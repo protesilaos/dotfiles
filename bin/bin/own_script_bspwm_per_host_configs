@@ -1,0 +1,82 @@
+#!/bin/bash
+
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Description {{{
+# ---------------
+#
+# Configure `bspwm` depending on the host computer. Part of my dotfiles.
+# See https://gitlab.com/protesilaos/dotfiles
+#
+# This script implements some important settings, such as the number of
+# workspaces.  The reason these are not defined in `bspwmrc` is to keep
+# things clean and organised.  Also, this is better for testing
+# purposes.  It has been proven more difficult to debug various
+# scripting patterns when they are embedded directly in the `bspwmrc`
+# file.
+#
+# The approach followed herein is largely simplistic because I know the
+# setup in advance. I deploy my dotfiles on two separate machines.  On
+# one I often run a dual monitor setup.  As such, there are some bespoke
+# configs for each host.
+#
+# }}}
+
+# I define my host names as BASH variables in this file.  The format is
+# `my_variable='my_value'`.  Then I source it to retrieve the value I
+# need.  This makes it possible to run commands depending on the
+# computer you are working on.
+source "$HOME/.my_hostnames"
+
+# On my laptop I often connect an external monitor.  This is a simple
+# way to see if I have 2 monitors or not.  On the desktop, which is my
+# secondary computer, I always have a single monitor.  This is a
+# simplistic approach that works only because I know the setup[s] in
+# advance.
+monitor_count=$(bspc query -M | wc -l)
+
+# These should be applied if only one monitor is available.  This always
+# applies to my desktop computer.  It also is true for my laptop on
+# occasions where no external monitor is connected.
+function bspwm_generic_workspaces() {
+    # all workspaces on the primary monitor
+    bspc monitor -d 1 2 3 4 5 6
+}
+
+# These apply to my laptop when an external monitor is connected.
+function bspwm_laptop_dual_monitor() {
+    # run the script that adds the appropriate `xrandr` settings
+    if [ -x "$HOME/bin/own_script_laptop_dual_monitor" ]; then
+        own_script_laptop_dual_monitor
+    fi
+
+    # set the workspaces per monitor
+    bspc monitor LVDS1 -d 1 2 3
+    bspc monitor VGA1 -d 4 5 6
+}
+
+# Run commands depending on the host computer.
+# TODO any better to write this by not repeating the 'generic' call?
+if [[ $(hostname) == "$my_laptop_hostname" ]]; then
+    # Is an external monitor connected to my laptop?
+    if [[ "$monitor_count" == 2 ]]; then
+        bspwm_laptop_dual_monitor
+    else
+        bspwm_generic_workspaces
+    fi
+else
+    bspwm_generic_workspaces
+fi
+
+# vi:foldmethod=marker

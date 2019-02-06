@@ -1,0 +1,139 @@
+" Name: Tempus Warp
+" Author: Protesilaos Stavrou (https://protesilaos.com)
+" Description: Dark theme with a vibrant palette (WCAG AA compliant)
+
+set background=dark
+hi clear
+if exists("syntax_on")
+  syntax reset
+endif
+let g:colors_name = "tempus_warp"
+
+" General
+" -----------------
+
+" NOTE the ctermbg=none is for terminals with transparency
+hi Normal guibg=#001514 guifg=#a29fa0 ctermbg=none ctermfg=15
+hi Visual guibg=#a29fa0 guifg=#001514 ctermbg=15 ctermfg=0
+hi Search gui=underline,bold,italic guibg=#139913 guifg=#001514 cterm=underline,bold,italic ctermbg=2 ctermfg=0
+hi IncSearch gui=underline,bold,italic guibg=#928080 guifg=#001514 term=none cterm=underline,bold,italic ctermbg=7 ctermfg=0
+
+hi StatusLine gui=none,bold guibg=#a29fa0 guifg=#001514 cterm=none,bold ctermbg=15 ctermfg=0
+hi StatusLineNC gui=none guibg=#241828 guifg=#928080 cterm=none ctermbg=8 ctermfg=7
+hi StatusLineTerm gui=none,bold guibg=#139913 guifg=#001514 cterm=none,bold ctermbg=2 ctermfg=0
+hi StatusLineTermNC gui=none guibg=#241828 guifg=#139913 cterm=none ctermbg=8 ctermfg=2
+
+hi VertSplit gui=none cterm=none
+hi TabLine gui=none guibg=#241828 guifg=#928080 cterm=none ctermbg=8 ctermfg=7
+hi TabLineSel gui=none guibg=#a29fa0 guifg=#001514 cterm=none ctermbg=15 ctermfg=0
+hi TabLineFill gui=none cterm=none
+
+hi Comment gui=italic guifg=#928080 cterm=italic ctermfg=7
+hi Todo gui=bold guibg=#241828 guifg=#ba8a00 cterm=bold ctermbg=8 ctermfg=11
+
+hi Warning gui=none guibg=#9e8100 guifg=#001514 cterm=none ctermbg=3 ctermfg=0
+hi WarningMsg gui=none guibg=#9e8100 guifg=#001514 cterm=none ctermbg=3 ctermfg=0
+hi Error gui=none guibg=#fa3333 guifg=#001514 cterm=none ctermbg=1 ctermfg=0
+hi ErrorMsg gui=none guibg=#fa3333 guifg=#001514 cterm=none ctermbg=1 ctermfg=0
+
+hi MatchParen gui=underline,bold guibg=#d85cf2 guifg=#001514 cterm=underline,bold ctermbg=13 ctermfg=0
+
+hi ToolbarLine guibg=#928080 guifg=#001514 term=none ctermbg=7 ctermfg=0
+hi ToolbarButton gui=bold guibg=#928080 guifg=#001514 term=none cterm=bold ctermbg=7 ctermfg=0
+
+hi WildMenu guibg=#001514 guifg=#a29fa0 term=standout ctermbg=0 ctermfg=15
+
+hi Terminal guibg=#001514 guifg=#a29fa0 term=none ctermbg=0 ctermfg=15
+
+" Constructs
+" -----------------
+hi Constant guifg=#557feb ctermfg=4
+hi Number guifg=#557feb ctermfg=4
+hi Float guifg=#557feb ctermfg=4
+hi String guifg=#8887f0 ctermfg=12
+
+hi Function guifg=#d54cbf ctermfg=5
+hi Identifier guifg=#d85cf2 term=none ctermfg=13
+hi Label guifg=#d54cbf ctermfg=5
+hi Tag guifg=#d54cbf ctermfg=5
+hi Keyword gui=bold guifg=#d85cf2 gui=bold ctermfg=13
+
+hi Character gui=bold guifg=#1da1af cterm=bold ctermfg=14
+
+hi Type gui=none,bold guifg=#009580 term=none cterm=none,bold ctermfg=6
+hi Boolean guifg=#009580 ctermfg=6
+hi StorageClass guifg=#009580 ctermfg=6
+hi Structure guifg=#009580 ctermfg=6
+hi Typedef gui=bold guifg=#1da1af cterm=bold ctermfg=14
+
+hi Conditional gui=bold guifg=#139913 cterm=bold ctermfg=2
+hi Statement gui=none guifg=#3aa73a cterm=none ctermfg=10
+hi Repeat gui=bold guifg=#3aa73a cterm=bold ctermfg=10
+hi Operator gui=bold guifg=#a29fa0 cterm=bold ctermfg=15
+hi Exception gui=bold guifg=#fa3333 cterm=bold ctermfg=1
+
+hi Preproc gui=none guifg=#F0681A term=none cterm=none ctermfg=9
+hi PreCondit gui=bold guifg=#F0681A cterm=bold ctermfg=9
+hi Macro gui=bold guifg=#F0681A cterm=bold ctermfg=9
+hi Include guifg=#F0681A ctermfg=9
+hi Define guifg=#F0681A ctermfg=9
+
+hi Title gui=bold guibg=#001514 guifg=#009580 cterm=bold ctermbg=0 ctermfg=6
+
+hi Special gui=bold guifg=#ba8a00 term=none cterm=bold ctermfg=11
+hi SpecialKey guifg=#ba8a00 ctermfg=11
+hi SpecialChar gui=bold guifg=#ba8a00 cterm=bold ctermfg=11
+
+hi Delimeter gui=bold guifg=#d54cbf cterm=bold ctermfg=5
+hi Delimiter gui=bold guifg=#d54cbf cterm=bold ctermfg=5
+hi SpecialComment gui=bold guifg=#d54cbf cterm=bold ctermfg=5
+
+hi Debug guifg=#d85cf2 ctermfg=13
+
+" Other
+" -----------------
+hi LineNr guibg=#241828 guifg=#928080 term=none ctermbg=8 ctermfg=7
+hi Cursor guibg=#a29fa0 guifg=#001514 ctermbg=15 ctermfg=0
+hi CursorLine gui=none guibg=NONE term=none cterm=none ctermbg=none
+hi CursorColumn gui=none guibg=#241828 term=none cterm=none ctermbg=8
+hi CursorLineNr gui=bold guibg=#928080 guifg=#001514 cterm=bold ctermbg=7 ctermfg=0
+hi ColorColumn guibg=#241828 guifg=#a29fa0 term=none ctermbg=8 ctermfg=15
+
+hi Folded guibg=#241828 guifg=#928080 ctermbg=8 ctermfg=7
+hi FoldColumn guibg=#241828 guifg=#928080 ctermbg=8 ctermfg=7
+
+hi NonText gui=bold guibg=NONE guifg=#928080 cterm=bold ctermbg=none ctermfg=7
+
+hi Directory gui=none guifg=#139913 term=none cterm=none ctermfg=2
+hi Question gui=bold guifg=#ba8a00 cterm=bold ctermfg=11
+hi MoreMsg guifg=#3aa73a ctermfg=10
+hi ModeMsg gui=bold guifg=#139913 cterm=bold ctermfg=2
+
+hi VimOption guifg=#d54cbf ctermfg=5
+hi VimGroup guifg=#d54cbf ctermfg=5
+
+hi Underlined gui=underline,bold guifg=#a29fa0 cterm=underline,bold ctermfg=15
+hi Ignore guibg=#241828 guifg=#928080 ctermbg=8 ctermfg=7
+hi Conceal guibg=#928080 guifg=#241828 ctermbg=7 ctermfg=8
+
+hi SpellBad guibg=#fa3333 guifg=#001514 ctermbg=1 ctermfg=0
+hi SpellCap guibg=#9e8100 guifg=#001514 ctermbg=3 ctermfg=0
+hi SpellRare guibg=#d85cf2 guifg=#001514 ctermbg=13 ctermfg=0
+hi SpellLocal guibg=#1da1af guifg=#001514 ctermbg=14 ctermfg=0
+
+hi Pmenu gui=italic guibg=#241828 guifg=#a29fa0 cterm=italic ctermbg=8 ctermfg=15
+hi PmenuSel gui=none,bold guibg=#928080 guifg=#001514 cterm=none,bold ctermbg=7 ctermfg=0
+hi PmenuSbar guibg=#241828 ctermbg=8
+hi PmenuThumb guibg=#928080 ctermbg=7
+
+" Diffs
+" -----------------
+hi DiffAdd gui=bold guibg=#139913 guifg=#001514 cterm=bold ctermbg=10 ctermfg=0
+hi DiffDelete gui=none guibg=#fa3333 guifg=#001514 cterm=none ctermbg=9 ctermfg=0
+hi DiffChange gui=bold guibg=#241828 guifg=#928080 cterm=bold ctermbg=8 ctermfg=7
+hi DiffText gui=bold guibg=#241828 guifg=#F0681A cterm=bold ctermbg=8 ctermfg=1
+
+hi diffAdded guifg=#139913 ctermfg=2
+hi diffRemoved guifg=#fa3333 ctermfg=1
+hi diffNewFile gui=none guifg=#557feb ctermfg=4
+hi diffFile gui=none guifg=#9e8100 cterm=none ctermfg=3

@@ -1,0 +1,113 @@
+#!/bin/bash
+
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Description {{{
+# ---------------
+#
+# Uses `ffmpeg` to capture video and sound from a running X session and
+# output it to a file.  The current script provides options for
+# recording video, video+audio, and stopping any running screencast.
+# Alternatively, the functions of this script can be bound to
+# keybindings:
+#
+# own_script_ffmpeg_screencast [rec_video_audio|rec_video_only|rec_stop]
+#
+# This script is invoked by my `screencastmenu`. A `dmenu` wrapper that
+# serves as a simple interface for the three available options. 
+#
+# This is a simplistic tool, intended mostly for capturing short videos.
+# If you need something more robust, consider OBS Studio:
+# 
+# sudo apt install obs-studio
+# 
+# Provided as part of my dotfiles, inside the "bin" directory.  See
+# https://gitlab.com/protesilaos/dotfiles.  Last reviewed on 2018-11-05
+#
+# }}}
+
+# TODO {{{
+# --------
+# 
+# 1. Improve documentation
+# 2. Review output formats
+# 3. Review code
+#
+# }}}
+
+timestamp=$(date +"%Y%m%d-%H%M%S")
+screen_resolution=$(xrandr | grep -o -e 'current [0-9]* x [0-9]*' | sed 's/current \([0-9]*\) x \([0-9]*\)/\1x\2/g')
+
+rec_video_audio() {
+    notify-send -i video-editor "Session recording" "Started capturing video and audio"
+
+    ffmpeg \
+    -f x11grab \
+    -framerate 60 \
+    -s "$screen_resolution" \
+    -i :0.0 \
+    -f alsa -i default \
+    -c:v libx264 -r 30 \
+    -c:a flac \
+    "$HOME/Videos/session_record_video_audio_$timestamp.mkv"
+
+    # ffmpeg command description
+    # capture from X session
+    # set framerate
+    # screen resolution
+    # define monitor
+    # grab sound from default sink
+    # specify video codec
+    # specify audio codec
+    # output path
+}
+
+rec_video_only() {
+    notify-send -i video-editor "Session recording" "Started capturing video only"
+
+    ffmpeg \
+    -f x11grab \
+    -framerate 60 \
+    -s "$screen_resolution" \
+    -i :0.0 \
+    -c:v libx264 -r 30 \
+    "$HOME/Videos/session_record_video_only_$timestamp.mkv"
+
+    # ffmpeg command description
+    # capture from X session
+    # set framerate
+    # screen resolution
+    # define monitor
+    # specify video codec
+    # output path
+}
+
+rec_stop() {
+    pkill ffmpeg
+
+    notify-send -i video-editor "Session recording" "Stopped recording"
+}
+
+# check if cli argument corresponds to function name
+if declare -f "$1" > /dev/null
+then
+    # call the corresponding function
+    "$1"
+else
+    # send error message
+    echo "Not valid function name"
+    exit 1
+fi
+
+# vi:foldmethod=marker

@@ -1,0 +1,49 @@
+#!/bin/bash
+
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# TODO {{{
+# --------
+# 
+# 1. Improve documentation
+# 2. Review output formats
+# 3. Review code
+#
+# Last checked on 2018-11-05
+#
+# }}}
+ 
+# screencastmenu: a dmenu script to interface with my screen recording script.
+# see scripts under the `bin` directory of https://gitlab.com/protesilaos/dotfiles
+
+# pass custom colours to dmenu command
+source "$HOME/.my_colours/active-tempus-theme.sh"
+
+# get the system-wide custom font
+source "$HOME/.my_custom_ui_font.sh"
+
+# dmenu wrapper with the list of options for my ffmpeg screen recording script (grep -o prints only matching lines)
+screencastmenu_selection()
+{
+    grep -o -e '^rec_[a-z_]*' "$HOME/bin/own_script_ffmpeg_screencast" | \
+    dmenu -p 'Screencast options' -nb "$background" -nf "$foreground" -sb "$color4" -sf "$background" -fn "$my_custom_ui_font"
+}
+
+# capture dmenu selection
+screencastmenu_selected=$(screencastmenu_selection)
+
+# run script to update all themes with the choice as its argument
+if [ "$screencastmenu_selected" ]; then
+    own_script_ffmpeg_screencast "$screencastmenu_selected"
+fi

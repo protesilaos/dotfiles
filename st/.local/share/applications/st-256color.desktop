@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Simple Terminal (Tmux)
+GenericName=st-256color
+Comment=Standard terminal emulator for the X window system
+Exec=st -t "Suckless Terminal" -e tmux
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Icon=terminal
+Categories=System;TerminalEmulator;
+Keywords=shell;prompt;command;commandline;cmd;

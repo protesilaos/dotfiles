@@ -1,0 +1,162 @@
+#!/bin/bash
+
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Description {{{
+# ---------------
+#
+# This is a `dmenu` script to switch between Tempus themes on demand.
+# It parses the list of available options and presents them once
+# invoked.  The choice then becomes the input/argument of another script
+# that actually performs the operations pertaining to the complete theme
+# change.  In other words, `tempusmenu` is an interface for
+# `own_script_update_environment_theme`, both of which are part of my
+# dotfiles and are available in the "bin" directory.  See
+# https://gitlab.com/protesilaos/dotfiles (a short demo should also be
+# linked to in the README.md).
+#
+# Tempus is a collection of themes for Vim and terminal emulators that
+# is compliant *at minimum* with the WCAG AA standard for colour
+# contrast between background and foreground values.  See
+# https://protesilaos.com/tempus-themes.
+#
+# Tempus is incorporated in my dotfiles, providing for all theme-related
+# options it has ports for or can be implemented in.  The theme change
+# applies to a variety of programs, including X resources, bspwm, dunst,
+# polybar, etc.  A fully functional environment derived from my dotfiles
+# is required for this to work as intended.
+#
+# Last reviewed on 2018-11-06
+#
+# }}}
+
+# General variables {{{
+# ---------------------
+
+# Array with all available tempus themes.  The `sed` command cleans up
+# the output, stripping it of surrounding text. As for `sort`, it just
+# presents the output in alphabetical order.
+tempus_themes_array=$(find "$HOME/.my_colours/shell/" -type f -printf "%f\\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort)
+
+# Pass custom colours to the `dmenu` command.  These will style the
+# background and foreground values using shell variables.  That file is
+# used in other places as well to offer a convenient way of styling
+# multiple tools in a that is centralised and straightforward.
+source "$HOME/.my_colours/active-tempus-theme.sh"
+
+# Get the system-wide custom font.  This is done with other `dmenu`
+# scripts as well to provide for an easy way to style them all at once.
+# The actual font is a `fontconfig` alias, which is currently defined as
+# `Hack` and which uses my patched variant of that typeface.  See my
+# dotfiles under "fonts".
+source "$HOME/.my_custom_ui_font.sh"
+
+# }}}
+
+# Functions and conditions {{{
+# ----------------------------
+
+# This is the `dmenu` wrapper with the list of available Tempus themes.
+# Instead of offering a direct input source that yields an immediate
+# result, this command stores the user's choice as a variable which is
+# used further below.
+tempus_themes_selection() {
+    tempus_themes_choice=$(echo -e "$tempus_themes_array" | dmenu \
+    -p 'Select Tempus theme' -nb "$background" -nf "$foreground" \
+    -sb "$color5" -sf "$background" -fn "$my_custom_ui_font")
+
+
+    # This checks if the input is an empty string.  An empty string can
+    # be added by hitting the Esc key.  It fixes a critical bug where
+    # `own_script_update_environment_theme` would be executed without
+    # matching an item in the Tempus Themes array.  This would cause
+    # theme files to be replaced by an empty/invalid string.  The
+    # necessary logic has been added to that script to tackle the issue.
+    if [ -z "$tempus_themes_choice" ]; then
+        echo 'No valid selection. Exiting...'
+        exit 1
+    fi
+}
+
+tempusmenu_confirm_input() {
+    tempus_themes_selection
+    echo "Will run desktop environment update using \"$tempus_themes_choice\""
+    own_script_update_environment_theme "$tempus_themes_choice" "$1"
+    exit 0
+}
+
+# Conditions on which to conduct the operations pertaining to the theme
+# change.
+tempusmenu() {
+    if [[ "$1" == "de" ]]; then
+        echo "Received 'de' as an argument for tempusmenu"
+        echo "Opening dmenu interface for Desktop Environment theme update"
+        tempusmenu_confirm_input de
+    elif [[ -z "$1" ]]; then
+        echo "There is no optional 'de' argument for tempusmenu"
+        echo "Opening dmenu interface for BSPWM environment update"
+        tempusmenu_confirm_input
+    else
+        echo "ERROR. tempusmenu accepts one optional argument: de (for use in GNOME, MATE, Xfce)"
+        echo "You typed \"$1\""
+        exit 1
+    fi
+}
+
+tempusmenu "$1"
+
+# }}}
+
+# ANNEX with further explanations {{{
+# -----------------------------------
+
+# I store my generic X colors in "$HOME/.my_colours/".  The Tempus
+# themes are within the subdirectory $HOME/.my_colours/tempus/.  This
+# ensures that any other theme I include is not bundled up together with
+# them.  A likely scenario would be my older themes project, Prot16 (see
+# https://protesilaos.com/schemes).
+#
+# Recall that this is a shell script that does not use the content of
+# those `*.sh`.  All we need is to extract the scheme name of each item.
+#
+# Each theme's name is prefixed with 'tempus_' and suffixed with '.sh'.
+
+# $ ls $HOME/.my_colours/shell/
+# tempus_autumn.sh   tempus_dusk.sh    tempus_past.sh    tempus_tempest.sh
+# tempus_classic.sh  tempus_fugit.sh   tempus_rift.sh    tempus_totus.sh
+# tempus_dawn.sh     tempus_future.sh  tempus_spring.sh  tempus_warp.sh
+# tempus_day.sh      tempus_night.sh   tempus_summer.sh  tempus_winter.sh
+
+# The sed regex is used to omit the prefix 'tempus_' and the suffix '.sh'.
+# $ find "$HOME/.my_colours/shell/" -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort
+# autumn
+# classic
+# dawn
+# day
+# dusk
+# fugit
+# future
+# night
+# past
+# rift
+# spring
+# summer
+# tempest
+# totus
+# warp
+# winter
+
+# }}}
+
+# vi:foldmethod=marker

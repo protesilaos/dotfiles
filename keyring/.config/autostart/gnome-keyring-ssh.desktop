@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=SSH Key Agent
+Comment=GNOME Keyring: SSH Agent
+Exec=/usr/bin/gnome-keyring-daemon --start --components=ssh
+X-GNOME-Autostart-Phase=PreDisplayServer
+X-GNOME-AutoRestart=true
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Notify=true

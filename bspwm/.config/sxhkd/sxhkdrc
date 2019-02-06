@@ -1,0 +1,367 @@
+#
+# ~/.config/sxhkd/sxhkdrc
+#
+
+# Description {{{
+# ===============
+#
+# Configuration file for the Simple X Hotkey Daemon.  Meant to work with
+# `bspwm`.  This is part of my dotfiles, which are managed with GNU
+# Stow.  See https://gitlab.com/protesilaos/dotfiles
+#
+# Most commands are derived from `man bspc|bspwm` and `man sxhkd`.  Each
+# action is preceded by comments which explain what it does.
+#
+# Last reviewed on 2018-11-07
+#
+# }}}
+
+# Index with key chord chain mnemonics {{{
+# ========================================
+#
+# Key chord chains are used for less common or ancillary commands, or
+# for when assigning direct keybindings would become unwieldy.  The idea
+# is to scope bindings so as to avoid conflicts.  
+#
+# Environment: super + e ; ...
+# Executables which typically run in the console: super + x ; ...
+# Graphical applications: super + g ; ...
+# Assign (node flags or split ratios of the root tree): super + a ; ...
+
+# FIXME key chain chords in the form of `super + n ; ...` have a bug See
+# https://github.com/baskerville/sxhkd/issues/83.  The awkward
+# workaround is to use this syntax instead `super + n; X ; ...`, where X
+# is a variable.
+
+# }}}
+
+# General key chords that do not invoke BSPC {{{
+# ==============================================
+
+# Keyboard layout
+# ---------------
+# We can set the keyboard layouts, as well as the toggle directly via
+# `setxkbmap`.  Example of what I used to run:
+#
+#   setxkbmap -layout 'us,gr' -option 'grp:alt_caps_toggle'
+#
+# However, doing so means losing out on the possibility to easily find
+# out the current/active layout from a script: X knows about us,gr in
+# that order, not which one is currently typing.  As such, in `bspwmrc`
+# I simply autostart `setxkbmap -layout 'us'` without defining the
+# second layout and a toggle.  The toggle is set below.  With the
+# difference being that it invokes a custom script that switches between
+# the us,gr layout.  All this is done to be able to get the active
+# keyboard layout and print its name to my system panel (custom lemonbar
+# called "melonpanel").
+{alt + Caps_Lock,super + Escape}
+    own_script_current_keyboard_layout
+
+# Environment
+# -----------
+
+# The following commands are:
+# 1. Reload sxhkd.
+# 2. Reload melonpanel (my lemonbar script).
+# 3. Open the "tempusmenu" (my comprehensive theme switcher for
+#    terminals, CLI tools, GTK apps and flatpaks).
+# 4. Send notification with the mpc status.
+# 5. Open a dmenu interface for log out, lock, switch users, reboot,
+#    shutdown (also mapped to Ctrl+Alt+{Home,End,Delete}).
+#
+# Recall that these depend on my dotfiles.  That command is in my own
+# bin directory.  See https://gitlab.com/protesilaos/dotfiles.
+super + e ; {s,p,t,m,k,q}
+    { \
+    pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
+    pkill -x melonpanel && melonpanel, \
+    tempusmenu, \
+    own_script_notify_send_mpc_status, \
+	own_script_notify_send_keyboard_layout, \
+    poweroptionsmenu \
+    }
+
+# Session management (log out, lock, switch usersm reboot, shutdown).
+ctrl + alt + {Home,End,Delete}
+    poweroptionsmenu
+
+# Main programs
+# -------------
+
+# Terminal emulator with and without tmux.  Bear in mind that my `st`
+# build does not try to replicate multiplexing features, including
+# scroll back.  As such, `super + shift + Return` should be used when
+# you need a very basic terminal emulator.  I usually use this to test
+# how various actions affect running nodes (e.g. test the script that
+# resizes nodes, or the key chords that balance/equalise node splits).
+# I normally use `tmux` which is ideal for working on multiple
+# terminals, switching sessions, and the like.  You should really give
+# this a fair try.  I think it fits perfectly into a console-based
+# workflow and complements the features of a tiling WM.
+#
+# NOTE `@` means until key is released, though I cannot confirm it works
+# properly.  It is kept here for reference and future review.
+super + {_, shift + } @Return
+    {st -e tmux new-session -A -s 'Default', st}
+
+# GUI programs.  Where these are alternatives to common CLI tools they
+# are mapped to the same number as their counterparts, but prepended
+# with a `g` (mnemonic for GUI).
+super + g ; {1,2,3}
+	{ \
+    notify-send -i firefox "Run GUI program" "Launching Web Browser" && firefox-esr, \
+	notify-send -i system-file-manager "Run GUI program" "Launching File Manager" && caja, \
+	notify-send -i thunderbird "Run GUI program" "Launching Email Client" && thunderbird \
+	}
+
+# CLI programs.  Any browser and/or file manager should be assigned the
+# numbers 1 and 2 respectively, in order to bkeep consistency with the
+# above-defined GUIs.
+super + x ; {3-7}
+    st -e {neomutt,newsboat,rtv,ncmpcpp,podboat -a}
+
+# I use "my_float_window" as an application name or class for those rare
+# occasions where I prefer a floating window at launch.  Note that
+# `calc` is found in the Debian repos as `apcalc`.
+super + x ; 0
+    st -c 'my_float_window' -e calc
+
+# sbgmenu: dmenu interface for browsing images from my "Pictures"
+# directory.  There is an option to just display the selected file, or
+# set it as the new desktop wallpaper.
+#
+# nbp: similar to the above, but uses a graphical approach, by
+# displaying all image thumbnails in a grid layout using `sxiv`.  The
+# user can view each image individually and mark images.  If only one is
+# marked, it is defined as the new wallpaper, else another grid is drawn
+# with just the marked files.
+#
+# dmenu interface for managing my task list.  If I type something that
+# has no match, it is appended in plain text format to my task list
+# file.  If I select an existing item, it is removed from the list.
+# I also have a script that presents the data: see "stm" inside my
+# dotfiles' "bin" directorty
+#
+# NOTE the keys are mnemonics for Backgrounds, Wallpapers, Tasks.
+super + x; {b,w,t}
+	{sbgmenu,nbm,stmmenu}
+
+# Launchers
+# ---------
+
+# dmenu_run and passmenu using my custom colours.
+super + {d,p}
+    {own_script_run_dmenu_xcolors,own_script_run_passmenu_xcolors}
+
+# dmenu specifically for flatpaks.  While it is possible to include
+# these in the $PATH, or to query by `.desktop` file, I prefer to keep
+# them separate.
+super + shift + d
+    flatpakmenu
+
+# Tools and utilities
+# -------------------
+
+# PLACEHOLDER for future release of dunst {{{
+
+# # TODO add all `dunst` related keys here.  Currently, it only supports
+# # setting key bindings inside `dunstrc`, but there is ongoing work to
+# allow an # external program to handle them.  Below is an example
+# implementation # in lieu of the actual commands, which assigns the key
+# chords I have # specified in `dunstrc`.
+
+# # super + {_, shift + } v
+    # # VIEW {context menu of} last notification (shows max 3 at a time)
+# # super + {_, shift + } c
+    # # CLOSE {all} notification{s}
+
+# }}}
+
+# Open interface for screencasting or stop recording.  Note that this is
+# a simplistic approach.  For something more robust use OBS Studio.
+# Recall that these depend on my dotfiles.  That command is in my own
+# bin directory.  See https://gitlab.com/protesilaos/dotfiles.
+super + x ; {r,s}
+    {screencastmenu, own_script_ffmpeg_screencast rec_stop}
+
+# Screenshots (requires `scrot`).  First one is for the focused window.
+# The other is of the entire X session (including all active monitors).
+# Note that `scrot` only has an interactive mode that I do not use.
+Print
+    scrot -u -z '%Y-%m-%d_%H:%M:%S_$wx$h$n.png' -e 'mv $f ~/Desktop' && notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Desktop"
+super + Print
+    scrot -m -z '%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'mv $f ~/Desktop' && notify-send -i gnome-screenshot "Screen view screenshot" "Saved image to Desktop"
+
+# Control the laptop's screen brightness (requires `xbacklight`).
+XF86MonBrightness{Down,Up}
+    xbacklight {-dec 15,-inc 15} 
+
+# Screen locker (requires `slock`, which in Debian is provided by the
+# package `suckless-tools`).
+XF86ScreenSaver
+    slock
+
+# Media controls
+# --------------
+
+# MPRIS method (default).  Use `mpdris2` (Debian repos) as a bridge
+# between MPD and MPRIS.
+XF86Audio{Play,Prev,Next,Stop}
+    playerctl {play-pause,previous,next,stop}
+
+# mpc method (if function keys are standalone)
+super + XF86Audio{Mute,LowerVolume,RaiseVolume}
+    mpc {toggle,prev,next,stop}
+
+# mpc method (using arrow keys)
+super + {Down,Left,Right,Up}
+    mpc {toggle,prev,next,stop}
+
+# TODO implement alternatives for volume control for keyboards that do
+# not have bespoke keys.
+# Speaker/output volume
+XF86Audio{Mute,LowerVolume,RaiseVolume}
+    amixer set Master {toggle,5%-,5%+}
+
+# Microphone/input volume.
+XF86AudioMicMute
+    amixer set Capture toggle
+super + XF86Audio{Mute,LowerVolume,RaiseVolume}
+    amixer set Capture {toggle,5%-,5%+}
+
+# }}}
+
+# BSPWM operations for window management {{{
+# ==========================================
+ 
+# Close or kill currently focused node
+super + {_,shift + }q
+	bspc node -{c,k}
+
+# Node layout state and flags
+# ---------------------------
+
+# Toggle monocle layout (maximise focused node).  If you use `-l
+# monocle` you lose the toggle functionality.
+super + m
+	bspc desktop -l next
+
+# Toggle tiled, pseudo_tiled, floating, fullscreen view.  Tiled is what
+# is used by default.  Pseudo-tiled presents the window in its original
+# dimensions inside the split it would normally occupy as a tile (I have
+# never found a practical use for this).  Floating windows have their
+# own dimensions and can be stacked on top of each other.
+#
+# NOTE the presence of the tilde ~.  If current state matches the given
+# state, then the argument is interpreted as the last state.
+super + {t,shift + space,space,f}
+ 	bspc node -t ~{tiled,pseudo_tiled,floating,fullscreen}
+
+# Set the node flags.  Locked is a node that cannot be closed with `bspc
+# node --close`.  Sticky stays in the focused desktop.  Private tries to
+# keep its dimensions and tiling position.
+#
+# There also are flags for "hidden" and "marked" but I have yet to find
+# any practical use for them.
+super + a ; {l,s,p}
+    bspc node -g {locked,sticky,private}
+
+# Focus/swap nodes/desktops
+# -------------------------
+
+# Focus the node in the given direction (select window).
+super + {_,shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
+
+# Focus {or send focused node} to the given desktop.
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+# Send and follow focused node to given desktop.
+super + ctrl + shift + {1-9}
+    id=$(bspc query -N -n); bspc node -d ^{1-9}; bspc node -f ${id}
+
+# Expand or contract node in the given direction.
+#
+# For floating windows one can use Alt + Right Mouse click to
+# drag/resize in the given direction (this works in other DEs as well,
+# such as MATE and Xfce).  I have not set the script to resize floating
+# windows because: (i) I do not use them and if I do I do not want to
+# change their dimensions, and (ii) to keep the script concise.
+super + ctrl + {h,j,k,l}
+    own_script_bspwm_node_resize {west,south,north,east} 50
+
+# Move a floating window with the arrow keys (else use Alt + Left Mouse
+# Click to drag).  I seldom use floating windows.
+super + shift + {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# FIXME TODO on focus history (see following three commands) {{{
+#
+# 1.  Can Alt+Tab work like the standard Alt+Tab implementation where
+#     releasing the key on the first occurrence rewrites the focus
+#     history so the next Alt+Tab brings you to the previous window?
+# 2.  Research how to consolidate these in fewer keystrokes on something
+#     that makes more sense.  Too many options that provide overlapping
+#     functions.
+#
+# }}}
+
+# Focus the last node/desktop.  This only cycles through the active and
+# the last active node.  Compare it to the behaviour of the following
+# two commands.
+super + {grave,Tab}
+	bspc {node,desktop} -f last
+
+# Focus on older/newer window in history.  This does not cycle through
+# windows.  It stops once reaching the {old,new}est.
+super + {o,n}
+	bspc wm --record-history off; \
+	bspc node --focus {older,newer}; \
+    bspc wm --record-history on
+
+# Focus next/previous window. This does cycle through windows.
+alt + {_,shift +} Tab
+    bspc node -f {next,prev}
+
+# preselect
+# ---------
+# NOTE there also is an option to insert a "receptacle", but I have
+# found no use for it yet.  Not included herein.
+
+# Preselect the direction or insert again to cancel the preselection.
+# This enters the manual mode.
+super + alt + {h,j,k,l}
+    bspc node --presel-dir '~{north,south,west,east}'
+
+# Preselect the ratio.  The default value is 0.5, defined in `bspwmrc`.
+super + alt + {1-9}
+	bspc node -o 0.{1-9}
+
+# Manipulate the workspace
+# ------------------------
+
+# Rotate all windows [counter-]clockwise by 90 degrees.
+super + {_,shift + }r
+    bspc node @/ --rotate {90,-90}
+
+# Flip desktop: what is on the right/top moves to the left/bottom and
+# vice versa.
+super + alt + {_,shift + }r
+    bspc node @/ --rotate {180,-180}
+
+# Switch between gap presets.
+super + shift + {y,u,i,o}
+    bspc config window_gap {0,5,10,20}
+
+# Dynamic gaps.
+super + shift + bracket{left,right}
+	bspc config -d focused window_gap $((`bspc config -d focused window_gap` {-,+} 5 ))
+
+# Make node split ratios equal or balanced.
+super + a ; {e,b}
+	bspc node @/ {--equalize,--balance}
+
+# }}}
+
+# vim:ft=sh:foldmethod=marker

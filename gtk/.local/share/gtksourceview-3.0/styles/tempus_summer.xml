@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<style-scheme id="tempus-summer" _name="Tempus Summer" version="1.0">
+  <author>Protesilaos Stavrou (https://protesilaos.com)</author>
+  <_description>Dark theme with colours inspired by summer evenings by the sea (WCAG AA compliant)</_description>
+
+  <!-- Palette -->
+  <color name="col0" value="#202c3d"/>
+  <color name="col1" value="#ff6c38"/>
+  <color name="col2" value="#4eac6d"/>
+  <color name="col3" value="#af9a0a"/>
+  <color name="col4" value="#3aaaa4"/>
+  <color name="col5" value="#9c90dd"/>
+  <color name="col6" value="#3dab93"/>
+  <color name="col7" value="#a39799"/>
+  <color name="col8" value="#352f49"/>
+  <color name="col9" value="#eb7b4d"/>
+  <color name="col10" value="#57ad47"/>
+  <color name="col11" value="#bd951a"/>
+  <color name="col12" value="#5aa1d4"/>
+  <color name="col13" value="#c97ed7"/>
+  <color name="col14" value="#29ad8d"/>
+  <color name="col15" value="#a0abae"/>
+
+  <!-- Base values -->
+  <color name="colbg" value="#202c3d"/>
+  <color name="colbgalt" value="#352f49"/>
+  <color name="colbgdim" value="#2a2d43"/>
+  <color name="colfg" value="#a0abae"/>
+  <color name="colfgalt" value="#a39799"/>
+  <color name="colcr" value="#a0abae"/>
+
+  <!-- Global Settings -->
+  <style name="text" foreground="colfg" background="colbg"/>
+  <style name="line-numbers" foreground="colfgalt" background="colbgalt"/>
+  <style name="current-line" background="colbgdim"/>
+  <style name="current-line-number" foreground="colfgalt" background="colbgalt" bold="true"/>
+  <style name="draw-spaces" foreground="colfgalt"/>
+  <style name="background-pattern" background="colbg"/>
+
+  <!-- Bracket Matching -->
+  <style name="bracket-match" foreground="colbg" background="col13"/>
+  <style name="bracket-mismatch" foreground="colbg" background="col3"/>
+
+  <!-- Right Margin -->
+  <style name="right-margin" foreground="colfgalt" background="colbgalt"/>
+
+  <!-- Search Matching -->
+  <style name="search-match" foreground="colbg" background="col2" bold="true"/>
+
+  <!-- Comments -->
+  <style name="def:comment" foreground="colfgalt" italic="true"/>
+  <style name="def:shebang" foreground="colfgalt" bold="true" italic="true"/>
+  <style name="def:doc-comment-element" italic="true"/>
+
+  <!-- Constants -->
+  <style name="def:constant" foreground="col4"/>
+  <style name="def:special-char" foreground="col11" bold="true"/>
+
+  <!-- Identifiers -->
+  <style name="def:identifier" foreground="col13"/>
+
+  <!-- Statements -->
+  <style name="def:statement" foreground="col10" bold="true"/>
+
+  <!-- Types -->
+  <style name="def:type" foreground="col6" bold="true"/>
+
+  <!-- Others -->
+  <style name="def:preprocessor" foreground="col9"/>
+  <style name="def:error" foreground="colbg" background="col1"/>
+  <style name="def:warning" foreground="colbg" background="col3"/>
+  <style name="def:note" foreground="col3" bold="true"/>
+  <style name="def:underlined" italic="true" underline="single"/>
+
+  <!-- Heading styles, uncomment to enable -->
+  <!--
+  <style name="def:heading0" scale="5.0"/>
+  <style name="def:heading1" scale="2.5"/>
+  <style name="def:heading2" scale="2.0"/>
+  <style name="def:heading3" scale="1.7"/>
+  <style name="def:heading4" scale="1.5"/>
+  <style name="def:heading5" scale="1.3"/>
+  <style name="def:heading6" scale="1.2"/>
+  -->
+
+  <!-- Language specific styles -->
+  <style name="diff:added-line" foreground="colbg" background="col2" bold="true"/>
+  <style name="diff:removed-line" foreground="colbg" background="col1" bold="true"/>
+  <style name="diff:changed-line" use-style="def:preprocessor"/>
+  <style name="diff:special-case" use-style="def:constant"/>
+  <style name="diff:location" use-style="def:statement"/>
+  <style name="diff:diff-file" use-style="def:type"/>
+
+</style-scheme>

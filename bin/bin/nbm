@@ -1,0 +1,171 @@
+#!/bin/bash
+
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+# Description {{{
+# ---------------
+#
+# Nimble Backdrop Manager. Interface with `sxiv` to view your Pictures
+# folder and set a new wallpaper (by marking the thumbnail with "m" and
+# then hitting quit "q").
+#
+# This script is part of my dotfiles and is primarily intended for use
+# in my custom BSPWM session.  However, this script can be run in GNOME,
+# MATE, and Xfce to set the wallpaper accordingly.
+#
+# My dots: https://gitlab.com/protesilaos/dotfiles
+# 
+# Dependencies on Debian Buster:
+# 	apt install feh suckless-tools sxiv
+#
+# Assign this script to a key binding for your convenience.
+#
+# TODO is "Pictures" automatically localised?
+#
+# }}}
+
+# Image viewer parameters {{{
+# ---------------------------
+#
+# Define the sxiv command with reading from stdin and delivering to
+# stdout.  Start the program in thumbnail mode.  The -N flag is for
+# setting a window name that is recognised by my BSPWM rules: makes the
+# window float by default.
+my_sxiv() {
+	sxiv -iot -N 'my_float_window'
+}
+
+# }}}
+
+# Query the Pictures folder and present images {{{
+# ------------------------------------------------
+
+# Get image files that end in .{jpg,jpeg,png} from ~/Pictures.
+find_pictures() {
+	find $HOME/Pictures -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \)
+}
+
+# Abort if find returns no results.  Else keep on with the script.
+if [ -z "$(find_pictures)" ]; then
+	echo "ERROR. No valid image files in $HOME/Pictures"
+	echo "Aborting..."
+	exit 1
+fi
+
+# Present the images through the sxiv thumbnail mode.
+sxiv_interface() {
+	local instructions="Move with arrows or hjkl. 'Enter' to toggle thumbnail/image view. 'm' to mark wallpaper. 'q' to quit."
+
+	notify-send -i folder-pictures 'Opening image viewer' "$instructions"
+	find_pictures | my_sxiv
+}
+
+# }}}
+
+# Apply the wallpaper {{{
+# -----------------------
+#
+# This is the command that sets the wallpaper, which it reads as the
+# first argument.  The commands for the desktop environment's listed
+# below are standard ways of doing things.  Whereas there is no such
+# thing for BSPWM, where I always place my wallpaper as a hidden file in
+# my home directory.
+apply_wallpaper() {
+	local image="$1"
+
+	if [ "$DESKTOP_SESSION" == 'bspwm' ]; then
+		# Copy the selected image to the home directory, as a hidden
+		# file.  This is specific to my custom BSPWM session.
+		cp -f "$image" "$HOME/.wallpaper.jpg" && feh --bg-fill "$HOME/.wallpaper.jpg"
+	elif [ "$DESKTOP_SESSION" == 'gnome' ]; then
+		gsettings set org.gnome.desktop.background picture-uri "file://$image"
+	elif [ "$DESKTOP_SESSION" == 'mate' ]; then
+		gsettings set org.mate.background picture-filename "$image"
+	elif [ "$DESKTOP_SESSION" == 'xfce' ]; then
+		xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$image"
+	# Abort if the session is not known.  Print error message.
+	else
+		echo "ERROR. Unknown Desktop Session."
+		echo "Cannot set wallpaper."
+		echo "Aborting..."
+		exit 1
+	fi
+}
+
+# }}}
+
+# Conditions for running this script {{{
+# --------------------------------------
+nbm_exec() {
+	local quit_text='You hit the "q" key. Quiting program...'
+	# Open the interface with all available files from ~/Pictures
+	echo "Preparing to open picture files in sxiv thumbnail mode"
+	sxiv_output=$(sxiv_interface)
+
+	# If non-empty, prepare to set the wallpaper, else quit
+	if [ -n "$sxiv_output" ]; then
+		# If more than one image is marked, present the marked images in
+		# another sxiv interface.  Ask for input on one of them.
+		if [[ $(echo "$sxiv_output" | wc -l) -gt 1 ]]; then
+			echo 'Filtering marked images'
+			echo  "Your choices are:"
+			echo  "$sxiv_output"
+			echo 'Mark just one to set as new wallpaper'
+			notify-send -i eog 'Filtering marked images' \
+			'Mark just one to set as new wallpaper'
+			sxiv_output_filter="$(echo "$sxiv_output" | my_sxiv)"
+
+			# If the filtered input is still greater than one, throw an
+			# error and exit.
+			if [ -n "$sxiv_output_filter" ]; then
+				if [[ $(echo "$sxiv_output_filter" | wc -l) -gt 1 ]]; then
+					notify-send -i eog 'ERROR. Must mark only one' \
+					'You selected more than one file. Aborting...'
+					echo 'ERROR. Cannot set wallpaper.'
+					echo 'You selected more than one file.'
+					echo 'Aborting...'
+					exit 1
+				# If the filtered input is exactly one, then set that image
+				# as the new wallpaper.
+				elif [[ $(echo "$sxiv_output_filter" | wc -l) == 1 ]]; then
+					echo "Your choice is: $sxiv_output_filter"
+					echo "Applying new wallpaper"
+					apply_wallpaper "$sxiv_output_filter"
+				else
+					echo "$quit_text"
+					exit 1
+				fi
+			else
+				echo "$quit_text"
+				exit 1
+			fi
+		# If only one image is marked, set it as the new wallpaper.
+		else
+			echo "Your choice is: $sxiv_output"
+			echo "Applying new wallpaper"
+			apply_wallpaper "$sxiv_output"
+		fi
+	else
+		echo "$quit_text"
+		exit 1
+	fi
+}
+
+# Run the script
+nbm_exec
+
+# }}}
+
+# vi:foldmethod=marker

@@ -1,0 +1,31 @@
+## Passwords are stored in an ecnrypted file which is sourced within neomuttrc before sourcing this mailbox
+
+# Main account ----------------------------------
+
+# Specify GPG
+set pgp_sign_as = 0xFINGERPRINT
+
+# Configure imap username and password
+set imap_user = "email-one@protesilaos.com"
+set imap_pass = "$my_email-one_pass"
+
+# Configure folders
+set folder = "imaps://$imap_user@mail.gandi.net:993"
+set spoolfile= "=INBOX"
+set record = "=Sent"
+set postponed= "=Drafts"
+set trash= "=Trash"
+mailboxes = "=INBOX" "=Sent" "=Drafts" "=Archive" "=Junk" "=Trash"
+
+# Configure SMTP Settings
+set smtp_url = "smtp://$imap_user:$imap_pass@mail.gandi.net:587/"
+set realname = "Protesilaos Stavrou"
+set from = "email-one@protesilaos.com"
+set hostname = "mail.gandi.net"
+set use_from = yes
+# Connection options
+set ssl_force_tls = yes
+unset ssl_starttls
+
+## Hook -- IMPORTANT!
+account-hook $folder "set imap_user=email-one@protesilaos.com imap_pass=$my_email-one_pass"

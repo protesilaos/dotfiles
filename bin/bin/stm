@@ -1,0 +1,105 @@
+#!/bin/bash
+
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Simplistic Task Manager: stm is a very easy way to manage my task list
+# which is written in plain text.  This script is part of my dotfiles:
+# https://gitlab.com/protesilaos/dotfiles
+#
+# For a dmenu interface to adding/removing tasks to this list, see my
+# stmmenu, which is also part of my dotfiles (inside the "bin"
+# directory).
+
+# TODO document best practices for tagging tasks?
+# TODO add sort key to grep by @context #tag =date?
+
+# define my task list file
+# PRO TIP create your task list in a git-controlled directory (so as not
+# to lose things by accident) and then symlink it to the target defined
+# below:
+#	ln -s /path/to/git/directory/my_task_list ~/.my_task_list
+if [ -e "$HOME/.my_task_list" ]; then
+	task_list="$HOME/.my_task_list"
+else
+	touch -h "$HOME/.my_task_list"
+	task_list="$HOME/.my_task_list"
+fi
+
+# colour definitions for the output: ANSI sequences
+my_green='\033[1;32m'
+my_blue='\033[1;34m'
+my_nocol='\033[0m'
+
+help_message() {
+	echo -e "Run ${my_green}stm${my_nocol} without arguments to print the task list."
+	echo -e "Run ${my_green}stm due${my_nocol} to get only the tasks with a due date."
+	echo -e "Run ${my_green}stm edit${my_nocol} open the task list in your editor."
+	echo -e "Run ${my_green}stm list${my_nocol} <string> to only show tasks that match the string."
+	echo -e "Run ${my_green}stm omit${my_nocol} <string> to only show tasks that hide matching string."
+	echo -e "Run ${my_green}stm help${my_nocol} to get this message."
+	echo -e "The task list is stored in plain text at ${my_blue}$task_list${my_nocol}"
+	echo -e "In case you choose to edit the file, your EDITOR is ${my_blue}$EDITOR${my_nocol}"
+	echo ""
+	echo "This is stm, the Simplistic Task Manager by Protesilaos Stavrou (GPLv3)."
+	echo "My home repo: https://gitlab.com/protesilaos/dotfiles"
+	echo "Need ideas for writing good tasks?"
+	echo "See https://protesilaos.com/codelog/2019-01-22-manage-task-list/"
+}
+
+# If no arguments are supplied print the contents of the file in a more
+# readable format.
+if [ "$#" == 0 ]; then
+	echo "Viewing tasks:"
+	grep -nT '^.*' "$task_list" | \
+	fold -sw 72
+# Quickly edit the task list using the defined $EDITOR
+elif [ "$#" == 1 ] && [ "$1" == 'edit' ]; then
+	"$EDITOR" "$task_list"
+# If "help" is the first argument, print some useful text.
+elif [ "$#" == 1 ] && [ "$1" == 'help' ]; then
+	help_message
+# If "due" is the argument print only tasks with a date assigned to
+# them.
+elif [ "$#" == 1 ] && [ "$1" == 'due' ]; then
+	# TODO can sed do what the grep here does?
+	grep -e '=[0-9-]*' "$task_list" | \
+	sed --follow-symlinks 's/\(^.*\) =\([0-9-]*\)/\2: \1/g' | \
+	sort -g | \
+	fold -sw 72
+# If "list" is the first argument, require a second argument to use as
+# a search string.
+elif [ "$#" == 1 ] && [ "$1" == 'list' ]; then
+	echo "stm list needs a second argument to sort items accordingly"
+	echo "Example:"
+	echo "stm list '@myProject'"
+elif [ "$#" == 2 ] && [ "$1" == 'list' ]; then
+	echo -e "Viewing tasks that match ${my_green} $2 ${my_nocol}\n"
+	grep "$2" "$task_list" | \
+	sed --follow-symlinks "s/\(^.*\)/* \1/g" | \
+	fold -sw 72
+# If "omit" is the first argument, require a second one to use as
+# a search string.
+elif [ "$#" == 1 ] && [ "$1" == 'omit' ]; then
+	echo "stm omit needs a second argument to hide items from the list"
+	echo "Example:"
+	echo "stm omit '@myProject'"
+elif [ "$#" == 2 ] && [ "$1" == 'omit' ]; then
+	echo -e "Viewing tasks that hide match ${my_green} $2 ${my_nocol}\n"
+	grep -v "$2" "$task_list" | \
+	sed --follow-symlinks "s/\(^.*\)/* \1/g;" | \
+	fold -sw 72
+# Print the help_message if none of the above applies
+else
+	help_message
+fi

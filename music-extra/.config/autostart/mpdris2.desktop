@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Music Player Daemon
+Comment=MPRIS 2 support for MPD
+Exec=mpDris2
+Icon=audio-headphones
+StartupNotify=false
+Type=Application
+Categories=Audio;Music;Player;AudioVideo;
+NoDisplay=true
+Hidden=false
+X-DBUS-ServiceName=org.mpris.MediaPlayer2.mpd

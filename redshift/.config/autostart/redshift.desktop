@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=redshift
+NoDisplay=false
+Hidden=false
+Name[en_US]=redshift
+Comment[en_US]=Colour temperature adjustment
+# X-GNOME-Autostart-enabled=true
+# X-GNOME-Autostart-Delay=2
+OnlyShownIn=bspwm;

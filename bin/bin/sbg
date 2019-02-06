@@ -1,0 +1,60 @@
+#!/bin/bash
+
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Simple Background - sbg.  A script to set the wallpaper in my custom
+# BSPWM session, as well as supported GTK-based desktop environments.
+# This script is part of my dotfiles:
+# https://gitlab.com/protesilaos/dotfiles
+
+# TODO is "Pictures" automatically localised?
+
+sbg_do() {
+	# find the path to the input file
+	local picture="$(readlink -fn $1)"
+
+	# Make sure this is an image file
+	if [[ $picture =~ .*\.(jpg|jpeg|png) ]]; then
+		echo "This is a valid image file"
+	else
+		echo "ERROR. This is not a valid image file."
+		echo "Aborting..."
+		exit 1
+	fi
+
+	echo "Changing wallpaper to $picture"
+
+	# Copy the selected image to the home directory, as a hidden
+	# file.
+	cp -rf "$picture" "$HOME/.wallpaper.jpg"
+	if [ "$DESKTOP_SESSION" == 'bspwm' ]; then
+		feh --bg-fill "$HOME/.wallpaper.jpg"
+	elif [ "$DESKTOP_SESSION" == 'gnome' ]; then
+		gsettings set org.gnome.desktop.background picture-uri "file://$picture"
+	elif [ "$DESKTOP_SESSION" == 'mate' ]; then
+		echo "file://$picture"
+		gsettings set org.mate.background picture-filename "$picture"
+	elif [ "$DESKTOP_SESSION" == 'xfce' ]; then
+		xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$picture"
+	# Abort if the session is not known.  Print error message.
+	else
+		echo "ERROR. Unknown Desktop Session."
+		echo "Cannot set wallpaper."
+		echo "Aborting..."
+		exit 1
+	fi
+}
+
+# Run the script
+sbg_do $1

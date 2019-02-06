@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  Copyright (C) 2019 Protesilaos Stavrou
+  Author: Protesilaos Stavrou <https://protesilaos.com>
+
+  GtkSourceView is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+
+  GtkSourceView is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this library; if not, see <http://www.gnu.org/licenses/>.
+
+-->
+<style-scheme id="tempus-fugit" _name="Tempus Fugit" version="1.0">
+  <author>Protesilaos Stavrou (https://protesilaos.com)</author>
+  <_description>Light, pleasant theme optimised for long writing/coding sessions (WCAG AA compliant)</_description>
+
+  <!-- Palette -->
+  <color name="col0" value="#4d595f"/>
+  <color name="col1" value="#c61a14"/>
+  <color name="col2" value="#357200"/>
+  <color name="col3" value="#825e00"/>
+  <color name="col4" value="#1666b0"/>
+  <color name="col5" value="#a83884"/>
+  <color name="col6" value="#007072"/>
+  <color name="col7" value="#f2ebe9"/>
+  <color name="col8" value="#7b6471"/>
+  <color name="col9" value="#bd401a"/>
+  <color name="col10" value="#447720"/>
+  <color name="col11" value="#985d00"/>
+  <color name="col12" value="#485ddf"/>
+  <color name="col13" value="#a438c0"/>
+  <color name="col14" value="#00786a"/>
+  <color name="col15" value="#fff5f3"/>
+
+  <!-- Base values -->
+  <color name="colbg" value="#fff5f3"/>
+  <color name="colbgalt" value="#f2ebe9"/>
+  <color name="colbgdim" value="#f8f0ee"/>
+  <color name="colfg" value="#4d595f"/>
+  <color name="colfgalt" value="#7b6471"/>
+
+  <color name="colcr" value="#4d595f"/>
+  <!-- Global Settings -->
+  <style name="text" foreground="colfg" background="colbg"/>
+  <style name="selection" foreground="colbg" background="colfg"/>
+  <style name="cursor" foreground="colfg"/>
+  <style name="secondary-cursor" foreground="colfgalt"/>
+  <style name="current-line" background="colbgdim"/>
+  <style name="line-numbers" foreground="colfgalt" background="colbgalt"/>
+  <style name="background-pattern" background="colbgdim"/>
+
+  <!-- Bracket Matching -->
+  <style name="bracket-match" foreground="colbg" background="col13"/>
+  <style name="bracket-mismatch" foreground="colbg" background="col3"/>
+
+  <!-- Right Margin -->
+  <style name="right-margin" foreground="colfgalt" background="colbgalt"/>
+
+  <!-- Search Matching -->
+  <style name="search-match" foreground="colbg" background="col2" bold="true"/>
+
+  <!-- Comments -->
+  <style name="def:comment" foreground="colfgalt" italic="true"/>
+  <style name="def:shebang" foreground="colfgalt" bold="true" italic="true"/>
+  <style name="def:doc-comment-element" italic="true"/>
+
+  <!-- Constants -->
+  <style name="def:constant" foreground="col4"/>
+  <style name="def:special-char" foreground="col11" bold="true"/>
+
+  <!-- Identifiers -->
+  <style name="def:identifier" foreground="col13"/>
+
+  <!-- Statements -->
+  <style name="def:statement" foreground="col10" bold="true"/>
+
+  <!-- Types -->
+  <style name="def:type" foreground="col6" bold="true"/>
+
+  <!-- Operators -->
+  <style name="def:operator" foreground="colfg" bold="true"/>
+
+  <!-- Others -->
+  <style name="def:preprocessor" foreground="col9"/>
+  <style name="def:error" foreground="colbg" background="col1"/>
+  <style name="def:warning" foreground="colbg" background="col3"/>
+  <style name="def:note" foreground="col3" background="colbgalt" bold="true" italic="false"/>
+  <style name="def:underlined" italic="true" underline="single"/>
+
+  <!-- Heading styles, uncomment to enable -->
+  <!--
+  <style name="def:heading0" scale="5.0"/>
+  <style name="def:heading1" scale="2.5"/>
+  <style name="def:heading2" scale="2.0"/>
+  <style name="def:heading3" scale="1.7"/>
+  <style name="def:heading4" scale="1.5"/>
+  <style name="def:heading5" scale="1.3"/>
+  <style name="def:heading6" scale="1.2"/>
+  -->
+ 
+  <!-- Language specific styles -->
+  <style name="diff:added-line" foreground="colbg" background="col2" bold="true"/>
+  <style name="diff:removed-line" foreground="colbg" background="col1" bold="true"/>
+  <style name="diff:changed-line" use-style="def:preprocessor"/>
+  <style name="diff:special-case" use-style="def:constant"/>
+  <style name="diff:location" use-style="def:statement"/>
+  <style name="diff:diff-file" use-style="def:type"/>
+
+</style-scheme>

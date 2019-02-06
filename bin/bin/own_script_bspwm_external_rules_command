@@ -1,0 +1,44 @@
+#!/bin/bash
+
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Description {{{
+# ---------------
+#
+# This script defines conditions that alter the way `bspwm` treats
+# certain window types.
+#
+# Note that this is a very simplistic approach that may need to be
+# optimised and expanded upon.  For the time being, it "just works".
+#
+# }}}
+
+window_id="$1"
+window_class="$2"
+
+# NOTE the asterisk is a wildcard for basically making sure that all
+# dialog windows are set to a floating state regardless of what program
+# is spawning them.
+
+# TODO read the spec about window types to infer other possible rules
+# that would qualify as sound defaults.
+case "$window_class" in
+	* )
+        case "$(xprop -id "$window_id" _NET_WM_WINDOW_TYPE)" in *_NET_WM_WINDOW_TYPE_DIALOG* )
+            echo "state=floating" ;;
+        esac
+        ;;
+esac
+
+# vim:ft=sh:foldmethod=marker

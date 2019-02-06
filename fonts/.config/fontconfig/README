@@ -1,0 +1,91 @@
+About fonts distributed with my dotfiles
+========================================
+
+Contents:
+    1. About fonts.conf (only for outline fonts)
+    2. About conf.d/
+    3. About Bitmap fonts
+    4. How to use Siji
+
+Prior notes:
+    - When running `stow fonts` inside my dotfiles' root directory, you 
+      will be symlinking outline fonts at ~/.local/share/fonts/<FONT>
+    - When running `stow fonts` inside my dotfiles' root directory, you 
+      will be symlinking Bitmap fonts at ~/.local/share/fonts/bitmap
+    - Following a successful `stow fonts`, a copy of this file is 
+      available at ~/.config/fontconfig/README and 
+      ~/.local/share/fonts/README
+
+1 About fonts.conf (only for outline fonts)
+-------------------------------------------
+Default fonts are FiraGO, DejaVu Serif, Hack (alt), Noto Color Emoji.
+
+FiraGO is the continuation of Fira Sans.  It has international language 
+support.
+
+- Get it from source[1].  Only Regular, Italic, Bold, Bold Italic are 
+  bundled with my dotfiles.
+- Distributed under the terms of the SIL Open Font License Version 1.1.
+
+Hack is available in the Debian repos, but I use a patched variant
+that I prepared myself[2].
+
+- See fonts/.local/share/fonts/Hack-alt/README.md for what the patches 
+  pertain to.
+- Distributed under the terms of the MIT License to be consistent with 
+  the terms of the alternative glyphs provided by the upstream 
+  developers of Hack.
+
+The DejaVu Serif typeface should be part of a new Debian install.
+Otherwise, you can get it with:
+
+	apt install fonts-dejavu
+
+The emoji fonts needs be installed with:
+
+	apt install fonts-noto-color-emoji
+
+If you do not like FiraGO and/or Hack, comment them out in the
+fonts.conf. Then enable the currently commented out alternatives that
+belong to the DejaVu family.
+
+Note that the fonts installed locally take precedence over the ones
+on the system.  As such, my Hack alternative will be used over the
+`fonts-hack` package.  I personally do not install the Debian package, 
+just to make sure.
+
+2. About conf.d/
+----------------
+
+This directory includes rules that are meant to override the defaults
+offered by Debian.
+
+The changes I have introduced concern the approval or enablement of the
+Bitmap fonts that are distributed with my dotfiles.  There also are
+rules to unhint the Hack typeface at small sizes (makes it excellent at
+8pt).
+
+See /etc/fonts/conf.d/ to find out what the defaults are on an 
+up-to-date Debian system.  Last tested on 2018-12-18.
+
+3. About the Bitmap fonts I distribute
+--------------------------------------
+
+The Bitmap fonts bundled with my dotfiles are:
+
+    - Gohu Font (WTFPL - Do What the Fuck You Want to Public License)[3]
+    - Tamzen Font (Free license)[4]
+    - Siji Font (GPL2)[5]
+
+They are all used in my custom `lemonbar` script to draw the system 
+panel.  For that, see "melonpanel" inside my dotfiles' "bin" directory.
+
+For how to use Bitmap fonts, consider this resource on the X server's 
+demands[6].
+
+[1] https://bboxtype.com/typefaces/FiraGO/
+[2] https://github.com/source-foundry/alt-hack
+[3] http://font.gohu.org/
+[4] https://github.com/sunaku/tamzen-font
+[5] https://github.com/stark/siji
+[6] http://www.xfree86.org/4.1.0/fonts2.html

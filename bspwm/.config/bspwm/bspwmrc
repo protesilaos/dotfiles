@@ -1,0 +1,215 @@
+#!/bin/bash
+
+# Description {{{
+# ===============
+# Configuration file for the Binary Space Partitioning Window Manager.
+# This is part of my dotfiles, which are managed with GNU Stow.  See
+# https://gitlab.com/protesilaos/dotfiles
+
+# Note that the three `{` and `}` that surround comment blocks are to
+# demarcate Vim folds.  The fold method is defined in the very last line
+# of this document, the "modeline".
+
+# }}}
+
+# Per host configurations {{{
+# ============================
+
+# I deploy my dotfiles on two separate machines.  On one I often run a
+# dual monitor setup.  As such, there are some bespoke configs for each
+# host.  Settings such as workspaces [per monitor] and program-specific
+# window rules are included.
+if [ -x "$HOME/bin/own_script_bspwm_per_host_configs" ]; then
+    own_script_bspwm_per_host_configs
+else
+    # well, this message is meaningful if you already use my dotfiles...
+    notify-send "BSPWM startup" "You have not stowed the bin directory.  See https://gitlab.com/protesilaos/dotfiles."
+fi
+
+# }}}
+
+# Visual options {{{
+# ============================
+
+# window management
+# ----------------------------
+# also see `man bspc` or `man bspwm`
+bspc config border_width 2
+bspc config window_gap 8
+bspc config split_ratio 0.50
+bspc config borderless_monocle true # smart borders
+bspc config gapless_monocle true # smart gaps
+bspc config single_monocle true # smart gaps
+bspc config focus_follows_pointer false
+bspc config pointer_follows_monitor true # brings pointer to focused monitor (see workspaces)
+bspc config pointer_modifier mod1 # ALT key (see why right below)
+bspc config pointer_action1 move # alt + left-click to move node
+bspc config pointer_action2 resize_side # alt + right-click to resize node splits
+bspc config click_to_focus any # focus with any click
+bspc config swallow_first_click false # play the mouse event (e.g. right click context menu)
+bspc config initial_polarity first_child
+bspc config ignore_ewmh_focus true # prevent focus stealing
+
+# Program-specific rules (use `xprop` to find each window's specifics).
+# For special use cases, I apply "my_float_window" for programs that can
+# accept a custom name/class.  These two definitions apply a custom
+# class and name respectively.
+bspc rule -a my_float_window:* state=floating
+bspc rule -a *:my_float_window state=floating
+
+# External window rules.
+bspc config external_rules_command "$(which own_script_bspwm_external_rules_command)"
+
+# colours
+# ----------------------------
+# NOTE these are the fallback values, but not what is actually loaded
+# post-launch (see autostart for own_script_bspwm_config_post_launch)
+
+# EXPLAIN: bspwm does not read the custom colours if they are sourced
+# from another file at launch.  Instead it defaults to its own colour
+# values.  Here I set the defaults I would prefer to have, while I
+# autostart the script that sources and then applies the colours I
+# actually want.
+bspc config normal_border_color "#1a1a1a" # unfocused window
+bspc config active_border_color "#555555" # focused window, unfocused monitor
+bspc config focused_border_color "#448822" # focused window, focused monitor
+bspc config presel_feedback_color "#ccaa00" # feedback for manual node split
+
+# }}}
+
+# autostart {{{
+# ============================
+
+sxhkd &
+
+# Launch my custom lemonbar
+if [ -x $HOME/bin/melonpanel ]; then
+
+    # First inform the X server about any bitmap fonts it should include
+    # in the font path.  Needed to draw the glyphs on the melonpanel.
+    if [ -d "$HOME/.local/share/fonts/bitmap" ]; then
+        # Apped this the list
+        xset fp+ "$HOME/.local/share/fonts/bitmap"
+    fi
+
+    # Make sure we have no running instances
+    if pgrep -x melonpanel; then
+        pkill -x melonpanel
+    fi
+
+    melonpanel
+fi
+
+# display compositor
+if [ -x /usr/bin/compton ]; then
+    compton --config "$HOME/.config/compton.conf" &
+fi
+
+# start music server
+if [ -x /usr/bin/mpd ]; then
+    mpd
+fi
+
+# Start the bridge between mpd and mpris2.  Enabling the MPRIS
+# implementation allows other programs that handle multimedia to
+# interface with `mpd`.  This is the case, for example, with programs
+# such as `playerctl`, or with desktop environments that offer
+# multimedia controls in their shell (e.g.  GNOME, Cinnamon, etc.).
+#
+# See my `sxhkdrc` for the set of key bindings that handles media
+# controls in general and `mpd` in particular.
+if [ -x /usr/bin/mpDris2 ]; then
+    mpDris2 &
+fi
+
+# Run the tool that sets the wallpaper.  A program could be used that
+# handles the desktop in general, including the option to set icons.
+# But this is enough for my case.  Here is a command I tested and which
+# works (using the Xfce desktop manager):
+# xfdesktop --sm-client-disable --disable-wm-check &
+if [ -x /usr/bin/feh ]; then
+    if [ -f "$HOME/.fehbg" ]; then
+        "$HOME/.fehbg" &
+    elif [ -f "$HOME/.wallpaper.jpg" ]; then
+        feh --bg-fill "$HOME/.wallpaper.jpg" &
+    else
+        feh --bg-fill "$HOME/.bspwm_no_wallpaper_dark_gradient.png" &
+    fi
+fi
+
+# display temperature regulator
+if [ -x /usr/bin/redshift ]; then
+
+    # Kill any running instance (it is possible for redshift to spawn
+    # multiple of them when logging out/in)
+    if pgrep -x redhisft; then
+        pkill -x redshift
+    fi
+
+    # launch new instance with the given configurations
+    redshift -c "$HOME/.config/redshift.conf" &
+fi
+
+# TODO review this, as there may be an even simpler way
+# specify keyboard layout and compose key
+if [ -x /usr/bin/setxkbmap ]; then
+    setxkbmap -option compose:menu
+
+    # NOTE we can set the toggle here, but I do this via sxhkd, which
+    # allows me to run a script that does the actual layout switching.
+    # This in turn lets me output a unique identifier to a temporary
+    # file, which can then be read to determine the current keyboard
+    # layout.  That can be printed to the melonpanel.
+
+    # setxkbmap -layout 'us,gr' -option 'grp:alt_caps_toggle'
+    setxkbmap -layout 'us'
+
+    # For the key chord that performs the layout switching see my
+    # `sxhkdrc`.  The script: `own_script_current_keyboard_layout`
+fi
+
+# NOTE commented out but kept for reference.
+# # hardware enablement tool
+# if [ -x /usr/bin/xinput ]; then
+    # # `xinput list` devices
+    # # `xinput list-props` device properties
+# 
+    # # syntax is [id] [prop] [boolean]
+    # # enable touchpad tap to click
+    # # xinput set-prop 11 275 1
+    # xinput set-prop 11 277 1
+# fi
+
+# start the MATE/Xfce settings daemon to apply GTK themes to running
+# applications as well as flatpaks.
+#
+# For details, refer to the "bin" directory of my dotfiles,
+# https://gitlab.com/protesilaos/dotfiles.
+#
+# Specifically, see the `modify_running_gtk_and_flatpak` function of the
+# "own_script_update_environment_theme" script.
+#
+# Maybe also check my blog post:
+# https://protesilaos.com/codelog/bspwm-flatpak-themes/
+if [ -x /usr/bin/flatpak ]; then
+	if [ -x /usr/bin/mate-settings-daemon ]; then
+		mate-settings-daemon &
+	elif [ -x /usr/bin/xfsettingsd ]; then
+		xfsettingsd
+	fi
+fi
+
+# sets the border colours for bspwm by sourcing a file with colour
+# values
+# EXPLAIN: bspwm does not read the custom colours if they are sourced
+# from another file at launch.  Instead it defaults to its own colour
+# values.  Here I set the defaults I would prefer to have, while I
+# autostart the script that sources and then applies the colours I
+# actually want.
+if [ -x "$HOME/bin/own_script_bspwm_config_post_launch" ]; then
+    own_script_bspwm_config_post_launch
+fi
+
+# }}}
+
+# vim:ft=sh:foldmethod=marker

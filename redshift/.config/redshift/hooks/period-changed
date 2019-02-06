@@ -1,0 +1,5 @@
+#!/bin/sh
+case $1 in period-changed)
+	exec notify-send -i redshift "Screen temperature" "Period changed to $3"
+esac
+

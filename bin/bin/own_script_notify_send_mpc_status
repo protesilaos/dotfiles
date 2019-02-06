@@ -1,0 +1,52 @@
+#!/bin/bash
+
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Display the status of the Music Player Daemon.  If this script is run
+# without an argument, the notification will be sent to the desktop's
+# notification daemon using the `notify-send` command.  Else, if it is
+# run with the "cli" argument, the notification will be sent to stdout.
+#
+# Assign this executable to a key binding for your convenience.  This
+# file is part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
+#
+# Dependency for sending desktop notifications:
+# 	apt install libnotify-bin
+#
+# Optional dependency to display album art:
+# 	apt install playerctl
+
+# Fetch album art information using playerctl, if it is installed.  Else
+# display generic icon.
+if [ -x /usr/bin/playerctl ]; then
+	album_art=$(playerctl metadata 'mpris:artUrl' --player=mpd | sed 's,file://,,')
+else
+	# else use the "rhythmbox" icon from the available icon theme
+	album_art='rhythmbox'
+fi
+
+# This script accepts "cli" as a single argument, in which case it
+# prints the notification to the terminal (stdout).  Otherwise it sends
+# a desktop notification (if the dependency is already installed).
+if [[ "$1" == "cli" ]]; then
+	echo -e "$(mpc --format '%artist% - %title%\\n%album% (%date%)' current)"\\n"Album art: $album_art"
+else
+	if [ -x /usr/bin/notify-send ]; then
+		notify-send -i "$album_art" "Now Playing" "$(mpc --format '%artist% - %title%\\n%album% (%date%)' current)"
+	else
+		echo -e "ERROR. Missing dependency 'libnotify-bin'.\
+		\\nThis is the package that provides the 'notify-send' command.\
+		\\nCannot send message to the notification daemon without it."
+	fi
+fi

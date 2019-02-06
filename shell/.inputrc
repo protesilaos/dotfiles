@@ -1,0 +1,16 @@
+# Reduce tab completion key presses and show suggestions
+set show-all-if-ambiguous on
+# Color files by types
+set colored-stats On
+# Append char to indicate type
+set visible-stats On
+# Mark symlinked directories
+set mark-symlinked-directories On
+# Color the common prefix
+set colored-completion-prefix On
+# Color the common prefix in menu-complete
+set menu-complete-display-prefix On
+
+# Fixes issues with some keys on `st`
+# As per the Arch Wiki
+set enable-keypad on

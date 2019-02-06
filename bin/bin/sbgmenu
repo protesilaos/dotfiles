@@ -1,0 +1,103 @@
+#!/bin/bash
+
+    # This program is free software: you can redistribute it and/or modify
+    # it under the terms of the GNU General Public License as published by
+    # the Free Software Foundation, either version 3 of the License, or
+    # (at your option) any later version.
+
+    # This program is distributed in the hope that it will be useful,
+    # but WITHOUT ANY WARRANTY; without even the implied warranty of
+    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    # GNU General Public License for more details.
+
+    # You should have received a copy of the GNU General Public License
+    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Simple Background Menu: sbgmenu is a dmenu interface for viewing
+# images and/or selecting a new wallpaper from the user's "Pictures"
+# directory.  This script is part of my dotfiles and is primarily
+# intended for use in my custom BSPWM session:
+# https://gitlab.com/protesilaos/dotfiles
+#
+# Dependencies on Debian Buster:
+# 	apt install feh suckless-tools
+#
+# Assign this script to a key binding for your convenience.
+
+# TODO is "Pictures" automatically localised?
+# TODO consider adding notify-send actions
+
+# pass custom colours to dmenu command
+source "$HOME/.my_colours/active-tempus-theme.sh"
+
+# get the system-wide custom font
+source "$HOME/.my_custom_ui_font.sh"
+
+# the customised `dmenu` command.  Accepts the prompt's text as the
+# first argument and the height as a second.  If the latter is not
+# defined, then dmenu displays options horizontally.
+my_dmenu() {
+	local prompt="$1"
+	local height="$2"
+
+	if [ -n "$2" ]; then
+		dmenu -i -p "$prompt" -nb "$background" -nf "$foreground" \
+		-sb "$color13" -sf "$background" -fn "$my_custom_ui_font" -l "$2"
+	else
+		dmenu -i -p "$prompt" -nb "$background" -nf "$foreground" \
+		-sb "$color13" -sf "$background" -fn "$my_custom_ui_font"
+	fi
+}
+
+# Here we ask the user whether they want to just view the selected
+# image, or set it as the new wallpaper.
+sbgmenu_mode="$(echo -e 'View images\nSet desktop wallpaper' | my_dmenu 'Choose the sbgmenu mode')"
+
+# Get image files that end in .{jpg,jpeg,png} from ~/Pictures and
+# present them as dmenu items.
+my_pictures() {
+	find "$HOME/Pictures" -type f \( -iname '*.jpg' -o -iname '*.jpeg' \
+	-o -iname '*.png' \) | my_dmenu "$1" "$2"
+}
+
+# Act depending on the mode of action.
+sbgmenu_action() {
+	# If the option is to view an image, use the default image viewer
+	# (user defined).
+	if [ "$sbgmenu_mode" == 'View images' ]; then
+		sbgmenu_output="$(my_pictures 'View selected picture' 10)"
+		echo "Opening file"
+		mimeopen "$sbgmenu_output"
+	# If the decision is to set a wallpaper, prepare the relevant
+	# command based on the running session.  Note that the bspwm session
+	# is not standardised.  Using `feh` is my way of doing things.
+	elif [ "$sbgmenu_mode" == 'Set desktop wallpaper' ]; then
+		sbgmenu_output="$(my_pictures 'Set new desktop wallpaper' 10)"
+		echo "Changing wallpaper"
+
+		# Copy the selected image to the home directory, as a hidden
+		# file.
+		cp -f "$sbgmenu_output" "$HOME/.wallpaper.jpg"
+		if [ "$DESKTOP_SESSION" == 'bspwm' ]; then
+			feh --bg-fill "$HOME/.wallpaper.jpg"
+		elif [ "$DESKTOP_SESSION" == 'gnome' ]; then
+			gsettings set org.gnome.desktop.background picture-uri "file://$sbgmenu_output"
+		elif [ "$DESKTOP_SESSION" == 'mate' ]; then
+			gsettings set org.mate.background picture-filename "$sbgmenu_output"
+		elif [ "$DESKTOP_SESSION" == 'xfce' ]; then
+			xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$sbgmenu_output"
+		# Abort if the session is not known.  Print error message.
+		else
+			echo "ERROR. Unknown Desktop Session."
+			echo "Cannot set wallpaper."
+			echo "Aborting..."
+			exit 1
+		fi
+	# If neither of the available modes is selected, abort sbgmenu
+	else
+		exit 1
+	fi
+}
+
+# Run the script
+sbgmenu_action
