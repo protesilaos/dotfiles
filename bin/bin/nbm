@@ -30,6 +30,9 @@
 # Dependencies on Debian Buster:
 # 	apt install feh suckless-tools sxiv
 #
+# Optional dependency (binary is fdfind):
+# 	apt install fd-find
+#
 # Assign this script to a key binding for your convenience.
 #
 # TODO is "Pictures" automatically localised?
@@ -54,7 +57,11 @@ my_sxiv() {
 
 # Get image files that end in .{jpg,jpeg,png} from ~/Pictures.
 find_pictures() {
-	find $HOME/Pictures -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \)
+	if [ -x /usr/bin/fdfind ]; then
+		fdfind 'jpg|jpeg|png' "$HOME/Pictures/"
+	else
+		find "$HOME/Pictures" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \)
+	fi
 }
 
 # Abort if find returns no results.  Else keep on with the script.
