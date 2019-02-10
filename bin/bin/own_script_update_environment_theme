@@ -127,7 +127,7 @@ modify_wallpaper() {
 # ------------------
 
 # Optional dependencies:
-#   sudo apt install arc-theme papirus-icon-theme
+#   sudo apt install materia-gtk-theme papirus-icon-theme
 #
 # NOTE that I use my custom working environment in tandem with a
 # fallback Desktop Environment, typically MATE or Xfce.  I do that to
@@ -138,53 +138,65 @@ modify_wallpaper() {
 # Modify gtk{2,3} themes.
 modify_gtk2() {
 	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-        if [ -d /usr/share/themes/Arc ]; then
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Arc\"/g" "$HOME"/.gtkrc-2.0
+
+        if [ -d /usr/share/themes/Materia-light-compact ]; then
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Materia-light-compact\"/g" "$HOME"/.gtkrc-2.0
 		else
 			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Adwaita\"/g" "$HOME"/.gtkrc-2.0
 		fi
+
         if [ -d /usr/share/icons/Papirus ]; then
             sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Papirus\"/g" "$HOME"/.gtkrc-2.0
         else
             sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Adwaita\"/g" "$HOME"/.gtkrc-2.0
         fi
+
 	else
-        if [ -d /usr/share/themes/Arc-Dark ]; then
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Arc-Dark\"/g" "$HOME"/.gtkrc-2.0
+
+        if [ -d /usr/share/themes/Materia-dark-compact ]; then
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Materia-dark-compact\"/g" "$HOME"/.gtkrc-2.0
 		else
 			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Adwaita-dark\"/g" "$HOME"/.gtkrc-2.0
 		fi
+
         if [ -d /usr/share/icons/Papirus-Dark ]; then
             sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Papirus-Dark\"/g" "$HOME"/.gtkrc-2.0
         else
             sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Adwaita\"/g" "$HOME"/.gtkrc-2.0
         fi
+
 	fi
 }
 
 modify_gtk3() {
 	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-        if [ -d /usr/share/themes/Arc ]; then
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Arc/g" "$HOME"/.config/gtk-3.0/settings.ini
+
+        if [ -d /usr/share/themes/Materia-light-compact ]; then
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Materia-light-compact/g" "$HOME"/.config/gtk-3.0/settings.ini
 		else
 			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Adwaita/g" "$HOME"/.config/gtk-3.0/settings.ini
 		fi
+
         if [ -d /usr/share/icons/Papirus ]; then
             sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Papirus/g" "$HOME"/.config/gtk-3.0/settings.ini
         else
             sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Adwaita/g" "$HOME"/.config/gtk-3.0/settings.ini
         fi
+
 	else
-        if [ -d /usr/share/themes/Arc-Dark ]; then
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Arc-Dark/g" "$HOME"/.config/gtk-3.0/settings.ini
+
+        if [ -d /usr/share/themes/Materia-dark-compact ]; then
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Materia-dark-compact/g" "$HOME"/.config/gtk-3.0/settings.ini
 		else
 			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Adwaita-dark/g" "$HOME"/.config/gtk-3.0/settings.ini
 		fi
+
         if [ -d /usr/share/icons/Papirus-Dark ]; then
             sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Papirus-Dark/g" "$HOME"/.config/gtk-3.0/settings.ini
         else
             sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Adwaita/g" "$HOME"/.config/gtk-3.0/settings.ini
         fi
+
 	fi
 }
 
@@ -506,37 +518,44 @@ modify_gnome() {
 # ----------------------------
 
 # Optional dependencies:
-# 	sudo apt install arc-theme papirus-icon-theme
+# 	sudo apt install materia-gtk-theme papirus-icon-theme
 #
 # update MATE settings
 modify_mate() {
 	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-		if [ -d /usr/share/themes/Arc ]; then
-			gsettings set org.mate.interface gtk-theme 'Arc'
-			gsettings set org.mate.Marco.general theme 'Arc'
+
+		if [ -d /usr/share/themes/Materia-light ]; then
+			gsettings set org.mate.interface gtk-theme 'Materia-light-compact'
+			gsettings set org.mate.Marco.general theme 'Materia-light-compact'
 		else
 			gsettings set org.mate.interface gtk-theme 'Adwaita' # TODO what is the MATE default?
 			gsettings set org.mate.Marco.general theme 'Adwaita' # TODO what is the MATE default?
 		fi
+
 		if [ -d /usr/share/icons/Papirus ]; then
 			gsettings set org.mate.interface icon-theme 'Papirus'
 		else
 			gsettings set org.mate.interface icon-theme 'Adwaita' # TODO what is the MATE default?
 		fi
+
 		gsettings set org.mate.background picture-filename "$HOME/Pictures/theme/light.jpg"
+
 	else
-		if [ -d /usr/share/themes/Arc-Dark ]; then
-			gsettings set org.mate.interface gtk-theme 'Arc-Dark'
-			gsettings set org.mate.Marco.general theme 'Arc-Dark'
+
+		if [ -d /usr/share/themes/Materia-dark-compact ]; then
+			gsettings set org.mate.interface gtk-theme 'Materia-dark-compact'
+			gsettings set org.mate.Marco.general theme 'Materia-dark-compact'
 		else
 			gsettings set org.mate.interface gtk-theme 'Adwaita-dark' # TODO what is the MATE default?
 			gsettings set org.mate.Marco.general theme 'Adwaita-dark' # TODO what is the MATE default?
 		fi
+
 		if [ -d /usr/share/icons/Papirus-Dark ]; then
 			gsettings set org.mate.interface icon-theme 'Papirus-Dark'
 		else
 			gsettings set org.mate.interface icon-theme 'Adwaita' # TODO what is the MATE default?
 		fi
+
 		gsettings set org.mate.background picture-filename "$HOME/Pictures/theme/dark.jpg"
 
 	fi
@@ -572,7 +591,7 @@ modify_xfce() {
 # ----------------------------
 
 # Optional dependencies:
-# 	sudo apt install arc-theme papirus-icon-theme
+# 	sudo apt install materia-gtk-theme papirus-icon-theme
 #
 # NOTE this function is not used inside a GNOME/MATE session.  Its
 # purpose is two-fold:
@@ -582,27 +601,33 @@ modify_xfce() {
 #    `modify_running_gtk_and_flatpak`.
 modify_gsettings_without_de() {
     if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-		if [ -d /usr/share/themes/Arc ]; then
-			gsettings set org.mate.interface gtk-theme 'Arc'
+
+		if [ -d /usr/share/themes/Materia-light-compact ]; then
+			gsettings set org.mate.interface gtk-theme 'Materia-light-compact'
 		else
 			gsettings set org.mate.interface gtk-theme 'Adwaita' # TODO what is the MATE default?
 		fi
+
 		if [ -d /usr/share/icons/Papirus ]; then
 			gsettings set org.mate.interface icon-theme 'Papirus'
 		else
 			gsettings set org.mate.interface icon-theme 'Adwaita' # TODO what is the MATE default?
 		fi
+
     else
-		if [ -d /usr/share/themes/Arc-Dark ]; then
-			gsettings set org.mate.interface gtk-theme 'Arc-Dark'
+
+		if [ -d /usr/share/themes/Materia-dark-compact ]; then
+			gsettings set org.mate.interface gtk-theme 'Materia-dark-compact'
 		else
 			gsettings set org.mate.interface gtk-theme 'Adwaita-dark' # TODO what is the MATE default?
 		fi
+
 		if [ -d /usr/share/icons/Papirus-Dark ]; then
 			gsettings set org.mate.interface icon-theme 'Papirus-Dark'
 		else
 			gsettings set org.mate.interface icon-theme 'Adwaita' # TODO what is the MATE default?
 		fi
+
     fi
 }
 
@@ -679,9 +704,12 @@ modify_xfconf_without_xfce() {
 #
 # flatpak remote-ls | grep 'org.gtk.Gtk3theme'
 #
-# EXAMPLE to install Arc:
+# EXAMPLE to install Materia:
 #
-# flatpak install flathub org.gtk.Gtk3theme.Arc org.gtk.Gtk3theme.Arc-Darker org.gtk.Gtk3theme.Arc-Dark
+# flatpak install flathub org.gtk.Gtk3theme.Materia \
+# org.gtk.Gtk3theme.Materia-compact org.gtk.Gtk3theme.Materia-light \
+# org.gtk.Gtk3theme.Materia-light-compact org.gtk.Gtk3theme.Materia-dark \
+# org.gtk.Gtk3theme.Materia-dark-compact
 #
 # I wrote a short article about this in my coding blog:
 # https://protesilaos.com/codelog/bspwm-flatpak-themes/
