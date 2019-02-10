@@ -490,10 +490,10 @@ melonpanel() {
         esac
         local laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
         if [ -n "$laptop_external_monitor" ]; then
-            printf "%s%s\n" "%{Sf}%{l}${wm}${mus}%{r}${bat} ${vol} ${net} ${date} ${clock} "\
-            "%{Sf}%{l}${wm}${mus}%{r}${bat} ${vol} ${net} ${date} ${clock} "
+            printf "%s%s\n" "%{Sf}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} ${clock} "\
+            "%{Sl}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} ${clock} "
         else
-            printf "%s\n" "%{Sf}%{l}${wm}${mus}%{r}${bat} ${vol} ${net} ${date} ${clock} "
+            printf "%s\n" "%{Sf}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} ${clock} "
         fi
     done
 }
