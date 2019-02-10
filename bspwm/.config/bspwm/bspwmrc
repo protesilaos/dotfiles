@@ -2,14 +2,11 @@
 
 # Description {{{
 # ===============
+#
 # Configuration file for the Binary Space Partitioning Window Manager.
 # This is part of my dotfiles, which are managed with GNU Stow.  See
 # https://gitlab.com/protesilaos/dotfiles
-
-# Note that the three `{` and `}` that surround comment blocks are to
-# demarcate Vim folds.  The fold method is defined in the very last line
-# of this document, the "modeline".
-
+#
 # }}}
 
 # Per host configurations {{{
@@ -22,7 +19,8 @@
 if [ -x "$HOME/bin/own_script_bspwm_per_host_configs" ]; then
     own_script_bspwm_per_host_configs
 else
-    # well, this message is meaningful if you already use my dotfiles...
+	# well, this message is not meaningful if you already use my
+	# dotfiles...
     notify-send "BSPWM startup" "You have not stowed the bin directory.  See https://gitlab.com/protesilaos/dotfiles."
 fi
 
@@ -37,9 +35,9 @@ fi
 bspc config border_width 2
 bspc config window_gap 8
 bspc config split_ratio 0.50
+bspc config single_monocle true # smart borders
 bspc config borderless_monocle true # smart borders
-bspc config gapless_monocle true # smart gaps
-bspc config single_monocle true # smart gaps
+bspc config gapless_monocle false # use "true" for smart gaps
 bspc config focus_follows_pointer false
 bspc config pointer_follows_monitor true # brings pointer to focused monitor (see workspaces)
 bspc config pointer_modifier mod1 # ALT key (see why right below)
@@ -78,11 +76,13 @@ bspc config presel_feedback_color "#ccaa00" # feedback for manual node split
 # }}}
 
 # autostart {{{
-# ============================
+# =============
 
+# The hotkey daemon that handles all custom key bindings, including the
+# ones that control BSPWM
 sxhkd &
 
-# Launch my custom lemonbar
+# Launch my custom Lemonbar implementation
 if [ -x $HOME/bin/melonpanel ]; then
 
     # First inform the X server about any bitmap fonts it should include
@@ -100,7 +100,8 @@ if [ -x $HOME/bin/melonpanel ]; then
     melonpanel
 fi
 
-# display compositor
+# display compositor for shadow effects and background blur behind
+# transparent elements
 if [ -x /usr/bin/compton ]; then
     compton --config "$HOME/.config/compton.conf" &
 fi
@@ -167,18 +168,6 @@ if [ -x /usr/bin/setxkbmap ]; then
     # For the key chord that performs the layout switching see my
     # `sxhkdrc`.  The script: `own_script_current_keyboard_layout`
 fi
-
-# NOTE commented out but kept for reference.
-# # hardware enablement tool
-# if [ -x /usr/bin/xinput ]; then
-    # # `xinput list` devices
-    # # `xinput list-props` device properties
-# 
-    # # syntax is [id] [prop] [boolean]
-    # # enable touchpad tap to click
-    # # xinput set-prop 11 275 1
-    # xinput set-prop 11 277 1
-# fi
 
 # start the MATE/Xfce settings daemon to apply GTK themes to running
 # applications as well as flatpaks.
