@@ -50,20 +50,27 @@ monitor_count=$(bspc query -M | wc -l)
 # applies to my desktop computer.  It also is true for my laptop on
 # occasions where no external monitor is connected.
 function bspwm_generic_workspaces() {
-    # all workspaces on the primary monitor
-    bspc monitor -d 1 2 3 4 5 6
+	# all workspaces on the primary monitor
+	bspc monitor -d 1 2 3 4 5 6
 }
 
 # These apply to my laptop when an external monitor is connected.
 function bspwm_laptop_dual_monitor() {
-    # run the script that adds the appropriate `xrandr` settings
-    if [ -x "$HOME/bin/own_script_laptop_dual_monitor" ]; then
-        own_script_laptop_dual_monitor
-    fi
+	# run the script that adds the appropriate `xrandr` settings
+	if [ -x "$HOME/bin/own_script_laptop_dual_monitor" ]; then
+		own_script_laptop_dual_monitor
+	fi
 
-    # set the workspaces per monitor
-    bspc monitor LVDS1 -d 1 2 3
-    bspc monitor VGA1 -d 4 5 6
+	# set the workspaces per monitor
+	bspc monitor VGA1 -d 1 2 3
+	bspc monitor LVDS1 -d 4 5 6
+
+	# Add padding to fix issue where there is an overlap between panel
+	# and windows in LVDS1.  The panel gets covered by the windows.
+	#
+	# NOTE the value is equal to the size of the panel (lemonbar), as
+	# defined in my melonpanel script.
+	bspc config top_padding 18
 }
 
 # Run commands depending on the host computer.

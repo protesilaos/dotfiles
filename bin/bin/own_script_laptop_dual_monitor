@@ -76,7 +76,11 @@ my_laptop_external_monitor=$(xrandr --query | grep 'VGA1 connected')
 # another machine, say, another laptop that uses an HDMI connection
 # instead.
 if [ -n "$my_laptop_external_monitor" ]; then
-    xrandr --output LVDS1 --primary --mode 1366x768 --rotate normal --output VGA1 --mode 1920x1080 --rotate normal --right-of LVDS1
+	xrandr --output VGA1 --primary --mode 1920x1080 --pos 0x0 --rotate normal \
+	--output LVDS1 --mode 1366x768 --pos 0x1080 --rotate normal
+	#### TODO create a couple of functions to support both layouts (the
+	#### one above and the one below)
+	####xrandr --output LVDS1 --primary --mode 1366x768 --rotate normal --output VGA1 --mode 1920x1080 --rotate normal --right-of LVDS1
 else
     xrandr --output LVDS1 --mode 1366x768
 fi
