@@ -49,13 +49,13 @@ monitor_count=$(bspc query -M | wc -l)
 # These should be applied if only one monitor is available.  This always
 # applies to my desktop computer.  It also is true for my laptop on
 # occasions where no external monitor is connected.
-function bspwm_generic_workspaces() {
+bspwm_generic_workspaces() {
 	# all workspaces on the primary monitor
 	bspc monitor -d 1 2 3 4 5 6
 }
 
 # These apply to my laptop when an external monitor is connected.
-function bspwm_laptop_dual_monitor() {
+bspwm_laptop_dual_monitor() {
 	# run the script that adds the appropriate `xrandr` settings
 	if [ -x "$HOME/bin/own_script_laptop_dual_monitor" ]; then
 		own_script_laptop_dual_monitor
@@ -76,13 +76,22 @@ function bspwm_laptop_dual_monitor() {
 # Run commands depending on the host computer.
 # TODO any better to write this by not repeating the 'generic' call?
 if [[ $(hostname) == "$my_laptop_hostname" ]]; then
+	echo "You are on $my_laptop_hostname"
+
     # Is an external monitor connected to my laptop?
     if [[ "$monitor_count" == 2 ]]; then
+		echo "Monitor count is equal to 2"
+
+		echo "Defining per-monitor workspaces"
         bspwm_laptop_dual_monitor
     else
         bspwm_generic_workspaces
     fi
+
 else
+	echo "You are not on $my_laptop_hostname"
+	echo "Defaulting to generic workspace configurations"
+
     bspwm_generic_workspaces
 fi
 
