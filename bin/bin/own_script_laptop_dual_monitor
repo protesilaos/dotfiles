@@ -73,7 +73,7 @@ laptop_coordinates() {
 }
 
 laptop_brightness() {
-	xrandr --output LVDS1 --brightness 0.9 --gamma 0.75:0.78:0.65
+	xrandr --output LVDS1 --brightness 0.9 --gamma 0.66:0.65:0.58
 }
 
 multihead_coordinates() {
@@ -105,6 +105,9 @@ multihead_brightness() {
 configure_displays() {
 	local my_laptop_external_monitor=$(xrandr --query | grep 'VGA1 connected')
 
+	# We check for DESKTOP_SESSION to make sure the brightness/gamma
+	# settings are not executed in places such as the lightdm login
+	# screen.
 	if [ -n "$my_laptop_external_monitor" ] && [ $DESKTOP_SESSION == 'bspwm' ]; then
 		multihead_coordinates
 		multihead_brightness
