@@ -77,14 +77,16 @@ COLOR_DEFAULT_FG="$foreground"
 COLOR_DEFAULT_BG="$background"
 COLOR_MONITOR_FG="$foregroundalt"
 COLOR_MONITOR_BG="$background"
-COLOR_FOCUSED_MONITOR_FG="$foreground"
-COLOR_FOCUSED_MONITOR_BG="$backgroundalt"
+COLOR_FOCUSED_MONITOR_FG="$backgroundalt"
+COLOR_FOCUSED_MONITOR_BG="$color6"
 COLOR_FREE_FG="$foregroundalt"
 COLOR_FREE_BG="$background"
 COLOR_FOCUSED_FREE_FG="$background"
 COLOR_FOCUSED_FREE_BG="$color2"
 COLOR_OCCUPIED_FG="$color6"
 COLOR_OCCUPIED_BG="$backgroundalt"
+COLOR_ACTIVE_OCCUPIED_FG="$background"
+COLOR_ACTIVE_OCCUPIED_BG="$color4"
 COLOR_FOCUSED_OCCUPIED_FG="$background"
 COLOR_FOCUSED_OCCUPIED_BG="$color6"
 COLOR_URGENT_FG="$background"
@@ -437,8 +439,8 @@ melonpanel() {
                                         BG=$COLOR_FOCUSED_OCCUPIED_BG
                                     else
                                         # active occupied desktop
-                                        FG=$COLOR_OCCUPIED_FG
-                                        BG=$COLOR_OCCUPIED_BG
+                                        FG=$COLOR_ACTIVE_OCCUPIED_FG
+                                        BG=$COLOR_ACTIVE_OCCUPIED_BG
                                     fi
                                     ;;
                                 u*)
