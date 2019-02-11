@@ -33,7 +33,7 @@
 # This script is part of my custom desktop session.  For more, see my
 # dotfiles https://gitlab.com/protesilaos/dotfiles.
 #
-# Last reviewed on 2019-02-10
+# Last reviewed on 2019-02-11
 #
 # }}}
 
@@ -63,25 +63,62 @@
 #
 # }}}
 
-my_laptop_external_monitor=$(xrandr --query | grep 'VGA1 connected')
+# XrandR functions {{{
+# --------------------
+# XXX NOTE XXX These will have no permanent effect if another program
+# adjusts the screen's colours and brightness, such as `redshift`.
+
+laptop_coordinates() {
+	xrandr --output LVDS1 --mode 1366x768 --pos 0x1080
+}
+
+laptop_brightness() {
+	xrandr --output LVDS1 --brightness 0.9 --gamma 0.75:0.78:0.65
+}
+
+multihead_coordinates() {
+	echo "Configuring VGA1 + LVDS1 XrandR coordinates"
+	xrandr --output VGA1 --primary --mode 1920x1080 --pos 0x0
+	laptop_coordinates
+}
+
+multihead_brightness() {
+	echo "Configuring VGA1 + LVDS1 XrandR properties"
+	xrandr --output VGA1 --brightness 1 --gamma 1:1:1
+	laptop_brightness
+}
+
+# }}}
+
+# Conditions for running this script {{{
+# --------------------------------------
 
 # If the VGA1 port connects to a monitor, the output of the variable
 # will not be empty.  In which case it is assumed that I am using my
-# secondary display, whose resolution I know in advance.  If the
-# variable is empty, then no external monitor is connected.
+# external display, whose resolution I know in advance.  If the variable
+# is empty, then no external monitor is connected.
 #
 # This is a simplistic approach which will not work if the external
 # monitor has another resolution.  It will also fail if executed from
 # another machine, say, another laptop that uses an HDMI connection
 # instead.
-if [ -n "$my_laptop_external_monitor" ]; then
-	xrandr --output VGA1 --primary --mode 1920x1080 --dpi 96 --pos 0x0 --rotate normal \
-	--output LVDS1 --mode 1366x768 --dpi 96 --pos 0x1080 --rotate normal
-	#### TODO create a couple of functions to support both layouts (the
-	#### one above and the one below)
-	####xrandr --output LVDS1 --primary --mode 1366x768 --rotate normal --output VGA1 --mode 1920x1080 --rotate normal --right-of LVDS1
-else
-    xrandr --output LVDS1 --mode 1366x768 --dpi 96
-fi
+configure_displays() {
+	local my_laptop_external_monitor=$(xrandr --query | grep 'VGA1 connected')
+
+	if [ -n "$my_laptop_external_monitor" ] && [ $DESKTOP_SESSION == 'bspwm' ]; then
+		multihead_coordinates
+		multihead_brightness
+	elif [ -n "$my_laptop_external_monitor" ]; then
+		multihead_coordinates
+	else
+		echo "Configuring LVDS1 XrandR settings"
+		laptop_coordinates
+		laptop_brightness
+	fi
+}
+
+# }}}
+
+configure_displays
 
 # vi:foldmethod=marker
