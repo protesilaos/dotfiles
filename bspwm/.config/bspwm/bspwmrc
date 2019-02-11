@@ -9,28 +9,11 @@
 #
 # }}}
 
-# Per host configurations {{{
-# ============================
-
-# I deploy my dotfiles on two separate machines.  On one I often run a
-# dual monitor setup.  As such, there are some bespoke configs for each
-# host.  Settings such as workspaces [per monitor] and program-specific
-# window rules are included.
-if [ -x "$HOME/bin/own_script_bspwm_per_host_configs" ]; then
-    own_script_bspwm_per_host_configs
-else
-	# well, this message is not meaningful if you already use my
-	# dotfiles...
-    notify-send "BSPWM startup" "You have not stowed the bin directory.  See https://gitlab.com/protesilaos/dotfiles."
-fi
-
-# }}}
-
 # Visual options {{{
-# ============================
+# ==================
 
 # window management
-# ----------------------------
+# -----------------
 # also see `man bspc` or `man bspwm`
 bspc config border_width 2
 bspc config window_gap 8
@@ -59,7 +42,7 @@ bspc rule -a *:my_float_window state=floating
 bspc config external_rules_command "$(which own_script_bspwm_external_rules_command)"
 
 # colours
-# ----------------------------
+# -------
 # NOTE these are the fallback values, but not what is actually loaded
 # post-launch (see autostart for own_script_bspwm_config_post_launch)
 
@@ -138,19 +121,6 @@ if [ -x /usr/bin/feh ]; then
     fi
 fi
 
-# display temperature regulator
-if [ -x /usr/bin/redshift ]; then
-
-    # Kill any running instance (it is possible for redshift to spawn
-    # multiple of them when logging out/in)
-    if pgrep -x redhisft; then
-        pkill -x redshift
-    fi
-
-    # launch new instance with the given configurations
-    redshift -c "$HOME/.config/redshift.conf" &
-fi
-
 # TODO review this, as there may be an even simpler way
 # specify keyboard layout and compose key
 if [ -x /usr/bin/setxkbmap ]; then
@@ -197,6 +167,19 @@ fi
 # actually want.
 if [ -x "$HOME/bin/own_script_bspwm_config_post_launch" ]; then
     own_script_bspwm_config_post_launch
+fi
+
+# }}}
+
+# Per host configurations {{{
+# ===========================
+
+# I deploy my dotfiles on two separate machines.  On one I often run a
+# dual monitor setup.  As such, there are some bespoke configs for each
+# host.  Settings such as workspaces [per monitor] and program-specific
+# window rules are included.
+if [ -x "$HOME/bin/own_script_bspwm_per_host_configs" ]; then
+    own_script_bspwm_per_host_configs
 fi
 
 # }}}
