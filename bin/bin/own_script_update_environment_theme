@@ -290,7 +290,7 @@ modify_st() {
     if [ -x "$HOME"/bin/st ]; then
         echo "Recompiling st - suckless terminal"
         notify-send -i terminal "Environment theme" "Recompiling st"
-        sed --follow-symlinks -i -e "s/_[a-z]*\\./_$tempus_scheme./g" "$HOME"/st/themes/active-tempus-theme.h
+        sed --follow-symlinks -i -e "s/_[a-z]*\\./_$tempus_scheme./g" "$HOME"/st/active-tempus-theme.h
         # TODO this `cd` will cause problems if it fails to execute
         # properly.  Add some conditional logic.
         cd "$HOME"/dotfiles/st/st
