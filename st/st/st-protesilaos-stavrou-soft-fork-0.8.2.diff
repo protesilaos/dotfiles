@@ -29,7 +29,7 @@ diff -up /home/prot/st-0.8.2-upstream/config.def.h /home/prot/st-0.8.2-prot-soft
   */
 -static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
 -static int borderpx = 2;
-+static char *font = "monospace:size=10";
++static char *font = "monospace:size=9.5";
 +static int borderpx = 0;
  
  /*

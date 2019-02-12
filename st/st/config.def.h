@@ -22,7 +22,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "monospace:size=10";
+static char *font = "monospace:size=9.5";
 static int borderpx = 0;
 
 /*
