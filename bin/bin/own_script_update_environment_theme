@@ -371,27 +371,6 @@ modify_less_manpages() {
 
 # }}}
 
-# Set ranger theme {{{
-# --------------------
-
-# dependency:
-#   sudo apt install ranger
-#
-# Switch `ranger` theme to light or dark depending on the argument
-# passed to this script.  The theme files for `ranger` are included with
-# my dotfiles and should be in place if you run `stow cli-tools`.
-modify_ranger() {
-    if [ -x /usr/bin/ranger ]; then
-        if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-            sed --follow-symlinks -i -e "s/set colorscheme [a-z_-]*/set colorscheme tempus_theme_light/g" "$HOME"/.config/ranger/rc.conf
-        else
-            sed --follow-symlinks -i -e "s/set colorscheme [a-z_-]*/set colorscheme tempus_theme_dark/g" "$HOME"/.config/ranger/rc.conf
-        fi
-    fi
-}
-
-# }}}
-
 # Set newsboat theme {{{
 # ----------------------
 
@@ -496,8 +475,8 @@ modify_dunst() {
 
 # }}}
 
-# Configure GNOME settings {{{
-# ----------------------------
+# Set GNOME theme {{{
+# -------------------
 
 # update GNOME settings
 # TODO how to change gnome terminal profile, assuming the presence of
@@ -514,8 +493,8 @@ modify_gnome() {
 
 # }}}
 
-# Configure MATE settings {{{
-# ----------------------------
+# Set MATE theme {{{
+# ------------------
 
 # Optional dependencies:
 # 	sudo apt install materia-gtk-theme papirus-icon-theme
@@ -563,8 +542,8 @@ modify_mate() {
 
 # }}}
 
-# Configure Xfce settings {{{
-# ---------------------------
+# Set Xfce theme {{{
+# ------------------
 
 # update Xfce settings
 modify_xfce() {
@@ -656,32 +635,6 @@ modify_xfconf_without_xfce() {
 
 # }}}
 
-# Set xfce4-terminal colours {{{
-# ------------------------------
-
-# DEPRECATED.  This function is not actually being called because I
-# decided to stick with `st` as my default terminal emulator.  It is
-# kept here in case a future need arises.
-
-# # these variables are sourced from a file that provides the colour
-# # values to the shell environment
-# # see function: modify_shell_theme
-# modify_xfce_terminal() {
-    # if [ -x /usr/bin/xfce4-terminal ]; then
-        # xfce4_terminal_palette="$color0;$color1;$color2;$color3;$color4;$color5;$color6;$color7;$color8;$color9;$color10;$color11;$color12;$color13;$color14;$color15"
-# 
-        # sed --follow-symlinks -i -e "s/ColorPalette=[#;0-9a-fA-F]*/ColorPalette=$xfce4_terminal_palette/g" "$HOME"/.config/xfce4/terminal/terminalrc
-        # sed --follow-symlinks -i -e "s/ColorForeground=\#[0-9a-fA-F]*/ColorForeground=$foreground/g" "$HOME"/.config/xfce4/terminal/terminalrc
-        # sed --follow-symlinks -i -e "s/ColorBackground=\#[0-9a-fA-F]*/ColorBackground=$background/g" "$HOME"/.config/xfce4/terminal/terminalrc
-        # sed --follow-symlinks -i -e "s/ColorCursor=\#[0-9a-fA-F]*/ColorCursor=$cursorColor/g" "$HOME"/.config/xfce4/terminal/terminalrc
-        # sed --follow-symlinks -i -e "s/ColorSelection=\#[0-9a-fA-F]*/ColorSelection=$background/g" "$HOME"/.config/xfce4/terminal/terminalrc
-        # sed --follow-symlinks -i -e "s/ColorSelectionBackground=\#[0-9a-fA-F]*/ColorSelectionBackground=$foreground/g" "$HOME"/.config/xfce4/terminal/terminalrc
-        # sed --follow-symlinks -i -e "s/ColorBold=\#[0-9a-fA-F]*/ColorBold=$foreground/g" "$HOME"/.config/xfce4/terminal/terminalrc
-    # fi
-# }
-
-# }}}
-
 # Live theme switch for Flatpak apps {{{
 # --------------------------------------
 
@@ -745,7 +698,6 @@ update_environment_theme() {
 	# call external script to pass new colours to running terminals
 	own_script_update_running_terminals
 	modify_less_manpages
-	modify_ranger
 	modify_newsboat
 	modify_neomutt
 	# define scheme for shell substitution in subsequent commands
@@ -789,7 +741,6 @@ update_environment_theme_de() {
 	# call external script to pass new colours to running terminals
 	own_script_update_running_terminals
 	modify_less_manpages
-	modify_ranger
 	modify_newsboat
 	modify_neomutt
 	# define scheme for shell substitution in subsequent commands
