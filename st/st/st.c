@@ -38,14 +38,10 @@
 
 /* macros */
 #define IS_SET(flag)		((term.mode & (flag)) != 0)
-#define NUMMAXLEN(x)		((int)(sizeof(x) * 2.56 + 0.5) + 1)
 #define ISCONTROLC0(c)		(BETWEEN(c, 0, 0x1f) || (c) == '\177')
 #define ISCONTROLC1(c)		(BETWEEN(c, 0x80, 0x9f))
 #define ISCONTROL(c)		(ISCONTROLC0(c) || ISCONTROLC1(c))
 #define ISDELIM(u)		(utf8strchr(worddelimiters, u) != NULL)
-
-/* constants */
-#define ISO14755CMD		"dmenu -w \"$WINDOWID\" -p codepoint: </dev/null"
 
 enum term_mode {
 	MODE_WRAP        = 1 << 0,
@@ -735,8 +731,10 @@ sigchld(int a)
 	if (pid != p)
 		return;
 
-	if (!WIFEXITED(stat) || WEXITSTATUS(stat))
-		die("child finished with error '%d'\n", stat);
+	if (WIFEXITED(stat) && WEXITSTATUS(stat))
+		die("child exited with status %d\n", WEXITSTATUS(stat));
+	else if (WIFSIGNALED(stat))
+		die("child terminated due to signal %d\n", WTERMSIG(stat));
 	exit(0);
 }
 
@@ -1232,9 +1230,6 @@ tsetchar(Rune u, Glyph *attr, int x, int y)
 	term.dirty[y] = 1;
 	term.line[y][x] = *attr;
 	term.line[y][x].u = u;
-
-	if (boxdraw && isboxdraw(&term.line[y][x]))
-		term.line[y][x].mode |= ATTR_BOXDRAW;
 }
 
 void
@@ -1459,7 +1454,8 @@ tsetattr(int *attr, int l)
 			} else {
 				fprintf(stderr,
 					"erresc(default): gfx attr %d unknown\n",
-					attr[i]), csidump();
+					attr[i]);
+				csidump();
 			}
 			break;
 		}
@@ -1985,28 +1981,6 @@ tprinter(char *s, size_t len)
 }
 
 void
-iso14755(const Arg *arg)
-{
-	FILE *p;
-	char *us, *e, codepoint[9], uc[UTF_SIZ];
-	unsigned long utf32;
-
-	if (!(p = popen(ISO14755CMD, "r")))
-		return;
-
-	us = fgets(codepoint, sizeof(codepoint), p);
-	pclose(p);
-
-	if (!us || *us == '\0' || *us == '-' || strlen(us) > 7)
-		return;
-	if ((utf32 = strtoul(us, &e, 16)) == ULONG_MAX ||
-	    (*e != '\n' && *e != '\0'))
-		return;
-
-	ttywrite(uc, utf8encode(utf32, uc), 1);
-}
-
-void
 toggleprinter(const Arg *arg)
 {
 	term.mode ^= MODE_PRINT;
@@ -2290,7 +2264,7 @@ eschandle(uchar ascii)
 	case 'Z': /* DECID -- Identify Terminal */
 		ttywrite(vtiden, strlen(vtiden), 0);
 		break;
-	case 'c': /* RIS -- Reset to inital state */
+	case 'c': /* RIS -- Reset to initial state */
 		treset();
 		resettitle();
 		xloadcols();

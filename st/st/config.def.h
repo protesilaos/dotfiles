@@ -41,9 +41,8 @@ char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
 char *vtiden = "\033[?6c";
 
 /* Kerning / character bounding-box multipliers */
-
-static float cwscale = 1.00;
-static float chscale = 1.00;
+static float cwscale = 1.0;
+static float chscale = 1.0;
 
 /*
  * word delimiter string
@@ -73,14 +72,6 @@ static unsigned int blinktimeout = 800;
  * thickness of underline and bar cursors
  */
 static unsigned int cursorthickness = 2;
-
-/*
- * 1: custom-draw (without using the font) most of the lines/blocks characters
- *    for gapless alignment between cells. This includes all the codepoints at
- *    U+2500 - U+259F except dashes, diagonals and shades.
- * 0: disable (render all glyphs normally from the font).
- */
-const int boxdraw = 1;
 
 /*
  * bell volume. It must be a value between -100 and 100. Use 0 for disabling
@@ -119,7 +110,7 @@ unsigned int tabspaces = 8;
  * 
  * }}}
  */
-#include "themes/active-tempus-theme.h"
+#include "active-tempus-theme.h"
 
 /*
  * Default shape of cursor
@@ -174,8 +165,8 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
+	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
-	{ TERMMOD,              XK_I,           iso14755,       {.i =  0} },
 };
 
 /*
