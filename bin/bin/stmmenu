@@ -13,6 +13,9 @@
     # You should have received a copy of the GNU General Public License
     # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# TODO review code 2019-02-16
+# TODO update documentation
+
 # A simple way to manage my task lisk.  `stmmenu` is a dmenu interface
 # for adding or removing items from a plain text file.  This script is
 # part of my dotfiles: https://gitlab.com/protesilaos/dotfiles 
@@ -55,7 +58,7 @@ my_dmenu() {
 }
 
 # Pipe the task list's contents to dmenu. Print line numbers as well.
-task_interaction="grep -n '^.*' $task_list | my_dmenu $task_list_height"
+task_interaction="grep -n '' $task_list | my_dmenu $task_list_height"
 
 # Capture dmenu's output
 task_action="$(eval $task_interaction)"
@@ -72,7 +75,7 @@ task_action_clean="$(echo $task_action | cut -d ':' -f 2)"
 # list.
 while [ -n "$task_action" ]; do
 	# If item with corresponding line number exists
-	if grep "$task_action_clean" "$task_list"; then
+	if grep -F "$task_action_clean" "$task_list"; then
 		# Remove item from list based on its line number.  Also respect
 		# symlinks (the actual task list might be in a git-controlled
 		# repo).
