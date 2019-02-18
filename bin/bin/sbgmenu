@@ -67,7 +67,7 @@ sbgmenu_action() {
 	if [ "$sbgmenu_mode" == 'View images' ]; then
 		sbgmenu_output="$(my_pictures 'View selected picture' 10)"
 		echo "Opening file"
-		mimeopen "$sbgmenu_output"
+		xdg-open "$sbgmenu_output"
 	# If the decision is to set a wallpaper, prepare the relevant
 	# command based on the running session.  Note that the bspwm session
 	# is not standardised.  Using `feh` is my way of doing things.
@@ -78,6 +78,8 @@ sbgmenu_action() {
 		# Copy the selected image to the home directory, as a hidden
 		# file.
 		cp -f "$sbgmenu_output" "$HOME/.wallpaper.jpg"
+
+		# TODO make this a case statement
 		if [ "$DESKTOP_SESSION" == 'bspwm' ]; then
 			feh --bg-fill "$HOME/.wallpaper.jpg"
 		elif [ "$DESKTOP_SESSION" == 'gnome' ]; then

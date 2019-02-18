@@ -38,6 +38,8 @@ sbg_do() {
 	# Copy the selected image to the home directory, as a hidden
 	# file.
 	cp -rf "$picture" "$HOME/.wallpaper.jpg"
+
+	# TODO make this a case statement
 	if [ "$DESKTOP_SESSION" == 'bspwm' ]; then
 		feh --bg-fill "$HOME/.wallpaper.jpg"
 	elif [ "$DESKTOP_SESSION" == 'gnome' ]; then

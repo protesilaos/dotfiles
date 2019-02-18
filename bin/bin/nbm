@@ -92,6 +92,7 @@ sxiv_interface() {
 apply_wallpaper() {
 	local image="$1"
 
+	# TODO make this a case statement
 	if [ "$DESKTOP_SESSION" == 'bspwm' ]; then
 		# Copy the selected image to the home directory, as a hidden
 		# file.  This is specific to my custom BSPWM session.
