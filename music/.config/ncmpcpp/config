@@ -37,7 +37,7 @@ discard_colors_if_item_is_selected=yes
 
 # NOTE for box-drawing characters, see
 # https://en.wikipedia.org/wiki/Box-drawing_character
-progressbar_look="─▎┄"
+progressbar_look="─█·"
 ####progressbar_look="=>—"
 ####progressbar_look="─┅─"
 ####progressbar_look="─╼ "
