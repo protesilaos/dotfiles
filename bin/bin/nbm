@@ -28,7 +28,10 @@
 # My dots: https://gitlab.com/protesilaos/dotfiles
 # 
 # Dependencies on Debian Buster:
-# 	apt install feh suckless-tools sxiv
+# 	apt install suckless-tools sxiv
+#
+# For BSPWM, you also need:
+# 	apt install feh
 #
 # Optional dependency (binary is fdfind):
 # 	apt install fd-find
@@ -92,24 +95,35 @@ sxiv_interface() {
 apply_wallpaper() {
 	local image="$1"
 
-	# TODO make this a case statement
-	if [ "$DESKTOP_SESSION" == 'bspwm' ]; then
-		# Copy the selected image to the home directory, as a hidden
-		# file.  This is specific to my custom BSPWM session.
-		cp -f "$image" "$HOME/.wallpaper.jpg" && feh --bg-fill "$HOME/.wallpaper.jpg"
-	elif [ "$DESKTOP_SESSION" == 'gnome' ]; then
-		gsettings set org.gnome.desktop.background picture-uri "file://$image"
-	elif [ "$DESKTOP_SESSION" == 'mate' ]; then
-		gsettings set org.mate.background picture-filename "$image"
-	elif [ "$DESKTOP_SESSION" == 'xfce' ]; then
-		xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$image"
-	# Abort if the session is not known.  Print error message.
-	else
-		echo "ERROR. Unknown Desktop Session."
-		echo "Cannot set wallpaper."
-		echo "Aborting..."
-		exit 1
-	fi
+	case "$DESKTOP_SESSION" in
+		bspwm)
+			# NOTE there is no standard way for defining a wallpaper in
+			# BSPWM.  Using a hidden file from the home dir is specific
+			# to my custom desktop session.
+			#
+			# Dependency on Debian Buster:
+			# 	sudo apt install feh
+			cp -f "$image" "$HOME/.wallpaper.jpg"
+			feh --bg-fill "$HOME/.wallpaper.jpg"
+			;;
+		gnome)
+			gsettings set org.gnome.desktop.background picture-uri "file://$image"
+			;;
+		mate)
+			gsettings set org.mate.background picture-filename "$image"
+			;;
+		xfce)
+			# TODO any way to define a wallpaper in Xfce without
+			# specifying screen, monitor, workspace?
+			xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$image"
+			;;
+		*)
+			echo "ERROR. Unknown Desktop Session."
+			echo "Cannot set wallpaper."
+			echo "Aborting..."
+			exit 1
+			;;
+	esac
 }
 
 # }}}
