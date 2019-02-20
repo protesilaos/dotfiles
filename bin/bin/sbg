@@ -19,6 +19,7 @@
 # https://gitlab.com/protesilaos/dotfiles
 
 # TODO is "Pictures" automatically localised?
+# TODO ~/.config/user-dirs.dirs seems to contain environment variables…
 
 sbg_do() {
 	# find the path to the input file
@@ -33,29 +34,40 @@ sbg_do() {
 		exit 1
 	fi
 
+	case "$DESKTOP_SESSION" in
+		bspwm)
+			# NOTE there is no standard way for defining a wallpaper in
+			# BSPWM.  Using a hidden file from the home dir is specific
+			# to my custom desktop session.
+			#
+			# Copy the selected image to the home directory, as a hidden
+			# file.
+			#
+			# Dependency on Debian Buster:
+			# 	sudo apt install feh
+			cp -f "$picture" "$HOME/.wallpaper.jpg"
+			feh --bg-fill "$HOME/.wallpaper.jpg"
+			;;
+		gnome)
+			gsettings set org.gnome.desktop.background picture-uri "file://$picture"
+			;;
+		mate)
+			gsettings set org.mate.background picture-filename "$picture"
+			;;
+		xfce)
+			# TODO any way to define a wallpaper in Xfce without
+			# specifying screen, monitor, workspace?
+			xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$picture"
+			;;
+		*)
+			echo "ERROR. Unknown Desktop Session."
+			echo "Cannot set wallpaper."
+			echo "Aborting..."
+			exit 1
+			;;
+	esac
+
 	echo "Changing wallpaper to $picture"
-
-	# Copy the selected image to the home directory, as a hidden
-	# file.
-	cp -rf "$picture" "$HOME/.wallpaper.jpg"
-
-	# TODO make this a case statement
-	if [ "$DESKTOP_SESSION" == 'bspwm' ]; then
-		feh --bg-fill "$HOME/.wallpaper.jpg"
-	elif [ "$DESKTOP_SESSION" == 'gnome' ]; then
-		gsettings set org.gnome.desktop.background picture-uri "file://$picture"
-	elif [ "$DESKTOP_SESSION" == 'mate' ]; then
-		echo "file://$picture"
-		gsettings set org.mate.background picture-filename "$picture"
-	elif [ "$DESKTOP_SESSION" == 'xfce' ]; then
-		xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$picture"
-	# Abort if the session is not known.  Print error message.
-	else
-		echo "ERROR. Unknown Desktop Session."
-		echo "Cannot set wallpaper."
-		echo "Aborting..."
-		exit 1
-	fi
 }
 
 # Run the script
