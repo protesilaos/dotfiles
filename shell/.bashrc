@@ -19,12 +19,6 @@
 # General settings {{{
 # ====================
 
-# Any key press disables Ctrl+s that 'freezes' the terminal.  I often
-# press this key binding by accident, while I have found no apparent use
-# for keeping this functionality.  See this thread for more information:
-# https://unix.stackexchange.com/questions/12107/how-to-unfreeze-after-accidentally-pressing-ctrl-s-in-a-terminal
-stty ixany
-
 # Include my scripts in the PATH.  To avoid conflicts, I always prepend
 # `own_script_` to my files.  There are some exceptions though, where I
 # am confident that no conflicts will arrise.  See the 'bin' directory
