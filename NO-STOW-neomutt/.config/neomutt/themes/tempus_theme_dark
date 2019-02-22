@@ -7,7 +7,7 @@
 # -------------
 color error color1 default
 color search color6 default
-color indicator color3 default
+color indicator color0 color6
 color tree default default
 
 # defaults

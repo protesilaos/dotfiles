@@ -1,6 +1,6 @@
 # vi:foldmethod=marker
 
-# Configuration file for Neomutt.  Tested on 2019-02-01.  Debian Buster
+# Configuration file for Neomutt.  Tested on 2019-02-22.  Debian Buster
 # running NeoMutt 20180716.
 #
 # This configuration file obfuscates all private information that is
@@ -15,17 +15,17 @@
 
 # General settings {{{
 # -------------------
-set arrow_cursor=yes
+set arrow_cursor=no # yes == indicator "->" will note the position in the index, else the whole line is highlighted
 set sleep_time=0
 
 # Mailcap
 auto_view text/html
 alternative_order text/plain text/html
-set mailcap_path=~/.neomutt/mailcap
+set mailcap_path=~/.config/neomutt/mailcap
 set mailcap_sanitize=yes
 
 # Colours
-source "~/.neomutt/themes/tempus_theme_dark"
+source "~/.config/neomutt/themes/tempus_theme_dark"
 
 # Receiving
 set mail_check=600
@@ -34,9 +34,9 @@ set imap_keepalive=300
 unset imap_passive
 
 # Cache
-set header_cache='~/.neomutt/.cache/headercache'
-set message_cachedir='~/.neomutt/.cache/messagecache'
-set certificate_file='~/.neomutt/.cache/certificates'
+set header_cache='~/.config/neomutt/cache/headercache'
+set message_cachedir='~/.config/neomutt/cache/messagecache'
+set certificate_file='~/.config/neomutt/cache/certificates'
 
 # Messages
 set beep_new=yes
@@ -57,7 +57,7 @@ set askcc=no
 # # No need for spell check, as it is provided by Vim
 # set ispell="aspell -e -c"
 set edit_headers=no
-set signature="~/.neomutt/mails/signature"
+set signature="~/.config/neomutt/mails/signature"
 
 # Replies
 set fast_reply=yes
@@ -65,7 +65,7 @@ set include=no
 set reverse_name
 
 # GPG
-source ~/.neomutt/gpg.rc
+source ~/.config/neomutt/gpg.rc
 set crypt_use_gpgme=yes
 set crypt_autopgp=yes
 set crypt_autosign=no
@@ -100,7 +100,7 @@ set sort_aux=reverse-last-date-received
 
 
 # NOTE status bar colours are defined in the theme, which is sourced at
-# the start of this file.  All dash characters are em dahses.
+# the start of this file.  All dash characters are em dashes.
 set status_format='———%v: %f———(%P)———%>—\
 [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Del:%d?%?F? \
 Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l??]———'
@@ -119,16 +119,16 @@ set pager_format='———%F: %s%*—(%P)'
 # ago, before NeoMutt had gained traction.
 
 # First retrieve passwords from secure file
-source "gpg -dq $HOME/.neomutt/mails/passwords.gpg |"
+source "gpg -dq $HOME/.config/neomutt/mails/passwords.gpg |"
 
-source "~/.neomutt/mails/email-one"
-folder-hook $folder 'source ~/.neomutt/mails/email-one'
+source "~/.config/neomutt/mails/email-one"
+folder-hook $folder 'source ~/.config/neomutt/mails/email-one'
 
-source "~/.neomutt/mails/email-two"
-folder-hook $folder 'source ~/.neomutt/mails/email-two'
+source "~/.config/neomutt/mails/email-two"
+folder-hook $folder 'source ~/.config/neomutt/mails/email-two'
 
-source "~/.neomutt/mails/email-three"
-folder-hook $folder 'source ~/.neomutt/mails/email-three'
+source "~/.config/neomutt/mails/email-three"
+folder-hook $folder 'source ~/.config/neomutt/mails/email-three'
 
 # }}}
 
@@ -185,9 +185,9 @@ macro index A "<tag-prefix><enter-command>unset resolve<enter><tag-prefix><clear
 macro pager A "<save-message>=Archive<enter>" "Archive message"
 
 # Account switching
-macro index,pager ,1 '<sync-mailbox><enter-command>source ~/.neomutt/mails/email-one<enter><change-folder>!<enter>'
-macro index,pager ,2 '<sync-mailbox><enter-command>source ~/.neomutt/mails/email-two<enter><change-folder>!<enter>'
-macro index,pager ,3 '<sync-mailbox><enter-command>source ~/.neomutt/mails/email-three<enter><change-folder>!<enter>'
+macro index,pager ,1 '<sync-mailbox><enter-command>source ~/.config/neomutt/mails/email-one<enter><change-folder>!<enter>'
+macro index,pager ,2 '<sync-mailbox><enter-command>source ~/.config/neomutt/mails/email-two<enter><change-folder>!<enter>'
+macro index,pager ,3 '<sync-mailbox><enter-command>source ~/.config/neomutt/mails/email-three<enter><change-folder>!<enter>'
 
 # Sidebar
 bind index,pager <left> sidebar-toggle-visible
