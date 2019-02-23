@@ -23,31 +23,31 @@
   <_description>Light theme with warm colours (WCAG AA compliant)</_description>
 
   <!-- Palette -->
-  <color name="col0" value="#3b2820"/>
-  <color name="col1" value="#d62500"/>
-  <color name="col2" value="#207f20"/>
-  <color name="col3" value="#8a6900"/>
-  <color name="col4" value="#306ad0"/>
-  <color name="col5" value="#c6365d"/>
-  <color name="col6" value="#00798d"/>
-  <color name="col7" value="#f5f0f5"/>
-  <color name="col8" value="#5b4440"/>
-  <color name="col9" value="#bb4b00"/>
-  <color name="col10" value="#5a7800"/>
-  <color name="col11" value="#9a6033"/>
-  <color name="col12" value="#6061d0"/>
-  <color name="col13" value="#8850d0"/>
-  <color name="col14" value="#007c6d"/>
-  <color name="col15" value="#f8f1e0"/>
+  <color name="col0" value="#464340"/>
+  <color name="col1" value="#c81000"/>
+  <color name="col2" value="#107410"/>
+  <color name="col3" value="#806000"/>
+  <color name="col4" value="#385dc4"/>
+  <color name="col5" value="#b63052"/>
+  <color name="col6" value="#007070"/>
+  <color name="col7" value="#EAE9DD"/>
+  <color name="col8" value="#68607d"/>
+  <color name="col9" value="#b94000"/>
+  <color name="col10" value="#4A7240"/>
+  <color name="col11" value="#706A00"/>
+  <color name="col12" value="#0D66C9"/>
+  <color name="col13" value="#8055aa"/>
+  <color name="col14" value="#337087"/>
+  <color name="col15" value="#F8F2E5"/>
 
   <!-- Base values -->
-  <color name="colbg" value="#f8f1e0"/>
-  <color name="colbgalt" value="#f5f0f5"/>
-  <color name="colbgdim" value="#f6f0ea"/>
-  <color name="colfg" value="#3b2820"/>
-  <color name="colfgalt" value="#5b4440"/>
+  <color name="colbg" value="#F8F2E5"/>
+  <color name="colbgalt" value="#EAE9DD"/>
+  <color name="colbgdim" value="#f1ede1"/>
+  <color name="colfg" value="#464340"/>
+  <color name="colfgalt" value="#68607d"/>
 
-  <color name="colcr" value="#3b2820"/>
+  <color name="colcr" value="#464340"/>
   <!-- Global Settings -->
   <style name="text" foreground="colfg" background="colbg"/>
   <style name="selection" foreground="colbg" background="colfg"/>
