@@ -23,9 +23,9 @@
 
 # see my dotfiles for the complete working environment
 # https://gitlab.com/protesilaos/dotfiles 
-if [ -f "$HOME/.my_colours/active-tempus-theme.sh" ]; then
+if [ -f "$HOME/.local/share/my_colours/active-tempus-theme.sh" ]; then
     # define scheme
-    source "$HOME/.my_colours/active-tempus-theme.sh"
+    source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
     # window decorations
     bspc config normal_border_color "$background"

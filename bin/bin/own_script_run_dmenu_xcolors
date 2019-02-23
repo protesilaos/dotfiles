@@ -16,10 +16,10 @@
 # A simple command to run dmenu with custom colours sourced by the shell.
 
 # get the colours
-source "$HOME/.my_colours/active-tempus-theme.sh"
+source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # get the system-wide custom font
-source "$HOME/.my_custom_ui_font.sh"
+source "$HOME/.local/share/my_custom_ui_font.sh"
 
 # run dmenu with custom colours, font, and prompt
 dmenu_run -p "Run command" -nb "$background" -nf "$foreground" -sb "$color2" -sf "$background" -fn "$my_custom_ui_font"

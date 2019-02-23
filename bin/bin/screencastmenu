@@ -28,10 +28,10 @@
 # see scripts under the `bin` directory of https://gitlab.com/protesilaos/dotfiles
 
 # pass custom colours to dmenu command
-source "$HOME/.my_colours/active-tempus-theme.sh"
+source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # get the system-wide custom font
-source "$HOME/.my_custom_ui_font.sh"
+source "$HOME/.local/share/my_custom_ui_font.sh"
 
 # dmenu wrapper with the list of options for my ffmpeg screen recording script (grep -o prints only matching lines)
 screencastmenu_selection()

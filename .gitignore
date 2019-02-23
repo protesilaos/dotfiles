@@ -9,6 +9,7 @@
 **/.config/mpd/state
 **/.config/mpd/sticker.sql
 **/.config/ncmpcpp/error.log
+**/.config/ncmpcpp/lyrics
 **/.config/newsboat/cache.db
 **/.config/newsboat/cache.db.lock
 **/.config/newsboat/history.cmdline

@@ -34,10 +34,10 @@
 # TODO consider adding notify-send actions
 
 # pass custom colours to dmenu command
-source "$HOME/.my_colours/active-tempus-theme.sh"
+source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # get the system-wide custom font
-source "$HOME/.my_custom_ui_font.sh"
+source "$HOME/.local/share/my_custom_ui_font.sh"
 
 # the customised `dmenu` command.  Accepts the prompt's text as the
 # first argument and the height as a second.  If the latter is not

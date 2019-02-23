@@ -16,10 +16,10 @@
 # A simple command to run passmenu with custom colours sourced by the shell.
 
 # get the colours
-source "$HOME/.my_colours/active-tempus-theme.sh"
+source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # get the system-wide custom font
-source "$HOME/.my_custom_ui_font.sh"
+source "$HOME/.local/share/my_custom_ui_font.sh"
 
 # run passmenu with custom colours, font, and prompt
 passmenu -f -i -p "Copy password" -nb "$background" -nf "$foreground" -sb "$color3" -sf "$background" -fn "$my_custom_ui_font"

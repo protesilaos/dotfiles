@@ -70,7 +70,7 @@ melonpanel_glyphs='-wuncon-siji-medium-r-normal--10-100-75-75-c-80-iso10646-1'
 # That file is used in other places as well to offer a convenient way of
 # styling multiple tools in a manner that is centralised and
 # straightforward.
-source "$HOME/.my_colours/active-tempus-theme.sh"
+source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # TODO review these
 COLOR_DEFAULT_FG="$foreground"

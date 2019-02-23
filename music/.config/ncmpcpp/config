@@ -9,6 +9,10 @@
 # Remove comment lines
 grep -ev '^#' ~/.config/ncmpcpp/config
 
+# ncmpcpp location
+ncmpcpp_directory=~/.config/ncmpcpp
+lyrics_directory=~/.config/ncmpcpp/lyrics
+
 # Define Music directory (needed for editing tags)
 mpd_music_dir=~/Music/
 

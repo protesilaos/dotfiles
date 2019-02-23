@@ -9,4 +9,4 @@
 
 # It is also used by bspwm to draw window borders and the like
 
-source "$HOME/.my_colours/shell/tempus_classic.sh"
+source "$HOME/.local/share/my_colours/shell/tempus_classic.sh"

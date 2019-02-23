@@ -117,7 +117,7 @@ if [ -x /usr/bin/feh ]; then
     elif [ -f "$HOME/.wallpaper.jpg" ]; then
         feh --bg-fill "$HOME/.wallpaper.jpg" &
     else
-        feh --bg-fill "$HOME/.bspwm_no_wallpaper_dark_gradient.png" &
+        feh --bg-fill "$HOME/.local/share/my_bspwm_wallpaper_fallback.png" &
     fi
 fi
 

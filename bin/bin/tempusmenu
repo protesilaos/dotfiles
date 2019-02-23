@@ -47,20 +47,20 @@
 # Array with all available tempus themes.  The `sed` command cleans up
 # the output, stripping it of surrounding text. As for `sort`, it just
 # presents the output in alphabetical order.
-tempus_themes_array=$(find "$HOME/.my_colours/shell/" -type f -printf "%f\\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort)
+tempus_themes_array=$(find "$HOME/.local/share/my_colours/shell/" -type f -printf "%f\\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort)
 
 # Pass custom colours to the `dmenu` command.  These will style the
 # background and foreground values using shell variables.  That file is
 # used in other places as well to offer a convenient way of styling
 # multiple tools in a that is centralised and straightforward.
-source "$HOME/.my_colours/active-tempus-theme.sh"
+source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # Get the system-wide custom font.  This is done with other `dmenu`
 # scripts as well to provide for an easy way to style them all at once.
 # The actual font is a `fontconfig` alias, which is currently defined as
 # `Hack` and which uses my patched variant of that typeface.  See my
 # dotfiles under "fonts".
-source "$HOME/.my_custom_ui_font.sh"
+source "$HOME/.local/share/my_custom_ui_font.sh"
 
 # }}}
 
@@ -121,25 +121,22 @@ tempusmenu "$1"
 # ANNEX with further explanations {{{
 # -----------------------------------
 
-# I store my generic X colors in "$HOME/.my_colours/".  The Tempus
-# themes are within the subdirectory $HOME/.my_colours/tempus/.  This
-# ensures that any other theme I include is not bundled up together with
-# them.  A likely scenario would be my older themes project, Prot16 (see
-# https://protesilaos.com/schemes).
+# I store my colors in "$HOME/.local/share/my_colours/".  The Tempus
+# themes are at $HOME/.local/share/my_colours/shell/.
 #
 # Recall that this is a shell script that does not use the content of
 # those `*.sh`.  All we need is to extract the scheme name of each item.
 #
 # Each theme's name is prefixed with 'tempus_' and suffixed with '.sh'.
 
-# $ ls $HOME/.my_colours/shell/
+# $ ls $HOME/.local/share/my_colours/shell/
 # tempus_autumn.sh   tempus_dusk.sh    tempus_past.sh    tempus_tempest.sh
 # tempus_classic.sh  tempus_fugit.sh   tempus_rift.sh    tempus_totus.sh
 # tempus_dawn.sh     tempus_future.sh  tempus_spring.sh  tempus_warp.sh
 # tempus_day.sh      tempus_night.sh   tempus_summer.sh  tempus_winter.sh
 
 # The sed regex is used to omit the prefix 'tempus_' and the suffix '.sh'.
-# $ find "$HOME/.my_colours/shell/" -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort
+# $ find "$HOME/.local/share/my_colours/shell/" -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort
 # autumn
 # classic
 # dawn

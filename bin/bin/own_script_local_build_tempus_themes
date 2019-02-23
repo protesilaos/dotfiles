@@ -51,15 +51,11 @@ tempus_generator_script=$tempus_generator_dir/tempus-themes-generator.sh
 
 # Get the list of the available schemes from inside the generator's
 # directory
-# TODO do not use `ls`.  Run this instead (needs testing):
-# find "$HOME/.my_colours/tempus/" -type f -printf "%f\\n" | sed -e
-# 's/tempus_\([a-z]*\).Xcolors/\1/g' | sort
+# TODO do not use `ls`
 tempus_schemes=$(ls "$tempus_generator_dir/schemes")
 
 # Destination path used by some functions
-# MAYBE TODO change this to `my_colours`.  Would also have to modify the
-# Xresources function and all impacted files.
-local_col_dir=$HOME/.my_colours
+local_col_dir=$HOME/.local/share/my_colours
 
 # }}}
 
@@ -174,7 +170,7 @@ build_gtksourceview4() {
 # it the following arguments:
 #
 # 1. The 'kitty' template name
-# 2. Destination path for $HOME/.my_colours/kitty
+# 2. Destination path for $HOME/.local/share/my_colours/kitty
 # 3. File type extension for tempus_$i.conf
 build_kitty() {
     local dest_dir=$local_col_dir/kitty
@@ -190,7 +186,7 @@ build_kitty() {
 # we pass to it the following arguments:
 #
 # 1. The 'shell-variables' template name
-# 2. Destination path for $HOME/.my_colours/shell
+# 2. Destination path for $HOME/.local/share/my_colours/shell
 # 3. File type extension for tempus_$i.sh
 build_shell() {
     local dest_dir=$local_col_dir/shell
@@ -214,8 +210,8 @@ build_shell() {
 # NOTE st uses a different destination path than the rest.
 build_st() {
     echo "Building themes for the Simple Terminal."
-    echo "Destination is: $HOME/st/themes/"
-    invoke_generic_loop st "$HOME/st/themes" h
+    echo "Destination is: $HOME/st/"
+    invoke_generic_loop st "$HOME/st" h
     echo "Done with ST."
 
     # If the git variant of my `st` fork is in the home dir, also build
@@ -224,8 +220,8 @@ build_st() {
     # which is added to $HOME as a symlink (with GNU Stow).
     if [ -d "$HOME/st-prot-source" ]; then
         echo "Also building themes for the Simple Terminal fork."
-        echo "Destination is: $HOME/st-prot-source/themes/"
-        invoke_generic_loop st "$HOME/st-prot-source/themes" h
+        echo "Destination is: $HOME/st-prot-source/"
+        invoke_generic_loop st "$HOME/st-prot-source" h
         echo "Done with the ST fork."
     fi
 }
@@ -235,7 +231,7 @@ build_st() {
 # we pass to it the following arguments:
 #
 # 1. The 'xcolors' template name
-# 2. Destination path for $HOME/.my_colours/tempus
+# 2. Destination path for $HOME/.local/share/my_colours/tempus
 # 3. File type extension for tempus_$i.Xcolors
 build_xcolors() {
     local dest_dir=$local_col_dir/tempus

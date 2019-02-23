@@ -30,7 +30,7 @@
 #
 # }}}
 
-active_theme="$HOME/.my_colours/active-theme-content"
+active_theme="$HOME/.local/share/my_colours/active-theme-content"
 
 if [ -f "$active_theme" ]; then
 	# capture all active colours

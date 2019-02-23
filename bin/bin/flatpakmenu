@@ -16,10 +16,10 @@
 # A dmenu script to run installed Flatpak applications.
 
 # pass custom colours to dmenu command
-source "$HOME/.my_colours/active-tempus-theme.sh"
+source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # get the system-wide custom font
-source "$HOME/.my_custom_ui_font.sh"
+source "$HOME/.local/share/my_custom_ui_font.sh"
 
 # the customised `dmenu` command
 my_dmenu() {

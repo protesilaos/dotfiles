@@ -6,8 +6,8 @@
 # ===============
 #
 # BASH configuration file.  Any modules such as the `dircolors` config
-# are stored in ~/.my_bash.  This setup is part of my dotfiles.  See
-# https://gitlab.com/protesilaos/dotfiles.
+# are stored in ~/.local/share/my_bash/.  This setup is part of my
+# dotfiles.  See https://gitlab.com/protesilaos/dotfiles.
 #
 # Note that ALL MY SCRIPTS are designed to work with `#!/bin/bash`.
 # They are not tested for portability.
@@ -203,8 +203,8 @@ alias rsyncavzrd='rsync -avzr --delete --progress'
 # Enable automatic color support for common commands that list output
 # and also add handy aliases.  Note the link to the `dircolors`.  This
 # is provided by my dotfiles.
-dircolors_data="$HOME/.my_bash/dircolors"
 if [ -x /usr/bin/dircolors ]; then
+	dircolors_data="$HOME/.local/share/my_bash/dircolors"
     test -r $dircolors_data && eval "$(dircolors -b ${dircolors_data})" || eval "$(dircolors -b)"
 fi
 

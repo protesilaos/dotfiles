@@ -47,7 +47,7 @@
 # own_script_update_environment_theme [theme]
 #
 # For available arguments run:
-# find $HOME/.my_colours/shell/ -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort
+# find $HOME/.local/share/my_colours/shell/ -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort
 # 
 # It is preferable to use the `tempusmenu` instead, which is a dmenu
 # interface with all the available theme options.
@@ -71,7 +71,7 @@ if [ "$#" == 0 ] ; then
     echo "own_script_update_environment_theme winter"
     echo ""
     echo "For available arguments run:"
-    echo "find $HOME/.my_colours/shell/ -type f -printf \"%f\\n\" | sed -e 's/tempus_\\([a-z]*\\).sh/\\1/g' | sort"
+    echo "find $HOME/.local/share/my_colours/shell/ -type f -printf \"%f\\n\" | sed -e 's/tempus_\\([a-z]*\\).sh/\\1/g' | sort"
     echo ""
     echo "To change desktop environment theme (GNOME, MATE, Xfce), run this instead:"
     echo "own_script_update_environment_theme winter de"
@@ -338,12 +338,12 @@ modify_tmux() {
 # colour values.  Makes it easier to control inter-related options from
 # a single file.
 modify_shell_theme() {
-	sed --follow-symlinks -i -e "s/_[a-z]*\\./_$tempus_scheme./g" "$HOME/.my_colours/active-tempus-theme.sh"
+	sed --follow-symlinks -i -e "s/_[a-z]*\\./_$tempus_scheme./g" "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 	# Create a new file as well that is used to get the colour values
 	# of the running terminal.  This is used by my
 	# own_script_update_running_terminals
-	grep '^.*=' "$HOME/.my_colours/shell/tempus_$tempus_scheme.sh" > "$HOME/.my_colours/active-theme-content"
+	grep '^.*=' "$HOME/.local/share/my_colours/shell/tempus_$tempus_scheme.sh" > "$HOME/.local/share/my_colours/active-theme-content"
 }
 
 # }}}
@@ -701,7 +701,7 @@ update_environment_theme() {
 	modify_newsboat
 	modify_neomutt
 	# define scheme for shell substitution in subsequent commands
-	source "$HOME/.my_colours/active-tempus-theme.sh"
+	source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 	modify_bspwm
 	modify_dunst
 	melonpanel # this re-runs my lemonbar to get the new colours
@@ -744,7 +744,7 @@ update_environment_theme_de() {
 	modify_newsboat
 	modify_neomutt
 	# define scheme for shell substitution in subsequent commands
-	source "$HOME/.my_colours/active-tempus-theme.sh"
+	source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 	modify_dunst
 	# modify st last because it requires recompilation
 	# running instances are updated via ANSI sequences
@@ -761,8 +761,8 @@ update_environment_theme_de() {
 # check if this script is run with a second 'de' argument,
 # if second argument is not "de", throw error,
 # else run the full environment update
-tempus_themes_array=$(printf "%s " "$(find "$HOME"/.my_colours/shell/ -type f -printf "%f " | sed -e 's/tempus_\([a-z]*\).sh/\1/g')")
-tempus_themes_array_formatted=$(find $HOME/.my_colours/shell/ -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort)
+tempus_themes_array=$(printf "%s " "$(find "$HOME"/.local/share/my_colours/shell/ -type f -printf "%f " | sed -e 's/tempus_\([a-z]*\).sh/\1/g')")
+tempus_themes_array_formatted=$(find $HOME/.local/share/my_colours/shell/ -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort)
 
 if [[ " ${tempus_themes_array[*]} " == *" $tempus_scheme "* ]]; then
     echo -e "GOOD Theme \"$1\" is part of the Tempus Themes array:\\n$tempus_themes_array_formatted"

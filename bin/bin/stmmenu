@@ -39,10 +39,10 @@ fi
 task_list_height="$(grep -c '^.*' $task_list)"
 
 # Pass custom colours to dmenu command
-source "$HOME/.my_colours/active-tempus-theme.sh"
+source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # Get the system-wide custom font, for use in dmenu
-source "$HOME/.my_custom_ui_font.sh"
+source "$HOME/.local/share/my_custom_ui_font.sh"
 
 # Custom dmenu command.  Accepts the line height as an argument.
 my_dmenu() {
