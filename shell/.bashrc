@@ -327,7 +327,8 @@ if [ -x /usr/bin/git ]; then
     alias gadd='git add -v'
     alias gaddi='git add --interactive'
     alias gall='git add -Av'
-    alias gcom='git commit -S -m' # gpg sign
+    alias gcom='git commit -S' # opens in the predefined editor.  -S to gpg sign
+    alias gcomm='git commit -S -m' # pass a message directly: gcomm 'My commit'
 
     # amend
     alias gca='git commit --amend'
