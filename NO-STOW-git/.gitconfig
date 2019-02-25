@@ -2,3 +2,5 @@
 	name = Protesilaos Stavrou
 	email = info@protesilaos.com
 	signingkey = C3C6BC9BBE2F62C7C586EBAA99BD6459CD5CA3EA
+[core]
+	editor = vim
