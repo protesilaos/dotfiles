@@ -33,7 +33,7 @@
 # This script is part of my custom desktop session.  For more, see my
 # dotfiles https://gitlab.com/protesilaos/dotfiles.
 #
-# Last reviewed on 2019-02-11
+# Last reviewed on 2019-02-27
 #
 # }}}
 
@@ -69,7 +69,11 @@
 # adjusts the screen's colours and brightness, such as `redshift`.
 
 laptop_coordinates() {
-	xrandr --output LVDS1 --mode 1366x768 --pos 0x1080
+	if [ $# == 1 ]; then
+		xrandr --output LVDS1 --primary --mode 1366x768 --pos 0x1080
+	else
+		xrandr --output LVDS1 --mode 1366x768 --pos 0x1080
+	fi
 }
 
 laptop_brightness() {
@@ -77,15 +81,18 @@ laptop_brightness() {
 }
 
 multihead_coordinates() {
-	echo "Configuring VGA1 + LVDS1 XrandR coordinates"
-	xrandr --output VGA1 --primary --mode 1920x1080 --pos 0x0
-	laptop_coordinates
+	echo "Configuring LVDS1 + VGA1 XrandR coordinates"
+	# pass a single argument to activate the --primary option
+	laptop_coordinates 'primary'
+
+	# configure the external display on the VGA port
+	xrandr --output VGA1 --mode 1920x1080 --pos 0x0
 }
 
 multihead_brightness() {
-	echo "Configuring VGA1 + LVDS1 XrandR properties"
-	xrandr --output VGA1 --brightness 1 --gamma 1:1:1
+	echo "Configuring LVDS1 + VGA1 XrandR properties"
 	laptop_brightness
+	xrandr --output VGA1 --brightness 1 --gamma 1:1:1
 }
 
 # }}}
