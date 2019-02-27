@@ -413,9 +413,9 @@ modify_newsboat() {
 modify_neomutt() {
     if [ -x /usr/bin/neomutt ]; then
         if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-            sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME"/.neomuttrc
+            sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME"/.config/neomutt/neomuttrc
         else
-            sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_dark/g" "$HOME"/.neomuttrc
+            sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_dark/g" "$HOME"/.config/neomutt/neomuttrc
         fi
     fi
 }
