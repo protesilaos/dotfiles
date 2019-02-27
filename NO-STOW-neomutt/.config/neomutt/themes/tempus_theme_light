@@ -1,13 +1,13 @@
 # Theme for NeoMutt, sourced from ~/.neomuttrc.  This file is part of my
 # dotfiles.  See https://gitlab.com/protesilaos/dotfiles.
 #
-# Last reviewed on 2019-02-14
+# Last reviewed on 2019-02-27
 
 # basic colours
 # -------------
 color error color1 default
 color search color6 default
-color indicator color3 default
+color indicator color15 color6
 color tree default default
 
 # defaults
@@ -20,7 +20,7 @@ color index color4 default "~O"
 color index color6 default "~N"
 
 # deleted messages
-color index color8 color1 "~D"
+color index color7 color1 "~D"
 
 # read messages
 color index default default "~R"
