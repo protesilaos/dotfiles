@@ -93,11 +93,13 @@ set abort_noattach_regex="\\<attach|attached|attachment|attachments\
 # `man neomuttrc`.  Notice the number in %C (index_fromat).
 set date_format="%Y-%m-%d %R"
 set index_format="%Z %-20.19F %s%*  %d"
-set sort=threads
-set strict_threads="yes"
-set sort_browser="date"
-set sort_aux=reverse-last-date-received
 
+## NOTE uncomment to sort by thread
+#set sort=threads
+#set sort_aux=reverse-last-date-received
+set sort=reverse-date # newest at the top
+set strict_threads="yes"
+set sort_browser=alpha
 
 # NOTE status bar colours are defined in the theme, which is sourced at
 # the start of this file.  All dash characters are em dashes.
