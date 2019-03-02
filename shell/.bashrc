@@ -12,7 +12,7 @@
 # Note that ALL MY SCRIPTS are designed to work with `#!/bin/bash`.
 # They are not tested for portability.
 #
-# Last reviewed on 2018-11-18
+# Last reviewed on 2019-03-02
 
 # }}}
 
@@ -95,10 +95,10 @@ shopt -s checkwinsize
 # Make less more friendly for non-text input files, see `man lesspipe`.
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# cd into a directory by typing its name.  I disable this but keep it
-# around.  I find it tricky, especially when an executable has a
-# similar/same name to a directory.
-# shopt -s autocd
+#### cd into a directory by typing its name.  I disable this but keep it
+#### around.  I find it tricky, especially when an executable has a
+#### similar/same name to a directory.
+#### shopt -s autocd
 
 # }}}
 
@@ -134,8 +134,8 @@ if [ -x /usr/bin/apt ]; then
 	alias aulu="sudo apt update && apt list --upgradable"
 
 	# act on the repos
-	alias as="sudo apt search"
-	alias ash="sudo apt show"
+	alias as="apt search"
+	alias ash="apt show"
 	alias adl="apt download" # gets source .deb in current directory
 
 	# package handling
@@ -169,6 +169,14 @@ fi
 # Check these because some of them modify the behaviour of standard
 # commands, such as `cp`, `mv`, `rm`, so that they provide verbose
 # output and open a prompt when an existing file is affected.
+#
+# PRO TIP to ignore aliases, start them with a backslash \.  The
+# original command will be used.  This is useful when the original
+# command and the alias have the same name.  Example is my `cp` which is
+# aliased to `cp -iv`:
+#
+#	cp == cp -iv
+#	\cp == cp
 
 # Entering Vim is made easier!
 if [ -x /usr/bin/vim ]; then
@@ -228,23 +236,15 @@ alias lsl='ls -lh --color=auto --group-directories-first'
 alias lsla='ls -lhA --color=auto --group-directories-first'
 
 # Shortcuts to common configs.
-# TODO review those.
-alias bbb="$EDITOR ~/.bashrc"
-alias ddd="$EDITOR ~/.config/dunst/dunstrc"
-# alias mmm="$EDITOR ~/.neomuttrc"
-# alias ppp="$EDITOR ~/.config/polybar/config"
-# alias rrr="$EDITOR ~/.config/ranger/rc.conf"
-# alias sss="$EDITOR ~/.neomutt/mails/signature"
-# alias vvv="$EDITOR ~/.vimrc"
-# alias xxx="$EDITOR ~/.Xresources"
+alias bashrc="$EDITOR $HOME/.bashrc"
+alias bspwmrc="$EDITOR $HOME/.config/bspwm/bspwmrc"
+alias dunstrc="$EDITOR $HOME/.config/dunst/dunstrc"
+alias neomuttrc="$EDITOR $HOME/.config/neomutt/neomuttrc"
+alias sxhkdrc="$EDITOR $HOME/.config/sxhkd/sxhkdrc"
+alias tmuxconf="$EDITOR $HOME/.tmux.conf"
+alias urls="$EDITOR $HOME/.config/newsboat/urls"
+alias vimrc="$EDITOR $HOME/.vimrc"
 
-alias urls="$EDITOR ~/.config/newsboat/urls" # changed this because `nnn` is an executable
-
-# reload config files
-alias rbbb='source ~/.bashrc'
-alias rddd='killall dunst && eval $(dbus-launch)'
-# alias rxxx='xrdb -merge ~/.Xresources'
-#
 # }}}
 
 # Extra tasks and infrequently used tools {{{
@@ -262,26 +262,22 @@ if [ -x /usr/bin/gnome-terminal ]; then
     alias gtermd="gnome-terminal --tab-with-profile='Tempus Dark'"
 fi
 
-# Used in place of w3m when the latter fails to display content
-# correctly.  These options are very opinionated, disabling images,
-# javascripts, etc.  See `man surf`.
+# These options are very opinionated, disabling images, javascripts,
+# etc.  See `man surf`.
 if [ -x /usr/bin/surf ]; then
     alias surf="surf -giKMnps"
 fi
 
 # Quick shortcuts for `mpv`.  When I want to play a podcast that only
 # shows a static image, I run the command with the --no-video option.
-# When I only need to view the file I use --no-audio.  By the way, `mpv`
-# is able to stream content directly from the web, thanks to
-# `youtube-dl`.
+# When I only need to view the file I use --no-audio.
 if [ -x /usr/bin/mpv ]; then
     alias mpvna='mpv --no-audio'
     alias mpvnv='mpv --no-video'
 fi
 
-# Quick shortcuts for `youtube-dl`.  Note the paths where the files are
-# extracted to.  The first places the output inside the present working
-# directory.
+# Quick shortcuts for `youtube-dl`.  Output is placed in the present
+# working directory.
 if [ -x /usr/bin/youtube-dl ]; then
     alias ytaud='youtube-dl --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
     alias ytvid='youtube-dl --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
@@ -292,9 +288,6 @@ fi
 if [ -x /usr/bin/certbot ]; then
     alias certm='sudo certbot certonly -a manual -d'
 fi
-
-# Get external/public IP address.
-alias mypubip='curl ipinfo.io/ip'
 
 # When I need to copy the contents of a file to the clipboard
 if [ -x /usr/bin/xclip ]; then
@@ -367,13 +360,6 @@ if [ -x /usr/bin/bundler ]; then
     alias bejsdev='bundle exec jekyll serve --config _config.yml,_config-dev.yml'
 fi
 
-# npm (node package manager)
-# TODO add aliases for other npm tasks.
-# TODO consider adding shortcuts for gulp
-if [ -x /usr/bin/npm ]; then
-    alias npmiu='npm install && npm update'
-fi
-
 # }}}
 
 # }}}
@@ -414,8 +400,10 @@ backupthis() {
     cp -riv $1 ${1}-`date +%Y%m%d%H%M`.backup;
 }
 
-# Playerctl display album art (tested with mpd and well-structured Music metadata).
-# dependencies:
+# Display album art in a small floating window on the top right corner
+# of the screen (tested with MPD and well-structured Music metadata).
+#
+# Debian Buster dependencies:
 #   sudo apt install playerctl sxiv
 albumart() {
     if [ -x /usr/bin/playerctl ]; then
