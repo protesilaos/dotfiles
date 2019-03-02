@@ -26,7 +26,7 @@ enable_window_title=yes
 user_interface=classic
 display_remaining_time=no
 display_volume_level=no
-display_bitrate=yes
+display_bitrate=no
 clock_display_seconds=no
 use_console_editor=yes
 external_editor=/usr/bin/vim
@@ -35,7 +35,7 @@ header_visibility=yes
 statusbar_visibility=yes
 search_engine_display_mode=columns
 startup_screen=playlist
-playlist_display_mode=columns
+playlist_display_mode=classic
 playlist_separate_albums=no
 discard_colors_if_item_is_selected=yes
 
@@ -70,7 +70,7 @@ space_add_mode=add_remove
 visualizer_fifo_path=/tmp/mpd.fifo
 visualizer_output_name=my_fifo
 visualizer_sync_interval=30
-visualizer_in_stereo=no
+visualizer_in_stereo=yes
 visualizer_type=spectrum
 # NOTE for block characters see
 # https://en.wikipedia.org/wiki/Block_Elements
@@ -86,6 +86,7 @@ visualizer_look = "◆▎"
 
 # Colours and formatting {{{
 # --------------------------
+colors_enabled=yes
 
 # NOTE colours numbers are terminal number + 1
 visualizer_color=5, 7, 3, 4, 2
@@ -94,8 +95,14 @@ visualizer_color=5, 7, 3, 4, 2
 ####visualizer_color=3, 5, 13, 11, 12, 10
 
 # Playlist
-now_playing_prefix=$b$5
+now_playing_prefix=$b$6
 now_playing_suffix=$/b$9
+
+# NOTE braces will only display the tag if available.  The syntax {}|{}
+# indicates an alternative in case the first is not present.
+song_status_format={%a [%b] - %t}|{%f}
+song_list_format={%a [%b] - %t}|{%f} $R%l
+# Requires: playlist_display_mode=columns
 song_columns_list_format=(20)[]{a} (20)[]{A} (30)[]{t|f:Title} (25)[]{b} (5)[]{l}
 
 # Colours
