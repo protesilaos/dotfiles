@@ -129,6 +129,7 @@ if [ -x /usr/bin/apt ]; then
 	alias ar="sudo apt remove"
 
 	# list local packages
+	alias ard="apt rdepends" # followed by package name to print reverse dependencies
 	alias ali="apt list --installed"
 	alias alu="apt list --upgradable"
 	alias aulu="sudo apt update && apt list --upgradable"
