@@ -71,8 +71,9 @@
 #
 # Recall that these depend on my dotfiles.  That command is in my own
 # bin directory.  See https://gitlab.com/protesilaos/dotfiles.
-super + e ; {s,p,t,m,k,q}
+super + e ; {d,s,p,t,m,k,q}
     { \
+	dotsmenu, \
     pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
     pkill -x melonpanel && melonpanel, \
     tempusmenu, \
