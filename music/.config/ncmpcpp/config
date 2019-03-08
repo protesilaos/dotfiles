@@ -53,9 +53,9 @@ media_library_primary_tag=album_artist
 media_library_albums_split_by_date=yes
 
 # Behaviour
-playlist_disable_highlight_delay=2
+playlist_disable_highlight_delay=6
 ignore_diacritics=yes
-message_delay_time=2
+message_delay_time=4
 autocenter_mode=yes
 centered_cursor=yes
 cyclic_scrolling=yes
@@ -94,15 +94,19 @@ visualizer_color=5, 7, 3, 4, 2
 ####visualizer_color=6, 14, 13, 15, 11, 7
 ####visualizer_color=3, 5, 13, 11, 12, 10
 
-# Playlist
-now_playing_prefix=$b$6
-now_playing_suffix=$/b$9
+# Current item
+current_item_prefix="$b$2 —> $9"
+current_item_suffix=$/b
+current_item_inactive_column_prefix=$4$r
+current_item_inactive_column_suffix=$9$/r$(end)
 
+# Playlist
+now_playing_prefix=$u
+now_playing_suffix=$/u
 # NOTE braces will only display the tag if available.  The syntax {}|{}
 # indicates an alternative in case the first is not present.
-song_status_format={%a [%b] - %t}|{%f}
-song_list_format={%a [%b] - %t}|{%f} $R%l
-# Requires: playlist_display_mode=columns
+song_status_format={%a ~ %t [%b]}|{%f}
+song_list_format={%a ~ $3%t$9}|{%f} $R$4%l$9
 song_columns_list_format=(20)[]{a} (20)[]{A} (30)[]{t|f:Title} (25)[]{b} (5)[]{l}
 
 # Colours
@@ -118,9 +122,5 @@ statusbar_time_color=5
 player_state_color=13
 progressbar_color=6
 progressbar_elapsed_color=14
-current_item_prefix=$(7)$r
-current_item_suffix=$/r$(end)
-current_item_inactive_column_prefix=$(4)$r
-current_item_inactive_column_suffix=$9$/r$(end)
 
 # vi:foldmethod=marker
