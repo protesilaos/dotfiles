@@ -237,14 +237,7 @@ alias lsl='ls -lh --color=auto --group-directories-first'
 alias lsla='ls -lhA --color=auto --group-directories-first'
 
 # Shortcuts to common configs.
-alias bashrc="$EDITOR $HOME/.bashrc"
-alias bspwmrc="$EDITOR $HOME/.config/bspwm/bspwmrc"
-alias dunstrc="$EDITOR $HOME/.config/dunst/dunstrc"
-alias neomuttrc="$EDITOR $HOME/.config/neomutt/neomuttrc"
-alias sxhkdrc="$EDITOR $HOME/.config/sxhkd/sxhkdrc"
-alias tmuxconf="$EDITOR $HOME/.tmux.conf"
 alias urls="$EDITOR $HOME/.config/newsboat/urls"
-alias vimrc="$EDITOR $HOME/.vimrc"
 
 # }}}
 
