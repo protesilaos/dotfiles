@@ -26,7 +26,8 @@
 # Environment: super + e ; ...
 # Executables which typically run in the console: super + x ; ...
 # Graphical applications: super + g ; ...
-# Assign (node flags or split ratios of the root tree): super + a ; ...
+# Assign (node flags): super + a ; ...
+# Split (split ratios): super + s ; ...
 
 # FIXME key chain chords in the form of `super + n ; ...` have a bug See
 # https://github.com/baskerville/sxhkd/issues/83.  The awkward
@@ -267,6 +268,17 @@ super + {t,shift + space,space,f}
 super + a ; {l,s,p}
     bspc node -g {locked,sticky,private}
 
+# Set the split ratio on demand
+super + s ; {2,3}
+	bspc config split_ratio { \
+	0.50 && notify-send "BSPWM configuration" "Split ratio set to 0.50", \
+	0.66 && notify-send "BSPWM configuration" "Split ratio set to 0.66" \
+	}
+
+# Make node split ratios equal or balanced.
+super + s ; {e,b}
+	bspc node @/ {--equalize,--balance}
+
 # Focus/swap nodes/desktops
 # -------------------------
 
@@ -358,10 +370,6 @@ super + shift + {y,u,i,o}
 # Dynamic gaps.
 super + shift + bracket{left,right}
 	bspc config -d focused window_gap $((`bspc config -d focused window_gap` {-,+} 5 ))
-
-# Make node split ratios equal or balanced.
-super + a ; {e,b}
-	bspc node @/ {--equalize,--balance}
 
 # }}}
 
