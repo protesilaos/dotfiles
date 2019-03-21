@@ -15,8 +15,8 @@
 # window management
 # -----------------
 # also see `man bspc` or `man bspwm`
-bspc config border_width 2
-bspc config window_gap 8
+bspc config border_width 3
+bspc config window_gap 6
 bspc config split_ratio 0.50
 bspc config single_monocle true # smart borders
 bspc config borderless_monocle true # smart borders
