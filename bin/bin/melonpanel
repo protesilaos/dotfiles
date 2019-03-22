@@ -32,16 +32,14 @@
 # is included in the Debian repos and comes together with `bspwm` when
 # running `apt install bspwm`.
 #
-# Because of Lemonbar's inability to draw Xft fonts (outline fonts),
-# this script calls free/libre bitmap fonts that are bundled with my
-# dotfiles.  For more details, see the "fonts" directory of my dotfiles.
-#
-# TODO make sure all deps are included
 # Melonpanel dependencies:
-#   sudo apt install bspwm lemonbar xdo
+#   sudo apt install bspwm lemonbar xdo xfonts-terminus
 #
-# Module dependencies: TODO make sure each module checks for bin
+# DEPRECATED but kept for reference:
+# Module dependencies:
 #   sudo apt install amixer mpd mpc
+#
+# Last reviewed 2019-03-22
 #
 # }}}
 
@@ -53,13 +51,11 @@ if pgrep -xo lemonbar > /dev/null; then
     pkill -xo lemonbar
 fi
 
-# Fonts used to output text and unicode glyphs.  These are bitmap fonts,
-# which are included with my dotfiles, inside the "fonts" directory.
-# The "uni" font is a fallback for drawing Greek characters (most fonts
-# I tested did not, exception is GNU Unifont, which only comes in 16pt).
-melonpanel_font='-misc-tamzen-medium-r-normal--12-87-100-100-c-60-iso8859-1'
-melonpanel_font_uni='-gohu-gohufont-medium-r-normal--11-80-100-100-c-60-iso10646-1'
-melonpanel_glyphs='-wuncon-siji-medium-r-normal--10-100-75-75-c-80-iso10646-1'
+# Melonpanel variables
+# NOTE the descriptions for the Terminus typeface are copied from
+# /etc/X11/fonts/misc/xfonts-terminus.alias
+melonpanel_font='-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso10646-1'
+melonpanel_height='20'
 
 # }}}
 
@@ -72,12 +68,11 @@ melonpanel_glyphs='-wuncon-siji-medium-r-normal--10-100-75-75-c-80-iso10646-1'
 # straightforward.
 source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
-# TODO review these
 COLOR_DEFAULT_FG="$foreground"
 COLOR_DEFAULT_BG="$background"
 COLOR_MONITOR_FG="$foregroundalt"
-COLOR_MONITOR_BG="$background"
-COLOR_FOCUSED_MONITOR_FG="$backgroundalt"
+COLOR_MONITOR_BG="$color5"
+COLOR_FOCUSED_MONITOR_FG="$foreground"
 COLOR_FOCUSED_MONITOR_BG="$color6"
 COLOR_FREE_FG="$foregroundalt"
 COLOR_FREE_BG="$background"
@@ -85,8 +80,8 @@ COLOR_FOCUSED_FREE_FG="$background"
 COLOR_FOCUSED_FREE_BG="$color2"
 COLOR_OCCUPIED_FG="$color6"
 COLOR_OCCUPIED_BG="$backgroundalt"
-COLOR_ACTIVE_OCCUPIED_FG="$background"
-COLOR_ACTIVE_OCCUPIED_BG="$color4"
+COLOR_ACTIVE_OCCUPIED_FG="$backgroundalt"
+COLOR_ACTIVE_OCCUPIED_BG="$color5"
 COLOR_FOCUSED_OCCUPIED_FG="$background"
 COLOR_FOCUSED_OCCUPIED_BG="$color6"
 COLOR_URGENT_FG="$background"
@@ -94,9 +89,9 @@ COLOR_URGENT_BG="$color1"
 COLOR_FOCUSED_URGENT_FG="$background"
 COLOR_FOCUSED_URGENT_BG="$color6"
 COLOR_MONOCLE_FG="$background"
-COLOR_MONOCLE_BG="$color11"
+COLOR_MONOCLE_BG="$color3"
 COLOR_FLAGS_FG="$background"
-COLOR_FLAGS_BG="$color12"
+COLOR_FLAGS_BG="$color4"
 
 # }}}
 
@@ -107,50 +102,35 @@ COLOR_FLAGS_BG="$color12"
 # will echo a majuscule (letter A-Z).  This is done to easily retrieve
 # their output from the named pipe.  The letter has to be unique and,
 # ideally, use common words that denote the function of the content of
-# the command such as e.g. D for Date, C for Clock...  Where this would
-# lead to conflicts, find a synonym or something close enough.
+# the command such as e.g. D for Date, N for Network...  Where this
+# would lead to conflicts, find a synonym or something close enough.
 #
 # Any function that starts with "ancillary" is only meant to support the
 # operations of another function.  Ancillary functions are used for
 # formatting and the like.  They are not printed directly on the panel.
 # Whereas functions called "my_SOMETHING" pass their output to the
 # panel.
-#
-# Also note that all unicode glyphs are taken from the font defined in
-# the variable "melonpanel_glyphs" in the previous section.
-
 
 # Define date format as "Mon 1 Jan" (the %e omits the leading 0 from
-# single digit dates, as opposed to %d).  Update every 6 hours.
+# single digit dates, as opposed to %d == this is the same as %_d).
 #
-# TODO HELP any better way to update only when the day changes?
-# Changing the value to 1d is not really a solution because a workflow
-# may start shortly before the beginning of the next date and thus
-# retain the old value for too long.
-my_date() {
+# Define the time in hours, minutes, seconds, using 24h format.  Update
+# every second.
+my_datetime() {
     while true; do
-        echo "D" "$(date +'%a %e %b')"
-        sleep 6h
-    done
-}
-
-# Define the time in hours and minutes, using 24h format.  Update every
-# minute.
-my_time() {
-    while true; do
-        echo "T""$(date +'%H:%M')"
-        sleep 1m
+        echo "D" "$(date +'%a %e %b %T')"
+        sleep 1s
     done
 }
 
 # TODO test ethernet
 # TODO make WiFi test conditional on the existence of wireless capacity
 #
-# Check if the connection is established.  Print WiFi info.  Else
-# display notice.
+# Check if the connection is established.  Print info.  Else display
+# notice.
 ancillary_my_network() {
 	if [[ "$(nmcli -t -f STATE general status)" == 'connected' ]]; then
-		echo "$(nmcli -t -f IN-USE,SSID,SIGNAL device wifi list | grep '*' | sed 's/:/ /g ; s/\*// ; s/^ //g')%"
+		echo "$(nmcli -t -f IN-USE,SIGNAL device wifi list | grep '^\*' | cut -d ':' -f 2)%"
 	else
 		echo "No Connection"
 	fi
@@ -162,12 +142,12 @@ ancillary_my_network() {
 # hour.
 my_network() {
 	while true; do
-		echo "N" "%{F$color5}$(echo -e '\ue0f0')%{F-}" "$(ancillary_my_network)"
+		echo "N" "%{F$color5}Net%{F-}" "$(ancillary_my_network)"
 		sleep 1h
 	done
 }
 
-###### DEPRECATED but kept for future reference
+###### DEPRECATED but kept for future reference {{{
 #### # Check if mpd is running, what is its state, and output the appropriate
 #### # glyph.  If mpd is stopped or not running, omit the glyph.
 #### ancillary_mpd_playing() {
@@ -204,17 +184,17 @@ my_network() {
 ####         fi
 ####     fi
 #### }
-
-# Here we include the status of mpd and of the current song, as defined
-# above, and append its elapsed time / duration.  If there is no running
-# mpd, nothing will be shown.  Update every second.
-my_mpd_status() {
-    while true; do
-        echo "M" "$(ancillary_mpd_playing)" "$(ancillary_mpd_current)" \
-		"$(mpc status | grep -oe '[0-9]*:[0-9]*/[0-9]*:[0-9]*')" 
-        sleep 1s
-    done
-}
+####
+#### # Here we include the status of mpd and of the current song, as defined
+#### # above, and append its elapsed time / duration.  If there is no running
+#### # mpd, nothing will be shown.  Update every second.
+#### my_mpd_status() {
+####     while true; do
+####         echo "M" "$(ancillary_mpd_playing)" "$(ancillary_mpd_current)" \
+#### 		"$(mpc status | grep -oe '[0-9]*:[0-9]*/[0-9]*:[0-9]*')" 
+####         sleep 1s
+####     done
+#### }
 
 ###### DEPRECATED but kept for future reference
 #### # This is where we retrieve the information about the temperature of the
@@ -234,6 +214,7 @@ my_mpd_status() {
 ####         sleep 5m
 ####     done
 #### }
+###### }}}
 
 # TODO this should be contingent on the presence of a battery
 # Show whether the battery is charging, discharging, or full.  Add the
@@ -241,16 +222,17 @@ my_mpd_status() {
 ancillary_my_battery_status() {
     local battery_path='/sys/class/power_supply/BAT0'
     local battery_status="$(cat $battery_path/status)"
+	local battery_label='Bat'
 
     # TODO consider conditional logic when on plug
 	if [ "$battery_status" == 'Charging' ]; then
-		echo "%{F$color2}$(echo -e '\ue0d9')%{F-}"
+		echo "%{F$color13}$battery_label ▒%{F-}"
 	elif [ "$battery_status" == 'Discharging' ]; then
-		echo "%{F$color3}$(echo -e '\ue036')%{F-}"
+		echo "%{F$color11}$battery_label ░%{F-}"
 	elif [ "$battery_status" == 'Full' ]; then
-		echo "%{F$color2}$(echo -e '\ue037')%{F-}"
+		echo "%{F$color2}$battery_label █%{F-}"
 	else
-		echo "%{F$color3}$(echo -e '\ue20f')%{F-}"
+		echo "%{F$color3}$battery_label ?%{F-}"
 	fi
 }
 
@@ -274,11 +256,12 @@ ancillary_my_volume_status() {
     if [ -x /usr/bin/amixer ]; then
         local volume_status="$(amixer get Master | tail -n 1 | grep -e '\[[on,off]*\]')"
         local volume_level="$(amixer get Master | tail -n 1 | grep -oe '[0-9]*%')"
+		local volume_label='Vol'
 
         if [[ "$volume_status" == *'off'* ]]; then
-            printf "%s %s" "%{F$color3}$(echo -e '\ue0e0')%{F-}" "$volume_level (Muted)"
+            printf "%s %s" "%{F$color3}$volume_label%{F-}" "$volume_level (Muted)"
         else
-            printf "%s %s" "%{F$color4}$(echo -e '\ue0e0')%{F-}" "$volume_level"
+            printf "%s %s" "%{F$color4}$volume_label%{F-}" "$volume_level"
         fi
     fi
 }
@@ -316,8 +299,8 @@ my_volume() {
 # Piping and reading the output of the modules {{{
 # ------------------------------------------------
 
-# The design of this section has been heavily inspired from the examples
-# provided by upstream bspwm.
+# The design of this section has been heavily inspired/adapted from the
+# examples provided by upstream bspwm.
 
 # set path to named pipe used to store process data for these operations
 melonpanel_fifo=/tmp/melonpanel_fifo
@@ -332,14 +315,16 @@ mkfifo "$melonpanel_fifo"
 
 # pipe the output of the modules to the fifo
 my_battery > "$melonpanel_fifo" &
-my_date > "$melonpanel_fifo" &
+my_datetime > "$melonpanel_fifo" &
 my_network > "$melonpanel_fifo" &
+my_volume > "$melonpanel_fifo" &
+bspc subscribe report > "$melonpanel_fifo" &
+
+##### DEPRECATED these are from the modules that are no longer in use.
+##### Kept for reference.
 #### my_current_keyboard_layout > "$melonpanel_fifo" &
 #### my_mpd_status > "$melonpanel_fifo" &
 #### my_temperature > "$melonpanel_fifo" &
-my_time > "$melonpanel_fifo" &
-my_volume > "$melonpanel_fifo" &
-bspc subscribe report > "$melonpanel_fifo" &
 
 # Read the content of the fifo file.  We differantiate between modules
 # based on the majuscule (letter A-Z) they piped into melonpanel_fifo
@@ -355,7 +340,7 @@ melonpanel() {
                 bat="${line#?}"
                 ;;
             D*)
-                # current date
+                # current date and time
                 date="${line#?}"
                 ;;
 ####            H*)
@@ -374,10 +359,6 @@ melonpanel() {
 ####                # mpd status
 ####                mus="${line#?}"
 ####                ;;
-            T*)
-                # current time
-                clock="${line#?}"
-                ;;
             V*)
                 # current date
                 vol="${line#?}"
@@ -407,7 +388,7 @@ melonpanel() {
                                     ;;
                             esac
                             [ $num_mon -lt 2 ] && shift && continue
-                            wm="${wm}%{F${FG}}%{B${BG}} ${name} %{B-}%{F-}"
+                            wm="${wm}%{U${BG}}%{F${FG}} %{+u}${name}%{-u} %{F-}%{U-}"
                             ;;
                         [fFoOuU]*)
                             case $item in
@@ -492,10 +473,10 @@ melonpanel() {
         esac
         local laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
         if [ -n "$laptop_external_monitor" ]; then
-            printf "%s%s\n" "%{Sf}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} ${clock} "\
-            "%{Sl}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} ${clock} "
+            printf "%s%s\n" "%{Sf}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} "\
+            "%{Sl}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} "
         else
-            printf "%s\n" "%{Sf}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} ${clock} "
+            printf "%s\n" "%{Sf}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} "
         fi
     done
 }
@@ -505,12 +486,10 @@ melonpanel() {
 # Launch the panel with the given parameters {{{
 # ----------------------------------------------
 
-# We load three fonts.  The first is the main font for text, the second
-# is a fallback option for displaying Greek glyphs, while the third
-# draws the iconographs/symbols used in some of the modules.
-melonpanel < "$melonpanel_fifo" | lemonbar -u 0 -p -g 'x18' \
--F "$foreground" -B "$background" -f "$melonpanel_font" \
--f "$melonpanel_font_uni" -f "$melonpanel_glyphs" -n "Melonpanel" &
+# NOTE the $foreground and $background are colours (see relevant section
+# above).
+melonpanel < "$melonpanel_fifo" | lemonbar -u 2 -p -g "x${melonpanel_height}" \
+-F "$foreground" -B "$background" -f "$melonpanel_font" -n "Melonpanel" &
 
 # Hide panel when windows are in full screen mode.  This does not work
 # all the time, especially with lower `sleep` values, requiring a
