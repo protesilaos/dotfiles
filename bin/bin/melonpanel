@@ -70,26 +70,47 @@ source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 COLOR_DEFAULT_FG="$foreground"
 COLOR_DEFAULT_BG="$background"
-COLOR_MONITOR_FG="$foregroundalt"
-COLOR_MONITOR_BG="$color5"
-COLOR_FOCUSED_MONITOR_FG="$foreground"
+
+COLOR_MONITOR_FG="$color5"
+COLOR_MONITOR_BG="$backgroundalt"
+COLOR_MONITOR_U="$color5"
+
+COLOR_FOCUSED_MONITOR_FG="$background"
 COLOR_FOCUSED_MONITOR_BG="$color6"
+COLOR_FOCUSED_MONITOR_U="$color6"
+
 COLOR_FREE_FG="$foregroundalt"
 COLOR_FREE_BG="$background"
+
+COLOR_ACTIVE_FREE_FG="$color2"
+COLOR_ACTIVE_FREE_BG="$backgroundalt"
+COLOR_ACTIVE_FREE_U="$color2"
+
 COLOR_FOCUSED_FREE_FG="$background"
 COLOR_FOCUSED_FREE_BG="$color2"
-COLOR_OCCUPIED_FG="$color6"
+COLOR_FOCUSED_FREE_U="$color2"
+
+COLOR_OCCUPIED_FG="$color5"
 COLOR_OCCUPIED_BG="$backgroundalt"
-COLOR_ACTIVE_OCCUPIED_FG="$backgroundalt"
-COLOR_ACTIVE_OCCUPIED_BG="$color5"
+COLOR_OCCUPIED_U="$backgroundalt"
+
+COLOR_ACTIVE_OCCUPIED_FG="$color5"
+COLOR_ACTIVE_OCCUPIED_BG="$backgroundalt"
+COLOR_ACTIVE_OCCUPIED_U="$color5"
+
 COLOR_FOCUSED_OCCUPIED_FG="$background"
 COLOR_FOCUSED_OCCUPIED_BG="$color6"
+COLOR_FOCUSED_OCCUPIED_U="$color6"
+
 COLOR_URGENT_FG="$background"
 COLOR_URGENT_BG="$color1"
+
 COLOR_FOCUSED_URGENT_FG="$background"
-COLOR_FOCUSED_URGENT_BG="$color6"
+COLOR_FOCUSED_URGENT_BG="$color1"
+
 COLOR_MONOCLE_FG="$background"
 COLOR_MONOCLE_BG="$color3"
+
 COLOR_FLAGS_FG="$background"
 COLOR_FLAGS_BG="$color4"
 
@@ -378,17 +399,19 @@ melonpanel() {
                                     # monitor
                                     FG=$COLOR_MONITOR_FG
                                     BG=$COLOR_MONITOR_BG
+                                    U=$COLOR_MONITOR_U
                                     on_focused_monitor=
                                     ;;
                                 M*)
                                     # focused monitor
                                     FG=$COLOR_FOCUSED_MONITOR_FG
                                     BG=$COLOR_FOCUSED_MONITOR_BG
+                                    U=$COLOR_FOCUSED_MONITOR_U
                                     on_focused_monitor=1
                                     ;;
                             esac
                             [ $num_mon -lt 2 ] && shift && continue
-                            wm="${wm}%{U${BG}}%{F${FG}} %{+u}${name}%{-u} %{F-}%{U-}"
+                            wm="${wm}%{U$U}%{F$FG}%{B$BG} %{+u}${name}%{-u} %{B-}%{F-}%{U-}"
                             ;;
                         [fFoOuU]*)
                             case $item in
@@ -396,52 +419,61 @@ melonpanel() {
                                     # free desktop
                                     FG=$COLOR_FREE_FG
                                     BG=$COLOR_FREE_BG
+                                    U=$COLOR_FREE_BG
                                     ;;
                                 F*)
                                     if [ "$on_focused_monitor" ] ; then
                                         # focused free desktop
                                         FG=$COLOR_FOCUSED_FREE_FG
                                         BG=$COLOR_FOCUSED_FREE_BG
+                                        U=$COLOR_FOCUSED_FREE_U
                                     else
                                         # active free desktop
-                                        FG=$COLOR_FREE_FG
-                                        BG=$COLOR_FREE_BG
+                                        FG=$COLOR_ACTIVE_FREE_FG
+                                        BG=$COLOR_ACTIVE_FREE_BG
+                                        U=$COLOR_ACTIVE_FREE_U
                                     fi
                                     ;;
                                 o*)
                                     # occupied desktop
                                     FG=$COLOR_OCCUPIED_FG
                                     BG=$COLOR_OCCUPIED_BG
+                                    U=$COLOR_OCCUPIED_U
                                     ;;
                                 O*)
                                     if [ "$on_focused_monitor" ] ; then
                                         # focused occupied desktop
                                         FG=$COLOR_FOCUSED_OCCUPIED_FG
                                         BG=$COLOR_FOCUSED_OCCUPIED_BG
+                                        U=$COLOR_FOCUSED_OCCUPIED_U
                                     else
                                         # active occupied desktop
                                         FG=$COLOR_ACTIVE_OCCUPIED_FG
                                         BG=$COLOR_ACTIVE_OCCUPIED_BG
+                                        U=$COLOR_ACTIVE_OCCUPIED_U
                                     fi
                                     ;;
                                 u*)
                                     # urgent desktop
                                     FG=$COLOR_URGENT_FG
                                     BG=$COLOR_URGENT_BG
+                                    U=$COLOR_URGENT_BG
                                     ;;
                                 U*)
                                     if [ "$on_focused_monitor" ] ; then
                                         # focused urgent desktop
                                         FG=$COLOR_FOCUSED_URGENT_FG
                                         BG=$COLOR_FOCUSED_URGENT_BG
+                                        U=$COLOR_FOCUSED_URGENT_BG
                                     else
                                         # active urgent desktop
                                         FG=$COLOR_URGENT_FG
                                         BG=$COLOR_URGENT_BG
+                                        U=$COLOR_URGENT_BG
                                     fi
                                     ;;
                             esac
-                            wm="${wm}%{F$FG}%{B$BG} ${name} %{B-}%{F-}"
+                            wm="${wm}%{U$U}%{F$FG}%{B$BG}%{+u} ${name} %{-u}%{B-}%{F-}%{U-}"
                             ;;
                         [LG]*)
                             case $item in
