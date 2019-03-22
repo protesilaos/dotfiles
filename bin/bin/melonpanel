@@ -1,17 +1,17 @@
 #!/bin/bash
 
-    # This program is free software: you can redistribute it and/or modify
-    # it under the terms of the GNU General Public License as published by
-    # the Free Software Foundation, either version 3 of the License, or
-    # (at your option) any later version.
+	# This program is free software: you can redistribute it and/or modify
+	# it under the terms of the GNU General Public License as published by
+	# the Free Software Foundation, either version 3 of the License, or
+	# (at your option) any later version.
 
-    # This program is distributed in the hope that it will be useful,
-    # but WITHOUT ANY WARRANTY; without even the implied warranty of
-    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    # GNU General Public License for more details.
+	# This program is distributed in the hope that it will be useful,
+	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	# GNU General Public License for more details.
 
-    # You should have received a copy of the GNU General Public License
-    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	# You should have received a copy of the GNU General Public License
+	# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Description {{{
 # ---------------
@@ -33,11 +33,11 @@
 # running `apt install bspwm`.
 #
 # Melonpanel dependencies:
-#   sudo apt install bspwm lemonbar xdo xfonts-terminus
+#	sudo apt install bspwm lemonbar xdo xfonts-terminus
 #
-# DEPRECATED but kept for reference:
-# Module dependencies:
-#   sudo apt install amixer mpd mpc
+# For some of the older, deprecated modules that were once part of this
+# script, see "melonpanel_deprecated_modules", inside the same directory
+# as this file.
 #
 # Last reviewed 2019-03-22
 #
@@ -48,7 +48,7 @@
 
 # Check if any lemonbar is running and kill it
 if pgrep -xo lemonbar > /dev/null; then
-    pkill -xo lemonbar
+	pkill -xo lemonbar
 fi
 
 # Melonpanel variables
@@ -73,7 +73,7 @@ COLOR_DEFAULT_BG="$background"
 
 COLOR_MONITOR_FG="$color5"
 COLOR_MONITOR_BG="$backgroundalt"
-COLOR_MONITOR_U="$color5"
+COLOR_MONITOR_U="$backgroundalt"
 
 COLOR_FOCUSED_MONITOR_FG="$background"
 COLOR_FOCUSED_MONITOR_BG="$color6"
@@ -138,10 +138,10 @@ COLOR_FLAGS_BG="$color4"
 # Define the time in hours, minutes, seconds, using 24h format.  Update
 # every second.
 my_datetime() {
-    while true; do
-        echo "D" "$(date +'%a %e %b %T')"
-        sleep 1s
-    done
+	while true; do
+		echo "D" "$(date +'%a %e %b %T')"
+		sleep 1s
+	done
 }
 
 # TODO test ethernet
@@ -168,84 +168,15 @@ my_network() {
 	done
 }
 
-###### DEPRECATED but kept for future reference {{{
-#### # Check if mpd is running, what is its state, and output the appropriate
-#### # glyph.  If mpd is stopped or not running, omit the glyph.
-#### ancillary_mpd_playing() {
-####     local mpc_status=$(mpc status | grep "[[a-z]*]")
-#### 
-####     if [[ "$mpc_status" == *'playing'* ]]; then
-####         echo "%{F$color2}$(echo -e '\ue0ed')%{F-}"
-####     elif [[ "$mpc_status" == *'paused'* ]]; then
-####         echo "%{F$color3}$(echo -e '\ue0ed')%{F-}" "(Paused)"
-####     else
-####         echo ''
-####     fi
-#### }
-#### 
-#### # Get a cleaner output of the mpc status.  We just want the first line
-#### # which has the artist's name and the song title.  Then we want to make
-#### # sure that long titles are trimmed and an indicator is appended to
-#### # denote this.
-#### ancillary_mpd_current() {
-####     local mpc_status=$(mpc status | grep "[[a-z]*]")
-####     local current_song_length="$(mpc status | head -n 1 | wc -c)"
-####     local maxlen="60"
-#### 
-####     # if playing or paused
-####     if [[ "$mpc_status" == *'p'* ]]; then
-####         # Check if current mpc status has a length that is equal or higher
-####         # than "maxlen".  If so trim the output to "maxlen" and append
-####         # marker to denote the modification.
-####         if [ "$current_song_length" -gt "$maxlen" ]; then
-####             local current_song_trimmed="$(mpc status | head -n 1 | cut -c 1-${maxlen})"
-####             printf "%s %s" "$current_song_trimmed" "[..]"
-####         else
-####             echo "$(mpc status | head -n 1)" 
-####         fi
-####     fi
-#### }
-####
-#### # Here we include the status of mpd and of the current song, as defined
-#### # above, and append its elapsed time / duration.  If there is no running
-#### # mpd, nothing will be shown.  Update every second.
-#### my_mpd_status() {
-####     while true; do
-####         echo "M" "$(ancillary_mpd_playing)" "$(ancillary_mpd_current)" \
-#### 		"$(mpc status | grep -oe '[0-9]*:[0-9]*/[0-9]*:[0-9]*')" 
-####         sleep 1s
-####     done
-#### }
-
-###### DEPRECATED but kept for future reference
-#### # This is where we retrieve the information about the temperature of the
-#### # laptop's core.  Updated every five minutes.
-#### my_temperature() {
-#### 	# make this conditional on presence of temperature_path, else print
-#### 	# empty string, but keep the TEMP indicator (to show the absence of
-#### 	# the path).
-#### 	if [ -f /sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input ]; then
-#### 		local temperature_path='/sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input'
-#### 	elif [ -f /sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input ]; then
-#### 		local temperature_path='/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input'
-#### 	fi
-#### 
-####     while true; do
-####         echo "H" "%{F$color1}$(echo -e '\ue0c3')%{F-}" "$(cat $temperature_path | cut -c 1-2)°"
-####         sleep 5m
-####     done
-#### }
-###### }}}
-
 # TODO this should be contingent on the presence of a battery
 # Show whether the battery is charging, discharging, or full.  Add the
 # appropriate unicode glyph.
 ancillary_my_battery_status() {
-    local battery_path='/sys/class/power_supply/BAT0'
-    local battery_status="$(cat $battery_path/status)"
+	local battery_path='/sys/class/power_supply/BAT0'
+	local battery_status="$(cat $battery_path/status)"
 	local battery_label='Bat'
 
-    # TODO consider conditional logic when on plug
+	# TODO consider conditional logic when on plug
 	if [ "$battery_status" == 'Charging' ]; then
 		echo "%{F$color13}$battery_label ▒%{F-}"
 	elif [ "$battery_status" == 'Discharging' ]; then
@@ -261,12 +192,12 @@ ancillary_my_battery_status() {
 # Get the output from the above ancillary function and present it
 # together with the current battery level.  Update every minute.
 my_battery() {
-    local battery_path='/sys/class/power_supply/BAT0'
+	local battery_path='/sys/class/power_supply/BAT0'
 
-    while true; do
-        echo "B" "$(ancillary_my_battery_status)" "$(cat "$battery_path/capacity")%"
-        sleep 1m
-    done
+	while true; do
+		echo "B" "$(ancillary_my_battery_status)" "$(cat "$battery_path/capacity")%"
+		sleep 1m
+	done
 }
 
 # Check if the volume is muted or not.  Output the appropriate
@@ -274,46 +205,27 @@ my_battery() {
 # TODO should this change if another output source is connected?  Test
 # and adapt.
 ancillary_my_volume_status() {
-    if [ -x /usr/bin/amixer ]; then
-        local volume_status="$(amixer get Master | tail -n 1 | grep -e '\[[on,off]*\]')"
-        local volume_level="$(amixer get Master | tail -n 1 | grep -oe '[0-9]*%')"
+	if [ -x /usr/bin/amixer ]; then
+		local volume_status="$(amixer get Master | tail -n 1 | grep -e '\[[on,off]*\]')"
+		local volume_level="$(amixer get Master | tail -n 1 | grep -oe '[0-9]*%')"
 		local volume_label='Vol'
 
-        if [[ "$volume_status" == *'off'* ]]; then
-            printf "%s %s" "%{F$color3}$volume_label%{F-}" "$volume_level (Muted)"
-        else
-            printf "%s %s" "%{F$color4}$volume_label%{F-}" "$volume_level"
-        fi
-    fi
+		if [[ "$volume_status" == *'off'* ]]; then
+			printf "%s %s" "%{F$color3}$volume_label%{F-}" "$volume_level (Muted)"
+		else
+			printf "%s %s" "%{F$color4}$volume_label%{F-}" "$volume_level"
+		fi
+	fi
 }
 
 # Present the content of the above ancillary function.  Update every
 # minute.
 my_volume() {
-    while true; do
-        echo "V" "$(ancillary_my_volume_status)"
-        sleep 1m
-    done
+	while true; do
+		echo "V" "$(ancillary_my_volume_status)"
+		sleep 1m
+	done
 }
-
-###### DEPRECATED but kept for future reference
-#### # Modified version of the content of `own_script_current_layout`.  That
-#### # is a separate file just because I need the functionality decoupled
-#### # from the panel.  All we do here is print the language of the current
-#### # layout.
-#### #
-#### # TODO HELP any better way than to spam this every second?  Just update
-#### # if a change occurs?
-#### my_current_keyboard_layout() {
-####     while true; do
-####         if [[ "$(setxkbmap -query | grep 'layout' | grep -o 'us')" == 'us' ]]; then
-####             echo 'K''EN' # English (US QWERTY)
-####         else
-####             echo 'K''EL' # Greek
-####         fi
-####         sleep 1s
-####     done
-#### }
 
 # }}}
 
@@ -328,7 +240,7 @@ melonpanel_fifo=/tmp/melonpanel_fifo
 
 # make sure you delete any existing named pipe
 if [ -e "$melonpanel_fifo" ]; then
-    rm "$melonpanel_fifo"
+	rm "$melonpanel_fifo"
 fi
 
 # create a new named pipe
@@ -341,180 +253,162 @@ my_network > "$melonpanel_fifo" &
 my_volume > "$melonpanel_fifo" &
 bspc subscribe report > "$melonpanel_fifo" &
 
-##### DEPRECATED these are from the modules that are no longer in use.
-##### Kept for reference.
-#### my_current_keyboard_layout > "$melonpanel_fifo" &
-#### my_mpd_status > "$melonpanel_fifo" &
-#### my_temperature > "$melonpanel_fifo" &
-
 # Read the content of the fifo file.  We differantiate between modules
 # based on the majuscule (letter A-Z) they piped into melonpanel_fifo
 # (see modules above).  Here we just add a shorter variable to each
 # module, which helps position it on the panel (the last printf).
 melonpanel() {
-    local num_mon=$(bspc query -M | wc -l)
+	local num_mon=$(bspc query -M | wc -l)
 
-    while read -r line ; do
-        case $line in
-            B*)
-                # battery status
-                bat="${line#?}"
-                ;;
-            D*)
-                # current date and time
-                date="${line#?}"
-                ;;
-####            H*)
-####                # temperature level
-####                hot="${line#?}"
-####                ;;
-####            K*)
-####                # current keyboard language
-####                key="${line#?}"
-####                ;;
-            N*)
-                # network status
-                net="${line#?}"
-                ;;
-####            M*)
-####                # mpd status
-####                mus="${line#?}"
-####                ;;
-            V*)
-                # current date
-                vol="${line#?}"
-                ;;
-            W*)
-                # bspwm's state
-                wm=
-                IFS=':'
-                set -- ${line#?}
-                while [ $# -gt 0 ] ; do
-                    item=$1
-                    name=${item#?}
-                    case $item in
-                        [mM]*)
-                            case $item in
-                                m*)
-                                    # monitor
-                                    FG=$COLOR_MONITOR_FG
-                                    BG=$COLOR_MONITOR_BG
-                                    U=$COLOR_MONITOR_U
-                                    on_focused_monitor=
-                                    ;;
-                                M*)
-                                    # focused monitor
-                                    FG=$COLOR_FOCUSED_MONITOR_FG
-                                    BG=$COLOR_FOCUSED_MONITOR_BG
-                                    U=$COLOR_FOCUSED_MONITOR_U
-                                    on_focused_monitor=1
-                                    ;;
-                            esac
-                            [ $num_mon -lt 2 ] && shift && continue
-                            wm="${wm}%{U$U}%{F$FG}%{B$BG} %{+u}${name}%{-u} %{B-}%{F-}%{U-}"
-                            ;;
-                        [fFoOuU]*)
-                            case $item in
-                                f*)
-                                    # free desktop
-                                    FG=$COLOR_FREE_FG
-                                    BG=$COLOR_FREE_BG
-                                    U=$COLOR_FREE_BG
-                                    ;;
-                                F*)
-                                    if [ "$on_focused_monitor" ] ; then
-                                        # focused free desktop
-                                        FG=$COLOR_FOCUSED_FREE_FG
-                                        BG=$COLOR_FOCUSED_FREE_BG
-                                        U=$COLOR_FOCUSED_FREE_U
-                                    else
-                                        # active free desktop
-                                        FG=$COLOR_ACTIVE_FREE_FG
-                                        BG=$COLOR_ACTIVE_FREE_BG
-                                        U=$COLOR_ACTIVE_FREE_U
-                                    fi
-                                    ;;
-                                o*)
-                                    # occupied desktop
-                                    FG=$COLOR_OCCUPIED_FG
-                                    BG=$COLOR_OCCUPIED_BG
-                                    U=$COLOR_OCCUPIED_U
-                                    ;;
-                                O*)
-                                    if [ "$on_focused_monitor" ] ; then
-                                        # focused occupied desktop
-                                        FG=$COLOR_FOCUSED_OCCUPIED_FG
-                                        BG=$COLOR_FOCUSED_OCCUPIED_BG
-                                        U=$COLOR_FOCUSED_OCCUPIED_U
-                                    else
-                                        # active occupied desktop
-                                        FG=$COLOR_ACTIVE_OCCUPIED_FG
-                                        BG=$COLOR_ACTIVE_OCCUPIED_BG
-                                        U=$COLOR_ACTIVE_OCCUPIED_U
-                                    fi
-                                    ;;
-                                u*)
-                                    # urgent desktop
-                                    FG=$COLOR_URGENT_FG
-                                    BG=$COLOR_URGENT_BG
-                                    U=$COLOR_URGENT_BG
-                                    ;;
-                                U*)
-                                    if [ "$on_focused_monitor" ] ; then
-                                        # focused urgent desktop
-                                        FG=$COLOR_FOCUSED_URGENT_FG
-                                        BG=$COLOR_FOCUSED_URGENT_BG
-                                        U=$COLOR_FOCUSED_URGENT_BG
-                                    else
-                                        # active urgent desktop
-                                        FG=$COLOR_URGENT_FG
-                                        BG=$COLOR_URGENT_BG
-                                        U=$COLOR_URGENT_BG
-                                    fi
-                                    ;;
-                            esac
-                            wm="${wm}%{U$U}%{F$FG}%{B$BG}%{+u} ${name} %{-u}%{B-}%{F-}%{U-}"
-                            ;;
-                        [LG]*)
-                            case $item in
-                                LM*)
-                                    # layout monocle
-                                    FG=$COLOR_MONOCLE_FG
-                                    BG=$COLOR_MONOCLE_BG
-                                    ;;
-                                LT*)
-                                    # layout tiled
-                                    FG=$COLOR_DEFAULT_FG
-                                    BG=$COLOR_DEFAULT_BG
-                                    ;;
-                                G) # define it so that monocle does not paint the empty space
-                                    FG=$COLOR_DEFAULT_FG
-                                    BG=$COLOR_DEFAULT_BG
-                                    ;;
-                                G*?)
-                                    FG=$COLOR_FLAGS_FG
-                                    BG=$COLOR_FLAGS_BG
-                                    ;;
-                            esac
-                            # layout, state and flags
-                            wm="${wm}%{F$FG}%{B$BG} ${name} %{B-}%{F-}"
-                            ;;
-                    esac
-                    shift
-                done
-        esac
-        local laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
-        if [ -n "$laptop_external_monitor" ]; then
-            printf "%s%s\n" "%{Sf}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} "\
-            "%{Sl}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} "
-        else
-            printf "%s\n" "%{Sf}%{l}${wm}%{r}${bat} ${vol} ${net} ${date} "
-        fi
-    done
+	while read -r line ; do
+		case $line in
+			B*)
+				# battery status
+				bat="${line#?}"
+				;;
+			D*)
+				# current date and time
+				date="${line#?}"
+				;;
+			N*)
+				# network status
+				net="${line#?}"
+				;;
+			V*)
+				# current date
+				vol="${line#?}"
+				;;
+			W*)
+				# bspwm's state
+				wm=
+				IFS=':'
+				set -- ${line#?}
+				while [ $# -gt 0 ] ; do
+					item=$1
+					name=${item#?}
+					case $item in
+						[mM]*)
+							case $item in
+								m*)
+									# monitor
+									FG=$COLOR_MONITOR_FG
+									BG=$COLOR_MONITOR_BG
+									U=$COLOR_MONITOR_U
+									on_focused_monitor=
+									;;
+								M*)
+									# focused monitor
+									FG=$COLOR_FOCUSED_MONITOR_FG
+									BG=$COLOR_FOCUSED_MONITOR_BG
+									U=$COLOR_FOCUSED_MONITOR_U
+									on_focused_monitor=1
+									;;
+							esac
+							[ $num_mon -lt 2 ] && shift && continue
+							wm="${wm}%{U$U}%{F$FG}%{B$BG} %{+u}${name}%{-u} %{B-}%{F-}%{U-}"
+							;;
+						[fFoOuU]*)
+							case $item in
+								f*)
+									# free desktop
+									FG=$COLOR_FREE_FG
+									BG=$COLOR_FREE_BG
+									U=$COLOR_FREE_BG
+									;;
+								F*)
+									if [ "$on_focused_monitor" ] ; then
+										# focused free desktop
+										FG=$COLOR_FOCUSED_FREE_FG
+										BG=$COLOR_FOCUSED_FREE_BG
+										U=$COLOR_FOCUSED_FREE_U
+									else
+										# active free desktop
+										FG=$COLOR_ACTIVE_FREE_FG
+										BG=$COLOR_ACTIVE_FREE_BG
+										U=$COLOR_ACTIVE_FREE_U
+									fi
+									;;
+								o*)
+									# occupied desktop
+									FG=$COLOR_OCCUPIED_FG
+									BG=$COLOR_OCCUPIED_BG
+									U=$COLOR_OCCUPIED_U
+									;;
+								O*)
+									if [ "$on_focused_monitor" ] ; then
+										# focused occupied desktop
+										FG=$COLOR_FOCUSED_OCCUPIED_FG
+										BG=$COLOR_FOCUSED_OCCUPIED_BG
+										U=$COLOR_FOCUSED_OCCUPIED_U
+									else
+										# active occupied desktop
+										FG=$COLOR_ACTIVE_OCCUPIED_FG
+										BG=$COLOR_ACTIVE_OCCUPIED_BG
+										U=$COLOR_ACTIVE_OCCUPIED_U
+									fi
+									;;
+								u*)
+									# urgent desktop
+									FG=$COLOR_URGENT_FG
+									BG=$COLOR_URGENT_BG
+									U=$COLOR_URGENT_BG
+									;;
+								U*)
+									if [ "$on_focused_monitor" ] ; then
+										# focused urgent desktop
+										FG=$COLOR_FOCUSED_URGENT_FG
+										BG=$COLOR_FOCUSED_URGENT_BG
+										U=$COLOR_FOCUSED_URGENT_BG
+									else
+										# active urgent desktop
+										FG=$COLOR_URGENT_FG
+										BG=$COLOR_URGENT_BG
+										U=$COLOR_URGENT_BG
+									fi
+									;;
+							esac
+							wm="${wm}%{U$U}%{F$FG}%{B$BG}%{+u} ${name} %{-u}%{B-}%{F-}%{U-}"
+							;;
+						[LG]*)
+							case $item in
+								LM*)
+									# layout monocle
+									FG=$COLOR_MONOCLE_FG
+									BG=$COLOR_MONOCLE_BG
+									;;
+								LT*)
+									# layout tiled
+									FG=$COLOR_DEFAULT_FG
+									BG=$COLOR_DEFAULT_BG
+									;;
+								G) # define it so that monocle does not paint the empty space
+									FG=$COLOR_DEFAULT_FG
+									BG=$COLOR_DEFAULT_BG
+									;;
+								G*?)
+									FG=$COLOR_FLAGS_FG
+									BG=$COLOR_FLAGS_BG
+									;;
+							esac
+							# layout, state and flags
+							wm="${wm}%{F$FG}%{B$BG} ${name} %{B-}%{F-}"
+							;;
+					esac
+					shift
+				done
+		esac
+		local laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
+		if [ -n "$laptop_external_monitor" ]; then
+			printf "%s%s\n" "%{Sf}%{l}$wm%{r}$bat $vol $net $date " \
+			"%{Sl}%{l}$wm%{r}$bat $vol $net $date "
+		else
+			printf "%s\n" "%{Sf}%{l}$wm%{r}$bat $vol $net $date "
+		fi
+	done
 }
 
 # }}}
- 
+
 # Launch the panel with the given parameters {{{
 # ----------------------------------------------
 
