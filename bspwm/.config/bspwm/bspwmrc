@@ -68,13 +68,6 @@ sxhkd &
 # Launch my custom Lemonbar implementation
 if [ -x $HOME/bin/melonpanel ]; then
 
-    # First inform the X server about any bitmap fonts it should include
-    # in the font path.  Needed to draw the glyphs on the melonpanel.
-    if [ -d "$HOME/.local/share/fonts/bitmap" ]; then
-        # Apped this the list
-        xset fp+ "$HOME/.local/share/fonts/bitmap"
-    fi
-
     # Make sure we have no running instances
     if pgrep -x melonpanel; then
         pkill -x melonpanel
