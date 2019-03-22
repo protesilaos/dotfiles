@@ -5,7 +5,6 @@ Prior notes:
 
 * When running `stow fonts` inside my dotfiles' root directory, you will
   be symlinking outline fonts at ~/.local/share/fonts/FONT
-* Similarly, Bitmap fonts will be placed at ~/.local/share/fonts/bitmap
 * Following a successful `stow fonts`, a copy of this file is available
   at ~/.config/fontconfig/README and ~/.local/share/fonts/README
 
@@ -65,24 +64,5 @@ on the system.  As such, my Hack alternative will be used over the
 `fonts-hack` package.  I personally do not install the Debian package, 
 just to make sure.
 
-4 About the Bitmap fonts I distribute
--------------------------------------
-
-The Bitmap fonts bundled with my dotfiles are:
-
-* Gohu Font (WTFPL - Do What the Fuck You Want to Public License)[3]
-* Tamzen Font (Free license)[4]
-* Siji Font (GPL2)[5]
-
-They are all used in my custom `lemonbar` script to draw the system 
-panel.  For that, see `melonpanel` inside my dotfiles' "bin" directory.
-
-For how to use Bitmap fonts, consider this resource on the X server's 
-demands[6].
-
 [1] https://bboxtype.com/typefaces/FiraGO/
 [2] https://github.com/source-foundry/alt-hack
-[3] http://font.gohu.org/
-[4] https://github.com/sunaku/tamzen-font
-[5] https://github.com/stark/siji
-[6] http://www.xfree86.org/4.1.0/fonts2.html
