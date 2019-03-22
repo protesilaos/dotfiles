@@ -8,7 +8,9 @@
 [global]
 # NOTE uses the fontconfig default, see the 'font' directory of my
 # dotfiles https://gitlab.com/protesilaos/dotfiles 
-font = "sans-serif 9"
+# The size of the font should be the same as the one defined in
+# /dotfiles/bin/.local/share/my_custom_ui_font.sh
+font = "sans 10.5"
 frame_width = 1
 frame_color = "#232323"
 
@@ -97,7 +99,7 @@ hide_duplicate_count = false
 # NOTE after reading the above, follow this if you want to center on
 # screen:
 # {( monitor width / 2 ) - ( notification width / 2)}
-geometry = "300x4-3+20"
+geometry = "300x4-3+24"
 
 # Shrink window if it's smaller than the width.  Will be ignored if
 # width is 0.

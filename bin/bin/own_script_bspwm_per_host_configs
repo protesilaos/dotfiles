@@ -70,7 +70,7 @@ bspwm_laptop_dual_monitor() {
 	#
 	# NOTE the value is equal to the size of the panel (lemonbar), as
 	# defined in my melonpanel script.
-	bspc config top_padding 18
+	bspc config top_padding 20
 }
 
 # Run commands depending on the host computer.
