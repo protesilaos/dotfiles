@@ -24,7 +24,7 @@
 # am confident that no conflicts will arrise.  See the 'bin' directory
 # of my dotfiles.
 if [ -d "$HOME/bin" ] ; then
-    export PATH=$PATH:"$HOME/bin"
+	export PATH=$PATH:"$HOME/bin"
 fi
 
 # Default pager.  Note that the option I pass to it will quit once you
@@ -35,11 +35,11 @@ export MANPAGER=$PAGER
 # Default editor.  On Debian the Vim GUI is provided by a separate
 # package.
 if [ -x /usr/bin/gvim ]; then
-    export VISUAL="gvim"
-    export EDITOR=vim
+	export VISUAL="gvim"
+	export EDITOR=vim
 else
-    export VISUAL=vim
-    export EDITOR=$VISUAL
+	export VISUAL=vim
+	export EDITOR=$VISUAL
 fi
 
 # Default browser.  This leverages the MIME list.
@@ -47,9 +47,9 @@ export BROWSER=/usr/bin/xdg-open
 
 # Simple prompt
 if [ -n "$SSH_CONNECTION" ]; then
-    export PS1="\u@\h: \w \$ "
+	export PS1="\u@\h: \w \$ "
 else
-    export PS1="\w \$ "
+	export PS1="\w \$ "
 fi
 export PS2="> "
 
@@ -58,23 +58,23 @@ export PS2="> "
 # it's already enabled in /etc/bash.bashrc and /etc/profile sources
 # /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+	if [ -f /usr/share/bash-completion/bash_completion ]; then
+	. /usr/share/bash-completion/bash_completion
+	elif [ -f /etc/bash_completion ]; then
+	. /etc/bash_completion
+	fi
 fi
 
 # Enable tab completion when starting a command with 'sudo'
 if [ "$PS1" ]; then
-    complete -cf sudo
+	complete -cf sudo
 fi
 
 # If not running interactively, don't do anything.  This too is taken
 # from Debian 9's bashrc.
 case $- in
-    *i*) ;;
-      *) return;;
+	*i*) ;;
+	  *) return;;
 esac
 
 # Don't put duplicate lines or lines starting with space in the history.
@@ -187,7 +187,7 @@ fi
 
 # Same as above, though I currently do not use Emacs.
 if [ -x /usr/bin/emacs ]; then
-    alias e='emacsclient -c'
+	alias e='emacsclient -c'
 fi
 
 # cd into the previous working directory by omitting `cd`.
@@ -214,7 +214,7 @@ alias rsyncavzrd='rsync -avzr --delete --progress'
 # is provided by my dotfiles.
 if [ -x /usr/bin/dircolors ]; then
 	dircolors_data="$HOME/.local/share/my_bash/dircolors"
-    test -r $dircolors_data && eval "$(dircolors -b ${dircolors_data})" || eval "$(dircolors -b)"
+	test -r $dircolors_data && eval "$(dircolors -b ${dircolors_data})" || eval "$(dircolors -b)"
 fi
 
 alias dir='dir --color=auto'
@@ -252,14 +252,14 @@ alias urls="$EDITOR $HOME/.config/newsboat/urls"
 # https://protesilaos.com/tempus-themes.  These are also integrated into
 # my dotfiles, though not for `gnome-terminal`.
 if [ -x /usr/bin/gnome-terminal ]; then
-    alias gterml="gnome-terminal --tab-with-profile='Tempus Light'"
-    alias gtermd="gnome-terminal --tab-with-profile='Tempus Dark'"
+	alias gterml="gnome-terminal --tab-with-profile='Tempus Light'"
+	alias gtermd="gnome-terminal --tab-with-profile='Tempus Dark'"
 fi
 
 # These options are very opinionated, disabling images, javascripts,
 # etc.  See `man surf`.
 if [ -x /usr/bin/surf ]; then
-    alias surf="surf -giKMnps"
+	alias surf="surf -giKMnps"
 fi
 
 # Quick shortcuts for `mpv`.  When I want to play a podcast that only
@@ -268,22 +268,22 @@ fi
 # --ytdl-raw-options is for those occasions where a video is 4k or
 # something that slows things down considerably.
 if [ -x /usr/bin/mpv ]; then
-    alias mpvna='mpv --no-audio'
-    alias mpvnv='mpv --no-video'
+	alias mpvna='mpv --no-audio'
+	alias mpvnv='mpv --no-video'
 	alias mpvyt="mpv --ytdl-raw-options='format=[[bestvideo=height<=720]]'"
 fi
 
 # Quick shortcuts for `youtube-dl`.  Output is placed in the present
 # working directory.
 if [ -x /usr/bin/youtube-dl ]; then
-    alias ytaud='youtube-dl --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
-    alias ytvid='youtube-dl --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
+	alias ytaud='youtube-dl --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
+	alias ytvid='youtube-dl --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
 fi
 
 # Certbot.  This is a utility that handles Let's Encrypt certificates
 # for https connections.
 if [ -x /usr/bin/certbot ]; then
-    alias certm='sudo certbot certonly -a manual -d'
+	alias certm='sudo certbot certonly -a manual -d'
 fi
 
 # When I need to copy the contents of a file to the clipboard
@@ -297,10 +297,10 @@ fi
 # --------------------
 
 if [ -x /usr/bin/flatpak ]; then
-    alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
-    alias fliu="flatpak uninstall"
-    alias flls="flatpak list"
-    alias flu="flatpak update"
+	alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
+	alias fliu="flatpak uninstall"
+	alias flls="flatpak list"
+	alias flu="flatpak update"
 fi
 
 # }}}
@@ -309,39 +309,39 @@ fi
 # ----------------
 
 if [ -x /usr/bin/git ]; then
-    # status
-    alias gsta='git status'
-    alias gstat='git status'
+	# status
+	alias gsta='git status'
+	alias gstat='git status'
 
-    # add, commit
-    alias gadd='git add -v'
-    alias gaddi='git add --interactive'
-    alias gall='git add -Av'
-    alias gcom='git commit -S' # opens in the predefined editor.  -S to gpg sign
-    alias gcomm='git commit -S -m' # pass a message directly: gcomm 'My commit'
+	# add, commit
+	alias gadd='git add -v'
+	alias gaddi='git add --interactive'
+	alias gall='git add -Av'
+	alias gcom='git commit -S' # opens in the predefined editor.  -S to gpg sign
+	alias gcomm='git commit -S -m' # pass a message directly: gcomm 'My commit'
 
-    # amend
-    alias gca='git commit --amend'
-    alias grh='git reset HEAD'
+	# amend
+	alias gca='git commit --amend'
+	alias grh='git reset HEAD'
 
-    # diff
-    alias gdif='git diff'
-    alias gdiff='git diff'
-    alias gdifs='git diff --stat --summary'
-    alias gdiffss='git diff --stat --summary'
+	# diff
+	alias gdif='git diff'
+	alias gdiff='git diff'
+	alias gdifs='git diff --stat --summary'
+	alias gdiffss='git diff --stat --summary'
 
-    # branching
-    alias gch='git checkout'
-    alias gchb='git checkout -b'
-    alias gbd='git branch -d'
-    alias gbl='git branch --list'
-    alias gpd='git push origin --delete'
+	# branching
+	alias gch='git checkout'
+	alias gchb='git checkout -b'
+	alias gbd='git branch -d'
+	alias gbl='git branch --list'
+	alias gpd='git push origin --delete'
 
-    # syncing
-    alias gpull='git pull'
-    alias gfetch='git fetch'
-    alias gpm='git push -u origin master'
-    alias gph='git push -u origin HEAD'
+	# syncing
+	alias gpull='git pull'
+	alias gfetch='git fetch'
+	alias gpm='git push -u origin master'
+	alias gph='git push -u origin HEAD'
 fi
 
 # }}}
@@ -351,10 +351,10 @@ fi
 
 # ruby bundler (jekyll)
 if [ -x /usr/bin/bundler ]; then
-    alias bibu='bundle install --path vendor/bundle && bundle update'
-    alias bu='bundle update'
-    alias bejs='bundle exec jekyll serve'
-    alias bejsdev='bundle exec jekyll serve --config _config.yml,_config-dev.yml'
+	alias bibu='bundle install --path vendor/bundle && bundle update'
+	alias bu='bundle update'
+	alias bejs='bundle exec jekyll serve'
+	alias bejsdev='bundle exec jekyll serve --config _config.yml,_config-dev.yml'
 fi
 
 # }}}
@@ -366,54 +366,54 @@ fi
 
 # Colourise man pages
 man() {
-    env \
-    LESS_TERMCAP_mb=$(tput bold; tput setaf 5) \
-    LESS_TERMCAP_md=$(tput bold; tput setaf 5) \
-    LESS_TERMCAP_me=$(tput sgr0) \
-    LESS_TERMCAP_se=$(tput rmso; tput sgr0) \
-    LESS_TERMCAP_ue=$(tput rmul; tput sgr0) \
-    LESS_TERMCAP_so=$(tput bold; tput setaf 0; tput setab 15) \
-    LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 4) \
-    LESS_TERMCAP_mr=$(tput rev) \
-    LESS_TERMCAP_mh=$(tput dim) \
-    LESS_TERMCAP_ZN=$(tput ssubm) \
-    LESS_TERMCAP_ZV=$(tput rsubm) \
-    LESS_TERMCAP_ZO=$(tput ssupm) \
-    LESS_TERMCAP_ZW=$(tput rsupm) \
-        man "$@"
+	env \
+	LESS_TERMCAP_mb=$(tput bold; tput setaf 5) \
+	LESS_TERMCAP_md=$(tput bold; tput setaf 5) \
+	LESS_TERMCAP_me=$(tput sgr0) \
+	LESS_TERMCAP_se=$(tput rmso; tput sgr0) \
+	LESS_TERMCAP_ue=$(tput rmul; tput sgr0) \
+	LESS_TERMCAP_so=$(tput bold; tput setaf 0; tput setab 15) \
+	LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 4) \
+	LESS_TERMCAP_mr=$(tput rev) \
+	LESS_TERMCAP_mh=$(tput dim) \
+	LESS_TERMCAP_ZN=$(tput ssubm) \
+	LESS_TERMCAP_ZV=$(tput rsubm) \
+	LESS_TERMCAP_ZO=$(tput ssupm) \
+	LESS_TERMCAP_ZW=$(tput rsupm) \
+		man "$@"
 }
 
 # Enter directory and list contents
 cd() {
-    if [ -n "$1" ]; then
-        builtin cd "$@" && ls -A --color=auto --group-directories-first 
-    else
-        builtin cd ~ && ls -A --color=auto --group-directories-first
-    fi
+	if [ -n "$1" ]; then
+		builtin cd "$@" && ls -A --color=auto --group-directories-first 
+	else
+		builtin cd ~ && ls -A --color=auto --group-directories-first
+	fi
 }
 
 # Back up a file. Usage "backupthis <filename>"
 backupthis() {
-    cp -riv $1 ${1}-`date +%Y%m%d%H%M`.backup;
+	cp -riv $1 ${1}-`date +%Y%m%d%H%M`.backup;
 }
 
 # Display album art in a small floating window on the top right corner
 # of the screen (tested with MPD and well-structured Music metadata).
 #
 # Debian Buster dependencies:
-#   sudo apt install playerctl sxiv
+#	sudo apt install playerctl sxiv
 albumart() {
-    if [ -x /usr/bin/playerctl ]; then
-        local albumcover=$(playerctl metadata 'mpris:artUrl' | sed 's,file://,,g')
-    fi
+	if [ -x /usr/bin/playerctl ]; then
+		local albumcover=$(playerctl metadata 'mpris:artUrl' | sed 's,file://,,g')
+	fi
 
-    if [ -x /usr/bin/sxiv ]; then
-        if [ "$XDG_SESSION_DESKTOP" == 'bspwm' ]; then
-            sxiv -g '150x150-15+15' -b -p -N my_float_window "$albumcover"
-        else
-            sxiv -g '150x150-15+15' -b -p  "$albumcover"
-        fi
-    fi
+	if [ -x /usr/bin/sxiv ]; then
+		if [ "$XDG_SESSION_DESKTOP" == 'bspwm' ]; then
+			sxiv -g '150x150-15+15' -b -p -N my_float_window "$albumcover"
+		else
+			sxiv -g '150x150-15+15' -b -p  "$albumcover"
+		fi
+	fi
 }
 
 # }}}
