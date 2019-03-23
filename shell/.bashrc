@@ -264,10 +264,13 @@ fi
 
 # Quick shortcuts for `mpv`.  When I want to play a podcast that only
 # shows a static image, I run the command with the --no-video option.
-# When I only need to view the file I use --no-audio.
+# When I only need to view the file I use --no-audio.  The one with
+# --ytdl-raw-options is for those occasions where a video is 4k or
+# something that slows things down considerably.
 if [ -x /usr/bin/mpv ]; then
     alias mpvna='mpv --no-audio'
     alias mpvnv='mpv --no-video'
+	alias mpvyt="mpv --ytdl-raw-options='format=[[bestvideo=height<=720]]'"
 fi
 
 # Quick shortcuts for `youtube-dl`.  Output is placed in the present
