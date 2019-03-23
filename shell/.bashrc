@@ -12,7 +12,7 @@
 # Note that ALL MY SCRIPTS are designed to work with `#!/bin/bash`.
 # They are not tested for portability.
 #
-# Last reviewed on 2019-03-02
+# Last reviewed on 2019-03-23
 
 # }}}
 
@@ -394,7 +394,7 @@ cd() {
 
 # Back up a file. Usage "backupthis <filename>"
 backupthis() {
-	cp -riv $1 ${1}-`date +%Y%m%d%H%M`.backup;
+	cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
 }
 
 # Display album art in a small floating window on the top right corner
