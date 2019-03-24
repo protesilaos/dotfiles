@@ -6,19 +6,19 @@
   <!-- Palette -->
   <color name="col0" value="#283a37"/>
   <color name="col1" value="#ff855a"/>
-  <color name="col2" value="#52bc6d"/>
-  <color name="col3" value="#b6aa1a"/>
-  <color name="col4" value="#5db4c0"/>
-  <color name="col5" value="#d495b4"/>
+  <color name="col2" value="#5cbc4d"/>
+  <color name="col3" value="#a6af1a"/>
+  <color name="col4" value="#39b6ce"/>
+  <color name="col5" value="#e69092"/>
   <color name="col6" value="#36bd84"/>
   <color name="col7" value="#96aca7"/>
   <color name="col8" value="#2a423d"/>
-  <color name="col9" value="#df993a"/>
-  <color name="col10" value="#3dbf50"/>
-  <color name="col11" value="#99b22a"/>
-  <color name="col12" value="#4ab4d3"/>
+  <color name="col9" value="#e19900"/>
+  <color name="col10" value="#6dbb0d"/>
+  <color name="col11" value="#c5a443"/>
+  <color name="col12" value="#70ade2"/>
   <color name="col13" value="#d091db"/>
-  <color name="col14" value="#1dbab8"/>
+  <color name="col14" value="#3cbaa6"/>
   <color name="col15" value="#b5b8b7"/>
 
   <!-- Base values -->

@@ -24,20 +24,20 @@
 
   <!-- Palette -->
   <color name="col0" value="#202c3d"/>
-  <color name="col1" value="#ff6c38"/>
+  <color name="col1" value="#f76f6e"/>
   <color name="col2" value="#4eac6d"/>
   <color name="col3" value="#af9a0a"/>
-  <color name="col4" value="#3aaaa4"/>
-  <color name="col5" value="#9c90dd"/>
-  <color name="col6" value="#3dab93"/>
-  <color name="col7" value="#a39799"/>
+  <color name="col4" value="#609fda"/>
+  <color name="col5" value="#cc84ad"/>
+  <color name="col6" value="#3dab95"/>
+  <color name="col7" value="#919ab9"/>
   <color name="col8" value="#352f49"/>
   <color name="col9" value="#eb7b4d"/>
   <color name="col10" value="#57ad47"/>
   <color name="col11" value="#bd951a"/>
-  <color name="col12" value="#5aa1d4"/>
+  <color name="col12" value="#8196e8"/>
   <color name="col13" value="#c97ed7"/>
-  <color name="col14" value="#29ad8d"/>
+  <color name="col14" value="#2aa9b6"/>
   <color name="col15" value="#a0abae"/>
 
   <!-- Base values -->
@@ -45,7 +45,7 @@
   <color name="colbgalt" value="#352f49"/>
   <color name="colbgdim" value="#2a2d43"/>
   <color name="colfg" value="#a0abae"/>
-  <color name="colfgalt" value="#a39799"/>
+  <color name="colfgalt" value="#919ab9"/>
 
   <color name="colcr" value="#a0abae"/>
   <!-- Global Settings -->

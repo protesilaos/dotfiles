@@ -8,17 +8,17 @@ static const char *colorname[] = {
     [4] = "#385dc4",
     [5] = "#b63052",
     [6] = "#007070",
-    [7] = "#EAE9DD",
+    [7] = "#eae9dd",
 
     /* 8 bright colors */
     [8] = "#68607d",
     [9] = "#b94000",
-    [10] = "#4A7240",
-    [11] = "#706A00",
-    [12] = "#0D66C9",
+    [10] = "#4a7240",
+    [11] = "#706a00",
+    [12] = "#0d66c9",
     [13] = "#8055aa",
     [14] = "#337087",
-    [15] = "#F8F2E5",
+    [15] = "#f8f2e5",
 
     /* more colors can be added after 255 to use with DefaultXX */
 
@@ -47,10 +47,10 @@ static const char *colorname[] = {
      * is invoked from the 'own_script_update_environment_theme', which
      * is typically interfaced via the 'tempusmenu'.
      */
-    [256] = "#F8F2E5",
+    [256] = "#f8f2e5",
     [257] = "#464340",
     [258] = "#464340",
-    [259] = "#F8F2E5",
+    [259] = "#f8f2e5",
 };
 
 /* Default colors (colorname index)

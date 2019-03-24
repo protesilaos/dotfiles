@@ -3,21 +3,21 @@ static const char *colorname[] = {
     /* 8 normal colors */
     [0] = "#283a37",
     [1] = "#ff855a",
-    [2] = "#52bc6d",
-    [3] = "#b6aa1a",
-    [4] = "#5db4c0",
-    [5] = "#d495b4",
+    [2] = "#5cbc4d",
+    [3] = "#a6af1a",
+    [4] = "#39b6ce",
+    [5] = "#e69092",
     [6] = "#36bd84",
     [7] = "#96aca7",
 
     /* 8 bright colors */
     [8] = "#2a423d",
-    [9] = "#df993a",
-    [10] = "#3dbf50",
-    [11] = "#99b22a",
-    [12] = "#4ab4d3",
+    [9] = "#e19900",
+    [10] = "#6dbb0d",
+    [11] = "#c5a443",
+    [12] = "#70ade2",
     [13] = "#d091db",
-    [14] = "#1dbab8",
+    [14] = "#3cbaa6",
     [15] = "#b5b8b7",
 
     /* more colors can be added after 255 to use with DefaultXX */

@@ -23,29 +23,29 @@
   <_description>Dark theme with colours inspired by concept art of outer space (WCAG AAA compliant)</_description>
 
   <!-- Palette -->
-  <color name="col0" value="#150d15"/>
+  <color name="col0" value="#090a18"/>
   <color name="col1" value="#ff778a"/>
   <color name="col2" value="#6ab539"/>
   <color name="col3" value="#bfa01a"/>
-  <color name="col4" value="#5aaec3"/>
-  <color name="col5" value="#da8ab2"/>
-  <color name="col6" value="#79a9c3"/>
-  <color name="col7" value="#be9c8a"/>
-  <color name="col8" value="#19170D"/>
+  <color name="col4" value="#4aaed3"/>
+  <color name="col5" value="#e58a82"/>
+  <color name="col6" value="#29b3bb"/>
+  <color name="col7" value="#a59ebd"/>
+  <color name="col8" value="#260e22"/>
   <color name="col9" value="#f78e2f"/>
   <color name="col10" value="#60ba80"/>
   <color name="col11" value="#de9b1d"/>
-  <color name="col12" value="#79b0c4"/>
+  <color name="col12" value="#8ba7ea"/>
   <color name="col13" value="#e08bd6"/>
-  <color name="col14" value="#5ab7b0"/>
+  <color name="col14" value="#2cbab6"/>
   <color name="col15" value="#b4abac"/>
 
   <!-- Base values -->
-  <color name="colbg" value="#150d15"/>
-  <color name="colbgalt" value="#19170D"/>
-  <color name="colbgdim" value="#171211"/>
+  <color name="colbg" value="#090a18"/>
+  <color name="colbgalt" value="#260e22"/>
+  <color name="colbgdim" value="#40519"/>
   <color name="colfg" value="#b4abac"/>
-  <color name="colfgalt" value="#be9c8a"/>
+  <color name="colfgalt" value="#a59ebd"/>
 
   <color name="colcr" value="#b4abac"/>
   <!-- Global Settings -->

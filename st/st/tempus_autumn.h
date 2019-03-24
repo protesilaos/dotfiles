@@ -1,24 +1,24 @@
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
     /* 8 normal colors */
-    [0] = "#2b1d1a",
-    [1] = "#f85a10",
-    [2] = "#809900",
-    [3] = "#ad8b00",
-    [4] = "#888db0",
-    [5] = "#cb758e",
-    [6] = "#709a65",
-    [7] = "#919078",
+    [0] = "#302420",
+    [1] = "#f16c50",
+    [2] = "#80a100",
+    [3] = "#ac9440",
+    [4] = "#7897c2",
+    [5] = "#dd758e",
+    [6] = "#52a485",
+    [7] = "#a5918a",
 
     /* 8 bright colors */
-    [8] = "#35260f",
-    [9] = "#ce7b1a",
-    [10] = "#729c1a",
-    [11] = "#b28910",
-    [12] = "#9385cd",
-    [13] = "#c874a3",
-    [14] = "#529d80",
-    [15] = "#a49ba0",
+    [8] = "#312e2a",
+    [9] = "#e07a3d",
+    [10] = "#43a770",
+    [11] = "#ba9000",
+    [12] = "#908ed4",
+    [13] = "#c57bc4",
+    [14] = "#2aa4ad",
+    [15] = "#a9a2a6",
 
     /* more colors can be added after 255 to use with DefaultXX */
 
@@ -47,10 +47,10 @@ static const char *colorname[] = {
      * is invoked from the 'own_script_update_environment_theme', which
      * is typically interfaced via the 'tempusmenu'.
      */
-    [256] = "#2b1d1a",
-    [257] = "#a49ba0",
-    [258] = "#a49ba0",
-    [259] = "#2b1d1a",
+    [256] = "#302420",
+    [257] = "#a9a2a6",
+    [258] = "#a9a2a6",
+    [259] = "#302420",
 };
 
 /* Default colors (colorname index)
