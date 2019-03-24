@@ -44,10 +44,10 @@
 # --------------------------------
 
 # The generator path
-tempus_generator_dir=$HOME/tempus-themes-generator
+tempus_generator_dir="$HOME/tempus-themes-generator"
 
 # The generator script inside the generator directory
-tempus_generator_script=$tempus_generator_dir/tempus-themes-generator.sh
+tempus_generator_script="$tempus_generator_dir/tempus-themes-generator.sh"
 
 # Get the list of the available schemes from inside the generator's
 # directory
@@ -55,7 +55,7 @@ tempus_generator_script=$tempus_generator_dir/tempus-themes-generator.sh
 tempus_schemes=$(ls "$tempus_generator_dir/schemes")
 
 # Destination path used by some functions
-local_col_dir=$HOME/.local/share/my_colours
+local_col_dir="$HOME/.local/share/my_colours"
 
 # }}}
 
@@ -148,7 +148,7 @@ invoke_generic_loop() {
 # 2. Destination path for $HOME/.local/share/gtksourceview-{3.0,4}/styles
 # 3. File type extension for tempus_$i.xml
 build_gtksourceview3() {
-    local dest_dir=$HOME/.local/share/gtksourceview-3.0/styles
+    local dest_dir="$HOME/.local/share/gtksourceview-3.0/styles"
     echo "Building themes for GTK Source View 3."
     mkdir -p "$dest_dir"
     echo "Destination is: $dest_dir/"
@@ -157,7 +157,7 @@ build_gtksourceview3() {
 }
 
 build_gtksourceview4() {
-    local dest_dir=$HOME/.local/share/gtksourceview-4/styles
+    local dest_dir="$HOME/.local/share/gtksourceview-4/styles"
     echo "Building themes for GTK Source View 4."
     mkdir -p "$dest_dir"
     echo "Destination is: $dest_dir/"
@@ -173,7 +173,7 @@ build_gtksourceview4() {
 # 2. Destination path for $HOME/.local/share/my_colours/kitty
 # 3. File type extension for tempus_$i.conf
 build_kitty() {
-    local dest_dir=$local_col_dir/kitty
+    local dest_dir="$local_col_dir/kitty"
     echo "Building themes for Kitty."
     mkdir -p "$dest_dir"
     echo "Destination is: $dest_dir/"
@@ -189,7 +189,7 @@ build_kitty() {
 # 2. Destination path for $HOME/.local/share/my_colours/shell
 # 3. File type extension for tempus_$i.sh
 build_shell() {
-    local dest_dir=$local_col_dir/shell
+    local dest_dir="$local_col_dir/shell"
     echo "Building themes for the Shell."
     mkdir -p "$dest_dir"
     echo "Destination is: $dest_dir/"
@@ -234,7 +234,7 @@ build_st() {
 # 2. Destination path for $HOME/.local/share/my_colours/tempus
 # 3. File type extension for tempus_$i.Xcolors
 build_xcolors() {
-    local dest_dir=$local_col_dir/tempus
+    local dest_dir="$local_col_dir/tempus"
     echo "Building themes for X resources."
     mkdir -p "$dest_dir"
     echo "Destination is: $dest_dir/"
@@ -250,7 +250,7 @@ build_xcolors() {
 # 2. Destination path for $HOME/.local/share/xfce4/terminal/colorschemes
 # 3. File type extension for $HOME/.local/share/xfce4/terminal/colorschemes/tempus_$i.theme
 build_xfce4_terminal() {
-    local dest_dir=$HOME/.local/share/xfce4/terminal/colorschemes
+    local dest_dir="$HOME/.local/share/xfce4/terminal/colorschemes"
     echo "Building themes for Xfce4 terminal."
     mkdir -p "$dest_dir"
     echo "Destination is: $dest_dir/"
