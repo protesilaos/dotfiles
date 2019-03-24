@@ -68,23 +68,23 @@ sxhkd &
 # Launch my custom Lemonbar implementation
 if [ -x $HOME/bin/melonpanel ]; then
 
-    # Make sure we have no running instances
-    if pgrep -x melonpanel; then
-        pkill -x melonpanel
-    fi
+	# Make sure we have no running instances
+	if pgrep -x melonpanel; then
+		pkill -x melonpanel
+	fi
 
-    melonpanel
+	melonpanel
 fi
 
 # display compositor for shadow effects and background blur behind
 # transparent elements
 if [ -x /usr/bin/compton ]; then
-    compton --config "$HOME/.config/compton.conf" &
+	compton --config "$HOME/.config/compton.conf" &
 fi
 
 # start music server
 if [ -x /usr/bin/mpd ]; then
-    mpd
+	mpd
 fi
 
 # Start the bridge between mpd and mpris2.  Enabling the MPRIS
@@ -96,7 +96,7 @@ fi
 # See my `sxhkdrc` for the set of key bindings that handles media
 # controls in general and `mpd` in particular.
 if [ -x /usr/bin/mpDris2 ]; then
-    mpDris2 &
+	mpDris2 &
 fi
 
 # Run the tool that sets the wallpaper.  A program could be used that
@@ -105,31 +105,31 @@ fi
 # works (using the Xfce desktop manager):
 # xfdesktop --sm-client-disable --disable-wm-check &
 if [ -x /usr/bin/feh ]; then
-    if [ -f "$HOME/.fehbg" ]; then
-        "$HOME/.fehbg" &
-    elif [ -f "$HOME/.wallpaper.jpg" ]; then
-        feh --bg-fill "$HOME/.wallpaper.jpg" &
-    else
-        feh --bg-fill "$HOME/.local/share/my_bspwm_wallpaper_fallback.png" &
-    fi
+	if [ -f "$HOME/.fehbg" ]; then
+		"$HOME/.fehbg" &
+	elif [ -f "$HOME/.wallpaper.jpg" ]; then
+		feh --bg-fill "$HOME/.wallpaper.jpg" &
+	else
+		feh --bg-fill "$HOME/.local/share/my_bspwm_wallpaper_fallback.png" &
+	fi
 fi
 
 # TODO review this, as there may be an even simpler way
 # specify keyboard layout and compose key
 if [ -x /usr/bin/setxkbmap ]; then
-    setxkbmap -option compose:menu
+	setxkbmap -option compose:menu
 
-    # NOTE we can set the toggle here, but I do this via sxhkd, which
-    # allows me to run a script that does the actual layout switching.
-    # This in turn lets me output a unique identifier to a temporary
-    # file, which can then be read to determine the current keyboard
-    # layout.  That can be printed to the melonpanel.
+	# NOTE we can set the toggle here, but I do this via sxhkd, which
+	# allows me to run a script that does the actual layout switching.
+	# This in turn lets me output a unique identifier to a temporary
+	# file, which can then be read to determine the current keyboard
+	# layout.  That can be printed to the melonpanel.
 
-    # setxkbmap -layout 'us,gr' -option 'grp:alt_caps_toggle'
-    setxkbmap -layout 'us'
+	# setxkbmap -layout 'us,gr' -option 'grp:alt_caps_toggle'
+	setxkbmap -layout 'us'
 
-    # For the key chord that performs the layout switching see my
-    # `sxhkdrc`.  The script: `own_script_current_keyboard_layout`
+	# For the key chord that performs the layout switching see my
+	# `sxhkdrc`.  The script: `own_script_current_keyboard_layout`
 fi
 
 # start the MATE/Xfce settings daemon to apply GTK themes to running
@@ -159,7 +159,7 @@ fi
 # autostart the script that sources and then applies the colours I
 # actually want.
 if [ -x "$HOME/bin/own_script_bspwm_config_post_launch" ]; then
-    own_script_bspwm_config_post_launch
+	own_script_bspwm_config_post_launch
 fi
 
 # }}}
@@ -172,7 +172,7 @@ fi
 # host.  Settings such as workspaces [per monitor] and program-specific
 # window rules are included.
 if [ -x "$HOME/bin/own_script_bspwm_per_host_configs" ]; then
-    own_script_bspwm_per_host_configs
+	own_script_bspwm_per_host_configs
 fi
 
 # }}}
