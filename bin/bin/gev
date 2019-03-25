@@ -1,0 +1,74 @@
+#!/bin/bash
+
+	# This program is free software: you can redistribute it and/or modify
+	# it under the terms of the GNU General Public License as published by
+	# the Free Software Foundation, either version 3 of the License, or
+	# (at your option) any later version.
+
+	# This program is distributed in the hope that it will be useful,
+	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	# GNU General Public License for more details.
+
+	# You should have received a copy of the GNU General Public License
+	# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Description {{{
+# ---------------
+#
+# GEV: Git's Eye View.  A simple way to get an overview of the status of
+# all git repos inside a directory.  A simple two column list is drawn,
+# with the status code on the left and the path of the git-controlled
+# directory on the right.
+#
+# The status codes are:
+# * 0 == no changes
+# * 1 == unstaged changes
+# * 2 == staged, but not committed
+# * 3 == untracked files
+#
+# Debian Buster Dependencies:
+# 	apt install git
+#
+# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
+#
+# }}}
+
+# Which directory contains our repos?
+parent_directory="$HOME"
+
+git_status() {
+	# Add some colour (these are ANSI sequences)
+	local col1='\033[0;31m'
+	local col2='\033[0;32m'
+	local col3='\033[0;33m'
+	local no_col='\033[0m'
+
+	# The git command that will check for unstaged changes.  For help,
+	# run: git diff --help
+	local unstaged=$(git diff --exit-code)
+
+	# The git command for staged but not committed changes.
+	local staged=$(git diff --cached --exit-code)
+
+	# The git command for untracked files.  For help, run:
+	# git ls-files --help
+	local untracked=$(git ls-files -mo --exclude-standard)
+
+	if [ -n "$unstaged" ]; then
+		echo -e "${col1}1${no_col}"
+	elif [ -n "$staged" ]; then
+		echo -e "${col2}2${no_col}"
+	elif [ -n "$untracked" ]; then
+		echo -e "${col3}3${no_col}"
+	else
+		echo '0'
+	fi
+}
+
+for i in $(find "$parent_directory" -maxdepth 2 -name '.git' -print); do
+	cd $i/.. > /dev/null
+	printf "%s %s\\n" $(git_status) "$PWD"
+done
+
+# vi:foldmethod=marker
