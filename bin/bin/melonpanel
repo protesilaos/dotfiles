@@ -178,7 +178,7 @@ ancillary_my_battery_status() {
 
 	# TODO consider conditional logic when on plug
 	if [ "$battery_status" == 'Charging' ]; then
-		echo "%{F$color13}$battery_label ▒%{F-}"
+		echo "%{F$color14}$battery_label ▒%{F-}"
 	elif [ "$battery_status" == 'Discharging' ]; then
 		echo "%{F$color11}$battery_label ░%{F-}"
 	elif [ "$battery_status" == 'Full' ]; then
