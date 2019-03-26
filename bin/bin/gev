@@ -39,21 +39,31 @@ parent_directory="$HOME"
 
 git_status() {
 	# Add some colour (these are ANSI sequences)
-	local col1='\033[0;31m'
-	local col2='\033[0;32m'
-	local col3='\033[0;33m'
-	local no_col='\033[0m'
+	local col1
+	local col2
+	local col3
+	local no_col
+
+	col1='\033[0;31m'
+	col2='\033[0;32m'
+	col3='\033[0;33m'
+	no_col='\033[0m'
+
+	# git operations
+	local unstaged
+	local staged
+	local untracked
 
 	# The git command that will check for unstaged changes.  For help,
 	# run: git diff --help
-	local unstaged=$(git diff --exit-code)
+	unstaged="$(git diff --exit-code)"
 
 	# The git command for staged but not committed changes.
-	local staged=$(git diff --cached --exit-code)
+	staged="$(git diff --cached --exit-code)"
 
 	# The git command for untracked files.  For help, run:
 	# git ls-files --help
-	local untracked=$(git ls-files -mo --exclude-standard)
+	untracked="$(git ls-files -mo --exclude-standard)"
 
 	if [ -n "$unstaged" ]; then
 		echo -e "${col1}1${no_col}"
@@ -66,9 +76,10 @@ git_status() {
 	fi
 }
 
-for i in $(find "$parent_directory" -maxdepth 2 -name '.git' -print); do
-	cd $i/.. > /dev/null
-	printf "%s %s\\n" $(git_status) "$PWD"
+find "$parent_directory" -maxdepth 2 -name '.git' -print0 | \
+while IFS= read -r -d '' repo; do
+	cd "$repo/.." > /dev/null || exit
+	printf "%s %s\\n" "$(git_status)" "$PWD"
 done
 
 # vi:foldmethod=marker
