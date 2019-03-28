@@ -3,10 +3,10 @@ About my font configurations
 
 Prior notes:
 
+* Run `stow fontconfig` inside my dotfiles' root directory, to get my
+  font configurations at ~/.config/fontconfig
 * When running `stow fonts` inside my dotfiles' root directory, you will
   be symlinking outline fonts at ~/.local/share/fonts/FONT
-* Following a successful `stow fonts`, a copy of this file is available
-  at ~/.config/fontconfig/README and ~/.local/share/fonts/README
 
 1 About fonts.conf (only for outline fonts)
 -------------------------------------------
@@ -56,13 +56,13 @@ I prepared myself[2].
   the terms of the alternative glyphs provided by the upstream
   developers of Hack.
 
-If you do not like FiraGO and/or Hack, comment them out in the
-`60-latin.conf` file inside my `conf.d/`.
-
 Note that the fonts installed locally take precedence over the ones
 on the system.  As such, my Hack alternative will be used over the
 `fonts-hack` package.  I personally do not install the Debian package, 
 just to make sure.
+
+If you do not like my custom fonts, simply do not run `stow fonts`, as
+mentioned in the opening notes to this document.
 
 [1] https://bboxtype.com/typefaces/FiraGO/
 [2] https://github.com/source-foundry/alt-hack
