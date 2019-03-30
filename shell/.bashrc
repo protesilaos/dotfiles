@@ -126,7 +126,7 @@ if [ -x /usr/bin/apt ]; then
 	# act on package targets
 	alias ai="sudo apt install"
 	alias air="sudo apt install --reinstall"
-	alias ar="sudo apt remove"
+	alias ar="sudo apt remove -V"
 
 	# list local packages
 	alias ard="apt rdepends" # followed by package name to print reverse dependencies
