@@ -26,3 +26,6 @@ color12="#5c5d8c"
 color13="#a24055"
 color14="#2d6978"
 color15="#f3f4f6"
+
+# Special colours
+backgrounddim="#ecedf0"
