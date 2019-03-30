@@ -25,7 +25,7 @@
 # 	apt install libnotify-bin
 #
 # Optional dependency to display album art:
-# 	apt install playerctl
+# 	apt install playerctl mpDris2
 
 # Fetch album art information using playerctl, if it is installed.  Else
 # display generic icon.
