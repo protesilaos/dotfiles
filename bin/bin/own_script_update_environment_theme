@@ -310,21 +310,15 @@ modify_st() {
 # Update tmux base values.  The `tmux` setup should be in place if you
 # run `stow tmux` from inside my dotfiles' directory.
 modify_tmux() {
-    if [ -x /usr/bin/tmux ]; then
-        if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-            sed --follow-symlinks -i -e 's/tempus_fg="colour[0-9]*"/tempus_fg="colour0"/' "$HOME"/.tmux.conf
-            sed --follow-symlinks -i -e 's/tempus_fg_alt="colour[0-9]*"/tempus_fg_alt="colour8"/' "$HOME"/.tmux.conf
-            sed --follow-symlinks -i -e 's/tempus_bg="colour[0-9]*"/tempus_bg="colour15"/' "$HOME"/.tmux.conf
-            sed --follow-symlinks -i -e 's/tempus_bg_alt="colour[0-9]*"/tempus_bg_alt="colour7"/' "$HOME"/.tmux.conf
-        else
-            sed --follow-symlinks -i -e 's/tempus_fg="colour[0-9]*"/tempus_fg="colour15"/' "$HOME"/.tmux.conf
-            sed --follow-symlinks -i -e 's/tempus_fg_alt="colour[0-9]*"/tempus_fg_alt="colour7"/' "$HOME"/.tmux.conf
-            sed --follow-symlinks -i -e 's/tempus_bg="colour[0-9]*"/tempus_bg="colour0"/' "$HOME"/.tmux.conf
-            sed --follow-symlinks -i -e 's/tempus_bg_alt="colour[0-9]*"/tempus_bg_alt="colour8"/' "$HOME"/.tmux.conf
-        fi
+	if [ -x /usr/bin/tmux ]; then
+		sed --follow-symlinks -i -e "s/tempus_fg=\"#[a-zA-Z0-9]*\"/tempus_fg=\"${foreground}\"/ ; \
+		s/tempus_bg=\"#[a-zA-Z0-9]*\"/tempus_bg=\"${background}\"/ ; \
+		s/tempus_fg_alt=\"#[a-zA-Z0-9]*\"/tempus_fg_alt=\"${foregroundalt}\"/ ; \
+		s/tempus_bg_alt=\"#[a-zA-Z0-9]*\"/tempus_bg_alt=\"${backgroundalt}\"/ ; \
+		s/tempus_bg_dim=\"#[a-zA-Z0-9]*\"/tempus_bg_dim=\"${backgrounddim}\"/" "$HOME/.tmux.conf"
 
-        tmux source-file "$HOME/.tmux.conf"
-    fi
+		tmux source-file "$HOME/.tmux.conf"
+	fi
 }
 
 # }}}
@@ -690,7 +684,6 @@ update_environment_theme() {
 	modify_gtk3
 	modify_gtksourceview3
 	modify_gtksourceview4
-	modify_tmux
 	modify_vim
 	# the shell is reloaded first, so that others can take the new
 	# variables it exposes
@@ -702,6 +695,7 @@ update_environment_theme() {
 	modify_neomutt
 	# define scheme for shell substitution in subsequent commands
 	source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
+	modify_tmux
 	modify_bspwm
 	modify_dunst
 	melonpanel # this re-runs my lemonbar to get the new colours
@@ -733,7 +727,6 @@ update_environment_theme_de() {
 	modify_gtk3
 	modify_gtksourceview3
 	modify_gtksourceview4
-	modify_tmux
 	modify_vim
 	# the shell is reloaded first, so that others can take the new
 	# variables it exposes
@@ -745,6 +738,7 @@ update_environment_theme_de() {
 	modify_neomutt
 	# define scheme for shell substitution in subsequent commands
 	source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
+	modify_tmux
 	modify_dunst
 	# modify st last because it requires recompilation
 	# running instances are updated via ANSI sequences
