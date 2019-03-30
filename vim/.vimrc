@@ -250,17 +250,13 @@ function! ProtLineActiveStatus()
     let statusline.="%#StatusLine#"
     let statusline.="\ %{ProtLineCurrentMode()}\%-6{ProtLinePasteMode()}"
     let statusline.="\%<"
-    let statusline.="%#FoldColumn#"
-    let statusline.="\ %f%( %m%)"
+    let statusline.="%#LineNr#"
+    let statusline.="\ %F%( %m%)"
     let statusline.="\ %(\%r %h% %w%)"
-    let statusline.="%#Normal#"
     let statusline.="%=" 
-    let statusline.="%#FoldColumn#"
     let statusline.=" %{&tw} %{&fo} "
-    let statusline.="%#CursorLineNr#"
-    let statusline.="\ %y "
     let statusline.="%#StatusLine#"
-    let statusline.="\ %c:%l/%L\ "
+    let statusline.="\ %c-%l/%L\ "
     return statusline
 endfunction
 
@@ -269,33 +265,24 @@ function! ProtLineActiveStatusInsertMode()
     let statusline.="%#StatusLineTerm#"
     let statusline.="\ %{ProtLineCurrentMode()}\%-6{ProtLinePasteMode()}"
     let statusline.="\%<"
-    let statusline.="%#StatusLineTermNC#"
-    let statusline.="\ %f%( %m%)"
+    let statusline.="%#LineNr#"
+    let statusline.="\ %F%( %m%)"
     let statusline.="\ %r"
-    let statusline.="%#Normal#"
     let statusline.="%=" 
-    let statusline.="%#StatusLineTermNC#"
     let statusline.=" %{&tw} %{&fo} "
     let statusline.="%#StatusLineTerm#"
-    let statusline.="\ %y "
-    let statusline.="\ %c:%l/%L\ "
+    let statusline.="\ %c-%l/%L\ "
     return statusline
 endfunction
 
 function! ProtLineInactiveStatus()
     let statusline=""
-    let statusline.="%#FoldColumn#"
-    let statusline.="%(%{'help'!=&filetype?'\ \ '.bufnr('%').'\ ':'\ '}%)"
-    let statusline.="\ %{ProtLineCurrentMode()}\%-6{ProtLinePasteMode()}"
+    let statusline.="%#LineNr#"
     let statusline.="\%<"
-    let statusline.="%#FoldColumn#"
-    let statusline.="\ %f"
+    let statusline.="\ %F"
     let statusline.="\ %r"
     let statusline.="%=" 
-    let statusline.="%#FoldColumn#"
-    let statusline.=" %{&tw} %{&fo} "
-    let statusline.="\ %y "
-    let statusline.="\ %c:%l/%L\ "
+    let statusline.="\ %c-%l/%L\ "
     return statusline
 endfunction
 
