@@ -19,12 +19,14 @@
 # part of my dotfiles and is meant to work in that environment.  See
 # https://gitlab.com/protesilaos/dotfiles
 
-# For the actual font family, see my `fonts.conf`, under the "fonts"
-# directory of my dotfiles.  Possible values for the font family are the
-# generic `fontconfig` aliases: sans, serif, monospace.  The font weight
-# can only be one that is supported by the designated font.
+# For the actual font family, see the rules inside the "fontconfig"
+# directory of my dotfiles.
+#
+# Possible values for the font family are the generic `fontconfig`
+# aliases: sans, serif, monospace.  The font weight can only be one that
+# is supported by the designated font.
 my_font_family=sans
-my_font_size='10.5'
+my_font_size=11
 my_font_weight=regular
 
 my_custom_ui_font="$my_font_family-$my_font_size:$my_font_weight"
