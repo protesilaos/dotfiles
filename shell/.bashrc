@@ -120,8 +120,8 @@ if [ -x /usr/bin/apt ]; then
 	alias au="sudo apt update"
 	alias aug="sudo apt upgrade -V"
 	alias auu="sudo apt update && sudo apt upgrade -V"
-	alias afu="sudo apt full-upgrade"
-	alias auufu="sudo apt update && sudo apt upgrade -V && sudo apt full-upgrade"
+	alias afu="sudo apt full-upgrade -V"
+	alias auufu="sudo apt update && sudo apt upgrade -V && sudo apt full-upgrade -V"
 
 	# act on package targets
 	alias ai="sudo apt install"
@@ -141,7 +141,7 @@ if [ -x /usr/bin/apt ]; then
 
 	# package handling
 	alias aac="sudo apt autoclean"
-	alias aar="sudo apt autoremove"
+	alias aar="sudo apt autoremove -V"
 	alias ama="sudo apt-mark auto"
 	alias amm="sudo apt-mark manual"
 fi
