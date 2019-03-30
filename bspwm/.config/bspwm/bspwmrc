@@ -67,7 +67,6 @@ sxhkd &
 
 # Launch my custom Lemonbar implementation
 if [ -x $HOME/bin/melonpanel ]; then
-
 	# Make sure we have no running instances
 	if pgrep -x melonpanel; then
 		pkill -x melonpanel
@@ -80,23 +79,6 @@ fi
 # transparent elements
 if [ -x /usr/bin/compton ]; then
 	compton --config "$HOME/.config/compton.conf" &
-fi
-
-# start music server
-if [ -x /usr/bin/mpd ]; then
-	mpd
-fi
-
-# Start the bridge between mpd and mpris2.  Enabling the MPRIS
-# implementation allows other programs that handle multimedia to
-# interface with `mpd`.  This is the case, for example, with programs
-# such as `playerctl`, or with desktop environments that offer
-# multimedia controls in their shell (e.g.  GNOME, Cinnamon, etc.).
-#
-# See my `sxhkdrc` for the set of key bindings that handles media
-# controls in general and `mpd` in particular.
-if [ -x /usr/bin/mpDris2 ]; then
-	mpDris2 &
 fi
 
 # Run the tool that sets the wallpaper.  A program could be used that
@@ -151,6 +133,23 @@ if [ -x /usr/bin/flatpak ]; then
 	fi
 fi
 
+# start music server
+if [ -x /usr/bin/mpd ]; then
+	mpd
+fi
+
+# Start the bridge between mpd and mpris2.  Enabling the MPRIS
+# implementation allows other programs that handle multimedia to
+# interface with `mpd`.  This is the case, for example, with programs
+# such as `playerctl`, or with desktop environments that offer
+# multimedia controls in their shell (e.g.  GNOME, Cinnamon, etc.).
+#
+# See my `sxhkdrc` for the set of key bindings that handles media
+# controls in general and `mpd` in particular.
+if [ -x /usr/bin/mpDris2 ]; then
+	mpDris2 &
+fi
+
 # sets the border colours for bspwm by sourcing a file with colour
 # values
 # EXPLAIN: bspwm does not read the custom colours if they are sourced
@@ -177,4 +176,4 @@ fi
 
 # }}}
 
-# vim:ft=sh:foldmethod=marker
+# vim:foldmethod=marker
