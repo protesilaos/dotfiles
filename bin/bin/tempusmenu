@@ -57,9 +57,8 @@ source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # Get the system-wide custom font.  This is done with other `dmenu`
 # scripts as well to provide for an easy way to style them all at once.
-# The actual font is a `fontconfig` alias, which is currently defined as
-# `Hack` and which uses my patched variant of that typeface.  See my
-# dotfiles under "fonts".
+# The actual font is a `fontconfig` alias.  See my dotfiles under
+# "fontconfig".
 source "$HOME/.local/share/my_custom_ui_font.sh"
 
 # }}}
