@@ -104,7 +104,7 @@ ctrl + alt + {Home,End,Delete}
 # NOTE `@` means until key is released, though I cannot confirm it works
 # properly.  It is kept here for reference and future review.
 super + {_, shift + } @Return
-    {st -e tmux new-session -A -s 'Default', st}
+    {mate-terminal -x tmux new-session -A -s 'Default', mate-terminal}
 
 # GUI programs.  Where these are alternatives to common CLI tools they
 # are mapped to the same number as their counterparts, but prepended
@@ -120,7 +120,7 @@ super + g ; {1,2,3}
 # numbers 1 and 2 respectively, in order to bkeep consistency with the
 # above-defined GUIs.
 super + x ; {3-7}
-    st -e {neomutt,newsboat,rtv,ncmpcpp,podboat -a}
+    mate-terminal -x {neomutt,newsboat,rtv,ncmpcpp,podboat -a}
 
 # I use "my_float_window" as an application name or class for those rare
 # occasions where I prefer a floating window at launch.  Note that
