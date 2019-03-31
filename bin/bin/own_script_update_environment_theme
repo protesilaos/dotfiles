@@ -265,6 +265,18 @@ modify_vim() {
 
 # }}}
 
+# Set theme for MATE Terminal {{{
+# ------------------------------
+# TODO add documentation (this is intended to replace the Simple
+# Terminal)
+modify_mate_terminal() {
+	if [ -x /usr/bin/mate-terminal ]; then
+		own_script_mate_terminal_setup
+	fi
+}
+
+# }}}
+
 # Set theme for st {{{
 # --------------------
 
@@ -681,10 +693,11 @@ update_environment_theme() {
 	modify_bspwm
 	modify_dunst
 	melonpanel # this re-runs my lemonbar to get the new colours
-	# modify st last because it requires recompilation
-	# running instances are updated via ANSI sequences
-	# see my dotfiles for `own_script_update_running_terminals`
-	modify_st
+	###### modify st last because it requires recompilation
+	###### running instances are updated via ANSI sequences
+	###### see my dotfiles for `own_script_update_running_terminals`
+	#### modify_st
+	modify_mate_terminal
 }
 
 # }}}
@@ -721,10 +734,11 @@ update_environment_theme_de() {
 	source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 	modify_tmux
 	modify_dunst
-	# modify st last because it requires recompilation
-	# running instances are updated via ANSI sequences
-	# see my dotfiles for `own_script_update_running_terminals`
-	modify_st
+	###### modify st last because it requires recompilation
+	###### running instances are updated via ANSI sequences
+	###### see my dotfiles for `own_script_update_running_terminals`
+	#### modify_st
+	modify_mate_terminal
 }
 
 # }}}
