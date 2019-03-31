@@ -126,77 +126,48 @@ modify_wallpaper() {
 # Set GTK themes {{{
 # ------------------
 
-# Optional dependencies:
+# Debian Buster optional dependencies:
 #   sudo apt install materia-gtk-theme papirus-icon-theme
 #
-# NOTE that I use my custom working environment in tandem with a
-# fallback Desktop Environment, typically MATE or Xfce.  I do that to
-# pull in all dependencies for Xorg, the network manager, etc.  As such,
-# the actual dependencies of GTK are much more than just those defined
-# above.
+# NOTE that I use my custom desktop session in tandem with a fallback
+# Desktop Environment, typically MATE or Xfce.  I do that to pull in all
+# dependencies for Xorg, the network manager, etc.  As such, the actual
+# dependencies of GTK are much more than just those defined above.
 #
-# Modify gtk{2,3} themes.
-modify_gtk2() {
+# Modify gtk{2,3} widget and icon themes
+modify_gtk() {
 	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-
-        if [ -d /usr/share/themes/Materia-light-compact ]; then
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Materia-light-compact\"/g" "$HOME"/.gtkrc-2.0
+		if [ -d /usr/share/themes/Materia-light-compact ] && [ -d /usr/share/icons/Papirus ]; then
+			# GTK 2
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Materia-light-compact\"/g ; \
+			s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Papirus\"/g" "$HOME/.gtkrc-2.0"
+			# GTK 3
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Materia-light-compact/g ; \
+			s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Papirus/g" "$HOME/.config/gtk-3.0/settings.ini"
 		else
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Adwaita\"/g" "$HOME"/.gtkrc-2.0
+			# GTK 2
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Adwaita\"/g ; \
+			s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Adwaita\"/g" "$HOME/.gtkrc-2.0"
+			# GTK 3
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Adwaita/g ; \
+			s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Adwaita/g" "$HOME/.config/gtk-3.0/settings.ini"
 		fi
-
-        if [ -d /usr/share/icons/Papirus ]; then
-            sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Papirus\"/g" "$HOME"/.gtkrc-2.0
-        else
-            sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Adwaita\"/g" "$HOME"/.gtkrc-2.0
-        fi
-
 	else
-
-        if [ -d /usr/share/themes/Materia-dark-compact ]; then
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Materia-dark-compact\"/g" "$HOME"/.gtkrc-2.0
+		if [ -d /usr/share/themes/Materia-dark-compact ] && [ -d /usr/share/icons/Papirus-Dark ]; then
+			# GTK2
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Materia-dark-compact\"/g ; \
+			s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Papirus-Dark\"/g" "$HOME/.gtkrc-2.0"
+			# GTK3
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Materia-dark-compact/g ; \
+			s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Papirus-Dark/g" "$HOME/.config/gtk-3.0/settings.ini"
 		else
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Adwaita-dark\"/g" "$HOME"/.gtkrc-2.0
+			# GTK2
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Adwaita-dark\"/g ; \
+			s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Adwaita\"/g" "$HOME/.gtkrc-2.0"
+			# GTK3
+			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Adwaita-dark/g ; \
+			s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Adwaita/g" "$HOME/.config/gtk-3.0/settings.ini"
 		fi
-
-        if [ -d /usr/share/icons/Papirus-Dark ]; then
-            sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Papirus-Dark\"/g" "$HOME"/.gtkrc-2.0
-        else
-            sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Adwaita\"/g" "$HOME"/.gtkrc-2.0
-        fi
-
-	fi
-}
-
-modify_gtk3() {
-	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-
-        if [ -d /usr/share/themes/Materia-light-compact ]; then
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Materia-light-compact/g" "$HOME"/.config/gtk-3.0/settings.ini
-		else
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Adwaita/g" "$HOME"/.config/gtk-3.0/settings.ini
-		fi
-
-        if [ -d /usr/share/icons/Papirus ]; then
-            sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Papirus/g" "$HOME"/.config/gtk-3.0/settings.ini
-        else
-            sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Adwaita/g" "$HOME"/.config/gtk-3.0/settings.ini
-        fi
-
-	else
-
-        if [ -d /usr/share/themes/Materia-dark-compact ]; then
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Materia-dark-compact/g" "$HOME"/.config/gtk-3.0/settings.ini
-		else
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Adwaita-dark/g" "$HOME"/.config/gtk-3.0/settings.ini
-		fi
-
-        if [ -d /usr/share/icons/Papirus-Dark ]; then
-            sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Papirus-Dark/g" "$HOME"/.config/gtk-3.0/settings.ini
-        else
-            sed --follow-symlinks -i -e  "s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Adwaita/g" "$HOME"/.config/gtk-3.0/settings.ini
-        fi
-
 	fi
 }
 
@@ -680,8 +651,7 @@ update_environment_theme() {
 	# first modify running gtk (because we see them), then edit the gtk
 	# configs for new windows.
 	modify_running_gtk_and_flatpak
-	modify_gtk2
-	modify_gtk3
+	modify_gtk
 	modify_gtksourceview3
 	modify_gtksourceview4
 	modify_vim
@@ -723,8 +693,7 @@ update_environment_theme_de() {
 		echo "Your current session is \"$DESKTOP_SESSION\""
 		modify_xfce
 	fi
-	modify_gtk2
-	modify_gtk3
+	modify_gtk
 	modify_gtksourceview3
 	modify_gtksourceview4
 	modify_vim
