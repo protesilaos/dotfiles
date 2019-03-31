@@ -15,11 +15,10 @@
 
 # Description {{{
 # ===============
-
+#
 # A script that handles on-demand theme changes for a variety of tools.
-# This is an integral part of my custom working environment, centered
-# around `bspwm`.  See my dotfiles and study the README.md carefully:
-# https://gitlab.com/protesilaos/dotfiles.
+# This is an integral part of my custom desktop session, centered around
+# `bspwm`: https://gitlab.com/protesilaos/dotfiles.
 #
 # Replaces existing themes with the one provided as a shell argument.
 # This is typically done via an interface.  For that see my
@@ -33,11 +32,7 @@
 # about each item in the collection, as well as links to all related
 # source code repositories.
 #
-# Note that the three `{` and `}` that surround comment blocks or code
-# sections are to demarcate Vim folds.  The fold method is defined in
-# the very last line of this document, the "modeline".
-#
-# Last reviewed on 2018-11-26
+# Last full review on 2018-11-26
 #
 # }}}
 
@@ -46,8 +41,10 @@
 #
 # own_script_update_environment_theme [theme]
 #
-# For available arguments run:
-# find $HOME/.local/share/my_colours/shell/ -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort
+# For available arguments run (assuming you have already run `stow
+# colours` from inside my dotfiles' directory:
+#
+# find "$HOME/.local/share/my_colours/shell/" -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort
 # 
 # It is preferable to use the `tempusmenu` instead, which is a dmenu
 # interface with all the available theme options.
@@ -96,6 +93,29 @@ tempus_scheme=$1
 # Define array with Tempus light themes.  This is important as it will
 # determine such things as a the appropriate GTK theme and the icons.
 tempus_light_themes=(dawn day fugit past totus)
+
+# The project is controlled with git.  Else throw an error and exit.
+if [ -x /usr/bin/git ]; then
+	# The git command will only work if this script is run from the
+	# shell.  Whereas calling it from a key binding will fall back to
+	# the hard-coded path.
+	#
+	if [ -n "$(git rev-parse --show-toplevel)" ]; then
+		dotfiles_dir="$(git rev-parse --show-toplevel)"
+	elif [ -d "$HOME/dotfiles" ]; then
+		# IMPORTANT NOTE: make sure this path is indeed referencing my
+		# dotfiles: https://gitlab.com/protesilaos/dotfiles
+		dotfiles_dir="$HOME/dotfiles"
+	else
+		echo "ERROR. Missing dotfiles' directory"
+		echo "Exiting"
+		exit 1
+	fi
+else
+	echo "ERROR. Missing dependency: git"
+	echo "Exiting"
+	exit 1
+fi
 
 # }}}
 
@@ -248,26 +268,18 @@ modify_vim() {
 # Set theme for st {{{
 # --------------------
 
-# dependency:
-#   My soft fork of the Simple Terminal by suckless.  The source code is
-#   bundled with my dotfiles and should already be installed on the
-#   system if you have used `stow st` (please see the README.md in
-#   advance): https://gitlab.com/protesilaos/dotfiles
-# 
-# If you wish to contribute to the source code of my `st` fork, see:
-# https://gitlab.com/protesilaos/st.  Please note that I do not try to
-# replicate features that are provided by `tmux`.
+# DEPENDENCY: My soft fork of the Simple Terminal by suckless.  The
+# source code is bundled with my dotfiles and should already be
+# installed on the system if you have used `stow st`.  Please see the
+# README.md in advance for all the build dependencies:
+# https://gitlab.com/protesilaos/st
 modify_st() {
-    if [ -x "$HOME"/bin/st ]; then
-        echo "Recompiling st - suckless terminal"
-        notify-send -i terminal "Environment theme" "Recompiling st"
-        sed --follow-symlinks -i -e "s/_[a-z]*\\./_$tempus_scheme./g" "$HOME"/st/active-tempus-theme.h
-        # TODO this `cd` will cause problems if it fails to execute
-        # properly.  Add some conditional logic.
-        cd "$HOME"/dotfiles/st/st
-        rm -f config.h
-        make clean install
-    fi
+	if [ -x "$HOME/bin/st" ]; then
+		echo "Recompiling st - suckless terminal"
+		notify-send -i terminal "Environment theme" "Recompiling st"
+		sed --follow-symlinks -i -e "s/_[a-z]*\\./_$tempus_scheme./g" "$dotfiles_dir/st/st/active-tempus-theme.h"
+		cd "$dotfiles_dir/st/st" && rm -f config.h && make clean install
+	fi
 }
 
 # }}}
