@@ -1,0 +1,174 @@
+#!/bin/bash
+
+	# This program is free software: you can redistribute it and/or modify
+	# it under the terms of the GNU General Public License as published by
+	# the Free Software Foundation, either version 3 of the License, or
+	# (at your option) any later version.
+
+	# This program is distributed in the hope that it will be useful,
+	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+	# GNU General Public License for more details.
+
+	# You should have received a copy of the GNU General Public License
+	# along with this program.	If not, see <http://www.gnu.org/licenses/>.
+
+# Description {{{
+# ---------------
+#
+# Configures the MATE Terminal (default terminal emulator for MATE
+# Desktop Environment) to my liking.  This script is part of my dotfiles
+# and is meant to make the MATE Terminal useful within the context of my
+# custom desktop session running BSPWM.  Part of this integration is the
+# ability to dynamically switch themes for the entire environment
+# (terminals, GUIs, icons, wallpapers, etc.).  See my dotfiles:
+# https://gitlab.com/protesilaos/dotfiles
+#
+# Written on 2019-03-31 and tested on an up-to-date Debian Buster/Sid
+# machine.  In need of review.
+#
+# }}}
+
+# TODO improve documentation, especially in the "conditional commands"
+# section.
+
+# Theme settings {{{
+# ------------------
+#
+# You do not need to run this script manually, just for the sake of
+# updating the terminals' colours.  If you are using my `tempusmenu` (or
+# `own_script_update_environment_theme`), the script shall be executed
+# automatically as part of the overall theme change.
+
+# Get the relevant variables from the active Tempus theme
+source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
+
+# Path to the default MATE terminal profile
+dconf_path='/org/mate/terminal/profiles/default'
+
+# This concerns only a few global settings
+dconf_path_global='/org/mate/terminal/global'
+
+# For custom key bindings
+dconf_path_keys='/org/mate/terminal/keybindings'
+
+# Define colours
+dconf write "$dconf_path/foreground-color" "'$foreground'"
+dconf write "$dconf_path/bold-color" "'$foreground'"
+dconf write "$dconf_path/background-color" "'$background'"
+dconf write "$dconf_path/palette" "'$color0:$color1:$color2:$color3:$color4:$color5:$color6:$color7:$color8:$color9:$color10:$color11:$color12:$color13:$color14:$color15'"
+
+# }}}
+
+# Conditional commands {{{
+# ------------------------
+#
+# We define these in a conditional way because the idea is they will
+# remain constant over the long run.  The idea is that this script will
+# be executed whenever a theme change occurs, so the colour values need
+# no conditional logic.
+
+dconf_read_write_boolean() {
+	if [ "$(dconf read $dconf_path/$1)" == $2 ]; then
+		dconf write $dconf_path/$1 $3
+	elif [ -z "$(dconf read $dconf_path/$1)" ]; then
+		dconf write $dconf_path/$1 $3
+	fi
+}
+
+dconf_read_write_string() {
+	if [ "$(dconf read $dconf_path/$1)" != "'$2'" ]; then
+		dconf write $dconf_path/$1 "'$2'"
+	elif [ -z "$(dconf read $dconf_path/$1)" ]; then
+		dconf write $dconf_path/$1 "'$2'"
+	fi
+}
+
+dconf_read_write_integer() {
+	if [ "$(dconf read $dconf_path/$1)" != $2 ]; then
+		dconf write $dconf_path/$1 $2
+	elif [ -z "$(dconf read $dconf_path/$1)" ]; then
+		dconf write $dconf_path/$1 $2
+	fi
+}
+
+dconf_read_write_boolean_global() {
+	if [ "$(dconf read $dconf_path_global/$1)" == $2 ]; then
+		dconf write $dconf_path_global/$1 $3
+	elif [ -z "$(dconf read $dconf_path_global/$1)" ]; then
+		dconf write $dconf_path_global/$1 $3
+	fi
+}
+
+dconf_read_write_string_keys() {
+	if [ "$(dconf read $dconf_path_keys/$1)" != "'$2'" ]; then
+		dconf write $dconf_path_keys/$1 "'$2'"
+	elif [ -z "$(dconf read $dconf_path_keys/$1)" ]; then
+		dconf write $dconf_path_keys/$1 "'$2'"
+	fi
+}
+
+# Profile settings
+### Boolean types
+dconf_read_write_boolean 'allow-bold' 'false' 'true'
+dconf_read_write_boolean 'bold-color-same-as-fg' 'false' 'true'
+dconf_read_write_boolean 'copy-selection' 'false' 'true'
+dconf_read_write_boolean 'default-show-menubar' 'true' 'false'
+dconf_read_write_boolean 'use-system-font' 'true' 'false'
+dconf_read_write_boolean 'use-theme-colors' 'true' 'false'
+### String types
+dconf_read_write_string 'font' 'Monospace 10'
+dconf_read_write_string 'cursor-blink-mode' 'off'
+dconf_read_write_string 'scrollbar-position' 'hidden'
+#### Integer types
+dconf_read_write_integer 'scrollback-lines' '9999'
+
+# Global settings
+dconf_read_write_boolean_global 'use-menu-accelerators' 'true' 'false'
+dconf_read_write_boolean_global 'use-mnemonics' 'true' 'false'
+
+# Key bindings
+# NOTE this is very opinionated because I either use the terminal to
+# launch a tmux session, or as a standalone container for CLI tools,
+# such as neomutt.  Either way, I do not want the terminal's key
+# bindings to ever interfere with any of my own.  Furthermore, I NEVER
+# use tabs, multiple profiles, etc.
+### Redefine
+dconf_read_write_string_keys 'toggle-menubar' '<Ctrl><Shift>m'
+dconf_read_write_string_keys 'zoom-in' '<Ctrl><Shift>Page_Up'
+dconf_read_write_string_keys 'zoom-out' '<Ctrl><Shift>Page_Down'
+dconf_read_write_string_keys 'zoom-normal' '<Ctrl><Shift>Home'
+### Disable
+dconf_read_write_string_keys 'detach-tab' 'disabled'
+dconf_read_write_string_keys 'move-tab-left' 'disabled'
+dconf_read_write_string_keys 'move-tab-right' 'disabled'
+dconf_read_write_string_keys 'new-tab' 'disabled'
+dconf_read_write_string_keys 'new-window' 'disabled'
+dconf_read_write_string_keys 'next-profile' 'disabled'
+dconf_read_write_string_keys 'next-tab' 'disabled'
+dconf_read_write_string_keys 'prev-profile' 'disabled'
+dconf_read_write_string_keys 'prev-tab' 'disabled'
+dconf_read_write_string_keys 'reset' 'disabled'
+dconf_read_write_string_keys 'reset-and-clear' 'disabled'
+dconf_read_write_string_keys 'save-contents' 'disabled'
+dconf_read_write_string_keys 'search-find' 'disabled'
+dconf_read_write_string_keys 'search-find-next' 'disabled'
+dconf_read_write_string_keys 'search-find-previous' 'disabled'
+dconf_read_write_string_keys 'select-all' 'disabled'
+dconf_read_write_string_keys 'set-terminal-title' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-1' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-2' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-3' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-4' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-5' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-6' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-7' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-8' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-9' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-10' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-11' 'disabled'
+dconf_read_write_string_keys 'switch-to-tab-12' 'disabled'
+
+# }}}
+
+# vi:foldmethod=marker
