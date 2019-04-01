@@ -36,7 +36,7 @@
 # contribute to the Tempus Themes project, see the generator's
 # CONTRIBUTING.md.
 #
-# Last reviewed on 2018-11-01.
+# Last reviewed on 2019-04-01
 #
 # }}}
 
@@ -165,22 +165,6 @@ build_gtksourceview4() {
     echo "Done with GTK Source View 4."
 }
 
-# Function to build all Tempus themes for Kitty.  It starts by invoking
-# the generic loop that iterates over each scheme file.  Then we pass to
-# it the following arguments:
-#
-# 1. The 'kitty' template name
-# 2. Destination path for $HOME/.local/share/my_colours/kitty
-# 3. File type extension for tempus_$i.conf
-build_kitty() {
-    local dest_dir="$local_col_dir/kitty"
-    echo "Building themes for Kitty."
-    mkdir -p "$dest_dir"
-    echo "Destination is: $dest_dir/"
-    invoke_generic_loop kitty "$dest_dir" conf
-    echo "Done with Kitty."
-}
-
 # Function to build all Tempus themes for the shell.  It starts by
 # invoking the generic loop that iterates over each scheme file.  Then
 # we pass to it the following arguments:
@@ -197,67 +181,6 @@ build_shell() {
     echo "Done with the Shell."
 }
 
-# Function to build all Tempus themes for the Simple Terminal by
-# suckless.  It starts by invoking the generic loop that
-# iterates over each scheme file.  Then we pass to it the following
-# arguments:
-#
-# 1. The 'st' template name
-# 2. Destination path for $HOME/st/themes
-# 3. File type extension for tempus_$i.h
-#
-# See my fork https://gitlab.com/protesilaos/st
-# NOTE st uses a different destination path than the rest.
-build_st() {
-    echo "Building themes for the Simple Terminal."
-    echo "Destination is: $HOME/st/"
-    invoke_generic_loop st "$HOME/st" h
-    echo "Done with ST."
-
-    # If the git variant of my `st` fork is in the home dir, also build
-    # the themes for it.  I always give it the name defined below, to
-    # distinguish it from the "st" that is bundled with my dotfiles and
-    # which is added to $HOME as a symlink (with GNU Stow).
-    if [ -d "$HOME/st-prot-source" ]; then
-        echo "Also building themes for the Simple Terminal fork."
-        echo "Destination is: $HOME/st-prot-source/"
-        invoke_generic_loop st "$HOME/st-prot-source" h
-        echo "Done with the ST fork."
-    fi
-}
-
-# Function to build all Tempus themes for the X server.  It starts by
-# invoking the generic loop that iterates over each scheme file.  Then
-# we pass to it the following arguments:
-#
-# 1. The 'xcolors' template name
-# 2. Destination path for $HOME/.local/share/my_colours/tempus
-# 3. File type extension for tempus_$i.Xcolors
-build_xcolors() {
-    local dest_dir="$local_col_dir/tempus"
-    echo "Building themes for X resources."
-    mkdir -p "$dest_dir"
-    echo "Destination is: $dest_dir/"
-    invoke_generic_loop xcolors "$dest_dir" Xcolors
-    echo "Done with X resources."
-}
-
-# Function to build all Tempus themes for the Xfce 4 terminal emulator.
-# It starts by invoking the generic loop that iterates over each scheme
-# file.  Then we pass to it the following arguments:
-#
-# 1. The 'xfce4-terminal' template name
-# 2. Destination path for $HOME/.local/share/xfce4/terminal/colorschemes
-# 3. File type extension for $HOME/.local/share/xfce4/terminal/colorschemes/tempus_$i.theme
-build_xfce4_terminal() {
-    local dest_dir="$HOME/.local/share/xfce4/terminal/colorschemes"
-    echo "Building themes for Xfce4 terminal."
-    mkdir -p "$dest_dir"
-    echo "Destination is: $dest_dir/"
-    invoke_generic_loop xfce4-terminal "$dest_dir" theme
-    echo "Done with the Xfce4 terminal."
-}
-
 # }}}
 
 # Build everything {{{
@@ -270,15 +193,7 @@ build_xfce4_terminal() {
 build_all() {
     build_gtksourceview3
     build_gtksourceview4
-    if [ -x /usr/bin/kitty ]; then
-        build_kitty
-    fi
     build_shell
-    if [ -x "$HOME/bin/st" ]; then
-        build_st
-    fi
-    #build_xcolors
-    build_xfce4_terminal
 }
 
 # return results
