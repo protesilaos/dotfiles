@@ -179,13 +179,6 @@ super + shift + d
 
 # }}}
 
-# Open interface for screencasting or stop recording.  Note that this is
-# a simplistic approach.  For something more robust use OBS Studio.
-# Recall that these depend on my dotfiles.  That command is in my own
-# bin directory.  See https://gitlab.com/protesilaos/dotfiles.
-super + x ; {r,s}
-    {screencastmenu, own_script_ffmpeg_screencast rec_stop}
-
 # Screenshots (requires `scrot`).  First one is for the focused window.
 # The other is of the entire X session (including all active monitors).
 # Note that `scrot` only has an interactive mode that I do not use.
