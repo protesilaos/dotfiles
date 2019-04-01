@@ -12,7 +12,8 @@
 # Most commands are derived from `man bspc|bspwm` and `man sxhkd`.  Each
 # action is preceded by comments which explain what it does.
 #
-# Last reviewed on 2018-11-07
+# Last full review on 2018-11-07
+# Last major edit on 2019-04-01
 #
 # }}}
 
@@ -90,21 +91,16 @@ ctrl + alt + {Home,End,Delete}
 # Main programs
 # -------------
 
-# Terminal emulator with and without tmux.  Bear in mind that my `st`
-# build does not try to replicate multiplexing features, including
-# scroll back.  As such, `super + shift + Return` should be used when
-# you need a very basic terminal emulator.  I usually use this to test
-# how various actions affect running nodes (e.g. test the script that
-# resizes nodes, or the key chords that balance/equalise node splits).
-# I normally use `tmux` which is ideal for working on multiple
-# terminals, switching sessions, and the like.  You should really give
-# this a fair try.  I think it fits perfectly into a console-based
-# workflow and complements the features of a tiling WM.
+# Terminal emulator with and without tmux.  I normally use `tmux` which
+# is ideal for working on multiple terminals, switching sessions, and
+# the like.  You should really give this a fair try.  I think it fits
+# perfectly into a console-based workflow and complements the features
+# of a tiling WM.
 #
 # NOTE `@` means until key is released, though I cannot confirm it works
 # properly.  It is kept here for reference and future review.
 super + {_, shift + } @Return
-    {st -e tmux new-session -A -s 'Default', st}
+    {mate-terminal --disable-factory -x tmux new-session -A -s 'Default', mate-terminal}
 
 # GUI programs.  Where these are alternatives to common CLI tools they
 # are mapped to the same number as their counterparts, but prepended
@@ -117,16 +113,25 @@ super + g ; {1,2,3}
 	}
 
 # CLI programs.  Any browser and/or file manager should be assigned the
-# numbers 1 and 2 respectively, in order to bkeep consistency with the
+# numbers 1 and 2 respectively, in order to keep consistency with the
 # above-defined GUIs.
+#
+# Note that, by default, all instances of `mate-terminal` run in
+# a single process.  So killing one (bspc node -k), will bring down all
+# terminals.  Pass option "--disable-factory" to run each terminal as
+# its own process (I only do this for special occasions, as seen
+# elsewhere in this file).
 super + x ; {3-7}
-    st -e {neomutt,newsboat,rtv,ncmpcpp,podboat -a}
+    mate-terminal -x {neomutt,newsboat,rtv,ncmpcpp,podboat -a}
 
 # I use "my_float_window" as an application name or class for those rare
-# occasions where I prefer a floating window at launch.  Note that
-# `calc` is found in the Debian repos as `apcalc`.
+# occasions where I prefer a floating window at launch.  The option
+# --disable-factory is necessary to run the terminal in its own process,
+# so as to inherit the class we pass to it.
+#
+# Note that `calc` is found in the Debian repos as `apcalc`.
 super + x ; 0
-    st -c 'my_float_window' -e calc
+    mate-terminal --disable-factory --class=my_float_window -x calc
 
 # sbgmenu: dmenu interface for browsing images from my "Pictures"
 # directory.  There is an option to just display the selected file, or
