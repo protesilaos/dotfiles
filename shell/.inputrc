@@ -10,7 +10,3 @@ set mark-symlinked-directories On
 set colored-completion-prefix On
 # Color the common prefix in menu-complete
 set menu-complete-display-prefix On
-
-# Fixes issues with some keys on `st`
-# As per the Arch Wiki
-set enable-keypad on
