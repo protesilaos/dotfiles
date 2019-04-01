@@ -19,7 +19,7 @@
 # Use ANSI codes to apply theme change to all active terminals.  This is
 # particularly useful for programs that source their colours at startup,
 # requiring a restart to apply a new theme.  All terminals I have tested
-# respond to the live theme change.  Tried with xterm, rxvt-unicode, st,
+# respond to the live theme change.  Tried with xterm, rxvt-unicode,
 # {gnome,mate,xfce4}-terminal, kitty, tilix.
 #
 # Adapted from
@@ -68,19 +68,6 @@ done
 ansi_sequences+="\\033]10;$(get_hex_value foreground)\\007"
 ansi_sequences+="\\033]11;$(get_hex_value background)\\007"
 ansi_sequences+="\\033]17;$(get_hex_value foreground)\\007"
-
-# My Tempus themes use custom colours for `st` base values (numbers
-# 256-259).  This is to enable smooth transitions between dark and light
-# themes.  My st build: https://gitlab.com/protesilaos/st
-#
-# NOTE that st no longer is not my main terminal emulator.  This snippet
-# is kept mostly for reference.
-if [ -x "$HOME/bin/st" ]; then
-	ansi_sequences+="\\033]4;256;$(get_hex_value background)\\007"
-	ansi_sequences+="\\033]4;257;$(get_hex_value foreground)\\007"
-	ansi_sequences+="\\033]4;258;$(get_hex_value cursorColor)\\007"
-	ansi_sequences+="\\033]4;259;$(get_hex_value cursorColor2)\\007"
-fi
 
 # Apply ANSI sequences to running terminals.
 for term in /dev/pts/[0-9]*; do
