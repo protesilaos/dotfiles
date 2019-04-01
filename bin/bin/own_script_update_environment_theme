@@ -277,25 +277,6 @@ modify_mate_terminal() {
 
 # }}}
 
-# Set theme for st {{{
-# --------------------
-
-# DEPENDENCY: My soft fork of the Simple Terminal by suckless.  The
-# source code is bundled with my dotfiles and should already be
-# installed on the system if you have used `stow st`.  Please see the
-# README.md in advance for all the build dependencies:
-# https://gitlab.com/protesilaos/st
-modify_st() {
-	if [ -x "$HOME/bin/st" ]; then
-		echo "Recompiling st - suckless terminal"
-		notify-send -i terminal "Environment theme" "Recompiling st"
-		sed --follow-symlinks -i -e "s/_[a-z]*\\./_$tempus_scheme./g" "$dotfiles_dir/st/st/active-tempus-theme.h"
-		cd "$dotfiles_dir/st/st" && rm -f config.h && make clean install
-	fi
-}
-
-# }}}
-
 # Set tmux theme {{{
 # ------------------
 
@@ -693,10 +674,6 @@ update_environment_theme() {
 	modify_bspwm
 	modify_dunst
 	melonpanel # this re-runs my lemonbar to get the new colours
-	###### modify st last because it requires recompilation
-	###### running instances are updated via ANSI sequences
-	###### see my dotfiles for `own_script_update_running_terminals`
-	#### modify_st
 	modify_mate_terminal
 }
 
@@ -734,10 +711,6 @@ update_environment_theme_de() {
 	source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 	modify_tmux
 	modify_dunst
-	###### modify st last because it requires recompilation
-	###### running instances are updated via ANSI sequences
-	###### see my dotfiles for `own_script_update_running_terminals`
-	#### modify_st
 	modify_mate_terminal
 }
 
