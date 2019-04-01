@@ -26,7 +26,7 @@
 # aliases: sans, serif, monospace.  The font weight can only be one that
 # is supported by the designated font.
 my_font_family=sans
-my_font_size=10
+my_font_size=11
 my_font_weight=regular
 
 my_custom_ui_font="$my_font_family-$my_font_size:$my_font_weight"
