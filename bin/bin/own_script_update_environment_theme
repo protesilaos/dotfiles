@@ -266,9 +266,10 @@ modify_vim() {
 # }}}
 
 # Set theme for MATE Terminal {{{
-# ------------------------------
-# TODO add documentation (this is intended to replace the Simple
-# Terminal)
+# -------------------------------
+#
+# This is my default terminal emulator.  This script leverages `dconf`
+# to make the necessary changes.
 modify_mate_terminal() {
 	if [ -x /usr/bin/mate-terminal ]; then
 		own_script_mate_terminal_setup
