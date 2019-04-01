@@ -18,9 +18,9 @@
 #
 # Use ANSI codes to apply theme change to all active terminals.  This is
 # particularly useful for programs that source their colours at startup,
-# requiring a restart to apply a new theme.  However, all terminals
-# I have tested respond to the live theme change.  Tried with xterm,
-# rxvt-unicode, st, {gnome,mate,xfce4}-terminal, kitty, tilix.
+# requiring a restart to apply a new theme.  All terminals I have tested
+# respond to the live theme change.  Tried with xterm, rxvt-unicode, st,
+# {gnome,mate,xfce4}-terminal, kitty, tilix.
 #
 # Adapted from
 # https://www.reddit.com/r/unixporn/comments/80nidw/bspwm_script_to_change_all_themes_on_demand/duxjw1e/
@@ -36,7 +36,8 @@ if [ -f "$active_theme" ]; then
 	# capture all active colours
 	col_array="$(grep '^.*=' $active_theme)"
 else
-	echo "There is file at $active_theme"
+	echo "ERROR. There is no file at $active_theme"
+	echo "Aborting"
 	exit 1
 fi
 
@@ -70,10 +71,10 @@ ansi_sequences+="\\033]17;$(get_hex_value foreground)\\007"
 
 # My Tempus themes use custom colours for `st` base values (numbers
 # 256-259).  This is to enable smooth transitions between dark and light
-# themes.  See the inline comments in my `st` theme files, which are
-# included with my dotfiles inside the "st" directory.
-# my dotfiles: https://gitlab.com/protesilaos/dotfiles
-# my st build: https://gitlab.com/protesilaos/st
+# themes.  My st build: https://gitlab.com/protesilaos/st
+#
+# NOTE that st no longer is not my main terminal emulator.  This snippet
+# is kept mostly for reference.
 if [ -x "$HOME/bin/st" ]; then
 	ansi_sequences+="\\033]4;256;$(get_hex_value background)\\007"
 	ansi_sequences+="\\033]4;257;$(get_hex_value foreground)\\007"
