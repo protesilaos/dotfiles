@@ -1,17 +1,17 @@
 #!/bin/bash
 
-    # This program is free software: you can redistribute it and/or modify
-    # it under the terms of the GNU General Public License as published by
-    # the Free Software Foundation, either version 3 of the License, or
-    # (at your option) any later version.
+	# This program is free software: you can redistribute it and/or modify
+	# it under the terms of the GNU General Public License as published by
+	# the Free Software Foundation, either version 3 of the License, or
+	# (at your option) any later version.
 
-    # This program is distributed in the hope that it will be useful,
-    # but WITHOUT ANY WARRANTY; without even the implied warranty of
-    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    # GNU General Public License for more details.
+	# This program is distributed in the hope that it will be useful,
+	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+	# GNU General Public License for more details.
 
-    # You should have received a copy of the GNU General Public License
-    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	# You should have received a copy of the GNU General Public License
+	# along with this program.	If not, see <http://www.gnu.org/licenses/>.
 
 # Description {{{
 # ===============
@@ -33,6 +33,7 @@
 # source code repositories.
 #
 # Last full review on 2018-11-26
+# Last major update on 2019-04-01
 #
 # }}}
 
@@ -45,7 +46,7 @@
 # colours` from inside my dotfiles' directory:
 #
 # find "$HOME/.local/share/my_colours/shell/" -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort
-# 
+#
 # It is preferable to use the `tempusmenu` instead, which is a dmenu
 # interface with all the available theme options.
 #
@@ -60,23 +61,23 @@
 # TODO should this be moved to the bottom?
 # TODO can it be incorporated in the other conditions?
 if [ "$#" == 0 ] ; then
-    echo "ERROR. At least 1 argument expected"
-    echo "Exiting..."
-    echo ""
-    echo "SOLUTION. own_script_update_environment_theme [theme]"
-    echo "EXAMPLE using Tempus Winter:"
-    echo "own_script_update_environment_theme winter"
-    echo ""
-    echo "For available arguments run:"
-    echo "find $HOME/.local/share/my_colours/shell/ -type f -printf \"%f\\n\" | sed -e 's/tempus_\\([a-z]*\\).sh/\\1/g' | sort"
-    echo ""
-    echo "To change desktop environment theme (GNOME, MATE, Xfce), run this instead:"
-    echo "own_script_update_environment_theme winter de"
-    echo ""
-    echo "Note though, that you can use 'tempusmenu', a simple interface for theme selection"
-    echo "tempusmenu should be available as it is part of my dotfiles"
-    echo "See https://gitlab.com/protesilaos/dotfiles, inside the 'bin' directory"
-    exit 1
+	echo "ERROR. At least 1 argument expected"
+	echo "Exiting..."
+	echo ""
+	echo "SOLUTION. own_script_update_environment_theme [theme]"
+	echo "EXAMPLE using Tempus Winter:"
+	echo "own_script_update_environment_theme winter"
+	echo ""
+	echo "For available arguments run:"
+	echo "find $HOME/.local/share/my_colours/shell/ -type f -printf \"%f\\n\" | sed -e 's/tempus_\\([a-z]*\\).sh/\\1/g' | sort"
+	echo ""
+	echo "To change desktop environment theme (GNOME, MATE, Xfce), run this instead:"
+	echo "own_script_update_environment_theme winter de"
+	echo ""
+	echo "Note though, that you can use 'tempusmenu', a simple interface for theme selection"
+	echo "tempusmenu should be available as it is part of my dotfiles"
+	echo "See https://gitlab.com/protesilaos/dotfiles, inside the 'bin' directory"
+	exit 1
 fi
 
 # }}}
@@ -123,22 +124,22 @@ fi
 # ------------------
 
 # dependency:
-#   sudo apt install feh
+#	sudo apt install feh
 #
 # Check if argument is part of the light themes array.  If yes, set
 # light background as the wallpaper, else switch to a dark one.
 modify_wallpaper() {
-    # the wallpapers are defined manually at
-    # ~/Pictures/theme/{light,dark}.jpg
-    local wall_path="$HOME/Pictures/theme"
-    local wall_path_light="$wall_path/light"
-    local wall_path_dark="$wall_path/dark"
+	# the wallpapers are defined manually at
+	# ~/Pictures/theme/{light,dark}.jpg
+	local wall_path="$HOME/Pictures/theme"
+	local wall_path_light="$wall_path/light"
+	local wall_path_dark="$wall_path/dark"
 
-    if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-        cp -f "$wall_path_light".jpg "$HOME"/.wallpaper.jpg && feh --bg-fill "$HOME"/.wallpaper.jpg
-    else
-        cp -f "$wall_path_dark".jpg "$HOME"/.wallpaper.jpg && feh --bg-fill "$HOME"/.wallpaper.jpg
-    fi
+	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
+		cp -f "$wall_path_light".jpg "$HOME"/.wallpaper.jpg && feh --bg-fill "$HOME"/.wallpaper.jpg
+	else
+		cp -f "$wall_path_dark".jpg "$HOME"/.wallpaper.jpg && feh --bg-fill "$HOME"/.wallpaper.jpg
+	fi
 }
 
 # }}}
@@ -197,30 +198,29 @@ modify_gtk() {
 # ------------------------------
 
 # TODO find xfconf-query for mousepad (Xfce editor)
-# TODO is Linux Mint's Xed in the Debian repo's?  Find how to adjust it.
 
 modify_gtksourceview3() {
-    if [ -x /usr/bin/gedit ]; then
-        # NOTE XXX this needs the ports of the Tempus themes for the
-        # GTK3 Source View widget.  These are included with my dotfiles
-        # and should be available with `stow gtk`.  Here is the source
-        # code with those theme files only:
-        # https://gitlab.com/protesilaos/tempus-themes-gtksourceview3
-        if [ -f /usr/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ] || [ -f "$HOME"/.local/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ]; then
-            gsettings set org.gnome.gedit.preferences.editor scheme "tempus-$tempus_scheme"
-        fi
-    fi
+	if [ -x /usr/bin/gedit ]; then
+		# NOTE XXX this needs the ports of the Tempus themes for the
+		# GTK3 Source View widget.	These are included with my dotfiles
+		# and should be available with `stow gtk`.	Here is the source
+		# code with those theme files only:
+		# https://gitlab.com/protesilaos/tempus-themes-gtksourceview3
+		if [ -f /usr/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ] || [ -f "$HOME"/.local/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ]; then
+			gsettings set org.gnome.gedit.preferences.editor scheme "tempus-$tempus_scheme"
+		fi
+	fi
 
-    if [ -x /usr/bin/pluma ]; then
-        # NOTE XXX this needs the ports of the Tempus themes for the
-        # GTK3 Source View widget.  These are included with my dotfiles
-        # and should be available with `stow gtk`.  Here is the source
-        # code with those theme files only:
-        # https://gitlab.com/protesilaos/tempus-themes-gtksourceview3
-        if [ -f /usr/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ] || [ -f "$HOME"/.local/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ]; then
-            gsettings set org.mate.pluma color-scheme "tempus-$tempus_scheme"
-        fi
-    fi
+	if [ -x /usr/bin/pluma ]; then
+		# NOTE XXX this needs the ports of the Tempus themes for the
+		# GTK3 Source View widget.	These are included with my dotfiles
+		# and should be available with `stow gtk`.	Here is the source
+		# code with those theme files only:
+		# https://gitlab.com/protesilaos/tempus-themes-gtksourceview3
+		if [ -f /usr/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ] || [ -f "$HOME"/.local/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ]; then
+			gsettings set org.mate.pluma color-scheme "tempus-$tempus_scheme"
+		fi
+	fi
 }
 
 # }}}
@@ -229,16 +229,16 @@ modify_gtksourceview3() {
 # ------------------------------
 
 modify_gtksourceview4() {
-    if [ -x /usr/bin/gnome-builder ]; then
-        # NOTE XXX this needs the ports of the Tempus themes for the
-        # GTK4 Source View widget.  These are included with my dotfiles
-        # and should be available with `stow gtk`.  Here is the source
-        # code with those theme files only:
-        # https://gitlab.com/protesilaos/tempus-themes-gtksourceview4
-        if [ -f /usr/share/gtksourceview-4/styles/tempus_"$tempus_scheme".xml ] || [ -f "$HOME"/.local/share/gtksourceview-4/styles/tempus_"$tempus_scheme".xml ]; then
-            gsettings set org.gnome.builder.editor style-scheme-name "tempus-$tempus_scheme"
-        fi
-    fi
+	if [ -x /usr/bin/gnome-builder ]; then
+		# NOTE XXX this needs the ports of the Tempus themes for the
+		# GTK4 Source View widget.  These are included with my dotfiles
+		# and should be available with `stow gtk`.  Here is the source
+		# code with those theme files only:
+		# https://gitlab.com/protesilaos/tempus-themes-gtksourceview4
+		if [ -f /usr/share/gtksourceview-4/styles/tempus_"$tempus_scheme".xml ] || [ -f "$HOME"/.local/share/gtksourceview-4/styles/tempus_"$tempus_scheme".xml ]; then
+			gsettings set org.gnome.builder.editor style-scheme-name "tempus-$tempus_scheme"
+		fi
+	fi
 }
 
 # }}}
@@ -282,7 +282,7 @@ modify_mate_terminal() {
 # ------------------
 
 # dependency:
-#   sudo apt install tmux
+#	sudo apt install tmux
 #
 # Update tmux base values.  The `tmux` setup should be in place if you
 # run `stow tmux` from inside my dotfiles' directory.
@@ -322,10 +322,6 @@ modify_shell_theme() {
 # Set less manpager colours {{{
 # -----------------------------
 
-# TODO update `shell` to run everything from a single file, rather than
-# the current modular approach.  Then change the source of the
-# subsequent `sed` commands to "$HOME"/.bashrc
-
 # Change the man pages colour output based on whether the theme is light
 # or dark.  This assumes the $PAGER or $MANPAGER is `less`.  It also
 # assumes that you have the same BASH setup as that provided by my
@@ -346,7 +342,7 @@ modify_less_manpages() {
 # ----------------------
 
 # dependency:
-#   sudo apt install newsboat
+#	sudo apt install newsboat
 #
 # To actually read RSS feeds, you need to manually create
 # `~/.config/newsboat/urls`.  That file should have a URL per line.
@@ -355,13 +351,13 @@ modify_less_manpages() {
 # passed to this script.  The theme files for `newsboat` are included
 # with my dotfiles and should be in place if you run `stow cli-tools`.
 modify_newsboat() {
-    if [ -x /usr/bin/newsboat ]; then
-        if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-            sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME"/.config/newsboat/config
-        else
-            sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_dark/g" "$HOME"/.config/newsboat/config
-        fi
-    fi
+	if [ -x /usr/bin/newsboat ]; then
+		if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
+			sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME"/.config/newsboat/config
+		else
+			sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_dark/g" "$HOME"/.config/newsboat/config
+		fi
+	fi
 }
 
 # }}}
@@ -403,13 +399,13 @@ modify_neomutt() {
 # from the generic shell theme defined in the function
 # `modify_shell_theme`.
 modify_bspwm() {
-    if pgrep -x "bspwm" > /dev/null; then
-        # window decorations
-        bspc config normal_border_color "$background"
-        bspc config active_border_color "$color5"
-        bspc config focused_border_color "$color6"
-        bspc config presel_feedback_color "$backgroundalt"
-    fi
+	if pgrep -x "bspwm" > /dev/null; then
+		# window decorations
+		bspc config normal_border_color "$background"
+		bspc config active_border_color "$color5"
+		bspc config focused_border_color "$color6"
+		bspc config presel_feedback_color "$backgroundalt"
+	fi
 }
 
 # }}}
@@ -418,30 +414,28 @@ modify_bspwm() {
 # ---------------------
 
 # dependency:
-#   sudo apt install dunst
+#	sudo apt install dunst
 #
 # Modify the `dunst` colours.  These variables are sourced from the
 # generic shell theme defined in the function `modify_shell_theme`.
 modify_dunst() {
-    local dunstrc="$HOME/.config/dunst/dunstrc"
+	local dunstrc="$HOME/.config/dunst/dunstrc"
 
-    if pgrep -x "dunst" > /dev/null; then
-        # Change the separator and frame colour
-        sed --follow-symlinks -i "s/\(^separator_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/" "$dunstrc"
-        sed --follow-symlinks -i "s/\(^frame_color.*\)\(#[0-9a-zA-Z]*\)/\1$background/" "$dunstrc"
+	if pgrep -x "dunst" > /dev/null; then
+		# Sed actions, per line:
+		# Change the separator and frame colour
+		# Change {back,fore}ground value for urgency_low notifications
+		# Change {back,fore}ground value for urgency_normal notifications
+		# Change {back,fore}ground value for urgency_critical notifications
+		sed --follow-symlinks -i "s/\(^separator_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; \
+		s/\(^frame_color.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; \
+		/urgency_low/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; /urgency_low/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foregroundalt/ ; \
+		/urgency_normal/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; /urgency_normal/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foreground/ ; \
+		/urgency_critical/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$color1/ ; /urgency_critical/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$background/" "$dunstrc"
 
-        # Change {back,fore}ground value for urgency_low notifications
-        sed --follow-symlinks -i "/urgency_low/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; /urgency_low/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foregroundalt/" "$dunstrc"
-
-        # Change {back,fore}ground value for urgency_normal notifications
-        sed --follow-symlinks -i "/urgency_normal/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; /urgency_normal/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foreground/" "$dunstrc"
-
-        # Change {back,fore}ground value for urgency_critical notifications
-        sed --follow-symlinks -i "/urgency_critical/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$color1/ ; /urgency_critical/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$background/" "$dunstrc"
-
-        # kill and reload dunst
-        killall dunst && eval "$(dbus-launch)"
-    fi
+		# kill and reload dunst
+		killall dunst && eval "$(dbus-launch)"
+	fi
 }
 
 # }}}
@@ -453,13 +447,13 @@ modify_dunst() {
 # TODO how to change gnome terminal profile, assuming the presence of
 # 'Dark' and 'Light' profile names?
 modify_gnome() {
-    if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-        gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"
-        gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/theme/light.jpg"
-    else
-        gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
-        gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/theme/dark.jpg"
-    fi
+	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
+		gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"
+		gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/theme/light.jpg"
+	else
+		gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
+		gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/theme/dark.jpg"
+	fi
 }
 
 # }}}
@@ -473,37 +467,30 @@ modify_gnome() {
 # update MATE settings
 modify_mate() {
 	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-
-		if [ -d /usr/share/themes/Materia-light ]; then
+		# If there are custom GTK widget and icon themes, use them, else
+		# use the defaults
+		if [ -d /usr/share/themes/Materia-light ] && [ -d /usr/share/icons/Papirus ]; then
 			gsettings set org.mate.interface gtk-theme 'Materia-light-compact'
 			gsettings set org.mate.Marco.general theme 'Materia-light-compact'
-		else
-			gsettings set org.mate.interface gtk-theme 'Adwaita' # TODO what is the MATE default?
-			gsettings set org.mate.Marco.general theme 'Adwaita' # TODO what is the MATE default?
-		fi
-
-		if [ -d /usr/share/icons/Papirus ]; then
 			gsettings set org.mate.interface icon-theme 'Papirus'
 		else
-			gsettings set org.mate.interface icon-theme 'Adwaita' # TODO what is the MATE default?
+			gsettings set org.mate.interface gtk-theme 'Menta'
+			gsettings set org.mate.Marco.general theme 'Menta'
+			gsettings set org.mate.interface icon-theme 'Menta'
 		fi
 
 		gsettings set org.mate.background picture-filename "$HOME/Pictures/theme/light.jpg"
 
 	else
 
-		if [ -d /usr/share/themes/Materia-dark-compact ]; then
+		if [ -d /usr/share/themes/Materia-dark-compact ] && [ -d /usr/share/icons/Papirus-Dark ]; then
 			gsettings set org.mate.interface gtk-theme 'Materia-dark-compact'
 			gsettings set org.mate.Marco.general theme 'Materia-dark-compact'
-		else
-			gsettings set org.mate.interface gtk-theme 'Adwaita-dark' # TODO what is the MATE default?
-			gsettings set org.mate.Marco.general theme 'Adwaita-dark' # TODO what is the MATE default?
-		fi
-
-		if [ -d /usr/share/icons/Papirus-Dark ]; then
 			gsettings set org.mate.interface icon-theme 'Papirus-Dark'
 		else
-			gsettings set org.mate.interface icon-theme 'Adwaita' # TODO what is the MATE default?
+			gsettings set org.mate.interface gtk-theme 'Menta'
+			gsettings set org.mate.Marco.general theme 'Menta'
+			gsettings set org.mate.interface icon-theme 'Menta'
 		fi
 
 		gsettings set org.mate.background picture-filename "$HOME/Pictures/theme/dark.jpg"
@@ -543,42 +530,32 @@ modify_xfce() {
 # Optional dependencies:
 # 	sudo apt install materia-gtk-theme papirus-icon-theme
 #
-# NOTE this function is not used inside a GNOME/MATE session.  Its
+# NOTE this function is not used inside a MATE session.  Its
 # purpose is two-fold:
 # 1. Change GTK styles for running applications in a bspwm session
-#    (running xfsettingsd).
+#    (running `mate-settings-daemon` or `xfsettingsd`).
 # 2. Modify flatpak themes.  See this script's function called
 #    `modify_running_gtk_and_flatpak`.
 modify_gsettings_without_de() {
-    if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-
-		if [ -d /usr/share/themes/Materia-light-compact ]; then
+	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
+		if [ -d /usr/share/themes/Materia-light-compact ] && [ -d /usr/share/icons/Papirus ]; then
 			gsettings set org.mate.interface gtk-theme 'Materia-light-compact'
-		else
-			gsettings set org.mate.interface gtk-theme 'Adwaita' # TODO what is the MATE default?
-		fi
-
-		if [ -d /usr/share/icons/Papirus ]; then
 			gsettings set org.mate.interface icon-theme 'Papirus'
 		else
-			gsettings set org.mate.interface icon-theme 'Adwaita' # TODO what is the MATE default?
+			gsettings set org.mate.interface gtk-theme 'Menta'
+			gsettings set org.mate.interface icon-theme 'Menta'
 		fi
+	else
 
-    else
-
-		if [ -d /usr/share/themes/Materia-dark-compact ]; then
+		if [ -d /usr/share/themes/Materia-dark-compact ] && [ -d /usr/share/icons/Papirus-Dark ]; then
 			gsettings set org.mate.interface gtk-theme 'Materia-dark-compact'
-		else
-			gsettings set org.mate.interface gtk-theme 'Adwaita-dark' # TODO what is the MATE default?
-		fi
-
-		if [ -d /usr/share/icons/Papirus-Dark ]; then
 			gsettings set org.mate.interface icon-theme 'Papirus-Dark'
 		else
-			gsettings set org.mate.interface icon-theme 'Adwaita' # TODO what is the MATE default?
+			gsettings set org.mate.interface gtk-theme 'Menta'
+			gsettings set org.mate.interface icon-theme 'Menta'
 		fi
 
-    fi
+	fi
 }
 
 # }}}
@@ -612,15 +589,14 @@ modify_xfconf_without_xfce() {
 # IMPORTANT NOTE ABOUT `modify_running_gtk_and_flatpak`
 # -----------------------------------------------------
 #
-## TODO include MATE in this description
 # Flatpak themes are implemented via a settings daemon.  In a `bspwm`
 # session there is none running, so changing themes does not work.
 # Relying on the `gnome-settings-daemon` is not ideal because of all the
-# packages it pulls in.  A better alternative is to use `xfsettingsd`,
-# from Xfce.  This daemon is instructed to autostart when the `bspwm`
-# session is launched.  It then listens to commands from `xfconf-query`
-# (see this script's function `modify_xfconf_without_xfce`) to apply
-# settings on running applications.
+# packages it pulls in.  A better alternative is to use
+# `mate-settings-daemon` or `xfsettingsd`, from Xfce.  This daemon is
+# instructed to autostart when the `bspwm` session is launched.  It then
+# listens to commands from `gsetting`, `dconf`, or `xfconf-query` (the
+# latter is for Xfce) to apply settings on running applications.
 #
 # Flatpak inherits the active GTK theme.  You also need the
 # corresponding theme for `flatpak`.  Assuming you have configured
@@ -630,21 +606,15 @@ modify_xfconf_without_xfce() {
 #
 # EXAMPLE to install Materia:
 #
-# flatpak install flathub org.gtk.Gtk3theme.Materia \
-# org.gtk.Gtk3theme.Materia-compact org.gtk.Gtk3theme.Materia-light \
-# org.gtk.Gtk3theme.Materia-light-compact org.gtk.Gtk3theme.Materia-dark \
-# org.gtk.Gtk3theme.Materia-dark-compact
-#
-# I wrote a short article about this in my coding blog:
-# https://protesilaos.com/codelog/bspwm-flatpak-themes/
+# flatpak install flathub org.gtk.Gtk3theme.Materia{,-dark,-light}{,-compact}
 modify_running_gtk_and_flatpak() {
-    if [ -x /usr/bin/flatpak ]; then
+	if [ -x /usr/bin/flatpak ]; then
 		if [ -x /usr/share/mate-settings-daemon ]; then
-            modify_gsettings_without_de
+			modify_gsettings_without_de
 		elif [ -x /usr/bin/xfsettingsd ]; then
-            modify_xfconf_without_xfce
-        fi
-    fi
+			modify_xfconf_without_xfce
+		fi
+	fi
 }
 
 # }}}
