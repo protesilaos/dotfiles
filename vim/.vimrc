@@ -74,7 +74,7 @@ set confirm " ask for confirmation when quitting a file that has changes
 set hidden " hide buffers
 "set listchars=tab:›\ ,eol:¬,trail:⋅,extends:>,precedes:<,nbsp:+ " invisible characters to display (with :set list)
 "
-set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»
+set listchars=tab:→\ ,nbsp:␣,trail:•,eol:¬,precedes:«,extends:»
 
 " tabs
 set autoindent " indent automatically (useful for formatoptions)
