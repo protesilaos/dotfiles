@@ -202,12 +202,11 @@ volume_status() {
 
 # Get the status of the Music Player Daemon.
 mpd_status() {
-	local mpc_status current_song_length current_song current_song_trimmed maxlen
+	local mpc_status current_song_length current_song maxlen
 
 	mpc_status=$(mpc status | grep -o '\[.*\]')
 	current_song_length="$(mpc status | sed 1q | wc -c)"
 	current_song="$(mpc status -f '%artist%: %title%' | sed 1q)"
-	current_song_trimmed="$(mpc status -f '%title%' | sed 's,^\(.\{30\}\).*,\1, ; 1q')"
 	maxlen=30
 
 	mpd_playing() {
@@ -230,7 +229,7 @@ mpd_status() {
 		# higher than "$maxlen".  If so trim the output and append
 		# marker to denote the modification.
 		if [ "$current_song_length" -gt "$maxlen" ]; then
-			echo "$(mpd_playing)" "$current_song_trimmed" "[..]"
+			echo "$(mpd_playing)" "${current_song:0:$maxlen}" "[..]"
 		else
 			echo "$(mpd_playing)" "$current_song"
 		fi
