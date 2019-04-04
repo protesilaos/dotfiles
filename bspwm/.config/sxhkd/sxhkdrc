@@ -121,8 +121,8 @@ super + g ; {1,2,3}
 # terminals.  Pass option "--disable-factory" to run each terminal as
 # its own process (I only do this for special occasions, as seen
 # elsewhere in this file).
-super + x ; {3-7}
-    mate-terminal -x {neomutt,newsboat,rtv,ncmpcpp,podboat -a}
+super + x ; {3-5}
+    mate-terminal -x {neomutt,newsboat,ncmpcpp}
 
 # I use "my_float_window" as an application name or class for those rare
 # occasions where I prefer a floating window at launch.  The option
@@ -132,6 +132,11 @@ super + x ; {3-7}
 # Note that `calc` is found in the Debian repos as `apcalc`.
 super + x ; 0
     mate-terminal --disable-factory --class=my_float_window -x calc
+
+# Bring up the help text for common keybindings
+super + {F1,Home}
+    mate-terminal --disable-factory --class=my_float_window \
+	--geometry='100x30' -x less "$HOME/.config/sxhkd/cheatsheet_sxhkdrc.txt"
 
 # sbgmenu: dmenu interface for browsing images from my "Pictures"
 # directory.  There is an option to just display the selected file, or
@@ -343,7 +348,7 @@ alt + {_,shift +} Tab
 # Preselect the direction or insert again to cancel the preselection.
 # This enters the manual mode.
 super + alt + {h,j,k,l}
-    bspc node --presel-dir '~{north,south,west,east}'
+    bspc node --presel-dir '~{west,south,north,east}'
 
 # Preselect the ratio.  The default value is 0.5, defined in `bspwmrc`.
 super + alt + {1-9}
