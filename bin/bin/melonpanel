@@ -205,8 +205,8 @@ mpd_status() {
 	local mpc_status current_song_length current_song maxlen
 
 	mpc_status="$(mpc status | grep -o '^\[[a-z]*\]')"
-	current_song_length="$(mpc status | sed 1q | wc -c)"
-	current_song="$(mpc status -f "[[%artist%: ]%title%]|[%file%]" | sed 1q)"
+	current_song_length="$(mpc current | wc -c)"
+	current_song="$(mpc current -f "[[%artist%: ]%title%]|[%file%]")"
 	maxlen=30
 
 	mpd_playing() {
