@@ -136,7 +136,7 @@ battery_status() {
 				echo "%{F$color2}$battery_label%{F-} Full"
 				;;
 			*)
-				echo "%{F$color3}$battery_label <?>F-} ${battery_output}%"
+				echo "%{F$color3}$battery_label <?>%{F-} ${battery_output}%"
 				;;
 		esac
 	else
