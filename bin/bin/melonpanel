@@ -130,7 +130,17 @@ battery_status() {
 				echo "%{F$color14}$battery_label <c>%{F-} ${battery_output}%"
 				;;
 			'Discharging')
-				echo "%{F$color11}$battery_label <d>%{F-} ${battery_output}%"
+				case "$battery_output" in
+					1[0-9])
+						echo "%{F$color1}$battery_label <d>%{F-} ${battery_output}%"
+						;;
+					[0-9])
+						echo "%{B$color1}%{F$background} $battery_label ${battery_output}% %{F-}%{B-}"
+						;;
+					*)
+						echo "%{F$color11}$battery_label <d>%{F-} ${battery_output}%"
+						;;
+				esac
 				;;
 			'Full')
 				echo "%{F$color2}$battery_label%{F-} Full"
