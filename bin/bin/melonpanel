@@ -16,30 +16,19 @@
 # Description {{{
 # ---------------
 #
-# Melonpanel: my panel for my custom working environment centred around
-# `bspwm`.  Melonpanel uses `lemonbar` to draw the system bar.  I just
-# selected the name "melon" as an anagram for "lemon" and then switched
-# "bar" with "panel".  This is to avoid naming conflicts where we could
-# accidentally kill the wrong process or whatnot.
+# Melonpanel: my `lemonbar` implementation, for use in my custom desktop
+# session (see my dotfiles https://gitlab.com/protesilaos/dotfiles).
+# I just selected the name "melon" as an anagram for "lemon" and then
+# switched "bar" with "panel".  This is to avoid naming conflicts where
+# we could accidentally kill the wrong process or whatnot.
 #
-# This script contains all the modules that are used in my `lemonbar`
-# panel.  The bar is part of my custom working environment centred
-# around `bspwm`.  See my dotfiles, which are managed with GNU Stow:
-# https://gitlab.com/protesilaos/dotfiles.
+# Debian Buster dependencies for melonpanel:
+#	apt install bspwm lemonbar xdo xfonts-terminus
 #
-# Note that THIS IS WORK IN PROGRESS.  Check the various TODO tags
-# scattered across this document.  I have opted for Lemonbar because it
-# is included in the Debian repos and comes together with `bspwm` when
-# running `apt install bspwm`.
+# Debian Buster dependencies for individual modules:
+# 	apt install amixer mpd mpc
 #
-# Melonpanel dependencies:
-#	sudo apt install bspwm lemonbar xdo xfonts-terminus
-#
-# For some of the older, deprecated modules that were once part of this
-# script, see "melonpanel_deprecated_modules", inside the same directory
-# as this file.
-#
-# Last reviewed 2019-03-22
+# Last full review 2019-04-04
 #
 # }}}
 
@@ -71,32 +60,32 @@ source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 COLOR_DEFAULT_FG="$foreground"
 COLOR_DEFAULT_BG="$background"
 
-COLOR_MONITOR_FG="$color5"
+COLOR_MONITOR_FG="$foregroundalt"
 COLOR_MONITOR_BG="$backgroundalt"
 COLOR_MONITOR_U="$backgroundalt"
 
-COLOR_FOCUSED_MONITOR_FG="$background"
-COLOR_FOCUSED_MONITOR_BG="$color6"
+COLOR_FOCUSED_MONITOR_FG="$color6"
+COLOR_FOCUSED_MONITOR_BG="$background"
 COLOR_FOCUSED_MONITOR_U="$color6"
 
 COLOR_FREE_FG="$foregroundalt"
 COLOR_FREE_BG="$background"
 
-COLOR_ACTIVE_FREE_FG="$color2"
+COLOR_ACTIVE_FREE_FG="$foregroundalt"
 COLOR_ACTIVE_FREE_BG="$backgroundalt"
-COLOR_ACTIVE_FREE_U="$color2"
+COLOR_ACTIVE_FREE_U="$backgroundalt"
 
 COLOR_FOCUSED_FREE_FG="$background"
-COLOR_FOCUSED_FREE_BG="$color2"
-COLOR_FOCUSED_FREE_U="$color2"
+COLOR_FOCUSED_FREE_BG="$color6"
+COLOR_FOCUSED_FREE_U="$color6"
 
-COLOR_OCCUPIED_FG="$color5"
+COLOR_OCCUPIED_FG="$foreground"
 COLOR_OCCUPIED_BG="$backgroundalt"
-COLOR_OCCUPIED_U="$backgroundalt"
+COLOR_OCCUPIED_U="$foreground"
 
-COLOR_ACTIVE_OCCUPIED_FG="$color5"
-COLOR_ACTIVE_OCCUPIED_BG="$backgroundalt"
-COLOR_ACTIVE_OCCUPIED_U="$color5"
+COLOR_ACTIVE_OCCUPIED_FG="$COLOR_OCCUPIED_FG"
+COLOR_ACTIVE_OCCUPIED_BG="$COLOR_OCCUPIED_BG"
+COLOR_ACTIVE_OCCUPIED_U="$COLOR_OCCUPIED_U"
 
 COLOR_FOCUSED_OCCUPIED_FG="$background"
 COLOR_FOCUSED_OCCUPIED_BG="$color6"
@@ -108,122 +97,147 @@ COLOR_URGENT_BG="$color1"
 COLOR_FOCUSED_URGENT_FG="$background"
 COLOR_FOCUSED_URGENT_BG="$color1"
 
-COLOR_MONOCLE_FG="$background"
-COLOR_MONOCLE_BG="$color3"
+COLOR_MONOCLE_FG="$foreground"
+COLOR_MONOCLE_BG="$background"
 
-COLOR_FLAGS_FG="$background"
-COLOR_FLAGS_BG="$color4"
+COLOR_FLAGS_FG="$foreground"
+COLOR_FLAGS_BG="$background"
 
 # }}}
 
 # Panel modules {{{
 # -----------------
-# 
+#
 # NOTE all functions that are meant to pipe their output to the panel
 # will echo a majuscule (letter A-Z).  This is done to easily retrieve
 # their output from the named pipe.  The letter has to be unique and,
 # ideally, use common words that denote the function of the content of
 # the command such as e.g. D for Date, N for Network...  Where this
 # would lead to conflicts, find a synonym or something close enough.
-#
-# Any function that starts with "ancillary" is only meant to support the
-# operations of another function.  Ancillary functions are used for
-# formatting and the like.  They are not printed directly on the panel.
-# Whereas functions called "my_SOMETHING" pass their output to the
-# panel.
 
-# Define date format as "Mon 1 Jan" (the %e omits the leading 0 from
-# single digit dates, as opposed to %d == this is the same as %_d).
-#
-# Define the time in hours, minutes, seconds, using 24h format.  Update
-# every second.
-my_datetime() {
-	while true; do
-		echo "D" "$(date +'%a %e %b %T')"
-		sleep 1s
-	done
-}
+# Battery status: charging (c), discharging (d), full (f), unknown (?).
+battery_status() {
+	local battery_path battery_status battery_label battery_output
 
-# TODO test ethernet
-# TODO make WiFi test conditional on the existence of wireless capacity
-#
-# Check if the connection is established.  Print info.  Else display
-# notice.
-ancillary_my_network() {
-	if [[ "$(nmcli -t -f STATE general status)" == 'connected' ]]; then
-		echo "$(nmcli -t -f IN-USE,SIGNAL device wifi list | grep '^\*' | cut -d ':' -f 2)%"
+	battery_path='/sys/class/power_supply/BAT0'
+	battery_output=$(sed 1q $battery_path/capacity)
+	battery_status="$(sed 1q $battery_path/status)"
+	battery_label='Bat'
+
+	if [ -n "$battery_path" ]; then
+		case "$battery_status" in
+			'Charging')
+				echo "%{F$color14}$battery_label <c>%{F-} ${battery_output}%"
+				;;
+			'Discharging')
+				echo "%{F$color11}$battery_label <d>%{F-} ${battery_output}%"
+				;;
+			'Full')
+				echo "%{F$color2}$battery_label%{F-} Full"
+				;;
+			*)
+				echo "%{F$color3}$battery_label <?>F-} ${battery_output}%"
+				;;
+		esac
 	else
-		echo "No Connection"
+		echo ''
 	fi
-}
-
-# TODO review the sleep interval
-#
-# Shows the name of the network and the signal strength.  Updated every
-# hour.
-my_network() {
-	while true; do
-		echo "N" "%{F$color5}Net%{F-}" "$(ancillary_my_network)"
-		sleep 1h
-	done
-}
-
-# TODO this should be contingent on the presence of a battery
-# Show whether the battery is charging, discharging, or full.  Add the
-# appropriate unicode glyph.
-ancillary_my_battery_status() {
-	local battery_path='/sys/class/power_supply/BAT0'
-	local battery_status="$(cat $battery_path/status)"
-	local battery_label='Bat'
-
-	# TODO consider conditional logic when on plug
-	if [ "$battery_status" == 'Charging' ]; then
-		echo "%{F$color14}$battery_label ▒%{F-}"
-	elif [ "$battery_status" == 'Discharging' ]; then
-		echo "%{F$color11}$battery_label ░%{F-}"
-	elif [ "$battery_status" == 'Full' ]; then
-		echo "%{F$color2}$battery_label █%{F-}"
-	else
-		echo "%{F$color3}$battery_label ?%{F-}"
-	fi
-}
-
-# TODO this should be contingent on the presence of a battery
-# Get the output from the above ancillary function and present it
-# together with the current battery level.  Update every minute.
-my_battery() {
-	local battery_path='/sys/class/power_supply/BAT0'
-
-	while true; do
-		echo "B" "$(ancillary_my_battery_status)" "$(cat "$battery_path/capacity")%"
-		sleep 1m
-	done
 }
 
 # Check if the volume is muted or not.  Output the appropriate
 # indicators.
 # TODO should this change if another output source is connected?  Test
 # and adapt.
-ancillary_my_volume_status() {
+volume_status() {
 	if [ -x /usr/bin/amixer ]; then
-		local volume_status="$(amixer get Master | tail -n 1 | grep -e '\[[on,off]*\]')"
-		local volume_level="$(amixer get Master | tail -n 1 | grep -oe '[0-9]*%')"
-		local volume_label='Vol'
+		local volume_status volume_level volume_label
 
-		if [[ "$volume_status" == *'off'* ]]; then
-			printf "%s %s" "%{F$color3}$volume_label%{F-}" "$volume_level (Muted)"
+		# FIXME the "Front R" range is not robust
+		amixer_get() {
+			amixer get Master | \
+			sed "/^\ *Front R/!d ; s,\(^.*\) \[\(.*%\)\] \[\(.*\)\],\\${1},"
+		}
+
+		volume_status="$(amixer_get 3)"
+		volume_level="$(amixer_get 2)"
+		volume_label='Vol'
+
+		case "$volume_status" in
+			'off')
+				echo "%{F$color3}$volume_label%{F-}" "$volume_level (Muted)"
+				;;
+			'on')
+				echo "%{F$color4}$volume_label%{F-}" "$volume_level"
+				;;
+			*)
+				echo ''
+				;;
+		esac
+	fi
+}
+
+# Get the status of the Music Player Daemon.
+mpd_status() {
+	local mpc_status current_song_length current_song current_song_trimmed maxlen
+
+	mpc_status=$(mpc status | grep -o '\[.*\]')
+	current_song_length="$(mpc status | sed 1q | wc -c)"
+	current_song="$(mpc status -f '%artist%: %title%' | sed 1q)"
+	current_song_trimmed="$(mpc status -f '%title%' | sed 's,^\(.\{30\}\).*,\1, ; 1q')"
+	maxlen=30
+
+	mpd_playing() {
+		case "$mpc_status" in
+			'[playing]')
+				echo "%{F$color5}>>%{F-}"
+				;;
+			'[paused]')
+				echo "%{F$color5}||%{F-}"
+				;;
+			*)
+				echo ''
+				;;
+		esac
+	}
+
+	# if playing or paused
+	if [ -n "$mpc_status" ]; then
+		# Check if current mpc status has a length that is equal or
+		# higher than "$maxlen".  If so trim the output and append
+		# marker to denote the modification.
+		if [ "$current_song_length" -gt "$maxlen" ]; then
+			echo "$(mpd_playing)" "$current_song_trimmed" "[..]"
 		else
-			printf "%s %s" "%{F$color4}$volume_label%{F-}" "$volume_level"
+			echo "$(mpd_playing)" "$current_song"
 		fi
 	fi
 }
 
-# Present the content of the above ancillary function.  Update every
-# minute.
-my_volume() {
+# Modified version of the content of `own_script_current_layout`.  That
+# is a separate file just because I need the functionality decoupled
+# from the panel.  All we do here is print the language of the current
+# layout.
+keyboard_layout() {
+	if [ "$(setxkbmap -query | sed '/^layout/!d ; s,^.*:[\ ]*,,g')" == 'gr' ]; then
+		echo '%{+u}EL%{-u}' # Greek
+	else
+		echo 'EN' # English (US QWERTY)
+	fi
+}
+
+# Include all modules in a single infinite loop that iterates every
+# second (adjust interval accordingly, as it can be taxing on system
+# resources).
+#
+# To format the date, see `man date`.
+my_modules() {
 	while true; do
-		echo "V" "$(ancillary_my_volume_status)"
-		sleep 1m
+		echo "B" "$(battery_status)"
+		echo "D" "$(date +'%a %d %b %H:%M')"
+		echo "K" "$(keyboard_layout)"
+		echo "M" "$(mpd_status)"
+		echo "V" "$(volume_status)"
+		sleep 1s
 	done
 }
 
@@ -247,10 +261,7 @@ fi
 mkfifo "$melonpanel_fifo"
 
 # pipe the output of the modules to the fifo
-my_battery > "$melonpanel_fifo" &
-my_datetime > "$melonpanel_fifo" &
-my_network > "$melonpanel_fifo" &
-my_volume > "$melonpanel_fifo" &
+my_modules > "$melonpanel_fifo" &
 bspc subscribe report > "$melonpanel_fifo" &
 
 # Read the content of the fifo file.  We differantiate between modules
@@ -258,7 +269,10 @@ bspc subscribe report > "$melonpanel_fifo" &
 # (see modules above).  Here we just add a shorter variable to each
 # module, which helps position it on the panel (the last printf).
 melonpanel() {
-	local num_mon=$(bspc query -M | wc -l)
+	local num_mon laptop_external_monitor
+
+	num_mon=$(bspc query -M | wc -l)
+	laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
 
 	while read -r line ; do
 		case $line in
@@ -270,12 +284,16 @@ melonpanel() {
 				# current date and time
 				date="${line#?}"
 				;;
-			N*)
-				# network status
-				net="${line#?}"
+			K*)
+				# keyboard layout (en or gr)
+				key="${line#?}"
+				;;
+			M*)
+				# MPD
+				mpd="${line#?}"
 				;;
 			V*)
-				# current date
+				# volume level
 				vol="${line#?}"
 				;;
 			W*)
@@ -371,38 +389,42 @@ melonpanel() {
 							;;
 						[LG]*)
 							case $item in
-								LM*)
+								LT)
+									# layout tiled
+									name='-'
+									FG=$COLOR_DEFAULT_FG
+									BG=$COLOR_DEFAULT_BG
+									;;
+								LM)
 									# layout monocle
 									FG=$COLOR_MONOCLE_FG
 									BG=$COLOR_MONOCLE_BG
 									;;
-								LT*)
-									# layout tiled
-									FG=$COLOR_DEFAULT_FG
-									BG=$COLOR_DEFAULT_BG
-									;;
-								G) # define it so that monocle does not paint the empty space
-									FG=$COLOR_DEFAULT_FG
-									BG=$COLOR_DEFAULT_BG
-									;;
 								G*?)
+									# node flags
 									FG=$COLOR_FLAGS_FG
 									BG=$COLOR_FLAGS_BG
 									;;
+								*)
+									name='-'
+									;;
 							esac
-							# layout, state and flags
+							# layout and flags
 							wm="${wm}%{F$FG}%{B$BG} ${name} %{B-}%{F-}"
 							;;
 					esac
 					shift
 				done
 		esac
-		local laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
+
+		panel_layout() {
+			echo "%{l}$wm%{r}$mpd $bat $vol $key $date "
+		}
+
 		if [ -n "$laptop_external_monitor" ]; then
-			printf "%s%s\n" "%{Sf}%{l}$wm%{r}$bat $vol $net $date " \
-			"%{Sl}%{l}$wm%{r}$bat $vol $net $date "
+			printf "%s%s\n" "%{Sf}$(panel_layout)" "%{Sl}$(panel_layout)"
 		else
-			printf "%s\n" "%{Sf}%{l}$wm%{r}$bat $vol $net $date "
+			printf "%s\n" "%{Sf}$(panel_layout)"
 		fi
 	done
 }
@@ -414,17 +436,18 @@ melonpanel() {
 
 # NOTE the $foreground and $background are colours (see relevant section
 # above).
-melonpanel < "$melonpanel_fifo" | lemonbar -u 2 -p -g "x${melonpanel_height}" \
+melonpanel < "$melonpanel_fifo" | lemonbar -u 1 -p -g "x${melonpanel_height}" \
 -F "$foreground" -B "$background" -f "$melonpanel_font" -n "Melonpanel" &
 
 # Hide panel when windows are in full screen mode.  This does not work
 # all the time, especially with lower `sleep` values, requiring a
 # re-launch of melonpanel (pkill -x melonpanel && melonpanel).  I have
-# yet to find a robust solution.  Source of this snippet (with minor
-# adapatations by me): https://github.com/baskerville/bspwm/issues/484
-until bar_id=$(xdo id -a 'Melonpanel')
-do
-  sleep 0.1
+# yet to find a robust solution.
+#
+# Source of this snippet (with minor adapatations by me):
+# https://github.com/baskerville/bspwm/issues/484
+until bar_id=$(xdo id -a 'Melonpanel'); do
+	sleep 1s
 done
 
 xdo below -t $(xdo id -n root) $bar_id &
