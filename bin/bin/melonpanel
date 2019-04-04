@@ -51,57 +51,71 @@ melonpanel_height='20'
 # Colours for modules and bspwm indicators {{{
 # --------------------------------------------
 
-# These will style the various parts of the panel using shell variables.
-# That file is used in other places as well to offer a convenient way of
-# styling multiple tools in a manner that is centralised and
-# straightforward.
+# Add colours from current Tempus theme.  That file is used in other
+# places as well to offer a convenient way of styling multiple tools in
+# a manner that is centralised and straightforward.  Colour definitions
+# are "color[0-15]", using the standard terminal sequence, plus
+# "foreground{alt}", "background{alt,dim}".  For details, see the main
+# Tempus themes repo: https://gitlab.com/protesilaos/tempus-themes
 source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
+# Use this as the value for COLOR_DEFAULT_BG if you want transparency
+# for the entire panel.  The first two numbers are the alpha channel.
+# The notation ${VAR:1} strips the expanded value of its initial '#'.
+bgalpha="#b0${background:1}"
+
+# NOTE these colour definitions apply to the BSPWM module and the
+# `lemonabar` itself.  All other modules use the variables defined in
+# the afore-sourced file.
 COLOR_DEFAULT_FG="$foreground"
-COLOR_DEFAULT_BG="$background"
+COLOR_DEFAULT_BG="$background" # add "$bgalpha" to enable transparency
+COLOR_DEFAULT_FG_ALT="$foregroundalt"
+COLOR_DEFAULT_BG_ALT="$backgroundalt"
+COLOR_DEFAULT_ACCENT="$color6"
+COLOR_DEFAULT_ALERT="$color1"
 
-COLOR_MONITOR_FG="$foregroundalt"
-COLOR_MONITOR_BG="$backgroundalt"
-COLOR_MONITOR_U="$backgroundalt"
+COLOR_MONITOR_FG="$COLOR_DEFAULT_FG_ALT"
+COLOR_MONITOR_BG="$COLOR_DEFAULT_BG_ALT"
+COLOR_MONITOR_U="$COLOR_DEFAULT_BG_ALT"
 
-COLOR_FOCUSED_MONITOR_FG="$color6"
-COLOR_FOCUSED_MONITOR_BG="$background"
-COLOR_FOCUSED_MONITOR_U="$color6"
+COLOR_FOCUSED_MONITOR_FG="$COLOR_DEFAULT_ACCENT"
+COLOR_FOCUSED_MONITOR_BG="$COLOR_DEFAULT_BG"
+COLOR_FOCUSED_MONITOR_U="$COLOR_DEFAULT_ACCENT"
 
-COLOR_FREE_FG="$foregroundalt"
-COLOR_FREE_BG="$background"
+COLOR_FREE_FG="$COLOR_DEFAULT_FG_ALT"
+COLOR_FREE_BG="$COLOR_DEFAULT_BG"
 
-COLOR_ACTIVE_FREE_FG="$foregroundalt"
-COLOR_ACTIVE_FREE_BG="$backgroundalt"
-COLOR_ACTIVE_FREE_U="$backgroundalt"
+COLOR_ACTIVE_FREE_FG="$COLOR_DEFAULT_FG_ALT"
+COLOR_ACTIVE_FREE_BG="$COLOR_DEFAULT_BG_ALT"
+COLOR_ACTIVE_FREE_U="$COLOR_DEFAULT_BG_ALT"
 
-COLOR_FOCUSED_FREE_FG="$background"
-COLOR_FOCUSED_FREE_BG="$color6"
-COLOR_FOCUSED_FREE_U="$color6"
+COLOR_FOCUSED_FREE_FG="$COLOR_DEFAULT_BG"
+COLOR_FOCUSED_FREE_BG="$COLOR_DEFAULT_ACCENT"
+COLOR_FOCUSED_FREE_U="$COLOR_DEFAULT_ACCENT"
 
-COLOR_OCCUPIED_FG="$foreground"
-COLOR_OCCUPIED_BG="$backgroundalt"
-COLOR_OCCUPIED_U="$foreground"
+COLOR_OCCUPIED_FG="$COLOR_DEFAULT_FG"
+COLOR_OCCUPIED_BG="$COLOR_DEFAULT_BG_ALT"
+COLOR_OCCUPIED_U="$COLOR_DEFAULT_FG"
 
 COLOR_ACTIVE_OCCUPIED_FG="$COLOR_OCCUPIED_FG"
 COLOR_ACTIVE_OCCUPIED_BG="$COLOR_OCCUPIED_BG"
 COLOR_ACTIVE_OCCUPIED_U="$COLOR_OCCUPIED_U"
 
-COLOR_FOCUSED_OCCUPIED_FG="$background"
-COLOR_FOCUSED_OCCUPIED_BG="$color6"
-COLOR_FOCUSED_OCCUPIED_U="$color6"
+COLOR_FOCUSED_OCCUPIED_FG="$COLOR_DEFAULT_BG"
+COLOR_FOCUSED_OCCUPIED_BG="$COLOR_DEFAULT_ACCENT"
+COLOR_FOCUSED_OCCUPIED_U="$COLOR_DEFAULT_ACCENT"
 
-COLOR_URGENT_FG="$background"
-COLOR_URGENT_BG="$color1"
+COLOR_URGENT_FG="$COLOR_DEFAULT_BG"
+COLOR_URGENT_BG="$COLOR_DEFAULT_ALERT"
 
-COLOR_FOCUSED_URGENT_FG="$background"
-COLOR_FOCUSED_URGENT_BG="$color1"
+COLOR_FOCUSED_URGENT_FG="$COLOR_URGENT_FG"
+COLOR_FOCUSED_URGENT_BG="$COLOR_URGENT_BG"
 
-COLOR_MONOCLE_FG="$foreground"
-COLOR_MONOCLE_BG="$background"
+COLOR_MONOCLE_FG="$COLOR_DEFAULT_FG"
+COLOR_MONOCLE_BG="$COLOR_DEFAULT_BG"
 
-COLOR_FLAGS_FG="$foreground"
-COLOR_FLAGS_BG="$background"
+COLOR_FLAGS_FG="$COLOR_DEFAULT_FG"
+COLOR_FLAGS_BG="$COLOR_DEFAULT_BG"
 
 # }}}
 
@@ -444,10 +458,8 @@ melonpanel() {
 # Launch the panel with the given parameters {{{
 # ----------------------------------------------
 
-# NOTE the $foreground and $background are colours (see relevant section
-# above).
 melonpanel < "$melonpanel_fifo" | lemonbar -u 1 -p -g "x${melonpanel_height}" \
--F "$foreground" -B "$background" -f "$melonpanel_font" -n "Melonpanel" &
+-F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" -f "$melonpanel_font" -n "Melonpanel" &
 
 # Hide panel when windows are in full screen mode.  This does not work
 # all the time, especially with lower `sleep` values, requiring a
