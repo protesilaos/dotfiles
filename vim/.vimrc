@@ -72,9 +72,7 @@ set wildignore+=node_modules/*,bower_components/*,vendor/*,.vendor/*,_site/*,.gi
 " buffers
 set confirm " ask for confirmation when quitting a file that has changes
 set hidden " hide buffers
-"set listchars=tab:›\ ,eol:¬,trail:⋅,extends:>,precedes:<,nbsp:+ " invisible characters to display (with :set list)
-"
-set listchars=tab:→\ ,nbsp:␣,trail:•,eol:¬,precedes:«,extends:»
+set listchars=tab:›\ ,space:·,nbsp:␣,trail:•,eol:¬,precedes:«,extends:» " invisible characters to display (with :set list)
 
 " tabs
 set autoindent " indent automatically (useful for formatoptions)
