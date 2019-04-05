@@ -34,7 +34,7 @@ export MANPAGER=$PAGER
 
 # Default editor.  On Debian the Vim GUI is provided by a separate
 # package.
-if [ -x /usr/bin/gvim ]; then
+if [ "$(which gvim)" ]; then
 	export VISUAL="gvim"
 	export EDITOR=vim
 else
@@ -93,7 +93,7 @@ HISTFILESIZE=2000
 shopt -s checkwinsize
 
 # Make less more friendly for non-text input files, see `man lesspipe`.
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+[ "$(which lesspipe)" ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 #### cd into a directory by typing its name.  I disable this but keep it
 #### around.  I find it tricky, especially when an executable has a
@@ -115,7 +115,7 @@ shopt -s checkwinsize
 # If you are coming to Debian from Arch-based distros, check
 # compatibility with `pacman`:
 # https://wiki.archlinux.org/index.php/Pacman/Rosetta
-if [ -x /usr/bin/apt ]; then
+if [ "$(which apt)" ]; then
 	# up{dating,grading}.  The -V shows version changes.
 	alias au="sudo apt update"
 	alias aug="sudo apt upgrade -V"
@@ -146,7 +146,7 @@ if [ -x /usr/bin/apt ]; then
 	alias amm="sudo apt-mark manual"
 fi
 
-if [ -x /usr/bin/dpkg ]; then
+if [ "$(which dpkg)" ]; then
 	alias dgl='dpkg --listfiles' # target a package name, e.g. dgl bspwm
 	alias dgg='dpkg --get-selections' # would normally be pipped to grep
 	# The following removes/purges unused configs without asking for
@@ -155,7 +155,7 @@ if [ -x /usr/bin/dpkg ]; then
 	alias dgp='sudo dpkg --purge $(dpkg --get-selections | grep deinstall | cut -f 1)'
 fi
 
-if [ -x /usr/bin/aptitude ]; then
+if [ "$(which aptitude)" ]; then
 	# The following two aliases perform the same action of removing
 	# unused system files.  Unlike 'alias dgp', confirmation is needed.
 	#alias apc="sudo aptitude purge ?config-files"
@@ -180,13 +180,13 @@ fi
 #	\cp == cp
 
 # Entering Vim is made easier!
-if [ -x /usr/bin/vim ]; then
+if [ "$(which vim)" ]; then
     alias v='vim'
     alias vi='vim'
 fi
 
 # Same as above, though I currently do not use Emacs.
-if [ -x /usr/bin/emacs ]; then
+if [ "$(which emacs)" ]; then
 	alias e='emacsclient -c'
 fi
 
@@ -212,7 +212,7 @@ alias rsyncavzrd='rsync -avzr --delete --progress'
 # Enable automatic color support for common commands that list output
 # and also add handy aliases.  Note the link to the `dircolors`.  This
 # is provided by my dotfiles.
-if [ -x /usr/bin/dircolors ]; then
+if [ "$(which dircolors)" ]; then
 	dircolors_data="$HOME/.local/share/my_bash/dircolors"
 	test -r $dircolors_data && eval "$(dircolors -b ${dircolors_data})" || eval "$(dircolors -b)"
 fi
@@ -251,14 +251,14 @@ alias urls="$EDITOR $HOME/.config/newsboat/urls"
 # found and could be useful in some contexts.  As for "Tempus", see
 # https://protesilaos.com/tempus-themes.  These are also integrated into
 # my dotfiles, though not for `gnome-terminal`.
-if [ -x /usr/bin/gnome-terminal ]; then
+if [ "$(which gnome-terminal)" ]; then
 	alias gterml="gnome-terminal --tab-with-profile='Tempus Light'"
 	alias gtermd="gnome-terminal --tab-with-profile='Tempus Dark'"
 fi
 
 # These options are very opinionated, disabling images, javascripts,
 # etc.  See `man surf`.
-if [ -x /usr/bin/surf ]; then
+if [ "$(which surf)" ]; then
 	alias surf="surf -giKMnps"
 fi
 
@@ -267,7 +267,7 @@ fi
 # When I only need to view the file I use --no-audio.  The one with
 # --ytdl-raw-options is for those occasions where a video is 4k or
 # something that slows things down considerably.
-if [ -x /usr/bin/mpv ]; then
+if [ "$(which mpv)" ]; then
 	alias mpvna='mpv --no-audio'
 	alias mpvnv='mpv --no-video'
 	alias mpvyt="mpv --ytdl-raw-options='format=[[bestvideo=height<=720]]'"
@@ -275,19 +275,19 @@ fi
 
 # Quick shortcuts for `youtube-dl`.  Output is placed in the present
 # working directory.
-if [ -x /usr/bin/youtube-dl ]; then
+if [ "$(which youtube-dl)" ]; then
 	alias ytaud='youtube-dl --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
 	alias ytvid='youtube-dl --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
 fi
 
 # Certbot.  This is a utility that handles Let's Encrypt certificates
 # for https connections.
-if [ -x /usr/bin/certbot ]; then
+if [ "$(which certbot)" ]; then
 	alias certm='sudo certbot certonly -a manual -d'
 fi
 
 # When I need to copy the contents of a file to the clipboard
-if [ -x /usr/bin/xclip ]; then
+if [ "$(which xclip)" ]; then
 	alias xclipc='xclip -selection clipboard' # followed by path to file
 fi
 
@@ -296,7 +296,7 @@ fi
 # Flatpak commands {{{
 # --------------------
 
-if [ -x /usr/bin/flatpak ]; then
+if [ "$(which flatpak)" ]; then
 	alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
 	alias fliu="flatpak uninstall"
 	alias flls="flatpak list"
@@ -308,7 +308,7 @@ fi
 # Git commands {{{
 # ----------------
 
-if [ -x /usr/bin/git ]; then
+if [ "$(which git)" ]; then
 	# status
 	alias gsta='git status'
 	alias gstat='git status'
@@ -350,7 +350,7 @@ fi
 # -----------------
 
 # ruby bundler (jekyll)
-if [ -x /usr/bin/bundler ]; then
+if [ "$(which bundler)" ]; then
 	alias bibu='bundle install --path vendor/bundle && bundle update'
 	alias bu='bundle update'
 	alias bejs='bundle exec jekyll serve'
@@ -403,11 +403,11 @@ backupthis() {
 # Debian Buster dependencies:
 #	sudo apt install playerctl sxiv
 albumart() {
-	if [ -x /usr/bin/playerctl ]; then
+	if [ "$(which playerctl)" ]; then
 		local albumcover=$(playerctl metadata 'mpris:artUrl' | sed 's,file://,,g')
 	fi
 
-	if [ -x /usr/bin/sxiv ]; then
+	if [ "$(which sxiv)" ]; then
 		if [ "$XDG_SESSION_DESKTOP" == 'bspwm' ]; then
 			sxiv -g '150x150-15+15' -b -p -N my_float_window "$albumcover"
 		else

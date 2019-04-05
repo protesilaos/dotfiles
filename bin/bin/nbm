@@ -60,7 +60,7 @@ my_sxiv() {
 
 # Get image files that end in .{jpg,jpeg,png} from ~/Pictures.
 find_pictures() {
-	if [ -x /usr/bin/fdfind ]; then
+	if [ "$(which fdfind)" ]; then
 		fdfind 'jpg|jpeg|png' "$HOME/Pictures/"
 	else
 		find "$HOME/Pictures" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \)

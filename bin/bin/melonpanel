@@ -173,7 +173,7 @@ battery_status() {
 # TODO should this change if another output source is connected?  Test
 # and adapt.
 volume_status() {
-	if [ -x /usr/bin/amixer ]; then
+	if [ "$(which amixer)" ]; then
 		local volume_status volume_level volume_label
 
 		# FIXME the "Front R" range is not robust

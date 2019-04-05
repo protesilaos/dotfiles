@@ -66,7 +66,7 @@ bspc config presel_feedback_color "#ccaa00" # feedback for manual node split
 sxhkd &
 
 # Launch my custom Lemonbar implementation
-if [ -x $HOME/bin/melonpanel ]; then
+if [ "$(which melonpanel 2> /dev/null)" ]; then
 	# Make sure we have no running instances
 	if pgrep -x melonpanel; then
 		pkill -x melonpanel
@@ -77,7 +77,7 @@ fi
 
 # display compositor for shadow effects and background blur behind
 # transparent elements
-if [ -x /usr/bin/compton ]; then
+if [ "$(which compton 2> /dev/null)" ]; then
 	compton --config "$HOME/.config/compton.conf" &
 fi
 
@@ -86,7 +86,7 @@ fi
 # But this is enough for my case.  Here is a command I tested and which
 # works (using the Xfce desktop manager):
 # xfdesktop --sm-client-disable --disable-wm-check &
-if [ -x /usr/bin/feh ]; then
+if [ "$(which feh 2> /dev/null)" ]; then
 	if [ -f "$HOME/.fehbg" ]; then
 		"$HOME/.fehbg" &
 	elif [ -f "$HOME/.wallpaper.jpg" ]; then
@@ -98,7 +98,7 @@ fi
 
 # TODO review this, as there may be an even simpler way
 # specify keyboard layout and compose key
-if [ -x /usr/bin/setxkbmap ]; then
+if [ "$(which setxkbmap 2> /dev/null)" ]; then
 	setxkbmap -option compose:menu
 
 	# NOTE we can set the toggle here, but I do this via sxhkd, which
@@ -125,16 +125,16 @@ fi
 #
 # Maybe also check my blog post:
 # https://protesilaos.com/codelog/bspwm-flatpak-themes/
-if [ -x /usr/bin/flatpak ]; then
-	if [ -x /usr/bin/mate-settings-daemon ]; then
+if [ "$(which flatpak 2> /dev/null)" ]; then
+	if [ "$(which mate-settings-daemon 2> /dev/null)" ]; then
 		mate-settings-daemon &
-	elif [ -x /usr/bin/xfsettingsd ]; then
+	elif [ "$(which xfsettingsd 2> /dev/null)" ]; then
 		xfsettingsd
 	fi
 fi
 
 # start music server
-if [ -x /usr/bin/mpd ]; then
+if [ "$(which mpd 2> /dev/null)" ]; then
 	mpd
 fi
 
@@ -146,7 +146,7 @@ fi
 #
 # See my `sxhkdrc` for the set of key bindings that handles media
 # controls in general and `mpd` in particular.
-if [ -x /usr/bin/mpDris2 ]; then
+if [ "$(which mpDris2 2> /dev/null)" ]; then
 	mpDris2 &
 fi
 
@@ -157,7 +157,7 @@ fi
 # values.  Here I set the defaults I would prefer to have, while I
 # autostart the script that sources and then applies the colours I
 # actually want.
-if [ -x "$HOME/bin/own_script_bspwm_config_post_launch" ]; then
+if [ "$(which own_script_bspwm_config_post_launch 2> /dev/null)" ]; then
 	own_script_bspwm_config_post_launch
 fi
 
@@ -170,7 +170,7 @@ fi
 # dual monitor setup.  As such, there are some bespoke configs for each
 # host.  Settings such as workspaces [per monitor] and program-specific
 # window rules are included.
-if [ -x "$HOME/bin/own_script_bspwm_per_host_configs" ]; then
+if [ "$(which own_script_bspwm_per_host_configs)" ]; then
 	own_script_bspwm_per_host_configs
 fi
 

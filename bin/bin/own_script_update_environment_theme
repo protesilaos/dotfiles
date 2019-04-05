@@ -96,7 +96,7 @@ tempus_scheme=$1
 tempus_light_themes=(dawn day fugit past totus)
 
 # The project is controlled with git.  Else throw an error and exit.
-if [ -x /usr/bin/git ]; then
+if [ "$(which git)" ]; then
 	# The git command will only work if this script is run from the
 	# shell.  Whereas calling it from a key binding will fall back to
 	# the hard-coded path.
@@ -200,7 +200,7 @@ modify_gtk() {
 # TODO find xfconf-query for mousepad (Xfce editor)
 
 modify_gtksourceview3() {
-	if [ -x /usr/bin/gedit ]; then
+	if [ "$(which gedit)" ]; then
 		# NOTE XXX this needs the ports of the Tempus themes for the
 		# GTK3 Source View widget.	These are included with my dotfiles
 		# and should be available with `stow gtk`.	Here is the source
@@ -211,7 +211,7 @@ modify_gtksourceview3() {
 		fi
 	fi
 
-	if [ -x /usr/bin/pluma ]; then
+	if [ "$(which pluma)" ]; then
 		# NOTE XXX this needs the ports of the Tempus themes for the
 		# GTK3 Source View widget.	These are included with my dotfiles
 		# and should be available with `stow gtk`.	Here is the source
@@ -229,7 +229,7 @@ modify_gtksourceview3() {
 # ------------------------------
 
 modify_gtksourceview4() {
-	if [ -x /usr/bin/gnome-builder ]; then
+	if [ "$(which gnome-builder)" ]; then
 		# NOTE XXX this needs the ports of the Tempus themes for the
 		# GTK4 Source View widget.  These are included with my dotfiles
 		# and should be available with `stow gtk`.  Here is the source
@@ -271,7 +271,7 @@ modify_vim() {
 # This is my default terminal emulator.  This script leverages `dconf`
 # to make the necessary changes.
 modify_mate_terminal() {
-	if [ -x /usr/bin/mate-terminal ]; then
+	if [ "$(which mate-terminal)" ]; then
 		own_script_mate_terminal_setup
 	fi
 }
@@ -287,7 +287,7 @@ modify_mate_terminal() {
 # Update tmux base values.  The `tmux` setup should be in place if you
 # run `stow tmux` from inside my dotfiles' directory.
 modify_tmux() {
-	if [ -x /usr/bin/tmux ]; then
+	if [ "$(which tmux)" ]; then
 		sed --follow-symlinks -i -e "s/tempus_fg=\"#[a-zA-Z0-9]*\"/tempus_fg=\"${foreground}\"/ ; \
 		s/tempus_bg=\"#[a-zA-Z0-9]*\"/tempus_bg=\"${background}\"/ ; \
 		s/tempus_fg_alt=\"#[a-zA-Z0-9]*\"/tempus_fg_alt=\"${foregroundalt}\"/ ; \
@@ -351,7 +351,7 @@ modify_less_manpages() {
 # passed to this script.  The theme files for `newsboat` are included
 # with my dotfiles and should be in place if you run `stow cli-tools`.
 modify_newsboat() {
-	if [ -x /usr/bin/newsboat ]; then
+	if [ "$(which newsboat)" ]; then
 		if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
 			sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME"/.config/newsboat/config
 		else
@@ -378,7 +378,7 @@ modify_newsboat() {
 # manually edit the files that reference email account inside
 # `~/.neomutt/mails/`.
 modify_neomutt() {
-    if [ -x /usr/bin/neomutt ]; then
+    if [ "$(which neomutt)" ]; then
         if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
             sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME"/.config/neomutt/neomuttrc
         else
@@ -608,10 +608,10 @@ modify_xfconf_without_xfce() {
 #
 # flatpak install flathub org.gtk.Gtk3theme.Materia{,-dark,-light}{,-compact}
 modify_running_gtk_and_flatpak() {
-	if [ -x /usr/bin/flatpak ]; then
-		if [ -x /usr/share/mate-settings-daemon ]; then
+	if [ "$(which flatpak)" ]; then
+		if [ "$(which mate-settings-daemon)" ]; then
 			modify_gsettings_without_de
-		elif [ -x /usr/bin/xfsettingsd ]; then
+		elif [ "$(which xfsettingsd)" ]; then
 			modify_xfconf_without_xfce
 		fi
 	fi

@@ -57,7 +57,7 @@ bspwm_generic_workspaces() {
 # These apply to my laptop when an external monitor is connected.
 bspwm_laptop_dual_monitor() {
 	# run the script that adds the appropriate `xrandr` settings
-	if [ -x "$HOME/bin/own_script_laptop_dual_monitor" ]; then
+	if [ "$(which own_script_laptop_dual_monitor)" ]; then
 		own_script_laptop_dual_monitor
 	fi
 
