@@ -367,8 +367,8 @@ fi
 # Colourise man pages
 man() {
 	env \
-	LESS_TERMCAP_mb=$(tput bold; tput setaf 5) \
-	LESS_TERMCAP_md=$(tput bold; tput setaf 5) \
+	LESS_TERMCAP_mb=$(tput bold; tput setaf 6) \
+	LESS_TERMCAP_md=$(tput bold; tput setaf 6) \
 	LESS_TERMCAP_me=$(tput sgr0) \
 	LESS_TERMCAP_se=$(tput rmso; tput sgr0) \
 	LESS_TERMCAP_ue=$(tput rmul; tput sgr0) \
