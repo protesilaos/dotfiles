@@ -5,7 +5,7 @@
 set background=light
 hi clear
 if exists("syntax_on")
-  syntax reset
+	syntax reset
 endif
 let g:colors_name = "tempus_fugit"
 
@@ -15,12 +15,12 @@ let g:colors_name = "tempus_fugit"
 " NOTE the ctermbg=none is for terminals with transparency
 hi Normal guibg=#fff5f3 guifg=#4d595f ctermbg=none ctermfg=0
 hi Visual guibg=#4d595f guifg=#fff5f3 ctermbg=0 ctermfg=15
-hi Search gui=underline,bold,italic guibg=#357200 guifg=#fff5f3 cterm=underline,bold,italic ctermbg=2 ctermfg=15
-hi IncSearch gui=underline,bold,italic guibg=#7b6471 guifg=#fff5f3 term=none cterm=underline,bold,italic ctermbg=8 ctermfg=15
+hi Search gui=underline,bold,italic guibg=#357200 guifg=#fff5f3 cterm=underline,bold ctermbg=2 ctermfg=15
+hi IncSearch gui=underline,bold,italic guibg=#7b6471 guifg=#fff5f3 term=none cterm=underline,bold ctermbg=8 ctermfg=15
 
-hi StatusLine gui=none,bold guibg=#4d595f guifg=#fff5f3 cterm=none,bold ctermbg=0 ctermfg=15
+hi StatusLine gui=none guibg=#4d595f guifg=#fff5f3 cterm=none ctermbg=0 ctermfg=15
 hi StatusLineNC gui=none guibg=#f2ebe9 guifg=#7b6471 cterm=none ctermbg=7 ctermfg=8
-hi StatusLineTerm gui=none,bold guibg=#357200 guifg=#fff5f3 cterm=none,bold ctermbg=2 ctermfg=15
+hi StatusLineTerm gui=none guibg=#357200 guifg=#fff5f3 cterm=none ctermbg=2 ctermfg=15
 hi StatusLineTermNC gui=none guibg=#f2ebe9 guifg=#357200 cterm=none ctermbg=7 ctermfg=2
 
 hi VertSplit gui=none cterm=none
@@ -28,7 +28,7 @@ hi TabLine gui=none guibg=#f2ebe9 guifg=#7b6471 cterm=none ctermbg=7 ctermfg=8
 hi TabLineSel gui=none guibg=#4d595f guifg=#fff5f3 cterm=none ctermbg=0 ctermfg=15
 hi TabLineFill gui=none cterm=none
 
-hi Comment gui=italic guifg=#7b6471 cterm=italic ctermfg=8
+hi Comment gui=italic guifg=#7b6471 cterm=none ctermfg=8
 hi Todo gui=bold guibg=#f2ebe9 guifg=#985d00 cterm=bold ctermbg=7 ctermfg=11
 
 hi Warning gui=none guibg=#825e00 guifg=#fff5f3 cterm=none ctermbg=3 ctermfg=15
@@ -36,7 +36,7 @@ hi WarningMsg gui=none guibg=#825e00 guifg=#fff5f3 cterm=none ctermbg=3 ctermfg=
 hi Error gui=none guibg=#c61a14 guifg=#fff5f3 cterm=none ctermbg=1 ctermfg=15
 hi ErrorMsg gui=none guibg=#c61a14 guifg=#fff5f3 cterm=none ctermbg=1 ctermfg=15
 
-hi MatchParen gui=underline,bold guibg=#a438c0 guifg=#fff5f3 cterm=underline,bold ctermbg=13 ctermfg=15
+hi MatchParen gui=underline,bold guibg=#f2ebe9 guifg=#7b6471 cterm=underline,bold ctermbg=7 ctermfg=8
 
 hi ToolbarLine guibg=#7b6471 guifg=#fff5f3 term=none ctermbg=8 ctermfg=15
 hi ToolbarButton gui=bold guibg=#7b6471 guifg=#fff5f3 term=none cterm=bold ctermbg=8 ctermfg=15
@@ -80,10 +80,6 @@ hi Define guifg=#bd401a ctermfg=9
 
 hi Title gui=bold guibg=#fff5f3 guifg=#007072 cterm=bold ctermbg=15 ctermfg=6
 
-hi Special gui=bold guifg=#985d00 term=none cterm=bold ctermfg=11
-hi SpecialKey guifg=#985d00 ctermfg=11
-hi SpecialChar gui=bold guifg=#985d00 cterm=bold ctermfg=11
-
 hi Delimeter gui=bold guifg=#a83884 cterm=bold ctermfg=5
 hi Delimiter gui=bold guifg=#a83884 cterm=bold ctermfg=5
 hi SpecialComment gui=bold guifg=#a83884 cterm=bold ctermfg=5
@@ -102,7 +98,11 @@ hi ColorColumn guibg=#f2ebe9 guifg=#4d595f term=none ctermbg=7 ctermfg=0
 hi Folded guibg=#f2ebe9 guifg=#7b6471 ctermbg=7 ctermfg=8
 hi FoldColumn guibg=#f2ebe9 guifg=#7b6471 ctermbg=7 ctermfg=8
 
-hi NonText gui=bold guibg=NONE guifg=#7b6471 cterm=bold ctermbg=none ctermfg=8
+hi Special gui=bold guifg=#985d00 term=none cterm=bold ctermfg=11
+hi SpecialKey gui=none guibg=#f2ebe9 guifg=#7b6471 cterm=none ctermbg=7 ctermfg=8
+hi SpecialChar gui=bold guifg=#985d00 cterm=bold ctermfg=11
+hi NonText gui=none guibg=#f2ebe9 guifg=#7b6471 cterm=none ctermbg=7 ctermfg=8
+hi EndOfBuffer gui=bold guifg=#7b6471 cterm=bold ctermfg=8
 
 hi Directory gui=none guifg=#357200 term=none cterm=none ctermfg=2
 hi Question gui=bold guifg=#985d00 cterm=bold ctermfg=11
@@ -121,7 +121,7 @@ hi SpellCap guibg=#825e00 guifg=#fff5f3 ctermbg=3 ctermfg=15
 hi SpellRare guibg=#a438c0 guifg=#fff5f3 ctermbg=13 ctermfg=15
 hi SpellLocal guibg=#00786a guifg=#fff5f3 ctermbg=14 ctermfg=15
 
-hi Pmenu gui=italic guibg=#f2ebe9 guifg=#4d595f cterm=italic ctermbg=7 ctermfg=0
+hi Pmenu gui=italic guibg=#f2ebe9 guifg=#4d595f cterm=none ctermbg=7 ctermfg=0
 hi PmenuSel gui=none,bold guibg=#7b6471 guifg=#fff5f3 cterm=none,bold ctermbg=8 ctermfg=15
 hi PmenuSbar guibg=#f2ebe9 ctermbg=7
 hi PmenuThumb guibg=#7b6471 ctermbg=8
