@@ -1,16 +1,15 @@
 # vi: ft=cfg
-
+#
+# dunst configuration file.  Part of my dotfiles:
+# https://gitlab.com/protesilaos/dotfiles
+#
 # NOTE default configuration file on Debian is available at:
 # /usr/share/doc/dunst/dunstrc.gz
 # This files preserves some of the original comments, but removes parts
 # that are considered surplus to my requirements.
 
 [global]
-# NOTE uses the fontconfig default, see the 'font' directory of my
-# dotfiles https://gitlab.com/protesilaos/dotfiles 
-# The size of the font should be the same as the one defined in
-# /dotfiles/bin/.local/share/my_custom_ui_font.sh
-font = "sans 10.5"
+font = "sans 10"
 frame_width = 1
 frame_color = "#232323"
 
