@@ -22,11 +22,19 @@
 # For the actual font family, see the rules inside the "fontconfig"
 # directory of my dotfiles.
 #
-# Possible values for the font family are the generic `fontconfig`
+# Desirable values for the font family are the generic `fontconfig`
 # aliases: sans, serif, monospace.  The font weight can only be one that
 # is supported by the designated font.
-my_font_family=sans
-my_font_size=11
-my_font_weight=regular
 
+# If Terminus is installed, use it (because it is my default monospaced
+# typeface in the fontconfig rules).
+if [ -f /usr/share/fonts/X11/misc/ter-u16n_unicode.pcf.gz ]; then
+	my_font_family=monospace
+	my_font_size=12
+else
+	my_font_family=sans
+	my_font_size=10
+fi
+
+my_font_weight=regular
 my_custom_ui_font="$my_font_family-$my_font_size:$my_font_weight"
