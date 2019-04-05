@@ -117,7 +117,16 @@ dconf_read_write_boolean 'default-show-menubar' 'true' 'false'
 dconf_read_write_boolean 'use-system-font' 'true' 'false'
 dconf_read_write_boolean 'use-theme-colors' 'true' 'false'
 ### String types
-dconf_read_write_string 'font' 'Monospace 10'
+# NOTE the font conditions only concern the point size.  The name
+# "monospace" is just a fontconfig alias.  My setup has the relevant
+# custom rules to choose the appropriate font, in order of preference.
+if [ -f /usr/share/fonts/X11/misc/ter-u16n_unicode.pcf.gz ]; then
+	dconf_read_write_string 'font' 'Monospace 12'
+elif [ -d /usr/share/fonts/truetype/monoid ]; then
+	dconf_read_write_string 'font' 'Monospace 9'
+else
+	dconf_read_write_string 'font' 'Monospace 10'
+fi
 dconf_read_write_string 'cursor-blink-mode' 'off'
 dconf_read_write_string 'scrollbar-position' 'hidden'
 #### Integer types
