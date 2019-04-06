@@ -101,12 +101,12 @@ if [ "$(which git)" ]; then
 	# shell.  Whereas calling it from a key binding will fall back to
 	# the hard-coded path.
 	#
-	if [ -n "$(git rev-parse --show-toplevel)" ]; then
-		dotfiles_dir="$(git rev-parse --show-toplevel)"
-	elif [ -d "$HOME/dotfiles" ]; then
+	if [ -d "$HOME/dotfiles" ]; then
 		# IMPORTANT NOTE: make sure this path is indeed referencing my
 		# dotfiles: https://gitlab.com/protesilaos/dotfiles
 		dotfiles_dir="$HOME/dotfiles"
+	elif [ -n "$(git rev-parse --show-toplevel)" ]; then
+		dotfiles_dir="$(git rev-parse --show-toplevel)"
 	else
 		echo "ERROR. Missing dotfiles' directory"
 		echo "Exiting"
