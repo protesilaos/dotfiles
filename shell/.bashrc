@@ -185,11 +185,6 @@ if [ "$(which vim)" ]; then
     alias vi='vim'
 fi
 
-# Same as above, though I currently do not use Emacs.
-if [ "$(which emacs)" ]; then
-	alias e='emacsclient -c'
-fi
-
 # cd into the previous working directory by omitting `cd`.
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -204,10 +199,12 @@ alias mv='mv -iv'
 alias rm='rm -Iv'
 
 # Some common tasks for the `rsync` utiity.
-alias rsync='rsync --progress'
-alias rsyncavz='rsync -avz --progress'
-alias rsyncavzr='rsync -avzr --progress'
-alias rsyncavzrd='rsync -avzr --delete --progress'
+if [ "$(which rsync)" ]; then
+	alias rsync='rsync --progress'
+	alias rsyncavz='rsync -avz --progress'
+	alias rsyncavzr='rsync -avzr --progress'
+	alias rsyncavzrd='rsync -avzr --delete --progress'
+fi
 
 # Enable automatic color support for common commands that list output
 # and also add handy aliases.  Note the link to the `dircolors`.  This
@@ -244,19 +241,7 @@ alias urls="$EDITOR $HOME/.config/newsboat/urls"
 # Extra tasks and infrequently used tools {{{
 # -------------------------------------------
 
-# Profile switching in `gnome-terminal`.  I define two profiles, named
-# Tempus Light/Dark.  Then these commands open a new tab with the
-# desired profile.  In other words, one tab can be dark, the other
-# light.  I do not actually use `gnome-terminal` but this is a gimmick I
-# found and could be useful in some contexts.  As for "Tempus", see
-# https://protesilaos.com/tempus-themes.  These are also integrated into
-# my dotfiles, though not for `gnome-terminal`.
-if [ "$(which gnome-terminal)" ]; then
-	alias gterml="gnome-terminal --tab-with-profile='Tempus Light'"
-	alias gtermd="gnome-terminal --tab-with-profile='Tempus Dark'"
-fi
-
-# These options are very opinionated, disabling images, javascripts,
+# These options are very opinionated, disabling images, javascript,
 # etc.  See `man surf`.
 if [ "$(which surf)" ]; then
 	alias surf="surf -giKMnps"
@@ -270,7 +255,7 @@ fi
 if [ "$(which mpv)" ]; then
 	alias mpvna='mpv --no-audio'
 	alias mpvnv='mpv --no-video'
-	alias mpvyt="mpv --ytdl-raw-options='format=[[bestvideo=height<=720]]'"
+	alias mpvhd="mpv --ytdl-raw-options='format=[[bestvideo=height<=720]]'"
 fi
 
 # Quick shortcuts for `youtube-dl`.  Output is placed in the present
@@ -299,7 +284,7 @@ fi
 if [ "$(which flatpak)" ]; then
 	alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
 	alias fliu="flatpak uninstall"
-	alias flls="flatpak list"
+	alias flls="flatpak list --app --columns='desc,app,orig'"
 	alias flu="flatpak update"
 fi
 
@@ -309,22 +294,20 @@ fi
 # ----------------
 
 if [ "$(which git)" ]; then
-	# status
-	alias gsta='git status'
-	alias gstat='git status'
-
 	# add, commit
 	alias gadd='git add -v'
 	alias gaddi='git add --interactive'
 	alias gall='git add -Av'
 	alias gcom='git commit -S' # opens in the predefined editor.  -S to gpg sign
 	alias gcomm='git commit -S -m' # pass a message directly: gcomm 'My commit'
-
-	# amend
 	alias gca='git commit --amend'
 	alias grh='git reset HEAD'
 
-	# diff
+	# stats and diffs
+	alias glo='git log --oneline'
+	alias glog='git log'
+	alias gsta='git status'
+	alias gstat='git status'
 	alias gdif='git diff'
 	alias gdiff='git diff'
 	alias gdifs='git diff --stat --summary'
@@ -336,25 +319,14 @@ if [ "$(which git)" ]; then
 	alias gbd='git branch -d'
 	alias gbl='git branch --list'
 	alias gpd='git push origin --delete'
+	alias gmerg='git merge -S --edit --stat'
+	alias gmerge='git merge -S --edit --stat'
 
 	# syncing
 	alias gpull='git pull'
 	alias gfetch='git fetch'
 	alias gpm='git push -u origin master'
 	alias gph='git push -u origin HEAD'
-fi
-
-# }}}
-
-# Web dev tools {{{
-# -----------------
-
-# ruby bundler (jekyll)
-if [ "$(which bundler)" ]; then
-	alias bibu='bundle install --path vendor/bundle && bundle update'
-	alias bu='bundle update'
-	alias bejs='bundle exec jekyll serve'
-	alias bejsdev='bundle exec jekyll serve --config _config.yml,_config-dev.yml'
 fi
 
 # }}}
@@ -395,25 +367,6 @@ cd() {
 # Back up a file. Usage "backupthis <filename>"
 backupthis() {
 	cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
-}
-
-# Display album art in a small floating window on the top right corner
-# of the screen (tested with MPD and well-structured Music metadata).
-#
-# Debian Buster dependencies:
-#	sudo apt install playerctl sxiv
-albumart() {
-	if [ "$(which playerctl)" ]; then
-		local albumcover=$(playerctl metadata 'mpris:artUrl' | sed 's,file://,,g')
-	fi
-
-	if [ "$(which sxiv)" ]; then
-		if [ "$XDG_SESSION_DESKTOP" == 'bspwm' ]; then
-			sxiv -g '150x150-15+15' -b -p -N my_float_window "$albumcover"
-		else
-			sxiv -g '150x150-15+15' -b -p  "$albumcover"
-		fi
-	fi
 }
 
 # }}}
