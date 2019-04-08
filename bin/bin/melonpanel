@@ -44,7 +44,7 @@ fi
 # NOTE the descriptions for the Terminus typeface are copied from
 # /etc/X11/fonts/misc/xfonts-terminus.alias
 melonpanel_font='-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso10646-1'
-melonpanel_height='18'
+melonpanel_height=18
 
 # }}}
 
