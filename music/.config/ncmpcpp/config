@@ -95,7 +95,7 @@ visualizer_color=5, 7, 3, 4, 2
 ####visualizer_color=3, 5, 13, 11, 12, 10
 
 # Current item
-current_item_prefix="$b$2 —> $9"
+current_item_prefix="$b$2 > $9"
 current_item_suffix=$/b
 current_item_inactive_column_prefix=$4$r
 current_item_inactive_column_suffix=$9$/r$(end)
@@ -107,7 +107,7 @@ now_playing_suffix=$/u
 # indicates an alternative in case the first is not present.
 song_status_format={%a ~ %t [%b]}|{%f}
 song_list_format={%a ~ $3%t$9}|{%f} $R$4%l$9
-song_columns_list_format=(20)[]{a} (20)[]{A} (30)[]{t|f:Title} (25)[]{b} (5)[]{l}
+song_columns_list_format=(30)[]{a} (40)[]{t|f:Title} (25)[]{b} (5)[]{l}
 
 # Colours
 # NOTE colours numbers are terminal number + 1
