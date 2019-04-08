@@ -619,6 +619,17 @@ modify_running_gtk_and_flatpak() {
 
 # }}}
 
+# Reload melonpanel(lemonbar) {{{
+modify_melonpanel() {
+	if pgrep -xo melonpanel > /dev/null; then
+		killall -eq melonpanel
+	fi
+
+	melonpanel
+}
+
+# }}}
+
 # Catch-all function when running a standalone WM (bspwm) {{{
 # -----------------------------------------------------------
 
@@ -644,7 +655,7 @@ update_environment_theme() {
 	modify_tmux
 	modify_bspwm
 	modify_dunst
-	melonpanel # this re-runs my lemonbar to get the new colours
+	modify_melonpanel
 	modify_mate_terminal
 }
 
@@ -682,6 +693,7 @@ update_environment_theme_de() {
 	source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 	modify_tmux
 	modify_dunst
+	modify_melonpanel
 	modify_mate_terminal
 }
 
