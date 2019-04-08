@@ -1,17 +1,17 @@
 #!/bin/bash
 
-    # This program is free software: you can redistribute it and/or modify
-    # it under the terms of the GNU General Public License as published by
-    # the Free Software Foundation, either version 3 of the License, or
-    # (at your option) any later version.
+	# This program is free software: you can redistribute it and/or modify
+	# it under the terms of the GNU General Public License as published by
+	# the Free Software Foundation, either version 3 of the License, or
+	# (at your option) any later version.
 
-    # This program is distributed in the hope that it will be useful,
-    # but WITHOUT ANY WARRANTY; without even the implied warranty of
-    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    # GNU General Public License for more details.
+	# This program is distributed in the hope that it will be useful,
+	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+	# GNU General Public License for more details.
 
-    # You should have received a copy of the GNU General Public License
-    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	# You should have received a copy of the GNU General Public License
+	# along with this program.	If not, see <http://www.gnu.org/licenses/>.
 
 # Description {{{
 # ---------------
@@ -44,7 +44,7 @@ source "$HOME/.my_hostnames"
 # secondary computer, I always have a single monitor.  This is a
 # simplistic approach that works only because I know the setup[s] in
 # advance.
-monitor_count=$(bspc query -M | wc -l)
+monitor_count="$(bspc query -M | wc -l)"
 
 # These should be applied if only one monitor is available.  This always
 # applies to my desktop computer.  It also is true for my laptop on
@@ -65,34 +65,34 @@ bspwm_laptop_dual_monitor() {
 	bspc monitor VGA1 -d 1 2 3
 	bspc monitor LVDS1 -d 4 5 6
 
-	# Add padding to fix issue where there is an overlap between panel
-	# and windows in LVDS1.  The panel gets covered by the windows.
-	#
-	# NOTE the value is equal to the size of the panel (lemonbar), as
-	# defined in my melonpanel script.
-	bspc config top_padding 20
+	# Add padding equal to panel height to fix issue where there is an
+	# overlap between panel and windows in LVDS1.  The panel gets
+	# covered by the windows.
+	if pgrep -x melonpanel > /dev/null; then
+		local panel_height
+		panel_height="$(sed '/^melonpanel_height=/!d ; s,\([a-z_]*\)=\([0-9]*\),\2,g' $(which melonpanel))"
+		bspc config top_padding "$panel_height"
+	fi
 }
 
 # Run commands depending on the host computer.
-# TODO any better to write this by not repeating the 'generic' call?
-if [[ $(hostname) == "$my_laptop_hostname" ]]; then
-	echo "You are on $my_laptop_hostname"
-
-    # Is an external monitor connected to my laptop?
-    if [[ "$monitor_count" == 2 ]]; then
-		echo "Monitor count is equal to 2"
-
-		echo "Defining per-monitor workspaces"
-        bspwm_laptop_dual_monitor
-    else
-        bspwm_generic_workspaces
-    fi
-
-else
-	echo "You are not on $my_laptop_hostname"
-	echo "Defaulting to generic workspace configurations"
-
-    bspwm_generic_workspaces
-fi
+case "$(hostname)" in
+	"$my_laptop_hostname")
+		echo "You are on $my_laptop_hostname"
+		# Is an external monitor connected to my laptop?
+		if [ "$monitor_count" == 2 ]; then
+			echo "Monitor count is equal to 2"
+			echo "Defining per-monitor workspaces"
+			bspwm_laptop_dual_monitor
+		else
+			bspwm_generic_workspaces
+		fi
+		;;
+	*)
+		echo "You are not on $my_laptop_hostname"
+		echo "Defaulting to generic workspace configurations"
+		bspwm_generic_workspaces
+		;;
+esac
 
 # vi:foldmethod=marker
