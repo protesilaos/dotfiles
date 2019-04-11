@@ -272,6 +272,7 @@ modify_vim() {
 # to make the necessary changes.
 modify_mate_terminal() {
 	if [ "$(which mate-terminal)" ]; then
+		echo "Modifying the MATE terminal"
 		own_script_mate_terminal_setup
 	fi
 }
@@ -410,6 +411,17 @@ modify_bspwm() {
 
 # }}}
 
+# Reload melonpanel(lemonbar) {{{
+modify_melonpanel() {
+	if pgrep -xo melonpanel > /dev/null; then
+		pkill -xo melonpanel
+	fi
+
+	melonpanel
+}
+
+# }}}
+
 # Set dunst colours {{{
 # ---------------------
 
@@ -432,6 +444,8 @@ modify_dunst() {
 		/urgency_low/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; /urgency_low/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foregroundalt/ ; \
 		/urgency_normal/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; /urgency_normal/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foreground/ ; \
 		/urgency_critical/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$color1/ ; /urgency_critical/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$background/" "$dunstrc"
+
+		sleep 500ms
 
 		# kill and reload dunst
 		killall dunst && eval "$(dbus-launch)"
@@ -615,17 +629,6 @@ modify_running_gtk_and_flatpak() {
 			modify_xfconf_without_xfce
 		fi
 	fi
-}
-
-# }}}
-
-# Reload melonpanel(lemonbar) {{{
-modify_melonpanel() {
-	if pgrep -xo melonpanel > /dev/null; then
-		killall -eq melonpanel
-	fi
-
-	melonpanel
 }
 
 # }}}
