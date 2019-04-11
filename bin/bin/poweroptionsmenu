@@ -1,69 +1,88 @@
 #!/bin/bash
 
-    # This program is free software: you can redistribute it and/or modify
-    # it under the terms of the GNU General Public License as published by
-    # the Free Software Foundation, either version 3 of the License, or
-    # (at your option) any later version.
+	# This program is free software: you can redistribute it and/or modify
+	# it under the terms of the GNU General Public License as published by
+	# the Free Software Foundation, either version 3 of the License, or
+	# (at your option) any later version.
 
-    # This program is distributed in the hope that it will be useful,
-    # but WITHOUT ANY WARRANTY; without even the implied warranty of
-    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    # GNU General Public License for more details.
+	# This program is distributed in the hope that it will be useful,
+	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	# GNU General Public License for more details.
 
-    # You should have received a copy of the GNU General Public License
-    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	# You should have received a copy of the GNU General Public License
+	# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# A dmenu script to provide an interface for selecting session actions.
-# Possible actions are "lock", "log out", "switch users", "reboot", "poweroff".
-# This script is intended to be used in a bspwm session. 
-# The log out option uses a bspwm-specifc command.
-# See my custom working environement around bspwm:
+# Description {{{ ---------------
+#
+# A dmenu script to provide an interface for selecting session actions:
+# lock, logout, switch users, reboot, poweroff.
+#
+# This script is intended to be used in a BSPWM session.  As such, the
+# log out option uses a BSPWM-specific command.  Part of my dotfiles:
 # https://gitlab.com/protesilaos/dotfiles
+#
+# Debian Buster dependencies:
+# 	
+# 	apt install suckless-tools libnotify-bin
+#
+# Last full review on 2019-04-11
+#
+# }}}
 
-# Possible actions
-# ----------------------------
-poweroptionsmenu_available_actions=(
-    "bspc quit" # log out from bspwm
-    "slock"
-    "dm-tool switch-to-greeter"
-    "systemctl reboot"
-    "systemctl poweroff"
-)
-
-# Global variables
-# ----------------------------
 # pass custom colours to dmenu command
-source $HOME/.local/share/my_colours/active-tempus-theme.sh
+source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # get the system-wide custom font
-source $HOME/.local/share/my_custom_ui_font.sh
+source "$HOME/.local/share/my_custom_ui_font.sh"
 
-# Use a consistent dmenu interface
 # Call this function with one argument for the prompt text
-poweroptionsmenu_dmenu() {
-    dmenu -p "$1" -nb $background -nf $foreground -sb $color1 -sf $background -fn "$my_custom_ui_font"
+my_dmenu() {
+	dmenu -i -p "$1" -nb $background -nf $foreground -sb $color1 -sf $background -fn "$my_custom_ui_font"
 }
+
+# Possible actions (see case statement at the end for the actual
+# commands)
+actions=('Quit session' 'Lock screen' 'Switch users' 'Reboot' 'Shutdown')
 
 # List actions to choose from
-# ----------------------------
-poweroptionsmenu_list_actions() {
-    # use printf to output array items on a new line
-    printf '%s\n' "${poweroptionsmenu_available_actions[@]}" | poweroptionsmenu_dmenu "Power options for user session"
+list_actions() {
+	# use printf to output array items on a new line
+	printf '%s\n' "${actions[@]}" | my_dmenu 'Power options'
 }
 
-poweroptionsmenu_choice=$(poweroptionsmenu_list_actions)
+choice="$(list_actions)"
 
 # Run the selected command
-# ----------------------------
-poweroptionsmenu_run_command() {
-    # make sure choice is part of available actions
-    # there could be an error if mistyping a string
-    if [[ "${poweroptionsmenu_available_actions[*]}" == *"$poweroptionsmenu_choice"* ]]; then
-        $poweroptionsmenu_choice
-    else
-        notify-send -i terminal "Session management" "ERROR: Option \"$poweroptionsmenu_choice\" does not exist"
-        exit 1
-    fi
-}
+case "$choice" in
+	Q*)
+		bspc quit
+		;;
+	L*)
+		slock
+		;;
+	Sw*)
+		dm-tool switch-to-greeter
+		;;
+	R*)
+		systemctl reboot
+		;;
+	Sh*)
+		systemctl poweroff
+		;;
+	[a-zA-Z]*)
+		# This is for handling common typos
+		if [ -n "$(which notify-send 2> /dev/null)" ]; then
+			notify-send -i 'computer-fail' 'Session management' "ERROR: Option _${choice}_ does not exist"
+		else
+			echo "ERROR: Option _${choice}_ does not exist"
+		fi
+		exit 1
+		;;
+	*)
+		# Exit if dmenu receives no input
+		exit 1
+		;;
+esac
 
-poweroptionsmenu_run_command
+# vi:foldmethod=marker
