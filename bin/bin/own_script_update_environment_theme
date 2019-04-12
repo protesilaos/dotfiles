@@ -16,107 +16,93 @@
 # Description {{{
 # ===============
 #
-# A script that handles on-demand theme changes for a variety of tools.
-# This is an integral part of my custom desktop session, centered around
-# `bspwm`: https://gitlab.com/protesilaos/dotfiles.
+# A script that handles on-demand _Tempus themes_ changes for a variety
+# of tools.  This is an integral part of my custom desktop session,
+# centered around `bspwm`: https://gitlab.com/protesilaos/dotfiles.
 #
-# Replaces existing themes with the one provided as a shell argument.
-# This is typically done via an interface.  For that see my
-# `tempusmenu`.  All my scripts are stored in my dotfiles, inside the
-# "bin" directory.
+# The Tempus Themes are a collection of accessible colour schemes for
+# Vim, terminal emulators and CLI tools, that are compliant _at minimum_
+# with the WCAG AA standard for colour contrast between background and
+# foreground values (contrast ratio of >= 4.5:1, though some items are
+# WCAG AAA, else >= 7:1).  See https://protesilaos.com/tempus-themes,
+# which includes information about each item in the collection, as well
+# as links to all related source code repositories.
 #
-# The Tempus Themes are a collection of accessible colour schemes that
-# are compliant _at minimum_ with the WCAG AA standard for colour
-# contrast between background and foreground values.  See
-# https://protesilaos.com/tempus-themes, which includes information
-# about each item in the collection, as well as links to all related
-# source code repositories.
+# For a `dmenu` interface to this script, see my `tempusmenu`.  This
+# script can be used to modify GNOME, MATE, and Xfce sessions: run it
+# with 'de' as a second argument (read the script for the specifics).
 #
-# Last full review on 2018-11-26
-# Last major update on 2019-04-01
+# Last full review on 2019-04-12
 #
-# }}}
-
-# Usage {{{
-# =========
-#
-# own_script_update_environment_theme [theme]
-#
-# For available arguments run (assuming you have already run `stow
-# colours` from inside my dotfiles' directory:
-#
-# find "$HOME/.local/share/my_colours/shell/" -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort
-#
-# It is preferable to use the `tempusmenu` instead, which is a dmenu
-# interface with all the available theme options.
-#
-# }}}
-
-# Error and help message {{{
-# ==========================
-
-# Require at least one command line argument.  This is necessary to
-# prevent the substitution of a running theme with an empty string.  See
-# end of script for the conditions that handle this script's execution.
-# TODO should this be moved to the bottom?
-# TODO can it be incorporated in the other conditions?
-if [ "$#" == 0 ] ; then
-	echo "ERROR. At least 1 argument expected"
-	echo "Exiting..."
-	echo ""
-	echo "SOLUTION. own_script_update_environment_theme [theme]"
-	echo "EXAMPLE using Tempus Winter:"
-	echo "own_script_update_environment_theme winter"
-	echo ""
-	echo "For available arguments run:"
-	echo "find $HOME/.local/share/my_colours/shell/ -type f -printf \"%f\\n\" | sed -e 's/tempus_\\([a-z]*\\).sh/\\1/g' | sort"
-	echo ""
-	echo "To change desktop environment theme (GNOME, MATE, Xfce), run this instead:"
-	echo "own_script_update_environment_theme winter de"
-	echo ""
-	echo "Note though, that you can use 'tempusmenu', a simple interface for theme selection"
-	echo "tempusmenu should be available as it is part of my dotfiles"
-	echo "See https://gitlab.com/protesilaos/dotfiles, inside the 'bin' directory"
-	exit 1
-fi
-
 # }}}
 
 # General variables {{{
 # =====================
 
+# File system path to the Tempus themes (Bash variables implementation)
+tempus_files="$HOME/.local/share/my_colours/shell/"
+
 # This script is meant to be run with the slug of a Tempus theme as its
 # first argument.  The slug is the unique identifier inside the name.
 # For example the slug of "tempus_winter.sh" is "winter".  Capture that
 # into a variable that is used throughout this script.
-tempus_scheme=$1
+tempus_scheme="$1"
 
-# Define array with Tempus light themes.  This is important as it will
-# determine such things as a the appropriate GTK theme and the icons.
-tempus_light_themes=(dawn day fugit past totus)
+# Define whether the selected theme is of a "light" or "dark" sort.
+# This is important as it will determine such things as the appropriate
+# GTK widget and icon themes.
+case "$tempus_scheme" in
+	dawn|day|fugit|past|totus)
+		tempus_variant=light
+		;;
+	autumn|classic|dusk|future|night|rift|spring|summer|tempest|warp|winter)
+		tempus_variant=dark
+		;;
+esac
 
-# The project is controlled with git.  Else throw an error and exit.
-if [ "$(which git)" ]; then
-	# The git command will only work if this script is run from the
-	# shell.  Whereas calling it from a key binding will fall back to
-	# the hard-coded path.
-	#
-	if [ -d "$HOME/dotfiles" ]; then
-		# IMPORTANT NOTE: make sure this path is indeed referencing my
-		# dotfiles: https://gitlab.com/protesilaos/dotfiles
-		dotfiles_dir="$HOME/dotfiles"
-	elif [ -n "$(git rev-parse --show-toplevel)" ]; then
-		dotfiles_dir="$(git rev-parse --show-toplevel)"
+# Define array with tempus themes (to run only if the theme exists).
+# Check if this script is run with a second 'de' argument, if second
+# argument is not "de", throw error, else run the full environment
+# update.
+#
+# TODO FIXME this is inelegant, though it works…
+tempus_themes_array="$(printf '%s ' $(find $HOME/.local/share/my_colours/shell/ -maxdepth 1 -type f -printf "%f " | sed 's/tempus_\([a-z]*\).sh/\1/g'))"
+
+# Present a list with the available options for $1
+find_schemes() {
+	if [ -d "$tempus_files" ]; then
+		find "$tempus_files" -maxdepth 1 -type f -name 'tempus*' -print0 | \
+		while IFS= read -r -d '' line; do
+				printf "%s\\n" "$line" | sed 's,.*_\([a-z]*\).*,\1,g'
+		done
 	else
-		echo "ERROR. Missing dotfiles' directory"
-		echo "Exiting"
+		echo "ERROR Directory with Tempus theme files could not be found"
+		echo "Aborting"
 		exit 1
 	fi
-else
-	echo "ERROR. Missing dependency: git"
-	echo "Exiting"
+}
+
+# Error and help message
+help_message() {
+	local red green_underline cyan cyan_bold magenta nocol
+	red='\033[0;31m'
+	green_underline='\033[4;32m'
+	cyan='\033[0;36m'
+	cyan_bold='\033[1;36m'
+	magenta='\033[0;35m'
+	nocol='\033[0m'
+
+	echo -e "${red}ERROR${nocol}. At least 1 argument expected:"
+	echo -e "\\t${cyan}own_script_update_environment_theme${nocol} ${green_underline}theme${nocol}"
+	echo -e "Available Tempus items for ${green_underline}theme${nocol}:"
+	find_schemes | sort
+	echo "To change Desktop Environment theme (GNOME, MATE, Xfce), run this instead:"
+	echo -e "\\t${cyan}own_script_update_environment_theme${nocol} ${green_underline}theme${nocol} ${cyan_bold}de${nocol}"
+	echo -e "Note though, that you can use ${magenta}'tempusmenu'${nocol}, a simple interface for theme selection"
+	echo "tempusmenu should be available as it is part of my dotfiles"
+	echo "See https://gitlab.com/protesilaos/dotfiles, inside the 'bin' directory"
 	exit 1
-fi
+}
 
 # }}}
 
@@ -129,16 +115,25 @@ fi
 # Check if argument is part of the light themes array.  If yes, set
 # light background as the wallpaper, else switch to a dark one.
 modify_wallpaper() {
+	local wall_path wall_path_light wall_path_dark
+
 	# the wallpapers are defined manually at
 	# ~/Pictures/theme/{light,dark}.jpg
-	local wall_path="$HOME/Pictures/theme"
-	local wall_path_light="$wall_path/light"
-	local wall_path_dark="$wall_path/dark"
+	wall_path="$HOME/Pictures/theme"
+	wall_path_light="$wall_path/light.jpg"
+	wall_path_dark="$wall_path/dark.jpg"
 
-	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-		cp -f "$wall_path_light".jpg "$HOME"/.wallpaper.jpg && feh --bg-fill "$HOME"/.wallpaper.jpg
+	if [ "$tempus_variant" == 'light' ] && [ -f "$wall_path_light" ]; then
+		cp -f "$wall_path_light" "$HOME/.wallpaper.jpg" \
+		&& feh --bg-fill "$HOME/.wallpaper.jpg"
+		echo "Updating the wallpaper to a light image"
+	elif [ "$tempus_variant" == 'dark' ] && [ -f "$wall_path_dark" ]; then
+		cp -f "$wall_path_dark" "$HOME/.wallpaper.jpg" \
+		&& feh --bg-fill "$HOME/.wallpaper.jpg"
+		echo "Updating the wallpaper to a dark image"
 	else
-		cp -f "$wall_path_dark".jpg "$HOME"/.wallpaper.jpg && feh --bg-fill "$HOME"/.wallpaper.jpg
+		echo "WARNING No image defined in $HOME/Pictures/theme/{light,dark}"
+		echo "WARNING Will not update the wallpaper"
 	fi
 }
 
@@ -157,39 +152,41 @@ modify_wallpaper() {
 #
 # Modify gtk{2,3} widget and icon themes
 modify_gtk() {
-	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
+	if [ "$tempus_variant" == 'light' ]; then
 		if [ -d /usr/share/themes/Materia-light-compact ] && [ -d /usr/share/icons/Papirus ]; then
 			# GTK 2
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Materia-light-compact\"/g ; \
+			sed --follow-symlinks -i  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Materia-light-compact\"/g ; \
 			s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Papirus\"/g" "$HOME/.gtkrc-2.0"
 			# GTK 3
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Materia-light-compact/g ; \
+			sed --follow-symlinks -i  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Materia-light-compact/g ; \
 			s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Papirus/g" "$HOME/.config/gtk-3.0/settings.ini"
 		else
 			# GTK 2
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Adwaita\"/g ; \
+			sed --follow-symlinks -i  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Adwaita\"/g ; \
 			s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Adwaita\"/g" "$HOME/.gtkrc-2.0"
 			# GTK 3
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Adwaita/g ; \
+			sed --follow-symlinks -i  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Adwaita/g ; \
 			s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Adwaita/g" "$HOME/.config/gtk-3.0/settings.ini"
 		fi
 	else
 		if [ -d /usr/share/themes/Materia-dark-compact ] && [ -d /usr/share/icons/Papirus-Dark ]; then
 			# GTK2
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Materia-dark-compact\"/g ; \
+			sed --follow-symlinks -i  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Materia-dark-compact\"/g ; \
 			s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Papirus-Dark\"/g" "$HOME/.gtkrc-2.0"
 			# GTK3
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Materia-dark-compact/g ; \
+			sed --follow-symlinks -i  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Materia-dark-compact/g ; \
 			s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Papirus-Dark/g" "$HOME/.config/gtk-3.0/settings.ini"
 		else
 			# GTK2
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Adwaita-dark\"/g ; \
+			sed --follow-symlinks -i  "s/gtk-theme-name=[\"a-zA-Z-]*/gtk-theme-name=\"Adwaita-dark\"/g ; \
 			s/gtk-icon-theme-name=[\"a-zA-Z-]*/gtk-icon-theme-name=\"Adwaita\"/g" "$HOME/.gtkrc-2.0"
 			# GTK3
-			sed --follow-symlinks -i -e  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Adwaita-dark/g ; \
+			sed --follow-symlinks -i  "s/gtk-theme-name=[a-zA-Z-]*/gtk-theme-name=Adwaita-dark/g ; \
 			s/gtk-icon-theme-name=[a-zA-Z-]*/gtk-icon-theme-name=Adwaita/g" "$HOME/.config/gtk-3.0/settings.ini"
 		fi
 	fi
+
+	echo "Updating GTK widget and icon themes"
 }
 
 # }}}
@@ -197,28 +194,30 @@ modify_gtk() {
 # Set GTKsourceview3 colours {{{
 # ------------------------------
 
-# TODO find xfconf-query for mousepad (Xfce editor)
+# TODO LOWPRIORITY find xfconf-query for mousepad (Xfce editor)
 
 modify_gtksourceview3() {
-	if [ "$(which gedit)" ]; then
+	if [ "$(command -v gedit 2> /dev/null)" ]; then
 		# NOTE XXX this needs the ports of the Tempus themes for the
 		# GTK3 Source View widget.	These are included with my dotfiles
 		# and should be available with `stow gtk`.	Here is the source
 		# code with those theme files only:
 		# https://gitlab.com/protesilaos/tempus-themes-gtksourceview3
-		if [ -f /usr/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ] || [ -f "$HOME"/.local/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ]; then
+		if [ -f /usr/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ] || [ -f "$HOME/.local/share/gtksourceview-3.0/styles/tempus_$tempus_scheme.xml" ]; then
 			gsettings set org.gnome.gedit.preferences.editor scheme "tempus-$tempus_scheme"
+			echo "Updating gedit syntax theme"
 		fi
 	fi
 
-	if [ "$(which pluma)" ]; then
+	if [ "$(command -v pluma 2> /dev/null)" ]; then
 		# NOTE XXX this needs the ports of the Tempus themes for the
 		# GTK3 Source View widget.	These are included with my dotfiles
 		# and should be available with `stow gtk`.	Here is the source
 		# code with those theme files only:
 		# https://gitlab.com/protesilaos/tempus-themes-gtksourceview3
-		if [ -f /usr/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ] || [ -f "$HOME"/.local/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ]; then
+		if [ -f /usr/share/gtksourceview-3.0/styles/tempus_"$tempus_scheme".xml ] || [ -f "$HOME/.local/share/gtksourceview-3.0/styles/tempus_$tempus_scheme.xml" ]; then
 			gsettings set org.mate.pluma color-scheme "tempus-$tempus_scheme"
+			echo "Updating pluma syntax theme"
 		fi
 	fi
 }
@@ -229,7 +228,7 @@ modify_gtksourceview3() {
 # ------------------------------
 
 modify_gtksourceview4() {
-	if [ "$(which gnome-builder)" ]; then
+	if [ "$(command -v gnome-builder 2> /dev/null)" ]; then
 		# NOTE XXX this needs the ports of the Tempus themes for the
 		# GTK4 Source View widget.  These are included with my dotfiles
 		# and should be available with `stow gtk`.  Here is the source
@@ -237,6 +236,7 @@ modify_gtksourceview4() {
 		# https://gitlab.com/protesilaos/tempus-themes-gtksourceview4
 		if [ -f /usr/share/gtksourceview-4/styles/tempus_"$tempus_scheme".xml ] || [ -f "$HOME"/.local/share/gtksourceview-4/styles/tempus_"$tempus_scheme".xml ]; then
 			gsettings set org.gnome.builder.editor style-scheme-name "tempus-$tempus_scheme"
+			echo "Updating gnome-builder syntax theme"
 		fi
 	fi
 }
@@ -260,7 +260,8 @@ modify_gtksourceview4() {
 # vim` has some flags for executing commands at startup but this only
 # works for new instances of Vim.
 modify_vim() {
-	sed --follow-symlinks -i -e "s/tempus_[a-z]*/tempus_$tempus_scheme/g" "$HOME"/.vimrc
+	sed --follow-symlinks -i "s/tempus_[a-z]*/tempus_$tempus_scheme/g" "$HOME/.vimrc"
+	echo "Updating vim syntax theme"
 }
 
 # }}}
@@ -271,7 +272,7 @@ modify_vim() {
 # This is my default terminal emulator.  This script leverages `dconf`
 # to make the necessary changes.
 modify_mate_terminal() {
-	if [ "$(which mate-terminal)" ]; then
+	if [ "$(command -v mate-terminal 2> /dev/null)" ]; then
 		echo "Modifying the MATE terminal"
 		own_script_mate_terminal_setup
 	fi
@@ -288,14 +289,15 @@ modify_mate_terminal() {
 # Update tmux base values.  The `tmux` setup should be in place if you
 # run `stow tmux` from inside my dotfiles' directory.
 modify_tmux() {
-	if [ "$(which tmux)" ]; then
-		sed --follow-symlinks -i -e "s/tempus_fg=\"#[a-zA-Z0-9]*\"/tempus_fg=\"${foreground}\"/ ; \
+	if [ "$(command -v tmux 2> /dev/null)" ]; then
+		sed --follow-symlinks -i "s/tempus_fg=\"#[a-zA-Z0-9]*\"/tempus_fg=\"${foreground}\"/ ; \
 		s/tempus_bg=\"#[a-zA-Z0-9]*\"/tempus_bg=\"${background}\"/ ; \
 		s/tempus_fg_alt=\"#[a-zA-Z0-9]*\"/tempus_fg_alt=\"${foregroundalt}\"/ ; \
 		s/tempus_bg_alt=\"#[a-zA-Z0-9]*\"/tempus_bg_alt=\"${backgroundalt}\"/ ; \
 		s/tempus_bg_dim=\"#[a-zA-Z0-9]*\"/tempus_bg_dim=\"${backgrounddim}\"/" "$HOME/.tmux.conf"
 
 		tmux source-file "$HOME/.tmux.conf"
+		echo "Changing the tmux colours"
 	fi
 }
 
@@ -304,18 +306,34 @@ modify_tmux() {
 # Set generic shell variables {{{
 # -------------------------------
 
-# Change the shell variables theme, used by my various `dmenu`
-# implimentations, `bspwm`, `dunst`.  This is a file that includes BASH
-# variables.  It is sourced from other scripts to pass the appropriate
-# colour values.  Makes it easier to control inter-related options from
-# a single file.
+# Change the shell variables theme, used by a number of tools, such as
+# `tmux`, my various `dmenu` implimentations, `bspwm`, `dunst`.  Any
+# colour value referenced in this script is taken from the "active" file
+# defined in this function.
 modify_shell_theme() {
-	sed --follow-symlinks -i -e "s/_[a-z]*\\./_$tempus_scheme./g" "$HOME/.local/share/my_colours/active-tempus-theme.sh"
+	local my_colours my_colours_shell tempus_active_scheme tempus_colours_content
 
-	# Create a new file as well that is used to get the colour values
-	# of the running terminal.  This is used by my
-	# own_script_update_running_terminals
-	grep '^.*=' "$HOME/.local/share/my_colours/shell/tempus_$tempus_scheme.sh" > "$HOME/.local/share/my_colours/active-theme-content"
+	my_colours="$HOME/.local/share/my_colours"
+	my_colours_shell="$HOME/.local/share/my_colours/shell"
+	tempus_active="$my_colours/active-tempus-theme.sh"
+	tempus_content="$my_colours/active-theme-content"
+
+	if [ -n "$tempus_active" ] && [ -d "$my_colours_shell" ]; then
+		sed --follow-symlinks -i "s/_[a-z]*\\./_$tempus_scheme./g" "$tempus_active"
+
+		# Create a new file as well that is used to get the colour values
+		# of the running terminal.
+		#
+		# This is used by own_script_update_running_terminals
+		grep '^.*=' "$my_colours_shell/tempus_${tempus_scheme}.sh" > "$tempus_content"
+
+		source "$tempus_active"
+		echo "Sourcing the shell variables for the active Tempus theme"
+	else
+		echo "ERROR: Missing the Tempus theme's shell variables"
+		echo "Aborting"
+		exit 1
+	fi
 }
 
 # }}}
@@ -324,17 +342,25 @@ modify_shell_theme() {
 # -----------------------------
 
 # Change the man pages colour output based on whether the theme is light
-# or dark.  This assumes the $PAGER or $MANPAGER is `less`.  It also
-# assumes that you have the same BASH setup as that provided by my
-# dotfiles via `stow shell`.
+# or dark.  This assumes the $PAGER or $MANPAGER is `less`.
 modify_less_manpages() {
-	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-        sed --follow-symlinks -i -e "s/tput setaf [0-9][0-5]*; tput setab [0-9][0-5]*/tput setaf 15; tput setab 0/g" "$HOME"/.bashrc
-	else
-        sed --follow-symlinks -i -e "s/tput setaf [0-9][0-5]*; tput setab [0-9][0-5]*/tput setaf 0; tput setab 15/g" "$HOME"/.bashrc
-	fi
+	local bashrc
+	bashrc="$HOME/.bashrc"
 
-    source "$HOME"/.bashrc
+	if [ -n "$bashrc" ]; then
+		if [ "$tempus_variant" == 'light' ]; then
+			sed --follow-symlinks -i "s/tput setaf [0-9][0-5]*; tput setab [0-9][0-5]*/tput setaf 15; tput setab 0/g" "$HOME/.bashrc"
+		else
+			sed --follow-symlinks -i "s/tput setaf [0-9][0-5]*; tput setab [0-9][0-5]*/tput setaf 0; tput setab 15/g" "$HOME/.bashrc"
+		fi
+
+		echo "Adding appropriate colours to manpages"
+		source "$HOME/.bashrc"
+	else
+		echo "ERROR Missing .bashrc"
+		echo "Aborting"
+		exit 1
+	fi
 }
 
 # }}}
@@ -345,19 +371,21 @@ modify_less_manpages() {
 # dependency:
 #	sudo apt install newsboat
 #
-# To actually read RSS feeds, you need to manually create
-# `~/.config/newsboat/urls`.  That file should have a URL per line.
-#
 # Switch `newsboat` theme to light or dark depending on the argument
 # passed to this script.  The theme files for `newsboat` are included
-# with my dotfiles and should be in place if you run `stow cli-tools`.
+# with my dotfiles and should be in place if you run `stow newsboat`.
+#
+# To actually read RSS/Atom feeds, you need to manually create
+# `~/.config/newsboat/urls`.  That file should have a URL per line.
 modify_newsboat() {
-	if [ "$(which newsboat)" ]; then
-		if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-			sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME"/.config/newsboat/config
+	if [ "$(command -v newsboat 2> /dev/null)" ]; then
+		if [ "$tempus_variant" == 'light' ]; then
+			sed --follow-symlinks -i "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME/.config/newsboat/config"
 		else
-			sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_dark/g" "$HOME"/.config/newsboat/config
+			sed --follow-symlinks -i "s/tempus_theme_[a-z]*/tempus_theme_dark/g" "$HOME/.config/newsboat/config"
 		fi
+
+		echo "Updating the newsboat theme"
 	fi
 }
 
@@ -368,23 +396,15 @@ modify_newsboat() {
 
 # dependency:
 #   sudo apt install neomutt
-#
-# Switch `neomutt` theme to light or dark depending on the argument passed
-# to this script.  The theme files for `neomutt` are included with my
-# dotfiles and should be in place if you run `stow neomutt-bare`.
-#
-# XXX IMPORTANT NOTE XXX for security purposes, sensitive information is
-# not in my dotfiles and has been obfuscated instead.  To actually
-# configure this program to serve as an email client you need to
-# manually edit the files that reference email account inside
-# `~/.neomutt/mails/`.
 modify_neomutt() {
-    if [ "$(which neomutt)" ]; then
-        if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
-            sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME"/.config/neomutt/neomuttrc
+    if [ "$(command -v neomutt 2> /dev/null)" ]; then
+		if [ "$tempus_variant" == 'light' ]; then
+            sed --follow-symlinks -i "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME/.config/neomutt/neomuttrc"
         else
-            sed --follow-symlinks -i -e "s/tempus_theme_[a-z]*/tempus_theme_dark/g" "$HOME"/.config/neomutt/neomuttrc
+            sed --follow-symlinks -i "s/tempus_theme_[a-z]*/tempus_theme_dark/g" "$HOME/.config/neomutt/neomuttrc"
         fi
+
+		echo "Updating the neomutt theme"
     fi
 }
 
@@ -406,6 +426,8 @@ modify_bspwm() {
 		bspc config active_border_color "$color5"
 		bspc config focused_border_color "$color6"
 		bspc config presel_feedback_color "$backgroundalt"
+
+		echo "Resetting the BSPWM colours"
 	fi
 }
 
@@ -417,7 +439,7 @@ modify_melonpanel() {
 		pkill -xo melonpanel
 	fi
 
-	melonpanel
+	melonpanel && echo "Reloading the system panel (melonpanel)"
 }
 
 # }}}
@@ -433,22 +455,20 @@ modify_melonpanel() {
 modify_dunst() {
 	local dunstrc="$HOME/.config/dunst/dunstrc"
 
+	# Sed actions, per line:
+	# Change the separator and frame colour
+	# Change {back,fore}ground value for urgency_low notifications
+	# Change {back,fore}ground value for urgency_normal notifications
+	# Change {back,fore}ground value for urgency_critical notifications
+	sed --follow-symlinks -i "s/\(^separator_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; \
+	s/\(^frame_color.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; \
+	/urgency_low/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; /urgency_low/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foregroundalt/ ; \
+	/urgency_normal/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; /urgency_normal/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foreground/ ; \
+	/urgency_critical/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$color1/ ; /urgency_critical/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$background/" "$dunstrc"
+
+	# kill and reload dunst
 	if pgrep -x "dunst" > /dev/null; then
-		# Sed actions, per line:
-		# Change the separator and frame colour
-		# Change {back,fore}ground value for urgency_low notifications
-		# Change {back,fore}ground value for urgency_normal notifications
-		# Change {back,fore}ground value for urgency_critical notifications
-		sed --follow-symlinks -i "s/\(^separator_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; \
-		s/\(^frame_color.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; \
-		/urgency_low/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; /urgency_low/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foregroundalt/ ; \
-		/urgency_normal/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; /urgency_normal/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foreground/ ; \
-		/urgency_critical/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$color1/ ; /urgency_critical/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$background/" "$dunstrc"
-
-		sleep 500ms
-
-		# kill and reload dunst
-		killall dunst && eval "$(dbus-launch)"
+		killall dunst && eval "$(dbus-launch)" && echo "Reloading the notification daemon (dunst)"
 	fi
 }
 
@@ -459,13 +479,16 @@ modify_dunst() {
 
 # update GNOME settings
 # TODO how to change gnome terminal profile, assuming the presence of
-# 'Dark' and 'Light' profile names?
+# 'Dark' and 'Light' profile names?  For a possible approach, see
+# own_script_mate_terminal_setup.
 modify_gnome() {
-	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
+	if [ "$tempus_variant" == 'light' ]; then
 		gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"
+		# TODO make this conditional (same approach as modify_wallpaper)
 		gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/theme/light.jpg"
 	else
 		gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
+		# TODO make this conditional (same approach as modify_wallpaper)
 		gsettings set org.gnome.desktop.background picture-uri "file://$HOME/Pictures/theme/dark.jpg"
 	fi
 }
@@ -480,7 +503,7 @@ modify_gnome() {
 #
 # update MATE settings
 modify_mate() {
-	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
+	if [ "$tempus_variant" == 'light' ]; then
 		# If there are custom GTK widget and icon themes, use them, else
 		# use the defaults
 		if [ -d /usr/share/themes/Materia-light ] && [ -d /usr/share/icons/Papirus ]; then
@@ -493,6 +516,7 @@ modify_mate() {
 			gsettings set org.mate.interface icon-theme 'Menta'
 		fi
 
+		# TODO make this conditional (same approach as modify_wallpaper)
 		gsettings set org.mate.background picture-filename "$HOME/Pictures/theme/light.jpg"
 
 	else
@@ -507,6 +531,7 @@ modify_mate() {
 			gsettings set org.mate.interface icon-theme 'Menta'
 		fi
 
+		# TODO make this conditional (same approach as modify_wallpaper)
 		gsettings set org.mate.background picture-filename "$HOME/Pictures/theme/dark.jpg"
 
 	fi
@@ -519,11 +544,12 @@ modify_mate() {
 
 # update Xfce settings
 modify_xfce() {
-    if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
+	if [ "$tempus_variant" == 'light' ]; then
         xfconf-query -c xfwm4 -p /general/theme -s Adwaita
         xfconf-query -c xsettings -p /Net/ThemeName -s Adwaita
         xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus
         # TODO add check for external monitor[s]
+		# TODO make this conditional (same approach as modify_wallpaper)
         xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$HOME/Pictures/theme/light.jpg"
         xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor1/workspace0/last-image -s "$HOME/Pictures/theme/light.jpg"
     else
@@ -531,6 +557,7 @@ modify_xfce() {
         xfconf-query -c xsettings -p /Net/ThemeName -s Adwaita-dark
         xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus-Dark
         # TODO add check for external monitor[s]
+		# TODO make this conditional (same approach as modify_wallpaper)
         xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$HOME/Pictures/theme/dark.jpg"
         xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor1/workspace0/last-image -s "$HOME/Pictures/theme/dark.jpg"
     fi
@@ -547,11 +574,11 @@ modify_xfce() {
 # NOTE this function is not used inside a MATE session.  Its
 # purpose is two-fold:
 # 1. Change GTK styles for running applications in a bspwm session
-#    (running `mate-settings-daemon` or `xfsettingsd`).
+#    (running `mate-settings-daemon`).
 # 2. Modify flatpak themes.  See this script's function called
 #    `modify_running_gtk_and_flatpak`.
 modify_gsettings_without_de() {
-	if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
+	if [ "$tempus_variant" == 'light' ]; then
 		if [ -d /usr/share/themes/Materia-light-compact ] && [ -d /usr/share/icons/Papirus ]; then
 			gsettings set org.mate.interface gtk-theme 'Materia-light-compact'
 			gsettings set org.mate.interface icon-theme 'Papirus'
@@ -584,7 +611,7 @@ modify_gsettings_without_de() {
 # 2. Modify flatpak themes.  See this script's function called
 #    `modify_running_gtk_and_flatpak`.
 modify_xfconf_without_xfce() {
-    if [[ " ${tempus_light_themes[*]} " == *" $tempus_scheme "* ]]; then
+	if [ "$tempus_variant" == 'light' ]; then
         xfconf-query -c xfwm4 -p /general/theme -s Adwaita
         xfconf-query -c xsettings -p /Net/ThemeName -s Adwaita
         xfconf-query -c xsettings -p /Net/IconThemeName -s Papirus
@@ -606,11 +633,13 @@ modify_xfconf_without_xfce() {
 # Flatpak themes are implemented via a settings daemon.  In a `bspwm`
 # session there is none running, so changing themes does not work.
 # Relying on the `gnome-settings-daemon` is not ideal because of all the
-# packages it pulls in.  A better alternative is to use
-# `mate-settings-daemon` or `xfsettingsd`, from Xfce.  This daemon is
-# instructed to autostart when the `bspwm` session is launched.  It then
-# listens to commands from `gsetting`, `dconf`, or `xfconf-query` (the
-# latter is for Xfce) to apply settings on running applications.
+# packages it pulls in.  A better alternative is to use MATE's
+# `mate-settings-daemon` or `xfsettingsd`, from Xfce.
+#
+# This daemon is instructed to autostart when the `bspwm` session is
+# launched.  It then listens to commands from `gsetting`, `dconf`, or
+# `xfconf-query` (the latter is for Xfce) to apply settings on running
+# applications.
 #
 # Flatpak inherits the active GTK theme.  You also need the
 # corresponding theme for `flatpak`.  Assuming you have configured
@@ -622,10 +651,10 @@ modify_xfconf_without_xfce() {
 #
 # flatpak install flathub org.gtk.Gtk3theme.Materia{,-dark,-light}{,-compact}
 modify_running_gtk_and_flatpak() {
-	if [ "$(which flatpak)" ]; then
-		if [ "$(which mate-settings-daemon)" ]; then
+	if [ "$(command -v flatpak 2> /dev/null)" ]; then
+		if [ "$(command -v mate-settings-daemon 2> /dev/null)" ]; then
 			modify_gsettings_without_de
-		elif [ "$(which xfsettingsd)" ]; then
+		elif [ "$(command -v xfsettingsd 2> /dev/null)" ]; then
 			modify_xfconf_without_xfce
 		fi
 	fi
@@ -638,8 +667,8 @@ modify_running_gtk_and_flatpak() {
 
 update_environment_theme() {
 	modify_wallpaper
-	# first modify running gtk (because we see them), then edit the gtk
-	# configs for new windows.
+	modify_shell_theme
+	# first modify running GTK because we see them, then edit the files
 	modify_running_gtk_and_flatpak
 	modify_gtk
 	modify_gtksourceview3
@@ -647,14 +676,11 @@ update_environment_theme() {
 	modify_vim
 	# the shell is reloaded first, so that others can take the new
 	# variables it exposes
-	modify_shell_theme
 	# call external script to pass new colours to running terminals
 	own_script_update_running_terminals
 	modify_less_manpages
 	modify_newsboat
 	modify_neomutt
-	# define scheme for shell substitution in subsequent commands
-	source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 	modify_tmux
 	modify_bspwm
 	modify_dunst
@@ -668,18 +694,20 @@ update_environment_theme() {
 # ------------------------------------------------------
 
 update_environment_theme_de() {
-	if [ "$DESKTOP_SESSION" = "gnome" ]; then
-		echo "Your current session is \"$DESKTOP_SESSION\""
-		modify_gnome
-	fi
-	if [ "$DESKTOP_SESSION" = "mate" ]; then
-		echo "Your current session is \"$DESKTOP_SESSION\""
-		modify_mate
-	fi
-	if [ "$DESKTOP_SESSION" = "xfce" ]; then
-		echo "Your current session is \"$DESKTOP_SESSION\""
-		modify_xfce
-	fi
+	case "$DESKTOP_SESSION" in
+		gnome)
+			echo "Your current session is _$DESKTOP_SESSION_"
+			modify_gnome
+			;;
+		mate)
+			echo "Your current session is _$DESKTOP_SESSION_"
+			modify_mate
+			;;
+		xfce)
+			echo "Your current session is _$DESKTOP_SESSION_"
+			modify_xfce
+			;;
+	esac
 	modify_gtk
 	modify_gtksourceview3
 	modify_gtksourceview4
@@ -692,8 +720,7 @@ update_environment_theme_de() {
 	modify_less_manpages
 	modify_newsboat
 	modify_neomutt
-	# define scheme for shell substitution in subsequent commands
-	source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
+	tempus_shell_colours # keep this order
 	modify_tmux
 	modify_dunst
 	modify_melonpanel
@@ -705,46 +732,75 @@ update_environment_theme_de() {
 # Conditions for running this script {{{
 # ======================================
 
-# define array with tempus themes (to run only if the theme exists),
-# check if this script is run with a second 'de' argument,
-# if second argument is not "de", throw error,
-# else run the full environment update
-tempus_themes_array=$(printf "%s " "$(find "$HOME"/.local/share/my_colours/shell/ -type f -printf "%f " | sed -e 's/tempus_\([a-z]*\).sh/\1/g')")
-tempus_themes_array_formatted=$(find $HOME/.local/share/my_colours/shell/ -type f -printf "%f\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort)
-
-if [[ " ${tempus_themes_array[*]} " == *" $tempus_scheme "* ]]; then
-    echo -e "GOOD Theme \"$1\" is part of the Tempus Themes array:\\n$tempus_themes_array_formatted"
-    echo "Will proceed with the rest of the logic"
-
-    if [[ "$2" == "de" ]]; then
-        echo "GOOD The arguments are \"$1\" and \"$2\""
-        echo "Will update all Desktop Environment themes"
-        update_environment_theme_de
-        echo "DONE Updated colours to Tempus $tempus_scheme"
-        # send notification
-        notify-send -i terminal "Environment theme (Desktop Environment)" "Updated colours to <b>Tempus $tempus_scheme</b>"
-        exit 0
-    elif [ ! -z "$2" ]; then
-        echo "ERROR Second argument must be 'de'"
-        echo "Your input was \"$2\""
-        exit 1
-    else
-        # run commands for everything
-        echo "NOTE No optional second \"de\" argument is present"
-        echo "Will thus run the full environment theme update"
-        update_environment_theme
-        echo "DONE Updated colours to Tempus $tempus_scheme"
-        # send notification
-        notify-send -i terminal "Environment theme" "Updated colours to <b>Tempus $tempus_scheme</b>"
-    fi
+# The project is controlled with git.  Else throw an error and exit.
+if [ "$(command -v git 2> /dev/null)" ]; then
+	# The git command will only work if this script is run from the
+	# shell.  Whereas calling it from a key binding will fall back to
+	# the hard-coded path.
+	if [ -d "$HOME/dotfiles" ]; then
+		# IMPORTANT NOTE: make sure this path is indeed referencing my
+		# dotfiles: https://gitlab.com/protesilaos/dotfiles
+		dotfiles_dir="$HOME/dotfiles"
+	elif [ -n "$(git rev-parse --show-toplevel)" ]; then
+		dotfiles_dir="$(git rev-parse --show-toplevel)"
+	else
+		echo "ERROR. Missing dotfiles' directory"
+		echo "Exiting"
+		exit 1
+	fi
 else
-    echo "ERROR First argument must be one of:"
-    echo ""
-    echo "$tempus_themes_array_formatted"
-    echo ""
-    echo "Your input was \"$1\""
-    exit 1
+	echo "ERROR. Missing dependency: git"
+	echo "Exiting"
+	exit 1
 fi
+
+# Run relevant commands depending on the number of arguments
+case "$#" in
+	0)
+		help_message
+		;;
+	1)
+		if [[ " ${tempus_themes_array[*]} " == *" $tempus_scheme "* ]]; then
+			echo -e "GOOD: Theme _$1_ is a valid argument"
+			echo "Will proceed with the rest of the logic"
+			echo "NOTE No optional second _de_ argument is present"
+			echo "Will thus run the full environment theme update"
+			update_environment_theme && echo "DONE Updated colours to Tempus $tempus_scheme"
+			# also send desktop notification
+			if [ "$(command -v notify-send 2> /dev/null)" ]; then
+				notify-send -i terminal "Environment theme" "Updated colours to <b>Tempus $tempus_scheme</b>"
+			fi
+		else
+			echo "ERROR Invalid scheme name."
+			echo "First argument must be one of:"
+			find_schemes | sort
+			echo "Your input was _$1_"
+			echo "Aborting"
+			exit 1
+		fi
+		;;
+	2)
+		if [ "$2" == 'de' ]; then
+			echo "GOOD The arguments are _$1_ and _$2_"
+			echo "Will update all Desktop Environment themes"
+			update_environment_theme_de && echo "DONE Updated colours to Tempus $tempus_scheme"
+			# also send desktop notification
+			if [ "$(command -v notify-send 2> /dev/null)" ]; then
+				notify-send -i terminal "Environment theme (Desktop Environment)" "Updated colours to <b>Tempus $tempus_scheme</b>"
+			fi
+			exit 0
+		else
+			echo "ERROR Second argument must be 'de'"
+			echo "Your input was _$2_"
+			exit 1
+		fi
+		;;
+	*)
+		echo "Unknown parameters"
+		help_message
+		echo "Aborting"
+		exit 1
+esac
 
 # }}}
 
