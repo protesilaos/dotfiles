@@ -37,7 +37,7 @@
 # polybar, etc.  A fully functional environment derived from my dotfiles
 # is required for this to work as intended.
 #
-# Last reviewed on 2018-11-06
+# Last full review 2019-04-12
 #
 # }}}
 
@@ -53,12 +53,14 @@ tempus_themes_array=$(find "$HOME/.local/share/my_colours/shell/" -type f -print
 # background and foreground values using shell variables.  That file is
 # used in other places as well to offer a convenient way of styling
 # multiple tools in a that is centralised and straightforward.
+# TODO make this conditional
 source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # Get the system-wide custom font.  This is done with other `dmenu`
 # scripts as well to provide for an easy way to style them all at once.
 # The actual font is a `fontconfig` alias.  See my dotfiles under
 # "fontconfig".
+# TODO make this conditional
 source "$HOME/.local/share/my_custom_ui_font.sh"
 
 # }}}
@@ -91,29 +93,39 @@ tempus_themes_selection() {
 tempusmenu_confirm_input() {
     tempus_themes_selection
     echo "Will run desktop environment update using \"$tempus_themes_choice\""
-    own_script_update_environment_theme "$tempus_themes_choice" "$1"
+
+	if [ -n "$1" ]; then
+		own_script_update_environment_theme "$tempus_themes_choice" de
+	else
+		own_script_update_environment_theme "$tempus_themes_choice"
+	fi
     exit 0
 }
 
-# Conditions on which to conduct the operations pertaining to the theme
-# change.
-tempusmenu() {
-    if [[ "$1" == "de" ]]; then
-        echo "Received 'de' as an argument for tempusmenu"
-        echo "Opening dmenu interface for Desktop Environment theme update"
-        tempusmenu_confirm_input de
-    elif [[ -z "$1" ]]; then
+# Conditional behaviour for this script
+case "$#" in
+	0)
         echo "There is no optional 'de' argument for tempusmenu"
         echo "Opening dmenu interface for BSPWM environment update"
         tempusmenu_confirm_input
-    else
+		;;
+	1)
+		if [ "$1" == "de" ]; then
+			echo "Received 'de' as an argument for tempusmenu"
+			echo "Opening dmenu interface for Desktop Environment theme update"
+			tempusmenu_confirm_input de
+		else
+			echo "ERROR. tempusmenu can only be run with 'de' as an argument"
+			echo "Your input is _$1_"
+			exit 1
+		fi
+		;;
+	*)
         echo "ERROR. tempusmenu accepts one optional argument: de (for use in GNOME, MATE, Xfce)"
-        echo "You typed \"$1\""
+        echo "You typed _$1_"
         exit 1
-    fi
-}
-
-tempusmenu "$1"
+		;;
+esac
 
 # }}}
 
