@@ -60,7 +60,7 @@ my_dmenu() {
 sbgmenu_mode="$(echo -e 'View images\nSet desktop wallpaper' | my_dmenu 'Choose the sbgmenu mode')"
 
 find_pictures() {
-	if [ "$(which fdfind)" ]; then
+	if [ "$(command -v fdfind 2> /dev/null)" ]; then
 		fdfind 'jpg|jpeg|png' "$HOME/Pictures/"
 	else
 		find "$HOME/Pictures" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \)

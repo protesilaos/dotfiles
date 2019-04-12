@@ -260,7 +260,7 @@ fi
 
 # Quick shortcuts for `youtube-dl`.  Output is placed in the present
 # working directory.
-if [ "$(command -v youtube 2> /dev/null-dl)" ]; then
+if [ "$(command -v youtube-dl 2> /dev/null)" ]; then
 	alias ytaud='youtube-dl --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
 	alias ytvid='youtube-dl --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
 fi
