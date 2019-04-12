@@ -57,7 +57,7 @@ bspwm_generic_workspaces() {
 # These apply to my laptop when an external monitor is connected.
 bspwm_laptop_dual_monitor() {
 	# run the script that adds the appropriate `xrandr` settings
-	if [ "$(which own_script_laptop_dual_monitor)" ]; then
+	if [ "$(command -v own_script_laptop_dual_monitor 2> /dev/null)" ]; then
 		own_script_laptop_dual_monitor
 	fi
 
@@ -70,7 +70,7 @@ bspwm_laptop_dual_monitor() {
 	# covered by the windows.
 	if pgrep -x melonpanel > /dev/null; then
 		local panel_height
-		panel_height="$(sed '/^melonpanel_height=/!d ; s,\([a-z_]*\)=\([0-9]*\),\2,g' $(which melonpanel))"
+		panel_height="$(sed '/^melonpanel_height=/!d ; s,\([a-z_]*\)=\([0-9]*\),\2,g' $(command -v melonpanel 2> /dev/null))"
 		bspc config top_padding "$panel_height"
 	fi
 }

@@ -74,7 +74,7 @@ if [ -n "$dotsmenu_interaction" ]; then
 		"$EDITOR" "$dotsmenu_selection"
 	elif [ -n "$VISUAL" ]; then
 		"$VISUAL" "$dotsmenu_selection"
-	elif [ "$(which gvim)" ]; then
+	elif [ "$(command -v gvim 2> /dev/null)" ]; then
 		gvim "$dotsmenu_selection"
 	else
 		xdg-open "$dotsmenu_selection"

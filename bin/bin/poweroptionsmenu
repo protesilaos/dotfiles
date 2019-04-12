@@ -72,7 +72,7 @@ case "$choice" in
 		;;
 	[a-zA-Z]*)
 		# This is for handling common typos
-		if [ -n "$(which notify-send 2> /dev/null)" ]; then
+		if [ -n "$(command -v notify-send 2> /dev/null)" ]; then
 			notify-send -i 'computer-fail' 'Session management' "ERROR: Option _${choice}_ does not exist"
 		else
 			echo "ERROR: Option _${choice}_ does not exist"

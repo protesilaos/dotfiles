@@ -29,7 +29,7 @@
 
 # Fetch album art information using playerctl, if it is installed.  Else
 # display generic icon.
-if [ "$(which playerctl)" ]; then
+if [ "$(command -v playerctl 2> /dev/null)" ]; then
 	album_art=$(playerctl metadata 'mpris:artUrl' --player=mpd | sed 's,file://,,')
 else
 	# else use the "rhythmbox" icon from the available icon theme
@@ -42,7 +42,7 @@ fi
 if [[ "$1" == "cli" ]]; then
 	echo -e "$(mpc --format '%artist% - %title%\\n%album% (%date%)' current)"\\n"Album art: $album_art"
 else
-	if [ "$(which notify-send)" ]; then
+	if [ "$(command -v notify 2> /dev/null-send)" ]; then
 		notify-send -i "$album_art" "Now Playing" "$(mpc --format '%artist% - %title%\\n%album% (%date%)' current)"
 	else
 		echo -e "ERROR. Missing dependency 'libnotify-bin'.\
