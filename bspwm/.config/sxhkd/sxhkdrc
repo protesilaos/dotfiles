@@ -100,7 +100,7 @@ ctrl + alt + {Home,End,Delete}
 # NOTE `@` means until key is released, though I cannot confirm it works
 # properly.  It is kept here for reference and future review.
 super + {_, shift + } @Return
-    {mate-terminal --disable-factory -x tmux new-session -A -s 'Default', mate-terminal}
+    {mate-terminal --disable-factory -x tmux new-session -A -s 'Default', mate-terminal --disable-factory}
 
 # GUI programs.  Where these are alternatives to common CLI tools they
 # are mapped to the same number as their counterparts, but prepended
@@ -122,7 +122,7 @@ super + g ; {1,2,3}
 # its own process (I only do this for special occasions, as seen
 # elsewhere in this file).
 super + x ; {3-5}
-    mate-terminal -x {neomutt,newsboat,ncmpcpp}
+    mate-terminal --disable-factory -x {neomutt,newsboat,ncmpcpp}
 
 # I use "my_float_window" as an application name or class for those rare
 # occasions where I prefer a floating window at launch.  The option
