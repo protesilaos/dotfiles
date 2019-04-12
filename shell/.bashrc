@@ -34,7 +34,7 @@ export MANPAGER=$PAGER
 
 # Default editor.  On Debian the Vim GUI is provided by a separate
 # package.
-if [ "$(which gvim)" ]; then
+if [ "$(command -v gvim 2> /dev/null)" ]; then
 	export VISUAL="gvim"
 	export EDITOR=vim
 else
@@ -93,7 +93,7 @@ HISTFILESIZE=2000
 shopt -s checkwinsize
 
 # Make less more friendly for non-text input files, see `man lesspipe`.
-[ "$(which lesspipe)" ] && eval "$(SHELL=/bin/sh lesspipe)"
+[ "$(command -v lesspipe 2> /dev/null)" ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 #### cd into a directory by typing its name.  I disable this but keep it
 #### around.  I find it tricky, especially when an executable has a
@@ -115,7 +115,7 @@ shopt -s checkwinsize
 # If you are coming to Debian from Arch-based distros, check
 # compatibility with `pacman`:
 # https://wiki.archlinux.org/index.php/Pacman/Rosetta
-if [ "$(which apt)" ]; then
+if [ "$(command -v apt 2> /dev/null)" ]; then
 	# up{dating,grading}.  The -V shows version changes.
 	alias au="sudo apt update"
 	alias aug="sudo apt upgrade -V"
@@ -146,7 +146,7 @@ if [ "$(which apt)" ]; then
 	alias amm="sudo apt-mark manual"
 fi
 
-if [ "$(which dpkg)" ]; then
+if [ "$(command -v dpkg 2> /dev/null)" ]; then
 	alias dgl='dpkg --listfiles' # target a package name, e.g. dgl bspwm
 	alias dgg='dpkg --get-selections' # would normally be pipped to grep
 	# The following removes/purges unused configs without asking for
@@ -155,7 +155,7 @@ if [ "$(which dpkg)" ]; then
 	alias dgp='sudo dpkg --purge $(dpkg --get-selections | grep deinstall | cut -f 1)'
 fi
 
-if [ "$(which aptitude)" ]; then
+if [ "$(command -v aptitude 2> /dev/null)" ]; then
 	# The following two aliases perform the same action of removing
 	# unused system files.  Unlike 'alias dgp', confirmation is needed.
 	#alias apc="sudo aptitude purge ?config-files"
@@ -180,7 +180,7 @@ fi
 #	\cp == cp
 
 # Entering Vim is made easier!
-if [ "$(which vim)" ]; then
+if [ "$(command -v vim 2> /dev/null)" ]; then
     alias v='vim'
     alias vi='vim'
 fi
@@ -199,7 +199,7 @@ alias mv='mv -iv'
 alias rm='rm -Iv'
 
 # Some common tasks for the `rsync` utiity.
-if [ "$(which rsync)" ]; then
+if [ "$(command -v rsync 2> /dev/null)" ]; then
 	alias rsync='rsync --progress'
 	alias rsyncavz='rsync -avz --progress'
 	alias rsyncavzr='rsync -avzr --progress'
@@ -209,7 +209,7 @@ fi
 # Enable automatic color support for common commands that list output
 # and also add handy aliases.  Note the link to the `dircolors`.  This
 # is provided by my dotfiles.
-if [ "$(which dircolors)" ]; then
+if [ "$(command -v dircolors 2> /dev/null)" ]; then
 	dircolors_data="$HOME/.local/share/my_bash/dircolors"
 	test -r $dircolors_data && eval "$(dircolors -b ${dircolors_data})" || eval "$(dircolors -b)"
 fi
@@ -243,7 +243,7 @@ alias urls="$EDITOR $HOME/.config/newsboat/urls"
 
 # These options are very opinionated, disabling images, javascript,
 # etc.  See `man surf`.
-if [ "$(which surf)" ]; then
+if [ "$(command -v surf 2> /dev/null)" ]; then
 	alias surf="surf -giKMnps"
 fi
 
@@ -252,7 +252,7 @@ fi
 # When I only need to view the file I use --no-audio.  The one with
 # --ytdl-raw-options is for those occasions where a video is 4k or
 # something that slows things down considerably.
-if [ "$(which mpv)" ]; then
+if [ "$(command -v mpv 2> /dev/null)" ]; then
 	alias mpvna='mpv --no-audio'
 	alias mpvnv='mpv --no-video'
 	alias mpvhd="mpv --ytdl-raw-options='format=[[bestvideo=height<=720]]'"
@@ -260,19 +260,19 @@ fi
 
 # Quick shortcuts for `youtube-dl`.  Output is placed in the present
 # working directory.
-if [ "$(which youtube-dl)" ]; then
+if [ "$(command -v youtube 2> /dev/null-dl)" ]; then
 	alias ytaud='youtube-dl --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
 	alias ytvid='youtube-dl --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
 fi
 
 # Certbot.  This is a utility that handles Let's Encrypt certificates
 # for https connections.
-if [ "$(which certbot)" ]; then
+if [ "$(command -v certbot 2> /dev/null)" ]; then
 	alias certm='sudo certbot certonly -a manual -d'
 fi
 
 # When I need to copy the contents of a file to the clipboard
-if [ "$(which xclip)" ]; then
+if [ "$(command -v xclip 2> /dev/null)" ]; then
 	alias xclipc='xclip -selection clipboard' # followed by path to file
 fi
 
@@ -281,7 +281,7 @@ fi
 # Flatpak commands {{{
 # --------------------
 
-if [ "$(which flatpak)" ]; then
+if [ "$(command -v flatpak 2> /dev/null)" ]; then
 	alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
 	alias fliu="flatpak uninstall"
 	alias flls="flatpak list --app --columns='desc,app,orig'"
@@ -293,7 +293,7 @@ fi
 # Git commands {{{
 # ----------------
 
-if [ "$(which git)" ]; then
+if [ "$(command -v git 2> /dev/null)" ]; then
 	# add, commit
 	alias gadd='git add -v'
 	alias gaddi='git add --interactive'
