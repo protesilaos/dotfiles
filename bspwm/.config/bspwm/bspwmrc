@@ -43,18 +43,14 @@ bspc config external_rules_command "$(command -v own_script_bspwm_external_rules
 
 # colours
 # -------
-# NOTE these are the fallback values, but not what is actually loaded
-# post-launch (see autostart for own_script_bspwm_config_post_launch)
 
-# EXPLAIN: bspwm does not read the custom colours if they are sourced
-# from another file at launch.  Instead it defaults to its own colour
-# values.  Here I set the defaults I would prefer to have, while I
-# autostart the script that sources and then applies the colours I
-# actually want.
-bspc config normal_border_color "#1a1a1a" # unfocused window
-bspc config active_border_color "#555555" # focused window, unfocused monitor
-bspc config focused_border_color "#448822" # focused window, focused monitor
-bspc config presel_feedback_color "#ccaa00" # feedback for manual node split
+# DO NOT EDIT: these are modified programmatically by
+# `own_script_update_environment_theme` and/or its frontend
+# `tempusmenu`.
+bspc config normal_border_color "#232323" # unfocused window
+bspc config active_border_color "#b58d88" # focused window, unfocused monitor
+bspc config focused_border_color "#6da280" # focused window, focused monitor
+bspc config presel_feedback_color "#312e30" # feedback for manual node split
 
 # }}}
 
@@ -148,17 +144,6 @@ fi
 # controls in general and `mpd` in particular.
 if [ "$(command -v mpDris2 2> /dev/null)" ]; then
 	mpDris2 &
-fi
-
-# sets the border colours for bspwm by sourcing a file with colour
-# values
-# EXPLAIN: bspwm does not read the custom colours if they are sourced
-# from another file at launch.  Instead it defaults to its own colour
-# values.  Here I set the defaults I would prefer to have, while I
-# autostart the script that sources and then applies the colours I
-# actually want.
-if [ "$(command -v own_script_bspwm_config_post_launch 2> /dev/null)" ]; then
-	own_script_bspwm_config_post_launch
 fi
 
 # }}}

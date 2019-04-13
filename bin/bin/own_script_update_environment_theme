@@ -414,12 +414,13 @@ modify_neomutt() {
 # ---------------------
 
 # dependency:
-#   sudo apt install bspwm
+#	sudo apt install bspwm
 #
 # Reload the relevant options of `bspwm`.  These variables are sourced
 # from the generic shell theme defined in the function
 # `modify_shell_theme`.
 modify_bspwm() {
+	# Change the colours of the active WM
 	if pgrep -x "bspwm" > /dev/null; then
 		# window decorations
 		bspc config normal_border_color "$background"
@@ -428,6 +429,19 @@ modify_bspwm() {
 		bspc config presel_feedback_color "$backgroundalt"
 
 		echo "Resetting the BSPWM colours"
+	fi
+
+	local bspwmrc
+	bspwmrc="$HOME/.config/bspwm/bspwmrc"
+
+	# Also change the colours in the config file (will apply when
+	# restarting).
+	if [ -x "$bspwmrc" ]; then
+		sed --follow-symlinks -i " \
+		/normal_border_color/ s,#[a-zA-Z0-9]*,$background, ; \
+		/active_border_color/ s,#[a-zA-Z0-9]*,$color5, ; \
+		/focused_border_color/ s,#[a-zA-Z0-9]*,$color6, ; \
+		/presel_feedback_color/ s,#[a-zA-Z0-9]*,$backgroundalt," "$bspwmrc"
 	fi
 }
 
