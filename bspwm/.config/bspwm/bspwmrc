@@ -92,22 +92,15 @@ if [ "$(command -v feh 2> /dev/null)" ]; then
 	fi
 fi
 
-# TODO review this, as there may be an even simpler way
 # specify keyboard layout and compose key
 if [ "$(command -v setxkbmap 2> /dev/null)" ]; then
-	setxkbmap -option compose:menu
-
-	# NOTE we can set the toggle here, but I do this via sxhkd, which
-	# allows me to run a script that does the actual layout switching.
-	# This in turn lets me output a unique identifier to a temporary
-	# file, which can then be read to determine the current keyboard
-	# layout.  That can be printed to the melonpanel.
-
 	# setxkbmap -layout 'us,gr' -option 'grp:alt_caps_toggle'
 	setxkbmap -layout 'us'
+	setxkbmap -option compose:menu
 
-	# For the key chord that performs the layout switching see my
-	# `sxhkdrc`.  The script: `own_script_current_keyboard_layout`
+	# For the key chord that performs the layout switching between US
+	# QWERTY and Greek see my `sxhkdrc`.  The script:
+	# `own_script_current_keyboard_layout`
 fi
 
 # start the MATE/Xfce settings daemon to apply GTK themes to running

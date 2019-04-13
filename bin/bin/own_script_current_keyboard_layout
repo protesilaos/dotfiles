@@ -13,17 +13,19 @@
     # You should have received a copy of the GNU General Public License
     # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Very simple, but effective, script to switch keyboard layouts between
-# US QWERTY and standard Greek.  This script is assigned to a key chord
-# in my `sxkdrc`.  A variant of this is also included in my system
-# panel, the `melonpanel` to get the current layout.
-#
-# Everything is part of my dotfiles.  See
-# https://gitlab.com/protesilaos/dotfiles.
-my_layout=$(setxkbmap -query | grep 'layout' | grep -o 'us')
- 
-if [ -n "$my_layout" ]; then
-    setxkbmap -layout gr
+# Very simple way to switch keyboard layouts between US QWERTY and
+# standard Greek.  This script is assigned to a key chord in my
+# `sxkdrc`.  A variant of this is also included in my system panel, the
+# `melonpanel` to get the current layout. Everything is part of my
+# dotfiles: https://gitlab.com/protesilaos/dotfiles.
+
+if [ "$(command -v setxkbmap 2> /dev/null)" ]; then
+	if [ "$(setxkbmap -query | sed '/^layout/!d ; s,^.*:[\ ]*,,g')" == 'gr' ]; then
+		setxkbmap -layout us # US QWERTY
+	else
+		setxkbmap -layout gr # Greek
+	fi
 else
-    setxkbmap -layout us
+	echo "ERROR: setxkbmap not found"
+	exit 1
 fi
