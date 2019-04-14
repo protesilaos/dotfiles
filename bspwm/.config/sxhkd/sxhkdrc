@@ -84,7 +84,7 @@ super + e ; {d,s,p,t,m,k,q}
     poweroptionsmenu \
     }
 
-# Session management (log out, lock, switch usersm reboot, shutdown).
+# Session management (log out, lock, switch users, reboot, shutdown).
 ctrl + alt + {Home,End,Delete}
     poweroptionsmenu
 
