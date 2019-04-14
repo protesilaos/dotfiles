@@ -138,7 +138,7 @@ battery_status() {
 	battery_status="$(sed 1q $battery_path/status)"
 	battery_label='Bat'
 
-	if [ -n "$battery_path" ]; then
+	if [ -d "$battery_path" ]; then
 		case "$battery_status" in
 			'Charging')
 				echo "%{F$color14}$battery_label <c>%{F-} ${battery_output}%"
