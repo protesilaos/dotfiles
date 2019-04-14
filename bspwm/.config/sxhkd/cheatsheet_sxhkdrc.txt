@@ -78,7 +78,7 @@ Launching programs
 Super + d                 |-Run dmenu with access to all binaries in PATH
 Super + Shift + d         |-Run flatpakmenu with access to all flatpak apps
 Super + g ; {1,2,3}       |-Open graphical apps {firefox,caja,thunderbird}
-Super + x ; {4,5,6}       |-Run a terminal with {neomutt,newsboat,ncmcpp}
+Super + x ; {3,4,5}       |-Run a terminal with {neomutt,newsboat,ncmcpp}
 Super + x ; 0             |-Launch a floating terminal running calc
 
 Useful extras
