@@ -39,10 +39,10 @@ fi
 # This script accepts "cli" as a single argument, in which case it
 # prints the notification to the terminal (stdout).  Otherwise it sends
 # a desktop notification (if the dependency is already installed).
-if [[ "$1" == "cli" ]]; then
+if [ "$1" == "cli" ]; then
 	echo -e "$(mpc --format '%artist% - %title%\\n%album% (%date%)' current)"\\n"Album art: $album_art"
 else
-	if [ "$(command -v notify 2> /dev/null-send)" ]; then
+	if [ "$(command -v notify-send 2> /dev/null)" ]; then
 		notify-send -i "$album_art" "Now Playing" "$(mpc --format '%artist% - %title%\\n%album% (%date%)' current)"
 	else
 		echo -e "ERROR. Missing dependency 'libnotify-bin'.\
