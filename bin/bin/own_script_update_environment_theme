@@ -685,9 +685,10 @@ update_environment_theme() {
 	# first modify running GTK because we see them, then edit the files
 	modify_running_gtk_and_flatpak
 	modify_gtk
+	modify_vim
+	own_script_update_tmux_running_vim
 	modify_gtksourceview3
 	modify_gtksourceview4
-	modify_vim
 	# the shell is reloaded first, so that others can take the new
 	# variables it exposes
 	# call external script to pass new colours to running terminals
@@ -723,9 +724,10 @@ update_environment_theme_de() {
 			;;
 	esac
 	modify_gtk
+	modify_vim
+	own_script_update_tmux_running_vim
 	modify_gtksourceview3
 	modify_gtksourceview4
-	modify_vim
 	# the shell is reloaded first, so that others can take the new
 	# variables it exposes
 	modify_shell_theme
