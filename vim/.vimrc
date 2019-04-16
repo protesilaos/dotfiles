@@ -304,6 +304,8 @@ augroup END
 set t_Co=256 " number of colours
 syntax enable " enable syntax highlighting
 colorscheme tempus_classic " use one of my Tempus thems (these are bundled with my dotfiles) - also as a plugin https://gitlab.com/protesilaos/tempus-themes-vim
+" DO NOT EDIT MANUALLY.  Themes are updated programatically via my
+" `own_script_update_environment_theme`
 
 " }}}
 
