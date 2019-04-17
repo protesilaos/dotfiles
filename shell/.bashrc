@@ -322,6 +322,10 @@ if [ "$(command -v git 2> /dev/null)" ]; then
 	alias gmerg='git merge -S --edit --stat'
 	alias gmerge='git merge -S --edit --stat'
 
+	# tagging
+	alias gtag='git tag --sign' # followed by the tag's name
+	alias gtagl='git tag --list'
+
 	# syncing
 	alias gpull='git pull'
 	alias gfetch='git fetch'
