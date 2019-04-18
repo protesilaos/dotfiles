@@ -228,10 +228,10 @@ alias egrep='egrep --color=auto'
 # the previous dir denoted by two dots).  I would also like to use the
 # -p option, which prepends a forward slash to directories, but it does
 # not seem to work with symlinked directories. For more, see `man ls`.
-alias ls='ls --color=auto --group-directories-first'
-alias lsa='ls -A --color=auto --group-directories-first'
-alias lsl='ls -lh --color=auto --group-directories-first'
-alias lsla='ls -lhA --color=auto --group-directories-first'
+alias ls='ls -pv --color=auto --group-directories-first'
+alias lsa='ls -pvA --color=auto --group-directories-first'
+alias lsl='ls -lhpv --color=auto --group-directories-first'
+alias lsla='ls -lhpvA --color=auto --group-directories-first'
 
 # Shortcuts to common configs.
 alias urls="$EDITOR $HOME/.config/newsboat/urls"
