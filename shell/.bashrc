@@ -362,9 +362,9 @@ man() {
 # Enter directory and list contents
 cd() {
 	if [ -n "$1" ]; then
-		builtin cd "$@" && ls -A --color=auto --group-directories-first 
+		builtin cd "$@" && ls -pvA --color=auto --group-directories-first
 	else
-		builtin cd ~ && ls -A --color=auto --group-directories-first
+		builtin cd ~ && ls -pvA --color=auto --group-directories-first
 	fi
 }
 
