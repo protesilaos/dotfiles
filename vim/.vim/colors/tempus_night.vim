@@ -1,6 +1,8 @@
 " Name: Tempus Night
-" Author: Protesilaos Stavrou (https://protesilaos.com)
 " Description: High contrast dark theme with bright colours (WCAG AAA compliant)
+" Author: Protesilaos Stavrou (https://protesilaos.com)
+" Meta: Created with the Tempus Themes Generator
+" URL: https://gitlab.com/protesilaos/tempus-themes-generator
 
 set background=dark
 hi clear
@@ -10,8 +12,7 @@ endif
 let g:colors_name = "tempus_night"
 
 " General
-" -----------------
-
+" -------
 " NOTE the ctermbg=none is for terminals with transparency
 hi Normal guibg=#1a1a1a guifg=#e0e0e0 ctermbg=none ctermfg=15
 hi Visual guibg=#e0e0e0 guifg=#1a1a1a ctermbg=15 ctermfg=0
@@ -25,7 +26,7 @@ hi StatusLineTermNC gui=none guibg=#18143d guifg=#52ba40 cterm=none ctermbg=8 ct
 
 hi VertSplit gui=none cterm=none
 hi TabLine gui=none guibg=#18143d guifg=#c4bdaf cterm=none ctermbg=8 ctermfg=7
-hi TabLineSel gui=none guibg=#e0e0e0 guifg=#1a1a1a cterm=none ctermbg=15 ctermfg=0
+hi TabLineSel gui=none guibg=#1db5c3 guifg=#1a1a1a cterm=none ctermbg=6 ctermfg=0
 hi TabLineFill gui=none cterm=none
 
 hi Comment gui=italic guifg=#c4bdaf cterm=none ctermfg=7
@@ -46,7 +47,7 @@ hi WildMenu guibg=#1a1a1a guifg=#e0e0e0 term=standout ctermbg=0 ctermfg=15
 hi Terminal guibg=#1a1a1a guifg=#e0e0e0 term=none ctermbg=0 ctermfg=15
 
 " Constructs
-" -----------------
+" ----------
 hi Constant guifg=#5aaaf2 ctermfg=4
 hi Number guifg=#5aaaf2 ctermfg=4
 hi Float guifg=#5aaaf2 ctermfg=4
@@ -87,7 +88,7 @@ hi SpecialComment gui=bold guifg=#ee80c0 cterm=bold ctermfg=5
 hi Debug guifg=#de99f0 ctermfg=13
 
 " Other
-" -----------------
+" -----
 hi LineNr guibg=#18143d guifg=#c4bdaf term=none ctermbg=8 ctermfg=7
 hi Cursor guibg=#e0e0e0 guifg=#1a1a1a ctermbg=15 ctermfg=0
 hi CursorLine gui=none guibg=NONE term=none cterm=none ctermbg=none
@@ -112,7 +113,7 @@ hi ModeMsg gui=bold guifg=#52ba40 cterm=bold ctermfg=2
 hi VimOption guifg=#ee80c0 ctermfg=5
 hi VimGroup guifg=#ee80c0 ctermfg=5
 
-hi Underlined gui=underline,bold guifg=#e0e0e0 cterm=underline,bold ctermfg=15
+hi Underlined gui=underline guifg=#e0e0e0 cterm=underline ctermfg=15
 hi Ignore guibg=#18143d guifg=#c4bdaf ctermbg=8 ctermfg=7
 hi Conceal guibg=#c4bdaf guifg=#18143d ctermbg=7 ctermfg=8
 
@@ -127,7 +128,7 @@ hi PmenuSbar guibg=#18143d ctermbg=8
 hi PmenuThumb guibg=#c4bdaf ctermbg=7
 
 " Diffs
-" -----------------
+" -----
 hi DiffAdd gui=bold guibg=#52ba40 guifg=#1a1a1a cterm=bold ctermbg=10 ctermfg=0
 hi DiffDelete gui=none guibg=#fb7e8e guifg=#1a1a1a cterm=none ctermbg=9 ctermfg=0
 hi DiffChange gui=bold guibg=#18143d guifg=#c4bdaf cterm=bold ctermbg=8 ctermfg=7
@@ -137,3 +138,36 @@ hi diffAdded guifg=#52ba40 ctermfg=2
 hi diffRemoved guifg=#fb7e8e ctermfg=1
 hi diffNewFile gui=none guifg=#5aaaf2 ctermfg=4
 hi diffFile gui=none guifg=#b0a800 cterm=none ctermfg=3
+
+" Markdown
+" --------
+hi MarkdownRule gui=bold guibg=#18143d guifg=#88c400 cterm=bold ctermbg=8 ctermfg=10
+
+hi MarkdownHeading gui=bold guifg=#e0e0e0 cterm=bold ctermfg=15
+hi default link MarkdownH1 MarkdownHeading
+hi default link MarkdownH2 MarkdownHeading
+hi default link MarkdownH3 MarkdownHeading
+hi default link MarkdownH4 MarkdownHeading
+hi default link MarkdownH5 MarkdownHeading
+hi default link MarkdownH6 MarkdownHeading
+hi default link MarkdownHeadingDelimiter MarkdownHeading
+hi default link MarkdownHeadingRule MarkdownHeading
+
+hi MarkdownBold gui=bold guifg=#f69d6a cterm=bold ctermfg=9
+hi default link MarkdownBoldDelimiter MarkdownBold
+
+hi MarkdownItalic gui=italic guifg=#b0a800 cterm=none ctermfg=3
+hi default link MarkdownItalicDelimiter MarkdownItalic
+
+hi MarkdownUrl gui=underline guifg=#5aaaf2 cterm=underline ctermfg=4
+hi MarkdownLinkText gui=none guifg=#8cb4f0 cterm=none ctermfg=12
+hi MarkdownLinkDelimiter gui=bold guifg=#e0e0e0 cterm=bold ctermfg=15
+hi default link MarkdownLinkTextDelimiter MarkdownLinkDelimiter
+
+hi MarkdownCode guifg=#ee80c0 ctermfg=5
+hi default link MarkdownCodeDelimiter MarkdownCode
+
+hi MarkdownCodeBlock guifg=#e0e0e0 ctermfg=15
+
+hi MarkdownListMarker gui=none guifg=#52ba40 cterm=none ctermfg=2
+hi default link MarkdownOrderedListMarker MarkdownListMarker
