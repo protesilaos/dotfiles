@@ -65,7 +65,7 @@ source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 bgalpha="#b0${background:1}"
 
 # NOTE these colour definitions apply to the BSPWM module and the
-# `lemonabar` itself.  All other modules use the variables defined in
+# `lemonbar` itself.  All other modules use the variables defined in
 # the afore-sourced file.
 COLOR_DEFAULT_FG="$foreground"
 COLOR_DEFAULT_BG="$background" # add "$bgalpha" to enable transparency
