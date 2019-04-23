@@ -27,10 +27,17 @@
 # is supported by the designated font.
 
 # If Terminus is installed, use it (because it is my default monospaced
-# typeface in the fontconfig rules).
-if [ -f /usr/share/fonts/X11/misc/ter-u16n_unicode.pcf.gz ]; then
+# typeface in the fontconfig rules).  Else try Monoid.  Otherwise
+# default to whatever the sans-serif font is.
+# NOTE that we do not define the actual font, but only the fontconfig
+# alias.  This is to control the typefaces that are used from a single
+# place, rather than on a per-application basis.
+if [ -n "$(fc-list terminus)" ]; then
 	my_font_family=monospace
 	my_font_size=12
+elif [ -n "$(fc-list monoid)" ]; then
+	my_font_family=monospace
+	my_font_size=9
 else
 	my_font_family=sans
 	my_font_size=10
