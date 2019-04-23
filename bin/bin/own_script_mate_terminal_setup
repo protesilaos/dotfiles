@@ -120,9 +120,12 @@ dconf_read_write_boolean 'use-theme-colors' 'true' 'false'
 # NOTE the font conditions only concern the point size.  The name
 # "monospace" is just a fontconfig alias.  My setup has the relevant
 # custom rules to choose the appropriate font, in order of preference.
-if [ -f /usr/share/fonts/X11/misc/ter-u16n_unicode.pcf.gz ]; then
+# I prefer to just define "monospace" in the various applications, so
+# that I only need to change the fontconfig aliases if I want to use
+# a new typeface, rather than update each application separately.
+if [ -n "$(fc-list terminus)" ]; then
 	dconf_read_write_string 'font' 'Monospace 12'
-elif [ -d /usr/share/fonts/truetype/monoid ]; then
+elif [ -n "$(fc-list monoid)" ]; then
 	dconf_read_write_string 'font' 'Monospace 9'
 else
 	dconf_read_write_string 'font' 'Monospace 10'
