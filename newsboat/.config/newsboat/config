@@ -12,7 +12,7 @@ refresh-on-startup yes
 show-read-articles no
 show-read-feeds no
 prepopulate-query-feeds no
-feed-sort-order title
+feed-sort-order unreadarticlecount
 show-keymap-hint yes
 swap-title-and-hints no
 text-width 72
