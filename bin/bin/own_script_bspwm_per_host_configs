@@ -56,11 +56,6 @@ bspwm_generic_workspaces() {
 
 # These apply to my laptop when an external monitor is connected.
 bspwm_laptop_dual_monitor() {
-	# run the script that adds the appropriate `xrandr` settings
-	if [ "$(command -v own_script_laptop_dual_monitor 2> /dev/null)" ]; then
-		own_script_laptop_dual_monitor
-	fi
-
 	# set the workspaces per monitor
 	bspc monitor VGA1 -d 1 2 3
 	bspc monitor LVDS1 -d 4 5 6
@@ -79,6 +74,12 @@ bspwm_laptop_dual_monitor() {
 case "$(hostname)" in
 	"$my_laptop_hostname")
 		echo "You are on $my_laptop_hostname"
+
+		# run the script that adds the appropriate `xrandr` settings
+		if [ "$(command -v own_script_laptop_dual_monitor 2> /dev/null)" ]; then
+			own_script_laptop_dual_monitor
+		fi
+
 		# Is an external monitor connected to my laptop?
 		if [ "$monitor_count" == 2 ]; then
 			echo "Monitor count is equal to 2"
