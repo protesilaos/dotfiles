@@ -1,17 +1,17 @@
 #!/bin/bash
 
-    # This program is free software: you can redistribute it and/or modify
-    # it under the terms of the GNU General Public License as published by
-    # the Free Software Foundation, either version 3 of the License, or
-    # (at your option) any later version.
+	# This program is free software: you can redistribute it and/or modify
+	# it under the terms of the GNU General Public License as published by
+	# the Free Software Foundation, either version 3 of the License, or
+	# (at your option) any later version.
 
-    # This program is distributed in the hope that it will be useful,
-    # but WITHOUT ANY WARRANTY; without even the implied warranty of
-    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    # GNU General Public License for more details.
+	# This program is distributed in the hope that it will be useful,
+	# but WITHOUT ANY WARRANTY; without even the implied warranty of
+	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+	# GNU General Public License for more details.
 
-    # You should have received a copy of the GNU General Public License
-    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	# You should have received a copy of the GNU General Public License
+	# along with this program.	If not, see <http://www.gnu.org/licenses/>.
 
 # Description {{{
 # ---------------
@@ -33,7 +33,7 @@
 # This script is part of my custom desktop session.  For more, see my
 # dotfiles https://gitlab.com/protesilaos/dotfiles.
 #
-# Last reviewed on 2019-02-27
+# Last full review on 2019-04-21
 #
 # }}}
 
@@ -69,7 +69,7 @@
 # adjusts the screen's colours and brightness, such as `redshift`.
 
 laptop_coordinates() {
-	if [ $# == 1 ]; then
+	if [ "$#" == 1 ]; then
 		xrandr --output LVDS1 --primary --mode 1366x768 --pos 0x1080
 	else
 		xrandr --output LVDS1 --mode 1366x768 --pos 0x1080
@@ -77,7 +77,14 @@ laptop_coordinates() {
 }
 
 laptop_brightness() {
-	xrandr --output LVDS1 --brightness 0.9 --gamma 0.66:0.65:0.58
+	# I define my host names in a local file.  The format is
+	# `my_MACHINE="VALUE"`
+	local laptop_host
+	laptop_host="$(sed '/my_laptop/!d ; s,.*"\([a-zA-Z0-9]*\)",\1,' "$HOME/.my_hostnames")"
+
+	if [ "$laptop_host" == "$(hostname)" ]; then
+		xrandr --output LVDS1 --brightness 0.9 --gamma 0.66:0.65:0.58
+	fi
 }
 
 multihead_coordinates() {
@@ -109,26 +116,22 @@ multihead_brightness() {
 # monitor has another resolution.  It will also fail if executed from
 # another machine, say, another laptop that uses an HDMI connection
 # instead.
-configure_displays() {
-	local my_laptop_external_monitor=$(xrandr --query | grep 'VGA1 connected')
+my_laptop_external_monitor=$(xrandr --query | grep 'VGA1 connected')
 
-	# We check for DESKTOP_SESSION to make sure the brightness/gamma
-	# settings are not executed in places such as the lightdm login
-	# screen.
-	if [ -n "$my_laptop_external_monitor" ] && [ $DESKTOP_SESSION == 'bspwm' ]; then
-		multihead_coordinates
-		multihead_brightness
-	elif [ -n "$my_laptop_external_monitor" ]; then
-		multihead_coordinates
-	else
-		echo "Configuring LVDS1 XrandR settings"
-		laptop_coordinates
-		laptop_brightness
-	fi
-}
+# We check for DESKTOP_SESSION to make sure the brightness/gamma
+# settings are not executed in places such as the lightdm login
+# screen.
+if [ -n "$my_laptop_external_monitor" ] && [ "$DESKTOP_SESSION" == 'bspwm' ]; then
+	multihead_coordinates
+	multihead_brightness
+elif [ -n "$my_laptop_external_monitor" ]; then
+	multihead_coordinates
+else
+	echo "Configuring LVDS1 XrandR settings"
+	laptop_coordinates
+	laptop_brightness
+fi
 
 # }}}
-
-configure_displays
 
 # vi:foldmethod=marker
