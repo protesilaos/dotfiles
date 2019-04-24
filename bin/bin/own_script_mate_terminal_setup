@@ -117,18 +117,15 @@ dconf_read_write_boolean 'default-show-menubar' 'true' 'false'
 dconf_read_write_boolean 'use-system-font' 'true' 'false'
 dconf_read_write_boolean 'use-theme-colors' 'true' 'false'
 ### String types
-# NOTE the font conditions only concern the point size.  The name
-# "monospace" is just a fontconfig alias.  My setup has the relevant
-# custom rules to choose the appropriate font, in order of preference.
-# I prefer to just define "monospace" in the various applications, so
-# that I only need to change the fontconfig aliases if I want to use
-# a new typeface, rather than update each application separately.
+# NOTE the font conditions are intended to set the appropriate point size for the given typeface.
 if [ -n "$(fc-list terminus)" ]; then
-	dconf_read_write_string 'font' 'Monospace 12'
+	dconf_read_write_string 'font' 'Terminus 12'
+elif [ -n "$(fc-list hack)" ]; then
+	dconf_read_write_string 'font' 'Hack 10'
 elif [ -n "$(fc-list monoid)" ]; then
-	dconf_read_write_string 'font' 'Monospace 9'
+	dconf_read_write_string 'font' 'Monoid 9'
 else
-	dconf_read_write_string 'font' 'Monospace 10'
+	dconf_read_write_string 'font' 'Monospace 10' # Defaults to "DejaVu Sans Mono"
 fi
 dconf_read_write_string 'cursor-blink-mode' 'off'
 dconf_read_write_string 'scrollbar-position' 'hidden'
