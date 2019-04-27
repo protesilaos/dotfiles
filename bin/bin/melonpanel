@@ -48,7 +48,9 @@ if [ -n "$(fc-list terminus)" ]; then
 	# A wildcard `*` can replace each part of the definition.
 	melonpanel_font='-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso10646-1'
 else
-	melonpanel_font='-*-fixed-medium-r-normal--13-*-*-*-*-*-*-*'
+	# Could not find this exact definition in the Debian configs.  Got
+	# it from here: https://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html
+	melonpanel_font='-misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso10646-1'
 fi
 
 # }}}
