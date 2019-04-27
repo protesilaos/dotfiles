@@ -474,8 +474,8 @@ modify_dunst() {
 	# Change {back,fore}ground value for urgency_low notifications
 	# Change {back,fore}ground value for urgency_normal notifications
 	# Change {back,fore}ground value for urgency_critical notifications
-	sed --follow-symlinks -i "s/\(^separator_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; \
-	s/\(^frame_color.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; \
+	sed --follow-symlinks -i "s/\(^separator_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgrounddim/ ; \
+	s/\(^frame_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; \
 	/urgency_low/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; /urgency_low/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foregroundalt/ ; \
 	/urgency_normal/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; /urgency_normal/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foreground/ ; \
 	/urgency_critical/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$color1/ ; /urgency_critical/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$background/" "$dunstrc"
