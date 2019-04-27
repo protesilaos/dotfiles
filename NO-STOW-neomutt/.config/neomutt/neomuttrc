@@ -102,12 +102,13 @@ set strict_threads="yes"
 set sort_browser=alpha
 
 # NOTE status bar colours are defined in the theme, which is sourced at
-# the start of this file.  All dash characters are em dashes.
-set status_format='———%v: %f———(%P)———%>—\
+# the start of this file.  All dash characters are Unicode code point
+# U+2500.  See https://en.wikipedia.org/wiki/Box-drawing_character.
+set status_format='───%v: %f───(%P)───%>─\
 [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Del:%d?%?F? \
-Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l??]———'
+Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l??]───'
 
-set pager_format='———%F: %s%*—(%P)'
+set pager_format='───%F: %s%*─(%P)'
 
 # }}}
 
