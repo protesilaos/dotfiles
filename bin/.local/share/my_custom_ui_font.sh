@@ -25,16 +25,12 @@
 # Desirable values for the font family are the generic `fontconfig`
 # aliases: sans, serif, monospace OR the name of the typeface.  The font
 # weight can only be one that is supported by the designated font.
-
-# If Terminus is installed, use it.  Otherwise default to whatever the
-# sans-serif font is.
-if [ -n "$(fc-list terminus)" ]; then
-	my_font_family=Terminus
-	my_font_size=12
+if [ -n "$(fc-list 'dejavu sans condensed')" ]; then
+	my_font_family='DejaVu Sans Condensed'
 else
 	my_font_family=sans
-	my_font_size=10
 fi
 
+my_font_size=12.5
 my_font_weight=regular
 my_custom_ui_font="$my_font_family-$my_font_size:$my_font_weight"
