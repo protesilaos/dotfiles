@@ -41,16 +41,18 @@ if pgrep -xo lemonbar > /dev/null; then
 fi
 
 # Melonpanel variables
-melonpanel_height=18
+melonpanel_height=22
+# NOTE smaller font sizes are poor fits for light themes: a halo effect
+# is created around glyphs, while colours are harder to tell apart.
 if [ -n "$(fc-list terminus)" ]; then
 	# NOTE the descriptions for the Terminus typeface are copied from
 	# /etc/X11/fonts/misc/xfonts-terminus.alias
 	# A wildcard `*` can replace each part of the definition.
-	melonpanel_font='-xos4-terminus-medium-r-normal--12-120-72-72-c-60-iso10646-1'
+	melonpanel_font='-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso10646-1'
 else
 	# Could not find this exact definition in the Debian configs.  Got
 	# it from here: https://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html
-	melonpanel_font='-misc-fixed-medium-r-semicondensed--13-120-75-75-c-60-iso10646-1'
+	melonpanel_font='-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso10646-1'
 fi
 
 # }}}
