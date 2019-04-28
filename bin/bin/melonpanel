@@ -251,7 +251,7 @@ mpd_status() {
 # layout.
 keyboard_layout() {
 	if [ "$(setxkbmap -query | sed '/^layout/!d ; s,^.*:[\ ]*,,g')" == 'gr' ]; then
-		echo '%{+u}EL%{-u}' # Greek
+		echo "%{U$foregroundalt}%{+u}EL%{-u}%{U-}" # Greek
 	else
 		echo 'EN' # English (US QWERTY)
 	fi
