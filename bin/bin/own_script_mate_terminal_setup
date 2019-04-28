@@ -118,9 +118,7 @@ dconf_read_write_boolean 'use-system-font' 'true' 'false'
 dconf_read_write_boolean 'use-theme-colors' 'true' 'false'
 ### String types
 # NOTE the font conditions are intended to set the appropriate point size for the given typeface.
-if [ -n "$(fc-list terminus)" ]; then
-	dconf_read_write_string 'font' 'Terminus 12'
-elif [ -n "$(fc-list hack)" ]; then
+if [ -n "$(fc-list hack)" ]; then
 	dconf_read_write_string 'font' 'Hack 10'
 elif [ -n "$(fc-list monoid)" ]; then
 	dconf_read_write_string 'font' 'Monoid 9'
