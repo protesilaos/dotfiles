@@ -30,8 +30,6 @@
 # manually and then using the `dconf-editor` to figure out what changed
 # in the backend.
 
-# TODO add if condition for the presence of each component
-
 # Keyboard settings {{{
 # ---------------------
 gsettings set org.mate.peripherals-keyboard numlock-state 'off'
@@ -75,10 +73,10 @@ gsettings set org.mate.interface monospace-font-name 'Monospace 10'
 # Theme settings {{{
 # ------------------
 # Dependencies:
-# 	apt install arc-theme papirus-icon-theme
+# 	apt install materia-gtk-theme papirus-icon-theme
 
-if [ -d /usr/share/themes/Arc ]; then
-	gsettings set org.mate.interface gtk-theme 'Arc-Dark'
+if [ -d /usr/share/themes/Materia ]; then
+	gsettings set org.mate.interface gtk-theme 'Materia-dark'
 fi
 
 if [ -d /usr/share/icons/Papirus ]; then
