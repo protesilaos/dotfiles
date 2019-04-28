@@ -37,6 +37,8 @@ else
 fi
 
 my_configs() {
+	# TODO use `fdfind` as an optional dependency
+	# TODO use parameter expansion instead of `sed`
 	fdfind -H -t f '.*rc$|.*\.conf|config$' "$my_dots" | \
 	sed "s,$my_dots/,,g"
 }
