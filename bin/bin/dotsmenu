@@ -23,7 +23,7 @@
 # 	apt install suckless-tools
 #
 # Optional dependencies:
-# 	apt install fd-find notify-send libnotify-bin
+# 	apt install fd-find libnotify-bin
 
 if [ -d "$HOME/dotfiles" ]; then
 	my_dots="$HOME/dotfiles"
