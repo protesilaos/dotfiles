@@ -44,24 +44,38 @@
 # General variables {{{
 # ---------------------
 
-# Array with all available tempus themes.  The `sed` command cleans up
-# the output, stripping it of surrounding text. As for `sort`, it just
-# presents the output in alphabetical order.
-tempus_themes_array=$(find "$HOME/.local/share/my_colours/shell/" -type f -printf "%f\\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort)
+# We use this logic to check and then pass to the rest of the script the
+# colour values and the custom font.  If the files are not available,
+# the script exits with an error.
+source_file() {
+	if [ -f "$1" ]; then
+		source "$1"
+	else
+		echo "ERROR: Could not find active $2"
+		echo "Aborting"
+		exit 1
+	fi
+}
 
 # Pass custom colours to the `dmenu` command.  These will style the
 # background and foreground values using shell variables.  That file is
 # used in other places as well to offer a convenient way of styling
 # multiple tools in a that is centralised and straightforward.
-# TODO make this conditional
-source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
+my_colours="$HOME/.local/share/my_colours/active-tempus-theme.sh"
+source_file "$my_colours" 'Tempus theme'
 
 # Get the system-wide custom font.  This is done with other `dmenu`
 # scripts as well to provide for an easy way to style them all at once.
 # The actual font is a `fontconfig` alias.  See my dotfiles under
 # "fontconfig".
-# TODO make this conditional
-source "$HOME/.local/share/my_custom_ui_font.sh"
+my_font="$HOME/.local/share/my_custom_ui_font.sh"
+source_file "$my_font" 'UI font'
+
+# TODO use parameter expansion instead of sed
+# Array with all available tempus themes.  The `sed` command cleans up
+# the output, stripping it of surrounding text. As for `sort`, it just
+# presents the output in alphabetical order.
+tempus_themes_array=$(find "$HOME/.local/share/my_colours/shell/" -type f -printf "%f\\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort)
 
 # }}}
 
