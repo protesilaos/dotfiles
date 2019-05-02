@@ -143,7 +143,7 @@ battery_status() {
 	local battery_path battery_status battery_label battery_output
 
 	battery_path='/sys/class/power_supply/BAT0'
-	battery_output=$(sed 1q $battery_path/capacity)
+	battery_output="$(sed 1q $battery_path/capacity)"
 	battery_status="$(sed 1q $battery_path/status)"
 	battery_label='Bat'
 
@@ -211,10 +211,9 @@ volume_status() {
 
 # Get the status of the Music Player Daemon.
 mpd_status() {
-	local mpc_status current_song_length current_song maxlen
+	local mpc_status current_song maxlen
 
 	mpc_status="$(mpc status | grep -o '^\[[a-z]*\]')"
-	current_song_length="$(mpc current | wc -c)"
 	current_song="$(mpc current -f "[[%artist%: ]%title%]|[%file%]")"
 	maxlen=30
 
@@ -237,7 +236,7 @@ mpd_status() {
 		# Check if current mpc status has a length that is equal or
 		# higher than "$maxlen".  If so trim the output and append
 		# marker to denote the modification.
-		if [ "$current_song_length" -gt "$maxlen" ]; then
+		if [ "${#current_song}" -ge "$maxlen" ]; then
 			echo "$(mpd_playing)" "${current_song:0:$maxlen}" "[..]"
 		else
 			echo "$(mpd_playing)" "$current_song"
@@ -303,7 +302,7 @@ bspc subscribe report > "$melonpanel_fifo" &
 melonpanel() {
 	local num_mon laptop_external_monitor
 
-	num_mon=$(bspc query -M | wc -l)
+	num_mon="$(bspc query -M | wc -l)"
 	laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
 
 	while read -r line ; do
@@ -354,7 +353,7 @@ melonpanel() {
 									on_focused_monitor=1
 									;;
 							esac
-							[ $num_mon -lt 2 ] && shift && continue
+							[ "$num_mon" -lt 2 ] && shift && continue
 							wm="${wm}%{U$U}%{F$FG}%{B$BG} %{+u}${name}%{-u} %{B-}%{F-}%{U-}"
 							;;
 						[fFoOuU]*)
