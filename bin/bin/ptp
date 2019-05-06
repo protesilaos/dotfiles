@@ -24,7 +24,9 @@
 # NOTE ABOUT THE OUTPUT: on terminals that use a dark Tempus theme, the
 # colours 0 and 8 will not be visible (maybe colour 8 will be bearely
 # visible).  Similarly, colours 7 and 15 will not appear on light
-# themes.
+# themes.  This is because col0 is the dark theme's background, with
+# col8 functioning as the alternative background in various contexts.
+# For light themes we have col15=bg and col7=bgalt.
 
 # This will work if the colours are in place (my dots rely on GNU Stow).
 my_colours="$HOME/.local/share/my_colours"
@@ -65,10 +67,12 @@ colour_row() {
 	# https://en.wikipedia.org/wiki/Box-drawing_character
 	block='\u2588\u2588'
 
-	if [ "$columns" -le 80 ]; then
-		echo -en "\\033[38;5;${i}m${tempus_palette[$i]} \\033[0m";
-	else
+	if [ "$columns" -gt 90 ]; then
 		echo -en "\\033[38;5;${i}m${block} ${tempus_palette[$i]} \\033[0m";
+	elif [ "$columns" -gt 80 ]; then
+		echo -en "\\033[38;5;${i}m${block} ${tempus_palette[$i]:1} \\033[0m";
+	else
+		echo -en "\\033[38;5;${i}m${tempus_palette[$i]} \\033[0m";
 	fi
 }
 
