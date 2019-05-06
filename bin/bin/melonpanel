@@ -48,11 +48,11 @@ if [ -n "$(fc-list terminus)" ]; then
 	# NOTE the descriptions for the Terminus typeface are copied from
 	# /etc/X11/fonts/misc/xfonts-terminus.alias
 	# A wildcard `*` can replace each part of the definition.
-	melonpanel_font='-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso10646-1'
+	melonpanel_font='-xos4-terminus-medium-r-normal--16-160-72-72-c-80-iso10646-1'
 else
 	# Could not find this exact definition in the Debian configs.  Got
 	# it from here: https://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html
-	melonpanel_font='-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso10646-1'
+	melonpanel_font='-misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1'
 fi
 
 # }}}
