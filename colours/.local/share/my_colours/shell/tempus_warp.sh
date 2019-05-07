@@ -28,4 +28,4 @@ color14="#1da1af"
 color15="#a29fa0"
 
 # Special colours
-backgrounddim="#131214"
+backgrounddim="#12161e"
