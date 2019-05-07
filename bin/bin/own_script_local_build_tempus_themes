@@ -36,64 +36,27 @@
 # contribute to the Tempus Themes project, see the generator's
 # CONTRIBUTING.md.
 #
-# Last reviewed on 2019-04-01
+# Last full review on 2019-05-07
 #
 # }}}
 
-# Variables for the operations {{{
-# --------------------------------
-
 # The generator path
-tempus_generator_dir="$HOME/tempus-themes-generator"
+generator_dir="$HOME/tempus-themes-generator"
 
 # The generator script inside the generator directory
-tempus_generator_script="$tempus_generator_dir/tempus-themes-generator.sh"
+generator="$generator_dir/tempus-themes-generator.sh"
 
-# Get the list of the available schemes from inside the generator's
-# directory
-# TODO do not use `ls`
-tempus_schemes=$(ls "$tempus_generator_dir/schemes")
+# Define the array with all the available schemes
+schemes=()
+while IFS=  read -r -d $'\0' item; do
+	schemes+=("${item##*/}")
+done < <(find "$generator_dir/schemes" -type f -print0)
 
 # Destination path used by some functions
 local_col_dir="$HOME/.local/share/my_colours"
 
-# }}}
-
-# Check dependencies before the building process {{{
-# --------------------------------------------------
-# 
-# This assumes that the names of these directories correspond to the
-# ones I have in my home directory.  For my dotfiles, I run a test on
-# two destination, $HOME/dotfiles and $HOME/dotfiles-prot.  The former
-# is the one I use.  The latter is what I recommend in the README for
-# people to set as a git clone target.
-#
-# NOTE this script is not fool proof, so if you have something else that
-# meets those conditions, you might run into unexpected behaviour.
-if [ -d "$HOME/dotfiles" ] || [ -d "$HOME/dotfiles-prot" ]; then
-    echo "GOOD. The dotfiles of Protesilaos Stavrou are assumed to be in place."
-    echo "Continuing to build the Tempus Themes for the local setup."
-else
-    echo "ERROR. Unmet dependency for the dotfiles of Protesilaos Stavrou."
-    echo "Get them with this command:"
-    echo "git clone --depth 1 https://gitlab.com/protesilaos/dotfiles.git"
-    exit 1
-fi
-
-if [ -d "$tempus_generator_dir" ]; then
-    echo "GOOD. The Tempus Themes generator is assumed to be in place."
-    echo "Continuing to build the Tempus Themes for the local setup."
-else
-    echo "ERROR. Unmet dependency for the Tempus Themes generator."
-    echo "Get it with this command:"
-    echo "git clone --depth 1 https://gitlab.com/protesilaos/tempus-themes-generator.git"
-    exit 1
-fi
-
-# }}}
-
-# Core functions for all the build processes {{{
-# ----------------------------------------------
+[ -d "$generator_dir" ] || { echo "The Tempus themes generator is not in the home dir!"; exit 1; }
+[ -d "$HOME/dotfiles" ] && [ -d "$local_col_dir" ] || { echo "Could not find destination directories!"; exit 1; }
 
 # This is the generator's command.  The script accepts two arguments.
 # The first is the name of the scheme.  The second is the template.  For
@@ -113,7 +76,11 @@ fi
 # 3. Destination path
 # 4. Name of output file
 invoke_generator() {
-    "$tempus_generator_script" "$1" "$2" > "$3"/tempus_"$4"
+	# The generator's script can only be invoked from inside the
+	# generator's directory.  This is to ensure that all relative paths
+	# point to the right location.
+	cd "$generator_dir" || exit 1
+    "$generator" "$1" "$2" > "$3"/tempus_"$4"
 }
 
 # As there are a number of Tempus schemes, we will run a loop that
@@ -128,16 +95,10 @@ invoke_generator() {
 # 2. Destination path
 # 3. File type extension
 invoke_generic_loop() {
-    for i in $tempus_schemes
-    do
+    for i in ${schemes[*]}; do
         invoke_generator "$i" "$1" "$2" "$i"."$3"
     done
 }
-
-# }}}
-
-# Functions for app-specific builds {{{
-# -------------------------------------
 
 # Function to build all Tempus themes for GTK{3,4} source view (syntax
 # highlighting for GNOME Builder, Gedit, Pluma, Xed, Mousepad, etc.).
@@ -149,20 +110,14 @@ invoke_generic_loop() {
 # 3. File type extension for tempus_$i.xml
 build_gtksourceview3() {
     local dest_dir="$HOME/.local/share/gtksourceview-3.0/styles"
-    echo "Building themes for GTK Source View 3."
     mkdir -p "$dest_dir"
-    echo "Destination is: $dest_dir/"
     invoke_generic_loop gtksourceview3 "$dest_dir" xml
-    echo "Done with GTK Source View 3."
 }
 
 build_gtksourceview4() {
     local dest_dir="$HOME/.local/share/gtksourceview-4/styles"
-    echo "Building themes for GTK Source View 4."
     mkdir -p "$dest_dir"
-    echo "Destination is: $dest_dir/"
     invoke_generic_loop gtksourceview4 "$dest_dir" xml
-    echo "Done with GTK Source View 4."
 }
 
 # Function to build all Tempus themes for the shell.  It starts by
@@ -174,37 +129,11 @@ build_gtksourceview4() {
 # 3. File type extension for tempus_$i.sh
 build_shell() {
     local dest_dir="$local_col_dir/shell"
-    echo "Building themes for the Shell."
     mkdir -p "$dest_dir"
-    echo "Destination is: $dest_dir/"
     invoke_generic_loop shell-variables "$dest_dir" sh
-    echo "Done with the Shell."
-}
-
-# }}}
-
-# Build everything {{{
-# --------------------
-
-# Run all build functions, unless the programs are not available.  The
-# condition applies to Kitty and the Simple Terminal.  Note that the
-# latter is bundled with my dotfiles and is located in my home "bin"
-# directory.
-build_all() {
-    build_gtksourceview3
-    build_gtksourceview4
-    build_shell
 }
 
 # return results
-build_all
-
-# Send notification.
-echo ""
-echo "Done building all theme files."
-echo "Changes should be reflected in the dotfiles."
-notify-send -i clock "Theme files for the local setup" "All Tempus Themes have been rebuilt. Changes should be reflected in the dotfiles."
-
-# }}}
-
-# vi: foldmethod=marker
+build_gtksourceview3
+build_gtksourceview4
+build_shell
