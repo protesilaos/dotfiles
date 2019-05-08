@@ -264,7 +264,7 @@ keyboard_layout() {
 my_modules() {
 	while true; do
 		echo "B" "$(battery_status)"
-		echo "D" "$(date +'%a %d %b %H:%M')"
+		echo "D" "$(date +'%a %-d %b %H:%M')"
 		echo "K" "$(keyboard_layout)"
 		echo "M" "$(mpd_status)"
 		echo "V" "$(volume_status)"
