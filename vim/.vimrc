@@ -2,118 +2,81 @@
 " ~/.vimrc
 "
 
-" Description {{{
-" ---------------
+" Description
+" -----------
 "
-" This is my Vim config file.  I try to keep it simple and do things
-" without heavily modifying the meaning of the commands.  I use no
-" plugins whatsoever.  Additional functionality is provided by my
-" operating system (GNU/Linux). You can read this as to why:
-" https://protesilaos.com/codelog/2018-11-24-vim-no-plugins/
+" This is my Vim config file.  It should be distributed together with my
+" '.vim' directory.  I try to keep the entire setup simple.  I use no
+" plugins whatsoever, have no custom key bindings, while I do not
+" leverage ANY of the multiplexing and session-management features of
+" vim: that is the job of tmux, the window manager, or whatever
+" dedicated tool.  For me, Vim is just a text editor.
 "
-" This setup is part of my dotfiles, which deploy a custom working
-" environment based on BSPWM.  The underlying OS is Debian Buster/Sid.
-" See https://gitlab.com/protesilaos/dotfiles.
+" This is part of my dotfiles, which deploy a custom desktop session
+" based on BSPWM: https://gitlab.com/protesilaos/dotfiles.
 " 
-" The syntax theme is part of my Tempus Themes project. See
-" https://protesilaos.com/tempus-themes.  Theme files are bundled with
-" my dotfiles (Tempus is used everywhere).
+" The colour scheme is part of my Tempus Themes (designed for
+" accessibility): https://protesilaos.com/tempus-themes.  Theme files
+" are bundled with my dots (Tempus themes are fully integrated into my
+" dotfiles and are applied almost everywhere).
 " 
 " I run Vim exclusively in the console, but also install a graphical
-" version as a fallback option.  On Debian, install with:
+" version as a fallback option.  On Debian 'buster':
 "
 "	sudo apt install vim vim-gtk3
 "
-" Last full review: 2018-11-25
-"
-" }}}
+" Last full review: 2019-05-09
 
-" General settings {{{
-" ====================
+" General settings
+" ----------------
 " Read documentation about each option by executing :h <option>
 
-set nocompatible " do not preserve compatibility with Vi
-set modifiable " buffer contents can be modified
+set nocompatible                  " do not preserve compatibility with Vi
+set modifiable                    " buffer contents can be modified
+set encoding=utf-8                " default character encoding
+set autoread                      " detect when a file has been modified externally
+set spelllang=en,el               " languages to check for spelling (english, greek)
+set spellsuggest=10               " number of suggestions for correct spelling
+set updatetime=500                " time of idleness is miliseconds before saving swapfile
+set undolevels=1000               " how many undo levels to keep in memory
+set showcmd                       " show command in last line of the screen
+set nostartofline                 " keep cursor in the same column when moving between lines
+set errorbells                    " ring the bell for errors
+set visualbell                    " then use a flash instead of a beep sound
+set confirm                       " ask for confirmation when quitting a file that has changes
+set hidden                        " hide buffers
+set autoindent                    " indent automatically (useful for formatoptions)
+set noexpandtab                   " use tabs instead of spaces
+set tabstop=4                     " tab character width
+set shiftwidth=4                  " needs to be the same as tabstop
+set smartcase                     " ignore case if the search contains majuscules
+set hlsearch                      " highlight all matches of last search
+set incsearch                     " enable incremental searching (get feedback as you type)
+set backspace=indent,eol,start    " backspace key should delete indentation, line ends, characters
+set whichwrap=s,b                 " which motion keys should jump to the above/below wrapped line
+set textwidth=72                  " hard wrap at this column
+set joinspaces                    " insert two spaces after puncutation marks when joining multiple lines into one
+set wildmenu                      " enable tab completion with suggestions when executing commands
+set wildmode=list:longest,full    " settings for how to complete matched strings
+set nomodeline                    " vim reads the modeline to execute commands for the current file
+set modelines=0                   " how many lines to check in the top/bottom of the file. 0=off
 
-" file settings
-set encoding=utf-8 " default character encoding
-set autoread " detect when a file has been modified externally
-set spelllang=en,el " languages to check for spelling
-set spellsuggest=10 " number of suggestions for correct spelling
-set updatetime=500 " time of idleness is miliseconds before saving swapfile
-set undolevels=1000 " how many undo levels to keep in memory
-set showcmd " show command in last line of the screen
+" defines how automatic formatting should be done (see :h fo-table)
+set formatoptions-=t formatoptions-=o formatoptions+=crqjnl1
+filetype plugin on                " load syntax options for different file types
+filetype indent off               " do not load indent options for different file types
 
-" modeline
-" NOTE this can be a security risk or an inconvenience, so disable or
-" adapt accordingly when working with untrusted files.
-set modeline " vim reads this to execute commands for the current file
-set modelines=2 " how many lines to check in the top/bottom of the file
+" invisible characters to display (with :set list)
+set listchars=tab:›\ ,space:·,nbsp:␣,trail:•,eol:¬,precedes:«,extends:»
 
-" cursor
-set nostartofline " keep cursor in the same column when moving between lines
+" Helpers
+" -------
 
-" error feedback
-set errorbells " ring the bell for errors
-set visualbell " then use a flash instead of a beep sound
-
-" white space
-set backspace=indent,eol,start " backspace key should delete indentation, line ends, characters
-set whichwrap=s,b " which motions keys should jump to the above/below wrapped line
-
-" context menu
-set wildmenu " enable tab completion with suggestions when executing commands
-set wildmode=list:longest,full " settings for how to complete matched strings
-set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico " ignore images
-set wildignore+=*.pdf,*.psd " ignore documents
-set wildignore+=*.swp,*.bak " ignore swap files
-set wildignore+=node_modules/*,bower_components/*,vendor/*,.vendor/*,_site/*,.git/* " ignore development files
-
-" buffers
-set confirm " ask for confirmation when quitting a file that has changes
-set hidden " hide buffers
-set listchars=tab:›\ ,space:·,nbsp:␣,trail:•,eol:¬,precedes:«,extends:» " invisible characters to display (with :set list)
-
-" tabs
-set autoindent " indent automatically (useful for formatoptions)
-set noexpandtab " use tabs instead of spaces
-set tabstop=4 " tab character width
-set shiftwidth=4 " needs to be the same as tabstop
-
-" searches
-set smartcase " ignore case if the search contains majuscules
-set hlsearch " highlight all matches of last search
-set incsearch " enable incremental searching (get feedback as you type)
-
-" windows/splits
-set winminwidth=0 " minimum width of new windows/splits
-set winminheight=0 " minimum  height
-set splitbelow splitright " put new window below and to the right of the current one
-
-" formatting (see :h fo-table)
-" NOTE some custom commands are about formatting, see the 'Commands'
-" sub-section below in the key bindings section.
-set textwidth=72 " hard wrap at this column
-set joinspaces " insert two spaces after puncutation marks when joining multiple lines into one
-set formatoptions-=t formatoptions-=o formatoptions+=crqjnl1 " defines how automatic formatting should be done
-filetype plugin on " load syntax options for different file types
-filetype indent off " do not load indent options for different file types
-
-" }}}
-
-" Helpers {{{
-" ===========
-
-" auto reload vimrc when editing it
-autocmd! bufwritepost .vimrc source ~/.vimrc
-
-" abbreviations
+" abbreviations (try not to use common words)
 iab medate <c-r>=strftime('%Y-%m-%d')<cr>
-iab metime <c-r>=strftime('%H:%M')<cr>
 iab meweb https://protesilaos.com/
-iab megithub https://github.com/protesilaos
-iab medots https://gitlab.com/protesilaos/dotfiles
-iab megitlab https://gitlab.com/protesilaos
+iab megit https://gitlab.com/protesilaos
+iab medot https://gitlab.com/protesilaos/dotfiles
 
 " Change cursor shape in different modes.  Adapted from:
 " http://vim.wikia.com/wiki/Change_cursor_shape_in_different_modes
@@ -136,177 +99,11 @@ else
 	let &t_EI = "\e[2 q"
 endif
 
-" Identify the highlight group under the cursor.  Useful for debugging
-" my Vim themes.
-map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+" Theme settings
+" --------------
 
-" }}}
+syntax enable               " enable syntax highlighting
+colorscheme tempus_classic    " use one of my Tempus themes
 
-" Key bindings {{{
-" ================
-
-" [mode]map : define a new mapping recursively
-" [mode]remap : redefine a default/existing mapping recursively
-" [mode]noremap : define a new mapping non-recursively
-"
-" NOTE avoid ambiguous mappings to speed up execution.
-
-let mapleader=","
-
-" editor interface
-" ----------------
-
-nnoremap <silent> \ :silent nohlsearch<cr> " clear the search highlight
-
-"  folding lines
-"  When inside a fold, <Space> will toggle open/close state.  Otherwise it
-"  moves the cursor to the right (default behaviour).  In visual mode,
-"  <Space> will create a fold.  This is taken from the Vim Wikia page:
-"  http://vim.wikia.com/wiki/Folding
-nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
-vnoremap <Space> zf
-
-" move lines in normal mode (note that s-j joins lines in insert mode).
-nnoremap <silent> <s-j> :m +1<cr>
-nnoremap <silent> <s-k> :m -2<cr>
-
-" Commands
-" --------
-" for the meaning of the formatoptions, see :h fo-table
-
-" Clear all formatting options
-nmap <leader>fno :set textwidth=0 formatoptions=<Esc>
-
-" Plain text formatting for my writings
-nmap <leader>ftx :set textwidth=72 formatoptions=twan12<Esc>
-
-" Set formatting options for comments in source code so that text is
-" automatically wrapped at text width. For the full list of options see `:h
-" fo-table`. Also note that the minus sign does not work
-" consistently when aggregating options.
-" nmap <leader>fc :set formatoptions-=t formatoptions-=o formatoptions+=ncrql<Esc>
-nmap <leader>fc :set formatoptions-=t formatoptions-=o formatoptions+=crqjnl1<Esc>
-
-" }}}
-
-" Status line {{{
-" ===============
-" TODO this sections needs to be simplified
-
-" protline: my simplistic statusline
-" 
-" based off of sources:
-" https://www.reddit.com/r/vim/comments/6b7b08/my_custom_statusline/
-" https://hackernoon.com/the-last-statusline-for-vim-a613048959b2
-
-" Dictionary: take mode() input -> longer notation of current mode
-" mode() is defined by Vim
-let g:currentmode={
-    \ 'n'  : 'Normal ',
-    \ 'no' : 'N·Operator Pending ',
-    \ 'v'  : 'Visual ',
-    \ 'V'  : 'V·Line ',
-    \ '^V' : 'V·Block ',
-    \ 's'  : 'Select ',
-    \ 'S'  : 'S·Line ',
-    \ '^S' : 'S·Block ',
-    \ 'i'  : 'Insert ',
-    \ 'R'  : 'Replace ',
-    \ 'Rv' : 'V·Replace ',
-    \ 'c'  : 'Command ',
-    \ 'cv' : 'Vim Ex ',
-    \ 'ce' : 'Ex ',
-    \ 'r'  : 'Prompt ',
-    \ 'rm' : 'More ',
-    \ 'r?' : 'Confirm ',
-    \ '!'  : 'Shell ',
-    \ 't'  : 'Terminal '}
-
-function! ProtLineCurrentMode() abort
-    let l:modecurrent = mode()
-    " use get() -> fails safely, since ^V doesn't seem to register
-    " 3rd arg is used when return of mode() == 0, which is case with ^V
-    " thus, ^V fails -> returns 0 -> replaced with 'V Block'
-    let l:modelist = toupper(get(g:currentmode, l:modecurrent, 'V·Block '))
-    let l:current_status_mode = l:modelist
-    return l:current_status_mode
-endfunction
-
-function! ProtLinePasteMode()
-    let paste_status = &paste
-    if paste_status == 1
-        return "paste"
-    else
-        return ""
-    endif
-endfunction
-
-function! ProtLineActiveStatus()
-    let statusline=""
-    let statusline.="%#StatusLine#"
-    let statusline.="\ %{ProtLineCurrentMode()}\%-6{ProtLinePasteMode()}"
-    let statusline.="\%<"
-    let statusline.="%#LineNr#"
-    let statusline.="\ %F%( %m%)"
-    let statusline.="\ %(\%r %h% %w%)"
-    let statusline.="%=" 
-    let statusline.=" %{&tw} %{&fo} "
-    let statusline.="%#StatusLine#"
-    let statusline.="\ %c-%l/%L\ "
-    return statusline
-endfunction
-
-function! ProtLineActiveStatusInsertMode()
-    let statusline=""
-    let statusline.="%#StatusLineTerm#"
-    let statusline.="\ %{ProtLineCurrentMode()}\%-6{ProtLinePasteMode()}"
-    let statusline.="\%<"
-    let statusline.="%#LineNr#"
-    let statusline.="\ %F%( %m%)"
-    let statusline.="\ %r"
-    let statusline.="%=" 
-    let statusline.=" %{&tw} %{&fo} "
-    let statusline.="%#StatusLineTerm#"
-    let statusline.="\ %c-%l/%L\ "
-    return statusline
-endfunction
-
-function! ProtLineInactiveStatus()
-    let statusline=""
-    let statusline.="%#LineNr#"
-    let statusline.="\%<"
-    let statusline.="\ %F"
-    let statusline.="\ %r"
-    let statusline.="%=" 
-    let statusline.="\ %c-%l/%L\ "
-    return statusline
-endfunction
-
-set laststatus=2 " always draw a status bar
-set noshowmode " do not show the mode at the last line (we have the status bar)
-set statusline=%!ProtLineActiveStatus()
-
-augroup status
-    autocmd!
-    autocmd WinEnter * setlocal statusline=%!ProtLineActiveStatus()
-    autocmd WinLeave * setlocal statusline=%!ProtLineInactiveStatus()
-    autocmd InsertEnter * setlocal statusline=%!ProtLineActiveStatusInsertMode()
-    autocmd InsertLeave * setlocal statusline=%!ProtLineActiveStatus()
-augroup END
-
-" }}}
-
-" Theme settings {{{
-" ==================
-
-set t_Co=256 " number of colours
-syntax enable " enable syntax highlighting
-colorscheme tempus_classic " use one of my Tempus thems (these are bundled with my dotfiles) - also as a plugin https://gitlab.com/protesilaos/tempus-themes-vim
-" DO NOT EDIT MANUALLY.  Themes are updated programatically via my
-" `own_script_update_environment_theme`
-
-" }}}
-
-" vi:foldmethod=marker
+" DO NOT EDIT MANUALLY IF YOU USE MY DOTFILES.  Themes are updated
+" programatically via my `own_script_update_environment_theme`
