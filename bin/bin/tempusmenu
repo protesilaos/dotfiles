@@ -13,8 +13,8 @@
     # You should have received a copy of the GNU General Public License
     # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Description {{{
-# ---------------
+# Description
+# -----------
 #
 # This is a `dmenu` script to switch between Tempus themes on demand.
 # It parses the list of available options and presents them once
@@ -38,11 +38,9 @@
 # is required for this to work as intended.
 #
 # Last full review 2019-04-12
-#
-# }}}
 
-# General variables {{{
-# ---------------------
+# General variables
+# -----------------
 
 # We use this logic to check and then pass to the rest of the script the
 # colour values and the custom font.  If the files are not available,
@@ -77,10 +75,8 @@ source_file "$my_font" 'UI font'
 # presents the output in alphabetical order.
 tempus_themes_array=$(find "$HOME/.local/share/my_colours/shell/" -type f -printf "%f\\n" | sed -e 's/tempus_\([a-z]*\).sh/\1/g' | sort)
 
-# }}}
-
-# Functions and conditions {{{
-# ----------------------------
+# Functions and conditions
+# ------------------------
 
 # This is the `dmenu` wrapper with the list of available Tempus themes.
 # Instead of offering a direct input source that yields an immediate
@@ -141,10 +137,8 @@ case "$#" in
 		;;
 esac
 
-# }}}
-
-# ANNEX with further explanations {{{
-# -----------------------------------
+# ANNEX with further explanations
+# -------------------------------
 
 # I store my colors in "$HOME/.local/share/my_colours/".  The Tempus
 # themes are at $HOME/.local/share/my_colours/shell/.
@@ -178,7 +172,3 @@ esac
 # totus
 # warp
 # winter
-
-# }}}
-
-# vi:foldmethod=marker

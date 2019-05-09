@@ -2,8 +2,8 @@
 # ~/.config/sxhkd/sxhkdrc
 #
 
-# Description {{{
-# ===============
+# Description
+# ===========
 #
 # Configuration file for the Simple X Hotkey Daemon.  Meant to work with
 # `bspwm`.  This is part of my dotfiles, which are managed with GNU
@@ -14,11 +14,9 @@
 #
 # Last full review on 2018-11-07
 # Last major edit on 2019-04-01
-#
-# }}}
 
-# Index with key chord chain mnemonics {{{
-# ========================================
+# Index with key chord chain mnemonics
+# ====================================
 #
 # Key chord chains are used for less common or ancillary commands, or
 # for when assigning direct keybindings would become unwieldy.  The idea
@@ -35,10 +33,8 @@
 # workaround is to use this syntax instead `super + n; X ; ...`, where X
 # is a variable.
 
-# }}}
-
-# General key chords that do not invoke BSPC {{{
-# ==============================================
+# General key chords that do not invoke BSPC
+# ==========================================
 
 # Keyboard layout
 # ---------------
@@ -174,7 +170,7 @@ super + shift + d
 # Tools and utilities
 # -------------------
 
-# PLACEHOLDER for future release of dunst {{{
+# PLACEHOLDER for future release of dunst
 
 # # TODO add all `dunst` related keys here.  Currently, it only supports
 # # setting key bindings inside `dunstrc`, but there is ongoing work to
@@ -186,8 +182,6 @@ super + shift + d
     # # VIEW {context menu of} last notification (shows max 3 at a time)
 # # super + {_, shift + } c
     # # CLOSE {all} notification{s}
-
-# }}}
 
 # Screenshots (requires `scrot`).  First one is for the focused window.
 # The other is of the entire X session (including all active monitors).
@@ -234,10 +228,8 @@ XF86AudioMicMute
 super + XF86Audio{Mute,LowerVolume,RaiseVolume}
     amixer set Capture {toggle,5%-,5%+}
 
-# }}}
-
-# BSPWM operations for window management {{{
-# ==========================================
+# BSPWM operations for window management
+# ======================================
  
 # Close or kill currently focused node
 super + {_,shift + }q
@@ -312,7 +304,7 @@ super + ctrl + {h,j,k,l}
 super + shift + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
 
-# FIXME TODO on focus history (see following three commands) {{{
+# FIXME TODO on focus history (see following three commands)
 #
 # 1.  Can Alt+Tab work like the standard Alt+Tab implementation where
 #     releasing the key on the first occurrence rewrites the focus
@@ -320,8 +312,6 @@ super + shift + {Left,Down,Up,Right}
 # 2.  Research how to consolidate these in fewer keystrokes on something
 #     that makes more sense.  Too many options that provide overlapping
 #     functions.
-#
-# }}}
 
 # Focus the last node/desktop.  This only cycles through the active and
 # the last active node.  Compare it to the behaviour of the following
@@ -373,7 +363,3 @@ super + shift + {y,u,i,o}
 # Dynamic gaps.
 super + shift + bracket{left,right}
 	bspc config -d focused window_gap $((`bspc config -d focused window_gap` {-,+} 5 ))
-
-# }}}
-
-# vim:ft=sh:foldmethod=marker

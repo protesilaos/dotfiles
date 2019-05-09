@@ -2,8 +2,8 @@
 # ~/.bashrc
 #
 
-# Description {{{
-# ===============
+# Description
+# ===========
 #
 # BASH configuration file.  Any modules such as the `dircolors` config
 # are stored in ~/.local/share/my_bash/.  This setup is part of my
@@ -14,10 +14,8 @@
 #
 # Last reviewed on 2019-03-23
 
-# }}}
-
-# General settings {{{
-# ====================
+# General settings
+# ================
 
 # Include my scripts in the PATH.  To avoid conflicts, I always prepend
 # `own_script_` to my files.  There are some exceptions though, where I
@@ -100,17 +98,15 @@ shopt -s checkwinsize
 #### similar/same name to a directory.
 #### shopt -s autocd
 
-# }}}
-
-# Aliases {{{
-# ===========
+# Aliases
+# =======
 # A note on how I define aliases.  I try to abstract the command into
 # its initials or something that resembles the original.  This helps me
 # remember the original command when necessary.  There are some
 # exceptions for commands I seldom execute.
 
-# APT (package management on Debian) {{{
-# --------------------------------------
+# APT (package management on Debian)
+# ----------------------------------
 
 # If you are coming to Debian from Arch-based distros, check
 # compatibility with `pacman`:
@@ -162,10 +158,8 @@ if [ "$(command -v aptitude 2> /dev/null)" ]; then
 	alias apc="sudo aptitude purge ~c"
 fi
 
-# }}}
-
-# Common tasks and utilities {{{
-# ------------------------------
+# Common tasks and utilities
+# --------------------------
 
 # Check these because some of them modify the behaviour of standard
 # commands, such as `cp`, `mv`, `rm`, so that they provide verbose
@@ -236,10 +230,8 @@ alias lsla='ls -lhpvA --color=auto --group-directories-first'
 # Shortcuts to common configs.
 alias urls="$EDITOR $HOME/.config/newsboat/urls"
 
-# }}}
-
-# Extra tasks and infrequently used tools {{{
-# -------------------------------------------
+# Extra tasks and infrequently used tools
+# ---------------------------------------
 
 # These options are very opinionated, disabling images, javascript,
 # etc.  See `man surf`.
@@ -276,10 +268,8 @@ if [ "$(command -v xclip 2> /dev/null)" ]; then
 	alias xclipc='xclip -selection clipboard' # followed by path to file
 fi
 
-# }}}
-
-# Flatpak commands {{{
-# --------------------
+# Flatpak commands
+# ----------------
 
 if [ "$(command -v flatpak 2> /dev/null)" ]; then
 	alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
@@ -288,10 +278,8 @@ if [ "$(command -v flatpak 2> /dev/null)" ]; then
 	alias flu="flatpak update"
 fi
 
-# }}}
-
-# Git commands {{{
-# ----------------
+# Git commands
+# ------------
 
 if [ "$(command -v git 2> /dev/null)" ]; then
 	# add, commit
@@ -333,12 +321,8 @@ if [ "$(command -v git 2> /dev/null)" ]; then
 	alias gph='git push -u origin HEAD'
 fi
 
-# }}}
-
-# }}}
-
-# Functions {{{
-# =============
+# Functions
+# =========
 
 # Colourise man pages
 man() {
@@ -372,7 +356,3 @@ cd() {
 backupthis() {
 	cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
 }
-
-# }}}
-
-# vi:foldmethod=marker

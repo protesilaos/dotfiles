@@ -13,8 +13,8 @@
 	# You should have received a copy of the GNU General Public License
 	# along with this program.	If not, see <http://www.gnu.org/licenses/>.
 
-# Description {{{
-# ---------------
+# Description
+# -----------
 #
 # Configures the MATE Terminal (default terminal emulator for MATE
 # Desktop Environment) to my liking.  This script is part of my dotfiles
@@ -26,14 +26,12 @@
 #
 # Written on 2019-03-31 and tested on an up-to-date Debian Buster/Sid
 # machine.  In need of review.
-#
-# }}}
 
 # TODO improve documentation, especially in the "conditional commands"
 # section.
 
-# Theme settings {{{
-# ------------------
+# Theme settings
+# --------------
 #
 # You do not need to run this script manually, just for the sake of
 # updating the terminals' colours.  If you are using my `tempusmenu` (or
@@ -58,10 +56,8 @@ dconf write "$dconf_path/bold-color" "'$foreground'"
 dconf write "$dconf_path/background-color" "'$background'"
 dconf write "$dconf_path/palette" "'$color0:$color1:$color2:$color3:$color4:$color5:$color6:$color7:$color8:$color9:$color10:$color11:$color12:$color13:$color14:$color15'"
 
-# }}}
-
-# Conditional commands {{{
-# ------------------------
+# Conditional commands
+# --------------------
 #
 # We define these in a conditional way because the idea is they will
 # remain constant over the long run.  The idea is that this script will
@@ -175,7 +171,3 @@ dconf_read_write_string_keys 'switch-to-tab-9' 'disabled'
 dconf_read_write_string_keys 'switch-to-tab-10' 'disabled'
 dconf_read_write_string_keys 'switch-to-tab-11' 'disabled'
 dconf_read_write_string_keys 'switch-to-tab-12' 'disabled'
-
-# }}}
-
-# vi:foldmethod=marker

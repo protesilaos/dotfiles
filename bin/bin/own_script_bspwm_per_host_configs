@@ -13,8 +13,8 @@
 	# You should have received a copy of the GNU General Public License
 	# along with this program.	If not, see <http://www.gnu.org/licenses/>.
 
-# Description {{{
-# ---------------
+# Description
+# -----------
 #
 # Configure `bspwm` depending on the host computer. Part of my dotfiles.
 # See https://gitlab.com/protesilaos/dotfiles
@@ -30,8 +30,6 @@
 # setup in advance. I deploy my dotfiles on two separate machines.  On
 # one I often run a dual monitor setup.  As such, there are some bespoke
 # configs for each host.
-#
-# }}}
 
 # I define my host names as BASH variables in this file.  The format is
 # `my_variable='my_value'`.  Then I source it to retrieve the value I
@@ -95,5 +93,3 @@ case "$(hostname)" in
 		bspwm_generic_workspaces
 		;;
 esac
-
-# vi:foldmethod=marker

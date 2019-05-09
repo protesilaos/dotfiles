@@ -13,8 +13,8 @@
     # You should have received a copy of the GNU General Public License
     # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# README for dependencies {{{
-# ---------------------------
+# README for dependencies
+# -----------------------
 
 # Builds theme files for all items in the Tempus Themes collection and
 # places them in their corresponding location inside my dotfiles.  For
@@ -37,8 +37,6 @@
 # CONTRIBUTING.md.
 #
 # Last full review on 2019-05-07
-#
-# }}}
 
 # The generator path
 generator_dir="$HOME/tempus-themes-generator"

@@ -1,5 +1,3 @@
-# vi:foldmethod=marker
-
 # Configuration file for Neomutt.  Tested on 2019-02-28.  Debian Buster
 # running NeoMutt 20180716.
 #
@@ -13,8 +11,8 @@
 # This file and everything sourced herein is part of my dotfiles.  See
 # https://gitlab.com/protesilaos/dotfiles.
 
-# General settings {{{
-# -------------------
+# General settings
+# ----------------
 set arrow_cursor=no # yes == indicator "->" will note the position in the index, else the whole line is highlighted
 set sleep_time=0
 
@@ -47,10 +45,8 @@ unset markers # do not show markers for wrapped lines
 set pager_index_lines=10
 set mime_forward=yes # send forwarded mails as attachments
 
-# }}}
-
-# Composing {{{
-# -------------
+# Composing
+# ---------
 set editor="vim +':set textwidth=72' +':set formatoptions=twan12'"
 set empty_subject='Your email'
 set askcc=no
@@ -85,10 +81,8 @@ set abort_noattach_regex="\\<attach|attached|attachment|attachments\
 |joignons|επισύναψη|επισυνάπτω|συνημμένο|συνημμένα|επισυναψη\
 |επισυναπτω|συνημμενο|συνημμενα)\\>"
 
-# }}}
-
-# Index and status bars {{{
-# -------------------------
+# Index and status bars
+# ---------------------
 # For the date_format, see `man strftime`.  For the index_format see
 # `man neomuttrc`.  Notice the number in %C (index_fromat).
 set date_format="%Y-%m-%d %R"
@@ -110,10 +104,8 @@ Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l??]───'
 
 set pager_format='───%F: %s%*─(%P)'
 
-# }}}
-
-# Mailboxes {{{
-# -------------
+# Mailboxes
+# ---------
 # NOTE the passwords for each account are stored in an encrypted file.
 # Each password is defined as a custom variable by prepending the `my_`
 # directive.  Such as `set my_variable = "password"`.
@@ -133,20 +125,16 @@ folder-hook $folder 'source ~/.config/neomutt/mails/email-two'
 source "~/.config/neomutt/mails/email-three"
 folder-hook $folder 'source ~/.config/neomutt/mails/email-three'
 
-# }}}
-
-# Sidebar settings (I don't really use this) {{{
-# ----------------------------------------------
+# Sidebar settings (I don't really use this)
+# ------------------------------------------
 set sidebar_visible=no
 set mail_check_stats
 set sidebar_format="%B%?F? [%F]?%* %?N?%N/?%S"
 set sidebar_short_path=yes
 set sidebar_delim_chars='/'
 
-# }}}
-
-# Key bindings {{{
-# ----------------
+# Key bindings
+# ------------
 bind editor <Tab> complete-query
 
 # Compose a new email (not a reply) to the sender
@@ -197,5 +185,3 @@ bind index,pager <left> sidebar-toggle-visible
 bind index,pager <up> sidebar-prev
 bind index,pager <down> sidebar-next
 bind index,pager <right> sidebar-open
-
-# }}

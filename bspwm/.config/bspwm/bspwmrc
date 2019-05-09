@@ -1,16 +1,14 @@
 #!/bin/bash
 
-# Description {{{
-# ===============
+# Description
+# ===========
 #
 # Configuration file for the Binary Space Partitioning Window Manager.
 # This is part of my dotfiles, which are managed with GNU Stow.  See
 # https://gitlab.com/protesilaos/dotfiles
-#
-# }}}
 
-# Visual options {{{
-# ==================
+# Visual options
+# ==============
 
 # window management
 # -----------------
@@ -52,10 +50,8 @@ bspc config active_border_color "#b58d88" # focused window, unfocused monitor
 bspc config focused_border_color "#6da280" # focused window, focused monitor
 bspc config presel_feedback_color "#312e30" # feedback for manual node split
 
-# }}}
-
-# autostart {{{
-# =============
+# autostart
+# =========
 
 # The hotkey daemon that handles all custom key bindings, including the
 # ones that control BSPWM
@@ -139,10 +135,8 @@ if [ "$(command -v mpDris2 2> /dev/null)" ]; then
 	mpDris2 &
 fi
 
-# }}}
-
-# Per host configurations {{{
-# ===========================
+# Per host configurations
+# =======================
 
 # I deploy my dotfiles on two separate machines.  On one I often run a
 # dual monitor setup.  As such, there are some bespoke configs for each
@@ -151,7 +145,3 @@ fi
 if [ "$(command -v own_script_bspwm_per_host_configs)" ]; then
 	own_script_bspwm_per_host_configs
 fi
-
-# }}}
-
-# vim:foldmethod=marker

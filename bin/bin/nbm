@@ -14,8 +14,8 @@
     # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# Description {{{
-# ---------------
+# Description
+# -----------
 #
 # Nimble Backdrop Manager. Interface with `sxiv` to view your Pictures
 # folder and set a new wallpaper (by marking the thumbnail with "m" and
@@ -39,11 +39,9 @@
 # Assign this script to a key binding for your convenience.
 #
 # TODO is "Pictures" automatically localised?
-#
-# }}}
 
-# Image viewer parameters {{{
-# ---------------------------
+# Image viewer parameters
+# -----------------------
 #
 # Define the sxiv command with reading from stdin and delivering to
 # stdout.  Start the program in thumbnail mode.  The -N flag is for
@@ -53,10 +51,8 @@ my_sxiv() {
 	sxiv -iot -N 'my_float_window'
 }
 
-# }}}
-
-# Query the Pictures folder and present images {{{
-# ------------------------------------------------
+# Query the Pictures folder and present images
+# --------------------------------------------
 
 # Get image files that end in .{jpg,jpeg,png} from ~/Pictures.
 find_pictures() {
@@ -82,10 +78,8 @@ sxiv_interface() {
 	find_pictures | my_sxiv
 }
 
-# }}}
-
-# Apply the wallpaper {{{
-# -----------------------
+# Apply the wallpaper
+# -------------------
 #
 # This is the command that sets the wallpaper, which it reads as the
 # first argument.  The commands for the desktop environment's listed
@@ -126,10 +120,8 @@ apply_wallpaper() {
 	esac
 }
 
-# }}}
-
-# Conditions for running this script {{{
-# --------------------------------------
+# Conditions for running this script
+# ----------------------------------
 nbm_exec() {
 	local quit_text='You hit the "q" key. Quiting program...'
 	# Open the interface with all available files from ~/Pictures
@@ -187,7 +179,3 @@ nbm_exec() {
 
 # Run the script
 nbm_exec
-
-# }}}
-
-# vi:foldmethod=marker

@@ -3,8 +3,8 @@
 #
 # See `man ncmpcpp` for the meaning of each option.
 
-# Essentials {{{
-# --------------
+# Essentials
+# ----------
 
 # Remove comment lines
 grep -ev '^#' ~/.config/ncmpcpp/config
@@ -16,10 +16,8 @@ lyrics_directory=~/.config/ncmpcpp/lyrics
 # Define Music directory (needed for editing tags)
 mpd_music_dir=~/Music/
 
-# }}}
-
-# General settings {{{
-# --------------------
+# General settings
+# ----------------
 
 # Interface
 enable_window_title=yes
@@ -63,10 +61,8 @@ default_find_mode=wrapped
 jump_to_now_playing_song_at_start=yes
 space_add_mode=add_remove
 
-# }}}
-
-# Visualiser settings {{{
-# -----------------------
+# Visualiser settings
+# -------------------
 visualizer_fifo_path=/tmp/mpd.fifo
 visualizer_output_name=my_fifo
 visualizer_sync_interval=30
@@ -81,11 +77,8 @@ visualizer_look = "◆▎"
 ####visualizer_look = "◆▪"
 ####visualizer_look = "◆•"
 
-
-# }}}
-
-# Colours and formatting {{{
-# --------------------------
+# Colours and formatting
+# ----------------------
 colors_enabled=yes
 
 # NOTE colours numbers are terminal number + 1
@@ -122,5 +115,3 @@ statusbar_time_color=5
 player_state_color=13
 progressbar_color=6
 progressbar_elapsed_color=14
-
-# vi:foldmethod=marker

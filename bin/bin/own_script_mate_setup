@@ -30,16 +30,14 @@
 # manually and then using the `dconf-editor` to figure out what changed
 # in the backend.
 
-# Keyboard settings {{{
-# ---------------------
+# Keyboard settings
+# -----------------
 gsettings set org.mate.peripherals-keyboard numlock-state 'off'
 gsettings set org.mate.peripherals-keyboard-xkb.kbd layouts "['us','gr']"
 gsettings set org.mate.peripherals-keyboard-xkb.kbd options "['grp\tgrp:alt_caps_toggle', 'Compose key\tcompose:menu']"
 
-# }}}
-
-# Key bindings {{{
-# ----------------
+# Key bindings
+# ------------
 gsettings set org.mate.Marco.window-keybindings tile-to-side-e '<Shift><Mod4>l'
 gsettings set org.mate.Marco.window-keybindings tile-to-side-w '<Shift><Mod4>h'
 gsettings set org.mate.Marco.window-keybindings toggle-fullscreen '<Mod4>f'
@@ -58,20 +56,16 @@ gsettings set org.mate.Marco.global-keybindings run-command-screenshot '<Mod4>Pr
 gsettings set org.mate.SettingsDaemon.plugins.media-keys logout '<Primary><Alt>Delete'
 gsettings set org.mate.SettingsDaemon.plugins.media-keys power '<Primary><Alt>End'
 
-# }}}
-
-# Font settings {{{
-# -----------------
+# Font settings
+# -------------
 gsettings set org.mate.caja.desktop font 'Sans 10'
 gsettings set org.mate.interface font-name 'Sans 10'
 gsettings set org.mate.Marco.general titlebar-font 'Sans 10'
 gsettings set org.mate.interface document-font-name 'Sans 10'
 gsettings set org.mate.interface monospace-font-name 'Monospace 10'
 
-# }}}
-
-# Theme settings {{{
-# ------------------
+# Theme settings
+# --------------
 # Dependencies:
 # 	apt install materia-gtk-theme papirus-icon-theme
 
@@ -93,34 +87,26 @@ gsettings set org.mate.peripherals-mouse cursor-size '24'
 # any effect.
 gsettings set org.mate.NotificationDaemon theme 'coco'
 
-# }}}
-
-# Desktop settings {{{
-# --------------------
+# Desktop settings
+# ----------------
 gsettings set org.mate.background show-desktop-icons 'true'
 gsettings set org.mate.caja.desktop home-icon-visible 'false'
 gsettings set org.mate.Marco.general num-workspaces '4'
 
-# }}}
-
-# Panel settings {{{
-# ------------------
+# Panel settings
+# --------------
 gsettings set org.mate.panel toplevel-id-list "['top']"
 gsettings set org.mate.panel.toplevel.background:/org/mate/panel/toplevels/top/background/ color 'rgba(0,0,0,0.6)'
 gsettings set org.mate.panel.toplevel.background:/org/mate/panel/toplevels/top/background/ type 'color'
 
-# }}}
-
-# Window manager settings {{{
-# ---------------------------
+# Window manager settings
+# -----------------------
 gsettings set org.mate.session.required-components windowmanager 'marco'
 gsettings set org.mate.Marco.general center-new-windows 'false'
 gsettings set org.mate.Marco.general compositing-manager 'true'
 
-# }}}
-
-# App settings {{{
-# ----------------
+# App settings
+# ------------
 
 # Eye of MATE
 gsettings set org.mate.eom.ui image-collection 'false'
@@ -154,7 +140,3 @@ gsettings set org.mate.screensaver mode 'single'
 # Settings daemon
 gsettings set org.mate.SettingsDaemon.plugins.media-keys enable-osd 'false'
 gsettings set org.mate.SettingsDaemon.plugins.media-keys screensaver 'disabled'
-
-# }}}
-
-# vi:foldmethod=marker

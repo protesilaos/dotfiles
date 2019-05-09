@@ -13,8 +13,8 @@
     # You should have received a copy of the GNU General Public License
     # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Description and overview {{{
-# ----------------------------
+# Description and overview
+# ------------------------
 #
 # Simplistic Task Manager: a shell script that uses standard UNIX tools
 # to control the presentation and contents of a plain text file that
@@ -46,11 +46,9 @@
 # For a dmenu interface to adding/removing tasks to the same to-do list,
 # see my stmmenu, which is also part of my dotfiles (inside the "bin"
 # directory).
-#
-# }}}
 
-# Global variables {{{
-# --------------------
+# Global variables
+# ----------------
 
 # Define my task list file.
 #
@@ -77,10 +75,8 @@ my_nocol='\033[0m'
 # the line length for folding stm's output
 stm_fold=80
 
-# }}}
-
-# Functions {{{
-# -------------
+# Functions
+# ---------
 
 stm_help() {
 	echo -e "${my_cyan}stm${my_nocol} ${my_magenta}[d|due] [e|edit] [l|list] [o|omit] [h|help|-h|--help]${my_nocol}"
@@ -152,10 +148,8 @@ stm_omit() {
 	fi
 }
 
-# }}}
-
-# Conditions {{{
-# --------------
+# Conditions
+# ----------
 
 # A second argument is required by options that filter the output.
 stm_region="$2"
@@ -197,7 +191,3 @@ else
 			;;
 	esac
 fi
-
-# }}}
-
-# vi:foldmethod=marker

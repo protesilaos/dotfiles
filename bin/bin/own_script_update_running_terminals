@@ -13,8 +13,8 @@
 	# You should have received a copy of the GNU General Public License
 	# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Description {{{
-# ---------------
+# Description
+# -----------
 #
 # Use ANSI codes to apply theme change to all active terminals.  This is
 # particularly useful for programs that source their colours at startup,
@@ -27,8 +27,6 @@
 #
 # The ANSI escape sequences are defined in this document
 # http://pod.tst.eu/http://cvs.schmorp.de/rxvt-unicode/doc/rxvt.7.pod#XTerm_Operating_System_Commands
-#
-# }}}
 
 active_theme="$HOME/.local/share/my_colours/active-theme-content"
 
@@ -73,5 +71,3 @@ ansi_sequences+="\\033]17;$(get_hex_value foreground)\\007"
 for term in /dev/pts/[0-9]*; do
 	printf "%b" "$ansi_sequences" > "$term" &
 done
-
-# vi:foldmethod=marker

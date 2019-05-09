@@ -13,8 +13,8 @@
 	# You should have received a copy of the GNU General Public License
 	# along with this program.	If not, see <http://www.gnu.org/licenses/>.
 
-# Description {{{
-# ---------------
+# Description
+# -----------
 #
 # This script has a dual purpose when executed from my laptop:
 #
@@ -34,10 +34,8 @@
 # dotfiles https://gitlab.com/protesilaos/dotfiles.
 #
 # Last full review on 2019-04-21
-#
-# }}}
 
-# Configure this for LightDM {{{
+# Configure this for LightDM
 #
 # To instruct `lightdm` to run this at startup on a machine running
 # Debian Buster/Sid, you must edit `/etc/lightdm/lightdm.conf` (requires
@@ -60,11 +58,9 @@
 #
 # This might also work with other greeters, such as `slick-greeter`.
 # Needs further testing.
-#
-# }}}
 
-# XrandR functions {{{
-# --------------------
+# XrandR functions
+# ----------------
 # XXX NOTE XXX These will have no permanent effect if another program
 # adjusts the screen's colours and brightness, such as `redshift`.
 
@@ -105,10 +101,8 @@ multihead_brightness() {
 	xrandr --output VGA1 --brightness 1 --gamma 1:1:1
 }
 
-# }}}
-
-# Conditions for running this script {{{
-# --------------------------------------
+# Conditions for running this script
+# ----------------------------------
 
 # If the VGA1 port connects to a monitor, the output of the variable
 # will not be empty.  In which case it is assumed that I am using my
@@ -134,7 +128,3 @@ else
 	laptop_coordinates
 	laptop_brightness
 fi
-
-# }}}
-
-# vi:foldmethod=marker

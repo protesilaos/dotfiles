@@ -13,8 +13,8 @@
 	# You should have received a copy of the GNU General Public License
 	# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Description {{{
-# ---------------
+# Description
+# -----------
 #
 # Melonpanel: my `lemonbar` implementation, for use in my custom desktop
 # session (see my dotfiles https://gitlab.com/protesilaos/dotfiles).
@@ -29,11 +29,9 @@
 # 	apt install amixer mpd mpc
 #
 # Last full review 2019-04-04
-#
-# }}}
 
-# General settings {{{
-# --------------------
+# General settings
+# ----------------
 
 # Check if any lemonbar is running and kill it
 if pgrep -xo lemonbar > /dev/null; then
@@ -55,10 +53,8 @@ else
 	melonpanel_font='-misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1'
 fi
 
-# }}}
-
-# Colours for modules and bspwm indicators {{{
-# --------------------------------------------
+# Colours for modules and bspwm indicators
+# ----------------------------------------
 
 # Add colours from current Tempus theme.  That file is used in other
 # places as well to offer a convenient way of styling multiple tools in
@@ -126,10 +122,8 @@ COLOR_MONOCLE_BG="$COLOR_DEFAULT_BG"
 COLOR_FLAGS_FG="$COLOR_DEFAULT_FG"
 COLOR_FLAGS_BG="$COLOR_DEFAULT_BG"
 
-# }}}
-
-# Panel modules {{{
-# -----------------
+# Panel modules
+# -------------
 #
 # NOTE all functions that are meant to pipe their output to the panel
 # will echo a majuscule (letter A-Z).  This is done to easily retrieve
@@ -272,10 +266,8 @@ my_modules() {
 	done
 }
 
-# }}}
-
-# Piping and reading the output of the modules {{{
-# ------------------------------------------------
+# Piping and reading the output of the modules
+# --------------------------------------------
 
 # The design of this section has been heavily inspired/adapted from the
 # examples provided by upstream bspwm.
@@ -460,10 +452,8 @@ melonpanel() {
 	done
 }
 
-# }}}
-
-# Launch the panel with the given parameters {{{
-# ----------------------------------------------
+# Launch the panel with the given parameters
+# ------------------------------------------
 
 melonpanel < "$melonpanel_fifo" | lemonbar -u 1 -p -g "x${melonpanel_height}" \
 -F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" -f "$melonpanel_font" -n "Melonpanel" &
@@ -480,7 +470,3 @@ until bar_id=$(xdo id -a 'Melonpanel'); do
 done
 
 xdo below -t $(xdo id -n root) $bar_id &
-
-# }}}
-
-# vi:foldmethod=marker

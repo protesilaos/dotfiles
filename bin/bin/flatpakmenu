@@ -51,5 +51,3 @@ if [ "$my_flatpaks_choice" ]; then
     echo "flatpak run \"$my_flatpaks_choice\""
     flatpak run "$my_flatpaks_choice" &
 fi
-
-# vi:foldmethod=marker

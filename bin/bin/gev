@@ -13,8 +13,8 @@
 	# You should have received a copy of the GNU General Public License
 	# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Description {{{
-# ---------------
+# Description
+# -----------
 #
 # GEV: Git's Eye View.  A simple way to get an overview of the status of
 # all git repos inside a directory.  A simple two column list is drawn,
@@ -31,8 +31,6 @@
 # 	apt install git
 #
 # Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
-#
-# }}}
 
 # Which directory contains our repos?
 parent_directory="$HOME"
@@ -81,5 +79,3 @@ while IFS= read -r -d '' repo; do
 	cd "$repo/.." > /dev/null || exit
 	printf "%s %s\\n" "$(git_status)" "$PWD"
 done
-
-# vi:foldmethod=marker

@@ -13,8 +13,8 @@
 	# You should have received a copy of the GNU General Public License
 	# along with this program.	If not, see <http://www.gnu.org/licenses/>.
 
-# Description {{{
-# ===============
+# Description
+# ===========
 #
 # A script that handles on-demand _Tempus themes_ changes for a variety
 # of tools.  This is an integral part of my custom desktop session,
@@ -33,11 +33,9 @@
 # with 'de' as a second argument (read the script for the specifics).
 #
 # Last full review on 2019-04-12
-#
-# }}}
 
-# General variables {{{
-# =====================
+# General variables
+# =================
 
 # File system path to the Tempus themes (Bash variables implementation)
 tempus_files="$HOME/.local/share/my_colours/shell/"
@@ -104,10 +102,8 @@ help_message() {
 	exit 1
 }
 
-# }}}
-
-# Set wallpaper {{{
-# ------------------
+# Set wallpaper
+# -------------
 
 # dependency:
 #	sudo apt install feh
@@ -137,10 +133,8 @@ modify_wallpaper() {
 	fi
 }
 
-# }}}
-
-# Set GTK themes {{{
-# ------------------
+# Set GTK themes
+# --------------
 
 # Debian Buster optional dependencies:
 #   sudo apt install materia-gtk-theme papirus-icon-theme
@@ -189,10 +183,8 @@ modify_gtk() {
 	echo "Updating GTK widget and icon themes"
 }
 
-# }}}
-
-# Set GTKsourceview3 colours {{{
-# ------------------------------
+# Set GTKsourceview3 colours
+# --------------------------
 
 # TODO LOWPRIORITY find xfconf-query for mousepad (Xfce editor)
 
@@ -222,10 +214,8 @@ modify_gtksourceview3() {
 	fi
 }
 
-# }}}
-
-# Set GTKsourceview4 colours {{{
-# ------------------------------
+# Set GTKsourceview4 colours
+# --------------------------
 
 modify_gtksourceview4() {
 	if [ "$(command -v gnome-builder 2> /dev/null)" ]; then
@@ -241,10 +231,8 @@ modify_gtksourceview4() {
 	fi
 }
 
-# }}}
-
-# Set vim syntax theme {{{
-# ------------------------
+# Set vim syntax theme
+# --------------------
 
 # Change the Vim `colorscheme` value.  that because the Tempus themes
 # are _structurally_ identical (only the colour _values_ change), the
@@ -264,10 +252,8 @@ modify_vim() {
 	echo "Updating vim syntax theme"
 }
 
-# }}}
-
-# Set theme for MATE Terminal {{{
-# -------------------------------
+# Set theme for MATE Terminal
+# ---------------------------
 #
 # This is my default terminal emulator.  This script leverages `dconf`
 # to make the necessary changes.
@@ -278,10 +264,8 @@ modify_mate_terminal() {
 	fi
 }
 
-# }}}
-
-# Set tmux theme {{{
-# ------------------
+# Set tmux theme
+# --------------
 
 # dependency:
 #	sudo apt install tmux
@@ -301,10 +285,8 @@ modify_tmux() {
 	fi
 }
 
-# }}}
-
-# Set generic shell variables {{{
-# -------------------------------
+# Set generic shell variables
+# ---------------------------
 
 # Change the shell variables theme, used by a number of tools, such as
 # `tmux`, my various `dmenu` implimentations, `bspwm`, `dunst`.  Any
@@ -336,10 +318,8 @@ modify_shell_theme() {
 	fi
 }
 
-# }}}
-
-# Set less manpager colours {{{
-# -----------------------------
+# Set less manpager colours
+# -------------------------
 
 # Change the man pages colour output based on whether the theme is light
 # or dark.  This assumes the $PAGER or $MANPAGER is `less`.
@@ -363,10 +343,8 @@ modify_less_manpages() {
 	fi
 }
 
-# }}}
-
-# Set newsboat theme {{{
-# ----------------------
+# Set newsboat theme
+# ------------------
 
 # dependency:
 #	sudo apt install newsboat
@@ -389,10 +367,8 @@ modify_newsboat() {
 	fi
 }
 
-# }}}
-
-# Set neomutt theme {{{
-# ---------------------
+# Set neomutt theme
+# -----------------
 
 # dependency:
 #   sudo apt install neomutt
@@ -408,10 +384,8 @@ modify_neomutt() {
     fi
 }
 
-# }}}
-
-# Set bspwm colours {{{
-# ---------------------
+# Set bspwm colours
+# -----------------
 
 # dependency:
 #	sudo apt install bspwm
@@ -445,9 +419,7 @@ modify_bspwm() {
 	fi
 }
 
-# }}}
-
-# Reload melonpanel(lemonbar) {{{
+# Reload melonpanel(lemonbar)
 modify_melonpanel() {
 	if pgrep -xo melonpanel > /dev/null; then
 		pkill -xo melonpanel
@@ -456,10 +428,8 @@ modify_melonpanel() {
 	melonpanel && echo "Reloading the system panel (melonpanel)"
 }
 
-# }}}
-
-# Set dunst colours {{{
-# ---------------------
+# Set dunst colours
+# -----------------
 
 # dependency:
 #	sudo apt install dunst
@@ -486,10 +456,8 @@ modify_dunst() {
 	fi
 }
 
-# }}}
-
-# Set GNOME theme {{{
-# -------------------
+# Set GNOME theme
+# ---------------
 
 # update GNOME settings
 # TODO how to change gnome terminal profile, assuming the presence of
@@ -507,10 +475,8 @@ modify_gnome() {
 	fi
 }
 
-# }}}
-
-# Set MATE theme {{{
-# ------------------
+# Set MATE theme
+# --------------
 
 # Optional dependencies:
 # 	sudo apt install materia-gtk-theme papirus-icon-theme
@@ -551,10 +517,8 @@ modify_mate() {
 	fi
 }
 
-# }}}
-
-# Set Xfce theme {{{
-# ------------------
+# Set Xfce theme
+# --------------
 
 # update Xfce settings
 modify_xfce() {
@@ -577,10 +541,8 @@ modify_xfce() {
     fi
 }
 
-# }}}
-
-# Set gsettings without DE {{{
-# ----------------------------
+# Set gsettings without DE
+# ------------------------
 
 # Optional dependencies:
 # 	sudo apt install materia-gtk-theme papirus-icon-theme
@@ -613,10 +575,8 @@ modify_gsettings_without_de() {
 	fi
 }
 
-# }}}
-
-# Set xfsettingsd without Xfce {{{
-# --------------------------------
+# Set xfsettingsd without Xfce
+# ----------------------------
 
 # NOTE this function is not used inside an Xfce session.  Its purpose is
 # two-fold:
@@ -636,10 +596,8 @@ modify_xfconf_without_xfce() {
     fi
 }
 
-# }}}
-
-# Live theme switch for Flatpak apps {{{
-# --------------------------------------
+# Live theme switch for Flatpak apps 
+# -----------------------------------
 
 # IMPORTANT NOTE ABOUT `modify_running_gtk_and_flatpak`
 # -----------------------------------------------------
@@ -674,10 +632,8 @@ modify_running_gtk_and_flatpak() {
 	fi
 }
 
-# }}}
-
-# Catch-all function when running a standalone WM (bspwm) {{{
-# -----------------------------------------------------------
+# Catch-all function when running a standalone WM (bspwm)
+# -------------------------------------------------------
 
 update_environment_theme() {
 	modify_wallpaper
@@ -703,10 +659,8 @@ update_environment_theme() {
 	modify_mate_terminal
 }
 
-# }}}
-
-# Catch-all function when running a fully fledged DE {{{
-# ------------------------------------------------------
+# Catch-all function when running a fully fledged DE
+# --------------------------------------------------
 
 update_environment_theme_de() {
 	case "$DESKTOP_SESSION" in
@@ -743,10 +697,8 @@ update_environment_theme_de() {
 	modify_mate_terminal
 }
 
-# }}}
-
-# Conditions for running this script {{{
-# ======================================
+# Conditions for running this script
+# ==================================
 
 # The project is controlled with git.  Else throw an error and exit.
 if [ "$(command -v git 2> /dev/null)" ]; then
@@ -817,7 +769,3 @@ case "$#" in
 		echo "Aborting"
 		exit 1
 esac
-
-# }}}
-
-# vi:foldmethod=marker

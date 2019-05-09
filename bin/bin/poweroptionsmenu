@@ -13,7 +13,7 @@
 	# You should have received a copy of the GNU General Public License
 	# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Description {{{ ---------------
+# Description
 #
 # A dmenu script to provide an interface for selecting session actions:
 # lock, logout, switch users, reboot, poweroff.
@@ -27,8 +27,6 @@
 # 	apt install suckless-tools libnotify-bin
 #
 # Last full review on 2019-04-11
-#
-# }}}
 
 # pass custom colours to dmenu command
 source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
@@ -84,5 +82,3 @@ case "$choice" in
 		exit 1
 		;;
 esac
-
-# vi:foldmethod=marker
