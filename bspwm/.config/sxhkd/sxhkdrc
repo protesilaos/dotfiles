@@ -62,6 +62,7 @@
 #
 # c == toggle compton (display compositor)
 # d == dmenu to quickly edit dotfiles
+# f == bspwm focus mode
 # s == reload sxhkd
 # p == reload melonpanel (my lemonbar script)
 # t == dmenu to choose Tempus theme
@@ -71,10 +72,11 @@
 #
 # Recall that these depend on my dotfiles:
 # https://gitlab.com/protesilaos/dotfiles.
-super + e ; {c,d,s,p,t,m,k,q}
+super + e ; {c,d,f,s,p,t,m,k,q}
     { \
 	own_script_toggle_compton, \
 	dotsmenu, \
+	bspwm_focus_mode, \
     pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
     pkill -x melonpanel && melonpanel, \
     tempusmenu, \
