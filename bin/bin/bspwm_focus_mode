@@ -60,7 +60,7 @@ if [ "$effective_padding" -ge "$panel_height" ] ; then
 	border_width=4
 
 	# No need to keep the panel
-	pkill -xo melonpanel
+	pkill -xo melonpanel && pkill -x lemonbar
 else
 	# Unset everything
 	unset top_padding
