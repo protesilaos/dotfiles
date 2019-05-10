@@ -59,18 +59,21 @@
 # -----------
 
 # The following commands are:
-# 1. Reload sxhkd.
-# 2. Reload melonpanel (my lemonbar script).
-# 3. Open the "tempusmenu" (my comprehensive theme switcher for
-#    terminals, CLI tools, GTK apps and flatpaks).
-# 4. Send notification with the mpc status.
-# 5. Open a dmenu interface for log out, lock, switch users, reboot,
-#    shutdown (also mapped to Ctrl+Alt+{Home,End,Delete}).
 #
-# Recall that these depend on my dotfiles.  That command is in my own
-# bin directory.  See https://gitlab.com/protesilaos/dotfiles.
-super + e ; {d,s,p,t,m,k,q}
+# c == toggle compton (display compositor)
+# d == dmenu to quickly edit dotfiles
+# s == reload sxhkd
+# p == reload melonpanel (my lemonbar script)
+# t == dmenu to choose Tempus theme
+# m == notification with mpc status
+# k == switch layout (configured to toggle between US QWERTY and Greek)
+# q == dmenu interface to log out, lock, switch users, reboot, shutdown
+#
+# Recall that these depend on my dotfiles:
+# https://gitlab.com/protesilaos/dotfiles.
+super + e ; {c,d,s,p,t,m,k,q}
     { \
+	own_script_toggle_compton, \
 	dotsmenu, \
     pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
     pkill -x melonpanel && melonpanel, \
@@ -81,6 +84,7 @@ super + e ; {d,s,p,t,m,k,q}
     }
 
 # Session management (log out, lock, switch users, reboot, shutdown).
+# Can also be invoked with super + e ; q (as defined above).
 ctrl + alt + {Home,End,Delete}
     poweroptionsmenu
 
