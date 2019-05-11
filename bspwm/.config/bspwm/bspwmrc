@@ -46,10 +46,10 @@ bspc config external_rules_command "$(command -v own_script_bspwm_external_rules
 # DO NOT EDIT: these are modified programmatically by
 # `own_script_update_environment_theme` and/or its frontend
 # `tempusmenu`.
-bspc config normal_border_color "#232323" # unfocused window
+bspc config normal_border_color "#312e30" # unfocused window
 bspc config active_border_color "#b58d88" # focused window, unfocused monitor
 bspc config focused_border_color "#6da280" # focused window, focused monitor
-bspc config presel_feedback_color "#312e30" # feedback for manual node split
+bspc config presel_feedback_color "#2a2829" # feedback for manual node split
 
 # autostart
 # =========
