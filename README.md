@@ -32,7 +32,7 @@ International.
 
 PDFD will only offer guidance about the latest "fixed release" of my
 dotfiles.  These are tagged with the appropriate annotation (formatted
-as <version>.pdfd<?\_label>) and are then synced with a separate code
+as <version>-pdfd<?\_label>) and are then synced with a separate code
 repo, titled "Code for PDFD": https://gitlab.com/protesilaos/cpdfd.
 
 Do not track my dotfiles directly
