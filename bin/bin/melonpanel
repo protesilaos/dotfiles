@@ -64,64 +64,6 @@ fi
 # Tempus themes repo: https://gitlab.com/protesilaos/tempus-themes
 source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
-# Use this as the value for COLOR_DEFAULT_BG if you want transparency
-# for the entire panel.  The first two numbers are the alpha channel.
-# The notation ${VAR:1} strips the expanded value of its initial '#'.
-bgalpha="#b0${background:1}"
-
-# NOTE these colour definitions apply to the BSPWM module and the
-# `lemonbar` itself.  All other modules use the variables defined in
-# the afore-sourced file.
-COLOR_DEFAULT_FG="$foreground"
-COLOR_DEFAULT_BG="$background" # add "$bgalpha" to enable transparency
-COLOR_DEFAULT_FG_ALT="$foregroundalt"
-COLOR_DEFAULT_BG_ALT="$backgroundalt"
-COLOR_DEFAULT_ACCENT="$color6"
-COLOR_DEFAULT_ALERT="$color1"
-
-COLOR_MONITOR_FG="$COLOR_DEFAULT_FG_ALT"
-COLOR_MONITOR_BG="$COLOR_DEFAULT_BG_ALT"
-COLOR_MONITOR_U="$COLOR_DEFAULT_BG_ALT"
-
-COLOR_FOCUSED_MONITOR_FG="$COLOR_DEFAULT_ACCENT"
-COLOR_FOCUSED_MONITOR_BG="$COLOR_DEFAULT_BG"
-COLOR_FOCUSED_MONITOR_U="$COLOR_DEFAULT_ACCENT"
-
-COLOR_FREE_FG="$COLOR_DEFAULT_FG_ALT"
-COLOR_FREE_BG="$COLOR_DEFAULT_BG"
-
-COLOR_ACTIVE_FREE_FG="$COLOR_DEFAULT_FG_ALT"
-COLOR_ACTIVE_FREE_BG="$COLOR_DEFAULT_BG_ALT"
-COLOR_ACTIVE_FREE_U="$COLOR_DEFAULT_BG_ALT"
-
-COLOR_FOCUSED_FREE_FG="$COLOR_DEFAULT_BG"
-COLOR_FOCUSED_FREE_BG="$COLOR_DEFAULT_ACCENT"
-COLOR_FOCUSED_FREE_U="$COLOR_DEFAULT_ACCENT"
-
-COLOR_OCCUPIED_FG="$COLOR_DEFAULT_FG"
-COLOR_OCCUPIED_BG="$COLOR_DEFAULT_BG_ALT"
-COLOR_OCCUPIED_U="$COLOR_DEFAULT_FG"
-
-COLOR_ACTIVE_OCCUPIED_FG="$COLOR_OCCUPIED_FG"
-COLOR_ACTIVE_OCCUPIED_BG="$COLOR_OCCUPIED_BG"
-COLOR_ACTIVE_OCCUPIED_U="$COLOR_OCCUPIED_U"
-
-COLOR_FOCUSED_OCCUPIED_FG="$COLOR_DEFAULT_BG"
-COLOR_FOCUSED_OCCUPIED_BG="$COLOR_DEFAULT_ACCENT"
-COLOR_FOCUSED_OCCUPIED_U="$COLOR_DEFAULT_ACCENT"
-
-COLOR_URGENT_FG="$COLOR_DEFAULT_BG"
-COLOR_URGENT_BG="$COLOR_DEFAULT_ALERT"
-
-COLOR_FOCUSED_URGENT_FG="$COLOR_URGENT_FG"
-COLOR_FOCUSED_URGENT_BG="$COLOR_URGENT_BG"
-
-COLOR_MONOCLE_FG="$COLOR_DEFAULT_FG"
-COLOR_MONOCLE_BG="$COLOR_DEFAULT_BG"
-
-COLOR_FLAGS_FG="$COLOR_DEFAULT_FG"
-COLOR_FLAGS_BG="$COLOR_DEFAULT_BG"
-
 # Panel modules
 # -------------
 #
@@ -328,112 +270,52 @@ melonpanel() {
 					item=$1
 					name=${item#?}
 					case $item in
-						[mM]*)
+						[mMfFoOuULG]*)
 							case $item in
 								m*)
 									# monitor
-									FG=$COLOR_MONITOR_FG
-									BG=$COLOR_MONITOR_BG
-									U=$COLOR_MONITOR_U
 									on_focused_monitor=
+									name=
 									;;
 								M*)
 									# focused monitor
-									FG=$COLOR_FOCUSED_MONITOR_FG
-									BG=$COLOR_FOCUSED_MONITOR_BG
-									U=$COLOR_FOCUSED_MONITOR_U
 									on_focused_monitor=1
+									name=
 									;;
-							esac
-							[ "$num_mon" -lt 2 ] && shift && continue
-							wm="${wm}%{U$U}%{F$FG}%{B$BG} %{+u}${name}%{-u} %{B-}%{F-}%{U-}"
-							;;
-						[fFoOuU]*)
-							case $item in
-								f*)
-									# free desktop
-									FG=$COLOR_FREE_FG
-									BG=$COLOR_FREE_BG
-									U=$COLOR_FREE_BG
-									;;
-								F*)
-									if [ "$on_focused_monitor" ] ; then
-										# focused free desktop
-										FG=$COLOR_FOCUSED_FREE_FG
-										BG=$COLOR_FOCUSED_FREE_BG
-										U=$COLOR_FOCUSED_FREE_U
+								# {Free,Occupied,Urgent} focused
+								[FOU]*)
+									if [ -n "$on_focused_monitor" ]; then
+										name="${name/*/[$name*]}"
+										FG="$foreground"
 									else
-										# active free desktop
-										FG=$COLOR_ACTIVE_FREE_FG
-										BG=$COLOR_ACTIVE_FREE_BG
-										U=$COLOR_ACTIVE_FREE_U
+										name="${name/*/ $name- }"
+										FG="$foregroundalt"
 									fi
+									;;
+								# {free,occupied,urgent} unfocused
+								f*)
+									FG="$foregroundalt"
+									name="${name/*/ $name  }"
 									;;
 								o*)
-									# occupied desktop
-									FG=$COLOR_OCCUPIED_FG
-									BG=$COLOR_OCCUPIED_BG
-									U=$COLOR_OCCUPIED_U
-									;;
-								O*)
-									if [ "$on_focused_monitor" ] ; then
-										# focused occupied desktop
-										FG=$COLOR_FOCUSED_OCCUPIED_FG
-										BG=$COLOR_FOCUSED_OCCUPIED_BG
-										U=$COLOR_FOCUSED_OCCUPIED_U
-									else
-										# active occupied desktop
-										FG=$COLOR_ACTIVE_OCCUPIED_FG
-										BG=$COLOR_ACTIVE_OCCUPIED_BG
-										U=$COLOR_ACTIVE_OCCUPIED_U
-									fi
+									FG="$foregroundalt"
+									name="${name/*/ $name^ }"
 									;;
 								u*)
-									# urgent desktop
-									FG=$COLOR_URGENT_FG
-									BG=$COLOR_URGENT_BG
-									U=$COLOR_URGENT_BG
+									FG="$color1"
+									name="${name/*/ $name\# }"
 									;;
-								U*)
-									if [ "$on_focused_monitor" ] ; then
-										# focused urgent desktop
-										FG=$COLOR_FOCUSED_URGENT_FG
-										BG=$COLOR_FOCUSED_URGENT_BG
-										U=$COLOR_FOCUSED_URGENT_BG
-									else
-										# active urgent desktop
-										FG=$COLOR_URGENT_FG
-										BG=$COLOR_URGENT_BG
-										U=$COLOR_URGENT_BG
-									fi
-									;;
-							esac
-							wm="${wm}%{U$U}%{F$FG}%{B$BG}%{+u} ${name} %{-u}%{B-}%{F-}%{U-}"
-							;;
-						[LG]*)
-							case $item in
-								LT)
-									# layout tiled
-									name='-'
-									FG=$COLOR_DEFAULT_FG
-									BG=$COLOR_DEFAULT_BG
-									;;
-								LM)
-									# layout monocle
-									FG=$COLOR_MONOCLE_FG
-									BG=$COLOR_MONOCLE_BG
-									;;
-								G*?)
-									# node flags
-									FG=$COLOR_FLAGS_FG
-									BG=$COLOR_FLAGS_BG
+								# desktop layout for monocle and node flags
+								LM|G*?)
+									FG="$foreground"
+									name="${name/*/ $name }"
 									;;
 								*)
-									name='-'
+									FG="$foregroundalt"
+									name="${name/*/ · }"
 									;;
 							esac
-							# layout and flags
-							wm="${wm}%{F$FG}%{B$BG} ${name} %{B-}%{F-}"
+							wm="${wm}%{F$FG}${name}%{F-}"
 							;;
 					esac
 					shift
@@ -455,8 +337,11 @@ melonpanel() {
 # Launch the panel with the given parameters
 # ------------------------------------------
 
+# NOTE the syntax for the background value.  If you want transparency,
+# just replace "ff" with a lower value: "00" means no opacity.  This is
+# hexadecimal notation.
 melonpanel < "$melonpanel_fifo" | lemonbar -u 1 -p -g "x${melonpanel_height}" \
--F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" -f "$melonpanel_font" -n "Melonpanel" &
+-F "$foreground" -B "#ff${background:1}" -f "$melonpanel_font" -n "Melonpanel" &
 
 # Hide panel when windows are in full screen mode.  This does not work
 # all the time, especially with lower `sleep` values, requiring a
