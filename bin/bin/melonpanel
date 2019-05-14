@@ -36,10 +36,29 @@
 # General settings
 # ----------------
 
-# Check if any lemonbar is running and kill it
-if pgrep -xo lemonbar > /dev/null; then
-	pkill -xo lemonbar
-fi
+
+# Check for dependencies.  Fail if unmet.
+check_dep() {
+	[ "$(command -v "$1" 2> /dev/null)" ] || { echo "Missing $1 dependency."; exit 1; }
+}
+
+check_dep bspwm
+check_dep lemonbar
+check_dep xdo
+
+# Kill any running lemonbar
+pgrep -xo lemonbar > /dev/null && pkill -xo lemonbar
+
+# Add colours from current Tempus theme.  That file is used in other
+# places as well to offer a convenient way of styling multiple tools in
+# a manner that is centralised and straightforward.  Colour definitions
+# are "color{0-15}", using the standard terminal sequence, plus
+# "foreground{,alt}", "background{,alt,dim}".  For details, see the main
+# Tempus themes repo: https://gitlab.com/protesilaos/tempus-themes
+tempus_theme="$HOME/.local/share/my_colours/active-tempus-theme.sh"
+
+# Source the colour definitions if the file exists.  Else exit.
+[ -e "$tempus_theme" ] && source "$tempus_theme" || { echo "Missing Tempus theme"; exit 1; }
 
 # Melonpanel variables
 melonpanel_height=22
@@ -55,17 +74,6 @@ else
 	# it from here: https://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html
 	melonpanel_font='-misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1'
 fi
-
-# Colours for modules and bspwm indicators
-# ----------------------------------------
-
-# Add colours from current Tempus theme.  That file is used in other
-# places as well to offer a convenient way of styling multiple tools in
-# a manner that is centralised and straightforward.  Colour definitions
-# are "color[0-15]", using the standard terminal sequence, plus
-# "foreground{alt}", "background{alt,dim}".  For details, see the main
-# Tempus themes repo: https://gitlab.com/protesilaos/tempus-themes
-source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # Panel modules
 # -------------
@@ -179,12 +187,10 @@ my_modules() {
 # examples provided by upstream bspwm.
 
 # set path to named pipe used to store process data for these operations
-melonpanel_fifo=/tmp/melonpanel_fifo
+melonpanel_fifo='/tmp/melonpanel.fifo'
 
 # make sure you delete any existing named pipe
-if [ -e "$melonpanel_fifo" ]; then
-	rm "$melonpanel_fifo"
-fi
+[ -e "$melonpanel_fifo" ] && rm "$melonpanel_fifo"
 
 # create a new named pipe
 mkfifo "$melonpanel_fifo"
@@ -198,9 +204,8 @@ bspc subscribe report > "$melonpanel_fifo" &
 # (see modules above).  Here we just add a shorter variable to each
 # module, which helps position it on the panel (the last printf).
 melonpanel() {
-	local num_mon laptop_external_monitor
+	local laptop_external_monitor
 
-	num_mon="$(bspc query -M | wc -l)"
 	laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
 
 	while read -r line ; do
@@ -234,11 +239,13 @@ melonpanel() {
 							case "$item" in
 								m*)
 									# monitor
+									FG="$foregroundalt" # needed to avoid invalid colour error
 									on_focused_monitor=
 									name=
 									;;
 								M*)
 									# focused monitor
+									FG="$foregroundalt" # needed to avoid invalid colour error
 									on_focused_monitor=1
 									name=
 									;;
