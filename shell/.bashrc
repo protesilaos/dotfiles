@@ -284,6 +284,7 @@ fi
 if [ "$(command -v git 2> /dev/null)" ]; then
 	# add, commit
 	alias gadd='git add -v'
+	alias gaddp='git add --patch'
 	alias gaddi='git add --interactive'
 	alias gall='git add -Av'
 	alias gcom='git commit -S' # opens in the predefined editor.  -S to gpg sign
