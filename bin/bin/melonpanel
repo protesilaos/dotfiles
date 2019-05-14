@@ -23,12 +23,15 @@
 # we could accidentally kill the wrong process or whatnot.
 #
 # Debian Buster dependencies for melonpanel:
-#	apt install bspwm lemonbar xdo xfonts-terminus
+#	apt install bspwm lemonbar xdo
 #
-# Debian Buster dependencies for individual modules:
+# Dependencies for individual modules:
 # 	apt install amixer mpd mpc
 #
-# Last full review 2019-04-04
+# Optional:
+# 	apt install xfonts-terminus
+#
+# Last full review 2019-05-13
 
 # General settings
 # ----------------
@@ -115,13 +118,10 @@ battery_status() {
 
 # Check if the volume is muted or not.  Output the appropriate
 # indicators.
-# TODO should this change if another output source is connected?  Test
-# and adapt.
 volume_status() {
 	if [ "$(command -v amixer 2> /dev/null)" ]; then
 		local volume_status volume_level volume_label
 
-		# FIXME the "Front R" range is not robust
 		amixer_get() {
 			amixer get Master | \
 			sed "/^\ *Front R/!d ; s,\(^.*\) \[\(.*%\)\] \[\(.*\)\],\\${1},"
@@ -266,12 +266,12 @@ melonpanel() {
 				wm=
 				IFS=':'
 				set -- ${line#?}
-				while [ $# -gt 0 ] ; do
-					item=$1
-					name=${item#?}
-					case $item in
+				while [ "$#" -gt 0 ] ; do
+					item="$1"
+					name="${item#?}"
+					case "$item" in
 						[mMfFoOuULG]*)
-							case $item in
+							case "$item" in
 								m*)
 									# monitor
 									on_focused_monitor=
