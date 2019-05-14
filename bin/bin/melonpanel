@@ -26,7 +26,7 @@
 #	apt install bspwm lemonbar xdo
 #
 # Dependencies for individual modules:
-# 	apt install amixer mpd mpc
+# 	apt install amixer
 #
 # Optional:
 # 	apt install xfonts-terminus
@@ -145,41 +145,6 @@ volume_status() {
 	fi
 }
 
-# Get the status of the Music Player Daemon.
-mpd_status() {
-	local mpc_status current_song maxlen
-
-	mpc_status="$(mpc status | grep -o '^\[[a-z]*\]')"
-	current_song="$(mpc current -f "[[%artist%: ]%title%]|[%file%]")"
-	maxlen=30
-
-	mpd_playing() {
-		case "$mpc_status" in
-			'[playing]')
-				echo "%{F$color5}>>%{F-}"
-				;;
-			'[paused]')
-				echo "%{F$color5}||%{F-}"
-				;;
-			*)
-				echo ''
-				;;
-		esac
-	}
-
-	# if playing or paused
-	if [ -n "$mpc_status" ]; then
-		# Check if current mpc status has a length that is equal or
-		# higher than "$maxlen".  If so trim the output and append
-		# marker to denote the modification.
-		if [ "${#current_song}" -ge "$maxlen" ]; then
-			echo "$(mpd_playing)" "${current_song:0:$maxlen}" "[..]"
-		else
-			echo "$(mpd_playing)" "$current_song"
-		fi
-	fi
-}
-
 # Modified version of the content of `own_script_current_layout`.  That
 # is a separate file just because I need the functionality decoupled
 # from the panel.  All we do here is print the language of the current
@@ -202,7 +167,6 @@ my_modules() {
 		echo "B" "$(battery_status)"
 		echo "D" "$(date +'%a %-d %b %H:%M')"
 		echo "K" "$(keyboard_layout)"
-		echo "M" "$(mpd_status)"
 		echo "V" "$(volume_status)"
 		sleep 1s
 	done
@@ -252,10 +216,6 @@ melonpanel() {
 			K*)
 				# keyboard layout (en or gr)
 				key="${line#?}"
-				;;
-			M*)
-				# MPD
-				mpd="${line#?}"
 				;;
 			V*)
 				# volume level
@@ -323,7 +283,7 @@ melonpanel() {
 		esac
 
 		panel_layout() {
-			echo "%{l}$wm%{r}$mpd $bat $vol $key $date "
+			echo "%{l}$wm%{r}$bat $vol $key $date "
 		}
 
 		if [ -n "$laptop_external_monitor" ]; then
