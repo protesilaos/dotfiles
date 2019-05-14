@@ -285,25 +285,25 @@ melonpanel() {
 								# {Free,Occupied,Urgent} focused
 								[FOU]*)
 									if [ -n "$on_focused_monitor" ]; then
-										name="${name/*/[$name*]}"
+										name="${name/*/[$name]}"
 										FG="$foreground"
 									else
-										name="${name/*/ $name- }"
+										name="${name/*/ $name-}"
 										FG="$foregroundalt"
 									fi
 									;;
 								# {free,occupied,urgent} unfocused
 								f*)
 									FG="$foregroundalt"
-									name="${name/*/ $name  }"
+									name="${name/*/ $name }"
 									;;
 								o*)
 									FG="$foregroundalt"
-									name="${name/*/ $name^ }"
+									name="${name/*/ $name^}"
 									;;
 								u*)
 									FG="$color1"
-									name="${name/*/ $name\# }"
+									name="${name/*/ $name\#}"
 									;;
 								# desktop layout for monocle and node flags
 								LM|G*?)
@@ -312,7 +312,7 @@ melonpanel() {
 									;;
 								*)
 									FG="$foregroundalt"
-									name="${name/*/ · }"
+									name="${name/*/ * }"
 									;;
 							esac
 							wm="${wm}%{F$FG}${name}%{F-}"
