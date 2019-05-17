@@ -2,7 +2,7 @@ List of common key bindings.  All definitions are stored at:
 
 	~/.config/sxhkd/sxhkdrc
 
-Last review 2019-04-03.
+Last review 2019-05-16.
 
 Explanation of the basics
 =========================
@@ -89,6 +89,8 @@ Print                     |-Get a screenshot of the focused node saved to the ~/
 Super + Print             |-Get a screenshot of the entire viewport saved to the ~/Desktop
 Super + p                 |-Run passmenu to copy a password stored with the UNIX tool "pass"
 Super + x ; w             |-Run a floating image browser, from where you can also set the wallpaper
+Super + e ; c             |-Toggle the display compotisor (do this if you have performance issues)
+Super + e ; f             |-Toggle BSPWM "focus mode", to remove gaps, the padding, the panel
 Super + e ; t             |-Run tempusmenu to select a Tempus theme for a live theme switch
                           |---The Tempus themes: https://gitlab.com/protesilaos/tempus-themes
                           |---Some ports of the Tempus themes are distributed with my dotfiles
