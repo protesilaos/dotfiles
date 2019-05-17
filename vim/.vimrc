@@ -1,4 +1,4 @@
-" 
+"
 " ~/.vimrc
 "
 
@@ -14,12 +14,12 @@
 "
 " This is part of my dotfiles, which deploy a custom desktop session
 " based on BSPWM: https://gitlab.com/protesilaos/dotfiles.
-" 
+"
 " The colour scheme is part of my Tempus Themes (designed for
 " accessibility): https://protesilaos.com/tempus-themes.  Theme files
 " are bundled with my dots (Tempus themes are fully integrated into my
 " dotfiles and are applied almost everywhere).
-" 
+"
 " I run Vim exclusively in the console, but also install a graphical
 " version as a fallback option.  On Debian 'buster':
 "
@@ -67,7 +67,8 @@ filetype plugin on                " load syntax options for different file types
 filetype indent off               " do not load indent options for different file types
 
 " invisible characters to display (with :set list)
-set listchars=tab:›\ ,space:·,nbsp:␣,trail:•,eol:¬,precedes:«,extends:»
+set listchars=tab:›\ ,nbsp:␣,trail:•,precedes:«,extends:»
+""""set listchars=tab:›\ ,space:·,nbsp:␣,trail:•,eol:¬,precedes:«,extends:»
 
 " Helpers
 " -------
@@ -102,7 +103,7 @@ endif
 " Theme settings
 " --------------
 
-syntax enable               " enable syntax highlighting
+syntax enable                 " enable syntax highlighting
 colorscheme tempus_classic    " use one of my Tempus themes
 
 " DO NOT EDIT MANUALLY IF YOU USE MY DOTFILES.  Themes are updated
