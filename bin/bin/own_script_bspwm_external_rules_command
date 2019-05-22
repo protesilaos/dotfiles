@@ -13,15 +13,6 @@
 	# You should have received a copy of the GNU General Public License
 	# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Description
-# -----------
-#
-# This script defines conditions that alter the way `bspwm` treats
-# certain window types.
-#
-# Note that this is a very simplistic approach that may need to be
-# optimised and expanded upon.  For the time being, it "just works".
-
 window_id="$1"
 window_class="$2"
 
@@ -35,7 +26,10 @@ case "$window_class" in
 			echo "state=floating"
 			;;
 		*_NET_WM_WINDOW_TYPE_NOTIFICATION*)
-			echo "layer=above"
+			echo "layer=above" # FIXME does not seem to work…
+			;;
+		*)
+			echo "state=tiled"
 			;;
 		esac
 		;;
