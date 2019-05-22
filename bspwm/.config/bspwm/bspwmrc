@@ -56,7 +56,7 @@ bspc config presel_feedback_color "#2a2829" # feedback for manual node split
 
 # The hotkey daemon that handles all custom key bindings, including the
 # ones that control BSPWM
-sxhkd &
+sxhkd -c "$HOME/.config/sxhkd/"sxhkdrc* &
 
 # Launch my custom Lemonbar implementation
 if [ "$(command -v melonpanel 2> /dev/null)" ]; then

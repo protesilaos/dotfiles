@@ -1,19 +1,19 @@
 #
+# SXHKD module with WM-agnostic keys
+#
 # ~/.config/sxhkd/sxhkdrc
 #
 
 # Description
 # ===========
 #
-# Configuration file for the Simple X Hotkey Daemon.  Meant to work with
-# `bspwm`.  This is part of my dotfiles, which are managed with GNU
-# Stow.  See https://gitlab.com/protesilaos/dotfiles
+# Partial configuration file for the Simple X Hotkey Daemon.  Meant to
+# work with `bspwm`.  This is part of my dotfiles, which are managed
+# with GNU Stow.  See https://gitlab.com/protesilaos/dotfiles
 #
-# Most commands are derived from `man bspc|bspwm` and `man sxhkd`.  Each
-# action is preceded by comments which explain what it does.
-#
-# Last full review on 2018-11-07
-# Last major edit on 2019-04-01
+# Last full review on 2019-05-22
+
+
 
 # Index with key chord chain mnemonics
 # ====================================
@@ -28,13 +28,7 @@
 # Assign (node flags): super + a ; ...
 # Split (split ratios): super + s ; ...
 
-# FIXME key chain chords in the form of `super + n ; ...` have a bug See
-# https://github.com/baskerville/sxhkd/issues/83.  The awkward
-# workaround is to use this syntax instead `super + n; X ; ...`, where X
-# is a variable.
 
-# General key chords that do not invoke BSPC
-# ==========================================
 
 # Keyboard layout
 # ---------------
@@ -234,138 +228,3 @@ XF86AudioMicMute
 super + XF86Audio{Mute,LowerVolume,RaiseVolume}
     amixer set Capture {toggle,5%-,5%+}
 
-# BSPWM operations for window management
-# ======================================
- 
-# Close or kill currently focused node
-super + {_,shift + }q
-	bspc node -{c,k}
-
-# Node layout state and flags
-# ---------------------------
-
-# Toggle monocle layout (maximise focused node).  If you use `-l
-# monocle` you lose the toggle functionality.
-super + m
-	bspc desktop -l next
-
-# Toggle tiled, pseudo_tiled, floating, fullscreen view.  Tiled is what
-# is used by default.  Pseudo-tiled presents the window in its original
-# dimensions inside the split it would normally occupy as a tile (I have
-# never found a practical use for this).  Floating windows have their
-# own dimensions and can be stacked on top of each other.
-#
-# NOTE the presence of the tilde ~.  If current state matches the given
-# state, then the argument is interpreted as the last state.
-super + {t,shift + space,space,f}
- 	bspc node -t ~{tiled,pseudo_tiled,floating,fullscreen}
-
-# Set the node flags.  Locked is a node that cannot be closed with `bspc
-# node --close`.  Sticky stays in the focused desktop.  Private tries to
-# keep its dimensions and tiling position.
-#
-# There also are flags for "hidden" and "marked" but I have yet to find
-# any practical use for them.
-super + a ; {l,s,p}
-    bspc node -g {locked,sticky,private}
-
-# Set the split ratio on demand
-super + s ; {2,3}
-	bspc config split_ratio { \
-	0.50 && notify-send "BSPWM configuration" "Split ratio set to 0.50", \
-	0.66 && notify-send "BSPWM configuration" "Split ratio set to 0.66" \
-	}
-
-# Make node split ratios equal or balanced.
-super + s ; {e,b}
-	bspc node @/ {--equalize,--balance}
-
-# Focus/swap nodes/desktops
-# -------------------------
-
-# Focus the node in the given direction (select window).
-super + {_,shift + }{h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
-
-# Focus {or send focused node} to the given desktop.
-super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '^{1-9,10}'
-
-# Send and follow focused node to given desktop.
-super + ctrl + shift + {1-9}
-    id=$(bspc query -N -n); bspc node -d ^{1-9}; bspc node -f ${id}
-
-# Expand or contract node in the given direction.
-#
-# For floating windows one can use Alt + Right Mouse click to
-# drag/resize in the given direction (this works in other DEs as well,
-# such as MATE and Xfce).  I have not set the script to resize floating
-# windows because: (i) I do not use them and if I do I do not want to
-# change their dimensions, and (ii) to keep the script concise.
-super + ctrl + {h,j,k,l}
-    own_script_bspwm_node_resize {west,south,north,east} 50
-
-# Move a floating window with the arrow keys (else use Alt + Left Mouse
-# Click to drag).  I seldom use floating windows.
-super + shift + {Left,Down,Up,Right}
-	bspc node -v {-20 0,0 20,0 -20,20 0}
-
-# FIXME TODO on focus history (see following three commands)
-#
-# 1.  Can Alt+Tab work like the standard Alt+Tab implementation where
-#     releasing the key on the first occurrence rewrites the focus
-#     history so the next Alt+Tab brings you to the previous window?
-# 2.  Research how to consolidate these in fewer keystrokes on something
-#     that makes more sense.  Too many options that provide overlapping
-#     functions.
-
-# Focus the last node/desktop.  This only cycles through the active and
-# the last active node.  Compare it to the behaviour of the following
-# two commands.
-super + {grave,Tab}
-	bspc {node,desktop} -f last
-
-# Focus on older/newer window in history.  This does not cycle through
-# windows.  It stops once reaching the {old,new}est.
-super + {o,n}
-	bspc wm --record-history off; \
-	bspc node --focus {older,newer}; \
-    bspc wm --record-history on
-
-# Focus next/previous window. This does cycle through windows.
-alt + {_,shift +} Tab
-    bspc node -f {next,prev}
-
-# preselect
-# ---------
-# NOTE there also is an option to insert a "receptacle", but I have
-# found no use for it yet.  Not included herein.
-
-# Preselect the direction or insert again to cancel the preselection.
-# This enters the manual mode.
-super + alt + {h,j,k,l}
-    bspc node --presel-dir '~{west,south,north,east}'
-
-# Preselect the ratio.  The default value is 0.5, defined in `bspwmrc`.
-super + alt + {1-9}
-	bspc node -o 0.{1-9}
-
-# Manipulate the workspace
-# ------------------------
-
-# Rotate all windows [counter-]clockwise by 90 degrees.
-super + {_,shift + }r
-    bspc node @/ --rotate {90,-90}
-
-# Flip desktop: what is on the right/top moves to the left/bottom and
-# vice versa.
-super + alt + {_,shift + }r
-    bspc node @/ --rotate {180,-180}
-
-# Switch between gap presets.
-super + shift + {y,u,i,o}
-    bspc config window_gap {0,5,10,20}
-
-# Dynamic gaps.
-super + shift + bracket{left,right}
-	bspc config -d focused window_gap $((`bspc config -d focused window_gap` {-,+} 5 ))
