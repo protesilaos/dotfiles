@@ -1,0 +1,22 @@
+! Theme: Tempus Dawn
+! Description: Light theme with a soft, slightly desaturated palette (WCAG AA compliant)
+! Author: Protesilaos Stavrou (https://protesilaos.com)
+xterm*background: #f3f4f6
+xterm*foreground: #525470
+xterm*cursorColor: #525470
+xterm*color0: #525470
+xterm*color1: #9b3132
+xterm*color2: #306130
+xterm*color3: #73500a
+xterm*color4: #4c547e
+xterm*color5: #883c64
+xterm*color6: #186060
+xterm*color7: #e6e7ea
+xterm*color8: #705e4d
+xterm*color9: #9b474d
+xterm*color10: #4e6938
+xterm*color11: #8e5319
+xterm*color12: #5c5d8c
+xterm*color13: #a24055
+xterm*color14: #2d6978
+xterm*color15: #f3f4f6

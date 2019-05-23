@@ -1,0 +1,22 @@
+! Theme: Tempus Autumn
+! Description: Dark theme with a palette inspired by earthly colours (WCAG AA compliant)
+! Author: Protesilaos Stavrou (https://protesilaos.com)
+xterm*background: #302420
+xterm*foreground: #a9a2a6
+xterm*cursorColor: #a9a2a6
+xterm*color0: #302420
+xterm*color1: #f16c50
+xterm*color2: #80a100
+xterm*color3: #ac9440
+xterm*color4: #7897c2
+xterm*color5: #dd758e
+xterm*color6: #52a485
+xterm*color7: #a5918a
+xterm*color8: #312e2a
+xterm*color9: #e07a3d
+xterm*color10: #43a770
+xterm*color11: #ba9000
+xterm*color12: #908ed4
+xterm*color13: #c57bc4
+xterm*color14: #2aa4ad
+xterm*color15: #a9a2a6

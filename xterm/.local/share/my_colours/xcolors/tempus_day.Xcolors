@@ -1,0 +1,22 @@
+! Theme: Tempus Day
+! Description: Light theme with warm colours (WCAG AA compliant)
+! Author: Protesilaos Stavrou (https://protesilaos.com)
+xterm*background: #f8f2e5
+xterm*foreground: #464340
+xterm*cursorColor: #464340
+xterm*color0: #464340
+xterm*color1: #c81000
+xterm*color2: #107410
+xterm*color3: #806000
+xterm*color4: #385dc4
+xterm*color5: #b63052
+xterm*color6: #007070
+xterm*color7: #eae9dd
+xterm*color8: #68607d
+xterm*color9: #b94000
+xterm*color10: #4a7240
+xterm*color11: #706a00
+xterm*color12: #0d66c9
+xterm*color13: #8055aa
+xterm*color14: #337087
+xterm*color15: #f8f2e5

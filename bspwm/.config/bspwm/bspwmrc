@@ -58,6 +58,11 @@ bspc config presel_feedback_color "#2a2829" # feedback for manual node split
 # ones that control BSPWM
 sxhkd -c "$HOME/.config/sxhkd/"sxhkdrc* &
 
+# Load my XTerm and relevant configurations.
+if [ -f "$HOME/.Xresources" ]; then
+	xrdb -I "$HOME" -merge "$HOME/.Xresources"
+fi
+
 # Launch my custom Lemonbar implementation
 if [ "$(command -v melonpanel 2> /dev/null)" ]; then
 	# Make sure we have no running instances

@@ -252,10 +252,28 @@ modify_vim() {
 	echo "Updating vim syntax theme"
 }
 
+# Set theme for XTerm
+# -------------------
+#
+# This is my default terminal emulator.
+modify_xterm() {
+	local my_colours my_Xcolors my_resources
+
+	my_colours="$HOME/.local/share/my_colours"
+	my_Xcolors="$my_colours/active-tempus-theme.Xcolors"
+	my_resources="$HOME/.Xresources"
+
+	if [ "$(command -v xterm 2> /dev/null)" ] && [ -f "$my_Xcolors" ] && [ -f "$my_resources" ]; then
+		sed --follow-symlinks -i "s/tempus_[a-z]*/tempus_$tempus_scheme/" "$my_Xcolors"
+		xrdb -I "$HOME" -merge "$my_resources"
+		echo "Updating XTerm colours"
+	fi
+}
+
 # Set theme for MATE Terminal
 # ---------------------------
 #
-# This is my default terminal emulator.  This script leverages `dconf`
+# This is my fallback terminal emulator.  This script leverages `dconf`
 # to make the necessary changes.
 modify_mate_terminal() {
 	if [ "$(command -v mate-terminal 2> /dev/null)" ]; then
@@ -649,6 +667,7 @@ update_environment_theme() {
 	# variables it exposes
 	# call external script to pass new colours to running terminals
 	own_script_update_running_terminals
+	modify_xterm
 	modify_less_manpages
 	modify_newsboat
 	modify_neomutt
@@ -656,7 +675,6 @@ update_environment_theme() {
 	modify_bspwm
 	modify_dunst
 	modify_melonpanel
-	modify_mate_terminal
 }
 
 # Catch-all function when running a fully fledged DE
@@ -671,6 +689,7 @@ update_environment_theme_de() {
 		mate)
 			echo "Your current session is _$DESKTOP_SESSION_"
 			modify_mate
+			modify_mate_terminal
 			;;
 		xfce)
 			echo "Your current session is _$DESKTOP_SESSION_"
@@ -694,7 +713,6 @@ update_environment_theme_de() {
 	modify_tmux
 	modify_dunst
 	modify_melonpanel
-	modify_mate_terminal
 }
 
 # Conditions for running this script

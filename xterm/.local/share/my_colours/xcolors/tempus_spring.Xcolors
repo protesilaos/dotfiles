@@ -1,0 +1,22 @@
+! Theme: Tempus Spring
+! Description: Dark theme with a palette inspired by early spring colours (WCAG AA compliant)
+! Author: Protesilaos Stavrou (https://protesilaos.com)
+xterm*background: #283a37
+xterm*foreground: #b5b8b7
+xterm*cursorColor: #b5b8b7
+xterm*color0: #283a37
+xterm*color1: #ff855a
+xterm*color2: #5cbc4d
+xterm*color3: #a6af1a
+xterm*color4: #39b6ce
+xterm*color5: #e69092
+xterm*color6: #36bd84
+xterm*color7: #96aca7
+xterm*color8: #2a423d
+xterm*color9: #e19900
+xterm*color10: #6dbb0d
+xterm*color11: #c5a443
+xterm*color12: #70ade2
+xterm*color13: #d091db
+xterm*color14: #3cbaa6
+xterm*color15: #b5b8b7
