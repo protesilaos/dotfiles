@@ -3,6 +3,8 @@
 #
 # ~/.config/sxhkd/sxhkdrc
 #
+# Other modules should be available at ~/.config/sxhkd/
+#
 
 # Description
 # ===========
@@ -11,7 +13,7 @@
 # work with `bspwm`.  This is part of my dotfiles, which are managed
 # with GNU Stow.  See https://gitlab.com/protesilaos/dotfiles
 #
-# Last full review on 2019-05-22
+# Last full review on 2019-05-23
 
 
 
@@ -20,7 +22,7 @@
 #
 # Key chord chains are used for less common or ancillary commands, or
 # for when assigning direct keybindings would become unwieldy.  The idea
-# is to scope bindings so as to avoid conflicts.  
+# is to scope bindings so as to avoid conflicts.
 #
 # Environment: super + e ; ...
 # Executables which typically run in the console: super + x ; ...
@@ -35,10 +37,10 @@
 # We can set the keyboard layouts, as well as the toggle directly via
 # `setxkbmap`.  Example of what I used to run:
 #
-#   setxkbmap -layout 'us,gr' -option 'grp:alt_caps_toggle'
+#	setxkbmap -layout 'us,gr' -option 'grp:alt_caps_toggle'
 #
 # However, doing so means losing out on the possibility to easily find
-# out the current/active layout from a script: X knows about us,gr in
+# out the current/active layout from a script: X knows about "us,gr" in
 # that order, not which one is currently typing.  As such, in `bspwmrc`
 # I simply autostart `setxkbmap -layout 'us'` without defining the
 # second layout and a toggle.  The toggle is set below.  With the
@@ -47,7 +49,7 @@
 # keyboard layout and print its name to my system panel (custom lemonbar
 # called "melonpanel").
 {alt + Caps_Lock,super + Escape}
-    own_script_current_keyboard_layout
+	own_script_current_keyboard_layout
 
 # Environment
 # -----------
@@ -60,50 +62,48 @@
 # s == reload sxhkd
 # p == reload melonpanel (my lemonbar script)
 # t == dmenu to choose Tempus theme
-# m == notification with mpc status
+# m == notification with mpc status (shows album art, title, etc.)
 # k == switch layout (configured to toggle between US QWERTY and Greek)
 # q == dmenu interface to log out, lock, switch users, reboot, shutdown
 #
 # Recall that these depend on my dotfiles:
 # https://gitlab.com/protesilaos/dotfiles.
 super + e ; {c,d,f,s,p,t,m,k,q}
-    { \
+	{ \
 	own_script_toggle_compton, \
 	dotsmenu, \
 	bspwm_focus_mode, \
-    pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
-    pkill -x melonpanel && melonpanel, \
-    tempusmenu, \
-    own_script_notify_send_mpc_status, \
+	pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
+	pkill -x melonpanel && melonpanel, \
+	tempusmenu, \
+	own_script_notify_send_mpc_status, \
 	own_script_notify_send_keyboard_layout, \
-    poweroptionsmenu \
-    }
+	poweroptionsmenu \
+	}
 
 # Session management (log out, lock, switch users, reboot, shutdown).
 # Can also be invoked with super + e ; q (as defined above).
 ctrl + alt + {Home,End,Delete}
-    poweroptionsmenu
+	poweroptionsmenu
 
 # Main programs
 # -------------
 
-# Terminal emulator with and without tmux.  I normally use `tmux` which
+# Terminal emulator with and without TMUX.  I normally use `tmux` which
 # is ideal for working on multiple terminals, switching sessions, and
-# the like.  You should really give this a fair try.  I think it fits
-# perfectly into a console-based workflow and complements the features
-# of a tiling WM.
-#
-# NOTE `@` means until key is released, though I cannot confirm it works
-# properly.  It is kept here for reference and future review.
-super + {_, shift + } @Return
-    {mate-terminal --disable-factory -x tmux new-session -A -s 'Default', mate-terminal --disable-factory}
+# the like.  I think it fits perfectly into a console-based workflow and
+# complements the features of a tiling WM.  No need to spawn tens of
+# terminals, like a barbarian!  Watch my screen cast on the matter:
+# https://protesilaos.com/codelog/2019-01-13-tmux-demo-bspwm/
+super + {_, shift + } Return
+	{mate-terminal --disable-factory -x tmux new-session -A -s 'Default', mate-terminal --disable-factory}
 
 # GUI programs.  Where these are alternatives to common CLI tools they
 # are mapped to the same number as their counterparts, but prepended
 # with a `g` (mnemonic for GUI).
 super + g ; {1,2,3}
 	{ \
-    notify-send -i firefox "Run GUI program" "Launching Web Browser" && firefox-esr, \
+	notify-send -i firefox "Run GUI program" "Launching Web Browser" && firefox-esr, \
 	notify-send -i system-file-manager "Run GUI program" "Launching File Manager" && caja, \
 	notify-send -i thunderbird "Run GUI program" "Launching Email Client" && thunderbird \
 	}
@@ -115,116 +115,116 @@ super + g ; {1,2,3}
 # Note that, by default, all instances of `mate-terminal` run in
 # a single process.  So killing one (bspc node -k), will bring down all
 # terminals.  Pass option "--disable-factory" to run each terminal as
-# its own process (I only do this for special occasions, as seen
-# elsewhere in this file).
+# its own process.
 super + x ; {3-5}
-    mate-terminal --disable-factory -x {neomutt,newsboat,ncmpcpp}
+	mate-terminal --disable-factory -x {neomutt,newsboat,ncmpcpp}
 
 # I use "my_float_window" as an application name or class for those rare
 # occasions where I prefer a floating window at launch.  The option
 # --disable-factory is necessary to run the terminal in its own process,
 # so as to inherit the class we pass to it.
 #
-# Note that `calc` is found in the Debian repos as `apcalc`.
+# Note that the executable `calc` is contained in the Debian package
+# `apcalc`.
 super + x ; 0
-    mate-terminal --disable-factory --class=my_float_window -x calc
+	mate-terminal --disable-factory --class=my_float_window -x calc
 
 # Bring up the help text for common keybindings
 super + {F1,Home}
-    mate-terminal --disable-factory --class=my_float_window \
+	mate-terminal --disable-factory --class=my_float_window \
 	--geometry='100x30' -x less "$HOME/.config/sxhkd/cheatsheet_sxhkdrc.txt"
 
 # sbgmenu: dmenu interface for browsing images from my "Pictures"
 # directory.  There is an option to just display the selected file, or
 # set it as the new desktop wallpaper.
 #
-# nbp: similar to the above, but uses a graphical approach, by
+# nbm: similar to the above, but uses a graphical approach, by
 # displaying all image thumbnails in a grid layout using `sxiv`.  The
 # user can view each image individually and mark images.  If only one is
 # marked, it is defined as the new wallpaper, else another grid is drawn
 # with just the marked files.
 #
-# dmenu interface for managing my task list.  If I type something that
-# has no match, it is appended in plain text format to my task list
-# file.  If I select an existing item, it is removed from the list.
-# I also have a script that presents the data: see "stm" inside my
-# dotfiles' "bin" directorty
+# Watch this screen cast for `sbgmenu` and `nbm`:
+# https://protesilaos.com/codelog/2019-02-09-unix-ways-wallpapers/
+#
+# stmmenu: dmenu interface for managing my task list.  If I type
+# something that has no match, it is appended in plain text format to my
+# task list file.  If I select an existing item, it is removed from the
+# list.  I also have a script that presents the data: see "stm" inside
+# my dotfiles' "bin" directorty.  Check this video demo:
+# https://protesilaos.com/codelog/2019-02-17-unix-ways-todo/
 #
 # NOTE the keys are mnemonics for Backgrounds, Wallpapers, Tasks.
 super + x; {b,w,t}
 	{sbgmenu,nbm,stmmenu}
 
-# Launchers
-# ---------
-
 # dmenu_run and passmenu using my custom colours.
 super + {d,p}
-    {own_script_run_dmenu_xcolors,own_script_run_passmenu_xcolors}
+	{own_script_run_dmenu_xcolors,own_script_run_passmenu_xcolors}
 
 # dmenu specifically for flatpaks.  While it is possible to include
 # these in the $PATH, or to query by `.desktop` file, I prefer to keep
 # them separate.
 super + shift + d
-    flatpakmenu
+	flatpakmenu
 
 # Tools and utilities
 # -------------------
 
-# PLACEHOLDER for future release of dunst
-
-# # TODO add all `dunst` related keys here.  Currently, it only supports
-# # setting key bindings inside `dunstrc`, but there is ongoing work to
-# allow an # external program to handle them.  Below is an example
-# implementation # in lieu of the actual commands, which assigns the key
-# chords I have # specified in `dunstrc`.
-
-# # super + {_, shift + } v
-    # # VIEW {context menu of} last notification (shows max 3 at a time)
-# # super + {_, shift + } c
-    # # CLOSE {all} notification{s}
+#####PLACEHOLDER for future release of dunst
+#### TODO add all `dunst` related keys here.  Currently, it only supports
+#### setting key bindings inside `dunstrc`, but there is ongoing work to
+#### allow an external program to handle them.  Below is an example
+#### implementation in lieu of the actual commands, which assigns the key
+#### chords I have specified in `dunstrc`.
+###super + {_, shift + } v
+###	VIEW {context menu of} last notification (shows max 3 at a time)
+###super + {_, shift + } c
+###	CLOSE {all} notification{s}
 
 # Screenshots (requires `scrot`).  First one is for the focused window.
 # The other is of the entire X session (including all active monitors).
-# Note that `scrot` only has an interactive mode that I do not use.
+# Note that `scrot` also has an interactive mode that I do not use.
 Print
-    scrot -u -z '%Y-%m-%d_%H:%M:%S_$wx$h$n.png' -e 'mv $f ~/Desktop' && notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Desktop"
+	scrot -u -z '%Y-%m-%d_%H:%M:%S_$wx$h$n.png' -e 'mv $f ~/Desktop' && notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Desktop"
 super + Print
-    scrot -m -z '%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'mv $f ~/Desktop' && notify-send -i gnome-screenshot "Screen view screenshot" "Saved image to Desktop"
+	scrot -m -z '%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'mv $f ~/Desktop' && notify-send -i gnome-screenshot "Screen view screenshot" "Saved image to Desktop"
 
 # Control the laptop's screen brightness (requires `xbacklight`).
 XF86MonBrightness{Down,Up}
-    xbacklight {-dec 15,-inc 15} 
+	xbacklight {-dec 15,-inc 15}
 
 # Screen locker (requires `slock`, which in Debian is provided by the
 # package `suckless-tools`).
 XF86ScreenSaver
-    slock
+	slock
 
 # Media controls
 # --------------
 
-# MPRIS method (default).  Use `mpdris2` (Debian repos) as a bridge
-# between MPD and MPRIS.
+# MPRIS method that manages all supporting clients or programs.  For
+# MPD, you must have `mpdris2` (Debian repos) as a bridge between it and
+# MPRIS.  `playerctl` is the tool that controls all MPRIS-aware
+# applications.  These mappings use dedicated media keys.
 XF86Audio{Play,Prev,Next,Stop}
-    playerctl {play-pause,previous,next,stop}
+	playerctl {play-pause,previous,next,stop}
 
-# mpc method (if function keys are standalone)
+# mpc method that is specific to the Music Player Daemon.  This uses
+# dedicated media keys.
 super + XF86Audio{Mute,LowerVolume,RaiseVolume}
-    mpc {toggle,prev,next,stop}
+	mpc {toggle,prev,next,stop}
 
-# mpc method (using arrow keys)
+# mpc method as above, but using the arrow keys.
 super + {Down,Left,Right,Up}
-    mpc {toggle,prev,next,stop}
+	mpc {toggle,prev,next,stop}
 
-# TODO implement alternatives for volume control for keyboards that do
-# not have bespoke keys.
-# Speaker/output volume
+# Speaker/output volume.  Requires `amixer` and dedicated keys.
 XF86Audio{Mute,LowerVolume,RaiseVolume}
-    amixer set Master {toggle,5%-,5%+}
+	amixer set Master {toggle,5%-,5%+}
 
-# Microphone/input volume.
+# Microphone/input volume.  Same requirements as previous definition.
 XF86AudioMicMute
-    amixer set Capture toggle
+	amixer set Capture toggle
 super + XF86Audio{Mute,LowerVolume,RaiseVolume}
-    amixer set Capture {toggle,5%-,5%+}
+	amixer set Capture {toggle,5%-,5%+}
 

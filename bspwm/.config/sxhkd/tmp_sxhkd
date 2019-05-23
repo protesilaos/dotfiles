@@ -1,0 +1,13 @@
+# Simplest form
+super + Return
+	mate-terminal
+
+super + f
+	firefox-esr
+
+# The above defined in parallel
+super + {Return,f}
+	{mate-terminal,firefox-esr}
+
+# Conditional behaviour
+super + {_, shift + } Return

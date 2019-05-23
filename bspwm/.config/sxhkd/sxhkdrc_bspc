@@ -3,6 +3,8 @@
 #
 # ~/.config/sxhkd/sxhkdrc_bspc
 #
+# Other modules should be available at ~/.config/sxhkd/
+#
 
 # Description
 # ===========
@@ -11,7 +13,7 @@
 # work with `bspwm`.  This is part of my dotfiles, which are managed
 # with GNU Stow.  See https://gitlab.com/protesilaos/dotfiles
 #
-# Last full review on 2019-05-22
+# Last full review on 2019-05-23
 
 
 
@@ -32,7 +34,7 @@ super + {_,shift + }{1-9,0}
 
 # Send and follow focused node to given desktop.
 super + ctrl + shift + {1-9}
-    id=$(bspc query -N -n); bspc node -d ^{1-9}; bspc node -f ${id}
+	id=$(bspc query -N -n); bspc node -d ^{1-9}; bspc node -f ${id}
 
 # Expand or contract node in the given direction.
 #
@@ -42,7 +44,7 @@ super + ctrl + shift + {1-9}
 # windows because: (i) I do not use them and if I do I do not want to
 # change their dimensions, and (ii) to keep the script concise.
 super + ctrl + {h,j,k,l}
-    own_script_bspwm_node_resize {west,south,north,east} 50
+	own_script_bspwm_node_resize {west,south,north,east} 50
 
 # Move a floating window with the arrow keys (else use Alt + Left Mouse
 # Click to drag).  I seldom use floating windows.
@@ -58,7 +60,7 @@ super + {grave,Tab}
 # Focus {next,previous} window in the current desktop. This does cycle
 # through windows.
 alt + {_,shift +} Tab
-    bspc node -f {next,prev}.local
+	bspc node -f {next,prev}.local
 
 # Swap current window with the biggest one in the present desktop.
 # Using it with shift will focus back to the last node.  The keys {b,z}
@@ -74,7 +76,7 @@ super + {_,shift +} {b,z}
 # Preselect the direction or insert again to cancel the preselection.
 # This enters the manual mode.
 super + alt + {h,j,k,l}
-    bspc node --presel-dir '~{west,south,north,east}'
+	bspc node --presel-dir '~{west,south,north,east}'
 
 # Preselect the ratio.  The default value is 0.5, defined in `bspwmrc`.
 super + alt + {1-9}
@@ -106,13 +108,16 @@ super + {t,shift + space,space,f}
 # There also are flags for "hidden" and "marked" but I have yet to find
 # any practical use for them.
 super + a ; {l,s,p}
-    bspc node -g {locked,sticky,private}
+	bspc node -g {locked,sticky,private}
 
-# Set the split ratio on demand
-super + s ; {2,3}
+# Set the split ratio on demand.  Applies to the next window, or when
+# using the next set of commands that equalise the tree or balance the
+# parent node.
+super + s ; {2,3,4}
 	bspc config split_ratio { \
 	0.50 && notify-send "BSPWM configuration" "Split ratio set to 0.50", \
-	0.66 && notify-send "BSPWM configuration" "Split ratio set to 0.66" \
+	0.66 && notify-send "BSPWM configuration" "Split ratio set to 0.66", \
+	0.75 && notify-send "BSPWM configuration" "Split ratio set to 0.75" \
 	}
 
 # Make node split ratios equal or balanced.  The former applies to the
@@ -123,18 +128,18 @@ super + s ; {e,b}
 # Manipulate the workspace
 # ------------------------
 
-# Rotate all windows [counter-]clockwise by 90 degrees.
+# Rotate all windows {counter-}clockwise by 90 degrees.
 super + {_,shift + }r
-    bspc node @/ --rotate {90,-90}
+	bspc node @/ --rotate {90,-90}
 
 # Flip desktop: what is on the right/top moves to the left/bottom and
 # vice versa.
 super + alt + {_,shift + }r
-    bspc node @/ --rotate {180,-180}
+	bspc node @/ --rotate {180,-180}
 
 # Switch between gap presets.
 super + shift + {y,u,i,o}
-    bspc config window_gap {0,5,10,20}
+	bspc config window_gap {0,5,10,20}
 
 # Dynamic gaps.
 super + shift + bracket{left,right}
@@ -159,7 +164,7 @@ super + c : {_,shift + } {h,j,k,l}
 
 # Gaps presets.
 super + c : {y,u,i,o}
-    bspc config window_gap {0,5,10,20}
+	bspc config window_gap {0,5,10,20}
 
 # Mode for dynamic gaps.
 super + c : bracket{left,right}
@@ -168,3 +173,4 @@ super + c : bracket{left,right}
 # Move floating windows with the arrow keys
 super + c : {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
+
