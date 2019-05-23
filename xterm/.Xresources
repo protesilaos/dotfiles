@@ -29,7 +29,10 @@ XTerm*utf8: 1
 xterm*dynamicColors: true
 
 ! Visual
-XTerm*cursorBlink: false
+XTerm*cursorBlink: true
+XTerm*cursorUnderLine: false
+XTerm*cursorOnTime: 1000
+XTerm*cursorOffTime: 500
 XTerm*visualbell: true
 XTerm*bellIsUrgent: true
 XTerm*geometry: 80x24
