@@ -255,8 +255,7 @@ modify_vim() {
 # Set theme for XTerm
 # -------------------
 #
-# This is my default terminal emulator.  This script leverages `dconf`
-# to make the necessary changes.
+# This is my default terminal emulator.
 modify_xterm() {
 	local my_colours my_Xcolors my_resources
 

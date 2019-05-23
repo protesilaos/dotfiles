@@ -2,7 +2,7 @@ List of common key bindings.  All definitions are stored at:
 
 	~/.config/sxhkd/sxhkdrc
 
-Last review 2019-05-16.
+Last review 2019-05-23.
 
 Explanation of the basics
 =========================
@@ -34,7 +34,7 @@ Getting started
 ===============
 
 Super + Return            |-Open a terminal running the "Default" tmux session
-Super + Shift + Return    |-Open a generic terminal (mate-terminal)
+Super + Shift + Return    |-Open a generic terminal (xterm)
 Super + q                 |-Close focused node
 Super + Shift + q         |-Kill focused node
 Ctrl + Alt + Delete       |-Launch poweroptionsmenu, where you can choose to log out, reboot, etc.
