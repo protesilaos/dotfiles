@@ -131,7 +131,35 @@ build_shell() {
     invoke_generic_loop shell-variables "$dest_dir" sh
 }
 
+# Function to build all Tempus themes for Vim.  It starts by
+# invoking the generic loop that iterates over each scheme file.  Then
+# we pass to it the following arguments:
+#
+# 1. The 'vim' template name
+# 2. Destination path for $HOME/.vim/colors
+# 3. File type extension for tempus_$i.vim
+build_vim() {
+    local dest_dir="$HOME/.vim/colors"
+    mkdir -p "$dest_dir"
+    invoke_generic_loop vim "$dest_dir" vim
+}
+
+# Function to build all Tempus themes for XTerm.  It starts by
+# invoking the generic loop that iterates over each scheme file.  Then
+# we pass to it the following arguments:
+#
+# 1. The 'xterm' template name
+# 2. Destination path for $HOME/.local/share/my_colours/xcolors
+# 3. File type extension for tempus_$i.Xcolors
+build_xterm() {
+    local dest_dir="$local_col_dir/xcolors"
+    mkdir -p "$dest_dir"
+    invoke_generic_loop xterm "$dest_dir" Xcolors
+}
+
 # return results
 build_gtksourceview3
 build_gtksourceview4
 build_shell
+build_vim
+build_xterm
