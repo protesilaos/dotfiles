@@ -3,7 +3,6 @@
 ! Author: Protesilaos Stavrou (https://protesilaos.com)
 xterm*background: #282b2b
 xterm*foreground: #b6e0ca
-xterm*cursorColor: #b6e0ca
 xterm*color0: #282b2b
 xterm*color1: #c6c80a
 xterm*color2: #7ad67a

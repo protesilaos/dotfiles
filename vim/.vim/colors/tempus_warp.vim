@@ -16,8 +16,8 @@ let g:colors_name = "tempus_warp"
 " NOTE the ctermbg=none is for terminals with transparency
 hi Normal guibg=#001514 guifg=#a29fa0 ctermbg=none ctermfg=15
 hi Visual guibg=#a29fa0 guifg=#001514 ctermbg=15 ctermfg=0
-hi Search gui=underline,bold,italic guibg=#139913 guifg=#001514 cterm=underline,bold ctermbg=2 ctermfg=0
-hi IncSearch gui=underline,bold,italic guibg=#928080 guifg=#001514 term=none cterm=underline,bold ctermbg=7 ctermfg=0
+hi Search gui=underline,bold,reverse cterm=underline,bold,reverse
+hi IncSearch gui=underline,bold,reverse cterm=underline,bold,reverse
 
 hi StatusLine gui=none guibg=#a29fa0 guifg=#001514 cterm=none ctermbg=15 ctermfg=0
 hi StatusLineNC gui=none guibg=#241828 guifg=#928080 cterm=none ctermbg=8 ctermfg=7
