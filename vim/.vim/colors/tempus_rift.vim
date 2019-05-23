@@ -16,8 +16,8 @@ let g:colors_name = "tempus_rift"
 " NOTE the ctermbg=none is for terminals with transparency
 hi Normal guibg=#162c22 guifg=#bbbcbc ctermbg=none ctermfg=15
 hi Visual guibg=#bbbcbc guifg=#162c22 ctermbg=15 ctermfg=0
-hi Search gui=underline,bold,reverse cterm=underline,bold,reverse
-hi IncSearch gui=underline,bold,reverse cterm=underline,bold,reverse
+hi Search gui=underline,bold guibg=#283431 guifg=#bbbcbc cterm=underline,bold ctermbg=8 ctermfg=3
+hi IncSearch gui=underline,bold guibg=#ab9aa9 guifg=#162c22 term=none cterm=underline,bold ctermbg=7 ctermfg=0
 
 hi StatusLine gui=none guibg=#bbbcbc guifg=#162c22 cterm=none ctermbg=15 ctermfg=0
 hi StatusLineNC gui=none guibg=#283431 guifg=#ab9aa9 cterm=none ctermbg=8 ctermfg=7

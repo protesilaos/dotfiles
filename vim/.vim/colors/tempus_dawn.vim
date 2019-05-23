@@ -16,8 +16,8 @@ let g:colors_name = "tempus_dawn"
 " NOTE the ctermbg=none is for terminals with transparency
 hi Normal guibg=#f3f4f6 guifg=#525470 ctermbg=none ctermfg=0
 hi Visual guibg=#525470 guifg=#f3f4f6 ctermbg=0 ctermfg=15
-hi Search gui=underline,bold,reverse cterm=underline,bold,reverse
-hi IncSearch gui=underline,bold,reverse cterm=underline,bold,reverse
+hi Search gui=underline,bold guibg=#e6e7ea guifg=#525470 cterm=underline,bold ctermbg=7 ctermfg=3
+hi IncSearch gui=underline,bold guibg=#705e4d guifg=#f3f4f6 term=none cterm=underline,bold ctermbg=8 ctermfg=15
 
 hi StatusLine gui=none guibg=#525470 guifg=#f3f4f6 cterm=none ctermbg=0 ctermfg=15
 hi StatusLineNC gui=none guibg=#e6e7ea guifg=#705e4d cterm=none ctermbg=7 ctermfg=8
