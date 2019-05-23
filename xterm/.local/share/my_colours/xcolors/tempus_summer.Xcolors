@@ -1,0 +1,22 @@
+! Theme: Tempus Summer
+! Description: Dark theme with colours inspired by summer evenings by the sea (WCAG AA compliant)
+! Author: Protesilaos Stavrou (https://protesilaos.com)
+xterm*background: #202c3d
+xterm*foreground: #a0abae
+xterm*cursorColor: #a0abae
+xterm*color0: #202c3d
+xterm*color1: #f76f6e
+xterm*color2: #4eac6d
+xterm*color3: #af9a0a
+xterm*color4: #609fda
+xterm*color5: #cc84ad
+xterm*color6: #3dab95
+xterm*color7: #919ab9
+xterm*color8: #352f49
+xterm*color9: #eb7b4d
+xterm*color10: #57ad47
+xterm*color11: #bd951a
+xterm*color12: #8196e8
+xterm*color13: #c97ed7
+xterm*color14: #2aa9b6
+xterm*color15: #a0abae

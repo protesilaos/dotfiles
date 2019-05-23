@@ -96,7 +96,7 @@ ctrl + alt + {Home,End,Delete}
 # terminals, like a barbarian!  Watch my screen cast on the matter:
 # https://protesilaos.com/codelog/2019-01-13-tmux-demo-bspwm/
 super + {_, shift + } Return
-	{mate-terminal --disable-factory -x tmux new-session -A -s 'Default', mate-terminal --disable-factory}
+	{xterm -e tmux new-session -A -s 'Default', xterm}
 
 # GUI programs.  Where these are alternatives to common CLI tools they
 # are mapped to the same number as their counterparts, but prepended
@@ -117,7 +117,7 @@ super + g ; {1,2,3}
 # terminals.  Pass option "--disable-factory" to run each terminal as
 # its own process.
 super + x ; {3-5}
-	mate-terminal --disable-factory -x {neomutt,newsboat,ncmpcpp}
+	xterm -e {neomutt,newsboat,ncmpcpp}
 
 # I use "my_float_window" as an application name or class for those rare
 # occasions where I prefer a floating window at launch.  The option
@@ -127,12 +127,12 @@ super + x ; {3-5}
 # Note that the executable `calc` is contained in the Debian package
 # `apcalc`.
 super + x ; 0
-	mate-terminal --disable-factory --class=my_float_window -x calc
+	xterm -class "my_float_window" -e calc
 
 # Bring up the help text for common keybindings
 super + {F1,Home}
-	mate-terminal --disable-factory --class=my_float_window \
-	--geometry='100x30' -x less "$HOME/.config/sxhkd/cheatsheet_sxhkdrc.txt"
+	xterm -class "my_float_window" \
+	-geometry '100x30' -e less "$HOME/.config/sxhkd/cheatsheet_sxhkdrc.txt"
 
 # sbgmenu: dmenu interface for browsing images from my "Pictures"
 # directory.  There is an option to just display the selected file, or
