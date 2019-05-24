@@ -65,10 +65,11 @@
 # m == notification with mpc status (shows album art, title, etc.)
 # k == switch layout (configured to toggle between US QWERTY and Greek)
 # q == dmenu interface to log out, lock, switch users, reboot, shutdown
+# x == reload the Xresources file
 #
 # Recall that these depend on my dotfiles:
 # https://gitlab.com/protesilaos/dotfiles.
-super + e ; {c,d,f,s,p,t,m,k,q}
+super + e ; {c,d,f,s,p,t,m,k,q,x}
 	{ \
 	own_script_toggle_compton, \
 	dotsmenu, \
@@ -78,7 +79,8 @@ super + e ; {c,d,f,s,p,t,m,k,q}
 	tempusmenu, \
 	own_script_notify_send_mpc_status, \
 	own_script_notify_send_keyboard_layout, \
-	poweroptionsmenu \
+	poweroptionsmenu, \
+	xrdb -I "$HOME" -merge "$HOME"/.Xresources \
 	}
 
 # Session management (log out, lock, switch users, reboot, shutdown).
