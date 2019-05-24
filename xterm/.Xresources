@@ -28,27 +28,33 @@ XTerm*termName: xterm-256color
 XTerm*utf8: 1
 xterm*dynamicColors: true
 
-! Visual
-XTerm*cursorBlink: true
-XTerm*cursorUnderLine: false
-XTerm*cursorOnTime: 1000
-XTerm*cursorOffTime: 500
-XTerm*visualbell: true
-XTerm*bellIsUrgent: true
-XTerm*geometry: 80x24
-XTerm*internalBorder: 2
+! UI components
 XTerm*toolBar: false
 XTerm*scrollBar: false
-XTerm*scrollKey: true
-XTerm*multiClickTime: 250 
+XTerm*geometry: 80x24
+XTerm*internalBorder: 0
+
+! Cursor
+XTerm*cursorBlink: true
+XTerm*cursorOffTime: 500
+XTerm*cursorOnTime: 1000
+XTerm*cursorUnderLine: false
+XTerm*pointerShape: XTerm
+
+! Bell
+XTerm*bellIsUrgent: true
+XTerm*bellSupressTime: 3000
+XTerm*marginBell: false
+XTerm*visualBell: false
 
 ! Text highlighting
 XTerm*highlightColor: XtDefaultForeground
 XTerm*highlightColorMode: default
 XTerm*highlightReverse: true
-XTerm*highlightTextColor: XtDefaultBackground
 XTerm*highlightSelection: true
+XTerm*highlightTextColor: XtDefaultBackground
 
+! Font settings
 ! Use fontconfig alias for desired typeface (based on my relevant rules/preferences)
 XTerm*faceName: xft:monospace:size=10
 XTerm*boldFont: xft:monospace:style=bold:size=10
@@ -58,16 +64,19 @@ XTerm*faceSize3: 14
 XTerm*faceSize4: 16
 XTerm*faceSize5: 18
 XTerm*faceSize6: 20
+XTerm*forceBoxChars: true
 
-XTerm*saveLines: 9999
-XTerm*scrollTtyKeypress: true
-XTerm*scrollTtyOutput: false
+! Scroll and output
 XTerm*jumpScroll: true
 XTerm*multiScroll: true
+XTerm*saveLines: 9999
+XTerm*scrollKey: true
+XTerm*scrollTtyKeypress: true
+XTerm*scrollTtyOutput: false
 
 ! Backspace behaviour
-XTerm*metaSendsEscape: true
 XTerm*backarrowKey: false
+XTerm*metaSendsEscape: true
 XTerm*ttyModes: erase ^?
 
 ! Key bindings.  Use C-S-{c,v} to copy/paste as in GNOME terminal.  The
