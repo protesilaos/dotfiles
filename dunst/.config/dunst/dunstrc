@@ -9,7 +9,7 @@
 # that are considered surplus to my requirements.
 
 [global]
-font = "sans 10"
+font = "sans 9"
 frame_width = 2
 frame_color = "#312e30"
 
@@ -46,7 +46,7 @@ markup = full
 #   %p  progress value if set ([  0%] to [100%]) or nothing
 # Markup is allowed
 
-format = "<b>%s</b>\n%b"
+format = "<b>%s</b>: %b"
 
 # Sort messages by urgency.
 sort = yes
@@ -74,7 +74,7 @@ show_age_threshold = 120
 word_wrap = yes
 
 # Ignore newlines '\n' in notifications.
-ignore_newline = no
+ignore_newline = yes
 
 # Merge multiple notifications with the same content
 stack_duplicates = true
@@ -98,11 +98,11 @@ hide_duplicate_count = false
 # NOTE after reading the above, follow this if you want to center on
 # screen:
 # {( monitor width / 2 ) - ( notification width / 2)}
-geometry = "300x4-3+3"
+geometry = "1920x1-1"
 
 # Shrink window if it's smaller than the width.  Will be ignored if
 # width is 0.
-shrink = no
+shrink = yes
 
 # The transparency of the window.  Range: [0; 100].
 # This option will only work if a compositing windowmanager is
@@ -151,10 +151,10 @@ line_height = 0
 separator_height = 2
 
 # Padding between text and separator.
-padding = 8
+padding = 1
 
 # Horizontal padding.
-horizontal_padding = 10
+horizontal_padding = 2
 
 # Define a color for the separator.
 # possible values are:
@@ -181,10 +181,10 @@ icon_position = left
 # Max size for icons that are larger that the default ones.  This is
 # good to show the album cover of songs when mpd is running (with
 # mpDris2).
-max_icon_size = 48
+max_icon_size = 16
 
 # Paths to default icons.
-icon_path = /usr/share/icons/Papirus/32x32/apps:/usr/share/icons/Papirus/32x32/devices:/usr/share/icons/Papirus/32x32/mimetypes:/usr/share/icons/Papirus/32x32/places:/usr/share/icons/Papirus/32x32/status
+icon_path = /usr/share/icons/Papirus/16x16/apps:/usr/share/icons/Papirus/16x16/devices:/usr/share/icons/Papirus/16x16/mimetypes:/usr/share/icons/Papirus/16x16/places:/usr/share/icons/Papirus/16x16/status
 
 # Define the title of the windows spawned by dunst
 title = Dunst
@@ -192,23 +192,23 @@ title = Dunst
 # Define the class of the windows spawned by dunst
 class = Dunst
 
-####[shortcuts]
-##### Shortcuts are specified as [modifier+][modifier+]...key
-##### Available modifiers are "ctrl", "mod1" (the alt-key), "mod2",
-##### "mod3" and "mod4" (windows-key).
-##### Xev might be helpful to find names for keys.
-####
-##### Close notification.
-####close = mod4+c
-####
-##### Close all notifications.
-####close_all = mod4+shift+c
-####
-##### Redisplay last message(s).
-####history = mod4+v
-####
-##### Context menu.
-####context = mod4+shift+v
+[shortcuts]
+# Shortcuts are specified as [modifier+][modifier+]...key
+# Available modifiers are "ctrl", "mod1" (the alt-key), "mod2",
+# "mod3" and "mod4" (windows-key).
+# Xev might be helpful to find names for keys.
+
+# Close notification.
+close = ctrl+grave
+
+## Close all notifications.
+#close_all = mod4+shift+c
+
+# Redisplay last message(s).
+history = ctrl+shift+grave
+
+## Context menu.
+#context = mod4+shift+v
 
 # IMPORTANT: colors have to be defined in quotation marks.
 # Otherwise the "#" and following would be interpreted as a comment.
