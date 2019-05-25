@@ -47,7 +47,8 @@ bind-key ^D pagedown
 # Macros
 # see the Arch Wiki on this:
 # https://wiki.archlinux.org/index.php/Newsboat#Pass_article_URL_to_external_command
-macro o set browser "mpv %u"; open-in-browser ; set browser "/usr/bin/xdg-open %u"
+macro v set browser "xterm -e mpv --ytdl-raw-options='\''format=[[bestvideo=height<=720]]'\'' %u &"; open-in-browser ; set browser "/usr/bin/xdg-open %u"
+macro a set browser "xterm -e mpv --no-video %u &"; open-in-browser ; set browser "/usr/bin/xdg-open %u"
 
 # Colours
 # -------
