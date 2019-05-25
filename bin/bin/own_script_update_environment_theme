@@ -385,23 +385,6 @@ modify_newsboat() {
 	fi
 }
 
-# Set neomutt theme
-# -----------------
-
-# dependency:
-#   sudo apt install neomutt
-modify_neomutt() {
-    if [ "$(command -v neomutt 2> /dev/null)" ]; then
-		if [ "$tempus_variant" == 'light' ]; then
-            sed --follow-symlinks -i "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME/.config/neomutt/neomuttrc"
-        else
-            sed --follow-symlinks -i "s/tempus_theme_[a-z]*/tempus_theme_dark/g" "$HOME/.config/neomutt/neomuttrc"
-        fi
-
-		echo "Updating the neomutt theme"
-    fi
-}
-
 # Set bspwm colours
 # -----------------
 
@@ -670,7 +653,6 @@ update_environment_theme() {
 	modify_xterm
 	modify_less_manpages
 	modify_newsboat
-	modify_neomutt
 	modify_tmux
 	modify_bspwm
 	modify_dunst
@@ -708,7 +690,6 @@ update_environment_theme_de() {
 	own_script_update_running_terminals
 	modify_less_manpages
 	modify_newsboat
-	modify_neomutt
 	tempus_shell_colours # keep this order
 	modify_tmux
 	modify_dunst

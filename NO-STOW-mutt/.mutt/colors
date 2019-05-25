@@ -1,0 +1,30 @@
+# Minimalist theme for Mutt, sourced from ~/.mutt/muttrc
+#
+# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
+#
+# Last reviewed on 2019-05-25
+
+color indicator brightdefault default
+color search cyan default
+color tree default default
+color index default default .*
+color index brightdefault default ~N
+color index brightgreen default (~R|)~F
+color index brightred default ~D
+color index blue default ~X1-99
+color header brightcyan default .*
+color normal default default
+color status default default
+color error brightred default
+color bold default default
+color underline default default
+color quoted green default
+color quoted1 cyan default
+color quoted2 blue default
+color quoted3 yellow default
+color tilde brightdefault default
+color markers brightdefault default
+color attachment yellow default
+color signature magenta default
+color body brightblue default "(https?|s?ftp)://[^ \"\t\r\n]*"
+color body brightblue default "[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}"

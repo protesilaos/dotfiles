@@ -1,0 +1,173 @@
+# Configuration file for Mutt.  Tested on 2019-05-25.  Debian Buster
+# running Mutt 1.10.1 (2018-07-13).
+#
+# This configuration file obfuscates all private information that is
+# necessary in the "Mailboxes" section.  To adapt it to your system YOU
+# NEED TO MAKE MANUAL INTERVENTIONS.  For the meaning of each setting,
+# run `man muttrc`.
+#
+# This file and everything sourced herein is part of my dotfiles.  See
+# https://gitlab.com/protesilaos/dotfiles.
+
+# General settings
+# ----------------
+set sleep_time=0
+set arrow_cursor=yes # no==highlight line with: color indicator [foreground] [background]
+
+# Mailcap
+auto_view text/html
+alternative_order text/plain text/html
+set mailcap_path=~/.mutt/mailcap
+set mailcap_sanitize=yes
+
+# Colours (tested with my Tempus themes in the terminal)
+source ~/.mutt/colors
+
+# Receiving
+set mail_check=600
+unset imap_check_subscribed
+set imap_keepalive=300
+unset imap_passive
+
+# Cache
+set header_cache='~/.mutt/cache/headercache'
+set message_cachedir='~/.mutt/cache/messagecache'
+set certificate_file='~/.mutt/cache/certificates'
+
+# Messages
+set beep_new=yes
+set delete=yes
+set confirmappend=no
+set confirmcreate=yes
+set markers=no
+set pager_index_lines=10
+set mime_forward=yes # send forwarded mails as attachments
+set resolve=no # yes==jump to the next message after succesfully operating on the current one
+
+# Composing
+# ---------
+set editor="vim +':set textwidth=72' +':set colorcolumn=72' +':set formatoptions=twan12'"
+set abort_nosubject=no
+set askcc=no
+set edit_headers=yes
+set signature="~/.mutt/mails/signature"
+
+# Replies
+set fast_reply=yes
+set include=ask-yes
+set reverse_name
+
+# GPG
+#source ~/.mutt/gpg.rc
+set crypt_use_gpgme=yes
+set crypt_autopgp=yes
+set crypt_autosign=no
+set crypt_autoencrypt=no
+set crypt_autosmime=yes
+set crypt_replyencrypt=yes
+set crypt_replysignencrypted=yes
+set pgp_timeout=3600
+
+# Forgotten attachment feature
+set abort_noattach=ask-yes
+
+# Search for the following key words in the body of the email.  Covers
+# English, French, Greek.  Test patterns with grep -E.
+set abort_noattach_regexp="attach(|ed?|ments?|és?|ons)|(ci-|)joint(|es?)|(επι|)σ(υ|ύ)ν(ημμ|α)(((ε|έ)ν(ο|α))|ψη|πτω)"
+
+# Index and status bars
+# ---------------------
+# For the date_format, see `man strftime`.  For the index_format see
+# `man muttrc`.  Notice the number in %C (index_fromat).
+set date_format="%Y-%m-%d %R"
+set index_format="%Z %-20.19F %s %*  %D"
+
+## NOTE uncomment to sort by thread
+#set sort=threads
+#set sort_aux=reverse-last-date-received
+set sort=reverse-date # newest at the top
+set strict_threads="yes"
+set sort_browser=alpha
+
+#All dash characters are Unicode code point U+2500.  See
+#https://en.wikipedia.org/wiki/Box-drawing_character.
+set status_format='───%v: %f───(%P)───%>─\
+[Msgs:%?M?%M/?%m%?n? New:%n?%?o? Del:%d?%?F? \
+Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l??]───'
+
+set pager_format='───%F: %s%*─(%P)'
+
+# Sidebar settings (I seldom use this)
+# ------------------------------------
+set sidebar_visible=no
+set sidebar_format="%B"
+set sidebar_short_path=yes
+set sidebar_delim_chars='/'
+set mail_check_stats=no
+
+# Key bindings
+# ------------
+bind editor <Tab> complete-query
+
+# Unbind some defaults
+bind index <esc>V noop
+bind index <esc>v noop
+bind index \Cn noop
+bind index \Cp noop
+bind attach,browser,index,pager g noop
+
+# Moving around
+bind attach,browser,index gg first-entry
+bind attach,browser,index G last-entry
+bind pager gg top
+bind pager G bottom
+bind pager k previous-line
+bind pager j next-line
+bind attach,browser,pager,index \CF next-page
+bind attach,browser,pager,index \CB previous-page
+bind attach,browser,pager,index \Cu half-up
+bind attach,browser,pager,index \Cd half-down
+
+# Search
+bind index n search-next
+bind index N search-opposite
+
+# Moving messages
+bind index D delete-message
+bind index P purge-message # skip trash, remove permanently
+bind index U undelete-message # also works as unpurge
+bind index,pager F flag-message # "star" message
+bind index,pager S save-message # TODO save where? Is this for archiving?
+bind index,pager R group-reply
+
+# Sidebar
+bind index,pager \Cl sidebar-toggle-visible
+bind index,pager \Cp sidebar-prev
+bind index,pager \Cn sidebar-next
+bind index,pager \Co sidebar-open
+
+# History
+bind editor \Cp history-up
+bind editor \Cn history-down
+
+# Mailboxes
+# ---------
+# The passwords for each account are stored in an encrypted file.  Each
+# password is defined as a custom variable by prepending the `my_`
+# directive.  Such as `set my_variable = "password"`.
+
+# First retrieve passwords from secure file
+source "gpg -dq $HOME/.mutt/mails/passwords.gpg |"
+
+source "~/.mutt/mails/m1"
+folder-hook $folder 'source ~/.mutt/mails/m1'
+source "~/.mutt/mails/m2"
+folder-hook $folder 'source ~/.mutt/mails/m2'
+source "~/.mutt/mails/m3"
+folder-hook $folder 'source ~/.mutt/mails/m3'
+
+# Account switching
+macro index,pager g1 '<sync-mailbox><enter-command>source ~/.mutt/mails/m1<enter><change-folder>!<enter>'
+macro index,pager g2 '<sync-mailbox><enter-command>source ~/.mutt/mails/m2<enter><change-folder>!<enter>'
+macro index,pager g3 '<sync-mailbox><enter-command>source ~/.mutt/mails/m3<enter><change-folder>!<enter>'
+

@@ -133,9 +133,9 @@ dconf_read_write_boolean_global 'use-mnemonics' 'true' 'false'
 # Key bindings
 # NOTE this is very opinionated because I either use the terminal to
 # launch a tmux session, or as a standalone container for CLI tools,
-# such as neomutt.  Either way, I do not want the terminal's key
-# bindings to ever interfere with any of my own.  Furthermore, I NEVER
-# use tabs, multiple profiles, etc.
+# such as mutt.  Either way, I do not want the terminal's key bindings
+# to ever interfere with any of my own.  Furthermore, I NEVER use tabs,
+# multiple profiles, etc.
 ### Redefine
 dconf_read_write_string_keys 'toggle-menubar' '<Ctrl><Shift>m'
 dconf_read_write_string_keys 'zoom-in' '<Ctrl><Shift>Page_Up'
