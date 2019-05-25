@@ -25,7 +25,9 @@ Xft*lcdfilter: lcddefault
 
 ! Basic settings
 XTerm*termName: xterm-256color
+XTerm*locale: true
 XTerm*utf8: 1
+XTerm*utf8Fonts: always
 xterm*dynamicColors: true
 
 ! UI components
@@ -49,22 +51,25 @@ XTerm*visualBell: false
 
 ! Text highlighting
 XTerm*highlightColor: XtDefaultForeground
-XTerm*highlightColorMode: default
+!XTerm*highlightColorMode: true
 XTerm*highlightReverse: true
 XTerm*highlightSelection: true
 XTerm*highlightTextColor: XtDefaultBackground
 
 ! Font settings
-! Use fontconfig alias for desired typeface (based on my relevant rules/preferences)
-XTerm*faceName: xft:monospace:size=10
-XTerm*boldFont: xft:monospace:style=bold:size=10
+! Use fontconfig alias for desired typeface (based on my rules)
+XTerm*faceName: Monospace
+XTerm*faceSize: 10
+XTerm*renderFont: true
 XTerm*faceSize1: 8
 XTerm*faceSize2: 12
 XTerm*faceSize3: 14
 XTerm*faceSize4: 16
 XTerm*faceSize5: 18
 XTerm*faceSize6: 20
-XTerm*forceBoxChars: true
+XTerm*forceBoxChars: false
+XTerm*limitFontsets: 3
+XTerm*scaleHeight: 1.0
 
 ! Scroll and output
 XTerm*jumpScroll: true
@@ -85,8 +90,9 @@ XTerm*selectToClipboard: true
 XTerm*translations: #override \n\
 	Ctrl Shift <KeyPress>C: select-end(SELECT, CLIPBOARD) \n\
 	Ctrl Shift <KeyPress>V: insert-selection(SELECT, CLIPBOARD) \n\
+	Ctrl Shift <KeyPress>Next: smaller-vt-font() \n\
 	Ctrl Shift <KeyPress>Prior: larger-vt-font() \n\
-	Ctrl Shift <KeyPress>Next: smaller-vt-font()
+	Ctrl Shift <KeyPress>Home: set-vt-font(d)
 
 ! DO NOT EDIT THIS.  IT IS CONTROLLED PROGRAMMATICALLY.
 ! Use my active Tempus theme.
