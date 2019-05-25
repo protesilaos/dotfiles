@@ -361,30 +361,6 @@ modify_less_manpages() {
 	fi
 }
 
-# Set newsboat theme
-# ------------------
-
-# dependency:
-#	sudo apt install newsboat
-#
-# Switch `newsboat` theme to light or dark depending on the argument
-# passed to this script.  The theme files for `newsboat` are included
-# with my dotfiles and should be in place if you run `stow newsboat`.
-#
-# To actually read RSS/Atom feeds, you need to manually create
-# `~/.config/newsboat/urls`.  That file should have a URL per line.
-modify_newsboat() {
-	if [ "$(command -v newsboat 2> /dev/null)" ]; then
-		if [ "$tempus_variant" == 'light' ]; then
-			sed --follow-symlinks -i "s/tempus_theme_[a-z]*/tempus_theme_light/g" "$HOME/.config/newsboat/config"
-		else
-			sed --follow-symlinks -i "s/tempus_theme_[a-z]*/tempus_theme_dark/g" "$HOME/.config/newsboat/config"
-		fi
-
-		echo "Updating the newsboat theme"
-	fi
-}
-
 # Set bspwm colours
 # -----------------
 
@@ -652,7 +628,6 @@ update_environment_theme() {
 	own_script_update_running_terminals
 	modify_xterm
 	modify_less_manpages
-	modify_newsboat
 	modify_tmux
 	modify_bspwm
 	modify_dunst
@@ -689,7 +664,6 @@ update_environment_theme_de() {
 	# call external script to pass new colours to running terminals
 	own_script_update_running_terminals
 	modify_less_manpages
-	modify_newsboat
 	tempus_shell_colours # keep this order
 	modify_tmux
 	modify_dunst

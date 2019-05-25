@@ -1,9 +1,0 @@
-color background default default
-color info default default
-color article default default
-color listnormal default default
-color listfocus color6 default reverse
-color listfocus_unread color6 default reverse
-color listnormal_unread default default
-highlight article "^(Feed|Title|Author|Link|Date):.*" color2 default
-highlight article "^Podcast Download URL:.*" color5 default

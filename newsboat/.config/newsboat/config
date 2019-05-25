@@ -53,7 +53,6 @@ macro a set browser "xterm -e mpv --no-video %u &"; open-in-browser ; set browse
 # Colours
 # -------
 
-# Tempus themes
-# By Protesilaos Stavrou
+# Tested with terminals that use my Tempus themes
 # https://gitlab.com/protesilaos/tempus-themes
-include ~/.config/newsboat/themes/tempus_theme_dark.theme
+include ~/.config/newsboat/colors.theme
