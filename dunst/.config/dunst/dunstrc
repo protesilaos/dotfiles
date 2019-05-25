@@ -192,23 +192,23 @@ title = Dunst
 # Define the class of the windows spawned by dunst
 class = Dunst
 
-[shortcuts]
-# Shortcuts are specified as [modifier+][modifier+]...key
-# Available modifiers are "ctrl", "mod1" (the alt-key), "mod2",
-# "mod3" and "mod4" (windows-key).
-# Xev might be helpful to find names for keys.
-
-# Close notification.
-close = mod4+c
-
-# Close all notifications.
-close_all = mod4+shift+c
-
-# Redisplay last message(s).
-history = mod4+v
-
-# Context menu.
-context = mod4+shift+v
+####[shortcuts]
+##### Shortcuts are specified as [modifier+][modifier+]...key
+##### Available modifiers are "ctrl", "mod1" (the alt-key), "mod2",
+##### "mod3" and "mod4" (windows-key).
+##### Xev might be helpful to find names for keys.
+####
+##### Close notification.
+####close = mod4+c
+####
+##### Close all notifications.
+####close_all = mod4+shift+c
+####
+##### Redisplay last message(s).
+####history = mod4+v
+####
+##### Context menu.
+####context = mod4+shift+v
 
 # IMPORTANT: colors have to be defined in quotation marks.
 # Otherwise the "#" and following would be interpreted as a comment.
