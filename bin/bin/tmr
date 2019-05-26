@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# TMR --- TMR Must Recur is a simplistic timer for the terminal.
+# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles.
+#
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or (at
+# your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Debian Buster dependency:
+# 	apt install libnotify-bin
+#
+# Optional dependency to work inside my custom desktop session:
+# 	apt install dunst
+
+# Exit if `notify-send` is not available.
+[ "$(command -v notify-send 2> /dev/null)" ] || { echo "Missing notify-send."; exit 1; }
+
+# Define a help message
+_help_message() {
+	echo "ERROR. Must pass a single argument."
+	echo "Examples of valid syntax to pass: 10s, 5m, 2h"
+}
+
+# Show the help message if arguments are not equal to one.
+[ "$#" -eq 1 ] || { _help_message; exit 1; }
+
+# Capture the argument.  The first variables is meant to print the exact
+# argument.  The latter is transformed into human-readable text.
+arg="$1"
+timer="$1"
+time_clean="${timer%?}"
+
+# Convert the argument into a string (necessary to calculate the
+# difference between the time this script starts and ends.
+case "$timer" in
+	*m)
+		timer="${timer/*/$time_clean minutes ago}"
+		;;
+	*h)
+		timer="${timer/*/$time_clean hours ago}"
+		;;
+	*d)
+		# Also something to be said about the choice of capitalisation…
+		echo "TMR Mustn't be Ridiculous" && exit 1
+		;;
+	*)
+		timer="${timer/*/$time_clean seconds ago}"
+		;;
+esac
+
+# The message to print when the timer is done.  This will echo a message
+# in the terminal and set a desktop notification.
+_notify() {
+	local time_set time_now message
+
+	time_set="$(date --date="$timer" +%T)"
+	time_now="$(date +%T)"
+	message="Time is up!  Your timer ($arg) was set at $time_set.  Now is $time_now."
+
+	echo "$message"
+	notify-send -i clock -u critical "$message"
+
+	# TODO add some noise?
+}
+
+# Set the timer
+sleep "$arg" && _notify
