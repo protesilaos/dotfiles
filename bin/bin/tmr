@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# TMR --- TMR Must Recur is a simplistic timer for the terminal.
-# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles.
+# TMR Must Recur (pronounced "timer") is a simplistic timer for the
+# terminal.  Distributed as part of my dotfiles:
+# https://gitlab.com/protesilaos/dotfiles.
 #
 # Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
 #
@@ -39,24 +40,23 @@ _help_message() {
 # Capture the argument.  The first variables is meant to print the exact
 # argument.  The latter is transformed into human-readable text.
 arg="$1"
-timer="$1"
 time_clean="${timer%?}"
 
 # Convert the argument into a string (necessary to calculate the
 # difference between the time this script starts and ends.
-case "$timer" in
+case "$arg" in
 	*m)
-		timer="${timer/*/$time_clean minutes ago}"
+		timer="$time_clean minutes ago"
 		;;
 	*h)
-		timer="${timer/*/$time_clean hours ago}"
+		timer="$time_clean hours ago"
 		;;
 	*d)
 		# Also something to be said about the choice of capitalisation…
 		echo "TMR Mustn't be Ridiculous" && exit 1
 		;;
 	*)
-		timer="${timer/*/$time_clean seconds ago}"
+		timer="$time_clean seconds ago"
 		;;
 esac
 
@@ -69,10 +69,10 @@ _notify() {
 	time_now="$(date +%T)"
 	message="Time is up!  Your timer ($arg) was set at $time_set.  Now is $time_now."
 
+	# TODO add some noise?
+	# TODO maybe also echo -e "\a"?
 	echo "$message"
 	notify-send -i clock -u critical "$message"
-
-	# TODO add some noise?
 }
 
 # Set the timer
