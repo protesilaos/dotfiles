@@ -6,10 +6,8 @@
 ! ===========
 !
 ! This file is part of my dotfiles and is meant to work with the rest of
-! my custom desktop session.  The font-related settings reflect my
-! fontconfig rules.  Xterm is configured to work like GNOME terminal.
-!
-! My dotfiles: https://gitlab.com/protesilaos/dotfiles
+! my custom desktop session: https://gitlab.com/protesilaos/dotfiles
+
 
 ! Font settings (for programs that do not support fontconfig)
 ! ===========================================================
@@ -24,70 +22,70 @@ Xft*lcdfilter: lcddefault
 ! =====
 
 ! Basic settings
-XTerm*termName: xterm-256color
-XTerm*locale: true
-XTerm*utf8: 1
-XTerm*utf8Fonts: always
+xterm*termName: xterm-256color
+xterm*locale: true
+xterm*utf8: 1
+xterm*utf8Fonts: always
 xterm*dynamicColors: true
 
 ! UI components
-XTerm*toolBar: false
-XTerm*scrollBar: false
-XTerm*geometry: 80x24
-XTerm*internalBorder: 0
+xterm*toolBar: false
+xterm*scrollBar: false
+xterm*geometry: 80x24
+xterm*internalBorder: 0
 
 ! Cursor
-XTerm*cursorBlink: true
-XTerm*cursorOffTime: 500
-XTerm*cursorOnTime: 1000
-XTerm*cursorUnderLine: false
-XTerm*pointerShape: XTerm
+xterm*cursorBlink: true
+xterm*cursorOffTime: 500
+xterm*cursorOnTime: 1000
+xterm*cursorUnderLine: false
+xterm*pointerShape: XTerm
 
 ! Bell
-XTerm*bellIsUrgent: true
-XTerm*bellSupressTime: 3000
-XTerm*marginBell: false
-XTerm*visualBell: false
+xterm*bellIsUrgent: true
+xterm*bellSupressTime: 3000
+xterm*marginBell: false
+xterm*visualBell: false
 
 ! Text highlighting
-XTerm*highlightColor: XtDefaultForeground
-!XTerm*highlightColorMode: true
-XTerm*highlightReverse: true
-XTerm*highlightSelection: true
-XTerm*highlightTextColor: XtDefaultBackground
+xterm*highlightColor: XtDefaultForeground
+xterm*highlightReverse: true
+xterm*highlightSelection: true
+xterm*highlightTextColor: XtDefaultBackground
 
 ! Font settings
-! Use fontconfig alias for desired typeface (based on my rules)
-XTerm*faceName: Monospace
-XTerm*faceSize: 10
-XTerm*renderFont: true
-XTerm*faceSize1: 8
-XTerm*faceSize2: 12
-XTerm*faceSize3: 14
-XTerm*faceSize4: 16
-XTerm*faceSize5: 18
-XTerm*faceSize6: 20
-XTerm*forceBoxChars: false
-XTerm*limitFontsets: 3
-XTerm*scaleHeight: 1.0
+! Read this blog post to understand why I have switched to Fira:
+! https://protesilaos.com/codelog/2019-05-26-xterm-letter-pi-bug/
+xterm*faceName: Fira Code:style=Medium,Monospace
+xterm*faceSize: 10
+xterm*renderFont: true
+xterm*faceSize1: 8
+xterm*faceSize2: 12
+xterm*faceSize3: 14
+xterm*faceSize4: 16
+xterm*faceSize5: 18
+xterm*faceSize6: 20
+xterm*forceBoxChars: false
+xterm*limitFontsets: 3
+xterm*scaleHeight: 1.0
 
 ! Scroll and output
-XTerm*jumpScroll: true
-XTerm*multiScroll: true
-XTerm*saveLines: 9999
-XTerm*scrollKey: true
-XTerm*scrollTtyKeypress: true
-XTerm*scrollTtyOutput: false
+xterm*jumpScroll: true
+xterm*multiScroll: true
+xterm*saveLines: 9999
+xterm*scrollKey: true
+xterm*scrollTtyKeypress: true
+xterm*scrollTtyOutput: false
 
 ! Backspace behaviour
-XTerm*backarrowKey: false
-XTerm*metaSendsEscape: true
-XTerm*ttyModes: erase ^?
+xterm*backarrowKey: false
+xterm*metaSendsEscape: true
+xterm*ttyModes: erase ^?
 
 ! Key bindings.  Use C-S-{c,v} to copy/paste as in GNOME terminal.  The
 ! keys "Prior" and "Next" represent PgUp and PgDown respectively.
-XTerm*selectToClipboard: true
-XTerm*translations: #override \n\
+xterm*selectToClipboard: true
+xterm*translations: #override \n\
 	Ctrl Shift <KeyPress>C: select-end(SELECT, CLIPBOARD) \n\
 	Ctrl Shift <KeyPress>V: insert-selection(SELECT, CLIPBOARD) \n\
 	Ctrl Shift <KeyPress>Next: smaller-vt-font() \n\
