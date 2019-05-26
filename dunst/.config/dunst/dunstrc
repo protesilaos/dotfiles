@@ -9,8 +9,8 @@
 # that are considered surplus to my requirements.
 
 [global]
-font = "sans 9"
-frame_width = 2
+font = "sans 10"
+frame_width = 1
 frame_color = "#312e30"
 
 # Possible values are:
@@ -46,7 +46,7 @@ markup = full
 #   %p  progress value if set ([  0%] to [100%]) or nothing
 # Markup is allowed
 
-format = "<b>%s</b>: %b"
+format = "<b>%s</b>  %b"
 
 # Sort messages by urgency.
 sort = yes
@@ -98,7 +98,7 @@ hide_duplicate_count = false
 # NOTE after reading the above, follow this if you want to center on
 # screen:
 # {( monitor width / 2 ) - ( notification width / 2)}
-geometry = "1920x1-1"
+geometry = "1920x1-0"
 
 # Shrink window if it's smaller than the width.  Will be ignored if
 # width is 0.
