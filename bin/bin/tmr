@@ -22,8 +22,12 @@
 # Debian Buster dependency:
 # 	apt install libnotify-bin
 #
+# Optional dependency to sound the alarm
+# 	apt install mpv
+#
 # Optional dependency to work inside my custom desktop session:
 # 	apt install dunst
+
 
 # Exit if `notify-send` is not available.
 [ "$(command -v notify-send 2> /dev/null)" ] || { echo "Missing notify-send."; exit 1; }
@@ -63,17 +67,22 @@ esac
 # The message to print when the timer is done.  This will echo a message
 # in the terminal and set a desktop notification.
 _notify() {
-	local time_set time_now message
+	local time_set time_now message alarm_sound
 
 	time_set="$(date --date="$timer" +%T)"
 	time_now="$(date +%T)"
 	message="Time is up!  Your timer ($arg) was set at $time_set.  Now is $time_now."
+	alarm_sound="/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
 
-	# TODO add some noise?
-	# TODO maybe also echo -e "\a"?
 	echo "$message"
 	notify-send -i clock -u critical "$message"
+
+	if [ -n "$alarm_sound" ] && [ "$(command -v mpv 2> /dev/null)" ]; then
+		mpv "$alarm_sound"
+	else
+		echo -e "\a"
+	fi
 }
 
-# Set the timer
+# Set the timer and send notification when its done
 sleep "$arg" && _notify
