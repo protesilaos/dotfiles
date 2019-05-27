@@ -40,7 +40,7 @@ _help_message() {
 # Capture the argument.  The first variables is meant to print the exact
 # argument.  The latter is transformed into human-readable text.
 arg="$1"
-time_clean="${timer%?}"
+time_clean="${1%?}"
 
 # Convert the argument into a string (necessary to calculate the
 # difference between the time this script starts and ends.
