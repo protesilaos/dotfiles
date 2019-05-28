@@ -666,7 +666,6 @@ update_environment_theme_de() {
 	modify_less_manpages
 	modify_tmux
 	modify_dunst
-	modify_melonpanel
 }
 
 # Conditions for running this script
