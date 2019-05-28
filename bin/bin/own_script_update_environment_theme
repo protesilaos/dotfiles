@@ -664,7 +664,6 @@ update_environment_theme_de() {
 	# call external script to pass new colours to running terminals
 	own_script_update_running_terminals
 	modify_less_manpages
-	tempus_shell_colours # keep this order
 	modify_tmux
 	modify_dunst
 	modify_melonpanel
