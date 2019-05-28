@@ -38,6 +38,14 @@
 [ "$(command -v calc 2> /dev/null)" ] || { echo "Missing calc dependency"; exit 1; }
 [ "$#" -eq 2 ] || { echo "Must pass two arguments, representing valid HEX colours"; exit 1; }
 
+# This uses Bash-specific syntax
+_valid_hex() {
+	[[ $1 =~ ^[0-9A-Fa-f]*$ ]] || { echo "$1 needs to be a valid HEX colour"; exit 1; }
+}
+
+_valid_hex "$1"
+_valid_hex "$2"
+
 _six_digits() {
 	local arg
 	arg="$1"
