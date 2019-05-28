@@ -468,9 +468,9 @@ modify_mate() {
 			gsettings set org.mate.Marco.general theme 'Materia-light-compact'
 			gsettings set org.mate.interface icon-theme 'Papirus'
 		else
-			gsettings set org.mate.interface gtk-theme 'Menta'
+			gsettings set org.mate.interface gtk-theme 'Adwaita'
 			gsettings set org.mate.Marco.general theme 'Menta'
-			gsettings set org.mate.interface icon-theme 'Menta'
+			gsettings set org.mate.interface icon-theme 'Adwaita'
 		fi
 
 		# TODO make this conditional (same approach as modify_wallpaper)
@@ -483,9 +483,9 @@ modify_mate() {
 			gsettings set org.mate.Marco.general theme 'Materia-dark-compact'
 			gsettings set org.mate.interface icon-theme 'Papirus-Dark'
 		else
-			gsettings set org.mate.interface gtk-theme 'Menta'
+			gsettings set org.mate.interface gtk-theme 'Adwaita-dark'
 			gsettings set org.mate.Marco.general theme 'Menta'
-			gsettings set org.mate.interface icon-theme 'Menta'
+			gsettings set org.mate.interface icon-theme 'Adwaita'
 		fi
 
 		# TODO make this conditional (same approach as modify_wallpaper)
@@ -536,8 +536,8 @@ modify_gsettings_without_de() {
 			gsettings set org.mate.interface gtk-theme 'Materia-light-compact'
 			gsettings set org.mate.interface icon-theme 'Papirus'
 		else
-			gsettings set org.mate.interface gtk-theme 'Menta'
-			gsettings set org.mate.interface icon-theme 'Menta'
+			gsettings set org.mate.interface gtk-theme 'Adwaita'
+			gsettings set org.mate.interface icon-theme 'Adwaita'
 		fi
 	else
 
@@ -545,8 +545,8 @@ modify_gsettings_without_de() {
 			gsettings set org.mate.interface gtk-theme 'Materia-dark-compact'
 			gsettings set org.mate.interface icon-theme 'Papirus-Dark'
 		else
-			gsettings set org.mate.interface gtk-theme 'Menta'
-			gsettings set org.mate.interface icon-theme 'Menta'
+			gsettings set org.mate.interface gtk-theme 'Adwaita-dark'
+			gsettings set org.mate.interface icon-theme 'Adwaita'
 		fi
 
 	fi
