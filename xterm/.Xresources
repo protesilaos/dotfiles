@@ -94,4 +94,5 @@ xterm*translations: #override \n\
 
 ! DO NOT EDIT THIS.  IT IS CONTROLLED PROGRAMMATICALLY.
 ! Use my active Tempus theme.
+xterm*boldColors: false
 #include ".local/share/my_colours/active-tempus-theme.Xcolors"
