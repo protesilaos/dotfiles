@@ -39,7 +39,7 @@ fi
 
 # The square brackets are meant to display their content only if the
 # included metatag is available.  This is documented in `man mpc`.
-mpc_format="$(mpc --format '%artist% - %title%\n%album%[ (%date%)]' current)"
+mpc_format="$(mpc --format '%artist% - %title% == %album%[ (%date%)]' current)"
 
 # This script accepts "cli" as a single argument, in which case it
 # prints the notification to the terminal (stdout).  Otherwise it sends
