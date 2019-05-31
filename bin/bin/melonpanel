@@ -61,18 +61,22 @@ tempus_theme="$HOME/.local/share/my_colours/active-tempus-theme.sh"
 [ -e "$tempus_theme" ] && source "$tempus_theme" || { echo "Missing Tempus theme"; exit 1; }
 
 # Melonpanel variables
-melonpanel_height=22
-# NOTE smaller font sizes are poor fits for light themes: a halo effect
-# is created around glyphs, while colours are harder to tell apart.
+melonpanel_height=22 # DO NOT EDIT the name of this parameter (checked by other scripts).
+
+# NOTE `lemonbar` only prints bitmap fonts.
+# NOTE the choice of fonts below is governed by the number prior to the
+# ISO definition.  That controls the overall width of the letters,
+# making these choices metrically compatible on a line.
 if [ -n "$(fc-list terminus)" ]; then
 	# NOTE the descriptions for the Terminus typeface are copied from
 	# /etc/X11/fonts/misc/xfonts-terminus.alias
-	# A wildcard `*` can replace each part of the definition.
-	melonpanel_font='-xos4-terminus-medium-r-normal--16-160-72-72-c-80-iso10646-1'
+	fontmain='-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso10646-1'
+	fontbold='-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso10646-1'
 else
 	# Could not find this exact definition in the Debian configs.  Got
 	# it from here: https://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html
-	melonpanel_font='-misc-fixed-medium-r-normal--18-120-100-100-c-90-iso10646-1'
+	fontmain='-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso10646-1'
+	fontbold='-misc-fixed-bold-r-normal--13-120-75-75-c-80-iso10646-1'
 fi
 
 # Panel modules
@@ -252,7 +256,7 @@ melonpanel() {
 								# {Free,Occupied,Urgent} focused
 								[FOU]*)
 									if [ -n "$on_focused_monitor" ]; then
-										name="${name/*/[$name]}"
+										name="%{T2}${name/*/[$name]}%{T-}" # the %{Tx} specifies the bold font
 										FG="$foreground"
 									else
 										name="${name/*/ $name-}"
@@ -306,9 +310,9 @@ melonpanel() {
 
 # NOTE the syntax for the background value.  If you want transparency,
 # just replace "ff" with a lower value: "00" means no opacity.  This is
-# hexadecimal notation.
+# hexadecimal notation: 0-9, a-f, A-F.
 melonpanel < "$melonpanel_fifo" | lemonbar -u 1 -p -g "x${melonpanel_height}" \
--F "$foreground" -B "#ff${background:1}" -f "$melonpanel_font" -n "Melonpanel" &
+-F "$foreground" -B "#ff${background:1}" -f "$fontmain" -f "$fontbold" -n "Melonpanel" &
 
 # Hide panel when windows are in full screen mode.  This does not work
 # all the time, especially with lower `sleep` values, requiring a
