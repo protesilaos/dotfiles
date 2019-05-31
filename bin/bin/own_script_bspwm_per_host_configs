@@ -58,6 +58,10 @@ bspwm_laptop_dual_monitor() {
 	bspc monitor VGA1 -d 1 2 3
 	bspc monitor LVDS1 -d 4 5 6
 
+	# make sure borders are always on, otherwise it is impossible to
+	# find the focused window on two monitors with monocles…
+	bspc config borderless_monocle false
+
 	# Add padding equal to panel height to fix issue where there is an
 	# overlap between panel and windows in LVDS1.  The panel gets
 	# covered by the windows.

@@ -79,8 +79,8 @@ if [ -n "$border_width" ]; then
 		bspc config "${side}"_padding "$border_width"
 	done
 else
-	bspc config window_gap "${window_gap:=6}"
-	bspc config border_width "${border_width:=3}"
+	bspc config window_gap "${window_gap:=4}"
+	bspc config border_width "${border_width:=2}"
 	bspc config top_padding "${top_padding:=$panel_height}"
 	for side in right bottom left; do
 		bspc config "${side}"_padding "0"
