@@ -54,18 +54,18 @@ xterm*highlightSelection: true
 xterm*highlightTextColor: XtDefaultBackground
 
 ! Font settings
-! Read this blog post to understand why I have switched to Fira:
+! The font settings address the issue discussed in this blog post:
 ! https://protesilaos.com/codelog/2019-05-26-xterm-letter-pi-bug/
-xterm*faceName: Fira Code:style=Medium,Monospace
-xterm*faceSize: 10
+xterm*faceName: Hack,DejaVu Sans Mono,Monospace
+xterm*faceSize: 9.5
 xterm*renderFont: true
 xterm*boldColors: false
 xterm*faceSize1: 8
 xterm*faceSize2: 12
-xterm*faceSize3: 14
-xterm*faceSize4: 18
-xterm*faceSize5: 20
-xterm*faceSize6: 24
+xterm*faceSize3: 15
+xterm*faceSize4: 18.25
+xterm*faceSize5: 20.5
+xterm*faceSize6: 25.5
 xterm*forceBoxChars: false
 xterm*limitFontsets: 3
 xterm*scaleHeight: 1.0
