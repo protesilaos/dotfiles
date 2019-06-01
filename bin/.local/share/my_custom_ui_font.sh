@@ -27,10 +27,7 @@
 # weight can only be one that is supported by the designated font.
 if [ -n "$(fc-list 'dejavu sans condensed')" ]; then
 	my_font_family='DejaVu Sans Condensed'
-else
-	my_font_family=sans
+	my_font_size=12.5
 fi
 
-my_font_size=12.5
-my_font_weight=regular
-my_custom_ui_font="$my_font_family-$my_font_size:$my_font_weight"
+my_custom_ui_font="${my_font_family:-sans}-${my_font_size-12}:${my_font_weight:-regular}"
