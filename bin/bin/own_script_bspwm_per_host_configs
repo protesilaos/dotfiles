@@ -67,7 +67,7 @@ bspwm_laptop_dual_monitor() {
 	# covered by the windows.
 	if pgrep -x melonpanel > /dev/null; then
 		local panel_height
-		panel_height="$(sed '/^melonpanel_height=/!d ; s,\([a-z_]*\)=\([0-9]*\),\2,g' $(command -v melonpanel 2> /dev/null))"
+		panel_height="$(sed '/^melonpanel_height=/!d ; s,.*\([0-9]\{2\}\).*,\1,' $(command -v melonpanel 2> /dev/null))"
 		bspc config top_padding "$panel_height"
 	fi
 }

@@ -26,7 +26,7 @@
 # This assumes that we are already running the lemonbar script.
 [ -z "$(pgrep -x melonpanel > /dev/null)" ] || { echo "No running melonpanel"; exit 1; }
 
-panel_height="$(sed '/^melonpanel_height=/!d ; s,\([a-z_]*\)=\([0-9]*\),\2,g' "$(command -v melonpanel 2> /dev/null)")"
+panel_height="$(sed '/^melonpanel_height=/!d ; s,.*\([0-9]\{2\}\).*,\1,' "$(command -v melonpanel 2> /dev/null)")"
 
 # The top padding this is not defined in bspwmrc but in another script
 # that sets the value on a per-host-computer basis.  We just get the
