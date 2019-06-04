@@ -82,7 +82,7 @@ laptop_brightness() {
 	# reproduction of colours, especially when working with light
 	# themes.
 	if [ "$laptop_host" == "$(hostname)" ]; then
-		xrandr --output LVDS1 --brightness 1.025 --gamma 0.76:0.75:0.68
+		xrandr --output LVDS1 --brightness 1.0 --gamma 0.76:0.75:0.68
 	fi
 }
 
