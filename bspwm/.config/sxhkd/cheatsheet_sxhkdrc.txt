@@ -1,8 +1,12 @@
 List of common key bindings.  All definitions are stored at:
 
 	~/.config/sxhkd/sxhkdrc
+	~/.config/sxhkd/sxhkdrc_bspc
 
-Last review 2019-05-25.
+The latter is for definitions that control the window manager.  While
+the former has WM-independent keys.
+
+Last review 2019-06-04.
 
 Explanation of the basics
 =========================
@@ -58,13 +62,16 @@ Window and desktop actions
 Super + Space             |-Toggle between tiled and floating states
 Super + m                 |-Toggle between tiled and monocle layout (monocle == maximised nodes)
 Super + f                 |-Toggle focused node's full screen view
+Alt + Tab                 |-Cycle through windows on the current desktop
+Alt + Shift + Tab         |-Cycle backwardly through windows on the current desktop
 
 Desktop operations
 ==================
 
 Super + {1-6}             |-Switch to the designated desktop (workspace)
 Super + shift + {1-6}     |-Send focused node to the given desktop
-Super + Tab               |-Switch to last active desktop
+Super + Tab               |-Cycle through desktops on the current monitor
+Super + Shift + Tab       |-Cycle backwardly through desktops on the current monitor
 Super + r                 |-Rotate the node tree 90 degrees clockwise
 Super + Shift + r         |-Rotate the node tree 90 degrees counter-clockwise
 Super + Alt + r           |-Mirror/flip the node tree (top left becomes bottom right)
@@ -98,6 +105,6 @@ Super + e ; t             |-Run tempusmenu to select a Tempus theme for a live t
 Further reading
 ===============
 
-Study the ~/.config/sxhkd/sxhkdrc.  It is extensively documented.  You
-will find key chords for tasks not included herein, such as multimedia
-keys, setting node flags, cycling through the node history, and more.
+Study the ~/.config/sxhkd/sxhkdrc and ~/.config/sxhkd/sxhkdrc_bspc.
+They are extensively documented.  You will find key chords for tasks not
+included herein, such as multimedia keys, setting node flags, and more.

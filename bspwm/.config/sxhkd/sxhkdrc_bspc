@@ -13,11 +13,11 @@
 # work with `bspwm`.  This is part of my dotfiles, which are managed
 # with GNU Stow.  See https://gitlab.com/protesilaos/dotfiles
 #
-# Last full review on 2019-05-23
+# Last full review on 2019-06-04
 
 
 
-# Close or kill currently focused node
+# Close {or kill} currently focused node
 super + {_,shift + }q
 	bspc node -{c,k}
 
@@ -36,6 +36,13 @@ super + {_,shift + }{1-9,0}
 super + ctrl + shift + {1-9}
 	id=$(bspc query -N -n); bspc node -d ^{1-9}; bspc node -f ${id}
 
+# With `alt` focus {next,previous} window in the current desktop.  With
+# `super` focus {next,previous} desktop in the current monitor.
+# Cyclical behaviour.  Move in the opposite direction while also holding
+# down `shift`.
+{super,alt} + {_,shift +} Tab
+	bspc {desktop,node} -f {next,prev}.local
+
 # Expand or contract node in the given direction.
 #
 # For floating windows one can use Alt + Right Mouse click to
@@ -51,36 +58,25 @@ super + ctrl + {h,j,k,l}
 super + shift + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
 
-# Focus the last node/desktop.  This only cycles through the active and
-# the last active node.  Compare it to the behaviour of the following
-# two commands.
-super + {grave,Tab}
-	bspc {node,desktop} -f last
-
-# Focus {next,previous} window in the current desktop. This does cycle
-# through windows.
-alt + {_,shift +} Tab
-	bspc node -f {next,prev}.local
-
-# Swap current window with the biggest one in the present desktop.
-# Using it with shift will focus back to the last node.  The keys {b,z}
-# are chosen as mnemonics for Biggest/Back or Zoom in/out…
-super + {_,shift +} {b,z}
-	bspc node {-s biggest.local,-f last}
-
-# preselect
-# ---------
-# NOTE there also is an option to insert a "receptacle", but I have
-# found no use for it yet.  Not included herein.
+# Swap current window with the biggest one in the present
+# desktop.
+super + shift + b
+	bspc node -s biggest.local
 
 # Preselect the direction or insert again to cancel the preselection.
-# This enters the manual mode.
+# This enters the manual tiling mode.
 super + alt + {h,j,k,l}
 	bspc node --presel-dir '~{west,south,north,east}'
 
 # Preselect the ratio.  The default value is 0.5, defined in `bspwmrc`.
 super + alt + {1-9}
 	bspc node -o 0.{1-9}
+
+# Send the newest marked node to the newest preselected node
+# (see node flags below).  The choice of key binding is meant to mimic
+# that of pasting from the clipboard to the terminal.
+super + shift + v
+	bspc node newest.marked -n newest.!automatic
 
 # Node layout state and flags
 # ---------------------------
@@ -102,13 +98,12 @@ super + {t,shift + space,space,f}
  	bspc node -t ~{tiled,pseudo_tiled,floating,fullscreen}
 
 # Set the node flags.  Locked is a node that cannot be closed with `bspc
-# node --close`.  Sticky stays in the focused desktop.  Private tries to
+# node --close`.  Marked is a specific selector that allows operating on
+# the given item (such as sending the marked item to the newest
+# preselection).  Sticky stays in the focused desktop.  Private tries to
 # keep its dimensions and tiling position.
-#
-# There also are flags for "hidden" and "marked" but I have yet to find
-# any practical use for them.
-super + a ; {l,s,p}
-	bspc node -g {locked,sticky,private}
+super + a ; {l,m,s,p}
+	bspc node -g {locked,marked,sticky,private}
 
 # Set the split ratio on demand.  Applies to the next window, or when
 # using the next set of commands that equalise the tree or balance the
@@ -121,7 +116,8 @@ super + s ; {2,3,4}
 	}
 
 # Make node split ratios equal or balanced.  The former applies to the
-# root of the tree, the latter to the parent node.
+# root of the tree to equalise all split ratios.  The latter applies to
+# the parent node to even out manually-split windows.
 super + s ; {e,b}
 	bspc node {@/ --equalize,@parent --balance}
 
@@ -173,4 +169,3 @@ super + c : bracket{left,right}
 # Move floating windows with the arrow keys
 super + c : {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
-
