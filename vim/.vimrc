@@ -79,27 +79,6 @@ iab meweb https://protesilaos.com/
 iab megit https://gitlab.com/protesilaos
 iab medot https://gitlab.com/protesilaos/dotfiles
 
-" Change cursor shape in different modes.  Adapted from:
-" http://vim.wikia.com/wiki/Change_cursor_shape_in_different_modes
-"
-" Cursor shape follows the DECSCUSR standard:
-"
-" 	default, 0, 1, or none = blinking block
-" 	2 = steady block
-" 	3 = blinking underscore
-" 	4 = steady underscore
-" 	5 = blinking bar (i-beam)
-" 	6 = steady bar
-if exists('$TMUX')
-	let &t_SI = "\ePtmux;\e\e[5 q\e\\"
-	let &t_SR = "\ePtmux;\e\e[3 q\e\\"
-	let &t_EI = "\ePtmux;\e\e[0 q\e\\"
-else
-	let &t_SI = "\e[5 q"
-	let &t_SR = "\e[3 q"
-	let &t_EI = "\e[0 q"
-endif
-
 " Theme settings
 " --------------
 
