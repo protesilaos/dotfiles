@@ -67,14 +67,12 @@ melonpanel_height=22 # DO NOT EDIT the name of this parameter (checked by other 
 # NOTE the choice of fonts below is governed by the number prior to the
 # ISO definition.  That controls the overall width of the letters,
 # making these choices metrically compatible on a line.
+#
+# Find available fonts using `xlsfonts`.
 if [ -n "$(fc-list terminus)" ]; then
-	# NOTE the descriptions for the Terminus typeface are copied from
-	# /etc/X11/fonts/misc/xfonts-terminus.alias
 	fontmain='-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso10646-1'
 	fontbold='-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso10646-1'
 else
-	# Could not find this exact definition in the Debian configs.  Got
-	# it from here: https://www.cl.cam.ac.uk/~mgk25/ucs-fonts.html
 	fontmain='-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso10646-1'
 	fontbold='-misc-fixed-bold-r-normal--13-120-75-75-c-80-iso10646-1'
 fi
