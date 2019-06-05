@@ -287,8 +287,8 @@ if [ "$(command -v git 2> /dev/null)" ]; then
 	alias gaddp='git add --patch'
 	alias gaddi='git add --interactive'
 	alias gall='git add -Av'
-	alias gcom='git commit -S' # opens in the predefined editor.  -S to gpg sign
-	alias gcomm='git commit -S -m' # pass a message directly: gcomm 'My commit'
+	alias gcom='git commit' # opens in the predefined editor.
+	alias gcomm='git commit -m' # pass a message directly: gcomm 'My commit'
 	alias gca='git commit --amend'
 	alias grh='git reset HEAD'
 
@@ -308,8 +308,8 @@ if [ "$(command -v git 2> /dev/null)" ]; then
 	alias gbd='git branch -d'
 	alias gbl='git branch --list'
 	alias gpd='git push origin --delete'
-	alias gmerg='git merge -S --edit --stat'
-	alias gmerge='git merge -S --edit --stat'
+	alias gmerg='git merge --edit --stat'
+	alias gmerge='git merge --edit --stat'
 
 	# tagging
 	alias gtag='git tag --sign' # followed by the tag's name
