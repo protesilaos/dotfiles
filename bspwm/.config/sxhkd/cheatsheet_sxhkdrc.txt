@@ -69,7 +69,7 @@ Desktop operations
 ==================
 
 Super + {1-6}             |-Switch to the designated desktop (workspace)
-Super + shift + {1-6}     |-Send focused node to the given desktop
+Super + Shift + {1-6}     |-Send focused node to the given desktop
 Super + Tab               |-Cycle through desktops on the current monitor
 Super + Shift + Tab       |-Cycle backwardly through desktops on the current monitor
 Super + r                 |-Rotate the node tree 90 degrees clockwise
@@ -84,8 +84,8 @@ Launching programs
 
 Super + d                 |-Run dmenu with access to all binaries in PATH
 Super + Shift + d         |-Run flatpakmenu with access to all flatpak apps
-Super + g ; {1,2,3}       |-Open graphical apps {firefox,caja,thunderbird}
-Super + x ; {3,4,5}       |-Run a terminal with {mutt,newsboat,ncmcpp}
+Super + g ; {1-3}         |-Open graphical apps {firefox,caja,thunderbird}
+Super + x ; {3-5}         |-Run a terminal with {mutt,newsboat,ncmcpp}
 Super + x ; 0             |-Launch a floating terminal running calc
 
 Useful extras
