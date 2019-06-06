@@ -26,16 +26,15 @@
 #	apt install bspwm lemonbar xdo
 #
 # Dependencies for individual modules:
-# 	apt install amixer
+#	apt install amixer
 #
 # Optional:
-# 	apt install xfonts-terminus
+#	apt install xfonts-terminus
 #
 # Last full review 2019-05-13
 
 # General settings
 # ----------------
-
 
 # Check for dependencies.  Fail if unmet.
 check_dep() {
@@ -60,15 +59,31 @@ tempus_theme="$HOME/.local/share/my_colours/active-tempus-theme.sh"
 # Source the colour definitions if the file exists.  Else exit.
 [ -e "$tempus_theme" ] && source "$tempus_theme" || { echo "Missing Tempus theme"; exit 1; }
 
-# Melonpanel variables
 melonpanel_height=22 # DO NOT EDIT the name of this parameter (checked by other scripts).
 
-# NOTE `lemonbar` only prints bitmap fonts.
-# NOTE the choice of fonts below is governed by the number prior to the
-# ISO definition.  That controls the overall width of the letters,
-# making these choices metrically compatible on a line.
-#
+# Fonts (lemonbar only supports bitmap fonts)
+# -------------------------------------------
 # Find available fonts using `xlsfonts`.
+#
+# Meaning of these fields (between dashes):
+# https://wiki.archlinux.org/index.php/X_Logical_Font_Description
+#
+# * foundry
+# * name
+# * weight
+# * slant (r == roman, o == oblique, i == italic)
+# * font width
+# * -- means an empty field (a foundry can have something special here)
+# * pixelsize
+# * pointsize (tenths of a point)
+# * resolution X
+# * resolution Y
+# * spacing (c == cell == typographer, m == mono, p == proportional)
+# * average width
+# * character registry
+# * character encoding
+#
+# 0 or * is a wildcard.  Can be used for scalable fonts.
 if [ -n "$(fc-list terminus)" ]; then
 	fontmain='-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso10646-1'
 	fontbold='-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso10646-1'
