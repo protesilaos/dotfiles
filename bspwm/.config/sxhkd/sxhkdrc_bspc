@@ -32,9 +32,22 @@ super + {_,shift + }{h,j,k,l}
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}'
 
+# For multi-monitor setups: switches the active (visible) desktop of the
+# unfocused monitor, without focusing it (focus stays on the current
+# desktop/monitor).
+super + ctrl + {1-9,0}
+	bspc desktop -a '^{1-9,10}'
+
 # Send and follow focused node to given desktop.
-super + ctrl + shift + {1-9}
-	id=$(bspc query -N -n); bspc node -d ^{1-9}; bspc node -f ${id}
+super + ctrl + shift + {1-9,0}
+	bspc node -d '^{1-9,10}' --follow
+
+# Send all windows from the current desktop to the given one
+# (particularly useful with multiple monitors).  Append `--follow` (as
+# shown in the above key chord) if you want to switch to the given
+# desktop as well.
+super + ctrl + alt + shift + {1-9,0}
+	bspc node any.local -d '^{1-9,10}'
 
 # With `alt` focus {next,previous} window in the current desktop.  With
 # `super` focus {next,previous} desktop in the current monitor.
