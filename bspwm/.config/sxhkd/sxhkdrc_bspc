@@ -85,11 +85,26 @@ super + alt + {h,j,k,l}
 super + alt + {1-9}
 	bspc node -o 0.{1-9}
 
-# Send the newest marked node to the newest preselected node
-# (see node flags below).  The choice of key binding is meant to mimic
-# that of pasting from the clipboard to the terminal.
-super + shift + v
-	bspc node newest.marked -n newest.!automatic
+# Advanced placement (receptacles)
+# --------------------------------
+
+# Insert receptacle (follows tiling scheme or preselection).
+# Receptacles are empty frames that function as placeholders for
+# windows.
+super + n ; r
+	bspc node -i
+
+# Insert the marked window (or focused if no marks) in the first
+# matching receptacle (or preselection if no receptacles).
+#
+# NOTE bspwm_smart_presel is my own script (part of my dotfiles).
+# NOTE key chord for the "marked" flag is in the next section.
+super + n ; i
+	bspwm_smart_presel
+
+# Kill/remove the first matching receptacle from the current desktop.
+super + n ; q
+	bspc node 'any.leaf.!window.local' -k
 
 # Node layout state and flags
 # ---------------------------
