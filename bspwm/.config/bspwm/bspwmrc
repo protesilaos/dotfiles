@@ -56,7 +56,7 @@ bspc config presel_feedback_color "#2a2829" # feedback for manual node split
 
 # The hotkey daemon that handles all custom key bindings, including the
 # ones that control BSPWM
-sxhkd -c "$HOME/.config/sxhkd/"sxhkdrc* &
+sxhkd -c "$HOME"/.config/sxhkd/sxhkdrc{,_bspc} &
 
 # Load my XTerm and relevant configurations.
 if [ -f "$HOME/.Xresources" ]; then
