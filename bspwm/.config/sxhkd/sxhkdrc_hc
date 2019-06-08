@@ -1,0 +1,51 @@
+#
+# SXHKD module with herbstluftwm-specific commands
+#
+# ~/.config/sxhkd/sxhkdrc_hc
+#
+# Other modules should be available at ~/.config/sxhkd/
+#
+
+# Description
+# ===========
+#
+# Partial configuration file for the Simple X Hotkey Daemon.  Meant to
+# work with `herbstluftwm`.  This is part of my dotfiles, which are managed
+# with GNU Stow.  See https://gitlab.com/protesilaos/dotfiles
+
+
+# Basics
+super + b ; {r,Delete}
+	herbstclient {reload,quit}
+
+
+# Move focus {or shift focused window} in the cardinal direction (Vi motions)
+super + {_,shift + }{h,j,k,l}
+	herbstclient {focus -i,shift -e} {l,d,u,r}
+
+super + {_,shift + }q
+	herbstclient {close_or_remove,close_and_remove}
+
+alt + {_,shift +}Tab
+	herbstclient cycle {1,-1}
+
+# Frames
+super + alt + {h,j,k,l}
+	herbstclient split {left,bottom,top,right} 0.5
+# Resize frames
+super + ctrl + {h,j,k,l}
+	herbstclient resize {l,d,u,r} +0.25
+
+
+# Layouts inside a frame
+super + b ; alt + {1-4}
+	herbstclient set_layout {vertical,horizontal,max,grid}
+super + {_,shift + }space
+	herbstclient cycle_layout {_,-}1
+
+## Desktops
+super + {period,comma}
+	herbstclient use_index {+,-}1
+
+super + b ; 1
+	herbstclient use 1

@@ -56,6 +56,12 @@ super + ctrl + alt + shift + {1-9,0}
 {super,alt} + {_,shift +} Tab
 	bspc {desktop,node} -f {next,prev}.local
 
+# Switch to last active {desktop,node}.  With super move to the last
+# active desktop.  With alt move to the last active node. "grave" is
+# positioned above Tab in QWERTY layouts.
+{super,alt} + grave
+	bspc {desktop,node} -f last
+
 # Expand or contract node in the given direction.
 #
 # For floating windows one can use Alt + Right Mouse click to
