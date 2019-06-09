@@ -117,9 +117,7 @@ super + x ; {3-5}
 	xterm -e {mutt,newsboat,ncmpcpp}
 
 # I use "my_float_window" as an application name or class for those rare
-# occasions where I prefer a floating window at launch.  The option
-# --disable-factory is necessary to run the terminal in its own process,
-# so as to inherit the class we pass to it.
+# occasions where I prefer a floating window at launch.
 #
 # Note that the executable `calc` is contained in the Debian package
 # `apcalc`.
