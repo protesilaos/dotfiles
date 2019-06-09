@@ -57,7 +57,8 @@ pgrep -xo lemonbar > /dev/null && pkill -xo lemonbar
 tempus_theme="$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # Source the colour definitions if the file exists.  Else exit.
-[ -e "$tempus_theme" ] && source "$tempus_theme" || { echo "Missing Tempus theme"; exit 1; }
+[ -e "$tempus_theme" ] || { echo "Missing Tempus theme"; exit 1; }
+source "$tempus_theme"
 
 melonpanel_height=22 # DO NOT EDIT the name of this parameter (checked by other scripts).
 
