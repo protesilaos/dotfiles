@@ -191,7 +191,9 @@ window_title() {
 	nid="$(bspc query -N -n)"
 
 	if [ -n "$nid" ]; then
-		wt="$(xwininfo -id "$nid" | sed ' /^xwininfo/!d ; s,.*"\(.*\)".*,\1,')"
+		wt="$(xwininfo -id "$nid" | sed '/^xwininfo/!d ; s,.* \(".*"\).*,\1,')"
+		wt="${wt#?}"
+		wt="${wt%?}"
 		echo "%{F$foregroundalt}${wt:0:40}%{F-}"
 	else
 		echo ''
