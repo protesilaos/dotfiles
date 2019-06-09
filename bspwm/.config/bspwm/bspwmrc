@@ -30,15 +30,8 @@ bspc config swallow_first_click false # play the mouse event (e.g. right click c
 bspc config initial_polarity first_child
 bspc config ignore_ewmh_focus true # prevent focus stealing
 
-# Program-specific rules (use `xprop` to find each window's specifics).
-# For special use cases, I apply "my_float_window" for programs that can
-# accept a custom name/class.  These two definitions apply a custom
-# class and name respectively.
-bspc rule -a my_float_window:* state=floating
-bspc rule -a *:my_float_window state=floating
-
-# External window rules.
-bspc config external_rules_command "$(command -v own_script_bspwm_external_rules_command 2> /dev/null)"
+# Window rules.
+bspc config external_rules_command "$(command -v bspwm_external_rules 2> /dev/null)"
 
 # colours
 # -------

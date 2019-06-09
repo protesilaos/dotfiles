@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# External rules for BSPWM.  This script is part of my dotfiles:
+# https://gitlab.com/protesilaos/dotfiles.
+#
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+# Spawn window on the newest receptacle or preselection and switch focus
+# to it.  For presels priority is given to the current desktop.
+_bspc_query() {
+	bspc query -N -n "$@"
+}
+
+recept="$(_bspc_query 'any.leaf.!window')"
+presel="$(_bspc_query 'newest.!automatic')"
+
+if [ -n "$recept" ]; then
+	target="$recept"
+elif [ -n "$presel" ]; then
+	target="$presel"
+else
+	target="focused"
+fi
+
+echo "node=$target"
+echo "follow=on"
+
+# Operate on windows based on their properties.  The positional
+# arguments are defined in the `external_rules_command` of `man bspc`.
+window_id="$1"
+window_class="$2"
+window_instance="$3"
+window_title="$(xwininfo -id "$window_id" | sed ' /^xwininfo/!d ; s,.*"\(.*\)".*,\1,')"
+
+case "$window_class" in
+	[Mm]pv|[Pp]avucontrol|[Vv]lc|[Ee]o[mg]|[Ff]eh|[Rr]istretto|[Ss]xiv|[Aa]tril|[Ee]vince|[Zz]athura|my_float_window)
+		echo "state=floating"
+		echo "center=on"
+		;;
+	* )
+		case "$(xprop -id "$window_id" _NET_WM_WINDOW_TYPE)" in
+			*_NET_WM_WINDOW_TYPE_DIALOG*)
+				echo "state=floating"
+				;;
+			*)
+				echo "state=tiled"
+				;;
+		esac
+		;;
+esac
+
+# FIXME the "file operations" applies to the `caja` file manager.
+# TODO There should be a better way of handling this.
+case "$window_title" in
+	'File Operations'*)
+		echo "state=floating"
+		echo "center=on"
+		;;
+	my_float_window)
+		echo "state=floating"
+		;;
+esac
