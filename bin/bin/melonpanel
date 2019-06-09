@@ -183,6 +183,21 @@ keyboard_layout() {
 	fi
 }
 
+# Get the title of the currently focused window.  We limit the
+# characters it outputs to 40.
+window_title() {
+	local nid wt
+
+	nid="$(bspc query -N -n)"
+
+	if [ -n "$nid" ]; then
+		wt="$(xwininfo -id "$nid" | sed ' /^xwininfo/!d ; s,.*"\(.*\)".*,\1,')"
+		echo "%{F$foregroundalt}${wt:0:40}%{F-}"
+	else
+		echo ''
+	fi
+}
+
 # Include all modules in a single infinite loop that iterates every
 # second (adjust interval accordingly, as it can be taxing on system
 # resources).
@@ -193,6 +208,7 @@ my_modules() {
 		echo "B" "$(battery_status)"
 		echo "D" "$(date +'%a %-d %b %H:%M')"
 		echo "K" "$(keyboard_layout)"
+		echo "T" "$(window_title)"
 		echo "V" "$(volume_status)"
 		sleep 1s
 	done
@@ -239,6 +255,10 @@ melonpanel() {
 			K*)
 				# keyboard layout (en or gr)
 				key="${line#?}"
+				;;
+			T*)
+				# window title
+				title="${line#?}"
 				;;
 			V*)
 				# volume level
@@ -308,7 +328,7 @@ melonpanel() {
 		esac
 
 		panel_layout() {
-			echo "%{l}$wm%{r}$bat $vol $key $date "
+			echo "%{l}$wm $title %{r}$bat $vol $key $date "
 		}
 
 		if [ -n "$laptop_external_monitor" ]; then
