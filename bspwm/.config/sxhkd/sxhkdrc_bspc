@@ -42,13 +42,6 @@ super + ctrl + {1-9,0}
 super + ctrl + shift + {1-9,0}
 	bspc node -d '^{1-9,10}' --follow
 
-# Send all windows from the current desktop to the given one
-# (particularly useful with multiple monitors).  Append `--follow` (as
-# shown in the above key chord) if you want to switch to the given
-# desktop as well.
-super + ctrl + alt + shift + {1-9,0}
-	bspc node any.local -d '^{1-9,10}'
-
 # With `alt` focus {next,previous} window in the current desktop.  With
 # `super` focus {next,previous} desktop in the current monitor.
 # Cyclical behaviour.  Move in the opposite direction while also holding
@@ -90,27 +83,6 @@ super + alt + {h,j,k,l}
 # Preselect the ratio.  The default value is 0.5, defined in `bspwmrc`.
 super + alt + {1-9}
 	bspc node -o 0.{1-9}
-
-# Advanced placement (receptacles)
-# --------------------------------
-
-# Insert receptacle (follows tiling scheme or preselection).
-# Receptacles are empty frames that function as placeholders for
-# windows.
-super + n ; r
-	bspc node -i
-
-# Insert the marked window (or focused if no marks) in the first
-# matching receptacle (or preselection if no receptacles).
-#
-# NOTE bspwm_smart_presel is my own script (part of my dotfiles).
-# NOTE key chord for the "marked" flag is in the next section.
-super + n ; i
-	bspwm_smart_presel
-
-# Kill/remove the first matching receptacle from the current desktop.
-super + n ; q
-	bspc node 'any.leaf.!window.local' -k
 
 # Node layout state and flags
 # ---------------------------
@@ -175,6 +147,45 @@ super + shift + {y,u,i,o}
 super + shift + bracket{left,right}
 	bspc config -d focused window_gap "$(($(bspc config -d focused window_gap) {-,+} 5 ))"
 
+# Advanced operations (receptacles and scripted actions)
+# ------------------------------------------------------
+
+# Insert receptacle (follows tiling scheme or preselection).
+# Receptacles are empty frames that function as placeholders for
+# windows.
+super + n ; r
+	bspc node -i
+
+# Insert the marked window (or focused if no marks) in the first
+# matching receptacle (or preselection if no receptacles).
+super + n ; i
+	bspwm_smart_presel
+
+# Kill/remove the first matching receptacle from the current desktop.
+# With shift, kill them all at once.
+super + n ; {_, shift + }q
+	{ \
+	bspc node 'any.leaf.!window.local' -k, \
+	bspwm_multifaceted_operation --kill-all-receptacles \
+	}
+
+# Summon all marked windows across all desktops to the current desktop.
+super + n ; m
+	bspwm_multifaceted_operation --summon-all-marked
+
+# Bring the windows of the given desktop to the current one.  With
+# shift, send the current window to the given one.
+super + n ; super + {_, shift + }{1-9,0}
+	bspwm_multifaceted_operation {--bring-desktop-here,--send-desktop-there} '^{1-9,0}'
+
+# Kill all windows in the present desktop except the focused one.
+super + n ; super + q
+	bspwm_multifaceted_operation --kill-all-local-non-focused
+
+# Assign the locked flag to all windows in the current desktop.  With
+# shift, remove the locked flag from all.
+super + n ; {_, shift + }l
+	bspwm_multifaceted_operation {--lock-all-local,--unlock-all-local}
 
 
 # Continuous input mode
