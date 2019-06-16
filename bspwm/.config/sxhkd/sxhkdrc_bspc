@@ -28,9 +28,12 @@ super + {_,shift + }q
 super + {_,shift + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
 
-# Focus {or send focused node to} the given desktop.
+# Focus {or send focused node to} the given desktop.  This invokes
+# a script of mine that implements dynamic desktops.
+#
+# NOTE the leading `;` runs this command asynchronously.
 super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '^{1-9,10}'
+	;bspwm_dynamic_desktops {_,focused} '^{1-9,10}'
 
 # For multi-monitor setups: switches the active (visible) desktop of the
 # unfocused monitor, without focusing it (focus stays on the current
@@ -48,6 +51,11 @@ super + ctrl + shift + {1-9,0}
 # down `shift`.
 {super,alt} + {_,shift +} Tab
 	bspc {desktop,node} -f {next,prev}.local
+
+# Switch to the {next,previous} monitor.  This brings focus to that
+# monitor's active desktop.
+super + {_,shift + }comma
+	bspc monitor -f {next,prev}
 
 # Switch to last active {desktop,node}.  With super move to the last
 # active desktop.  With alt move to the last active node. "grave" is

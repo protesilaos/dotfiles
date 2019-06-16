@@ -48,15 +48,18 @@ monitor_count="$(bspc query -M | wc -l)"
 # applies to my desktop computer.  It also is true for my laptop on
 # occasions where no external monitor is connected.
 bspwm_generic_workspaces() {
-	# all workspaces on the primary monitor
-	bspc monitor -d 1 2 3 4 5 6
+	# A single desktop on the monitor.  We only define one, because of
+	# another script I have that implements dynamic desktops.
+	bspc monitor -d 1
 }
 
 # These apply to my laptop when an external monitor is connected.
 bspwm_laptop_dual_monitor() {
-	# set the workspaces per monitor
-	bspc monitor VGA1 -d 1 2 3
-	bspc monitor LVDS1 -d 4 5 6
+	# Set the workspaces per monitor.  We only define one per monitor,
+	# because of another script I have that implements dynamic
+	# desktops.
+	bspc monitor VGA1 -d 1
+	bspc monitor LVDS1 -d 8
 
 	# make sure borders are always on, otherwise it is impossible to
 	# find the focused window on two monitors with monocles…
