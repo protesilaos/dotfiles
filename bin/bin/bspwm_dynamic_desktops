@@ -1,0 +1,94 @@
+#!/bin/bash
+
+# WORK IN PROGRESS
+#
+# Dynamic workspaces for BSPWM.  Switching to a non-existent desktop
+# will create it dynamically.  Same with sending nodes to one.  Empty
+# desktops are removed.  This is meant to be implemented in SXHKD.  Part
+# of my dotfiles: https://gitlab.com/protesilaos/dotfiles
+#
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+# Requires at least one argument.
+# TODO one or two args!
+[ "$#" -ge 1 ] || { echo 'Must run with one or two arguments.'; exit 1; }
+
+# Capture the argument{,s}.
+case "$#" in
+	2)
+		sel="$1"
+		num="$2"
+		;;
+	1)
+		num="$1"
+		;;
+esac
+
+# Make sure the $num is a valid number for desktop names.  This assumes
+# that we call the current script from within the hotkey daemon which
+# passes this: '^{1-9,10}'
+#
+# TODO better way to define range?  Maybe {1..10}?  case or if?
+case "$num" in
+	\^[1-9]|\^10)
+		target_desktop="${num:1}" # strips the leading caret (see the sxhkd config)
+		;;
+	*)
+		echo 'Target desktop must be 1 through 10'; exit 1;
+		;;
+esac
+
+# Command for querying BSPWM desktops.
+_query_desktops() {
+	bspc query -D -d "$@"
+}
+
+# The core functionality of this script.  Behaviour changes based on
+# whether this is a desktop or a node (each action is mapped to
+# different key chords in sxhkd).
+#
+# If the target desktop does not exist, it is created on the spot.
+_desk_or_node() {
+	if ! _query_desktops "$target_desktop" > /dev/null; then
+		bspc monitor -a "$target_desktop" && bspc "$@"
+	else
+		bspc "$@"
+	fi
+}
+
+# Invoke the above command, passing to it arguments that change its
+# behaviour (desktop or node).
+#
+# TODO send node to unfocused monitor.
+case "$#" in
+	2)_desk_or_node node "${sel:-focused}" -d "$target_desktop";;
+	1)_desk_or_node desktop -f "$target_desktop";;
+esac
+
+# Remove empty desktops.  This works for multiple monitors, as well.
+for i in $(_query_desktops '.!focused.!occupied' --names); do
+	bspc desktop "$i" -r
+done
+
+# Reorder desktops on the focused monitor.
+_desk_order() {
+	while read -r line; do
+		printf "%s\\n" "$line"
+	done < <(bspc query -D -m focused --names) | sort -g | paste -d ' ' -s
+}
+
+bspc monitor -o $(_desk_order) # do not quote! we want term splitting here
