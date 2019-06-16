@@ -33,8 +33,11 @@ case "$1" in
 	--rk|--kill-all-receptacles)
 		_query_nodes '.leaf.!window' -k
 		;;
+	--nca|--close-all-local-non-focused)
+		_query_nodes '.!focused.!marked.local.window' -c
+		;;
 	--nka|--kill-all-local-non-focused)
-		_query_nodes '.!focused.local.window' -k
+		_query_nodes '.!focused.!marked.local.window' -k
 		;;
 	--nla|--lock-all-local)
 		_query_nodes '.local.window' -g locked=on

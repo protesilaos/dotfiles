@@ -163,7 +163,7 @@ super + n ; i
 
 # Kill/remove the first matching receptacle from the current desktop.
 # With shift, kill them all at once.
-super + n ; {_, shift + }q
+super + n ; super + {_, shift + }r
 	{ \
 	bspc node 'any.leaf.!window.local' -k, \
 	bspwm_multifaceted_operation --kill-all-receptacles \
@@ -178,9 +178,10 @@ super + n ; m
 super + n ; super + {_, shift + }{1-9,0}
 	bspwm_multifaceted_operation {--bring-desktop-here,--send-desktop-there} '^{1-9,0}'
 
-# Kill all windows in the present desktop except the focused one.
-super + n ; super + q
-	bspwm_multifaceted_operation --kill-all-local-non-focused
+# Close {or kill} all windows in the present desktop except the focused
+# or any marked ones.
+super + n ; super + {_,shift + }q
+	bspwm_multifaceted_operation --{close,kill}-all-local-non-focused
 
 # Assign the locked flag to all windows in the current desktop.  With
 # shift, remove the locked flag from all.
