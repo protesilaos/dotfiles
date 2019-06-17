@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# WORK IN PROGRESS
-#
 # Dynamic workspaces for BSPWM.  Switching to a non-existent desktop
 # will create it dynamically.  Same with sending nodes to one.  Empty
 # desktops are removed.  This is meant to be implemented in SXHKD.  Part
@@ -21,6 +19,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+# WORK IN PROGRESS:  This script works as intended in my custom desktop
+# session, but still requires some extra work.  See the TODOs.
 
 
 # Requires at least one argument.
