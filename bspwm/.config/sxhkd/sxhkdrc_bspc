@@ -32,18 +32,14 @@ super + {_,shift + }{h,j,k,l}
 # a script of mine that implements dynamic desktops.
 #
 # NOTE the leading `;` runs this command asynchronously.
-super + {_,shift + }{1-9,0}
-	;bspwm_dynamic_desktops {_,focused} '^{1-9,10}'
+super + {_,shift + }{0-9}
+	;bspwm_dynamic_desktops {_,focused} '^{0-9}'
 
 # For multi-monitor setups: switches the active (visible) desktop of the
 # unfocused monitor, without focusing it (focus stays on the current
 # desktop/monitor).
-super + ctrl + {1-9,0}
-	bspc desktop -a '^{1-9,10}'
-
-# Send and follow focused node to given desktop.
-super + ctrl + shift + {1-9,0}
-	bspc node -d '^{1-9,10}' --follow
+super + ctrl + {0-9}
+	bspc desktop -a '{0-9}'
 
 # With `alt` focus {next,previous} window in the current desktop.  With
 # `super` focus {next,previous} desktop in the current monitor.
@@ -183,8 +179,8 @@ super + n ; m
 
 # Bring the windows of the given desktop to the current one.  With
 # shift, send the current window to the given one.
-super + n ; super + {_, shift + }{1-9,0}
-	bspwm_multifaceted_operation {--bring-desktop-here,--send-desktop-there} '^{1-9,0}'
+super + n ; super + {_, shift + }{0-9}
+	bspwm_multifaceted_operation {--bring-desktop-here,--send-desktop-there} '^{0-9}'
 
 # Close {or kill} all windows in the present desktop except the focused
 # or any marked ones.

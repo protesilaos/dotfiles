@@ -42,15 +42,13 @@ esac
 
 # Make sure the $num is a valid number for desktop names.  This assumes
 # that we call the current script from within the hotkey daemon which
-# passes this: '^{1-9,10}'
-#
-# TODO better way to define range?  Maybe {1..10}?  case or if?
+# passes this: '^{0-9}'
 case "$num" in
-	\^[1-9]|\^10)
+	\^[0-9])
 		target_desktop="${num:1}" # strips the leading caret (see the sxhkd config)
 		;;
 	*)
-		echo 'Target desktop must be 1 through 10'; exit 1;
+		echo 'Target desktop must be 0 through 9'; exit 1;
 		;;
 esac
 
