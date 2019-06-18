@@ -55,6 +55,6 @@ case "$1" in
 		;;
 	--ds|--send-desktop-there)
 		# NOTE another script of mine (see dotfiles).
-		bspwm_dynamic_desktops 'any.local' "$2"
+		bspwm_dynamic_desktops --send-all-to-desktop "$2"
 		;;
 esac

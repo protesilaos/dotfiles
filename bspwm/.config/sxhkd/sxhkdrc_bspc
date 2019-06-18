@@ -13,7 +13,10 @@
 # work with `bspwm`.  This is part of my dotfiles, which are managed
 # with GNU Stow.  See https://gitlab.com/protesilaos/dotfiles
 #
-# Last full review on 2019-06-04
+# LARGE PORTIONS OF THIS FILE INVOKE MY SHELL SCRIPTS.  Do not blindly
+# copy-paste from here!
+#
+# Last full review on 2019-06-18
 
 
 
@@ -28,18 +31,28 @@ super + {_,shift + }q
 super + {_,shift + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
 
-# Focus {or send focused node to} the given desktop.  This invokes
-# a script of mine that implements dynamic desktops.
+# Dynamic desktop behaviour:  this invokes a script of mine that
+# implements dynamic desktops (see dotfiles).  If the given desktop
+# number is missing, it is created on the spot.  Empty desktops are then
+# removed automatically.
+#
+#
+# super + <number> = focus the given desktop
+# super + shift + <number> = send focused window to given desktop
+# super + ctrl + shift + <number> = as above, but send to next monitor
+# super + ctrl + <number> = switches the active (visible) desktop of the
+# unfocused monitor, without focusing it (focus stays on the current
+# desktop/monitor).  It also inserts a receptacle, meaning that the next
+# created window will go there without calling focus to itself (see my
+# bspwm_external_rules).
+#
+#
+# Commands for receptacles are defined in the "advanced operations"
+# section.
 #
 # NOTE the leading `;` runs this command asynchronously.
-super + {_,shift + }{0-9}
-	;bspwm_dynamic_desktops {_,focused} '^{0-9}'
-
-# For multi-monitor setups: switches the active (visible) desktop of the
-# unfocused monitor, without focusing it (focus stays on the current
-# desktop/monitor).
-super + ctrl + {0-9}
-	bspc desktop -a '{0-9}'
+super + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
+	;bspwm_dynamic_desktops {--df,--ns,--nm,--da} {0-9}
 
 # With `alt` focus {next,previous} window in the current desktop.  With
 # `super` focus {next,previous} desktop in the current monitor.
@@ -153,6 +166,8 @@ super + shift + bracket{left,right}
 
 # Advanced operations (receptacles and scripted actions)
 # ------------------------------------------------------
+# NOTE The behaviour of preselections and receptacles is regulated by my
+# bspwm_external_rules command (which is called from within bspwmrc).
 
 # Insert receptacle (follows tiling scheme or preselection).
 # Receptacles are empty frames that function as placeholders for
@@ -180,7 +195,7 @@ super + n ; m
 # Bring the windows of the given desktop to the current one.  With
 # shift, send the current window to the given one.
 super + n ; super + {_, shift + }{0-9}
-	bspwm_multifaceted_operation {--bring-desktop-here,--send-desktop-there} '^{0-9}'
+	bspwm_multifaceted_operation {--bring-desktop-here,--send-desktop-there} {0-9}
 
 # Close {or kill} all windows in the present desktop except the focused
 # or any marked ones.
