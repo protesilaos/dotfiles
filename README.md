@@ -3,12 +3,15 @@ Custom desktop session (BSPWM) and configurations for GNU/Linux
 
 My custom desktop session can be outlined thus:
 
-* Debian stable because rolling release distros tend to be overrated.
-* `bspwm` for fine-grained window management (with custom scripts for
-  added features).
+* Debian stable because I prefer longer-term predictability over
+  novelty.
+* `bspwm` for fine-grained window management with my custom scripts for
+  added features.
 * `tmux` to make the terminal power user even more powerful (no
   plugins).
-* `vim` because I can't exit it (no plugins).
+* `vim` because I need an efficient text editor (no plugins).
+* True minimalism: no complex status lines, no fancy prompts, no
+  decorative elements that add no functionality whatsoever.
 * Carefully-defined font configurations to complement my hardware and
   satisfy my aesthetic preferences.
 * Full integration of my Tempus themes for considerate colour contrast
