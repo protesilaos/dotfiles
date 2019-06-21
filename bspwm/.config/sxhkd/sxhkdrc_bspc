@@ -27,9 +27,30 @@ super + {_,shift + }q
 # Focus/swap nodes/desktops
 # -------------------------
 
-# Focus {or swap} the node in the given direction.
-super + {_,shift + }{h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
+# Focus the node in the given direction.
+super + {h,j,k,l}
+	bspc node -f {west,south,north,east}
+
+# Swap focused window with the one in the given direction.  If there is
+# no window in that direction, a receptacle will be created.  Inputting
+# any direction again will move the focused window to the position of
+# the receptacle.  This will effectively remove it from the current
+# layout, creating a more fluid workflow that does not constrain you to
+# the tree of the tiling scheme.
+#
+# IF you only ever want to move a window into an existing one and avoid
+# the added features of the scripted behaviour, use the following
+# command instead:
+#
+# 	bspc node -s {west,south,north,east}
+#
+# TIP after breaking free from the layout, you can use --balance to
+# spread out the nodes (see the key chord further down).  You may also
+# --rotate the tree.
+#
+# bspwm_smart_move is part of my dotfiles (link in the description).
+super + shift + {h,j,k,l}
+	bspwm_smart_move {west,south,north,east}
 
 # Dynamic desktop behaviour:  this invokes a script of mine that
 # implements dynamic desktops (see dotfiles).  If the given desktop
@@ -93,7 +114,8 @@ super + shift + b
 	bspc node -s biggest.local
 
 # Preselect the direction or insert again to cancel the preselection.
-# This enters the manual tiling mode.
+# This enters the manual tiling mode that splits the currently focused
+# window.
 super + alt + {h,j,k,l}
 	bspc node --presel-dir '~{west,south,north,east}'
 
@@ -169,9 +191,12 @@ super + shift + bracket{left,right}
 # NOTE The behaviour of preselections and receptacles is regulated by my
 # bspwm_external_rules command (which is called from within bspwmrc).
 
-# Insert receptacle (follows tiling scheme or preselection).
+# Insert receptacle following the tiling scheme or preselection.
 # Receptacles are empty frames that function as placeholders for
 # windows.
+#
+# Whereas bspwm_smart_move (defined above) will automatically insert
+# a receptacle in the given direction by splitting the entire viewport.
 super + n ; r
 	bspc node -i
 
