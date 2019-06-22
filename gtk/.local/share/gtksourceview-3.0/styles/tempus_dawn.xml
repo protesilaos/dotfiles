@@ -4,30 +4,30 @@
   <_description>Light theme with a soft, slightly desaturated palette (WCAG AA compliant)</_description>
 
   <!-- Palette -->
-  <color name="col0" value="#525470"/>
-  <color name="col1" value="#9b3132"/>
-  <color name="col2" value="#306130"/>
-  <color name="col3" value="#73500a"/>
-  <color name="col4" value="#4c547e"/>
-  <color name="col5" value="#883c64"/>
-  <color name="col6" value="#186060"/>
-  <color name="col7" value="#e6e7ea"/>
-  <color name="col8" value="#705e4d"/>
-  <color name="col9" value="#9b474d"/>
-  <color name="col10" value="#4e6938"/>
-  <color name="col11" value="#8e5319"/>
-  <color name="col12" value="#5c5d8c"/>
-  <color name="col13" value="#a24055"/>
-  <color name="col14" value="#2d6978"/>
-  <color name="col15" value="#f3f4f6"/>
+  <color name="col0" value="#4a4b4e"/>
+  <color name="col1" value="#a32a3a"/>
+  <color name="col2" value="#206620"/>
+  <color name="col3" value="#745300"/>
+  <color name="col4" value="#4b529a"/>
+  <color name="col5" value="#8d377e"/>
+  <color name="col6" value="#086784"/>
+  <color name="col7" value="#e2e4e1"/>
+  <color name="col8" value="#686565"/>
+  <color name="col9" value="#ae4e2a"/>
+  <color name="col10" value="#1a7608"/>
+  <color name="col11" value="#8d5b0a"/>
+  <color name="col12" value="#5c5bb2"/>
+  <color name="col13" value="#8e47a8"/>
+  <color name="col14" value="#106e8c"/>
+  <color name="col15" value="#eff0f2"/>
 
   <!-- Base values -->
-  <color name="colbg" value="#f3f4f6"/>
-  <color name="colbgalt" value="#e6e7ea"/>
-  <color name="colbgdim" value="#ecedf0"/>
-  <color name="colfg" value="#525470"/>
-  <color name="colfgalt" value="#705e4d"/>
-  <color name="colcr" value="#525470"/>
+  <color name="colbg" value="#eff0f2"/>
+  <color name="colbgalt" value="#e2e4e1"/>
+  <color name="colbgdim" value="#e8eae9"/>
+  <color name="colfg" value="#4a4b4e"/>
+  <color name="colfgalt" value="#686565"/>
+  <color name="colcr" value="#4a4b4e"/>
 
   <!-- Global Settings -->
   <style name="text" foreground="colfg" background="colbg"/>
