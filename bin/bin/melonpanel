@@ -149,14 +149,14 @@ volume_status() {
 
 		volume_status="$(amixer_get 3)"
 		volume_level="$(amixer_get 2)"
-		volume_label='Vol'
+		volume_label='VOL:'
 
 		case "$volume_status" in
 			'off')
-				echo "%{F$color3}$volume_label%{F-}" "$volume_level (Muted)"
+				echo "$volume_label $volume_level (Muted)"
 				;;
 			'on')
-				echo "%{F$color4}$volume_label%{F-}" "$volume_level"
+				echo "$volume_label $volume_level"
 				;;
 			*)
 				echo ''
