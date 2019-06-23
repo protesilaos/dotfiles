@@ -165,17 +165,14 @@ volume_status() {
 	fi
 }
 
-# Modified version of the content of `own_script_current_layout`.  That
-# is a separate file just because I need the functionality decoupled
-# from the panel.  All we do here is print the language of the current
-# layout.
+# This informs us if the current layout is set to Greek.  We need to
+# know this as key bindings generally work as expected with english.
 keyboard_layout() {
-	if [ "$(setxkbmap -query | sed '/^layout/!d ; s,^.*:[\ ]*,,g')" == 'gr' ]; then
-		echo "%{U$foregroundalt}%{+u}EL%{-u}%{U-}" # Greek
-	else
-		echo 'EN' # English (US QWERTY)
+	if [ "$(setxkbmap -query | sed '/^layout/!d ; s,^.*:[\ ]*,,g')" = 'gr' ]; then
+		echo "%{B$backgroundalt}%{U$foreground}%{+u} EL %{-u}%{U-}%{B-}"
 	fi
 }
+
 
 # Get the title of the currently focused window.  We limit the
 # characters it outputs to 40.
@@ -324,7 +321,7 @@ melonpanel() {
 		esac
 
 		panel_layout() {
-			echo "%{l}$wm $title %{r}$bat $vol $key $date "
+			echo "%{l}$wm $title %{r}$key $bat $vol $date "
 		}
 
 		if [ -n "$laptop_external_monitor" ]; then
