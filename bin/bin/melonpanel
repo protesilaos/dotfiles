@@ -103,38 +103,32 @@ fi
 # the command such as e.g. D for Date, N for Network...  Where this
 # would lead to conflicts, find a synonym or something close enough.
 
-# Battery status: charging (c), discharging (d), full (f), unknown (?).
+# Battery status.
 battery_status() {
 	local battery_path battery_status battery_label battery_output
 
 	battery_path='/sys/class/power_supply/BAT0'
-	battery_output="$(sed 1q $battery_path/capacity)"
+	battery_output="$(sed 1q $battery_path/capacity)%"
 	battery_status="$(sed 1q $battery_path/status)"
-	battery_label='Bat'
+	battery_label='BAT:'
 
 	if [ -d "$battery_path" ]; then
 		case "$battery_status" in
 			'Charging')
-				echo "%{F$color14}$battery_label <c>%{F-} ${battery_output}%"
+				echo "$battery_label %{F$color6}${battery_output}+%{F-}"
 				;;
 			'Discharging')
 				case "$battery_output" in
-					1[0-9])
-						echo "%{F$color1}$battery_label <d>%{F-} ${battery_output}%"
-						;;
-					[0-9])
-						echo "%{B$color1}%{F$background} $battery_label ${battery_output}% %{F-}%{B-}"
+					[0-9]*)
+						echo "%{B$color9}%{F$background} $battery_label ${battery_output}- %{F-}%{B-}"
 						;;
 					*)
-						echo "%{F$color11}$battery_label <d>%{F-} ${battery_output}%"
+						echo "$battery_label %{F$color11}${battery_output}-%{F-}"
 						;;
 				esac
 				;;
-			'Full')
-				echo "%{F$color2}$battery_label%{F-} Full"
-				;;
 			*)
-				echo "%{F$color3}$battery_label <?>%{F-} ${battery_output}%"
+				echo "$battery_label ${battery_output}"
 				;;
 		esac
 	else
