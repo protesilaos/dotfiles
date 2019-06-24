@@ -54,9 +54,16 @@ xterm*highlightSelection: true
 xterm*highlightTextColor: XtDefaultBackground
 
 ! Font settings
+!
 ! The font settings address the issue discussed in this blog post:
 ! https://protesilaos.com/codelog/2019-05-26-xterm-letter-pi-bug/
-xterm*faceName: Hack,DejaVu Sans Mono,Monospace
+!
+! Alternatively, just use Fira Code (apt install fonts-firacode) at any
+! integer size.  The font stack (comma separated) ensures that the next
+! font will be used if the one before is not available.  "Monospace" is
+! a fontconfig alias that ultimately points to "DejaVu Sans Mono" (see
+! my dotfiles' fontconfig).
+xterm*faceName: Fira Code:size=10,Hack,Monospace
 xterm*faceSize: 9.5
 xterm*renderFont: true
 xterm*boldColors: false
@@ -67,7 +74,7 @@ xterm*faceSize4: 18.25
 xterm*faceSize5: 20.5
 xterm*faceSize6: 25.5
 xterm*forceBoxChars: false
-xterm*limitFontsets: 3
+xterm*limitFontsets: 5
 xterm*scaleHeight: 1.0
 
 ! Scroll and output
