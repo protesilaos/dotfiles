@@ -118,8 +118,8 @@ battery_status() {
 				echo "$battery_label %{F$color6}${battery_output}+%{F-}"
 				;;
 			'Discharging')
-				case "$battery_output" in
-					[0-9]*)
+				case "${battery_output%?}" in
+					[0-9])
 						echo "%{B$color9}%{F$background} $battery_label ${battery_output}- %{F-}%{B-}"
 						;;
 					*)
