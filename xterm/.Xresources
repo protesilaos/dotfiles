@@ -36,8 +36,8 @@ xterm*internalBorder: 0
 
 ! Cursor
 xterm*cursorBlink: true
-xterm*cursorOffTime: 500
-xterm*cursorOnTime: 1000
+xterm*cursorOffTime: 300
+xterm*cursorOnTime: 800
 xterm*cursorUnderLine: false
 xterm*pointerShape: XTerm
 
