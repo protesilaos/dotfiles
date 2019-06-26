@@ -62,8 +62,8 @@ source "$tempus_theme"
 
 melonpanel_height=22 # DO NOT EDIT the name of this parameter (checked by other scripts).
 
-# Fonts (lemonbar only supports bitmap fonts)
-# -------------------------------------------
+# Fonts (upstream lemonbar only supports bitmap fonts)
+# ----------------------------------------------------
 # Find available fonts using `xlsfonts`.
 #
 # Meaning of these fields (between dashes):
@@ -92,6 +92,27 @@ else
 	fontmain='-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso10646-1'
 	fontbold='-misc-fixed-bold-r-normal--13-120-75-75-c-80-iso10646-1'
 fi
+
+# OPTIONAL: Fonts for Lemonbar with Xft support (custom fork)
+# -----------------------------------------------------------
+# I have decided to maintain a fork of `lemonbar` that supports
+# outline/proportional typefaces (like the "DejaVu" family):
+# https://gitlab.com/protesilaos/lemonbar-xft
+#
+# To use this fork, you need to compile it yourself.  Instructions for
+# Debian 10 Buster here:
+#
+# * https://protesilaos.com/codelog/2019-06-23-lemonbar-xft-new/
+#
+# If you want to reproduce/verify this fork, follow these steps:
+#
+# * https://protesilaos.com/codelog/2019-06-24-lemonbar-xft-howto/
+#
+# Once you have compiled the lemonbar fork and have removed the
+# corresponding Debian package, comment out the variables below and
+# adapt them to your needs.
+###fontmain='monospace:style=regular:size=10'
+###fontbold='monospace:style=bold:size=10'
 
 # Panel modules
 # -------------
