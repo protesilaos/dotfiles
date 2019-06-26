@@ -62,7 +62,7 @@ xterm*highlightTextColor: XtDefaultBackground
 ! integer size.  The font stack (comma separated) ensures that the next
 ! font will be used if the one before is not available.  "Monospace" is
 ! a fontconfig alias that ultimately points to "DejaVu Sans Mono" (see
-! my dotfiles' fontconfig).
+! my dotfiles fontconfig).
 xterm*faceName: Fira Code:size=10,Hack,Monospace
 xterm*faceSize: 9.5
 xterm*renderFont: true
