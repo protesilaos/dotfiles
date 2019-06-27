@@ -90,8 +90,6 @@ _depcheck() {
 # Debian Buster dependency:
 # 	apt install feh
 _wallpaper() {
-	_depcheck feh
-
 	# the wallpapers are defined manually at
 	# ~/Pictures/theme/{light,dark}.jpg
 	wall_path="$HOME/Pictures/theme"
@@ -110,9 +108,10 @@ _wallpaper() {
 		l*) 
 			case "$DESKTOP_SESSION" in
 				bspwm)
+					_depcheck feh
 					_feh "$wall_light"
 					;;
-				gnome)
+				gnome*)
 					gsettings set org.gnome.desktop.background picture-uri "file://${wall_light}" &
 					;;
 				mate)
@@ -125,7 +124,7 @@ _wallpaper() {
 				bspwm)
 					_feh "$wall_dark"
 					;;
-				gnome)
+				gnome*)
 					gsettings set org.gnome.desktop.background picture-uri "file://${wall_dark}" &
 					;;
 				mate)
@@ -160,14 +159,22 @@ _gtk() {
 	_gtk_live() {
 		_depcheck mate-settings-daemon
 
-		gsettings set org.mate.interface gtk-theme "$1"
-		gsettings set org.mate.interface icon-theme "$2"
+		case "$DESKTOP_SESSION" in
+			gnome*)
+				gsettings set org.gnome.desktop.interface gtk-theme "$1"
+				gsettings set org.gnome.desktop.interface icon-theme "$2"
+				;;
+			bspwm|mate)
+				gsettings set org.mate.interface gtk-theme "$1"
+				gsettings set org.mate.interface icon-theme "$2"
+				;;
+		esac
 	}
 
 	case "$theme_variant" in
 		l*)
-			_gtk_variant 'Adwaita' 'Papirus' &
-			_gtk_live 'Adwaita' 'Papirus' &
+			_gtk_variant 'Adwaita' 'Papirus-Light' &
+			_gtk_live 'Adwaita' 'Papirus-Light' &
 			;;
 		d*)
 			_gtk_variant 'Adwaita-dark' 'Papirus-Dark' &
@@ -212,9 +219,6 @@ _vim() {
 	_depcheck vim
 
 	_sed "s,\(colorscheme \).*,\1tempus_${tempus_theme}," "$HOME"/.vimrc
-
-	# NOTE this is another script that is part of my dotfiles.
-	tmux_update_vim &
 }
 
 _x_and_shell() {
@@ -271,6 +275,8 @@ _manpages() {
 _tmux() {
 	_depcheck tmux
 
+	pgrep -x tmux || return 1;
+
 	_sed_sync "s/tempus_fg=\"#[a-zA-Z0-9]*\"/tempus_fg=\"${foreground}\"/ ; \
 	s/tempus_bg=\"#[a-zA-Z0-9]*\"/tempus_bg=\"${background}\"/ ; \
 	s/tempus_fg_alt=\"#[a-zA-Z0-9]*\"/tempus_fg_alt=\"${foregroundalt}\"/ ; \
@@ -278,17 +284,9 @@ _tmux() {
 	s/tempus_bg_dim=\"#[a-zA-Z0-9]*\"/tempus_bg_dim=\"${backgrounddim}\"/" "$HOME"/.tmux.conf
 
 	tmux source-file "$HOME/.tmux.conf"
-}
 
-# This is my script for adding content to lemonbar.  Reloading it will
-# make it get the new shell colours.
-_melonpanel() {
-	_depcheck lemonbar
-	_depcheck melonpanel
-
-	if pgrep -x melonpanel > /dev/null; then
-		pkill -x melonpanel && melonpanel &
-	fi
+	# NOTE this is another script that is part of my dotfiles.
+	tmux_update_vim &
 }
 
 _dunst() {
@@ -313,8 +311,22 @@ _dunst() {
 	fi
 }
 
+# This is my script for adding content to lemonbar.  Reloading it will
+# make it get the new shell colours.
+_melonpanel() {
+	_depcheck lemonbar
+	_depcheck melonpanel
+
+	if pgrep -x melonpanel > /dev/null; then
+		pkill -x melonpanel && melonpanel &
+	fi
+}
+
+
 _bspwm() {
-	[ "$DESKTOP_SESSION" = 'bspwm' ] || { echo "Not running BSPWM. No action for it."; return 1; }
+	[ "$DESKTOP_SESSION" = 'bspwm' ] || return 1
+
+	_melonpanel
 
 	_bc() {
 		bspc config "$@"
@@ -352,11 +364,10 @@ _bspwm() {
 _x_and_shell
 _tmux
 _vim
-_melonpanel
 _dunst
+_bspwm
 _wallpaper
 _manpages
 _gtk
 _gtksourceview3
 _gtksourceview4
-_bspwm
