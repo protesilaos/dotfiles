@@ -261,17 +261,6 @@ _x_and_shell() {
 	fi
 }
 
-_manpages() {
-	_manpages_common() {
-		_sed "s,\(man_fg=\).*,\1${1}, ; s,\(man_bg=\).*,\1${2}," "$HOME"/.bashrc
-	}
-
-	case "$theme_variant" in
-		l*) _manpages_common 0 15;;
-		d*) _manpages_common 15 0;;
-	esac
-}
-
 _tmux() {
 	_depcheck tmux
 
@@ -367,7 +356,6 @@ _vim
 _dunst
 _bspwm
 _wallpaper
-_manpages
 _gtk
 _gtksourceview3
 _gtksourceview4

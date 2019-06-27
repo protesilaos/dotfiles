@@ -327,18 +327,12 @@ fi
 
 # Colourise man pages
 man() {
-	# DO NOT EDIT those two.  They are programmatically updated by my
-	# `tempus` script.
-	man_fg=15
-	man_bg=0
-
 	env \
 	LESS_TERMCAP_mb=$(tput bold; tput setaf 6) \
 	LESS_TERMCAP_md=$(tput bold; tput setaf 6) \
 	LESS_TERMCAP_me=$(tput sgr0) \
 	LESS_TERMCAP_se=$(tput rmso; tput sgr0) \
 	LESS_TERMCAP_ue=$(tput rmul; tput sgr0) \
-	LESS_TERMCAP_so=$(tput bold; tput setaf "$fg"; tput setab "$bg") \
 	LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 4) \
 	LESS_TERMCAP_mr=$(tput rev) \
 	LESS_TERMCAP_mh=$(tput dim) \
