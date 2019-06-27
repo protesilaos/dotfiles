@@ -22,12 +22,21 @@
 
 pgrep tmux > /dev/null || { echo "Tmux is not runnning"; exit 1; }
 
-find_vim() {
-	tmux list-panes -a -F '#D:#T' | grep 'VIM'
+_find_vim() {
+	tmux list-panes -a -F '#D:#T:#{pane_in_mode}' | grep 'VIM'
 }
 
-# TODO find if tmux is in a mode
-while read -r line; do
-	tmux send-keys -t "${line/:*/}" ':source ~/.vimrc' 'Enter'
-done < <(find_vim)
+# Shorten common command…
+_tsk() {
+	tmux send-keys -t "${line/:*/}" "$@"
+}
 
+# The if statement checks if the pane is in a mode.  To process key
+# strokes, the pane must exit the mode first.
+while read -r line; do
+	if [ "${line: -1}" = 1 ]; then
+		_tsk -X cancel && _tsk ':source ~/.vimrc' 'Enter'
+	else
+		_tsk ':source ~/.vimrc' 'Enter'
+	fi
+done < <(_find_vim)
