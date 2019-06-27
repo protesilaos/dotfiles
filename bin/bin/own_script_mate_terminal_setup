@@ -1,45 +1,46 @@
 #!/bin/bash
 
-	# This program is free software: you can redistribute it and/or modify
-	# it under the terms of the GNU General Public License as published by
-	# the Free Software Foundation, either version 3 of the License, or
-	# (at your option) any later version.
-
-	# This program is distributed in the hope that it will be useful,
-	# but WITHOUT ANY WARRANTY; without even the implied warranty of
-	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-	# GNU General Public License for more details.
-
-	# You should have received a copy of the GNU General Public License
-	# along with this program.	If not, see <http://www.gnu.org/licenses/>.
-
-# Description
-# -----------
-#
 # Configures the MATE Terminal (default terminal emulator for MATE
 # Desktop Environment) to my liking.  This script is part of my dotfiles
-# and is meant to make the MATE Terminal useful within the context of my
-# custom desktop session running BSPWM.  Part of this integration is the
-# ability to dynamically switch themes for the entire environment
-# (terminals, GUIs, icons, wallpapers, etc.).  See my dotfiles:
-# https://gitlab.com/protesilaos/dotfiles
+# and is meant to make the MATE Terminal useful _as a fallback option_
+# within the context of my custom desktop session running BSPWM.  Part
+# of this integration is the ability to dynamically switch themes for
+# the entire environment (terminals, GUIs, icons, wallpapers, etc.).
+# See my dotfiles: https://gitlab.com/protesilaos/dotfiles
 #
-# Written on 2019-03-31 and tested on an up-to-date Debian Buster/Sid
-# machine.  In need of review.
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.	If not, see <http://www.gnu.org/licenses/>.
 
-# TODO improve documentation, especially in the "conditional commands"
-# section.
+command -v mate-terminal > /dev/null || { echo "Mate Terminal not installed."; exit 1; }
+
+tempus_theme="$HOME"/.local/share/my_colours/active-tempus-theme.sh
+
+# Get the relevant variables from the active Tempus theme
+if [ -f "$tempus_theme" ]; then
+	source "$tempus_theme"
+else
+	echo "Missing active Tempus theme."
+	exit 1
+fi
 
 # Theme settings
 # --------------
-#
-# You do not need to run this script manually, just for the sake of
-# updating the terminals' colours.  If you are using my `tempusmenu` (or
-# `own_script_update_environment_theme`), the script shall be executed
-# automatically as part of the overall theme change.
-
-# Get the relevant variables from the active Tempus theme
-source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
+# NOTE newly-spawned terminals will inherit the changes only if all
+# running instances are closed.  Else, the new terminal uses the
+# previously-defined options.  This does not apply if running instances
+# have the --disable-factory option (see `man mate-terminal`).
 
 # Path to the default MATE terminal profile
 dconf_path='/org/mate/terminal/profiles/default'
@@ -65,42 +66,42 @@ dconf write "$dconf_path/palette" "'$color0:$color1:$color2:$color3:$color4:$col
 # no conditional logic.
 
 dconf_read_write_boolean() {
-	if [ "$(dconf read $dconf_path/$1)" == $2 ]; then
-		dconf write $dconf_path/$1 $3
-	elif [ -z "$(dconf read $dconf_path/$1)" ]; then
-		dconf write $dconf_path/$1 $3
+	if [ "$(dconf read "$dconf_path/$1")" == "$2" ]; then
+		dconf write "$dconf_path/$1" "$3"
+	elif [ -z "$(dconf read "$dconf_path/$1")" ]; then
+		dconf write "$dconf_path/$1" "$3"
 	fi
 }
 
 dconf_read_write_string() {
-	if [ "$(dconf read $dconf_path/$1)" != "'$2'" ]; then
-		dconf write $dconf_path/$1 "'$2'"
-	elif [ -z "$(dconf read $dconf_path/$1)" ]; then
-		dconf write $dconf_path/$1 "'$2'"
+	if [ "$(dconf read "$dconf_path/$1")" != "'$2'" ]; then
+		dconf write "$dconf_path/$1" "'$2'"
+	elif [ -z "$(dconf read "$dconf_path/$1")" ]; then
+		dconf write "$dconf_path/$1" "'$2'"
 	fi
 }
 
 dconf_read_write_integer() {
-	if [ "$(dconf read $dconf_path/$1)" != $2 ]; then
-		dconf write $dconf_path/$1 $2
-	elif [ -z "$(dconf read $dconf_path/$1)" ]; then
-		dconf write $dconf_path/$1 $2
+	if [ "$(dconf read "$dconf_path/$1")" != "$2" ]; then
+		dconf write "$dconf_path/$1" "$2"
+	elif [ -z "$(dconf read "$dconf_path/$1")" ]; then
+		dconf write "$dconf_path/$1" "$2"
 	fi
 }
 
 dconf_read_write_boolean_global() {
-	if [ "$(dconf read $dconf_path_global/$1)" == $2 ]; then
-		dconf write $dconf_path_global/$1 $3
-	elif [ -z "$(dconf read $dconf_path_global/$1)" ]; then
-		dconf write $dconf_path_global/$1 $3
+	if [ "$(dconf read "$dconf_path_global/$1")" == "$2" ]; then
+		dconf write "$dconf_path_global/$1" "$3"
+	elif [ -z "$(dconf read "$dconf_path_global/$1")" ]; then
+		dconf write "$dconf_path_global/$1" "$3"
 	fi
 }
 
 dconf_read_write_string_keys() {
-	if [ "$(dconf read $dconf_path_keys/$1)" != "'$2'" ]; then
-		dconf write $dconf_path_keys/$1 "'$2'"
-	elif [ -z "$(dconf read $dconf_path_keys/$1)" ]; then
-		dconf write $dconf_path_keys/$1 "'$2'"
+	if [ "$(dconf read "$dconf_path_keys/$1")" != "'$2'" ]; then
+		dconf write "$dconf_path_keys/$1" "'$2'"
+	elif [ -z "$(dconf read "$dconf_path_keys/$1")" ]; then
+		dconf write "$dconf_path_keys/$1" "'$2'"
 	fi
 }
 
@@ -113,15 +114,8 @@ dconf_read_write_boolean 'default-show-menubar' 'true' 'false'
 dconf_read_write_boolean 'use-system-font' 'true' 'false'
 dconf_read_write_boolean 'use-theme-colors' 'true' 'false'
 ### String types
-# NOTE the font conditions are intended to set the appropriate point size for the given typeface.
-if [ -n "$(fc-list hack)" ]; then
-	dconf_read_write_string 'font' 'Hack 10'
-elif [ -n "$(fc-list monoid)" ]; then
-	dconf_read_write_string 'font' 'Monoid 9'
-else
-	dconf_read_write_string 'font' 'Monospace 10' # Defaults to "DejaVu Sans Mono"
-fi
-dconf_read_write_string 'cursor-blink-mode' 'off'
+dconf_read_write_string 'font' 'Monospace 10' # Defaults to "DejaVu Sans Mono"
+dconf_read_write_string 'cursor-blink-mode' 'on'
 dconf_read_write_string 'scrollbar-position' 'hidden'
 #### Integer types
 dconf_read_write_integer 'scrollback-lines' '9999'
