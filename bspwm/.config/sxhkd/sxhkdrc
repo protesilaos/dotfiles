@@ -63,7 +63,7 @@
 # p == reload melonpanel (my lemonbar script)
 # t == dmenu to choose Tempus theme
 # m == notification with mpc status (shows album art, title, etc.)
-# k == switch layout (configured to toggle between US QWERTY and Greek)
+# k == toggle screenkey (useful for screen casts)
 # q == dmenu interface to log out, lock, switch users, reboot, shutdown
 # x == reload the Xresources file
 #
@@ -78,7 +78,7 @@ super + e ; {c,d,f,s,p,t,m,k,q,x}
 	pkill -x melonpanel && melonpanel, \
 	tempusmenu, \
 	own_script_notify_send_mpc_status, \
-	own_script_notify_send_keyboard_layout, \
+	toggle_screenkey, \
 	poweroptionsmenu, \
 	xrdb -I "$HOME" -merge "$HOME"/.Xresources \
 	}
