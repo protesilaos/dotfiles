@@ -275,7 +275,7 @@ _manpages() {
 _tmux() {
 	_depcheck tmux
 
-	pgrep -x tmux || return 1;
+	pgrep tmux || return 1;
 
 	_sed_sync "s/tempus_fg=\"#[a-zA-Z0-9]*\"/tempus_fg=\"${foreground}\"/ ; \
 	s/tempus_bg=\"#[a-zA-Z0-9]*\"/tempus_bg=\"${background}\"/ ; \
