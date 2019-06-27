@@ -37,8 +37,7 @@ bspc config external_rules_command "$(command -v bspwm_external_rules 2> /dev/nu
 # -------
 
 # DO NOT EDIT: these are modified programmatically by
-# `own_script_update_environment_theme` and/or its frontend
-# `tempusmenu`.
+# `tempus` and/or its frontend `tempusmenu`.
 bspc config normal_border_color "#312e30" # unfocused window
 bspc config active_border_color "#b1942b" # focused window, unfocused monitor
 bspc config focused_border_color "#6da280" # focused window, focused monitor
@@ -98,23 +97,10 @@ if [ "$(command -v setxkbmap 2> /dev/null)" ]; then
 	# `own_script_current_keyboard_layout`
 fi
 
-# start the MATE/Xfce settings daemon to apply GTK themes to running
-# applications as well as flatpaks.
-#
-# For details, refer to the "bin" directory of my dotfiles,
-# https://gitlab.com/protesilaos/dotfiles.
-#
-# Specifically, see the `modify_running_gtk_and_flatpak` function of the
-# "own_script_update_environment_theme" script.
-#
-# Maybe also check my blog post:
-# https://protesilaos.com/codelog/bspwm-flatpak-themes/
-if [ "$(command -v flatpak 2> /dev/null)" ]; then
-	if [ "$(command -v mate-settings-daemon 2> /dev/null)" ]; then
-		mate-settings-daemon &
-	elif [ "$(command -v xfsettingsd 2> /dev/null)" ]; then
-		xfsettingsd
-	fi
+# start the MATE settings daemon to apply GTK themes to running
+# applications as well as flatpaks (see the `tempus` script).
+if [ "$(command -v mate-settings-daemon 2> /dev/null)" ]; then
+	mate-settings-daemon &
 fi
 
 # start music server

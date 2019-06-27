@@ -11,7 +11,7 @@
 [global]
 font = "sans 10"
 frame_width = 1
-frame_color = "#312e30"
+frame_color = ""
 
 # Possible values are:
 # full: Allow a small subset of html markup in notifications:
@@ -162,7 +162,7 @@ horizontal_padding = 2
 #  * foreground: use the same color as the foreground;
 #  * frame: use the same color as the frame;
 #  * anything else will be interpreted as a X color.
-separator_color = "#2a2829"
+separator_color = ""
 
 # Print a notification on startup.
 # This is mainly for error detection, since dbus (re-)starts dunst
@@ -213,16 +213,16 @@ history = ctrl+shift+grave
 # IMPORTANT: colors have to be defined in quotation marks.
 # Otherwise the "#" and following would be interpreted as a comment.
 [urgency_low]
-background = "#312e30"
-foreground = "#949d9f"
+background = ""
+foreground = ""
 timeout = 6
 
 [urgency_normal]
-background = "#232323"
-foreground = "#aeadaf"
+background = ""
+foreground = ""
 timeout = 8
 
 [urgency_critical]
-background = "#d2813d"
-foreground = "#232323"
+background = ""
+foreground = ""
 timeout = 12

@@ -82,8 +82,7 @@ iab medot https://gitlab.com/protesilaos/dotfiles
 " Theme settings
 " --------------
 
-syntax enable                 " enable syntax highlighting
-colorscheme tempus_classic    " use one of my Tempus themes
-
+syntax enable
 " DO NOT EDIT MANUALLY IF YOU USE MY DOTFILES.  Themes are updated
-" programatically via my `own_script_update_environment_theme`
+" programatically via my `tempus` script.
+colorscheme tempus_classic

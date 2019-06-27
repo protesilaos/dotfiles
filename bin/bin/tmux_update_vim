@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Sends a key sequence to all running instances of Vim inside a tmux
+# session.  The sequence is for reloading the vimrc.  The intended use
+# of this script is to live reload a Vim theme as part of my
+# `bspwm_tempus_switch`: https://gitlab.com/protesilaos/dotfiles.
+#
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+pgrep tmux > /dev/null || { echo "Tmux is not runnning"; exit 1; }
+
+find_vim() {
+	tmux list-panes -a -F '#D:#T' | grep 'VIM'
+}
+
+# TODO find if tmux is in a mode
+while read -r line; do
+	tmux send-keys -t "${line/:*/}" ':source ~/.vimrc' 'Enter'
+done < <(find_vim)
+

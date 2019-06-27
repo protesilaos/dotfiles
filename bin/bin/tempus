@@ -1,0 +1,362 @@
+#!/bin/bash
+
+# TEMPUS --- Themes Every Meticulous Person Ultimately Seeks (yes, this
+# is a backronym).
+#
+# Handles the integration between my custom desktop session[0] and my
+# Tempus themes[1].  TEMPUS performs live theme switching, while also
+# updating the relevant configuration files.  The main use case for this
+# is as part of BSPWM, but some actions will also work in GNOME or MATE
+# (the latter being my fallback DE on Debian).
+#
+# 0: https://gitlab.com/protesilaos/dotfiles
+# 1: https://gitlab.com/protesilaos/tempus-themes (partially
+#    incorporated in my dotfiles)
+#
+# This script is the successor of own_script_update_environment_theme,
+# which has been deprecated and will be removed from future releases of
+# my dotfiles (ensures feature parity).
+#
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+# Error handling and help messages
+# --------------------------------
+_help_message() {
+	echo "Run this script with a single argument:"
+
+	# The parameter expansions here keep only the theme's unique name:
+	# /path/to/tempus_classic.sh ==> classic
+	while IFS= read -r -d $'\0' line; do
+		line="${line##[a-z/_]*tempus_}"
+		printf "\\t%s\\n" "${line%.sh}"
+	done < <(find "$HOME"/.local/share/my_colours/shell/ -type f -name '*.sh' -print0 | sort -z)
+
+	echo "This assumes you have used STOW on my 'colours' directory (part of my dotfiles)"
+}
+
+[ "$#" -eq 1 ] || { _help_message; exit 1; }
+
+tempus_theme="$1"
+
+# Is the theme light or dark?
+case "$tempus_theme" in
+	dawn|day|fugit|past|totus)
+		theme_variant=light
+		;;
+	autumn|classic|dusk|future|night|rift|spring|summer|tempest|warp|winter)
+		theme_variant=dark
+		;;
+	*)
+		echo "_$1_ is not a valid Tempus theme."
+		_help_message
+		;;
+esac
+
+# Program-specific functions
+# --------------------------
+
+# Shorter version of the sed command we will be using throughout…
+_sed() {
+	sed --follow-symlinks -i "$@" &
+}
+
+_sed_sync() {
+	# Here we make an exception for the _sed function, because if we run
+	# this asynchronously, other processes might fail to get the new
+	# colours.  To my knowledge as of 2019-06-27, this appears to be
+	# better than using sleep and/or until…
+	sed --follow-symlinks -i "$@"
+}
+
+# Check for dependency, else exit the given function that calls this.
+_depcheck() {
+	command -v "$1" > /dev/null || { echo "Missing dependency: $1."; return 1; }
+}
+
+# Debian Buster dependency:
+# 	apt install feh
+_wallpaper() {
+	_depcheck feh
+
+	# the wallpapers are defined manually at
+	# ~/Pictures/theme/{light,dark}.jpg
+	wall_path="$HOME/Pictures/theme"
+	wall_light="$wall_path/light.jpg"
+	wall_dark="$wall_path/dark.jpg"
+
+	[ -d "$wall_path" ] || { echo "No path to: $wall_path"; return 1; }
+	[ -f "$wall_light" ] || { echo "No path to: $wall_light"; return 1; }
+	[ -f "$wall_dark" ] || { echo "No path to: $wall_dark"; return 1; }
+
+	_feh() {
+		feh --bg-fill "$1" &
+	}
+
+	case "$theme_variant" in
+		l*) 
+			case "$DESKTOP_SESSION" in
+				bspwm)
+					_feh "$wall_light"
+					;;
+				gnome)
+					gsettings set org.gnome.desktop.background picture-uri "file://${wall_light}" &
+					;;
+				mate)
+					gsettings set org.mate.background picture-filename "$wall_light" &
+					;;
+			esac
+			;;
+		d*) 
+			case "$DESKTOP_SESSION" in
+				bspwm)
+					_feh "$wall_dark"
+					;;
+				gnome)
+					gsettings set org.gnome.desktop.background picture-uri "file://${wall_dark}" &
+					;;
+				mate)
+					gsettings set org.mate.background picture-filename "$wall_dark" &
+					;;
+			esac
+			;;
+	esac
+}
+
+# Debian Buster optional dependency:
+# 	apt install papirus-icon-theme
+_gtk() {
+	_gtk_common() {
+		# GTK 2
+		_sed "s,\(gtk-theme-name=\).*,\1\'${1}\', ; s,\(gtk-icon-theme-name=\).*,\1\'${2}\'," "$HOME"/.gtkrc-2.0
+		
+		# GTK 3
+		_sed "s,\(gtk-theme-name=\).*,\1${1}, ; s,\(gtk-icon-theme-name=\).*,\1${2}," "$HOME"/.config/gtk-3.0/settings.ini
+	}
+
+	_gtk_variant() {
+		if [ -d /usr/share/icons/"${2}" ]; then
+			_gtk_common "$1" "$2"
+		else
+			_gtk_common Adwaita Adwaita
+		fi
+	}
+
+	# My custom desktop session uses the mate-settings-daemon to live
+	# reload GTK and Flatpak themes.
+	_gtk_live() {
+		_depcheck mate-settings-daemon
+
+		gsettings set org.mate.interface gtk-theme "$1"
+		gsettings set org.mate.interface icon-theme "$2"
+	}
+
+	case "$theme_variant" in
+		l*)
+			_gtk_variant 'Adwaita' 'Papirus' &
+			_gtk_live 'Adwaita' 'Papirus' &
+			;;
+		d*)
+			_gtk_variant 'Adwaita-dark' 'Papirus-Dark' &
+			_gtk_live 'Adwaita-dark' 'Papirus-Dark' &
+			;;
+	esac
+}
+
+_gtksourceview3() {
+	gtksourceview_path="$HOME"/.local/share/gtksourceview-3.0/styles
+	[ -f "$gtksourceview_path"/tempus_"${tempus_theme}".xml ] || { echo "Missing gtksourceview3 file."; return 1; }
+
+	if [ "$(command -v gedit 2> /dev/null)" ]; then
+		gsettings set org.gnome.gedit.preferences.editor scheme "tempus-$tempus_theme"
+	fi
+
+	if [ "$(command -v pluma 2> /dev/null)" ]; then
+		gsettings set org.mate.pluma color-scheme "tempus-$tempus_theme"
+	fi
+}
+
+_gtksourceview4() {
+	gtksourceview_path="$HOME"/.local/share/gtksourceview-4/styles
+	[ -f "$gtksourceview_path"/tempus_"${tempus_theme}".xml ] || { echo "Missing gtksourceview4 file."; return 1; }
+
+	if [ "$(command -v gnome-builder 2> /dev/null)" ]; then
+		gsettings set org.gnome.builder.editor style-scheme-name "tempus-$tempus_theme"
+	fi
+}
+
+# FIXME HELPME is it possible to change the Vim colorscheme from the
+# shell, so that all running Vim sessions inside the terminal switch to
+# it?  Right now, I have to close any Vim instance inside the terminal
+# when switching from a light/dark theme to its opposite.  The terminal
+# colours change, but Vim still uses the same theme it did at startup.
+# This is expected behaviour: that is what the rc file is for.  `man
+# vim` has some flags for executing commands at startup but this only
+# works for new instances of Vim.  Use something like `xdo`, perhaps?
+#
+# The above DO NOT apply to Vim instances inside of tmux.
+_vim() {
+	_depcheck vim
+
+	_sed "s,\(colorscheme \).*,\1tempus_${tempus_theme}," "$HOME"/.vimrc
+
+	# NOTE this is another script that is part of my dotfiles.
+	tmux_update_vim &
+}
+
+_x_and_shell() {
+	tempus_files="$HOME/.local/share/my_colours"
+	tempus_active_x="$tempus_files/active-tempus-theme.Xcolors"
+	tempus_active_sh="$tempus_files/active-tempus-theme.sh"
+	tempus_active_content="$tempus_files/active-theme-content"
+
+	_check_tempus() {
+		[ -n "$1" ] || { echo "Path for Tempus themes is unavailable."; return 1; }
+	}
+
+	_check_tempus "$tempus_files"
+	_check_tempus "$tempus_active_x"
+	_check_tempus "$tempus_active_sh"
+
+	# IMPORTANT once modified, let other processes use the new colours.
+	_sed_sync "s,\(^source.*tempus_\).*,\1${tempus_theme}.sh," "$tempus_active_sh" && source "$tempus_active_sh"
+
+	# Update the X colours, so that new X programs inherit them.
+	_sed "s,\(^#include.*tempus_\).*,\1${tempus_theme}.Xcolors\"," "$tempus_active_x"
+
+	# Create a new file as well that is used to get the colour values
+	# of the running terminal.
+	#
+	# This is used by: own_script_update_running_terminals
+	grep '^.*=' "$tempus_files/shell/tempus_${tempus_theme}.sh" > "$tempus_active_content"
+
+	# NOTE older scripts of mine, in need of review…  MATE Terminal is
+	# a fallback option, in case Xterm gives me problems (because MATE
+	# is my fallback desktop environment).
+	own_script_update_running_terminals &
+	own_script_mate_terminal_setup &
+
+	_depcheck xterm
+
+	xresources="$HOME"/.Xresources
+	if [ -f "$xresources" ]; then
+		xrdb -I "$HOME" -merge "$xresources"
+	fi
+}
+
+_manpages() {
+	_manpages_common() {
+		_sed "s,\(man_fg=\).*,\1${1}, ; s,\(man_bg=\).*,\1${2}," "$HOME"/.bashrc
+	}
+
+	case "$theme_variant" in
+		l*) _manpages_common 0 15;;
+		d*) _manpages_common 15 0;;
+	esac
+}
+
+_tmux() {
+	_depcheck tmux
+
+	_sed_sync "s/tempus_fg=\"#[a-zA-Z0-9]*\"/tempus_fg=\"${foreground}\"/ ; \
+	s/tempus_bg=\"#[a-zA-Z0-9]*\"/tempus_bg=\"${background}\"/ ; \
+	s/tempus_fg_alt=\"#[a-zA-Z0-9]*\"/tempus_fg_alt=\"${foregroundalt}\"/ ; \
+	s/tempus_bg_alt=\"#[a-zA-Z0-9]*\"/tempus_bg_alt=\"${backgroundalt}\"/ ; \
+	s/tempus_bg_dim=\"#[a-zA-Z0-9]*\"/tempus_bg_dim=\"${backgrounddim}\"/" "$HOME"/.tmux.conf
+
+	tmux source-file "$HOME/.tmux.conf"
+}
+
+# This is my script for adding content to lemonbar.  Reloading it will
+# make it get the new shell colours.
+_melonpanel() {
+	_depcheck lemonbar
+	_depcheck melonpanel
+
+	if pgrep -x melonpanel > /dev/null; then
+		pkill -x melonpanel && melonpanel &
+	fi
+}
+
+_dunst() {
+	_depcheck dunst
+
+	dunstrc="$HOME/.config/dunst/dunstrc"
+
+	# Sed actions, per line:
+	# Change the separator and frame colour
+	# Change {back,fore}ground value for urgency_low notifications
+	# Change {back,fore}ground value for urgency_normal notifications
+	# Change {back,fore}ground value for urgency_critical notifications
+	sed --follow-symlinks -i "s/\(^separator_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgrounddim/ ; \
+	s/\(^frame_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; \
+	/urgency_low/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; /urgency_low/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foregroundalt/ ; \
+	/urgency_normal/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; /urgency_normal/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foreground/ ; \
+	/urgency_critical/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$color1/ ; /urgency_critical/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$background/" "$dunstrc"
+
+	# kill and reload dunst
+	if pgrep -x "dunst" > /dev/null; then
+		killall dunst && eval "$(dbus-launch)" &
+	fi
+}
+
+_bspwm() {
+	[ "$DESKTOP_SESSION" = 'bspwm' ] || { echo "Not running BSPWM. No action for it."; return 1; }
+
+	_bc() {
+		bspc config "$@"
+	}
+
+	_bc normal_border_color "$backgroundalt"
+	_bc presel_feedback_color "$backgrounddim"
+	if [ "$theme_variant" == 'light' ]; then
+		_bc active_border_color "$color1"
+		_bc focused_border_color "$color4"
+	else
+		_bc active_border_color "$color3"
+		_bc focused_border_color "$color6"
+	fi
+
+	bspwmrc="$HOME/.config/bspwm/bspwmrc"
+
+	[ -x "$bspwmrc" ] || { echo "Missing bspwmrc."; return 1; }
+
+	case "$theme_variant" in
+		l*)	
+			_sed "/active_border_color/ s,#[a-zA-Z0-9]*,$color1, ; \
+			/focused_border_color/ s,#[a-zA-Z0-9]*,$color4," "$bspwmrc"
+			;;
+		d*)
+			_sed "/active_border_color/ s,#[a-zA-Z0-9]*,$color3, ; \
+			/focused_border_color/ s,#[a-zA-Z0-9]*,$color6," "$bspwmrc"
+			;;
+	esac
+}
+
+# Function call cascade
+# ---------------------
+# Do not reorder.  Not tested thoroughly.
+_x_and_shell
+_tmux
+_vim
+_melonpanel
+_dunst
+_wallpaper
+_manpages
+_gtk
+_gtksourceview3
+_gtksourceview4
+_bspwm
