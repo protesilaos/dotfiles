@@ -323,7 +323,7 @@ _bspwm() {
 
 	_bc normal_border_color "$backgroundalt"
 	_bc presel_feedback_color "$backgrounddim"
-	if [ "$theme_variant" == 'light' ]; then
+	if [ "$theme_variant" = 'light' ]; then
 		_bc active_border_color "$color1"
 		_bc focused_border_color "$color4"
 	else
