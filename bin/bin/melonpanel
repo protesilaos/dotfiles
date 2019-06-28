@@ -26,27 +26,27 @@
 #	apt install bspwm lemonbar xdo
 #
 # Dependencies for individual modules:
-#	apt install amixer
+# 	apt install amixer acpi
 #
 # Optional:
 #	apt install xfonts-terminus
 #
-# Last full review 2019-05-13
+# Last full review 2019-06-28
 
 # General settings
 # ----------------
 
 # Check for dependencies.  Fail if unmet.
-check_dep() {
-	[ "$(command -v "$1" 2> /dev/null)" ] || { echo "Missing $1 dependency."; exit 1; }
+_checkdep() {
+	command -v "$1" > /dev/null || { echo "Missing dependency: $1"; exit 1; }
 }
 
-check_dep bspwm
-check_dep lemonbar
-check_dep xdo
+_checkdep bspwm
+_checkdep lemonbar
+_checkdep xdo
 
 # Kill any running lemonbar
-pgrep -xo lemonbar > /dev/null && pkill -xo lemonbar
+pgrep -x lemonbar > /dev/null && pkill -x lemonbar
 
 # Add colours from current Tempus theme.  That file is used in other
 # places as well to offer a convenient way of styling multiple tools in
@@ -123,107 +123,139 @@ fi
 # ideally, use common words that denote the function of the content of
 # the command such as e.g. D for Date, N for Network...  Where this
 # would lead to conflicts, find a synonym or something close enough.
+#
+# The various sequences %{..} are part of lemonbar's syntax for styling
+# the output.  See `man lemonbar`.
+
+
 
 # Battery status.
-battery_status() {
-	local battery_path battery_status battery_label battery_output
+_battery() {
+	command -v acpi > /dev/null || return 1
 
-	battery_path='/sys/class/power_supply/BAT0'
-	battery_output="$(sed 1q $battery_path/capacity)%"
-	battery_status="$(sed 1q $battery_path/status)"
-	battery_label='BAT:'
+	local battery_label battery_status battery_output battery_status_time
 
-	if [ -d "$battery_path" ]; then
-		case "$battery_status" in
-			'Charging')
-				echo "$battery_label %{F$color6}${battery_output}+%{F-}"
-				;;
-			'Discharging')
-				case "${battery_output%?}" in
-					[0-9])
-						echo "%{B$color9}%{F$background} $battery_label ${battery_output}- %{F-}%{B-}"
-						;;
-					*)
-						echo "$battery_label %{F$color11}${battery_output}-%{F-}"
-						;;
-				esac
-				;;
-			*)
-				echo "$battery_label ${battery_output}"
-				;;
-		esac
-	else
-		echo ''
-	fi
+	battery_label='B:'
+	battery_status="$(acpi -b | awk -F '[[:space:]]+|,' '{ print $3 }')"
+	battery_output="$(acpi -b | awk -F '[[:space:]]+|,' '{ print $5 }')"
+
+	# If dischange level reaches 0-9, the whole indicator will turn to
+	# a bright colour.  Otherwise, discharging will be denoted by
+	# a coloured output of the current level followed by the minus sign.
+	case "$battery_status" in
+		'Charging')
+			echo "$battery_label %{F$color6}${battery_output}+%{F-}"
+			;;
+		'Discharging')
+			case "${battery_output%?}" in
+				[0-9])
+					echo "%{B$color11}%{F$background} $battery_label ${battery_output}- %{F-}%{B-}"
+					;;
+				*)
+					echo "$battery_label %{F$color11}${battery_output}-%{F-}"
+					;;
+			esac
+			;;
+		*)
+			echo "$battery_label ${battery_output}"
+			;;
+	esac
 }
 
-# Check if the volume is muted or not.  Output the appropriate
-# indicators.
-volume_status() {
-	if [ "$(command -v amixer 2> /dev/null)" ]; then
-		local volume_status volume_level volume_label
+# Core temperature.
+_temperature() {
+	command -v acpi > /dev/null || return 1
 
-		amixer_get() {
-			amixer get Master | \
-			sed "/^\ *Front R/!d ; s,\(^.*\) \[\(.*%\)\] \[\(.*\)\],\\${1},"
-		}
+	local therm_label therm_status
 
-		volume_status="$(amixer_get 3)"
-		volume_level="$(amixer_get 2)"
-		volume_label='VOL:'
+	therm_label='T:'
+	therm_status="$(acpi -t | awk -F '[[:space:]]+|,' '{ print $5 }')"
+	therm_status="${therm_status:0:2}"
 
-		case "$volume_status" in
-			'off')
-				echo "$volume_label $volume_level (Muted)"
-				;;
-			'on')
-				echo "$volume_label $volume_level"
-				;;
-			*)
-				echo ''
-				;;
-		esac
-	fi
+	# Up to 59 degrees celcius keep text colour same as default.  60-79
+	# turn the colour red on normal background.  Else turn the whole
+	# indicator red.
+	case "$therm_status" in
+		[12345][0-9])
+			echo "$therm_label ${therm_status}°C"
+			;;
+		[67][0-9])
+			echo "$therm_label %{F$color1}${therm_status}°C%{F-}"
+			;;
+		*)
+			echo "%{F$background}%{B$color1} $therm_label ${therm_status}°C %{B-}%{F-}"
+			;;
+	esac
 }
 
-# This informs us if the current layout is set to Greek.  We need to
-# know this as key bindings generally work as expected with english.
-keyboard_layout() {
+# Check the sound volume and whether it is muted or not.  Output the
+# appropriate indicators.
+_volume() {
+	command -v amixer > /dev/null || return 1
+
+	local volume_status volume_level volume_label
+
+	_amixer_get() {
+		amixer get Master | \
+		sed "/^\ *Front R/!d ; s,\(^.*\) \[\(.*%\)\] \[\(.*\)\],\\${1},"
+	}
+
+	volume_status="$(_amixer_get 3)"
+	volume_level="$(_amixer_get 2)"
+	volume_label='V:'
+
+	case "$volume_status" in
+		'off')
+			echo "$volume_label $volume_level (Muted)"
+			;;
+		'on')
+			echo "$volume_label $volume_level"
+			;;
+	esac
+}
+
+# Keyboard indicators.
+_keyboard() {
+	local kd_layout kb_caps
+
+	# Checks if the current layout is set to Greek (adjust accordingly).
+	# If yes, the indicator will be displayed, else it is assumed that
+	# English is being used.
 	if [ "$(setxkbmap -query | sed '/^layout/!d ; s,^.*:[\ ]*,,g')" = 'gr' ]; then
-		echo "%{B$backgroundalt}%{U$foreground}%{+u} EL %{-u}%{U-}%{B-}"
+		kb_layout="%{B$backgroundalt}%{U$foreground}%{+u} EL %{-u}%{U-}%{B-}"
 	fi
+	
+	# Show an indicator if Caps Lock is on.
+	if [ "$(xset -q | grep Caps | awk '{ print $4 }')" = 'on' ]; then
+		kb_caps="%{B$backgroundalt}%{U$foreground}%{+u} CAPS %{-u}%{U-}%{B-}"
+	fi
+
+	# Print the indicators next each other in the given order.
+	printf "%s %s" "$kb_layout" "$kb_caps"
 }
 
+_datetime() {
+	local dt_label dt_status
 
-# Get the title of the currently focused window.  We limit the
-# characters it outputs to 40.
-window_title() {
-	local nid wt
+	dt_label='D:'
+	dt_status="$(date +'%a %-d %b %H:%M')"
 
-	nid="$(bspc query -N -n)"
-
-	if [ -n "$nid" ]; then
-		wt="$(xwininfo -id "$nid" | sed '/^xwininfo/!d ; s,.* \(".*"\).*,\1,')"
-		wt="${wt#?}"
-		wt="${wt%?}"
-		echo "%{F$foregroundalt}${wt:0:40}%{F-}"
-	else
-		echo ''
-	fi
+	echo "$dt_label $dt_status"
 }
+
 
 # Include all modules in a single infinite loop that iterates every
 # second (adjust interval accordingly, as it can be taxing on system
 # resources).
 #
 # To format the date, see `man date`.
-my_modules() {
+_modules() {
 	while true; do
-		echo "B" "$(battery_status)"
-		echo "D" "$(date +'%a %-d %b %H:%M')"
-		echo "K" "$(keyboard_layout)"
-		echo "T" "$(window_title)"
-		echo "V" "$(volume_status)"
+		echo "B" "$(_battery)"
+		echo "T" "$(_temperature)"
+		echo "D" "$(_datetime)"
+		echo "K" "$(_keyboard)"
+		echo "V" "$(_volume)"
 		sleep 1s
 	done
 }
@@ -244,7 +276,7 @@ melonpanel_fifo='/tmp/melonpanel.fifo'
 mkfifo "$melonpanel_fifo"
 
 # pipe the output of the modules to the fifo
-my_modules > "$melonpanel_fifo" &
+_modules > "$melonpanel_fifo" &
 bspc subscribe report > "$melonpanel_fifo" &
 
 # Read the content of the fifo file.  We differantiate between modules
@@ -262,6 +294,10 @@ melonpanel() {
 				# battery status
 				bat="${line#?}"
 				;;
+			T*)
+				# temperature
+				therm="${line#?}"
+				;;
 			D*)
 				# current date and time
 				date="${line#?}"
@@ -269,10 +305,6 @@ melonpanel() {
 			K*)
 				# keyboard layout (en or gr)
 				key="${line#?}"
-				;;
-			T*)
-				# window title
-				title="${line#?}"
 				;;
 			V*)
 				# volume level
@@ -341,14 +373,14 @@ melonpanel() {
 				done
 		esac
 
-		panel_layout() {
-			echo "%{l}$wm $title %{r}$key $bat $vol $date "
+		_panel_layout() {
+			echo "%{l}$wm%{r}$key $bat $therm $vol $date "
 		}
 
 		if [ -n "$laptop_external_monitor" ]; then
-			printf "%s%s\n" "%{Sf}$(panel_layout)" "%{Sl}$(panel_layout)"
+			printf "%s%s\n" "%{Sf}$(_panel_layout)" "%{Sl}$(_panel_layout)"
 		else
-			printf "%s\n" "%{Sf}$(panel_layout)"
+			printf "%s\n" "%{Sf}$(_panel_layout)"
 		fi
 	done
 }
