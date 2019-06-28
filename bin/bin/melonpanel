@@ -84,7 +84,10 @@ melonpanel_height=22 # DO NOT EDIT the name of this parameter (checked by other 
 # * character registry
 # * character encoding
 #
-# 0 or * is a wildcard.  Can be used for scalable fonts.
+# A wildcard is either 0 or *.  Can be used for quasi-scalable fonts:
+# they are still fixed-size, but are designed to match the closest size
+# at the given resolution and/or allocated space.  The method for
+# deciding on the ideal proportions is not clear to me…
 if [ -n "$(fc-list terminus)" ]; then
 	fontmain='-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso10646-1'
 	fontbold='-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso10646-1'
@@ -110,9 +113,10 @@ fi
 #
 # Once you have compiled the lemonbar fork and have removed the
 # corresponding Debian package, comment out the variables below and
-# adapt them to your needs.
-###fontmain='monospace:style=regular:size=10'
-###fontbold='monospace:style=bold:size=10'
+# adapt them to your needs.  Valid typeface names are whatever is
+# supported by fontconfig (also see my dotfiles for the relevant rules).
+###fontmain='DejaVu Sans Condensed:style=regular:size=11'
+###fontbold='DejaVu Sans Condensed:style=bold:size=11'
 
 # Panel modules
 # -------------
