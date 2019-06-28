@@ -264,13 +264,13 @@ _x_and_shell() {
 _tmux() {
 	_depcheck tmux
 
-	pgrep tmux > /dev/null || return 1
-
 	_sed_sync "s/tempus_fg=\"#[a-zA-Z0-9]*\"/tempus_fg=\"${foreground}\"/ ; \
 	s/tempus_bg=\"#[a-zA-Z0-9]*\"/tempus_bg=\"${background}\"/ ; \
 	s/tempus_fg_alt=\"#[a-zA-Z0-9]*\"/tempus_fg_alt=\"${foregroundalt}\"/ ; \
 	s/tempus_bg_alt=\"#[a-zA-Z0-9]*\"/tempus_bg_alt=\"${backgroundalt}\"/ ; \
 	s/tempus_bg_dim=\"#[a-zA-Z0-9]*\"/tempus_bg_dim=\"${backgrounddim}\"/" "$HOME"/.tmux.conf
+
+	pgrep tmux > /dev/null || return 1
 
 	tmux source-file "$HOME/.tmux.conf"
 
