@@ -42,10 +42,10 @@ xterm*cursorUnderLine: false
 xterm*pointerShape: XTerm
 
 ! Bell
-xterm*bellIsUrgent: true
-xterm*bellSupressTime: 3000
+xterm*bellIsUrgent: false
+xterm*bellSupressTime: 100
 xterm*marginBell: false
-xterm*visualBell: false
+xterm*visualBell: true
 
 ! Text highlighting
 xterm*highlightColor: XtDefaultForeground
