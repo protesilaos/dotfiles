@@ -43,6 +43,7 @@ set showcmd                       " show command in last line of the screen
 set nostartofline                 " keep cursor in the same column when moving between lines
 set errorbells                    " ring the bell for errors
 set visualbell                    " then use a flash instead of a beep sound
+set belloff=esc                   " hitting escape in normal mode does not constitute an error
 set confirm                       " ask for confirmation when quitting a file that has changes
 set hidden                        " hide buffers
 set autoindent                    " indent automatically (useful for formatoptions)
