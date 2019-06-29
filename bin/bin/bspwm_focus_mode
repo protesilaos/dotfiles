@@ -38,10 +38,10 @@ _get_value() {
 	local bspwmrc
 	bspwmrc="$HOME/.config/bspwm/bspwmrc"
 
-	sed "/$1/!d ; s,bspc config $1 \([a-z0-9]*\).*,\1," "$bspwmrc"
+	sed "/$1/!d ; s,.* $1 \([a-z0-9]*\).*,\1," "$bspwmrc"
 }
 
-# Use the function that gets the desired value from bspwmrc.
+## Use the function that gets the desired value from bspwmrc.
 window_gap="$(_get_value window_gap)"
 gapless_monocle="$(_get_value gapless_monocle)"
 paddingless_monocle="$(_get_value paddingless_monocle)"
