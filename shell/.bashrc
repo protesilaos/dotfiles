@@ -12,7 +12,12 @@
 # Note that ALL MY SCRIPTS are designed to work with `#!/bin/bash`.
 # They are not tested for portability.
 #
-# Last reviewed on 2019-03-23
+# Last full review on 2019-06-28
+
+# Shorter version of a common command that it used herein.
+_checkexec() {
+	command -v "$1" > /dev/null
+}
 
 # General settings
 # ================
@@ -32,7 +37,7 @@ export MANPAGER=$PAGER
 
 # Default editor.  On Debian the Vim GUI is provided by a separate
 # package.
-if [ "$(command -v gvim 2> /dev/null)" ]; then
+if _checkexec gvim; then
 	export VISUAL="gvim"
 	export EDITOR=vim
 else
@@ -64,9 +69,7 @@ if ! shopt -oq posix; then
 fi
 
 # Enable tab completion when starting a command with 'sudo'
-if [ "$PS1" ]; then
-	complete -cf sudo
-fi
+[ "$PS1" ] && complete -cf sudo
 
 # If not running interactively, don't do anything.  This too is taken
 # from Debian 9's bashrc.
@@ -90,13 +93,8 @@ HISTFILESIZE=2000
 # values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# Make less more friendly for non-text input files, see `man lesspipe`.
-[ "$(command -v lesspipe 2> /dev/null)" ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-#### cd into a directory by typing its name.  I disable this but keep it
-#### around.  I find it tricky, especially when an executable has a
-#### similar/same name to a directory.
-#### shopt -s autocd
+# Make `less` more friendly for non-text input files.
+_checkexec lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
 
 # Aliases
 # =======
@@ -111,7 +109,7 @@ shopt -s checkwinsize
 # If you are coming to Debian from Arch-based distros, check
 # compatibility with `pacman`:
 # https://wiki.archlinux.org/index.php/Pacman/Rosetta
-if [ "$(command -v apt 2> /dev/null)" ]; then
+if _checkexec apt; then
 	# up{dating,grading}.  The -V shows version changes.
 	alias au="sudo apt update"
 	alias aug="sudo apt upgrade -V"
@@ -142,7 +140,9 @@ if [ "$(command -v apt 2> /dev/null)" ]; then
 	alias amm="sudo apt-mark manual"
 fi
 
-if [ "$(command -v dpkg 2> /dev/null)" ]; then
+# No point in checking for dpkg on a Debian system.  Still, it can help
+# people who copy-paste stuff.
+if _checkexec dpkg; then
 	alias dgl='dpkg --listfiles' # target a package name, e.g. dgl bspwm
 	alias dgg='dpkg --get-selections' # would normally be pipped to grep
 	# The following removes/purges unused configs without asking for
@@ -151,7 +151,7 @@ if [ "$(command -v dpkg 2> /dev/null)" ]; then
 	alias dgp='sudo dpkg --purge $(dpkg --get-selections | grep deinstall | cut -f 1)'
 fi
 
-if [ "$(command -v aptitude 2> /dev/null)" ]; then
+if _checkexec aptitude; then
 	# The following two aliases perform the same action of removing
 	# unused system files.  Unlike 'alias dgp', confirmation is needed.
 	#alias apc="sudo aptitude purge ?config-files"
@@ -173,8 +173,8 @@ fi
 #	cp == cp -iv
 #	\cp == cp
 
-# Entering Vim is made easier!
-if [ "$(command -v vim 2> /dev/null)" ]; then
+# _Entering_ Vim is easy.
+if _checkexec vim; then
     alias v='vim'
     alias vi='vim'
 fi
@@ -193,7 +193,7 @@ alias mv='mv -iv'
 alias rm='rm -Iv'
 
 # Some common tasks for the `rsync` utiity.
-if [ "$(command -v rsync 2> /dev/null)" ]; then
+if _checkexec rsync; then
 	alias rsync='rsync --progress'
 	alias rsyncavz='rsync -avz --progress'
 	alias rsyncavzr='rsync -avzr --progress'
@@ -203,16 +203,16 @@ fi
 # Enable automatic color support for common commands that list output
 # and also add handy aliases.  Note the link to the `dircolors`.  This
 # is provided by my dotfiles.
-if [ "$(command -v dircolors 2> /dev/null)" ]; then
+if _checkexec dircolors; then
 	dircolors_data="$HOME/.local/share/my_bash/dircolors"
 	test -r $dircolors_data && eval "$(dircolors -b ${dircolors_data})" || eval "$(dircolors -b)"
 fi
 
+alias diff='diff --color=auto'
+
 alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
 
-# TODO document common offenders to be excluded from grep -R such as:
-# grep -R --exclude-dir='.git'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
@@ -227,15 +227,12 @@ alias lsa='ls -pvA --color=auto --group-directories-first'
 alias lsl='ls -lhpv --color=auto --group-directories-first'
 alias lsla='ls -lhpvA --color=auto --group-directories-first'
 
-# Shortcuts to common configs.
-alias urls="$EDITOR $HOME/.config/newsboat/urls"
-
 # Extra tasks and infrequently used tools
 # ---------------------------------------
 
 # These options are very opinionated, disabling images, javascript,
 # etc.  See `man surf`.
-if [ "$(command -v surf 2> /dev/null)" ]; then
+if _checkexec surf; then
 	alias surf="surf -giKMnps"
 fi
 
@@ -244,7 +241,7 @@ fi
 # When I only need to view the file I use --no-audio.  The one with
 # --ytdl-raw-options is for those occasions where a video is 4k or
 # something that slows things down considerably.
-if [ "$(command -v mpv 2> /dev/null)" ]; then
+if _checkexec mpv; then
 	alias mpvna='mpv --no-audio'
 	alias mpvnv='mpv --no-video'
 	alias mpvhd="mpv --ytdl-raw-options='format=[[bestvideo=height<=720]]'"
@@ -252,26 +249,26 @@ fi
 
 # Quick shortcuts for `youtube-dl`.  Output is placed in the present
 # working directory.
-if [ "$(command -v youtube-dl 2> /dev/null)" ]; then
+if _checkexec youtube-dl; then
 	alias ytaud='youtube-dl --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
 	alias ytvid='youtube-dl --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
 fi
 
 # Certbot.  This is a utility that handles Let's Encrypt certificates
 # for https connections.
-if [ "$(command -v certbot 2> /dev/null)" ]; then
+if _checkexec certbot; then
 	alias certm='sudo certbot certonly -a manual -d'
 fi
 
 # When I need to copy the contents of a file to the clipboard
-if [ "$(command -v xclip 2> /dev/null)" ]; then
+if _checkexec xclip; then
 	alias xclipc='xclip -selection clipboard' # followed by path to file
 fi
 
 # Flatpak commands
 # ----------------
 
-if [ "$(command -v flatpak 2> /dev/null)" ]; then
+if _checkexec flatpak; then
 	alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
 	alias fliu="flatpak uninstall"
 	alias flls="flatpak list --app --columns='desc,app,orig'"
@@ -281,7 +278,7 @@ fi
 # Git commands
 # ------------
 
-if [ "$(command -v git 2> /dev/null)" ]; then
+if _checkexec git; then
 	# add, commit
 	alias gadd='git add -v'
 	alias gaddp='git add --patch'
@@ -293,6 +290,8 @@ if [ "$(command -v git 2> /dev/null)" ]; then
 	alias grh='git reset HEAD'
 
 	# stats and diffs
+	alias gsh='git show'
+	alias gsho='git show --oneline'
 	alias glo='git log --oneline'
 	alias glog='git log'
 	alias gsta='git status'
