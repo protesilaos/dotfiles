@@ -84,7 +84,7 @@ _bc initial_polarity first_child
 _bc ignore_ewmh_focus true
 
 # window rules
-_check bspwm_external_rules && _bc external_rules_command bspwm_external_rules
+_check bspwm_external_rules && _bc external_rules_command "$(command -v bspwm_external_rules)"
 
 # colours
 # -------
