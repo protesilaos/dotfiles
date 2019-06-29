@@ -1,93 +1,130 @@
 #!/bin/bash
 
-# Description
-# ===========
-#
 # Configuration file for the Binary Space Partitioning Window Manager.
 # This is part of my dotfiles, which are managed with GNU Stow.  See
 # https://gitlab.com/protesilaos/dotfiles
+#
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+# Truncate a couple of common commands that are used herein.
+_bc() {
+	bspc config "$@"
+}
+
+_check() {
+	command -v "$1" > /dev/null
+}
 
 # Visual options
 # ==============
+#
+# Things to bear in mind about certain configurations:
+#
+# 1. single_monocle true == Does not recognise receptacles, so if you
+#    have a single window and insert a receptacle, the window will
+#    remain in monocle view.  Desired behaviour is to tile accordingly.
+# 2. borderless_monocle true == Smart borders are bad in multi-monitor
+#    setups because you cannot tell which window has focus when
+#    a monocle exists on each monitor.  Single monitor is okay.
+# 3. ignore_ewmh_focus true == This is very opinionated as it completely
+#    prevents focus stealing.  Adapt accordingly.
+# 4. pointer_modifier mod1 == enables mouse actions while holding down
+#    the Alt key (see below---bonus: the following two also work in the
+#    popular desktop environments).
+# 5. pointer_action1 move == Alt + Right Click allows you to drag
+#    a floating window.  Also works for switching the position of tiled
+#    windows, if that is your thing.
+# 6. pointer_action2 resize_side == Alt + Left Click allows you to
+#    resize the nearest side of the focused window.  Works for both
+#    tiled and floating windows.
+# 7. external_rules_command bspwm_external_rules == References the
+#    script of mine that implements window rules and some custom
+#    behaviours.  The script is also part of my dotfiles.  Window rules
+#    can be included herein, but I prefer to keep them separate.
+# 8. Colours are edited programmatically by my `tempus` script.  Do not
+#    edit them manually (edit the script instead).  These colours
+#    concern the following:
+#
+#    * normal_border_color   == unfocused windows
+#    * active_border_color   == focused window, unfocused monitor
+#    * focused_border_color  == focused window, focused monitor
+#    * presel_feedback_color == area for a manual split (preselection)
 
 # window management
 # -----------------
-# also see `man bspc` or `man bspwm`
-bspc config border_width 2
-bspc config window_gap 4
-bspc config split_ratio 0.50
-bspc config single_monocle false # "true" does not recognise receptacles
-bspc config borderless_monocle true # smart borders
-bspc config gapless_monocle false # use "true" for smart gaps
-bspc config paddingless_monocle false
-bspc config focus_follows_pointer false
-bspc config pointer_follows_monitor true # brings pointer to focused monitor (see workspaces)
-bspc config pointer_modifier mod1 # ALT key (see why right below)
-bspc config pointer_action1 move # alt + left-click to move node
-bspc config pointer_action2 resize_side # alt + right-click to resize node splits
-bspc config click_to_focus any # focus with any click
-bspc config swallow_first_click false # play the mouse event (e.g. right click context menu)
-bspc config initial_polarity first_child
-bspc config ignore_ewmh_focus true # prevent focus stealing
+_bc border_width 2
+_bc window_gap 4
+_bc split_ratio 0.50
+_bc single_monocle false
+_bc borderless_monocle true
+_bc gapless_monocle false
+_bc paddingless_monocle false
+_bc focus_follows_pointer false
+_bc pointer_follows_monitor true
+_bc pointer_modifier mod1
+_bc pointer_action1 move
+_bc pointer_action2 resize_side
+_bc click_to_focus any
+_bc swallow_first_click false
+_bc initial_polarity first_child
+_bc ignore_ewmh_focus true
 
-# Window rules.
-bspc config external_rules_command "$(command -v bspwm_external_rules 2> /dev/null)"
+# window rules
+_check bspwm_external_rules && _bc external_rules_command bspwm_external_rules
 
 # colours
 # -------
-
-# DO NOT EDIT: these are modified programmatically by
-# `tempus` and/or its frontend `tempusmenu`.
-bspc config normal_border_color "#312e30" # unfocused window
-bspc config active_border_color "#b1942b" # focused window, unfocused monitor
-bspc config focused_border_color "#6da280" # focused window, focused monitor
-bspc config presel_feedback_color "#2a2829" # feedback for manual node split
+_bc normal_border_color "#312e30"
+_bc active_border_color "#b1942b"
+_bc focused_border_color "#6da280"
+_bc presel_feedback_color "#2a2829"
 
 # autostart
 # =========
 
 # The hotkey daemon that handles all custom key bindings, including the
-# ones that control BSPWM
-sxhkd -c "$HOME"/.config/sxhkd/sxhkdrc{,_bspc} &
+# ones that control BSPWM.  No real need to check for the presence of
+# this executable, because it is a dependency of the BSPWM package.
+_check sxhkd && sxhkd -c "$HOME"/.config/sxhkd/sxhkdrc{,_bspc} &
 
 # Load my XTerm and relevant configurations.
-if [ -f "$HOME/.Xresources" ]; then
-	xrdb -I "$HOME" -merge "$HOME/.Xresources"
-fi
+[ -f "$HOME"/.Xresources ] && xrdb -I "$HOME" -merge "$HOME"/.Xresources
 
-# Launch my custom Lemonbar implementation
-if [ "$(command -v melonpanel 2> /dev/null)" ]; then
+# Launch my custom Lemonbar implementation (the system panel).
+if _check melonpanel; then
 	# Make sure we have no running instances
-	if pgrep -x melonpanel; then
-		pkill -x melonpanel
-	fi
-
+	pgrep -x melonpanel && pkill -x melonpanel
 	melonpanel
 fi
 
-# display compositor for shadow effects and background blur behind
-# transparent elements
-if [ "$(command -v compton 2> /dev/null)" ]; then
-	compton --config "$HOME/.config/compton.conf" &
-fi
+# Display compositor for enabling shadow effects and transparency
+# (disable it if performance is bad---also bear in mind that I do not
+# use transparent areas in any of my interfaces).
+_check compton && compton --config "$HOME"/.config/compton.conf &
 
 # Run the tool that sets the wallpaper.  A program could be used that
 # handles the desktop in general, including the option to set icons.
 # But this is enough for my case.  Here is a command I tested and which
 # works (using the Xfce desktop manager):
 # xfdesktop --sm-client-disable --disable-wm-check &
-if [ "$(command -v feh 2> /dev/null)" ]; then
-	if [ -f "$HOME/.fehbg" ]; then
-		"$HOME/.fehbg" &
-	elif [ -f "$HOME/.wallpaper.jpg" ]; then
-		feh --bg-fill "$HOME/.wallpaper.jpg" &
-	else
-		feh --bg-fill "$HOME/.local/share/my_bspwm_wallpaper_fallback.png" &
-	fi
-fi
+_check feh && "$HOME"/.fehbg &
 
 # specify keyboard layout and compose key
-if [ "$(command -v setxkbmap 2> /dev/null)" ]; then
+if _check setxkbmap; then
 	# setxkbmap -layout 'us,gr' -option 'grp:alt_caps_toggle'
 	setxkbmap -layout 'us'
 	setxkbmap -option compose:menu
@@ -99,14 +136,10 @@ fi
 
 # start the MATE settings daemon to apply GTK themes to running
 # applications as well as flatpaks (see the `tempus` script).
-if [ "$(command -v mate-settings-daemon 2> /dev/null)" ]; then
-	mate-settings-daemon &
-fi
+_check mate-settings-daemon && mate-settings-daemon &
 
 # start music server
-if [ "$(command -v mpd 2> /dev/null)" ]; then
-	mpd
-fi
+_check mpd && mpd
 
 # Start the bridge between mpd and mpris2.  Enabling the MPRIS
 # implementation allows other programs that handle multimedia to
@@ -116,9 +149,7 @@ fi
 #
 # See my `sxhkdrc` for the set of key bindings that handles media
 # controls in general and `mpd` in particular.
-if [ "$(command -v mpDris2 2> /dev/null)" ]; then
-	mpDris2 &
-fi
+_check mpDris2 && mpDris2 &
 
 # Per host configurations
 # =======================
@@ -127,6 +158,4 @@ fi
 # dual monitor setup.  As such, there are some bespoke configs for each
 # host.  Settings such as workspaces [per monitor] and program-specific
 # window rules are included.
-if [ "$(command -v own_script_bspwm_per_host_configs)" ]; then
-	own_script_bspwm_per_host_configs
-fi
+_check own_script_bspwm_per_host_configs && own_script_bspwm_per_host_configs
