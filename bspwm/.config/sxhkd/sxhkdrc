@@ -71,7 +71,7 @@
 # https://gitlab.com/protesilaos/dotfiles.
 super + e ; {c,d,f,s,p,t,m,k,q,x}
 	{ \
-	own_script_toggle_compton, \
+	toggle_compton, \
 	dotsmenu, \
 	bspwm_focus_mode, \
 	pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
