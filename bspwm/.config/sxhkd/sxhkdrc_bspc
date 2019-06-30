@@ -244,9 +244,9 @@ super + n ; {_, shift + }l
 # NOTE: All of the following are mirrors of their afore-mentioned
 # couterparts.
 
-# Focus {or swap with node} in the given direction.
-super + c : {_,shift + } {h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
+# Resize node in the given direction.
+super + c : {h,j,k,l}
+	own_script_bspwm_node_resize {west,south,north,east} 50
 
 # Gaps presets.
 super + c : {y,u,i,o}
