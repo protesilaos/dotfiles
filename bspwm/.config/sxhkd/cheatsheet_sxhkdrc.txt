@@ -6,7 +6,7 @@ List of common key bindings.  All definitions are stored at:
 The latter is for definitions that control the window manager.  While
 the former has WM-independent keys.
 
-Last review 2019-06-04.
+Last review 2019-07-01.
 
 Explanation of the basics
 =========================
@@ -38,15 +38,15 @@ Getting started
 ===============
 
 Super + Return            |-Open a terminal running the "Default" tmux session
-Super + Shift + Return    |-Open a generic terminal (xterm)
-Super + q                 |-Close focused node
-Super + Shift + q         |-Kill focused node
+Super + Shift + Return    |-Open a generic, yet fully-capable terminal (xterm)
+Super + q                 |-Close focused window safely (apps might require confirmation)
+Super + Shift + q         |-Kill focused window (no confirmation whatsoever)
 Ctrl + Alt + Delete       |-Launch poweroptionsmenu, where you can choose to log out, reboot, etc.
 
 Window motions
 ==============
 
-Super + {h,j,k,l}         |-Move focus in the given direction == determine which node has attention
+Super + {h,j,k,l}         |-Move focus in the given direction == choose which window has attention
 Super + Shift + {h,j,k,l} |-Swap focused node with the one in the given direction
 Super + Ctrl + {h,j,k,l}  |-Expand/contract tiled node in that direction, provided there is a split
 Super + Alt + {h,j,k,l}   |-Set preselection (manual tiling) for next window
@@ -61,23 +61,27 @@ Window and desktop actions
 
 Super + Space             |-Toggle between tiled and floating states
 Super + m                 |-Toggle between tiled and monocle layout (monocle == maximised nodes)
-Super + f                 |-Toggle focused node's full screen view
+Super + f                 |-Toggle focused window's full screen view
 Alt + Tab                 |-Cycle through windows on the current desktop
 Alt + Shift + Tab         |-Cycle backwardly through windows on the current desktop
 
 Desktop operations
 ==================
 
-Super + {1-6}             |-Switch to the designated desktop (workspace)
-Super + Shift + {1-6}     |-Send focused node to the given desktop
+Super + {0-9}             |-Switch to the designated desktop (workspace)
+Super + Shift + {0-9}     |-Send focused node to the given desktop
+                          |---Desktops are created/removed dynamically (my custom setup)
 Super + Tab               |-Cycle through desktops on the current monitor
 Super + Shift + Tab       |-Cycle backwardly through desktops on the current monitor
 Super + r                 |-Rotate the node tree 90 degrees clockwise
 Super + Shift + r         |-Rotate the node tree 90 degrees counter-clockwise
 Super + Alt + r           |-Mirror/flip the node tree (top left becomes bottom right)
 Super + s ; {b,e}         |-Balance or equalise node splits (better try it to get an idea)
+                          |---Balance works on the parent node.  Equalise is for all nodes.
 Super + Shift + {[,]}     |-Incrementally decrease or increase the gaps between the tiled nodes
 Super + Shift + {y,u,i,o} |-Change to gap presents {0,5,10,20}
+Super + comma             |-Switch focus to the next monitor (cycles through monitors)
+Super + Shift + comma     |-Switch focus to the previous monitor (cycles through monitors)
 
 Launching programs
 ==================
@@ -92,7 +96,7 @@ Useful extras
 =============
 
 Super + {F1,Home}         |-Launch a floating window with this cheat sheet
-Print                     |-Get a screenshot of the focused node saved to the ~/Desktop
+Print                     |-Get a screenshot of the focused window saved to the ~/Desktop
 Super + Print             |-Get a screenshot of the entire viewport saved to the ~/Desktop
 Super + p                 |-Run passmenu to copy a password stored with the UNIX tool "pass"
 Super + x ; w             |-Run a floating image browser, from where you can also set the wallpaper
