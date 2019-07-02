@@ -251,8 +251,6 @@ _datetime() {
 # Include all modules in a single infinite loop that iterates every
 # second (adjust interval accordingly, as it can be taxing on system
 # resources).
-#
-# To format the date, see `man date`.
 _modules() {
 	while true; do
 		echo "B" "$(_battery)"
@@ -287,7 +285,7 @@ bspc subscribe report > "$melonpanel_fifo" &
 # based on the majuscule (letter A-Z) they piped into melonpanel_fifo
 # (see modules above).  Here we just add a shorter variable to each
 # module, which helps position it on the panel (the last printf).
-melonpanel() {
+_melonpanel() {
 	local laptop_external_monitor
 
 	laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
@@ -395,7 +393,7 @@ melonpanel() {
 # NOTE the syntax for the background value.  If you want transparency,
 # just replace "ff" with a lower value: "00" means no opacity.  This is
 # hexadecimal notation: 0-9, a-f, A-F.
-melonpanel < "$melonpanel_fifo" | lemonbar -u 1 -p -g "x${melonpanel_height}" \
+_melonpanel < "$melonpanel_fifo" | lemonbar -u 1 -p -g "x${melonpanel_height}" \
 -F "$foreground" -B "#ff${background:1}" -f "$fontmain" -f "$fontbold" -n "Melonpanel" &
 
 # Hide panel when windows are in full screen mode.  This does not work
