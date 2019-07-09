@@ -338,11 +338,15 @@ _bspwm() {
 	case "$theme_variant" in
 		l*)	
 			_sed "/^[^#].*active_border_color/ s,#[a-zA-Z0-9]*,$color1, ; \
-			/^[^#].*focused_border_color/ s,#[a-zA-Z0-9]*,$color4," "$bspwmrc"
+			/^[^#].*focused_border_color/ s,#[a-zA-Z0-9]*,$color4, ; \
+			/^[^#].*normal_border_color/ s,#[a-zA-Z0-9]*,$backgroundalt, ; \
+			/^[^#].*presel_feedback_color/ s,#[a-zA-Z0-9]*,$backgrounddim," "$bspwmrc"
 			;;
 		d*)
 			_sed "/^[^#].*active_border_color/ s,#[a-zA-Z0-9]*,$color3, ; \
-			/^[^#].*focused_border_color/ s,#[a-zA-Z0-9]*,$color6," "$bspwmrc"
+			/^[^#].*focused_border_color/ s,#[a-zA-Z0-9]*,$color6, ; \
+			/^[^#].*normal_border_color/ s,#[a-zA-Z0-9]*,$backgroundalt, ; \
+			/^[^#].*presel_feedback_color/ s,#[a-zA-Z0-9]*,$backgrounddim," "$bspwmrc"
 			;;
 	esac
 }
