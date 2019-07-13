@@ -66,9 +66,9 @@
 
 laptop_coordinates() {
 	if [ "$#" == 1 ]; then
-		xrandr --output LVDS1 --primary --mode 1366x768 --pos 0x1080
+		xrandr --output LVDS1 --primary --mode 1366x768 --pos 0x0
 	else
-		xrandr --output LVDS1 --mode 1366x768 --pos 0x1080
+		xrandr --output LVDS1 --mode 1366x768 --pos 0x0
 	fi
 }
 
@@ -78,7 +78,7 @@ laptop_brightness() {
 	local laptop_host
 	laptop_host="$(sed '/my_laptop/!d ; s,.*"\([a-zA-Z0-9]*\)",\1,' "$HOME/.my_hostnames")"
 
-	# This is specific to my Lenovo ThinkPad X220.  It improves the
+	# this is specific to my Lenovo ThinkPad X220.  It improves the
 	# reproduction of colours, especially when working with light
 	# themes.
 	if [ "$laptop_host" == "$(hostname)" ]; then
@@ -92,7 +92,7 @@ multihead_coordinates() {
 	laptop_coordinates 'primary'
 
 	# configure the external display on the VGA port
-	xrandr --output VGA1 --mode 1920x1080 --pos 0x0
+	xrandr --output VGA1 --mode 1920x1080 --pos 1366x0
 }
 
 multihead_brightness() {
