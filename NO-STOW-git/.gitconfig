@@ -4,5 +4,6 @@
 	signingkey = 99BD6459CD5CA3EA
 [core]
 	editor = vim
+	excludesfile = ~/.gitignore_global
 [commit]
 	gpgsign = true
