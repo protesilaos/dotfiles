@@ -279,6 +279,8 @@ fi
 # ------------
 
 if _checkexec git; then
+	export GIT_EDITOR="$EDITOR"
+
 	# add, commit
 	alias gadd='git add -v'
 	alias gaddp='git add --patch'
