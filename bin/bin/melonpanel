@@ -26,7 +26,7 @@
 #	apt install bspwm lemonbar xdo
 #
 # Dependencies for individual modules:
-# 	apt install amixer acpi
+# 	apt install acpi
 #
 # Optional:
 #	apt install xfonts-terminus
