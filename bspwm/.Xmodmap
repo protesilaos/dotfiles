@@ -42,7 +42,7 @@
 ! I choose to bind Hyper to the Caps key and the right Win key
 ! (Super_R).
 
-! I know that many Emacs users use Capos as an extra Ctrl, but I have
+! I know that many Emacs users use Caps as an extra Ctrl, but I have
 ! never gotten used to that.  Whereas now I can use Hyper for my tiling
 ! window manager, and leave Ctrl, Meta, Super for Emacs.  Furthermore, I
 ! am aware that Emacs can bind different keys to Meta and Alt, but I
@@ -53,6 +53,9 @@
 clear lock
 clear mod3
 clear mod4
+
+! Set the Menu key as Compose
+keycode 135 = Multi_key
 
 ! Caps Lock as left Hyper
 keycode 66 = Hyper_L
