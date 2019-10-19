@@ -96,6 +96,11 @@ _bc presel_feedback_color "#2a2829"
 # autostart
 # =========
 
+# Parse my custom key mappings.  These enable Mod3 ("Hyper") and make
+# some necessary adjustments to that end.  We need to evaluate this
+# first otherwise it might mess up with SXHKD.
+[ -f "$HOME"/.Xmodmap ] && xmodmap "$HOME"/.Xmodmap
+
 # The hotkey daemon that handles all custom key bindings, including the
 # ones that control BSPWM.  No real need to check for the presence of
 # this executable, because it is a dependency of the BSPWM package.

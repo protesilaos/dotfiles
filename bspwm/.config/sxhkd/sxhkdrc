@@ -12,8 +12,36 @@
 # Partial configuration file for the Simple X Hotkey Daemon.  Meant to
 # work with `bspwm`.  This is part of my dotfiles, which are managed
 # with GNU Stow.  See https://gitlab.com/protesilaos/dotfiles
-#
-# Last full review on 2019-05-23
+
+
+
+
+
+############################################################################
+# IMPORTANT NOTE ABOUT THE USE OF MOD3 (written on 2019-10-19)             #
+#                                                                          #
+# Earlier versions of my SXHKD-related files would use Super (mod4) as the #
+# main modifier key for controlling my custom BSPWM session.  However,     #
+# since early July 2019 I have switched my main computing/coding/writing   #
+# environment to Emacs, where the Super key is more useful there.  As      #
+# such, I am now including an `~/.Xmodmap' file which enables the Hyper    #
+# key (mod3) and binds it to the Caps lock and the right "Win" key         #
+# respectively.                                                            #
+#                                                                          #
+# Please be very careful with the syntax of the key bindings for SXHKD.    #
+# My tests would only yield the desired results when `mod3' was            #
+# referenced explicitly.  Writing `hyper' would mess things up with        #
+# `super'.                                                                 #
+#                                                                          #
+# At any rate, this change is likely to be the first in a series as I      #
+# try to blend my BSPWM with my Emacs setup.  Eventually, I will make      #
+# the key bindings that control the window manager behave more like        #
+# those of Emacs and/or I will review all key chord chain to be more       #
+# aligned with Emacs conventions.  This is meant to prevent me from the    #
+# friction that context-switching tends to cause.                          #
+############################################################################
+
+
 
 
 
@@ -24,11 +52,11 @@
 # for when assigning direct keybindings would become unwieldy.  The idea
 # is to scope bindings so as to avoid conflicts.
 #
-# Environment: super + e ; ...
-# Executables which typically run in the console: super + x ; ...
-# Graphical applications: super + g ; ...
-# Assign (node flags): super + a ; ...
-# Split (split ratios): super + s ; ...
+# Environment: mod3 + e ; ...
+# Executables which typically run in the console: mod3 + x ; ...
+# Graphical applications: mod3 + g ; ...
+# Assign (node flags): mod3 + a ; ...
+# Split (split ratios): mod3 + s ; ...
 
 
 
@@ -48,7 +76,7 @@
 # the us,gr layout.  All this is done to be able to get the active
 # keyboard layout and print its name to my system panel (custom lemonbar
 # called "melonpanel").
-{alt + Caps_Lock,super + Escape}
+{alt + Caps_Lock,mod3 + Escape}
 	own_script_current_keyboard_layout
 
 # Environment
@@ -69,7 +97,7 @@
 #
 # Recall that these depend on my dotfiles:
 # https://gitlab.com/protesilaos/dotfiles.
-super + e ; {c,d,f,s,p,t,m,k,q,x}
+mod3 + e ; {c,d,f,s,p,t,m,k,q,x}
 	{ \
 	toggle_compton, \
 	dotsmenu, \
@@ -84,7 +112,7 @@ super + e ; {c,d,f,s,p,t,m,k,q,x}
 	}
 
 # Session management (log out, lock, switch users, reboot, shutdown).
-# Can also be invoked with super + e ; q (as defined above).
+# Can also be invoked with mod3 + e ; q (as defined above).
 ctrl + alt + {Home,End,Delete}
 	poweroptionsmenu
 
@@ -97,23 +125,23 @@ ctrl + alt + {Home,End,Delete}
 # complements the features of a tiling WM.  No need to spawn tens of
 # terminals, like a barbarian!  Watch my screen cast on the matter:
 # https://protesilaos.com/codelog/2019-01-13-tmux-demo-bspwm/
-super + {_, shift + } Return
+mod3 + {_, shift + } Return
 	{xterm -e tmux new-session -A -s 'Default', xterm}
 
 # GUI programs.  Where these are alternatives to common CLI tools they
 # are mapped to the same number as their counterparts, but prepended
 # with a `g` (mnemonic for GUI).
-super + g ; {1,2,3}
+mod3 + g ; {1,2,3}
 	{ \
-	notify-send -i firefox "Run GUI program" "Launching Web Browser" && firefox-esr, \
-	notify-send -i system-file-manager "Run GUI program" "Launching File Manager" && caja, \
-	notify-send -i thunderbird "Run GUI program" "Launching Email Client" && thunderbird \
+	notify-send -i firefox "Launching Firefox" && firefox-esr, \
+	notify-send -i system-file-manager "Launching Caja File Manager" && caja, \
+	notify-send -i thunderbird "Launching Thunderbird" && thunderbird \
 	}
 
 # CLI programs.  Any browser and/or file manager should be assigned the
 # numbers 1 and 2 respectively, in order to keep consistency with the
 # above-defined GUIs.
-super + x ; {3-5}
+mod3 + x ; {3-5}
 	xterm -e {mutt,newsboat,ncmpcpp}
 
 # I use "my_float_window" as an application name or class for those rare
@@ -121,11 +149,11 @@ super + x ; {3-5}
 #
 # Note that the executable `calc` is contained in the Debian package
 # `apcalc`.
-super + x ; 0
+mod3 + x ; 0
 	xterm -class "my_float_window" -e calc
 
 # Bring up the help text for common keybindings
-super + {F1,Home}
+mod3 + {F1,Home}
 	xterm -class "my_float_window" \
 	-geometry '100x30' -e less "$HOME/.config/sxhkd/cheatsheet_sxhkdrc.txt"
 
@@ -150,17 +178,17 @@ super + {F1,Home}
 # https://protesilaos.com/codelog/2019-02-17-unix-ways-todo/
 #
 # NOTE the keys are mnemonics for Backgrounds, Wallpapers, Tasks.
-super + x; {b,w,t}
+mod3 + x; {b,w,t}
 	{sbgmenu,nbm,stmmenu}
 
 # dmenu_run and passmenu using my custom colours.
-super + {d,p}
+mod3 + {d,p}
 	{own_script_run_dmenu_xcolors,own_script_run_passmenu_xcolors}
 
 # dmenu specifically for flatpaks.  While it is possible to include
 # these in the $PATH, or to query by `.desktop` file, I prefer to keep
 # them separate.
-super + shift + d
+mod3 + shift + d
 	flatpakmenu
 
 # Tools and utilities
@@ -172,9 +200,9 @@ super + shift + d
 #### allow an external program to handle them.  Below is an example
 #### implementation in lieu of the actual commands, which assigns the key
 #### chords I have specified in `dunstrc`.
-###super + {_, shift + } v
+###mod3 + {_, shift + } v
 ###	VIEW {context menu of} last notification (shows max 3 at a time)
-###super + {_, shift + } c
+###mod3 + {_, shift + } c
 ###	CLOSE {all} notification{s}
 
 # Screenshots (requires `scrot`).  First one is for the focused window.
@@ -182,7 +210,7 @@ super + shift + d
 # Note that `scrot` also has an interactive mode that I do not use.
 Print
 	scrot -u -z '%Y-%m-%d_%H:%M:%S_$wx$h$n.png' -e 'mv $f ~/Desktop' && notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Desktop"
-super + Print
+mod3 + Print
 	scrot -m -z '%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'mv $f ~/Desktop' && notify-send -i gnome-screenshot "Screen view screenshot" "Saved image to Desktop"
 
 # Control the laptop's screen brightness (requires `xbacklight`).
@@ -206,11 +234,11 @@ XF86Audio{Play,Prev,Next,Stop}
 
 # mpc method that is specific to the Music Player Daemon.  This uses
 # dedicated media keys.
-super + XF86Audio{Mute,LowerVolume,RaiseVolume}
+mod3 + XF86Audio{Mute,LowerVolume,RaiseVolume}
 	mpc {toggle,prev,next,stop}
 
 # mpc method as above, but using the arrow keys.
-super + {Down,Left,Right,Up}
+mod3 + {Down,Left,Right,Up}
 	mpc {toggle,prev,next,stop}
 
 # Speaker/output volume.  Requires `amixer` and dedicated keys.
@@ -220,6 +248,5 @@ XF86Audio{Mute,LowerVolume,RaiseVolume}
 # Microphone/input volume.  Same requirements as previous definition.
 XF86AudioMicMute
 	amixer set Capture toggle
-super + XF86Audio{Mute,LowerVolume,RaiseVolume}
+mod3 + XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer set Capture {toggle,5%-,5%+}
-

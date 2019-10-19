@@ -15,20 +15,48 @@
 #
 # LARGE PORTIONS OF THIS FILE INVOKE MY SHELL SCRIPTS.  Do not blindly
 # copy-paste from here!
-#
-# Last full review on 2019-06-18
+
+
+
+
+
+############################################################################
+# IMPORTANT NOTE ABOUT THE USE OF MOD3 (written on 2019-10-19)             #
+#                                                                          #
+# Earlier versions of my SXHKD-related files would use Super (mod4) as the #
+# main modifier key for controlling my custom BSPWM session.  However,     #
+# since early July 2019 I have switched my main computing/coding/writing   #
+# environment to Emacs, where the Super key is more useful there.  As      #
+# such, I am now including an `~/.Xmodmap' file which enables the Hyper    #
+# key (mod3) and binds it to the Caps lock and the right "Win" key         #
+# respectively.                                                            #
+#                                                                          #
+# Please be very careful with the syntax of the key bindings for SXHKD.    #
+# My tests would only yield the desired results when `mod3' was            #
+# referenced explicitly.  Writing `hyper' would mess things up with        #
+# `super'.                                                                 #
+#                                                                          #
+# At any rate, this change is likely to be the first in a series as I      #
+# try to blend my BSPWM with my Emacs setup.  Eventually, I will make      #
+# the key bindings that control the window manager behave more like        #
+# those of Emacs and/or I will review all key chord chain to be more       #
+# aligned with Emacs conventions.  This is meant to prevent me from the    #
+# friction that context-switching tends to cause.                          #
+############################################################################
+
+
 
 
 
 # Close {or kill} currently focused node
-super + {_,shift + }q
+mod3 + {_,shift + }q
 	bspc node -{c,k}
 
 # Focus/swap nodes/desktops
 # -------------------------
 
 # Focus the node in the given direction.
-super + {h,j,k,l}
+mod3 + {h,j,k,l}
 	bspc node -f {west,south,north,east}
 
 # Swap focused window with the one in the given direction.  If there is
@@ -49,7 +77,7 @@ super + {h,j,k,l}
 # --rotate the tree.
 #
 # bspwm_smart_move is part of my dotfiles (link in the description).
-super + shift + {h,j,k,l}
+mod3 + shift + {h,j,k,l}
 	bspwm_smart_move {west,south,north,east}
 
 # Dynamic desktop behaviour:  this invokes a script of mine that
@@ -58,10 +86,10 @@ super + shift + {h,j,k,l}
 # removed automatically.
 #
 #
-# super + <number> = focus the given desktop
-# super + shift + <number> = send focused window to given desktop
-# super + ctrl + shift + <number> = as above, but send to next monitor
-# super + ctrl + <number> = switches the active (visible) desktop of the
+# mod3 + <number> = focus the given desktop
+# mod3 + shift + <number> = send focused window to given desktop
+# mod3 + ctrl + shift + <number> = as above, but send to next monitor
+# mod3 + ctrl + <number> = switches the active (visible) desktop of the
 # unfocused monitor, without focusing it (focus stays on the current
 # desktop/monitor).  It also inserts a receptacle, meaning that the next
 # created window will go there without calling focus to itself (see my
@@ -72,25 +100,25 @@ super + shift + {h,j,k,l}
 # section.
 #
 # NOTE the leading `;` runs this command asynchronously.
-super + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
+mod3 + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
 	;bspwm_dynamic_desktops {--df,--ns,--nm,--da} {0-9}
 
 # With `alt` focus {next,previous} window in the current desktop.  With
-# `super` focus {next,previous} desktop in the current monitor.
+# `mod3` focus {next,previous} desktop in the current monitor.
 # Cyclical behaviour.  Move in the opposite direction while also holding
 # down `shift`.
-{super,alt} + {_,shift +} Tab
+{mod3,alt} + {_,shift +} Tab
 	bspc {desktop,node} -f {next,prev}.local
 
 # Switch to the {next,previous} monitor.  This brings focus to that
 # monitor's active desktop.
-super + {_,shift + }comma
+mod3 + {_,shift + }comma
 	bspc monitor -f {next,prev}
 
-# Switch to last active {desktop,node}.  With super move to the last
+# Switch to last active {desktop,node}.  With mod3 move to the last
 # active desktop.  With alt move to the last active node. "grave" is
 # positioned above Tab in QWERTY layouts.
-{super,alt} + grave
+{mod3,alt} + grave
 	bspc {desktop,node} -f last
 
 # Expand or contract node in the given direction.
@@ -100,27 +128,27 @@ super + {_,shift + }comma
 # such as MATE and Xfce).  I have not set the script to resize floating
 # windows because: (i) I do not use them and if I do I do not want to
 # change their dimensions, and (ii) to keep the script concise.
-super + ctrl + {h,j,k,l}
+mod3 + ctrl + {h,j,k,l}
 	own_script_bspwm_node_resize {west,south,north,east} 50
 
 # Move a floating window with the arrow keys (else use Alt + Left Mouse
 # Click to drag).  I seldom use floating windows.
-super + shift + {Left,Down,Up,Right}
+mod3 + shift + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
 
 # Swap current window with the biggest one in the present
 # desktop.
-super + shift + b
+mod3 + shift + b
 	bspc node -s biggest.local
 
 # Preselect the direction or insert again to cancel the preselection.
 # This enters the manual tiling mode that splits the currently focused
 # window.
-super + alt + {h,j,k,l}
+mod3 + alt + {h,j,k,l}
 	bspc node --presel-dir '~{west,south,north,east}'
 
 # Preselect the ratio.  The default value is 0.5, defined in `bspwmrc`.
-super + alt + {1-9}
+mod3 + alt + {1-9}
 	bspc node -o 0.{1-9}
 
 # Node layout state and flags
@@ -128,7 +156,7 @@ super + alt + {1-9}
 
 # Toggle monocle layout (maximise focused node).  If you use `-l
 # monocle` you lose the toggle functionality.
-super + m
+mod3 + m
 	bspc desktop -l next
 
 # Toggle tiled, pseudo_tiled, floating, fullscreen view.  Tiled is what
@@ -139,7 +167,7 @@ super + m
 #
 # NOTE the presence of the tilde ~.  If current state matches the given
 # state, then the argument is interpreted as the last state.
-super + {t,shift + space,space,f}
+mod3 + {t,shift + space,space,f}
  	bspc node -t ~{tiled,pseudo_tiled,floating,fullscreen}
 
 # Set the node flags.  Locked is a node that cannot be closed with `bspc
@@ -147,13 +175,13 @@ super + {t,shift + space,space,f}
 # the given item (such as sending the marked item to the newest
 # preselection).  Sticky stays in the focused desktop.  Private tries to
 # keep its dimensions and tiling position.
-super + a ; {l,m,s,p}
+mod3 + a ; {l,m,s,p}
 	bspc node -g {locked,marked,sticky,private}
 
 # Set the split ratio on demand.  Applies to the next window, or when
 # using the next set of commands that equalise the tree or balance the
 # parent node.
-super + s ; {2,3,4}
+mod3 + s ; {2,3,4}
 	bspc config split_ratio { \
 	0.50 && notify-send "BSPWM configuration" "Split ratio set to 0.50", \
 	0.66 && notify-send "BSPWM configuration" "Split ratio set to 0.66", \
@@ -163,27 +191,27 @@ super + s ; {2,3,4}
 # Make node split ratios equal or balanced.  The former applies to the
 # root of the tree to equalise all split ratios.  The latter applies to
 # the parent node to even out manually-split windows.
-super + s ; {e,b}
+mod3 + s ; {e,b}
 	bspc node {@/ --equalize,@parent --balance}
 
 # Manipulate the workspace
 # ------------------------
 
 # Rotate all windows {counter-}clockwise by 90 degrees.
-super + {_,shift + }r
+mod3 + {_,shift + }r
 	bspc node @/ --rotate {90,-90}
 
 # Flip desktop: what is on the right/top moves to the left/bottom and
 # vice versa.
-super + alt + {_,shift + }r
+mod3 + alt + {_,shift + }r
 	bspc node @/ --rotate {180,-180}
 
 # Switch between gap presets.
-super + shift + {y,u,i,o}
+mod3 + shift + {y,u,i,o}
 	bspc config window_gap {0,5,10,20}
 
 # Dynamic gaps.
-super + shift + bracket{left,right}
+mod3 + shift + bracket{left,right}
 	bspc config -d focused window_gap "$(($(bspc config -d focused window_gap) {-,+} 5 ))"
 
 # Advanced operations (receptacles and scripted actions)
@@ -197,39 +225,39 @@ super + shift + bracket{left,right}
 #
 # Whereas bspwm_smart_move (defined above) will automatically insert
 # a receptacle in the given direction by splitting the entire viewport.
-super + n ; r
+mod3 + n ; r
 	bspc node -i
 
 # Insert the marked window (or focused if no marks) in the first
 # matching receptacle (or preselection if no receptacles).
-super + n ; i
+mod3 + n ; i
 	bspwm_smart_presel
 
 # Kill/remove the first matching receptacle from the current desktop.
 # With shift, kill them all at once.
-super + n ; super + {_, shift + }r
+mod3 + n ; mod3 + {_, shift + }r
 	{ \
 	bspc node 'any.leaf.!window.local' -k, \
 	bspwm_multifaceted_operation --kill-all-receptacles \
 	}
 
 # Summon all marked windows across all desktops to the current desktop.
-super + n ; m
+mod3 + n ; m
 	bspwm_multifaceted_operation --summon-all-marked
 
 # Bring the windows of the given desktop to the current one.  With
 # shift, send the current window to the given one.
-super + n ; super + {_, shift + }{0-9}
+mod3 + n ; mod3 + {_, shift + }{0-9}
 	bspwm_multifaceted_operation {--bring-desktop-here,--send-desktop-there} {0-9}
 
 # Close {or kill} all windows in the present desktop except the focused
 # or any marked ones.
-super + n ; super + {_,shift + }q
+mod3 + n ; mod3 + {_,shift + }q
 	bspwm_multifaceted_operation --{close,kill}-all-local-non-focused
 
 # Assign the locked flag to all windows in the current desktop.  With
 # shift, remove the locked flag from all.
-super + n ; {_, shift + }l
+mod3 + n ; {_, shift + }l
 	bspwm_multifaceted_operation {--lock-all-local,--unlock-all-local}
 
 
@@ -245,17 +273,17 @@ super + n ; {_, shift + }l
 # couterparts.
 
 # Resize node in the given direction.
-super + c : {h,j,k,l}
+mod3 + c : {h,j,k,l}
 	own_script_bspwm_node_resize {west,south,north,east} 50
 
 # Gaps presets.
-super + c : {y,u,i,o}
+mod3 + c : {y,u,i,o}
 	bspc config window_gap {0,5,10,20}
 
 # Mode for dynamic gaps.
-super + c : bracket{left,right}
+mod3 + c : bracket{left,right}
 	bspc config -d focused window_gap "$(($(bspc config -d focused window_gap) {-,+} 5 ))"
 
 # Move floating windows with the arrow keys
-super + c : {Left,Down,Up,Right}
+mod3 + c : {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}

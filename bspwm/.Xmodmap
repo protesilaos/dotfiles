@@ -1,0 +1,67 @@
+!!!!!!!!!!!!!!!
+! Prior notes !
+!!!!!!!!!!!!!!!
+
+! These settings have been implemented succesfully on Debian 10
+! 'buster' running a variety of desktop environments on top of Xorg.
+
+! To get the current status of the modifiers:
+!
+!    xmodmap -pm
+!
+! To find out the key codes that are available:
+!
+!    xmodmap -pke
+!
+! Or narrow the results, e.g.:
+!
+!    xmodmap -pke | grep -E '(Alt|Shift)'
+!
+! Alternatively, use `xev` to print the key code upon key press.
+!
+! Here are some of the most likely candidates for changes:
+!
+!    keycode 37  = Control_L
+!    keycode 50  = Shift_L
+!    keycode 62  = Shift_R
+!    keycode 64  = Alt_L
+!    keycode 66  = Caps_Lock
+!    keycode 77  = Num_Lock
+!    keycode 105 = Control_R
+!    keycode 108 = Alt_R
+!    keycode 133 = Super_L
+!    keycode 134 = Super_R
+!    keycode 135 = Menu
+
+!!!!!!!!!!!!!!!!!
+! Modifications !
+!!!!!!!!!!!!!!!!!
+
+! Sometimes the Hyper key is bundled with Mod4 (Super).  So what we want
+! is to remove it from that group.  Mod4 should just cover Super.  Then
+! I choose to bind Hyper to the Caps key and the right Win key
+! (Super_R).
+
+! I know that many Emacs users use Capos as an extra Ctrl, but I have
+! never gotten used to that.  Whereas now I can use Hyper for my tiling
+! window manager, and leave Ctrl, Meta, Super for Emacs.  Furthermore, I
+! am aware that Emacs can bind different keys to Meta and Alt, but I
+! still have no use for that and do not want to increase the complexity
+! of my key bindings.
+
+! Clear affected keys
+clear lock
+clear mod3
+clear mod4
+
+! Caps Lock as left Hyper
+keycode 66 = Hyper_L
+
+! Right Super as Right Hyper
+keycode 134 = Hyper_R
+
+! Set mod3 to capslock/hyper
+add mod3 = Hyper_L Hyper_R
+
+! Keep Super in tact
+add mod4 = Super_L Super_R
