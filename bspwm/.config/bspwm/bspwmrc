@@ -96,6 +96,21 @@ _bc presel_feedback_color "#2a2829"
 # autostart
 # =========
 
+# Specify keyboard layout.  For the key chord that performs the layout
+# switching between US QWERTY and Greek see my `sxhkdrc`.
+#
+# Found the options in this location (Debian Buster):
+# /usr/share/X11/xkb/rules/base.lst
+#
+# caps:hyper           Make Caps Lock an additional Hyper
+# compose:menu         Menu keys behaves as Compose
+#
+# The options are required in order for Xmodmap to work properly (see
+# below).
+if _check setxkbmap; then
+    setxkbmap -layout 'us,el' -option 'caps:hyper,compose:menu'
+fi
+
 # Parse my custom key mappings.  These enable Mod3 ("Hyper") and make
 # some necessary adjustments to that end.  We need to evaluate this
 # first otherwise it might mess up with SXHKD.
@@ -128,20 +143,10 @@ _check compton && compton --config "$HOME"/.config/compton.conf &
 # xfdesktop --sm-client-disable --disable-wm-check &
 _check feh && "$HOME"/.fehbg &
 
-# specify keyboard layout and compose key
-if _check setxkbmap; then
-	# setxkbmap -layout 'us,gr' -option 'grp:alt_caps_toggle'
-	setxkbmap -layout 'us'
-	setxkbmap -option compose:menu
-
-	# For the key chord that performs the layout switching between US
-	# QWERTY and Greek see my `sxhkdrc`.  The script:
-	# `own_script_current_keyboard_layout`
-fi
-
-# start the MATE settings daemon to apply GTK themes to running
+### DISABLED because it breaks the Xmodmap settings
+# Start the MATE settings daemon to apply GTK themes to running
 # applications as well as flatpaks (see the `tempus` script).
-_check mate-settings-daemon && mate-settings-daemon &
+# _check mate-settings-daemon && mate-settings-daemon &
 
 # start music server
 _check mpd && mpd

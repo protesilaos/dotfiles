@@ -76,7 +76,7 @@
 # the us,gr layout.  All this is done to be able to get the active
 # keyboard layout and print its name to my system panel (custom lemonbar
 # called "melonpanel").
-{alt + Caps_Lock,mod3 + Escape}
+mod3 + Escape
 	own_script_current_keyboard_layout
 
 # Environment

@@ -37,34 +37,22 @@
 ! Modifications !
 !!!!!!!!!!!!!!!!!
 
-! Sometimes the Hyper key is bundled with Mod4 (Super).  So what we want
-! is to remove it from that group.  Mod4 should just cover Super.  Then
-! I choose to bind Hyper to the Caps key and the right Win key
-! (Super_R).
-
-! I know that many Emacs users use Caps as an extra Ctrl, but I have
-! never gotten used to that.  Whereas now I can use Hyper for my tiling
-! window manager, and leave Ctrl, Meta, Super for Emacs.  Furthermore, I
-! am aware that Emacs can bind different keys to Meta and Alt, but I
-! still have no use for that and do not want to increase the complexity
-! of my key bindings.
-
 ! Clear affected keys
 clear lock
 clear mod3
 clear mod4
 
-! Set the Menu key as Compose
-keycode 135 = Multi_key
-
 ! Caps Lock as left Hyper
 keycode 66 = Hyper_L
 
-! Right Super as Right Hyper
+! Keep Super in left Win
+keycode 133 = Super_L
+
+! Right Super as right Hyper
 keycode 134 = Hyper_R
 
-! Set mod3 to capslock/hyper
+! Set hyper
 add mod3 = Hyper_L Hyper_R
 
-! Keep Super in tact
+! Set super
 add mod4 = Super_L Super_R
