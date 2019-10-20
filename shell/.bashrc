@@ -27,13 +27,14 @@ _checkexec() {
 # am confident that no conflicts will arrise.  See the 'bin' directory
 # of my dotfiles.
 if [ -d "$HOME/bin" ] ; then
-	export PATH=$PATH:"$HOME/bin"
+    PATH=$PATH:"$HOME"/bin:"$HOME"/.local/bin
 fi
+
 
 # Default pager.  Note that the option I pass to it will quit once you
 # try to scroll past the end of the file.
 export PAGER="less --quit-at-eof"
-export MANPAGER=$PAGER
+export MANPAGER="$PAGER"
 
 # Default editor.  On Debian the Vim GUI is provided by a separate
 # package.
@@ -254,15 +255,14 @@ if _checkexec youtube-dl; then
 	alias ytvid='youtube-dl --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
 fi
 
-# Certbot.  This is a utility that handles Let's Encrypt certificates
-# for https connections.
-if _checkexec certbot; then
-	alias certm='sudo certbot certonly -a manual -d'
-fi
-
 # When I need to copy the contents of a file to the clipboard
 if _checkexec xclip; then
 	alias xclipc='xclip -selection clipboard' # followed by path to file
+fi
+
+# I only ever use Stow to make symlinks with my home dir as the base
+if _checkexec stow; then
+    alias stow="stow -t $HOME"
 fi
 
 # Flatpak commands

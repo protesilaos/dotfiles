@@ -18,8 +18,12 @@ fi
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
-    PATH=$PATH:"$HOME/bin"
+    PATH=$PATH:"$HOME"/bin:"$HOME"/.local/bin
 fi
+
+# if command -v emacs > /dev/null; then
+#  	export INFOPATH=$INFOPATH:/usr/share/info/emacs
+# fi
 
 # unclock keyring for terminal sessions
 # see https://wiki.archlinux.org/index.php/GNOME/Keyring#With_a_display_manager
