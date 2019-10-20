@@ -66,8 +66,8 @@ _check() {
 
 # window management
 # -----------------
-_bc border_width 2
-_bc window_gap 4
+_bc border_width 1
+_bc window_gap 1
 _bc split_ratio 0.50
 _bc single_monocle false
 _bc borderless_monocle true
@@ -103,7 +103,7 @@ _bc presel_feedback_color "#2a2829"
 # /usr/share/X11/xkb/rules/base.lst
 #
 # caps:hyper           Make Caps Lock an additional Hyper
-# compose:menu         Menu keys behaves as Compose
+# compose:menu         Menu key behaves as Compose
 #
 # The options are required in order for Xmodmap to work properly (see
 # below).

@@ -325,10 +325,10 @@ _bspwm() {
 	_bc presel_feedback_color "$backgrounddim"
 	if [ "$theme_variant" = 'light' ]; then
 		_bc active_border_color "$color1"
-		_bc focused_border_color "$background"
+		_bc focused_border_color "$color4"
 	else
 		_bc active_border_color "$color3"
-		_bc focused_border_color "$background"
+		_bc focused_border_color "$color6"
 	fi
 
 	bspwmrc="$HOME/.config/bspwm/bspwmrc"
