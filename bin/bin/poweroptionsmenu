@@ -23,7 +23,7 @@
 # https://gitlab.com/protesilaos/dotfiles
 #
 # Debian Buster dependencies:
-# 	
+#
 # 	apt install suckless-tools libnotify-bin
 #
 # Last full review on 2019-04-11
@@ -36,7 +36,7 @@ source "$HOME/.local/share/my_custom_ui_font.sh"
 
 # Call this function with one argument for the prompt text
 my_dmenu() {
-	dmenu -i -p "$1" -nb $background -nf $foreground -sb $color1 -sf $background -fn "$my_custom_ui_font"
+	dmenu -b -i -p "$1" -nb $background -nf $foreground -sb $color1 -sf $background -fn "$my_custom_ui_font"
 }
 
 # Possible actions (see case statement at the end for the actual

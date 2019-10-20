@@ -57,7 +57,7 @@ _themes() {
 }
 
 _dmenu() {
-	dmenu -p 'Select Tempus theme' -nb "${background:-'#000000'}" -nf "${foreground:-'#ffffff'}" \
+	dmenu -b -p 'Select Tempus theme' -nb "${background:-'#000000'}" -nf "${foreground:-'#ffffff'}" \
 	-sb "${color5:-'#bb6688'}" -sf "${background:-'#000000'}" -fn "${my_custom_ui_font:-'DejaVu Sans-10'}"
 }
 

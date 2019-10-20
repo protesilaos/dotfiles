@@ -18,7 +18,7 @@
 
 # A simple way to manage my task lisk.  `stmmenu` is a dmenu interface
 # for adding or removing items from a plain text file.  This script is
-# part of my dotfiles: https://gitlab.com/protesilaos/dotfiles 
+# part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
 #
 # Adapted from the same tool provided by suckless.org:
 # https://tools.suckless.org/dmenu/scripts/todo
@@ -52,7 +52,7 @@ my_dmenu() {
 		local height="5"
 	fi
 
-    dmenu -i -p 'Write to add OR select to remove a task' \
+    dmenu -b -i -p 'Write to add OR select to remove a task' \
 	-nb "$background" -nf "$foreground" -sb "$color12" \
 	-sf "$background" -fn "$my_custom_ui_font" -l "$height"
 }
@@ -96,7 +96,7 @@ while [ -n "$task_action" ]; do
 		# Increment the line height after adding the typed task
         task_list_height=$(($task_list_height+1))
 	fi
-	
+
 	# Renew stmmenu after receiving an action
 	task_interaction="grep -n '^.*' $task_list | my_dmenu $task_list_height"
 	task_action="$(eval $task_interaction)"

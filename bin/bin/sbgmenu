@@ -47,10 +47,10 @@ my_dmenu() {
 	local height="$2"
 
 	if [ -n "$2" ]; then
-		dmenu -i -p "$prompt" -nb "$background" -nf "$foreground" \
+		dmenu -b -i -p "$prompt" -nb "$background" -nf "$foreground" \
 		-sb "$color13" -sf "$background" -fn "$my_custom_ui_font" -l "$2"
 	else
-		dmenu -i -p "$prompt" -nb "$background" -nf "$foreground" \
+		dmenu -b -i -p "$prompt" -nb "$background" -nf "$foreground" \
 		-sb "$color13" -sf "$background" -fn "$my_custom_ui_font"
 	fi
 }

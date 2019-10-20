@@ -23,7 +23,7 @@ source "$HOME/.local/share/my_custom_ui_font.sh"
 
 # the customised `dmenu` command
 my_dmenu() {
-    dmenu -i -p 'Flatpak run' -nb "$background" -nf "$foreground" \
+    dmenu -b -i -p 'Flatpak run' -nb "$background" -nf "$foreground" \
     -sb "$color6" -sf "$background" -fn "$my_custom_ui_font"
 }
 
