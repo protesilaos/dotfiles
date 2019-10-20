@@ -31,7 +31,7 @@ panel_height="$(sed '/^melonpanel_height=/!d ; s,.*\([0-9]\{2\}\).*,\1,' "$(comm
 # The top padding this is not defined in bspwmrc but in another script
 # that sets the value on a per-host-computer basis.  We just get the
 # value from the running program.
-top_padding="$(bspc config top_padding)"
+bottom_padding="$(bspc config bottom_padding)"
 
 # Read the default setting from the bspwm config file.
 _get_value() {
@@ -49,11 +49,11 @@ border_width="$(_get_value border_width)"
 
 # Calculate the actual gap from the top of the viewport to the upper
 # part of the nodes.
-effective_padding=$(("$top_padding" + "$window_gap"))
+effective_padding=$(("$bottom_padding" + "$window_gap"))
 
 # If we are not in "focus mode"...
 if [ "$effective_padding" -ge "$panel_height" ] ; then
-	top_padding=0
+	bottom_padding=0
 	window_gap=0
 	gapless_monocle=true
 	paddingless_monocle=true
@@ -63,7 +63,7 @@ if [ "$effective_padding" -ge "$panel_height" ] ; then
 	pkill -xo melonpanel && pkill -x lemonbar
 else
 	# Unset everything
-	unset top_padding
+	unset bottom_padding
 	unset window_gap
 	unset gapless_monocle
 	unset paddingless_monocle
@@ -81,7 +81,7 @@ if [ -n "$border_width" ]; then
 else
 	bspc config window_gap "${window_gap:=4}"
 	bspc config border_width "${border_width:=2}"
-	bspc config top_padding "${top_padding:=$panel_height}"
+	bspc config bottom_padding "${bottom_padding:=$panel_height}"
 	for side in right bottom left; do
 		bspc config "${side}"_padding "0"
 	done
