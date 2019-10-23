@@ -45,6 +45,17 @@ _checkdep bspwm
 _checkdep lemonbar
 _checkdep xdo
 
+# Assess whether we are using the Debian package or my custom Xft fork
+# (see further below).  The latter uses outline or proportionately-sized
+# fonts as opposed to fixed-size bitmap fonts.
+#
+# Note that this check is not necessarily robust enough, because the
+# user might have a custom build of upstream lemonbar (with no Xft
+# support) inside their `$HOME/bin'.
+if [ "$(command -v lemonbar)" = "$HOME/bin/lemonbar" ]; then
+    lemonbar_xft=0
+fi
+
 # Kill any running lemonbar
 pgrep -x lemonbar > /dev/null && pkill -x lemonbar
 
@@ -88,18 +99,11 @@ melonpanel_height=22 # DO NOT EDIT the name of this parameter (checked by other 
 # they are still fixed-size, but are designed to match the closest size
 # at the given resolution and/or allocated space.  The method for
 # deciding on the ideal proportions is not clear to me…
-if [ -n "$(fc-list terminus)" ]; then
-	fontmain='-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso10646-1'
-	fontbold='-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso10646-1'
-else
-	fontmain='-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso10646-1'
-	fontbold='-misc-fixed-bold-r-normal--13-120-75-75-c-80-iso10646-1'
-fi
-
+#
 # OPTIONAL: Fonts for Lemonbar with Xft support (custom fork)
 # -----------------------------------------------------------
 # I have decided to maintain a fork of `lemonbar` that supports
-# outline/proportional typefaces (like the "DejaVu" family):
+# outline/proportionately-sized typefaces (like the "DejaVu" family):
 # https://gitlab.com/protesilaos/lemonbar-xft
 #
 # To use this fork, you need to compile it yourself.  Instructions for
@@ -111,12 +115,23 @@ fi
 #
 # * https://protesilaos.com/codelog/2019-06-24-lemonbar-xft-howto/
 #
-# Once you have compiled the lemonbar fork and have removed the
-# corresponding Debian package, comment out the variables below and
-# adapt them to your needs.  Valid typeface names are whatever is
-# supported by fontconfig (also see my dotfiles for the relevant rules).
-###fontmain='DejaVu Sans Condensed:style=regular:size=11'
-###fontbold='DejaVu Sans Condensed:style=bold:size=11'
+# Valid typeface names are whatever is supported by fontconfig (also see
+# my dotfiles for the relevant rules).
+case "$lemonbar_xft" in
+    0)
+        fontmain='FiraGO:style=regular:size=11'
+        fontbold='FiraGO:style=bold:size=11'
+        ;;
+    *)
+        if [ -n "$(fc-list terminus)" ]; then
+            fontmain='-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso10646-1'
+            fontbold='-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso10646-1'
+        else
+            fontmain='-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso10646-1'
+            fontbold='-misc-fixed-bold-r-normal--13-120-75-75-c-80-iso10646-1'
+        fi
+        ;;
+esac
 
 # Panel modules
 # -------------
