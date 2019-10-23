@@ -60,7 +60,8 @@ case "$arg" in
 		echo "TMR Mustn't be Ridiculous" && exit 1
 		;;
 	*)
-		timer="$time_clean seconds ago"
+		arg="${arg}m"
+		timer="$time_clean minutes ago"
 		;;
 esac
 
@@ -75,7 +76,7 @@ _notify() {
 	alarm_sound="/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
 
 	echo "$message"
-	notify-send -i clock -u critical "$message"
+	notify-send -i clock "$message"
 
 	if [ -n "$alarm_sound" ] && [ "$(command -v mpv 2> /dev/null)" ]; then
 		mpv "$alarm_sound"
