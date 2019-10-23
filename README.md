@@ -1,6 +1,17 @@
 Custom desktop session (BSPWM) and configurations for GNU/Linux
 ===============================================================
 
+**UPDATE 2019-10-23:** I produced a video where, among others, I talk
+about my outlook concerning my BSPWM session (and this repo).  Some
+_major breaking changes_ are in the works.  Please watch and remember
+that you can always use my free/libre book, which is also mentioned in
+the "Get my configs" section below.
+
+The video:
+https://protesilaos.com/codelog/2019-10-22-status-update-bspwm-emacs/
+
+* * *
+
 My custom desktop session can be outlined thus:
 
 * Debian stable because I prefer longer-term predictability over
@@ -25,7 +36,7 @@ Demos
 * Screen Casts: https://protesilaos.com/code-casts
 
 Get my configs
----------------
+--------------
 
 To reproduce my custom desktop session on Debian 10 'buster', follow the
 detailed instructions in my book "Prot's Dots for Debian (PDFD)":
