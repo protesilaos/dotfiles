@@ -20,8 +20,22 @@
 
 command -v screenkey > /dev/null || { echo "screenkey is not installed."; exit 1; }
 
+# Run this script with an argument to use black text on a white
+# background.  Otherwise use the inverse.
+if [ -n "$1" ]; then
+	bg="#ffffff"
+	fg="#000000"
+else
+	fg="#ffffff"
+	bg="#000000"
+fi
+
+# Kill the program if it is running, else launch it using the
+# appropriate settings.
 if pgrep -x screenkey; then
 	pkill -x screenkey
 else
-	screenkey -t 1 -s small -p bottom --no-systray --vis-shift --mods-mode normal --font 'Monospace Bold' --compr-cnt 5
+	screenkey --scr 1 -t 1 -s small -p bottom --opacity 1 \
+			  --no-systray --mods-mode emacs --font 'Monospace' \
+              --compr-cnt 2 --bg-color "$bg" --font-color "$fg"
 fi
