@@ -1,44 +1,48 @@
 #!/bin/bash
 
-	# This program is free software: you can redistribute it and/or modify
-	# it under the terms of the GNU General Public License as published by
-	# the Free Software Foundation, either version 3 of the License, or
-	# (at your option) any later version.
-
-	# This program is distributed in the hope that it will be useful,
-	# but WITHOUT ANY WARRANTY; without even the implied warranty of
-	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	# GNU General Public License for more details.
-
-	# You should have received a copy of the GNU General Public License
-	# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Melonpanel --- Script to configure `lemonbar' output
+#
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Description
 # -----------
 #
-# Melonpanel: my `lemonbar` implementation, for use in my custom desktop
-# session (see my dotfiles https://gitlab.com/protesilaos/dotfiles).
-# I just selected the name "melon" as an anagram for "lemon" and then
+# Melonpanel: my `lemonbar' implementation, for use in my custom desktop
+# session (see my dotfiles https://gitlab.com/protesilaos/dotfiles).  I
+# just selected the name "melon" as an anagram for "lemon" and then
 # switched "bar" with "panel".  This is to avoid naming conflicts where
 # we could accidentally kill the wrong process or whatnot.
 #
 # Debian Buster dependencies for melonpanel:
-#	apt install bspwm lemonbar xdo
+#    apt install bspwm lemonbar xdo
 #
 # Dependencies for individual modules:
-# 	apt install acpi
+#    apt install acpi
 #
 # Optional:
-#	apt install xfonts-terminus
+#    apt install xfonts-terminus
 #
-# Last full review 2019-06-28
+# Last full review 2019-10-23
 
 # General settings
 # ----------------
 
 # Check for dependencies.  Fail if unmet.
 _checkdep() {
-	command -v "$1" > /dev/null || { echo "Missing dependency: $1"; exit 1; }
+    command -v "$1" > /dev/null || { echo "Missing dependency: $1"; exit 1; }
 }
 
 _checkdep bspwm
@@ -150,116 +154,116 @@ esac
 
 # Battery status.
 _battery() {
-	command -v acpi > /dev/null || return 1
+    command -v acpi > /dev/null || return 1
 
-	local battery_label battery_status battery_output battery_status_time
+    local battery_label battery_status battery_output battery_status_time
 
-	battery_label='B:'
-	battery_status="$(acpi -b | awk -F '[[:space:]]+|,' '{ print $3 }')"
-	battery_output="$(acpi -b | awk -F '[[:space:]]+|,' '{ print $5 }')"
+    battery_label='B:'
+    battery_status="$(acpi -b | awk -F '[[:space:]]+|,' '{ print $3 }')"
+    battery_output="$(acpi -b | awk -F '[[:space:]]+|,' '{ print $5 }')"
 
-	# If dischange level reaches 0-9, the whole indicator will turn to
-	# a bright colour.  Otherwise, discharging will be denoted by
-	# a coloured output of the current level followed by the minus sign.
-	case "$battery_status" in
-		'Charging')
-			echo "$battery_label %{F$color6}${battery_output}+%{F-}"
-			;;
-		'Discharging')
-			case "${battery_output%?}" in
-				[0-9])
-					echo "%{B$color11}%{F$background} $battery_label ${battery_output}- %{F-}%{B-}"
-					;;
-				*)
-					echo "$battery_label %{F$color11}${battery_output}-%{F-}"
-					;;
-			esac
-			;;
-		*)
-			echo "$battery_label ${battery_output}"
-			;;
-	esac
+    # If dischange level reaches 0-9, the whole indicator will turn to
+    # a bright colour.  Otherwise, discharging will be denoted by
+    # a coloured output of the current level followed by the minus sign.
+    case "$battery_status" in
+        'Charging')
+            echo "$battery_label %{F$color6}${battery_output}+%{F-}"
+            ;;
+        'Discharging')
+            case "${battery_output%?}" in
+                [0-9])
+                    echo "%{B$color11}%{F$background} $battery_label ${battery_output}- %{F-}%{B-}"
+                    ;;
+                *)
+                    echo "$battery_label %{F$color11}${battery_output}-%{F-}"
+                    ;;
+            esac
+            ;;
+        *)
+            echo "$battery_label ${battery_output}"
+            ;;
+    esac
 }
 
 # Core temperature.
 _temperature() {
-	command -v acpi > /dev/null || return 1
+    command -v acpi > /dev/null || return 1
 
-	local therm_label therm_status
+    local therm_label therm_status
 
-	therm_label='T:'
-	therm_status="$(acpi -t | awk -F '[[:space:]]+|,' '{ print $5 }')"
-	therm_status="${therm_status:0:2}"
+    therm_label='T:'
+    therm_status="$(acpi -t | awk -F '[[:space:]]+|,' '{ print $5 }')"
+    therm_status="${therm_status:0:2}"
 
-	# Up to 59 degrees celcius keep text colour same as default.  60-79
-	# turn the colour red on normal background.  Else turn the whole
-	# indicator red.
-	case "$therm_status" in
-		[12345][0-9])
-			echo "$therm_label ${therm_status}°C"
-			;;
-		[67][0-9])
-			echo "$therm_label %{F$color1}${therm_status}°C%{F-}"
-			;;
-		*)
-			echo "%{F$background}%{B$color1} $therm_label ${therm_status}°C %{B-}%{F-}"
-			;;
-	esac
+    # Up to 59 degrees celcius keep text colour same as default.  60-79
+    # turn the colour red on normal background.  Else turn the whole
+    # indicator red.
+    case "$therm_status" in
+        [12345][0-9])
+            echo "$therm_label ${therm_status}°C"
+            ;;
+        [67][0-9])
+            echo "$therm_label %{F$color1}${therm_status}°C%{F-}"
+            ;;
+        *)
+            echo "%{F$background}%{B$color1} $therm_label ${therm_status}°C %{B-}%{F-}"
+            ;;
+    esac
 }
 
 # Check the sound volume and whether it is muted or not.  Output the
 # appropriate indicators.
 _volume() {
-	command -v amixer > /dev/null || return 1
+    command -v amixer > /dev/null || return 1
 
-	local volume_status volume_level volume_label
+    local volume_status volume_level volume_label
 
-	_amixer_get() {
-		amixer get Master | \
-		sed "/^\ *Front R/!d ; s,\(^.*\) \[\(.*%\)\] \[\(.*\)\],\\${1},"
-	}
+    _amixer_get() {
+        amixer get Master | \
+        sed "/^\ *Front R/!d ; s,\(^.*\) \[\(.*%\)\] \[\(.*\)\],\\${1},"
+    }
 
-	volume_status="$(_amixer_get 3)"
-	volume_level="$(_amixer_get 2)"
-	volume_label='V:'
+    volume_status="$(_amixer_get 3)"
+    volume_level="$(_amixer_get 2)"
+    volume_label='V:'
 
-	case "$volume_status" in
-		'off')
-			echo "$volume_label $volume_level (Muted)"
-			;;
-		'on')
-			echo "$volume_label $volume_level"
-			;;
-	esac
+    case "$volume_status" in
+        'off')
+            echo "$volume_label $volume_level (Muted)"
+            ;;
+        'on')
+            echo "$volume_label $volume_level"
+            ;;
+    esac
 }
 
 # Keyboard indicators.
 _keyboard() {
-	local kd_layout kb_caps
+    local kd_layout kb_caps
 
-	# Checks if the current layout is set to Greek (adjust accordingly).
-	# If yes, the indicator will be displayed, else it is assumed that
-	# English is being used.
-	if [ "$(setxkbmap -query | sed '/^layout/!d ; s,^.*:[\ ]*,,g')" = 'gr' ]; then
-		kb_layout="%{B$backgroundalt}%{U$foreground}%{+u} EL %{-u}%{U-}%{B-}"
-	fi
+    # Checks if the current layout is set to Greek (adjust accordingly).
+    # If yes, the indicator will be displayed, else it is assumed that
+    # English is being used.
+    if [ "$(setxkbmap -query | sed '/^layout/!d ; s,^.*:[\ ]*,,g')" = 'gr' ]; then
+        kb_layout="%{B$backgroundalt}%{U$foreground}%{+u} EL %{-u}%{U-}%{B-}"
+    fi
 
-	# Show an indicator if Caps Lock is on.
-	if [ "$(xset -q | grep Caps | awk '{ print $4 }')" = 'on' ]; then
-		kb_caps="%{B$backgroundalt}%{U$foreground}%{+u} CAPS %{-u}%{U-}%{B-}"
-	fi
+    # Show an indicator if Caps Lock is on.
+    if [ "$(xset -q | grep Caps | awk '{ print $4 }')" = 'on' ]; then
+        kb_caps="%{B$backgroundalt}%{U$foreground}%{+u} CAPS %{-u}%{U-}%{B-}"
+    fi
 
-	# Print the indicators next each other in the given order.
-	printf "%s %s" "$kb_layout" "$kb_caps"
+    # Print the indicators next each other in the given order.
+    printf "%s %s" "$kb_layout" "$kb_caps"
 }
 
 _datetime() {
-	local dt_label dt_status
+    local dt_label dt_status
 
-	dt_label='D:'
-	dt_status="$(date +'%a %-d %b %H:%M')"
+    dt_label='D:'
+    dt_status="$(date +'%a %-d %b %H:%M')"
 
-	echo "$dt_label $dt_status"
+    echo "$dt_label $dt_status"
 }
 
 
@@ -267,14 +271,14 @@ _datetime() {
 # second (adjust interval accordingly, as it can be taxing on system
 # resources).
 _modules() {
-	while true; do
-		echo "B" "$(_battery)"
-		echo "T" "$(_temperature)"
-		echo "D" "$(_datetime)"
-		echo "K" "$(_keyboard)"
-		echo "V" "$(_volume)"
-		sleep 1s
-	done
+    while true; do
+        echo "B" "$(_battery)"
+        echo "T" "$(_temperature)"
+        echo "D" "$(_datetime)"
+        echo "K" "$(_keyboard)"
+        echo "V" "$(_volume)"
+        sleep 1s
+    done
 }
 
 # Piping and reading the output of the modules
@@ -301,105 +305,105 @@ bspc subscribe report > "$melonpanel_fifo" &
 # (see modules above).  Here we just add a shorter variable to each
 # module, which helps position it on the panel (the last printf).
 _melonpanel() {
-	local laptop_external_monitor
+    local laptop_external_monitor
 
-	laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
+    laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
 
-	while read -r line ; do
-		case $line in
-			B*)
-				# battery status
-				bat="${line#?}"
-				;;
-			T*)
-				# temperature
-				therm="${line#?}"
-				;;
-			D*)
-				# current date and time
-				date="${line#?}"
-				;;
-			K*)
-				# keyboard layout (en or gr)
-				key="${line#?}"
-				;;
-			V*)
-				# volume level
-				vol="${line#?}"
-				;;
-			W*)
-				# bspwm's state
-				wm=
-				IFS=':'
-				set -- ${line#?}
-				while [ "$#" -gt 0 ] ; do
-					item="$1"
-					name="${item#?}"
-					case "$item" in
-						[mMfFoOuULG]*)
-							case "$item" in
-								m*)
-									# monitor
-									FG="$foregroundalt" # needed to avoid invalid colour error
-									on_focused_monitor=
-									name=
-									;;
-								M*)
-									# focused monitor
-									FG="$foregroundalt" # needed to avoid invalid colour error
-									on_focused_monitor=1
-									name=
-									;;
-								# {Free,Occupied,Urgent} focused
-								[FOU]*)
-									if [ -n "$on_focused_monitor" ]; then
-										name="%{T2}${name/*/[$name]}%{T-}" # the %{Tx} specifies the bold font
-										FG="$foreground"
-									else
-										name="${name/*/ $name-}"
-										FG="$foregroundalt"
-									fi
-									;;
-								# {free,occupied,urgent} unfocused
-								f*)
-									FG="$foregroundalt"
-									name="${name/*/ $name }"
-									;;
-								o*)
-									FG="$foregroundalt"
-									name="${name/*/ $name^}"
-									;;
-								u*)
-									FG="$color1"
-									name="${name/*/ $name\#}"
-									;;
-								# desktop layout for monocle and node flags
-								LM|G*?)
-									FG="$foreground"
-									name="${name/*/ $name }"
-									;;
-								*)
-									FG="$foregroundalt"
-									name="${name/*/ * }"
-									;;
-							esac
-							wm="${wm}%{F$FG}${name}%{F-}"
-							;;
-					esac
-					shift
-				done
-		esac
+    while read -r line ; do
+        case $line in
+            B*)
+                # battery status
+                bat="${line#?}"
+                ;;
+            T*)
+                # temperature
+                therm="${line#?}"
+                ;;
+            D*)
+                # current date and time
+                date="${line#?}"
+                ;;
+            K*)
+                # keyboard layout (en or gr)
+                key="${line#?}"
+                ;;
+            V*)
+                # volume level
+                vol="${line#?}"
+                ;;
+            W*)
+                # bspwm's state
+                wm=
+                IFS=':'
+                set -- ${line#?}
+                while [ "$#" -gt 0 ] ; do
+                    item="$1"
+                    name="${item#?}"
+                    case "$item" in
+                        [mMfFoOuULG]*)
+                            case "$item" in
+                                m*)
+                                    # monitor
+                                    FG="$foregroundalt" # needed to avoid invalid colour error
+                                    on_focused_monitor=
+                                    name=
+                                    ;;
+                                M*)
+                                    # focused monitor
+                                    FG="$foregroundalt" # needed to avoid invalid colour error
+                                    on_focused_monitor=1
+                                    name=
+                                    ;;
+                                # {Free,Occupied,Urgent} focused
+                                [FOU]*)
+                                    if [ -n "$on_focused_monitor" ]; then
+                                        name="%{T2}${name/*/[$name]}%{T-}" # the %{Tx} specifies the bold font
+                                        FG="$foreground"
+                                    else
+                                        name="${name/*/ $name-}"
+                                        FG="$foregroundalt"
+                                    fi
+                                    ;;
+                                # {free,occupied,urgent} unfocused
+                                f*)
+                                    FG="$foregroundalt"
+                                    name="${name/*/ $name }"
+                                    ;;
+                                o*)
+                                    FG="$foregroundalt"
+                                    name="${name/*/ $name^}"
+                                    ;;
+                                u*)
+                                    FG="$color1"
+                                    name="${name/*/ $name\#}"
+                                    ;;
+                                # desktop layout for monocle and node flags
+                                LM|G*?)
+                                    FG="$foreground"
+                                    name="${name/*/ $name }"
+                                    ;;
+                                *)
+                                    FG="$foregroundalt"
+                                    name="${name/*/ * }"
+                                    ;;
+                            esac
+                            wm="${wm}%{F$FG}${name}%{F-}"
+                            ;;
+                    esac
+                    shift
+                done
+        esac
 
-		_panel_layout() {
-			echo "%{l}$wm%{r}$key $bat $therm $vol $date "
-		}
+        _panel_layout() {
+            echo "%{l}$wm%{r}$key $bat $therm $vol $date "
+        }
 
-		if [ -n "$laptop_external_monitor" ]; then
-			printf "%s%s\n" "%{Sf}$(_panel_layout)" "%{Sl}$(_panel_layout)"
-		else
-			printf "%s\n" "%{Sf}$(_panel_layout)"
-		fi
-	done
+        if [ -n "$laptop_external_monitor" ]; then
+            printf "%s%s\n" "%{Sf}$(_panel_layout)" "%{Sl}$(_panel_layout)"
+        else
+            printf "%s\n" "%{Sf}$(_panel_layout)"
+        fi
+    done
 }
 
 # Launch the panel with the given parameters
@@ -419,7 +423,7 @@ _melonpanel < "$melonpanel_fifo" | lemonbar -b -u 1 -p -g "x${melonpanel_height}
 # Source of this snippet (with minor adapatations by me):
 # https://github.com/baskerville/bspwm/issues/484
 until bar_id=$(xdo id -a 'Melonpanel'); do
-	sleep 1s
+    sleep 1s
 done
 
 xdo below -t $(xdo id -n root) $bar_id &
