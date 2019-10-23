@@ -166,6 +166,5 @@ _check mpDris2 && mpDris2 &
 
 # I deploy my dotfiles on two separate machines.  On one I often run a
 # dual monitor setup.  As such, there are some bespoke configs for each
-# host.  Settings such as workspaces [per monitor] and program-specific
-# window rules are included.
+# host.
 _check own_script_bspwm_per_host_configs && own_script_bspwm_per_host_configs
