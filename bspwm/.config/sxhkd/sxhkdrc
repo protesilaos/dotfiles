@@ -225,21 +225,24 @@ XF86ScreenSaver
 # Media controls
 # --------------
 
-# MPRIS method that manages all supporting clients or programs.  For
-# MPD, you must have `mpdris2` (Debian repos) as a bridge between it and
-# MPRIS.  `playerctl` is the tool that controls all MPRIS-aware
-# applications.  These mappings use dedicated media keys.
-XF86Audio{Play,Prev,Next,Stop}
-	playerctl {play-pause,previous,next,stop}
+##### DEPRECATION NOTICE 2019-10-24: I will be gradually incorporating
+##### my Emacs setup in my dotfiles.  The Music Player Daemon and
+##### relevant tools will be removed in the process (and other things as
+##### well).
+# # MPRIS method that manages all supporting clients or programs.  For
+# # MPD, you must have `mpdris2` (Debian repos) as a bridge between it and
+# # MPRIS.  `playerctl` is the tool that controls all MPRIS-aware
+# # applications.  These mappings use dedicated media keys.
+# XF86Audio{Play,Prev,Next,Stop}
+# 	playerctl {play-pause,previous,next,stop}
 
-# mpc method that is specific to the Music Player Daemon.  This uses
-# dedicated media keys.
-mod3 + XF86Audio{Mute,LowerVolume,RaiseVolume}
-	mpc {toggle,prev,next,stop}
-
-# mpc method as above, but using the arrow keys.
-mod3 + {Down,Left,Right,Up}
-	mpc {toggle,prev,next,stop}
+# Control the current Emacs player from outside of Emacs.
+mod3 + XF86Audio{Play,Prev,Next}
+	emacsclient -e { \
+    "(bongo-pause/resume)", \
+    "(bongo-previous)", \
+    "(bongo-next)" \
+    }
 
 # Speaker/output volume.  Requires `amixer` and dedicated keys.
 XF86Audio{Mute,LowerVolume,RaiseVolume}
