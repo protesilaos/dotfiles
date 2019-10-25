@@ -278,6 +278,22 @@ _tmux() {
 	tmux_update_vim &
 }
 
+_emacs() {
+    _depcheck emacs
+
+    pgrep -x emacs > /dev/null || return 1
+
+    # Just run the function I have for toggling between my two Emacs
+    # themes.  The Modus themes are not part of Tempus, but their goal
+    # is the same.
+    #
+    # See:
+    #
+    # 1. https://protesilaos.com/dotemacs
+    # 2. https://gitlab.com/protesilaos/modus-themes
+    emacsclient -e "(prot/modus-themes-toggle)"
+}
+
 _dunst() {
 	_depcheck dunst
 
@@ -354,6 +370,7 @@ _bspwm() {
 # Function call cascade
 # ---------------------
 # Do not reorder.  Not tested thoroughly.
+_emacs
 _x_and_shell
 _tmux
 _vim
