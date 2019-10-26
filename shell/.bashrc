@@ -113,16 +113,16 @@ _checkexec lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
 # https://wiki.archlinux.org/index.php/Pacman/Rosetta
 if _checkexec apt; then
 	# up{dating,grading}.  The -V shows version changes.
-	alias au="sudo apt update"
-	alias aug="sudo apt upgrade -V"
-	alias auu="sudo apt update && sudo apt upgrade -V"
-	alias afu="sudo apt full-upgrade -V"
-	alias auufu="sudo apt update && sudo apt upgrade -V && sudo apt full-upgrade -V"
+	alias au="sudo apt-get update"
+	alias aug="sudo apt-get upgrade -V"
+	alias auu="sudo apt-get update && sudo apt-get upgrade -V"
+	alias afu="sudo apt-get dist-upgrade -V"
+	alias auufu="sudo apt-get update && sudo apt-get upgrade -V && sudo apt-get dist-upgrade -V"
 
 	# act on package targets
-	alias ai="sudo apt install"
-	alias air="sudo apt install --reinstall"
-	alias ar="sudo apt remove -V"
+	alias ai="sudo apt-get install"
+	alias air="sudo apt-get install --reinstall"
+	alias ar="sudo apt-get remove -V"
 
 	# list local packages
 	alias ard="apt rdepends" # followed by package name to print reverse dependencies
@@ -136,8 +136,8 @@ if _checkexec apt; then
 	alias adl="apt download" # gets source .deb in current directory
 
 	# package handling
-	alias aac="sudo apt autoclean"
-	alias aar="sudo apt autoremove -V"
+	alias aac="sudo apt-get autoclean"
+	alias aar="sudo apt-get autoremove -V"
 	alias ama="sudo apt-mark auto"
 	alias amm="sudo apt-mark manual"
 fi
