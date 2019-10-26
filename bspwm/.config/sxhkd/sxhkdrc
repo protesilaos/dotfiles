@@ -238,7 +238,7 @@ XF86ScreenSaver
 
 # Control the current Emacs player from outside of Emacs.
 mod3 + XF86Audio{Play,Prev,Next}
-	emacsclient -e { \
+	pgrep -x emacs && emacsclient -e { \
     "(bongo-pause/resume)", \
     "(bongo-previous)", \
     "(bongo-next)" \
