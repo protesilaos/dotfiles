@@ -22,12 +22,13 @@ _checkexec() {
 # General settings
 # ================
 
-# Include my scripts in the PATH.  To avoid conflicts, I always prepend
-# `own_script_` to my files.  There are some exceptions though, where I
-# am confident that no conflicts will arrise.  See the 'bin' directory
-# of my dotfiles.
-if [ -d "$HOME/bin" ] ; then
-    PATH=$PATH:"$HOME"/bin:"$HOME"/.local/bin
+# Include my scripts in the PATH.
+if [ -d "$HOME/bin" ]; then
+    PATH=$PATH:"$HOME"/bin
+fi
+
+if [ -d "$HOME/.local/bin" ]; then
+    PATH=$PATH:"$HOME"/.local/bin
 fi
 
 
