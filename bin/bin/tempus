@@ -283,15 +283,17 @@ _emacs() {
 
     pgrep -x emacs > /dev/null || return 1
 
-    # Just run the function I have for toggling between my two Emacs
-    # themes.  The Modus themes are not part of Tempus, but their goal
-    # is the same.
+    # Just switch to the appropriate Emacs theme.  The Modus themes are
+    # not part of Tempus, but their goal is the same.
     #
     # See:
     #
     # 1. https://protesilaos.com/dotemacs
     # 2. https://gitlab.com/protesilaos/modus-themes
-    emacsclient -e "(prot/modus-themes-toggle)"
+    case "$theme_variant" in
+        l*) emacsclient -e "(load-theme 'modus-operandi t)" ;;
+        d*) emacsclient -e "(load-theme 'modus-vivendi t)" ;;
+	esac
 }
 
 _dunst() {
