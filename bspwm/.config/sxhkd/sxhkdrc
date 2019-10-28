@@ -147,30 +147,6 @@ mod3 + {F1,Home}
 	xterm -class "my_float_window" \
 	-geometry '100x30' -e less "$HOME/.config/sxhkd/cheatsheet_sxhkdrc.txt"
 
-# sbgmenu: dmenu interface for browsing images from my "Pictures"
-# directory.  There is an option to just display the selected file, or
-# set it as the new desktop wallpaper.
-#
-# nbm: similar to the above, but uses a graphical approach, by
-# displaying all image thumbnails in a grid layout using `sxiv`.  The
-# user can view each image individually and mark images.  If only one is
-# marked, it is defined as the new wallpaper, else another grid is drawn
-# with just the marked files.
-#
-# Watch this screen cast for `sbgmenu` and `nbm`:
-# https://protesilaos.com/codelog/2019-02-09-unix-ways-wallpapers/
-#
-# stmmenu: dmenu interface for managing my task list.  If I type
-# something that has no match, it is appended in plain text format to my
-# task list file.  If I select an existing item, it is removed from the
-# list.  I also have a script that presents the data: see "stm" inside
-# my dotfiles' "bin" directorty.  Check this video demo:
-# https://protesilaos.com/codelog/2019-02-17-unix-ways-todo/
-#
-# NOTE the keys are mnemonics for Backgrounds, Wallpapers, Tasks.
-mod3 + x; {b,w,t}
-	{sbgmenu,nbm,stmmenu}
-
 # dmenu_run and passmenu using my custom colours.
 mod3 + {d,p}
 	{own_script_run_dmenu_xcolors,own_script_run_passmenu_xcolors}
