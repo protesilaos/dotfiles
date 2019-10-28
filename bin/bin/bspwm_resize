@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Extracted and adapted from source:
+# https://github.com/Chrysostomus/bspwm-scripts/blob/master/bin/bspwm_resize.sh
+
+# Resizes (expands or contracts) the selected node in the given
+# direction.  This is assigned to a key binding in $HOME/.config/sxhkd/sxhkdrc
+
+size=${2:-'10'}
+direction=$1
+
+case "$direction" in
+ west)  bspc node @west  -r -"$size" || bspc node @east  -r -"$size" ;;
+ east)  bspc node @west  -r +"$size" || bspc node @east  -r +"$size" ;;
+ north) bspc node @south -r -"$size" || bspc node @north -r -"$size" ;;
+ south) bspc node @south -r +"$size" || bspc node @north -r +"$size" ;;
+esac

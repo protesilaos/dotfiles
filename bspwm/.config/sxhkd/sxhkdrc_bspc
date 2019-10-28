@@ -129,7 +129,7 @@ mod3 + {_,shift + }comma
 # windows because: (i) I do not use them and if I do I do not want to
 # change their dimensions, and (ii) to keep the script concise.
 mod3 + ctrl + {h,j,k,l}
-	own_script_bspwm_node_resize {west,south,north,east} 50
+	bspwm_resize {west,south,north,east} 50
 
 # Move a floating window with the arrow keys (else use Alt + Left Mouse
 # Click to drag).  I seldom use floating windows.
@@ -274,7 +274,7 @@ mod3 + n ; {_, shift + }l
 
 # Resize node in the given direction.
 mod3 + c : {h,j,k,l}
-	own_script_bspwm_node_resize {west,south,north,east} 50
+	bspwm_resize {west,south,north,east} 50
 
 # Gaps presets.
 mod3 + c : {y,u,i,o}
