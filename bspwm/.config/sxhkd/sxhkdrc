@@ -77,7 +77,7 @@
 # keyboard layout and print its name to my system panel (custom lemonbar
 # called "melonpanel").
 mod3 + Escape
-	own_script_current_keyboard_layout
+	toggle_kbd_layout
 
 # Environment
 # -----------
