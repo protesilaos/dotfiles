@@ -296,28 +296,6 @@ _emacs() {
 	esac
 }
 
-_dunst() {
-	_depcheck dunst
-
-	dunstrc="$HOME/.config/dunst/dunstrc"
-
-	# Sed actions, per line:
-	# Change the separator and frame colour
-	# Change {back,fore}ground value for urgency_low notifications
-	# Change {back,fore}ground value for urgency_normal notifications
-	# Change {back,fore}ground value for urgency_critical notifications
-	sed --follow-symlinks -i "s/\(^separator_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgrounddim/ ; \
-	s/\(^frame_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; \
-	/urgency_low/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; /urgency_low/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foregroundalt/ ; \
-	/urgency_normal/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; /urgency_normal/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foreground/ ; \
-	/urgency_critical/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$color1/ ; /urgency_critical/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$background/" "$dunstrc"
-
-	# kill and reload dunst
-	if pgrep -x "dunst" > /dev/null; then
-		killall dunst && eval "$(dbus-launch)" &
-	fi
-}
-
 # This is my script for adding content to lemonbar.  Reloading it will
 # make it get the new shell colours.
 _melonpanel() {
@@ -376,7 +354,6 @@ _emacs
 _x_and_shell
 _tmux
 _vim
-_dunst
 _bspwm
 _wallpaper
 _gtk
