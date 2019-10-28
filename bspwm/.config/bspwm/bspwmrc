@@ -131,11 +131,6 @@ if _check melonpanel; then
 	melonpanel
 fi
 
-# Display compositor for enabling shadow effects and transparency
-# (disable it if performance is bad---also bear in mind that I do not
-# use transparent areas in any of my interfaces).
-_check compton && compton --config "$HOME"/.config/compton.conf &
-
 # Run the tool that sets the wallpaper.  A program could be used that
 # handles the desktop in general, including the option to set icons.
 # But this is enough for my case.  Here is a command I tested and which
