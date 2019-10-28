@@ -148,19 +148,6 @@ _check feh && "$HOME"/.fehbg &
 # applications as well as flatpaks (see the `tempus` script).
 # _check mate-settings-daemon && mate-settings-daemon &
 
-# start music server
-_check mpd && mpd
-
-# Start the bridge between mpd and mpris2.  Enabling the MPRIS
-# implementation allows other programs that handle multimedia to
-# interface with `mpd`.  This is the case, for example, with programs
-# such as `playerctl`, or with desktop environments that offer
-# multimedia controls in their shell (e.g.  GNOME, Cinnamon, etc.).
-#
-# See my `sxhkdrc` for the set of key bindings that handles media
-# controls in general and `mpd` in particular.
-_check mpDris2 && mpDris2 &
-
 # Per host configurations
 # =======================
 
