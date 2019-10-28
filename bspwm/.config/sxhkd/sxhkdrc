@@ -149,7 +149,7 @@ mod3 + {F1,Home}
 
 # dmenu_run and passmenu using my custom colours.
 mod3 + {d,p}
-	{own_script_run_dmenu_xcolors,own_script_run_passmenu_xcolors}
+	{dmenu_xcolors,passmenu_xcolors}
 
 # dmenu specifically for flatpaks.  While it is possible to include
 # these in the $PATH, or to query by `.desktop` file, I prefer to keep
