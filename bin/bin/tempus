@@ -13,10 +13,6 @@
 # 1: https://gitlab.com/protesilaos/tempus-themes (partially
 #    incorporated in my dotfiles)
 #
-# This script is the successor of own_script_update_environment_theme,
-# which has been deprecated and will be removed from future releases of
-# my dotfiles (ensures feature parity).
-#
 # Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -244,13 +240,16 @@ _x_and_shell() {
 	# Create a new file as well that is used to get the colour values
 	# of the running terminal.
 	#
-	# This is used by: own_script_update_running_terminals
+	# This is used by: repaint_terminals
 	grep '^.*=' "$tempus_files/shell/tempus_${tempus_theme}.sh" > "$tempus_active_content"
 
-	# NOTE older scripts of mine, in need of review…  MATE Terminal is
-	# a fallback option, in case Xterm gives me problems (because MATE
-	# is my fallback desktop environment).
-	own_script_update_running_terminals &
+    # Another one of my scripts for live recolouring running terminal
+    # emulators, by using escape sequences.
+    repaint_terminals &
+
+	# This one is an older script of mine.  In need of review…  MATE
+	# Terminal is a fallback option, in case Xterm gives me problems
+	# (because MATE is my "plan B" desktop environment).
 	own_script_mate_terminal_setup &
 
 	_depcheck xterm
