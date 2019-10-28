@@ -84,7 +84,6 @@ mod3 + Escape
 
 # The following commands are:
 #
-# c == toggle compton (display compositor)
 # d == dmenu to quickly edit dotfiles
 # f == bspwm focus mode
 # s == reload sxhkd
@@ -97,9 +96,8 @@ mod3 + Escape
 #
 # Recall that these depend on my dotfiles:
 # https://gitlab.com/protesilaos/dotfiles.
-mod3 + e ; {c,d,f,s,p,t,m,k,q,x}
+mod3 + e ; {d,f,s,p,t,m,k,q,x}
 	{ \
-	toggle_compton, \
 	dotsmenu, \
 	bspwm_focus_mode, \
 	pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
@@ -137,12 +135,6 @@ mod3 + g ; {1,2,3}
 	notify-send -i system-file-manager "Launching Caja File Manager" && caja, \
 	notify-send -i thunderbird "Launching Thunderbird" && thunderbird \
 	}
-
-# CLI programs.  Any browser and/or file manager should be assigned the
-# numbers 1 and 2 respectively, in order to keep consistency with the
-# above-defined GUIs.
-mod3 + x ; {3-5}
-	xterm -e {mutt,newsboat,ncmpcpp}
 
 # I use "my_float_window" as an application name or class for those rare
 # occasions where I prefer a floating window at launch.
@@ -193,17 +185,6 @@ mod3 + shift + d
 
 # Tools and utilities
 # -------------------
-
-#####PLACEHOLDER for future release of dunst
-#### TODO add all `dunst` related keys here.  Currently, it only supports
-#### setting key bindings inside `dunstrc`, but there is ongoing work to
-#### allow an external program to handle them.  Below is an example
-#### implementation in lieu of the actual commands, which assigns the key
-#### chords I have specified in `dunstrc`.
-###mod3 + {_, shift + } v
-###	VIEW {context menu of} last notification (shows max 3 at a time)
-###mod3 + {_, shift + } c
-###	CLOSE {all} notification{s}
 
 # Screenshots (requires `scrot`).  First one is for the focused window.
 # The other is of the entire X session (including all active monitors).
