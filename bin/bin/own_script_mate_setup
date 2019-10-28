@@ -82,9 +82,6 @@ if [ -d /usr/share/icons/Adwaita ]; then
 fi
 
 gsettings set org.mate.peripherals-mouse cursor-size '24'
-
-# The notification daemon is replaced by `dunst` so this does not have
-# any effect.
 gsettings set org.mate.NotificationDaemon theme 'coco'
 
 # Desktop settings
