@@ -89,21 +89,19 @@ mod3 + Escape
 # s == reload sxhkd
 # p == reload melonpanel (my lemonbar script)
 # t == dmenu to choose Tempus theme
-# m == notification with mpc status (shows album art, title, etc.)
 # k == toggle screenkey (useful for screen casts)
 # q == dmenu interface to log out, lock, switch users, reboot, shutdown
 # x == reload the Xresources file
 #
 # Recall that these depend on my dotfiles:
 # https://gitlab.com/protesilaos/dotfiles.
-mod3 + e ; {d,f,s,p,t,m,k,q,x}
+mod3 + e ; {d,f,s,p,t,k,q,x}
 	{ \
 	dotsmenu, \
 	bspwm_focus_mode, \
 	pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
 	pkill -x melonpanel && melonpanel, \
 	tempusmenu, \
-	own_script_notify_send_mpc_status, \
 	toggle_screenkey, \
 	poweroptionsmenu, \
 	xrdb -I "$HOME" -merge "$HOME"/.Xresources \
@@ -206,19 +204,8 @@ XF86ScreenSaver
 # Media controls
 # --------------
 
-##### DEPRECATION NOTICE 2019-10-24: I will be gradually incorporating
-##### my Emacs setup in my dotfiles.  The Music Player Daemon and
-##### relevant tools will be removed in the process (and other things as
-##### well).
-# # MPRIS method that manages all supporting clients or programs.  For
-# # MPD, you must have `mpdris2` (Debian repos) as a bridge between it and
-# # MPRIS.  `playerctl` is the tool that controls all MPRIS-aware
-# # applications.  These mappings use dedicated media keys.
-# XF86Audio{Play,Prev,Next,Stop}
-# 	playerctl {play-pause,previous,next,stop}
-
 # Control the current Emacs player from outside of Emacs.
-mod3 + XF86Audio{Play,Prev,Next}
+XF86Audio{Play,Prev,Next}
 	pgrep -x emacs && emacsclient -e { \
     "(bongo-pause/resume)", \
     "(bongo-previous)", \
