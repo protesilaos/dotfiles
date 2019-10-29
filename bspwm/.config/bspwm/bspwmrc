@@ -66,8 +66,8 @@ _check() {
 
 # window management
 # -----------------
-_bc border_width 1
-_bc window_gap 1
+_bc border_width 2
+_bc window_gap 2
 _bc split_ratio 0.50
 _bc single_monocle false
 _bc borderless_monocle true
