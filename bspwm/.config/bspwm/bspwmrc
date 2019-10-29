@@ -138,6 +138,15 @@ fi
 # xfdesktop --sm-client-disable --disable-wm-check &
 _check feh && "$HOME"/.fehbg &
 
+# EXPERIMENTAL Start the display compositor.  This one is a replacement
+# for Compton.  I built it from source, as no Debian package is
+# available: https://github.com/yshui/picom
+#
+# Find all options with `picom --help'
+picom -r 10 -o .5 -l -8 -t -8 -CGb --detect-rounded-corners \
+      --detect-client-opacity --vsync --use-ewmh-active-win \
+      --unredir-if-possible --config /dev/null
+
 ### DISABLED because it breaks the Xmodmap settings
 # Start the MATE settings daemon to apply GTK themes to running
 # applications as well as flatpaks (see the `tempus` script).
