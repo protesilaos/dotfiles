@@ -13,10 +13,6 @@
 # 1: https://gitlab.com/protesilaos/tempus-themes (partially
 #    incorporated in my dotfiles)
 #
-# This script is the successor of own_script_update_environment_theme,
-# which has been deprecated and will be removed from future releases of
-# my dotfiles (ensures feature parity).
-#
 # Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -135,6 +131,8 @@ _wallpaper() {
 	esac
 }
 
+### TODO 2019-10-29: Add check for theme AND icons.  Test against
+### both, else use Adwaita.
 # Debian Buster optional dependency:
 # 	apt install papirus-icon-theme
 _gtk() {
@@ -171,14 +169,16 @@ _gtk() {
 		esac
 	}
 
+    ### NOTE 2019-10-29: Materia is not parsed through any test.  See
+    ### the above TODO.  This is work-in-progress.
 	case "$theme_variant" in
 		l*)
-			_gtk_variant 'Adwaita' 'Papirus-Light' &
-			_gtk_live 'Adwaita' 'Papirus-Light' &
+			_gtk_variant 'Materia-light-compact' 'Papirus-Light' &
+			_gtk_live 'Materia-light-compact' 'Papirus-Light' &
 			;;
 		d*)
-			_gtk_variant 'Adwaita-dark' 'Papirus-Dark' &
-			_gtk_live 'Adwaita-dark' 'Papirus-Dark' &
+			_gtk_variant 'Materia-dark-compact' 'Papirus-Dark' &
+			_gtk_live 'Materia-dark-compact' 'Papirus-Dark' &
 			;;
 	esac
 }
@@ -244,13 +244,16 @@ _x_and_shell() {
 	# Create a new file as well that is used to get the colour values
 	# of the running terminal.
 	#
-	# This is used by: own_script_update_running_terminals
+	# This is used by: repaint_terminals
 	grep '^.*=' "$tempus_files/shell/tempus_${tempus_theme}.sh" > "$tempus_active_content"
 
-	# NOTE older scripts of mine, in need of review…  MATE Terminal is
-	# a fallback option, in case Xterm gives me problems (because MATE
-	# is my fallback desktop environment).
-	own_script_update_running_terminals &
+    # Another one of my scripts for live recolouring running terminal
+    # emulators, by using escape sequences.
+    repaint_terminals &
+
+	# This one is an older script of mine.  In need of review…  MATE
+	# Terminal is a fallback option, in case Xterm gives me problems
+	# (because MATE is my "plan B" desktop environment).
 	own_script_mate_terminal_setup &
 
 	_depcheck xterm
@@ -294,28 +297,6 @@ _emacs() {
         l*) emacsclient -e "(load-theme 'modus-operandi t)" ;;
         d*) emacsclient -e "(load-theme 'modus-vivendi t)" ;;
 	esac
-}
-
-_dunst() {
-	_depcheck dunst
-
-	dunstrc="$HOME/.config/dunst/dunstrc"
-
-	# Sed actions, per line:
-	# Change the separator and frame colour
-	# Change {back,fore}ground value for urgency_low notifications
-	# Change {back,fore}ground value for urgency_normal notifications
-	# Change {back,fore}ground value for urgency_critical notifications
-	sed --follow-symlinks -i "s/\(^separator_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgrounddim/ ; \
-	s/\(^frame_color.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; \
-	/urgency_low/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$backgroundalt/ ; /urgency_low/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foregroundalt/ ; \
-	/urgency_normal/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$background/ ; /urgency_normal/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$foreground/ ; \
-	/urgency_critical/,/timeout/ s/\(^b.*\)\(#[0-9a-zA-Z]*\)/\1$color1/ ; /urgency_critical/,/timeout/ s/\(^f.*\)\(#[0-9a-zA-Z]*\)/\1$background/" "$dunstrc"
-
-	# kill and reload dunst
-	if pgrep -x "dunst" > /dev/null; then
-		killall dunst && eval "$(dbus-launch)" &
-	fi
 }
 
 # This is my script for adding content to lemonbar.  Reloading it will
@@ -376,7 +357,6 @@ _emacs
 _x_and_shell
 _tmux
 _vim
-_dunst
 _bspwm
 _wallpaper
 _gtk

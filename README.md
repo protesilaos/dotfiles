@@ -1,39 +1,16 @@
-Custom desktop session (BSPWM) and configurations for GNU/Linux
-===============================================================
+Custom desktop session centred around BSPWM and Emacs
+=====================================================
 
 **UPDATE 2019-10-23:** I produced a video where, among others, I talk
 about my outlook concerning my BSPWM session (and this repo).  Some
 _major breaking changes_ are in the works.  Please watch and remember
 that you can always use my free/libre book, which is also mentioned in
-the "Get my configs" section below.
+the "Get my configs" section below.  That book contains a stable
+"snapshot" of my configurations with code that was developed before my
+switch to Emacs (early July 2019).
 
 The video:
 https://protesilaos.com/codelog/2019-10-22-status-update-bspwm-emacs/
-
-* * *
-
-My custom desktop session can be outlined thus:
-
-* Debian stable because I prefer longer-term predictability over
-  novelty.
-* `bspwm` for fine-grained window management with my custom scripts for
-  added features.
-* `tmux` to make the terminal power user even more powerful (no
-  plugins).
-* `vim` because I need an efficient text editor (no plugins).
-* True minimalism: no complex status lines, no fancy prompts, no
-  decorative elements that add no functionality whatsoever.
-* Carefully-defined font configurations to complement my hardware and
-  satisfy my aesthetic preferences.
-* Full integration of my Tempus themes for considerate colour contrast
-  and easy live theme switching for the entire session.
-* The superb Maté desktop environment as a fallback option and provider
-  of some important programs and system-wide base configurations.
-
-Demos
------
-
-* Screen Casts: https://protesilaos.com/code-casts
 
 Get my configs
 --------------
@@ -47,7 +24,10 @@ International.
 PDFD will only offer guidance about the latest "fixed release" of my
 dotfiles.  These are tagged with the appropriate annotation (formatted
 as <version>-pdfd<?\_label>) and are then synced with a separate code
-repo, titled "Code for PDFD": https://gitlab.com/protesilaos/cpdfd.
+repo, titled "Code for PDFD": https://gitlab.com/protesilaos/cpdfd
+
+**As such, PDFD does not contain the latest breaking changes.** Please
+contact me, if you have any questions: https://protesilaos.com/contact/
 
 Do not track my dotfiles directly
 ---------------------------------

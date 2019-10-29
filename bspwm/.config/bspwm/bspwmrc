@@ -66,8 +66,8 @@ _check() {
 
 # window management
 # -----------------
-_bc border_width 1
-_bc window_gap 1
+_bc border_width 2
+_bc window_gap 2
 _bc split_ratio 0.50
 _bc single_monocle false
 _bc borderless_monocle true
@@ -131,11 +131,6 @@ if _check melonpanel; then
 	melonpanel
 fi
 
-# Display compositor for enabling shadow effects and transparency
-# (disable it if performance is bad---also bear in mind that I do not
-# use transparent areas in any of my interfaces).
-_check compton && compton --config "$HOME"/.config/compton.conf &
-
 # Run the tool that sets the wallpaper.  A program could be used that
 # handles the desktop in general, including the option to set icons.
 # But this is enough for my case.  Here is a command I tested and which
@@ -143,27 +138,25 @@ _check compton && compton --config "$HOME"/.config/compton.conf &
 # xfdesktop --sm-client-disable --disable-wm-check &
 _check feh && "$HOME"/.fehbg &
 
+# EXPERIMENTAL Start the display compositor.  This one is a replacement
+# for Compton.  I built it from source, as no Debian package is
+# available: https://github.com/yshui/picom
+#
+# Find all options with `picom --help'
+picom -r 10 -o .5 -l -8 -t -8 -CGb --detect-rounded-corners \
+      --detect-client-opacity --vsync --use-ewmh-active-win \
+      --unredir-if-possible --config /dev/null
+
+#### TODO 2019-10-29: review.  Check the Xfce/LXQt equivalent.
 ### DISABLED because it breaks the Xmodmap settings
 # Start the MATE settings daemon to apply GTK themes to running
 # applications as well as flatpaks (see the `tempus` script).
 # _check mate-settings-daemon && mate-settings-daemon &
 
-# start music server
-_check mpd && mpd
-
-# Start the bridge between mpd and mpris2.  Enabling the MPRIS
-# implementation allows other programs that handle multimedia to
-# interface with `mpd`.  This is the case, for example, with programs
-# such as `playerctl`, or with desktop environments that offer
-# multimedia controls in their shell (e.g.  GNOME, Cinnamon, etc.).
-#
-# See my `sxhkdrc` for the set of key bindings that handles media
-# controls in general and `mpd` in particular.
-_check mpDris2 && mpDris2 &
-
 # Per host configurations
 # =======================
 
+#### TODO 2019-10-29: review the utility/design of that script
 # I deploy my dotfiles on two separate machines.  On one I often run a
 # dual monitor setup.  As such, there are some bespoke configs for each
 # host.

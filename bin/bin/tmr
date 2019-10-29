@@ -24,9 +24,6 @@
 #
 # Optional dependency to sound the alarm
 # 	apt install mpv
-#
-# Optional dependency to work inside my custom desktop session:
-# 	apt install dunst
 
 
 # Exit if `notify-send` is not available.

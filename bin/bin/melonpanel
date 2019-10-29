@@ -72,10 +72,15 @@ pgrep -x lemonbar > /dev/null && pkill -x lemonbar
 tempus_theme="$HOME/.local/share/my_colours/active-tempus-theme.sh"
 
 # Source the colour definitions if the file exists.  Else exit.
-[ -e "$tempus_theme" ] || { echo "Missing Tempus theme"; exit 1; }
-source "$tempus_theme"
+if [ -e "$tempus_theme" ]; then
+    source "$tempus_theme"
+else
+    echo "Missing Tempus theme"
+    exit 1
+fi
 
-melonpanel_height=22 # DO NOT EDIT the name of this parameter (checked by other scripts).
+# DO NOT EDIT the name of this parameter (checked by other scripts).
+melonpanel_height=22
 
 # Fonts (upstream lemonbar only supports bitmap fonts)
 # ----------------------------------------------------
@@ -159,8 +164,9 @@ _battery() {
     local battery_label battery_status battery_output battery_status_time
 
     battery_label='B:'
-    battery_status="$(acpi -b | awk -F '[[:space:]]+|,' '{ print $3 }')"
-    battery_output="$(acpi -b | awk -F '[[:space:]]+|,' '{ print $5 }')"
+    battery_command="$(acpi -b | sed 's/.*: //')" # Clean output
+    battery_status="${battery_command:0:4}"       # Use first characters
+    battery_output="${battery_command: -4}"       # Use last characters
 
     # If dischange level reaches 0-9, the whole indicator will turn to
     # a bright colour.  Otherwise, discharging will be denoted by
@@ -192,8 +198,8 @@ _temperature() {
     local therm_label therm_status
 
     therm_label='T:'
-    therm_status="$(acpi -t | awk -F '[[:space:]]+|,' '{ print $5 }')"
-    therm_status="${therm_status:0:2}"
+    therm_status="$(acpi -t | awk -F '[[:space:]]+|,' '{ print $2 }')"
+    therm_status="${therm_status:1:2}"
 
     # Up to 59 degrees celcius keep text colour same as default.  60-79
     # turn the colour red on normal background.  Else turn the whole
@@ -307,7 +313,7 @@ bspc subscribe report > "$melonpanel_fifo" &
 _melonpanel() {
     local laptop_external_monitor
 
-    laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
+    laptop_external_monitor="$(xrandr --query | grep 'VGA-1 connected')"
 
     while read -r line ; do
         case $line in
