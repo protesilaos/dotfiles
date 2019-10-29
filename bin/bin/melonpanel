@@ -164,8 +164,9 @@ _battery() {
     local battery_label battery_status battery_output battery_status_time
 
     battery_label='B:'
-    battery_status="$(acpi -b | awk -F '[[:space:]]+|,' '{ print $3 }')"
-    battery_output="$(acpi -b | awk -F '[[:space:]]+|,' '{ print $5 }')"
+    battery_command="$(acpi -b | sed 's/.*: //')" # Clean output
+    battery_status="${battery_command:0:4}"       # Use first characters
+    battery_output="${battery_command: -4}"       # Use last characters
 
     # If dischange level reaches 0-9, the whole indicator will turn to
     # a bright colour.  Otherwise, discharging will be denoted by
@@ -197,8 +198,8 @@ _temperature() {
     local therm_label therm_status
 
     therm_label='T:'
-    therm_status="$(acpi -t | awk -F '[[:space:]]+|,' '{ print $5 }')"
-    therm_status="${therm_status:0:2}"
+    therm_status="$(acpi -t | awk -F '[[:space:]]+|,' '{ print $2 }')"
+    therm_status="${therm_status:1:2}"
 
     # Up to 59 degrees celcius keep text colour same as default.  60-79
     # turn the colour red on normal background.  Else turn the whole
