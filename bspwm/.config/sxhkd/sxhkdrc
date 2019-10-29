@@ -129,9 +129,9 @@ mod3 + {_, shift + } Return
 # with a `g` (mnemonic for GUI).
 mod3 + g ; {1,2,3}
 	{ \
-	notify-send -i firefox "Launching Firefox" && firefox-esr, \
-	notify-send -i system-file-manager "Launching Caja File Manager" && caja, \
-	notify-send -i thunderbird "Launching Thunderbird" && thunderbird \
+	notify-send -i internet-web-browser "Launching web browser" && epiphany-browser, \
+	notify-send -i system-file-manager "Launching File Manager" && caja, \
+	notify-send -i evolution "Launching email client" && thunderbird \
 	}
 
 # I use "my_float_window" as an application name or class for those rare
