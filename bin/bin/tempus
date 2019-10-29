@@ -131,6 +131,8 @@ _wallpaper() {
 	esac
 }
 
+### TODO 2019-10-29: Add check for theme AND icons.  Test against
+### both, else use Adwaita.
 # Debian Buster optional dependency:
 # 	apt install papirus-icon-theme
 _gtk() {
@@ -167,14 +169,16 @@ _gtk() {
 		esac
 	}
 
+    ### NOTE 2019-10-29: Materia is not parsed through any test.  See
+    ### the above TODO.  This is work-in-progress.
 	case "$theme_variant" in
 		l*)
-			_gtk_variant 'Adwaita' 'Papirus-Light' &
-			_gtk_live 'Adwaita' 'Papirus-Light' &
+			_gtk_variant 'Materia-light-compact' 'Papirus-Light' &
+			_gtk_live 'Materia-light-compact' 'Papirus-Light' &
 			;;
 		d*)
-			_gtk_variant 'Adwaita-dark' 'Papirus-Dark' &
-			_gtk_live 'Adwaita-dark' 'Papirus-Dark' &
+			_gtk_variant 'Materia-dark-compact' 'Papirus-Dark' &
+			_gtk_live 'Materia-dark-compact' 'Papirus-Dark' &
 			;;
 	esac
 }
