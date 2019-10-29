@@ -313,7 +313,7 @@ bspc subscribe report > "$melonpanel_fifo" &
 _melonpanel() {
     local laptop_external_monitor
 
-    laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
+    laptop_external_monitor="$(xrandr --query | grep 'VGA-1 connected')"
 
     while read -r line ; do
         case $line in
