@@ -155,17 +155,21 @@ _gtk() {
 	# My custom desktop session uses the mate-settings-daemon to live
 	# reload GTK and Flatpak themes.
 	_gtk_live() {
-		_depcheck mate-settings-daemon
+		_depcheck mate-settings-daemon || _depcheck gnome-settings-daemon || _depcheck xfsettingsd
 
 		case "$DESKTOP_SESSION" in
-			gnome*)
+            gnome*)
 				gsettings set org.gnome.desktop.interface gtk-theme "$1"
 				gsettings set org.gnome.desktop.interface icon-theme "$2"
 				;;
-			bspwm|mate)
+            mate|bspwm)
 				gsettings set org.mate.interface gtk-theme "$1"
 				gsettings set org.mate.interface icon-theme "$2"
 				;;
+            xfce)
+                xfconf-query -c xsettings -p /Net/ThemeName -s "$1"
+                xfconf-query -c xsettings -p /Net/IconThemeName -s "$2"
+                ;;
 		esac
 	}
 

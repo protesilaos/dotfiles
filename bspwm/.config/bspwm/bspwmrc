@@ -147,11 +147,9 @@ picom -r 10 -o .5 -l -8 -t -8 -CGb --detect-rounded-corners \
       --detect-client-opacity --vsync --use-ewmh-active-win \
       --unredir-if-possible --config /dev/null
 
-#### TODO 2019-10-29: review.  Check the Xfce/LXQt equivalent.
-### DISABLED because it breaks the Xmodmap settings
-# Start the MATE settings daemon to apply GTK themes to running
-# applications as well as flatpaks (see the `tempus` script).
-# _check mate-settings-daemon && mate-settings-daemon &
+# Start the settings daemon to apply GTK widget and icon themes to
+# running applications as well as flatpaks (see the `tempus' script).
+_check mate-settings-daemon && mate-settings-daemon &
 
 # Per host configurations
 # =======================
