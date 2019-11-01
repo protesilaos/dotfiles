@@ -12,53 +12,36 @@
 # Partial configuration file for the Simple X Hotkey Daemon.  Meant to
 # work with `bspwm`.  This is part of my dotfiles, which are managed
 # with GNU Stow.  See https://gitlab.com/protesilaos/dotfiles
-
-
-
-
-
-############################################################################
-# IMPORTANT NOTE ABOUT THE USE OF MOD3 (written on 2019-10-19)             #
-#                                                                          #
-# Earlier versions of my SXHKD-related files would use Super (mod4) as the #
-# main modifier key for controlling my custom BSPWM session.  However,     #
-# since early July 2019 I have switched my main computing/coding/writing   #
-# environment to Emacs, where the Super key is more useful there.  As      #
-# such, I am now including an `~/.Xmodmap' file which enables the Hyper    #
-# key (mod3) and binds it to the Caps lock and the right "Win" key         #
-# respectively.                                                            #
-#                                                                          #
-# Please be very careful with the syntax of the key bindings for SXHKD.    #
-# My tests would only yield the desired results when `mod3' was            #
-# referenced explicitly.  Writing `hyper' would mess things up with        #
-# `super'.                                                                 #
-#                                                                          #
-# At any rate, this change is likely to be the first in a series as I      #
-# try to blend my BSPWM with my Emacs setup.  Eventually, I will make      #
-# the key bindings that control the window manager behave more like        #
-# those of Emacs and/or I will review all key chord chain to be more       #
-# aligned with Emacs conventions.  This is meant to prevent me from the    #
-# friction that context-switching tends to cause.                          #
-############################################################################
-
-
-
-
-
-# Index with key chord chain mnemonics
-# ====================================
 #
-# Key chord chains are used for less common or ancillary commands, or
-# for when assigning direct keybindings would become unwieldy.  The idea
-# is to scope bindings so as to avoid conflicts.
+# Note that `mod3' is the Hyper key, which I enable via Xmodmap (see my
+# bspwmrc and relevant configs).
+
+
+# Environment
+# -----------
+
+# I am using the prefix `mod3 + e' as a mnemonic for "environment".
 #
-# Environment: mod3 + e ; ...
-# Executables which typically run in the console: mod3 + x ; ...
-# Graphical applications: mod3 + g ; ...
-# Assign (node flags): mod3 + a ; ...
-# Split (split ratios): mod3 + s ; ...
+# The following commands are:
+#
+# f == bspwm focus mode
+# s == reload sxhkd
+# p == reload melonpanel (my lemonbar script)
+# t == dmenu to choose Tempus theme
+# x == reload the Xresources file
+mod3 + e ; {f,s,p,t,x}
+    { \
+    bspwm_focus_mode, \
+    pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
+    pkill -x melonpanel && melonpanel, \
+    tempusmenu, \
+    xrdb -I "$HOME" -merge "$HOME"/.Xresources \
+    }
 
-
+# Invoke the session management menu (log out, lock, switch users,
+# reboot, shutdown).
+ctrl + alt + Delete
+     poweroptionsmenu
 
 # Keyboard layout
 # ---------------
@@ -76,110 +59,55 @@
 # the us,gr layout.  All this is done to be able to get the active
 # keyboard layout and print its name to my system panel (custom lemonbar
 # called "melonpanel").
-mod3 + Escape
+#
+# The key chord is based on the Emacs function `toggle-input-method',
+# which is bound to C-\
+mod3 + backslash
 	toggle_kbd_layout
-
-# Environment
-# -----------
-
-# The following commands are:
-#
-# d == dmenu to quickly edit dotfiles
-# f == bspwm focus mode
-# s == reload sxhkd
-# p == reload melonpanel (my lemonbar script)
-# t == dmenu to choose Tempus theme
-# k == toggle screenkey (useful for screen casts)
-# q == dmenu interface to log out, lock, switch users, reboot, shutdown
-# x == reload the Xresources file
-#
-# Recall that these depend on my dotfiles:
-# https://gitlab.com/protesilaos/dotfiles.
-mod3 + e ; {d,f,s,p,t,k,q,x}
-	{ \
-	dotsmenu, \
-	bspwm_focus_mode, \
-	pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
-	pkill -x melonpanel && melonpanel, \
-	tempusmenu, \
-	toggle_screenkey, \
-	poweroptionsmenu, \
-	xrdb -I "$HOME" -merge "$HOME"/.Xresources \
-	}
-
-# Session management (log out, lock, switch users, reboot, shutdown).
-# Can also be invoked with mod3 + e ; q (as defined above).
-ctrl + alt + {Home,End,Delete}
-	poweroptionsmenu
 
 # Main programs
 # -------------
 
-# Terminal emulator with and without TMUX.  I normally use `tmux` which
-# is ideal for working on multiple terminals, switching sessions, and
-# the like.  I think it fits perfectly into a console-based workflow and
-# complements the features of a tiling WM.  No need to spawn tens of
-# terminals, like a barbarian!  Watch my screen cast on the matter:
-# https://protesilaos.com/codelog/2019-01-13-tmux-demo-bspwm/
+# Use Xterm as a standalone tool or with Tmux (with Shift).
 mod3 + {_, shift + } Return
-	{xterm -e tmux new-session -A -s 'Default', xterm}
+	{xterm,xterm -e tmux new-session -A -s 'Default'}
 
-# GUI programs.  Where these are alternatives to common CLI tools they
-# are mapped to the same number as their counterparts, but prepended
-# with a `g` (mnemonic for GUI).
-mod3 + g ; {1,2,3}
-	{ \
-	notify-send -i internet-web-browser "Launching web browser" && epiphany-browser, \
-	notify-send -i system-file-manager "Launching File Manager" && caja, \
-	notify-send -i evolution "Launching email client" && thunderbird \
-	}
-
-# I use "my_float_window" as an application name or class for those rare
-# occasions where I prefer a floating window at launch.
+# With `b' use rofi to switch between running windows.  I call these
+# "buffers" because they are loaded in memory.  Whatever…  The keys are
+# a simplified version of the Emacs buffer switching `C-x b'.
 #
-# Note that the executable `calc` is contained in the Debian package
-# `apcalc`.
-mod3 + x ; 0
-	xterm -class "my_float_window" -e calc
+# With `x' search for an executable.  Like the Emacs `M-x' prompt.
+mod3 + {b,x}
+     rofi -show {window,run}
 
-# Bring up the help text for common keybindings
-mod3 + {F1,Home}
-	xterm -class "my_float_window" \
-	-geometry '100x30' -e less "$HOME/.config/sxhkd/cheatsheet_sxhkdrc.txt"
+# Bring up a rofi interface for `pass' (the superb UNIX password
+# manager).
+mod3 + p
+     passmenu
 
-# dmenu_run and passmenu using my custom colours.
-mod3 + {d,p}
-	{dmenu_xcolors,passmenu_xcolors}
-
-# dmenu specifically for flatpaks.  While it is possible to include
-# these in the $PATH, or to query by `.desktop` file, I prefer to keep
-# them separate.
-mod3 + shift + d
-	flatpakmenu
-
-# Tools and utilities
-# -------------------
+# Miscellaneous tools and media keys
+# ----------------------------------
 
 # Screenshots (requires `scrot`).  First one is for the focused window.
 # The other is of the entire X session (including all active monitors).
 # Note that `scrot` also has an interactive mode that I do not use.
 Print
-	scrot -u -z '%Y-%m-%d_%H:%M:%S_$wx$h$n.png' -e 'mv $f ~/Desktop' && notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Desktop"
+	scrot -u -z '%Y-%m-%d_%H:%M:%S_$wx$h$n.png' -e 'mv $f ~/Desktop' \
+    && notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Desktop"
 mod3 + Print
-	scrot -m -z '%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'mv $f ~/Desktop' && notify-send -i gnome-screenshot "Screen view screenshot" "Saved image to Desktop"
+	scrot -m -z '%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'mv $f ~/Desktop' \
+    && notify-send -i gnome-screenshot "Screen view screenshot" "Saved image to Desktop"
 
 # Control the laptop's screen brightness (requires `xbacklight`).
 XF86MonBrightness{Down,Up}
 	xbacklight {-dec 15,-inc 15}
 
-# Screen locker (requires `slock`, which in Debian is provided by the
-# package `suckless-tools`).
-XF86ScreenSaver
-	slock
-
-# Media controls
-# --------------
-
+### TODO 2019-11-01: This should be more abstract and should be able to
+### work like the CLI `playerctl' which can control all MPRIS-aware
+### interfaces.  Perhaps the solution would be to figure out how to make
+### the Emacs player MPRIS-compliant…  At any rate, this is a
+### theoretical problem, as I only ever use the media keys for music
+### that Bongo plays.
 # Control the current Emacs player from outside of Emacs.
 XF86Audio{Play,Prev,Next}
 	pgrep -x emacs && emacsclient -e { \
@@ -197,3 +125,13 @@ XF86AudioMicMute
 	amixer set Capture toggle
 mod3 + XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer set Capture {toggle,5%-,5%+}
+
+
+
+# TODO 2019-11-01: These will need to be reviewed once all key bindings
+# are rewritten.  Perhaps it would be nice to produce something that is
+# interactive and searchable…
+# # Bring up the help text for common keybindings
+# mod3 + {F1,Home}
+# 	xterm -class "my_float_window" \
+# 	-geometry '100x30' -e less "$HOME/.config/sxhkd/cheatsheet_sxhkdrc.txt"
