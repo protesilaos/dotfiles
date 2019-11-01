@@ -1,6 +1,7 @@
 #!/bin/bash
-# dmenu interface for `pass`
-# Source:
+# passmenu --- dmenu-style interface for `pass'.
+
+# Modified from source:
 # https://git.zx2c4.com/password-store/tree/contrib/dmenu
 
 shopt -s nullglob globstar
@@ -16,7 +17,7 @@ password_files=( "$prefix"/**/*.gpg )
 password_files=( "${password_files[@]#"$prefix"/}" )
 password_files=( "${password_files[@]%.gpg}" )
 
-password=$(printf '%s\n' "${password_files[@]}" | dmenu -b "$@")
+password=$(printf '%s\n' "${password_files[@]}" | rofi -dmenu "$@")
 
 [[ -n $password ]] || exit
 
