@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# tempusmenu --- dmenu interface for `tempus`.
+# tempusmenu --- dmenu-style interface for `tempus'.
 #
 # Provides an interactive menu from where to choose the argument that is
-# passed to the `tempus` script.  That will then live reload the session
+# passed to the `tempus' script.  That will then live reload the session
 # to apply the new theme.  This functionality is integral to my dotfiles:
 # https://gitlab.com/protesilaos/dotfiles.
 #
@@ -21,31 +21,21 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Debian depencency:
+#    apt install rofi
 
+command -v rofi > /dev/null || { echo "Missing rofi dependency."; return 1; }
 
-# Check for dependency, else exit the given function that calls this.
-_depcheck() {
-	command -v "$1" > /dev/null || { echo "Missing dependency: $1."; return 1; }
-}
-
-_depcheck dmenu
-
-_filesource() {
-	if [ -f "$1" ]; then
-		source "$1"
-	fi
+_check_files() {
+    [ -d "$1" ] || { echo "Missing path to Tempus themes."; exit 1; }
 }
 
 tempus_files="$HOME"/.local/share/my_colours
-[ -d "$tempus_files" ] || { echo "Missing path to Tempus themes."; exit 1; }
-
-tempus_active="$tempus_files"/active-tempus-theme.sh
 tempus_shell_files="$tempus_files"/shell/
 
-dmenu_font="$HOME"/.local/share/my_custom_ui_font.sh
-
-_filesource "$tempus_active"
-_filesource "$dmenu_font"
+_check_files "$tempus_files"
+_check_files "$tempus_shell_files"
 
 _themes() {
 	# The parameter expansions here keep only the theme's unique name:
@@ -56,21 +46,6 @@ _themes() {
 	done < <(find "$tempus_shell_files" -type f -name '*.sh' -print0 | sort -z)
 }
 
-_dmenu() {
-	dmenu -b -p 'Select Tempus theme' -nb "${background:-'#000000'}" -nf "${foreground:-'#ffffff'}" \
-	-sb "${color5:-'#bb6688'}" -sf "${background:-'#000000'}" -fn "${my_custom_ui_font:-'DejaVu Sans-10'}"
-}
+selection="$(_themes | rofi -dmenu -no-custom -p 'Select Tempus theme')"
 
-selection="$(_themes | _dmenu)"
-
-if [ "$?" = 0 ]; then
-	case "$selection" in
-		autumn|classic|dawn|day|dusk|fugit|future|night|past|rift|spring|summer|tempest|totus|warp|winter)
-			tempus "$selection"
-			;;
-		*)
-			echo "Not a valid Tempus theme: $selection"
-			exit 1
-			;;
-	esac
-fi
+tempus "$selection"
