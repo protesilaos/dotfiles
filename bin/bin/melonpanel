@@ -163,19 +163,24 @@ _battery() {
 
     local battery_label battery_status battery_output battery_status_time
 
+    # Just using Bash parameter expansion here, instead of an external
+    # process (e.g. cut).  This is just me practicing.
     battery_label='B:'
-    battery_command="$(acpi -b | sed 's/.*: //')" # Clean output
-    battery_status="${battery_command:0:4}"       # Use first characters
-    battery_output="${battery_command: -4}"       # Use last characters
+    battery_command="$(acpi -b | sed 's/.*: //')" # Remove the "battery" part
+    battery_status="${battery_command:0:1}"       # Use first character
+    battery_output="${battery_command#*, }"       # Delete up to first comma
+    battery_output="${battery_output%,*}"         # Same but read from the end
 
-    # If dischange level reaches 0-9, the whole indicator will turn to
-    # a bright colour.  Otherwise, discharging will be denoted by
-    # a coloured output of the current level followed by the minus sign.
+    # The $battery_status will tell us if it is (C)harging or
+    # (D)ischaging.  If dischange level reaches 0-9, the whole indicator
+    # will turn to a bright colour.  Otherwise, discharging will be
+    # denoted by a coloured output of the current level followed by the
+    # minus sign.
     case "$battery_status" in
-        'Charging')
+        'C')
             echo "$battery_label %{F$color6}${battery_output}+%{F-}"
             ;;
-        'Discharging')
+        'D')
             case "${battery_output%?}" in
                 [0-9])
                     echo "%{B$color11}%{F$background} $battery_label ${battery_output}- %{F-}%{B-}"
