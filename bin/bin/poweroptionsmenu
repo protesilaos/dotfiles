@@ -1,63 +1,39 @@
 #!/bin/bash
 
-	# This program is free software: you can redistribute it and/or modify
-	# it under the terms of the GNU General Public License as published by
-	# the Free Software Foundation, either version 3 of the License, or
-	# (at your option) any later version.
-
-	# This program is distributed in the hope that it will be useful,
-	# but WITHOUT ANY WARRANTY; without even the implied warranty of
-	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	# GNU General Public License for more details.
-
-	# You should have received a copy of the GNU General Public License
-	# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-# Description
+# poweroptionsmenu --- dmenu-style interface for session actions.
 #
-# A dmenu script to provide an interface for selecting session actions:
-# lock, logout, switch users, reboot, poweroff.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-# This script is intended to be used in a BSPWM session.  As such, the
-# log out option uses a BSPWM-specific command.  Part of my dotfiles:
-# https://gitlab.com/protesilaos/dotfiles
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Debian Buster dependencies:
-#
-# 	apt install suckless-tools libnotify-bin
-#
-# Last full review on 2019-04-11
-
-# pass custom colours to dmenu command
-source "$HOME/.local/share/my_colours/active-tempus-theme.sh"
-
-# get the system-wide custom font
-source "$HOME/.local/share/my_custom_ui_font.sh"
-
-# Call this function with one argument for the prompt text
-my_dmenu() {
-	dmenu -b -i -p "$1" -nb $background -nf $foreground -sb $color1 -sf $background -fn "$my_custom_ui_font"
-}
+#     apt install rofi
 
 # Possible actions (see case statement at the end for the actual
 # commands)
-actions=('Quit session' 'Lock screen' 'Switch users' 'Reboot' 'Shutdown')
+actions=('Log out' 'Switch users' 'Reboot' 'Power off')
 
 # List actions to choose from
 list_actions() {
 	# use printf to output array items on a new line
-	printf '%s\n' "${actions[@]}" | my_dmenu 'Power options'
+	printf '%s\n' "${actions[@]}" | rofi -dmenu -no-custom -p 'Power options'
 }
 
 choice="$(list_actions)"
 
 # Run the selected command
 case "$choice" in
-	Q*)
-		bspc quit
-		;;
 	L*)
-		slock
+		bspc quit
 		;;
 	Sw*)
 		dm-tool switch-to-greeter
@@ -65,20 +41,7 @@ case "$choice" in
 	R*)
 		systemctl reboot
 		;;
-	Sh*)
+	P*)
 		systemctl poweroff
-		;;
-	[a-zA-Z]*)
-		# This is for handling common typos
-		if [ -n "$(command -v notify-send 2> /dev/null)" ]; then
-			notify-send -i 'computer-fail' 'Session management' "ERROR: Option _${choice}_ does not exist"
-		else
-			echo "ERROR: Option _${choice}_ does not exist"
-		fi
-		exit 1
-		;;
-	*)
-		# Exit if dmenu receives no input
-		exit 1
 		;;
 esac
