@@ -28,9 +28,9 @@
 
 panel_height="$(sed '/^melonpanel_height=/!d ; s,.*\([0-9]\{2\}\).*,\1,' "$(command -v melonpanel 2> /dev/null)")"
 
-# The top padding this is not defined in bspwmrc but in another script
-# that sets the value on a per-host-computer basis.  We just get the
-# value from the running program.
+# The bottom padding is not defined in bspwmrc but in another script
+# that sets the value on a per-host-computer basis.  Here we just get
+# the value from the running program.
 bottom_padding="$(bspc config bottom_padding)"
 
 # Read the default setting from the bspwm config file.
@@ -79,10 +79,10 @@ if [ -n "$border_width" ]; then
 		bspc config "${side}"_padding "$border_width"
 	done
 else
-	bspc config window_gap "${window_gap:=4}"
+	bspc config window_gap "${window_gap:=2}"
 	bspc config border_width "${border_width:=2}"
 	bspc config bottom_padding "${bottom_padding:=$panel_height}"
-	for side in right bottom left; do
+	for side in right left top; do
 		bspc config "${side}"_padding "0"
 	done
 fi
