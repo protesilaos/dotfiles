@@ -33,6 +33,7 @@
 _help_message() {
 	echo "ERROR. Must pass a single argument."
 	echo "Examples of valid syntax to pass: 10s, 5m, 2h"
+    echo "A number without a unit is read as NUM minutes."
 }
 
 # Show the help message if arguments are not equal to one.
@@ -46,6 +47,9 @@ time_clean="${1%?}"
 # Convert the argument into a string (necessary to calculate the
 # difference between the time this script starts and ends.
 case "$arg" in
+    *s)
+		timer="$time_clean seconds ago"
+		;;
 	*m)
 		timer="$time_clean minutes ago"
 		;;
@@ -54,7 +58,7 @@ case "$arg" in
 		;;
 	*d)
 		# Also something to be said about the choice of capitalisation…
-		echo "TMR Mustn't be Ridiculous" && exit 1
+		echo "Days for a timer? TMR Made Ridiculous!" && exit 1
 		;;
 	*)
 		arg="${arg}m"
@@ -62,16 +66,14 @@ case "$arg" in
 		;;
 esac
 
+time_set="$(date --date="$timer" +%T)"
+time_now="$(date +%T)"
+message="Time is up! Started at $time_set. Elapsed at $time_now."
+alarm_sound="/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
+
 # The message to print when the timer is done.  This will echo a message
 # in the terminal and set a desktop notification.
 _notify() {
-	local time_set time_now message alarm_sound
-
-	time_set="$(date --date="$timer" +%T)"
-	time_now="$(date +%T)"
-	message="Time is up!  Your timer ($arg) was set at $time_set.  Now is $time_now."
-	alarm_sound="/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
-
 	echo "$message"
 	notify-send -i clock "$message"
 
@@ -83,4 +85,5 @@ _notify() {
 }
 
 # Set the timer and send notification when its done
+echo "tmr: Started at $time_set"
 sleep "$arg" && _notify
