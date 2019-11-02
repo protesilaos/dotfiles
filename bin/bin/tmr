@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# TMR Must Recur (pronounced "timer") is a simplistic timer for the
-# terminal.  Distributed as part of my dotfiles:
+# tmr --- Bash script to run a simple timer
+#
+# TMR Must Recur (pronounced "timer") is a simple command-line timer
+# that accepts a single argument that is a valid unit of time.
+# Distributed as part of my dotfiles:
 # https://gitlab.com/protesilaos/dotfiles.
 #
 # Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
@@ -19,71 +22,56 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Debian Buster dependency:
-# 	apt install libnotify-bin
-#
-# Optional dependency to sound the alarm
-# 	apt install mpv
+# Optional Debian Buster dependencies:
+#    apt install libnotify-bin mpv
 
-
-# Exit if `notify-send` is not available.
-[ "$(command -v notify-send 2> /dev/null)" ] || { echo "Missing notify-send."; exit 1; }
 
 # Define a help message
 _help_message() {
-	echo "ERROR. Must pass a single argument."
-	echo "Examples of valid syntax to pass: 10s, 5m, 2h"
+    echo "ERROR. Must pass a single argument."
+    echo "Examples of valid syntax to pass: 10s, 5m, 2h"
     echo "A number without a unit is read as NUM minutes."
 }
 
 # Show the help message if arguments are not equal to one.
 [ "$#" -eq 1 ] || { _help_message; exit 1; }
 
-# Capture the argument.  The first variables is meant to print the exact
-# argument.  The latter is transformed into human-readable text.
+# Convert the argument into a human-readable string (necessary to
+# calculate the difference between the time this script starts and ends.
 arg="$1"
-time_clean="${1%?}"
-
-# Convert the argument into a string (necessary to calculate the
-# difference between the time this script starts and ends.
 case "$arg" in
-    *s)
-		timer="$time_clean seconds ago"
-		;;
-	*m)
-		timer="$time_clean minutes ago"
-		;;
-	*h)
-		timer="$time_clean hours ago"
-		;;
-	*d)
-		# Also something to be said about the choice of capitalisation…
-		echo "Days for a timer? TMR Made Ridiculous!" && exit 1
-		;;
-	*)
-		arg="${arg}m"
-		timer="$time_clean minutes ago"
-		;;
+    *s) timer="${arg%?} seconds ago" ;;
+    *m) timer="${arg%?} minutes ago" ;;
+    *h) timer="${arg%?} hours ago"   ;;
+    *d) echo "Days? TMR Made Ridiculous!" && exit 1  ;;
+    *)  arg="${arg}m" ; timer="${arg%?} minutes ago" ;;
 esac
 
 time_set="$(date --date="$timer" +%T)"
 time_now="$(date +%T)"
-message="Time is up! Started at $time_set. Elapsed at $time_now."
 alarm_sound="/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
+
+# Function to check if optional dependencies are in the PATH
+_depcheck() {
+    command -v "$1" 2> /dev/null
+}
 
 # The message to print when the timer is done.  This will echo a message
 # in the terminal and set a desktop notification.
 _notify() {
-	echo "$message"
-	notify-send -i clock "$message"
+    local message
+    message="tmr elapsed at $time_now"
+    echo "$message"
 
-	if [ -n "$alarm_sound" ] && [ "$(command -v mpv 2> /dev/null)" ]; then
-		mpv "$alarm_sound"
-	else
-		echo -e "\a"
-	fi
+    [ "$(_depcheck notify-send)" ] && notify-send -i clock "$message"
+
+    if [ -n "$alarm_sound" ] && [ "$(_depcheck mpv)" ]; then
+        mpv "$alarm_sound"
+    else
+        echo -e "\a"
+    fi
 }
 
 # Set the timer and send notification when its done
-echo "tmr: Started at $time_set"
+echo "tmr started at $time_set"
 sleep "$arg" && _notify
