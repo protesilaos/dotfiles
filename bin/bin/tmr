@@ -29,26 +29,27 @@
 # Define a help message
 _help_message() {
     echo "ERROR. Must pass a single argument."
-    echo "Examples of valid syntax to pass: 10s, 5m, 2h"
+    echo "Examples of valid time units: 10s, 5m, 2h"
     echo "A number without a unit is read as NUM minutes."
 }
 
 # Show the help message if arguments are not equal to one.
 [ "$#" -eq 1 ] || { _help_message; exit 1; }
 
-# Convert the argument into a human-readable string (necessary to
-# calculate the difference between the time this script starts and ends.
+# Convert the argument into a human-readable string: to calculate the
+# difference between the time this script starts and ends.
 arg="$1"
 case "$arg" in
-    *s) timer="${arg%?} seconds ago" ;;
-    *m) timer="${arg%?} minutes ago" ;;
-    *h) timer="${arg%?} hours ago"   ;;
+    *s) past="${arg%?} seconds ago" ;;
+    *m) past="${arg%?} minutes ago" ;;
+    *h) past="${arg%?} hours ago"   ;;
     *d) echo "Days? TMR Made Ridiculous!" && exit 1  ;;
-    *)  arg="${arg}m" ; timer="${arg%?} minutes ago" ;;
+    *)  arg="${arg}m" ; past="${arg%?} minutes ago" ;;
 esac
 
-time_set="$(date --date="$timer" +%T)"
+time_set="$(date --date="$past" +%T)"
 time_now="$(date +%T)"
+time_after="$(date --date="${past% ago}" +%T)"
 alarm_sound="/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
 
 # Function to check if optional dependencies are in the PATH
@@ -57,10 +58,11 @@ _depcheck() {
 }
 
 # The message to print when the timer is done.  This will echo a message
-# in the terminal and set a desktop notification.
+# in the terminal and, if optional dependencies are present, set a
+# desktop notification while ringing the alarm bell for a short time.
 _notify() {
-    local message
-    message="tmr elapsed at $time_now"
+    message="tmr elapsed at $time_after (started $past)"
+
     echo "$message"
 
     [ "$(_depcheck notify-send)" ] && notify-send -i clock "$message"
@@ -73,5 +75,5 @@ _notify() {
 }
 
 # Set the timer and send notification when its done
-echo "tmr started at $time_set"
+echo "tmr started at $time_now"
 sleep "$arg" && _notify
