@@ -279,7 +279,7 @@ _tmux() {
 
 	pgrep tmux > /dev/null || return 1
 
-	tmux source-file "$HOME/.tmux.conf"
+	tmux source-file "$HOME"/.tmux.conf
 
 	# NOTE this is another script that is part of my dotfiles.
 	tmux_update_vim &
@@ -299,7 +299,7 @@ _emacs() {
     # 2. https://gitlab.com/protesilaos/modus-themes
     case "$theme_variant" in
         l*) emacsclient -e "(load-theme 'modus-operandi t)" ;;
-        d*) emacsclient -e "(load-theme 'modus-vivendi t)" ;;
+        d*) emacsclient -e "(load-theme 'modus-vivendi t)"  ;;
 	esac
 }
 
