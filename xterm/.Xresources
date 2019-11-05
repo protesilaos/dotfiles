@@ -1,4 +1,4 @@
-! 
+!
 ! ~/.Xresources
 !
 
@@ -59,8 +59,8 @@ xterm*highlightSelection: true
 xterm*highlightTextColor: XtDefaultBackground
 
 ! Font settings
-xterm*faceName: Hack
-xterm*faceSize: 11
+xterm*faceName: Monospace
+xterm*faceSize: 10.5
 xterm*renderFont: true
 xterm*boldColors: false
 xterm*faceSize1: 9.5
