@@ -18,16 +18,41 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-command -v screenkey > /dev/null || { echo "screenkey is not installed."; exit 1; }
+command -v screenkey > /dev/null || { echo "screenkey not installed."; exit 1; }
 
-# Run this script with an argument to use black text on a white
-# background.  Otherwise use the inverse.
-if [ -n "$1" ]; then
-	bg="#ffffff"
-	fg="#000000"
+# Find the active Tempus theme (used by my terminals and determines the
+# running GTK theme, etc.).  We want to pass colours to screenkey that
+# fit with the active theme (light or dark styles).  If this information
+# is not available, default to a dark theme.
+theme_path="$HOME"/.local/share/my_colours/active-tempus-theme.sh
+
+if [ -f "$theme_path" ]; then
+    theme_file="$(sed '/tempus_/!d ; s,.*/,,' $theme_path)"
+    theme_id="${theme_file%.sh}"
+    theme_id="${theme_id#tempus_}"
 else
-	fg="#ffffff"
-	bg="#000000"
+    fg="#ffffff"
+	bg="#0a0a0a"
+fi
+
+case "$theme_id" in
+	dawn|day|fugit|past|totus)
+		bg="#f5f5f5"
+	    fg="#000000"
+		;;
+	autumn|classic|dusk|future|night|rift|spring|summer|tempest|warp|winter)
+		fg="#ffffff"
+	    bg="#0a0a0a"
+		;;
+esac
+
+# Determine a suitable font, in order of preference.
+if [ -n "$(fc-list 'Source Code Pro')" ]; then
+    font='Source Code Pro'
+elif [ -n "$(fc-list 'Fira Code')" ]; then
+    font='Fira Code'
+else
+    font='Monospace'
 fi
 
 # Kill the program if it is running, else launch it using the
@@ -36,6 +61,6 @@ if pgrep -x screenkey; then
 	pkill -x screenkey
 else
 	screenkey --scr 1 -t 1 -s small -p bottom --opacity 1 \
-			  --no-systray --mods-mode emacs --font 'Monospace' \
+			  --no-systray --mods-mode emacs --font "$font" \
               --compr-cnt 2 --bg-color "$bg" --font-color "$fg"
 fi
