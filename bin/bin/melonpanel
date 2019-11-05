@@ -128,8 +128,13 @@ melonpanel_height=22
 # my dotfiles for the relevant rules).
 case "$lemonbar_xft" in
     0)
-        fontmain='FiraGO:style=regular:size=11'
-        fontbold='FiraGO:style=bold:size=11'
+        if [ -n "$(fc-list FiraGO)" ]; then
+            fontmain='FiraGO:style=regular:size=11'
+            fontbold='FiraGO:style=bold:size=11'
+        else
+            fontmain='DejaVu Sans:style=regular:size=11'
+            fontbold='DejaVu Sans:style=bold:size=11'
+        fi
         ;;
     *)
         if [ -n "$(fc-list terminus)" ]; then
