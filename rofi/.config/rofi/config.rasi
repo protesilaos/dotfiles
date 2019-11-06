@@ -1,9 +1,9 @@
 configuration {
-	modi: "window,drun,run,combi";
+	modi: "combi,run,drun,window";
 	width: 100;
 	lines: 10;
 	columns: 1;
-	font: "Sans 14";
+	font: "Sans 16";
 	location: 6;
 	yoffset: 0;
 	xoffset: 0;
