@@ -139,7 +139,7 @@ fi
 _check feh && "$HOME"/.fehbg &
 
 # Start the simple display compositor.  See `xcompmgr --help'.
-xcompmgr -cC -t -5 -l -5 -r 4.2 -o 0.55 &
+xcompmgr -cCfF -t -5 -l -5 -r 4.2 -o 0.55 -D 5 &
 
 # Start the settings daemon to apply GTK widget and icon themes to
 # running applications as well as flatpaks (see the `tempus' script).
