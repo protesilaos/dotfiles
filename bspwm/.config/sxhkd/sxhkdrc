@@ -72,13 +72,9 @@ mod3 + backslash
 mod3 + {_, shift + } Return
 	{xterm,xterm -e tmux new-session -A -s 'Default'}
 
-# With `b' use rofi to switch between running windows.  I call these
-# "buffers" because they are loaded in memory.  Whatever…  The keys are
-# a simplified version of the Emacs buffer switching `C-x b'.
-#
-# With `x' search for an executable.  Like the Emacs `M-x' prompt.
-mod3 + {b,x}
-     rofi -show {window,run}
+# Show the combined rofi view.
+mod3 + x
+     rofi -show combi
 
 # Bring up a rofi interface for `pass' (the superb UNIX password
 # manager).
