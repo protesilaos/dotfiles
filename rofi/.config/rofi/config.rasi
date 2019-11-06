@@ -38,7 +38,7 @@ configuration {
 	max-history-size: 25;
 	combi-hide-mode-prefix: true;
 /*	pid: "/run/user/1000/rofi.pid";*/
-	display-window: "Windows" ;
+	display-window: "Windows";
 /*	display-windowcd: ;*/
 	display-run: "Executables";
 /*	display-ssh: ;*/
