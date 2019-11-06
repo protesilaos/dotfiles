@@ -46,6 +46,6 @@ _themes() {
 	done < <(find "$tempus_shell_files" -type f -name '*.sh' -print0 | sort -z)
 }
 
-selection="$(_themes | rofi -dmenu -no-custom -p 'Select Tempus theme')"
+selection="$(_themes | rofi -dmenu -only-match -p 'Select Tempus theme')"
 
 tempus "$selection"
