@@ -354,11 +354,21 @@ _bspwm() {
 	esac
 }
 
+_rofi() {
+    _depcheck rofi
+
+    roficonf="$HOME"/.config/rofi/config.rasi
+	if [ -f "$roficonf" ]; then
+		_sed "s/tempus_[a-z]*/tempus_${tempus_theme}/" "$roficonf"
+	fi
+}
+
 # Function call cascade
 # ---------------------
 # Do not reorder.  Not tested thoroughly.
 _emacs
 _x_and_shell
+_rofi
 _tmux
 _vim
 _bspwm

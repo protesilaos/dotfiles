@@ -1,0 +1,131 @@
+/**
+ * rofi -dump-theme output.
+ * Rofi version: 1.5.1
+ * User: Protesilaos Stavrou
+ * Copyright: Protesilaos Stavrou --- Released under the GNU GPLv3
+ * Comment: Part of the Tempus themes (https://protesilaos.com/tempus-themes)
+ * Meta: Produce with https://gitlab.com/protesilaos/tempus-themes-generator
+ **/
+
+* {
+    /* Custom colours */
+    tempus-bg-alt:         #292b35ff;
+    tempus-bg-main:        #202427ff;
+    tempus-fg-alt:         #909294ff;
+    tempus-fg-main:        #8da3b8ff;
+    tempus-red:            #eb6a58ff;
+    tempus-green:          #49a61dff;
+    tempus-yellow:         #959721ff;
+    tempus-blue:           #798fd7ff;
+    tempus-magenta:        #cd7b7eff;
+    tempus-cyan:           #4fa090ff;
+    tempus-red-bright:     #db7824ff;
+    tempus-green-bright:   #00a854ff;
+    tempus-yellow-bright:  #ad8e4bff;
+    tempus-blue-bright:    #309dc1ff;
+    tempus-magenta-bright: #c874c2ff;
+    tempus-cyan-bright:    #1ba2a0ff;
+
+    /* Global properties */
+    background-color: rgba      (0,0,0, 0%);
+}
+#window {
+    background-color: @tempus-bg-main;
+    border:           2px 0 0;
+    border-color:     @tempus-bg-alt;
+    padding:          0px;
+}
+#mainbox {
+    border:  0;
+    padding: 0;
+}
+#message {
+    border:       2px solid 0px 0px;
+    border-color: @tempus-fg-alt;
+    padding:      1px ;
+}
+#textbox {
+    text-color:   @tempus-fg-main;
+}
+#listview {
+    fixed-height: 0;
+    border:       2px solid 0px 0px;
+    border-color: @tempus-fg-alt;
+    spacing:      4px;
+    scrollbar:    true;
+    padding:      2px 0px 0px;
+}
+#element {
+    border: 0;
+    padding: 1px;
+}
+#element.normal.normal {
+    background-color: @tempus-bg-main;
+    text-color:       @tempus-fg-alt;
+}
+#element.normal.urgent {
+    background-color: @tempus-red;
+    text-color:       @tempus-bg-alt;
+}
+#element.normal.active {
+    background-color: @tempus-blue;
+    text-color:       @tempus-bg-alt;
+}
+#element.selected.normal {
+    background-color: @tempus-fg-alt;
+    text-color:       @tempus-bg-alt;
+}
+#element.selected.urgent {
+    background-color: @tempus-red-bright;
+    text-color:       @tempus-bg-main;
+}
+#element.selected.active {
+    background-color: @tempus-blue-bright;
+    text-color:       @tempus-bg-main;
+}
+#element.alternate.normal {
+    background-color: @tempus-bg-main;
+    text-color:       @tempus-fg-alt;
+}
+#element.alternate.urgent {
+    background-color: @tempus-red-bright;
+    text-color:       @tempus-bg-alt;
+}
+#element alternate.active {
+    background-color: @tempus-blue-bright;
+    text-color:       @tempus-bg-alt;
+}
+#scrollbar {
+    width:        4px;
+    border:       0;
+    handle-color: @tempus-fg-alt;
+    handle-width: 8px;
+    padding:      0;
+}
+#sidebar {
+    border:       2px solid 0px 0px;
+    border-color: @tempus-fg-alt;
+}
+#button {
+    spacing: 0;
+    background-color: @tempus-bg-alt;
+    text-color:       @tempus-fg-alt;
+}
+#button.selected {
+    background-color: @tempus-cyan;
+    text-color:       @tempus-bg-main;
+}
+#inputbar {
+    spacing:    10;
+    padding:    1px;
+    text-color: @tempus-fg-main;
+    children:   [ prompt,entry ];
+}
+#prompt {
+    spacing:    0;
+    text-color: @tempus-cyan;
+}
+#entry {
+    spacing:    0;
+    text-color: @tempus-fg-main;
+}
