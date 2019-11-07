@@ -27,15 +27,27 @@
 
 command -v rofi > /dev/null || { echo "Missing rofi dependency."; return 1; }
 
+_check_dirs() {
+    [ -d "$1" ] || { echo "Missing path to Tempus theme directories."; exit 1; }
+}
+
 _check_files() {
-    [ -d "$1" ] || { echo "Missing path to Tempus themes."; exit 1; }
+    [ -f "$1" ] || { echo "Missing path to Tempus theme files."; exit 1; }
 }
 
 tempus_files="$HOME"/.local/share/my_colours
 tempus_shell_files="$tempus_files"/shell/
+tempus_active_path="$tempus_files"/active-tempus-theme.sh
 
-_check_files "$tempus_files"
-_check_files "$tempus_shell_files"
+_check_dirs "$tempus_files"
+_check_dirs "$tempus_shell_files"
+_check_files "$tempus_active_path"
+
+# Get the unique identity of the active theme.  We want to inform the
+# user about it in the `rofi' prompt.
+tempus_active_name="$(sed '/tempus_/!d ; s,.*/,,' $tempus_active_path)"
+tempus_active_id="${tempus_active_name%.sh}"
+tempus_active_id="${tempus_active_id#tempus_}"
 
 _themes() {
 	# The parameter expansions here keep only the theme's unique name:
@@ -46,6 +58,11 @@ _themes() {
 	done < <(find "$tempus_shell_files" -type f -name '*.sh' -print0 | sort -z)
 }
 
-selection="$(_themes | rofi -dmenu -no-custom -p 'Select Tempus theme')"
+# Notice the two caret signs `^': to upcase the expanded variable.
+_rofi() {
+    rofi -dmenu -no-custom -p "Select Tempus theme (current is ${tempus_active_id^^})"
+}
+
+selection="$(_themes | _rofi)"
 
 [ -n "$selection" ] && tempus "$selection"
