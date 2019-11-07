@@ -177,8 +177,8 @@ _gtk() {
     ### the above TODO.  This is work-in-progress.
 	case "$theme_variant" in
 		l*)
-			_gtk_variant 'Arc-Light' 'Papirus-Light' &
-			_gtk_live 'Arc-Light' 'Papirus-Light' &
+			_gtk_variant 'Arc' 'Papirus-Light' &
+			_gtk_live 'Arc' 'Papirus-Light' &
 			;;
 		d*)
 			_gtk_variant 'Arc-Dark' 'Papirus-Dark' &
