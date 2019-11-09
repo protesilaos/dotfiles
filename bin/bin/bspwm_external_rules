@@ -65,6 +65,9 @@ case "$window_class" in
 		echo "state=floating"
 		echo "center=on"
 		;;
+    [Mm]ate-calc)
+		echo "state=pseudo_tiled"
+        ;;
 	* )
 		case "$(xprop -id "$window_id" _NET_WM_WINDOW_TYPE)" in
 			*_NET_WM_WINDOW_TYPE_DIALOG*)
