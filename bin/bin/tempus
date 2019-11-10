@@ -136,10 +136,12 @@ _wallpaper() {
 _gtk() {
 	_gtk_common() {
 		# GTK 2
-		_sed "s,\(gtk-theme-name=\).*,\1\'${1}\', ; s,\(gtk-icon-theme-name=\).*,\1\'${2}\'," "$HOME"/.gtkrc-2.0
+		_sed "s,\(gtk-theme-name=\).*,\1\'${1}\', ; s,\(gtk-icon-theme-name=\).*,\1\'${2}\'," \
+             "$HOME"/.gtkrc-2.0
 
 		# GTK 3
-		_sed "s,\(gtk-theme-name=\).*,\1${1}, ; s,\(gtk-icon-theme-name=\).*,\1${2}," "$HOME"/.config/gtk-3.0/settings.ini
+		_sed "s,\(gtk-theme-name=\).*,\1${1}, ; s,\(gtk-icon-theme-name=\).*,\1${2}," \
+             "$HOME"/.config/gtk-3.0/settings.ini
 	}
 
 	_gtk_variant() {
