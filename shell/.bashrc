@@ -37,9 +37,11 @@ fi
 export PAGER="less --quit-at-eof"
 export MANPAGER="$PAGER"
 
-# Default editor.  On Debian the Vim GUI is provided by a separate
-# package.
-if _checkexec gvim; then
+# Default editor.
+if pgrep -x emacs; then
+    export VISUAL="emacsclient -c"
+	export EDITOR="emacsclient -t"
+elif _checkexec gvim; then
 	export VISUAL="gvim"
 	export EDITOR=vim
 else
