@@ -38,7 +38,7 @@ export PAGER="less --quit-at-eof"
 export MANPAGER="$PAGER"
 
 # Default editor.
-if pgrep -x emacs; then
+if pgrep -x emacs > /dev/null; then
     export VISUAL="emacsclient -c"
 	export EDITOR="emacsclient -t"
 elif _checkexec gvim; then
