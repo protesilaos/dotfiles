@@ -208,8 +208,9 @@ _temperature() {
     local therm_label therm_status
 
     therm_label='T:'
-    therm_status="$(acpi -t | awk -F '[[:space:]]+|,' '{ print $2 }')"
-    therm_status="${therm_status:1:2}"
+    therm_status="$(acpi -t | sed 's/.*: //')"
+    therm_status="${therm_status#*, }"
+    therm_status="${therm_status:0:2}"
 
     # Up to 59 degrees celcius keep text colour same as default.  60-79
     # turn the colour red on normal background.  Else turn the whole
