@@ -20,7 +20,7 @@
 
 # Possible actions (see case statement at the end for the actual
 # commands)
-actions=('Log out' 'Switch users' 'Reboot' 'Power off')
+actions=('Log out' 'Reboot' 'Power off')
 
 # List actions to choose from
 list_actions() {
@@ -30,18 +30,28 @@ list_actions() {
 
 choice="$(list_actions)"
 
+_pkill() {
+    if pgrep -x "$1"; then
+        pkill -x "$1"
+    fi
+}
+
+_kill_processes() {
+    _pkill bspwm_external_rules
+    _pkill sxhkd
+    _pkill melonpanel
+    _pkill feh
+    _pkill xcompmgr
+    _pkill gsd-xsettings
+}
+
 # Run the selected command
 case "$choice" in
 	L*)
+        _kill_processes
 		bspc quit
 		;;
-	Sw*)
-		dm-tool switch-to-greeter
-		;;
-	R*)
-		systemctl reboot
-		;;
-	P*)
-		systemctl poweroff
-		;;
+    # TODO 2019-11-11: No systemd, no root?
+	R*) systemctl reboot   ;;
+	P*) systemctl poweroff ;;
 esac
