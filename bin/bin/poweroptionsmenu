@@ -42,7 +42,6 @@ _kill_processes() {
     _pkill melonpanel
     _pkill feh
     _pkill xcompmgr
-    _pkill gsd-xsettings
 }
 
 # Run the selected command
