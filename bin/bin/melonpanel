@@ -137,13 +137,8 @@ case "$lemonbar_xft" in
         fi
         ;;
     *)
-        if [ -n "$(fc-list terminus)" ]; then
-            fontmain='-xos4-terminus-medium-r-normal--14-140-72-72-c-80-iso10646-1'
-            fontbold='-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso10646-1'
-        else
-            fontmain='-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso10646-1'
-            fontbold='-misc-fixed-bold-r-normal--13-120-75-75-c-80-iso10646-1'
-        fi
+        fontmain='-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso10646-1'
+        fontbold='-misc-fixed-bold-r-normal--13-120-75-75-c-80-iso10646-1'
         ;;
 esac
 
