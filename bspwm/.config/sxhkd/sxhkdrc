@@ -106,7 +106,7 @@ XF86MonBrightness{Down,Up}
 ### that Bongo plays.
 # Control the current Emacs player from outside of Emacs.
 XF86Audio{Play,Prev,Next}
-	pgrep -x emacs && emacsclient -e { \
+	emacsclient -e { \
     "(bongo-pause/resume)", \
     "(bongo-previous)", \
     "(bongo-next)" \
