@@ -58,15 +58,15 @@ bspwm_laptop_dual_monitor() {
 	# Set the workspaces per monitor.  We only define one per monitor,
 	# because of another script I have that implements dynamic
 	# desktops.
-	bspc monitor LVDS-1 -d 1
-	bspc monitor VGA-1 -d 8
+	bspc monitor LVDS1 -d 1
+	bspc monitor VGA1 -d 8
 
 	# make sure borders are always on, otherwise it is impossible to
 	# find the focused window on two monitors with monocles…
 	bspc config borderless_monocle false
 
 	# Add padding equal to panel height to fix issue where there is an
-	# overlap between panel and windows in LVDS-1.  The panel gets
+	# overlap between panel and windows in LVDS1.  The panel gets
 	# covered by the windows.
 	if pgrep -x melonpanel > /dev/null; then
 		local panel_height

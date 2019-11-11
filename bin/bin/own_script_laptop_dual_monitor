@@ -66,9 +66,9 @@
 
 laptop_coordinates() {
 	if [ "$#" == 1 ]; then
-		xrandr --output LVDS-1 --primary --mode 1366x768 --pos 0x0
+		xrandr --output LVDS1 --primary --mode 1366x768 --pos 0x0
 	else
-		xrandr --output LVDS-1 --mode 1366x768 --pos 0x0
+		xrandr --output LVDS1 --mode 1366x768 --pos 0x0
 	fi
 }
 
@@ -82,17 +82,17 @@ laptop_brightness() {
 	# reproduction of colours, especially when working with light
 	# themes.
 	if [ "$laptop_host" == "$(hostname)" ]; then
-		xrandr --output LVDS-1 --brightness 1.0 --gamma 0.76:0.75:0.68
+		xrandr --output LVDS1 --brightness 1.0 --gamma 0.76:0.75:0.68
 	fi
 }
 
 multihead_coordinates() {
-	echo "Configuring LVDS-1 + VGA-1 XrandR coordinates"
+	echo "Configuring LVDS1 + VGA1 XrandR coordinates"
 	# pass a single argument to activate the --primary option
 	laptop_coordinates 'primary'
 
 	# configure the external display on the VGA port
-	xrandr --output VGA-1 --mode 1920x1080 --pos 1366x0
+	xrandr --output VGA1 --mode 1920x1080 --pos 1366x0
 }
 
 multihead_brightness() {
