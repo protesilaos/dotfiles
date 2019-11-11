@@ -83,54 +83,6 @@ _depcheck() {
 	command -v "$1" > /dev/null || { echo "Missing dependency: $1."; return 1; }
 }
 
-# Debian Buster dependency:
-# 	apt install feh
-_wallpaper() {
-	# the wallpapers are defined manually at
-	# ~/Pictures/theme/{light,dark}.jpg
-	wall_path="$HOME/Pictures/theme"
-	wall_light="$wall_path/light.jpg"
-	wall_dark="$wall_path/dark.jpg"
-
-	[ -d "$wall_path" ] || { echo "No path to: $wall_path"; return 1; }
-	[ -f "$wall_light" ] || { echo "No path to: $wall_light"; return 1; }
-	[ -f "$wall_dark" ] || { echo "No path to: $wall_dark"; return 1; }
-
-	_feh() {
-		feh --bg-fill "$1" &
-	}
-
-	case "$theme_variant" in
-		l*)
-			case "$DESKTOP_SESSION" in
-				bspwm)
-					_depcheck feh
-					_feh "$wall_light"
-					;;
-				gnome*)
-					gsettings set org.gnome.desktop.background picture-uri "file://${wall_light}" &
-					;;
-				mate)
-					gsettings set org.mate.background picture-filename "$wall_light" &
-					;;
-			esac
-			;;
-		d*)
-			case "$DESKTOP_SESSION" in
-				bspwm)
-					_feh "$wall_dark"
-					;;
-				gnome*)
-					gsettings set org.gnome.desktop.background picture-uri "file://${wall_dark}" &
-					;;
-				mate)
-					gsettings set org.mate.background picture-filename "$wall_dark" &
-					;;
-			esac
-			;;
-	esac
-}
-
 # Debian Buster optional dependencies:
 # 	apt install papirus-icon-theme arc-theme
 _gtk() {
@@ -184,28 +136,6 @@ _gtk() {
 			_gtk_live 'Arc-Dark' 'Papirus-Dark' &
 			;;
 	esac
-}
-
-_gtksourceview3() {
-	gtksourceview_path="$HOME"/.local/share/gtksourceview-3.0/styles
-	[ -f "$gtksourceview_path"/tempus_"${tempus_theme}".xml ] || { echo "Missing gtksourceview3 file."; return 1; }
-
-	if [ "$(command -v gedit 2> /dev/null)" ]; then
-		gsettings set org.gnome.gedit.preferences.editor scheme "tempus-$tempus_theme"
-	fi
-
-	if [ "$(command -v pluma 2> /dev/null)" ]; then
-		gsettings set org.mate.pluma color-scheme "tempus-$tempus_theme"
-	fi
-}
-
-_gtksourceview4() {
-	gtksourceview_path="$HOME"/.local/share/gtksourceview-4/styles
-	[ -f "$gtksourceview_path"/tempus_"${tempus_theme}".xml ] || { echo "Missing gtksourceview4 file."; return 1; }
-
-	if [ "$(command -v gnome-builder 2> /dev/null)" ]; then
-		gsettings set org.gnome.builder.editor style-scheme-name "tempus-$tempus_theme"
-	fi
 }
 
 # FIXME HELPME is it possible to change the Vim colorscheme from the
