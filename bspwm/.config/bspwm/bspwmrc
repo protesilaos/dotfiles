@@ -81,7 +81,7 @@ _bc split_ratio 0.50
 _bc single_monocle false
 _bc borderless_monocle true
 _bc gapless_monocle false
-_bc paddingless_monocle false
+# _bc paddingless_monocle false
 _bc focus_follows_pointer false
 _bc pointer_follows_monitor true
 _bc pointer_modifier mod1
@@ -93,7 +93,9 @@ _bc initial_polarity first_child
 _bc ignore_ewmh_focus true
 
 # window rules
-_check bspwm_external_rules && _bc external_rules_command "$(command -v bspwm_external_rules)"
+_check bspwm_external_rules && \
+    _bc external_rules_command \
+        "$(command -v bspwm_external_rules)"
 
 # colours
 # -------
@@ -152,13 +154,5 @@ xcompmgr -cCfF -t -5 -l -5 -r 4.2 -o 0.55 -D 5 &
 
 # Start the settings daemon to apply GTK widget and icon themes to
 # running applications as well as flatpaks (see the `tempus' script).
-_check mate-settings-daemon && mate-settings-daemon &
-
-# Per host configurations
-# =======================
-
-#### TODO 2019-10-29: review the utility/design of that script
-# I deploy my dotfiles on two separate machines.  On one I often run a
-# dual monitor setup.  As such, there are some bespoke configs for each
-# host.
-_check own_script_bspwm_per_host_configs && own_script_bspwm_per_host_configs
+# _check gnome-settings-daemon && /usr/libexec/gsd-xsettings &
+# _check xfsettingsd && xfsettingsd &
