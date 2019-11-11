@@ -166,38 +166,36 @@ fi
 # XBPS (package management on Void Linux)
 # ---------------------------------------
 if _checkexec xbps-install; then
-    xbi="xbps-install -S"        # Update lists without a package arg
-    xbiu="xbps-install -Su"      # Upgrade system
-    xbif="xbps-install -f"       # Re-install 'forcefully' (no checks)
-    xbiD="xbps-install -D"       # Just download
-    xbiSuvn="xbps-install -Suvn" # List upgradeable
+    alias xbi="sudo xbps-install -S"        # Update lists without a package arg
+    alias xbiu="sudo xbps-install -Su"      # Upgrade system
+    alias xbif="sudo xbps-install -f"       # Re-install 'forcefully' (no checks)
+    alias xbiD="sudo xbps-install -D"       # Just download
+    alias xbiSuvn="sudo xbps-install -Suvn" # List upgradeable
 fi
 
 if _checkexec xbps-remove; then
-    xbr="xbps-remove"
-    xbrR="xbps-remove -R"       # Remove deps as well
-    xbro="xbps-remove -o"       # Remove orphans
-    xbro="xbps-remove -O"       # Remove obsolete files
+    alias xbr="sudo xbps-remove -R"         # Remove deps as well
+    alias xbro="sudo xbps-remove -Oo"       # PKG, orphans, obsolete files
 fi
 
 if _checkexec xbps-query; then
-    xbq="xbps-query"        # Search for local package
-    xbqR="xbps-query -Rs"        # Search for remote package
-    xbqH="xbps-query -H"        # Query "hold" rules
-    xbqX="xbps-query -X"        # Reverse dependencies
-    xbql="xbps-query -l"        # List installed
-    xbqL="xbps-query -L"        # List info sources
-    xbqx="xbps-query -x"        # Dependencies
-    xbqf="xbps-query -f"        # List local package files
-    xbqF="xbps-query -Rf"       # Remote package files
-    xbqO="xbps-query -O"        # List orphans
+    alias xbq="xbps-query"                  # Search for local package
+    alias xbqR="xbps-query -Rs"             # Search for remote package
+    alias xbqH="xbps-query -H"              # Query "hold" rules
+    alias xbqX="xbps-query -X"              # Reverse dependencies
+    alias xbql="xbps-query -l"              # List installed
+    alias xbqL="xbps-query -L"              # List info sources
+    alias xbqx="xbps-query -x"              # Dependencies
+    alias xbqf="xbps-query -f"              # List local package files
+    alias xbqF="xbps-query -Rf"             # Remote package files
+    alias xbqO="xbps-query -O"              # List orphans
 fi
 
 if _checkexec xbps-pkgdb; then
-    xbma="xbps-pkgdb -m auto"   # Mark as auto install
-    xbmm="xbps-pkgdb -m manual" # Mark as manual install
-    xbmh="xbps-pkgdb -m hold"
-    xbmuh="xbps-pkgdb -m unhold"
+    alias xbma="sudo xbps-pkgdb -m auto"    # Mark as auto install
+    alias xbmm="sudo xbps-pkgdb -m manual"  # Mark as manual install
+    alias xbmh="sudo xbps-pkgdb -m hold"
+    alias xbmuh="sudo xbps-pkgdb -m unhold"
 fi
 
 
