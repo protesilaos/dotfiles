@@ -230,22 +230,14 @@ _volume() {
 
     local volume_status volume_level volume_label
 
-    _amixer_get() {
-        amixer get Master | \
-        sed "/^\ *Front R/!d ; s,\(^.*\) \[\(.*%\)\] \[\(.*\)\],\\${1},"
-    }
-
-    volume_status="$(_amixer_get 3)"
-    volume_level="$(_amixer_get 2)"
+    volume_status="$(amixer get Master | awk -F "[][]" '/%/ { print $4; exit; }')"
+    volume_level="$(amixer get Master | awk -F "[][]" '/%/ { print $2; exit; }')"
     volume_label='V:'
 
     case "$volume_status" in
-        'off')
-            echo "$volume_label $volume_level (Muted)"
-            ;;
-        'on')
-            echo "$volume_label $volume_level"
-            ;;
+        'off') echo "$volume_label $volume_level (Muted)" ;;
+        'on')  echo "$volume_label $volume_level"         ;;
+        *)     echo "$volume_level (?)"      ;;
     esac
 }
 
