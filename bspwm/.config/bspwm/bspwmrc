@@ -38,6 +38,7 @@ _check bspwm_conf_xrandr && bspwm_conf_xrandr
 # Desktop[s] [per monitor].
 _check bspwm_conf_desktops && bspwm_conf_desktops
 
+## TODO 2019-11-11: All visual options are in need of review
 # Visual options
 # ==============
 #
@@ -99,6 +100,7 @@ _check bspwm_external_rules && \
 
 # colours
 # -------
+# NOTE these are modified by my `tempus' script.
 _bc normal_border_color "#312e30"
 _bc active_border_color "#b1942b"
 _bc focused_border_color "#6da280"
