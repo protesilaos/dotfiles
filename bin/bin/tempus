@@ -217,7 +217,7 @@ _tmux() {
 _emacs() {
     _depcheck emacs
 
-    pgrep -x emacs > /dev/null || return 1
+    pgrep emacs > /dev/null || return 1
 
     # Just switch to the appropriate Emacs theme.  The Modus themes are
     # not part of Tempus, but their goal is the same.
@@ -238,14 +238,14 @@ _melonpanel() {
 	_depcheck lemonbar
 	_depcheck melonpanel
 
-	if pgrep -x melonpanel > /dev/null; then
-		pkill -x melonpanel && melonpanel &
+	if pgrep melonpanel > /dev/null; then
+		pkill melonpanel && melonpanel &
 	fi
 }
 
 
 _bspwm() {
-	[ "$DESKTOP_SESSION" = 'bspwm' ] || return 1
+	pgrep -x bspwm || return 1
 
 	_melonpanel
 
@@ -294,14 +294,14 @@ _rofi() {
 
 # Function call cascade
 # ---------------------
-# Do not reorder.  Not tested thoroughly.
+# The order should not matter but I did not put this to the test.
 _emacs
 _x_and_shell
 _rofi
-_tmux
-_vim
 _bspwm
-_wallpaper
 _gtk
-_gtksourceview3
-_gtksourceview4
+
+## NOTE 2019-11-11: Not actively using these any more.  Keeping them,
+## just in case.
+# _tmux
+# _vim
