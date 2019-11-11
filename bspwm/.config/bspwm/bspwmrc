@@ -20,6 +20,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# Essentials
+# ==========
+
 # Truncate a couple of common commands that are used herein.
 _bc() {
 	bspc config "$@"
@@ -28,6 +31,12 @@ _bc() {
 _check() {
 	command -v "$1" > /dev/null
 }
+
+# Determine XrandR settings.
+_check bspwm_conf_xrandr && bspwm_conf_xrandr
+
+# Desktop[s] [per monitor].
+_check bspwm_conf_desktops && bspwm_conf_desktops
 
 # Visual options
 # ==============

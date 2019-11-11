@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# bspwm_monitor_conf --- Configure monitor settings for BSPWM.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.	If not, see <http://www.gnu.org/licenses/>.
+
+if [ "$(bspc query -M | wc -l)" ]; then
+	# Set the workspaces per monitor.  We only define one per monitor,
+	# because of another script I have that implements dynamic desktops.
+	# For the XrandR settings see my `bspwm_conf_xrandr'.
+	bspc monitor LVDS1 -d 1
+	bspc monitor VGA1 -d 8
+
+	# Make sure borders are always on, otherwise it is impossible to
+	# find the focused window on two monitors with monocles…
+	bspc config borderless_monocle false
+
+	# Add padding equal to panel height to fix issue where there is an
+	# overlap between panel and windows in LVDS1.  The panel gets
+	# covered by the windows.
+	if pgrep -x melonpanel > /dev/null; then
+        _panel_height() {
+            awk -F '=' '/melonpanel_height/ { print $2; exit; }' \
+                $(command -v melonpanel)
+        }
+
+		bspc config bottom_padding "$(_panel_height)"
+	fi
+else
+	bspc monitor -d 1
+fi
