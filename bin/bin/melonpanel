@@ -26,14 +26,11 @@
 # switched "bar" with "panel".  This is to avoid naming conflicts where
 # we could accidentally kill the wrong process or whatnot.
 #
-# Debian Buster dependencies for melonpanel:
-#    apt install bspwm lemonbar xdo
+# Void Linux dependencies for melonpanel:
+#    xbps-install -S bspwm lemonbar-xft xdo
 #
 # Dependencies for individual modules:
-#    apt install acpi
-#
-# Optional:
-#    apt install xfonts-terminus
+#    xbps-install -S acpi
 #
 # Last full review 2019-10-23
 
@@ -48,17 +45,6 @@ _checkdep() {
 _checkdep bspwm
 _checkdep lemonbar
 _checkdep xdo
-
-# Assess whether we are using the Debian package or my custom Xft fork
-# (see further below).  The latter uses outline or proportionately-sized
-# fonts as opposed to fixed-size bitmap fonts.
-#
-# Note that this check is not necessarily robust enough, because the
-# user might have a custom build of upstream lemonbar (with no Xft
-# support) inside their `$HOME/bin'.
-if [ "$(command -v lemonbar)" = "$HOME/bin/lemonbar" ]; then
-    lemonbar_xft=0
-fi
 
 # Kill any running lemonbar
 pgrep -x lemonbar > /dev/null && pkill -x lemonbar
@@ -84,63 +70,20 @@ melonpanel_height=22
 
 # Fonts (upstream lemonbar only supports bitmap fonts)
 # ----------------------------------------------------
-# Find available fonts using `xlsfonts`.
+# I use a private fork of Lemonbar, that I compile using `xbps-src'.
+# See the Void wiki: https://wiki.voidlinux.org/Xbps-src.
 #
-# Meaning of these fields (between dashes):
-# https://wiki.archlinux.org/index.php/X_Logical_Font_Description
+# My fork: https://gitlab.com/protesilaos/lemonbar-xft
 #
-# * foundry
-# * name
-# * weight
-# * slant (r == roman, o == oblique, i == italic)
-# * font width
-# * -- means an empty field (a foundry can have something special here)
-# * pixelsize
-# * pointsize (tenths of a point)
-# * resolution X
-# * resolution Y
-# * spacing (c == cell == typographer, m == mono, p == proportional)
-# * average width
-# * character registry
-# * character encoding
-#
-# A wildcard is either 0 or *.  Can be used for quasi-scalable fonts:
-# they are still fixed-size, but are designed to match the closest size
-# at the given resolution and/or allocated space.  The method for
-# deciding on the ideal proportions is not clear to me…
-#
-# OPTIONAL: Fonts for Lemonbar with Xft support (custom fork)
-# -----------------------------------------------------------
-# I have decided to maintain a fork of `lemonbar` that supports
-# outline/proportionately-sized typefaces (like the "DejaVu" family):
-# https://gitlab.com/protesilaos/lemonbar-xft
-#
-# To use this fork, you need to compile it yourself.  Instructions for
-# Debian 10 Buster here:
-#
-# * https://protesilaos.com/codelog/2019-06-23-lemonbar-xft-new/
-#
-# If you want to reproduce/verify this fork, follow these steps:
-#
-# * https://protesilaos.com/codelog/2019-06-24-lemonbar-xft-howto/
-#
-# Valid typeface names are whatever is supported by fontconfig (also see
-# my dotfiles for the relevant rules).
-case "$lemonbar_xft" in
-    0)
-        if [ -n "$(fc-list FiraGO)" ]; then
-            fontmain='FiraGO:style=regular:size=11'
-            fontbold='FiraGO:style=bold:size=11'
-        else
-            fontmain='DejaVu Sans:style=regular:size=11'
-            fontbold='DejaVu Sans:style=bold:size=11'
-        fi
-        ;;
-    *)
-        fontmain='-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso10646-1'
-        fontbold='-misc-fixed-bold-r-normal--13-120-75-75-c-80-iso10646-1'
-        ;;
-esac
+# To verify it, follow the step-by-step instructions (what I did):
+# https://protesilaos.com/codelog/2019-06-24-lemonbar-xft-howto/
+if [ -n "$(fc-list FiraGO)" ]; then
+    fontmain='FiraGO:style=regular:size=11'
+    fontbold='FiraGO:style=bold:size=11'
+else
+    fontmain='-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso10646-1'
+    fontbold='-misc-fixed-bold-r-normal--13-120-75-75-c-80-iso10646-1'
+fi
 
 # Panel modules
 # -------------
