@@ -3489,3 +3489,25 @@ It only works for frames with exactly two windows."
   :bind (("s-m" . windower-toggle-single) ; toggle maximisation
          ("s-s" . windower-toggle-split)))
 #+END_SRC
+** Compare last two kills
+   :PROPERTIES:
+   :CUSTOM_ID: h:97e82006-9ba9-49ee-8f69-280b4beee831
+   :END:
+
+This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-11_Diffing_buffer_fragments][diffing buffer fragments]].
+Some minor tweaks by me.
+
+#+BEGIN_SRC emacs-lisp
+(use-package emacs
+  :config
+  (defun contrib/diff-last-two-kills ()
+    "Write the last two kills to temporary files and diff them."
+    (interactive)
+    (let ((old "/tmp/emacs-old-kill") (new "/tmp/emacs-new-kill"))
+      (with-temp-file new
+        (insert (current-kill 0 t)))
+      (with-temp-file old
+        (insert (current-kill 1 t)))
+      (diff old new "-u" t)))
+  :bind ("C-c d" . contrib/diff-last-two-kills))
+#+END_SRC
