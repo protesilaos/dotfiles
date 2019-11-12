@@ -74,14 +74,6 @@ My OS is Void Linux.  I use the Emacs package provided by my distro.  I
 do not optimise for portability across different versions or operating
 systems.
 
-I previously used Debian.  Some references in this document will be
-updated accordingly (this noted on 2019-11-12).
-
-*** TODO Replace Debian with Void Linux
-    :PROPERTIES:
-    :CUSTOM_ID: h:bc555caa-193f-433d-901a-089de608968a
-    :END:
-
 ** Note about my methodology
    :PROPERTIES:
    :CUSTOM_ID: h:a654fcb5-0163-4dc6-977a-8c50175118a1
@@ -303,11 +295,11 @@ wish to build a variant themselves.  I used this to do the following:
   necessary to offer the /impression/ of similarity between roman and
   italic variations.
 
-This is the [[https://gitlab.com/protesilaos/hack-font-mod][git repo of my custom Hack font]].  It is available under
-the same terms as "Hack" itself (MIT License).  Note that you should
-better remove any other build of the original typeface before using my
-mod.  On Debian per-user fonts are read from =~/.local/share/fonts/=
-(probably true for many other distros).
+This is the [[https://gitlab.com/protesilaos/hack-font-mod][git repo of my custom Hack font]].  It is available under the
+same terms as "Hack" itself (MIT License).  Note that you should better
+remove any other build of the original typeface before using my mod.  On
+Debian and Void Linux (and probably all other distros) per-user fonts
+are read from =~/.local/share/fonts/=.
 
 *** Technical considerations on GNU/Linux
     :PROPERTIES:
@@ -315,8 +307,8 @@ mod.  On Debian per-user fonts are read from =~/.local/share/fonts/=
     :END:
 
 On the implementation front, it is worth knowing that things are
-governed by the =fontconfig= library.  This is true for Debian and
-others.
+governed by the =fontconfig= library.  This is true for Debian, Void
+Linux, and others.
 
 The font definition can thus accept several values other than the font
 family and size.  Each value is separated by the colon sign.  Have a
@@ -1036,7 +1028,7 @@ confines of word boundaries (e.g. multiple words)."
 This is a great alternative to =grep=.  For me the main selling point is
 its improved speed.  It also has some nice usability enhancements.  To
 get this to work, you must first install the =ripgrep= binary, which is
-not an Emacs package.  On Debian this is just =apt install ripgrep=.
+not an Emacs package.  On Void Linux: =xbps-install -S ripgrep=.
 
 The key chord is similar to =occur=.  I just also keep =F5= there in
 case I need it.
@@ -1774,7 +1766,7 @@ uses GPG and standand UNIX tools to handle passwords.  Encrypted files
 are stored in a plain directory structure.  Very simple, very nice: now
 all data is available with a variety of interfaces, such as standard
 CLI, a =dmenu= interface, a graphical front-end like =qtpass=, etc.
-Install it on Debian and derivatives with =apt install pass=.
+Install it on Void Linux with =xbps-install -S pass=.
 
 The package below provides an Emacs interface to some of the most common
 actions, in the form of a list of candidates that can be narrowed down
@@ -2058,10 +2050,10 @@ is from MELPA):
 
 + The built-in SMTP capabilities to send email.
 + The =mu4e= front-end to the =mu= mail indexer.  This is for finding
-  and reading email.  Both of those tools are available for Debian 10
-  'buster': =apt install mu4e=.
+  and reading email.  Both of those tools are available on Void Linux:
+  =xbps-install -S mu mu4e=.
 + The =offlineimap= utility to store a local copy of my email (from
-  Debian: =apt install offlineimap=).  This is necessary for =mu= to
+  Void: =xbps-install -S offlineimap=).  This is necessary for =mu= to
   actually do its work.
 
 *** Sending email (SMTP)
@@ -2101,7 +2093,7 @@ Emacs can decrypt those automatically.
 The following configure =mu4e=, the Mail User Agent.  An overview:
 
 + Include mu4e in the load path.  This is necessary because we are
-  using the Debian package.
+  using the Void Linux package.
 + Use =mu4e= as the default MUA in Emacs.  This concerns actions such
   as =C-x m= (=compose-mail=).
 + Do not run anything to get new mail.  The task is handled by
@@ -2277,7 +2269,8 @@ automatic.
 + These settings are meant to check for mixed language content, so there
   is no need to changed dictionaries.
 + Note that =hunspell= is not part of Emacs.  I install the relevant
-  packages from the Debian archive with =apt install hunspell{,-el}=.
+  packages from the Void Linux archive (NOTE 2019-11-12: the Greek
+  dictionary is missing, but I will try to make a package for it).
 + The value of =ispell-local-dictionary-alist= is based on the
   information provided in [[http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html][Chen Bin's blog]].
 + The key binding =C-;= is disabled because I repurpose that for a
