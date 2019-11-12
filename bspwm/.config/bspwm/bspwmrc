@@ -76,13 +76,14 @@ _check bspwm_conf_desktops && bspwm_conf_desktops
 
 # window management
 # -----------------
+_bc automatic_scheme longest_side
+_bc initial_polarity second_child
 _bc border_width 2
 _bc window_gap 2
 _bc split_ratio 0.50
 _bc single_monocle false
 _bc borderless_monocle true
 _bc gapless_monocle false
-# _bc paddingless_monocle false
 _bc focus_follows_pointer false
 _bc pointer_follows_monitor true
 _bc pointer_modifier mod1
@@ -90,8 +91,12 @@ _bc pointer_action1 move
 _bc pointer_action2 resize_side
 _bc click_to_focus any
 _bc swallow_first_click false
-_bc initial_polarity first_child
 _bc ignore_ewmh_focus true
+
+for i in top right bottom left; do
+    _bc "${i}"_monocle_padding 0
+done
+unset i
 
 # window rules
 _check bspwm_external_rules && \
