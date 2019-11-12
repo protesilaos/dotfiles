@@ -22,8 +22,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Optional Debian Buster dependencies:
-#    apt install libnotify-bin mpv
+# Void Linux dependencies:
+# 	xbps-install mpv libnotify sound-theme-freedesktop
 
 
 # Define a help message
