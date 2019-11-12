@@ -1,6 +1,10 @@
 Custom desktop session centred around BSPWM and Emacs
 =====================================================
 
+**UPDATE 2019-11-12:** I switched from Debian to Void Linux.  All
+references to Debian will be removed and lots of things will be
+refactored accordingly.
+
 **UPDATE 2019-10-23:** I produced a video where, among others, I talked
 about my outlook concerning my BSPWM session (and this repo).  Some
 _major breaking changes_ are in the works.  Please watch and remember
