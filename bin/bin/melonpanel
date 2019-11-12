@@ -237,7 +237,7 @@ _volume() {
     case "$volume_status" in
         'off') echo "$volume_label $volume_level (Muted)" ;;
         'on')  echo "$volume_label $volume_level"         ;;
-        *)     echo "$volume_level (?)"      ;;
+        *)     echo "$volume_label $volume_level (?)"     ;;
     esac
 }
 
