@@ -252,10 +252,6 @@ bspc subscribe report > "$melonpanel_fifo" &
 # (see modules above).  Here we just add a shorter variable to each
 # module, which helps position it on the panel (the last printf).
 _melonpanel() {
-    local laptop_external_monitor
-
-    laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
-
     while read -r line ; do
         case $line in
             B*)
@@ -304,7 +300,7 @@ _melonpanel() {
                                 # {Free,Occupied,Urgent} focused
                                 [FOU]*)
                                     if [ -n "$on_focused_monitor" ]; then
-                                        name="%{T2}${name/*/[$name]}%{T-}" # the %{Tx} specifies the bold font
+                                        name="%{T2}${name/*/[$name]}%{T-}" # the %{T2} specifies the bold font
                                         FG="$foreground"
                                     else
                                         name="${name/*/ $name-}"
@@ -344,6 +340,9 @@ _melonpanel() {
         _panel_layout() {
             echo "%{l}$wm%{r}$key $bat $therm $vol $date "
         }
+
+        local laptop_external_monitor
+        laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
 
         if [ -n "$laptop_external_monitor" ]; then
             printf "%s%s\n" "%{Sf}$(_panel_layout)" "%{Sl}$(_panel_layout)"
