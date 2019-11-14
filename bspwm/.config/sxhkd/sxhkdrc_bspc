@@ -135,10 +135,11 @@ mod3 + ctrl + {h,j,k,l}
 mod3 + shift + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
 
-# Swap current window with the biggest one in the present
+# Swap current window with the biggest/smallest one in the present
 # desktop.
-mod3 + shift + b
-	bspc node -s biggest.local
+# mod3 + shift + {b,s}
+mod3 + {_, shift + } b
+	bspc node -s {biggest,smallest}.local
 
 # Preselect the direction or insert again to cancel the preselection.
 # This enters the manual tiling mode that splits the currently focused
