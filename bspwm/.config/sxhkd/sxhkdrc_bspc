@@ -110,10 +110,9 @@ mod3 + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
 {mod3,alt} + {_,shift +} Tab
 	bspc {desktop,node} -f {next,prev}.local
 
-# Switch to the {next,previous} monitor.  This brings focus to that
-# monitor's active desktop.
-mod3 + {_,shift + }comma
-	bspc monitor -f {next,prev}
+# Switch to the other monitor.
+mod3 + o
+	bspc monitor -f next
 
 # Switch to last active {desktop,node}.  With mod3 move to the last
 # active desktop.  With alt move to the last active node. "grave" is
