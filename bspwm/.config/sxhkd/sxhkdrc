@@ -24,7 +24,7 @@
 #
 # The following commands are:
 #
-# f == bspwm focus mode
+# f == bspwm focus mode (my script)
 # s == reload sxhkd
 # p == reload melonpanel (my lemonbar script)
 # t == dmenu to choose Tempus theme
@@ -32,14 +32,13 @@
 mod3 + e ; {f,s,p,t,x}
     { \
     bspwm_focus_mode, \
-    pkill -USR1 -x sxhkd && notify-send -i debian-logo "sxhkd config" "Reloaded key bindings", \
+    pkill -USR1 -x sxhkd && notify-send -i key_bindings "Reloaded key bindings", \
     pkill -x melonpanel && melonpanel, \
     tempusmenu, \
     xrdb -I "$HOME" -merge "$HOME"/.Xresources \
     }
 
-# Invoke the session management menu (log out, lock, switch users,
-# reboot, shutdown).
+# Invoke the session management menu (log out, lock, reboot, shutdown).
 ctrl + alt + Delete
      poweroptionsmenu
 
@@ -98,19 +97,18 @@ mod3 + Print
 XF86MonBrightness{Down,Up}
 	xbacklight {-dec 15,-inc 15}
 
-### TODO 2019-11-01: This should be more abstract and should be able to
-### work like the CLI `playerctl' which can control all MPRIS-aware
-### interfaces.  Perhaps the solution would be to figure out how to make
-### the Emacs player MPRIS-compliant…  At any rate, this is a
-### theoretical problem, as I only ever use the media keys for music
-### that Bongo plays.
-# Control the current Emacs player from outside of Emacs.
+
+# Specifically for `bongo', my Emacs music manager.
 XF86Audio{Play,Prev,Next}
 	emacsclient -e { \
     "(bongo-pause/resume)", \
     "(bongo-previous)", \
     "(bongo-next)" \
     }
+
+# Control the [last] currently active player.
+mod3 + XF86Audio{Play,Prev,Next}
+    playerctl {play-pause,previous,next}
 
 # Speaker/output volume.  Requires `amixer` and dedicated keys.
 XF86Audio{Mute,LowerVolume,RaiseVolume}
