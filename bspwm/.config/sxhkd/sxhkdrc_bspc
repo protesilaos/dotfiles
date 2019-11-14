@@ -150,6 +150,12 @@ mod3 + alt + {h,j,k,l}
 mod3 + alt + {1-9}
 	bspc node -o 0.{1-9}
 
+# Transpose desktops, while keeping focus on the present monitor.  With
+# shift the focus stays on the present window/desktop, thus moving to
+# the other monitor.
+mod3 + {_, shift + }t
+    bspc desktop --swap next.active {_,--follow}
+
 # Node layout state and flags
 # ---------------------------
 
