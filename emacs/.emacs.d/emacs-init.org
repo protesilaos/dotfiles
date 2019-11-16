@@ -1961,7 +1961,7 @@ on the marked items, if they exist.
   (bongo-display-header-icons nil)
   (bongo-display-playback-mode-indicator t)
   (bongo-display-inline-playback-progress nil)
-  (bongo-mark-played-tracks t)
+  (bongo-mark-played-tracks nil)
   (bongo-header-line-mode nil)
   (bongo-header-line-function nil)
   (bongo-mode-line-indicator-mode nil)
