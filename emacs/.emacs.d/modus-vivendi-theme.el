@@ -245,6 +245,11 @@ between foreground and background is >= 7:1)."
    `(anzu-mode-line-no-match ((,class (:background ,bg-main :foreground ,red-intense :weight bold))))
    `(anzu-replace-highlight ((,class (:inherit (modus-theme-intense-green) :weight bold))))
    `(anzu-replace-to ((,class (:inherit (modus-theme-intense-magenta)))))
+   ;;;; artbollocks-mode
+   `(artbollocks-face ((,class (:background ,bg-alt :foreground ,magenta-alt-other :underline (:style wave)))))
+   `(artbollocks-lexical-illusions-face ((,class (:inherit (modus-theme-refine-magenta) :underline (:style wave)))))
+   `(artbollocks-passive-voice-face ((,class (:background ,bg-alt :foreground ,cyan-alt-other :underline (:style wave)))))
+   `(artbollocks-weasel-words-face ((,class (:background ,bg-alt :foreground ,yellow-alt-other :underline (:style wave)))))
    ;;;; avy
    `(avy-background-face ((,class (:background ,bg-dim :foreground ,fg-dim))))
    `(avy-goto-char-timer-face ((,class (:background ,magenta-intense :foreground ,bg-main))))
@@ -447,8 +452,8 @@ between foreground and background is >= 7:1)."
    `(flycheck-verify-select-checker ((,class (:box (:line-width 1 :color nil :style released-button)))))
    `(flycheck-warning ((,class (:background ,bg-alt :foreground ,yellow :underline t))))
    ;;;; flyspell
-   `(flyspell-duplicate ((,class (:inherit (modus-theme-subtle-yellow) :underline (:color foreground-color :style line)))))
-   `(flyspell-incorrect ((,class (:inherit (modus-theme-subtle-red) :underline (:color foreground-color :style line)))))
+   `(flyspell-duplicate ((,class (:inherit (modus-theme-refine-yellow) :underline (:style wave)))))
+   `(flyspell-incorrect ((,class (:inherit (modus-theme-refine-red) :underline (:style wave)))))
    ;;;; git and magit
    `(git-commit-overlong-summary ((,class (:inherit (modus-theme-subtle-yellow)))))
    `(magit-bisect-bad ((,class (:foreground ,red-alt-other))))
@@ -958,7 +963,11 @@ between foreground and background is >= 7:1)."
    `(whitespace-space-after-tab ((,class (:inherit (modus-theme-subtle-magenta)))))
    `(whitespace-space-before-tab ((,class (:inherit (modus-theme-subtle-yellow)))))
    `(whitespace-tab ((,class (:inherit (whitespace-space)))))
-   `(whitespace-trailing ((,class (:inherit (modus-theme-intense-red)))))))
+   `(whitespace-trailing ((,class (:inherit (modus-theme-intense-red)))))
+   ;;;; writegood-mode
+   `(writegood-duplicates-face ((,class (:background ,bg-alt :foreground ,red-alt-other :underline (:style wave)))))
+   `(writegood-passive-voice-face ((,class (:background ,bg-alt :foreground ,cyan-alt-other :underline (:style wave)))))
+   `(writegood-weasels-face ((,class (:background ,bg-alt :foreground ,yellow-alt-other :underline (:style wave)))))))
 
 ;;;###autoload
 (when load-file-name
