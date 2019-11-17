@@ -198,6 +198,12 @@ if _checkexec xbps-pkgdb; then
     alias xbmuh="sudo xbps-pkgdb -m unhold"
 fi
 
+if _checkexec xbps-remove && _checkexec xbps-query; then
+    xbrq() {
+        sudo xbps-remove -R $(xbps-query -s "$1" | cut -d ' ' -f 2 | tr '\n' ' ')
+    }
+fi
+
 
 # Common tasks and utilities
 # --------------------------
