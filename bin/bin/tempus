@@ -49,6 +49,10 @@ _help_message() {
 tempus_theme="$1"
 
 # Is the theme light or dark?
+#
+# TODO 2019-11-17: Themes should expose information about their variant.
+# This approach is fragile.  Changes must be implements in the generator:
+# https://gitlab.com/protesilaos/tempus-themes-generator
 case "$tempus_theme" in
 	dawn|day|fugit|past|totus)
 		theme_variant=light
@@ -217,7 +221,7 @@ _tmux() {
 _emacs() {
     _depcheck emacs
 
-    pgrep emacs > /dev/null || return 1
+    pgrep -x emacs > /dev/null || return 1
 
     # Just switch to the appropriate Emacs theme.  The Modus themes are
     # not part of Tempus, but their goal is the same.
@@ -239,15 +243,17 @@ _melonpanel() {
 	_depcheck melonpanel
 
 	if pgrep melonpanel > /dev/null; then
-		pkill melonpanel && melonpanel &
+		pkill -x melonpanel
+		pkill -x lemonbar
+        melonpanel &
 	fi
 }
 
 
 _bspwm() {
-	pgrep -x bspwm || return 1
+    _depcheck bspwm
 
-	_melonpanel
+	pgrep -x bspwm || return 1
 
 	_bc() {
 		bspc config "$@"
@@ -297,6 +303,7 @@ _rofi() {
 # The order should not matter but I did not put this to the test.
 _emacs
 _x_and_shell
+_melonpanel
 _rofi
 _bspwm
 _gtk
