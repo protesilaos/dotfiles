@@ -47,7 +47,7 @@ _checkdep lemonbar
 _checkdep xdo
 
 # Kill any running lemonbar
-pgrep -x lemonbar > /dev/null && pkill -x lemonbar
+pgrep -x lemonbar > /dev/null && pkill -x lemonbar &
 
 # Add colours from current Tempus theme.  That file is used in other
 # places as well to offer a convenient way of styling multiple tools in
@@ -191,12 +191,12 @@ _keyboard() {
     # Checks if the current layout is set to Greek (adjust accordingly).
     # If yes, the indicator will be displayed, else it is assumed that
     # English is being used.
-    if [ "$(setxkbmap -query | sed '/^layout/!d ; s,^.*:[\ ]*,,g')" = 'gr' ]; then
+    if [ "$(setxkbmap -query | sed '/^l/!d ; s,.*:[\ ]*,,g')" = 'gr' ]; then
         kb_layout="%{B$backgroundalt}%{U$foreground}%{+u} EL %{-u}%{U-}%{B-}"
     fi
 
     # Show an indicator if Caps Lock is on.
-    if [ "$(xset -q | grep Caps | awk '{ print $4 }')" = 'on' ]; then
+    if [ "$(xset -q | awk '/Caps/ { print $4 }')" = 'on' ]; then
         kb_caps="%{B$backgroundalt}%{U$foreground}%{+u} CAPS %{-u}%{U-}%{B-}"
     fi
 
@@ -212,7 +212,6 @@ _datetime() {
 
     echo "$dt_label $dt_status"
 }
-
 
 # Include all modules in a single infinite loop that iterates every
 # second (adjust interval accordingly, as it can be taxing on system
@@ -358,8 +357,10 @@ _melonpanel() {
 # NOTE the syntax for the background value.  If you want transparency,
 # just replace "ff" with a lower value: "00" means no opacity.  This is
 # hexadecimal notation: 0-9, a-f, A-F.
-_melonpanel < "$melonpanel_fifo" | lemonbar -b -u 1 -p -g "x${melonpanel_height}" \
--F "$foreground" -B "#ff${background:1}" -f "$fontmain" -f "$fontbold" -n "Melonpanel" &
+_melonpanel < "$melonpanel_fifo" \
+    | lemonbar -b -u 1 -p -g "x${melonpanel_height}" \
+               -F "$foreground" -B "#ff${background:1}" \
+               -f "$fontmain" -f "$fontbold" -n "Melonpanel" &
 
 # Hide panel when windows are in full screen mode.  This does not work
 # all the time, especially with lower `sleep` values, requiring a
@@ -369,7 +370,7 @@ _melonpanel < "$melonpanel_fifo" | lemonbar -b -u 1 -p -g "x${melonpanel_height}
 # Source of this snippet (with minor adapatations by me):
 # https://github.com/baskerville/bspwm/issues/484
 until bar_id=$(xdo id -a 'Melonpanel'); do
-    sleep 1s
+    sleep 0.1s
 done
 
 xdo below -t $(xdo id -n root) $bar_id &
