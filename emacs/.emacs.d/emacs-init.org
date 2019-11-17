@@ -1669,21 +1669,8 @@ command history with =M-p= or =M-n=).
 
 #+BEGIN_SRC emacs-lisp
 (use-package shell
-  :commands (shell shell-command))
-#+END_SRC
-
-The following package provides several functions that try to improve
-upon the experience of working with shell buffers, especially while
-doing so in tandem with Git projects.
-
-All I need from it is =better-shell-for-current-dir=.  It will spawn a
-terminal in the path of the current buffer, else re-use an existing one
-and =cd= into the present working directory.
-
-#+BEGIN_SRC emacs-lisp
-(use-package better-shell
-  :ensure t
-  :bind ("<s-return>" . better-shell-for-current-dir))
+  :commands (shell shell-command)
+  :bind ("<s-return>" . shell))
 #+END_SRC
 
 *** Eshell
