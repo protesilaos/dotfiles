@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# poweroptionsmenu --- dmenu-style interface for session actions.
+# poweroptionsmenu --- rofi interface for session actions.
+#
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,20 +17,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Debian Buster dependencies:
-#     apt install rofi
+# Void Linux dependencies:
+#     xbps-install -S rofi
 
 # Possible actions (see case statement at the end for the actual
 # commands)
-actions=('Log out' 'Reboot' 'Power off')
+actions=('Log out' 'Reboot' 'Power off' 'Xmodmap reload')
 
 # List actions to choose from
-list_actions() {
-	# use printf to output array items on a new line
-	printf '%s\n' "${actions[@]}" | rofi -dmenu -no-custom -p 'Power options'
+_list_actions() {
+    # use printf to output array items on a new line
+    printf '%s\n' "${actions[@]}" | rofi -dmenu -no-custom -p 'Power options'
 }
 
-choice="$(list_actions)"
+choice="$(_list_actions)"
 
 _pkill() {
     if pgrep -x "$1"; then
@@ -44,13 +46,16 @@ _kill_processes() {
     _pkill xcompmgr
 }
 
-# Run the selected command
+# In case the Hyper key ever stops working, we can call this script
+# (Ctrl+Alt+Delete on my sxhkdrc) and apply the modifications again.
+xmod="$HOME"/.Xmodmap
+
+# Run the selected command.  The `reboot' and `poweroff' require
+# escalated privilages, unless you configure things.  Read:
+# https://wiki.voidlinux.org/Post_Installation#Allow_users_to_shutdown_without_a_password
 case "$choice" in
-	L*)
-        _kill_processes
-		bspc quit
-		;;
-    # TODO 2019-11-11: No systemd, no root?
-	R*) systemctl reboot   ;;
-	P*) systemctl poweroff ;;
+    L*) _kill_processes && bspc quit      ;;
+    R*) _kill_processes && reboot         ;;
+    P*) _kill_processes && poweroff       ;;
+    X*) [ -f "$xmod" ] && xmodmap "$xmod" ;;
 esac
