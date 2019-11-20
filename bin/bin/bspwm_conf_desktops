@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.	If not, see <http://www.gnu.org/licenses/>.
 
-if [ "$(bspc query -M | wc -l)" ]; then
+if [ "$(bspc query -M | wc -l)" -eq 2 ]; then
 	# Set the workspaces per monitor.  We only define one per monitor,
 	# because of another script I have that implements dynamic desktops.
 	# For the XrandR settings see my `bspwm_conf_xrandr'.
