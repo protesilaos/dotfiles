@@ -123,11 +123,11 @@ _gtk() {
             _sed "s,\(.*\/IconThemeName\) \"[a-zA-Z-]*\",\1 \"${2}\"," "$xsettingsd"
         fi
 
-        # This is a very lightweight program that simply load the
+        # This is a very lightweight program that simply loads the
         # settings it reads from the file.  Kill and run again to read
         # the new values.
-        pgrep -x xsettingsd && pkill xsettingsd
-        xsettingsd -c "$xsettingsd" > /dev/null &
+        pgrep -xo xsettingsd && pkill -xo xsettingsd
+        xsettingsd -c "$xsettingsd"
 	}
 
 	case "$theme_variant" in
@@ -245,7 +245,7 @@ _melonpanel() {
 	if pgrep melonpanel > /dev/null; then
 		pkill -x melonpanel
 		pkill -x lemonbar
-        melonpanel &
+        melonpanel
 	fi
 }
 
@@ -300,15 +300,11 @@ _rofi() {
 
 # Function call cascade
 # ---------------------
-# The order should not matter but I did not put this to the test.
-_emacs
 _x_and_shell
-_melonpanel
+_emacs
 _rofi
-_bspwm
+_melonpanel
 _gtk
-
-## NOTE 2019-11-11: Not actively using these any more.  Keeping them,
-## just in case.
-# _tmux
-# _vim
+_bspwm
+_tmux
+_vim
