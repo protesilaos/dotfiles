@@ -25,18 +25,6 @@ if [ "$(bspc query -M | wc -l)" -eq 2 ]; then
 	# Make sure borders are always on, otherwise it is impossible to
 	# find the focused window on two monitors with monocles…
 	bspc config borderless_monocle false
-
-	# Add padding equal to panel height to fix issue where there is an
-	# overlap between panel and windows in LVDS1.  The panel gets
-	# covered by the windows.
-	if pgrep -x melonpanel > /dev/null; then
-        _panel_height() {
-            awk -F '=' '/melonpanel_height/ { print $2; exit; }' \
-                $(command -v melonpanel)
-        }
-
-		bspc config bottom_padding "$(_panel_height)"
-	fi
 else
 	bspc monitor -d 1
 fi
