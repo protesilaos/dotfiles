@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# NOTE 2019-11-21: This script is subject to removal or major review.
+
 # Configures the MATE Terminal (default terminal emulator for MATE
 # Desktop Environment) to my liking.  This script is part of my dotfiles
 # and is meant to make the MATE Terminal useful _as a fallback option_
