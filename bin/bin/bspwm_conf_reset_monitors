@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# EXPERIMENTAL
+
+# Run this after {dis,}connecting an external monitor.  It will
+# recognifure the layout, based on the functions provided in the scripts
+# it calls.
+
+_check() {
+    command -v "$1" > /dev/null
+}
+
+_check bspwm_conf_xrandr && bspwm_conf_xrandr
+_check bspwm_conf_desktops && bspwm_conf_desktops
+
+# Apply the last defined wallpaper
+fehbg="$HOME"/.fehbg
+
+if [ -f "$fehbg" ] && _check feh; then
+    sh -c "$fehbg"
+fi
