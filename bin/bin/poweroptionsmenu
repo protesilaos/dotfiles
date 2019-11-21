@@ -22,7 +22,7 @@
 
 # Possible actions (see case statement at the end for the actual
 # commands)
-actions=('Log out' 'Reboot' 'Power off' 'Xmodmap reload')
+actions=('Log out' 'Reboot' 'Power off' 'Xmodmap and keyboard reload')
 
 # List actions to choose from
 _list_actions() {
@@ -48,14 +48,19 @@ _kill_processes() {
 
 # In case the Hyper key ever stops working, we can call this script
 # (Ctrl+Alt+Delete on my sxhkdrc) and apply the modifications again.
-xmod="$HOME"/.Xmodmap
+_kbd_reset_and_xmodmap() {
+    xmod="$HOME"/.Xmodmap
+
+    setxkbmap -layout 'us,el' -option 'caps:hyper,compose:menu'
+    [ -f "$xmod" ] && xmodmap "$xmod"
+}
 
 # Run the selected command.  The `reboot' and `poweroff' require
 # escalated privilages, unless you configure things.  Read:
 # https://wiki.voidlinux.org/Post_Installation#Allow_users_to_shutdown_without_a_password
 case "$choice" in
-    L*) _kill_processes && bspc quit      ;;
-    R*) _kill_processes && reboot         ;;
-    P*) _kill_processes && poweroff       ;;
-    X*) [ -f "$xmod" ] && xmodmap "$xmod" ;;
+    L*) _kill_processes && bspc quit ;;
+    R*) _kill_processes && reboot    ;;
+    P*) _kill_processes && poweroff  ;;
+    X*) _kbd_reset_and_xmodmap       ;;
 esac
