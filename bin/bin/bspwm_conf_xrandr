@@ -2,6 +2,8 @@
 
 # bspwm_conf_xrandr --- BSPWM Xrandr settings for my laptop.
 #
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
