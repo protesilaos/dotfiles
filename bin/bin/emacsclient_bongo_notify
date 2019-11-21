@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# EXPERIMENTAL not sure this is a useful feature to keep around…
+
+# Use `emacsclient' to retrieve the information and subsequently send a
+# desktop notification with the title of the currently playing Bongo
+# track.
+
+pgrep -x emacs || { echo "No running instance of Emacs"; exit 1; }
+
+bongo_title="$(emacsclient -e '(bongo-show)' | sed 's,.*\"\(.*\)\".*,\1,;1q')"
+
+notify-send -i emacs "Now playing in Bongo (Emacs)" "$bongo_title"
