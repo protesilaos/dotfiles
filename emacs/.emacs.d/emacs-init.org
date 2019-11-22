@@ -1198,7 +1198,34 @@ behaviour while inside a regular dired buffer.
 ;; (setq peep-dired-enable-on-directories t)
 #+END_SRC
 
-*** Tree-style view/navigation
+*** image-dired (image thumbnails and previews)
+    :PROPERTIES:
+    :CUSTOM_ID: h:30e647cb-aee5-45d9-93b4-dc4e855fd0a6
+    :END:
+
+This tool offers facilities for generating thumbnails out of a selection
+of images and displaying them in a separate buffer.  An external program
+is needed for converting the images into thumbnails.  On Void Linux
+install it with =xbps-install -S ImageMagick=.  Other useful external
+packages are =optipng= and =sxiv=.  The former is for operating on PNG
+files, while the latter is a lightweight image viewer.
+
+I feel this process is a bit cumbersome and can be very slow if you try
+to generate lots of images at once.  The culprit is the image converter.
+
+#+BEGIN_SRC emacs-lisp
+(use-package image-dired
+  :custom
+  (image-dired-external-viewer "xdg-open")
+  (image-dired-thumb-size 80)
+  (image-dired-thumb-margin 2)
+  (image-dired-thumb-relief 0)
+  (image-dired-thumbs-per-row 4)
+  :bind (:map image-dired-thumbnail-mode-map
+              ("<return>" . image-dired-thumbnail-display-external)))
+#+END_SRC
+
+*** dired-subtree (tree-style view/navigation)
     :PROPERTIES:
     :CUSTOM_ID: h:6f25c4c1-c504-44e8-8fe5-280d780f0897
     :END:
