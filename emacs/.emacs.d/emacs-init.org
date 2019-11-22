@@ -1487,14 +1487,18 @@ introductory section of this document).
          ("s-2" . split-window-below)
          ("s-3" . split-window-right)
          ("s-0" . delete-window)
-         ("s-1" . delete-other-windows)))
+         ("s-1" . delete-other-windows)
+         ("s-5" . delete-frame)))
 #+END_SRC
 
 Note that there also exists =tear-off-window=: it allows us to place the
-current window in its own frame.  I do not assign this to a key because
-I have no use for it.  Remember—what Emacs call a "window" is the split
-of the viewport.  Whereas a "frame" is the rectangle your window manager
-controls.
+current window in its own frame.  Search elsewhere in this document for
+the key I assign it to.
+
+The default keys for =delete-frame= are =C-x 5 0=.
+
+Remember—what Emacs call a "window" is the split of the viewport.
+Whereas a "frame" is the rectangle your window manager controls.
 
 *** winner-mode
     :PROPERTIES:
@@ -3148,6 +3152,11 @@ They are written by me, unless otherwise noted.
      This uses the built-in mechanism for transposing sentences, but
      does not operate on constructs that are next to each other.  Mostly
      useful for prose.
++ Tear off window (place in frame) :: This will place the current window
+     in a new frame.  Recall that in Emacs parlance "windows" are the
+     splits that contain buffers, while "frames" are the nodes that are
+     controlled by your operating system's window manager (and usually
+     have the "close", "minimise", "maximise" buttons at a top corner).
 + Transpose characters :: Tweak the way the original command works, so
      that it /always/ transposes the two characters before point.  This
      will no longer have the effect of moving the character forward
@@ -3365,6 +3374,7 @@ instead.  This command can then be followed by the standard
          ("<C-S-return>" . prot/new-line-above)
          ("M-SPC" . cycle-spacing)
          ("M-o" . delete-blank-lines)
+         ("<f6>" . tear-off-window)
          ("C-t" . prot/transpose-chars)
          ("C-x C-t" . prot/transpose-or-swap-lines)
          ("C-S-t" . prot/transpose-or-swap-paragraphs)
