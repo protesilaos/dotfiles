@@ -776,40 +776,40 @@ with their equivalents in =isearch=.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ido
-  :init
-  (setq ido-everywhere t)
-  (setq ido-enable-flex-matching t)
-  (setq ido-enable-regexp nil)
-  (setq ido-enable-prefix nil)
-  (setq ido-all-frames nil)
-  (setq ido-buffer-disable-smart-matches t)
-  (setq ido-completion-buffer "*Ido Completions*")
-  (setq ido-completion-buffer-all-completions nil)
-  (setq ido-confirm-unique-completion nil)
-  (setq ido-create-new-buffer 'prompt)
-  (setq ido-default-buffer-method 'selected-window)
-  (setq ido-default-file-method 'selected-window)
-  (setq ido-enable-last-directory-history t)
-  (setq ido-use-filename-at-point nil)
-  (setq ido-use-url-at-point nil)
-  (setq ido-use-virtual-buffers t)
-  (setq ido-use-faces t)
-  (setq ido-max-window-height 1)
-  (setq ido-decorations
-        '(" "
-          "   "
-          " | "
-          " | …"
-          "["
-          "]"
-          " [No match]"
-          " [Matched]"
-          " [Not readable]"
-          " [Too big]"
-          " [Confirm]"
-          " "
-          " "))
-  (setq ido-auto-merge-work-directories-length -1)
+  :custom
+  (ido-everywhere t)
+  (ido-enable-flex-matching t)
+  (ido-enable-regexp nil)
+  (ido-enable-prefix nil)
+  (ido-all-frames nil)
+  (ido-buffer-disable-smart-matches t)
+  (ido-completion-buffer "*Ido Completions*")
+  (ido-completion-buffer-all-completions nil)
+  (ido-confirm-unique-completion nil)
+  (ido-create-new-buffer 'prompt)
+  (ido-default-buffer-method 'selected-window)
+  (ido-default-file-method 'selected-window)
+  (ido-enable-last-directory-history t)
+  (ido-use-filename-at-point nil)
+  (ido-use-url-at-point nil)
+  (ido-use-virtual-buffers t)
+  (ido-use-faces t)
+  (ido-max-window-height 1)
+  (ido-decorations
+   '(" "
+     "   "
+     " | "
+     " | …"
+     "["
+     "]"
+     " [No match]"
+     " [Matched]"
+     " [Not readable]"
+     " [Too big]"
+     " [Confirm]"
+     " "
+     " "))
+  (ido-auto-merge-work-directories-length -1)
   :config
   (ido-mode 1)
   :hook
