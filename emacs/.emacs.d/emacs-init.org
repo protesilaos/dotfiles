@@ -1959,10 +1959,17 @@ to play the tracks in random order.  Done!  I rarely switch tracks
 manually and change playlists in regular intervals (a directory tree
 typically contains hundreds of music files).
 
-This sequence is conveniently mapped to =SPC= inside of the Bongo
+This sequence is conveniently mapped to =C-RET= inside of the Bongo
 Library buffer (so the Dired buffer of =~/Music= and its
 sub-directories).  The command will operate on the directory at point or
-on the marked items, if they exist.
+on the marked items, if they exist.  Note that I used to bind that
+action to just =SPC= but I realised it would interfere with tasks in
+=wdired= (and probably elsewhere).
+
+I have a couple of videos about my workflow with Bongo and Dired:
+
++ [[https://protesilaos.com/codelog/2019-11-13-emacs-bongo-music/][Emacs workflow for music management]] (2019-11-13)
++ [[https://protesilaos.com/codelog/2019-11-18-emacs-dired-bongo/][Emacs: use DIRED and BONGO to store playlists]] (2019-11-18)
 
 #+BEGIN_SRC emacs-lisp
 (use-package bongo
@@ -2037,7 +2044,7 @@ buffer that doubles as a library buffer (see
          :map bongo-playlist-mode-map
          ("C-d" . prot/bongo-clear-playlist-and-stop)
          :map bongo-dired-library-mode-map
-         ("SPC" . prot/bongo-library-insert-and-play-random)))
+         ("<C-return>" . prot/bongo-library-insert-and-play-random)))
 #+END_SRC
 
 *** TODO start bongo in the background when emacs launches
