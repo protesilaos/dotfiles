@@ -887,11 +887,23 @@ value I pass to =ido-decorations=.
 #+BEGIN_SRC emacs-lisp
 (use-package icomplete
   :disabled
-  :init
-  (setq icomplete-show-matches-on-no-input t)
-  (setq icomplete-prospects-height 1)
+  :custom
+  (icomplete-show-matches-on-no-input t)
+  (icomplete-hide-common-prefix nil)
+  (icomplete-prospects-height 1)
+  (completion-styles '(basic partial-completion substring))
+  (completion-category-overrides '((file (styles basic substring))))
+  (read-file-name-completion-ignore-case t)
+  (read-buffer-completion-ignore-case t)
+  (completion-ignore-case t)
   :config
-  (icomplete-mode 1))
+  (icomplete-mode 1)
+  :bind (("s-f" . find-file)
+         ("s-F" . find-file-other-window)
+         ("s-d" . dired)
+         ("s-D" . dired-other-window)
+         ("s-b" . switch-buffer)
+         ("s-B" . switch-buffer-other-window)))
 #+END_SRC
 
 ** isearch enhancements
