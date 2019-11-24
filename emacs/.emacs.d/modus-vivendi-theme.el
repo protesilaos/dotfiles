@@ -187,6 +187,7 @@ between foreground and background is >= 7:1)."
    `(cursor ((,class (:background ,fg-main))))
    `(fringe ((,class (:inherit (default)))))
    ;;;; basic and/or ungrouped styles
+   `(diary ((,class (:foreground ,yellow))))
    `(error ((,class (:background ,bg-main :foreground ,red-intense :weight bold))))
    `(escape-glyph ((,class (:inherit (modus-theme-refine-blue) :weight bold))))
    `(header-line ((,class (:background ,bg-alt :foreground ,fg-alt))))
@@ -251,6 +252,8 @@ between foreground and background is >= 7:1)."
    `(artbollocks-lexical-illusions-face ((,class (:inherit (modus-theme-refine-magenta) :underline (:style wave)))))
    `(artbollocks-passive-voice-face ((,class (:background ,bg-alt :foreground ,cyan-alt-other :underline (:style wave)))))
    `(artbollocks-weasel-words-face ((,class (:background ,bg-alt :foreground ,yellow-alt-other :underline (:style wave)))))
+   ;;;; auto-dim-other-buffers
+   `(auto-dim-other-buffers-face ((,class (:background ,bg-alt))))
    ;;;; avy
    `(avy-background-face ((,class (:background ,bg-dim :foreground ,fg-dim))))
    `(avy-goto-char-timer-face ((,class (:background ,magenta-intense :foreground ,bg-main))))
@@ -352,7 +355,7 @@ between foreground and background is >= 7:1)."
    `(diff-refine-removed ((,class (:inherit (modus-theme-intense-red)))))
    `(diff-removed ((,class (:inherit (modus-theme-subtle-red)))))
    ;;;; dired (and extensions)
-   `(dgi-commit-message-face ((,class (:foreground ,fg-special-warm)))) ; dired-git-info
+   `(dgi-commit-message-face ((,class (:foreground ,fg-special-mild)))) ; dired-git-info
    `(dired-async-failures ((,class (:inherit (modus-theme-intense-red)))))
    `(dired-async-message ((,class (:inherit (modus-theme-intense-green)))))
    `(dired-async-mode-message ((,class (:inherit (modus-theme-intense-cyan)))))
@@ -406,6 +409,15 @@ between foreground and background is >= 7:1)."
    ;;;; emms
    `(emms-playlist-track-face ((,class (:foreground ,blue))))
    `(emms-playlist-selected-face ((,class (:foreground ,magenta :weight bold))))
+   ;;;; epa
+   `(epa-field-body ((,class (:foreground ,fg-main))))
+   `(epa-field-name ((,class (:foreground ,fg-dim :weight bold))))
+   `(epa-mark ((,class (:foreground ,magenta :weight bold))))
+   `(epa-string ((,class (:foreground ,blue-alt))))
+   `(epa-validity-disabled ((,class (:inherit (modus-theme-refine-red)))))
+   `(epa-validity-high ((,class (:foreground ,cyan :weight bold))))
+   `(epa-validity-low ((,class (:foreground ,fg-alt))))
+   `(epa-validity-medium ((,class (:foreground ,yellow))))
    ;;;; eshell
    `(eshell-ls-archive ((,class (:foreground ,cyan-alt :weight bold))))
    `(eshell-ls-backup ((,class (:foreground ,yellow-alt))))
@@ -541,6 +553,25 @@ between foreground and background is >= 7:1)."
    `(magit-signature-revoked ((,class (:background ,bg-main :foreground ,magenta-intense))))
    `(magit-signature-untrusted ((,class (:background ,bg-main :foreground ,cyan-intense))))
    `(magit-tag ((,class (:foreground ,yellow-alt-other))))
+   ;;;; git-gutter
+   `(git-gutter:added ((,class (:background ,bg-main :foreground ,green-intense :weight bold))))
+   `(git-gutter:deleted ((,class (:background ,bg-main :foreground ,red-intense :weight bold))))
+   `(git-gutter:modified ((,class (:background ,bg-main :foreground ,yellow-intense :weight bold))))
+   `(git-gutter:separator ((,class (:background ,bg-main :foreground ,cyan-intense :weight bold))))
+   `(git-gutter:unchanged ((,class (:inherit (modus-theme-refine-magenta)))))
+   ;;;; git-gutter-fr
+   `(git-gutter-fr:added ((,class (:inherit (git-gutter:added)))))
+   `(git-gutter-fr:deleted ((,class (:inherit (git-gutter:deleted)))))
+   `(git-gutter-fr:modified ((,class (:inherit (git-gutter:modified)))))
+   ;;;; git-{gutter,fringe}+
+   `(git-gutter+-added ((,class (:inherit (git-gutter:added)))))
+   `(git-gutter+-deleted ((,class (:inherit (git-gutter:deleted)))))
+   `(git-gutter+-modified ((,class (:inherit (git-gutter:modified)))))
+   `(git-gutter+-separator ((,class (:inherit (git-gutter:separator)))))
+   `(git-gutter+-unchanged ((,class (:inherit (git-gutter:unchanged)))))
+   `(git-gutter-fr+-added ((,class (:inherit (git-gutter:added)))))
+   `(git-gutter-fr+-deleted ((,class (:inherit (git-gutter:deleted)))))
+   `(git-gutter-fr+-modified ((,class (:inherit (git-gutter:modified)))))
    ;;;; gnus
    `(gnus-button ((,class (:inherit (button)))))
    `(gnus-cite-1 ((,class (:foreground ,blue-alt))))
@@ -686,6 +717,12 @@ between foreground and background is >= 7:1)."
    `(hl-line ((,class (:background ,bg-alt))))
    `(region ((,class (:background ,bg-active :foreground ,fg-active))))
    `(secondary-selection ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
+   ;;;; hydra
+   `(hydra-face-amaranth ((,class (:background ,bg-main :foreground ,yellow-intense :weight bold))))
+   `(hydra-face-blue ((,class (:background ,bg-main :foreground ,blue-intense :weight bold))))
+   `(hydra-face-pink ((,class (:background ,bg-main :foreground ,magenta-intense :weight bold))))
+   `(hydra-face-red ((,class (:background ,bg-main :foreground ,red-intense :weight bold))))
+   `(hydra-face-teal ((,class (:background ,bg-main :foreground ,cyan-intense :weight bold))))
    ;;;; ido-mode
    `(flx-highlight-face ((,class (:inherit (modus-theme-intense-magenta)))))
    `(ido-first-match ((,class (:foreground ,magenta :weight bold))))
@@ -890,6 +927,17 @@ between foreground and background is >= 7:1)."
    `(pass-mode-directory-face ((,class (:foreground ,fg-special-cold :weight bold))))
    `(pass-mode-entry-face ((,class (:inherit (default)))))
    `(pass-mode-header-face ((,class (:foreground ,fg-special-warm))))
+   ;;;; rainbow-blocks
+   `(rainbow-blocks-depth-1-face ((,class (:foreground ,magenta))))
+   `(rainbow-blocks-depth-2-face ((,class (:foreground ,magenta-alt))))
+   `(rainbow-blocks-depth-3-face ((,class (:foreground ,magenta-alt-other))))
+   `(rainbow-blocks-depth-4-face ((,class (:foreground ,cyan))))
+   `(rainbow-blocks-depth-5-face ((,class (:foreground ,blue))))
+   `(rainbow-blocks-depth-6-face ((,class (:foreground ,green))))
+   `(rainbow-blocks-depth-7-face ((,class (:foreground ,yellow))))
+   `(rainbow-blocks-depth-8-face ((,class (:foreground ,cyan-alt))))
+   `(rainbow-blocks-depth-9-face ((,class (:foreground ,blue-alt))))
+   `(rainbow-blocks-unmatched-face ((,class (:foreground ,red))))
    ;;;; rainbow-delimiters
    `(rainbow-delimiters-base-face ((,class (:foreground ,fg-main))))
    `(rainbow-delimiters-depth-1-face ((,class (:foreground ,green-alt-other))))
@@ -903,6 +951,9 @@ between foreground and background is >= 7:1)."
    `(rainbow-delimiters-depth-9-face ((,class (:foreground ,yellow-alt))))
    `(rainbow-delimiters-mismatched-face ((,class (:foreground ,red-alt :weight bold))))
    `(rainbow-delimiters-unmatched-face ((,class (:foreground ,red :weight bold))))
+   ;;;; shell scripts
+   `(sh-heredoc ((,class (:inherit (font-lock-string-face)))))
+   `(sh-quoted-exec ((,class (:inherit (font-lock-builtin-face)))))
    ;;;; smerge
    `(smerge-base ((,class (:inherit (modus-theme-special-warm)))))
    `(smerge-lower ((,class (:inherit (modus-theme-subtle-green)))))
@@ -912,9 +963,6 @@ between foreground and background is >= 7:1)."
    `(smerge-refined-removed ((,class (:inherit (modus-theme-intense-red)))))
    `(smerge-refined-upper ((,class (:inherit (modus-theme-intense-red)))))
    `(smerge-upper ((,class (:inherit (modus-theme-subtle-red)))))
-   ;;;; shell scripts
-   `(sh-heredoc ((,class (:inherit (font-lock-string-face)))))
-   `(sh-quoted-exec ((,class (:inherit (font-lock-builtin-face)))))
    ;;;; speedbar
    `(speedbar-button-face ((,class (:inherit (link)))))
    `(speedbar-directory-face ((,class (:inherit (dired-directory)))))
