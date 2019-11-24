@@ -141,10 +141,10 @@ between foreground and background is >= 7:1)."
       ;; are needed
       (red-refine-bg "#77002a") (green-refine-bg "#00422a")
       (yellow-refine-bg "#755000") (blue-refine-bg "#2222aa")
-      (magenta-refine-bg "#572f77") (cyan-refine-bg "#004f80")
+      (magenta-refine-bg "#572f77") (cyan-refine-bg "#2f4680")
       (red-refine-fg "#ffb9ab") (green-refine-fg "#9ff0cf")
       (yellow-refine-fg "#ffffcc") (blue-refine-fg "#adddff")
-      (magenta-refine-fg "#ffccff") (cyan-refine-fg "#afffff"))
+      (magenta-refine-fg "#ffccff") (cyan-refine-fg "#9ffcf6"))
   (custom-theme-set-faces
    'modus-vivendi
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -396,6 +396,23 @@ between foreground and background is >= 7:1)."
    `(diredfl-symlink ((,class (:foreground ,blue-alt :underline t))))
    `(diredfl-tagged-autofile-name ((,class (:inherit (modus-theme-refine-magenta)))))
    `(diredfl-write-priv ((,class (:foreground ,magenta-alt-other))))
+   ;;;; ediff
+   `(ediff-current-diff-A ((,class (:inherit (modus-theme-special-warm)))))
+   `(ediff-current-diff-Ancestor ((,class (:background ,bg-alt :foreground ,fg-main))))
+   `(ediff-current-diff-B ((,class (:inherit (modus-theme-special-cold)))))
+   `(ediff-current-diff-C ((,class (:inherit (modus-theme-special-mild)))))
+   `(ediff-even-diff-A ((,class (:inherit (modus-theme-subtle-yellow)))))
+   `(ediff-even-diff-Ancestor ((,class (:background ,bg-inactive :foreground ,fg-main))))
+   `(ediff-even-diff-B ((,class (:inherit (modus-theme-subtle-cyan)))))
+   `(ediff-even-diff-C ((,class (:inherit (modus-theme-subtle-green)))))
+   `(ediff-fine-diff-A ((,class (:inherit (modus-theme-intense-yellow)))))
+   `(ediff-fine-diff-Ancestor ((,class (:inherit (modus-theme-intense-magenta)))))
+   `(ediff-fine-diff-B ((,class (:inherit (modus-theme-intense-cyan)))))
+   `(ediff-fine-diff-C ((,class (:inherit (modus-theme-intense-green)))))
+   `(ediff-odd-diff-A ((,class (:inherit (modus-theme-refine-yellow)))))
+   `(ediff-odd-diff-Ancestor ((,class (:background ,bg-active :foreground ,fg-main))))
+   `(ediff-odd-diff-B ((,class (:inherit (modus-theme-refine-cyan)))))
+   `(ediff-odd-diff-C ((,class (:inherit (modus-theme-refine-green)))))
    ;;;; elfeed
    `(elfeed-search-date-face ((,class (:inherit (default)))))
    `(elfeed-search-title-face ((,class (:inherit (default) :weight normal))))
@@ -1003,6 +1020,20 @@ between foreground and background is >= 7:1)."
    `(term-color-red ((,class (:background ,red :foreground ,red))))
    `(term-color-yellow ((,class (:background ,yellow :foreground ,yellow))))
    `(term-underline ((,class (:underline t))))
+   ;;;; transient
+   `(transient-active-infix ((,class (:inherit (modus-theme-special-mild)))))
+   `(transient-argument ((,class (:foreground ,green :weight bold))))
+   `(transient-disabled-suffix ((,class (:inherit (modus-theme-intense-red)))))
+   `(transient-enabled-suffix ((,class (:inherit (modus-theme-intense-green)))))
+   `(transient-heading ((,class (:foreground ,fg-special-warm :weight bold))))
+   `(transient-inactive-argument ((,class (:foreground ,fg-alt))))
+   `(transient-inactive-value ((,class (:foreground ,fg-alt))))
+   `(transient-key ((,class (:background ,bg-main :foreground ,magenta-intense))))
+   `(transient-mismatched-key ((,class (:underline t))))
+   `(transient-nonstandard-key ((,class (:underline t))))
+   `(transient-unreachable ((,class (:foreground ,fg-inactive))))
+   `(transient-unreachable-key ((,class (:foreground ,fg-inactive))))
+   `(transient-value ((,class (:foreground ,blue))))
    ;;;; treemacs
    `(treemacs-directory-collapsed-face ((,class (:foreground ,magenta-alt))))
    `(treemacs-directory-face ((,class (:inherit (dired-directory)))))
