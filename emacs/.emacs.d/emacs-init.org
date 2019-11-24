@@ -398,6 +398,7 @@ abcdefghijklmnopqrstuvwxyz
 ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ
 αβγδεζηθικλμνξοπρστυφχψω
 #+END_SRC
+
 *** TODO if external monitor then prot/desktop else prot/laptop
     :PROPERTIES:
     :CUSTOM_ID: h:7ab25412-69e6-41eb-afac-51f5d761d30f
