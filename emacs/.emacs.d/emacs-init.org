@@ -1718,38 +1718,51 @@ document.  This fixes the issue (read the article for more).
     :END:
 
 This is a shell (Bash, in my case) that runs inside of Emacs.  Unlike
-=term= (see below), this one can use standard Emacs keys and behaves
-like an ordinary buffer.  The one area where it differs substantially
-from ordinary buffers is with regard to the command prompt: you can
-re-run a command on the scroll-back buffer by just hitting RET while
-point is on its line (no need to go back to the end and cycle the
-command history with =M-p= or =M-n=).
+=term= (see next section), this one can use standard Emacs keys and
+behaves like an ordinary buffer.  The one area where it differs
+substantially from ordinary buffers is with regard to the command
+prompt: you can re-run a command on the scroll-back buffer by just
+hitting RET while point is on its line (no need to go back to the end
+and cycle the command history with =M-p= or =M-n=).
+
+The key binding that invokes the standard shell (=s-RET=) will take you
+back to the shell buffer if it exists.  To always spawn a new shell use
+=s-S-RET=.  The latter can be achieved without any configurations by
+running =C-u M-x shell= (but who has time for that?).
+
+Note that I am well aware of =eshell=.  I read the manual and checked
+lots of configurations about it.  I still do not see a major improvement
+over Bash, notwithstanding the significant downside of having to learn
+the idiosyncracies of yet another tool.  Besides, many of the features
+of =eshell= are already available inside of Emacs and are accessible via
+more appropriate interfaces (e.g. =find-file= or =dired= powered by a
+completion framework like =ido-mode= or =ivy=).  The shell has to behave
+consistently whether I run it inside of Emacs, in Xterm, or just a TTY.
+Everything else introduces friction.
+
+Run =C-h m= inside of a shell buffer to learn about all the key bindings
+and corresponding functions.
 
 #+BEGIN_SRC emacs-lisp
 (use-package shell
   :commands (shell shell-command)
-  :bind ("<s-return>" . shell))
-#+END_SRC
-
-*** Eshell
-    :PROPERTIES:
-    :CUSTOM_ID: h:435b42b1-9937-42ef-b804-3628b927a449
-    :END:
-
-I am well aware of =eshell= and the /potential value/ of running elisp
-functions, but I have yet to see a compelling workflow around that
-particular feature.
-
-I just set up the absolute essentials, in lieu of a comprehensive
-package declaration.
-
-#+BEGIN_SRC emacs-lisp
-(use-package eshell
-  :commands (eshell eshell-command)
+  :custom
+  (ansi-color-for-comint-mode t)
   :config
-  (setq eshell-directory-name "~/.emacs.d/eshell/")
-  (setq password-cache t)
-  (setq password-cache-expiry 600))
+  (defun prot/shell-multi ()
+    "Spawn a new instance of `shell' and give it a unique name
+based on the directory of the current buffer."
+    (interactive)
+    (let* ((parent (if (buffer-file-name)
+                       (file-name-directory (buffer-file-name))
+                     default-directory))
+           (name (car (last (split-string parent "/" t)))))
+      (split-window-sensibly)
+      (other-window 1)
+      (shell "new")
+      (rename-buffer (concat "*shell: " name "*"))))
+  :bind (("<s-return>" . shell)
+         ("<s-S-return>" . prot/shell-multi)))
 #+END_SRC
 
 *** Terminal emulators
