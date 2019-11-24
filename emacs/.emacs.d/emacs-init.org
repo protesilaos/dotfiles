@@ -2148,9 +2148,9 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
   using the Void Linux package.
 + Use =mu4e= as the default MUA in Emacs.  This concerns actions such
   as =C-x m= (=compose-mail=).
-+ Do not run any command to get new mail.  I prefer to do this manually.
-  The idea is that when I have time to check my email, I can also
-  refresh its index.
++ I prefer to run the "get mail" command manually rather than rely on a
+  timer.  The idea is that when I have time to check my email, I can
+  also refresh its index.
 + Do not provide verbose output about indexing operations.
 + Update manually, because I anyway interact with email only when I
   have time to check it.
@@ -2183,7 +2183,7 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
   :commands mu4e
   :custom
   (mail-user-agent 'mu4e-user-agent)
-  (mu4e-get-mail-command "true")
+  (mu4e-get-mail-command "offlineimap")
   (mu4e-hide-index-messages t)
   (mu4e-update-interval nil)
   (mu4e-completing-read-function 'completing-read)
