@@ -1271,7 +1271,15 @@ target dir).
     :CUSTOM_ID: h:56cbacd7-1fe6-447c-a77f-645edbaa3c6c
     :END:
 
-Some additional features that are shipped with Emacs.
+Some additional features that are shipped with Emacs.  The one I need is
+=dired-jump= and its "other window" variant.  These are among my
+favourite commands.  They will always take you to the directory that
+contains the current buffer.  'Jumping' works even when you are inside
+buffers that do not visit files, such as Magit.  Edit a file then
+proceed to do some file management, then invoke =previous-buffer= or
+=winnder-undo= to go back to where you were (I have a key bindings for
+those in the [[#h:12591f89-eeea-4b12-93e8-9293504e5a12][Window configuration section]]).  Everything happens
+naturally.  Emacs' interconnectedness at its best!
 
 #+BEGIN_SRC emacs-lisp
 (use-package dired-x
@@ -1602,14 +1610,6 @@ seemingly infinite capabilities./
 
 Overview of the following settings:
 
-+ Disable opinionated Org bindings :: I want Emacs to be /my editor/ and
-     this includes the choice of key chords.  Org is very opinionated
-     with its decisions and maps all sorts of—often specialised—actions
-     to keys that follow the =C-c KEYS= sequence.  This breaks my setup.
-     I prefer to *disable all* of the default org-mode keys that
-     conflict with my own defititions and then choose to implement the
-     ones I might need for my own workflow.  These are the offending
-     keys I have identified thus far.
 + Style code blocks :: I want =.org= files to use the native settings
      for styling code blocks.  The first variable concerns =C-c '= (run
      it inside of a code block).  That opens a buffer with just the
@@ -1631,9 +1631,7 @@ Overview of the following settings:
   ;; disable keys I rely on for other tasks
   (define-key org-mode-map (kbd "<C-return>") nil)
   (define-key org-mode-map (kbd "<C-S-return>") nil)
-  (define-key org-mode-map (kbd "<M-return>") nil)
-  (define-key org-mode-map (kbd "C-c >") nil)
-  (define-key org-mode-map (kbd "C-c <") nil))
+  :bind (("C-c l" . org-store-link)))
 #+END_SRC
 
 *** Export Org to HTML
@@ -1916,7 +1914,7 @@ syntax for use by the `elfeed' package."
          ("w" . elfeed-show-yank)))
 #+END_SRC
 
-** Emacs web browser and HTML renderer
+** Emacs web browser and HTML parser
    :PROPERTIES:
    :CUSTOM_ID: h:524bc702-ff55-4ed9-9a38-26d30d64591d
    :END:
@@ -2846,16 +2844,15 @@ auto-insertion of characters.  This is a summary of my settings:
 
 #+BEGIN_SRC emacs-lisp
 (use-package electric
-  :init
-  (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
-  (setq electric-pair-pairs '((34 . 34)
-                              (8216 . 8217)
-                              (8220 . 8221)
-                              (171 . 187)))
-  (setq electric-pair-skip-self 'electric-pair-default-skip-self)
-  (setq electric-quote-context-sensitive t)
-  (setq electric-quote-paragraph t)
-  (setq electric-quote-string nil)
+  :custom
+  (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
+  (electric-pair-pairs '((8216 . 8217)
+                         (8220 . 8221)
+                         (171 . 187)))
+  (electric-pair-skip-self 'electric-pair-default-skip-self)
+  (electric-quote-context-sensitive t)
+  (electric-quote-paragraph t)
+  (electric-quote-string nil)
   :config
   (electric-indent-mode 1)
   (electric-pair-mode 1)
@@ -3112,8 +3109,8 @@ Some minor conveniences:
     (if (bound-and-true-p whitespace-mode)
         (whitespace-mode -1)
       (whitespace-mode)))
-  :bind (("C-c l" . prot/toggle-line-numbers)
-         ("C-c i" . prot/toggle-invisibles)))
+  :bind (("<f7>" . prot/toggle-line-numbers)
+         ("<f8>" . prot/toggle-invisibles)))
 #+END_SRC
 
 ** Multiple cursors
