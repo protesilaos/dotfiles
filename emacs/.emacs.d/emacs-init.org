@@ -2743,25 +2743,6 @@ available on GitHub.
            :repo "protesilaos/modus-themes"))
 #+END_SRC
 
-** Rainbow mode (for colour testing)
-   :PROPERTIES:
-   :CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
-   :END:
-
-The following package reads a colour value, such as hexadecimal RGB,
-and sets the background for the value in that colour.  Quite useful
-when reviewing my themes (=rainbow-mode= is activated manually).
-
-#+BEGIN_SRC emacs-lisp
-(use-package rainbow-mode
-  :ensure t
-  :delight
-  :commands rainbow-mode
-  :custom
-  (rainbow-ansi-colors nil)
-  (rainbow-x-colors nil))
-#+END_SRC
-
 * Interface and interactions
   :PROPERTIES:
   :CUSTOM_ID: h:b6bd2eea-8269-4029-b446-ee340c12ebc3
@@ -3168,6 +3149,54 @@ of them.  For this to work, the buffers must both be visible.
 #+BEGIN_SRC emacs-lisp
 (use-package broadcast
   :ensure t)
+#+END_SRC
+
+** Rainbow blocks
+   :PROPERTIES:
+   :CUSTOM_ID: h:d8c7292f-e7bd-43ff-962e-d9b2c6fc6b27
+   :END:
+
+This package is quite useful when debugging highly structured code that
+you are not familiar with.  It will highlight an entire code block in a
+single colour, making it easier to understand the overall structure (my
+Modus themes support it, of course).
+
+Also note that there is another package that applies a rainbow effect
+only to the delimiters.  Between the two, I prefer this one.  At any
+rate, I activate =rainbow-blocks-mode= manually, when I feel that I am
+missing something that I cannot spot right away.
+
+A less intrusive, built-in alternative is to set the variable
+=show-parent-style 'expression= (see my [[#h:3d374354-843f-4efa-aa38-1ba2c9ccc14c][configs for parentheses]]).
+
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-blocks
+  :ensure t
+  :delight
+  :commands rainbow-blocks-mode
+  :custom
+  (rainbow-blocks-highlight-braces-p t)
+  (rainbow-blocks-highlight-brackets-p t)
+  (rainbow-blocks-highlight-parens-p t))
+#+END_SRC
+
+** Rainbow mode (for colour testing)
+   :PROPERTIES:
+   :CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
+   :END:
+
+The following package reads a colour value, such as hexadecimal RGB,
+and sets the background for the value in that colour.  Quite useful
+when reviewing my themes (=rainbow-mode= is activated manually).
+
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-mode
+  :ensure t
+  :delight
+  :commands rainbow-mode
+  :custom
+  (rainbow-ansi-colors nil)
+  (rainbow-x-colors nil))
 #+END_SRC
 
 * Custom movements and motions
