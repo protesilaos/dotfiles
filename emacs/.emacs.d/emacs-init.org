@@ -268,7 +268,7 @@ My favourite fonts are "Hack" and its ancestor "DejaVu Sans Mono".  They
 offer wide glyph coverage, good support at small point sizes, perfectly
 visible glyphs at the regular weight.  Especially the latter is
 important for improving colour distinctiveness, particularly when using
-a light theme (see my Modus themes for Emacs).
+a light theme (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes for Emacs]]).
 
 I also like, though to a lesser extent, "Source Code Pro", "Iosevka",
 and "Fira Mono".  However SCP has relatively light glyphs at the regular
@@ -520,7 +520,7 @@ your init file.  I prefer to have that stored in a separate file.
 
 This is a built-in mode that keeps track of the files you have opened,
 allowing you go back to them faster.  It can also integrate with Ido
-(see its definition elsewhere in this doc) through its "virtual
+(see [[#h:8c8fd31e-b511-437a-b1b8-736274d7d6ca][Ido mode's definition]] elsewhere in this doc) through its "virtual
 buffers" interface.
 
 A few words about the variables I configure:
@@ -640,7 +640,7 @@ is named appropriately."
     :END:
 
 Keeps a record of actions involving the minibuffer.  Used by
-=icomplete= (see its definition elsewhere in this document).
+=icomplete= (see [[#h:3e5dbf08-9ec4-4aa2-ae97-e7e432a8c0c3][its definition elsewhere]] in this document).
 
 #+BEGIN_SRC emacs-lisp
 (use-package savehist
@@ -749,9 +749,9 @@ Here is an overview of my configurations:
   This gives many false positives and consequently hampers the
   commands for filesystem navigation.
 + Same for URLs.
-+ Use "virtual buffers" (e.g. recent files without a current buffer).
-  I also have a separate key binding for that (see my =use-package=
-  declaration for =recentf=).
++ Use "virtual buffers" (e.g. recent files without a current buffer).  I
+  also have a separate key binding for that (see my =use-package=
+  [[#h:5723c4bb-ff6c-449f-bb60-be66fab3f137][declaration for recentf]]).
 + Allow the theme's styles for Ido.  I have configured those in my
   Modus themes (defined elsewhere in this document).
 + Keep the prompt to a single line.  I find that a horizontal layout
@@ -1309,8 +1309,8 @@ information on the technicalities).
     :END:
 
 This package defines a few more colours for Dired, especially while in
-the detailed view.  My Modus themes support it (see the relevant section
-elsewhere in this doc).
+the detailed view.  My themes support it (see the [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][section on my Modus
+themes]]).
 
 #+BEGIN_SRC emacs-lisp
 (use-package diredfl
@@ -1395,8 +1395,7 @@ The settings below are for the diff screens that Magit produces.  I just
 want to highlight changes within a line, not just the line itself.  I
 enable it for just the focused hunk (there is an option for ='all=).
 
-My Modus themes (see elsewhere in this doc) are configured to style
-these appropriately.
+My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to style these appropriately.
 
 #+BEGIN_SRC emacs-lisp
 (use-package magit-diff
@@ -1414,9 +1413,8 @@ This tool allows us to determine a directory tree with our "projects".
 In my case, these are all git repositories.  It is then possible to
 perform a set of actions on a per-project level.
 
-In terms of integration, I am adding an extension to it which
-leverages the =ido= framework I am already using (see elsewhere in
-this document).
+In terms of integration, I am adding an extension to it which leverages
+the =ido= [[#h:8c8fd31e-b511-437a-b1b8-736274d7d6ca][framework I am already using]].
 
 The =:delight= statement customises the minor mode's presentation to
 only show the project's name.  For non-project buffers, a dash appears
@@ -1481,7 +1479,7 @@ Some tweaks to the default behaviour and presentation:
 + Do not open on the other window (not focused window).
 + Remap default key to launch ibuffer instead of list-buffers.
 + Use colours for common actions more consistently.  Inherit styles from
-  Dired (see my Modus themes).
+  Dired (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
 
 #+BEGIN_SRC emacs-lisp
 (use-package ibuffer
@@ -1531,7 +1529,7 @@ few careful configurations.
 
 These key bindings are complementary to the standard ones.  They do not
 replace the defaults, just provide faster access to their corresponding
-functions.  They all involve the Super key (see the relevant note in the
+functions.  They all involve the Super key (see [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][the relevant note]] in the
 introductory section of this document).
 
 #+BEGIN_SRC emacs-lisp
@@ -1935,7 +1933,7 @@ What these do:
 + Use monospaced fonts, since that is what I want to have everywhere
   in Emacs.
 + Do not preserve colours from websites, as they may be inaccessible
-  (see my Modus theme).
+  (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus theme]]).
 + Keep images to 20% of the window.  This number is arbitrary.  It
   just feels like a good upper limit (not a fan of decorative images
   inside of blog posts).
@@ -1989,7 +1987,7 @@ Concerning the customisations below, these can be summarised thus:
   =prot/bongo-dired-library= and the relevant hook).
 + Because of the above, prefer playlist buffers (*pro tip:* you can
   use =dired-jump= inside of a playlist buffer to switch to that
-  directory—see my Dired section for the relevant configs).
+  directory—see my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired section for the relevant configs]]).
 + While =contrib/bongo-add-dired-file= integrates Dired mark command
   with Bongo.  The function is provided in [[https://www.emacswiki.org/emacs/BongoHacks][this Emacs Wiki entry]]
   (minor tweaks by me).
@@ -2340,7 +2338,7 @@ automatic.
   information provided in [[http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html][Chen Bin's blog]].
 + The key binding =C-;= is disabled because I repurpose that for a
   faster version of =C-x C-;= (much more useful for my work—see the
-  section on comments).
+  [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
 
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
@@ -2550,7 +2548,7 @@ It provides similar functionality to Emacs' built-in "skeletons".  Its
 one major advantage, from my perspective, is that it has a strong
 community behind it, which has already written lots of useful templates
 for a variety of languages and scenaria (I use skeletons as well—see my
-simple abbreviations).  These snippets are distributed as a separate
+[[#h:33cd69cc-1a50-4abb-9f09-cae98dc8998b][simple abbreviations]]).  These snippets are distributed as a separate
 package.
 
 + TODO document the use of custom snippets.
