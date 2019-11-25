@@ -1922,9 +1922,9 @@ syntax for use by the `elfeed' package."
    :END:
 
 As far as I can tell, the following =shr-*= variables concern an HTML
-renderer that is used by a variety of tools, including Elfeed (defined
-right above).  I guess we could scope them by using hooks, but I see
-no need for different settings.
+parser that is used by a variety of tools, including Elfeed (defined
+right above).  I guess we could scope them by using hooks, but I see no
+need for different settings.
 
 What these do:
 
@@ -2810,10 +2810,10 @@ Summary of what these do:
 
 #+BEGIN_SRC emacs-lisp
 (use-package paren
-  :init
-  (setq show-paren-style 'mixed)
-  (setq show-paren-when-point-in-periphery t)
-  (setq show-paren-when-point-inside-paren nil)
+  :custom
+  (show-paren-style 'mixed)
+  (show-paren-when-point-in-periphery t)
+  (show-paren-when-point-inside-paren nil)
   :config
   (show-paren-mode 1))
 #+END_SRC
@@ -3533,6 +3533,7 @@ key binding!
   :ensure t
   :bind ("C-z" . goto-last-change))
 #+END_SRC
+
 ** Window actions
    :PROPERTIES:
    :CUSTOM_ID: h:f24bff70-a037-4c1c-979e-05fe843ffa85
@@ -3587,6 +3588,7 @@ It only works for frames with exactly two windows."
   :bind (("s-m" . windower-toggle-single) ; toggle maximisation
          ("s-s" . windower-toggle-split)))
 #+END_SRC
+
 ** Compare last two kills
    :PROPERTIES:
    :CUSTOM_ID: h:97e82006-9ba9-49ee-8f69-280b4beee831
