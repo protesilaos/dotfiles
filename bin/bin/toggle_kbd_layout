@@ -24,12 +24,12 @@ key_mods="$HOME"/.Xmodmap
 [ "$(command -v setxkbmap 2> /dev/null)" ] && [ -f "$key_mods" ] || { echo "Missing dependency"; exit 1; }
 
 _set_lang() {
-    setxkbmap -layout "$1"      # ARG is layout code
+    setxkbmap -layout "$1" -option 'caps:hyper,compose:menu'
     xmodmap "$key_mods"
 }
 
-if [ "$(setxkbmap -query | sed '/^layout/!d ; s,^.*:[\ ]*,,g')" == 'gr' ]; then
-    _set_lang us                # US QWERTY
+if [ "$(setxkbmap -query | sed '/^l/!d ; s,.*:[\ ]*,,g')" == 'gr' ]; then
+    _set_lang us
 else
-    _set_lang gr                # Greek layout
+    _set_lang gr
 fi
