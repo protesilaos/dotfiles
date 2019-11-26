@@ -26,7 +26,7 @@
 # This assumes that we are already running the lemonbar script.
 [ -z "$(pgrep -x melonpanel > /dev/null)" ] || { echo "No running melonpanel"; exit 1; }
 
-panel_height="$(sed '/^melonpanel_height=/!d ; s,.*\([0-9]\{2\}\).*,\1,' "$(command -v melonpanel 2> /dev/null)")"
+panel_height="$(awk -F '=' '/melonpanel_height/ { print $2; exit; }' "$(command -v melonpanel 2> /dev/null)")"
 
 # The bottom padding is not defined in bspwmrc but in another script
 # that sets the value on a per-host-computer basis.  Here we just get
@@ -44,7 +44,6 @@ _get_value() {
 ## Use the function that gets the desired value from bspwmrc.
 window_gap="$(_get_value window_gap)"
 gapless_monocle="$(_get_value gapless_monocle)"
-paddingless_monocle="$(_get_value paddingless_monocle)"
 border_width="$(_get_value border_width)"
 
 # Calculate the actual gap from the top of the viewport to the upper
@@ -56,8 +55,7 @@ if [ "$effective_padding" -ge "$panel_height" ] ; then
 	bottom_padding=0
 	window_gap=0
 	gapless_monocle=true
-	paddingless_monocle=true
-	border_width=4
+	border_width=1
 
 	# No need to keep the panel
 	pkill -xo melonpanel && pkill -x lemonbar
@@ -66,7 +64,6 @@ else
 	unset bottom_padding
 	unset window_gap
 	unset gapless_monocle
-	unset paddingless_monocle
 	unset border_width
 	panel_status=on
 fi
@@ -87,7 +84,6 @@ else
 	done
 fi
 
-bspc config gapless_monocle "${gapless_monocle:=false}"
-bspc config paddingless_monocle "${paddingless_monocle:=false}"
+bspc config gapless_monocle "${gapless_monocle:=true}"
 
 [ -n "$panel_status" ] && melonpanel
