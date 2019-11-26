@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# Configuration file for the Binary Space Partitioning Window Manager.
-# This is part of my dotfiles, which are managed with GNU Stow.  See
-# https://gitlab.com/protesilaos/dotfiles
+# bspwmrc --- Initialisation script for BSPWM.
 #
 # Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
 #
@@ -18,10 +16,17 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+## Commentary:
+#
+# This file is part of my custom desktop session on Void Linux.  Other
+# important settings are defined in `.xinitrc' and application-specific
+# initalisation files.  See: https://gitlab.com/protesilaos/dotfiles
 
 
-# Essentials
-# ==========
+##############
+# Essentials #
+##############
 
 # Truncate a couple of common commands that are used herein.
 _bc() {
@@ -35,63 +40,29 @@ _check() {
 # Determine XrandR settings.
 _check bspwm_conf_xrandr && bspwm_conf_xrandr
 
-# Desktop[s] [per monitor].
+# Defin desktop[s] [per monitor].
 _check bspwm_conf_desktops && bspwm_conf_desktops
 
-## TODO 2019-11-11: All visual options are in need of review
-# Visual options
-# ==============
-#
-# Things to bear in mind about certain configurations:
-#
-# 1. single_monocle true == Does not recognise receptacles, so if you
-#    have a single window and insert a receptacle, the window will
-#    remain in monocle view.  Desired behaviour is to tile accordingly.
-# 2. borderless_monocle true == Smart borders are bad in multi-monitor
-#    setups because you cannot tell which window has focus when
-#    a monocle exists on each monitor.  Single monitor is okay.
-# 3. ignore_ewmh_focus true == This is very opinionated as it completely
-#    prevents focus stealing.  Adapt accordingly.
-# 4. pointer_modifier mod1 == enables mouse actions while holding down
-#    the Alt key (see below---bonus: the following two also work in the
-#    popular desktop environments).
-# 5. pointer_action1 move == Alt + Right Click allows you to drag
-#    a floating window.  Also works for switching the position of tiled
-#    windows, if that is your thing.
-# 6. pointer_action2 resize_side == Alt + Left Click allows you to
-#    resize the nearest side of the focused window.  Works for both
-#    tiled and floating windows.
-# 7. external_rules_command bspwm_external_rules == References the
-#    script of mine that implements window rules and some custom
-#    behaviours.  The script is also part of my dotfiles.  Window rules
-#    can be included herein, but I prefer to keep them separate.
-# 8. Colours are edited programmatically by my `tempus` script.  Do not
-#    edit them manually (edit the script instead).  These colours
-#    concern the following:
-#
-#    * normal_border_color   == unfocused windows
-#    * active_border_color   == focused window, unfocused monitor
-#    * focused_border_color  == focused window, focused monitor
-#    * presel_feedback_color == area for a manual split (preselection)
+##################
+# Visual options #
+##################
 
 # window management
 # -----------------
 _bc automatic_scheme longest_side
 _bc initial_polarity second_child
-_bc border_width 2
-_bc window_gap 2
+_bc border_width 1
+_bc window_gap 1
 _bc split_ratio 0.50
 _bc single_monocle false
 _bc borderless_monocle true
-_bc gapless_monocle false
-_bc focus_follows_pointer false
+_bc gapless_monocle true
+_bc focus_follows_pointer true
 _bc pointer_follows_monitor true
 _bc pointer_modifier mod1
 _bc pointer_action1 move
 _bc pointer_action2 resize_side
-_bc click_to_focus any
-_bc swallow_first_click false
-_bc ignore_ewmh_focus true
+_bc ignore_ewmh_focus false
 
 for i in top right bottom left; do
     _bc "${i}"_monocle_padding 0
@@ -111,13 +82,14 @@ _bc active_border_color "#b1942b"
 _bc focused_border_color "#6da280"
 _bc presel_feedback_color "#2a2829"
 
-# autostart
-# =========
+#############
+# autostart #
+#############
 
 # Specify keyboard layout.  For the key chord that performs the layout
 # switching between US QWERTY and Greek see my `sxhkdrc`.
 #
-# Found the options in this location (Debian Buster):
+# Originally found the options in this location (Debian Buster):
 # /usr/share/X11/xkb/rules/base.lst
 #
 # caps:hyper           Make Caps Lock an additional Hyper
@@ -138,9 +110,6 @@ fi
 # ones that control BSPWM.  No real need to check for the presence of
 # this executable, because it is a dependency of the BSPWM package.
 _check sxhkd && sxhkd -c "$HOME"/.config/sxhkd/sxhkdrc{,_bspc} &
-
-# Load my XTerm and relevant configurations.
-[ -f "$HOME"/.Xresources ] && xrdb -I "$HOME" -merge "$HOME"/.Xresources
 
 # Launch my custom Lemonbar implementation (the system panel).
 if _check melonpanel; then
@@ -171,4 +140,4 @@ fi
 _check feh && "$HOME"/.fehbg &
 
 # Start the simple display compositor.  See `xcompmgr --help'.
-xcompmgr -cCfF -t -5 -l -5 -r 4.2 -o 0.55 -D 5 &
+xcompmgr -cCfF -t -2 -l -2 -r 3.2 -o 0.55 -D 5 &
