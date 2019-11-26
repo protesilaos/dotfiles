@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Melonpanel --- Script to configure `lemonbar' output
+# Melonpanel --- Script to draw a panel with `lemonbar'.
 #
 # Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
 #
@@ -32,7 +32,7 @@
 # Dependencies for individual modules:
 #    xbps-install -S acpi
 #
-# Last full review 2019-10-23
+# Last full review 2019-11-26
 
 # General settings
 # ----------------
@@ -49,24 +49,20 @@ _checkdep xdo
 # Kill any running lemonbar
 pgrep -x lemonbar > /dev/null && pkill -x lemonbar &
 
-# Add colours from current Tempus theme.  That file is used in other
-# places as well to offer a convenient way of styling multiple tools in
-# a manner that is centralised and straightforward.  Colour definitions
-# are "color{0-15}", using the standard terminal sequence, plus
-# "foreground{,alt}", "background{,alt,dim}".  For details, see the main
-# Tempus themes repo: https://gitlab.com/protesilaos/tempus-themes
-tempus_theme="$HOME/.local/share/my_colours/active-tempus-theme.sh"
-
-# Source the colour definitions if the file exists.  Else exit.
-if [ -e "$tempus_theme" ]; then
-    source "$tempus_theme"
-else
-    echo "Missing Tempus theme"
-    exit 1
-fi
-
 # DO NOT EDIT the name of this parameter (checked by other scripts).
-melonpanel_height=22
+melonpanel_height=20
+
+# Colours
+# -------
+# Taken from my Modus Vivendi (Modus themes for Emacs):
+# https://gitlab.com/protesilaos/modus-themes
+bg_main="#000000"
+bg_alt="#181a20"
+fg_main="#ffffff"
+fg_alt="#d8cdcf"
+red="#ff8059"
+green="#44bc44"
+yellow="#eecc00"
 
 # Fonts (upstream lemonbar only supports bitmap fonts)
 # ----------------------------------------------------
@@ -78,8 +74,8 @@ melonpanel_height=22
 # To verify it, follow the step-by-step instructions (what I did):
 # https://protesilaos.com/codelog/2019-06-24-lemonbar-xft-howto/
 if [ -n "$(fc-list FiraGO)" ]; then
-    fontmain='FiraGO:style=regular:size=11'
-    fontbold='FiraGO:style=bold:size=11'
+    fontmain='FiraGO:style=regular:size=10'
+    fontbold='FiraGO:style=bold:size=10'
 else
     fontmain='-misc-fixed-medium-r-normal--13-120-75-75-c-80-iso10646-1'
     fontbold='-misc-fixed-bold-r-normal--13-120-75-75-c-80-iso10646-1'
@@ -104,37 +100,37 @@ fi
 _battery() {
     command -v acpi > /dev/null || return 1
 
-    local battery_label battery_status battery_output battery_status_time
+    local label command status output
 
-    # Just using Bash parameter expansion here, instead of an external
-    # process (e.g. cut).  This is just me practicing.
-    battery_label='B:'
-    battery_command="$(acpi -b | sed 's/.*: //')" # Remove the "battery" part
-    battery_status="${battery_command:0:1}"       # Use first character
-    battery_output="${battery_command#*, }"       # Delete up to first comma
-    battery_output="${battery_output%,*}"         # Same but read from the end
+    label='B:'
+    # Using Bash parameter expansion here.  Just experimenting…
+    command="$(acpi -b)"
+    status="${command#*: }"    # Delete up the colon and following space
+    status="${status:0:1}"     # Use first character
+    output="${command#*, }"    # Delete up to first comma
+    output="${output%,*}"      # Same but read from the end
 
     # The $battery_status will tell us if it is (C)harging or
     # (D)ischaging.  If dischange level reaches 0-9, the whole indicator
     # will turn to a bright colour.  Otherwise, discharging will be
     # denoted by a coloured output of the current level followed by the
     # minus sign.
-    case "$battery_status" in
+    case "$status" in
         'C')
-            echo "$battery_label %{F$color6}${battery_output}+%{F-}"
+            echo "$label %{F$green}${output}+%{F-}"
             ;;
         'D')
-            case "${battery_output%?}" in
+            case "${output%?}" in
                 [0-9])
-                    echo "%{B$color11}%{F$background} $battery_label ${battery_output}- %{F-}%{B-}"
+                    echo "%{B$yellow}%{F$bg_main} $label ${output}- %{F-}%{B-}"
                     ;;
                 *)
-                    echo "$battery_label %{F$color11}${battery_output}-%{F-}"
+                    echo "$label %{F$yellow}${output}-%{F-}"
                     ;;
             esac
             ;;
         *)
-            echo "$battery_label ${battery_output}"
+            echo "$label ${output}"
             ;;
     esac
 }
@@ -143,25 +139,27 @@ _battery() {
 _temperature() {
     command -v acpi > /dev/null || return 1
 
-    local therm_label therm_status
+    local label command output
 
-    therm_label='T:'
-    therm_status="$(acpi -t | sed 's/.*: //')"
-    therm_status="${therm_status#*, }"
-    therm_status="${therm_status:0:2}"
+    label='T:'
+    # Use Bash parameter expansion again…
+    command="$(acpi -t)"
+    output="${command#*: }"
+    output="${output#*, }"
+    output="${output:0:2}"
 
     # Up to 59 degrees celcius keep text colour same as default.  60-79
     # turn the colour red on normal background.  Else turn the whole
     # indicator red.
-    case "$therm_status" in
+    case "$output" in
         [12345][0-9])
-            echo "$therm_label ${therm_status}°C"
+            echo "$label ${output}°C"
             ;;
         [67][0-9])
-            echo "$therm_label %{F$color1}${therm_status}°C%{F-}"
+            echo "$label %{F$red}${output}°C%{F-}"
             ;;
         *)
-            echo "%{F$background}%{B$color1} $therm_label ${therm_status}°C %{B-}%{F-}"
+            echo "%{F$bg_main}%{B$red} $label ${output}°C %{B-}%{F-}"
             ;;
     esac
 }
@@ -171,16 +169,16 @@ _temperature() {
 _volume() {
     command -v amixer > /dev/null || return 1
 
-    local volume_status volume_level volume_label
+    local label status output
 
-    volume_status="$(amixer get Master | awk -F "[][]" '/%/ { print $4; exit; }')"
-    volume_level="$(amixer get Master | awk -F "[][]" '/%/ { print $2; exit; }')"
-    volume_label='V:'
+    label='V:'
+    # Could not do this with just parameter expansions…
+    status="$(amixer get Master | awk -F'[][]' '/%/{print $2","$4;exit}')"
+    output="${status%,*}"
 
-    case "$volume_status" in
-        'off') echo "$volume_label $volume_level (Muted)" ;;
-        'on')  echo "$volume_label $volume_level"         ;;
-        *)     echo "$volume_label $volume_level (?)"     ;;
+    case "${status#*%}" in
+        'off') echo "$label $output (Muted)" ;;
+        *)     echo "$label $output"         ;;
     esac
 }
 
@@ -192,12 +190,12 @@ _keyboard() {
     # If yes, the indicator will be displayed, else it is assumed that
     # English is being used.
     if [ "$(setxkbmap -query | sed '/^l/!d ; s,.*:[\ ]*,,g')" = 'gr' ]; then
-        kb_layout="%{B$backgroundalt}%{U$foreground}%{+u} EL %{-u}%{U-}%{B-}"
+        kb_layout="%{B$bg_alt}%{U$fg_main}%{+u} EL %{-u}%{U-}%{B-}"
     fi
 
     # Show an indicator if Caps Lock is on.
     if [ "$(xset -q | awk '/Caps/ { print $4 }')" = 'on' ]; then
-        kb_caps="%{B$backgroundalt}%{U$foreground}%{+u} CAPS %{-u}%{U-}%{B-}"
+        kb_caps="%{B$bg_alt}%{U$fg_main}%{+u} CAPS %{-u}%{U-}%{B-}"
     fi
 
     # Print the indicators next each other in the given order.
@@ -205,12 +203,12 @@ _keyboard() {
 }
 
 _datetime() {
-    local dt_label dt_status
+    local label output
 
-    dt_label='D:'
-    dt_status="$(date +'%a %-d %b %H:%M')"
+    label='D:'
+    output="$(date +'%a %-d %b %H:%M')"
 
-    echo "$dt_label $dt_status"
+    echo "$label $output"
 }
 
 # Include all modules in a single infinite loop that iterates every
@@ -286,46 +284,46 @@ _melonpanel() {
                             case "$item" in
                                 m*)
                                     # monitor
-                                    FG="$foregroundalt" # needed to avoid invalid colour error
+                                    FG="$fg_alt" # needed to avoid invalid colour error
                                     on_focused_monitor=
                                     name=
                                     ;;
                                 M*)
                                     # focused monitor
-                                    FG="$foregroundalt" # needed to avoid invalid colour error
+                                    FG="$fg_alt" # needed to avoid invalid colour error
                                     on_focused_monitor=1
                                     name=
                                     ;;
                                 # {Free,Occupied,Urgent} focused
                                 [FOU]*)
                                     if [ -n "$on_focused_monitor" ]; then
-                                        name="%{T2}${name/*/[$name]}%{T-}" # the %{T2} specifies the bold font
-                                        FG="$foreground"
+                                        name="%{T2}${name/*/[$name]}%{T-}"
+                                        FG="$fg_main"
                                     else
                                         name="${name/*/ $name-}"
-                                        FG="$foregroundalt"
+                                        FG="$fg_alt"
                                     fi
                                     ;;
                                 # {free,occupied,urgent} unfocused
                                 f*)
-                                    FG="$foregroundalt"
+                                    FG="$fg_alt"
                                     name="${name/*/ $name }"
                                     ;;
                                 o*)
-                                    FG="$foregroundalt"
+                                    FG="$fg_alt"
                                     name="${name/*/ $name^}"
                                     ;;
                                 u*)
-                                    FG="$color1"
+                                    FG="$red"
                                     name="${name/*/ $name\#}"
                                     ;;
                                 # desktop layout for monocle and node flags
                                 LM|G*?)
-                                    FG="$foreground"
+                                    FG="$fg_main"
                                     name="${name/*/ $name }"
                                     ;;
                                 *)
-                                    FG="$foregroundalt"
+                                    FG="$fg_alt"
                                     name="${name/*/ * }"
                                     ;;
                             esac
@@ -359,7 +357,7 @@ _melonpanel() {
 # hexadecimal notation: 0-9, a-f, A-F.
 _melonpanel < "$melonpanel_fifo" \
     | lemonbar -b -u 1 -p -g "x${melonpanel_height}" \
-               -F "$foreground" -B "#ff${background:1}" \
+               -F "$fg_main" -B "#aa${bg_main:1}" \
                -f "$fontmain" -f "$fontbold" -n "Melonpanel" &
 
 # Hide panel when windows are in full screen mode.  This does not work
