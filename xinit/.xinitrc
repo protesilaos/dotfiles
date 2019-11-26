@@ -59,6 +59,9 @@ fi
 export $(dbus-launch)
 export $(gnome-keyring-daemon --start)
 
+# Load my XTerm and relevant configurations.
+[ -f "$HOME"/.Xresources ] && xrdb -I "$HOME" -merge "$HOME"/.Xresources
+
 #####################
 # Session selection #
 #####################
