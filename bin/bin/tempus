@@ -236,20 +236,6 @@ _emacs() {
 	esac
 }
 
-# This is my script for adding content to lemonbar.  Reloading it will
-# make it get the new shell colours.
-_melonpanel() {
-	_depcheck lemonbar
-	_depcheck melonpanel
-
-	if pgrep melonpanel > /dev/null; then
-		pkill -x melonpanel
-		pkill -x lemonbar
-        melonpanel
-	fi
-}
-
-
 _bspwm() {
     _depcheck bspwm
 
@@ -303,7 +289,6 @@ _rofi() {
 _x_and_shell
 _emacs
 _rofi
-_melonpanel
 _gtk
 _bspwm
 _tmux
