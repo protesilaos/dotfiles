@@ -72,6 +72,8 @@ export $(gnome-keyring-daemon --start)
 #
 # Or pass this file and the DE/WM arg to startx:
 #   startx ~/.xinitrc bspwm
+#
+# Also check my `.bash_profile' for the automatic login setup.
 
 # BSPWM is the default.
 session=${1:-bspwm}
