@@ -2486,7 +2486,10 @@ position of the cursor after the skeleton has been inserted.
     "Website extension: "
     "https://gitlab.com/protesilaos" str "")
   (define-abbrev global-abbrev-table "megit"
-    "" 'protesilaos-gitlab-skeleton))
+    "" 'protesilaos-gitlab-skeleton)
+  :hook
+  (text-mode . abbrev-mode)
+  (git-commit-mode . abbrev-mode))
 #+END_SRC
 
 ** Dabbrev and hippie-expand (dynamic word completion)
