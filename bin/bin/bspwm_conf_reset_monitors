@@ -27,8 +27,18 @@ _check() {
     command -v "$1" > /dev/null
 }
 
+# In case the Hyper key ever stops working, we can call this script
+# (Ctrl+Alt+Delete on my sxhkdrc) and apply the modifications again.
+_kbd_reset_and_xmodmap() {
+    xmod="$HOME"/.Xmodmap
+
+    setxkbmap -layout 'us,el' -option 'caps:hyper,compose:menu'
+    [ -f "$xmod" ] && xmodmap "$xmod"
+}
+
 _check bspwm_conf_xrandr && bspwm_conf_xrandr
 _check bspwm_conf_desktops && bspwm_conf_desktops
+_kbd_reset_and_xmodmap
 
 # Apply the last defined wallpaper
 fehbg="$HOME"/.fehbg
@@ -36,3 +46,6 @@ fehbg="$HOME"/.fehbg
 if [ -f "$fehbg" ] && _check feh; then
     sh -c "$fehbg"
 fi
+
+# Reload the panel
+pkill -x melonpanel && melonpanel
