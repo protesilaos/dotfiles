@@ -37,10 +37,12 @@ _check() {
 	command -v "$1" > /dev/null
 }
 
-# Determine XrandR settings.
+# Determine XrandR settings.  Whether an external display is connected
+# to the laptop or not.
 _check bspwm_conf_xrandr && bspwm_conf_xrandr
 
-# Defin desktop[s] [per monitor].
+# Defin desktop[s] [per monitor].  Contingent on the above.  Also note
+# that this leverages my `bspwm_dynamic_desktops'.
 _check bspwm_conf_desktops && bspwm_conf_desktops
 
 ##################
@@ -87,7 +89,7 @@ _bc presel_feedback_color "#2a2829"
 #############
 
 # Specify keyboard layout.  For the key chord that performs the layout
-# switching between US QWERTY and Greek see my `sxhkdrc`.
+# switching between US QWERTY and Greek refer to my `sxhkdrc`.
 #
 # Originally found the options in this location (Debian Buster):
 # /usr/share/X11/xkb/rules/base.lst
@@ -106,9 +108,9 @@ fi
 # first otherwise it might mess up with SXHKD.
 [ -f "$HOME"/.Xmodmap ] && xmodmap "$HOME"/.Xmodmap
 
-# The hotkey daemon that handles all custom key bindings, including the
-# ones that control BSPWM.  No real need to check for the presence of
-# this executable, because it is a dependency of the BSPWM package.
+# The hotkey daemon that handles all custom key bindings.  I split the
+# key chords into separate files, based on their scope.  The ones that
+# pertain to the window manager are defined in sxhkdrc_bspc.
 _check sxhkd && sxhkd -c "$HOME"/.config/sxhkd/sxhkdrc{,_bspc} &
 
 # Launch my custom Lemonbar implementation (the system panel).
