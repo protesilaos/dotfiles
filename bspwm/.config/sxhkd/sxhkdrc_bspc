@@ -1,9 +1,7 @@
 #
 # SXHKD module with BPSWM-specific commands
 #
-# ~/.config/sxhkd/sxhkdrc_bspc
-#
-# Other modules should be available at ~/.config/sxhkd/
+# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
 #
 
 # Description
