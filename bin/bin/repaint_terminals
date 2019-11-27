@@ -1,20 +1,23 @@
 #!/bin/bash
 
-	# This program is free software: you can redistribute it and/or modify
-	# it under the terms of the GNU General Public License as published by
-	# the Free Software Foundation, either version 3 of the License, or
-	# (at your option) any later version.
-
-	# This program is distributed in the hope that it will be useful,
-	# but WITHOUT ANY WARRANTY; without even the implied warranty of
-	# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	# GNU General Public License for more details.
-
-	# You should have received a copy of the GNU General Public License
-	# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-# Description
-# -----------
+# repaint_terminals --- Update colours using ANSI escape sequences.
+#
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+## Description
 #
 # Use ANSI codes to apply theme change to all active terminals.  This is
 # particularly useful for programs that source their colours at startup,
@@ -27,6 +30,7 @@
 #
 # The ANSI escape sequences are defined in this document
 # http://pod.tst.eu/http://cvs.schmorp.de/rxvt-unicode/doc/rxvt.7.pod#XTerm_Operating_System_Commands
+
 
 active_theme="$HOME/.local/share/my_colours/active-theme-content"
 
@@ -47,7 +51,7 @@ fi
 # 	#123456
 # NOTE we pass `-w` to `grep` to make sure it matches only whole words.
 # Otherwise a 'foreground' would also capture 'foregroundalt'.
-get_hex_value() {
+_get_hex_value() {
 	echo "$col_array" | grep -w "$1" | sed 's/\(.*\)"\(#[a-zA-Z0-9]*\)"/\2/'
 }
 
@@ -57,15 +61,15 @@ get_hex_value() {
 ansi_sequences=""
 
 # Prepare ANSI sequences for colors 0-15.
-for i in $(seq 0 15); do
-	ansi_sequences+="\\033]4;${i};$(get_hex_value color"${i}")\\007"
+for i in {0..15}; do
+	ansi_sequences+="\\033]4;${i};$(_get_hex_value color"${i}")\\007"
 done
 
 # Update base values (outside the 16-colour palette).  This covers the
 # foreground, background, and cursor.
-ansi_sequences+="\\033]10;$(get_hex_value foreground)\\007"
-ansi_sequences+="\\033]11;$(get_hex_value background)\\007"
-ansi_sequences+="\\033]17;$(get_hex_value foreground)\\007"
+ansi_sequences+="\\033]10;$(_get_hex_value foreground)\\007"
+ansi_sequences+="\\033]11;$(_get_hex_value background)\\007"
+ansi_sequences+="\\033]17;$(_get_hex_value foreground)\\007"
 
 # Apply ANSI sequences to running terminals.
 for term in /dev/pts/[0-9]*; do
