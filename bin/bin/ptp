@@ -1,22 +1,28 @@
 #!/bin/bash
 
-    # This program is free software: you can redistribute it and/or modify
-    # it under the terms of the GNU General Public License as published by
-    # the Free Software Foundation, either version 3 of the License, or
-    # (at your option) any later version.
-
-    # This program is distributed in the hope that it will be useful,
-    # but WITHOUT ANY WARRANTY; without even the implied warranty of
-    # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    # GNU General Public License for more details.
-
-    # You should have received a copy of the GNU General Public License
-    # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-# ptp (Print Tempus Palette) --- Prints the colour palette of the active
-# Tempus theme and colourises the value of each point accordingly.  Part
-# of my dotfiles: https://gitlab.com/protesilaos/dotfiles.
-# 
+# ptp --- Print active Tempus theme palette for the running terminal.
+#
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+## Commentary:
+#
+# Prints the colour palette of the active Tempus theme and colourises
+# the value of each point accordingly, by using ANSI escape sequences.
+# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles.
+#
 # The Tempus themes is a standalone project of mine, which is also
 # integrated into my custom desktop session.  For more about it, see:
 # https://protesilaos.com/tempus-themes.
@@ -27,6 +33,7 @@
 # themes.  This is because col0 is the dark theme's background, with
 # col8 functioning as the alternative background in various contexts.
 # For light themes we have col15=bg and col7=bgalt.
+
 
 # This will work if the colours are in place (my dots rely on GNU Stow).
 my_colours="$HOME/.local/share/my_colours"
@@ -85,7 +92,7 @@ echo "Tempus ${tempus_slug:0:-3}:"
 # using ANSI escape sequences.
 for i in {0..15}; do
 	colour_row
-	if [ "$i" == 7 ]; then
+	if [ "$i" = 7 ]; then
 		# Leave an empty line to draw the two rows properly and continue
 		# with the rest of the loop.
 		echo "" && continue
