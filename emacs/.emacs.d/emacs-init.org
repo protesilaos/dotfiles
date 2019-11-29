@@ -254,85 +254,19 @@ Overview of these settings:
    :PROPERTIES:
    :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
    :END:
-*** About my choice of font
-   :PROPERTIES:
-   :CUSTOM_ID: h:a3be0ffa-0e22-4c18-81e4-c644e4b8d610
-   :END:
-
-The primary objective of my font definitions is to cover my writing
-needs for both Latin and Greek scripts.  Secondarily, the typefaces
-should ideally cover both roman and italic slants and their bold
-equivalents.
-
-My favourite fonts are "Hack" and its ancestor "DejaVu Sans Mono".  They
-offer wide glyph coverage, good support at small point sizes, perfectly
-visible glyphs at the regular weight.  Especially the latter is
-important for improving colour distinctiveness, particularly when using
-a light theme (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes for Emacs]]).
-
-I also like, though to a lesser extent, "Source Code Pro", "Iosevka",
-and "Fira Mono".  However SCP has relatively light glyphs at the regular
-weight, Iosevka does not disambiguate hyphens from em dashes (critical
-for prose), while FM lacks italics.
-
-I do not enjoy everything in the standard Hack distribution.  The lack
-of a slab in the letter "i", the exaggerated shape of "1", the
-disproportionately thick dot/spot inside the "0".  Thankfully,
-upstream provides a [[https://github.com/source-foundry/alt-hack][repository with alternatives glyphs]], for those who
-wish to build a variant themselves.  I used this to do the following:
-
-+ Use slabbed version of letter "i" /only/ for the Regular and Bold
-  variants.  Italics and Bold Italics will use the default slab-less
-  glyph.
-+ Use a slab-less "1", which clearly disambiguates it from slabbed
-  "i".
-+ Use "3" with a flat top in Regular and Bold variants.  Leave them
-  unchanged for their italicised counterparts.
-+ Use knife variant of "f" for the Italic and Bold Italic sets.  The
-  default glyph remains in tact for Regular and Bold.
-+ Use dotted zero in Regular and Bold sets, while reverting to diamond
-  zero for the italic variants.  The use of a dot and a diamond is
-  necessary to offer the /impression/ of similarity between roman and
-  italic variations.
-
-This is the [[https://gitlab.com/protesilaos/hack-font-mod][git repo of my custom Hack font]].  It is available under the
-same terms as "Hack" itself (MIT License).  Note that you should better
-remove any other build of the original typeface before using my mod.  On
-Debian and Void Linux (and probably all other distros) per-user fonts
-are read from =~/.local/share/fonts/=.
-
-*** Technical considerations on GNU/Linux
-    :PROPERTIES:
-    :CUSTOM_ID: h:12067c3e-a346-4fcd-b81f-7378c54e6805
-    :END:
-
-On the implementation front, it is worth knowing that things are
-governed by the =fontconfig= library.  This is true for Debian, Void
-Linux, and others.
-
-The font definition can thus accept several values other than the font
-family and size.  Each value is separated by the colon sign.  Have a
-look at [[https://www.freedesktop.org/software/fontconfig/fontconfig-user.html][this spec]] for the available parameters.
-
-My fontconfig rules establish global slight hinting and RGB
-anti-aliasing.  These can be overridden in Emacs with a definition
-that passes rules to the font, as documented in the aforementioned
-specification, such as =Hack-13:hinting=true:hintstyle=hintfull=.
-
 *** Choose font based on availability
     :PROPERTIES:
     :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
     :END:
 
 The conditions below set an order of priority for my desired typeface.
-The first match from the top is the one that is used.  The structure
-of this snippet can be expanded to use as many typeface preferences as
-needed.
+The first match from the top is the one that is used.  The default size
+is that for desktop usage.
 
 #+BEGIN_SRC emacs-lisp
 (use-package emacs
   :custom
-  (x-underline-at-descent-line nil)
+  (x-underline-at-descent-line t)
   (underline-minimum-offset 1)
   :config
   (defun prot/font-sizes (size)
@@ -340,26 +274,22 @@ needed.
 availability of typefaces in order of preference."
     (interactive "P")
     (cond
-     ((member "Hack" (font-family-list))
-      (set-frame-font (concat "Hack-" (number-to-string size)) t t))
-     ((member "DejaVu Sans Mono" (font-family-list))
-      (set-frame-font (concat "DejaVu Sans Mono-" (number-to-string size)) t t))
-     ((member "Source Code Pro" (font-family-list))
-      (set-frame-font (concat "Source Code Pro-" (number-to-string size)) t t))
-     ((member "Fira Mono" (font-family-list))
-      (set-frame-font (concat "Fira Mono-" (number-to-string size)) t t))))
+     ((member "Iosevka SS09" (font-family-list))
+      (set-frame-font (concat "Iosevka SS09-" (number-to-string size)) t t))
+     ((member "Iosevka" (font-family-list))
+      (set-frame-font (concat "Iosevka-" (number-to-string size)) t t)))))
 
   (defun prot/laptop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
 small laptop monitor."
     (interactive)
-    (prot/font-sizes 10.5))
+    (prot/font-sizes 12))
 
   (defun prot/desktop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
 larger desktop monitor."
     (interactive)
-    (prot/font-sizes 13))
+    (prot/font-sizes 15))
 
   :hook (after-init . prot/desktop-fonts))
 #+END_SRC
@@ -377,7 +307,7 @@ else.
 7Zz
 gqp
 nmMN
-vvwWuuw
+uvvwWuuw
 x×X
 .,·°;:¡!¿?
 :;
@@ -387,7 +317,7 @@ x×X
 '
 "
 “”
-—–-~≈=_.…
+-~≈=_.…
 
 Sample character set
 Check for monospacing and Greek glyphs
