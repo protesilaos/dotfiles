@@ -150,8 +150,6 @@ _gtk() {
 # This is expected behaviour: that is what the rc file is for.  `man
 # vim` has some flags for executing commands at startup but this only
 # works for new instances of Vim.  Use something like `xdo`, perhaps?
-#
-# The above DO NOT apply to Vim instances inside of tmux.
 _vim() {
 	_depcheck vim
 
@@ -199,23 +197,6 @@ _x_and_shell() {
 	if [ -f "$xresources" ]; then
 		xrdb -I "$HOME" -merge "$xresources"
 	fi
-}
-
-_tmux() {
-	_depcheck tmux
-
-	_sed_sync "s/tempus_fg=\"#[a-zA-Z0-9]*\"/tempus_fg=\"${foreground}\"/ ; \
-	s/tempus_bg=\"#[a-zA-Z0-9]*\"/tempus_bg=\"${background}\"/ ; \
-	s/tempus_fg_alt=\"#[a-zA-Z0-9]*\"/tempus_fg_alt=\"${foregroundalt}\"/ ; \
-	s/tempus_bg_alt=\"#[a-zA-Z0-9]*\"/tempus_bg_alt=\"${backgroundalt}\"/ ; \
-	s/tempus_bg_dim=\"#[a-zA-Z0-9]*\"/tempus_bg_dim=\"${backgrounddim}\"/" "$HOME"/.tmux.conf
-
-	pgrep tmux > /dev/null || return 1
-
-	tmux source-file "$HOME"/.tmux.conf
-
-	# NOTE this is another script that is part of my dotfiles.
-	tmux_update_vim &
 }
 
 _emacs() {
@@ -291,5 +272,4 @@ _emacs
 _rofi
 _gtk
 _bspwm
-_tmux
 _vim

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# DEPRECATED 2019-11-29: I have switched to Emacs.  Kept for reference.
+
 # Sends a key sequence to all running instances of Vim inside a tmux
 # session.  The sequence is for reloading the vimrc.  The intended use
 # of this script is to live reload a Vim theme as part of my
