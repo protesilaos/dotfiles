@@ -1,13 +1,13 @@
-Custom desktop session centred around BSPWM and Emacs
-=====================================================
+My BSPWM and Emacs for Void GNU/Linux
+=====================================
 
-**UPDATE 2019-11-12:** I switched from Debian to Void Linux.  All
-references to Debian will be removed and lots of things will be
-refactored accordingly.  Some of my custom packages for Void are
-available here: https://gitlab.com/protesilaos/void-packages
+**UPDATE 2019-11-12:** I switched from Debian to Void.  All references
+to Debian will be removed and lots of things will be refactored
+accordingly.  Some of my custom packages for Void are available here:
+https://gitlab.com/protesilaos/void-packages
 
-Get my configs
---------------
+Get my old configs
+------------------
 
 To reproduce _the previous iteration_ of my custom desktop session on
 Debian 10 'buster', follow the detailed instructions in my book "Prot's
