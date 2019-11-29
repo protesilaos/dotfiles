@@ -2333,6 +2333,7 @@ The list will be expanded over time.
   :mode (("offlineimaprc" . conf-mode)
          ("sxhkdrc" . conf-mode)
          ("Xmodmap" . conf-xdefaults-mode)
+         ("template" . shell-script-mode)
          ("\\.rasi\\'" . css-mode)))
 #+END_SRC
 
