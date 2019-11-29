@@ -277,7 +277,7 @@ availability of typefaces in order of preference."
      ((member "Iosevka SS09" (font-family-list))
       (set-frame-font (concat "Iosevka SS09-" (number-to-string size)) t t))
      ((member "Iosevka" (font-family-list))
-      (set-frame-font (concat "Iosevka-" (number-to-string size)) t t)))))
+      (set-frame-font (concat "Iosevka-" (number-to-string size)) t t))))
 
   (defun prot/laptop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
