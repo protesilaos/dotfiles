@@ -30,7 +30,7 @@
 #    xbps-install -S bspwm lemonbar-xft xdo
 #
 # Dependencies for individual modules:
-#    xbps-install -S acpi
+#    xbps-install -S acpi alsa-utils
 #
 # Last full review 2019-11-26
 
