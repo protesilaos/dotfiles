@@ -3,18 +3,8 @@ Custom desktop session centred around BSPWM and Emacs
 
 **UPDATE 2019-11-12:** I switched from Debian to Void Linux.  All
 references to Debian will be removed and lots of things will be
-refactored accordingly.
-
-**UPDATE 2019-10-23:** I produced a video where, among others, I talked
-about my outlook concerning my BSPWM session (and this repo).  Some
-_major breaking changes_ are in the works.  Please watch and remember
-that you can always use my free/libre book, which is also mentioned in
-the "Get my configs" section below.  That book contains a stable
-"snapshot" of my configurations with code that was developed before my
-switch to Emacs (early July 2019).
-
-The video:
-https://protesilaos.com/codelog/2019-10-22-status-update-bspwm-emacs/
+refactored accordingly.  Some of my custom packages for Void are
+available here: https://gitlab.com/protesilaos/void-packages
 
 Get my configs
 --------------
