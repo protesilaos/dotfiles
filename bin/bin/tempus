@@ -142,14 +142,6 @@ _gtk() {
 	esac
 }
 
-# FIXME HELPME is it possible to change the Vim colorscheme from the
-# shell, so that all running Vim sessions inside the terminal switch to
-# it?  Right now, I have to close any Vim instance inside the terminal
-# when switching from a light/dark theme to its opposite.  The terminal
-# colours change, but Vim still uses the same theme it did at startup.
-# This is expected behaviour: that is what the rc file is for.  `man
-# vim` has some flags for executing commands at startup but this only
-# works for new instances of Vim.  Use something like `xdo`, perhaps?
 _vim() {
 	_depcheck vim
 
