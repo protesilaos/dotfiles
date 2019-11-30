@@ -27,7 +27,7 @@ actions=('Log out' 'Reboot' 'Power off' 'Xmodmap and keyboard reload' 'Configure
 # List actions to choose from
 _list_actions() {
     # use printf to output array items on a new line
-    printf '%s\n' "${actions[@]}" | rofi -dmenu -no-custom -p 'Power options'
+    printf '%s\n' "${actions[@]}" | rofi -dmenu -i -no-custom -p 'Power options'
 }
 
 choice="$(_list_actions)"
