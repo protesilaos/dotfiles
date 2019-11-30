@@ -254,14 +254,53 @@ Overview of these settings:
    :PROPERTIES:
    :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
    :END:
-*** Choose font based on availability
+*** Font settings
     :PROPERTIES:
     :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
     :END:
 
-The conditions below set an order of priority for my desired typeface.
-The first match from the top is the one that is used.  The default size
-is that for desktop usage.
+I use two distinct typefaces, each optimised for its ideal (in my
+opinion) point size.  These are Hack and Iosevka.
+
+A few notes about my fonts:
+
++ Iosevka is meant for desktop use on a large monitor, where its
+  compressed line length allows for larger font height.  This leads to
+  greater readability.  Iosevka is extremely customisable.  My choice
+  uses the pre-built stylistic set 9 (SS09), which corresponds to an
+  approximation of the defining features of Source Code Pro.  I choose
+  this both because I like the aesthetics, but mostly due to its support
+  for true italics: distinct glyphs between roman and italic variants.
++ Hack is my favourite typeface overall, though I believe it is at its
+  best when used at smaller point sizes.  As such, I keep it exclusively
+  for use on the smaller laptop screen.  I do not enjoy everything in
+  the standard Hack distribution.  The lack of a slab in the letter "i"
+  can cause issues, the shape of "1" is exaggerated, the dot/spot inside
+  the "0" is disproportionately large.  Thankfully, upstream provides a
+  [[https://github.com/source-foundry/alt-hack][repository with alternatives glyphs]], for those who wish to build a
+  variant themselves.  I used this to do the following:
+  + Use slabbed version of letter "i" /only/ for the Regular and Bold
+    variants.  Italics and Bold Italics will use the default slab-less
+    glyph.
+  + Use a slab-less "1", which clearly disambiguates it from slabbed
+    "i".
+  + Use "3" with a flat top in Regular and Bold variants.  Leave them
+    unchanged for their italicised counterparts.
+  + Use knife variant of "f" for the Italic and Bold Italic sets.  The
+    default glyph remains in tact for Regular and Bold.
+  + Use dotted zero in Regular and Bold sets, while reverting to diamond
+    zero for the italic variants.  The use of a dot and a diamond is
+    necessary to offer the /impression/ of similarity between roman and
+    italic variations.
+
+This is the git repo of my [[https://gitlab.com/protesilaos/hack-font-mod][custom Hack font]].  It is available under the
+same terms as "Hack" itself (MIT License).  Note that you should better
+remove any other build of the original typeface before using my mod.  On
+Debian and Void Linux (and probably all other distros) per-user fonts
+are read from =~/.local/share/fonts/=.  If you are on Void, check my
+[[https://gitlab.com/protesilaos/void-packages][personal templates]] for =xbps-src=, which includes a build for this font
+(and my Iosevka) that installs system-wide.  Also refer to [[https://gitlab.com/protesilaos/dotfiles][my dotfiles]]
+for the =fontconfig= settings.
 
 #+BEGIN_SRC emacs-lisp
 (use-package emacs
@@ -269,29 +308,36 @@ is that for desktop usage.
   (x-underline-at-descent-line t)
   (underline-minimum-offset 1)
   :config
-  (defun prot/font-sizes (size)
-    "Set frame font at SIZE, while also checking for the
-availability of typefaces in order of preference."
-    (interactive "P")
-    (cond
-     ((member "Iosevka SS09" (font-family-list))
-      (set-frame-font (concat "Iosevka SS09-" (number-to-string size)) t t))
-     ((member "Iosevka" (font-family-list))
-      (set-frame-font (concat "Iosevka-" (number-to-string size)) t t))))
+  (defun prot/font-family-size (family size)
+    "Set frame font for FAMILY at SIZE."
+    (set-frame-font (concat family "-" (number-to-string size)) t t))
 
   (defun prot/laptop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
 small laptop monitor."
     (interactive)
-    (prot/font-sizes 12))
+    (when window-system
+      (prot/font-family-size "Hack" 10)))
 
   (defun prot/desktop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
-larger desktop monitor."
+small laptop monitor."
     (interactive)
-    (prot/font-sizes 15))
+    (when window-system
+      (prot/font-family-size "Iosevka SS09" 14)))
 
-  :hook (after-init . prot/desktop-fonts))
+  (defun prot/fonts-per-monitor ()
+    "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
+based on the width of the monitor.  The calculation is based on
+the maximum width of my laptop's screen."
+  (interactive)
+  (when window-system
+    (if (> (display-pixel-width) 1366)
+        (prot/desktop-fonts)
+      (prot/laptop-fonts))))
+
+  :hook
+  (after-init . prot/fonts-per-monitor))
 #+END_SRC
 
 And here is a typeface suitability test: can you discern the character
@@ -329,10 +375,6 @@ abcdefghijklmnopqrstuvwxyz
 αβγδεζηθικλμνξοπρστυφχψω
 #+END_SRC
 
-*** TODO if external monitor then prot/desktop else prot/laptop
-    :PROPERTIES:
-    :CUSTOM_ID: h:7ab25412-69e6-41eb-afac-51f5d761d30f
-    :END:
 ** Persistent state
    :PROPERTIES:
    :CUSTOM_ID: h:8798f77e-ad6c-4b3c-b808-c617b7135441
