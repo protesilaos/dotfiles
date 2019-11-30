@@ -2457,7 +2457,7 @@ position of the cursor after the skeleton has been inserted.
   possible extension.  Makes it easy to link to my various git
   repos."
     "Website extension: "
-    "https://gitlab.com/protesilaos" str "")
+    "https://gitlab.com/protesilaos/" str "")
   (define-abbrev global-abbrev-table "megit"
     "" 'protesilaos-gitlab-skeleton)
   :hook
