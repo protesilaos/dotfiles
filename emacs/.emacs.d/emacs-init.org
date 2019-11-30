@@ -2769,14 +2769,15 @@ with or simplify common tasks:
    :CUSTOM_ID: h:3d374354-843f-4efa-aa38-1ba2c9ccc14c
    :END:
 
-Configure the mode that highlights matching parentheses.  I consider
-this of utmost importance when working with languages such as elisp.
+Configure the mode that highlights matching delimiters or parentheses.
+I consider this of utmost importance when working with languages such as
+elisp.
 
 Summary of what these do:
 
 + Activate the mode.
-+ Show the matching parenthesis if on screen, else highlight the
-  expression enclosed by it.
++ Show the matching delimiter/parenthesis if on screen, else highlight
+  the expression enclosed by it.
 + Highlight parentheses even if the point is in their vicinity.  This
   means the beginning or end of the line, with space in between.
 + Do not highlight a match when the point is on the inside of the
@@ -2821,7 +2822,7 @@ auto-insertion of characters.  This is a summary of my settings:
 #+BEGIN_SRC emacs-lisp
 (use-package electric
   :custom
-  (electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
+  (electric-pair-inhibit-predicate 'electric-pair-default-inhibit)
   (electric-pair-pairs '((8216 . 8217)
                          (8220 . 8221)
                          (171 . 187)))
