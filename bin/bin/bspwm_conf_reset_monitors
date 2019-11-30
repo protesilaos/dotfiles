@@ -49,3 +49,6 @@ fi
 
 # Reload the panel
 pkill -x melonpanel && melonpanel
+
+# Switch my font sizes in Emacs
+pgrep -x emacs && emacsclient -e '(prot/fonts-per-monitor)'
