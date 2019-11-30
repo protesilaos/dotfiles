@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# EXPERIMENTAL
+# EXPERIMENTAL 2019-11-30: It works after connecting a monitor to the
+# laptop, but not when disconnecting.  The problem seems to be with
+# BSPWM, since `bspc query -M' continues to list the second monitor…
+# Will investigate further.
 #
 # Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
 #
