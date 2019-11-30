@@ -324,7 +324,7 @@ small laptop monitor."
 small laptop monitor."
     (interactive)
     (when window-system
-      (prot/font-family-size "Iosevka SS09" 14)))
+      (prot/font-family-size "Iosevka SS09" 15)))
 
   (defun prot/fonts-per-monitor ()
     "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
