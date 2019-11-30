@@ -317,7 +317,7 @@ for the =fontconfig= settings.
 small laptop monitor."
     (interactive)
     (when window-system
-      (prot/font-family-size "Hack" 10)))
+      (prot/font-family-size "Hack" 10.5)))
 
   (defun prot/desktop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
