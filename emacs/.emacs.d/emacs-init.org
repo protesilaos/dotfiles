@@ -2660,7 +2660,7 @@ execute around `company-complete-selection' command."
                           (company-complete-common-or-cycle -1))))))
 #+END_SRC
 
-* Theme and colours (Modus themes)
+* Modus themes (my very accessible themes)
   :PROPERTIES:
   :CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
   :END:
@@ -2668,17 +2668,21 @@ execute around `company-complete-selection' command."
 I am using my own themes.  They are designed to conform with the
 highest accessibility standard for colour contrast between foreground
 and background values.  This stands for a minimum contrast ratio of
-7:1.
+7:1, also known as the WCAG AAA standard.
 
-I call this project "Modus themes".  It currently consists of "Modus
-Operandi" (light theme) and "Modus Vivendi" (dark).  The source code is
-available [[https://gitlab.com/protesilaos/modus-themes][on my GitLab page]] (includes installation instructions).
+I call this project "Modus themes".  It consists of "Modus Operandi"
+(light theme) and "Modus Vivendi" (dark).  The source code and
+installation instructions are available [[https://gitlab.com/protesilaos/modus-themes][on their GitLab page]].
 
-There will soon be MELPA packages for these: the pull requests I
-submitted are in need of approval (see [[https://github.com/melpa/melpa/pull/6516][#6516]] and [[https://github.com/melpa/melpa/pull/6517][#6517]]).  Once that
-happens, my themes will be available as distinct packages:
-=modus-operandi= (light) and =modus-vivendi= (dark)).  /This section
-will be updated accordingly./
+The themes are available on MELPA as /standalone packages/ as of
+December 1, 2019.  I did it that way instead of distributing them as a
+single package because I know that people tend to use one or the other.
+And also due to the fact that one is not a prerequisite for the other.
+I personally use both, switching between the two depending on the
+ambient light in my room.
+
+Note though that because I am using these themes locally as part of
+their development process, I am not using the MELPA packages directly.
 
 #+BEGIN_SRC emacs-lisp
 (use-package emacs
@@ -2688,33 +2692,14 @@ will be updated accordingly./
   (defun prot/modus-themes-toggle ()
     "Simplistic toggle for my Modus Themes.  All it does is check
 if `modus-operandi' (light version) is active and if so switch to
-`modus-vivendi' (dark version).  The inverse applies when Vivendi
-is in use."
+`modus-vivendi' (dark version).  Else it switches to the light
+theme."
     (interactive)
     (if (eq (car custom-enabled-themes) 'modus-operandi)
         (load-theme 'modus-vivendi t)
       (load-theme 'modus-operandi t)))
   :bind ("s-t" . prot/modus-themes-toggle)
-  :hook (after-init . (lambda ()
-                        (load-theme 'modus-operandi t))))
-#+END_SRC
-
-** Upstream Modus themes via Quelpa
-   :PROPERTIES:
-   :CUSTOM_ID: h:78e9c1f8-92a0-4675-923a-9731c47a670c
-   :END:
-
-While waiting for the MELPA packages, you can use [[https://github.com/quelpa/quelpa][Quelpa]] to get the
-upstream version directly.  The following snippet was kindly provided by
-Murilo Pereira, whose [[https://github.com/mpereira/.emacs.d][Emacs configurations (optimised for Evil-mode)]] are
-available on GitHub.
-
-#+BEGIN_SRC
-(use-package modus-themes
-  :ensure nil
-  :quelpa (modus-themes
-           :fetcher gitlab
-           :repo "protesilaos/modus-themes"))
+  :hook (after-init . (lambda () (load-theme 'modus-operandi t))))
 #+END_SRC
 
 * Interface and interactions
