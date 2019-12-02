@@ -1591,6 +1591,7 @@ Overview of the following settings:
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :custom
+  (org-directory "~/Org")
   ;; code blocks
   (org-src-window-setup 'current-window)
   (org-src-fontify-natively t)
