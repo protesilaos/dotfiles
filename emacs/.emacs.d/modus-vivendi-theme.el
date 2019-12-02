@@ -93,8 +93,8 @@ between foreground and background is >= 7:1)."
       (fg-dim "#e0e6f0") (bg-dim "#110b11")
       ;; specifically for on/off states (e.g. mode-line)
       ;; must be combined with themselves
-      (fg-active "#f5f5f5") (bg-active "#454545")
-      (fg-inactive "#bebebe") (bg-inactive "#303030")
+      (fg-active "#f5f5f5") (bg-active "#404040")
+      (fg-inactive "#bebebe") (bg-inactive "#282828")
       ;; special base values, used only for cases where the above
       ;; fg-* or bg-* cannot or should not be used (to avoid confusion)
       ;; must be combined with: {fg,bg}-{main,alt,dim}
@@ -144,7 +144,13 @@ between foreground and background is >= 7:1)."
       (magenta-refine-bg "#572f77") (cyan-refine-bg "#2f4680")
       (red-refine-fg "#ffb9ab") (green-refine-fg "#9ff0cf")
       (yellow-refine-fg "#ffffcc") (blue-refine-fg "#adddff")
-      (magenta-refine-fg "#ffccff") (cyan-refine-fg "#9ffcf6"))
+      (magenta-refine-fg "#ffccff") (cyan-refine-fg "#9ffcf6")
+      ;; styles that are meant exclusively for the mode line
+      ;;
+      ;; must be combined with: bg-active, bg-inactive
+      (red-active "#ffcf70") (green-active "#70f070")
+      (yellow-active "#dddd00") (blue-active "#bed6ff")
+      (magenta-active "#f0c8ff") (cyan-active "#40ede0"))
   (custom-theme-set-faces
    'modus-vivendi
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -245,8 +251,8 @@ between foreground and background is >= 7:1)."
    `(anzu-match-1 ((,class (:inherit modus-theme-intense-cyan))))
    `(anzu-match-2 ((,class (:inherit modus-theme-intense-green))))
    `(anzu-match-3 ((,class (:inherit modus-theme-intense-yellow))))
-   `(anzu-mode-line ((,class (:background ,bg-main :foreground ,green-intense :weight bold))))
-   `(anzu-mode-line-no-match ((,class (:background ,bg-main :foreground ,red-intense :weight bold))))
+   `(anzu-mode-line ((,class (:foreground ,green-active))))
+   `(anzu-mode-line-no-match ((,class (:foreground ,red-active :weight bold))))
    `(anzu-replace-highlight ((,class (:inherit modus-theme-intense-green :weight bold))))
    `(anzu-replace-to ((,class (:inherit modus-theme-intense-magenta))))
    ;;;; artbollocks-mode
@@ -301,9 +307,9 @@ between foreground and background is >= 7:1)."
    `(compilation-error ((,class (:background ,bg-main :foreground ,red-intense :weight bold))))
    `(compilation-info ((,class (:background ,bg-dim :foreground ,green))))
    `(compilation-line-number ((,class (:background ,bg-main :foreground ,magenta-intense))))
-   `(compilation-mode-line-exit ((,class (:background ,bg-main :foreground ,blue-intense :weight bold))))
-   `(compilation-mode-line-fail ((,class (:background ,bg-main :foreground ,red-intense :weight bold))))
-   `(compilation-mode-line-run ((,class (:background ,bg-main :foreground ,cyan-intense :weight bold))))
+   `(compilation-mode-line-exit ((,class (:foreground ,blue-active :weight bold))))
+   `(compilation-mode-line-fail ((,class (:foreground ,red-active :weight bold))))
+   `(compilation-mode-line-run ((,class (:foreground ,magenta-active :weight bold))))
    `(compilation-warning ((,class (:background ,bg-main :foreground ,yellow-intense :weight bold))))
    ;;;; completions
    `(completions-annotations ((,class (:inherit italic))))
@@ -358,9 +364,9 @@ between foreground and background is >= 7:1)."
    `(diff-removed ((,class (:inherit modus-theme-subtle-red))))
    ;;;; dired (and extensions)
    `(dgi-commit-message-face ((,class (:foreground ,fg-special-mild)))) ; dired-git-info
-   `(dired-async-failures ((,class (:inherit modus-theme-intense-red))))
-   `(dired-async-message ((,class (:inherit modus-theme-intense-green))))
-   `(dired-async-mode-message ((,class (:inherit modus-theme-intense-cyan))))
+   `(dired-async-failures ((,class (:foreground ,red-active :weight bold))))
+   `(dired-async-message ((,class (:foreground ,green-active :weight bold))))
+   `(dired-async-mode-message ((,class (:foreground ,cyan-active))))
    `(dired-directory ((,class (:foreground ,blue :weight bold))))
    `(dired-flagged ((,class (:inherit modus-theme-intense-red))))
    `(dired-header ((,class (:foreground ,fg-main :weight bold))))
@@ -877,12 +883,12 @@ between foreground and background is >= 7:1)."
    `(mode-line-inactive ((,class (:box (:color ,bg-inactive) :background ,bg-inactive :foreground ,fg-inactive))))
    `(which-func ((,class (:foreground ,fg-main))))
    ;;;; mood-line
-   `(mood-line-modified ((,class (:background ,bg-alt :foreground ,yellow-alt))))
-   `(mood-line-status-error ((,class (:background ,bg-alt :foreground ,red :weight bold))))
-   `(mood-line-status-info ((,class (:background ,bg-alt :foreground ,blue))))
-   `(mood-line-status-neutral ((,class (:background ,bg-alt :foreground ,fg-alt))))
-   `(mood-line-status-success ((,class (:background ,bg-alt :foreground ,green))))
-   `(mood-line-status-warning ((,class (:background ,bg-alt :foreground ,yellow :weight bold))))
+   `(mood-line-modified ((,class (:foreground ,magenta-active))))
+   `(mood-line-status-error ((,class (:foreground ,red-active :weight bold))))
+   `(mood-line-status-info ((,class (:foreground ,cyan-active))))
+   `(mood-line-status-neutral ((,class (:foreground ,blue-active))))
+   `(mood-line-status-success ((,class (:foreground ,green-active))))
+   `(mood-line-status-warning ((,class (:foreground ,yellow-active :weight bold))))
    `(mood-line-unimportant ((,class (:foreground ,fg-inactive))))
    ;;;; mu4e
    `(mu4e-attach-number-face ((,class (:foreground ,cyan-alt :weight bold))))
