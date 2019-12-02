@@ -3159,6 +3159,31 @@ when reviewing my themes (=rainbow-mode= is activated manually).
   (rainbow-x-colors nil))
 #+END_SRC
 
+** Which key (key chord hints)
+   :PROPERTIES:
+   :CUSTOM_ID: h:d066905d-4c6c-4fe5-8077-e806353b8929
+   :END:
+
+By default you can receive hints for possible key chord chains by
+hitting =C-h= once you start a sequence (e.g. =C-x C-k C-h= will offer
+hints about keyboard macros).  The following package simplifies this
+step by presenting a table with the completion targets, once certain
+configurable criteria are met (a timer in my case).
+
+The "special keys" are represented by their initial letter, which is
+displayed in a differently coloured foreground than standard keys (as
+per [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
+
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :ensure t
+  :custom
+  (which-key-popup-type 'side-window)
+  (which-key-show-prefix 'echo)
+  (which-key-idle-delay 0.5)
+  (which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL")))
+#+END_SRC
+
 * Custom movements and motions
   :PROPERTIES:
   :CUSTOM_ID: h:9aa933d2-70a9-426a-aeb2-2fa21bc67d97
