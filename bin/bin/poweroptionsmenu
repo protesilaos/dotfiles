@@ -55,13 +55,14 @@ _kbd_reset_and_xmodmap() {
     [ -f "$xmod" ] && xmodmap "$xmod"
 }
 
-# Run the selected command.  The `reboot' and `poweroff' require
-# escalated privilages, unless you configure things.  Read:
+# Run the selected command.
+#
+# The `reboot' and `poweroff' require escalated privilages.  Read:
 # https://wiki.voidlinux.org/Post_Installation#Allow_users_to_shutdown_without_a_password
 case "$choice" in
-    L*) _kill_processes && bspc quit ;;
-    R*) _kill_processes && reboot    ;;
-    P*) _kill_processes && poweroff  ;;
-    X*) _kbd_reset_and_xmodmap       ;;
-    C*) bspwm_conf_reset_monitors    ;;
+    L*) _kill_processes && bspc quit      ;;
+    R*) _kill_processes && sudo reboot    ;;
+    P*) _kill_processes && sudo poweroff  ;;
+    X*) _kbd_reset_and_xmodmap            ;;
+    C*) bspwm_conf_reset_monitors         ;;
 esac
