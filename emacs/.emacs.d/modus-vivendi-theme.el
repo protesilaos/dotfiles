@@ -336,6 +336,8 @@ between foreground and background is >= 7:1)."
    `(widget-field ((,class (:background ,bg-alt :foreground ,fg-dim))))
    `(widget-inactive ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
    `(widget-single-line-field ((,class (:inherit widget-field))))
+   ;;;; column-enforce-mode
+   `(column-enforce-face ((,class (:inherit modus-theme-refine-yellow))))
    ;;;; company-mode
    `(company-echo-common ((,class (:foreground ,magenta-alt-other))))
    `(company-preview ((,class (:inherit modus-theme-intense-neutral))))
@@ -385,6 +387,9 @@ between foreground and background is >= 7:1)."
    `(deadgrep-meta-face ((,class (:foreground ,fg-alt))))
    `(deadgrep-regexp-metachar-face ((,class (:foreground ,yellow-intense :weight bold))))
    `(deadgrep-search-term-face ((,class (:foreground ,green-intense :weight bold))))
+   ;;;; define-word
+   `(define-word-face-1 ((,class (:foreground ,yellow))))
+   `(define-word-face-2 ((,class (:foreground ,fg-main))))
    ;;;; diff-hl
    `(diff-hl-change ((,class (:inherit modus-theme-intense-yellow))))
    `(diff-hl-delete ((,class (:inherit modus-theme-intense-red))))
@@ -494,6 +499,9 @@ between foreground and background is >= 7:1)."
    `(doom-modeline-unread-number ((,class (:foreground ,fg-active :slant italic))))
    `(doom-modeline-urgent ((,class (:inherit modus-theme-intense-red :weight bold))))
    `(doom-modeline-warning ((,class (:inherit modus-theme-intense-yellow :weight bold))))
+   ;;;; easy-kill
+   `(easy-kill-origin ((,class (:inherit modus-theme-subtle-red))))
+   `(easy-kill-selection ((,class (:inherit modus-theme-subtle-yellow))))
    ;;;; ediff
    `(ediff-current-diff-A ((,class (:inherit modus-theme-special-warm))))
    `(ediff-current-diff-Ancestor ((,class (:background ,bg-alt :foreground ,fg-main))))
@@ -821,6 +829,9 @@ between foreground and background is >= 7:1)."
    `(ido-only-match ((,class (:foreground ,magenta-intense :weight bold))))
    `(ido-subdir ((,class (:foreground ,blue-alt-other))))
    `(ido-virtual ((,class (:foreground ,yellow-alt-other))))
+   ;;;; iedit
+   `(iedit-occurrence ((,class (:inherit modus-theme-refine-blue))))
+   `(iedit-read-only-occurrence ((,class (:inherit modus-theme-intense-yellow))))
    ;;;; info
    `(Info-quoted ((,class (:foreground ,magenta)))) ; the capitalisation is canonical
    `(info-header-node ((,class (:foreground ,fg-special-warm))))
