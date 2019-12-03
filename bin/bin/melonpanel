@@ -357,7 +357,7 @@ _melonpanel() {
 # hexadecimal notation: 0-9, a-f, A-F.
 _melonpanel < "$melonpanel_fifo" \
     | lemonbar -b -u 1 -p -g "x${melonpanel_height}" \
-               -F "$fg_main" -B "#aa${bg_main:1}" \
+               -F "$fg_main" -B "#ff${bg_main:1}" \
                -f "$fontmain" -f "$fontbold" -n "Melonpanel" &
 
 # Hide panel when windows are in full screen mode.  This does not work
