@@ -3177,10 +3177,11 @@ per [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
   :ensure t
+  :delight
   :custom
   (which-key-popup-type 'side-window)
   (which-key-show-prefix 'echo)
-  (which-key-idle-delay 0.5)
+  (which-key-idle-delay 1.5)
   (which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL")))
 #+END_SRC
 
