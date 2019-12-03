@@ -941,9 +941,9 @@ this package declaration.
 #+BEGIN_SRC emacs-lisp
 (use-package isearch
   :init
-  (setq search-whitespace-regexp ".*")
-  ;; Or use the following for non-greedy matches
-  ;; (setq search-whitespace-regexp ".*?")
+  (setq search-whitespace-regexp ".*?")
+  ;; Or use the following for greedy matches
+  ;; (setq search-whitespace-regexp ".*")
   (setq isearch-lax-whitespace t)
   (setq isearch-regexp-lax-whitespace nil)
   :config
@@ -996,7 +996,7 @@ confines of word boundaries (e.g. multiple words)."
   ;;
   ;; :hook
   ;; (isearch-mode-end . (lambda ()
-  ;;                        (setq search-whitespace-regexp ".*")
+  ;;                        (setq search-whitespace-regexp ".*?")
   ;;                        (setq isearch-lax-whitespace t)))
 
   :bind (:map isearch-mode-map
