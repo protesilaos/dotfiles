@@ -667,6 +667,7 @@ Adding to the table above, you can always use the /universal/ =M-n= and
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
   :ensure t
+  :delight
   :custom
   (ivy-count-format "(%d/%d) ")
   (ivy-height-alist '((t lambda (_caller) (/ (window-height) 4))))
