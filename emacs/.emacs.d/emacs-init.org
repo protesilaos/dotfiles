@@ -422,8 +422,7 @@ Overview of my settings:
     to =nil=.
 + Do not restore frame configurations.  Causes problems with the way my
   themes are loaded.  Besides, window layouts are not important to me,
-  since I use the buffer-switching methods to move around (and also I
-  have configured =recentf= and =ido= to access recently-visited files).
+  since I use the buffer-switching methods to move around.
 + Ask what to do in case the session has a newer file that the one it
   initially started out with (e.g. when a new frame runs in parallel to
   the older one).
@@ -478,9 +477,8 @@ your init file.  I prefer to have that stored in a separate file.
     :END:
 
 This is a built-in mode that keeps track of the files you have opened,
-allowing you go back to them faster.  It can also integrate with Ido
-(see [[#h:8c8fd31e-b511-437a-b1b8-736274d7d6ca][Ido mode's definition]] elsewhere in this doc) through its "virtual
-buffers" interface.
+allowing you go back to them faster.  It can also integrate with a
+completion framework to populate their "virtual buffers" list.
 
 A few words about the variables I configure:
 
@@ -491,7 +489,7 @@ A few words about the variables I configure:
 + Store up to 100 items at a time.  The number is arbitrary but seems
   good enough for me to (a) find common items quickly, (b) do not keep
   track of everything I ever access.
-+ Do no prepend a number to the first ten files that appear in the
++ Do not prepend a number to the first ten files that appear in the
   dedicated =recentf= buffer (accessible via =recentf-open-files=).
 
 Now some notes on my extensions:
@@ -504,21 +502,9 @@ Now some notes on my extensions:
   ensure that only the new name is tracked, while the old is discarded.
 + The function that includes Dired buffers to the list, is extracted
   from the [[https://www.emacswiki.org/emacs/recentf-ext.el][recentf-ext file on the Emacs Wiki]].  I use this in tandem
-  with Ido's buffer's switching command and virtual buffers.  This
-  practically eliminates whatever need to a dedicated command to display
+  with my completion framework's virtual buffers.  This practically
+  eliminates whatever need for a dedicated command to display
   recently-accessed directories (dired buffers).
-+ The =contrib/ido-choose-from-recentf= is a slightly modified version
-  of the one provided by Damien Cassou in the comments section of this
-  [[https://masteringemacs.org/article/find-files-faster-recent-files-package][Mastering Emacs article]].  It uses Ido to select an item from the list,
-  while reducing the full path to the user's home directory into a
-  tilde.
-
-Finally, I am repurposing the key chord =C-x C-r=.  By default it is
-assigned to a function that opens files as read-only.  I have no use for
-that, so I am mapping it to the function that opens a =dired= buffer
-with the recent files.  Note though that if you rely on Ido, or Ido's
-virtual buffers (as I do), you can always open a transient buffer by
-pressing =TAB= or =?= while inside the Ido interface.
 
 #+BEGIN_SRC emacs-lisp
 (use-package recentf
@@ -561,38 +547,13 @@ pressing =TAB= or =?= while inside the Ido interface.
 
   (defun contrib/recentf-add-dired-directory ()
     "Include Dired buffers in the list.  Particularly useful when
-combined with Ido's ability to display virtual buffers."
+combined with a completion framework's ability to display virtual
+buffers."
     (when (and (stringp dired-directory)
                (equal "" (file-name-nondirectory dired-directory)))
-      (recentf-add-file dired-directory)))
-
-  (defun contrib/ido-choose-from-recentf ()
-    "Use ido to select a recently opened file from the
-`recentf-list'.  The full path to the user's home directory is
-truncated into a tilde."
-    (interactive)
-    (let ((home (expand-file-name (getenv "HOME"))))
-      (find-file
-       (ido-completing-read "Recentf open: "
-                            (mapcar (lambda (path)
-                                      (replace-regexp-in-string home "~" path))
-                                    recentf-list)
-                            nil t))))
-
-  (defun prot/recentf-dired-buffer ()
-    "Open the `recentf-list' inside a Dired buffer.  The buffer
-is named appropriately."
-    (interactive)
-    (dired recentf-list)
-    (rename-buffer "*Recentf Dired*"))
-  :bind (("C-x C-r" . prot/recentf-dired-buffer)
-         ("s-r" . contrib/ido-choose-from-recentf)))
+      (recentf-add-file dired-directory))))
 #+END_SRC
 
-**** TODO uniquify duplicates in Ido virtual buffers?
-     :PROPERTIES:
-     :CUSTOM_ID: h:5763aa84-0ce4-4673-8915-1f999a5ae4c8
-     :END:
 *** Minibuffer
     :PROPERTIES:
     :CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
@@ -661,209 +622,105 @@ the optimal way of using Emacs is through searching and narrowing
 selection candidates.  Spend less time worrying about where things are
 on the screen and more on how fast you can bring them into focus.
 
-I have made some changes since that video was published.  Namely,
-reverting to the built-in =ido-mode= instead of Ivy and friends.
-
-*** Ido (interactively do things)
+*** Ivy/Counsel/Swiper
     :PROPERTIES:
-    :CUSTOM_ID: h:8c8fd31e-b511-437a-b1b8-736274d7d6ca
+    :CUSTOM_ID: h:d76e14b0-2002-4efa-8fef-cb3cd42d3d80
     :END:
 
-/I have a [[https://protesilaos.com/codelog/2019-09-09-emacs-ido-features/][video demo about IDO]]./
+This is a suite of tools that enhance several aspects of the Emacs
+experience.  =ivy= is the mechanism that handles all selection lists.
+=swiper= is a tool for performing searches, powered by Ivy.  Similarly,
+=counsel= provides a set of functions for navigating the file system,
+switching buffers, etc. all using Ivy in the background.
 
-This is the built-in framework for interactively narrowing down the
-list of matching candidates when performing a relevant search.  Ido
-underpins functions such as those that change buffers, navigate the
-filesystem, query for help…  I used to be an Ivy user, but have found
-that Ido is just as good for my case.  Plus, I prefer its default
-horizontal layout.  Simple and effective.
+A few highlights of my configurations (thus far):
 
-Here is an overview of my configurations:
++ =ivy-height-alist= governs the maximum width of the Ivy window to 1/4
+  of the viewport.
++ =ivy-virtual-buffers= populates buffer-switching lists with items from
+  the =recentf= utility.  In practice, a recently killed buffer can
+  still be accessed from =counsel-switch-buffer= as if the kill had
+  never occured.
++ =ivy-re-builders-list= allows us to specify the algorithm for matching
+  candidates.  Unless specified, I am using flexible matching by
+  default.
++ I only use =swiper= when I am not sure whether the item I am looking
+  for is before or after the point.  It also is useful for cases where a
+  long list of matches is expected.
 
-+ Use =ido-mode= and make sure it runs everywhere it can.
-+ Enable "flexible matching".  If there is no matching string of
-  adjacent characters, Ido will instead search for any item containing
-  the characters in their given sequence even if they are not
-  positioned directly next to each other.  Their sequence is all that
-  matters.
-+ Also disable regexp and prefix matching by default.  These can be
-  toggled on at any moment with =C-t= or =C-p= respectively (read
-  below for more key bindings).
-+ Only consider the current frame.  I seldom use more than one (recall
-  that what Emacs calls "frames" is what window managers call
-  "windows").
-+ Create a buffer with completion candidates (manually invoke it with
-  "?" after having typed a search), but do not place all completions
-  there—just the current list of matches.
-+ No need to confirm anything when there is a unique match.
-+ Create a buffer when there is no match for the given search.  Ask for
-  confirmation.  This is great for producing a scratch-like buffer,
-  whose contents can then be saved with =C-x C-s= or =C-x C-w=.
-+ By default open matching buffers and files in the selected window.
-  I use separate commands for doing the same for the "other window".
-  By default, these are always accessed via =C-x 4=.
-+ Keep track of selected directories (recall that navigating history
-  is done with =M-n= and =M-p=).
-+ Do not try to guess whether the symbol at point is a file name.
-  This gives many false positives and consequently hampers the
-  commands for filesystem navigation.
-+ Same for URLs.
-+ Use "virtual buffers" (e.g. recent files without a current buffer).  I
-  also have a separate key binding for that (see my =use-package=
-  [[#h:5723c4bb-ff6c-449f-bb60-be66fab3f137][declaration for recentf]]).
-+ Allow the theme's styles for Ido.  I have configured those in my
-  Modus themes (defined elsewhere in this document).
-+ Keep the prompt to a single line.  I find that a horizontal layout
-  that spans multiple lines is counter-productive.  One line is nice
-  and simple.  We are anyhow going to narrow down the list of
-  candidates by typing a search.  The =:hook= for the minibuffer ensures
-  that this aesthetic is not anyhow interfered with.
-+ As for =ido-decorations= it is better you search for its help buffer
-  with =C-h v ido-decorations RET=.  Basically, I tweak it to have
-  less visual noise.
-+ Do not allow Ido to employ its "merge" functionality.  What that does
-  is to automatically switch directory if the file name you type in does
-  not exist in the current directory but is available in some other
-  place you recently visited.  This makes it difficult to just create a
-  new file.  By the by, when using =ido-find-file= you can always just
-  confirm the inserted text with =C-j=.
+And here are some 'hidden' key bindings for making the most out of Ivy
+(find more in the official manual).
 
-Then I just bind some common commands to the Super key.  Where you see
-a capital letter, it means Super-Shift-KEY.  For a complete overview
-of some useful key bindings, type =C-h f ido-find-file RET=.  The
-bindings I define in =ido-common-completion-map= are for consistency
-with their equivalents in =isearch=.
+| Key     | Function                | Description                                 |
+|---------+-------------------------+---------------------------------------------|
+| M-o     | ivy-dispatching-done    | Show actions for current match.             |
+| C-c C-o | ivy-occur               | Place the list in a standalone buffer.      |
+| C-M-m   | ivy-call                | Run command, keep minibuffer open.          |
+| M-i     | ivy-insert-current      | Insert match in the prompt.                 |
+| M-j     | ivy-yank-word           | Put word at point in the minibuffer prompt. |
+| S-SPC   | ivy-restrict-to-matches | Restrict list to prompt (and search anew).  |
+
+Adding to the table above, you can always use the /universal/ =M-n= and
+=M-p= to cycle through the history of entries.
 
 #+BEGIN_SRC emacs-lisp
-(use-package ido
+(use-package ivy
+  :ensure t
   :custom
-  (ido-everywhere t)
-  (ido-enable-flex-matching t)
-  (ido-enable-regexp nil)
-  (ido-enable-prefix nil)
-  (ido-all-frames nil)
-  (ido-buffer-disable-smart-matches t)
-  (ido-completion-buffer "*Ido Completions*")
-  (ido-completion-buffer-all-completions nil)
-  (ido-confirm-unique-completion nil)
-  (ido-create-new-buffer 'prompt)
-  (ido-default-buffer-method 'selected-window)
-  (ido-default-file-method 'selected-window)
-  (ido-enable-last-directory-history t)
-  (ido-use-filename-at-point nil)
-  (ido-use-url-at-point nil)
-  (ido-use-virtual-buffers t)
-  (ido-use-faces t)
-  (ido-max-window-height 1)
-  (ido-decorations
-   '(" "
-     "   "
-     " | "
-     " | …"
-     "["
-     "]"
-     " [No match]"
-     " [Matched]"
-     " [Not readable]"
-     " [Too big]"
-     " [Confirm]"
-     " "
-     " "))
-  (ido-auto-merge-work-directories-length -1)
+  (ivy-count-format "(%d/%d) ")
+  (ivy-height-alist '((t lambda (_caller) (/ (window-height) 4))))
+  (ivy-use-virtual-buffers t)
+  (ivy-wrap nil)
+  (ivy-re-builders-alist
+   '((counsel-describe-function . ivy--regex-plus)
+     (counsel-describe-variable . ivy--regex-plus)
+     (swiper . ivy--regex-plus)
+     (t . ivy--regex-fuzzy)))
+  (ivy-display-style 'fancy)
   :config
-  (ido-mode 1)
+  (ivy-mode 1)
+  :bind (("<s-up>" . ivy-push-view)
+		 ("<s-down>" . ivy-switch-view)
+         :map ivy-occur-mode-map
+         ("f" . forward-char)
+         ("b" . backward-char)
+         ("n" . ivy-occur-next-line)
+         ("p" . ivy-occur-previous-line)
+         ("<C-return>" . ivy-occur-press))
   :hook
-  (minibuffer-setup . (lambda ()
-                        (visual-line-mode 1)
-                        (setq-local truncate-lines nil)
-                        (setq-local resize-mini-windows nil)
-                        (setq-local max-mini-window-height 1)))
-  :bind (("s-f" . ido-find-file)
-         ("s-F" . ido-find-file-other-window)
-         ("s-d" . ido-dired)
-         ("s-D" . ido-dired-other-window)
-         ("s-b" . ido-switch-buffer)
-         ("s-B" . ido-switch-buffer-other-window)
-         :map ido-common-completion-map
-         ("M-e" . ido-edit-input)
-         ("M-r" . ido-toggle-regexp)))
-#+END_SRC
+  (ivy-occur-mode . hl-line-mode))
 
-The following ensures that Ido mode is implemented in as many places
-as possible.  I am not sure what is not covered by it, but so far
-every relevant interface provides Ido-style matching.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ido-completing-read+
+(use-package counsel
   :ensure t
-  :after ido
-  :config
-  (ido-ubiquitous-mode 1))
-#+END_SRC
-
-*** amx (minibuffer support for ido)
-    :PROPERTIES:
-    :CUSTOM_ID: h:c63623f6-d29a-4963-921e-1464a87c978c
-    :END:
-
-This package implements Ido-style completion for the =M-x= prompt,
-plus a nice scoring algorithm as well as a history of recent commands.
-Surprisingly simple and powerful.
-
-Note that =amx= can show the key bindings that are associated with a
-given function.  I keep it disabled because it (a) clutters the
-interface and (b) can cause a noticeable delay, according to its
-documentation.
-
-#+BEGIN_SRC emacs-lisp
-(use-package amx
-  :ensure t
-  :after (ido ido-completing-read+)
-  :init
-  (setq amx-backend 'ido)
-  (setq amx-save-file "~/.emacs.d/amx-items")
-  (setq amx-history-length 10)
-  (setq amx-show-key-bindings nil)
-  :config
-  (amx-mode 1))
-#+END_SRC
-
-*** Icomplete (disabled fallback option)
-    :PROPERTIES:
-    :CUSTOM_ID: h:3e5dbf08-9ec4-4aa2-ae97-e7e432a8c0c3
-    :END:
-
-There is another built-in tool, which is older and less capable (as
-far as I can tell), which can be used as a fallback for those cases
-where both ido and amx cannot get the job done.  Not sure what those
-cases would be, so I just keep this here /disabled/ until I have a
-better understanding of it.
-
-In my initial tests, =icomplete= will populate things that do not need
-Ido completion, such as renaming and copying files in Dired.  It also
-creates visual inconsistencies, as it does not inherit the custom
-value I pass to =ido-decorations=.
-
-#+BEGIN_SRC emacs-lisp
-(use-package icomplete
-  :disabled
+  :after ivy
   :custom
-  (icomplete-show-matches-on-no-input t)
-  (icomplete-hide-common-prefix nil)
-  (icomplete-prospects-height 1)
-  (completion-styles '(basic partial-completion substring))
-  (completion-category-overrides '((file (styles basic substring))))
-  (read-file-name-completion-ignore-case t)
-  (read-buffer-completion-ignore-case t)
-  (completion-ignore-case t)
-  :config
-  (icomplete-mode 1)
-  :bind (("s-f" . find-file)
-         ("s-F" . find-file-other-window)
-         ("s-d" . dired)
-         ("s-D" . dired-other-window)
-         ("s-b" . switch-buffer)
-         ("s-B" . switch-buffer-other-window)))
+  (counsel-yank-pop-preselect-last t)
+  (counsel-yank-pop-separator "\n—————————\n")
+  :bind (("M-x" . counsel-M-x)
+		 ("C-x C-f" . counsel-find-file)
+		 ("s-f" . counsel-find-file)
+		 ("s-F" . find-file-other-window)
+		 ("C-x b" . counsel-switch-buffer)
+		 ("s-b" . counsel-switch-buffer)
+		 ("C-x B" . counsel-switch-buffer-other-window)
+		 ("s-B" . counsel-switch-buffer-other-window)
+		 ("C-x d" . counsel-dired)
+		 ("C-x C-r" . counsel-buffer-or-recentf)
+		 ("s-r" . counsel-buffer-or-recentf)
+		 ("s-y" . counsel-yank-pop)
+         ("C-h f" . counsel-describe-function)
+         ("C-h v" . counsel-describe-variable)
+		 :map ivy-minibuffer-map
+		 ("s-y" . ivy-next-line)))
+
+(use-package swiper
+  :ensure t
+  :after ivy
+  :custom
+  (swiper-action-recenter t)
+  (swiper-goto-start-of-match t)
+  (swiper-include-line-number-in-search t)
+  :bind (("C-S-s" . swiper)))
 #+END_SRC
 
 ** isearch enhancements
@@ -1322,15 +1179,9 @@ switch to a terminal emulator.
 Magit has good defaults.  I only found a few things that I would like to
 customise, which I do in the following package declarations.
 
-For Magit itself, I just make sure it interfaces with =ido-mode= where
-appropriate, and define a few global key bindings for it.  The one I use
-the most is =s-g= (involves the Super key).
-
 #+BEGIN_SRC emacs-lisp
 (use-package magit
   :ensure t
-  :custom
-  (magit-completing-read-function 'magit-ido-completing-read)
   :bind (("C-c g" . magit-status)
          ("s-g" . magit-status)))
 #+END_SRC
@@ -1380,9 +1231,6 @@ This tool allows us to determine a directory tree with our "projects".
 In my case, these are all git repositories.  It is then possible to
 perform a set of actions on a per-project level.
 
-In terms of integration, I am adding an extension to it which leverages
-the =ido= [[#h:8c8fd31e-b511-437a-b1b8-736274d7d6ca][framework I am already using]].
-
 The =:delight= statement customises the minor mode's presentation to
 only show the project's name.  For non-project buffers, a dash appears
 instead.
@@ -1398,7 +1246,7 @@ chords.  You can learn about them with =C-c p C-h= (so append =C-h=).
   (setq projectile-project-search-path '("~/Git/Projects/"))
   (setq projectile-indexing-method 'alien)
   (setq projectile-enable-caching t)
-  (setq projectile-completion-system 'ido)
+  (setq projectile-completion-system 'ivy)
   :config
   (projectile-mode 1)
   :bind (("C-c p" . projectile-command-map)))
@@ -1785,8 +1633,8 @@ Install it on Void Linux with =xbps-install -S pass=.
 
 The package below provides an Emacs interface to some of the most common
 actions, in the form of a list of candidates that can be narrowed down
-(such as with Ido).  I use it to quickly store a password to the kill
-ring.
+(such as with Ivy, Ido).  I use it to quickly store a password to the
+kill ring.
 
 #+BEGIN_SRC emacs-lisp
 (use-package password-store
