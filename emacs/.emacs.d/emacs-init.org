@@ -646,6 +646,8 @@ A few highlights of my configurations (thus far):
 + I only use =swiper= when I am not sure whether the item I am looking
   for is before or after the point.  It also is useful for cases where a
   long list of matches is expected.
++ The =amx= package enhances the minibuffer experience, by tracking the
+  history of commands and ranking them automagically.
 
 And here are some 'hidden' key bindings for making the most out of Ivy
 (find more in the official manual).
@@ -678,6 +680,8 @@ Adding to the table above, you can always use the /universal/ =M-n= and
   (ivy-display-style 'fancy)
   :config
   (ivy-mode 1)
+  :hook
+  (ivy-occur-mode . hl-line-mode)
   :bind (("<s-up>" . ivy-push-view)
 		 ("<s-down>" . ivy-switch-view)
          :map ivy-occur-mode-map
@@ -685,13 +689,22 @@ Adding to the table above, you can always use the /universal/ =M-n= and
          ("b" . backward-char)
          ("n" . ivy-occur-next-line)
          ("p" . ivy-occur-previous-line)
-         ("<C-return>" . ivy-occur-press))
-  :hook
-  (ivy-occur-mode . hl-line-mode))
+         ("<C-return>" . ivy-occur-press)))
+
+(use-package amx
+  :ensure t
+  :after ivy
+  :custom
+  (amx-backend 'auto)
+  (amx-save-file "~/.emacs.d/amx-items")
+  (amx-history-length 10)
+  (amx-show-key-bindings nil)
+  :config
+  (amx-mode 1))
 
 (use-package counsel
   :ensure t
-  :after ivy
+  :after (ivy amx)
   :custom
   (counsel-yank-pop-preselect-last t)
   (counsel-yank-pop-separator "\n—————————\n")
