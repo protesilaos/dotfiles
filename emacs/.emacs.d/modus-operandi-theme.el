@@ -243,7 +243,7 @@ between foreground and background is >= 7:1)."
    `(fringe ((,class (:inherit default))))
    ;;;; basic and/or ungrouped styles
    `(diary ((,class (:foreground ,yellow))))
-   `(error ((,class (:background ,bg-main :foreground ,red-intense :weight bold))))
+   `(error ((,class (:foreground ,red :weight bold))))
    `(escape-glyph ((,class (:inherit modus-theme-refine-blue :weight bold))))
    `(header-line ((,class (:background ,bg-alt :foreground ,fg-alt))))
    `(homoglyph ((,class (:foreground ,yellow-alt-other))))
@@ -257,9 +257,9 @@ between foreground and background is >= 7:1)."
    `(mm-uu-extract ((,class (:inherit modus-theme-refine-yellow))))
    `(next-error ((,class (:inherit modus-theme-subtle-red))))
    `(shadow ((,class (:foreground ,fg-alt))))
-   `(success ((,class (:background ,bg-main :foreground ,green-intense :weight bold))))
+   `(success ((,class (:foreground ,green :weight bold))))
    `(trailing-whitespace ((,class (:background ,red-alt))))
-   `(warning ((,class (:background ,bg-main :foreground ,yellow-intense :weight bold))))
+   `(warning ((,class (:foreground ,yellow :weight bold))))
    ;;;; all-the-icons
    `(all-the-icons-blue ((,class (:foreground ,blue))))
    `(all-the-icons-blue-alt ((,class (:foreground ,blue-alt))))
@@ -880,6 +880,10 @@ between foreground and background is >= 7:1)."
    `(ivy-subdir ((,class (:foreground ,blue-alt-other))))
    `(ivy-virtual ((,class (:foreground ,magenta-alt-other))))
    `(ivy-yanked-word ((,class (:inherit modus-theme-refine-blue))))
+   ;;;; ivy-posframe
+   `(ivy-posframe ((,class (:background ,bg-alt :foreground ,fg-main))))
+   `(ivy-posframe-border ((,class (:inherit default :background ,fg-main))))
+   `(ivy-posframe-cursor ((,class (:inherit cursor))))
    ;;;; line numbers (display-line-numbers-mode and global variant)
    `(line-number ((,class (:background ,bg-alt :foreground ,fg-alt))))
    `(line-number-current-line ((,class (:background ,bg-active :foreground ,fg-active :weight bold))))
