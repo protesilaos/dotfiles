@@ -142,4 +142,4 @@ fi
 _check feh && "$HOME"/.fehbg &
 
 # Start the simple display compositor.  See `xcompmgr --help'.
-xcompmgr -cCfF -t -2 -l -2 -r 3.2 -o 0.55 -D 5 &
+xcompmgr -cCfF -t -2 -l -2 -r 2.8 -o 0.55 -D 5 &
