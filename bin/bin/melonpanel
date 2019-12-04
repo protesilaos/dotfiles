@@ -61,8 +61,8 @@ bg_alt="#181a20"
 fg_main="#ffffff"
 fg_alt="#a8a8a8"
 red="#ff8059"
-green="#44bc44"
-yellow="#eecc00"
+green="#58dd13"
+yellow="#f0ce43"
 
 # Fonts (upstream lemonbar only supports bitmap fonts)
 # ----------------------------------------------------
