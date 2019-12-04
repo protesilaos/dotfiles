@@ -704,6 +704,8 @@ Adding to the table above, you can always use the /universal/ =M-n= and
 		 ("C-x B" . counsel-switch-buffer-other-window)
 		 ("s-B" . counsel-switch-buffer-other-window)
 		 ("C-x d" . counsel-dired)
+		 ("s-d" . counsel-dired)
+		 ("s-D" . dired-other-window)
 		 ("C-x C-r" . counsel-buffer-or-recentf)
 		 ("s-r" . counsel-buffer-or-recentf)
 		 ("s-y" . counsel-yank-pop)
@@ -924,9 +926,7 @@ The options here are meant to do the following:
   (dired-dwim-target t)
   :hook
   (dired-mode . dired-hide-details-mode)
-  (dired-mode . hl-line-mode)
-  :bind (("s-d" . dired)
-         ("s-D" . dired-other-window)))
+  (dired-mode . hl-line-mode))
 
 (use-package find-dired
   :after dired
