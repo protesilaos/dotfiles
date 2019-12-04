@@ -191,11 +191,15 @@ between foreground and background is >= 7:1)."
 
       ;; conditional styles that evaluate user-facing customisation
       ;; options
-      (modus-theme-slant (if modus-operandi-theme-slanted-constructs
-                             'italic 'normal))
+      (modus-theme-slant
+       (if modus-operandi-theme-slanted-constructs
+           'italic
+         'normal))
 
-      (modus-theme-variable-pitch (if modus-operandi-theme-proportional-fonts
-                                      'variable-pitch 'default)))
+      (modus-theme-variable-pitch
+       (if modus-operandi-theme-proportional-fonts
+           'variable-pitch
+         'default)))
   (custom-theme-set-faces
    'modus-operandi
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -844,10 +848,10 @@ between foreground and background is >= 7:1)."
    `(info-index-match ((,class (:inherit match))))
    ;;;; isearch, occur, and the like
    `(isearch ((,class (:inherit modus-theme-intense-green :weight bold))))
-   `(isearch-fail ((,class (:inherit modus-theme-subtle-red))))
-   `(lazy-highlight ((,class (:inherit modus-theme-subtle-green))))
+   `(isearch-fail ((,class (:inherit modus-theme-subtle-red :weight bold))))
+   `(lazy-highlight ((,class (:inherit modus-theme-subtle-cyan))))
    `(match ((,class (:inherit modus-theme-intense-blue))))
-   `(query-replace ((,class (:inherit isearch))))
+   `(query-replace ((,class (:inherit modus-theme-refine-yellow :weight bold))))
    ;;;; info pages (help pages)
    `(info-header-node ((,class ((:weight bold)))))
    `(info-menu-star ((,class (:inherit default))))
@@ -858,9 +862,9 @@ between foreground and background is >= 7:1)."
    `(ivy-confirm-face ((,class (:foreground ,cyan))))
    `(ivy-current-match ((,class (:inherit modus-theme-special-mild :weight bold :underline t))))
    `(ivy-cursor ((,class (:inherit cursor))))
-   `(ivy-grep-info ((,class (:foreground ,green :weight bold))))
+   `(ivy-grep-info ((,class (:foreground ,cyan-alt))))
    `(ivy-grep-line-number ((,class (:inherit line-number))))
-   `(ivy-highlight-face ((,class (:inherit modus-theme-special-warm))))
+   `(ivy-highlight-face ((,class (:foreground ,magenta))))
    `(ivy-match-required-face ((,class (:inherit error))))
    `(ivy-minibuffer-match-face-1 ((,class (:inherit modus-theme-subtle-neutral))))
    `(ivy-minibuffer-match-face-2 ((,class (:inherit modus-theme-subtle-green))))
@@ -868,7 +872,7 @@ between foreground and background is >= 7:1)."
    `(ivy-minibuffer-match-face-4 ((,class (:inherit modus-theme-subtle-green))))
    `(ivy-minibuffer-match-highlight ((,class (:inherit modus-theme-subtle-blue :weight bold))))
    `(ivy-modified-buffer ((,class (:foreground ,yellow :slant ,modus-theme-slant))))
-   `(ivy-modified-buffer ((,class (:foreground ,yellow-alt :slant ,modus-theme-slant))))
+   `(ivy-modified-outside-buffer ((,class (:foreground ,yellow-alt :slant ,modus-theme-slant))))
    `(ivy-org ((,class (:foreground ,cyan-alt-other))))
    `(ivy-prompt-match ((,class (:inherit ivy-current-match))))
    `(ivy-remote ((,class (:foreground ,magenta))))
@@ -1163,7 +1167,7 @@ between foreground and background is >= 7:1)."
    `(org-upcoming-deadline ((,class (:foreground ,red-alt-other))))
    `(org-verbatim ((,class (:background ,bg-dim :foreground ,fg-special-warm))))
    `(org-verse ((,class (:inherit org-quote))))
-   `(org-warning ((,class (:inherit modus-theme-refine-red :weight bold))))
+   `(org-warning ((,class (:background ,bg-alt :foreground ,yellow-alt-other :weight bold))))
    ;;;; outline-mode
    `(outline-1 ((,class (:inherit org-level-1))))
    `(outline-2 ((,class (:inherit org-level-2))))
