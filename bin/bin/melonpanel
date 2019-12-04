@@ -117,7 +117,7 @@ _battery() {
     # minus sign.
     case "$status" in
         'C')
-            echo "$label %{F$green}${output}+%{F-}"
+            echo "%{F$fg_alt}${label}%{F-} %{F$green}${output}+%{F-}"
             ;;
         'D')
             case "${output%?}" in
@@ -125,12 +125,12 @@ _battery() {
                     echo "%{B$yellow}%{F$bg_main} $label ${output}- %{F-}%{B-}"
                     ;;
                 *)
-                    echo "$label %{F$yellow}${output}-%{F-}"
+                    echo "%{F$fg_alt}${label}%{F-} %{F$yellow}${output}-%{F-}"
                     ;;
             esac
             ;;
         *)
-            echo "$label ${output}"
+            echo "%{F$fg_alt}${label}%{F-} ${output}"
             ;;
     esac
 }
@@ -153,10 +153,10 @@ _temperature() {
     # indicator red.
     case "$output" in
         [12345][0-9])
-            echo "$label ${output}°C"
+            echo "%{F$fg_alt}${label}%{F-} ${output}°C"
             ;;
         [67][0-9])
-            echo "$label %{F$red}${output}°C%{F-}"
+            echo "%{F$fg_alt}${label}%{F-} %{F$red}${output}°C%{F-}"
             ;;
         *)
             echo "%{F$bg_main}%{B$red} $label ${output}°C %{B-}%{F-}"
@@ -177,8 +177,8 @@ _volume() {
     output="${status%,*}"
 
     case "${status#*%}" in
-        'off') echo "$label $output (Muted)" ;;
-        *)     echo "$label $output"         ;;
+        'off') echo "%{F$fg_alt}${label}%{F-} $output (Muted)" ;;
+        *)     echo "%{F$fg_alt}${label}%{F-} $output"         ;;
     esac
 }
 
@@ -208,7 +208,7 @@ _datetime() {
     label='D:'
     output="$(date +'%a %-d %b %H:%M')"
 
-    echo "$label $output"
+    echo "%{F$fg_alt}${label}%{F-} $output"
 }
 
 # Include all modules in a single infinite loop that iterates every
