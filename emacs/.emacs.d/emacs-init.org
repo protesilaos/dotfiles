@@ -559,8 +559,7 @@ buffers."
     :CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
     :END:
 
-Keeps a record of actions involving the minibuffer.  Used by
-=icomplete= (see [[#h:3e5dbf08-9ec4-4aa2-ae97-e7e432a8c0c3][its definition elsewhere]] in this document).
+Keeps a record of actions involving the minibuffer.
 
 #+BEGIN_SRC emacs-lisp
 (use-package savehist
