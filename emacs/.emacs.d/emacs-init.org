@@ -697,7 +697,7 @@ Adding to the table above, you can always use the /universal/ =M-n= and
   :custom
   (amx-backend 'auto)
   (amx-save-file "~/.emacs.d/amx-items")
-  (amx-history-length 10)
+  (amx-history-length 50)
   (amx-show-key-bindings nil)
   :config
   (amx-mode 1))
@@ -725,7 +725,8 @@ Adding to the table above, you can always use the /universal/ =M-n= and
          ("C-h f" . counsel-describe-function)
          ("C-h v" . counsel-describe-variable)
 		 :map ivy-minibuffer-map
-		 ("s-y" . ivy-next-line)))
+		 ("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
+         ("C-SPC" . ivy-restrict-to-matches)))
 
 (use-package swiper
   :ensure t
