@@ -627,27 +627,37 @@ on the screen and more on how fast you can bring them into focus.
     :END:
 
 This is a suite of tools that enhance several aspects of the Emacs
-experience.  =ivy= is the mechanism that handles all selection lists.
-=swiper= is a tool for performing searches, powered by Ivy.  Similarly,
-=counsel= provides a set of functions for navigating the file system,
-switching buffers, etc. all using Ivy in the background.
+experience.  Basically we have:
 
-A few highlights of my configurations (thus far):
++ =ivy= is the mechanism that handles all selection lists, narrowing
+  them down using a variety of possible builders (regular expressions of
+  flexible matching).  It also provides a base interface for any
+  function that needs to receive input based on a list of candidates.
++ =counsel= provides a superset of functions for navigating the file
+  system, switching buffers, etc. that expand on the basic features
+  supported by Ivy.  For instance, switching buffers with Counsel offers
+  a preview of their contents in the window, whereas regular Ivy does
+  not.
++ =swiper= is a tool for performing searches, powered by Ivy, all while
+  presenting a preview of the results.
+
+**** Configurations for Ivy
+     :PROPERTIES:
+     :CUSTOM_ID: h:ba8cd15e-97b8-40e1-804e-2badaca14c1d
+     :END:
+
+A few highlights of my configurations in the subsequent code block:
 
 + =ivy-height-alist= governs the maximum width of the Ivy window to 1/4
-  of the viewport.
+  of the viewport.  I prefer this over an absolute number as I work on
+  monitors with varying dimensions.
 + =ivy-virtual-buffers= populates buffer-switching lists with items from
   the =recentf= utility.  In practice, a recently killed buffer can
   still be accessed from =counsel-switch-buffer= as if the kill had
   never occured.
 + =ivy-re-builders-list= allows us to specify the algorithm for matching
-  candidates.  Unless specified, I am using flexible matching by
-  default.
-+ I only use =swiper= when I am not sure whether the item I am looking
-  for is before or after the point.  It also is useful for cases where a
-  long list of matches is expected.
-+ The =amx= package enhances the minibuffer experience, by tracking the
-  history of commands and ranking them automagically.
+  candidates.  Unless specified otherwise, I am using flexible matching
+  by default.
 
 And here are some 'hidden' key bindings for making the most out of Ivy
 (find more in the official manual).
@@ -660,6 +670,7 @@ And here are some 'hidden' key bindings for making the most out of Ivy
 | M-i     | ivy-insert-current      | Insert match in the prompt.                 |
 | M-j     | ivy-yank-word           | Put word at point in the minibuffer prompt. |
 | S-SPC   | ivy-restrict-to-matches | Restrict list to prompt (and search anew).  |
+| C-SPC   | ivy-restrict-to-matches | My alias for the above.                     |
 
 Adding to the table above, you can always use the /universal/ =M-n= and
 =M-p= to cycle through the history of entries.
@@ -674,9 +685,7 @@ Adding to the table above, you can always use the /universal/ =M-n= and
   (ivy-use-virtual-buffers t)
   (ivy-wrap nil)
   (ivy-re-builders-alist
-   '((counsel-describe-function . ivy--regex-plus)
-     (counsel-describe-variable . ivy--regex-plus)
-     (swiper . ivy--regex-plus)
+   '((swiper . ivy--regex-plus)
      (t . ivy--regex-fuzzy)))
   (ivy-display-style 'fancy)
   :config
@@ -691,7 +700,20 @@ Adding to the table above, you can always use the /universal/ =M-n= and
          ("n" . ivy-occur-next-line)
          ("p" . ivy-occur-previous-line)
          ("<C-return>" . ivy-occur-press)))
+#+END_SRC
 
+**** AMX (M-x history and matches)
+     :PROPERTIES:
+     :CUSTOM_ID: h:0ec97e10-e18d-4313-8f7b-3a202324d74c
+     :END:
+
+The =amx= package enhances the minibuffer experience, by tracking the
+history of commands and ranking them automagically.  I once thought it
+was only meant to be used with Ido, but upon closer inspection I
+realised otherwise.  Great!  Counsel leverages AMX's features
+without any further intervention.
+
+#+BEGIN_SRC emacs-lisp
 (use-package amx
   :ensure t
   :after ivy
@@ -702,7 +724,27 @@ Adding to the table above, you can always use the /universal/ =M-n= and
   (amx-show-key-bindings nil)
   :config
   (amx-mode 1))
+#+END_SRC
 
+**** Counsel configurations and key bindings
+     :PROPERTIES:
+     :CUSTOM_ID: h:919f942a-f99d-437f-b010-af21264246f3
+     :END:
+
+Recall that =counsel-M-x= benefits from =amx=, as noted in the
+subsection above.
+
+With regard to key bindings, notice that Counsel's implementation for
+switching buffers will preview the currently matched item.  This is
+particularly distracting when running it for the current window.  For
+that case I use the generic Ivy method.  I am okay with Counsel's
+approach when operating on the other window.
+
+As for =counsel-yank-pop-separator=, its value is a series of em dashes
+with a newline character at either end.  This creates a nice separator
+line when browsing the kill ring (=counsel-yank-pop=).
+
+#+BEGIN_SRC emacs-lisp
 (use-package counsel
   :ensure t
   :after (ivy amx)
@@ -713,22 +755,42 @@ Adding to the table above, you can always use the /universal/ =M-n= and
 		 ("C-x C-f" . counsel-find-file)
 		 ("s-f" . counsel-find-file)
 		 ("s-F" . find-file-other-window)
-		 ("C-x b" . counsel-switch-buffer)
-		 ("s-b" . counsel-switch-buffer)
+		 ("C-x b" . ivy-switch-buffer)
+		 ("s-b" . ivy-switch-buffer)
 		 ("C-x B" . counsel-switch-buffer-other-window)
 		 ("s-B" . counsel-switch-buffer-other-window)
 		 ("C-x d" . counsel-dired)
 		 ("s-d" . counsel-dired)
 		 ("s-D" . dired-other-window)
-		 ("C-x C-r" . counsel-buffer-or-recentf)
-		 ("s-r" . counsel-buffer-or-recentf)
+		 ("C-x C-r" . counsel-recentf)
+		 ("s-r" . counsel-recentf)
 		 ("s-y" . counsel-yank-pop)
          ("C-h f" . counsel-describe-function)
          ("C-h v" . counsel-describe-variable)
 		 :map ivy-minibuffer-map
 		 ("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
          ("C-SPC" . ivy-restrict-to-matches)))
+#+END_SRC
 
+**** Swiper
+     :PROPERTIES:
+     :CUSTOM_ID: h:8b7f982b-911f-4437-a448-b7288855fbda
+     :END:
+
+This probably is my least used tool out of the set: I only resort to
+=swiper= when I am not sure whether the item I am looking for is before
+or after the point.  It also is useful for cases where a long list of
+matches is expected.
+
+I think it does not provide a replacement for regular =isearch= because
+that can be used to quickly jump to a character, whereas Swiper's
+expanded preview can make the interface jump around unnecessarily.
+
+Furthermore, the fact that Swiper searches using regular expressions by
+default is no real upside in my case, since I have already "hacked"
+=isearch= to do the same (see [[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][isearch enhancements]]).
+
+#+BEGIN_SRC emacs-lisp
 (use-package swiper
   :ensure t
   :after ivy
@@ -737,6 +799,61 @@ Adding to the table above, you can always use the /universal/ =M-n= and
   (swiper-goto-start-of-match t)
   (swiper-include-line-number-in-search t)
   :bind (("C-S-s" . swiper)))
+#+END_SRC
+
+*** Ivy extensions
+    :PROPERTIES:
+    :CUSTOM_ID: h:93cb57d4-b4ea-4431-8a95-f0437bc4206f
+    :END:
+
+These tools build on the foundation of Ivy and friends.
+
+**** Ivy rich
+     :PROPERTIES:
+     :CUSTOM_ID: h:fe6839a7-f6cd-48c8-bf6e-d4d8519d02fc
+     :END:
+
+With this package we can make good use of the plenty of empty space left
+by Ivy's default presentation of its items.  It enhances several
+commands, providing each of them with additional information that is
+pertinent to the task at hand.  For example, =M-x= contains function
+descriptions, while the buffer list includes information about the major
+mode and file system path of the items.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-rich
+  :ensure t
+  :config
+  (setcdr (assq t ivy-format-functions-alist)
+          #'ivy-format-function-line)
+  (ivy-rich-mode 1))
+#+END_SRC
+
+**** Ivy posframe
+     :PROPERTIES:
+     :CUSTOM_ID: h:fe69c898-3d58-4c7f-a870-3cc1b9ac438c
+     :END:
+
+This package allows us to reposition Ivy's window anywhere inside of the
+Emacs frame.  Furthermore, it is possible to use this feature on a
+per-command basis, all while assigning a different height to each list.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-posframe
+  :ensure t
+  :delight
+  :custom
+  (ivy-posframe-height-alist
+   '((swiper . 15)
+     (t . 10)))
+  (ivy-posframe-display-functions-alist
+   '((complete-symbol . ivy-posframe-display-at-point)
+     (counsel-describe-function . nil)
+     (counsel-describe-variable . nil)
+     (swiper . nil)
+     (t . ivy-posframe-display-at-frame-center)))
+  :config
+  (ivy-posframe-mode 1))
 #+END_SRC
 
 ** isearch enhancements
