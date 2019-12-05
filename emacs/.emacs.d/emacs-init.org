@@ -2645,8 +2645,8 @@ The themes are available on MELPA as /standalone packages/ as of
 December 1, 2019.  I did it that way instead of distributing them as a
 single package because I know that people tend to use one or the other.
 And also due to the fact that one is not a prerequisite for the other.
-I personally use both, switching between the two depending on the
-ambient light in my room.
+I personally use both, switching between them depending on the ambient
+light in my room.
 
 Note though that because I am using these themes locally as part of
 their development process, I am not using the MELPA packages directly.
