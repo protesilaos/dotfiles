@@ -2353,8 +2353,6 @@ The list will be expanded over time.
    :CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
    :END:
 
-/Work in progress./
-
 This is a great tool for identifying errors or inconsistencies in
 programming syntax.  I used it for my Modus themes (defined elsewhere in
 this document) to make the necessary checks for code quality, in
@@ -2368,7 +2366,25 @@ will be updating the package declaration over time.
 
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
-  :ensure t)
+  :ensure t
+  :hook (emacs-lisp-mode . flycheck-mode))
+#+END_SRC
+
+*** Flycheck posframe (reposition flycheck's feedback)
+    :PROPERTIES:
+    :CUSTOM_ID: h:4566f37c-43c4-4d9e-bd70-80a5e6cf69e5
+    :END:
+
+While we can always hover over a Flycheck message or use a dedicated
+buffer in the form of =flycheck-list-errors= it can be more expedient to
+just rely to a "popup" that appears right below the point.  This is what
+the following package declaration is all about.
+
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck-posframe
+  :ensure t
+  :after flycheck
+  :hook (flycheck-mode-hook . flycheck-posframe-mode))
 #+END_SRC
 
 *** Flycheck package metadata
