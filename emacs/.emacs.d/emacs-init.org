@@ -1564,7 +1564,9 @@ Overview of the following settings:
   (org-src-tab-acts-natively t)
   (org-confirm-babel-evaluate nil)
   (org-edit-src-content-indentation 0)
-  ;; general
+  ;; export
+  (org-export-with-toc t)
+  (org-export-headline-levels 8)
   (org-export-backends '(ascii html latex md))
   :config
   ;; disable keys I rely on for other tasks
