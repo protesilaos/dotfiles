@@ -2931,27 +2931,6 @@ in effect).
   (delete-selection-mode 1))
 #+END_SRC
 
-** Browse the kill ring
-   :PROPERTIES:
-   :CUSTOM_ID: h:3a877b04-c116-4d30-a509-10a1792db722
-   :END:
-
-This neat package is for those cases where you have killed something a
-while ago and need to find it quickly.  Use Super-y instead of =M-y=
-to access it (the latter works as before).  A temporary buffer will
-pop up, allowing you move around using standard motions or just =n=
-and =p=.  Confirm your choice with =RET= or exit with =q=.
-
-#+BEGIN_SRC emacs-lisp
-(use-package browse-kill-ring
-  :ensure t
-  :custom
-  (browse-kill-ring-highlight-current-entry t)
-  (browse-kill-ring-separator "——————")
-  (browse-kill-ring-separator-face nil)
-  :bind ("C-c y" . browse-kill-ring))
-#+END_SRC
-
 ** Scrolling behaviour
    :PROPERTIES:
    :CUSTOM_ID: h:0c44b318-813a-4f4a-b596-75df4a86476b
