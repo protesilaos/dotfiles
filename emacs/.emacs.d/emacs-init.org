@@ -3131,7 +3131,10 @@ By default you can receive hints for possible key chord chains by
 hitting =C-h= once you start a sequence (e.g. =C-x C-k C-h= will offer
 hints about keyboard macros).  The following package simplifies this
 step by presenting a table with the completion targets, once certain
-configurable criteria are met (a timer in my case).
+configurable criteria are met.  By default the criterion is a short
+timer of idleness.  I find that too intrusive, opting instead to invoke
+the command manually (also helps that I somehow memorise all these
+keys…).
 
 The "special keys" are represented by their initial letter, which is
 displayed in a differently coloured foreground than standard keys (as
@@ -3142,10 +3145,16 @@ per [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
   :ensure t
   :delight
   :custom
+  (which-key-show-early-on-C-h t)
+  (which-key-idle-delay 10000)
+  (which-key-idle-secondary-delay 0.05)
   (which-key-popup-type 'side-window)
   (which-key-show-prefix 'echo)
-  (which-key-idle-delay 1.5)
-  (which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL")))
+  (which-key-max-display-columns 3)
+  (which-key-separator " ")
+  (which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
+  :config
+  (which-key-mode 1))
 #+END_SRC
 
 * Custom movements and motions
