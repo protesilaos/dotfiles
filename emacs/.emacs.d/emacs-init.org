@@ -3186,6 +3186,10 @@ They are written by me, unless otherwise noted.
      do use is the equivalent for the whole buffer.
 + Faster multiline move :: Move up or down by 15 lines at a time.  This
      is the equivalent of =C-u 15 C-n= or =C-u 15 C-p=.
++ Kill this buffer :: A faster way of killing the focused buffer,
+     without the need for confirming which buffer to kill.  Unsaved
+     files will still ask for confirmation though, which is exactly as
+     it should be.  Bound to =s-k=.
 + Kill to the begging of line :: Just remove everything from the point
      till the beginning of the line.  Do not try anything fancy like
      adjusting indentation or removing the line break.
@@ -3426,6 +3430,7 @@ instead.  This command can then be followed by the standard
   :bind (("C-c a" . bjm/align-whitespace)
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
+         ("s-k" . kill-this-buffer)
          ("C-S-k" . prot/kill-line-backward)
          ("C-S-SPC" . contrib/mark-whole-word)
          ("C-S-n" . prot/multi-line-next)
