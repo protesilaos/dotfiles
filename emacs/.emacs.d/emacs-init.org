@@ -650,14 +650,18 @@ A few highlights of my configurations in the subsequent code block:
 
 + =ivy-height-alist= governs the maximum width of the Ivy window to 1/4
   of the viewport.  I prefer this over an absolute number as I work on
-  monitors with varying dimensions.
+  monitors with varying dimensions (though note that =ivy-posframe= will
+  override it, if enabled).
 + =ivy-virtual-buffers= populates buffer-switching lists with items from
   the =recentf= utility.  In practice, a recently killed buffer can
   still be accessed from =counsel-switch-buffer= as if the kill had
   never occured.
 + =ivy-re-builders-list= allows us to specify the algorithm for matching
-  candidates.  Unless specified otherwise, I am using flexible matching
+  candidates.  Unless specified otherwise, I am using regexp matching
   by default.
++ =ivy-use-selectable-prompt= solves the problem of trying to create a
+  new file system path that shares a common name with an existing item.
+  Press =C-p= and proceed without further conflicts.
 
 And here are some 'hidden' key bindings for making the most out of Ivy
 (find more in the official manual).
@@ -685,9 +689,12 @@ Adding to the table above, you can always use the /universal/ =M-n= and
   (ivy-use-virtual-buffers t)
   (ivy-wrap nil)
   (ivy-re-builders-alist
-   '((swiper . ivy--regex-plus)
-     (t . ivy--regex-fuzzy)))
+   '((counsel-M-x . ivy--regex-fuzzy)
+     (t . ivy--regex-plus)))
   (ivy-display-style 'fancy)
+  (ivy-use-selectable-prompt t)
+  (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur)
+  (ivy-set-occur 'swiper 'swiper-occur)
   :config
   (ivy-mode 1)
   :hook
@@ -751,6 +758,9 @@ line when browsing the kill ring (=counsel-yank-pop=).
   :custom
   (counsel-yank-pop-preselect-last t)
   (counsel-yank-pop-separator "\n—————————\n")
+  :config
+  ;; Remove commands that only work with key bindings
+  (put 'counsel-find-symbol 'no-counsel-M-x t)
   :bind (("M-x" . counsel-M-x)
 		 ("C-x C-f" . counsel-find-file)
 		 ("s-f" . counsel-find-file)
@@ -767,6 +777,8 @@ line when browsing the kill ring (=counsel-yank-pop=).
 		 ("s-y" . counsel-yank-pop)
          ("C-h f" . counsel-describe-function)
          ("C-h v" . counsel-describe-variable)
+         :map minibuffer-local-map
+         ("C-r" . counsel-minibuffer-history)
 		 :map ivy-minibuffer-map
 		 ("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
          ("C-SPC" . ivy-restrict-to-matches)))
@@ -851,6 +863,7 @@ per-command basis, all while assigning a different height to each list.
      (counsel-describe-function . nil)
      (counsel-describe-variable . nil)
      (swiper . nil)
+     (swiper-isearch . nil)
      (t . ivy-posframe-display-at-frame-center)))
   :config
   (ivy-posframe-mode 1))
