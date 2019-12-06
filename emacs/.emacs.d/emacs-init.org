@@ -621,7 +621,7 @@ the optimal way of using Emacs is through searching and narrowing
 selection candidates.  Spend less time worrying about where things are
 on the screen and more on how fast you can bring them into focus.
 
-*** Ivy/Counsel/Swiper
+*** Ivy/Counsel/Swiper plus filtering and scoring
     :PROPERTIES:
     :CUSTOM_ID: h:d76e14b0-2002-4efa-8fef-cb3cd42d3d80
     :END:
@@ -679,6 +679,10 @@ And here are some 'hidden' key bindings for making the most out of Ivy
 Adding to the table above, you can always use the /universal/ =M-n= and
 =M-p= to cycle through the history of entries.
 
+With those granted, make sure to inspect the entirety of my dotemac's
+section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]], as the following
+package declaration is but a piece of a greater whole.
+
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
   :ensure t
@@ -695,12 +699,16 @@ Adding to the table above, you can always use the /universal/ =M-n= and
   (ivy-use-selectable-prompt t)
   (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur)
   (ivy-set-occur 'swiper 'swiper-occur)
+  (ivy-set-occur 'swiper-isearch 'swiper-occur)
+  (ivy-set-occur 'swiper-multi 'swiper-occur) ; TODO does not work
+  (ivy-fixed-height-minibuffer nil)
   :config
   (ivy-mode 1)
   :hook
   (ivy-occur-mode . hl-line-mode)
   :bind (("<s-up>" . ivy-push-view)
 		 ("<s-down>" . ivy-switch-view)
+         ("C-S-r" . ivy-resume)
          :map ivy-occur-mode-map
          ("f" . forward-char)
          ("b" . backward-char)
@@ -709,10 +717,14 @@ Adding to the table above, you can always use the /universal/ =M-n= and
          ("<C-return>" . ivy-occur-press)))
 #+END_SRC
 
-**** AMX (M-x history and matches)
+**** DEPRECATED AMX (M-x history and matches)
      :PROPERTIES:
      :CUSTOM_ID: h:0ec97e10-e18d-4313-8f7b-3a202324d74c
      :END:
+
+*UPDATE 2019-12-06:* I am deprecating =amx= in favour of =prescient=.
+See [[#h:87b37547-5941-4f20-baf6-4d00cde1151a][Prescient's package declaration]].  This section will be removed in
+the near future.
 
 The =amx= package enhances the minibuffer experience, by tracking the
 history of commands and ranking them automagically.  I once thought it
@@ -723,6 +735,7 @@ without any further intervention.
 #+BEGIN_SRC emacs-lisp
 (use-package amx
   :ensure t
+  :disabled
   :after ivy
   :custom
   (amx-backend 'auto)
@@ -731,6 +744,68 @@ without any further intervention.
   (amx-show-key-bindings nil)
   :config
   (amx-mode 1))
+#+END_SRC
+
+**** Prescient (sort, filter results)
+     :PROPERTIES:
+     :CUSTOM_ID: h:87b37547-5941-4f20-baf6-4d00cde1151a
+     :END:
+
+This tool provides a filtering and scoring system that can interface
+with Ivy.  It is a replacement for =amx=.
+
++ Filtering concerns the way matches are determined.  It is possible to
+  select candidates by applying the search terms in a number of ways,
+  such as a literal interpretation of the character string, a regular
+  expression, a set of wildcards (fuzzy match), or an initialism.  The
+  filters can be applied on a per function basis.
++ The scoring system is based on the frequency and recency of
+  commands.  This is extremely valuable, as it will always surface to
+  the top the commands you most likely need.  Running =M-x= is now akin
+  to starting a key chord chain (for example, =M-x b= will give me
+  =bongo= as my first match, which is exactly what I need).  It
+  eliminates the need for increasingly arcane key bindings.
+
+In the package declaration below, note that =prot/ivy-prescient-filters=
+defines an exception to my preferred method of prioritising fuzzy
+searching techniques.
+
+#+BEGIN_SRC emacs-lisp
+(use-package prescient
+  :ensure t
+  :custom
+  (prescient-history-length 50)
+  (prescient-save-file "~/.emacs.d/prescient-items")
+  (prescient-filter-method '(fuzzy initialism regexp))
+  :config
+  (prescient-persist-mode 1))
+
+(use-package ivy-prescient
+  :ensure t
+  :after (prescient ivy)
+  :custom
+  (ivy-prescient-sort-commands t)
+  (ivy-prescient-retain-classic-highlighting t)
+  (ivy-prescient-enable-filtering t)
+  (ivy-prescient-enable-sorting t)
+  :config
+  (defun prot/ivy-prescient-filters (str)
+    "Specify an exception for `prescient-filter-method'.
+
+This new rule can be used to tailor the results of individual
+Ivy-powered commands, using `ivy-prescient-re-builder'."
+    (let ((prescient-filter-method '(literal regexp)))
+      (ivy-prescient-re-builder str)))
+
+  (setq ivy-re-builders-alist
+        '((counsel-rg . prot/ivy-prescient-filters)
+          (counsel-grep . prot/ivy-prescient-filters)
+          (counsel-yank-pop . prot/ivy-prescient-filters)
+          (swiper . prot/ivy-prescient-filters)
+          (swiper-isearch . prot/ivy-prescient-filters)
+          (swiper-all . prot/ivy-prescient-filters)
+          (t . ivy-prescient-re-builder)))
+  (ivy-prescient-mode 1))
 #+END_SRC
 
 **** Counsel configurations and key bindings
@@ -751,8 +826,13 @@ A few things to consider about the settings in this sub-section:
 + The function =counsel-rg= provides an interface to an external program
   called =ripgrep=.  This is a great alternative to =grep=.  For me the
   main selling point is its improved speed.  The key chord for it is
-  similar to the built-in =occur=.  I just also keep =F5= there in case
-  I need it.
+  similar to the built-in =occur=.
++ The key chord for =counsel-git-grep= is also inspired by =occur=.
+  This one will perform a search in the current git repository.
+
+Also see all the other package declarations in [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and
+search methods]] to appreciate their interplay and the full extent of my
+customisations.
 
 #+BEGIN_SRC emacs-lisp
 (use-package counsel
@@ -761,6 +841,9 @@ A few things to consider about the settings in this sub-section:
   :custom
   (counsel-yank-pop-preselect-last t)
   (counsel-yank-pop-separator "\n—————————\n")
+  (counsel-grep-base-command "rg -S --no-heading --line-number --color never '%s' %s")
+  (counsel-find-file-occur-cmd          ; TODO Simplify this
+   "ls -a | grep -i -E '%s' | tr '\\n' '\\0' | xargs -0 ls -d --group-directories-first")
   :config
   ;; Remove commands that only work with key bindings
   (put 'counsel-find-symbol 'no-counsel-M-x t)
@@ -775,38 +858,34 @@ A few things to consider about the settings in this sub-section:
 		 ("C-x d" . counsel-dired)
 		 ("s-d" . counsel-dired)
 		 ("s-D" . dired-other-window)
-         ("C-x C-d" . counsel-git-grep)
 		 ("C-x C-r" . counsel-recentf)
 		 ("s-r" . counsel-recentf)
 		 ("s-y" . counsel-yank-pop)
          ("C-h f" . counsel-describe-function)
          ("C-h v" . counsel-describe-variable)
          ("M-s r" . counsel-rg)
-         ("<f5>" . counsel-rg)
-         :map minibuffer-local-map
-         ("C-r" . counsel-minibuffer-history)
+         ("M-s g" . counsel-git-grep)
 		 :map ivy-minibuffer-map
+         ("C-r" . counsel-minibuffer-history)
 		 ("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
          ("C-SPC" . ivy-restrict-to-matches)))
 #+END_SRC
 
-**** Swiper
+**** Swiper commands and settings
      :PROPERTIES:
      :CUSTOM_ID: h:8b7f982b-911f-4437-a448-b7288855fbda
      :END:
 
-This probably is my least used tool out of the set: I only resort to
-=swiper= when I am not sure whether the item I am looking for is before
-or after the point.  It also is useful for cases where a long list of
-matches is expected.
+This is the search tool that is powered by Ivy.  The current section is
+a work-in-progress as I still need to be able to produce a /writable
+buffer/ out of a search that spans multiple file-visiting buffers.  This
+would apply to =swiper-multi= and probably =swiper-all=.
 
-I think it does not provide a replacement for regular =isearch= because
-that can be used to quickly jump to a character, whereas Swiper's
-expanded preview can make the interface jump around unnecessarily.
+Swiper is intended as a replacement for =isearch=.  Key bindings with
+the =M-s= prefix are meant to be consistent with those of Isearch.
 
-Furthermore, the fact that Swiper searches using regular expressions by
-default is no real upside in my case, since I have already "hacked"
-=isearch= to do the same (see [[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][isearch enhancements]]).
+Do not forget to review the entire section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and
+search methods]].
 
 #+BEGIN_SRC emacs-lisp
 (use-package swiper
@@ -816,7 +895,14 @@ default is no real upside in my case, since I have already "hacked"
   (swiper-action-recenter t)
   (swiper-goto-start-of-match t)
   (swiper-include-line-number-in-search t)
-  :bind (("C-S-s" . swiper)))
+  :bind (("C-s" . swiper-isearch)
+         ("C-r" . swiper-isearch-backward)
+         ("C-S-s" . swiper)
+         ("M-s s" . swiper-multi)
+         ("M-s ." . swiper-isearch-thing-at-point)
+         ("M-s w" . swiper-thing-at-point)
+         :map swiper-map
+         ("M-%" . swiper-query-replace)))
 #+END_SRC
 
 *** Ivy extensions
@@ -863,22 +949,46 @@ per-command basis, all while assigning a different height to each list.
   :custom
   (ivy-posframe-height-alist
    '((swiper . 15)
+     (swiper-isearch . 8)
      (t . 10)))
   (ivy-posframe-display-functions-alist
    '((complete-symbol . ivy-posframe-display-at-point)
-     (counsel-describe-function . nil)
-     (counsel-describe-variable . nil)
-     (swiper . nil)
-     (swiper-isearch . nil)
+     (counsel-describe-function . ivy-posframe-display-at-frame-bottom-left)
+     (counsel-describe-variable . ivy-posframe-display-at-frame-bottom-left)
+     (swiper . ivy-posframe-display-at-frame-bottom-window-center)
+     (swiper-isearch . ivy-posframe-display-at-frame-top-center)
      (t . ivy-posframe-display-at-frame-center)))
   :config
   (ivy-posframe-mode 1))
 #+END_SRC
 
-** isearch enhancements
+** wgrep (writable grep)
+   :PROPERTIES:
+   :CUSTOM_ID: h:42624165-f4cb-4318-abce-c11232426880
+   :END:
+
+With =wgrep= we can directly edit the results of a =grep= and save the
+changes to all affected buffers.  In principle, this is the same as what
+the built-in =occur= offers.  We can use it to operate on a list of
+matches by bringing the full power of Emacs' editing capabilities
+(e.g. keyboard macros, multiple cursors…).
+
+#+BEGIN_SRC emacs-lisp
+(use-package wgrep
+  :ensure t
+  :custom
+  (wgrep-auto-save-buffer t)
+  (wgrep-change-readonly-file t))
+#+END_SRC
+
+** DEPRECATED isearch enhancements
    :PROPERTIES:
    :CUSTOM_ID: h:b67687ee-25a3-4bf4-a924-180ccb63c629
    :END:
+
+*UPDATE 2019-12-06:* I am deprecating =isearch= in favour of =swiper=.
+Refer to [[#h:8b7f982b-911f-4437-a448-b7288855fbda][Swiper's package declaration]].  This section will be removed in
+the near future.
 
 I use =isearch= all the time for quick navigation, either to a visible
 part of the buffer or to some specific string I am aware of.
@@ -936,6 +1046,7 @@ this package declaration.
 
 #+BEGIN_SRC emacs-lisp
 (use-package isearch
+  :disabled
   :init
   (setq search-whitespace-regexp ".*?")
   ;; Or use the following for greedy matches
@@ -999,26 +1110,6 @@ confines of word boundaries (e.g. multiple words)."
               ("C-SPC" . prot/isearch-mark-and-exit)
               ("DEL" . contrib/isearchp-remove-failed-part-or-last-char)
               ("<C-return>" . contrib/isearch-done-opposite-end)))
-#+END_SRC
-
-** Faster grep with deadgrep (ripgrep front-end)
-   :PROPERTIES:
-   :CUSTOM_ID: h:8778fb8e-e087-4281-8d55-96f59069bd4d
-   :END:
-
-This is a great alternative to =grep=.  For me the main selling point is
-its improved speed.  It also has some nice usability enhancements.  To
-get this to work, you must first install the =ripgrep= binary, which is
-not an Emacs package.  On Void Linux: =xbps-install -S ripgrep=.
-
-The key chord is similar to =occur=.  I just also keep =F5= there in
-case I need it.
-
-#+BEGIN_SRC emacs-lisp
-(use-package deadgrep
-  :ensure t
-  :bind (("M-s d" . deadgrep)
-         ("<f5>" . deadgrep)))
 #+END_SRC
 
 * Directory, project, buffer, window management
