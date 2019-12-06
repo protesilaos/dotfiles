@@ -28,14 +28,15 @@
 ;; audience that includes new or potential users (I am still very new
 ;; myself).
 
+;;; Code:
+
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
-			 '("melpa" . "https://melpa.org/packages/"))
+             '("melpa" . "https://melpa.org/packages/"))
 (unless package--initialized (package-initialize))
-(setq use-package-compute-statistics t)
 
 (require 'org)
 (org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
 
-;; init.el ends here
+;;; init.el ends here
