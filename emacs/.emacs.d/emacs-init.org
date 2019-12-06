@@ -738,23 +738,26 @@ without any further intervention.
      :CUSTOM_ID: h:919f942a-f99d-437f-b010-af21264246f3
      :END:
 
-Recall that =counsel-M-x= benefits from =amx=, as noted in the
-subsection above.
+A few things to consider about the settings in this sub-section:
 
-With regard to key bindings, notice that Counsel's implementation for
-switching buffers will preview the currently matched item.  This is
-particularly distracting when running it for the current window.  For
-that case I use the generic Ivy method.  I am okay with Counsel's
-approach when operating on the other window.
-
-As for =counsel-yank-pop-separator=, its value is a series of em dashes
-with a newline character at either end.  This creates a nice separator
-line when browsing the kill ring (=counsel-yank-pop=).
++ With regard to key bindings, notice that Counsel's implementation for
+  switching buffers will preview the currently matched item.  This is
+  particularly distracting when running it for the current window.  For
+  that case I use the generic Ivy method.  I am okay with Counsel's
+  approach when operating on the other window.
++ As for =counsel-yank-pop-separator=, its value is a series of em
+  dashes with a newline character at either end.  This creates a nice
+  separator line when browsing the kill ring (=counsel-yank-pop=).
++ The function =counsel-rg= provides an interface to an external program
+  called =ripgrep=.  This is a great alternative to =grep=.  For me the
+  main selling point is its improved speed.  The key chord for it is
+  similar to the built-in =occur=.  I just also keep =F5= there in case
+  I need it.
 
 #+BEGIN_SRC emacs-lisp
 (use-package counsel
   :ensure t
-  :after (ivy amx)
+  :after ivy
   :custom
   (counsel-yank-pop-preselect-last t)
   (counsel-yank-pop-separator "\n—————————\n")
@@ -772,11 +775,14 @@ line when browsing the kill ring (=counsel-yank-pop=).
 		 ("C-x d" . counsel-dired)
 		 ("s-d" . counsel-dired)
 		 ("s-D" . dired-other-window)
+         ("C-x C-d" . counsel-git-grep)
 		 ("C-x C-r" . counsel-recentf)
 		 ("s-r" . counsel-recentf)
 		 ("s-y" . counsel-yank-pop)
          ("C-h f" . counsel-describe-function)
          ("C-h v" . counsel-describe-variable)
+         ("M-s r" . counsel-rg)
+         ("<f5>" . counsel-rg)
          :map minibuffer-local-map
          ("C-r" . counsel-minibuffer-history)
 		 :map ivy-minibuffer-map
