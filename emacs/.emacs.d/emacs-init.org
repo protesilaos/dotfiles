@@ -953,26 +953,15 @@ per-command basis, all while assigning a different height to each list.
   (ivy-posframe-mode 1))
 #+END_SRC
 
-** Wgrep (writable grep)
+** Configurations or extensions for built-in commands
    :PROPERTIES:
-   :CUSTOM_ID: h:42624165-f4cb-4318-abce-c11232426880
+   :CUSTOM_ID: h:67dac9fe-5c15-437d-bb3e-26b293affa45
    :END:
 
-With =wgrep= we can directly edit the results of a =grep= and save the
-changes to all affected buffers.  In principle, this is the same as what
-the built-in =occur= offers.  We can use it to operate on a list of
-matches by bringing the full power of Emacs' editing capabilities
-(e.g. keyboard macros, multiple cursors…).
+These are meant to enhance the functionality of tools that are already
+shipped with Emacs.
 
-#+BEGIN_SRC emacs-lisp
-(use-package wgrep
-  :ensure t
-  :custom
-  (wgrep-auto-save-buffer t)
-  (wgrep-change-readonly-file t))
-#+END_SRC
-
-** Isearch enhancements
+*** Isearch enhancements
    :PROPERTIES:
    :CUSTOM_ID: h:b67687ee-25a3-4bf4-a924-180ccb63c629
    :END:
@@ -1001,12 +990,11 @@ In the package declaration below, the combined effect of the variables
 for whitespace is a valuable hack: typing a space is the same as
 inserting a wildcard, which is much more useful as far as I am
 concerned.  It basically behaves the same way as Swiper: a single space
-represents a wildcard that matches items in a non-greedy fashion, while
-a double space will match a literal single space.  *This concerns
-regular searches* (the standard =C-s= and =C-r=).  The regexp functions
-=C-M-s= and =C-M-r= remain in tact.  You can toggle whitespace matching
-behaviour while performing a search, with =M-s SPC= (revert back to just
-literal spaces).
+represents a wildcard that matches items in a non-greedy fashion.  *This
+concerns regular searches* (the standard =C-s= and =C-r=).  The regexp
+functions =C-M-s= and =C-M-r= remain in tact.  You can toggle whitespace
+matching behaviour while performing a search, with =M-s SPC= (revert
+back to just literal spaces).
 
 Now on to some custom functions.  Here is an overview of what goes into
 this package declaration.
@@ -1042,7 +1030,7 @@ this package declaration.
 #+BEGIN_SRC emacs-lisp
 (use-package isearch
   :custom
-  (search-whitespace-regexp ".*?\\s-+")
+  (search-whitespace-regexp ".*?")
   (isearch-lax-whitespace t)
   (isearch-regexp-lax-whitespace nil)
   :config
@@ -1089,13 +1077,14 @@ confines of word boundaries (e.g. multiple words)."
     (interactive)
     (funcall #'isearch-done nopush edit)
     (when isearch-other-end (goto-char isearch-other-end)))
-  :bind (:map isearch-mode-map
+  :bind (("M-s M-o" . multi-occur)
+         :map isearch-mode-map
               ("C-SPC" . prot/isearch-mark-and-exit)
               ("DEL" . contrib/isearchp-remove-failed-part-or-last-char)
               ("<C-return>" . contrib/isearch-done-opposite-end)))
 #+END_SRC
 
-** Anzu (search results and improved replacing with isearch)
+*** Anzu (search results and improved replacing with isearch)
    :PROPERTIES:
    :CUSTOM_ID: h:4c1a2270-ddf6-453f-bdcb-914f455b896a
    :END:
@@ -1127,6 +1116,27 @@ covers a different niche.
   (global-anzu-mode 1)
   :bind (([remap query-replace] . anzu-query-replace)
          ([remap query-replace-regexp] . anzu-query-replace-regexp)))
+#+END_SRC
+
+*** wgrep (writable grep)
+   :PROPERTIES:
+   :CUSTOM_ID: h:42624165-f4cb-4318-abce-c11232426880
+   :END:
+
+With =wgrep= we can directly edit the results of a =grep= and save the
+changes to all affected buffers.  In principle, this is the same as what
+the built-in =occur= offers.  We can use it to operate on a list of
+matches by bringing the full power of Emacs' editing capabilities
+(e.g. keyboard macros, multiple cursors…).
+
+#+BEGIN_SRC emacs-lisp
+(use-package wgrep
+  :ensure t
+  :custom
+  (wgrep-auto-save-buffer t)
+  (wgrep-change-readonly-file t)
+  :bind (:map ivy-occur-mode-map
+              ("e" . ivy-wgrep-change-to-wgrep-mode)))
 #+END_SRC
 
 * Directory, project, buffer, window management
@@ -2810,7 +2820,7 @@ theme."
     (if (eq (car custom-enabled-themes) 'modus-operandi)
         (load-theme 'modus-vivendi t)
       (load-theme 'modus-operandi t)))
-  :bind ("s-t" . prot/modus-themes-toggle)
+  :bind ("<f5>" . prot/modus-themes-toggle)
   :hook (after-init . (lambda () (load-theme 'modus-operandi t))))
 #+END_SRC
 
@@ -3599,7 +3609,8 @@ need are:
 #+BEGIN_SRC emacs-lisp
 (use-package crux
   :ensure t
-  :bind (("C-c w" . crux-duplicate-current-line-or-region)
+  :bind (("s-t" . crux-transpose-windows)
+         ("C-c w" . crux-duplicate-current-line-or-region)
          ("<C-f2>" . crux-rename-file-and-buffer)
          :map dired-mode-map
          ("<M-return>" . crux-open-with)))
