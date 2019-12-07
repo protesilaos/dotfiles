@@ -972,17 +972,15 @@ matches by bringing the full power of Emacs' editing capabilities
   (wgrep-change-readonly-file t))
 #+END_SRC
 
-** DEPRECATED isearch enhancements
+** Isearch enhancements
    :PROPERTIES:
    :CUSTOM_ID: h:b67687ee-25a3-4bf4-a924-180ccb63c629
    :END:
 
-*UPDATE 2019-12-06:* I am deprecating =isearch= in favour of =swiper=.
-Refer to [[#h:8b7f982b-911f-4437-a448-b7288855fbda][Swiper's package declaration]].  This section will be removed in
-the near future.
-
 I use =isearch= all the time for quick navigation, either to a visible
-part of the buffer or to some specific string I am aware of.
+part of the buffer or to some specific string I am aware of.  It also is
+great when used in the context of a keyboard macro where you do not
+really need the preview offered by Swiper (see [[#h:8b7f982b-911f-4437-a448-b7288855fbda][the relevant section]]).
 
 Run =C-h k C-s= to get an /awesome/ help menu with all the extra keys
 you can use with =isearch=.  These are the ones I use the most:
@@ -996,12 +994,18 @@ you can use with =isearch=.  These are the ones I use the most:
 | M-s h u   | Undo the highlight           |
 | C-s M-r   | Toggle regexp search         |
 
+Most—if not all—of these functions can be invoked in the middle of a
+search to perform the appropriate action on the existing match.
+
 In the package declaration below, the combined effect of the variables
 for whitespace is a valuable hack: typing a space is the same as
 inserting a wildcard, which is much more useful as far as I am
-concerned.  *This concerns regular searches* (the standard =C-s= and
-=C-r=).  The regexp functions remain in tact.  You can toggle this
-behaviour, while performing a search, with =M-s SPC= (revert back to
+concerned.  It basically behaves the same way as Swiper: a single space
+represents a wildcard that matches items in a non-greedy fashion, while
+a double space will match a literal single space.  *This concerns
+regular searches* (the standard =C-s= and =C-r=).  The regexp functions
+=C-M-s= and =C-M-r= remain in tact.  You can toggle whitespace matching
+behaviour while performing a search, with =M-s SPC= (revert back to just
 literal spaces).
 
 Now on to some custom functions.  Here is an overview of what goes into
@@ -1037,13 +1041,10 @@ this package declaration.
 
 #+BEGIN_SRC emacs-lisp
 (use-package isearch
-  :disabled
-  :init
-  (setq search-whitespace-regexp ".*?")
-  ;; Or use the following for greedy matches
-  ;; (setq search-whitespace-regexp ".*")
-  (setq isearch-lax-whitespace t)
-  (setq isearch-regexp-lax-whitespace nil)
+  :custom
+  (search-whitespace-regexp ".*?\\s-+")
+  (isearch-lax-whitespace t)
+  (isearch-regexp-lax-whitespace nil)
   :config
   (defun prot/isearch-mark-and-exit ()
     "Marks the current search string.  Can be used as a building
@@ -1088,19 +1089,44 @@ confines of word boundaries (e.g. multiple words)."
     (interactive)
     (funcall #'isearch-done nopush edit)
     (when isearch-other-end (goto-char isearch-other-end)))
-
-  ;; Uncomment if you want to auto-reset to "hacked" whitespace after
-  ;; having toggled literal spaces (with `M-s SPC')
-  ;;
-  ;; :hook
-  ;; (isearch-mode-end . (lambda ()
-  ;;                        (setq search-whitespace-regexp ".*?")
-  ;;                        (setq isearch-lax-whitespace t)))
-
   :bind (:map isearch-mode-map
               ("C-SPC" . prot/isearch-mark-and-exit)
               ("DEL" . contrib/isearchp-remove-failed-part-or-last-char)
               ("<C-return>" . contrib/isearch-done-opposite-end)))
+#+END_SRC
+
+** Anzu (search results and improved replacing with isearch)
+   :PROPERTIES:
+   :CUSTOM_ID: h:4c1a2270-ddf6-453f-bdcb-914f455b896a
+   :END:
+
+Anzu is a nice and simple tool that can work together with Isearch,
+requiring minimal adjustments from our side.  It provides two main
+utilities:
+
+1. Show information about the number of total matches and where the
+   current match stands in that count.
+2. Provide replacements to the standard functions of =query-replace=
+   (=M-%=) and =query-replace-regexp= (=C-M-%=).  These offer better
+   visual feedback.
+
+Anzu is meant to be used as an enhancement to Isearch.  What I have on
+Swiper and other grep-like tools still remains relevant, though it
+covers a different niche.
+
+#+BEGIN_SRC emacs-lisp
+(use-package anzu
+  :ensure t
+  :delight
+  :custom
+  (anzu-search-threshold 100)
+  (anzu-replace-threshold nil)
+  (anzu-deactivate-region nil)
+  (anzu-replace-to-string-separator "")
+  :config
+  (global-anzu-mode 1)
+  :bind (([remap query-replace] . anzu-query-replace)
+         ([remap query-replace-regexp] . anzu-query-replace-regexp)))
 #+END_SRC
 
 * Directory, project, buffer, window management
