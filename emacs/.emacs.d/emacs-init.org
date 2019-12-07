@@ -1134,9 +1134,7 @@ matches by bringing the full power of Emacs' editing capabilities
   :ensure t
   :custom
   (wgrep-auto-save-buffer t)
-  (wgrep-change-readonly-file t)
-  :bind (:map ivy-occur-mode-map
-              ("e" . ivy-wgrep-change-to-wgrep-mode)))
+  (wgrep-change-readonly-file t))
 #+END_SRC
 
 * Directory, project, buffer, window management
