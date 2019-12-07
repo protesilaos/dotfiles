@@ -841,7 +841,8 @@ customisations.
   :custom
   (counsel-yank-pop-preselect-last t)
   (counsel-yank-pop-separator "\n—————————\n")
-  (counsel-grep-base-command "rg -S --no-heading --line-number --color never '%s' %s")
+  (counsel-grep-base-command
+   "rg -S --with-filename --no-heading --line-number --color never '%s' %s")
   (counsel-find-file-occur-cmd          ; TODO Simplify this
    "ls -a | grep -i -E '%s' | tr '\\n' '\\0' | xargs -0 ls -d --group-directories-first")
   :config
@@ -876,16 +877,13 @@ customisations.
      :CUSTOM_ID: h:8b7f982b-911f-4437-a448-b7288855fbda
      :END:
 
-This is the search tool that is powered by Ivy.  The current section is
-a work-in-progress as I still need to be able to produce a /writable
-buffer/ out of a search that spans multiple file-visiting buffers.  This
-would apply to =swiper-multi= and probably =swiper-all=.
+This is the search tool that is powered by Ivy.  I use it to get an
+overview of the matching candidates when performing a more complex
+search.  It is not intended as a drop-in replacement for =isearch= (see
+[[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][section on Isearch]])
 
-Swiper is intended as a replacement for =isearch=.  Key bindings with
-the =M-s= prefix are meant to be consistent with those of Isearch.
-
-Do not forget to review the entire section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and
-search methods]].
+Given that Swiper is related to Ivy, do not forget to review the entire
+section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]].
 
 #+BEGIN_SRC emacs-lisp
 (use-package swiper
@@ -895,14 +893,9 @@ search methods]].
   (swiper-action-recenter t)
   (swiper-goto-start-of-match t)
   (swiper-include-line-number-in-search t)
-  :bind (("C-s" . swiper-isearch)
-         ("C-r" . swiper-isearch-backward)
-         ("C-S-s" . swiper)
+  :bind (("C-S-s" . swiper)
          ("M-s s" . swiper-multi)
-         ("M-s ." . swiper-isearch-thing-at-point)
-         ("M-s w" . swiper-thing-at-point)
-         :map swiper-map
-         ("M-%" . swiper-query-replace)))
+         ("M-s w" . swiper-thing-at-point)))
 #+END_SRC
 
 *** Ivy extensions
@@ -949,20 +942,18 @@ per-command basis, all while assigning a different height to each list.
   :custom
   (ivy-posframe-height-alist
    '((swiper . 15)
-     (swiper-isearch . 8)
+     (swiper-isearch . 15)
      (t . 10)))
   (ivy-posframe-display-functions-alist
    '((complete-symbol . ivy-posframe-display-at-point)
-     (counsel-describe-function . ivy-posframe-display-at-frame-bottom-left)
-     (counsel-describe-variable . ivy-posframe-display-at-frame-bottom-left)
-     (swiper . ivy-posframe-display-at-frame-bottom-window-center)
-     (swiper-isearch . ivy-posframe-display-at-frame-top-center)
+     (swiper . nil)
+     (swiper-isearch . nil)
      (t . ivy-posframe-display-at-frame-center)))
   :config
   (ivy-posframe-mode 1))
 #+END_SRC
 
-** wgrep (writable grep)
+** Wgrep (writable grep)
    :PROPERTIES:
    :CUSTOM_ID: h:42624165-f4cb-4318-abce-c11232426880
    :END:
