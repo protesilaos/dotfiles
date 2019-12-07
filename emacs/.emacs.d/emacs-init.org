@@ -784,7 +784,8 @@ searching techniques.
   :ensure t
   :after (prescient ivy)
   :custom
-  (ivy-prescient-sort-commands t)
+  (ivy-prescient-sort-commands
+   '(:not swiper ivy-switch-buffer counsel-switch-buffer))
   (ivy-prescient-retain-classic-highlighting t)
   (ivy-prescient-enable-filtering t)
   (ivy-prescient-enable-sorting t)
