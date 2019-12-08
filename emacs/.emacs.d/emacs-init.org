@@ -697,12 +697,12 @@ package declaration is but a piece of a greater whole.
      (t . ivy--regex-plus)))
   (ivy-display-style 'fancy)
   (ivy-use-selectable-prompt t)
+  (ivy-fixed-height-minibuffer nil)
+  :config
   (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur)
   (ivy-set-occur 'swiper 'swiper-occur)
   (ivy-set-occur 'swiper-isearch 'swiper-occur)
   (ivy-set-occur 'swiper-multi 'swiper-occur) ; TODO does not work
-  (ivy-fixed-height-minibuffer nil)
-  :config
   (ivy-mode 1)
   :hook
   (ivy-occur-mode . hl-line-mode)
@@ -1127,7 +1127,7 @@ covers a different niche.
 With =wgrep= we can directly edit the results of a =grep= and save the
 changes to all affected buffers.  In principle, this is the same as what
 the built-in =occur= offers.  We can use it to operate on a list of
-matches by bringing the full power of Emacs' editing capabilities
+matches by leveraging the full power of Emacs' editing capabilities
 (e.g. keyboard macros, multiple cursors…).
 
 #+BEGIN_SRC emacs-lisp
@@ -2628,12 +2628,10 @@ remarks in =M-x find-library RET hippie-exp RET=.
   :bind ("M-/" . hippie-expand))
 #+END_SRC
 
-** DISABLED YASnippet (templating system)
+** YASnippet (templating system)
    :PROPERTIES:
    :CUSTOM_ID: h:71c33c3d-d780-4a46-8a61-3830813f9c33
    :END:
-
-/The code in this section is disabled until further review/.
 
 Yasnippet is a tool for defining and using code or text templates.  The
 template can have several "stops", which are the mutable parts of it
@@ -2646,34 +2644,31 @@ for a variety of languages and scenaria (I use skeletons as well—see my
 [[#h:33cd69cc-1a50-4abb-9f09-cae98dc8998b][simple abbreviations]]).  These snippets are distributed as a separate
 package.
 
-+ TODO document the use of custom snippets.
+For the time being I am do not have any snippets of my own.  I still
+need to assess whether this tool actually improves my workflow.
 
 Note that =:delight= does not work without an argument here.  It needs
 to target =yas-minor-mode=.
 
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
-  :disabled
   :ensure t
   :delight yas-minor-mode
-  :init
-  (setq yas-snippet-dirs (append yas-snippet-dirs
-                                 '("~/.emacs.d/snippets/")))
   :config
   (yas-global-mode 1))
 
 (use-package yasnippet-snippets
-  :disabled
   :ensure t
-  :after yasnippet)
+  :after yasnippet
+  :custom
+  (yas-snippet-dirs (append yas-snippet-dirs
+                            '("~/.emacs.d/snippets/"))))
 #+END_SRC
 
-** DISABLED Company (completion framework)
+** Company (completion framework)
    :PROPERTIES:
    :CUSTOM_ID: h:d2e402b3-c947-42fc-af80-b8a982082a1b
    :END:
-
-/The code in this section is disabled until further review/.
 
 Company has a modular design that allows it to adapt to the user's
 needs.  Additional backends are provided as separate packages.
@@ -2699,7 +2694,7 @@ Overview of the following settings.
   encounter in my workflow (such as /is/ => /isearch/).
 + Keep the completion candidates to ten at a time.  This allows us to
   target them directly by their number (10 is 0 in this case).
-+ Determine how completions are sorted.  /This is subject to review/.
++ Determine how completions are sorted.
 + The function that includes Yasnippet to all backends is provided by
   [[https://emacs.nasy.moe][Nasy's Emacs configuration file]].
 
@@ -2727,24 +2722,23 @@ inside the list of suggestions.
 
 #+BEGIN_SRC emacs-lisp
 (use-package company
-  :disabled
   :ensure t
   :after yasnippet
   :delight
-  :init
-  (setq company-require-match nil)
-  (setq company-tooltip-align-annotations t)
-  (setq company-dabbrev-downcase nil)
-  (setq company-show-numbers t)
-  (setq company-selection-wrap-around t)
-  (setq company-auto-complete nil)
-  (setq company-minimum-prefix-length 3)
-  (setq company-idle-delay 0.5)
-  (setq company-tooltip-limit 10)
-  (setq company-transformers
-        '(company-sort-by-backend-importance
-          company-sort-prefer-same-case-prefix
-          company-sort-by-occurrence))
+  :custom
+  (company-require-match nil)
+  (company-tooltip-align-annotations t)
+  (company-dabbrev-downcase nil)
+  (company-show-numbers t)
+  (company-selection-wrap-around t)
+  (company-auto-complete nil)
+  (company-minimum-prefix-length 3)
+  (company-idle-delay 0.5)
+  (company-tooltip-limit 10)
+  (company-transformers
+   '(company-sort-by-backend-importance
+     company-sort-prefer-same-case-prefix
+     company-sort-by-occurrence))
   :config
   (global-company-mode 1)
   (defun jcs--company-complete-selection--advice-around (fn)
@@ -2779,6 +2773,23 @@ execute around `company-complete-selection' command."
                ("C-p" . (lambda ()
                           (interactive)
                           (company-complete-common-or-cycle -1))))))
+#+END_SRC
+
+*** Prescient filtering for Company
+    :PROPERTIES:
+    :CUSTOM_ID: h:763a4a35-62a2-4fc5-9ba4-4d2212aa7fe4
+    :END:
+
+The =prescient= package provides scoring and filtering mechanisms for
+completion candidates.  I am using it in tandem with Ivy (see the
+[[#h:87b37547-5941-4f20-baf6-4d00cde1151a][relevant section]]).  Here I declare the extension for =company=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-prescient
+  :ensure t
+  :after (company prescient)
+  :config
+  (company-prescient-mode 1))
 #+END_SRC
 
 * Modus themes (my very accessible themes)
