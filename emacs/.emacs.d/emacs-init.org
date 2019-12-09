@@ -2503,7 +2503,8 @@ will be updating the package declaration over time.
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :ensure t
-  :hook (emacs-lisp-mode . flycheck-mode))
+  :custom
+  (flycheck-check-syntax-automatically '(save mode-enabled)))
 #+END_SRC
 
 *** Flycheck posframe (reposition flycheck's feedback)
