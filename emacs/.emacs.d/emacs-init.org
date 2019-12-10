@@ -2241,6 +2241,9 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
   information about my account setup.  I set this in a private and
   encrypted file.  Do check [[https://www.djcbsoftware.nl/code/mu/mu4e/Contexts-example.html#Contexts-example][the example]] in the official docs.  I based
   my work off of it.
++ Message citation is just an improved format for quoting a message in a
+  reply.  The format looks like /"On 2019-12-09, 16:50 (EET), PERSON
+  <EMAIL> wrote:"/.
 
 #+BEGIN_SRC emacs-lisp
 (use-package mu4e
@@ -2261,6 +2264,8 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
   (mu4e-view-show-addresses t)
   (mu4e-context-policy 'pick-first)
   (mu4e-compose-context-policy 'ask)
+  (message-citation-line-format "On %Y-%m-%d, %R (%Z), %f wrote:\n")
+  (message-citation-line-function 'message-insert-formatted-citation-line)
   :config
   (defun prot/mu4e-contexts ()
     "Loads a file with the specifics of my email account info."
