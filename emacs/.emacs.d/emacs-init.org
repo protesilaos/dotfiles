@@ -1761,6 +1761,76 @@ Overview of the following settings:
          ("C-c l" . org-store-link)))
 #+END_SRC
 
+*** Export Org to HTML
+    :PROPERTIES:
+    :CUSTOM_ID: h:087f3e10-b270-4a5c-b5e4-dbb2b4964f61
+    :END:
+
+Use this package to output to HTML.  While in the export interface, type
+=C-b= to only produce the HTML body (useful when embedding to an
+existing template/website).
+
+#+BEGIN_SRC emacs-lisp
+(use-package htmlize
+  :ensure t
+  :after org
+  :config
+  (global-set-key (kbd "C-c o") (kbd "C-c C-e C-b h H")))
+#+END_SRC
+
+*** Consistent heading IDs (and anchor tags)
+    :PROPERTIES:
+    :CUSTOM_ID: h:031f7dbf-19e4-4ddf-a3d3-f648261412f6
+    :END:
+
+Everything in this section is copied directly from this detailed
+tutorial on [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][Org header IDs]].  Basically, the problem is that exported
+HTML does not have reliable anchor tags for the various sections of the
+document.  This fixes the issue (read the article for more).
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-id
+  :after org
+  :init
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  :config
+  (defun eos/org-custom-id-get (&optional pom create prefix)
+    "Get the CUSTOM_ID property of the entry at point-or-marker POM.
+   If POM is nil, refer to the entry at point. If the entry does
+   not have an CUSTOM_ID, the function returns nil. However, when
+   CREATE is non nil, create a CUSTOM_ID if none is present
+   already. PREFIX will be passed through to `org-id-new'. In any
+   case, the CUSTOM_ID of the entry is returned."
+    (interactive)
+    (org-with-point-at pom
+      (let ((id (org-entry-get nil "CUSTOM_ID")))
+        (cond
+         ((and id (stringp id) (string-match "\\S-" id))
+          id)
+         (create
+          (setq id (org-id-new (concat prefix "h")))
+          (org-entry-put pom "CUSTOM_ID" id)
+          (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
+          id)))))
+
+  (defun eos/org-add-ids-to-headlines-in-file ()
+    "Add CUSTOM_ID properties to all headlines in the
+   current file which do not already have one."
+    (interactive)
+    (org-map-entries (lambda ()
+                       (eos/org-custom-id-get (point) 'create))))
+  :hook
+  ;; automatically add ids to captured headlines
+  (org-capture-prepare-finalize-hook . (lambda ()
+                                         (eos/org-custom-id-get (point) 'create)))
+  ;; automatically add ids to saved org-mode headlines
+  (org-mode . (lambda ()
+                (add-hook 'before-save-hook
+                          (lambda ()
+                            (when (and (eq major-mode 'org-mode)
+                                       (eq buffer-read-only nil))))))))
+#+END_SRC
+
 ** Shells and terminal emulators
    :PROPERTIES:
    :CUSTOM_ID: h:0df1db3a-30ee-43e5-9086-92951a58164f
