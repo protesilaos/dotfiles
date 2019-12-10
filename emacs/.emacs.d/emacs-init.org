@@ -47,19 +47,8 @@ users (I started in early July 2019).
 
 Code blocks are wrapped between =#+BEGIN_SRC= and =#+END_SRC= tags
 (not visible in the website version of this page), which can be
-quickly inserted with the key chord =<s TAB=.  Alternatively, we can
-employ the following to pass a specific language to the block,
-accompanied by a corresponding keyboard shortcut (I got this from a
-[[https://news.ycombinator.com/item?id=20156004][Hacker News thread]]).
-
-#+BEGIN_SRC emacs-lisp
-(setq org-structure-template-alist
-      (cons '("se" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC" "<src
-  lang=\"emacs-lisp\">\n?\n</src>")
-            org-structure-template-alist))
-#+END_SRC
-
-Now =<se TAB= will give you a block for =emacs-lisp=.
+quickly inserted with the key chord =<s TAB=.  For more on this, refer
+to [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org's section further below]].
 
 As for the various settings included herein, you can learn /even more/
 about them by using [[https://protesilaos.com/codelog/2019-08-24-emacs-docs-discovery/][Emacs' built-in documentation]] (great for discovering
@@ -1679,21 +1668,68 @@ is to eventually integrate everything inside of Emacs.
    :CUSTOM_ID: h:4e8347de-415e-4804-b383-d61499e05ca1
    :END:
 
-/This section will expand gradually, as I continue to explore Org's
-seemingly infinite capabilities./
+/WORK IN PROGRESS.  Documentation will be expanded once I am done./
 
 Overview of the following settings:
 
++ Agenda and task list ::  Define where to store captured items and how
+     to display the information.
 + Style code blocks :: I want =.org= files to use the native settings
      for styling code blocks.  The first variable concerns =C-c '= (run
      it inside of a code block).  That opens a buffer with just the
      contents of the code block, with the major mode configured
      appropriately.
++ Export settings :: Just provide a table of contents, cover 8 levels of
+     depth and offer support for the back-ends I specify.  For the time
+     being, I mostly use HTML to publish this document on my website…
++ General settings :: Allow =C-a= and =C-e= to move to the logical
+     beginning or end of the Org element upon second invocation (first
+     one behaves normally).  Define a few templates for inserting blocks
+     using =<=, =KEY=, and then =TAB=, where =KEY= is the one that
+     corresponds to the given template.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :custom
+  ;; agenda
   (org-directory "~/Org")
+  (org-agenda-files '("~/Org/tasks.org"))
+  (org-default-notes-file "~/Org/notes.org")
+  (org-agenda-window-setup 'current-window)
+  (org-deadline-warning-days 7)
+  (org-agenda-span 'month)
+  (org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (org-agenda-sorting-strategy
+   '((agenda deadline-up priority-down)
+     (todo priority-down category-keep)
+     (tags priority-down category-keep)
+     ((search category-keep))))
+  ;; capture, refile, todo
+  (org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
+  (org-reverse-note-order nil)
+  (org-refile-use-outline-path t)
+  (org-refile-allow-creating-parent-nodes 'confirm)
+  (org-refile-use-cache t)
+  (org-todo-keywords
+   '((sequence "TODO(t)" "|" "DONE(d)")
+     (sequence "STUDY(s)" "WRITE(w)" "|" "POSTED(p)")
+     (sequence "NOTE(n)" "|" "ARCHIVED(r)")))
+  (org-highest-priority ?A)
+  (org-lowest-priority ?C)
+  (org-default-priority ?A)
+  (org-capture-templates
+   '(("t" "Task for the day" entry
+      (file+headline "~/Org/tasks.org" "Tasks with a deadline")
+      "* TODO [#A] %?\nDEADLINE: %t\n")
+     ("l" "Link to Emacs buffer or file" entry
+      (file+headline "~/Org/tasks.org" "Links to buffers/files")
+      "* STUDY [#B] %?\nSCHEDULED: %t\n%a")
+     ("L" "Link to full file system path" entry
+      (file+headline "~/Org/tasks.org" "Links to buffers/files")
+      "* STUDY [#B]  %?\nSCHEDULED: %t\n%F")
+     ("n" "Note" entry
+      (file+headline "~/Org/tasks.org" "Notes with or without context")
+      "* NOTE [#C]  %?\nSCHEDULED: %t\n%i")))
   ;; code blocks
   (org-src-window-setup 'current-window)
   (org-src-fontify-natively t)
@@ -1704,82 +1740,25 @@ Overview of the following settings:
   (org-export-with-toc t)
   (org-export-headline-levels 8)
   (org-export-backends '(ascii html latex md))
+  ;; general
+  (org-special-ctrl-a/e 'reversed)
+  (org-structure-template-alist
+   '(("s" "#+BEGIN_SRC ?\n\n#+END_SRC")
+     ("E" "#+BEGIN_SRC emacs-lisp ?\n\n#+END_SRC")
+     ("e" "#+BEGIN_EXAMPLE\n?\n#+END_EXAMPLE")
+     ("q" "#+BEGIN_QUOTE\n?\n#+END_QUOTE")
+     ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE")
+     ("V" "#+BEGIN_VERBATIM\n?\n#+END_VERBATIM")
+     ("c" "#+BEGIN_CENTER\n?\n#+END_CENTER")
+     ("C" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
+     ("I" "#+INCLUDE: %file ?")))
   :config
   ;; disable keys I rely on for other tasks
   (define-key org-mode-map (kbd "<C-return>") nil)
   (define-key org-mode-map (kbd "<C-S-return>") nil)
-  :bind (("C-c l" . org-store-link)))
-#+END_SRC
-
-*** Export Org to HTML
-    :PROPERTIES:
-    :CUSTOM_ID: h:087f3e10-b270-4a5c-b5e4-dbb2b4964f61
-    :END:
-
-Use this package to output to HTML.  While in the export interface, type
-=C-b= to only produce the HTML body (useful when embedding to an
-existing template/website).
-
-#+BEGIN_SRC emacs-lisp
-(use-package htmlize
-  :ensure t
-  :after org
-  :config
-  (global-set-key (kbd "C-c o") (kbd "C-c C-e C-b h H")))
-#+END_SRC
-
-*** Consistent heading IDs (and anchor tags)
-    :PROPERTIES:
-    :CUSTOM_ID: h:031f7dbf-19e4-4ddf-a3d3-f648261412f6
-    :END:
-
-Everything in this section is copied directly from this detailed
-tutorial on [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][Org header IDs]].  Basically, the problem is that exported
-HTML does not have reliable anchor tags for the various sections of the
-document.  This fixes the issue (read the article for more).
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-id
-  :after org
-  :init
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
-  :config
-  (defun eos/org-custom-id-get (&optional pom create prefix)
-    "Get the CUSTOM_ID property of the entry at point-or-marker POM.
-   If POM is nil, refer to the entry at point. If the entry does
-   not have an CUSTOM_ID, the function returns nil. However, when
-   CREATE is non nil, create a CUSTOM_ID if none is present
-   already. PREFIX will be passed through to `org-id-new'. In any
-   case, the CUSTOM_ID of the entry is returned."
-    (interactive)
-    (org-with-point-at pom
-      (let ((id (org-entry-get nil "CUSTOM_ID")))
-        (cond
-         ((and id (stringp id) (string-match "\\S-" id))
-          id)
-         (create
-          (setq id (org-id-new (concat prefix "h")))
-          (org-entry-put pom "CUSTOM_ID" id)
-          (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
-          id)))))
-
-  (defun eos/org-add-ids-to-headlines-in-file ()
-    "Add CUSTOM_ID properties to all headlines in the
-   current file which do not already have one."
-    (interactive)
-    (org-map-entries (lambda ()
-                       (eos/org-custom-id-get (point) 'create))))
-  :hook
-  ;; automatically add ids to captured headlines
-  (org-capture-prepare-finalize-hook . (lambda ()
-                                         (eos/org-custom-id-get (point) 'create)))
-  ;; automatically add ids to saved org-mode headlines
-  (org-mode . (lambda ()
-                (add-hook 'before-save-hook
-                          (lambda ()
-                            (when (and (eq major-mode 'org-mode)
-                                       (eq buffer-read-only nil))
-                              (eos/org-add-ids-to-headlines-in-file)))))))
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-c l" . org-store-link)))
 #+END_SRC
 
 ** Shells and terminal emulators
@@ -3326,7 +3305,7 @@ They are written by me, unless otherwise noted.
 
 + Align to whitespace :: This will align a portion of text using
      whitespace as an indicator for creating separate columns.  I bind
-     it to =C-c a=.  Got it from this [[http://pragmaticemacs.com/emacs/aligning-text/][Pragmatic Emacs blog post]].
+     it to =C-c C-==.  Got it from this [[http://pragmaticemacs.com/emacs/aligning-text/][Pragmatic Emacs blog post]].
 + Copy the current line :: Just place the entire line in the kill ring.
      Do not be smart about it.
 + Count words in buffer :: By default, the binding =M-== will count the
@@ -3575,7 +3554,7 @@ instead.  This command can then be followed by the standard
         (delete-region (point-at-bol) (point-at-eol))
         (yank))))
 
-  :bind (("C-c a" . bjm/align-whitespace)
+  :bind (("C-c C-=" . bjm/align-whitespace)
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
          ("s-k" . kill-this-buffer)
