@@ -1688,12 +1688,14 @@ Overview of the following settings:
      using =<=, =KEY=, and then =TAB=, where =KEY= is the one that
      corresponds to the given template.
 
+The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/org-recur][README of org-recur]].
+
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :custom
   ;; agenda
   (org-directory "~/Org")
-  (org-agenda-files '("~/Org/tasks.org"))
+  (org-agenda-files '("~/Org/tasks.org" "~/Org/notes.org"))
   (org-default-notes-file "~/Org/notes.org")
   (org-agenda-window-setup 'current-window)
   (org-deadline-warning-days 7)
@@ -1726,10 +1728,10 @@ Overview of the following settings:
       "* STUDY [#B] %?\nSCHEDULED: %t\n%a")
      ("L" "Link to full file system path" entry
       (file+headline "~/Org/tasks.org" "Links to buffers/files")
-      "* STUDY [#B]  %?\nSCHEDULED: %t\n%F")
+      "* STUDY [#B] %?\nSCHEDULED: %t\n%F")
      ("n" "Note" entry
       (file+headline "~/Org/tasks.org" "Notes with or without context")
-      "* NOTE [#C]  %?\nSCHEDULED: %t\n%i")))
+      "* NOTE [#C] %?\nSCHEDULED: %t\n%i")))
   ;; code blocks
   (org-src-window-setup 'current-window)
   (org-src-fontify-natively t)
@@ -1740,6 +1742,11 @@ Overview of the following settings:
   (org-export-with-toc t)
   (org-export-headline-levels 8)
   (org-export-backends '(ascii html latex md))
+  ;; log
+  (org-log-done 'time)
+  (org-log-redeadline nil)
+  (org-log-reschedule nil)
+  (org-read-date-prefer-future 'time)
   ;; general
   (org-special-ctrl-a/e 'reversed)
   (org-structure-template-alist
@@ -1753,12 +1760,44 @@ Overview of the following settings:
      ("C" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
      ("I" "#+INCLUDE: %file ?")))
   :config
+  ;; Refresh org-agenda after rescheduling a task.
+  (defun contrib/org-agenda-refresh ()
+    "Refresh all `org-agenda' buffers."
+    (dolist (buffer (buffer-list))
+      (with-current-buffer buffer
+        (when (derived-mode-p 'org-agenda-mode)
+          (org-agenda-maybe-redo)))))
+
+  (defadvice org-schedule (after refresh-agenda activate)
+    "Refresh org-agenda."
+    (contrib/org-agenda-refresh))
+
   ;; disable keys I rely on for other tasks
   (define-key org-mode-map (kbd "<C-return>") nil)
   (define-key org-mode-map (kbd "<C-S-return>") nil)
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c l" . org-store-link)))
+#+END_SRC
+
+*** Support recurring tasks
+
+With the addition of this package, we can easily define recurring tasks
+in =org-agenda= by adding a bit of text like =|+2|= for every two days,
+=|+w|= for every week, and so on.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-recur
+  :ensure t
+  :custom
+  (org-recur-finish-done t)
+  (org-recur-finish-archive t)
+  :bind (:map org-recur-mode-map
+              ("C-c r" . org-recur-finish)
+              :map org-recur-agenda-mode-map
+              ("C-c r" . org-recur-finish))
+  :hook ((org-mode . org-recur-mode)
+         (org-agenda-mode . org-recur-agenda-mode)))
 #+END_SRC
 
 *** Export Org to HTML
