@@ -1970,7 +1970,7 @@ right now.  Would need to experiment with it a bit more.
 (use-package proced
   :commands proced
   :custom
-  (proced-toggle-auto-update t)
+  (proced-auto-update-flag t)
   (proced-auto-update-interval 1)
   (proced-descend t)
   (proced-filter 'user))
