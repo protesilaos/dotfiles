@@ -1548,9 +1548,15 @@ Some tweaks to the default behaviour and presentation:
 + Prompt for confirmation only when deleting a modified buffer.
 + Hide the summary.
 + Do not open on the other window (not focused window).
-+ Remap default key to launch ibuffer instead of list-buffers.
++ Do not show empty filter groups.
++ Do not cycle movements.  So do not go to the top when moving downward
+  at the last item on the list.
 + Use colours for common actions more consistently.  Inherit styles from
   Dired (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
++ EXPERIMENTAL: My =prot/ibuffer-multi= allows for multiple instances of
+  =ibuffer=.  These can then be used to maintain subsets of buffers,
+  from where to perform per-subset operations.
++ Remap default key to launch ibuffer instead of list-buffers.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ibuffer
@@ -1558,9 +1564,27 @@ Some tweaks to the default behaviour and presentation:
   (ibuffer-expert t)
   (ibuffer-display-summary nil)
   (ibuffer-use-other-window nil)
-  (ibuffer-deletion-face 'dired-flagged)
-  (ibuffer-marked-face 'dired-marked)
-  :bind ("C-x C-b" . ibuffer))
+  (ibuffer-show-empty-filter-groups nil)
+  (ibuffer-movement-cycle nil)
+  ;;;; NOTE built into the Modus themes
+  ;; (ibuffer-deletion-face 'dired-flagged)
+  ;; (ibuffer-marked-face 'dired-marked)
+  :config
+  (defun prot/ibuffer-multi ()
+    "Spawn a new instance of `ibuffer' and give it a unique name
+based on the directory of the current buffer."
+    (interactive)
+    (let* ((parent (if (buffer-file-name)
+                       (file-name-directory (buffer-file-name))
+                     default-directory))
+           (name (car (last (split-string parent "/" t)))))
+      (split-window-sensibly)
+      (other-window 1)
+      (ibuffer nil "new")
+      (rename-buffer (concat "*Ibuffer: " name "*"))))
+  :bind (("C-x C-b" . ibuffer)
+         ("C-x C-S-b" . prot/ibuffer-multi) ; EXPERIMENTAL
+         ))
 #+END_SRC
 
 The following package groups buffers in relation to their version
