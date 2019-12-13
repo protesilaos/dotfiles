@@ -729,9 +729,9 @@ between foreground and background is >= 7:1)."
    `(gnus-group-news-low-empty ((,class (:foreground ,fg-alt))))
    `(gnus-header-content ((,class (:foreground ,fg-main))))
    `(gnus-header-from ((,class (:foreground ,fg-main))))
-   `(gnus-header-name ((,class (:foreground ,fg-dim :weight bold))))
+   `(gnus-header-name ((,class (:foreground ,fg-special-cold :weight bold))))
    `(gnus-header-newsgroup ((,class (:foreground ,blue))))
-   `(gnus-header-subject ((,class (:foreground ,fg-main))))
+   `(gnus-header-subject ((,class (:foreground ,magenta-alt-other))))
    `(gnus-server-agent ((,class (:foreground ,cyan :weight bold))))
    `(gnus-server-closed ((,class (:foreground ,magenta))))
    `(gnus-server-cloud ((,class (:foreground ,cyan-alt :weight bold))))
@@ -1200,6 +1200,10 @@ between foreground and background is >= 7:1)."
    `(pass-mode-directory-face ((,class (:foreground ,fg-special-cold :weight bold))))
    `(pass-mode-entry-face ((,class (:inherit default))))
    `(pass-mode-header-face ((,class (:foreground ,fg-special-warm))))
+   ;;;; persp-mode
+   `(persp-face-lighter-buffer-not-in-persp ((,class (:inherit modus-theme-intense-red))))
+   `(persp-face-lighter-default ((,class (:foreground ,blue-active :weight bold))))
+   `(persp-face-lighter-nil-persp ((,class (:foreground ,fg-active :weight bold))))
    ;;;; perspective
    `(persp-selected-face ((,class (:foreground ,blue-active :weight bold))))
    ;;;; prodigy
