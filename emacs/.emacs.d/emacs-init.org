@@ -1540,9 +1540,50 @@ Some tweaks to the default behaviour and presentation:
   (ibuffer-use-other-window nil)
   (ibuffer-show-empty-filter-groups nil)
   (ibuffer-movement-cycle nil)
+  (ibuffer-default-sorting-mode 'filename/process)
   ;;;; NOTE built into the Modus themes
   ;; (ibuffer-deletion-face 'dired-flagged)
   ;; (ibuffer-marked-face 'dired-marked)
+  (ibuffer-saved-filter-groups
+   '(("Main"
+      ("Directories" (mode . dired-mode))
+      ("Org" (mode . org-mode))
+      ("Programming" (or
+                      (mode . c-mode)
+                      (mode . conf-mode)
+                      (mode . css-mode)
+                      (mode . emacs-lisp-mode)
+                      (mode . html-mode)
+                      (mode . mhtml-mode)
+                      (mode . python-mode)
+                      (mode . ruby-mode)
+                      (mode . scss-mode)
+                      (mode . shell-script-mode)
+                      (mode . yaml-mode)))
+      ("Markdown" (mode . markdown-mode))
+      ("Magit" (or
+                (mode . magit-blame-mode)
+                (mode . magit-cherry-mode)
+                (mode . magit-diff-mode)
+                (mode . magit-log-mode)
+                (mode . magit-process-mode)
+                (mode . magit-status-mode)))
+      ("Apps" (or
+                   (mode . bongo-playlist-mode)
+                   (mode . mu4e-compose-mode)
+                   (mode . mu4e-headers-mode)
+                   (mode . mu4e-main-mode)
+                   (mode . elfeed-search-mode)
+                   (mode . elfeed-show-mode)
+                   (mode . mu4e-view-mode)))
+       ("Emacs" (or
+                 (name . "^\\*Help\\*$")
+                 (name . "^\\*Custom.*")
+                 (name . "^\\*Org Agenda\\*$")
+                 (name . "^\\*info\\*$")
+                 (name . "^\\*scratch\\*$")
+                 (name . "^\\*Backtrace\\*$")
+                 (name . "^\\*Messages\\*$"))))))
   :config
   (defun prot/ibuffer-multi ()
     "Spawn a new instance of `ibuffer' and give it a unique name
@@ -1554,8 +1595,11 @@ based on the directory of the current buffer."
            (name (car (last (split-string parent "/" t)))))
       (split-window-sensibly)
       (other-window 1)
-      (ibuffer nil "new")
+      (ibuffer t "*Ibuffer [new]*")
       (rename-buffer (concat "*Ibuffer: " name "*"))))
+  :hook
+  (ibuffer-mode . (lambda ()
+                     (ibuffer-switch-to-saved-filter-groups "Main")))
   :bind (("C-x C-b" . ibuffer)
          ("C-x C-S-b" . prot/ibuffer-multi) ; EXPERIMENTAL
          ))
