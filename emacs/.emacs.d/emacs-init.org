@@ -1486,41 +1486,6 @@ My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to s
   :custom
   (magit-diff-refine-hunk t))
 #+END_SRC
-
-** Git project toolbox (Projectile)
-   :PROPERTIES:
-   :CUSTOM_ID: h:ac330b2c-76c1-4f95-832b-8e250cc9f8cd
-   :END:
-
-This tool allows us to determine a directory tree with our "projects".
-In my case, these are all git repositories.  It is then possible to
-perform a set of actions on a per-project level.
-
-The =:delight= statement customises the minor mode's presentation to
-only show the project's name.  For non-project buffers, a dash appears
-instead.
-
-The key binding used here is just the common prefix to a list of key
-chords.  You can learn about them with =C-c p C-h= (so append =C-h=).
-
-#+BEGIN_SRC emacs-lisp
-(use-package projectile
-  :ensure t
-  :delight '(:eval (concat " " (projectile-project-name)))
-  :init
-  (setq projectile-project-search-path '("~/Git/Projects/"))
-  (setq projectile-indexing-method 'alien)
-  (setq projectile-enable-caching t)
-  (setq projectile-completion-system 'ivy)
-  :config
-  (projectile-mode 1)
-  :bind (("C-c p" . projectile-command-map)))
-#+END_SRC
-
-It is worth noting that Projectile /is not/ a replacement for Dired.
-It rather complements it nicely, especially when working with both
-unversioned and git-controlled directories.
-
 ** Working with buffers
    :PROPERTIES:
    :CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
@@ -1594,24 +1559,6 @@ based on the directory of the current buffer."
   :bind (("C-x C-b" . ibuffer)
          ("C-x C-S-b" . prot/ibuffer-multi) ; EXPERIMENTAL
          ))
-#+END_SRC
-
-The following package groups buffers in relation to their version
-control project (I am already using =projectile= for that).  While the
-visuals are more consistent this way, its true power lies in its
-ability to operate /at once/ on a per-project basis.  Just mark for
-deletion a project heading, confirm it, and boom all of the project's
-buffers are gone.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ibuffer-projectile
-  :ensure t
-  :after (ibuffer projectile)
-  :hook
-  (ibuffer . (lambda ()
-               (ibuffer-projectile-set-filter-groups)
-               (unless (eq ibuffer-sorting-mode 'recency)
-                 (ibuffer-do-sort-by-recency)))))
 #+END_SRC
 
 ** Window configuration
