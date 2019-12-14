@@ -1573,7 +1573,7 @@ buffer and window management]].
 That granted, the default experience can be further enhanced with a
 few careful configurations.
 
-*** Basic tweaks
+*** Basic tweaks for windows
     :PROPERTIES:
     :CUSTOM_ID: h:3d8ebbb1-f749-412e-9c72-5d65f48d5957
     :END:
@@ -1604,7 +1604,7 @@ The default keys for =delete-frame= are =C-x 5 0=.
 Remember—what Emacs call a "window" is the split of the viewport.
 Whereas a "frame" is the rectangle your window manager controls.
 
-*** winner-mode
+*** Window history and directional motions (winner-mode and windmove)
     :PROPERTIES:
     :CUSTOM_ID: h:6b4f7792-6ccd-45d5-b262-01d200639072
     :END:
@@ -1621,16 +1621,51 @@ its two main functions to Super and the right/left arrow keys.
          ("<s-left>" . winner-undo)))
 #+END_SRC
 
-There also exist other functions for switching to a window in any of the
-cardinal directions.  This is something I do not use, as I always work
-with two windows at a time (where =other-window= is all I need to move
-back and forth).
+Windmove is also built into Emacs.  It provides functions for selecting
+a window in any of the cardinal directions.  I use the Vim keys while
+holding down Super and Meta (because other mnemonics-based actions
+involving just Super or Meta are already occupied).
 
-I have a video on how to [[https://protesilaos.com/codelog/2019-08-30-emacs-manage-window-layout/][manage window layouts in Emacs]], but have
-since decided to just use registers for storing window layouts
-(instead of using the functions provided by Ivy).  Use =C-x r w= and
-then a key to store the current layout to it.  At any time you can
-jump to that layout with =C-x r j KEY=.
+#+BEGIN_SRC emacs-lisp
+(use-package windmove
+  :bind (("M-s-h" . windmove-left))
+         ("M-s-j" . windmove-down)
+         ("M-s-k" . windmove-up)
+         ("M-s-l" . windmove-right))
+#+END_SRC
+
+*** ace-window (more flexible window motions)
+
+The default Emacs distribution is very weak on window management.  While
+its notion of the "other window" is appropriate for two-window layouts,
+it becomes a constraint whenever more windows need to be displayed on
+the frame.
+
+With =ace-window= (from the developer of Ivy/Counsel/Swiper…) we can
+both enhance the movement between windows, but also perform additional
+actions to them.  These are listed in =aw-dispatch-list=.  Note that the
+keys in that list must not conflict with those in =aw-keys=.
+
+Also bear in mind that I define several other window motions.  Refer to
+[[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Basic tweaks for windows]] and [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][Window history and directional motions]].
+
+#+BEGIN_SRC emacs-lisp
+(use-package ace-window
+  :ensure t
+  :custom
+  (aw-keys '(?h ?j ?k ?l ?y ?u ?i ?o ?p))
+  (aw-scope 'frame)
+  (aw-dispatch-always t)
+  (aw-dispatch-alist
+   '((?s aw-swap-window "Swap Windows")
+     (?b aw-switch-buffer-in-window "Select Buffer")
+     (?2 aw-split-window-vert "Split Window Vertically")
+     (?3 aw-split-window-horz "Split Window Horizontally")
+     (?? aw-show-dispatch-help)))
+  (aw-minibuffer-flag t)
+  (aw-ignore-current nil)
+  :bind (("s-O" . ace-window)))
+#+END_SRC
 
 * Applications and utilities
   :PROPERTIES:
@@ -3698,61 +3733,6 @@ key binding!
 (use-package goto-last-change
   :ensure t
   :bind ("C-z" . goto-last-change))
-#+END_SRC
-
-** Window actions
-   :PROPERTIES:
-   :CUSTOM_ID: h:f24bff70-a037-4c1c-979e-05fe843ffa85
-   :END:
-
-Pierre Neidhardt has released [[https://gitlab.com/ambrevar/emacs-windower][a package called "Windower"]].  It
-implements several window management techniques that should be familiar
-to anyone who has used a tiling window manager.  As I only need a couple
-of those functions, I extract them and place them here.
-
-#+BEGIN_SRC emacs-lisp
-(use-package emacs
-  :config
-  (defun windower-toggle-single ()
-    "Un-maximize current window.
-If multiple windows are active, save window configuration and
-delete other windows.  If only one window is active and a window
-configuration was previously save, restore that configuration."
-    (interactive)
-    (if (= (count-windows) 1)
-        (when windower--last-configuration
-          (set-window-configuration windower--last-configuration))
-      (setq windower--last-configuration (current-window-configuration))
-      (delete-other-windows)))
-
-  (defun windower-toggle-split ()
-    "Switch between vertical and horizontal split.
-It only works for frames with exactly two windows."
-    (interactive)
-    (if (= (count-windows) 2)
-        (let* ((this-win-buffer (window-buffer))
-               (next-win-buffer (window-buffer (next-window)))
-               (this-win-edges (window-edges (selected-window)))
-               (next-win-edges (window-edges (next-window)))
-               (this-win-2nd (not (and (<= (car this-win-edges)
-                                           (car next-win-edges))
-                                       (<= (cadr this-win-edges)
-                                           (cadr next-win-edges)))))
-               (splitter
-                (if (= (car this-win-edges)
-                       (car (window-edges (next-window))))
-                    'split-window-horizontally
-                  'split-window-vertically)))
-          (delete-other-windows)
-          (let ((first-win (selected-window)))
-            (funcall splitter)
-            (if this-win-2nd (other-window 1))
-            (set-window-buffer (selected-window) this-win-buffer)
-            (set-window-buffer (next-window) next-win-buffer)
-            (select-window first-win)
-            (if this-win-2nd (other-window 1))))))
-  :bind (("s-m" . windower-toggle-single) ; toggle maximisation
-         ("s-s" . windower-toggle-split)))
 #+END_SRC
 
 ** Compare last two kills
