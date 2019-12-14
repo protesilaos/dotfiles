@@ -1261,9 +1261,11 @@ regular buffer, then confirm them with =C-c C-c=.
 #+BEGIN_SRC emacs-lisp
 (use-package wdired
   :after dired
-  :init
-  (setq wdired-allow-to-change-permissions t)
-  (setq wdired-create-parent-directories t))
+  :commands (wdired-mode
+             wdired-change-to-wdired-mode)
+  :custom
+  (wdired-allow-to-change-permissions t)
+  (wdired-create-parent-directories t))
 #+END_SRC
 
 *** peep-dired (file previews including images)
