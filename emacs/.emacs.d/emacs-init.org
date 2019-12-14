@@ -3708,6 +3708,21 @@ instead.  This command can then be followed by the standard
         (delete-region (point-at-bol) (point-at-eol))
         (yank))))
 
+;;;; NOTE: this is experimental and needs further refinements
+;;   (defun prot/toggle-dedicated-window ()
+;;     "Toggle current window as strongly dedicated to its buffer.
+;;
+;; Dedicated windows are not affected by actions that involve the
+;; other window.  They remain in place."
+;;     (interactive)
+;;     (let ((buf (get-buffer-window (current-buffer))))
+;;       (if (not (window-dedicated-p buf))
+;;           (progn
+;;             (set-window-dedicated-p buf t)
+;;             (message "Added 'dedicated' flag to buffer"))
+;;         (set-window-dedicated-p buf nil)
+;;         (message "Removed 'dedicated' flag from buffer"))))
+
   :bind (("C-c C-=" . bjm/align-whitespace)
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
@@ -3753,6 +3768,10 @@ need are:
 #+BEGIN_SRC emacs-lisp
 (use-package crux
   :ensure t
+  :commands (crux-transpose-windows
+             crux-duplicate-current-line-or-region
+             crux-rename-file-and-buffer
+             crux-open-with)
   :bind (("s-t" . crux-transpose-windows)
          ("C-c w" . crux-duplicate-current-line-or-region)
          ("<C-f2>" . crux-rename-file-and-buffer)
@@ -3776,6 +3795,7 @@ key binding!
 #+BEGIN_SRC emacs-lisp
 (use-package goto-last-change
   :ensure t
+  :commands goto-last-change
   :bind ("C-z" . goto-last-change))
 #+END_SRC
 
@@ -3788,6 +3808,7 @@ This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_
 
 #+BEGIN_SRC emacs-lisp
 (use-package emacs
+  :commands contrib/diff-last-two-kills
   :config
   (defun contrib/diff-last-two-kills ()
     "Put the last two kills to temporary buffers and diff them."
@@ -3800,6 +3821,5 @@ This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_
       (insert (current-kill 1 t))
       (diff old new)
       (kill-buffer old)
-      (kill-buffer new)))
-  :bind ("C-c d" . contrib/diff-last-two-kills))
+      (kill-buffer new))))
 #+END_SRC
