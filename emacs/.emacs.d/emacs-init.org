@@ -418,19 +418,18 @@ Overview of my settings:
 
 #+BEGIN_SRC emacs-lisp
 (use-package desktop
-  :init
-  (setq desktop-auto-save-timeout 300)
-  (setq desktop-dirname "~/.emacs.d/")
-  (setq desktop-base-file-name "desktop")
-  (setq desktop-files-not-to-save nil)
-  (setq desktop-globals-to-clear nil)
-  (setq desktop-load-locked-desktop t)
-  (setq desktop-missing-file-warning t)
-  (setq desktop-restore-eager 3)
-  (setq desktop-restore-frames nil)
-  (setq desktop-save 'ask-if-new)
-  :config
-  (desktop-save-mode 1))
+  :custom
+  (desktop-auto-save-timeout 300)
+  (desktop-dirname "~/.emacs.d/")
+  (desktop-base-file-name "desktop")
+  (desktop-files-not-to-save nil)
+  (desktop-globals-to-clear nil)
+  (desktop-load-locked-desktop t)
+  (desktop-missing-file-warning t)
+  (desktop-restore-eager 3)
+  (desktop-restore-frames nil)
+  (desktop-save 'ask-if-new)
+  :hook (after-init . (lambda () (desktop-save-mode 1))))
 #+END_SRC
 
 **** TODO store window configuration registers (C-x r w)?
@@ -497,11 +496,11 @@ Now some notes on my extensions:
 
 #+BEGIN_SRC emacs-lisp
 (use-package recentf
-  :init
-  (setq recentf-save-file "~/.emacs.d/recentf")
-  (setq recentf-max-menu-items 10)
-  (setq recentf-max-saved-items 200)
-  (setq recentf-show-file-shortcuts-flag nil)
+  :custom
+  (recentf-save-file "~/.emacs.d/recentf")
+  (recentf-max-menu-items 10)
+  (recentf-max-saved-items 200)
+  (recentf-show-file-shortcuts-flag nil)
   :config
   (recentf-mode 1)
   ;; Magic advice to rename entries in recentf when moving files in
@@ -552,10 +551,10 @@ Keeps a record of actions involving the minibuffer.
 
 #+BEGIN_SRC emacs-lisp
 (use-package savehist
-  :init
-  (setq savehist-file "~/.emacs.d/savehist")
-  (setq history-length 1000)
-  (setq savehist-save-minibuffer-history t)
+  :custom
+  (savehist-file "~/.emacs.d/savehist")
+  (history-length 1000)
+  (savehist-save-minibuffer-history t)
   :config
   (savehist-mode 1))
 #+END_SRC
@@ -569,8 +568,8 @@ Just remember where the point is in any given file.
 
 #+BEGIN_SRC emacs-lisp
 (use-package saveplace
-  :init
-  (setq save-place-file "~/.emacs.d/saveplace")
+  :custom
+  (save-place-file "~/.emacs.d/saveplace")
   :config
   (save-place-mode 1))
 #+END_SRC
@@ -1854,8 +1853,8 @@ document.  This fixes the issue (read the article for more).
 #+BEGIN_SRC emacs-lisp
 (use-package org-id
   :after org
-  :init
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  :custom
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
   :config
   (defun eos/org-custom-id-get (&optional pom create prefix)
     "Get the CUSTOM_ID property of the entry at point-or-marker POM.
@@ -2558,8 +2557,7 @@ automatic.
 + These settings are meant to check for mixed language content, so there
   is no need to changed dictionaries.
 + Note that =hunspell= is not part of Emacs.  I install the relevant
-  packages from the Void Linux archive (NOTE 2019-11-12: the Greek
-  dictionary is missing, but I will try to make a package for it).
+  packages from the Void Linux archive.
 + The value of =ispell-local-dictionary-alist= is based on the
   information provided in [[http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html][Chen Bin's blog]].
 + The key binding =C-;= is disabled because I repurpose that for a
@@ -2711,9 +2709,10 @@ position of the cursor after the skeleton has been inserted.
 #+BEGIN_SRC emacs-lisp
 (use-package abbrev
   :delight
-  :init
-  (setq abbrev-file-name "~/.emacs.d/abbrevs")
-  (setq only-global-abbrevs nil)
+  :custom
+  (abbrev-file-name "~/.emacs.d/abbrevs")
+  (only-global-abbrevs nil)
+  :config
   ;;;;;;;;;;;;;;;;;;;;;;
   ;; simple skeletons ;;
   ;;;;;;;;;;;;;;;;;;;;;;
@@ -3224,10 +3223,10 @@ The other options in short:
 
 #+BEGIN_SRC emacs-lisp
 (use-package mouse
-  :init
-  (setq mouse-drag-copy-region t)
-  (setq make-pointer-invisible t)
-  (setq mouse-wheel-progressive-speed t)
+  :custom
+  (mouse-drag-copy-region t)
+  (make-pointer-invisible t)
+  (mouse-wheel-progressive-speed t)
   :config
   (mouse-wheel-mode 1))
 #+END_SRC
