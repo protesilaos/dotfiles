@@ -68,22 +68,17 @@ systems.
    :CUSTOM_ID: h:a654fcb5-0163-4dc6-977a-8c50175118a1
    :END:
 
-I choose not to use many external packages until I familiarise myself
-with the defaults and/or with functionality I carefully introduce.
-The idea is to take things slowly and learn along the way while
-consulting the official manual and relevant documentation.  This is
-necessary to make an informed decision about what is actually missing
-and what could be improved further.
+I choose external packages only after I try the defaults.  The idea is
+to take things slowly and learn along the way, while consulting the
+official manual and relevant documentation.  This is necessary to make
+an informed decision about what is actually missing and what could be
+improved further.
 
 External packages that I do use are either a clear upgrade over the
 defaults or otherwise extend the functionality of what is already
-available.  For example, Magit is the superior choice for working with
-git, while =amx= nicely complements the built-in completion mechanism
-when running the =M-x= prompt.
-
-Though a former Vim user, I choose *not* to use evil-mode or similar
-implementations from the start.  I want to do things differently in
-order to ultimately set on the best approach /for my use case/.
+available.  For example, =magit= is the superior choice for working with
+git, while =Ivy= offers a richer experience than that of either
+=ido-mode= or =icomplete=.
 
 When I first switched to Emacs, in early July 2019, I kept my "dotemacs"
 separate from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles]].  The idea was not to break things until I
@@ -97,15 +92,22 @@ is still in a state of transition, as I am reviewing practically every
 aspect of it, both to accommodate Emacs and to optimise for my new
 distro: Void Linux.
 
+Though a former Vim user, I decided *not* to use =evil-mode= or any kind
+of Vi emulation.  I wanted to do things differently in order to
+ultimately set on the best approach going forward.  I have eventually
+settled on a system that builds on top of the "Emacs way" to key
+bindings.  I believe that a mnemonics-based set of keys is easier to
+memorise and to expand considerably (also see [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][my use of the Super key]]).
+
 ** Note about the use of the Super key
    :PROPERTIES:
    :CUSTOM_ID: h:fbba4dea-9cc8-4e73-bffa-02aab10a6703
    :END:
 
-Some sections of this document assign functions to =s-KEY=.  These are
-alternative ways of invoking /common commands/ that are bound to
-otherwise awkward key chords.  The original keys will continue to
-function as intended (for example, =C-x o= is also =s-o=).
+Some sections of this document assign functions to =s-KEY=.  In most
+cases, these are alternative ways of invoking /common commands/ that are
+bound to otherwise awkward key chords.  The original keys will continue
+to function as intended (for example, =C-x o= is also =s-o=).
 
 Note that your choice of desktop environment might render some of
 these useless.  The DE will simply intercept the key chord before it
