@@ -2344,14 +2344,6 @@ buffer that doubles as a library buffer (see
          ("<C-return>" . prot/bongo-library-insert-and-play-random)))
 #+END_SRC
 
-*** TODO start bongo in the background when emacs launches
-    :PROPERTIES:
-    :CUSTOM_ID: h:6f195bc4-12e2-4740-9cc7-ea7439ad2241
-    :END:
-*** TODO save/load playlists
-    :PROPERTIES:
-    :CUSTOM_ID: h:1937c1df-6c9e-487f-ab9d-ba3d148c6a28
-    :END:
 *** TODO read metadata
     :PROPERTIES:
     :CUSTOM_ID: h:f00519f1-6a03-40a7-b09f-bc3a44c78520
