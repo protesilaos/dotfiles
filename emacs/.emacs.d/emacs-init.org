@@ -832,11 +832,43 @@ customisations.
   :custom
   (counsel-yank-pop-preselect-last t)
   (counsel-yank-pop-separator "\n—————————\n")
-  (counsel-grep-base-command
-   "rg -S --with-filename --no-heading --line-number --color never '%s' %s")
+  (counsel-rg-base-command
+   "rg -SHn --no-heading --color never --no-follow --hidden %s")
   (counsel-find-file-occur-cmd          ; TODO Simplify this
    "ls -a | grep -i -E '%s' | tr '\\n' '\\0' | xargs -0 ls -d --group-directories-first")
   :config
+  (defun prot/counsel-fzf-rg-files (&optional input dir)
+    "Run `fzf' in tandem with `ripgrep' to find files in the
+present directory.  Both of those programs are external to
+Emacs."
+    (interactive)
+    (let ((process-environment
+           (cons (concat "FZF_DEFAULT_COMMAND=rg -Sn --color never --files --no-follow --hidden")
+                 process-environment)))
+      (counsel-fzf input dir)))
+
+  (defun prot/counsel-fzf-dir (arg)
+    "Specify root directory for `counsel-fzf'."
+    (prot/counsel-fzf-rg-files ivy-text
+                 (read-directory-name
+                  (concat (car (split-string counsel-fzf-cmd))
+                          " in directory: "))))
+
+  (defun prot/counsel-rg-dir (arg)
+    "Specify root directory for `counsel-rg'."
+    (let ((current-prefix-arg '(4)))
+      (counsel-rg ivy-text nil "")))
+
+  (ivy-add-actions
+   'counsel-fzf
+   '(("r" prot/counsel-fzf-dir "change root directory")
+     ("g" prot/counsel-rg-dir "use ripgrep in root directory")))
+
+  (ivy-add-actions
+   'counsel-rg
+   '(("r" prot/counsel-rg-dir "change root directory")
+     ("z" prot/counsel-fzf-dir "find files with fzf in root directory")))
+
   ;; Remove commands that only work with key bindings
   (put 'counsel-find-symbol 'no-counsel-M-x t)
   :bind (("M-x" . counsel-M-x)
@@ -857,6 +889,7 @@ customisations.
          ("C-h v" . counsel-describe-variable)
          ("M-s r" . counsel-rg)
          ("M-s g" . counsel-git-grep)
+         ("M-s z" . prot/counsel-fzf-rg-files)
 		 :map ivy-minibuffer-map
          ("C-r" . counsel-minibuffer-history)
 		 ("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
