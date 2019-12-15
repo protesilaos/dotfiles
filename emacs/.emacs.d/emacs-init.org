@@ -820,6 +820,9 @@ A few things to consider about the settings in this sub-section:
   similar to the built-in =occur=.
 + The key chord for =counsel-git-grep= is also inspired by =occur=.
   This one will perform a search in the current git repository.
++ I have a few custom functions for finding files using a fluid workflow
+  from =fzf= to =ripgrep= (and vice versa).  Better check my video on
+  [[https://protesilaos.com/codelog/2019-12-15-emacs-ivy-fzf-rg/][Fuzzy search with “Ivy actions” for FZF and RIPGREP]] (2019-12-15).
 
 Also see all the other package declarations in [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and
 search methods]] to appreciate their interplay and the full extent of my
