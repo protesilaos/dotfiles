@@ -2481,6 +2481,21 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
 
 To set up =offlineimap= I used the [[https://wiki.archlinux.org/index.php/OfflineIMAP][Arch Wiki]] entry.
 
+*** MU4E extension for org-capture
+
+With this little snippet, we allow =org-capture= convert any email into
+a note, to-do item or whatever.  The killer feature is that we get a
+direct link back to the original email.  This way, we can avoid the
+problem of searching through a pile of messages until we find the one we
+really need.  Sweet!
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-mu4e                   ; no need for `:ensure t'
+  :after (org mu4e)
+  :custom
+  (org-mu4e-link-query-in-headers-mode nil))
+#+END_SRC
+
 * Language settings (spelling, abbrevs, commenting…)
   :PROPERTIES:
   :CUSTOM_ID: h:8fc1f9ca-f5ae-407a-b721-aab414ca657b
