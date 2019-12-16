@@ -823,10 +823,13 @@ A few things to consider about the settings in this sub-section:
 + I have a few custom functions for finding files using a fluid workflow
   from =fzf= to =ripgrep= (and vice versa).  Better check my video on
   [[https://protesilaos.com/codelog/2019-12-15-emacs-ivy-fzf-rg/][Fuzzy search with “Ivy actions” for FZF and RIPGREP]] (2019-12-15).
++ For the =prot/counsel-fzf-ace-window= function, I recommend you refer
+  to my [[#h:4337228f-7ee5-4f59-b435-61534538c66f][package declaration for ace-window]], in order to see what
+  commands I want to use.
 
-Also see all the other package declarations in [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and
-search methods]] to appreciate their interplay and the full extent of my
-customisations.
+Also make sure to study all the other package declarations in the
+[[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]] section, to appreciate their
+interplay and the full extent of my customisations.
 
 #+BEGIN_SRC emacs-lisp
 (use-package counsel
@@ -841,14 +844,17 @@ customisations.
    "ls -a | grep -i -E '%s' | tr '\\n' '\\0' | xargs -0 ls -d --group-directories-first")
   :config
   (defun prot/counsel-fzf-rg-files (&optional input dir)
-    "Run `fzf' in tandem with `ripgrep' to find files in the
-present directory.  Both of those programs are external to
-Emacs."
+    "Run `fzf' in tandem with `ripgrep' to find files in the root
+of the present version-controlled directory."
     (interactive)
-    (let ((process-environment
-           (cons (concat "FZF_DEFAULT_COMMAND=rg -Sn --color never --files --no-follow --hidden")
-                 process-environment)))
-      (counsel-fzf input dir)))
+    (let* ((process-environment
+            (cons (concat "FZF_DEFAULT_COMMAND=rg -Sn --color never --files --no-follow --hidden")
+                  process-environment))
+           (default-directory
+             (vc-root-dir)))
+      (if dir
+          (counsel-fzf input dir)
+        (counsel-fzf input))))
 
   (defun prot/counsel-fzf-dir (arg)
     "Specify root directory for `counsel-fzf'."
@@ -862,40 +868,56 @@ Emacs."
     (let ((current-prefix-arg '(4)))
       (counsel-rg ivy-text nil "")))
 
+  ;; TODO generalise for all relevant file/buffer counsel-*?
+  (defun prot/counsel-fzf-ace-window (arg)
+    "Use `ace-window' on `prot/counsel-fzf-rg-files' candidate."
+    (ace-window t)
+    (let ((default-directory counsel--fzf-dir))
+      (other-window 1)
+      (find-file arg))
+    (balance-windows))
+
+  ;; Pass functions as appropriate Ivy actions (accessed via M-o)
   (ivy-add-actions
    'counsel-fzf
    '(("r" prot/counsel-fzf-dir "change root directory")
-     ("g" prot/counsel-rg-dir "use ripgrep in root directory")))
+     ("g" prot/counsel-rg-dir "use ripgrep in root directory")
+     ("a" prot/counsel-fzf-ace-window "ace-window switch")))
 
   (ivy-add-actions
    'counsel-rg
    '(("r" prot/counsel-rg-dir "change root directory")
-     ("z" prot/counsel-fzf-dir "find files with fzf in root directory")))
+     ("z" prot/counsel-fzf-dir "find file with fzf in root directory")))
+
+  (ivy-add-actions
+   'counsel-find-file
+   '(("g" prot/counsel-rg-dir "use ripgrep in root directory")
+     ("z" prot/counsel-fzf-dir "find file with fzf in root directory")))
 
   ;; Remove commands that only work with key bindings
   (put 'counsel-find-symbol 'no-counsel-M-x t)
   :bind (("M-x" . counsel-M-x)
-		 ("C-x C-f" . counsel-find-file)
-		 ("s-f" . counsel-find-file)
-		 ("s-F" . find-file-other-window)
-		 ("C-x b" . ivy-switch-buffer)
-		 ("s-b" . ivy-switch-buffer)
-		 ("C-x B" . counsel-switch-buffer-other-window)
-		 ("s-B" . counsel-switch-buffer-other-window)
-		 ("C-x d" . counsel-dired)
-		 ("s-d" . counsel-dired)
-		 ("s-D" . dired-other-window)
-		 ("C-x C-r" . counsel-recentf)
-		 ("s-r" . counsel-recentf)
-		 ("s-y" . counsel-yank-pop)
+         ("C-x C-f" . counsel-find-file)
+         ("s-f" . counsel-find-file)
+         ("s-F" . find-file-other-window)
+         ("C-x b" . ivy-switch-buffer)
+         ("s-b" . ivy-switch-buffer)
+         ("C-x B" . counsel-switch-buffer-other-window)
+         ("s-B" . counsel-switch-buffer-other-window)
+         ("C-x d" . counsel-dired)
+         ("s-d" . counsel-dired)
+         ("s-D" . dired-other-window)
+         ("C-x C-r" . counsel-recentf)
+         ("s-r" . counsel-recentf)
+         ("s-y" . counsel-yank-pop)
          ("C-h f" . counsel-describe-function)
          ("C-h v" . counsel-describe-variable)
          ("M-s r" . counsel-rg)
          ("M-s g" . counsel-git-grep)
          ("M-s z" . prot/counsel-fzf-rg-files)
-		 :map ivy-minibuffer-map
+         :map ivy-minibuffer-map
          ("C-r" . counsel-minibuffer-history)
-		 ("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
+         ("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
          ("C-SPC" . ivy-restrict-to-matches)))
 #+END_SRC
 
