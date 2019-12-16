@@ -853,9 +853,9 @@ Emacs."
   (defun prot/counsel-fzf-dir (arg)
     "Specify root directory for `counsel-fzf'."
     (prot/counsel-fzf-rg-files ivy-text
-                 (read-directory-name
-                  (concat (car (split-string counsel-fzf-cmd))
-                          " in directory: "))))
+                               (read-directory-name
+                                (concat (car (split-string counsel-fzf-cmd))
+                                        " in directory: "))))
 
   (defun prot/counsel-rg-dir (arg)
     "Specify root directory for `counsel-rg'."
@@ -1172,7 +1172,7 @@ matches by leveraging the full power of Emacs' editing capabilities
   (wgrep-change-readonly-file t))
 #+END_SRC
 
-* Directory, project, buffer, window management
+* Directory, buffer, window management
   :PROPERTIES:
   :CUSTOM_ID: h:402cb0db-1e93-4b1f-8f6d-e17b4409fb86
   :END:
@@ -1717,6 +1717,9 @@ involving just Super or Meta are already occupied).
 #+END_SRC
 
 *** ace-window (more flexible window motions)
+    :PROPERTIES:
+    :CUSTOM_ID: h:4337228f-7ee5-4f59-b435-61534538c66f
+    :END:
 
 The default Emacs distribution is very weak on window management.  While
 its notion of the "other window" is appropriate for two-window layouts,
