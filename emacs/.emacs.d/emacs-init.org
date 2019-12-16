@@ -847,14 +847,14 @@ interplay and the full extent of my customisations.
     "Run `fzf' in tandem with `ripgrep' to find files in the root
 of the present version-controlled directory."
     (interactive)
-    (let* ((process-environment
-            (cons (concat "FZF_DEFAULT_COMMAND=rg -Sn --color never --files --no-follow --hidden")
-                  process-environment))
-           (default-directory
-             (vc-root-dir)))
+    (let ((process-environment
+           (cons (concat "FZF_DEFAULT_COMMAND=rg -Sn --color never --files --no-follow --hidden")
+                 process-environment)))
       (if dir
           (counsel-fzf input dir)
-        (counsel-fzf input))))
+        (if (eq (vc-root-dir) nil)
+            (counsel-fzf input default-directory)
+          (counsel-fzf input (vc-root-dir))))))
 
   (defun prot/counsel-fzf-dir (arg)
     "Specify root directory for `counsel-fzf'."
