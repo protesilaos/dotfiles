@@ -1765,12 +1765,15 @@ Also bear in mind that I define several other window motions.  Refer to
   (aw-dispatch-always t)
   (aw-dispatch-alist
    '((?s aw-swap-window "Swap Windows")
-     (?b aw-switch-buffer-in-window "Select Buffer")
      (?2 aw-split-window-vert "Split Window Vertically")
      (?3 aw-split-window-horz "Split Window Horizontally")
      (?? aw-show-dispatch-help)))
   (aw-minibuffer-flag t)
   (aw-ignore-current nil)
+  (aw-display-mode-overlay t)
+  (aw-background t)
+  :config
+  (ace-window-display-mode -1)
   :bind (("s-O" . ace-window)))
 #+END_SRC
 
