@@ -874,10 +874,14 @@ repository, then the corresponding root is used instead."
   (defun prot/counsel-fzf-ace-window (arg)
     "Use `ace-window' on `prot/counsel-fzf-rg-files' candidate."
     (ace-window t)
-    (let ((default-directory counsel--fzf-dir))
-      (other-window 1)
-      (find-file arg))
-    (balance-windows))
+    (let ((default-directory (if (eq (vc-root-dir) nil)
+                                 counsel--fzf-dir
+                               (vc-root-dir))))
+      (if (> (length (aw-window-list)) 1)
+          (progn
+            (find-file arg))
+        (find-file-other-window arg))
+      (balance-windows)))
 
   ;; Pass functions as appropriate Ivy actions (accessed via M-o)
   (ivy-add-actions
@@ -1863,8 +1867,8 @@ Also bear in mind that I define several other window motions.  Refer to
   (aw-display-mode-overlay t)
   (aw-background t)
   :config
-  (ace-window-display-mode -1)
-  :bind (("s-O" . ace-window)))
+  (ace-window-display-mode 1)
+  :bind (("s-a" . ace-window)))
 #+END_SRC
 
 * Applications and utilities
