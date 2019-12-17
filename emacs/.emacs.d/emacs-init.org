@@ -1671,6 +1671,62 @@ based on the directory of the current buffer."
          ))
 #+END_SRC
 
+** Directory and buffer sidebars
+
+/WORK IN PROGRESS/
+
+Sometimes you need to work in a project with deeply nested directories.
+You are not familiar with the overall file structure and you are
+expected to edit lots of files from different locations.  This is where
+a persistent sidebar can come in handy.
+
+There are several options in the Emacs space, but I am inclined to use
+the ones that already benefits from the customisations I have in this
+section: just take the =dired= and =ibuffer= I have and place them in
+dedicated buffers on the side of the frame.  Do not reinvent the file
+manager or the buffer list.  Reuse my configurations.  Simple and
+effective.
+
+The settings below may be adapted over time, once I get into the flow of
+working with a persistent sidebar for project management.  Note that the
+key binding I assign to the toggle is used by default to run the
+=list-directory= function: I have found no use for it.
+
+Both packages are defined together, because of how I intend to use them.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-sidebar
+  :ensure t
+  :commands (dired-sidebar-toggle-sidebar)
+  :custom
+  (dired-sidebar-close-sidebar-on-file-open nil)
+  (dired-sidebar-delay-auto-revert-updates t)
+  (dired-sidebar-stale-buffer-time-idle-delay 2)
+  (dired-sidebar-disable-dired-collapse t)
+  (dired-sidebar-display-autorevert-messages nil)
+  (dired-sidebar-use-custom-font t)
+  (dired-sidebar-face 'variable-pitch)
+  (dired-sidebar-should-follow-file t)
+  (dired-sidebar-cycle-subtree-on-click t)
+  (dired-sidebar-follow-file-at-point-on-toggle-open t)
+  (dired-sidebar-follow-file-idle-delay 2)
+  (dired-sidebar-no-delete-other-windows t) ; Resist `delete-other-windows'
+  (dired-sidebar-one-instance-p t)
+  (dired-sidebar-open-file-in-most-recently-used-window t)
+  (dired-sidebar-pop-to-sidebar-on-toggle-open t)
+  (dired-sidebar-recenter-cursor-on-follow-file t)
+  ;; (dired-sidebar-refresh-on-projectile-switch t)
+  (dired-sidebar-skip-subtree-parent t)
+  (dired-sidebar-theme 'none)
+  (dired-sidebar-width 30))
+
+(use-package ibuffer-sidebar
+  :ensure t
+  :custom
+  (ibuffer-sidebar-use-custom-font t)
+  (ibuffer-sidebar-face 'variable-pitch))
+#+END_SRC
+
 ** Window configuration
    :PROPERTIES:
    :CUSTOM_ID: h:12591f89-eeea-4b12-93e8-9293504e5a12
