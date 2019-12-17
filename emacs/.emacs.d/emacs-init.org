@@ -844,17 +844,19 @@ interplay and the full extent of my customisations.
    "ls -a | grep -i -E '%s' | tr '\\n' '\\0' | xargs -0 ls -d --group-directories-first")
   :config
   (defun prot/counsel-fzf-rg-files (&optional input dir)
-    "Run `fzf' in tandem with `ripgrep' to find files in the root
-of the present version-controlled directory."
+    "Run `fzf' in tandem with `ripgrep' to find files in the
+present directory.  If invoked from inside a version-controlled
+repository, then the corresponding root is used instead."
     (interactive)
-    (let ((process-environment
-           (cons (concat "FZF_DEFAULT_COMMAND=rg -Sn --color never --files --no-follow --hidden")
-                 process-environment)))
+    (let* ((process-environment
+            (cons (concat "FZF_DEFAULT_COMMAND=rg -Sn --color never --files --no-follow --hidden")
+                  process-environment))
+           (vc (vc-root-dir)))
       (if dir
           (counsel-fzf input dir)
-        (if (eq (vc-root-dir) nil)
+        (if (eq vc nil)
             (counsel-fzf input default-directory)
-          (counsel-fzf input (vc-root-dir))))))
+          (counsel-fzf input vc)))))
 
   (defun prot/counsel-fzf-dir (arg)
     "Specify root directory for `counsel-fzf'."
