@@ -1548,6 +1548,7 @@ My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to s
   :custom
   (magit-diff-refine-hunk t))
 #+END_SRC
+
 ** Working with buffers
    :PROPERTIES:
    :CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
@@ -1606,6 +1607,9 @@ Some tweaks to the default behaviour and presentation:
   ;;;; NOTE built into the Modus themes
   ;; (ibuffer-deletion-face 'dired-flagged)
   ;; (ibuffer-marked-face 'dired-marked)
+  (ibuffer-title-face 'font-lock-doc-face)
+  (ibuffer-use-header-line t)
+  (ibuffer-default-shrink-to-minimum-size nil)
   (ibuffer-saved-filter-groups
    '(("Main"
       ("Directories" (mode . dired-mode))
