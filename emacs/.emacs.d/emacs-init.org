@@ -1664,6 +1664,7 @@ based on the directory of the current buffer."
       (ibuffer t "*Ibuffer [new]*")
       (rename-buffer (concat "*Ibuffer: " name "*"))))
   :hook
+  (ibuffer-mode . hl-line-mode)
   (ibuffer-mode . (lambda ()
                      (ibuffer-switch-to-saved-filter-groups "Main")))
   :bind (("C-x C-b" . ibuffer)
@@ -1681,7 +1682,7 @@ expected to edit lots of files from different locations.  This is where
 a persistent sidebar can come in handy.
 
 There are several options in the Emacs space, but I am inclined to use
-the ones that already benefits from the customisations I have in this
+the ones that already benefit from the customisations I have in this
 section: just take the =dired= and =ibuffer= I have and place them in
 dedicated buffers on the side of the frame.  Do not reinvent the file
 manager or the buffer list.  Reuse my configurations.  Simple and
@@ -1697,7 +1698,7 @@ Both packages are defined together, because of how I intend to use them.
 #+BEGIN_SRC emacs-lisp
 (use-package dired-sidebar
   :ensure t
-  :commands (dired-sidebar-toggle-sidebar)
+  :after dired
   :custom
   (dired-sidebar-close-sidebar-on-file-open nil)
   (dired-sidebar-delay-auto-revert-updates t)
@@ -1705,7 +1706,7 @@ Both packages are defined together, because of how I intend to use them.
   (dired-sidebar-disable-dired-collapse t)
   (dired-sidebar-display-autorevert-messages nil)
   (dired-sidebar-use-custom-font t)
-  (dired-sidebar-face 'variable-pitch)
+  (dired-sidebar-face `(:height 0.85))
   (dired-sidebar-should-follow-file t)
   (dired-sidebar-cycle-subtree-on-click t)
   (dired-sidebar-follow-file-at-point-on-toggle-open t)
@@ -1716,15 +1717,42 @@ Both packages are defined together, because of how I intend to use them.
   (dired-sidebar-pop-to-sidebar-on-toggle-open t)
   (dired-sidebar-recenter-cursor-on-follow-file t)
   ;; (dired-sidebar-refresh-on-projectile-switch t)
+  (dired-sidebar-refresh-on-special-commands t)
+  (dired-sidebar-special-refresh-commands:
+   '(dired-do-delete
+     dired-do-rename
+     dired-do-copy
+     dired-do-flagged-delete
+     dired-create-directory
+     (delete-file . 5)
+     (save-buffer . 5)
+     magit-format-patch))
   (dired-sidebar-skip-subtree-parent t)
   (dired-sidebar-theme 'none)
-  (dired-sidebar-width 30))
+  (dired-sidebar-width 35))
 
 (use-package ibuffer-sidebar
   :ensure t
+  :after ibuffer
   :custom
   (ibuffer-sidebar-use-custom-font t)
-  (ibuffer-sidebar-face 'variable-pitch))
+  (ibuffer-sidebar-face `(:height 0.85))
+  (ibuffer-sidebar-pop-to-sidebar-on-toggle-open t)
+  (ibuffer-sidebar-width 35)
+  (ibuffer-sidebar-special-refresh-commands
+   '((kill-buffer . 2)
+     (find-file . 2)
+     (delete-file . 2))))
+
+(use-package emacs
+  :config
+  (defun prot/toggle-dired-ibuffer-sidebars ()
+    "Toggle both `dired-sidebar' and `ibuffer-sidebar'."
+    (interactive)
+    (dired-sidebar-toggle-sidebar)
+    (ibuffer-sidebar-toggle-sidebar)
+    (balance-windows))
+  :bind ("C-x C-d" . prot/toggle-dired-ibuffer-sidebars))
 #+END_SRC
 
 ** Window configuration
