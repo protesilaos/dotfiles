@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 0.1.0
+;; Version: 0.2.1
 ;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -1239,6 +1239,13 @@ between foreground and background is >= 7:1)."
    `(persp-face-lighter-nil-persp ((,class (:foreground ,fg-active :weight bold))))
    ;;;; perspective
    `(persp-selected-face ((,class (:foreground ,blue-active :weight bold))))
+   ;;;; powerline
+   `(powerline-active0 ((,class (:background ,fg-inactive :foreground ,bg-inactive))))
+   `(powerline-active1 ((,class (:background ,bg-active :foreground ,fg-active))))
+   `(powerline-active2 ((,class (:background ,bg-alt :foreground ,fg-active))))
+   `(powerline-inactive0 ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
+   `(powerline-inactive1 ((,class (:background ,bg-alt :foreground ,fg-alt))))
+   `(powerline-inactive2 ((,class (:background ,bg-main :foreground ,fg-alt))))
    ;;;; prodigy
    `(prodigy-green-face ((,class (:foreground ,green))))
    `(prodigy-red-face ((,class (:foreground ,red))))
@@ -1267,6 +1274,17 @@ between foreground and background is >= 7:1)."
    `(rainbow-delimiters-depth-9-face ((,class (:foreground ,yellow-alt))))
    `(rainbow-delimiters-mismatched-face ((,class (:foreground ,red-alt :weight bold))))
    `(rainbow-delimiters-unmatched-face ((,class (:foreground ,red :weight bold))))
+   ;;;; ruler-mode
+   `(ruler-mode-column-number ((,class (:inherit ruler-mode-default :foreground ,fg-main :weight bold))))
+   `(ruler-mode-comment-column ((,class (:inherit ruler-mode-default :foreground ,red-active))))
+   `(ruler-mode-current-column ((,class (:inherit ruler-mode-default :foreground ,cyan-active :box t))))
+   `(ruler-mode-default ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
+   `(ruler-mode-fill-column ((,class (:inherit ruler-mode-default :foreground ,green-active))))
+   `(ruler-mode-fringes ((,class (:inherit ruler-mode-default :foreground ,blue-active))))
+   `(ruler-mode-goal-column ((,class (:inherit ruler-mode-default :foreground ,magenta-active))))
+   `(ruler-mode-margins ((,class (:inherit ruler-mode-default :foreground ,bg-main))))
+   `(ruler-mode-pad ((,class (:background ,bg-active :foreground ,fg-inactive))))
+   `(ruler-mode-tab-stop ((,class (:inherit ruler-mode-default :foreground ,yellow-active))))
    ;;;; shell scripts
    `(sh-heredoc ((,class (:inherit font-lock-string-face))))
    `(sh-quoted-exec ((,class (:inherit font-lock-builtin-face))))
