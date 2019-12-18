@@ -302,7 +302,7 @@ small laptop monitor."
 larger desktop monitor."
     (interactive)
     (when window-system
-      (prot/font-family-size "Hack" 13)))
+      (prot/font-family-size "Hack" 11.5)))
 
   (defun prot/fonts-per-monitor ()
     "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
