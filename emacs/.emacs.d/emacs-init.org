@@ -3514,27 +3514,6 @@ Some minor conveniences:
          ("<f8>" . prot/toggle-invisibles)))
 #+END_SRC
 
-** Multiple cursors
-   :PROPERTIES:
-   :CUSTOM_ID: h:8cd50d65-c1a0-4a4b-b481-e213a55ffb8c
-   :END:
-
-For me, this package is useful for quickly operating on multiple
-positions within the same viewport (use =occur=, keyboard macros, regexp
-replacement etc. for more demanding tasks).  Here I only include the
-actions that I find useful for this task.  Note that I do not rely on
-this package for complex tasks, because it does not scale well.  Read
-this [[http://nullprogram.com/blog/2017/09/07/][detailed analysis on the matter by Chris Wellons]].
-
-#+BEGIN_SRC emacs-lisp
-(use-package multiple-cursors
-  :ensure t
-  :bind (("C->" . mc/mark-next-like-this)
-         ("C-<" . mc/mark-previous-like-this)
-         ("s->" . mc/mark-all-like-this) ; Use with narrow commands
-         ("C-S-<mouse-1>" . mc/add-cursor-on-click)))
-#+END_SRC
-
 ** Broadcast mode
    :PROPERTIES:
    :CUSTOM_ID: h:0e5c777b-a1e9-4421-8b92-fcadfb1692ad
