@@ -2086,6 +2086,66 @@ document.  This fixes the issue (read the article for more).
                        (eos/org-custom-id-get (point) 'create)))))
 #+END_SRC
 
+*** Simple presentations inside of Emacs (org-tree-slide)
+    :PROPERTIES:
+    :CUSTOM_ID: h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11
+    :END:
+
+I like the idea of easily converting an =.org= file into a set of pseudo
+slides.  It is simple and has no external dependencies.  Will be
+experimenting with =org-tree-slide= to see whether my idea is actually
+good enough when put to some real use.
+
+My needs are pretty simple and straightforward: just show some text.
+The other packages in this section are only meant to be used for
+presentations.
+
+#+BEGIN_SRC emacs-lisp
+(use-package darkroom
+  :ensure t
+  :custom
+  (darkroom-text-scale-increase 0))
+
+(use-package org-bullets
+  :ensure t
+  :after org)
+
+(use-package org-tree-slide
+  :ensure t
+  :after (org darkroom)
+  :custom
+  (org-tree-slide-breadcrumbs nil)
+  (org-tree-slide-header nil)
+  (org-tree-slide-slide-in-effect nil)
+  (org-tree-slide-heading-emphasis nil)
+  (org-tree-slide-cursor-init t)
+  (org-tree-slide-modeline-display nil)
+  (org-tree-slide-skip-done nil)
+  (org-tree-slide-skip-comments t)
+  (org-tree-slide-fold-subtrees-skipped t)
+  (org-tree-slide-skip-outline-level 8)
+  (org-tree-slide-never-touch-face t)
+  :config
+  (defun prot/org-presentation ()
+    "Specifies conditions that should apply locally upon
+activation of `org-tree-slide-mode'."
+    (if (eq darkroom-tentative-mode nil)
+        (progn
+          (darkroom-tentative-mode 1)
+          (org-bullets-mode 1)
+          (org-indent-mode 1)
+          (set-frame-font "Hack-14" t t)
+          (setq cursor-type '(bar . 1)))
+      (darkroom-tentative-mode -1)
+      (org-bullets-mode -1)
+      (org-indent-mode -1)
+      (prot/fonts-per-monitor)
+      (setq cursor-type 'box)))
+  :bind (("<f9>" . org-tree-slide-mode)
+         :map org-tree-slide-mode-map
+         ("<C-right>" . org-tree-slide-move-next-tree)
+         ("<C-left>" . org-tree-slide-move-previous-tree))
+  :hook (org-tree-slide-mode . prot/org-presentation))
 #+END_SRC
 
 ** Shells and terminal emulators
