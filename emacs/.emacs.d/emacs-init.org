@@ -2083,17 +2083,9 @@ document.  This fixes the issue (read the article for more).
    current file which do not already have one."
     (interactive)
     (org-map-entries (lambda ()
-                       (eos/org-custom-id-get (point) 'create))))
-  :hook
-  ;; automatically add ids to captured headlines
-  (org-capture-prepare-finalize-hook . (lambda ()
-                                         (eos/org-custom-id-get (point) 'create)))
-  ;; automatically add ids to saved org-mode headlines
-  (org-mode . (lambda ()
-                (add-hook 'before-save-hook
-                          (lambda ()
-                            (when (and (eq major-mode 'org-mode)
-                                       (eq buffer-read-only nil))))))))
+                       (eos/org-custom-id-get (point) 'create)))))
+#+END_SRC
+
 #+END_SRC
 
 ** Shells and terminal emulators
