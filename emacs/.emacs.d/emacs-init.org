@@ -3127,6 +3127,28 @@ their development process, I am not using the MELPA packages directly.
   :custom
   (custom-safe-themes t)
   :config
+  (defun prot/modus-operandi ()
+    "Enable some `modus-operandi' variables and load the theme."
+    (setq modus-operandi-theme-slanted-constructs t
+          modus-operandi-theme-proportional-fonts nil
+          modus-operandi-theme-scale-headings t
+          modus-operandi-theme-scale-1 1.1
+          modus-operandi-theme-scale-2 1.2
+          modus-operandi-theme-scale-3 1.3
+          modus-operandi-theme-scale-4 1.4)
+    (load-theme 'modus-operandi t))
+
+  (defun prot/modus-vivendi ()
+    "Enable some `modus-vivendi' variables and load the theme."
+    (setq modus-vivendi-theme-slanted-constructs t
+          modus-vivendi-theme-proportional-fonts nil
+          modus-vivendi-theme-scale-headings t
+          modus-vivendi-theme-scale-1 1.1
+          modus-vivendi-theme-scale-2 1.2
+          modus-vivendi-theme-scale-3 1.3
+          modus-vivendi-theme-scale-4 1.4)
+    (load-theme 'modus-vivendi t))
+
   (defun prot/modus-themes-toggle ()
     "Simplistic toggle for my Modus Themes.  All it does is check
 if `modus-operandi' (light version) is active and if so switch to
@@ -3134,10 +3156,10 @@ if `modus-operandi' (light version) is active and if so switch to
 theme."
     (interactive)
     (if (eq (car custom-enabled-themes) 'modus-operandi)
-        (load-theme 'modus-vivendi t)
-      (load-theme 'modus-operandi t)))
+        (prot/modus-vivendi)
+      (prot/modus-operandi)))
   :bind ("<f5>" . prot/modus-themes-toggle)
-  :hook (after-init . (lambda () (load-theme 'modus-operandi t))))
+  :hook (after-init . prot/modus-operandi))
 #+END_SRC
 
 * Interface and interactions
