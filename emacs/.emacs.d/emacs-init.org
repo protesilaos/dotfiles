@@ -1971,6 +1971,7 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
   (org-read-date-prefer-future 'time)
   ;; general
   (org-special-ctrl-a/e 'reversed)
+  (org-hide-emphasis-markers t)
   (org-structure-template-alist
    '(("s" "#+BEGIN_SRC ?\n\n#+END_SRC")
      ("E" "#+BEGIN_SRC emacs-lisp ?\n\n#+END_SRC")
