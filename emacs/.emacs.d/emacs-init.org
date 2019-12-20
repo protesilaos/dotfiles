@@ -1677,6 +1677,9 @@ based on the directory of the current buffer."
 #+END_SRC
 
 ** Directory and buffer sidebars
+   :PROPERTIES:
+   :CUSTOM_ID: h:794f5d6d-bdd7-4c38-aada-22563939f48c
+   :END:
 
 /WORK IN PROGRESS/
 
@@ -2000,6 +2003,9 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
 #+END_SRC
 
 *** Support recurring tasks
+    :PROPERTIES:
+    :CUSTOM_ID: h:26501a5a-ad17-4146-b095-4749579a103e
+    :END:
 
 With the addition of this package, we can easily define recurring tasks
 in =org-agenda= by adding a bit of text like =|+2|= for every two days,
@@ -2351,6 +2357,9 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
 #+END_SRC
 
 ** PDF tools
+   :PROPERTIES:
+   :CUSTOM_ID: h:d04d5803-fcd5-4b15-9e2f-ea14b8d5c8c0
+   :END:
 
 I am using this tool because I want to see whether handling PDFs inside
 of Emacs is worth the effort.  The key bindings are already familiar.
@@ -2632,6 +2641,9 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
 To set up =offlineimap= I used the [[https://wiki.archlinux.org/index.php/OfflineIMAP][Arch Wiki]] entry.
 
 *** MU4E extension for org-capture
+    :PROPERTIES:
+    :CUSTOM_ID: h:ab106725-ae5d-4ce2-8160-d2f8c46cb563
+    :END:
 
 With this little snippet, we allow =org-capture= convert any email into
 a note, to-do item or whatever.  The killer feature is that we get a
