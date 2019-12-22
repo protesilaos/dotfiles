@@ -376,6 +376,34 @@ between foreground and background is >= 7:1)."
    `(completions-annotations ((,class (:inherit italic))))
    `(completions-common-part ((,class nil)))
    `(completions-first-difference ((,class (:inherit bold))))
+   ;;;; counsel
+   `(counsel-active-mode ((,class (:foreground ,magenta-alt-other))))
+   `(counsel-application-name ((,class (:foreground ,red-alt-other))))
+   `(counsel-key-binding ((,class (:foreground ,blue-alt-other :weight bold))))
+   `(counsel-outline-1 ((,class (:inherit outline-1))))
+   `(counsel-outline-2 ((,class (:inherit outline-2))))
+   `(counsel-outline-3 ((,class (:inherit outline-3))))
+   `(counsel-outline-4 ((,class (:inherit outline-4))))
+   `(counsel-outline-5 ((,class (:inherit outline-5))))
+   `(counsel-outline-6 ((,class (:inherit outline-6))))
+   `(counsel-outline-7 ((,class (:inherit outline-7))))
+   `(counsel-outline-8 ((,class (:inherit outline-8))))
+   `(counsel-outline-default ((,class (:foreground ,green-alt-other :weight bold))))
+   `(counsel-variable-documentation ((,class (:foreground ,yellow-alt-other :slant ,modus-theme-slant))))
+   ;;;; counsel-css
+   `(counsel-css-selector-depth-face-1 ((,class (:foreground ,blue))))
+   `(counsel-css-selector-depth-face-2 ((,class (:foreground ,cyan))))
+   `(counsel-css-selector-depth-face-3 ((,class (:foreground ,green))))
+   `(counsel-css-selector-depth-face-4 ((,class (:foreground ,yellow))))
+   `(counsel-css-selector-depth-face-5 ((,class (:foreground ,magenta))))
+   `(counsel-css-selector-depth-face-6 ((,class (:foreground ,red))))
+   ;;;; counsel-notmuch
+   `(counsel-notmuch-count-face ((,class (:foreground ,cyan))))
+   `(counsel-notmuch-date-face ((,class (:foreground ,blue))))
+   `(counsel-notmuch-people-face ((,class (:foreground ,magenta))))
+   `(counsel-notmuch-subject-face ((,class (:foreground ,magenta-alt-other))))
+   ;;;; counsel-org-capture-string
+   `(counsel-org-capture-string-template-body-face ((,class (:foreground ,fg-special-cold))))
    ;;;; custom
    `(custom-changed ((,class (:inherit modus-theme-subtle-cyan))))
    `(custom-comment ((,class (:foreground ,fg-alt))))
@@ -1125,7 +1153,7 @@ between foreground and background is >= 7:1)."
    `(neo-vc-unlocked-changes-face ((,class (:inherit modus-theme-refine-blue))))
    `(neo-vc-up-to-date-face ((,class (:foreground ,fg-alt))))
    `(neo-vc-user-face ((,class (:foreground ,magenta))))
-   ;;;; org-mode
+   ;;;; org
    `(org-agenda-calendar-event ((,class (:foreground ,blue-alt))))
    `(org-agenda-calendar-sexp ((,class (:foreground ,cyan-alt))))
    `(org-agenda-clocking ((,class (:inherit modus-theme-special-cold))))
@@ -1206,7 +1234,6 @@ between foreground and background is >= 7:1)."
    `(org-mode-line-clock ((,class (:background ,bg-main :foreground ,fg-main))))
    `(org-mode-line-clock-overrun ((,class (:inherit modus-theme-intense-red))))
    `(org-priority ((,class (:foreground ,magenta))))
-   `(org-recur ((,class (:foreground ,magenta-active))))
    `(org-quote ((,class (:inherit org-block :foreground ,fg-special-cold))))
    `(org-scheduled ((,class (:foreground ,fg-special-cold))))
    `(org-scheduled-previously ((,class (:foreground ,fg-special-warm))))
@@ -1223,6 +1250,15 @@ between foreground and background is >= 7:1)."
    `(org-verbatim ((,class (:background ,bg-dim :foreground ,fg-special-warm))))
    `(org-verse ((,class (:inherit org-quote))))
    `(org-warning ((,class (:foreground ,blue-intense))))
+   ;;;; org-journal
+   `(org-journal-calendar-entry-face ((,class (:foreground ,yellow-alt-other :slant ,modus-theme-slant))))
+   `(org-journal-calendar-scheduled-face ((,class (:foreground ,red-alt-other :slant ,modus-theme-slant))))
+   `(org-journal-highlight ((,class (:foreground ,magenta-alt))))
+   ;;;; org-noter
+   `(org-noter-no-notes-exist-face ((,class (:foreground ,red-active :weight bold))))
+   `(org-noter-notes-exist-face ((,class (:foreground ,green-active :weight bold))))
+   ;;;; org-recur
+   `(org-recur ((,class (:foreground ,magenta-active))))
    ;;;; outline-mode
    `(outline-1 ((,class (:inherit org-level-1))))
    `(outline-2 ((,class (:inherit org-level-2))))
