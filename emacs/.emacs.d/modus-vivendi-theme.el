@@ -32,12 +32,15 @@
 ;; accessibility criterion per the guidelines of the Worldwide Web
 ;; Consortium's Working Group on Accessibility (WCAG AAA standard).
 ;;
-;; 2. Offer as close to full face coverage as possible.  The output of
-;; `list-faces-display' offers all we need.  Note though, that it is
-;; difficult to create theme styles without actually using the
-;; packages/interfaces that require them.  As such, the development of
-;; this theme will be incremental, gradually incorporating the
-;; customisations for packages I use or have been exposed to.
+;; 2. Offer as close to full face coverage as possible.  The list is
+;; already quite long, with more additions to follow.
+;;
+;; Note though, that it is difficult to create theme styles without
+;; actually using the packages/interfaces that require them.  The output
+;; of `list-faces-display' offers all we need to get started.  As such,
+;; the development of this theme will be incremental, gradually
+;; incorporating the customisations for packages I use or have been
+;; exposed to.
 
 ;;; Code:
 
@@ -228,7 +231,7 @@ between foreground and background is >= 7:1)."
    `(modus-theme-refine-blue ((,class (:background ,blue-refine-bg :foreground ,blue-refine-fg))))
    `(modus-theme-refine-magenta ((,class (:background ,magenta-refine-bg :foreground ,magenta-refine-fg))))
    `(modus-theme-refine-cyan ((,class (:background ,cyan-refine-bg :foreground ,cyan-refine-fg))))
-   ;;; special base values that are closer the grayscale than
+   ;;; special base values that are closer to the grayscale than
    ;;; the accents defined above
    `(modus-theme-special-cold ((,class (:background ,bg-special-cold :foreground ,fg-special-cold))))
    `(modus-theme-special-mild ((,class (:background ,bg-special-mild :foreground ,fg-special-mild))))
@@ -310,6 +313,12 @@ between foreground and background is >= 7:1)."
    `(anzu-mode-line-no-match ((,class (:foreground ,red-active :weight bold))))
    `(anzu-replace-highlight ((,class (:inherit modus-theme-refine-yellow :underline t))))
    `(anzu-replace-to ((,class (:inherit modus-theme-intense-green :weight bold))))
+   ;;;; apt-sources-list
+   `(apt-sources-list-components ((,class (:foreground ,cyan))))
+   `(apt-sources-list-options ((,class (:foreground ,yellow))))
+   `(apt-sources-list-suite ((,class (:foreground ,green))))
+   `(apt-sources-list-type ((,class (:foreground ,magenta))))
+   `(apt-sources-list-uri ((,class (:foreground ,blue))))
    ;;;; artbollocks-mode
    `(artbollocks-face ((,class (:background ,bg-alt :foreground ,magenta-alt-other :underline t))))
    `(artbollocks-lexical-illusions-face ((,class (:inherit modus-theme-refine-magenta :underline t))))
@@ -404,6 +413,13 @@ between foreground and background is >= 7:1)."
    `(counsel-notmuch-subject-face ((,class (:foreground ,magenta-alt-other))))
    ;;;; counsel-org-capture-string
    `(counsel-org-capture-string-template-body-face ((,class (:foreground ,fg-special-cold))))
+   ;;;; cov
+   `(cov-coverage-not-run-face ((,class (:foreground ,red-intense))))
+   `(cov-coverage-run-face ((,class (:foreground ,green-intense))))
+   `(cov-heavy-face ((,class (:foreground ,magenta-intense))))
+   `(cov-light-face ((,class (:foreground ,blue-intense))))
+   `(cov-med-face ((,class (:foreground ,yellow-intense))))
+   `(cov-none-face ((,class (:foreground ,cyan-intense))))
    ;;;; custom
    `(custom-changed ((,class (:inherit modus-theme-subtle-cyan))))
    `(custom-comment ((,class (:foreground ,fg-alt))))
@@ -719,6 +735,18 @@ between foreground and background is >= 7:1)."
      ((,(append '((supports :underline (:style wave))) class)
        (:foreground ,red :underline (:style wave)))
       (,class (:foreground ,red :underline t))))
+   ;;;; geiser
+   `(geiser-font-lock-autodoc-current-arg ((,class (:foreground ,magenta))))
+   `(geiser-font-lock-autodoc-identifier ((,class (:foreground ,blue))))
+   `(geiser-font-lock-doc-button ((,class (:foreground ,cyan-alt :underline t))))
+   `(geiser-font-lock-doc-link ((,class (:inherit link))))
+   `(geiser-font-lock-error-link ((,class (:foreground ,red-alt :underline t))))
+   `(geiser-font-lock-image-button ((,class (:foreground ,green-alt :underline t))))
+   `(geiser-font-lock-repl-input ((,class (:weight bold))))
+   `(geiser-font-lock-repl-output ((,class (:foreground ,magenta-alt-other))))
+   `(geiser-font-lock-repl-prompt ((,class (:foreground ,cyan-alt-other))))
+   `(geiser-font-lock-xref-header ((,class (:weight bold))))
+   `(geiser-font-lock-xref-link ((,class (:inherit link))))
    ;;;; git-commit
    `(git-commit-comment-action ((,class (:foreground ,fg-special-mild))))
    `(git-commit-comment-branch-local ((,class (:foreground ,cyan))))
@@ -1268,6 +1296,21 @@ between foreground and background is >= 7:1)."
    `(outline-6 ((,class (:inherit org-level-6))))
    `(outline-7 ((,class (:inherit org-level-7))))
    `(outline-8 ((,class (:inherit org-level-8))))
+   ;;;; package (M-x list-packages)
+   `(package-description ((,class (:foreground ,fg-special-cold))))
+   `(package-help-section-name ((,class (:foreground ,magenta-alt-other :weight bold))))
+   `(package-name ((,class (:inherit link))))
+   `(package-status-avail-obso ((,class (:foreground ,red :weight bold))))
+   `(package-status-available ((,class (:foreground ,fg-special-mild))))
+   `(package-status-built-in ((,class (:foreground ,magenta))))
+   `(package-status-dependency ((,class (:foreground ,magenta-alt-other))))
+   `(package-status-disabled ((,class (:inherit modus-theme-subtle-red))))
+   `(package-status-external ((,class (:foreground ,cyan-alt-other))))
+   `(package-status-held ((,class (:foreground ,yellow-alt))))
+   `(package-status-incompat ((,class (:foreground ,yellow :weight bold))))
+   `(package-status-installed ((,class (:foreground ,fg-special-warm))))
+   `(package-status-new ((,class (:foreground ,green :weight bold))))
+   `(package-status-unsigned ((,class (:foreground ,red-alt :weight bold))))
    ;;;; paren-face
    `(parenthesis ((,class (:foreground ,fg-alt))))
    ;;;; pass
@@ -1472,6 +1515,16 @@ between foreground and background is >= 7:1)."
    `(undo-tree-visualizer-default-face ((,class (:foreground ,fg-alt))))
    `(undo-tree-visualizer-register-face ((,class (:foreground ,magenta-intense))))
    `(undo-tree-visualizer-unmodified-face ((,class (:foreground ,green-intense))))
+   ;;;; vc
+   `(vc-conflict-state ((,class (:foreground ,red-active :weight bold))))
+   `(vc-edited-state ((,class (:foreground ,green-active))))
+   `(vc-locally-added-state ((,class (:foreground ,cyan-active))))
+   `(vc-locked-state ((,class (:foreground ,magenta-active :weight bold))))
+   `(vc-missing-state ((,class (:foreground ,yellow-active :weight bold))))
+   `(vc-needs-update-state ((,class (:foreground ,blue-active :weight bold))))
+   `(vc-removed-state ((,class (:foreground ,red-active :weight bold))))
+   `(vc-state-base ((,class (:foreground ,fg-active))))
+   `(vc-up-to-date-state ((,class (:foreground ,fg-active))))
    ;;;; visual-regexp
    `(vr/group-0 ((,class (:inherit modus-theme-subtle-cyan))))
    `(vr/group-1 ((,class (:inherit modus-theme-subtle-yellow))))
