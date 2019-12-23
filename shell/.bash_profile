@@ -5,10 +5,10 @@
 #
 
 # Load my configs
-[ -f ~/.bashrc ] && . ~/.bashrc
+[ -f "$HOME"/.bashrc ] && . "$HOME"/.bashrc
 
 # Autostart X (see my .xinitrc)
-if [ -f ~/.xinitrc ]; then
+if [ -f "$HOME"/.xinitrc ]; then
     if [ -z "$DISPLAY" ] && [ "$(tty)" = /dev/tty1 ]; then
         xinit
     fi
