@@ -328,7 +328,7 @@ you discern the character at a quick glance?  If yes, the choice is
 good, else search for something else.
 
 Note that this test is not perfect, since many typefaces fall short in
-less obvious ways, such the space between the characters.
+less obvious ways, such as the space between the characters.
 
 #+BEGIN_EXAMPLE
 ()[]{}<>«»‹›
