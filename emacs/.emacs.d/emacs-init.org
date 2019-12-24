@@ -2069,26 +2069,37 @@ document.  This fixes the issue (read the article for more).
     :END:
 
 I like the idea of easily converting an =.org= file into a set of pseudo
-slides.  It is simple and has no external dependencies.  Will be
-experimenting with =org-tree-slide= to see whether my idea is actually
-good enough when put to some real use.
+slides.  It is simple and has no external dependencies.
 
 My needs are pretty simple and straightforward: just show some text.
 The other packages in this section are only meant to be used for
 presentations.
 
+For the font specified herein, make sure to understand the overall
+configurations by reading the section on [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][primary font settings]].  I opted
+not to use =text-scale-adjust= or some variant thereof, because that only
+operates on the text of the focused window, whereas I want all
+interfaces to adapt to the new size (so that I can, for example, show
+the minibuffer while doing a presentation).
+
+*NOTE:* I am keeping these disabled with and will only be activating them
+when I need to do a presentation.
+
 #+BEGIN_SRC emacs-lisp
 (use-package darkroom
   :ensure t
+  :disabled
   :custom
   (darkroom-text-scale-increase 0))
 
 (use-package org-bullets
   :ensure t
+  :disabled
   :after org)
 
 (use-package org-tree-slide
   :ensure t
+  :disabled
   :after (org darkroom)
   :custom
   (org-tree-slide-breadcrumbs nil)
