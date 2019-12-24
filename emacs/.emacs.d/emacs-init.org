@@ -2711,6 +2711,20 @@ really need.  Sweet!
   (org-mu4e-link-query-in-headers-mode nil))
 #+END_SRC
 
+** Package lists
+   :PROPERTIES:
+   :CUSTOM_ID: h:0d36996d-c12d-42e6-a388-b67c548c4a4b
+   :END:
+
+With this I just want to enable line highlighting when browsing the list
+of packages.  I generally use =hl-line-mode= on all interfaces where the
+current line is more important than the exact column of the point.
+
+#+BEGIN_SRC emacs-lisp
+(use-package package
+  :hook (package-menu-mode . hl-line-mode))
+#+END_SRC
+
 * Language settings (spelling, abbrevs, commenting…)
   :PROPERTIES:
   :CUSTOM_ID: h:8fc1f9ca-f5ae-407a-b721-aab414ca657b
