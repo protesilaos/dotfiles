@@ -286,6 +286,16 @@ that installs system-wide.  Also refer to [[https://gitlab.com/protesilaos/dotfi
   (x-underline-at-descent-line t)
   (underline-minimum-offset 1)
   :config
+  (defconst prot/fixed-pitch-font "Hack"
+    "The default fixed-pitch typeface.")
+
+  ;;;; TODO is it okay to defconst there?
+  ;; (defun prot/test-font-availaiblity ()
+  ;;   "Checks for the availability of a desired monospace font"
+  ;;   (when (member "Hack" (font-family-list))
+  ;;     (defconst prot/fixed-pitch-font "Hack"
+  ;;       "The default fixed-pitch typeface.")))
+
   (defun prot/font-family-size (family size)
     "Set frame font for FAMILY at SIZE."
     (set-frame-font (concat family "-" (number-to-string size)) t t))
@@ -295,24 +305,24 @@ that installs system-wide.  Also refer to [[https://gitlab.com/protesilaos/dotfi
 small laptop monitor."
     (interactive)
     (when window-system
-      (prot/font-family-size "Hack" 10.5)))
+      (prot/font-family-size prot/fixed-pitch-font 10.5)))
 
   (defun prot/desktop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
 larger desktop monitor."
     (interactive)
     (when window-system
-      (prot/font-family-size "Hack" 11.5)))
+      (prot/font-family-size prot/fixed-pitch-font 11.5)))
 
   (defun prot/fonts-per-monitor ()
     "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
 based on the width of the monitor.  The calculation is based on
 the maximum width of my laptop's screen."
-  (interactive)
-  (when window-system
-    (if (> (display-pixel-width) 1366)
-        (prot/desktop-fonts)
-      (prot/laptop-fonts))))
+    (interactive)
+    (when window-system
+      (if (> (display-pixel-width) 1366)
+          (prot/desktop-fonts)
+        (prot/laptop-fonts))))
 
   :hook
   (after-init . prot/fonts-per-monitor))
@@ -2130,7 +2140,7 @@ activation of `org-tree-slide-mode'."
           (darkroom-tentative-mode 1)
           (org-bullets-mode 1)
           (org-indent-mode 1)
-          (set-frame-font "Hack-14" t t)
+          (set-frame-font (concat prot/fixed-pitch-font "-" (number-to-string 14)) t t)
           (setq cursor-type '(bar . 1)))
       (darkroom-tentative-mode -1)
       (org-bullets-mode -1)
