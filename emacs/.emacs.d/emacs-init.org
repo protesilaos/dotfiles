@@ -2003,29 +2003,6 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
          ("C-c l" . org-store-link)))
 #+END_SRC
 
-*** Support recurring tasks
-    :PROPERTIES:
-    :CUSTOM_ID: h:26501a5a-ad17-4146-b095-4749579a103e
-    :END:
-
-With the addition of this package, we can easily define recurring tasks
-in =org-agenda= by adding a bit of text like =|+2|= for every two days,
-=|+w|= for every week, and so on.
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-recur
-  :ensure t
-  :custom
-  (org-recur-finish-done t)
-  (org-recur-finish-archive t)
-  :bind (:map org-recur-mode-map
-              ("C-c r" . org-recur-finish)
-              :map org-recur-agenda-mode-map
-              ("C-c r" . org-recur-finish))
-  :hook ((org-mode . org-recur-mode)
-         (org-agenda-mode . org-recur-agenda-mode)))
-#+END_SRC
-
 *** Export Org to HTML
     :PROPERTIES:
     :CUSTOM_ID: h:087f3e10-b270-4a5c-b5e4-dbb2b4964f61
