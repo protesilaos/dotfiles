@@ -2694,7 +2694,9 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
     (let ((mails "~/.emacs.d/mu4e-contexts.el.gpg"))
       (when (file-exists-p mails)
         (load-file mails))))
-  :hook (after-init . prot/mu4e-contexts))
+  :hook (after-init . prot/mu4e-contexts)
+  :bind (:map mu4e-main-mode-map
+              ("g" . mu4e-update-mail-and-index)))
 #+END_SRC
 
 To set up =offlineimap= I used the [[https://wiki.archlinux.org/index.php/OfflineIMAP][Arch Wiki]] entry.
