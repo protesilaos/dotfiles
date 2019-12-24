@@ -242,7 +242,7 @@ between foreground and background is >= 7:1)."
    ;;; default constructs
    ;;;; absolute essentials
    `(default ((,class (:background ,bg-main :foreground ,fg-main))))
-   `(cursor ((,class (:background ,fg-main))))
+   `(cursor ((,class (:background ,bg-main :foreground ,fg-main :inverse-video t))))
    `(fringe ((,class (:inherit default))))
    ;;;; basic and/or ungrouped styles
    `(diary ((,class (:foreground ,yellow))))
@@ -256,7 +256,7 @@ between foreground and background is >= 7:1)."
    `(no-emoji ((,class (:foreground ,fg-special-mild :weight bold))))
    `(nobreak-hyphen ((,class (:inherit modus-theme-refine-cyan))))
    `(nobreak-space ((,class (:inherit modus-theme-refine-cyan :underline t))))
-   `(minibuffer-prompt ((,class (:foreground ,cyan-intense))))
+   `(minibuffer-prompt ((,class (:foreground ,cyan))))
    `(mm-command-output ((,class (:foreground ,red-alt-other))))
    `(mm-uu-extract ((,class (:inherit modus-theme-refine-yellow))))
    `(next-error ((,class (:inherit modus-theme-subtle-red))))
@@ -350,6 +350,32 @@ between foreground and background is >= 7:1)."
    `(widget-field ((,class (:background ,bg-alt :foreground ,fg-dim))))
    `(widget-inactive ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
    `(widget-single-line-field ((,class (:inherit widget-field))))
+   ;;;; calendar
+   `(calendar-today ((,class (:underline t))))
+   `(calendar-weekday-header ((,class (:foreground ,blue-alt-other))))
+   `(calendar-weekend-header ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
+   ;;;; calfw
+   `(cfw:face-annotation ((,class (:background ,bg-alt :foreground ,fg-alt))))
+   `(cfw:face-day-title ((,class (:background ,bg-alt :foreground ,fg-main))))
+   `(cfw:face-default-content ((,class (:foreground ,green-alt))))
+   `(cfw:face-default-day ((,class (:inherit cfw:face-day-title :weight bold))))
+   `(cfw:face-disable ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
+   `(cfw:face-grid ((,class (:foreground ,fg-inactive))))
+   `(cfw:face-header ((,class (::foreground ,fg-main :weight bold))))
+   `(cfw:face-holiday ((,class (:background ,bg-alt :foreground ,magenta :weight bold))))
+   `(cfw:face-periods ((,class (:foreground ,cyan-alt-other))))
+   `(cfw:face-saturday ((,class (:background ,bg-alt :foreground ,magenta-alt :weight bold))))
+   `(cfw:face-select ((,class (:inherit modus-theme-intense-blue))))
+   `(cfw:face-sunday ((,class (:background ,bg-alt :foreground ,magenta-alt-other :weight bold))))
+   `(cfw:face-title ((,class (:inherit ,modus-theme-variable-pitch
+                                       :foreground ,fg-special-warm :weight bold
+                                       ,@(when modus-operandi-theme-scale-headings
+                                           (list :height modus-operandi-theme-scale-4))))))
+   `(cfw:face-today ((,class (:foreground ,blue :weight bold))))
+   `(cfw:face-today-title ((,class (:inherit modus-theme-special-mild :box t))))
+   `(cfw:face-toolbar ((,class (:background ,bg-active :foreground ,bg-active))))
+   `(cfw:face-toolbar-button-off ((,class (:background ,bg-alt :foreground ,cyan))))
+   `(cfw:face-toolbar-button-on ((,class (:background ,bg-main :foreground ,blue-intense :weight bold))))
    ;;;; column-enforce-mode
    `(column-enforce-face ((,class (:inherit modus-theme-refine-yellow))))
    ;;;; company-mode
@@ -373,10 +399,10 @@ between foreground and background is >= 7:1)."
    `(company-posframe-inactive-backend-name ((,class (:background ,bg-active :foreground ,fg-active))))
    `(company-posframe-metadata ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
    ;;;; compilation feedback
-   `(compilation-column-number ((,class (:foreground ,magenta))))
+   `(compilation-column-number ((,class (:foreground ,magenta-alt-other))))
    `(compilation-error ((,class (:foreground ,red :weight bold))))
    `(compilation-info ((,class (:foreground ,fg-special-cold))))
-   `(compilation-line-number ((,class (::foreground ,magenta-alt))))
+   `(compilation-line-number ((,class (:foreground ,magenta-alt))))
    `(compilation-mode-line-exit ((,class (:foreground ,blue-active :weight bold))))
    `(compilation-mode-line-fail ((,class (:foreground ,red-active :weight bold))))
    `(compilation-mode-line-run ((,class (:foreground ,magenta-active :weight bold))))
@@ -687,10 +713,10 @@ between foreground and background is >= 7:1)."
    `(fancy-dabbrev-selection-face ((,class (:inherit modus-theme-intense-cyan :weight bold))))
    ;;;; font lock
    `(font-lock-builtin-face ((,class (:foreground ,magenta-alt))))
-   `(font-lock-comment-delimiter-face ((,class (:foreground ,fg-alt))))
+   `(font-lock-comment-delimiter-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
    `(font-lock-comment-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
    `(font-lock-constant-face ((,class (:foreground ,blue-alt-other))))
-   `(font-lock-doc-face ((,class (:foreground ,fg-special-cold))))
+   `(font-lock-doc-face ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
    `(font-lock-function-name-face ((,class (:foreground ,magenta))))
    `(font-lock-keyword-face ((,class (:foreground ,magenta-alt-other))))
    `(font-lock-negation-char-face ((,class nil)))
@@ -979,7 +1005,7 @@ between foreground and background is >= 7:1)."
    `(ivy-org ((,class (:foreground ,cyan-alt-other))))
    `(ivy-prompt-match ((,class (:inherit ivy-current-match))))
    `(ivy-remote ((,class (:foreground ,magenta))))
-   `(ivy-remote ((,class (:foreground ,fg-alt))))
+   `(ivy-separator ((,class (:foreground ,fg-alt))))
    `(ivy-subdir ((,class (:foreground ,blue-alt-other))))
    `(ivy-virtual ((,class (:foreground ,magenta-alt-other))))
    `(ivy-yanked-word ((,class (:inherit modus-theme-refine-blue))))
