@@ -1981,8 +1981,8 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
   (org-special-ctrl-a/e 'reversed)
   (org-hide-emphasis-markers t)
   (org-structure-template-alist
-   '(("s" "#+BEGIN_SRC ?\n\n#+END_SRC")
-     ("E" "#+BEGIN_SRC emacs-lisp ?\n\n#+END_SRC")
+   '(("s" "#+BEGIN_SRC\n?\n#+END_SRC")
+     ("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC")
      ("e" "#+BEGIN_EXAMPLE\n?\n#+END_EXAMPLE")
      ("q" "#+BEGIN_QUOTE\n?\n#+END_QUOTE")
      ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE")
