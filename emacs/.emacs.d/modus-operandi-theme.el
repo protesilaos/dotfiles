@@ -475,6 +475,13 @@ between foreground and background is >= 7:1)."
    ;;;; define-word
    `(define-word-face-1 ((,class (:foreground ,yellow))))
    `(define-word-face-2 ((,class (:foreground ,fg-main))))
+   ;;;; disk-usage
+   `(disk-usage-children ((,class (:foreground ,yellow))))
+   `(disk-usage-inaccessible ((,class (:foreground ,red :weight bold))))
+   `(disk-usage-percent ((,class (:foreground ,green))))
+   `(disk-usage-size ((,class (:foreground ,cyan))))
+   `(disk-usage-symlink ((,class (:foreground ,blue :underline t))))
+   `(disk-usage-symlink-directory ((,class (:foreground ,blue-alt :weight bold))))
    ;;;; diff-hl
    `(diff-hl-change ((,class (:inherit modus-theme-intense-yellow))))
    `(diff-hl-delete ((,class (:inherit modus-theme-intense-red))))
@@ -502,16 +509,25 @@ between foreground and background is >= 7:1)."
    `(diff-refine-changed ((,class (:inherit modus-theme-intense-yellow))))
    `(diff-refine-removed ((,class (:inherit modus-theme-intense-red))))
    `(diff-removed ((,class (:inherit modus-theme-subtle-red))))
-   ;;;; dired (and extensions)
-   `(dgi-commit-message-face ((,class (:foreground ,fg-special-mild)))) ; dired-git-info
-   `(dired-async-failures ((,class (:foreground ,red-active :weight bold))))
-   `(dired-async-message ((,class (:foreground ,green-active :weight bold))))
-   `(dired-async-mode-message ((,class (:foreground ,cyan-active :weight bold))))
+   ;;;; dired
    `(dired-directory ((,class (:foreground ,blue :weight bold))))
    `(dired-flagged ((,class (:inherit modus-theme-intense-red))))
    `(dired-header ((,class (:foreground ,fg-main :weight bold))))
+   `(dired-ignored ((,class (:foreground ,fg-alt))))
+   `(dired-mark ((,class (:foreground ,magenta-alt :weight bold))))
    `(dired-marked ((,class (:inherit modus-theme-intense-magenta))))
+   `(dired-perm-write ((,class (:foreground ,fg-special-warm))))
+   `(dired-symlink ((,class (:foreground ,blue-alt :underline t))))
+   `(dired-warning ((,class (:foreground ,yellow :weight bold))))
+   ;;;; dired-async
+   `(dired-async-failures ((,class (:foreground ,red-active :weight bold))))
+   `(dired-async-message ((,class (:foreground ,green-active :weight bold))))
+   `(dired-async-mode-message ((,class (:foreground ,cyan-active :weight bold))))
+   ;;;; dired-git-info
+   `(dgi-commit-message-face ((,class (:foreground ,fg-special-mild))))
+   ;;;; dired-narrow
    `(dired-narrow-blink ((,class (:inherit modus-theme-subtle-cyan :weight bold))))
+   ;;;; dired-subtree
    ;; remove background from dired-subtree, else it breaks
    ;; dired-{flagged,marked} and any other face that sets a background
    ;; such as hl-line
