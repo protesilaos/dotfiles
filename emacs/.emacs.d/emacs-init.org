@@ -241,11 +241,11 @@ Overview of these settings:
   (global-unset-key (kbd "C-h h")))
 #+END_SRC
 
-** Default typeface
+** Base typeface configurations
    :PROPERTIES:
    :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
    :END:
-*** Font settings
+*** Primary font settings
     :PROPERTIES:
     :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
     :END:
@@ -318,11 +318,19 @@ the maximum width of my laptop's screen."
   (after-init . prot/fonts-per-monitor))
 #+END_SRC
 
-And here is a typeface suitability test: can you discern the character
-at a quick glance?  If yes, the font is good, else search for something
-else.
+*** Typeface suitability test
+    :PROPERTIES:
+    :CUSTOM_ID: h:9035a1ed-e988-4731-89a5-0d9e302c3dea
+    :END:
 
-#+BEGIN_SRC
+And here is a simple test to assess the overall quality of the font: can
+you discern the character at a quick glance?  If yes, the choice is
+good, else search for something else.
+
+Note that this test is not perfect, since many typefaces fall short in
+less obvious ways, such the space between the characters.
+
+#+BEGIN_EXAMPLE
 ()[]{}<>«»‹›
 6bB8&0ODdo
 1tiIlL|
@@ -351,7 +359,7 @@ abcdefghijklmnopqrstuvwxyz
 1234567890#%^*
 ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ
 αβγδεζηθικλμνξοπρστυφχψω
-#+END_SRC
+#+END_EXAMPLE
 
 ** Persistent state
    :PROPERTIES:
