@@ -3178,6 +3178,19 @@ completion candidates.  I am using it in tandem with Ivy (see the
   (company-prescient-mode 1))
 #+END_SRC
 
+** Eldoc (elisp live documentation feedback)
+
+Displays information about the construct at point in the echo area.  I
+find that I have no use for this, so I am disabling it for the time
+being.
+
+#+BEGIN_SRC emacs-lisp
+(use-package eldoc
+  :disabled
+  :config
+  (global-eldoc-mode -1))
+#+END_SRC
+
 * Modus themes (my very accessible themes)
   :PROPERTIES:
   :CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
