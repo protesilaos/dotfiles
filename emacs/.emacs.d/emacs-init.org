@@ -333,12 +333,14 @@ the maximum width of my laptop's screen."
     :CUSTOM_ID: h:9035a1ed-e988-4731-89a5-0d9e302c3dea
     :END:
 
-And here is a simple test to assess the overall quality of the font: can
-you discern the character at a quick glance?  If yes, the choice is
-good, else search for something else.
+And here is a simple test to assess the overall quality of the font: /can
+you discern the character at a quick glance?/ If yes, your choice of font
+is good, else search for something else.
 
 Note that this test is not perfect, since many typefaces fall short in
-less obvious ways, such as the space between the characters.
+less obvious ways, such as the space between the characters.  Also note
+that the website version of this document may not accurately represent
+the typeface I am using.
 
 #+BEGIN_EXAMPLE
 ()[]{}<>«»‹›
