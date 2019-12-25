@@ -3191,7 +3191,6 @@ being.
 
 #+BEGIN_SRC emacs-lisp
 (use-package eldoc
-  :disabled
   :config
   (global-eldoc-mode -1))
 #+END_SRC
