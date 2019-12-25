@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 0.2.1
+;; Version: 0.3.0
 ;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -91,6 +91,11 @@ between foreground and background is >= 7:1)."
 ;; default (users must opt in).
 (defcustom modus-vivendi-theme-slanted-constructs nil
   "Use slanted text in more code constructs (italics or oblique)."
+  :type 'boolean
+  :group 'modus-theme)
+
+(defcustom modus-vivendi-theme-bold-constructs nil
+  "Use bold text in more code constructs."
   :type 'boolean
   :group 'modus-theme)
 
@@ -197,6 +202,11 @@ between foreground and background is >= 7:1)."
       (modus-theme-slant
        (if modus-vivendi-theme-slanted-constructs
            'italic
+         'normal))
+
+      (modus-theme-bold
+       (if modus-vivendi-theme-bold-constructs
+           'bold
          'normal))
 
       (modus-theme-variable-pitch
@@ -369,8 +379,8 @@ between foreground and background is >= 7:1)."
    `(cfw:face-sunday ((,class (:background ,bg-alt :foreground ,magenta-alt-other :weight bold))))
    `(cfw:face-title ((,class (:inherit ,modus-theme-variable-pitch
                                        :foreground ,fg-special-warm :weight bold
-                                       ,@(when modus-operandi-theme-scale-headings
-                                           (list :height modus-operandi-theme-scale-4))))))
+                                       ,@(when modus-vivendi-theme-scale-headings
+                                           (list :height modus-vivendi-theme-scale-4))))))
    `(cfw:face-today ((,class (:foreground ,blue :weight bold))))
    `(cfw:face-today-title ((,class (:inherit modus-theme-special-mild :box t))))
    `(cfw:face-toolbar ((,class (:background ,bg-active :foreground ,bg-active))))
@@ -712,6 +722,8 @@ between foreground and background is >= 7:1)."
    `(evil-goggles-shift-face ((,class (:inherit evil-goggles-default-face))))
    `(evil-goggles-surround-face ((,class (:inherit evil-goggles-default-face))))
    `(evil-goggles-yank-face ((,class (:inherit modus-theme-subtle-blue))))
+   ;;;; evil-visual-mark-mode
+   `(evil-visual-mark-face ((,class (:inherit modus-theme-intense-magenta))))
    ;;;; eww
    `(eww-invalid-certificate ((,class (:inherit error))))
    `(eww-valid-certificate ((,class (:inherit success))))
@@ -727,18 +739,18 @@ between foreground and background is >= 7:1)."
    `(fancy-dabbrev-menu-face ((,class (:background ,bg-alt :foreground ,fg-alt))))
    `(fancy-dabbrev-preview-face ((,class (:foreground ,fg-alt :underline t))))
    `(fancy-dabbrev-selection-face ((,class (:inherit modus-theme-intense-cyan :weight bold))))
-   ;;;; font lock
-   `(font-lock-builtin-face ((,class (:foreground ,magenta-alt))))
+   ;;;; font-lock
+   `(font-lock-builtin-face ((,class (:foreground ,magenta-alt :weight ,modus-theme-bold))))
    `(font-lock-comment-delimiter-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
    `(font-lock-comment-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
    `(font-lock-constant-face ((,class (:foreground ,blue-alt-other))))
    `(font-lock-doc-face ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
    `(font-lock-function-name-face ((,class (:foreground ,magenta))))
-   `(font-lock-keyword-face ((,class (:foreground ,magenta-alt-other))))
-   `(font-lock-negation-char-face ((,class nil)))
+   `(font-lock-keyword-face ((,class (:foreground ,magenta-alt-other :weight ,modus-theme-bold))))
+   `(font-lock-negation-char-face ((,class (:foreground ,yellow :weight ,modus-theme-bold))))
    `(font-lock-preprocessor-face ((,class (:foreground ,magenta))))
-   `(font-lock-regexp-grouping-backslash ((,class (:weight bold))))
-   `(font-lock-regexp-grouping-construct ((,class (:weight bold))))
+   `(font-lock-regexp-grouping-backslash ((,class (:foreground ,yellow-alt-other :weight bold))))
+   `(font-lock-regexp-grouping-construct ((,class (:foreground ,green-alt-other :weight bold))))
    `(font-lock-string-face ((,class (:foreground ,blue-alt))))
    `(font-lock-type-face ((,class (:foreground ,magenta-alt))))
    `(font-lock-variable-name-face ((,class (:foreground ,cyan))))
@@ -1131,11 +1143,42 @@ between foreground and background is >= 7:1)."
    `(magit-signature-revoked ((,class (:background ,bg-main :foreground ,magenta-intense))))
    `(magit-signature-untrusted ((,class (:background ,bg-main :foreground ,cyan-intense))))
    `(magit-tag ((,class (:foreground ,yellow-alt-other))))
-   ;;;; markdown format
-   `(markdown-blockquote-face ((,class (:background ,bg-alt))))
+   ;;;; markdown-mode
+   `(markdown-blockquote-face ((,class (:background ,bg-dim :foreground ,fg-special-warm :slant ,modus-theme-slant))))
+   `(markdown-bold-face ((,class (:weight bold))))
+   `(markdown-code-face ((,class (:inherit fixed-pitch))))
+   `(markdown-comment-face ((,class (:inherit font-lock-comment-face))))
+   `(markdown-footnote-marker-face ((,class (:foreground ,cyan-alt :weight bold))))
+   `(markdown-footnote-text-face ((,class (:foreground ,fg-main :slant ,modus-theme-slant))))
+   `(markdown-gfm-checkbox-face ((,class (:foreground ,cyan-alt-other))))
+   `(markdown-header-delimiter-face ((,class (:foreground ,fg-dim :weight normal))))
    `(markdown-header-face ((,class (:weight bold))))
-   `(markdown-inline-code-face ((,class (:background ,bg-dim :foreground ,magenta-alt))))
-   `(markdown-pre-face ((,class (:inherit markdown-inline-code-face))))
+   `(markdown-header-rule-face ((,class (:foreground ,fg-special-warm :weight bold))))
+   `(markdown-hr-face ((,class (:foreground ,fg-special-warm :weight bold))))
+   `(markdown-html-attr-name-face ((,class (:foreground ,cyan))))
+   `(markdown-html-attr-value-face ((,class (:foreground ,blue))))
+   `(markdown-html-entity-face ((,class (:foreground ,cyan))))
+   `(markdown-html-tag-delimiter-face ((,class (:foreground ,fg-special-mild))))
+   `(markdown-html-tag-name-face ((,class (:foreground ,magenta-alt))))
+   `(markdown-inline-code-face ((,class (:foreground ,magenta))))
+   `(markdown-italic-face ((,class (:slant italic))))
+   `(markdown-language-info-face ((,class (:foreground ,fg-special-cold))))
+   `(markdown-language-keyword-face ((,class (:foreground ,green-alt-other))))
+   `(markdown-line-break-face ((,class (:inherit modus-theme-refine-cyan :underline t))))
+   `(markdown-link-face ((,class (:inherit link))))
+   `(markdown-link-title-face ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
+   `(markdown-list-face ((,class (:foreground ,fg-dim))))
+   `(markdown-markup-face ((,class (:foreground ,fg-alt))))
+   `(markdown-math-face ((,class (:foreground ,magenta-alt-other))))
+   `(markdown-metadata-key-face ((,class (:foreground ,cyan-alt-other))))
+   `(markdown-metadata-value-face ((,class (:foreground ,blue-alt))))
+   `(markdown-missing-link-face ((,class (:foreground ,yellow :weight bold))))
+   `(markdown-plain-url-face ((,class (:inherit markdown-link-face))))
+   `(markdown-pre-face ((,class (:foreground ,fg-special-mild))))
+   `(markdown-reference-face ((,class (:inherit markdown-markup-face))))
+   `(markdown-strike-through-face ((,class (:strike-through t))))
+   `(markdown-table-face ((,class (:foreground ,fg-special-cold))))
+   `(markdown-url-face ((,class (:foreground ,blue))))
    ;;;; matching parentheses
    `(show-paren-match ((,class (:inherit modus-theme-intense-magenta :weight bold))))
    `(show-paren-match-expression ((,class (:inherit modus-theme-special-mild))))
