@@ -83,6 +83,12 @@ between foreground and background is >= 7:1)."
 (defface modus-theme-refine-blue nil t)
 (defface modus-theme-refine-magenta nil t)
 (defface modus-theme-refine-cyan nil t)
+(defface modus-theme-active-red nil t)
+(defface modus-theme-active-green nil t)
+(defface modus-theme-active-yellow nil t)
+(defface modus-theme-active-blue nil t)
+(defface modus-theme-active-magenta nil t)
+(defface modus-theme-active-cyan nil t)
 (defface modus-theme-special-cold nil t)
 (defface modus-theme-special-mild nil t)
 (defface modus-theme-special-warm nil t)
@@ -138,8 +144,8 @@ between foreground and background is >= 7:1)."
       (fg-dim "#e0e6f0") (bg-dim "#110b11")
       ;; specifically for on/off states (e.g. mode-line)
       ;; must be combined with themselves
-      (fg-active "#f5f5f5") (bg-active "#404040")
-      (fg-inactive "#bebebe") (bg-inactive "#282828")
+      (fg-active "#f5f5f5") (bg-active "#2f2f2f")
+      (fg-inactive "#bebebe") (bg-inactive "#202020")
       ;; special base values, used only for cases where the above
       ;; fg-* or bg-* cannot or should not be used (to avoid confusion)
       ;; must be combined with: {fg,bg}-{main,alt,dim}
@@ -176,7 +182,7 @@ between foreground and background is >= 7:1)."
       ;; distinguishable
       ;; must be combined with: fg-main
       (red-intense-bg "#a4202a") (green-intense-bg "#006800")
-      (yellow-intense-bg "#625a00") (blue-intense-bg "#2844b8")
+      (yellow-intense-bg "#824a00") (blue-intense-bg "#2844b8")
       (magenta-intense-bg "#7042a2") (cyan-intense-bg "#005f88")
       ;; styles for refined git diffs and other contexts where both the
       ;; foreground and the background need to have the same/similar hue
@@ -193,9 +199,9 @@ between foreground and background is >= 7:1)."
       ;; styles that are meant exclusively for the mode line
       ;;
       ;; must be combined with: bg-active, bg-inactive
-      (red-active "#ffcf70") (green-active "#70f070")
-      (yellow-active "#dddd00") (blue-active "#0eeaff")
-      (magenta-active "#f0c8ff") (cyan-active "#70ecd0")
+      (red-active "#ffaa20") (green-active "#70e030")
+      (yellow-active "#efdf00") (blue-active "#00ccff")
+      (magenta-active "#d0acff") (cyan-active "#00ddc0")
 
       ;; conditional styles that evaluate user-facing customisation
       ;; options
@@ -241,6 +247,14 @@ between foreground and background is >= 7:1)."
    `(modus-theme-refine-blue ((,class (:background ,blue-refine-bg :foreground ,blue-refine-fg))))
    `(modus-theme-refine-magenta ((,class (:background ,magenta-refine-bg :foreground ,magenta-refine-fg))))
    `(modus-theme-refine-cyan ((,class (:background ,cyan-refine-bg :foreground ,cyan-refine-fg))))
+   ;;; invert the colours used on the "active" backgrounds
+   ;;; mostly for use on the mode line
+   `(modus-theme-active-red ((,class (:background ,red-active :foreground ,bg-active))))
+   `(modus-theme-active-green ((,class (:background ,green-active :foreground ,bg-active))))
+   `(modus-theme-active-yellow ((,class (:background ,yellow-active :foreground ,bg-active))))
+   `(modus-theme-active-blue ((,class (:background ,blue-active :foreground ,bg-active))))
+   `(modus-theme-active-magenta ((,class (:background ,magenta-active :foreground ,bg-active))))
+   `(modus-theme-active-cyan ((,class (:background ,cyan-active :foreground ,bg-active))))
    ;;; special base values that are closer to the grayscale than
    ;;; the accents defined above
    `(modus-theme-special-cold ((,class (:background ,bg-special-cold :foreground ,fg-special-cold))))
@@ -574,42 +588,42 @@ between foreground and background is >= 7:1)."
    `(diredfl-tagged-autofile-name ((,class (:inherit modus-theme-refine-magenta))))
    `(diredfl-write-priv ((,class (:foreground ,magenta-alt-other))))
    ;;;; doom-modeline
-   `(doom-modeline-bar ((,class (:background ,blue-intense :foreground ,bg-main))))
+   `(doom-modeline-bar ((,class (:inherit modus-theme-active-blue))))
    `(doom-modeline-bar-inactive ((,class (:background ,fg-inactive :foreground ,bg-main))))
    `(doom-modeline-battery-charging ((,class (:foreground ,green-active))))
    `(doom-modeline-battery-critical ((,class (:foreground ,red-active :weight bold))))
-   `(doom-modeline-battery-error ((,class (:inherit modus-theme-intense-red))))
+   `(doom-modeline-battery-error ((,class (:inherit modus-theme-active-red))))
    `(doom-modeline-battery-full ((,class (:foreground ,blue-active))))
    `(doom-modeline-battery-normal ((,class (:foreground ,fg-active))))
    `(doom-modeline-battery-warning ((,class (:foreground ,yellow-active :weight bold))))
    `(doom-modeline-buffer-file ((,class (:foreground ,fg-active :weight bold))))
    `(doom-modeline-buffer-major-mode ((,class (:foreground ,cyan-active :weight bold))))
-   `(doom-modeline-buffer-minor-mode ((,class (:foreground ,cyan-active))))
+   `(doom-modeline-buffer-minor-mode ((,class (:foreground ,fg-inactive))))
    `(doom-modeline-buffer-modified ((,class (:foreground ,magenta-active :weight bold))))
    `(doom-modeline-buffer-path ((,class (:foreground ,fg-active :weight bold))))
    `(doom-modeline-debug ((,class (:foreground ,yellow-active :weight bold))))
-   `(doom-modeline-evil-emacs-state ((,class (:foreground ,red-active :weight bold))))
+   `(doom-modeline-evil-emacs-state ((,class (:foreground ,magenta-active :weight bold))))
    `(doom-modeline-evil-insert-state ((,class (:foreground ,green-active :weight bold))))
-   `(doom-modeline-evil-motion-state ((,class (:foreground ,cyan-active :weight bold))))
+   `(doom-modeline-evil-motion-state ((,class (:foreground ,fg-inactive :weight bold))))
    `(doom-modeline-evil-normal-state ((,class (:foreground ,fg-active :weight bold))))
    `(doom-modeline-evil-operator-state ((,class (:foreground ,blue-active :weight bold))))
-   `(doom-modeline-evil-replace-state ((,class (:foreground ,yellow-active :weight bold))))
-   `(doom-modeline-evil-visual-state ((,class (:foreground ,magenta-active :weight bold))))
+   `(doom-modeline-evil-replace-state ((,class (:foreground ,red-active :weight bold))))
+   `(doom-modeline-evil-visual-state ((,class (:foreground ,cyan-active :weight bold))))
    `(doom-modeline-highlight ((,class (:foreground ,blue-active :weight bold))))
    `(doom-modeline-host ((,class (:slant italic))))
-   `(doom-modeline-info ((,class (:foreground ,cyan-active))))
+   `(doom-modeline-info ((,class (:foreground ,green-active))))
    `(doom-modeline-lsp-error ((,class (:foreground ,red-active :weight bold))))
    `(doom-modeline-lsp-success ((,class (:foreground ,green-active :weight bold))))
    `(doom-modeline-lsp-warning ((,class (:foreground ,yellow-active :weight bold))))
-   `(doom-modeline-panel ((,class (:inherit modus-theme-intense-blue))))
+   `(doom-modeline-panel ((,class (:inherit modus-theme-active-blue))))
    `(doom-modeline-persp-buffer-not-in-persp ((,class (:foreground ,yellow-active :slant italic))))
    `(doom-modeline-persp-name ((,class (:foreground ,fg-active))))
    `(doom-modeline-project-dir ((,class (:foreground ,blue-active :weight bold))))
    `(doom-modeline-project-parent-dir ((,class (:foreground ,blue-active))))
    `(doom-modeline-project-root-dir ((,class (:foreground ,fg-active))))
    `(doom-modeline-unread-number ((,class (:foreground ,fg-active :slant italic))))
-   `(doom-modeline-urgent ((,class (:inherit modus-theme-intense-red :weight bold))))
-   `(doom-modeline-warning ((,class (:inherit modus-theme-intense-yellow :weight bold))))
+   `(doom-modeline-urgent ((,class (:inherit modus-theme-active-red :weight bold))))
+   `(doom-modeline-warning ((,class (:foreground ,yellow-active :weight bold))))
    ;;;; easy-jekyll
    `(easy-jekyll-help-face ((,class (:background ,bg-dim :foreground ,cyan-alt-other))))
    ;;;; easy-kill
