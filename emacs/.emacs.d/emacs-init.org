@@ -1579,10 +1579,16 @@ My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to s
    :CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
    :END:
 
+*** Unique names for buffers
+    :PROPERTIES:
+    :CUSTOM_ID: h:60a70340-49dc-4f45-b147-12a4141db42b
+    :END:
+
 These settings make it easier to work with multiple buffers.  When two
-buffers have the same name, Emacs will try to disambiguate them by first
-displaying their path inside angled brackets, while stripping the part
-they have in common.
+buffers have the same name, Emacs will try to disambiguate them by
+displaying their unique path inside angled brackets.  With the addition
+of =uniquify-strip-common-suffix= it will also remove the part of the
+file system path they have in common.
 
 All such operations are reversed once an offending buffer is removed
 from the list, allowing Emacs to revert to the standard of displaying
@@ -2057,7 +2063,7 @@ document.  This fixes the issue (read the article for more).
   :custom
   (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
   :config
-  (defun eos/org-custom-id-get (&optional pom create prefix)
+  (defun contrib/org-get-id (&optional pom create prefix)
     "Get the CUSTOM_ID property of the entry at point-or-marker POM.
    If POM is nil, refer to the entry at point. If the entry does
    not have an CUSTOM_ID, the function returns nil. However, when
@@ -2076,12 +2082,12 @@ document.  This fixes the issue (read the article for more).
           (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
           id)))))
 
-  (defun eos/org-add-ids-to-headlines-in-file ()
+  (defun contrib/org-id-headlines ()
     "Add CUSTOM_ID properties to all headlines in the
    current file which do not already have one."
     (interactive)
     (org-map-entries (lambda ()
-                       (eos/org-custom-id-get (point) 'create)))))
+                       (contrib/org-get-id (point) 'create)))))
 #+END_SRC
 
 *** Simple presentations inside of Emacs (org-tree-slide)
@@ -3184,6 +3190,9 @@ completion candidates.  I am using it in tandem with Ivy (see the
 #+END_SRC
 
 ** Eldoc (elisp live documentation feedback)
+   :PROPERTIES:
+   :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
+   :END:
 
 Displays information about the construct at point in the echo area.  I
 find that I have no use for this, so I am disabling it for the time
