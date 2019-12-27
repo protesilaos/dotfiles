@@ -787,21 +787,39 @@ without any further intervention.
 This tool provides a filtering and scoring system that can interface
 with Ivy.  It is a replacement for =amx=.
 
-+ Filtering concerns the way matches are determined.  It is possible to
-  select candidates by applying the search terms in a number of ways,
-  such as a literal interpretation of the character string, a regular
-  expression, a set of wildcards (fuzzy match), or an initialism.  The
-  filters can be applied on a per function basis.
-+ The scoring system is based on the frequency and recency of
-  commands.  This is extremely valuable, as it will always surface to
-  the top the commands you most likely need.  Running =M-x= is now akin
-  to starting a key chord chain (for example, =M-x b= will give me
-  =bongo= as my first match, which is exactly what I need).  It
-  eliminates the need for increasingly arcane key bindings.
+Filtering concerns the way matches are determined.  It is possible to
+select candidates by applying the search terms in a number of ways, such
+as a literal interpretation of the character string, a regular
+expression, a set of ordered wildcards (fuzzy match), or an initialism.
+The filters can be applied on a per function basis—a truly powerful
+feature!
 
-In the package declaration below, note that =prot/ivy-prescient-filters=
-defines an exception to my preferred method of prioritising fuzzy
-searching techniques.
+The scoring system is based on the frequency and recency of commands.
+This is extremely valuable, as it will always surface to the top the
+commands you most likely need.  Running =M-x= is now akin to starting a
+key chord chain (for example, =M-x b= will give me =bongo= as my first
+match, which is exactly what I need).  It eliminates the need for
+increasingly arcane key bindings.
+
+In the package declarations below, note that =prot/ivy-prescient-filters=
+defines an exception for those commands where I wish to prioritise fuzzy
+searching.  The default, specified in =prescient-filter-method= is to
+match terms literally or by a regular expression.
+
+The =ivy-re-builders-list= should normally be included in [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][the Ivy section]],
+but I am defining it here because of how =prescient= is meant to assume
+the responsibility of filtering/sorting results.  If you change things,
+make sure to adapt things accordingly in the Ivy section, specifically
+the value of =ivy-initial-inputs-alist=.
+
+Lastly, the value of =ivy-prescient-sort-commands= defines functions that
+are exempt from all the sorting operations performed by this tool.  I
+think that, at the very least, =swiper= should always be excluded from any
+kind of sorting mechanism, because it already orders its results based
+on the line number.  We should not break that expectation.  All other
+commands are just a matter of preference, where I simply find the
+generic sorting to offer a better first impression (does not really
+matter either way, since I will type something anyhow).
 
 #+BEGIN_SRC emacs-lisp
 (use-package prescient
@@ -809,7 +827,7 @@ searching techniques.
   :custom
   (prescient-history-length 50)
   (prescient-save-file "~/.emacs.d/prescient-items")
-  (prescient-filter-method '(fuzzy initialism regexp))
+  (prescient-filter-method '(literal regexp))
   :config
   (prescient-persist-mode 1))
 
@@ -828,17 +846,16 @@ searching techniques.
 
 This new rule can be used to tailor the results of individual
 Ivy-powered commands, using `ivy-prescient-re-builder'."
-    (let ((prescient-filter-method '(literal regexp)))
+    (let ((prescient-filter-method '(fuzzy regexp)))
       (ivy-prescient-re-builder str)))
 
+  ;; Prioritise fuzzy search for named commands, else default to value
+  ;; of `prescient-filter-method' (the last line).
   (setq ivy-re-builders-alist
-        '((counsel-rg . prot/ivy-prescient-filters)
-          (counsel-grep . prot/ivy-prescient-filters)
-          (counsel-yank-pop . prot/ivy-prescient-filters)
-          (swiper . prot/ivy-prescient-filters)
-          (swiper-isearch . prot/ivy-prescient-filters)
-          (swiper-all . prot/ivy-prescient-filters)
+        '((counsel-fzf . prot/ivy-prescient-filters)
+          (counsel-M-x . prot/ivy-prescient-filters)
           (t . ivy-prescient-re-builder)))
+
   (ivy-prescient-mode 1))
 #+END_SRC
 
