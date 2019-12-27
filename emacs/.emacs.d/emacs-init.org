@@ -252,9 +252,9 @@ Overview of these settings:
 
 I use Hack, which is a derivative of the venerable DejaVu Sans Mono.
 Hack is my favourite typeface overall, though I do not enjoy everything
-in the standard Hack distribution.  The lack of a slab in the letter "i"
-can cause issues, the shape of "1" is exaggerated, the dot/spot inside
-the "0" is disproportionately large.  Thankfully, upstream provides a
+in the standard distribution.  The lack of a slab in the letter "i" can
+cause issues; the shape of "1" is exaggerated; the dot/spot inside the
+"0" is disproportionately large…  Thankfully, upstream provides a
 [[https://github.com/source-foundry/alt-hack][repository with alternatives glyphs]], for those who wish to build a
 variant themselves.  I used this to do the following:
 
@@ -262,8 +262,8 @@ variant themselves.  I used this to do the following:
   variants.  Italics and Bold Italics will use the default slab-less
   glyph.
 + Use a slab-less "1", which clearly disambiguates it from slabbed "i".
-+ Use "3" with a flat top in Regular and Bold variants.  Leave them
-  unchanged for their italicised counterparts.
++ Use "3" with a flat top in Regular and Bold variants.  Leave it
+  unchanged for its italicised counterparts.
 + Use knife variant of "f" for the Italic and Bold Italic sets.  The
   default glyph remains in tact for Regular and Bold.
 + Use dotted zero in Regular and Bold sets, while reverting to diamond
@@ -289,6 +289,9 @@ that installs system-wide.  Also refer to [[https://gitlab.com/protesilaos/dotfi
   (defconst prot/fixed-pitch-font "Hack"
     "The default fixed-pitch typeface.")
 
+  (defconst prot/fixed-pitch-params ":weight=regular:hintstyle=hintslight"
+    "Fontconfig parameters for the fixed-pitch typeface.")
+
   ;;;; TODO is it okay to defconst there?
   ;; (defun prot/test-font-availaiblity ()
   ;;   "Checks for the availability of a desired monospace font"
@@ -298,7 +301,10 @@ that installs system-wide.  Also refer to [[https://gitlab.com/protesilaos/dotfi
 
   (defun prot/font-family-size (family size)
     "Set frame font for FAMILY at SIZE."
-    (set-frame-font (concat family "-" (number-to-string size)) t t))
+    (set-frame-font (concat
+                     family "-" (number-to-string size)
+                     prot/fixed-pitch-params)
+                    t t))
 
   (defun prot/laptop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
@@ -2149,7 +2155,10 @@ activation of `org-tree-slide-mode'."
           (darkroom-tentative-mode 1)
           (org-bullets-mode 1)
           (org-indent-mode 1)
-          (set-frame-font (concat prot/fixed-pitch-font "-" (number-to-string 14)) t t)
+          (set-frame-font (concat
+                           prot/fixed-pitch-font "-" (number-to-string 14)
+                           prot/fixed-pitch-params)
+                          t t)
           (setq cursor-type '(bar . 1)))
       (darkroom-tentative-mode -1)
       (org-bullets-mode -1)
