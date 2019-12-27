@@ -791,6 +791,13 @@ between foreground and background is >= 7:1)."
    `(flycheck-info ((,class (:foreground ,green :underline t))))
    `(flycheck-verify-select-checker ((,class (:box (:line-width 1 :color nil :style released-button)))))
    `(flycheck-warning ((,class (:foreground ,yellow :underline t))))
+   ;;;; flycheck-indicator
+   `(flycheck-indicator-disabled ((,class (:foreground ,fg-inactive :slant ,modus-theme-slant))))
+   `(flycheck-indicator-error ((,class (:foreground ,red-active :weight bold))))
+   `(flycheck-indicator-info ((,class (:foreground ,blue-active :weight bold))))
+   `(flycheck-indicator-running ((,class (:foreground ,magenta-active :weight bold))))
+   `(flycheck-indicator-success ((,class (:foreground ,green-active :weight bold))))
+   `(flycheck-indicator-warning ((,class (:foreground ,yellow-active :weight bold))))
    ;;;; flycheck-posframe
    `(flycheck-posframe-background-face ((,class (:background ,bg-alt))))
    `(flycheck-posframe-border-face ((,class (:foreground ,fg-alt))))
@@ -1222,7 +1229,7 @@ between foreground and background is >= 7:1)."
    `(mode-line ((,class (:box (:line-width 1 :color ,fg-inactive) :background ,bg-active :foreground ,fg-active))))
    `(mode-line-buffer-id ((,class (:weight bold))))
    `(mode-line-emphasis ((,class (:foreground ,blue-active :weight bold :box t))))
-   `(mode-line-highlight ((,class (:inherit modus-theme-active-blue :box (:line-width 1 :color ,bg-main)))))
+   `(mode-line-highlight ((,class (:inherit modus-theme-active-blue :box (:line-width -1 :style pressed-button)))))
    `(mode-line-inactive ((,class (:box (:color ,bg-inactive) :background ,bg-inactive :foreground ,fg-inactive))))
    ;;;; mood-line
    `(mood-line-modified ((,class (:foreground ,magenta-active))))
@@ -1447,9 +1454,18 @@ between foreground and background is >= 7:1)."
    `(powerline-active0 ((,class (:background ,fg-inactive :foreground ,bg-inactive))))
    `(powerline-active1 ((,class (:background ,bg-active :foreground ,fg-active))))
    `(powerline-active2 ((,class (:background ,bg-alt :foreground ,fg-active))))
-   `(powerline-inactive0 ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
-   `(powerline-inactive1 ((,class (:background ,bg-alt :foreground ,fg-alt))))
+   `(powerline-inactive0 ((,class (:background ,bg-active :foreground ,fg-inactive))))
+   `(powerline-inactive1 ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
    `(powerline-inactive2 ((,class (:background ,bg-main :foreground ,fg-alt))))
+   ;;;; powerline-evil
+   `(powerline-evil-base-face ((,class (:background ,fg-main :foreground ,bg-main))))
+   `(powerline-evil-emacs-face ((,class (:inherit modus-theme-active-magenta))))
+   `(powerline-evil-insert-face ((,class (:inherit modus-theme-active-green))))
+   `(powerline-evil-motion-face ((,class (:inherit modus-theme-active-blue))))
+   `(powerline-evil-normal-face ((,class (:background ,fg-alt :foreground ,bg-main))))
+   `(powerline-evil-operator-face ((,class (:inherit modus-theme-active-yellow))))
+   `(powerline-evil-replace-face ((,class (:inherit modus-theme-active-red))))
+   `(powerline-evil-visual-face ((,class (:inherit modus-theme-active-cyan))))
    ;;;; prodigy
    `(prodigy-green-face ((,class (:foreground ,green))))
    `(prodigy-red-face ((,class (:foreground ,red))))
