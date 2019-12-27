@@ -3219,8 +3219,8 @@ completion candidates.  I am using it in tandem with Ivy (see the
    :END:
 
 Displays information about the construct at point in the echo area.  I
-find that I have no use for this, so I am disabling it for the time
-being.
+find that I have no use for this, so I am disabling the mode for the
+time being.
 
 #+BEGIN_SRC emacs-lisp
 (use-package eldoc
