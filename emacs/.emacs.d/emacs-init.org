@@ -725,6 +725,10 @@ package declaration is but a piece of a greater whole.
   (ivy-display-style 'fancy)
   (ivy-use-selectable-prompt t)
   (ivy-fixed-height-minibuffer nil)
+  (ivy-initial-inputs-alist
+   '((counsel-M-x . "")
+     (counsel-describe-function . "^")
+     (counsel-describe-variable . "^")))
   :config
   (ivy-set-occur 'counsel-fzf 'counsel-fzf-occur)
   (ivy-set-occur 'counsel-rg 'counsel-ag-occur)
