@@ -726,6 +726,8 @@ package declaration is but a piece of a greater whole.
   (ivy-use-selectable-prompt t)
   (ivy-fixed-height-minibuffer nil)
   :config
+  (ivy-set-occur 'counsel-fzf 'counsel-fzf-occur)
+  (ivy-set-occur 'counsel-rg 'counsel-ag-occur)
   (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur)
   (ivy-set-occur 'swiper 'swiper-occur)
   (ivy-set-occur 'swiper-isearch 'swiper-occur)
