@@ -89,6 +89,7 @@ between foreground and background is >= 7:1)."
 (defface modus-theme-active-blue nil t)
 (defface modus-theme-active-magenta nil t)
 (defface modus-theme-active-cyan nil t)
+(defface modus-theme-active-neutral nil t)
 (defface modus-theme-special-cold nil t)
 (defface modus-theme-special-mild nil t)
 (defface modus-theme-special-warm nil t)
@@ -142,6 +143,8 @@ between foreground and background is >= 7:1)."
       (fg-main "#000000") (bg-main "#ffffff")
       (fg-alt "#505050") (bg-alt "#f3f1f3")
       (fg-dim "#282828") (bg-dim "#f8f8f8")
+      ;; this one is reserved for hl-line-mode or equivalent
+      (bg-hl-line "#f3f6f9")
       ;; specifically for on/off states (e.g. mode-line)
       ;; must be combined with themselves
       (fg-active "#191919") (bg-active "#e0e0e0")
@@ -255,6 +258,7 @@ between foreground and background is >= 7:1)."
    `(modus-theme-active-blue ((,class (:background ,blue-active :foreground ,bg-active))))
    `(modus-theme-active-magenta ((,class (:background ,magenta-active :foreground ,bg-active))))
    `(modus-theme-active-cyan ((,class (:background ,cyan-active :foreground ,bg-active))))
+   `(modus-theme-active-neutral ((,class (:background ,fg-active :foreground ,bg-active))))
    ;;; special base values that are closer to the grayscale than
    ;;; the accents defined above
    `(modus-theme-special-cold ((,class (:background ,bg-special-cold :foreground ,fg-special-cold))))
@@ -266,7 +270,7 @@ between foreground and background is >= 7:1)."
    ;;; default constructs
    ;;;; absolute essentials
    `(default ((,class (:background ,bg-main :foreground ,fg-main))))
-   `(cursor ((,class (:background ,bg-main :foreground ,fg-main :inverse-video t))))
+   `(cursor ((,class (:background ,fg-main))))
    `(fringe ((,class (:inherit default))))
    ;;;; basic and/or ungrouped styles
    `(diary ((,class (:foreground ,yellow))))
@@ -990,7 +994,7 @@ between foreground and background is >= 7:1)."
    `(highlight-changes ((,class (:foreground ,yellow-alt-other))))
    `(highlight-changes-delete ((,class (:foreground ,red-alt-other :underline t))))
    `(hl-line ((,class (,@(and (>= emacs-major-version 27) '(:extend t))
-                       :background ,bg-alt))))
+                       :background ,bg-hl-line))))
    `(region ((,class (,@(and (>= emacs-major-version 27) '(:extend t))
                       :background ,bg-active :foreground ,fg-active))))
    `(secondary-selection ((,class (,@(and (>= emacs-major-version 27) '(:extend t))
@@ -1032,7 +1036,7 @@ between foreground and background is >= 7:1)."
    `(ivy-completions-annotations ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
    `(ivy-confirm-face ((,class (:foreground ,cyan))))
    `(ivy-current-match ((,class (:inherit modus-theme-special-mild :weight bold :underline t))))
-   `(ivy-cursor ((,class (:inherit cursor))))
+   `(ivy-cursor ((,class (:background ,fg-main :foreground ,bg-main))))
    `(ivy-grep-info ((,class (:foreground ,cyan-alt))))
    `(ivy-grep-line-number ((,class (:foreground ,fg-special-warm))))
    `(ivy-highlight-face ((,class (:foreground ,magenta))))
@@ -1054,7 +1058,7 @@ between foreground and background is >= 7:1)."
    ;;;; ivy-posframe
    `(ivy-posframe ((,class (:background ,bg-dim :foreground ,fg-main))))
    `(ivy-posframe-border ((,class (:background ,bg-active))))
-   `(ivy-posframe-cursor ((,class (:inherit cursor))))
+   `(ivy-posframe-cursor ((,class (:background ,fg-main :foreground ,bg-main))))
    ;;;; keycast
    `(keycast-command ((,class (:foreground ,red-active :weight bold))))
    `(keycast-key ((,class (:height 1.2 :inherit modus-theme-special-warm :weight bold :box (:line-width -3 :style released-button)))))
@@ -1218,7 +1222,7 @@ between foreground and background is >= 7:1)."
    `(mode-line ((,class (:box (:line-width 1 :color ,fg-inactive) :background ,bg-active :foreground ,fg-active))))
    `(mode-line-buffer-id ((,class (:weight bold))))
    `(mode-line-emphasis ((,class (:foreground ,blue-active :weight bold :box t))))
-   `(mode-line-highlight ((,class (:inherit modus-theme-intense-blue :box t))))
+   `(mode-line-highlight ((,class (:inherit modus-theme-active-blue :box (:line-width 1 :color ,bg-main)))))
    `(mode-line-inactive ((,class (:box (:color ,bg-inactive) :background ,bg-inactive :foreground ,fg-inactive))))
    ;;;; mood-line
    `(mood-line-modified ((,class (:foreground ,magenta-active))))
@@ -1376,7 +1380,7 @@ between foreground and background is >= 7:1)."
    `(org-macro ((,class (:inherit org-latex-and-related))))
    `(org-meta-line ((,class (:inherit font-lock-comment-face))))
    `(org-mode-line-clock ((,class (:background ,bg-main :foreground ,fg-main))))
-   `(org-mode-line-clock-overrun ((,class (:inherit modus-theme-intense-red))))
+   `(org-mode-line-clock-overrun ((,class (:inherit modus-theme-active-red))))
    `(org-priority ((,class (:foreground ,magenta))))
    `(org-quote ((,class (:inherit org-block :foreground ,fg-special-cold))))
    `(org-scheduled ((,class (:foreground ,fg-special-cold))))
@@ -1568,7 +1572,7 @@ between foreground and background is >= 7:1)."
    `(sx-question-list-score-upvoted ((,class (:inherit sx-question-list-score :weight bold))))
    `(sx-question-list-unread-question ((,class (:foreground ,fg-main :weight bold))))
    `(sx-question-mode-accepted ((,class (:height 1.3 :foreground ,green :weight bold))))
-   `(sx-question-mode-closed ((,class (:box (:line-width 2 :color nil) :inherit modus-theme-subtle-yellow))))
+   `(sx-question-mode-closed ((,class (:box (:line-width 2 :color nil) :inherit modus-theme-active-yellow))))
    `(sx-question-mode-closed-reason ((,class (:box (:line-width 2 :color nil) :foreground ,fg-main))))
    `(sx-question-mode-content-face ((,class (:background ,bg-dim))))
    `(sx-question-mode-date ((,class (:foreground ,blue))))
@@ -1685,16 +1689,16 @@ between foreground and background is >= 7:1)."
    `(which-key-separator-face ((,class (:foreground ,fg-alt))))
    `(which-key-special-key-face ((,class (:foreground ,yellow-intense :weight bold))))
    ;;;; whitespace-mode
-   `(whitespace-big-indent ((,class (:inherit modus-theme-intense-red))))
+   `(whitespace-big-indent ((,class (:inherit modus-theme-subtle-red))))
    `(whitespace-empty ((,class (:inherit modus-theme-intense-magenta))))
-   `(whitespace-hspace ((,class (whitespace-space))))
-   `(whitespace-indentation ((,class (:inherit whitespace-space))))
-   `(whitespace-line ((,class (:inherit modus-theme-subtle-yellow))))
-   `(whitespace-newline ((,class (:background ,bg-alt :foreground ,fg-alt))))
-   `(whitespace-space ((,class (:inherit whitespace-newline))))
+   `(whitespace-hspace ((,class (:background ,bg-dim :foreground ,fg-alt))))
+   `(whitespace-indentation ((,class (:background ,bg-dim :foreground ,fg-alt))))
+   `(whitespace-line ((,class (:inherit modus-theme-special-warm))))
+   `(whitespace-newline ((,class (:inherit modus-theme-special-cold))))
+   `(whitespace-space ((,class (:background ,bg-dim :foreground ,fg-alt))))
    `(whitespace-space-after-tab ((,class (:inherit modus-theme-subtle-magenta))))
-   `(whitespace-space-before-tab ((,class (:inherit modus-theme-subtle-yellow))))
-   `(whitespace-tab ((,class (:inherit whitespace-space))))
+   `(whitespace-space-before-tab ((,class (:inherit modus-theme-subtle-cyan))))
+   `(whitespace-tab ((,class (:background ,bg-dim :foreground ,fg-alt))))
    `(whitespace-trailing ((,class (:inherit modus-theme-intense-red))))
    ;;;; writegood-mode
    `(writegood-duplicates-face ((,class (:background ,bg-alt :foreground ,red-alt-other :underline t))))
