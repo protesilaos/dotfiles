@@ -276,7 +276,7 @@ same terms as "Hack" itself (MIT License).  Note that you should better
 remove any other build of the original typeface before using my mod.  On
 Debian and Void Linux (and probably all other distros) per-user fonts
 are read from =~/.local/share/fonts/=.  If you are on Void, check my
-[[https://gitlab.com/protesilaos/void-packages][personal templates]] for =xbps-src=, which includes a build for this font
+[[https://gitlab.com/protesilaos/void-packages][personal templates]] for =xbps-src=, which include a build for this font
 that installs system-wide.  Also refer to [[https://gitlab.com/protesilaos/dotfiles][my dotfiles]] for the relevant
 =fontconfig= settings.
 
@@ -328,7 +328,7 @@ the maximum width of my laptop's screen."
   (after-init . prot/fonts-per-monitor))
 #+END_SRC
 
-*** Typeface suitability test
+**** Typeface suitability test
     :PROPERTIES:
     :CUSTOM_ID: h:9035a1ed-e988-4731-89a5-0d9e302c3dea
     :END:
