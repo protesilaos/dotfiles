@@ -999,9 +999,17 @@ pertinent to the task at hand.  For example, =M-x= contains function
 descriptions, while the buffer list includes information about the major
 mode and file system path of the items.
 
+The =ivy-rich-path-style= offers an abbreviation of the file system path
+that an item is referring to.  So far, the only noticeable difference
+over an absolute value is the use of the tilde (=~=) instead of
+=/home/USER/= in the buffer list.  Whereas =recentf= continues to display
+absolute paths.  Will need to test this further…
+
 #+BEGIN_SRC emacs-lisp
 (use-package ivy-rich
   :ensure t
+  :custom
+  (ivy-rich-path-style 'abbreviate)
   :config
   (setcdr (assq t ivy-format-functions-alist)
           #'ivy-format-function-line)
