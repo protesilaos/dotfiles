@@ -2965,6 +2965,9 @@ will be updating the package declaration over time.
 #+END_SRC
 
 *** Flycheck modeline indicators
+    :PROPERTIES:
+    :CUSTOM_ID: h:0fb1303b-c8b0-49e9-942d-659a26e523cf
+    :END:
 
 These provide information concerning Flycheck's status on the mode line.
 It is activated once =flycheck-mode= is enabled.  Nice, simple, effective.
