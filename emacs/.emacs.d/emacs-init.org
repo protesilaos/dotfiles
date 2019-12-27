@@ -2964,6 +2964,18 @@ will be updating the package declaration over time.
   (flycheck-check-syntax-automatically '(save mode-enabled)))
 #+END_SRC
 
+*** Flycheck modeline indicators
+
+These provide information concerning Flycheck's status on the mode line.
+It is activated once =flycheck-mode= is enabled.  Nice, simple, effective.
+
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck-indicator
+  :ensure t
+  :after flycheck
+  :hook (flycheck-mode-hook . flycheck-indicator-mode))
+#+END_SRC
+
 *** Flycheck posframe (reposition flycheck's feedback)
     :PROPERTIES:
     :CUSTOM_ID: h:4566f37c-43c4-4d9e-bd70-80a5e6cf69e5
