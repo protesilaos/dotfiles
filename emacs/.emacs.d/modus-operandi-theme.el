@@ -626,7 +626,7 @@ between foreground and background is >= 7:1)."
    `(doom-modeline-project-parent-dir ((,class (:foreground ,blue-active))))
    `(doom-modeline-project-root-dir ((,class (:foreground ,fg-active))))
    `(doom-modeline-unread-number ((,class (:foreground ,fg-active :slant italic))))
-   `(doom-modeline-urgent ((,class (:inherit modus-theme-active-red :weight bold))))
+   `(doom-modeline-urgent ((,class (:foreground ,red-active :weight bold :underline t))))
    `(doom-modeline-warning ((,class (:foreground ,yellow-active :weight bold))))
    ;;;; easy-jekyll
    `(easy-jekyll-help-face ((,class (:background ,bg-dim :foreground ,cyan-alt-other))))
@@ -1042,7 +1042,8 @@ between foreground and background is >= 7:1)."
    `(ivy-action ((,class (:foreground ,red-alt :weight bold))))
    `(ivy-completions-annotations ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
    `(ivy-confirm-face ((,class (:foreground ,cyan))))
-   `(ivy-current-match ((,class (:inherit modus-theme-special-mild :weight bold :underline t))))
+   `(ivy-current-match ((,class (:inherit modus-theme-special-mild :weight bold
+                                          :box (:line-width 1 :color ,fg-inactive)))))
    `(ivy-cursor ((,class (:background ,fg-main :foreground ,bg-main))))
    `(ivy-grep-info ((,class (:foreground ,cyan-alt))))
    `(ivy-grep-line-number ((,class (:foreground ,fg-special-warm))))
@@ -1264,7 +1265,7 @@ between foreground and background is >= 7:1)."
    `(mu4e-header-value-face ((,class (:foreground ,magenta-alt-other))))
    `(mu4e-highlight-face ((,class (:foreground ,blue-intense :weight bold))))
    `(mu4e-link-face ((,class (:inherit link))))
-   `(mu4e-modeline-face ((,class (:foreground ,cyan-active))))
+   `(mu4e-modeline-face ((,class (:foreground ,magenta-active))))
    `(mu4e-moved-face ((,class (:foreground ,blue-refine-fg))))
    `(mu4e-ok-face ((,class (:foreground ,green-intense :weight bold))))
    `(mu4e-region-code ((,class (:inherit show-paren-match-expression))))
