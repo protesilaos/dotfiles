@@ -674,11 +674,19 @@ A few highlights of my configurations in the subsequent code block:
   still be accessed from =counsel-switch-buffer= as if the kill had
   never occured.
 + =ivy-re-builders-list= allows us to specify the algorithm for matching
-  candidates.  Unless specified otherwise, I am using regexp matching
-  by default.
+  candidates.  Unless specified otherwise, I am using regexp matching by
+  default.  Note though, that since I am defining additional conditions
+  in the filtering system (see [[#h:87b37547-5941-4f20-baf6-4d00cde1151a][prescient configs]]), I am keeping this
+  part commented out just for the sake of offering a reference.
++ =ivy-initial-inputs-alist= adds some initial input to the commands we
+  specify.  Use it only for those that are meant to match candidates
+  using regular expressions.
 + =ivy-use-selectable-prompt= solves the problem of trying to create a
   new file system path that shares a common name with an existing item.
   Press =C-p= and proceed without further conflicts.
++ The various =ivy-set-occur= are meant to specify a function for
+  producing an appropriate buffer when running =ivy-occur= (see table
+  right below).
 
 And here are some 'hidden' key bindings for making the most out of Ivy
 (find more in the official manual).
@@ -709,9 +717,11 @@ package declaration is but a piece of a greater whole.
   (ivy-height-alist '((t lambda (_caller) (/ (window-height) 4))))
   (ivy-use-virtual-buffers t)
   (ivy-wrap nil)
-  (ivy-re-builders-alist
-   '((counsel-M-x . ivy--regex-fuzzy)
-     (t . ivy--regex-plus)))
+  ;;;; NOTE see package declaration for `prescient'
+  ;; (ivy-re-builders-alist
+  ;;  '((counsel-M-x . ivy--regex-fuzzy)
+  ;;    (ivy-switch-buffer . ivy--regex-fuzzy)
+  ;;    (t . ivy--regex-plus)))
   (ivy-display-style 'fancy)
   (ivy-use-selectable-prompt t)
   (ivy-fixed-height-minibuffer nil)
