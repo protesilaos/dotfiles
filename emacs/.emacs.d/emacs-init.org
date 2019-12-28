@@ -1028,14 +1028,22 @@ This package allows us to reposition Ivy's window anywhere inside of the
 Emacs frame.  Furthermore, it is possible to use this feature on a
 per-command basis, all while assigning a different height to each list.
 
+The =ivy-posframe-parameters= can be found in the source code of the main
+library.  Do =M-x find-library RET posframe RET= where =RET= means to hit
+the Return key in order to proceed.  In one of the parameters I define a
+font that is different from what I normally use, just as a proof of
+concept (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
+
 #+BEGIN_SRC emacs-lisp
 (use-package ivy-posframe
   :ensure t
   :delight
   :custom
   (ivy-posframe-parameters
-   '((left-fringe . 4)
-     (right-fringe . 4)))
+   '((left-fringe . 2)
+     (right-fringe . 2)
+     (internal-border-width . 2)
+     (font . "Iosevka SS09-12:hintstyle=hintfull")))
   (ivy-posframe-height-alist
    '((swiper . 15)
      (swiper-isearch . 15)
