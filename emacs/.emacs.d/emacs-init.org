@@ -716,6 +716,7 @@ package declaration is but a piece of a greater whole.
   (ivy-wrap nil)
   (ivy-re-builders-alist
    '((counsel-M-x . ivy--regex-fuzzy)
+     (counsel-rg . ivy--regex-or-literal)
      (t . ivy--regex-plus)))
   (ivy-display-style 'fancy)
   (ivy-use-selectable-prompt t)
