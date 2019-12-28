@@ -197,7 +197,7 @@ between foreground and background is >= 7:1)."
       ;; must be combined with themselves OR the foregrounds can be
       ;; combined with any of the base backgrounds
       (red-refine-bg "#77002a") (green-refine-bg "#00422a")
-      (yellow-refine-bg "#755000") (blue-refine-bg "#2222aa")
+      (yellow-refine-bg "#755000") (blue-refine-bg "#2428a0")
       (magenta-refine-bg "#572f77") (cyan-refine-bg "#2f4680")
       (red-refine-fg "#ffb9ab") (green-refine-fg "#9ff0cf")
       (yellow-refine-fg "#ffffcc") (blue-refine-fg "#adddff")
@@ -1059,7 +1059,7 @@ between foreground and background is >= 7:1)."
    `(ivy-grep-line-number ((,class (:foreground ,fg-special-warm))))
    `(ivy-highlight-face ((,class (:foreground ,magenta))))
    `(ivy-match-required-face ((,class (:inherit error))))
-   `(ivy-minibuffer-match-face-1 ((,class (:inherit modus-theme-subtle-neutral))))
+   `(ivy-minibuffer-match-face-1 ((,class (:inherit modus-theme-intense-neutral))))
    `(ivy-minibuffer-match-face-2 ((,class (:inherit modus-theme-refine-green :weight bold))))
    `(ivy-minibuffer-match-face-3 ((,class (:inherit modus-theme-refine-cyan :weight bold))))
    `(ivy-minibuffer-match-face-4 ((,class (:inherit modus-theme-refine-magenta :weight bold))))
