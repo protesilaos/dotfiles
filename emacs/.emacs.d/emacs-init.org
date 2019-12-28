@@ -730,7 +730,7 @@ package declaration is but a piece of a greater whole.
   (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur)
   (ivy-set-occur 'swiper 'swiper-occur)
   (ivy-set-occur 'swiper-isearch 'swiper-occur)
-  (ivy-set-occur 'swiper-multi 'swiper-occur) ; TODO does not work
+  (ivy-set-occur 'swiper-multi 'counsel-ag-occur)
   (ivy-mode 1)
   :hook
   (ivy-occur-mode . hl-line-mode)
