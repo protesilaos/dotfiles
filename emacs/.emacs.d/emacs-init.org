@@ -1033,6 +1033,9 @@ per-command basis, all while assigning a different height to each list.
   :ensure t
   :delight
   :custom
+  (ivy-posframe-parameters
+   '((left-fringe . 4)
+     (right-fringe . 4)))
   (ivy-posframe-height-alist
    '((swiper . 15)
      (swiper-isearch . 15)
