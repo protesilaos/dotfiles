@@ -3404,29 +3404,43 @@ auto-insertion of characters.  This is a summary of my settings:
 + Indent automatically.
 + Insert quotes and brackets in pairs.  Only do so if there is no
   alphabetic character after the cursor.
-+ The cryptic numbers in the pairs set, correspond to standard double
-  quotes, their fancy (curly) equivalents, and these =«»=.  The contents
-  of this set are always inserted in pairs, regardless of major mode.  I
-  do not add straight single quotes or backticks because of their
-  importance in elisp.
-+ When inputting a pair, inserting the closing character will just skip
++ The cryptic numbers in the pairs set, correspond to curly single and
+  double quotes and these =«»=.  The contents of this set are always
+  inserted in pairs, regardless of major mode.
+  + To get those numbers, evaluate =(string-to-char CHAR)= where CHAR is
+    the one you are interested in.  For example, get the literal tab's
+    character with =(string-to-char "\t")=.
++ While inputting a pair, inserting the closing character will just skip
   over the existing one, rather than add a new one.  So typing =(= will
-  insert =()= and then typing =)= will just be the same as moving
-  forward one character =C-f=.
+  insert =()= and then typing =)= will just be the same as moving forward
+  one character =C-f=.
++ Do not skip over whitespace when operating on pairs.  Combined with
+  the above point, this means that a new character will be inserted,
+  rather than be skipped over.  I find this better, because it prevents
+  the point from jumping forward, plus it allows for more natural
+  editing.
++ The whitespace characters are space (=\s=), tab (=\t=), and newline (=\n=).
 + The rest concern the conditions for transforming quotes into their
   curly equivalents.  I keep this disabled, because curly quotes are
   distinct characters.  It is difficult to search for them.  Just note
   that on GNU/Linux you can type them directly by hitting the "compose"
-  key and then =<"= , =>"=, =<'=, =>'=.
+  key and then an angled bracket (=<= or =>=) followed by a quote mark.
 
 #+BEGIN_SRC emacs-lisp
 (use-package electric
   :custom
-  (electric-pair-inhibit-predicate 'electric-pair-default-inhibit)
-  (electric-pair-pairs '((8216 . 8217)
-                         (8220 . 8221)
-                         (171 . 187)))
+  (electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
+  (electric-pair-preserve-balance t)
+  (electric-pair-pairs
+   '((8216 . 8217)
+     (8220 . 8221)
+     (171 . 187)))
   (electric-pair-skip-self 'electric-pair-default-skip-self)
+  (electric-pair-skip-whitespace nil)
+  (electric-pair-skip-whitespace-chars
+   '(9
+     10
+     32))
   (electric-quote-context-sensitive t)
   (electric-quote-paragraph t)
   (electric-quote-string nil)
