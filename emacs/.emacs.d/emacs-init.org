@@ -959,6 +959,53 @@ repository, then the corresponding root is used instead."
          ("C-SPC" . ivy-restrict-to-matches)))
 #+END_SRC
 
+***** Counsel and projectile
+      :PROPERTIES:
+      :CUSTOM_ID: h:1dd71ddc-994d-420b-9aaf-26741aaf20cd
+      :END:
+
+These are a set of commands for interacting with projects, by leveraging
+the =projectile= library.  A "project" is a version-controlled directory
+or one that is manually declared as such by an empty =.projectile= file at
+its root.  Either way, projects are placed inside a filesystem path,
+which I declare in =projectile-project-search-path= (this could actually
+be a list).
+
+The =:delight= statement customises the minor mode's presentation to
+only show the project's name.  For non-project buffers, a dash appears
+instead.
+
+I only really need a handful of commands from this setup, namely the
+ability to switch between buffers or directories in a project and to
+switch between projects.  For the rest, I am already covered by what I
+have defined in the [[#h:919f942a-f99d-437f-b010-af21264246f3][Counsel section above]].
+
+In case you want to use =counsel-projectile= to its full extent, then
+enable and configure =:bind-keymap=.  That key binding is just the common
+prefix to a list of key chords.  You can learn about them with =M-s p C-h=
+(so append =C-h=).  Note though that the keys I define below do not
+require such a prefix.  They call the commands directly.
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :ensure t
+  :delight '(:eval (concat " " (projectile-project-name)))
+  :custom
+  (projectile-project-search-path '("~/Git/Projects/"))
+  (projectile-indexing-method 'alien)
+  (projectile-enable-caching t)
+  (projectile-completion-system 'ivy))
+
+(use-package counsel-projectile
+  :ensure t
+  :config
+  (counsel-projectile-mode 1)
+  ;; :bind-keymap ("M-s p" . projectile-command-map)
+  :bind (("M-s b" . counsel-projectile-switch-to-buffer)
+         ("M-s d" . counsel-projectile-find-dir)
+         ("M-s p" . counsel-projectile-switch-project)))
+#+END_SRC
+
 **** Swiper commands and settings
      :PROPERTIES:
      :CUSTOM_ID: h:8b7f982b-911f-4437-a448-b7288855fbda
