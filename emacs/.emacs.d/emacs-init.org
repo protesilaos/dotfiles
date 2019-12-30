@@ -951,6 +951,7 @@ repository, then the corresponding root is used instead."
          ("C-h v" . counsel-describe-variable)
          ("M-s r" . counsel-rg)
          ("M-s g" . counsel-git-grep)
+         ("M-s l" . counsel-find-library)
          ("M-s z" . prot/counsel-fzf-rg-files)
          :map ivy-minibuffer-map
          ("C-r" . counsel-minibuffer-history)
@@ -3553,7 +3554,6 @@ Some minor conveniences:
           For a single movement that key chord is fine, but for multiple
           invocations it becomes tiresome.  The following allows you to
           repeat the motion with =C-SPC=.
-
 
 #+BEGIN_SRC emacs-lisp
 (use-package emacs
