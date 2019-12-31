@@ -701,7 +701,7 @@ And here are some 'hidden' key bindings for making the most out of Ivy
 Adding to the table above, you can always use the /universal/ =M-n= and
 =M-p= to cycle through the history of entries.
 
-With those granted, make sure to inspect the entirety of my dotemac's
+With those granted, make sure to inspect the entirety of my dotemacs'
 section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]], as the following
 package declaration is but a piece of a greater whole.
 
@@ -2182,7 +2182,7 @@ running =C-u M-x shell= (but who has time for that?).
 Note that I am well aware of =eshell=.  I read the manual and checked
 lots of configurations about it.  I still do not see a major improvement
 over Bash, notwithstanding the significant downside of having to learn
-the idiosyncracies of yet another tool.  Besides, many of the features
+the idiosyncrasies of yet another tool.  Besides, many of the features
 of =eshell= are already available inside of Emacs and are accessible via
 more appropriate interfaces (e.g. =find-file= or =dired= powered by a
 completion framework like =ido-mode= or =ivy=).  The shell has to behave
@@ -2269,7 +2269,7 @@ right now.  Would need to experiment with it a bit more.
    :END:
 
 The "pass" program, aka "password-store", is a password manager that
-uses GPG and standand UNIX tools to handle passwords.  Encrypted files
+uses GPG and standard UNIX tools to handle passwords.  Encrypted files
 are stored in a plain directory structure.  Very simple, very nice: now
 all data is available with a variety of interfaces, such as standard
 CLI, a =dmenu= interface, a graphical front-end like =qtpass=, etc.
@@ -2783,8 +2783,8 @@ bulleted and numbered lists.
    :END:
 
 Just some basic configurations for commenting structured text.  This is
-mostly a placeholder for potentially more targetted and detailed
-settings that would involve per-mode hooks.
+mostly a placeholder for potentially more targeted and detailed settings
+that would involve per-mode hooks.
 
 The purpose of my reviewed key bindings is to make them more consistent.
 Helps with mnemonics.  They also are more ergonomic.  To this end, I
@@ -2937,10 +2937,10 @@ this document) to make the necessary checks for code quality, in
 preparation of their release as a MELPA package.
 
 This package provides a broad range of customisation options, with many
-items targetting specific programming languages and/or style
-conventions.  It seems very powerful!  As these targetted operations
-require some more research, I leave everything to its default value and
-will be updating the package declaration over time.
+items targeting specific programming languages and/or style conventions.
+It seems very powerful!  As these targeted operations require some more
+research, I leave everything to its default value and will be updating
+the package declaration over time.
 
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
@@ -3565,7 +3565,7 @@ rather than force it to the top or bottom of the viewport.  This
 eliminates the friction of guessing where the point has warped to.
 
 As for per-line scrolling, I dislike the default behaviour of visually
-re-centering the point.  With the following, it will stay at the
+re-centring the point.  With the following, it will stay at the
 top/bottom of the screen while moving in that direction (use =C-l= to
 reposition it).  This does not result in more manual interventions to
 recenter text, because of the above.
