@@ -1261,6 +1261,11 @@ Anzu is meant to be used as an enhancement to Isearch.  What I have on
 Swiper and other grep-like tools still remains relevant, though it
 covers a different niche.
 
+Note that =anzu-cons-mode-line-p= disables the default placement of the
+feedback indicator this tool provides.  I do not want it to be at the
+leftmost part of the mode line.  Instead, I define a new position in my
+[[#h:b0395aae-a2d2-4e50-8965-433c4605c724][custom mode line configurations]].
+
 #+BEGIN_SRC emacs-lisp
 (use-package anzu
   :ensure t
@@ -1270,6 +1275,7 @@ covers a different niche.
   (anzu-replace-threshold nil)
   (anzu-deactivate-region nil)
   (anzu-replace-to-string-separator "")
+  (anzu-cons-mode-line-p nil)
   :config
   (global-anzu-mode 1)
   :bind (([remap isearch-query-replace] . anzu-isearch-query-replace)
@@ -1888,7 +1894,7 @@ Also bear in mind that I define several other window motions.  Refer to
   (aw-display-mode-overlay t)
   (aw-background t)
   :config
-  (ace-window-display-mode 1)
+  (ace-window-display-mode -1)
   :bind (("s-a" . ace-window)))
 #+END_SRC
 
@@ -2942,275 +2948,15 @@ It seems very powerful!  As these targeted operations require some more
 research, I leave everything to its default value and will be updating
 the package declaration over time.
 
+Note that previous versions of this document included a package that
+adds a Flycheck indicator on the mode line.  This has now been
+superseded by my [[#h:b0395aae-a2d2-4e50-8965-433c4605c724][custom mode line configurations]].
+
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :ensure t
   :custom
   (flycheck-check-syntax-automatically '(save mode-enabled)))
-#+END_SRC
-
-*** Flycheck modeline indicators
-    :PROPERTIES:
-    :CUSTOM_ID: h:0fb1303b-c8b0-49e9-942d-659a26e523cf
-    :END:
-
-These provide information concerning Flycheck's status on the mode line.
-It is activated once =flycheck-mode= is enabled.  Nice, simple, effective.
-
-#+BEGIN_SRC emacs-lisp
-(use-package flycheck-indicator
-  :ensure t
-  :after flycheck
-  :hook (flycheck-mode-hook . flycheck-indicator-mode))
-#+END_SRC
-
-*** Flycheck posframe (reposition flycheck's feedback)
-    :PROPERTIES:
-    :CUSTOM_ID: h:4566f37c-43c4-4d9e-bd70-80a5e6cf69e5
-    :END:
-
-While we can always hover over a Flycheck message or use a dedicated
-buffer in the form of =flycheck-list-errors= it can be more expedient to
-just rely to a "popup" that appears right below the point.  This is what
-the following package declaration is all about.
-
-#+BEGIN_SRC emacs-lisp
-(use-package flycheck-posframe
-  :ensure t
-  :after flycheck
-  :hook (flycheck-mode-hook . flycheck-posframe-mode))
-#+END_SRC
-
-*** Flycheck package metadata
-    :PROPERTIES:
-    :CUSTOM_ID: h:bc435c0c-f8ad-4fb6-a68e-e94d8455ba22
-    :END:
-
-This one integrates with Flycheck to provide the necessary checks for
-code that is intended for use in MELPA.  I just define the linter for
-packages as a standalone declaration, in case I wish to keep this
-without the flycheck interface.
-
-#+BEGIN_SRC emacs-lisp
-(use-package package-lint
-  :ensure t)
-
-(use-package flycheck-package
-  :ensure t
-  :after (flycheck package-lint))
-#+END_SRC
-
-** Simple abbreviations
-   :PROPERTIES:
-   :CUSTOM_ID: h:33cd69cc-1a50-4abb-9f09-cae98dc8998b
-   :END:
-
-This section stores all the "skeletons" I define.  These are snippets of
-text, typically templates or code statements, that are meant to speed up
-typing.  I combine them with abbreviations.
-
-*Please note that these will be very simplistic at first.*  I am aware
-that they can be abstracted using elisp—need to learn more on that
-front.  Also note that wherever you see =" _ "= it signifies the
-position of the cursor after the skeleton has been inserted.
-
-#+BEGIN_SRC emacs-lisp
-(use-package abbrev
-  :delight
-  :custom
-  (abbrev-file-name "~/.emacs.d/abbrevs")
-  (only-global-abbrevs nil)
-  :config
-  ;;;;;;;;;;;;;;;;;;;;;;
-  ;; simple skeletons ;;
-  ;;;;;;;;;;;;;;;;;;;;;;
-  (define-skeleton protesilaos-com-skeleton
-    "Adds a link to my website while prompting for a possible
-  extension."
-    "Insert website extension: "
-    "https://protesilaos.com/" str "")
-  (define-abbrev global-abbrev-table "meweb"
-    "" 'protesilaos-com-skeleton)
-
-  (define-skeleton protesilaos-gitlab-skeleton
-    "Adds a link to my GitLab account while prompting for a
-  possible extension.  Makes it easy to link to my various git
-  repos."
-    "Website extension: "
-    "https://gitlab.com/protesilaos/" str "")
-  (define-abbrev global-abbrev-table "megit"
-    "" 'protesilaos-gitlab-skeleton)
-  :hook
-  (text-mode . abbrev-mode)
-  (git-commit-mode . abbrev-mode))
-#+END_SRC
-
-** Dabbrev and hippie-expand (dynamic word completion)
-   :PROPERTIES:
-   :CUSTOM_ID: h:57dcf193-0c4e-4ee6-9b2d-6892558b0a84
-   :END:
-
-This is Emacs' own approach to text completion: "dynamic abbreviation"
-and the corresponding "do what I mean wrapper" called =hippie-expand=.
-The latter is a superset of =dabbrev=.
-
-To learn about =hippie-expand-try-functions-list=, read the introductory
-remarks in =M-x find-library RET hippie-exp RET=.
-
-#+BEGIN_SRC emacs-lisp
-(use-package dabbrev
-  :custom
-  (dabbrev-abbrev-char-regexp nil)
-  (dabbrev-backward-only nil)
-  (dabbrev-case-distinction nil)
-  (dabbrev-case-fold-search t)
-  (dabbrev-case-replace nil)
-  (dabbrev-eliminate-newlines nil)
-  (dabbrev-upcase-means-case-search t))
-
-(use-package hippie-exp
-  :after dabbrev
-  :custom
-  (hippie-expand-try-functions-list
-   '(try-expand-dabbrev
-     try-expand-dabbrev-visible
-     try-expand-dabbrev-from-kill
-     try-expand-dabbrev-all-buffers
-     try-expand-list
-     try-expand-list-all-buffers
-     try-expand-line
-     try-expand-line-all-buffers
-     try-complete-file-name-partially
-     try-complete-file-name
-     try-expand-all-abbrevs))
-  (hippie-expand-verbose t)
-  :bind ("M-/" . hippie-expand))
-#+END_SRC
-
-** Company (completion framework)
-   :PROPERTIES:
-   :CUSTOM_ID: h:d2e402b3-c947-42fc-af80-b8a982082a1b
-   :END:
-
-Company has a modular design that allows it to adapt to the user's
-needs.  Additional backends are provided as separate packages.
-
-Overview of the following settings.
-
-+ Allow non-matching input.  The cursor can thus be moved as expected
-  while the pop-up menu with the suggestions is active.
-+ Align annotations to the right.
-+ Do not downcase completions.  There is a function further below that
-  allows lower casing only while filling completions.  I found it in the
-  [[https://github.com/elpa-host/company-fuzzy/blob/master/README.md][README page of this package]].
-+ Show numbers for the ten matching candidates at the top of the list.
-  Select them with =M-NUM=.
-+ Wrap around the list of candidates (go back to start when reaching the
-  end and vice versa).
-+ Do not allow autocomplete.  This might sound like a good idea, but it
-  can have undesired effects: e.g. expanding "is" into "isearch" just by
-  hitting the space key.  That depends on the settings for prefix length
-  and idle delay.
-+ Set minimum length to 3 and delay the pop-up by half a second.  This
-  avoids too many false positives or minor inconveniences that I
-  encounter in my workflow (such as /is/ => /isearch/).
-+ Keep the completion candidates to ten at a time.  This allows us to
-  target them directly by their number (10 is 0 in this case).
-+ Determine how completions are sorted.
-
-Now a few words about the key bindings:
-
-+ Company will start automatically based on the prefix and delay
-  settings mentioned above.  However, it is possible to launch it
-  manually with =s-/= (that is the Super key).  Bear in mind that this
-  key is similar to =M-/= which is used by the built-in Dabbrev tool
-  (defined in a previous sections).  I only use Dabbrev for those cases
-  where Company does not seem to get the job done (probably because it
-  requires further configuration).
-+ While the list of suggestions is open, =M-/= will switch to a
-  different backend.  This can help improve results for the task at
-  hand.
-+ The common part of completion suggestions can be inserted directly
-  with =TAB=.  Hit it twice to select the current item.
-+ Alternatively, =C-TAB= inserts the selection right away.
-+ =C-n= and =C-p= can be used to cycle the list of suggestions.  I have
-  configured it to also complete the common prefix while doing so
-  (whereas the generic approach would be to just move up or down).
-
-Additionally, you can also use =C-s= and =C-r= to perform a search
-inside the list of suggestions.
-
-#+BEGIN_SRC emacs-lisp
-(use-package company
-  :ensure t
-  :delight
-  :custom
-  (company-require-match nil)
-  (company-tooltip-align-annotations t)
-  (company-dabbrev-downcase nil)
-  (company-show-numbers t)
-  (company-selection-wrap-around t)
-  (company-auto-complete nil)
-  (company-minimum-prefix-length 3)
-  (company-idle-delay 0.5)
-  (company-tooltip-limit 10)
-  (company-transformers
-   '(company-sort-by-backend-importance
-     company-sort-prefer-same-case-prefix
-     company-sort-by-occurrence))
-  :config
-  (global-company-mode 1)
-  (defun jcs--company-complete-selection--advice-around (fn)
-    "Enable downcase only when completing the completion.  Advice
-execute around `company-complete-selection' command."
-    (let ((company-dabbrev-downcase t))
-      (call-interactively fn)))
-  (advice-add 'company-complete-selection :around #'jcs--company-complete-selection--advice-around)
-  :bind (:map company-mode-map
-              ("s-/" . company-manual-begin)
-              :map company-active-map
-              (("s-/" . company-other-backend)
-               ("C-d" . company-show-doc-buffer)
-               ("<tab>" . company-complete)
-               ("<C-tab>" . company-complete-selection)
-               ("C-n" . (lambda ()
-                          (interactive)
-                          (company-complete-common-or-cycle 1)))
-               ("C-p" . (lambda ()
-                          (interactive)
-                          (company-complete-common-or-cycle -1))))))
-#+END_SRC
-
-*** Prescient filtering for Company
-    :PROPERTIES:
-    :CUSTOM_ID: h:763a4a35-62a2-4fc5-9ba4-4d2212aa7fe4
-    :END:
-
-The =prescient= package provides scoring and filtering mechanisms for
-completion candidates.  I am using it in tandem with Ivy (see the
-[[#h:87b37547-5941-4f20-baf6-4d00cde1151a][relevant section]]).  Here I declare the extension for =company=.
-
-#+BEGIN_SRC emacs-lisp
-(use-package company-prescient
-  :ensure t
-  :after (company prescient)
-  :config
-  (company-prescient-mode 1))
-#+END_SRC
-
-** Eldoc (elisp live documentation feedback)
-   :PROPERTIES:
-   :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
-   :END:
-
-Displays information about the construct at point in the echo area.  I
-find that I have no use for this, so I am disabling the mode for the
-time being.
-
-#+BEGIN_SRC emacs-lisp
-(use-package eldoc
-  :config
-  (global-eldoc-mode -1))
 #+END_SRC
 
 * Modus themes (my very accessible themes)
@@ -3286,6 +3032,78 @@ theme."
 
 This section contains lots of small tweaks and refinements that cover a
 wide range of item across the Emacs customisation settings.
+
+** Custom mode line
+   :PROPERTIES:
+   :CUSTOM_ID: h:b0395aae-a2d2-4e50-8965-433c4605c724
+   :END:
+
+I generally like the default mode line.  But it has a major weakness: it
+concentrates all indicators to the left, making it feel a bit too busy.
+This detracts from its otherwise clean presentation.  Given that this is
+an integral part of the Emacs experience, I feel that it is necessary to
+customise it, while retaining its simple looks.
+
+The overall presentation should be just like the original one, with the
+exception that modes are pushed to the rightmost area.  Transient
+feedback for keyboard macros, buffer narrowing, and searching with =anzu=
+are drawn in a more intense style, so as to eliminate any doubts as to
+what is going on (see the [[#h:4c1a2270-ddf6-453f-bdcb-914f455b896a][section on Anzu]]).
+
+My personal choice aside, all packages that modify the mode line are
+supported by my Modus themes.
+
+#+BEGIN_SRC emacs-lisp
+(use-package telephone-line
+  :ensure t
+  :custom
+  (telephone-line-height 18)
+  (telephone-line-primary-left-separator
+   'telephone-line-abs-left)
+  (telephone-line-primary-right-separator
+   'telephone-line-abs-right)
+  (telephone-line-secondary-left-separator
+   'telephone-line-abs-hollow-left)
+  (telephone-line-secondary-right-separator
+   'telephone-line-abs-hollow-right)
+  (telephone-line-separator-extra-padding 3)
+  :config
+  (telephone-line-defsegment prot/telephone-line-kbd-macro-segment ()
+    "Offer keyboard macro feedback."
+    (when (or defining-kbd-macro executing-kbd-macro)
+      (telephone-line-raw "Macro")))
+
+  (telephone-line-defsegment prot/telephone-line-narrow-segment ()
+    "Offer feedback on narrowed buffer, with less padding than
+default."
+    (when (not (eq (buffer-narrowed-p) nil))
+      (telephone-line-raw "Narrow")))
+
+  (telephone-line-defsegment prot/telephone-line-anzu-segment ()
+    "Show the `anzu' indicator."
+    (with-eval-after-load 'anzu
+      (telephone-line-raw (anzu--update-mode-line))))
+
+  (setq telephone-line-lhs
+        '((accent . (prot/telephone-line-kbd-macro-segment
+                     prot/telephone-line-narrow-segment
+                     prot/telephone-line-anzu-segment))
+          (nil    . (telephone-line-buffer-segment
+                     telephone-line-position-segment))))
+  (setq telephone-line-rhs
+        '((nil    . (telephone-line-process-segment
+                     telephone-line-misc-info-segment
+                     telephone-line-flycheck-segment
+                     telephone-line-minor-mode-segment
+                     telephone-line-major-mode-segment))))
+
+  (telephone-line-mode 1))
+#+END_SRC
+
+*** TODO create mode line segment for ace-window
+    :PROPERTIES:
+    :CUSTOM_ID: h:b1afe4ce-f2d2-43e8-90df-961e701b3add
+    :END:
 
 ** Feedback
    :PROPERTIES:
