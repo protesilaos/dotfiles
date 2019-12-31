@@ -32,7 +32,7 @@ if [ -d "$HOME"/.local/bin ]; then
 fi
 
 # May be needed for Jekyll…
-if [ -d "$HOME"/.local/share/gems]; then
+if [ -d "$HOME"/.local/share/gems ]; then
     GEM_HOME="$HOME"/.local/share/gems
     PATH=$PATH:"$HOME"/.local/share/gems/bin
 fi
