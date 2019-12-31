@@ -26,7 +26,7 @@
 #    https://gitlab.com/protesilaos/dotfiles
 # 2. The Tempus Themes generator is also at the home dir.  See:
 #    https://gitlab.com/protesilaos/tempus-themes-generator
-# 
+#
 # The utility of this script is only realised when I modify the source
 # of the existing Tempus Themes and/or add a new theme (new templates
 # would require modifications to this script).  It makes it easy to
@@ -88,7 +88,7 @@ invoke_generator() {
 # passing to it the scheme name which is needed for that function's
 # arguments 1 and 4 (see its description).
 #
-# The `invoke_generic_loop()` accepts threee arguments from subsequent
+# The `invoke_generic_loop()` accepts three arguments from subsequent
 # functions.  These define the following:
 #
 # 1. Template name

@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-pgrep tmux > /dev/null || { echo "Tmux is not runnning"; exit 1; }
+pgrep tmux > /dev/null || { echo "Tmux is not running"; exit 1; }
 
 _find_vim() {
 	tmux list-panes -a -F '#D:#T:#{pane_in_mode}' | grep 'VIM'

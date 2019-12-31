@@ -21,7 +21,7 @@
 #
 # This file is part of my custom desktop session on Void Linux.  Other
 # important settings are defined in `.xinitrc' and application-specific
-# initalisation files.  See: https://gitlab.com/protesilaos/dotfiles
+# initialisation files.  See: https://gitlab.com/protesilaos/dotfiles
 
 
 ##############
@@ -41,7 +41,7 @@ _check() {
 # to the laptop or not.
 _check bspwm_conf_xrandr && bspwm_conf_xrandr
 
-# Defin desktop[s] [per monitor].  Contingent on the above.  Also note
+# Define desktop[s] [per monitor].  Contingent on the above.  Also note
 # that this leverages my `bspwm_dynamic_desktops'.
 _check bspwm_conf_desktops && bspwm_conf_desktops
 

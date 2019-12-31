@@ -37,7 +37,7 @@ set encoding=utf-8                " default character encoding
 set autoread                      " detect when a file has been modified externally
 set spelllang=en,el               " languages to check for spelling (english, greek)
 set spellsuggest=10               " number of suggestions for correct spelling
-set updatetime=500                " time of idleness is miliseconds before saving swapfile
+set updatetime=500                " time of idleness is milliseconds before saving swapfile
 set undolevels=1000               " how many undo levels to keep in memory
 set showcmd                       " show command in last line of the screen
 set nostartofline                 " keep cursor in the same column when moving between lines
@@ -85,5 +85,5 @@ iab medot https://gitlab.com/protesilaos/dotfiles
 
 syntax enable
 " DO NOT EDIT MANUALLY IF YOU USE MY DOTFILES.  Themes are updated
-" programatically via my `tempus` script.
+" programmatically via my `tempus` script.
 colorscheme tempus_classic

@@ -57,7 +57,7 @@ _kbd_reset_and_xmodmap() {
 
 # Run the selected command.
 #
-# The `reboot' and `poweroff' require escalated privilages.  Read:
+# The `reboot' and `poweroff' require escalated privileges.  Read:
 # https://wiki.voidlinux.org/Post_Installation#Allow_users_to_shutdown_without_a_password
 case "$choice" in
     L*) _kill_processes && bspc quit      ;;

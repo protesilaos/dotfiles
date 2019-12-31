@@ -148,7 +148,7 @@ _temperature() {
     output="${output#*, }"
     output="${output:0:2}"
 
-    # Up to 59 degrees celcius keep text colour same as default.  60-79
+    # Up to 59 degrees celsius keep text colour same as default.  60-79
     # turn the colour red on normal background.  Else turn the whole
     # indicator red.
     case "$output" in
@@ -244,7 +244,7 @@ mkfifo "$melonpanel_fifo"
 _modules > "$melonpanel_fifo" &
 bspc subscribe report > "$melonpanel_fifo" &
 
-# Read the content of the fifo file.  We differantiate between modules
+# Read the content of the fifo file.  We differentiate between modules
 # based on the majuscule (letter A-Z) they piped into melonpanel_fifo
 # (see modules above).  Here we just add a shorter variable to each
 # module, which helps position it on the panel (the last printf).
