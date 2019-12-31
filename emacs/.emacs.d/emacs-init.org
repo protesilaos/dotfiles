@@ -3088,6 +3088,25 @@ default."
     (with-eval-after-load 'anzu
       (telephone-line-raw (anzu--update-mode-line))))
 
+  (telephone-line-defsegment prot/telephone-line-vcs-segment ()
+    "Show current VCS branch and status indicator."
+    (when (and vc-mode buffer-file-name)
+      (let* ((backend (vc-backend buffer-file-name))
+             (state (vc-state buffer-file-name backend)))
+        (concat
+         (telephone-line-raw
+          (format "%s" (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2))))
+         (cond ((memq state '(edited added))
+                (telephone-line-raw " *"))
+               ((eq state 'needs-merge)
+                (telephone-line-raw " ?"))
+               ((eq state 'needs-update)
+                (telephone-line-raw " !"))
+               ((memq state '(removed conflict unregistered))
+                (telephone-line-raw " ×"))
+               (t
+                (telephone-line-raw "")))))))
+
   (setq telephone-line-lhs
         '((accent . (prot/telephone-line-kbd-macro-segment
                      prot/telephone-line-narrow-segment
@@ -3098,8 +3117,8 @@ default."
         '((nil    . (telephone-line-process-segment
                      telephone-line-misc-info-segment
                      telephone-line-flycheck-segment
+                     prot/telephone-line-vcs-segment
                      telephone-line-minor-mode-segment
-                     telephone-line-vc-segment
                      telephone-line-major-mode-segment))))
 
   (telephone-line-mode 1))
