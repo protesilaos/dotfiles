@@ -971,9 +971,12 @@ its root.  Either way, projects are placed inside a filesystem path,
 which I declare in =projectile-project-search-path= (this could actually
 be a list).
 
-The =:delight= statement customises the minor mode's presentation to
-only show the project's name.  For non-project buffers, a dash appears
-instead.
+The disabled =:delight= statement customises the minor mode's presentation
+to only show the project's name.  For non-project buffers, a dash
+appears instead.  However, it is disabled in favour of not showing
+anything at all in the minor mode list.  A dedicated indicator for the
+built-in version control status is used in my [[#h:b0395aae-a2d2-4e50-8965-433c4605c724][custom mode line]] instead.
+This is enough for my use-case.
 
 I only really need a handful of commands from this setup, namely the
 ability to switch between buffers or directories in a project and to
@@ -989,7 +992,8 @@ require such a prefix.  They call the commands directly.
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
   :ensure t
-  :delight '(:eval (concat " " (projectile-project-name)))
+  ;; :delight '(:eval (concat " " (projectile-project-name)))
+  :delight
   :custom
   (projectile-project-search-path '("~/Git/Projects/"))
   (projectile-indexing-method 'alien)
@@ -3095,6 +3099,7 @@ default."
                      telephone-line-misc-info-segment
                      telephone-line-flycheck-segment
                      telephone-line-minor-mode-segment
+                     telephone-line-vc-segment
                      telephone-line-major-mode-segment))))
 
   (telephone-line-mode 1))
