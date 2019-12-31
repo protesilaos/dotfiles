@@ -3326,6 +3326,24 @@ with or simplify common tasks:
   (put 'overwrite-mode 'disabled t))
 #+END_SRC
 
+** Auto revert mode
+   :PROPERTIES:
+   :CUSTOM_ID: h:7a8422e6-86d1-40f3-add4-0a1c826e44a3
+   :END:
+
+This mode ensures that the buffer is updated whenever the file changes.
+A change can happen externally or by some other tool inside of Emacs
+(e.g. kill a Magit diff).
+
+#+BEGIN_SRC emacs-lisp
+(use-package autorevert
+  :delight
+  :custom
+  (auto-revert-verbose t)
+  :config
+  (global-auto-revert-mode 1))
+#+END_SRC
+
 ** Parentheses
    :PROPERTIES:
    :CUSTOM_ID: h:3d374354-843f-4efa-aa38-1ba2c9ccc14c
