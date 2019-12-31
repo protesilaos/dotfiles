@@ -23,12 +23,18 @@ _checkexec() {
 # ================
 
 # Include my scripts in the PATH.
-if [ -d "$HOME/bin" ]; then
+if [ -d "$HOME"/bin ]; then
     PATH=$PATH:"$HOME"/bin
 fi
 
-if [ -d "$HOME/.local/bin" ]; then
+if [ -d "$HOME"/.local/bin ]; then
     PATH=$PATH:"$HOME"/.local/bin
+fi
+
+# May be needed for Jekyll…
+if [ -d "$HOME"/.local/share/gems]; then
+    GEM_HOME="$HOME"/.local/share/gems
+    PATH=$PATH:"$HOME"/.local/share/gems/bin
 fi
 
 
