@@ -813,7 +813,7 @@ type something anyhow).
   :custom
   (prescient-history-length 200)
   (prescient-save-file "~/.emacs.d/prescient-items")
-  (prescient-filter-method '(literal initialism fuzzy regexp))
+  (prescient-filter-method '(literal regexp))
   :config
   (prescient-persist-mode 1))
 
