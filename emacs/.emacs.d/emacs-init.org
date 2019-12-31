@@ -1252,10 +1252,10 @@ utilities:
    (=M-%=) and =query-replace-regexp= (=C-M-%=), as well as their
    equivalents that are called amid an =isearch=.  These offer better
    visual feedback.
-3. The =anzu-query-replace-at-cursor= will run a replacement search for
-   the thing at point.  Each replacement expects a =y= answer.  All
-   replacements can happen at once with =!= (as with all the other
-   commands).
+
+The =anzu-query-replace-at-cursor= will run a replacement search for the
+thing at point.  Each replacement expects a =y= answer.  All replacements
+can happen at once with =!= (as with all the other commands).
 
 Anzu is meant to be used as an enhancement to Isearch.  What I have on
 Swiper and other grep-like tools still remains relevant, though it
