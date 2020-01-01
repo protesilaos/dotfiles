@@ -980,7 +980,14 @@ In case you want to use =counsel-projectile= to its full extent, then
 enable and configure =:bind-keymap=.  That key binding is just the common
 prefix to a list of key chords.  You can learn about them with =M-s p C-h=
 (so append =C-h=).  Note though that the keys I define below do not
-require such a prefix.  They call the commands directly.
+require such a prefix.  They call the commands I need directly.
+
+The =counsel-projectile-switch-project= is configured to run the fourth
+action of those available, which configures it to switch to a project
+and open it inside of =dired=, rather than ask for a file to open.
+
+While the =ivy-initial-inputs-alist= extends the variable that is
+specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
 
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
@@ -996,11 +1003,14 @@ require such a prefix.  They call the commands directly.
 (use-package counsel-projectile
   :ensure t
   :config
+  (add-to-list 'ivy-initial-inputs-alist '(counsel-projectile-switch-project . ""))
   (counsel-projectile-mode 1)
   ;; :bind-keymap ("M-s p" . projectile-command-map)
   :bind (("M-s b" . counsel-projectile-switch-to-buffer)
          ("M-s d" . counsel-projectile-find-dir)
-         ("M-s p" . counsel-projectile-switch-project)))
+         ("M-s p" . (lambda ()
+                      (interactive)
+                      (counsel-projectile-switch-project 4)))))
 #+END_SRC
 
 **** Swiper commands and settings
