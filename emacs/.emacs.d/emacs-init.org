@@ -716,6 +716,7 @@ package declaration is but a piece of a greater whole.
    '((counsel-M-x . "")
      (counsel-fzf . "")
      (counsel-rg . "")
+     (swiper . "")
      (t . "^")))
   :config
   (ivy-set-occur 'counsel-fzf 'counsel-fzf-occur)
