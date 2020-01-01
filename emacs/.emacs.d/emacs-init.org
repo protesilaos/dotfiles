@@ -3296,7 +3296,7 @@ supported by my Modus themes.
 (use-package telephone-line
   :ensure t
   :custom
-  (telephone-line-height 22)
+  (telephone-line-height nil)
   (telephone-line-primary-left-separator
    'telephone-line-nil)
   (telephone-line-primary-right-separator
