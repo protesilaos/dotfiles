@@ -271,7 +271,7 @@ of Emacs, while I keep Hack as the generic monospaced font.
 #+BEGIN_SRC emacs-lisp
 (use-package emacs
   :custom
-  (x-underline-at-descent-line nil)
+  (x-underline-at-descent-line t)
   (underline-minimum-offset 1)
   :config
   (defconst prot/fixed-pitch-font "Iosevka Slab Extended"
