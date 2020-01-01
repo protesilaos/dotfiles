@@ -3298,13 +3298,13 @@ supported by my Modus themes.
   :custom
   (telephone-line-height 22)
   (telephone-line-primary-left-separator
-   'telephone-line-abs-left)
+   'telephone-line-nil)
   (telephone-line-primary-right-separator
-   'telephone-line-abs-right)
+   'telephone-line-halfsin-right)
   (telephone-line-secondary-left-separator
-   'telephone-line-abs-hollow-left)
+   'telephone-line-halfsin-hollow-left)
   (telephone-line-secondary-right-separator
-   'telephone-line-abs-hollow-right)
+   'telephone-line-halfsin-hollow-right)
   (telephone-line-separator-extra-padding 3)
   :config
   (telephone-line-defsegment prot/telephone-line-kbd-macro-segment ()
