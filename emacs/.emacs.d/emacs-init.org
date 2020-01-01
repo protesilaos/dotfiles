@@ -286,7 +286,7 @@ of Emacs, while I keep Hack as the generic monospaced font.
   ;;;; TODO is it okay to defconst there?
   ;; (defun prot/test-font-availaiblity ()
   ;;   "Checks for the availability of a desired monospace font"
-  ;;   (when (member "Iosevka Slab Light Extended" (font-family-list))
+  ;;   (when (member "Iosevka Slab Extended" (font-family-list))
   ;;     (defconst prot/fixed-pitch-font "Iosevka Slab Extended"
   ;;       "The default fixed-pitch typeface.")))
 
