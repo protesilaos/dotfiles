@@ -668,7 +668,8 @@ A few highlights of my configurations in the subsequent code block:
   candidates.  Unless declared otherwise, I am using regexp matching by
   default.
 + =ivy-initial-inputs-alist= adds some initial input to the commands we
-  specify.  Leave it empty if you want fuzzy search to work properly.
+  specify.  I define it to prepend a caret sign =(^)= by default, unless
+  explicitly stated not to include anything.
 + =ivy-use-selectable-prompt= solves the problem of trying to create a
   new file system path that shares a common name with an existing item.
   Press =C-p= and proceed without further conflicts.
@@ -713,7 +714,8 @@ package declaration is but a piece of a greater whole.
   (ivy-use-selectable-prompt t)
   (ivy-fixed-height-minibuffer nil)
   (ivy-initial-inputs-alist
-   '((counsel-M-x . "")
+   '((counsel-dired . "")
+     (counsel-find-file . "")
      (counsel-fzf . "")
      (counsel-rg . "")
      (swiper . "")
