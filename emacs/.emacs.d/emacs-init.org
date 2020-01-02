@@ -714,12 +714,11 @@ package declaration is but a piece of a greater whole.
   (ivy-use-selectable-prompt t)
   (ivy-fixed-height-minibuffer nil)
   (ivy-initial-inputs-alist
-   '((counsel-dired . "")
-     (counsel-find-file . "")
-     (counsel-fzf . "")
-     (counsel-rg . "")
-     (swiper . "")
-     (t . "^")))
+   '((counsel-M-x . "^")
+     (ivy-switch-buffer . "^")
+     (counsel-describe-function . "^")
+     (counsel-describe-variable . "^")
+     (t . "")))
   :config
   (ivy-set-occur 'counsel-fzf 'counsel-fzf-occur)
   (ivy-set-occur 'counsel-rg 'counsel-ag-occur)
