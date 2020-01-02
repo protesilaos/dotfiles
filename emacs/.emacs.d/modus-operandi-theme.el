@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 0.3.0
+;; Version: 0.4.0
 ;; Package-Requires: ((emacs "25.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -421,20 +421,20 @@ between foreground and background is >= 7:1)."
    `(column-enforce-face ((,class (:inherit modus-theme-refine-yellow))))
    ;;;; company-mode
    `(company-echo-common ((,class (:foreground ,magenta-alt-other))))
-   `(company-preview ((,class (:inherit modus-theme-intense-neutral))))
-   `(company-preview-common ((,class (:foreground ,magenta-alt-other))))
+   `(company-preview ((,class (:background ,bg-dim :foreground ,fg-dim))))
+   `(company-preview-common ((,class (:foreground ,blue-alt))))
    `(company-scrollbar-bg ((,class (:background ,bg-active))))
    `(company-scrollbar-fg ((,class (:background ,fg-active))))
    `(company-template-field ((,class (:inherit modus-theme-intense-magenta))))
-   `(company-tooltip ((,class (:background ,bg-alt))))
-   `(company-tooltip-annotation ((,class (:foreground ,magenta-alt-other))))
+   `(company-tooltip ((,class (:background ,bg-alt :foreground ,fg-alt))))
+   `(company-tooltip-annotation ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
    `(company-tooltip-annotation-selection ((,class (:foreground ,fg-main :weight bold))))
-   `(company-tooltip-common ((,class (:foreground ,magenta-alt-other))))
-   `(company-tooltip-common-selection ((,class (:foreground ,fg-main :weight bold))))
+   `(company-tooltip-common ((,class (:foreground ,blue-alt :weight bold))))
+   `(company-tooltip-common-selection ((,class (:foreground ,fg-main))))
    `(company-tooltip-mouse ((,class (:inherit modus-theme-intense-blue))))
-   `(company-tooltip-search ((,class (:inherit modus-theme-subtle-green))))
-   `(company-tooltip-search-selection ((,class (:inherit modus-theme-intense-green))))
-   `(company-tooltip-selection ((,class (:inherit modus-theme-intense-cyan))))
+   `(company-tooltip-search ((,class (:inherit modus-theme-subtle-blue :weight bold))))
+   `(company-tooltip-search-selection ((,class (:inherit modus-theme-refine-magenta :weight bold :underline t))))
+   `(company-tooltip-selection ((,class (:inherit modus-theme-subtle-cyan :weight bold))))
    ;;;; company-posframe
    `(company-posframe-active-backend-name ((,class (:background ,bg-active :foreground ,blue-active :weight bold))))
    `(company-posframe-inactive-backend-name ((,class (:background ,bg-active :foreground ,fg-active))))
@@ -1589,11 +1589,11 @@ between foreground and background is >= 7:1)."
    `(swiper-background-match-face-2 ((,class (:inherit modus-theme-subtle-cyan))))
    `(swiper-background-match-face-3 ((,class (:inherit modus-theme-subtle-magenta))))
    `(swiper-background-match-face-4 ((,class (:inherit modus-theme-subtle-green))))
-   `(swiper-line-face ((,class (:inherit ivy-current-match))))
-   `(swiper-match-face-1 ((,class (:inherit ivy-current-match))))
-   `(swiper-match-face-2 ((,class (:inherit ivy-current-match))))
-   `(swiper-match-face-3 ((,class (:inherit ivy-current-match))))
-   `(swiper-match-face-4 ((,class (:inherit ivy-current-match))))
+   `(swiper-line-face ((,class (:inherit modus-theme-special-mild))))
+   `(swiper-match-face-1 ((,class (:inherit swiper-line-face))))
+   `(swiper-match-face-2 ((,class (:inherit swiper-line-face))))
+   `(swiper-match-face-3 ((,class (:inherit swiper-line-face))))
+   `(swiper-match-face-4 ((,class (:inherit swiper-line-face))))
    ;;;; sx
    `(sx-inbox-item-type ((,class (:foreground ,magenta-alt-other))))
    `(sx-inbox-item-type-unread ((,class (:inherit sx-inbox-item-type :weight bold))))
