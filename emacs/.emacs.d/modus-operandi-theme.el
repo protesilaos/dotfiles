@@ -795,11 +795,11 @@ between foreground and background is >= 7:1)."
    `(flycheck-error-list-column-number ((,class (:foreground ,fg-special-cold))))
    `(flycheck-error-list-error ((,class (:inherit error))))
    `(flycheck-error-list-filename ((,class (:foreground ,blue))))
-   `(flycheck-error-list-highlight ((,class (:inherit highlight))))
+   `(flycheck-error-list-highlight ((,class (:inherit modus-theme-special-warm))))
    `(flycheck-error-list-id ((,class (:foreground ,magenta-alt-other))))
    `(flycheck-error-list-id-with-explainer ((,class (:inherit flycheck-error-list-id :box t))))
    `(flycheck-error-list-info ((,class (:foreground ,green))))
-   `(flycheck-error-list-line-number ((,class (:foreground ,fg-special-cold))))
+   `(flycheck-error-list-line-number ((,class (:foreground ,fg-special-warm))))
    `(flycheck-error-list-warning ((,class (:foreground ,yellow))))
    `(flycheck-fringe-error ((,class (:foreground ,red-intense :weight bold))))
    `(flycheck-fringe-info ((,class (:foreground ,green-intense :weight bold))))
@@ -821,6 +821,10 @@ between foreground and background is >= 7:1)."
    `(flycheck-posframe-face ((,class (:foreground ,fg-main :slant ,modus-theme-slant))))
    `(flycheck-posframe-info-face ((,class (:foreground ,green :weight bold))))
    `(flycheck-posframe-warning-face ((,class (:foreground ,yellow :weight bold))))
+   ;;;; flymake
+   `(flymake-error ((,class (:foreground ,red :underline t))))
+   `(flymake-note ((,class (:foreground ,green :underline t))))
+   `(flymake-warning ((,class (:foreground ,yellow :underline t))))
    ;;;; flyspell
    `(flyspell-duplicate
      ((,(append '((supports :underline (:style wave))) class)
@@ -1054,7 +1058,7 @@ between foreground and background is >= 7:1)."
    ;;;; isearch, occur, and the like
    `(isearch ((,class (:inherit modus-theme-intense-green :weight bold))))
    `(isearch-fail ((,class (:inherit modus-theme-subtle-red :weight bold))))
-   `(lazy-highlight ((,class (:inherit modus-theme-subtle-cyan))))
+   `(lazy-highlight ((,class (:inherit modus-theme-refine-cyan))))
    `(match ((,class (:inherit modus-theme-intense-blue))))
    `(query-replace ((,class (:inherit modus-theme-refine-yellow :weight bold))))
    ;;;; info pages (help pages)
