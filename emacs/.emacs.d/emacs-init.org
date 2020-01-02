@@ -3043,6 +3043,10 @@ The latter is a superset of =dabbrev=.
 To learn about =hippie-expand-try-functions-list=, read the introductory
 remarks in =M-x find-library RET hippie-exp RET=.
 
+That granted, the tool that I actually use is called Company, which
+includes the functionality of =dabbrev= while offering several extensions.
+Refer to the [[#h:d2e402b3-c947-42fc-af80-b8a982082a1b][Company section for a detailed explanation]].
+
 #+BEGIN_SRC emacs-lisp
 (use-package dabbrev
   :custom
@@ -3069,8 +3073,7 @@ remarks in =M-x find-library RET hippie-exp RET=.
      try-complete-file-name-partially
      try-complete-file-name
      try-expand-all-abbrevs))
-  (hippie-expand-verbose t)
-  :bind ("M-/" . hippie-expand))
+  (hippie-expand-verbose t))
 #+END_SRC
 
 ** Company (completion framework)
@@ -3079,92 +3082,101 @@ remarks in =M-x find-library RET hippie-exp RET=.
    :END:
 
 Company has a modular design that allows it to adapt to the user's
-needs.  Additional backends are provided as separate packages.
+needs.  Additional backends are provided as separate packages, though I
+currently do not need any of them.
 
 Overview of the following settings.
 
-+ Allow non-matching input.  The cursor can thus be moved as expected
-  while the pop-up menu with the suggestions is active.
-+ Align annotations to the right.
-+ Do not downcase completions.  There is a function further below that
-  allows lower casing only while filling completions.  I found it in the
-  [[https://github.com/elpa-host/company-fuzzy/blob/master/README.md][README page of this package]].
-+ Show numbers for the ten matching candidates at the top of the list.
-  Select them with =M-NUM=.
-+ Wrap around the list of candidates (go back to start when reaching the
-  end and vice versa).
 + Do not allow autocomplete.  This might sound like a good idea, but it
   can have undesired effects: e.g. expanding "is" into "isearch" just by
   hitting the space key.  That depends on the settings for prefix length
   and idle delay.
-+ Set minimum length to 3 and delay the pop-up by half a second.  This
++ Use the built-in "dynamic abbreviation" (=dabbrev=) in comments and
+  strings, as well as more generally.  I find that this method gives me
+  relevant results.
++ While using =dabbrev= make sure to populate the list with suggestions
+  from all buffers, thus increasing the likelihood of showing something
+  I already have and need again.
++ Never downcase an expanded completion candidate, but do allow for case
+  insensitive candidates.
++ Set minimum length to 3 and delay the pop-up by 0.3 seconds.  This
   avoids too many false positives or minor inconveniences that I
   encounter in my workflow (such as /is/ => /isearch/).
-+ Keep the completion candidates to ten at a time.  This allows us to
-  target them directly by their number (10 is 0 in this case).
-+ Determine how completions are sorted.
++ Allow non-matching input.  The cursor can thus be moved as expected
+  while the pop-up menu with the suggestions is active.  I find this
+  necessary to avoid being locked into the completion list.
++ Let the list be cyclical, so moving to the end will bring you back at
+  the top.  In practice though, I never use this.  If I need to run
+  through a long list and come back again, I am probably doing something
+  wrong.  At any rate, you can search within the list of suggestions
+  while it is active by using =C-s=.
++ Show numbers for the ten matching candidates at the top of the list.
+  Select them with =M-NUM=.
++ Control how results are sorted once they are collected from all the
+  relevant backends.  What I have in =company-transformers= works fine for
+  me, but I am not sure how it interacts with =company-prescient= (see
+  [[#h:763a4a35-62a2-4fc5-9ba4-4d2212aa7fe4][relevant section]]).
++ Align annotations to the right.  This concerns certain backends that
+  display additional information for their candidates.  This keeps
+  things nice and tidy.
++ Keep the completion candidates to ten at a time, allowing us to target
+  each item directly by its corresponding number (10 is 0 in this
+  case).  Remember to select the item with Meta and its number.
++ Keep the margin of the tooltip to a minimum and show a scrollbar when
+  the list exceeds the limit of 10 candidates at a time.
 
 Now a few words about the key bindings:
 
 + Company will start automatically based on the prefix and delay
   settings mentioned above.  However, it is possible to launch it
-  manually with =s-/= (that is the Super key).  Bear in mind that this
-  key is similar to =M-/= which is used by the built-in Dabbrev tool
-  (defined in a previous sections).  I only use Dabbrev for those cases
-  where Company does not seem to get the job done (probably because it
-  requires further configuration).
+  manually with =M-/=.  Bear in mind that by default this key is used by
+  the built-in Dabbrev tool.  Since =company= encompasses the
+  functionality of that backend, there is no need to keep a separate key
+  for it.
 + While the list of suggestions is open, =M-/= will switch to a
   different backend.  This can help improve results for the task at
   hand.
-+ The common part of completion suggestions can be inserted directly
-  with =TAB=.  Hit it twice to select the current item.
-+ Alternatively, =C-TAB= inserts the selection right away.
-+ =C-n= and =C-p= can be used to cycle the list of suggestions.  I have
-  configured it to also complete the common prefix while doing so
-  (whereas the generic approach would be to just move up or down).
-
-Additionally, you can also use =C-s= and =C-r= to perform a search
-inside the list of suggestions.
++ If possible, the common part of completion candidates can be inserted
+  directly with =C-TAB=.  If no common prefix can be completed, this key
+  will more the selection to the next item on the list.  To select the
+  current item without further questions, simply hit =TAB=.
++ =C-n= and =C-p= can be used to cycle the list of suggestions.
 
 #+BEGIN_SRC emacs-lisp
 (use-package company
   :ensure t
   :delight
   :custom
-  (company-require-match nil)
-  (company-tooltip-align-annotations t)
-  (company-dabbrev-downcase nil)
-  (company-show-numbers t)
-  (company-selection-wrap-around t)
   (company-auto-complete nil)
+  (company-dabbrev-code-everywhere t)
+  (company-dabbrev-code-modes t)
+  (company-dabbrev-code-other-buffers 'all)
+  (company-dabbrev-downcase nil)
+  (company-dabbrev-ignore-case t)
+  (company-dabbrev-other-buffers 'all)
+  (company-idle-delay 0.3)
   (company-minimum-prefix-length 3)
-  (company-idle-delay 0.5)
-  (company-tooltip-limit 10)
+  (company-require-match nil)
+  (company-selection-wrap-around t)
+  (company-show-numbers t)
   (company-transformers
    '(company-sort-by-backend-importance
      company-sort-prefer-same-case-prefix
      company-sort-by-occurrence))
+  (company-tooltip-align-annotations t)
+  (company-tooltip-limit 10)
+  (company-tooltip-margin 1)
+  (company-tooltip-offset-display 'scrollbar)
   :config
   (global-company-mode 1)
-  (defun jcs--company-complete-selection--advice-around (fn)
-    "Enable downcase only when completing the completion.  Advice
-execute around `company-complete-selection' command."
-    (let ((company-dabbrev-downcase t))
-      (call-interactively fn)))
-  (advice-add 'company-complete-selection :around #'jcs--company-complete-selection--advice-around)
   :bind (:map company-mode-map
-              ("s-/" . company-manual-begin)
+              ("M-/" . company-manual-begin)
               :map company-active-map
-              (("s-/" . company-other-backend)
-               ("C-d" . company-show-doc-buffer)
-               ("<tab>" . company-complete)
-               ("<C-tab>" . company-complete-selection)
-               ("C-n" . (lambda ()
-                          (interactive)
-                          (company-complete-common-or-cycle 1)))
-               ("C-p" . (lambda ()
-                          (interactive)
-                          (company-complete-common-or-cycle -1))))))
+              (("M-/" . company-other-backend)
+               ("<tab>" . company-complete-selection)
+               ("<C-tab>" . company-complete-common-or-cycle)
+               ("C-n" . company-select-next)
+               ("C-p" . company-select-previous))))
 #+END_SRC
 
 *** Prescient filtering for Company
