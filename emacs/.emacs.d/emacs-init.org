@@ -818,7 +818,7 @@ type something anyhow).
   (ivy-prescient-sort-commands
    '(:not swiper ivy-switch-buffer counsel-switch-buffer))
   (ivy-prescient-retain-classic-highlighting t)
-  (ivy-prescient-enable-filtering t)
+  (ivy-prescient-enable-filtering nil)
   (ivy-prescient-enable-sorting t)
   :config
   (ivy-prescient-mode 1))
