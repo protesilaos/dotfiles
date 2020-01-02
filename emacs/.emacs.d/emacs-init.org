@@ -1989,6 +1989,7 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
   ;; code blocks
   (org-src-window-setup 'current-window)
   (org-src-fontify-natively t)
+  (org-src-preserve-indentation t)
   (org-src-tab-acts-natively t)
   (org-confirm-babel-evaluate nil)
   (org-edit-src-content-indentation 0)
@@ -2014,6 +2015,8 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
      ("c" "#+BEGIN_CENTER\n?\n#+END_CENTER")
      ("C" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
      ("I" "#+INCLUDE: %file ?")))
+  (org-catch-invisible-edits 'show)
+  (org-return-follows-link t)
   :config
   ;; Refresh org-agenda after rescheduling a task.
   (defun contrib/org-agenda-refresh ()
@@ -4108,7 +4111,7 @@ The idea is to produce the opposite effect of both
           (fill-region (region-beginning) (region-end))
         (fill-paragraph nil region))))
 
-    (defun prot/yank-replace-line-or-region ()
+  (defun prot/yank-replace-line-or-region ()
     "Replace the line at point with the contents of the last
 stretch of killed text.  If the region is active, operate over it
 instead.  This command can then be followed by the standard
@@ -4123,25 +4126,25 @@ instead.  This command can then be followed by the standard
         (yank))))
 
 ;;;; NOTE: this is experimental and needs further refinements
-;;   (defun prot/toggle-dedicated-window ()
-;;     "Toggle current window as strongly dedicated to its buffer.
-;;
-;; Dedicated windows are not affected by actions that involve the
-;; other window.  They remain in place."
-;;     (interactive)
-;;     (let ((buf (get-buffer-window (current-buffer))))
-;;       (if (not (window-dedicated-p buf))
-;;           (progn
-;;             (set-window-dedicated-p buf t)
-;;             (message "Added 'dedicated' flag to buffer"))
-;;         (set-window-dedicated-p buf nil)
-;;         (message "Removed 'dedicated' flag from buffer"))))
+  ;;   (defun prot/toggle-dedicated-window ()
+  ;;     "Toggle current window as strongly dedicated to its buffer.
+  ;;
+  ;; Dedicated windows are not affected by actions that involve the
+  ;; other window.  They remain in place."
+  ;;     (interactive)
+  ;;     (let ((buf (get-buffer-window (current-buffer))))
+  ;;       (if (not (window-dedicated-p buf))
+  ;;           (progn
+  ;;             (set-window-dedicated-p buf t)
+  ;;             (message "Added 'dedicated' flag to buffer"))
+  ;;         (set-window-dedicated-p buf nil)
+  ;;         (message "Removed 'dedicated' flag from buffer"))))
 
   :bind (("C-c C-=" . bjm/align-whitespace)
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
          ("s-k" . kill-this-buffer)
-         ("C-S-k" . prot/kill-line-backward)
+         ("M-k" . prot/kill-line-backward)
          ("C-S-SPC" . contrib/mark-whole-word)
          ("C-S-n" . prot/multi-line-next)
          ("C-S-p" . prot/multi-line-prev)
