@@ -1611,7 +1611,7 @@ represents the tab character and is there to ensure alignment.
               (")" . dired-git-info-mode)))
 #+END_SRC
 
-** Git front-end (Magit)
+** Git front-end (Magit) and relevant configurations
    :PROPERTIES:
    :CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
    :END:
@@ -1621,6 +1621,11 @@ that =magit= offers an intuitive interface that speeds up most common
 tasks.  The real reason I use it though, is because it makes it easier
 to perform git operations while inside a directory/file.  No need to
 switch to a terminal emulator.
+
+*** Base Magit settings
+    :PROPERTIES:
+    :CUSTOM_ID: h:21ca155a-d0d7-4710-b34a-a0d7a901ac0d
+    :END:
 
 Magit has good defaults.  I only found a few things that I would like to
 customise, which I do in the following package declarations.
@@ -1632,8 +1637,14 @@ customise, which I do in the following package declarations.
          ("s-g" . magit-status)))
 #+END_SRC
 
+*** Git commits
+    :PROPERTIES:
+    :CUSTOM_ID: h:f851e0cc-099c-4309-8517-b2f20ab18ab4
+    :END:
+
 The following package is configured in accordance with the guidelines
-provided by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].
+provided by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is
+to write commits that are clean and easy to read.
 
 #+BEGIN_SRC emacs-lisp
 (use-package git-commit
@@ -1655,9 +1666,14 @@ provided by this article on [[https://chris.beams.io/posts/git-commit/][writing 
      overlong-summary-line)))
 #+END_SRC
 
+*** Git diffs
+    :PROPERTIES:
+    :CUSTOM_ID: h:c7a465c1-f33a-42d8-9617-fff3e1460060
+    :END:
+
 The settings below are for the diff screens that Magit produces.  I just
 want to highlight changes within a line, not just the line itself.  I
-enable it for just the focused hunk (there is an option for ='all=).
+enable it only for the focused hunk (there is an option for ='all=).
 
 My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to style these appropriately.
 
