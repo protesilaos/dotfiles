@@ -1702,6 +1702,29 @@ examined further.
   (magit-repository-directories '(("~/Git/Projects" . 1))))
 #+END_SRC
 
+*** Git time machine
+    :PROPERTIES:
+    :CUSTOM_ID: h:d91ae6cb-433e-4efa-9580-07c5a59e5e29
+    :END:
+
+One of the major upsides of keeping files under version control is the
+ability to revert to a previous state in the history of changes.  By
+using =git-timemachine= we can flip through a file's full list of
+permutations.  Reverting to a given phase is as easy as writing the
+buffer to a file, with =C-x C-w=.  In general, it might be better to save
+a version as a different file and then run =M-x diff= between the two.  Or
+maybe you want to do so with three files, in which case =M-x ediff3= is
+your friend.
+
+I am not aware of the equivalent functionality in Magit, in which case
+it would make more sense to just use that.
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-timemachine
+  :ensure t
+  :commands git-timemachine)
+#+END_SRC
+
 ** Working with buffers
    :PROPERTIES:
    :CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
