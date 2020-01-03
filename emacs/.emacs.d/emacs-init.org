@@ -2916,7 +2916,7 @@ Else toggle the comment status of the line at point."
          ("C-x C-;" . comment-box)))
 #+END_SRC
 
-** Spell check
+** Flyspell (spell check)
    :PROPERTIES:
    :CUSTOM_ID: h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c
    :END:
@@ -2955,52 +2955,6 @@ automatic.
   :hook
   (text-mode . turn-on-flyspell)
   (prog-mode . turn-off-flyspell))
-#+END_SRC
-
-** Markdown support
-   :PROPERTIES:
-   :CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
-   :END:
-
-I edit lots of Markdown files.  This makes things easier.
-
-#+BEGIN_SRC emacs-lisp
-(use-package markdown-mode
-  :ensure t
-  :mode ("\\.md\\'" . markdown-mode))
-#+END_SRC
-
-** YAML support
-   :PROPERTIES:
-   :CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
-   :END:
-
-This adds support for YAML files.
-
-#+BEGIN_SRC emacs-lisp
-(use-package yaml-mode
-  :ensure t
-  :mode (("\\.yml\\'" . yaml-mode)
-         ("\\.yaml\\'" . yaml-mode)))
-#+END_SRC
-
-** Support for various config files
-   :PROPERTIES:
-   :CUSTOM_ID: h:3a5ec3f9-1087-4409-88d5-2468a0aa385e
-   :END:
-
-The following rules implement the appropriate syntax highlighting in
-various configuration files that I access.
-
-The list will be expanded over time.
-
-#+BEGIN_SRC emacs-lisp
-(use-package emacs
-  :mode (("offlineimaprc" . conf-mode)
-         ("sxhkdrc" . conf-mode)
-         ("Xmodmap" . conf-xdefaults-mode)
-         ("template" . shell-script-mode)
-         ("\\.rasi\\'" . css-mode)))
 #+END_SRC
 
 ** Flycheck (code linting)
@@ -3047,6 +3001,52 @@ without the flycheck interface.
 (use-package flycheck-package
   :ensure t
   :after (flycheck package-lint))
+#+END_SRC
+
+** Markdown support
+   :PROPERTIES:
+   :CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
+   :END:
+
+I edit lots of Markdown files.  This makes things easier.
+
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.md\\'" . markdown-mode))
+#+END_SRC
+
+** YAML support
+   :PROPERTIES:
+   :CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
+   :END:
+
+This adds support for YAML files.
+
+#+BEGIN_SRC emacs-lisp
+(use-package yaml-mode
+  :ensure t
+  :mode (("\\.yml\\'" . yaml-mode)
+         ("\\.yaml\\'" . yaml-mode)))
+#+END_SRC
+
+** Support for various config files
+   :PROPERTIES:
+   :CUSTOM_ID: h:3a5ec3f9-1087-4409-88d5-2468a0aa385e
+   :END:
+
+The following rules implement the appropriate syntax highlighting in
+various configuration files that I access.
+
+The list will be expanded over time.
+
+#+BEGIN_SRC emacs-lisp
+(use-package emacs
+  :mode (("offlineimaprc" . conf-mode)
+         ("sxhkdrc" . conf-mode)
+         ("Xmodmap" . conf-xdefaults-mode)
+         ("template" . shell-script-mode)
+         ("\\.rasi\\'" . css-mode)))
 #+END_SRC
 
 ** Simple abbreviations
