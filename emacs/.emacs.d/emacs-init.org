@@ -1716,8 +1716,8 @@ a version as a different file and then run =M-x diff= between the two.  Or
 maybe you want to do so with three files, in which case =M-x ediff3= is
 your friend.
 
-I am not aware of the equivalent functionality in Magit, in which case
-it would make more sense to just use that.
+Once inside the time machine, hit =?= to get a help interface with the
+available key bindings.  These extend =magit= functionality.
 
 #+BEGIN_SRC emacs-lisp
 (use-package git-timemachine
