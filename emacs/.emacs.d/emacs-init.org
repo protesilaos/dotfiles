@@ -708,6 +708,8 @@ package declaration is but a piece of a greater whole.
   (ivy-wrap nil)
   (ivy-re-builders-alist
    '((counsel-M-x . ivy--regex-fuzzy)
+     (ivy-switch-buffer . ivy--regex-fuzzy)
+     (ivy-switch-buffer-other-window . ivy--regex-fuzzy)
      (counsel-rg . ivy--regex-or-literal)
      (t . ivy--regex-plus)))
   (ivy-display-style 'fancy)
@@ -716,6 +718,7 @@ package declaration is but a piece of a greater whole.
   (ivy-initial-inputs-alist
    '((counsel-M-x . "^")
      (ivy-switch-buffer . "^")
+     (ivy-switch-buffer-other-window . "^")
      (counsel-describe-function . "^")
      (counsel-describe-variable . "^")
      (t . "")))
