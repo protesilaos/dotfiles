@@ -1684,6 +1684,24 @@ My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to s
   (magit-diff-refine-hunk t))
 #+END_SRC
 
+*** Magit repo list
+    :PROPERTIES:
+    :CUSTOM_ID: h:35972439-0b28-4d33-8091-c6b5f1f02579
+    :END:
+
+When maintaining a number of projects, it sometimes is necessary to
+produce a full list of them with their corresponding Magit status.  That
+way you can determine very quickly which repositories need to be
+examined further.
+
+#+BEGIN_SRC emacs-lisp
+(use-package magit-repos
+  :after magit
+  :commands magit-list-repositories
+  :custom
+  (magit-repository-directories '(("~/Git/Projects" . 1))))
+#+END_SRC
+
 ** Working with buffers
    :PROPERTIES:
    :CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
