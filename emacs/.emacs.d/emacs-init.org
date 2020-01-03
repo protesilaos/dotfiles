@@ -2921,40 +2921,37 @@ Else toggle the comment status of the line at point."
    :CUSTOM_ID: h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c
    :END:
 
-I need spell checking for both English and Greek.  Activation is
-automatic.
+I need spell checking for both English and Greek.  In previous versions
+of this section I had configurations that would automate spell checking
+for both languages at once.  It worked but was rather slow.
 
-+ These settings are meant to check for mixed language content, so there
-  is no need to changed dictionaries.
-+ Note that =hunspell= is not part of Emacs.  I install the relevant
-  packages from the Void Linux archive.
-+ The value of =ispell-local-dictionary-alist= is based on the
-  information provided in [[http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html][Chen Bin's blog]].
-+ The key binding =C-;= is disabled because I repurpose that for a
-  faster version of =C-x C-;= (much more useful for my work—see the
-  [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
+Upon further inspection, I have realised that I seldom need to work in
+mixed language circumstances.  Moreover, I now understand that I do not
+need to have spell checking always on.  It can be activated manually,
+with the =flyspell= functions defined in the =:commands= segment below.  It
+is thus possible to keep things simple and to switch dictionaries only
+when necessary.
+
+Also bear in mind that the key binding =C-;= is disabled because I
+repurpose that for a faster version of =C-x C-;= (much more useful for my
+work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
+
+Note that =aspell= and its dictionaries are not part of Emacs.  I install
+the relevant packages from my distro's archive.
 
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
-  :init
-  (setq flyspell-issue-message-flag nil)
-  (setq flyspell-issue-welcome-flag nil)
-  (setq ispell-program-name "hunspell")
-  (setq ispell-local-dictionary "en_GB")
-  (setq ispell-local-dictionary-alist
-        '(("en_GB"
-           "[[:alpha:]]"
-           "[^[:alpha:]]"
-           "[']"
-           nil
-           ("-d" "en_GB,el_GR")
-           nil
-           utf-8)))
+  :commands (ispell-change-dictionary
+             flyspell-buffer
+             flyspell-mode
+             flyspell-region)
+  :custom
+  (flyspell-issue-message-flag nil)
+  (flyspell-issue-welcome-flag nil)
+  (ispell-program-name "aspell")
+  (ispell-dictionary "en_GB")
   :config
-  (define-key flyspell-mode-map (kbd "C-;") nil)
-  :hook
-  (text-mode . turn-on-flyspell)
-  (prog-mode . turn-off-flyspell))
+  (define-key flyspell-mode-map (kbd "C-;") nil))
 #+END_SRC
 
 ** Flycheck (code linting)
