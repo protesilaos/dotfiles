@@ -163,16 +163,43 @@ along with this file.  If not, see <http://www.gnu.org/licenses/>.
    :CUSTOM_ID: h:cfa129a4-3394-4911-9097-4544df4e6ed9
    :END:
 
-This is a tool that streamlines the configuration of /packages/.  Though
-this might not be readily apparent, a "package" in Emacs parlance is any
-elisp file that is evaluated by Emacs.  This includes libraries that are
-shipped with the upstream distribution.
+This is a tool that streamlines the configuration of /packages/.  It
+handles everything from assigning key bindings, setting the value of
+customisation options, writing hooks, declaring a package as a
+dependency for another, and so on.
 
-As such I have two ways of implementing =use-package=:
+Though it might not be readily apparent, a "package" in Emacs parlance
+is any elisp file that is evaluated by Emacs.  This includes libraries
+that are shipped with the upstream distribution as well as code that
+comes from other sources.
+
+Unlike a typical extensible program, there is no real distinction
+between native Emacs code and the one that comes from third parties.
+There is no API or a limited set of features that external tools can
+plug into.  Emacs is an interpreter or lisp (Emacs Lisp), meaning that
+any elisp is evaluated in real time, thus making Emacs behave in
+accordance with it.
+
+I have an hour long [[https://protesilaos.com/codelog/2019-12-20-vlog-switch-emacs/][presentation about switching to Emacs]], where this
+and other topics are discussed in greater detail.  It is good to
+understand the context in order to appreciate the differences between
+the various =use-package= declarations documented herein.
 
 1. To install and set up external packages.  Those are denoted by the
    inclusion of =:ensure t=.
 2. To configure default packages.  No =:ensure t= for them.
+
+With =use-package= we can improve the start-up performance of Emacs in a
+few fairly simple ways.  Whenever a command is bound to a key it is
+configured to be loaded only once invoked.  Otherwise we can specify
+which functions should be autoloaded by means of the =:commands= keyword.
+
+Furthermore, I define all variables that are supposed to be immutable
+with the =:custom= keyword.  This writes them to the =custom.el= that I
+specify [[#h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d][further below]].  Whereas all minor modes, custom functions, or
+other configurations are enabled under the =:config= keyword.  The
+activation of a mode should always be the very last thing, once all
+variables have been set.
 
 #+BEGIN_SRC emacs-lisp
 (unless (package-installed-p 'use-package)
