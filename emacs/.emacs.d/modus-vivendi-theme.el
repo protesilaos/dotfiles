@@ -1,11 +1,11 @@
 ;;; modus-vivendi-theme.el --- Accessible dark theme (WCAG AAA) -*- lexical-binding:t -*-
 
-;; Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+;; Copyright (c) 2019-2020 Protesilaos Stavrou <info@protesilaos.com>
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 0.4.0
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
 ;; This file is NOT part of GNU Emacs.
@@ -92,6 +92,7 @@ between foreground and background is >= 7:1)."
 (defface modus-theme-special-cold nil t)
 (defface modus-theme-special-mild nil t)
 (defface modus-theme-special-warm nil t)
+(defface modus-theme-special-calm nil t)
 
 ;; User-facing customisation options.  They are all deactivated by
 ;; default (users must opt in).
@@ -153,6 +154,7 @@ between foreground and background is >= 7:1)."
       (fg-special-cold "#c6eaff") (bg-special-cold "#203448")
       (fg-special-mild "#bfebe0") (bg-special-mild "#00322e")
       (fg-special-warm "#f8dec0") (bg-special-warm "#382f27")
+      (fg-special-calm "#f0cdf0") (bg-special-calm "#431b30")
       ;; styles for the main constructs
       ;;
       ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
@@ -198,10 +200,10 @@ between foreground and background is >= 7:1)."
       ;; combined with any of the base backgrounds
       (red-refine-bg "#77002a") (green-refine-bg "#00422a")
       (yellow-refine-bg "#755000") (blue-refine-bg "#2428a0")
-      (magenta-refine-bg "#572f77") (cyan-refine-bg "#2f4680")
+      (magenta-refine-bg "#71206a") (cyan-refine-bg "#2f4680")
       (red-refine-fg "#ffb9ab") (green-refine-fg "#9ff0cf")
       (yellow-refine-fg "#ffffcc") (blue-refine-fg "#adddff")
-      (magenta-refine-fg "#ffccff") (cyan-refine-fg "#9ffcf6")
+      (magenta-refine-fg "#ffcaf0") (cyan-refine-fg "#9ffcf6")
       ;; styles that are meant exclusively for the mode line
       ;;
       ;; must be combined with: `bg-active', `bg-inactive'
@@ -216,9 +218,10 @@ between foreground and background is >= 7:1)."
       ;;
       ;; `bg-region' must be combined with `fg-main'
       ;;
-      ;; the whitespace values should be combined with themselves
+      ;; all other pairs are combinable with themselves
       (bg-hl-line "#151823") (bg-region "#505050")
       (fg-whitespace "#a4959f") (bg-whitespace "#170016")
+      (fg-paren-match "#fcfcfc") (bg-paren-match "#754a5d")
 
       ;; conditional styles that evaluate user-facing customisation
       ;; options
@@ -277,6 +280,7 @@ between foreground and background is >= 7:1)."
    `(modus-theme-special-cold ((,class (:background ,bg-special-cold :foreground ,fg-special-cold))))
    `(modus-theme-special-mild ((,class (:background ,bg-special-mild :foreground ,fg-special-mild))))
    `(modus-theme-special-warm ((,class (:background ,bg-special-warm :foreground ,fg-special-warm))))
+   `(modus-theme-special-calm ((,class (:background ,bg-special-calm :foreground ,fg-special-calm))))
    ;;;;;;;;;;;;;;;;;;;
    ;; actual styles ;;
    ;;;;;;;;;;;;;;;;;;;
@@ -847,7 +851,7 @@ between foreground and background is >= 7:1)."
    `(geiser-font-lock-xref-header ((,class (:weight bold))))
    `(geiser-font-lock-xref-link ((,class (:inherit link))))
    ;;;; git-commit
-   `(git-commit-comment-action ((,class (:foreground ,fg-special-mild))))
+   `(git-commit-comment-action ((,class (:foreground ,fg-special-calm))))
    `(git-commit-comment-branch-local ((,class (:foreground ,cyan))))
    `(git-commit-comment-branch-remote ((,class (:foreground ,blue))))
    `(git-commit-comment-detached ((,class (:foreground ,yellow))))
@@ -1062,7 +1066,7 @@ between foreground and background is >= 7:1)."
    `(isearch ((,class (:inherit modus-theme-intense-green :weight bold))))
    `(isearch-fail ((,class (:inherit modus-theme-subtle-red :weight bold))))
    `(lazy-highlight ((,class (:inherit modus-theme-refine-cyan))))
-   `(match ((,class (:inherit modus-theme-intense-blue))))
+   `(match ((,class (:inherit modus-theme-special-calm))))
    `(query-replace ((,class (:inherit modus-theme-refine-yellow :weight bold))))
    ;;;; info pages (help pages)
    `(info-header-node ((,class ((:weight bold)))))
@@ -1525,8 +1529,8 @@ between foreground and background is >= 7:1)."
    `(sh-heredoc ((,class (:inherit font-lock-string-face))))
    `(sh-quoted-exec ((,class (:inherit font-lock-builtin-face))))
    ;;;; show-paren-mode
-   `(show-paren-match ((,class (:inherit modus-theme-intense-magenta :weight bold))))
-   `(show-paren-match-expression ((,class (:inherit modus-theme-special-mild))))
+   `(show-paren-match ((,class (:background ,bg-paren-match :foreground ,fg-paren-match :weight bold))))
+   `(show-paren-match-expression ((,class (:inherit modus-theme-special-calm))))
    `(show-paren-mismatch ((,class (:inherit modus-theme-intense-red))))
    ;;;; smart-mode-line
    `(sml/charging ((,class (:foreground ,green-active))))
