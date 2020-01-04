@@ -139,7 +139,7 @@ this document.
    :CUSTOM_ID: h:1b9e6455-ba10-4683-88d4-738ecc41cdf6
    :END:
 
-Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+Copyright (c) 2019-2020 Protesilaos Stavrou <info@protesilaos.com>
 
 This file is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -1025,7 +1025,8 @@ specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
 This is the search tool that is powered by Ivy.  I use it to get an
 overview of the matching candidates when performing a more complex
 search.  It is not intended as a drop-in replacement for =isearch= (see
-[[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][section on Isearch]])
+[[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][section on Isearch]]), especially since the latter is better for recording
+macros and jumping to visible sections in the buffer.
 
 Given that Swiper is related to Ivy, do not forget to review the entire
 section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]].
@@ -1860,8 +1861,8 @@ based on the directory of the current buffer."
    :END:
 
 I believe that Emacs' true power lies in its buffer management rather
-than its multiplexing, as I explain in my video about [[https://protesilaos.com/codelog/2019-08-18-emacs-buffers-windows/][the Emacs way to
-buffer and window management]].
+than its multiplexing, as I explain in my video about
+[[https://protesilaos.com/codelog/2019-08-18-emacs-buffers-windows/][the Emacs way to buffer and window management]].
 
 That granted, the default experience can be further enhanced with a
 few careful configurations.
@@ -2128,6 +2129,8 @@ document.  This fixes the issue (read the article for more).
 #+BEGIN_SRC emacs-lisp
 (use-package org-id
   :after org
+  :commands (contrib/org-get-id
+             contrib/org-id-headlines)
   :custom
   (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
   :config
@@ -2184,12 +2187,15 @@ when I need to do a presentation.
 (use-package darkroom
   :ensure t
   :disabled
+  :commands (darkroom-mode
+             darkroom-tentative-mode)
   :custom
   (darkroom-text-scale-increase 0))
 
 (use-package org-bullets
   :ensure t
   :disabled
+  :commands org-bullets-mode
   :after org)
 
 (use-package org-tree-slide
@@ -2373,7 +2379,8 @@ bindings and their functions.
 
 #+BEGIN_SRC emacs-lisp
 (use-package pass
-  :ensure t)
+  :ensure t
+  :commands pass)
 #+END_SRC
 
 ** Elfeed (feed reader for RSS/Atom)
@@ -2499,6 +2506,8 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
    :PROPERTIES:
    :CUSTOM_ID: h:d04d5803-fcd5-4b15-9e2f-ea14b8d5c8c0
    :END:
+
+/This section is subject to review and possible removal./
 
 I am using this tool because I want to see whether handling PDFs inside
 of Emacs is worth the effort.  The key bindings are already familiar.
@@ -2744,14 +2753,14 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
   encrypted file.  Do check [[https://www.djcbsoftware.nl/code/mu/mu4e/Contexts-example.html#Contexts-example][the example]] in the official docs.  I based
   my work off of it.
 + Message citation is just an improved format for quoting a message in a
-  reply.  The format looks like /"On 2019-12-09, 16:50 (EET), PERSON
+  reply.  The format looks like /"On 2019-12-09, 16:50 (CET), PERSON
   <EMAIL> wrote:"/.
 
 #+BEGIN_SRC emacs-lisp
 (use-package mu4e
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :after (smtpmail smtpmail-async)
-  :commands mu4e
+  :commands (mu4e mu4e-update-mail-and-index)
   :custom
   (mail-user-agent 'mu4e-user-agent)
   (mu4e-get-mail-command "offlineimap")
@@ -2786,11 +2795,11 @@ To set up =offlineimap= I used the [[https://wiki.archlinux.org/index.php/Offlin
     :CUSTOM_ID: h:ab106725-ae5d-4ce2-8160-d2f8c46cb563
     :END:
 
-With this little snippet, we allow =org-capture= convert any email into
-a note, to-do item or whatever.  The killer feature is that we get a
+With this little snippet, we allow =org-capture= convert any email into a
+note, to-do item or whatever.  The killer feature is that we get a
 direct link back to the original email.  This way, we can avoid the
 problem of searching through a pile of messages until we find the one we
-really need.  Sweet!
+really need.  Nice!
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-mu4e                   ; no need for `:ensure t'
@@ -2810,6 +2819,10 @@ current line is more important than the exact column of the point.
 
 #+BEGIN_SRC emacs-lisp
 (use-package package
+  :commands (list-packages
+             package-menu-refresh
+             package-refresh-contents
+             package-list-packages)
   :hook (package-menu-mode . hl-line-mode))
 #+END_SRC
 
@@ -2977,8 +2990,18 @@ superseded by my [[#h:b0395aae-a2d2-4e50-8965-433c4605c724][custom mode line con
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :ensure t
+  :commands flycheck-mode
   :custom
   (flycheck-check-syntax-automatically '(save mode-enabled)))
+#+END_SRC
+
+There is also a built-in tool that covers this niche, but I find its
+functionality somewhat more limited.  As such I am defining it so that
+it will create an autoload for it.
+
+#+BEGIN_SRC emacs-lisp
+(use-package flymake
+  :commands flymake-mode)
 #+END_SRC
 
 *** Flycheck package metadata
@@ -3086,9 +3109,8 @@ position of the cursor after the skeleton has been inserted.
     "https://gitlab.com/protesilaos/" str "")
   (define-abbrev global-abbrev-table "megit"
     "" 'protesilaos-gitlab-skeleton)
-  :hook
-  (text-mode . abbrev-mode)
-  (git-commit-mode . abbrev-mode))
+  :hook ((text-mode . abbrev-mode)
+         (git-commit-mode . abbrev-mode)))
 #+END_SRC
 
 ** Dabbrev and hippie-expand (dynamic word completion)
@@ -3109,6 +3131,7 @@ Refer to the [[#h:d2e402b3-c947-42fc-af80-b8a982082a1b][Company section for a de
 
 #+BEGIN_SRC emacs-lisp
 (use-package dabbrev
+  :commands dabbrev-expand
   :custom
   (dabbrev-abbrev-char-regexp nil)
   (dabbrev-backward-only nil)
@@ -3120,6 +3143,7 @@ Refer to the [[#h:d2e402b3-c947-42fc-af80-b8a982082a1b][Company section for a de
 
 (use-package hippie-exp
   :after dabbrev
+  :commands hippie-expand
   :custom
   (hippie-expand-try-functions-list
    '(try-expand-dabbrev
@@ -3594,7 +3618,7 @@ depending on the tab size.  As such, I am disabling tabs by default.
 
 #+BEGIN_SRC emacs-lisp
 (use-package emacs
-  :init
+  :config
   (setq-default tab-always-indent 'complete)
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil))
@@ -3823,7 +3847,8 @@ of them.  For this to work, the buffers must both be visible.
 
 #+BEGIN_SRC emacs-lisp
 (use-package broadcast
-  :ensure t)
+  :ensure t
+  :commands broadcast-mode)
 #+END_SRC
 
 ** Rainbow blocks
@@ -3899,6 +3924,7 @@ relevant documentation in a tooltip.
 (use-package which-key
   :ensure t
   :delight
+  :commands which-key-C-h-dispatch
   :custom
   (which-key-show-early-on-C-h t)
   (which-key-idle-delay 10000)
@@ -4242,10 +4268,6 @@ need are:
 #+BEGIN_SRC emacs-lisp
 (use-package crux
   :ensure t
-  :commands (crux-transpose-windows
-             crux-duplicate-current-line-or-region
-             crux-rename-file-and-buffer
-             crux-open-with)
   :bind (("s-t" . crux-transpose-windows)
          ("C-c w" . crux-duplicate-current-line-or-region)
          ("<C-f2>" . crux-rename-file-and-buffer)
@@ -4269,7 +4291,6 @@ key binding!
 #+BEGIN_SRC emacs-lisp
 (use-package goto-last-change
   :ensure t
-  :commands goto-last-change
   :bind ("C-z" . goto-last-change))
 #+END_SRC
 
