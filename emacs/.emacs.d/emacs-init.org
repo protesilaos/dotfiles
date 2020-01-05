@@ -1899,10 +1899,16 @@ few careful configurations.
     :CUSTOM_ID: h:3d8ebbb1-f749-412e-9c72-5d65f48d5957
     :END:
 
-These key bindings are complementary to the standard ones.  They do not
-replace the defaults, just provide faster access to their corresponding
-functions.  They all involve the Super key (see [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][the relevant note]] in the
-introductory section of this document).
+The =display-buffer-alist= is *experimental and subject to review*.  It is
+intended as a rule set for controlling the display of windows.  The
+objective is to create a more intuitive workflow where certain buffer
+types are always shown in a given location.  Predictability improves
+usability.
+
+This section's key bindings are complementary to the standard ones.
+They do not replace the defaults, just provide faster access to their
+corresponding functions.  They all involve the Super key (see [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][the
+relevant note]] in the introductory section of this document).
 
 Note that =tear-off-window= allows us to place the current window in its
 own frame.  Recall that in Emacs parlance "windows" are the splits that
@@ -1912,6 +1918,19 @@ your operating system's window manager (and usually have the "close",
 
 #+BEGIN_SRC emacs-lisp
 (use-package window
+  :custom
+  ;; TODO target by major-mode, not buffer name
+  (display-buffer-alist
+   '(("\\*e?shell\\*"
+      (display-buffer-in-side-window)
+      (window-height . 0.33)
+      (side . bottom)
+      (slot . 0))
+     ("*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Faces\\|Messages.*\\)"
+      (display-buffer-in-side-window)
+      (window-height . 0.33)
+      (side . bottom)
+      (slot . 1))))
   :bind (("s-n" . next-buffer)
          ("s-p" . previous-buffer)
          ("s-o" . other-window)
@@ -1921,15 +1940,6 @@ your operating system's window manager (and usually have the "close",
          ("s-0" . delete-window)
          ("s-1" . delete-other-windows)))
 #+END_SRC
-
-Note that there also exists =tear-off-window=: it allows us to place the
-current window in its own frame.  Search elsewhere in this document for
-the key I assign it to.
-
-The default keys for =delete-frame= are =C-x 5 0=.
-
-Remember—what Emacs call a "window" is the split of the viewport.
-Whereas a "frame" is the rectangle your window manager controls.
 
 *** Window history and directional motions (winner-mode and windmove)
     :PROPERTIES:
