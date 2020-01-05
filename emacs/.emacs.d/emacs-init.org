@@ -3852,21 +3852,21 @@ Some minor conveniences:
 #+BEGIN_SRC emacs-lisp
 (use-package emacs
   :config
-  (defun prot/toggle-line-numbers ()
-    "Toggles the display of line numbers.  Applies to all buffers."
-    (interactive)
-    (if (bound-and-true-p display-line-numbers-mode)
-        (display-line-numbers-mode -1)
-      (display-line-numbers-mode)))
-
   (defun prot/toggle-invisibles ()
     "Toggles the display of indentation and space characters."
     (interactive)
     (if (bound-and-true-p whitespace-mode)
         (whitespace-mode -1)
       (whitespace-mode)))
-  :bind (("<f7>" . prot/toggle-line-numbers)
-         ("<f8>" . prot/toggle-invisibles)))
+
+  (defun prot/toggle-line-numbers ()
+    "Toggles the display of line numbers.  Applies to all buffers."
+    (interactive)
+    (if (bound-and-true-p display-line-numbers-mode)
+        (display-line-numbers-mode -1)
+      (display-line-numbers-mode)))
+  :bind (("<f6>" . prot/toggle-invisibles)
+         ("<f7>" . prot/toggle-line-numbers)))
 #+END_SRC
 
 ** Broadcast mode
