@@ -2304,7 +2304,7 @@ and corresponding functions.
 (use-package shell
   :commands (shell shell-command)
   :custom
-  (ansi-color-for-comint-mode 'filter)
+  (ansi-color-for-comint-mode t)
   :config
   (defun prot/shell-multi ()
     "Spawn a new instance of `shell' and give it a unique name
