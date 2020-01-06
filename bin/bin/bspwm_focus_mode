@@ -5,10 +5,7 @@
 # This script is meant to be used in my custom desktop session:
 # https://gitlab.com/protesilaos/dotfiles.
 #
-# Debian Buster dependencies:
-#	sudo apt install bspwm lemonbar
-
-# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (c) 2019-2020 Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,9 +25,7 @@
 
 panel_height="$(awk -F '=' '/melonpanel_height/ { print $2; exit; }' "$(command -v melonpanel 2> /dev/null)")"
 
-# The bottom padding is not defined in bspwmrc but in another script
-# that sets the value on a per-host-computer basis.  Here we just get
-# the value from the running program.
+# The bottom padding is extracted from the running program.
 bottom_padding="$(bspc config bottom_padding)"
 
 # Read the default setting from the bspwm config file.
@@ -46,7 +41,7 @@ window_gap="$(_get_value window_gap)"
 gapless_monocle="$(_get_value gapless_monocle)"
 border_width="$(_get_value border_width)"
 
-# Calculate the actual gap from the top of the viewport to the upper
+# Calculate the actual gap from the bottom of the viewport to the lower
 # part of the nodes.
 effective_padding=$(("$bottom_padding" + "$window_gap"))
 
@@ -76,8 +71,8 @@ if [ -n "$border_width" ]; then
 		bspc config "${side}"_padding "$border_width"
 	done
 else
-	bspc config window_gap "${window_gap:=2}"
-	bspc config border_width "${border_width:=2}"
+	bspc config window_gap "${window_gap:=1}"
+	bspc config border_width "${border_width:=1}"
 	bspc config bottom_padding "${bottom_padding:=$panel_height}"
 	for side in right left top; do
 		bspc config "${side}"_padding "0"
