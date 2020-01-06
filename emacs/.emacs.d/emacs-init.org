@@ -933,8 +933,7 @@ repository, then the corresponding root is used instead."
                                  counsel--fzf-dir
                                (vc-root-dir))))
       (if (> (length (aw-window-list)) 1)
-          (progn
-            (find-file arg))
+            (find-file arg)
         (find-file-other-window arg))
       (balance-windows)))
 
@@ -4254,13 +4253,12 @@ command twice."
     (interactive "p")
     (if (use-region-p)
         (transpose-words 0)
-      (progn
-        (if (eq (point) (point-at-eol))
-            (progn
-              (backward-word 1)
-              (transpose-words 1)
-              (forward-char 1))
-          (transpose-words arg)))))
+      (if (eq (point) (point-at-eol))
+          (progn
+            (backward-word 1)
+            (transpose-words 1)
+            (forward-char 1))
+        (transpose-words arg))))
 
   (defun prot/unfill-region-or-paragraph (&optional region)
     "Join all lines in a region, if active, while respecting any
@@ -4284,9 +4282,6 @@ instead.  This command can then be followed by the standard
         (progn
           (delete-region (region-beginning) (region-end))
           (yank))
-      (progn
-        (delete-region (point-at-bol) (point-at-eol))
-        (yank))))
 
 ;;;; NOTE: this is experimental and needs further refinements
   ;;   (defun prot/toggle-dedicated-window ()
@@ -4303,6 +4298,8 @@ instead.  This command can then be followed by the standard
   ;;         (set-window-dedicated-p buf nil)
   ;;         (message "Removed 'dedicated' flag from buffer"))))
 
+      (delete-region (point-at-bol) (point-at-eol))
+      (yank)))
   :bind (("C-c C-=" . bjm/align-whitespace)
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
