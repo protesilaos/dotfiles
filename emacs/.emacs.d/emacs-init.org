@@ -1870,27 +1870,49 @@ Some tweaks to the default behaviour and presentation:
    :END:
 
 I believe that Emacs' true power lies in its buffer management rather
-than its multiplexing, as I explain in my video about
-[[https://protesilaos.com/codelog/2019-08-18-emacs-buffers-windows/][the Emacs way to buffer and window management]].
+than its multiplexing.  The latter becomes inefficient at scale, since
+it tries to emulate the limitations of the real world, namely, the
+placement of things on a desk.
 
-That granted, the default experience can be further enhanced with a
-few careful configurations.
+By leveraging the power of the computer, we can use search methods to
+easily reach any item.  There is no need to remain confined to the idea
+of a finite space (screen real estate) that needs to be carefully
+managed.
 
-*** Basic tweaks for windows
+That granted, Emacs' multiplexing can be turned into a powerhouse as
+well, covering everything from window placement rules, to the recording
+of history and layouts, as well as directional or direct window
+navigation.
+
+*** Window rules and basic tweaks
     :PROPERTIES:
     :CUSTOM_ID: h:3d8ebbb1-f749-412e-9c72-5d65f48d5957
     :END:
 
-The =display-buffer-alist= is *experimental and subject to review*.  It is
-intended as a rule set for controlling the display of windows.  The
-objective is to create a more intuitive workflow where certain buffer
-types are always shown in a given location.  Predictability improves
-usability.
+The =display-buffer-alist= and =prot/window-dired-vc-root-left= are
+considered *experimental and subject to review*.  The former is intended
+as a rule-set for controlling the display of windows.  While the latter
+serves as a tangible example of passing certain rules through a
+function, in combination with a few relevant extras.  The objective is
+to create a more intuitive workflow where targeted buffer groups or
+types are always shown in a given location, on the premise that
+predictability improves usability.
 
-This section's key bindings are complementary to the standard ones.
-They do not replace the defaults, just provide faster access to their
-corresponding functions.  They all involve the Super key (see [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][the
-relevant note]] in the introductory section of this document).
+For each buffer action in =display-buffer-alist= we can define several
+functions for selecting the appropriate window.  These are executed in
+sequence.  I keep a sample in the code below, but my usage thus far
+suggests that a simpler method is just as effective for my case.
+
+Everything pertaining to buffer actions is documented at length in the
+[[https://www.gnu.org/software/emacs/manual/html_node/elisp/index.html#Top][GNU Emacs Lisp Reference Manual]], currently corresponding to version
+26.3.  Information can also be found via =C-h f display-buffer= and, for
+my settings, =C-h f display-buffer-in-side-window=.
+
+With regard to the contents of the =:bind= keyword, most key combinations
+are complementary to the standard ones, such as =C-x 1=, =C-x o=, and the
+like.  They do not replace the defaults, just provide faster access to
+their corresponding functions.  They all involve the Super key,
+following the norms described in the [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][introductory note on the matter]].
 
 Note that =tear-off-window= allows us to place the current window in its
 own frame.  Recall that in Emacs parlance "windows" are the splits that
@@ -1901,16 +1923,24 @@ your operating system's window manager (and usually have the "close",
 #+BEGIN_SRC emacs-lisp
 (use-package window
   :custom
-  ;; TODO target by major-mode, not buffer name
+  ;; TODO target by major-mode, but buffer name has priority
+  ;; TODO do not repeat common parts, abstract them somehow
   (display-buffer-alist
    '(("\\*e?shell\\*"
+      ;;;; NOTE Sample with more functions, executed sequentially
+      ;; (display-buffer-reuse-mode-window display-buffer-reuse-window display-buffer-in-previous-window display-buffer-in-side-window)
       (display-buffer-in-side-window)
-      (window-height . 0.33)
+      (window-height . 0.25)
+      (side . bottom)
+      (slot . -1))
+     ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
+      (display-buffer-in-side-window)
+      (window-height . 0.25)
       (side . bottom)
       (slot . 0))
-     ("*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Faces\\|Messages.*\\)"
+     ("\\*Faces\\*"
       (display-buffer-in-side-window)
-      (window-height . 0.33)
+      (window-height . 0.25)
       (side . bottom)
       (slot . 1))))
   :bind (("s-n" . next-buffer)
@@ -1920,7 +1950,35 @@ your operating system's window manager (and usually have the "close",
          ("s-3" . split-window-right)
          ("s-5" . tear-off-window)
          ("s-0" . delete-window)
-         ("s-1" . delete-other-windows)))
+         ("s-1" . delete-other-windows)
+         ("<f8>" . window-toggle-side-windows)))
+
+(use-package emacs
+  :config
+  (defun prot/window-dired-vc-root-left ()
+    "Open root directory of current version-controlled repository
+or the present working directory with `dired' and bespoke window
+parameters.  This is meant as a proof-of-concept function,
+illustrating how to leverage window rules to display a buffer,
+plus a few concomitant extras."
+    (interactive)
+    (let ((dir (if (eq (vc-root-dir) nil)
+                   (dired-noselect default-directory)
+                 (dired-noselect (vc-root-dir)))))
+      (display-buffer-in-side-window
+       dir `((side . left)
+             (slot . 0)
+             (window-width . 0.2)
+             (window-parameters . ((no-other-window . t)
+                                   (no-delete-other-windows . t)
+                                   (mode-line-format . (" "
+                                                        "%b"))))))
+      (with-current-buffer dir
+        (rename-buffer "*Dired-Side*")))
+    (with-eval-after-load 'ace-window
+      (when (boundp 'aw-ignored-buffers)
+        (add-to-list 'aw-ignored-buffers "*Dired-Side*"))))
+  :bind ("C-c d" . prot/window-dired-vc-root-left))
 #+END_SRC
 
 *** Window history and directional motions (winner-mode and windmove)
