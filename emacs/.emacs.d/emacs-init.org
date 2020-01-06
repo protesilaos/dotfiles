@@ -2360,7 +2360,7 @@ and corresponding functions.
 
 #+BEGIN_SRC emacs-lisp
 (use-package shell
-  :commands (shell shell-command)
+  :commands shell-command
   :custom
   (ansi-color-for-comint-mode t)
   :config
