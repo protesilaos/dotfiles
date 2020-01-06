@@ -69,9 +69,9 @@ mod3 + backslash
 mod3 + {_, shift + } Return
 	{xterm,xterm -e tmux new-session -A -s 'Default'}
 
-# Show the combined rofi view.
-mod3 + x
-     rofi -show combi
+# Show the desired rofi views.
+mod3 + {x,b}
+     rofi -show {drun,window}
 
 # Bring up a rofi interface for `pass' (the superb UNIX password
 # manager).
