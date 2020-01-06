@@ -3854,10 +3854,27 @@ recenter text, because of the above.
   (scroll-margin 0))
 #+END_SRC
 
-** TODO tool tips
+** Tool tips
    :PROPERTIES:
    :CUSTOM_ID: h:9f492949-70fb-4fba-a0ea-569d4a240be8
    :END:
+
+These settings control how tool tips are to be handled when hovering the
+mouse over an actionable item.  I just want to make sure that the GTK
+theme is used for those, instead of the generic graphical display.  The
+delay is slightly reduced for the initial pop-up, while it has been
+increased for immediate pop-ups thereafter.
+
+#+BEGIN_SRC emacs-lisp
+(use-package tooltip
+  :custom
+  (tooltip-delay 0.5)
+  (tooltip-short-delay 0.5)
+  (x-gtk-use-system-tooltips t)
+  :config
+  (tooltip-mode 1))
+#+END_SRC
+
 ** Altered zap and easier repeat
    :PROPERTIES:
    :CUSTOM_ID: h:5f6ffe61-f0cc-41ad-9d2f-46ad181c3a00
