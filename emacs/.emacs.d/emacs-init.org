@@ -1800,9 +1800,6 @@ Some tweaks to the default behaviour and presentation:
   at the last item on the list.
 + Use colours for common actions more consistently.  Inherit styles from
   Dired (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
-+ EXPERIMENTAL: My =prot/ibuffer-multi= allows for multiple instances of
-  =ibuffer=.  These can then be used to maintain subsets of buffers,
-  from where to perform per-subset operations.
 + Remap default key to launch ibuffer instead of list-buffers.
 
 #+BEGIN_SRC emacs-lisp
@@ -1860,26 +1857,11 @@ Some tweaks to the default behaviour and presentation:
                  (name . "^\\*scratch\\*$")
                  (name . "^\\*Backtrace\\*$")
                  (name . "^\\*Messages\\*$"))))))
-  :config
-  (defun prot/ibuffer-multi ()
-    "Spawn a new instance of `ibuffer' and give it a unique name
-based on the directory of the current buffer."
-    (interactive)
-    (let* ((parent (if (buffer-file-name)
-                       (file-name-directory (buffer-file-name))
-                     default-directory))
-           (name (car (last (split-string parent "/" t)))))
-      (split-window-sensibly)
-      (other-window 1)
-      (ibuffer t "*Ibuffer [new]*")
-      (rename-buffer (concat "*Ibuffer: " name "*"))))
   :hook
   (ibuffer-mode . hl-line-mode)
   (ibuffer-mode . (lambda ()
                      (ibuffer-switch-to-saved-filter-groups "Main")))
-  :bind (("C-x C-b" . ibuffer)
-         ("C-x C-S-b" . prot/ibuffer-multi) ; EXPERIMENTAL
-         ))
+  :bind (("C-x C-b" . ibuffer)))
 #+END_SRC
 
 ** Window configuration
