@@ -4282,22 +4282,6 @@ instead.  This command can then be followed by the standard
         (progn
           (delete-region (region-beginning) (region-end))
           (yank))
-
-;;;; NOTE: this is experimental and needs further refinements
-  ;;   (defun prot/toggle-dedicated-window ()
-  ;;     "Toggle current window as strongly dedicated to its buffer.
-  ;;
-  ;; Dedicated windows are not affected by actions that involve the
-  ;; other window.  They remain in place."
-  ;;     (interactive)
-  ;;     (let ((buf (get-buffer-window (current-buffer))))
-  ;;       (if (not (window-dedicated-p buf))
-  ;;           (progn
-  ;;             (set-window-dedicated-p buf t)
-  ;;             (message "Added 'dedicated' flag to buffer"))
-  ;;         (set-window-dedicated-p buf nil)
-  ;;         (message "Removed 'dedicated' flag from buffer"))))
-
       (delete-region (point-at-bol) (point-at-eol))
       (yank)))
   :bind (("C-c C-=" . bjm/align-whitespace)
