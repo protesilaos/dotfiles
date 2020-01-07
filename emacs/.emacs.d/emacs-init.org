@@ -1387,6 +1387,11 @@ The options here are meant to do the following:
 + Enable asynchronous mode.  This is subject to change, as I need to
   test it a bit more.
 
+Note that =dired-listing-switches= and =find-ls-option= are configured to
+show hidden directories and files /before/ their non-hidden counterparts.
+If you want to reverse this order, you must append the =-X= option (such
+as =-AFXhlv --group-directories-first=).
+
 #+BEGIN_SRC emacs-lisp
 (use-package dired
   :custom
