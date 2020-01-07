@@ -1913,12 +1913,6 @@ like.  They do not replace the defaults, just provide faster access to
 their corresponding functions.  They all involve the Super key,
 following the norms described in the [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][introductory note on the matter]].
 
-Note that =tear-off-window= allows us to place the current window in its
-own frame.  Recall that in Emacs parlance "windows" are the splits that
-contain buffers, while "frames" are the nodes that are controlled by
-your operating system's window manager (and usually have the "close",
-"minimise", "maximise" buttons at a top corner).
-
 #+BEGIN_SRC emacs-lisp
 (use-package window
   :custom
@@ -1947,9 +1941,9 @@ your operating system's window manager (and usually have the "close",
          ("s-o" . other-window)
          ("s-2" . split-window-below)
          ("s-3" . split-window-right)
-         ("s-5" . tear-off-window)
          ("s-0" . delete-window)
          ("s-1" . delete-other-windows)
+         ("s-5" . delete-frame)
          ("<f8>" . window-toggle-side-windows)))
 
 (use-package emacs
@@ -1973,11 +1967,44 @@ plus a few concomitant extras."
                                    (mode-line-format . (" "
                                                         "%b"))))))
       (with-current-buffer dir
-        (rename-buffer "*Dired-Side*")))
+        (rename-buffer "*Dired-Side*")
+        (setq-local window-size-fixed t)))
     (with-eval-after-load 'ace-window
       (when (boundp 'aw-ignored-buffers)
         (add-to-list 'aw-ignored-buffers "*Dired-Side*"))))
-  :bind ("C-c d" . prot/window-dired-vc-root-left))
+
+  (defun prot/make-frame-floating-with-current-buffer ()
+    "Display the current buffer in a new floating frame.
+
+This passes certain parameters to the newly created frame:
+
+- use a different name than the default;
+- use a graphical frame;
+- do not display the minibuffer.
+
+The name is meant to be used by the external rules of my tiling
+window manager (BSPWM) to present the frame in a floating state."
+    (interactive)
+    (make-frame '((name . "my_float_window")
+                  (window-system . x)
+                  (minibuffer . nil))))
+
+  (defun prot/display-buffer-at-bottom ()
+    "Move the current to the bottom of the frame.  This is useful
+to take a buffer out of a side window.
+
+The window parameters of this function, are provided mostly for
+didactic purposes."
+    (interactive)
+    (let ((buffer (current-buffer)))
+      (with-current-buffer buffer
+        (delete-window)
+        (display-buffer-at-bottom
+         buffer `((window-parameters . ((mode-line-format . (" "
+                                                             "%b")))))))))
+  :bind (("C-c d" . prot/window-dired-vc-root-left)
+         ("C-c f" . prot/make-frame-floating-with-current-buffer)
+         ("C-c b" . prot/display-buffer-at-bottom)))
 #+END_SRC
 
 *** Window history and directional motions (winner-mode and windmove)
