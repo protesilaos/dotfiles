@@ -1995,8 +1995,8 @@ window manager (BSPWM) to present the frame in a floating state."
                   (minibuffer . nil))))
 
   (defun prot/display-buffer-at-bottom ()
-    "Move the current to the bottom of the frame.  This is useful
-to take a buffer out of a side window.
+    "Move the current buffer to the bottom of the frame.  This is
+useful to take a buffer out of a side window.
 
 The window parameters of this function, are provided mostly for
 didactic purposes."
