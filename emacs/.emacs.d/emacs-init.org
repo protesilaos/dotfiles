@@ -1898,14 +1898,14 @@ navigation.
     :CUSTOM_ID: h:3d8ebbb1-f749-412e-9c72-5d65f48d5957
     :END:
 
-The =display-buffer-alist= and =prot/window-dired-vc-root-left= are
-considered *experimental and subject to review*.  The former is intended
-as a rule-set for controlling the display of windows.  While the latter
-serves as a tangible example of passing certain rules through a
-function, in combination with a few relevant extras.  The objective is
-to create a more intuitive workflow where targeted buffer groups or
-types are always shown in a given location, on the premise that
-predictability improves usability.
+The =display-buffer-alist= and all other functions grouped together with
+=prot/window-dired-vc-root-left= are considered *experimental and subject
+to review*.  The former is intended as a rule-set for controlling the
+display of windows.  While the latter serves as a series of tangible
+examples of passing certain rules programmatically, in combination with
+a few relevant extras.  The objective is to create a more intuitive
+workflow where targeted buffer groups or types are always shown in a
+given location, on the premise that predictability improves usability.
 
 For each buffer action in =display-buffer-alist= we can define several
 functions for selecting the appropriate window.  These are executed in
@@ -1917,16 +1917,19 @@ Everything pertaining to buffer actions is documented at length in the
 26.3.  Information can also be found via =C-h f display-buffer= and, for
 my settings, =C-h f display-buffer-in-side-window=.
 
-With regard to the contents of the =:bind= keyword, most key combinations
-are complementary to the standard ones, such as =C-x 1=, =C-x o=, and the
-like.  They do not replace the defaults, just provide faster access to
-their corresponding functions.  They all involve the Super key,
-following the norms described in the [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][introductory note on the matter]].
+With regard to the contents of the =:bind= keyword of the =window= library,
+most key combinations are complementary to the standard ones, such as
+=C-x 1= becoming =s-1=, =C-x o= turning into =s-o= and the like.  They do not
+replace the defaults, just provide faster access to their corresponding
+functions.  They all involve the Super key, following the norms
+described in the [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][introductory note on the matter]].
+
+For a demo of the =display-buffer-alist= and the custom functions that
+accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-display-buffer/][video on rules for buffer placement]].
 
 #+BEGIN_SRC emacs-lisp
 (use-package window
   :custom
-  ;; TODO target by major-mode, but buffer name has priority
   ;; TODO do not repeat common parts, abstract them somehow
   (display-buffer-alist
    '(("\\*e?shell\\*"
@@ -1956,6 +1959,8 @@ following the norms described in the [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][
          ("s-5" . delete-frame)
          ("<f8>" . window-toggle-side-windows)))
 
+;; These are all experimental.  Just showcasing the power of passing
+;; parameters to windows or frames.
 (use-package emacs
   :config
   (defun prot/window-dired-vc-root-left ()
@@ -2003,7 +2008,7 @@ window manager (BSPWM) to present the frame in a floating state."
     "Move the current buffer to the bottom of the frame.  This is
 useful to take a buffer out of a side window.
 
-The window parameters of this function, are provided mostly for
+The window parameters of this function are provided mostly for
 didactic purposes."
     (interactive)
     (let ((buffer (current-buffer)))
