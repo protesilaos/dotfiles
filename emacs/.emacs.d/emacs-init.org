@@ -1931,7 +1931,8 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   :custom
   ;; TODO do not repeat common parts, abstract them somehow
   (display-buffer-alist
-   '(("\\*e?shell\\*"
+   '(;; bottom side window
+     ("\\*e?shell\\*"
       ;;;; NOTE Sample with more functions, executed sequentially
       ;; (display-buffer-reuse-mode-window display-buffer-reuse-window display-buffer-in-previous-window display-buffer-in-side-window)
       (display-buffer-in-side-window)
@@ -1943,10 +1944,22 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
       (window-height . 0.25)
       (side . bottom)
       (slot . 0))
-     ("\\*Faces\\*"
+     ("\\*Custom.*"
       (display-buffer-in-side-window)
       (window-height . 0.25)
       (side . bottom)
+      (slot . 1))
+     ;; right side window
+     ("\\*\\(Flycheck\\|Package-Lint\\).*"
+      (display-buffer-in-side-window)
+      (window-width . 0.333)
+      (side . right)
+      (slot . 0)
+      (window-parameters . ((no-other-window . t))))
+     ("\\*Faces\\*"
+      (display-buffer-in-side-window)
+      (window-width . 0.333)
+      (side . right)
       (slot . 1))))
   :bind (("s-n" . next-buffer)
          ("s-p" . previous-buffer)
