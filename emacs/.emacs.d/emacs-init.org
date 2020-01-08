@@ -329,7 +329,7 @@ of Emacs, while I keep Hack as the generic monospaced font.
 small laptop monitor."
     (interactive)
     (when window-system
-      (prot/font-family-size prot/fixed-pitch-font-alt 11)))
+      (prot/font-family-size prot/fixed-pitch-font-alt 10.75)))
 
   (defun prot/desktop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
