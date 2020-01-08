@@ -846,7 +846,12 @@ type something anyhow).
   :after (prescient ivy)
   :custom
   (ivy-prescient-sort-commands
-   '(:not swiper ivy-switch-buffer counsel-switch-buffer))
+   '(:not counsel-grep
+          counsel-rg
+          counsel-switch-buffer
+          ivy-switch-buffer
+          swiper
+          swiper-multi))
   (ivy-prescient-retain-classic-highlighting t)
   (ivy-prescient-enable-filtering nil)
   (ivy-prescient-enable-sorting t)
