@@ -1955,12 +1955,17 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
       (window-width . 0.333)
       (side . right)
       (slot . 0)
-      (window-parameters . ((no-other-window . t))))
+      (window-parameters . ((no-other-window . t)
+                            (mode-line-format . (" "
+                                                 mode-line-buffer-identification)))))
      ("\\*Faces\\*"
       (display-buffer-in-side-window)
       (window-width . 0.333)
       (side . right)
-      (slot . 1))))
+      (slot . 1)
+      (window-parameters . ((no-other-window . t)
+                            (mode-line-format . (" "
+                                                 mode-line-buffer-identification)))))))
   :bind (("s-n" . next-buffer)
          ("s-p" . previous-buffer)
          ("s-o" . other-window)
@@ -1992,7 +1997,7 @@ plus a few concomitant extras."
              (window-parameters . ((no-other-window . t)
                                    (no-delete-other-windows . t)
                                    (mode-line-format . (" "
-                                                        "%b"))))))
+                                                        mode-line-buffer-identification))))))
       (with-current-buffer dir
         (rename-buffer "*Dired-Side*")
         (setq-local window-size-fixed t)))
@@ -2028,7 +2033,7 @@ didactic purposes."
         (delete-window)
         (display-buffer-at-bottom
          buffer `((window-parameters . ((mode-line-format . (" "
-                                                             "%b")))))))))
+                                                             mode-line-buffer-identification)))))))))
   :bind (("C-c d" . prot/window-dired-vc-root-left)
          ("C-c f" . prot/make-frame-floating-with-current-buffer)
          ("C-c b" . prot/display-buffer-at-bottom)))
