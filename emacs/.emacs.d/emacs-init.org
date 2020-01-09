@@ -1932,7 +1932,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   ;; TODO do not repeat common parts, abstract them somehow
   (display-buffer-alist
    '(;; bottom side window
-     ("\\*e?shell\\*"
+     ("\\*e?shell.*"
       ;;;; NOTE Sample with more functions, executed sequentially
       ;; (display-buffer-reuse-mode-window display-buffer-reuse-window display-buffer-in-previous-window display-buffer-in-side-window)
       (display-buffer-in-side-window)
@@ -2429,11 +2429,8 @@ based on the directory of the current buffer."
     (let* ((parent (if (buffer-file-name)
                        (file-name-directory (buffer-file-name))
                      default-directory))
-           (name (car (last (split-string parent "/" t))))
-           (buffer (shell "new")))
-      (split-window-sensibly)
-      (other-window 1)
-      (with-current-buffer buffer
+           (name (car (last (split-string parent "/" t)))))
+      (with-current-buffer (shell)
         (rename-buffer
          (generate-new-buffer-name (concat "*shell: " name "*"))))))
   :bind (("<s-return>" . shell)
