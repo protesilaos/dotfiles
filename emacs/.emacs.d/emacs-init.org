@@ -2645,45 +2645,6 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
                   'eww-display-html--override-shr-external-rendering-functions))))
 #+END_SRC
 
-** PDF tools
-   :PROPERTIES:
-   :CUSTOM_ID: h:d04d5803-fcd5-4b15-9e2f-ea14b8d5c8c0
-   :END:
-
-/This section is subject to review and possible removal./
-
-I am using this tool because I want to see whether handling PDFs inside
-of Emacs is worth the effort.  The key bindings are already familiar.
-We can run =isearch= and =occur=.  There is also the option to add
-annotations.
-
-Installing =pdf-tools= is a two step process.  The first is to get the
-package from MELPA.  Then we must run =pdf-tools-install=, which
-requires external dependencies.  To that end, I had to install several
-development packages.  On Void Linux these are:
-
-+ cairo-devel
-+ libpng
-+ poppler-devel
-+ poppler-glib-devel
-
-As such, my package declaration for it leverages the =:pin= keyword.
-
-To turn the document dark, use =pdf-view-midnight-minor-mode=.
-
-#+BEGIN_SRC emacs-lisp
-(use-package pdf-tools
-  :ensure t
-  :pin manual
-  :mode  ("\\.pdf\\'" . pdf-view-mode)
-  :config
-  (setq-default pdf-view-display-size 'fit-page)
-  (setq pdf-annot-activate-created-annotations t)
-  (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
-  (pdf-tools-install :no-query)
-  (require 'pdf-occur))
-#+END_SRC
-
 ** Bongo (Music player)
    :PROPERTIES:
    :CUSTOM_ID: h:758afe0d-bc7c-4afc-9c6b-b5e569901591
