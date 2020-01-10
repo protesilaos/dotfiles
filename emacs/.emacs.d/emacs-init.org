@@ -336,7 +336,7 @@ small laptop monitor."
 larger desktop monitor."
     (interactive)
     (when window-system
-      (prot/font-family-size prot/fixed-pitch-font 12)))
+      (prot/font-family-size prot/fixed-pitch-font 10.75)))
 
   (defun prot/fonts-per-monitor ()
     "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
@@ -1134,7 +1134,7 @@ concept (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
    '((left-fringe . 2)
      (right-fringe . 2)
      (internal-border-width . 2)
-     (font . "Iosevka Slab-12:hintstyle=hintfull")))
+     (font . "Iosevka Slab-10.75:hintstyle=hintfull")))
   (ivy-posframe-height-alist
    '((swiper . 15)
      (swiper-isearch . 15)
