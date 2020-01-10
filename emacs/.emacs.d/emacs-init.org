@@ -4078,6 +4078,9 @@ They are written by me, unless otherwise noted.
 + Align to whitespace :: This will align a portion of text using
      whitespace as an indicator for creating separate columns.  I bind
      it to =C-c C-==.  Got it from this [[http://pragmaticemacs.com/emacs/aligning-text/][Pragmatic Emacs blog post]].
++ Balance windows gracefully :: I find that =balance-windows-area= is less
+     intrusive than the =balance-windows= normally bound to =C-x +=.  I thus
+     choose to assign that key chord to the function I prefer.
 + Copy the current line :: Just place the entire line in the kill ring.
      Do not be smart about it.
 + Count words in buffer :: By default, the binding =M-== will count the
@@ -4319,6 +4322,7 @@ instead.  This command can then be followed by the standard
       (delete-region (point-at-bol) (point-at-eol))
       (yank)))
   :bind (("C-c C-=" . bjm/align-whitespace)
+         ("C-x +" . balance-windows-area)
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
          ("s-k" . kill-this-buffer)
