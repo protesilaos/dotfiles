@@ -939,7 +939,7 @@ repository, then the corresponding root is used instead."
       (if (> (length (aw-window-list)) 1)
             (find-file arg)
         (find-file-other-window arg))
-      (balance-windows)))
+      (balance-windows (current-buffer))))
 
   ;; Pass functions as appropriate Ivy actions (accessed via M-o)
   (ivy-add-actions
