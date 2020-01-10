@@ -1993,14 +1993,14 @@ plus a few concomitant extras."
       (display-buffer-in-side-window
        dir `((side . left)
              (slot . 0)
-             (window-width . 0.2)
+             (window-width . 0.16)
              (window-parameters . ((no-other-window . t)
                                    (no-delete-other-windows . t)
                                    (mode-line-format . (" "
                                                         mode-line-buffer-identification))))))
       (with-current-buffer dir
         (rename-buffer "*Dired-Side*")
-        (setq-local window-size-fixed t)))
+        (setq-local window-size-fixed 'width)))
     (with-eval-after-load 'ace-window
       (when (boundp 'aw-ignored-buffers)
         (add-to-list 'aw-ignored-buffers "*Dired-Side*"))))
