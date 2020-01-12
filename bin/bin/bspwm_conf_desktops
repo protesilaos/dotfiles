@@ -21,8 +21,8 @@ if [ "$(bspc query -M | wc -l)" -eq 2 ]; then
 	# Set the workspaces per monitor.  We only define one per monitor,
 	# because of another script I have that implements dynamic desktops.
 	# For the XrandR settings see my `bspwm_conf_xrandr'.
-	bspc monitor LVDS1 -d 1
-	bspc monitor VGA1 -d 8
+	bspc monitor LVDS-1 -d 1
+	bspc monitor VGA-1 -d 8
 
 	# Make sure borders are always on, otherwise it is impossible to
 	# find the focused window on two monitors with monocles…

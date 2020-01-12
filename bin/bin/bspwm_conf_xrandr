@@ -25,7 +25,7 @@
 # working with light themes.  Adjustments to these values have no effect
 # if a program such as `redshift' is running.
 _laptop() {
-	xrandr --output LVDS1 --mode 1366x768 --pos 0x0 \
+	xrandr --output LVDS-1 --mode 1366x768 --pos 0x0 \
            --brightness 1.0 --gamma 0.76:0.75:0.68 \
            "$@"
 }
@@ -36,13 +36,13 @@ _multihead() {
 	# Configure the external display on the VGA port.  Making it the
 	# `primary' can cause problems in certain contexts that assume this
 	# to be the left- and top- most monitor.
-	xrandr --output VGA1 --primary --mode 1920x1080 --pos 1366x0
+	xrandr --output VGA-1 --primary --mode 1920x1080 --pos 1366x0
 }
 
 # Conditions for running this script
 # ----------------------------------
 
-# If the VGA1 port connects to a monitor, the output of the variable
+# If the VGA-1 port connects to a monitor, the output of the variable
 # will not be empty.  In which case it is assumed that I am using my
 # external display, whose resolution I know in advance.  If the variable
 # is empty, then no external monitor is connected.
@@ -51,7 +51,7 @@ _multihead() {
 # monitor has another resolution.  It will also fail if executed from
 # another machine, say, another laptop that uses an HDMI connection
 # instead.
-if [ -n "$(xrandr --query | grep 'VGA1 connected')" ]; then
+if [ -n "$(xrandr --query | grep 'VGA-1 connected')" ]; then
 	_multihead
 else
     _laptop --primary
