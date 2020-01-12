@@ -2,6 +2,7 @@
 **/*.git
 **/*.swp
 **/bin/emacs
+**/bin/lemonbar
 **/.config/gtk-3.0/bookmarks
 **/.config/mpd/database
 **/.config/mpd/log
