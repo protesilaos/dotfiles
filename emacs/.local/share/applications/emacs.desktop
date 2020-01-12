@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=GNU Emacs
+GenericName=Emacs
+Comment="Text editor (ha!)"
+Exec=emacs
+Icon=emacs
+Terminal=false

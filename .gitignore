@@ -1,6 +1,7 @@
 **/#*#
 **/*.git
 **/*.swp
+**/bin/emacs
 **/.config/gtk-3.0/bookmarks
 **/.config/mpd/database
 **/.config/mpd/log
