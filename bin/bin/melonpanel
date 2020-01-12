@@ -338,10 +338,7 @@ _melonpanel() {
             echo "%{l}$wm%{r}$key $bat $therm $vol $date "
         }
 
-        local laptop_external_monitor
-        laptop_external_monitor="$(xrandr --query | grep 'VGA1 connected')"
-
-        if [ -n "$laptop_external_monitor" ]; then
+        if [ "$(bspc query -M | wc -l)" -gt 1 ]; then
             printf "%s%s\n" "%{Sf}$(_panel_layout)" "%{Sl}$(_panel_layout)"
         else
             printf "%s\n" "%{Sf}$(_panel_layout)"
