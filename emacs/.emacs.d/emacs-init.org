@@ -3115,7 +3115,9 @@ without the flycheck interface.
 
 (use-package flycheck-package
   :ensure t
-  :after (flycheck package-lint))
+  :after (flycheck package-lint)
+  :config
+  (flycheck-package-setup))
 #+END_SRC
 
 ** Markdown support
