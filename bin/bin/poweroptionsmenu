@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# poweroptionsmenu --- rofi interface for session actions.
+# poweroptionsmenu --- rofi or dmenu interface for session actions.
 #
-# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (c) 2019-2020 Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,20 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Void Linux dependencies:
-#     xbps-install -S rofi
-
-# Possible actions (see case statement at the end for the actual
-# commands)
-actions=('Log out' 'Reboot' 'Power off' 'Xmodmap and keyboard reload' 'Configure anew BSPWM monitors/desktops')
-
-# List actions to choose from
-_list_actions() {
-    # use printf to output array items on a new line
-    printf '%s\n' "${actions[@]}" | rofi -dmenu -i -no-custom -p 'Power options'
-}
-
-choice="$(_list_actions)"
+# Dependency:
+#    rofi OR dmenu
 
 _pkill() {
     if pgrep -x "$1"; then
@@ -55,14 +43,58 @@ _kbd_reset_and_xmodmap() {
     [ -f "$xmod" ] && xmodmap "$xmod"
 }
 
-# Run the selected command.
+# TODO is this the most robust way to check for systemd? Is it standard?
+_check_systemd() {
+    if [ -n /run/systemd/system ]; then
+        "$1"
+    else
+        "$2"
+    fi
+}
+
+# The idea with _reboot() and _poweroff() is to use the appropriate
+# command depending on whether the machine is running systemd or not.
 #
 # The `reboot' and `poweroff' require escalated privileges.  Read:
 # https://wiki.voidlinux.org/Post_Installation#Allow_users_to_shutdown_without_a_password
+_reboot() {
+    _check_systemd 'systemctl reboot' 'sudo reboot'
+}
+
+_poweroff() {
+    _check_systemd 'systemctl shutdown' 'sudo poweroff'
+}
+
+_checkdep() {
+    command -v "$1" > /dev/null || return 1
+}
+
+_dynamic_menu() {
+    if _checkdep rofi; then
+        # use printf to output array items on a new line
+        rofi -dmenu -i -no-custom -p 'Power options'
+    elif _checkdep dmenu; then
+        dmenu -i -p 'Power options'
+    else
+        echo "Missing rofi or dmenu dependency." && exit 1
+    fi
+}
+
+# Possible actions
+actions=('Log out' 'Reboot' 'Power off' 'Xmodmap and keyboard reload' 'Configure anew BSPWM monitors/desktops')
+
+# List actions to choose from.  Output array items on a new line.
+_list_actions() {
+    printf '%s\n' "${actions[@]}" | _dynamic_menu
+}
+
+choice="$(_list_actions)"
+
+# Run the selected command.
 case "$choice" in
-    L*) _kill_processes && bspc quit      ;;
-    R*) _kill_processes && sudo reboot    ;;
-    P*) _kill_processes && sudo poweroff  ;;
-    X*) _kbd_reset_and_xmodmap            ;;
-    C*) bspwm_conf_reset_monitors         ;;
+    L*) _kill_processes && bspc quit ;;
+    R*) _kill_processes && _reboot   ;;
+    P*) _kill_processes && _poweroff ;;
+    X*) _kbd_reset_and_xmodmap       ;;
+    C*) bspwm_conf_reset_monitors    ;;
 esac
