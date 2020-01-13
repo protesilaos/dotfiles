@@ -2,7 +2,7 @@
 
 # Melonpanel --- Script to draw a panel with `lemonbar'.
 #
-# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (c) 2019-2020 Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,23 +16,24 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-# Description
-# -----------
 #
-# Melonpanel: my `lemonbar' implementation, for use in my custom desktop
-# session (see my dotfiles https://gitlab.com/protesilaos/dotfiles).  I
-# just selected the name "melon" as an anagram for "lemon" and then
-# switched "bar" with "panel".  This is to avoid naming conflicts where
-# we could accidentally kill the wrong process or whatnot.
+## Commentary:
 #
-# Void Linux dependencies for melonpanel:
-#    xbps-install -S bspwm lemonbar-xft xdo
+# This script, called "Melonpanel" is my `lemonbar' implementation, for
+# use in my custom BSPWM desktop session.  I just selected the name
+# "melon" as an anagram for "lemon" and then switched "bar" with
+# "panel".  This is to avoid naming conflicts where we could
+# accidentally kill the wrong process or whatnot.
+#
+# I am using `lemonbar' instead of more popular options, such as
+# `polybar' in part because I like experimenting with shell scripting.
+#
+# Dependencies for melonpanel:
+#    bspwm lemonbar xdo
 #
 # Dependencies for individual modules:
-#    xbps-install -S acpi alsa-utils
-#
-# Last full review 2019-11-26
+#    acpi alsa-utils
+
 
 # General settings
 # ----------------
