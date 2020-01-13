@@ -51,7 +51,6 @@ _check bspwm_conf_desktops && bspwm_conf_desktops
 
 # window management
 # -----------------
-_bc automatic_scheme longest_side
 _bc initial_polarity second_child
 _bc border_width 1
 _bc window_gap 1
@@ -66,10 +65,15 @@ _bc pointer_action1 move
 _bc pointer_action2 resize_side
 _bc ignore_ewmh_focus false
 
-for i in top right bottom left; do
-    _bc "${i}"_monocle_padding 0
-done
-unset i
+# Debian 10 uses a version of BSPWM that lacks a couple of configs.
+if [ "$(bspwm -v)" -gt '0.9.5' ]; then
+    _bc automatic_scheme longest_side
+
+    for i in top right bottom left; do
+        _bc "${i}"_monocle_padding 0
+    done
+    unset i
+fi
 
 # window rules
 _check bspwm_external_rules && \
