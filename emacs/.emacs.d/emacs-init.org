@@ -1255,12 +1255,20 @@ this package declaration.
      presses.  This function addresses the issue (bound to =C-RET= while
      running a successful search).  The [[https://emacs.stackexchange.com/a/52554][source is this forum answer]].
 
+The variables that are commented as "Emacs 27" effectively supersede the
+functionality of =anzu=, a package I once used.
+
 #+BEGIN_SRC emacs-lisp
 (use-package isearch
   :custom
   (search-whitespace-regexp ".*?")
+  (search-highlight t)
   (isearch-lax-whitespace t)
   (isearch-regexp-lax-whitespace nil)
+  (isearch-lazy-highlight t)
+  (isearch-lazy-count t)                  ; Emacs 27
+  (lazy-count-prefix-format "(%s/%s) ")   ; Emacs 27
+  (lazy-count-suffic-format "[%s of %s]") ; Emacs 27
   :config
   (defun prot/isearch-mark-and-exit ()
     "Marks the current search string.  Can be used as a building
@@ -1310,54 +1318,6 @@ confines of word boundaries (e.g. multiple words)."
               ("C-SPC" . prot/isearch-mark-and-exit)
               ("DEL" . contrib/isearchp-remove-failed-part-or-last-char)
               ("<C-return>" . contrib/isearch-done-opposite-end)))
-#+END_SRC
-
-*** Anzu (search results and improved replacing with isearch)
-   :PROPERTIES:
-   :CUSTOM_ID: h:4c1a2270-ddf6-453f-bdcb-914f455b896a
-   :END:
-
-Anzu is a nice and simple tool that can work together with Isearch,
-requiring minimal adjustments from our side.  It provides two main
-utilities:
-
-1. Show information about the number of total matches and where the
-   current match stands in that count.
-2. Provide replacements to the standard functions of =query-replace=
-   (=M-%=) and =query-replace-regexp= (=C-M-%=), as well as their
-   equivalents that are called amid an =isearch=.  These offer better
-   visual feedback.
-
-The =anzu-query-replace-at-cursor= will run a replacement search for the
-thing at point.  Each replacement expects a =y= answer.  All replacements
-can happen at once with =!= (as with all the other commands).
-
-Anzu is meant to be used as an enhancement to Isearch.  What I have on
-Swiper and other grep-like tools still remains relevant, though it
-covers a different niche.
-
-Note that =anzu-cons-mode-line-p= disables the default placement of the
-feedback indicator this tool provides.  I do not want it to be at the
-leftmost part of the mode line.  Instead, I define a new position in my
-[[#h:b0395aae-a2d2-4e50-8965-433c4605c724][custom mode line configurations]].
-
-#+BEGIN_SRC emacs-lisp
-(use-package anzu
-  :ensure t
-  :delight
-  :custom
-  (anzu-search-threshold 100)
-  (anzu-replace-threshold nil)
-  (anzu-deactivate-region nil)
-  (anzu-replace-to-string-separator "")
-  (anzu-cons-mode-line-p nil)
-  :config
-  (global-anzu-mode 1)
-  :bind (([remap isearch-query-replace] . anzu-isearch-query-replace)
-         ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
-         ([remap query-replace] . anzu-query-replace)
-         ([remap query-replace-regexp] . anzu-query-replace-regexp)
-         ("M-s %" . anzu-query-replace-at-cursor))
 #+END_SRC
 
 *** wgrep (writable grep)
@@ -3500,9 +3460,13 @@ customise it, while retaining its simple looks.
 
 The overall presentation should be just like the original one, with the
 exception that modes are pushed to the rightmost area.  Transient
-feedback for keyboard macros, buffer narrowing, and searching with =anzu=
-are drawn in a more intense style, so as to eliminate any doubts as to
-what is going on (see the [[#h:4c1a2270-ddf6-453f-bdcb-914f455b896a][section on Anzu]]).
+feedback for keyboard macros and buffer narrowing are drawn in a more
+intense style, so as to eliminate any doubts as to what is going on.
+
+An earlier version of this package declaration contained support for the
+counter of the search results displayed by the =anzu= package.  It has
+been removed ever since I upgraded to Emacs 27, as it now comes with
+built-in support for counting the results of =isearch=.
 
 My personal choice aside, all packages that modify the mode line are
 supported by my Modus themes.
@@ -3533,11 +3497,6 @@ default."
     (when (not (eq (buffer-narrowed-p) nil))
       (telephone-line-raw "Narrow")))
 
-  (telephone-line-defsegment prot/telephone-line-anzu-segment ()
-    "Show the `anzu' indicator."
-    (with-eval-after-load 'anzu
-      (telephone-line-raw (anzu--update-mode-line))))
-
   (telephone-line-defsegment prot/telephone-line-vcs-segment ()
     "Show current VCS branch and status indicator."
     (when (and vc-mode buffer-file-name)
@@ -3559,8 +3518,7 @@ default."
 
   (setq telephone-line-lhs
         '((accent . (prot/telephone-line-kbd-macro-segment
-                     prot/telephone-line-narrow-segment
-                     prot/telephone-line-anzu-segment))
+                     prot/telephone-line-narrow-segment))
           (nil    . (telephone-line-buffer-segment
                      telephone-line-position-segment))))
   (setq telephone-line-rhs
