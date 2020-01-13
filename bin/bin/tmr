@@ -2,12 +2,7 @@
 
 # tmr --- Bash script to run a simple timer
 #
-# TMR Must Recur (pronounced "timer") is a simple command-line timer
-# that accepts a single argument that is a valid unit of time.
-# Distributed as part of my dotfiles:
-# https://gitlab.com/protesilaos/dotfiles.
-#
-# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (c) 2019-2020 Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,8 +17,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Void Linux dependencies:
-# 	xbps-install mpv libnotify sound-theme-freedesktop
+## Commentary:
+#
+# TMR Must Recur (pronounced "timer") is a simple command-line timer
+# that accepts a single argument that represents a valid unit of time.
+#
+# Distributed as part of my dotfiles, since I use it daily, though it
+# technically is not an integral part of my custom desktop session:
+# https://gitlab.com/protesilaos/dotfiles.
+#
+# TMR dependencies:
+# 	mpv libnotify (libnotify-bin) sound-theme-freedesktop
 
 
 # Define a help message
