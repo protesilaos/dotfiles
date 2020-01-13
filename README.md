@@ -1,10 +1,16 @@
-My BSPWM and Emacs for Void GNU/Linux
-=====================================
+My BSPWM and Emacs for GNU/Linux
+================================
 
-**UPDATE 2019-11-12:** I switched from Debian to Void.  All references
-to Debian will be removed and lots of things will be refactored
-accordingly.  Some of my custom packages for Void are available here:
-https://gitlab.com/protesilaos/void-packages
+**UPDATE 2020-01-13:** I continue to use Debian 10 'buster' (current
+stable) as my main operating system.  Check the tagged releases for the
+commits that were made from Void Linux box.  Going forward, I will be
+using Debian as my benchmark, because it is easier for maintenance: a
+rolling-release distro requires too much effort to keep track of all
+changes and to update all relevant documentation accordingly (plus, I
+prefer a stable system overall).
+
+I plan to stick with BSPWM at least for the entire life-cycle of Debian
+10, even though my focus now is on Emacs.
 
 Get my old configs
 ------------------
@@ -17,7 +23,9 @@ License, Version 4.0 International.
 
 The major difference between the present unstable state and the one in
 PDFD is that now I am making changes to accommodate Emacs.  Before that
-I was using Tmux+Vim together with other standalone CLI programs.
+I was using Tmux+Vim together with other standalone CLI programs.  There
+also are some refinements on the scripts I have written and the general
+shell or desktop environment.
 
 PDFD will only offer guidance about the latest stable state of my
 dotfiles.  The code has been forked from this repository and is
