@@ -143,7 +143,11 @@ fi
 # But this is enough for my case.  Here is a command I tested and which
 # works (using the Xfce desktop manager):
 # xfdesktop --sm-client-disable --disable-wm-check &
-_check feh && "$HOME"/.fehbg &
+if _check feh; then
+	if [ -n "$HOME"/.fehbg ]; then
+		"$HOME"/.fehbg &
+	fi
+fi
 
 # Start the simple display compositor.  See `xcompmgr --help'.
 xcompmgr -cCfF -t -2 -l -2 -r 2.8 -o 0.55 -D 5 &
