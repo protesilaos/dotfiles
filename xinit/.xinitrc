@@ -50,9 +50,7 @@ fi
 ##########################
 
 # Auto unlocks the GPG and SSH agents.
-export $(dbus-launch)
-
-eval $(gnome-keyring-daemon --start --daemonize)
+eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
 export SSH_AUTH_SOCK
 
 # Load my XTerm and relevant configurations.
