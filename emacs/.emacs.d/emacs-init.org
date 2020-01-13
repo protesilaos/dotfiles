@@ -15,16 +15,30 @@
    :CUSTOM_ID: h:8cfd5674-4997-44c7-bb7a-1869d5d53538
    :END:
 
-My initialisation file adds MELPA to the list of package repositories
-and loads the file with my configurations.  The latter is written using
-=org-mode=.  It is represented by this document.
+The present document contains my configurations for GNU Emacs.  It is
+designed using principles of "literate programming": a combination of
+ordinary language and inline code blocks.  Emacs knows how to parse this
+file properly so as to evaluate only the elisp ("Emacs Lisp") included
+herein.  The rest is for humans to make sense of my additions and their
+underlying rationale.
 
-For reference, these are the contents of my =init.el=.  In the source
-code, not the website version of this page, I make sure these are not
-part of an =emacs-lisp= block, so they are not accidentally parsed by
-the actual setup.
+Literate programming allows us to be more expressive and deliberate.
+Not only we can use typography to its maximum potential, but can also
+employ techniques such as internal links between sections.  This makes
+the end product much better for end users, than a terse script.
 
-#+BEGIN_SRC
+In more practical terms, this document is written using =org-mode=.  It
+contains all /package configurations/ for my Emacs setup.  To actually
+work, it needs to be initialised from another file, that only covers the
+absolute essentials.
+
+My initialisation file, named =init.el= as per the Emacs convention, adds
+the community-driven MELPA archive to the list of package repositories
+and then loads the file with my configurations.
+
+For reference, these were the contents of my =init.el= *prior to Emacs 27*.
+
+#+begin_example emacs-lisp
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
@@ -33,22 +47,28 @@ the actual setup.
 
 (require 'org)
 (org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
-#+END_SRC
+#+end_example
 
-The present document is an example of "literate programming": a
-combination of ordinary language and inline code blocks.  Emacs knows
-how to parse this file properly so as to evaluate only the elisp
-("Emacs Lisp") included herein.  The rest is for humans to make sense
-of my additions and their underlying rationale.
+Whereas in *Emacs 27 and onward*, they are simplified thus:
 
-I find this paradigm particularly helpful for sharing Emacs
-configurations with a wider audience that includes new or potential
-users (I started in early July 2019).
+#+begin_example emacs-lisp
+(require 'package)
 
-Code blocks are wrapped between =#+BEGIN_SRC= and =#+END_SRC= tags
-(not visible in the website version of this page), which can be
-quickly inserted with the key chord =<s TAB=.  For more on this, refer
-to [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org's section further below]].
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+
+(require 'org)
+(org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
+#+end_example
+
+In the source code version of this document, I make sure that these two
+code blocks are not declared as an =emacs-lisp= source but rather as mere
+examples, so they are not accidentally parsed by the actual setup.
+
+Code blocks are wrapped between =#+BEGIN_SRC= and =#+END_SRC= tags (not
+visible in the website version of this page).  Such templates can be
+quickly inserted with =C-c C-,= (this works both for empty blocks and
+active regions).  For more, refer to [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org's section further below]].
 
 As for the various settings included herein, you can learn /even more/
 about them by using [[https://protesilaos.com/codelog/2019-08-24-emacs-docs-discovery/][Emacs' built-in documentation]] (great for discovering
@@ -59,9 +79,16 @@ new features and pieces of functionality).
    :CUSTOM_ID: h:044977f2-a909-4804-bf89-576dd429d405
    :END:
 
-My OS is Void Linux.  I use the Emacs package provided by my distro.  I
-do not optimise for portability across different versions or operating
-systems.
+My OS is mostly Debian 10 'buster' (the current stable), though I also
+work on a Void Linux machine.  My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/tree/?h=emacs-27][built from source]], using the
+=emacs-27= branch.  Normally I would be using the packages provided by my
+GNU/Linux distribution but am opting for the manual method instead in
+order to make sure my Modus themes are compatible with changes upstream.
+
+I do not optimise for portability across different versions or operating
+systems.  I do, nonetheless, provide inline comments when a certain
+option or configuration is specific to a yet-to-be-released version of
+Emacs.
 
 ** Note about my methodology
    :PROPERTIES:
@@ -80,18 +107,6 @@ available.  For example, =magit= is the superior choice for working with
 git, while =Ivy= offers a richer experience than that of either
 =ido-mode= or =icomplete=.
 
-When I first switched to Emacs, in early July 2019, I kept my "dotemacs"
-separate from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles]].  The idea was not to break things until I
-could reach a stable state.  My Emacs usage has evolved ever since to
-encompass workflows that were once covered by standalone CLI/TUI tools
-that were part of my dotfiles.  For example, I now only use =mu4e=
-instead of =mutt=, or =elfeed= instead of =newsboat=.
-
-As of November 12, 2019, Emacs is a core part of my dotfiles.  The repo
-is still in a state of transition, as I am reviewing practically every
-aspect of it, both to accommodate Emacs and to optimise for my new
-distro: Void Linux.
-
 Though a former Vim user, I decided *not* to use =evil-mode= or any kind
 of Vi emulation.  I wanted to do things differently in order to
 ultimately set on the best approach going forward.  I have eventually
@@ -104,17 +119,19 @@ memorise and to expand considerably (also see [[#h:fbba4dea-9cc8-4e73-bffa-02aab
    :CUSTOM_ID: h:fbba4dea-9cc8-4e73-bffa-02aab10a6703
    :END:
 
-Some sections of this document assign functions to =s-KEY=.  In most
-cases, these are alternative ways of invoking /common commands/ that are
-bound to otherwise awkward key chords.  The original keys will continue
-to function as intended (for example, =C-x o= is also =s-o=).
+Some sections of this document assign functions to =s-KEY=.  The lower
+case =s= represents the "Super" key, also known as the "Windows key" on
+some commercial keyboards.  In most cases, those key bindings are
+alternative ways of invoking /common commands/ that are by default bound
+to otherwise awkward key chords.  The original keys will continue to
+function as intended (for example, =C-x o= is also =s-o=).
 
-Note that your choice of desktop environment might render some of
-these useless.  The DE will simply intercept the key chord before it
-is ever sent to Emacs.  For example, GNOME has a *hidden* key mapping
-to =s-p=, which does something with monitors (last time I checked on
-GNOME 3.30).  Such bindings are scattered throughout the config
-database that is normally accessed with =gsettings= or the
+Note that your choice of desktop environment might render some of these
+useless.  The DE will simply intercept the key chord before it is ever
+sent to Emacs.  For example, GNOME has a *hidden* key mapping to =s-p=,
+which does something with monitors (last time I checked on GNOME 3.30).
+Such bindings are scattered throughout the config database that is
+normally accessed with =gsettings= on the command line or the graphical
 =dconf-editor=.
 
 Similarly, a tiling window manager that binds practically all of its
@@ -129,10 +146,16 @@ my bespoke BSPWM setup ([[https://gitlab.com/protesilaos/dotfiles/commit/ec885d1
 
 If you are reading the source code for this file (available in my
 [[https://gitlab.com/protesilaos/dotfiles][dotfiles repo on Gitlab]]), you will notice some metadata tags specific to
-=org-mode= below each heading.  These are generated by the functions
-that are defined in the package declaration for =org-id=.  The idea is
-to keep anchor tags consistent when generating a new HTML version of
-this document.
+=org-mode= below each heading.  These are generated by the functions that
+are defined in the package declaration for =org-id=.  The idea is to keep
+anchor tags consistent when generating a new HTML version of this
+document.
+
+This metadata also makes it possible to create immutable internal links,
+whenever a reference is needed.  To create such links, you can use =C-c l=
+to capture the unique ID of the current section and then =C-c C-l= to
+create a link (the former is defined in the [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org package declaration]]—this
+is an internal link in action).
 
 ** COPYING
    :PROPERTIES:
@@ -205,6 +228,7 @@ variables have been set.
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
 (eval-when-compile
   (require 'use-package))
 #+END_SRC
@@ -1177,9 +1201,18 @@ you can use with =isearch=.  These are the ones I use the most:
 | M-s h r   | Highlight regexp             |
 | M-s h u   | Undo the highlight           |
 | C-s M-r   | Toggle regexp search         |
+| M-%       | Run `query-replace'          |
+| C-M-%     | `query-replace-regexp'       |
 
 Most—if not all—of these functions can be invoked in the middle of a
 search to perform the appropriate action on the existing match.
+
+With regard to the replace commands, note that you can use them on the
+active region.  Furthermore, you do not need to confirm each action, but
+can instead type =!= to answer "yes" to all possible replacement.  Better
+only use this while having already limited the results to the active
+region, to some specialised editable buffer like the one of =occur=, or by
+using Emacs' narrowing techniques, such as =narrow-to-region=.
 
 In the package declaration below, the combined effect of the variables
 for whitespace is a valuable hack: typing a space is the same as
@@ -1516,10 +1549,9 @@ behaviour while inside a regular dired buffer.
 
 This tool offers facilities for generating thumbnails out of a selection
 of images and displaying them in a separate buffer.  An external program
-is needed for converting the images into thumbnails.  On Void Linux
-install it with =xbps-install -S ImageMagick=.  Other useful external
-packages are =optipng= and =sxiv=.  The former is for operating on PNG
-files, while the latter is a lightweight image viewer.
+is needed for converting the images into thumbnails: =imagemagick=.  Other
+useful external packages are =optipng= and =sxiv=.  The former is for
+operating on PNG files, while the latter is a lightweight image viewer.
 
 I feel this process is a bit cumbersome and can be very slow if you try
 to generate lots of images at once.  The culprit is the image converter.
@@ -2491,12 +2523,11 @@ right now.  Would need to experiment with it a bit more.
    :CUSTOM_ID: h:1d2bf0d0-4806-4e04-a320-7d6538ef2e78
    :END:
 
-The "pass" program, aka "password-store", is a password manager that
-uses GPG and standard UNIX tools to handle passwords.  Encrypted files
-are stored in a plain directory structure.  Very simple, very nice: now
-all data is available with a variety of interfaces, such as standard
-CLI, a =dmenu= interface, a graphical front-end like =qtpass=, etc.
-Install it on Void Linux with =xbps-install -S pass=.
+The external =pass= program, aka "password-store", is a password manager
+that uses GPG and standard UNIX tools to handle passwords.  Encrypted
+files are stored in a plain directory structure.  Very simple, very
+nice: now all data is available with a variety of interfaces, such as
+standard CLI, a =dmenu= interface, a graphical front-end like =qtpass=, etc.
 
 The package below provides an Emacs interface to some of the most common
 actions, in the form of a list of candidates that can be narrowed down
@@ -2779,12 +2810,12 @@ The toolchain for my current setup consists of the following (nothing
 is from MELPA):
 
 + The built-in SMTP capabilities to send email.
-+ The =mu4e= front-end to the =mu= mail indexer.  This is for finding
-  and reading email.  Both of those tools are available on Void Linux:
-  =xbps-install -S mu mu4e=.
-+ The =offlineimap= utility to store a local copy of my email (from
-  Void: =xbps-install -S offlineimap=).  This is necessary for =mu= to
-  actually do its work.
++ The =mu4e= front-end to the =mu= mail indexer.  This is for finding and
+  reading email.  Both of those tools are available on available through
+  distro-specific packages (tested on Debian and Void Linux).
++ The =offlineimap= utility (also from distro packages) is used to store a
+  local copy of my emails.  This is necessary for =mu= to actually do its
+  work.
 
 *** Sending email (SMTP)
     :PROPERTIES:
