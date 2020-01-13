@@ -1977,10 +1977,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
       (side . bottom)
       (slot . 0))
      ("\\*Custom.*"
-      (display-buffer-in-side-window)
-      (window-height . 0.25)
-      (side . bottom)
-      (slot . 1))
+      (display-buffer-pop-up-window))
      ;; right side window
      ("\\*\\(Flycheck\\|Package-Lint\\).*"
       (display-buffer-in-side-window)
