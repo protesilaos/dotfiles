@@ -2161,20 +2161,21 @@ is to eventually integrate everything inside of Emacs.
 Overview of the following settings:
 
 + Agenda and task list ::  Define where to store captured items and how
-     to display the information.
-+ Style code blocks :: I want =.org= files to use the native settings
-     for styling code blocks.  The first variable concerns =C-c '= (run
-     it inside of a code block).  That opens a buffer with just the
-     contents of the code block, with the major mode configured
-     appropriately.
+  to display the information.
++ Style code blocks :: I want =.org= files to use the native settings for
+  styling code blocks.  The first variable concerns =C-c '= (run it inside
+  of a code block).  That opens a buffer with just the contents of the
+  code block, with the major mode configured appropriately.
 + Export settings :: Just provide a table of contents, cover 8 levels of
-     depth and offer support for the back-ends I specify.  For the time
-     being, I mostly use HTML to publish this document on my website…
-+ General settings :: Allow =C-a= and =C-e= to move to the logical
-     beginning or end of the Org element upon second invocation (first
-     one behaves normally).  Define a few templates for inserting blocks
-     using =<=, =KEY=, and then =TAB=, where =KEY= is the one that
-     corresponds to the given template.
+  depth and offer support for the back-ends I specify.  For the time
+  being, I mostly use HTML to publish this document on my website…
++ General settings :: Allow =C-a= and =C-e= to move to the logical beginning
+  or end of the Org element upon second invocation (first one behaves
+  normally).  Define a few templates for inserting source blocks.  Prior
+  to Org version 9.2 you could insert a template by using =<=, =KEY=, and
+  then =TAB=, where =KEY= is the one that corresponds to the given
+  template.  Now you invoke the menu with =C-c C-,= and then press the
+  relevant key.
 
 The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/org-recur][README of org-recur]].
 
@@ -2240,15 +2241,14 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
   (org-special-ctrl-a/e 'reversed)
   (org-hide-emphasis-markers t)
   (org-structure-template-alist
-   '(("s" "#+BEGIN_SRC\n?\n#+END_SRC")
-     ("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC")
-     ("e" "#+BEGIN_EXAMPLE\n?\n#+END_EXAMPLE")
-     ("q" "#+BEGIN_QUOTE\n?\n#+END_QUOTE")
-     ("v" "#+BEGIN_VERSE\n?\n#+END_VERSE")
-     ("V" "#+BEGIN_VERBATIM\n?\n#+END_VERBATIM")
-     ("c" "#+BEGIN_CENTER\n?\n#+END_CENTER")
-     ("C" "#+BEGIN_COMMENT\n?\n#+END_COMMENT")
-     ("I" "#+INCLUDE: %file ?")))
+   '(("s" . "src")
+     ("E" . "src emacs-lisp")
+     ("e" . "example")
+     ("q" . "quote")
+     ("v" . "verse")
+     ("V" . "verbatim")
+     ("c" . "center")
+     ("C" . "comment")))                ; CHANGED in Org 9.2 (Emacs 27)
   (org-catch-invisible-edits 'show)
   (org-return-follows-link t)
   :config
@@ -2264,29 +2264,18 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
     "Refresh org-agenda."
     (contrib/org-agenda-refresh))
 
+  (defun prot/org-insert-elisp-template ()
+    "Just insert an Emacs Lisp source block."
+    (interactive)
+    (org-insert-structure-template "src emacs-lisp"))
+
   ;; disable keys I rely on for other tasks
   (define-key org-mode-map (kbd "<C-return>") nil)
   (define-key org-mode-map (kbd "<C-S-return>") nil)
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
-         ("C-c l" . org-store-link)))
-#+END_SRC
-
-*** Export Org to HTML
-    :PROPERTIES:
-    :CUSTOM_ID: h:087f3e10-b270-4a5c-b5e4-dbb2b4964f61
-    :END:
-
-Use this package to output to HTML.  While in the export interface, type
-=C-b= to only produce the HTML body (useful when embedding to an
-existing template/website).
-
-#+BEGIN_SRC emacs-lisp
-(use-package htmlize
-  :ensure t
-  :after org
-  :config
-  (global-set-key (kbd "C-c o") (kbd "C-c C-e C-b h H")))
+         ("C-c l" . org-store-link)
+         ("C-c e" . prot/org-insert-elisp-template)))
 #+END_SRC
 
 *** Consistent heading IDs (and anchor tags)
