@@ -1,6 +1,6 @@
-# xinitrc --- Initialisation script for Void Linux.
+# xinitrc --- Initialisation script for the X server session.
 #
-# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (c) 2019-2020 Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software; you can redistribute it and/or
 # it under the terms of the GNU General Public License as published by
@@ -18,10 +18,10 @@
 ## Commentary:
 #
 # This script is a core part of my custom desktop session, centred
-# around BSPWM.  My setup runs on Void Linux and is managed with GNU
-# Stow.  The underlying OS is meant to remain in a minimal, clean state.
-# My main interface for most computing tasks is GNU Emacs.  Refer to my
-# dotfiles for the specifics: https://gitlab.com/protesilaos/dotfiles
+# around BSPWM.  My setup is managed with GNU Stow.  The underlying OS
+# is meant to remain in a minimal, clean state.  My main interface for
+# most computing tasks is GNU Emacs.  Refer to my dotfiles for the
+# specifics: https://gitlab.com/protesilaos/dotfiles
 
 
 ###############
@@ -36,17 +36,12 @@ if [ -n "$BASH_VERSION" ]; then
 fi
 
 # Set PATH so it includes user's private executables.
-#
-# TODO 2019-11-12: Consider pros/cons of splitting scripts at ~/scripts
-# from binaries at ~/bin.
-if [ -d "$HOME/bin" ]; then
+if [ -d "$HOME"/bin ]; then
     PATH=$PATH:"$HOME"/bin
 fi
 
-# NOTE 2019-11-12: This is another possible location for user-specific
-# binaries.  It might actually be better to merge everything here
-# (without prejudice to the above TODO).
-if [ -d "$HOME/.local/bin" ]; then
+# This is another possible location for user-specific binaries.
+if [ -d "$HOME"/.local/bin ]; then
     PATH=$PATH:"$HOME"/.local/bin
 fi
 
