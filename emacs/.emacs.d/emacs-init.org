@@ -2235,6 +2235,23 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
          ("C-c e" . prot/org-insert-elisp-template)))
 #+END_SRC
 
+*** Export Org to HTML
+    :PROPERTIES:
+    :CUSTOM_ID: h:087f3e10-b270-4a5c-b5e4-dbb2b4964f61
+    :END:
+
+Use this package to output to HTML and retain the colours/styles of the
+current theme.  While in the export interface, type =C-b= to only produce
+the HTML body (useful when embedding to an existing template/website).
+
+#+begin_emacs-lisp
+(use-package htmlize
+  :ensure t
+  :after org
+  :config
+  (global-set-key (kbd "C-c o") (kbd "C-c C-e C-b h H")))
+#+end_emacs-lisp
+
 *** Consistent heading IDs (and anchor tags)
     :PROPERTIES:
     :CUSTOM_ID: h:031f7dbf-19e4-4ddf-a3d3-f648261412f6
