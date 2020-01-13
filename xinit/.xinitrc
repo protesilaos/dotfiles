@@ -49,10 +49,11 @@ fi
 # Environment essentials #
 ##########################
 
-# Auto unlocks the GPG and SSH agents.  Note the specific syntax for
-# these, as they differ from what is available on the Void Linux Wiki.
+# Auto unlocks the GPG and SSH agents.
 export $(dbus-launch)
-export $(gnome-keyring-daemon --start)
+
+eval $(gnome-keyring-daemon --start --daemonize)
+export SSH_AUTH_SOCK
 
 # Load my XTerm and relevant configurations.
 [ -f "$HOME"/.Xresources ] && xrdb -I "$HOME" -merge "$HOME"/.Xresources
