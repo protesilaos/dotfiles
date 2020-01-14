@@ -46,9 +46,9 @@ _kbd_reset_and_xmodmap() {
 # TODO is this the most robust way to check for systemd? Is it standard?
 _check_systemd() {
     if [ -n /run/systemd/system ]; then
-        "$1"
+        systemctl "$1"
     else
-        "$2"
+        sudo "$1"
     fi
 }
 
@@ -58,11 +58,11 @@ _check_systemd() {
 # The `reboot' and `poweroff' require escalated privileges.  Read:
 # https://wiki.voidlinux.org/Post_Installation#Allow_users_to_shutdown_without_a_password
 _reboot() {
-    _check_systemd 'systemctl reboot' 'sudo reboot'
+    _check_systemd 'reboot'
 }
 
 _poweroff() {
-    _check_systemd 'systemctl shutdown' 'sudo poweroff'
+    _check_systemd 'poweroff'
 }
 
 _checkdep() {
