@@ -36,7 +36,8 @@ My initialisation file, named =init.el= as per the Emacs convention, adds
 the community-driven MELPA archive to the list of package repositories
 and then loads the file with my configurations.
 
-For reference, these were the contents of my =init.el= *prior to Emacs 27*.
+For reference, these were the contents of my =init.el= *prior to Emacs
+27.1*.
 
 #+begin_example emacs-lisp
 (require 'package)
@@ -49,7 +50,7 @@ For reference, these were the contents of my =init.el= *prior to Emacs 27*.
 (org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
 #+end_example
 
-Whereas in *Emacs 27 and onward*, they are simplified thus:
+Whereas in *Emacs 27.1 and onward*, they are simplified thus:
 
 #+begin_example emacs-lisp
 (require 'package)
@@ -1255,7 +1256,7 @@ this package declaration.
      presses.  This function addresses the issue (bound to =C-RET= while
      running a successful search).  The [[https://emacs.stackexchange.com/a/52554][source is this forum answer]].
 
-The variables about the lazy count that are commented as "Emacs 27"
+The variables about the lazy count that are commented as "Emacs 27.1"
 effectively supersede the functionality of =anzu=, a package I once used.
 
 #+BEGIN_SRC emacs-lisp
@@ -1266,7 +1267,7 @@ effectively supersede the functionality of =anzu=, a package I once used.
   (isearch-lax-whitespace t)
   (isearch-regexp-lax-whitespace nil)
   (isearch-lazy-highlight t)
-  ;; All of the following variables were introduced in Emacs 27.
+  ;; All of the following variables were introduced in Emacs 27.1.
   (isearch-lazy-count t)
   (lazy-count-prefix-format "(%s/%s) ")
   (lazy-count-suffic-format "[%s of %s]")
@@ -1383,12 +1384,12 @@ The options here are meant to do the following:
   operations of one are easily propagated to the other.  Dired is smart
   about your intentions and uses the adjacent Dired buffer's path as a
   prefix when performing such actions.
-+ For Emacs 27, Dired can automatically create destination directories
++ For Emacs 27.1, Dired can automatically create destination directories
   for its copy and remove operations.  So you can, for example, rename
   =file= to =/non-existent-path/file= and you will get what you want right
   away.
-+ For Emacs 27, renaming a file of a version-controlled repository (git)
-  will be done using the appropriate VC mechanism.
++ For Emacs 27.1, renaming a file of a version-controlled repository
+  (git) will be done using the appropriate VC mechanism.
 + Let the relevant =find= commands use case-insensitive names.
 + Enable asynchronous mode.  This is subject to change, as I need to
   test it a bit more.
@@ -1407,8 +1408,8 @@ as =-AFXhlv --group-directories-first=).
   (delete-by-moving-to-trash t)
   (dired-listing-switches "-AFhlv --group-directories-first")
   (dired-dwim-target t)
-  (dired-create-destination-dirs 'always) ; Emacs 27
-  (dired-vc-rename-file t)                ; Emacs 27
+  (dired-create-destination-dirs 'always) ; Emacs 27.1
+  (dired-vc-rename-file t)                ; Emacs 27.1
   :hook
   (dired-mode . dired-hide-details-mode)
   (dired-mode . hl-line-mode))
@@ -1724,7 +1725,7 @@ My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to s
 #+END_SRC
 
 And this covers the built-in diff mode, which I seldom use.  Both of
-these variables were introduced in Emacs 27.
+these variables were introduced in Emacs 27.1.
 
 #+begin_src emacs-lisp
 (use-package diff
@@ -2078,7 +2079,7 @@ create a new window.  I do not want that.
 #+BEGIN_SRC emacs-lisp
 (use-package windmove
   :custom
-  (windmove-create-window nil)          ; Emacs 27
+  (windmove-create-window nil)          ; Emacs 27.1
   :bind (("M-s-h" . windmove-left))
          ("M-s-j" . windmove-down)
          ("M-s-k" . windmove-up)
@@ -2232,7 +2233,7 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
      ("v" . "verse")
      ("V" . "verbatim")
      ("c" . "center")
-     ("C" . "comment")))                ; CHANGED in Org 9.2 (Emacs 27)
+     ("C" . "comment")))               ; CHANGED in Org 9.2 (Emacs 27.1)
   (org-catch-invisible-edits 'show)
   (org-return-follows-link t)
   :config
@@ -2443,7 +2444,7 @@ and corresponding functions.
   :commands shell-command
   :custom
   (ansi-color-for-comint-mode t)
-  (shell-command-prompt-show-cwd t)     ; Emacs 27
+  (shell-command-prompt-show-cwd t)     ; Emacs 27.1
   :config
   (defun prot/shell-multi ()
     "Spawn a new instance of `shell' and give it a unique name
@@ -3496,9 +3497,9 @@ theme."
   :hook (after-init . prot/modus-operandi))
 #+END_SRC
 
-** Tabs for window layouts and buffers (Emacs 27)
+** Tabs for window layouts and buffers (Emacs 27.1)
 
-Starting with version 27, Emacs has built-in support for two distinct
+Starting with version 27.1, Emacs has built-in support for two distinct
 concepts of "tabs":
 
 1. Spaces that contain windows in any given layout.
@@ -3569,7 +3570,7 @@ intense style, so as to eliminate any doubts as to what is going on.
 
 An earlier version of this package declaration contained support for the
 counter of the search results displayed by the =anzu= package.  It has
-been removed ever since I upgraded to Emacs 27, as it now comes with
+been removed ever since I upgraded to Emacs 27.1, as it now comes with
 built-in support for counting the results of =isearch=.
 
 My personal choice aside, all packages that modify the mode line are
@@ -3927,8 +3928,8 @@ in effect).
   (delete-selection-mode 1))
 #+END_SRC
 
-*Pro tip*: On Emacs 27 you can create a rectangular region by holding down
-Ctrl and Meta while dragging the mouse with the left click pressed.
+*Pro tip*: On Emacs 27.1 you can create a rectangular region by holding
+down Ctrl and Meta while dragging the mouse with the left click pressed.
 
 ** Scrolling behaviour
    :PROPERTIES:
