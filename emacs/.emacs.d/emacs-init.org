@@ -3525,7 +3525,7 @@ future as I experiment more with it as part of my workflow.
   (tab-bar-new-tab-choice t)
   (tab-bar-new-tab-to 'rightmost)
   (tab-bar-position nil)
-  (tab-bar-show t)
+  (tab-bar-show 1)
   (tab-bar-tab-hints nil)
   (tab-bar-tab-name-function 'tab-bar-tab-name-current)
   :config
