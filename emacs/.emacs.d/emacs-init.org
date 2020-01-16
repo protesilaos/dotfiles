@@ -3422,10 +3422,18 @@ time being.
   (global-eldoc-mode -1))
 #+END_SRC
 
-* Modus themes (my very accessible themes)
+* Interface and interactions
   :PROPERTIES:
-  :CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
+  :CUSTOM_ID: h:b6bd2eea-8269-4029-b446-ee340c12ebc3
   :END:
+
+This section contains lots of small tweaks and refinements that cover a
+wide range of item across the Emacs customisation settings.
+
+** Modus themes (my very accessible themes)
+   :PROPERTIES:
+   :CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
+   :END:
 
 I am using my own themes.  They are designed to conform with the
 highest accessibility standard for colour contrast between foreground
@@ -3488,13 +3496,7 @@ theme."
   :hook (after-init . prot/modus-operandi))
 #+END_SRC
 
-* Interface and interactions
-  :PROPERTIES:
-  :CUSTOM_ID: h:b6bd2eea-8269-4029-b446-ee340c12ebc3
-  :END:
 
-This section contains lots of small tweaks and refinements that cover a
-wide range of item across the Emacs customisation settings.
 
 ** Custom mode line
    :PROPERTIES:
