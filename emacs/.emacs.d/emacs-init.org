@@ -1958,8 +1958,6 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
       (window-height . 0.25)
       (side . bottom)
       (slot . 0))
-     ("\\*Custom.*"
-      (display-buffer-pop-up-window))
      ;; right side window
      ("\\*\\(Flycheck\\|Package-Lint\\).*"
       (display-buffer-in-side-window)
@@ -1976,7 +1974,12 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
       (slot . 1)
       (window-parameters . ((no-other-window . t)
                             (mode-line-format . (" "
-                                                 mode-line-buffer-identification)))))))
+                                                 mode-line-buffer-identification)))))
+     ("\\*Custom.*"
+      (display-buffer-in-side-window)
+      (window-width . 0.333)
+      (side . right)
+      (slot . 2))))
   :bind (("s-n" . next-buffer)
          ("s-p" . previous-buffer)
          ("s-o" . other-window)
