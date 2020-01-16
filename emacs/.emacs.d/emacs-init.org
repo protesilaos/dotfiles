@@ -1255,8 +1255,8 @@ this package declaration.
      presses.  This function addresses the issue (bound to =C-RET= while
      running a successful search).  The [[https://emacs.stackexchange.com/a/52554][source is this forum answer]].
 
-The variables that are commented as "Emacs 27" effectively supersede the
-functionality of =anzu=, a package I once used.
+The variables about the lazy count that are commented as "Emacs 27"
+effectively supersede the functionality of =anzu=, a package I once used.
 
 #+BEGIN_SRC emacs-lisp
 (use-package isearch
@@ -1266,9 +1266,12 @@ functionality of =anzu=, a package I once used.
   (isearch-lax-whitespace t)
   (isearch-regexp-lax-whitespace nil)
   (isearch-lazy-highlight t)
-  (isearch-lazy-count t)                  ; Emacs 27
-  (lazy-count-prefix-format "(%s/%s) ")   ; Emacs 27
-  (lazy-count-suffic-format "[%s of %s]") ; Emacs 27
+  ;; All of the following variables were introduced in Emacs 27.
+  (isearch-lazy-count t)
+  (lazy-count-prefix-format "(%s/%s) ")
+  (lazy-count-suffic-format "[%s of %s]")
+  (isearch-yank-on-move 'shift)
+  (isearch-allow-scroll 'unlimited)
   :config
   (defun prot/isearch-mark-and-exit ()
     "Marks the current search string.  Can be used as a building
@@ -1380,6 +1383,12 @@ The options here are meant to do the following:
   operations of one are easily propagated to the other.  Dired is smart
   about your intentions and uses the adjacent Dired buffer's path as a
   prefix when performing such actions.
++ For Emacs 27, Dired can automatically create destination directories
+  for its copy and remove operations.  So you can, for example, rename
+  =file= to =/non-existent-path/file= and you will get what you want right
+  away.
++ For Emacs 27, renaming a file of a version-controlled repository (git)
+  will be done using the appropriate VC mechanism.
 + Let the relevant =find= commands use case-insensitive names.
 + Enable asynchronous mode.  This is subject to change, as I need to
   test it a bit more.
@@ -1398,6 +1407,8 @@ as =-AFXhlv --group-directories-first=).
   (delete-by-moving-to-trash t)
   (dired-listing-switches "-AFhlv --group-directories-first")
   (dired-dwim-target t)
+  (dired-create-destination-dirs 'always) ; Emacs 27
+  (dired-vc-rename-file t)                ; Emacs 27
   :hook
   (dired-mode . dired-hide-details-mode)
   (dired-mode . hl-line-mode))
@@ -1711,6 +1722,16 @@ My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to s
   :custom
   (magit-diff-refine-hunk t))
 #+END_SRC
+
+And this covers the built-in diff mode, which I seldom use.  Both of
+these variables were introduced in Emacs 27.
+
+#+begin_src emacs-lisp
+(use-package diff
+  :custom
+  (diff-font-lock-prettify nil)
+  (diff-font-lock-syntax nil))
+#+end_src
 
 *** Magit repo list
     :PROPERTIES:
@@ -2047,11 +2068,17 @@ its two main functions to Super and the right/left arrow keys.
 
 Windmove is also built into Emacs.  It provides functions for selecting
 a window in any of the cardinal directions.  I use the Vim keys while
-holding down Super and Meta (because other mnemonics-based actions
-involving just Super or Meta are already occupied).
+holding down Super and Meta because other mnemonics-based actions
+involving just Super or Meta are already occupied.
+
+The =windmove-create-window= specifies what should happen when trying to
+move past the edge of the frame.  The idea with this is to allow it to
+create a new window.  I do not want that.
 
 #+BEGIN_SRC emacs-lisp
 (use-package windmove
+  :custom
+  (windmove-create-window nil)          ; Emacs 27
   :bind (("M-s-h" . windmove-left))
          ("M-s-j" . windmove-down)
          ("M-s-k" . windmove-up)
@@ -2416,6 +2443,7 @@ and corresponding functions.
   :commands shell-command
   :custom
   (ansi-color-for-comint-mode t)
+  (shell-command-prompt-show-cwd t)     ; Emacs 27
   :config
   (defun prot/shell-multi ()
     "Spawn a new instance of `shell' and give it a unique name
@@ -3059,7 +3087,9 @@ the relevant packages from my distro's archive.
   (ispell-program-name "aspell")
   (ispell-dictionary "en_GB")
   :config
-  (define-key flyspell-mode-map (kbd "C-;") nil))
+  (define-key flyspell-mode-map (kbd "C-;") nil)
+;; TODO (emacs 27): ispell-change-dictionary-hook
+)
 #+END_SRC
 
 ** Flycheck (code linting)
@@ -3841,6 +3871,9 @@ in effect).
   :config
   (delete-selection-mode 1))
 #+END_SRC
+
+*Pro tip*: On Emacs 27 you can create a rectangular region by holding down
+Ctrl and Meta while dragging the mouse with the left click pressed.
 
 ** Scrolling behaviour
    :PROPERTIES:
