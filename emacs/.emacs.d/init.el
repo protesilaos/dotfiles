@@ -1,6 +1,6 @@
 ;; init.el --- Personal GNU Emacs configuration file.
 
-;; Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+;; Copyright (c) 2019-2020 Protesilaos Stavrou <info@protesilaos.com>
 
 ;; This file is not part of GNU Emacs.  Its source online is:
 ;; https://gitlab.com/protesilaos/dotemacs
