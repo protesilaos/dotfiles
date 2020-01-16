@@ -3496,7 +3496,60 @@ theme."
   :hook (after-init . prot/modus-operandi))
 #+END_SRC
 
+** Tabs for window layouts and buffers (Emacs 27)
 
+Starting with version 27, Emacs has built-in support for two distinct
+concepts of "tabs":
+
+1. Spaces that contain windows in any given layout.
+2. A list of buffers presented as buttons at the top of the window.
+
+The former, represented by the =tab-bar= library is best understood as the
+equivalent of "virtual desktops", as these are used in most desktop
+environments or minimalist window managers.
+
+The latter, implemented in =tab-line,= is the same as the tabs you are
+used to in web browsers.  Each buffer is assigned to a single tab.
+Clicking on the tab takes you to it.
+
+I do not need the =tab-line= as I find such tabs to be inefficient at
+scale.  Finding a buffer through search mechanisms is generally faster:
+it does not matter whether you have ten or a hundred buffers on the list
+(unless, of course, they all have similar names in which case you are in
+trouble either way).
+
+On the other hand, the workspaces (=tab-bar=) can prove very useful for
+organising the various applications that are running inside of Emacs.
+You can, for example, have your current project on tab (workspace) 1,
+your email and news reader on 2, music on 3, and so on.  Of course, this
+can also be achieved by using separate frames for each of these, though
+I generally prefer working with a single frame.
+
+At any rate, I do not need the tab bar to be active at all times.  I
+enable it manually when it is necessary.  This might change in the
+future as I experiment more with it as part of my workflow.
+
+#+begin_src emacs-lisp
+(use-package tab-bar
+  :custom
+  (tab-bar-close-button-show t)
+  (tab-bar-close-last-tab-choice nil)
+  (tab-bar-close-tab-select 'recent)
+  (tab-bar-new-tab-choice t)
+  (tab-bar-new-tab-to 'rightmost)
+  (tab-bar-position nil)
+  (tab-bar-show t)
+  (tab-bar-tab-hints nil)
+  (tab-bar-tab-name-function 'tab-bar-tab-name-current)
+  :config
+  (tab-bar-mode -1)
+  (tab-bar-history-mode -1))
+
+;; This is only included as a reference.
+(use-package tab-line
+  :config
+  (global-tab-line-mode -1))
+#+end_src
 
 ** Custom mode line
    :PROPERTIES:
@@ -4366,7 +4419,7 @@ instead.  This command can then be followed by the standard
          ("C-t" . prot/transpose-chars)
          ("C-x C-t" . prot/transpose-or-swap-lines)
          ("C-S-t" . prot/transpose-or-swap-paragraphs)
-         ("C-x t" . prot/transpose-or-swap-sentences)
+         ("C-x M-t" . prot/transpose-or-swap-sentences)
          ("M-t" . prot/transpose-or-swap-words)
          ("M-Q" . prot/unfill-region-or-paragraph)
          ("C-S-y" . prot/yank-replace-line-or-region)))
