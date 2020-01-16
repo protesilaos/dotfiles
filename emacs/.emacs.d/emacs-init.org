@@ -66,7 +66,7 @@ In the source code version of this document, I make sure that these two
 code blocks are not declared as an =emacs-lisp= source but rather as mere
 examples, so they are not accidentally parsed by the actual setup.
 
-Code blocks are wrapped between =#+BEGIN_SRC= and =#+END_SRC= tags (not
+Code blocks are wrapped between =#+begin_src= and =#+end_src= tags (not
 visible in the website version of this page).  Such templates can be
 quickly inserted with =C-c C-,= (this works both for empty blocks and
 active regions).  For more, refer to [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org's section further below]].
@@ -225,14 +225,14 @@ other configurations are enabled under the =:config= keyword.  The
 activation of a mode should always be the very last thing, once all
 variables have been set.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
 (eval-when-compile
   (require 'use-package))
-#+END_SRC
+#+end_src
 
 Settings that do not have a corresponding package are declared using the
 special =use-package emacs= notation.
@@ -250,11 +250,11 @@ them (the information is still available when running =C-h m=).
 Furthermore, the functionality can be integrated in every package
 declaration of =use-package=: you will see a =:delight= tag.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package delight
   :ensure t
   :after use-package)
-#+END_SRC
+#+end_src
 
 ** Disable GUI components
    :PROPERTIES:
@@ -278,7 +278,7 @@ Overview of these settings:
   assume this has to do with font rendering and missing font files, as I
   experienced similar issues on various terminal emulators.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :custom
   (use-file-dialog nil)
@@ -291,7 +291,7 @@ Overview of these settings:
   (global-unset-key (kbd "C-z"))
   (global-unset-key (kbd "C-x C-z"))
   (global-unset-key (kbd "C-h h")))
-#+END_SRC
+#+end_src
 
 ** Base typeface configurations
    :PROPERTIES:
@@ -320,7 +320,7 @@ fontconfig, at the user or system level.  Refer to [[https://gitlab.com/protesil
 relevant =fontconfig= settings, as Iosevka is only meant to be used inside
 of Emacs, while I keep Hack as the generic monospaced font.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :custom
   (x-underline-at-descent-line t)
@@ -375,7 +375,7 @@ the maximum width of my laptop's screen."
 
   :hook
   (after-init . prot/fonts-per-monitor))
-#+END_SRC
+#+end_src
 
 **** Typeface suitability test
     :PROPERTIES:
@@ -391,7 +391,7 @@ less obvious ways, such as the space between the characters.  Also note
 that the website version of this document may not accurately represent
 the typeface I am using.
 
-#+BEGIN_EXAMPLE
+#+begin_example
 ()[]{}<>«»‹›
 6bB8&0ODdo
 1tiIlL|
@@ -420,7 +420,7 @@ abcdefghijklmnopqrstuvwxyz
 1234567890#%^*
 ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ
 αβγδεζηθικλμνξοπρστυφχψω
-#+END_EXAMPLE
+#+end_example
 
 ** Persistent state
    :PROPERTIES:
@@ -437,10 +437,10 @@ connect to.  This means that calling =emacsclient= (with or without
 original running process.  The server persists for as long as there is
 an Emacs frame attached to said server.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package server
   :hook (after-init . server-start))
-#+END_SRC
+#+end_src
 
 I personally have no need for the server per se: I launch Emacs and keep
 it open for as long as I am on the computer.  That is mostly there in
@@ -487,7 +487,7 @@ Overview of my settings:
   initially started out with (e.g. when a new frame runs in parallel to
   the older one).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package desktop
   :custom
   (desktop-auto-save-timeout 300)
@@ -501,7 +501,7 @@ Overview of my settings:
   (desktop-restore-frames nil)
   (desktop-save 'ask-if-new)
   :hook (after-init . (lambda () (desktop-save-mode 1))))
-#+END_SRC
+#+end_src
 
 **** TODO store window configuration registers (C-x r w)?
      :PROPERTIES:
@@ -517,7 +517,7 @@ When you install a package or use the various customisation interfaces
 to tweak things to your liking, Emacs will append a piece of elisp to
 your init file.  I prefer to have that stored in a separate file.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package cus-edit
   :custom
   (custom-file "~/.emacs.d/custom.el")
@@ -525,7 +525,7 @@ your init file.  I prefer to have that stored in a separate file.
                         (unless (file-exists-p custom-file)
                           (write-region "" nil custom-file))
                         (load custom-file))))
-#+END_SRC
+#+end_src
 
 ** Record history
    :PROPERTIES:
@@ -566,7 +566,7 @@ Now some notes on my extensions:
   eliminates whatever need for a dedicated command to display
   recently-accessed directories (dired buffers).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package recentf
   :custom
   (recentf-save-file "~/.emacs.d/recentf")
@@ -611,7 +611,7 @@ buffers."
     (when (and (stringp dired-directory)
                (equal "" (file-name-nondirectory dired-directory)))
       (recentf-add-file dired-directory))))
-#+END_SRC
+#+end_src
 
 *** Minibuffer
     :PROPERTIES:
@@ -620,7 +620,7 @@ buffers."
 
 Keeps a record of actions involving the minibuffer.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package savehist
   :custom
   (savehist-file "~/.emacs.d/savehist")
@@ -628,7 +628,7 @@ Keeps a record of actions involving the minibuffer.
   (savehist-save-minibuffer-history t)
   :config
   (savehist-mode 1))
-#+END_SRC
+#+end_src
 
 *** Point (cursor position)
     :PROPERTIES:
@@ -637,13 +637,13 @@ Keeps a record of actions involving the minibuffer.
 
 Just remember where the point is in any given file.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package saveplace
   :custom
   (save-place-file "~/.emacs.d/saveplace")
   :config
   (save-place-mode 1))
-#+END_SRC
+#+end_src
 
 *** Backups
     :PROPERTIES:
@@ -654,7 +654,7 @@ Just remember where the point is in any given file.
 
 And here are some settings pertaining to backups.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :custom
   (backup-directory-alist '(("." . "~/.emacs.d/backup/")))
@@ -664,7 +664,7 @@ And here are some settings pertaining to backups.
   (kept-new-versions 6)
   (kept-old-versions 2)
   (create-lockfiles nil))
-#+END_SRC
+#+end_src
 
 * Selection candidates and search methods
   :PROPERTIES:
@@ -748,7 +748,7 @@ With those granted, make sure to inspect the entirety of my dotemacs'
 section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]], as the following
 package declaration is but a piece of a greater whole.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package ivy
   :ensure t
   :delight
@@ -792,7 +792,7 @@ package declaration is but a piece of a greater whole.
          ("n" . ivy-occur-next-line)
          ("p" . ivy-occur-previous-line)
          ("<C-return>" . ivy-occur-press)))
-#+END_SRC
+#+end_src
 
 **** DEPRECATED AMX (M-x history and matches)
      :PROPERTIES:
@@ -809,7 +809,7 @@ was only meant to be used with Ido, but upon closer inspection I
 realised otherwise.  Great!  Counsel leverages AMX's features
 without any further intervention.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package amx
   :ensure t
   :disabled
@@ -821,7 +821,7 @@ without any further intervention.
   (amx-show-key-bindings nil)
   :config
   (amx-mode 1))
-#+END_SRC
+#+end_src
 
 **** Prescient (sort, filter results)
      :PROPERTIES:
@@ -855,7 +855,7 @@ are just a matter of preference, where I simply find the generic sorting
 to offer a better first impression (does not really matter, since I will
 type something anyhow).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package prescient
   :ensure t
   :custom
@@ -881,7 +881,7 @@ type something anyhow).
   (ivy-prescient-enable-sorting t)
   :config
   (ivy-prescient-mode 1))
-#+END_SRC
+#+end_src
 
 **** Counsel configurations and key bindings
      :PROPERTIES:
@@ -915,7 +915,7 @@ Also make sure to study all the other package declarations in the
 [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]] section, to appreciate their
 interplay and the full extent of my customisations.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package counsel
   :ensure t
   :after ivy
@@ -1009,7 +1009,7 @@ repository, then the corresponding root is used instead."
          ("C-r" . counsel-minibuffer-history)
          ("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
          ("C-SPC" . ivy-restrict-to-matches)))
-#+END_SRC
+#+end_src
 
 ***** Counsel and projectile
       :PROPERTIES:
@@ -1048,7 +1048,7 @@ and open it inside of =dired=, rather than ask for a file to open.
 While the =ivy-initial-inputs-alist= extends the variable that is
 specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package projectile
   :ensure t
   ;; :delight '(:eval (concat " " (projectile-project-name)))
@@ -1070,7 +1070,7 @@ specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
          ("M-s p" . (lambda ()
                       (interactive)
                       (counsel-projectile-switch-project 4)))))
-#+END_SRC
+#+end_src
 
 **** Swiper commands and settings
      :PROPERTIES:
@@ -1086,7 +1086,7 @@ macros and jumping to visible sections in the buffer.
 Given that Swiper is related to Ivy, do not forget to review the entire
 section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package swiper
   :ensure t
   :after ivy
@@ -1097,7 +1097,7 @@ section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and s
   :bind (("C-S-s" . swiper)
          ("M-s s" . swiper-multi)
          ("M-s w" . swiper-thing-at-point)))
-#+END_SRC
+#+end_src
 
 *** Ivy extensions
     :PROPERTIES:
@@ -1124,7 +1124,7 @@ over an absolute value is the use of the tilde (=~=) instead of
 =/home/USER/= in the buffer list.  Whereas =recentf= continues to display
 absolute paths.  Will need to test this further…
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package ivy-rich
   :ensure t
   :custom
@@ -1133,7 +1133,7 @@ absolute paths.  Will need to test this further…
   (setcdr (assq t ivy-format-functions-alist)
           #'ivy-format-function-line)
   (ivy-rich-mode 1))
-#+END_SRC
+#+end_src
 
 **** Ivy posframe
      :PROPERTIES:
@@ -1150,7 +1150,7 @@ the Return key in order to proceed.  In one of the parameters I define a
 font that is different from what I normally use, just as a proof of
 concept (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package ivy-posframe
   :ensure t
   :delight
@@ -1171,7 +1171,7 @@ concept (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
      (t . ivy-posframe-display-at-frame-center)))
   :config
   (ivy-posframe-mode 1))
-#+END_SRC
+#+end_src
 
 ** Configurations or extensions for built-in commands
    :PROPERTIES:
@@ -1259,7 +1259,7 @@ this package declaration.
 The variables about the lazy count that are commented as "Emacs 27.1"
 effectively supersede the functionality of =anzu=, a package I once used.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package isearch
   :custom
   (search-whitespace-regexp ".*?")
@@ -1322,7 +1322,7 @@ confines of word boundaries (e.g. multiple words)."
               ("C-SPC" . prot/isearch-mark-and-exit)
               ("DEL" . contrib/isearchp-remove-failed-part-or-last-char)
               ("<C-return>" . contrib/isearch-done-opposite-end)))
-#+END_SRC
+#+end_src
 
 *** wgrep (writable grep)
    :PROPERTIES:
@@ -1335,13 +1335,13 @@ the built-in =occur= offers.  We can use it to operate on a list of
 matches by leveraging the full power of Emacs' editing capabilities
 (e.g. keyboard macros, multiple cursors…).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package wgrep
   :ensure t
   :custom
   (wgrep-auto-save-buffer t)
   (wgrep-change-readonly-file t))
-#+END_SRC
+#+end_src
 
 * Directory, buffer, window management
   :PROPERTIES:
@@ -1399,7 +1399,7 @@ show hidden directories and files /before/ their non-hidden counterparts.
 If you want to reverse this order, you must append the =-X= option (such
 as =-AFXhlv --group-directories-first=).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package dired
   :custom
   (dired-recursive-copies 'always)
@@ -1428,7 +1428,7 @@ as =-AFXhlv --group-directories-first=).
   :after (dired async)
   :config
   (dired-async-mode 1))
-#+END_SRC
+#+end_src
 
 *Pro tip* while renaming or copying a file, =M-n= will return its
 original name, thus allowing you to easily {pre,ap}pend to it.
@@ -1455,7 +1455,7 @@ opted against them in the interest of simplicity:
 + =dired-narrow-regexp=
 + =dired-narrow-fuzzy=
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package dired-narrow
   :ensure t
   :after dired
@@ -1465,7 +1465,7 @@ opted against them in the interest of simplicity:
   (dired-narrow-blink-time 0.3)
   :bind (:map dired-mode-map
          ("M-s n" . dired-narrow)))
-#+END_SRC
+#+end_src
 
 *** wdired (writable dired)
     :PROPERTIES:
@@ -1480,7 +1480,7 @@ regular buffer, then confirm them with =C-c C-c=.
 + While renaming a file, any forward slash is treated like a directory
   and *is created directly* upon successful exit.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package wdired
   :after dired
   :commands (wdired-mode
@@ -1488,7 +1488,7 @@ regular buffer, then confirm them with =C-c C-c=.
   :custom
   (wdired-allow-to-change-permissions t)
   (wdired-create-parent-directories t))
-#+END_SRC
+#+end_src
 
 *** peep-dired (file previews including images)
     :PROPERTIES:
@@ -1499,7 +1499,7 @@ By default, dired does not show previews of files, while =image-dired=
 is intended for a different purpose.  We just want to toggle the
 behaviour while inside a regular dired buffer.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package peep-dired
   :ensure t
   :after dired
@@ -1512,7 +1512,7 @@ behaviour while inside a regular dired buffer.
 
 ;; ;; use this for peep always on
 ;; (setq peep-dired-enable-on-directories t)
-#+END_SRC
+#+end_src
 
 *** image-dired (image thumbnails and previews)
     :PROPERTIES:
@@ -1528,7 +1528,7 @@ operating on PNG files, while the latter is a lightweight image viewer.
 I feel this process is a bit cumbersome and can be very slow if you try
 to generate lots of images at once.  The culprit is the image converter.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package image-dired
   :custom
   (image-dired-external-viewer "xdg-open")
@@ -1538,7 +1538,7 @@ to generate lots of images at once.  The culprit is the image converter.
   (image-dired-thumbs-per-row 4)
   :bind (:map image-dired-thumbnail-mode-map
               ("<return>" . image-dired-thumbnail-display-external)))
-#+END_SRC
+#+end_src
 
 *** dired-subtree (tree-style view/navigation)
     :PROPERTIES:
@@ -1558,7 +1558,7 @@ At any rate, this does not override the action of inserting a
 subdirectory listing in the current dired buffer (with =i= over the
 target dir).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package dired-subtree
   :ensure t
   :after dired
@@ -1566,7 +1566,7 @@ target dir).
               ("<tab>" . dired-subtree-toggle)
               ("<C-tab>" . dired-subtree-cycle)
               ("<S-iso-lefttab>" . dired-subtree-remove)))
-#+END_SRC
+#+end_src
 
 *** dired-x (extra Dired functions)
     :PROPERTIES:
@@ -1583,7 +1583,7 @@ proceed to do some file management, then invoke =previous-buffer= or
 those in the [[#h:12591f89-eeea-4b12-93e8-9293504e5a12][Window configuration section]]).  Everything happens
 naturally.  Emacs' interconnectedness at its best!
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package dired-x
   :after dired
   :bind (("C-x C-j" . dired-jump)
@@ -1593,7 +1593,7 @@ naturally.  Emacs' interconnectedness at its best!
   :hook
   (dired-mode . (lambda ()
                   (setq dired-clean-confirm-killing-deleted-buffers t))))
-#+END_SRC
+#+end_src
 
 *** dired-rsync
     :PROPERTIES:
@@ -1606,12 +1606,12 @@ tool for quite some time now.  This package offers integration with
 Dired (do =M-x man rsync RET= and read this package's README for more
 information on the technicalities).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package dired-rsync
   :ensure t
   :bind (:map dired-mode-map
               ("r" . dired-rsync)))
-#+END_SRC
+#+end_src
 
 *** diredfl (more dired colours)
     :PROPERTIES:
@@ -1622,11 +1622,11 @@ This package defines a few more colours for Dired, especially while in
 the detailed view.  My themes support it (see the [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][section on my Modus
 themes]]).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package diredfl
   :ensure t
   :hook (dired-mode . diredfl-mode))
-#+END_SRC
+#+end_src
 
 *** Git overview in Dired
     :PROPERTIES:
@@ -1641,7 +1641,7 @@ The commit message format is configured to show an abbreviated hash of
 the commit, the commit subject, and the relative date.  The =\t=
 represents the tab character and is there to ensure alignment.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package dired-git-info
   :ensure t
   :after dired
@@ -1649,7 +1649,7 @@ represents the tab character and is there to ensure alignment.
   (dgi-commit-message-format "%h\t%s\t%cr")
   :bind (:map dired-mode-map
               (")" . dired-git-info-mode)))
-#+END_SRC
+#+end_src
 
 ** Git front-end (Magit) and relevant configurations
    :PROPERTIES:
@@ -1670,12 +1670,12 @@ switch to a terminal emulator.
 Magit has good defaults.  I only found a few things that I would like to
 customise, which I do in the following package declarations.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package magit
   :ensure t
   :bind (("C-c g" . magit-status)
          ("s-g" . magit-status)))
-#+END_SRC
+#+end_src
 
 *** Git commits
     :PROPERTIES:
@@ -1686,7 +1686,7 @@ The following package is configured in accordance with the guidelines
 provided by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is
 to write commits that are clean and easy to read.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package git-commit
   :after magit
   :custom
@@ -1704,7 +1704,7 @@ to write commits that are clean and easy to read.
   (git-commit-style-convention-checks
    '(non-empty-second-line
      overlong-summary-line)))
-#+END_SRC
+#+end_src
 
 *** Git diffs
     :PROPERTIES:
@@ -1717,12 +1717,12 @@ enable it only for the focused hunk (there is an option for ='all=).
 
 My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to style these appropriately.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package magit-diff
   :after magit
   :custom
   (magit-diff-refine-hunk t))
-#+END_SRC
+#+end_src
 
 And this covers the built-in diff mode, which I seldom use.  Both of
 these variables were introduced in Emacs 27.1.
@@ -1744,13 +1744,13 @@ produce a full list of them with their corresponding Magit status.  That
 way you can determine very quickly which repositories need to be
 examined further.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package magit-repos
   :after magit
   :commands magit-list-repositories
   :custom
   (magit-repository-directories '(("~/Git/Projects" . 1))))
-#+END_SRC
+#+end_src
 
 *** Git time machine
     :PROPERTIES:
@@ -1769,11 +1769,11 @@ your friend.
 Once inside the time machine, hit =?= to get a help interface with the
 available key bindings.  These extend =magit= functionality.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package git-timemachine
   :ensure t
   :commands git-timemachine)
-#+END_SRC
+#+end_src
 
 ** Working with buffers
    :PROPERTIES:
@@ -1795,13 +1795,13 @@ All such operations are reversed once an offending buffer is removed
 from the list, allowing Emacs to revert to the standard of displaying
 only the buffer's name.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package uniquify
   :custom
   (uniquify-buffer-name-style 'post-forward-angle-brackets)
   (uniquify-strip-common-suffix t)
   (uniquify-after-kill-buffer-p t))
-#+END_SRC
+#+end_src
 
 *** Configure ibuffer
     :PROPERTIES:
@@ -1824,7 +1824,7 @@ Some tweaks to the default behaviour and presentation:
   Dired (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
 + Remap default key to launch ibuffer instead of list-buffers.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package ibuffer
   :custom
   (ibuffer-expert t)
@@ -1884,7 +1884,7 @@ Some tweaks to the default behaviour and presentation:
   (ibuffer-mode . (lambda ()
                      (ibuffer-switch-to-saved-filter-groups "Main")))
   :bind (("C-x C-b" . ibuffer)))
-#+END_SRC
+#+end_src
 
 ** Window configuration
    :PROPERTIES:
@@ -1940,7 +1940,7 @@ described in the [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][introductory note on
 For a demo of the =display-buffer-alist= and the custom functions that
 accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-display-buffer/][video on rules for buffer placement]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package window
   :custom
   ;; TODO do not repeat common parts, abstract them somehow
@@ -2048,7 +2048,7 @@ didactic purposes."
   :bind (("C-c d" . prot/window-dired-vc-root-left)
          ("C-c f" . prot/make-frame-floating-with-current-buffer)
          ("C-c b" . prot/display-buffer-at-bottom)))
-#+END_SRC
+#+end_src
 
 *** Window history and directional motions (winner-mode and windmove)
     :PROPERTIES:
@@ -2060,12 +2060,12 @@ layout changes.  It then allows us to move back and forth in the
 history of said changes.  I have it enabled by default, while I assign
 its two main functions to Super and the right/left arrow keys.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package winner
   :hook (after-init . winner-mode)
   :bind (("<s-right>" . winner-redo)
          ("<s-left>" . winner-undo)))
-#+END_SRC
+#+end_src
 
 Windmove is also built into Emacs.  It provides functions for selecting
 a window in any of the cardinal directions.  I use the Vim keys while
@@ -2076,7 +2076,7 @@ The =windmove-create-window= specifies what should happen when trying to
 move past the edge of the frame.  The idea with this is to allow it to
 create a new window.  I do not want that.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package windmove
   :custom
   (windmove-create-window nil)          ; Emacs 27.1
@@ -2084,7 +2084,7 @@ create a new window.  I do not want that.
          ("M-s-j" . windmove-down)
          ("M-s-k" . windmove-up)
          ("M-s-l" . windmove-right))
-#+END_SRC
+#+end_src
 
 *** ace-window (more flexible window motions)
     :PROPERTIES:
@@ -2104,7 +2104,7 @@ keys in that list must not conflict with those in =aw-keys=.
 Also bear in mind that I define several other window motions.  Refer to
 [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Basic tweaks for windows]] and [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][Window history and directional motions]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package ace-window
   :ensure t
   :custom
@@ -2123,7 +2123,7 @@ Also bear in mind that I define several other window motions.  Refer to
   :config
   (ace-window-display-mode -1)
   :bind (("s-a" . ace-window)))
-#+END_SRC
+#+end_src
 
 * Applications and utilities
   :PROPERTIES:
@@ -2164,7 +2164,7 @@ Overview of the following settings:
 
 The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/org-recur][README of org-recur]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package org
   :custom
   ;; agenda
@@ -2261,7 +2261,7 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
          ("C-c c" . org-capture)
          ("C-c l" . org-store-link)
          ("C-c e" . prot/org-insert-elisp-template)))
-#+END_SRC
+#+end_src
 
 *** Export Org to HTML
     :PROPERTIES:
@@ -2290,7 +2290,7 @@ tutorial on [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][O
 HTML does not have reliable anchor tags for the various sections of the
 document.  This fixes the issue (read the article for more).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package org-id
   :after org
   :commands (contrib/org-get-id
@@ -2323,7 +2323,7 @@ document.  This fixes the issue (read the article for more).
     (interactive)
     (org-map-entries (lambda ()
                        (contrib/org-get-id (point) 'create)))))
-#+END_SRC
+#+end_src
 
 *** Simple presentations inside of Emacs (org-tree-slide)
     :PROPERTIES:
@@ -2347,7 +2347,7 @@ the minibuffer while doing a presentation).
 *NOTE:* I am keeping these disabled with and will only be activating them
 when I need to do a presentation.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package darkroom
   :ensure t
   :disabled
@@ -2402,7 +2402,7 @@ activation of `org-tree-slide-mode'."
          ("<C-right>" . org-tree-slide-move-next-tree)
          ("<C-left>" . org-tree-slide-move-previous-tree))
   :hook (org-tree-slide-mode . prot/org-presentation))
-#+END_SRC
+#+end_src
 
 ** Shells and terminal emulators
    :PROPERTIES:
@@ -2439,7 +2439,7 @@ Everything else introduces friction.
 Run =C-h m= inside of a shell buffer to learn about all the key bindings
 and corresponding functions.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package shell
   :commands shell-command
   :custom
@@ -2459,7 +2459,7 @@ based on the directory of the current buffer."
          (generate-new-buffer-name (concat "*shell: " name "*"))))))
   :bind (("<s-return>" . shell)
          ("<s-S-return>" . prot/shell-multi)))
-#+END_SRC
+#+end_src
 
 *** Terminal emulators
     :PROPERTIES:
@@ -2481,7 +2481,7 @@ simultaneously.  Better check the documentation for this point.  It does
 not seem to be a strong point, since this is also possible with the
 other options in the Emacs space (e.g. with =C-u M-x shell=).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package term
   :commands term
   :custom
@@ -2489,7 +2489,7 @@ other options in the Emacs space (e.g. with =C-u M-x shell=).
   (term-completion-autolist t)
   (term-completion-recexact t)
   (term-scroll-to-bottom-on-output t))
-#+END_SRC
+#+end_src
 
 ** Proced (process monitor, similar to `top')
    :PROPERTIES:
@@ -2500,7 +2500,7 @@ This is a built-in tool that allows you to monitor running processes
 and act on them accordingly.  These are the basic settings I have
 right now.  Would need to experiment with it a bit more.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package proced
   :commands proced
   :custom
@@ -2508,7 +2508,7 @@ right now.  Would need to experiment with it a bit more.
   (proced-auto-update-interval 1)
   (proced-descend t)
   (proced-filter 'user))
-#+END_SRC
+#+end_src
 
 ** Pass interface (password-store)
    :PROPERTIES:
@@ -2526,7 +2526,7 @@ actions, in the form of a list of candidates that can be narrowed down
 (such as with Ivy, Ido).  I use it to quickly store a password to the
 kill ring.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package password-store
   :ensure t
   :commands (password-store-copy
@@ -2534,17 +2534,17 @@ kill ring.
              password-store-insert)
   :custom
   (password-store-time-before-clipboard-restore 30))
-#+END_SRC
+#+end_src
 
 And this one adds a major mode for browsing the =pass= keychain.  Call
 it with =M-x pass=.  There is a helpful section at the top with key
 bindings and their functions.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package pass
   :ensure t
   :commands pass)
-#+END_SRC
+#+end_src
 
 ** Elfeed (feed reader for RSS/Atom)
    :PROPERTIES:
@@ -2558,7 +2558,7 @@ while I go on browsing the feed list.
 Here is [[Https://gitlab.com/ambrevar/dotfiles/blob/master/.emacs.d/lisp/init-elfeed.el][the source]] code on Gitlab for =ambrevar/elfeed-play-with-mpv=,
 with minor tweaks by me.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package elfeed
   :ensure t
   :commands elfeed
@@ -2611,7 +2611,7 @@ syntax for use by the `elfeed' package."
          :map elfeed-show-mode-map
          ("v" . ambrevar/elfeed-play-with-mpv)
          ("w" . elfeed-show-yank)))
-#+END_SRC
+#+end_src
 
 ** Emacs web browser and HTML parser
    :PROPERTIES:
@@ -2637,7 +2637,7 @@ What these do:
 + Line length at same number of characters as =fill-column= (defined
   elsewhere in this doc at 72).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package shr
   :commands (eww
              eww-browse-url)
@@ -2647,12 +2647,12 @@ What these do:
   (shr-use-colors nil)
   (shr-max-image-proportion 0.2)
   (shr-width (current-fill-column)))
-#+END_SRC
+#+end_src
 
 Support the HTML =pre= tag with proper syntax highlighting.  Got this
 snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][its GitHub project page]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package shr-tag-pre-highlight
   :ensure t
   :after shr
@@ -2663,7 +2663,7 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
     (with-eval-after-load 'eww
       (advice-add 'eww-display-html :around
                   'eww-display-html--override-shr-external-rendering-functions))))
-#+END_SRC
+#+end_src
 
 ** Bongo (Music player)
    :PROPERTIES:
@@ -2707,7 +2707,7 @@ I have a couple of videos about my workflow with Bongo and Dired:
 + [[https://protesilaos.com/codelog/2019-11-13-emacs-bongo-music/][Emacs workflow for music management]] (2019-11-13)
 + [[https://protesilaos.com/codelog/2019-11-18-emacs-dired-bongo/][Emacs: use DIRED and BONGO to store playlists]] (2019-11-18)
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package bongo
   :ensure t
   :commands bongo
@@ -2781,7 +2781,7 @@ buffer that doubles as a library buffer (see
          ("C-d" . prot/bongo-clear-playlist-and-stop)
          :map bongo-dired-library-mode-map
          ("<C-return>" . prot/bongo-library-insert-and-play-random)))
-#+END_SRC
+#+end_src
 
 *** TODO read metadata
     :PROPERTIES:
@@ -2820,7 +2820,7 @@ email account are stored in =~/.authinfo.gpg=.
 *Pro tip:*  While using Dired, type =: e= to encrypt file at point.
 Emacs can decrypt those automatically.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package smtpmail
   :custom
   (smtpmail-default-smtp-server "mail.gandi.net")
@@ -2836,7 +2836,7 @@ Emacs can decrypt those automatically.
   :custom
   (send-mail-function 'async-smtpmail-send-it)
   (message-send-mail-function 'async-smtpmail-send-it))
-#+END_SRC
+#+end_src
 
 *** Reading email (MUA)
     :PROPERTIES:
@@ -2880,7 +2880,7 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
   reply.  The format looks like /"On 2019-12-09, 16:50 (CET), PERSON
   <EMAIL> wrote:"/.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package mu4e
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :after (smtpmail smtpmail-async)
@@ -2910,7 +2910,7 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
   :hook (after-init . prot/mu4e-contexts)
   :bind (:map mu4e-main-mode-map
               ("g" . mu4e-update-mail-and-index)))
-#+END_SRC
+#+end_src
 
 To set up =offlineimap= I used the [[https://wiki.archlinux.org/index.php/OfflineIMAP][Arch Wiki]] entry.
 
@@ -2925,12 +2925,12 @@ direct link back to the original email.  This way, we can avoid the
 problem of searching through a pile of messages until we find the one we
 really need.  Nice!
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package org-mu4e                   ; no need for `:ensure t'
   :after (org mu4e)
   :custom
   (org-mu4e-link-query-in-headers-mode nil))
-#+END_SRC
+#+end_src
 
 ** Package lists
    :PROPERTIES:
@@ -2941,14 +2941,14 @@ With this I just want to enable line highlighting when browsing the list
 of packages.  I generally use =hl-line-mode= on all interfaces where the
 current line is more important than the exact column of the point.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package package
   :commands (list-packages
              package-menu-refresh
              package-refresh-contents
              package-list-packages)
   :hook (package-menu-mode . hl-line-mode))
-#+END_SRC
+#+end_src
 
 * Language settings (spelling, abbrevs, commenting…)
   :PROPERTIES:
@@ -2968,11 +2968,11 @@ way Emacs understands word boundaries.  So, /camelCaseWords/ are
 exposed as their constituents rather than one long word, meaning that
 motions will behave accordingly.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package subword
   :delight
   :hook (prog-mode . subword-mode))
-#+END_SRC
+#+end_src
 
 ** Auto-fill plain text and comments
    :PROPERTIES:
@@ -2983,13 +2983,13 @@ Make sure we run the mode that keeps paragraphs within the column
 limit.  The adaptive mode improves the handling of things like
 bulleted and numbered lists.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :hook (text-mode . (lambda ()
                        (turn-on-auto-fill)
                        (delight 'auto-fill-function nil t)
                        (setq adaptive-fill-mode t))))
-#+END_SRC
+#+end_src
 
 ** Comment lines, regions, boxes, etc.
    :PROPERTIES:
@@ -3024,7 +3024,7 @@ comment on a new line with respect for the current indentation.  If you
 are not inside of a comment, this will just create an indentation-aware
 new line.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package newcomment
   :custom
   (comment-empty-lines t)
@@ -3051,7 +3051,7 @@ Else toggle the comment status of the line at point."
          ("C-:" . comment-kill)
          ("M-;" . comment-indent)
          ("C-x C-;" . comment-box)))
-#+END_SRC
+#+end_src
 
 ** Flyspell (spell check)
    :PROPERTIES:
@@ -3076,7 +3076,7 @@ work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]])
 Note that =aspell= and its dictionaries are not part of Emacs.  I install
 the relevant packages from my distro's archive.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package flyspell
   :commands (ispell-change-dictionary
              flyspell-buffer
@@ -3091,7 +3091,7 @@ the relevant packages from my distro's archive.
   (define-key flyspell-mode-map (kbd "C-;") nil)
 ;; TODO (emacs 27): ispell-change-dictionary-hook
 )
-#+END_SRC
+#+end_src
 
 ** Flycheck (code linting)
    :PROPERTIES:
@@ -3113,22 +3113,22 @@ Note that previous versions of this document included a package that
 adds a Flycheck indicator on the mode line.  This has now been
 superseded by my [[#h:b0395aae-a2d2-4e50-8965-433c4605c724][custom mode line configurations]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package flycheck
   :ensure t
   :commands flycheck-mode
   :custom
   (flycheck-check-syntax-automatically '(save mode-enabled)))
-#+END_SRC
+#+end_src
 
 There is also a built-in tool that covers this niche, but I find its
 functionality somewhat more limited.  As such I am defining it so that
 it will create an autoload for it.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package flymake
   :commands flymake-mode)
-#+END_SRC
+#+end_src
 
 *** Flycheck package metadata
     :PROPERTIES:
@@ -3140,7 +3140,7 @@ code that is intended for use in MELPA.  I just define the linter for
 packages as a standalone declaration, in case I wish to keep this
 without the flycheck interface.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package package-lint
   :ensure t)
 
@@ -3149,7 +3149,7 @@ without the flycheck interface.
   :after (flycheck package-lint)
   :config
   (flycheck-package-setup))
-#+END_SRC
+#+end_src
 
 ** Markdown support
    :PROPERTIES:
@@ -3158,11 +3158,11 @@ without the flycheck interface.
 
 I edit lots of Markdown files.  This makes things easier.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package markdown-mode
   :ensure t
   :mode ("\\.md\\'" . markdown-mode))
-#+END_SRC
+#+end_src
 
 ** YAML support
    :PROPERTIES:
@@ -3171,12 +3171,12 @@ I edit lots of Markdown files.  This makes things easier.
 
 This adds support for YAML files.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package yaml-mode
   :ensure t
   :mode (("\\.yml\\'" . yaml-mode)
          ("\\.yaml\\'" . yaml-mode)))
-#+END_SRC
+#+end_src
 
 ** Support for various config files
    :PROPERTIES:
@@ -3188,14 +3188,14 @@ various configuration files that I access.
 
 The list will be expanded over time.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :mode (("offlineimaprc" . conf-mode)
          ("sxhkdrc" . conf-mode)
          ("Xmodmap" . conf-xdefaults-mode)
          ("template" . shell-script-mode)
          ("\\.rasi\\'" . css-mode)))
-#+END_SRC
+#+end_src
 
 ** Simple abbreviations
    :PROPERTIES:
@@ -3211,7 +3211,7 @@ that they can be abstracted using elisp—need to learn more on that
 front.  Also note that wherever you see =" _ "= it signifies the
 position of the cursor after the skeleton has been inserted.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package abbrev
   :delight
   :custom
@@ -3239,7 +3239,7 @@ position of the cursor after the skeleton has been inserted.
     "" 'protesilaos-gitlab-skeleton)
   :hook ((text-mode . abbrev-mode)
          (git-commit-mode . abbrev-mode)))
-#+END_SRC
+#+end_src
 
 ** Dabbrev and hippie-expand (dynamic word completion)
    :PROPERTIES:
@@ -3257,7 +3257,7 @@ That granted, the tool that I actually use is called Company, which
 includes the functionality of =dabbrev= while offering several extensions.
 Refer to the [[#h:d2e402b3-c947-42fc-af80-b8a982082a1b][Company section for a detailed explanation]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package dabbrev
   :commands dabbrev-expand
   :custom
@@ -3286,7 +3286,7 @@ Refer to the [[#h:d2e402b3-c947-42fc-af80-b8a982082a1b][Company section for a de
      try-complete-file-name
      try-expand-all-abbrevs))
   (hippie-expand-verbose t))
-#+END_SRC
+#+end_src
 
 ** Company (completion framework)
    :PROPERTIES:
@@ -3354,7 +3354,7 @@ Now a few words about the key bindings:
   current item without further questions, simply hit =TAB=.
 + =C-n= and =C-p= can be used to cycle the list of suggestions.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package company
   :ensure t
   :delight
@@ -3389,7 +3389,7 @@ Now a few words about the key bindings:
                ("<C-tab>" . company-complete-common-or-cycle)
                ("C-n" . company-select-next)
                ("C-p" . company-select-previous))))
-#+END_SRC
+#+end_src
 
 *** Prescient filtering for Company
     :PROPERTIES:
@@ -3400,13 +3400,13 @@ The =prescient= package provides scoring and filtering mechanisms for
 completion candidates.  I am using it in tandem with Ivy (see the
 [[#h:87b37547-5941-4f20-baf6-4d00cde1151a][relevant section]]).  Here I declare the extension for =company=.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package company-prescient
   :ensure t
   :after (company prescient)
   :config
   (company-prescient-mode 1))
-#+END_SRC
+#+end_src
 
 ** Eldoc (elisp live documentation feedback)
    :PROPERTIES:
@@ -3417,11 +3417,11 @@ Displays information about the construct at point in the echo area.  I
 find that I have no use for this, so I am disabling the mode for the
 time being.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package eldoc
   :config
   (global-eldoc-mode -1))
-#+END_SRC
+#+end_src
 
 * Interface and interactions
   :PROPERTIES:
@@ -3455,7 +3455,7 @@ light in my room.
 Note though that because I am using these themes locally as part of
 their development process, I am not using the MELPA packages directly.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :custom
   (custom-safe-themes t)
@@ -3495,7 +3495,7 @@ theme."
       (prot/modus-operandi)))
   :bind ("<f5>" . prot/modus-themes-toggle)
   :hook (after-init . prot/modus-operandi))
-#+END_SRC
+#+end_src
 
 ** Tabs for window layouts and buffers (Emacs 27.1)
 
@@ -3576,7 +3576,7 @@ built-in support for counting the results of =isearch=.
 My personal choice aside, all packages that modify the mode line are
 supported by my Modus themes.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package telephone-line
   :ensure t
   :custom
@@ -3635,7 +3635,7 @@ default."
                      telephone-line-major-mode-segment))))
 
   (telephone-line-mode 1))
-#+END_SRC
+#+end_src
 
 *** TODO create mode line segment for ace-window
     :PROPERTIES:
@@ -3663,7 +3663,7 @@ with or simplify common tasks:
   no results, while the failed match will be styled accordingly in the
   echo area)
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :custom
   (vc-follow-symlinks t)
@@ -3679,7 +3679,7 @@ with or simplify common tasks:
   (put 'downcase-region 'disabled nil)
   (put 'dired-find-alternate-file 'disabled nil)
   (put 'overwrite-mode 'disabled t))
-#+END_SRC
+#+end_src
 
 ** Auto revert mode
    :PROPERTIES:
@@ -3690,14 +3690,14 @@ This mode ensures that the buffer is updated whenever the file changes.
 A change can happen externally or by some other tool inside of Emacs
 (e.g. kill a Magit diff).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package autorevert
   :delight
   :custom
   (auto-revert-verbose t)
   :config
   (global-auto-revert-mode 1))
-#+END_SRC
+#+end_src
 
 ** Parentheses
    :PROPERTIES:
@@ -3718,7 +3718,7 @@ Summary of what these do:
 + Do not highlight a match when the point is on the inside of the
   parenthesis.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package paren
   :custom
   (show-paren-style 'mixed)
@@ -3726,7 +3726,7 @@ Summary of what these do:
   (show-paren-when-point-inside-paren nil)
   :config
   (show-paren-mode 1))
-#+END_SRC
+#+end_src
 
 ** Configure 'electric' behaviour
    :PROPERTIES:
@@ -3761,7 +3761,7 @@ auto-insertion of characters.  This is a summary of my settings:
   that on GNU/Linux you can type them directly by hitting the "compose"
   key and then an angled bracket (=<= or =>=) followed by a quote mark.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package electric
   :custom
   (electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
@@ -3783,7 +3783,7 @@ auto-insertion of characters.  This is a summary of my settings:
   (electric-indent-mode 1)
   (electric-pair-mode 1)
   (electric-quote-mode -1))
-#+END_SRC
+#+end_src
 
 ** Tabs, indentation, and the TAB key
    :PROPERTIES:
@@ -3797,13 +3797,13 @@ do not want to interfere with.  Also, Emacs tends to perform alignments
 by mixing tabs with spaces, which *can actually lead to misalignments*
 depending on the tab size.  As such, I am disabling tabs by default.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :config
   (setq-default tab-always-indent 'complete)
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil))
-#+END_SRC
+#+end_src
 
 ** Cursor appearance and tweaks
    :PROPERTIES:
@@ -3822,13 +3822,13 @@ character's width.  I disable it because it changes the consistency of
 things on the screen while moving around (such as when passing over a
 tab character).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :custom
   (cursor-type 'box)
   (cursor-in-non-selected-windows 'hollow)
   (x-stretch-cursor nil))
-#+END_SRC
+#+end_src
 
 ** Line length (column count)
    :PROPERTIES:
@@ -3842,7 +3842,7 @@ good use of this method.  The column count is used by =auto-fill-mode=
 and similar tools (or when manually invoking text formatting with
 =M-q=).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :custom
   (fill-column 72)
@@ -3851,7 +3851,7 @@ and similar tools (or when manually invoking text formatting with
   (colon-double-space nil)
   :config
   (column-number-mode 1))
-#+END_SRC
+#+end_src
 
 ** Delete trailing whitespace
    :PROPERTIES:
@@ -3861,10 +3861,10 @@ and similar tools (or when manually invoking text formatting with
 This always creates unnecessary diffs in git.  Just delete it upon
 saving.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :hook (before-save . delete-trailing-whitespace))
-#+END_SRC
+#+end_src
 
 ** Preserve contents of system clipboard
    :PROPERTIES:
@@ -3877,11 +3877,11 @@ to kill.  Doing that will place the last kill to the clipboard, thus
 overriding the thing you copied earlier.  We can have a kill ring
 solution to this with the following:
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :custom
   (save-interprogram-paste-before-kill t))
-#+END_SRC
+#+end_src
 
 Now the contents of the clipboard are stored in the kill ring and can
 be retrieved from there (e.g. with =M-y=).
@@ -3902,7 +3902,7 @@ The other options in short:
 + Enable mouse scroll.
 + Faster wheel movement means faster scroll.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package mouse
   :custom
   (mouse-drag-copy-region t)
@@ -3910,7 +3910,7 @@ The other options in short:
   (mouse-wheel-progressive-speed t)
   :config
   (mouse-wheel-mode 1))
-#+END_SRC
+#+end_src
 
 ** Selection
    :PROPERTIES:
@@ -3922,11 +3922,11 @@ directly to it.  It also has checks to ensure that yanking over a
 selected region will not insert itself (e.g. =mouse-drag-copy-region= is
 in effect).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package delsel
   :config
   (delete-selection-mode 1))
-#+END_SRC
+#+end_src
 
 *Pro tip*: On Emacs 27.1 you can create a rectangular region by holding
 down Ctrl and Meta while dragging the mouse with the left click pressed.
@@ -3946,13 +3946,13 @@ top/bottom of the screen while moving in that direction (use =C-l= to
 reposition it).  This does not result in more manual interventions to
 recenter text, because of the above.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :custom
   (scroll-preserve-screen-position t)
   (scroll-conservatively 1)
   (scroll-margin 0))
-#+END_SRC
+#+end_src
 
 ** Tool tips
    :PROPERTIES:
@@ -3965,7 +3965,7 @@ theme is used for those, instead of the generic graphical display.  The
 delay is slightly reduced for the initial pop-up, while it has been
 increased for immediate pop-ups thereafter.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package tooltip
   :custom
   (tooltip-delay 0.5)
@@ -3973,7 +3973,7 @@ increased for immediate pop-ups thereafter.
   (x-gtk-use-system-tooltips t)
   :config
   (tooltip-mode 1))
-#+END_SRC
+#+end_src
 
 ** Altered zap and easier repeat
    :PROPERTIES:
@@ -3995,13 +3995,13 @@ Some minor conveniences:
           invocations it becomes tiresome.  The following allows you to
           repeat the motion with =C-SPC=.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :custom
   (repeat-on-final-keystroke t)
   (set-mark-command-repeat-pop t)
   :bind ("M-z" . zap-up-to-char))
-#+END_SRC
+#+end_src
 
 ** Toggle visual elements
    :PROPERTIES:
@@ -4017,7 +4017,7 @@ Some minor conveniences:
      characters (whitespace) can be very helpful under certain
      circumstances.  Generally though, I do not keep it active.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :config
   (defun prot/toggle-invisibles ()
@@ -4035,7 +4035,7 @@ Some minor conveniences:
       (display-line-numbers-mode)))
   :bind (("<f6>" . prot/toggle-invisibles)
          ("<f7>" . prot/toggle-line-numbers)))
-#+END_SRC
+#+end_src
 
 ** Broadcast mode
    :PROPERTIES:
@@ -4046,11 +4046,11 @@ This package provides a mode for syncing input across buffers.  The way
 to link the affected buffers is to run =M-x broadcast-mode= inside each
 of them.  For this to work, the buffers must both be visible.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package broadcast
   :ensure t
   :commands broadcast-mode)
-#+END_SRC
+#+end_src
 
 ** Rainbow blocks
    :PROPERTIES:
@@ -4070,7 +4070,7 @@ missing something that I cannot spot right away.
 A less intrusive, built-in alternative is to set the variable
 =show-parent-style 'expression= (see my [[#h:3d374354-843f-4efa-aa38-1ba2c9ccc14c][configs for parentheses]]).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package rainbow-blocks
   :ensure t
   :delight
@@ -4079,7 +4079,7 @@ A less intrusive, built-in alternative is to set the variable
   (rainbow-blocks-highlight-braces-p t)
   (rainbow-blocks-highlight-brackets-p t)
   (rainbow-blocks-highlight-parens-p t))
-#+END_SRC
+#+end_src
 
 ** Rainbow mode (for colour testing)
    :PROPERTIES:
@@ -4090,7 +4090,7 @@ The following package reads a colour value, such as hexadecimal RGB,
 and sets the background for the value in that colour.  Quite useful
 when reviewing my themes (=rainbow-mode= is activated manually).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package rainbow-mode
   :ensure t
   :delight
@@ -4098,7 +4098,7 @@ when reviewing my themes (=rainbow-mode= is activated manually).
   :custom
   (rainbow-ansi-colors nil)
   (rainbow-x-colors nil))
-#+END_SRC
+#+end_src
 
 ** Which key (key chord hints)
    :PROPERTIES:
@@ -4121,7 +4121,7 @@ per [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
 Note that placing the mouse pointer over a =which-key= item will display
 relevant documentation in a tooltip.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package which-key
   :ensure t
   :delight
@@ -4137,7 +4137,7 @@ relevant documentation in a tooltip.
   (which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
   :config
   (which-key-mode 1))
-#+END_SRC
+#+end_src
 
 * Custom movements and motions
   :PROPERTIES:
@@ -4234,7 +4234,7 @@ They are written by me, unless otherwise noted.
      at point (or the active region) with the most recent item from the
      kill ring.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :config
   (defun bjm/align-whitespace (start end)
@@ -4424,7 +4424,7 @@ instead.  This command can then be followed by the standard
          ("M-t" . prot/transpose-or-swap-words)
          ("M-Q" . prot/unfill-region-or-paragraph)
          ("C-S-y" . prot/yank-replace-line-or-region)))
-#+END_SRC
+#+end_src
 
 ** Crux (extra utilities for some useful tasks)
    :PROPERTIES:
@@ -4446,7 +4446,7 @@ need are:
 + Duplicate line or region :: Just copy the line at point and place a
      duplicate right below it.  Does the same for a region, if active.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package crux
   :ensure t
   :bind (("s-t" . crux-transpose-windows)
@@ -4454,7 +4454,7 @@ need are:
          ("<C-f2>" . crux-rename-file-and-buffer)
          :map dired-mode-map
          ("<M-return>" . crux-open-with)))
-#+END_SRC
+#+end_src
 
 ** Go to last change
    :PROPERTIES:
@@ -4469,11 +4469,11 @@ The =C-z= binding is disabled in the opening sections of this document.
 It minimises the Emacs GUI.  A complete waste of an extremely valuable
 key binding!
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package goto-last-change
   :ensure t
   :bind ("C-z" . goto-last-change))
-#+END_SRC
+#+end_src
 
 ** Compare last two kills
    :PROPERTIES:
@@ -4482,7 +4482,7 @@ key binding!
 
 This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_buffer_fragments%252c_continued][diffing buffer fragments]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package emacs
   :commands contrib/diff-last-two-kills
   :config
@@ -4498,4 +4498,4 @@ This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_
       (diff old new)
       (kill-buffer old)
       (kill-buffer new))))
-#+END_SRC
+#+end_src
