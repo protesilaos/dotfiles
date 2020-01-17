@@ -3703,8 +3703,11 @@ elisp.
 Summary of what these do:
 
 + Activate the mode.
-+ Show the matching delimiter/parenthesis if on screen, else highlight
-  the expression enclosed by it.
++ Show the matching delimiter/parenthesis if on screen, else show
+  nothing.  It is possible to highlight the expression enclosed by the
+  delimiters, by using either =mixed= or =expression=.  The latter always
+  highlights the entire balanced expression, while the former will only
+  do so if the matching delimiter is off screen.
 + Highlight parentheses even if the point is in their vicinity.  This
   means the beginning or end of the line, with space in between.
 + Do not highlight a match when the point is on the inside of the
@@ -3713,7 +3716,7 @@ Summary of what these do:
 #+begin_src emacs-lisp
 (use-package paren
   :custom
-  (show-paren-style 'mixed)
+  (show-paren-style 'parenthesis)
   (show-paren-when-point-in-periphery t)
   (show-paren-when-point-inside-paren nil)
   :config
