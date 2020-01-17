@@ -3591,7 +3591,7 @@ supported by my Modus themes.
   (telephone-line-defsegment prot/telephone-line-narrow-segment ()
     "Offer feedback on narrowed buffer, with less padding than
 default."
-    (when (not (eq (buffer-narrowed-p) nil))
+    (unless (eq (buffer-narrowed-p) nil)
       (telephone-line-raw "Narrow")))
 
   (telephone-line-defsegment prot/telephone-line-vcs-segment ()
