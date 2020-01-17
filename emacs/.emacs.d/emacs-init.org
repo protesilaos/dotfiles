@@ -3521,7 +3521,7 @@ future as I experiment more with it as part of my workflow.
 
 #+begin_src emacs-lisp
 (use-package tab-bar
-  :commands tab-bar-mode
+  :commands (tab-bar-mode tab-bar-history-mode)
   :custom
   (tab-bar-close-button-show t)
   (tab-bar-close-last-tab-choice nil)
