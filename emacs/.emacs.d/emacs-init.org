@@ -50,7 +50,7 @@ For reference, these were the contents of my =init.el= *prior to Emacs
 (org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
 #+end_example
 
-Whereas in *Emacs 27.1 and onward*, they are simplified thus:
+Whereas in *Emacs 27.1 and onward*, they are modified thus:
 
 #+begin_example emacs-lisp
 (require 'package)
@@ -58,17 +58,47 @@ Whereas in *Emacs 27.1 and onward*, they are simplified thus:
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
+;; In Emacs >=27 packages are initialised before loading the user's
+;; init file.  This can be configured in the `early-init-file'.  Older
+;; versions of Emacs will read `package-enable-at-startup' from here.
+(when (< emacs-major-version 27)
+  (setq package-enable-at-startup nil))
+
+(package-initialize)
+
 (require 'org)
 (org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
 #+end_example
 
-In the source code version of this document, I make sure that these two
-code blocks are not declared as an =emacs-lisp= source but rather as mere
-examples, so they are not accidentally parsed by the actual setup.
+As you can already tell from the comment in the previous block, an
+=early-init.el= is now required to control things with greater
+precision.  Its code is as follows:
 
-Code blocks are wrapped between =#+begin_src= and =#+end_src= tags (not
-visible in the website version of this page).  Such templates can be
-quickly inserted with =C-c C-,= (this works both for empty blocks and
+#+begin_example emacs-lisp
+(setq package-enable-at-startup nil)
+#+end_example
+
+These adjustments are of paramount importance due to a change in the
+way Emacs initialises the package manager. Prior to Emacs 27, the
+=init.el= was supposed to handle that task by means of calling
+=package-initialize=.  Whereas for Emacs 27, the default behaviour is to
+start the package manager /before/ loading the user's init file.  This
+can create unexpected results with regard to how existing
+configuration files are parsed—or at least that was my experience with
+certain settings not being parsed consistently (was not able to
+reproduce it reliably).  I prefer the old behaviour so I simply tell
+the =early-init.el= to defer the process of initialising the package
+manager to when =init.el= is evaluated.
+
+Moving on to other basic information you might need to bear in mind if
+you get the source code of this file.  In the =org-mode= version of this
+document, I make sure that the above-referenced code blocks are not
+declared as an =emacs-lisp= source but rather as mere examples, so they
+are not accidentally parsed by the actual setup.
+
+Actual code blocks are wrapped between =#+begin_src= and =#+end_src= tags
+(not visible in the website version of this page).  Such templates can
+be quickly inserted with =C-c C-,= (this works both for empty blocks and
 active regions).  For more, refer to [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org's section further below]].
 
 As for the various settings included herein, you can learn /even more/
