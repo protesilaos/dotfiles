@@ -3484,6 +3484,9 @@ theme."
 #+end_src
 
 ** Tabs for window layouts and buffers (Emacs 27.1)
+   :PROPERTIES:
+   :CUSTOM_ID: h:63ad472f-c9c2-40ad-9675-1dc529487788
+   :END:
 
 Starting with version 27.1, Emacs has built-in support for two distinct
 concepts of "tabs":
@@ -3518,6 +3521,7 @@ future as I experiment more with it as part of my workflow.
 
 #+begin_src emacs-lisp
 (use-package tab-bar
+  :commands tab-bar-mode
   :custom
   (tab-bar-close-button-show t)
   (tab-bar-close-last-tab-choice nil)
@@ -3534,6 +3538,7 @@ future as I experiment more with it as part of my workflow.
 
 ;; This is only included as a reference.
 (use-package tab-line
+  :commands (tab-line-mode global-tab-line-mode)
   :config
   (global-tab-line-mode -1))
 #+end_src
