@@ -1952,8 +1952,6 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   (setq display-buffer-alist
         '(;; bottom side window
           ("\\*e?shell.*"
-      ;;;; NOTE Sample with more functions, executed sequentially
-           ;; (display-buffer-reuse-mode-window display-buffer-reuse-window display-buffer-in-previous-window display-buffer-in-side-window)
            (display-buffer-in-side-window)
            (window-height . 0.25)
            (side . bottom)
