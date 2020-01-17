@@ -218,12 +218,13 @@ few fairly simple ways.  Whenever a command is bound to a key it is
 configured to be loaded only once invoked.  Otherwise we can specify
 which functions should be autoloaded by means of the =:commands= keyword.
 
-Furthermore, I define all variables that are supposed to be immutable
-with the =:custom= keyword.  This writes them to the =custom.el= that I
-specify [[#h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d][further below]].  Whereas all minor modes, custom functions, or
-other configurations are enabled under the =:config= keyword.  The
-activation of a mode should always be the very last thing, once all
-variables have been set.
+Furthermore, and if absolutely necessary, I define all variables that
+are supposed to be immutable with the =:custom= keyword.  This writes
+them to the =custom.el= that I specify [[#h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d][further below]].  Consider that to
+be the exception, as all minor modes, custom functions, or other
+configurations are enabled under the =:config= keyword.  The activation
+of a mode should always be the very last thing, once all variables
+have been set.
 
 #+begin_src emacs-lisp
 (unless (package-installed-p 'use-package)
@@ -300,11 +301,11 @@ Overview of these settings:
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :custom
-  (use-file-dialog nil)
-  (use-dialog-box nil)
-  (inhibit-splash-screen t)
   :config
+  (setq use-file-dialog nil)
+  (setq use-dialog-box nil)
+  (setq inhibit-splash-screen t)
+
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
@@ -342,10 +343,10 @@ of Emacs, while I keep Hack as the generic monospaced font.
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :custom
-  (x-underline-at-descent-line t)
-  (underline-minimum-offset 1)
   :config
+  (setq x-underline-at-descent-line t)
+  (setq underline-minimum-offset 1)
+
   (defconst prot/fixed-pitch-font "Iosevka Slab Extended"
     "The default fixed-pitch typeface.")
 
@@ -509,17 +510,17 @@ Overview of my settings:
 
 #+begin_src emacs-lisp
 (use-package desktop
-  :custom
-  (desktop-auto-save-timeout 300)
-  (desktop-dirname "~/.emacs.d/")
-  (desktop-base-file-name "desktop")
-  (desktop-files-not-to-save nil)
-  (desktop-globals-to-clear nil)
-  (desktop-load-locked-desktop t)
-  (desktop-missing-file-warning t)
-  (desktop-restore-eager 3)
-  (desktop-restore-frames nil)
-  (desktop-save 'ask-if-new)
+  :config
+  (setq desktop-auto-save-timeout 300)
+  (setq desktop-dirname "~/.emacs.d/")
+  (setq desktop-base-file-name "desktop")
+  (setq desktop-files-not-to-save nil)
+  (setq desktop-globals-to-clear nil)
+  (setq desktop-load-locked-desktop t)
+  (setq desktop-missing-file-warning t)
+  (setq desktop-restore-eager 3)
+  (setq desktop-restore-frames nil)
+  (setq desktop-save 'ask-if-new)
   :hook (after-init . (lambda () (desktop-save-mode 1))))
 #+end_src
 
@@ -569,13 +570,12 @@ Now some notes on my extensions:
 
 #+begin_src emacs-lisp
 (use-package recentf
-  :custom
-  (recentf-save-file "~/.emacs.d/recentf")
-  (recentf-max-menu-items 10)
-  (recentf-max-saved-items 200)
-  (recentf-show-file-shortcuts-flag nil)
   :config
-  (recentf-mode 1)
+  (setq recentf-save-file "~/.emacs.d/recentf")
+  (setq recentf-max-menu-items 10)
+  (setq recentf-max-saved-items 200)
+  (setq recentf-show-file-shortcuts-flag nil)
+
   ;; rename entries in recentf when moving files in dired
   (defun rjs/recentf-rename-directory (oldname newname)
     ;; oldname, newname and all entries of recentf-list should already
@@ -611,7 +611,9 @@ combined with a completion framework's ability to display virtual
 buffers."
     (when (and (stringp dired-directory)
                (equal "" (file-name-nondirectory dired-directory)))
-      (recentf-add-file dired-directory))))
+      (recentf-add-file dired-directory)))
+
+  (recentf-mode 1))
 #+end_src
 
 *** Minibuffer
@@ -623,11 +625,11 @@ Keeps a record of actions involving the minibuffer.
 
 #+begin_src emacs-lisp
 (use-package savehist
-  :custom
-  (savehist-file "~/.emacs.d/savehist")
-  (history-length 1000)
-  (savehist-save-minibuffer-history t)
   :config
+  (setq savehist-file "~/.emacs.d/savehist")
+  (setq history-length 1000)
+  (setq savehist-save-minibuffer-history t)
+
   (savehist-mode 1))
 #+end_src
 
@@ -640,9 +642,9 @@ Just remember where the point is in any given file.
 
 #+begin_src emacs-lisp
 (use-package saveplace
-  :custom
-  (save-place-file "~/.emacs.d/saveplace")
   :config
+  (setq save-place-file "~/.emacs.d/saveplace")
+
   (save-place-mode 1))
 #+end_src
 
@@ -657,14 +659,15 @@ And here are some settings pertaining to backups.
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :custom
-  (backup-directory-alist '(("." . "~/.emacs.d/backup/")))
-  (backup-by-copying t)
-  (version-control t)
-  (delete-old-versions t)
-  (kept-new-versions 6)
-  (kept-old-versions 2)
-  (create-lockfiles nil))
+  :config
+  (setq backup-directory-alist
+        '(("." . "~/.emacs.d/backup/")))
+  (setq backup-by-copying t)
+  (setq version-control t)
+  (setq delete-old-versions t)
+  (setq kept-new-versions 6)
+  (setq kept-old-versions 2)
+  (setq create-lockfiles nil))
 #+end_src
 
 * Selection candidates and search methods
@@ -753,28 +756,28 @@ package declaration is but a piece of a greater whole.
 (use-package ivy
   :ensure t
   :delight
-  :custom
-  (ivy-count-format "(%d/%d) ")
-  (ivy-height-alist '((t lambda (_caller) (/ (window-height) 4))))
-  (ivy-use-virtual-buffers t)
-  (ivy-wrap nil)
-  (ivy-re-builders-alist
-   '((counsel-M-x . ivy--regex-fuzzy)
-     (ivy-switch-buffer . ivy--regex-fuzzy)
-     (ivy-switch-buffer-other-window . ivy--regex-fuzzy)
-     (counsel-rg . ivy--regex-or-literal)
-     (t . ivy--regex-plus)))
-  (ivy-display-style 'fancy)
-  (ivy-use-selectable-prompt t)
-  (ivy-fixed-height-minibuffer nil)
-  (ivy-initial-inputs-alist
-   '((counsel-M-x . "^")
-     (ivy-switch-buffer . "^")
-     (ivy-switch-buffer-other-window . "^")
-     (counsel-describe-function . "^")
-     (counsel-describe-variable . "^")
-     (t . "")))
   :config
+  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 4))))
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-wrap nil)
+  (setq ivy-re-builders-alist
+        '((counsel-M-x . ivy--regex-fuzzy)
+          (ivy-switch-buffer . ivy--regex-fuzzy)
+          (ivy-switch-buffer-other-window . ivy--regex-fuzzy)
+          (counsel-rg . ivy--regex-or-literal)
+          (t . ivy--regex-plus)))
+  (setq ivy-display-style 'fancy)
+  (setq ivy-use-selectable-prompt t)
+  (setq ivy-fixed-height-minibuffer nil)
+  (setq ivy-initial-inputs-alist
+        '((counsel-M-x . "^")
+          (ivy-switch-buffer . "^")
+          (ivy-switch-buffer-other-window . "^")
+          (counsel-describe-function . "^")
+          (counsel-describe-variable . "^")
+          (t . "")))
+
   (ivy-set-occur 'counsel-fzf 'counsel-fzf-occur)
   (ivy-set-occur 'counsel-rg 'counsel-ag-occur)
   (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur)
@@ -815,12 +818,12 @@ without any further intervention.
   :ensure t
   :disabled
   :after ivy
-  :custom
-  (amx-backend 'auto)
-  (amx-save-file "~/.emacs.d/amx-items")
-  (amx-history-length 50)
-  (amx-show-key-bindings nil)
   :config
+  (setq amx-backend 'auto)
+  (setq amx-save-file "~/.emacs.d/amx-items")
+  (setq amx-history-length 50)
+  (setq amx-show-key-bindings nil)
+
   (amx-mode 1))
 #+end_src
 
@@ -859,28 +862,28 @@ type something anyhow).
 #+begin_src emacs-lisp
 (use-package prescient
   :ensure t
-  :custom
-  (prescient-history-length 200)
-  (prescient-save-file "~/.emacs.d/prescient-items")
-  (prescient-filter-method '(literal regexp))
   :config
+  (setq prescient-history-length 200)
+  (setq prescient-save-file "~/.emacs.d/prescient-items")
+  (setq prescient-filter-method '(literal regexp))
+
   (prescient-persist-mode 1))
 
 (use-package ivy-prescient
   :ensure t
   :after (prescient ivy)
-  :custom
-  (ivy-prescient-sort-commands
-   '(:not counsel-grep
-          counsel-rg
-          counsel-switch-buffer
-          ivy-switch-buffer
-          swiper
-          swiper-multi))
-  (ivy-prescient-retain-classic-highlighting t)
-  (ivy-prescient-enable-filtering nil)
-  (ivy-prescient-enable-sorting t)
   :config
+  (setq ivy-prescient-sort-commands
+        '(:not counsel-grep
+               counsel-rg
+               counsel-switch-buffer
+               ivy-switch-buffer
+               swiper
+               swiper-multi))
+  (setq ivy-prescient-retain-classic-highlighting t)
+  (setq ivy-prescient-enable-filtering nil)
+  (setq ivy-prescient-enable-sorting t)
+
   (ivy-prescient-mode 1))
 #+end_src
 
@@ -920,14 +923,14 @@ interplay and the full extent of my customisations.
 (use-package counsel
   :ensure t
   :after ivy
-  :custom
-  (counsel-yank-pop-preselect-last t)
-  (counsel-yank-pop-separator "\n—————————\n")
-  (counsel-rg-base-command
-   "rg -SHn --no-heading --color never --no-follow --hidden %s")
-  (counsel-find-file-occur-cmd          ; TODO Simplify this
-   "ls -a | grep -i -E '%s' | tr '\\n' '\\0' | xargs -0 ls -d --group-directories-first")
   :config
+  (setq counsel-yank-pop-preselect-last t)
+  (setq counsel-yank-pop-separator "\n—————————\n")
+  (setq counsel-rg-base-command
+        "rg -SHn --no-heading --color never --no-follow --hidden %s")
+  (setq counsel-find-file-occur-cmd; TODO Simplify this
+        "ls -a | grep -i -E '%s' | tr '\\n' '\\0' | xargs -0 ls -d --group-directories-first")
+
   (defun prot/counsel-fzf-rg-files (&optional input dir)
     "Run `fzf' in tandem with `ripgrep' to find files in the
 present directory.  If invoked from inside a version-controlled
@@ -963,7 +966,7 @@ repository, then the corresponding root is used instead."
                                  counsel--fzf-dir
                                (vc-root-dir))))
       (if (> (length (aw-window-list)) 1)
-            (find-file arg)
+          (find-file arg)
         (find-file-other-window arg))
       (balance-windows (current-buffer))))
 
@@ -1054,11 +1057,11 @@ specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
   :ensure t
   ;; :delight '(:eval (concat " " (projectile-project-name)))
   :delight
-  :custom
-  (projectile-project-search-path '("~/Git/Projects/"))
-  (projectile-indexing-method 'alien)
-  (projectile-enable-caching t)
-  (projectile-completion-system 'ivy))
+  :config
+  (setq projectile-project-search-path '("~/Git/Projects/"))
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-enable-caching t)
+  (setq projectile-completion-system 'ivy))
 
 (use-package counsel-projectile
   :ensure t
@@ -1091,10 +1094,10 @@ section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and s
 (use-package swiper
   :ensure t
   :after ivy
-  :custom
-  (swiper-action-recenter t)
-  (swiper-goto-start-of-match t)
-  (swiper-include-line-number-in-search t)
+  :config
+  (setq swiper-action-recenter t)
+  (setq swiper-goto-start-of-match t)
+  (setq swiper-include-line-number-in-search t)
   :bind (("C-S-s" . swiper)
          ("M-s s" . swiper-multi)
          ("M-s w" . swiper-thing-at-point)))
@@ -1128,9 +1131,9 @@ absolute paths.  Will need to test this further…
 #+begin_src emacs-lisp
 (use-package ivy-rich
   :ensure t
-  :custom
-  (ivy-rich-path-style 'abbreviate)
   :config
+  (setq ivy-rich-path-style 'abbreviate)
+
   (setcdr (assq t ivy-format-functions-alist)
           #'ivy-format-function-line)
   (ivy-rich-mode 1))
@@ -1155,22 +1158,22 @@ concept (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
 (use-package ivy-posframe
   :ensure t
   :delight
-  :custom
-  (ivy-posframe-parameters
-   '((left-fringe . 2)
-     (right-fringe . 2)
-     (internal-border-width . 2)
-     (font . "Iosevka Slab-10.75:hintstyle=hintfull")))
-  (ivy-posframe-height-alist
-   '((swiper . 15)
-     (swiper-isearch . 15)
-     (t . 10)))
-  (ivy-posframe-display-functions-alist
-   '((complete-symbol . ivy-posframe-display-at-point)
-     (swiper . nil)
-     (swiper-isearch . nil)
-     (t . ivy-posframe-display-at-frame-center)))
   :config
+  (setq ivy-posframe-parameters
+        '((left-fringe . 2)
+          (right-fringe . 2)
+          (internal-border-width . 2)
+          (font . "Iosevka Slab-10.75:hintstyle=hintfull")))
+  (setq ivy-posframe-height-alist
+        '((swiper . 15)
+          (swiper-isearch . 15)
+          (t . 10)))
+  (setq ivy-posframe-display-functions-alist
+        '((complete-symbol . ivy-posframe-display-at-point)
+          (swiper . nil)
+          (swiper-isearch . nil)
+          (t . ivy-posframe-display-at-frame-center)))
+
   (ivy-posframe-mode 1))
 #+end_src
 
@@ -1262,19 +1265,19 @@ effectively supersede the functionality of =anzu=, a package I once used.
 
 #+begin_src emacs-lisp
 (use-package isearch
-  :custom
-  (search-whitespace-regexp ".*?")
-  (search-highlight t)
-  (isearch-lax-whitespace t)
-  (isearch-regexp-lax-whitespace nil)
-  (isearch-lazy-highlight t)
-  ;; All of the following variables were introduced in Emacs 27.1.
-  (isearch-lazy-count t)
-  (lazy-count-prefix-format "(%s/%s) ")
-  (lazy-count-suffic-format "[%s of %s]")
-  (isearch-yank-on-move 'shift)
-  (isearch-allow-scroll 'unlimited)
   :config
+  (setq search-whitespace-regexp ".*?")
+  (setq search-highlight t)
+  (setq isearch-lax-whitespace t)
+  (setq isearch-regexp-lax-whitespace nil)
+  (setq isearch-lazy-highlight t)
+  ;; All of the following variables were introduced in Emacs 27.1.
+  (setq isearch-lazy-count t)
+  (setq lazy-count-prefix-format "(%s/%s) ")
+  (setq lazy-count-suffic-format "[%s of %s]")
+  (setq isearch-yank-on-move 'shift)
+  (setq isearch-allow-scroll 'unlimited)
+
   (defun prot/isearch-mark-and-exit ()
     "Marks the current search string.  Can be used as a building
 block for a more complex chain, such as to kill a region, or
@@ -1320,9 +1323,9 @@ confines of word boundaries (e.g. multiple words)."
     (when isearch-other-end (goto-char isearch-other-end)))
   :bind (("M-s M-o" . multi-occur)
          :map isearch-mode-map
-              ("C-SPC" . prot/isearch-mark-and-exit)
-              ("DEL" . contrib/isearchp-remove-failed-part-or-last-char)
-              ("<C-return>" . contrib/isearch-done-opposite-end)))
+         ("C-SPC" . prot/isearch-mark-and-exit)
+         ("DEL" . contrib/isearchp-remove-failed-part-or-last-char)
+         ("<C-return>" . contrib/isearch-done-opposite-end)))
 #+end_src
 
 *** wgrep (writable grep)
@@ -1339,9 +1342,9 @@ matches by leveraging the full power of Emacs' editing capabilities
 #+begin_src emacs-lisp
 (use-package wgrep
   :ensure t
-  :custom
-  (wgrep-auto-save-buffer t)
-  (wgrep-change-readonly-file t))
+  :config
+  (setq wgrep-auto-save-buffer t)
+  (setq wgrep-change-readonly-file t))
 #+end_src
 
 * Directory, buffer, window management
@@ -1402,25 +1405,25 @@ as =-AFXhlv --group-directories-first=).
 
 #+begin_src emacs-lisp
 (use-package dired
-  :custom
-  (dired-recursive-copies 'always)
-  (dired-recursive-deletes 'always)
-  (dired-isearch-filenames 'dwim)
-  (delete-by-moving-to-trash t)
-  (dired-listing-switches "-AFhlv --group-directories-first")
-  (dired-dwim-target t)
-  (dired-create-destination-dirs 'always) ; Emacs 27.1
-  (dired-vc-rename-file t)                ; Emacs 27.1
+  :config
+  (setq dired-recursive-copies 'always)
+  (setq dired-recursive-deletes 'always)
+  (setq dired-isearch-filenames 'dwim)
+  (setq delete-by-moving-to-trash t)
+  (setq dired-listing-switches "-AFhlv --group-directories-first")
+  (setq dired-dwim-target t)
+  (setq dired-create-destination-dirs 'always) ; Emacs 27.1
+  (setq dired-vc-rename-file t)                ; Emacs 27.1
   :hook
   (dired-mode . dired-hide-details-mode)
   (dired-mode . hl-line-mode))
 
 (use-package find-dired
   :after dired
-  :custom
-  (find-ls-option ;; applies to `find-name-dired'
-   '("-ls" . "-AFhlv --group-directories-first"))
-  (find-name-arg "-iname"))
+  :config
+  (setq find-ls-option ;; applies to `find-name-dired'
+   '(setq "-ls" . "-AFhlv --group-directories-first"))
+  (setq find-name-arg "-iname"))
 
 (use-package async
   :ensure t)
@@ -1460,10 +1463,10 @@ opted against them in the interest of simplicity:
 (use-package dired-narrow
   :ensure t
   :after dired
-  :custom
-  (dired-narrow-exit-when-one-left t)
-  (dired-narrow-enable-blinking t)
-  (dired-narrow-blink-time 0.3)
+  :config
+  (setq dired-narrow-exit-when-one-left t)
+  (setq dired-narrow-enable-blinking t)
+  (setq dired-narrow-blink-time 0.3)
   :bind (:map dired-mode-map
          ("M-s n" . dired-narrow)))
 #+end_src
@@ -1486,9 +1489,9 @@ regular buffer, then confirm them with =C-c C-c=.
   :after dired
   :commands (wdired-mode
              wdired-change-to-wdired-mode)
-  :custom
-  (wdired-allow-to-change-permissions t)
-  (wdired-create-parent-directories t))
+  :config
+  (setq wdired-allow-to-change-permissions t)
+  (setq wdired-create-parent-directories t))
 #+end_src
 
 *** peep-dired (file previews including images)
@@ -1506,10 +1509,10 @@ behaviour while inside a regular dired buffer.
   :after dired
   :bind (:map dired-mode-map
               ("P" . peep-dired))
-  :custom
-  (peep-dired-cleanup-on-disable t)
-  (peep-dired-ignored-extensions
-   '("mkv" "webm" "mp4" "mp3" "ogg" "iso")))
+  :config
+  (setq peep-dired-cleanup-on-disable t)
+  (setq peep-dired-ignored-extensions
+        '("mkv" "webm" "mp4" "mp3" "ogg" "iso")))
 
 ;; ;; use this for peep always on
 ;; (setq peep-dired-enable-on-directories t)
@@ -1531,12 +1534,12 @@ to generate lots of images at once.  The culprit is the image converter.
 
 #+begin_src emacs-lisp
 (use-package image-dired
-  :custom
-  (image-dired-external-viewer "xdg-open")
-  (image-dired-thumb-size 80)
-  (image-dired-thumb-margin 2)
-  (image-dired-thumb-relief 0)
-  (image-dired-thumbs-per-row 4)
+  :config
+  (setq image-dired-external-viewer "xdg-open")
+  (setq image-dired-thumb-size 80)
+  (setq image-dired-thumb-margin 2)
+  (setq image-dired-thumb-relief 0)
+  (setq image-dired-thumbs-per-row 4)
   :bind (:map image-dired-thumbnail-mode-map
               ("<return>" . image-dired-thumbnail-display-external)))
 #+end_src
@@ -1646,8 +1649,8 @@ represents the tab character and is there to ensure alignment.
 (use-package dired-git-info
   :ensure t
   :after dired
-  :custom
-  (dgi-commit-message-format "%h\t%s\t%cr")
+  :config
+  (setq dgi-commit-message-format "%h\t%s\t%cr")
   :bind (:map dired-mode-map
               (")" . dired-git-info-mode)))
 #+end_src
@@ -1690,21 +1693,21 @@ to write commits that are clean and easy to read.
 #+begin_src emacs-lisp
 (use-package git-commit
   :after magit
-  :custom
-  (git-commit-fill-column 72)
-  (git-commit-summary-max-length 50)
-  (git-commit-known-pseudo-headers
-   '("Signed-off-by"
-     "Acked-by"
-     "Modified-by"
-     "Cc"
-     "Suggested-by"
-     "Reported-by"
-     "Tested-by"
-     "Reviewed-by"))
-  (git-commit-style-convention-checks
-   '(non-empty-second-line
-     overlong-summary-line)))
+  :config
+  (setq git-commit-fill-column 72)
+  (setq git-commit-summary-max-length 50)
+  (setq git-commit-known-pseudo-headers
+        '("Signed-off-by"
+          "Acked-by"
+          "Modified-by"
+          "Cc"
+          "Suggested-by"
+          "Reported-by"
+          "Tested-by"
+          "Reviewed-by"))
+  (setq git-commit-style-convention-checks
+        '(non-empty-second-line
+          overlong-summary-line)))
 #+end_src
 
 *** Git diffs
@@ -1721,8 +1724,8 @@ My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to s
 #+begin_src emacs-lisp
 (use-package magit-diff
   :after magit
-  :custom
-  (magit-diff-refine-hunk t))
+  :config
+  (setq magit-diff-refine-hunk t))
 #+end_src
 
 And this covers the built-in diff mode, which I seldom use.  Both of
@@ -1730,9 +1733,9 @@ these variables were introduced in Emacs 27.1.
 
 #+begin_src emacs-lisp
 (use-package diff
-  :custom
-  (diff-font-lock-prettify nil)
-  (diff-font-lock-syntax nil))
+  :config
+  (setq diff-font-lock-prettify nil)
+  (setq diff-font-lock-syntax nil))
 #+end_src
 
 *** Magit repo list
@@ -1749,8 +1752,9 @@ examined further.
 (use-package magit-repos
   :after magit
   :commands magit-list-repositories
-  :custom
-  (magit-repository-directories '(("~/Git/Projects" . 1))))
+  :config
+  (setq magit-repository-directories
+        '(("~/Git/Projects" . 1))))
 #+end_src
 
 *** Git time machine
@@ -1798,10 +1802,10 @@ only the buffer's name.
 
 #+begin_src emacs-lisp
 (use-package uniquify
-  :custom
-  (uniquify-buffer-name-style 'post-forward-angle-brackets)
-  (uniquify-strip-common-suffix t)
-  (uniquify-after-kill-buffer-p t))
+  :config
+  (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
+  (setq uniquify-strip-common-suffix t)
+  (setq uniquify-after-kill-buffer-p t))
 #+end_src
 
 *** Configure ibuffer
@@ -1827,63 +1831,63 @@ Some tweaks to the default behaviour and presentation:
 
 #+begin_src emacs-lisp
 (use-package ibuffer
-  :custom
-  (ibuffer-expert t)
-  (ibuffer-display-summary nil)
-  (ibuffer-use-other-window nil)
-  (ibuffer-show-empty-filter-groups nil)
-  (ibuffer-movement-cycle nil)
-  (ibuffer-default-sorting-mode 'filename/process)
+  :config
+  (setq ibuffer-expert t)
+  (setq ibuffer-display-summary nil)
+  (setq ibuffer-use-other-window nil)
+  (setq ibuffer-show-empty-filter-groups nil)
+  (setq ibuffer-movement-cycle nil)
+  (setq ibuffer-default-sorting-mode 'filename/process)
   ;;;; NOTE built into the Modus themes
-  ;; (ibuffer-deletion-face 'dired-flagged)
-  ;; (ibuffer-marked-face 'dired-marked)
-  (ibuffer-title-face 'font-lock-doc-face)
-  (ibuffer-use-header-line t)
-  (ibuffer-default-shrink-to-minimum-size nil)
-  (ibuffer-saved-filter-groups
-   '(("Main"
-      ("Directories" (mode . dired-mode))
-      ("Org" (mode . org-mode))
-      ("Programming" (or
-                      (mode . c-mode)
-                      (mode . conf-mode)
-                      (mode . css-mode)
-                      (mode . emacs-lisp-mode)
-                      (mode . html-mode)
-                      (mode . mhtml-mode)
-                      (mode . python-mode)
-                      (mode . ruby-mode)
-                      (mode . scss-mode)
-                      (mode . shell-script-mode)
-                      (mode . yaml-mode)))
-      ("Markdown" (mode . markdown-mode))
-      ("Magit" (or
-                (mode . magit-blame-mode)
-                (mode . magit-cherry-mode)
-                (mode . magit-diff-mode)
-                (mode . magit-log-mode)
-                (mode . magit-process-mode)
-                (mode . magit-status-mode)))
-      ("Apps" (or
-                   (mode . bongo-playlist-mode)
-                   (mode . mu4e-compose-mode)
-                   (mode . mu4e-headers-mode)
-                   (mode . mu4e-main-mode)
-                   (mode . elfeed-search-mode)
-                   (mode . elfeed-show-mode)
-                   (mode . mu4e-view-mode)))
-       ("Emacs" (or
-                 (name . "^\\*Help\\*$")
-                 (name . "^\\*Custom.*")
-                 (name . "^\\*Org Agenda\\*$")
-                 (name . "^\\*info\\*$")
-                 (name . "^\\*scratch\\*$")
-                 (name . "^\\*Backtrace\\*$")
-                 (name . "^\\*Messages\\*$"))))))
+  ;; (setq ibuffer-deletion-face 'dired-flagged)
+  ;; (setq ibuffer-marked-face 'dired-marked)
+  (setq ibuffer-title-face 'font-lock-doc-face)
+  (setq ibuffer-use-header-line t)
+  (setq ibuffer-default-shrink-to-minimum-size nil)
+  (setq ibuffer-saved-filter-groups
+        '(("Main"
+           ("Directories" (mode . dired-mode))
+           ("Org" (mode . org-mode))
+           ("Programming" (or
+                           (mode . c-mode)
+                           (mode . conf-mode)
+                           (mode . css-mode)
+                           (mode . emacs-lisp-mode)
+                           (mode . html-mode)
+                           (mode . mhtml-mode)
+                           (mode . python-mode)
+                           (mode . ruby-mode)
+                           (mode . scss-mode)
+                           (mode . shell-script-mode)
+                           (mode . yaml-mode)))
+           ("Markdown" (mode . markdown-mode))
+           ("Magit" (or
+                     (mode . magit-blame-mode)
+                     (mode . magit-cherry-mode)
+                     (mode . magit-diff-mode)
+                     (mode . magit-log-mode)
+                     (mode . magit-process-mode)
+                     (mode . magit-status-mode)))
+           ("Apps" (or
+                    (mode . bongo-playlist-mode)
+                    (mode . mu4e-compose-mode)
+                    (mode . mu4e-headers-mode)
+                    (mode . mu4e-main-mode)
+                    (mode . elfeed-search-mode)
+                    (mode . elfeed-show-mode)
+                    (mode . mu4e-view-mode)))
+           ("Emacs" (or
+                     (name . "^\\*Help\\*$")
+                     (name . "^\\*Custom.*")
+                     (name . "^\\*Org Agenda\\*$")
+                     (name . "^\\*info\\*$")
+                     (name . "^\\*scratch\\*$")
+                     (name . "^\\*Backtrace\\*$")
+                     (name . "^\\*Messages\\*$"))))))
   :hook
   (ibuffer-mode . hl-line-mode)
   (ibuffer-mode . (lambda ()
-                     (ibuffer-switch-to-saved-filter-groups "Main")))
+                    (ibuffer-switch-to-saved-filter-groups "Main")))
   :bind (("C-x C-b" . ibuffer)))
 #+end_src
 
@@ -1943,44 +1947,44 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
 
 #+begin_src emacs-lisp
 (use-package window
-  :custom
+  :config
   ;; TODO do not repeat common parts, abstract them somehow
-  (display-buffer-alist
-   '(;; bottom side window
-     ("\\*e?shell.*"
+  (setq display-buffer-alist
+        '(;; bottom side window
+          ("\\*e?shell.*"
       ;;;; NOTE Sample with more functions, executed sequentially
-      ;; (display-buffer-reuse-mode-window display-buffer-reuse-window display-buffer-in-previous-window display-buffer-in-side-window)
-      (display-buffer-in-side-window)
-      (window-height . 0.25)
-      (side . bottom)
-      (slot . -1))
-     ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
-      (display-buffer-in-side-window)
-      (window-height . 0.25)
-      (side . bottom)
-      (slot . 0))
-     ;; right side window
-     ("\\*\\(Flycheck\\|Package-Lint\\).*"
-      (display-buffer-in-side-window)
-      (window-width . 0.333)
-      (side . right)
-      (slot . 0)
-      (window-parameters . ((no-other-window . t)
-                            (mode-line-format . (" "
-                                                 mode-line-buffer-identification)))))
-     ("\\*Faces\\*"
-      (display-buffer-in-side-window)
-      (window-width . 0.333)
-      (side . right)
-      (slot . 1)
-      (window-parameters . ((no-other-window . t)
-                            (mode-line-format . (" "
-                                                 mode-line-buffer-identification)))))
-     ("\\*Custom.*"
-      (display-buffer-in-side-window)
-      (window-width . 0.333)
-      (side . right)
-      (slot . 2))))
+           ;; (display-buffer-reuse-mode-window display-buffer-reuse-window display-buffer-in-previous-window display-buffer-in-side-window)
+           (display-buffer-in-side-window)
+           (window-height . 0.25)
+           (side . bottom)
+           (slot . -1))
+          ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
+           (display-buffer-in-side-window)
+           (window-height . 0.25)
+           (side . bottom)
+           (slot . 0))
+          ;; right side window
+          ("\\*\\(Flycheck\\|Package-Lint\\).*"
+           (display-buffer-in-side-window)
+           (window-width . 0.333)
+           (side . right)
+           (slot . 0)
+           (window-parameters . ((no-other-window . t)
+                                 (mode-line-format . (" "
+                                                      mode-line-buffer-identification)))))
+          ("\\*Faces\\*"
+           (display-buffer-in-side-window)
+           (window-width . 0.333)
+           (side . right)
+           (slot . 1)
+           (window-parameters . ((no-other-window . t)
+                                 (mode-line-format . (" "
+                                                      mode-line-buffer-identification)))))
+          ("\\*Custom.*"
+           (display-buffer-in-side-window)
+           (window-width . 0.333)
+           (side . right)
+           (slot . 2))))
   :bind (("s-n" . next-buffer)
          ("s-p" . previous-buffer)
          ("s-o" . other-window)
@@ -2082,8 +2086,8 @@ create a new window.  I do not want that.
 
 #+begin_src emacs-lisp
 (use-package windmove
-  :custom
-  (windmove-create-window nil)          ; Emacs 27.1
+  :config
+  (setq windmove-create-window nil)     ; Emacs 27.1
   :bind (("M-s-h" . windmove-left))
          ("M-s-j" . windmove-down)
          ("M-s-k" . windmove-up)
@@ -2111,20 +2115,20 @@ Also bear in mind that I define several other window motions.  Refer to
 #+begin_src emacs-lisp
 (use-package ace-window
   :ensure t
-  :custom
-  (aw-keys '(?h ?j ?k ?l ?y ?u ?i ?o ?p))
-  (aw-scope 'frame)
-  (aw-dispatch-always t)
-  (aw-dispatch-alist
-   '((?s aw-swap-window "Swap Windows")
-     (?2 aw-split-window-vert "Split Window Vertically")
-     (?3 aw-split-window-horz "Split Window Horizontally")
-     (?? aw-show-dispatch-help)))
-  (aw-minibuffer-flag t)
-  (aw-ignore-current nil)
-  (aw-display-mode-overlay t)
-  (aw-background t)
   :config
+  (setq aw-keys '(?h ?j ?k ?l ?y ?u ?i ?o ?p))
+  (setq aw-scope 'frame)
+  (setq aw-dispatch-always t)
+  (setq aw-dispatch-alist
+        '((?s aw-swap-window "Swap Windows")
+          (?2 aw-split-window-vert "Split Window Vertically")
+          (?3 aw-split-window-horz "Split Window Horizontally")
+          (?? aw-show-dispatch-help)))
+  (setq aw-minibuffer-flag t)
+  (setq aw-ignore-current nil)
+  (setq aw-display-mode-overlay t)
+  (setq aw-background t)
+
   (ace-window-display-mode -1)
   :bind (("s-a" . ace-window)))
 #+end_src
@@ -2170,77 +2174,77 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
 
 #+begin_src emacs-lisp
 (use-package org
-  :custom
-  ;; agenda
-  (org-directory "~/Org")
-  (org-agenda-files '("~/Org/tasks.org" "~/Org/notes.org"))
-  (org-default-notes-file "~/Org/notes.org")
-  (org-agenda-window-setup 'current-window)
-  (org-deadline-warning-days 7)
-  (org-agenda-span 'month)
-  (org-agenda-skip-scheduled-if-deadline-is-shown t)
-  (org-agenda-sorting-strategy
-   '((agenda deadline-up priority-down)
-     (todo priority-down category-keep)
-     (tags priority-down category-keep)
-     ((search category-keep))))
-  ;; capture, refile, todo
-  (org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
-  (org-reverse-note-order nil)
-  (org-refile-use-outline-path t)
-  (org-refile-allow-creating-parent-nodes 'confirm)
-  (org-refile-use-cache t)
-  (org-todo-keywords
-   '((sequence "TODO(t)" "|" "DONE(d)")
-     (sequence "STUDY(s)" "WRITE(w)" "|" "POSTED(p)")
-     (sequence "NOTE(n)" "|" "ARCHIVED(r)")))
-  (org-highest-priority ?A)
-  (org-lowest-priority ?C)
-  (org-default-priority ?A)
-  (org-capture-templates
-   '(("t" "Task for the day" entry
-      (file+headline "~/Org/tasks.org" "Tasks with a deadline")
-      "* TODO [#A] %?\nDEADLINE: %t\n")
-     ("l" "Link to Emacs buffer or file" entry
-      (file+headline "~/Org/tasks.org" "Links to buffers/files")
-      "* STUDY [#B] %?\nSCHEDULED: %t\n%a")
-     ("L" "Link to full file system path" entry
-      (file+headline "~/Org/tasks.org" "Links to buffers/files")
-      "* STUDY [#B] %?\nSCHEDULED: %t\n%F")
-     ("n" "Note" entry
-      (file+headline "~/Org/tasks.org" "Notes with or without context")
-      "* NOTE [#C] %?\nSCHEDULED: %t\n%i")))
-  ;; code blocks
-  (org-src-window-setup 'current-window)
-  (org-src-fontify-natively t)
-  (org-src-preserve-indentation t)
-  (org-src-tab-acts-natively t)
-  (org-confirm-babel-evaluate nil)
-  (org-edit-src-content-indentation 0)
-  ;; export
-  (org-export-with-toc t)
-  (org-export-headline-levels 8)
-  (org-export-backends '(ascii html latex md))
-  ;; log
-  (org-log-done 'time)
-  (org-log-redeadline nil)
-  (org-log-reschedule nil)
-  (org-read-date-prefer-future 'time)
-  ;; general
-  (org-special-ctrl-a/e 'reversed)
-  (org-hide-emphasis-markers t)
-  (org-structure-template-alist
-   '(("s" . "src")
-     ("E" . "src emacs-lisp")
-     ("e" . "example")
-     ("q" . "quote")
-     ("v" . "verse")
-     ("V" . "verbatim")
-     ("c" . "center")
-     ("C" . "comment")))               ; CHANGED in Org 9.2 (Emacs 27.1)
-  (org-catch-invisible-edits 'show)
-  (org-return-follows-link t)
   :config
+  ;; agenda
+  (setq org-directory "~/Org")
+  (setq org-agenda-files '("~/Org/tasks.org" "~/Org/notes.org"))
+  (setq org-default-notes-file "~/Org/notes.org")
+  (setq org-agenda-window-setup 'current-window)
+  (setq org-deadline-warning-days 7)
+  (setq org-agenda-span 'month)
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (setq org-agenda-sorting-strategy
+        '((agenda deadline-up priority-down)
+          (todo priority-down category-keep)
+          (tags priority-down category-keep)
+          ((search category-keep))))
+  ;; capture, refile, todo
+  (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
+  (setq org-reverse-note-order nil)
+  (setq org-refile-use-outline-path t)
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-refile-use-cache t)
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "|" "DONE(d)")
+          (sequence "STUDY(s)" "WRITE(w)" "|" "POSTED(p)")
+          (sequence "NOTE(n)" "|" "ARCHIVED(r)")))
+  (setq org-highest-priority ?A)
+  (setq org-lowest-priority ?C)
+  (setq org-default-priority ?A)
+  (setq org-capture-templates
+        '(("t" "Task for the day" entry
+           (setq file+headline "~/Org/tasks.org" "Tasks with a deadline")
+           "* TODO [#A] %?\nDEADLINE: %t\n")
+          ("l" "Link to Emacs buffer or file" entry
+           (setq file+headline "~/Org/tasks.org" "Links to buffers/files")
+           "* STUDY [#B] %?\nSCHEDULED: %t\n%a")
+          ("L" "Link to full file system path" entry
+           (setq file+headline "~/Org/tasks.org" "Links to buffers/files")
+           "* STUDY [#B] %?\nSCHEDULED: %t\n%F")
+          ("n" "Note" entry
+           (setq file+headline "~/Org/tasks.org" "Notes with or without context")
+           "* NOTE [#C] %?\nSCHEDULED: %t\n%i")))
+  ;; code blocks
+  (setq org-src-window-setup 'current-window)
+  (setq org-src-fontify-natively t)
+  (setq org-src-preserve-indentation t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-edit-src-content-indentation 0)
+  ;; export
+  (setq org-export-with-toc t)
+  (setq org-export-headline-levels 8)
+  (setq org-export-backends '(ascii html latex md))
+  ;; log
+  (setq org-log-done 'time)
+  (setq org-log-redeadline nil)
+  (setq org-log-reschedule nil)
+  (setq org-read-date-prefer-future 'time)
+  ;; general
+  (setq org-special-ctrl-a/e 'reversed)
+  (setq org-hide-emphasis-markers t)
+  (setq org-structure-template-alist
+        '(("s" . "src")
+          ("E" . "src emacs-lisp")
+          ("e" . "example")
+          ("q" . "quote")
+          ("v" . "verse")
+          ("V" . "verbatim")
+          ("c" . "center")
+          ("C" . "comment"))) ; CHANGED in Org 9.2 (Emacs 27.1)
+  (setq org-catch-invisible-edits 'show)
+  (setq org-return-follows-link t)
+
   ;; Refresh org-agenda after rescheduling a task.
   (defun contrib/org-agenda-refresh ()
     "Refresh all `org-agenda' buffers."
@@ -2282,9 +2286,9 @@ document.  This fixes the issue (read the article for more).
   :after org
   :commands (contrib/org-get-id
              contrib/org-id-headlines)
-  :custom
-  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
   :config
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+
   (defun contrib/org-get-id (&optional pom create prefix)
     "Get the CUSTOM_ID property of the entry at point-or-marker POM.
    If POM is nil, refer to the entry at point. If the entry does
@@ -2340,8 +2344,8 @@ when I need to do a presentation.
   :disabled
   :commands (darkroom-mode
              darkroom-tentative-mode)
-  :custom
-  (darkroom-text-scale-increase 0))
+  :config
+  (setq darkroom-text-scale-increase 0))
 
 (use-package org-bullets
   :ensure t
@@ -2353,19 +2357,19 @@ when I need to do a presentation.
   :ensure t
   :disabled
   :after (org darkroom)
-  :custom
-  (org-tree-slide-breadcrumbs nil)
-  (org-tree-slide-header nil)
-  (org-tree-slide-slide-in-effect nil)
-  (org-tree-slide-heading-emphasis nil)
-  (org-tree-slide-cursor-init t)
-  (org-tree-slide-modeline-display nil)
-  (org-tree-slide-skip-done nil)
-  (org-tree-slide-skip-comments t)
-  (org-tree-slide-fold-subtrees-skipped t)
-  (org-tree-slide-skip-outline-level 8)
-  (org-tree-slide-never-touch-face t)
   :config
+  (setq org-tree-slide-breadcrumbs nil)
+  (setq org-tree-slide-header nil)
+  (setq org-tree-slide-slide-in-effect nil)
+  (setq org-tree-slide-heading-emphasis nil)
+  (setq org-tree-slide-cursor-init t)
+  (setq org-tree-slide-modeline-display nil)
+  (setq org-tree-slide-skip-done nil)
+  (setq org-tree-slide-skip-comments t)
+  (setq org-tree-slide-fold-subtrees-skipped t)
+  (setq org-tree-slide-skip-outline-level 8)
+  (setq org-tree-slide-never-touch-face t)
+
   (defun prot/org-presentation ()
     "Specifies conditions that should apply locally upon
 activation of `org-tree-slide-mode'."
@@ -2429,10 +2433,10 @@ and corresponding functions.
 #+begin_src emacs-lisp
 (use-package shell
   :commands shell-command
-  :custom
-  (ansi-color-for-comint-mode t)
-  (shell-command-prompt-show-cwd t)     ; Emacs 27.1
   :config
+  (setq ansi-color-for-comint-mode t)
+  (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
+
   (defun prot/shell-multi ()
     "Spawn a new instance of `shell' and give it a unique name
 based on the directory of the current buffer."
@@ -2471,11 +2475,11 @@ other options in the Emacs space (e.g. with =C-u M-x shell=).
 #+begin_src emacs-lisp
 (use-package term
   :commands term
-  :custom
-  (term-buffer-maximum-size 9999)
-  (term-completion-autolist t)
-  (term-completion-recexact t)
-  (term-scroll-to-bottom-on-output t))
+  :config
+  (setq term-buffer-maximum-size 9999)
+  (setq term-completion-autolist t)
+  (setq term-completion-recexact t)
+  (setq term-scroll-to-bottom-on-output t))
 #+end_src
 
 ** Proced (process monitor, similar to `top')
@@ -2490,11 +2494,11 @@ right now.  Would need to experiment with it a bit more.
 #+begin_src emacs-lisp
 (use-package proced
   :commands proced
-  :custom
-  (proced-auto-update-flag t)
-  (proced-auto-update-interval 1)
-  (proced-descend t)
-  (proced-filter 'user))
+  :config
+  (setq proced-auto-update-flag t)
+  (setq proced-auto-update-interval 1)
+  (setq proced-descend t)
+  (setq proced-filter 'user))
 #+end_src
 
 ** Pass interface (password-store)
@@ -2519,8 +2523,8 @@ kill ring.
   :commands (password-store-copy
              password-store-edit
              password-store-insert)
-  :custom
-  (password-store-time-before-clipboard-restore 30))
+  :config
+  (setq password-store-time-before-clipboard-restore 30))
 #+end_src
 
 And this one adds a major mode for browsing the =pass= keychain.  Call
@@ -2549,19 +2553,19 @@ with minor tweaks by me.
 (use-package elfeed
   :ensure t
   :commands elfeed
-  :custom
-  (elfeed-use-curl t)
-  (elfeed-curl-max-connections 10)
-  (elfeed-db-directory "~/.emacs.d/elfeed")
-  (elfeed-enclosure-default-dir "~/Downloads")
-  (elfeed-search-clipboard-type 'CLIPBOARD)
-  (elfeed-search-title-max-width (current-fill-column))
-  (elfeed-search-title-max-width 100)
-  (elfeed-search-title-min-width 30)
-  (elfeed-search-trailing-width 16)
-  (elfeed-show-truncate-long-urls t)
-  (elfeed-show-unique-buffers t)
   :config
+  (setq elfeed-use-curl t)
+  (setq elfeed-curl-max-connections 10)
+  (setq elfeed-db-directory "~/.emacs.d/elfeed")
+  (setq elfeed-enclosure-default-dir "~/Downloads")
+  (setq elfeed-search-clipboard-type 'CLIPBOARD)
+  (setq elfeed-search-title-max-width (current-fill-column))
+  (setq elfeed-search-title-max-width 100)
+  (setq elfeed-search-title-min-width 30)
+  (setq elfeed-search-trailing-width 16)
+  (setq elfeed-show-truncate-long-urls t)
+  (setq elfeed-show-unique-buffers t)
+
   (defun prot/feeds ()
     "Loads a file with RSS/Atom feeds.  This file contains valid
 syntax for use by the `elfeed' package."
@@ -2588,16 +2592,16 @@ syntax for use by the `elfeed' package."
                      quality-arg (elfeed-entry-link entry))))
   :hook (after-init . prot/feeds)
   :bind (:map elfeed-search-mode-map
-         ("v" . (lambda ()
-                  (interactive)
-                  (ambrevar/elfeed-play-with-mpv)
-                  (elfeed-search-untag-all-unread)))
-         ("w" . elfeed-search-yank)
-         ("g" . elfeed-update)
-         ("G" . elfeed-search-update--force)
-         :map elfeed-show-mode-map
-         ("v" . ambrevar/elfeed-play-with-mpv)
-         ("w" . elfeed-show-yank)))
+              ("v" . (lambda ()
+                       (interactive)
+                       (ambrevar/elfeed-play-with-mpv)
+                       (elfeed-search-untag-all-unread)))
+              ("w" . elfeed-search-yank)
+              ("g" . elfeed-update)
+              ("G" . elfeed-search-update--force)
+              :map elfeed-show-mode-map
+              ("v" . ambrevar/elfeed-play-with-mpv)
+              ("w" . elfeed-show-yank)))
 #+end_src
 
 ** Emacs web browser and HTML parser
@@ -2628,12 +2632,12 @@ What these do:
 (use-package shr
   :commands (eww
              eww-browse-url)
-  :custom
-  (browse-url-browser-function 'eww-browse-url)
-  (shr-use-fonts nil)
-  (shr-use-colors nil)
-  (shr-max-image-proportion 0.2)
-  (shr-width (current-fill-column)))
+  :config
+  (setq browse-url-browser-function 'eww-browse-url)
+  (setq shr-use-fonts nil)
+  (setq shr-use-colors nil)
+  (setq shr-max-image-proportion 0.2)
+  (setq shr-width (current-fill-column)))
 #+end_src
 
 Support the HTML =pre= tag with proper syntax highlighting.  Got this
@@ -2698,23 +2702,23 @@ I have a couple of videos about my workflow with Bongo and Dired:
 (use-package bongo
   :ensure t
   :commands bongo
-  :custom
-  (bongo-default-directory "~/Music")
-  (bongo-prefer-library-buffers nil)
-  (bongo-insert-whole-directory-trees t)
-  (bongo-logo nil)
-  (bongo-action-track-icon nil)
-  (bongo-display-track-icons nil)
-  (bongo-display-track-lengths nil)
-  (bongo-display-header-icons nil)
-  (bongo-display-playback-mode-indicator t)
-  (bongo-display-inline-playback-progress nil)
-  (bongo-mark-played-tracks nil)
-  (bongo-header-line-mode nil)
-  (bongo-header-line-function nil)
-  (bongo-mode-line-indicator-mode nil)
-  (bongo-vlc-program-name "cvlc")
   :config
+  (setq bongo-default-directory "~/Music")
+  (setq bongo-prefer-library-buffers nil)
+  (setq bongo-insert-whole-directory-trees t)
+  (setq bongo-logo nil)
+  (setq bongo-action-track-icon nil)
+  (setq bongo-display-track-icons nil)
+  (setq bongo-display-track-lengths nil)
+  (setq bongo-display-header-icons nil)
+  (setq bongo-display-playback-mode-indicator t)
+  (setq bongo-display-inline-playback-progress nil)
+  (setq bongo-mark-played-tracks nil)
+  (setq bongo-header-line-mode nil)
+  (setq bongo-header-line-function nil)
+  (setq bongo-mode-line-indicator-mode nil)
+  (setq bongo-vlc-program-name "cvlc")
+
   (defun contrib/bongo-add-dired-files ()
     "Add marked files inside of a Dired buffer to the Bongo library"
     (interactive)
@@ -2809,20 +2813,20 @@ Emacs can decrypt those automatically.
 
 #+begin_src emacs-lisp
 (use-package smtpmail
-  :custom
-  (smtpmail-default-smtp-server "mail.gandi.net")
-  (smtpmail-smtp-server "mail.gandi.net")
-  (smtpmail-stream-type 'ssl)
-  (smtpmail-smtp-service 465)
-  (user-full-name "Protesilaos Stavrou")
-  (auth-sources '("~/.authinfo.gpg" "~/.authinfo"))
-  (epa-file-cache-passphrase-for-symmetric-encryption t))
+  :config
+  (setq smtpmail-default-smtp-server "mail.gandi.net")
+  (setq smtpmail-smtp-server "mail.gandi.net")
+  (setq smtpmail-stream-type 'ssl)
+  (setq smtpmail-smtp-service 465)
+  (setq user-full-name "Protesilaos Stavrou")
+  (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo"))
+  (setq epa-file-cache-passphrase-for-symmetric-encryption t))
 
 (use-package smtpmail-async
   :after smtpmail
-  :custom
-  (send-mail-function 'async-smtpmail-send-it)
-  (message-send-mail-function 'async-smtpmail-send-it))
+  :config
+  (setq send-mail-function 'async-smtpmail-send-it)
+  (setq message-send-mail-function 'async-smtpmail-send-it))
 #+end_src
 
 *** Reading email (MUA)
@@ -2872,23 +2876,23 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :after (smtpmail smtpmail-async)
   :commands (mu4e mu4e-update-mail-and-index)
-  :custom
-  (mail-user-agent 'mu4e-user-agent)
-  (mu4e-get-mail-command "offlineimap")
-  (mu4e-hide-index-messages t)
-  (mu4e-update-interval nil)
-  (mu4e-completing-read-function 'completing-read)
-  (mu4e-compose-signature "Protesilaos Stavrou\nprotesilaos.com\n")
-  (mu4e-compose-signature-auto-include t)
-  (mu4e-maildir "~/Maildir")
-  (mu4e-sent-messages-behavior 'sent)
-  (message-kill-buffer-on-exit nil)
-  (mu4e-view-show-addresses t)
-  (mu4e-context-policy 'pick-first)
-  (mu4e-compose-context-policy 'ask)
-  (message-citation-line-format "On %Y-%m-%d, %R (%Z), %f wrote:\n")
-  (message-citation-line-function 'message-insert-formatted-citation-line)
   :config
+  (setq mail-user-agent 'mu4e-user-agent)
+  (setq mu4e-get-mail-command "offlineimap")
+  (setq mu4e-hide-index-messages t)
+  (setq mu4e-update-interval nil)
+  (setq mu4e-completing-read-function 'completing-read)
+  (setq mu4e-compose-signature "Protesilaos Stavrou\nprotesilaos.com\n")
+  (setq mu4e-compose-signature-auto-include t)
+  (setq mu4e-maildir "~/Maildir")
+  (setq mu4e-sent-messages-behavior 'sent)
+  (setq message-kill-buffer-on-exit nil)
+  (setq mu4e-view-show-addresses t)
+  (setq mu4e-context-policy 'pick-first)
+  (setq mu4e-compose-context-policy 'ask)
+  (setq message-citation-line-format "On %Y-%m-%d, %R (%Z), %f wrote:\n")
+  (setq message-citation-line-function 'message-insert-formatted-citation-line)
+
   (defun prot/mu4e-contexts ()
     "Loads a file with the specifics of my email account info."
     (let ((mails "~/.emacs.d/mu4e-contexts.el.gpg"))
@@ -2915,8 +2919,8 @@ really need.  Nice!
 #+begin_src emacs-lisp
 (use-package org-mu4e                   ; no need for `:ensure t'
   :after (org mu4e)
-  :custom
-  (org-mu4e-link-query-in-headers-mode nil))
+  :config
+  (setq org-mu4e-link-query-in-headers-mode nil))
 #+end_src
 
 ** Package lists
@@ -3013,12 +3017,12 @@ new line.
 
 #+begin_src emacs-lisp
 (use-package newcomment
-  :custom
-  (comment-empty-lines t)
-  (comment-fill-column nil)
-  (comment-multi-line t)
-  (comment-style 'multi-line)
   :config
+  (setq comment-empty-lines t)
+  (setq comment-fill-column nil)
+  (setq comment-multi-line t)
+  (setq comment-style 'multi-line)
+
   (defun prot/comment-dwim (&optional arg)
     "Alternative to `comment-dwim': offers a simple wrapper
 around `comment-line' and `comment-dwim'.
@@ -3069,15 +3073,15 @@ the relevant packages from my distro's archive.
              flyspell-buffer
              flyspell-mode
              flyspell-region)
-  :custom
-  (flyspell-issue-message-flag nil)
-  (flyspell-issue-welcome-flag nil)
-  (ispell-program-name "aspell")
-  (ispell-dictionary "en_GB")
   :config
+  (setq flyspell-issue-message-flag nil)
+  (setq flyspell-issue-welcome-flag nil)
+  (setq ispell-program-name "aspell")
+  (setq ispell-dictionary "en_GB")
+
   (define-key flyspell-mode-map (kbd "C-;") nil)
-;; TODO (emacs 27): ispell-change-dictionary-hook
-)
+  ;; TODO (emacs 27): ispell-change-dictionary-hook
+  )
 #+end_src
 
 ** Flycheck (code linting)
@@ -3104,8 +3108,9 @@ superseded by my [[#h:b0395aae-a2d2-4e50-8965-433c4605c724][custom mode line con
 (use-package flycheck
   :ensure t
   :commands flycheck-mode
-  :custom
-  (flycheck-check-syntax-automatically '(save mode-enabled)))
+  :config
+  (setq flycheck-check-syntax-automatically
+        '(save mode-enabled)))
 #+end_src
 
 There is also a built-in tool that covers this niche, but I find its
@@ -3201,10 +3206,10 @@ position of the cursor after the skeleton has been inserted.
 #+begin_src emacs-lisp
 (use-package abbrev
   :delight
-  :custom
-  (abbrev-file-name "~/.emacs.d/abbrevs")
-  (only-global-abbrevs nil)
   :config
+  (setq abbrev-file-name "~/.emacs.d/abbrevs")
+  (setq only-global-abbrevs nil)
+
   ;;;;;;;;;;;;;;;;;;;;;;
   ;; simple skeletons ;;
   ;;;;;;;;;;;;;;;;;;;;;;
@@ -3247,32 +3252,32 @@ Refer to the [[#h:d2e402b3-c947-42fc-af80-b8a982082a1b][Company section for a de
 #+begin_src emacs-lisp
 (use-package dabbrev
   :commands dabbrev-expand
-  :custom
-  (dabbrev-abbrev-char-regexp nil)
-  (dabbrev-backward-only nil)
-  (dabbrev-case-distinction nil)
-  (dabbrev-case-fold-search t)
-  (dabbrev-case-replace nil)
-  (dabbrev-eliminate-newlines nil)
-  (dabbrev-upcase-means-case-search t))
+  :config
+  (setq dabbrev-abbrev-char-regexp nil)
+  (setq dabbrev-backward-only nil)
+  (setq dabbrev-case-distinction nil)
+  (setq dabbrev-case-fold-search t)
+  (setq dabbrev-case-replace nil)
+  (setq dabbrev-eliminate-newlines nil)
+  (setq dabbrev-upcase-means-case-search t))
 
 (use-package hippie-exp
   :after dabbrev
   :commands hippie-expand
-  :custom
-  (hippie-expand-try-functions-list
-   '(try-expand-dabbrev
-     try-expand-dabbrev-visible
-     try-expand-dabbrev-from-kill
-     try-expand-dabbrev-all-buffers
-     try-expand-list
-     try-expand-list-all-buffers
-     try-expand-line
-     try-expand-line-all-buffers
-     try-complete-file-name-partially
-     try-complete-file-name
-     try-expand-all-abbrevs))
-  (hippie-expand-verbose t))
+  :config
+  (setq hippie-expand-try-functions-list
+        '(try-expand-dabbrev
+          try-expand-dabbrev-visible
+          try-expand-dabbrev-from-kill
+          try-expand-dabbrev-all-buffers
+          try-expand-list
+          try-expand-list-all-buffers
+          try-expand-line
+          try-expand-line-all-buffers
+          try-complete-file-name-partially
+          try-complete-file-name
+          try-expand-all-abbrevs))
+  (setq hippie-expand-verbose t))
 #+end_src
 
 ** Company (completion framework)
@@ -3345,28 +3350,28 @@ Now a few words about the key bindings:
 (use-package company
   :ensure t
   :delight
-  :custom
-  (company-auto-complete nil)
-  (company-dabbrev-code-everywhere t)
-  (company-dabbrev-code-modes t)
-  (company-dabbrev-code-other-buffers 'all)
-  (company-dabbrev-downcase nil)
-  (company-dabbrev-ignore-case t)
-  (company-dabbrev-other-buffers 'all)
-  (company-idle-delay 0.3)
-  (company-minimum-prefix-length 3)
-  (company-require-match nil)
-  (company-selection-wrap-around t)
-  (company-show-numbers t)
-  (company-transformers
-   '(company-sort-by-backend-importance
-     company-sort-prefer-same-case-prefix
-     company-sort-by-occurrence))
-  (company-tooltip-align-annotations t)
-  (company-tooltip-limit 10)
-  (company-tooltip-margin 1)
-  (company-tooltip-offset-display 'scrollbar)
   :config
+  (setq company-auto-complete nil)
+  (setq company-dabbrev-code-everywhere t)
+  (setq company-dabbrev-code-modes t)
+  (setq company-dabbrev-code-other-buffers 'all)
+  (setq company-dabbrev-downcase nil)
+  (setq company-dabbrev-ignore-case t)
+  (setq company-dabbrev-other-buffers 'all)
+  (setq company-idle-delay 0.3)
+  (setq company-minimum-prefix-length 3)
+  (setq company-require-match nil)
+  (setq company-selection-wrap-around t)
+  (setq company-show-numbers t)
+  (setq company-transformers
+        '(company-sort-by-backend-importance
+          company-sort-prefer-same-case-prefix
+          company-sort-by-occurrence))
+  (setq company-tooltip-align-annotations t)
+  (setq company-tooltip-limit 10)
+  (setq company-tooltip-margin 1)
+  (setq company-tooltip-offset-display 'scrollbar)
+
   (global-company-mode 1)
   :bind (:map company-mode-map
               ("M-/" . company-manual-begin)
@@ -3444,9 +3449,9 @@ their development process, I am not using the MELPA packages directly.
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :custom
-  (custom-safe-themes t)
   :config
+  (setq custom-safe-themes t)
+
   (defun prot/modus-operandi ()
     "Enable some `modus-operandi' variables and load the theme."
     (setq modus-operandi-theme-slanted-constructs t
@@ -3523,17 +3528,17 @@ future as I experiment more with it as part of my workflow.
 #+begin_src emacs-lisp
 (use-package tab-bar
   :commands (tab-bar-mode tab-bar-history-mode)
-  :custom
-  (tab-bar-close-button-show t)
-  (tab-bar-close-last-tab-choice nil)
-  (tab-bar-close-tab-select 'recent)
-  (tab-bar-new-tab-choice t)
-  (tab-bar-new-tab-to 'rightmost)
-  (tab-bar-position nil)
-  (tab-bar-show 1)
-  (tab-bar-tab-hints nil)
-  (tab-bar-tab-name-function 'tab-bar-tab-name-current)
   :config
+  (setq tab-bar-close-button-show t)
+  (setq tab-bar-close-last-tab-choice nil)
+  (setq tab-bar-close-tab-select 'recent)
+  (setq tab-bar-new-tab-choice t)
+  (setq tab-bar-new-tab-to 'rightmost)
+  (setq tab-bar-position nil)
+  (setq tab-bar-show 1)
+  (setq tab-bar-tab-hints nil)
+  (setq tab-bar-tab-name-function 'tab-bar-tab-name-current)
+
   (tab-bar-mode -1)
   (tab-bar-history-mode -1))
 
@@ -3571,18 +3576,18 @@ supported by my Modus themes.
 #+begin_src emacs-lisp
 (use-package telephone-line
   :ensure t
-  :custom
-  (telephone-line-height nil)
-  (telephone-line-primary-left-separator
-   'telephone-line-nil)
-  (telephone-line-primary-right-separator
-   'telephone-line-halfsin-right)
-  (telephone-line-secondary-left-separator
-   'telephone-line-halfsin-hollow-left)
-  (telephone-line-secondary-right-separator
-   'telephone-line-halfsin-hollow-right)
-  (telephone-line-separator-extra-padding 3)
   :config
+  (setq telephone-line-height nil)
+  (setq telephone-line-primary-left-separator
+        'telephone-line-nil)
+  (setq telephone-line-primary-right-separator
+        'telephone-line-halfsin-right)
+  (setq telephone-line-secondary-left-separator
+        'telephone-line-halfsin-hollow-left)
+  (setq telephone-line-secondary-right-separator
+        'telephone-line-halfsin-hollow-right)
+  (setq telephone-line-separator-extra-padding 3)
+
   (telephone-line-defsegment prot/telephone-line-kbd-macro-segment ()
     "Offer keyboard macro feedback."
     (when (or defining-kbd-macro executing-kbd-macro)
@@ -3657,14 +3662,14 @@ with or simplify common tasks:
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :custom
-  (vc-follow-symlinks t)
-  (frame-title-format '("%b %& GNU Emacs"))
-  (echo-keystrokes 0.25)
-  (auto-revert-verbose nil)
-  (default-input-method "greek")
-  (ring-bell-function 'ignore)
   :config
+  (setq vc-follow-symlinks t)
+  (setq frame-title-format '("%b %& GNU Emacs"))
+  (setq echo-keystrokes 0.25)
+  (setq auto-revert-verbose nil)
+  (setq default-input-method "greek")
+  (setq ring-bell-function 'ignore)
+
   (defalias 'yes-or-no-p 'y-or-n-p)
   (put 'narrow-to-region 'disabled nil)
   (put 'upcase-region 'disabled nil)
@@ -3685,9 +3690,9 @@ A change can happen externally or by some other tool inside of Emacs
 #+begin_src emacs-lisp
 (use-package autorevert
   :delight
-  :custom
-  (auto-revert-verbose t)
   :config
+  (setq auto-revert-verbose t)
+
   (global-auto-revert-mode 1))
 #+end_src
 
@@ -3715,11 +3720,11 @@ Summary of what these do:
 
 #+begin_src emacs-lisp
 (use-package paren
-  :custom
-  (show-paren-style 'parenthesis)
-  (show-paren-when-point-in-periphery t)
-  (show-paren-when-point-inside-paren nil)
   :config
+  (setq show-paren-style 'parenthesis)
+  (setq show-paren-when-point-in-periphery t)
+  (setq show-paren-when-point-inside-paren nil)
+
   (show-paren-mode 1))
 #+end_src
 
@@ -3759,23 +3764,23 @@ auto-insertion of characters.  This is a summary of my settings:
 
 #+begin_src emacs-lisp
 (use-package electric
-  :custom
-  (electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
-  (electric-pair-preserve-balance t)
-  (electric-pair-pairs
-   '((8216 . 8217)
-     (8220 . 8221)
-     (171 . 187)))
-  (electric-pair-skip-self 'electric-pair-default-skip-self)
-  (electric-pair-skip-whitespace nil)
-  (electric-pair-skip-whitespace-chars
-   '(9
-     10
-     32))
-  (electric-quote-context-sensitive t)
-  (electric-quote-paragraph t)
-  (electric-quote-string nil)
   :config
+  (setq electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
+  (setq electric-pair-preserve-balance t)
+  (setq electric-pair-pairs
+        '((8216 . 8217)
+          (8220 . 8221)
+          (171 . 187)))
+  (setq electric-pair-skip-self 'electric-pair-default-skip-self)
+  (setq electric-pair-skip-whitespace nil)
+  (setq electric-pair-skip-whitespace-chars
+        '(9
+          10
+          32))
+  (setq electric-quote-context-sensitive t)
+  (setq electric-quote-paragraph t)
+  (setq electric-quote-string nil)
+
   (electric-indent-mode 1)
   (electric-pair-mode -1)
   (electric-quote-mode -1))
@@ -3820,10 +3825,10 @@ tab character).
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :custom
-  (cursor-type 'box)
-  (cursor-in-non-selected-windows 'hollow)
-  (x-stretch-cursor nil))
+  :config
+  (setq cursor-type 'box)
+  (setq cursor-in-non-selected-windows 'hollow)
+  (setq x-stretch-cursor nil))
 #+end_src
 
 ** Line length (column count)
@@ -3840,12 +3845,12 @@ and similar tools (or when manually invoking text formatting with
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :custom
-  (fill-column 72)
-  (sentence-end-double-space t)
-  (sentence-end-without-period nil)
-  (colon-double-space nil)
   :config
+  (setq fill-column 72)
+  (setq sentence-end-double-space t)
+  (setq sentence-end-without-period nil)
+  (setq colon-double-space nil)
+
   (column-number-mode 1))
 #+end_src
 
@@ -3875,8 +3880,8 @@ solution to this with the following:
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :custom
-  (save-interprogram-paste-before-kill t))
+  :config
+  (setq save-interprogram-paste-before-kill t))
 #+end_src
 
 Now the contents of the clipboard are stored in the kill ring and can
@@ -3900,11 +3905,11 @@ The other options in short:
 
 #+begin_src emacs-lisp
 (use-package mouse
-  :custom
-  (mouse-drag-copy-region t)
-  (make-pointer-invisible t)
-  (mouse-wheel-progressive-speed t)
   :config
+  (setq mouse-drag-copy-region t)
+  (setq make-pointer-invisible t)
+  (setq mouse-wheel-progressive-speed t)
+
   (mouse-wheel-mode 1))
 #+end_src
 
@@ -3944,10 +3949,10 @@ recenter text, because of the above.
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :custom
-  (scroll-preserve-screen-position t)
-  (scroll-conservatively 1)
-  (scroll-margin 0))
+  :config
+  (setq scroll-preserve-screen-position t)
+  (setq scroll-conservatively 1)
+  (setq scroll-margin 0))
 #+end_src
 
 ** Tool tips
@@ -3963,11 +3968,11 @@ increased for immediate pop-ups thereafter.
 
 #+begin_src emacs-lisp
 (use-package tooltip
-  :custom
-  (tooltip-delay 0.5)
-  (tooltip-short-delay 0.5)
-  (x-gtk-use-system-tooltips t)
   :config
+  (setq tooltip-delay 0.5)
+  (setq tooltip-short-delay 0.5)
+  (setq x-gtk-use-system-tooltips t)
+
   (tooltip-mode 1))
 #+end_src
 
@@ -3993,9 +3998,9 @@ Some minor conveniences:
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :custom
-  (repeat-on-final-keystroke t)
-  (set-mark-command-repeat-pop t)
+  :config
+  (setq repeat-on-final-keystroke t)
+  (setq set-mark-command-repeat-pop t)
   :bind ("M-z" . zap-up-to-char))
 #+end_src
 
@@ -4071,10 +4076,10 @@ A less intrusive, built-in alternative is to set the variable
   :ensure t
   :delight
   :commands rainbow-blocks-mode
-  :custom
-  (rainbow-blocks-highlight-braces-p t)
-  (rainbow-blocks-highlight-brackets-p t)
-  (rainbow-blocks-highlight-parens-p t))
+  :config
+  (setq rainbow-blocks-highlight-braces-p t)
+  (setq rainbow-blocks-highlight-brackets-p t)
+  (setq rainbow-blocks-highlight-parens-p t))
 #+end_src
 
 ** Rainbow mode (for colour testing)
@@ -4091,9 +4096,9 @@ when reviewing my themes (=rainbow-mode= is activated manually).
   :ensure t
   :delight
   :commands rainbow-mode
-  :custom
-  (rainbow-ansi-colors nil)
-  (rainbow-x-colors nil))
+  :config
+  (setq rainbow-ansi-colors nil)
+  (setq rainbow-x-colors nil))
 #+end_src
 
 ** Which key (key chord hints)
@@ -4122,16 +4127,16 @@ relevant documentation in a tooltip.
   :ensure t
   :delight
   :commands which-key-C-h-dispatch
-  :custom
-  (which-key-show-early-on-C-h t)
-  (which-key-idle-delay 10000)
-  (which-key-idle-secondary-delay 0.05)
-  (which-key-popup-type 'side-window)
-  (which-key-show-prefix 'echo)
-  (which-key-max-display-columns 6)
-  (which-key-separator " ")
-  (which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
   :config
+  (setq which-key-show-early-on-C-h t)
+  (setq which-key-idle-delay 10000)
+  (setq which-key-idle-secondary-delay 0.05)
+  (setq which-key-popup-type 'side-window)
+  (setq which-key-show-prefix 'echo)
+  (setq which-key-max-display-columns 6)
+  (setq which-key-separator " ")
+  (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
+
   (which-key-mode 1))
 #+end_src
 
