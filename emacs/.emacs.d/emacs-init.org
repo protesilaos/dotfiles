@@ -3732,8 +3732,9 @@ Emacs labels as "electric" any behaviour that involves contextual
 auto-insertion of characters.  This is a summary of my settings:
 
 + Indent automatically.
-+ Insert quotes and brackets in pairs.  Only do so if there is no
-  alphabetic character after the cursor.
++ If =electric-pair-mode= is enabled (which I might do manually), insert
+  quotes and brackets in pairs.  Only do so if there is no alphabetic
+  character after the cursor.
 + The cryptic numbers in the pairs set, correspond to curly single and
   double quotes and these =«»=.  The contents of this set are always
   inserted in pairs, regardless of major mode.
@@ -3776,7 +3777,7 @@ auto-insertion of characters.  This is a summary of my settings:
   (electric-quote-string nil)
   :config
   (electric-indent-mode 1)
-  (electric-pair-mode 1)
+  (electric-pair-mode -1)
   (electric-quote-mode -1))
 #+end_src
 
