@@ -1304,7 +1304,7 @@ effectively supersede the functionality of =anzu=, a package I once used.
   ;; All of the following variables were introduced in Emacs 27.1.
   (setq isearch-lazy-count t)
   (setq lazy-count-prefix-format "(%s/%s) ")
-  (setq lazy-count-suffic-format "[%s of %s]")
+  (setq lazy-count-suffix-format "[%s of %s]")
   (setq isearch-yank-on-move 'shift)
   (setq isearch-allow-scroll 'unlimited)
 
@@ -1718,13 +1718,13 @@ customise, which I do in the following package declarations.
 
 The following package is configured in accordance with the guidelines
 provided by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is
-to write commits that are clean and easy to read.
+to write commits that are clean and easy to read.  The =fill-column= is
+set elsewhere in this document to 72 characters long.
 
 #+begin_src emacs-lisp
 (use-package git-commit
   :after magit
   :config
-  (setq git-commit-fill-column 72)
   (setq git-commit-summary-max-length 50)
   (setq git-commit-known-pseudo-headers
         '("Signed-off-by"
@@ -2198,14 +2198,15 @@ Overview of the following settings:
   template.  Now you invoke the menu with =C-c C-,= and then press the
   relevant key.
 
-The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/org-recur][README of org-recur]].
+The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/org-recur][README of org-recur]].
 
 #+begin_src emacs-lisp
 (use-package org
   :config
   ;; agenda
   (setq org-directory "~/Org")
-  (setq org-agenda-files '("~/Org/tasks.org" "~/Org/notes.org"))
+  (setq org-agenda-files
+        '("~/Org/tasks.org" "~/Org/notes.org"))
   (setq org-default-notes-file "~/Org/notes.org")
   (setq org-agenda-window-setup 'current-window)
   (setq org-deadline-warning-days 7)
@@ -2217,7 +2218,8 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
           (tags priority-down category-keep)
           ((search category-keep))))
   ;; capture, refile, todo
-  (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
+  (setq org-refile-targets
+        '((org-agenda-files . (:maxlevel . 3))))
   (setq org-reverse-note-order nil)
   (setq org-refile-use-outline-path t)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
@@ -2252,7 +2254,8 @@ The =contrib/org-agenta-refresh= is taken from the [[https://github.com/m-cat/or
   ;; export
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)
-  (setq org-export-backends '(ascii html latex md))
+  (setq org-export-backends
+        '(ascii html latex md))
   ;; log
   (setq org-log-done 'time)
   (setq org-log-redeadline nil)
@@ -2963,7 +2966,6 @@ current line is more important than the exact column of the point.
 #+begin_src emacs-lisp
 (use-package package
   :commands (list-packages
-             package-menu-refresh
              package-refresh-contents
              package-list-packages)
   :hook (package-menu-mode . hl-line-mode))
@@ -4285,7 +4287,7 @@ They are written by me, unless otherwise noted.
   (defun prot/multi-line-prev ()
     "Moves the point 15 lines up."
     (interactive)
-    (previous-line 15))
+    (forward-line -15))
 
   (defun prot/kill-line-backward ()
     "Kill line backwards from the point to the beginning of the
