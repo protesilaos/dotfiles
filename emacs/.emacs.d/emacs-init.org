@@ -237,6 +237,26 @@ variables have been set.
 Settings that do not have a corresponding package are declared using the
 special =use-package emacs= notation.
 
+** Custom.el
+   :PROPERTIES:
+   :CUSTOM_ID: h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d
+   :END:
+
+When you install a package or use the various customisation interfaces
+to tweak things to your liking, Emacs will append a piece of elisp to
+your init file.  I prefer to have that stored in a separate file.
+
+#+begin_src emacs-lisp
+(use-package cus-edit
+  :config
+  (setq custom-file "~/.emacs.d/custom.el")
+
+  (unless (file-exists-p custom-file)
+    (write-region "" nil custom-file))
+
+  (load custom-file))
+#+end_src
+
 ** Edit modeline "lighters"
    :PROPERTIES:
    :CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
@@ -507,25 +527,6 @@ Overview of my settings:
      :PROPERTIES:
      :CUSTOM_ID: h:2f4b0490-01be-43e5-a952-c61226504e4e
      :END:
-
-*** Custom.el
-    :PROPERTIES:
-    :CUSTOM_ID: h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d
-    :END:
-
-When you install a package or use the various customisation interfaces
-to tweak things to your liking, Emacs will append a piece of elisp to
-your init file.  I prefer to have that stored in a separate file.
-
-#+begin_src emacs-lisp
-(use-package cus-edit
-  :custom
-  (custom-file "~/.emacs.d/custom.el")
-  :hook (after-init . (lambda ()
-                        (unless (file-exists-p custom-file)
-                          (write-region "" nil custom-file))
-                        (load custom-file))))
-#+end_src
 
 ** Record history
    :PROPERTIES:
