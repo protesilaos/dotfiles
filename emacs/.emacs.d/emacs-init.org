@@ -15,12 +15,13 @@
    :CUSTOM_ID: h:8cfd5674-4997-44c7-bb7a-1869d5d53538
    :END:
 
-The present document contains my configurations for GNU Emacs.  It is
-designed using principles of "literate programming": a combination of
-ordinary language and inline code blocks.  Emacs knows how to parse this
-file properly so as to evaluate only the elisp ("Emacs Lisp") included
-herein.  The rest is for humans to make sense of my additions and their
-underlying rationale.
+The present document, referred to in the source code version as
+=emacs-init.org=, contains the bulk of my configurations for GNU Emacs.
+It is designed using principles of "literate programming": a
+combination of ordinary language and inline code blocks.  Emacs knows
+how to parse this file properly so as to evaluate only the elisp
+("Emacs Lisp") included herein.  The rest is for humans to make sense
+of my additions and their underlying rationale.
 
 Literate programming allows us to be more expressive and deliberate.
 Not only we can use typography to its maximum potential, but can also
@@ -32,9 +33,13 @@ contains all /package configurations/ for my Emacs setup.  To actually
 work, it needs to be initialised from another file, that only covers the
 absolute essentials.
 
-My initialisation file, named =init.el= as per the Emacs convention, adds
-the community-driven MELPA archive to the list of package repositories
-and then loads the file with my configurations.
+*** Contents of my init.el
+
+The =emacs-init.org= is actually loaded from an other file, named
+=init.el= as per the Emacs convention.  Mine is designed to add the
+community-driven MELPA archive to the list of package repositories,
+configure =use-package= and then load the file with my configurations
+(i.e. the present document).
 
 For reference, these were the contents of my =init.el= *prior to Emacs
 27.1*.
@@ -58,48 +63,139 @@ Whereas in *Emacs 27.1 and onward*, they are modified thus:
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
-;; In Emacs >=27 packages are initialised before loading the user's
-;; init file.  This can be configured in the `early-init-file'.  Older
-;; versions of Emacs will read `package-enable-at-startup' from here.
-(when (< emacs-major-version 27)
-  (setq package-enable-at-startup nil))
+;; Initialise the packages, avoiding a re-initialisation.
+(unless (bound-and-true-p package--initialized)
+  (setq package-enable-at-startup nil)
+  (package-initialize))
 
-(package-initialize)
+;; Make sure `use-package' is available.
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; Configure `use-package' prior to loading it.
+(eval-and-compile
+  (setq use-package-always-ensure nil)
+  (setq use-package-always-defer nil)
+  (setq use-package-always-demand nil)
+  (setq use-package-expand-minimally nil)
+  (setq use-package-enable-imenu-support t))
+
+(eval-when-compile
+  (require 'use-package))
 
 (require 'org)
 (org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
 #+end_example
 
-As you can already tell from the comment in the previous block, an
-=early-init.el= is now required to control things with greater
-precision.  Its code is as follows:
+Starting with Emacs 27.1, an =early-init.el= is now required to control
+things with greater precision.  Its code is as follows:
 
 #+begin_example emacs-lisp
+;; Do not initialise the package manager.  This is done in `init.el'.
 (setq package-enable-at-startup nil)
+
+;; Do not resize the frame at this early stage.
+(setq frame-inhibit-implied-resize t)
 #+end_example
 
-These adjustments are of paramount importance due to a change in the
-way Emacs initialises the package manager. Prior to Emacs 27, the
+These adjustments are of paramount importance due to changes in the
+way Emacs initialises the package manager. Prior to Emacs 27.1, the
 =init.el= was supposed to handle that task by means of calling
-=package-initialize=.  Whereas for Emacs 27, the default behaviour is to
-start the package manager /before/ loading the user's init file.  This
-can create unexpected results with regard to how existing
+=package-initialize=.  Whereas for Emacs 27.1, the default behaviour is
+to start the package manager /before/ loading the user's init file.
+This can create unexpected results with regard to how existing
 configuration files are parsed—or at least that was my experience with
 certain settings not being parsed consistently (was not able to
 reproduce it reliably).  I prefer the old behaviour so I simply tell
 the =early-init.el= to defer the process of initialising the package
 manager to when =init.el= is evaluated.
 
-Moving on to other basic information you might need to bear in mind if
-you get the source code of this file.  In the =org-mode= version of this
-document, I make sure that the above-referenced code blocks are not
-declared as an =emacs-lisp= source but rather as mere examples, so they
-are not accidentally parsed by the actual setup.
+*** About `use-package'
+    :PROPERTIES:
+    :CUSTOM_ID: h:cfa129a4-3394-4911-9097-4544df4e6ed9
+    :END:
+
+This is a tool that streamlines the configuration of /packages/.  It
+handles everything from assigning key bindings, setting the value of
+customisation options, writing hooks, declaring a package as a
+dependency for another, and so on.
+
+Though it might not be readily apparent, a "package" in Emacs parlance
+is any elisp file that is evaluated by Emacs.  This includes libraries
+that are shipped with the upstream distribution as well as code that
+comes from other sources.
+
+Unlike a typical extensible program, there is no real distinction
+between native Emacs code and the one that comes from third parties.
+There is no externally-facing limited set of features that other tools
+can plug into.  Emacs is an interpreter of lisp (Emacs Lisp), meaning
+that any elisp is evaluated in real time, making Emacs behave in
+accordance with it.
+
+I have an hour long [[https://protesilaos.com/codelog/2019-12-20-vlog-switch-emacs/][presentation about switching to Emacs]], where this
+and other topics are discussed in greater detail.  It is good to
+understand the context in order to appreciate the differences between
+the various =use-package= declarations documented herein.
+
+The two main functions of =use-package=:
+
+1. To install and set up external packages.  Those are denoted by the
+   inclusion of =:ensure t=.
+2. To configure default packages.  No =:ensure t= for them.
+
+With =use-package= we can improve the start-up performance of Emacs in a
+few fairly simple ways.  Whenever a command is bound to a key it is
+configured to be loaded only once invoked.  Otherwise we can specify
+which functions should be autoloaded by means of the =:commands= keyword.
+
+Furthermore, and if absolutely necessary, I define all variables that
+are supposed to be immutable with the =:custom= keyword.  This writes
+them to the =custom.el= that I specify [[#h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d][further below]].  Consider that to
+be the exception, as all minor modes, custom functions, or other
+configurations are enabled under the =:config= keyword.  The activation
+of a mode should always be the very last thing, once all variables
+have been set.
+
+The following snippet of elisp sets up and configures =use-package= to
+my liking.  It is already referenced in the previous section
+concerning the [[*Contents of my init.el][contents of my init.el]].  This is due to changes in how
+Emacs 27.1 starts up.  Whereas before I used to configure =use-package=
+from inside this document.
+
+#+begin_example emacs-lisp
+;; Setup `use-package'
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; Should set before loading `use-package'
+(eval-and-compile
+  (setq use-package-always-ensure nil)
+  (setq use-package-always-defer nil)
+  (setq use-package-always-demand nil)
+  (setq use-package-expand-minimally nil)
+  (setq use-package-enable-imenu-support t))
+
+(eval-when-compile
+  (require 'use-package))
+#+end_example
+
+Settings that do not have a corresponding package are declared using the
+special =use-package emacs= notation.
+
+*** About the source code version of this document
+
+In the =org-mode= version of this document, I make sure that the
+above-referenced code blocks are not declared as an =emacs-lisp= source
+but rather as mere examples, so they are not accidentally parsed by
+the actual setup.
 
 Actual code blocks are wrapped between =#+begin_src= and =#+end_src= tags
-(not visible in the website version of this page).  Such templates can
-be quickly inserted with =C-c C-,= (this works both for empty blocks and
-active regions).  For more, refer to [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org's section further below]].
+(not visible in the website version of this page).  For Emacs 27.1,
+such templates can be quickly inserted with =C-c C-,= (this works both
+for empty blocks and active regions).  For more, refer to [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org's
+section further below]].
 
 As for the various settings included herein, you can learn /even more/
 about them by using [[https://protesilaos.com/codelog/2019-08-24-emacs-docs-discovery/][Emacs' built-in documentation]] (great for discovering
@@ -212,62 +308,6 @@ along with this file.  If not, see <http://www.gnu.org/licenses/>.
   :PROPERTIES:
   :CUSTOM_ID: h:4d42f3e3-e96f-4125-a819-0544a21d45f3
   :END:
-** Prepare use-package
-   :PROPERTIES:
-   :CUSTOM_ID: h:cfa129a4-3394-4911-9097-4544df4e6ed9
-   :END:
-
-This is a tool that streamlines the configuration of /packages/.  It
-handles everything from assigning key bindings, setting the value of
-customisation options, writing hooks, declaring a package as a
-dependency for another, and so on.
-
-Though it might not be readily apparent, a "package" in Emacs parlance
-is any elisp file that is evaluated by Emacs.  This includes libraries
-that are shipped with the upstream distribution as well as code that
-comes from other sources.
-
-Unlike a typical extensible program, there is no real distinction
-between native Emacs code and the one that comes from third parties.
-There is no API or a limited set of features that external tools can
-plug into.  Emacs is an interpreter or lisp (Emacs Lisp), meaning that
-any elisp is evaluated in real time, thus making Emacs behave in
-accordance with it.
-
-I have an hour long [[https://protesilaos.com/codelog/2019-12-20-vlog-switch-emacs/][presentation about switching to Emacs]], where this
-and other topics are discussed in greater detail.  It is good to
-understand the context in order to appreciate the differences between
-the various =use-package= declarations documented herein.
-
-1. To install and set up external packages.  Those are denoted by the
-   inclusion of =:ensure t=.
-2. To configure default packages.  No =:ensure t= for them.
-
-With =use-package= we can improve the start-up performance of Emacs in a
-few fairly simple ways.  Whenever a command is bound to a key it is
-configured to be loaded only once invoked.  Otherwise we can specify
-which functions should be autoloaded by means of the =:commands= keyword.
-
-Furthermore, and if absolutely necessary, I define all variables that
-are supposed to be immutable with the =:custom= keyword.  This writes
-them to the =custom.el= that I specify [[#h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d][further below]].  Consider that to
-be the exception, as all minor modes, custom functions, or other
-configurations are enabled under the =:config= keyword.  The activation
-of a mode should always be the very last thing, once all variables
-have been set.
-
-#+begin_src emacs-lisp
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
-#+end_src
-
-Settings that do not have a corresponding package are declared using the
-special =use-package emacs= notation.
-
 ** Custom.el
    :PROPERTIES:
    :CUSTOM_ID: h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d
@@ -1438,15 +1478,19 @@ as =-AFXhlv --group-directories-first=).
   :config
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
-  (setq dired-isearch-filenames 'dwim)
   (setq delete-by-moving-to-trash t)
   (setq dired-listing-switches "-AFhlv --group-directories-first")
   (setq dired-dwim-target t)
-  (setq dired-create-destination-dirs 'always) ; Emacs 27.1
-  (setq dired-vc-rename-file t)                ; Emacs 27.1
   :hook
   (dired-mode . dired-hide-details-mode)
   (dired-mode . hl-line-mode))
+
+(use-package dired-aux
+  :config
+  (setq dired-isearch-filenames 'dwim)
+  ;; The following were introduced in Emacs 27.1
+  (setq dired-create-destination-dirs 'always)
+  (setq dired-vc-rename-file t))
 
 (use-package find-dired
   :after dired
@@ -1977,7 +2021,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
 
 #+begin_src emacs-lisp
 (use-package window
-  :config
+  :init
   ;; TODO do not repeat common parts, abstract them somehow
   (setq display-buffer-alist
         '(;; bottom side window
@@ -3401,8 +3445,7 @@ Now a few words about the key bindings:
   (setq company-tooltip-limit 10)
   (setq company-tooltip-margin 1)
   (setq company-tooltip-offset-display 'scrollbar)
-
-  (global-company-mode 1)
+  :hook (after-init . global-company-mode)
   :bind (:map company-mode-map
               ("M-/" . company-manual-begin)
               :map company-active-map

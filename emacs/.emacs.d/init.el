@@ -32,13 +32,26 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
-;; In Emacs >=27 packages are initialised before loading the user's
-;; init file.  This can be configured in the `early-init-file'.  Older
-;; versions of Emacs will read `package-enable-at-startup' from here.
-(when (< emacs-major-version 27)
-  (setq package-enable-at-startup nil))
+;; Initialise the packages, avoiding a re-initialisation.
+(unless (bound-and-true-p package--initialized)
+  (setq package-enable-at-startup nil)
+  (package-initialize))
 
-(package-initialize)
+;; Make sure `use-package' is available.
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; Configure `use-package' prior to loading it.
+(eval-and-compile
+  (setq use-package-always-ensure nil)
+  (setq use-package-always-defer nil)
+  (setq use-package-always-demand nil)
+  (setq use-package-expand-minimally nil)
+  (setq use-package-enable-imenu-support t))
+
+(eval-when-compile
+  (require 'use-package))
 
 (require 'org)
 (org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
