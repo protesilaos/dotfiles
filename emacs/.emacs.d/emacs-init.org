@@ -308,44 +308,9 @@ along with this file.  If not, see <http://www.gnu.org/licenses/>.
   :PROPERTIES:
   :CUSTOM_ID: h:4d42f3e3-e96f-4125-a819-0544a21d45f3
   :END:
-** Custom.el
-   :PROPERTIES:
-   :CUSTOM_ID: h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d
-   :END:
 
-When you install a package or use the various customisation interfaces
-to tweak things to your liking, Emacs will append a piece of elisp to
-your init file.  I prefer to have that stored in a separate file.
-
-#+begin_src emacs-lisp
-(use-package cus-edit
-  :config
-  (setq custom-file "~/.emacs.d/custom.el")
-
-  (unless (file-exists-p custom-file)
-    (write-region "" nil custom-file))
-
-  (load custom-file))
-#+end_src
-
-** Edit modeline "lighters"
-   :PROPERTIES:
-   :CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
-   :END:
-
-In Emacs speak, the name of a mode present at the modeline is called a
-"lighter".  For example, Flyspell's lighter is "Fly".
-
-With this package we can edit or rename lighters, or altogether hide
-them (the information is still available when running =C-h m=).
-Furthermore, the functionality can be integrated in every package
-declaration of =use-package=: you will see a =:delight= tag.
-
-#+begin_src emacs-lisp
-(use-package delight
-  :ensure t
-  :after use-package)
-#+end_src
+This section contains the relatively few configurations that are needed
+prior to the setup of everything else.
 
 ** Disable GUI components
    :PROPERTIES:
@@ -375,19 +340,66 @@ Overview of these settings:
   (setq use-file-dialog nil)
   (setq use-dialog-box nil)
   (setq inhibit-splash-screen t)
-
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
   (global-unset-key (kbd "C-z"))
   (global-unset-key (kbd "C-x C-z"))
-  (global-unset-key (kbd "C-h h")))
+  (global-unset-key (kbd "C-h h"))
+  :hook (after-init . (lambda ()
+                        (menu-bar-mode -1)
+                        (tool-bar-mode -1)
+                        (scroll-bar-mode -1))))
+#+end_src
+
+** Edit modeline "lighters"
+   :PROPERTIES:
+   :CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
+   :END:
+
+In Emacs speak, the name of a mode present at the modeline is called a
+"lighter".  For example, Flyspell's lighter is "Fly".
+
+With this package we can edit or rename lighters, or altogether hide
+them (the information is still available when running =C-h m=).
+Furthermore, the functionality can be integrated in every package
+declaration of =use-package=: you will see a =:delight= tag.
+
+#+begin_src emacs-lisp
+(use-package delight
+  :ensure t
+  :after use-package)
+#+end_src
+
+** Custom.el
+   :PROPERTIES:
+   :CUSTOM_ID: h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d
+   :END:
+
+When you install a package or use the various customisation interfaces
+to tweak things to your liking, Emacs will append a piece of elisp to
+your init file.  I prefer to have that stored in a separate file.
+
+#+begin_src emacs-lisp
+(use-package cus-edit
+  :config
+  (setq custom-file "~/.emacs.d/custom.el")
+
+  (unless (file-exists-p custom-file)
+    (write-region "" nil custom-file))
+
+  (load custom-file))
 #+end_src
 
 ** Base typeface configurations
    :PROPERTIES:
    :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
    :END:
+
+While we can always specify a font family for each Emacs "face"
+(i.e. customisable styles of code/interface constructs), it still is a
+good idea to establish a baseline for what typeface settings should be
+applicable by default.  In general, I like constistent typography and
+would only mix styles when it is absolutely necessary to convey a
+particular meaning.
+
 *** Primary font settings
     :PROPERTIES:
     :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
@@ -412,20 +424,6 @@ relevant =fontconfig= settings, as Iosevka is only meant to be used inside
 of Emacs, while I keep Hack as the generic monospaced font.
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq x-underline-at-descent-line t)
-  (setq underline-minimum-offset 1)
-
-  (defconst prot/fixed-pitch-font "Iosevka Slab Extended"
-    "The default fixed-pitch typeface.")
-
-  (defconst prot/fixed-pitch-font-alt "Iosevka Slab"
-    "The default fixed-pitch typeface.")
-
-  (defconst prot/fixed-pitch-params ":hintstyle=hintfull"
-    "Fontconfig parameters for the fixed-pitch typeface.")
-
   ;;;; TODO is it okay to defconst there?
   ;; (defun prot/test-font-availaiblity ()
   ;;   "Checks for the availability of a desired monospace font"
@@ -433,38 +431,52 @@ of Emacs, while I keep Hack as the generic monospaced font.
   ;;     (defconst prot/fixed-pitch-font "Iosevka Slab Extended"
   ;;       "The default fixed-pitch typeface.")))
 
-  (defun prot/font-family-size (family size)
-    "Set frame font for FAMILY at SIZE."
-    (set-frame-font (concat
-                     family "-" (number-to-string size)
-                     prot/fixed-pitch-params)
-                    t t))
+  (use-package emacs
+    :config
+    (setq x-underline-at-descent-line t)
+    (setq underline-minimum-offset 1)
 
-  (defun prot/laptop-fonts ()
-    "Pass desired argument to `prot/font-sizes' for use on my
-small laptop monitor."
-    (interactive)
-    (when window-system
-      (prot/font-family-size prot/fixed-pitch-font-alt 10.75)))
+    (defconst prot/fixed-pitch-font "Iosevka Slab Extended"
+      "The default fixed-pitch typeface.")
 
-  (defun prot/desktop-fonts ()
-    "Pass desired argument to `prot/font-sizes' for use on my
-larger desktop monitor."
-    (interactive)
-    (when window-system
-      (prot/font-family-size prot/fixed-pitch-font 10.75)))
+    (defconst prot/fixed-pitch-font-alt "Iosevka Slab"
+      "The default fixed-pitch typeface.")
 
-  (defun prot/fonts-per-monitor ()
-    "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
-based on the width of the monitor.  The calculation is based on
-the maximum width of my laptop's screen."
-    (interactive)
-    (when window-system
-      (if (> (display-pixel-width) 1366)
-          (prot/desktop-fonts)
-        (prot/laptop-fonts))))
+    (defconst prot/fixed-pitch-params ":hintstyle=hintfull"
+      "Fontconfig parameters for the fixed-pitch typeface.")
 
-  :hook (after-init . prot/fonts-per-monitor))
+    (defun prot/font-family-size (family size)
+      "Set frame font for FAMILY at SIZE."
+      (set-frame-font (concat
+		       family "-" (number-to-string size)
+		       prot/fixed-pitch-params)
+		      t t))
+
+    (defun prot/laptop-fonts ()
+      "Pass desired argument to `prot/font-sizes' for use on my
+  small laptop monitor."
+      (interactive)
+      (when window-system
+	(prot/font-family-size prot/fixed-pitch-font-alt 10.75)))
+
+    (defun prot/desktop-fonts ()
+      "Pass desired argument to `prot/font-sizes' for use on my
+  larger desktop monitor."
+      (interactive)
+      (when window-system
+	(prot/font-family-size prot/fixed-pitch-font 10.75)))
+
+    (defun prot/fonts-per-monitor ()
+      "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
+  based on the width of the monitor.  The calculation is based on
+  the maximum width of my laptop's screen."
+      (interactive)
+      (when window-system
+	(if (> (display-pixel-width) 1366)
+	    (prot/desktop-fonts)
+	  (prot/laptop-fonts))))
+
+    :hook (after-init . prot/fonts-per-monitor))
 #+end_src
 
 **** Typeface suitability test
@@ -472,9 +484,10 @@ the maximum width of my laptop's screen."
     :CUSTOM_ID: h:9035a1ed-e988-4731-89a5-0d9e302c3dea
     :END:
 
-And here is a simple test to assess the overall quality of the font: /can
-you discern the character at a quick glance?/ If yes, your choice of font
-is good, else search for something else.
+Here is a simple test I have come up with to make an initial assessment
+of the overall quality of the font: /can you discern the character at a
+quick glance?/ If yes, your choice of font is good /prima facie/, else
+search for something else.
 
 Note that this test is not perfect, since many typefaces fall short in
 less obvious ways, such as the space between the characters.  Also note
@@ -511,226 +524,6 @@ abcdefghijklmnopqrstuvwxyz
 ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ
 αβγδεζηθικλμνξοπρστυφχψω
 #+end_example
-
-** Persistent state
-   :PROPERTIES:
-   :CUSTOM_ID: h:8798f77e-ad6c-4b3c-b808-c617b7135441
-   :END:
-*** Emacs server
-    :PROPERTIES:
-    :CUSTOM_ID: h:b40b36f1-c00d-4677-8efb-f1e18c4c4b8d
-    :END:
-
-The following uses the first /running/ process as the one others may
-connect to.  This means that calling =emacsclient= (with or without
-=--create-frame=), will share the same buffer list and data as the
-original running process.  The server persists for as long as there is
-an Emacs frame attached to said server.
-
-#+begin_src emacs-lisp
-(use-package server
-  :hook (after-init . server-start))
-#+end_src
-
-I personally have no need for the server per se: I launch Emacs and keep
-it open for as long as I am on the computer.  That is mostly there in
-case some external functionality calls the =$EDITOR= environment
-variable.  Though, again, this has never happened in practice as I use
-Emacs for practically everything.
-
-*** Emacs "desktop" (state of buffers)
-    :PROPERTIES:
-    :CUSTOM_ID: h:b8d23f7d-acb8-49df-990c-3065df4f32e8
-    :END:
-
-What I find more useful is the ability to save the state I was in: the
-name and position of buffers, and the like.  Emacs calls this state of
-affairs the "desktop".  Preserving it saves me from any possible crash
-or when I need to close Emacs and re-launch it later (my hardware is
-limited, so I do not keep it running while I am away).
-
-Overview of my settings:
-
-+ Enable the mode that saves the "desktop", instructing it to load a
-  small number of buffers at launch (=desktop-restore-eager=).  The
-  remainder of the buffer list will be loaded lazily.
-+ Now we must tell it where to store the files it generates and how
-  often it should save.  Concerning the latter, the default is to
-  store the state every time it changes.  I find that a bit too much,
-  so I set a timeout of five minutes of idleness.
-+ Note the =desktop-load-locked-desktop=.  By default, Emacs locks the
-  desktop file while it runs.  The lock is removed upon exiting.  This
-  is a safety mechanism.  There are two cases where the lock can create
-  issues:
-  + Emacs has crashed, meaning that it exited abruptly and was not able
-    to unlock the desktop.  Upon re-lauch Emacs will prompt you whether
-    to load the locked file.  You normally want to answer affirmatively.
-  + Emacs runs in daemon mode, where it does not ask questions upon
-    loading.  In this case the lock is ignored.
-  + Because I am only affected by the former, I choose to disable the
-    prompt and just load the thing directly.  Otherwise, I would set it
-    to =nil=.
-+ Do not restore frame configurations.  Causes problems with the way my
-  themes are loaded.  Besides, window layouts are not important to me,
-  since I use the buffer-switching methods to move around.
-+ Ask what to do in case the session has a newer file that the one it
-  initially started out with (e.g. when a new frame runs in parallel to
-  the older one).
-
-#+begin_src emacs-lisp
-(use-package desktop
-  :config
-  (setq desktop-auto-save-timeout 300)
-  (setq desktop-dirname "~/.emacs.d/")
-  (setq desktop-base-file-name "desktop")
-  (setq desktop-files-not-to-save nil)
-  (setq desktop-globals-to-clear nil)
-  (setq desktop-load-locked-desktop t)
-  (setq desktop-missing-file-warning t)
-  (setq desktop-restore-eager 3)
-  (setq desktop-restore-frames nil)
-  (setq desktop-save 'ask-if-new)
-  :hook (after-init . desktop-save-mode))
-#+end_src
-
-** Record history
-   :PROPERTIES:
-   :CUSTOM_ID: h:ab868c1a-7ca6-4f54-83d8-eab49447da82
-   :END:
-*** Recentf (recent files and directories)
-    :PROPERTIES:
-    :CUSTOM_ID: h:5723c4bb-ff6c-449f-bb60-be66fab3f137
-    :END:
-
-This is a built-in mode that keeps track of the files you have opened,
-allowing you go back to them faster.  It can also integrate with a
-completion framework to populate their "virtual buffers" list.
-
-A few words about the variables I configure:
-
-+ Enable the mode and define the file it should use to store the list of
-  files.
-+ Allow only 10 items in the menu.  This is used by the menu bar, which
-  I disable by default.
-+ Store up to 100 items at a time.  The number is arbitrary but seems
-  good enough for me to (a) find common items quickly, (b) do not keep
-  track of everything I ever access.
-+ Do not prepend a number to the first ten files that appear in the
-  dedicated =recentf= buffer (accessible via =recentf-open-files=).
-
-Now some notes on my extensions:
-
-+ The functions whose name starts with "rjs" are intended to address a
-  limitation in the original package that does not keep track of file
-  name changes.  With these we make sure that the list is updated any
-  time a file is moved/renamed.  My sole contribution to these functions
-  is to append the =recentf-cleanup= function where appropriate, to
-  ensure that only the new name is tracked, while the old is discarded.
-+ The function that includes Dired buffers to the list, is extracted
-  from the [[https://www.emacswiki.org/emacs/recentf-ext.el][recentf-ext file on the Emacs Wiki]].  I use this in tandem
-  with my completion framework's virtual buffers.  This practically
-  eliminates whatever need for a dedicated command to display
-  recently-accessed directories (dired buffers).
-
-#+begin_src emacs-lisp
-(use-package recentf
-  :config
-  (setq recentf-save-file "~/.emacs.d/recentf")
-  (setq recentf-max-menu-items 10)
-  (setq recentf-max-saved-items 200)
-  (setq recentf-show-file-shortcuts-flag nil)
-
-  ;; rename entries in recentf when moving files in dired
-  (defun rjs/recentf-rename-directory (oldname newname)
-    ;; oldname, newname and all entries of recentf-list should already
-    ;; be absolute and normalised so I think this can just test whether
-    ;; oldname is a prefix of the element.
-    (setq recentf-list
-          (mapcar (lambda (name)
-                    (if (string-prefix-p oldname name)
-                        (concat newname (substring name (length oldname)))
-                      name))
-                  recentf-list))
-    (recentf-cleanup))
-
-  (defun rjs/recentf-rename-file (oldname newname)
-    (setq recentf-list
-          (mapcar (lambda (name)
-                    (if (string-equal name oldname)
-                        newname
-                      oldname))
-                  recentf-list))
-    (recentf-cleanup))
-
-  (defun rjs/recentf-rename-notify (oldname newname &rest args)
-    (if (file-directory-p newname)
-        (rjs/recentf-rename-directory oldname newname)
-      (rjs/recentf-rename-file oldname newname)))
-
-  (advice-add 'dired-rename-file :after #'rjs/recentf-rename-notify)
-
-  (defun contrib/recentf-add-dired-directory ()
-    "Include Dired buffers in the list.  Particularly useful when
-combined with a completion framework's ability to display virtual
-buffers."
-    (when (and (stringp dired-directory)
-               (equal "" (file-name-nondirectory dired-directory)))
-      (recentf-add-file dired-directory)))
-
-  :hook (after-init . recentf-mode))
-#+end_src
-
-*** Minibuffer
-    :PROPERTIES:
-    :CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
-    :END:
-
-Keeps a record of actions involving the minibuffer.
-
-#+begin_src emacs-lisp
-(use-package savehist
-  :config
-  (setq savehist-file "~/.emacs.d/savehist")
-  (setq history-length 1000)
-  (setq savehist-save-minibuffer-history t)
-  :hook (after-init . savehist-mode))
-#+end_src
-
-*** Point (cursor position)
-    :PROPERTIES:
-    :CUSTOM_ID: h:ae1cad56-c12c-4bd5-a5cc-e85c0ad4b978
-    :END:
-
-Just remember where the point is in any given file.
-
-#+begin_src emacs-lisp
-(use-package saveplace
-  :config
-  (setq save-place-file "~/.emacs.d/saveplace")
-  :hook (after-init . save-place-mode))
-#+end_src
-
-*** Backups
-    :PROPERTIES:
-    :CUSTOM_ID: h:3d2e3e65-b860-4ad7-87d2-24e4e9d0e296
-    :END:
-
-/This section is subject to review./
-
-And here are some settings pertaining to backups.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq backup-directory-alist
-        '(("." . "~/.emacs.d/backup/")))
-  (setq backup-by-copying t)
-  (setq version-control t)
-  (setq delete-old-versions t)
-  (setq kept-new-versions 6)
-  (setq kept-old-versions 2)
-  (setq create-lockfiles nil))
-#+end_src
 
 * Selection candidates and search methods
   :PROPERTIES:
@@ -4548,4 +4341,230 @@ This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_
       (diff old new)
       (kill-buffer old)
       (kill-buffer new))))
+#+end_src
+* History and desktop state
+
+This section contains configurations for packages that are dedicated to
+the task of recording the state of various Emacs tools.  As such, this
+section does not cover packages that may define functionality beyond the
+narrow confines of tracking and storing history.  For example, Ivy's
+filtering mechanism (=prescient=) defines its own saved state, but it
+would not make sense to declare here, since it also plugs into various
+Ivy-specific items.
+
+** Persistent session
+   :PROPERTIES:
+   :CUSTOM_ID: h:8798f77e-ad6c-4b3c-b808-c617b7135441
+   :END:
+
+These are about the general state of Emacs.
+
+*** Emacs server
+    :PROPERTIES:
+    :CUSTOM_ID: h:b40b36f1-c00d-4677-8efb-f1e18c4c4b8d
+    :END:
+
+The following uses the first /running/ process as the one others may
+connect to.  This means that calling =emacsclient= (with or without
+=--create-frame=), will share the same buffer list and data as the
+original running process.  The server persists for as long as there is
+an Emacs frame attached to said server.
+
+#+begin_src emacs-lisp
+(use-package server
+  :hook (after-init . server-start))
+#+end_src
+
+*** Emacs "desktop" (state of buffers)
+    :PROPERTIES:
+    :CUSTOM_ID: h:b8d23f7d-acb8-49df-990c-3065df4f32e8
+    :END:
+
+What I find particularly useful is the ability to save the state I was
+in: the name and position of buffers, and the like.  Emacs calls this
+state of affairs the "desktop".  Preserving it saves me from any
+possible crash or when I need to close Emacs and re-launch it later (my
+hardware is limited, so I do not keep it running while I am away).
+
+Overview of my settings:
+
++ Enable the mode that saves the "desktop", instructing it to load a
+  small number of buffers at launch (=desktop-restore-eager=).  The
+  remainder of the buffer list will be loaded lazily.
++ Now we must tell it where to store the files it generates and how
+  often it should save.  Concerning the latter, the default is to
+  store the state every time it changes.  I find that a bit too much,
+  so I set a timeout of five minutes of idleness.
++ Note the =desktop-load-locked-desktop=.  By default, Emacs locks the
+  desktop file while it runs.  The lock is removed upon exiting.  This
+  is a safety mechanism.  There are two cases where the lock can create
+  issues:
+  + Emacs has crashed, meaning that it exited abruptly and was not able
+    to unlock the desktop.  Upon re-lauch Emacs will prompt you whether
+    to load the locked file.  You normally want to answer affirmatively.
+  + Emacs runs in daemon mode, where it does not ask questions upon
+    loading.  In this case the lock is ignored.
+  + Because I am only affected by the former, I choose to disable the
+    prompt and just load the thing directly.  Otherwise, I would set it
+    to =nil=.
++ Do not restore frame configurations.  Causes problems with the way my
+  themes are loaded.  Besides, window layouts are not important to me,
+  since I use the buffer-switching methods to move around.
++ Ask what to do in case the session has a newer file that the one it
+  initially started out with (e.g. when a new frame runs in parallel to
+  the older one).
+
+#+begin_src emacs-lisp
+(use-package desktop
+  :config
+  (setq desktop-auto-save-timeout 300)
+  (setq desktop-dirname "~/.emacs.d/")
+  (setq desktop-base-file-name "desktop")
+  (setq desktop-files-not-to-save nil)
+  (setq desktop-globals-to-clear nil)
+  (setq desktop-load-locked-desktop t)
+  (setq desktop-missing-file-warning t)
+  (setq desktop-restore-eager 3)
+  (setq desktop-restore-frames nil)
+  (setq desktop-save 'ask-if-new)
+  :hook (after-init . desktop-save-mode))
+#+end_src
+
+** Record history
+   :PROPERTIES:
+   :CUSTOM_ID: h:ab868c1a-7ca6-4f54-83d8-eab49447da82
+   :END:
+*** Recentf (recent files and directories)
+    :PROPERTIES:
+    :CUSTOM_ID: h:5723c4bb-ff6c-449f-bb60-be66fab3f137
+    :END:
+
+This is a built-in mode that keeps track of the files you have opened,
+allowing you go back to them faster.  It can also integrate with a
+completion framework to populate their "virtual buffers" list.
+
+A few words about the variables I configure:
+
++ Enable the mode and define the file it should use to store the list of
+  files.
++ Allow only 10 items in the menu.  This is used by the menu bar, which
+  I disable by default.
++ Store up to 100 items at a time.  The number is arbitrary but seems
+  good enough for me to (a) find common items quickly, (b) do not keep
+  track of everything I ever access.
++ Do not prepend a number to the first ten files that appear in the
+  dedicated =recentf= buffer (accessible via =recentf-open-files=).
+
+Now some notes on my extensions:
+
++ The functions whose name starts with "rjs" are intended to address a
+  limitation in the original package that does not keep track of file
+  name changes.  With these we make sure that the list is updated any
+  time a file is moved/renamed.  My sole contribution to these functions
+  is to append the =recentf-cleanup= function where appropriate, to
+  ensure that only the new name is tracked, while the old is discarded.
++ The function that includes Dired buffers to the list, is extracted
+  from the [[https://www.emacswiki.org/emacs/recentf-ext.el][recentf-ext file on the Emacs Wiki]].  I use this in tandem
+  with my completion framework's virtual buffers.  This practically
+  eliminates whatever need for a dedicated command to display
+  recently-accessed directories (dired buffers).
+
+#+begin_src emacs-lisp
+(use-package recentf
+  :config
+  (setq recentf-save-file "~/.emacs.d/recentf")
+  (setq recentf-max-menu-items 10)
+  (setq recentf-max-saved-items 200)
+  (setq recentf-show-file-shortcuts-flag nil)
+
+  ;; rename entries in recentf when moving files in dired
+  (defun rjs/recentf-rename-directory (oldname newname)
+    ;; oldname, newname and all entries of recentf-list should already
+    ;; be absolute and normalised so I think this can just test whether
+    ;; oldname is a prefix of the element.
+    (setq recentf-list
+          (mapcar (lambda (name)
+                    (if (string-prefix-p oldname name)
+                        (concat newname (substring name (length oldname)))
+                      name))
+                  recentf-list))
+    (recentf-cleanup))
+
+  (defun rjs/recentf-rename-file (oldname newname)
+    (setq recentf-list
+          (mapcar (lambda (name)
+                    (if (string-equal name oldname)
+                        newname
+                      oldname))
+                  recentf-list))
+    (recentf-cleanup))
+
+  (defun rjs/recentf-rename-notify (oldname newname &rest args)
+    (if (file-directory-p newname)
+        (rjs/recentf-rename-directory oldname newname)
+      (rjs/recentf-rename-file oldname newname)))
+
+  (advice-add 'dired-rename-file :after #'rjs/recentf-rename-notify)
+
+  (defun contrib/recentf-add-dired-directory ()
+    "Include Dired buffers in the list.  Particularly useful when
+combined with a completion framework's ability to display virtual
+buffers."
+    (when (and (stringp dired-directory)
+               (equal "" (file-name-nondirectory dired-directory)))
+      (recentf-add-file dired-directory)))
+
+  :hook (after-init . recentf-mode))
+#+end_src
+
+*** Minibuffer
+    :PROPERTIES:
+    :CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
+    :END:
+
+Keeps a record of actions involving the minibuffer.
+
+#+begin_src emacs-lisp
+(use-package savehist
+  :config
+  (setq savehist-file "~/.emacs.d/savehist")
+  (setq history-length 1000)
+  (setq savehist-save-minibuffer-history t)
+  :hook (after-init . savehist-mode))
+#+end_src
+
+*** Point (cursor position)
+    :PROPERTIES:
+    :CUSTOM_ID: h:ae1cad56-c12c-4bd5-a5cc-e85c0ad4b978
+    :END:
+
+Just remember where the point is in any given file.
+
+#+begin_src emacs-lisp
+(use-package saveplace
+  :config
+  (setq save-place-file "~/.emacs.d/saveplace")
+  :hook (after-init . save-place-mode))
+#+end_src
+
+*** Backups
+    :PROPERTIES:
+    :CUSTOM_ID: h:3d2e3e65-b860-4ad7-87d2-24e4e9d0e296
+    :END:
+
+/This section is subject to review./
+
+And here are some settings pertaining to backups.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq backup-directory-alist
+        '(("." . "~/.emacs.d/backup/")))
+  (setq backup-by-copying t)
+  (setq version-control t)
+  (setq delete-old-versions t)
+  (setq kept-new-versions 6)
+  (setq kept-old-versions 2)
+  (setq create-lockfiles nil))
 #+end_src
