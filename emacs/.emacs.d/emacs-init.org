@@ -711,7 +711,7 @@ type something anyhow).
   (setq prescient-history-length 200)
   (setq prescient-save-file "~/.emacs.d/prescient-items")
   (setq prescient-filter-method '(literal regexp))
-  :hook (after-init . prescient-persist-mode))
+  (prescient-persist-mode 1))
 
 (use-package ivy-prescient
   :ensure t
@@ -727,7 +727,7 @@ type something anyhow).
   (setq ivy-prescient-retain-classic-highlighting t)
   (setq ivy-prescient-enable-filtering nil)
   (setq ivy-prescient-enable-sorting t)
-  :hook (after-init . ivy-prescient-mode))
+  (ivy-prescient-mode 1))
 #+end_src
 
 **** Counsel configurations and key bindings
@@ -3239,7 +3239,7 @@ completion candidates.  I am using it in tandem with Ivy (see the
 (use-package company-prescient
   :ensure t
   :after (company prescient)
-  :hook (company-mode . company-prescient-mode))
+  :config (company-prescient-mode 1))
 #+end_src
 
 ** Eldoc (elisp live documentation feedback)
@@ -4441,7 +4441,7 @@ A few words about the variables I configure:
   files.
 + Allow only 10 items in the menu.  This is used by the menu bar, which
   I disable by default.
-+ Store up to 100 items at a time.  The number is arbitrary but seems
++ Store up to 200 items at a time.  The number is arbitrary but seems
   good enough for me to (a) find common items quickly, (b) do not keep
   track of everything I ever access.
 + Do not prepend a number to the first ten files that appear in the
@@ -4520,9 +4520,9 @@ Keeps a record of actions involving the minibuffer.
 (use-package savehist
   :config
   (setq savehist-file "~/.emacs.d/savehist")
-  (setq history-length 1000)
+  (setq history-length 10000)
   (setq savehist-save-minibuffer-history t)
-  :hook (after-init . savehist-mode))
+  (savehist-mode 1))
 #+end_src
 
 *** Point (cursor position)
@@ -4536,7 +4536,7 @@ Just remember where the point is in any given file.
 (use-package saveplace
   :config
   (setq save-place-file "~/.emacs.d/saveplace")
-  :hook (after-init . save-place-mode))
+  (save-place-mode 1))
 #+end_src
 
 *** Backups
