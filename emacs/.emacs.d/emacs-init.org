@@ -464,8 +464,7 @@ the maximum width of my laptop's screen."
           (prot/desktop-fonts)
         (prot/laptop-fonts))))
 
-  :hook
-  (after-init . prot/fonts-per-monitor))
+  :hook (after-init . prot/fonts-per-monitor))
 #+end_src
 
 **** Typeface suitability test
@@ -591,7 +590,7 @@ Overview of my settings:
   (setq desktop-restore-eager 3)
   (setq desktop-restore-frames nil)
   (setq desktop-save 'ask-if-new)
-  :hook (after-init . (lambda () (desktop-save-mode 1))))
+  :hook (after-init . desktop-save-mode))
 #+end_src
 
 ** Record history
@@ -678,7 +677,7 @@ buffers."
                (equal "" (file-name-nondirectory dired-directory)))
       (recentf-add-file dired-directory)))
 
-  (recentf-mode 1))
+  :hook (after-init . recentf-mode))
 #+end_src
 
 *** Minibuffer
@@ -694,8 +693,7 @@ Keeps a record of actions involving the minibuffer.
   (setq savehist-file "~/.emacs.d/savehist")
   (setq history-length 1000)
   (setq savehist-save-minibuffer-history t)
-
-  (savehist-mode 1))
+  :hook (after-init . savehist-mode))
 #+end_src
 
 *** Point (cursor position)
@@ -709,8 +707,7 @@ Just remember where the point is in any given file.
 (use-package saveplace
   :config
   (setq save-place-file "~/.emacs.d/saveplace")
-
-  (save-place-mode 1))
+  :hook (after-init . save-place-mode))
 #+end_src
 
 *** Backups
@@ -849,9 +846,8 @@ package declaration is but a piece of a greater whole.
   (ivy-set-occur 'swiper 'swiper-occur)
   (ivy-set-occur 'swiper-isearch 'swiper-occur)
   (ivy-set-occur 'swiper-multi 'counsel-ag-occur)
-  (ivy-mode 1)
-  :hook
-  (ivy-occur-mode . hl-line-mode)
+  :hook ((after-init . ivy-mode)
+         (ivy-occur-mode . hl-line-mode))
   :bind (("<s-up>" . ivy-push-view)
 		 ("<s-down>" . ivy-switch-view)
          ("C-S-r" . ivy-resume)
@@ -888,8 +884,7 @@ without any further intervention.
   (setq amx-save-file "~/.emacs.d/amx-items")
   (setq amx-history-length 50)
   (setq amx-show-key-bindings nil)
-
-  (amx-mode 1))
+  :hook (after-init . amx-mode))
 #+end_src
 
 **** Prescient (sort, filter results)
@@ -931,8 +926,7 @@ type something anyhow).
   (setq prescient-history-length 200)
   (setq prescient-save-file "~/.emacs.d/prescient-items")
   (setq prescient-filter-method '(literal regexp))
-
-  (prescient-persist-mode 1))
+  :hook (after-init . prescient-persist-mode))
 
 (use-package ivy-prescient
   :ensure t
@@ -948,8 +942,7 @@ type something anyhow).
   (setq ivy-prescient-retain-classic-highlighting t)
   (setq ivy-prescient-enable-filtering nil)
   (setq ivy-prescient-enable-sorting t)
-
-  (ivy-prescient-mode 1))
+  :hook (after-init . ivy-prescient-mode))
 #+end_src
 
 **** Counsel configurations and key bindings
@@ -1132,7 +1125,7 @@ specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
   :ensure t
   :config
   (add-to-list 'ivy-initial-inputs-alist '(counsel-projectile-switch-project . ""))
-  (counsel-projectile-mode 1)
+  :hook (after-init . counsel-projectile-mode)
   ;; :bind-keymap ("M-s p" . projectile-command-map)
   :bind (("M-s b" . counsel-projectile-switch-to-buffer)
          ("M-s d" . counsel-projectile-find-dir)
@@ -1201,7 +1194,7 @@ absolute paths.  Will need to test this further…
 
   (setcdr (assq t ivy-format-functions-alist)
           #'ivy-format-function-line)
-  (ivy-rich-mode 1))
+  :hook (after-init . ivy-rich-mode))
 #+end_src
 
 **** Ivy posframe
@@ -1238,8 +1231,7 @@ concept (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
           (swiper . nil)
           (swiper-isearch . nil)
           (t . ivy-posframe-display-at-frame-center)))
-
-  (ivy-posframe-mode 1))
+  :hook (after-init . ivy-posframe-mode))
 #+end_src
 
 ** Configurations or extensions for built-in commands
@@ -1476,9 +1468,8 @@ as =-AFXhlv --group-directories-first=).
   (setq delete-by-moving-to-trash t)
   (setq dired-listing-switches "-AFhlv --group-directories-first")
   (setq dired-dwim-target t)
-  :hook
-  (dired-mode . dired-hide-details-mode)
-  (dired-mode . hl-line-mode))
+  :hook ((dired-mode . dired-hide-details-mode)
+         (dired-mode . hl-line-mode)))
 
 (use-package dired-aux
   :config
@@ -1499,8 +1490,7 @@ as =-AFXhlv --group-directories-first=).
 
 (use-package dired-async
   :after (dired async)
-  :config
-  (dired-async-mode 1))
+  :hook (dired-mode . dired-async-mode))
 #+end_src
 
 *Pro tip* while renaming or copying a file, =M-n= will return its
@@ -3464,8 +3454,7 @@ completion candidates.  I am using it in tandem with Ivy (see the
 (use-package company-prescient
   :ensure t
   :after (company prescient)
-  :config
-  (company-prescient-mode 1))
+  :hook (company-mode . company-prescient-mode))
 #+end_src
 
 ** Eldoc (elisp live documentation feedback)
@@ -3698,8 +3687,7 @@ default."
                      prot/telephone-line-vcs-segment
                      telephone-line-minor-mode-segment
                      telephone-line-major-mode-segment))))
-
-  (telephone-line-mode 1))
+  :hook (after-init . telephone-line-mode))
 #+end_src
 
 *** TODO create mode line segment for ace-window
@@ -3760,8 +3748,7 @@ A change can happen externally or by some other tool inside of Emacs
   :delight
   :config
   (setq auto-revert-verbose t)
-
-  (global-auto-revert-mode 1))
+  :hook (after-init . global-auto-revert-mode))
 #+end_src
 
 ** Parentheses
@@ -3792,8 +3779,7 @@ Summary of what these do:
   (setq show-paren-style 'parenthesis)
   (setq show-paren-when-point-in-periphery t)
   (setq show-paren-when-point-inside-paren nil)
-
-  (show-paren-mode 1))
+  :hook (after-init . show-paren-mode))
 #+end_src
 
 ** Configure 'electric' behaviour
@@ -3848,10 +3834,10 @@ auto-insertion of characters.  This is a summary of my settings:
   (setq electric-quote-context-sensitive t)
   (setq electric-quote-paragraph t)
   (setq electric-quote-string nil)
-
-  (electric-indent-mode 1)
-  (electric-pair-mode -1)
-  (electric-quote-mode -1))
+  :hook (after-init . (lambda ()
+                        (electric-indent-mode 1)
+                        (electric-pair-mode -1)
+                        (electric-quote-mode -1))))
 #+end_src
 
 ** Tabs, indentation, and the TAB key
@@ -3918,8 +3904,7 @@ and similar tools (or when manually invoking text formatting with
   (setq sentence-end-double-space t)
   (setq sentence-end-without-period nil)
   (setq colon-double-space nil)
-
-  (column-number-mode 1))
+  :hook (after-init . column-number-mode))
 #+end_src
 
 ** Delete trailing whitespace
@@ -3977,8 +3962,7 @@ The other options in short:
   (setq mouse-drag-copy-region t)
   (setq make-pointer-invisible t)
   (setq mouse-wheel-progressive-speed t)
-
-  (mouse-wheel-mode 1))
+  :hook (after-init . mouse-wheel-mode))
 #+end_src
 
 ** Selection
@@ -3993,8 +3977,7 @@ in effect).
 
 #+begin_src emacs-lisp
 (use-package delsel
-  :config
-  (delete-selection-mode 1))
+  :hook (after-init . delete-selection-mode))
 #+end_src
 
 *Pro tip*: On Emacs 27.1 you can create a rectangular region by holding
@@ -4040,8 +4023,7 @@ increased for immediate pop-ups thereafter.
   (setq tooltip-delay 0.5)
   (setq tooltip-short-delay 0.5)
   (setq x-gtk-use-system-tooltips t)
-
-  (tooltip-mode 1))
+  :hook (after-init . tooltip-mode))
 #+end_src
 
 ** Altered zap and easier repeat
@@ -4204,8 +4186,7 @@ relevant documentation in a tooltip.
   (setq which-key-max-display-columns 6)
   (setq which-key-separator " ")
   (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
-
-  (which-key-mode 1))
+  :hook (after-init . which-key-mode))
 #+end_src
 
 * Custom movements and motions
