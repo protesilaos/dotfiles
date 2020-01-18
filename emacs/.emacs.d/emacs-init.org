@@ -424,59 +424,51 @@ relevant =fontconfig= settings, as Iosevka is only meant to be used inside
 of Emacs, while I keep Hack as the generic monospaced font.
 
 #+begin_src emacs-lisp
-  ;;;; TODO is it okay to defconst there?
-  ;; (defun prot/test-font-availaiblity ()
-  ;;   "Checks for the availability of a desired monospace font"
-  ;;   (when (member "Iosevka Slab Extended" (font-family-list))
-  ;;     (defconst prot/fixed-pitch-font "Iosevka Slab Extended"
-  ;;       "The default fixed-pitch typeface.")))
+(use-package emacs
+  :config
+  (setq x-underline-at-descent-line t)
+  (setq underline-minimum-offset 1)
 
-  (use-package emacs
-    :config
-    (setq x-underline-at-descent-line t)
-    (setq underline-minimum-offset 1)
+  (defconst prot/fixed-pitch-font "Iosevka Slab Extended"
+    "The default fixed-pitch typeface.")
 
-    (defconst prot/fixed-pitch-font "Iosevka Slab Extended"
-      "The default fixed-pitch typeface.")
+  (defconst prot/fixed-pitch-font-alt "Iosevka Slab"
+    "The default fixed-pitch typeface.")
 
-    (defconst prot/fixed-pitch-font-alt "Iosevka Slab"
-      "The default fixed-pitch typeface.")
+  (defconst prot/fixed-pitch-params ":hintstyle=hintfull"
+    "Fontconfig parameters for the fixed-pitch typeface.")
 
-    (defconst prot/fixed-pitch-params ":hintstyle=hintfull"
-      "Fontconfig parameters for the fixed-pitch typeface.")
+  (defun prot/font-family-size (family size)
+    "Set frame font for FAMILY at SIZE."
+    (set-frame-font (concat
+		             family "-" (number-to-string size)
+		             prot/fixed-pitch-params)
+		            t t))
 
-    (defun prot/font-family-size (family size)
-      "Set frame font for FAMILY at SIZE."
-      (set-frame-font (concat
-		       family "-" (number-to-string size)
-		       prot/fixed-pitch-params)
-		      t t))
-
-    (defun prot/laptop-fonts ()
-      "Pass desired argument to `prot/font-sizes' for use on my
+  (defun prot/laptop-fonts ()
+    "Pass desired argument to `prot/font-sizes' for use on my
   small laptop monitor."
-      (interactive)
-      (when window-system
-	(prot/font-family-size prot/fixed-pitch-font-alt 10.75)))
+    (interactive)
+    (when window-system
+	  (prot/font-family-size prot/fixed-pitch-font-alt 10.75)))
 
-    (defun prot/desktop-fonts ()
-      "Pass desired argument to `prot/font-sizes' for use on my
+  (defun prot/desktop-fonts ()
+    "Pass desired argument to `prot/font-sizes' for use on my
   larger desktop monitor."
-      (interactive)
-      (when window-system
-	(prot/font-family-size prot/fixed-pitch-font 10.75)))
+    (interactive)
+    (when window-system
+	  (prot/font-family-size prot/fixed-pitch-font 10.75)))
 
-    (defun prot/fonts-per-monitor ()
-      "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
+  (defun prot/fonts-per-monitor ()
+    "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
   based on the width of the monitor.  The calculation is based on
   the maximum width of my laptop's screen."
-      (interactive)
-      (when window-system
-	(if (> (display-pixel-width) 1366)
-	    (prot/desktop-fonts)
-	  (prot/laptop-fonts))))
-
-    :hook (after-init . prot/fonts-per-monitor))
+    (interactive)
+    (when window-system
+	  (if (= (display-pixel-width) 1366)
+	      (prot/laptop-fonts)
+	    (prot/desktop-fonts))))
+  :hook (after-init . prot/fonts-per-monitor))
 #+end_src
 
 **** Typeface suitability test
@@ -4427,7 +4419,7 @@ Overview of my settings:
   (setq desktop-restore-eager 3)
   (setq desktop-restore-frames nil)
   (setq desktop-save 'ask-if-new)
-  :hook (after-init . desktop-save-mode))
+  (desktop-save-mode 1))
 #+end_src
 
 ** Record history
