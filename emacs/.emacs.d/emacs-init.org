@@ -194,8 +194,8 @@ the actual setup.
 Actual code blocks are wrapped between =#+begin_src= and =#+end_src= tags
 (not visible in the website version of this page).  For Emacs 27.1,
 such templates can be quickly inserted with =C-c C-,= (this works both
-for empty blocks and active regions).  For more, refer to [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org's
-section further below]].
+for empty blocks and active regions).  For more on the matter, refer
+to [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org's section further below]].
 
 As for the various settings included herein, you can learn /even more/
 about them by using [[https://protesilaos.com/codelog/2019-08-24-emacs-docs-discovery/][Emacs' built-in documentation]] (great for discovering
@@ -593,11 +593,6 @@ Overview of my settings:
   (setq desktop-save 'ask-if-new)
   :hook (after-init . (lambda () (desktop-save-mode 1))))
 #+end_src
-
-**** TODO store window configuration registers (C-x r w)?
-     :PROPERTIES:
-     :CUSTOM_ID: h:2f4b0490-01be-43e5-a952-c61226504e4e
-     :END:
 
 ** Record history
    :PROPERTIES:
@@ -4180,11 +4175,11 @@ when reviewing my themes (=rainbow-mode= is activated manually).
    :END:
 
 By default you can receive hints for possible key chord chains by
-hitting =C-h= once you start a sequence (e.g. =C-x C-k C-h= will offer
-hints about keyboard macros).  The following package simplifies this
-step by presenting a table with the completion targets, once certain
+hitting =C-h= once you start a sequence (e.g. =C-x C-k C-h= will offer hints
+about keyboard macros).  The following package simplifies this step by
+presenting a table with the completion targets, once certain
 configurable criteria are met.  By default the criterion is a short
-timer of idleness.  I find that too intrusive, opting instead to invoke
+timer for idleness.  I find that too intrusive, opting instead to invoke
 the command manually (also helps that I somehow memorise all these
 keys…).
 
