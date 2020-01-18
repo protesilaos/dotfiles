@@ -439,41 +439,40 @@ of Emacs, while I keep Hack as the generic monospaced font.
     "The default fixed-pitch typeface.")
 
   (defconst prot/fixed-pitch-font-alt "Iosevka Slab"
-    "The default fixed-pitch typeface.")
+    "The default fixed-pitch typeface (alt).")
 
   (defconst prot/fixed-pitch-params ":hintstyle=hintfull"
     "Fontconfig parameters for the fixed-pitch typeface.")
 
   (defun prot/font-family-size (family size)
-    "Set frame font for FAMILY at SIZE."
-    (set-frame-font (concat
-		             family "-" (number-to-string size)
-		             prot/fixed-pitch-params)
-		            t t))
+    "Set frame font to FAMILY at SIZE."
+    (set-frame-font
+     (concat family "-" (number-to-string size) prot/fixed-pitch-params) t t))
 
   (defun prot/laptop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
-  small laptop monitor."
+small laptop monitor."
     (interactive)
     (when window-system
 	  (prot/font-family-size prot/fixed-pitch-font-alt 10.75)))
 
   (defun prot/desktop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
-  larger desktop monitor."
+larger desktop monitor."
     (interactive)
     (when window-system
 	  (prot/font-family-size prot/fixed-pitch-font 10.75)))
 
   (defun prot/fonts-per-monitor ()
     "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
-  based on the width of the monitor.  The calculation is based on
-  the maximum width of my laptop's screen."
+based on the width of the monitor.  The calculation is based on
+the maximum width of my laptop's screen."
     (interactive)
     (when window-system
-	  (if (= (display-pixel-width) 1366)
+	  (if (<= (display-pixel-width) 1366)
 	      (prot/laptop-fonts)
 	    (prot/desktop-fonts))))
+
   :hook (after-init . prot/fonts-per-monitor))
 #+end_src
 
