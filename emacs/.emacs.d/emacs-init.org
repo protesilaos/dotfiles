@@ -34,6 +34,9 @@ work, it needs to be initialised from another file, that only covers the
 absolute essentials.
 
 *** Contents of my init.el
+    :PROPERTIES:
+    :CUSTOM_ID: h:584c3604-55a1-49d0-9c31-abe46cb1f028
+    :END:
 
 The =emacs-init.org= is actually loaded from an other file, named
 =init.el= as per the Emacs convention.  Mine is designed to add the
@@ -185,6 +188,9 @@ Settings that do not have a corresponding package are declared using the
 special =use-package emacs= notation.
 
 *** About the source code version of this document
+    :PROPERTIES:
+    :CUSTOM_ID: h:f738cdfc-a6ff-46cb-9962-31f754280af5
+    :END:
 
 In the =org-mode= version of this document, I make sure that the
 above-referenced code blocks are not declared as an =emacs-lisp= source
@@ -1267,7 +1273,7 @@ as =-AFXhlv --group-directories-first=).
   :after dired
   :config
   (setq find-ls-option ;; applies to `find-name-dired'
-   '(setq "-ls" . "-AFhlv --group-directories-first"))
+   '("-ls" . "-AFhlv --group-directories-first"))
   (setq find-name-arg "-iname"))
 
 (use-package async
@@ -1771,23 +1777,24 @@ given location, on the premise that predictability improves usability.
 
 For each buffer action in =display-buffer-alist= we can define several
 functions for selecting the appropriate window.  These are executed in
-sequence.  I keep a sample in the code below, but my usage thus far
-suggests that a simpler method is just as effective for my case.
+sequence, but my usage thus far suggests that a simpler method is just
+as effective for my case.
 
 Everything pertaining to buffer actions is documented at length in the
 [[https://www.gnu.org/software/emacs/manual/html_node/elisp/index.html#Top][GNU Emacs Lisp Reference Manual]], currently corresponding to version
 26.3.  Information can also be found via =C-h f display-buffer= and, for
 my settings, =C-h f display-buffer-in-side-window=.
 
-With regard to the contents of the =:bind= keyword of the =window= library,
-most key combinations are complementary to the standard ones, such as
-=C-x 1= becoming =s-1=, =C-x o= turning into =s-o= and the like.  They do not
-replace the defaults, just provide faster access to their corresponding
-functions.  They all involve the Super key, following the norms
-described in the [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][introductory note on the matter]].
+With regard to the contents of the =:bind= keyword of the =window=
+library, most key combinations are complementary to the standard ones,
+such as =C-x 1= becoming =s-1=, =C-x o= turning into =s-o= and the like.  They
+*do not replace* the defaults: they just provide more convenient access
+to their corresponding functions.  They all involve the Super key,
+following the norms described in the [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][introductory note on the matter]].
 
-For a demo of the =display-buffer-alist= and the custom functions that
-accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-display-buffer/][video on rules for buffer placement]].
+For a demo of the =display-buffer-alist= and the functions that
+accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-display-buffer/][video on rules for buffer placement]]
+(2020-01-07).
 
 #+begin_src emacs-lisp
 (use-package window
@@ -2180,8 +2187,9 @@ operates on the text of the focused window, whereas I want all
 interfaces to adapt to the new size (so that I can, for example, show
 the minibuffer while doing a presentation).
 
-*NOTE:* I am keeping these disabled with and will only be activating them
-when I need to do a presentation.
+*NOTE:* I am keeping these disabled and will only be activating them
+when I need to do a presentation.  For example, I did so in my ~1
+hour-long video blog on the topic of [[https://protesilaos.com/codelog/2019-12-20-vlog-switch-emacs/][switching to Emacs]] (2019-12-20).
 
 #+begin_src emacs-lisp
 (use-package darkroom
@@ -2254,23 +2262,18 @@ This is a shell (Bash, in my case) that runs inside of Emacs.  Unlike
 behaves like an ordinary buffer.  The one area where it differs
 substantially from ordinary buffers is with regard to the command
 prompt: you can re-run a command on the scroll-back buffer by just
-hitting RET while point is on its line (no need to go back to the end
+hitting =RET= while point is on its line (no need to go back to the end
 and cycle the command history with =M-p= or =M-n=).
 
-The key binding that invokes the standard shell (=s-RET=) will take you
-back to the shell buffer if it exists.  To always spawn a new shell use
-=s-S-RET=.  The latter can be achieved without any configurations by
-running =C-u M-x shell= (but who has time for that?).
-
 Note that I am well aware of =eshell=.  I read the manual and checked
-lots of configurations about it.  I still do not see a major improvement
-over Bash, notwithstanding the significant downside of having to learn
-the idiosyncrasies of yet another tool.  Besides, many of the features
-of =eshell= are already available inside of Emacs and are accessible via
-more appropriate interfaces (e.g. =find-file= or =dired= powered by a
-completion framework like =ido-mode= or =ivy=).  The shell has to behave
-consistently whether I run it inside of Emacs, in Xterm, or just a TTY.
-Everything else introduces friction.
+lots of configurations about it.  I still do not see a major
+improvement over Bash, notwithstanding the significant downside of
+having to learn the idiosyncrasies of yet another tool.  Besides, many
+of the features of =eshell= are already available inside of Emacs and
+are accessible via more appropriate interfaces (e.g. =find-file= or
+=dired= powered by a completion framework like =ido-mode= or =ivy=).  The
+shell has to behave consistently whether I run it inside of Emacs, in
+Xterm, or just a TTY.  Everything else introduces friction.
 
 Run =C-h m= inside of a shell buffer to learn about all the key bindings
 and corresponding functions.
@@ -2302,8 +2305,8 @@ based on the directory of the current buffer."
     :CUSTOM_ID: h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2
     :END:
 
-=term= and =ansi-term= are /terminal emulators/ (like Xterm).  Not to be
-confused with command line shells (such as Bash).  They run inside of
+=term= and =ansi-term= are /terminal emulators/ like Xterm.  Not to be
+confused with command line shells such as Bash.  They run inside of
 Emacs but are basically alien to the rest of the Emacs milieu: they do
 not reuse standard key bindings like =C-y=.
 
@@ -2334,7 +2337,8 @@ other options in the Emacs space (e.g. with =C-u M-x shell=).
 
 This is a built-in tool that allows you to monitor running processes
 and act on them accordingly.  These are the basic settings I have
-right now.  Would need to experiment with it a bit more.
+right now.  Would need to experiment with it a bit more.  It works
+fine though.
 
 #+begin_src emacs-lisp
 (use-package proced
@@ -2957,9 +2961,10 @@ superseded by my [[#h:b0395aae-a2d2-4e50-8965-433c4605c724][custom mode line con
         '(save mode-enabled)))
 #+end_src
 
-There is also a built-in tool that covers this niche, but I find its
-functionality somewhat more limited.  As such I am defining it so that
-it will create an autoload for it.
+There is also a built-in tool that covers Flycheck's niche, but I find
+its functionality somewhat more limited.  As such I am defining it so
+that an autoload will be created for it (meaning that it will only be
+made available on demand).
 
 #+begin_src emacs-lisp
 (use-package flymake
@@ -3124,7 +3129,7 @@ Refer to the [[#h:d2e402b3-c947-42fc-af80-b8a982082a1b][Company section for a de
   (setq hippie-expand-verbose t))
 #+end_src
 
-** Company (completion framework)
+** Company (text completion/expansion framework)
    :PROPERTIES:
    :CUSTOM_ID: h:d2e402b3-c947-42fc-af80-b8a982082a1b
    :END:
@@ -3346,9 +3351,9 @@ The former, represented by the =tab-bar= library is best understood as the
 equivalent of "virtual desktops", as these are used in most desktop
 environments or minimalist window managers.
 
-The latter, implemented in =tab-line,= is the same as the tabs you are
+The latter, implemented in =tab-line=, is the same as the tabs you are
 used to in web browsers.  Each buffer is assigned to a single tab.
-Clicking on the tab takes you to it.
+Clicking on the tab takes you to the corresponding buffer.
 
 I do not need the =tab-line= as I find such tabs to be inefficient at
 scale.  Finding a buffer through search mechanisms is generally faster:
@@ -4335,6 +4340,9 @@ This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_
       (kill-buffer new))))
 #+end_src
 * History and desktop state
+  :PROPERTIES:
+  :CUSTOM_ID: h:1d9437fe-1355-4c2f-8ea7-6668b4d0399b
+  :END:
 
 This section contains configurations for packages that are dedicated to
 the task of recording the state of various Emacs tools.  As such, this
