@@ -3877,21 +3877,6 @@ Some minor conveniences:
          ("<f7>" . prot/toggle-line-numbers)))
 #+end_src
 
-** Broadcast mode
-   :PROPERTIES:
-   :CUSTOM_ID: h:0e5c777b-a1e9-4421-8b92-fcadfb1692ad
-   :END:
-
-This package provides a mode for syncing input across buffers.  The way
-to link the affected buffers is to run =M-x broadcast-mode= inside each
-of them.  For this to work, the buffers must both be visible.
-
-#+begin_src emacs-lisp
-(use-package broadcast
-  :ensure t
-  :commands broadcast-mode)
-#+end_src
-
 ** Rainbow blocks
    :PROPERTIES:
    :CUSTOM_ID: h:d8c7292f-e7bd-43ff-962e-d9b2c6fc6b27
