@@ -1800,19 +1800,26 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   :init
   ;; TODO do not repeat common parts, abstract them somehow
   (setq display-buffer-alist
-        '(;; bottom side window
+        '(;; top side window
+          ("\\*\\(Flycheck\\|Package-Lint\\).*"
+           (display-buffer-in-side-window)
+           (window-height . 0.15)
+           (side . top)
+           (slot . 0)
+           (window-parameters . ((no-other-window . t))))
+          ;; bottom side window
           ("\\*e?shell.*"
            (display-buffer-in-side-window)
            (window-height . 0.25)
            (side . bottom)
-           (slot . -1))
+           (slot . 0))
           ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
            (display-buffer-in-side-window)
            (window-height . 0.25)
            (side . bottom)
-           (slot . 0))
+           (slot . 1))
           ;; right side window
-          ("\\*\\(Flycheck\\|Package-Lint\\).*"
+          ("\\*Faces\\*"
            (display-buffer-in-side-window)
            (window-width . 0.333)
            (side . right)
@@ -1820,19 +1827,11 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . (" "
                                                       mode-line-buffer-identification)))))
-          ("\\*Faces\\*"
-           (display-buffer-in-side-window)
-           (window-width . 0.333)
-           (side . right)
-           (slot . 1)
-           (window-parameters . ((no-other-window . t)
-                                 (mode-line-format . (" "
-                                                      mode-line-buffer-identification)))))
           ("\\*Custom.*"
            (display-buffer-in-side-window)
            (window-width . 0.333)
            (side . right)
-           (slot . 2))))
+           (slot . 1))))
   :bind (("s-n" . next-buffer)
          ("s-p" . previous-buffer)
          ("s-o" . other-window)
