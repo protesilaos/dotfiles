@@ -4490,14 +4490,15 @@ Now some notes on my extensions:
   (advice-add 'dired-rename-file :after #'rjs/recentf-rename-notify)
 
   (defun contrib/recentf-add-dired-directory ()
-    "Include Dired buffers in the list.  Particularly useful when
-combined with a completion framework's ability to display virtual
-buffers."
+    "Include Dired buffers in the `recentf' list.  Particularly
+useful when combined with a completion framework's ability to
+display virtual buffers."
     (when (and (stringp dired-directory)
                (equal "" (file-name-nondirectory dired-directory)))
       (recentf-add-file dired-directory)))
 
-  :hook (after-init . recentf-mode))
+  :hook ((after-init . recentf-mode)
+         (dired-mode . contrib/recentf-add-dired-directory)))
 #+end_src
 
 *** Minibuffer
