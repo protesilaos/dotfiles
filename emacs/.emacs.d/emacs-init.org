@@ -3522,6 +3522,20 @@ with or simplify common tasks:
   (put 'overwrite-mode 'disabled t))
 #+end_src
 
+** Current line highlight (hl-line-mode)
+
+This is a mode that I only activate via hooks for certain buffers
+where the current line itself is more important that the actual column
+(e.g. in Dired buffers).  Here I configure it so that the highlight
+applies only to the current window.  There is also a "global" variant,
+for when the equivalent mode is used (I have no plan to use that).
+
+#+begin_src emacs-lisp
+(use-package hl-line
+  :config
+  (setq hl-line-sticky-flag nil))
+#+end_src
+
 ** Auto revert mode
    :PROPERTIES:
    :CUSTOM_ID: h:7a8422e6-86d1-40f3-add4-0a1c826e44a3
