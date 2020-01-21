@@ -47,8 +47,8 @@ case "$theme_id" in
 esac
 
 # Determine a suitable font, in order of preference.
-if [ -n "$(fc-list 'Iosevka Slab')" ]; then
-    font='Iosevka Slab'
+if [ -n "$(fc-list 'Iosevka Light')" ]; then
+    font='Iosevka Light'
 elif [ -n "$(fc-list 'Fira Code')" ]; then
     font='Fira Code'
 else
