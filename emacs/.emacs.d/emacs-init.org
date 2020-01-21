@@ -1038,9 +1038,10 @@ shipped with Emacs.
    :END:
 
 I use =isearch= all the time for quick navigation, either to a visible
-part of the buffer or to some specific string I am aware of.  It also is
-great when used in the context of a keyboard macro where you do not
-really need the preview offered by Swiper (see [[#h:8b7f982b-911f-4437-a448-b7288855fbda][the relevant section]]).
+part of the buffer or to some specific string I am aware of.  It also
+is essential when used in the context of a keyboard macro.  For me
+Swiper, [[#h:8b7f982b-911f-4437-a448-b7288855fbda][which I also declare in this document]], can never be optimal
+for those uses.
 
 Run =C-h k C-s= to get an /awesome/ help menu with all the extra keys
 you can use with =isearch=.  These are the ones I use the most:
@@ -1056,8 +1057,9 @@ you can use with =isearch=.  These are the ones I use the most:
 | M-%       | Run `query-replace'          |
 | C-M-%     | `query-replace-regexp'       |
 
-Most—if not all—of these functions can be invoked in the middle of a
-search to perform the appropriate action on the existing match.
+Many commands can be invoked while running =isearch= to operate on the
+current match.  For example, =C-s SEARCH M-s o= will produce an "Occur"
+buffer with the contents of the search terms.  Absolutely great!
 
 With regard to the replace commands, note that you can use them on the
 active region.  Furthermore, you do not need to confirm each action, but
@@ -1080,32 +1082,41 @@ Now on to some custom functions.  Here is an overview of what goes into
 this package declaration.
 
 + Mark isearch match :: Replaces the default mark command following a
-     successful search.  I prefer to mark the match.  This can be then
-     used to insert multiple cursors, kill the region, etc.  Besides, it
-     is always possible to mark a region from point to search string by
-     running =C-x C-x= following a successful search.
-+ Search for region :: Populate the search prompt with the contents of
-     the region.  Select a word or a phrase that would be harder to
-     otherwise type out and run a search.  Got this snippet from a
-     [[https://old.reddit.com/r/emacs/comments/b7yjje/isearch_region_search/][Reddit post on r/emacs]].
-+ DWIM delete non-match :: The =isearch+.el= library provides a ton of
-     additions to the search function.  I do not need any of them,
-     except the following snippet, which deletes the entire failed match
-     or just the last character (whatever is appropriate).  This removes
-     the entirety of a mismatch, just by hitting backspace.  For valid
-     searches, backspace functions exactly as expected, deleting one
-     character at a time.  Note, though, that it is no longer possible
-     to delete part of a failed search, just by hitting backspace.  For
-     that you should anyway be doing a proper edit with =M-e=.
+  successful search.  I prefer to mark the match.  This can be then
+  used to insert multiple cursors (if you are using it), kill the
+  region, etc.  Besides, it is always possible to mark a region from
+  point to search string by running =C-x C-x= following a successful
+  search.
 + Move to opposite end :: Isearch places the point at either the
-     beginning or the end of the match, depending on the direction it is
-     moving in.  For single words this is not an issue because you can
-     always confirm a search by using a motion key (so, for example,
-     move to the end of the matching word with =M-f=).  There are,
-     however, matches that are not limited to word boundaries.  For
-     those cases moving to the opposite end requires multiple key
-     presses.  This function addresses the issue (bound to =C-RET= while
-     running a successful search).  The [[https://emacs.stackexchange.com/a/52554][source is this forum answer]].
+  beginning or the end of the match, depending on the direction it is
+  moving in.  For single words or balanced expressions this is not an
+  issue because you can always confirm a search by using a motion key
+  (so, for example, move to the end of the matching word with =M-f=).
+  There are, however, matches that are not limited to such boundaries.
+  For those cases moving to the opposite end might require multiple
+  key presses, which is bad when trying to record an efficient
+  keyboard macro.  =prot/isearch-other-end= addresses the issue.  It is
+  bound to =C-RET= while running a successful search.  The direct
+  inspiration [[https://emacs.stackexchange.com/a/52554][is this forum answer]].  Note though that you can achieve
+  the same result by changing the direction the search is moving
+  towards with =C-s= or =C-r= (though I still prefer my minor addition).
++ Delete non-match :: The built-in method to remove the entirety of a
+  mismatched input is to hit =C-g= following a failed search.  This
+  keeps the valid part and allows you to continue searching.  However,
+  I find that the choice of key binding can prove problematic, since
+  =C-g= also exits a standard/successful search.  As such, the simple
+  function =prot/isearch-abort= is designed to remove the entirety of a
+  mismatch, just by hitting backspace (aka =DEL=).  For valid searches,
+  backspace functions exactly as expected, deleting one character at a
+  time.  Note, though, that it is no longer possible to delete part of
+  a failed search, just by hitting backspace: you can still rely on
+  =C-M-d= for that (or edit the input with =M-e=).
++ Replace symbol at point :: Combine the built-in functions of
+  =isearch-forward-symbol-at-point= and =isearch-query-replace-regexp=
+  into a single command that is bound to the key chord =M-s %=.  Simple
+  and super effective (*pro tip*: hit =!= to answer "yes" to all possible
+  matches, which is possible in all cases where Emacs asks you for
+  multiple confirmations).
 
 The variables about the lazy count that are commented as "Emacs 27.1"
 effectively supersede the functionality of =anzu=, a package I once used.
@@ -1121,58 +1132,54 @@ effectively supersede the functionality of =anzu=, a package I once used.
   ;; All of the following variables were introduced in Emacs 27.1.
   (setq isearch-lazy-count t)
   (setq lazy-count-prefix-format "(%s/%s) ")
-  (setq lazy-count-suffix-format "[%s of %s]")
+  (setq lazy-count-suffix-format nil)
   (setq isearch-yank-on-move 'shift)
   (setq isearch-allow-scroll 'unlimited)
 
   (defun prot/isearch-mark-and-exit ()
-    "Marks the current search string.  Can be used as a building
-block for a more complex chain, such as to kill a region, or
-place multiple cursors."
+    "Mark the current search string and exit the search."
     (interactive)
     (push-mark isearch-other-end t 'activate)
     (setq deactivate-mark nil)
     (isearch-done))
 
-  (defun stribb/isearch-region (&optional not-regexp no-recursive-edit)
-    "If a region is active, make this the isearch default search
-pattern."
-    (interactive "P\np")
-    (when (use-region-p)
-      (let ((search (buffer-substring-no-properties
-                     (region-beginning)
-                     (region-end))))
-        (message "stribb/ir: %s %d %d" search (region-beginning) (region-end))
-        (setq deactivate-mark t)
-        (isearch-yank-string search))))
-  (advice-add 'isearch-forward-regexp :after 'stribb/isearch-region)
-  (advice-add 'isearch-forward :after 'stribb/isearch-region)
-  (advice-add 'isearch-backward-regexp :after 'stribb/isearch-region)
-  (advice-add 'isearch-backward :after 'stribb/isearch-region)
-
-  (defun contrib/isearchp-remove-failed-part-or-last-char ()
-    "Remove failed part of search string, or last char if successful.
-Do nothing if search string is empty to start with."
-    (interactive)
-    (if (equal isearch-string "")
-        (isearch-update)
-      (if isearch-success
-          (isearch-delete-char)
-        (while (isearch-fail-pos) (isearch-pop-state)))
-      (isearch-update)))
-
-  (defun contrib/isearch-done-opposite-end (&optional nopush edit)
+  (defun prot/isearch-other-end ()
     "End current search in the opposite side of the match.
 Particularly useful when the match does not fall within the
 confines of word boundaries (e.g. multiple words)."
     (interactive)
-    (funcall #'isearch-done nopush edit)
-    (when isearch-other-end (goto-char isearch-other-end)))
+    (isearch-done)
+    (when isearch-other-end
+      (goto-char isearch-other-end)))
+
+  (defun prot/isearch-abort ()
+    "Remove non-matching `isearch' input, reverting to previous
+successful search and continuing with the search.
+
+This is a modified variant of the original `isearch-abort',
+mapped to C-g which will remove the failed match if any and only
+afterwards exit the search altogether."
+    (interactive)
+    (discard-input)
+    (while (or (not isearch-success) isearch-error)
+      (isearch-pop-state))
+    (isearch-update))
+
+  (defun prot/isearch-query-replace-symbol-at-point ()
+    "Run `query-replace-regexp' for the symbol at point."
+    (interactive)
+    (isearch-forward-symbol-at-point)
+    (isearch-query-replace-regexp))
+
   :bind (("M-s M-o" . multi-occur)
+         ("M-s %" . prot/isearch-query-replace-symbol-at-point)
+         :map minibuffer-local-isearch-map
+         ("M-/" . isearch-complete-edit)
          :map isearch-mode-map
+         ("M-/" . isearch-complete)
          ("C-SPC" . prot/isearch-mark-and-exit)
-         ("DEL" . contrib/isearchp-remove-failed-part-or-last-char)
-         ("<C-return>" . contrib/isearch-done-opposite-end)))
+         ("DEL" . prot/isearch-abort)
+         ("<C-return>" . prot/isearch-other-end)))
 #+end_src
 
 *** wgrep (writable grep)
