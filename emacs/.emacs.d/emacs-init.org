@@ -1011,7 +1011,7 @@ concept (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
         '((left-fringe . 2)
           (right-fringe . 2)
           (internal-border-width . 2)
-          (font . "Iosevka Slab-10.75:hintstyle=hintfull")))
+          (font . "Iosevka-10.75:hintstyle=hintfull")))
   (setq ivy-posframe-height-alist
         '((swiper . 15)
           (swiper-isearch . 15)
