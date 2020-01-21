@@ -2907,8 +2907,15 @@ is thus possible to keep things simple and to switch dictionaries only
 when necessary.
 
 Also bear in mind that the key binding =C-;= is disabled because I
-repurpose that for a faster version of =C-x C-;= (much more useful for my
-work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
+re-purpose that for a faster version of =C-x C-;= (much more useful for
+my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
+
+The two functions I define are meant to ease my workflow, while
+superseding the default binding for =ispell-word=.  What I normally use
+is my =M-$=, which will spell-check the active region or toggle the
+dictionaries I use.  The =C-M-$= is defined as a fallback option in case
+I have already highlighted a region and then realise I need the other
+dictionary.
 
 Note that =aspell= and its dictionaries are not part of Emacs.  I install
 the relevant packages from my distro's archive.
@@ -2916,6 +2923,7 @@ the relevant packages from my distro's archive.
 #+begin_src emacs-lisp
 (use-package flyspell
   :commands (ispell-change-dictionary
+             ispell-word
              flyspell-buffer
              flyspell-mode
              flyspell-region)
@@ -2926,8 +2934,24 @@ the relevant packages from my distro's archive.
   (setq ispell-dictionary "en_GB")
 
   (define-key flyspell-mode-map (kbd "C-;") nil)
-  ;; TODO (emacs 27): ispell-change-dictionary-hook
-  )
+
+  (defun prot/ispell-toggle-dictionaries ()
+    "Toggle between English and Greek dictionaries."
+    (interactive)
+    (if (string= ispell-current-dictionary "en")
+        (ispell-change-dictionary "el")
+      (ispell-change-dictionary "en")))
+
+  (defun prot/flyspell-dwim (&optional beg end)
+    "Run `flyspell-region' on the active region, else toggle the
+ispell dictionaries with `prot/ispell-toggle-dictionaries'."
+    (interactive "r")
+      (if (use-region-p)
+          (flyspell-region beg end)
+        (prot/ispell-toggle-dictionaries)))
+
+  :bind (("M-$" . prot/flyspell-dwim)
+         ("C-M-$" . prot/ispell-toggle-dictionaries)))
 #+end_src
 
 ** Flycheck (code linting)
