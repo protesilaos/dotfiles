@@ -216,10 +216,16 @@ between foreground and background is >= 7:1)."
       ;; `bg-hl-line' is between `bg-dim' and `bg-alt', so it should
       ;; work with all accents that cover those two, plus `bg-main'
       ;;
+      ;; `bg-header' is between `bg-active' and `bg-inactive', so it
+      ;; can be combined with any of the "active" values, plus the
+      ;; "special" and base foreground colours
+      ;;
       ;; `bg-region' must be combined with `fg-main'
       ;;
       ;; all other pairs are combinable with themselves
-      (bg-hl-line "#f1f2f6") (bg-region "#bcbcbc")
+      (bg-hl-line "#f1f2f6")
+      (bg-region "#bcbcbc")
+      (fg-header "#2a2a2a") (bg-header "#e5e5e5")
       (fg-whitespace "#645060") (bg-whitespace "#fff8fc")
       (fg-paren-match "#222222") (bg-paren-match "#deb8af")
 
@@ -293,7 +299,7 @@ between foreground and background is >= 7:1)."
    `(diary ((,class (:foreground ,yellow))))
    `(error ((,class (:foreground ,red :weight bold))))
    `(escape-glyph ((,class (:inherit modus-theme-refine-blue :weight bold))))
-   `(header-line ((,class (:background ,bg-alt :foreground ,fg-alt))))
+   `(header-line ((,class (:background ,bg-header :foreground ,fg-header))))
    `(holiday ((,class (:inherit modus-theme-subtle-magenta))))
    `(homoglyph ((,class (:foreground ,yellow-alt-other))))
    `(ibuffer-locked-buffer ((,class (:foreground ,yellow-alt-other))))
@@ -679,7 +685,7 @@ between foreground and background is >= 7:1)."
    `(elfeed-search-date-face ((,class (:foreground ,fg-special-cold))))
    `(elfeed-search-feed-face ((,class (:foreground ,cyan))))
    `(elfeed-search-filter-face ((,class (:foreground ,fg-special-cold))))
-   `(elfeed-search-last-update-face ((,class (:foreground ,fg-special-mild))))
+   `(elfeed-search-last-update-face ((,class (:foreground ,fg-special-calm))))
    `(elfeed-search-tag-face ((,class (:foreground ,fg-special-mild))))
    `(elfeed-search-title-face ((,class (:foreground ,fg-main))))
    `(elfeed-search-unread-count-face ((,class (:foreground ,fg-special-warm))))
@@ -1205,7 +1211,7 @@ between foreground and background is >= 7:1)."
    `(magit-refname-stash ((,class (:foreground ,fg-alt))))
    `(magit-refname-wip ((,class (:foreground ,fg-alt))))
    `(magit-section ((,class (:background ,bg-dim :foreground ,fg-main))))
-   `(magit-section-heading ((,class (:foreground ,cyan))))
+   `(magit-section-heading ((,class (:foreground ,cyan-active))))
    `(magit-section-heading-selection ((,class (:inherit modus-theme-refine-cyan :weight bold))))
    `(magit-section-highlight ((,class (:background ,bg-alt))))
    `(magit-sequence-done ((,class (:foreground ,green-alt))))
@@ -1525,6 +1531,10 @@ between foreground and background is >= 7:1)."
    `(powerline-evil-operator-face ((,class (:inherit modus-theme-active-yellow))))
    `(powerline-evil-replace-face ((,class (:inherit modus-theme-active-red))))
    `(powerline-evil-visual-face ((,class (:inherit modus-theme-active-cyan))))
+   ;;;; proced
+   `(proced-mark ((,class (:foreground ,magenta-alt :weight bold))))
+   `(proced-marked ((,class (:inherit modus-theme-intense-magenta))))
+   `(proced-sort-header ((,class (:foreground ,fg-special-calm :weight bold :underline t))))
    ;;;; prodigy
    `(prodigy-green-face ((,class (:foreground ,green))))
    `(prodigy-red-face ((,class (:foreground ,red))))
