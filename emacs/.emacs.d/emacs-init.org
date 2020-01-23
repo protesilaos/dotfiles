@@ -2200,15 +2200,12 @@ hour-long video blog on the topic of [[https://protesilaos.com/codelog/2019-12-2
 (use-package darkroom
   :ensure t
   :disabled
-  :commands (darkroom-mode
-             darkroom-tentative-mode)
   :config
   (setq darkroom-text-scale-increase 0))
 
 (use-package org-bullets
   :ensure t
   :disabled
-  :commands org-bullets-mode
   :after org)
 
 (use-package org-tree-slide
