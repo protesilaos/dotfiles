@@ -1183,6 +1183,9 @@ afterwards exit the search altogether."
 #+end_src
 
 *** Regular expressions: re-builder and visual-regexp
+    :PROPERTIES:
+    :CUSTOM_ID: h:6c6759c8-3ae3-40b0-8356-05cc0975e12a
+    :END:
 
 To learn more about regular expressions, read the relevant pages in
 the official manual.  Assuming you have this installed properly on
@@ -3588,6 +3591,9 @@ with or simplify common tasks:
 #+end_src
 
 ** Current line highlight (hl-line-mode)
+   :PROPERTIES:
+   :CUSTOM_ID: h:7e65d6e5-ac8f-4100-b7dd-14e3fbc94040
+   :END:
 
 This is a mode that I only activate via hooks for certain buffers
 where the current line itself is more important that the actual column
