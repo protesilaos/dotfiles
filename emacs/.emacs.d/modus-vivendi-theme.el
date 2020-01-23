@@ -1102,7 +1102,7 @@ between foreground and background is >= 7:1)."
    ;;;; info
    `(Info-quoted ((,class (:foreground ,magenta)))) ; the capitalisation is canonical
    `(info-header-node ((,class (:foreground ,fg-special-warm))))
-   `(info-header-xref ((,class (:foreground ,blue-alt))))
+   `(info-header-xref ((,class (:foreground ,blue-active))))
    `(info-index-match ((,class (:inherit match))))
    `(info-menu-star ((,class (:foreground ,fg-main))))
    `(info-node ((,class ((:weight bold)))))
@@ -1467,7 +1467,7 @@ between foreground and background is >= 7:1)."
    `(org-time-grid ((,class (:foreground ,yellow-alt-other))))
    `(org-todo ((,class (:foreground ,magenta-alt-other))))
    `(org-upcoming-deadline ((,class (:foreground ,red-alt-other))))
-   `(org-verbatim ((,class (:background ,bg-dim :foreground ,fg-special-warm))))
+   `(org-verbatim ((,class (:background ,bg-alt :foreground ,fg-special-calm))))
    `(org-verse ((,class (:inherit org-quote))))
    `(org-warning ((,class (:foreground ,blue-intense))))
    ;;;; org-journal
@@ -1565,8 +1565,8 @@ between foreground and background is >= 7:1)."
    `(rainbow-delimiters-mismatched-face ((,class (:foreground ,red-alt :weight bold))))
    `(rainbow-delimiters-unmatched-face ((,class (:foreground ,red :weight bold))))
    ;;;; regexp-builder (re-builder)
-   `(reb-match-0 ((,class (:inherit modus-theme-special-cold))))
-   `(reb-match-1 ((,class (:inherit modus-theme-intense-yellow))))
+   `(reb-match-0 ((,class (:inherit modus-theme-intense-blue))))
+   `(reb-match-1 ((,class (:inherit modus-theme-intense-magenta))))
    `(reb-match-2 ((,class (:inherit modus-theme-intense-green))))
    `(reb-match-3 ((,class (:inherit modus-theme-intense-red))))
    `(reb-regexp-grouping-backslash ((,class (:foreground ,green :weight bold))))
@@ -1761,12 +1761,12 @@ between foreground and background is >= 7:1)."
    `(vc-state-base ((,class (:foreground ,fg-active))))
    `(vc-up-to-date-state ((,class (:foreground ,fg-special-cold))))
    ;;;; visual-regexp
-   `(vr/group-0 ((,class (:inherit modus-theme-subtle-cyan))))
-   `(vr/group-1 ((,class (:inherit modus-theme-subtle-yellow))))
-   `(vr/group-2 ((,class (:inherit modus-theme-subtle-blue))))
-   `(vr/match-0 ((,class (:inherit modus-theme-subtle-green))))
-   `(vr/match-1 ((,class (:inherit modus-theme-refine-green))))
-   `(vr/match-separator-face ((,class (:inherit modus-theme-subtle-magenta))))
+   `(vr/group-0 ((,class (:inherit modus-theme-intense-blue))))
+   `(vr/group-1 ((,class (:inherit modus-theme-intense-magenta))))
+   `(vr/group-2 ((,class (:inherit modus-theme-intense-green))))
+   `(vr/match-0 ((,class (:inherit modus-theme-refine-yellow))))
+   `(vr/match-1 ((,class (:inherit modus-theme-refine-yellow))))
+   `(vr/match-separator-face ((,class (:inherit modus-theme-intense-neutral :weight bold))))
    ;;;; wgrep
    `(wgrep-delete-face ((,class (:inherit modus-theme-refine-yellow))))
    `(wgrep-done-face ((,class (:inherit modus-theme-refine-blue))))
