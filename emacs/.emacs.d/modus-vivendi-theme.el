@@ -154,7 +154,7 @@ between foreground and background is >= 7:1)."
       (fg-special-cold "#c6eaff") (bg-special-cold "#203448")
       (fg-special-mild "#bfebe0") (bg-special-mild "#00322e")
       (fg-special-warm "#f8dec0") (bg-special-warm "#382f27")
-      (fg-special-calm "#f0cdf0") (bg-special-calm "#431b30")
+      (fg-special-calm "#fbd6f4") (bg-special-calm "#392a48")
       ;; styles for the main constructs
       ;;
       ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
@@ -184,14 +184,14 @@ between foreground and background is >= 7:1)."
       ;;
       ;; must be combined with: `fg-dim'
       (red-subtle-bg "#762422") (green-subtle-bg "#2f4a00")
-      (yellow-subtle-bg "#654230") (blue-subtle-bg "#2a2f90")
-      (magenta-subtle-bg "#5d2975") (cyan-subtle-bg "#00415e")
+      (yellow-subtle-bg "#604200") (blue-subtle-bg "#10387c")
+      (magenta-subtle-bg "#49366e") (cyan-subtle-bg "#00415e")
       ;; styles for background elements that should be visible and
       ;; distinguishable
       ;;
       ;; must be combined with: `fg-main'
       (red-intense-bg "#a4202a") (green-intense-bg "#006800")
-      (yellow-intense-bg "#824a00") (blue-intense-bg "#2844b8")
+      (yellow-intense-bg "#874900") (blue-intense-bg "#2a40b8")
       (magenta-intense-bg "#7042a2") (cyan-intense-bg "#005f88")
       ;; styles for refined git diffs and other contexts where both the
       ;; foreground and the background need to have the same/similar hue
@@ -199,11 +199,11 @@ between foreground and background is >= 7:1)."
       ;; must be combined with themselves OR the foregrounds can be
       ;; combined with any of the base backgrounds
       (red-refine-bg "#77002a") (green-refine-bg "#00422a")
-      (yellow-refine-bg "#755000") (blue-refine-bg "#2428a0")
-      (magenta-refine-bg "#71206a") (cyan-refine-bg "#2f4680")
+      (yellow-refine-bg "#705000") (blue-refine-bg "#242679")
+      (magenta-refine-bg "#71206a") (cyan-refine-bg "#004065")
       (red-refine-fg "#ffb9ab") (green-refine-fg "#9ff0cf")
-      (yellow-refine-fg "#ffffcc") (blue-refine-fg "#adddff")
-      (magenta-refine-fg "#ffcaf0") (cyan-refine-fg "#9ffcf6")
+      (yellow-refine-fg "#ffffac") (blue-refine-fg "#8ec6ff")
+      (magenta-refine-fg "#ffcaf0") (cyan-refine-fg "#8ae4f2")
       ;; styles that are meant exclusively for the mode line
       ;;
       ;; must be combined with: `bg-active', `bg-inactive'
@@ -224,7 +224,7 @@ between foreground and background is >= 7:1)."
       ;;
       ;; all other pairs are combinable with themselves
       (bg-hl-line "#151823")
-      (bg-region "#505050")
+      (bg-region "#3c3c3c")
       (fg-header "#dddddd") (bg-header "#2a2a2a")
       (fg-whitespace "#a4959f") (bg-whitespace "#170016")
       (fg-paren-match "#fcfcfc") (bg-paren-match "#754a5d")
@@ -754,8 +754,8 @@ between foreground and background is >= 7:1)."
    ;;;; evil-mode
    `(evil-ex-commands ((,class (:foreground ,magenta-alt-other))))
    `(evil-ex-info ((,class (:foreground ,cyan-alt-other))))
-   `(evil-ex-lazy-highlight ((,class (:inherit lazy-highlight))))
-   `(evil-ex-search ((,class (:inherit isearch))))
+   `(evil-ex-lazy-highlight ((,class (:inherit modus-theme-refine-cyan))))
+   `(evil-ex-search ((,class (:inherit modus-theme-intense-green))))
    `(evil-ex-substitute-matches ((,class (:inherit modus-theme-refine-yellow :underline t))))
    `(evil-ex-substitute-replacement ((,class (:inherit modus-theme-intense-green :weight bold))))
    ;;;; evil-goggles
@@ -1110,10 +1110,10 @@ between foreground and background is >= 7:1)."
    `(info-node ((,class ((:weight bold)))))
    ;;;; isearch, occur, and the like
    `(isearch ((,class (:inherit modus-theme-intense-green :weight bold))))
-   `(isearch-fail ((,class (:inherit modus-theme-subtle-red :weight bold))))
+   `(isearch-fail ((,class (:inherit modus-theme-refine-red))))
    `(lazy-highlight ((,class (:inherit modus-theme-refine-cyan))))
    `(match ((,class (:inherit modus-theme-special-calm))))
-   `(query-replace ((,class (:inherit modus-theme-refine-yellow :weight bold))))
+   `(query-replace ((,class (:inherit modus-theme-intense-yellow :weight bold))))
    ;;;; ivy
    `(ivy-action ((,class (:foreground ,red-alt :weight bold))))
    `(ivy-completions-annotations ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
