@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 0.4.0
+;; Version: 0.5.0
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -812,7 +812,7 @@ between foreground and background is >= 7:1)."
    `(font-lock-warning-face ((,class (:background ,bg-alt :foreground ,yellow-alt-other :weight bold))))
    ;;;; flycheck
    `(flycheck-error ((,class (:foreground ,red :underline t))))
-   `(flycheck-error-list-checker-name ((,class (:foreground ,magenta-alt))))
+   `(flycheck-error-list-checker-name ((,class (:foreground ,magenta-active))))
    `(flycheck-error-list-column-number ((,class (:foreground ,fg-special-cold))))
    `(flycheck-error-list-error ((,class (:inherit error))))
    `(flycheck-error-list-filename ((,class (:foreground ,blue))))
@@ -1379,7 +1379,8 @@ between foreground and background is >= 7:1)."
    `(mu4e-footer-face ((,class (:foreground ,fg-alt))))
    `(mu4e-forwarded-face ((,class (:foreground ,green-alt-other))))
    `(mu4e-header-face ((,class (:foreground ,fg-main))))
-   `(mu4e-header-highlight-face ((,class (:background ,bg-hl-line))))
+   `(mu4e-header-highlight-face ((,class (,@(and (>= emacs-major-version 27) '(:extend t))
+                                          :background ,bg-hl-line))))
    `(mu4e-header-key-face ((,class (:foreground ,fg-dim :weight bold))))
    `(mu4e-header-marks-face ((,class (:foreground ,magenta-alt :weight bold))))
    `(mu4e-header-title-face ((,class (:foreground ,fg-special-warm))))
@@ -1466,7 +1467,7 @@ between foreground and background is >= 7:1)."
    `(org-document-title ((,class (:foreground ,fg-special-cold :weight bold))))
    `(org-done ((,class (:foreground ,green))))
    `(org-drawer ((,class (:foreground ,cyan-alt))))
-   `(org-ellipsis ((,class (:foreground ,yellow-alt :underline t))))
+   `(org-ellipsis ((,class (:foreground nil)))) ; inherits from the heading's colour
    `(org-footnote ((,class (:foreground ,blue-alt :underline t))))
    `(org-formula ((,class (:foreground ,red-alt))))
    `(org-habit-alert-face ((,class (:inherit modus-theme-intense-yellow))))
