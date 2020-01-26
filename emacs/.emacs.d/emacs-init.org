@@ -2099,16 +2099,16 @@ The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/or
   (setq org-default-priority ?A)
   (setq org-capture-templates
         '(("t" "Task for the day" entry
-           (setq file+headline "~/Org/tasks.org" "Tasks with a deadline")
+           (file+headline "~/Org/tasks.org" "Tasks with a deadline")
            "* TODO [#A] %?\nDEADLINE: %t\n")
           ("l" "Link to Emacs buffer or file" entry
-           (setq file+headline "~/Org/tasks.org" "Links to buffers/files")
+           (file+headline "~/Org/tasks.org" "Links to buffers/files")
            "* STUDY [#B] %?\nSCHEDULED: %t\n%a")
           ("L" "Link to full file system path" entry
-           (setq file+headline "~/Org/tasks.org" "Links to buffers/files")
+           (file+headline "~/Org/tasks.org" "Links to buffers/files")
            "* STUDY [#B] %?\nSCHEDULED: %t\n%F")
           ("n" "Note" entry
-           (setq file+headline "~/Org/tasks.org" "Notes with or without context")
+           (file+headline "~/Org/tasks.org" "Notes with or without context")
            "* NOTE [#C] %?\nSCHEDULED: %t\n%i")))
   ;; code blocks
   (setq org-src-window-setup 'current-window)
