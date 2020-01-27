@@ -3773,7 +3773,7 @@ and similar tools (or when manually invoking text formatting with
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq fill-column 72)
+  (setq-default fill-column 72)
   (setq sentence-end-double-space t)
   (setq sentence-end-without-period nil)
   (setq colon-double-space nil)
