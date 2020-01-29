@@ -1,11 +1,8 @@
 #!/bin/bash
 
-# Dynamic workspaces for BSPWM.  Switching to a non-existent desktop
-# will create it dynamically.  Same with sending nodes to one.  Empty
-# desktops are removed.  This is meant to be implemented in SXHKD.  Part
-# of my dotfiles: https://gitlab.com/protesilaos/dotfiles
+# bspwm_dynamic_desktops --- Dynamic desktops (work spaces) for BSPWM.
 #
-# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (c) 2019-2020 Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,6 +16,28 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+## Commentary:
+#
+# The idea with dynamic desktops is to maintain a list of varying
+# lengths with only the active items.  Whereas the default is to keep a
+# fixed list of, say, ten desktops at all times.
+#
+# What this script does, in outline:
+#
+# - Switching to a non-existent desktop will create it dynamically.
+# - Sending a node to a given desktop will create that desktop as well.
+#   - There also exists a variant that follows the node to that desktop.
+# - Empty desktops are removed.
+#
+# This script's commands are meant to be implemented in SXHKD (or
+# equivalent).  Furthermore, the desktops need to be set to one per
+# monitor in bspwmrc (empty desktops are removed upon invoking one of
+# this script's commands).
+#
+# `bspwm_dynamic_desktops' is part of my dotfiles (which also offer a
+# complete implementation): https://gitlab.com/protesilaos/dotfiles
+
 
 
 # See the --options below for the available arguments for $1.  $2 must
