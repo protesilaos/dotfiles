@@ -98,8 +98,19 @@ mod3 + shift + {h,j,k,l}
 # section.
 #
 # NOTE the leading `;` runs this command asynchronously.
+#
+# NOTE2 the script also offers commands for sending to a desktop on the
+# current or the next monitor and following it right away.  The
+# shorthand for those is `--nsf' and `--nmf' respectively.  A
+# commented-out version is provided below the enabled key bindings,
+# which replaces the "send" commands noted above with their
+# "send+follow" equivalents.
 mod3 + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
 	;bspwm_dynamic_desktops {--df,--ns,--nm,--da} {0-9}
+
+## Use this for "send+follow" instead of just "send"
+# mod3 + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
+# 	;bspwm_dynamic_desktops {--df,--nsf,--nmf,--da} {0-9}
 
 # With `alt` focus {next,previous} window in the current desktop.  With
 # `mod3` focus {next,previous} desktop in the current monitor.

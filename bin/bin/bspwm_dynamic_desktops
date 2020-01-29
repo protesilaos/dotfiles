@@ -132,8 +132,14 @@ case "$option" in
 	--ns|--send-focused-to-desktop)
 		_desk_or_node node focused -d "${target_desktop}"
 		;;
+	--nsf|--send-focused-to-desktop-and-follow)
+		_desk_or_node node focused -d "${target_desktop}" --follow
+		;;
 	--nm|--send-focused-to-next-monitor)
 		_desk_or_node monitor node focused -d "${target_desktop}"
+		;;
+	--nmf|--send-focused-to-next-monitor-and-follow)
+		_desk_or_node monitor node focused -d "${target_desktop}" --follow
 		;;
 	--da|--activate-desktop-and-place-receptacle)
 		_desk_or_node monitor node @"$target_desktop":/ -i && bspc desktop -a "${target_desktop}"
