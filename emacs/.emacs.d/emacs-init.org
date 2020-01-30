@@ -2092,24 +2092,17 @@ The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/or
   (setq org-refile-use-cache t)
   (setq org-todo-keywords
         '((sequence "TODO(t)" "|" "DONE(d)")
-          (sequence "STUDY(s)" "WRITE(w)" "|" "POSTED(p)")
-          (sequence "NOTE(n)" "|" "ARCHIVED(r)")))
+          (sequence "READ(r)" "|" "POSTED(p)")))
   (setq org-highest-priority ?A)
-  (setq org-lowest-priority ?C)
+  (setq org-lowest-priority ?B)
   (setq org-default-priority ?A)
   (setq org-capture-templates
         '(("t" "Task for the day" entry
-           (file+headline "~/Org/tasks.org" "Tasks with a deadline")
+           (file+headline "~/Org/tasks.org" "Task list")
            "* TODO [#A] %?\nDEADLINE: %t\n")
           ("l" "Link to Emacs buffer or file" entry
            (file+headline "~/Org/tasks.org" "Links to buffers/files")
-           "* STUDY [#B] %?\nSCHEDULED: %t\n%a")
-          ("L" "Link to full file system path" entry
-           (file+headline "~/Org/tasks.org" "Links to buffers/files")
-           "* STUDY [#B] %?\nSCHEDULED: %t\n%F")
-          ("n" "Note" entry
-           (file+headline "~/Org/tasks.org" "Notes with or without context")
-           "* NOTE [#C] %?\nSCHEDULED: %t\n%i")))
+           "* TODO [#B] %?\n%a")))
   ;; code blocks
   (setq org-src-window-setup 'current-window)
   (setq org-src-fontify-natively t)
