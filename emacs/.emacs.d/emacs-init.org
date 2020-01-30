@@ -2678,40 +2678,271 @@ buffer that doubles as a library buffer (see
    :CUSTOM_ID: h:5ad80664-3163-4d9d-be65-462637d77903
    :END:
 
-Setting up Email is quite the challenge, especially because we have
-been used to the likes of Thunderbird, where everything "just works".
-The toolchain for my current setup consists of the following (nothing
-is from MELPA):
+Configuring email can be quite the challenge, largely because we have
+been used to the likes of Thunderbird, where you log in once and then
+everything "just works".  The tool set for my current setup consists of
+the following:
 
++ Gnus (also pronounced as "News" or "Nouz"), which is a powerful
+  newsreader and email client that is built into Emacs.
 + The built-in SMTP capabilities to send email.
-+ The =mu4e= front-end to the =mu= mail indexer.  This is for finding and
-  reading email.  Both of those tools are available on available through
-  distro-specific packages (tested on Debian and Void Linux).
-+ The =offlineimap= utility (also from distro packages) is used to store a
-  local copy of my emails.  This is necessary for =mu= to actually do its
-  work.
 
+Previous versions of this document (prior to 2020-01-30) relied on
+external tools for reading and sending email, in particular =mu4e=, the
+front-end to the =mu= mail indexer, and =offlineimap=.  Whereas now I let
+Gnus handle the task of synchronising with the IMAP server and with all
+the news groups I am subscribed to.  No need to worry about some complex
+mechanism for fetching, storing, indexing email.
+
+*** Base email settings
+    :PROPERTIES:
+    :CUSTOM_ID: h:a82766be-daab-4925-b23a-1c5ffd47e599
+    :END:
+
+Before configuring the email client, we need to establish the absolute
+essentials: who we are, where our credentials are stored, and whether
+encryption is supported.  This is done in the first two package
+declarations.  The other two are of secondary importance.
+
+Consider reviewing =nnmail-expiry-wait= only after you have some
+experience with Gnus.  As for the =message-citation-line-format=, its
+value is expanded as something like /"On 2020-01-29, 22:17 CET, PERSON
+wrote:"/.
+
+#+begin_src emacs-lisp
+(use-package auth-source
+  :config
+  (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo"))
+  (setq user-full-name "Protesilaos Stavrou")
+  (setq user-mail-address "public@protesilaos.com"))
+
+(use-package epa-file
+  :config
+  (setq epa-file-cache-passphrase-for-symmetric-encryption t))
+
+(use-package message
+  :config
+  (setq message-citation-line-format "On %Y-%m-%d, %R %Z, %f wrote:\n")
+  (setq message-citation-line-function
+        'message-insert-formatted-citation-line)
+  (setq message-kill-buffer-on-exit t))
+
+(use-package nnmail
+  :config
+  (setq nnmail-expiry-wait 30))
+#+end_src
+
+Below is a sample with the contents of my =authinfo.gpg=.  This is read by
+=gnus= and =smtpmail= to be able to both fetch and send messages from the
+given account.  I strongly encourage you to *encrypt this file* if you add
+your login credentials there.  Do it from inside =dired= with =: e= while
+the point is over the file.  Emacs can decrypt all encrypted files
+automatically.
+
+#+begin_example
+machine prv port 993 login MAIL password SECRET
+machine inf port 993 login MAIL password SECRET
+machine pub port 993 login MAIL password SECRET
+
+machine mail.gandi.net port 465 login MAIL password SECRET
+machine mail.gandi.net port 465 login MAIL password SECRET
+machine mail.gandi.net port 465 login MAIL password SECRET
+#+end_example
+
+Refer to your email provider's documentation in order to determine the
+port number and server address you need to use for sending and receiving
+messages.
+
+*** Gnus for reading email, mailing lists, and more
+    :PROPERTIES:
+    :CUSTOM_ID: h:14cf6fea-54eb-4faa-bb16-3739485c929a
+    :END:
+
+/WORK IN PROGRESS: this setup works and I already like it, but will
+probably introduce several changes as I become more familiar with Gnus./
+
+The documentation describes Gnus as the /"coffee-brewing, all singing,
+all dancing, kitchen sink newsreader"/.  I chuckled when I first read it,
+thinking to myself that the developers have a nice sense of humour.
+Then I decided to quickly go through the list of user-facing
+customisation options: =M-x customize-apropos-groups RET gnus RET= …  Not
+so funny after all!
+
+Simply put, Gnus is massive.  This makes it both extremely powerful and
+incredibly complicated for new users.  But once you make sense of the
+basics, everything fits into place and you can gradually tweak your
+setup as you build up your skills.  That is what I am doing.
+
+The default Gnus buffer shows you the "Groups" you are subscribed to.
+These can be your mailboxes or some Usenet source (e.g. a mailing list).
+All sources are accessed via the "Server" buffer.  At first, your group
+list is empty: you use whatever you want from the Server listings.
+
+Once your groups are determined, you can browse each of them in the
+"Summary" buffer.  That offers a more familiar layout, where the frame
+is split between the list of emails and the current message's view.
+
+Notwithstanding the customisation options and various idiosyncratic
+design choices, some prior experience with Emacs' various interfaces
+will definitely come in handy: Gnus uses similar metaphors for
+navigating and parsing information.  It still is important to read the
+manual though.
+
+The package declaration below is divided into several blocks, each
+demarcated by a comment line.  Here is an overview (use =C-h v VAR= to
+read documentation about each =VAR= or simply place the point over it and
+then hit =C-h v= to pre-populate the results):
+
++ Account settings :: The =gnus-select-method= sets the default method for
+  fetching news items.  As I want to read mail from several accounts, I
+  choose to set it to nil.  The =gnus-secondary-select-methods= is where
+  my accounts are specified.  Each =nnimap= list points to a specific line
+  in my =authinfo.gpg= file.  My emails all use the same server so this
+  method allows me to specify the username (email) and password
+  combination for each of them /without/ making this information public.
+  I am not sure whether the =nnimap-stream= and =nnimap-authinfo-file= are
+  needed, but I keep them for the sake of completeness.
++ Article :: I have no particular interest in the HTML-related
+  variables, because I practically never have to read any of them.  As a
+  general rule, email that can only be read in HTML is likely spam or
+  annoying enough to be treated as such.  The variable I care deeply
+  about in this section is =gnus-mode-line-image-cache=, whose =nil= value
+  makes sure that the blue Gnus icon is not shown in the mode line.
+  That icon has a predefined colour, making it a poor choice for colour
+  contrast accessibility.
++ Asynchronous operation :: Allow Gnus to perform certain tasks in a
+  non-blocking manner.  In practice though, I am not sure what those are
+  and how different the behaviour is.
++ Groups buffer :: Disable the default behaviour of always showing a
+  group that has "ticked" items (the equivalent of starred or marked as
+  important).
++ Topics (groups buffer) :: I like to always show the list of topics,
+  including the empty ones because it allows for fetching messages on a
+  per-topic basis using =M-g=.
++ Summary buffer :: The sorting is set to reverse chronological order
+  (newest first).  Threads should not be hidden, while messages whose
+  root has been removed should be grouped together in some meaningful
+  way.  Furthermore, when moving up or down in the list of messages
+  using just =n= or =p=, I want to go to the next message, regardless of
+  whether it has been read or not.  I can otherwise rely on standard
+  Emacs motions.
+
+Now here comes the nice part of leveraging the integration that Emacs
+offers: in my [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org mode configurations]] I have a simple template to
+capture the current buffer's link.  This means that we can quickly
+convert any item into a task/note and always be able to go back to the
+original message by following the link.  /Found an interesting suggestion
+in some mailing list?/ Capture it.  /Need to act on an email later?/
+Capture, capture, capture.
+
+#+begin_src emacs-lisp
+(use-package gnus
+  :config
+  ;; accounts
+  (setq gnus-select-method '(nnnil))
+  (setq gnus-secondary-select-methods
+        '((nntp "news.gwene.org")
+          (nnimap "prv"
+                  (nnimap-address "mail.gandi.net")
+                  (nnimap-stream ssl)
+                  (nnimap-authinfo-file "~/.authinfo.gpg"))
+          (nnimap "inf"
+                  (nnimap-address "mail.gandi.net")
+                  (nnimap-stream ssl)
+                  (nnimap-authinfo-file "~/.authinfo.gpg"))
+          (nnimap "pub"
+                  (nnimap-address "mail.gandi.net")
+                  (nnimap-stream ssl)
+                  (nnimap-authinfo-file "~/.authinfo.gpg"))))
+  ;; agent
+  (setq gnus-agent t)
+  (setq gnus-agent-article-alist-save-format 1)  ; uncompressed
+  (setq gnus-agent-cache t)
+  (setq gnus-agent-confirmation-function 'y-or-n-p)
+  (setq gnus-agent-consider-all-articles nil)
+  (setq gnus-agent-directory "~/News/agent/")
+  (setq gnus-agent-enable-expiration 'ENABLE)
+  (setq gnus-agent-expire-all nil)
+  (setq gnus-agent-expire-days 30)
+  (setq gnus-agent-mark-unread-after-downloaded t)
+  (setq gnus-agent-queue-mail 'always)
+  (setq gnus-agent-synchronize-flags nil)
+  ;; article
+  (setq gnus-article-browse-delete-temp 'ask)
+  (setq gnus-article-over-scroll nil)
+  (setq gnus-article-show-cursor t)
+  (setq gnus-article-sort-functions
+        '((not gnus-article-sort-by-date)))
+  (setq gnus-article-truncate-lines nil)
+  (setq gnus-html-frame-width 80)
+  (setq gnus-html-image-automatic-caching t)
+  (setq gnus-inhibit-images t)
+  (setq gnus-max-image-proportion 0.3)
+  (setq gnus-mode-line-image-cache nil)
+  (setq gnus-treat-display-smileys nil)
+  ;; asynchronous
+  (setq gnus-asynchronous t)
+  (setq gnus-use-article-prefetch 15)
+  ;; dribble
+  (setq gnus-use-dribble-file t)
+  (setq gnus-always-read-dribble-file t)
+  ;; groups
+  (setq gnus-list-groups-with-ticked-articles nil)
+  (setq gnus-group-sort-function
+        '(gnus-group-sort-by-alphabet gnus-group-sort-by-rank))
+  (setq gnus-topic-display-empty-topics t)
+  ;; summary
+  (setq gnus-summary-goto-unread nil)
+  (setq gnus-summary-make-false-root 'adopt)
+  (setq gnus-thread-sort-functions
+        '((not gnus-thread-sort-by-date)))
+  (setq gnus-thread-hide-subtree nil)
+  (setq gnus-thread-ignore-subject t)
+  :hook ((gnus-summary-mode . hl-line-mode)
+         (gnus-group-mode . hl-line-mode)
+         (gnus-group-mode . gnus-topic-mode)))
+#+end_src
+
+**** TODO learn more about mail searching (nnir?, nnimap?)
+     :PROPERTIES:
+     :CUSTOM_ID: h:4f3fb8e0-8e53-4c9b-9623-01a2aa4a05fe
+     :END:
+**** TODO explore header fields and their order (gnus article)
+     :PROPERTIES:
+     :CUSTOM_ID: h:01e2f232-2594-4296-81b9-b9eabef0145a
+     :END:
+**** TODO explore topic line format
+     :PROPERTIES:
+     :CUSTOM_ID: h:0f2ea220-aef3-4f23-a452-a376db3706bd
+     :END:
+**** TODO non-blocking RSS feeds (use topic scores?)
+     :PROPERTIES:
+     :CUSTOM_ID: h:61a91a5c-338d-4c1d-9f8c-f8ee321078a8
+     :END:
+**** TODO parse Atom feeds as well?
+     :PROPERTIES:
+     :CUSTOM_ID: h:812c503c-fbd8-40f5-ac5d-6cae20974cba
+     :END:
 *** Sending email (SMTP)
     :PROPERTIES:
     :CUSTOM_ID: h:2d793cf8-83f5-4830-b73d-78385d9b96dd
     :END:
 
-These are the base configs for the SMTP server.  Passwords for each
-email account are stored in =~/.authinfo.gpg=.
+These are the base settings for the SMTP functionality.  Passwords and
+other critical information are stored in =~/.authinfo.gpg=, as
+demonstrated in [[#h:a82766be-daab-4925-b23a-1c5ffd47e599][the base email settings]].  What follows is just a
+mirroring of the contents of that file.
 
-*Pro tip:*  While using Dired, type =: e= to encrypt file at point.
-Emacs can decrypt those automatically.
+With regard to the asynchronous functionality, it is meant to improve
+performance by carrying out the relevant tasks in a non-blocking way.
 
 #+begin_src emacs-lisp
 (use-package smtpmail
   :config
-  (setq smtpmail-default-smtp-server "mail.gandi.net")
+  ;; (setq smtpmail-default-smtp-server "mail.gandi.net")
   (setq smtpmail-smtp-server "mail.gandi.net")
   (setq smtpmail-stream-type 'ssl)
-  (setq smtpmail-smtp-service 465)
-  (setq user-full-name "Protesilaos Stavrou")
-  (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo"))
-  (setq epa-file-cache-passphrase-for-symmetric-encryption t))
+  (setq smtpmail-smtp-service 465))
 
 (use-package smtpmail-async
   :after smtpmail
@@ -2720,15 +2951,18 @@ Emacs can decrypt those automatically.
   (setq message-send-mail-function 'async-smtpmail-send-it))
 #+end_src
 
-*** Reading email (MUA)
+*** DEPRECATED Reading email with MU4E
     :PROPERTIES:
     :CUSTOM_ID: h:2a93d8bf-200a-4d23-9be3-276a907947e1
     :END:
 
+/WARNING (2020-01-30): I am no longer using MU4E as I [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][switched to Gnus]].
+This section is only kept for reference./
+
 The following configure =mu4e=, the Mail User Agent.  An overview:
 
-+ Include mu4e in the load path.  This is necessary because we are
-  using the Void Linux package.
++ Include mu4e in the load path.  This is necessary because we are using
+  the GNU/Linux distro's package.
 + Use =mu4e= as the default MUA in Emacs.  This concerns actions such
   as =C-x m= (=compose-mail=).
 + I prefer to run the "get mail" command manually rather than rely on a
@@ -2764,6 +2998,7 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
 
 #+begin_src emacs-lisp
 (use-package mu4e
+  :disabled                             ; DEPRECATED in favour of `gnus'
   :load-path "/usr/share/emacs/site-lisp/mu4e"
   :after (smtpmail smtpmail-async)
   :commands (mu4e mu4e-update-mail-and-index)
@@ -2796,10 +3031,13 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
 
 To set up =offlineimap= I used the [[https://wiki.archlinux.org/index.php/OfflineIMAP][Arch Wiki]] entry.
 
-*** MU4E extension for org-capture
+*** DEPRECATED mu4e extension for org-capture
     :PROPERTIES:
     :CUSTOM_ID: h:ab106725-ae5d-4ce2-8160-d2f8c46cb563
     :END:
+
+/WARNING (2020-01-30): I am no longer using MU4E as I [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][switched to Gnus]].
+This section is only kept for reference./
 
 With this little snippet, we allow =org-capture= convert any email into a
 note, to-do item or whatever.  The killer feature is that we get a
@@ -2809,6 +3047,7 @@ really need.  Nice!
 
 #+begin_src emacs-lisp
 (use-package org-mu4e                   ; no need for `:ensure t'
+  :disabled                             ; DEPRECATED in favour of `gnus'
   :after (org mu4e)
   :config
   (setq org-mu4e-link-query-in-headers-mode nil))
