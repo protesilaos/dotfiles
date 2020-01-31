@@ -2718,7 +2718,8 @@ wrote:"/.
   (setq message-citation-line-format "On %Y-%m-%d, %R %Z, %f wrote:\n")
   (setq message-citation-line-function
         'message-insert-formatted-citation-line)
-  (setq message-kill-buffer-on-exit t))
+  (setq message-kill-buffer-on-exit nil)
+  (setq message-wide-reply-confirm-recipients t))
 
 (use-package nnmail
   :config
@@ -2856,6 +2857,7 @@ Capture, capture, capture.
                   (nnimap-stream ssl)
                   (nnimap-authinfo-file "~/.authinfo.gpg"))))
   ;; agent
+  (setq mail-user-agent 'gnus-user-agent) ; also works with `sendmail-user-agent'
   (setq gnus-agent t)
   (setq gnus-agent-article-alist-save-format 1)  ; uncompressed
   (setq gnus-agent-cache t)
@@ -2866,7 +2868,7 @@ Capture, capture, capture.
   (setq gnus-agent-expire-all nil)
   (setq gnus-agent-expire-days 30)
   (setq gnus-agent-mark-unread-after-downloaded t)
-  (setq gnus-agent-queue-mail 'always)
+  (setq gnus-agent-queue-mail t)        ; queue if unplugged
   (setq gnus-agent-synchronize-flags nil)
   ;; article
   (setq gnus-article-browse-delete-temp 'ask)
@@ -2937,10 +2939,6 @@ Capture, capture, capture.
      :PROPERTIES:
      :CUSTOM_ID: h:01e2f232-2594-4296-81b9-b9eabef0145a
      :END:
-**** TODO explore topic line format
-     :PROPERTIES:
-     :CUSTOM_ID: h:0f2ea220-aef3-4f23-a452-a376db3706bd
-     :END:
 **** TODO non-blocking RSS feeds (use topic scores?)
      :PROPERTIES:
      :CUSTOM_ID: h:61a91a5c-338d-4c1d-9f8c-f8ee321078a8
@@ -2964,11 +2962,13 @@ performance by carrying out the relevant tasks in a non-blocking way.
 
 #+begin_src emacs-lisp
 (use-package smtpmail
+  :init
+  (setq smtpmail-default-smtp-server "mail.gandi.net")
   :config
-  ;; (setq smtpmail-default-smtp-server "mail.gandi.net")
   (setq smtpmail-smtp-server "mail.gandi.net")
   (setq smtpmail-stream-type 'ssl)
-  (setq smtpmail-smtp-service 465))
+  (setq smtpmail-smtp-service 465)
+  (setq smtpmail-queue-mail nil))
 
 (use-package smtpmail-async
   :after smtpmail
