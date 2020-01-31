@@ -2819,12 +2819,14 @@ then hit =C-h v= to pre-populate the results):
   using just =n= or =p=, I want to go to the next message, regardless of
   whether it has been read or not.  I can otherwise rely on standard
   Emacs motions.  The formatting of the threads using Unicode characters
-  was taken from the [[https://www.emacswiki.org/emacs/GnusFormatting][relevant Emacs wiki entry]].
+  was taken from the [[https://www.emacswiki.org/emacs/GnusFormatting][relevant Emacs wiki entry]] plus some minor tweaks by
+  me.
 + Time formatting :: Better refer to the documentation of the function
   =format-time-string= to understand the meaning of the various date/time
   specifiers.  As for =gnus-user-date-format-alist=, this basically adapts
-  the date to whether the message was within the day, month, year, else
-  falls back to a default value.  It is then called with =%&user-date;=.
+  the date to whether the message was within the day or the one before,
+  else falls back to a default value.  It is then called with
+  =%&user-date;=.
 
 Now here comes the nice part of leveraging the integration that Emacs
 offers: in my [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org mode configurations]] I have a simple template to
@@ -2879,6 +2881,7 @@ Capture, capture, capture.
   (setq gnus-max-image-proportion 0.3)
   (setq gnus-mode-line-image-cache nil)
   (setq gnus-treat-display-smileys nil)
+  (setq gnus-article-mode-line-format "Gnus: %S %m")
   ;; asynchronous
   (setq gnus-asynchronous t)
   (setq gnus-use-article-prefetch 15)
@@ -2899,6 +2902,7 @@ Capture, capture, capture.
           gnus-group-sort-by-unread
           gnus-group-sort-by-alphabet))
   (setq gnus-topic-display-empty-topics t)
+  (setq gnus-group-mode-line-format "Gnus: %%b")
   ;; summary
   (setq gnus-summary-goto-unread nil)
   (setq gnus-summary-make-false-root 'adopt)
@@ -2909,21 +2913,17 @@ Capture, capture, capture.
   (setq gnus-thread-hide-subtree nil)
   (setq gnus-thread-ignore-subject t)
   (setq gnus-user-date-format-alist
-        '(((gnus-seconds-today) . "%R")
-          ((gnus-seconds-month) . "%a %e %R")
-          ((gnus-seconds-year) . "%m-%d %R")
+        '(((gnus-seconds-today) . "Today at %R")
+          ((+ 86400 (gnus-seconds-today)) . "Yesterday, %R")
           (t . "%Y-%m-%d %R")))
-  (setq gnus-summary-line-format "%U%R%z %&user-date;  %-20,20f  %B%S\n")
+  (setq gnus-summary-line-format "%U%R%z %-16,16&user-date;  %4L:%-20,20f  %B%S\n")
+  (setq gnus-summary-mode-line-format "Gnus: %p (%U)")
   (setq gnus-sum-thread-tree-false-root "")
   (setq gnus-sum-thread-tree-indent " ")
-  (setq gnus-sum-thread-tree-leaf-with-other "├► ")
+  (setq gnus-sum-thread-tree-leaf-with-other "├─➤ ")
   (setq gnus-sum-thread-tree-root "")
-  (setq gnus-sum-thread-tree-single-leaf "╰► ")
+  (setq gnus-sum-thread-tree-single-leaf "└─➤ ")
   (setq gnus-sum-thread-tree-vertical "│")
-  ;; (setq gnus-sum-thread-tree-leaf-with-other "+-> ")
-  ;; (setq gnus-sum-thread-tree-root "> ")
-  ;; (setq gnus-sum-thread-tree-single-leaf "\\-> ")
-  ;; (setq gnus-sum-thread-tree-vertical "│")
   :hook ((gnus-summary-mode . hl-line-mode)
          (gnus-group-mode . hl-line-mode)
          (gnus-group-mode . gnus-topic-mode)))
