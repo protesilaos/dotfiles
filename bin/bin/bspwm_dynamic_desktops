@@ -54,6 +54,24 @@ case "$target_desktop" in
 		echo "The second argument must be a valid number"
 		exit 1
 		;;
+    # The following switch allows us to specify a range of numbered
+    # desktops that we would always want to place on a dedicated
+    # monitor, which is here defined as the first on the list.
+    #
+    # THIS IS JUST A PROOF-OF-CONCEPT.  It only applies to the `--ns*'
+    # options (see the last part of the script).  As such, you can still
+    # send a node to any dynamically-created numbered desktop on the
+    # next monitor, by using the `--nm*' options.
+    #
+    # In principle, it is possible to have multiple dedicated monitors,
+    # but I feel that the current implementation already points at a
+    # possible approach to tackling that issue.
+    #
+    # Furthermore, we can target a monitor by its name (e.g. LVDS-1).
+    [1-4])
+        dedicated_desktops=1
+        dedicated_monitor="$(bspc query -M | sed 1q)" # Selects the 1st
+        ;;
 esac
 
 # Command for querying BSPWM desktops.
@@ -93,7 +111,8 @@ _desk_or_node() {
 	}
 
 	# Reorder desktops on the target monitor (the target is the first
-	# argument passed to this function.  The default is the focused one.
+	# argument passed to this function).  The default is the focused
+	# one.
 	_desk_order() {
 		while read -r line; do
 			printf "%s\\n" "$line"
@@ -110,8 +129,15 @@ _desk_or_node() {
 			;;
 		monitor)
 			shift
-			_dynamic_desktops next bspc "$@"
-			bspc monitor next -o $(eval _desk_order next) # do not quote! we want term splitting here
+            if [ -n "$dedicated_desktops" ]; then
+			    _dynamic_desktops "$dedicated_monitor" bspc "$@"
+			    bspc monitor "$dedicated_monitor" -o $(eval _desk_order "$dedicated_monitor")
+                # do not quote the above $(…), as we want term splitting there
+            else
+			    _dynamic_desktops next bspc "$@"
+			    bspc monitor next -o $(eval _desk_order next)
+                # do not quote the above $(…), as we want term splitting there
+            fi
 			;;
 	esac
 }
@@ -130,10 +156,18 @@ case "$option" in
 		_desk_or_node node 'any.local' -d "${target_desktop}"
 		;;
 	--ns|--send-focused-to-desktop)
-		_desk_or_node node focused -d "${target_desktop}"
+        if [ -n "$dedicated_desktops" ]; then
+            _desk_or_node monitor node focused -d "${target_desktop}"
+        else
+		    _desk_or_node node focused -d "${target_desktop}"
+        fi
 		;;
 	--nsf|--send-focused-to-desktop-and-follow)
-		_desk_or_node node focused -d "${target_desktop}" --follow
+        if [ -n "$dedicated_desktops" ]; then
+            _desk_or_node monitor node focused -d "${target_desktop}" --follow
+        else
+		    _desk_or_node node focused -d "${target_desktop}" --follow
+        fi
 		;;
 	--nm|--send-focused-to-next-monitor)
 		_desk_or_node monitor node focused -d "${target_desktop}"
@@ -145,7 +179,11 @@ case "$option" in
 		_desk_or_node monitor node @"$target_desktop":/ -i && bspc desktop -a "${target_desktop}"
 		;;
 	--df|--focus-desktop)
-		_desk_or_node desktop -f "${target_desktop}"
+        if [ -n "$dedicated_desktops" ]; then
+		    _desk_or_node monitor desktop -f "${target_desktop}"
+        else
+            _desk_or_node desktop -f "${target_desktop}"
+        fi
 		;;
 	*)
 		echo "< $option > is not a valid option."
