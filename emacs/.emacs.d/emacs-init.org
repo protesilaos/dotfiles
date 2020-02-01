@@ -2568,6 +2568,28 @@ Capture, capture, capture.
      :PROPERTIES:
      :CUSTOM_ID: h:812c503c-fbd8-40f5-ac5d-6cae20974cba
      :END:
+**** Gnus intersection with Dired
+     :PROPERTIES:
+     :CUSTOM_ID: h:0fabe523-725e-41eb-9e8b-061d74dc7bda
+     :END:
+
+We can use the built-in directory editor (file manager) as a more
+convenient way of performing certain tasks that relate to emails, such
+as attaching all the marked items of the =dired= buffer to an email we are
+currently composing or wish to initiate the composition of.
+
+Run =C-h m= inside of a Dired buffer that has =gnus-dired-mode= enabled and
+search for "gnus" to see all the relevant key bindings and the functions
+they call.  I only ever use =C-c C-m C-a= (=C-m= is the same as =RET=).
+
+By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][comprehensive Dired configurations]].
+
+#+begin_src emacs-lisp
+(use-package gnus-dired
+  :after (gnus dired)
+  :hook (dired-mode . gnus-dired-mode))
+#+end_src
+
 *** Sending email (SMTP)
     :PROPERTIES:
     :CUSTOM_ID: h:2d793cf8-83f5-4830-b73d-78385d9b96dd
