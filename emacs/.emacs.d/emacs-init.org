@@ -2553,13 +2553,13 @@ Capture, capture, capture.
 #+end_src
 
 **** TODO learn more about mail searching (nnir?, nnimap?)
-     :PROPERTIES:
-     :CUSTOM_ID: h:4f3fb8e0-8e53-4c9b-9623-01a2aa4a05fe
-     :END:
+    :PROPERTIES:
+    :CUSTOM_ID: h:4f3fb8e0-8e53-4c9b-9623-01a2aa4a05fe
+    :END:
 **** TODO explore header fields and their order (gnus article)
-     :PROPERTIES:
-     :CUSTOM_ID: h:01e2f232-2594-4296-81b9-b9eabef0145a
-     :END:
+    :PROPERTIES:
+    :CUSTOM_ID: h:01e2f232-2594-4296-81b9-b9eabef0145a
+    :END:
 **** TODO non-blocking RSS feeds (use topic scores?)
      :PROPERTIES:
      :CUSTOM_ID: h:61a91a5c-338d-4c1d-9f8c-f8ee321078a8
