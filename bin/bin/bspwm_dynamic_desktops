@@ -30,6 +30,13 @@
 #   - There also exists a variant that follows the node to that desktop.
 # - Empty desktops are removed.
 #
+# Furthermore, there exists a toggle for multi-head setups (typically
+# dual-monitor) which allows us to bind desktops to monitors, while
+# retaining the aforementioned patterns of behaviour.  In practice this
+# means that the relevant commands become agnostic to the focused
+# monitor so that, e.g., switching to desktop 1 will always take you to
+# desktop 1 which belongs to monitor A.
+#
 # This script's commands are meant to be implemented in SXHKD (or
 # equivalent).  Furthermore, the desktops need to be set to one per
 # monitor in bspwmrc (empty desktops are removed upon invoking one of
@@ -46,8 +53,8 @@
 
 # Capture the arguments.  We need to run tests against them.  Renaming
 # them makes things easier to read.
-option="${@:1:1}"
-target_desktop="${@:2:1}"
+option="${*:1:1}"
+target_desktop="${*:2:1}"
 
 case "$target_desktop" in
     [!0-9])
@@ -56,19 +63,20 @@ case "$target_desktop" in
         ;;
 esac
 
-# The `dynamic_but_dedicated' switch allows us to specify a range of
-# numbered desktops that we would always want to place on dedicated
-# monitors.  This means that while we retain the functionality of
-# dynamically creating/removing desktops, we also bind certain desktops
-# to monitors.
+# The `dynamic_but_dedicated' switch concerns multi-head setups
+# (typically dual-monitor).  It allows us to specify a range of numbered
+# desktops that we would want to always place on dedicated monitors.
+# This means that while we retain the functionality of dynamically
+# creating/removing desktops, we also bind certain desktops to monitors.
 #
 # THIS IS JUST A PROOF-OF-CONCEPT.  It only applies to the `--ns*'
 # options (see the last part of the script).  As such, you can still
 # send a node to any dynamically-created numbered desktop on the
 # next monitor, by using the `--nm*' options.
-
-# Switch to `false' to restore the monitor-independent behaviour.
-dynamic_but_dedicated='true'
+if [ "$(bspc query -M | wc -l)" -gt 1 ]; then
+    # Switch to `false' to restore the monitor-independent behaviour.
+    dynamic_but_dedicated='true'
+fi
 
 # Here we specify the range of desktops that should always appear on the
 # monitor named `LVDS-1'.  Everything else appears on `VGA-1'.  You can
@@ -97,8 +105,8 @@ _desk_or_node() {
         # function.      Then we can operate on them with greater
         # flexibility.
         local monitor action
-        monitor="${@:1:1}"
-        action="${@:2}"
+        monitor="${*:1:1}"
+        action="${*:2}"
 
         # Leave the unquoted in tact!  Else the commands will not run.
         if ! _query_desktops "$target_desktop" > /dev/null; then
@@ -132,18 +140,28 @@ _desk_or_node() {
     case "$1" in
         node|desktop)
             _dynamic_desktops 'focused.focused' bspc "$@"
-            bspc monitor -o $(eval _desk_order) # do not quote! we want term splitting here
+            # Do not quote the following `$(…)` we want term splitting
+            # here.  The next comment silences the `shellcheck' utility.
+            #
+            # shellcheck disable=SC2046
+            bspc monitor -o $(eval _desk_order)
             ;;
         monitor)
             shift
             if [ -n "$dedicated_desktops" ]; then
                 _dynamic_desktops "$dedicated_monitor" bspc "$@"
+                # Do not quote the following `$(…)` we want term splitting
+                # here.  The next comment silences the `shellcheck' utility.
+                #
+                # shellcheck disable=SC2046
                 bspc monitor "$dedicated_monitor" -o $(eval _desk_order "$dedicated_monitor")
-                # do not quote the above $(…), as we want term splitting there
             else
                 _dynamic_desktops next bspc "$@"
+                # Do not quote the following `$(…)` we want term splitting
+                # here.  The next comment silences the `shellcheck' utility.
+                #
+                # shellcheck disable=SC2046
                 bspc monitor next -o $(eval _desk_order next)
-                # do not quote the above $(…), as we want term splitting there
             fi
             ;;
     esac
