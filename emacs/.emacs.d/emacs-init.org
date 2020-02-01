@@ -849,6 +849,7 @@ repository, then the corresponding root is used instead."
          ("s-d" . counsel-dired)
          ("s-D" . dired-other-window)
          ("C-x C-r" . counsel-recentf)
+         ("s-m" . counsel-mark-ring)
          ("s-r" . counsel-recentf)
          ("s-y" . counsel-yank-pop)
          ("C-h f" . counsel-describe-function)
