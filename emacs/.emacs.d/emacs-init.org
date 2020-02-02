@@ -2465,7 +2465,8 @@ capture the current buffer's link.  This means that we can quickly
 convert any item into a task/note and always be able to go back to the
 original message by following the link.  /Found an interesting suggestion
 in some mailing list?/ Capture it.  /Need to act on an email later?/
-Capture, capture, capture.
+Capture, capture, capture.  Same principle applies to the integration
+with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-9e8b-061d74dc7bda][next section]]).
 
 #+begin_src emacs-lisp
 (use-package gnus
@@ -2560,6 +2561,7 @@ Capture, capture, capture.
   (setq gnus-sum-thread-tree-vertical "│")
   :hook ((gnus-summary-mode . hl-line-mode)
          (gnus-group-mode . hl-line-mode)
+         (gnus-server-mode . hl-line-mode)
          (gnus-group-mode . gnus-topic-mode)))
 #+end_src
 
