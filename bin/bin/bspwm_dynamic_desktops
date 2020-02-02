@@ -69,10 +69,10 @@ esac
 # This means that while we retain the functionality of dynamically
 # creating/removing desktops, we also bind certain desktops to monitors.
 #
-# THIS IS JUST A PROOF-OF-CONCEPT.  It only applies to the `--ns*'
-# options (see the last part of the script).  As such, you can still
-# send a node to any dynamically-created numbered desktop on the
-# next monitor, by using the `--nm*' options.
+# NOTE: it only applies to the `--ns*' options (see the last part of the
+# script).  As such, you can still send a node to any
+# dynamically-created numbered desktop on the next monitor, by using the
+# `--nm*' options.
 if [ "$(bspc query -M | wc -l)" -gt 1 ]; then
     # Switch to `false' to restore the monitor-independent behaviour.
     dynamic_but_dedicated='true'
@@ -81,6 +81,9 @@ fi
 # Here we specify the range of desktops that should always appear on the
 # monitor named `LVDS-1'.  Everything else appears on `VGA-1'.  You can
 # find the names of your monitors with `bspc query -M --names`.
+#
+# NOTE: if you use more that two monitors, you need to create another
+# range similar to the one for LVDS-1 and adapt things accordingly.
 if [ "$dynamic_but_dedicated" = 'true' ]; then
     dedicated_desktops='true'
     case "$target_desktop" in
@@ -89,7 +92,7 @@ if [ "$dynamic_but_dedicated" = 'true' ]; then
     esac
 fi
 
-# Command for querying BSPWM desktops.
+# Command for querying BSPWM desktops.  Used further below.
 _query_desktops() {
     bspc query -D -d "$@"
 }
@@ -101,9 +104,8 @@ _query_desktops() {
 # If the target desktop does not exist, it is created on the spot.
 _desk_or_node() {
     _dynamic_desktops() {
-        # Here we make sure we clean up the arguments passed to this
-        # function.      Then we can operate on them with greater
-        # flexibility.
+        # Here we make sure to clean up the arguments passed to this
+        # function.  We can operate on them with greater flexibility.
         local monitor action
         monitor="${*:1:1}"
         action="${*:2}"
@@ -112,7 +114,7 @@ _desk_or_node() {
         if ! _query_desktops "$target_desktop" > /dev/null; then
             bspc monitor "$monitor" -a "$target_desktop" && $action
         else
-            # BACK-AND-FORTH behaviour:      inputting the number of the
+            # BACK-AND-FORTH behaviour: inputting the number of the
             # focused desktop switches to the last one.
             #
             # If you do not like this, just replace the whole if/fi part
@@ -135,8 +137,8 @@ _desk_or_node() {
     }
 
     # Determines whether the behaviour of this function concerns nodes
-    # or desktops.  The "monitor" is just a filter for nodes/desktops,
-    # hence the "shift".  It concerns multihead setups.
+    # or desktops.  The "monitor" is just a filter for nodes/desktops
+    # (hence the `shift').  It concerns multihead setups.
     case "$1" in
         node|desktop)
             _dynamic_desktops 'focused.focused' bspc "$@"
@@ -173,9 +175,6 @@ _desk_or_node() {
 # Mnemonics for shorter options:
 # n* == node
 # d* == desktop
-#
-# TODO LOWPRIORITY --no|--send-all-to-desktop-next-monitor*)
-# TODO to be implemented in bspwm_multifaceted_operations and sxhkd
 case "$option" in
     --na|--send-all-to-desktop)
         _desk_or_node node 'any.local' -d "${target_desktop}"
