@@ -2478,6 +2478,8 @@ Capture, capture, capture.
                   (nnimap-address "mail.gandi.net")
                   (nnimap-stream ssl)
                   (nnimap-authinfo-file "~/.authinfo.gpg"))))
+  ;; (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
+  (setq message-signature "Protesilaos Stavrou\nprotesilaos.com\n")
   ;; agent
   (setq mail-user-agent 'gnus-user-agent) ; also works with `sendmail-user-agent'
   (setq gnus-agent t)
