@@ -4351,6 +4351,25 @@ relevant documentation in a tooltip.
   :hook (after-init . which-key-mode))
 #+end_src
 
+** Keycast mode
+   :PROPERTIES:
+   :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
+   :END:
+
+I am experimenting with this package as a means of enhancing the videos
+I do on emacs.  Once enabled, it uses the mode line to show the keys
+being pressed and the command they call.
+
+#+begin_src emacs-lisp
+(use-package keycast
+  :ensure t
+  :config
+  (setq keycast-window-predicate 'keycast-active-frame-bottom-right-p)
+  (setq keycast-separator-width 3)
+  (setq keycast-insert-after 'mode-line-buffer-identification)
+  (setq keycast-remove-tail-elements t))
+#+end_src
+
 * Custom movements and motions
   :PROPERTIES:
   :CUSTOM_ID: h:9aa933d2-70a9-426a-aeb2-2fa21bc67d97
