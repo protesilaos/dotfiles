@@ -954,7 +954,9 @@ section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and s
   (setq swiper-include-line-number-in-search t)
   :bind (("C-S-s" . swiper)
          ("M-s s" . swiper-multi)
-         ("M-s w" . swiper-thing-at-point)))
+         ("M-s w" . swiper-thing-at-point)
+         :map swiper-map
+         ("M-%" . swiper-query-replace)))
 #+end_src
 
 *** Ivy extensions
