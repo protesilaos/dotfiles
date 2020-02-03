@@ -2425,7 +2425,7 @@ so funny after all!
 
 Simply put, Gnus is massive.  This makes it both extremely powerful and
 incredibly complicated for new users.  Do not let that scare you though:
-start small and gradually tweak things as you on.  This is how you
+start small and gradually tweak things as you go.  This is how you
 approach Emacs itself.  Learn the basics and then figure out your needs
 from then on.
 
