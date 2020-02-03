@@ -2315,19 +2315,27 @@ activation of `org-tree-slide-mode'."
 
 Configuring email can be quite the challenge, largely because we have
 been used to the likes of Thunderbird, where you log in once and then
-everything "just works".  The tool set for my current setup consists of
+everything "just works".  The toolset for my current setup consists of
 the following:
 
-+ Gnus (also pronounced as "News" or "Nouz"), which is a powerful
++ Gnus (also pronounced as "News" or "Nooz", etc.), which is a powerful
   newsreader and email client that is built into Emacs.
-+ The built-in SMTP capabilities to send email.
++ The built-in capabilities to send email.
 
 Previous versions of this document (prior to 2020-01-30) relied on
-external tools for reading and sending email, in particular =mu4e=, the
+external tools for fetching and reading email, in particular =mu4e=, the
 front-end to the =mu= mail indexer, and =offlineimap=.  Whereas now I let
 Gnus handle the task of synchronising with the IMAP server and with all
 the news groups I am subscribed to.  No need to worry about some complex
-mechanism for fetching, storing, indexing email.
+mechanism for syncing, storing, indexing email.
+
+Note that I do not work in an office context, do not need HTML in my
+email, and do not try to come up with some fancy mechanism for updating
+my sources and notifying me of the results.  My approach is to update my
+sources manually: the idea is that if I have time to check my news, I
+also am able to act on it.  If you have more complex needs, you will
+definitely need to adapt things accordingly.  Still, this section
+contains lots of useful information to get you started.
 
 *** Base email settings
     :PROPERTIES:
@@ -2337,12 +2345,14 @@ mechanism for fetching, storing, indexing email.
 Before configuring the email client, we need to establish the absolute
 essentials: who we are, where our credentials are stored, and whether
 encryption is supported.  This is done in the first two package
-declarations.  The other two are of secondary importance.
+declarations.  The others are of secondary importance, though still very
+useful.
 
 Consider reviewing =nnmail-expiry-wait= only after you have some
 experience with Gnus.  As for the =message-citation-line-format=, its
-value is expanded as something like /"On 2020-01-29, 22:17 CET, PERSON
-wrote:"/.
+value is expanded into something like /"On 2020-01-29, 22:17 CET, PERSON
+wrote:"/.  To find about all the date-related specifiers, read the
+relevant documentation with =C-h v format-time-string=.
 
 #+begin_src emacs-lisp
 (use-package auth-source
@@ -2391,42 +2401,101 @@ machine mail.gandi.net port 465 login MAIL password SECRET
 
 Refer to your email provider's documentation in order to determine the
 port number and server address you need to use for sending and receiving
-messages.
+messages.  The =MAIL= is either your email address or some username for
+logging into the account.
+
+Note that the terms I use above for =prv=, =inf=, and =pub= are just arbitrary
+names for the given =MAIL= and =SECRET= combination.  This allows us to
+reference each name in the Gnus configurations, and share those in a
+public document like this one, without worrying about leaking private
+data.
 
 *** Gnus for reading email, mailing lists, and more
     :PROPERTIES:
     :CUSTOM_ID: h:14cf6fea-54eb-4faa-bb16-3739485c929a
     :END:
 
-/WORK IN PROGRESS: this setup works and I already like it, but will
+/WORK IN PROGRESS: this setup works and I already like it a lot, but will
 probably introduce several changes as I become more familiar with Gnus./
 
 The documentation describes Gnus as the /"coffee-brewing, all singing,
 all dancing, kitchen sink newsreader"/.  I chuckled when I first read it,
-thinking to myself that the developers have a nice sense of humour.
-Then I decided to quickly go through the list of user-facing
+thinking to myself that the developers have an interesting sense of
+humour.  Then I decided to quickly go through the list of user-facing
 customisation options: =M-x customize-apropos-groups RET gnus RET= …  Not
 so funny after all!
 
 Simply put, Gnus is massive.  This makes it both extremely powerful and
-incredibly complicated for new users.  But once you make sense of the
-basics, everything fits into place and you can gradually tweak your
-setup as you build up your skills.  That is what I am doing.
+incredibly complicated for new users.  Do not let that scare you though:
+start small and gradually tweak things as you on.  This is how you
+approach Emacs itself.  Learn the basics and then figure out your needs
+from then on.
 
-The default Gnus buffer shows you the "Groups" you are subscribed to.
-These can be your mailboxes or some Usenet source (e.g. a mailing list).
-All sources are accessed via the "Server" buffer.  At first, your group
-list is empty: you use whatever you want from the Server listings.
+Now some basic information on the abastractions that Gnus relies on:
 
-Once your groups are determined, you can browse each of them in the
-"Summary" buffer.  That offers a more familiar layout, where the frame
-is split between the list of emails and the current message's view.
+1. The default Gnus buffer shows is called "Group".  It will present you
+   with a list of all the news sources you have subscribed to.  By
+   default, Gnus only displays messages that have not been read.  The
+   same applies for groups.  The "Group" buffer will be empty the very
+   first time you log in because you have not subscribed to anything
+   yet.  Use =g= to fetch new messages from the sources.  If you only want
+   to refresh the group at point, do it with =M-g=.
+2. The "Server" buffer contains a list with all the sources you have
+   specified for discovering news.  In my case, these are my email
+   accounts and a Usenet server where mailing lists are hosted.  To
+   access the "Server" buffer from inside the "Group" buffer, just hit
+   the caret sign =^=.  To subscribe to an item, place the point over it
+   and hit =u=.  Do that for your email's inbox and for whatever mailing
+   lists you intend to follow.
+3. The "Summary" buffer contains all the message of a group.  Hitting
+   the return key over a message will split the view in two, with the
+   list above and the message below.  Use =n= or =p= to move to the next or
+   previous unread message (or =N= and =P= to just the next/prev).  You
+   access the "Summary" buffer both from the "Group" and the "Server" by
+   entering a group.
+
+It is essential to take things slowly (and first test whether your
+messages are being sent and that you can receive them).  Each buffer has
+some unique functions that are relevant to the current interface.  To
+learn more about them, use =C-h m=.  Do it for all three of the above.
+Also rely on =C-h k= to get information about what each key does in the
+given context.  Furthermore, you can use =which-key= to get feedback on
+possible key combinations (refer to [[#h:d066905d-4c6c-4fe5-8077-e806353b8929][the relevant section]]).
+
+Now a couple more things about the "Group" buffer:
+
++ A group can be assigned a level of importance.  This is a grade whose
+  highest score is 1 and the lowest is 6 (customisable though).  Each
+  level has a different colour.  To assign a new value to the group at
+  point, do it with =S l= and then give it a number.  Once you have graded
+  your groups, you can perform various actions on a per-level basis.
+  For example, to refresh all levels from 1 up to 3 but not higher, pass
+  a numeric argument to the standard =g= command.  So =C-3 g= (this is the
+  same as =C-u 3 g=).
++ Groups can be organised by topic.  Create a new one with =T n= and give
+  it a name.  Move a group to a topic with =T m=.  To toggle the view of
+  topics use =t= (I have a hook that does this automatically at startup).
+  The level of indentation tells us whether a topic is a sub-set of
+  another.  Use =TAB= or =C-u TAB= to adjust it accordingly.  As with
+  levels, you can operate on a per-topic basis.  For example, to catch
+  up on all the news of a given topic (mark all as read), you place the
+  point over it, hit =c= and then confirm your choice.
+
+As noted, Gnus will only show you a list of unread items.  To view all
+your groups, hit =L=.  Use the lower case version =l= to view only the
+unread ones.  To produce a Summary buffer with read items, hit =C-u RET=
+over a group and specify the number of messages you want to list
+(another option is =C-u M-g= from inside the Summary).  Another useful
+trick for the Summary buffer is the use of the caret sign =^= to show you
+the previous message that the current item is a reply to.
+
+Consider watching my [[https://protesilaos.com/codelog/2020-02-02-emacs-gnus-intro/][Intro to the Gnus]] (2020-02-02).
 
 Notwithstanding the customisation options and various idiosyncratic
 design choices, some prior experience with Emacs' various interfaces
 will definitely come in handy: Gnus uses similar metaphors for
-navigating and parsing information.  It still is important to read the
-manual though.
+navigating and parsing information.  *It still is important to read the
+manual though*.
 
 The package declaration below is divided into several blocks, each
 demarcated by a comment line.  Here is an overview (use =C-h v VAR= to
@@ -2546,7 +2615,6 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-level-subscribed 6)
   (setq gnus-level-unsubscribed 7)
   (setq gnus-level-zombie 8)
-  (setq gnus-level-zombie 9)
   (setq gnus-list-groups-with-ticked-articles nil)
   (setq gnus-group-sort-function
         '(gnus-group-sort-by-rank
@@ -2619,6 +2687,10 @@ By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][com
   :hook (dired-mode . gnus-dired-mode))
 #+end_src
 
+**** TODO Try "org-msg" package to compose email in Org-mode
+     :PROPERTIES:
+     :CUSTOM_ID: h:d89808cb-70bb-42ff-b659-a22c6a7b31cd
+     :END:
 *** Sending email (SMTP)
     :PROPERTIES:
     :CUSTOM_ID: h:2d793cf8-83f5-4830-b73d-78385d9b96dd
