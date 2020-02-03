@@ -2429,15 +2429,15 @@ start small and gradually tweak things as you go.  This is how you
 approach Emacs itself.  Learn the basics and then figure out your needs
 from then on.
 
-Now some basic information on the abastractions that Gnus relies on:
+Now some basic information on the abstractions that Gnus relies on:
 
-1. The default Gnus buffer shows is called "Group".  It will present you
-   with a list of all the news sources you have subscribed to.  By
-   default, Gnus only displays messages that have not been read.  The
-   same applies for groups.  The "Group" buffer will be empty the very
-   first time you log in because you have not subscribed to anything
-   yet.  Use =g= to fetch new messages from the sources.  If you only want
-   to refresh the group at point, do it with =M-g=.
+1. The default Gnus buffer is called "Group".  It will present you with
+   a list of all the news sources you have subscribed to.  By default,
+   Gnus only displays messages that have not been read.  The same
+   applies for groups.  The "Group" buffer will be empty the very first
+   time you log in because you have not subscribed to anything yet.  Use
+   =g= to fetch new messages from the sources.  If you only want to
+   refresh the group at point, do it with =M-g=.
 2. The "Server" buffer contains a list with all the sources you have
    specified for discovering news.  In my case, these are my email
    accounts and a Usenet server where mailing lists are hosted.  To
@@ -2445,7 +2445,7 @@ Now some basic information on the abastractions that Gnus relies on:
    the caret sign =^=.  To subscribe to an item, place the point over it
    and hit =u=.  Do that for your email's inbox and for whatever mailing
    lists you intend to follow.
-3. The "Summary" buffer contains all the message of a group.  Hitting
+3. The "Summary" buffer contains all the messages of a group.  Hitting
    the return key over a message will split the view in two, with the
    list above and the message below.  Use =n= or =p= to move to the next or
    previous unread message (or =N= and =P= to just the next/prev).  You
@@ -2482,12 +2482,12 @@ Now a couple more things about the "Group" buffer:
 As noted, Gnus will only show you a list of unread items.  To view all
 your groups, hit =L=.  Use the lower case version =l= to view only the
 unread ones.  To produce a Summary buffer with read items, hit =C-u RET=
-over a group and specify the number of messages you want to list
-(another option is =C-u M-g= from inside the Summary).  Another useful
-trick for the Summary buffer is the use of the caret sign =^= to show you
-the previous message that the current item is a reply to.
+over a group and specify the number of messages you want to list (the
+other option is =C-u M-g= from inside the Summary).  Another useful trick
+for the Summary buffer is the use of the caret sign (=^=) to show you the
+previous message that the current item is a reply to.
 
-Consider watching my [[https://protesilaos.com/codelog/2020-02-02-emacs-gnus-intro/][Intro to the Gnus]] (2020-02-02).
+Consider watching my [[https://protesilaos.com/codelog/2020-02-02-emacs-gnus-intro/][Introduction to Gnus]] (2020-02-02).
 
 Notwithstanding the customisation options and various idiosyncratic
 design choices, some prior experience with Emacs' various interfaces
