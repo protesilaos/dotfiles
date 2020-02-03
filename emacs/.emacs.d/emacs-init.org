@@ -886,9 +886,7 @@ be a list).
 The disabled =:delight= statement customises the minor mode's presentation
 to only show the project's name.  For non-project buffers, a dash
 appears instead.  However, it is disabled in favour of not showing
-anything at all in the minor mode list.  A dedicated indicator for the
-built-in version control status is used in my [[#h:b0395aae-a2d2-4e50-8965-433c4605c724][custom mode line]] instead.
-This is enough for my use-case.
+anything at all in the minor mode list.
 
 I only really need a handful of commands from this setup, namely the
 ability to switch between buffers or directories in a project and to
@@ -3406,10 +3404,6 @@ It seems very powerful!  As these targeted operations require some more
 research, I leave everything to its default value and will be updating
 the package declaration over time.
 
-Note that previous versions of this document included a package that
-adds a Flycheck indicator on the mode line.  This has now been
-superseded by my [[#h:b0395aae-a2d2-4e50-8965-433c4605c724][custom mode line configurations]].
-
 #+begin_src emacs-lisp
 (use-package flycheck
   :ensure t
@@ -3417,6 +3411,15 @@ superseded by my [[#h:b0395aae-a2d2-4e50-8965-433c4605c724][custom mode line con
   :config
   (setq flycheck-check-syntax-automatically
         '(save mode-enabled)))
+#+end_src
+
+Also offer a Flycheck indicator in the mode line.
+
+#+begin_src emacs-lisp
+(use-package flycheck-indicator
+  :ensure t
+  :after flycheck
+  :hook (flycheck-mode . flycheck-indicator-mode))
 #+end_src
 
 There is also a built-in tool that covers Flycheck's niche, but I find
