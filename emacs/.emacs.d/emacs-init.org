@@ -2570,8 +2570,20 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
                   (nnimap-address "mail.gandi.net")
                   (nnimap-stream ssl)
                   (nnimap-authinfo-file "~/.authinfo.gpg"))))
-  ;; (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
+  ;; Move outgoing messages to appropriate "Sent" folder
+  (setq gnus-parameters
+        '(("prv"
+           (posting-style
+            (gcc "nnimap+prv:Sent")))
+          ("inf"
+           (posting-style
+            (gcc "nnimap+inf:Sent")))
+          ("pub"
+           (posting-style
+            (gcc "nnimap+pub:Sent")))))
+  (setq gnus-gcc-mark-as-read t)        ; Mark sent as read
   (setq message-signature "Protesilaos Stavrou\nprotesilaos.com\n")
+  ;; (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
   ;; agent
   (setq mail-user-agent 'gnus-user-agent) ; also works with `sendmail-user-agent'
   (setq gnus-agent t)
@@ -2641,10 +2653,9 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-sum-thread-tree-root "")
   (setq gnus-sum-thread-tree-single-leaf "└─➤ ")
   (setq gnus-sum-thread-tree-vertical "│")
-  :hook ((gnus-summary-mode . hl-line-mode)
-         (gnus-group-mode . hl-line-mode)
-         (gnus-server-mode . hl-line-mode)
-         (gnus-group-mode . gnus-topic-mode)))
+  :hook
+  ((gnus-summary-mode gnus-server-mode gnus-group-mode) . hl-line-mode)
+  (gnus-group-mode . gnus-topic-mode))
 #+end_src
 
 **** TODO learn more about mail searching (nnir?, nnimap?)
