@@ -2048,81 +2048,53 @@ Also bear in mind that I define several other window motions.  Refer to
 This section includes configurations for programs like email clients,
 news reader, music players…  Anything you would normally see in a GUI.
 It also configures the various "killer apps" of the Emacs ecosystem
-(those that did not fit in any of the other sections).  The end goal
-is to eventually integrate everything inside of Emacs.
+(those that did not fit in any of the other sections).  The end goal is
+to eventually integrate every aspect of my computing inside of Emacs.
 
-** Configure Org-mode
+** Org-mode (personal information manager)
    :PROPERTIES:
    :CUSTOM_ID: h:4e8347de-415e-4804-b383-d61499e05ca1
    :END:
 
-/WORK IN PROGRESS.  Documentation will be expanded once I am done./
+For many users =org-mode= is *the* killer app that draws them to Emacs.  One
+can write an entire book on the merits of this tool.  But let's not do
+that, given how massive this document already is.
 
-Overview of the following settings:
+Org offers you the tools to organise your life in super-efficient ways
+using nothing but plain text.  In effect, Org is a collection of
+commands that speed up the process of structuring and manipulating plain
+text.
 
-+ Agenda and task list ::  Define where to store captured items and how
-  to display the information.
-+ Style code blocks :: I want =.org= files to use the native settings for
-  styling code blocks.  The first variable concerns =C-c '= (run it inside
-  of a code block).  That opens a buffer with just the contents of the
-  code block, with the major mode configured appropriately.
-+ Export settings :: Just provide a table of contents, cover 8 levels of
-  depth and offer support for the back-ends I specify.  For the time
-  being, I mostly use HTML to publish this document on my website…
-+ General settings :: Allow =C-a= and =C-e= to move to the logical beginning
-  or end of the Org element upon second invocation (first one behaves
-  normally).  Define a few templates for inserting source blocks.  Prior
-  to Org version 9.2 you could insert a template by using =<=, =KEY=, and
-  then =TAB=, where =KEY= is the one that corresponds to the given
-  template.  Now you invoke the menu with =C-c C-,= and then press the
-  relevant key.
+This section contains several sub-sections, each dedicated to a
+particular aspect of Org.
 
-The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/org-recur][README of org-recur]].
+*** Org basic configurations
+    :PROPERTIES:
+    :CUSTOM_ID: h:b95d0798-1cc5-4083-8728-f6a51ddbc531
+    :END:
+
+/2020-02-03: WORK IN PROGRESS/
 
 #+begin_src emacs-lisp
 (use-package org
   :config
   ;; agenda
   (setq org-directory "~/Org")
-  (setq org-agenda-files
-        '("~/Org/tasks.org" "~/Org/notes.org"))
-  (setq org-default-notes-file "~/Org/notes.org")
-  (setq org-agenda-window-setup 'current-window)
   (setq org-deadline-warning-days 7)
-  (setq org-agenda-span 'month)
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
-  (setq org-agenda-sorting-strategy
-        '((agenda deadline-up priority-down)
-          (todo priority-down category-keep)
-          (tags priority-down category-keep)
-          ((search category-keep))))
-  ;; capture, refile, todo
+  ;; refile, todo
   (setq org-refile-targets
         '((org-agenda-files . (:maxlevel . 3))))
-  (setq org-reverse-note-order nil)
   (setq org-refile-use-outline-path t)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-refile-use-cache t)
+  (setq org-reverse-note-order nil)
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "|" "DONE(d)")
-          (sequence "READ(r)" "|" "POSTED(p)")))
+        '((sequence "TODO(t)" "|" "DONE(d)" "CANCELLED(c)")))
   (setq org-highest-priority ?A)
   (setq org-lowest-priority ?B)
   (setq org-default-priority ?A)
-  (setq org-capture-templates
-        '(("t" "Task for the day" entry
-           (file+headline "~/Org/tasks.org" "Task list")
-           "* TODO [#A] %?\nDEADLINE: %t\n")
-          ("l" "Link to Emacs buffer or file" entry
-           (file+headline "~/Org/tasks.org" "Links to buffers/files")
-           "* TODO [#B] %?\n%a")))
   ;; code blocks
-  (setq org-src-window-setup 'current-window)
-  (setq org-src-fontify-natively t)
-  (setq org-src-preserve-indentation t)
-  (setq org-src-tab-acts-natively t)
   (setq org-confirm-babel-evaluate nil)
-  (setq org-edit-src-content-indentation 0)
   ;; export
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)
@@ -2144,9 +2116,77 @@ The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/or
           ("v" . "verse")
           ("V" . "verbatim")
           ("c" . "center")
-          ("C" . "comment"))) ; CHANGED in Org 9.2 (Emacs 27.1)
+          ("C" . "comment")))          ; CHANGED in Org 9.2 (Emacs 27.1)
+                                       ; Use with: C-c C-,
   (setq org-catch-invisible-edits 'show)
   (setq org-return-follows-link t)
+  ;; disable keys I rely on for other tasks
+  (define-key org-mode-map (kbd "<C-return>") nil)
+  (define-key org-mode-map (kbd "<C-S-return>") nil)
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-c l" . org-store-link)))
+#+end_src
+
+*** Org-capture templates
+    :PROPERTIES:
+    :CUSTOM_ID: h:7b88b89a-6eb3-4da3-a9fe-0e447300a250
+    :END:
+
+/2020-02-03: WORK IN PROGRESS/
+
+#+begin_src emacs-lisp
+(use-package org-capture
+  :config
+  (setq org-capture-templates
+        '(("t" "Task for the day" entry
+           (file+headline "~/Org/tasks.org" "Task list")
+           "* TODO [#A] %?\nDEADLINE: %t\n")
+          ("l" "Link to Emacs buffer or file" entry
+           (file+headline "~/Org/tasks.org" "Links to buffers/files")
+           "* TODO [#B] %?\n%a")
+          ("c" "Contact information")
+          ("ca" "Contact information ACQUAINTANCES" entry
+           (file+headline "~/Org/contacts.org" "Acquaintances")
+           "* %^{Name SURNAME}\n :PHONE: %^{+XX YYY}\n :EMAIL: %^{user@domain.com}\n :NOTES: %?")
+          ("cf" "Contact information FAMILY" entry
+           (file+headline "~/Org/contacts.org" "Family and friends")
+           "* %^{Name SURNAME}\n :PHONE: %^{+XX YYY}\n :EMAIL: %^{user@domain.com}\n :NOTES: %?")
+          ("cp" "Contact information PUBLIC" entry
+           (file+headline "~/Org/contacts.org" "Wider public")
+           "* %:fromname\n :EMAIL: %:fromaddress\n :NOTES: %?")
+          ("cw" "Contact information WORK" entry
+           (file+headline "~/Org/contacts.org" "Co-workers")
+           "* %^{Name SURNAME}\n :PHONE: %^{+XX YYY}\n :EMAIL: %^{user@domain.com}\n :NOTES: %?")))
+  (setq org-capture-templates-contexts
+        '(("cp" ((in-mode . "gnus-article-mode")
+                 (in-mode . "gnus-summary-mode")
+                 (in-mode . "message-mode"))))))
+#+end_src
+
+*** Org agenda
+    :PROPERTIES:
+    :CUSTOM_ID: h:847477fe-ef86-4e12-a2da-6c431528da99
+    :END:
+
+/2020-02-03: WORK IN PROGRESS/
+
+The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/org-recur][README of org-recur]].
+
+#+begin_src emacs-lisp
+(use-package org-agenda
+  :config
+  (setq org-agenda-files
+        '("~/Org/tasks.org" "~/Org/notes.org"))
+  (setq org-default-notes-file "~/Org/notes.org")
+  (setq org-agenda-window-setup 'current-window)
+  (setq org-agenda-span 'month)
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (setq org-agenda-sorting-strategy
+        '((agenda deadline-up priority-down)
+          (todo priority-down category-keep)
+          (tags priority-down category-keep)
+          ((search category-keep))))
 
   ;; Refresh org-agenda after rescheduling a task.
   (defun contrib/org-agenda-refresh ()
@@ -2158,20 +2198,24 @@ The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/or
 
   (defadvice org-schedule (after refresh-agenda activate)
     "Refresh org-agenda."
-    (contrib/org-agenda-refresh))
+    (contrib/org-agenda-refresh)))
+#+end_src
 
-  (defun prot/org-insert-elisp-template ()
-    "Just insert an Emacs Lisp source block."
-    (interactive)
-    (org-insert-structure-template "src emacs-lisp"))
+*** Org source code blocks
+    :PROPERTIES:
+    :CUSTOM_ID: h:88a2a57d-6181-4720-a64b-8a34286c26b2
+    :END:
 
-  ;; disable keys I rely on for other tasks
-  (define-key org-mode-map (kbd "<C-return>") nil)
-  (define-key org-mode-map (kbd "<C-S-return>") nil)
-  :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-c l" . org-store-link)
-         ("C-c e" . prot/org-insert-elisp-template)))
+/2020-02-03: WORK IN PROGRESS/
+
+#+begin_src emacs-lisp
+(use-package org-src
+  :config
+  (setq org-src-window-setup 'current-window)
+  (setq org-src-fontify-natively t)
+  (setq org-src-preserve-indentation t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-edit-src-content-indentation 0))
 #+end_src
 
 *** Inherit theme styles in Org HTML export
