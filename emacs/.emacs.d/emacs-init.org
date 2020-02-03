@@ -1,3 +1,7 @@
+#+TITLE: GNU Emacs package configuration file
+#+AUTHOR: Protesilaos Stavrou
+#+EMAIL: public@protesilaos.com
+
 * Overview
   :PROPERTIES:
   :CUSTOM_ID: h:9ff13b78-42b8-49fe-9e23-0307c780de93
