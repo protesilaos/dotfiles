@@ -2662,6 +2662,11 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-mode-line-image-cache nil)
   (setq gnus-treat-display-smileys nil)
   (setq gnus-article-mode-line-format "Gnus: %S %m")
+  (setq gnus-visible-headers
+        '("^From:" "^To:" "^Cc:" "^Newsgroups:" "^Subject:" "^Date:"
+          "Followup-To:" "Reply-To:" "^Organization:" "^X-Newsreader:"
+          "^X-Mailer:"))
+  (setq gnus-sorted-header-list gnus-visible-headers)
   ;; asynchronous
   (setq gnus-asynchronous t)
   (setq gnus-use-article-prefetch 15)
@@ -2683,8 +2688,12 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-topic-display-empty-topics t)
   (setq gnus-group-mode-line-format "Gnus: %%b")
   ;; summary
+  (setq gnus-auto-select-first nil)
+  (setq gnus-summary-ignore-duplicates t)
+  (setq gnus-suppress-duplicates t)
   (setq gnus-summary-goto-unread nil)
   (setq gnus-summary-make-false-root 'adopt)
+  (setq gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references)
   (setq gnus-thread-sort-functions
         '((not gnus-thread-sort-by-date)))
   (setq gnus-subthread-sort-functions
@@ -2703,8 +2712,13 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-sum-thread-tree-root "")
   (setq gnus-sum-thread-tree-single-leaf "└─➤ ")
   (setq gnus-sum-thread-tree-vertical "│")
+  ;; various
+  (setq gnus-use-atomic-windows t)
   :hook
   ((gnus-summary-mode gnus-server-mode gnus-group-mode) . hl-line-mode)
+  (gnus-summary-exit-hook . gnus-topic-sort-groups-by-alphabet)
+  (gnus-summary-exit-hook . gnus-group-sort-groups-by-rank)
+  (gnus-select-group-hook . gnus-group-set-timestamp)
   (gnus-group-mode . gnus-topic-mode))
 #+end_src
 
@@ -2780,6 +2794,7 @@ performance by carrying out the relevant tasks in a non-blocking way.
   (setq message-send-mail-function 'async-smtpmail-send-it))
 #+end_src
 
+*** TODO Integrate contacts database and completion (BBDB)
 *** DEPRECATED Reading email with MU4E
     :PROPERTIES:
     :CUSTOM_ID: h:2a93d8bf-200a-4d23-9be3-276a907947e1
