@@ -4499,7 +4499,13 @@ being pressed and the command they call.
 (use-package keycast
   :ensure t
   :config
-  (setq keycast-window-predicate 'keycast-active-frame-bottom-right-p)
+  (defun prot/keycast-bottom-left-window-p ()
+    (and (window-at-side-p nil 'left)
+         (window-at-side-p nil 'bottom)))
+  (defun prot/keycast-active-frame-bottom-left-p ()
+    (and (prot/keycast-bottom-left-window-p)
+         (keycast--active-frame-p)))
+  (setq keycast-window-predicate 'prot/keycast-active-frame-bottom-left-p)
   (setq keycast-separator-width 3)
   (setq keycast-insert-after 'mode-line-buffer-identification)
   (setq keycast-remove-tail-elements t))
