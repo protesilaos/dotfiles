@@ -3763,8 +3763,8 @@ Overview of the following settings.
   Select them with =M-NUM=.
 + Control how results are sorted once they are collected from all the
   relevant backends.  What I have in =company-transformers= works fine for
-  me, but I am not sure how it interacts with =company-prescient= (see
-  [[#h:763a4a35-62a2-4fc5-9ba4-4d2212aa7fe4][relevant section]]).
+  me.  Also note that =company-prescient= adds its own transformer to the
+  top of the list (see [[#h:763a4a35-62a2-4fc5-9ba4-4d2212aa7fe4][relevant section]]).
 + Align annotations to the right.  This concerns certain backends that
   display additional information for their candidates.  This keeps
   things nice and tidy.
@@ -3809,9 +3809,9 @@ Now a few words about the key bindings:
   (setq company-selection-wrap-around t)
   (setq company-show-numbers t)
   (setq company-transformers
-        '(company-sort-by-backend-importance
+        '(company-sort-by-occurrence
           company-sort-prefer-same-case-prefix
-          company-sort-by-occurrence))
+          company-sort-by-backend-importance))
   (setq company-tooltip-align-annotations t)
   (setq company-tooltip-limit 10)
   (setq company-tooltip-margin 1)
@@ -3840,7 +3840,9 @@ completion candidates.  I am using it in tandem with Ivy (see the
 (use-package company-prescient
   :ensure t
   :after (company prescient)
-  :config (company-prescient-mode 1))
+  :config
+  (add-to-list 'company-transformers 'company-prescient-transformer)
+  (company-prescient-mode 1))
 #+end_src
 
 ** Eldoc (elisp live documentation feedback)
