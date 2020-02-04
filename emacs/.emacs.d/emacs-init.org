@@ -2073,7 +2073,7 @@ particular aspect of Org.
     :CUSTOM_ID: h:b95d0798-1cc5-4083-8728-f6a51ddbc531
     :END:
 
-/2020-02-03: WORK IN PROGRESS/
+/2020-02-04: WORK IN PROGRESS/
 
 #+begin_src emacs-lisp
 (use-package org
@@ -2089,7 +2089,8 @@ particular aspect of Org.
   (setq org-refile-use-cache t)
   (setq org-reverse-note-order nil)
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "|" "DONE(d)" "CANCELLED(c)")))
+        '((sequence "TODO(t)" "|" "DONE(D)" "ABORTED(A)")
+          (sequence "MEETING(m)" "|" "MET(M)" "CANCELLED(C)")))
   (setq org-highest-priority ?A)
   (setq org-lowest-priority ?B)
   (setq org-default-priority ?A)
@@ -2123,9 +2124,7 @@ particular aspect of Org.
   ;; disable keys I rely on for other tasks
   (define-key org-mode-map (kbd "<C-return>") nil)
   (define-key org-mode-map (kbd "<C-S-return>") nil)
-  :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-c l" . org-store-link)))
+  :bind (("C-c l" . org-store-link)))
 #+end_src
 
 *** Org-capture templates
@@ -2169,7 +2168,7 @@ particular aspect of Org.
     :CUSTOM_ID: h:847477fe-ef86-4e12-a2da-6c431528da99
     :END:
 
-/2020-02-03: WORK IN PROGRESS/
+/2020-02-04: WORK IN PROGRESS/
 
 The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/org-recur][README of org-recur]].
 
@@ -2198,7 +2197,8 @@ The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/or
 
   (defadvice org-schedule (after refresh-agenda activate)
     "Refresh org-agenda."
-    (contrib/org-agenda-refresh)))
+    (contrib/org-agenda-refresh))
+  :bind ("C-c a" . org-agenda))
 #+end_src
 
 *** Org source code blocks
@@ -2206,7 +2206,7 @@ The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/or
     :CUSTOM_ID: h:88a2a57d-6181-4720-a64b-8a34286c26b2
     :END:
 
-/2020-02-03: WORK IN PROGRESS/
+/2020-02-04: WORK IN PROGRESS/
 
 #+begin_src emacs-lisp
 (use-package org-src
