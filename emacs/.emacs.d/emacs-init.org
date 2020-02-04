@@ -2714,7 +2714,8 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-article-over-scroll nil)
   (setq gnus-article-show-cursor t)
   (setq gnus-article-sort-functions
-        '((not gnus-article-sort-by-date)))
+        '((not gnus-article-sort-by-number)
+          (not gnus-article-sort-by-date)))
   (setq gnus-article-truncate-lines nil)
   (setq gnus-html-frame-width 80)
   (setq gnus-html-image-automatic-caching t)
@@ -2743,9 +2744,9 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-level-zombie 8)
   (setq gnus-list-groups-with-ticked-articles nil)
   (setq gnus-group-sort-function
-        '(gnus-group-sort-by-rank
-          gnus-group-sort-by-unread
-          gnus-group-sort-by-alphabet))
+        '((gnus-group-sort-by-unread)
+          (gnus-group-sort-by-alphabet)
+          (gnus-group-sort-by-rank)))
   (setq gnus-topic-display-empty-topics t)
   (setq gnus-group-mode-line-format "Gnus: %%b")
   ;; summary
@@ -2754,9 +2755,10 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-suppress-duplicates t)
   (setq gnus-summary-goto-unread nil)
   (setq gnus-summary-make-false-root 'adopt)
-  (setq gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references)
+  (setq gnus-summary-thread-gathering-function 'gnus-gather-threads-by-subject)
   (setq gnus-thread-sort-functions
-        '((not gnus-thread-sort-by-date)))
+        '((not gnus-thread-sort-by-number)
+          (not gnus-thread-sort-by-date)))
   (setq gnus-subthread-sort-functions
         'gnus-thread-sort-by-date)
   (setq gnus-thread-hide-subtree nil)
@@ -2786,10 +2788,6 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
 **** TODO learn more about mail searching (nnir?, nnimap?)
     :PROPERTIES:
     :CUSTOM_ID: h:4f3fb8e0-8e53-4c9b-9623-01a2aa4a05fe
-    :END:
-**** TODO explore header fields and their order (gnus article)
-    :PROPERTIES:
-    :CUSTOM_ID: h:01e2f232-2594-4296-81b9-b9eabef0145a
     :END:
 **** TODO non-blocking RSS feeds (use topic scores?)
      :PROPERTIES:
