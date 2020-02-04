@@ -3898,7 +3898,7 @@ their development process, I am not using the MELPA packages directly.
     (setq modus-operandi-theme-slanted-constructs t
           modus-operandi-theme-bold-constructs t
           modus-operandi-theme-proportional-fonts nil
-          modus-operandi-theme-scale-headings t
+          modus-operandi-theme-scale-headings nil
           modus-operandi-theme-scale-1 1.1
           modus-operandi-theme-scale-2 1.2
           modus-operandi-theme-scale-3 1.3
@@ -3910,7 +3910,7 @@ their development process, I am not using the MELPA packages directly.
     (setq modus-vivendi-theme-slanted-constructs t
           modus-vivendi-theme-bold-constructs t
           modus-vivendi-theme-proportional-fonts nil
-          modus-vivendi-theme-scale-headings t
+          modus-vivendi-theme-scale-headings nil
           modus-vivendi-theme-scale-1 1.1
           modus-vivendi-theme-scale-2 1.2
           modus-vivendi-theme-scale-3 1.3
