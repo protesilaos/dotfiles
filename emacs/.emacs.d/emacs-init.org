@@ -2132,35 +2132,92 @@ particular aspect of Org.
     :CUSTOM_ID: h:7b88b89a-6eb3-4da3-a9fe-0e447300a250
     :END:
 
-/2020-02-03: WORK IN PROGRESS/
+The =org-capture= tool is a powerful way to quickly produce some kind of
+structured information.  The type of data and the way to store is
+determined by a system of templates which accepts a series of possible
+specifiers as well as the evaluated part of arbitrary elisp code.
+
+Each template is accessed via a key.  These are listed in a buffer when
+you call =org-capture=.  Unique keys give direct access to their template,
+whereas templates that share a common initial key will produce a second
+selection list with the remaining options.  In the latter case, the
+initial key entry has no call to an actual function, but is just written
+as a heading.  For an example, look how I do the "contact information":
+all templates whose keys follow the pattern =cX= are only visible after
+hitting =c= and are then accessed via =X=.
+
+The visibility of a template is further controlled by another variable:
+=org-capture-templates-contexts=.  This allows us to tell Org the context
+in which we want certain options to appear in.  Otherwise they remain
+concealed from our view.  Equipped with this piece of functionality, we
+can freely write highly-specialised templates that capture structured
+text when viewing some particular item, but are not needed for more
+general purposes.  I do this for certain actions that only come into
+effect when reading email (also check my [[#h:5ad80664-3163-4d9d-be65-462637d77903][comprehensive configurations
+for email]] and the Gnus news/mail reader).
+
+Speaking of mail, you will notice some specifiers like =:fromname=.  This
+refers to the =From= field in emails and will capture the name part only.
+Other similar keywords are =:from= (name and email), =:fromaddress= (email
+only), =:subject=.
+
+Specifiers that start with the caret sign (=^=) represent prompts for
+further user input.  The pattern =^{TEXT}= is a prompt whose name is =TEXT=.
+To offer possible options, use =^{Initial|ONE|TWO|THREE}=, where the first
+entry is the text of the prompt and all the rest are the available
+choices.  In some templates I use the =^t= specifier, which is a built-in
+method to ask for a specific date.
+
+The text that goes into a template can be written as part of a string or
+inside a function that is then evaluated.  I generally prefer to use
+simple strings, though I might revise this approach going forward.  To
+insert a new line inside of a string, use =\n=.
+
+As things currently stand, my capture templates always write to headings
+inside of files.  Note though that there are more possibilities, as
+described in the manual.
 
 #+begin_src emacs-lisp
 (use-package org-capture
   :config
   (setq org-capture-templates
-        '(("t" "Task for the day" entry
+        '(("t" "Task for a day" entry
            (file+headline "~/Org/tasks.org" "Task list")
-           "* TODO [#A] %?\nDEADLINE: %t\n")
-          ("l" "Link to Emacs buffer or file" entry
+           "* TODO [#A] %?\nDEADLINE: %^t\n")
+          ("l" "Link to buffer or file" entry
            (file+headline "~/Org/tasks.org" "Links to buffers/files")
            "* TODO [#B] %?\n%a")
           ("c" "Contact information")
-          ("ca" "Contact information ACQUAINTANCES" entry
-           (file+headline "~/Org/contacts.org" "Acquaintances")
-           "* %^{Name SURNAME}\n :PHONE: %^{+XX YYY}\n :EMAIL: %^{user@domain.com}\n :NOTES: %?")
-          ("cf" "Contact information FAMILY" entry
-           (file+headline "~/Org/contacts.org" "Family and friends")
-           "* %^{Name SURNAME}\n :PHONE: %^{+XX YYY}\n :EMAIL: %^{user@domain.com}\n :NOTES: %?")
-          ("cp" "Contact information PUBLIC" entry
-           (file+headline "~/Org/contacts.org" "Wider public")
-           "* %:fromname\n :EMAIL: %:fromaddress\n :NOTES: %?")
-          ("cw" "Contact information WORK" entry
-           (file+headline "~/Org/contacts.org" "Co-workers")
-           "* %^{Name SURNAME}\n :PHONE: %^{+XX YYY}\n :EMAIL: %^{user@domain.com}\n :NOTES: %?")))
+          ("ca" "Acquaintances and friends" entry
+           (file+headline "~/Org/contacts.org" "Acquaintances and friends")
+           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+CODE PHONE}\n :EMAIL: %^{EMAIL}\n :NOTES: %?\n :END:")
+          ("cf" "Family" entry
+           (file+headline "~/Org/contacts.org" "Family members")
+           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+CODE PHONE}\n :EMAIL: %^{EMAIL}\n :NOTES: %?\n :END:")
+          ("cp" "Public (who have emailed me)" entry
+           (file+headline "~/Org/contacts.org" "Members of the wider public")
+           "* %:fromname\n :PROPERTIES:\n :EMAIL: %:fromaddress\n :NOTES: %?\n :END:")
+          ("cw" "Work-related and colleagues" entry
+           (file+headline "~/Org/contacts.org" "Co-workers, functionaries, intermediaries")
+           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+CODE PHONE}\n :EMAIL: %^{EMAIL} \n:FUNCTION: %^{Function|Assistant|Intern|External|VIP}\n :NOTES: %?\n :END:")
+          ("m" "Meetings")
+          ("ma" "Appointments" entry
+           (file+headline "~/Org/meetings.org" "Appointments and work-related meetings")
+           "* MEETING %:from\nSCHEDULED: %^t\n :PROPERTIES:\n :TOPIC: %:subject %?\n :END:")
+          ("me" "Event" entry
+           (file+headline "~/Org/meetings.org" "Events")
+           "* MEETING %:from\nSCHEDULED: %^t\n :PROPERTIES:\n :TOPIC: %:subject %?\n :END:")
+          ("r" "Randez-vous" entry
+           (file+headline "~/Org/meetings.org" "Private meetings")
+           "* MEETING %^{With whom}\n SCHEDULED: %^t\n %?")))
   (setq org-capture-templates-contexts
         '(("cp" ((in-mode . "gnus-article-mode")
                  (in-mode . "gnus-summary-mode")
-                 (in-mode . "message-mode"))))))
+                 (in-mode . "message-mode")))
+          ("m" ((in-mode . "gnus-article-mode")
+                (in-mode . "gnus-summary-mode")
+                (in-mode . "message-mode")))))
+  :bind ("C-c c" . org-capture))
 #+end_src
 
 *** Org agenda
