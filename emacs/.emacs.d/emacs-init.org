@@ -2761,7 +2761,7 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
         '(((gnus-seconds-today) . "Today at %R")
           ((+ 86400 (gnus-seconds-today)) . "Yesterday, %R")
           (t . "%Y-%m-%d %R")))
-  (setq gnus-summary-line-format "%U%R%z %-16,16&user-date;  %4L:%-20,20f  %B%S\n")
+  (setq gnus-summary-line-format "%U%R%z %-16,16&user-date;  %4L:%-30,30f  %B%S\n")
   (setq gnus-summary-mode-line-format "Gnus: %p (%U)")
   (setq gnus-sum-thread-tree-false-root "")
   (setq gnus-sum-thread-tree-indent " ")
@@ -2770,9 +2770,9 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-sum-thread-tree-single-leaf "└─➤ ")
   (setq gnus-sum-thread-tree-vertical "│")
   ;; various
-  (setq gnus-use-atomic-windows t)
+  (setq gnus-use-atomic-windows nil)
   :hook
-  ((gnus-summary-mode gnus-server-mode gnus-group-mode) . hl-line-mode)
+  ((gnus-browse-mode gnus-summary-mode gnus-server-mode gnus-group-mode) . hl-line-mode)
   (gnus-summary-exit-hook . gnus-topic-sort-groups-by-alphabet)
   (gnus-summary-exit-hook . gnus-group-sort-groups-by-rank)
   (gnus-select-group-hook . gnus-group-set-timestamp)
@@ -2794,6 +2794,10 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
 **** TODO parse Atom feeds as well?
      :PROPERTIES:
      :CUSTOM_ID: h:812c503c-fbd8-40f5-ac5d-6cae20974cba
+     :END:
+**** TODO Try "org-msg" package to compose email in Org-mode
+     :PROPERTIES:
+     :CUSTOM_ID: h:d89808cb-70bb-42ff-b659-a22c6a7b31cd
      :END:
 **** Gnus intersection with Dired
      :PROPERTIES:
@@ -2817,10 +2821,6 @@ By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][com
   :hook (dired-mode . gnus-dired-mode))
 #+end_src
 
-**** TODO Try "org-msg" package to compose email in Org-mode
-     :PROPERTIES:
-     :CUSTOM_ID: h:d89808cb-70bb-42ff-b659-a22c6a7b31cd
-     :END:
 *** Sending email (SMTP)
     :PROPERTIES:
     :CUSTOM_ID: h:2d793cf8-83f5-4830-b73d-78385d9b96dd
