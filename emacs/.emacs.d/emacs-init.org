@@ -2211,7 +2211,7 @@ respective headings.
           ("cw" "Work-related" entry
            (file+headline "contacts.org" "Co-workers, functionaries, intermediaries")
            "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+Country Number}\n :EMAIL: %^{Email address}\n:FUNCTION: %^{Function|Assistant|Intern|External|VIP}\n :NOTES: %?\n :END:")
-          ("m" "Meetings")
+          ("m" "Mailed meeting requests")
           ("ma" "Appointments" entry
            (file+headline "meetings.org" "Appointments and work-related meetings")
            "* MEETING %:from\nSCHEDULED: %^t\n :PROPERTIES:\n :TOPIC: %:subject %?\n :END:")
