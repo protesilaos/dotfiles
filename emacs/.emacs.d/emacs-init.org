@@ -4560,7 +4560,7 @@ They are written by me, unless otherwise noted.
   (defun prot/multi-line-next ()
     "Moves the point 15 lines down."
     (interactive)
-    (next-line 15))
+    (forward-line 15))
 
   (defun prot/multi-line-prev ()
     "Moves the point 15 lines up."
