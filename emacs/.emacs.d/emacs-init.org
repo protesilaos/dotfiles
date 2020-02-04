@@ -2310,12 +2310,12 @@ document.  This fixes the issue (read the article for more).
   (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
 
   (defun contrib/org-get-id (&optional pom create prefix)
-    "Get the CUSTOM_ID property of the entry at point-or-marker POM.
-   If POM is nil, refer to the entry at point. If the entry does
-   not have an CUSTOM_ID, the function returns nil. However, when
-   CREATE is non nil, create a CUSTOM_ID if none is present
-   already. PREFIX will be passed through to `org-id-new'. In any
-   case, the CUSTOM_ID of the entry is returned."
+    "Get the CUSTOM_ID property of the entry at point-or-marker
+POM. If POM is nil, refer to the entry at point. If the entry
+does not have an CUSTOM_ID, the function returns nil. However,
+when CREATE is non nil, create a CUSTOM_ID if none is present
+already. PREFIX will be passed through to `org-id-new'. In any
+case, the CUSTOM_ID of the entry is returned."
     (interactive)
     (org-with-point-at pom
       (let ((id (org-entry-get nil "CUSTOM_ID")))
@@ -2329,8 +2329,8 @@ document.  This fixes the issue (read the article for more).
           id)))))
 
   (defun contrib/org-id-headlines ()
-    "Add CUSTOM_ID properties to all headlines in the
-   current file which do not already have one."
+    "Add CUSTOM_ID properties to all headlines in the current
+file which do not already have one."
     (interactive)
     (org-map-entries (lambda ()
                        (contrib/org-get-id (point) 'create)))))
