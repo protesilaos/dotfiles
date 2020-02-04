@@ -2233,11 +2233,9 @@ respective headings.
            "* %^{Speak your mind}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")))
   (setq org-capture-templates-contexts
         '(("cp" ((in-mode . "gnus-article-mode")
-                 (in-mode . "gnus-summary-mode")
-                 (in-mode . "message-mode")))
+                 (in-mode . "gnus-summary-mode")))
           ("m" ((in-mode . "gnus-article-mode")
-                (in-mode . "gnus-summary-mode")
-                (in-mode . "message-mode")))))
+                (in-mode . "gnus-summary-mode")))))
   :bind ("C-c c" . org-capture))
 #+end_src
 
