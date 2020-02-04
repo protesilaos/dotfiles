@@ -2080,6 +2080,7 @@ particular aspect of Org.
   :config
   ;; agenda
   (setq org-directory "~/Org")
+  (setq org-default-notes-file "~/Org/notes.org")
   (setq org-deadline-warning-days 7)
   ;; refile, todo
   (setq org-refile-targets
@@ -2153,8 +2154,9 @@ concealed from our view.  Equipped with this piece of functionality, we
 can freely write highly-specialised templates that capture structured
 text when viewing some particular item, but are not needed for more
 general purposes.  I do this for certain actions that only come into
-effect when reading email (also check my [[#h:5ad80664-3163-4d9d-be65-462637d77903][comprehensive configurations
-for email]] and the Gnus news/mail reader).
+effect when reading email inside of the relevant =gnus= buffers (also
+check my [[#h:5ad80664-3163-4d9d-be65-462637d77903][comprehensive configurations for email]] and the Gnus news/mail
+reader).
 
 Speaking of mail, you will notice some specifiers like =:fromname=.  This
 refers to the =From= field in emails and will capture the name part only.
@@ -2173,43 +2175,62 @@ inside a function that is then evaluated.  I generally prefer to use
 simple strings, though I might revise this approach going forward.  To
 insert a new line inside of a string, use =\n=.
 
+The =%?= determines where the point should be once the template is filled
+in.  While =%i= will insert the contents of the active region.
+
 As things currently stand, my capture templates always write to headings
 inside of files.  Note though that there are more possibilities, as
 described in the manual.
+
+A file can be specified by its absolute path or just a name.  In the
+latter case, its location is understood relative to =org-directory=.  When
+using the =file+headline= pattern, non-existing files are created
+automatically once you call the relevant template.  Same for their
+respective headings.
 
 #+begin_src emacs-lisp
 (use-package org-capture
   :config
   (setq org-capture-templates
         '(("t" "Task for a day" entry
-           (file+headline "~/Org/tasks.org" "Task list")
-           "* TODO [#A] %?\nDEADLINE: %^t\n")
+           (file+headline "tasks.org" "Task list")
+           "* TODO [#A] %?\nDEADLINE: %^t")
           ("l" "Link to buffer or file" entry
-           (file+headline "~/Org/tasks.org" "Links to buffers/files")
+           (file+headline "tasks.org" "Links to buffers/files")
            "* TODO [#B] %?\n%a")
           ("c" "Contact information")
           ("ca" "Acquaintances and friends" entry
-           (file+headline "~/Org/contacts.org" "Acquaintances and friends")
-           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+CODE PHONE}\n :EMAIL: %^{EMAIL}\n :NOTES: %?\n :END:")
+           (file+headline "contacts.org" "Acquaintances and friends")
+           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+Country Number}\n :EMAIL: %^{Email address}\n :NOTES: %?\n :END:")
           ("cf" "Family" entry
-           (file+headline "~/Org/contacts.org" "Family members")
-           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+CODE PHONE}\n :EMAIL: %^{EMAIL}\n :NOTES: %?\n :END:")
-          ("cp" "Public (who have emailed me)" entry
-           (file+headline "~/Org/contacts.org" "Members of the wider public")
-           "* %:fromname\n :PROPERTIES:\n :EMAIL: %:fromaddress\n :NOTES: %?\n :END:")
-          ("cw" "Work-related and colleagues" entry
-           (file+headline "~/Org/contacts.org" "Co-workers, functionaries, intermediaries")
-           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+CODE PHONE}\n :EMAIL: %^{EMAIL} \n:FUNCTION: %^{Function|Assistant|Intern|External|VIP}\n :NOTES: %?\n :END:")
+           (file+headline "contacts.org" "Family members")
+           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+Country Number}\n :EMAIL: %^{Email address}\n :NOTES: %?\n :END:")
+          ("cp" "Public at-large" entry
+           (file+headline "contacts.org" "Members of the wider public")
+           "* %:fromname\n :PROPERTIES:\n :EMAIL: %:fromaddress\n :THREAD: %l\n :NOTES: %?\n :END:")
+          ("cw" "Work-related" entry
+           (file+headline "contacts.org" "Co-workers, functionaries, intermediaries")
+           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+Country Number}\n :EMAIL: %^{Email address}\n:FUNCTION: %^{Function|Assistant|Intern|External|VIP}\n :NOTES: %?\n :END:")
           ("m" "Meetings")
           ("ma" "Appointments" entry
-           (file+headline "~/Org/meetings.org" "Appointments and work-related meetings")
+           (file+headline "meetings.org" "Appointments and work-related meetings")
            "* MEETING %:from\nSCHEDULED: %^t\n :PROPERTIES:\n :TOPIC: %:subject %?\n :END:")
           ("me" "Event" entry
-           (file+headline "~/Org/meetings.org" "Events")
+           (file+headline "meetings.org" "Events and conferences")
            "* MEETING %:from\nSCHEDULED: %^t\n :PROPERTIES:\n :TOPIC: %:subject %?\n :END:")
-          ("r" "Randez-vous" entry
-           (file+headline "~/Org/meetings.org" "Private meetings")
-           "* MEETING %^{With whom}\n SCHEDULED: %^t\n %?")))
+          ("r" "Rendez-vous" entry
+           (file+headline "meetings.org" "Private meetings")
+           "* MEETING %^{With whom}%?\n SCHEDULED: %^t")
+          ("i" "Idea")
+          ("ia" "Activity or event" entry
+           (file+headline "ideas.org" "Activities or events")
+           "* %^{Speak your mind}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
+          ("ie" "Essay or publication" entry
+           (file+headline "ideas.org" "Essays or publications")
+           "* %^{Speak your mind}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
+          ("iv" "Video blog or screen cast" entry
+           (file+headline "ideas.org" "Screen casts or vlogs")
+           "* %^{Speak your mind}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")))
   (setq org-capture-templates-contexts
         '(("cp" ((in-mode . "gnus-article-mode")
                  (in-mode . "gnus-summary-mode")
@@ -2227,14 +2248,11 @@ described in the manual.
 
 /2020-02-04: WORK IN PROGRESS/
 
-The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/org-recur][README of org-recur]].
-
 #+begin_src emacs-lisp
 (use-package org-agenda
   :config
   (setq org-agenda-files
-        '("~/Org/tasks.org" "~/Org/notes.org"))
-  (setq org-default-notes-file "~/Org/notes.org")
+        '("~/Org/tasks.org" "~/Org/meetings.org"))
   (setq org-agenda-window-setup 'current-window)
   (setq org-agenda-span 'month)
   (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
@@ -2243,18 +2261,6 @@ The =contrib/org-agenda-refresh= is taken from the [[https://github.com/m-cat/or
           (todo priority-down category-keep)
           (tags priority-down category-keep)
           ((search category-keep))))
-
-  ;; Refresh org-agenda after rescheduling a task.
-  (defun contrib/org-agenda-refresh ()
-    "Refresh all `org-agenda' buffers."
-    (dolist (buffer (buffer-list))
-      (with-current-buffer buffer
-        (when (derived-mode-p 'org-agenda-mode)
-          (org-agenda-maybe-redo)))))
-
-  (defadvice org-schedule (after refresh-agenda activate)
-    "Refresh org-agenda."
-    (contrib/org-agenda-refresh))
   :bind ("C-c a" . org-agenda))
 #+end_src
 
