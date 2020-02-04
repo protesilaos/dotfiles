@@ -4514,7 +4514,7 @@ being pressed and the command they call.
   (setq keycast-window-predicate 'prot/keycast-active-frame-bottom-left-p)
   (setq keycast-separator-width 3)
   (setq keycast-insert-after 'mode-line-buffer-identification)
-  (setq keycast-remove-tail-elements t))
+  (setq keycast-remove-tail-elements nil))
 #+end_src
 
 * Custom movements and motions
