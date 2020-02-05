@@ -4344,17 +4344,19 @@ recenter text, because of the above.
    :END:
 
 These settings control how tool tips are to be handled when hovering the
-mouse over an actionable item.  I just want to make sure that the GTK
-theme is used for those, instead of the generic graphical display.  The
-delay is slightly reduced for the initial pop-up, while it has been
-increased for immediate pop-ups thereafter.
+mouse over an actionable item:
+
++ I just want to make sure that the GTK theme is /not used/ for those: I
+  prefer the generic display which follows my current theme's styles.
++ The delay is slightly reduced for the initial pop-up, while it has
+  been increased for immediate pop-ups thereafter.
 
 #+begin_src emacs-lisp
 (use-package tooltip
   :config
   (setq tooltip-delay 0.5)
   (setq tooltip-short-delay 0.5)
-  (setq x-gtk-use-system-tooltips t)
+  (setq x-gtk-use-system-tooltips nil)
   :hook (after-init . tooltip-mode))
 #+end_src
 
