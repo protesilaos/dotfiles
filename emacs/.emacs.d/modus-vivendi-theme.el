@@ -136,6 +136,8 @@
 ;;     isearch, occur, etc.
 ;;     ivy
 ;;     ivy-posframe
+;;     jira (org-jira)
+;;     js2-mode
 ;;     keycast
 ;;     line numbers (`display-line-numbers-mode' and global variant)
 ;;     lsp-mode
@@ -1337,6 +1339,31 @@ between foreground and background is >= 7:1)."
    `(ivy-posframe ((,class (:background ,bg-dim :foreground ,fg-main))))
    `(ivy-posframe-border ((,class (:background ,bg-active))))
    `(ivy-posframe-cursor ((,class (:background ,fg-main :foreground ,bg-main))))
+   ;;;; jira (org-jira)
+   `(jiralib-comment-face ((,class (:background ,bg-alt))))
+   `(jiralib-comment-header-face ((,class (:weight bold))))
+   `(jiralib-issue-info-face ((,class (:inherit modus-theme-special-warm))))
+   `(jiralib-issue-info-header-face ((,class (:inherit modus-theme-special-warm :weight bold))))
+   `(jiralib-issue-summary-face ((,class (:weight bold))))
+   `(jiralib-link-filter-face ((,class (:underline t))))
+   `(jiralib-link-issue-face ((,class (:underline t))))
+   `(jiralib-link-project-face ((,class (:underline t))))
+   ;;;; js2-mode
+   `(js2-error ((,class (:foreground ,red))))
+   `(js2-external-variable ((,class (:foreground ,cyan-alt-other))))
+   `(js2-function-call ((,class (:foreground ,magenta))))
+   `(js2-function-param ((,class (:foreground ,blue))))
+   `(js2-instance-member ((,class (:foreground ,magenta-alt-other))))
+   `(js2-jsdoc-html-tag-delimiter ((,class (:foreground ,fg-main))))
+   `(js2-jsdoc-html-tag-name ((,class (:foreground ,cyan))))
+   `(js2-jsdoc-tag ((,class (:foreground ,fg-special-calm))))
+   `(js2-jsdoc-type ((,class (:foreground ,fg-special-cold))))
+   `(js2-jsdoc-value ((,class (:foreground ,fg-special-warm))))
+   `(js2-object-property ((,class (:foreground ,fg-main))))
+   `(js2-object-property-access ((,class (:foreground ,fg-main))))
+   `(js2-private-function-call ((,class (:foreground ,green-alt-other))))
+   `(js2-private-member ((,class (:foreground ,fg-special-mild))))
+   `(js2-warning ((,class (:foreground ,yellow-alt :underline t))))
    ;;;; keycast
    `(keycast-command ((,class (:foreground ,blue-active :weight bold))))
    `(keycast-key ((,class (:inherit modus-theme-active-blue))))
