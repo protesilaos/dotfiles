@@ -56,6 +56,7 @@
 ;; inherit from font-lock or some basic group).  You are encouraged to
 ;; notify me of any missing package or change you would like to see.
 ;;
+;;     alert
 ;;     all-the-icons
 ;;     annotate
 ;;     anzu
@@ -64,6 +65,7 @@
 ;;     auto-dim-other-buffers
 ;;     avy
 ;;     ace-window
+;;     breakpoint (provided by built-in gdb-mi.el)
 ;;     calendar
 ;;     calfw
 ;;     column-enforce-mode
@@ -77,6 +79,7 @@
 ;;     counsel-org-capture-string
 ;;     cov
 ;;     custom (M-x customize)
+;;     dap-mode
 ;;     dashboard (emacs-dashboard)
 ;;     deadgrep
 ;;     define-word
@@ -149,7 +152,9 @@
 ;;     org
 ;;     org-journal
 ;;     org-noter
+;;     org-pomodoro
 ;;     org-recur
+;;     origami
 ;;     outline-mode
 ;;     package (M-x list-packages)
 ;;     paren-face
@@ -462,6 +467,12 @@ between foreground and background is >= 7:1)."
    `(success ((,class (:foreground ,green :weight bold))))
    `(trailing-whitespace ((,class (:background ,red-alt))))
    `(warning ((,class (:foreground ,yellow :weight bold))))
+   ;;;; alert
+   `(alert-high-face ((,class (:foreground ,red-alt :weight bold))))
+   `(alert-low-face ((,class (:foreground ,fg-special-mild))))
+   `(alert-moderate-face ((,class (:foreground ,yellow :weight bold))))
+   `(alert-trivial-face ((,class (:foreground ,fg-special-calm))))
+   `(alert-urgent-face ((,class (:foreground ,red-intense :weight bold))))
    ;;;; all-the-icons
    `(all-the-icons-blue ((,class (:foreground ,blue))))
    `(all-the-icons-blue-alt ((,class (:foreground ,blue-alt))))
@@ -548,6 +559,9 @@ between foreground and background is >= 7:1)."
    `(widget-field ((,class (:background ,bg-alt :foreground ,fg-dim))))
    `(widget-inactive ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
    `(widget-single-line-field ((,class (:inherit widget-field))))
+   ;;;; breakpoint (built-in gdb-mi.el)
+   `(breakpoint-disabled ((,class (:foreground ,fg-alt))))
+   `(breakpoint-enabled ((,class (:foreground ,red :weight bold))))
    ;;;; calendar
    `(calendar-today ((,class (:underline t))))
    `(calendar-weekday-header ((,class (:foreground ,blue-alt-other))))
@@ -645,7 +659,13 @@ between foreground and background is >= 7:1)."
    `(cov-light-face ((,class (:foreground ,blue-intense))))
    `(cov-med-face ((,class (:foreground ,yellow-intense))))
    `(cov-none-face ((,class (:foreground ,cyan-intense))))
-   ;;;; custom
+   ;;;; custom (M-x customize)
+   `(custom-button ((,class (:box (:line-width 2 :color nil :style released-button)
+                                  :background ,bg-active :foreground ,fg-main))))
+   `(custom-button-mouse ((,class (:box (:line-width 2 :color nil :style released-button)
+                                        :background ,bg-active :foreground ,fg-active))))
+   `(custom-button-pressed ((,class (:box (:line-width 2 :color nil :style pressed-button)
+                                          :background ,bg-active :foreground ,fg-main))))
    `(custom-changed ((,class (:inherit modus-theme-subtle-cyan))))
    `(custom-comment ((,class (:foreground ,fg-alt))))
    `(custom-comment-tag ((,class (:background ,bg-alt :foreground ,yellow-alt-other))))
@@ -659,6 +679,20 @@ between foreground and background is >= 7:1)."
    `(custom-state ((,class (:foreground ,cyan-alt-other))))
    `(custom-themed ((,class (:inherit modus-theme-subtle-blue))))
    `(custom-variable-tag ((,class (:foreground ,cyan :weight bold))))
+   ;;;; dap-mode
+   `(dap-mouse-eval-thing-face ((,class (:box (:line-width -1 :color ,blue-active :style nil)
+                                            :background ,bg-active :foreground ,fg-main))))
+   `(dap-result-overlay-face ((,class (:box (:line-width -1 :color ,bg-active :style nil)
+                                            :background ,bg-active :foreground ,fg-main))))
+   `(dap-ui-breakpoint-verified-fringe ((,class (:foreground ,green-intense :weight bold))))
+   `(dap-ui-compile-errline ((,class (:foreground ,red-intense :weight bold))))
+   `(dap-ui-locals-scope-face ((,class (:foreground ,magenta :weight bold :underline t))))
+   `(dap-ui-locals-variable-face ((,class (:foreground ,cyan :weight bold))))
+   `(dap-ui-locals-variable-leaf-face ((,class (:foreground ,cyan-alt-other :slant italic))))
+   `(dap-ui-marker-face ((,class (:inherit modus-theme-subtle-blue))))
+   `(dap-ui-sessions-stack-frame-face ((,class (:foreground ,magenta-alt :weight bold))))
+   `(dap-ui-sessions-terminated-active-face ((,class (:foreground ,fg-alt :weight bold))))
+   `(dap-ui-sessions-terminated-face ((,class (:foreground ,fg-alt))))
    ;;;; dashboard (emacs-dashboard)
    `(dashboard-banner-logo-title ((,class (:foreground ,fg-special-cold :weight bold))))
    `(dashboard-footer ((,class (:foreground ,fg-special-mild :weight bold))))
@@ -1682,8 +1716,15 @@ between foreground and background is >= 7:1)."
    ;;;; org-noter
    `(org-noter-no-notes-exist-face ((,class (:foreground ,red-active :weight bold))))
    `(org-noter-notes-exist-face ((,class (:foreground ,green-active :weight bold))))
+   ;;;; org-pomodoro
+   `(org-pomodoro-mode-line ((,class (:foreground ,red-active))))
+   `(org-pomodoro-mode-line-break ((,class (:foreground ,cyan-active))))
+   `(org-pomodoro-mode-line-overtime ((,class (:foreground ,red-active :weight bold))))
    ;;;; org-recur
    `(org-recur ((,class (:foreground ,magenta-active))))
+   ;;;; origami
+   `(origami-fold-header-face ((,class (:background ,bg-dim :foreground ,fg-dim :box t))))
+   `(origami-fold-replacement-face ((,class (:background ,bg-alt :foreground ,fg-alt))))
    ;;;; outline-mode
    `(outline-1 ((,class (:inherit ,modus-theme-variable-pitch
                            :foreground ,fg-main :weight bold
