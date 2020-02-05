@@ -484,7 +484,7 @@ small laptop monitor."
 larger desktop monitor."
     (interactive)
     (when window-system
-	  (prot/font-family-size prot/fixed-pitch-font 12)))
+	  (prot/font-family-size prot/fixed-pitch-font 11)))
 
   (defun prot/screencast-fonts ()
     "Pass desired argument to `prot/font-sizes' for use during
