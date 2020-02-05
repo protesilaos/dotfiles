@@ -2211,50 +2211,25 @@ respective headings.
 (use-package org-capture
   :config
   (setq org-capture-templates
-        '(("t" "Task for a day" entry
-           (file+headline "tasks.org" "Task list")
-           "* TODO [#A] %?\nDEADLINE: %^t")
-          ("l" "Link to buffer or file" entry
-           (file+headline "tasks.org" "Links to buffers/files")
-           "* TODO [#B] %?\n%a")
-          ("c" "Contact information")
-          ("ca" "Acquaintances and friends" entry
-           (file+headline "contacts.org" "Acquaintances and friends")
-           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+Country Number}\n :EMAIL: %^{Email address}\n :NOTES: %?\n :END:")
-          ("cf" "Family" entry
-           (file+headline "contacts.org" "Family members")
-           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+Country Number}\n :EMAIL: %^{Email address}\n :NOTES: %?\n :END:")
-          ("cp" "Public at-large" entry
-           (file+headline "contacts.org" "Members of the wider public")
-           "* %:fromname\n :PROPERTIES:\n :EMAIL: %:fromaddress\n :THREAD: %l\n :NOTES: %?\n :END:")
-          ("cw" "Work-related" entry
-           (file+headline "contacts.org" "Co-workers, functionaries, intermediaries")
-           "* %^{Name SURNAME}\n :PROPERTIES:\n :PHONE: %^{+Country Number}\n :EMAIL: %^{Email address}\n:FUNCTION: %^{Function|Assistant|Intern|External|VIP}\n :NOTES: %?\n :END:")
-          ("m" "Mailed meeting requests")
-          ("ma" "Appointments" entry
-           (file+headline "meetings.org" "Appointments and work-related meetings")
-           "* MEETING %:from\nSCHEDULED: %^t\n :PROPERTIES:\n :TOPIC: %:subject %?\n :END:")
-          ("me" "Event" entry
-           (file+headline "meetings.org" "Events and conferences")
-           "* MEETING %:from\nSCHEDULED: %^t\n :PROPERTIES:\n :TOPIC: %:subject %?\n :END:")
-          ("r" "Rendez-vous" entry
-           (file+headline "meetings.org" "Private meetings")
-           "* MEETING %^{With whom}%?\n SCHEDULED: %^t")
+        '(("t" "Task with a deadline (structured)" entry
+           (file+headline "tasks.org" "Task list with a date")
+           "* %^{Scope of task|TODO [#A]|MEETING with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n :END:\n\n %i %?")
+          ("r" "Reply to an email" entry
+           (file+headline "tasks.org" "Mail correspondence")
+           "* TODO [#B] %:subject :gnus:\n SCHEDULED: %t\n :PROPERTIES:\n :CONTEXT: %a\n :END:\n\n %i %?")
           ("i" "Idea")
           ("ia" "Activity or event" entry
            (file+headline "ideas.org" "Activities or events")
-           "* %^{Speak your mind}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
+           "* %^{Act about what}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
           ("ie" "Essay or publication" entry
            (file+headline "ideas.org" "Essays or publications")
-           "* %^{Speak your mind}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
+           "* %^{Expound on which thesis}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
           ("iv" "Video blog or screen cast" entry
            (file+headline "ideas.org" "Screen casts or vlogs")
-           "* %^{Speak your mind}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")))
+           "* %^{Record on what topic}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")))
   (setq org-capture-templates-contexts
-        '(("cp" ((in-mode . "gnus-article-mode")
-                 (in-mode . "gnus-summary-mode")))
-          ("m" ((in-mode . "gnus-article-mode")
-                (in-mode . "gnus-summary-mode")))))
+        '(("r" ((in-mode . "gnus-article-mode")
+                 (in-mode . "gnus-summary-mode")))))
   :bind ("C-c c" . org-capture))
 #+end_src
 
