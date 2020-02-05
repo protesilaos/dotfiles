@@ -415,23 +415,42 @@ particular meaning.
     :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
     :END:
 
-I am using a variant of the Iosevka typeface, ever since the release of
-version 3.0.0-alpha.2, which addressed some the issues I had with
-previous iterations.
+I use fonts that support Latin and Greek character sets and offer both
+roman and italic variants.  Furthermore, I define several typeface
+options to cater to my evolving needs: they depend on the various
+contexts in which I must type in.
 
-Iosevka has true italics and supports both scripts I am interested in:
-Latin and Greek.  It also offers a comprehensive list of stylistic
-alternatives as well as a broad range of weight sizes.
++ On my laptop, I am using /Iosevka/ because of its compressed forms.  It
+  is ideal for smaller screens and/or whenever it is necessary to
+  economise on line length.  My preference is the variant with the slab
+  serifs.  I find it easier to read than the sans-serif equivalent, due
+  to the fact that some letter forms are thicker to accommodate the
+  serifs.
++ When the laptop is connected to an external display, I opt for my
+  [[https://gitlab.com/protesilaos/hack-font-mod][custom build of the Hack typeface]].  This is a true workhorse of a
+  font.  It may not be the prettier, but it works well in practically
+  every context I have ever used it in.  The patches I have made to it
+  concern minor improvements that (i) bring Hack stylistically closer to
+  its DejaVu heritage, and (ii) refine the presentation of the italic
+  version, by using some varying glyphs for roman and italic variants
+  (for example, the dot inside the zero is turned into a diamond to keep
+  things consistent, since a slanted dotted zero is less decipherable
+  than its roman counterpart).
 
-On Debian and Void Linux (and probably all other distros) per-user fonts
-are read from =~/.local/share/fonts/=.
+The functions that follow the pattern =prot/SCOPE-font= allow me to
+conveniently define the font I need to use.  A hook checks whether my
+screen real estate is that of a laptop or desktop and loads whatever is
+appropriate.  Whereas the =prot/screencast-font= is only used for
+presentations, following feedback I have received with regard to the
+size and overall readability of my fonts (the feedback concerned the
+Iosevka font that I used in a desktop context at the beginning of 2020).
 
 Each font declaration can accept several =fontconfig= parameters, as shown
 in =prot/fixed-pitch-params=.  Read the [[https://www.freedesktop.org/software/fontconfig/fontconfig-user.html][relevant spec]] for further details.
 These can be exceptions to environment-wide rules that you specify for
 fontconfig, at the user or system level.  Refer to [[https://gitlab.com/protesilaos/dotfiles][my dotfiles]] for the
-relevant =fontconfig= settings, as Iosevka is only meant to be used inside
-of Emacs, while I keep Hack as the generic monospaced font.
+relevant =fontconfig= settings.  Note also that on a modern GNU/Linux
+system per-user fonts are preferably read from =~/.local/share/fonts/=.
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -439,7 +458,7 @@ of Emacs, while I keep Hack as the generic monospaced font.
   (setq x-underline-at-descent-line t)
   (setq underline-minimum-offset 1)
 
-  (defconst prot/fixed-pitch-font "Iosevka Slab Extended"
+  (defconst prot/fixed-pitch-font "Hack"
     "The default fixed-pitch typeface.")
 
   (defconst prot/fixed-pitch-font-alt "Iosevka Slab"
@@ -467,12 +486,12 @@ larger desktop monitor."
     (when window-system
 	  (prot/font-family-size prot/fixed-pitch-font 12)))
 
-  (defun prot/screen-cast-fonts ()
+  (defun prot/screencast-fonts ()
     "Pass desired argument to `prot/font-sizes' for use during
 screen casting."
     (interactive)
     (when window-system
-	  (prot/font-family-size prot/fixed-pitch-font-alt 16)))
+	  (prot/font-family-size prot/fixed-pitch-font 16)))
 
   (defun prot/fonts-per-monitor ()
     "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
@@ -1010,9 +1029,9 @@ per-command basis, all while assigning a different height to each list.
 
 The =ivy-posframe-parameters= can be found in the source code of the main
 library.  Do =M-x find-library RET posframe RET= where =RET= means to hit
-the Return key in order to proceed.  In one of the parameters I define a
-font that is different from what I normally use, just as a proof of
-concept (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
+the Return key in order to proceed.  In one of the parameters I show how
+to define a font that is different from what would normally be used (see
+this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
 
 #+begin_src emacs-lisp
 (use-package ivy-posframe
@@ -1023,7 +1042,7 @@ concept (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
         '((left-fringe . 2)
           (right-fringe . 2)
           (internal-border-width . 2)
-          ;; (font . "Iosevka-10.75:hintstyle=hintfull")
+          ;; (font . "DejaVu Sans Mono-10.75:hintstyle=hintfull")
 ))
   (setq ivy-posframe-height-alist
         '((swiper . 15)
@@ -2400,10 +2419,7 @@ activation of `org-tree-slide-mode'."
           (darkroom-tentative-mode 1)
           (org-bullets-mode 1)
           (org-indent-mode 1)
-          (set-frame-font (concat
-                           prot/fixed-pitch-font "-" (number-to-string 14)
-                           prot/fixed-pitch-params)
-                          t t)
+          (prot/screencast-fonts)
           (setq cursor-type '(bar . 1)))
       (darkroom-tentative-mode -1)
       (org-bullets-mode -1)
