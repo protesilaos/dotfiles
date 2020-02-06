@@ -2515,9 +2515,6 @@ data.
     :CUSTOM_ID: h:14cf6fea-54eb-4faa-bb16-3739485c929a
     :END:
 
-/WORK IN PROGRESS: this setup works and I already like it a lot, but will
-probably introduce several changes as I become more familiar with Gnus./
-
 The documentation describes Gnus as the /"coffee-brewing, all singing,
 all dancing, kitchen sink newsreader"/.  I chuckled when I first read it,
 thinking to myself that the developers have an interesting sense of
@@ -2597,62 +2594,6 @@ will definitely come in handy: Gnus uses similar metaphors for
 navigating and parsing information.  *It still is important to read the
 manual though*.
 
-The package declaration below is divided into several blocks, each
-demarcated by a comment line.  Here is an overview (use =C-h v VAR= to
-read documentation about each =VAR= or simply place the point over it and
-then hit =C-h v= to pre-populate the results):
-
-+ Account settings :: The =gnus-select-method= sets the default method for
-  fetching news items.  As I want to read mail from several accounts, I
-  choose to set it to nil.  The =gnus-secondary-select-methods= is where
-  my accounts are specified.  Each =nnimap= list points to a specific line
-  in my =authinfo.gpg= file.  My emails all use the same server so this
-  method allows me to specify the username (email) and password
-  combination for each of them /without/ making this information public.
-  I am not sure whether the =nnimap-stream= and =nnimap-authinfo-file= are
-  needed, but I keep them for the sake of completeness.
-+ Article :: I have no particular interest in the HTML-related
-  variables, because I practically never have to read any of them.  As a
-  general rule, email that can only be read in HTML is likely spam or
-  annoying enough to be treated as such.  The variable I care deeply
-  about in this section is =gnus-mode-line-image-cache=, whose =nil= value
-  makes sure that the blue Gnus icon is not shown in the mode line.
-  That icon has a predefined colour, making it a poor choice for colour
-  contrast accessibility.
-+ Asynchronous operation :: Allow Gnus to perform certain tasks in a
-  non-blocking manner.  In practice though, I am not sure what those are
-  and how different the behaviour is.
-+ Groups buffer :: Disable the default behaviour of always showing a
-  group that has "ticked" items (the equivalent of starred or marked as
-  important).
-+ Topics (groups buffer) :: I like to always show the list of topics,
-  including the empty ones because it allows for fetching messages on a
-  per-topic basis using =M-g=.
-+ Summary buffer :: The sorting is set to reverse chronological order
-  (newest first).  Threads should not be hidden, while messages whose
-  root has been removed should be grouped together in some meaningful
-  way.  Furthermore, when moving up or down in the list of messages
-  using just =n= or =p=, I want to go to the next message, regardless of
-  whether it has been read or not.  I can otherwise rely on standard
-  Emacs motions.  The formatting of the threads using Unicode characters
-  was taken from the [[https://www.emacswiki.org/emacs/GnusFormatting][relevant Emacs wiki entry]] plus some minor tweaks by
-  me.
-+ Time formatting :: Better refer to the documentation of the function
-  =format-time-string= to understand the meaning of the various date/time
-  specifiers.  As for =gnus-user-date-format-alist=, this basically adapts
-  the date to whether the message was within the day or the one before,
-  else falls back to a default value.  It is then called with
-  =%&user-date;=.
-
-With regard to the key bindings, I have redefined some of the existing
-ones to suit of workflow and better match my intuitions.  For example,
-in the Article view, hitting =s= takes you to the summary buffer.  I find
-that to be a waste, since we can already move between buffers with
-standard keys.  The =s= can be used to save the attachment at point.
-Similarly, I want =o= to behave just like in =dired=, where it opens the
-file at point in another buffer.  Here it applies to attachments (MIME
-parts).
-
 Now here comes the nice part of leveraging the integration that Emacs
 offers: in my [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org mode configurations]] I have a simple template to
 capture the current buffer's link.  This means that we can quickly
@@ -2661,6 +2602,41 @@ original message by following the link.  /Found an interesting suggestion
 in some mailing list?/ Capture it.  /Need to act on an email later?/
 Capture, capture, capture.  Same principle applies to the integration
 with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-9e8b-061d74dc7bda][next section]]).
+
+The package declarations below are divided into several subsections to
+make things easier to read and keep track of.  Remember to use =C-h v VAR=
+to read documentation about each =VAR= or simply place the point over it
+and then hit =C-h v= to pre-populate the results (=C-h f= is the equivalent
+for functions, =C-h o= for other symbols).  Whenever you see some
+formatting customisations concerning time units, it is better refer to
+the documentation of the function =format-time-string= to understand the
+meaning of the various date/time specifiers.
+
+**** Gnus account settings and essential
+     :PROPERTIES:
+     :CUSTOM_ID: h:dc8811af-dec8-4ca8-a62e-0b500928d10b
+     :END:
+
+Here I only furnish the essentials for the basic Gnus functionality.
+
+The =gnus-select-method= sets the default method for fetching news items.
+As I want to read mail from several accounts in addition to following
+Usenet sources, I choose to set it to nil.
+
+The =gnus-secondary-select-methods= is where my accounts are specified.
+Each =nnimap= list points to a specific line in my =authinfo.gpg= file
+(whose format I described in the [[#h:a82766be-daab-4925-b23a-1c5ffd47e599][base email settings]]).  My emails all
+use the same server so this method allows me to specify the username
+(email) and password combination for each of them /without/ making this
+information public.  I am not sure whether the =nnimap-stream= and
+=nnimap-authinfo-file= are needed, but I keep them for the sake of
+completeness.
+
+The =gnus-parameters= are designed to simply move my outgoing messages to
+the "Sent" folder of the relevant account.  While =gnus-gcc-mark-as-read=
+ensures that these are marked as read.
+
+The "agent" is enabled here and configured in the [[#h:fccaadbb-ea22-4d1f-ae79-ef1f45f3befa][following section]].
 
 #+begin_src emacs-lisp
 (use-package gnus
@@ -2681,7 +2657,6 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
                   (nnimap-address "mail.gandi.net")
                   (nnimap-stream ssl)
                   (nnimap-authinfo-file "~/.authinfo.gpg"))))
-  ;; Move outgoing messages to appropriate "Sent" folder
   (setq gnus-parameters
         '(("prv"
            (posting-style
@@ -2692,12 +2667,40 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
           ("pub"
            (posting-style
             (gcc "nnimap+pub:Sent")))))
-  (setq gnus-gcc-mark-as-read t)        ; Mark sent as read
+  (setq gnus-gcc-mark-as-read t)
+  (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
   (setq message-signature "Protesilaos Stavrou\nprotesilaos.com\n")
-  ;; (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
-  ;; agent
-  (setq mail-user-agent 'gnus-user-agent) ; also works with `sendmail-user-agent'
   (setq gnus-agent t)
+  (setq mail-user-agent 'gnus-user-agent) ; also works with `sendmail-user-agent'
+  ;; checking sources
+  (setq gnus-check-new-newsgroups 'ask-server)
+  (setq gnus-read-active-file 'some)
+  ;; dribble
+  (setq gnus-use-dribble-file t)
+  (setq gnus-always-read-dribble-file t)
+  :bind ("C-c m" . gnus))
+#+end_src
+
+**** Gnus agent (offline capabilities)
+     :PROPERTIES:
+     :CUSTOM_ID: h:fccaadbb-ea22-4d1f-ae79-ef1f45f3befa
+     :END:
+
+The "agent" is a technical term described in the Gnus manual which
+basically represents the bridge between our Gnus and the server to which
+it connects to.  Gnus is said to be "plugged" when a connection is
+established.  Else it is "unplugged".
+
+Technicalities aside, we basically use this to save a local copy of the
+items we have already fetched from the server.  We can also use the
+agent to configure the handling of local messages.  For example, we can
+set an expiry date, after which the message is deleted, or we can create
+a queue of outgoing messages when Gnus is in an unplugged state.
+
+#+begin_src emacs-lisp
+(use-package gnus-agent
+  :after gnus
+  :config
   (setq gnus-agent-article-alist-save-format 1)  ; uncompressed
   (setq gnus-agent-cache t)
   (setq gnus-agent-confirmation-function 'y-or-n-p)
@@ -2708,8 +2711,45 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-agent-expire-days 30)
   (setq gnus-agent-mark-unread-after-downloaded t)
   (setq gnus-agent-queue-mail t)        ; queue if unplugged
-  (setq gnus-agent-synchronize-flags nil)
-  ;; article
+  (setq gnus-agent-synchronize-flags nil))
+#+end_src
+
+**** Gnus article (message view)
+     :PROPERTIES:
+     :CUSTOM_ID: h:81c48313-97a3-49bb-af2b-a273db31c331
+     :END:
+
+In Gnus parlance the "article" is the window that contains the summary's
+news/email currently selected item.  This has its own major mode, which
+is great for us: we can define key bindings that only apply when the
+article is in focus.
+
+I have no particular interest in the HTML-related variables, because I
+practically never have to read any such messages.  As a general rule,
+email that can only be read in HTML is likely spam or annoying enough to
+be treated as such.
+
+The variable =gnus-mode-line-image-cache= is set to =nil= to make sure that
+the blue Gnus icon is not shown in the mode line.  That icon has a
+predefined colour, making it a potentially poor choice for colour
+contrast accessibility.
+
+Note that =gnus-article-sort-functions= requires the most important
+function to be declared last.
+
+With regard to the key bindings, I have redefined some of the existing
+ones to suit of workflow and better match my intuitions.  For example,
+in the Article view, hitting =s= takes you to the Summary buffer.  I find
+that to be a waste, since we can already move between buffers with
+standard keys.  Instead, The =s= can be used to save the attachment at
+point.  Similarly, I want =o= to behave just like in =dired=, where it opens
+the attachment at point (MIME part) in another buffer.
+
+#+begin_src emacs-lisp
+(use-package gnus-art
+  :after gnus
+  :demand
+  :config
   (setq gnus-article-browse-delete-temp 'ask)
   (setq gnus-article-over-scroll nil)
   (setq gnus-article-show-cursor t)
@@ -2729,16 +2769,55 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
           "Followup-To:" "Reply-To:" "^Organization:" "^X-Newsreader:"
           "^X-Mailer:"))
   (setq gnus-sorted-header-list gnus-visible-headers)
-  ;; asynchronous
+  :bind (:map gnus-article-mode-map
+              ("s" . gnus-mime-save-part)
+              ("o" . gnus-mime-copy-part)))
+#+end_src
+
+**** Gnus asynchronous operations
+     :PROPERTIES:
+     :CUSTOM_ID: h:169083d7-881f-486a-be04-1ebbf2a7edd5
+     :END:
+
+By default, Gnus performs all its actions in a synchronous fashion.
+This means that Emacs is blocked until Gnus has finished.  By enabling
+this library, we can use certain functions in a non-blocking way.  I do
+this for [[#h:2d793cf8-83f5-4830-b73d-78385d9b96dd][sending email]].
+
+#+begin_src emacs-lisp
+(use-package gnus-async
+  :after gnus
+  :config
   (setq gnus-asynchronous t)
-  (setq gnus-use-article-prefetch 15)
-  ;; checking sources
-  (setq gnus-check-new-newsgroups 'ask-server)
-  (setq gnus-read-active-file 'some)
-  ;; dribble
-  (setq gnus-use-dribble-file t)
-  (setq gnus-always-read-dribble-file t)
-  ;; groups
+  (setq gnus-use-article-prefetch 15))
+#+end_src
+
+**** Gnus group (main interface)
+     :PROPERTIES:
+     :CUSTOM_ID: h:d198d238-66c8-42b6-81a3-c0819177c8c2
+     :END:
+
+I already outlined the utility of the group buffer in the introductory
+section on [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]].  In short,
+it is the epicentre of Gnus, where all your subscribed groups are
+presented and from where you can browse through your updates.
+
+I use groups in tandem with topics, which allows me to quickly follow
+updates on the theme I am interested in at the moment.  It also allows
+me to perform per-topic actions, such as updating only the groups it
+contains or "catching up" to them (marking them as read).
+
+I choose to disable the default behaviour of always showing a group that
+has "ticked" items (the equivalent of starred or marked as important).
+
+Note that =gnus-group-sort-functions= requires the most important function
+to be declared last.
+
+#+begin_src emacs-lisp
+(use-package gnus-group
+  :after gnus
+  :demand
+  :config
   (setq gnus-level-subscribed 6)
   (setq gnus-level-unsubscribed 7)
   (setq gnus-level-zombie 8)
@@ -2747,9 +2826,52 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
         '((gnus-group-sort-by-unread)
           (gnus-group-sort-by-alphabet)
           (gnus-group-sort-by-rank)))
-  (setq gnus-topic-display-empty-topics t)
   (setq gnus-group-mode-line-format "Gnus: %%b")
-  ;; summary
+  :hook
+  (gnus-group-mode . hl-line-mode)
+  (gnus-select-group-hook . gnus-group-set-timestamp)
+  :bind (:map gnus-agent-group-mode-map
+              ("M-n" . gnus-topic-goto-next-topic)
+              ("M-p" . gnus-topic-goto-previous-topic)))
+
+(use-package gnus-topic
+  :after (gnus gnus-group)
+  :config
+  (setq gnus-topic-display-empty-topics t)
+  :hook
+  (gnus-group-mode . gnus-topic-mode))
+#+end_src
+
+**** Gnus summary
+     :PROPERTIES:
+     :CUSTOM_ID: h:65c5eefc-a92e-41d3-a0ec-ce48dc61f1af
+     :END:
+
+This section assumes you have already read my introductory remarks on
+[[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]].
+
+Note that the various sort functions expect the primary filter method to
+be declared last, in case more that one function is to be invoked.  The
+sorting is set to reverse chronological order (newest first).
+
+Threads should not be hidden, while messages whose root has been removed
+should be grouped together in some meaningful way.  Furthermore, when
+moving up or down in the list of messages using just =n= or =p=, I want to
+go to the next message, regardless of whether it has been read or not.
+I can otherwise rely on standard Emacs motions.
+
+The formatting of the threads using Unicode characters was taken from
+the [[https://www.emacswiki.org/emacs/GnusFormatting][relevant Emacs wiki entry]] plus some minor tweaks by me.
+
+The =gnus-user-date-format-alist=, this basically adapts the date to
+whether the message was within the day or the one before, else falls
+back to a default value.  It is then called with =%&user-date;=.
+
+#+begin_src emacs-lisp
+(use-package gnus-sum
+  :after (gnus gnus-group)
+  :demand
+  :config
   (setq gnus-auto-select-first nil)
   (setq gnus-summary-ignore-duplicates t)
   (setq gnus-suppress-duplicates t)
@@ -2775,56 +2897,45 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-sum-thread-tree-root "")
   (setq gnus-sum-thread-tree-single-leaf "└─➤ ")
   (setq gnus-sum-thread-tree-vertical "│")
-  ;; various
-  (setq gnus-use-atomic-windows nil)    ; Emacs 27.1
-
-  (defun prot/gnus-summary-save-parts-all ()
-    "Save all MIME parts (attachments) to the ~/Downloads directory."
-    (interactive)
-    (let ((directory "~/Downloads"))
-      (gnus-summary-save-parts ".*" directory)))
+  ;; (defun prot/gnus-summary-save-parts-all ()
+  ;;   "Save all MIME parts (attachments) to the ~/Downloads directory."
+  ;;   (interactive)
+  ;;   (let ((directory "~/Downloads"))
+  ;;     (gnus-summary-save-parts ".*" directory)))
   :hook
-  ((gnus-browse-mode gnus-summary-mode gnus-server-mode gnus-group-mode) . hl-line-mode)
+  (gnus-summary-mode . hl-line-mode)
   (gnus-summary-exit-hook . gnus-topic-sort-groups-by-alphabet)
   (gnus-summary-exit-hook . gnus-group-sort-groups-by-rank)
-  (gnus-select-group-hook . gnus-group-set-timestamp)
-  (gnus-group-mode . gnus-topic-mode)
-  :bind (("C-c m" . gnus)
-          :map gnus-agent-summary-mode-map
-          ("<delete>" . gnus-summary-delete-article)
-          ("n" . gnus-summary-next-article)
-          ("p" . gnus-summary-previous-article)
-          ("N" . gnus-summary-next-unread-article)
-          ("P" . gnus-summary-previous-unread-article)
-          ("M-n" . gnus-summary-next-thread)
-          ("M-p" . gnus-summary-previous-thread)
-          ("C-M-n" . gnus-summary-next-group)
-          ("C-M-p" . gnus-summary-previous-group)
-          ("C-M-^" . gnus-summary-refer-thread) ; Can fetch a lot
-          :map gnus-article-mode-map
-          ("s" . gnus-mime-save-part)
-          ("o" . gnus-mime-copy-part)   ; Opens in buffer
-          :map gnus-group-mode-map
-          ("M-n" . gnus-topic-goto-next-topic)
-          ("M-p" . gnus-topic-goto-previous-topic)))
+  :bind (:map gnus-agent-summary-mode-map
+              ("<delete>" . gnus-summary-delete-article)
+              ("n" . gnus-summary-next-article)
+              ("p" . gnus-summary-prev-article)
+              ("N" . gnus-summary-next-unread-article)
+              ("P" . gnus-summary-prev-unread-article)
+              ("M-n" . gnus-summary-next-thread)
+              ("M-p" . gnus-summary-prev-thread)
+              ("C-M-n" . gnus-summary-next-group)
+              ("C-M-p" . gnus-summary-prev-group)
+              ("C-M-^" . gnus-summary-refer-thread)))
 #+end_src
 
-**** TODO learn more about mail searching (nnir?, nnimap?)
-    :PROPERTIES:
-    :CUSTOM_ID: h:4f3fb8e0-8e53-4c9b-9623-01a2aa4a05fe
-    :END:
-**** TODO non-blocking RSS feeds (use topic scores?)
+**** Gnus server
      :PROPERTIES:
-     :CUSTOM_ID: h:61a91a5c-338d-4c1d-9f8c-f8ee321078a8
+     :CUSTOM_ID: h:7760e881-fd54-43cc-ae5f-2728384d2107
      :END:
-**** TODO parse Atom feeds as well?
-     :PROPERTIES:
-     :CUSTOM_ID: h:812c503c-fbd8-40f5-ac5d-6cae20974cba
-     :END:
-**** TODO Try "org-msg" package to compose email in Org-mode
-     :PROPERTIES:
-     :CUSTOM_ID: h:d89808cb-70bb-42ff-b659-a22c6a7b31cd
-     :END:
+
+The "server" is where your news sources are listed and from where you
+can browse items you would like to subscribe to (e.g. your email
+account's Inbox or some mailing list on Usenet).  Make sure to read
+about these concepts in the introductory [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][section about Gnus]].
+
+#+begin_src emacs-lisp
+(use-package gnus-srvr
+  :after gnus
+  :hook
+  ((gnus-browse-mode gnus-server-mode) . hl-line-mode))
+#+end_src
+
 **** Gnus intersection with Dired
      :PROPERTIES:
      :CUSTOM_ID: h:0fabe523-725e-41eb-9e8b-061d74dc7bda
@@ -2847,6 +2958,26 @@ By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][com
   :hook (dired-mode . gnus-dired-mode))
 #+end_src
 
+**** TODO Integrate contacts database and completion (BBDB)
+     :PROPERTIES:
+     :CUSTOM_ID: h:8b80841e-8981-469a-90db-df2b13627056
+     :END:
+**** TODO learn more about mail searching (nnir?, nnimap?)
+    :PROPERTIES:
+    :CUSTOM_ID: h:4f3fb8e0-8e53-4c9b-9623-01a2aa4a05fe
+    :END:
+**** TODO non-blocking RSS feeds (use topic scores?)
+     :PROPERTIES:
+     :CUSTOM_ID: h:61a91a5c-338d-4c1d-9f8c-f8ee321078a8
+     :END:
+**** TODO parse Atom feeds as well?
+     :PROPERTIES:
+     :CUSTOM_ID: h:812c503c-fbd8-40f5-ac5d-6cae20974cba
+     :END:
+**** TODO Try "org-msg" package to compose email in Org-mode
+     :PROPERTIES:
+     :CUSTOM_ID: h:d89808cb-70bb-42ff-b659-a22c6a7b31cd
+     :END:
 *** Sending email (SMTP)
     :PROPERTIES:
     :CUSTOM_ID: h:2d793cf8-83f5-4830-b73d-78385d9b96dd
@@ -2877,7 +3008,6 @@ performance by carrying out the relevant tasks in a non-blocking way.
   (setq message-send-mail-function 'async-smtpmail-send-it))
 #+end_src
 
-*** TODO Integrate contacts database and completion (BBDB)
 *** DEPRECATED Reading email with MU4E
     :PROPERTIES:
     :CUSTOM_ID: h:2a93d8bf-200a-4d23-9be3-276a907947e1
