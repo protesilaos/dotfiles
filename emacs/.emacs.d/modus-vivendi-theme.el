@@ -138,6 +138,7 @@
 ;;     ivy-posframe
 ;;     jira (org-jira)
 ;;     js2-mode
+;;     jupyter
 ;;     keycast
 ;;     line numbers (`display-line-numbers-mode' and global variant)
 ;;     lsp-mode
@@ -191,6 +192,7 @@
 ;;     which-function-mode
 ;;     which-key
 ;;     whitespace-mode
+;;     window-divider-mode
 ;;     writegood-mode
 ;;     xah-elisp-mode
 ;;     xterm-color (and ansi-colors)
@@ -382,9 +384,13 @@ between foreground and background is >= 7:1)."
       ;;
       ;; `bg-region' must be combined with `fg-main'
       ;;
+      ;; the window divider colours apply to faces with just an fg value
+      ;;
       ;; all other pairs are combinable with themselves
       (bg-hl-line "#151823")
       (bg-region "#3c3c3c")
+      (fg-window-divider-inner "#646464")
+      (fg-window-divider-outer "#969696")
       (fg-header "#dddddd") (bg-header "#2a2a2a")
       (fg-whitespace "#a4959f") (bg-whitespace "#170016")
       (fg-paren-match "#fcfcfc") (bg-paren-match "#754a5d")
@@ -1370,6 +1376,11 @@ between foreground and background is >= 7:1)."
    `(js2-private-function-call ((,class (:foreground ,green-alt-other))))
    `(js2-private-member ((,class (:foreground ,fg-special-mild))))
    `(js2-warning ((,class (:foreground ,yellow-alt :underline t))))
+   ;;;; jupyter
+   `(jupyter-eval-overlay ((,class (:foreground ,blue :weight bold))))
+   `(jupyter-repl-input-prompt ((,class (:foreground ,cyan-alt-other))))
+   `(jupyter-repl-output-prompt ((,class (:foreground ,magenta-alt-other))))
+   `(jupyter-repl-traceback ((,class (:inherit modus-theme-intense-red))))
    ;;;; keycast
    `(keycast-command ((,class (:foreground ,blue-active :weight bold))))
    `(keycast-key ((,class (:inherit modus-theme-active-blue))))
@@ -2091,6 +2102,10 @@ between foreground and background is >= 7:1)."
    `(whitespace-space-before-tab ((,class (:inherit modus-theme-subtle-cyan))))
    `(whitespace-tab ((,class (:background ,bg-whitespace :foreground ,fg-whitespace))))
    `(whitespace-trailing ((,class (:inherit modus-theme-intense-red))))
+   ;;;; window-divider-mode
+   `(window-divider ((,class (:foreground ,fg-window-divider-inner))))
+   `(window-divider-first-pixel ((,class (:foreground ,fg-window-divider-outer))))
+   `(window-divider-last-pixel ((,class (:foreground ,fg-window-divider-outer))))
    ;;;; writegood-mode
    `(writegood-duplicates-face ((,class (:background ,bg-alt :foreground ,red-alt-other :underline t))))
    `(writegood-passive-voice-face ((,class (:background ,bg-alt :foreground ,cyan-alt-other :underline t))))
