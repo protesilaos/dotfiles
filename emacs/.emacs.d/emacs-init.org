@@ -477,7 +477,7 @@ system per-user fonts are preferably read from =~/.local/share/fonts/=.
 small laptop monitor."
     (interactive)
     (when window-system
-	  (prot/font-family-size prot/fixed-pitch-font-alt 10.75)))
+	  (prot/font-family-size prot/fixed-pitch-font-alt 10.5)))
 
   (defun prot/desktop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
@@ -2644,6 +2644,15 @@ then hit =C-h v= to pre-populate the results):
   else falls back to a default value.  It is then called with
   =%&user-date;=.
 
+With regard to the key bindings, I have redefined some of the existing
+ones to suit of workflow and better match my intuitions.  For example,
+in the Article view, hitting =s= takes you to the summary buffer.  I find
+that to be a waste, since we can already move between buffers with
+standard keys.  The =s= can be used to save the attachment at point.
+Similarly, I want =o= to behave just like in =dired=, where it opens the
+file at point in another buffer.  Here it applies to attachments (MIME
+parts).
+
 Now here comes the nice part of leveraging the integration that Emacs
 offers: in my [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org mode configurations]] I have a simple template to
 capture the current buffer's link.  This means that we can quickly
@@ -2767,13 +2776,37 @@ with Dired as a means of attaching files to emails (see [[#h:0fabe523-725e-41eb-
   (setq gnus-sum-thread-tree-single-leaf "└─➤ ")
   (setq gnus-sum-thread-tree-vertical "│")
   ;; various
-  (setq gnus-use-atomic-windows nil)
+  (setq gnus-use-atomic-windows nil)    ; Emacs 27.1
+
+  (defun prot/gnus-summary-save-parts-all ()
+    "Save all MIME parts (attachments) to the ~/Downloads directory."
+    (interactive)
+    (let ((directory "~/Downloads"))
+      (gnus-summary-save-parts ".*" directory)))
   :hook
   ((gnus-browse-mode gnus-summary-mode gnus-server-mode gnus-group-mode) . hl-line-mode)
   (gnus-summary-exit-hook . gnus-topic-sort-groups-by-alphabet)
   (gnus-summary-exit-hook . gnus-group-sort-groups-by-rank)
   (gnus-select-group-hook . gnus-group-set-timestamp)
-  (gnus-group-mode . gnus-topic-mode))
+  (gnus-group-mode . gnus-topic-mode)
+  :bind (("C-c m" . gnus)
+          :map gnus-agent-summary-mode-map
+          ("<delete>" . gnus-summary-delete-article)
+          ("n" . gnus-summary-next-article)
+          ("p" . gnus-summary-previous-article)
+          ("N" . gnus-summary-next-unread-article)
+          ("P" . gnus-summary-previous-unread-article)
+          ("M-n" . gnus-summary-next-thread)
+          ("M-p" . gnus-summary-previous-thread)
+          ("C-M-n" . gnus-summary-next-group)
+          ("C-M-p" . gnus-summary-previous-group)
+          ("C-M-^" . gnus-summary-refer-thread) ; Can fetch a lot
+          :map gnus-article-mode-map
+          ("s" . gnus-mime-save-part)
+          ("o" . gnus-mime-copy-part)   ; Opens in buffer
+          :map gnus-group-mode-map
+          ("M-n" . gnus-topic-goto-next-topic)
+          ("M-p" . gnus-topic-goto-previous-topic)))
 #+end_src
 
 **** TODO learn more about mail searching (nnir?, nnimap?)
