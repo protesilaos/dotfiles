@@ -2080,44 +2080,114 @@ facilities that require date/time input (see following sections).
    :CUSTOM_ID: h:4e8347de-415e-4804-b383-d61499e05ca1
    :END:
 
-For many users =org-mode= is *the* killer app that draws them to Emacs.  One
-can write an entire book on the merits of this tool.  But let's not do
-that, given how massive this document already is.
+Org offers you the basic tools to organise your life in super-efficient
+ways using nothing but plain text.
 
-Org offers you the tools to organise your life in super-efficient ways
-using nothing but plain text.  In effect, Org is a collection of
-commands that speed up the process of structuring and manipulating plain
-text.
+In its purest form, Org is a markup language that is similar to
+Markdown: symbols are used to denote the meaning of a construct in its
+context, such as what may represent a headline element or a phrase that
+calls for emphasis.
+
+What lends Org its super powers though is everything else built around
+it: a rich corpus of elisp functions that automate, link, combine,
+enhance, structure, or otherwise enrich the process of using this
+otherwise simple markup language.  This very document is written in
+=org-mode= while its website version is produced by a function that
+exports Org notation into its HTML equivalent.
 
 This section contains several sub-sections, each dedicated to a
-particular aspect of Org.
+particular aspect of Org.  Unless otherwise specified, everything is a
+work-in-progress as I gradually build up my knowledge of this killer
+app.
 
 *** Org basic configurations
     :PROPERTIES:
     :CUSTOM_ID: h:b95d0798-1cc5-4083-8728-f6a51ddbc531
     :END:
 
-/2020-02-04: WORK IN PROGRESS/
+These are the base settings that other more specialised functions of Org
+depend on.  Here is an overview:
+
++ Agenda and default setup :: The bulk of the =org-agenda= configurations
+  is defined in a [[#h:847477fe-ef86-4e12-a2da-6c431528da99][subsequent section]].  Here we just declare the default
+  file system paths for searching for relevant files.  The "notes" file
+  is meant as a fallback option for when =org-capture= has not been given
+  a file to write at (also see the [[#h:7b88b89a-6eb3-4da3-a9fe-0e447300a250][org-capture section]]).
++ Refilling items :: This is done with =C-c C-w= which then prompts us for
+  a heading under which the current item should be positioned.  I set my
+  Org agenda files as one possible target and the current buffer as the
+  other.  The maximum depth should be 3 levels.  Refilling can also be
+  done from inside an =org-capture= interface.  Any new entry should go at
+  the end of the heading it is filled under.
++ To-do settings :: I generally use a very simple system of writing
+  tasks, in the sense that I do not really care about time-tracking or
+  assigning an intermediate state, etc.  I let tags and the description
+  further qualify the meaning.  The letter inside parentheses is for
+  faster access when using the =C-c C-t= method.  The upside of having
+  lots of specialised keywords is that it becomes easier to filter your
+  tasks in the relevant agenda views.
++ Logging meta data :: I do not really care about tracking all the
+  minutia of why a deadline was reviewed or whatnot.  Though it is kind
+  of nice to have a timestamp of when a task was concluded (still don't
+  care about it).
+
+Now on to the miscellaneous settings:
+
++ With the =t= value of =org-special-ctrl-a/e= we assign a special meaning
+  to the motions that take us to the beginning or end of the line when
+  those are performed over a heading.  The idea here is that we can
+  always perform changes to the absolute beginning of the line, such as
+  by increasing the heading's depth with =M-right=.
++ I do not enable this sort of contextual awareness for the =C-k= command,
+  because I do consider it rather unpredictable.
++ All the markup characters should be hidden from view, in the same way
+  links are.  This generally reduces the distractions in the document.
++ The =org-structure-template-alist= had its value and functionality
+  changed in Org version 9.2, which ships with Emacs 27.  To insert a
+  template you must now use =C-c C-,=.
++ The =return= key should never follow a link because I sometimes call it
+  by accident.  Use =C-c C-o= instead.
++ The =org-store-link= is one of the nicest additions.  Use it to store a
+  direct link to the heading at point.  Then invoke =C-c C-l= with or
+  without an active region, to create a link to that location (when the
+  region is active, its text will be used for the link, subject to
+  confirmation and further editing).  This is how I create the various
+  internal links that point to other parts of this document.
+
+/2020-02-07: WORK IN PROGRESS/
 
 #+begin_src emacs-lisp
 (use-package org
   :config
-  ;; agenda
+  ;; agenda and basic directory structure
   (setq org-directory "~/Org")
   (setq org-default-notes-file "~/Org/notes.org")
-  (setq org-deadline-warning-days 7)
+  (setq org-agenda-files
+        '("~/Org"
+          "~/.emacs.d"
+          "~/Documents"))
+  (setq org-deadline-warning-days 3)
   ;; refile, todo
   (setq org-refile-targets
-        '((org-agenda-files . (:maxlevel . 3))))
+	    '((org-agenda-files . (:maxlevel . 3))
+	      (nil . (:maxlevel . 3))))
   (setq org-refile-use-outline-path t)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-refile-use-cache t)
   (setq org-reverse-note-order nil)
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "|" "DONE(D)" "ABORTED(A)")
-          (sequence "MEETING(m)" "|" "MET(M)" "CANCELLED(C)")))
+	    '((sequence "TODO(t)" "|" "DONE(D)" "CANCELLED(C")
+          (sequence "ACT(a)" "|" "ACTED(A)")
+          (sequence "BUY(b)" "|" "BOUGHT(B)")
+	      (sequence "MEET(m)" "|" "MET(M)" "POSTPONED(P)")
+          (sequence "STUDY(s)" "|" "STUDIED(S)")
+          (sequence "RECORD(r)" "|" "RECORDED(R)")))
+  (setq org-fontify-done-headline t)
+  (setq org-enforce-todo-dependencies t)
+  (setq org-enforce-todo-checkbox-dependencies t)
+  (setq org-track-ordered-property-with-tag t)
   (setq org-highest-priority ?A)
-  (setq org-lowest-priority ?B)
+  (setq org-lowest-priority ?C)
   (setq org-default-priority ?A)
   ;; code blocks
   (setq org-confirm-babel-evaluate nil)
@@ -2125,32 +2195,46 @@ particular aspect of Org.
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)
   (setq org-export-backends
-        '(ascii html latex md))
+	    '(ascii html latex md))
   ;; log
   (setq org-log-done 'time)
+  (setq org-log-note-clock-out nil)
   (setq org-log-redeadline nil)
   (setq org-log-reschedule nil)
   (setq org-read-date-prefer-future 'time)
   ;; general
-  (setq org-special-ctrl-a/e 'reversed)
+  (setq org-special-ctrl-a/e t)
+  (setq org-special-ctrl-k nil)
   (setq org-hide-emphasis-markers t)
-  (setq org-structure-template-alist
-        '(("s" . "src")
-          ("E" . "src emacs-lisp")
-          ("e" . "example")
-          ("q" . "quote")
-          ("v" . "verse")
-          ("V" . "verbatim")
-          ("c" . "center")
-          ("C" . "comment")))          ; CHANGED in Org 9.2 (Emacs 27.1)
-                                       ; Use with: C-c C-,
+  (setq org-structure-template-alist    ; CHANGED in Org 9.2, Emacs 27.1
+	    '(("s" . "src")
+	      ("E" . "src emacs-lisp")
+	      ("e" . "example")
+	      ("q" . "quote")
+	      ("v" . "verse")
+	      ("V" . "verbatim")
+	      ("c" . "center")
+	      ("C" . "comment")))
   (setq org-catch-invisible-edits 'show)
-  (setq org-return-follows-link t)
+  (setq org-return-follows-link nil)
   ;; disable keys I rely on for other tasks
   (define-key org-mode-map (kbd "<C-return>") nil)
   (define-key org-mode-map (kbd "<C-S-return>") nil)
   :bind (("C-c l" . org-store-link)))
 #+end_src
+
+**** TODO review Org's exporting facilities [0/2]            :emacs:wishlist:
+     :PROPERTIES:
+     :CUSTOM_ID: h:ce9b2670-b2db-4bf3-bc7e-4995ef62679f
+     :END:
+***** TODO research derived backends
+      :PROPERTIES:
+      :CUSTOM_ID: h:00ed7a50-84e4-444c-b127-89df423cfd0c
+      :END:
+***** TODO automate webpage creation for dotemacs
+      :PROPERTIES:
+      :CUSTOM_ID: h:88d804f6-0e3f-44c8-9218-585378d04f12
+      :END:
 
 *** Org-capture templates
     :PROPERTIES:
@@ -2216,25 +2300,25 @@ respective headings.
 (use-package org-capture
   :config
   (setq org-capture-templates
-        '(("c" "Configure something" entry
+        '(("c" "Capture some actionable item" entry
            (file+headline "tasks.org" "Task list without a defined date")
            "* TODO %^{Title} %^g\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?")
           ("t" "Task with a deadline (structured)" entry
            (file+headline "tasks.org" "Task list with a date")
-           "* %^{Scope of task|TODO [#A]|MEETING with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n :END:\n\n %i %?")
+           "* %^{Scope of task|TODO [#A]|MEET with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n :END:\n\n %i %?")
           ("r" "Reply to an email" entry
            (file+headline "tasks.org" "Mail correspondence")
            "* TODO [#B] %:subject :gnus:\n SCHEDULED: %t\n :PROPERTIES:\n :CONTEXT: %a\n :END:\n\n %i %?")
           ("i" "Idea")
           ("ia" "Activity or event" entry
            (file+headline "ideas.org" "Activities or events")
-           "* %^{Act about what}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
+           "* ACT %^{Act about what}%? :private:event:\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
           ("ie" "Essay or publication" entry
            (file+headline "ideas.org" "Essays or publications")
-           "* %^{Expound on which thesis}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
+           "* STUDY %^{Expound on which thesis}%? :private:write:\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
           ("iv" "Video blog or screen cast" entry
            (file+headline "ideas.org" "Screen casts or vlogs")
-           "* %^{Record on what topic}%?\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")))
+           "* RECORD %^{Record on what topic}%? :private:cast:\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")))
   (setq org-capture-templates-contexts
         '(("r" ((in-mode . "gnus-article-mode")
                  (in-mode . "gnus-summary-mode")))))
@@ -2246,21 +2330,36 @@ respective headings.
     :CUSTOM_ID: h:847477fe-ef86-4e12-a2da-6c431528da99
     :END:
 
+The =org-agenda= is not just a single interface.  It rather is your
+conduit to a set of utilities from where you can keep track of all the
+tasks you have written in the files declared as part of =org-agenda-files=
+(see its value in the [[#h:b95d0798-1cc5-4083-8728-f6a51ddbc531][section that covers the base Org configurations]]).
+Invoking =org-agenda= will present you with a list of possible options.
+
++ The =a= is where you keep track of all the items that have a date
+  assigned to them, be it =SCHEDULED= or =DEADLINE=.  To assign such a value
+  to a heading use =C-c C-s= or =C-c C-d= respectively.
++ The =t= will list all your tasks, regardless of whether they have a date
+  assigned to them.  You can then filter by keyword.  There also are
+  several options for narrowing the list using various search
+  techniques.
++ And the =n= will offer you a combined view of the above.
+
 /2020-02-07: WORK IN PROGRESS/
 
 #+begin_src emacs-lisp
 (use-package org-agenda
   :config
-  (setq org-agenda-files
-        '("~/Org/tasks.org"))
   (setq org-agenda-window-setup 'current-window)
   (setq org-agenda-span 'week)
   (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (setq org-agenda-skip-deadline-prewarning-if-scheduled t)
   (setq org-agenda-sorting-strategy
         '((agenda deadline-up priority-down)
           (todo priority-down category-keep)
           (tags priority-down category-keep)
           ((search category-keep))))
+  (setq org-agenda-dim-blocked-tasks t)
   :bind ("C-c a" . org-agenda))
 #+end_src
 
@@ -2269,7 +2368,13 @@ respective headings.
     :CUSTOM_ID: h:88a2a57d-6181-4720-a64b-8a34286c26b2
     :END:
 
-/2020-02-04: WORK IN PROGRESS/
+These are just some basic settings that are particularly useful when
+inserting source code blocks.  I do not want Org to mess up with my
+indentation, while I need to see the native syntax highlighting for that
+language.
+
+The =org-src-window-setup= is accessed via the =C-c '= key once inside a
+code block that has a language assigned to it.
 
 #+begin_src emacs-lisp
 (use-package org-src
