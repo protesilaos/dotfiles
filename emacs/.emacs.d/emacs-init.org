@@ -4667,6 +4667,40 @@ being pressed and the command they call.
   (setq keycast-remove-tail-elements nil))
 #+end_src
 
+** Window divider mode
+   :PROPERTIES:
+   :CUSTOM_ID: h:6fb900e3-49db-4bc3-8a9e-cd88e020f15b
+   :END:
+
+This is a built-in mode that allows us to display configurable (and
+theme-able) window dividers.  Whereas the default is to draw a single
+pixel line using the primary foreground value of the current theme.
+
+The configurations below produce virtually the same results as with the
+generic window border, only the colour of the divider is less intense
+(has a grey colour compared to pure white/black).  Here is an excerpt of
+what I had to write about it in [[https://gitlab.com/protesilaos/modus-themes/commit/373178f8753ff9f2e90a751f2feb777743898dbb][commit 373178f8 to my Modus themes]]:
+
+#+begin_quote
+The default width of the divider is 6 pixels.  The first and last pixels
+are meant as narrow outlines that are drawn in a slightly more intense
+colour than the remaining 4 inner pixels.
+
+Due to the possibility of adjusting the thickness of the divider, plus
+the generous default width, the colours I have chosen are less intense
+than those used in the default window border (those are black on white
+and vice versa, as per the value of the `default' face).
+#+end_quote
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq window-divider-default-right-width 1)
+  (setq window-divider-default-bottom-width 1)
+  (setq window-divider-default-places 'right-only)
+  :hook (after-init . window-divider-mode))
+#+end_src
+
 * Custom movements and motions
   :PROPERTIES:
   :CUSTOM_ID: h:9aa933d2-70a9-426a-aeb2-2fa21bc67d97
