@@ -420,30 +420,24 @@ roman and italic variants.  Furthermore, I define several typeface
 options to cater to my evolving needs: they depend on the various
 contexts in which I must type in.
 
-+ On my laptop, I am using /Iosevka/ because of its compressed forms.  It
-  is ideal for smaller screens and/or whenever it is necessary to
-  economise on line length.  My preference is the variant with the slab
-  serifs.  I find it easier to read than the sans-serif equivalent, due
-  to the fact that some letter forms are thicker to accommodate the
-  serifs.
-+ When the laptop is connected to an external display, I opt for my
-  [[https://gitlab.com/protesilaos/hack-font-mod][custom build of the Hack typeface]].  This is a true workhorse of a
-  font.  It may not be the prettier, but it works well in practically
-  every context I have ever used it in.  The patches I have made to it
-  concern minor improvements that (i) bring Hack stylistically closer to
-  its DejaVu heritage, and (ii) refine the presentation of the italic
-  version, by using some varying glyphs for roman and italic variants
-  (for example, the dot inside the zero is turned into a diamond to keep
-  things consistent, since a slanted dotted zero is less decipherable
-  than its roman counterpart).
+I opt for my [[https://gitlab.com/protesilaos/hack-font-mod][custom build of the Hack typeface]].  This is a true
+workhorse of a font.  It may not be the prettier, but it works well in
+practically every context I have ever used it in.  The patches I have
+made to it concern minor improvements that (i) bring Hack stylistically
+closer to its DejaVu heritage, and (ii) refine the presentation of the
+italic version, by using some distinct glyphs for roman and italic
+variants (for example, the dot inside the zero is turned into a diamond
+to keep things consistent, since a slanted dotted zero is less
+decipherable than its roman counterpart).
 
 The functions that follow the pattern =prot/SCOPE-font= allow me to
-conveniently define the font I need to use.  A hook checks whether my
-screen real estate is that of a laptop or desktop and loads whatever is
-appropriate.  Whereas the =prot/screencast-font= is only used for
-presentations, following feedback I have received with regard to the
-size and overall readability of my fonts (the feedback concerned the
-Iosevka font that I used in a desktop context at the beginning of 2020).
+conveniently define the font I need to use in the given context.  A hook
+checks whether my screen real estate is that of a laptop or desktop and
+loads whatever is appropriate.  Whereas the =prot/screencast-font= is only
+used for presentations, following feedback I have received with regard
+to the size and overall readability of my fonts (the feedback concerned
+the Iosevka font that I used in a desktop context in and around the
+beginning of 2020).
 
 Each font declaration can accept several =fontconfig= parameters, as shown
 in =prot/fixed-pitch-params=.  Read the [[https://www.freedesktop.org/software/fontconfig/fontconfig-user.html][relevant spec]] for further details.
@@ -461,9 +455,6 @@ system per-user fonts are preferably read from =~/.local/share/fonts/=.
   (defconst prot/fixed-pitch-font "Hack"
     "The default fixed-pitch typeface.")
 
-  (defconst prot/fixed-pitch-font-alt "Iosevka Slab"
-    "The default fixed-pitch typeface (alt).")
-
   (defconst prot/fixed-pitch-params ":hintstyle=hintfull"
     "Fontconfig parameters for the fixed-pitch typeface.")
 
@@ -477,7 +468,7 @@ system per-user fonts are preferably read from =~/.local/share/fonts/=.
 small laptop monitor."
     (interactive)
     (when window-system
-	  (prot/font-family-size prot/fixed-pitch-font-alt 10.5)))
+	  (prot/font-family-size prot/fixed-pitch-font 10.5)))
 
   (defun prot/desktop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
