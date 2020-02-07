@@ -2153,6 +2153,10 @@ Now on to the miscellaneous settings:
   region is active, its text will be used for the link, subject to
   confirmation and further editing).  This is how I create the various
   internal links that point to other parts of this document.
++ With =org-loop-over-headlines-in-active-region= we can perform actions
+  such as tagging and scheduling on the items within the active region.
+  I configure it to only apply to headings of the same level, in order
+  to avoid possible inconveniences.
 
 /2020-02-07: WORK IN PROGRESS/
 
@@ -2217,25 +2221,25 @@ Now on to the miscellaneous settings:
 	      ("C" . "comment")))
   (setq org-catch-invisible-edits 'show)
   (setq org-return-follows-link nil)
+  (setq org-loop-over-headlines-in-active-region 'start-level)
   ;; disable keys I rely on for other tasks
   (define-key org-mode-map (kbd "<C-return>") nil)
   (define-key org-mode-map (kbd "<C-S-return>") nil)
   :bind (("C-c l" . org-store-link)))
 #+end_src
 
-**** TODO review Org's exporting facilities [0/2]            :emacs:wishlist:
+**** TODO review Org's exporting facilities [0/2]                     :emacs:
      :PROPERTIES:
      :CUSTOM_ID: h:ce9b2670-b2db-4bf3-bc7e-4995ef62679f
      :END:
-***** TODO research derived backends
+***** TODO research derived export backends                       :emacs:org:
       :PROPERTIES:
       :CUSTOM_ID: h:00ed7a50-84e4-444c-b127-89df423cfd0c
       :END:
-***** TODO automate webpage creation for dotemacs
+***** TODO automate webpage creation for dotemacs                 :emacs:org:
       :PROPERTIES:
       :CUSTOM_ID: h:88d804f6-0e3f-44c8-9218-585378d04f12
       :END:
-
 *** Org-capture templates
     :PROPERTIES:
     :CUSTOM_ID: h:7b88b89a-6eb3-4da3-a9fe-0e447300a250
@@ -3076,26 +3080,30 @@ By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][com
   :hook (dired-mode . gnus-dired-mode))
 #+end_src
 
-**** TODO Integrate contacts database and completion (BBDB)
+**** TODO Extend Gnus [0/5]                                       :emacs:gnus:
      :PROPERTIES:
-     :CUSTOM_ID: h:8b80841e-8981-469a-90db-df2b13627056
+     :CUSTOM_ID: h:357088a3-b88d-4928-9c8c-f6c5902421aa
      :END:
-**** TODO learn more about mail searching (nnir?, nnimap?)
-    :PROPERTIES:
-    :CUSTOM_ID: h:4f3fb8e0-8e53-4c9b-9623-01a2aa4a05fe
-    :END:
-**** TODO non-blocking RSS feeds (use topic scores?)
-     :PROPERTIES:
-     :CUSTOM_ID: h:61a91a5c-338d-4c1d-9f8c-f8ee321078a8
-     :END:
-**** TODO parse Atom feeds as well?
-     :PROPERTIES:
-     :CUSTOM_ID: h:812c503c-fbd8-40f5-ac5d-6cae20974cba
-     :END:
-**** TODO Try "org-msg" package to compose email in Org-mode
-     :PROPERTIES:
-     :CUSTOM_ID: h:d89808cb-70bb-42ff-b659-a22c6a7b31cd
-     :END:
+***** TODO Integrate contacts database and completion (BBDB)      :emacs:gnus:
+      :PROPERTIES:
+      :CUSTOM_ID: h:8b80841e-8981-469a-90db-df2b13627056
+      :END:
+***** TODO learn more about mail searching (nnir?, nnimap?)       :emacs:gnus:
+      :PROPERTIES:
+      :CUSTOM_ID: h:4f3fb8e0-8e53-4c9b-9623-01a2aa4a05fe
+      :END:
+***** TODO non-blocking RSS feeds (use topic scores?)             :emacs:gnus:
+      :PROPERTIES:
+      :CUSTOM_ID: h:61a91a5c-338d-4c1d-9f8c-f8ee321078a8
+      :END:
+***** TODO parse Atom feeds as well?                              :emacs:gnus:
+      :PROPERTIES:
+      :CUSTOM_ID: h:812c503c-fbd8-40f5-ac5d-6cae20974cba
+      :END:
+***** TODO Try "org-msg" package to compose email in Org-mode     :emacs:gnus:
+      :PROPERTIES:
+      :CUSTOM_ID: h:d89808cb-70bb-42ff-b659-a22c6a7b31cd
+      :END:
 *** Sending email (SMTP)
     :PROPERTIES:
     :CUSTOM_ID: h:2d793cf8-83f5-4830-b73d-78385d9b96dd
@@ -3603,14 +3611,6 @@ buffer that doubles as a library buffer (see
          ("<C-return>" . prot/bongo-library-insert-and-play-random)))
 #+end_src
 
-*** TODO read metadata
-    :PROPERTIES:
-    :CUSTOM_ID: h:f00519f1-6a03-40a7-b09f-bc3a44c78520
-    :END:
-*** TODO browse/search by metadata
-    :PROPERTIES:
-    :CUSTOM_ID: h:20b198e8-ac38-4fcd-9f76-1992aeb66cb4
-    :END:
 * Language settings (spelling, abbrevs, commenting…)
   :PROPERTIES:
   :CUSTOM_ID: h:8fc1f9ca-f5ae-407a-b721-aab414ca657b
