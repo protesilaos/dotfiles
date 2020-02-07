@@ -2176,7 +2176,7 @@ Now on to the miscellaneous settings:
   (setq org-refile-use-cache t)
   (setq org-reverse-note-order nil)
   (setq org-todo-keywords
-	    '((sequence "TODO(t)" "|" "DONE(D)" "CANCELLED(C")
+	    '((sequence "TODO(t)" "|" "DONE(D)" "CANCELLED(C)")
           (sequence "ACT(a)" "|" "ACTED(A)")
           (sequence "BUY(b)" "|" "BOUGHT(B)")
 	      (sequence "MEET(m)" "|" "MET(M)" "POSTPONED(P)")
@@ -2187,7 +2187,7 @@ Now on to the miscellaneous settings:
   (setq org-enforce-todo-checkbox-dependencies t)
   (setq org-track-ordered-property-with-tag t)
   (setq org-highest-priority ?A)
-  (setq org-lowest-priority ?C)
+  (setq org-lowest-priority ?B)
   (setq org-default-priority ?A)
   ;; code blocks
   (setq org-confirm-babel-evaluate nil)
@@ -2300,28 +2300,31 @@ respective headings.
 (use-package org-capture
   :config
   (setq org-capture-templates
-        '(("c" "Capture some actionable item" entry
+        '(("b" "Basic task" entry
+           (file+headline "tasks.org" "Basic tasks that need to be reviewed")
+           "* %?")
+          ("c" "Capture some actionable item" entry
            (file+headline "tasks.org" "Task list without a defined date")
-           "* TODO %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?")
-          ("t" "Task with a deadline (structured)" entry
+           "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?")
+          ("t" "Task of importance with a tag and a deadline" entry
            (file+headline "tasks.org" "Task list with a date")
-           "* %^{Scope of task|TODO [#A]|STUDY|MEET with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")
+           "* %^{Scope of task|TODO [#A]|STUDY [#A]|MEET [#A] with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")
           ("r" "Reply to an email" entry
            (file+headline "tasks.org" "Mail correspondence")
-           "* TODO [#B] %:subject :gnus:\n SCHEDULED: %t\n :PROPERTIES:\n :CONTEXT: %a\n :END:\n\n %i %?")
+           "* TODO [#B] %:subject\n SCHEDULED: %t\n :PROPERTIES:\n :CONTEXT: %a\n :END:\n\n %i %?")
           ("i" "Idea")
           ("ia" "Activity or event" entry
            (file+headline "ideas.org" "Activities or events")
-           "* ACT %^{Act about what}%? :private:event:\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
+           "* ACT %^{Act about what}%? :private:\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
           ("ie" "Essay or publication" entry
            (file+headline "ideas.org" "Essays or publications")
-           "* STUDY %^{Expound on which thesis}%? :private:write:\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
+           "* STUDY %^{Expound on which thesis}%? :private:\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")
           ("iv" "Video blog or screen cast" entry
            (file+headline "ideas.org" "Screen casts or vlogs")
-           "* RECORD %^{Record on what topic}%? :private:cast:\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")))
+           "* RECORD %^{Record on what topic}%? :private:\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i")))
   (setq org-capture-templates-contexts
         '(("r" ((in-mode . "gnus-article-mode")
-                 (in-mode . "gnus-summary-mode")))))
+                (in-mode . "gnus-summary-mode")))))
   :bind ("C-c c" . org-capture))
 #+end_src
 
