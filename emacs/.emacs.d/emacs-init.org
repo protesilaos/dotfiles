@@ -2187,7 +2187,7 @@ Now on to the miscellaneous settings:
   (setq org-enforce-todo-checkbox-dependencies t)
   (setq org-track-ordered-property-with-tag t)
   (setq org-highest-priority ?A)
-  (setq org-lowest-priority ?B)
+  (setq org-lowest-priority ?C)
   (setq org-default-priority ?A)
   ;; code blocks
   (setq org-confirm-babel-evaluate nil)
