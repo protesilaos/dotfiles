@@ -2440,10 +2440,12 @@ declarations.  The others are of secondary importance, though still very
 useful.
 
 Consider reviewing =nnmail-expiry-wait= only after you have some
-experience with Gnus.  As for the =message-citation-line-format=, its
-value is expanded into something like /"On 2020-01-29, 22:17 CET, PERSON
-wrote:"/.  To find about all the date-related specifiers, read the
-relevant documentation with =C-h v format-time-string=.
+experience with Gnus.
+
+As for the =message-citation-line-format=, its value is expanded into
+something like /"NAME <EMAIL> [2020-02-07, 13:47 +0100]:"/.  To find about
+all the date-related specifiers, read the relevant documentation with
+=C-h v format-time-string=.
 
 #+begin_src emacs-lisp
 (use-package auth-source
@@ -2458,7 +2460,7 @@ relevant documentation with =C-h v format-time-string=.
 
 (use-package message
   :config
-  (setq message-citation-line-format "On %Y-%m-%d, %R %Z, %f wrote:\n")
+  (setq message-citation-line-format "%f [%Y-%m-%d, %R %z]:\n")
   (setq message-citation-line-function
         'message-insert-formatted-citation-line)
   (setq message-kill-buffer-on-exit nil)
