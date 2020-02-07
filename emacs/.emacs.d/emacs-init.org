@@ -2060,6 +2060,21 @@ news reader, music players…  Anything you would normally see in a
 standalone application.  The end goal is to eventually integrate every
 aspect of my computing inside of Emacs.
 
+** Built-in calendar
+   :PROPERTIES:
+   :CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
+   :END:
+
+Some basic settings for this tool.  It is used by all Org-mode
+facilities that require date/time input (see following sections).
+
+#+begin_src emacs-lisp
+(use-package calendar
+  :config
+  (setq calendar-week-start-day 1)      ; Monday
+  (setq calendar-date-style 'iso))
+#+end_src
+
 ** Org-mode (personal information manager)
    :PROPERTIES:
    :CUSTOM_ID: h:4e8347de-415e-4804-b383-d61499e05ca1
