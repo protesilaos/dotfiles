@@ -2734,7 +2734,7 @@ formatting customisations concerning time units, it is better refer to
 the documentation of the function =format-time-string= to understand the
 meaning of the various date/time specifiers.
 
-**** Gnus account settings and essential
+**** Gnus account settings and essential configurations
      :PROPERTIES:
      :CUSTOM_ID: h:dc8811af-dec8-4ca8-a62e-0b500928d10b
      :END:
@@ -2803,7 +2803,7 @@ The "agent" is enabled here and configured in the [[#h:fccaadbb-ea22-4d1f-ae79-e
   :bind ("C-c m" . gnus))
 #+end_src
 
-**** Gnus agent (offline capabilities)
+**** Gnus agent
      :PROPERTIES:
      :CUSTOM_ID: h:fccaadbb-ea22-4d1f-ae79-ef1f45f3befa
      :END:
@@ -2813,11 +2813,10 @@ basically represents the bridge between our Gnus and the server to which
 it connects to.  Gnus is said to be "plugged" when a connection is
 established.  Else it is "unplugged".
 
-Technicalities aside, we basically use this to save a local copy of the
-items we have already fetched from the server.  We can also use the
-agent to configure the handling of local messages.  For example, we can
-set an expiry date, after which the message is deleted, or we can create
-a queue of outgoing messages when Gnus is in an unplugged state.
+Technicalities aside, we can use the agent to configure the handling of
+messages.  For example, we can set an expiry date, after which the
+message is deleted, or we can create a queue of outgoing messages when
+Gnus is in an unplugged state.
 
 #+begin_src emacs-lisp
 (use-package gnus-agent
