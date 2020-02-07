@@ -2056,10 +2056,9 @@ Also bear in mind that I define several other window motions.  Refer to
   :END:
 
 This section includes configurations for programs like email clients,
-news reader, music players…  Anything you would normally see in a GUI.
-It also configures the various "killer apps" of the Emacs ecosystem
-(those that did not fit in any of the other sections).  The end goal is
-to eventually integrate every aspect of my computing inside of Emacs.
+news reader, music players…  Anything you would normally see in a
+standalone application.  The end goal is to eventually integrate every
+aspect of my computing inside of Emacs.
 
 ** Org-mode (personal information manager)
    :PROPERTIES:
