@@ -2231,15 +2231,15 @@ Now on to the miscellaneous settings:
   :bind (("C-c l" . org-store-link)))
 #+end_src
 
-**** TODO review Org's exporting facilities [0/2]                     :emacs:
+**** TODO review Org's exporting facilities [0/2]                 :emacs:org:
      :PROPERTIES:
      :CUSTOM_ID: h:ce9b2670-b2db-4bf3-bc7e-4995ef62679f
      :END:
-***** TODO research derived export backends                       :emacs:org:
+***** TODO research derived export backends
       :PROPERTIES:
       :CUSTOM_ID: h:00ed7a50-84e4-444c-b127-89df423cfd0c
       :END:
-***** TODO automate webpage creation for dotemacs                 :emacs:org:
+***** TODO automate webpage creation for dotemacs
       :PROPERTIES:
       :CUSTOM_ID: h:88d804f6-0e3f-44c8-9218-585378d04f12
       :END:
@@ -3086,23 +3086,23 @@ By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][com
      :PROPERTIES:
      :CUSTOM_ID: h:357088a3-b88d-4928-9c8c-f6c5902421aa
      :END:
-***** TODO Integrate contacts database and completion (BBDB)      :emacs:gnus:
+***** TODO Integrate contacts database and completion (BBDB)
       :PROPERTIES:
       :CUSTOM_ID: h:8b80841e-8981-469a-90db-df2b13627056
       :END:
-***** TODO learn more about mail searching (nnir?, nnimap?)       :emacs:gnus:
+***** TODO learn more about mail searching (nnir?, nnimap?)
       :PROPERTIES:
       :CUSTOM_ID: h:4f3fb8e0-8e53-4c9b-9623-01a2aa4a05fe
       :END:
-***** TODO non-blocking RSS feeds (use topic scores?)             :emacs:gnus:
+***** TODO non-blocking RSS feeds (use topic scores?)
       :PROPERTIES:
       :CUSTOM_ID: h:61a91a5c-338d-4c1d-9f8c-f8ee321078a8
       :END:
-***** TODO parse Atom feeds as well?                              :emacs:gnus:
+***** TODO parse Atom feeds as well?
       :PROPERTIES:
       :CUSTOM_ID: h:812c503c-fbd8-40f5-ac5d-6cae20974cba
       :END:
-***** TODO Try "org-msg" package to compose email in Org-mode     :emacs:gnus:
+***** TODO Try "org-msg" package to compose email in Org-mode
       :PROPERTIES:
       :CUSTOM_ID: h:d89808cb-70bb-42ff-b659-a22c6a7b31cd
       :END:
