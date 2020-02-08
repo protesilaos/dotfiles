@@ -1001,12 +1001,13 @@ absolute paths.  Will need to test this further…
 #+begin_src emacs-lisp
 (use-package ivy-rich
   :ensure t
+  :after ivy
   :config
   (setq ivy-rich-path-style 'abbreviate)
 
   (setcdr (assq t ivy-format-functions-alist)
           #'ivy-format-function-line)
-  :hook (after-init . ivy-rich-mode))
+  (ivy-rich-mode 1))
 #+end_src
 
 **** Ivy posframe
@@ -1027,6 +1028,7 @@ this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
 #+begin_src emacs-lisp
 (use-package ivy-posframe
   :ensure t
+  :after ivy
   :delight
   :config
   (setq ivy-posframe-parameters
@@ -1034,7 +1036,7 @@ this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
           (right-fringe . 2)
           (internal-border-width . 2)
           ;; (font . "DejaVu Sans Mono-10.75:hintstyle=hintfull")
-))
+          ))
   (setq ivy-posframe-height-alist
         '((swiper . 15)
           (swiper-isearch . 15)
@@ -1044,7 +1046,7 @@ this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
           (swiper . nil)
           (swiper-isearch . nil)
           (t . ivy-posframe-display-at-frame-center)))
-  :hook (after-init . ivy-posframe-mode))
+  (ivy-posframe-mode 1))
 #+end_src
 
 ** Configurations or extensions for built-in commands
@@ -1902,6 +1904,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (window-width . 0.333)
            (side . right)
            (slot . 1))))
+  (setq window-combination-resize t)
   :bind (("s-n" . next-buffer)
          ("s-p" . previous-buffer)
          ("s-o" . other-window)
