@@ -2198,11 +2198,6 @@ Now on to the miscellaneous settings:
   (setq org-default-priority ?A)
   ;; code blocks
   (setq org-confirm-babel-evaluate nil)
-  ;; export
-  (setq org-export-with-toc t)
-  (setq org-export-headline-levels 8)
-  (setq org-export-backends
-	    '(ascii html latex md))
   ;; log
   (setq org-log-done 'time)
   (setq org-log-note-clock-out nil)
@@ -2231,18 +2226,6 @@ Now on to the miscellaneous settings:
   :bind (("C-c l" . org-store-link)))
 #+end_src
 
-**** TODO review Org's exporting facilities [0/2]                 :emacs:org:
-     :PROPERTIES:
-     :CUSTOM_ID: h:ce9b2670-b2db-4bf3-bc7e-4995ef62679f
-     :END:
-***** TODO research derived export backends
-      :PROPERTIES:
-      :CUSTOM_ID: h:00ed7a50-84e4-444c-b127-89df423cfd0c
-      :END:
-***** TODO automate webpage creation for dotemacs
-      :PROPERTIES:
-      :CUSTOM_ID: h:88d804f6-0e3f-44c8-9218-585378d04f12
-      :END:
 *** Org-capture templates
     :PROPERTIES:
     :CUSTOM_ID: h:7b88b89a-6eb3-4da3-a9fe-0e447300a250
@@ -2305,6 +2288,7 @@ respective headings.
 
 #+begin_src emacs-lisp
 (use-package org-capture
+  :after org
   :config
   (setq org-capture-templates
         '(("b" "Basic task" entry
@@ -2359,16 +2343,24 @@ Invoking =org-agenda= will present you with a list of possible options.
 
 #+begin_src emacs-lisp
 (use-package org-agenda
+  :after org
   :config
-  (setq org-agenda-window-setup 'current-window)
-  (setq org-agenda-span 'week)
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (setq org-agenda-additional-timestamps-same-entry t)
+  (setq org-agenda-include-diary nil)
+  (setq org-agenda-show-all-dates t)
+  (setq org-agenda-show-outline-path nil)
+  (setq org-agenda-skip-additional-timestamps-same-entry t)
+  (setq org-agenda-skip-additional-timestamps-same-entry t)
   (setq org-agenda-skip-deadline-prewarning-if-scheduled t)
-  (setq org-agenda-sorting-strategy
-        '((agenda deadline-up priority-down)
-          (todo priority-down category-keep)
-          (tags priority-down category-keep)
-          ((search category-keep))))
+  (setq org-agenda-skip-scheduled-delay-if-deadline t)
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-skip-timestamp-if-deadline-is-shown t)
+  (setq org-agenda-skip-timestamp-if-done t)
+  (setq org-agenda-span 3)
+  (setq org-agenda-start-on-weekday 1)  ; Monday
+  (setq org-agenda-timegrid-use-ampm nil)
+  (setq org-agenda-window-setup 'current-window)
   (setq org-agenda-dim-blocked-tasks t)
   :bind ("C-c a" . org-agenda))
 #+end_src
@@ -2388,6 +2380,7 @@ code block that has a language assigned to it.
 
 #+begin_src emacs-lisp
 (use-package org-src
+  :after org
   :config
   (setq org-src-window-setup 'current-window)
   (setq org-src-fontify-natively t)
@@ -2396,6 +2389,40 @@ code block that has a language assigned to it.
   (setq org-edit-src-content-indentation 0))
 #+end_src
 
+*** Org export
+    :PROPERTIES:
+    :CUSTOM_ID: h:6c06bd5e-7a3e-40fc-b7ca-60bbbbc6e769
+    :END:
+
+Org's "export" facility has the power to convert a =.org= file into a
+number of common formats, including =.pdf=.  I only ever use it to produce
+the HTML version of this document or similar tasks along those lines.
+In the future, I might spend some time leveraging its potential for more
+demanding workflows.
+
+#+begin_src emacs-lisp
+(use-package ox
+  :after org
+  :config
+  (setq org-export-with-toc t)
+  (setq org-export-headline-levels 8)
+  (setq org-export-backends
+	    '(ascii html latex md))
+  (setq org-export-dispatch-use-expert-ui t))
+#+end_src
+
+**** TODO review Org's exporting facilities [0/2]                 :emacs:org:
+     :PROPERTIES:
+     :CUSTOM_ID: h:ce9b2670-b2db-4bf3-bc7e-4995ef62679f
+     :END:
+***** TODO research derived export backends
+      :PROPERTIES:
+      :CUSTOM_ID: h:00ed7a50-84e4-444c-b127-89df423cfd0c
+      :END:
+***** TODO automate webpage creation for dotemacs
+      :PROPERTIES:
+      :CUSTOM_ID: h:88d804f6-0e3f-44c8-9218-585378d04f12
+      :END:
 *** Inherit theme styles in Org HTML export
     :PROPERTIES:
     :CUSTOM_ID: h:5b1d7d28-2cda-4ebb-9867-3fef9669d9f4
@@ -4160,10 +4187,10 @@ their development process, I am not using the MELPA packages directly.
           modus-operandi-theme-bold-constructs t
           modus-operandi-theme-proportional-fonts nil
           modus-operandi-theme-scale-headings nil
-          modus-operandi-theme-scale-1 1.1
-          modus-operandi-theme-scale-2 1.2
-          modus-operandi-theme-scale-3 1.3
-          modus-operandi-theme-scale-4 1.4)
+          modus-operandi-theme-scale-1 1.05
+          modus-operandi-theme-scale-2 1.1
+          modus-operandi-theme-scale-3 1.15
+          modus-operandi-theme-scale-4 1.2)
     (load-theme 'modus-operandi t))
 
   (defun prot/modus-vivendi ()
@@ -4172,10 +4199,10 @@ their development process, I am not using the MELPA packages directly.
           modus-vivendi-theme-bold-constructs t
           modus-vivendi-theme-proportional-fonts nil
           modus-vivendi-theme-scale-headings nil
-          modus-vivendi-theme-scale-1 1.1
-          modus-vivendi-theme-scale-2 1.2
-          modus-vivendi-theme-scale-3 1.3
-          modus-vivendi-theme-scale-4 1.4)
+          modus-vivendi-theme-scale-1 1.05
+          modus-vivendi-theme-scale-2 1.1
+          modus-vivendi-theme-scale-3 1.15
+          modus-vivendi-theme-scale-4 1.2)
     (load-theme 'modus-vivendi t))
 
   (defun prot/modus-themes-toggle ()
@@ -5376,6 +5403,7 @@ Keeps a record of actions involving the minibuffer.
   :config
   (setq savehist-file "~/.emacs.d/savehist")
   (setq history-length 10000)
+  (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
   (savehist-mode 1))
 #+end_src
