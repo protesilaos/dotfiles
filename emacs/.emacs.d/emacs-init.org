@@ -1016,8 +1016,10 @@ absolute paths.  Will need to test this further…
      :END:
 
 This package allows us to reposition Ivy's window anywhere inside of the
-Emacs frame.  Furthermore, it is possible to use this feature on a
-per-command basis, all while assigning a different height to each list.
+Emacs frame by placing it inside of a so-called "child frame", i.e. the
+"posframe".  Furthermore, it is possible to use this feature on a
+per-command basis, all while assigning a different height to each
+function.
 
 The =ivy-posframe-parameters= can be found in the source code of the main
 library.  Do =M-x find-library RET posframe RET= where =RET= means to hit
@@ -1049,7 +1051,7 @@ this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
   (ivy-posframe-mode 1))
 #+end_src
 
-** Configurations or extensions for built-in commands
+** Configurations for—or extensions to—built-in commands
    :PROPERTIES:
    :CUSTOM_ID: h:67dac9fe-5c15-437d-bb3e-26b293affa45
    :END:
@@ -1103,8 +1105,9 @@ functions =C-M-s= and =C-M-r= remain in tact.  You can toggle whitespace
 matching behaviour while performing a search, with =M-s SPC= (revert
 back to just literal spaces).
 
-Now on to some custom functions.  Here is an overview of what goes into
-this package declaration.
+Now on to some custom functions, all of which are derived from the
+source code of =isearch= (do it with =M-x find-library RET isearch RET=).
+Here is an overview of what goes into this package declaration.
 
 + Mark isearch match :: Replaces the default mark command following a
   successful search.  I prefer to mark the match.  This can be then
@@ -2583,7 +2586,7 @@ Note that I do not work in an office context, do not need HTML in my
 email, and do not try to come up with some fancy mechanism for updating
 my sources and notifying me of the results.  My approach is to update my
 sources manually: the idea is that if I have time to check my news, I
-also am able to act on it.  If you have more complex needs, you will
+also am able to act on them.  If you have more complex needs, you will
 definitely need to adapt things accordingly.  Still, this section
 contains lots of useful information to get you started.
 
@@ -4472,7 +4475,7 @@ depending on the tab size.  As such, I am disabling tabs by default.
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq-default tab-always-indent 'complete)
+  (setq-default tab-always-indent t)
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil))
 #+end_src
