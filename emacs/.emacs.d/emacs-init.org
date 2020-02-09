@@ -734,6 +734,7 @@ package declaration is but a piece of a greater whole.
 
 #+begin_src emacs-lisp
 (use-package ivy
+  :disabled
   :ensure t
   :delight
   :config
@@ -847,6 +848,7 @@ type something anyhow).
   (prescient-persist-mode 1))
 
 (use-package ivy-prescient
+  :disabled
   :ensure t
   :after (prescient ivy)
   :config
@@ -897,6 +899,7 @@ interplay and the full extent of my customisations.
 
 #+begin_src emacs-lisp
 (use-package counsel
+  :disabled
   :ensure t
   :after ivy
   :config
@@ -1029,6 +1032,7 @@ specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
 
 #+begin_src emacs-lisp
 (use-package projectile
+  :disabled
   :ensure t
   ;; :delight '(:eval (concat " " (projectile-project-name)))
   :delight
@@ -1039,6 +1043,7 @@ specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
   (setq projectile-completion-system 'ivy))
 
 (use-package counsel-projectile
+  :disabled
   :ensure t
   :config
   (add-to-list 'ivy-initial-inputs-alist '(counsel-projectile-switch-project . ""))
@@ -1067,6 +1072,7 @@ section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and s
 
 #+begin_src emacs-lisp
 (use-package swiper
+  :disabled
   :ensure t
   :after ivy
   :config
@@ -1107,6 +1113,7 @@ absolute paths.  Will need to test this further…
 
 #+begin_src emacs-lisp
 (use-package ivy-rich
+  :disabled
   :ensure t
   :after ivy
   :config
@@ -1136,6 +1143,7 @@ this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
 
 #+begin_src emacs-lisp
 (use-package ivy-posframe
+  :disabled
   :ensure t
   :after ivy
   :delight
