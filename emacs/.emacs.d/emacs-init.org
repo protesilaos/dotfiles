@@ -2047,27 +2047,35 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
         '(;; top side window
           ("\\*\\(Flycheck\\|Package-Lint\\).*"
            (display-buffer-in-side-window)
-           (window-height . 0.15)
+           (window-height . 0.16)
            (side . top)
            (slot . 0)
            (window-parameters . ((no-other-window . t))))
-          ;; bottom side window
-          (".*\\*Completions*"
+          ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|Messages\\)\\*"
            (display-buffer-in-side-window)
-           (window-height . 0.25)
+           (window-height . 0.16)
+           (side . top)
+           (slot . 1)
+           (window-parameters . ((no-other-window . t))))
+          ;; bottom side window
+          (".*\\*Completions.*"
+           (display-buffer-in-side-window)
+           (window-height . 0.16)
            (side . bottom)
-           (slot . -1)
+           (slot . 0)
            (window-parameters . ((no-other-window . t))))
           ("\\*e?shell.*"
            (display-buffer-in-side-window)
-           (window-height . 0.25)
-           (side . bottom)
-           (slot . 0))
-          ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|[Hh]elp\\|Messages\\)\\*"
-           (display-buffer-in-side-window)
-           (window-height . 0.25)
+           (window-height . 0.16)
            (side . bottom)
            (slot . 1))
+          ;; left side window
+          ("\\*Help.*"
+           (display-buffer-in-side-window)
+           (window-width . 0.20)       ; See the :hook
+           (side . left)
+           (slot . 0)
+           (window-parameters . ((no-other-window . t))))
           ;; right side window
           ("\\*Faces\\*"
            (display-buffer-in-side-window)
@@ -2083,6 +2091,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (side . right)
            (slot . 1))))
   (setq window-combination-resize t)
+  :hook (help-mode . visual-line-mode)
   :bind (("s-n" . next-buffer)
          ("s-p" . previous-buffer)
          ("s-o" . other-window)
@@ -2109,7 +2118,7 @@ plus a few concomitant extras."
                  (dired-noselect (vc-root-dir)))))
       (display-buffer-in-side-window
        dir `((side . left)
-             (slot . 0)
+             (slot . -1)
              (window-width . 0.16)
              (window-parameters . ((no-other-window . t)
                                    (no-delete-other-windows . t)
