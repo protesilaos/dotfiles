@@ -593,69 +593,92 @@ on the screen and more on how fast you can bring them into focus.
   (setq icomplete-with-completion-tables t)
   (fido-mode -1)
   (icomplete-mode 1)
+
+  (defun prot/focus-minibuffer ()
+    "Focus the active minibuffer.
+
+Bind this to `completion-list-mode-map' to easily switch between
+the list of candidates present in the \\*Completions\\* buffer
+and the minibuffer."
+    (interactive)
+    (when (active-minibuffer-window)
+      (select-window (active-minibuffer-window))))
+
+  (defun prot/icomplete-project-find-file ()
+    "Find file in current version-controlled project."
+    (interactive)
+    (let ((files (mapcar 'abbreviate-file-name
+                         (project-files (project-current)))))
+      (find-file
+       (completing-read "Open file in project: " files nil t))))
+
+  (defun prot/icomplete-recentf ()
+    "Open `recent-list' item in a new buffer."
+    (interactive)
+    (let ((files (mapcar 'abbreviate-file-name recentf-list)))
+      (find-file
+       (completing-read "Open recentf entry: " files nil t))))
+
+  (defun prot/icomplete-yank-kill-ring ()
+    "Insert at point the selected `kill-ring' item."
+    (interactive)
+    (insert
+     (completing-read "Open file: " kill-ring nil t)))
+
+  (defun prot/describe-symbol-at-point ()
+    "Get documentation for the symbol at point."
+    (interactive)
+    (let ((symbol (symbol-at-point)))
+      (when symbol
+        (describe-symbol symbol))))
+
+  ;; (defvar saved-window-configuration nil)
+  ;;
+  ;; (defun push-window-configuration ()
+  ;;   (interactive)
+  ;;   (push (current-window-configuration) saved-window-configuration))
+  ;;
+  ;; (defun pop-window-configuration ()
+  ;;   (interactive)
+  ;;   (let ((config (pop saved-window-configuration)))
+  ;;     (if config
+  ;;         (set-window-configuration config)
+  ;;       (if (> (length (window-list)) 1)
+  ;;           (delete-window)
+  ;;         (bury-buffer))))))
+
   :bind (("s-f" . find-file)
          ("s-F" . find-file-other-window)
          ("s-d" . dired)
          ("s-D" . dired-other-window)
          ("s-b" . switch-to-buffer)
          ("s-B" . switch-to-buffer-other-window)
+         ("s-h" . prot/describe-symbol-at-point)
+         ("s-v" . prot/focus-minibuffer)
+         ("s-y" . prot/icomplete-yank-kill-ring)
+         ("s-r" . prot/icomplete-recentf)
+         ("M-s f" . prot/icomplete-project-find-file)
          :map completion-list-mode-map
-         ("f" . describe-function)
-         ("v" . describe-variable)
+         ("h" . prot/describe-symbol-at-point)
+         ("M-v" . prot/focus-minibuffer)
          :map icomplete-minibuffer-map
-              ("<return>" . icomplete-fido-ret)
-              ("<delete>" . icomplete-fido-delete-char)
-              ("<C-k>" . icomplete-fido-kill)))
-
-;; What I used before switching to Ivy and then Icomplete…
-(use-package ido
-  :disabled
-  :config
-  (setq ido-everywhere t)
-  (setq ido-enable-flex-matching t)
-  (setq ido-enable-regexp nil)
-  (setq ido-enable-prefix nil)
-  (setq ido-all-frames nil)
-  (setq ido-buffer-disable-smart-matches t)
-  (setq ido-completion-buffer "*Ido Completions*")
-  (setq ido-completion-buffer-all-completions nil)
-  (setq ido-confirm-unique-completion nil)
-  (setq ido-create-new-buffer 'prompt)
-  (setq ido-default-buffer-method 'selected-window)
-  (setq ido-default-file-method 'selected-window)
-  (setq ido-enable-last-directory-history t)
-  (setq ido-use-filename-at-point nil)
-  (setq ido-use-url-at-point nil)
-  (setq ido-use-virtual-buffers t)
-  (setq ido-use-faces t)
-  (setq ido-max-window-height 1)
-  (setq ido-decorations
-        '(" "
-          "   "
-          " │ "
-          " │ …"
-          "["
-          "]"
-          " [No match]"
-          " [Matched]"
-          " [Not readable]"
-          " [Too big]"
-          " [Confirm]"
-          " "
-          " "))
-  (setq ido-auto-merge-work-directories-length -1)
-  (ido-mode -1)
-  :bind (("s-f" . ido-find-file)
-         ("s-F" . ido-find-file-other-window)
-         ("s-d" . ido-dired)
-         ("s-D" . ido-dired-other-window)
-         ("s-b" . ido-switch-buffer)
-         ("s-B" . ido-switch-buffer-other-window)
-         :map ido-common-completion-map
-         ("M-e" . ido-edit-input)
-         ("M-r" . ido-toggle-regexp)))
+         ("<return>" . icomplete-force-complete-and-exit)))
 #+end_src
 
+**** TODO Icomplete expansion [3/10]                        :emacs:icomplete:
+***** DONE kill ring
+      CLOSED: [2020-02-09 Sun 12:11]
+***** DONE recentf
+      CLOSED: [2020-02-09 Sun 12:11]
+***** DONE Project integration
+      CLOSED: [2020-02-09 Sun 14:18]
+***** TODO [#A] How to get current completion?
+***** TODO [#B] vc-git-grep without too many prompts?
+***** TODO [#B] grep+replace (occur? in project)?
+***** TODO [#C] show key bindings
+***** TODO [#C] current and total count
+***** TODO [#C] functions on current-completion like describe-symbol
+***** STUDY project-combine-directories?
 *** Ivy/Counsel/Swiper plus filtering and scoring
     :PROPERTIES:
     :CUSTOM_ID: h:d76e14b0-2002-4efa-8fef-cb3cd42d3d80
