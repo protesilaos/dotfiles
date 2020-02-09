@@ -557,6 +557,104 @@ the optimal way of using Emacs is through searching and narrowing
 selection candidates.  Spend less time worrying about where things are
 on the screen and more on how fast you can bring them into focus.
 
+*** Icomplete (built-in completion interface)
+
+#+begin_src emacs-lisp
+(use-package minibuffer
+  :config
+  (setq completion-cycle-threshold 4)
+  ;; (setq completion-extra-properties
+  (setq completion-flex-nospace nil)
+  (setq completion-pcm-complete-word-inserts-delimiters t)
+  (setq completion-pcm-word-delimiters "-_./:| ")
+  (setq completion-styles '(substring partial-completion flex))
+  (setq completion-category-overrides '((file (styles partial-completion basic))
+                                        (info-menu (styles basic))
+                                        (buffer (styles flex))))
+  (setq completions-format 'vertical)     ; *Completions*
+  (setq enable-recursive-minibuffers nil)
+  (setq read-answer-short t)
+  (setq read-buffer-completion-ignore-case t)
+  (setq read-file-name-completion-ignore-case t)
+  (file-name-shadow-mode 1)
+  (minibuffer-electric-default-mode 1))
+
+(use-package icomplete
+  :demand
+  :config
+  (setq icomplete-compute-delay 0.5)
+  (setq icomplete-delay-completions-threshold 100)
+  (setq icomplete-hide-common-prefix t)
+  (setq icomplete-max-delay-chars 2)
+  (setq icomplete-prospects-height 1)
+  (setq icomplete-separator " │ ")
+  (setq icomplete-show-matches-on-no-input nil)
+  (setq icomplete-with-completion-tables t)
+  (fido-mode -1)
+  (icomplete-mode 1)
+  :bind (("s-f" . find-file)
+         ("s-F" . find-file-other-window)
+         ("s-d" . dired)
+         ("s-D" . dired-other-window)
+         ("s-b" . switch-to-buffer)
+         ("s-B" . switch-to-buffer-other-window)
+         :map completion-list-mode-map
+         ("f" . describe-function)
+         ("v" . describe-variable)
+         :map icomplete-minibuffer-map
+              ("<return>" . icomplete-fido-ret)
+              ("<delete>" . icomplete-fido-delete-char)
+              ("<C-k>" . icomplete-fido-kill)))
+
+;; What I used before switching to Ivy and then Icomplete…
+(use-package ido
+  :disabled
+  :config
+  (setq ido-everywhere t)
+  (setq ido-enable-flex-matching t)
+  (setq ido-enable-regexp nil)
+  (setq ido-enable-prefix nil)
+  (setq ido-all-frames nil)
+  (setq ido-buffer-disable-smart-matches t)
+  (setq ido-completion-buffer "*Ido Completions*")
+  (setq ido-completion-buffer-all-completions nil)
+  (setq ido-confirm-unique-completion nil)
+  (setq ido-create-new-buffer 'prompt)
+  (setq ido-default-buffer-method 'selected-window)
+  (setq ido-default-file-method 'selected-window)
+  (setq ido-enable-last-directory-history t)
+  (setq ido-use-filename-at-point nil)
+  (setq ido-use-url-at-point nil)
+  (setq ido-use-virtual-buffers t)
+  (setq ido-use-faces t)
+  (setq ido-max-window-height 1)
+  (setq ido-decorations
+        '(" "
+          "   "
+          " │ "
+          " │ …"
+          "["
+          "]"
+          " [No match]"
+          " [Matched]"
+          " [Not readable]"
+          " [Too big]"
+          " [Confirm]"
+          " "
+          " "))
+  (setq ido-auto-merge-work-directories-length -1)
+  (ido-mode -1)
+  :bind (("s-f" . ido-find-file)
+         ("s-F" . ido-find-file-other-window)
+         ("s-d" . ido-dired)
+         ("s-D" . ido-dired-other-window)
+         ("s-b" . ido-switch-buffer)
+         ("s-B" . ido-switch-buffer-other-window)
+         :map ido-common-completion-map
+         ("M-e" . ido-edit-input)
+         ("M-r" . ido-toggle-regexp)))
+#+end_src
+
 *** Ivy/Counsel/Swiper plus filtering and scoring
     :PROPERTIES:
     :CUSTOM_ID: h:d76e14b0-2002-4efa-8fef-cb3cd42d3d80
@@ -1883,6 +1981,12 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (slot . 0)
            (window-parameters . ((no-other-window . t))))
           ;; bottom side window
+          (".*\\*Completions*"
+           (display-buffer-in-side-window)
+           (window-height . 0.25)
+           (side . bottom)
+           (slot . -1)
+           (window-parameters . ((no-other-window . t))))
           ("\\*e?shell.*"
            (display-buffer-in-side-window)
            (window-height . 0.25)
