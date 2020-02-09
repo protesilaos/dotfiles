@@ -568,11 +568,12 @@ on the screen and more on how fast you can bring them into focus.
   (setq completion-pcm-complete-word-inserts-delimiters t)
   (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-styles '(substring partial-completion flex))
-  (setq completion-category-overrides '((file (styles partial-completion basic))
-                                        (info-menu (styles basic))
-                                        (buffer (styles flex))))
+  (setq completion-category-overrides
+        '((file (styles partial-completion basic))
+          (info-menu (styles basic))
+          (buffer (styles flex))))
   (setq completions-format 'vertical)     ; *Completions*
-  (setq enable-recursive-minibuffers nil)
+  (setq enable-recursive-minibuffers t)
   (setq read-answer-short t)
   (setq read-buffer-completion-ignore-case t)
   (setq read-file-name-completion-ignore-case t)
@@ -582,13 +583,13 @@ on the screen and more on how fast you can bring them into focus.
 (use-package icomplete
   :demand
   :config
-  (setq icomplete-compute-delay 0.5)
+  (setq icomplete-compute-delay 1)
   (setq icomplete-delay-completions-threshold 100)
   (setq icomplete-hide-common-prefix t)
   (setq icomplete-max-delay-chars 2)
   (setq icomplete-prospects-height 1)
   (setq icomplete-separator " │ ")
-  (setq icomplete-show-matches-on-no-input nil)
+  (setq icomplete-show-matches-on-no-input t)
   (setq icomplete-with-completion-tables t)
   (fido-mode -1)
   (icomplete-mode 1)
