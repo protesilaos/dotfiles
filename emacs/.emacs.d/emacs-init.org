@@ -559,50 +559,60 @@ on the screen and more on how fast you can bring them into focus.
 
 *** Icomplete (built-in completion interface)
 
+A note about the design of =prot/icomplete-toggle-vertical= and its
+companion =prot/icomplete-restore-horizontal=: they both set variables
+using the values I prefer, but I can tell that this is not a robust
+solution, as changing those variables would mess up with their
+expectations.  I might eventually configure them to read the initial
+values first and then act without prejudice to the user setting.
+
 #+begin_src emacs-lisp
 (use-package minibuffer
   :config
-  (setq completion-cycle-threshold 4)
+  (setq completion-cycle-threshold 3)
   ;; (setq completion-extra-properties
   (setq completion-flex-nospace nil)
   (setq completion-pcm-complete-word-inserts-delimiters t)
   (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-styles '(substring partial-completion flex))
   (setq completion-category-overrides
-        '((file (styles partial-completion basic))
-          (info-menu (styles basic))
-          (buffer (styles flex))))
+        '((file (styles initials flex partial-completion))
+          (info-menu (styles substring basic))
+          (buffer (styles initials flex))))
   (setq completions-format 'vertical)     ; *Completions*
   (setq enable-recursive-minibuffers t)
   (setq read-answer-short t)
   (setq read-buffer-completion-ignore-case t)
   (setq read-file-name-completion-ignore-case t)
+
   (file-name-shadow-mode 1)
   (minibuffer-electric-default-mode 1))
 
 (use-package icomplete
   :demand
   :config
-  (setq icomplete-compute-delay 1)
   (setq icomplete-delay-completions-threshold 100)
-  (setq icomplete-hide-common-prefix t)
-  (setq icomplete-max-delay-chars 2)
+  (setq icomplete-max-delay-chars 4)
+  (setq icomplete-compute-delay 0.3)
+  (setq icomplete-show-matches-on-no-input t)
+  (setq icomplete-hide-common-prefix nil)
   (setq icomplete-prospects-height 1)
   (setq icomplete-separator " │ ")
-  (setq icomplete-show-matches-on-no-input t)
   (setq icomplete-with-completion-tables t)
+  (setq icomplete-in-buffer nil)
   (fido-mode -1)
   (icomplete-mode 1)
 
   (defun prot/focus-minibuffer ()
     "Focus the active minibuffer.
 
-Bind this to `completion-list-mode-map' to easily switch between
-the list of candidates present in the \\*Completions\\* buffer
-and the minibuffer."
+Bind this to `completion-list-mode-map' to M-v to easily jump
+between the list of candidates present in the \\*Completions\\*
+buffer and the minibuffer."
     (interactive)
-    (when (active-minibuffer-window)
-      (select-window (active-minibuffer-window))))
+    (let ((mini (active-minibuffer-window)))
+      (when mini
+        (select-window mini))))
 
   (defun prot/icomplete-project-find-file ()
     "Find file in current version-controlled project."
@@ -613,17 +623,22 @@ and the minibuffer."
        (completing-read "Open file in project: " files nil t))))
 
   (defun prot/icomplete-recentf ()
-    "Open `recent-list' item in a new buffer."
+    "Open `recent-list' item in a new buffer.
+
+The user's $HOME directory is abbreviated as a tilde."
     (interactive)
     (let ((files (mapcar 'abbreviate-file-name recentf-list)))
       (find-file
        (completing-read "Open recentf entry: " files nil t))))
 
   (defun prot/icomplete-yank-kill-ring ()
-    "Insert at point the selected `kill-ring' item."
+    "Insert the selected `kill-ring' item directly at point.
+
+In case of long matches, you might want to consider the use of
+`prot/icomplete-toggle-vertical'."
     (interactive)
     (insert
-     (completing-read "Open file: " kill-ring nil t)))
+     (completing-read "Yank from kill ring: " kill-ring nil t)))
 
   (defun prot/describe-symbol-at-point ()
     "Get documentation for the symbol at point."
@@ -632,6 +647,34 @@ and the minibuffer."
       (when symbol
         (describe-symbol symbol))))
 
+  (defun prot/icomplete-toggle-vertical ()
+    "Toggle vertical view for `icomplete'.
+
+This is intended as a temporary adjustment of the layout,
+possibly to read a list of long names.  It is for this reason
+that `prot/icomplete-restore-horizontal' exists and is called by
+the `minibuffer-exit-hook'."
+    (interactive)
+    (let ((mini (active-minibuffer-window)))
+      (when mini
+        (if (not (string= icomplete-separator "\n "))
+            (progn
+              (setq-local icomplete-prospects-height 10)
+              (setq-local icomplete-separator "\n ")
+              (setq-local resize-mini-windows 'grow-only))
+          (setq icomplete-prospects-height 1)
+          (setq icomplete-separator " │ ")
+          (setq-local resize-mini-windows t)))))
+
+  (defun prot/icomplete-restore-horizontal ()
+    "Restore the effects of `prot/icomplete-toggle-vertical'.
+
+This is meant to be run by the `minibuffer-exit-hook'."
+    (unless (string= icomplete-separator " │ ")
+      (setq icomplete-prospects-height 1)
+      (setq icomplete-separator " │ ")))
+
+  :hook (minibuffer-exit . prot/icomplete-restore-horizontal)
   :bind (("s-f" . find-file)
          ("s-F" . find-file-other-window)
          ("s-d" . dired)
@@ -645,24 +688,35 @@ and the minibuffer."
          ("M-s f" . prot/icomplete-project-find-file)
          :map completion-list-mode-map
          ("h" . prot/describe-symbol-at-point)
-         ("M-v" . prot/focus-minibuffer)
+         ("n" . next-line)
+         ("p" . previous-line)
+         ("f" . next-completion)
+         ("b" . previous-completion)
+         ("M-v" . prot/focus-minibuffer) ; Icomplete has the same
          :map icomplete-minibuffer-map
-         ("<return>" . icomplete-force-complete-and-exit)))
+         ("C-n" . icomplete-forward-completions)
+         ("<right>" . icomplete-forward-completions)
+         ("C-p" . icomplete-backward-completions)
+         ("<left>" . icomplete-backward-completions)
+         ("<return>" . icomplete-force-complete-and-exit)
+         ("M-i" . icomplete-force-complete)
+         ("C-M-|" . prot/icomplete-toggle-vertical)))
 #+end_src
 
-**** TODO Icomplete expansion [3/10]                        :emacs:icomplete:
-***** DONE kill ring
+**** TODO Icomplete expansions [3/11]                       :emacs:icomplete:
+***** DONE kill ring yank
       CLOSED: [2020-02-09 Sun 12:11]
-***** DONE recentf
+***** DONE recentf with abbreviated path
       CLOSED: [2020-02-09 Sun 12:11]
-***** DONE Project integration
+***** DONE Basic project integration
       CLOSED: [2020-02-09 Sun 14:18]
-***** TODO [#A] How to get current completion?
+***** TODO [#A] How to get current match in the most efficient way?
 ***** TODO [#B] vc-git-grep without too many prompts?
 ***** TODO [#B] grep+replace (occur? in project)?
 ***** TODO [#C] show key bindings
+***** TODO [#C] show docstrings, annotations?
 ***** TODO [#C] current and total count
-***** TODO [#C] functions on current-completion like describe-symbol
+***** TODO [#C] functions on current-completion (kill, describe…)
 ***** STUDY project-combine-directories?
 *** Ivy/Counsel/Swiper plus filtering and scoring
     :PROPERTIES:
