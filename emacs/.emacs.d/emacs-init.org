@@ -2724,7 +2724,7 @@ respective headings.
            "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?" :immediate-finish t)
           ("t" "Task of importance with a tag and a deadline" entry
            (file+headline "tasks.org" "Task list with a date")
-           "* %^{Scope of task|TODO [#A]|STUDY [#A]|MEET [#A] with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")
+           "* %^{Scope of task||TODO [#A]|STUDY [#A]|MEET with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")
           ("r" "Reply to an email" entry
            (file+headline "tasks.org" "Mail correspondence")
            "* TODO [#B] %:subject\n SCHEDULED: %t\n :PROPERTIES:\n :CONTEXT: %a\n :END:\n\n %i %?")
