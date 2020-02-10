@@ -238,18 +238,20 @@ official manual and relevant documentation.  This is necessary to make
 an informed decision about what is actually missing and what could be
 improved further.
 
-External packages that I do use are either a clear upgrade over the
-defaults or otherwise extend the functionality of what is already
-available.  For example, =magit= is the superior choice for working with
-git, while =Ivy= offers a richer experience than that of either
-=ido-mode= or =icomplete=.
+The process of learning the internals of Emacs means that I will, at
+times, write my own elisp functions.  External packages that I do use
+are either a clear upgrade over the defaults or otherwise extend the
+functionality of what is already available.  You will not find any
+superficialities herein: no rainbow-coloured mode lines, no icons,
+nothing.
 
-Though a former Vim user, I decided *not* to use =evil-mode= or any kind
-of Vi emulation.  I wanted to do things differently in order to
-ultimately set on the best approach going forward.  I have eventually
-settled on a system that builds on top of the "Emacs way" to key
-bindings.  I believe that a mnemonics-based set of keys is easier to
-memorise and to expand considerably (also see [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][my use of the Super key]]).
+Though a former Vim user, I decided *not* to use =evil-mode= or any kind of
+Vi emulation.  I wanted to do things differently in order to ultimately
+set on the best approach going forward.  I have eventually settled on a
+system that builds on top of the "Emacs way" to key bindings.  I believe
+that a mnemonics-based set of keys is easier to memorise and to expand
+considerably, especially in light of Emacs' multitude of applications
+/beyond/ the narrow confines of editing text.
 
 ** Note about the use of the Super key
    :PROPERTIES:
@@ -262,6 +264,10 @@ some commercial keyboards.  In most cases, those key bindings are
 alternative ways of invoking /common commands/ that are by default bound
 to otherwise awkward key chords.  The original keys will continue to
 function as intended (for example, =C-x o= is also =s-o=).
+
+To find all my keybindings of this sort in the source code version of
+this document from inside of Emacs, do =M-s o= (or =M-x occur=) followed by
+the pattern ="s-[a-z]"=.
 
 Note that your choice of desktop environment might render some of these
 useless.  The DE will simply intercept the key chord before it is ever
@@ -586,6 +592,9 @@ may still need to see the code and customisations I had for those, thus
 *I am keeping everything in place* with the =:disabled= keyword.
 
 *** Minibuffer essentials and Icomplete (built-in completion)
+    :PROPERTIES:
+    :CUSTOM_ID: h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7
+    :END:
 
 The minibuffer is the locus of extended command interaction.  Whether it
 is about offering input to a prompt, performing a search, executing a
@@ -627,7 +636,9 @@ Now some comments about my implementation:
   start something in the minibuffer, switch to another window, call the
   minibuffer again, run some commands, and then move back to what you
   initiated in the original minibuffer.  To exit such recursive edits,
-  hit =C-]= (=abort-recursive-edit=).
+  hit =C-]= (=abort-recursive-edit=).  The =minibuffer-depth-indicate-mode=
+  will show an indicator next to the minibuffer prompt if a recursive
+  edit is in progress.
 + The values of all variables that pertain to the delay of feedback are
   tentative.  My initial tests suggest that they behave exactly the way
   I want, but this might change once I test them further.
@@ -669,6 +680,9 @@ I have here.
         '((file (styles initials flex partial-completion))
           (buffer (styles substring flex))
           (info-menu (styles substring basic))))
+  (setq completion-at-point-functions   ; EXPERIMENTAL
+        '(dabbrev-completion
+          tags-completion-at-point-function))
   (setq completions-format 'vertical)     ; *Completions* buffer
   (setq enable-recursive-minibuffers t)
   (setq read-answer-short t)
@@ -676,6 +690,7 @@ I have here.
   (setq read-file-name-completion-ignore-case t)
 
   (file-name-shadow-mode 1)
+  (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
 
   (defun prot/describe-symbol-at-point ()
@@ -690,11 +705,33 @@ I have here.
 
 Bind this to `completion-list-mode-map' to M-v to easily jump
 between the list of candidates present in the \\*Completions\\*
-buffer and the minibuffer."
+buffer and the minibuffer (because M-v switches to the
+completions if invoked from inside the minibuffer."
     (interactive)
     (let ((mini (active-minibuffer-window)))
       (when mini
         (select-window mini))))
+
+  (defun prot/focus-minibuffer-or-completions ()
+    "Focus the active minibuffer or the \\*Completions\\*.
+
+If both the minibuffer and the Completions are present, this
+command will first move per invocation to the former, then the
+latter, and then continue to switch between the two.
+
+The continuous switch is essentially the same as running
+`prot/focus-minibuffer' and `switch-to-completions' in
+succession."
+    (interactive)
+    (let* ((mini (active-minibuffer-window))
+           (completions (get-buffer-window "*Completions*")))
+      (cond ((and mini
+                  (not (minibufferp)))
+             (select-window mini nil))
+            ((and completions
+                  (not (eq (selected-window)
+                           completions)))
+             (select-window completions nil)))))
 
   :bind (("s-f" . find-file)
          ("s-F" . find-file-other-window)
@@ -703,7 +740,7 @@ buffer and the minibuffer."
          ("s-b" . switch-to-buffer)
          ("s-B" . switch-to-buffer-other-window)
          ("s-h" . prot/describe-symbol-at-point)
-         ("s-v" . prot/focus-minibuffer)
+         ("s-v" . prot/focus-minibuffer-or-completions)
          :map completion-list-mode-map
          ("h" . prot/describe-symbol-at-point)
          ("n" . next-line)
@@ -723,17 +760,10 @@ buffer and the minibuffer."
   (setq icomplete-prospects-height 1)
   (setq icomplete-separator " │ ")
   (setq icomplete-with-completion-tables t)
-  (setq icomplete-in-buffer nil)
+  (setq icomplete-in-buffer t)
+
   (fido-mode -1)                        ; Emacs 27.1
   (icomplete-mode 1)
-
-  (defun prot/icomplete-project-find-file ()
-    "Find file in current version-controlled project."
-    (interactive)
-    (let ((files (mapcar 'abbreviate-file-name
-                         (project-files (project-current)))))
-      (find-file
-       (completing-read "Open file in project: " files nil t))))
 
   (defun prot/icomplete-recentf ()
     "Open `recent-list' item in a new buffer.
@@ -748,13 +778,13 @@ The user's $HOME directory is abbreviated as a tilde."
     "Insert the selected `kill-ring' item directly at point.
 
 In case of long matches, you might want to consider the use of
-`prot/icomplete-toggle-vertical'."
+`prot/icomplete-toggle-vertical' (EXPERIMENTAL)."
     (interactive)
     (insert
      (completing-read "Yank from kill ring: " kill-ring nil t)))
 
   (defun prot/icomplete-toggle-vertical ()
-    "Toggle vertical view for `icomplete'.
+    "EXPERIMENTAL Toggle vertical view for `icomplete'.
 
 This is intended as a temporary adjustment of the layout,
 possibly to read a list of long names.  It is for this reason
@@ -789,14 +819,13 @@ This is meant to be run by the `minibuffer-exit-hook'."
     (if (eq (car completion-styles) 'partial-completion)
         (progn
           (setq-local completion-styles '(flex substring partial-completion))
-          (message "Prioritising flex matches"))
+          (message "%s" (propertize "Prioritising FLEX" 'face 'highlight)))
       (setq-local completion-styles '(partial-completion substring flex))
-      (message "Prioritising regexp matches")))
+      (message "%s" (propertize "Prioritising REGEXP" 'face 'highlight))))
 
   :hook (minibuffer-exit . prot/icomplete-restore-horizontal)
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
          ("s-r" . prot/icomplete-recentf)
-         ("M-s f" . prot/icomplete-project-find-file)
          :map icomplete-minibuffer-map
          ("C-n" . icomplete-forward-completions)
          ("<right>" . icomplete-forward-completions)
@@ -808,34 +837,111 @@ This is meant to be run by the `minibuffer-exit-hook'."
          ("C-M-." . prot/icomplete-toggle-flex)))
 #+end_src
 
-**** TODO Icomplete expansions and wishlist [5/18]          :emacs:icomplete:
+**** TODO Icomplete expansions and wishlist [4/11]          :emacs:icomplete:
+     :PROPERTIES:
+     :CUSTOM_ID: h:a54af17d-ce97-497b-a816-207af23f4da3
+     :END:
 ***** DONE kill ring yank
       CLOSED: [2020-02-09 Sun 12:11]
+      :PROPERTIES:
+      :CUSTOM_ID: h:f39ef2fe-f47a-4dc8-aecc-ed697e8863fc
+      :END:
 ***** DONE recentf with abbreviated path
       CLOSED: [2020-02-09 Sun 12:11]
-***** DONE Project integration for files
-      CLOSED: [2020-02-09 Sun 14:18]
+      :PROPERTIES:
+      :CUSTOM_ID: h:63c7fc41-f8b9-4094-9d56-83121e4495c3
+      :END:
 ***** DONE vertical view toggle
       CLOSED: [2020-02-10 Mon 07:53]
+      :PROPERTIES:
+      :CUSTOM_ID: h:69535b15-10e2-480f-91a9-629ea9ff1e7c
+      :END:
 ***** DONE regexp/flex toggle
       CLOSED: [2020-02-10 Mon 07:53]
-***** TODO [#A] Find project buffers
-***** TODO [#A] Find projects
-***** TODO [#A] How to get current match in the most efficient way?
+      :PROPERTIES:
+      :CUSTOM_ID: h:96ef8f87-1b1d-4404-9fe4-78f7b9073bde
+      :END:
+***** TODO [#A] How to get current icomplete match in the most efficient way?
+      :PROPERTIES:
+      :CUSTOM_ID: h:03d4396a-8693-49c5-8fa6-71bdd6a46b56
+      :END:
 ***** TODO [#B] functions on current-completion (kill, describe…)
-***** TODO [#B] vc-git-grep without too many prompts?
-***** TODO [#B] grep+replace (occur? in project)?
+      :PROPERTIES:
+      :CUSTOM_ID: h:6b8853ee-496c-4015-9e12-8beebb99b9db
+      :END:
 ***** TODO [#C] show key bindings?
+      :PROPERTIES:
+      :CUSTOM_ID: h:5b6b2719-bec4-4e26-85b5-6d271859e3c5
+      :END:
 ***** TODO [#C] show docstrings, annotations in Completions?
+      :PROPERTIES:
+      :CUSTOM_ID: h:29a11856-f67a-468a-a65d-ba31b58868f7
+      :END:
 ***** TODO [#C] current and total count of candidates?
+      :PROPERTIES:
+      :CUSTOM_ID: h:f45069ea-595f-4d00-a089-8bc380d18905
+      :END:
 ***** TODO [#C] minibuffer indicator for completion style?
-***** STUDY project-combine-directories?
-***** STUDY M-x find-library vc-git (and relevant)
-***** STUDY Do we need AMX or Prescient?
-*** Ivy/Counsel/Swiper plus filtering and scoring
+      :PROPERTIES:
+      :CUSTOM_ID: h:5e3ed4ac-508a-4e71-9cab-83e3b9e07b83
+      :END:
+***** STUDY Do we need AMX or Prescient or savehist is okay?
+      :PROPERTIES:
+      :CUSTOM_ID: h:b8461794-ed06-4200-89a2-117076919c5a
+      :END:
+*** Projectile (completion and extras for projects)
+    :PROPERTIES:
+    :CUSTOM_ID: h:7862f39e-aed0-4d02-9f1e-60c4601a9734
+    :END:
+
+These are a set of commands for interacting with projects.  A "project"
+is a version-controlled directory or one that is manually declared as
+such by an empty =.projectile= file at its root.
+
+Practically all the functions I need from the =projectile= library involve
+minibuffer completion and thus rely on the set of configurations from
+the previous section on [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]].
+
+The disabled =:delight= statement customises the minor mode's presentation
+to only show the project's name.  For non-project buffers, a dash
+appears instead.  However, it is disabled in favour of not showing
+anything at all in the minor mode list.
+
+#+begin_src emacs-lisp
+(use-package projectile
+  :ensure t
+  ;; :delight '(:eval (concat " " (projectile-project-name)))
+  :delight
+  :config
+  (setq projectile-project-search-path '("~/Git/Projects/"))
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-enable-caching t)
+  (setq projectile-completion-system 'default) ; Allows `icomplete'
+  (setq projectile-use-git-grep t)
+  (setq projectile-switch-project-action
+        'projectile-dired)
+  :bind (("M-s b" . projectile-switch-to-buffer)
+         ("M-s d" . projectile-find-dir)
+         ("M-s f" . projectile-find-file)
+         ("M-s g" . projectile-grep)
+         ("M-s r" . projectile-ripgrep)
+         ("M-s p" . projectile-switch-project)))
+#+end_src
+
+*** DEPRECATED Ivy/Counsel/Swiper plus filtering and scoring
     :PROPERTIES:
     :CUSTOM_ID: h:d76e14b0-2002-4efa-8fef-cb3cd42d3d80
     :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
 
 This is a suite of tools that enhance several aspects of the Emacs
 experience.  Basically we have:
@@ -852,10 +958,20 @@ experience.  Basically we have:
 + =swiper= is a tool for performing searches, powered by Ivy, all while
   presenting a preview of the results.
 
-**** Configurations for Ivy
+**** DEPRECATED Configurations for Ivy
      :PROPERTIES:
      :CUSTOM_ID: h:ba8cd15e-97b8-40e1-804e-2badaca14c1d
      :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
 
 A few highlights of my configurations in the subsequent code block:
 
@@ -902,7 +1018,7 @@ package declaration is but a piece of a greater whole.
 
 #+begin_src emacs-lisp
 (use-package ivy
-  :disabled
+  :disabled                             ; switched to `icomplete'
   :ensure t
   :delight
   :config
@@ -946,38 +1062,20 @@ package declaration is but a piece of a greater whole.
          ("<C-return>" . ivy-occur-press)))
 #+end_src
 
-**** DEPRECATED AMX (M-x history and matches)
-     :PROPERTIES:
-     :CUSTOM_ID: h:0ec97e10-e18d-4313-8f7b-3a202324d74c
-     :END:
-
-*UPDATE 2019-12-06:* I am deprecating =amx= in favour of =prescient=.
-See [[#h:87b37547-5941-4f20-baf6-4d00cde1151a][Prescient's package declaration]].  This section will be removed in
-the near future.
-
-The =amx= package enhances the minibuffer experience, by tracking the
-history of commands and ranking them automagically.  I once thought it
-was only meant to be used with Ido, but upon closer inspection I
-realised otherwise.  Great!  Counsel leverages AMX's features
-without any further intervention.
-
-#+begin_src emacs-lisp
-(use-package amx
-  :ensure t
-  :disabled
-  :after ivy
-  :config
-  (setq amx-backend 'auto)
-  (setq amx-save-file "~/.emacs.d/amx-items")
-  (setq amx-history-length 50)
-  (setq amx-show-key-bindings nil)
-  :hook (after-init . amx-mode))
-#+end_src
-
-**** Prescient (sort, filter results)
+**** DEPRECATED Prescient (sort, filter results)
      :PROPERTIES:
      :CUSTOM_ID: h:87b37547-5941-4f20-baf6-4d00cde1151a
      :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
 
 This tool provides a filtering and scoring system that can interface
 with Ivy.  It is a replacement for =amx=.
@@ -1008,6 +1106,7 @@ type something anyhow).
 
 #+begin_src emacs-lisp
 (use-package prescient
+  :disabled                             ; switched to `icomplete'
   :ensure t
   :config
   (setq prescient-history-length 200)
@@ -1016,7 +1115,7 @@ type something anyhow).
   (prescient-persist-mode 1))
 
 (use-package ivy-prescient
-  :disabled
+  :disabled                             ; switched to `icomplete'
   :ensure t
   :after (prescient ivy)
   :config
@@ -1033,10 +1132,20 @@ type something anyhow).
   (ivy-prescient-mode 1))
 #+end_src
 
-**** Counsel configurations and key bindings
+**** DEPRECATED Counsel configurations and key bindings
      :PROPERTIES:
      :CUSTOM_ID: h:919f942a-f99d-437f-b010-af21264246f3
      :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
 
 A few things to consider about the settings in this sub-section:
 
@@ -1067,7 +1176,7 @@ interplay and the full extent of my customisations.
 
 #+begin_src emacs-lisp
 (use-package counsel
-  :disabled
+  :disabled                             ; switched to `icomplete'
   :ensure t
   :after ivy
   :config
@@ -1168,17 +1277,15 @@ repository, then the corresponding root is used instead."
       :CUSTOM_ID: h:1dd71ddc-994d-420b-9aaf-26741aaf20cd
       :END:
 
-These are a set of commands for interacting with projects, by leveraging
-the =projectile= library.  A "project" is a version-controlled directory
-or one that is manually declared as such by an empty =.projectile= file at
-its root.  Either way, projects are placed inside a filesystem path,
-which I declare in =projectile-project-search-path= (this could actually
-be a list).
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
 
-The disabled =:delight= statement customises the minor mode's presentation
-to only show the project's name.  For non-project buffers, a dash
-appears instead.  However, it is disabled in favour of not showing
-anything at all in the minor mode list.
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
 
 I only really need a handful of commands from this setup, namely the
 ability to switch between buffers or directories in a project and to
@@ -1199,19 +1306,8 @@ While the =ivy-initial-inputs-alist= extends the variable that is
 specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
 
 #+begin_src emacs-lisp
-(use-package projectile
-  :disabled
-  :ensure t
-  ;; :delight '(:eval (concat " " (projectile-project-name)))
-  :delight
-  :config
-  (setq projectile-project-search-path '("~/Git/Projects/"))
-  (setq projectile-indexing-method 'alien)
-  (setq projectile-enable-caching t)
-  (setq projectile-completion-system 'ivy))
-
 (use-package counsel-projectile
-  :disabled
+  :disabled                             ; switched to `icomplete'
   :ensure t
   :config
   (add-to-list 'ivy-initial-inputs-alist '(counsel-projectile-switch-project . ""))
@@ -1224,10 +1320,20 @@ specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
                       (counsel-projectile-switch-project 4)))))
 #+end_src
 
-**** Swiper commands and settings
+**** DEPRECATED Swiper commands and settings
      :PROPERTIES:
      :CUSTOM_ID: h:8b7f982b-911f-4437-a448-b7288855fbda
      :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
 
 This is the search tool that is powered by Ivy.  I use it to get an
 overview of the matching candidates when performing a more complex
@@ -1240,7 +1346,7 @@ section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and s
 
 #+begin_src emacs-lisp
 (use-package swiper
-  :disabled
+  :disabled                             ; switched to `icomplete'
   :ensure t
   :after ivy
   :config
@@ -1254,34 +1360,44 @@ section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and s
          ("M-%" . swiper-query-replace)))
 #+end_src
 
-*** Ivy extensions
-    :PROPERTIES:
-    :CUSTOM_ID: h:93cb57d4-b4ea-4431-8a95-f0437bc4206f
-    :END:
-
-These tools build on the foundation of Ivy and friends.
-
-**** Ivy rich
+**** DEPRECATED Ivy extensions
      :PROPERTIES:
-     :CUSTOM_ID: h:fe6839a7-f6cd-48c8-bf6e-d4d8519d02fc
+     :CUSTOM_ID: h:93cb57d4-b4ea-4431-8a95-f0437bc4206f
      :END:
 
-With this package we can make good use of the plenty of empty space left
-by Ivy's default presentation of its items.  It enhances several
-commands, providing each of them with additional information that is
-pertinent to the task at hand.  For example, =M-x= contains function
-descriptions, while the buffer list includes information about the major
-mode and file system path of the items.
+ These tools build on the foundation of Ivy and friends.
 
-The =ivy-rich-path-style= offers an abbreviation of the file system path
-that an item is referring to.  So far, the only noticeable difference
-over an absolute value is the use of the tilde (=~=) instead of
-=/home/USER/= in the buffer list.  Whereas =recentf= continues to display
-absolute paths.  Will need to test this further…
+***** Ivy rich
+      :PROPERTIES:
+      :CUSTOM_ID: h:fe6839a7-f6cd-48c8-bf6e-d4d8519d02fc
+      :END:
 
-#+begin_src emacs-lisp
+ *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+ uses the built-in =icomplete= tool.  All deprecated packages contain the
+ special =:disabled= keyword.  For the new system, refer to the previous
+ sections:
+
+ + [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
+ + [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+ *Below is the latest state of these settings prior to the switch.*
+
+ With this package we can make good use of the plenty of empty space left
+ by Ivy's default presentation of its items.  It enhances several
+ commands, providing each of them with additional information that is
+ pertinent to the task at hand.  For example, =M-x= contains function
+ descriptions, while the buffer list includes information about the major
+ mode and file system path of the items.
+
+ The =ivy-rich-path-style= offers an abbreviation of the file system path
+ that an item is referring to.  So far, the only noticeable difference
+ over an absolute value is the use of the tilde (=~=) instead of
+ =/home/USER/= in the buffer list.  Whereas =recentf= continues to display
+ absolute paths.  Will need to test this further…
+
+ #+begin_src emacs-lisp
 (use-package ivy-rich
-  :disabled
+  :disabled                             ; switched to `icomplete'
   :ensure t
   :after ivy
   :config
@@ -1290,28 +1406,38 @@ absolute paths.  Will need to test this further…
   (setcdr (assq t ivy-format-functions-alist)
           #'ivy-format-function-line)
   (ivy-rich-mode 1))
-#+end_src
+ #+end_src
 
-**** Ivy posframe
-     :PROPERTIES:
-     :CUSTOM_ID: h:fe69c898-3d58-4c7f-a870-3cc1b9ac438c
-     :END:
+***** Ivy posframe
+      :PROPERTIES:
+      :CUSTOM_ID: h:fe69c898-3d58-4c7f-a870-3cc1b9ac438c
+      :END:
 
-This package allows us to reposition Ivy's window anywhere inside of the
-Emacs frame by placing it inside of a so-called "child frame", i.e. the
-"posframe".  Furthermore, it is possible to use this feature on a
-per-command basis, all while assigning a different height to each
-function.
+ *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+ uses the built-in =icomplete= tool.  All deprecated packages contain the
+ special =:disabled= keyword.  For the new system, refer to the previous
+ sections:
 
-The =ivy-posframe-parameters= can be found in the source code of the main
-library.  Do =M-x find-library RET posframe RET= where =RET= means to hit
-the Return key in order to proceed.  In one of the parameters I show how
-to define a font that is different from what would normally be used (see
-this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
+ + [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
+ + [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
 
-#+begin_src emacs-lisp
+ *Below is the latest state of these settings prior to the switch.*
+
+ This package allows us to reposition Ivy's window anywhere inside of the
+ Emacs frame by placing it inside of a so-called "child frame", i.e. the
+ "posframe".  Furthermore, it is possible to use this feature on a
+ per-command basis, all while assigning a different height to each
+ function.
+
+ The =ivy-posframe-parameters= can be found in the source code of the main
+ library.  Do =M-x find-library RET posframe RET= where =RET= means to hit
+ the Return key in order to proceed.  In one of the parameters I show how
+ to define a font that is different from what would normally be used (see
+ this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
+
+ #+begin_src emacs-lisp
 (use-package ivy-posframe
-  :disabled
+  :disabled                             ; switched to `icomplete'
   :ensure t
   :after ivy
   :delight
@@ -1347,11 +1473,13 @@ shipped with Emacs.
    :CUSTOM_ID: h:b67687ee-25a3-4bf4-a924-180ccb63c629
    :END:
 
+The built-in search mechanism is a thing of beauty: minimal in its
+presentation, powerful in its applications.
+
 I use =isearch= all the time for quick navigation, either to a visible
-part of the buffer or to some specific string I am aware of.  It also
-is essential when used in the context of a keyboard macro.  For me
-Swiper, [[#h:8b7f982b-911f-4437-a448-b7288855fbda][which I also declare in this document]], can never be optimal
-for those uses.
+part of the buffer or to some specific string I am aware of.  It also is
+essential when used in the context of a keyboard macro, as demonstrated
+in my video about [[https://protesilaos.com/codelog/2020-01-21-emacs-isearch-kmacro/][Isearch powers in keyboard macros]] (2020-01-21).
 
 Run =C-h k C-s= to get an /awesome/ help menu with all the extra keys
 you can use with =isearch=.  These are the ones I use the most:
@@ -1381,12 +1509,11 @@ using Emacs' narrowing techniques, such as =narrow-to-region=.
 In the package declaration below, the combined effect of the variables
 for whitespace is a valuable hack: typing a space is the same as
 inserting a wildcard, which is much more useful as far as I am
-concerned.  It basically behaves the same way as Swiper: a single space
-represents a wildcard that matches items in a non-greedy fashion.  *This
-concerns regular searches* (the standard =C-s= and =C-r=).  The regexp
-functions =C-M-s= and =C-M-r= remain in tact.  You can toggle whitespace
-matching behaviour while performing a search, with =M-s SPC= (revert
-back to just literal spaces).
+concerned.  A single space represents a wildcard that matches items in a
+non-greedy fashion.  *This concerns regular searches* (the standard =C-s=
+and =C-r=).  The regexp functions =C-M-s= and =C-M-r= remain in tact.  You can
+always toggle whitespace matching behaviour while performing a search,
+with =M-s SPC= (revert back to just literal spaces).
 
 Now on to some custom functions, all of which are derived from the
 source code of =isearch= (do it with =M-x find-library RET isearch RET=).
@@ -1502,7 +1629,7 @@ To learn more about regular expressions, read the relevant pages in
 the official manual.  Assuming you have this installed properly on
 your system, run =C-h r i regexp= to get to the starting chapter.
 
-Also watch my ~35 minute-long [[https://protesilaos.com/codelog/2020-01-23-emacs-regexp-primer/][primer on Emacs regexp]] (2019-01-23).
+Also watch my ~35 minute-long [[https://protesilaos.com/codelog/2020-01-23-emacs-regexp-primer/][primer on Emacs regexp]] (2020-01-23).
 
 Emacs offers a built-in package for practising regular expressions.
 By default, =re-builder= uses Emacs-style escape notation, in the form
@@ -2320,18 +2447,15 @@ create a new window.  I do not want that.
     :CUSTOM_ID: h:4337228f-7ee5-4f59-b435-61534538c66f
     :END:
 
-The default Emacs distribution is very weak on window management.  While
-its notion of the "other window" is appropriate for two-window layouts,
-it becomes a constraint whenever more windows need to be displayed on
-the frame.
-
 With =ace-window= (from the developer of Ivy/Counsel/Swiper…) we can
 both enhance the movement between windows, but also perform additional
 actions to them.  These are listed in =aw-dispatch-list=.  Note that the
 keys in that list must not conflict with those in =aw-keys=.
 
-Also bear in mind that I define several other window motions.  Refer to
-[[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Basic tweaks for windows]] and [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][Window history and directional motions]].
+Make sure to also refer to the previous sections on:
+
++ [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]].
++ [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][Window history and directional motions]].
 
 #+begin_src emacs-lisp
 (use-package ace-window
@@ -2597,7 +2721,7 @@ respective headings.
            "* %?")
           ("c" "Capture some actionable item" entry
            (file+headline "tasks.org" "Task list without a defined date")
-           "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?")
+           "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?" :immediate-finish t)
           ("t" "Task of importance with a tag and a deadline" entry
            (file+headline "tasks.org" "Task list with a date")
            "* %^{Scope of task|TODO [#A]|STUDY [#A]|MEET [#A] with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")
@@ -3484,7 +3608,7 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
 + Do not provide verbose output about indexing operations.
 + Update manually, because I anyway interact with email only when I
   have time to check it.
-+ Use my selected completion framework (Ido, Ivy…) where relevant.
++ Use my selected completion framework where relevant.
 + Define my signature and include it in new messages.
 + Specify the directory where mail is stored.  This is where
   =offlineimap= is configured to place its findings.  Each email
@@ -3583,15 +3707,16 @@ prompt: you can re-run a command on the scroll-back buffer by just
 hitting =RET= while point is on its line (no need to go back to the end
 and cycle the command history with =M-p= or =M-n=).
 
-Note that I am well aware of =eshell=.  I read the manual and checked
-lots of configurations about it.  I still do not see a major
-improvement over Bash, notwithstanding the significant downside of
-having to learn the idiosyncrasies of yet another tool.  Besides, many
-of the features of =eshell= are already available inside of Emacs and
-are accessible via more appropriate interfaces (e.g. =find-file= or
-=dired= powered by a completion framework like =ido-mode= or =ivy=).  The
-shell has to behave consistently whether I run it inside of Emacs, in
-Xterm, or just a TTY.  Everything else introduces friction.
+Note that I am well aware of =eshell=.  I read the manual and checked lots
+of configurations about it.  I still do not see a major improvement over
+Bash, notwithstanding the significant downside of having to learn the
+idiosyncrasies of yet another tool.  Besides, many of the features of
+=eshell= are already available inside of Emacs and are accessible via more
+appropriate interfaces (e.g. =find-file= or =dired= powered by a completion
+framework like the one I specify in a previous section of this document
+about [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]]).  The shell has to behave
+consistently whether I run it inside of Emacs, in Xterm, or just a TTY.
+Everything else introduces friction.
 
 Run =C-h m= inside of a shell buffer to learn about all the key bindings
 and corresponding functions.
@@ -3681,7 +3806,7 @@ standard CLI, a =dmenu= interface, a graphical front-end like =qtpass=, etc.
 
 The package below provides an Emacs interface to some of the most common
 actions, in the form of a list of candidates that can be narrowed down
-(such as with Ivy, Ido).  I use it to quickly store a password to the
+(such as with =icomplete=).  I use it to quickly store a password to the
 kill ring.
 
 #+begin_src emacs-lisp
@@ -4348,8 +4473,7 @@ Overview of the following settings.
   Select them with =M-NUM=.
 + Control how results are sorted once they are collected from all the
   relevant backends.  What I have in =company-transformers= works fine for
-  me.  Also note that =company-prescient= adds its own transformer to the
-  top of the list (see [[#h:763a4a35-62a2-4fc5-9ba4-4d2212aa7fe4][relevant section]]).
+  me.
 + Align annotations to the right.  This concerns certain backends that
   display additional information for their candidates.  This keeps
   things nice and tidy.
@@ -4410,24 +4534,6 @@ Now a few words about the key bindings:
                ("<C-tab>" . company-complete-common-or-cycle)
                ("C-n" . company-select-next)
                ("C-p" . company-select-previous))))
-#+end_src
-
-*** Prescient filtering for Company
-    :PROPERTIES:
-    :CUSTOM_ID: h:763a4a35-62a2-4fc5-9ba4-4d2212aa7fe4
-    :END:
-
-The =prescient= package provides scoring and filtering mechanisms for
-completion candidates.  I am using it in tandem with Ivy (see the
-[[#h:87b37547-5941-4f20-baf6-4d00cde1151a][relevant section]]).  Here I declare the extension for =company=.
-
-#+begin_src emacs-lisp
-(use-package company-prescient
-  :ensure t
-  :after (company prescient)
-  :config
-  (add-to-list 'company-transformers 'company-prescient-transformer)
-  (company-prescient-mode 1))
 #+end_src
 
 ** Eldoc (elisp live documentation feedback)
@@ -4767,13 +4873,24 @@ I believe tabs, in the sense of inserting the tab character, are best
 suited for indentation.  While spaces are superior at precisely aligning
 text.  However, I understand that elisp uses its own approach, which I
 do not want to interfere with.  Also, Emacs tends to perform alignments
-by mixing tabs with spaces, which *can actually lead to misalignments*
-depending on the tab size.  As such, I am disabling tabs by default.
+by mixing tabs with spaces, which /can actually lead to misalignments/
+depending on certain variables such as the size of the tab.  As such, I
+am disabling tabs by default.
+
+If there ever is a need to use different settings in other modes, we can
+customise them via hooks.  This is not an issue I have encountered yet
+and am therefore refraining from solving a problem that does not affect
+me.
+
+The =tab-always-indent= is here defined to have a context-dependent
+behaviour, where it will attempt to complete the thing at point if no
+further indentation operations can be performed.  For more on the
+underlying mechanism, refer to [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
 
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq-default tab-always-indent t)
+  (setq-default tab-always-indent 'complete)
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil))
 #+end_src
@@ -5519,12 +5636,8 @@ This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_
   :END:
 
 This section contains configurations for packages that are dedicated to
-the task of recording the state of various Emacs tools.  As such, this
-section does not cover packages that may define functionality beyond the
-narrow confines of tracking and storing history.  For example, Ivy's
-filtering mechanism (=prescient=) defines its own saved state, but it
-would not make sense to declare here, since it also plugs into various
-Ivy-specific items.
+the task of recording the state of various Emacs tools, such as the
+history of the minibuffer or the list of recently-visited files.
 
 ** Persistent session
    :PROPERTIES:
@@ -5710,7 +5823,7 @@ check my [[*Minibuffer essentials and Icomplete (built-in completion)][configura
   (savehist-mode 1))
 #+end_src
 
-*** Point (cursor position)
+*** Record cursor position
     :PROPERTIES:
     :CUSTOM_ID: h:ae1cad56-c12c-4bd5-a5cc-e85c0ad4b978
     :END:
