@@ -555,38 +555,162 @@ abcdefghijklmnopqrstuvwxyz
 As discussed in my video about [[https://protesilaos.com/codelog/2019-08-18-emacs-buffers-windows/][Emacs' buffer and window management]],
 the optimal way of using Emacs is through searching and narrowing
 selection candidates.  Spend less time worrying about where things are
-on the screen and more on how fast you can bring them into focus.
+on the screen and more on how fast you can bring them into focus.  This
+is, of course, a matter of realigning priorities, as we still wish to
+control every aspect of the interface.
 
-*** Icomplete (built-in completion interface)
+Since the day I switched to Emacs (July 2019), I was using some
+completion framework other than the default.  I started out with =ivy= and
+its companion packages, switched to the built-in =ido= and then went back
+to the former.  I never experimented with any sort of customisations to
+the generic minibuffer experience.  Nor did I ever bother with the
+oldest built-in tool of the sort (=icomplete=) that is designed to
+complement the minibuffer's internal mechanisms for matching items.  Not
+until ~10 February 2020…
 
-A note about the design of =prot/icomplete-toggle-vertical= and its
-companion =prot/icomplete-restore-horizontal=: they both set variables
-using the values I prefer, but I can tell that this is not a robust
-solution, as changing those variables would mess up with their
-expectations.  I might eventually configure them to read the initial
-values first and then act without prejudice to the user setting.
+It turns out that, despite appearances to the contrary, the defaults are
+very powerful, opening up a range of possibilities to those eager to
+learn and experiment (a common theme in Emacs).
+
+In the following package declarations I am defining several functions
+that enhance the experience of =icomplete=.  These are part of a learning
+process to (i) explore the internal of Emacs and study how various
+problems are solved with elisp, and (ii) determine how far one can go,
+in terms of efficient functionality, without deviating from the norms
+inherent to the tools that are shipped with Emacs.
+
+What this also means is that *I am deprecating Ivy and its dependants* as
+well as reviewing any other package that expected their presence or
+somehow contributed to them.  I do understand, however, that some users
+may still need to see the code and customisations I had for those, thus
+*I am keeping everything in place* with the =:disabled= keyword.
+
+*** Minibuffer essentials and Icomplete (built-in completion)
+
+The minibuffer is the locus of extended command interaction.  Whether it
+is about offering input to a prompt, performing a search, executing a
+function by its name, the minibuffer remains at the epicentre.  The
+default experience is far more powerful than it seems to be.  It can get
+even better by tweaking the available customisation options and defining
+our own extensions.
+
+While =icomplete= is the tool that offers incremental completion feedback
+for what the minibuffer is doing (where appropriate).  There is no added
+layer of complexity.  Just a visualisation of what is going on under the
+hood.  As such, =icomplete= is designed with the generic minibuffer in
+mind.  The two are meant to work in tandem in accordance with the design
+conventions of the upstream Emacs distribution.
+
+Now some comments about my implementation:
+
++ The key bindings in the pattern of =s-KEY= follow the principles I
+  outlined in my introductory [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note about the use of the Super key]].
++ The =flex= option in =completion-styles= and relevant places is only
+  available for Emacs versions after 27.  As of this writing
+  (2020-02-10) the current stable release is 26.3.
++ The =completion-category-overrides= provide exceptions to the fallback
+  completion styles.  In that list, the =file= category applies to finding
+  files and directories.
++ The =completions-format= concerns the layout of the =*Completions*= buffer
+  that pops up after trying to complete a non-unique match.  It can be
+  focused directly with =M-v= while inside an =icomplete= prompt.
++ To enhance the experience of the Completions buffer, I define several
+  keys that make motions easier and consistent with other read-only
+  interfaces.  The =h= key calls a command of mine for seeking help for
+  the item at point, typically a function or a variable.  I also define
+  =M-v= to take you back to the minibuffer while inside the =*Completions*=
+  (and =s-v= to do it from anywhere else).
+  - The placement of the Completions, Help, and other buffers is defined
+    in detail in the section about [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]],
+    specifically within the =display-buffer-alist=.
++ I enable recursive minibuffers.  This practically means that you can
+  start something in the minibuffer, switch to another window, call the
+  minibuffer again, run some commands, and then move back to what you
+  initiated in the original minibuffer.  To exit such recursive edits,
+  hit =C-]= (=abort-recursive-edit=).
++ The values of all variables that pertain to the delay of feedback are
+  tentative.  My initial tests suggest that they behave exactly the way
+  I want, but this might change once I test them further.
++ For versions of Emacs above 27, there is a mode called =fido= (Fake IDO,
+  where =ido= is an alternative option).  This changes some of the primary
+  key bindings and commands of =icomplete= so that it meets the
+  expectations of Ido users.  It is not meant as a fully fledged
+  replacement for Ido, as its scope is much narrower (for the time
+  being).  If you are curious, check the source code for both =icomplete=
+  and =ido= with =M-x find-library=.
++ All my functions that somehow extend the functionality of Icomplete
+  have their own documentation.  No need to reproduce it here.  Some
+  other ideas about possible extensions are included in the task list
+  after the package declarations.
+
+An *important note* about every =prot/icomplete-*= function that contains a
+=setq= in its body: the way the variables are declared is not robust,
+because it assumes default values that may not exist.  I am aware that
+it is possible to perform tests inside a =setq= and return their result,
+but this added complexity is not needed for my case: I am aware of this
+limitation, plus I know the default values of those variables and do not
+need to fiddle with them.  Some examples of better toggle design can be
+found with =M-x find-library isearch=.
+
+Also check my configurations pertaining to the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].  I am
+still not sure whether we need a scoring mechanism like =prescient= or
+=amx=.  Perhaps we do, in which case I will make sure they work with what
+I have here.
 
 #+begin_src emacs-lisp
 (use-package minibuffer
   :config
   (setq completion-cycle-threshold 3)
-  ;; (setq completion-extra-properties
   (setq completion-flex-nospace nil)
   (setq completion-pcm-complete-word-inserts-delimiters t)
   (setq completion-pcm-word-delimiters "-_./:| ")
-  (setq completion-styles '(substring partial-completion flex))
-  (setq completion-category-overrides
+  (setq completion-styles '(partial-completion substring flex))
+  (setq completion-category-overrides   ; flex requires >= Emacs 27
         '((file (styles initials flex partial-completion))
-          (info-menu (styles substring basic))
-          (buffer (styles initials flex))))
-  (setq completions-format 'vertical)     ; *Completions*
+          (buffer (styles substring flex))
+          (info-menu (styles substring basic))))
+  (setq completions-format 'vertical)     ; *Completions* buffer
   (setq enable-recursive-minibuffers t)
   (setq read-answer-short t)
   (setq read-buffer-completion-ignore-case t)
   (setq read-file-name-completion-ignore-case t)
 
   (file-name-shadow-mode 1)
-  (minibuffer-electric-default-mode 1))
+  (minibuffer-electric-default-mode 1)
+
+  (defun prot/describe-symbol-at-point ()
+    "Get documentation (help) for the symbol at point."
+    (interactive)
+    (let ((symbol (symbol-at-point)))
+      (when symbol
+        (describe-symbol symbol))))
+
+  (defun prot/focus-minibuffer ()
+    "Focus the active minibuffer.
+
+Bind this to `completion-list-mode-map' to M-v to easily jump
+between the list of candidates present in the \\*Completions\\*
+buffer and the minibuffer."
+    (interactive)
+    (let ((mini (active-minibuffer-window)))
+      (when mini
+        (select-window mini))))
+
+  :bind (("s-f" . find-file)
+         ("s-F" . find-file-other-window)
+         ("s-d" . dired)
+         ("s-D" . dired-other-window)
+         ("s-b" . switch-to-buffer)
+         ("s-B" . switch-to-buffer-other-window)
+         ("s-h" . prot/describe-symbol-at-point)
+         ("s-v" . prot/focus-minibuffer)
+         :map completion-list-mode-map
+         ("h" . prot/describe-symbol-at-point)
+         ("n" . next-line)
+         ("p" . previous-line)
+         ("f" . next-completion)
+         ("b" . previous-completion)
+         ("M-v" . prot/focus-minibuffer)))
 
 (use-package icomplete
   :demand
@@ -600,19 +724,8 @@ values first and then act without prejudice to the user setting.
   (setq icomplete-separator " │ ")
   (setq icomplete-with-completion-tables t)
   (setq icomplete-in-buffer nil)
-  (fido-mode -1)
+  (fido-mode -1)                        ; Emacs 27.1
   (icomplete-mode 1)
-
-  (defun prot/focus-minibuffer ()
-    "Focus the active minibuffer.
-
-Bind this to `completion-list-mode-map' to M-v to easily jump
-between the list of candidates present in the \\*Completions\\*
-buffer and the minibuffer."
-    (interactive)
-    (let ((mini (active-minibuffer-window)))
-      (when mini
-        (select-window mini))))
 
   (defun prot/icomplete-project-find-file ()
     "Find file in current version-controlled project."
@@ -640,20 +753,16 @@ In case of long matches, you might want to consider the use of
     (insert
      (completing-read "Yank from kill ring: " kill-ring nil t)))
 
-  (defun prot/describe-symbol-at-point ()
-    "Get documentation for the symbol at point."
-    (interactive)
-    (let ((symbol (symbol-at-point)))
-      (when symbol
-        (describe-symbol symbol))))
-
   (defun prot/icomplete-toggle-vertical ()
     "Toggle vertical view for `icomplete'.
 
 This is intended as a temporary adjustment of the layout,
 possibly to read a list of long names.  It is for this reason
 that `prot/icomplete-restore-horizontal' exists and is called by
-the `minibuffer-exit-hook'."
+the `minibuffer-exit-hook'.
+
+NOTE: there still needs to be a way to show the minibuffer input
+on its own line while also displaying the list of candidates."
     (interactive)
     (let ((mini (active-minibuffer-window)))
       (when mini
@@ -674,25 +783,20 @@ This is meant to be run by the `minibuffer-exit-hook'."
       (setq icomplete-prospects-height 1)
       (setq icomplete-separator " │ ")))
 
+  (defun prot/icomplete-toggle-flex ()
+    "Toggle between flex and partial-completion (regexp)."
+    (interactive)
+    (if (eq (car completion-styles) 'partial-completion)
+        (progn
+          (setq-local completion-styles '(flex substring partial-completion))
+          (message "Prioritising flex matches"))
+      (setq-local completion-styles '(partial-completion substring flex))
+      (message "Prioritising regexp matches")))
+
   :hook (minibuffer-exit . prot/icomplete-restore-horizontal)
-  :bind (("s-f" . find-file)
-         ("s-F" . find-file-other-window)
-         ("s-d" . dired)
-         ("s-D" . dired-other-window)
-         ("s-b" . switch-to-buffer)
-         ("s-B" . switch-to-buffer-other-window)
-         ("s-h" . prot/describe-symbol-at-point)
-         ("s-v" . prot/focus-minibuffer)
-         ("s-y" . prot/icomplete-yank-kill-ring)
+  :bind (("s-y" . prot/icomplete-yank-kill-ring)
          ("s-r" . prot/icomplete-recentf)
          ("M-s f" . prot/icomplete-project-find-file)
-         :map completion-list-mode-map
-         ("h" . prot/describe-symbol-at-point)
-         ("n" . next-line)
-         ("p" . previous-line)
-         ("f" . next-completion)
-         ("b" . previous-completion)
-         ("M-v" . prot/focus-minibuffer) ; Icomplete has the same
          :map icomplete-minibuffer-map
          ("C-n" . icomplete-forward-completions)
          ("<right>" . icomplete-forward-completions)
@@ -700,24 +804,34 @@ This is meant to be run by the `minibuffer-exit-hook'."
          ("<left>" . icomplete-backward-completions)
          ("<return>" . icomplete-force-complete-and-exit)
          ("M-i" . icomplete-force-complete)
-         ("C-M-|" . prot/icomplete-toggle-vertical)))
+         ("C-M-|" . prot/icomplete-toggle-vertical)
+         ("C-M-." . prot/icomplete-toggle-flex)))
 #+end_src
 
-**** TODO Icomplete expansions [3/11]                       :emacs:icomplete:
+**** TODO Icomplete expansions and wishlist [5/18]          :emacs:icomplete:
 ***** DONE kill ring yank
       CLOSED: [2020-02-09 Sun 12:11]
 ***** DONE recentf with abbreviated path
       CLOSED: [2020-02-09 Sun 12:11]
-***** DONE Basic project integration
+***** DONE Project integration for files
       CLOSED: [2020-02-09 Sun 14:18]
+***** DONE vertical view toggle
+      CLOSED: [2020-02-10 Mon 07:53]
+***** DONE regexp/flex toggle
+      CLOSED: [2020-02-10 Mon 07:53]
+***** TODO [#A] Find project buffers
+***** TODO [#A] Find projects
 ***** TODO [#A] How to get current match in the most efficient way?
+***** TODO [#B] functions on current-completion (kill, describe…)
 ***** TODO [#B] vc-git-grep without too many prompts?
 ***** TODO [#B] grep+replace (occur? in project)?
-***** TODO [#C] show key bindings
-***** TODO [#C] show docstrings, annotations?
-***** TODO [#C] current and total count
-***** TODO [#C] functions on current-completion (kill, describe…)
+***** TODO [#C] show key bindings?
+***** TODO [#C] show docstrings, annotations in Completions?
+***** TODO [#C] current and total count of candidates?
+***** TODO [#C] minibuffer indicator for completion style?
 ***** STUDY project-combine-directories?
+***** STUDY M-x find-library vc-git (and relevant)
+***** STUDY Do we need AMX or Prescient?
 *** Ivy/Counsel/Swiper plus filtering and scoring
     :PROPERTIES:
     :CUSTOM_ID: h:d76e14b0-2002-4efa-8fef-cb3cd42d3d80
@@ -5578,12 +5692,13 @@ display virtual buffers."
          (dired-mode . contrib/recentf-add-dired-directory)))
 #+end_src
 
-*** Minibuffer
+*** Minibuffer history
     :PROPERTIES:
     :CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
     :END:
 
-Keeps a record of actions involving the minibuffer.
+Keeps a record of actions involving the minibuffer.  Make sure to also
+check my [[*Minibuffer essentials and Icomplete (built-in completion)][configurations for the minibuffer and icomplete]].
 
 #+begin_src emacs-lisp
 (use-package savehist
