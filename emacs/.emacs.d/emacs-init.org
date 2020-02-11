@@ -490,6 +490,13 @@ screen casting."
     (when window-system
 	  (prot/font-family-size prot/fixed-pitch-font 16)))
 
+  (defun prot/presentation-fonts ()
+    "Pass desired argument to `prot/font-sizes' for use during
+presentations.  Also see `prot/org-presentation'."
+    (interactive)
+    (when window-system
+	  (prot/font-family-size prot/fixed-pitch-font 18)))
+
   (defun prot/fonts-per-monitor ()
     "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
 based on the width of the monitor.  The calculation is based on
@@ -3034,25 +3041,18 @@ operates on the text of the focused window, whereas I want all
 interfaces to adapt to the new size (so that I can, for example, show
 the minibuffer while doing a presentation).
 
-*NOTE:* I am keeping these disabled and will only be activating them
-when I need to do a presentation.  For example, I did so in my ~1
-hour-long video blog on the topic of [[https://protesilaos.com/codelog/2019-12-20-vlog-switch-emacs/][switching to Emacs]] (2019-12-20).
-
 #+begin_src emacs-lisp
 (use-package darkroom
   :ensure t
-  :disabled
   :config
   (setq darkroom-text-scale-increase 0))
 
 (use-package org-bullets
   :ensure t
-  :disabled
   :after org)
 
 (use-package org-tree-slide
   :ensure t
-  :disabled
   :after (org darkroom)
   :config
   (setq org-tree-slide-breadcrumbs nil)
@@ -3075,8 +3075,8 @@ activation of `org-tree-slide-mode'."
           (darkroom-tentative-mode 1)
           (org-bullets-mode 1)
           (org-indent-mode 1)
-          (prot/screencast-fonts)
-          (setq cursor-type '(bar . 1)))
+          (prot/presentation-fonts)
+          (setq cursor-type '(bar . 2)))
       (darkroom-tentative-mode -1)
       (org-bullets-mode -1)
       (org-indent-mode -1)
@@ -4772,6 +4772,7 @@ auto-insertion of characters.  This is a summary of my settings:
   (setq electric-quote-context-sensitive t)
   (setq electric-quote-paragraph t)
   (setq electric-quote-string nil)
+  (setq electric-quote-replace-double t)
   :hook (after-init . (lambda ()
                         (electric-indent-mode 1)
                         (electric-pair-mode -1)
