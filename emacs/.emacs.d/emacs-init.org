@@ -1412,7 +1412,7 @@ repository, then the corresponding root is used instead."
          ("C-SPC" . ivy-restrict-to-matches)))
 #+end_src
 
-***** Counsel and projectile
+***** DEPRECATED Counsel and projectile
       :PROPERTIES:
       :CUSTOM_ID: h:1dd71ddc-994d-420b-9aaf-26741aaf20cd
       :END:
@@ -1507,7 +1507,7 @@ section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and s
 
  These tools build on the foundation of Ivy and friends.
 
-***** Ivy rich
+***** DEPRECATED Ivy rich
       :PROPERTIES:
       :CUSTOM_ID: h:fe6839a7-f6cd-48c8-bf6e-d4d8519d02fc
       :END:
@@ -1548,7 +1548,7 @@ section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and s
   (ivy-rich-mode 1))
  #+end_src
 
-***** Ivy posframe
+***** DEPRECATED Ivy posframe
       :PROPERTIES:
       :CUSTOM_ID: h:fe69c898-3d58-4c7f-a870-3cc1b9ac438c
       :END:
@@ -1600,7 +1600,7 @@ section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and s
   (ivy-posframe-mode 1))
 #+end_src
 
-** Configurations for—or extensions to—built-in commands
+** Configurations for—or extensions to—built-in search commands
    :PROPERTIES:
    :CUSTOM_ID: h:67dac9fe-5c15-437d-bb3e-26b293affa45
    :END:
