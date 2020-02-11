@@ -983,25 +983,43 @@ This is Emacs' own approach to text completion inside the buffer:
 "dynamic abbreviation" and the corresponding "do what I mean" wrapper
 called =hippie-expand=.  The latter is a superset of =dabbrev=.
 
+After trying the popular third-party "Company" package, I felt that it
+does not offer me much of an added value, while its popup feature
+detracted from the otherwise frugal aesthetics of my setup.  Whereas
+Dabbrev works in a way I find intuitive enough, while it remains
+minimalist in its presentation.
+
 To learn about =hippie-expand-try-functions-list=, read the introductory
-remarks in =M-x find-library RET hippie-exp RET=.
+remarks in =M-x find-library RET hippie-exp RET=.  The =M-/= is bound by
+default to Dabbrev, but I am repurposing it for its built-in superset.
 
-That granted, the tool that I actually use is called =company=, which
-includes the functionality of =dabbrev= while offering several extensions.
-Refer to the [[#h:d2e402b3-c947-42fc-af80-b8a982082a1b][Company section for a detailed explanation]].
+The =dabbrev-abbrev-char-regexp= is configured to match both regular words
+and symbols (e.g. with hyphenation like this variable).  This makes it
+suitable for code and ordinary language.
 
-The =M-/= is bound by default to Dabbrev, but I am repurposing it for its
-built-in superset.
+While the =dabbrev-abbrev-skip-leading-regexp= is instructed to also
+expand words and symbols that start with any of these: =$=, =*=, =/=, ===.  This
+regexp may be expanded in the future, but the idea is to be able to
+perform completion in contexts where the known word/symbol is preceded
+by a special characters.  For example, in the =org-mode= version of this
+document, all inline code must be placed between the equals sign.  So
+now typing the ===, then a letter, will still allow me to expand text
+based on that input.
+
+To check what I have on regular expressions, see further below my
+configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][re-builder and visual-regexp]].
 
 #+begin_src emacs-lisp
 (use-package dabbrev
   :commands (dabbrev-expand dabbrev-completion)
   :config
-  (setq dabbrev-abbrev-char-regexp nil)
+  (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
+  (setq dabbrev-abbrev-skip-leading-regexp "\\$\\|\\*\\|/\\|=")
   (setq dabbrev-backward-only nil)
   (setq dabbrev-case-distinction nil)
   (setq dabbrev-case-fold-search t)
   (setq dabbrev-case-replace nil)
+  (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines nil)
   (setq dabbrev-upcase-means-case-search t))
 
@@ -1009,18 +1027,18 @@ built-in superset.
   :after dabbrev
   :config
   (setq hippie-expand-try-functions-list
-        '(try-expand-dabbrev
-          try-expand-dabbrev-visible
-          try-expand-dabbrev-from-kill
+        '(try-expand-dabbrev-visible
+          try-expand-dabbrev
           try-expand-dabbrev-all-buffers
-          try-expand-list
+          try-expand-dabbrev-from-kill
           try-expand-list-all-buffers
-          try-expand-line
+          try-expand-list
           try-expand-line-all-buffers
+          try-expand-line
           try-complete-file-name-partially
           try-complete-file-name
           try-expand-all-abbrevs))
-  (setq hippie-expand-verbose t)
+  (setq hippie-expand-verbose nil)
   :bind ("M-/" . hippie-expand))
 #+end_src
 
