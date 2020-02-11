@@ -2104,131 +2104,6 @@ represents the tab character and is there to ensure alignment.
               (")" . dired-git-info-mode)))
 #+end_src
 
-** Git front-end (Magit) and relevant configurations
-   :PROPERTIES:
-   :CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
-   :END:
-
-I was already well-versed in the CLI commands for =git=, but I feel
-that =magit= offers an intuitive interface that speeds up most common
-tasks.  The real reason I use it though, is because it makes it easier
-to perform git operations while inside a directory/file.  No need to
-switch to a terminal emulator.
-
-*** Base Magit settings
-    :PROPERTIES:
-    :CUSTOM_ID: h:21ca155a-d0d7-4710-b34a-a0d7a901ac0d
-    :END:
-
-Magit has good defaults.  I only found a few things that I would like to
-customise, which I do in the following package declarations.
-
-#+begin_src emacs-lisp
-(use-package magit
-  :ensure t
-  :bind (("C-c g" . magit-status)
-         ("s-g" . magit-status)))
-#+end_src
-
-*** Git commits
-    :PROPERTIES:
-    :CUSTOM_ID: h:f851e0cc-099c-4309-8517-b2f20ab18ab4
-    :END:
-
-The following package is configured in accordance with the guidelines
-provided by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is
-to write commits that are clean and easy to read.  The =fill-column= is
-set elsewhere in this document to 72 characters long.
-
-#+begin_src emacs-lisp
-(use-package git-commit
-  :after magit
-  :config
-  (setq git-commit-summary-max-length 50)
-  (setq git-commit-known-pseudo-headers
-        '("Signed-off-by"
-          "Acked-by"
-          "Modified-by"
-          "Cc"
-          "Suggested-by"
-          "Reported-by"
-          "Tested-by"
-          "Reviewed-by"))
-  (setq git-commit-style-convention-checks
-        '(non-empty-second-line
-          overlong-summary-line)))
-#+end_src
-
-*** Git diffs
-    :PROPERTIES:
-    :CUSTOM_ID: h:c7a465c1-f33a-42d8-9617-fff3e1460060
-    :END:
-
-The settings below are for the diff screens that Magit produces.  I just
-want to highlight changes within a line, not just the line itself.  I
-enable it only for the focused hunk (there is an option for ='all=).
-
-My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to style these appropriately.
-
-#+begin_src emacs-lisp
-(use-package magit-diff
-  :after magit
-  :config
-  (setq magit-diff-refine-hunk t))
-#+end_src
-
-And this covers the built-in diff mode, which I seldom use.  Both of
-these variables were introduced in Emacs 27.1.
-
-#+begin_src emacs-lisp
-(use-package diff
-  :config
-  (setq diff-font-lock-prettify nil)
-  (setq diff-font-lock-syntax nil))
-#+end_src
-
-*** Magit repo list
-    :PROPERTIES:
-    :CUSTOM_ID: h:35972439-0b28-4d33-8091-c6b5f1f02579
-    :END:
-
-When maintaining a number of projects, it sometimes is necessary to
-produce a full list of them with their corresponding Magit status.  That
-way you can determine very quickly which repositories need to be
-examined further.
-
-#+begin_src emacs-lisp
-(use-package magit-repos
-  :after magit
-  :commands magit-list-repositories
-  :config
-  (setq magit-repository-directories
-        '(("~/Git/Projects" . 1))))
-#+end_src
-
-*** Git time machine
-    :PROPERTIES:
-    :CUSTOM_ID: h:d91ae6cb-433e-4efa-9580-07c5a59e5e29
-    :END:
-
-One of the major upsides of keeping files under version control is the
-ability to revert to a previous state in the history of changes.  By
-using =git-timemachine= we can flip through a file's full list of
-permutations.  Reverting to a given phase is as easy as writing the
-buffer to a file, with =C-x C-w=.  In general, it might be better to save
-a version as a different file and then run =M-x diff= between the two.  Or
-maybe you want to do so with three files, in which case =M-x ediff3= is
-your friend.
-
-Once inside the time machine, hit =?= to get a help interface with the
-available key bindings.  These extend =magit= functionality.
-
-#+begin_src emacs-lisp
-(use-package git-timemachine
-  :ensure t
-  :commands git-timemachine)
-#+end_src
-
 ** Working with buffers
    :PROPERTIES:
    :CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
@@ -3796,6 +3671,131 @@ really need.  Nice!
   :after (org mu4e)
   :config
   (setq org-mu4e-link-query-in-headers-mode nil))
+#+end_src
+
+** Git front-end (Magit) and relevant configurations
+   :PROPERTIES:
+   :CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
+   :END:
+
+I was already well-versed in the CLI commands for =git=, but I feel
+that =magit= offers an intuitive interface that speeds up most common
+tasks.  The real reason I use it though, is because it makes it easier
+to perform git operations while inside a directory/file.  No need to
+switch to a terminal emulator.
+
+*** Base Magit settings
+    :PROPERTIES:
+    :CUSTOM_ID: h:21ca155a-d0d7-4710-b34a-a0d7a901ac0d
+    :END:
+
+Magit has good defaults.  I only found a few things that I would like to
+customise, which I do in the following package declarations.
+
+#+begin_src emacs-lisp
+(use-package magit
+  :ensure t
+  :bind (("C-c g" . magit-status)
+         ("s-g" . magit-status)))
+#+end_src
+
+*** Git commits
+    :PROPERTIES:
+    :CUSTOM_ID: h:f851e0cc-099c-4309-8517-b2f20ab18ab4
+    :END:
+
+The following package is configured in accordance with the guidelines
+provided by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is
+to write commits that are clean and easy to read.  The =fill-column= is
+set elsewhere in this document to 72 characters long.
+
+#+begin_src emacs-lisp
+(use-package git-commit
+  :after magit
+  :config
+  (setq git-commit-summary-max-length 50)
+  (setq git-commit-known-pseudo-headers
+        '("Signed-off-by"
+          "Acked-by"
+          "Modified-by"
+          "Cc"
+          "Suggested-by"
+          "Reported-by"
+          "Tested-by"
+          "Reviewed-by"))
+  (setq git-commit-style-convention-checks
+        '(non-empty-second-line
+          overlong-summary-line)))
+#+end_src
+
+*** Git diffs
+    :PROPERTIES:
+    :CUSTOM_ID: h:c7a465c1-f33a-42d8-9617-fff3e1460060
+    :END:
+
+The settings below are for the diff screens that Magit produces.  I just
+want to highlight changes within a line, not just the line itself.  I
+enable it only for the focused hunk (there is an option for ='all=).
+
+My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to style these appropriately.
+
+#+begin_src emacs-lisp
+(use-package magit-diff
+  :after magit
+  :config
+  (setq magit-diff-refine-hunk t))
+#+end_src
+
+And this covers the built-in diff mode, which I seldom use.  Both of
+these variables were introduced in Emacs 27.1.
+
+#+begin_src emacs-lisp
+(use-package diff
+  :config
+  (setq diff-font-lock-prettify nil)
+  (setq diff-font-lock-syntax nil))
+#+end_src
+
+*** Magit repo list
+    :PROPERTIES:
+    :CUSTOM_ID: h:35972439-0b28-4d33-8091-c6b5f1f02579
+    :END:
+
+When maintaining a number of projects, it sometimes is necessary to
+produce a full list of them with their corresponding Magit status.  That
+way you can determine very quickly which repositories need to be
+examined further.
+
+#+begin_src emacs-lisp
+(use-package magit-repos
+  :after magit
+  :commands magit-list-repositories
+  :config
+  (setq magit-repository-directories
+        '(("~/Git/Projects" . 1))))
+#+end_src
+
+*** Git time machine
+    :PROPERTIES:
+    :CUSTOM_ID: h:d91ae6cb-433e-4efa-9580-07c5a59e5e29
+    :END:
+
+One of the major upsides of keeping files under version control is the
+ability to revert to a previous state in the history of changes.  By
+using =git-timemachine= we can flip through a file's full list of
+permutations.  Reverting to a given phase is as easy as writing the
+buffer to a file, with =C-x C-w=.  In general, it might be better to save
+a version as a different file and then run =M-x diff= between the two.  Or
+maybe you want to do so with three files, in which case =M-x ediff3= is
+your friend.
+
+Once inside the time machine, hit =?= to get a help interface with the
+available key bindings.  These extend =magit= functionality.
+
+#+begin_src emacs-lisp
+(use-package git-timemachine
+  :ensure t
+  :commands git-timemachine)
 #+end_src
 
 ** Shells and terminal emulators
