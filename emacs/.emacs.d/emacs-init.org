@@ -866,10 +866,9 @@ the matching candidate directly."
                         (point))
         (when current-prefix-arg
           (delete-minibuffer-contents)
-          (save-excursion
-            (other-window 1)
-            (insert (car kill-ring))
-            (other-window 1))))))
+          (select-window (previous-window))
+          (insert (car kill-ring))
+          (prot/focus-minibuffer)))))
 
   :hook (minibuffer-exit . prot/icomplete-restore-horizontal)
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
@@ -906,6 +905,9 @@ The disabled =:delight= statement customises the minor mode's presentation
 to only show the project's name.  For non-project buffers, a dash
 appears instead.  However, it is disabled in favour of not showing
 anything at all in the minor mode list.
+
+Concerning the design of these key bindings, they are consistent with
+all "advanced search methods" (e.g. the default =M-s o= for =occur=).
 
 #+begin_src emacs-lisp
 (use-package projectile
