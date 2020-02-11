@@ -973,6 +973,116 @@ anything at all in the minor mode list.
          ("M-s p" . projectile-switch-project)))
 #+end_src
 
+*** In-buffer completions
+**** Dabbrev and hippie-expand (dynamic word completion)
+     :PROPERTIES:
+     :CUSTOM_ID: h:57dcf193-0c4e-4ee6-9b2d-6892558b0a84
+     :END:
+
+This is Emacs' own approach to text completion inside the buffer:
+"dynamic abbreviation" and the corresponding "do what I mean" wrapper
+called =hippie-expand=.  The latter is a superset of =dabbrev=.
+
+To learn about =hippie-expand-try-functions-list=, read the introductory
+remarks in =M-x find-library RET hippie-exp RET=.
+
+That granted, the tool that I actually use is called =company=, which
+includes the functionality of =dabbrev= while offering several extensions.
+Refer to the [[#h:d2e402b3-c947-42fc-af80-b8a982082a1b][Company section for a detailed explanation]].
+
+The =M-/= is bound by default to Dabbrev, but I am repurposing it for its
+built-in superset.
+
+#+begin_src emacs-lisp
+(use-package dabbrev
+  :commands (dabbrev-expand dabbrev-completion)
+  :config
+  (setq dabbrev-abbrev-char-regexp nil)
+  (setq dabbrev-backward-only nil)
+  (setq dabbrev-case-distinction nil)
+  (setq dabbrev-case-fold-search t)
+  (setq dabbrev-case-replace nil)
+  (setq dabbrev-eliminate-newlines nil)
+  (setq dabbrev-upcase-means-case-search t))
+
+(use-package hippie-exp
+  :after dabbrev
+  :config
+  (setq hippie-expand-try-functions-list
+        '(try-expand-dabbrev
+          try-expand-dabbrev-visible
+          try-expand-dabbrev-from-kill
+          try-expand-dabbrev-all-buffers
+          try-expand-list
+          try-expand-list-all-buffers
+          try-expand-line
+          try-expand-line-all-buffers
+          try-complete-file-name-partially
+          try-complete-file-name
+          try-expand-all-abbrevs))
+  (setq hippie-expand-verbose t)
+  :bind ("M-/" . hippie-expand))
+#+end_src
+
+**** Eldoc (elisp live documentation feedback)
+     :PROPERTIES:
+     :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
+     :END:
+
+Displays information about the construct at point in the echo area.  I
+find that I have no use for this, so I am disabling the mode for the
+time being.
+
+#+begin_src emacs-lisp
+(use-package eldoc
+  :config
+  (global-eldoc-mode -1))
+#+end_src
+
+**** Simple abbreviations
+     :PROPERTIES:
+     :CUSTOM_ID: h:33cd69cc-1a50-4abb-9f09-cae98dc8998b
+     :END:
+
+This section stores all the "skeletons" I define.  These are snippets of
+text, typically templates or code statements, that are meant to speed up
+typing.  I combine them with abbreviations.
+
+*Please note that these will be very simplistic at first.*  I am aware
+that they can be abstracted using elisp—need to learn more on that
+front.  Also note that wherever you see =" _ "= it signifies the
+position of the cursor after the skeleton has been inserted.
+
+#+begin_src emacs-lisp
+(use-package abbrev
+  :delight
+  :config
+  (setq abbrev-file-name "~/.emacs.d/abbrevs")
+  (setq only-global-abbrevs nil)
+
+  ;;;;;;;;;;;;;;;;;;;;;;
+  ;; simple skeletons ;;
+  ;;;;;;;;;;;;;;;;;;;;;;
+  (define-skeleton protesilaos-com-skeleton
+    "Adds a link to my website while prompting for a possible
+  extension."
+    "Insert website extension: "
+    "https://protesilaos.com/" str "")
+  (define-abbrev global-abbrev-table "meweb"
+    "" 'protesilaos-com-skeleton)
+
+  (define-skeleton protesilaos-gitlab-skeleton
+    "Adds a link to my GitLab account while prompting for a
+  possible extension.  Makes it easy to link to my various git
+  repos."
+    "Website extension: "
+    "https://gitlab.com/protesilaos/" str "")
+  (define-abbrev global-abbrev-table "megit"
+    "" 'protesilaos-gitlab-skeleton)
+  :hook ((text-mode . abbrev-mode)
+         (git-commit-mode . abbrev-mode)))
+#+end_src
+
 *** DEPRECATED Ivy/Counsel/Swiper plus filtering and scoring
     :PROPERTIES:
     :CUSTOM_ID: h:d76e14b0-2002-4efa-8fef-cb3cd42d3d80
@@ -4387,213 +4497,6 @@ The list will be expanded over time.
          ("Xmodmap" . conf-xdefaults-mode)
          ("template" . shell-script-mode)
          ("\\.rasi\\'" . css-mode)))
-#+end_src
-
-** Simple abbreviations
-   :PROPERTIES:
-   :CUSTOM_ID: h:33cd69cc-1a50-4abb-9f09-cae98dc8998b
-   :END:
-
-This section stores all the "skeletons" I define.  These are snippets of
-text, typically templates or code statements, that are meant to speed up
-typing.  I combine them with abbreviations.
-
-*Please note that these will be very simplistic at first.*  I am aware
-that they can be abstracted using elisp—need to learn more on that
-front.  Also note that wherever you see =" _ "= it signifies the
-position of the cursor after the skeleton has been inserted.
-
-#+begin_src emacs-lisp
-(use-package abbrev
-  :delight
-  :config
-  (setq abbrev-file-name "~/.emacs.d/abbrevs")
-  (setq only-global-abbrevs nil)
-
-  ;;;;;;;;;;;;;;;;;;;;;;
-  ;; simple skeletons ;;
-  ;;;;;;;;;;;;;;;;;;;;;;
-  (define-skeleton protesilaos-com-skeleton
-    "Adds a link to my website while prompting for a possible
-  extension."
-    "Insert website extension: "
-    "https://protesilaos.com/" str "")
-  (define-abbrev global-abbrev-table "meweb"
-    "" 'protesilaos-com-skeleton)
-
-  (define-skeleton protesilaos-gitlab-skeleton
-    "Adds a link to my GitLab account while prompting for a
-  possible extension.  Makes it easy to link to my various git
-  repos."
-    "Website extension: "
-    "https://gitlab.com/protesilaos/" str "")
-  (define-abbrev global-abbrev-table "megit"
-    "" 'protesilaos-gitlab-skeleton)
-  :hook ((text-mode . abbrev-mode)
-         (git-commit-mode . abbrev-mode)))
-#+end_src
-
-** Dabbrev and hippie-expand (dynamic word completion)
-   :PROPERTIES:
-   :CUSTOM_ID: h:57dcf193-0c4e-4ee6-9b2d-6892558b0a84
-   :END:
-
-This is Emacs' own approach to text completion: "dynamic abbreviation"
-and the corresponding "do what I mean wrapper" called =hippie-expand=.
-The latter is a superset of =dabbrev=.
-
-To learn about =hippie-expand-try-functions-list=, read the introductory
-remarks in =M-x find-library RET hippie-exp RET=.
-
-That granted, the tool that I actually use is called Company, which
-includes the functionality of =dabbrev= while offering several extensions.
-Refer to the [[#h:d2e402b3-c947-42fc-af80-b8a982082a1b][Company section for a detailed explanation]].
-
-#+begin_src emacs-lisp
-(use-package dabbrev
-  :commands dabbrev-expand
-  :config
-  (setq dabbrev-abbrev-char-regexp nil)
-  (setq dabbrev-backward-only nil)
-  (setq dabbrev-case-distinction nil)
-  (setq dabbrev-case-fold-search t)
-  (setq dabbrev-case-replace nil)
-  (setq dabbrev-eliminate-newlines nil)
-  (setq dabbrev-upcase-means-case-search t))
-
-(use-package hippie-exp
-  :after dabbrev
-  :commands hippie-expand
-  :config
-  (setq hippie-expand-try-functions-list
-        '(try-expand-dabbrev
-          try-expand-dabbrev-visible
-          try-expand-dabbrev-from-kill
-          try-expand-dabbrev-all-buffers
-          try-expand-list
-          try-expand-list-all-buffers
-          try-expand-line
-          try-expand-line-all-buffers
-          try-complete-file-name-partially
-          try-complete-file-name
-          try-expand-all-abbrevs))
-  (setq hippie-expand-verbose t))
-#+end_src
-
-** Company (text completion/expansion framework)
-   :PROPERTIES:
-   :CUSTOM_ID: h:d2e402b3-c947-42fc-af80-b8a982082a1b
-   :END:
-
-Company has a modular design that allows it to adapt to the user's
-needs.  Additional backends are provided as separate packages, though I
-currently do not need any of them.
-
-Overview of the following settings.
-
-+ Do not allow autocomplete.  This might sound like a good idea, but it
-  can have undesired effects: e.g. expanding "is" into "isearch" just by
-  hitting the space key.  That depends on the settings for prefix length
-  and idle delay.
-+ Use the built-in "dynamic abbreviation" (=dabbrev=) in comments and
-  strings, as well as more generally.  I find that this method gives me
-  relevant results.
-+ While using =dabbrev= make sure to populate the list with suggestions
-  from all buffers, thus increasing the likelihood of showing something
-  I already have and need again.
-+ Never downcase an expanded completion candidate, but do allow for case
-  insensitive candidates.
-+ Set minimum length to 3 and delay the pop-up by 0.3 seconds.  This
-  avoids too many false positives or minor inconveniences that I
-  encounter in my workflow (such as /is/ => /isearch/).
-+ Allow non-matching input.  The cursor can thus be moved as expected
-  while the pop-up menu with the suggestions is active.  I find this
-  necessary to avoid being locked into the completion list.
-+ Let the list be cyclical, so moving to the end will bring you back at
-  the top.  In practice though, I never use this.  If I need to run
-  through a long list and come back again, I am probably doing something
-  wrong.  At any rate, you can search within the list of suggestions
-  while it is active by using =C-s=.
-+ Show numbers for the ten matching candidates at the top of the list.
-  Select them with =M-NUM=.
-+ Control how results are sorted once they are collected from all the
-  relevant backends.  What I have in =company-transformers= works fine for
-  me.
-+ Align annotations to the right.  This concerns certain backends that
-  display additional information for their candidates.  This keeps
-  things nice and tidy.
-+ Keep the completion candidates to ten at a time, allowing us to target
-  each item directly by its corresponding number (10 is 0 in this
-  case).  Remember to select the item with Meta and its number.
-+ Keep the margin of the tooltip to a minimum and show a scrollbar when
-  the list exceeds the limit of 10 candidates at a time.
-
-Now a few words about the key bindings:
-
-+ Company will start automatically based on the prefix and delay
-  settings mentioned above.  However, it is possible to launch it
-  manually with =M-/=.  Bear in mind that by default this key is used by
-  the built-in Dabbrev tool.  Since =company= encompasses the
-  functionality of that backend, there is no need to keep a separate key
-  for it.
-+ While the list of suggestions is open, =M-/= will switch to a
-  different backend.  This can help improve results for the task at
-  hand.
-+ If possible, the common part of completion candidates can be inserted
-  directly with =C-TAB=.  If no common prefix can be completed, this key
-  will more the selection to the next item on the list.  To select the
-  current item without further questions, simply hit =TAB=.
-+ =C-n= and =C-p= can be used to cycle the list of suggestions.
-
-#+begin_src emacs-lisp
-(use-package company
-  :ensure t
-  :delight
-  :config
-  (setq company-auto-complete nil)
-  (setq company-dabbrev-code-everywhere t)
-  (setq company-dabbrev-code-modes t)
-  (setq company-dabbrev-code-other-buffers 'all)
-  (setq company-dabbrev-downcase nil)
-  (setq company-dabbrev-ignore-case t)
-  (setq company-dabbrev-other-buffers 'all)
-  (setq company-idle-delay 0.3)
-  (setq company-minimum-prefix-length 3)
-  (setq company-require-match nil)
-  (setq company-selection-wrap-around t)
-  (setq company-show-numbers t)
-  (setq company-transformers
-        '(company-sort-by-occurrence
-          company-sort-prefer-same-case-prefix
-          company-sort-by-backend-importance))
-  (setq company-tooltip-align-annotations t)
-  (setq company-tooltip-limit 10)
-  (setq company-tooltip-margin 1)
-  (setq company-tooltip-offset-display 'scrollbar)
-  :hook (after-init . global-company-mode)
-  :bind (:map company-mode-map
-              ("M-/" . company-manual-begin)
-              :map company-active-map
-              (("M-/" . company-other-backend)
-               ("<tab>" . company-complete-selection)
-               ("<C-tab>" . company-complete-common-or-cycle)
-               ("C-n" . company-select-next)
-               ("C-p" . company-select-previous))))
-#+end_src
-
-** Eldoc (elisp live documentation feedback)
-   :PROPERTIES:
-   :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
-   :END:
-
-Displays information about the construct at point in the echo area.  I
-find that I have no use for this, so I am disabling the mode for the
-time being.
-
-#+begin_src emacs-lisp
-(use-package eldoc
-  :config
-  (global-eldoc-mode -1))
 #+end_src
 
 * Interface and interactions
