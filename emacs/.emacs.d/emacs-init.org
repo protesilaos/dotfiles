@@ -658,15 +658,19 @@ An *important note* about every =prot/icomplete-*= function that contains a
 =setq= in its body: the way the variables are declared is not robust,
 because it assumes default values that may not exist.  I am aware that
 it is possible to perform tests inside a =setq= and return their result,
-but this added complexity is not needed for my case: I am aware of this
-limitation, plus I know the default values of those variables and do not
-need to fiddle with them.  Some examples of better toggle design can be
-found with =M-x find-library isearch=.
+but this added complexity is not needed for my case: I know the default
+values of those variables and keep them constant.  If the variables need
+to be changed, then the functions will be updated accordingly.  At any
+rate, some examples of better toggle design can be discovered in the
+=isearch.el= library with =M-x find-library isearch=.
 
 Also check my configurations pertaining to the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].  I am
 still not sure whether we need a scoring mechanism like =prescient= or
-=amx=.  Perhaps we do, in which case I will make sure they work with what
-I have here.
+=amx=.  My first few rounds of testing suggest that we do not, but this
+might still be proven otherwise, in which case I will just edit things
+accordingly.
+
+Now here is the actual code for the minibuffer part:
 
 #+begin_src emacs-lisp
 (use-package minibuffer
@@ -676,14 +680,11 @@ I have here.
   (setq completion-pcm-complete-word-inserts-delimiters t)
   (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-styles '(partial-completion substring flex))
-  (setq completion-category-overrides   ; flex requires >= Emacs 27
+  (setq completion-category-overrides
         '((file (styles initials flex partial-completion))
           (buffer (styles substring flex))
-          (info-menu (styles substring basic))))
-  (setq completion-at-point-functions   ; EXPERIMENTAL
-        '(dabbrev-completion
-          tags-completion-at-point-function))
-  (setq completions-format 'vertical)     ; *Completions* buffer
+          (info-menu (styles substring basic)))) ; flex in >= Emacs 27
+  (setq completions-format 'vertical)            ; *Completions* buffer
   (setq enable-recursive-minibuffers t)
   (setq read-answer-short t)
   (setq read-buffer-completion-ignore-case t)
@@ -748,7 +749,11 @@ succession."
          ("f" . next-completion)
          ("b" . previous-completion)
          ("M-v" . prot/focus-minibuffer)))
+#+end_src
 
+And this is for the completion interface:
+
+#+begin_src emacs-lisp
 (use-package icomplete
   :demand
   :config
@@ -823,6 +828,42 @@ This is meant to be run by the `minibuffer-exit-hook'."
       (setq-local completion-styles '(partial-completion substring flex))
       (message "%s" (propertize "Prioritising REGEXP" 'face 'highlight))))
 
+  (defun prot/icomplete-force-complete-and-exit ()
+    "Complete the current `icomplete' match and exit the minibuffer."
+    (interactive)
+    (icomplete-force-complete)
+    (exit-minibuffer))
+
+  (defun prot/icomplete-kill-ring-save (&optional arg)
+    "EXPERIMENTAL Save current `icomplete' match to the kill ring.
+
+Call it with a prefix argument to insert the match to the point
+in the current buffer.
+
+This has a couple of side effects that I have yet to address:
+
+- Without an argument it will complete the current match.
+- With an argument it will clear the user input.
+
+The side effects would be avoidable if I knew of a way to capture
+the matching candidate directly."
+    (interactive "P")
+    (let ((mini (active-minibuffer-window)))
+      (when (and mini
+                 (minibufferp)
+                 (bound-and-true-p icomplete-mode))
+        (move-beginning-of-line 1)
+        (set-mark (point))
+        (icomplete-force-complete)
+        (kill-ring-save (mark)
+                        (point))
+        (when current-prefix-arg
+          (delete-minibuffer-contents)
+          (save-excursion
+            (other-window 1)
+            (insert (car kill-ring))
+            (other-window 1))))))
+
   :hook (minibuffer-exit . prot/icomplete-restore-horizontal)
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
          ("s-r" . prot/icomplete-recentf)
@@ -831,8 +872,12 @@ This is meant to be run by the `minibuffer-exit-hook'."
          ("<right>" . icomplete-forward-completions)
          ("C-p" . icomplete-backward-completions)
          ("<left>" . icomplete-backward-completions)
-         ("<return>" . icomplete-force-complete-and-exit)
-         ("M-i" . icomplete-force-complete)
+         ("<return>" . prot/icomplete-force-complete-and-exit)
+         ("M-o w" . prot/icomplete-kill-ring-save)
+         ("M-o i" . (lambda ()
+                      (interactive)
+                      (let ((current-prefix-arg t))
+                        (prot/icomplete-kill-ring-save))))
          ("C-M-|" . prot/icomplete-toggle-vertical)
          ("C-M-." . prot/icomplete-toggle-flex)))
 #+end_src
