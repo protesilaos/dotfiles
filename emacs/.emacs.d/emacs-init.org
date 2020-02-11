@@ -4830,15 +4830,10 @@ customise them via hooks.  This is not an issue I have encountered yet
 and am therefore refraining from solving a problem that does not affect
 me.
 
-The =tab-always-indent= is here defined to have a context-dependent
-behaviour, where it will attempt to complete the thing at point if no
-further indentation operations can be performed.  For more on the
-underlying mechanism, refer to [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
-
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq-default tab-always-indent 'complete)
+  (setq-default tab-always-indent t)
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil))
 #+end_src
