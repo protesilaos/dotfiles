@@ -882,58 +882,6 @@ the matching candidate directly."
          ("C-M-." . prot/icomplete-toggle-flex)))
 #+end_src
 
-**** TODO Icomplete expansions and wishlist [4/11]          :emacs:icomplete:
-     :PROPERTIES:
-     :CUSTOM_ID: h:a54af17d-ce97-497b-a816-207af23f4da3
-     :END:
-***** DONE kill ring yank
-      CLOSED: [2020-02-09 Sun 12:11]
-      :PROPERTIES:
-      :CUSTOM_ID: h:f39ef2fe-f47a-4dc8-aecc-ed697e8863fc
-      :END:
-***** DONE recentf with abbreviated path
-      CLOSED: [2020-02-09 Sun 12:11]
-      :PROPERTIES:
-      :CUSTOM_ID: h:63c7fc41-f8b9-4094-9d56-83121e4495c3
-      :END:
-***** DONE vertical view toggle
-      CLOSED: [2020-02-10 Mon 07:53]
-      :PROPERTIES:
-      :CUSTOM_ID: h:69535b15-10e2-480f-91a9-629ea9ff1e7c
-      :END:
-***** DONE regexp/flex toggle
-      CLOSED: [2020-02-10 Mon 07:53]
-      :PROPERTIES:
-      :CUSTOM_ID: h:96ef8f87-1b1d-4404-9fe4-78f7b9073bde
-      :END:
-***** TODO [#A] How to get current icomplete match in the most efficient way?
-      :PROPERTIES:
-      :CUSTOM_ID: h:03d4396a-8693-49c5-8fa6-71bdd6a46b56
-      :END:
-***** TODO [#B] functions on current-completion (kill, describe…)
-      :PROPERTIES:
-      :CUSTOM_ID: h:6b8853ee-496c-4015-9e12-8beebb99b9db
-      :END:
-***** TODO [#C] show key bindings?
-      :PROPERTIES:
-      :CUSTOM_ID: h:5b6b2719-bec4-4e26-85b5-6d271859e3c5
-      :END:
-***** TODO [#C] show docstrings, annotations in Completions?
-      :PROPERTIES:
-      :CUSTOM_ID: h:29a11856-f67a-468a-a65d-ba31b58868f7
-      :END:
-***** TODO [#C] current and total count of candidates?
-      :PROPERTIES:
-      :CUSTOM_ID: h:f45069ea-595f-4d00-a089-8bc380d18905
-      :END:
-***** TODO [#C] minibuffer indicator for completion style?
-      :PROPERTIES:
-      :CUSTOM_ID: h:5e3ed4ac-508a-4e71-9cab-83e3b9e07b83
-      :END:
-***** STUDY Do we need AMX or Prescient or savehist is okay?
-      :PROPERTIES:
-      :CUSTOM_ID: h:b8461794-ed06-4200-89a2-117076919c5a
-      :END:
 *** Projectile (completion and extras for projects)
     :PROPERTIES:
     :CUSTOM_ID: h:7862f39e-aed0-4d02-9f1e-60c4601a9734
