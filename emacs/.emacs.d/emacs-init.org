@@ -679,7 +679,7 @@ Now here is the actual code for the minibuffer part:
   (setq completion-flex-nospace nil)
   (setq completion-pcm-complete-word-inserts-delimiters t)
   (setq completion-pcm-word-delimiters "-_./:| ")
-  (setq completion-styles '(partial-completion substring flex))
+  (setq completion-styles '(partial-completion substring initials flex))
   (setq completion-category-overrides
         '((file (styles initials flex partial-completion))
           (buffer (styles substring flex))
