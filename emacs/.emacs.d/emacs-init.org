@@ -1024,21 +1024,6 @@ built-in superset.
   :bind ("M-/" . hippie-expand))
 #+end_src
 
-**** Eldoc (elisp live documentation feedback)
-     :PROPERTIES:
-     :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
-     :END:
-
-Displays information about the construct at point in the echo area.  I
-find that I have no use for this, so I am disabling the mode for the
-time being.
-
-#+begin_src emacs-lisp
-(use-package eldoc
-  :config
-  (global-eldoc-mode -1))
-#+end_src
-
 **** Simple abbreviations
      :PROPERTIES:
      :CUSTOM_ID: h:33cd69cc-1a50-4abb-9f09-cae98dc8998b
@@ -4451,6 +4436,21 @@ without the flycheck interface.
   :after (flycheck package-lint)
   :config
   (flycheck-package-setup))
+#+end_src
+
+** Eldoc (elisp live documentation feedback)
+     :PROPERTIES:
+     :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
+     :END:
+
+Displays information about the construct at point in the echo area.  I
+find that I have no use for this, so I am disabling the mode for the
+time being.
+
+#+begin_src emacs-lisp
+(use-package eldoc
+  :config
+  (global-eldoc-mode -1))
 #+end_src
 
 ** Markdown support
