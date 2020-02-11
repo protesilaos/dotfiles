@@ -1803,14 +1803,33 @@ matches by leveraging the full power of Emacs' editing capabilities
    :CUSTOM_ID: h:c519300f-8a9a-472b-b26d-c2f49adbdb5d
    :END:
 
-=dired= is a built-in tool that performs file management operations.
-It is simply superb.  I use it daily.  Check my video on my [[https://protesilaos.com/codelog/2019-08-12-emacs-dired-tweaks/][Dired
-tweaks and refinements]].
+The directory editor abbreviated as "Dired" (which I pronounce like
+"tired", "mired", etc.) is a built-in tool that performs file management
+operations inside of an Emacs buffer.  It is simply superb!  I use it
+daily for a number of tasks.
 
-*** Base settings
+You can interactively copy, move (rename), symlink, delete files and
+directories, handle permissions, compress or extract archives, run shell
+commands, combine Dired with regular editing capabilities as part of a
+keyboard macro, search[+replace] across multiple files, encrypt/decrypt
+files, and more.  Combine that with the possibility of matching items
+with regular expressions or creating an editable Dired buffer and you
+have everything you need to maximise your productivity.
+
+Check some of my videos:
+
++ [[https://protesilaos.com/codelog/2019-08-12-emacs-dired-tweaks/][Dired tweaks and refinements]] (2019-08-12).
++ [[https://protesilaos.com/codelog/2019-09-03-emacs-dired-macros/][Use Dired and keyboard macros]] (2019-09-03).
++ [[https://protesilaos.com/codelog/2019-09-19-dired-narrow/][Techniques to narrow Dired]] (2019-09-19).
++ [[https://protesilaos.com/codelog/2019-11-16-emacs-dired-chmod/][Change multi-file permissions with Dired]] (2019-11-16).
++ [[https://protesilaos.com/codelog/2019-11-13-emacs-bongo-music/][Music management with Dired and Bongo]] (2019-11-13).
++ [[https://protesilaos.com/codelog/2019-11-18-emacs-dired-bongo/][Dired+Bongo and macros to handle music playlists]] (2019-11-18).
++ [[https://protesilaos.com/codelog/2019-12-08-emacs-multi-replace/][Search and replace across multiple files (not Dired-specific)]] (2019-12-08).
+
+*** Base settings for Dired
    :PROPERTIES:
-        :CUSTOM_ID: h:751a310d-c63e-461c-a6e1-dfdfdb01cb92
-        :END:
+   :CUSTOM_ID: h:751a310d-c63e-461c-a6e1-dfdfdb01cb92
+   :END:
 
 The options here are meant to do the following:
 
@@ -1864,9 +1883,11 @@ as =-AFXhlv --group-directories-first=).
 (use-package dired-aux
   :config
   (setq dired-isearch-filenames 'dwim)
-  ;; The following were introduced in Emacs 27.1
-  (setq dired-create-destination-dirs 'always)
-  (setq dired-vc-rename-file t))
+  ;; The following variables were introduced in Emacs 27.1
+  (setq dired-create-destination-dirs 'ask)
+  (setq dired-vc-rename-file t)
+  :bind (:map dired-mode-map
+         ("C-c +" . dired-create-empty-file)))
 
 (use-package find-dired
   :after dired
@@ -1883,15 +1904,18 @@ as =-AFXhlv --group-directories-first=).
   :hook (dired-mode . dired-async-mode))
 #+end_src
 
-*Pro tip* while renaming or copying a file, =M-n= will return its
-original name, thus allowing you to easily {pre,ap}pend to it.
+*Pro tip* while renaming or copying a file, =M-n= will return its original
+name, thus allowing you to easily {pre,ap}pend to it.  This leverages an
+intriguing concept of Emacs' design called "future history" (because =M-p=
+goes back to your previous entries).  The notion of the future history,
+when applied, is basically an educated guess of what the user would want
+to do in the current context, given that they are not searching through
+their previous actions.
 
 *** Narrowed dired
     :PROPERTIES:
     :CUSTOM_ID: h:affb6142-6216-43b6-9d66-e7b18d65e79e
     :END:
-
-/I have a [[https://protesilaos.com/codelog/2019-09-19-dired-narrow/][video demo on techniques to narrow a Dired buffer]]./
 
 The easiest way to produce a Dired buffer with only a handful of files
 is to mark them, either manually or with =% m=, then toggle the mark
@@ -1936,8 +1960,7 @@ regular buffer, then confirm them with =C-c C-c=.
 #+begin_src emacs-lisp
 (use-package wdired
   :after dired
-  :commands (wdired-mode
-             wdired-change-to-wdired-mode)
+  :commands wdired-change-to-wdired-mode
   :config
   (setq wdired-allow-to-change-permissions t)
   (setq wdired-create-parent-directories t))
@@ -1956,15 +1979,13 @@ behaviour while inside a regular dired buffer.
 (use-package peep-dired
   :ensure t
   :after dired
-  :bind (:map dired-mode-map
-              ("P" . peep-dired))
   :config
   (setq peep-dired-cleanup-on-disable t)
+  (setq peep-dired-enable-on-directories nil)
   (setq peep-dired-ignored-extensions
-        '("mkv" "webm" "mp4" "mp3" "ogg" "iso")))
-
-;; ;; use this for peep always on
-;; (setq peep-dired-enable-on-directories t)
+        '("mkv" "webm" "mp4" "mp3" "ogg" "iso"))
+  :bind (:map dired-mode-map
+              ("P" . peep-dired)))
 #+end_src
 
 *** image-dired (image thumbnails and previews)
@@ -1998,7 +2019,17 @@ to generate lots of images at once.  The culprit is the image converter.
     :CUSTOM_ID: h:6f25c4c1-c504-44e8-8fe5-280d780f0897
     :END:
 
-This is great.  Tree-style navigation across the filesystem.
+Tree-style navigation means that the subdirectories of the current Dired
+buffer can be expanded and contracted in place.  It then is possible to
+perform the same kind of folding on their subdirectories, and so on.
+
+This is, in my opinion, a far more intuitive interaction than the
+default way of inserting subdirectories in the current buffer below
+their parent (type =i= over the target dir).  There still are uses for
+that technique, but tree-style navigation is easier for day-to-day
+tasks.
+
+What I have here:
 
 + The tab key will expand or contract the subdirectory at point.
 + =C-TAB= will behave just like org-mode handles its headings: hit it
@@ -2007,14 +2038,12 @@ This is great.  Tree-style navigation across the filesystem.
 + I also have Shift-TAB for contracting the subtree /when the point is
   inside of it/.
 
-At any rate, this does not override the action of inserting a
-subdirectory listing in the current dired buffer (with =i= over the
-target dir).
-
 #+begin_src emacs-lisp
 (use-package dired-subtree
   :ensure t
   :after dired
+  :config
+  (setq dired-subtree-use-backgrounds nil)
   :bind (:map dired-mode-map
               ("<tab>" . dired-subtree-toggle)
               ("<C-tab>" . dired-subtree-cycle)
@@ -2026,26 +2055,57 @@ target dir).
     :CUSTOM_ID: h:56cbacd7-1fe6-447c-a77f-645edbaa3c6c
     :END:
 
-Some additional features that are shipped with Emacs.  The one I need is
-=dired-jump= and its "other window" variant.  These are among my
-favourite commands.  They will always take you to the directory that
-contains the current buffer.  'Jumping' works even when you are inside
-buffers that do not visit files, such as Magit.  Edit a file then
-proceed to do some file management, then invoke =previous-buffer= or
-=winnder-undo= to go back to where you were (I have a key bindings for
-those in the [[#h:12591f89-eeea-4b12-93e8-9293504e5a12][Window configuration section]]).  Everything happens
-naturally.  Emacs' interconnectedness at its best!
+These are some additional features that are shipped with Emacs.  The one
+I need the most is =dired-jump= and its "other window" variant.  These are
+among my favourite commands.  They will always take you to the directory
+that contains the current buffer.
+
+'Jumping' works even when you are inside buffers that do not visit
+files, such as Magit.  Edit a file then proceed to do some file
+management, then invoke =previous-buffer= or =winner-undo= to go back to
+where you were (I have a key bindings for those in the [[#h:12591f89-eeea-4b12-93e8-9293504e5a12][Window
+configuration section]]).  Everything happens naturally.  Emacs'
+interconnectedness at its best!
+
+I keep =dired-clean-confirm-killing-deleted-buffers= to =t= as a safety
+mechanism: if a file is ever deleted by accident I can use its buffer to
+restore it (never happened in practice).
+
+With regard to binding keys, I choose to handle things myself.  There
+has never been a case where I had to run =info= or =man= inside of a
+directory listing and wished there was some keyboard shortcut readily
+available.
+
+While in =dired-mode=, if you need to open all marked files at once, you
+can hit =F=.  It calls =dired-do-find-marked-files=.
+
+As for my two functions, they leverage a command found in this library.
+I call them with =M-x= as their utility is very specialised.
 
 #+begin_src emacs-lisp
 (use-package dired-x
   :after dired
+  :config
+  (setq dired-clean-up-buffers-too t)
+  (setq dired-clean-confirm-killing-deleted-buffers t)
+  (setq dired-x-hands-off-my-keys t)
+  (setq dired-bind-man nil)
+  (setq dired-bind-info nil)
+
+  (defun prot/kill-current-filename ()
+    "Place the current buffer's file name in the `kill-ring'."
+    (interactive)
+    (kill-new (dired-filename-at-point)))
+
+  (defun prot/insert-current-filename ()
+    "Insert at point the current buffer's file name."
+    (interactive)
+    (insert (dired-filename-at-point)))
+
   :bind (("C-x C-j" . dired-jump)
          ("s-j" . dired-jump)
          ("C-x 4 C-j" . dired-jump-other-window)
-         ("s-J" . dired-jump-other-window))
-  :hook
-  (dired-mode . (lambda ()
-                  (setq dired-clean-confirm-killing-deleted-buffers t))))
+         ("s-J" . dired-jump-other-window)))
 #+end_src
 
 *** dired-rsync
@@ -2072,8 +2132,8 @@ information on the technicalities).
     :END:
 
 This package defines a few more colours for Dired, especially while in
-the detailed view.  My themes support it (see the [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][section on my Modus
-themes]]).
+the detailed view.  My themes support it, as well as a ton of other
+packages (see the [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][section on my Modus themes]]).
 
 #+begin_src emacs-lisp
 (use-package diredfl
