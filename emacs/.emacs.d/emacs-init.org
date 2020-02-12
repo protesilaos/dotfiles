@@ -931,6 +931,9 @@ all "advanced search methods" (e.g. the default =M-s o= for =occur=).
 #+end_src
 
 *** In-buffer completions
+    :PROPERTIES:
+    :CUSTOM_ID: h:98876022-57cc-40de-936e-4ee42cefd69a
+    :END:
 **** Dabbrev and hippie-expand (dynamic word completion)
      :PROPERTIES:
      :CUSTOM_ID: h:57dcf193-0c4e-4ee6-9b2d-6892558b0a84
@@ -4234,299 +4237,6 @@ buffer that doubles as a library buffer (see
          ("<C-return>" . prot/bongo-library-insert-and-play-random)))
 #+end_src
 
-* Language settings (spelling, abbrevs, commenting…)
-  :PROPERTIES:
-  :CUSTOM_ID: h:8fc1f9ca-f5ae-407a-b721-aab414ca657b
-  :END:
-
-This section is all about configurations and packages that deal with
-natural or programming language enhancements.
-
-** Recognise subwords
-   :PROPERTIES:
-   :CUSTOM_ID: h:899cff89-a517-41d5-8c55-b91c6aba8c9d
-   :END:
-
-It is better you do =C-h f subword-mode=.  Basically, this alters the
-way Emacs understands word boundaries.  So, /camelCaseWords/ are
-exposed as their constituents rather than one long word, meaning that
-motions will behave accordingly.
-
-#+begin_src emacs-lisp
-(use-package subword
-  :delight
-  :hook (prog-mode . subword-mode))
-#+end_src
-
-** Auto-fill plain text and comments
-   :PROPERTIES:
-   :CUSTOM_ID: h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3
-   :END:
-
-Make sure we run the mode that keeps paragraphs within the column
-limit.  The adaptive mode improves the handling of things like
-bulleted and numbered lists.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :hook (text-mode . (lambda ()
-                       (turn-on-auto-fill)
-                       (delight 'auto-fill-function nil t)
-                       (setq adaptive-fill-mode t))))
-#+end_src
-
-** Comment lines, regions, boxes, etc.
-   :PROPERTIES:
-   :CUSTOM_ID: h:fa56241c-6840-4a39-8f59-18460d37fc69
-   :END:
-
-Just some basic configurations for commenting structured text.  This is
-mostly a placeholder for potentially more targeted and detailed settings
-that would involve per-mode hooks.
-
-The purpose of my reviewed key bindings is to make them more consistent.
-Helps with mnemonics.  They also are more ergonomic.  To this end, I
-have the following:
-
-+ The standard commenting function is now bound to the simple =C-;=.
-  This runs a "do what I meant" function I have defined, whose detailed
-  documentation can be read below.
-+ =C-:= (=C-S-;=) will kill the comment on the current line.  This is
-  particularly helpful when the comment follows text you would like to
-  keep.  The operation can be performed regardless of where the point is
-  on the line.  *Some modes disable this behaviour* (e.g. trying it on
-  source code inside of org-mode—for those cases, focus the block with
-  =C-c '=).
-+ The =M-;= will just append a comment to the line, rather than the
-  default =comment-dwim=.
-
-Note that =C-;= is occupied by some =flyspell= command that I have no
-use for (disabled in the relevant package declaration).
-
-Lastly, use =M-j= (alias =C-M-j=) when you want to continue an existing
-comment on a new line with respect for the current indentation.  If you
-are not inside of a comment, this will just create an indentation-aware
-new line.
-
-#+begin_src emacs-lisp
-(use-package newcomment
-  :config
-  (setq comment-empty-lines t)
-  (setq comment-fill-column nil)
-  (setq comment-multi-line t)
-  (setq comment-style 'multi-line)
-
-  (defun prot/comment-dwim (&optional arg)
-    "Alternative to `comment-dwim': offers a simple wrapper
-around `comment-line' and `comment-dwim'.
-
-If the region is active, then toggle the comment status of the
-region or, if the major mode defines as much, of all the lines
-implied by the region boundaries.
-
-Else toggle the comment status of the line at point."
-    (interactive "*P")
-    (if (use-region-p)
-        (comment-dwim arg)
-      (save-excursion
-        (comment-line arg))))
-
-  :bind (("C-;" . prot/comment-dwim)
-         ("C-:" . comment-kill)
-         ("M-;" . comment-indent)
-         ("C-x C-;" . comment-box)))
-#+end_src
-
-** Flyspell (spell check)
-   :PROPERTIES:
-   :CUSTOM_ID: h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c
-   :END:
-
-I need spell checking for both English and Greek.  In previous versions
-of this section I had configurations that would automate spell checking
-for both languages at once.  It worked but was rather slow.
-
-Upon further inspection, I have realised that I seldom need to work in
-mixed language circumstances.  Moreover, I now understand that I do not
-need to have spell checking always on.  It can be activated manually,
-with the =flyspell= functions defined in the =:commands= segment below.  It
-is thus possible to keep things simple and to switch dictionaries only
-when necessary.
-
-Also bear in mind that the key binding =C-;= is disabled because I
-re-purpose that for a faster version of =C-x C-;= (much more useful for
-my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
-
-The two functions I define are meant to ease my workflow, while
-superseding the default binding for =ispell-word=.  What I normally use
-is my =M-$=, which will spell-check the active region or toggle the
-dictionaries I use.  The =C-M-$= is defined as a fallback option in case
-I have already highlighted a region and then realise I need the other
-dictionary.
-
-Note that =aspell= and its dictionaries are not part of Emacs.  I install
-the relevant packages from my distro's archive.
-
-#+begin_src emacs-lisp
-(use-package flyspell
-  :commands (ispell-change-dictionary
-             ispell-word
-             flyspell-buffer
-             flyspell-mode
-             flyspell-region)
-  :config
-  (setq flyspell-issue-message-flag nil)
-  (setq flyspell-issue-welcome-flag nil)
-  (setq ispell-program-name "aspell")
-  (setq ispell-dictionary "en_GB")
-
-  (define-key flyspell-mode-map (kbd "C-;") nil)
-
-  (defun prot/ispell-toggle-dictionaries ()
-    "Toggle between English and Greek dictionaries."
-    (interactive)
-    (if (string= ispell-current-dictionary "en")
-        (ispell-change-dictionary "el")
-      (ispell-change-dictionary "en")))
-
-  (defun prot/flyspell-dwim (&optional beg end)
-    "Run `flyspell-region' on the active region, else toggle the
-ispell dictionaries with `prot/ispell-toggle-dictionaries'."
-    (interactive "r")
-      (if (use-region-p)
-          (flyspell-region beg end)
-        (prot/ispell-toggle-dictionaries)))
-
-  :bind (("M-$" . prot/flyspell-dwim)
-         ("C-M-$" . prot/ispell-toggle-dictionaries)))
-#+end_src
-
-** Flycheck (code linting)
-   :PROPERTIES:
-   :CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
-   :END:
-
-This is a great tool for identifying errors or inconsistencies in
-programming syntax.  I used it for my Modus themes (defined elsewhere in
-this document) to make the necessary checks for code quality, in
-preparation of their release as a MELPA package.
-
-This package provides a broad range of customisation options, with many
-items targeting specific programming languages and/or style conventions.
-It seems very powerful!  As these targeted operations require some more
-research, I leave everything to its default value and will be updating
-the package declaration over time.
-
-#+begin_src emacs-lisp
-(use-package flycheck
-  :ensure t
-  :commands flycheck-mode
-  :config
-  (setq flycheck-check-syntax-automatically
-        '(save mode-enabled)))
-#+end_src
-
-Also offer a Flycheck indicator in the mode line.
-
-#+begin_src emacs-lisp
-(use-package flycheck-indicator
-  :ensure t
-  :after flycheck
-  :hook (flycheck-mode . flycheck-indicator-mode))
-#+end_src
-
-There is also a built-in tool that covers Flycheck's niche, but I find
-its functionality somewhat more limited.  As such I am defining it so
-that an autoload will be created for it (meaning that it will only be
-made available on demand).
-
-#+begin_src emacs-lisp
-(use-package flymake
-  :commands flymake-mode)
-#+end_src
-
-*** Flycheck package metadata
-    :PROPERTIES:
-    :CUSTOM_ID: h:bc435c0c-f8ad-4fb6-a68e-e94d8455ba22
-    :END:
-
-This one integrates with Flycheck to provide the necessary checks for
-code that is intended for use in MELPA.  I just define the linter for
-packages as a standalone declaration, in case I wish to keep this
-without the flycheck interface.
-
-#+begin_src emacs-lisp
-(use-package package-lint
-  :ensure t)
-
-(use-package flycheck-package
-  :ensure t
-  :after (flycheck package-lint)
-  :config
-  (flycheck-package-setup))
-#+end_src
-
-** Eldoc (elisp live documentation feedback)
-     :PROPERTIES:
-     :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
-     :END:
-
-Displays information about the construct at point in the echo area.  I
-find that I have no use for this, so I am disabling the mode for the
-time being.
-
-#+begin_src emacs-lisp
-(use-package eldoc
-  :config
-  (global-eldoc-mode -1))
-#+end_src
-
-** Markdown support
-   :PROPERTIES:
-   :CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
-   :END:
-
-I edit lots of Markdown files.  This makes things easier.
-
-#+begin_src emacs-lisp
-(use-package markdown-mode
-  :ensure t
-  :mode ("\\.md\\'" . markdown-mode))
-#+end_src
-
-** YAML support
-   :PROPERTIES:
-   :CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
-   :END:
-
-This adds support for YAML files.
-
-#+begin_src emacs-lisp
-(use-package yaml-mode
-  :ensure t
-  :mode (("\\.yml\\'" . yaml-mode)
-         ("\\.yaml\\'" . yaml-mode)))
-#+end_src
-
-** Support for various config files
-   :PROPERTIES:
-   :CUSTOM_ID: h:3a5ec3f9-1087-4409-88d5-2468a0aa385e
-   :END:
-
-The following rules implement the appropriate syntax highlighting in
-various configuration files that I access.
-
-The list will be expanded over time.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :mode (("offlineimaprc" . conf-mode)
-         ("sxhkdrc" . conf-mode)
-         ("Xmodmap" . conf-xdefaults-mode)
-         ("template" . shell-script-mode)
-         ("\\.rasi\\'" . css-mode)))
-#+end_src
-
 * Interface and interactions
   :PROPERTIES:
   :CUSTOM_ID: h:b6bd2eea-8269-4029-b446-ee340c12ebc3
@@ -4535,7 +4245,7 @@ The list will be expanded over time.
 This section contains lots of small tweaks and refinements that cover a
 wide range of item across the Emacs customisation settings.
 
-** Modus themes (my very accessible themes)
+** Modus themes (my very accessible themes) and other visuals
    :PROPERTIES:
    :CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
    :END:
@@ -4601,10 +4311,53 @@ theme."
   :hook (after-init . prot/modus-operandi))
 #+end_src
 
-** Tabs for window layouts and buffers (Emacs 27.1)
-   :PROPERTIES:
-   :CUSTOM_ID: h:63ad472f-c9c2-40ad-9675-1dc529487788
-   :END:
+*** Window divider mode
+    :PROPERTIES:
+    :CUSTOM_ID: h:6fb900e3-49db-4bc3-8a9e-cd88e020f15b
+    :END:
+
+This is a built-in mode that allows us to display configurable (and
+theme-able) window dividers.  Whereas the default is to draw a single
+pixel line using the primary foreground value of the current theme.
+
+The configurations below produce virtually the same results as with the
+generic window border, only the colour of the divider is less intense
+(has a grey colour compared to pure white/black).  Here is an excerpt of
+what I had to write about it in [[https://gitlab.com/protesilaos/modus-themes/commit/373178f8753ff9f2e90a751f2feb777743898dbb][commit 373178f8 to my Modus themes]]:
+
+#+begin_quote
+The default width of the divider is 6 pixels.  The first and last pixels
+are meant as narrow outlines that are drawn in a slightly more intense
+colour than the remaining 4 inner pixels.
+
+Due to the possibility of adjusting the thickness of the divider, plus
+the generous default width, the colours I have chosen are less intense
+than those used in the default window border (those are black on white
+and vice versa, as per the value of the `default' face).
+#+end_quote
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq window-divider-default-right-width 1)
+  (setq window-divider-default-bottom-width 1)
+  (setq window-divider-default-places 'right-only)
+  :hook (after-init . window-divider-mode))
+#+end_src
+
+*** Optional visual indicators or layout elements
+    :PROPERTIES:
+    :CUSTOM_ID: h:e8d77f0b-0502-449b-bc69-18cf29b9edb0
+    :END:
+
+This is a collection of modes or interfaces I seldom use or, rather, I
+use under special circumstances.  They are useful, but there is not need
+for them to be available at all times.
+
+**** Tabs for window layouts and buffers (Emacs 27.1)
+     :PROPERTIES:
+     :CUSTOM_ID: h:63ad472f-c9c2-40ad-9675-1dc529487788
+     :END:
 
 Starting with version 27.1, Emacs has built-in support for two distinct
 concepts of "tabs":
@@ -4661,49 +4414,10 @@ future as I experiment more with it as part of my workflow.
   (global-tab-line-mode -1))
 #+end_src
 
-** Feedback
-   :PROPERTIES:
-   :CUSTOM_ID: h:1f7c0bf3-8b0e-4baa-b1e0-7e89053d36cb
-   :END:
-
-The common thread of these options is the feedback they provide us
-with or simplify common tasks:
-
-+ Answer with just the initials when dealing with "yes/no" questions.
-+ Follow symlinks without asking.
-+ Faster feedback for key chords (keys appear in the echo area).
-+ Be quiet about auto-revert messages.  They interrupt the minibuffer.
-+ Enable actions for narrowing, region {up,down}casing (all caps or no
-  caps), dired single-buffer navigation (bound to =a=).  Disable
-  overwrite-mode.
-+ Allow inputting Greek while preserving Emacs keys.  Toggle with =C-\=.
-+ Ignore visual/audible bells, because Emacs more appropriate ways of
-  providing error/warning feedback (e.g. a failed =isearch= will return
-  no results, while the failed match will be styled accordingly in the
-  echo area)
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq vc-follow-symlinks t)
-  (setq frame-title-format '("%b %& GNU Emacs"))
-  (setq echo-keystrokes 0.25)
-  (setq auto-revert-verbose nil)
-  (setq default-input-method "greek")
-  (setq ring-bell-function 'ignore)
-
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  (put 'narrow-to-region 'disabled nil)
-  (put 'upcase-region 'disabled nil)
-  (put 'downcase-region 'disabled nil)
-  (put 'dired-find-alternate-file 'disabled nil)
-  (put 'overwrite-mode 'disabled t))
-#+end_src
-
-** Current line highlight (hl-line-mode)
-   :PROPERTIES:
-   :CUSTOM_ID: h:7e65d6e5-ac8f-4100-b7dd-14e3fbc94040
-   :END:
+**** Current line highlight (hl-line-mode)
+     :PROPERTIES:
+     :CUSTOM_ID: h:7e65d6e5-ac8f-4100-b7dd-14e3fbc94040
+     :END:
 
 This is a mode that I only activate via hooks for certain buffers
 where the current line itself is more important that the actual column
@@ -4717,75 +4431,407 @@ for when the equivalent mode is used (I have no plan to use that).
   (setq hl-line-sticky-flag nil))
 #+end_src
 
-** Package lists
-   :PROPERTIES:
-   :CUSTOM_ID: h:0d36996d-c12d-42e6-a388-b67c548c4a4b
-   :END:
+**** Rainbow mode for colour testing
+     :PROPERTIES:
+     :CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
+     :END:
 
-With this I just want to enable line highlighting when browsing the list
-of packages.  I generally use =hl-line-mode= on all interfaces where the
-current line is more important than the exact column of the point.
-
-#+begin_src emacs-lisp
-(use-package package
-  :commands (list-packages
-             package-refresh-contents
-             package-list-packages)
-  :hook (package-menu-mode . hl-line-mode))
-#+end_src
-
-** Auto revert mode
-   :PROPERTIES:
-   :CUSTOM_ID: h:7a8422e6-86d1-40f3-add4-0a1c826e44a3
-   :END:
-
-This mode ensures that the buffer is updated whenever the file changes.
-A change can happen externally or by some other tool inside of Emacs
-(e.g. kill a Magit diff).
+The following package reads a colour value, such as hexadecimal RGB,
+and sets the background for the value in that colour.  Quite useful
+when reviewing my themes (=rainbow-mode= is activated manually).
 
 #+begin_src emacs-lisp
-(use-package autorevert
+(use-package rainbow-mode
+  :ensure t
   :delight
+  :commands rainbow-mode
   :config
-  (setq auto-revert-verbose t)
-  :hook (after-init . global-auto-revert-mode))
+  (setq rainbow-ansi-colors nil)
+  (setq rainbow-x-colors nil))
 #+end_src
 
-** Parentheses
-   :PROPERTIES:
-   :CUSTOM_ID: h:3d374354-843f-4efa-aa38-1ba2c9ccc14c
-   :END:
+**** Toggles for line numbers and whitespace indicators
+     :PROPERTIES:
+     :CUSTOM_ID: h:cb76fcee-e304-4b86-a764-6c3c6775da51
+     :END:
 
-Configure the mode that highlights matching delimiters or parentheses.
-I consider this of utmost importance when working with languages such as
-elisp.
-
-Summary of what these do:
-
-+ Activate the mode.
-+ Show the matching delimiter/parenthesis if on screen, else show
-  nothing.  It is possible to highlight the expression enclosed by the
-  delimiters, by using either =mixed= or =expression=.  The latter always
-  highlights the entire balanced expression, while the former will only
-  do so if the matching delimiter is off screen.
-+ Highlight parentheses even if the point is in their vicinity.  This
-  means the beginning or end of the line, with space in between.
-+ Do not highlight a match when the point is on the inside of the
-  parenthesis.
++ Display line numbers (buffer-local) ::  I seldom use line numbers, but
+     here it is.  This toggles the setting for the local buffer.  A
+     global option is also available, but I prefer the buffer-specific
+     variant because there are contexts where global display is not
+     useful (such as =occur=).
++ Display invisible characters (whitespace) :: Viewing invisible
+     characters (whitespace) can be very helpful under certain
+     circumstances.  Generally though, I do not keep it active.
 
 #+begin_src emacs-lisp
-(use-package paren
+(use-package emacs
   :config
-  (setq show-paren-style 'parenthesis)
-  (setq show-paren-when-point-in-periphery t)
-  (setq show-paren-when-point-inside-paren nil)
-  :hook (after-init . show-paren-mode))
+  (defun prot/toggle-invisibles ()
+    "Toggles the display of indentation and space characters."
+    (interactive)
+    (if (bound-and-true-p whitespace-mode)
+        (whitespace-mode -1)
+      (whitespace-mode)))
+
+  (defun prot/toggle-line-numbers ()
+    "Toggles the display of line numbers.  Applies to all buffers."
+    (interactive)
+    (if (bound-and-true-p display-line-numbers-mode)
+        (display-line-numbers-mode -1)
+      (display-line-numbers-mode)))
+  :bind (("<f6>" . prot/toggle-invisibles)
+         ("<f7>" . prot/toggle-line-numbers)))
 #+end_src
 
-** Configure 'electric' behaviour
+**** Rainbow blocks
+     :PROPERTIES:
+     :CUSTOM_ID: h:d8c7292f-e7bd-43ff-962e-d9b2c6fc6b27
+     :END:
+
+This package is quite useful when debugging highly structured code that
+you are not familiar with.  It will highlight an entire code block in a
+single colour, making it easier to understand the overall structure (my
+Modus themes support it, of course).
+
+Also note that there is another package that applies a rainbow effect
+only to the delimiters.  Between the two, I prefer this one.  At any
+rate, I activate =rainbow-blocks-mode= manually, when I feel that I am
+missing something that I cannot spot right away.
+
+A less intrusive, built-in alternative is to set the variable
+=show-parent-style 'expression= (see my [[#h:3d374354-843f-4efa-aa38-1ba2c9ccc14c][configs for parentheses]]).
+
+#+begin_src emacs-lisp
+(use-package rainbow-blocks
+  :ensure t
+  :delight
+  :commands rainbow-blocks-mode
+  :config
+  (setq rainbow-blocks-highlight-braces-p t)
+  (setq rainbow-blocks-highlight-brackets-p t)
+  (setq rainbow-blocks-highlight-parens-p t))
+#+end_src
+
+** Language settings for prose and code
    :PROPERTIES:
-   :CUSTOM_ID: h:ed95ef3e-75e6-4e53-b3bc-4aee540fe3d9
+   :CUSTOM_ID: h:8fc1f9ca-f5ae-407a-b721-aab414ca657b
    :END:
+
+This section is all about configurations and packages that deal with
+natural or programming language enhancements.
+
+*** Line length (column count)
+    :PROPERTIES:
+    :CUSTOM_ID: h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c
+    :END:
+
+The column count is set to 72.  The standard line length is 80
+characters, so having it at something less allows for such things as
+quoting plain text, indenting, etc.  =git= commit messages also make
+good use of this method.  The column count is used by =auto-fill-mode=
+and similar tools (or when manually invoking text formatting with
+=M-q=).
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq-default fill-column 72)
+  (setq sentence-end-double-space t)
+  (setq sentence-end-without-period nil)
+  (setq colon-double-space nil)
+  :hook (after-init . column-number-mode))
+#+end_src
+
+*** Recognise subwords
+    :PROPERTIES:
+    :CUSTOM_ID: h:899cff89-a517-41d5-8c55-b91c6aba8c9d
+    :END:
+
+It is better you do =C-h f subword-mode=.  Basically, this alters the
+way Emacs understands word boundaries.  So, /camelCaseWords/ are
+exposed as their constituents rather than one long word, meaning that
+motions will behave accordingly.
+
+#+begin_src emacs-lisp
+(use-package subword
+  :delight
+  :hook (prog-mode . subword-mode))
+#+end_src
+
+*** Auto-fill plain text and comments
+    :PROPERTIES:
+    :CUSTOM_ID: h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3
+    :END:
+
+Make sure we run the mode that keeps paragraphs within the column
+limit.  The adaptive mode improves the handling of things like
+bulleted and numbered lists.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :hook (text-mode . (lambda ()
+                       (turn-on-auto-fill)
+                       (delight 'auto-fill-function nil t)
+                       (setq adaptive-fill-mode t))))
+#+end_src
+
+*** Comment lines, regions, boxes, etc.
+    :PROPERTIES:
+    :CUSTOM_ID: h:fa56241c-6840-4a39-8f59-18460d37fc69
+    :END:
+
+Just some basic configurations for commenting structured text.  This is
+mostly a placeholder for potentially more targeted and detailed settings
+that would involve per-mode hooks.
+
+The purpose of my reviewed key bindings is to make them more consistent.
+Helps with mnemonics.  They also are more ergonomic.  To this end, I
+have the following:
+
++ The standard commenting function is now bound to the simple =C-;=.
+  This runs a "do what I meant" function I have defined, whose detailed
+  documentation can be read below.
++ =C-:= (=C-S-;=) will kill the comment on the current line.  This is
+  particularly helpful when the comment follows text you would like to
+  keep.  The operation can be performed regardless of where the point is
+  on the line.  *Some modes disable this behaviour* (e.g. trying it on
+  source code inside of org-mode—for those cases, focus the block with
+  =C-c '=).
++ The =M-;= will just append a comment to the line, rather than the
+  default =comment-dwim=.
+
+Note that =C-;= is occupied by some =flyspell= command that I have no
+use for (disabled in the relevant package declaration).
+
+Lastly, use =M-j= (alias =C-M-j=) when you want to continue an existing
+comment on a new line with respect for the current indentation.  If you
+are not inside of a comment, this will just create an indentation-aware
+new line.
+
+#+begin_src emacs-lisp
+(use-package newcomment
+  :config
+  (setq comment-empty-lines t)
+  (setq comment-fill-column nil)
+  (setq comment-multi-line t)
+  (setq comment-style 'multi-line)
+
+  (defun prot/comment-dwim (&optional arg)
+    "Alternative to `comment-dwim': offers a simple wrapper
+around `comment-line' and `comment-dwim'.
+
+If the region is active, then toggle the comment status of the
+region or, if the major mode defines as much, of all the lines
+implied by the region boundaries.
+
+Else toggle the comment status of the line at point."
+    (interactive "*P")
+    (if (use-region-p)
+        (comment-dwim arg)
+      (save-excursion
+        (comment-line arg))))
+
+  :bind (("C-;" . prot/comment-dwim)
+         ("C-:" . comment-kill)
+         ("M-;" . comment-indent)
+         ("C-x C-;" . comment-box)))
+#+end_src
+
+*** Flyspell (spell check)
+    :PROPERTIES:
+    :CUSTOM_ID: h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c
+    :END:
+
+I need spell checking for both English and Greek.  In previous versions
+of this section I had configurations that would automate spell checking
+for both languages at once.  It worked but was rather slow.
+
+Upon further inspection, I have realised that I seldom need to work in
+mixed language circumstances.  Moreover, I now understand that I do not
+need to have spell checking always on.  It can be activated manually,
+with the =flyspell= functions defined in the =:commands= segment below.  It
+is thus possible to keep things simple and to switch dictionaries only
+when necessary.
+
+Also bear in mind that the key binding =C-;= is disabled because I
+re-purpose that for a faster version of =C-x C-;= (much more useful for
+my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
+
+The two functions I define are meant to ease my workflow, while
+superseding the default binding for =ispell-word=.  What I normally use
+is my =M-$=, which will spell-check the active region or toggle the
+dictionaries I use.  The =C-M-$= is defined as a fallback option in case
+I have already highlighted a region and then realise I need the other
+dictionary.
+
+Note that =aspell= and its dictionaries are not part of Emacs.  I install
+the relevant packages from my distro's archive.
+
+#+begin_src emacs-lisp
+(use-package flyspell
+  :commands (ispell-change-dictionary
+             ispell-word
+             flyspell-buffer
+             flyspell-mode
+             flyspell-region)
+  :config
+  (setq flyspell-issue-message-flag nil)
+  (setq flyspell-issue-welcome-flag nil)
+  (setq ispell-program-name "aspell")
+  (setq ispell-dictionary "en_GB")
+
+  (define-key flyspell-mode-map (kbd "C-;") nil)
+
+  (defun prot/ispell-toggle-dictionaries ()
+    "Toggle between English and Greek dictionaries."
+    (interactive)
+    (if (string= ispell-current-dictionary "en")
+        (ispell-change-dictionary "el")
+      (ispell-change-dictionary "en")))
+
+  (defun prot/flyspell-dwim (&optional beg end)
+    "Run `flyspell-region' on the active region, else toggle the
+ispell dictionaries with `prot/ispell-toggle-dictionaries'."
+    (interactive "r")
+      (if (use-region-p)
+          (flyspell-region beg end)
+        (prot/ispell-toggle-dictionaries)))
+
+  :bind (("M-$" . prot/flyspell-dwim)
+         ("C-M-$" . prot/ispell-toggle-dictionaries)))
+#+end_src
+
+*** Flycheck (code linting)
+    :PROPERTIES:
+    :CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
+    :END:
+
+This is a great tool for identifying errors or inconsistencies in
+programming syntax.  I used it for my Modus themes (defined elsewhere in
+this document) to make the necessary checks for code quality, in
+preparation of their release as a MELPA package.
+
+This package provides a broad range of customisation options, with many
+items targeting specific programming languages and/or style conventions.
+It seems very powerful!  As these targeted operations require some more
+research, I leave everything to its default value and will be updating
+the package declaration over time.
+
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t
+  :commands flycheck-mode
+  :config
+  (setq flycheck-check-syntax-automatically
+        '(save mode-enabled)))
+#+end_src
+
+Also offer a Flycheck indicator in the mode line.
+
+#+begin_src emacs-lisp
+(use-package flycheck-indicator
+  :ensure t
+  :after flycheck
+  :hook (flycheck-mode . flycheck-indicator-mode))
+#+end_src
+
+There is also a built-in tool that covers Flycheck's niche, but I find
+its functionality somewhat more limited.  As such I am defining it so
+that an autoload will be created for it (meaning that it will only be
+made available on demand).
+
+#+begin_src emacs-lisp
+(use-package flymake
+  :commands flymake-mode)
+#+end_src
+
+**** Flycheck package metadata
+     :PROPERTIES:
+     :CUSTOM_ID: h:bc435c0c-f8ad-4fb6-a68e-e94d8455ba22
+     :END:
+
+This one integrates with Flycheck to provide the necessary checks for
+code that is intended for use in MELPA.  I just define the linter for
+packages as a standalone declaration, in case I wish to keep this
+without the flycheck interface.
+
+#+begin_src emacs-lisp
+(use-package package-lint
+  :ensure t)
+
+(use-package flycheck-package
+  :ensure t
+  :after (flycheck package-lint)
+  :config
+  (flycheck-package-setup))
+#+end_src
+
+*** Eldoc (elisp live documentation feedback)
+    :PROPERTIES:
+    :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
+    :END:
+
+Displays information about the construct at point in the echo area.  I
+find that I have no use for this, so I am disabling the mode for the
+time being.
+
+#+begin_src emacs-lisp
+(use-package eldoc
+  :config
+  (global-eldoc-mode -1))
+#+end_src
+
+*** Markdown support
+    :PROPERTIES:
+    :CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
+    :END:
+
+I edit lots of Markdown files.  This makes things easier.
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.md\\'" . markdown-mode))
+#+end_src
+
+*** YAML support
+    :PROPERTIES:
+    :CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
+    :END:
+
+This adds support for YAML files.
+
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :ensure t
+  :mode (("\\.yml\\'" . yaml-mode)
+         ("\\.yaml\\'" . yaml-mode)))
+#+end_src
+
+*** Support for various config files
+    :PROPERTIES:
+    :CUSTOM_ID: h:3a5ec3f9-1087-4409-88d5-2468a0aa385e
+    :END:
+
+The following rules implement the appropriate syntax highlighting in
+various configuration files that I access.
+
+The list will be expanded over time.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :mode (("offlineimaprc" . conf-mode)
+         ("sxhkdrc" . conf-mode)
+         ("Xmodmap" . conf-xdefaults-mode)
+         ("template" . shell-script-mode)
+         ("\\.rasi\\'" . css-mode)))
+#+end_src
+
+*** Configure 'electric' behaviour
+    :PROPERTIES:
+    :CUSTOM_ID: h:ed95ef3e-75e6-4e53-b3bc-4aee540fe3d9
+    :END:
 
 Emacs labels as "electric" any behaviour that involves contextual
 auto-insertion of characters.  This is a summary of my settings:
@@ -4841,10 +4887,41 @@ auto-insertion of characters.  This is a summary of my settings:
                         (electric-quote-mode -1))))
 #+end_src
 
-** Tabs, indentation, and the TAB key
-   :PROPERTIES:
-   :CUSTOM_ID: h:d51d37df-4e58-4e0b-85a1-019ceda342f6
-   :END:
+*** Parentheses
+    :PROPERTIES:
+    :CUSTOM_ID: h:3d374354-843f-4efa-aa38-1ba2c9ccc14c
+    :END:
+
+Configure the mode that highlights matching delimiters or parentheses.
+I consider this of utmost importance when working with languages such as
+elisp.
+
+Summary of what these do:
+
++ Activate the mode.
++ Show the matching delimiter/parenthesis if on screen, else show
+  nothing.  It is possible to highlight the expression enclosed by the
+  delimiters, by using either =mixed= or =expression=.  The latter always
+  highlights the entire balanced expression, while the former will only
+  do so if the matching delimiter is off screen.
++ Highlight parentheses even if the point is in their vicinity.  This
+  means the beginning or end of the line, with space in between.
++ Do not highlight a match when the point is on the inside of the
+  parenthesis.
+
+#+begin_src emacs-lisp
+(use-package paren
+  :config
+  (setq show-paren-style 'parenthesis)
+  (setq show-paren-when-point-in-periphery t)
+  (setq show-paren-when-point-inside-paren nil)
+  :hook (after-init . show-paren-mode))
+#+end_src
+
+*** Tabs, indentation, and the TAB key
+    :PROPERTIES:
+    :CUSTOM_ID: h:d51d37df-4e58-4e0b-85a1-019ceda342f6
+    :END:
 
 I believe tabs, in the sense of inserting the tab character, are best
 suited for indentation.  While spaces are superior at precisely aligning
@@ -4867,385 +4944,10 @@ me.
   (setq-default indent-tabs-mode nil))
 #+end_src
 
-** Cursor appearance and tweaks
+** Custom movements and motions
    :PROPERTIES:
-   :CUSTOM_ID: h:cf9086c1-1b33-4127-a716-de94259e14a0
+   :CUSTOM_ID: h:9aa933d2-70a9-426a-aeb2-2fa21bc67d97
    :END:
-
-My cursor is a box character that blinks.  After lots of testing with
-packages like =beacon= and using a bar cursor, I set back to what I
-always had.  Combined with the default blinking settings, it makes for
-the most accessible combination: the blinking box is easy to spot,
-even when the point is placed over an inaccessible colour combination
-(very low contrast between the background and the foreground).
-
-The "stretch" variable can make the box cover the entirety of a
-character's width.  I disable it because it changes the consistency of
-things on the screen while moving around (such as when passing over a
-tab character).
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq cursor-type 'box)
-  (setq cursor-in-non-selected-windows 'hollow)
-  (setq x-stretch-cursor nil))
-#+end_src
-
-** Line length (column count)
-   :PROPERTIES:
-   :CUSTOM_ID: h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c
-   :END:
-
-The column count is set to 72.  The standard line length is 80
-characters, so having it at something less allows for such things as
-quoting plain text, indenting, etc.  =git= commit messages also make
-good use of this method.  The column count is used by =auto-fill-mode=
-and similar tools (or when manually invoking text formatting with
-=M-q=).
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq-default fill-column 72)
-  (setq sentence-end-double-space t)
-  (setq sentence-end-without-period nil)
-  (setq colon-double-space nil)
-  :hook (after-init . column-number-mode))
-#+end_src
-
-** Delete trailing whitespace
-   :PROPERTIES:
-   :CUSTOM_ID: h:d73479be-91de-4325-a93b-3f7fdcbb642e
-   :END:
-
-This always creates unnecessary diffs in git.  Just delete it upon
-saving.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :hook (before-save . delete-trailing-whitespace))
-#+end_src
-
-** Preserve contents of system clipboard
-   :PROPERTIES:
-   :CUSTOM_ID: h:9eae0d2a-eef1-4b14-b883-39094be4de71
-   :END:
-
-Say you copied a link from your web browser, then switched to Emacs to
-paste it somewhere.  Before you do that, you notice something you want
-to kill.  Doing that will place the last kill to the clipboard, thus
-overriding the thing you copied earlier.  We can have a kill ring
-solution to this with the following:
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq save-interprogram-paste-before-kill t))
-#+end_src
-
-Now the contents of the clipboard are stored in the kill ring and can
-be retrieved from there (e.g. with =M-y=).
-
-** Mouse behaviour
-   :PROPERTIES:
-   :CUSTOM_ID: h:02572210-eb26-4941-8f7c-666a0314877b
-   :END:
-
-I seldom use the mouse with Emacs.  But when I do, I am most likely
-highlighting some area that I would like to copy.  This setting has
-the same behaviour as terminal emulators that place the selection to
-the clipboard (or the primary selection).
-
-The other options in short:
-
-+ Hide pointer while typing.
-+ Enable mouse scroll.
-+ Faster wheel movement means faster scroll.
-
-#+begin_src emacs-lisp
-(use-package mouse
-  :config
-  (setq mouse-drag-copy-region t)
-  (setq make-pointer-invisible t)
-  (setq mouse-wheel-progressive-speed t)
-  :hook (after-init . mouse-wheel-mode))
-#+end_src
-
-** Selection
-   :PROPERTIES:
-   :CUSTOM_ID: h:d53b7b54-924a-443b-955a-3c5b222e3a90
-   :END:
-
-This is a very helpful mode.  It kills the marked region when inserting
-directly to it.  It also has checks to ensure that yanking over a
-selected region will not insert itself (e.g. =mouse-drag-copy-region= is
-in effect).
-
-#+begin_src emacs-lisp
-(use-package delsel
-  :hook (after-init . delete-selection-mode))
-#+end_src
-
-*Pro tip*: On Emacs 27.1 you can create a rectangular region by holding
-down Ctrl and Meta while dragging the mouse with the left click pressed.
-
-** Scrolling behaviour
-   :PROPERTIES:
-   :CUSTOM_ID: h:0c44b318-813a-4f4a-b596-75df4a86476b
-   :END:
-
-Page scrolling should keep the point at the same visual position,
-rather than force it to the top or bottom of the viewport.  This
-eliminates the friction of guessing where the point has warped to.
-
-As for per-line scrolling, I dislike the default behaviour of visually
-re-centring the point.  With the following, it will stay at the
-top/bottom of the screen while moving in that direction (use =C-l= to
-reposition it).  This does not result in more manual interventions to
-recenter text, because of the above.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq scroll-preserve-screen-position t)
-  (setq scroll-conservatively 1)
-  (setq scroll-margin 0))
-#+end_src
-
-** Tool tips
-   :PROPERTIES:
-   :CUSTOM_ID: h:9f492949-70fb-4fba-a0ea-569d4a240be8
-   :END:
-
-These settings control how tool tips are to be handled when hovering the
-mouse over an actionable item:
-
-+ I just want to make sure that the GTK theme is /not used/ for those: I
-  prefer the generic display which follows my current theme's styles.
-+ The delay is slightly reduced for the initial pop-up, while it has
-  been increased for immediate pop-ups thereafter.
-
-#+begin_src emacs-lisp
-(use-package tooltip
-  :config
-  (setq tooltip-delay 0.5)
-  (setq tooltip-short-delay 0.5)
-  (setq x-gtk-use-system-tooltips nil)
-  :hook (after-init . tooltip-mode))
-#+end_src
-
-** Altered zap and easier repeat
-   :PROPERTIES:
-   :CUSTOM_ID: h:5f6ffe61-f0cc-41ad-9d2f-46ad181c3a00
-   :END:
-
-Some minor conveniences:
-
-+ Zap :: I do not like the default behaviour of =M-z= (=zap-to-char=):
-         it deletes the character you provide it with.  Fortunately,
-         there is a built-in replacement that deletes everything up to
-         the character. Let's just rebind the key stroke.
-+ Repeat :: With this you can repeat the last command with =C-x z= and
-            then just press =z= to run it over and over…  Quite
-            useful!  IF you find yourself in need of something more
-            complex, use keyboard macros.
-+ Mark :: You can move back to a previous mark by pressing =C-u SPC=.
-          For a single movement that key chord is fine, but for multiple
-          invocations it becomes tiresome.  The following allows you to
-          repeat the motion with =C-SPC=.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq repeat-on-final-keystroke t)
-  (setq set-mark-command-repeat-pop t)
-  :bind ("M-z" . zap-up-to-char))
-#+end_src
-
-** Toggle visual elements
-   :PROPERTIES:
-   :CUSTOM_ID: h:cb76fcee-e304-4b86-a764-6c3c6775da51
-   :END:
-
-+ Display line numbers (buffer-local) ::  I seldom use line numbers, but
-     here it is.  This toggles the setting for the local buffer.  A
-     global option is also available, but I prefer the buffer-specific
-     variant because there are contexts where global display is not
-     useful (such as =occur=).
-+ Display invisible characters (whitespace) :: Viewing invisible
-     characters (whitespace) can be very helpful under certain
-     circumstances.  Generally though, I do not keep it active.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (defun prot/toggle-invisibles ()
-    "Toggles the display of indentation and space characters."
-    (interactive)
-    (if (bound-and-true-p whitespace-mode)
-        (whitespace-mode -1)
-      (whitespace-mode)))
-
-  (defun prot/toggle-line-numbers ()
-    "Toggles the display of line numbers.  Applies to all buffers."
-    (interactive)
-    (if (bound-and-true-p display-line-numbers-mode)
-        (display-line-numbers-mode -1)
-      (display-line-numbers-mode)))
-  :bind (("<f6>" . prot/toggle-invisibles)
-         ("<f7>" . prot/toggle-line-numbers)))
-#+end_src
-
-** Rainbow blocks
-   :PROPERTIES:
-   :CUSTOM_ID: h:d8c7292f-e7bd-43ff-962e-d9b2c6fc6b27
-   :END:
-
-This package is quite useful when debugging highly structured code that
-you are not familiar with.  It will highlight an entire code block in a
-single colour, making it easier to understand the overall structure (my
-Modus themes support it, of course).
-
-Also note that there is another package that applies a rainbow effect
-only to the delimiters.  Between the two, I prefer this one.  At any
-rate, I activate =rainbow-blocks-mode= manually, when I feel that I am
-missing something that I cannot spot right away.
-
-A less intrusive, built-in alternative is to set the variable
-=show-parent-style 'expression= (see my [[#h:3d374354-843f-4efa-aa38-1ba2c9ccc14c][configs for parentheses]]).
-
-#+begin_src emacs-lisp
-(use-package rainbow-blocks
-  :ensure t
-  :delight
-  :commands rainbow-blocks-mode
-  :config
-  (setq rainbow-blocks-highlight-braces-p t)
-  (setq rainbow-blocks-highlight-brackets-p t)
-  (setq rainbow-blocks-highlight-parens-p t))
-#+end_src
-
-** Rainbow mode (for colour testing)
-   :PROPERTIES:
-   :CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
-   :END:
-
-The following package reads a colour value, such as hexadecimal RGB,
-and sets the background for the value in that colour.  Quite useful
-when reviewing my themes (=rainbow-mode= is activated manually).
-
-#+begin_src emacs-lisp
-(use-package rainbow-mode
-  :ensure t
-  :delight
-  :commands rainbow-mode
-  :config
-  (setq rainbow-ansi-colors nil)
-  (setq rainbow-x-colors nil))
-#+end_src
-
-** Which key (key chord hints)
-   :PROPERTIES:
-   :CUSTOM_ID: h:d066905d-4c6c-4fe5-8077-e806353b8929
-   :END:
-
-By default you can receive hints for possible key chord chains by
-hitting =C-h= once you start a sequence (e.g. =C-x C-k C-h= will offer hints
-about keyboard macros).  The following package simplifies this step by
-presenting a table with the completion targets, once certain
-configurable criteria are met.  By default the criterion is a short
-timer for idleness.  I find that too intrusive, opting instead to invoke
-the command manually (also helps that I somehow memorise all these
-keys…).
-
-The "special keys" are represented by their initial letter, which is
-displayed in a differently coloured foreground than standard keys (as
-per [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
-
-Note that placing the mouse pointer over a =which-key= item will display
-relevant documentation in a tooltip.
-
-#+begin_src emacs-lisp
-(use-package which-key
-  :ensure t
-  :delight
-  :commands which-key-C-h-dispatch
-  :config
-  (setq which-key-show-early-on-C-h t)
-  (setq which-key-idle-delay 10000)
-  (setq which-key-idle-secondary-delay 0.05)
-  (setq which-key-popup-type 'side-window)
-  (setq which-key-show-prefix 'echo)
-  (setq which-key-max-display-columns 6)
-  (setq which-key-separator " ")
-  (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
-  :hook (after-init . which-key-mode))
-#+end_src
-
-** Keycast mode
-   :PROPERTIES:
-   :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
-   :END:
-
-I am experimenting with this package as a means of enhancing the videos
-I do on emacs.  Once enabled, it uses the mode line to show the keys
-being pressed and the command they call.
-
-#+begin_src emacs-lisp
-(use-package keycast
-  :ensure t
-  :config
-  (defun prot/keycast-bottom-left-window-p ()
-    (and (window-at-side-p nil 'left)
-         (window-at-side-p nil 'bottom)))
-  (defun prot/keycast-active-frame-bottom-left-p ()
-    (and (prot/keycast-bottom-left-window-p)
-         (keycast--active-frame-p)))
-  (setq keycast-window-predicate 'prot/keycast-active-frame-bottom-left-p)
-  (setq keycast-separator-width 3)
-  (setq keycast-insert-after 'mode-line-buffer-identification)
-  (setq keycast-remove-tail-elements nil))
-#+end_src
-
-** Window divider mode
-   :PROPERTIES:
-   :CUSTOM_ID: h:6fb900e3-49db-4bc3-8a9e-cd88e020f15b
-   :END:
-
-This is a built-in mode that allows us to display configurable (and
-theme-able) window dividers.  Whereas the default is to draw a single
-pixel line using the primary foreground value of the current theme.
-
-The configurations below produce virtually the same results as with the
-generic window border, only the colour of the divider is less intense
-(has a grey colour compared to pure white/black).  Here is an excerpt of
-what I had to write about it in [[https://gitlab.com/protesilaos/modus-themes/commit/373178f8753ff9f2e90a751f2feb777743898dbb][commit 373178f8 to my Modus themes]]:
-
-#+begin_quote
-The default width of the divider is 6 pixels.  The first and last pixels
-are meant as narrow outlines that are drawn in a slightly more intense
-colour than the remaining 4 inner pixels.
-
-Due to the possibility of adjusting the thickness of the divider, plus
-the generous default width, the colours I have chosen are less intense
-than those used in the default window border (those are black on white
-and vice versa, as per the value of the `default' face).
-#+end_quote
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq window-divider-default-right-width 1)
-  (setq window-divider-default-bottom-width 1)
-  (setq window-divider-default-places 'right-only)
-  :hook (after-init . window-divider-mode))
-#+end_src
-
-* Custom movements and motions
-  :PROPERTIES:
-  :CUSTOM_ID: h:9aa933d2-70a9-426a-aeb2-2fa21bc67d97
-  :END:
 
 I generally rely on the default keys to move around (plus my Super-KEY
 additions to economise on some repetitive tasks).  There are, however,
@@ -5253,10 +4955,10 @@ some motions that are rather cumbersome or too specialised.  While there
 are some commands that are not available at all.  For those cases, I
 rely on custom functions.
 
-** Collection of unpackaged commands or tweaks
-   :PROPERTIES:
-   :CUSTOM_ID: h:2442f3bf-3ffb-431d-82d9-8a44954355b1
-   :END:
+*** Collection of unpackaged commands or tweaks
+    :PROPERTIES:
+    :CUSTOM_ID: h:2442f3bf-3ffb-431d-82d9-8a44954355b1
+    :END:
 
 These are small functions that facilitate my day-to-day work with Emacs.
 They are written by me, unless otherwise noted.
@@ -5529,10 +5231,10 @@ instead.  This command can then be followed by the standard
          ("C-S-y" . prot/yank-replace-line-or-region)))
 #+end_src
 
-** Crux (extra utilities for some useful tasks)
-   :PROPERTIES:
-   :CUSTOM_ID: h:ff6909e4-1c3e-4f57-bb12-9e6679db63fc
-   :END:
+*** Crux (extra utilities for some useful tasks)
+    :PROPERTIES:
+    :CUSTOM_ID: h:ff6909e4-1c3e-4f57-bb12-9e6679db63fc
+    :END:
 
 The package =crux= contains a number of useful functions.  The ones I
 need are:
@@ -5559,10 +5261,10 @@ need are:
          ("<M-return>" . crux-open-with)))
 #+end_src
 
-** Go to last change
-   :PROPERTIES:
-   :CUSTOM_ID: h:ac889a76-1092-449e-a184-9092093f3103
-   :END:
+*** Go to last change
+    :PROPERTIES:
+    :CUSTOM_ID: h:ac889a76-1092-449e-a184-9092093f3103
+    :END:
 
 I could not find any built-in method of /reliably/ moving back to the
 last change.  Using the mark ring is always an option, but does not fill
@@ -5578,10 +5280,10 @@ key binding!
   :bind ("C-z" . goto-last-change))
 #+end_src
 
-** Compare last two kills
-   :PROPERTIES:
-   :CUSTOM_ID: h:97e82006-9ba9-49ee-8f69-280b4beee831
-   :END:
+*** Compare last two kills
+    :PROPERTIES:
+    :CUSTOM_ID: h:97e82006-9ba9-49ee-8f69-280b4beee831
+    :END:
 
 This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_buffer_fragments%252c_continued][diffing buffer fragments]].
 
@@ -5602,7 +5304,320 @@ This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_
       (kill-buffer old)
       (kill-buffer new))))
 #+end_src
-* History and desktop state
+
+** Generic feedback
+   :PROPERTIES:
+   :CUSTOM_ID: h:1f7c0bf3-8b0e-4baa-b1e0-7e89053d36cb
+   :END:
+
+The common thread of these options is the feedback they provide us
+with or simplify common tasks:
+
++ Answer with just the initials when dealing with "yes/no" questions.
++ Follow symlinks without asking.
++ Faster feedback for key chords (keys appear in the echo area).
++ Enable actions for narrowing, region {up,down}casing (all caps or no
+  caps), dired single-buffer navigation (bound to =a=).  Disable
+  overwrite-mode.
++ Allow inputting Greek while preserving Emacs keys.  Toggle with =C-\=.
++ Ignore visual/audible bells, because Emacs more appropriate ways of
+  providing error/warning feedback (e.g. a failed =isearch= will return
+  no results, while the failed match will be styled accordingly in the
+  echo area)
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq vc-follow-symlinks t)
+  (setq frame-title-format '("%b %& GNU Emacs"))
+  (setq echo-keystrokes 0.25)
+  (setq default-input-method "greek")
+  (setq ring-bell-function 'ignore)
+
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (put 'narrow-to-region 'disabled nil)
+  (put 'upcase-region 'disabled nil)
+  (put 'downcase-region 'disabled nil)
+  (put 'dired-find-alternate-file 'disabled nil)
+  (put 'overwrite-mode 'disabled t))
+#+end_src
+
+** Package lists
+   :PROPERTIES:
+   :CUSTOM_ID: h:0d36996d-c12d-42e6-a388-b67c548c4a4b
+   :END:
+
+With this I just want to enable line highlighting when browsing the list
+of packages.  I generally use =hl-line-mode= on all interfaces where the
+current line is more important than the exact column of the point.
+
+#+begin_src emacs-lisp
+(use-package package
+  :commands (list-packages
+             package-refresh-contents
+             package-list-packages)
+  :hook (package-menu-mode . hl-line-mode))
+#+end_src
+
+** Auto revert mode
+   :PROPERTIES:
+   :CUSTOM_ID: h:7a8422e6-86d1-40f3-add4-0a1c826e44a3
+   :END:
+
+This mode ensures that the buffer is updated whenever the file changes.
+A change can happen externally or by some other tool inside of Emacs
+(e.g. kill a Magit diff).
+
+#+begin_src emacs-lisp
+(use-package autorevert
+  :delight
+  :config
+  (setq auto-revert-verbose t)
+  :hook (after-init . global-auto-revert-mode))
+#+end_src
+
+** Cursor and mouse settings
+   :PROPERTIES:
+   :CUSTOM_ID: h:a75d07c3-22a8-4e0f-aa88-1e2e1579d820
+   :END:
+*** Cursor appearance and tweaks
+    :PROPERTIES:
+    :CUSTOM_ID: h:cf9086c1-1b33-4127-a716-de94259e14a0
+    :END:
+
+My cursor is a box character that blinks.  After lots of testing with
+packages like =beacon= and using a bar cursor, I set back to what I
+always had.  Combined with the default blinking settings, it makes for
+the most accessible combination: the blinking box is easy to spot,
+even when the point is placed over an inaccessible colour combination
+(very low contrast between the background and the foreground).
+
+The "stretch" variable can make the box cover the entirety of a
+character's width.  I disable it because it changes the consistency of
+things on the screen while moving around (such as when passing over a
+tab character).
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq cursor-type 'box)
+  (setq cursor-in-non-selected-windows 'hollow)
+  (setq x-stretch-cursor nil))
+#+end_src
+
+*** Mouse behaviour
+    :PROPERTIES:
+    :CUSTOM_ID: h:02572210-eb26-4941-8f7c-666a0314877b
+    :END:
+
+I seldom use the mouse with Emacs.  But when I do, I am most likely
+highlighting some area that I would like to copy.  This setting has
+the same behaviour as terminal emulators that place the selection to
+the clipboard (or the primary selection).
+
+The other options in short:
+
++ Hide pointer while typing.
++ Enable mouse scroll.
++ Faster wheel movement means faster scroll.
+
+#+begin_src emacs-lisp
+(use-package mouse
+  :config
+  (setq mouse-drag-copy-region t)
+  (setq make-pointer-invisible t)
+  (setq mouse-wheel-progressive-speed t)
+  :hook (after-init . mouse-wheel-mode))
+#+end_src
+
+*** Delete selection
+    :PROPERTIES:
+    :CUSTOM_ID: h:d53b7b54-924a-443b-955a-3c5b222e3a90
+    :END:
+
+This is a very helpful mode.  It kills the marked region when inserting
+directly to it.  It also has checks to ensure that yanking over a
+selected region will not insert itself (e.g. =mouse-drag-copy-region= is
+in effect).
+
+#+begin_src emacs-lisp
+(use-package delsel
+  :hook (after-init . delete-selection-mode))
+#+end_src
+
+*Pro tip*: On Emacs 27.1 you can create a rectangular region by holding
+down Ctrl and Meta while dragging the mouse with the left click pressed.
+
+*** Scrolling behaviour
+    :PROPERTIES:
+    :CUSTOM_ID: h:0c44b318-813a-4f4a-b596-75df4a86476b
+    :END:
+
+Page scrolling should keep the point at the same visual position,
+rather than force it to the top or bottom of the viewport.  This
+eliminates the friction of guessing where the point has warped to.
+
+As for per-line scrolling, I dislike the default behaviour of visually
+re-centring the point.  With the following, it will stay at the
+top/bottom of the screen while moving in that direction (use =C-l= to
+reposition it).  This does not result in more manual interventions to
+recenter text, because of the above.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq scroll-preserve-screen-position t)
+  (setq scroll-conservatively 1)
+  (setq scroll-margin 0))
+#+end_src
+
+*** Tool tips
+    :PROPERTIES:
+    :CUSTOM_ID: h:9f492949-70fb-4fba-a0ea-569d4a240be8
+    :END:
+
+These settings control how tool tips are to be handled when hovering the
+mouse over an actionable item:
+
++ I just want to make sure that the GTK theme is /not used/ for those: I
+  prefer the generic display which follows my current theme's styles.
++ The delay is slightly reduced for the initial pop-up, while it has
+  been increased for immediate pop-ups thereafter.
+
+#+begin_src emacs-lisp
+(use-package tooltip
+  :config
+  (setq tooltip-delay 0.5)
+  (setq tooltip-short-delay 0.5)
+  (setq x-gtk-use-system-tooltips nil)
+  :hook (after-init . tooltip-mode))
+#+end_src
+
+** Delete trailing whitespace
+   :PROPERTIES:
+   :CUSTOM_ID: h:d73479be-91de-4325-a93b-3f7fdcbb642e
+   :END:
+
+This always creates unnecessary diffs in git.  Just delete it upon
+saving.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :hook (before-save . delete-trailing-whitespace))
+#+end_src
+
+** Preserve contents of system clipboard
+   :PROPERTIES:
+   :CUSTOM_ID: h:9eae0d2a-eef1-4b14-b883-39094be4de71
+   :END:
+
+Say you copied a link from your web browser, then switched to Emacs to
+paste it somewhere.  Before you do that, you notice something you want
+to kill.  Doing that will place the last kill to the clipboard, thus
+overriding the thing you copied earlier.  We can have a kill ring
+solution to this with the following:
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq save-interprogram-paste-before-kill t))
+#+end_src
+
+Now the contents of the clipboard are stored in the kill ring and can
+be retrieved from there (e.g. with =M-y=).
+
+** Altered zap and easier repeat
+   :PROPERTIES:
+   :CUSTOM_ID: h:5f6ffe61-f0cc-41ad-9d2f-46ad181c3a00
+   :END:
+
+Some minor conveniences:
+
++ Zap :: I do not like the default behaviour of =M-z= (=zap-to-char=):
+         it deletes the character you provide it with.  Fortunately,
+         there is a built-in replacement that deletes everything up to
+         the character. Let's just rebind the key stroke.
++ Repeat :: With this you can repeat the last command with =C-x z= and
+            then just press =z= to run it over and over…  Quite
+            useful!  IF you find yourself in need of something more
+            complex, use keyboard macros.
++ Mark :: You can move back to a previous mark by pressing =C-u SPC=.
+          For a single movement that key chord is fine, but for multiple
+          invocations it becomes tiresome.  The following allows you to
+          repeat the motion with =C-SPC=.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq repeat-on-final-keystroke t)
+  (setq set-mark-command-repeat-pop t)
+  :bind ("M-z" . zap-up-to-char))
+#+end_src
+
+** Which key (key chord hints)
+   :PROPERTIES:
+   :CUSTOM_ID: h:d066905d-4c6c-4fe5-8077-e806353b8929
+   :END:
+
+By default you can receive hints for possible key chord chains by
+hitting =C-h= once you start a sequence (e.g. =C-x C-k C-h= will offer hints
+about keyboard macros).  The following package simplifies this step by
+presenting a table with the completion targets, once certain
+configurable criteria are met.  By default the criterion is a short
+timer for idleness.  I find that too intrusive, opting instead to invoke
+the command manually (also helps that I somehow memorise all these
+keys…).
+
+The "special keys" are represented by their initial letter, which is
+displayed in a differently coloured foreground than standard keys (as
+per [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
+
+Note that placing the mouse pointer over a =which-key= item will display
+relevant documentation in a tooltip.
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :ensure t
+  :delight
+  :commands which-key-C-h-dispatch
+  :config
+  (setq which-key-show-early-on-C-h t)
+  (setq which-key-idle-delay 10000)
+  (setq which-key-idle-secondary-delay 0.05)
+  (setq which-key-popup-type 'side-window)
+  (setq which-key-show-prefix 'echo)
+  (setq which-key-max-display-columns 6)
+  (setq which-key-separator " ")
+  (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
+  :hook (after-init . which-key-mode))
+#+end_src
+
+** Keycast mode
+   :PROPERTIES:
+   :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
+   :END:
+
+I am experimenting with this package as a means of enhancing the videos
+I do on emacs.  Once enabled, it uses the mode line to show the keys
+being pressed and the command they call.
+
+#+begin_src emacs-lisp
+(use-package keycast
+  :ensure t
+  :config
+  (defun prot/keycast-bottom-left-window-p ()
+    (and (window-at-side-p nil 'left)
+         (window-at-side-p nil 'bottom)))
+  (defun prot/keycast-active-frame-bottom-left-p ()
+    (and (prot/keycast-bottom-left-window-p)
+         (keycast--active-frame-p)))
+  (setq keycast-window-predicate 'prot/keycast-active-frame-bottom-left-p)
+  (setq keycast-separator-width 3)
+  (setq keycast-insert-after 'mode-line-buffer-identification)
+  (setq keycast-remove-tail-elements nil))
+#+end_src
+
+* History and state
   :PROPERTIES:
   :CUSTOM_ID: h:1d9437fe-1355-4c2f-8ea7-6668b4d0399b
   :END:
