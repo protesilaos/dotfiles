@@ -87,8 +87,10 @@
 ;;     disk-usage
 ;;     diff-hl
 ;;     diff-mode
+;;     dim-autoload
 ;;     dired
 ;;     dired-async
+;;     dired-git
 ;;     dired-git-info
 ;;     dired-narrow
 ;;     dired-subtree
@@ -769,6 +771,8 @@ between foreground and background is >= 7:1)."
    `(diff-refine-changed ((,class (:inherit modus-theme-intense-yellow))))
    `(diff-refine-removed ((,class (:inherit modus-theme-intense-red))))
    `(diff-removed ((,class (:inherit modus-theme-subtle-red))))
+   ;;;; dim-autoload
+   `(dim-autoload-cookie-line ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
    ;;;; dired
    `(dired-directory ((,class (:foreground ,blue :weight bold))))
    `(dired-flagged ((,class (:inherit modus-theme-intense-red))))
@@ -783,6 +787,9 @@ between foreground and background is >= 7:1)."
    `(dired-async-failures ((,class (:foreground ,red-active :weight bold))))
    `(dired-async-message ((,class (:foreground ,green-active :weight bold))))
    `(dired-async-mode-message ((,class (:foreground ,cyan-active :weight bold))))
+   ;;;; dired-git
+   `(dired-git-branch-else ((,class (:foreground ,magenta-alt :weight bold))))
+   `(dired-git-branch-master ((,class (:foreground ,magenta-alt-other :weight bold))))
    ;;;; dired-git-info
    `(dgi-commit-message-face ((,class (:foreground ,fg-special-mild))))
    ;;;; dired-narrow
