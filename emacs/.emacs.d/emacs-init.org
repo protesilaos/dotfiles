@@ -2336,7 +2336,6 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
 #+begin_src emacs-lisp
 (use-package window
   :init
-  ;; TODO do not repeat common parts, abstract them somehow
   (setq display-buffer-alist
         '(;; top side window
           ("\\*\\(Flycheck\\|Package-Lint\\).*"
@@ -4251,13 +4250,14 @@ buffer that doubles as a library buffer (see
          ("<C-return>" . prot/bongo-library-insert-and-play-random)))
 #+end_src
 
-* Interface and interactions
+* General interface and interactions
   :PROPERTIES:
   :CUSTOM_ID: h:b6bd2eea-8269-4029-b446-ee340c12ebc3
   :END:
 
-This section contains lots of small tweaks and refinements that cover a
-wide range of item across the Emacs customisation settings.
+This section contains lots of small or self-contained tweaks and
+refinements that cover a wide range of item across the Emacs
+customisation settings.
 
 ** Modus themes (my very accessible themes) and other visuals
    :PROPERTIES:
@@ -5319,77 +5319,6 @@ This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_
       (kill-buffer new))))
 #+end_src
 
-** Generic feedback
-   :PROPERTIES:
-   :CUSTOM_ID: h:1f7c0bf3-8b0e-4baa-b1e0-7e89053d36cb
-   :END:
-
-The common thread of these options is the feedback they provide us
-with or simplify common tasks:
-
-+ Answer with just the initials when dealing with "yes/no" questions.
-+ Follow symlinks without asking.
-+ Faster feedback for key chords (keys appear in the echo area).
-+ Enable actions for narrowing, region {up,down}casing (all caps or no
-  caps), dired single-buffer navigation (bound to =a=).  Disable
-  overwrite-mode.
-+ Allow inputting Greek while preserving Emacs keys.  Toggle with =C-\=.
-+ Ignore visual/audible bells, because Emacs more appropriate ways of
-  providing error/warning feedback (e.g. a failed =isearch= will return
-  no results, while the failed match will be styled accordingly in the
-  echo area)
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq vc-follow-symlinks t)
-  (setq frame-title-format '("%b %& GNU Emacs"))
-  (setq echo-keystrokes 0.25)
-  (setq default-input-method "greek")
-  (setq ring-bell-function 'ignore)
-
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  (put 'narrow-to-region 'disabled nil)
-  (put 'upcase-region 'disabled nil)
-  (put 'downcase-region 'disabled nil)
-  (put 'dired-find-alternate-file 'disabled nil)
-  (put 'overwrite-mode 'disabled t))
-#+end_src
-
-** Package lists
-   :PROPERTIES:
-   :CUSTOM_ID: h:0d36996d-c12d-42e6-a388-b67c548c4a4b
-   :END:
-
-With this I just want to enable line highlighting when browsing the list
-of packages.  I generally use =hl-line-mode= on all interfaces where the
-current line is more important than the exact column of the point.
-
-#+begin_src emacs-lisp
-(use-package package
-  :commands (list-packages
-             package-refresh-contents
-             package-list-packages)
-  :hook (package-menu-mode . hl-line-mode))
-#+end_src
-
-** Auto revert mode
-   :PROPERTIES:
-   :CUSTOM_ID: h:7a8422e6-86d1-40f3-add4-0a1c826e44a3
-   :END:
-
-This mode ensures that the buffer is updated whenever the file changes.
-A change can happen externally or by some other tool inside of Emacs
-(e.g. kill a Magit diff).
-
-#+begin_src emacs-lisp
-(use-package autorevert
-  :delight
-  :config
-  (setq auto-revert-verbose t)
-  :hook (after-init . global-auto-revert-mode))
-#+end_src
-
 ** Cursor and mouse settings
    :PROPERTIES:
    :CUSTOM_ID: h:a75d07c3-22a8-4e0f-aa88-1e2e1579d820
@@ -5507,23 +5436,56 @@ mouse over an actionable item:
   :hook (after-init . tooltip-mode))
 #+end_src
 
-** Delete trailing whitespace
+** Keycast mode
    :PROPERTIES:
-   :CUSTOM_ID: h:d73479be-91de-4325-a93b-3f7fdcbb642e
+   :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
    :END:
 
-This always creates unnecessary diffs in git.  Just delete it upon
-saving.
+I am experimenting with this package as a means of enhancing the videos
+I do on emacs.  Once enabled, it uses the mode line to show the keys
+being pressed and the command they call.
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :hook (before-save . delete-trailing-whitespace))
+(use-package keycast
+  :ensure t
+  :config
+  (defun prot/keycast-bottom-left-window-p ()
+    (and (window-at-side-p nil 'left)
+         (window-at-side-p nil 'bottom)))
+  (defun prot/keycast-active-frame-bottom-left-p ()
+    (and (prot/keycast-bottom-left-window-p)
+         (keycast--active-frame-p)))
+  (setq keycast-window-predicate 'prot/keycast-active-frame-bottom-left-p)
+  (setq keycast-separator-width 3)
+  (setq keycast-insert-after 'mode-line-buffer-identification)
+  (setq keycast-remove-tail-elements nil))
 #+end_src
 
-** Preserve contents of system clipboard
+** Conveniences and minor extras
    :PROPERTIES:
-   :CUSTOM_ID: h:9eae0d2a-eef1-4b14-b883-39094be4de71
+   :CUSTOM_ID: h:271c9122-280b-424e-98f0-af9e4f09bbdb
    :END:
+*** Auto revert mode
+    :PROPERTIES:
+    :CUSTOM_ID: h:7a8422e6-86d1-40f3-add4-0a1c826e44a3
+    :END:
+
+This mode ensures that the buffer is updated whenever the file changes.
+A change can happen externally or by some other tool inside of Emacs
+(e.g. kill a Magit diff).
+
+#+begin_src emacs-lisp
+(use-package autorevert
+  :delight
+  :config
+  (setq auto-revert-verbose t)
+  :hook (after-init . global-auto-revert-mode))
+#+end_src
+
+*** Preserve contents of system clipboard
+    :PROPERTIES:
+    :CUSTOM_ID: h:9eae0d2a-eef1-4b14-b883-39094be4de71
+    :END:
 
 Say you copied a link from your web browser, then switched to Emacs to
 paste it somewhere.  Before you do that, you notice something you want
@@ -5540,25 +5502,86 @@ solution to this with the following:
 Now the contents of the clipboard are stored in the kill ring and can
 be retrieved from there (e.g. with =M-y=).
 
-** Altered zap and easier repeat
-   :PROPERTIES:
-   :CUSTOM_ID: h:5f6ffe61-f0cc-41ad-9d2f-46ad181c3a00
-   :END:
+*** Delete trailing whitespace
+    :PROPERTIES:
+    :CUSTOM_ID: h:d73479be-91de-4325-a93b-3f7fdcbb642e
+    :END:
 
-Some minor conveniences:
+This always creates unnecessary diffs in git.  Just delete it upon
+saving.
 
-+ Zap :: I do not like the default behaviour of =M-z= (=zap-to-char=):
-         it deletes the character you provide it with.  Fortunately,
-         there is a built-in replacement that deletes everything up to
-         the character. Let's just rebind the key stroke.
-+ Repeat :: With this you can repeat the last command with =C-x z= and
-            then just press =z= to run it over and over…  Quite
-            useful!  IF you find yourself in need of something more
-            complex, use keyboard macros.
-+ Mark :: You can move back to a previous mark by pressing =C-u SPC=.
-          For a single movement that key chord is fine, but for multiple
-          invocations it becomes tiresome.  The following allows you to
-          repeat the motion with =C-SPC=.
+#+begin_src emacs-lisp
+(use-package emacs
+  :hook (before-save . delete-trailing-whitespace))
+#+end_src
+
+*** Generic feedback
+    :PROPERTIES:
+    :CUSTOM_ID: h:1f7c0bf3-8b0e-4baa-b1e0-7e89053d36cb
+    :END:
+
+The common thread of these options is the feedback they provide us
+with or simplify common tasks:
+
++ Answer with just the initials when dealing with "yes/no" questions.
++ Follow symlinks without asking.
++ Faster feedback for key chords (keys appear in the echo area).
++ Enable actions for narrowing, region {up,down}casing (all caps or no
+  caps), dired single-buffer navigation (bound to =a=).  Disable
+  overwrite-mode.
++ Allow inputting Greek while preserving Emacs keys.  Toggle with =C-\=.
++ Ignore visual/audible bells, because Emacs more appropriate ways of
+  providing error/warning feedback (e.g. a failed =isearch= will return
+  no results, while the failed match will be styled accordingly in the
+  echo area)
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq vc-follow-symlinks t)
+  (setq frame-title-format '("%b %& GNU Emacs"))
+  (setq echo-keystrokes 0.25)
+  (setq default-input-method "greek")
+  (setq ring-bell-function 'ignore)
+
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (put 'narrow-to-region 'disabled nil)
+  (put 'upcase-region 'disabled nil)
+  (put 'downcase-region 'disabled nil)
+  (put 'dired-find-alternate-file 'disabled nil)
+  (put 'overwrite-mode 'disabled t))
+#+end_src
+
+*** Altered zap and easier repeats
+    :PROPERTIES:
+    :CUSTOM_ID: h:5f6ffe61-f0cc-41ad-9d2f-46ad181c3a00
+    :END:
+
+I seldom use the functionality related to this section, but when I do I
+prefer it to work the way I expect.  =zap-up-to-char= will delete
+everything from point up to the character you provide it with.  Think of
+how you may want to delete a file name but keep its file type extension.
+
+The repeat command is bound by default to =C-x z=.  I make it so that
+subsequent repetitions require only hitting another =z=.  In practice
+though, you should not bother with this.  Let keyboard macros handle
+that task.
+
+*Pro tip:* to make a keyboard macro out of your most recent commands,
+use =C-x C-k l= which calls =kmacro-edit-lossage=.  The list is editable, so
+remove anything that is not required and then save what is left.  The
+result is stored as the latest keyboard macro (and you also have the
+power to cycle through kmacros, store them in specific keys, etc.).
+
+Moving on to the mark, practically every Emacs motion that operates on a
+portion of text will set the mark automatically.  You can also do it
+manually with =C-SPC= (hit it twice if you do not wish to activate the
+region).  It is then possible to cycle through the marks in reverse
+order by passing a prefix argument =C-u C-SPC=.  With the evaluation of
+=set-mark-command-repeat-pop= as =t= we can continue cycling by repeated
+presses of =C-SPC=.  Again though, this is not the type of functionality I
+rely on: for more deliberate actions of this sort, consider Emacs'
+notion of "registers".
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -5568,10 +5591,27 @@ Some minor conveniences:
   :bind ("M-z" . zap-up-to-char))
 #+end_src
 
-** Which key (key chord hints)
-   :PROPERTIES:
-   :CUSTOM_ID: h:d066905d-4c6c-4fe5-8077-e806353b8929
-   :END:
+*** Package lists
+    :PROPERTIES:
+    :CUSTOM_ID: h:0d36996d-c12d-42e6-a388-b67c548c4a4b
+    :END:
+
+With this I just want to enable line highlighting when browsing the list
+of packages.  I generally use =hl-line-mode= on all interfaces where the
+current line is more important than the exact column of the point.
+
+#+begin_src emacs-lisp
+(use-package package
+  :commands (list-packages
+             package-refresh-contents
+             package-list-packages)
+  :hook (package-menu-mode . hl-line-mode))
+#+end_src
+
+*** Which key (key chord hints)
+    :PROPERTIES:
+    :CUSTOM_ID: h:d066905d-4c6c-4fe5-8077-e806353b8929
+    :END:
 
 By default you can receive hints for possible key chord chains by
 hitting =C-h= once you start a sequence (e.g. =C-x C-k C-h= will offer hints
@@ -5606,31 +5646,6 @@ relevant documentation in a tooltip.
   :hook (after-init . which-key-mode))
 #+end_src
 
-** Keycast mode
-   :PROPERTIES:
-   :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
-   :END:
-
-I am experimenting with this package as a means of enhancing the videos
-I do on emacs.  Once enabled, it uses the mode line to show the keys
-being pressed and the command they call.
-
-#+begin_src emacs-lisp
-(use-package keycast
-  :ensure t
-  :config
-  (defun prot/keycast-bottom-left-window-p ()
-    (and (window-at-side-p nil 'left)
-         (window-at-side-p nil 'bottom)))
-  (defun prot/keycast-active-frame-bottom-left-p ()
-    (and (prot/keycast-bottom-left-window-p)
-         (keycast--active-frame-p)))
-  (setq keycast-window-predicate 'prot/keycast-active-frame-bottom-left-p)
-  (setq keycast-separator-width 3)
-  (setq keycast-insert-after 'mode-line-buffer-identification)
-  (setq keycast-remove-tail-elements nil))
-#+end_src
-
 * History and state
   :PROPERTIES:
   :CUSTOM_ID: h:1d9437fe-1355-4c2f-8ea7-6668b4d0399b
@@ -5640,39 +5655,31 @@ This section contains configurations for packages that are dedicated to
 the task of recording the state of various Emacs tools, such as the
 history of the minibuffer or the list of recently-visited files.
 
-** Persistent session
-   :PROPERTIES:
-   :CUSTOM_ID: h:8798f77e-ad6c-4b3c-b808-c617b7135441
-   :END:
+In practice, these are some of the most useful configurations one can
+make, as lots of functions depend on them.  For example, a record of the
+minibuffer's history of inputs allows the completion framework to guess
+the most likely course of action.  Typing =M-x g= gives me =gnus= as the
+first possible option, which is exactly what I want.
 
-These are about the general state of Emacs.
+** Emacs server and desktop (state of buffers)
 
-*** Emacs server
-    :PROPERTIES:
-    :CUSTOM_ID: h:b40b36f1-c00d-4677-8efb-f1e18c4c4b8d
-    :END:
-
-The following uses the first /running/ process as the one others may
-connect to.  This means that calling =emacsclient= (with or without
+The following uses the first /running/ process of Emacs as the one others
+may connect to.  This means that calling =emacsclient= (with or without
 =--create-frame=), will share the same buffer list and data as the
-original running process.  The server persists for as long as there is
-an Emacs frame attached to said server.
+original running process, aka "the server".  The server persists for as
+long as there is an Emacs frame attached to it.
 
 #+begin_src emacs-lisp
 (use-package server
   :hook (after-init . server-start))
 #+end_src
 
-*** Emacs "desktop" (state of buffers)
-    :PROPERTIES:
-    :CUSTOM_ID: h:b8d23f7d-acb8-49df-990c-3065df4f32e8
-    :END:
-
-What I find particularly useful is the ability to save the state I was
-in: the name and position of buffers, and the like.  Emacs calls this
-state of affairs the "desktop".  Preserving it saves me from any
-possible crash or when I need to close Emacs and re-launch it later (my
-hardware is limited, so I do not keep it running while I am away).
+With some exceptions aside, I only ever use Emacs in a single frame.
+What I find more useful is the ability to save the state I was in: the
+name and position of buffers, and the like.  Emacs calls this state of
+affairs the "desktop".  Preserving it saves me from any possible crash
+or when I need to close Emacs and re-launch it later (my hardware is
+limited, so I do not keep it running while I am away).
 
 Overview of my settings:
 
@@ -5718,7 +5725,7 @@ Overview of my settings:
   (desktop-save-mode 1))
 #+end_src
 
-** Record history
+** Record various types of history
    :PROPERTIES:
    :CUSTOM_ID: h:ab868c1a-7ca6-4f54-83d8-eab49447da82
    :END:
@@ -5811,8 +5818,13 @@ display virtual buffers."
     :CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
     :END:
 
-Keeps a record of actions involving the minibuffer.  Make sure to also
-check my [[*Minibuffer essentials and Icomplete (built-in completion)][configurations for the minibuffer and icomplete]].
+Keeps a record of actions involving the minibuffer.  This is of
+paramount importance to a fast and efficient workflow involving any
+completion framework that leverages the built-in mechanisms.
+
+Emacs will remember your input and choices and will surface the desired
+results towards the top as the most likely candidates.  Make sure to
+also check my [[*Minibuffer essentials and Icomplete (built-in completion)][configurations for the minibuffer and icomplete]].
 
 #+begin_src emacs-lisp
 (use-package savehist
@@ -5829,12 +5841,15 @@ check my [[*Minibuffer essentials and Icomplete (built-in completion)][configura
     :CUSTOM_ID: h:ae1cad56-c12c-4bd5-a5cc-e85c0ad4b978
     :END:
 
-Just remember where the point is in any given file.
+Just remember where the point is in any given file.  This can often be a
+subtle reminder of what you were doing the last time you visited that
+file, allowing you to pick up from there.
 
 #+begin_src emacs-lisp
 (use-package saveplace
   :config
   (setq save-place-file "~/.emacs.d/saveplace")
+  (setq save-place-forget-unreadable-files t)
   (save-place-mode 1))
 #+end_src
 
@@ -5843,9 +5858,9 @@ Just remember where the point is in any given file.
     :CUSTOM_ID: h:3d2e3e65-b860-4ad7-87d2-24e4e9d0e296
     :END:
 
-/This section is subject to review./
-
-And here are some settings pertaining to backups.
+And here are some settings pertaining to backups.  I rarely need those,
+but I prefer to be safe in the knowledge that if something goes awry
+there is something to fall back to.
 
 #+begin_src emacs-lisp
 (use-package emacs
