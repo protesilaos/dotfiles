@@ -596,7 +596,8 @@ What this also means is that *I am deprecating Ivy and its dependants* as
 well as reviewing any other package that expected their presence or
 somehow contributed to them.  I do understand, however, that some users
 may still need to see the code and customisations I had for those, thus
-*I am keeping everything in place* with the =:disabled= keyword.
+*I am keeping everything in place* with the =:disabled= keyword.  Everything
+is under the heading of [[#h:9850e597-e4b4-4e04-aad9-ce8a12b3e4ae][important configurations that I stopped using]].
 
 *** Minibuffer essentials and Icomplete (built-in completion)
     :PROPERTIES:
@@ -1044,538 +1045,6 @@ position of the cursor after the skeleton has been inserted.
     "" 'protesilaos-gitlab-skeleton)
   :hook ((text-mode . abbrev-mode)
          (git-commit-mode . abbrev-mode)))
-#+end_src
-
-*** DEPRECATED Ivy/Counsel/Swiper plus filtering and scoring
-    :PROPERTIES:
-    :CUSTOM_ID: h:d76e14b0-2002-4efa-8fef-cb3cd42d3d80
-    :END:
-
-*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
-uses the built-in =icomplete= tool.  All deprecated packages contain the
-special =:disabled= keyword.  For the new system, refer to the previous
-sections:
-
-+ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
-+ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
-
-*Below is the latest state of these settings prior to the switch.*
-
-This is a suite of tools that enhance several aspects of the Emacs
-experience.  Basically we have:
-
-+ =ivy= is the mechanism that handles all selection lists, narrowing
-  them down using a variety of possible builders (regular expressions of
-  flexible matching).  It also provides a base interface for any
-  function that needs to receive input based on a list of candidates.
-+ =counsel= provides a superset of functions for navigating the file
-  system, switching buffers, etc. that expand on the basic features
-  supported by Ivy.  For instance, switching buffers with Counsel offers
-  a preview of their contents in the window, whereas regular Ivy does
-  not.
-+ =swiper= is a tool for performing searches, powered by Ivy, all while
-  presenting a preview of the results.
-
-**** DEPRECATED Configurations for Ivy
-     :PROPERTIES:
-     :CUSTOM_ID: h:ba8cd15e-97b8-40e1-804e-2badaca14c1d
-     :END:
-
-*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
-uses the built-in =icomplete= tool.  All deprecated packages contain the
-special =:disabled= keyword.  For the new system, refer to the previous
-sections:
-
-+ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
-+ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
-
-*Below is the latest state of these settings prior to the switch.*
-
-A few highlights of my configurations in the subsequent code block:
-
-+ =ivy-height-alist= governs the maximum width of the Ivy window to 1/4
-  of the viewport.  I prefer this over an absolute number as I work on
-  monitors with varying dimensions (though note that =ivy-posframe= will
-  override it, if enabled).
-+ =ivy-virtual-buffers= populates buffer-switching lists with items from
-  the =recentf= utility.  In practice, a recently killed buffer can still
-  be accessed from ={ivy,counsel}-switch-buffer= as if the kill had never
-  occurred.
-+ =ivy-re-builders-list= allows us to specify the algorithm for matching
-  candidates.  Unless declared otherwise, I am using regexp matching by
-  default.
-+ =ivy-initial-inputs-alist= adds some initial input to the commands we
-  specify.  I define it to prepend a caret sign =(^)= by default, unless
-  explicitly stated not to include anything.
-+ =ivy-use-selectable-prompt= solves the problem of trying to create a
-  new file system path that shares a common name with an existing item.
-  Press =C-p= and proceed without further conflicts.
-+ The various =ivy-set-occur= are meant to specify a function for
-  producing an appropriate buffer when running =ivy-occur= (see table
-  right below).
-
-And here are some 'hidden' key bindings for making the most out of Ivy
-(find more in the official manual).
-
-| Key     | Function                | Description                                 |
-|---------+-------------------------+---------------------------------------------|
-| M-o     | ivy-dispatching-done    | Show actions for current match.             |
-| C-c C-o | ivy-occur               | Place the list in a standalone buffer.      |
-| C-M-m   | ivy-call                | Run command, keep minibuffer open.          |
-| M-i     | ivy-insert-current      | Insert match in the prompt.                 |
-| M-j     | ivy-yank-word           | Put word at point in the minibuffer prompt. |
-| S-SPC   | ivy-restrict-to-matches | Restrict list to prompt (and search anew).  |
-| C-SPC   | ivy-restrict-to-matches | My alias for the above.                     |
-
-Adding to the table above, you can always use the /universal/ =M-n= and
-=M-p= to cycle through the history of entries.
-
-With those granted, make sure to inspect the entirety of my dotemacs'
-section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]], as the following
-package declaration is but a piece of a greater whole.
-
-#+begin_src emacs-lisp
-(use-package ivy
-  :disabled                             ; switched to `icomplete'
-  :ensure t
-  :delight
-  :config
-  (setq ivy-count-format "(%d/%d) ")
-  (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 4))))
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-wrap nil)
-  (setq ivy-re-builders-alist
-        '((counsel-M-x . ivy--regex-fuzzy)
-          (ivy-switch-buffer . ivy--regex-fuzzy)
-          (ivy-switch-buffer-other-window . ivy--regex-fuzzy)
-          (counsel-rg . ivy--regex-or-literal)
-          (t . ivy--regex-plus)))
-  (setq ivy-display-style 'fancy)
-  (setq ivy-use-selectable-prompt t)
-  (setq ivy-fixed-height-minibuffer nil)
-  (setq ivy-initial-inputs-alist
-        '((counsel-M-x . "^")
-          (ivy-switch-buffer . "^")
-          (ivy-switch-buffer-other-window . "^")
-          (counsel-describe-function . "^")
-          (counsel-describe-variable . "^")
-          (t . "")))
-
-  (ivy-set-occur 'counsel-fzf 'counsel-fzf-occur)
-  (ivy-set-occur 'counsel-rg 'counsel-ag-occur)
-  (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur)
-  (ivy-set-occur 'swiper 'swiper-occur)
-  (ivy-set-occur 'swiper-isearch 'swiper-occur)
-  (ivy-set-occur 'swiper-multi 'counsel-ag-occur)
-  :hook ((after-init . ivy-mode)
-         (ivy-occur-mode . hl-line-mode))
-  :bind (("<s-up>" . ivy-push-view)
-		 ("<s-down>" . ivy-switch-view)
-         ("C-S-r" . ivy-resume)
-         :map ivy-occur-mode-map
-         ("f" . forward-char)
-         ("b" . backward-char)
-         ("n" . ivy-occur-next-line)
-         ("p" . ivy-occur-previous-line)
-         ("<C-return>" . ivy-occur-press)))
-#+end_src
-
-**** DEPRECATED Prescient (sort, filter results)
-     :PROPERTIES:
-     :CUSTOM_ID: h:87b37547-5941-4f20-baf6-4d00cde1151a
-     :END:
-
-*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
-uses the built-in =icomplete= tool.  All deprecated packages contain the
-special =:disabled= keyword.  For the new system, refer to the previous
-sections:
-
-+ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
-+ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
-
-*Below is the latest state of these settings prior to the switch.*
-
-This tool provides a filtering and scoring system that can interface
-with Ivy.  It is a replacement for =amx=.
-
-Filtering concerns the way matches are determined.  It is possible to
-select candidates by applying the search terms in a number of ways, such
-as a literal interpretation of the character string, a regular
-expression, a set of ordered wildcards (fuzzy match), or an initialism.
-The filters can be applied on a per function basis, though I that breaks
-the way Ivy highlights things.
-
-The scoring system is based on the frequency and recency of commands.
-This is extremely valuable, as it will always surface to the top the
-commands you most likely need.  Running =M-x= is now akin to starting a
-key chord chain (for example, =M-x b= will give me =bongo= as my first
-match, which is exactly what I need).  It eliminates the need for
-increasingly arcane key bindings—use keys only for the most
-frequently-used commands.
-
-The value of =ivy-prescient-sort-commands= defines functions that are
-exempt from all the sorting operations performed by this tool.  I think
-that, at the very least, =swiper= should always be excluded from any kind
-of sorting mechanism, because it already orders its results based on the
-line number.  We should not break that expectation.  All other commands
-are just a matter of preference, where I simply find the generic sorting
-to offer a better first impression (does not really matter, since I will
-type something anyhow).
-
-#+begin_src emacs-lisp
-(use-package prescient
-  :disabled                             ; switched to `icomplete'
-  :ensure t
-  :config
-  (setq prescient-history-length 200)
-  (setq prescient-save-file "~/.emacs.d/prescient-items")
-  (setq prescient-filter-method '(literal regexp))
-  (prescient-persist-mode 1))
-
-(use-package ivy-prescient
-  :disabled                             ; switched to `icomplete'
-  :ensure t
-  :after (prescient ivy)
-  :config
-  (setq ivy-prescient-sort-commands
-        '(:not counsel-grep
-               counsel-rg
-               counsel-switch-buffer
-               ivy-switch-buffer
-               swiper
-               swiper-multi))
-  (setq ivy-prescient-retain-classic-highlighting t)
-  (setq ivy-prescient-enable-filtering nil)
-  (setq ivy-prescient-enable-sorting t)
-  (ivy-prescient-mode 1))
-#+end_src
-
-**** DEPRECATED Counsel configurations and key bindings
-     :PROPERTIES:
-     :CUSTOM_ID: h:919f942a-f99d-437f-b010-af21264246f3
-     :END:
-
-*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
-uses the built-in =icomplete= tool.  All deprecated packages contain the
-special =:disabled= keyword.  For the new system, refer to the previous
-sections:
-
-+ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
-+ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
-
-*Below is the latest state of these settings prior to the switch.*
-
-A few things to consider about the settings in this sub-section:
-
-+ With regard to key bindings, notice that Counsel's implementation for
-  switching buffers will preview the currently matched item.  This is
-  particularly distracting when running it for the current window.  For
-  that case I use the generic Ivy method.  I am okay with Counsel's
-  approach when operating on the other window.
-+ As for =counsel-yank-pop-separator=, its value is a series of em
-  dashes with a newline character at either end.  This creates a nice
-  separator line when browsing the kill ring (=counsel-yank-pop=).
-+ The function =counsel-rg= provides an interface to an external program
-  called =ripgrep=.  This is a great alternative to =grep=.  For me the
-  main selling point is its improved speed.  The key chord for it is
-  similar to the built-in =occur=.
-+ The key chord for =counsel-git-grep= is also inspired by =occur=.
-  This one will perform a search in the current git repository.
-+ I have a few custom functions for finding files using a fluid workflow
-  from =fzf= to =ripgrep= (and vice versa).  Better check my video on
-  [[https://protesilaos.com/codelog/2019-12-15-emacs-ivy-fzf-rg/][Fuzzy search with “Ivy actions” for FZF and RIPGREP]] (2019-12-15).
-+ For the =prot/counsel-fzf-ace-window= function, I recommend you refer
-  to my [[#h:4337228f-7ee5-4f59-b435-61534538c66f][package declaration for ace-window]], in order to see what
-  commands I want to use.
-
-Also make sure to study all the other package declarations in the
-[[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]] section, to appreciate their
-interplay and the full extent of my customisations.
-
-#+begin_src emacs-lisp
-(use-package counsel
-  :disabled                             ; switched to `icomplete'
-  :ensure t
-  :after ivy
-  :config
-  (setq counsel-yank-pop-preselect-last t)
-  (setq counsel-yank-pop-separator "\n—————————\n")
-  (setq counsel-rg-base-command
-        "rg -SHn --no-heading --color never --no-follow --hidden %s")
-  (setq counsel-find-file-occur-cmd; TODO Simplify this
-        "ls -a | grep -i -E '%s' | tr '\\n' '\\0' | xargs -0 ls -d --group-directories-first")
-
-  (defun prot/counsel-fzf-rg-files (&optional input dir)
-    "Run `fzf' in tandem with `ripgrep' to find files in the
-present directory.  If invoked from inside a version-controlled
-repository, then the corresponding root is used instead."
-    (interactive)
-    (let* ((process-environment
-            (cons (concat "FZF_DEFAULT_COMMAND=rg -Sn --color never --files --no-follow --hidden")
-                  process-environment))
-           (vc (vc-root-dir)))
-      (if dir
-          (counsel-fzf input dir)
-        (if (eq vc nil)
-            (counsel-fzf input default-directory)
-          (counsel-fzf input vc)))))
-
-  (defun prot/counsel-fzf-dir (arg)
-    "Specify root directory for `counsel-fzf'."
-    (prot/counsel-fzf-rg-files ivy-text
-                               (read-directory-name
-                                (concat (car (split-string counsel-fzf-cmd))
-                                        " in directory: "))))
-
-  (defun prot/counsel-rg-dir (arg)
-    "Specify root directory for `counsel-rg'."
-    (let ((current-prefix-arg '(4)))
-      (counsel-rg ivy-text nil "")))
-
-  ;; TODO generalise for all relevant file/buffer counsel-*?
-  (defun prot/counsel-fzf-ace-window (arg)
-    "Use `ace-window' on `prot/counsel-fzf-rg-files' candidate."
-    (ace-window t)
-    (let ((default-directory (if (eq (vc-root-dir) nil)
-                                 counsel--fzf-dir
-                               (vc-root-dir))))
-      (if (> (length (aw-window-list)) 1)
-          (find-file arg)
-        (find-file-other-window arg))
-      (balance-windows (current-buffer))))
-
-  ;; Pass functions as appropriate Ivy actions (accessed via M-o)
-  (ivy-add-actions
-   'counsel-fzf
-   '(("r" prot/counsel-fzf-dir "change root directory")
-     ("g" prot/counsel-rg-dir "use ripgrep in root directory")
-     ("a" prot/counsel-fzf-ace-window "ace-window switch")))
-
-  (ivy-add-actions
-   'counsel-rg
-   '(("r" prot/counsel-rg-dir "change root directory")
-     ("z" prot/counsel-fzf-dir "find file with fzf in root directory")))
-
-  (ivy-add-actions
-   'counsel-find-file
-   '(("g" prot/counsel-rg-dir "use ripgrep in root directory")
-     ("z" prot/counsel-fzf-dir "find file with fzf in root directory")))
-
-  ;; Remove commands that only work with key bindings
-  (put 'counsel-find-symbol 'no-counsel-M-x t)
-  :bind (("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
-         ("s-f" . counsel-find-file)
-         ("s-F" . find-file-other-window)
-         ("C-x b" . ivy-switch-buffer)
-         ("s-b" . ivy-switch-buffer)
-         ("C-x B" . counsel-switch-buffer-other-window)
-         ("s-B" . counsel-switch-buffer-other-window)
-         ("C-x d" . counsel-dired)
-         ("s-d" . counsel-dired)
-         ("s-D" . dired-other-window)
-         ("C-x C-r" . counsel-recentf)
-         ("s-m" . counsel-mark-ring)
-         ("s-r" . counsel-recentf)
-         ("s-y" . counsel-yank-pop)
-         ("C-h f" . counsel-describe-function)
-         ("C-h v" . counsel-describe-variable)
-         ("M-s r" . counsel-rg)
-         ("M-s g" . counsel-git-grep)
-         ("M-s l" . counsel-find-library)
-         ("M-s z" . prot/counsel-fzf-rg-files)
-         :map ivy-minibuffer-map
-         ("C-r" . counsel-minibuffer-history)
-         ("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
-         ("C-SPC" . ivy-restrict-to-matches)))
-#+end_src
-
-***** DEPRECATED Counsel and projectile
-      :PROPERTIES:
-      :CUSTOM_ID: h:1dd71ddc-994d-420b-9aaf-26741aaf20cd
-      :END:
-
-*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
-uses the built-in =icomplete= tool.  All deprecated packages contain the
-special =:disabled= keyword.  For the new system, refer to the previous
-sections:
-
-+ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
-+ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
-
-*Below is the latest state of these settings prior to the switch.*
-
-I only really need a handful of commands from this setup, namely the
-ability to switch between buffers or directories in a project and to
-switch between projects.  For the rest, I am already covered by what I
-have defined in the [[#h:919f942a-f99d-437f-b010-af21264246f3][Counsel section above]].
-
-In case you want to use =counsel-projectile= to its full extent, then
-enable and configure =:bind-keymap=.  That key binding is just the common
-prefix to a list of key chords.  You can learn about them with =M-s p C-h=
-(so append =C-h=).  Note though that the keys I define below do not
-require such a prefix.  They call the commands I need directly.
-
-The =counsel-projectile-switch-project= is configured to run the fourth
-action of those available, which configures it to switch to a project
-and open it inside of =dired=, rather than ask for a file to open.
-
-While the =ivy-initial-inputs-alist= extends the variable that is
-specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
-
-#+begin_src emacs-lisp
-(use-package counsel-projectile
-  :disabled                             ; switched to `icomplete'
-  :ensure t
-  :config
-  (add-to-list 'ivy-initial-inputs-alist '(counsel-projectile-switch-project . ""))
-  :hook (after-init . counsel-projectile-mode)
-  ;; :bind-keymap ("M-s p" . projectile-command-map)
-  :bind (("M-s b" . counsel-projectile-switch-to-buffer)
-         ("M-s d" . counsel-projectile-find-dir)
-         ("M-s p" . (lambda ()
-                      (interactive)
-                      (counsel-projectile-switch-project 4)))))
-#+end_src
-
-**** DEPRECATED Swiper commands and settings
-     :PROPERTIES:
-     :CUSTOM_ID: h:8b7f982b-911f-4437-a448-b7288855fbda
-     :END:
-
-*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
-uses the built-in =icomplete= tool.  All deprecated packages contain the
-special =:disabled= keyword.  For the new system, refer to the previous
-sections:
-
-+ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
-+ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
-
-*Below is the latest state of these settings prior to the switch.*
-
-This is the search tool that is powered by Ivy.  I use it to get an
-overview of the matching candidates when performing a more complex
-search.  It is not intended as a drop-in replacement for =isearch= (see
-[[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][section on Isearch]]), especially since the latter is better for recording
-macros and jumping to visible sections in the buffer.
-
-Given that Swiper is related to Ivy, do not forget to review the entire
-section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]].
-
-#+begin_src emacs-lisp
-(use-package swiper
-  :disabled                             ; switched to `icomplete'
-  :ensure t
-  :after ivy
-  :config
-  (setq swiper-action-recenter t)
-  (setq swiper-goto-start-of-match t)
-  (setq swiper-include-line-number-in-search t)
-  :bind (("C-S-s" . swiper)
-         ("M-s s" . swiper-multi)
-         ("M-s w" . swiper-thing-at-point)
-         :map swiper-map
-         ("M-%" . swiper-query-replace)))
-#+end_src
-
-**** DEPRECATED Ivy extensions
-     :PROPERTIES:
-     :CUSTOM_ID: h:93cb57d4-b4ea-4431-8a95-f0437bc4206f
-     :END:
-
- These tools build on the foundation of Ivy and friends.
-
-***** DEPRECATED Ivy rich
-      :PROPERTIES:
-      :CUSTOM_ID: h:fe6839a7-f6cd-48c8-bf6e-d4d8519d02fc
-      :END:
-
- *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
- uses the built-in =icomplete= tool.  All deprecated packages contain the
- special =:disabled= keyword.  For the new system, refer to the previous
- sections:
-
- + [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
- + [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
-
- *Below is the latest state of these settings prior to the switch.*
-
- With this package we can make good use of the plenty of empty space left
- by Ivy's default presentation of its items.  It enhances several
- commands, providing each of them with additional information that is
- pertinent to the task at hand.  For example, =M-x= contains function
- descriptions, while the buffer list includes information about the major
- mode and file system path of the items.
-
- The =ivy-rich-path-style= offers an abbreviation of the file system path
- that an item is referring to.  So far, the only noticeable difference
- over an absolute value is the use of the tilde (=~=) instead of
- =/home/USER/= in the buffer list.  Whereas =recentf= continues to display
- absolute paths.  Will need to test this further…
-
- #+begin_src emacs-lisp
-(use-package ivy-rich
-  :disabled                             ; switched to `icomplete'
-  :ensure t
-  :after ivy
-  :config
-  (setq ivy-rich-path-style 'abbreviate)
-
-  (setcdr (assq t ivy-format-functions-alist)
-          #'ivy-format-function-line)
-  (ivy-rich-mode 1))
- #+end_src
-
-***** DEPRECATED Ivy posframe
-      :PROPERTIES:
-      :CUSTOM_ID: h:fe69c898-3d58-4c7f-a870-3cc1b9ac438c
-      :END:
-
- *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
- uses the built-in =icomplete= tool.  All deprecated packages contain the
- special =:disabled= keyword.  For the new system, refer to the previous
- sections:
-
- + [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
- + [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
-
- *Below is the latest state of these settings prior to the switch.*
-
- This package allows us to reposition Ivy's window anywhere inside of the
- Emacs frame by placing it inside of a so-called "child frame", i.e. the
- "posframe".  Furthermore, it is possible to use this feature on a
- per-command basis, all while assigning a different height to each
- function.
-
- The =ivy-posframe-parameters= can be found in the source code of the main
- library.  Do =M-x find-library RET posframe RET= where =RET= means to hit
- the Return key in order to proceed.  In one of the parameters I show how
- to define a font that is different from what would normally be used (see
- this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
-
- #+begin_src emacs-lisp
-(use-package ivy-posframe
-  :disabled                             ; switched to `icomplete'
-  :ensure t
-  :after ivy
-  :delight
-  :config
-  (setq ivy-posframe-parameters
-        '((left-fringe . 2)
-          (right-fringe . 2)
-          (internal-border-width . 2)
-          ;; (font . "DejaVu Sans Mono-10.75:hintstyle=hintfull")
-          ))
-  (setq ivy-posframe-height-alist
-        '((swiper . 15)
-          (swiper-isearch . 15)
-          (t . 10)))
-  (setq ivy-posframe-display-functions-alist
-        '((complete-symbol . ivy-posframe-display-at-point)
-          (swiper . nil)
-          (swiper-isearch . nil)
-          (t . ivy-posframe-display-at-frame-center)))
-  (ivy-posframe-mode 1))
 #+end_src
 
 ** Configurations for—or extensions to—built-in search commands
@@ -3647,108 +3116,6 @@ performance by carrying out the relevant tasks in a non-blocking way.
   (setq message-send-mail-function 'async-smtpmail-send-it))
 #+end_src
 
-*** DEPRECATED Reading email with MU4E
-    :PROPERTIES:
-    :CUSTOM_ID: h:2a93d8bf-200a-4d23-9be3-276a907947e1
-    :END:
-
-/WARNING (2020-01-30): I am no longer using MU4E as I [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][switched to Gnus]].
-This section is only kept for reference./
-
-The following configure =mu4e=, the Mail User Agent.  An overview:
-
-+ Include mu4e in the load path.  This is necessary because we are using
-  the GNU/Linux distro's package.
-+ Use =mu4e= as the default MUA in Emacs.  This concerns actions such
-  as =C-x m= (=compose-mail=).
-+ I prefer to run the "get mail" command manually rather than rely on a
-  timer.  The idea is that when I have time to check my email, I can
-  also refresh its index.
-+ Do not provide verbose output about indexing operations.
-+ Update manually, because I anyway interact with email only when I
-  have time to check it.
-+ Use my selected completion framework where relevant.
-+ Define my signature and include it in new messages.
-+ Specify the directory where mail is stored.  This is where
-  =offlineimap= is configured to place its findings.  Each email
-  account has its own subdirectory therein.
-+ *Careful with this:* Store sent messages in their appropriate place
-  (defined in the "contexts" file—see further below).  The docs
-  suggest that IMAP accounts should opt for either moving messages to
-  the trash directory or outright deleting them.  The idea is that
-  IMAP is supposed to handle this stuff automatically—my initial tests
-  with my configs do not confirm this, which is why I just tell it to
-  place them in the "sent" directory.
-+ Do not kill message buffer upon exit from it.  It can always be
-  useful to quickly check something.
-+ Always show email addresses (the default is to display just the
-  name).
-+ The variables that concern mu4e contexts are relevant because of
-  =prot/mu4e-contexts=.  It loads the =mu4e-contexts= with all the
-  information about my account setup.  I set this in a private and
-  encrypted file.  Do check [[https://www.djcbsoftware.nl/code/mu/mu4e/Contexts-example.html#Contexts-example][the example]] in the official docs.  I based
-  my work off of it.
-+ Message citation is just an improved format for quoting a message in a
-  reply.  The format looks like /"On 2019-12-09, 16:50 (CET), PERSON
-  <EMAIL> wrote:"/.
-
-#+begin_src emacs-lisp
-(use-package mu4e
-  :disabled                             ; DEPRECATED in favour of `gnus'
-  :load-path "/usr/share/emacs/site-lisp/mu4e"
-  :after (smtpmail smtpmail-async)
-  :commands (mu4e mu4e-update-mail-and-index)
-  :config
-  (setq mail-user-agent 'mu4e-user-agent)
-  (setq mu4e-get-mail-command "offlineimap")
-  (setq mu4e-hide-index-messages t)
-  (setq mu4e-update-interval nil)
-  (setq mu4e-completing-read-function 'completing-read)
-  (setq mu4e-compose-signature "Protesilaos Stavrou\nprotesilaos.com\n")
-  (setq mu4e-compose-signature-auto-include t)
-  (setq mu4e-maildir "~/Maildir")
-  (setq mu4e-sent-messages-behavior 'sent)
-  (setq message-kill-buffer-on-exit nil)
-  (setq mu4e-view-show-addresses t)
-  (setq mu4e-context-policy 'pick-first)
-  (setq mu4e-compose-context-policy 'ask)
-  (setq message-citation-line-format "On %Y-%m-%d, %R (%Z), %f wrote:\n")
-  (setq message-citation-line-function 'message-insert-formatted-citation-line)
-
-  (defun prot/mu4e-contexts ()
-    "Loads a file with the specifics of my email account info."
-    (let ((mails "~/.emacs.d/mu4e-contexts.el.gpg"))
-      (when (file-exists-p mails)
-        (load-file mails))))
-  :hook (after-init . prot/mu4e-contexts)
-  :bind (:map mu4e-main-mode-map
-              ("g" . mu4e-update-mail-and-index)))
-#+end_src
-
-To set up =offlineimap= I used the [[https://wiki.archlinux.org/index.php/OfflineIMAP][Arch Wiki]] entry.
-
-*** DEPRECATED mu4e extension for org-capture
-    :PROPERTIES:
-    :CUSTOM_ID: h:ab106725-ae5d-4ce2-8160-d2f8c46cb563
-    :END:
-
-/WARNING (2020-01-30): I am no longer using MU4E as I [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][switched to Gnus]].
-This section is only kept for reference./
-
-With this little snippet, we allow =org-capture= convert any email into a
-note, to-do item or whatever.  The killer feature is that we get a
-direct link back to the original email.  This way, we can avoid the
-problem of searching through a pile of messages until we find the one we
-really need.  Nice!
-
-#+begin_src emacs-lisp
-(use-package org-mu4e                   ; no need for `:ensure t'
-  :disabled                             ; DEPRECATED in favour of `gnus'
-  :after (org mu4e)
-  :config
-  (setq org-mu4e-link-query-in-headers-mode nil))
-#+end_src
-
 ** Git front-end (Magit) and relevant configurations
    :PROPERTIES:
    :CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
@@ -5662,6 +5029,9 @@ the most likely course of action.  Typing =M-x g= gives me =gnus= as the
 first possible option, which is exactly what I want.
 
 ** Emacs server and desktop (state of buffers)
+   :PROPERTIES:
+   :CUSTOM_ID: h:68d57dd2-4df1-4b7a-8766-231216e6cd9c
+   :END:
 
 The following uses the first /running/ process of Emacs as the one others
 may connect to.  This means that calling =emacsclient= (with or without
@@ -5873,4 +5243,655 @@ there is something to fall back to.
   (setq kept-new-versions 6)
   (setq kept-old-versions 2)
   (setq create-lockfiles nil))
+#+end_src
+
+* Important configurations that I stopped using
+  :PROPERTIES:
+  :CUSTOM_ID: h:9850e597-e4b4-4e04-aad9-ce8a12b3e4ae
+  :END:
+
+As my understanding of Emacs improves, I critically assess the utility
+of tools I once used.  What is not needed is promptly removed.  However,
+there are some cases where the deprecation of a package is basely solely
+on subjective criteria: the tools are still good, it just happens that I
+discovered something I like more.
+
+Furthermore, there may be packages I once demonstrated in a video of
+mine, where I added my own extensions or whatnot and which people found
+useful.
+
+Those are all stored in this section.
+
+** DEPRECATED Ivy/Counsel/Swiper plus filtering and scoring
+   :PROPERTIES:
+   :CUSTOM_ID: h:d76e14b0-2002-4efa-8fef-cb3cd42d3d80
+   :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
+
+This is a suite of tools that enhance several aspects of the Emacs
+experience.  Basically we have:
+
++ =ivy= is the mechanism that handles all selection lists, narrowing
+  them down using a variety of possible builders (regular expressions of
+  flexible matching).  It also provides a base interface for any
+  function that needs to receive input based on a list of candidates.
++ =counsel= provides a superset of functions for navigating the file
+  system, switching buffers, etc. that expand on the basic features
+  supported by Ivy.  For instance, switching buffers with Counsel offers
+  a preview of their contents in the window, whereas regular Ivy does
+  not.
++ =swiper= is a tool for performing searches, powered by Ivy, all while
+  presenting a preview of the results.
+
+*** DEPRECATED Configurations for Ivy
+    :PROPERTIES:
+    :CUSTOM_ID: h:ba8cd15e-97b8-40e1-804e-2badaca14c1d
+    :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
+
+A few highlights of my configurations in the subsequent code block:
+
++ =ivy-height-alist= governs the maximum width of the Ivy window to 1/4
+  of the viewport.  I prefer this over an absolute number as I work on
+  monitors with varying dimensions (though note that =ivy-posframe= will
+  override it, if enabled).
++ =ivy-virtual-buffers= populates buffer-switching lists with items from
+  the =recentf= utility.  In practice, a recently killed buffer can still
+  be accessed from ={ivy,counsel}-switch-buffer= as if the kill had never
+  occurred.
++ =ivy-re-builders-list= allows us to specify the algorithm for matching
+  candidates.  Unless declared otherwise, I am using regexp matching by
+  default.
++ =ivy-initial-inputs-alist= adds some initial input to the commands we
+  specify.  I define it to prepend a caret sign =(^)= by default, unless
+  explicitly stated not to include anything.
++ =ivy-use-selectable-prompt= solves the problem of trying to create a
+  new file system path that shares a common name with an existing item.
+  Press =C-p= and proceed without further conflicts.
++ The various =ivy-set-occur= are meant to specify a function for
+  producing an appropriate buffer when running =ivy-occur= (see table
+  right below).
+
+And here are some 'hidden' key bindings for making the most out of Ivy
+(find more in the official manual).
+
+| Key     | Function                | Description                                 |
+|---------+-------------------------+---------------------------------------------|
+| M-o     | ivy-dispatching-done    | Show actions for current match.             |
+| C-c C-o | ivy-occur               | Place the list in a standalone buffer.      |
+| C-M-m   | ivy-call                | Run command, keep minibuffer open.          |
+| M-i     | ivy-insert-current      | Insert match in the prompt.                 |
+| M-j     | ivy-yank-word           | Put word at point in the minibuffer prompt. |
+| S-SPC   | ivy-restrict-to-matches | Restrict list to prompt (and search anew).  |
+| C-SPC   | ivy-restrict-to-matches | My alias for the above.                     |
+
+Adding to the table above, you can always use the /universal/ =M-n= and
+=M-p= to cycle through the history of entries.
+
+With those granted, make sure to inspect the entirety of my dotemacs'
+section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]], as the following
+package declaration is but a piece of a greater whole.
+
+#+begin_src emacs-lisp
+(use-package ivy
+  :disabled                             ; switched to `icomplete'
+  :ensure t
+  :delight
+  :config
+  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 4))))
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-wrap nil)
+  (setq ivy-re-builders-alist
+        '((counsel-M-x . ivy--regex-fuzzy)
+          (ivy-switch-buffer . ivy--regex-fuzzy)
+          (ivy-switch-buffer-other-window . ivy--regex-fuzzy)
+          (counsel-rg . ivy--regex-or-literal)
+          (t . ivy--regex-plus)))
+  (setq ivy-display-style 'fancy)
+  (setq ivy-use-selectable-prompt t)
+  (setq ivy-fixed-height-minibuffer nil)
+  (setq ivy-initial-inputs-alist
+        '((counsel-M-x . "^")
+          (ivy-switch-buffer . "^")
+          (ivy-switch-buffer-other-window . "^")
+          (counsel-describe-function . "^")
+          (counsel-describe-variable . "^")
+          (t . "")))
+
+  (ivy-set-occur 'counsel-fzf 'counsel-fzf-occur)
+  (ivy-set-occur 'counsel-rg 'counsel-ag-occur)
+  (ivy-set-occur 'ivy-switch-buffer 'ivy-switch-buffer-occur)
+  (ivy-set-occur 'swiper 'swiper-occur)
+  (ivy-set-occur 'swiper-isearch 'swiper-occur)
+  (ivy-set-occur 'swiper-multi 'counsel-ag-occur)
+  :hook ((after-init . ivy-mode)
+         (ivy-occur-mode . hl-line-mode))
+  :bind (("<s-up>" . ivy-push-view)
+		 ("<s-down>" . ivy-switch-view)
+         ("C-S-r" . ivy-resume)
+         :map ivy-occur-mode-map
+         ("f" . forward-char)
+         ("b" . backward-char)
+         ("n" . ivy-occur-next-line)
+         ("p" . ivy-occur-previous-line)
+         ("<C-return>" . ivy-occur-press)))
+#+end_src
+
+*** DEPRECATED Prescient (sort, filter results)
+    :PROPERTIES:
+    :CUSTOM_ID: h:87b37547-5941-4f20-baf6-4d00cde1151a
+    :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
+
+This tool provides a filtering and scoring system that can interface
+with Ivy.  It is a replacement for =amx=.
+
+Filtering concerns the way matches are determined.  It is possible to
+select candidates by applying the search terms in a number of ways, such
+as a literal interpretation of the character string, a regular
+expression, a set of ordered wildcards (fuzzy match), or an initialism.
+The filters can be applied on a per function basis, though I that breaks
+the way Ivy highlights things.
+
+The scoring system is based on the frequency and recency of commands.
+This is extremely valuable, as it will always surface to the top the
+commands you most likely need.  Running =M-x= is now akin to starting a
+key chord chain (for example, =M-x b= will give me =bongo= as my first
+match, which is exactly what I need).  It eliminates the need for
+increasingly arcane key bindings—use keys only for the most
+frequently-used commands.
+
+The value of =ivy-prescient-sort-commands= defines functions that are
+exempt from all the sorting operations performed by this tool.  I think
+that, at the very least, =swiper= should always be excluded from any kind
+of sorting mechanism, because it already orders its results based on the
+line number.  We should not break that expectation.  All other commands
+are just a matter of preference, where I simply find the generic sorting
+to offer a better first impression (does not really matter, since I will
+type something anyhow).
+
+#+begin_src emacs-lisp
+(use-package prescient
+  :disabled                             ; switched to `icomplete'
+  :ensure t
+  :config
+  (setq prescient-history-length 200)
+  (setq prescient-save-file "~/.emacs.d/prescient-items")
+  (setq prescient-filter-method '(literal regexp))
+  (prescient-persist-mode 1))
+
+(use-package ivy-prescient
+  :disabled                             ; switched to `icomplete'
+  :ensure t
+  :after (prescient ivy)
+  :config
+  (setq ivy-prescient-sort-commands
+        '(:not counsel-grep
+               counsel-rg
+               counsel-switch-buffer
+               ivy-switch-buffer
+               swiper
+               swiper-multi))
+  (setq ivy-prescient-retain-classic-highlighting t)
+  (setq ivy-prescient-enable-filtering nil)
+  (setq ivy-prescient-enable-sorting t)
+  (ivy-prescient-mode 1))
+#+end_src
+
+*** DEPRECATED Counsel configurations and key bindings
+    :PROPERTIES:
+    :CUSTOM_ID: h:919f942a-f99d-437f-b010-af21264246f3
+    :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
+
+A few things to consider about the settings in this sub-section:
+
++ With regard to key bindings, notice that Counsel's implementation for
+  switching buffers will preview the currently matched item.  This is
+  particularly distracting when running it for the current window.  For
+  that case I use the generic Ivy method.  I am okay with Counsel's
+  approach when operating on the other window.
++ As for =counsel-yank-pop-separator=, its value is a series of em
+  dashes with a newline character at either end.  This creates a nice
+  separator line when browsing the kill ring (=counsel-yank-pop=).
++ The function =counsel-rg= provides an interface to an external program
+  called =ripgrep=.  This is a great alternative to =grep=.  For me the
+  main selling point is its improved speed.  The key chord for it is
+  similar to the built-in =occur=.
++ The key chord for =counsel-git-grep= is also inspired by =occur=.
+  This one will perform a search in the current git repository.
++ I have a few custom functions for finding files using a fluid workflow
+  from =fzf= to =ripgrep= (and vice versa).  Better check my video on
+  [[https://protesilaos.com/codelog/2019-12-15-emacs-ivy-fzf-rg/][Fuzzy search with “Ivy actions” for FZF and RIPGREP]] (2019-12-15).
++ For the =prot/counsel-fzf-ace-window= function, I recommend you refer
+  to my [[#h:4337228f-7ee5-4f59-b435-61534538c66f][package declaration for ace-window]], in order to see what
+  commands I want to use.
+
+Also make sure to study all the other package declarations in the
+[[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]] section, to appreciate their
+interplay and the full extent of my customisations.
+
+#+begin_src emacs-lisp
+(use-package counsel
+  :disabled                             ; switched to `icomplete'
+  :ensure t
+  :after ivy
+  :config
+  (setq counsel-yank-pop-preselect-last t)
+  (setq counsel-yank-pop-separator "\n—————————\n")
+  (setq counsel-rg-base-command
+        "rg -SHn --no-heading --color never --no-follow --hidden %s")
+  (setq counsel-find-file-occur-cmd; TODO Simplify this
+        "ls -a | grep -i -E '%s' | tr '\\n' '\\0' | xargs -0 ls -d --group-directories-first")
+
+  (defun prot/counsel-fzf-rg-files (&optional input dir)
+    "Run `fzf' in tandem with `ripgrep' to find files in the
+present directory.  If invoked from inside a version-controlled
+repository, then the corresponding root is used instead."
+    (interactive)
+    (let* ((process-environment
+            (cons (concat "FZF_DEFAULT_COMMAND=rg -Sn --color never --files --no-follow --hidden")
+                  process-environment))
+           (vc (vc-root-dir)))
+      (if dir
+          (counsel-fzf input dir)
+        (if (eq vc nil)
+            (counsel-fzf input default-directory)
+          (counsel-fzf input vc)))))
+
+  (defun prot/counsel-fzf-dir (arg)
+    "Specify root directory for `counsel-fzf'."
+    (prot/counsel-fzf-rg-files ivy-text
+                               (read-directory-name
+                                (concat (car (split-string counsel-fzf-cmd))
+                                        " in directory: "))))
+
+  (defun prot/counsel-rg-dir (arg)
+    "Specify root directory for `counsel-rg'."
+    (let ((current-prefix-arg '(4)))
+      (counsel-rg ivy-text nil "")))
+
+  ;; TODO generalise for all relevant file/buffer counsel-*?
+  (defun prot/counsel-fzf-ace-window (arg)
+    "Use `ace-window' on `prot/counsel-fzf-rg-files' candidate."
+    (ace-window t)
+    (let ((default-directory (if (eq (vc-root-dir) nil)
+                                 counsel--fzf-dir
+                               (vc-root-dir))))
+      (if (> (length (aw-window-list)) 1)
+          (find-file arg)
+        (find-file-other-window arg))
+      (balance-windows (current-buffer))))
+
+  ;; Pass functions as appropriate Ivy actions (accessed via M-o)
+  (ivy-add-actions
+   'counsel-fzf
+   '(("r" prot/counsel-fzf-dir "change root directory")
+     ("g" prot/counsel-rg-dir "use ripgrep in root directory")
+     ("a" prot/counsel-fzf-ace-window "ace-window switch")))
+
+  (ivy-add-actions
+   'counsel-rg
+   '(("r" prot/counsel-rg-dir "change root directory")
+     ("z" prot/counsel-fzf-dir "find file with fzf in root directory")))
+
+  (ivy-add-actions
+   'counsel-find-file
+   '(("g" prot/counsel-rg-dir "use ripgrep in root directory")
+     ("z" prot/counsel-fzf-dir "find file with fzf in root directory")))
+
+  ;; Remove commands that only work with key bindings
+  (put 'counsel-find-symbol 'no-counsel-M-x t)
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("s-f" . counsel-find-file)
+         ("s-F" . find-file-other-window)
+         ("C-x b" . ivy-switch-buffer)
+         ("s-b" . ivy-switch-buffer)
+         ("C-x B" . counsel-switch-buffer-other-window)
+         ("s-B" . counsel-switch-buffer-other-window)
+         ("C-x d" . counsel-dired)
+         ("s-d" . counsel-dired)
+         ("s-D" . dired-other-window)
+         ("C-x C-r" . counsel-recentf)
+         ("s-m" . counsel-mark-ring)
+         ("s-r" . counsel-recentf)
+         ("s-y" . counsel-yank-pop)
+         ("C-h f" . counsel-describe-function)
+         ("C-h v" . counsel-describe-variable)
+         ("M-s r" . counsel-rg)
+         ("M-s g" . counsel-git-grep)
+         ("M-s l" . counsel-find-library)
+         ("M-s z" . prot/counsel-fzf-rg-files)
+         :map ivy-minibuffer-map
+         ("C-r" . counsel-minibuffer-history)
+         ("s-y" . ivy-next-line)        ; Avoid 2× `counsel-yank-pop'
+         ("C-SPC" . ivy-restrict-to-matches)))
+#+end_src
+
+**** DEPRECATED Counsel and projectile
+     :PROPERTIES:
+     :CUSTOM_ID: h:1dd71ddc-994d-420b-9aaf-26741aaf20cd
+     :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
+
+I only really need a handful of commands from this setup, namely the
+ability to switch between buffers or directories in a project and to
+switch between projects.  For the rest, I am already covered by what I
+have defined in the [[#h:919f942a-f99d-437f-b010-af21264246f3][Counsel section above]].
+
+In case you want to use =counsel-projectile= to its full extent, then
+enable and configure =:bind-keymap=.  That key binding is just the common
+prefix to a list of key chords.  You can learn about them with =M-s p C-h=
+(so append =C-h=).  Note though that the keys I define below do not
+require such a prefix.  They call the commands I need directly.
+
+The =counsel-projectile-switch-project= is configured to run the fourth
+action of those available, which configures it to switch to a project
+and open it inside of =dired=, rather than ask for a file to open.
+
+While the =ivy-initial-inputs-alist= extends the variable that is
+specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
+
+#+begin_src emacs-lisp
+(use-package counsel-projectile
+  :disabled                             ; switched to `icomplete'
+  :ensure t
+  :config
+  (add-to-list 'ivy-initial-inputs-alist '(counsel-projectile-switch-project . ""))
+  :hook (after-init . counsel-projectile-mode)
+  ;; :bind-keymap ("M-s p" . projectile-command-map)
+  :bind (("M-s b" . counsel-projectile-switch-to-buffer)
+         ("M-s d" . counsel-projectile-find-dir)
+         ("M-s p" . (lambda ()
+                      (interactive)
+                      (counsel-projectile-switch-project 4)))))
+#+end_src
+
+*** DEPRECATED Swiper commands and settings
+    :PROPERTIES:
+    :CUSTOM_ID: h:8b7f982b-911f-4437-a448-b7288855fbda
+    :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
+
+This is the search tool that is powered by Ivy.  I use it to get an
+overview of the matching candidates when performing a more complex
+search.  It is not intended as a drop-in replacement for =isearch= (see
+[[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][section on Isearch]]), especially since the latter is better for recording
+macros and jumping to visible sections in the buffer.
+
+Given that Swiper is related to Ivy, do not forget to review the entire
+section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]].
+
+#+begin_src emacs-lisp
+(use-package swiper
+  :disabled                             ; switched to `icomplete'
+  :ensure t
+  :after ivy
+  :config
+  (setq swiper-action-recenter t)
+  (setq swiper-goto-start-of-match t)
+  (setq swiper-include-line-number-in-search t)
+  :bind (("C-S-s" . swiper)
+         ("M-s s" . swiper-multi)
+         ("M-s w" . swiper-thing-at-point)
+         :map swiper-map
+         ("M-%" . swiper-query-replace)))
+#+end_src
+
+*** DEPRECATED Ivy extensions
+    :PROPERTIES:
+    :CUSTOM_ID: h:93cb57d4-b4ea-4431-8a95-f0437bc4206f
+    :END:
+
+These tools build on the foundation of Ivy and friends.
+
+**** DEPRECATED Ivy rich
+     :PROPERTIES:
+     :CUSTOM_ID: h:fe6839a7-f6cd-48c8-bf6e-d4d8519d02fc
+     :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
+
+With this package we can make good use of the plenty of empty space left
+by Ivy's default presentation of its items.  It enhances several
+commands, providing each of them with additional information that is
+pertinent to the task at hand.  For example, =M-x= contains function
+descriptions, while the buffer list includes information about the major
+mode and file system path of the items.
+
+The =ivy-rich-path-style= offers an abbreviation of the file system path
+that an item is referring to.  So far, the only noticeable difference
+over an absolute value is the use of the tilde (=~=) instead of
+=/home/USER/= in the buffer list.  Whereas =recentf= continues to display
+absolute paths.  Will need to test this further…
+
+#+begin_src emacs-lisp
+(use-package ivy-rich
+  :disabled                             ; switched to `icomplete'
+  :ensure t
+  :after ivy
+  :config
+  (setq ivy-rich-path-style 'abbreviate)
+
+  (setcdr (assq t ivy-format-functions-alist)
+          #'ivy-format-function-line)
+  (ivy-rich-mode 1))
+#+end_src
+
+**** DEPRECATED Ivy posframe
+     :PROPERTIES:
+     :CUSTOM_ID: h:fe69c898-3d58-4c7f-a870-3cc1b9ac438c
+     :END:
+
+*WARNING 2020-02-10:* I have switched to a simpler, custom solution that
+uses the built-in =icomplete= tool.  All deprecated packages contain the
+special =:disabled= keyword.  For the new system, refer to the previous
+sections:
+
++ [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
++ [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+*Below is the latest state of these settings prior to the switch.*
+
+This package allows us to reposition Ivy's window anywhere inside of the
+Emacs frame by placing it inside of a so-called "child frame", i.e. the
+"posframe".  Furthermore, it is possible to use this feature on a
+per-command basis, all while assigning a different height to each
+function.
+
+The =ivy-posframe-parameters= can be found in the source code of the main
+library.  Do =M-x find-library RET posframe RET= where =RET= means to hit
+the Return key in order to proceed.  In one of the parameters I show how
+to define a font that is different from what would normally be used (see
+this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
+
+#+begin_src emacs-lisp
+(use-package ivy-posframe
+  :disabled                             ; switched to `icomplete'
+  :ensure t
+  :after ivy
+  :delight
+  :config
+  (setq ivy-posframe-parameters
+        '((left-fringe . 2)
+          (right-fringe . 2)
+          (internal-border-width . 2)
+          ;; (font . "DejaVu Sans Mono-10.75:hintstyle=hintfull")
+          ))
+  (setq ivy-posframe-height-alist
+        '((swiper . 15)
+          (swiper-isearch . 15)
+          (t . 10)))
+  (setq ivy-posframe-display-functions-alist
+        '((complete-symbol . ivy-posframe-display-at-point)
+          (swiper . nil)
+          (swiper-isearch . nil)
+          (t . ivy-posframe-display-at-frame-center)))
+  (ivy-posframe-mode 1))
+#+end_src
+
+** DEPRECATED Reading email with MU4E
+   :PROPERTIES:
+   :CUSTOM_ID: h:2a93d8bf-200a-4d23-9be3-276a907947e1
+   :END:
+
+/WARNING (2020-01-30): I am no longer using MU4E as I [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][switched to Gnus]].
+This section is only kept for reference./
+
+The following configure =mu4e=, the Mail User Agent.  An overview:
+
++ Include mu4e in the load path.  This is necessary because we are using
+  the GNU/Linux distro's package.
++ Use =mu4e= as the default MUA in Emacs.  This concerns actions such
+  as =C-x m= (=compose-mail=).
++ I prefer to run the "get mail" command manually rather than rely on a
+  timer.  The idea is that when I have time to check my email, I can
+  also refresh its index.
++ Do not provide verbose output about indexing operations.
++ Update manually, because I anyway interact with email only when I
+  have time to check it.
++ Use my selected completion framework where relevant.
++ Define my signature and include it in new messages.
++ Specify the directory where mail is stored.  This is where
+  =offlineimap= is configured to place its findings.  Each email
+  account has its own subdirectory therein.
++ *Careful with this:* Store sent messages in their appropriate place
+  (defined in the "contexts" file—see further below).  The docs
+  suggest that IMAP accounts should opt for either moving messages to
+  the trash directory or outright deleting them.  The idea is that
+  IMAP is supposed to handle this stuff automatically—my initial tests
+  with my configs do not confirm this, which is why I just tell it to
+  place them in the "sent" directory.
++ Do not kill message buffer upon exit from it.  It can always be
+  useful to quickly check something.
++ Always show email addresses (the default is to display just the
+  name).
++ The variables that concern mu4e contexts are relevant because of
+  =prot/mu4e-contexts=.  It loads the =mu4e-contexts= with all the
+  information about my account setup.  I set this in a private and
+  encrypted file.  Do check [[https://www.djcbsoftware.nl/code/mu/mu4e/Contexts-example.html#Contexts-example][the example]] in the official docs.  I based
+  my work off of it.
++ Message citation is just an improved format for quoting a message in a
+  reply.  The format looks like /"On 2019-12-09, 16:50 (CET), PERSON
+  <EMAIL> wrote:"/.
+
+#+begin_src emacs-lisp
+(use-package mu4e
+  :disabled                             ; DEPRECATED in favour of `gnus'
+  :load-path "/usr/share/emacs/site-lisp/mu4e"
+  :after (smtpmail smtpmail-async)
+  :commands (mu4e mu4e-update-mail-and-index)
+  :config
+  (setq mail-user-agent 'mu4e-user-agent)
+  (setq mu4e-get-mail-command "offlineimap")
+  (setq mu4e-hide-index-messages t)
+  (setq mu4e-update-interval nil)
+  (setq mu4e-completing-read-function 'completing-read)
+  (setq mu4e-compose-signature "Protesilaos Stavrou\nprotesilaos.com\n")
+  (setq mu4e-compose-signature-auto-include t)
+  (setq mu4e-maildir "~/Maildir")
+  (setq mu4e-sent-messages-behavior 'sent)
+  (setq message-kill-buffer-on-exit nil)
+  (setq mu4e-view-show-addresses t)
+  (setq mu4e-context-policy 'pick-first)
+  (setq mu4e-compose-context-policy 'ask)
+  (setq message-citation-line-format "On %Y-%m-%d, %R (%Z), %f wrote:\n")
+  (setq message-citation-line-function 'message-insert-formatted-citation-line)
+
+  (defun prot/mu4e-contexts ()
+    "Loads a file with the specifics of my email account info."
+    (let ((mails "~/.emacs.d/mu4e-contexts.el.gpg"))
+      (when (file-exists-p mails)
+        (load-file mails))))
+  :hook (after-init . prot/mu4e-contexts)
+  :bind (:map mu4e-main-mode-map
+              ("g" . mu4e-update-mail-and-index)))
+#+end_src
+
+To set up =offlineimap= I used the [[https://wiki.archlinux.org/index.php/OfflineIMAP][Arch Wiki]] entry.
+
+*** DEPRECATED mu4e extension for org-capture
+    :PROPERTIES:
+    :CUSTOM_ID: h:ab106725-ae5d-4ce2-8160-d2f8c46cb563
+    :END:
+
+/WARNING (2020-01-30): I am no longer using MU4E as I [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][switched to Gnus]].
+This section is only kept for reference./
+
+With this little snippet, we allow =org-capture= convert any email into a
+note, to-do item or whatever.  The killer feature is that we get a
+direct link back to the original email.  This way, we can avoid the
+problem of searching through a pile of messages until we find the one we
+really need.  Nice!
+
+#+begin_src emacs-lisp
+(use-package org-mu4e                   ; no need for `:ensure t'
+  :disabled                             ; DEPRECATED in favour of `gnus'
+  :after (org mu4e)
+  :config
+  (setq org-mu4e-link-query-in-headers-mode nil))
 #+end_src
