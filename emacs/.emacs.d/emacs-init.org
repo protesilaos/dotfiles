@@ -2764,6 +2764,12 @@ using the =file+headline= pattern, non-existing files are created
 automatically once you call the relevant template.  Same for their
 respective headings.
 
+Finally, the =contrib/org-capture-no-delete-windows= and relevant =advice=
+address a problem I have when =org-capture= fails to conclude its actions
+when called from inside of a side window (for more on those, refer to
+the section on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).  The code is taken
+directly from this [[https://stackoverflow.com/a/54251825][Stack Overflow thread]].
+
 #+begin_src emacs-lisp
 (use-package org-capture
   :after org
@@ -2794,6 +2800,14 @@ respective headings.
   (setq org-capture-templates-contexts
         '(("r" ((in-mode . "gnus-article-mode")
                 (in-mode . "gnus-summary-mode")))))
+
+  (defun contrib/org-capture-no-delete-windows (oldfun args)
+    (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
+      (apply oldfun args)))
+
+  (with-eval-after-load "org-capture"
+    (advice-add 'org-capture-place-template :around 'contrib/org-capture-no-delete-windows))
+
   :bind ("C-c c" . org-capture))
 #+end_src
 
