@@ -5196,12 +5196,17 @@ Emacs will remember your input and choices and will surface the desired
 results towards the top as the most likely candidates.  Make sure to
 also check my [[*Minibuffer essentials and Icomplete (built-in completion)][configurations for the minibuffer and icomplete]].
 
+I set the length to a fairly high number, while I make sure that
+duplicate entries remain in tact.  The assumption is that duplicate
+entries increase the likelihood of returning the candidate I am
+searching or.
+
 #+begin_src emacs-lisp
 (use-package savehist
   :config
   (setq savehist-file "~/.emacs.d/savehist")
-  (setq history-length 10000)
-  (setq history-delete-duplicates t)
+  (setq history-length 30000)
+  (setq history-delete-duplicates nil)
   (setq savehist-save-minibuffer-history t)
   (savehist-mode 1))
 #+end_src
