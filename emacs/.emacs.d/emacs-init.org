@@ -2777,6 +2777,7 @@ The "agent" is enabled here and configured in the [[#h:fccaadbb-ea22-4d1f-ae79-e
   (setq message-signature "Protesilaos Stavrou\nprotesilaos.com\n")
   (setq gnus-agent t)
   (setq mail-user-agent 'gnus-user-agent) ; also works with `sendmail-user-agent'
+  (setq gnus-novice-user nil)
   ;; checking sources
   (setq gnus-check-new-newsgroups 'ask-server)
   (setq gnus-read-active-file 'some)
