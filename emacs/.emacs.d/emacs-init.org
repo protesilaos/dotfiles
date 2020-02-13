@@ -2056,10 +2056,10 @@ depend on.  Here is an overview:
   file system paths for searching for relevant files.  The "notes" file
   is meant as a fallback option for when =org-capture= has not been given
   a file to write at (also see the [[#h:7b88b89a-6eb3-4da3-a9fe-0e447300a250][org-capture section]]).
-+ Refilling items :: This is done with =C-c C-w= which then prompts us for
++ Re-filing items :: This is done with =C-c C-w= which then prompts us for
   a heading under which the current item should be positioned.  I set my
   Org agenda files as one possible target and the current buffer as the
-  other.  The maximum depth should be 3 levels.  Refilling can also be
+  other.  The maximum depth should be 3 levels.  Re-filing can also be
   done from inside an =org-capture= interface.  Any new entry should go at
   the end of the heading it is filled under.
 + To-do settings :: I generally use a very simple system of writing
