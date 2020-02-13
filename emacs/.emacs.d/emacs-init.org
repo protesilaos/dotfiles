@@ -620,11 +620,10 @@ Now some comments about my implementation:
   available for Emacs versions after 27.  As of this writing
   (2020-02-10) the current stable release is 26.3.
 + The =completion-category-overrides= provide exceptions to the fallback
-  completion styles.  In that list, the =file= category applies to finding
-  files and directories.
+  completion styles.
 + The =completions-format= concerns the layout of the =*Completions*= buffer
-  that pops up after trying to complete a non-unique match.  It can be
-  focused directly with =M-v= while inside an =icomplete= prompt.
+  that pops up after trying to complete a non-unique match.  By default,
+  it can be focused directly with =M-v= while inside an =icomplete= prompt.
 + To enhance the experience of the Completions buffer, I define several
   keys that make motions easier and consistent with other read-only
   interfaces.  The =h= key calls a command of mine for seeking help for
@@ -652,9 +651,7 @@ Now some comments about my implementation:
   being).  If you are curious, check the source code for both =icomplete=
   and =ido= with =M-x find-library=.
 + All my functions that somehow extend the functionality of Icomplete
-  have their own documentation.  No need to reproduce it here.  Some
-  other ideas about possible extensions are included in the task list
-  after the package declarations.
+  have their own documentation.  No need to reproduce it here.
 
 An *important note* about every =prot/icomplete-*= function that contains a
 =setq= in its body: the way the variables are declared is not robust,
@@ -681,12 +678,13 @@ Now here is the actual code for the minibuffer part:
   (setq completion-flex-nospace nil)
   (setq completion-pcm-complete-word-inserts-delimiters t)
   (setq completion-pcm-word-delimiters "-_./:| ")
-  (setq completion-styles '(partial-completion substring initials flex))
+  ;; NOTE: flex completion is introduced in Emacs 27
+  (setq completion-styles '(partial-completion substring flex))
   (setq completion-category-overrides
-        '((file (styles initials flex partial-completion))
-          (buffer (styles substring flex))
-          (info-menu (styles substring basic)))) ; flex in >= Emacs 27
-  (setq completions-format 'vertical)            ; *Completions* buffer
+        '((file (styles initials basic))
+          (buffer (styles initials basic))
+          (info-menu (styles basic))))
+  (setq completions-format 'vertical)   ; *Completions* buffer
   (setq enable-recursive-minibuffers t)
   (setq read-answer-short t)
   (setq read-buffer-completion-ignore-case t)
@@ -759,9 +757,9 @@ And this is for the completion interface:
 (use-package icomplete
   :demand
   :config
-  (setq icomplete-delay-completions-threshold 600)
-  (setq icomplete-max-delay-chars 3)
-  (setq icomplete-compute-delay 0.2)
+  (setq icomplete-delay-completions-threshold 0)
+  (setq icomplete-max-delay-chars 0)
+  (setq icomplete-compute-delay 0)
   (setq icomplete-show-matches-on-no-input t)
   (setq icomplete-hide-common-prefix nil)
   (setq icomplete-prospects-height 1)
