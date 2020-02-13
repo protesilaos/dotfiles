@@ -765,9 +765,9 @@ And this is for the completion interface:
 (use-package icomplete
   :demand
   :config
-  (setq icomplete-delay-completions-threshold 100)
-  (setq icomplete-max-delay-chars 4)
-  (setq icomplete-compute-delay 0.3)
+  (setq icomplete-delay-completions-threshold 600)
+  (setq icomplete-max-delay-chars 3)
+  (setq icomplete-compute-delay 0.2)
   (setq icomplete-show-matches-on-no-input t)
   (setq icomplete-hide-common-prefix nil)
   (setq icomplete-prospects-height 1)
