@@ -461,41 +461,37 @@ system per-user fonts are preferably read from =~/.local/share/fonts/=.
   (defconst prot/fixed-pitch-font "Hack"
     "The default fixed-pitch typeface.")
 
-  (defconst prot/fixed-pitch-params ":hintstyle=hintfull"
-    "Fontconfig parameters for the fixed-pitch typeface.")
-
-  (defun prot/font-family-size (family size)
+  (defun prot/default-font (family size)
     "Set frame font to FAMILY at SIZE."
-    (set-frame-font
-     (concat family "-" (number-to-string size) prot/fixed-pitch-params) t t))
+    (set-face-attribute 'default nil :family family :height size))
 
   (defun prot/laptop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
 small laptop monitor."
     (interactive)
     (when window-system
-	  (prot/font-family-size prot/fixed-pitch-font 10.5)))
+	  (prot/default-font prot/fixed-pitch-font 105)))
 
   (defun prot/desktop-fonts ()
     "Pass desired argument to `prot/font-sizes' for use on my
 larger desktop monitor."
     (interactive)
     (when window-system
-	  (prot/font-family-size prot/fixed-pitch-font 11)))
+	  (prot/default-font prot/fixed-pitch-font 110)))
 
   (defun prot/screencast-fonts ()
     "Pass desired argument to `prot/font-sizes' for use during
 screen casting."
     (interactive)
     (when window-system
-	  (prot/font-family-size prot/fixed-pitch-font 16)))
+	  (prot/default-font prot/fixed-pitch-font 160)))
 
   (defun prot/presentation-fonts ()
     "Pass desired argument to `prot/font-sizes' for use during
 presentations.  Also see `prot/org-presentation'."
     (interactive)
     (when window-system
-	  (prot/font-family-size prot/fixed-pitch-font 18)))
+	  (prot/default-font prot/fixed-pitch-font 180)))
 
   (defun prot/fonts-per-monitor ()
     "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
