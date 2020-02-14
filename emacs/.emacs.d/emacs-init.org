@@ -679,7 +679,7 @@ Now here is the actual code for the minibuffer part:
   (setq completion-pcm-complete-word-inserts-delimiters t)
   (setq completion-pcm-word-delimiters "-_./:| ")
   ;; NOTE: flex completion is introduced in Emacs 27
-  (setq completion-styles '(partial-completion substring flex))
+  (setq completion-styles '(partial-completion substring initials flex))
   (setq completion-category-overrides
         '((file (styles initials basic))
           (buffer (styles initials basic))
@@ -823,10 +823,10 @@ This is meant to be run by the `minibuffer-exit-hook'."
     (interactive)
     (if (eq (car completion-styles) 'partial-completion)
         (progn
-          (setq-local completion-styles '(flex substring partial-completion))
+          (setq-local completion-styles '(flex initials substring partial-completion))
           (message "%s" (propertize "Prioritising FLEX" 'face 'highlight)))
-      (setq-local completion-styles '(partial-completion substring flex))
-      (message "%s" (propertize "Prioritising REGEXP" 'face 'highlight))))
+      (setq-local completion-styles '(partial-completion substring initials flex))
+      (message "%s" (propertize "Prioritising PREFIX REGEXP" 'face 'highlight))))
 
   (defun prot/icomplete-force-complete-and-exit ()
     "Complete the current `icomplete' match and exit the minibuffer."
