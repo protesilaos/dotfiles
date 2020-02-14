@@ -864,8 +864,8 @@ In my testing, this is necessary when the variable
   (defun prot/icomplete-kill-ring-save (&optional arg)
     "EXPERIMENTAL Save current `icomplete' match to the kill ring.
 
-Call it with a prefix argument to insert the match to the point
-in the current buffer.
+With a prefix argument insert the match to the point in the
+current buffer and return to the minibuffer.
 
 This has a couple of side effects that I have yet to address:
 
@@ -873,7 +873,8 @@ This has a couple of side effects that I have yet to address:
 - With an argument it will clear the user input.
 
 The side effects would be avoidable if I knew of a way to capture
-the matching candidate directly."
+the matching candidate directly without interfering with the
+contents of the minibuffer."
     (interactive "P")
     (let ((mini (active-minibuffer-window)))
       (when (and mini
