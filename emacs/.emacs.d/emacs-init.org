@@ -751,7 +751,13 @@ succession."
          ("M-v" . prot/focus-minibuffer)))
 #+end_src
 
-And this is for the completion interface:
+And the following is for the completion interface.
+
+Note that while running a shell, you can still use =icomplete= by means of
+tab-completion, but to confirm a choice you need to hit =C-m=.  Hitting
+=RET= will just give you a part of the candidate.  I have yet to figure
+out why my =prot/icomplete-force-complete-and-exit= does not work as
+intended.
 
 #+begin_src emacs-lisp
 (use-package icomplete
@@ -840,7 +846,17 @@ This is meant to be run by the `minibuffer-exit-hook'."
       (message "%s" (propertize "Prioritising PREFIX REGEXP" 'face 'highlight))))
 
   (defun prot/icomplete-force-complete-and-exit ()
-    "Complete the current `icomplete' match and exit the minibuffer."
+    "Complete the current `icomplete' match and exit the minibuffer.
+
+Contrary to `icomplete-force-complete-and-exit', this will
+confirm your choice without complaining about incomplete matches.
+
+Those incomplete matches can block you from performing legitimate
+actions, such as defining a new tag in an `org-capture' prompt.
+
+In my testing, this is necessary when the variable
+`icomplete-with-completion-tables' is non-nil, because then
+`icomplete' will be activated practically everywhere it can."
     (interactive)
     (icomplete-force-complete)
     (exit-minibuffer))
