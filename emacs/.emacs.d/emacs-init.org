@@ -421,41 +421,60 @@ particular meaning.
     :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
     :END:
 
-I use fonts that support Latin and Greek character sets and offer both
-roman and italic variants.  Furthermore, I define several typeface
-functions to cater to my evolving needs: they depend on the various
-contexts in which I must type in.
+Any font I use must support Latin and Greek character sets, offer both
+roman and italic variants, be readable at both small and large sizes,
+not be too thin, not have too short of an x-height, not be too compact,
+not have a name that directly advertises some brand, and be equally
+readable against light and dark backdrops.
 
-I opt for my [[https://gitlab.com/protesilaos/hack-font-mod][custom build of the Hack typeface]].  This is a true
-workhorse of a font.  It may not be the prettiest, but it works well in
-practically every context I have ever used it in.  The patches I have
-made to it concern minor improvements that (i) bring Hack stylistically
-closer to its DejaVu heritage, and (ii) refine the presentation of the
-italic version, by using some distinct glyphs for roman and italic
-variants (for example, the dot inside the zero is turned into a diamond
-to keep things consistent, since a slanted dotted zero is less
-decipherable than its roman counterpart).
+While there are many good free/libre options available, none of them
+copes well with my fairly demanding needs.  Some look good at large
+point sizes.  Others lack Greek characters.  While a few of them are
+practically unreadable when cast on a light background (bitmaps fonts in
+particular).
 
-The functions that follow the pattern =prot/SCOPE-font= allow me to
-conveniently define the font I need to use in the given context.
+As such, I opt for my [[https://gitlab.com/protesilaos/hack-font-mod][custom build of the Hack typeface]].  It is a true
+workhorse of a font.  It works well in every context I have ever used it
+in.
+
+Some honourable mentions of libre typefaces that I could use, but have
+some fault that puts them below Hack in my order of preference:
+
+| Typeface           | Subjective faults                 |
+|--------------------+-----------------------------------|
+| DejaVu Sans Mono   | Minor details.                    |
+| Iosevka (extended) | Comparatively smaller glyphs.     |
+| Fira Mono          | No italics.                       |
+| Source Code Pro    | Too thin.  Too broad.  Too fancy. |
+| Victor Mono        | Work-in-progress.                 |
+| Mononoki           | Too fancy.                        |
+| Monoid             | Too thin.                         |
+
+Moving on to my configurations, the functions that follow the pattern
+=prot/SCOPE-font= allow me to conveniently define the font settings I need
+to use in the given context.
 
 Each font declaration can accept several =fontconfig= parameters, as shown
-in =prot/fixed-pitch-params=.  Read the [[https://www.freedesktop.org/software/fontconfig/fontconfig-user.html][relevant spec]] for further details.
-These can be exceptions to environment-wide rules that you specify for
-fontconfig, at the user or system level.  For all font-related settings,
-consult [[https://gitlab.com/protesilaos/dotfiles][my dotfiles]].  Note also that on a modern GNU/Linux system
-per-user fonts are preferably read from =~/.local/share/fonts/=.
+in =prot/fixed-pitch-params=.  Read the [[https://www.freedesktop.org/software/fontconfig/fontconfig-user.html][relevant spec]] for further details,
+while also noting that only some of these are supported by most
+typefaces.  The parameters we can pass here are exceptions to
+environment-wide rules that one can specify for fontconfig, at the user
+or system level.
+
+For all my font-related settings, consult [[https://gitlab.com/protesilaos/dotfiles][my dotfiles]].  Note also that
+on a modern GNU/Linux system per-user fonts are preferably read from
+=~/.local/share/fonts/=.
 
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq x-underline-at-descent-line t)
-  (setq underline-minimum-offset 1)
+  (setq x-underline-at-descent-line nil)
+  (setq underline-minimum-offset 0)
 
   (defconst prot/fixed-pitch-font "Hack"
     "The default fixed-pitch typeface.")
 
-  (defconst prot/fixed-pitch-params ":hintstyle=hintfull"
+  (defconst prot/fixed-pitch-params ":hintstyle=hintslight"
     "Fontconfig parameters for the fixed-pitch typeface.")
 
   (defun prot/default-font (family size)
@@ -475,14 +494,14 @@ small laptop monitor."
 larger desktop monitor."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 11)))
+	  (prot/default-font prot/fixed-pitch-font 13)))
 
   (defun prot/screencast-fonts ()
     "Pass desired argument to `prot/font-sizes' for use during
 screen casting."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 14)))
+	  (prot/default-font prot/fixed-pitch-font 16)))
 
   (defun prot/presentation-fonts ()
     "Pass desired argument to `prot/font-sizes' for use during
@@ -511,7 +530,7 @@ the maximum width of my laptop's screen."
 
 Here is a simple test I have come up with to make an initial assessment
 of the overall quality of the font: /can you discern the character at a
-quick glance?/ If yes, your choice of font is good /prima facie/, else
+quick glance?/ If yes, your choice of typeface is good /prima facie/, else
 search for something else.
 
 Note that this test is not perfect, since many typefaces fall short in
