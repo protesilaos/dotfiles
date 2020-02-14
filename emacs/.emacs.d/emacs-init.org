@@ -886,7 +886,7 @@ the matching candidate directly."
                         (point))
         (when current-prefix-arg
           (delete-minibuffer-contents)
-          (select-window (previous-window))
+          (select-window (get-mru-window))
           (insert (car kill-ring))
           (prot/focus-minibuffer)))))
 
