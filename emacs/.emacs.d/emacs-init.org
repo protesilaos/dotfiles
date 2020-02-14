@@ -2302,7 +2302,6 @@ Invoking =org-agenda= will present you with a list of possible options.
   (setq org-agenda-show-all-dates t)
   (setq org-agenda-show-outline-path nil)
   (setq org-agenda-skip-additional-timestamps-same-entry t)
-  (setq org-agenda-skip-additional-timestamps-same-entry t)
   (setq org-agenda-skip-deadline-prewarning-if-scheduled t)
   (setq org-agenda-skip-scheduled-delay-if-deadline t)
   (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
