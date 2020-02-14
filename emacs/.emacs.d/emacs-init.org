@@ -779,6 +779,17 @@ The user's $HOME directory is abbreviated as a tilde."
       (find-file
        (completing-read "Open recentf entry: " files nil t))))
 
+  (defun prot/icomplete-font-family-list ()
+    "Add item from the `font-family-list' to the `kill-ring'.
+
+This allows you to save the name of a font, which can then be
+used in commands such as `set-frame-font'."
+    (interactive)
+      (kill-new
+       (completing-read "Copy font family: "
+                        (print (font-family-list))
+                        nil t)))
+
   (defun prot/icomplete-yank-kill-ring ()
     "Insert the selected `kill-ring' item directly at point.
 
