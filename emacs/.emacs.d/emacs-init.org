@@ -774,9 +774,10 @@ And the following is for the completion interface.
 
 Note that while running a shell, you can still use =icomplete= by means of
 tab-completion, but to confirm a choice you need to hit =C-m=.  Hitting
-=RET= will just give you a part of the candidate.  I have yet to figure
-out why my =prot/icomplete-force-complete-and-exit= does not work as
-intended.
+=RET= after succesful tab completions will just give you the final part of
+the candidate.  I have yet to figure out why we cannot lock in the
+entire sequence and why my =prot/icomplete-force-complete-and-exit= does
+not work as intended.
 
 #+begin_src emacs-lisp
 (use-package icomplete
@@ -851,7 +852,7 @@ on its own line while also displaying the list of candidates."
           (setq-local resize-mini-windows t)))))
 
   (defun prot/icomplete-restore-horizontal ()
-    "Restore the effects of `prot/icomplete-toggle-vertical'.
+    "Restore `icomplete' to its horizontal layout.
 
 This is meant to be run by the `minibuffer-exit-hook'."
     (unless (string= icomplete-separator " │ ")
