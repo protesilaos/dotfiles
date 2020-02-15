@@ -818,9 +818,13 @@ used in commands such as `set-frame-font'."
   (defun prot/icomplete-yank-kill-ring ()
     "Insert the selected `kill-ring' item directly at point.
 
-In case of long matches, you might want to consider the use of
-`prot/icomplete-toggle-vertical' (EXPERIMENTAL)."
+Defaults to a vertical layout.  This is restored on exit by means
+of `prot/icomplete-restore-horizontal'."
     (interactive)
+    (setq icomplete-prospects-height 10)
+    (setq icomplete-separator
+          (concat "\n" (propertize "··········" 'face 'shadow) "\n"))
+    (setq resize-mini-windows 'grow-only)
     (insert
      (completing-read "Yank from kill ring: " kill-ring nil t)))
 
