@@ -868,6 +868,16 @@ This is meant to be run by the `minibuffer-exit-hook'."
       (setq-local completion-styles '(partial-completion substring initials flex))
       (message "%s" (propertize "Prioritising PREFIX REGEXP" 'face 'highlight))))
 
+  (defun prot/icomplete-toggle-basic ()
+    "Toggle between basic and partial-completion (regexp)."
+    (interactive)
+    (if (eq (car completion-styles) 'partial-completion)
+        (progn
+          (setq-local completion-styles '(basic))
+          (message "%s" (propertize "Prioritising BASIC matching" 'face 'highlight)))
+      (setq-local completion-styles '(partial-completion substring initials flex))
+      (message "%s" (propertize "Prioritising PREFIX REGEXP" 'face 'highlight))))
+
   (defun prot/icomplete-force-complete-and-exit ()
     "Complete the current `icomplete' match and exit the minibuffer.
 
