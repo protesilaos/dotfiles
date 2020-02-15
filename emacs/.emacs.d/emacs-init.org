@@ -811,10 +811,10 @@ The user's $HOME directory is abbreviated as a tilde."
 This allows you to save the name of a font, which can then be
 used in commands such as `set-frame-font'."
     (interactive)
-      (kill-new
-       (completing-read "Copy font family: "
-                        (print (font-family-list))
-                        nil t)))
+    (kill-new
+     (completing-read "Copy font family: "
+                      (print (font-family-list))
+                      nil t)))
 
   (defun prot/icomplete-yank-kill-ring ()
     "Insert the selected `kill-ring' item directly at point.
@@ -1416,13 +1416,13 @@ as =-AFXhlv --group-directories-first=).
   (setq dired-create-destination-dirs 'ask)
   (setq dired-vc-rename-file t)
   :bind (:map dired-mode-map
-         ("C-c +" . dired-create-empty-file)))
+              ("C-c +" . dired-create-empty-file)))
 
 (use-package find-dired
   :after dired
   :config
   (setq find-ls-option ;; applies to `find-name-dired'
-   '("-ls" . "-AFhlv --group-directories-first"))
+        '("-ls" . "-AFhlv --group-directories-first"))
   (setq find-name-arg "-iname"))
 
 (use-package async
