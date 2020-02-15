@@ -946,46 +946,63 @@ contents of the minibuffer."
          ("C-M-." . prot/icomplete-toggle-basic)))
 #+end_src
 
-*** Projectile (completion and extras for projects)
+*** Completion for projects and directory trees
     :PROPERTIES:
     :CUSTOM_ID: h:7862f39e-aed0-4d02-9f1e-60c4601a9734
     :END:
 
-These are a set of commands for interacting with projects.  A "project"
-is a version-controlled directory or one that is manually declared as
-such by an empty =.projectile= file at its root.
+These are a set of commands for interacting with version-controlled
+directories, aka "projects", or directory trees in general.  With these
+I have no need for the third-party "Projectile" package.
 
-Practically all the functions I need from the =projectile= library involve
-minibuffer completion and thus rely on the set of configurations from
-the previous section on [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]].
+Some of the functions furnished herein are built into Emacs, while
+others are defined by me to satisfy my particular needs.
 
-The disabled =:delight= statement customises the minor mode's presentation
-to only show the project's name.  For non-project buffers, a dash
-appears instead.  However, it is disabled in favour of not showing
-anything at all in the minor mode list.
+Everything I have here presupposes a completion framework, so make sure
+to check the previous section on [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]].
 
 Concerning the design of these key bindings, they are consistent with
 all "advanced search methods" (e.g. the default =M-s o= for =occur=).
 
+Note that =project-find-regexp= produces an =xref= buffer from where one can
+run a =query-replace= on the results by hitting =r=.  If the intention is to
+make complex changes, consider =project-query-replace-regexp= instead.
+There also are other techniques which are project-agnostic, such as
+=multi-occur=, =ibuffer-do-occur=, =dired-do-find-regexp-and-replace=.  Read
+their respective docs (with =C-h f FUNCTION=).
+
 #+begin_src emacs-lisp
-(use-package projectile
-  :ensure t
-  ;; :delight '(:eval (concat " " (projectile-project-name)))
-  :delight
+(use-package project
   :config
-  (setq projectile-project-search-path '("~/Git/Projects/"))
-  (setq projectile-indexing-method 'alien)
-  (setq projectile-enable-caching t)
-  (setq projectile-completion-system 'default) ; Allows `icomplete'
-  (setq projectile-use-git-grep t)
-  (setq projectile-switch-project-action
-        'projectile-dired)
-  :bind (("M-s b" . projectile-switch-to-buffer)
-         ("M-s d" . projectile-find-dir)
-         ("M-s f" . projectile-find-file)
-         ("M-s g" . projectile-grep)
-         ("M-s r" . projectile-ripgrep)
-         ("M-s p" . projectile-switch-project)))
+  (defun prot/find-file-from-dir-recursive ()
+    "WORK IN PROGRESS"
+    (interactive)
+    (let* ((file-list (directory-files-recursively default-directory "" nil))
+           (files (mapcar 'abbreviate-file-name file-list)))
+      (find-file
+       (completing-read "Find file recursively: " files nil t))))
+
+  (defvar prot/projects-dir "~/Git/Projects/"
+    "Root directory that hosts all my Git projects.")
+
+  (defun prot/find-project ()
+    "Use `dired' for sub-directory at `prot/projects-dir'.
+
+Allows you to switch directly to the root directory of a project
+inside a given location."
+    (interactive)
+    (let* ((dotless directory-files-no-dot-files-regexp)
+           (project-list (project-combine-directories
+                          (directory-files prot/projects-dir t dotless)))
+           (projects (mapcar 'abbreviate-file-name project-list)))
+      (dired
+       (completing-read "Find project: " projects nil t))))
+
+  :bind (("M-s p" . prot/find-project)
+         ("M-s f" . project-find-file)
+         ("M-s z" . prot/find-file-from-dir-recursive)
+         ("M-s r" . project-find-regexp)
+         ("M-s C-M-%" . project-query-replace-regexp)))
 #+end_src
 
 *** In-buffer completions
