@@ -920,8 +920,10 @@ contents of the minibuffer."
          :map icomplete-minibuffer-map
          ("C-n" . icomplete-forward-completions)
          ("<right>" . icomplete-forward-completions)
+         ("<down>" . icomplete-forward-completions)
          ("C-p" . icomplete-backward-completions)
          ("<left>" . icomplete-backward-completions)
+         ("<up>" . icomplete-backward-completions)
          ("<return>" . prot/icomplete-force-complete-and-exit)
          ("M-o w" . prot/icomplete-kill-ring-save)
          ("M-o i" . (lambda ()
