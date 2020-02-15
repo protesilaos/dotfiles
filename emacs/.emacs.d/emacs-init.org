@@ -941,7 +941,8 @@ contents of the minibuffer."
                       (let ((current-prefix-arg t))
                         (prot/icomplete-kill-ring-save))))
          ("C-M-|" . prot/icomplete-toggle-vertical)
-         ("C-M-." . prot/icomplete-toggle-flex)))
+         ("C-M-," . prot/icomplete-toggle-flex)
+         ("C-M-." . prot/icomplete-toggle-basic)))
 #+end_src
 
 *** Projectile (completion and extras for projects)
