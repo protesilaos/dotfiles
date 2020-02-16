@@ -2328,7 +2328,7 @@ directly from this [[https://stackoverflow.com/a/54251825][Stack Overflow thread
            "* %?")
           ("c" "Capture some actionable item" entry
            (file+headline "tasks.org" "Task list without a defined date")
-           "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?" :immediate-finish t)
+           "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %l" :immediate-finish t)
           ("t" "Task of importance with a tag and a deadline" entry
            (file+headline "tasks.org" "Task list with a date")
            "* %^{Scope of task||TODO [#A]|STUDY [#A]|MEET with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")
