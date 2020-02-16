@@ -1865,12 +1865,14 @@ Everything pertaining to buffer actions is documented at length in the
 26.3.  Information can also be found via =C-h f display-buffer= and, for
 my settings, =C-h f display-buffer-in-side-window=.
 
-With regard to the contents of the =:bind= keyword of the =window=
-library, most key combinations are complementary to the standard ones,
-such as =C-x 1= becoming =s-1=, =C-x o= turning into =s-o= and the like.  They
-*do not replace* the defaults: they just provide more convenient access
-to their corresponding functions.  They all involve the Super key,
-following the norms described in the [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][introductory note on the matter]].
+With regard to the contents of the =:bind= keyword of the =window= library,
+most key combinations are complementary to the standard ones, such as
+=C-x 1= becoming =s-1=, =C-x o= turning into =s-o= and the like.  They *do not
+replace* the defaults: they just provide more convenient access to their
+corresponding functions.  They all involve the Super key, following the
+norms described in the [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][introductory note on the matter]].  Concerning the
+=balance-windows-area= I find that it is less intrusive than the original
+=balance-windows= normally bound to the same =C-x +=.
 
 For a demo of the =display-buffer-alist= and the functions that
 accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-display-buffer/][video on rules for buffer placement]]
@@ -1915,7 +1917,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
           ;; right side window
           ("\\*Faces\\*"
            (display-buffer-in-side-window)
-           (window-width . 0.333)
+           (window-width . 0.25)
            (side . right)
            (slot . 0)
            (window-parameters . ((no-other-window . t)
@@ -1923,11 +1925,14 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
                                                       mode-line-buffer-identification)))))
           ("\\*Custom.*"
            (display-buffer-in-side-window)
-           (window-width . 0.333)
+           (window-width . 0.25)
            (side . right)
            (slot . 1))))
   (setq window-combination-resize t)
-  :hook (help-mode . visual-line-mode)
+  (setq even-window-sizes 'height-only)
+  (setq window-sides-vertical nil)
+  :hook ((help-mode . visual-line-mode)
+         (custom-mode . visual-line-mode))
   :bind (("s-n" . next-buffer)
          ("s-p" . previous-buffer)
          ("s-o" . other-window)
@@ -1936,6 +1941,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
          ("s-0" . delete-window)
          ("s-1" . delete-other-windows)
          ("s-5" . delete-frame)
+         ("C-x +" . balance-windows-area)
          ("<f8>" . window-toggle-side-windows)))
 
 ;; These are all experimental.  Just showcasing the power of passing
@@ -4421,9 +4427,6 @@ They are written by me, unless otherwise noted.
 + Align to whitespace :: This will align a portion of text using
      whitespace as an indicator for creating separate columns.  I bind
      it to =C-c C-==.  Got it from this [[http://pragmaticemacs.com/emacs/aligning-text/][Pragmatic Emacs blog post]].
-+ Balance windows gracefully :: I find that =balance-windows-area= is less
-     intrusive than the =balance-windows= normally bound to =C-x +=.  I thus
-     choose to assign that key chord to the function I prefer.
 + Copy the current line :: Just place the entire line in the kill ring.
      Do not be smart about it.
 + Count words in buffer :: By default, the binding =M-== will count the
@@ -4665,7 +4668,6 @@ instead.  This command can then be followed by the standard
       (delete-region (point-at-bol) (point-at-eol))
       (yank)))
   :bind (("C-c C-=" . bjm/align-whitespace)
-         ("C-x +" . balance-windows-area)
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
          ("s-k" . kill-this-buffer)
