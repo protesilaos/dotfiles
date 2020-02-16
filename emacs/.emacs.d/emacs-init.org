@@ -494,14 +494,14 @@ small laptop monitor."
 larger desktop monitor."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 13)))
+	  (prot/default-font prot/fixed-pitch-font 11)))
 
   (defun prot/screencast-fonts ()
     "Pass desired argument to `prot/font-sizes' for use during
 screen casting."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 16)))
+	  (prot/default-font prot/fixed-pitch-font 14)))
 
   (defun prot/presentation-fonts ()
     "Pass desired argument to `prot/font-sizes' for use during
