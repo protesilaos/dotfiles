@@ -2740,8 +2740,8 @@ messages are being sent and that you can receive them).  Each buffer has
 some unique functions that are relevant to the current interface.  To
 learn more about them, use =C-h m=.  Do it for all three of the above.
 Also rely on =C-h k= to get information about what each key does in the
-given context.  Furthermore, you can use =which-key= to get feedback on
-possible key combinations (refer to [[#h:d066905d-4c6c-4fe5-8077-e806353b8929][the relevant section]]).
+given context (or just start a key sequence and then hit =C-h= to display
+possible combinations in a new Help buffer).
 
 Now a couple more things about the "Group" buffer:
 
@@ -5049,44 +5049,6 @@ current line is more important than the exact column of the point.
              package-refresh-contents
              package-list-packages)
   :hook (package-menu-mode . hl-line-mode))
-#+end_src
-
-*** Which key (key chord hints)
-    :PROPERTIES:
-    :CUSTOM_ID: h:d066905d-4c6c-4fe5-8077-e806353b8929
-    :END:
-
-By default you can receive hints for possible key chord chains by
-hitting =C-h= once you start a sequence (e.g. =C-x C-k C-h= will offer hints
-about keyboard macros).  The following package simplifies this step by
-presenting a table with the completion targets, once certain
-configurable criteria are met.  By default the criterion is a short
-timer for idleness.  I find that too intrusive, opting instead to invoke
-the command manually (also helps that I somehow memorise all these
-keys…).
-
-The "special keys" are represented by their initial letter, which is
-displayed in a differently coloured foreground than standard keys (as
-per [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
-
-Note that placing the mouse pointer over a =which-key= item will display
-relevant documentation in a tooltip.
-
-#+begin_src emacs-lisp
-(use-package which-key
-  :ensure t
-  :delight
-  :commands which-key-C-h-dispatch
-  :config
-  (setq which-key-show-early-on-C-h t)
-  (setq which-key-idle-delay 10000)
-  (setq which-key-idle-secondary-delay 0.05)
-  (setq which-key-popup-type 'side-window)
-  (setq which-key-show-prefix 'echo)
-  (setq which-key-max-display-columns 6)
-  (setq which-key-separator " ")
-  (setq which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
-  :hook (after-init . which-key-mode))
 #+end_src
 
 * History and state
