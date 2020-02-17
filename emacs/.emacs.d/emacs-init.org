@@ -713,12 +713,22 @@ Now here is the actual code for the minibuffer part:
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
 
-  (defun prot/describe-symbol-at-point ()
-    "Get documentation (help) for the symbol at point."
-    (interactive)
+  (defun prot/describe-symbol-at-point (&optional arg)
+    "Get help (documentation) for the symbol at point.
+
+With a prefix argument, switch to the \\*Help\\* window.  If that
+is already focused, switch to the most recently used window
+instead."
+    (interactive "P")
     (let ((symbol (symbol-at-point)))
       (when symbol
-        (describe-symbol symbol))))
+        (describe-symbol symbol)))
+    (when current-prefix-arg
+      (let ((help (get-buffer-window "*Help*")))
+        (when help
+          (if (not (eq (selected-window) help))
+              (select-window help)
+            (select-window (get-mru-window)))))))
 
   (defun prot/focus-minibuffer ()
     "Focus the active minibuffer.
@@ -760,6 +770,10 @@ succession."
          ("s-b" . switch-to-buffer)
          ("s-B" . switch-to-buffer-other-window)
          ("s-h" . prot/describe-symbol-at-point)
+         ("s-H" . (lambda ()
+                      (interactive)
+                      (let ((current-prefix-arg t))
+                        (prot/describe-symbol-at-point))))
          ("s-v" . prot/focus-minibuffer-or-completions)
          :map completion-list-mode-map
          ("h" . prot/describe-symbol-at-point)
