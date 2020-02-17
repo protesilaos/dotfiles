@@ -796,11 +796,35 @@ not work as intended.
   (fido-mode -1)                        ; Emacs 27.1
   (icomplete-mode 1)
 
+  (defun prot/icomplete-show-vertical (&optional str)
+    "Allow `icomplete' to present results vertically.
+
+This is meant to be used by other functions that need to show
+their results as a vertical list, with an optional string marking
+the demarcation line.
+
+For an interactive version see `prot/icomplete-toggle-vertical'."
+    (setq resize-mini-windows 'grow-only)
+    (setq icomplete-prospects-height 10)
+    (if str
+        (setq icomplete-separator
+              (concat "\n" (propertize str 'face 'shadow) "\n "))
+      (setq icomplete-separator "\n ")))
+
+  (defun prot/icomplete-restore-horizontal ()
+    "Restore `icomplete' to its horizontal layout.
+
+This is meant to be run by the `minibuffer-exit-hook'."
+    (unless (string= icomplete-separator " │ ")
+      (setq icomplete-prospects-height 1)
+      (setq icomplete-separator " │ ")))
+
   (defun prot/icomplete-recentf ()
     "Open `recent-list' item in a new buffer.
 
 The user's $HOME directory is abbreviated as a tilde."
     (interactive)
+    (prot/icomplete-show-vertical)
     (let ((files (mapcar 'abbreviate-file-name recentf-list)))
       (find-file
        (completing-read "Open recentf entry: " files nil t))))
@@ -811,6 +835,7 @@ The user's $HOME directory is abbreviated as a tilde."
 This allows you to save the name of a font, which can then be
 used in commands such as `set-frame-font'."
     (interactive)
+    (prot/icomplete-show-vertical)
     (kill-new
      (completing-read "Copy font family: "
                       (print (font-family-list))
@@ -822,10 +847,7 @@ used in commands such as `set-frame-font'."
 Defaults to a vertical layout.  This is restored on exit by means
 of `prot/icomplete-restore-horizontal'."
     (interactive)
-    (setq icomplete-prospects-height 10)
-    (setq icomplete-separator
-          (concat "\n" (propertize "··········" 'face 'shadow) "\n"))
-    (setq resize-mini-windows 'grow-only)
+    (prot/icomplete-show-vertical "··········")
     (insert
      (completing-read "Yank from kill ring: " kill-ring nil t)))
 
