@@ -735,7 +735,7 @@ instead."
 
 Bind this to `completion-list-mode-map' to M-v to easily jump
 between the list of candidates present in the \\*Completions\\*
-buffer and the minibuffer (because M-v switches to the
+buffer and the minibuffer (because by default M-v switches to the
 completions if invoked from inside the minibuffer."
     (interactive)
     (let ((mini (active-minibuffer-window)))
@@ -886,14 +886,6 @@ on its own line while also displaying the list of candidates."
           (setq icomplete-prospects-height 1)
           (setq icomplete-separator " │ ")
           (setq-local resize-mini-windows t)))))
-
-  (defun prot/icomplete-restore-horizontal ()
-    "Restore `icomplete' to its horizontal layout.
-
-This is meant to be run by the `minibuffer-exit-hook'."
-    (unless (string= icomplete-separator " │ ")
-      (setq icomplete-prospects-height 1)
-      (setq icomplete-separator " │ ")))
 
   (defun prot/icomplete-toggle-flex ()
     "Toggle between flex and partial-completion (regexp)."
