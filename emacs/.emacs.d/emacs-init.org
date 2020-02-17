@@ -876,16 +876,15 @@ the `minibuffer-exit-hook'.
 NOTE: there still needs to be a way to show the minibuffer input
 on its own line while also displaying the list of candidates."
     (interactive)
-    (let ((mini (active-minibuffer-window)))
-      (when mini
-        (if (not (string= icomplete-separator "\n "))
-            (progn
-              (setq-local icomplete-prospects-height 10)
-              (setq-local icomplete-separator "\n ")
-              (setq-local resize-mini-windows 'grow-only))
-          (setq icomplete-prospects-height 1)
-          (setq icomplete-separator " │ ")
-          (setq-local resize-mini-windows t)))))
+    (when (active-minibuffer-window)
+      (if (not (string= icomplete-separator "\n "))
+          (progn
+            (setq-local icomplete-prospects-height 10)
+            (setq-local icomplete-separator "\n ")
+            (setq-local resize-mini-windows 'grow-only))
+        (setq icomplete-prospects-height 1)
+        (setq icomplete-separator " │ ")
+        (setq-local resize-mini-windows t))))
 
   (defun prot/icomplete-toggle-flex ()
     "Toggle between flex and partial-completion (regexp)."
@@ -938,20 +937,19 @@ The side effects would be avoidable if I knew of a way to capture
 the matching candidate directly without interfering with the
 contents of the minibuffer."
     (interactive "P")
-    (let ((mini (active-minibuffer-window)))
-      (when (and mini
-                 (minibufferp)
-                 (bound-and-true-p icomplete-mode))
-        (move-beginning-of-line 1)
-        (set-mark (point))
-        (icomplete-force-complete)
-        (kill-ring-save (mark)
-                        (point))
-        (when current-prefix-arg
-          (delete-minibuffer-contents)
-          (select-window (get-mru-window))
-          (insert (car kill-ring))
-          (prot/focus-minibuffer)))))
+    (when (and (active-minibuffer-window)
+               (minibufferp)
+               (bound-and-true-p icomplete-mode))
+      (move-beginning-of-line 1)
+      (set-mark (point))
+      (icomplete-force-complete)
+      (kill-ring-save (mark)
+                      (point))
+      (when current-prefix-arg
+        (delete-minibuffer-contents)
+        (select-window (get-mru-window))
+        (insert (car kill-ring))
+        (prot/focus-minibuffer))))
 
   :hook (minibuffer-exit . prot/icomplete-restore-horizontal)
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
