@@ -437,18 +437,17 @@ As such, I opt for my [[https://gitlab.com/protesilaos/hack-font-mod][custom bui
 workhorse of a font.  It works well in every context I have ever used it
 in.
 
-Some honourable mentions of libre typefaces that I could use, but have
-some fault that puts them below Hack in my order of preference:
+Honourable mentions of libre typefaces that I could use, but have some
+fault that puts them below Hack in my order of preference:
 
-| Typeface           | Subjective faults                 |
-|--------------------+-----------------------------------|
-| DejaVu Sans Mono   | Minor details.                    |
-| Iosevka (extended) | Comparatively smaller glyphs.     |
-| Fira Mono          | No italics.                       |
-| Source Code Pro    | Too thin.  Too broad.  Too fancy. |
-| Victor Mono        | Work-in-progress.                 |
-| Mononoki           | Too fancy.                        |
-| Monoid             | Too thin.                         |
+| Typeface           | Subjective faults |
+|--------------------+-------------------|
+| DejaVu Sans Mono   | Minor details.    |
+| Iosevka (extended) | Smaller glyphs.   |
+| Fira Mono/Code     | No italics.       |
+| Source Code Pro    | Too thin.         |
+| Mononoki           | Too fancy.        |
+| Victor Mono        | Work-in-progress. |
 
 Moving on to my configurations, the functions that follow the pattern
 =prot/SCOPE-font= allow me to conveniently define the font settings I need
@@ -508,7 +507,7 @@ screen casting."
 presentations.  Also see `prot/org-presentation'."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 18)))
+	  (prot/default-font prot/fixed-pitch-font 20)))
 
   (defun prot/fonts-per-monitor ()
     "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
@@ -2352,10 +2351,10 @@ directly from this [[https://stackoverflow.com/a/54251825][Stack Overflow thread
         '(("b" "Basic task" entry
            (file+headline "tasks.org" "Basic tasks that need to be reviewed")
            "* %?")
-          ("c" "Capture some actionable item" entry
+          ("c" "Capture some concise actionable item and exit immediately" entry
            (file+headline "tasks.org" "Task list without a defined date")
            "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %l" :immediate-finish t)
-          ("t" "Task of importance with a tag and a deadline" entry
+          ("t" "Task of importance with a tag, deadline, and further editable space" entry
            (file+headline "tasks.org" "Task list with a date")
            "* %^{Scope of task||TODO [#A]|STUDY [#A]|MEET with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")
           ("r" "Reply to an email" entry
