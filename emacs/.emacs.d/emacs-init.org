@@ -922,33 +922,23 @@ In my testing, this is necessary when the variable
     (exit-minibuffer))
 
   (defun prot/icomplete-kill-ring-save (&optional arg)
-    "EXPERIMENTAL Save current `icomplete' match to the kill ring.
+    "Expand and save current `icomplete' match to the kill ring.
 
-With a prefix argument insert the match to the point in the
-current buffer and return to the minibuffer.
-
-This has a couple of side effects that I have yet to address:
-
-- Without an argument it will complete the current match.
-- With an argument it will clear the user input.
-
-The side effects would be avoidable if I knew of a way to capture
-the matching candidate directly without interfering with the
-contents of the minibuffer."
-    (interactive "P")
+With a prefix argument, insert the match to the point in the
+current buffer and exit the recursive edit (or just close the
+minibuffer)."
+    (interactive "*P")
     (when (and (active-minibuffer-window)
                (minibufferp)
                (bound-and-true-p icomplete-mode))
-      (move-beginning-of-line 1)
-      (set-mark (point))
       (icomplete-force-complete)
-      (kill-ring-save (mark)
-                      (point))
+      (kill-new (field-string-no-properties))
       (when current-prefix-arg
-        (delete-minibuffer-contents)
+        (kill-new (field-string-no-properties))
         (select-window (get-mru-window))
         (insert (car kill-ring))
-        (prot/focus-minibuffer))))
+        (prot/focus-minibuffer)
+        (exit-recursive-edit))))
 
   :hook (minibuffer-exit . prot/icomplete-restore-horizontal)
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
