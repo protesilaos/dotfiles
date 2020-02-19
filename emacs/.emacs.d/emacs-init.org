@@ -2645,16 +2645,27 @@ contains lots of useful information to get you started.
 Before configuring the email client, we need to establish the absolute
 essentials: who we are, where our credentials are stored, and whether
 encryption is supported.  This is done in the first two package
-declarations.  The others are of secondary importance, though still very
-useful.
+declarations.
 
-Consider reviewing =nnmail-expiry-wait= only after you have some
-experience with Gnus.
+Then we set up the interface for composing emails:
 
-As for the =message-citation-line-format=, its value is expanded into
-something like /"NAME <EMAIL> [2020-02-07, 13:47 +0100]:"/.  To find about
-all the date-related specifiers, read the relevant documentation with
-=C-h v format-time-string=.
++ The =mail-user-agent= and =message-mail-user-agent= concern the default
+  email composition buffer, called with =C-x m= or any other facility that
+  falls back to the =compose-mail= function.  The default is =message-mode=.
+  When Gnus is running, it will insert relevant paraphernalia, the most
+  important of which is the "Gcc" header.  The Gcc saves a copy of the
+  outgoing message to a specified group.  In my case that is the "Sent"
+  directory of my default IMAP account.
++ Function =prot/message-header-add-gcc= is directly related to the above.
+  The inserted header points to my public email account, which is
+  declared in =user-mail-address=.  This concerns only the creation of new
+  emails.  While replying to a message, the appropriate information is
+  filled in automatically, based on parameters I specify in the section
+  about [[#h:dc8811af-dec8-4ca8-a62e-0b500928d10b][account settings and essential configurations]].
++ The value of =message-citation-line-format= is expanded into something
+  like /"NAME <EMAIL> [2020-02-19, 13:54 +0200]:"/.  To learn about all
+  the date-related specifiers, it is better for you to read the
+  documentation with =C-h v format-time-string=.
 
 #+begin_src emacs-lisp
 (use-package auth-source
@@ -2669,20 +2680,34 @@ all the date-related specifiers, read the relevant documentation with
 
 (use-package message
   :config
+  (setq mail-user-agent 'message-user-agent)
+  (setq message-mail-user-agent nil)    ; default is `gnus'
+  (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
+  (setq message-signature "Protesilaos Stavrou\nprotesilaos.com\n")
   (setq message-citation-line-format "%f [%Y-%m-%d, %R %z]:\n")
-  (setq message-fill-column 80)
   (setq message-citation-line-function
         'message-insert-formatted-citation-line)
   (setq message-kill-buffer-on-exit nil)
-  (setq message-wide-reply-confirm-recipients t))
+  (setq message-wide-reply-confirm-recipients t)
 
-(use-package nnmail
-  :config
-  (setq nnmail-expiry-wait 30))
+  (defun prot/message-header-add-gcc ()
+    "While `gnus' is running, add a Gcc header, if missing.
 
-(use-package nnir
-  :config
-  (setq nnir-imap-default-search-key 'imap))
+The Gcc header places a copy of the outgoing message to the
+appropriate directory of the IMAP server, as per the contents of
+~/.authinfo.gpg.
+
+In the absence of a Gcc header, the outgoing message will not
+appear in the appropriate IMAP directory, though it will still be
+sent.
+
+Add this function to `message-header-setup-hook'."
+    (if (gnus-alive-p)
+      (unless (message-fetch-field "Gcc")
+        (message-add-header "Gcc: nnimap+pub:Sent"))
+      (message "Gnus is not running. No GCC field inserted.")))
+
+  :hook (message-header-setup . prot/message-header-add-gcc))
 #+end_src
 
 Below is a sample with the contents of my =authinfo.gpg=.  This is read by
@@ -2821,25 +2846,33 @@ meaning of the various date/time specifiers.
      :END:
 
 Here I only furnish the essentials for the basic Gnus functionality.
+Subsequent sections expand on the particulars.
 
-The =gnus-select-method= sets the default method for fetching news items.
-As I want to read mail from several accounts in addition to following
-Usenet sources, I choose to set it to nil.
-
-The =gnus-secondary-select-methods= is where my accounts are specified.
-Each =nnimap= list points to a specific line in my =authinfo.gpg= file
-(whose format I described in the [[#h:a82766be-daab-4925-b23a-1c5ffd47e599][base email settings]]).  My emails all
-use the same server so this method allows me to specify the username
-(email) and password combination for each of them /without/ making this
-information public.  I am not sure whether the =nnimap-stream= and
-=nnimap-authinfo-file= are needed, but I keep them for the sake of
-completeness.
-
-The =gnus-parameters= are designed to simply move my outgoing messages to
-the "Sent" folder of the relevant account.  While =gnus-gcc-mark-as-read=
-ensures that these are marked as read.
-
-The "agent" is enabled here and configured in the [[#h:fccaadbb-ea22-4d1f-ae79-ef1f45f3befa][following section]].
++ The =gnus-select-method= sets the default method for fetching news
+  items. As I want to read mail from several accounts in addition to
+  following Usenet sources, I choose to set it to nil.
++ The =gnus-secondary-select-methods= is where my accounts are specified.
+  Each =nnimap= list points to a specific line in my =authinfo.gpg= file
+  (whose format I described in the [[#h:a82766be-daab-4925-b23a-1c5ffd47e599][base email settings]]).  My emails all
+  use the same server so this method allows me to specify the username
+  (email) and password combination for each of them /without/ making this
+  information public.  I am not sure whether the =nnimap-stream= and
+  =nnimap-authinfo-file= are needed, but I keep them for the sake of
+  completeness.
++ The =gnus-parameters= are designed to simply move my outgoing messages
+  to the "Sent" folder of the account that replies to a given email.
+  While =gnus-gcc-mark-as-read= ensures that these are marked as read.
++ The "agent" is enabled here and configured in the [[#h:fccaadbb-ea22-4d1f-ae79-ef1f45f3befa][following section]].
++ Setting the =gnus-novice-user= to =nil= has the effect of reducing prompts
+  for potentially destructive commands, such as deleting an email.  Too
+  many confirmations end up being annoying, but you might opt to keep
+  this to =t= if you are still new to Gnus.
++ The variables concerning the "dribble" file may be reviewed.  The idea
+  is to store the state of Gnus in case Emacs crashes.  This has never
+  happened and, therefore, I am not putting too much effort into solving
+  a highly unlikely problem.
++ Consider reviewing =nnmail-expiry-wait= only after you have some
+  experience with Gnus.  I set it to a fairly high value.
 
 #+begin_src emacs-lisp
 (use-package gnus
@@ -2871,10 +2904,7 @@ The "agent" is enabled here and configured in the [[#h:fccaadbb-ea22-4d1f-ae79-e
            (posting-style
             (gcc "nnimap+pub:Sent")))))
   (setq gnus-gcc-mark-as-read t)
-  (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
-  (setq message-signature "Protesilaos Stavrou\nprotesilaos.com\n")
   (setq gnus-agent t)
-  (setq mail-user-agent 'gnus-user-agent)
   (setq gnus-novice-user nil)
   ;; checking sources
   (setq gnus-check-new-newsgroups 'ask-server)
@@ -2883,6 +2913,10 @@ The "agent" is enabled here and configured in the [[#h:fccaadbb-ea22-4d1f-ae79-e
   (setq gnus-use-dribble-file t)
   (setq gnus-always-read-dribble-file t)
   :bind ("C-c m" . gnus))
+
+(use-package nnmail
+  :config
+  (setq nnmail-expiry-wait 30))
 #+end_src
 
 **** Gnus agent
@@ -3161,18 +3195,10 @@ By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][com
   :hook (dired-mode . gnus-dired-mode))
 #+end_src
 
-**** TODO Extend Gnus [0/5]                                       :emacs:gnus:
+**** TODO Extend Gnus [0/2]                                      :emacs:gnus:
      :PROPERTIES:
      :CUSTOM_ID: h:357088a3-b88d-4928-9c8c-f6c5902421aa
      :END:
-***** TODO Integrate contacts database and completion (BBDB)
-      :PROPERTIES:
-      :CUSTOM_ID: h:8b80841e-8981-469a-90db-df2b13627056
-      :END:
-***** TODO learn more about mail searching (nnir?, nnimap?)
-      :PROPERTIES:
-      :CUSTOM_ID: h:4f3fb8e0-8e53-4c9b-9623-01a2aa4a05fe
-      :END:
 ***** TODO non-blocking RSS feeds (use topic scores?)
       :PROPERTIES:
       :CUSTOM_ID: h:61a91a5c-338d-4c1d-9f8c-f8ee321078a8
@@ -3180,10 +3206,6 @@ By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][com
 ***** TODO parse Atom feeds as well?
       :PROPERTIES:
       :CUSTOM_ID: h:812c503c-fbd8-40f5-ac5d-6cae20974cba
-      :END:
-***** TODO Try "org-msg" package to compose email in Org-mode
-      :PROPERTIES:
-      :CUSTOM_ID: h:d89808cb-70bb-42ff-b659-a22c6a7b31cd
       :END:
 *** Sending email (SMTP)
     :PROPERTIES:
