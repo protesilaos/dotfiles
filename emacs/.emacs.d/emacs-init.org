@@ -926,8 +926,7 @@ In my testing, this is necessary when the variable
     "Expand and save current `icomplete' match to the kill ring.
 
 With a prefix argument, insert the match to the point in the
-current buffer and exit the recursive edit (or just close the
-minibuffer)."
+current buffer and switch focus back to the minibuffer."
     (interactive "*P")
     (when (and (active-minibuffer-window)
                (minibufferp)
@@ -938,8 +937,7 @@ minibuffer)."
         (kill-new (field-string-no-properties))
         (select-window (get-mru-window))
         (insert (car kill-ring))
-        (prot/focus-minibuffer)
-        (exit-recursive-edit))))
+        (prot/focus-minibuffer))))
 
   :hook (minibuffer-exit . prot/icomplete-restore-horizontal)
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
