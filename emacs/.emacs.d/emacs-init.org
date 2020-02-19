@@ -3697,43 +3697,79 @@ I have a couple of videos about my workflow with Bongo and Dired:
         (mapc 'bongo-insert-file files))))
 
   (defun prot/bongo-dired-library ()
-    "Activate `bongo-dired-library-mode' when accessing the
-~/Music directory.  This is meant to be hooked into `dired-mode'.
+    "Set `bongo-dired-library-mode' when accessing ~/Music.
 
-Upon activation, the directory and all its sub-directories become
-a valid library buffer for Bongo, from where we can, among
-others, add tracks to playlists.  The added benefit is that Dired
-will continue to behave as normal, making this a superior
-alternative to a purpose-specific library buffer."
+This is meant to be hooked to `dired-mode'.  Upon activation, the
+directory and all its sub-directories become a valid library
+buffer for Bongo, from where we can, among others, add tracks to
+playlists.  The added benefit is that Dired will continue to
+behave as normal, making this a superior alternative to a
+purpose-specific library buffer."
     (when (string-match-p "\\`~/Music/" default-directory)
       (set (make-local-variable 'bongo-dired-library-mode) 't)))
 
   (defun prot/bongo-clear-playlist-and-stop ()
     "Stop playback and clear the entire `bongo' playlist buffer.
+
 Contrary to the standard `bongo-erase-buffer', this also removes
 the currently-playing track."
     (interactive)
-    (bongo-stop)
-    (bongo-erase-buffer))
+    (when (bongo-playlist-buffer-p)
+      (bongo-stop)
+      (bongo-erase-buffer)))
+
+  (defun prot/bongo-play-random ()
+    "Play a random track with `bongo' and set random playback."
+    (interactive)
+    (when (or (bongo-playlist-buffer-p)
+              (bongo-library-buffer-p))
+      (bongo-play-random)
+      (bongo-random-playback-mode 1)))
 
   (defun prot/bongo-library-insert-and-play-random ()
-    "Enqueue directory tree at point, or marked items, to the
-`bongo' playlist.  This is meant to work while inside a `dired'
-buffer that doubles as a library buffer (see
-`prot/bongo-dired-library')."
+    "Add directory tree or marked items to the `bongo' playlist.
+
+This is meant to work while inside a `dired' buffer that doubles
+as a library buffer (see `prot/bongo-dired-library')."
     (interactive)
-    (contrib/bongo-add-dired-files)
-    (bongo-play-random)
-    (bongo-random-playback-mode 1))
-  :hook
-  (dired-mode . prot/bongo-dired-library)
-  (bongo-playlist-mode . hl-line-mode)
+    (when (bongo-library-buffer-p)
+      (contrib/bongo-add-dired-files)
+      (prot/bongo-play-random)))
+
+  (defun prot/bongo-insert-playlist ()
+    "Insert the contents of a `bongo' playlist.
+
+The files are stored in a predetermined path inside my Music
+directory.
+
+Upon insertion, playback starts immediately, in accordance with
+`prot/bongo-play-random'."
+    (interactive)
+    (let* ((path "~/Music/playlists/")
+           (dotless directory-files-no-dot-files-regexp)
+           (playlists (mapcar
+                       'abbreviate-file-name
+                       (directory-files path t dotless))))
+      (when (bongo-playlist-buffer-p)
+        ;;;; Enables vertical completion while using `icomplete'.  I do
+        ;;;; not need this right now, since there is only a handful of
+        ;;;; playlists and all of them are in the same path so that a
+        ;;;; couple of key presses give a unique match anyway.
+        ;; (when (bound-and-true-p icomplete-mode)
+        ;;   (prot/icomplete-show-vertical))
+        (bongo-insert-playlist-contents
+         (completing-read "Select playlist: " playlists nil t))
+        (prot/bongo-play-random))))
+
+  :hook ((dired-mode . prot/bongo-dired-library)
+         (bongo-playlist-mode . hl-line-mode))
   :bind (("<C-XF86AudioPlay>" . bongo-pause/resume)
          ("<C-XF86AudioNext>" . bongo-next)
          ("<C-XF86AudioPrev>" . bongo-previous)
          ("<M-XF86AudioPlay>" . bongo-show)
          :map bongo-playlist-mode-map
          ("C-d" . prot/bongo-clear-playlist-and-stop)
+         ("I" . prot/bongo-insert-playlist)
          :map bongo-dired-library-mode-map
          ("<C-return>" . prot/bongo-library-insert-and-play-random)))
 #+end_src
