@@ -697,6 +697,7 @@ Now here is the actual code for the minibuffer part:
   (setq completion-pcm-complete-word-inserts-delimiters t)
   (setq completion-pcm-word-delimiters "-_./:| ")
   ;; NOTE: flex completion is introduced in Emacs 27
+  (setq completion-show-help nil)
   (setq completion-styles '(partial-completion substring initials flex))
   (setq completion-category-overrides
         '((file (styles initials basic))
@@ -2667,6 +2668,7 @@ all the date-related specifiers, read the relevant documentation with
 (use-package message
   :config
   (setq message-citation-line-format "%f [%Y-%m-%d, %R %z]:\n")
+  (setq message-fill-column 80)
   (setq message-citation-line-function
         'message-insert-formatted-citation-line)
   (setq message-kill-buffer-on-exit nil)
@@ -2870,7 +2872,7 @@ The "agent" is enabled here and configured in the [[#h:fccaadbb-ea22-4d1f-ae79-e
   (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
   (setq message-signature "Protesilaos Stavrou\nprotesilaos.com\n")
   (setq gnus-agent t)
-  (setq mail-user-agent 'gnus-user-agent) ; also works with `sendmail-user-agent'
+  (setq mail-user-agent 'gnus-user-agent)
   (setq gnus-novice-user nil)
   ;; checking sources
   (setq gnus-check-new-newsgroups 'ask-server)
