@@ -996,19 +996,23 @@ their respective docs (with =C-h f FUNCTION=).
       (find-file
        (completing-read "Find file recursively: " files nil t))))
 
-  (defvar prot/projects-dir "~/Git/Projects/"
-    "Root directory that hosts all my Git projects.")
-
   (defun prot/find-project ()
-    "Use `dired' for sub-directory at `prot/projects-dir'.
+    "Use `dired' for sub-directory at ~/Git/Projects.
 
 Allows you to switch directly to the root directory of a project
 inside a given location."
     (interactive)
-    (let* ((dotless directory-files-no-dot-files-regexp)
+    (let* ((path "~/Git/Projects/")
+           (dotless directory-files-no-dot-files-regexp)
            (project-list (project-combine-directories
-                          (directory-files prot/projects-dir t dotless)))
+                          (directory-files path t dotless)))
            (projects (mapcar 'abbreviate-file-name project-list)))
+      ;;;; Enables vertical completion while using `icomplete'.  I do
+      ;;;; not need this right now, since there is only a handful of
+      ;;;; projects and all of them are in the same path so that a
+      ;;;; couple of key presses give a unique match anyway.
+      ;; (when (bound-and-true-p icomplete-mode)
+      ;;   (prot/icomplete-show-vertical))
       (dired
        (completing-read "Find project: " projects nil t))))
 
