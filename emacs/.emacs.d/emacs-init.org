@@ -2860,9 +2860,14 @@ Subsequent sections expand on the particulars.
   information public.  I am not sure whether the =nnimap-stream= and
   =nnimap-authinfo-file= are needed, but I keep them for the sake of
   completeness.
-+ The =gnus-parameters= are designed to simply move my outgoing messages
-  to the "Sent" folder of the account that replies to a given email.
-  While =gnus-gcc-mark-as-read= ensures that these are marked as read.
++ The =gnus-parameters= are designed to move my outgoing messages to the
+  "Sent" folder of the account that replies to a given email and to use
+  the right email address, depending on the context.  While the variable
+  =gnus-gcc-mark-as-read= ensures that the outgoing messages are marked as
+  read.  NOTE: the function I currently use to dynamically set the
+  "From" parameter is /very fragile/.  I eventually need to find a robust
+  way of getting the substring.  I know how to do it with =sed= or =awk= but
+  not while using elisp.  Though the code works for the time being…
 + The "agent" is enabled here and configured in the [[#h:fccaadbb-ea22-4d1f-ae79-ef1f45f3befa][following section]].
 + Setting the =gnus-novice-user= to =nil= has the effect of reducing prompts
   for potentially destructive commands, such as deleting an email.  Too
@@ -2894,15 +2899,24 @@ Subsequent sections expand on the particulars.
                   (nnimap-address "mail.gandi.net")
                   (nnimap-stream ssl)
                   (nnimap-authinfo-file "~/.authinfo.gpg"))))
+
   (setq gnus-parameters
         '(("prv"
            (posting-style
-            (gcc "nnimap+prv:Sent")))
+            (gcc "nnimap+prv:Sent")
+            (From
+             (concat user-full-name " " "<"
+              (substring (format "%s" (auth-source-search :host "prv")) 28 51)
+              ">"))))
           ("inf"
            (posting-style
-            (gcc "nnimap+inf:Sent")))
+            (gcc "nnimap+inf:Sent")
+            (From
+             (concat user-full-name " " "<"
+              (substring (format "%s" (auth-source-search :host "inf")) 28 48)
+              ">"))))
           ("pub"
-           (posting-style
+           (posting-style               ; Uses default name+mail
             (gcc "nnimap+pub:Sent")))))
   (setq gnus-gcc-mark-as-read t)
   (setq gnus-agent t)
