@@ -2707,7 +2707,8 @@ Add this function to `message-header-setup-hook'."
         (message-add-header "Gcc: nnimap+pub:Sent"))
       (message "Gnus is not running. No GCC field inserted.")))
 
-  :hook (message-header-setup . prot/message-header-add-gcc))
+  :hook ((message-header-setup . prot/message-header-add-gcc)
+         (message-setup . message-sort-headers)))
 #+end_src
 
 Below is a sample with the contents of my =authinfo.gpg=.  This is read by
