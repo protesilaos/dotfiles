@@ -3832,7 +3832,7 @@ their development process, I am not using the MELPA packages directly.
     (setq modus-operandi-theme-slanted-constructs t
           modus-operandi-theme-bold-constructs t
           modus-operandi-theme-proportional-fonts nil
-          modus-operandi-theme-scale-headings nil
+          modus-operandi-theme-scale-headings t
           modus-operandi-theme-scale-1 1.05
           modus-operandi-theme-scale-2 1.1
           modus-operandi-theme-scale-3 1.15
@@ -3844,7 +3844,7 @@ their development process, I am not using the MELPA packages directly.
     (setq modus-vivendi-theme-slanted-constructs t
           modus-vivendi-theme-bold-constructs t
           modus-vivendi-theme-proportional-fonts nil
-          modus-vivendi-theme-scale-headings nil
+          modus-vivendi-theme-scale-headings t
           modus-vivendi-theme-scale-1 1.05
           modus-vivendi-theme-scale-2 1.1
           modus-vivendi-theme-scale-3 1.15
@@ -3860,7 +3860,20 @@ theme."
     (if (eq (car custom-enabled-themes) 'modus-operandi)
         (prot/modus-vivendi)
       (prot/modus-operandi)))
-  :bind ("<f5>" . prot/modus-themes-toggle)
+
+  (defun prot/describe-face (pos)
+    "Print message with name of face[s] at point.
+
+A lightweight alternative to `what-cursor-position' and its
+prefixed variant."
+    (interactive "d")
+    (let ((face (or (get-char-property pos 'face)
+                    (get-char-property pos 'read-cf-name))))
+      (message "%s" (or face
+                        "No face at point"))))
+
+  :bind (("<f5>" . prot/modus-themes-toggle)
+         ("s-=" . prot/describe-face))
   :hook (after-init . prot/modus-operandi))
 #+end_src
 
