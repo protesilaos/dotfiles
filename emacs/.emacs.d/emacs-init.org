@@ -328,43 +328,6 @@ along with this file.  If not, see <http://www.gnu.org/licenses/>.
 This section contains the relatively few configurations that are needed
 prior to the setup of everything else.
 
-** Disable GUI components
-   :PROPERTIES:
-   :CUSTOM_ID: h:ae48fe61-a3c3-4132-8986-785f9bfbeafb
-   :END:
-
-Overview of these settings:
-
-+ I normally use the GTK (GUI) variant of Emacs.  I prefer not to have
-  any of the elements that come with it.  This keeps the window
-  clean. The only "interface" component that remains in place is the
-  mode line, which is not part of the GUI toolkit anyway…
-+ The start-up screen that offers an overview of GNU Emacs is also
-  disabled.  It is useful for beginners, but is rendered obsolete once
-  you familiarise yourself with the essentials.
-+ The pair of key bindings that involve =z= minimise the Emacs frame.
-  This is technically an interface action, in that it assumes my window
-  manager has a minimise function or that I want to have such a motion
-  inside of Emacs.  Disable them.
-+ Also disable the "hello file" function, because it crashes Emacs.  I
-  assume this has to do with font rendering and missing font files, as I
-  experienced similar issues on various terminal emulators.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq use-file-dialog nil)
-  (setq use-dialog-box nil)
-  (setq inhibit-splash-screen t)
-  (global-unset-key (kbd "C-z"))
-  (global-unset-key (kbd "C-x C-z"))
-  (global-unset-key (kbd "C-h h"))
-  :hook (after-init . (lambda ()
-                        (menu-bar-mode -1)
-                        (tool-bar-mode -1)
-                        (scroll-bar-mode -1))))
-#+end_src
-
 ** Edit modeline "lighters"
    :PROPERTIES:
    :CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
@@ -3797,6 +3760,43 @@ Upon insertion, playback starts immediately, in accordance with
 This section contains lots of small or self-contained tweaks and
 refinements that cover a wide range of item across the Emacs
 customisation settings.
+
+** Disable GUI components
+   :PROPERTIES:
+   :CUSTOM_ID: h:ae48fe61-a3c3-4132-8986-785f9bfbeafb
+   :END:
+
+Overview of these settings:
+
++ I normally use the GTK (GUI) variant of Emacs.  I prefer not to have
+  any of the elements that come with it.  This keeps the window
+  clean. The only "interface" component that remains in place is the
+  mode line, which is not part of the GUI toolkit anyway…
++ The start-up screen that offers an overview of GNU Emacs is also
+  disabled.  It is useful for beginners, but is rendered obsolete once
+  you familiarise yourself with the essentials.
++ The pair of key bindings that involve =z= minimise the Emacs frame.
+  This is technically an interface action, in that it assumes my window
+  manager has a minimise function or that I want to have such a motion
+  inside of Emacs.  Disable them.
++ Also disable the "hello file" function, because it crashes Emacs.  I
+  assume this has to do with font rendering and missing font files, as I
+  experienced similar issues on various terminal emulators.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq use-file-dialog nil)
+  (setq use-dialog-box t)               ; only for mouse events
+  (setq inhibit-splash-screen t)
+  (global-unset-key (kbd "C-z"))
+  (global-unset-key (kbd "C-x C-z"))
+  (global-unset-key (kbd "C-h h"))
+  :hook (after-init . (lambda ()
+                        (menu-bar-mode -1)
+                        (tool-bar-mode -1)
+                        (scroll-bar-mode -1))))
+#+end_src
 
 ** Modus themes (my very accessible themes) and other visuals
    :PROPERTIES:
