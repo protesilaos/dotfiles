@@ -375,17 +375,12 @@ your init file.  I prefer to have that stored in a separate file.
 While we can always specify a font family for each Emacs "face"
 (i.e. customisable styles of code/interface constructs), it still is a
 good idea to establish a baseline for what typeface settings should be
-applicable by default.  In general, I like constistent typography and
+applicable by default.  In general, I like consistent typography and
 would only mix styles when it is absolutely necessary to convey a
 particular meaning.
 
-*** Primary font settings
-    :PROPERTIES:
-    :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
-    :END:
-
 Any font I choose must support Latin and Greek character sets, be
-readable at both small and large sizes, preferably offer both roman and
+readable at both small and large sizes, preferably offer roman and
 italic variants with corresponding bold weights, not be too thin, not
 have too short of an x-height, not be too compact or wide, not have a
 name that directly advertises some brand, not try to call too much
@@ -398,7 +393,7 @@ large point sizes.  Others lack Greek characters.  While a few of them
 are virtually unreadable when cast on a light background (bitmap fonts
 in particular, including the otherwise sublime /Terminus/).
 
-As such, I opt for [[https://github.com/be5invis/Iosevka][Iosevka]].  It is aesthetically pleasing and
+My research has led me to [[https://github.com/be5invis/Iosevka][Iosevka]].  It is aesthetically pleasing and
 technically excellent, satisfying all of my aforementioned criteria.
 Please refer to its docs for further information on the stylistic set
 that I am using.
@@ -412,6 +407,18 @@ but have some fault that places them below Iosevka in my rankings:
 | DejaVu Sans Mono | A bit worse than Hack in those same areas    |
 | Source Code Pro  | Too light, too wide, better with dark themes |
 | Fira Mono/Code   | No italics, otherwise excellent              |
+
+Lastly, note that I do not need the extended family set of Iosevka.  I
+only use the hinted =*.ttf= files and only the regular and bold weights,
+with their corresponding italics and extended variants.  To remove the
+extra weights from inside of =dired= do =% m= to mark a regular expression
+and then insert =thin\|light\|medium\|semi\|heavy\|extra\|oblique=.  Hit =D=
+to be prompted for the deletion of the marked items.
+
+*** Primary font settings
+    :PROPERTIES:
+    :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
+    :END:
 
 Moving on to my configurations, the functions that follow the pattern
 =prot/SCOPE-font= allow me to conveniently define the settings I need to
