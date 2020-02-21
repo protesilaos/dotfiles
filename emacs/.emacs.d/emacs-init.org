@@ -445,37 +445,53 @@ on a modern GNU/Linux system per-user fonts are preferably read from
      (concat family "-" (number-to-string size) prot/fixed-pitch-params) t t))
 
   (defun prot/laptop-fonts ()
-    "Pass desired argument to `prot/font-sizes' for use on my
+    "Fonts for the small laptop screen.
+
+Pass desired argument to `prot/font-sizes' for use on my
 small laptop monitor."
     (interactive)
     (when window-system
 	  (prot/default-font prot/fixed-pitch-font 10.5)))
 
   (defun prot/desktop-fonts ()
-    "Pass desired argument to `prot/font-sizes' for use on my
-larger desktop monitor."
+    "Fonts for the larger desktop screen.
+
+Pass desired argument to `prot/font-sizes' for use on my larger
+desktop monitor (external display connected to my laptop)."
     (interactive)
     (when window-system
 	  (prot/default-font prot/fixed-pitch-font 11)))
 
   (defun prot/screencast-fonts ()
-    "Pass desired argument to `prot/font-sizes' for use during
-screen casting."
+    "Fonts for screen casts and video demos.
+
+Pass desired argument to `prot/font-sizes' for use during screen
+casting.  The idea is to make it easier for viewers to see what I
+am doing."
     (interactive)
     (when window-system
 	  (prot/default-font prot/fixed-pitch-font 14)))
 
   (defun prot/presentation-fonts ()
-    "Pass desired argument to `prot/font-sizes' for use during
+    "Fonts for presentations and video blogs.
+
+Pass desired argument to `prot/font-sizes' for use during
 presentations.  Also see `prot/org-presentation'."
     (interactive)
     (when window-system
 	  (prot/default-font prot/fixed-pitch-font 20)))
 
   (defun prot/fonts-per-monitor ()
-    "Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
-based on the width of the monitor.  The calculation is based on
-the maximum width of my laptop's screen."
+  "Use font settings based on screen size.
+
+Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
+depending on the width of the monitor.  The calculation is based
+on the maximum width of my laptop's screen.  So if an external
+display is attached, then it is considered a desktop scenario.
+
+While this function is interactive, it is best to run it with the
+`after-init-hook' or perhaps some other event that tracks
+monitor-related events."
     (interactive)
     (when window-system
 	  (if (<= (display-pixel-width) 1366)
