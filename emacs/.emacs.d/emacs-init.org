@@ -384,48 +384,46 @@ particular meaning.
     :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
     :END:
 
-Any font I use must support Latin and Greek character sets, offer both
-roman and italic variants, be readable at both small and large sizes,
-not be too thin, not have too short of an x-height, not be too compact,
-not have a name that directly advertises some brand, and be equally
-readable against light and dark backdrops.
+Any font I choose must support Latin and Greek character sets, be
+readable at both small and large sizes, preferably offer both roman and
+italic variants with corresponding bold weights, not be too thin, not
+have too short of an x-height, not be too compact or wide, not have a
+name that directly advertises some brand, not try to call too much
+attention to its details, and be equally readable against light and dark
+backdrops.
 
-While there are many good free/libre options available, none of them
-copes well with my fairly demanding needs.  Some look good at large
-point sizes.  Others lack Greek characters.  While a few of them are
-practically unreadable when cast on a light background (bitmaps fonts in
-particular).
+While there are many good free/libre options available, only a handful
+of them cope well with my fairly demanding needs.  Some look good at
+large point sizes.  Others lack Greek characters.  While a few of them
+are virtually unreadable when cast on a light background (bitmap fonts
+in particular, including the otherwise sublime /Terminus/).
 
-As such, I opt for my [[https://gitlab.com/protesilaos/hack-font-mod][custom build of the Hack typeface]].  It is a true
-workhorse of a font.  It works well in every context I have ever used it
-in.
+As such, I opt for [[https://github.com/be5invis/Iosevka][Iosevka]].  It is aesthetically pleasing and
+technically excellent, satisfying all of my aforementioned criteria.
+Please refer to its docs for further information on the stylistic set
+that I am using.
 
-Honourable mentions of libre typefaces that I could use, but have some
-fault that puts them below Hack in my order of preference:
+Here are a few honourable mentions of libre typefaces that I could use,
+but have some fault that places them below Iosevka in my rankings:
 
-| Typeface           | Subjective faults |
-|--------------------+-------------------|
-| DejaVu Sans Mono   | Minor details.    |
-| Iosevka (extended) | Smaller glyphs.   |
-| Fira Mono/Code     | No italics.       |
-| Source Code Pro    | Too thin.         |
-| Mononoki           | Too fancy.        |
-| Victor Mono        | Work-in-progress. |
+| Typeface         | Subjective faults                            |
+|------------------+----------------------------------------------|
+| Hack             | Minor details with delimiters, italics       |
+| DejaVu Sans Mono | A bit worse than Hack in those same areas    |
+| Source Code Pro  | Too light, too wide, better with dark themes |
+| Fira Mono/Code   | No italics, otherwise excellent              |
 
 Moving on to my configurations, the functions that follow the pattern
-=prot/SCOPE-font= allow me to conveniently define the font settings I need
-to use in the given context.
+=prot/SCOPE-font= allow me to conveniently define the settings I need to
+use in the given context.  Their docstrings should offer you all the
+information you need.
 
 Each font declaration can accept several =fontconfig= parameters, as shown
 in =prot/fixed-pitch-params=.  Read the [[https://www.freedesktop.org/software/fontconfig/fontconfig-user.html][relevant spec]] for further details,
-while also noting that only some of these are supported by most
-typefaces.  The parameters we can pass here are exceptions to
-environment-wide rules that one can specify for fontconfig, at the user
+while also noting that only a subset of these are supported by most
+typefaces.  The parameters we can pass here are treated as exceptions to
+environment-wide rules that one can specify for fontconfig at the user
 or system level.
-
-For all my font-related settings, consult [[https://gitlab.com/protesilaos/dotfiles][my dotfiles]].  Note also that
-on a modern GNU/Linux system per-user fonts are preferably read from
-=~/.local/share/fonts/=.
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -433,10 +431,10 @@ on a modern GNU/Linux system per-user fonts are preferably read from
   (setq x-underline-at-descent-line nil)
   (setq underline-minimum-offset 0)
 
-  (defconst prot/fixed-pitch-font "Hack"
+  (defconst prot/fixed-pitch-font "Iosevka Type Slab"
     "The default fixed-pitch typeface.")
 
-  (defconst prot/fixed-pitch-params ":hintstyle=hintslight"
+  (defconst prot/fixed-pitch-params ":hintstyle=hintfull"
     "Fontconfig parameters for the fixed-pitch typeface.")
 
   (defun prot/default-font (family size)
@@ -451,7 +449,7 @@ Pass desired argument to `prot/font-sizes' for use on my
 small laptop monitor."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 10.5)))
+	  (prot/default-font prot/fixed-pitch-font 12)))
 
   (defun prot/desktop-fonts ()
     "Fonts for the larger desktop screen.
@@ -460,7 +458,7 @@ Pass desired argument to `prot/font-sizes' for use on my larger
 desktop monitor (external display connected to my laptop)."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 11)))
+	  (prot/default-font prot/fixed-pitch-font 13.5)))
 
   (defun prot/screencast-fonts ()
     "Fonts for screen casts and video demos.
@@ -470,7 +468,7 @@ casting.  The idea is to make it easier for viewers to see what I
 am doing."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 14)))
+	  (prot/default-font prot/fixed-pitch-font 18)))
 
   (defun prot/presentation-fonts ()
     "Fonts for presentations and video blogs.
@@ -479,7 +477,7 @@ Pass desired argument to `prot/font-sizes' for use during
 presentations.  Also see `prot/org-presentation'."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 20)))
+	  (prot/default-font prot/fixed-pitch-font 22.5)))
 
   (defun prot/fonts-per-monitor ()
   "Use font settings based on screen size.
