@@ -329,6 +329,35 @@ along with this file.  If not, see <http://www.gnu.org/licenses/>.
 This section contains the relatively few configurations that are needed
 prior to the setup of everything else.
 
+** Always rebuild init
+   :PROPERTIES:
+   :CUSTOM_ID: h:b343378b-d3ec-4c90-8117-6cf92abee45b
+   :END:
+
+When Emacs expands this =org-mode= file into the actual elisp code, it
+creates a new document: =emacs-init.org= derives =emacs-init.el=.  The
+latter holds my customisations in the state they were in at the time the
+document was created.  Any updates require a rewrite.
+
+To make sure that I do not load older settings after having made some
+tweaks to my dotemacs, I want to delete that derived file when I
+instruct Emacs to terminate its process.  This ensures that edits I made
+to =emacs-init.org= are parsed into a new =emacs-init.el= at the next
+startup.
+
+For live evalutation of elisp, we have =C-x C-e= (=eval-last-elisp=).
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (defun prot/delete-emacs-init ()
+    (interactive)
+    (let ((configs "~/.emacs.d/emacs-init.el"))
+      (when configs
+        (delete-file configs))))
+  :hook (kill-emacs . prot/delete-emacs-init))
+#+end_src
+
 ** Edit modeline "lighters"
    :PROPERTIES:
    :CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
