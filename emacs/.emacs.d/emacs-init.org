@@ -2482,7 +2482,7 @@ demanding workflows.
   (setq org-export-headline-levels 8)
   (setq org-export-backends
 	    '(ascii html latex md))
-  (setq org-export-dispatch-use-expert-ui t))
+  (setq org-export-dispatch-use-expert-ui nil))
 #+end_src
 
 **** TODO review Org's exporting facilities [0/2]                 :emacs:org:
