@@ -54,6 +54,7 @@
   (require 'use-package))
 
 (require 'org)
+(setq vc-follow-symlinks t)
 (org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
 
 ;;; init.el ends here

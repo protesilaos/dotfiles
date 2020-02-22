@@ -92,6 +92,7 @@ Whereas in *Emacs 27.1 and onward*, they are modified thus:
   (require 'use-package))
 
 (require 'org)
+(setq vc-follow-symlinks t)
 (org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
 #+end_example
 
@@ -5096,7 +5097,6 @@ The common thread of these options is the feedback they provide us
 with or simplify common tasks:
 
 + Answer with just the initials when dealing with "yes/no" questions.
-+ Follow symlinks without asking.
 + Faster feedback for key chords (keys appear in the echo area).
 + Enable actions for narrowing, region {up,down}casing (all caps or no
   caps), dired single-buffer navigation (bound to =a=).  Disable
@@ -5110,7 +5110,6 @@ with or simplify common tasks:
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq vc-follow-symlinks t)
   (setq frame-title-format '("%b %& GNU Emacs"))
   (setq echo-keystrokes 0.25)
   (setq default-input-method "greek")
