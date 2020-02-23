@@ -3811,9 +3811,9 @@ Upon insertion, playback starts immediately, in accordance with
   :CUSTOM_ID: h:b6bd2eea-8269-4029-b446-ee340c12ebc3
   :END:
 
-This section contains lots of small or self-contained tweaks and
-refinements that cover a wide range of item across the Emacs
-customisation settings.
+This section contains configurations for all aspects of the Emacs user
+interface, as well lots of small or self-contained tweaks that cover a
+wide range of built-in libraries.
 
 ** Disable GUI components
    :PROPERTIES:
