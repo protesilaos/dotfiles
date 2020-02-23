@@ -56,6 +56,7 @@
 ;; inherit from font-lock or some basic group).  You are encouraged to
 ;; notify me of any missing package or change you would like to see.
 ;;
+;;     ace-window
 ;;     alert
 ;;     all-the-icons
 ;;     annotate
@@ -65,7 +66,6 @@
 ;;     artbollocks-mode
 ;;     auto-dim-other-buffers
 ;;     avy
-;;     ace-window
 ;;     breakpoint (provided by built-in gdb-mi.el)
 ;;     calendar and diary
 ;;     calfw
@@ -86,7 +86,6 @@
 ;;     deadgrep
 ;;     define-word
 ;;     deft
-;;     disk-usage
 ;;     diff-hl
 ;;     diff-mode
 ;;     dim-autoload
@@ -97,14 +96,15 @@
 ;;     dired-narrow
 ;;     dired-subtree
 ;;     diredfl
+;;     disk-usage
 ;;     doom-modeline
 ;;     easy-jekyll
 ;;     easy-kill
 ;;     ediff
 ;;     eldoc-box
 ;;     elfeed
-;;     enhanced-ruby-mode
 ;;     emms
+;;     enhanced-ruby-mode
 ;;     epa
 ;;     equake
 ;;     erc
@@ -116,13 +116,13 @@
 ;;     eww
 ;;     eyebrowse
 ;;     fancy-dabbrev
-;;     focus
-;;     font-lock (generic syntax highlighting)
 ;;     flycheck
 ;;     flycheck-indicator
 ;;     flycheck-posframe
 ;;     flymake
 ;;     flyspell
+;;     focus
+;;     font-lock (generic syntax highlighting)
 ;;     fountain (fountain-mode)
 ;;     geiser
 ;;     git
@@ -131,12 +131,13 @@
 ;;     git-timemachine
 ;;     gnus
 ;;     helm
-;;     hydra
 ;;     highlight-blocks
-;;     hl-line-mode
 ;;     hl-fill-column
+;;     hl-line-mode
+;;     hydra
 ;;     ido-mode
 ;;     iedit
+;;     imenu-list
 ;;     info
 ;;     info-colors
 ;;     isearch, occur, etc.
@@ -763,13 +764,6 @@ between foreground and background is >= 7:1)."
    `(deft-summary-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
    `(deft-time-face ((,class (:foreground ,fg-special-cold))))
    `(deft-title-face ((,class (:foreground ,fg-main :weight bold))))
-   ;;;; disk-usage
-   `(disk-usage-children ((,class (:foreground ,yellow))))
-   `(disk-usage-inaccessible ((,class (:foreground ,red :weight bold))))
-   `(disk-usage-percent ((,class (:foreground ,green))))
-   `(disk-usage-size ((,class (:foreground ,cyan))))
-   `(disk-usage-symlink ((,class (:foreground ,blue :underline t))))
-   `(disk-usage-symlink-directory ((,class (:foreground ,blue-alt :weight bold))))
    ;;;; diff-hl
    `(diff-hl-change ((,class (:inherit modus-theme-intense-yellow))))
    `(diff-hl-delete ((,class (:inherit modus-theme-intense-red))))
@@ -856,6 +850,13 @@ between foreground and background is >= 7:1)."
    `(diredfl-symlink ((,class (:foreground ,blue-alt :underline t))))
    `(diredfl-tagged-autofile-name ((,class (:inherit modus-theme-refine-magenta))))
    `(diredfl-write-priv ((,class (:foreground ,magenta-alt-other))))
+   ;;;; disk-usage
+   `(disk-usage-children ((,class (:foreground ,yellow))))
+   `(disk-usage-inaccessible ((,class (:foreground ,red :weight bold))))
+   `(disk-usage-percent ((,class (:foreground ,green))))
+   `(disk-usage-size ((,class (:foreground ,cyan))))
+   `(disk-usage-symlink ((,class (:foreground ,blue :underline t))))
+   `(disk-usage-symlink-directory ((,class (:foreground ,blue-alt :weight bold))))
    ;;;; doom-modeline
    `(doom-modeline-bar ((,class (:inherit modus-theme-active-blue))))
    `(doom-modeline-bar-inactive ((,class (:background ,fg-inactive :foreground ,bg-main))))
@@ -932,6 +933,9 @@ between foreground and background is >= 7:1)."
    `(elfeed-search-title-face ((,class (:foreground ,fg-main))))
    `(elfeed-search-unread-count-face ((,class (:foreground ,fg-special-warm))))
    `(elfeed-search-unread-title-face ((,class (:weight bold))))
+   ;;;; emms
+   `(emms-playlist-track-face ((,class (:foreground ,blue))))
+   `(emms-playlist-selected-face ((,class (:foreground ,magenta :weight bold))))
    ;;;; enhanced-ruby-mode
    `(enh-ruby-heredoc-delimiter-face ((,class (:foreground ,blue-alt-other))))
    `(enh-ruby-op-face ((,class (:foreground ,fg-main))))
@@ -940,9 +944,6 @@ between foreground and background is >= 7:1)."
    `(enh-ruby-string-delimiter-face ((,class (:foreground ,blue-alt))))
    `(erm-syn-errline ((,class (:foreground ,red :underline t))))
    `(erm-syn-warnline ((,class (:foreground ,yellow :underline t))))
-   ;;;; emms
-   `(emms-playlist-track-face ((,class (:foreground ,blue))))
-   `(emms-playlist-selected-face ((,class (:foreground ,magenta :weight bold))))
    ;;;; epa
    `(epa-field-body ((,class (:foreground ,fg-main))))
    `(epa-field-name ((,class (:foreground ,fg-dim :weight bold))))
@@ -1352,6 +1353,15 @@ between foreground and background is >= 7:1)."
    ;;;; iedit
    `(iedit-occurrence ((,class (:inherit modus-theme-refine-blue))))
    `(iedit-read-only-occurrence ((,class (:inherit modus-theme-intense-yellow))))
+   ;;;; imenu-list
+   `(imenu-list-entry-face-0 ((,class (:foreground ,magenta-alt-other))))
+   `(imenu-list-entry-face-1 ((,class (:foreground ,cyan-alt-other))))
+   `(imenu-list-entry-face-2 ((,class (:foreground ,yellow-alt-other))))
+   `(imenu-list-entry-face-3 ((,class (:foreground ,green-alt-other))))
+   `(imenu-list-entry-subalist-face-0 ((,class (:foreground ,magenta-alt-other :weight bold :underline t))))
+   `(imenu-list-entry-subalist-face-1 ((,class (:foreground ,cyan-alt-other :weight bold :underline t))))
+   `(imenu-list-entry-subalist-face-2 ((,class (:foreground ,yellow-alt-other :weight bold :underline t))))
+   `(imenu-list-entry-subalist-face-3 ((,class (:foreground ,green-alt-other :weight bold :underline t))))
    ;;;; info
    `(Info-quoted ((,class (:foreground ,magenta)))) ; the capitalisation is canonical
    `(info-header-node ((,class (:foreground ,fg-special-warm))))
