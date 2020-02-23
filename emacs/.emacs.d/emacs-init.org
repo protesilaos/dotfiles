@@ -5038,54 +5038,6 @@ mouse over an actionable item:
   :hook (after-init . tooltip-mode))
 #+end_src
 
-** Keycast mode
-   :PROPERTIES:
-   :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
-   :END:
-
-I am experimenting with this package as a means of enhancing the videos
-I do on emacs.  Once enabled, it uses the mode line to show the keys
-being pressed and the command they call.
-
-#+begin_src emacs-lisp
-(use-package keycast
-  :ensure t
-  :config
-  (defun prot/keycast-bottom-left-window-p ()
-    (and (window-at-side-p nil 'left)
-         (window-at-side-p nil 'bottom)))
-  (defun prot/keycast-active-frame-bottom-left-p ()
-    (and (prot/keycast-bottom-left-window-p)
-         (keycast--active-frame-p)))
-  (setq keycast-window-predicate 'prot/keycast-active-frame-bottom-left-p)
-  (setq keycast-separator-width 3)
-  (setq keycast-insert-after 'mode-line-buffer-identification)
-  (setq keycast-remove-tail-elements nil))
-#+end_src
-
-** Display time in the mode line
-
-I normally use Emacs in fullscreen view.  No system panels, no window
-decorations, nothing to distract me.  While I really like this
-environment, I often need to take a look at the time.  Thankfully Emacs
-offers a convenient way of displaying such information in the mode line.
-
-The =display-time-mode= will actually output more than just the current
-time.  It also shows the load average and an email notification.  I only
-need a clock in 24h format.
-
-#+begin_src emacs-lisp
-(use-package time
-  :config
-  (setq display-time-24hr-format t)
-  (setq display-time-day-and-date nil)
-  (setq display-time-format nil)
-  (setq display-time-interval 60)
-  (setq display-time-mail-directory nil)
-  (setq display-time-default-load-average nil)
-  :hook (after-init . display-time-mode))
-#+end_src
-
 ** Conveniences and minor extras
    :PROPERTIES:
    :CUSTOM_ID: h:271c9122-280b-424e-98f0-af9e4f09bbdb
@@ -5105,6 +5057,58 @@ A change can happen externally or by some other tool inside of Emacs
   :config
   (setq auto-revert-verbose t)
   :hook (after-init . global-auto-revert-mode))
+#+end_src
+
+*** Display time in the mode line
+    :PROPERTIES:
+    :CUSTOM_ID: h:da14ac1d-a06f-4531-b6c3-0414e8c98102
+    :END:
+
+I normally use Emacs in fullscreen view.  No system panels, no window
+decorations, nothing to distract me.  While I really like this
+environment, sometimes I need to take a look at the time…  Thankfully
+Emacs offers a convenient way of displaying such information in the mode
+line.
+
+The =display-time-mode= will actually output more than just the current
+time.  It also shows the load average and an email indicator.  I only
+need a clock in 24h format.  The rest is noise.
+
+#+begin_src emacs-lisp
+(use-package time
+  :config
+  (setq display-time-24hr-format t)
+  (setq display-time-day-and-date nil)
+  (setq display-time-format nil)
+  (setq display-time-interval 60)
+  (setq display-time-mail-directory nil)
+  (setq display-time-default-load-average nil)
+  :hook (after-init . display-time-mode))
+#+end_src
+
+*** Keycast mode
+    :PROPERTIES:
+    :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
+    :END:
+
+Once enabled, this package uses the mode line to show the keys being
+pressed and the command they call.  It is quite useful for screen
+casting.
+
+#+begin_src emacs-lisp
+(use-package keycast
+  :ensure t
+  :config
+  (defun prot/keycast-bottom-left-window-p ()
+    (and (window-at-side-p nil 'left)
+         (window-at-side-p nil 'bottom)))
+  (defun prot/keycast-active-frame-bottom-left-p ()
+    (and (prot/keycast-bottom-left-window-p)
+         (keycast--active-frame-p)))
+  (setq keycast-window-predicate 'prot/keycast-active-frame-bottom-left-p)
+  (setq keycast-separator-width 3)
+  (setq keycast-insert-after 'mode-line-buffer-identification)
+  (setq keycast-remove-tail-elements nil))
 #+end_src
 
 *** Preserve contents of system clipboard
