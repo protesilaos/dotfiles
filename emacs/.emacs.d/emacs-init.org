@@ -2611,13 +2611,12 @@ activation of `org-tree-slide-mode'."
           (darkroom-tentative-mode 1)
           (org-bullets-mode 1)
           (org-indent-mode 1)
-          (prot/presentation-fonts)
-          (setq cursor-type '(bar . 2)))
+          (prot/presentation-fonts))
       (darkroom-tentative-mode -1)
       (org-bullets-mode -1)
       (org-indent-mode -1)
-      (prot/fonts-per-monitor)
-      (setq cursor-type 'box)))
+      (prot/fonts-per-monitor)))
+
   :bind (("<f9>" . org-tree-slide-mode)
          :map org-tree-slide-mode-map
          ("<C-right>" . org-tree-slide-move-next-tree)
@@ -4930,24 +4929,26 @@ This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_
     :CUSTOM_ID: h:cf9086c1-1b33-4127-a716-de94259e14a0
     :END:
 
-My cursor is a box character that blinks.  After lots of testing with
-packages like =beacon= and using a bar cursor, I set back to what I
-always had.  Combined with the default blinking settings, it makes for
-the most accessible combination: the blinking box is easy to spot,
-even when the point is placed over an inaccessible colour combination
-(very low contrast between the background and the foreground).
+My cursor is a thin vertical line that blinks.  A box character is
+generally more accessible, but after several days of testing I find that
+I am perfectly fine with just a bar.
 
-The "stretch" variable can make the box cover the entirety of a
-character's width.  I disable it because it changes the consistency of
-things on the screen while moving around (such as when passing over a
-tab character).
+The cursor is only displayed on the current window.  Having it also show
+on other windows can be somewhat confusing, especially when not using
+the original box character.
+
+The default blink settings meet my expectations, except the number of
+blinks before switching to a solid cursor state (an otherwise good
+idea).  The original value of =blink-cursor-blinks= is just 10…
 
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq cursor-type 'box)
-  (setq cursor-in-non-selected-windows 'hollow)
-  (setq x-stretch-cursor nil))
+  (setq cursor-type '(bar . 1))
+  (setq cursor-in-non-selected-windows nil)
+  (setq blink-cursor-blinks 50))
+#+end_src
+
 #+end_src
 
 *** Mouse behaviour
