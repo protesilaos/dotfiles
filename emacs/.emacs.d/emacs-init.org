@@ -5063,6 +5063,29 @@ being pressed and the command they call.
   (setq keycast-remove-tail-elements nil))
 #+end_src
 
+** Display time in the mode line
+
+I normally use Emacs in fullscreen view.  No system panels, no window
+decorations, nothing to distract me.  While I really like this
+environment, I often need to take a look at the time.  Thankfully Emacs
+offers a convenient way of displaying such information in the mode line.
+
+The =display-time-mode= will actually output more than just the current
+time.  It also shows the load average and an email notification.  I only
+need a clock in 24h format.
+
+#+begin_src emacs-lisp
+(use-package time
+  :config
+  (setq display-time-24hr-format t)
+  (setq display-time-day-and-date nil)
+  (setq display-time-format nil)
+  (setq display-time-interval 60)
+  (setq display-time-mail-directory nil)
+  (setq display-time-default-load-average nil)
+  :hook (after-init . display-time-mode))
+#+end_src
+
 ** Conveniences and minor extras
    :PROPERTIES:
    :CUSTOM_ID: h:271c9122-280b-424e-98f0-af9e4f09bbdb
