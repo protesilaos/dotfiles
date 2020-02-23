@@ -4944,9 +4944,9 @@ idea).  The original value of =blink-cursor-blinks= is just 10…
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq cursor-type '(bar . 1))
-  (setq cursor-in-non-selected-windows nil)
-  (setq blink-cursor-blinks 50))
+  (setq-default cursor-type '(bar . 1))
+  (setq-default cursor-in-non-selected-windows nil)
+  (setq-default blink-cursor-blinks 50))
 #+end_src
 
 *** Beacon mode (highlight cursor position)
