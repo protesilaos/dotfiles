@@ -4949,6 +4949,29 @@ idea).  The original value of =blink-cursor-blinks= is just 10…
   (setq blink-cursor-blinks 50))
 #+end_src
 
+*** Beacon mode (highlight cursor position)
+    :PROPERTIES:
+    :CUSTOM_ID: h:6bbc41d6-da7c-4301-84c6-c5887c29283f
+    :END:
+
+This package will light a beam where the cursor is.  A nice way of
+quickly discovering your current position in the current window.
+
+There is a minor mode with several customisation options, in case you
+want to have this functionality to be readily available.  I generally do
+need it always on, so I just bind a key for calling the command manually
+and only tweak the visuals of the beam effect.
+
+#+begin_src emacs-lisp
+(use-package beacon
+  :ensure t
+  :delight
+  :config
+  (setq beacon-blink-delay 0.15)
+  (setq beacon-blink-duration 0.35)
+  (setq beacon-size 30)
+  (beacon-mode -1)
+  :bind ("<s-escape>" . beacon-blink))
 #+end_src
 
 *** Mouse behaviour
