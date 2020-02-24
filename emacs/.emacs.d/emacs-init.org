@@ -2404,26 +2404,57 @@ conduit to a set of utilities from where you can keep track of all the
 tasks you have written in the files declared as part of =org-agenda-files=
 (see its value in the [[#h:b95d0798-1cc5-4083-8728-f6a51ddbc531][section that covers the base Org configurations]]).
 Invoking =org-agenda= will present you with a list of possible options.
+Here is a primer (there are many more functions documented in the
+manual):
 
 + The =a= is where you keep track of all the items that have a date
   assigned to them, be it =SCHEDULED= or =DEADLINE=.  To assign such a value
   to a heading use =C-c C-s= or =C-c C-d= respectively.
 + The =t= will list all your tasks, regardless of whether they have a date
-  assigned to them.  You can then filter by keyword.  There also are
-  several options for narrowing the list using various search
-  techniques.
+  assigned to them.  You can then filter by keyword, regular expression,
+  etc.
 + And the =n= will offer you a combined view of the above.
 
-/2020-02-07: WORK IN PROGRESS/
+Now a few words about some of my customisations (remember to use Emacs'
+documentation facilities over each item, such as =C-h v=):
+
++ Always ask for confirmation when hitting =C-k= from the agenda views.
+  That command removes the entry in the original file.
++ I do not use the built-in =diary= and am generally not interested in
+  meticulous time tracking, the 'special' day of X, etc.  It is the kind
+  of busywork that has no place in my simple, as-stress-free-as-possible
+  life.  The Org manual suggests that we can use the diary functionality
+  to /“keep track of anniversaries, lunar phases, sunrise/set”/.  Sure…
++ Show all dates in the current view, including those that have no
+  entries.  I find it easier that way to assess how far apart the tasks
+  are.
++ Do not produce a message in the echo area showing the outline path.
+  It is too distracting.
++ Any valid time expressions in headlines should be ignored.  Otherwise
+  they are used as part of the relevant sorting methods.
++ The default view should just show me a three day span.  All the
+  commands for changing views still work as expected (e.g. hit =w= to show
+  the current week).
++ Disable follow mode by default.  This produces a view of the current
+  item's original context in the other window.  It can be toggled on by
+  hitting =F=.
++ Time stamps should always be expressed in 24h format.
++ Make minor tweaks to the time grid view format.
++ Disable the key bindings that cycle through the agenda files: too easy
+  to hit while trying to perform some other action.  Besides, I do not
+  need that kind of functionality.
 
 #+begin_src emacs-lisp
 (use-package org-agenda
   :after org
   :config
-  (setq org-agenda-additional-timestamps-same-entry t)
+  (setq org-agenda-confirm-kill t)
+  (setq org-agenda-dim-blocked-tasks t)
   (setq org-agenda-include-diary nil)
   (setq org-agenda-show-all-dates t)
   (setq org-agenda-show-outline-path nil)
+
+  ;; All the "skip" need to be reviewed
   (setq org-agenda-skip-additional-timestamps-same-entry t)
   (setq org-agenda-skip-deadline-prewarning-if-scheduled t)
   (setq org-agenda-skip-scheduled-delay-if-deadline t)
@@ -2431,11 +2462,22 @@ Invoking =org-agenda= will present you with a list of possible options.
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-skip-timestamp-if-deadline-is-shown t)
   (setq org-agenda-skip-timestamp-if-done t)
+
+  (setq org-agenda-search-headline-for-time nil)
   (setq org-agenda-span 3)
   (setq org-agenda-start-on-weekday 1)  ; Monday
+  (setq org-agenda-start-with-follow-mode nil)
   (setq org-agenda-timegrid-use-ampm nil)
+  (setq org-agenda-time-grid
+        '((daily today require-timed)
+          (0800 1000 1200 1400 1600 1800 2000)
+          "      " "················"))
+  (setq org-agenda-use-time-grid t)
   (setq org-agenda-window-setup 'current-window)
-  (setq org-agenda-dim-blocked-tasks t)
+  (setq org-agenda-todo-list-sublevels t)
+
+  (define-key org-mode-map (kbd "C-'") nil)
+  (define-key org-mode-map (kbd "C-,") nil)
   :bind ("C-c a" . org-agenda))
 #+end_src
 
