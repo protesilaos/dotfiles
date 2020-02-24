@@ -3972,6 +3972,134 @@ prefixed variant."
   :hook (after-init . prot/modus-operandi))
 #+end_src
 
+*** Mode line
+    :PROPERTIES:
+    :CUSTOM_ID: h:39f57b0d-300a-4310-9ba8-8c388fa72e1d
+    :END:
+
+The mode line is an integral part of the Emacs interface.  While there
+are lots of third party packages that style it in a variety of ways, I
+find the default to be particularly good.
+
+I just configure it to hide the Git/VC status as well as the buffer
+position offset.  Their utility is marginal at best.  Then I reshuffle
+some of the remaining indicators.  Nothing too fancy.
+
+Meanwhile, the =mode-line-defining-kbd-macro= is tweaked to use a more
+appropriate string for its indicator and colours that are designed
+specifically for the mode line (the default uses the generic font-lock
+warning face).
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq mode-line-percent-position nil) ; no buffer %
+  (setq mode-line-defining-kbd-macro
+        (propertize " Macro" 'face 'mode-line-emphasis))
+  (setq-default mode-line-format
+                '("%e"
+                  mode-line-front-space
+                  mode-line-mule-info
+                  mode-line-client
+                  mode-line-modified
+                  mode-line-remote
+                  mode-line-frame-identification
+                  mode-line-buffer-identification
+                  " "
+                  mode-line-position
+                  " "
+                  mode-line-modes
+                  " "
+                  mode-line-misc-info
+                  mode-line-end-spaces)))
+#+end_src
+
+In the following sub-sections I provide customisations for some tools
+that place information on the mode line.  Again, nothing flamboyant.
+
+**** Battery status
+     :PROPERTIES:
+     :CUSTOM_ID: h:3a759294-ab03-40cb-bb08-94275d76fc53
+     :END:
+
+Emacs offers a built-in library for presenting information about the
+status of the laptop's battery.  Using it allows me to eliminate my
+dependence on the system panel and thus keep Emacs in full screen view
+without any interruptions.
+
+The default update interval is set to a single minute (in seconds),
+which is generally fine though I find that a slightly higher value works
+just as well.  As for the format, it is designed to show a
+context-dependent, single character indicator about the current status,
+as well as the battery's overall percentage.
+
+#+begin_src emacs-lisp
+(use-package battery
+  :config
+  (setq battery-mode-line-format " [%b%p%%]")
+  (setq battery-update-interval 180)
+  (setq battery-load-low 20)
+  (setq battery-load-critical 10)
+  :hook (after-init . display-battery-mode))
+#+end_src
+
+**** Display current time
+     :PROPERTIES:
+     :CUSTOM_ID: h:da14ac1d-a06f-4531-b6c3-0414e8c98102
+     :END:
+
+I normally use Emacs in fullscreen view.  No system panels, no window
+decorations, no icons and blinking indicators.  Nothing to distract me.
+While I really like this environment, sometimes I need to take a look at
+the time…  Thankfully Emacs offers a convenient, built-in way of
+displaying such information in the mode line.
+
+The =display-time-format= can actually be configured to show the current
+date in all the various formats we would expect, using a string of
+specifiers.  Setting it to =nil= means that it just uses the combined
+result of =display-time-24hr-format= and =display-time-day-and-date=.
+
+The =display-time-mode= will actually output more than just the current
+time.  It also shows the load average and an email indicator.  I only
+need a clock in 24h format.  The rest is noise.
+
+#+begin_src emacs-lisp
+(use-package time
+  :config
+  (setq display-time-24hr-format t)
+  (setq display-time-day-and-date nil)
+  (setq display-time-format nil)
+  (setq display-time-interval 60)
+  (setq display-time-mail-directory nil)
+  (setq display-time-default-load-average nil)
+  :hook (after-init . display-time-mode))
+#+end_src
+
+**** Keycast mode
+     :PROPERTIES:
+     :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
+     :END:
+
+Once enabled, this package uses the mode line to show the keys being
+pressed and the command they call.  It is quite useful for screen
+casting.
+
+#+begin_src emacs-lisp
+(use-package keycast
+  :ensure t
+  :config
+  (defun prot/keycast-bottom-left-window-p ()
+    (and (window-at-side-p nil 'left)
+         (window-at-side-p nil 'bottom)))
+  (defun prot/keycast-active-frame-bottom-left-p ()
+    (and (prot/keycast-bottom-left-window-p)
+         (keycast--active-frame-p)))
+  (setq keycast-window-predicate 'prot/keycast-active-frame-bottom-left-p)
+  (setq keycast-separator-width 3)
+  (setq keycast-insert-after 'mode-line-buffer-identification)
+  (setq keycast-remove-tail-elements nil))
+#+end_src
+
 *** Window divider mode
     :PROPERTIES:
     :CUSTOM_ID: h:6fb900e3-49db-4bc3-8a9e-cd88e020f15b
@@ -5123,58 +5251,6 @@ A change can happen externally or by some other tool inside of Emacs
   :config
   (setq auto-revert-verbose t)
   :hook (after-init . global-auto-revert-mode))
-#+end_src
-
-*** Display time in the mode line
-    :PROPERTIES:
-    :CUSTOM_ID: h:da14ac1d-a06f-4531-b6c3-0414e8c98102
-    :END:
-
-I normally use Emacs in fullscreen view.  No system panels, no window
-decorations, nothing to distract me.  While I really like this
-environment, sometimes I need to take a look at the time…  Thankfully
-Emacs offers a convenient way of displaying such information in the mode
-line.
-
-The =display-time-mode= will actually output more than just the current
-time.  It also shows the load average and an email indicator.  I only
-need a clock in 24h format.  The rest is noise.
-
-#+begin_src emacs-lisp
-(use-package time
-  :config
-  (setq display-time-24hr-format t)
-  (setq display-time-day-and-date nil)
-  (setq display-time-format nil)
-  (setq display-time-interval 60)
-  (setq display-time-mail-directory nil)
-  (setq display-time-default-load-average nil)
-  :hook (after-init . display-time-mode))
-#+end_src
-
-*** Keycast mode
-    :PROPERTIES:
-    :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
-    :END:
-
-Once enabled, this package uses the mode line to show the keys being
-pressed and the command they call.  It is quite useful for screen
-casting.
-
-#+begin_src emacs-lisp
-(use-package keycast
-  :ensure t
-  :config
-  (defun prot/keycast-bottom-left-window-p ()
-    (and (window-at-side-p nil 'left)
-         (window-at-side-p nil 'bottom)))
-  (defun prot/keycast-active-frame-bottom-left-p ()
-    (and (prot/keycast-bottom-left-window-p)
-         (keycast--active-frame-p)))
-  (setq keycast-window-predicate 'prot/keycast-active-frame-bottom-left-p)
-  (setq keycast-separator-width 3)
-  (setq keycast-insert-after 'mode-line-buffer-identification)
-  (setq keycast-remove-tail-elements nil))
 #+end_src
 
 *** Preserve contents of system clipboard
