@@ -468,7 +468,7 @@ or system level.
   (setq x-underline-at-descent-line nil)
   (setq underline-minimum-offset 0)
 
-  (defconst prot/fixed-pitch-font "Iosevka Type Slab"
+  (defconst prot/fixed-pitch-font "Iosevka Curly Slab"
     "The default fixed-pitch typeface.")
 
   (defconst prot/fixed-pitch-params ":hintstyle=hintfull"
