@@ -1474,7 +1474,7 @@ as =-AFXhlv --group-directories-first=).
 (use-package find-dired
   :after dired
   :config
-  (setq find-ls-option ;; applies to `find-name-dired'
+  (setq find-ls-option
         '("-ls" . "-AFhlv --group-directories-first"))
   (setq find-name-arg "-iname"))
 
