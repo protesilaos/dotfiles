@@ -2180,7 +2180,7 @@ depend on.  Here is an overview:
 + Re-filing items :: This is done with =C-c C-w= which then prompts us for
   a heading under which the current item should be positioned.  I set my
   Org agenda files as one possible target and the current buffer as the
-  other.  The maximum depth should be 3 levels.  Re-filing can also be
+  other.  The maximum depth should be 2 levels.  Re-filing can also be
   done from inside an =org-capture= interface.  Any new entry should go at
   the end of the heading it is filled under.
 + To-do settings :: I generally use a very simple system of writing
@@ -2237,8 +2237,8 @@ Now on to the miscellaneous settings:
   (setq org-deadline-warning-days 3)
   ;; refile, todo
   (setq org-refile-targets
-	    '((org-agenda-files . (:maxlevel . 3))
-	      (nil . (:maxlevel . 3))))
+	    '((org-agenda-files . (:maxlevel . 2))
+	      (nil . (:maxlevel . 2))))
   (setq org-refile-use-outline-path t)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-refile-use-cache t)
