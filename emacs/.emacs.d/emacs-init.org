@@ -4034,10 +4034,16 @@ just as well.  As for the format, it is designed to show a
 context-dependent, single character indicator about the current status,
 as well as the battery's overall percentage.
 
+Variable =battery-mode-line-limit= will hide the indicator if the value is
+above the declared threshold.  99 basically means "full".  I use that
+instead of a 100 because sometimes the battery only ever fills up to
+99.99, meaning that the indicator remains present at all times.
+
 #+begin_src emacs-lisp
 (use-package battery
   :config
   (setq battery-mode-line-format " [%b%p%%]")
+  (setq battery-mode-line-limit 99)
   (setq battery-update-interval 180)
   (setq battery-load-low 20)
   (setq battery-load-critical 10)
