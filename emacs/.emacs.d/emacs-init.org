@@ -1468,7 +1468,8 @@ as =-AFXhlv --group-directories-first=).
   (setq dired-create-destination-dirs 'ask)
   (setq dired-vc-rename-file t)
   :bind (:map dired-mode-map
-              ("C-c +" . dired-create-empty-file)))
+              ("C-c +" . dired-create-empty-file)
+              ("M-s f" . nil)))
 
 (use-package find-dired
   :after dired
@@ -2281,10 +2282,10 @@ Now on to the miscellaneous settings:
   (setq org-catch-invisible-edits 'show)
   (setq org-return-follows-link nil)
   (setq org-loop-over-headlines-in-active-region 'start-level)
-  ;; disable keys I rely on for other tasks
-  (define-key org-mode-map (kbd "<C-return>") nil)
-  (define-key org-mode-map (kbd "<C-S-return>") nil)
-  :bind (("C-c l" . org-store-link)))
+  :bind (("C-c l" . org-store-link)
+         :map org-mode-map
+         ("<C-return>" . nil)
+         ("<C-S-return>" . nil)))
 #+end_src
 
 *** Org-capture templates
@@ -2475,10 +2476,10 @@ documentation facilities over each item, such as =C-h v=):
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-window-setup 'current-window)
   (setq org-agenda-todo-list-sublevels t)
-
-  (define-key org-mode-map (kbd "C-'") nil)
-  (define-key org-mode-map (kbd "C-,") nil)
-  :bind ("C-c a" . org-agenda))
+  :bind (("C-c a" . org-agenda)
+         :map org-mode-map
+         ("C-'" . nil)
+         ("C-," . nil)))
 #+end_src
 
 *** Org source code blocks
@@ -4470,8 +4471,6 @@ the relevant packages from my distro's archive.
   (setq ispell-program-name "aspell")
   (setq ispell-dictionary "en_GB")
 
-  (define-key flyspell-mode-map (kbd "C-;") nil)
-
   (defun prot/ispell-toggle-dictionaries ()
     "Toggle between English and Greek dictionaries."
     (interactive)
@@ -4488,7 +4487,9 @@ ispell dictionaries with `prot/ispell-toggle-dictionaries'."
         (prot/ispell-toggle-dictionaries)))
 
   :bind (("M-$" . prot/flyspell-dwim)
-         ("C-M-$" . prot/ispell-toggle-dictionaries)))
+         ("C-M-$" . prot/ispell-toggle-dictionaries)
+         :map flyspell-mode-map
+         ("C-;" . nil)))
 #+end_src
 
 *** Flycheck (code linting)
