@@ -423,27 +423,27 @@ large point sizes.  Others lack Greek characters.  While a few of them
 are virtually unreadable when cast on a light background (bitmap fonts
 in particular, including the otherwise sublime /Terminus/).
 
-My research has led me to [[https://github.com/be5invis/Iosevka][Iosevka]].  It is aesthetically pleasing and
-technically excellent, satisfying all of my aforementioned criteria.
-Please refer to its docs for further information on the stylistic set
-that I am using.
+My choice of font is a [[https://gitlab.com/protesilaos/hack-font-mod][patched version of Hack]] that I prepared myself,
+using the latest =dev= sources from the upstream distribution (fonts built
+on 2020-02-25).  My changes pertain to the use of glyphs that are more
+suited to roman or italic letter forms respectively.  The project's
+README offers a comprehensive description of the modifications and their
+underlying rationale.
 
-Here are a few honourable mentions of libre typefaces that I could use,
-but have some fault that places them below Iosevka in my rankings:
+If I could not patch Hack, I would still use the upstream version.
+There are, however, some other options that I could consider.  Here they
+are in order of preference, with a short note on what disqualifies them:
 
 | Typeface         | Subjective faults                            |
 |------------------+----------------------------------------------|
-| Hack             | Minor details with delimiters, italics       |
-| DejaVu Sans Mono | A bit worse than Hack in those same areas    |
+| Hack             | See the README of my mod                     |
+| Iosevka          | Wide glyphs (‘m’, ‘w’) need more work        |
+| DejaVu Sans Mono | A bit worse than Hack in a lot of details    |
 | Source Code Pro  | Too light, too wide, better with dark themes |
 | Fira Mono/Code   | No italics, otherwise excellent              |
 
-Lastly, note that I do not need the extended family set of Iosevka.  I
-only use the hinted =*.ttf= files and only the regular and bold weights,
-with their corresponding italics and extended variants.  To remove the
-extra weights from inside of =dired= do =% m= to mark a regular expression
-and then insert =thin\|light\|medium\|semi\|heavy\|extra\|oblique=.  Hit =D=
-to be prompted for the deletion of the marked items.
+Lastly, note that on a modern GNU/Linux system that uses the =fontconfig=
+library, per-user fonts are stored in =~/.local/share/fonts=.
 
 *** Primary font settings
     :PROPERTIES:
@@ -468,10 +468,10 @@ or system level.
   (setq x-underline-at-descent-line nil)
   (setq underline-minimum-offset 0)
 
-  (defconst prot/fixed-pitch-font "Iosevka Curly Slab"
+  (defconst prot/fixed-pitch-font "Hack"
     "The default fixed-pitch typeface.")
 
-  (defconst prot/fixed-pitch-params ":hintstyle=hintfull"
+  (defconst prot/fixed-pitch-params ":hintstyle=hintslight"
     "Fontconfig parameters for the fixed-pitch typeface.")
 
   (defun prot/default-font (family size)
@@ -486,7 +486,7 @@ Pass desired argument to `prot/font-sizes' for use on my
 small laptop monitor."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 12)))
+	  (prot/default-font prot/fixed-pitch-font 10.5)))
 
   (defun prot/desktop-fonts ()
     "Fonts for the larger desktop screen.
@@ -495,7 +495,7 @@ Pass desired argument to `prot/font-sizes' for use on my larger
 desktop monitor (external display connected to my laptop)."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 13.5)))
+	  (prot/default-font prot/fixed-pitch-font 11)))
 
   (defun prot/screencast-fonts ()
     "Fonts for screen casts and video demos.
@@ -505,7 +505,7 @@ casting.  The idea is to make it easier for viewers to see what I
 am doing."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 18)))
+	  (prot/default-font prot/fixed-pitch-font 16)))
 
   (defun prot/presentation-fonts ()
     "Fonts for presentations and video blogs.
@@ -514,7 +514,7 @@ Pass desired argument to `prot/font-sizes' for use during
 presentations.  Also see `prot/org-presentation'."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 22.5)))
+	  (prot/default-font prot/fixed-pitch-font 18)))
 
   (defun prot/fonts-per-monitor ()
   "Use font settings based on screen size.
@@ -570,7 +570,7 @@ x×X
 '
 "
 “”
--~≈=_.…
+—-~≈=_.…
 
 Sample character set
 Check for monospacing and Greek glyphs
