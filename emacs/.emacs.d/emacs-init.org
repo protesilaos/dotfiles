@@ -5298,24 +5298,30 @@ saving.
     :CUSTOM_ID: h:1f7c0bf3-8b0e-4baa-b1e0-7e89053d36cb
     :END:
 
-The common thread of these options is the feedback they provide us
-with or simplify common tasks:
+The common thread of these options is the feedback they provide us with
+or simplify common tasks so that /their/ feedback does not cause friction:
 
-+ Answer with just the initials when dealing with "yes/no" questions.
++ Show the current buffer's name as the frame's title.  This only
+  affects window managers that have window decorations.  If you do not
+  know what that means, then you are most likely using an environment
+  where frame titles are already visible.
 + Faster feedback for key chords (keys appear in the echo area).
-+ Enable actions for narrowing, region {up,down}casing (all caps or no
-  caps), dired single-buffer navigation (bound to =a=).  Disable
-  overwrite-mode.
 + Allow inputting Greek while preserving Emacs keys.  Toggle with =C-\=.
-+ Ignore visual/audible bells, because Emacs more appropriate ways of
-  providing error/warning feedback (e.g. a failed =isearch= will return
-  no results, while the failed match will be styled accordingly in the
-  echo area)
++ Ignore visual or audible bells.  Emacs has more appropriate ways of
+  providing error/warning messages or hints that something is not
+  producing the desired results (e.g. a failed =isearch= will return no
+  results, while the failed match will be styled accordingly in the echo
+  area).  By the way, use =C-h e= to bring up the log with the echo area's
+  messages.
++ Answer with just the initials when dealing with "yes/no" questions.
++ Enable actions for narrowing the buffer, region {up,down}casing (all
+  caps or no caps), =dired= single-buffer navigation (bound to =a=).
+  Disable overwrite-mode.
 
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq frame-title-format '("%b %& GNU Emacs"))
+  (setq frame-title-format '("%b"))
   (setq echo-keystrokes 0.25)
   (setq default-input-method "greek")
   (setq ring-bell-function 'ignore)
