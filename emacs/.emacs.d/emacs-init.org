@@ -4760,71 +4760,69 @@ These are small functions that facilitate my day-to-day work with Emacs.
 They are written by me, unless otherwise noted.
 
 + Copy the current line :: Just place the entire line in the kill ring.
-     Do not be smart about it.
+  Do not be smart about it.
 + Count words in buffer :: By default, the binding =M-== will count the
-     lines, words, characters in the region.  I never use that.  What I
-     do use is the equivalent for the whole buffer.
+  lines, words, characters in the region.  I never use that.  What I do
+  use is the equivalent for the whole buffer.
 + Faster multiline move :: Move up or down by 15 lines at a time.  This
-     is the equivalent of =C-u 15 C-n= or =C-u 15 C-p=.
+  is the equivalent of =C-u 15 C-n= or =C-u 15 C-p=.
 + Kill this buffer :: A faster way of killing the focused buffer,
-     without the need for confirming which buffer to kill.  Unsaved
-     files will still ask for confirmation though, which is exactly as
-     it should be.  Bound to =s-k=.
+  without the need for confirming which buffer to kill.  Unsaved files
+  will still ask for confirmation though, which is exactly as it should
+  be.  Bound to =s-k=.
 + Kill to the begging of line :: Just remove everything from the point
-     till the beginning of the line.  Do not try anything fancy like
-     adjusting indentation or removing the line break.
+  till the beginning of the line.  Do not try anything fancy like
+  adjusting indentation or removing the line break.
 + New line above or below :: Create a new line above or below the
-     current one and place the point at its beginning.  Does not matter
-     where the point is on the current line.  Does not try to account
-     for any indentation rules.
+  current one and place the point at its beginning.  Does not matter
+  where the point is on the current line.  Does not try to account for
+  any indentation rules.
 + Rename current buffer :: Change the file name being visited by the
   current buffer.  This updates both the name of the buffer and the file
   system path.  I extracted this command from the [[https://github.com/bbatsov/crux][Crux package]].
 + Shrink whitespace :: By default, =M-SPC= will reduce multiple spaces
-     into a single one, while =M-\= will remove all space.  Then there
-     is =C-x C-o= which is the inverse of =C-o=.  For the first two of
-     the afore-mentioned, I use =cycle-spacing=: a single invocation
-     will leave one space; a second removes all space; while a third
-     consecutive call restores the original state.  Also, since I have
-     no use for the default function bound to =M-o= I make it an alias
-     for =C-x C-o=.
+  into a single one, while =M-\= will remove all space.  Then there is =C-x
+  C-o= which is the inverse of =C-o=.  For the first two of the
+  afore-mentioned, I use =cycle-spacing=: a single invocation will leave
+  one space; a second removes all space; while a third consecutive call
+  restores the original state.  Also, since I have no use for the
+  default function bound to =M-o= I make it an alias for =C-x C-o=.
 + Swap non-adjacent sentences :: Allows you to set the mark at one
-     sentence, then move to another one and exchange their positions.
-     This uses the built-in mechanism for transposing sentences, but
-     does not operate on constructs that are next to each other.  Mostly
-     useful for prose.
+  sentence, then move to another one and exchange their positions.  This
+  uses the built-in mechanism for transposing sentences, but does not
+  operate on constructs that are next to each other.  Mostly useful for
+  prose.
 + Transpose characters :: Tweak the way the original command works, so
-     that it /always/ transposes the two characters before point.  This
-     will no longer have the effect of moving the character forward
-     following repeated invocations of the command.  Just a toggle to
-     quickly fix the last typo.
-+ Transpose or swap lines :: Behave as the original =transpose-lines=,
-     but also be aware of the active region in which case swap the line
-     at point (region end) with the line at mark (region beginning).
+  that it /always/ transposes the two characters before point.  This will
+  no longer have the effect of moving the character forward following
+  repeated invocations of the command.  Just a toggle to quickly fix the
+  last typo.
++ Transpose or swap lines :: Behave as the original =transpose-lines=, but
+  also be aware of the active region in which case swap the line at
+  point (region end) with the line at mark (region beginning).
 + Transpose or swap paragraphs :: A wrapper around the original
-     =transpose-paragraphs= that fulfils my expectations: if region is
-     active, swap paragraph at mark (region beginning) with one at point
-     (region end), otherwise transpose current paragraph with the one
-     after it (drag paragraph downward/forward).
+  =transpose-paragraphs= that fulfils my expectations: if region is
+  active, swap paragraph at mark (region beginning) with one at point
+  (region end), otherwise transpose current paragraph with the one after
+  it (drag paragraph downward/forward).
 + Transpose or swap sentences :: Same principle as above.  When region
-     is active it exchanges the sentences at either end of it, otherwise
-     is drags the sentence forward.  The added effect here is that if
-     point is at the end of the paragraph, where no further 'dragging'
-     can occur, it transposes the sentence at point with the one before
-     it.
+  is active it exchanges the sentences at either end of it, otherwise is
+  drags the sentence forward.  The added effect here is that if point is
+  at the end of the paragraph, where no further 'dragging' can occur, it
+  transposes the sentence at point with the one before it.
 + Transpose or swap words ::  Same as with the other "swap" commands.
-     In addition, this alters =transpose-words= while at the end of line
-     where it will only transpose the last two words before the point.
-     It thus avoids transposing words across lines or paragraphs.
+  In addition, this alters =transpose-words= while at the end of line
+  where it will only transpose the last two words before the point.  It
+  thus avoids transposing words across lines or paragraphs.
 + Unfill text DWIM :: With =M-q= we can break a long line into a block
-     that ends each line at the =fill-column= (I configure Emacs to do
-     this automatically, where appropriate, but often do it manually).
-     With =M-^= we can join the line at point with the one above.  But
-     there seems to be no way of doing this for a block of text.  So I
-     assign the following function to =M-Q= (must also hold down Shift).
+  that ends each line at the =fill-column= (I configure Emacs to do this
+  automatically, where appropriate, but often do it manually).  With =M-^=
+  we can join the line at point with the one above.  But there seems to
+  be no way of doing this for a block of text.  So I assign the
+  following function to =M-Q= (must also hold down Shift).
 + Yank over current line or region :: Replace the contents of the line
-     at point (or the active region) with the most recent item from the
-     kill ring.
+  at point (or the active region) with the most recent item from the
+  kill ring.
 
 #+begin_src emacs-lisp
 (use-package emacs
