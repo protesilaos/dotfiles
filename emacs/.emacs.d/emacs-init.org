@@ -4088,6 +4088,11 @@ Once enabled, this package uses the mode line to show the keys being
 pressed and the command they call.  It is quite useful for screen
 casting.
 
+The placement of the indicator is controlled by =keycast-window-predicate=
+which I set to the current window.  The =moody= library offers that
+specific piece of functionality.  Moody can also be used to customise
+the looks of the mode line, though I do not want that.
+
 #+begin_src emacs-lisp
 (use-package moody
   :ensure t)
@@ -4095,13 +4100,8 @@ casting.
 (use-package keycast
   :ensure t
   :after moody
+  :commands keycast-mode
   :config
-  (defun prot/keycast-bottom-left-window-p ()
-    (and (window-at-side-p nil 'left)
-         (window-at-side-p nil 'bottom)))
-  (defun prot/keycast-active-frame-bottom-left-p ()
-    (and (prot/keycast-bottom-left-window-p)
-         (keycast--active-frame-p)))
   (setq keycast-window-predicate 'moody-window-active-p)
   (setq keycast-separator-width 1)
   (setq keycast-insert-after 'mode-line-buffer-identification)
