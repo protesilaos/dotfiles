@@ -1836,25 +1836,28 @@ Some tweaks to the default behaviour and presentation:
                      (mode . magit-status-mode)))
            ("Apps" (or
                     (mode . bongo-playlist-mode)
-                    (mode . mu4e-compose-mode)
-                    (mode . mu4e-headers-mode)
-                    (mode . mu4e-main-mode)
                     (mode . elfeed-search-mode)
-                    (mode . elfeed-show-mode)
-                    (mode . mu4e-view-mode)))
-           ("Emacs" (or
-                     (name . "^\\*Help\\*$")
-                     (name . "^\\*Custom.*")
-                     (name . "^\\*Org Agenda\\*$")
-                     (name . "^\\*info\\*$")
-                     (name . "^\\*scratch\\*$")
-                     (name . "^\\*Backtrace\\*$")
-                     (name . "^\\*Messages\\*$"))))))
-  :hook
-  (ibuffer-mode . hl-line-mode)
-  (ibuffer-mode . (lambda ()
-                    (ibuffer-switch-to-saved-filter-groups "Main")))
-  :bind (("C-x C-b" . ibuffer)))
+                    (mode . elfeed-show-mode)))
+           ("Gnus" (or
+                    (mode . message-mode)
+                    (mode . mail-mode)
+                    (mode . gnus-article-mode)
+                    (mode . gnus-group-mode)
+                    (mode . gnus-server-mode)
+                    (mode . gnus-summary-mode)))
+          ("Emacs" (or
+                    (name . "^\\*Help\\*$")
+                    (name . "^\\*Custom.*")
+                    (name . "^\\*Org Agenda\\*$")
+                    (name . "^\\*info\\*$")
+                    (name . "^\\*scratch\\*$")
+                    (name . "^\\*Backtrace\\*$")
+                    (name . "^\\*Messages\\*$"))))))
+:hook
+(ibuffer-mode . hl-line-mode)
+(ibuffer-mode . (lambda ()
+                  (ibuffer-switch-to-saved-filter-groups "Main")))
+:bind (("C-x C-b" . ibuffer)))
 #+end_src
 
 ** Window configuration
