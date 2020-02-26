@@ -4086,8 +4086,12 @@ pressed and the command they call.  It is quite useful for screen
 casting.
 
 #+begin_src emacs-lisp
+(use-package moody
+  :ensure t)
+
 (use-package keycast
   :ensure t
+  :after moody
   :config
   (defun prot/keycast-bottom-left-window-p ()
     (and (window-at-side-p nil 'left)
@@ -4095,8 +4099,8 @@ casting.
   (defun prot/keycast-active-frame-bottom-left-p ()
     (and (prot/keycast-bottom-left-window-p)
          (keycast--active-frame-p)))
-  (setq keycast-window-predicate 'prot/keycast-active-frame-bottom-left-p)
-  (setq keycast-separator-width 3)
+  (setq keycast-window-predicate 'moody-window-active-p)
+  (setq keycast-separator-width 1)
   (setq keycast-insert-after 'mode-line-buffer-identification)
   (setq keycast-remove-tail-elements nil))
 #+end_src
