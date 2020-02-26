@@ -4751,6 +4751,41 @@ some motions that are rather cumbersome or too specialised.  While there
 are some commands that are not available at all.  For those cases, I
 rely on custom functions.
 
+*** Mark by semantic unit (expand-region)
+
+The =expand-region= library offers the means to mark syntactic elements by
+semantic unit: word, symbol, string, balanced expression…  The expansion
+is incremental, from the smallest to the largest match, with each
+increment performed by === following the initial invocation of the command
+(decrement with =-= or reset with =0=) or by just repeatedly hitting =C-==.
+
+There are lost of specialised functions bundled up together with this
+package.  Rather than bind each one to a key, I prefer to keep things
+simple: =er/expand-region= only ever needs a couple extra calls to match
+compound units.  The few exceptions are for commands I use all the time.
+
+Note though that this library is complementary to existing commands
+(which can be ignored or altogether superseded).  Here is a quick
+reference:
+
+| Function          | Key binding |
+|-------------------+-------------|
+| mark-paragraph    | M-h         |
+| mark-sexp         | C-M-SPC     |
+| mark-whole-buffer | C-x h       |
+| mark-word         | M-@         |
+
+#+begin_src emacs-lisp
+(use-package expand-region
+  :ensure t
+  :pin gnu                              ; Prefer ELPA version
+  :config
+  (setq expand-region-smart-cursor t)
+  :bind (("C-=" . er/expand-region)
+         ("C-+" . er/mark-outside-pairs)
+         ("C-S-SPC" . er/mark-symbol)))
+#+end_src
+
 *** Collection of unpackaged commands or tweaks
     :PROPERTIES:
     :CUSTOM_ID: h:2442f3bf-3ffb-431d-82d9-8a44954355b1
