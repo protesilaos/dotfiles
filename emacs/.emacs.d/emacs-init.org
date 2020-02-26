@@ -4759,9 +4759,6 @@ rely on custom functions.
 These are small functions that facilitate my day-to-day work with Emacs.
 They are written by me, unless otherwise noted.
 
-+ Align to whitespace :: This will align a portion of text using
-     whitespace as an indicator for creating separate columns.  I bind
-     it to =C-c C-==.  Got it from this [[http://pragmaticemacs.com/emacs/aligning-text/][Pragmatic Emacs blog post]].
 + Copy the current line :: Just place the entire line in the kill ring.
      Do not be smart about it.
 + Count words in buffer :: By default, the binding =M-== will count the
@@ -4776,16 +4773,13 @@ They are written by me, unless otherwise noted.
 + Kill to the begging of line :: Just remove everything from the point
      till the beginning of the line.  Do not try anything fancy like
      adjusting indentation or removing the line break.
-+ Mark whole word ::  The default behaviour of =M-@= is to mark a word,
-     but will only expand from point till the end of the word.  This
-     means that to truly mark the word at point, you must first make a
-     backward motion and then run the command.  Whereas with this
-     function, the word at point is marked from its beginning until its
-     end.  Got it from this [[https://emacs.stackexchange.com/a/35072][Stack Exchange]] thread.
 + New line above or below :: Create a new line above or below the
      current one and place the point at its beginning.  Does not matter
      where the point is on the current line.  Does not try to account
      for any indentation rules.
++ Rename current buffer :: Change the file name being visited by the
+  current buffer.  This updates both the name of the buffer and the file
+  system path.  I extracted this command from the [[https://github.com/bbatsov/crux][Crux package]].
 + Shrink whitespace :: By default, =M-SPC= will reduce multiple spaces
      into a single one, while =M-\= will remove all space.  Then there
      is =C-x C-o= which is the inverse of =C-o=.  For the first two of
@@ -4835,11 +4829,6 @@ They are written by me, unless otherwise noted.
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (defun bjm/align-whitespace (start end)
-    "Align columns by whitespace"
-    (interactive "r")
-    (align-regexp start end "\\(\\s-*\\)\\s-" 1 0 t))
-
   (defun prot/copy-line ()
     "Copies the entirety of the current line."
     (interactive)
@@ -4862,34 +4851,6 @@ line.  This will not remove the line."
     (interactive)
     (kill-line 0))
 
-  (defun contrib/mark-whole-word (&optional arg allow-extend)
-    "Like `mark-word', but selects whole words and skips over
-whitespace.  If you use a negative prefix arg then select words
-backward.  Otherwise select them forward.
-
-If cursor starts in the middle of word then select that whole word.
-
-If there is whitespace between the initial cursor position and the first
-word (in the selection direction), it is skipped (not selected).
-
-If the command is repeated or the mark is active, select the next NUM
-words, where NUM is the numeric prefix argument.  (Negative NUM selects
-backward.)"
-    (interactive "P\np")
-    (let ((num  (prefix-numeric-value arg)))
-      (unless (eq last-command this-command)
-        (if (natnump num)
-            (skip-syntax-forward "\\s-")
-          (skip-syntax-backward "\\s-")))
-      (unless (or (eq last-command this-command)
-                  (if (natnump num)
-                      (looking-at "\\b")
-                    (looking-back "\\b")))
-        (if (natnump num)
-            (left-word)
-          (right-word)))
-      (mark-word arg allow-extend)))
-
   (defun prot/new-line-below ()
     "Create a new line below the current one.  Move the point to
 the absolute beginning.  Also see `prot/new-line-above'."
@@ -4904,6 +4865,21 @@ the absolute beginning.  Also see `prot/new-line-below'."
     (beginning-of-line)
     (newline)
     (forward-line -1))
+
+  (defun contrib/rename-file-and-buffer ()
+    "Rename current buffer and if the buffer is visiting a file, rename it too."
+    (interactive)
+    (let ((filename (buffer-file-name)))
+      (if (not (and filename (file-exists-p filename)))
+          (rename-buffer (read-from-minibuffer "New name: " (buffer-name)))
+        (let* ((new-name (read-from-minibuffer "New name: " filename))
+               (containing-dir (file-name-directory new-name)))
+          (make-directory containing-dir t)
+          (cond
+           ((vc-backend filename) (vc-rename-file filename new-name))
+           (t
+            (rename-file filename new-name t)
+            (set-visited-file-name new-name t t)))))))
 
   (defun prot/transpose-chars ()
     "Always transposes the two characters before point.  There is
@@ -5002,12 +4978,12 @@ instead.  This command can then be followed by the standard
           (yank))
       (delete-region (point-at-bol) (point-at-eol))
       (yank)))
-  :bind (("C-c C-=" . bjm/align-whitespace)
+
+  :bind (("<C-f2>" . contrib/rename-file-and-buffer)
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
          ("s-k" . kill-this-buffer)
          ("M-k" . prot/kill-line-backward)
-         ("C-S-SPC" . contrib/mark-whole-word)
          ("C-S-n" . prot/multi-line-next)
          ("C-S-p" . prot/multi-line-prev)
          ("<C-return>" . prot/new-line-below)
@@ -5021,36 +4997,6 @@ instead.  This command can then be followed by the standard
          ("M-t" . prot/transpose-or-swap-words)
          ("M-Q" . prot/unfill-region-or-paragraph)
          ("C-S-y" . prot/yank-replace-line-or-region)))
-#+end_src
-
-*** Crux (extra utilities for some useful tasks)
-    :PROPERTIES:
-    :CUSTOM_ID: h:ff6909e4-1c3e-4f57-bb12-9e6679db63fc
-    :END:
-
-The package =crux= contains a number of useful functions.  The ones I
-need are:
-
-+ Convenient renaming :: An easy way to rename the current file and its
-     corresponding buffer.  No need to switch to Dired, run a shell
-     command, or something along those lines.
-+ Dired open with :: Allows us to easily invoke =xdg-open= (or
-     equivalent on non-Linux systems) for the file at point.  This means
-     to use the default program for accessing the item (e.g. run VLC for
-     the =.mkv= at point).  Note that we can do this by default inside
-     of a Dired buffer by running =! xdg-open RET=, where =!= is the key
-     for running an arbitrary command for the [marked] file[s].
-+ Duplicate line or region :: Just copy the line at point and place a
-     duplicate right below it.  Does the same for a region, if active.
-
-#+begin_src emacs-lisp
-(use-package crux
-  :ensure t
-  :bind (("s-t" . crux-transpose-windows)
-         ("C-c w" . crux-duplicate-current-line-or-region)
-         ("<C-f2>" . crux-rename-file-and-buffer)
-         :map dired-mode-map
-         ("<M-return>" . crux-open-with)))
 #+end_src
 
 *** Go to last change
@@ -5070,31 +5016,6 @@ key binding!
 (use-package goto-last-change
   :ensure t
   :bind ("C-z" . goto-last-change))
-#+end_src
-
-*** Compare last two kills
-    :PROPERTIES:
-    :CUSTOM_ID: h:97e82006-9ba9-49ee-8f69-280b4beee831
-    :END:
-
-This comes from Marcin Borkowski's blog on [[http://mbork.pl/2019-11-17_Diffing_buffer_fragments%252c_continued][diffing buffer fragments]].
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :commands contrib/diff-last-two-kills
-  :config
-  (defun contrib/diff-last-two-kills ()
-    "Put the last two kills to temporary buffers and diff them."
-    (interactive)
-    (let ((old (generate-new-buffer "old"))
-          (new (generate-new-buffer "new")))
-      (set-buffer old)
-      (insert (current-kill 0 t))
-      (set-buffer new)
-      (insert (current-kill 1 t))
-      (diff old new)
-      (kill-buffer old)
-      (kill-buffer new))))
 #+end_src
 
 ** Cursor and mouse settings
