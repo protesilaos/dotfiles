@@ -4810,11 +4810,11 @@ They are written by me, unless otherwise noted.
   current buffer.  This updates both the name of the buffer and the file
   system path.  I extracted this command from the [[https://github.com/bbatsov/crux][Crux package]].
 + Shrink whitespace :: By default, =M-SPC= will reduce multiple spaces
-  into a single one, while =M-\= will remove all space.  Then there is =C-x
-  C-o= which is the inverse of =C-o=.  For the first two of the
-  afore-mentioned, I use =cycle-spacing=: a single invocation will leave
-  one space; a second removes all space; while a third consecutive call
-  restores the original state.  Also, since I have no use for the
+  into a single one, while =M-\= will remove all space at once.  Then
+  there is =C-x C-o= which is the inverse of =C-o=.  For the first two of
+  the afore-mentioned, I use =cycle-spacing=: a single invocation will
+  leave one space; a second removes all space; while a third consecutive
+  call restores the original state.  Also, since I have no use for the
   default function bound to =M-o= I make it an alias for =C-x C-o=.
 + Swap non-adjacent sentences :: Allows you to set the mark at one
   sentence, then move to another one and exchange their positions.  This
