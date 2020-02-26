@@ -3040,11 +3040,6 @@ practically never have to read any such messages.  As a general rule,
 email that can only be read in HTML is likely spam or annoying enough to
 be treated as such.
 
-The variable =gnus-mode-line-image-cache= is set to =nil= to make sure that
-the blue Gnus icon is not shown in the mode line.  That icon has a
-predefined colour, making it a potentially poor choice for colour
-contrast accessibility.
-
 Note that =gnus-article-sort-functions= requires the most important
 function to be declared last.
 
@@ -3072,9 +3067,8 @@ the attachment at point (MIME part) in another buffer.
   (setq gnus-html-image-automatic-caching t)
   (setq gnus-inhibit-images t)
   (setq gnus-max-image-proportion 0.3)
-  (setq gnus-mode-line-image-cache nil)
   (setq gnus-treat-display-smileys nil)
-  (setq gnus-article-mode-line-format "Gnus: %S %m")
+  (setq gnus-article-mode-line-format "%G %S [%m]")
   (setq gnus-visible-headers
         '("^From:" "^To:" "^Cc:" "^Newsgroups:" "^Subject:" "^Date:"
           "Followup-To:" "Reply-To:" "^Organization:" "^X-Newsreader:"
@@ -3137,7 +3131,7 @@ to be declared last.
         '((gnus-group-sort-by-unread)
           (gnus-group-sort-by-alphabet)
           (gnus-group-sort-by-rank)))
-  (setq gnus-group-mode-line-format "Gnus: %%b")
+  (setq gnus-group-mode-line-format "%%b")
   :hook
   (gnus-group-mode . hl-line-mode)
   (gnus-select-group-hook . gnus-group-set-timestamp)
@@ -3148,7 +3142,7 @@ to be declared last.
 (use-package gnus-topic
   :after (gnus gnus-group)
   :config
-  (setq gnus-topic-display-empty-topics t)
+  (setq gnus-topic-display-empty-topics nil)
   :hook
   (gnus-group-mode . gnus-topic-mode))
 #+end_src
@@ -3188,7 +3182,7 @@ back to a default value.  It is then called with =%&user-date;=.
   (setq gnus-suppress-duplicates t)
   (setq gnus-summary-goto-unread nil)
   (setq gnus-summary-make-false-root 'adopt)
-  (setq gnus-summary-thread-gathering-function 'gnus-gather-threads-by-subject)
+  (setq gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references)
   (setq gnus-thread-sort-functions
         '((not gnus-thread-sort-by-number)
           (not gnus-thread-sort-by-date)))
@@ -3201,7 +3195,7 @@ back to a default value.  It is then called with =%&user-date;=.
           ((+ 86400 (gnus-seconds-today)) . "Yesterday, %R")
           (t . "%Y-%m-%d %R")))
   (setq gnus-summary-line-format "%U%R%z %-16,16&user-date;  %4L:%-30,30f  %B%S\n")
-  (setq gnus-summary-mode-line-format "Gnus: %p (%U)")
+  (setq gnus-summary-mode-line-format "%p (%U)")
   (setq gnus-sum-thread-tree-false-root "")
   (setq gnus-sum-thread-tree-indent " ")
   (setq gnus-sum-thread-tree-leaf-with-other "├─➤ ")
