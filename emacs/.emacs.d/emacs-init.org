@@ -3071,7 +3071,7 @@ the attachment at point (MIME part) in another buffer.
   (setq gnus-inhibit-images t)
   (setq gnus-max-image-proportion 0.3)
   (setq gnus-treat-display-smileys nil)
-  (setq gnus-article-mode-line-format "%G %S [%m]")
+  (setq gnus-article-mode-line-format "%G %S %m")
   (setq gnus-visible-headers
         '("^From:" "^To:" "^Cc:" "^Newsgroups:" "^Subject:" "^Date:"
           "Followup-To:" "Reply-To:" "^Organization:" "^X-Newsreader:"
@@ -3198,7 +3198,7 @@ back to a default value.  It is then called with =%&user-date;=.
           ((+ 86400 (gnus-seconds-today)) . "Yesterday, %R")
           (t . "%Y-%m-%d %R")))
   (setq gnus-summary-line-format "%U%R%z %-16,16&user-date;  %4L:%-30,30f  %B%S\n")
-  (setq gnus-summary-mode-line-format "%p (%U)")
+  (setq gnus-summary-mode-line-format "%p")
   (setq gnus-sum-thread-tree-false-root "")
   (setq gnus-sum-thread-tree-indent " ")
   (setq gnus-sum-thread-tree-leaf-with-other "├─➤ ")
