@@ -4816,8 +4816,8 @@ They are written by me, unless otherwise noted.
   pair of characters from the point onward.  It uses the character after
   point to determine the matching character.  I bind that to =C-delete= as
   it is conceptually close to regular Delete.  Then I bind an equivalent
-  backward motion to =M-backspace= so that it is similar to how the
-  backward deletion of words works (=C-backspace=).
+  backward motion to =C-backspace= so that it is similar to how the
+  backward deletion of words works (=M-backspace=).
 + Insert pairs :: These are several functions that allow for manual
   insertion of various common delimiters I use.  The idea is to offer
   the means of quickly wrapping a word/symbol/region in those characters
@@ -5070,7 +5070,7 @@ instead.  This command can then be followed by the standard
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
          ("<C-delete>" . delete-pair)
-         ("<M-backspace>" . prot/delete-pair-backward)
+         ("<C-backspace>" . prot/delete-pair-backward)
          ("M-\"" . prot/insert-double-quotes)
          ("C-M-\"" . prot/insert-double-smart-quotes)
          ("C-M-'" . prot/insert-single-smart-quotes)
