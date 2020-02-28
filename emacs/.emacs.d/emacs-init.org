@@ -4812,6 +4812,20 @@ They are written by me, unless otherwise noted.
 + Count words in buffer :: By default, the binding =M-== will count the
   lines, words, characters in the region.  I never use that.  What I do
   use is the equivalent for the whole buffer.
++ Delete pair forward/backward :: The built-in =delete-pair= will remove a
+  pair of characters from the point onward.  It uses the character after
+  point to determine the matching character.  I bind that to =C-delete= as
+  it is conceptually close to regular Delete.  Then I bind an equivalent
+  backward motion to =M-backspace= so that it is similar to how the
+  backward deletion of words works (=C-backspace=).
++ Insert pairs :: These are several functions that allow for manual
+  insertion of various common delimiters I use.  The idea is to offer
+  the means of quickly wrapping a word/symbol/region in those characters
+  without having to always run a minor mode that "intelligently" decides
+  when to insert pairs.  The basic pattern for these keybindings is
+  derived from the default =M-(= which runs =insert-parentheses=: the basis
+  of all these commands.  Note also that =M-`= shadows the default keys
+  for =tmm-menubar=, which is a command I am 100% sure I will never use.
 + Faster multiline move :: Move up or down by 15 lines at a time.  This
   is the equivalent of =C-u 15 C-n= or =C-u 15 C-p=.
 + Kill this buffer :: A faster way of killing the focused buffer,
@@ -4831,7 +4845,7 @@ They are written by me, unless otherwise noted.
 + Shrink whitespace :: By default, =M-SPC= will reduce multiple spaces
   into a single one, while =M-\= will remove all space at once.  Then
   there is =C-x C-o= which is the inverse of =C-o=.  For the first two of
-  the afore-mentioned, I use =cycle-spacing=: a single invocation will
+  the aforementioned, I use =cycle-spacing=: a single invocation will
   leave one space; a second removes all space; while a third consecutive
   call restores the original state.  Also, since I have no use for the
   default function bound to =M-o= I make it an alias for =C-x C-o=.
@@ -4881,19 +4895,46 @@ They are written by me, unless otherwise noted.
     (copy-region-as-kill (point-at-bol) (point-at-eol))
     (message "Current line copied"))
 
+  (defun prot/delete-pair-backward ()
+    "Delete pair of characters before point.
+
+Use the character right before point as a reference on what to
+match for deletion."
+    (interactive)
+    (delete-pair -1))
+
+  (defun prot/insert-double-quotes (&optional arg)
+    "Insert a pair of double quotes or wrap ARG with them."
+    (interactive "P")
+    (insert-pair arg ?\" ?\"))
+
+  (defun prot/insert-double-smart-quotes (&optional arg)
+    "Insert a pair of double smart quotes or wrap ARG with them."
+    (interactive "P")
+    (insert-pair arg ?\“ ?\”))
+
+  (defun prot/insert-single-smart-quotes (&optional arg)
+    "Insert a pair of single smart quotes or wrap ARG with them."
+    (interactive "P")
+    (insert-pair arg ?\‘ ?\’))
+
+  (defun prot/insert-elisp-quotes (&optional arg)
+    "Insert a pair of elisp symbol quotes or wrap ARG with them."
+    (interactive "P")
+    (insert-pair arg ?\` ?\'))
+
   (defun prot/multi-line-next ()
-    "Moves the point 15 lines down."
+    "Moves point 15 lines down."
     (interactive)
     (forward-line 15))
 
   (defun prot/multi-line-prev ()
-    "Moves the point 15 lines up."
+    "Moves point 15 lines up."
     (interactive)
     (forward-line -15))
 
   (defun prot/kill-line-backward ()
-    "Kill line backwards from the point to the beginning of the
-line.  This will not remove the line."
+    "Kill from point to the beginning of the line."
     (interactive)
     (kill-line 0))
 
@@ -5028,6 +5069,12 @@ instead.  This command can then be followed by the standard
   :bind (("<C-f2>" . contrib/rename-file-and-buffer)
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
+         ("<C-delete>" . delete-pair)
+         ("<M-backspace>" . prot/delete-pair-backward)
+         ("M-\"" . prot/insert-double-quotes)
+         ("C-M-\"" . prot/insert-double-smart-quotes)
+         ("C-M-'" . prot/insert-single-smart-quotes)
+         ("M-`" . prot/insert-elisp-quotes)
          ("s-k" . kill-this-buffer)
          ("M-k" . prot/kill-line-backward)
          ("C-S-n" . prot/multi-line-next)
