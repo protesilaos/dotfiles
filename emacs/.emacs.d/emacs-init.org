@@ -799,7 +799,8 @@ succession."
          ("M-v" . prot/focus-minibuffer)))
 #+end_src
 
-And the following is for the completion interface.
+And the following is for the completion interface.  Do not forget to
+also check the section on the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].
 
 Note that while running a shell, you can still use =icomplete= by means of
 tab-completion, but to confirm a choice you need to hit =C-m=.  Hitting
