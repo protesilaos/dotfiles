@@ -131,6 +131,8 @@
 ;;     git-timemachine
 ;;     gnus
 ;;     helm
+;;     helm-ls-git
+;;     helm-xref
 ;;     highlight-blocks
 ;;     hl-fill-column
 ;;     hl-line-mode
@@ -1282,7 +1284,7 @@ between foreground and background is >= 7:1)."
    `(helm-ff-symlink ((,class (:foreground ,cyan :underline t))))
    `(helm-ff-truename ((,class (:foreground ,blue-alt-other))))
    `(helm-grep-cmd-line ((,class (:foreground ,yellow-alt-other))))
-   `(helm-grep-file ((,class (:foreground ,cyan-alt :weight bold))))
+   `(helm-grep-file ((,class (:foreground ,fg-special-cold :weight bold))))
    `(helm-grep-finish ((,class (:foreground ,green))))
    `(helm-grep-lineno ((,class (:foreground ,fg-special-warm))))
    `(helm-grep-match ((,class (:inherit modus-theme-subtle-blue))))
@@ -1314,6 +1316,19 @@ between foreground and background is >= 7:1)."
    `(helm-top-columns ((,class (:inherit helm-header))))
    `(helm-ucs-char ((,class (:foreground ,yellow-alt-other))))
    `(helm-visible-mark ((,class (:inherit modus-theme-subtle-cyan))))
+   ;;;; helm-ls-git
+   `(helm-ls-git-added-copied-face ((,class (:foreground ,green-intense))))
+   `(helm-ls-git-added-modified-face ((,class (:foreground ,yellow-intense))))
+   `(helm-ls-git-conflict-face ((,class (:foreground ,red-intense :weight bold))))
+   `(helm-ls-git-deleted-and-staged-face ((,class (:foreground ,red-nuanced))))
+   `(helm-ls-git-deleted-not-staged-face ((,class (:foreground ,red))))
+   `(helm-ls-git-modified-and-staged-face ((,class (:foreground ,yellow-nuanced))))
+   `(helm-ls-git-modified-not-staged-face ((,class (:foreground ,yellow))))
+   `(helm-ls-git-renamed-modified-face ((,class (:foreground ,magenta))))
+   `(helm-ls-git-untracked-face ((,class (:foreground ,fg-special-cold))))
+   ;;;; helm-xref
+   `(helm-xref-file-name ((,class (:foreground ,fg-special-cold :weight bold))))
+   `(helm-xref-file-name ((,class (:foreground ,fg-special-warm))))
    ;;;; highlight region or ad-hoc regexp
    `(hi-black-b ((,class ((:background ,fg-main :foreground ,bg-main)))))
    `(hi-blue ((,class (:background ,bg-alt :foreground ,blue :underline t))))
