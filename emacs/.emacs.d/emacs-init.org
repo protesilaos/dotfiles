@@ -1810,6 +1810,17 @@ Some tweaks to the default behaviour and presentation:
   (setq ibuffer-title-face 'font-lock-doc-face)
   (setq ibuffer-use-header-line t)
   (setq ibuffer-default-shrink-to-minimum-size nil)
+  (setq ibuffer-formats
+        '((mark modified read-only locked " "
+                (name 30 30 :left :elide)
+                " "
+                (size 9 -1 :right)
+                " "
+                (mode 16 16 :left :elide)
+                " " filename-and-process)
+          (mark " "
+                (name 16 -1)
+                " " filename)))
   (setq ibuffer-saved-filter-groups
         '(("Main"
            ("Directories" (mode . dired-mode))
@@ -1845,19 +1856,19 @@ Some tweaks to the default behaviour and presentation:
                     (mode . gnus-group-mode)
                     (mode . gnus-server-mode)
                     (mode . gnus-summary-mode)))
-          ("Emacs" (or
-                    (name . "^\\*Help\\*$")
-                    (name . "^\\*Custom.*")
-                    (name . "^\\*Org Agenda\\*$")
-                    (name . "^\\*info\\*$")
-                    (name . "^\\*scratch\\*$")
-                    (name . "^\\*Backtrace\\*$")
-                    (name . "^\\*Messages\\*$"))))))
-:hook
-(ibuffer-mode . hl-line-mode)
-(ibuffer-mode . (lambda ()
-                  (ibuffer-switch-to-saved-filter-groups "Main")))
-:bind (("C-x C-b" . ibuffer)))
+           ("Emacs" (or
+                     (name . "^\\*Help\\*$")
+                     (name . "^\\*Custom.*")
+                     (name . "^\\*Org Agenda\\*$")
+                     (name . "^\\*info\\*$")
+                     (name . "^\\*scratch\\*$")
+                     (name . "^\\*Backtrace\\*$")
+                     (name . "^\\*Messages\\*$"))))))
+  :hook
+  (ibuffer-mode . hl-line-mode)
+  (ibuffer-mode . (lambda ()
+                    (ibuffer-switch-to-saved-filter-groups "Main")))
+  :bind (("C-x C-b" . ibuffer)))
 #+end_src
 
 ** Window configuration
