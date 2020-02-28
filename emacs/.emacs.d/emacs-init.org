@@ -4795,8 +4795,8 @@ reference:
   :config
   (setq expand-region-smart-cursor t)
   :bind (("C-=" . er/expand-region)
-         ("C-+" . er/mark-outside-pairs)
-         ("C-S-SPC" . er/mark-symbol)))
+         ("C-M-=" . er/mark-outside-pairs)
+         ("C-+" . er/mark-symbol)))
 #+end_src
 
 *** Collection of unpackaged commands or tweaks
