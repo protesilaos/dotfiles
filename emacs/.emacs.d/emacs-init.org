@@ -4849,11 +4849,6 @@ They are written by me, unless otherwise noted.
   leave one space; a second removes all space; while a third consecutive
   call restores the original state.  Also, since I have no use for the
   default function bound to =M-o= I make it an alias for =C-x C-o=.
-+ Swap non-adjacent sentences :: Allows you to set the mark at one
-  sentence, then move to another one and exchange their positions.  This
-  uses the built-in mechanism for transposing sentences, but does not
-  operate on constructs that are next to each other.  Mostly useful for
-  prose.
 + Transpose characters :: Tweak the way the original command works, so
   that it /always/ transposes the two characters before point.  This will
   no longer have the effect of moving the character forward following
@@ -4872,7 +4867,7 @@ They are written by me, unless otherwise noted.
   drags the sentence forward.  The added effect here is that if point is
   at the end of the paragraph, where no further 'dragging' can occur, it
   transposes the sentence at point with the one before it.
-+ Transpose or swap words ::  Same as with the other "swap" commands.
++ Transpose or swap words :: Same as with the other "swap" commands.
   In addition, this alters =transpose-words= while at the end of line
   where it will only transpose the last two words before the point.  It
   thus avoids transposing words across lines or paragraphs.
