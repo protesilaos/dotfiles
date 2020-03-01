@@ -5160,48 +5160,47 @@ and only tweak the visuals of the beam effect.
   :bind ("<s-escape>" . beacon-blink))
 #+end_src
 
-*** Mouse behaviour
+*** Mouse wheel behaviour
     :PROPERTIES:
     :CUSTOM_ID: h:02572210-eb26-4941-8f7c-666a0314877b
     :END:
 
-I seldom use the mouse with Emacs.  But when I do, I am most likely
-highlighting some area that I would like to copy.  This setting has
-the same behaviour as terminal emulators that place the selection to
-the clipboard (or the primary selection).
+The value of =mouse-wheel-scroll-amount= means the following:
+
++ By default scroll by one line.
++ Hold down Shift to do so by five lines.
++ Hold down Meta to scroll half a screen.
++ Hold down Control to adjust the size of the text.  This is added in
+  Emacs 27.
+
+By enabling =mouse-drag-copy-region= we automatically place the mouse
+selection to the kill ring.  This is the same behaviour as terminal
+emulators that place the selection to the clipboard (or the primary
+selection).
 
 The other options in short:
 
-+ Hide pointer while typing.
++ Hide mouse pointer while typing.
 + Enable mouse scroll.
 + Faster wheel movement means faster scroll.
++ Scroll window under mouse pointer regardless of whether it is the
+  current one or not.
 
 #+begin_src emacs-lisp
 (use-package mouse
   :config
+  ;; In Emacs 27, use Control + mouse wheel to scale text.
+  (setq mouse-wheel-scroll-amount
+        '(1
+          ((shift) . 5)
+          ((meta) . 0.5)
+          ((control) . text-scale)))
   (setq mouse-drag-copy-region t)
   (setq make-pointer-invisible t)
   (setq mouse-wheel-progressive-speed t)
+  (setq mouse-wheel-follow-mouse t)
   :hook (after-init . mouse-wheel-mode))
 #+end_src
-
-*** Delete selection
-    :PROPERTIES:
-    :CUSTOM_ID: h:d53b7b54-924a-443b-955a-3c5b222e3a90
-    :END:
-
-This is a very helpful mode.  It kills the marked region when inserting
-directly to it.  It also has checks to ensure that yanking over a
-selected region will not insert itself (e.g. =mouse-drag-copy-region= is
-in effect).
-
-#+begin_src emacs-lisp
-(use-package delsel
-  :hook (after-init . delete-selection-mode))
-#+end_src
-
-*Pro tip*: On Emacs 27.1 you can create a rectangular region by holding
-down Ctrl and Meta while dragging the mouse with the left click pressed.
 
 *** Scrolling behaviour
     :PROPERTIES:
@@ -5222,9 +5221,27 @@ recenter text, because of the above.
 (use-package emacs
   :config
   (setq scroll-preserve-screen-position t)
-  (setq scroll-conservatively 1)
+  (setq scroll-conservatively 1)        ; affects `scroll-step'
   (setq scroll-margin 0))
 #+end_src
+
+*** Delete selection
+    :PROPERTIES:
+    :CUSTOM_ID: h:d53b7b54-924a-443b-955a-3c5b222e3a90
+    :END:
+
+This is a very helpful mode.  It kills the marked region when inserting
+directly to it.  It also has checks to ensure that yanking over a
+selected region will not insert itself when =mouse-drag-copy-region= is in
+effect (see the section on the [[#h:02572210-eb26-4941-8f7c-666a0314877b][mouse wheel behaviour]]).
+
+#+begin_src emacs-lisp
+(use-package delsel
+  :hook (after-init . delete-selection-mode))
+#+end_src
+
+*Pro tip*: On Emacs 27.1 you can create a rectangular region by holding
+down Ctrl and Meta while dragging the mouse with the left click pressed.
 
 *** Tool tips
     :PROPERTIES:
