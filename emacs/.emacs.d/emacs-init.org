@@ -683,7 +683,11 @@ Now some comments about my implementation:
   being).  If you are curious, check the source code for both =icomplete=
   and =ido= with =M-x find-library=.
 + All my functions that somehow extend the functionality of Icomplete
-  have their own documentation.  No need to reproduce it here.
+  have their own documentation.  No need to reproduce it here.  An
+  exception must be made for =prot/icomplete-yank-kill-ring= that uses a
+  function to avoid sorting the elements of its list.  I adapted that
+  sorting method from this [[https://emacs.stackexchange.com/questions/41801/how-to-stop-completing-read-ivy-completing-read-from-sorting][Emacs StackExchange thread]], following a
+  comment I received on my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
 
 An *important note* about every =prot/icomplete-*= function that contains a
 =setq= in its body: the way the variables are declared /is not robust/,
@@ -876,12 +880,22 @@ used in commands such as `set-frame-font'."
   (defun prot/icomplete-yank-kill-ring ()
     "Insert the selected `kill-ring' item directly at point.
 
+Sorting of the `kill-ring' is disabled.  Items appear as they
+normally would when calling `yank' followed by `yank-pop'.
+
 Defaults to a vertical layout.  This is restored on exit by means
 of `prot/icomplete-restore-horizontal'."
     (interactive)
-    (prot/icomplete-show-vertical "··········")
-    (insert
-     (completing-read "Yank from kill ring: " kill-ring nil t)))
+    (let ((kills                    ; do not sort items
+           (lambda (string pred action)
+             (if (eq action 'metadata)
+                 '(metadata (display-sort-function . identity)
+                            (cycle-sort-function . identity))
+               (complete-with-action
+                action kill-ring string pred)))))
+      (prot/icomplete-show-vertical "··········")
+      (insert
+       (completing-read "Yank from kill ring: " kills nil t))))
 
   (defun prot/icomplete-toggle-vertical ()
     "Toggle vertical view for `icomplete'.
