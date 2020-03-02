@@ -686,8 +686,8 @@ Now some comments about my implementation:
   have their own documentation.  No need to reproduce it here.  An
   exception must be made for =prot/icomplete-yank-kill-ring= that uses a
   function to avoid sorting the elements of its list.  I adapted that
-  sorting method from this [[https://emacs.stackexchange.com/questions/41801/how-to-stop-completing-read-ivy-completing-read-from-sorting][Emacs StackExchange thread]], following a
-  comment I received on my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
+  sorting method from the [[https://github.com/jixiuf/vmacs/blob/master/conf/conf-icomplete.el][dotemacs of GitHub user jixiuf]], following a
+  comment I got from them on my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
 
 An *important note* about every =prot/icomplete-*= function that contains a
 =setq= in its body: the way the variables are declared /is not robust/,
