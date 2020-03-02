@@ -825,7 +825,7 @@ not work as intended.
   (setq icomplete-show-matches-on-no-input t)
   (setq icomplete-hide-common-prefix nil)
   (setq icomplete-prospects-height 1)
-  (setq icomplete-separator " · ")
+  (setq icomplete-separator " · ")      ; mid dot, not full stop
   (setq icomplete-with-completion-tables t)
   (setq icomplete-in-buffer t)
 
