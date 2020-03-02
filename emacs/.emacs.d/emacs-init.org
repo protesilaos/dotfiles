@@ -686,7 +686,7 @@ Now some comments about my implementation:
   have their own documentation.  No need to reproduce it here.
 
 An *important note* about every =prot/icomplete-*= function that contains a
-=setq= in its body: the way the variables are declared is not robust,
+=setq= in its body: the way the variables are declared /is not robust/,
 because it assumes default values that may not exist.  I am aware that
 it is possible to perform tests inside a =setq= and return their result,
 but this added complexity is not needed for my case: I know the default
@@ -695,13 +695,15 @@ to be changed, then the functions will be updated accordingly.  At any
 rate, some examples of better toggle design can be discovered in the
 =isearch.el= library with =M-x find-library isearch=.
 
-Also check my configurations pertaining to the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].  I am
-still not sure whether we need a scoring mechanism like =prescient= or
-=amx=.  My first few rounds of testing suggest that we do not, but this
-might still be proven otherwise, in which case I will just edit things
-accordingly.
+Also check my configurations pertaining to the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].
+After about one month of full time usage (as of 2020-03-02), I am
+confident in the built-in mechanism's ability to sort things well enough
+and to surface the results I am most likely interested in, based on
+previous selections.  This means that we do not need a third-party
+scoring and filtering library like =prescient= or =amx=.
 
-Now here is the actual code for the minibuffer part:
+Now here is the actual code for the minibuffer part (=icomplete= is
+further below):
 
 #+begin_src emacs-lisp
 (use-package minibuffer
