@@ -142,6 +142,7 @@
 ;;     imenu-list
 ;;     info
 ;;     info-colors
+;;     interaction-log
 ;;     isearch, occur, etc.
 ;;     ivy
 ;;     ivy-posframe
@@ -777,22 +778,22 @@ between foreground and background is >= 7:1)."
    `(diff-hl-insert ((,class (:inherit modus-theme-intense-green))))
    `(diff-hl-reverted-hunk-highlight ((,class (:inherit modus-theme-intense-magenta))))
    ;;;; diff-mode
-   `(diff-added ((,class (:inherit modus-theme-subtle-green))))
-   `(diff-changed ((,class (:inherit modus-theme-subtle-yellow))))
-   `(diff-context ((,class (:background ,bg-dim :foreground ,fg-alt))))
+   `(diff-added ((,class (:inherit modus-theme-refine-green))))
+   `(diff-changed ((,class (:inherit modus-theme-refine-yellow))))
+   `(diff-context ((,class (:foreground ,fg-alt))))
    `(diff-file-header ((,class (:inherit modus-theme-special-cold :weight bold))))
-   `(diff-function ((,class (:inherit modus-theme-special-cold :weight bold))))
-   `(diff-header ((,class (:inherit modus-theme-special-cold :weight bold))))
+   `(diff-function ((,class (:inherit modus-theme-subtle-neutral))))
+   `(diff-header ((,class (:foreground ,fg-special-cold))))
    `(diff-hunk-header ((,class (:inherit modus-theme-special-warm :weight bold))))
-   `(diff-index-header ((,class (:inherit diff-function))))
+   `(diff-index ((,class (:inherit modus-theme-special-cold :weight bold))))
    `(diff-indicator-added ((,class (:inherit diff-added))))
    `(diff-indicator-changed ((,class (:inherit diff-changed))))
    `(diff-indicator-removed ((,class (:inherit diff-removed))))
-   `(diff-nonexistent ((,class (:inherit modus-theme-subtle-neutral))))
+   `(diff-nonexistent ((,class (:inherit modus-theme-intense-neutral :weight bold))))
    `(diff-refine-added ((,class (:inherit modus-theme-intense-green))))
    `(diff-refine-changed ((,class (:inherit modus-theme-intense-yellow))))
    `(diff-refine-removed ((,class (:inherit modus-theme-intense-red))))
-   `(diff-removed ((,class (:inherit modus-theme-subtle-red))))
+   `(diff-removed ((,class (:inherit modus-theme-refine-red))))
    ;;;; dim-autoload
    `(dim-autoload-cookie-line ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
    ;;;; dired
@@ -1401,6 +1402,13 @@ between foreground and background is >= 7:1)."
    `(info-colors-ref-item-type ((,class (:foreground ,magenta-alt))))
    `(info-colors-ref-item-user-option ((,class (:foreground ,cyan))))
    `(info-colors-ref-item-variable ((,class (:foreground ,cyan))))
+   ;;;; interaction-log
+   `(ilog-buffer-face ((,class (:foreground ,magenta-alt-other))))
+   `(ilog-change-face ((,class (:foreground ,magenta-alt))))
+   `(ilog-echo-face ((,class (:foreground ,yellow-alt-other))))
+   `(ilog-load-face ((,class (:foreground ,green))))
+   `(ilog-message-face ((,class (:foreground ,fg-alt))))
+   `(ilog-non-change-face ((,class (:foreground ,blue))))
    ;;;; isearch, occur, and the like
    `(isearch ((,class (:inherit modus-theme-intense-green :weight bold))))
    `(isearch-fail ((,class (:inherit modus-theme-refine-red))))
@@ -1436,7 +1444,7 @@ between foreground and background is >= 7:1)."
    `(ivy-posframe ((,class (:background ,bg-dim :foreground ,fg-main))))
    `(ivy-posframe-border ((,class (:background ,bg-active))))
    `(ivy-posframe-cursor ((,class (:background ,fg-main :foreground ,bg-main))))
-   ;;;; org-jira
+   ;;;; jira (org-jira)
    `(jiralib-comment-face ((,class (:background ,bg-alt))))
    `(jiralib-comment-header-face ((,class (:weight bold))))
    `(jiralib-issue-info-face ((,class (:inherit modus-theme-special-warm))))
