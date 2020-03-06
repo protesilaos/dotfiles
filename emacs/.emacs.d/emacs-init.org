@@ -1964,6 +1964,12 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (slot . 1)
            (window-parameters . ((no-other-window . t))))
           ;; bottom side window
+          ("\\*\\(Output\\|Register Preview\\).*"
+           (display-buffer-in-side-window)
+           (window-width . 0.16)       ; See the :hook
+           (side . bottom)
+           (slot . -1)
+           (window-parameters . ((no-other-window . t))))
           (".*\\*Completions.*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
@@ -4775,6 +4781,141 @@ me.
   (setq-default tab-always-indent t)
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil))
+#+end_src
+
+** Registers
+   :PROPERTIES:
+   :CUSTOM_ID: h:6bdfe4d1-f97a-4d89-ab68-e87448a95fea
+   :END:
+
+Registers are compartments that hold data of various sorts.  They offer
+the means for advanced, highly-efficient workflows, especially when
+combined with keyboard macros.
+
+Registers are called by a single character, which can be a letter
+(case-sensitive), number, or symbol.  Each character can only contain a
+single register at a time.
+
+To define a register, you call the appropriate command (see table below)
+and then specify the character you want to store that data at.
+
+| Key chord | Command                                               |
+|-----------+-------------------------------------------------------|
+| C-x r n   | number-to-register                                    |
+| C-x r s   | copy-to-register (think "save string")                |
+| C-x r r   | copy-rectangle-to-register                            |
+| C-x r SPC | point-to-register                                     |
+| C-x r w   | window-configuration-to-register                      |
+| C-x r f   | frameset-to-register (frames and their windows)       |
+| C-x r +   | increment-register (better used with numbers)         |
+| C-x r i   | insert-register (text, number, rectangle)             |
+| C-x r j   | jump-to-register (to point or window/frameset config) |
+
+Notes about some of the above:
+
++ Using =point-to-register= allows you to revisit a specific location in a
+  buffer, but also reopen the file visited by that buffer in case the
+  buffer is deleted.
++ Calling =number-to-register= without an argument will just store the
+  number =0= to the register you specify.  Whereas =C-u 100 C-x r n= will
+  store =100=.  In practice, you often want to use the latter method.
++ Use =increment-register= to increment a number by one.  Pass a numeric
+  argument to increment by that amount instead.  For example, to
+  increment by five do =C-u 5 C-x r += and then select the register you
+  want to operate on.  This only affects the value stored in the
+  register.  It does not also insert it in the buffer.
++ Number registers are particularly useful when you want to increment
+  several numbers through a keyboard macro.  You can record the motions
+  you need, run =increment-register= as noted above followed by the
+  standard =insert-register=.  If, however, you just want to increment a
+  single number through a keyboard macro, then just use the counter
+  provided by that facility (refer to my video on [[https://protesilaos.com/codelog/2019-10-14-emacs-easier-kmacro-counter/][easier kmacro counter]]
+  from 2019-10-14).
++ The registers that store text as a string or a rectangle rely on the
+  active region to capture the data.  They are also great for keyboard
+  macros where you cannot rely on yanking from the head of the kill ring
+  (because, say, you are killing other things which push that value
+  further down).  Note though that =increment-register= has a different
+  behaviour when applied to them, where it will append to the register
+  instead (with an option to override the previous value).
++ While on the topic of appending to registers, I define several
+  functions that change how the accumulation of text is supposed to
+  happen.  They introduce a space or line separator between the entries
+  you {ap,pre}-pend to the register.
++ In my testing, I could never make =window-configuration-to-register=
+  persist between sessions (see section on [[#h:68d57dd2-4df1-4b7a-8766-231216e6cd9c][Emacs server and desktop]]).
+  Whereas all other registers retain their values.  So use this command
+  to store window configurations that are otherwise transient in nature.
+  For more permanent setups, rely on =frameset-to-register= which will
+  produce a new frame (or more if you had) with all the windows in
+  place.  Remember that you can always go back to your previous window
+  configuration without using registers, such as with the built-in
+  =winner-mode= (see section on [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][window history and directional motions]]).
++ While on the topics of storing registers across sessions, I find that
+  sometimes I will collect too many registers that I do not really need
+  any more.  So =prot/clear-registers= just resets the list.
+
+#+begin_src emacs-lisp
+(use-package register
+  :commands (prot/clear-registers
+             prot/append-register-line-separator
+             prot/append-register-space-separator
+             prot/prepend-register-line-separator
+             prot/prepend-register-space-separator)
+  :config
+  ;;;;;; Use this if you need it
+  ;;;; Define f5 as an alias for C-x r
+  ;; (global-set-key (kbd "<f5>") (lookup-key global-map (kbd "C-x r")))
+
+  (defun prot/clear-registers ()
+    "Remove all saved registers."
+    (interactive)
+    (setq register-alist nil))
+
+  (defun prot/append-register-space-separator (start end)
+    "Append region to register with space in between entries.
+
+A prompt will ask for the register to operate on."
+    (interactive "r")
+    (let* ((prompt (register-read-with-preview
+                    "Append to register with space separator: ")))
+      (setq register-separator ?+)
+      (set-register register-separator " ")
+      (append-to-register prompt start end nil)))
+
+  (defun prot/append-register-line-separator (start end)
+    "Append region to register with an empty in between entries.
+
+A prompt will ask for the register to operate on."
+    (interactive "r")
+    (let* ((prompt (register-read-with-preview
+                    "Append to register with line separator: ")))
+      (setq register-separator ?+)
+      (set-register register-separator "\n\n")
+      (append-to-register prompt start end nil)))
+
+
+  (defun prot/prepend-register-space-separator (start end)
+    "Prepend region to register with space in between entries.
+
+A prompt will ask for the register to operate on."
+    (interactive "r")
+    (let* ((prompt (register-read-with-preview
+                    "Prepend to register with space separator: ")))
+      (setq register-separator ?+)
+      (set-register register-separator " ")
+      (prepend-to-register prompt start end nil)))
+
+  (defun prot/prepend-register-line-separator (start end)
+    "Prepend region to register with an empty in between entries.
+
+A prompt will ask for the register to operate on."
+    (interactive "r")
+    (let* ((prompt (register-read-with-preview
+                    "Prepend to register with line separator: ")))
+      (setq register-separator ?+)
+      (set-register register-separator "\n\n")
+      (prepend-to-register prompt start end nil))))
 #+end_src
 
 ** Custom movements and motions
