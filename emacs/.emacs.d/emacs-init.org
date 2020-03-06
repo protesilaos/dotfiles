@@ -4789,6 +4789,9 @@ are some commands that are not available at all.  For those cases, I
 rely on custom functions.
 
 *** Mark by semantic unit (expand-region)
+    :PROPERTIES:
+    :CUSTOM_ID: h:0cb24401-16df-45ed-80f7-8e993f985c0d
+    :END:
 
 The =expand-region= library offers the means to mark syntactic elements by
 semantic unit: word, symbol, string, balanced expression…  The expansion
