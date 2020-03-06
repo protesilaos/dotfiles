@@ -2780,6 +2780,8 @@ Then we set up the interface for composing emails:
         'message-insert-formatted-citation-line)
   (setq message-kill-buffer-on-exit nil)
   (setq message-wide-reply-confirm-recipients t)
+  (setq message-default-charset 'utf-8)
+  (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
   (defun prot/message-header-add-gcc ()
     "While `gnus' is running, add a Gcc header, if missing.
