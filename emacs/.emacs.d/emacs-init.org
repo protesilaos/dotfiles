@@ -3025,6 +3025,11 @@ Subsequent sections expand on the particulars.
 (use-package nnmail
   :config
   (setq nnmail-expiry-wait 30))
+
+(use-package mml-sec
+  :config
+  (setq mml-secure-openpgp-signers
+        '("A5B8A16D86ADECB21FB8D488BF48FD84FE21D72A")))
 #+end_src
 
 **** Gnus agent
