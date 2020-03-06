@@ -1274,6 +1274,7 @@ effectively supersede the functionality of =anzu=, a package I once used.
 
 #+begin_src emacs-lisp
 (use-package isearch
+  :delight
   :config
   (setq search-highlight t)
   (setq search-whitespace-regexp ".*?")
