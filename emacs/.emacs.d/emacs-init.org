@@ -2784,7 +2784,8 @@ Then we set up the interface for composing emails:
   (setq message-citation-line-format "%f [%Y-%m-%d, %R %z]:\n")
   (setq message-citation-line-function
         'message-insert-formatted-citation-line)
-  (setq message-kill-buffer-on-exit nil)
+  (setq message-confirm-send nil)
+  (setq message-kill-buffer-on-exit t)
   (setq message-wide-reply-confirm-recipients t)
   (setq message-default-charset 'utf-8)
   (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
@@ -2802,8 +2803,10 @@ sent.
 
 Add this function to `message-header-setup-hook'."
     (if (gnus-alive-p)
-      (unless (message-fetch-field "Gcc")
-        (message-add-header "Gcc: nnimap+pub:Sent"))
+        (progn
+          (when (message-fetch-field "Gcc")
+            (message-remove-header "Gcc")
+            (message-add-header "Gcc: nnimap+pub:Sent")))
       (message "Gnus is not running. No GCC field inserted.")))
 
   :hook ((message-header-setup . prot/message-header-add-gcc)
@@ -2978,6 +2981,17 @@ Subsequent sections expand on the particulars.
   a highly unlikely problem.
 + Consider reviewing =nnmail-expiry-wait= only after you have some
   experience with Gnus.  I set it to a fairly high value.
++ As for the configurations of =mm-encode= and =mml-sec=, these are meant to
+  come into effect when encrypting and signing an outgoing message with
+  =C-c C-m C-e= (=mml-secure-message-sign-encrypt=).  The guided key
+  selection will ask for confirmation on who to encrypt to.  It presents
+  a list with the available keys.  Items are marked with =m= and then the
+  mail can be sent with the standard commands (e.g. =C-c C-c=).  I select
+  myself and whomever the other party is.  This is an extra step just to
+  make sure that I have everything right with regard to the keys and the
+  correspondent[s] when using encryption.  If this becomes a task I use
+  regularly, I will need to streamline things.  For the time being, I
+  want the added confirmation.
 
 #+begin_src emacs-lisp
 (use-package gnus
@@ -3032,10 +3046,16 @@ Subsequent sections expand on the particulars.
   :config
   (setq nnmail-expiry-wait 30))
 
+(use-package mm-encode
+  :config
+  (setq mm-encrypt-option 'guided))
+
 (use-package mml-sec
   :config
-  (setq mml-secure-openpgp-signers
-        '("A5B8A16D86ADECB21FB8D488BF48FD84FE21D72A")))
+  (setq mml-secure-openpgp-encrypt-to-self t)
+  (setq mml-secure-openpgp-sign-with-sender t)
+  (setq mml-secure-smime-encrypt-to-self t)
+  (setq mml-secure-smime-sign-with-sender t))
 #+end_src
 
 **** Gnus agent
