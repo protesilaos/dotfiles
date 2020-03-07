@@ -808,10 +808,10 @@ succession."
 And the following is for the completion interface.  Do not forget to
 also check the section on the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].
 
-Note that while running a shell, you can still use =icomplete= by means of
-tab-completion, but to confirm a choice you need to hit =C-m=.  Hitting
-=RET= after succesful tab completions will just give you the final part of
-the candidate.  I have yet to figure out why we cannot lock in the
+Note that while running =M-x shell=, you can still use =icomplete= by means
+of tab-completion, but to confirm a choice you need to hit =C-m=.  Hitting
+=RET= after successful tab completions will just give you the final part
+of the candidate.  I have yet to figure out why we cannot lock in the
 entire sequence and why my =prot/icomplete-force-complete-and-exit= does
 not work as intended.
 
@@ -3227,21 +3227,22 @@ back to a default value.  It is then called with =%&user-date;=.
   (setq gnus-suppress-duplicates t)
   (setq gnus-summary-goto-unread nil)
   (setq gnus-summary-make-false-root 'adopt)
-  (setq gnus-summary-thread-gathering-function 'gnus-gather-threads-by-references)
+  (setq gnus-summary-thread-gathering-function
+        'gnus-gather-threads-by-subject)
   (setq gnus-thread-sort-functions
-        '((not gnus-thread-sort-by-number)
-          (not gnus-thread-sort-by-date)))
+        '((not gnus-thread-sort-by-date)
+          (not gnus-thread-sort-by-number)))
   (setq gnus-subthread-sort-functions
         'gnus-thread-sort-by-date)
   (setq gnus-thread-hide-subtree nil)
-  (setq gnus-thread-ignore-subject t)
+  (setq gnus-thread-ignore-subject nil)
   (setq gnus-user-date-format-alist
         '(((gnus-seconds-today) . "Today at %R")
           ((+ 86400 (gnus-seconds-today)) . "Yesterday, %R")
           (t . "%Y-%m-%d %R")))
   (setq gnus-summary-line-format "%U%R%z %-16,16&user-date;  %4L:%-30,30f  %B%S\n")
   (setq gnus-summary-mode-line-format "%p")
-  (setq gnus-sum-thread-tree-false-root "")
+  (setq gnus-sum-thread-tree-false-root "─┬➤ ")
   (setq gnus-sum-thread-tree-indent " ")
   (setq gnus-sum-thread-tree-leaf-with-other "├─➤ ")
   (setq gnus-sum-thread-tree-root "")
