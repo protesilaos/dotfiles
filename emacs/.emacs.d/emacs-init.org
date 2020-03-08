@@ -4905,7 +4905,7 @@ A prompt will ask for the register to operate on."
       (append-to-register prompt start end nil)))
 
   (defun prot/append-register-line-separator (start end)
-    "Append region to register with an empty in between entries.
+    "Append region to register with an empty line in between entries.
 
 A prompt will ask for the register to operate on."
     (interactive "r")
@@ -4928,7 +4928,7 @@ A prompt will ask for the register to operate on."
       (prepend-to-register prompt start end nil)))
 
   (defun prot/prepend-register-line-separator (start end)
-    "Prepend region to register with an empty in between entries.
+    "Prepend region to register with an empty line in between entries.
 
 A prompt will ask for the register to operate on."
     (interactive "r")
@@ -5319,6 +5319,7 @@ idea).  The original value of =blink-cursor-blinks= is just 10…
 #+begin_src emacs-lisp
 (use-package emacs
   :config
+  ;; (setq-default cursor-type 'box)
   (setq-default cursor-type '(bar . 1))
   (setq-default cursor-in-non-selected-windows nil)
   (setq-default blink-cursor-blinks 50))
