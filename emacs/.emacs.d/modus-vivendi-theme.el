@@ -123,6 +123,7 @@
 ;;     flymake
 ;;     flyspell
 ;;     flyspell-correct
+;;     frog-menu
 ;;     focus
 ;;     font-lock (generic syntax highlighting)
 ;;     fountain (fountain-mode)
@@ -1060,24 +1061,6 @@ between foreground and background is >= 7:1)."
    `(fancy-dabbrev-menu-face ((,class (:background ,bg-alt :foreground ,fg-alt))))
    `(fancy-dabbrev-preview-face ((,class (:foreground ,fg-alt :underline t))))
    `(fancy-dabbrev-selection-face ((,class (:inherit modus-theme-intense-cyan :weight bold))))
-   ;;;; focus
-   `(focus-unfocused ((,class (:foreground ,fg-alt))))
-   ;;;; font-lock
-   `(font-lock-builtin-face ((,class (:foreground ,magenta-alt :weight ,modus-theme-bold))))
-   `(font-lock-comment-delimiter-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
-   `(font-lock-comment-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
-   `(font-lock-constant-face ((,class (:foreground ,blue-alt-other))))
-   `(font-lock-doc-face ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
-   `(font-lock-function-name-face ((,class (:foreground ,magenta))))
-   `(font-lock-keyword-face ((,class (:foreground ,magenta-alt-other :weight ,modus-theme-bold))))
-   `(font-lock-negation-char-face ((,class (:foreground ,yellow :weight ,modus-theme-bold))))
-   `(font-lock-preprocessor-face ((,class (:foreground ,magenta))))
-   `(font-lock-regexp-grouping-backslash ((,class (:foreground ,green :weight bold))))
-   `(font-lock-regexp-grouping-construct ((,class (:foreground ,magenta :weight bold))))
-   `(font-lock-string-face ((,class (:foreground ,blue-alt))))
-   `(font-lock-type-face ((,class (:foreground ,magenta-alt))))
-   `(font-lock-variable-name-face ((,class (:foreground ,cyan))))
-   `(font-lock-warning-face ((,class (:background ,bg-alt :foreground ,yellow-alt-other :weight bold))))
    ;;;; flycheck
    `(flycheck-error ((,class (:foreground ,red :underline t))))
    `(flycheck-error-list-checker-name ((,class (:foreground ,magenta-active))))
@@ -1125,6 +1108,31 @@ between foreground and background is >= 7:1)."
       (,class (:foreground ,red :underline t))))
    ;;;; flyspell-correct
    `(flyspell-correct-highlight-face ((,class (:inherit modus-theme-refine-green))))
+   ;;;; frog-menu
+   `(frog-menu-action-keybinding-face ((,class (:foreground ,blue-alt-other))))
+   `(frog-menu-actions-face ((,class (:foreground ,magenta))))
+   `(frog-menu-border ((,class (:background ,bg-active))))
+   `(frog-menu-candidates-face ((,class (:foreground ,fg-main))))
+   `(frog-menu-posframe-background-face ((,class (:background ,bg-dim))))
+   `(frog-menu-prompt-face ((,class (:foreground ,cyan))))
+   ;;;; focus
+   `(focus-unfocused ((,class (:foreground ,fg-alt))))
+   ;;;; font-lock
+   `(font-lock-builtin-face ((,class (:foreground ,magenta-alt :weight ,modus-theme-bold))))
+   `(font-lock-comment-delimiter-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
+   `(font-lock-comment-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
+   `(font-lock-constant-face ((,class (:foreground ,blue-alt-other))))
+   `(font-lock-doc-face ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
+   `(font-lock-function-name-face ((,class (:foreground ,magenta))))
+   `(font-lock-keyword-face ((,class (:foreground ,magenta-alt-other :weight ,modus-theme-bold))))
+   `(font-lock-negation-char-face ((,class (:foreground ,yellow :weight ,modus-theme-bold))))
+   `(font-lock-preprocessor-face ((,class (:foreground ,magenta))))
+   `(font-lock-regexp-grouping-backslash ((,class (:foreground ,green :weight bold))))
+   `(font-lock-regexp-grouping-construct ((,class (:foreground ,magenta :weight bold))))
+   `(font-lock-string-face ((,class (:foreground ,blue-alt))))
+   `(font-lock-type-face ((,class (:foreground ,magenta-alt))))
+   `(font-lock-variable-name-face ((,class (:foreground ,cyan))))
+   `(font-lock-warning-face ((,class (:background ,bg-alt :foreground ,yellow-alt-other :weight bold))))
    ;;;; fountain-mode
    `(fountain-character ((,class (:foreground ,magenta-alt-other))))
    `(fountain-comment ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
