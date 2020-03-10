@@ -278,43 +278,35 @@ between foreground and background is >= 7:1)."
 ;; default (users must opt in).
 (defcustom modus-vivendi-theme-slanted-constructs nil
   "Use slanted text in more code constructs (italics or oblique)."
-  :type 'boolean
-  :group 'modus-theme)
+  :type 'boolean)
 
 (defcustom modus-vivendi-theme-bold-constructs nil
   "Use bold text in more code constructs."
-  :type 'boolean
-  :group 'modus-theme)
+  :type 'boolean)
 
 (defcustom modus-vivendi-theme-proportional-fonts nil
   "Use proportional fonts (variable-pitch) in headings."
-  :type 'boolean
-  :group 'modus-theme)
+  :type 'boolean)
 
 (defcustom modus-vivendi-theme-scale-headings nil
   "Use font scaling for headings."
-  :type 'boolean
-  :group 'modus-theme)
+  :type 'boolean)
 
 (defcustom modus-vivendi-theme-scale-1 1.05
   "Font size that is slightly larger than the base value."
-  :type 'number
-  :group 'modus-theme)
+  :type 'number)
 
 (defcustom modus-vivendi-theme-scale-2 1.1
   "Font size that is slightly larger than `modus-theme-scale-1'."
-  :type 'number
-  :group 'modus-theme)
+  :type 'number)
 
 (defcustom modus-vivendi-theme-scale-3 1.15
   "Font size that is slightly larger than `modus-theme-scale-2'."
-  :type 'number
-  :group 'modus-theme)
+  :type 'number)
 
 (defcustom modus-vivendi-theme-scale-4 1.2
   "Font size that is slightly larger than `modus-theme-scale-3'."
-  :type 'number
-  :group 'modus-theme)
+  :type 'number)
 
 ;; Define colour palette.  Each colour must have a >= 7:1 contrast
 ;; ratio relative to the foreground/background colour it is rendered
@@ -1132,7 +1124,7 @@ between foreground and background is >= 7:1)."
    `(font-lock-string-face ((,class (:foreground ,blue-alt))))
    `(font-lock-type-face ((,class (:foreground ,magenta-alt))))
    `(font-lock-variable-name-face ((,class (:foreground ,cyan))))
-   `(font-lock-warning-face ((,class (:background ,bg-alt :foreground ,yellow-alt-other :weight bold))))
+   `(font-lock-warning-face ((,class (:foreground ,yellow-active :weight bold))))
    ;;;; fountain-mode
    `(fountain-character ((,class (:foreground ,magenta-alt-other))))
    `(fountain-comment ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
