@@ -125,6 +125,7 @@
 ;;     flyspell-correct
 ;;     frog-menu
 ;;     focus
+;;     fold-this
 ;;     font-lock (generic syntax highlighting)
 ;;     fountain (fountain-mode)
 ;;     geiser
@@ -176,6 +177,7 @@
 ;;     org-recur
 ;;     origami
 ;;     outline-mode
+;;     outline-minor-faces
 ;;     package (M-x list-packages)
 ;;     paren-face
 ;;     pass
@@ -1140,6 +1142,8 @@ between foreground and background is >= 7:1)."
    `(frog-menu-prompt-face ((,class (:foreground ,cyan))))
    ;;;; focus
    `(focus-unfocused ((,class (:foreground ,fg-alt))))
+   ;;;; fold-this
+   `(fold-this-overlay ((,class (:inherit modus-theme-special-mild))))
    ;;;; font-lock
    `(font-lock-builtin-face ((,class (:foreground ,magenta-alt :weight ,modus-theme-bold))))
    `(font-lock-comment-delimiter-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
@@ -1953,13 +1957,16 @@ between foreground and background is >= 7:1)."
                                        ,@(when modus-vivendi-theme-scale-headings
                                           (list :height modus-vivendi-theme-scale-1))))))
    `(outline-5 ((,class (:inherit ,modus-theme-variable-pitch
-                           :foreground ,fg-dim :weight bold))))
+                           :foreground ,fg-special-calm :weight bold))))
    `(outline-6 ((,class (:inherit ,modus-theme-variable-pitch
-                           :foreground ,fg-alt :weight bold))))
+                           :foreground ,yellow-nuanced :weight bold))))
    `(outline-7 ((,class (:inherit ,modus-theme-variable-pitch
-                           :foreground ,cyan-active :weight bold))))
+                           :foreground ,red-nuanced :weight bold))))
    `(outline-8 ((,class (:inherit ,modus-theme-variable-pitch
-                           :foreground ,magenta-active :weight bold))))
+                                  :foreground ,fg-dim :weight bold))))
+   ;;;; outline-minor-faces (applies backgrounds to `outline-minor-mode')
+   `(outline-minor-0 ((,class (,@(and (>= emacs-major-version 27) '(:extend t))
+                               :background ,bg-alt :weight bold))))
    ;;;; package (M-x list-packages)
    `(package-description ((,class (:foreground ,fg-special-cold))))
    `(package-help-section-name ((,class (:foreground ,magenta-alt-other :weight bold))))
