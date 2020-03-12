@@ -5304,25 +5304,25 @@ key binding!
     :CUSTOM_ID: h:cf9086c1-1b33-4127-a716-de94259e14a0
     :END:
 
-My cursor is a thin vertical line that blinks.  A box character is
-generally more accessible, but after several days of testing I find that
-I am perfectly fine with just a bar.
+My cursor for the current window is a box character that blinks.  Other
+windows use a vertical bar that is 2 pixels wide.
 
-The cursor is only displayed on the current window.  Having it also show
-on other windows can be somewhat confusing, especially when not using
-the original box character.
-
-The default blink settings meet my expectations, except the number of
-blinks before switching to a solid cursor state (an otherwise good
-idea).  The original value of =blink-cursor-blinks= is just 10…
+The default blink settings are close to my expectations, though I do
+apply some small tweaks to the interval between blinks and the delay for
+the initial blinking.  Where I differ substantially from the defaults is
+the number of blinks before switching to a non-blinking state.  The
+original value of =blink-cursor-blinks= is just 10 blinks, which can be
+fairly short in a number of scenaria.
 
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  ;; (setq-default cursor-type 'box)
-  (setq-default cursor-type '(bar . 1))
-  (setq-default cursor-in-non-selected-windows nil)
-  (setq-default blink-cursor-blinks 50))
+  (setq-default cursor-type 'box)
+  (setq-default cursor-in-non-selected-windows '(bar . 2))
+  (setq-default blink-cursor-blinks 50)
+  (setq-default blink-cursor-interval 0.75)
+  (setq-default blink-cursor-delay 0.2)
+  :hook (after-init . blink-cursor-mode))
 #+end_src
 
 *** Beacon mode (highlight cursor position)
@@ -5335,17 +5335,17 @@ quickly discovering your current position in the current window.
 
 There is a minor mode with several customisation options, in case you
 want to have this functionality to be readily available.  I generally do
-need it always on, so I just bind a key for calling the command manually
-and only tweak the visuals of the beam effect.
+not need it to always be on, so I just bind a key for calling the
+command manually and only tweak the visuals of the beam effect.
 
 #+begin_src emacs-lisp
 (use-package beacon
   :ensure t
   :delight
   :config
-  (setq beacon-blink-delay 0.15)
-  (setq beacon-blink-duration 0.35)
-  (setq beacon-size 30)
+  (setq beacon-blink-delay 0.2)
+  (setq beacon-blink-duration 0.25)
+  (setq beacon-size 25)
   (beacon-mode -1)
   :bind ("<s-escape>" . beacon-blink))
 #+end_src
