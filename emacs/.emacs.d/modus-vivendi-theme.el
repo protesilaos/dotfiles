@@ -67,10 +67,12 @@
 ;;     auto-dim-other-buffers
 ;;     avy
 ;;     breakpoint (provided by built-in gdb-mi.el)
+;;     bm
 ;;     buffer-expose
 ;;     calendar and diary
 ;;     calfw
 ;;     change-log and log-view (`vc-print-log' and `vc-print-root-log')
+;;     cider
 ;;     column-enforce-mode
 ;;     company-mode
 ;;     company-posframe
@@ -136,6 +138,7 @@
 ;;     gnus
 ;;     helm
 ;;     helm-ls-git
+;;     helm-switch-shell
 ;;     helm-xref
 ;;     highlight-blocks
 ;;     highlight-defined
@@ -156,12 +159,14 @@
 ;;     jira (org-jira)
 ;;     js2-mode
 ;;     jupyter
+;;     kaocha-runner
 ;;     keycast
 ;;     line numbers (`display-line-numbers-mode' and global variant)
 ;;     lsp-mode
 ;;     lsp-ui
 ;;     magit
 ;;     markdown-mode
+;;     markup-faces (`adoc-mode')
 ;;     mentor
 ;;     messages
 ;;     modeline
@@ -193,6 +198,7 @@
 ;;     regexp-builder (also known as `re-builder')
 ;;     rmail
 ;;     ruler-mode
+;;     sesman
 ;;     shell-script-mode
 ;;     show-paren-mode
 ;;     smart-mode-line
@@ -203,6 +209,7 @@
 ;;     swiper
 ;;     sx
 ;;     symbol-overlay
+;;     syslog-mode
 ;;     telephone-line
 ;;     term
 ;;     transient (pop-up windows like Magit's)
@@ -617,6 +624,13 @@ between foreground and background is >= 7:1)."
    `(aw-leading-char-face ((,class (:height 1.5 :background ,bg-main :foreground ,red-intense :weight bold))))
    `(aw-minibuffer-leading-char-face ((,class (:foreground ,magenta-active))))
    `(aw-mode-line-face ((,class (:weight bold))))
+   ;;;; bm
+   `(bm-face ((,class (:inherit modus-theme-subtle-yellow
+                                ,@(and (>= emacs-major-version 27) '(:extend t))))))
+   `(bm-fringe-face ((,class (:inherit modus-theme-subtle-yellow))))
+   `(bm-fringe-persistent-face ((,class (:inherit modus-theme-intense-blue))))
+   `(bm-persistent-face ((,class (:inherit modus-theme-intense-blue
+                                           ,@(and (>= emacs-major-version 27) '(:extend t))))))
    ;;;; buttons, links, widgets
    `(button ((,class (:foreground ,blue-alt-other :underline t))))
    `(link ((,class (:foreground ,blue-alt-other :underline t))))
@@ -679,6 +693,41 @@ between foreground and background is >= 7:1)."
    `(log-edit-unknown-header ((,class (:foreground ,fg-alt))))
    `(log-view-file ((,class (:foreground ,fg-special-cold :weight bold))))
    `(log-view-message ((,class (:foreground ,fg-special-warm))))
+   ;;;; cider
+   `(cider-debug-code-overlay-face ((,class (:background ,bg-alt))))
+   `(cider-debug-prompt-face ((,class (:foreground ,magenta-alt :underline t))))
+   `(cider-deprecated-face ((,class (:inherit modus-theme-refine-yellow))))
+   `(cider-docview-emphasis-face ((,class (:foreground ,fg-special-cold :slant italic))))
+   `(cider-docview-literal-face ((,class (:foreground ,blue-alt))))
+   `(cider-docview-strong-face ((,class (:foreground ,fg-special-cold :weight bold))))
+   `(cider-docview-table-border-face ((,class (:foreground ,fg-alt))))
+   `(cider-enlightened-face ((,class (:box (:line-width -1 :color ,yellow-alt :style nil) :background ,bg-dim))))
+   `(cider-enlightened-local-face ((,class (:foreground ,yellow-alt-other :weight bold))))
+   `(cider-error-highlight-face ((,class (:foreground ,red :underline t))))
+   `(cider-fragile-button-face ((,class (:box (:line-width 3 :color ,fg-alt :style released-button)) :foreground ,yellow)))
+   `(cider-fringe-good-face ((,class (:foreground ,green-intense))))
+   `(cider-instrumented-face ((,class (:box (:line-width -1 :color ,red :style nil) :background ,bg-dim))))
+   `(cider-reader-conditional-face ((,class (:foreground ,fg-special-warm :slant italic))))
+   `(cider-repl-input-face ((,class (:weight bold))))
+   `(cider-repl-prompt-face ((,class (:foreground ,cyan-alt-other))))
+   `(cider-repl-stderr-face ((,class (:foreground ,red :weight bold))))
+   `(cider-repl-stdout-face ((,class (:foreground ,blue))))
+   `(cider-result-overlay-face ((,class (:box (:line-width -1 :color ,blue :style nil) :background ,bg-dim))))
+   `(cider-stacktrace-error-class-face ((,class (:foreground ,red :weight bold))))
+   `(cider-stacktrace-error-message-face ((,class (:foreground ,red-alt-other :slant italic))))
+   `(cider-stacktrace-face ((,class (:foreground ,fg-main))))
+   `(cider-stacktrace-filter-active-face ((,class (:foreground ,cyan-alt :underline t))))
+   `(cider-stacktrace-filter-inactive-face ((,class (:foreground ,cyan-alt))))
+   `(cider-stacktrace-fn-face ((,class (:foreground ,fg-main :weight bold))))
+   `(cider-stacktrace-ns-face ((,class (:foreground ,fg-alt :slant italic))))
+   `(cider-stacktrace-promoted-button-face ((,class (box (:line-width 3 :color ,fg-alt :style released-button)) :foreground ,red)))
+   `(cider-stacktrace-suppressed-button-face ((,class (:box (:line-width 3 :color ,fg-alt :style pressed-button))
+                                                      :background ,bg-alt :foreground ,fg-alt)))
+   `(cider-test-error-face ((,class (:inherit modus-theme-subtle-red))))
+   `(cider-test-failure-face ((,class (:inherit modus-theme-intense-red :weight bold))))
+   `(cider-test-success-face ((,class (:inherit modus-theme-intense-green))))
+   `(cider-traced-face ((,class (:box (:line-width -1 :color ,cyan :style nil) :background ,bg-dim))))
+   `(cider-warning-highlight-face ((,class (:foreground ,yellow :underline t))))
    ;;;; column-enforce-mode
    `(column-enforce-face ((,class (:inherit modus-theme-refine-yellow))))
    ;;;; company-mode
@@ -1380,11 +1429,13 @@ between foreground and background is >= 7:1)."
    `(helm-ls-git-modified-not-staged-face ((,class (:foreground ,yellow))))
    `(helm-ls-git-renamed-modified-face ((,class (:foreground ,magenta))))
    `(helm-ls-git-untracked-face ((,class (:foreground ,fg-special-cold))))
+   ;;;; helm-switch-shell
+   `(helm-switch-shell-new-shell-face ((,class (:inherit modus-theme-refine-magenta :weight bold))))
    ;;;; helm-xref
    `(helm-xref-file-name ((,class (:foreground ,fg-special-cold :weight bold))))
    `(helm-xref-file-name ((,class (:foreground ,fg-special-warm))))
    ;;;; highlight region or ad-hoc regexp
-   `(hi-black-b ((,class ((:background ,fg-main :foreground ,bg-main)))))
+   `(hi-black-b ((,class (:background ,fg-main :foreground ,bg-main))))
    `(hi-blue ((,class (:background ,bg-alt :foreground ,blue :underline t))))
    `(hi-blue-b ((,class (:inherit modus-theme-intense-blue))))
    `(hi-green ((,class (:background ,bg-alt :foreground ,green :underline t))))
@@ -1453,7 +1504,7 @@ between foreground and background is >= 7:1)."
    `(info-header-xref ((,class (:foreground ,blue-active))))
    `(info-index-match ((,class (:inherit match))))
    `(info-menu-star ((,class (:foreground ,fg-main))))
-   `(info-node ((,class ((:weight bold)))))
+   `(info-node ((,class (:weight bold))))
    ;;;; info-colors
    `(info-colors-lisp-code-block ((,class (:inherit fixed-pitch))))
    `(info-colors-ref-item-command ((,class (:foreground ,magenta))))
@@ -1538,6 +1589,10 @@ between foreground and background is >= 7:1)."
    `(jupyter-repl-input-prompt ((,class (:foreground ,cyan-alt-other))))
    `(jupyter-repl-output-prompt ((,class (:foreground ,magenta-alt-other))))
    `(jupyter-repl-traceback ((,class (:inherit modus-theme-intense-red))))
+   ;;;; kaocha-runner
+   `(kaocha-runner-error-face ((,class (:foreground ,red))))
+   `(kaocha-runner-success-face ((,class (:foreground ,green))))
+   `(kaocha-runner-warning-face ((,class (:foreground ,yellow))))
    ;;;; keycast
    `(keycast-command ((,class (:foreground ,blue-active :weight bold))))
    `(keycast-key ((,class (:inherit modus-theme-active-blue))))
@@ -1703,6 +1758,43 @@ between foreground and background is >= 7:1)."
    `(markdown-strike-through-face ((,class (:strike-through t))))
    `(markdown-table-face ((,class (:foreground ,fg-special-cold))))
    `(markdown-url-face ((,class (:foreground ,blue))))
+   ;;;; markup-faces (`adoc-mode')
+   `(markup-anchor-face ((,class (:foreground ,fg-inactive))))
+   `(markup-attribute-face ((,class (:foreground ,fg-inactive :slant italic))))
+   `(markup-big-face ((,class (:height 1.3 :foreground ,blue-nuanced))))
+   `(markup-bold-face ((,class (:foreground ,red-nuanced :weight bold))))
+   `(markup-code-face ((,class (:inherit fixed-pitch :foreground ,magenta))))
+   `(markup-command-face ((,class (:foreground ,fg-inactive))))
+   `(markup-comment-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
+   `(markup-complex-replacement-face ((,class (:box (:line-width 2 :color nil :style released-button)
+                                                    :inherit modus-theme-refine-magenta))))
+   `(markup-emphasis-face ((,class (:foreground ,fg-special-cold :slant italic))))
+   `(markup-error-face ((,class (:foreground ,red :weight bold))))
+   `(markup-gen-face ((,class (:foreground ,magenta-alt))))
+   `(markup-internal-reference-face ((,class (:foreground ,fg-inactive :underline t))))
+   `(markup-italic-face ((,class (:foreground ,fg-special-cold :slant italic))))
+   `(markup-list-face ((,class (:inherit modus-theme-special-calm))))
+   `(markup-meta-face ((,class (:foreground ,fg-inactive))))
+   `(markup-meta-hide-face ((,class (:foreground ,fg-alt))))
+   `(markup-passthrough-face ((,class (:inherit fixed-pitch :foreground ,cyan))))
+   `(markup-preprocessor-face ((,class (:foreground ,magenta))))
+   `(markup-replacement-face ((,class (:foreground ,yellow-alt-other))))
+   `(markup-secondary-text-face ((,class (:height 0.8 :foreground ,magenta-nuanced))))
+   `(markup-small-face ((,class (:height 0.8 :foreground ,fg-main))))
+   `(markup-strong-face ((,class (:foreground ,red-nuanced :weight bold))))
+   `(markup-subscript-face ((,class (:height 0.8 :foreground ,fg-special-cold))))
+   `(markup-superscript-face ((,class (:height 0.8 :foreground ,fg-special-cold))))
+   `(markup-table-cell-face ((,class (:inherit modus-theme-special-cold))))
+   `(markup-table-face ((,class (:inherit modus-theme-subtle-cyan))))
+   `(markup-table-row-face ((,class (:inherit modus-theme-subtle-cyan))))
+   `(markup-title-0-face ((,class (:height 3.0 :foreground ,blue-nuanced))))
+   `(markup-title-1-face ((,class (:height 2.4 :foreground ,blue-nuanced))))
+   `(markup-title-2-face ((,class (:height 1.8 :foreground ,blue-nuanced))))
+   `(markup-title-3-face ((,class (:height 1.4 :foreground ,blue-nuanced))))
+   `(markup-title-4-face ((,class (:height 1.2 :foreground ,blue-nuanced))))
+   `(markup-title-5-face ((,class (:height 1.2 :foreground ,blue-nuanced :underline t))))
+   `(markup-value-face ((,class (:foreground ,fg-inactive))))
+   `(markup-verbatim-face ((,class (:inherit modus-theme-special-mild))))
    ;;;; mentor
    `(mentor-download-message ((,class (:foreground ,fg-special-warm))))
    `(mentor-download-name ((,class (:foreground ,fg-special-cold))))
@@ -2080,7 +2172,13 @@ between foreground and background is >= 7:1)."
    `(ruler-mode-margins ((,class (:inherit ruler-mode-default :foreground ,bg-main))))
    `(ruler-mode-pad ((,class (:background ,bg-active :foreground ,fg-inactive))))
    `(ruler-mode-tab-stop ((,class (:inherit ruler-mode-default :foreground ,yellow-active))))
-   ;;;; shell scripts
+   ;;;; sesman
+   `(sesman-browser-button-face ((,class (:foreground ,blue-alt-other :underline t))))
+   `(sesman-browser-highligh-face ((,class (:inherit modus-theme-subtle-blue))))
+   `(sesman-buffer-face ((,class (:foreground ,magenta))))
+   `(sesman-directory-face ((,class (:foreground ,blue :weight bold))))
+   `(sesman-project-face ((,class (:foreground ,magenta-alt-other :weight bold))))
+   ;;;; shell-script-mode
    `(sh-heredoc ((,class (:foreground ,blue-alt))))
    `(sh-quoted-exec ((,class (:foreground ,magenta-alt :weight ,modus-theme-bold))))
    ;;;; show-paren-mode
@@ -2190,6 +2288,16 @@ between foreground and background is >= 7:1)."
    `(symbol-overlay-face-6 ((,class (:inherit modus-theme-refine-red))))
    `(symbol-overlay-face-7 ((,class (:inherit modus-theme-intense-cyan))))
    `(symbol-overlay-face-8 ((,class (:inherit modus-theme-refine-cyan))))
+   ;;;; syslog-mode
+   `(syslog-debug ((,class (:foreground ,cyan-alt-other :weight bold))))
+   `(syslog-error ((,class (:foreground ,red :weight bold))))
+   `(syslog-file ((,class (:foreground ,fg-special-cold :weight bold))))
+   `(syslog-hide ((,class (:background ,bg-main :foreground ,fg-main))))
+   `(syslog-hour ((,class (:foreground ,magenta-alt-other :weight bold))))
+   `(syslog-info ((,class (:foreground ,blue-alt-other :weight bold))))
+   `(syslog-ip ((,class (:foreground ,fg-special-mild :weight bold :underline t))))
+   `(syslog-su ((,class (:foreground ,red-alt :weight bold))))
+   `(syslog-warn ((,class (:foreground ,yellow :weight bold))))
    ;;;; telephone-line
    `(telephone-line-accent-active ((,class (:background ,fg-inactive :foreground ,bg-inactive))))
    `(telephone-line-accent-inactive ((,class (:background ,bg-active :foreground ,fg-active))))
