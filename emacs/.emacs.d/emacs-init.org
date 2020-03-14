@@ -4007,15 +4007,19 @@ their development process, I am not using the MELPA packages directly.
           modus-vivendi-theme-scale-4 1.2)
     (load-theme 'modus-vivendi t))
 
+  (defcustom prot/modus-themes-toggle-hook nil
+    "Hook that runs after `prot/modus-themes-toggle' is invoked."
+    :type 'hook)
+
   (defun prot/modus-themes-toggle ()
-    "Simplistic toggle for my Modus Themes.  All it does is check
-if `modus-operandi' (light version) is active and if so switch to
-`modus-vivendi' (dark version).  Else it switches to the light
-theme."
+    "Toggle between `modus-operandi' and `modus-vivendi' themes.
+
+Also run `prot/modus-themes-toggle-hook'."
     (interactive)
     (if (eq (car custom-enabled-themes) 'modus-operandi)
         (prot/modus-vivendi)
-      (prot/modus-operandi)))
+      (prot/modus-operandi))
+    (run-hooks 'prot/modus-themes-toggle-hook))
 
   (defun prot/describe-face (pos)
     "Print message with name of face[s] at point.
