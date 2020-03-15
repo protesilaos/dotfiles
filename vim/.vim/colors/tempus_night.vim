@@ -95,6 +95,7 @@ hi CursorLine gui=none guibg=NONE term=none cterm=none ctermbg=none
 hi CursorColumn gui=none guibg=#18143d term=none cterm=none ctermbg=8
 hi CursorLineNr gui=bold guibg=#c4bdaf guifg=#1a1a1a cterm=bold ctermbg=7 ctermfg=0
 hi ColorColumn guibg=#18143d guifg=#e0e0e0 term=none ctermbg=8 ctermfg=15
+hi SignColumn guibg=#18143d guifg=#c4bdaf term=none ctermbg=8 ctermfg=7
 
 hi Folded guibg=#18143d guifg=#c4bdaf ctermbg=8 ctermfg=7
 hi FoldColumn guibg=#18143d guifg=#c4bdaf ctermbg=8 ctermfg=7
@@ -138,6 +139,30 @@ hi diffAdded guifg=#52ba40 ctermfg=2
 hi diffRemoved guifg=#fb7e8e ctermfg=1
 hi diffNewFile gui=none guifg=#5aaaf2 ctermfg=4
 hi diffFile gui=none guifg=#b0a800 cterm=none ctermfg=3
+
+hi GitGutterAdd guibg=#18143d guifg=#52ba40 ctermbg=8 ctermfg=2
+hi GitGutterChange gui=bold guibg=#18143d guifg=#c4bdaf cterm=bold ctermbg=8 ctermfg=7
+hi GitGutterDelete guibg=#18143d guifg=#fb7e8e ctermbg=8 ctermfg=1
+hi GitGutterChangeDelete gui=bold guibg=#18143d guifg=#fb7e8e cterm=bold ctermbg=8 ctermfg=1
+
+" Neomake
+" -------
+hi NeomakeError gui=none guibg=#fb7e8e guifg=#1a1a1a cterm=none ctermbg=1 ctermfg=0
+hi NeomakeInfo gui=none guibg=#1db5c3 guifg=#1a1a1a cterm=none ctermbg=6 ctermfg=0
+hi NeomakeWarning gui=none guibg=#b0a800 guifg=#1a1a1a cterm=none ctermbg=3 ctermfg=0
+hi NeomakeMessage gui=none guibg=#d7ae00 guifg=#1a1a1a cterm=none ctermbg=11 ctermfg=0
+
+hi NeomakeVirtualtextInfoDefault guifg=#00ca9a ctermfg=14
+hi NeomakeVirtualtextMessageDefault guifg=#d7ae00 ctermfg=11
+hi NeomakeVirtualtextWarningDefault guifg=#b0a800 ctermfg=3
+hi NeomakeVirtualtextErrorDefault guifg=#fb7e8e ctermfg=1
+
+hi NeomakeStatusGood gui=none guibg=#52ba40 guifg=#1a1a1a cterm=none ctermbg=2 ctermfg=0
+hi NeomakeStatusGoodNC gui=none guibg=#18143d guifg=#52ba40 cterm=none ctermbg=8 ctermfg=2
+
+hi NeomakeStatColorDefault gui=none guibg=#5aaaf2 guifg=#1a1a1a cterm=none ctermbg=4 ctermfg=0
+hi NeomakeStatColorTypeE gui=none guibg=#fb7e8e guifg=#1a1a1a cterm=none ctermbg=1 ctermfg=0
+hi NeomakeStatColorTypeW gui=none guibg=#b0a800 guifg=#1a1a1a cterm=none ctermbg=3 ctermfg=0
 
 " Markdown
 " --------
