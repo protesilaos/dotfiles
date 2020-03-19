@@ -64,6 +64,7 @@
 ;;     apropos
 ;;     apt-sources-list
 ;;     artbollocks-mode
+;;     auctex and TeX
 ;;     auto-dim-other-buffers
 ;;     avy
 ;;     breakpoint (provided by built-in gdb-mi.el)
@@ -71,6 +72,7 @@
 ;;     buffer-expose
 ;;     calendar and diary
 ;;     calfw
+;;     centaur-tabs
 ;;     change-log and log-view (`vc-print-log' and `vc-print-root-log')
 ;;     cider
 ;;     column-enforce-mode
@@ -143,6 +145,7 @@
 ;;     highlight-blocks
 ;;     highlight-defined
 ;;     highlight-numbers
+;;     highlight-thing
 ;;     hl-fill-column
 ;;     hl-line-mode
 ;;     hl-todo
@@ -180,6 +183,8 @@
 ;;     org-noter
 ;;     org-pomodoro
 ;;     org-recur
+;;     org-roam
+;;     org-superstar
 ;;     origami
 ;;     outline-mode
 ;;     outline-minor-faces
@@ -418,28 +423,37 @@ between foreground and background is >= 7:1)."
       ;; can be combined with any of the "active" values, plus the
       ;; "special" and base foreground colours
       ;;
-      ;; `bg-region' must be combined with `fg-main'
+      ;; `bg-region' and `bg-tab-active' must be combined with
+      ;; `fg-main', while `bg-tab-inactive' should be combined with
+      ;; `fg-dim'
+      ;;
+      ;; `fg-tab-active' is meant to be combined with `bg-tab-active',
+      ;; though only for styling special elements, such as underlining
+      ;; the current tab
       ;;
       ;; the window divider colours apply to faces with just an fg value
       ;;
       ;; all other pairs are combinable with themselves
       (bg-hl-line "#151823")
       (bg-region "#3c3c3c")
+      (bg-tab-active "#484848")
+      (bg-tab-inactive "#2f2f2f")
+      (fg-tab-active "#99efff")
       (fg-window-divider-inner "#646464")
       (fg-window-divider-outer "#969696")
       (fg-header "#dddddd") (bg-header "#2a2a2a")
       (fg-whitespace "#a4959f") (bg-whitespace "#170016")
       (fg-paren-match "#fcfcfc") (bg-paren-match "#754a5d")
       (fg-diff-heading "#dadffe") (bg-diff-heading "#304466")
-      (fg-diff-added "#94ba94") (bg-diff-added "#002600")
+      (fg-diff-added "#94ba94") (bg-diff-added "#0a280a")
       (fg-diff-changed "#b0ba9f") (bg-diff-changed "#2a2000")
-      (fg-diff-removed "#bbadaa") (bg-diff-removed "#390a0a")
-      (fg-diff-refine-added "#e0ffe0") (bg-diff-refine-added "#005a00")
+      (fg-diff-removed "#c6adaa") (bg-diff-removed "#40160f")
+      (fg-diff-refine-added "#e0f6e0") (bg-diff-refine-added "#005a36")
       (fg-diff-refine-changed "#ffffcc") (bg-diff-refine-changed "#585800")
-      (fg-diff-refine-removed "#ffc8bb") (bg-diff-refine-removed "#7d0000")
-      (fg-diff-focus-added "#b4ddb4") (bg-diff-focus-added "#244024")
+      (fg-diff-refine-removed "#ffd9eb") (bg-diff-refine-removed "#852828")
+      (fg-diff-focus-added "#b4ddb4") (bg-diff-focus-added "#203d20")
       (fg-diff-focus-changed "#d0daaf") (bg-diff-focus-changed "#4a3a10")
-      (fg-diff-focus-removed "#eebdba") (bg-diff-focus-removed "#542222")
+      (fg-diff-focus-removed "#eebdba") (bg-diff-focus-removed "#5e2526")
 
       ;; conditional styles that evaluate user-facing customisation
       ;; options
@@ -515,7 +529,8 @@ between foreground and background is >= 7:1)."
    ;;;;;;;;;;;;;;;;;;;
    ;;; default constructs
    ;;;; absolute essentials
-   `(default ((,class (:background ,bg-main :foreground ,fg-main))))
+   `(default ((,class (:background ,(when (display-graphic-p) bg-main)
+                                   :foreground ,fg-main))))
    `(cursor ((,class (:background ,fg-main))))
    `(fringe ((,class (:background ,bg-main :foreground ,fg-main))))
    ;;;; basic and/or ungrouped styles
@@ -610,6 +625,50 @@ between foreground and background is >= 7:1)."
    `(artbollocks-lexical-illusions-face ((,class (:inherit modus-theme-refine-magenta :underline t))))
    `(artbollocks-passive-voice-face ((,class (:background ,bg-alt :foreground ,cyan-alt-other :underline t))))
    `(artbollocks-weasel-words-face ((,class (:background ,bg-alt :foreground ,yellow-alt-other :underline t))))
+   ;;;; auctex and TeX
+   `(font-latex-bold-face ((,class (:foreground ,fg-special-calm :weight bold))))
+   `(font-latex-doctex-documentation-face ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
+   `(font-latex-doctex-preprocessor-face ((,class (:foreground ,magenta-alt :weight ,modus-theme-bold))))
+   `(font-latex-italic-face ((,class (:foreground ,fg-special-calm :slant italic))))
+   `(font-latex-math-face ((,class (:foreground ,cyan-alt-other))))
+   `(font-latex-script-char-face ((,class (:foreground ,cyan-alt-other))))
+   `(font-latex-sectioning-0-face ((,class (:inherit ,modus-theme-variable-pitch
+                                                     :foreground ,blue-nuanced :weight bold
+                                                     ,@(when modus-vivendi-theme-scale-headings
+                                                         (list :height modus-vivendi-theme-scale-4))))))
+   `(font-latex-sectioning-1-face ((,class (:inherit ,modus-theme-variable-pitch
+                                                     :foreground ,blue-nuanced :weight bold
+                                                     ,@(when modus-vivendi-theme-scale-headings
+                                                         (list :height modus-vivendi-theme-scale-3))))))
+   `(font-latex-sectioning-2-face ((,class (:inherit ,modus-theme-variable-pitch
+                                                     :foreground ,blue-nuanced :weight bold
+                                                     ,@(when modus-vivendi-theme-scale-headings
+                                                         (list :height modus-vivendi-theme-scale-2))))))
+   `(font-latex-sectioning-3-face ((,class (:inherit ,modus-theme-variable-pitch
+                                                     :foreground ,blue-nuanced :weight bold
+                                                     ,@(when modus-vivendi-theme-scale-headings
+                                                         (list :height modus-vivendi-theme-scale-1))))))
+   `(font-latex-sectioning-4-face ((,class (:inherit ,modus-theme-variable-pitch
+                                                     :foreground ,blue-nuanced :weight bold))))
+   `(font-latex-sectioning-5-face ((,class (:inherit ,modus-theme-variable-pitch
+                                                     :foreground ,blue-nuanced))))
+   `(font-latex-sedate-face ((,class (:foreground ,magenta-alt-other :weight ,modus-theme-bold))))
+   `(font-latex-slide-title-face ((,class (:inherit ,modus-theme-variable-pitch
+                                                     :foreground ,cyan-nuanced :weight bold
+                                                     ,@(when modus-vivendi-theme-scale-headings
+                                                         (list :height modus-vivendi-theme-scale-4))))))
+   `(font-latex-string-face ((,class (:foreground ,blue-alt))))
+   `(font-latex-subscript-face ((,class (:height 0.95))))
+   `(font-latex-superscript-face ((,class (:height 0.95))))
+   `(font-latex-verbatim-face ((,class (:background ,bg-dim :foreground ,fg-special-mild))))
+   `(font-latex-warning-face ((,class (:foreground ,yellow-alt-other))))
+   `(tex-match ((,class (:foreground ,blue-alt-other))))
+   `(tex-verbatim ((,class (:background ,bg-dim :foreground ,fg-special-mild))))
+   `(texinfo-heading ((,class (:foreground ,magenta))))
+   `(TeX-error-description-error ((,class (:foreground ,red :weight bold))))
+   `(TeX-error-description-help ((,class (:foreground ,blue))))
+   `(TeX-error-description-tex-said ((,class (:foreground ,blue))))
+   `(TeX-error-description-warning ((,class (:foreground ,yellow :weight bold))))
    ;;;; auto-dim-other-buffers
    `(auto-dim-other-buffers-face ((,class (:background ,bg-alt))))
    ;;;; avy
@@ -681,6 +740,18 @@ between foreground and background is >= 7:1)."
    `(cfw:face-toolbar ((,class (:background ,bg-active :foreground ,bg-active))))
    `(cfw:face-toolbar-button-off ((,class (:background ,bg-alt :foreground ,cyan))))
    `(cfw:face-toolbar-button-on ((,class (:background ,bg-main :foreground ,blue-intense :weight bold))))
+   ;;;; centaur-tabs
+   `(centaur-tabs-active-bar-face ((,class (:background ,fg-tab-active))))
+   `(centaur-tabs-close-mouse-face ((,class (:underline t))))
+   `(centaur-tabs-close-selected ((,class (:inherit centaur-tabs-selected))))
+   `(centaur-tabs-close-unselected ((,class (:inherit centaur-tabs-unselected))))
+   `(centaur-tabs-modified-marker-selected ((,class (:inherit centaur-tabs-selected))))
+   `(centaur-tabs-modified-marker-unselected ((,class (:inherit centaur-tabs-unselected))))
+   `(centaur-tabs-default ((,class (:background ,bg-main :foreground ,bg-main))))
+   `(centaur-tabs-selected ((,class (:background ,bg-tab-active :foreground ,fg-main))))
+   `(centaur-tabs-selected-modified ((,class (:background ,bg-tab-active :foreground ,fg-main :slant italic))))
+   `(centaur-tabs-unselected ((,class (:background ,bg-tab-inactive :foreground ,fg-dim))))
+   `(centaur-tabs-unselected-modified ((,class (:background ,bg-tab-inactive :foreground ,fg-dim :slant italic))))
    ;;;; change-log and log-view (`vc-print-log' and `vc-print-root-log')
    `(change-log-acknowledgment ((,class (:foreground ,yellow-nuanced))))
    `(change-log-conditionals ((,class (:foreground ,magenta-alt))))
@@ -1469,6 +1540,8 @@ between foreground and background is >= 7:1)."
    `(highlight-defined-variable-name-face ((,class (:foreground ,cyan))))
    ;;;; highlight-numbers
    `(highlight-numbers-number ((,class (:foreground ,blue-alt-other))))
+   ;;;; highlight-thing
+   `(highlight-thing ((,class (:background ,bg-alt :foreground ,cyan))))
    ;;;; hl-fill-column
    `(hl-fill-column-face ((,class (:background ,bg-active :foreground ,fg-active))))
    ;;;; hl-todo
@@ -2029,6 +2102,12 @@ between foreground and background is >= 7:1)."
    `(org-pomodoro-mode-line-overtime ((,class (:foreground ,red-active :weight bold))))
    ;;;; org-recur
    `(org-recur ((,class (:foreground ,magenta-active))))
+   ;;;; org-roam
+   `(org-roam-link ((,class (:foreground ,blue-alt-other :underline t))))
+   `(org-roam-backlink ((,class (:foreground ,green-alt-other :underline t))))
+   ;;;; org-superstar
+   `(org-superstar-item ((,class (:foreground ,fg-main))))
+   `(org-superstar-leading ((,class (:foreground ,fg-whitespace))))
    ;;;; origami
    `(origami-fold-header-face ((,class (:background ,bg-dim :foreground ,fg-dim :box t))))
    `(origami-fold-replacement-face ((,class (:background ,bg-alt :foreground ,fg-alt))))
