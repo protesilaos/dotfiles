@@ -3996,7 +3996,7 @@ their development process, I am not using the MELPA packages directly.
   (defun prot/modus-operandi ()
     "Enable some `modus-operandi' variables and load the theme."
     (setq modus-operandi-theme-slanted-constructs t
-          modus-operandi-theme-bold-constructs t
+          modus-operandi-theme-bold-constructs nil
           modus-operandi-theme-proportional-fonts nil
           modus-operandi-theme-scale-headings t
           modus-operandi-theme-scale-1 1.05
@@ -4008,7 +4008,7 @@ their development process, I am not using the MELPA packages directly.
   (defun prot/modus-vivendi ()
     "Enable some `modus-vivendi' variables and load the theme."
     (setq modus-vivendi-theme-slanted-constructs t
-          modus-vivendi-theme-bold-constructs t
+          modus-vivendi-theme-bold-constructs nil
           modus-vivendi-theme-proportional-fonts nil
           modus-vivendi-theme-scale-headings t
           modus-vivendi-theme-scale-1 1.05
