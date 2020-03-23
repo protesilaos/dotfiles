@@ -43,6 +43,7 @@
 ;;     modus-vivendi-theme-bold-constructs
 ;;     modus-vivendi-theme-proportional-fonts
 ;;     modus-vivendi-theme-scale-headings
+;;     modus-vivendi-theme-visible-fringes
 ;;
 ;; The default scale is as follows (it can be customised as well):
 ;;
@@ -289,6 +290,12 @@ between foreground and background is >= 7:1)."
 (defface modus-theme-active-blue nil t)
 (defface modus-theme-active-magenta nil t)
 (defface modus-theme-active-cyan nil t)
+(defface modus-theme-fringe-red nil t)
+(defface modus-theme-fringe-green nil t)
+(defface modus-theme-fringe-yellow nil t)
+(defface modus-theme-fringe-blue nil t)
+(defface modus-theme-fringe-magenta nil t)
+(defface modus-theme-fringe-cyan nil t)
 (defface modus-theme-special-cold nil t)
 (defface modus-theme-special-mild nil t)
 (defface modus-theme-special-warm nil t)
@@ -337,6 +344,10 @@ between foreground and background is >= 7:1)."
 (defcustom modus-vivendi-theme-scale-4 1.2
   "Font size that is slightly larger than `modus-theme-scale-3'."
   :type 'number)
+
+(defcustom modus-vivendi-theme-visible-fringes nil
+  "Use a visible style for fringes."
+  :type 'boolean)
 
 ;; Define colour palette.  Each colour must have a >= 7:1 contrast
 ;; ratio relative to the foreground/background colour it is rendered
@@ -418,6 +429,13 @@ between foreground and background is >= 7:1)."
       (red-active "#ffaa20") (green-active "#70e030")
       (yellow-active "#efdf00") (blue-active "#00ccff")
       (magenta-active "#d0acff") (cyan-active "#00ddc0")
+      ;; styles that are meant exclusively for the fringes
+      ;;
+      ;; must have a minimum contrast ratio of 1.5:1 with `bg-inactive'
+      ;; and be combined with `fg-main'
+      (red-fringe-bg "#a00000") (green-fringe-bg "#006600")
+      (yellow-fringe-bg "#775500") (blue-fringe-bg "#3228bb")
+      (magenta-fringe-bg "#990099") (cyan-fringe-bg "#005599")
 
       ;; styles reserved for specific faces
       ;;
@@ -512,6 +530,13 @@ between foreground and background is >= 7:1)."
    `(modus-theme-active-blue ((,class (:background ,blue-active :foreground ,bg-active))))
    `(modus-theme-active-magenta ((,class (:background ,magenta-active :foreground ,bg-active))))
    `(modus-theme-active-cyan ((,class (:background ,cyan-active :foreground ,bg-active))))
+   ;;; for fringe indicators
+   `(modus-theme-fringe-red ((,class (:background ,red-fringe-bg :foreground ,fg-main))))
+   `(modus-theme-fringe-green ((,class (:background ,green-fringe-bg :foreground ,fg-main))))
+   `(modus-theme-fringe-yellow ((,class (:background ,yellow-fringe-bg :foreground ,fg-main))))
+   `(modus-theme-fringe-blue ((,class (:background ,blue-fringe-bg :foreground ,fg-main))))
+   `(modus-theme-fringe-magenta ((,class (:background ,magenta-fringe-bg :foreground ,fg-main))))
+   `(modus-theme-fringe-cyan ((,class (:background ,cyan-fringe-bg :foreground ,fg-main))))
    ;;; special base values that are closer to the grayscale than
    ;;; the accents defined above
    `(modus-theme-special-cold ((,class (:background ,bg-special-cold :foreground ,fg-special-cold))))
@@ -536,7 +561,9 @@ between foreground and background is >= 7:1)."
    ;;;; absolute essentials
    `(default ((,class (:background ,bg-main :foreground ,fg-main))))
    `(cursor ((,class (:background ,fg-main))))
-   `(fringe ((,class (:background ,bg-main :foreground ,fg-main))))
+   `(fringe ((,class (:background
+                      ,(if modus-vivendi-theme-visible-fringes bg-inactive bg-main)
+                      :foreground ,fg-main))))
    ;;;; basic and/or ungrouped styles
    `(error ((,class (:foreground ,red :weight bold))))
    `(escape-glyph ((,class (:inherit modus-theme-refine-blue :weight bold))))
@@ -691,8 +718,8 @@ between foreground and background is >= 7:1)."
    ;;;; bm
    `(bm-face ((,class (:inherit modus-theme-subtle-yellow
                                 ,@(and (>= emacs-major-version 27) '(:extend t))))))
-   `(bm-fringe-face ((,class (:inherit modus-theme-subtle-yellow))))
-   `(bm-fringe-persistent-face ((,class (:inherit modus-theme-intense-blue))))
+   `(bm-fringe-face ((,class (:inherit modus-theme-fringe-yellow))))
+   `(bm-fringe-persistent-face ((,class (:inherit modus-theme-fringe-blue))))
    `(bm-persistent-face ((,class (:inherit modus-theme-intense-blue
                                            ,@(and (>= emacs-major-version 27) '(:extend t))))))
    ;;;; buttons, links, widgets
@@ -781,7 +808,7 @@ between foreground and background is >= 7:1)."
    `(cider-enlightened-local-face ((,class (:foreground ,yellow-alt-other :weight bold))))
    `(cider-error-highlight-face ((,class (:foreground ,red :underline t))))
    `(cider-fragile-button-face ((,class (:box (:line-width 3 :color ,fg-alt :style released-button)) :foreground ,yellow)))
-   `(cider-fringe-good-face ((,class (:foreground ,green-intense))))
+   `(cider-fringe-good-face ((,class (:foreground ,green-active))))
    `(cider-instrumented-face ((,class (:box (:line-width -1 :color ,red :style nil) :background ,bg-dim))))
    `(cider-reader-conditional-face ((,class (:foreground ,fg-special-warm :slant italic))))
    `(cider-repl-input-face ((,class (:weight bold))))
@@ -901,7 +928,7 @@ between foreground and background is >= 7:1)."
                                             :background ,bg-active :foreground ,fg-main))))
    `(dap-result-overlay-face ((,class (:box (:line-width -1 :color ,bg-active :style nil)
                                             :background ,bg-active :foreground ,fg-main))))
-   `(dap-ui-breakpoint-verified-fringe ((,class (:foreground ,green-intense :weight bold))))
+   `(dap-ui-breakpoint-verified-fringe ((,class (:foreground ,green-active :weight bold))))
    `(dap-ui-compile-errline ((,class (:foreground ,red-intense :weight bold))))
    `(dap-ui-locals-scope-face ((,class (:foreground ,magenta :weight bold :underline t))))
    `(dap-ui-locals-variable-face ((,class (:foreground ,cyan :weight bold))))
@@ -934,15 +961,15 @@ between foreground and background is >= 7:1)."
    `(deft-time-face ((,class (:foreground ,fg-special-cold))))
    `(deft-title-face ((,class (:foreground ,fg-main :weight bold))))
    ;;;; diff-hl
-   `(diff-hl-change ((,class (:inherit modus-theme-intense-yellow))))
-   `(diff-hl-delete ((,class (:inherit modus-theme-intense-red))))
+   `(diff-hl-change ((,class (:inherit modus-theme-fringe-blue))))
+   `(diff-hl-delete ((,class (:inherit modus-theme-fringe-red))))
    `(diff-hl-dired-change ((,class (:inherit diff-hl-change))))
    `(diff-hl-dired-delete ((,class (:inherit diff-hl-delete))))
    `(diff-hl-dired-ignored ((,class (:inherit dired-ignored))))
    `(diff-hl-dired-insert ((,class (:inherit diff-hl-insert))))
    `(diff-hl-dired-unknown ((,class (:inherit dired-ignored))))
-   `(diff-hl-insert ((,class (:inherit modus-theme-intense-green))))
-   `(diff-hl-reverted-hunk-highlight ((,class (:inherit modus-theme-intense-magenta))))
+   `(diff-hl-insert ((,class (:inherit modus-theme-fringe-green))))
+   `(diff-hl-reverted-hunk-highlight ((,class (:inherit modus-theme-intense-blue))))
    ;;;; diff-mode
    `(diff-added ((,class (:inherit modus-theme-diff-focus-added))))
    `(diff-changed ((,class (:inherit modus-theme-diff-focus-changed))))
@@ -1223,9 +1250,9 @@ between foreground and background is >= 7:1)."
    `(flycheck-error-list-info ((,class (:foreground ,green))))
    `(flycheck-error-list-line-number ((,class (:foreground ,fg-special-warm))))
    `(flycheck-error-list-warning ((,class (:foreground ,yellow))))
-   `(flycheck-fringe-error ((,class (:foreground ,red-intense :weight bold))))
-   `(flycheck-fringe-info ((,class (:foreground ,green-intense :weight bold))))
-   `(flycheck-fringe-warning ((,class (:foreground ,yellow-intense :weight bold))))
+   `(flycheck-fringe-error ((,class (:inherit modus-theme-fringe-red))))
+   `(flycheck-fringe-info ((,class (:inherit modus-theme-fringe-green))))
+   `(flycheck-fringe-warning ((,class (:inherit modus-theme-fringe-yellow))))
    `(flycheck-info ((,class (:foreground ,green :underline t))))
    `(flycheck-verify-select-checker ((,class (:box (:line-width 1 :color nil :style released-button)))))
    `(flycheck-warning ((,class (:foreground ,yellow :underline t))))
@@ -1327,24 +1354,24 @@ between foreground and background is >= 7:1)."
    `(git-commit-pseudo-header ((,class (:foreground ,fg-alt :weight bold))))
    `(git-commit-summary ((,class (:foreground ,magenta-alt-other))))
    ;;;; git-gutter
-   `(git-gutter:added ((,class (:foreground ,green-intense :weight bold))))
-   `(git-gutter:deleted ((,class (:foreground ,red-intense :weight bold))))
-   `(git-gutter:modified ((,class (:foreground ,yellow-intense :weight bold))))
-   `(git-gutter:separator ((,class (:foreground ,cyan-intense :weight bold))))
-   `(git-gutter:unchanged ((,class (:inherit modus-theme-refine-magenta))))
+   `(git-gutter:added ((,class (:inherit modus-theme-fringe-green))))
+   `(git-gutter:deleted ((,class (:inherit modus-theme-fringe-red))))
+   `(git-gutter:modified ((,class (:inherit modus-theme-fringe-yellow))))
+   `(git-gutter:separator ((,class (:inherit modus-theme-fringe-cyan))))
+   `(git-gutter:unchanged ((,class (:inherit modus-theme-fringe-magenta))))
    ;;;; git-gutter-fr
-   `(git-gutter-fr:added ((,class (:foreground ,green-intense :weight bold))))
-   `(git-gutter-fr:deleted ((,class (:foreground ,red-intense :weight bold))))
-   `(git-gutter-fr:modified ((,class (:foreground ,yellow-intense :weight bold))))
+   `(git-gutter-fr:added ((,class (:inherit modus-theme-fringe-green))))
+   `(git-gutter-fr:deleted ((,class (:inherit modus-theme-fringe-red))))
+   `(git-gutter-fr:modified ((,class (:inherit modus-theme-fringe-yellow))))
    ;;;; git-{gutter,fringe}+
-   `(git-gutter+-added ((,class (:foreground ,green-intense :weight bold))))
-   `(git-gutter+-deleted ((,class (:foreground ,red-intense :weight bold))))
-   `(git-gutter+-modified ((,class (:foreground ,yellow-intense :weight bold))))
-   `(git-gutter+-separator ((,class (:foreground ,cyan-intense :weight bold))))
-   `(git-gutter+-unchanged ((,class (:inherit modus-theme-refine-magenta))))
-   `(git-gutter-fr+-added ((,class (:foreground ,green-intense :weight bold))))
-   `(git-gutter-fr+-deleted ((,class (:foreground ,red-intense :weight bold))))
-   `(git-gutter-fr+-modified ((,class (:foreground ,yellow-intense :weight bold))))
+   `(git-gutter+-added ((,class (:inherit modus-theme-fringe-green))))
+   `(git-gutter+-deleted ((,class (:inherit modus-theme-fringe-red))))
+   `(git-gutter+-modified ((,class (:inherit modus-theme-fringe-yellow))))
+   `(git-gutter+-separator ((,class (:inherit modus-theme-fringe-cyan))))
+   `(git-gutter+-unchanged ((,class (:inherit modus-theme-fringe-magenta))))
+   `(git-gutter-fr+-added ((,class (:inherit modus-theme-fringe-green))))
+   `(git-gutter-fr+-deleted ((,class (:inherit modus-theme-fringe-red))))
+   `(git-gutter-fr+-modified ((,class (:inherit modus-theme-fringe-yellow))))
    ;;;; git-lens
    `(git-lens-added ((,class (:foreground ,green :weight bold))))
    `(git-lens-deleted ((,class (:foreground ,red :weight bold))))
