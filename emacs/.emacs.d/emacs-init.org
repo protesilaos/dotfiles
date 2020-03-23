@@ -2645,18 +2645,22 @@ file which do not already have one."
     :END:
 
 I like the idea of easily converting an =.org= file into a set of pseudo
-slides.  It is simple and has no external dependencies.
+slides.  It is simple and has no external dependencies.  My needs are
+pretty simple and straightforward: just show some text, narrowing it to
+the current section.
 
-My needs are pretty simple and straightforward: just show some text.
-The other packages in this section are only meant to be used for
-presentations.
+To make presentations happen, I use =org-tree-slide= to narrow the buffer
+to each heading.  The =darkroom= package centres the view, while removing
+the mode line.  While =org-superstar= prettifies the heading bullets,
+while removing the leading stars.  The other tweaks in the code block
+below are complementary to this "slideshow effect".
 
 For the font specified herein, make sure to understand the overall
 configurations by reading the section on [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][primary font settings]].  I opted
 not to use =text-scale-adjust= or some variant thereof, because that only
 operates on the text of the focused window, whereas I want all
-interfaces to adapt to the new size (so that I can, for example, show
-the minibuffer while doing a presentation).
+interfaces to adapt to the new size so that I can, for example, show the
+minibuffer while doing a presentation.
 
 #+begin_src emacs-lisp
 (use-package darkroom
@@ -2664,9 +2668,11 @@ the minibuffer while doing a presentation).
   :config
   (setq darkroom-text-scale-increase 0))
 
-(use-package org-bullets
+(use-package org-superstar              ; supersedes `org-bullets'
   :ensure t
-  :after org)
+  :after org
+  :config
+  (setq org-superstar-remove-leading-stars t))
 
 (use-package org-tree-slide
   :ensure t
@@ -2690,12 +2696,16 @@ activation of `org-tree-slide-mode'."
     (if (eq darkroom-tentative-mode nil)
         (progn
           (darkroom-tentative-mode 1)
-          (org-bullets-mode 1)
+          (org-superstar-mode 1)
           (org-indent-mode 1)
+          (blink-cursor-mode -1)
+          (setq-local cursor-type '(bar . 1))
           (prot/presentation-fonts))
       (darkroom-tentative-mode -1)
-      (org-bullets-mode -1)
+      (org-superstar-mode -1)
       (org-indent-mode -1)
+      (blink-cursor-mode 1)
+      (setq-local cursor-type 'box)
       (prot/fonts-per-monitor)))
 
   :bind (("<f9>" . org-tree-slide-mode)
