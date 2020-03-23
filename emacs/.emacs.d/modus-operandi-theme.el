@@ -189,6 +189,7 @@
 ;;     outline-mode
 ;;     outline-minor-faces
 ;;     package (M-x list-packages)
+;;     paradox
 ;;     paren-face
 ;;     pass
 ;;     persp-mode
@@ -201,6 +202,8 @@
 ;;     rainbow-identifiers
 ;;     rainbow-delimiters
 ;;     regexp-builder (also known as `re-builder')
+;;     rg
+;;     ripgrep
 ;;     rmail
 ;;     ruler-mode
 ;;     sallet
@@ -550,7 +553,7 @@ between foreground and background is >= 7:1)."
    `(next-error ((,class (:inherit modus-theme-subtle-red))))
    `(shadow ((,class (:foreground ,fg-alt))))
    `(success ((,class (:foreground ,green :weight bold))))
-   `(trailing-whitespace ((,class (:background ,red-alt))))
+   `(trailing-whitespace ((,class (:background ,red-intense-bg))))
    `(warning ((,class (:foreground ,yellow :weight bold))))
    ;;;; alert
    `(alert-high-face ((,class (:foreground ,red-alt :weight bold))))
@@ -828,7 +831,7 @@ between foreground and background is >= 7:1)."
    `(compilation-column-number ((,class (:foreground ,magenta-alt-other))))
    `(compilation-error ((,class (:foreground ,red :weight bold))))
    `(compilation-info ((,class (:foreground ,fg-special-cold))))
-   `(compilation-line-number ((,class (:foreground ,magenta-alt))))
+   `(compilation-line-number ((,class (:foreground ,fg-special-warm))))
    `(compilation-mode-line-exit ((,class (:foreground ,blue-active :weight bold))))
    `(compilation-mode-line-fail ((,class (:foreground ,red-active :weight bold))))
    `(compilation-mode-line-run ((,class (:foreground ,magenta-active :weight bold))))
@@ -914,8 +917,8 @@ between foreground and background is >= 7:1)."
    `(dashboard-navigator ((,class (:foreground ,cyan-alt-other))))
    `(dashboard-text-banner ((,class (:foreground ,fg-dim))))
    ;;;; deadgrep
-   `(deadgrep-filename-face ((,class (:foreground ,cyan :weight bold))))
-   `(deadgrep-match-face ((,class (:inherit modus-theme-subtle-blue))))
+   `(deadgrep-filename-face ((,class (:foreground ,fg-special-cold :weight bold))))
+   `(deadgrep-match-face ((,class (:inherit modus-theme-special-calm))))
    `(deadgrep-meta-face ((,class (:foreground ,fg-alt))))
    `(deadgrep-regexp-metachar-face ((,class (:foreground ,yellow-intense :weight bold))))
    `(deadgrep-search-term-face ((,class (:foreground ,green-intense :weight bold))))
@@ -2155,6 +2158,19 @@ between foreground and background is >= 7:1)."
    `(package-status-installed ((,class (:foreground ,fg-special-warm))))
    `(package-status-new ((,class (:foreground ,green :weight bold))))
    `(package-status-unsigned ((,class (:foreground ,red-alt :weight bold))))
+   ;;;; paradox
+   `(paradox-archive-face ((,class (:foreground ,fg-special-mild))))
+   `(paradox-comment-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
+   `(paradox-commit-tag-face ((,class (:inherit modus-theme-refine-magenta :box t))))
+   `(paradox-description-face ((,class (:foreground ,fg-special-cold))))
+   `(paradox-description-face-multiline ((,class (:foreground ,fg-special-cold))))
+   `(paradox-download-face ((,class (:foreground ,blue-alt-other :weight ,modus-theme-bold))))
+   `(paradox-highlight-face ((,class (:foreground ,cyan-alt-other :weight ,modus-theme-bold))))
+   `(paradox-homepage-button-face ((,class (:foreground ,magenta-alt-other :underline t))))
+   `(paradox-mode-line-face ((,class (:foreground ,cyan-active :weight bold))))
+   `(paradox-name-face ((,class (:foreground ,blue :underline t))))
+   `(paradox-star-face ((,class (:foreground ,magenta))))
+   `(paradox-starred-face ((,class (:foreground ,magenta-alt))))
    ;;;; paren-face
    `(parenthesis ((,class (:foreground ,fg-alt))))
    ;;;; pass
@@ -2239,6 +2255,24 @@ between foreground and background is >= 7:1)."
    `(reb-match-3 ((,class (:inherit modus-theme-intense-red))))
    `(reb-regexp-grouping-backslash ((,class (:foreground ,green :weight bold))))
    `(reb-regexp-grouping-construct ((,class (:foreground ,magenta :weight bold))))
+   ;;;; rg (rg.el)
+   `(rg-column-number-face ((,class (:foreground ,magenta-alt-other))))
+   `(rg-context-face ((,class (:foreground ,fg-alt))))
+   `(rg-error-face ((,class (:foreground ,red :weight bold))))
+   `(rg-file-tag-face ((,class (:foreground ,fg-special-cold))))
+   `(rg-filename-face ((,class (:foreground ,fg-special-cold :weight bold))))
+   `(rg-line-number-face ((,class (:foreground ,fg-special-warm))))
+   `(rg-literal-face ((,class (:foreground ,blue-alt))))
+   `(rg-match-face ((,class (:inherit modus-theme-special-calm))))
+   `(rg-regexp-face ((,class (:foreground ,magenta-active))))
+   `(rg-toggle-off-face ((,class (:foreground ,fg-inactive :weight bold))))
+   `(rg-toggle-on-face ((,class (:foreground ,cyan-active :weight bold))))
+   `(rg-warning-face ((,class (:foreground ,yellow :weight bold))))
+   ;;;; ripgrep
+   `(ripgrep-context-face ((,class (:foreground ,fg-alt))))
+   `(ripgrep-error-face ((,class (:foreground ,red :weight bold))))
+   `(ripgrep-hit-face ((,class (:foreground ,cyan))))
+   `(ripgrep-match-face ((,class (:inherit modus-theme-special-calm))))
    ;;;; rmail
    `(rmail-header-name ((,class (:foreground ,cyan-alt-other))))
    `(rmail-highlight ((,class (:foreground ,magenta-alt :weight bold))))
