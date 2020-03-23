@@ -1019,6 +1019,8 @@ There also are other techniques which are project-agnostic, such as
 =multi-occur=, =ibuffer-do-occur=, =dired-do-find-regexp-and-replace=.  Read
 their respective docs (with =C-h f FUNCTION=).
 
+Also see my [[*ripgrep (rg.el)][configurations for ripgrep]].
+
 #+begin_src emacs-lisp
 (use-package project
   :config
@@ -1391,6 +1393,52 @@ matches by leveraging the full power of Emacs' editing capabilities
   :config
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t))
+#+end_src
+
+*** ripgrep (rg.el)
+    :PROPERTIES:
+    :CUSTOM_ID: h:31622bf2-526b-4426-9fda-c0fc59ac8f4b
+    :END:
+
+/Update 2020-03-23: Work-in-progress./
+
+This is a tool that interfaces with the external program called
+"ripgrep" (the executable is =rg=).  It allows us to search the contents
+of files for a search term.
+
+What I find particularly appealing about this package is that it tries
+to follow the interface paradigms of built-in commands, such as =grep=.
+This means that it can be used without depending on a particular
+completion framework (e.g. Ivy, Helm).
+
+Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][project-related commands]].
+
+#+begin_src emacs-lisp
+(use-package rg
+  :ensure t
+  :config
+  (setq rg-group-result t)
+  (setq rg-show-columns nil)
+
+  (rg-define-search prot/grep-vc-or-dir
+  "Use `rg' to search current project's root directory, else the
+current directory."
+  :query ask
+  :format regexp
+  :files "everything"
+  :dir (let ((vc (vc-root-dir)))
+         (if vc
+             vc
+           default-directory))
+  :confirm prefix
+  :flags ("--hidden -g !.git"))
+
+  :bind (("M-s g" . prot/grep-vc-or-dir)
+         :map rg-mode-map
+         ("C-n" . next-line)
+         ("C-p" . previous-line)
+         ("M-n" . rg-next-file)
+         ("M-p" . rg-prev-file)))
 #+end_src
 
 * Directory, buffer, window management
