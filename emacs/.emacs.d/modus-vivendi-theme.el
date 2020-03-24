@@ -128,6 +128,7 @@
 ;;     flymake
 ;;     flyspell
 ;;     flyspell-correct
+;;     freeze-it
 ;;     frog-menu
 ;;     focus
 ;;     fold-this
@@ -145,6 +146,7 @@
 ;;     helm-xref
 ;;     highlight-blocks
 ;;     highlight-defined
+;;     highlight-escape-sequences (`hes-mode')
 ;;     highlight-numbers
 ;;     highlight-thing
 ;;     hl-fill-column
@@ -212,6 +214,7 @@
 ;;     sesman
 ;;     shell-script-mode
 ;;     show-paren-mode
+;;     side-notes
 ;;     skewer-mode
 ;;     smart-mode-line
 ;;     smartparens
@@ -1285,6 +1288,8 @@ between foreground and background is >= 7:1)."
       (,class (:foreground ,red :underline t))))
    ;;;; flyspell-correct
    `(flyspell-correct-highlight-face ((,class (:inherit modus-theme-refine-green))))
+   ;;;; freeze-it
+   `(freeze-it-show ((,class (:background ,bg-dim :foreground ,fg-special-warm))))
    ;;;; frog-menu
    `(frog-menu-action-keybinding-face ((,class (:foreground ,blue-alt-other))))
    `(frog-menu-actions-face ((,class (:foreground ,magenta))))
@@ -1324,7 +1329,28 @@ between foreground and background is >= 7:1)."
    `(fountain-page-number ((,class (:foreground ,yellow-alt :weight bold))))
    `(fountain-paren ((,class (:foreground ,cyan))))
    `(fountain-scene-heading ((,class (:foreground ,fg-special-calm :weight bold))))
-   `(fountain-section-heading ((,class (:foreground ,green-alt-other :weight bold))))
+   `(fountain-section-heading ((,class (:inherit ,modus-theme-variable-pitch
+                                                 :foreground ,fg-main :weight bold
+                                                 ,@(when modus-vivendi-theme-scale-headings
+                                                     (list :height modus-vivendi-theme-scale-4))))))
+   `(fountain-section-heading-1 ((,class (:inherit ,modus-theme-variable-pitch
+                                                   :foreground ,fg-main :weight bold
+                                                   ,@(when modus-vivendi-theme-scale-headings
+                                                       (list :height modus-vivendi-theme-scale-4))))))
+   `(fountain-section-heading-2 ((,class (:inherit ,modus-theme-variable-pitch
+                                                   :foreground ,fg-special-warm :weight bold
+                                                   ,@(when modus-vivendi-theme-scale-headings
+                                                       (list :height modus-vivendi-theme-scale-3))))))
+   `(fountain-section-heading-3 ((,class (:inherit ,modus-theme-variable-pitch
+                                                   :foreground ,fg-special-cold :weight bold
+                                                   ,@(when modus-vivendi-theme-scale-headings
+                                                       (list :height modus-vivendi-theme-scale-2))))))
+   `(fountain-section-heading-4 ((,class (:inherit ,modus-theme-variable-pitch
+                                                   :foreground ,fg-special-mild :weight bold
+                                                   ,@(when modus-vivendi-theme-scale-headings
+                                                       (list :height modus-vivendi-theme-scale-1))))))
+   `(fountain-section-heading-5 ((,class (:inherit ,modus-theme-variable-pitch
+                                                   :foreground ,fg-special-calm :weight bold))))
    `(fountain-synopsis ((,class (:foreground ,green))))
    `(fountain-template ((,class (:foreground ,magenta-alt))))
    `(fountain-trans ((,class (:foreground ,magenta :weight bold))))
@@ -1569,6 +1595,9 @@ between foreground and background is >= 7:1)."
    `(highlight-defined-macro-name-face ((,class (:foreground ,magenta-alt))))
    `(highlight-defined-special-form-name-face ((,class (:foreground ,magenta-alt-other))))
    `(highlight-defined-variable-name-face ((,class (:foreground ,cyan))))
+   ;;;; highlight-escape-sequences (`hes-mode')
+   `(hes-escape-backslash-face ((,class (:foreground ,green :weight bold))))
+   `(hes-escape-sequence-face ((,class (:foreground ,magenta :weight bold))))
    ;;;; highlight-numbers
    `(highlight-numbers-number ((,class (:foreground ,blue-alt-other))))
    ;;;; highlight-thing
@@ -2144,27 +2173,27 @@ between foreground and background is >= 7:1)."
    `(origami-fold-replacement-face ((,class (:background ,bg-alt :foreground ,fg-alt))))
    ;;;; outline-mode
    `(outline-1 ((,class (:inherit ,modus-theme-variable-pitch
-                           :foreground ,fg-main :weight bold
-                                       ,@(when modus-vivendi-theme-scale-headings
-                                           (list :height modus-vivendi-theme-scale-4))))))
+                                  :foreground ,fg-main :weight bold
+                                  ,@(when modus-vivendi-theme-scale-headings
+                                      (list :height modus-vivendi-theme-scale-4))))))
    `(outline-2 ((,class (:inherit ,modus-theme-variable-pitch
-                           :foreground ,fg-special-warm :weight bold
-                                       ,@(when modus-vivendi-theme-scale-headings
-                                          (list :height modus-vivendi-theme-scale-3))))))
+                                  :foreground ,fg-special-warm :weight bold
+                                  ,@(when modus-vivendi-theme-scale-headings
+                                      (list :height modus-vivendi-theme-scale-3))))))
    `(outline-3 ((,class (:inherit ,modus-theme-variable-pitch
-                           :foreground ,fg-special-cold :weight bold
-                                       ,@(when modus-vivendi-theme-scale-headings
-                                          (list :height modus-vivendi-theme-scale-2))))))
+                                  :foreground ,fg-special-cold :weight bold
+                                  ,@(when modus-vivendi-theme-scale-headings
+                                      (list :height modus-vivendi-theme-scale-2))))))
    `(outline-4 ((,class (:inherit ,modus-theme-variable-pitch
-                           :foreground ,fg-special-mild :weight bold
-                                       ,@(when modus-vivendi-theme-scale-headings
-                                          (list :height modus-vivendi-theme-scale-1))))))
+                                  :foreground ,fg-special-mild :weight bold
+                                  ,@(when modus-vivendi-theme-scale-headings
+                                      (list :height modus-vivendi-theme-scale-1))))))
    `(outline-5 ((,class (:inherit ,modus-theme-variable-pitch
-                           :foreground ,fg-special-calm :weight bold))))
+                                  :foreground ,fg-special-calm :weight bold))))
    `(outline-6 ((,class (:inherit ,modus-theme-variable-pitch
-                           :foreground ,yellow-nuanced :weight bold))))
+                                  :foreground ,yellow-nuanced :weight bold))))
    `(outline-7 ((,class (:inherit ,modus-theme-variable-pitch
-                           :foreground ,red-nuanced :weight bold))))
+                                  :foreground ,red-nuanced :weight bold))))
    `(outline-8 ((,class (:inherit ,modus-theme-variable-pitch
                                   :foreground ,fg-dim :weight bold))))
    ;;;; outline-minor-faces (applies backgrounds to `outline-minor-mode')
@@ -2351,6 +2380,8 @@ between foreground and background is >= 7:1)."
    `(show-paren-mismatch ((,class (:inherit modus-theme-intense-red))))
    ;;;; skewer-mode
    `(skewer-error-face ((,class (:foreground ,red :underline t))))
+   ;;;; side-notes
+   `(side-notes ((,class (:background ,bg-dim :foreground ,fg-dim))))
    ;;;; smart-mode-line
    `(sml/charging ((,class (:foreground ,green-active))))
    `(sml/discharging ((,class (:foreground ,red-active))))
