@@ -4045,6 +4045,7 @@ their development process, I am not using the MELPA packages directly.
     "Enable some `modus-operandi' variables and load the theme."
     (setq modus-operandi-theme-slanted-constructs t
           modus-operandi-theme-bold-constructs nil
+          modus-operandi-theme-visible-fringes t
           modus-operandi-theme-proportional-fonts nil
           modus-operandi-theme-scale-headings t
           modus-operandi-theme-scale-1 1.05
@@ -4057,6 +4058,7 @@ their development process, I am not using the MELPA packages directly.
     "Enable some `modus-vivendi' variables and load the theme."
     (setq modus-vivendi-theme-slanted-constructs t
           modus-vivendi-theme-bold-constructs nil
+          modus-vivendi-theme-visible-fringes t
           modus-vivendi-theme-proportional-fonts nil
           modus-vivendi-theme-scale-headings t
           modus-vivendi-theme-scale-1 1.05
