@@ -4269,6 +4269,58 @@ and vice versa, as per the value of the `default' face).
   :hook (after-init . window-divider-mode))
 #+end_src
 
+*** Fringe mode
+    :PROPERTIES:
+    :CUSTOM_ID: h:26a4fac6-33e2-4f6c-8589-9463df8525c9
+    :END:
+
+The fringes are areas to the right and left side of an Emacs frame.
+They can be used to show status-related or contextual feedback such as
+line truncation indicators, continuation lines, code linting markers,
+etc.
+
+The default fringe width is 8 pixels on either side, which I approve of.
+The value of the =fringe-mode= I define below allows us to control each
+side independently.  In practice, I could use a single number to apply
+it to both sides, but this way is better for raising awareness of the
+possibility.
+
+The use of =setq-default= is necessary, otherwise these values become
+buffer-local.
+
+#+begin_src emacs-lisp
+(use-package fringe
+  :config
+  (fringe-mode '(8 . 8))
+  (setq-default fringes-outside-margins nil)
+  (setq-default indicate-buffer-boundaries nil)
+  (setq-default indicate-empty-lines nil)
+  (setq-default overflow-newline-into-fringe t))
+#+end_src
+
+*** Diff highlights in the fringe
+    :PROPERTIES:
+    :CUSTOM_ID: h:5b71e71f-353f-4290-951b-3fc575c0fcba
+    :END:
+
+The =diff-hl= package uses the left or right fringe to highlight changes
+in the current buffer.  The indicators are colour-coded to denote
+whether a change is an addition, removal, or change that includes a bit
+of both.
+
+The package offers some more features, such as the ability to move
+between diff hunks while editing the buffer.  I still need to experiment
+with those before customising them to my liking.
+
+#+begin_src emacs-lisp
+(use-package diff-hl
+  :ensure t
+  :config
+  (setq diff-hl-draw-borders nil)
+  (setq diff-hl-side 'left)
+ :hook ((after-init . global-diff-hl-mode)))
+#+end_src
+
 *** Optional visual indicators or layout elements
     :PROPERTIES:
     :CUSTOM_ID: h:e8d77f0b-0502-449b-bc69-18cf29b9edb0
