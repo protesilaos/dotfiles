@@ -4017,24 +4017,34 @@ Overview of these settings:
    :CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
    :END:
 
-I am using my own themes.  They are designed to conform with the
-highest accessibility standard for colour contrast between foreground
-and background values.  This stands for a minimum contrast ratio of
-7:1, also known as the WCAG AAA standard.
+I am using my own themes.  They are designed to conform with the highest
+accessibility standard for colour contrast between foreground and
+background values.  This stands for a minimum contrast ratio of 7:1,
+also known as the WCAG AAA standard.  In simpler terms, they are good
+for readability.
 
 I call this project "Modus themes".  It consists of "Modus Operandi"
 (light theme) and "Modus Vivendi" (dark).  The source code and
-installation instructions are available [[https://gitlab.com/protesilaos/modus-themes][on their GitLab page]].
+installation instructions are available [[https://gitlab.com/protesilaos/modus-themes][on their GitLab page]].  The list
+of supported packages is comprehensive.
 
-The themes are available on MELPA as /standalone packages/ as of
-December 1, 2019.  I did it that way instead of distributing them as a
-single package because I know that people tend to use one or the other.
-And also due to the fact that one is not a prerequisite for the other.
-I personally use both, switching between them depending on the ambient
-light in my room.
+The themes are available in the official ELPA repository (latest tagged
+release), MELPA (latest commit to the =master= branch), as well as MELPA
+Stable (latest tag).
+
+They are distributed as /standalone packages/ as of December 1, 2019 under
+the terms of the GNU General Public License.  I did it that way instead
+of publishing them as a single package because I know that people tend
+to use one or the other.  And also due to the fact that one is not a
+prerequisite for the other.  I personally use both, switching between
+them depending on the ambient light in my room.
 
 Note though that because I am using these themes locally as part of
-their development process, I am not using the MELPA packages directly.
+their development process, I am not using the ELPA/MELPA packages
+directly.
+
+Lastly, if you are curious about the underlying methodology, read my
+essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-emacs/][on the design of the Modus themes]] (2020-03-17).
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -4046,6 +4056,7 @@ their development process, I am not using the MELPA packages directly.
     (setq modus-operandi-theme-slanted-constructs t
           modus-operandi-theme-bold-constructs nil
           modus-operandi-theme-visible-fringes t
+          modus-operandi-theme-distinct-org-blocks nil
           modus-operandi-theme-proportional-fonts nil
           modus-operandi-theme-scale-headings t
           modus-operandi-theme-scale-1 1.05
@@ -4059,6 +4070,7 @@ their development process, I am not using the MELPA packages directly.
     (setq modus-vivendi-theme-slanted-constructs t
           modus-vivendi-theme-bold-constructs nil
           modus-vivendi-theme-visible-fringes t
+          modus-vivendi-theme-distinct-org-blocks nil
           modus-vivendi-theme-proportional-fonts nil
           modus-vivendi-theme-scale-headings t
           modus-vivendi-theme-scale-1 1.05
