@@ -1442,20 +1442,20 @@ Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][projec
   (setq rg-default-alias-fallback "all")
 
   (rg-define-search prot/grep-vc-or-dir
-  :query ask
-  :format regexp
-  :files "everything"
-  :dir (let ((vc (vc-root-dir)))
-         (if vc
-             vc                         ; search root project dir
-           default-directory))          ; or from the current dir
-  :confirm prefix
-  :flags ("--hidden -g !.git"))
+    :query ask
+    :format regexp
+    :files "everything"
+    :dir (let ((vc (vc-root-dir)))
+           (if vc
+               vc                         ; search root project dir
+             default-directory))          ; or from the current dir
+    :confirm prefix
+    :flags ("--hidden -g !.git"))
 
   (defun prot/rg-save-search-as-name ()
-    "Save `rg' buffer with contents of current search.
+    "Save `rg' buffer, naming it after the current search terms.
 
-This function is meant to be mapped in `rg-mode-map'."
+This function is meant to be mapped to a key in `rg-mode-map'."
     (interactive)
     (let ((pattern (car rg-pattern-history)))
       (rg-save-search-as-name (concat "«" pattern "»"))))
