@@ -87,6 +87,7 @@
 ;;     counsel-notmuch
 ;;     counsel-org-capture-string
 ;;     cov
+;;     csv-mode
 ;;     custom (M-x customize)
 ;;     dap-mode
 ;;     dashboard (emacs-dashboard)
@@ -105,11 +106,13 @@
 ;;     diredfl
 ;;     disk-usage
 ;;     doom-modeline
+;;     dynamic-ruler
 ;;     easy-jekyll
 ;;     easy-kill
 ;;     ediff
 ;;     eldoc-box
 ;;     elfeed
+;;     elfeed-score
 ;;     emms
 ;;     enhanced-ruby-mode
 ;;     epa
@@ -140,6 +143,7 @@
 ;;     git-gutter (and variants)
 ;;     git-lens
 ;;     git-timemachine
+;;     git-walktree
 ;;     gnus
 ;;     helm
 ;;     helm-ls-git
@@ -913,6 +917,8 @@ between foreground and background is >= 7:1)."
    `(cov-light-face ((,class (:foreground ,blue-intense))))
    `(cov-med-face ((,class (:foreground ,yellow-intense))))
    `(cov-none-face ((,class (:foreground ,cyan-intense))))
+   ;;;; csv-mode
+   `(csv-separator-face ((,class (:background ,bg-special-cold :foreground ,fg-main))))
    ;;;; custom (M-x customize)
    `(custom-button ((,class (:box (:line-width 2 :color nil :style released-button)
                                   :background ,bg-active :foreground ,fg-main))))
@@ -1100,6 +1106,9 @@ between foreground and background is >= 7:1)."
    `(doom-modeline-unread-number ((,class (:foreground ,fg-active :slant italic))))
    `(doom-modeline-urgent ((,class (:foreground ,red-active :weight bold :underline t))))
    `(doom-modeline-warning ((,class (:foreground ,yellow-active :weight bold))))
+   ;;;; dynamic-ruler
+   `(dynamic-ruler-negative-face ((,class (:inherit modus-theme-intense-neutral))))
+   `(dynamic-ruler-positive-face ((,class (:inherit modus-theme-intense-yellow))))
    ;;;; easy-jekyll
    `(easy-jekyll-help-face ((,class (:background ,bg-dim :foreground ,cyan-alt-other))))
    ;;;; easy-kill
@@ -1139,6 +1148,12 @@ between foreground and background is >= 7:1)."
    `(elfeed-search-title-face ((,class (:foreground ,fg-main))))
    `(elfeed-search-unread-count-face ((,class (:foreground ,fg-special-warm))))
    `(elfeed-search-unread-title-face ((,class (:weight bold))))
+   ;;;; elfeed-score
+   `(elfeed-score-date-face ((,class (:foreground ,blue))))
+   `(elfeed-score-debug-level-face ((,class (:foreground ,magenta-alt-other))))
+   `(elfeed-score-error-level-face ((,class (:foreground ,red))))
+   `(elfeed-score-info-level-face ((,class (:foreground ,cyan))))
+   `(elfeed-score-warn-level-face ((,class (:foreground ,yellow))))
    ;;;; emms
    `(emms-playlist-track-face ((,class (:foreground ,blue))))
    `(emms-playlist-selected-face ((,class (:foreground ,magenta :weight bold))))
@@ -1415,6 +1430,10 @@ between foreground and background is >= 7:1)."
    `(git-timemachine-commit ((,class (:foreground ,yellow-active :weight bold))))
    `(git-timemachine-minibuffer-author-face ((,class (:foreground ,fg-special-warm))))
    `(git-timemachine-minibuffer-detail-face ((,class (:foreground ,red-alt))))
+   ;;;; git-walktree
+   `(git-walktree-commit-face ((,class (:foreground ,yellow))))
+   `(git-walktree-symlink-face ((,class (:foreground ,cyan :underline t))))
+   `(git-walktree-tree-face ((,class (:foreground ,magenta))))
    ;;;; gnus
    `(gnus-button ((,class (:inherit button))))
    `(gnus-cite-1 ((,class (:foreground ,blue-alt))))
