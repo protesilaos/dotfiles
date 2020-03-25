@@ -91,7 +91,7 @@ hi Debug guifg=#d85cf2 ctermfg=13
 " -----
 hi LineNr guibg=#241828 guifg=#928080 term=none ctermbg=8 ctermfg=7
 hi Cursor guibg=#a29fa0 guifg=#001514 ctermbg=15 ctermfg=0
-hi CursorLine gui=none guibg=none term=none cterm=none ctermbg=none
+hi CursorLine gui=none guibg=#241828 term=none cterm=none ctermbg=8
 hi CursorColumn gui=none guibg=#241828 term=none cterm=none ctermbg=8
 hi CursorLineNr gui=bold guibg=#928080 guifg=#001514 cterm=bold ctermbg=7 ctermfg=0
 hi ColorColumn guibg=#241828 guifg=#a29fa0 term=none ctermbg=8 ctermfg=15
