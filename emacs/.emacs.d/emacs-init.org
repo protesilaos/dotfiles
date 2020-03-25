@@ -1406,41 +1406,63 @@ matches by leveraging the full power of Emacs' editing capabilities
     :CUSTOM_ID: h:31622bf2-526b-4426-9fda-c0fc59ac8f4b
     :END:
 
-/Update 2020-03-23: Work-in-progress./
-
 This is a tool that interfaces with the external program called
 "ripgrep" (the executable is =rg=).  It allows us to search the contents
 of files for a search term.
 
-What I find particularly appealing about this package is that it tries
-to follow the interface paradigms of built-in commands, such as =grep=.
-This means that it can be used without depending on a particular
-completion framework (e.g. Ivy, Helm).
+What I find particularly appealing about this package is that it follows
+the interface paradigms of built-in commands, such as =grep= or =occur=.
+With regard to the latter, it even uses the same key to convert the
+results' buffer into an editable one: =e= (writing changes is here
+provided by the =wgrep= package that [[#h:42624165-f4cb-4318-abce-c11232426880][I define right above]]).  Meanwhile, it
+interfaces with =ibuffer=, another built-in package, to list saved
+searches (see my =prot/rg-save-search-as-name= in the package declaration
+below).
+
+=rg.el= is designed in such a way that it offers useful functionality
+without depending on a particular completion framework (e.g. Ivy, Helm):
+an advantage, as far as I am concerned.
+
+Concerning the key bindings for navigating the results buffer, I find
+that the standard motions should retain their general purposes, while
+moving between file headings can be done with =M-{n,p}=.
 
 Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][project-related commands]].
 
 #+begin_src emacs-lisp
 (use-package rg
   :ensure t
+  :after wgrep
   :config
   (setq rg-group-result t)
+  (setq rg-hide-command t)
   (setq rg-show-columns nil)
+  (setq rg-show-header t)
+  (setq rg-custom-type-aliases nil)
+  (setq rg-default-alias-fallback "all")
 
   (rg-define-search prot/grep-vc-or-dir
-  "Use `rg' to search current project's root directory, else the
-current directory."
   :query ask
   :format regexp
   :files "everything"
   :dir (let ((vc (vc-root-dir)))
          (if vc
-             vc
-           default-directory))
+             vc                         ; search root project dir
+           default-directory))          ; or from the current dir
   :confirm prefix
   :flags ("--hidden -g !.git"))
 
+  (defun prot/rg-save-search-as-name ()
+    "Save `rg' buffer with contents of current search.
+
+This function is meant to be mapped in `rg-mode-map'."
+    (interactive)
+    (let ((pattern (car rg-pattern-history)))
+      (rg-save-search-as-name (concat "«" pattern "»"))))
+
   :bind (("M-s g" . prot/grep-vc-or-dir)
          :map rg-mode-map
+         ("s" . prot/rg-save-search-as-name)
          ("C-n" . next-line)
          ("C-p" . previous-line)
          ("M-n" . rg-next-file)
