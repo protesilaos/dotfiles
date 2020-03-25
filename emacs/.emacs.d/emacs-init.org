@@ -1406,26 +1406,33 @@ matches by leveraging the full power of Emacs' editing capabilities
     :CUSTOM_ID: h:31622bf2-526b-4426-9fda-c0fc59ac8f4b
     :END:
 
-This is a tool that interfaces with the external program called
-"ripgrep" (the executable is =rg=).  It allows us to search the contents
-of files for a search term.
+This is a package that allows us to interface with the external command
+line program called "ripgrep".
 
-What I find particularly appealing about this package is that it follows
-the interface paradigms of built-in commands, such as =grep= or =occur=.
+What I find particularly appealing about =rg.el= is that it follows the
+interface paradigms of built-in Emacs functions, such as =grep= or =occur=.
 With regard to the latter, it even uses the same key to convert the
-results' buffer into an editable one: =e= (writing changes is here
-provided by the =wgrep= package that [[#h:42624165-f4cb-4318-abce-c11232426880][I define right above]]).  Meanwhile, it
-interfaces with =ibuffer=, another built-in package, to list saved
-searches (see my =prot/rg-save-search-as-name= in the package declaration
-below).
+results' buffer into an editable one: =e= (the ability to write changes is
+provided by the =wgrep= package that [[#h:42624165-f4cb-4318-abce-c11232426880][I define right above]]).
 
-=rg.el= is designed in such a way that it offers useful functionality
-without depending on a particular completion framework (e.g. Ivy, Helm):
-an advantage, as far as I am concerned.
+Furthermore, =rg.el= interfaces with =ibuffer=, another built-in package, to
+list saved searches (see my =prot/rg-save-search-as-name= in the package
+declaration below).  Saved searches are regular buffers.  You can switch
+to any of them the normal way.
+
+While inside of an =rg.el= buffer, hit =m= to produce a transient menu from
+where you can refine your search.  This works just like =magit=.  In
+addition, you can consult the universal =C-h m= for documentation
+concerning the major mode you are in.
 
 Concerning the key bindings for navigating the results buffer, I find
-that the standard motions should retain their general purposes, while
+that the standard motions should retain their general function, while
 moving between file headings can be done with =M-{n,p}=.
+
+=rg.el= is designed in such a way that it offers useful functionality
+without depending on a particular completion framework (e.g. Ivy, Helm).
+I consider this an advantage, especially when combined with the overall
+alignment of this package with standard Emacs tools.
 
 Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][project-related commands]].
 
@@ -1453,7 +1460,7 @@ Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][projec
     :flags ("--hidden -g !.git"))
 
   (defun prot/rg-save-search-as-name ()
-    "Save `rg' buffer, naming it after the current search terms.
+    "Save `rg' buffer, naming it after the current search query.
 
 This function is meant to be mapped to a key in `rg-mode-map'."
     (interactive)
