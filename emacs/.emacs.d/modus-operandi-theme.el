@@ -164,6 +164,7 @@
 ;;     info
 ;;     info-colors
 ;;     interaction-log
+;;     ioccur
 ;;     isearch, occur, etc.
 ;;     ivy
 ;;     ivy-posframe
@@ -756,12 +757,12 @@ between foreground and background is >= 7:1)."
    `(buffer-expose-selected-face ((,class (:inherit modus-theme-special-mild))))
    ;;;; calendar and diary
    `(calendar-month-header ((,class (:foreground ,fg-main :weight bold))))
-   `(calendar-today ((,class (:underline t))))
+   `(calendar-today ((,class (:background ,bg-alt :underline t))))
    `(calendar-weekday-header ((,class (:foreground ,blue-alt))))
-   `(calendar-weekend-header ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
-   `(diary ((,class (:foreground ,yellow-alt-other))))
-   `(diary-anniversary ((,class (:foreground ,green))))
-   `(diary-time ((,class (:foreground ,cyan))))
+   `(calendar-weekend-header ((,class (:foreground ,fg-alt))))
+   `(diary ((,class (:foreground ,green-alt-other))))
+   `(diary-anniversary ((,class (:foreground ,yellow-alt-other))))
+   `(diary-time ((,class (:foreground ,red-alt))))
    `(holiday ((,class (:foreground ,magenta-alt))))
    ;;;; calfw
    `(cfw:face-annotation ((,class (:background ,bg-alt :foreground ,fg-alt))))
@@ -1684,6 +1685,19 @@ between foreground and background is >= 7:1)."
    `(ilog-load-face ((,class (:foreground ,green))))
    `(ilog-message-face ((,class (:foreground ,fg-alt))))
    `(ilog-non-change-face ((,class (:foreground ,blue))))
+   ;;;; ioccur
+   `(ioccur-cursor ((,class (:foreground ,fg-main))))
+   `(ioccur-invalid-regexp ((,class (:foreground ,red))))
+   `(ioccur-match-face ((,class (:inherit modus-theme-special-calm))))
+   `(ioccur-match-overlay-face ((,class (,@(and (>= emacs-major-version 27) '(:extend t))
+                                         :inherit modus-theme-special-cold))))
+   `(ioccur-num-line-face ((,class (:foreground ,fg-special-warm))))
+   `(ioccur-overlay-face ((,class (,@(and (>= emacs-major-version 27) '(:extend t))
+                                   :inherit modus-theme-refine-blue))))
+   `(ioccur-regexp-face ((,class (:inherit modus-theme-intense-magenta :weight bold))))
+   `(ioccur-title-face ((,class (:foreground ,red-alt :weight bold
+                                             ,@(when modus-operandi-theme-scale-headings
+                                                 (list :height modus-operandi-theme-scale-4))))))
    ;;;; isearch, occur, and the like
    `(isearch ((,class (:inherit modus-theme-intense-green :weight bold))))
    `(isearch-fail ((,class (:inherit modus-theme-refine-red))))
