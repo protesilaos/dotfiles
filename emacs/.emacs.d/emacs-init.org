@@ -4550,7 +4550,7 @@ that is so pertinent to presentations.
           (prot/fonts-per-monitor))
       (olivetti-mode 1)
       (fringe-mode '(0 . 0))
-      (prot/focused-reading-fonts)))
+      (prot/reading-fonts)))
   :bind ("C-c o" . prot/olivetti-mode))
 #+end_src
 
