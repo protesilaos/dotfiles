@@ -4232,21 +4232,24 @@ While I really like this environment, sometimes I need to take a look at
 the time…  Thankfully Emacs offers a convenient, built-in way of
 displaying such information in the mode line.
 
-The =display-time-format= can actually be configured to show the current
-date in all the various formats we would expect, using a string of
-specifiers.  Setting it to =nil= means that it just uses the combined
-result of =display-time-24hr-format= and =display-time-day-and-date=.
+The =display-time-format= can be configured to show the current date and
+time in all the various formats we would expect, using a string of
+specifiers (find the docs with =C-h v format-time-string=).  Setting its
+value to =nil= means that the information on display will be the combined
+result of =display-time-24hr-format= and =display-time-day-and-date=.  I
+prefer to just write a string directly, keeping those two inactive.
 
-The =display-time-mode= will actually output more than just the current
-time.  It also shows the load average and an email indicator.  I only
-need a clock in 24h format.  The rest is noise.
+The =display-time-mode= can output more than just the current time.  It
+also shows the load average and an email indicator.  I only need the
+time and date.  The rest is noise.
 
 #+begin_src emacs-lisp
 (use-package time
   :config
-  (setq display-time-24hr-format t)
-  (setq display-time-day-and-date nil)
-  (setq display-time-format nil)
+  (setq display-time-format "%Y-%m-%e  %H:%M")
+  ;;;; Covered by `display-time-format'
+  ;; (setq display-time-24hr-format t)
+  ;; (setq display-time-day-and-date t)
   (setq display-time-interval 60)
   (setq display-time-mail-directory nil)
   (setq display-time-default-load-average nil)
