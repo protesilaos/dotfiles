@@ -4194,9 +4194,9 @@ The mode line is an integral part of the Emacs interface.  While there
 are lots of third party packages that style it in a variety of ways, I
 find the default to be particularly good.
 
-I just configure it to hide the Git/VC status as well as the buffer
-position offset.  Their utility is marginal at best.  Then I reshuffle
-some of the remaining indicators.  Nothing too fancy.
+I just configure it to hide the Git/VC status.  Its utility is marginal
+at best.  Then I reshuffle some of the remaining indicators.  Nothing
+too fancy.
 
 Meanwhile, the =mode-line-defining-kbd-macro= is tweaked to use a more
 appropriate string for its indicator and colours that are designed
@@ -4206,7 +4206,7 @@ warning face).
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq mode-line-percent-position nil) ; no buffer %
+  (setq mode-line-percent-position '(-3 "%p"))
   (setq mode-line-defining-kbd-macro
         (propertize " Macro" 'face 'mode-line-emphasis))
   (setq-default mode-line-format
