@@ -3464,6 +3464,47 @@ performance by carrying out the relevant tasks in a non-blocking way.
   (setq message-send-mail-function 'async-smtpmail-send-it))
 #+end_src
 
+*** Contact management (EBDB)
+    :PROPERTIES:
+    :CUSTOM_ID: h:8171d88e-329f-43bb-8290-0e5b060a62a0
+    :END:
+
+This is a contact manager that integrates nicely with Gnus.  It is an
+alternative to the more established =bbdb= package.  I use it to store
+names and addresses from my email correspondence.  Nothing fancy here.
+
+=ebdb= has a comprehensive manual and a broad range of customisation
+options.  My needs are simple though, as I have basically lived without
+any contact management app for ages.
+
+I set it to integrate with Gnus and the message composition interface
+(see previous sections in [[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).  The variable =ebdb-mua-pop-up=
+provides contextual feedback on the presence of a record for the
+person[s] in the given exchange.  While a question is asked on whether
+to create a new database entry based on the information harvested from a
+given email thread.  The key sequence =; := from inside the Gnus Summary
+or Article views will prompt for the creation of a new record.
+
+If my needs ever evolve to something more demanding, I am confident this
+tool will cope with them.  For the time being, this is enough.
+
+#+begin_src emacs-lisp
+(use-package ebdb
+  :ensure t
+  :pin gnu                              ; Prefer ELPA version
+  :config
+  (require 'ebdb-gnus)
+  (require 'ebdb-message)
+  (setq ebdb-default-window-size 0.2)
+  (setq ebdb-mua-pop-up t)
+  (setq ebdb-mua-auto-update-p 'query)
+  (setq ebdb-mua-sender-update-p 'query)
+  (setq ebdb-mua-reader-update-p 'query)
+  (setq ebdb-add-aka 'query)
+  (setq ebdb-add-name 'query)
+  (setq ebdb-add-mails 'query))
+#+end_src
+
 ** Git front-end (Magit) and relevant configurations
    :PROPERTIES:
    :CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
