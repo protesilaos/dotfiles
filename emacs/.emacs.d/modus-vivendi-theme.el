@@ -171,6 +171,7 @@
 ;;     ivy-posframe
 ;;     jira (org-jira)
 ;;     js2-mode
+;;     julia
 ;;     jupyter
 ;;     kaocha-runner
 ;;     keycast
@@ -188,6 +189,7 @@
 ;;     mu4e-conversation
 ;;     multiple-cursors
 ;;     neotree
+;;     num3-mode
 ;;     org
 ;;     org-journal
 ;;     org-noter
@@ -470,9 +472,12 @@ between foreground and background is >= 7:1)."
       ;; though only for styling special elements, such as underlining
       ;; the current tab
       ;;
+      ;; `fg-mark', `fg-mark-del', `fg-mark-other' can be combined with
+      ;; `bg-main', `bg-dim', `bg-alt', `bg-hl-line'
+      ;;
       ;; the window divider colours apply to faces with just an fg value
       ;;
-      ;; all other pairs are combinable with themselves
+      ;; all pairs are combinable with themselves
       (bg-hl-line "#151823")
       (bg-paren-match "#6e3a50")
       (bg-region "#3c3c3c")
@@ -493,6 +498,9 @@ between foreground and background is >= 7:1)."
       (fg-diff-focus-added "#b4ddb4") (bg-diff-focus-added "#203d20")
       (fg-diff-focus-changed "#d0daaf") (bg-diff-focus-changed "#4a3a10")
       (fg-diff-focus-removed "#eebdba") (bg-diff-focus-removed "#5e2526")
+      (fg-mark "#60cfa2") (bg-mark "#002f2f")
+      (fg-mark-del "#ff99aa") (bg-mark-del "#5a0000")
+      (fg-mark-other "#f0aa20") (bg-mark-other "#3f2210")
 
       ;; conditional styles that evaluate user-facing customisation
       ;; options
@@ -1008,12 +1016,12 @@ between foreground and background is >= 7:1)."
    ;;;; dim-autoload
    `(dim-autoload-cookie-line ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
    ;;;; dired
-   `(dired-directory ((,class (:foreground ,blue :weight bold))))
-   `(dired-flagged ((,class (:inherit modus-theme-intense-red))))
+   `(dired-directory ((,class (:foreground ,blue))))
+   `(dired-flagged ((,class (:background ,bg-mark-del :foreground ,fg-mark-del :weight bold))))
    `(dired-header ((,class (:foreground ,fg-main :weight bold))))
    `(dired-ignored ((,class (:foreground ,fg-alt))))
-   `(dired-mark ((,class (:foreground ,magenta-alt :weight bold))))
-   `(dired-marked ((,class (:inherit modus-theme-intense-magenta))))
+   `(dired-mark ((,class (:foreground ,blue-alt :weight bold))))
+   `(dired-marked ((,class (:background ,bg-mark :foreground ,fg-mark :weight bold))))
    `(dired-perm-write ((,class (:foreground ,fg-special-warm))))
    `(dired-symlink ((,class (:foreground ,blue-alt :underline t))))
    `(dired-warning ((,class (:foreground ,yellow :weight bold))))
@@ -1502,7 +1510,7 @@ between foreground and background is >= 7:1)."
    `(gnus-server-opened ((,class (:foreground ,green :weight bold))))
    `(gnus-signature ((,class (:foreground ,fg-special-cold :slant italic))))
    `(gnus-splash ((,class (:foreground ,fg-alt))))
-   `(gnus-summary-cancelled ((,class (:inherit modus-theme-intense-yellow))))
+   `(gnus-summary-cancelled ((,class (:background ,bg-mark-other :foreground ,fg-mark-other :weight bold))))
    `(gnus-summary-high-ancient ((,class (:foreground ,fg-alt :weight bold))))
    `(gnus-summary-high-read ((,class (:foreground ,fg-special-cold :weight bold))))
    `(gnus-summary-high-ticked ((,class (:foreground ,red-alt :weight bold))))
@@ -1774,6 +1782,9 @@ between foreground and background is >= 7:1)."
    `(js2-private-function-call ((,class (:foreground ,green-alt-other))))
    `(js2-private-member ((,class (:foreground ,fg-special-mild))))
    `(js2-warning ((,class (:foreground ,yellow-alt :underline t))))
+   ;;;; julia
+   `(julia-macro-face ((,class (:foreground ,magenta :weight ,modus-theme-bold))))
+   `(julia-quoted-symbol-face ((,class (:foreground ,blue-alt-other))))
    ;;;; jupyter
    `(jupyter-eval-overlay ((,class (:foreground ,blue :weight bold))))
    `(jupyter-repl-input-prompt ((,class (:foreground ,cyan-alt-other))))
@@ -2097,6 +2108,8 @@ between foreground and background is >= 7:1)."
    `(neo-vc-unlocked-changes-face ((,class (:inherit modus-theme-refine-blue))))
    `(neo-vc-up-to-date-face ((,class (:foreground ,fg-alt))))
    `(neo-vc-user-face ((,class (:foreground ,magenta))))
+   ;;;; num3-mode
+   `(num3-face-even ((,class (:background ,bg-alt :weight bold))))
    ;;;; org
    `(org-agenda-calendar-event ((,class (:foreground ,blue-alt))))
    `(org-agenda-calendar-sexp ((,class (:foreground ,cyan-alt))))
@@ -2320,8 +2333,8 @@ between foreground and background is >= 7:1)."
    `(powerline-evil-replace-face ((,class (:inherit modus-theme-active-red))))
    `(powerline-evil-visual-face ((,class (:inherit modus-theme-active-cyan))))
    ;;;; proced
-   `(proced-mark ((,class (:foreground ,magenta-alt :weight bold))))
-   `(proced-marked ((,class (:inherit modus-theme-intense-magenta))))
+   `(proced-mark ((,class (:foreground ,blue-alt :weight bold))))
+   `(proced-marked ((,class (:background ,bg-mark-other :foreground ,fg-mark-other :weight bold))))
    `(proced-sort-header ((,class (:foreground ,fg-special-calm :weight bold :underline t))))
    ;;;; prodigy
    `(prodigy-green-face ((,class (:foreground ,green))))
