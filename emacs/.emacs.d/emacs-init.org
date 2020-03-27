@@ -2246,19 +2246,66 @@ news reader, music players…  Anything you would normally see in a
 standalone application.  The end goal is to eventually integrate every
 aspect of my computing inside of Emacs.
 
-** Built-in calendar
+** Calendar
    :PROPERTIES:
    :CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
    :END:
 
-Some basic settings for this tool.  It is used by all Org-mode
-facilities that require date/time input (see following sections).
+/WORK IN PROGRESS 2020-03-27/
+
+Some basic settings for this tool.  It is used by the diary (next
+section), as well as all Org-mode facilities that require date/time
+input (see following sections).
 
 #+begin_src emacs-lisp
 (use-package calendar
   :config
+  (setq calendar-mark-diary-entries-flag t)
+  (setq calendar-time-display-form
+        '(24-hours ":" minutes
+                   (when time-zone
+                     (concat " (" time-zone ")"))))
   (setq calendar-week-start-day 1)      ; Monday
-  (setq calendar-date-style 'iso))
+  (setq calendar-date-style 'iso)
+  (setq calendar-holidays
+        (append holiday-general-holidays holiday-local-holidays
+                holiday-other-holidays holiday-christian-holidays
+                holiday-islamic-holidays holiday-oriental-holidays
+                holiday-solar-holidays))
+  :hook (calendar-today-visible . calendar-mark-today))
+#+end_src
+
+** Diary
+   :PROPERTIES:
+   :CUSTOM_ID: h:b07e88e2-c822-4ca0-aeb5-894a208139a7
+   :END:
+
+/WORK IN PROGRESS 2020-03-27/
+
+Emacs comes with a built-in facility to record tasks and create
+notifications for them.  It is simply called =diary=.  I am still
+assessing its overall utility in my workflow.
+
+#+begin_src emacs-lisp
+(use-package diary-lib
+  :config
+  (setq diary-file "~/.emacs.d/diary")
+  (setq diary-entry-marker "diary")
+  (setq diary-show-holidays-flag t)
+  (setq diary-header-line-flag nil)
+  (setq diary-mail-addr "public@protesilaos.com")
+  (setq diary-mail-days 3)
+  (setq diary-number-of-entries 3)
+  (setq diary-comment-start ";")
+  (setq diary-comment-end "")
+  (setq diary-date-forms
+        '((day "/" month "[^/0-9]")
+          (day "/" month "/" year "[^0-9]")
+          (day " *" monthname " *" year "[^0-9]")
+          (monthname " *" day "[^,0-9]")
+          (monthname " *" day ", *" year "[^0-9]")
+          (year "[-/]" month "[-/]" day "[^0-9]")
+          (dayname "\\W"))))
 #+end_src
 
 ** Org-mode (personal information manager)
