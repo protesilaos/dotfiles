@@ -109,6 +109,7 @@
 ;;     dynamic-ruler
 ;;     easy-jekyll
 ;;     easy-kill
+;;     ebdb
 ;;     ediff
 ;;     eldoc-box
 ;;     elfeed
@@ -1115,6 +1116,21 @@ between foreground and background is >= 7:1)."
    ;;;; easy-kill
    `(easy-kill-origin ((,class (:inherit modus-theme-subtle-red))))
    `(easy-kill-selection ((,class (:inherit modus-theme-subtle-yellow))))
+   ;;;; ebdb
+   `(ebdb-address-default ((,class (:foreground ,fg-main))))
+   `(ebdb-db-char ((,class (:foreground ,fg-special-cold))))
+   `(ebdb-defunct ((,class (:foreground ,fg-alt))))
+   `(ebdb-field-hidden ((,class (:foreground ,magenta))))
+   `(ebdb-field-url ((,class (:foreground ,blue))))
+   `(ebdb-label ((,class (:foreground ,cyan-alt-other))))
+   `(ebdb-mail-default ((,class (:foreground ,fg-main))))
+   `(ebdb-mail-primary ((,class (:foreground ,blue-alt))))
+   `(ebdb-marked ((,class (:background ,cyan-intense-bg))))
+   `(ebdb-organization-name ((,class (:foreground ,fg-special-calm))))
+   `(ebdb-person-name ((,class (:foreground ,magenta-alt-other))))
+   `(ebdb-phone-default ((,class (:foreground ,fg-special-warm))))
+   `(ebdb-role-defunct ((,class (:foreground ,fg-alt))))
+   `(eieio-custom-slot-tag-face ((,class (:foreground ,red-alt))))
    ;;;; ediff
    `(ediff-current-diff-A ((,class (:inherit modus-theme-special-warm))))
    `(ediff-current-diff-Ancestor ((,class (:background ,bg-alt :foreground ,fg-main))))
@@ -1696,8 +1712,8 @@ between foreground and background is >= 7:1)."
                                    :inherit modus-theme-refine-blue))))
    `(ioccur-regexp-face ((,class (:inherit modus-theme-intense-magenta :weight bold))))
    `(ioccur-title-face ((,class (:foreground ,red-alt :weight bold
-                                             ,@(when modus-operandi-theme-scale-headings
-                                                 (list :height modus-operandi-theme-scale-4))))))
+                                             ,@(when modus-vivendi-theme-scale-headings
+                                                 (list :height modus-vivendi-theme-scale-4))))))
    ;;;; isearch, occur, and the like
    `(isearch ((,class (:inherit modus-theme-intense-green :weight bold))))
    `(isearch-fail ((,class (:inherit modus-theme-refine-red))))
