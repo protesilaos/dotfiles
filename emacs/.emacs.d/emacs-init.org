@@ -2918,6 +2918,7 @@ Then we set up the interface for composing emails:
 (use-package message
   :config
   (setq mail-user-agent 'message-user-agent)
+  (setq compose-mail-user-agent-warnings nil)
   (setq message-mail-user-agent nil)    ; default is `gnus'
   (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
   (setq message-signature "Protesilaos Stavrou\nprotesilaos.com\n")
@@ -4265,7 +4266,7 @@ warning face).
                   mode-line-remote
                   mode-line-frame-identification
                   mode-line-buffer-identification
-                  " "
+                  "  "
                   mode-line-position
                   " "
                   mode-line-modes
