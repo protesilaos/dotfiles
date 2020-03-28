@@ -3517,24 +3517,46 @@ performance by carrying out the relevant tasks in a non-blocking way.
     :CUSTOM_ID: h:8171d88e-329f-43bb-8290-0e5b060a62a0
     :END:
 
-This is a contact manager that integrates nicely with Gnus.  It is an
-alternative to the more established =bbdb= package.  I use it to store
-names and addresses from my email correspondence.  Nothing fancy here.
+This is a contact manager that integrates nicely with Gnus (see previous
+sections in [[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).  It is an alternative to the more
+established =bbdb= package.  I use it to store names and addresses from my
+email correspondence.  Nothing fancy here.
 
 =ebdb= has a comprehensive manual and a broad range of customisation
 options.  My needs are simple though, as I have basically lived without
-any contact management app for ages.
+any contact management app for ages (I practised “social distancing”
+before it became a thing!).
 
-I set it to integrate with Gnus and the message composition interface
-(see previous sections in [[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).  The variable =ebdb-mua-pop-up=
-provides contextual feedback on the presence of a record for the
-person[s] in the given exchange.  While a question is asked on whether
-to create a new database entry based on the information harvested from a
-given email thread.  The key sequence =; := from inside the Gnus Summary
-or Article views will prompt for the creation of a new record.
+This is how EBDB works inside of the Gnus "Summary" or "Article"
+buffers:
 
-If my needs ever evolve to something more demanding, I am confident this
-tool will cope with them.  For the time being, this is enough.
++ Hit =; ;= to display a window on the side of the message with
+  information about the records in the database that correspond to those
+  in the message.  If no record exists, the window will not be
+  displayed.  Alternatively, set =ebdb-mua-pop-up= to =t= to always get the
+  window, whether empty or not.
++ With =; := you can create new database entries with the information
+  harvested from the current message.  There are ways to make this
+  automatic, but I did not experiment with them.  If I store someone's
+  contact information, it means I have used it before or have a clear
+  intent to do so.  No automatic records, please.
++ Type =;= followed by =C-h= to bring up a help buffer with all the
+  available keybindings (this works for every key chord, by the way).
+
+Some useful commands that are not specific to Gnus:
+
++ In a message composition buffer (using e.g. the =compose-mail= bound to
+  =C-x m=), hit =TAB= while in a header field where emails are appropriate
+  to either complete what you have typed in or get feedback on possible
+  completion candidates.
++ =ebdb-cite-records= lets you input a contact in the current buffer.  If
+  you do this in an =org-mode= buffer, it will prefix the email address
+  with a =mailto:= tag.
+
+It is also possible to connect EBDB with the Diary and with Org's Agenda
+views.  I have no use for such features.  If, however, my needs ever
+evolve to something more demanding, I am confident this tool will cope
+with them.  For the time being, this package declaration is enough.
 
 #+begin_src emacs-lisp
 (use-package ebdb
@@ -3544,7 +3566,7 @@ tool will cope with them.  For the time being, this is enough.
   (require 'ebdb-gnus)
   (require 'ebdb-message)
   (setq ebdb-default-window-size 0.2)
-  (setq ebdb-mua-pop-up t)
+  (setq ebdb-mua-pop-up nil)
   (setq ebdb-mua-auto-update-p 'query)
   (setq ebdb-mua-sender-update-p 'query)
   (setq ebdb-mua-reader-update-p 'query)
