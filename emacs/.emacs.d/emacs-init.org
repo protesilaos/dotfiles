@@ -3721,6 +3721,83 @@ available key bindings.  These extend =magit= functionality.
   :commands git-timemachine)
 #+end_src
 
+** Generic version control (VC) framework
+   :PROPERTIES:
+   :CUSTOM_ID: h:31deeff4-dfae-48d9-a906-1f3272f29bc9
+   :END:
+
+While I have been using =magit= for all my hitherto git-related
+operations, I am starting to incorporate the various built-in version
+control tools into my workflow.  VC is a generic framework that works
+with several backends.  In practice though, I only ever use it with =git=.
+
+I started using VC through a common scenario: to produce a diff of my
+current changes formatted as a ready-to-apply patch.  This is done with
+=vc-diff= (also see the =vc-git-diff-switches= variable).  A patch can be
+applied while in the =*vc-diff*= buffer by hitting =C-c C-a=.  Fairly easy.
+
+Another nice feature is a region-specific commit log with =C-x v h=
+(=vc-region-history=).  Highlight a region and run the command to get a
+clear view of how it took form.  Quite an easy way to "git blame".  For
+a more macroscopic view you can rely on =C-x v g= or my alias =C-x v a=
+which calls =vc-annotate=.
+
+=C-x v v= (=vc-next-action=) is a hidden gem.  On a new project it will
+first ask you for a backend.  Selecting =git= will run =git init=.  Invoking
+the command again will track the file and commit the changes.  And so
+on.  The idea of an abstraction that follows a logical sequence is
+surprisingly powerful.
+
+The commit buffer presents you with a summary section followed by the
+body of the commit message, as per the conventions that govern good
+commits.  In the lower part you can see the affected files (just the
+current file by default).  The standard =C-c C-c= confirms the commit,
+while =C-c C-k= cancels it.
+
+With =vc-dir=, which I rebind to the more logical "project" mnemonic of
+=C-x v p=, you can mark with =m= several files to add to a commit (rebinding
+it also allows for its original key binding to be assigned to =vc-diff=;
+which in turn makes it consistent with =C-x v D=, else =vc-root-diff=).
+
+You can review the commit log for the current file with =C-x v l=
+(=vc-print-log=) or for the entirety of the current project with =C-x v L=
+(=vc-print-root-log=).  From there you can display any diff with =d= or find
+the prior state of the commit at point with =f=.  Use the latter as a
+starting point for reverting to a prior state: once inside that buffer
+run =C-x C-w= and overwrite the file.
+
+Based on these, you can already see how VC may be used as your main tool
+for version control, from committing changes, to pulling/pushing from/to
+a remote, viewing commit logs, etc.  It depends on your needs and
+preferences.  Run =C-x v C-h= to get a full list of the possible commands.
+Then in each of the various VC modes try =C-h m= for further help.  Also
+consult the manual and =C-h f= or =C-h v=.
+
+My method right now is to use VC for simpler commits and let Magit
+handle the more refined (or "git power user") tasks.
+
+#+begin_src emacs-lisp
+(use-package vc
+  :config
+  (setq vc-git-diff-switches "-p")
+  (setq vc-git-print-log-follow t)
+
+  (defun prot/vc-project-dir ()
+    "Unconditionally display `vc-diff' for the current project."
+    (interactive)
+    (let ((dir (vc-root-dir)))
+      (vc-dir dir)))
+  :bind (("C-x v p" . prot/vc-project-dir)
+         ("C-x v d" . vc-diff)))
+
+(use-package vc-annotate
+  :config
+  (setq vc-annotate-display-mode 'scale) ; scale to oldest
+  :bind (("C-x v a" . vc-annotate)       ; `vc-update-change-log' is not in git
+         :map vc-annotate-mode-map
+         ("t" . vc-annotate-toggle-annotation-visibility)))
+#+end_src
+
 ** Shells and terminal emulators
    :PROPERTIES:
    :CUSTOM_ID: h:0df1db3a-30ee-43e5-9086-92951a58164f
