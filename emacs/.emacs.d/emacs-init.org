@@ -2055,7 +2055,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   :init
   (setq display-buffer-alist
         '(;; top side window
-          ("\\*\\(Flycheck\\|Package-Lint\\).*"
+          ("\\*\\(Flycheck\\|Package-Lint\\|\\vc-git\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
