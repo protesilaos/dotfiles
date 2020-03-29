@@ -1880,11 +1880,27 @@ only the buffer's name.
     :CUSTOM_ID: h:06290f9c-491c-45b2-b213-0248f890c83d
     :END:
 
-=ibuffer= is a built-in replacement for =buffer-list= that allows for
-fine-grained control over the buffer list (both work similar to
-dired).
+=ibuffer= is a built-in replacement for =list-buffers= that allows for
+fine-grained control over the buffer list.  For this reason I bind it to
+=C-x C-b=.
 
-Some tweaks to the default behaviour and presentation:
+Overview of its features:
+
+- mark and delete buffers same way you do in =dired= (see the previous
+  sections on [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][dired (directory editor, file manager)]]);
+- mark by a predicate, such as name, major mode, etc.;
+- sort buffers by name, filesystem path, major mode, size;
+- run =occur= on the marked buffers (remember: Occur produces a buffer
+  that you can edit once you enable the editable state with =e=);
+- run =query-replace= on marked buffers or its regular-expression-aware
+  equivalent.
+
+Run the universal help command for major mode documentation (=C-h m=)
+while inside =ibuffer= to get a detailed list of all available commands
+and their key bindings.
+
+With regard to the following package declaration, these are my tweaks to
+the default behaviour and presentation:
 
 + Prompt for confirmation only when deleting a modified buffer.
 + Hide the summary.
@@ -1894,7 +1910,6 @@ Some tweaks to the default behaviour and presentation:
   at the last item on the list.
 + Use colours for common actions more consistently.  Inherit styles from
   Dired (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
-+ Remap default key to launch ibuffer instead of list-buffers.
 
 #+begin_src emacs-lisp
 (use-package ibuffer
@@ -1922,54 +1937,60 @@ Some tweaks to the default behaviour and presentation:
           (mark " "
                 (name 16 -1)
                 " " filename)))
-  (setq ibuffer-saved-filter-groups
-        '(("Main"
-           ("Directories" (mode . dired-mode))
-           ("Org" (mode . org-mode))
-           ("Programming" (or
-                           (mode . c-mode)
-                           (mode . conf-mode)
-                           (mode . css-mode)
-                           (mode . emacs-lisp-mode)
-                           (mode . html-mode)
-                           (mode . mhtml-mode)
-                           (mode . python-mode)
-                           (mode . ruby-mode)
-                           (mode . scss-mode)
-                           (mode . shell-script-mode)
-                           (mode . yaml-mode)))
-           ("Markdown" (mode . markdown-mode))
-           ("Magit" (or
-                     (mode . magit-blame-mode)
-                     (mode . magit-cherry-mode)
-                     (mode . magit-diff-mode)
-                     (mode . magit-log-mode)
-                     (mode . magit-process-mode)
-                     (mode . magit-status-mode)))
-           ("Apps" (or
-                    (mode . bongo-playlist-mode)
-                    (mode . elfeed-search-mode)
-                    (mode . elfeed-show-mode)))
-           ("Gnus" (or
-                    (mode . message-mode)
-                    (mode . mail-mode)
-                    (mode . gnus-article-mode)
-                    (mode . gnus-group-mode)
-                    (mode . gnus-server-mode)
-                    (mode . gnus-summary-mode)))
-           ("Emacs" (or
-                     (name . "^\\*Help\\*$")
-                     (name . "^\\*Custom.*")
-                     (name . "^\\*Org Agenda\\*$")
-                     (name . "^\\*info\\*$")
-                     (name . "^\\*scratch\\*$")
-                     (name . "^\\*Backtrace\\*$")
-                     (name . "^\\*Messages\\*$"))))))
+  (setq ibuffer-saved-filter-groups nil)
+
+  ;;;; NOTE use the following if you need to define your own groups
+  ;; (setq ibuffer-saved-filter-groups
+  ;;       '(("Main"
+  ;;          ("Directories" (mode . dired-mode))
+  ;;          ("Org" (mode . org-mode))
+  ;;          ("Programming" (or
+  ;;                          (mode . c-mode)
+  ;;                          (mode . conf-mode)
+  ;;                          (mode . css-mode)
+  ;;                          (mode . emacs-lisp-mode)
+  ;;                          (mode . html-mode)
+  ;;                          (mode . mhtml-mode)
+  ;;                          (mode . python-mode)
+  ;;                          (mode . ruby-mode)
+  ;;                          (mode . scss-mode)
+  ;;                          (mode . shell-script-mode)
+  ;;                          (mode . yaml-mode)))
+  ;;          ("Markdown" (mode . markdown-mode))
+  ;;          ("Magit" (or
+  ;;                    (mode . magit-blame-mode)
+  ;;                    (mode . magit-cherry-mode)
+  ;;                    (mode . magit-diff-mode)
+  ;;                    (mode . magit-log-mode)
+  ;;                    (mode . magit-process-mode)
+  ;;                    (mode . magit-status-mode)))
+  ;;          ("Apps" (or
+  ;;                   (mode . bongo-playlist-mode)
+  ;;                   (mode . elfeed-search-mode)
+  ;;                   (mode . elfeed-show-mode)))
+  ;;          ("Gnus" (or
+  ;;                   (mode . message-mode)
+  ;;                   (mode . mail-mode)
+  ;;                   (mode . gnus-article-mode)
+  ;;                   (mode . gnus-group-mode)
+  ;;                   (mode . gnus-server-mode)
+  ;;                   (mode . gnus-summary-mode)))
+  ;;          ("Emacs" (or
+  ;;                    (name . "^\\*Help\\*$")
+  ;;                    (name . "^\\*Custom.*")
+  ;;                    (name . "^\\*Org Agenda\\*$")
+  ;;                    (name . "^\\*info\\*$")
+  ;;                    (name . "^\\*scratch\\*$")
+  ;;                    (name . "^\\*Backtrace\\*$")
+  ;;                    (name . "^\\*Messages\\*$"))))))
   :hook
   (ibuffer-mode . hl-line-mode)
-  (ibuffer-mode . (lambda ()
-                    (ibuffer-switch-to-saved-filter-groups "Main")))
-  :bind (("C-x C-b" . ibuffer)))
+  ;;;; NOTE enable this if you also intend to use the above filter
+  ;; (ibuffer-mode . (lambda ()
+  ;;                   (ibuffer-switch-to-saved-filter-groups "Main")))
+  :bind (("C-x C-b" . ibuffer)
+         :map ibuffer-mode-map
+         ("/ g" . ibuffer-filter-by-content)))
 #+end_src
 
 ** Window configuration
