@@ -242,6 +242,7 @@
 ;;     treemacs
 ;;     undo-tree
 ;;     vc (built-in mode line status for version control)
+;;     vc-annotate (C-x v g)
 ;;     visual-regexp
 ;;     volatile-highlights
 ;;     web-mode
@@ -348,15 +349,15 @@ between foreground and background is >= 7:1)."
   :type 'number)
 
 (defcustom modus-operandi-theme-scale-2 1.1
-  "Font size that is slightly larger than `modus-theme-scale-1'."
+  "Font size slightly larger than `modus-operandi-theme-scale-1'."
   :type 'number)
 
 (defcustom modus-operandi-theme-scale-3 1.15
-  "Font size that is slightly larger than `modus-theme-scale-2'."
+  "Font size slightly larger than `modus-operandi-theme-scale-2'."
   :type 'number)
 
 (defcustom modus-operandi-theme-scale-4 1.2
-  "Font size that is slightly larger than `modus-theme-scale-3'."
+  "Font size slightly larger than `modus-operandi-theme-scale-3'."
   :type 'number)
 
 (defcustom modus-operandi-theme-visible-fringes nil
@@ -808,14 +809,14 @@ between foreground and background is >= 7:1)."
    `(centaur-tabs-unselected ((,class (:background ,bg-tab-inactive :foreground ,fg-dim))))
    `(centaur-tabs-unselected-modified ((,class (:background ,bg-tab-inactive :foreground ,fg-dim :slant italic))))
    ;;;; change-log and log-view (`vc-print-log' and `vc-print-root-log')
-   `(change-log-acknowledgment ((,class (:foreground ,yellow-nuanced))))
+   `(change-log-acknowledgment ((,class (:foreground ,fg-special-warm))))
    `(change-log-conditionals ((,class (:foreground ,magenta-alt))))
-   `(change-log-date ((,class (:foreground ,magenta-nuanced))))
-   `(change-log-email ((,class (:foreground ,cyan-nuanced))))
-   `(change-log-file ((,class (:foreground ,blue-nuanced))))
+   `(change-log-date ((,class (:foreground ,magenta))))
+   `(change-log-email ((,class (:foreground ,cyan))))
+   `(change-log-file ((,class (:foreground ,blue))))
    `(change-log-list ((,class (:foreground ,magenta-alt-other))))
-   `(change-log-name ((,class (:foreground ,cyan-nuanced))))
-   `(log-edit-header ((,class (:foreground ,blue :weight bold))))
+   `(change-log-name ((,class (:foreground ,cyan))))
+   `(log-edit-header ((,class (:foreground ,blue-alt :weight bold))))
    `(log-edit-summary ((,class (:foreground ,magenta-alt-other))))
    `(log-edit-unknown-header ((,class (:foreground ,fg-alt))))
    `(log-view-file ((,class (:foreground ,fg-special-cold :weight bold))))
@@ -1883,8 +1884,8 @@ between foreground and background is >= 7:1)."
    `(magit-dimmed ((,class (:foreground ,fg-alt))))
    `(magit-filename ((,class (:foreground ,fg-special-cold))))
    `(magit-hash ((,class (:foreground ,fg-special-warm))))
-   `(magit-log-author ((,class (:foreground ,fg-special-mild))))
-   `(magit-log-date ((,class (:foreground ,fg-dim))))
+   `(magit-log-author ((,class (:foreground ,cyan))))
+   `(magit-log-date ((,class (:foreground ,magenta))))
    `(magit-log-graph ((,class (:foreground ,fg-dim))))
    `(magit-mode-line-process ((,class (:foreground ,blue-active :weight bold))))
    `(magit-mode-line-process-error ((,class (:foreground ,red-active :weight bold))))
@@ -2825,6 +2826,29 @@ between foreground and background is >= 7:1)."
         ("XXX+" . ,red-alt)
         ("REVIEW" . ,cyan-alt-other)
         ("DEPRECATED" . ,blue-nuanced)))
+    ;;;;; vc-annotate (C-x v g)
+    `(vc-annotate-background nil)
+    `(vc-annotate-background-mode nil)
+    `(vc-annotate-color-map
+      '((20 . ,red)
+        (40 . ,magenta)
+        (60 . ,magenta-alt)
+        (80 . ,red-alt)
+        (100 . ,yellow)
+        (120 . ,yellow-alt)
+        (140 . ,fg-special-warm)
+        (160 . ,fg-special-mild)
+        (180 . ,green)
+        (200 . ,green-alt)
+        (220 . ,cyan-alt-other)
+        (240 . ,cyan-alt)
+        (260 . ,cyan)
+        (280 . ,fg-special-cold)
+        (300 . ,blue)
+        (320 . ,blue-alt)
+        (340 . ,blue-alt-other)
+        (360 . ,magenta-alt-other)))
+    `(vc-annotate-very-old-color nil)
     ;;;; xterm-color
     `(xterm-color-names [,fg-main ,red ,green ,yellow ,blue ,magenta ,cyan ,bg-alt])
     `(xterm-color-names-bright [,fg-alt ,red-alt ,green-alt ,yellow-alt ,blue-alt ,magenta-alt ,cyan-alt ,bg-main]))))
