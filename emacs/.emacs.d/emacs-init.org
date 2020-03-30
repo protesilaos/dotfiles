@@ -1407,7 +1407,8 @@ matches by leveraging the full power of Emacs' editing capabilities
     :END:
 
 This is a package that allows us to interface with the external command
-line program called "ripgrep".
+line program called "ripgrep".  My [[https://protesilaos.com/codelog/2020-03-25-emacs-ripgrep-rg/][video demo of rg.el]] (2020-03-25)
+covers the main features of this tool.
 
 What I find particularly appealing about =rg.el= is that it follows the
 interface paradigms of built-in Emacs functions, such as =grep= or =occur=.
