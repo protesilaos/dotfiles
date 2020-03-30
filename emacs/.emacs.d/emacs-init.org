@@ -3602,11 +3602,15 @@ with them.  For the time being, this package declaration is enough.
    :CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
    :END:
 
-I was already well-versed in the CLI commands for =git=, but I feel
-that =magit= offers an intuitive interface that speeds up most common
-tasks.  The real reason I use it though, is because it makes it easier
-to perform git operations while inside a directory/file.  No need to
-switch to a terminal emulator.
+I was already well-versed in the CLI commands for =git=, but I feel that
+=magit= offers an intuitive interface that speeds up most common tasks.
+The real reason I use it though, is because it makes it easier to
+perform advanced git operations while inside a directory/file.  No need
+to switch to a terminal emulator.
+
+After reviewing my Magit-related configurations, make sure to also check
+the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on the built-in Version Control framework]] where I explain,
+inter alia, how I divide my workflow between VC and Magit.
 
 *** Base Magit settings
     :PROPERTIES:
@@ -3672,12 +3676,26 @@ My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to s
 
 And this covers the standard =diff-mode=, which I use when interfacing
 with the built-in Version Control framework (see the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on VC]]).
-Both of the variables in this package declaration were introduced in
-Emacs 27.1.
+
+Overview of these tweaks:
+
++ Always start the buffer in a read-only state.  A typo will mess things
+  up when trying to apply a patch.
++ After a applying a diff hunk move on to the next one.
++ Update hunk headers automatically following an edit to the diff.
++ Show inline "refined" changes only once the hunk is in focus, not upon
+  the initial application of the "font lock" styles.
++ Do not prettify headers.  I like the standard "patch" looks.
++ Do not do any further syntax highlighting.
 
 #+begin_src emacs-lisp
 (use-package diff
   :config
+  (setq diff-default-read-only t)
+  (setq diff-advance-after-apply-hunk t)
+  (setq diff-update-on-the-fly t)
+  ;; The following are from Emacs 27.1
+  (setq diff-refine 'navigation)
   (setq diff-font-lock-prettify nil)
   (setq diff-font-lock-syntax nil))
 #+end_src
