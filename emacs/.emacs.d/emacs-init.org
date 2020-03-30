@@ -3669,8 +3669,10 @@ My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to s
   (setq magit-diff-refine-hunk t))
 #+end_src
 
-And this covers the built-in diff mode, which I seldom use.  Both of
-these variables were introduced in Emacs 27.1.
+And this covers the standard =diff-mode=, which I use when interfacing
+with the built-in Version Control framework (see the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on VC]]).
+Both of the variables in this package declaration were introduced in
+Emacs 27.1.
 
 #+begin_src emacs-lisp
 (use-package diff
@@ -3775,6 +3777,9 @@ consult the manual and =C-h f= or =C-h v=.
 
 My method right now is to use VC for simpler commits and let Magit
 handle the more refined (or "git power user") tasks.
+
+Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]]
+(2020-03-30).
 
 #+begin_src emacs-lisp
 (use-package vc
