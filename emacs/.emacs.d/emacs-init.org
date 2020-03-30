@@ -4595,13 +4595,17 @@ The package offers some more features, such as the ability to move
 between diff hunks while editing the buffer.  I still need to experiment
 with those before customising them to my liking.
 
+At any rate, this package is meant a general tool for version control
+systems, rather than a git-specific one.  Much like the built-in VC (see
+section on the [[*Generic version control (VC) framework][generic version control (VC) framework]]).
+
 #+begin_src emacs-lisp
 (use-package diff-hl
   :ensure t
   :config
   (setq diff-hl-draw-borders nil)
   (setq diff-hl-side 'left)
- :hook ((after-init . global-diff-hl-mode)))
+  :hook ((after-init . global-diff-hl-mode)))
 #+end_src
 
 *** Optional visual indicators or layout elements
