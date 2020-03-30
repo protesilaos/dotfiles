@@ -5932,19 +5932,6 @@ solution to this with the following:
 Now the contents of the clipboard are stored in the kill ring and can
 be retrieved from there (e.g. with =M-y=).
 
-*** Delete trailing whitespace
-    :PROPERTIES:
-    :CUSTOM_ID: h:d73479be-91de-4325-a93b-3f7fdcbb642e
-    :END:
-
-This always creates unnecessary diffs in git.  Just delete it upon
-saving.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :hook (before-save . delete-trailing-whitespace))
-#+end_src
-
 *** Generic feedback
     :PROPERTIES:
     :CUSTOM_ID: h:1f7c0bf3-8b0e-4baa-b1e0-7e89053d36cb
