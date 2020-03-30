@@ -345,7 +345,7 @@ instruct Emacs to terminate its process.  This ensures that edits I made
 to =emacs-init.org= are parsed into a new =emacs-init.el= at the next
 startup.
 
-For live evalutation of elisp, we have =C-x C-e= (=eval-last-elisp=).
+For live evaluation of elisp, we have =C-x C-e= (=eval-last-elisp=).
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -4732,12 +4732,12 @@ when reviewing my themes (=rainbow-mode= is activated manually).
 
 I spend much of my time in Emacs reading and writing long form texts.
 It is nice to be able to easily toggle a mode that centres the buffer,
-allowing for greater confort.
+allowing for greater comfort.
 
 Olivetti fulfils that niche very nicely.  It is not aggressive in its
 interface requirements while it does not introduce functionality beyond
 the scope of bringing the current window's buffer to the centre of the
-view.  This is exactly what I need.  Any other enhancement, such as a a
+view.  This is exactly what I need.  Any other enhancement, such as a
 larger font size can be handled by another function.
 
 The =prot/olivetti-mode= offers a toggle for activating this mode, while
