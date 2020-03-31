@@ -3709,7 +3709,7 @@ Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Intr
 
 (use-package vc-git
   :config
-  (setq vc-git-diff-switches "-p")
+  (setq vc-git-diff-switches "--patch-with-stat")
   (setq vc-git-print-log-follow t))
 
 (use-package vc-annotate
