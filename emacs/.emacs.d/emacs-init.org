@@ -3645,7 +3645,7 @@ inside the root log view, you can use an active region to show diffs in
 that range of commits.
 
 With =vc-dir=, which I rebind to the more logical "project" mnemonic of
-=C-x v p= (=prot/vc-project-dir=), you can mark with =m= several files to add
+=C-x v p= (=prot/vc-dir-project=), you can mark with =m= several files to add
 to a commit.  This modes offers easy access to the standard VC actions.
 To commit the file at point or the marked ones hit =v=.  To push do =P=.
 Same principle for diffs, logs, etc.
@@ -3685,19 +3685,27 @@ Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Intr
 #+begin_src emacs-lisp
 (use-package vc
   :config
-  (defun prot/vc-project-dir ()
-    "Unconditionally display `vc-diff' for the current project."
-    (interactive)
-    (vc-dir (vc-root-dir)))
+  (setq vc-find-revision-no-save t)
   :bind (("C-x v F" . vc-update)        ; "fetch" mnemonic
-         ("C-x v p" . prot/vc-project-dir)
          ("C-x v d" . vc-diff)))
 
 (use-package vc-dir
-  :bind (:map vc-dir-mode-map
-              ("F" . vc-update)         ; symmetric with P: `vc-push'
-              ("d" . vc-diff)           ; align with D: `vc-root-diff'
-              ("k" . vc-dir-clean-files)))
+  :config
+  (defun prot/vc-dir-project ()
+    "Unconditionally display `vc-diff' for the current project."
+    (interactive)
+    (vc-dir (vc-root-dir)))
+
+  (defun prot/vc-dir-jump ()
+    "Jump to present directory in a `vc-dir' buffer."
+    (interactive)
+    (vc-dir default-directory))
+  :bind (("C-x v p" . prot/vc-dir-project)
+         ("C-x v j" . prot/vc-dir-jump) ; similar to `dired-jump'
+         :map vc-dir-mode-map
+         ("F" . vc-update)              ; symmetric with P: `vc-push'
+         ("d" . vc-diff)                ; align with D: `vc-root-diff'
+         ("k" . vc-dir-clean-files)))
 
 (use-package vc-git
   :config
