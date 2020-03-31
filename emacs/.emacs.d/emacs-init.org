@@ -3685,8 +3685,7 @@ Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Intr
   (defun prot/vc-project-dir ()
     "Unconditionally display `vc-diff' for the current project."
     (interactive)
-    (let ((dir (vc-root-dir)))
-      (vc-dir dir)))
+    (vc-dir (vc-root-dir)))
   :bind (("C-x v F" . vc-update)        ; "fetch" mnemonic
          ("C-x v p" . prot/vc-project-dir)
          ("C-x v d" . vc-diff)))
