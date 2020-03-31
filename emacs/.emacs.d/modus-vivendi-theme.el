@@ -204,11 +204,15 @@
 ;;     outline-mode
 ;;     outline-minor-faces
 ;;     package (M-x list-packages)
+;;     page-break-lines
 ;;     paradox
 ;;     paren-face
+;;     parrot
 ;;     pass
 ;;     persp-mode
 ;;     perspective
+;;     phi-grep
+;;     phi-search
 ;;     powerline
 ;;     powerline-evil
 ;;     proced
@@ -2298,6 +2302,8 @@ between foreground and background is >= 7:1)."
    `(package-status-installed ((,class (:foreground ,fg-special-warm))))
    `(package-status-new ((,class (:foreground ,green :weight bold))))
    `(package-status-unsigned ((,class (:foreground ,red-alt :weight bold))))
+   ;;;; page-break-lines
+   `(page-break-lines ((,class (:foreground ,fg-alt))))
    ;;;; paradox
    `(paradox-archive-face ((,class (:foreground ,fg-special-mild))))
    `(paradox-comment-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
@@ -2313,6 +2319,8 @@ between foreground and background is >= 7:1)."
    `(paradox-starred-face ((,class (:foreground ,magenta-alt))))
    ;;;; paren-face
    `(parenthesis ((,class (:foreground ,fg-alt))))
+   ;;;; parrot
+   `(parrot-rotate-rotation-highlight-face ((,class (:inherit modus-theme-refine-magenta))))
    ;;;; pass
    `(pass-mode-directory-face ((,class (:foreground ,fg-special-cold :weight bold))))
    `(pass-mode-entry-face ((,class (:background ,bg-main :foreground ,fg-main))))
@@ -2323,6 +2331,19 @@ between foreground and background is >= 7:1)."
    `(persp-face-lighter-nil-persp ((,class (:foreground ,fg-active :weight bold))))
    ;;;; perspective
    `(persp-selected-face ((,class (:foreground ,blue-active :weight bold))))
+   ;;;; phi-grep
+   `(phi-grep-heading-face  ((,class (:foreground ,red-alt :weight bold
+                                              ,@(when modus-vivendi-theme-scale-headings
+                                                  (list :height modus-vivendi-theme-scale-4))))))
+   `(phi-grep-line-number-face ((,class (:foreground ,fg-special-warm))))
+   `(phi-grep-match-face ((,class (:inherit modus-theme-special-calm))))
+   `(phi-grep-modified-face ((,class (:inherit modus-theme-refine-yellow))))
+   `(phi-grep-overlay-face ((,class (:inherit modus-theme-refine-blue))))
+   ;;;; phi-search
+   `(phi-replace-preview-face ((,class (:inherit modus-theme-intense-magenta))))
+   `(phi-search-failpart-face ((,class (:inherit modus-theme-refine-red))))
+   `(phi-search-match-face ((,class (:inherit modus-theme-refine-cyan))))
+   `(phi-search-selection-face ((,class (:inherit modus-theme-intense-green :weight bold))))
    ;;;; powerline
    `(powerline-active0 ((,class (:background ,fg-inactive :foreground ,bg-inactive))))
    `(powerline-active1 ((,class (:background ,bg-active :foreground ,fg-active))))
