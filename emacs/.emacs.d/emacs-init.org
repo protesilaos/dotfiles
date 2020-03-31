@@ -3682,6 +3682,11 @@ Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Intr
   :bind (("C-x v p" . prot/vc-project-dir)
          ("C-x v d" . vc-diff)))
 
+(use-package vc-dir
+  :bind (:map vc-dir-mode-map
+              ("d" . vc-diff)           ; align with D `vc-root-diff'
+              ("k" . vc-dir-clean-files)))
+
 (use-package vc-git
   :config
   (setq vc-git-diff-switches "-p")
