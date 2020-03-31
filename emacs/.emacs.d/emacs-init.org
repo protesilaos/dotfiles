@@ -3674,7 +3674,10 @@ help.  Also consult the manual and make liberal use of =C-h f= or =C-h v=.
 
 Changes to all tracked files are highlighted in the fringe thanks to the
 =diff-hl= package which is [[#h:5b71e71f-353f-4290-951b-3fc575c0fcba][defined elsewhere in this document]] (as I
-consider it an "interface" element).
+consider it an "interface" element).  Any rules that control the
+placement of VC-related (and other) buffers are defined in the section
+on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (specifically, refer to the variable
+=display-buffer-alist=).
 
 Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]]
 (2020-03-30).
