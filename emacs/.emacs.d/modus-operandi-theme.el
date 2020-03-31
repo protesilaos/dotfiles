@@ -179,6 +179,7 @@
 ;;     lsp-mode
 ;;     lsp-ui
 ;;     magit
+;;     magit-imerge
 ;;     markdown-mode
 ;;     markup-faces (`adoc-mode')
 ;;     mentor
@@ -245,6 +246,7 @@
 ;;     vc-annotate (C-x v g)
 ;;     visual-regexp
 ;;     volatile-highlights
+;;     wcheck-mode
 ;;     web-mode
 ;;     wgrep
 ;;     which-function-mode
@@ -1924,6 +1926,8 @@ between foreground and background is >= 7:1)."
    `(magit-signature-revoked ((,class (:background ,bg-main :foreground ,magenta-intense))))
    `(magit-signature-untrusted ((,class (:background ,bg-main :foreground ,cyan-intense))))
    `(magit-tag ((,class (:foreground ,yellow-alt-other))))
+   ;;;; magit-imerge
+   `(magit-imerge-overriding-value ((,class (:foreground ,red-alt :weight bold))))
    ;;;; markdown-mode
    `(markdown-blockquote-face ((,class (:background ,bg-dim :foreground ,fg-special-warm :slant ,modus-theme-slant))))
    `(markdown-bold-face ((,class (:weight bold))))
@@ -2663,6 +2667,8 @@ between foreground and background is >= 7:1)."
    ;;;; volatile-highlights
    `(vhl/default-face ((,class (,@(and (>= emacs-major-version 27) '(:extend t))
                                 :background ,bg-alt :foreground ,blue-nuanced))))
+   ;;;; wcheck-mode
+   `(wcheck-default-face ((,class (:foreground ,red :underline t))))
    ;;;; web-mode
    `(web-mode-annotation-face ((,class (:inherit web-mode-comment-face))))
    `(web-mode-annotation-html-face ((,class (:inherit web-mode-comment-face))))
