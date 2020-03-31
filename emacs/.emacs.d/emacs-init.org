@@ -3579,25 +3579,211 @@ with them.  For the time being, this package declaration is enough.
   (setq ebdb-add-mails 'query))
 #+end_src
 
-** Git front-end (Magit) and relevant configurations
+** Version control tools
    :PROPERTIES:
-   :CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
+   :CUSTOM_ID: h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7
    :END:
-
-I was already well-versed in the CLI commands for =git=, but I feel that
-=magit= offers an intuitive interface that speeds up most common tasks.
-The real reason I use it though, is because it makes it easier to
-perform advanced git operations while inside a directory/file.  No need
-to switch to a terminal emulator.
-
-After reviewing my Magit-related configurations, make sure to also check
-the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on the built-in Version Control framework]] where I explain,
-inter alia, how I divide my workflow between VC and Magit.
-
-*** Base Magit settings
+*** Generic version control (VC) framework
     :PROPERTIES:
-    :CUSTOM_ID: h:21ca155a-d0d7-4710-b34a-a0d7a901ac0d
+    :CUSTOM_ID: h:31deeff4-dfae-48d9-a906-1f3272f29bc9
     :END:
+
+VC is a generic framework that works with several version control
+systems, else "backends".  In practice though, I only ever use it with
+=git=.  Compared with =magit= (see section on [[#h:76d1b392-e693-40dc-b320-d4c1047115ab][Magit configs]]), =vc= offers a
+more abstract, buffer-oriented workflow that, I feel, covers all common
+version control cases.
+
+With VC we can track and ignore files, commit changes, view diffs and
+logs, push and pull from a remote…  Everything you would expect from a
+version control system.  But I am not sure it is possible or convenient
+to perform tasks such as staging only a particular part of a diff,
+handling multiple remotes, interactively rebasing the commit log, etc.
+
+As such, I employ VC as my generalist interface to the most common Git
+interactions: diffs, commits, logs.  While I rely on Magit for expedient
+access to the more advanced features of Git, all of which are rendered
+approachable through an interactive/modal interface.
+
+I started using VC with this a common scenario: to produce a diff of my
+current changes formatted as a ready-to-apply patch.  This is done with
+=vc-diff= (also see the =vc-git-diff-switches= variable).  A diff hunk can
+be applied while in the =*vc-diff*= buffer by hitting =C-c C-a=.  Fairly
+easy.  One can always save the diff buffer using the standard =C-x C-w=
+command (=write-file=).  Use these to send patches (e.g. via email),
+without having to go through proprietary web tools.
+
+Another nice feature is a region-specific commit log with =C-x v h=
+(=vc-region-history=).  Highlight a region and run the command to get a
+clear view of how it took form.  Quite an easy way to "git blame".  For
+a more macroscopic view of the file's entire history you can always rely
+on =C-x v g= or my alias =C-x v a= which calls =vc-annotate=.  Commits are
+colour-coded with those on the red side of the spectrum being the newest
+ones, while those on the blue end representing the older ones.
+
+=C-x v v= (=vc-next-action=) is a hidden gem: a paradigm of minimalism done
+right.  On a new project it will first ask you for a backend.  Selecting
+=git= will run =git init=.  Invoking the command again will track the file
+and commit the changes.  If the file is already being tracked, it will
+just proceed to the next step.  It always follows a logical sequence
+which translates into a powerful metaphor of going through the process
+of committing changes to files.
+
+The commit buffer presents you with a summary section followed by the
+body of the commit message, separated by an empty line (shown as a
+border) as per the conventions that govern good commits.  In the lower
+part you can see the affected files (just the current file by default).
+The standard =C-c C-c= confirms the commit, while =C-c C-k= cancels it.
+
+With =vc-dir=, which I rebind to the more logical "project" mnemonic of
+=C-x v p= (=prot/vc-project-dir=), you can mark with =m= several files to add
+to a commit.  Or just go to the root directory and mark it for gathering
+all included files.  Rebinding =vc-dir= has another upside of allowing its
+original key binding to be assigned to =vc-diff=; which in turn makes that
+consistent with the =C-x v D= sequence, else =vc-root-diff=.
+
+You can review the commit log for the current file with =C-x v l=
+(=vc-print-log=) or for the entirety of the current project with =C-x v L=
+(=vc-print-root-log=).  From there you can display any diff with =d= or find
+the prior state of the commit at point with =f=.  Use the latter as a
+starting point for reverting to a prior state.  Also note that while
+inside the root log view, you can use an active region to show diffs in
+that range of commits.
+
+Some more common actions:
+
++ Pulling =C-x v += (=vc-update=).
++ Pushing =C-x v P= (=vc-push=).
++ Reverting =C-x v u= (=vc-revert=).
+
+Based on these (and there are more), you can already see how VC may be
+used as your main tool for version control, from committing changes, to
+pulling/pushing from/to a remote, viewing commit logs, etc.  It depends
+on your needs and preferences.  Run =C-x v C-h= to get a full list of the
+possible commands.  Read the docstring of each command for further
+information.  Then in each of the various VC modes try =C-h m= for further
+help.  Also consult the manual and make liberal use of =C-h f= or =C-h v=.
+
+Changes to all tracked files are highlighted in the fringe thanks to the
+=diff-hl= package which is [[#h:5b71e71f-353f-4290-951b-3fc575c0fcba][defined elsewhere in this document]] (as I
+consider it an "interface" element).
+
+Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]]
+(2020-03-30).
+
+#+begin_src emacs-lisp
+(use-package vc
+  :config
+  (defun prot/vc-project-dir ()
+    "Unconditionally display `vc-diff' for the current project."
+    (interactive)
+    (let ((dir (vc-root-dir)))
+      (vc-dir dir)))
+  :bind (("C-x v p" . prot/vc-project-dir)
+         ("C-x v d" . vc-diff)))
+
+(use-package vc-git
+  :config
+  (setq vc-git-diff-switches "-p")
+  (setq vc-git-print-log-follow t))
+
+(use-package vc-annotate
+  :config
+  (setq vc-annotate-display-mode 'scale) ; scale to oldest
+  :bind (("C-x v a" . vc-annotate)       ; `vc-update-change-log' is not in git
+         :map vc-annotate-mode-map
+         ("t" . vc-annotate-toggle-annotation-visibility)))
+#+end_src
+
+*** Diff-mode
+    :PROPERTIES:
+    :CUSTOM_ID: h:2ff46d23-09d5-4d92-b0af-2339dc19719f
+    :END:
+
+This covers the standard =diff-mode=, which I use when interfacing with
+the built-in Version Control framework (see the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on VC]]), but also
+find while browsing various newsgroups via Gnus (see [[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).
+
+Overview of these tweaks:
+
++ Always start the buffer in a read-only state.  A typo will mess things
+  up when trying to apply a patch.
++ After a applying a diff hunk move on to the next one.
++ Update hunk headers automatically following an edit to the diff.
++ Show inline "refined" changes only once the hunk is in focus, not upon
+  the initial application of the "font lock" styles.
++ Do not prettify headers.  I like the standard "patch" looks.
++ Do not do any further syntax highlighting.
+
+#+begin_src emacs-lisp
+(use-package diff
+  :config
+  (setq diff-default-read-only t)
+  (setq diff-advance-after-apply-hunk t)
+  (setq diff-update-on-the-fly t)
+  ;; The following are from Emacs 27.1
+  (setq diff-refine 'navigation)
+  (setq diff-font-lock-prettify nil)
+  (setq diff-font-lock-syntax nil))
+#+end_src
+
+*** TODO ediff
+    :PROPERTIES:
+    :CUSTOM_ID: h:89514b44-1225-4ef8-8f86-a23d5592b246
+    :END:
+
+*** Commit log editing
+    :PROPERTIES:
+    :CUSTOM_ID: h:4df7a1f5-a144-4848-b3aa-8796d76d5fb9
+    :END:
+
+The =log-edit= library defines a set of general commands that we can use
+to, inter alia, commit changes to Git, using the surprisingly powerful
+[[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][built-in Version Control (VC) framework]].
+
+Overview of the following tweaks:
+
++ While editing a commit message, only prompt for confirmation if the
+  list of files has changed since the beginning of the editing session.
++ Once the commit is done, remove its buffer.
++ Always add a newline.
++ Do not offer to manually write an =Author:= header.  Though this can be
+  useful if someone sends a patch.
+
+Also make sure to read the guide for [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  I
+always use =auto-fill-mode= to wrap lines to the value of =fill-column= (see
+[[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][relevant configs]]).
+
+#+begin_src emacs-lisp
+(use-package log-edit
+  :config
+  (setq log-edit-confirm 'changed)
+  (setq log-edit-keep-buffer nil)
+  (setq log-edit-require-final-newline t)
+  (setq log-edit-setup-add-author nil))
+#+end_src
+
+*** Interactive git front-end (Magit)
+    :PROPERTIES:
+    :CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
+    :END:
+
+As noted in the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on the built-in Version Control framework]] I use
+Magit for easy access to the advanced features of Git.  While I rely on
+the built-in tools for all day-to-day operations.
+
+Magit offers a modal interface where the full power of =git= is neatly
+organised in sets of keys that are directly accessible without holding
+down any modifiers.
+
+While inside the =magit-status= buffer, hit =?= to produce a transient menu
+with the possible vectors to action.  Do it again inside each of the
+Magit buffers to view the keys that work for their context.
+
+**** Base Magit settings
+     :PROPERTIES:
+     :CUSTOM_ID: h:21ca155a-d0d7-4710-b34a-a0d7a901ac0d
+     :END:
 
 Magit has good defaults.  I only found a few things that I would like to
 customise, which I do in the following package declarations.
@@ -3605,14 +3791,13 @@ customise, which I do in the following package declarations.
 #+begin_src emacs-lisp
 (use-package magit
   :ensure t
-  :bind (("C-c g" . magit-status)
-         ("s-g" . magit-status)))
+  :bind ("C-c g" . magit-status))
 #+end_src
 
-*** Git commits
-    :PROPERTIES:
-    :CUSTOM_ID: h:f851e0cc-099c-4309-8517-b2f20ab18ab4
-    :END:
+**** Magit commits
+     :PROPERTIES:
+     :CUSTOM_ID: h:f851e0cc-099c-4309-8517-b2f20ab18ab4
+     :END:
 
 The following package is configured in accordance with the guidelines
 provided by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is
@@ -3638,16 +3823,14 @@ set elsewhere in this document to 72 characters long.
           overlong-summary-line)))
 #+end_src
 
-*** Git diffs
-    :PROPERTIES:
-    :CUSTOM_ID: h:c7a465c1-f33a-42d8-9617-fff3e1460060
-    :END:
+**** Magit diffs
+     :PROPERTIES:
+     :CUSTOM_ID: h:c7a465c1-f33a-42d8-9617-fff3e1460060
+     :END:
 
 The settings below are for the diff screens that Magit produces.  I just
 want to highlight changes within a line, not just the line itself.  I
 enable it only for the focused hunk (there is an option for ='all=).
-
-My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to style these appropriately.
 
 #+begin_src emacs-lisp
 (use-package magit-diff
@@ -3656,36 +3839,10 @@ My [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes are configured]] to s
   (setq magit-diff-refine-hunk t))
 #+end_src
 
-And this covers the standard =diff-mode=, which I use when interfacing
-with the built-in Version Control framework (see the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on VC]]).
-
-Overview of these tweaks:
-
-+ Always start the buffer in a read-only state.  A typo will mess things
-  up when trying to apply a patch.
-+ After a applying a diff hunk move on to the next one.
-+ Update hunk headers automatically following an edit to the diff.
-+ Show inline "refined" changes only once the hunk is in focus, not upon
-  the initial application of the "font lock" styles.
-+ Do not prettify headers.  I like the standard "patch" looks.
-+ Do not do any further syntax highlighting.
-
-#+begin_src emacs-lisp
-(use-package diff
-  :config
-  (setq diff-default-read-only t)
-  (setq diff-advance-after-apply-hunk t)
-  (setq diff-update-on-the-fly t)
-  ;; The following are from Emacs 27.1
-  (setq diff-refine 'navigation)
-  (setq diff-font-lock-prettify nil)
-  (setq diff-font-lock-syntax nil))
-#+end_src
-
-*** Magit repo list
-    :PROPERTIES:
-    :CUSTOM_ID: h:35972439-0b28-4d33-8091-c6b5f1f02579
-    :END:
+**** Magit repo list
+     :PROPERTIES:
+     :CUSTOM_ID: h:35972439-0b28-4d33-8091-c6b5f1f02579
+     :END:
 
 When maintaining a number of projects, it sometimes is necessary to
 produce a full list of them with their corresponding Magit status.  That
@@ -3699,86 +3856,6 @@ examined further.
   :config
   (setq magit-repository-directories
         '(("~/Git/Projects" . 1))))
-#+end_src
-
-** Generic version control (VC) framework
-   :PROPERTIES:
-   :CUSTOM_ID: h:31deeff4-dfae-48d9-a906-1f3272f29bc9
-   :END:
-
-While I have been using =magit= for all my hitherto git-related
-operations, I am starting to incorporate the various built-in version
-control tools into my workflow.  VC is a generic framework that works
-with several backends.  In practice though, I only ever use it with =git=.
-
-I started using VC through a common scenario: to produce a diff of my
-current changes formatted as a ready-to-apply patch.  This is done with
-=vc-diff= (also see the =vc-git-diff-switches= variable).  A patch can be
-applied while in the =*vc-diff*= buffer by hitting =C-c C-a=.  Fairly easy.
-
-Another nice feature is a region-specific commit log with =C-x v h=
-(=vc-region-history=).  Highlight a region and run the command to get a
-clear view of how it took form.  Quite an easy way to "git blame".  For
-a more macroscopic view you can rely on =C-x v g= or my alias =C-x v a=
-which calls =vc-annotate=.
-
-=C-x v v= (=vc-next-action=) is a hidden gem.  On a new project it will
-first ask you for a backend.  Selecting =git= will run =git init=.  Invoking
-the command again will track the file and commit the changes.  And so
-on.  The idea of an abstraction that follows a logical sequence is
-surprisingly powerful.
-
-The commit buffer presents you with a summary section followed by the
-body of the commit message, as per the conventions that govern good
-commits.  In the lower part you can see the affected files (just the
-current file by default).  The standard =C-c C-c= confirms the commit,
-while =C-c C-k= cancels it.
-
-With =vc-dir=, which I rebind to the more logical "project" mnemonic of
-=C-x v p=, you can mark with =m= several files to add to a commit (rebinding
-it also allows for its original key binding to be assigned to =vc-diff=;
-which in turn makes it consistent with =C-x v D=, else =vc-root-diff=).
-
-You can review the commit log for the current file with =C-x v l=
-(=vc-print-log=) or for the entirety of the current project with =C-x v L=
-(=vc-print-root-log=).  From there you can display any diff with =d= or find
-the prior state of the commit at point with =f=.  Use the latter as a
-starting point for reverting to a prior state: once inside that buffer
-run =C-x C-w= and overwrite the file.
-
-Based on these, you can already see how VC may be used as your main tool
-for version control, from committing changes, to pulling/pushing from/to
-a remote, viewing commit logs, etc.  It depends on your needs and
-preferences.  Run =C-x v C-h= to get a full list of the possible commands.
-Then in each of the various VC modes try =C-h m= for further help.  Also
-consult the manual and =C-h f= or =C-h v=.
-
-My method right now is to use VC for simpler commits and let Magit
-handle the more refined (or "git power user") tasks.
-
-Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]]
-(2020-03-30).
-
-#+begin_src emacs-lisp
-(use-package vc
-  :config
-  (setq vc-git-diff-switches "-p")
-  (setq vc-git-print-log-follow t)
-
-  (defun prot/vc-project-dir ()
-    "Unconditionally display `vc-diff' for the current project."
-    (interactive)
-    (let ((dir (vc-root-dir)))
-      (vc-dir dir)))
-  :bind (("C-x v p" . prot/vc-project-dir)
-         ("C-x v d" . vc-diff)))
-
-(use-package vc-annotate
-  :config
-  (setq vc-annotate-display-mode 'scale) ; scale to oldest
-  :bind (("C-x v a" . vc-annotate)       ; `vc-update-change-log' is not in git
-         :map vc-annotate-mode-map
-         ("t" . vc-annotate-toggle-annotation-visibility)))
 #+end_src
 
 ** Shells and terminal emulators
@@ -4561,6 +4638,7 @@ section on the [[*Generic version control (VC) framework][generic version contro
 #+begin_src emacs-lisp
 (use-package diff-hl
   :ensure t
+  :after vc
   :config
   (setq diff-hl-draw-borders nil)
   (setq diff-hl-side 'left)
