@@ -1792,24 +1792,6 @@ I call them with =M-x= as their utility is very specialised.
          ("s-J" . dired-jump-other-window)))
 #+end_src
 
-*** dired-rsync
-    :PROPERTIES:
-    :CUSTOM_ID: h:94cd0dcb-4d1b-4641-9090-73934ded6e31
-    :END:
-
-The =rsync= utility is great for performing file transfers between
-different systems (such as via SSH).  I have been using the standard CLI
-tool for quite some time now.  This package offers integration with
-Dired (do =M-x man rsync RET= and read this package's README for more
-information on the technicalities).
-
-#+begin_src emacs-lisp
-(use-package dired-rsync
-  :ensure t
-  :bind (:map dired-mode-map
-              ("r" . dired-rsync)))
-#+end_src
-
 *** diredfl (more dired colours)
     :PROPERTIES:
     :CUSTOM_ID: h:26ddf3cb-60f0-4e06-8c03-523fc092b8e8
@@ -3717,29 +3699,6 @@ examined further.
   :config
   (setq magit-repository-directories
         '(("~/Git/Projects" . 1))))
-#+end_src
-
-*** Git time machine
-    :PROPERTIES:
-    :CUSTOM_ID: h:d91ae6cb-433e-4efa-9580-07c5a59e5e29
-    :END:
-
-One of the major upsides of keeping files under version control is the
-ability to revert to a previous state in the history of changes.  By
-using =git-timemachine= we can flip through a file's full list of
-permutations.  Reverting to a given phase is as easy as writing the
-buffer to a file, with =C-x C-w=.  In general, it might be better to save
-a version as a different file and then run =M-x diff= between the two.  Or
-maybe you want to do so with three files, in which case =M-x ediff3= is
-your friend.
-
-Once inside the time machine, hit =?= to get a help interface with the
-available key bindings.  These extend =magit= functionality.
-
-#+begin_src emacs-lisp
-(use-package git-timemachine
-  :ensure t
-  :commands git-timemachine)
 #+end_src
 
 ** Generic version control (VC) framework
