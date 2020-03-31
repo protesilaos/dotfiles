@@ -4398,7 +4398,7 @@ Also run `prot/modus-themes-toggle-hook'."
     (run-hooks 'prot/modus-themes-toggle-hook))
 
   (defun prot/describe-face (pos)
-    "Print message with name of face[s] at point.
+    "Print message with name of face at point.
 
 A lightweight alternative to `what-cursor-position' and its
 prefixed variant."
