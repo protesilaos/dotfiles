@@ -3631,16 +3631,10 @@ of committing changes to files.
 
 The commit buffer presents you with a summary section followed by the
 body of the commit message, separated by an empty line (shown as a
-border) as per the conventions that govern good commits.  In the lower
-part you can see the affected files (just the current file by default).
-The standard =C-c C-c= confirms the commit, while =C-c C-k= cancels it.
-
-With =vc-dir=, which I rebind to the more logical "project" mnemonic of
-=C-x v p= (=prot/vc-project-dir=), you can mark with =m= several files to add
-to a commit.  Or just go to the root directory and mark it for gathering
-all included files.  Rebinding =vc-dir= has another upside of allowing its
-original key binding to be assigned to =vc-diff=; which in turn makes that
-consistent with the =C-x v D= sequence, else =vc-root-diff=.
+border) as per the conventions that govern good commit messages.  In the
+lower part you can see the affected files (just the current file by
+default).  The standard =C-c C-c= confirms the commit, while =C-c C-k=
+cancels it.
 
 You can review the commit log for the current file with =C-x v l=
 (=vc-print-log=) or for the entirety of the current project with =C-x v L=
@@ -3650,11 +3644,25 @@ starting point for reverting to a prior state.  Also note that while
 inside the root log view, you can use an active region to show diffs in
 that range of commits.
 
-Some more common actions:
+With =vc-dir=, which I rebind to the more logical "project" mnemonic of
+=C-x v p= (=prot/vc-project-dir=), you can mark with =m= several files to add
+to a commit.  This modes offers easy access to the standard VC actions.
+To commit the file at point or the marked ones hit =v=.  To push do =P=.
+Same principle for diffs, logs, etc.
 
-+ Pulling =C-x v += (=vc-update=).
-+ Pushing =C-x v P= (=vc-push=).
-+ Reverting =C-x v u= (=vc-revert=).
+By the way, rebinding =vc-dir= has another upside of allowing its original
+key binding to be assigned to =vc-diff=; which in turn makes that
+mnemonically consistent with the =C-x v D= sequence, else =vc-root-diff=
+(make sure to check my key re-bindings or aliases).
+
+Some more common actions (read their docstrings for further help):
+
+| Command         | Key chord | VC-dir key |
+|-----------------+-----------+------------|
+| vc-update       | C-x v +   | +          |
+| vc-push         | C-x v P   | P          |
+| vc-log-incoming | C-x v I   | I          |
+| vc-log-outgoing | C-x v O   | O          |
 
 Based on these (and there are more), you can already see how VC may be
 used as your main tool for version control, from committing changes, to
@@ -3679,12 +3687,14 @@ Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Intr
     (interactive)
     (let ((dir (vc-root-dir)))
       (vc-dir dir)))
-  :bind (("C-x v p" . prot/vc-project-dir)
+  :bind (("C-x v F" . vc-update)        ; "fetch" mnemonic
+         ("C-x v p" . prot/vc-project-dir)
          ("C-x v d" . vc-diff)))
 
 (use-package vc-dir
   :bind (:map vc-dir-mode-map
-              ("d" . vc-diff)           ; align with D `vc-root-diff'
+              ("F" . vc-update)         ; symmetric with P: `vc-push'
+              ("d" . vc-diff)           ; align with D: `vc-root-diff'
               ("k" . vc-dir-clean-files)))
 
 (use-package vc-git
@@ -3731,11 +3741,6 @@ Overview of these tweaks:
   (setq diff-font-lock-prettify nil)
   (setq diff-font-lock-syntax nil))
 #+end_src
-
-*** TODO ediff
-    :PROPERTIES:
-    :CUSTOM_ID: h:89514b44-1225-4ef8-8f86-a23d5592b246
-    :END:
 
 *** Commit log editing
     :PROPERTIES:
