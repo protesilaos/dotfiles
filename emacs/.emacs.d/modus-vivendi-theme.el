@@ -88,6 +88,7 @@
 ;;     counsel-org-capture-string
 ;;     cov
 ;;     csv-mode
+;;     ctrlf
 ;;     custom (M-x customize)
 ;;     dap-mode
 ;;     dashboard (emacs-dashboard)
@@ -213,6 +214,7 @@
 ;;     perspective
 ;;     phi-grep
 ;;     phi-search
+;;     pomidor
 ;;     powerline
 ;;     powerline-evil
 ;;     proced
@@ -244,6 +246,7 @@
 ;;     syslog-mode
 ;;     telephone-line
 ;;     term
+;;     tomatinho
 ;;     transient (pop-up windows like Magit's)
 ;;     treemacs
 ;;     undo-tree
@@ -936,6 +939,10 @@ between foreground and background is >= 7:1)."
    `(cov-none-face ((,class (:foreground ,cyan-intense))))
    ;;;; csv-mode
    `(csv-separator-face ((,class (:background ,bg-special-cold :foreground ,fg-main))))
+   ;;;; ctrlf
+   `(ctrlf-highlight-active ((,class (:inherit modus-theme-intense-green :weight bold))))
+   `(ctrlf-highlight-line ((,class (:background ,bg-hl-line))))
+   `(ctrlf-highlight-passive ((,class (:inherit modus-theme-refine-cyan))))
    ;;;; custom (M-x customize)
    `(custom-button ((,class (:box (:line-width 2 :color nil :style released-button)
                                   :background ,bg-active :foreground ,fg-main))))
@@ -2344,6 +2351,11 @@ between foreground and background is >= 7:1)."
    `(phi-search-failpart-face ((,class (:inherit modus-theme-refine-red))))
    `(phi-search-match-face ((,class (:inherit modus-theme-refine-cyan))))
    `(phi-search-selection-face ((,class (:inherit modus-theme-intense-green :weight bold))))
+   ;;;; pomidor
+   `(pomidor-break-face ((,class (:foreground ,blue-alt-other))))
+   `(pomidor-overwork-face ((,class (:foreground ,red-alt-other))))
+   `(pomidor-skip-face ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
+   `(pomidor-work-face ((,class (:foreground ,green-alt-other))))
    ;;;; powerline
    `(powerline-active0 ((,class (:background ,fg-inactive :foreground ,bg-inactive))))
    `(powerline-active1 ((,class (:background ,bg-active :foreground ,fg-active))))
@@ -2627,6 +2639,10 @@ between foreground and background is >= 7:1)."
    `(term-color-red ((,class (:background ,red :foreground ,red))))
    `(term-color-yellow ((,class (:background ,yellow :foreground ,yellow))))
    `(term-underline ((,class (:underline t))))
+   ;;;; tomatinho
+   `(tomatinho-ok-face ((,class (:foreground ,blue-intense))))
+   `(tomatinho-pause-face ((,class (:foreground ,yellow-intense))))
+   `(tomatinho-reset-face ((,class (:foreground ,fg-alt))))
    ;;;; transient
    `(transient-active-infix ((,class (:inherit modus-theme-special-mild))))
    `(transient-argument ((,class (:foreground ,green :weight bold))))
