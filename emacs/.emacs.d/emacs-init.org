@@ -4535,7 +4535,7 @@ time and date.  The rest is noise.
 #+begin_src emacs-lisp
 (use-package time
   :config
-  (setq display-time-format "%Y-%m-%e  %H:%M")
+  (setq display-time-format "%Y-%m-%d  %H:%M")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
   ;; (setq display-time-day-and-date t)
