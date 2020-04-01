@@ -4380,6 +4380,7 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
     (setq modus-operandi-theme-slanted-constructs t
           modus-operandi-theme-bold-constructs nil
           modus-operandi-theme-visible-fringes t
+          modus-operandi-theme-subtle-diffs t
           modus-operandi-theme-distinct-org-blocks nil
           modus-operandi-theme-proportional-fonts nil
           modus-operandi-theme-scale-headings t
@@ -4394,6 +4395,7 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
     (setq modus-vivendi-theme-slanted-constructs t
           modus-vivendi-theme-bold-constructs nil
           modus-vivendi-theme-visible-fringes t
+          modus-vivendi-theme-subtle-diffs t
           modus-vivendi-theme-distinct-org-blocks nil
           modus-vivendi-theme-proportional-fonts nil
           modus-vivendi-theme-scale-headings t
