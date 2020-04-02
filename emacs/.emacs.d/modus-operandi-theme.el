@@ -152,6 +152,7 @@
 ;;     helm-ls-git
 ;;     helm-switch-shell
 ;;     helm-xref
+;;     helpful
 ;;     highlight-blocks
 ;;     highlight-defined
 ;;     highlight-escape-sequences (`hes-mode')
@@ -1654,6 +1655,9 @@ AMOUNT is a customisation option."
    ;;;; helm-xref
    `(helm-xref-file-name ((,class (:foreground ,fg-special-cold :weight bold))))
    `(helm-xref-file-name ((,class (:foreground ,fg-special-warm))))
+   ;;;; helpful
+   `(helpful-heading  ((,class (:inherit ,modus-theme-variable-pitch :foreground ,fg-main :weight bold
+                                         ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4)))))
    ;;;; highlight region or ad-hoc regexp
    `(hi-black-b ((,class (:background ,fg-main :foreground ,bg-main))))
    `(hi-blue ((,class (:background ,bg-alt :foreground ,blue :underline t))))
@@ -1927,7 +1931,7 @@ AMOUNT is a customisation option."
    `(magit-diff-lines-heading ((,class (:inherit modus-theme-refine-magenta))))
    `(magit-diff-removed ((,class ,(modus-operandi-theme-diffs
                                    bg-main red
-                                   bg-diff-focus-removed fg-diff-focus-removed))))
+                                   bg-diff-removed fg-diff-removed))))
    `(magit-diff-removed-highlight ((,class ,(modus-operandi-theme-diffs
                                              bg-dim red
                                              bg-diff-focus-removed fg-diff-focus-removed))))
