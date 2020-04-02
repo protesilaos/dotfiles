@@ -1903,10 +1903,6 @@ the default behaviour and presentation:
   (setq ibuffer-show-empty-filter-groups nil)
   (setq ibuffer-movement-cycle nil)
   (setq ibuffer-default-sorting-mode 'filename/process)
-  ;;;; NOTE built into the Modus themes
-  ;; (setq ibuffer-deletion-face 'dired-flagged)
-  ;; (setq ibuffer-marked-face 'dired-marked)
-  (setq ibuffer-title-face 'font-lock-doc-face)
   (setq ibuffer-use-header-line t)
   (setq ibuffer-default-shrink-to-minimum-size nil)
   (setq ibuffer-formats
@@ -1921,59 +1917,49 @@ the default behaviour and presentation:
                 (name 16 -1)
                 " " filename)))
   (setq ibuffer-saved-filter-groups nil)
-
-  ;;;; NOTE use the following if you need to define your own groups
-  ;; (setq ibuffer-saved-filter-groups
-  ;;       '(("Main"
-  ;;          ("Directories" (mode . dired-mode))
-  ;;          ("Org" (mode . org-mode))
-  ;;          ("Programming" (or
-  ;;                          (mode . c-mode)
-  ;;                          (mode . conf-mode)
-  ;;                          (mode . css-mode)
-  ;;                          (mode . emacs-lisp-mode)
-  ;;                          (mode . html-mode)
-  ;;                          (mode . mhtml-mode)
-  ;;                          (mode . python-mode)
-  ;;                          (mode . ruby-mode)
-  ;;                          (mode . scss-mode)
-  ;;                          (mode . shell-script-mode)
-  ;;                          (mode . yaml-mode)))
-  ;;          ("Markdown" (mode . markdown-mode))
-  ;;          ("Magit" (or
-  ;;                    (mode . magit-blame-mode)
-  ;;                    (mode . magit-cherry-mode)
-  ;;                    (mode . magit-diff-mode)
-  ;;                    (mode . magit-log-mode)
-  ;;                    (mode . magit-process-mode)
-  ;;                    (mode . magit-status-mode)))
-  ;;          ("Apps" (or
-  ;;                   (mode . bongo-playlist-mode)
-  ;;                   (mode . elfeed-search-mode)
-  ;;                   (mode . elfeed-show-mode)))
-  ;;          ("Gnus" (or
-  ;;                   (mode . message-mode)
-  ;;                   (mode . mail-mode)
-  ;;                   (mode . gnus-article-mode)
-  ;;                   (mode . gnus-group-mode)
-  ;;                   (mode . gnus-server-mode)
-  ;;                   (mode . gnus-summary-mode)))
-  ;;          ("Emacs" (or
-  ;;                    (name . "^\\*Help\\*$")
-  ;;                    (name . "^\\*Custom.*")
-  ;;                    (name . "^\\*Org Agenda\\*$")
-  ;;                    (name . "^\\*info\\*$")
-  ;;                    (name . "^\\*scratch\\*$")
-  ;;                    (name . "^\\*Backtrace\\*$")
-  ;;                    (name . "^\\*Messages\\*$"))))))
   :hook
   (ibuffer-mode . hl-line-mode)
-  ;;;; NOTE enable this if you also intend to use the above filter
-  ;; (ibuffer-mode . (lambda ()
-  ;;                   (ibuffer-switch-to-saved-filter-groups "Main")))
   :bind (("C-x C-b" . ibuffer)
          :map ibuffer-mode-map
+         ("s n" . ibuffer-do-sort-by-alphabetic) ; "sort name" mnemonic
          ("/ g" . ibuffer-filter-by-content)))
+#+end_src
+
+**** Ibuffer integration with VC (version control framework)
+     :PROPERTIES:
+     :CUSTOM_ID: h:fcb95193-4049-4ae3-92ae-13176606e165
+     :END:
+
+This package offers a few functions for operating on =ibuffer= items based
+on their corresponding version control data.
+
+To me the most common case is to establish filter groups on a
+per-project basis with =ibuffer-vc-set-filter-groups-by-vc-root=.  This
+makes it easier to get an overview of where each buffer belongs,
+especially in cases where you have similar looking names.
+
+In terms of functionality, filter groups allow for per-group actions:
+
++ Move between group headings with =M-n= and =M-p=.
++ Toggle the visibility of the group with =RET=, while the point is over
+  the heading.
++ With point over a heading, =m= will mark all its buffers, while =d= will
+  mark them for deletion (confirm the latter with =x=, same as with
+  =dired=).
+
+The above granted, I prefer to create such filter groups manually via a
+convenient key binding, rather than calling the function through a
+relevant hook.
+
+Make sure to also read the section on [[#h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7][version control tools]].
+
+#+begin_src emacs-lisp
+(use-package ibuffer-vc
+  :ensure t
+  :after (ibuffer vc)
+  :bind (:map ibuffer-mode-map
+              ("/ V" . ibuffer-vc-set-filter-groups-by-vc-root)
+              ("/ <deletechar>" . ibuffer-clear-filter-groups)))
 #+end_src
 
 ** Window configuration
