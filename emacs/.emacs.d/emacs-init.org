@@ -1891,8 +1891,6 @@ the default behaviour and presentation:
 + Do not show empty filter groups.
 + Do not cycle movements.  So do not go to the top when moving downward
   at the last item on the list.
-+ Use colours for common actions more consistently.  Inherit styles from
-  Dired (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]).
 
 #+begin_src emacs-lisp
 (use-package ibuffer
