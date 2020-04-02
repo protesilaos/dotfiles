@@ -1558,7 +1558,8 @@ as =-AFXhlv --group-directories-first=).
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
   (setq delete-by-moving-to-trash t)
-  (setq dired-listing-switches "-AFhlv --group-directories-first")
+  (setq dired-listing-switches 
+        "-AGFhlv --group-directories-first --time-style=long-iso")
   (setq dired-dwim-target t)
   :hook ((dired-mode . dired-hide-details-mode)
          (dired-mode . hl-line-mode)))
@@ -1570,14 +1571,14 @@ as =-AFXhlv --group-directories-first=).
   (setq dired-create-destination-dirs 'ask)
   (setq dired-vc-rename-file t)
   :bind (:map dired-mode-map
-              ("C-c +" . dired-create-empty-file)
+              ("C-+" . dired-create-empty-file)
               ("M-s f" . nil)))
 
 (use-package find-dired
   :after dired
   :config
   (setq find-ls-option
-        '("-ls" . "-AFhlv --group-directories-first"))
+        '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
   (setq find-name-arg "-iname"))
 
 (use-package async
@@ -1919,7 +1920,10 @@ the default behaviour and presentation:
   (ibuffer-mode . hl-line-mode)
   :bind (("C-x C-b" . ibuffer)
          :map ibuffer-mode-map
-         ("s n" . ibuffer-do-sort-by-alphabetic) ; "sort name" mnemonic
+         ("* f" . ibuffer-mark-by-file-name-regexp)
+         ("* g" . ibuffer-mark-by-content-regexp) ; "g" is for "grep"
+         ("* n" . ibuffer-mark-by-name-regexp)
+         ("s n" . ibuffer-do-sort-by-alphabetic)  ; "sort name" mnemonic
          ("/ g" . ibuffer-filter-by-content)))
 #+end_src
 
