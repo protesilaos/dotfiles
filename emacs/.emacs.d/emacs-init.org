@@ -3735,8 +3735,9 @@ Overview of these tweaks:
   up when trying to apply a patch.
 + After a applying a diff hunk move on to the next one.
 + Update hunk headers automatically following an edit to the diff.
-+ Show inline "refined" changes only once the hunk is in focus, not upon
-  the initial application of the "font lock" styles.
++ Show inline "refined" changes upon the initial application of the
+  "font lock" styles.  Use =navigation= if you want to apply highlights
+  only after focusing the diff hunk for the first time.
 + Do not prettify headers.  I like the standard "patch" looks.
 + Do not do any further syntax highlighting.
 
@@ -3747,7 +3748,7 @@ Overview of these tweaks:
   (setq diff-advance-after-apply-hunk t)
   (setq diff-update-on-the-fly t)
   ;; The following are from Emacs 27.1
-  (setq diff-refine 'navigation)
+  (setq diff-refine 'font-lock)
   (setq diff-font-lock-prettify nil)
   (setq diff-font-lock-syntax nil))
 #+end_src
