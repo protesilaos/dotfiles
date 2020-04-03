@@ -957,8 +957,7 @@ please tread carefully (until further notice, as of 2020-04-03).
   :load-path "~/.emacs.d/prot-dev/"
   :after (minibuffer icomplete)         ; check those from the start
   :config
-  (setq icomplete-vertical-prospects-height 10)
-  (setq icomplete-vertical-enable-global t)
+  (setq icomplete-vertical-prospects-height 5)
   (icomplete-vertical-mode -1)
 
   (defun prot/icomplete-show-vertical ()
