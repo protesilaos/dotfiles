@@ -619,7 +619,7 @@ learn and experiment (a common theme in Emacs).
 
 In the following package declarations I am defining several functions
 that enhance the experience of =icomplete=.  These are part of a learning
-process to (i) explore the internal of Emacs and study how various
+process to (i) explore the internals of Emacs and study how various
 problems are solved with elisp, and (ii) determine how far one can go,
 in terms of efficient functionality, without deviating from the norms
 inherent to the tools that are shipped with Emacs.
@@ -647,8 +647,8 @@ While =icomplete= is the tool that offers incremental completion feedback
 for what the minibuffer is doing (where appropriate).  There is no added
 layer of complexity.  Just a visualisation of what is going on under the
 hood.  As such, =icomplete= is designed with the generic minibuffer in
-mind.  The two are meant to work in tandem in accordance with the design
-conventions of the upstream Emacs distribution.
+mind.  The two are meant to work in tandem, in accordance with the
+design conventions of the upstream Emacs distribution.
 
 Now some comments about my implementation:
 
@@ -664,49 +664,23 @@ Now some comments about my implementation:
   it can be focused directly with =M-v= while inside an =icomplete= prompt.
 + To enhance the experience of the Completions buffer, I define several
   keys that make motions easier and consistent with other read-only
-  interfaces.  The =h= key calls a command of mine for seeking help for
-  the item at point, typically a function or a variable.  I also define
-  =M-v= to take you back to the minibuffer while inside the =*Completions*=
-  (and =s-v= to do it from anywhere else).
+  interfaces.  The =h= key calls a command of mine to offer help
+  (documentation) for the item at point, typically a function or a
+  variable.  I also define =M-v= to take me back to the minibuffer while
+  inside the =*Completions*= (and =s-v= to do it from anywhere else).
   - The placement of the Completions, Help, and other buffers is defined
     in detail in the section about [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]],
     specifically within the =display-buffer-alist=.
-+ I enable recursive minibuffers.  This practically means that you can
++ I enable /recursive minibuffers/.  This practically means that you can
   start something in the minibuffer, switch to another window, call the
   minibuffer again, run some commands, and then move back to what you
   initiated in the original minibuffer.  To exit such recursive edits,
-  hit =C-]= (=abort-recursive-edit=).  The =minibuffer-depth-indicate-mode=
-  will show an indicator next to the minibuffer prompt if a recursive
-  edit is in progress.
-+ The values of all variables that pertain to the delay of feedback are
-  tentative.  My initial tests suggest that they behave exactly the way
-  I want, but this might change once I test them further.
-+ For versions of Emacs above 27, there is a mode called =fido= (Fake IDO,
-  where =ido= is an alternative option).  This changes some of the primary
-  key bindings and commands of =icomplete= so that it meets the
-  expectations of Ido users.  It is not meant as a fully fledged
-  replacement for Ido, as its scope is much narrower (for the time
-  being).  If you are curious, check the source code for both =icomplete=
-  and =ido= with =M-x find-library=.
-+ All my functions that somehow extend the functionality of Icomplete
-  have their own documentation.  No need to reproduce it here.  An
-  exception must be made for =prot/icomplete-yank-kill-ring= that uses a
-  function to avoid sorting the elements of its list.  I adapted that
-  sorting method from the [[https://github.com/jixiuf/vmacs/blob/master/conf/conf-icomplete.el][dotemacs of GitHub user jixiuf]], following a
-  comment I got from them on my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
-
-An *important note* about every =prot/icomplete-*= function that contains a
-=setq= in its body: the way the variables are declared /is not robust/,
-because it assumes default values that may not exist.  I am aware that
-it is possible to perform tests inside a =setq= and return their result,
-but this added complexity is not needed for my case: I know the default
-values of those variables and keep them constant.  If the variables need
-to be changed, then the functions will be updated accordingly.  At any
-rate, some examples of better toggle design can be discovered in the
-=isearch.el= library with =M-x find-library isearch=.
+  hit =C-]= (=abort-recursive-edit=), though the regular =C-g= should also do
+  the trick.  The =minibuffer-depth-indicate-mode= will show an indicator
+  next to the minibuffer prompt if a recursive edit is in progress.
 
 Also check my configurations pertaining to the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].
-After about one month of full time usage (as of 2020-03-02), I am
+After about two months of full time usage (as of 2020-04-03), I am
 confident in the built-in mechanism's ability to sort things well enough
 and to surface the results I am most likely interested in, based on
 previous selections.  This means that we do not need a third-party
@@ -820,6 +794,29 @@ the underlying mechanisms).  As such, *do not forget to also check the
 entire section* above this message, the part on [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]], and
 my [[#h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1][docs+configs for ad-hoc verticality]].
 
+Overview of the following package declaration:
+
++ The values of all variables that pertain to the delay of feedback are
+  tentative.  My initial tests suggest that they behave exactly the way
+  I want, but this might change once I test them further.  In short, do
+  not introduce any further delay.
++ For versions of Emacs above 27, there is a mode called =fido= (Fake IDO,
+  where =ido= is an alternative option).  This changes some of the primary
+  key bindings and commands of =icomplete= so that it meets the
+  expectations of Ido users.  It is not meant as a fully fledged
+  replacement for Ido, as its scope is much narrower (for the time
+  being).  If you are curious, check the source code for both =icomplete=
+  and =ido= with =M-x find-library=.
++ All my functions that somehow extend the functionality of Icomplete
+  have their own documentation.  No need to reproduce it here.  An
+  exception must be made for =prot/icomplete-yank-kill-ring= that uses a
+  function to avoid sorting the elements of its list.  I adapted that
+  sorting method from the [[https://github.com/jixiuf/vmacs/blob/master/conf/conf-icomplete.el][dotemacs of GitHub user jixiuf]], following a
+  comment I got from them on my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
++ The keybindings define motions that ensure consistency betweem regular
+  editing and rotation of the selection candidate list.  The default
+  =icomplete= key bindings leave something to be desired.
+
 Note that while running =M-x shell=, you can still use =icomplete= by means
 of tab-completion, but to confirm a choice you need to hit =C-m=.  Hitting
 =RET= after successful tab completions will just give you the final part
@@ -920,10 +917,10 @@ current buffer and switch focus back to the minibuffer."
               ("C-M-." . prot/icomplete-toggle-basic)))
 #+end_src
 
-*** Icomplete vertical mode (in development)
-    :PROPERTIES:
-    :CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
-    :END:
+**** Icomplete vertical mode (in development)
+     :PROPERTIES:
+     :CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
+     :END:
 
 When I first switched to =icomplete= some time in late January to early
 February 2020, I had to implement my own admiteddly sub-par tweaks for
