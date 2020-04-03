@@ -740,23 +740,6 @@ further below):
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
 
-  (defun prot/describe-symbol-at-point (&optional arg)
-    "Get help (documentation) for the symbol at point.
-
-With a prefix argument, switch to the \\*Help\\* window.  If that
-is already focused, switch to the most recently used window
-instead."
-    (interactive "P")
-    (let ((symbol (symbol-at-point)))
-      (when symbol
-        (describe-symbol symbol)))
-    (when current-prefix-arg
-      (let ((help (get-buffer-window "*Help*")))
-        (when help
-          (if (not (eq (selected-window) help))
-              (select-window help)
-            (select-window (get-mru-window)))))))
-
   (defun prot/focus-minibuffer ()
     "Focus the active minibuffer.
 
@@ -789,6 +772,23 @@ succession."
                   (not (eq (selected-window)
                            completions)))
              (select-window completions nil)))))
+
+  (defun prot/describe-symbol-at-point (&optional arg)
+    "Get help (documentation) for the symbol at point.
+
+With a prefix argument, switch to the \\*Help\\* window.  If that
+is already focused, switch to the most recently used window
+instead."
+    (interactive "P")
+    (let ((symbol (symbol-at-point)))
+      (when symbol
+        (describe-symbol symbol)))
+    (when current-prefix-arg
+      (let ((help (get-buffer-window "*Help*")))
+        (when help
+          (if (not (eq (selected-window) help))
+              (select-window help)
+            (select-window (get-mru-window)))))))
 
   ;; Defines, among others, aliases for common actions to Super-KEY.
   ;; Normally these should go in individual package declarations, but
@@ -1171,8 +1171,8 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
   :after dabbrev
   :config
   (setq hippie-expand-try-functions-list
-        '(try-expand-dabbrev-visible
-          try-expand-dabbrev
+        '(try-expand-dabbrev
+          try-expand-dabbrev-visible
           try-expand-dabbrev-all-buffers
           try-expand-dabbrev-from-kill
           try-expand-list-all-buffers
@@ -1607,7 +1607,7 @@ as =-AFXhlv --group-directories-first=).
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
   (setq delete-by-moving-to-trash t)
-  (setq dired-listing-switches 
+  (setq dired-listing-switches
         "-AGFhlv --group-directories-first --time-style=long-iso")
   (setq dired-dwim-target t)
   :hook ((dired-mode . dired-hide-details-mode)
