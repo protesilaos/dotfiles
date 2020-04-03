@@ -954,7 +954,7 @@ please tread carefully (until further notice, as of 2020-04-03).
 
 #+begin_src emacs-lisp
 (use-package icomplete-vertical
-  :load-path "~/.emacs.d/prot-dev/"
+  :load-path "~/.emacs.d/prot-dev/icomplete-vertical/"
   :after (minibuffer icomplete)         ; check those from the start
   :config
   (setq icomplete-vertical-prospects-height 5)
