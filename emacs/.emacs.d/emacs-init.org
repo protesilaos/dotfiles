@@ -790,6 +790,9 @@ succession."
                            completions)))
              (select-window completions nil)))))
 
+  ;; Defines, among others, aliases for common actions to Super-KEY.
+  ;; Normally these should go in individual package declarations, but
+  ;; their grouping here makes things easier to understand.
   :bind (("s-f" . find-file)
          ("s-F" . find-file-other-window)
          ("s-d" . dired)
@@ -811,8 +814,11 @@ succession."
          ("M-v" . prot/focus-minibuffer)))
 #+end_src
 
-And the following is for the completion interface.  Do not forget to
-also check the section on the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].
+And the following package declaration is for the interactive completion
+interface: =icomplete= (remember, Icomplete just offers the interface, not
+the underlying mechanisms).  As such, *do not forget to also check the
+entire section* above this message, the part on [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]], and
+my [[#h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1][docs+configs for ad-hoc verticality]].
 
 Note that while running =M-x shell=, you can still use =icomplete= by means
 of tab-completion, but to confirm a choice you need to hit =C-m=.  Hitting
@@ -824,6 +830,7 @@ not work as intended.
 #+begin_src emacs-lisp
 (use-package icomplete
   :demand
+  :after minibuffer                     ; Read that section as well
   :config
   (setq icomplete-delay-completions-threshold 0)
   (setq icomplete-max-delay-chars 0)
@@ -838,31 +845,146 @@ not work as intended.
   (fido-mode -1)                        ; Emacs 27.1
   (icomplete-mode 1)
 
-  (defun prot/icomplete-show-vertical (&optional str)
+  (defun prot/icomplete-force-complete-and-exit ()
+    "Complete the current `icomplete' match and exit the minibuffer.
+
+Contrary to `icomplete-force-complete-and-exit', this will
+confirm your choice without complaining about incomplete matches.
+
+Those incomplete matches can block you from performing legitimate
+actions, such as defining a new tag in an `org-capture' prompt.
+
+In my testing, this is necessary when the variable
+`icomplete-with-completion-tables' is non-nil, because then
+`icomplete' will be activated practically everywhere it can."
+    (interactive)
+    (icomplete-force-complete)
+    (exit-minibuffer))
+
+  (defun prot/icomplete-kill-ring-save (&optional arg)
+    "Expand and save current `icomplete' match to the kill ring.
+
+With a prefix argument, insert the match to the point in the
+current buffer and switch focus back to the minibuffer."
+    (interactive "*P")
+    (when (and (minibufferp)
+               (bound-and-true-p icomplete-mode))
+      (icomplete-force-complete)
+      (kill-new (field-string-no-properties))
+      (when current-prefix-arg
+        (kill-new (field-string-no-properties))
+        (select-window (get-mru-window))
+        (insert (car kill-ring))
+        (prot/focus-minibuffer))))
+
+  ;; TODO store original value of `completion-styles' in a more robust way
+  (defun prot/icomplete-toggle-flex ()
+    "Toggle between flex and partial-completion (regexp)."
+    (interactive)
+    (when (and (minibufferp)
+               (bound-and-true-p icomplete-mode))
+      (if (not (eq (car completion-styles) 'flex))
+          (progn
+            (setq-local completion-styles '(flex initials substring partial-completion))
+            (message "%s" (propertize "Prioritising FLEX" 'face 'highlight)))
+        (setq-local completion-styles '(partial-completion substring initials flex))
+        (message "%s" (propertize "Prioritising PREFIX REGEXP" 'face 'highlight)))))
+
+  ;; TODO store original value of `completion-styles' in a more robust way
+  (defun prot/icomplete-toggle-basic ()
+    "Toggle between basic and partial-completion (regexp)."
+    (interactive)
+    (when (and (minibufferp)
+               (bound-and-true-p icomplete-mode))
+      (if (not (eq (car completion-styles) 'basic))
+          (progn
+            (setq-local completion-styles '(basic))
+            (message "%s" (propertize "Prioritising BASIC matching" 'face 'highlight)))
+        (setq-local completion-styles '(partial-completion substring initials flex))
+        (message "%s" (propertize "Prioritising PREFIX REGEXP" 'face 'highlight)))))
+
+  :bind (:map icomplete-minibuffer-map
+              ("C-n" . icomplete-forward-completions)
+              ("<right>" . icomplete-forward-completions)
+              ("<down>" . icomplete-forward-completions)
+              ("C-p" . icomplete-backward-completions)
+              ("<left>" . icomplete-backward-completions)
+              ("<up>" . icomplete-backward-completions)
+              ("<return>" . prot/icomplete-force-complete-and-exit)
+              ("M-o w" . prot/icomplete-kill-ring-save)
+              ("M-o i" . (lambda ()
+                           (interactive)
+                           (let ((current-prefix-arg t))
+                             (prot/icomplete-kill-ring-save))))
+              ("C-M-," . prot/icomplete-toggle-flex)
+              ("C-M-." . prot/icomplete-toggle-basic)))
+#+end_src
+
+*** Icomplete vertical mode (in development)
+    :PROPERTIES:
+    :CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
+    :END:
+
+When I first switched to =icomplete= some time in late January to early
+February 2020, I had to implement my own admiteddly sub-par tweaks for
+displaying candidates vertically: there was no package "ecosystem"
+around Icomplete.
+
+Thankfully, [[https://github.com/oantolin/icomplete-vertical][Omar Antolín Camarena's icomplete-vertical]] is here (since
+early April 2020) to fill in this gap.  For the time being, this package
+is in development.  I have contributed some minor patches, though all
+the real work is done by Omar.
+
+With regard to such verticality, I am the kind of user that actually
+/likes/ the standard horizontal view as a default layout.  It works
+perfectly well for all my common workflows of executing a command by
+name, switching to a buffer, and the like.  Verticality should, in my
+opinion, be the default /only/ for lists that present naturally long
+candidates.  A good example for that is the =recentf-list= that produces
+full filesystem paths, with the =kill-ring= being another one.  These are
+all commands I use less frequently.
+
+Couched in those terms, /the following package declaration does not
+enable/ =icomplete-vertical-mode= globally.  Instead, it defines the
+elements that are necessary for activating verticality on an ad-hoc,
+basis.
+
+Due to the nature of ongoing development, some things may change, so
+please tread carefully (until further notice, as of 2020-04-03).
+
+#+begin_src emacs-lisp
+(use-package icomplete-vertical
+  :load-path "~/.emacs.d/prot-dev/"
+  :after (minibuffer icomplete)         ; check those from the start
+  :config
+  (setq icomplete-vertical-prospects-height 10)
+  (setq icomplete-vertical-enable-global t)
+  (icomplete-vertical-mode -1)
+
+  (defun prot/icomplete-show-vertical ()
     "Allow `icomplete' to present results vertically.
 
 This is meant to be used by other functions that need to show
-their results as a vertical list, with an optional string marking
-the demarcation line.
+their results as a vertical list.
 
 For an interactive version see `prot/icomplete-toggle-vertical'."
-    (when (bound-and-true-p icomplete-mode)
-      (setq icomplete-prospects-height 10)
-      (if str
-          (setq icomplete-separator
-                (concat "\n" (propertize str 'face 'shadow) "\n "))
-        (setq icomplete-separator "\n "))))
+    (when (and (bound-and-true-p icomplete-mode)
+               (not (bound-and-true-p icomplete-vertical-mode)))
+      (icomplete-vertical-mode 1)))
 
   (defun prot/icomplete-restore-horizontal ()
     "Restore `icomplete' to its horizontal layout.
 
 This is meant to be run by the `minibuffer-exit-hook'."
-    (unless (string= icomplete-separator " · ")
-      (setq icomplete-prospects-height 1)
-      (setq icomplete-separator " · ")))
+    (when (and icomplete-mode
+               icomplete-vertical-mode)
+      (icomplete-vertical-mode -1)))
 
   (defun prot/icomplete-recentf ()
     "Open `recent-list' item in a new buffer.
+
+Defaults to a vertical layout.  This is restored on exit by means
+of `prot/icomplete-restore-horizontal'.
 
 The user's $HOME directory is abbreviated as a tilde."
     (interactive)
@@ -899,7 +1021,7 @@ of `prot/icomplete-restore-horizontal'."
                             (cycle-sort-function . identity))
                (complete-with-action
                 action kill-ring string pred)))))
-      (prot/icomplete-show-vertical "··········")
+      (prot/icomplete-show-vertical)
       (insert
        (completing-read "Yank from kill ring: " kills nil t))))
 
@@ -916,88 +1038,15 @@ on its own line while also displaying the list of candidates."
     (interactive)
     (when (and (minibufferp)
                (bound-and-true-p icomplete-mode))
-      (if (not (string= icomplete-separator "\n "))
-          (progn
-            (setq-local icomplete-prospects-height 10)
-            (setq-local icomplete-separator "\n "))
-        (setq icomplete-prospects-height 1)
-        (setq icomplete-separator " · "))))
-
-  (defun prot/icomplete-toggle-flex ()
-    "Toggle between flex and partial-completion (regexp)."
-    (interactive)
-    (when (and (minibufferp)
-               (bound-and-true-p icomplete-mode))
-      (if (not (eq (car completion-styles) 'flex))
-          (progn
-            (setq-local completion-styles '(flex initials substring partial-completion))
-            (message "%s" (propertize "Prioritising FLEX" 'face 'highlight)))
-        (setq-local completion-styles '(partial-completion substring initials flex))
-        (message "%s" (propertize "Prioritising PREFIX REGEXP" 'face 'highlight)))))
-
-  (defun prot/icomplete-toggle-basic ()
-    "Toggle between basic and partial-completion (regexp)."
-    (interactive)
-    (when (and (minibufferp)
-               (bound-and-true-p icomplete-mode))
-      (if (not (eq (car completion-styles) 'basic))
-          (progn
-            (setq-local completion-styles '(basic))
-            (message "%s" (propertize "Prioritising BASIC matching" 'face 'highlight)))
-        (setq-local completion-styles '(partial-completion substring initials flex))
-        (message "%s" (propertize "Prioritising PREFIX REGEXP" 'face 'highlight)))))
-
-  (defun prot/icomplete-force-complete-and-exit ()
-    "Complete the current `icomplete' match and exit the minibuffer.
-
-Contrary to `icomplete-force-complete-and-exit', this will
-confirm your choice without complaining about incomplete matches.
-
-Those incomplete matches can block you from performing legitimate
-actions, such as defining a new tag in an `org-capture' prompt.
-
-In my testing, this is necessary when the variable
-`icomplete-with-completion-tables' is non-nil, because then
-`icomplete' will be activated practically everywhere it can."
-    (interactive)
-    (icomplete-force-complete)
-    (exit-minibuffer))
-
-  (defun prot/icomplete-kill-ring-save (&optional arg)
-    "Expand and save current `icomplete' match to the kill ring.
-
-With a prefix argument, insert the match to the point in the
-current buffer and switch focus back to the minibuffer."
-    (interactive "*P")
-    (when (and (minibufferp)
-               (bound-and-true-p icomplete-mode))
-      (icomplete-force-complete)
-      (kill-new (field-string-no-properties))
-      (when current-prefix-arg
-        (kill-new (field-string-no-properties))
-        (select-window (get-mru-window))
-        (insert (car kill-ring))
-        (prot/focus-minibuffer))))
+      (if (bound-and-true-p icomplete-vertical-mode)
+          (icomplete-vertical-mode -1)
+        (icomplete-vertical-mode 1))))
 
   :hook (minibuffer-exit . prot/icomplete-restore-horizontal)
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
          ("s-r" . prot/icomplete-recentf)
          :map icomplete-minibuffer-map
-         ("C-n" . icomplete-forward-completions)
-         ("<right>" . icomplete-forward-completions)
-         ("<down>" . icomplete-forward-completions)
-         ("C-p" . icomplete-backward-completions)
-         ("<left>" . icomplete-backward-completions)
-         ("<up>" . icomplete-backward-completions)
-         ("<return>" . prot/icomplete-force-complete-and-exit)
-         ("M-o w" . prot/icomplete-kill-ring-save)
-         ("M-o i" . (lambda ()
-                      (interactive)
-                      (let ((current-prefix-arg t))
-                        (prot/icomplete-kill-ring-save))))
-         ("C-M-|" . prot/icomplete-toggle-vertical)
-         ("C-M-," . prot/icomplete-toggle-flex)
-         ("C-M-." . prot/icomplete-toggle-basic)))
+         ("C-M-|" . prot/icomplete-toggle-vertical)))
 #+end_src
 
 *** Completion for projects and directory trees
@@ -3778,7 +3827,7 @@ always use =auto-fill-mode= to wrap lines to the value of =fill-column= (see
     :END:
 
 As noted in the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on the built-in Version Control framework]] I use
-Magit for easy access to the advanced features of Git.  While I rely on
+Magit for easy access to the /advanced features of Git/.  While I rely on
 the built-in tools for all day-to-day operations.
 
 Magit offers a modal interface where the full power of =git= is neatly
@@ -3794,8 +3843,8 @@ Magit buffers to view the keys that work for their context.
      :CUSTOM_ID: h:21ca155a-d0d7-4710-b34a-a0d7a901ac0d
      :END:
 
-Magit has good defaults.  I only found a few things that I would like to
-customise, which I do in the following package declarations.
+Magit has great defaults.  I only found a few things that I would like
+to customise, which I do in the following package declarations.
 
 #+begin_src emacs-lisp
 (use-package magit
