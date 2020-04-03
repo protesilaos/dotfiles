@@ -1079,16 +1079,24 @@ Also see my [[*ripgrep (rg.el)][configurations for ripgrep]].
 #+begin_src emacs-lisp
 (use-package project
   :config
+  (defun prot/project-find-file ()
+    (interactive)
+    (when (bound-and-true-p icomplete-mode)
+        (prot/icomplete-show-vertical))
+    (project-find-file))
+
   (defun prot/find-file-from-dir-recursive ()
-    "WORK IN PROGRESS"
+    "NEEDS REVIEW: Find file recursively, starting from present dir."
     (interactive)
     (let* ((file-list (directory-files-recursively default-directory "" nil))
            (files (mapcar 'abbreviate-file-name file-list)))
+      (when (bound-and-true-p icomplete-mode)
+        (prot/icomplete-show-vertical))
       (find-file
        (completing-read "Find file recursively: " files nil t))))
 
   (defun prot/find-project ()
-    "Use `dired' for sub-directory at ~/Git/Projects.
+    "Switch to sub-directory at ~/Git/Projects.
 
 Allows you to switch directly to the root directory of a project
 inside a given location."
@@ -1108,7 +1116,7 @@ inside a given location."
        (completing-read "Find project: " projects nil t))))
 
   :bind (("M-s p" . prot/find-project)
-         ("M-s f" . project-find-file)
+         ("M-s f" . prot/project-find-file)
          ("M-s z" . prot/find-file-from-dir-recursive)
          ("M-s r" . project-find-regexp)
          ("M-s C-M-%" . project-query-replace-regexp)))
