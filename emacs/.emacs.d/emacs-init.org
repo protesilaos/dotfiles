@@ -2144,7 +2144,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
          ("s-1" . delete-other-windows)
          ("s-5" . delete-frame)
          ("C-x +" . balance-windows-area)
-         ("<f8>" . window-toggle-side-windows)))
+         ("s-q" . window-toggle-side-windows)))
 
 ;; These are all experimental.  Just showcasing the power of passing
 ;; parameters to windows or frames.
@@ -3841,6 +3841,9 @@ down any modifiers.
 While inside the =magit-status= buffer, hit =?= to produce a transient menu
 with the possible vectors to action.  Do it again inside each of the
 Magit buffers to view the keys that work for their context.
+
+Consider viewing my [[https://protesilaos.com/codelog/2020-04-04-emacs-intro-magit/][Introduction to Magit]] (2020-04-04) for how to stage
+diffs, commit changes, view logs, create branches, and so on.
 
 **** Base Magit settings
      :PROPERTIES:
