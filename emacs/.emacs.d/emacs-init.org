@@ -3724,7 +3724,7 @@ Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Intr
 (use-package vc
   :config
   (setq vc-find-revision-no-save t)
-  :bind (("C-x v F" . vc-update)        ; "fetch" mnemonic
+  :bind (("C-x v F" . vc-update)   ; "F" fetch because "P" pull is taken
          ("C-x v d" . vc-diff)))
 
 (use-package vc-dir
