@@ -243,10 +243,13 @@
 ;;     speedbar
 ;;     stripes
 ;;     suggest
+;;     switch-window
 ;;     swiper
+;;     swoop
 ;;     sx
 ;;     symbol-overlay
 ;;     syslog-mode
+;;     trashed
 ;;     telephone-line
 ;;     term
 ;;     tomatinho
@@ -1028,7 +1031,7 @@ AMOUNT is a customisation option."
    `(diff-hl-dired-insert ((,class (:inherit diff-hl-insert))))
    `(diff-hl-dired-unknown ((,class (:inherit dired-ignored))))
    `(diff-hl-insert ((,class (:inherit modus-theme-fringe-green))))
-   `(diff-hl-reverted-hunk-highlight ((,class (:inherit modus-theme-intense-blue))))
+   `(diff-hl-reverted-hunk-highlight ((,class (:inherit modus-theme-fringe-magenta :weight bold))))
    ;;;; diff-mode
    `(diff-added ((,class ,(modus-operandi-theme-diffs
                            bg-main green
@@ -2584,6 +2587,9 @@ AMOUNT is a customisation option."
    `(stripes ((,class (:background ,bg-alt))))
    ;;;; success
    `(suggest-heading ((,class (:foreground ,yellow-alt-other :weight bold))))
+   ;;;; switch-window
+   `(switch-window-background ((,class (:background ,bg-dim))))
+   `(switch-window-label ((,class (:height 3.0 :foreground ,blue-intense))))
    ;;;; swiper
    `(swiper-background-match-face-1 ((,class (:inherit modus-theme-subtle-neutral))))
    `(swiper-background-match-face-2 ((,class (:inherit modus-theme-subtle-cyan))))
@@ -2595,6 +2601,15 @@ AMOUNT is a customisation option."
    `(swiper-match-face-2 ((,class (:inherit swiper-line-face))))
    `(swiper-match-face-3 ((,class (:inherit swiper-line-face))))
    `(swiper-match-face-4 ((,class (:inherit swiper-line-face))))
+   ;;;; swoop
+   `(swoop-face-header-format-line ((,class (:foreground ,red-alt :weight bold
+                                                         ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3)))))
+   `(swoop-face-line-buffer-name ((,class (:foreground ,blue-alt :weight bold
+                                                       ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4)))))
+   `(swoop-face-line-number ((,class (:foreground ,fg-special-warm))))
+   `(swoop-face-target-line ((,class (:inherit modus-theme-intense-blue
+                                               ,@(and (>= emacs-major-version 27) '(:extend t))))))
+   `(swoop-face-target-words ((,class (:inherit modus-theme-refine-cyan))))
    ;;;; sx
    `(sx-inbox-item-type ((,class (:foreground ,magenta-alt-other))))
    `(sx-inbox-item-type-unread ((,class (:inherit sx-inbox-item-type :weight bold))))
@@ -2643,6 +2658,13 @@ AMOUNT is a customisation option."
    `(syslog-ip ((,class (:foreground ,fg-special-mild :weight bold :underline t))))
    `(syslog-su ((,class (:foreground ,red-alt :weight bold))))
    `(syslog-warn ((,class (:foreground ,yellow :weight bold))))
+   ;;;; trashed
+   `(trashed-deleted ((,class (:background ,bg-mark-del :foreground ,fg-mark-del :weight bold))))
+   `(trashed-directory ((,class (:foreground ,blue))))
+   `(trashed-mark ((,class (:foreground ,blue-alt :weight bold))))
+   `(trashed-marked ((,class (:background ,bg-mark-other :foreground ,fg-mark-other :weight bold))))
+   `(trashed-restored ((,class (:background ,bg-mark :foreground ,fg-mark :weight bold))))
+   `(trashed-symlink ((,class (:foreground ,blue-alt :underline t))))
    ;;;; telephone-line
    `(telephone-line-accent-active ((,class (:background ,fg-inactive :foreground ,bg-inactive))))
    `(telephone-line-accent-inactive ((,class (:background ,bg-active :foreground ,fg-active))))
