@@ -929,8 +929,8 @@ around Icomplete.
 
 Thankfully, [[https://github.com/oantolin/icomplete-vertical][Omar Antolín Camarena's icomplete-vertical]] is here (since
 early April 2020) to fill in this gap.  For the time being, this package
-is in development.  I have contributed some minor patches, though all
-the real work is done by Omar.
+is in development.  I have contributed some minor patches and user
+feedback in its early stages, though all the real work is done by Omar.
 
 With regard to such verticality, I am the kind of user that actually
 /likes/ the standard horizontal view as a default layout.  It works
@@ -943,8 +943,8 @@ all commands I use less frequently.
 
 Couched in those terms, /the following package declaration does not
 enable/ =icomplete-vertical-mode= globally.  Instead, it defines the
-elements that are necessary for activating verticality on an ad-hoc,
-basis.
+elements that are necessary for activating verticality on an ad-hoc or
+per-function basis.
 
 Due to the nature of ongoing development, some things may change, so
 please tread carefully (until further notice, as of 2020-04-03).
@@ -954,7 +954,7 @@ please tread carefully (until further notice, as of 2020-04-03).
   :load-path "~/.emacs.d/prot-dev/icomplete-vertical/"
   :after (minibuffer icomplete)         ; check those from the start
   :config
-  (setq icomplete-vertical-prospects-height 5)
+  (setq icomplete-vertical-prospects-height (/ (window-height) 6))
   (icomplete-vertical-mode -1)
 
   (defun prot/icomplete-show-vertical ()
@@ -1027,10 +1027,7 @@ of `prot/icomplete-restore-horizontal'."
 This is intended as a temporary adjustment of the layout,
 possibly to read a list of long names.  It is for this reason
 that `prot/icomplete-restore-horizontal' exists and is called by
-the `minibuffer-exit-hook'.
-
-NOTE: there still needs to be a way to show the minibuffer input
-on its own line while also displaying the list of candidates."
+the `minibuffer-exit-hook'."
     (interactive)
     (when (and (minibufferp)
                (bound-and-true-p icomplete-mode))
@@ -1275,7 +1272,7 @@ buffer with the contents of the search terms.  Absolutely great!
 
 With regard to the replace commands, note that you can use them on the
 active region.  Furthermore, you do not need to confirm each action, but
-can instead type =!= to answer "yes" to all possible replacement.  Better
+can instead type =!= to answer "yes" to all possible replacements.  Better
 only use this while having already limited the results to the active
 region, to some specialised editable buffer like the one of =occur=, or by
 using Emacs' narrowing techniques, such as =narrow-to-region=.
@@ -1284,10 +1281,10 @@ In the package declaration below, the combined effect of the variables
 for whitespace is a valuable hack: typing a space is the same as
 inserting a wildcard, which is much more useful as far as I am
 concerned.  A single space represents a wildcard that matches items in a
-non-greedy fashion.  *This concerns regular searches* (the standard =C-s=
-and =C-r=).  The regexp functions =C-M-s= and =C-M-r= remain in tact.  You can
-always toggle whitespace matching behaviour while performing a search,
-with =M-s SPC= (revert back to just literal spaces).
+non-greedy fashion.  *This affects regular searches* (the standard =C-s= and
+=C-r=).  The regexp-sensitive functions =C-M-s= and =C-M-r= remain in tact.
+You can always toggle whitespace matching behaviour while performing a
+search, with =M-s SPC= (revert back to just literal spaces).
 
 Now on to some custom functions, all of which are derived from the
 source code of =isearch= (do it with =M-x find-library RET isearch RET=).
@@ -1436,9 +1433,9 @@ great when dealing with complex sets of regexp constructs.
 #+end_src
 
 *** wgrep (writable grep)
-   :PROPERTIES:
-   :CUSTOM_ID: h:42624165-f4cb-4318-abce-c11232426880
-   :END:
+    :PROPERTIES:
+    :CUSTOM_ID: h:42624165-f4cb-4318-abce-c11232426880
+    :END:
 
 With =wgrep= we can directly edit the results of a =grep= and save the
 changes to all affected buffers.  In principle, this is the same as what
