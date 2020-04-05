@@ -949,6 +949,11 @@ per-function basis.
 Due to the nature of ongoing development, some things may change, so
 please tread carefully (until further notice, as of 2020-04-03).
 
+The =:load-path= means that I have manually cloned the repo and am
+handling the updates myself.  I know there are tools for that, but this
+is the first time I need such a facility and am not sure I want to make
+it more common.
+
 #+begin_src emacs-lisp
 (use-package icomplete-vertical
   :load-path "~/.emacs.d/prot-dev/icomplete-vertical/"
