@@ -814,8 +814,11 @@ Overview of the following package declaration:
   sorting method from the [[https://github.com/jixiuf/vmacs/blob/master/conf/conf-icomplete.el][dotemacs of GitHub user jixiuf]], following a
   comment I got from them on my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
 + The keybindings define motions that ensure consistency betweem regular
-  editing and rotation of the selection candidate list.  The default
-  =icomplete= key bindings leave something to be desired.
+  editing and the rotation of the candidate list.  The default =icomplete=
+  key bindings leave something to be desired.
++ Note the behaviour of =C-m=.  It is intended for inserting /exactly/ what
+  you have typed in.  Use it when Icomplete is matching =foobar= but you
+  only want =foo=.
 
 Note that while running =M-x shell=, you can still use =icomplete= by means
 of tab-completion, but to confirm a choice you need to hit =C-m=.  Hitting
