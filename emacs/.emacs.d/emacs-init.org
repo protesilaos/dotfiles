@@ -973,6 +973,7 @@ my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of 
 #+begin_src emacs-lisp
 (use-package icomplete-vertical
   :load-path "~/.emacs.d/prot-dev/icomplete-vertical/"
+  :demand
   :after (minibuffer icomplete)         ; check those from the start
   :config
   (setq icomplete-vertical-prospects-height (/ (window-height) 6))
@@ -3691,9 +3692,10 @@ that range of commits.
 
 With =vc-dir=, which I rebind to the more logical "project" mnemonic of
 =C-x v p= (=prot/vc-dir-project=), you can mark with =m= several files to add
-to a commit.  This modes offers easy access to the standard VC actions.
-To commit the file at point or the marked ones hit =v=.  To push do =P=.
-Same principle for diffs, logs, etc.
+to a commit.  Use =M= to mark all files with the same status.  This mode
+offers easy access to the standard VC actions.  To commit the file at
+point or the marked ones hit =v=.  To push do =P=.  Same principle for
+diffs, logs, etc.
 
 By the way, rebinding =vc-dir= has another upside of allowing its original
 key binding to be assigned to =vc-diff=; which in turn makes that
