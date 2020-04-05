@@ -877,33 +877,33 @@ current buffer and switch focus back to the minibuffer."
         (insert (car kill-ring))
         (prot/focus-minibuffer))))
 
-  ;; TODO store original value of `completion-styles' in a more robust way
-  (defun prot/icomplete-toggle-flex ()
-    "Toggle between flex and partial-completion (regexp)."
-    (interactive)
-    (when (and (minibufferp)
-               (bound-and-true-p icomplete-mode))
-      (if (not (eq (car completion-styles) 'flex))
-          (progn
-            (setq-local completion-styles '(flex initials substring partial-completion))
-            (message "%s" (propertize "Prioritising FLEX" 'face 'highlight)))
-        (setq-local completion-styles '(partial-completion substring initials flex))
-        (message "%s" (propertize "Prioritising PREFIX REGEXP" 'face 'highlight)))))
+  (defun prot/icomplete-toggle-completion-styles (&optional arg)
+    "Toggle between flex and prefix matching.
 
-  ;; TODO store original value of `completion-styles' in a more robust way
-  (defun prot/icomplete-toggle-basic ()
-    "Toggle between basic and partial-completion (regexp)."
-    (interactive)
+With pregix ARG use basic completion instead.  These styles are
+described in `completion-styles-alist'.
+
+Bind this function in `icomplete-minibuffer-map'."
+    (interactive "*P")
     (when (and (minibufferp)
                (bound-and-true-p icomplete-mode))
-      (if (not (eq (car completion-styles) 'basic))
-          (progn
-            (setq-local completion-styles '(basic))
-            (message "%s" (propertize "Prioritising BASIC matching" 'face 'highlight)))
-        (setq-local completion-styles '(partial-completion substring initials flex))
-        (message "%s" (propertize "Prioritising PREFIX REGEXP" 'face 'highlight)))))
+      (let* ((completion-styles-original completion-styles)
+             (basic '(emacs22 basic))
+             (flex '(flex initials substring partial-completion))
+             (prefix '(partial-completion substring initials flex)))
+        (if current-prefix-arg
+            (progn
+              (setq-local completion-styles basic)
+              (message "%s" (propertize "Prioritising BASIC matching" 'face 'highlight)))
+          (if (not (eq (car completion-styles) 'flex))
+              (progn
+                (setq-local completion-styles flex)
+                (message "%s" (propertize "Prioritising FLEX matching" 'face 'highlight)))
+            (setq-local completion-styles prefix)
+            (message "%s" (propertize "Prioritising PREFIX matching" 'face 'highlight)))))))
 
   :bind (:map icomplete-minibuffer-map
+              ("C-m" . minibuffer-complete-and-exit) ; force current input
               ("C-n" . icomplete-forward-completions)
               ("<right>" . icomplete-forward-completions)
               ("<down>" . icomplete-forward-completions)
@@ -916,8 +916,11 @@ current buffer and switch focus back to the minibuffer."
                            (interactive)
                            (let ((current-prefix-arg t))
                              (prot/icomplete-kill-ring-save))))
-              ("C-M-," . prot/icomplete-toggle-flex)
-              ("C-M-." . prot/icomplete-toggle-basic)))
+              ("C-M-," . prot/icomplete-toggle-completion-styles)
+              ("C-M-." . (lambda ()
+                           (interactive)
+                           (let ((current-prefix-arg t))
+                             (prot/icomplete-toggle-completion-styles))))))
 #+end_src
 
 **** Icomplete vertical mode (in development)
