@@ -3731,7 +3731,8 @@ Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Intr
 (use-package vc
   :config
   (setq vc-find-revision-no-save t)
-  :bind (("C-x v F" . vc-update)   ; "F" fetch because "P" pull is taken
+  :bind (("C-x v f" . vc-log-incoming)  ; the actual git fetch
+         ("C-x v F" . vc-update)        ; "F" because "P" is push
          ("C-x v d" . vc-diff)))
 
 (use-package vc-dir
@@ -3748,8 +3749,9 @@ Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Intr
   :bind (("C-x v p" . prot/vc-dir-project)
          ("C-x v j" . prot/vc-dir-jump) ; similar to `dired-jump'
          :map vc-dir-mode-map
-         ("F" . vc-update)              ; symmetric with P: `vc-push'
-         ("d" . vc-diff)                ; align with D: `vc-root-diff'
+         ("f" . vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
+         ("F" . vc-update)       ; symmetric with P: `vc-push'
+         ("d" . vc-diff)         ; align with D: `vc-root-diff'
          ("k" . vc-dir-clean-files)))
 
 (use-package vc-git
