@@ -636,6 +636,11 @@ is under the heading of [[#h:9850e597-e4b4-4e04-aad9-ce8a12b3e4ae][important con
     :CUSTOM_ID: h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7
     :END:
 
+For newcomers, watch my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).  This
+section contains a lot of documentation and several parts.  Make sure to
+also follow any links from here, or [[https://protesilaos.com/contact/][contact me]] in case something is
+amiss.
+
 The minibuffer is the locus of extended command interaction.  Whether it
 is about offering input to a prompt, performing a search, executing a
 function by its name, the minibuffer remains at the epicentre.  The
@@ -747,11 +752,14 @@ succession."
                            completions)))
              (select-window completions nil)))))
 
+  ;; Technically, this is not specific to the minibuffer, but I define
+  ;; it here so that you can see how it is also used from inside the
+  ;; "Completions" buffer
   (defun prot/describe-symbol-at-point (&optional arg)
     "Get help (documentation) for the symbol at point.
 
-With a prefix argument, switch to the \\*Help\\* window.  If that
-is already focused, switch to the most recently used window
+With a prefix argument, switch to the *Help* window.  If that is
+already focused, switch to the most recently used window
 instead."
     (interactive "P")
     (let ((symbol (symbol-at-point)))
@@ -808,11 +816,7 @@ Overview of the following package declaration:
   being).  If you are curious, check the source code for both =icomplete=
   and =ido= with =M-x find-library=.
 + All my functions that somehow extend the functionality of Icomplete
-  have their own documentation.  No need to reproduce it here.  An
-  exception must be made for =prot/icomplete-yank-kill-ring= that uses a
-  function to avoid sorting the elements of its list.  I adapted that
-  sorting method from the [[https://github.com/jixiuf/vmacs/blob/master/conf/conf-icomplete.el][dotemacs of GitHub user jixiuf]], following a
-  comment I got from them on my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
+  have their own documentation.  No need to reproduce it here.
 + The keybindings define motions that ensure consistency betweem regular
   editing and the rotation of the candidate list.  The default =icomplete=
   key bindings leave something to be desired.
@@ -960,6 +964,12 @@ handling the updates myself.  I know there are tools for that, but this
 is the first time I need such a facility and am not sure I want to make
 it more common.
 
+Finally, in =prot/icomplete-yank-kill-ring= you will spot a function that
+disables the sorting of the list.  Without it, the kills appear in a
+seemingly random order.  I adapted that piece of functionality from the
+[[https://github.com/jixiuf/vmacs/blob/master/conf/conf-icomplete.el][dotemacs of GitHub user jixiuf]], following a comment I got from them on
+my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
+
 #+begin_src emacs-lisp
 (use-package icomplete-vertical
   :load-path "~/.emacs.d/prot-dev/icomplete-vertical/"
@@ -1032,25 +1042,11 @@ of `prot/icomplete-restore-horizontal'."
       (insert
        (completing-read "Yank from kill ring: " kills nil t))))
 
-  (defun prot/icomplete-toggle-vertical ()
-    "Toggle vertical view for `icomplete'.
-
-This is intended as a temporary adjustment of the layout,
-possibly to read a list of long names.  It is for this reason
-that `prot/icomplete-restore-horizontal' exists and is called by
-the `minibuffer-exit-hook'."
-    (interactive)
-    (when (and (minibufferp)
-               (bound-and-true-p icomplete-mode))
-      (if (bound-and-true-p icomplete-vertical-mode)
-          (icomplete-vertical-mode -1)
-        (icomplete-vertical-mode 1))))
-
   :hook (minibuffer-exit . prot/icomplete-restore-horizontal)
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
          ("s-r" . prot/icomplete-recentf)
          :map icomplete-minibuffer-map
-         ("C-M-|" . prot/icomplete-toggle-vertical)))
+         ("C-M-|" . icomplete-vertical-toggle)))
 #+end_src
 
 *** Completion for projects and directory trees
