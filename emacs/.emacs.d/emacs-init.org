@@ -927,89 +927,94 @@ Bind this function in `icomplete-minibuffer-map'."
                              (prot/icomplete-toggle-completion-styles))))))
 #+end_src
 
-**** Icomplete vertical mode (in development)
+**** Icomplete vertical mode (stable, but in development)
      :PROPERTIES:
      :CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
      :END:
 
 When I first switched to =icomplete= some time in late January to early
 February 2020, I had to implement my own admiteddly sub-par tweaks for
-displaying candidates vertically: there was no package "ecosystem"
-around Icomplete.
+displaying candidates vertically and for tailoring that presentation to
+my particular needs.  There was no package "ecosystem" around Icomplete
+that I could leverage.
 
 Thankfully, [[https://github.com/oantolin/icomplete-vertical][Omar Antolín Camarena's icomplete-vertical]] is here (since
 early April 2020) to fill in this gap.  For the time being, this package
-is in development.  I have contributed some minor patches and user
-feedback in its early stages, though all the real work is done by Omar.
+is perfectly usable though still in development.  I have contributed
+some minor patches and user feedback in its early stages, though all the
+real work is done by Omar.
 
-With regard to such verticality, I am the kind of user that actually
-/likes/ the standard horizontal view as a default layout.  It works
-perfectly well for all my common workflows of executing a command by
-name, switching to a buffer, and the like.  Verticality should, in my
-opinion, be the default /only/ for lists that present naturally long
-candidates.  A good example for that is the =recentf-list= that produces
-full filesystem paths, with the =kill-ring= being another one.  These are
-all commands I use less frequently.
+The package provides a global minor mode for displaying the list of
+candidates vertically by default.  Enable it and you are good to go.
+For those who want to more fine-tuned experience, such as retaining the
+horizontal layout and enabling verticality for some functions,
+=icomplete-vertical.el= offers some useful abstractions to implement our
+idea.
+
++ With =icomplete-vertical-toggle=, which should be bound to a key inside
+  the minibuffer, we can use whatever layout we want whenever we need
+  it.  Excellent!
++ While the =icomplete-vertical-do= macro can be used to parametrise a
+  custom function with an optional height and unique separator.
+
+The project's README should offer all the information you need.  Several
+of my functions offer real-world implementations of the aforementioned.
+
+With =icomplete-vertical=, I can now remove all the poor code I had in
+place when I got started, relying instead on the thoughful design and
+features of this tool.  In short: the package is a near must-have for
+any =icomplete= user, while I expect it to single-handedly raise the
+awareness around Emacs' built-in completion mechanisms.
+
+With regard to verticality, I am the kind of user that actually /likes/
+the standard horizontal view as a default presentation.  It works
+splendidly for all my common workflows of executing a command by name,
+switching to a buffer, changing git branches, and the like.  Verticality
+should, in my opinion, be the default /only/ for lists that present
+naturally long candidates.  A good example is the =recentf-list= that
+consists of full filesystem paths, with the =kill-ring= being another one.
 
 Couched in those terms, /the following package declaration does not
 enable/ =icomplete-vertical-mode= globally.  Instead, it defines the
 elements that are necessary for activating verticality on an ad-hoc or
 per-function basis.
 
-Due to the nature of ongoing development, some things may change, so
-please tread carefully (until further notice, as of 2020-04-03).
+Due to the nature of ongoing development, some things may change, though
+I am confident that things are stable already (until further notice, as
+of 2020-04-06).
 
-The =:load-path= means that I have manually cloned the repo and am
-handling the updates myself.  I know there are tools for that, but this
-is the first time I need such a facility and am not sure I want to make
-it more common.
+The =:load-path= in the package declaration below means that I have
+manually cloned the repo and am handling the updates myself.  I know
+there are tools for that, but this is the first time I genuinely need
+such a facility and am not sure I want to make it more common.
 
-Finally, in =prot/icomplete-yank-kill-ring= you will spot a function that
-disables the sorting of the list.  Without it, the kills appear in a
-seemingly random order.  I adapted that piece of functionality from the
-[[https://github.com/jixiuf/vmacs/blob/master/conf/conf-icomplete.el][dotemacs of GitHub user jixiuf]], following a comment I got from them on
-my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
+In =prot/icomplete-yank-kill-ring= you will spot a function that disables
+the sorting of the list.  Without it, the kills appear in a seemingly
+random order, which is highly undesired.  I adapted that piece of
+functionality from the [[https://github.com/jixiuf/vmacs/blob/master/conf/conf-icomplete.el][dotemacs of GitHub user jixiuf]], following a
+comment I got from them on my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
+
+Finally, not all "vertical" functions of mine are defined here.  Some
+are also found in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][completion for projects and directory trees]].
 
 #+begin_src emacs-lisp
 (use-package icomplete-vertical
   :load-path "~/.emacs.d/prot-dev/icomplete-vertical/"
   :demand
-  :after (minibuffer icomplete)         ; check those from the start
+  :after (minibuffer icomplete) ; do not forget to check those as well
   :config
   (setq icomplete-vertical-prospects-height (/ (window-height) 6))
   (icomplete-vertical-mode -1)
 
-  (defun prot/icomplete-show-vertical ()
-    "Allow `icomplete' to present results vertically.
-
-This is meant to be used by other functions that need to show
-their results as a vertical list.
-
-For an interactive version see `prot/icomplete-toggle-vertical'."
-    (when (and (bound-and-true-p icomplete-mode)
-               (not (bound-and-true-p icomplete-vertical-mode)))
-      (icomplete-vertical-mode 1)))
-
-  (defun prot/icomplete-restore-horizontal ()
-    "Restore `icomplete' to its horizontal layout.
-
-This is meant to be run by the `minibuffer-exit-hook'."
-    (when (and icomplete-mode
-               icomplete-vertical-mode)
-      (icomplete-vertical-mode -1)))
-
   (defun prot/icomplete-recentf ()
     "Open `recent-list' item in a new buffer.
 
-Defaults to a vertical layout.  This is restored on exit by means
-of `prot/icomplete-restore-horizontal'.
-
 The user's $HOME directory is abbreviated as a tilde."
     (interactive)
-    (prot/icomplete-show-vertical)
-    (let ((files (mapcar 'abbreviate-file-name recentf-list)))
-      (find-file
-       (completing-read "Open recentf entry: " files nil t))))
+    (icomplete-vertical-do ()
+      (let ((files (mapcar 'abbreviate-file-name recentf-list)))
+        (find-file
+         (completing-read "Open recentf entry: " files nil t)))))
 
   (defun prot/icomplete-font-family-list ()
     "Add item from the `font-family-list' to the `kill-ring'.
@@ -1017,11 +1022,11 @@ The user's $HOME directory is abbreviated as a tilde."
 This allows you to save the name of a font, which can then be
 used in commands such as `set-frame-font'."
     (interactive)
-    (prot/icomplete-show-vertical)
-    (kill-new
-     (completing-read "Copy font family: "
-                      (print (font-family-list))
-                      nil t)))
+    (icomplete-vertical-do ()
+      (kill-new
+       (completing-read "Copy font family: "
+                        (print (font-family-list))
+                        nil t))))
 
   (defun prot/icomplete-yank-kill-ring ()
     "Insert the selected `kill-ring' item directly at point.
@@ -1039,11 +1044,15 @@ of `prot/icomplete-restore-horizontal'."
                             (cycle-sort-function . identity))
                (complete-with-action
                 action kill-ring string pred)))))
-      (prot/icomplete-show-vertical)
-      (insert
-       (completing-read "Yank from kill ring: " kills nil t))))
+      (icomplete-vertical-do
+          (:separator (concat "\n" (propertize "··········" 'face 'shadow) "\n")
+                      :height (/ (window-height) 4))
+        (insert
+         (completing-read "Yank from kill ring: " kills nil t)))))
 
-  :hook (minibuffer-exit . prot/icomplete-restore-horizontal)
+  ;; TODO can registers be inserted via completion?
+  ;; TODO can mark-ring positions be selected?
+
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
          ("s-r" . prot/icomplete-recentf)
          :map icomplete-minibuffer-map
@@ -1079,22 +1088,21 @@ Also see my [[*ripgrep (rg.el)][configurations for ripgrep]].
 
 #+begin_src emacs-lisp
 (use-package project
+  :after (minibuffer icomplete icomplete-vertical)
   :config
   (defun prot/project-find-file ()
     (interactive)
-    (when (bound-and-true-p icomplete-mode)
-        (prot/icomplete-show-vertical))
-    (project-find-file))
+    (icomplete-vertical-do ()
+      (project-find-file)))
 
   (defun prot/find-file-from-dir-recursive ()
-    "NEEDS REVIEW: Find file recursively, starting from present dir."
+    "Find file recursively, starting from present dir."
     (interactive)
-    (let* ((file-list (directory-files-recursively default-directory "" nil))
-           (files (mapcar 'abbreviate-file-name file-list)))
-      (when (bound-and-true-p icomplete-mode)
-        (prot/icomplete-show-vertical))
-      (find-file
-       (completing-read "Find file recursively: " files nil t))))
+    (let* ((dir default-directory)
+           (files (directory-files-recursively dir ".*" nil t)))
+      (icomplete-vertical-do ()
+        (find-file
+         (completing-read "Find file recursively: " files nil t dir)))))
 
   (defun prot/find-project ()
     "Switch to sub-directory at ~/Git/Projects.
@@ -1107,14 +1115,9 @@ inside a given location."
            (project-list (project-combine-directories
                           (directory-files path t dotless)))
            (projects (mapcar 'abbreviate-file-name project-list)))
-      ;;;; Enables vertical completion while using `icomplete'.  I do
-      ;;;; not need this right now, since there is only a handful of
-      ;;;; projects and all of them are in the same path so that a
-      ;;;; couple of key presses give a unique match anyway.
-      ;; (when (bound-and-true-p icomplete-mode)
-      ;;   (prot/icomplete-show-vertical))
-      (dired
-       (completing-read "Find project: " projects nil t))))
+      (icomplete-vertical-do ()
+        (dired
+         (completing-read "Find project: " projects nil t)))))
 
   :bind (("M-s p" . prot/find-project)
          ("M-s f" . prot/project-find-file)
