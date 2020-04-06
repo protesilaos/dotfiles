@@ -1951,6 +1951,8 @@ the default behaviour and presentation:
 + Do not cycle movements.  So do not go to the top when moving downward
   at the last item on the list.
 
+Also watch my [[https://protesilaos.com/codelog/2020-04-02-emacs-intro-ibuffer/][introduction to Ibuffer]] (2020-04-02).
+
 #+begin_src emacs-lisp
 (use-package ibuffer
   :config
