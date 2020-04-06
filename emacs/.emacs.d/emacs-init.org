@@ -4493,9 +4493,8 @@ The mode line is an integral part of the Emacs interface.  While there
 are lots of third party packages that style it in a variety of ways, I
 find the default to be particularly good.
 
-I just configure it to hide the Git/VC status.  Its utility is marginal
-at best.  Then I reshuffle some of the remaining indicators.  Nothing
-too fancy.
+I just configure it to reshuffle some of the indicators.  Nothing too
+fancy.
 
 Meanwhile, the =mode-line-defining-kbd-macro= is tweaked to use a more
 appropriate string for its indicator and colours that are designed
@@ -4519,6 +4518,7 @@ warning face).
                   mode-line-buffer-identification
                   "  "
                   mode-line-position
+                  (vc-mode vc-mode)
                   " "
                   mode-line-modes
                   " "
@@ -4586,7 +4586,7 @@ time and date.  The rest is noise.
 #+begin_src emacs-lisp
 (use-package time
   :config
-  (setq display-time-format "%Y-%m-%d  %H:%M")
+  (setq display-time-format "%H:%M  %Y-%m-%d")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
   ;; (setq display-time-day-and-date t)
