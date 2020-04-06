@@ -1869,27 +1869,32 @@ packages (see the [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][section on my Modus
   :hook (dired-mode . diredfl-mode))
 #+end_src
 
-*** Git overview in Dired
+*** dired-like view for the trash directory
     :PROPERTIES:
-    :CUSTOM_ID: h:796dc01d-a013-498f-8774-6271eaef512d
+    :CUSTOM_ID: h:954adfb4-8f2c-4665-bb5b-e098926341b0
     :END:
 
-I generally do not need to have the =git= related information readily
-available.  I use a dedicated package for version control.  Still, there
-are cases where just toggling on an overview is all you ever need.
+=trashed= applies the principles of =dired= to the management of the user's
+filesystem trash.  Use =C-h m= to see the docs and keybindings for its
+major mode.
 
-The commit message format is configured to show an abbreviated hash of
-the commit, the commit subject, and the relative date.  The =\t=
-represents the tab character and is there to ensure alignment.
+Basically, its interaction model is as follows:
+
+- =m= to mark for some deferred action, such as =D= to delete, =R= to restore.
+- =t= to toggle the status of all items as marked.  Use this without marks
+  to =m= (mark) all items, then call a deferred action to operate on them.
+- =d= to mark for permanent deletion.
+- =r= to mark for restoration.
+- =x= to execute these special marks.
 
 #+begin_src emacs-lisp
-(use-package dired-git-info
+(use-package trashed
   :ensure t
-  :after dired
   :config
-  (setq dgi-commit-message-format "%h\t%s\t%cr")
-  :bind (:map dired-mode-map
-              (")" . dired-git-info-mode)))
+  (setq trashed-action-confirmer 'y-or-n-p)
+  (setq trashed-use-header-line t)
+  (setq trashed-sort-key '("Date deleted" . t))
+  (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
 #+end_src
 
 ** Working with buffers
