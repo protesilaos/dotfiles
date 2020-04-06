@@ -3310,7 +3310,7 @@ Note that =gnus-article-sort-functions= requires the most important
 function to be declared last.
 
 With regard to the key bindings, I have redefined some of the existing
-ones to suit of workflow and better match my intuitions.  For example,
+ones to suit my workflow and better match my intuitions.  For example,
 in the Article view, hitting =s= takes you to the Summary buffer.  I find
 that to be a waste, since we can already move between buffers with
 standard keys.  Instead, The =s= can be used to save the attachment at
