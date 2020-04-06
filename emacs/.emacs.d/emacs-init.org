@@ -4322,12 +4322,6 @@ Upon insertion, playback starts immediately, in accordance with
                        'abbreviate-file-name
                        (directory-files path t dotless))))
       (when (bongo-playlist-buffer-p)
-        ;;;; Enables vertical completion while using `icomplete'.  I do
-        ;;;; not need this right now, since there is only a handful of
-        ;;;; playlists and all of them are in the same path so that a
-        ;;;; couple of key presses give a unique match anyway.
-        ;; (when (bound-and-true-p icomplete-mode)
-        ;;   (prot/icomplete-show-vertical))
         (bongo-insert-playlist-contents
          (completing-read "Select playlist: " playlists nil t))
         (prot/bongo-play-random))))
