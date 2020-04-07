@@ -3167,10 +3167,9 @@ Subsequent sections expand on the particulars.
   "Sent" folder of the account that replies to a given email and to use
   the right email address, depending on the context.  While the variable
   =gnus-gcc-mark-as-read= ensures that the outgoing messages are marked as
-  read.  NOTE: the function I currently use to dynamically set the
-  "From" parameter is /very fragile/.  I eventually need to find a robust
-  way of getting the substring.  I know how to do it with =sed= or =awk= but
-  not while using elisp.  Though the code works for the time being…
+  read.  The function =contrib/auth-source-search-host= which is used to
+  extract the email address for the given host was contributed by
+  another user in [[https://gitlab.com/protesilaos/dotfiles/-/issues/10][issue 10 on my dotfiles' repo]].
 + The "agent" is enabled here and configured in the [[#h:fccaadbb-ea22-4d1f-ae79-ef1f45f3befa][following section]].
 + Setting the =gnus-novice-user= to =nil= has the effect of reducing prompts
   for potentially destructive commands, such as deleting an email.  Too
@@ -3214,21 +3213,29 @@ Subsequent sections expand on the particulars.
                   (nnimap-stream ssl)
                   (nnimap-authinfo-file "~/.authinfo.gpg"))))
 
+  (defun contrib/auth-source-search-host (host)
+    "Retrieve login name or email address for HOST.
+
+This is meant to be used in the `gnus-parameters' variable."
+    (let ((my-user-name (format "%s" (auth-source-search :host host))))
+      (string-match "\\([^ @]+\\)@\\([^ @]+\\)" my-user-name)
+      (match-string 0 my-user-name)))
+
   (setq gnus-parameters
         '(("prv"
            (posting-style
             (gcc "nnimap+prv:Sent")
             (From
              (concat user-full-name " " "<"
-              (substring (format "%s" (auth-source-search :host "prv")) 28 51)
-              ">"))))
+                     (contrib/auth-source-search-host "prv")
+                     ">"))))
           ("inf"
            (posting-style
             (gcc "nnimap+inf:Sent")
             (From
              (concat user-full-name " " "<"
-              (substring (format "%s" (auth-source-search :host "inf")) 28 48)
-              ">"))))
+                     (contrib/auth-source-search-host "inf")
+                     ">"))))
           ("pub"
            (posting-style               ; Uses default name+mail
             (gcc "nnimap+pub:Sent")))))
