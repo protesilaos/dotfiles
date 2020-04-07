@@ -3702,7 +3702,9 @@ body of the commit message, separated by an empty line (shown as a
 border) as per the conventions that govern good commit messages.  In the
 lower part you can see the affected files (just the current file by
 default).  The standard =C-c C-c= confirms the commit, while =C-c C-k=
-cancels it.
+cancels it.  Furthermore, there is =C-c C-f= to view the file set
+concerned (in case it is not already visible below the message area), as
+well as =C-c C-d= to produce a diff of what is being committed.
 
 You can review the commit log for the current file with =C-x v l=
 (=vc-print-log=) or for the entirety of the current project with =C-x v L=
@@ -3751,13 +3753,28 @@ on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (s
 Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]]
 (2020-03-30).
 
+*Careful with the keybindings* I define.  Many of them do other things by
+default and /I might still review them further/.  When in doubt, stick
+with the defaults.
+
 #+begin_src emacs-lisp
 (use-package vc
   :config
   (setq vc-find-revision-no-save t)
-  :bind (("C-x v f" . vc-log-incoming)  ; the actual git fetch
+  (require 'log-view)                   ; needed for the key bindings
+  :bind (("C-x v b" . vc-retrieve-tag)  ; "branch" switch
+         ("C-x v c" . vc-create-tag)    ; create branch
+         ("C-x v f" . vc-log-incoming)  ; the actual git fetch
          ("C-x v F" . vc-update)        ; "F" because "P" is push
-         ("C-x v d" . vc-diff)))
+         ("C-x v d" . vc-diff)
+         (:map log-view-mode-map
+               ("<tab>" . log-view-toggle-entry-display)
+               ("<return>" . log-view-find-revision)
+               ("s" . vc-log-search)
+               ("o" . vc-log-outgoing)
+               ("f" . vc-log-incoming)
+               ("F" . vc-update)
+               ("P" . vc-push))))
 
 (use-package vc-dir
   :config
@@ -3773,6 +3790,9 @@ Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Intr
   :bind (("C-x v p" . prot/vc-dir-project)
          ("C-x v j" . prot/vc-dir-jump) ; similar to `dired-jump'
          :map vc-dir-mode-map
+         ("b" . vc-retrieve-tag)
+         ("c" . vc-create-tag)
+         ("o" . vc-log-outgoing)
          ("f" . vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
          ("F" . vc-update)       ; symmetric with P: `vc-push'
          ("d" . vc-diff)         ; align with D: `vc-root-diff'
