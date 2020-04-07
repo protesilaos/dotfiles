@@ -3441,12 +3441,14 @@ moving up or down in the list of messages using just =n= or =p=, I want to
 go to the next message, regardless of whether it has been read or not.
 I can otherwise rely on standard Emacs motions.
 
-The formatting of the threads using Unicode characters was taken from
-the [[https://www.emacswiki.org/emacs/GnusFormatting][relevant Emacs wiki entry]] plus some minor tweaks by me.
+The =gnus-user-date-format-alist= basically adapts the date to whether the
+message was within the day or the one before, else falls back to a
+default ISO-style value.  It is then called with =%&user-date;=.
 
-The =gnus-user-date-format-alist=, this basically adapts the date to
-whether the message was within the day or the one before, else falls
-back to a default value.  It is then called with =%&user-date;=.
+The formatting of the threads using Unicode characters was taken from
+the [[https://www.emacswiki.org/emacs/GnusFormatting][relevant Emacs wiki entry]] plus some minor tweaks by me.  Otherwise
+the summary's display is tweaked to show output in nice columns, while
+being a little bit cleaner than default.
 
 #+begin_src emacs-lisp
 (use-package gnus-sum
@@ -3471,7 +3473,7 @@ back to a default value.  It is then called with =%&user-date;=.
         '(((gnus-seconds-today) . "Today at %R")
           ((+ 86400 (gnus-seconds-today)) . "Yesterday, %R")
           (t . "%Y-%m-%d %R")))
-  (setq gnus-summary-line-format "%U%R%z %-16,16&user-date;  %4L:%-30,30f  %B%S\n")
+  (setq gnus-summary-line-format "%U%R%z %-16,16&user-date;  %4L:%-30,30f  %B%s\n")
   (setq gnus-summary-mode-line-format "%p")
   (setq gnus-sum-thread-tree-false-root "─┬➤ ")
   (setq gnus-sum-thread-tree-indent " ")
