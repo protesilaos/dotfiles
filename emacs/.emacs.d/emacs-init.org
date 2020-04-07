@@ -5574,6 +5574,11 @@ reference:
 These are small functions that facilitate my day-to-day work with Emacs.
 They are written by me, unless otherwise noted.
 
++ Change case "do what I mean" :: Emacs provides =*-dwim= versions of its
+  commands for changing the casing of a word or a region.  With an
+  active region, they operate on it, else they operate on the word.  I
+  bind them in the keys where you would find the originals (which, in
+  turn, render the region-specific variants redundant).
 + Copy the current line :: Just place the entire line in the kill ring.
   Do not be smart about it.
 + Count words in buffer :: By default, the binding =M-== will count the
@@ -5828,7 +5833,10 @@ instead.  This command can then be followed by the standard
       (delete-region (point-at-bol) (point-at-eol))
       (yank)))
 
-  :bind (("<C-f2>" . contrib/rename-file-and-buffer)
+  :bind (("M-c" . capitalize-dwim)
+         ("M-l" . downcase-dwim)        ; "lower" case
+         ("M-u" . upcase-dwim)
+         ("<C-f2>" . contrib/rename-file-and-buffer)
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
          ("<C-delete>" . delete-pair)
