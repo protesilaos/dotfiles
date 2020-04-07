@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
+	Based on the default GNOME Builder scheme by Christian Hergert.
+	Copyright (C) 2014 Christian Hergert <christian@hergert.me>
+
 	Copyright (C) 2019 Protesilaos Stavrou <info@protesilaos.com>
 
 	This program is free software: you can redistribute it and/or modify
@@ -45,6 +48,11 @@
 	<color name="colfgalt"    value="#686565"/>
 	<color name="colcr"       value="#4a4b4e"/>
 
+	<!-- Extra values -->
+	<color name="colwarn"     value="#4b529a"/>
+	<color name="colerr"      value="#a32a3a"/>
+	<color name="colnote"     value="#206620"/>
+
 	<!-- Global Settings -->
 	<style name="text"                  foreground="colfg" background="colbg"/>
 	<style name="selection"             foreground="colbg" background="colfg"/>
@@ -58,9 +66,9 @@
 
 	<!-- Diagnostics Underlining -->
 	<style name="diagnostician::deprecated"   underline="error" underline-color="colfgalt"/>
-	<style name="diagnostician::error"        underline="error" underline-color="col1"/>
-	<style name="diagnostician::note"         underline="error" underline-color="col4"/>
-	<style name="diagnostician::warning"      underline="error" underline-color="col3"/>
+	<style name="diagnostician::error"        underline="error" underline-color="colerr" foreground="colerr"/>
+	<style name="diagnostician::note"         underline="error" underline-color="colnote" foreground="colnote"/>
+	<style name="diagnostician::warning"      underline="error" underline-color="colwarn" foreground="colwarn"/>
 
 	<!-- Debugger -->
 	<style name="debugger::breakpoint"        background="col6" foreground="colbg"/>

@@ -29,6 +29,11 @@
   <color name="colfgalt" value="#a59ebd"/>
   <color name="colcr" value="#b4abac"/>
 
+  <!-- Extra values -->
+  <color name="colwarn" value="#bfa01a"/>
+  <color name="colerr" value="#ff778a"/>
+  <color name="colnote" value="#6ab539"/>
+
   <!-- Global Settings -->
   <style name="text" foreground="colfg" background="colbg"/>
   <style name="line-numbers" foreground="colfgalt" background="colbgalt"/>
@@ -67,9 +72,9 @@
 
   <!-- Others -->
   <style name="def:preprocessor" foreground="col9"/>
-  <style name="def:error" foreground="colbg" background="col1"/>
-  <style name="def:warning" foreground="colbg" background="col3"/>
-  <style name="def:note" foreground="col3" bold="true"/>
+  <style name="def:error" underline="single" underline-color="colerr" foreground="colerr"/>
+  <style name="def:warning" underline="single" underline-color="colwarn" foreground="colwarn"/>
+  <style name="def:note" underline="single" underline-color="colnote" foreground="colnote"/>
   <style name="def:underlined" italic="true" underline="single"/>
 
   <!-- Heading styles, uncomment to enable -->

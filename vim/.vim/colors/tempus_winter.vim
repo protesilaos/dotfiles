@@ -196,3 +196,12 @@ hi MarkdownCodeBlock guifg=#8da3b8 ctermfg=15
 
 hi MarkdownListMarker gui=none guifg=#49a61d cterm=none ctermfg=2
 hi default link MarkdownOrderedListMarker MarkdownListMarker
+
+" Linting
+" -------
+hi YcmErrorSection gui=undercurl guisp=#eb6a58 cterm=underline
+hi YcmWarningSection gui=undercurl guisp=#959721 cterm=underline
+hi SyntasticError gui=undercurl guisp=#eb6a58 cterm=underline
+hi SyntasticWarning gui=undercurl guisp=#959721 cterm=underline
+hi SyntasticErrorSing guifg=#202427 guibg=#eb6a58 ctermfg=0 ctermbg=1
+hi SyntasticWarningSign guifg=#202427 guibg=#959721 ctermfg=0 ctermbg=3
