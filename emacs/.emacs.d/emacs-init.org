@@ -1030,12 +1030,10 @@ used in commands such as `set-frame-font'."
 
   (defun prot/icomplete-yank-kill-ring ()
     "Insert the selected `kill-ring' item directly at point.
+When region is active, `delete-region'.
 
 Sorting of the `kill-ring' is disabled.  Items appear as they
-normally would when calling `yank' followed by `yank-pop'.
-
-Defaults to a vertical layout.  This is restored on exit by means
-of `prot/icomplete-restore-horizontal'."
+normally would when calling `yank' followed by `yank-pop'."
     (interactive)
     (let ((kills                    ; do not sort items
            (lambda (string pred action)
@@ -1047,6 +1045,8 @@ of `prot/icomplete-restore-horizontal'."
       (icomplete-vertical-do
           (:separator (concat "\n" (propertize "··········" 'face 'shadow) "\n")
                       :height (/ (window-height) 4))
+        (when (use-region-p)
+          (delete-region (region-beginning) (region-end)))
         (insert
          (completing-read "Yank from kill ring: " kills nil t)))))
 
