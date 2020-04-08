@@ -4349,11 +4349,14 @@ the currently-playing track."
 
   (defun prot/bongo-library-insert-and-play-random ()
     "Add directory tree or marked items to the `bongo' playlist.
+Create the playlist buffer if necessary.
 
 This is meant to work while inside a `dired' buffer that doubles
 as a library buffer (see `prot/bongo-dired-library')."
     (interactive)
     (when (bongo-library-buffer-p)
+      (unless (bongo-playlist-buffer-p)
+        (bongo-playlist-buffer))
       (contrib/bongo-add-dired-files)
       (prot/bongo-play-random)))
 
