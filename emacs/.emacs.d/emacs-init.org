@@ -808,6 +808,11 @@ Overview of the following package declaration:
   tentative.  My initial tests suggest that they behave exactly the way
   I want, but this might change once I test them further.  In short, do
   not introduce any further delay.
++ I do not want to see any kind of candidate unless I start typing.  I
+  understand this is idiosyncratic, but I find it faster for my
+  workflow.  I know, more or less, what I am looking for prior to
+  looking at the list and once I start typing I will get the standard
+  feedback on what is being matched.
 + For versions of Emacs above 27, there is a mode called =fido= (Fake IDO,
   where =ido= is an alternative option).  This changes some of the primary
   key bindings and commands of =icomplete= so that it meets the
@@ -824,12 +829,13 @@ Overview of the following package declaration:
   you have typed in.  Use it when Icomplete is matching =foobar= but you
   only want =foo=.
 
-Note that while running =M-x shell=, you can still use =icomplete= by means
-of tab-completion, but to confirm a choice you need to hit =C-m=.  Hitting
-=RET= after successful tab completions will just give you the final part
-of the candidate.  I have yet to figure out why we cannot lock in the
-entire sequence and why my =prot/icomplete-force-complete-and-exit= does
-not work as intended.
+*Pro tip*: while running =M-x shell= with my settings, you can still benefit
+from the built-in completion mechanisms by means of tab-completion.
+This requires =icomplete-in-buffer nil=.  Tab completion works the way you
+would expect in a terminal emulator, but also in accordance with how
+Emacs matches candidates.  So it works with initials as well!  For
+example, to =cd= into =~/Git/Projects/modus-themes= we can do =cd ~/G/P/m-t
+<TAB>=.  Try it!
 
 #+begin_src emacs-lisp
 (use-package icomplete
@@ -839,12 +845,12 @@ not work as intended.
   (setq icomplete-delay-completions-threshold 0)
   (setq icomplete-max-delay-chars 0)
   (setq icomplete-compute-delay 0)
-  (setq icomplete-show-matches-on-no-input t)
+  (setq icomplete-show-matches-on-no-input nil) ; no input, no feedback
   (setq icomplete-hide-common-prefix nil)
   (setq icomplete-prospects-height 1)
-  (setq icomplete-separator " · ")      ; mid dot, not full stop
+  (setq icomplete-separator " · ")      ; mid dot
   (setq icomplete-with-completion-tables t)
-  (setq icomplete-in-buffer t)
+  (setq icomplete-in-buffer nil)        ; not your job
 
   (fido-mode -1)                        ; Emacs 27.1
   (icomplete-mode 1)
@@ -1123,6 +1129,7 @@ inside a given location."
          ("M-s f" . prot/project-find-file)
          ("M-s z" . prot/find-file-from-dir-recursive)
          ("M-s r" . project-find-regexp)
+         ("M-s l" . find-library)
          ("M-s C-M-%" . project-query-replace-regexp)))
 #+end_src
 
