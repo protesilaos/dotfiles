@@ -3546,7 +3546,7 @@ By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][com
      :PROPERTIES:
      :CUSTOM_ID: h:357088a3-b88d-4928-9c8c-f6c5902421aa
      :END:
-***** TODO non-blocking RSS feeds (use topic scores?)
+***** TODO add RSS feeds
       :PROPERTIES:
       :CUSTOM_ID: h:61a91a5c-338d-4c1d-9f8c-f8ee321078a8
       :END:
@@ -4116,6 +4116,9 @@ bindings and their functions.
    :PROPERTIES:
    :CUSTOM_ID: h:f2528ad5-912c-45c5-a077-fe76623ff22b
    :END:
+
+/Warning 2020-04-08: This section will be removed in the future as I
+integrate my RSS feeds in Gnus./
 
 Settings for the feed reader package.  I mostly care about the unique
 buffers tweak.  It allows me to open a feed entry and keep it around
@@ -6157,7 +6160,7 @@ or simplify common tasks so that /their/ feedback does not cause friction:
   (put 'overwrite-mode 'disabled t))
 #+end_src
 
-*** Newlines at end of file and trailing whitespace
+*** Newline characters for file ending
     :PROPERTIES:
     :CUSTOM_ID: h:c0f0a2c1-1920-4bcf-8eb4-45f80cf1b874
     :END:
@@ -6167,19 +6170,10 @@ importance.  Without it you cannot, for instance, apply a patch cleanly.
 As such, the =mode-require-final-newline= will add a newline character
 when visiting or saving a buffer of relevance.
 
-Meanwhile, the hook will ensure that no trailing whitespace or empty
-lines remain.  *Careful with this*, as there may be cases where you
-actually want spaces at the end (e.g. Markdown interprets a double space
-at the end of the line as the equivalent of HTML's =br= ---I personally do
-not care about that and have not encountered any other problems with
-this).
-
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq mode-require-final-newline 'visit-save)
-  (setq delete-trailing-lines t)
-  :hook (before-save . delete-trailing-whitespace))
+  (setq mode-require-final-newline 'visit-save))
 #+end_src
 
 *** Altered zap and easier repeats
