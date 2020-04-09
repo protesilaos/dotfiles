@@ -811,20 +811,22 @@ Overview of the following package declaration:
 + I do not want to see any kind of candidate unless I start typing.  I
   understand this is idiosyncratic, but I find it faster for my
   workflow.  I know, more or less, what I am looking for prior to
-  looking at the list and once I start typing I will get the standard
-  feedback on what is being matched.
+  consulting the list of candidates.  Once I start typing I will get the
+  standard feedback on what is being matched.
 + For versions of Emacs above 27, there is a mode called =fido= (Fake IDO,
-  where =ido= is an alternative option).  This changes some of the primary
-  key bindings and commands of =icomplete= so that it meets the
-  expectations of Ido users.  It is not meant as a fully fledged
-  replacement for Ido, as its scope is much narrower (for the time
-  being).  If you are curious, check the source code for both =icomplete=
-  and =ido= with =M-x find-library=.
+  where =ido= is an alternative option to Icomplete that tries to do more
+  than just completion).  This new mode changes some of the primary key
+  bindings and commands of =icomplete= so that it meets the expectations
+  of Ido users.  It is not meant as a fully fledged replacement of Ido,
+  as its scope is much narrower, at least for the time being.  If you
+  are curious, check the source code for both =icomplete= and =ido= with the
+  help of =M-x find-library=.
 + All my functions that somehow extend the functionality of Icomplete
   have their own documentation.  No need to reproduce it here.
-+ The keybindings define motions that ensure consistency betweem regular
++ The keybindings define motions that ensure consistency between regular
   editing and the rotation of the candidate list.  The default =icomplete=
-  key bindings leave something to be desired.
+  key bindings leave something to be desired and are therefore
+  repurposed for my extensions.
 + Note the behaviour of =C-m=.  It is intended for inserting /exactly/ what
   you have typed in.  Use it when Icomplete is matching =foobar= but you
   only want =foo=.
@@ -834,8 +836,8 @@ from the built-in completion mechanisms by means of tab-completion.
 This requires =icomplete-in-buffer nil=.  Tab completion works the way you
 would expect in a terminal emulator, but also in accordance with how
 Emacs matches candidates.  So it works with initials as well!  For
-example, to =cd= into =~/Git/Projects/modus-themes= we can do =cd ~/G/P/m-t
-<TAB>=.  Try it!
+example, to =cd= into =~/Git/Projects/modus-themes= we can do something like
+=cd ~/G/P/m-t <TAB>=.  Try it!
 
 #+begin_src emacs-lisp
 (use-package icomplete
@@ -856,7 +858,7 @@ example, to =cd= into =~/Git/Projects/modus-themes= we can do =cd ~/G/P/m-t
   (icomplete-mode 1)
 
   (defun prot/icomplete-force-complete-and-exit ()
-    "Complete the current `icomplete' match and exit the minibuffer.
+    "Complete the current icomplete match and exit the minibuffer.
 
 Contrary to `icomplete-force-complete-and-exit', this will
 confirm your choice without complaining about incomplete matches.
@@ -872,7 +874,7 @@ In my testing, this is necessary when the variable
     (exit-minibuffer))
 
   (defun prot/icomplete-kill-ring-save (&optional arg)
-    "Expand and save current `icomplete' match to the kill ring.
+    "Expand and save current icomplete match to the kill ring.
 
 With a prefix argument, insert the match to the point in the
 current buffer and switch focus back to the minibuffer."
@@ -926,14 +928,14 @@ Bind this function in `icomplete-minibuffer-map'."
                            (interactive)
                            (let ((current-prefix-arg t))
                              (prot/icomplete-kill-ring-save))))
-              ("C-M-," . prot/icomplete-toggle-completion-styles)
-              ("C-M-." . (lambda ()
-                           (interactive)
-                           (let ((current-prefix-arg t))
-                             (prot/icomplete-toggle-completion-styles))))))
+              ("C-," . prot/icomplete-toggle-completion-styles) ; toggle flex
+              ("C-." . (lambda ()                               ; toggle basic
+                         (interactive)
+                         (let ((current-prefix-arg t))
+                           (prot/icomplete-toggle-completion-styles))))))
 #+end_src
 
-**** Icomplete vertical mode (stable, but in development)
+**** Icomplete vertical mode (stable, soon in MELPA)
      :PROPERTIES:
      :CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
      :END:
@@ -945,23 +947,29 @@ my particular needs.  There was no package "ecosystem" around Icomplete
 that I could leverage.
 
 Thankfully, [[https://github.com/oantolin/icomplete-vertical][Omar Antolín Camarena's icomplete-vertical]] is here (since
-early April 2020) to fill in this gap.  For the time being, this package
-is perfectly usable though still in development.  I have contributed
-some minor patches and user feedback in its early stages, though all the
-real work is done by Omar.
+early April 2020) to fill in this gap.  A pull request has been
+submitted to MELPA, so expect a package some time in May.
+
+Though technically in development, =icomplete-vertical= is perfectly
+usable, if not feature-complete already.  I have contributed some minor
+patches and user feedback in its early stages, but all the real work is
+done by Omar ---and it is /a lot of work/ as confirmed by the commit logs
+and the scope of the diffs.
 
 The package provides a global minor mode for displaying the list of
 candidates vertically by default.  Enable it and you are good to go.
-For those who want to more fine-tuned experience, such as retaining the
+For those who want a more fine-tuned experience, such as retaining the
 horizontal layout and enabling verticality for some functions,
-=icomplete-vertical.el= offers some useful abstractions to implement our
-idea.
+=icomplete-vertical.el= offers a set of useful abstractions to realise our
+plans.
 
 + With =icomplete-vertical-toggle=, which should be bound to a key inside
   the minibuffer, we can use whatever layout we want whenever we need
   it.  Excellent!
 + While the =icomplete-vertical-do= macro can be used to parametrise a
-  custom function with an optional height and unique separator.
+  custom function with an optional height and unique separator.  The
+  latter comes with the option to pick from a list of presets:
+  {solid,dashed,dotted}line.
 
 The project's README should offer all the information you need.  Several
 of my functions offer real-world implementations of the aforementioned.
@@ -985,20 +993,18 @@ enable/ =icomplete-vertical-mode= globally.  Instead, it defines the
 elements that are necessary for activating verticality on an ad-hoc or
 per-function basis.
 
-Due to the nature of ongoing development, some things may change, though
-I am confident that things are stable already (until further notice, as
-of 2020-04-06).
-
-The =:load-path= in the package declaration below means that I have
-manually cloned the repo and am handling the updates myself.  I know
-there are tools for that, but this is the first time I genuinely need
-such a facility and am not sure I want to make it more common.
-
 In =prot/icomplete-yank-kill-ring= you will spot a function that disables
 the sorting of the list.  Without it, the kills appear in a seemingly
 random order, which is highly undesired.  I adapted that piece of
 functionality from the [[https://github.com/jixiuf/vmacs/blob/master/conf/conf-icomplete.el][dotemacs of GitHub user jixiuf]], following a
 comment I got from them on my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
+
+Due to the nature of ongoing development, some things may change, though
+I am confident that things are stable already (until further notice, as
+of 2020-04-09).  The =:load-path= in the package declaration below means
+that I have manually cloned the repo and am handling the updates myself.
+I know there are tools for that, but this is the first time I genuinely
+need such a facility and am not sure I want to make it more common.
 
 Finally, not all "vertical" functions of mine are defined here.  Some
 are also found in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][completion for projects and directory trees]].
@@ -1049,8 +1055,7 @@ normally would when calling `yank' followed by `yank-pop'."
                (complete-with-action
                 action kill-ring string pred)))))
       (icomplete-vertical-do
-          (:separator (concat "\n" (propertize "··········" 'face 'shadow) "\n")
-                      :height (/ (window-height) 4))
+          (:separator 'dotted-line :height (/ (window-height) 4))
         (when (use-region-p)
           (delete-region (region-beginning) (region-end)))
         (insert
@@ -1062,7 +1067,7 @@ normally would when calling `yank' followed by `yank-pop'."
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
          ("s-r" . prot/icomplete-recentf)
          :map icomplete-minibuffer-map
-         ("C-M-|" . icomplete-vertical-toggle)))
+         ("C-v" . icomplete-vertical-toggle)))
 #+end_src
 
 *** Completion for projects and directory trees
@@ -1075,10 +1080,10 @@ directories, aka "projects", or directory trees in general.  With these
 I have no need for the third-party "Projectile" package.
 
 Some of the functions furnished herein are built into Emacs, while
-others are defined by me to satisfy my particular needs.
-
-Everything I have here presupposes a completion framework, so make sure
-to check the previous section on [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]].
+others are defined by me to satisfy my particular needs.  Whatever the
+case, they all presuppose a completion framework, so make sure to check
+the previous section on [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]] in its
+entirety.
 
 Concerning the design of these key bindings, they are consistent with
 all "advanced search methods" (e.g. the default =M-s o= for =occur=).
@@ -1094,7 +1099,7 @@ Also see my [[*ripgrep (rg.el)][configurations for ripgrep]].
 
 #+begin_src emacs-lisp
 (use-package project
-  :after (minibuffer icomplete icomplete-vertical)
+  :after (minibuffer icomplete icomplete-vertical) ; read those
   :config
   (defun prot/project-find-file ()
     (interactive)
