@@ -60,6 +60,7 @@
 ;; notify me of any missing package or change you would like to see.
 ;;
 ;;     ace-window
+;;     ag
 ;;     alert
 ;;     all-the-icons
 ;;     annotate
@@ -78,6 +79,7 @@
 ;;     centaur-tabs
 ;;     change-log and log-view (`vc-print-log' and `vc-print-root-log')
 ;;     cider
+;;     color-rg
 ;;     column-enforce-mode
 ;;     company-mode
 ;;     company-posframe
@@ -159,6 +161,7 @@
 ;;     highlight-defined
 ;;     highlight-escape-sequences (`hes-mode')
 ;;     highlight-numbers
+;;     highlight-symbol
 ;;     highlight-thing
 ;;     hl-fill-column
 ;;     hl-line-mode
@@ -261,6 +264,7 @@
 ;;     undo-tree
 ;;     vc (built-in mode line status for version control)
 ;;     vc-annotate (C-x v g)
+;;     vimish-fold
 ;;     visible-mark
 ;;     visual-regexp
 ;;     volatile-highlights
@@ -516,6 +520,9 @@ AMOUNT is a customisation option."
       ;; though only for styling special elements, such as underlining
       ;; the current tab
       ;;
+      ;; `fg-escape-char-construct' and `fg-escape-char-backslash' can
+      ;; be combined `bg-main', `bg-dim', `bg-alt'
+      ;;
       ;; `fg-mark', `fg-mark-del', `fg-mark-other' can be combined with
       ;; `bg-main', `bg-dim', `bg-alt', `bg-hl-line'
       ;;
@@ -529,6 +536,9 @@ AMOUNT is a customisation option."
       (bg-tab-active "#ababab")
       (bg-tab-inactive "#dadada")
       (fg-tab-active "#000077")
+
+      (fg-escape-char-construct "#8b1030")
+      (fg-escape-char-backslash "#644f00")
 
       (fg-window-divider-inner "#888888")
       (fg-window-divider-outer "#585858")
@@ -642,13 +652,13 @@ AMOUNT is a customisation option."
                       :foreground ,fg-main))))
    ;;;; basic and/or ungrouped styles
    `(error ((,class (:foreground ,red :weight bold))))
-   `(escape-glyph ((,class (:inherit modus-theme-refine-blue :weight bold))))
+   `(escape-glyph ((,class (:foreground ,fg-escape-char-construct))))
    `(header-line ((,class (:background ,bg-header :foreground ,fg-header))))
-   `(homoglyph ((,class (:foreground ,yellow-alt-other))))
+   `(homoglyph ((,class (:foreground ,fg-escape-char-construct))))
    `(ibuffer-locked-buffer ((,class (:foreground ,yellow-alt-other))))
    `(italic ((,class (:foreground ,fg-special-cold :slant italic))))
-   `(nobreak-hyphen ((,class (:inherit modus-theme-special-cold))))
-   `(nobreak-space ((,class (:inherit modus-theme-special-cold :underline t))))
+   `(nobreak-hyphen ((,class (:foreground ,fg-escape-char-construct))))
+   `(nobreak-space ((,class (:foreground ,fg-escape-char-construct :underline t))))
    `(minibuffer-prompt ((,class (:foreground ,cyan-alt))))
    `(mm-command-output ((,class (:foreground ,red-alt-other))))
    `(mm-uu-extract ((,class (:background ,bg-dim :foreground ,fg-special-mild))))
@@ -657,6 +667,9 @@ AMOUNT is a customisation option."
    `(success ((,class (:foreground ,green :weight bold))))
    `(trailing-whitespace ((,class (:background ,red-intense-bg))))
    `(warning ((,class (:foreground ,yellow :weight bold))))
+   ;;;; ag
+   `(ag-hit-face ((,class (:foreground ,fg-special-cold))))
+   `(ag-match-face ((,class (:inherit modus-theme-special-calm))))
    ;;;; alert
    `(alert-high-face ((,class (:foreground ,red-alt :weight bold))))
    `(alert-low-face ((,class (:foreground ,fg-special-mild))))
@@ -900,6 +913,21 @@ AMOUNT is a customisation option."
    `(cider-test-success-face ((,class (:inherit modus-theme-intense-green))))
    `(cider-traced-face ((,class (:box (:line-width -1 :color ,cyan :style nil) :background ,bg-dim))))
    `(cider-warning-highlight-face ((,class (:foreground ,yellow :underline t))))
+   ;;;; color-rg
+   `(color-rg-font-lock-column-number ((,class (:foreground ,magenta-alt-other))))
+   `(color-rg-font-lock-command ((,class (:foreground ,fg-main :weight bold))))
+   `(color-rg-font-lock-file ((,class (:foreground ,fg-special-cold :weight bold))))
+   `(color-rg-font-lock-flash ((,class (:inherit modus-theme-intense-blue))))
+   `(color-rg-font-lock-function-location ((,class (:inherit modus-theme-special-calm))))
+   `(color-rg-font-lock-header-line-directory ((,class (:foreground ,blue-active))))
+   `(color-rg-font-lock-header-line-edit-mode ((,class (:foreground ,magenta-active))))
+   `(color-rg-font-lock-header-line-keyword ((,class (:foreground ,green-active))))
+   `(color-rg-font-lock-header-line-text ((,class (:foreground ,fg-active))))
+   `(color-rg-font-lock-line-number ((,class (:foreground ,fg-special-warm))))
+   `(color-rg-font-lock-mark-changed ((,class (:foreground ,blue :weight bold))))
+   `(color-rg-font-lock-mark-deleted ((,class (:foreground ,red :weight bold))))
+   `(color-rg-font-lock-match ((,class (:inherit modus-theme-special-calm))))
+   `(color-rg-font-lock-position-splitter ((,class (:foreground ,fg-alt))))
    ;;;; column-enforce-mode
    `(column-enforce-face ((,class (:inherit modus-theme-refine-yellow))))
    ;;;; company-mode
@@ -1430,8 +1458,8 @@ AMOUNT is a customisation option."
    `(font-lock-keyword-face ((,class (:foreground ,magenta-alt-other :weight ,modus-theme-bold))))
    `(font-lock-negation-char-face ((,class (:foreground ,yellow :weight ,modus-theme-bold))))
    `(font-lock-preprocessor-face ((,class (:foreground ,magenta))))
-   `(font-lock-regexp-grouping-backslash ((,class (:foreground ,green :weight bold))))
-   `(font-lock-regexp-grouping-construct ((,class (:foreground ,magenta :weight bold))))
+   `(font-lock-regexp-grouping-backslash ((,class (:foreground ,fg-escape-char-backslash :weight bold))))
+   `(font-lock-regexp-grouping-construct ((,class (:foreground ,fg-escape-char-construct :weight bold))))
    `(font-lock-string-face ((,class (:foreground ,blue-alt))))
    `(font-lock-type-face ((,class (:foreground ,magenta-alt))))
    `(font-lock-variable-name-face ((,class (:foreground ,cyan))))
@@ -1724,10 +1752,12 @@ AMOUNT is a customisation option."
    `(highlight-defined-special-form-name-face ((,class (:foreground ,magenta-alt-other))))
    `(highlight-defined-variable-name-face ((,class (:foreground ,cyan))))
    ;;;; highlight-escape-sequences (`hes-mode')
-   `(hes-escape-backslash-face ((,class (:foreground ,green :weight bold))))
-   `(hes-escape-sequence-face ((,class (:foreground ,magenta :weight bold))))
+   `(hes-escape-backslash-face ((,class (:foreground ,fg-escape-char-construct :weight bold))))
+   `(hes-escape-sequence-face ((,class (:foreground ,fg-escape-char-backslash :weight bold))))
    ;;;; highlight-numbers
    `(highlight-numbers-number ((,class (:foreground ,blue-alt-other))))
+   ;;;; highlight-symbol
+   `(highlight-symbol-face ((,class (:inherit modus-theme-special-mild))))
    ;;;; highlight-thing
    `(highlight-thing ((,class (:background ,bg-alt :foreground ,cyan))))
    ;;;; hl-fill-column
@@ -2498,8 +2528,8 @@ AMOUNT is a customisation option."
    `(reb-match-1 ((,class (:inherit modus-theme-intense-magenta))))
    `(reb-match-2 ((,class (:inherit modus-theme-intense-green))))
    `(reb-match-3 ((,class (:inherit modus-theme-intense-red))))
-   `(reb-regexp-grouping-backslash ((,class (:foreground ,green :weight bold))))
-   `(reb-regexp-grouping-construct ((,class (:foreground ,magenta :weight bold))))
+   `(reb-regexp-grouping-backslash ((,class (:foreground ,fg-escape-char-backslash :weight bold))))
+   `(reb-regexp-grouping-construct ((,class (:foreground ,fg-escape-char-construct :weight bold))))
    ;;;; rg (rg.el)
    `(rg-column-number-face ((,class (:foreground ,magenta-alt-other))))
    `(rg-context-face ((,class (:foreground ,fg-alt))))
@@ -2795,6 +2825,10 @@ AMOUNT is a customisation option."
    `(vc-removed-state ((,class (:foreground ,red-active))))
    `(vc-state-base ((,class (:foreground ,fg-active))))
    `(vc-up-to-date-state ((,class (:foreground ,fg-special-cold))))
+   ;;;; vimish-fold
+   `(vimish-fold-fringe ((,class (:foreground ,cyan-active))))
+   `(vimish-fold-mouse-face ((,class (:inherit modus-theme-intense-blue))))
+   `(vimish-fold-overlay ((,class (:background ,bg-alt :foreground ,fg-special-cold))))
    ;;;; visible-mark
    `(visible-mark-active ((,class (:background ,blue-intense-bg))))
    `(visible-mark-face1 ((,class (:background ,cyan-intense-bg))))
