@@ -5402,9 +5402,15 @@ feels too intrusive.
           flymake-warning-bitmap '(exclamation-mark
                                    modus-theme-fringe-yellow)
           flymake-note-bitmap '(exclamation-mark
-                                modus-theme-fringe-green)))
+                                modus-theme-fringe-cyan)))
 
-  :hook (prog-mode . flymake-mode))
+  :hook (prog-mode . flymake-mode)
+  ;; All keys are tentative.  I want to avoid conflicts with something I
+  ;; would use.
+  :bind (("<f8>" . flymake-show-diagnostics-buffer)
+         :map flymake-mode-map
+         ("C-," . flymake-goto-prev-error)
+         ("C-." . flymake-goto-next-error)))
 #+end_src
 
 With this in place we can perform checks that pertain to Emacs packages.
@@ -5421,18 +5427,22 @@ patches to.
 *** Eldoc (elisp live documentation feedback)
     :PROPERTIES:
     :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
-    :END:
+    :ND:
 
-/Work in progress 2020-04-10.  I might actually use and tweak it./
+When editing elisp, this mode will display useful information about the
+construct at point in the echo area.  For functions it will display the
+list of arguments they accept.  While it will show the the first
+sentence of a variable's documentation string.
 
-Displays information about the construct at point in the echo area.  I
-find that I have no use for this, so I am disabling the mode for the
-time being.
+At first, I dismissed this package.  Upon closer inspection, it does
+offer a lightweight complementary facility to that of the standard help
+commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
 
 #+begin_src emacs-lisp
 (use-package eldoc
+  :delight
   :config
-  (global-eldoc-mode -1))
+  (global-eldoc-mode 1))
 #+end_src
 
 *** Markdown support
