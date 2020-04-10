@@ -171,6 +171,7 @@
 ;;     icomplete
 ;;     ido-mode
 ;;     iedit
+;;     iflipb
 ;;     imenu-list
 ;;     info
 ;;     info-colors
@@ -953,13 +954,13 @@ AMOUNT is a customisation option."
    `(company-posframe-metadata ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
    ;;;; compilation feedback
    `(compilation-column-number ((,class (:foreground ,magenta-alt-other))))
-   `(compilation-error ((,class (:foreground ,red :weight bold))))
+   `(compilation-error ((,class (:foreground ,red :weight ,modus-theme-bold))))
    `(compilation-info ((,class (:foreground ,fg-special-cold))))
    `(compilation-line-number ((,class (:foreground ,fg-special-warm))))
-   `(compilation-mode-line-exit ((,class (:foreground ,blue-active :weight bold))))
-   `(compilation-mode-line-fail ((,class (:foreground ,red-active :weight bold))))
-   `(compilation-mode-line-run ((,class (:foreground ,magenta-active :weight bold))))
-   `(compilation-warning ((,class (:foreground ,yellow :weight bold))))
+   `(compilation-mode-line-exit ((,class (:foreground ,blue-active :weight ,modus-theme-bold))))
+   `(compilation-mode-line-fail ((,class (:foreground ,red-active :weight ,modus-theme-bold))))
+   `(compilation-mode-line-run ((,class (:foreground ,magenta-active :weight ,modus-theme-bold))))
+   `(compilation-warning ((,class (:foreground ,yellow :weight ,modus-theme-bold))))
    ;;;; completions
    `(completions-annotations ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
    `(completions-common-part ((,class (:foreground ,cyan-alt-other))))
@@ -1116,9 +1117,9 @@ AMOUNT is a customisation option."
    `(dired-symlink ((,class (:foreground ,blue-alt :underline t))))
    `(dired-warning ((,class (:foreground ,yellow :weight bold))))
    ;;;; dired-async
-   `(dired-async-failures ((,class (:foreground ,red-active :weight bold))))
-   `(dired-async-message ((,class (:foreground ,green-active :weight bold))))
-   `(dired-async-mode-message ((,class (:foreground ,cyan-active :weight bold))))
+   `(dired-async-failures ((,class (:foreground ,red-active :weight ,modus-theme-bold))))
+   `(dired-async-message ((,class (:foreground ,green-active :weight ,modus-theme-bold))))
+   `(dired-async-mode-message ((,class (:foreground ,cyan-active :weight ,modus-theme-bold))))
    ;;;; dired-git
    `(dired-git-branch-else ((,class (:foreground ,magenta-alt :weight bold))))
    `(dired-git-branch-master ((,class (:foreground ,magenta-alt-other :weight bold))))
@@ -1406,11 +1407,11 @@ AMOUNT is a customisation option."
    `(flycheck-warning ((,class (:foreground ,yellow :underline t))))
    ;;;; flycheck-indicator
    `(flycheck-indicator-disabled ((,class (:foreground ,fg-inactive :slant ,modus-theme-slant))))
-   `(flycheck-indicator-error ((,class (:foreground ,red-active :weight bold))))
-   `(flycheck-indicator-info ((,class (:foreground ,blue-active :weight bold))))
-   `(flycheck-indicator-running ((,class (:foreground ,magenta-active :weight bold))))
-   `(flycheck-indicator-success ((,class (:foreground ,green-active :weight bold))))
-   `(flycheck-indicator-warning ((,class (:foreground ,yellow-active :weight bold))))
+   `(flycheck-indicator-error ((,class (:foreground ,red-active :weight ,modus-theme-bold))))
+   `(flycheck-indicator-info ((,class (:foreground ,blue-active :weight ,modus-theme-bold))))
+   `(flycheck-indicator-running ((,class (:foreground ,magenta-active :weight ,modus-theme-bold))))
+   `(flycheck-indicator-success ((,class (:foreground ,green-active :weight ,modus-theme-bold))))
+   `(flycheck-indicator-warning ((,class (:foreground ,yellow-active :weight ,modus-theme-bold))))
    ;;;; flycheck-posframe
    `(flycheck-posframe-background-face ((,class (:background ,bg-alt))))
    `(flycheck-posframe-border-face ((,class (:foreground ,fg-alt))))
@@ -1784,6 +1785,9 @@ AMOUNT is a customisation option."
    ;;;; iedit
    `(iedit-occurrence ((,class (:inherit modus-theme-refine-blue))))
    `(iedit-read-only-occurrence ((,class (:inherit modus-theme-intense-yellow))))
+   ;;;; iflipb
+   `(iflipb-current-buffer-face ((,class (:foreground ,cyan-alt :weight bold))))
+   `(iflipb-other-buffer-face ((,class (:foreground ,fg-alt))))
    ;;;; imenu-list
    `(imenu-list-entry-face-0 ((,class (:foreground ,magenta-alt-other))))
    `(imenu-list-entry-face-1 ((,class (:foreground ,cyan-alt-other))))
@@ -2816,12 +2820,12 @@ AMOUNT is a customisation option."
    `(undo-tree-visualizer-register-face ((,class (:foreground ,magenta-intense))))
    `(undo-tree-visualizer-unmodified-face ((,class (:foreground ,green-intense))))
    ;;;; vc
-   `(vc-conflict-state ((,class (:foreground ,red-active :weight bold))))
+   `(vc-conflict-state ((,class (:foreground ,red-active :weight ,modus-theme-bold))))
    `(vc-edited-state ((,class (:foreground ,fg-special-warm))))
    `(vc-locally-added-state ((,class (:foreground ,cyan-active))))
-   `(vc-locked-state ((,class (:foreground ,magenta-active :weight bold))))
-   `(vc-missing-state ((,class (:foreground ,yellow-active :weight bold))))
-   `(vc-needs-update-state ((,class (:foreground ,fg-special-mild :weight bold))))
+   `(vc-locked-state ((,class (:foreground ,magenta-active :weight ,modus-theme-bold))))
+   `(vc-missing-state ((,class (:foreground ,yellow-active :weight ,modus-theme-bold))))
+   `(vc-needs-update-state ((,class (:foreground ,fg-special-mild :weight ,modus-theme-bold))))
    `(vc-removed-state ((,class (:foreground ,red-active))))
    `(vc-state-base ((,class (:foreground ,fg-active))))
    `(vc-up-to-date-state ((,class (:foreground ,fg-special-cold))))
