@@ -3956,6 +3956,130 @@ always use =auto-fill-mode= to wrap lines to the value of =fill-column= (see
   (setq log-edit-setup-add-author nil))
 #+end_src
 
+*** Smerge and Ediff
+    :PROPERTIES:
+    :CUSTOM_ID: h:fb9e0507-5ab1-4ebd-8870-8c32cfe742c1
+    :END:
+
+*Read this section, because it matters more than the code below it.*
+
+Sometimes we face a situation where we have conflicting versions of a
+file and the version control backend cannot solve them on its own.  This
+can happen fairly often when collaborating with other people or, more
+generally, when we keep our work spread across multiple feature branches
+with diverging histories.  Whenever such conflicts arise, Emacs will
+automatically annotate the offending files with special markers that
+show the conflicting differences.  Visiting those files will then
+activate =smerge-mode=.  At which point we are in control.
+
+Smerge revolves around the concept of dividing the conflicting part into
+an "upper" (red) and a "lower" section (green), possibly with their
+common ancestor or last point of convergence in the middle (yellow).
+
+With this in mind we can operate on the marked differences by relying on
+the functions that Smerge provides, all of which are accessed through
+the common prefix =C-c ^=.  Start by typing the prefix followed by =C-h= to
+see all possible key chords.  These are the commands I have used the
+most:
+
++ =C-c ^ u= (=smerge-keep-upper=)
++ =C-c ^ l= (=smerge-keep-lower=)
++ =C-c ^ b= (=smerge-keep-base=)
++ =C-c ^ a= (=smerge-keep-all=)
++ =C-c ^ n= (=smerge-next=)
++ =C-c ^ p= (=smerge-prev=)
+
+Proceed to edit the file the way you want until no more conflicts exist.
+You can also do things through manual editing, with standard commands
+and motions, but that can be prone to errors (which lead to more
+conflicts).  At any moment in this process, you can switch to =ediff=,
+which offers a more powerful way of working with differences.  Type the
+key chord =C-c ^ E= (=smerge-ediff=).
+
+Ediff is a powerhouse that is likely to cover all your needs in this
+area (including those you are not aware of).  For our purposes, what
+matters is to understand the basic concepts.
+
+The way this tool works is that it starts by producing a layout of the
+two conflicting versions with access to a "control panel" for operating
+on them.  By default, the panel is positioned on a new frame, but I find
+that rather awkward ---my config puts it inside an Emacs window instead.
+While focusing the control panel, you can move between each diff range
+with =n= and =p=.  The focused section will be coloured using red, green,
+and yellow, while all other diffs will be presented in gray.
+
+On each diff, you have three options: to use the version of buffer A
+(red), of buffer B (green), or a combination of the two.  The keys for
+each of those are =a=, =b=, and =+= respectively.  Your choice will be
+reflected in buffer C (the yellow one).  Use these to resolve all
+conflicts and then quit the session with =q=.
+
+Concerning the combination of versions between A and B, Ediff has the
+behaviour of also inserting as plain text the annotation markers that
+Smerge relied on.  As of this writing (2020-04-10), I am not aware of an
+automatic or convenient way to omit those prior to confirming our edits.
+To that end, I tweak the wording of the markers to some unique string
+(see package below) and then run =flush-lines= to remove them before
+saving the resulting buffer (so right after the =q=).  For more on this,
+check =prot/ediff-flush-combination-pattern=.
+
+For =git= users, to actually /reference the common ancestor/ (the point
+before the branching paths started) we must run this command once in our
+command-line prompt (writes to your global =.gitconfig= file):
+
+#+begin_src
+git config --global merge.conflictStyle diff3
+#+end_src
+
+This is optional, but I find that I like it.  At any rate, the
+configurations I have below are straightforward:
+
++ Do not keep all the buffers after exiting the Ediff session.
++ Keep buffers in an editable state.  Otherwise it is impossible to
+  perform the changes we are interested in.
++ Show the common ancestor in another buffer.  This helps provide
+  further context of how things took their form.
++ Show only the conflicting parts.  This is not a review of all diffs.
++ Prefer putting windows side-by-side, rather than one below the other.
++ Do not enter the ediff session in a new frame.  This also means that
+  the control panel will be inside an Emacs window (at the bottom part)
+  rather than in a tiny frame of its own.
+
+There actually are no Smerge-related configurations here.  The package
+is small and does one thing well.  Whereas Ediff is much broader in
+scope.  Learn more about this powerful tool by hitting =?= inside of its
+control panel and by consulting its comprehensive manual.
+
+#+begin_src emacs-lisp
+(use-package ediff
+  :config
+  (setq ediff-keep-variants nil)
+  (setq ediff-make-buffers-readonly-at-startup nil)
+  (setq ediff-merge-revisions-with-ancestor t)
+  (setq ediff-show-clashes-only t)
+  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+  ;; Tweak those for safer identification and removal
+  (setq ediff-combination-pattern
+        '("<<<<<<< prot-ediff-combine Variant A" A
+          ">>>>>>> prot-ediff-combine Variant B" B
+          "####### prot-ediff-combine Ancestor" Ancestor
+          "======= prot-ediff-combine End"))
+
+  ;; TODO automate process in a robust way, or at least offer a good key
+  ;; binding.
+  (defun prot/ediff-flush-combination-pattern ()
+    "Remove my custom `ediff-combination-pattern' markers.
+
+This is a quick-and-dirty way to get rid of the markers that are
+left behind by `smerge-ediff' when combining the output of two
+diffs.  While this could be automated via a hook, I am not yet
+sure this is a good approach."
+    (interactive)
+    (flush-lines ".*prot-ediff.*" (point-min) (point-max) nil)))
+#+end_src
+
 *** Interactive git front-end (Magit)
     :PROPERTIES:
     :CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
