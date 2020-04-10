@@ -3869,13 +3869,7 @@ with the defaults.
     "Unconditionally display `vc-diff' for the current project."
     (interactive)
     (vc-dir (vc-root-dir)))
-
-  (defun prot/vc-dir-jump ()
-    "Jump to present directory in a `vc-dir' buffer."
-    (interactive)
-    (vc-dir default-directory))
   :bind (("C-x v p" . prot/vc-dir-project)
-         ("C-x v j" . prot/vc-dir-jump) ; similar to `dired-jump'
          :map vc-dir-mode-map
          ("b" . vc-retrieve-tag)
          ("c" . vc-create-tag)
