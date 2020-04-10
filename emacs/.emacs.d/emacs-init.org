@@ -3850,7 +3850,7 @@ with the defaults.
   (setq vc-find-revision-no-save t)
   (require 'log-view)                   ; needed for the key bindings
   :bind (("C-x v b" . vc-retrieve-tag)  ; "branch" switch
-         ("C-x v c" . vc-create-tag)    ; create branch
+         ("C-x v t" . vc-create-tag)
          ("C-x v f" . vc-log-incoming)  ; the actual git fetch
          ("C-x v F" . vc-update)        ; "F" because "P" is push
          ("C-x v d" . vc-diff)
@@ -3872,7 +3872,7 @@ with the defaults.
   :bind (("C-x v p" . prot/vc-dir-project)
          :map vc-dir-mode-map
          ("b" . vc-retrieve-tag)
-         ("c" . vc-create-tag)
+         ("t" . vc-create-tag)
          ("o" . vc-log-outgoing)
          ("f" . vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
          ("F" . vc-update)       ; symmetric with P: `vc-push'
@@ -3889,7 +3889,7 @@ with the defaults.
   (setq vc-annotate-display-mode 'scale) ; scale to oldest
   :bind (("C-x v a" . vc-annotate)       ; `vc-update-change-log' is not in git
          :map vc-annotate-mode-map
-         ("t" . vc-annotate-toggle-annotation-visibility)))
+         ("<tab>" . vc-annotate-toggle-annotation-visibility)))
 #+end_src
 
 **** Diff-mode
