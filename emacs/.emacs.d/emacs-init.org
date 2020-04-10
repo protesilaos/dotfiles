@@ -1123,7 +1123,7 @@ inside a given location."
            (projects (mapcar 'abbreviate-file-name project-list)))
       (icomplete-vertical-do ()
         (dired
-         (completing-read "Find project: " projects nil t)))))
+         (completing-read "Find project: " projects nil t path)))))
 
   :bind (("M-s p" . prot/find-project)
          ("M-s f" . prot/project-find-file)
