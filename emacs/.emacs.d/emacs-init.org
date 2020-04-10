@@ -2181,7 +2181,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   :init
   (setq display-buffer-alist
         '(;; top side window
-          ("\\*\\(Flycheck\\|Package-Lint\\|vc-git :\\).*"
+          ("\\*\\(Flycheck\\|Flymake\\|Package-Lint\\|vc-git :\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
@@ -5253,75 +5253,63 @@ ispell dictionaries with `prot/ispell-toggle-dictionaries'."
          ("C-;" . nil)))
 #+end_src
 
-*** Flycheck (code linting)
+*** Flymake (code linting)
     :PROPERTIES:
     :CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
     :END:
 
-This is a great tool for identifying errors or inconsistencies in
-programming syntax.  I used it for my Modus themes (defined elsewhere in
-this document) to make the necessary checks for code quality, in
-preparation of their release as a MELPA package.
+/Work in progress 2020-04-10./
 
-This package provides a broad range of customisation options, with many
-items targeting specific programming languages and/or style conventions.
-It seems very powerful!  As these targeted operations require some more
-research, I leave everything to its default value and will be updating
-the package declaration over time.
-
-#+begin_src emacs-lisp
-(use-package flycheck
-  :ensure t
-  :commands flycheck-mode
-  :config
-  (setq flycheck-check-syntax-automatically
-        '(save mode-enabled)))
-#+end_src
-
-Also offer a Flycheck indicator in the mode line.
-
-#+begin_src emacs-lisp
-(use-package flycheck-indicator
-  :ensure t
-  :after flycheck
-  :hook (flycheck-mode . flycheck-indicator-mode))
-#+end_src
-
-There is also a built-in tool that covers Flycheck's niche, but I find
-its functionality somewhat more limited.  As such I am defining it so
-that an autoload will be created for it (meaning that it will only be
-made available on demand).
+This is a built-in linter that can be extended to support any
+programming language.  I activate it manually and let it report its
+status only upon activation or after saving my edits ---live feedback
+feels too intrusive.
 
 #+begin_src emacs-lisp
 (use-package flymake
-  :commands flymake-mode)
+  :config
+  (setq flymake-fringe-indicator-position 'left-fringe)
+  (setq flymake-suppress-zero-counters t)
+  (setq flymake-start-on-flymake-mode t)
+  (setq flymake-no-changes-timeout nil)
+  (setq flymake-start-on-save-buffer t)
+  (setq flymake-proc-compilation-prevents-syntax-check t)
+  (setq flymake-wrap-around nil)
+
+  ;; I could set these directly, but this form may be safer for users
+  ;; who may not be using the Modus themes.
+  ;;
+  ;; TODO should such a thing be implemented at the theme level?
+  (when (car custom-enabled-themes) 
+    (or 'modus-operandi
+        'modus-vivendi)
+    (setq flymake-error-bitmap '(flymake-double-exclamation-mark
+                                 modus-theme-fringe-red)
+          flymake-warning-bitmap '(exclamation-mark
+                                   modus-theme-fringe-yellow)
+          flymake-note-bitmap '(exclamation-mark
+                                modus-theme-fringe-green)))
+
+  :hook (prog-mode . flymake-mode))
 #+end_src
 
-**** Flycheck package metadata
-     :PROPERTIES:
-     :CUSTOM_ID: h:bc435c0c-f8ad-4fb6-a68e-e94d8455ba22
-     :END:
-
-This one integrates with Flycheck to provide the necessary checks for
-code that is intended for use in MELPA.  I just define the linter for
-packages as a standalone declaration, in case I wish to keep this
-without the flycheck interface.
+With this in place we can perform checks that pertain to Emacs packages.
+I use it for my themes but also for any elisp library I may want to send
+patches to.
 
 #+begin_src emacs-lisp
-(use-package package-lint
-  :ensure t)
-
-(use-package flycheck-package
+(use-package package-lint-flymake
   :ensure t
-  :after (flycheck package-lint)
-  :config
-  (flycheck-package-setup))
+  :after flymake
+  :hook (emacs-lisp-mode . package-lint-setup-flymake))
 #+end_src
 
 *** Eldoc (elisp live documentation feedback)
     :PROPERTIES:
     :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
     :END:
+
+/Work in progress 2020-04-10.  I might actually use and tweak it./
 
 Displays information about the construct at point in the echo area.  I
 find that I have no use for this, so I am disabling the mode for the
