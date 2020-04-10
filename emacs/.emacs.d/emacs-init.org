@@ -3902,11 +3902,12 @@ Overview of these tweaks:
   up when trying to apply a patch.
 + After a applying a diff hunk move on to the next one.
 + Update hunk headers automatically following an edit to the diff.
-+ Show inline "refined" changes upon the initial application of the
-  "font lock" styles.  Use =navigation= if you want to apply highlights
-  only after focusing the diff hunk for the first time.
++ Do not show word-wise ("refined") changes upon activation.  I prefer
+  to do so manually with =C-c C-b=.  All such highlights are removed if
+  you generate the buffer again (with =g= as expected).
 + Do not prettify headers.  I like the standard "patch" looks.
-+ Do not do any further syntax highlighting.
++ Do not do any further syntax highlighting.  This is not the place to
+  check your pretty code.
 
 #+begin_src emacs-lisp
 (use-package diff
@@ -3915,7 +3916,7 @@ Overview of these tweaks:
   (setq diff-advance-after-apply-hunk t)
   (setq diff-update-on-the-fly t)
   ;; The following are from Emacs 27.1
-  (setq diff-refine 'font-lock)
+  (setq diff-refine nil)
   (setq diff-font-lock-prettify nil)
   (setq diff-font-lock-syntax nil))
 #+end_src
