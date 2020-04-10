@@ -808,11 +808,6 @@ Overview of the following package declaration:
   tentative.  My initial tests suggest that they behave exactly the way
   I want, but this might change once I test them further.  In short, do
   not introduce any further delay.
-+ I do not want to see any kind of candidate unless I start typing.  I
-  understand this is idiosyncratic, but I find it faster for my
-  workflow.  I know, more or less, what I am looking for prior to
-  consulting the list of candidates.  Once I start typing I will get the
-  standard feedback on what is being matched.
 + For versions of Emacs above 27, there is a mode called =fido= (Fake IDO,
   where =ido= is an alternative option to Icomplete that tries to do more
   than just completion).  This new mode changes some of the primary key
@@ -847,7 +842,7 @@ example, to =cd= into =~/Git/Projects/modus-themes= we can do something like
   (setq icomplete-delay-completions-threshold 0)
   (setq icomplete-max-delay-chars 0)
   (setq icomplete-compute-delay 0)
-  (setq icomplete-show-matches-on-no-input nil) ; no input, no feedback
+  (setq icomplete-show-matches-on-no-input t)
   (setq icomplete-hide-common-prefix nil)
   (setq icomplete-prospects-height 1)
   (setq icomplete-separator " · ")      ; mid dot
