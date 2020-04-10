@@ -1142,28 +1142,51 @@ inside a given location."
     :PROPERTIES:
     :CUSTOM_ID: h:98876022-57cc-40de-936e-4ee42cefd69a
     :END:
-**** Dabbrev and hippie-expand (dynamic word completion)
+
+After trying the popular third-party "Company" package, I felt that it
+did not offer much of an added value to my typing experience, while its
+popup feature detracted from the otherwise frugal aesthetics of my
+setup.  Furthermore, I felt like it was adding a second type of
+completion paradigm while ignoring the original one, i.e. the
+minibuffer ---again, an offense against simplicity.
+
+What I have in this section is a few simple, built-in ways to complete
+terms while typing text in a buffer.  I think that, for certain cases,
+the minibuffer can be used effectively to perfom in-buffer completion.
+Especially once combined with a completion mechanism.  So make sure to
+review my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+
+**** Dabbrev (dynamic word completion)
      :PROPERTIES:
      :CUSTOM_ID: h:57dcf193-0c4e-4ee6-9b2d-6892558b0a84
      :END:
 
 This is Emacs' own approach to text completion inside the buffer:
-"dynamic abbreviation" and the corresponding "do what I mean" wrapper
-called =hippie-expand=.  The latter is a superset of =dabbrev=.
+"dynamic abbreviation" or else =dabbrev=.  This mechanism works by reading
+all text before point to find a suitable match.  Different scenaria
+determine whether it should also look forward and in other buffers.
 
-After trying the popular third-party "Company" package, I felt that it
-does not offer me much of an added value, while its popup feature
-detracted from the otherwise frugal aesthetics of my setup.  Whereas
-Dabbrev works in a way I find intuitive enough, while it remains
-minimalist in its presentation.
+In essence, Dabbrev can help you type again what you already have.  It
+will not read from some knowledge bank, nor will it try to read your
+mind.
 
-To learn about =hippie-expand-try-functions-list=, read the introductory
-remarks in =M-x find-library RET hippie-exp RET=.  The =M-/= is bound by
-default to Dabbrev, but I am repurposing it for its built-in superset.
+With =dabbrev-expand= we make an attempt to complete the text at point.
+Repeated invocations will cycle through the candidates.  No feedback is
+provided, much in the same way yanking from the kill-ring works.  While
+=prot/dabbrev-completion= offers a familiar minibuffer presentation for
+narrowing down the list of candidates using completion.  I modified the
+code of =dabbrev-completion=.  *This is experimental and fragile*, but it
+works as a concept and I am okay with its peculiarities.
+
+That granted, I must stress that I do not rely on word expansion for
+most of my day-to-day editing.  I find that it often is easier to just
+type things out than stop, check if the expansion is correct, go back
+and try again if it is not, etc.  Using Dabbrev for long symbols is fine
+though.
 
 The =dabbrev-abbrev-char-regexp= is configured to match both regular words
-and symbols (e.g. with hyphenation like this variable).  This makes it
-suitable for code and ordinary language.
+and symbols (e.g. words separated by hyphens).  This makes it suitable
+both for code and ordinary language.
 
 While the =dabbrev-abbrev-skip-leading-regexp= is instructed to also
 expand words and symbols that start with any of these: =$=, =*=, =/=, ===.  This
@@ -1179,7 +1202,7 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
 
 #+begin_src emacs-lisp
 (use-package dabbrev
-  :commands (dabbrev-expand dabbrev-completion)
+  :after (minibuffer icomplete icomplete-vertical) ; read those as well
   :config
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "\\$\\|\\*\\|/\\|=")
@@ -1189,35 +1212,87 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
   (setq dabbrev-case-replace nil)
   (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines nil)
-  (setq dabbrev-upcase-means-case-search t))
+  (setq dabbrev-upcase-means-case-search t)
 
-(use-package hippie-exp
-  :after dabbrev
-  :config
-  (setq hippie-expand-try-functions-list
-        '(try-expand-dabbrev
-          try-expand-dabbrev-visible
-          try-expand-dabbrev-all-buffers
-          try-expand-dabbrev-from-kill
-          try-expand-list-all-buffers
-          try-expand-list
-          try-expand-line-all-buffers
-          try-expand-line
-          try-complete-file-name-partially
-          try-complete-file-name
-          try-expand-all-abbrevs))
-  (setq hippie-expand-verbose nil)
-  :bind ("M-/" . hippie-expand))
+  ;; EXPERIMENTAL This should be done by advising the original
+  ;; `dabbrev-completion', but I still do not know how to do that sort
+  ;; of thing.  It should also not kill the current text until the user
+  ;; confirms their choice (and this should then be a delete that does
+  ;; not write to the kill ring).
+  (defun prot/dabbrev-completion (&optional arg)
+    "Completion on current word.
+Like \\[dabbrev-expand] but finds all expansions in the current buffer
+and presents suggestions for completion.
+
+With a prefix argument ARG, it searches all buffers accepted by the
+function pointed out by `dabbrev-friend-buffer-function' to find the
+completions.
+
+If the prefix argument is 16 (which comes from \\[universal-argument] \\[universal-argument]),
+then it searches *all* buffers."
+    (interactive "*P")
+    (dabbrev--reset-global-variables)
+    (let* ((abbrev (dabbrev--abbrev-at-point))
+           (beg (progn (search-backward abbrev) (point)))
+           (end (progn (search-forward abbrev) (point)))
+	       (ignore-case-p (dabbrev--ignore-case-p abbrev))
+	       (list 'uninitialized)
+           (table
+            (lambda (s p a)
+              (if (eq a 'metadata)
+                  `(metadata (cycle-sort-function . ,#'identity)
+                             (category . dabbrev))
+                (when (eq list 'uninitialized)
+                  (save-excursion
+                    ;;--------------------------------
+                    ;; New abbreviation to expand.
+                    ;;--------------------------------
+                    (setq dabbrev--last-abbreviation abbrev)
+                    ;; Find all expansion
+                    (let ((completion-list
+                           (dabbrev--find-all-expansions abbrev ignore-case-p))
+                          (completion-ignore-case ignore-case-p))
+                      (or (consp completion-list)
+                          (user-error "No dynamic expansion for \"%s\" found%s"
+                                      abbrev
+                                      (if dabbrev--check-other-buffers
+                                          "" " in this-buffer")))
+                      (setq list
+                            (cond
+                             ((not (and ignore-case-p dabbrev-case-replace))
+                              completion-list)
+                             ((string= abbrev (upcase abbrev))
+                              (mapcar #'upcase completion-list))
+                             ((string= (substring abbrev 0 1)
+                                       (upcase (substring abbrev 0 1)))
+                              (mapcar #'capitalize completion-list))
+                             (t
+                              (mapcar #'downcase completion-list)))))))
+                (complete-with-action a list s p)))))
+      (setq dabbrev--check-other-buffers (and arg t))
+      (setq dabbrev--check-all-buffers
+            (and arg (= (prefix-numeric-value arg) 16)))
+      ;; NOT optimal, NOT safe, and needs lots of polish overall…
+      (save-excursion
+        (backward-kill-sexp)
+        (icomplete-vertical-do ()
+          (insert
+           (completing-read "Expand: " table nil t))))))
+
+  :bind (("M-/" . dabbrev-expand)
+         ("s-/" . prot/dabbrev-completion)))
 #+end_src
 
-**** Simple abbreviations
+**** Skeletons and abbreviations
      :PROPERTIES:
      :CUSTOM_ID: h:33cd69cc-1a50-4abb-9f09-cae98dc8998b
      :END:
 
 This section stores all the "skeletons" I define.  These are snippets of
 text, typically templates or code statements, that are meant to speed up
-typing.  I combine them with abbreviations.
+typing.  While abbreviations are shorter versions of terms that
+automatically expand into what they correspond to.  I combine skeletons
+with abbreviations.
 
 *Please note that these will be very simplistic at first.*  I am aware
 that they can be abstracted using elisp—need to learn more on that
