@@ -5372,12 +5372,15 @@ ispell dictionaries with `prot/ispell-toggle-dictionaries'."
     :CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
     :END:
 
-/Work in progress 2020-04-10./
-
 This is a built-in linter that can be extended to support any
-programming language.  I activate it manually and let it report its
-status only upon activation or after saving my edits ---live feedback
-feels too intrusive.
+programming language.  It seems to give me better feedback on elisp than
+the popular Flycheck alternative (though that is also excellent in its
+own right).
+
+I activate =flymake-mode= manually and let it report its status only upon
+activation or after saving my edits ---live feedback feels intrusive,
+while I do not need a linter when browsing code I have no intention to
+edit (e.g. Emacs libraries).
 
 #+begin_src emacs-lisp
 (use-package flymake
@@ -5389,22 +5392,6 @@ feels too intrusive.
   (setq flymake-start-on-save-buffer t)
   (setq flymake-proc-compilation-prevents-syntax-check t)
   (setq flymake-wrap-around nil)
-
-  ;; I could set these directly, but this form may be safer for users
-  ;; who may not be using the Modus themes.
-  ;;
-  ;; TODO should such a thing be implemented at the theme level?
-  (when (car custom-enabled-themes) 
-    (or 'modus-operandi
-        'modus-vivendi)
-    (setq flymake-error-bitmap '(flymake-double-exclamation-mark
-                                 modus-theme-fringe-red)
-          flymake-warning-bitmap '(exclamation-mark
-                                   modus-theme-fringe-yellow)
-          flymake-note-bitmap '(exclamation-mark
-                                modus-theme-fringe-cyan)))
-
-  :hook (prog-mode . flymake-mode)
   ;; All keys are tentative.  I want to avoid conflicts with something I
   ;; would use.
   :bind (("<f8>" . flymake-show-diagnostics-buffer)
