@@ -524,6 +524,9 @@ AMOUNT is a customisation option."
       ;; `fg-escape-char-construct' and `fg-escape-char-backslash' can
       ;; be combined `bg-main', `bg-dim', `bg-alt'
       ;;
+      ;; `fg-lang-error', `fg-lang-warning', `fg-lang-note' can be
+      ;; combined with `bg-main', `bg-dim', `bg-alt'
+      ;;
       ;; `fg-mark', `fg-mark-del', `fg-mark-other' can be combined with
       ;; `bg-main', `bg-dim', `bg-alt', `bg-hl-line'
       ;;
@@ -540,6 +543,10 @@ AMOUNT is a customisation option."
 
       (fg-escape-char-construct "#e7a59a")
       (fg-escape-char-backslash "#abab00")
+
+      (fg-lang-error "#ef8690")
+      (fg-lang-warning "#b0aa00")
+      (fg-lang-note "#9d9def")
 
       (fg-window-divider-inner "#646464")
       (fg-window-divider-outer "#969696")
@@ -741,10 +748,10 @@ AMOUNT is a customisation option."
    `(apt-sources-list-type ((,class (:foreground ,magenta))))
    `(apt-sources-list-uri ((,class (:foreground ,blue))))
    ;;;; artbollocks-mode
-   `(artbollocks-face ((,class (:background ,bg-alt :foreground ,magenta-alt-other :underline t))))
-   `(artbollocks-lexical-illusions-face ((,class (:inherit modus-theme-refine-magenta :underline t))))
-   `(artbollocks-passive-voice-face ((,class (:background ,bg-alt :foreground ,cyan-alt-other :underline t))))
-   `(artbollocks-weasel-words-face ((,class (:background ,bg-alt :foreground ,yellow-alt-other :underline t))))
+   `(artbollocks-face ((,class (:foreground ,cyan-nuanced :underline (:color ,fg-lang-note :style line)))))
+   `(artbollocks-lexical-illusions-face ((,class (:background ,bg-alt :foreground ,red-alt :underline t))))
+   `(artbollocks-passive-voice-face ((,class (:foreground ,yellow-nuanced :underline (:color ,fg-lang-warning :style line)))))
+   `(artbollocks-weasel-words-face ((,class (:foreground ,red-nuanced :underline (:color ,fg-lang-error :style line)))))
    ;;;; auctex and Tex
    `(font-latex-bold-face ((,class (:foreground ,fg-special-calm :weight bold))))
    `(font-latex-doctex-documentation-face ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
@@ -1388,23 +1395,23 @@ AMOUNT is a customisation option."
    `(fancy-dabbrev-preview-face ((,class (:foreground ,fg-alt :underline t))))
    `(fancy-dabbrev-selection-face ((,class (:inherit modus-theme-intense-cyan :weight bold))))
    ;;;; flycheck
-   `(flycheck-error ((,class (:foreground ,red :underline t))))
+   `(flycheck-error ((,class (:foreground ,red-nuanced :underline (:color ,fg-lang-error :style line)))))
    `(flycheck-error-list-checker-name ((,class (:foreground ,magenta-active))))
    `(flycheck-error-list-column-number ((,class (:foreground ,fg-special-cold))))
-   `(flycheck-error-list-error ((,class (:inherit error))))
+   `(flycheck-error-list-error ((,class (:foreground ,red :weight ,modus-theme-bold))))
    `(flycheck-error-list-filename ((,class (:foreground ,blue))))
    `(flycheck-error-list-highlight ((,class (:inherit modus-theme-special-warm))))
    `(flycheck-error-list-id ((,class (:foreground ,magenta-alt-other))))
    `(flycheck-error-list-id-with-explainer ((,class (:inherit flycheck-error-list-id :box t))))
-   `(flycheck-error-list-info ((,class (:foreground ,green))))
+   `(flycheck-error-list-info ((,class (:foreground ,cyan))))
    `(flycheck-error-list-line-number ((,class (:foreground ,fg-special-warm))))
    `(flycheck-error-list-warning ((,class (:foreground ,yellow))))
    `(flycheck-fringe-error ((,class (:inherit modus-theme-fringe-red))))
-   `(flycheck-fringe-info ((,class (:inherit modus-theme-fringe-green))))
+   `(flycheck-fringe-info ((,class (:inherit modus-theme-fringe-cyan))))
    `(flycheck-fringe-warning ((,class (:inherit modus-theme-fringe-yellow))))
-   `(flycheck-info ((,class (:foreground ,green :underline t))))
+   `(flycheck-info ((,class (:foreground ,blue-nuanced :underline (:color ,fg-lang-note :style line)))))
    `(flycheck-verify-select-checker ((,class (:box (:line-width 1 :color nil :style released-button)))))
-   `(flycheck-warning ((,class (:foreground ,yellow :underline t))))
+   `(flycheck-warning ((,class (:foreground ,yellow-nuanced :underline (:color ,fg-lang-warning :style line)))))
    ;;;; flycheck-indicator
    `(flycheck-indicator-disabled ((,class (:foreground ,fg-inactive :slant ,modus-theme-slant))))
    `(flycheck-indicator-error ((,class (:foreground ,red-active :weight ,modus-theme-bold))))
@@ -1417,21 +1424,21 @@ AMOUNT is a customisation option."
    `(flycheck-posframe-border-face ((,class (:foreground ,fg-alt))))
    `(flycheck-posframe-error-face ((,class (:foreground ,red :weight bold))))
    `(flycheck-posframe-face ((,class (:foreground ,fg-main :slant ,modus-theme-slant))))
-   `(flycheck-posframe-info-face ((,class (:foreground ,green :weight bold))))
+   `(flycheck-posframe-info-face ((,class (:foreground ,cyan :weight bold))))
    `(flycheck-posframe-warning-face ((,class (:foreground ,yellow :weight bold))))
    ;;;; flymake
-   `(flymake-error ((,class (:foreground ,red :underline t))))
-   `(flymake-note ((,class (:foreground ,green :underline t))))
-   `(flymake-warning ((,class (:foreground ,yellow :underline t))))
+   `(flymake-error ((,class (:foreground ,red-nuanced :underline (:color ,fg-lang-error :style line)))))
+   `(flymake-note ((,class (:foreground ,blue-nuanced :underline (:color ,fg-lang-note :style line)))))
+   `(flymake-warning ((,class (:foreground ,yellow-nuanced :underline (:color ,fg-lang-warning :style line)))))
    ;;;; flyspell
    `(flyspell-duplicate
      ((,(append '((supports :underline (:style wave))) class)
-       (:foreground ,yellow :underline (:style wave)))
-      (,class (:foreground ,yellow :underline t))))
+       (:foreground ,fg-lang-warning :underline (:style wave)))
+      (,class (:foreground ,fg-lang-warning :underline t))))
    `(flyspell-incorrect
      ((,(append '((supports :underline (:style wave))) class)
-       (:foreground ,red :underline (:style wave)))
-      (,class (:foreground ,red :underline t))))
+       (:foreground ,fg-lang-error :underline (:style wave)))
+      (,class (:foreground ,fg-lang-error :underline t))))
    ;;;; flyspell-correct
    `(flyspell-correct-highlight-face ((,class (:inherit modus-theme-refine-green))))
    ;;;; flx
@@ -2961,9 +2968,9 @@ AMOUNT is a customisation option."
    ;;;; winum
    `(winum-face ((,class (:foreground ,cyan-active :weight bold))))
    ;;;; writegood-mode
-   `(writegood-duplicates-face ((,class (:background ,bg-alt :foreground ,red-alt-other :underline t))))
-   `(writegood-passive-voice-face ((,class (:background ,bg-alt :foreground ,cyan-alt-other :underline t))))
-   `(writegood-weasels-face ((,class (:background ,bg-alt :foreground ,yellow-alt-other :underline t))))
+   `(writegood-duplicates-face ((,class (:background ,bg-alt :foreground ,red-alt :underline t))))
+   `(writegood-passive-voice-face ((,class (:foreground ,yellow-nuanced :underline (:color ,fg-lang-warning :style line)))))
+   `(writegood-weasels-face ((,class (:foreground ,red-nuanced :underline (:color ,fg-lang-error :style line)))))
    ;;;; xah-elisp-mode
    `(xah-elisp-at-symbol ((,class (:foreground ,red-alt :weight bold))))
    `(xah-elisp-cap-variable ((,class (:foreground ,red-alt-other))))
@@ -2994,6 +3001,10 @@ AMOUNT is a customisation option."
     ;;;; ansi-colors
     `(ansi-color-faces-vector [default bold shadow italic underline success warning error])
     `(ansi-color-names-vector [,bg-main ,red ,green ,yellow ,blue ,magenta ,cyan ,fg-main])
+    ;;;; flymake fringe indicators
+    `(flymake-error-bitmap '(flymake-double-exclamation-mark modus-theme-fringe-red))
+    `(flymake-warning-bitmap '(exclamation-mark modus-theme-fringe-yellow))
+    `(flymake-note-bitmap '(exclamation-mark modus-theme-fringe-cyan))
     ;;;; ibuffer
     `(ibuffer-deletion-face 'dired-flagged)
     `(ibuffer-filter-group-name-face 'dired-mark)
