@@ -2007,7 +2007,7 @@ only the buffer's name.
   (setq uniquify-after-kill-buffer-p t))
 #+end_src
 
-*** Configure ibuffer
+*** Ibuffer (dired-like buffer list manager)
     :PROPERTIES:
     :CUSTOM_ID: h:06290f9c-491c-45b2-b213-0248f890c83d
     :END:
@@ -2309,7 +2309,7 @@ didactic purposes."
                                                              mode-line-buffer-identification))))))))))
 #+end_src
 
-*** Window history and directional motions (winner-mode and windmove)
+*** Window history (winner-mode)
     :PROPERTIES:
     :CUSTOM_ID: h:6b4f7792-6ccd-45d5-b262-01d200639072
     :END:
@@ -2322,8 +2322,8 @@ its two main functions to Super and the right/left arrow keys.
 #+begin_src emacs-lisp
 (use-package winner
   :hook (after-init . winner-mode)
-  :bind (("<s-right>" . winner-redo)
-         ("<s-left>" . winner-undo)))
+  :bind ("<s-right>" . winner-redo)
+         ("<s-left>" . winner-undo))
 #+end_src
 
 Windmove is also built into Emacs.  It provides functions for selecting
@@ -2331,54 +2331,133 @@ a window in any of the cardinal directions.  I use the Vim keys while
 holding down Super and Meta because other mnemonics-based actions
 involving just Super or Meta are already occupied.
 
+*** Tabs for window layouts and buffers (Emacs 27.1)
+    :PROPERTIES:
+    :CUSTOM_ID: h:63ad472f-c9c2-40ad-9675-1dc529487788
+    :END:
+
+Starting with version 27.1, Emacs has built-in support for two distinct
+concepts of "tabs":
+
+1. Work spaces that contain windows in any given layout.
+2. A list of buffers presented as buttons at the top of the window.
+
+The former, represented by the =tab-bar= library, is best understood as
+the equivalent of "virtual desktops", as these are used in most desktop
+environments or window managers.
+
+The latter, implemented in =tab-line=, is the same as the tabs you are
+used to in web browsers.  Each buffer is assigned to a single tab.
+Clicking on the tab takes you to the corresponding buffer.
+
+I do not need the =tab-line= as I find such tabs to be inefficient at
+scale.  Finding a buffer through search mechanisms is generally faster:
+it does not matter whether you have ten or a hundred buffers on the list
+(unless, of course, they all have similar names in which case you are in
+trouble either way ---do not forget to check my [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer settings]]).
+
+On the other hand, the work spaces (=tab-bar=) are very useful for
+organising the various applications that are running inside of Emacs.
+You can, for example, have your current project on tab (workspace) 1,
+your email and news reader on 2, music on 3, and so on.  Of course, this
+can also be achieved by using separate frames for each of these, though
+I generally prefer working in a single frame (plus you can define a
+window configuration or frameset in a register ---see [[#h:6bdfe4d1-f97a-4d89-ab68-e87448a95fea][relevant section]]).
+
+For me tabs are useful as groups of buffers in a given window
+configuration.  I do not want a persistent bar with buttons that
+introduces extra visual clutter.  Switching to tabs is done through
+completion, specifically =prot/icomplete-tab-bar-select-tab=.  This
+extends the configurations in my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][minibuffer essentials and Icomplete]].
+Otherwise, we can use =tab-switcher= which produces a buffer with the
+entire list, plus a basic command for marking an item for deletion (same
+principle as with, e.g., =dired=).
+
+All settings I configure here are meant to work in accordance with this
+abstract conception of "tabs are work spaces".  Here are the main key
+chords for =tab-bar=:
+
+| Key     | Description                       |
+|---------+-----------------------------------|
+| C-x t b | Open a buffer in a new tab        |
+| C-x t d | Open a directory in a new tab     |
+| C-x t f | Open a file in a new tab          |
+| C-x t 0 | Close current tab                 |
+| C-x t 1 | Close all other tabs              |
+| C-x t 2 | Open current buffer in new tab    |
+
+These are consistent with the standard commands for handling windows and
+accessing buffers/files in the "other window" (the =C-x 4 KEY= pattern).
+There is also a command for giving a name to the current tab, accessed
+via =C-x t r=, though I find I do not use it.
+
+#+begin_src emacs-lisp
+(use-package tab-bar
+  :config
+  (setq tab-bar-close-button-show nil)
+  (setq tab-bar-close-last-tab-choice 'tab-bar-mode-disable)
+  (setq tab-bar-close-tab-select 'recent)
+  (setq tab-bar-new-tab-choice t)
+  (setq tab-bar-new-tab-to 'right)
+  (setq tab-bar-position nil)
+  (setq tab-bar-show nil)
+  (setq tab-bar-tab-hints nil)
+  (setq tab-bar-tab-name-function 'tab-bar-tab-name-all)
+
+  (tab-bar-mode -1)
+  (tab-bar-history-mode -1)
+
+  (defun prot/icomplete-tab-bar-select-tab ()
+    "Use completion to switch to a recent `tab-bar-mode' tab."
+    (interactive)
+    (let ((tabs (mapcar (lambda (tab)
+                          (alist-get 'name tab))
+                        (tab-bar--tabs-recent))))
+      (icomplete-vertical-do ()
+        (tab-bar-switch-to-tab
+         (completing-read "Select tab: " tabs nil t)))))
+
+  :bind (("C-x t t" . prot/icomplete-tab-bar-select-tab)
+         ("C-x t s" . tab-switcher)))
+
+;; This is only included as a reference.
+(use-package tab-line
+  :disabled
+  :commands (tab-line-mode global-tab-line-mode)
+  :config
+  (global-tab-line-mode -1))
+#+end_src
+
+*** Directional window motions (windmove)
+    :PROPERTIES:
+    :CUSTOM_ID: h:230d96c8-a955-4b82-844d-9de9a1b7c531
+    :END:
+
+While =C-x o= (=other-window=) is very useful when working with two or three
+windows, it can become tiresome.  Thankfully, Emacs comes with a
+built-in package to move to a window in the given direction.  I bind the
+cardinal directions to =Ctrl= and the arrow keys, with aliases for the
+arrows you find on a standard keyboard's number pad.  Note that these
+bindings may shadow some other motions, such as in =org-mode=.
+
 The =windmove-create-window= specifies what should happen when trying to
 move past the edge of the frame.  The idea with this is to allow it to
-create a new window.  I do not want that.
+create a new window with the contents of the current buffer.  I tried it
+for a while, but its added value is negligible at best.
 
 #+begin_src emacs-lisp
 (use-package windmove
   :config
   (setq windmove-create-window nil)     ; Emacs 27.1
-  :bind (("M-s-h" . windmove-left))
-         ("M-s-j" . windmove-down)
-         ("M-s-k" . windmove-up)
-         ("M-s-l" . windmove-right))
-#+end_src
-
-*** ace-window (more flexible window motions)
-    :PROPERTIES:
-    :CUSTOM_ID: h:4337228f-7ee5-4f59-b435-61534538c66f
-    :END:
-
-With =ace-window= (from the developer of Ivy/Counsel/Swiper…) we can
-both enhance the movement between windows, but also perform additional
-actions to them.  These are listed in =aw-dispatch-list=.  Note that the
-keys in that list must not conflict with those in =aw-keys=.
-
-Make sure to also refer to the previous sections on:
-
-+ [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]].
-+ [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][Window history and directional motions]].
-
-#+begin_src emacs-lisp
-(use-package ace-window
-  :ensure t
-  :config
-  (setq aw-keys '(?h ?j ?k ?l ?y ?u ?i ?o ?p))
-  (setq aw-scope 'frame)
-  (setq aw-dispatch-always t)
-  (setq aw-dispatch-alist
-        '((?s aw-swap-window "Swap Windows")
-          (?2 aw-split-window-vert "Split Window Vertically")
-          (?3 aw-split-window-horz "Split Window Horizontally")
-          (?? aw-show-dispatch-help)))
-  (setq aw-minibuffer-flag t)
-  (setq aw-ignore-current nil)
-  (setq aw-display-mode-overlay t)
-  (setq aw-background t)
-
-  (ace-window-display-mode -1)
-  :bind (("s-a" . ace-window)))
+  :bind (("<C-up>" . windmove-up)
+         ("<C-right>" . windmove-right)
+         ("<C-down>" . windmove-down)
+         ("<C-left>" . windmove-left)
+         ;; numpad keys clockwise: 8 6 2 4
+         ("<kp-up>" . windmove-up)
+         ("<kp-right>" . windmove-right)
+         ("<kp-down>" . windmove-down)
+         ("<kp-left>" . windmove-left)))
 #+end_src
 
 * Applications and utilities
@@ -4971,66 +5050,6 @@ section on the [[*Generic version control (VC) framework][generic version contro
 This is a collection of modes or interfaces I seldom use or, rather, I
 use under special circumstances.  They are useful, but there is not need
 for them to be available at all times.
-
-**** Tabs for window layouts and buffers (Emacs 27.1)
-     :PROPERTIES:
-     :CUSTOM_ID: h:63ad472f-c9c2-40ad-9675-1dc529487788
-     :END:
-
-Starting with version 27.1, Emacs has built-in support for two distinct
-concepts of "tabs":
-
-1. Spaces that contain windows in any given layout.
-2. A list of buffers presented as buttons at the top of the window.
-
-The former, represented by the =tab-bar= library is best understood as the
-equivalent of "virtual desktops", as these are used in most desktop
-environments or minimalist window managers.
-
-The latter, implemented in =tab-line=, is the same as the tabs you are
-used to in web browsers.  Each buffer is assigned to a single tab.
-Clicking on the tab takes you to the corresponding buffer.
-
-I do not need the =tab-line= as I find such tabs to be inefficient at
-scale.  Finding a buffer through search mechanisms is generally faster:
-it does not matter whether you have ten or a hundred buffers on the list
-(unless, of course, they all have similar names in which case you are in
-trouble either way).
-
-On the other hand, the workspaces (=tab-bar=) can prove very useful for
-organising the various applications that are running inside of Emacs.
-You can, for example, have your current project on tab (workspace) 1,
-your email and news reader on 2, music on 3, and so on.  Of course, this
-can also be achieved by using separate frames for each of these, though
-I generally prefer working with a single frame.
-
-At any rate, I do not need the tab bar to be active at all times.  I
-enable it manually when it is necessary.  This might change in the
-future as I experiment more with it as part of my workflow.
-
-#+begin_src emacs-lisp
-(use-package tab-bar
-  :commands (tab-bar-mode tab-bar-history-mode)
-  :config
-  (setq tab-bar-close-button-show t)
-  (setq tab-bar-close-last-tab-choice nil)
-  (setq tab-bar-close-tab-select 'recent)
-  (setq tab-bar-new-tab-choice t)
-  (setq tab-bar-new-tab-to 'rightmost)
-  (setq tab-bar-position nil)
-  (setq tab-bar-show 1)
-  (setq tab-bar-tab-hints nil)
-  (setq tab-bar-tab-name-function 'tab-bar-tab-name-current)
-
-  (tab-bar-mode -1)
-  (tab-bar-history-mode -1))
-
-;; This is only included as a reference.
-(use-package tab-line
-  :commands (tab-line-mode global-tab-line-mode)
-  :config
-  (global-tab-line-mode -1))
-#+end_src
 
 **** Current line highlight (hl-line-mode)
      :PROPERTIES:
