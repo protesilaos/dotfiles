@@ -2249,6 +2249,9 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
 ;; These are all experimental.  Just showcasing the power of passing
 ;; parameters to windows or frames.
 (use-package emacs
+  :commands (prot/window-dired-vc-root-left
+             prot/make-frame-floating-with-current-buffer
+             prot/display-buffer-at-bottom)
   :config
   (defun prot/window-dired-vc-root-left ()
     "Open root directory of current version-controlled repository
@@ -2303,10 +2306,7 @@ didactic purposes."
         (delete-window)
         (display-buffer-at-bottom
          buffer `((window-parameters . ((mode-line-format . (" "
-                                                             mode-line-buffer-identification)))))))))
-  :bind (("C-c d" . prot/window-dired-vc-root-left)
-         ("C-c f" . prot/make-frame-floating-with-current-buffer)
-         ("C-c b" . prot/display-buffer-at-bottom)))
+                                                             mode-line-buffer-identification))))))))))
 #+end_src
 
 *** Window history and directional motions (winner-mode and windmove)
