@@ -6936,9 +6936,6 @@ A few things to consider about the settings in this sub-section:
 + I have a few custom functions for finding files using a fluid workflow
   from =fzf= to =ripgrep= (and vice versa).  Better check my video on
   [[https://protesilaos.com/codelog/2019-12-15-emacs-ivy-fzf-rg/][Fuzzy search with “Ivy actions” for FZF and RIPGREP]] (2019-12-15).
-+ For the =prot/counsel-fzf-ace-window= function, I recommend you refer
-  to my [[#h:4337228f-7ee5-4f59-b435-61534538c66f][package declaration for ace-window]], in order to see what
-  commands I want to use.
 
 Also make sure to study all the other package declarations in the
 [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and search methods]] section, to appreciate their
