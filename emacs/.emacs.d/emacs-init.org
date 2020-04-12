@@ -5392,12 +5392,10 @@ edit (e.g. Emacs libraries).
   (setq flymake-start-on-save-buffer t)
   (setq flymake-proc-compilation-prevents-syntax-check t)
   (setq flymake-wrap-around nil)
-  ;; All keys are tentative.  I want to avoid conflicts with something I
-  ;; would use.
-  :bind (("<f8>" . flymake-show-diagnostics-buffer)
-         :map flymake-mode-map
-         ("C-," . flymake-goto-prev-error)
-         ("C-." . flymake-goto-next-error)))
+  :bind (:map flymake-mode-map
+              ("C-c d" . flymake-show-diagnostics-buffer)
+              ("C-c n" . flymake-goto-next-error)
+              ("C-c p" . flymake-goto-prev-error)))
 #+end_src
 
 With this in place we can perform checks that pertain to Emacs packages.
