@@ -658,6 +658,7 @@ AMOUNT is a customisation option."
    `(fringe ((,class (:background
                       ,(if modus-vivendi-theme-visible-fringes bg-inactive bg-main)
                       :foreground ,fg-main))))
+   `(vertical-border ((,class (:foreground ,fg-window-divider-inner))))
    ;;;; basic and/or ungrouped styles
    `(error ((,class (:foreground ,red :weight bold))))
    `(escape-glyph ((,class (:foreground ,fg-escape-char-construct))))
@@ -1353,7 +1354,7 @@ AMOUNT is a customisation option."
    `(eshell-ls-special ((,class (:foreground ,magenta :weight bold))))
    `(eshell-ls-symlink ((,class (:foreground ,cyan :underline t))))
    `(eshell-ls-unreadable ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
-   `(eshell-prompt ((,class (:foreground ,cyan-alt-other :weight bold))))
+   `(eshell-prompt ((,class (:foreground ,cyan-alt-other :weight ,modus-theme-bold))))
    ;;;; evil-mode
    `(evil-ex-commands ((,class (:foreground ,magenta-alt-other))))
    `(evil-ex-info ((,class (:foreground ,cyan-alt-other))))
@@ -2167,7 +2168,7 @@ AMOUNT is a customisation option."
    `(mode-line-buffer-id ((,class (:weight bold))))
    `(mode-line-emphasis ((,class (:foreground ,blue-active :weight bold))))
    `(mode-line-highlight ((,class (:inherit modus-theme-active-blue :box (:line-width -1 :style pressed-button)))))
-   `(mode-line-inactive ((,class (:box (:color ,bg-inactive) :background ,bg-inactive :foreground ,fg-inactive))))
+   `(mode-line-inactive ((,class (:box (:color ,bg-active) :background ,bg-inactive :foreground ,fg-inactive))))
    ;;;; mood-line
    `(mood-line-modified ((,class (:foreground ,magenta-active))))
    `(mood-line-status-error ((,class (:foreground ,red-active :weight bold))))
@@ -2966,7 +2967,7 @@ AMOUNT is a customisation option."
    `(window-divider-first-pixel ((,class (:foreground ,fg-window-divider-outer))))
    `(window-divider-last-pixel ((,class (:foreground ,fg-window-divider-outer))))
    ;;;; winum
-   `(winum-face ((,class (:foreground ,cyan-active :weight bold))))
+   `(winum-face ((,class (:foreground ,cyan-active :weight ,modus-theme-bold))))
    ;;;; writegood-mode
    `(writegood-duplicates-face ((,class (:background ,bg-alt :foreground ,red-alt :underline t))))
    `(writegood-passive-voice-face ((,class (:foreground ,yellow-nuanced :underline (:color ,fg-lang-warning :style line)))))
