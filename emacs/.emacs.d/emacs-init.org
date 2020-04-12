@@ -5408,7 +5408,8 @@ patches to.
 (use-package package-lint-flymake
   :ensure t
   :after flymake
-  :hook (emacs-lisp-mode . package-lint-setup-flymake))
+  :config
+  (package-lint-flymake-setup))
 #+end_src
 
 *** Eldoc (elisp live documentation feedback)
