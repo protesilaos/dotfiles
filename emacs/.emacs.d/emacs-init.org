@@ -1101,6 +1101,7 @@ Also see my [[*ripgrep (rg.el)][configurations for ripgrep]].
   :after (minibuffer icomplete icomplete-vertical) ; read those
   :config
   (defun prot/project-find-file ()
+    "Find a file that belongs to the current project."
     (interactive)
     (icomplete-vertical-do ()
       (project-find-file)))
@@ -1132,7 +1133,7 @@ inside a given location."
   :bind (("M-s p" . prot/find-project)
          ("M-s f" . prot/project-find-file)
          ("M-s z" . prot/find-file-from-dir-recursive)
-         ("M-s r" . project-find-regexp)
+         ("M-s d" . prot/project-or-dir-find-subdirectory-recursive)
          ("M-s l" . find-library)
          ("M-s C-M-%" . project-query-replace-regexp)))
 #+end_src
@@ -2379,7 +2380,8 @@ principle as with, e.g., =dired=).
 
 All settings I configure here are meant to work in accordance with this
 abstract conception of "tabs are work spaces".  Here are the main key
-chords for =tab-bar=:
+chords for =tab-bar= (they will all work properly if you keep the mode
+active):
 
 | Key     | Description                       |
 |---------+-----------------------------------|
@@ -2440,23 +2442,23 @@ via =C-x t r=, though I find I do not use it.
 While =C-x o= (=other-window=) is very useful when working with two or three
 windows, it can become tiresome.  Thankfully, Emacs comes with a
 built-in package to move to a window in the given direction.  I bind the
-cardinal directions to =Ctrl= and the arrow keys, with aliases for the
-arrows you find on a standard keyboard's number pad.  Note that these
-bindings may shadow some other motions, such as in =org-mode=.
+cardinal directions to Super+Ctrl plus the Vim keys (heresy!), with
+aliases for the arrows you find on a standard keyboard's number pad.
 
 The =windmove-create-window= specifies what should happen when trying to
 move past the edge of the frame.  The idea with this is to allow it to
 create a new window with the contents of the current buffer.  I tried it
-for a while, but its added value is negligible at best.
+for a while but felt that the times it would interfere with my layout
+where more than those it would actually speed up my workflow.
 
 #+begin_src emacs-lisp
 (use-package windmove
   :config
   (setq windmove-create-window nil)     ; Emacs 27.1
-  :bind (("<C-up>" . windmove-up)
-         ("<C-right>" . windmove-right)
-         ("<C-down>" . windmove-down)
-         ("<C-left>" . windmove-left)
+  :bind (("C-s-k" . windmove-up)
+         ("C-s-l" . windmove-right)
+         ("C-s-j" . windmove-down)
+         ("C-s-h" . windmove-left)
          ;; numpad keys clockwise: 8 6 2 4
          ("<kp-up>" . windmove-up)
          ("<kp-right>" . windmove-right)
