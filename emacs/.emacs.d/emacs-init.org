@@ -934,33 +934,26 @@ Bind this function in `icomplete-minibuffer-map'."
                            (prot/icomplete-toggle-completion-styles))))))
 #+end_src
 
-**** Icomplete vertical mode (stable, soon in MELPA)
+**** Icomplete vertical mode
      :PROPERTIES:
      :CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
      :END:
 
 When I first switched to =icomplete= some time in late January to early
-February 2020, I had to implement my own admiteddly sub-par tweaks for
+February 2020, I had to implement my own admittedly sub-par tweaks for
 displaying candidates vertically and for tailoring that presentation to
 my particular needs.  There was no package "ecosystem" around Icomplete
 that I could leverage.
 
 Thankfully, [[https://github.com/oantolin/icomplete-vertical][Omar Antolín Camarena's icomplete-vertical]] is here (since
-early April 2020) to fill in this gap.  A pull request has been
-submitted to MELPA, so expect a package some time in May.
+early April 2020) to fill in this gap.  The package provides a global
+minor mode for displaying the list of candidates vertically by default:
+simple and effective.
 
-Though technically in development, =icomplete-vertical= is perfectly
-usable, if not feature-complete already.  I have contributed some minor
-patches and user feedback in its early stages, but all the real work is
-done by Omar ---and it is /a lot of work/ as confirmed by the commit logs
-and the scope of the diffs.
-
-The package provides a global minor mode for displaying the list of
-candidates vertically by default.  Enable it and you are good to go.
-For those who want a more fine-tuned experience, such as retaining the
-horizontal layout and enabling verticality for some functions,
-=icomplete-vertical.el= offers a set of useful abstractions to realise our
-plans.
+While fairly young, =icomplete-vertical= already feels like a mature,
+feature-complete tool: it offers a robust experience out-of-the-box, but
+also provides facilities for users to introduce an element of ad-hoc
+verticality to their bespoke completion functions.  More specifically:
 
 + With =icomplete-vertical-toggle=, which should be bound to a key inside
   the minibuffer, we can use whatever layout we want whenever we need
@@ -971,13 +964,11 @@ plans.
   {solid,dashed,dotted}line.
 
 The project's README should offer all the information you need.  Several
-of my functions offer real-world implementations of the aforementioned.
-
-With =icomplete-vertical=, I can now remove all the poor code I had in
-place when I got started, relying instead on the thoughful design and
-features of this tool.  In short: the package is a near must-have for
-any =icomplete= user, while I expect it to single-handedly raise the
-awareness around Emacs' built-in completion mechanisms.
+of my functions offer real-world implementations of the aforementioned
+(I did, after all, contribute some minor patches and user feedback in
+the early stages of this package, though all the real work is done by
+Omar ---and it is /a lot of work/ as confirmed by the commit logs and the
+scope of the diffs).
 
 With regard to verticality, I am the kind of user that actually /likes/
 the standard horizontal view as a default presentation.  It works
@@ -990,7 +981,7 @@ consists of full filesystem paths, with the =kill-ring= being another one.
 Couched in those terms, /the following package declaration does not
 enable/ =icomplete-vertical-mode= globally.  Instead, it defines the
 elements that are necessary for activating verticality on an ad-hoc or
-per-function basis.
+per-function basis (and there are lots of them).
 
 In =prot/icomplete-yank-kill-ring= you will spot a function that disables
 the sorting of the list.  Without it, the kills appear in a seemingly
@@ -998,19 +989,20 @@ random order, which is highly undesired.  I adapted that piece of
 functionality from the [[https://github.com/jixiuf/vmacs/blob/master/conf/conf-icomplete.el][dotemacs of GitHub user jixiuf]], following a
 comment I got from them on my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).
 
-Due to the nature of ongoing development, some things may change, though
-I am confident that things are stable already (until further notice, as
-of 2020-04-09).  The =:load-path= in the package declaration below means
-that I have manually cloned the repo and am handling the updates myself.
-I know there are tools for that, but this is the first time I genuinely
-need such a facility and am not sure I want to make it more common.
+With =icomplete-vertical=, I can now remove all the poor code I had in
+place when I got started, relying instead on the thoughtful design and
+features that Omar has so meticulously developed.  In short: the package
+is a near must-have for any =icomplete= user, while I expect it to
+single-handedly convince many users to give Emacs' built-in completion
+mechanism a fair chance.
 
 Finally, not all "vertical" functions of mine are defined here.  Some
-are also found in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][completion for projects and directory trees]].
+are also found in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][completion for projects and directory trees]] and others
+still across this document (search for =icomplete-vertical-do=).
 
 #+begin_src emacs-lisp
 (use-package icomplete-vertical
-  :load-path "~/.emacs.d/prot-dev/icomplete-vertical/"
+  :ensure t
   :demand
   :after (minibuffer icomplete) ; do not forget to check those as well
   :config
