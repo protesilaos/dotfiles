@@ -822,9 +822,12 @@ Overview of the following package declaration:
   editing and the rotation of the candidate list.  The default =icomplete=
   key bindings leave something to be desired and are therefore
   repurposed for my extensions.
-+ Note the behaviour of =C-m=.  It is intended for inserting /exactly/ what
-  you have typed in.  Use it when Icomplete is matching =foobar= but you
-  only want =foo=.
++ Note the behaviour of =C-j= and =C-m=.  They are intended for inserting
+  /exactly/ what you have typed in.  The former is more forceful and will
+  work in scenaria where the latter will not (check the docstrings of
+  the commands they call): the differences are noticeable in edge cases
+  though.  Use them when Icomplete is matching =foobar= but you only want
+  =foo= (needed when renaming files and the like).
 
 *Pro tip*: while running =M-x shell= with my settings, you can still benefit
 from the built-in completion mechanisms by means of tab-completion.
@@ -910,7 +913,8 @@ Bind this function in `icomplete-minibuffer-map'."
             (message "%s" (propertize "Prioritising PREFIX matching" 'face 'highlight)))))))
 
   :bind (:map icomplete-minibuffer-map
-              ("C-m" . minibuffer-complete-and-exit) ; force current input
+              ("C-m" . minibuffer-complete-and-exit) ; try complete + force current input
+              ("C-j" . exit-minibuffer) ; force current input more aggressively
               ("C-n" . icomplete-forward-completions)
               ("<right>" . icomplete-forward-completions)
               ("<down>" . icomplete-forward-completions)
