@@ -1106,6 +1106,25 @@ Also see my [[*ripgrep (rg.el)][configurations for ripgrep]].
     (icomplete-vertical-do ()
       (project-find-file)))
 
+  (defun prot/project-or-dir-find-subdirectory-recursive ()
+    "Recursive find subdirectory of project or directory.
+
+This command has the potential for infinite recursion: use it
+wisely or prepare to use \\[keyboard-quit]."
+    (interactive)
+    (let* ((project (vc-root-dir))
+           (dir (if project project default-directory))
+           (contents (directory-files-recursively dir ".*" t nil nil))
+           ;; (contents (directory-files dir t))
+           (find-directories (mapcar (lambda (dir)
+                                       (when (file-directory-p dir)
+                                         (abbreviate-file-name dir)))
+                                     contents))
+           (subdirs (delete nil find-directories)))
+      (icomplete-vertical-do ()
+        (dired
+         (completing-read "Find sub-directory: " subdirs nil t dir)))))
+
   (defun prot/find-file-from-dir-recursive ()
     "Find file recursively, starting from present dir."
     (interactive)
