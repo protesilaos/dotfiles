@@ -45,6 +45,7 @@
 ;;     modus-operandi-theme-scale-headings
 ;;     modus-operandi-theme-visible-fringes
 ;;     modus-operandi-theme-distinct-org-blocks
+;;     modus-operandi-theme-3d-modeline
 ;;     modus-operandi-theme-subtle-diffs
 ;;
 ;; The default scale is as follows (it can be customised as well):
@@ -248,6 +249,7 @@
 ;;     smartparens
 ;;     smerge
 ;;     speedbar
+;;     spell-fu
 ;;     stripes
 ;;     suggest
 ;;     switch-window
@@ -255,6 +257,8 @@
 ;;     swoop
 ;;     sx
 ;;     symbol-overlay
+;;     tab-bar-mode
+;;     tab-line-mode
 ;;     syslog-mode
 ;;     trashed
 ;;     telephone-line
@@ -393,6 +397,16 @@ between foreground and background is >= 7:1)."
 (defcustom modus-operandi-theme-distinct-org-blocks nil
   "Use a distinct background for `org-mode' source blocks."
   :type 'boolean)
+
+(defcustom modus-operandi-theme-3d-modeline nil
+  "Use a three-dimensional style for the active mode line."
+  :type 'boolean)
+
+(defun modus-operandi-theme-modeline (col3d col)
+  "Control the box colour of the mode line, either COL3D or COL."
+  (if modus-operandi-theme-3d-modeline
+      (list :line-width 1 :color col3d :style 'released-button)
+    (list :line-width 1 :color col :style nil)))
 
 (defcustom modus-operandi-theme-subtle-diffs nil
   "Use fewer/dim backgrounds in `diff-mode', `ediff',`magit'."
@@ -2164,7 +2178,8 @@ AMOUNT is a customisation option."
    `(message-mml ((,class (:foreground ,green-alt))))
    `(message-separator ((,class (:background ,bg-alt :foreground ,fg-special-warm))))
    ;;;; modeline
-   `(mode-line ((,class (:box (:line-width 1 :color ,fg-inactive) :background ,bg-active :foreground ,fg-active))))
+   `(mode-line ((,class (:box ,(modus-operandi-theme-modeline bg-inactive fg-inactive)
+                                 :background ,bg-active :foreground ,fg-active))))
    `(mode-line-buffer-id ((,class (:weight bold))))
    `(mode-line-emphasis ((,class (:foreground ,blue-active :weight bold))))
    `(mode-line-highlight ((,class (:inherit modus-theme-active-blue :box (:line-width -1 :style pressed-button)))))
@@ -2673,6 +2688,11 @@ AMOUNT is a customisation option."
    `(speedbar-selected-face ((,class (:foreground ,cyan :weight bold))))
    `(speedbar-separator-face ((,class (:inherit modus-theme-intense-neutral))))
    `(speedbar-tag-face ((,class (:foreground ,yellow-alt-other))))
+   ;;;; spell-fu
+   `(spell-fu-incorrect-face
+     ((,(append '((supports :underline (:style wave))) class)
+       (:foreground ,fg-lang-error :underline (:style wave)))
+      (,class (:foreground ,fg-lang-error :underline t))))
    ;;;; stripes
    `(stripes ((,class (:background ,bg-alt))))
    ;;;; success
@@ -2996,6 +3016,25 @@ AMOUNT is a customisation option."
    `(ztreep-leaf-face ((,class (:foreground ,cyan))))
    `(ztreep-node-count-children-face ((,class (:foreground ,fg-special-warm))))
    `(ztreep-node-face ((,class (:foreground ,fg-main))))
+   (when (>= emacs-major-version 27) ; EXPERIMENTAL this form is subject to review
+     (custom-theme-set-faces
+      'modus-operandi
+      ;;;; tab-bar-mode
+      `(tab-bar ((,class (:background ,bg-alt :foreground ,fg-alt))))
+      `(tab-bar-tab ((,class (:box (:line-width 1 :color ,fg-window-divider-inner)
+                                   :background ,bg-tab-active :foreground ,fg-main))))
+      `(tab-bar-tab-inactive ((,class (:box (:line-width 1 :color ,bg-tab-active)
+                                            :background ,bg-tab-inactive :foreground ,fg-dim))))
+      ;;;; tab-line-mode
+      `(tab-line ((,class (:height 0.95 :background ,bg-active :foreground ,fg-active))))
+      `(tab-line-close-highlight ((,class (:foreground ,red-active))))
+      `(tab-line-highlight ((,class (:background ,bg-tab-active :foreground ,fg-main))))
+      `(tab-line-tab ((,class (:box (:line-width 1 :color ,fg-window-divider-inner)
+                                    :background ,bg-tab-active :foreground ,fg-main))))
+      `(tab-line-tab-current ((,class (:box (:line-width 1 :color ,fg-window-divider-inner)
+                                            :background ,bg-tab-active :foreground ,fg-main))))
+      `(tab-line-tab-inactive ((,class (:box (:line-width 1 :color ,bg-tab-active)
+                                             :background ,bg-tab-inactive :foreground ,fg-dim))))))
    ;;; Theme Variables
    (custom-theme-set-variables
     'modus-operandi
