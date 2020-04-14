@@ -290,6 +290,8 @@
 
 ;;; Code:
 
+
+
 (deftheme modus-vivendi
   "Dark theme that conforms with the highest accessibility
   standard for colour contrast between background and
@@ -408,11 +410,26 @@ between foreground and background is >= 7:1)."
 
 ;; Helper functions that are meant to ease the implementation of the
 ;; above customisation options.
-(defun modus-vivendi-theme-modeline (col3d col)
-  "Control the box colour of the mode line, either COL3D or COL."
+(defun modus-vivendi-theme-modeline-box (col3d col &optional btn int)
+  "Control the box properties of the mode line.
+COL3D is the border that is intended for the three-dimensional modeline.
+COL applies to the two-dimensional modeline.
+Optional BTN provides the 3d button style.
+Optional INT defines a border width."
+  (let* ((style (if btn 'released-button nil))
+         (int (if int int 1)))
+    (if modus-vivendi-theme-3d-modeline
+        (list :line-width int :color col3d :style style)
+      (list :line-width 1 :color col :style nil))))
+
+(defun modus-vivendi-theme-modeline-props (bg3d fg3d &optional bg fg)
+  "Control the background and foreground of the mode line.
+BG is the modeline's background.
+FG is the modeline's foreground.
+BG3D and FG3D apply to the three-dimensional modeline style."
   (if modus-vivendi-theme-3d-modeline
-      (list :line-width 1 :color col3d :style 'released-button)
-    (list :line-width 1 :color col :style nil)))
+      (list :background bg3d :foreground fg3d)
+    (list :background bg :foreground fg)))
 
 (defun modus-vivendi-theme-diffs (subtle-bg subtle-fg intense-bg intense-fg)
   "Colour combinations for `modus-vivendi-theme-subtle-diffs'.
@@ -431,6 +448,8 @@ INTENSE-FG should be one of the dedicated foregrounds for diffs"
 AMOUNT is a customisation option."
   (when modus-vivendi-theme-scale-headings
     (list :height amount)))
+
+
 
 ;; Define colour palette.  Each colour must have a >= 7:1 contrast
 ;; ratio relative to the foreground/background colour it is rendered
@@ -1933,7 +1952,10 @@ AMOUNT is a customisation option."
    `(kaocha-runner-warning-face ((,class (:foreground ,yellow))))
    ;;;; keycast
    `(keycast-command ((,class (:foreground ,blue-active :weight bold))))
-   `(keycast-key ((,class (:inherit modus-theme-active-blue))))
+   `(keycast-key ((,class (:box ,(modus-vivendi-theme-modeline-box blue-intense blue-active t -3)
+                                ,@(modus-vivendi-theme-modeline-props
+                                   blue-active bg-main
+                                   blue-active bg-active)))))
    ;;;; line numbers (display-line-numbers-mode and global variant)
    `(line-number ((,class (:background ,bg-dim :foreground ,fg-alt))))
    `(line-number-current-line ((,class (:background ,bg-active :foreground ,fg-active :weight bold))))
@@ -2180,12 +2202,17 @@ AMOUNT is a customisation option."
    `(message-mml ((,class (:foreground ,green-alt))))
    `(message-separator ((,class (:background ,bg-alt :foreground ,fg-special-warm))))
    ;;;; modeline
-   `(mode-line ((,class (:box ,(modus-vivendi-theme-modeline bg-inactive fg-inactive)
-                                 :background ,bg-active :foreground ,fg-active))))
+   `(mode-line ((,class (:box ,(modus-vivendi-theme-modeline-box bg-inactive fg-inactive t)
+                              ,@(modus-vivendi-theme-modeline-props
+                                 bg-active fg-dim
+                                 bg-active fg-active)))))
    `(mode-line-buffer-id ((,class (:weight bold))))
    `(mode-line-emphasis ((,class (:foreground ,blue-active :weight bold))))
    `(mode-line-highlight ((,class (:inherit modus-theme-active-blue :box (:line-width -1 :style pressed-button)))))
-   `(mode-line-inactive ((,class (:box (:color ,bg-active) :background ,bg-inactive :foreground ,fg-inactive))))
+   `(mode-line-inactive ((,class (:box ,(modus-vivendi-theme-modeline-box bg-active bg-active)
+                                       ,@(modus-vivendi-theme-modeline-props
+                                          bg-dim fg-inactive
+                                          bg-inactive fg-inactive)))))
    ;;;; mood-line
    `(mood-line-modified ((,class (:foreground ,magenta-active))))
    `(mood-line-status-error ((,class (:foreground ,red-active :weight bold))))
