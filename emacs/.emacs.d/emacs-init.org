@@ -1204,9 +1204,9 @@ With =dabbrev-expand= we make an attempt to complete the text at point.
 Repeated invocations will cycle through the candidates.  No feedback is
 provided, much in the same way yanking from the kill-ring works.  While
 =prot/dabbrev-completion= offers a familiar minibuffer presentation for
-narrowing down the list of candidates using completion.  I modified the
-code of =dabbrev-completion=.  *This is experimental and fragile*, but it
-works as a concept and I am okay with its peculiarities.
+narrowing down the list of candidates using completion.  *This is
+experimental and fragile*, but "it works" as a concept and I am okay with
+its peculiarities for the time being.
 
 That granted, I must stress that I do not rely on word expansion for
 most of my day-to-day editing.  I find that it often is easier to just
@@ -1244,70 +1244,19 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
   (setq dabbrev-eliminate-newlines nil)
   (setq dabbrev-upcase-means-case-search t)
 
-  ;; EXPERIMENTAL This should be done by advising the original
-  ;; `dabbrev-completion', but I still do not know how to do that sort
-  ;; of thing.  It should also not kill the current text until the user
-  ;; confirms their choice (and this should then be a delete that does
-  ;; not write to the kill ring).
-  (defun prot/dabbrev-completion (&optional arg)
-    "Completion on current word.
-Like \\[dabbrev-expand] but finds all expansions in the current buffer
-and presents suggestions for completion.
-
-With a prefix argument ARG, it searches all buffers accepted by the
-function pointed out by `dabbrev-friend-buffer-function' to find the
-completions.
-
-If the prefix argument is 16 (which comes from \\[universal-argument] \\[universal-argument]),
-then it searches *all* buffers."
-    (interactive "*P")
+  ;; EXPERIMENTAL not well designed; not intended for general use
+  (defun prot/dabbrev-completion ()
+    (interactive)
     (dabbrev--reset-global-variables)
     (let* ((abbrev (dabbrev--abbrev-at-point))
-           (beg (progn (search-backward abbrev) (point)))
-           (end (progn (search-forward abbrev) (point)))
-	       (ignore-case-p (dabbrev--ignore-case-p abbrev))
-	       (list 'uninitialized)
-           (table
-            (lambda (s p a)
-              (if (eq a 'metadata)
-                  `(metadata (cycle-sort-function . ,#'identity)
-                             (category . dabbrev))
-                (when (eq list 'uninitialized)
-                  (save-excursion
-                    ;;--------------------------------
-                    ;; New abbreviation to expand.
-                    ;;--------------------------------
-                    (setq dabbrev--last-abbreviation abbrev)
-                    ;; Find all expansion
-                    (let ((completion-list
-                           (dabbrev--find-all-expansions abbrev ignore-case-p))
-                          (completion-ignore-case ignore-case-p))
-                      (or (consp completion-list)
-                          (user-error "No dynamic expansion for \"%s\" found%s"
-                                      abbrev
-                                      (if dabbrev--check-other-buffers
-                                          "" " in this-buffer")))
-                      (setq list
-                            (cond
-                             ((not (and ignore-case-p dabbrev-case-replace))
-                              completion-list)
-                             ((string= abbrev (upcase abbrev))
-                              (mapcar #'upcase completion-list))
-                             ((string= (substring abbrev 0 1)
-                                       (upcase (substring abbrev 0 1)))
-                              (mapcar #'capitalize completion-list))
-                             (t
-                              (mapcar #'downcase completion-list)))))))
-                (complete-with-action a list s p)))))
-      (setq dabbrev--check-other-buffers (and arg t))
-      (setq dabbrev--check-all-buffers
-            (and arg (= (prefix-numeric-value arg) 16)))
-      ;; NOT optimal, NOT safe, and needs lots of polish overall…
-      (save-excursion
-        (backward-kill-sexp)
-        (icomplete-vertical-do ()
-          (insert
-           (completing-read "Expand: " table nil t))))))
+           (completion-list
+            (dabbrev--find-all-expansions abbrev nil)))
+      (when completion-list
+        (save-excursion
+          (zap-up-to-char (- 1) ?\s)
+          (icomplete-vertical-do ()
+            (insert
+             (completing-read "Expand: " completion-list nil nil)))))))
 
   :bind (("M-/" . dabbrev-expand)
          ("s-/" . prot/dabbrev-completion)))
