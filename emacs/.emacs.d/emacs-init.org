@@ -706,13 +706,13 @@ further below):
   (setq completion-styles '(partial-completion substring initials flex))
   (setq completion-category-overrides
         '((file (styles initials basic))
-          (buffer (styles initials basic))
           (info-menu (styles basic))))
   (setq completions-format 'vertical)   ; *Completions* buffer
   (setq enable-recursive-minibuffers t)
   (setq read-answer-short t)
   (setq read-buffer-completion-ignore-case t)
   (setq read-file-name-completion-ignore-case t)
+  (setq completion-ignore-case t)
   (setq resize-mini-windows t)
 
   (file-name-shadow-mode 1)
@@ -4772,6 +4772,7 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
     (setq modus-operandi-theme-slanted-constructs t
           modus-operandi-theme-bold-constructs nil
           modus-operandi-theme-visible-fringes t
+          modus-operandi-theme-3d-modeline t
           modus-operandi-theme-subtle-diffs t
           modus-operandi-theme-distinct-org-blocks nil
           modus-operandi-theme-proportional-fonts nil
@@ -4787,6 +4788,7 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
     (setq modus-vivendi-theme-slanted-constructs t
           modus-vivendi-theme-bold-constructs nil
           modus-vivendi-theme-visible-fringes t
+          modus-vivendi-theme-3d-modeline t
           modus-vivendi-theme-subtle-diffs t
           modus-vivendi-theme-distinct-org-blocks nil
           modus-vivendi-theme-proportional-fonts nil
@@ -5821,6 +5823,9 @@ reference:
 These are small functions that facilitate my day-to-day work with Emacs.
 They are written by me, unless otherwise noted.
 
++ Backward kill symbolic expression :: I just bind the built-in
+  =backward-kill-sexp= to =C-M-backspace=.  This makes it consistent with
+  =kill-whole-line= (=C-S-backspace=).
 + Change case "do what I mean" :: Emacs provides =*-dwim= versions of its
   commands for changing the casing of a word or a region.  With an
   active region, they operate on it, else they operate on the word.  I
@@ -5831,12 +5836,6 @@ They are written by me, unless otherwise noted.
 + Count words in buffer :: By default, the binding =M-== will count the
   lines, words, characters in the region.  I never use that.  What I do
   use is the equivalent for the whole buffer.
-+ Delete pair forward/backward :: The built-in =delete-pair= will remove a
-  pair of characters from the point onward.  It uses the character after
-  point to determine the matching character.  I bind that to =C-delete= as
-  it is conceptually close to regular Delete.  Then I bind an equivalent
-  backward motion to =C-backspace= so that it is similar to how the
-  backward deletion of words works (=M-backspace=).
 + Insert pairs :: These are several functions that allow for manual
   insertion of various common delimiters I use.  The idea is to offer
   the means of quickly wrapping a word/symbol/region in those characters
@@ -5908,14 +5907,6 @@ They are written by me, unless otherwise noted.
     (interactive)
     (copy-region-as-kill (point-at-bol) (point-at-eol))
     (message "Current line copied"))
-
-  (defun prot/delete-pair-backward ()
-    "Delete pair of characters before point.
-
-Use the character right before point as a reference on what to
-match for deletion."
-    (interactive)
-    (delete-pair -1))
 
   (defun prot/insert-double-quotes (&optional arg)
     "Insert a pair of double quotes or wrap ARG with them."
@@ -6080,14 +6071,13 @@ instead.  This command can then be followed by the standard
       (delete-region (point-at-bol) (point-at-eol))
       (yank)))
 
-  :bind (("M-c" . capitalize-dwim)
+  :bind (("<C-M-backspace>" . backward-kill-sexp)
+         ("M-c" . capitalize-dwim)
          ("M-l" . downcase-dwim)        ; "lower" case
          ("M-u" . upcase-dwim)
          ("<C-f2>" . contrib/rename-file-and-buffer)
          ("C-S-w" . prot/copy-line)
          ("M-=" . count-words)
-         ("<C-delete>" . delete-pair)
-         ("<C-backspace>" . prot/delete-pair-backward)
          ("M-\"" . prot/insert-double-quotes)
          ("C-M-\"" . prot/insert-double-smart-quotes)
          ("C-M-'" . prot/insert-single-smart-quotes)
