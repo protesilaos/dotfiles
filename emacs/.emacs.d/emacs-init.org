@@ -826,7 +826,9 @@ Overview of the following package declaration:
   are curious, check the source code for both =icomplete= and =ido= with the
   help of =M-x find-library=.
 + All my functions that somehow extend the functionality of Icomplete
-  have their own documentation.  No need to reproduce it here.
+  have their own documentation.  No need to reproduce it here.  I got
+  the incredibly useful =contrib/icomplete-remove-directory-path= from
+  [[https://old.reddit.com/r/emacs/comments/g0cl4w/icompletevertical_a_package_to_display_icomplete/fna35l5/][this thread on r/emacs by user oantolin]].
 + The keybindings define motions that ensure consistency between regular
   editing and the rotation of the candidate list.  The default =icomplete=
   key bindings leave something to be desired and are therefore
@@ -921,6 +923,13 @@ Bind this function in `icomplete-minibuffer-map'."
             (setq-local completion-styles prefix)
             (message "%s" (propertize "Prioritising PREFIX matching" 'face 'highlight)))))))
 
+  (defun contrib/icomplete-remove-directory-path (arg)
+    "Remove sub-directory path in `find-file' or equivalent.
+
+Bind this in `minibuffer-local-filename-completion-map'."
+    (interactive "p")
+    (zap-up-to-char (- arg) ?/))
+
   :bind (:map icomplete-minibuffer-map
               ("C-m" . minibuffer-complete-and-exit) ; try complete + force current input
               ("C-j" . exit-minibuffer) ; force current input more aggressively
@@ -931,6 +940,7 @@ Bind this function in `icomplete-minibuffer-map'."
               ("<left>" . icomplete-backward-completions)
               ("<up>" . icomplete-backward-completions)
               ("<return>" . prot/icomplete-force-complete-and-exit)
+              ("<C-backspace>" . contrib/icomplete-remove-directory-path)
               ("M-o w" . prot/icomplete-kill-ring-save)
               ("M-o i" . (lambda ()
                            (interactive)
