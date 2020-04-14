@@ -402,33 +402,35 @@ between foreground and background is >= 7:1)."
   "Use a three-dimensional style for the active mode line."
   :type 'boolean)
 
+(defcustom modus-operandi-theme-subtle-diffs nil
+  "Use fewer/dim backgrounds in `diff-mode', `ediff',`magit'."
+  :type 'boolean)
+
+;; Helper functions that are meant to ease the implementation of the
+;; above customisation options.
 (defun modus-operandi-theme-modeline (col3d col)
   "Control the box colour of the mode line, either COL3D or COL."
   (if modus-operandi-theme-3d-modeline
       (list :line-width 1 :color col3d :style 'released-button)
     (list :line-width 1 :color col :style nil)))
 
-(defcustom modus-operandi-theme-subtle-diffs nil
-  "Use fewer/dim backgrounds in `diff-mode', `ediff',`magit'."
-  :type 'boolean)
-
-(defmacro modus-operandi-theme-diffs (subtle-bg subtle-fg intense-bg intense-fg)
+(defun modus-operandi-theme-diffs (subtle-bg subtle-fg intense-bg intense-fg)
   "Colour combinations for `modus-operandi-theme-subtle-diffs'.
 
 SUBTLE-BG should be similar or the same as the main background
 SUBTLE-FG should be an appropriate accent value
 INTENSE-BG should be one of the dedicated backgrounds for diffs
 INTENSE-FG should be one of the dedicated foregrounds for diffs"
-  (list 'if 'modus-operandi-theme-subtle-diffs
-        (list 'list :background subtle-bg :foreground subtle-fg)
-        (list 'list :background intense-bg :foreground intense-fg)))
+  (if modus-operandi-theme-subtle-diffs
+      (list :background subtle-bg :foreground subtle-fg)
+    (list :background intense-bg :foreground intense-fg)))
 
-(defmacro modus-operandi-theme-scale (amount)
+(defun modus-operandi-theme-scale (amount)
   "Scale heading by AMOUNT.
 
 AMOUNT is a customisation option."
-  (list 'when 'modus-operandi-theme-scale-headings
-        (list 'list :height amount)))
+  (when modus-operandi-theme-scale-headings
+        (list :height amount)))
 
 ;; Define colour palette.  Each colour must have a >= 7:1 contrast
 ;; ratio relative to the foreground/background colour it is rendered
