@@ -772,6 +772,14 @@ instead."
               (select-window help)
             (select-window (get-mru-window)))))))
 
+  (defun prot/completions-kill-save-symbol ()
+    "Add symbol-at-point to the kill ring.
+
+Intended for use in the \\*Completions\\* buffer.  Bind this to a
+key in `completion-list-mode-map'."
+    (interactive)
+    (kill-new (thing-at-point 'symbol)))
+
   ;; Defines, among others, aliases for common actions to Super-KEY.
   ;; Normally these should go in individual package declarations, but
   ;; their grouping here makes things easier to understand.
@@ -789,6 +797,7 @@ instead."
          ("s-v" . prot/focus-minibuffer-or-completions)
          :map completion-list-mode-map
          ("h" . prot/describe-symbol-at-point)
+         ("w" . prot/completions-kill-save-symbol)
          ("n" . next-line)
          ("p" . previous-line)
          ("f" . next-completion)
