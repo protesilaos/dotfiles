@@ -5782,6 +5782,30 @@ A prompt will ask for the register to operate on."
       (prepend-to-register prompt start end nil))))
 #+end_src
 
+** Outline minor mode
+   :PROPERTIES:
+   :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
+   :END:
+
+/Work in progress 2020-04-15/
+
+#+begin_src emacs-lisp
+(use-package outline)
+
+(use-package outline-minor-faces
+  :ensure t
+  :after outline
+  :hook
+  (outline-minor-mode . outline-minor-faces-add-font-lock-keywords))
+
+(use-package bicycle
+  :ensure t
+  :after outline
+  :bind (:map outline-minor-mode-map
+              ("<C-tab>" . bicycle-cycle)
+              ("<S-iso-lefttab>" . bicycle-cycle-global)))
+#+end_src
+
 ** Custom movements and motions
    :PROPERTIES:
    :CUSTOM_ID: h:9aa933d2-70a9-426a-aeb2-2fa21bc67d97
