@@ -30,11 +30,11 @@ of my additions and their underlying rationale.
 Literate programming allows us to be more expressive and deliberate.
 Not only we can use typography to its maximum potential, but can also
 employ techniques such as internal links between sections.  This makes
-the end product much better for end users, than a terse script.
+the end product much better for end users than a terse script.
 
 In more practical terms, this document is written using =org-mode=.  It
 contains all /package configurations/ for my Emacs setup.  To actually
-work, it needs to be initialised from another file, that only covers the
+work, it needs to be initialised from another file that only covers the
 absolute essentials.
 
 *** Contents of my init.el
@@ -42,11 +42,16 @@ absolute essentials.
     :CUSTOM_ID: h:584c3604-55a1-49d0-9c31-abe46cb1f028
     :END:
 
-The =emacs-init.org= is actually loaded from an other file, named
-=init.el= as per the Emacs convention.  Mine is designed to add the
+The =emacs-init.org= is actually loaded from an other file, named =init.el=
+as per the Emacs convention.  Mine is designed to add the
 community-driven MELPA archive to the list of package repositories,
-configure =use-package= and then load the file with my configurations
-(i.e. the present document).
+configure =use-package= (see [[#h:cfa129a4-3394-4911-9097-4544df4e6ed9][comprehensive explanation below]]) and then
+load the file with my configurations (i.e. the present document).
+
+**** Old version prior to Emacs 27
+     :PROPERTIES:
+     :CUSTOM_ID: h:7264d03a-9aac-490f-bfba-582382997105
+     :END:
 
 For reference, these were the contents of my =init.el= *prior to Emacs
 27.1*.
@@ -61,6 +66,11 @@ For reference, these were the contents of my =init.el= *prior to Emacs
 (require 'org)
 (org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
 #+end_example
+
+**** Current version for Emacs 27+
+     :PROPERTIES:
+     :CUSTOM_ID: h:3fd803db-1bb4-4a0b-9c50-787d88cc7594
+     :END:
 
 Whereas in *Emacs 27.1 and onward*, they are modified thus:
 
@@ -95,6 +105,11 @@ Whereas in *Emacs 27.1 and onward*, they are modified thus:
 (setq vc-follow-symlinks t)
 (org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
 #+end_example
+
+**** The "early init" for Emacs 27+
+     :PROPERTIES:
+     :CUSTOM_ID: h:874944d8-7ac0-4115-aa21-6ff4e005f6f6
+     :END:
 
 Starting with Emacs 27.1, an =early-init.el= is now required to control
 things with greater precision.  Its code is as follows:
@@ -134,6 +149,11 @@ is any elisp file that is evaluated by Emacs.  This includes libraries
 that are shipped with the upstream distribution as well as code that
 comes from other sources.
 
+As such =use-package= *is not a package manager*, in the sense of
+installing, removing, listing packages.  It only /configures/ things using
+a declarative syntax.  The package manager of Emacs is =package.el= while
+there are other tools available from third parties, such as =straight.el=.
+
 Unlike a typical extensible program, there is no real distinction
 between native Emacs code and the one that comes from third parties.
 There is no externally-facing limited set of features that other tools
@@ -146,11 +166,25 @@ and other topics are discussed in greater detail.  It is good to
 understand the context in order to appreciate the differences between
 the various =use-package= declarations documented herein.
 
-The two main functions of =use-package=:
+The three types of =use-package= declarations that I use:
 
-1. To install and set up external packages.  Those are denoted by the
-   inclusion of =:ensure t=.
-2. To configure default packages.  No =:ensure t= for them.
+1. To set up external packages.  Those are denoted by the inclusion of
+   =:ensure t= which means that /the package manager/ should make sure the
+   package is installed.
+2. To configure default packages.  No =:ensure t= is needed for them.
+3. To declare custom or otherwise experimental packages that are not
+   available in any repository and which I handle manually and plan to
+   review at a later date.  Those include a =:load-path= that makes their
+   code available to my environment.
+
+In several package declarations you will see a =:delight= keyword that
+leverages [[#h:b31005e3-c475-4be9-87fd-85b404550d8c][the delight package]].  This controls the so-called "lighter"
+that each package many define.  The lighter is the piece of text that a
+tool will append to the mode line.  For example, Flyspell's lighter is
+"Fly".  With =:delight= we can edit or rename lighters, or altogether hide
+them (the information is still available when running =C-h m=).  To
+rename, we pass a value to the keyword.  To remove, we leave the keyword
+on its own line (what I normally do).
 
 With =use-package= we can improve the start-up performance of Emacs in a
 few fairly simple ways.  Whenever a command is bound to a key it is
@@ -158,12 +192,21 @@ configured to be loaded only once invoked.  Otherwise we can specify
 which functions should be autoloaded by means of the =:commands= keyword.
 
 Furthermore, and if absolutely necessary, I define all variables that
-are supposed to be immutable with the =:custom= keyword.  This writes
-them to the =custom.el= that I specify [[#h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d][further below]].  Consider that to
-be the exception, as all minor modes, custom functions, or other
-configurations are enabled under the =:config= keyword.  The activation
-of a mode should always be the very last thing, once all variables
-have been set.
+are supposed to be immutable with the =:custom= keyword.  This writes them
+to the =custom.el= that I specify [[#h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d][further below]].  You should, however,
+*consider that to be the exception*, as all minor modes, custom functions,
+or other configurations are normally specified under the =:config=
+keyword.  The activation of a mode should always be the very last thing,
+once all variables have been set.  Make sure to read the manual for more
+information on the individual keywords.
+
+Last but not least, you should be warned of a common error with handling
+package installs (with or without =use-package=): if Emacs complains that
+the package you want no longer exists, it means that *you must refresh
+your package index* because there is a new version of that package, so
+the old one that is still registered on your list has been removed from
+the source.  Do that with either =M-x package-refresh-contents= or the
+package browser =M-x list-packages=.
 
 The following snippet of elisp sets up and configures =use-package= to
 my liking.  It is already referenced in the previous section
@@ -212,6 +255,18 @@ As for the various settings included herein, you can learn /even more/
 about them by using [[https://protesilaos.com/codelog/2019-08-24-emacs-docs-discovery/][Emacs' built-in documentation]] (great for discovering
 new features and pieces of functionality).
 
+Additionally, you will notice some metadata tags specific to =org-mode=
+below each heading.  These are generated by the functions that are
+defined in the package declaration for =org-id=.  The idea is to keep
+anchor tags consistent when generating a new HTML version of this
+document.
+
+This metadata also makes it possible to create immutable internal links,
+whenever a reference is needed.  To create such links, you can use =C-c l=
+to capture the unique ID of the current section and then =C-c C-l= to
+create a link (the former is defined in the [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org package declaration]]—this
+is an internal link in action).
+
 ** Where I run Emacs
    :PROPERTIES:
    :CUSTOM_ID: h:044977f2-a909-4804-bf89-576dd429d405
@@ -243,8 +298,8 @@ The process of learning the internals of Emacs means that I will, at
 times, write my own elisp functions.  External packages that I do use
 are either a clear upgrade over the defaults or otherwise extend the
 functionality of what is already available.  You will not find any
-superficialities herein: no rainbow-coloured mode lines, no icons,
-nothing.
+superficialities herein: no rainbow-coloured mode lines, no icons, no
+tool bars with bells and spinning wheels, nothing.
 
 Though a former Vim user, I decided *not* to use =evil-mode= or any kind of
 Vi emulation.  I wanted to do things differently in order to ultimately
@@ -268,7 +323,7 @@ function as intended (for example, =C-x o= is also =s-o=).
 
 To find all my keybindings of this sort in the source code version of
 this document from inside of Emacs, do =M-s o= (or =M-x occur=) followed by
-the pattern ="s-[a-z]"=.
+the pattern ="s-[a-z0-9]"=.
 
 Note that your choice of desktop environment might render some of these
 useless.  The DE will simply intercept the key chord before it is ever
@@ -276,30 +331,16 @@ sent to Emacs.  For example, GNOME has a *hidden* key mapping to =s-p=,
 which does something with monitors (last time I checked on GNOME 3.30).
 Such bindings are scattered throughout the config database that is
 normally accessed with =gsettings= on the command line or the graphical
-=dconf-editor=.
+=dconf-editor= (not pretty either way).
 
 Similarly, a tiling window manager that binds practically all of its
 motions to Super, will cause you trouble.  Personally, I have enabled
 the Hyper key and am now using it as an extra modifier for controlling
-my bespoke BSPWM setup ([[https://gitlab.com/protesilaos/dotfiles/commit/ec885d16be726df122d88bcf4494210ae300cfa7][comprehensive documentation in this commit]]).
-
-** Note about the source file
-   :PROPERTIES:
-   :CUSTOM_ID: h:00d9f2e2-84a2-4ff8-8388-e9f4f704a262
-   :END:
-
-If you are reading the source code for this file (available in my
-[[https://gitlab.com/protesilaos/dotfiles][dotfiles repo on Gitlab]]), you will notice some metadata tags specific to
-=org-mode= below each heading.  These are generated by the functions that
-are defined in the package declaration for =org-id=.  The idea is to keep
-anchor tags consistent when generating a new HTML version of this
-document.
-
-This metadata also makes it possible to create immutable internal links,
-whenever a reference is needed.  To create such links, you can use =C-c l=
-to capture the unique ID of the current section and then =C-c C-l= to
-create a link (the former is defined in the [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org package declaration]]—this
-is an internal link in action).
+my bespoke BSPWM setup ([[https://gitlab.com/protesilaos/dotfiles/commit/ec885d16be726df122d88bcf4494210ae300cfa7][comprehensive documentation in this commit]]),
+though I am starting to realise that my kind of integrated Emacs setup
+renders a tiling WM superfluous (I might actually switch to a generic
+floating window manager that does not use the keyboard for anything and
+which simply draws windows on the screen).
 
 ** COPYING
    :PROPERTIES:
@@ -363,13 +404,11 @@ For live evaluation of elisp, we have =C-x C-e= (=eval-last-elisp=).
    :CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
    :END:
 
-In Emacs speak, the name of a mode present at the modeline is called a
-"lighter".  For example, Flyspell's lighter is "Fly".
-
-With this package we can edit or rename lighters, or altogether hide
-them (the information is still available when running =C-h m=).
-Furthermore, the functionality can be integrated in every package
-declaration of =use-package=: you will see a =:delight= tag.
+As was noted in the section [[#h:cfa129a4-3394-4911-9097-4544df4e6ed9][about `use-package']] we can control the
+so-called "lighter" text that modes append to the mode line.  We can
+edit or rename lighters, or altogether hide them by passing the
+string/function we want to the =:delight= keyword of a package declaration
+(leaving just the keyword means to remove the lighter altogether).
 
 #+begin_src emacs-lisp
 (use-package delight
@@ -377,7 +416,7 @@ declaration of =use-package=: you will see a =:delight= tag.
   :after use-package)
 #+end_src
 
-** Custom.el
+** Put customisation settings in a "custom.el"
    :PROPERTIES:
    :CUSTOM_ID: h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d
    :END:
@@ -385,6 +424,12 @@ declaration of =use-package=: you will see a =:delight= tag.
 When you install a package or use the various customisation interfaces
 to tweak things to your liking, Emacs will append a piece of elisp to
 your init file.  I prefer to have that stored in a separate file.
+
+Note that a common source of inconsistencies with configurations arises
+from a conflict between your code and what is stored in the =custom=
+snippet.  When something does not seem to work as intended, make sure to
+check =custom.el= and edit or delete it if necessary (if deleted, it will
+be created again the next time you start Emacs).
 
 #+begin_src emacs-lisp
 (use-package cus-edit
@@ -436,7 +481,7 @@ are in order of preference, with a short note on what disqualifies them:
 
 | Typeface         | Subjective faults                            |
 |------------------+----------------------------------------------|
-| Hack             | See the README of my mod                     |
+| Hack (upstream)  | See the README of my mod                     |
 | Iosevka          | Wide glyphs (‘m’, ‘w’) need more work        |
 | DejaVu Sans Mono | A bit worse than Hack in a lot of details    |
 | Source Code Pro  | Too light, too wide, better with dark themes |
@@ -5418,6 +5463,9 @@ patches to.
 
 *** Eldoc (elisp live documentation feedback)
     :PROPERTIES:
+    :CUSTOM_ID: h:d0f76937-4f54-401c-aae8-ffadf8697357
+    :END:
+    :PROPERTIES:
     :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
     :ND:
 
@@ -5742,8 +5790,8 @@ A prompt will ask for the register to operate on."
 I generally rely on the default keys to move around (plus my Super-KEY
 additions to economise on some repetitive tasks).  There are, however,
 some motions that are rather cumbersome or too specialised.  While there
-are some commands that are not available at all.  For those cases, I
-rely on custom functions.
+are some commands that are not available at all.  For those cases, I use
+custom functions.
 
 *** Mark by semantic unit (expand-region)
     :PROPERTIES:
