@@ -689,29 +689,46 @@ amiss.
 The minibuffer is the locus of extended command interaction.  Whether it
 is about offering input to a prompt, performing a search, executing a
 function by its name, the minibuffer remains at the epicentre.  The
-default experience is far more powerful than it seems to be.  It can get
-even better by tweaking the available customisation options and defining
-our own extensions.
+minibuffer and Icomplete are meant to work in tandem as part of a
+singular framework.  The default experience is far more powerful than it
+seems to be.  It can get even better by tweaking the available
+customisation options and defining our own extensions.
 
-While =icomplete= is the tool that offers incremental completion feedback
-for what the minibuffer is doing (where appropriate).  There is no added
-layer of complexity.  Just a visualisation of what is going on under the
-hood.  As such, =icomplete= is designed with the generic minibuffer in
-mind.  The two are meant to work in tandem, in accordance with the
-design conventions of the upstream Emacs distribution.
+Icomplete is the tool that offers incremental completion feedback for
+what the minibuffer is doing (where appropriate).  There is no added
+layer of complexity, no need for another metaphor of interactivity
+beside what you already use the minibuffer for.  In essence, Icomplete
+is just a visualisation of what is going on under the hood, meaning that
+all the completion mechanisms actually work even if =icomplete-mode= is
+disabled ---though you obviously lose the visual feedback.
 
 Now some comments about my implementation:
 
 + The key bindings in the pattern of =s-KEY= follow the principles I
   outlined in my introductory [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note about the use of the Super key]].
++ The =completion-styles= try to match candidates using one style at a
+  time, moving from the first to the last until something is being
+  matched.  This is why I define several of them in an order I find
+  suitable to my workflow.  As far as I know, the styles cannot be
+  combined.
++ The =orderless= completion style allows for space-separated terms to be
+  treated as regular expressions that match candidates regardless of the
+  order the terms may appear in.  It can be super effective in cases
+  where you are not entirely sure how a long name of a symbol is
+  written.  [[https://github.com/oantolin/orderless][The “orderless” package]] is developed by Omar Antolín
+  Camarena and is in early development as of 2020-04-15.
 + The =flex= option in =completion-styles= and relevant places is only
   available for Emacs versions after 27.  As of this writing
   (2020-02-10) the current stable release is 26.3.
 + The =completion-category-overrides= provide exceptions to the fallback
-  completion styles.
+  completion styles.  This is convenient because we can prioritise a
+  certain style for some times of candidates, though in practice you can
+  always rely on the fact that =completion-styles= will anyhow fall back
+  to another item in their list until some match is found.
 + The =completions-format= concerns the layout of the =*Completions*= buffer
-  that pops up after trying to complete a non-unique match.  By default,
-  it can be focused directly with =M-v= while inside an =icomplete= prompt.
+  that pops up after trying to complete a non-unique match (or by typing
+  =?= from inside the minibuffer).  By default, it can be focused directly
+  with =M-v= while inside a minibuffer prompt.
 + To enhance the experience of the Completions buffer, I define several
   keys that make motions easier and consistent with other read-only
   interfaces.  The =h= key calls a command of mine to offer help
@@ -742,22 +759,30 @@ further below):
 #+begin_src emacs-lisp
 (use-package minibuffer
   :config
+  (use-package orderless
+    ;; in-development package for out-of-order completion of terms
+    :load-path "~/.emacs.d/prot-dev/orderless")
+
+  ;; NOTE that flex completion is introduced in Emacs 27
+  (setq completion-styles
+        '(partial-completion substring orderless initials flex))
+
+  ;;;; NOTE I do not need this, but keeping it here as an example
+  ;; (setq completion-category-overrides
+  ;;       '((file (styles initials basic))
+  ;;         (info-menu (styles orderless))))
+
   (setq completion-cycle-threshold 3)
   (setq completion-flex-nospace nil)
   (setq completion-pcm-complete-word-inserts-delimiters t)
   (setq completion-pcm-word-delimiters "-_./:| ")
-  ;; NOTE: flex completion is introduced in Emacs 27
   (setq completion-show-help nil)
-  (setq completion-styles '(partial-completion substring initials flex))
-  (setq completion-category-overrides
-        '((file (styles initials basic))
-          (info-menu (styles basic))))
+  (setq completion-ignore-case t)
+  (setq read-buffer-completion-ignore-case t)
+  (setq read-file-name-completion-ignore-case t)
   (setq completions-format 'vertical)   ; *Completions* buffer
   (setq enable-recursive-minibuffers t)
   (setq read-answer-short t)
-  (setq read-buffer-completion-ignore-case t)
-  (setq read-file-name-completion-ignore-case t)
-  (setq completion-ignore-case t)
   (setq resize-mini-windows t)
 
   (file-name-shadow-mode 1)
@@ -836,9 +861,9 @@ key in `completion-list-mode-map'."
          ("s-B" . switch-to-buffer-other-window)
          ("s-h" . prot/describe-symbol-at-point)
          ("s-H" . (lambda ()
-                      (interactive)
-                      (let ((current-prefix-arg t))
-                        (prot/describe-symbol-at-point))))
+                    (interactive)
+                    (let ((current-prefix-arg t))
+                      (prot/describe-symbol-at-point))))
          ("s-v" . prot/focus-minibuffer-or-completions)
          :map completion-list-mode-map
          ("h" . prot/describe-symbol-at-point)
