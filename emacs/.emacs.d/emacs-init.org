@@ -5807,6 +5807,47 @@ A prompt will ask for the register to operate on."
       (prepend-to-register prompt start end nil))))
 #+end_src
 
+** Visual bookmarks and extras (bm.el)
+   :PROPERTIES:
+   :CUSTOM_ID: h:f20b0d69-6fac-49d5-847f-362aea9f1bef
+   :END:
+
+This is a deceptively simple-yet-effective package for marking a point
+in a buffer for future review.  I learnt about it from Manuel Uberti's
+[[https://www.manueluberti.eu/emacs/2020/03/19/lockdown-beam-bm/][blog entry on the matter]] (2020-03-19).  As Manuel puts it:
+
+#+begin_quote
+I find bm.el really useful when studying source code from others, or
+when I want to quickly set jumping points in a log file cluttered with
+stacktraces. It’s quicker then moving around with Isearch or helm-occur,
+and unlike avy it’s not limited to what is currently visible on the
+screen.
+#+end_quote
+
+I use visual bookmarks in much the same way.
+
+#+begin_src emacs-lisp
+(use-package bm
+  :ensure t
+  :config
+  (setq bm-annotate-on-create t)
+  (setq bm-buffer-persistence t)
+  (setq bm-cycle-all-buffers t)
+  (setq bm-goto-position nil)
+  (setq bm-highlight-style 'bm-highlight-line-and-fringe)
+  (setq bm-in-lifo-order t)
+  (setq bm-recenter t)
+  (setq bm-repository-file "/home/prot/.emacs.d/bm-bookmarks")
+  (setq bm-repository-size 100)
+  (setq bm-show-annotations t)
+  (setq bm-wrap-immediately t)
+  (setq bm-wrap-search t)
+  :bind (("<C-f8>" . bm-next)
+         ("<C-S-f8>" . bm-previous)
+         ("<s-f8>" . bm-toggle-buffer-persistence)
+         ("<f8>" . bm-toggle)))
+#+end_src
+
 ** Outline minor mode
    :PROPERTIES:
    :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
