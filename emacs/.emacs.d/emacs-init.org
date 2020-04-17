@@ -177,14 +177,12 @@ The three types of =use-package= declarations that I use:
    review at a later date.  Those include a =:load-path= that makes their
    code available to my environment.
 
-In several package declarations you will see a =:delight= keyword that
-leverages [[#h:b31005e3-c475-4be9-87fd-85b404550d8c][the delight package]].  This controls the so-called "lighter"
+In several package declarations you will see a =:diminish= keyword that
+leverages [[#h:b31005e3-c475-4be9-87fd-85b404550d8c][the diminish package]].  This affects the so-called "lighter"
 that each package many define.  The lighter is the piece of text that a
 tool will append to the mode line.  For example, Flyspell's lighter is
-"Fly".  With =:delight= we can edit or rename lighters, or altogether hide
-them (the information is still available when running =C-h m=).  To
-rename, we pass a value to the keyword.  To remove, we leave the keyword
-on its own line (what I normally do).
+"Fly".  With =:diminish= we demand that the lighter be removed (the
+information is still available when running =C-h m=).
 
 With =use-package= we can improve the start-up performance of Emacs in a
 few fairly simple ways.  Whenever a command is bound to a key it is
@@ -399,19 +397,20 @@ For live evaluation of elisp, we have =C-x C-e= (=eval-last-elisp=).
   :hook (kill-emacs . prot/delete-emacs-init))
 #+end_src
 
-** Edit modeline "lighters"
+** Remove modeline "lighters"
    :PROPERTIES:
    :CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
    :END:
 
-As was noted in the section [[#h:cfa129a4-3394-4911-9097-4544df4e6ed9][about `use-package']] we can control the
-so-called "lighter" text that modes append to the mode line.  We can
-edit or rename lighters, or altogether hide them by passing the
-string/function we want to the =:delight= keyword of a package declaration
-(leaving just the keyword means to remove the lighter altogether).
+As was noted in the section [[#h:cfa129a4-3394-4911-9097-4544df4e6ed9][about `use-package']] we can remove the
+so-called "lighter" text that modes append to the mode line.  This is
+all that Diminish does and you will see a =:diminish= keyword in the
+relevant packages.
+
+If you actually want to edit the lighters, check the Delight package.
 
 #+begin_src emacs-lisp
-(use-package delight
+(use-package diminish
   :ensure t
   :after use-package)
 #+end_src
@@ -1350,7 +1349,7 @@ position of the cursor after the skeleton has been inserted.
 
 #+begin_src emacs-lisp
 (use-package abbrev
-  :delight
+  :diminish
   :config
   (setq abbrev-file-name "~/.emacs.d/abbrevs")
   (setq only-global-abbrevs nil)
@@ -1479,7 +1478,7 @@ effectively supersede the functionality of =anzu=, a package I once used.
 
 #+begin_src emacs-lisp
 (use-package isearch
-  :delight
+  :diminish
   :config
   (setq search-highlight t)
   (setq search-whitespace-regexp ".*?")
@@ -5137,7 +5136,7 @@ when reviewing my themes (=rainbow-mode= is activated manually).
 #+begin_src emacs-lisp
 (use-package rainbow-mode
   :ensure t
-  :delight
+  :diminish
   :commands rainbow-mode
   :config
   (setq rainbow-ansi-colors nil)
@@ -5205,7 +5204,7 @@ that is so pertinent to presentations.
 #+begin_src emacs-lisp
 (use-package olivetti
   :ensure t
-  :delight
+  :diminish
   :config
   (setq olivetti-body-width 100)
   (setq olivetti-minimum-body-width 72)
@@ -5246,7 +5245,7 @@ A less intrusive, built-in alternative is to set the variable
 #+begin_src emacs-lisp
 (use-package rainbow-blocks
   :ensure t
-  :delight
+  :diminish
   :commands rainbow-blocks-mode
   :config
   (setq rainbow-blocks-highlight-braces-p t)
@@ -5296,7 +5295,7 @@ motions will behave accordingly.
 
 #+begin_src emacs-lisp
 (use-package subword
-  :delight
+  :diminish
   :hook (prog-mode . subword-mode))
 #+end_src
 
@@ -5505,7 +5504,7 @@ commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
 
 #+begin_src emacs-lisp
 (use-package eldoc
-  :delight
+  :diminish
   :config
   (global-eldoc-mode 1))
 #+end_src
@@ -6303,7 +6302,7 @@ to the section on [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][the Modus themes (m
 #+begin_src emacs-lisp
 (use-package beacon
   :ensure t
-  :delight
+  :diminish
   :config
   (setq beacon-blink-delay 0.1)
   (setq beacon-blink-duration 0.25)
@@ -6443,7 +6442,7 @@ A change can happen externally or by some other tool inside of Emacs
 
 #+begin_src emacs-lisp
 (use-package autorevert
-  :delight
+  :diminish
   :config
   (setq auto-revert-verbose t)
   :hook (after-init . global-auto-revert-mode))
@@ -6933,7 +6932,7 @@ package declaration is but a piece of a greater whole.
 (use-package ivy
   :disabled                             ; switched to `icomplete'
   :ensure t
-  :delight
+  :diminish
   :config
   (setq ivy-count-format "(%d/%d) ")
   (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 4))))
@@ -7350,7 +7349,7 @@ this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
   :disabled                             ; switched to `icomplete'
   :ensure t
   :after ivy
-  :delight
+  :diminish
   :config
   (setq ivy-posframe-parameters
         '((left-fringe . 2)
