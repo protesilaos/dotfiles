@@ -5842,6 +5842,36 @@ some motions that are rather cumbersome or too specialised.  While there
 are some commands that are not available at all.  For those cases, I use
 custom functions.
 
+*** Go to actionable beginning or end of buffer
+    :PROPERTIES:
+    :CUSTOM_ID: h:29ea650f-f6a9-4bb4-abca-9548b4e4c4eb
+    :END:
+
+This package by Damien Cassou offers the ability to move to the first or
+last actionable point in a buffer rather than the absolute maximum or
+minimum point.  It does so by wrapping =M-<= and =M->= around a "do what I
+mean" behaviour where the initial command will take you to the
+actionable part, while another call will go to the absolute position.
+Nice and simple!
+
+Check [[https://github.com/DamienCassou/beginend][the package upstream]] for information on the supported modes and on
+how to contribute your own extensions (I provided support for =rg.el=,
+which I [[#h:31622bf2-526b-4426-9fda-c0fc59ac8f4b][define elsewhere in this document]]).
+
+Here the =dolist= combined with the =:diminish= keyword are meant to remove
+all lighters that this package produces: one for every minor mode it
+provides.  I got this from [[https://github.com/DamienCassou/beginend/issues/43][issue 43 on the beginend repo]].
+
+#+begin_src emacs-lisp
+(use-package beginend
+  :ensure t
+  :demand
+  :diminish beginend-global-mode
+  :config
+  (dolist (mode beginend-modes) (diminish (cdr mode)))
+  (beginend-global-mode 1))
+#+end_src
+
 *** Mark by semantic unit (expand-region)
     :PROPERTIES:
     :CUSTOM_ID: h:0cb24401-16df-45ed-80f7-8e993f985c0d
