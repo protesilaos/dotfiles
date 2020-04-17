@@ -883,8 +883,26 @@ Overview of the following package declaration:
 
 + The values of all variables that pertain to the delay of feedback are
   tentative.  My initial tests suggest that they behave exactly the way
-  I want, but this might change once I test them further.  In short, do
-  not introduce any further delay.
+  I want, but this might change once I test them further.  In short, I
+  want to introduce some delay in the feedback I get when the list of
+  candidates is long.  This makes things feel faster while I am still
+  typing.
++ My =prot/icomplete-kill-or-insert-candidate= is a simple yet super
+  effective tool that I bind to a couple of key chords.  With =M-o w= you
+  copy the current candidate to the kill ring.  So you can use that
+  symbol at a later point.  While =M-o i= will kill the candidate but also
+  insert it at the point of the most recently used buffer (the one that
+  originally called the minibuffer).
++ With =prot/icomplete-insert-candidate-and-exit= we can insert the
+  candidates directly at point and exit the minibuffer immediately.
+  Bound to =M-o j= and considered complementary to the above.
++ I find =prot/icomplete-toggle-completion-styles= to be helpful as a
+  means of changing the list of candidates, usually for the purposes of
+  reducing it in length.  Useful when running the various help functions
+  of =C-h v=, =C-h f=, =C-h o=.  Combine it with =icomplete-force-complete=,
+  bound to the tab key, to update the list for the given input.
++ I got the incredibly useful =contrib/icomplete-remove-directory-path=
+  from [[https://old.reddit.com/r/emacs/comments/g0cl4w/icompletevertical_a_package_to_display_icomplete/fna35l5/][this thread on r/emacs by user oantolin]].
 + For versions of Emacs above 27, there is a mode called =fido= (Fake IDO,
   where =ido= is an alternative option to Icomplete that tries to do more
   than just completion).  This new mode changes some of the primary key
@@ -892,104 +910,106 @@ Overview of the following package declaration:
   of Ido users.  It is not meant as a fully fledged replacement of Ido,
   as its scope is much narrower, at least for the time being.  If you
   are curious, check the source code for both =icomplete= and =ido= with the
-  help of =M-x find-library=.
-+ All my functions that somehow extend the functionality of Icomplete
-  have their own documentation.  No need to reproduce it here.  I got
-  the incredibly useful =contrib/icomplete-remove-directory-path= from
-  [[https://old.reddit.com/r/emacs/comments/g0cl4w/icompletevertical_a_package_to_display_icomplete/fna35l5/][this thread on r/emacs by user oantolin]].
-+ The keybindings define motions that ensure consistency between regular
-  editing and the rotation of the candidate list.  The default =icomplete=
-  key bindings leave something to be desired and are therefore
-  repurposed for my extensions.
-+ Note the behaviour of =C-j= and =C-m=.  They are intended for inserting
-  /exactly/ what you have typed in.  The former is more forceful and will
-  work in scenaria where the latter will not (check the docstrings of
-  the commands they call): the differences are noticeable in edge cases
-  though.  Use them when Icomplete is matching =foobar= but you only want
-  =foo= (needed when renaming files and the like).
+  help of =M-x find-library=.  I do not use Fido, though I think it is a
+  welcome step in the right direction.
++ The keybindings I specify define motions that ensure consistency
+  between regular editing and the rotation of the candidate list.  The
+  default =icomplete= key bindings leave something to be desired and are
+  therefore repurposed for my extensions.
++ Note the nuances in the behaviour between =RET=, =C-j,= and =C-m=.  With the
+  Return key, we tell Icomplete to expand the current candidate and then
+  exit the minibuffer.  Whereas the other two are intended for inserting
+  /exactly/ what you have typed in.  =C-j= is more forceful and will work in
+  scenaria where =C-m= will not (check the docstrings of the commands they
+  call): the differences are noticeable in edge cases though.  Use them
+  when Icomplete is matching =foobar= but you only want =foo= (needed when
+  renaming files and the like).
 
 *Pro tip*: while running =M-x shell= with my settings, you can still benefit
-from the built-in completion mechanisms by means of tab-completion.
-This requires =icomplete-in-buffer nil=.  Tab completion works the way you
-would expect in a terminal emulator, but also in accordance with how
-Emacs matches candidates.  So it works with initials as well!  For
-example, to =cd= into =~/Git/Projects/modus-themes= we can do something like
-=cd ~/G/P/m-t <TAB>=.  Try it!
+from the built-in completion mechanisms by means of tab-completion.  Tab
+completion works the way you would expect in a terminal emulator, but
+also in accordance with how Emacs matches candidates.  So it works with
+initials as well (among others)!  For example, to do a =cd= into
+=~/Git/Projects/modus-themes= we can write type =cd ~/G/P/m-t/ <TAB>= to
+produce a completion unterface (see the [[#h:98876022-57cc-40de-936e-4ee42cefd69a][section on in-buffer completions]]
+for the code that makes this nice to work with).  Try it and thank me
+later!
 
 #+begin_src emacs-lisp
 (use-package icomplete
   :demand
   :after minibuffer                     ; Read that section as well
   :config
-  (setq icomplete-delay-completions-threshold 0)
-  (setq icomplete-max-delay-chars 0)
-  (setq icomplete-compute-delay 0)
+  (setq icomplete-delay-completions-threshold 100)
+  (setq icomplete-max-delay-chars 2)
+  (setq icomplete-compute-delay 0.2)
   (setq icomplete-show-matches-on-no-input t)
   (setq icomplete-hide-common-prefix nil)
   (setq icomplete-prospects-height 1)
-  (setq icomplete-separator " · ")      ; mid dot
+  ;; (setq icomplete-separator " · ")
+  ;; (setq icomplete-separator " │ ")
+  ;; (setq icomplete-separator " ┊ ")
+  (setq icomplete-separator " ┆ ")
   (setq icomplete-with-completion-tables t)
-  (setq icomplete-in-buffer nil)        ; not your job
+  (setq icomplete-in-buffer t)
+  (setq icomplete-tidy-shadowed-file-names nil)
 
   (fido-mode -1)                        ; Emacs 27.1
   (icomplete-mode 1)
 
-  (defun prot/icomplete-force-complete-and-exit ()
-    "Complete the current icomplete match and exit the minibuffer.
-
-Contrary to `icomplete-force-complete-and-exit', this will
-confirm your choice without complaining about incomplete matches.
-
-Those incomplete matches can block you from performing legitimate
-actions, such as defining a new tag in an `org-capture' prompt.
-
-In my testing, this is necessary when the variable
-`icomplete-with-completion-tables' is non-nil, because then
-`icomplete' will be activated practically everywhere it can."
-    (interactive)
-    (icomplete-force-complete)
-    (exit-minibuffer))
-
-  (defun prot/icomplete-kill-ring-save (&optional arg)
-    "Expand and save current icomplete match to the kill ring.
-
-With a prefix argument, insert the match to the point in the
-current buffer and switch focus back to the minibuffer."
-    (interactive "*P")
-    (when (and (minibufferp)
-               (bound-and-true-p icomplete-mode))
-      (icomplete-force-complete)
-      (kill-new (field-string-no-properties))
-      (when arg
-        (kill-new (field-string-no-properties))
-        (select-window (get-mru-window))
-        (insert (car kill-ring))
-        (prot/focus-minibuffer))))
-
-  (defun prot/icomplete-toggle-completion-styles (&optional arg)
-    "Toggle between flex and prefix matching.
-
-With pregix ARG use basic completion instead.  These styles are
-described in `completion-styles-alist'.
+  (defun prot/icomplete-kill-or-insert-candidate (&optional arg)
+    "Place the matching candidate to the top of the `kill-ring'.
+With \\[universal-argument] also insert the candidate in the most
+recently used buffer, while keeping focus on the minibuffer.
 
 Bind this function in `icomplete-minibuffer-map'."
     (interactive "*P")
     (when (and (minibufferp)
                (bound-and-true-p icomplete-mode))
-      (let* ((completion-styles-original completion-styles)
-             (basic '(emacs22 basic))
-             (flex '(flex initials substring partial-completion))
-             (prefix '(partial-completion substring initials flex)))
-        (if current-prefix-arg
+      (kill-new (car completion-all-sorted-completions))
+      (when arg
+        (save-excursion
+          (kill-new (car completion-all-sorted-completions))
+          (select-window (get-mru-window))
+          (yank)
+          (prot/focus-minibuffer)))))
+
+  (defun prot/icomplete-insert-candidate-and-exit ()
+    "Insert candidate in most recently used buffer and exit.
+Like `prot/icomplete-kill-or-insert-candidate' but immediately
+exits the minibuffer, while it does not add the item to the
+`kill-ring'."
+    (interactive)
+    (let ((cand (car completion-all-sorted-completions)))
+      (when (and (minibufferp)
+                 (bound-and-true-p icomplete-mode))
+        (select-window (get-mru-window))
+        (insert cand)
+        (abort-recursive-edit))))
+
+  (defun prot/icomplete-toggle-completion-styles (&optional arg)
+    "Toggle between flex and default completion styles.
+
+With \\[universal-argument] use basic completion instead.  These
+styles are described in `completion-styles-alist'.
+
+Bind this function in `icomplete-minibuffer-map'."
+    (interactive "*P")
+    (when (and (minibufferp)
+               (bound-and-true-p icomplete-mode))
+      (let* ((basic '(emacs22 basic))
+             (flex '(flex orderless initials substring partial-completion))
+             (user completion-styles)) ; use my defaults
+        (if arg ; TODO make those message persistent next to the prompt
             (progn
               (setq-local completion-styles basic)
-              (message "%s" (propertize "Prioritising BASIC matching" 'face 'highlight)))
+              (message "%s" (propertize "BASIC matching" 'face 'highlight)))
           (if (not (eq (car completion-styles) 'flex))
               (progn
                 (setq-local completion-styles flex)
-                (message "%s" (propertize "Prioritising FLEX matching" 'face 'highlight)))
-            (setq-local completion-styles prefix)
-            (message "%s" (propertize "Prioritising PREFIX matching" 'face 'highlight)))))))
+                (message "%s" (propertize "FLEX first" 'face 'highlight)))
+            (setq-local completion-styles user)
+            (message "%s" (propertize "DEFAULT matching" 'face 'highlight)))))))
 
   (defun contrib/icomplete-remove-directory-path (arg)
     "Remove sub-directory path in `find-file' or equivalent.
@@ -998,7 +1018,12 @@ Bind this in `minibuffer-local-filename-completion-map'."
     (interactive "p")
     (zap-up-to-char (- arg) ?/))
 
+  ;; TODO can registers be inserted via completion?
+  ;; TODO can mark-ring positions be selected?
+
   :bind (:map icomplete-minibuffer-map
+              ("<tab>" . icomplete-force-complete)
+              ("<return>" . icomplete-force-complete-and-exit) ; exit with completion
               ("C-m" . minibuffer-complete-and-exit) ; try complete + force current input
               ("C-j" . exit-minibuffer) ; force current input more aggressively
               ("C-n" . icomplete-forward-completions)
@@ -1007,12 +1032,12 @@ Bind this in `minibuffer-local-filename-completion-map'."
               ("C-p" . icomplete-backward-completions)
               ("<left>" . icomplete-backward-completions)
               ("<up>" . icomplete-backward-completions)
-              ("<return>" . prot/icomplete-force-complete-and-exit)
               ("<C-backspace>" . contrib/icomplete-remove-directory-path)
-              ("M-o w" . prot/icomplete-kill-ring-save)
+              ("M-o w" . prot/icomplete-kill-or-insert-candidate)
               ("M-o i" . (lambda ()
                            (interactive)
-                           (prot/icomplete-kill-ring-save '(4))))
+                           (prot/icomplete-kill-or-insert-candidate '(4))))
+              ("M-o j" . prot/icomplete-insert-candidate-and-exit)
               ("C-," . prot/icomplete-toggle-completion-styles) ; toggle flex
               ("C-." . (lambda ()                               ; toggle basic
                          (interactive)
@@ -1136,9 +1161,6 @@ normally would when calling `yank' followed by `yank-pop'."
           (delete-region (region-beginning) (region-end)))
         (insert
          (completing-read "Yank from kill ring: " kills nil t)))))
-
-  ;; TODO can registers be inserted via completion?
-  ;; TODO can mark-ring positions be selected?
 
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
          ("s-r" . prot/icomplete-recentf)
