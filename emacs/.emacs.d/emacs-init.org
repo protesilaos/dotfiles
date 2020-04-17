@@ -1268,39 +1268,52 @@ setup.  Furthermore, I felt like it was adding a second type of
 completion paradigm while ignoring the original one, i.e. the
 minibuffer ---again, an offense against simplicity.
 
-What I have in this section is a few simple, built-in ways to complete
-terms while typing text in a buffer.  I think that, for certain cases,
-the minibuffer can be used effectively to perfom in-buffer completion.
-Especially once combined with a completion mechanism.  So make sure to
-review my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete (built-in completion)]].
+What I have in this section is a few simple tweaks and built-in ways to
+complete terms while typing text in a buffer.  I think that, for most
+cases, the minibuffer can be used effectively to perfom in-buffer
+completion: start from my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]] to
+understand how these fit into the broader framework.
+
+I yanked =contrib/completing-read-in-region= straight from Omar Antolín
+Camarena's [[https://github.com/oantolin/emacs-config][dotemacs repo]].  It provides a minibuffer-completion interface
+to the standard tab-completion mechanism (also check what I have on the
+topic of [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the TAB key]]).
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :after (minibuffer icomplete icomplete-vertical) ; review those first
+  :config
+  (defun contrib/completing-read-in-region (start end collection &optional predicate)
+    (let* ((completion-styles '(flex orderless initials substring partial-completion))
+           (completion
+            (icomplete-vertical-do ()
+              (completing-read "Completion: " collection predicate t
+                               (buffer-substring-no-properties start end)))))
+      (delete-region start end)
+      (insert completion)))
+
+  (setq completion-in-region-function #'contrib/completing-read-in-region))
+#+end_src
 
 **** Dabbrev (dynamic word completion)
      :PROPERTIES:
      :CUSTOM_ID: h:57dcf193-0c4e-4ee6-9b2d-6892558b0a84
      :END:
 
-This is Emacs' own approach to text completion inside the buffer:
-"dynamic abbreviation" or else =dabbrev=.  This mechanism works by reading
-all text before point to find a suitable match.  Different scenaria
-determine whether it should also look forward and in other buffers.
+This is Emacs' own approach to dynamic/arbitrary text completion inside
+the buffer: "dynamic abbreviation" or else =dabbrev=.  This mechanism
+works by reading all text before point to find a suitable match.
+Different scenaria determine whether it should also look forward and in
+other buffers.
 
 In essence, Dabbrev can help you type again what you already have.  It
-will not read from some knowledge bank, nor will it try to read your
-mind.
+will not draw findings from some knowledge bank, nor will it try to read
+your mind (though Emacs will definitely have an =M-x= conduit to such a
+technology).
 
 With =dabbrev-expand= we make an attempt to complete the text at point.
 Repeated invocations will cycle through the candidates.  No feedback is
-provided, much in the same way yanking from the kill-ring works.  While
-=prot/dabbrev-completion= offers a familiar minibuffer presentation for
-narrowing down the list of candidates using completion.  *This is
-experimental and fragile*, but "it works" as a concept and I am okay with
-its peculiarities for the time being.
-
-That granted, I must stress that I do not rely on word expansion for
-most of my day-to-day editing.  I find that it often is easier to just
-type things out than stop, check if the expansion is correct, go back
-and try again if it is not, etc.  Using Dabbrev for long symbols is fine
-though.
+provided, much in the same way yanking from the kill-ring works.
 
 The =dabbrev-abbrev-char-regexp= is configured to match both regular words
 and symbols (e.g. words separated by hyphens).  This makes it suitable
@@ -1331,23 +1344,7 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
   (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines nil)
   (setq dabbrev-upcase-means-case-search t)
-
-  ;; EXPERIMENTAL not well designed; not intended for general use
-  (defun prot/dabbrev-completion ()
-    (interactive)
-    (dabbrev--reset-global-variables)
-    (let* ((abbrev (dabbrev--abbrev-at-point))
-           (completion-list
-            (dabbrev--find-all-expansions abbrev nil)))
-      (when completion-list
-        (save-excursion
-          (zap-up-to-char (- 1) ?\s)
-          (icomplete-vertical-do ()
-            (insert
-             (completing-read "Expand: " completion-list nil nil)))))))
-
-  :bind (("M-/" . dabbrev-expand)
-         ("s-/" . prot/dabbrev-completion)))
+  :bind (("M-/" . dabbrev-expand)))
 #+end_src
 
 **** Skeletons and abbreviations
@@ -5682,10 +5679,14 @@ customise them via hooks.  This is not an issue I have encountered yet
 and am therefore refraining from solving a problem that does not affect
 me.
 
+Note that =tab-always-indent= will first do indentation and then try to
+complete whatever you have typed in.  I control how completion works for
+that particular function in my [[#h:98876022-57cc-40de-936e-4ee42cefd69a][in-buffer completions]] section.
+
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq-default tab-always-indent t)
+  (setq-default tab-always-indent 'complete)
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil))
 #+end_src
