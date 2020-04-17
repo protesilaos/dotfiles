@@ -834,7 +834,7 @@ instead."
     (let ((symbol (symbol-at-point)))
       (when symbol
         (describe-symbol symbol)))
-    (when current-prefix-arg
+    (when arg
       (let ((help (get-buffer-window "*Help*")))
         (when help
           (if (not (eq (selected-window) help))
@@ -861,8 +861,7 @@ key in `completion-list-mode-map'."
          ("s-h" . prot/describe-symbol-at-point)
          ("s-H" . (lambda ()
                     (interactive)
-                    (let ((current-prefix-arg t))
-                      (prot/describe-symbol-at-point))))
+                    (prot/describe-symbol-at-point '(4))))
          ("s-v" . prot/focus-minibuffer-or-completions)
          :map completion-list-mode-map
          ("h" . prot/describe-symbol-at-point)
@@ -961,7 +960,7 @@ current buffer and switch focus back to the minibuffer."
                (bound-and-true-p icomplete-mode))
       (icomplete-force-complete)
       (kill-new (field-string-no-properties))
-      (when current-prefix-arg
+      (when arg
         (kill-new (field-string-no-properties))
         (select-window (get-mru-window))
         (insert (car kill-ring))
@@ -1013,13 +1012,11 @@ Bind this in `minibuffer-local-filename-completion-map'."
               ("M-o w" . prot/icomplete-kill-ring-save)
               ("M-o i" . (lambda ()
                            (interactive)
-                           (let ((current-prefix-arg t))
-                             (prot/icomplete-kill-ring-save))))
+                           (prot/icomplete-kill-ring-save '(4))))
               ("C-," . prot/icomplete-toggle-completion-styles) ; toggle flex
               ("C-." . (lambda ()                               ; toggle basic
                          (interactive)
-                         (let ((current-prefix-arg t))
-                           (prot/icomplete-toggle-completion-styles))))))
+                         (prot/icomplete-toggle-completion-styles '(4))))))
 #+end_src
 
 **** Icomplete vertical mode
