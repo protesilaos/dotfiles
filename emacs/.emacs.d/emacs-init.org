@@ -1281,7 +1281,8 @@ understand how these fit into the broader framework.
 I yanked =contrib/completing-read-in-region= straight from Omar Antolín
 Camarena's [[https://github.com/oantolin/emacs-config][dotemacs repo]].  It provides a minibuffer-completion interface
 to the standard tab-completion mechanism (also check what I have on the
-topic of [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the TAB key]]).
+topic of [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the TAB key]]).  It also does the same for
+=dabbrev-completion= (see next section).
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -1318,6 +1319,9 @@ technology).
 With =dabbrev-expand= we make an attempt to complete the text at point.
 Repeated invocations will cycle through the candidates.  No feedback is
 provided, much in the same way yanking from the kill-ring works.
+Whereas =dabbrev-completion= benefits from minibuffer interactivity,
+courtesy of =contrib/completing-read-in-region= that was defined in the
+section right above.
 
 The =dabbrev-abbrev-char-regexp= is configured to match both regular words
 and symbols (e.g. words separated by hyphens).  This makes it suitable
@@ -1348,7 +1352,9 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
   (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines nil)
   (setq dabbrev-upcase-means-case-search t)
-  :bind (("M-/" . dabbrev-expand)))
+  :bind (("M-/" . dabbrev-expand)
+         ("C-M-/" . dabbrev-completion)
+         ("s-/" . dabbrev-completion)))
 #+end_src
 
 **** Skeletons and abbreviations
