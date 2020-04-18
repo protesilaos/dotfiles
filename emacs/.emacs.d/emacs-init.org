@@ -890,9 +890,9 @@ Overview of the following package declaration:
 + My =prot/icomplete-kill-or-insert-candidate= is a simple yet super
   effective tool that I bind to a couple of key chords.  With =M-o w= you
   copy the current candidate to the kill ring.  So you can use that
-  symbol at a later point.  While =M-o i= will kill the candidate but also
-  insert it at the point of the most recently used buffer (the one that
-  originally called the minibuffer).
+  symbol at a later point.  While =M-o i= will avoid killing the candidate
+  and instead insert it at the point of the most recently used buffer
+  (the one that originally called the minibuffer).
 + With =prot/icomplete-insert-candidate-and-exit= we can insert the
   candidates directly at point and exit the minibuffer immediately.
   Bound to =M-o j= and considered complementary to the above.
@@ -959,20 +959,20 @@ later!
 
   (defun prot/icomplete-kill-or-insert-candidate (&optional arg)
     "Place the matching candidate to the top of the `kill-ring'.
-With \\[universal-argument] also insert the candidate in the most
+With \\[universal-argument] insert the candidate in the most
 recently used buffer, while keeping focus on the minibuffer.
 
 Bind this function in `icomplete-minibuffer-map'."
     (interactive "*P")
-    (when (and (minibufferp)
-               (bound-and-true-p icomplete-mode))
-      (kill-new (car completion-all-sorted-completions))
-      (when arg
-        (save-excursion
-          (kill-new (car completion-all-sorted-completions))
-          (select-window (get-mru-window))
-          (yank)
-          (prot/focus-minibuffer)))))
+    (let ((candidate (car completion-all-sorted-completions)))
+      (when (and (minibufferp)
+                 (bound-and-true-p icomplete-mode))
+        (if arg
+            (save-excursion
+              (select-window (get-mru-window))
+              (insert candidate)
+              (prot/focus-minibuffer))
+          (kill-new candidate)))))
 
   (defun prot/icomplete-insert-candidate-and-exit ()
     "Insert candidate in most recently used buffer and exit.
@@ -1288,14 +1288,21 @@ topic of [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the T
 (use-package emacs
   :after (minibuffer icomplete icomplete-vertical) ; review those first
   :config
-  (defun contrib/completing-read-in-region (start end collection &optional predicate)
-    (let* ((completion-styles '(flex orderless initials substring partial-completion))
-           (completion
-            (icomplete-vertical-do ()
-              (completing-read "Completion: " collection predicate t
-                               (buffer-substring-no-properties start end)))))
-      (delete-region start end)
-      (insert completion)))
+   (defun contrib/completing-read-in-region (start end collection &optional predicate)
+     "Prompt for completion of region in the minibuffer if non-unique.
+   Use as a value for `completion-in-region-function'."
+     (let* ((initial (buffer-substring-no-properties start end))
+            (all (completion-all-completions initial collection predicate
+                                             (length initial)))
+            (completion (cond
+                         ((atom all) nil)
+                         ((and (consp all) (atom (cdr all))) (car all))
+                         (t (completing-read "Completion: "
+                                             collection predicate t initial)))))
+       (if (null completion)
+           (message "No completions")
+         (delete-region start end)
+         (insert completion))))
 
   (setq completion-in-region-function #'contrib/completing-read-in-region))
 #+end_src
