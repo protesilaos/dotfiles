@@ -4846,7 +4846,8 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
           modus-operandi-theme-subtle-diffs t
           modus-operandi-theme-distinct-org-blocks nil
           modus-operandi-theme-proportional-fonts nil
-          modus-operandi-theme-scale-headings t
+          modus-operandi-theme-rainbow-headings t
+          modus-operandi-theme-scale-headings nil
           modus-operandi-theme-scale-1 1.05
           modus-operandi-theme-scale-2 1.1
           modus-operandi-theme-scale-3 1.15
@@ -4862,7 +4863,8 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
           modus-vivendi-theme-subtle-diffs t
           modus-vivendi-theme-distinct-org-blocks nil
           modus-vivendi-theme-proportional-fonts nil
-          modus-vivendi-theme-scale-headings t
+          modus-vivendi-theme-rainbow-headings t
+          modus-vivendi-theme-scale-headings nil
           modus-vivendi-theme-scale-1 1.05
           modus-vivendi-theme-scale-2 1.1
           modus-vivendi-theme-scale-3 1.15
