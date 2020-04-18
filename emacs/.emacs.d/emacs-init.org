@@ -887,22 +887,20 @@ Overview of the following package declaration:
   want to introduce some delay in the feedback I get when the list of
   candidates is long.  This makes things feel faster while I am still
   typing.
-+ My =prot/icomplete-kill-or-insert-candidate= is a simple yet super
-  effective tool that I bind to a couple of key chords.  With =M-o w= you
-  copy the current candidate to the kill ring.  So you can use that
-  symbol at a later point.  While =M-o i= will avoid killing the candidate
-  and instead insert it at the point of the most recently used buffer
-  (the one that originally called the minibuffer).
-+ With =prot/icomplete-insert-candidate-and-exit= we can insert the
-  candidates directly at point and exit the minibuffer immediately.
-  Bound to =M-o j= and considered complementary to the above.
++ My =prot/icomplete-kill-or-insert-candidate= is a simple yet effective
+  tool that I bind to three key chords.  With =M-o w= you copy the current
+  candidate to the kill ring and continue with the minibuffer session.
+  With =M-o i= you insert the candidate in the buffer from where the
+  minibuffer was called, without appending to the kill ring, while still
+  keeping the session active.  And =M-o j= will insert the candidate in
+  the same way and immediately exit all recursive edits.
 + I find =prot/icomplete-toggle-completion-styles= to be helpful as a
   means of changing the list of candidates, usually for the purposes of
   reducing it in length.  Useful when running the various help functions
   of =C-h v=, =C-h f=, =C-h o=.  Combine it with =icomplete-force-complete=,
   bound to the tab key, to update the list for the given input.
 + I got the incredibly useful =contrib/icomplete-remove-directory-path=
-  from [[https://old.reddit.com/r/emacs/comments/g0cl4w/icompletevertical_a_package_to_display_icomplete/fna35l5/][this thread on r/emacs by user oantolin]].
+  from [[https://github.com/oantolin/emacs-config][Omar Antolín Camarena's emacs config]].
 + For versions of Emacs above 27, there is a mode called =fido= (Fake IDO,
   where =ido= is an alternative option to Icomplete that tries to do more
   than just completion).  This new mode changes some of the primary key
@@ -918,12 +916,12 @@ Overview of the following package declaration:
   therefore repurposed for my extensions.
 + Note the nuances in the behaviour between =RET=, =C-j,= and =C-m=.  With the
   Return key, we tell Icomplete to expand the current candidate and then
-  exit the minibuffer.  Whereas the other two are intended for inserting
-  /exactly/ what you have typed in.  =C-j= is more forceful and will work in
-  scenaria where =C-m= will not (check the docstrings of the commands they
-  call): the differences are noticeable in edge cases though.  Use them
-  when Icomplete is matching =foobar= but you only want =foo= (needed when
-  renaming files and the like).
+  exit the minibuffer if possible.  Whereas the other two are intended
+  for inserting /exactly/ what you have typed in.  =C-j= is more forceful
+  and will work in scenaria where =C-m= will not (check the docstrings of
+  the commands they call).  Use them when Icomplete is matching =foobar=
+  but you only want =foo= (needed when renaming files or when creating
+  links in Org to non-existent candidates).
 
 *Pro tip*: while running =M-x shell= with my settings, you can still benefit
 from the built-in completion mechanisms by means of tab-completion.  Tab
@@ -959,33 +957,27 @@ later!
 
   (defun prot/icomplete-kill-or-insert-candidate (&optional arg)
     "Place the matching candidate to the top of the `kill-ring'.
+This will keep the minibuffer session active.
+
 With \\[universal-argument] insert the candidate in the most
 recently used buffer, while keeping focus on the minibuffer.
+
+With \\[universal-argument] \\[universal-argument] insert the
+candidate and immediately exit all recursive editing levels and
+active minibuffers.
 
 Bind this function in `icomplete-minibuffer-map'."
     (interactive "*P")
     (let ((candidate (car completion-all-sorted-completions)))
       (when (and (minibufferp)
                  (bound-and-true-p icomplete-mode))
-        (if arg
-            (save-excursion
-              (select-window (get-mru-window))
-              (insert candidate)
-              (prot/focus-minibuffer))
-          (kill-new candidate)))))
-
-  (defun prot/icomplete-insert-candidate-and-exit ()
-    "Insert candidate in most recently used buffer and exit.
-Like `prot/icomplete-kill-or-insert-candidate' but immediately
-exits the minibuffer, while it does not add the item to the
-`kill-ring'."
-    (interactive)
-    (let ((cand (car completion-all-sorted-completions)))
-      (when (and (minibufferp)
-                 (bound-and-true-p icomplete-mode))
-        (select-window (get-mru-window))
-        (insert cand)
-        (abort-recursive-edit))))
+        (cond ((eq arg nil)
+               (kill-new candidate))
+              ((= (prefix-numeric-value arg) 4)
+               (with-minibuffer-selected-window (insert candidate)))
+              ((= (prefix-numeric-value arg) 16)
+               (with-minibuffer-selected-window (insert candidate))
+               (top-level))))))
 
   (defun prot/icomplete-toggle-completion-styles (&optional arg)
     "Toggle between flex and default completion styles.
@@ -1025,7 +1017,7 @@ Bind this in `minibuffer-local-filename-completion-map'."
               ("<tab>" . icomplete-force-complete)
               ("<return>" . icomplete-force-complete-and-exit) ; exit with completion
               ("C-m" . minibuffer-complete-and-exit) ; try complete + force current input
-              ("C-j" . exit-minibuffer) ; force current input more aggressively
+              ("C-j" . exit-minibuffer) ; force current input unconditionally
               ("C-n" . icomplete-forward-completions)
               ("<right>" . icomplete-forward-completions)
               ("<down>" . icomplete-forward-completions)
@@ -1037,7 +1029,9 @@ Bind this in `minibuffer-local-filename-completion-map'."
               ("M-o i" . (lambda ()
                            (interactive)
                            (prot/icomplete-kill-or-insert-candidate '(4))))
-              ("M-o j" . prot/icomplete-insert-candidate-and-exit)
+              ("M-o j" . (lambda ()
+                           (interactive)
+                           (prot/icomplete-kill-or-insert-candidate '(16))))
               ("C-," . prot/icomplete-toggle-completion-styles) ; toggle flex
               ("C-." . (lambda ()                               ; toggle basic
                          (interactive)
@@ -1220,7 +1214,8 @@ wisely or prepare to use \\[keyboard-quit]."
                                          (abbreviate-file-name dir)))
                                      contents))
            (subdirs (delete nil find-directories))
-           (completion-styles '(flex initials orderless substring partial-completion))
+           (completion-styles
+            '(flex initials orderless substring partial-completion))
            (orderless-regexp-separator "[/ ]"))
       (icomplete-vertical-do ()
         (dired
@@ -1231,7 +1226,8 @@ wisely or prepare to use \\[keyboard-quit]."
     (interactive)
     (let* ((dir default-directory)
            (files (directory-files-recursively dir ".*" nil t))
-           (completion-styles '(flex initials orderless substring partial-completion))
+           (completion-styles
+            '(flex initials orderless substring partial-completion))
            (orderless-regexp-separator "[/ ]"))
       (icomplete-vertical-do ()
         (find-file
@@ -1288,21 +1284,25 @@ topic of [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the T
 (use-package emacs
   :after (minibuffer icomplete icomplete-vertical) ; review those first
   :config
-   (defun contrib/completing-read-in-region (start end collection &optional predicate)
-     "Prompt for completion of region in the minibuffer if non-unique.
-   Use as a value for `completion-in-region-function'."
-     (let* ((initial (buffer-substring-no-properties start end))
-            (all (completion-all-completions initial collection predicate
-                                             (length initial)))
-            (completion (cond
-                         ((atom all) nil)
-                         ((and (consp all) (atom (cdr all))) (car all))
-                         (t (completing-read "Completion: "
-                                             collection predicate t initial)))))
-       (if (null completion)
-           (message "No completions")
-         (delete-region start end)
-         (insert completion))))
+  (defun contrib/completing-read-in-region (start end collection &optional predicate)
+    "Prompt for completion of region in the minibuffer if non-unique.
+ Use as a value for `completion-in-region-function'."
+    (let* ((initial (buffer-substring-no-properties start end))
+           (all (completion-all-completions initial collection predicate
+                                            (length initial)))
+           (completion (cond
+                        ((atom all) nil)
+                        ((and (consp all) (atom (cdr all))) (car all))
+                        (t (let ((completion-in-region-function
+                                  #'completion--in-region))
+                             (icomplete-vertical-do (:height (/ (window-height) 5))
+                               (completing-read
+                                "Completion: " collection predicate t initial)))))))
+      (if (null completion)
+          (progn (message "No completion") nil)
+        (delete-region start end)
+        (insert completion)
+        t)))
 
   (setq completion-in-region-function #'contrib/completing-read-in-region))
 #+end_src
