@@ -179,7 +179,7 @@ The three types of =use-package= declarations that I use:
 
 In several package declarations you will see a =:diminish= keyword that
 leverages [[#h:b31005e3-c475-4be9-87fd-85b404550d8c][the diminish package]].  This affects the so-called "lighter"
-that each package many define.  The lighter is the piece of text that a
+that each package may define.  The lighter is the piece of text that a
 tool will append to the mode line.  For example, Flyspell's lighter is
 "Fly".  With =:diminish= we demand that the lighter be removed (the
 information is still available when running =C-h m=).
@@ -1220,7 +1220,7 @@ wisely or prepare to use \\[keyboard-quit]."
                                          (abbreviate-file-name dir)))
                                      contents))
            (subdirs (delete nil find-directories))
-           (completion-styles '(flex initials orderless subtring partial-completion))
+           (completion-styles '(flex initials orderless substring partial-completion))
            (orderless-regexp-separator "[/ ]"))
       (icomplete-vertical-do ()
         (dired
@@ -1231,7 +1231,7 @@ wisely or prepare to use \\[keyboard-quit]."
     (interactive)
     (let* ((dir default-directory)
            (files (directory-files-recursively dir ".*" nil t))
-           (completion-styles '(flex initials orderless subtring partial-completion))
+           (completion-styles '(flex initials orderless substring partial-completion))
            (orderless-regexp-separator "[/ ]"))
       (icomplete-vertical-do ()
         (find-file
@@ -5336,9 +5336,9 @@ bulleted and numbered lists.
 
 #+begin_src emacs-lisp
 (use-package emacs
+  :diminish auto-fill-function
   :hook (text-mode . (lambda ()
                        (turn-on-auto-fill)
-                       (delight 'auto-fill-function nil t)
                        (setq adaptive-fill-mode t))))
 #+end_src
 
