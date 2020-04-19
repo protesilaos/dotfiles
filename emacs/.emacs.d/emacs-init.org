@@ -899,8 +899,6 @@ Overview of the following package declaration:
   reducing it in length.  Useful when running the various help functions
   of =C-h v=, =C-h f=, =C-h o=.  Combine it with =icomplete-force-complete=,
   bound to the tab key, to update the list for the given input.
-+ I got the incredibly useful =contrib/icomplete-remove-directory-path=
-  from [[https://github.com/oantolin/emacs-config][Omar Antolín Camarena's emacs config]].
 + For versions of Emacs above 27, there is a mode called =fido= (Fake IDO,
   where =ido= is an alternative option to Icomplete that tries to do more
   than just completion).  This new mode changes some of the primary key
@@ -1003,13 +1001,6 @@ Bind this function in `icomplete-minibuffer-map'."
             (setq-local completion-styles user)
             (message "%s" (propertize "DEFAULT matching" 'face 'highlight)))))))
 
-  (defun contrib/icomplete-remove-directory-path (arg)
-    "Remove sub-directory path in `find-file' or equivalent.
-
-Bind this in `minibuffer-local-filename-completion-map'."
-    (interactive "p")
-    (zap-up-to-char (- arg) ?/))
-
   ;; TODO can registers be inserted via completion?
   ;; TODO can mark-ring positions be selected?
 
@@ -1024,7 +1015,7 @@ Bind this in `minibuffer-local-filename-completion-map'."
               ("C-p" . icomplete-backward-completions)
               ("<left>" . icomplete-backward-completions)
               ("<up>" . icomplete-backward-completions)
-              ("<C-backspace>" . contrib/icomplete-remove-directory-path)
+              ("<C-backspace>" . icomplete-fido-backward-updir) ; Emacs 27.1
               ("M-o w" . prot/icomplete-kill-or-insert-candidate)
               ("M-o i" . (lambda ()
                            (interactive)
@@ -2495,7 +2486,7 @@ via =C-x t r=, though I find I do not use it.
   (tab-bar-history-mode -1)
 
   (defun prot/icomplete-tab-bar-select-tab ()
-    "Use completion to switch to a recent `tab-bar-mode' tab."
+    "Use completion to switch to an other `tab-bar-mode' tab."
     (interactive)
     (let ((tabs (mapcar (lambda (tab)
                           (alist-get 'name tab))
@@ -4812,22 +4803,22 @@ for readability.
 I call this project "Modus themes".  It consists of "Modus Operandi"
 (light theme) and "Modus Vivendi" (dark).  The source code and
 installation instructions are available [[https://gitlab.com/protesilaos/modus-themes][on their GitLab page]].  The list
-of supported packages is comprehensive.
+of supported packages is comprehensive.  There also are *lots of
+customisation options* to tweak the looks of the themes.
 
-The themes are available in the official ELPA repository (latest tagged
-release), MELPA (latest commit to the =master= branch), as well as MELPA
-Stable (latest tag).
-
-They are distributed as /standalone packages/ as of December 1, 2019 under
-the terms of the GNU General Public License.  I did it that way instead
-of publishing them as a single package because I know that people tend
-to use one or the other.  And also due to the fact that one is not a
-prerequisite for the other.  I personally use both, switching between
-them depending on the ambient light in my room.
+The two themes are distributed as /standalone packages/ under the terms of
+the GNU General Public License.  You can find them in the official ELPA
+repository (latest tagged release), MELPA (latest commit to the =master=
+branch), as well as MELPA Stable (latest tag).  Each theme is its own
+package because I know that people tend to use one or the other.  And
+also due to the fact that one is not a prerequisite for the other.  I
+personally use both, switching between on-the-fly by calling
+=prot/modus-themes-toggle=.
 
 Note though that because I am using these themes locally as part of
-their development process, I am not using the ELPA/MELPA packages
-directly.
+their development process, I am not configuring here the ELPA/MELPA
+versions.  So what you see in this =use-package= declaration is a bit
+different than what other users will be using.
 
 Lastly, if you are curious about the underlying methodology, read my
 essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-emacs/][on the design of the Modus themes]] (2020-03-17).
@@ -4846,7 +4837,8 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
           modus-operandi-theme-subtle-diffs t
           modus-operandi-theme-distinct-org-blocks nil
           modus-operandi-theme-proportional-fonts nil
-          modus-operandi-theme-rainbow-headings t
+          modus-operandi-theme-rainbow-headings nil
+          modus-operandi-theme-section-headings t
           modus-operandi-theme-scale-headings nil
           modus-operandi-theme-scale-1 1.05
           modus-operandi-theme-scale-2 1.1
@@ -4863,7 +4855,8 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
           modus-vivendi-theme-subtle-diffs t
           modus-vivendi-theme-distinct-org-blocks nil
           modus-vivendi-theme-proportional-fonts nil
-          modus-vivendi-theme-rainbow-headings t
+          modus-vivendi-theme-rainbow-headings nil
+          modus-vivendi-theme-section-headings t
           modus-vivendi-theme-scale-headings nil
           modus-vivendi-theme-scale-1 1.05
           modus-vivendi-theme-scale-2 1.1
