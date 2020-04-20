@@ -2722,6 +2722,8 @@ Now on to the miscellaneous settings:
           (sequence "STUDY(s)" "|" "STUDIED(S)")
           (sequence "RECORD(r)" "|" "RECORDED(R)")))
   (setq org-fontify-done-headline t)
+  (setq org-fontify-quote-and-verse-blocks t)
+  (setq org-fontify-whole-heading-line t)
   (setq org-enforce-todo-dependencies t)
   (setq org-enforce-todo-checkbox-dependencies t)
   (setq org-track-ordered-property-with-tag t)
@@ -4566,8 +4568,7 @@ What these do:
 
 #+begin_src emacs-lisp
 (use-package shr
-  :commands (eww
-             eww-browse-url)
+  :commands (eww eww-browse-url)
   :config
   (setq browse-url-browser-function 'eww-browse-url)
   (setq shr-use-fonts nil)
@@ -4831,15 +4832,15 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
   (defun prot/modus-operandi ()
     "Enable some `modus-operandi' variables and load the theme."
     (setq modus-operandi-theme-slanted-constructs t
-          modus-operandi-theme-bold-constructs nil
+          modus-operandi-theme-bold-constructs t
           modus-operandi-theme-visible-fringes t
           modus-operandi-theme-3d-modeline t
           modus-operandi-theme-subtle-diffs t
           modus-operandi-theme-distinct-org-blocks nil
           modus-operandi-theme-proportional-fonts nil
-          modus-operandi-theme-rainbow-headings nil
+          modus-operandi-theme-rainbow-headings t
           modus-operandi-theme-section-headings t
-          modus-operandi-theme-scale-headings nil
+          modus-operandi-theme-scale-headings t
           modus-operandi-theme-scale-1 1.05
           modus-operandi-theme-scale-2 1.1
           modus-operandi-theme-scale-3 1.15
@@ -4849,15 +4850,15 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
   (defun prot/modus-vivendi ()
     "Enable some `modus-vivendi' variables and load the theme."
     (setq modus-vivendi-theme-slanted-constructs t
-          modus-vivendi-theme-bold-constructs nil
+          modus-vivendi-theme-bold-constructs t
           modus-vivendi-theme-visible-fringes t
           modus-vivendi-theme-3d-modeline t
           modus-vivendi-theme-subtle-diffs t
           modus-vivendi-theme-distinct-org-blocks nil
           modus-vivendi-theme-proportional-fonts nil
-          modus-vivendi-theme-rainbow-headings nil
+          modus-vivendi-theme-rainbow-headings t
           modus-vivendi-theme-section-headings t
-          modus-vivendi-theme-scale-headings nil
+          modus-vivendi-theme-scale-headings t
           modus-vivendi-theme-scale-1 1.05
           modus-vivendi-theme-scale-2 1.1
           modus-vivendi-theme-scale-3 1.15
@@ -5040,25 +5041,10 @@ the looks of the mode line, though I do not want that.
     :CUSTOM_ID: h:6fb900e3-49db-4bc3-8a9e-cd88e020f15b
     :END:
 
-This is a built-in mode that allows us to display configurable (and
-theme-able) window dividers.  Whereas the default is to draw a single
-pixel line using the primary foreground value of the current theme.
-
-The configurations below produce virtually the same results as with the
-generic window border, only the colour of the divider is less intense
-(has a grey colour compared to pure white/black).  Here is an excerpt of
-what I had to write about it in [[https://gitlab.com/protesilaos/modus-themes/commit/373178f8753ff9f2e90a751f2feb777743898dbb][commit 373178f8 to my Modus themes]]:
-
-#+begin_quote
-The default width of the divider is 6 pixels.  The first and last pixels
-are meant as narrow outlines that are drawn in a slightly more intense
-colour than the remaining 4 inner pixels.
-
-Due to the possibility of adjusting the thickness of the divider, plus
-the generous default width, the colours I have chosen are less intense
-than those used in the default window border (those are black on white
-and vice versa, as per the value of the `default' face).
-#+end_quote
+This is a built-in mode that draws vertical window borders in a slightly
+different way than the default, which I find more consistent.  Only
+using it because of that, though it can also adjust the side of the
+borders as well as their placement.
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -5813,7 +5799,6 @@ A prompt will ask for the register to operate on."
       (setq register-separator ?+)
       (set-register register-separator "\n\n")
       (append-to-register prompt start end nil)))
-
 
   (defun prot/prepend-register-space-separator (start end)
     "Prepend region to register with space in between entries.
