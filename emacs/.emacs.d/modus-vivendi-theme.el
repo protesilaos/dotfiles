@@ -445,6 +445,14 @@ FG is used when no block style is in effect."
       (list :background bgbox :foreground fgbox :box (list :color fgbox))
     (list :foreground fg)))
 
+(defun modus-vivendi-theme-org-src-block (bgsrc bg)
+  "Conditionally set the styles of Org source blocks.
+BGSRC applies to a distinct background.  BG is used to keep
+blocks the same background as the rest of the buffer."
+  (if modus-vivendi-theme-distinct-org-blocks
+      (list :background bgsrc :extend t)
+    (list :background bg)))
+
 (defun modus-vivendi-theme-modeline-box (col3d col &optional btn int)
   "Control the box properties of the mode line.
 COL3D is the border that is intended for the three-dimensional modeline.
@@ -1620,12 +1628,12 @@ AMOUNT is a customisation option."
    `(geiser-font-lock-xref-header ((,class (:weight bold))))
    `(geiser-font-lock-xref-link ((,class (:inherit link))))
    ;;;; git-commit
-   `(git-commit-comment-action ((,class (:foreground ,fg-special-calm))))
-   `(git-commit-comment-branch-local ((,class (:foreground ,cyan))))
-   `(git-commit-comment-branch-remote ((,class (:foreground ,blue))))
-   `(git-commit-comment-detached ((,class (:foreground ,yellow))))
-   `(git-commit-comment-file ((,class (:foreground ,blue))))
-   `(git-commit-comment-heading ((,class (:foreground ,fg-main :weight bold))))
+   `(git-commit-comment-action ((,class (:foreground ,fg-special-calm :slant ,modus-theme-slant))))
+   `(git-commit-comment-branch-local ((,class (:foreground ,cyan :slant ,modus-theme-slant))))
+   `(git-commit-comment-branch-remote ((,class (:foreground ,blue :slant ,modus-theme-slant))))
+   `(git-commit-comment-detached ((,class (:foreground ,yellow :slant ,modus-theme-slant))))
+   `(git-commit-comment-file ((,class (:foreground ,blue :slant ,modus-theme-slant))))
+   `(git-commit-comment-heading ((,class (:foreground ,fg-main :weight bold :slant ,modus-theme-slant))))
    `(git-commit-keyword ((,class (:foreground ,magenta))))
    `(git-commit-known-pseudo-header ((,class (:foreground ,fg-special-warm :weight bold))))
    `(git-commit-nonempty-second-line ((,class (:inherit modus-theme-refine-yellow :weight bold))))
@@ -2388,9 +2396,7 @@ AMOUNT is a customisation option."
                                              :foreground ,fg-special-mild
                                              ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-3)))))
    `(org-archived ((,class (:background ,bg-alt :foreground ,fg-alt))))
-   `(org-block ((,class (,@(and (>= emacs-major-version 27) '(:extend t))
-                         :background ,(if modus-vivendi-theme-distinct-org-blocks bg-dim bg-main)
-                         :foreground ,fg-main))))
+   `(org-block ((,class (,@(modus-vivendi-theme-org-src-block bg-dim bg-main) :foreground ,fg-main))))
    `(org-block-begin-line ((,class (,@(and (>= emacs-major-version 27)
                                            modus-vivendi-theme-distinct-org-blocks
                                            '(:extend t))
@@ -2465,7 +2471,8 @@ AMOUNT is a customisation option."
    `(org-mode-line-clock ((,class (:background ,bg-main :foreground ,fg-main))))
    `(org-mode-line-clock-overrun ((,class (:inherit modus-theme-active-red))))
    `(org-priority ((,class (:foreground ,magenta))))
-   `(org-quote ((,class (:inherit org-block :foreground ,fg-special-cold))))
+   `(org-quote ((,class (,@(modus-vivendi-theme-org-src-block bg-dim bg-main)
+                         :foreground ,fg-special-cold :slant ,modus-theme-slant))))
    `(org-scheduled ((,class (:foreground ,fg-special-cold))))
    `(org-scheduled-previously ((,class (:foreground ,fg-special-warm))))
    `(org-scheduled-today ((,class (:foreground ,yellow-alt-other))))
