@@ -4465,8 +4465,8 @@ be confused with the [[#h:2c1966a1-bf33-4fe3-ac45-9f31158efd9b][command line she
 are basically alien to the rest of the Emacs milieu: they do not reuse
 standard key bindings like =C-n=.
 
-*Only use call those if you absolutely need one AND you have no access
-to either Vterm or a standalone, fully fledged terminal emulator*.
+*Only call those if you absolutely need them AND you have no access to
+either Vterm or a standalone, fully fledged terminal emulator*.
 
 As far as I can tell, based on reading the comments in =term.el= and
 elsewhere in the docs, the major difference between =term= and
@@ -5563,9 +5563,6 @@ patches to.
     :PROPERTIES:
     :CUSTOM_ID: h:d0f76937-4f54-401c-aae8-ffadf8697357
     :END:
-    :PROPERTIES:
-    :CUSTOM_ID: h:64cd5da9-93e8-4ba6-be98-50091580a838
-    :ND:
 
 When editing elisp, this mode will display useful information about the
 construct at point in the echo area.  For functions it will display the
