@@ -2278,7 +2278,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (side . bottom)
            (slot . 0)
            (window-parameters . ((no-other-window . t))))
-          ("\\*e?shell.*"
+          ("^\\(\\*e?shell\\|vterm\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . bottom)
@@ -4337,29 +4337,36 @@ examined further.
    :PROPERTIES:
    :CUSTOM_ID: h:0df1db3a-30ee-43e5-9086-92951a58164f
    :END:
-*** Shell (M-x shell)
+
+It should come to no surprise that Emacs can operate as both a /terminal
+emulator for command line shells/ and /toolkit for terminal emulators/.
+The present section covers both cases.
+
+*** Command-line shells
     :PROPERTIES:
-    :CUSTOM_ID: h:98804f0d-f2dd-41a4-b8df-c1bd04ef7f7a
+    :CUSTOM_ID: h:2c1966a1-bf33-4fe3-ac45-9f31158efd9b
     :END:
 
-This is a shell (Bash, in my case) that runs inside of Emacs.  Unlike
-=term= (see next section), this one can use standard Emacs keys and
-behaves like an ordinary buffer.  The one area where it differs
-substantially from ordinary buffers is with regard to the command
-prompt: you can re-run a command on the scroll-back buffer by just
-hitting =RET= while point is on its line (no need to go back to the end
-and cycle the command history with =M-p= or =M-n=).
+**** Shell (M-x shell)
+     :PROPERTIES:
+     :CUSTOM_ID: h:98804f0d-f2dd-41a4-b8df-c1bd04ef7f7a
+     :END:
 
-Note that I am well aware of =eshell=.  I read the manual and checked lots
-of configurations about it.  I still do not see a major improvement over
-Bash, notwithstanding the significant downside of having to learn the
-idiosyncrasies of yet another tool.  Besides, many of the features of
-=eshell= are already available inside of Emacs and are accessible via more
-appropriate interfaces (e.g. =find-file= or =dired= powered by a completion
-framework like the one I specify in a previous section of this document
-about [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]]).  The shell has to behave
-consistently whether I run it inside of Emacs, in Xterm, or just a TTY.
-Everything else introduces friction.
+This is a shell (Bash, in my case) that runs inside of Emacs.  Unlike
+the [[#h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2][terminal emulators defined below]], this one can use standard Emacs
+keys and behaves much like an ordinary buffer.  It also integrates
+nicely with the built-in completion tools, which makes it particularly
+nice to work with (see [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]]).
+
+The one area where this Shell differs substantially from ordinary
+buffers is with regard to the command prompt: you can re-run a command
+on the scroll-back buffer by just hitting =RET= while point is on its line
+(no need to go back to the end and cycle the command history with =M-p= or
+=M-n=).
+
+Another peculiarity relative to the standard commands in the terminal is
+to search backward through your history with =M-r= (whereas in a terminal
+emulator you use =C-r=).
 
 Run =C-h m= inside of a shell buffer to learn about all the key bindings
 and corresponding functions.
@@ -4371,7 +4378,7 @@ and corresponding functions.
   (setq ansi-color-for-comint-mode t)
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
 
-  (defun prot/shell-multi ()
+  (defun prot/shell-multi ()             ; TODO review
     "Spawn a new instance of `shell' and give it a unique name
 based on the directory of the current buffer."
     (interactive)
@@ -4386,18 +4393,80 @@ based on the directory of the current buffer."
          ("<s-S-return>" . prot/shell-multi)))
 #+end_src
 
-*** Terminal emulators
+**** Eshell (like M-x shell but in elisp)
+     :PROPERTIES:
+     :CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
+     :END:
+
+/WORK IN PROGRESS 2020-04-21/
+
+#+begin_src emacs-lisp
+(use-package eshell
+  :commands eshell)
+#+end_src
+
+*** Terminals inside of Emacs
     :PROPERTIES:
     :CUSTOM_ID: h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2
     :END:
 
-=term= and =ansi-term= are /terminal emulators/ like Xterm.  Not to be
-confused with command line shells such as Bash.  They run inside of
-Emacs but are basically alien to the rest of the Emacs milieu: they do
-not reuse standard key bindings like =C-y=.
+**** Vterm terminal emulator
+     :PROPERTIES:
+     :CUSTOM_ID: h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2
+     :END:
 
-*Only use those if you absolutely need one AND you have no access to a
-standalone, fully fledged terminal emulator*.
+The [[#h:87b40f59-0e11-48bc-8120-40026ebaf8a4][built-in terminal emulators]] are not up to par with the likes of
+Xterm and its peers. Perhaps they were a good compromise in yester
+years, but we have come to expect better from our system.  Thankfully
+there is a package that /might/ eventually makes its way into Emacs
+proper, provided all legal requirements are met.  This is Vterm, which
+is an implementation of the external =libvterm= library (and which
+requires =cmake= in order to be compiled).
+
+Vterm is a fully fledged terminal emulator (not mere shell) inside of
+Emacs.  Its main differences with [[#h:98804f0d-f2dd-41a4-b8df-c1bd04ef7f7a][Shell (M-x shell)]] can be summarised
+thus:
+
++ Vterm can handle graphics and ANSI escape sequences.  Shell cannot.
++ Shell behaves more like an ordinary Emacs buffer.  Vterm is like an
+  external application that has been embedded in the Emacs frame.
++ Vterm does tab-completion like a standard terminal.  Shell can use the
+  Emacs completion framework.  To make this concrete, with Vterm if you
+  type =cd G <tab>= it expands the =Git= subdirectory.  Whereas in Shell
+  with my completion framework (and tweaks) I can do =cd G/P/m-t <tab>= to
+  expand to =cd Git/Projects/modus-themes/=.
+
+My workflow is to keep the Shell as my main conduit to the command line,
+such as for when I need to call one of my scripts, and only use Vterm
+when I really need a CLI tool that is likely to produce graphical
+artifacts.
+
+#+begin_src emacs-lisp
+(use-package vterm
+  :ensure t
+  :commands vterm
+  :config
+  (setq vterm-disable-bold-font nil)
+  (setq vterm-disable-inverse-video nil)
+  (setq vterm-disable-underline nil)
+  (setq vterm-kill-buffer-on-exit nil)
+  (setq vterm-max-scrollback 9999)
+  (setq vterm-shell "/bin/bash")
+  (setq vterm-term-environment-variable "xterm-256color"))
+#+end_src
+
+**** Built-in terminals (fallback option)
+     :PROPERTIES:
+     :CUSTOM_ID: h:87b40f59-0e11-48bc-8120-40026ebaf8a4
+     :END:
+
+=term= and =ansi-term= are built-in /terminal emulators/ [[#h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2][like Vterm]].  Not to
+be confused with the [[#h:2c1966a1-bf33-4fe3-ac45-9f31158efd9b][command line shells]].  They run inside of Emacs but
+are basically alien to the rest of the Emacs milieu: they do not reuse
+standard key bindings like =C-n=.
+
+*Only use call those if you absolutely need one AND you have no access
+to either Vterm or a standalone, fully fledged terminal emulator*.
 
 As far as I can tell, based on reading the comments in =term.el= and
 elsewhere in the docs, the major difference between =term= and
@@ -4408,12 +4477,12 @@ other options in the Emacs space (e.g. with =C-u M-x shell=).
 
 #+begin_src emacs-lisp
 (use-package term
-  :commands term
+  :commands (term ansi-term)
   :config
   (setq term-buffer-maximum-size 9999)
   (setq term-completion-autolist t)
   (setq term-completion-recexact t)
-  (setq term-scroll-to-bottom-on-output t))
+  (setq term-scroll-to-bottom-on-output nil))
 #+end_src
 
 ** Proced (process monitor, similar to `top')
