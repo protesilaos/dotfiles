@@ -4819,7 +4819,9 @@ personally use both, switching between on-the-fly by calling
 Note though that because I am using these themes locally as part of
 their development process, I am not configuring here the ELPA/MELPA
 versions.  So what you see in this =use-package= declaration is a bit
-different than what other users will be using.
+different than what others will be using.  Also note that the values I
+set for these variables are not indicative of my preferences: I try
+different combinations to test things across a range of scenaria.
 
 Lastly, if you are curious about the underlying methodology, read my
 essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-emacs/][on the design of the Modus themes]] (2020-03-17).
@@ -4830,7 +4832,8 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
   (setq custom-safe-themes t)
 
   (defun prot/modus-operandi ()
-    "Enable some `modus-operandi' variables and load the theme."
+    "Enable some Modus Operandi variables and load the theme.
+This is used internally by `prot/modus-themes-toggle'."
     (setq modus-operandi-theme-slanted-constructs t
           modus-operandi-theme-bold-constructs t
           modus-operandi-theme-visible-fringes t
@@ -4848,7 +4851,8 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
     (load-theme 'modus-operandi t))
 
   (defun prot/modus-vivendi ()
-    "Enable some `modus-vivendi' variables and load the theme."
+    "Enable some Modus Vivendi variables and load the theme.
+This is used internally by `prot/modus-themes-toggle'."
     (setq modus-vivendi-theme-slanted-constructs t
           modus-vivendi-theme-bold-constructs t
           modus-vivendi-theme-visible-fringes t
@@ -4870,8 +4874,7 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
     :type 'hook)
 
   (defun prot/modus-themes-toggle ()
-    "Toggle between `modus-operandi' and `modus-vivendi' themes.
-
+    "Toggle between `prot/modus-operandi' and `prot/modus-vivendi'.
 Also run `prot/modus-themes-toggle-hook'."
     (interactive)
     (if (eq (car custom-enabled-themes) 'modus-operandi)
@@ -4879,19 +4882,7 @@ Also run `prot/modus-themes-toggle-hook'."
       (prot/modus-operandi))
     (run-hooks 'prot/modus-themes-toggle-hook))
 
-  (defun prot/describe-face (pos)
-    "Print message with name of face at point.
-
-A lightweight alternative to `what-cursor-position' and its
-prefixed variant."
-    (interactive "d")
-    (let ((face (or (get-char-property pos 'face)
-                    (get-char-property pos 'read-cf-name))))
-      (message "%s" (or face
-                        "No face at point"))))
-
-  :bind (("<f5>" . prot/modus-themes-toggle)
-         ("s-=" . prot/describe-face))
+  :bind ("<f5>" . prot/modus-themes-toggle)
   :hook (after-init . prot/modus-operandi))
 #+end_src
 
