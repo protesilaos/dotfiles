@@ -2553,8 +2553,6 @@ aspect of my computing inside of Emacs.
    :CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
    :END:
 
-/WORK IN PROGRESS 2020-03-27/
-
 Some basic settings for this tool.  It is used by the diary (next
 section), as well as all Org-mode facilities that require date/time
 input (see following sections).
@@ -2582,11 +2580,10 @@ input (see following sections).
    :CUSTOM_ID: h:b07e88e2-c822-4ca0-aeb5-894a208139a7
    :END:
 
-/WORK IN PROGRESS 2020-03-27/
-
 Emacs comes with a built-in facility to record tasks and create
 notifications for them.  It is simply called =diary=.  I am still
-assessing its overall utility in my workflow.
+assessing its overall utility in my workflow, though these
+configurations should be good enough at this stage.
 
 #+begin_src emacs-lisp
 (use-package diary-lib
@@ -2647,7 +2644,7 @@ depend on.  Here is an overview:
   is defined in a [[#h:847477fe-ef86-4e12-a2da-6c431528da99][subsequent section]].  Here we just declare the default
   file system paths for searching for relevant files.  The "notes" file
   is meant as a fallback option for when =org-capture= has not been given
-  a file to write at (also see the [[#h:7b88b89a-6eb3-4da3-a9fe-0e447300a250][org-capture section]]).
+  a file to write to (also see the [[#h:7b88b89a-6eb3-4da3-a9fe-0e447300a250][org-capture section]]).
 + Re-filing items :: This is done with =C-c C-w= which then prompts us for
   a heading under which the current item should be positioned.  I set my
   Org agenda files as one possible target and the current buffer as the
@@ -2683,17 +2680,16 @@ Now on to the miscellaneous settings:
 + The =return= key should never follow a link because I sometimes call it
   by accident.  Use =C-c C-o= instead.
 + The =org-store-link= is one of the nicest additions.  Use it to store a
-  direct link to the heading at point.  Then invoke =C-c C-l= with or
-  without an active region, to create a link to that location (when the
-  region is active, its text will be used for the link, subject to
-  confirmation and further editing).  This is how I create the various
-  internal links that point to other parts of this document.
+  direct link to the heading you are currently under.  Then you can
+  invoke =C-c C-l= with or without an active region, to create a link to
+  that location (when the region is active, its text will be used for
+  the link, subject to confirmation and further editing).  This is how I
+  create the various internal links that point to other parts of this
+  document.
 + With =org-loop-over-headlines-in-active-region= we can perform actions
   such as tagging and scheduling on the items within the active region.
   I configure it to only apply to headings of the same level, in order
   to avoid possible inconveniences.
-
-/2020-02-07: WORK IN PROGRESS/
 
 #+begin_src emacs-lisp
 (use-package org
@@ -2876,7 +2872,7 @@ The =org-agenda= is not just a single interface.  It rather is your
 conduit to a set of utilities from where you can keep track of all the
 tasks you have written in the files declared as part of =org-agenda-files=
 (see its value in the [[#h:b95d0798-1cc5-4083-8728-f6a51ddbc531][section that covers the base Org configurations]]).
-Invoking =org-agenda= will present you with a list of possible options.
+Calling =org-agenda= will present you with a list of possible options.
 Here is a primer (there are many more functions documented in the
 manual):
 
@@ -2885,7 +2881,7 @@ manual):
   to a heading use =C-c C-s= or =C-c C-d= respectively.
 + The =t= will list all your tasks, regardless of whether they have a date
   assigned to them.  You can then filter by keyword, regular expression,
-  etc.
+  etc.  Check the top of the buffer for information on how to do that.
 + And the =n= will offer you a combined view of the above.
 
 Now a few words about some of my customisations (remember to use Emacs'
@@ -2893,11 +2889,12 @@ documentation facilities over each item, such as =C-h v=):
 
 + Always ask for confirmation when hitting =C-k= from the agenda views.
   That command removes the entry in the original file.
-+ I do not use the built-in =diary= and am generally not interested in
-  meticulous time tracking, the 'special' day of X, etc.  It is the kind
-  of busywork that has no place in my simple, as-stress-free-as-possible
-  life.  The Org manual suggests that we can use the diary functionality
-  to /“keep track of anniversaries, lunar phases, sunrise/set”/.  Sure…
++ I do not make heavy use of the built-in =diary= and am generally not
+  interested in meticulous time tracking, the 'special' day of X, etc.
+  It is the kind of busywork that has no place in my simple,
+  as-stress-free-as-possible life.  The Org manual suggests that we can
+  use the diary functionality to /“keep track of anniversaries, lunar
+  phases, sunrise/set”/.  Sure…
 + Show all dates in the current view, including those that have no
   entries.  I find it easier that way to assess how far apart the tasks
   are.
@@ -5125,11 +5122,11 @@ They can be used to show status-related or contextual feedback such as
 line truncation indicators, continuation lines, code linting markers,
 etc.
 
-The default fringe width is 8 pixels on either side, which I approve of.
-The value of the =fringe-mode= I define below allows us to control each
-side independently.  In practice, I could use a single number to apply
-it to both sides, but this way is better for raising awareness of the
-possibility.
+The default fringe width (=nil=) is 8 pixels on either side, which I
+approve of.  It is possible to set the value of the =fringe-mode= to
+something like ='(10 . 5)= which applies the varied width to the left and
+right side respectively.  Otherwise, we can use a single integer that
+controls both sides.
 
 The use of =setq-default= is necessary, otherwise these values become
 buffer-local.
@@ -5137,7 +5134,7 @@ buffer-local.
 #+begin_src emacs-lisp
 (use-package fringe
   :config
-  (fringe-mode '(8 . 8))
+  (fringe-mode nil)
   (setq-default fringes-outside-margins nil)
   (setq-default indicate-buffer-boundaries nil)
   (setq-default indicate-empty-lines nil)
@@ -5290,7 +5287,7 @@ that is so pertinent to presentations.
     (if olivetti-mode
         (progn
           (olivetti-mode -1)
-          (fringe-mode '(8 . 8))
+          (fringe-mode nil)             ; Use default width
           (prot/fonts-per-monitor))
       (olivetti-mode 1)
       (fringe-mode '(0 . 0))
