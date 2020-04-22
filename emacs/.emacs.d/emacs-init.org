@@ -3544,15 +3544,18 @@ Gnus is in an unplugged state.
      :CUSTOM_ID: h:81c48313-97a3-49bb-af2b-a273db31c331
      :END:
 
-In Gnus parlance the "article" is the window that contains the summary's
-news/email currently selected item.  This has its own major mode, which
-is great for us: we can define key bindings that only apply when the
-article is in focus.
+In Gnus parlance, the "article" is the window that contains the content
+of the summary's selected item.  This has its own major mode, which is
+great for us: we can define behaviours and key bindings that only apply
+when the article is in focus.
 
 I have no particular interest in the HTML-related variables, because I
-practically never have to read any such messages.  As a general rule,
-email that can only be read in HTML is likely spam or annoying enough to
-be treated as such.
+practically never have to read such messages.  As a general rule, email
+that can only be read in HTML is likely spam or annoying enough to be
+treated as such.
+
+With regard to images, I prefer to inhibit any inline items.  If I need
+to see it, I can always call =gnus-article-show-images=.
 
 Note that =gnus-article-sort-functions= requires the most important
 function to be declared last.
@@ -3561,9 +3564,14 @@ With regard to the key bindings, I have redefined some of the existing
 ones to suit my workflow and better match my intuitions.  For example,
 in the Article view, hitting =s= takes you to the Summary buffer.  I find
 that to be a waste, since we can already move between buffers with
-standard keys.  Instead, The =s= can be used to save the attachment at
+standard keys.  Instead, the =s= can be used to save the attachment at
 point.  Similarly, I want =o= to behave just like in =dired=, where it opens
 the attachment at point (MIME part) in another buffer.
+
+Finally, here is a tip that I do not configure as I always prefer a
+manual check: when you receive someone's public PGP key, you can mark it
+and =epa-import-keys-region= (though I should probably write a function
+for this task).
 
 #+begin_src emacs-lisp
 (use-package gnus-art
@@ -3580,7 +3588,7 @@ the attachment at point (MIME part) in another buffer.
   (setq gnus-html-frame-width 80)
   (setq gnus-html-image-automatic-caching t)
   (setq gnus-inhibit-images t)
-  (setq gnus-max-image-proportion 0.3)
+  (setq gnus-max-image-proportion 0.7)
   (setq gnus-treat-display-smileys nil)
   (setq gnus-article-mode-line-format "%G %S %m")
   (setq gnus-visible-headers
@@ -3589,6 +3597,7 @@ the attachment at point (MIME part) in another buffer.
           "^X-Mailer:"))
   (setq gnus-sorted-header-list gnus-visible-headers)
   :bind (:map gnus-article-mode-map
+              ("i" . gnus-article-show-images)
               ("s" . gnus-mime-save-part)
               ("o" . gnus-mime-copy-part)))
 #+end_src
