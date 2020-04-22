@@ -703,27 +703,22 @@ disabled ---though you obviously lose the visual feedback.
 
 Now some comments about my implementation:
 
-+ The key bindings in the pattern of =s-KEY= follow the principles I
-  outlined in my introductory [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note about the use of the Super key]].
++ [[https://github.com/oantolin/orderless][The “orderless” package]] is developed by Omar Antolín Camarena and is
+  yet to be published on MELPA (as of 2020-04-22).  It provides the
+  =orderless= completion style for out-of-order pattern matching.  The
+  components can be determined using several styles, such as regexp,
+  flex, prefix, initialism.  Delimiters are literal spaces, but can be
+  configured to match other characters, with hyphens and slashes being
+  likely choices.  As such, Orderless supersedes and improves upon the
+  completion styles that come built into Emacs.  It also makes things
+  considerably simpler: in the past I had to change the completion
+  styles for some custom functions of mine, but now I know that
+  Orderless will always match what I am looking for.
 + The =completion-styles= try to match candidates using one style at a
   time, moving from the first to the last until something is being
   matched.  This is why I define several of them in an order I find
   suitable to my workflow.  As far as I know, the styles cannot be
   combined.
-+ The =orderless= completion style allows for space-separated terms to be
-  treated as regular expressions that match candidates regardless of the
-  order the terms may appear in.  It can be super effective in cases
-  where you are not entirely sure how a long name of a symbol is
-  written.  [[https://github.com/oantolin/orderless][The “orderless” package]] is developed by Omar Antolín
-  Camarena and is in early development as of 2020-04-15.
-+ The =flex= option in =completion-styles= and relevant places is only
-  available for Emacs versions after 27.  As of this writing
-  (2020-02-10) the current stable release is 26.3.
-+ The =completion-category-overrides= provide exceptions to the fallback
-  completion styles.  This is convenient because we can prioritise a
-  certain style for some times of candidates, though in practice you can
-  always rely on the fact that =completion-styles= will anyhow fall back
-  to another item in their list until some match is found.
 + The =completions-format= concerns the layout of the =*Completions*= buffer
   that pops up after trying to complete a non-unique match (or by typing
   =?= from inside the minibuffer).  By default, it can be focused directly
@@ -744,6 +739,8 @@ Now some comments about my implementation:
   hit =C-]= (=abort-recursive-edit=), though the regular =C-g= should also do
   the trick.  The =minibuffer-depth-indicate-mode= will show an indicator
   next to the minibuffer prompt if a recursive edit is in progress.
++ The key bindings in the pattern of =s-KEY= follow the principles I
+  outlined in my introductory [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note about the use of the Super key]].
 
 Also check my configurations pertaining to the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].
 After about two months of full time usage (as of 2020-04-03), I am
@@ -758,19 +755,14 @@ further below):
 #+begin_src emacs-lisp
 (use-package minibuffer
   :config
+  ;; in-development package for out-of-order completion of terms
   (use-package orderless
-    ;; in-development package for out-of-order completion of terms
-    :load-path "~/.emacs.d/prot-dev/orderless")
+    :load-path "~/.emacs.d/prot-dev/orderless"
+    :config
+    (setq orderless-component-matching-styles
+          '(orderless-regexp orderless-prefixes orderless-flex)))
 
-  ;; NOTE that flex completion is introduced in Emacs 27
-  (setq completion-styles
-        '(partial-completion substring orderless initials flex))
-
-  ;;;; NOTE I do not need this, but keeping it here as an example
-  ;; (setq completion-category-overrides
-  ;;       '((file (styles initials basic))
-  ;;         (info-menu (styles orderless))))
-
+  (setq completion-styles '(orderless))
   (setq completion-cycle-threshold 3)
   (setq completion-flex-nospace nil)
   (setq completion-pcm-complete-word-inserts-delimiters t)
@@ -894,11 +886,6 @@ Overview of the following package declaration:
   minibuffer was called, without appending to the kill ring, while still
   keeping the session active.  And =M-o j= will insert the candidate in
   the same way and immediately exit all recursive edits.
-+ I find =prot/icomplete-toggle-completion-styles= to be helpful as a
-  means of changing the list of candidates, usually for the purposes of
-  reducing it in length.  Useful when running the various help functions
-  of =C-h v=, =C-h f=, =C-h o=.  Combine it with =icomplete-force-complete=,
-  bound to the tab key, to update the list for the given input.
 + For versions of Emacs above 27, there is a mode called =fido= (Fake IDO,
   where =ido= is an alternative option to Icomplete that tries to do more
   than just completion).  This new mode changes some of the primary key
@@ -977,30 +964,6 @@ Bind this function in `icomplete-minibuffer-map'."
                (with-minibuffer-selected-window (insert candidate))
                (top-level))))))
 
-  (defun prot/icomplete-toggle-completion-styles (&optional arg)
-    "Toggle between flex and default completion styles.
-
-With \\[universal-argument] use basic completion instead.  These
-styles are described in `completion-styles-alist'.
-
-Bind this function in `icomplete-minibuffer-map'."
-    (interactive "*P")
-    (when (and (minibufferp)
-               (bound-and-true-p icomplete-mode))
-      (let* ((basic '(emacs22 basic))
-             (flex '(flex orderless initials substring partial-completion))
-             (user completion-styles)) ; use my defaults
-        (if arg ; TODO make those message persistent next to the prompt
-            (progn
-              (setq-local completion-styles basic)
-              (message "%s" (propertize "BASIC matching" 'face 'highlight)))
-          (if (not (eq (car completion-styles) 'flex))
-              (progn
-                (setq-local completion-styles flex)
-                (message "%s" (propertize "FLEX first" 'face 'highlight)))
-            (setq-local completion-styles user)
-            (message "%s" (propertize "DEFAULT matching" 'face 'highlight)))))))
-
   ;; TODO can registers be inserted via completion?
   ;; TODO can mark-ring positions be selected?
 
@@ -1022,11 +985,7 @@ Bind this function in `icomplete-minibuffer-map'."
                            (prot/icomplete-kill-or-insert-candidate '(4))))
               ("M-o j" . (lambda ()
                            (interactive)
-                           (prot/icomplete-kill-or-insert-candidate '(16))))
-              ("C-," . prot/icomplete-toggle-completion-styles) ; toggle flex
-              ("C-." . (lambda ()                               ; toggle basic
-                         (interactive)
-                         (prot/icomplete-toggle-completion-styles '(4))))))
+                           (prot/icomplete-kill-or-insert-candidate '(16))))))
 #+end_src
 
 **** Icomplete vertical mode
@@ -1204,10 +1163,7 @@ wisely or prepare to use \\[keyboard-quit]."
                                        (when (file-directory-p dir)
                                          (abbreviate-file-name dir)))
                                      contents))
-           (subdirs (delete nil find-directories))
-           (completion-styles
-            '(flex initials orderless substring partial-completion))
-           (orderless-regexp-separator "[/ ]"))
+           (subdirs (delete nil find-directories)))
       (icomplete-vertical-do ()
         (dired
          (completing-read "Find sub-directory: " subdirs nil t dir)))))
@@ -1216,10 +1172,7 @@ wisely or prepare to use \\[keyboard-quit]."
     "Find file recursively, starting from present dir."
     (interactive)
     (let* ((dir default-directory)
-           (files (directory-files-recursively dir ".*" nil t))
-           (completion-styles
-            '(flex initials orderless substring partial-completion))
-           (orderless-regexp-separator "[/ ]"))
+           (files (directory-files-recursively dir ".*" nil t)))
       (icomplete-vertical-do ()
         (find-file
          (completing-read "Find file recursively: " files nil t dir)))))
