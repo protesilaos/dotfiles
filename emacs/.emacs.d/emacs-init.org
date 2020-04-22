@@ -5375,16 +5375,22 @@ motions will behave accordingly.
     :CUSTOM_ID: h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3
     :END:
 
-Make sure we run the mode that keeps paragraphs within the column
-limit.  The adaptive mode improves the handling of things like
-bulleted and numbered lists.
+Make sure we run the minor mode that keeps paragraphs within the column
+[[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][limit I prefer]]: you can always do it manually for the current paragraph
+with =M-q=.  By targeting =text-mode= we also affect every major mode
+derived from it, which means that we correctly do not get this utility
+in programming-related modes (in principle, those come from =prog-mode=).
+The adaptive mode improves the handling of things like bulleted and
+numbered lists, where it recognises the text's prefix and tries to align
+to it rather than the absolute beginning of the line.
 
 #+begin_src emacs-lisp
 (use-package emacs
   :diminish auto-fill-function
+  :config
+  (setq adaptive-fill-mode t)
   :hook (text-mode . (lambda ()
-                       (turn-on-auto-fill)
-                       (setq adaptive-fill-mode t))))
+                       (turn-on-auto-fill))))
 #+end_src
 
 *** Comment lines, regions, boxes, etc.
