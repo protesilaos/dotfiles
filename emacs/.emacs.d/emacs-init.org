@@ -4626,7 +4626,7 @@ What these do:
   in Emacs.
 + Do not preserve colours from websites, as they may be inaccessible
   (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus theme]]).
-+ Keep images to 20% of the window.  This number is arbitrary.  It
++ Keep images to 70% of the window.  This number is arbitrary.  It
   just feels like a good upper limit (not a fan of decorative images
   inside of blog posts).
 + Line length at same number of characters as =fill-column= (defined
@@ -4639,7 +4639,7 @@ What these do:
   (setq browse-url-browser-function 'eww-browse-url)
   (setq shr-use-fonts nil)
   (setq shr-use-colors nil)
-  (setq shr-max-image-proportion 0.2)
+  (setq shr-max-image-proportion 0.7)
   (setq shr-width (current-fill-column)))
 #+end_src
 
