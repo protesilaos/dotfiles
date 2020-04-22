@@ -5258,10 +5258,12 @@ It is nice to be able to easily toggle a mode that centres the buffer,
 allowing for greater comfort.
 
 Olivetti fulfils that niche very nicely.  It is not aggressive in its
-interface requirements while it does not introduce functionality beyond
-the scope of bringing the current window's buffer to the centre of the
-view.  This is exactly what I need.  Any other enhancement, such as a
-larger font size can be handled by another function.
+interface requirements, respects my [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][existing line settings]] and with my
+preference for [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][auto-filling text]], while it does not introduce any kind
+of functionality beyond the scope of bringing the current window's
+buffer to the centre of the view.  This is exactly what I need.  Any
+other enhancement, such as a larger font size can be handled by another
+function.
 
 The =prot/olivetti-mode= offers a toggle for activating this mode, while
 removing the fringes (check my [[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][fringe-mode settings]]) and setting a
@@ -5278,7 +5280,7 @@ that is so pertinent to presentations.
   :diminish
   :config
   (setq olivetti-body-width 100)
-  (setq olivetti-minimum-body-width 72)
+  (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t)
 
   (defun prot/olivetti-mode ()
