@@ -751,7 +751,7 @@ layer of complexity, no need for another metaphor of interactivity
 beside what you already use the minibuffer for.  In essence, Icomplete
 is just a visualisation of what is going on under the hood, meaning that
 all the completion mechanisms actually work even if =icomplete-mode= is
-disabled ---though you obviously lose the visual feedback.
+disabled---though you obviously lose the visual feedback.
 
 Now some comments about my implementation:
 
@@ -1081,7 +1081,7 @@ The project's README should offer all the information you need.  Several
 of my functions offer real-world implementations of the aforementioned
 (I did, after all, contribute some minor patches and user feedback in
 the early stages of this package, though all the real work is done by
-Omar ---and it is /a lot of work/ as confirmed by the commit logs and the
+Omar---and it is /a lot of work/ as confirmed by the commit logs and the
 scope of the diffs).
 
 With regard to verticality, I am the kind of user that actually /likes/
@@ -1270,7 +1270,7 @@ did not offer much of an added value to my typing experience, while its
 popup feature detracted from the otherwise frugal aesthetics of my
 setup.  Furthermore, I felt like it was adding a second type of
 completion paradigm while ignoring the original one, i.e. the
-minibuffer ---again, an offense against simplicity.
+minibuffer---again, an offense against simplicity.
 
 What I have in this section is a few simple tweaks and built-in ways to
 complete terms while typing text in a buffer.  I think that, for most
@@ -2444,7 +2444,7 @@ I do not need the =tab-line= as I find such tabs to be inefficient at
 scale.  Finding a buffer through search mechanisms is generally faster:
 it does not matter whether you have ten or a hundred buffers on the list
 (unless, of course, they all have similar names in which case you are in
-trouble either way ---do not forget to check my [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer settings]]).
+trouble either way---do not forget to check my [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer settings]]).
 
 On the other hand, the work spaces (=tab-bar=) are very useful for
 organising the various applications that are running inside of Emacs.
@@ -2452,7 +2452,7 @@ You can, for example, have your current project on tab (workspace) 1,
 your email and news reader on 2, music on 3, and so on.  Of course, this
 can also be achieved by using separate frames for each of these, though
 I generally prefer working in a single frame (plus you can define a
-window configuration or frameset in a register ---see [[#h:6bdfe4d1-f97a-4d89-ab68-e87448a95fea][relevant section]]).
+window configuration or frameset in a register---see [[#h:6bdfe4d1-f97a-4d89-ab68-e87448a95fea][relevant section]]).
 
 For me tabs are useful as groups of buffers in a given window
 configuration.  I do not want a persistent bar with buttons that
@@ -4177,7 +4177,7 @@ matters is to understand the basic concepts.
 The way this tool works is that it starts by producing a layout of the
 two conflicting versions with access to a "control panel" for operating
 on them.  By default, the panel is positioned on a new frame, but I find
-that rather awkward ---my config puts it inside an Emacs window instead.
+that rather awkward---my config puts it inside an Emacs window instead.
 While focusing the control panel, you can move between each diff range
 with =n= and =p=.  The focused section will be coloured using red, green,
 and yellow, while all other diffs will be presented in gray.
@@ -5557,7 +5557,7 @@ own right and I am not sure this statement is true---needs further
 testing).
 
 I activate =flymake-mode= manually and let it report its status only upon
-activation or after saving my edits ---live feedback feels intrusive,
+activation or after saving my edits---live feedback feels intrusive,
 while I do not need a linter when browsing code I have no intention to
 edit (e.g. Emacs libraries).
 
