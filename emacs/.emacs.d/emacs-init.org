@@ -169,9 +169,9 @@ the various =use-package= declarations documented herein.
 The three types of =use-package= declarations that I use:
 
 1. To set up external packages.  Those are denoted by the inclusion of
-   =:ensure t= which means that /the package manager/ should make sure the
+   =:ensure= which means that /the package manager/ should make sure the
    package is installed.
-2. To configure default packages.  No =:ensure t= is needed for them.
+2. To configure default packages.  No =:ensure= is needed for them.
 3. To declare custom or otherwise experimental packages that are not
    available in any repository and which I handle manually and plan to
    review at a later date.  Those include a =:load-path= that makes their
@@ -411,7 +411,7 @@ If you actually want to edit the lighters, check the Delight package.
 
 #+begin_src emacs-lisp
 (use-package diminish
-  :ensure t
+  :ensure
   :after use-package)
 #+end_src
 
@@ -1116,7 +1116,7 @@ still across this document (search for =icomplete-vertical-do=).
 
 #+begin_src emacs-lisp
 (use-package icomplete-vertical
-  :ensure t
+  :ensure
   :demand
   :after (minibuffer icomplete) ; do not forget to check those as well
   :config
@@ -1609,7 +1609,7 @@ great when dealing with complex sets of regexp constructs.
 
 #+begin_src emacs-lisp
 (use-package visual-regexp
-  :ensure t
+  :ensure
   :config
   (setq vr/default-replace-preview nil)
   (setq vr/match-separator-use-custom-face t))
@@ -1628,7 +1628,7 @@ matches by leveraging the full power of Emacs' editing capabilities
 
 #+begin_src emacs-lisp
 (use-package wgrep
-  :ensure t
+  :ensure
   :config
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t))
@@ -1672,7 +1672,7 @@ Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][projec
 
 #+begin_src emacs-lisp
 (use-package rg
-  :ensure t
+  :ensure
   :after wgrep
   :config
   (setq rg-group-result t)
@@ -1815,7 +1815,7 @@ as =-AFXhlv --group-directories-first=).
   (setq find-name-arg "-iname"))
 
 (use-package async
-  :ensure t)
+  :ensure)
 
 (use-package dired-async
   :after (dired async)
@@ -1852,7 +1852,7 @@ opted against them in the interest of simplicity:
 
 #+begin_src emacs-lisp
 (use-package dired-narrow
-  :ensure t
+  :ensure
   :after dired
   :config
   (setq dired-narrow-exit-when-one-left t)
@@ -1895,7 +1895,7 @@ behaviour while inside a regular dired buffer.
 
 #+begin_src emacs-lisp
 (use-package peep-dired
-  :ensure t
+  :ensure
   :after dired
   :config
   (setq peep-dired-cleanup-on-disable t)
@@ -1958,7 +1958,7 @@ What I have here:
 
 #+begin_src emacs-lisp
 (use-package dired-subtree
-  :ensure t
+  :ensure
   :after dired
   :config
   (setq dired-subtree-use-backgrounds nil)
@@ -2037,7 +2037,7 @@ packages (see the [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][section on my Modus
 
 #+begin_src emacs-lisp
 (use-package diredfl
-  :ensure t
+  :ensure
   :hook (dired-mode . diredfl-mode))
 #+end_src
 
@@ -2061,7 +2061,7 @@ Basically, its interaction model is as follows:
 
 #+begin_src emacs-lisp
 (use-package trashed
-  :ensure t
+  :ensure
   :config
   (setq trashed-action-confirmer 'y-or-n-p)
   (setq trashed-use-header-line t)
@@ -2197,7 +2197,7 @@ Make sure to also read the section on [[#h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7]
 
 #+begin_src emacs-lisp
 (use-package ibuffer-vc
-  :ensure t
+  :ensure
   :after (ibuffer vc)
   :bind (:map ibuffer-mode-map
               ("/ V" . ibuffer-vc-set-filter-groups-by-vc-root)
@@ -3033,7 +3033,7 @@ blocks of source code.
 
 #+begin_src emacs-lisp
 (use-package htmlize
-  :ensure t
+  :ensure
   :after org
   (setq htmlize-ignore-face-size t))
 #+end_src
@@ -3108,18 +3108,18 @@ minibuffer while doing a presentation.
 
 #+begin_src emacs-lisp
 (use-package darkroom
-  :ensure t
+  :ensure
   :config
   (setq darkroom-text-scale-increase 0))
 
 (use-package org-superstar              ; supersedes `org-bullets'
-  :ensure t
+  :ensure
   :after org
   :config
   (setq org-superstar-remove-leading-stars t))
 
 (use-package org-tree-slide
-  :ensure t
+  :ensure
   :after (org darkroom)
   :config
   (setq org-tree-slide-breadcrumbs nil)
@@ -3892,7 +3892,7 @@ with them.  For the time being, this package declaration is enough.
 
 #+begin_src emacs-lisp
 (use-package ebdb
-  :ensure t
+  :ensure
   :pin gnu                              ; Prefer ELPA version
   :config
   (require 'ebdb-gnus)
@@ -4284,7 +4284,7 @@ to customise, which I do in the following package declarations.
 
 #+begin_src emacs-lisp
 (use-package magit
-  :ensure t
+  :ensure
   :bind ("C-c g" . magit-status))
 #+end_src
 
@@ -4462,7 +4462,7 @@ artifacts.
 
 #+begin_src emacs-lisp
 (use-package vterm
-  :ensure t
+  :ensure
   :commands vterm
   :config
   (setq vterm-disable-bold-font nil)
@@ -4542,7 +4542,7 @@ kill ring.
 
 #+begin_src emacs-lisp
 (use-package password-store
-  :ensure t
+  :ensure
   :commands (password-store-copy
              password-store-edit
              password-store-insert)
@@ -4556,7 +4556,7 @@ bindings and their functions.
 
 #+begin_src emacs-lisp
 (use-package pass
-  :ensure t
+  :ensure
   :commands pass)
 #+end_src
 
@@ -4577,7 +4577,7 @@ with minor tweaks by me.
 
 #+begin_src emacs-lisp
 (use-package elfeed
-  :ensure t
+  :ensure
   :commands elfeed
   :config
   (setq elfeed-use-curl t)
@@ -4670,7 +4670,7 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
 
 #+begin_src emacs-lisp
 (use-package shr-tag-pre-highlight
-  :ensure t
+  :ensure
   :after shr
   :config
   (add-to-list 'shr-external-rendering-functions
@@ -4725,7 +4725,7 @@ I have a couple of videos about my workflow with Bongo and Dired:
 
 #+begin_src emacs-lisp
 (use-package bongo
-  :ensure t
+  :ensure
   :commands bongo
   :config
   (setq bongo-default-directory "~/Music")
@@ -5104,10 +5104,10 @@ the looks of the mode line, though I do not want that.
 
 #+begin_src emacs-lisp
 (use-package moody
-  :ensure t)
+  :ensure)
 
 (use-package keycast
-  :ensure t
+  :ensure
   :after moody
   :commands keycast-mode
   :config
@@ -5185,7 +5185,7 @@ section on the [[*Generic version control (VC) framework][generic version contro
 
 #+begin_src emacs-lisp
 (use-package diff-hl
-  :ensure t
+  :ensure
   :after vc
   :config
   (setq diff-hl-draw-borders nil)
@@ -5230,7 +5230,7 @@ when reviewing my themes (=rainbow-mode= is activated manually).
 
 #+begin_src emacs-lisp
 (use-package rainbow-mode
-  :ensure t
+  :ensure
   :diminish
   :commands rainbow-mode
   :config
@@ -5300,7 +5300,7 @@ that is so pertinent to presentations.
 
 #+begin_src emacs-lisp
 (use-package olivetti
-  :ensure t
+  :ensure
   :diminish
   :config
   (setq olivetti-body-width 100)
@@ -5341,7 +5341,7 @@ A less intrusive, built-in alternative is to set the variable
 
 #+begin_src emacs-lisp
 (use-package rainbow-blocks
-  :ensure t
+  :ensure
   :diminish
   :commands rainbow-blocks-mode
   :config
@@ -5596,7 +5596,7 @@ patches to.
 
 #+begin_src emacs-lisp
 (use-package package-lint-flymake
-  :ensure t
+  :ensure
   :after flymake
   :config
   (package-lint-flymake-setup))
@@ -5632,7 +5632,7 @@ I edit lots of Markdown files.  This makes things easier.
 
 #+begin_src emacs-lisp
 (use-package markdown-mode
-  :ensure t
+  :ensure
   :mode ("\\.md\\'" . markdown-mode))
 #+end_src
 
@@ -5645,7 +5645,7 @@ This adds support for YAML files.
 
 #+begin_src emacs-lisp
 (use-package yaml-mode
-  :ensure t
+  :ensure
   :mode (("\\.yml\\'" . yaml-mode)
          ("\\.yaml\\'" . yaml-mode)))
 #+end_src
@@ -5944,7 +5944,7 @@ I use visual bookmarks in much the same way.
 
 #+begin_src emacs-lisp
 (use-package bm
-  :ensure t
+  :ensure
   :config
   (setq bm-annotate-on-create t)
   (setq bm-buffer-persistence t)
@@ -6001,7 +6001,7 @@ _b_: Back same level   _<S-iso-lefttab>_: Cycle global
               ("C-c h o" . hydra-outline/body)))
 
 (use-package outline-minor-faces
-  :ensure t
+  :ensure
   :after outline
   :hook
   (outline-minor-mode . outline-minor-faces-add-font-lock-keywords))
@@ -6040,7 +6040,7 @@ provides.  I got this from [[https://github.com/DamienCassou/beginend/issues/43]
 
 #+begin_src emacs-lisp
 (use-package beginend
-  :ensure t
+  :ensure
   :demand
   :diminish beginend-global-mode
   :config
@@ -6077,7 +6077,7 @@ reference:
 
 #+begin_src emacs-lisp
 (use-package expand-region
-  :ensure t
+  :ensure
   :pin gnu                              ; Prefer ELPA version
   :config
   (setq expand-region-smart-cursor t)
@@ -6385,7 +6385,7 @@ key binding!
 
 #+begin_src emacs-lisp
 (use-package goto-last-change
-  :ensure t
+  :ensure
   :bind ("C-z" . goto-last-change))
 #+end_src
 
@@ -6437,7 +6437,7 @@ to the section on [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][the Modus themes (m
 
 #+begin_src emacs-lisp
 (use-package beacon
-  :ensure t
+  :ensure
   :diminish
   :config
   (setq beacon-blink-delay 0.1)
@@ -7067,7 +7067,7 @@ package declaration is but a piece of a greater whole.
 #+begin_src emacs-lisp
 (use-package ivy
   :disabled                             ; switched to `icomplete'
-  :ensure t
+  :ensure
   :diminish
   :config
   (setq ivy-count-format "(%d/%d) ")
@@ -7155,7 +7155,7 @@ type something anyhow).
 #+begin_src emacs-lisp
 (use-package prescient
   :disabled                             ; switched to `icomplete'
-  :ensure t
+  :ensure
   :config
   (setq prescient-history-length 200)
   (setq prescient-save-file "~/.emacs.d/prescient-items")
@@ -7164,7 +7164,7 @@ type something anyhow).
 
 (use-package ivy-prescient
   :disabled                             ; switched to `icomplete'
-  :ensure t
+  :ensure
   :after (prescient ivy)
   :config
   (setq ivy-prescient-sort-commands
@@ -7222,7 +7222,7 @@ interplay and the full extent of my customisations.
 #+begin_src emacs-lisp
 (use-package counsel
   :disabled                             ; switched to `icomplete'
-  :ensure t
+  :ensure
   :after ivy
   :config
   (setq counsel-yank-pop-preselect-last t)
@@ -7353,7 +7353,7 @@ specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
 #+begin_src emacs-lisp
 (use-package counsel-projectile
   :disabled                             ; switched to `icomplete'
-  :ensure t
+  :ensure
   :config
   (add-to-list 'ivy-initial-inputs-alist '(counsel-projectile-switch-project . ""))
   :hook (after-init . counsel-projectile-mode)
@@ -7392,7 +7392,7 @@ section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and s
 #+begin_src emacs-lisp
 (use-package swiper
   :disabled                             ; switched to `icomplete'
-  :ensure t
+  :ensure
   :after ivy
   :config
   (setq swiper-action-recenter t)
@@ -7443,7 +7443,7 @@ absolute paths.  Will need to test this further…
 #+begin_src emacs-lisp
 (use-package ivy-rich
   :disabled                             ; switched to `icomplete'
-  :ensure t
+  :ensure
   :after ivy
   :config
   (setq ivy-rich-path-style 'abbreviate)
@@ -7483,7 +7483,7 @@ this document's [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][section on fonts]]).
 #+begin_src emacs-lisp
 (use-package ivy-posframe
   :disabled                             ; switched to `icomplete'
-  :ensure t
+  :ensure
   :after ivy
   :diminish
   :config
@@ -7600,7 +7600,7 @@ problem of searching through a pile of messages until we find the one we
 really need.  Nice!
 
 #+begin_src emacs-lisp
-(use-package org-mu4e                   ; no need for `:ensure t'
+(use-package org-mu4e                   ; no need for `:ensure'
   :disabled                             ; DEPRECATED in favour of `gnus'
   :after (org mu4e)
   :config
