@@ -703,22 +703,19 @@ disabled ---though you obviously lose the visual feedback.
 
 Now some comments about my implementation:
 
-+ [[https://github.com/oantolin/orderless][The “orderless” package]] is developed by Omar Antolín Camarena and is
-  yet to be published on MELPA (as of 2020-04-22).  It provides the
-  =orderless= completion style for out-of-order pattern matching.  The
-  components can be determined using several styles, such as regexp,
-  flex, prefix, initialism.  Delimiters are literal spaces, but can be
++ [[https://github.com/oantolin/orderless][The “orderless” package]] is developed by Omar Antolín Camarena and you
+  will find it on MELPA.  It provides the =orderless= completion style for
+  out-of-order grouped pattern matching.  The components can be
+  determined using several styles, such as regexp, flex, prefix,
+  initialism.  Delimiters are literal spaces by default, but can be
   configured to match other characters, with hyphens and slashes being
-  likely choices.  As such, Orderless supersedes and improves upon the
-  completion styles that come built into Emacs.  It also makes things
-  considerably simpler: in the past I had to change the completion
-  styles for some custom functions of mine, but now I know that
-  Orderless will always match what I am looking for.
+  likely choices.  As such, Orderless can supersede the more aggressive
+  completion styles that come built into Emacs, adding to them the
+  powerful out-of-order capability.
 + The =completion-styles= try to match candidates using one style at a
-  time, moving from the first to the last until something is being
-  matched.  This is why I define several of them in an order I find
-  suitable to my workflow.  As far as I know, the styles cannot be
-  combined.
+  time, moving from the first to the last until something is matched.
+  This is why I define several of them in an order I find suitable to my
+  workflow.  As far as I know, the styles cannot be combined.
 + The =completions-format= concerns the layout of the =*Completions*= buffer
   that pops up after trying to complete a non-unique match (or by typing
   =?= from inside the minibuffer).  By default, it can be focused directly
@@ -755,14 +752,20 @@ further below):
 #+begin_src emacs-lisp
 (use-package minibuffer
   :config
-  ;; in-development package for out-of-order completion of terms
+  ;; Aggressive completion style for out-of-order groups of matches
   (use-package orderless
-    :load-path "~/.emacs.d/prot-dev/orderless"
+    :ensure
     :config
     (setq orderless-component-matching-styles
-          '(orderless-regexp orderless-prefixes orderless-flex)))
+          '(orderless-regexp
+            orderless-flex))
+    (setq orderless-regexp-separator "[/\s_-]+")
+    :bind (:map minibuffer-local-completion-map
+                ("SPC" . nil)))         ; space should never complete
 
-  (setq completion-styles '(orderless))
+  (setq completion-styles
+        '(basic partial-completion initials orderless))
+  (setq completion-category-defaults nil)
   (setq completion-cycle-threshold 3)
   (setq completion-flex-nospace nil)
   (setq completion-pcm-complete-word-inserts-delimiters t)
@@ -876,9 +879,10 @@ Overview of the following package declaration:
 + The values of all variables that pertain to the delay of feedback are
   tentative.  My initial tests suggest that they behave exactly the way
   I want, but this might change once I test them further.  In short, I
-  want to introduce some delay in the feedback I get when the list of
-  candidates is long.  This makes things feel faster while I am still
-  typing.
+  want to introduce /some/ delay in the feedback I get when the list of
+  candidates is long.  This paradoxically makes things feel faster while
+  I am still typing (because by that time the list has been narrowed to
+  my input).
 + My =prot/icomplete-kill-or-insert-candidate= is a simple yet effective
   tool that I bind to three key chords.  With =M-o w= you copy the current
   candidate to the kill ring and continue with the minibuffer session.
@@ -886,37 +890,28 @@ Overview of the following package declaration:
   minibuffer was called, without appending to the kill ring, while still
   keeping the session active.  And =M-o j= will insert the candidate in
   the same way and immediately exit all recursive edits.
-+ For versions of Emacs above 27, there is a mode called =fido= (Fake IDO,
-  where =ido= is an alternative option to Icomplete that tries to do more
-  than just completion).  This new mode changes some of the primary key
-  bindings and commands of =icomplete= so that it meets the expectations
-  of Ido users.  It is not meant as a fully fledged replacement of Ido,
-  as its scope is much narrower, at least for the time being.  If you
-  are curious, check the source code for both =icomplete= and =ido= with the
-  help of =M-x find-library=.  I do not use Fido, though I think it is a
-  welcome step in the right direction.
++ For versions of Emacs above 27, there is a minor mode called =fido=
+  (Fake IDO, where =ido= is an alternative option to Icomplete that tries
+  to do more than just completion).  This new mode changes some of the
+  primary key bindings and commands of =icomplete= so that it meets the
+  expectations of Ido users.  It is not meant as a fully fledged
+  replacement of Ido, as its scope is much narrower, at least for the
+  time being.  If you are curious, check the source code for both
+  =icomplete= and =ido= with the help of =M-x find-library=.  I do not use
+  Fido, though I think it is a welcome step in the right direction.  For
+  the sake completeness, note that you can always bind some Fido command
+  without activating the minor mode.
 + The keybindings I specify define motions that ensure consistency
-  between regular editing and the rotation of the candidate list.  The
+  between regular editing and the rotation of the candidates' list.  The
   default =icomplete= key bindings leave something to be desired and are
   therefore repurposed for my extensions.
-+ Note the nuances in the behaviour between =RET=, =C-j,= and =C-m=.  With the
++ Note the nuances in the behaviour between =RET= and =C-j=.  With the
   Return key, we tell Icomplete to expand the current candidate and then
-  exit the minibuffer if possible.  Whereas the other two are intended
-  for inserting /exactly/ what you have typed in.  =C-j= is more forceful
-  and will work in scenaria where =C-m= will not (check the docstrings of
-  the commands they call).  Use them when Icomplete is matching =foobar=
-  but you only want =foo= (needed when renaming files or when creating
-  links in Org to non-existent candidates).
-
-*Pro tip*: while running =M-x shell= with my settings, you can still benefit
-from the built-in completion mechanisms by means of tab-completion.  Tab
-completion works the way you would expect in a terminal emulator, but
-also in accordance with how Emacs matches candidates.  So it works with
-initials as well (among others)!  For example, to do a =cd= into
-=~/Git/Projects/modus-themes= we can write type =cd ~/G/P/m-t/ <TAB>= to
-produce a completion unterface (see the [[#h:98876022-57cc-40de-936e-4ee42cefd69a][section on in-buffer completions]]
-for the code that makes this nice to work with).  Try it and thank me
-later!
+  exit the minibuffer if possible.  Whereas =C-j= is meant to insert
+  exactly what is in the minibuffer, which can be tricky in some
+  circumstances.  Use the latter when Icomplete is matching =foobar= but
+  you only want =foo= (needed when renaming files or when creating links
+  in Org to non-existent candidates).
 
 #+begin_src emacs-lisp
 (use-package icomplete
@@ -931,8 +926,9 @@ later!
   (setq icomplete-prospects-height 1)
   ;; (setq icomplete-separator " · ")
   ;; (setq icomplete-separator " │ ")
-  ;; (setq icomplete-separator " ┊ ")
-  (setq icomplete-separator " ┆ ")
+  ;; (setq icomplete-separator " ┆ ")
+  ;; (setq icomplete-separator " ¦ ")
+  (setq icomplete-separator (propertize " ┆ " 'face 'shadow))
   (setq icomplete-with-completion-tables t)
   (setq icomplete-in-buffer t)
   (setq icomplete-tidy-shadowed-file-names nil)
@@ -964,14 +960,21 @@ Bind this function in `icomplete-minibuffer-map'."
                (with-minibuffer-selected-window (insert candidate))
                (top-level))))))
 
-  ;; TODO can registers be inserted via completion?
-  ;; TODO can mark-ring positions be selected?
+  (defun prot/icomplete-minibuffer-truncate ()
+    "Truncate minibuffer lines in `icomplete-mode'.
+  This should only affect the horizontal layout and is meant to
+  enforce `icomplete-prospects-height' being set to 1.
 
+  Hook it to `icomplete-minibuffer-setup-hook'."
+    (when (and (minibufferp)
+               (bound-and-true-p icomplete-mode))
+      (setq truncate-lines t)))
+
+  :hook (icomplete-minibuffer-setup . prot/icomplete-minibuffer-truncate)
   :bind (:map icomplete-minibuffer-map
               ("<tab>" . icomplete-force-complete)
               ("<return>" . icomplete-force-complete-and-exit) ; exit with completion
-              ("C-m" . minibuffer-complete-and-exit) ; try complete + force current input
-              ("C-j" . exit-minibuffer) ; force current input unconditionally
+              ("C-j" . exit-minibuffer) ; force input unconditionally
               ("C-n" . icomplete-forward-completions)
               ("<right>" . icomplete-forward-completions)
               ("<down>" . icomplete-forward-completions)
@@ -988,6 +991,11 @@ Bind this function in `icomplete-minibuffer-map'."
                            (prot/icomplete-kill-or-insert-candidate '(16))))))
 #+end_src
 
+**** TODO can registers be inserted via completion?
+     :PROPERTIES:
+     :CUSTOM_ID: h:3dbfa7c6-7b1e-4ebc-85f3-227585eae8e1
+     :END:
+**** TODO can mark-ring positions be selected?
 **** Icomplete vertical mode
      :PROPERTIES:
      :CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
