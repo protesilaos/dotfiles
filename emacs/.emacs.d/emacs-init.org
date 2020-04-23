@@ -441,6 +441,58 @@ be created again the next time you start Emacs).
   (load custom-file))
 #+end_src
 
+** Fundamentals for Hydras
+   :PROPERTIES:
+   :CUSTOM_ID: h:af691a31-917e-4d9b-aee6-5744b1173999
+   :END:
+
+/WORK IN PROGRESS 2020-04-23/
+
+A "hydra" is an ad-hoc mode for mapping commands to a group of more
+convenient key bindings.  In an active hydra, all of its keys---the
+hydra's "heads"---can be typed in any order, keeping the mode active in
+the process (if wanted), while at least one key performs the function of
+exiting the hydra.
+
+In practice, *I do not use hydras as substitutes for mode maps*.  Instead,
+I treat them as complementary to minor modes that offer enhancements to
+a particular major mode but are otherwise not very useful outside that
+niche.  Think of cases such as a code linter (the minor mode) as part of
+a programming session (major mode).
+
+The reason I use hydras this way is due to the official key binding
+conventions that I [generally] follow (as documented in the Emacs
+manual).  The idea of using =C-c [a-z]= for all these minor modes is good
+only if you have a few of them and only if they are more useful outside
+a particular task.  In other words, it does not scale.
+
+I thus employ =C-c h= as a common prefix for all my hydras (knowing that
+it is meant for private use), binding each sequence to the relevant
+minor mode's map.  An extra key completes the chord following mnemonics.
+For instance, a hydra about the linter when that is active is =C-c h l=,
+for the outline viewer =C-c h o=, for git merge conflicts =C-c h g=, and so
+on.
+
+Look for the =defhydra= macro in the relevant package declarations (these
+will evolve over time).  Hydras are colour-coded as a means of denoting
+their behaviour with regard to the use of non-defined keys and the
+criteria for exiting.
+
+| Colour   | Hydra heads         | Other keys          |
+|----------+---------------------+---------------------|
+| red      | Accept and Continue | Accept and Exit     |
+| pink     | Accept and Continue | Accept and Continue |
+| amaranth | Accept and Continue | Reject and Continue |
+| teal     | Exit                | Reject and Continue |
+| blue     | Exit                | Accept and Exit     |
+
+Also check [[https://github.com/abo-abo/hydra][the project's source]] for more information.
+
+#+begin_src emacs-lisp
+(use-package hydra
+  :ensure)
+#+end_src
+
 ** Base typeface configurations
    :PROPERTIES:
    :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
@@ -5501,12 +5553,15 @@ ispell dictionaries with `prot/ispell-toggle-dictionaries'."
 This is a built-in linter that can be extended to support any
 programming language.  It seems to give me better feedback on elisp than
 the popular Flycheck alternative (though that is also excellent in its
-own right).
+own right and I am not sure this statement is true---needs further
+testing).
 
 I activate =flymake-mode= manually and let it report its status only upon
 activation or after saving my edits ---live feedback feels intrusive,
 while I do not need a linter when browsing code I have no intention to
 edit (e.g. Emacs libraries).
+
+Concerning this =defhydra=, remember to read my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
 
 #+begin_src emacs-lisp
 (use-package flymake
@@ -5518,10 +5573,21 @@ edit (e.g. Emacs libraries).
   (setq flymake-start-on-save-buffer t)
   (setq flymake-proc-compilation-prevents-syntax-check t)
   (setq flymake-wrap-around nil)
+
+  (defhydra hydra-flymake (:color pink :hint nil)
+    "
+Actions
+-------
+_n_: Next error
+_p_: Previous error
+_d_: Diagnostics' buffer
+"
+    ("d" flymake-show-diagnostics-buffer)
+    ("n" flymake-goto-next-error)
+    ("p" flymake-goto-prev-error)
+    ("q" nil "cancel" :color blue))
   :bind (:map flymake-mode-map
-              ("C-c d" . flymake-show-diagnostics-buffer)
-              ("C-c n" . flymake-goto-next-error)
-              ("C-c p" . flymake-goto-prev-error)))
+              ("C-c h l" . hydra-flymake/body)))
 #+end_src
 
 With this in place we can perform checks that pertain to Emacs packages.
@@ -5903,23 +5969,42 @@ I use visual bookmarks in much the same way.
    :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
    :END:
 
-/Work in progress 2020-04-15/
+/WORK IN PROGRESS 2020-04-23/
+
+For the =defhydra=, refer to my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
 
 #+begin_src emacs-lisp
-(use-package outline)
+(use-package outline
+  :diminish outline-minor-mode
+  :config
+  (use-package bicycle :ensure)
+
+  (defhydra hydra-outline (:idle nil :color pink :hint nil :post (deactivate-mark))
+    "
+   ^Motions^                            ^Show^
+---^------------------------------------^----------------
+_n_: Next heading                    _a_: All
+_p_: Prev heading                    _e_: Entry
+_f_: Fore same level               _TAB_: Cycle
+_b_: Back same level   _<S-iso-lefttab>_: Cycle global
+"
+    ("n" outline-next-visible-heading)
+    ("p" outline-previous-visible-heading)
+    ("f" outline-forward-same-level)
+    ("b" outline-backward-same-level)
+    ("a" outline-show-all)
+    ("e" outline-show-entry)
+    ("TAB" bicycle-cycle)
+    ("<S-iso-lefttab>" bicycle-cycle-global)
+    ("q" nil "cancel" :color blue))
+  :bind (:map outline-minor-mode-map
+              ("C-c h o" . hydra-outline/body)))
 
 (use-package outline-minor-faces
   :ensure t
   :after outline
   :hook
   (outline-minor-mode . outline-minor-faces-add-font-lock-keywords))
-
-(use-package bicycle
-  :ensure t
-  :after outline
-  :bind (:map outline-minor-mode-map
-              ("<C-tab>" . bicycle-cycle)
-              ("<S-iso-lefttab>" . bicycle-cycle-global)))
 #+end_src
 
 ** Custom movements and motions
