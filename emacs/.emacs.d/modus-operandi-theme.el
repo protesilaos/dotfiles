@@ -118,6 +118,7 @@
 ;;     easy-kill
 ;;     ebdb
 ;;     ediff
+;;     eglot
 ;;     eldoc-box
 ;;     elfeed
 ;;     elfeed-score
@@ -1349,6 +1350,8 @@ AMOUNT is a customisation option."
    `(ediff-odd-diff-Ancestor ((,class (:background ,bg-diff-neutral-0 :foreground ,fg-diff-neutral-0))))
    `(ediff-odd-diff-B ((,class (:background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2))))
    `(ediff-odd-diff-C ((,class (:background ,bg-diff-neutral-1 :foreground ,fg-diff-neutral-1))))
+   ;;;; eglot
+   `(eglot-mode-line ((,class (:foreground ,magenta-active :weight ,modus-theme-bold))))
    ;;;; eldoc-box
    `(eldoc-box-body ((,class (:background ,bg-alt :foreground ,fg-main))))
    `(eldoc-box-border ((,class (:background ,fg-alt))))
@@ -1878,11 +1881,11 @@ AMOUNT is a customisation option."
    ;;;; hl-todo
    `(hl-todo ((,class (:foreground ,red-alt-other :weight bold))))
    ;;;; hydra
-   `(hydra-face-amaranth ((,class (:foreground ,yellow-intense :weight bold))))
-   `(hydra-face-blue ((,class (:foreground ,blue-intense :weight bold))))
-   `(hydra-face-pink ((,class (:foreground ,magenta-intense :weight bold))))
-   `(hydra-face-red ((,class (:foreground ,red-intense :weight bold))))
-   `(hydra-face-teal ((,class (:foreground ,cyan-intense :weight bold))))
+   `(hydra-face-amaranth ((,class (:foreground ,yellow :weight bold))))
+   `(hydra-face-blue ((,class (:foreground ,blue-alt :weight bold))))
+   `(hydra-face-pink ((,class (:foreground ,magenta-alt :weight bold))))
+   `(hydra-face-red ((,class (:foreground ,red :weight bold))))
+   `(hydra-face-teal ((,class (:foreground ,cyan :weight bold))))
    ;;;; icomplete
    `(icomplete-first-match ((,class (:foreground ,magenta :weight bold))))
    ;;;; icomplete-vertical
@@ -2268,7 +2271,7 @@ AMOUNT is a customisation option."
    `(message-header-subject ((,class (:foreground ,magenta-alt-other :weight bold))))
    `(message-header-to ((,class (:foreground ,magenta-alt :weight bold))))
    `(message-header-xheader ((,class (:foreground ,blue-alt-other))))
-   `(message-mml ((,class (:foreground ,green-alt))))
+   `(message-mml ((,class (:foreground ,green-alt-other))))
    `(message-separator ((,class (:background ,bg-alt :foreground ,fg-special-warm))))
    ;;;; modeline
    `(mode-line ((,class (:box ,(modus-operandi-theme-modeline-box bg-inactive fg-inactive t)
