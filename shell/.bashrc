@@ -169,6 +169,7 @@ if _checkexec aptitude; then
 fi
 
 # NOTE 2019-11-10: Work-in-progress
+# UPDATE 2020-04-27: Generally okay, but never refined
 # XBPS (package management on Void Linux)
 # ---------------------------------------
 if _checkexec xbps-install; then
@@ -210,6 +211,43 @@ if _checkexec xbps-remove && _checkexec xbps-query; then
     }
 fi
 
+# Pacman and Yay (Arch Linux)
+# ---------------------------
+if _checkexec pacman; then
+    # General package management
+    alias pSyu="sudo pacman -Syu"   # system upgrade
+    alias pSyyu="sudo pacman -Syyu" # when updating mirrors
+    alias pD="sudo pacman -D"       # set `--asdeps` or `--asexplicit`
+
+    # Search remote database and download packages
+    alias pSs="pacman -Ss"      # search remote for package
+    alias pS="sudo pacman -S"   # sync download
+
+    # Search local database
+    alias pQs="pacman -Qs"      # query list
+    alias pQmq="pacman -Qmq"    # list foreign packages
+    alias pQdt="pacman -Qdt"    # list orphans
+
+    # Inspect packages (remote and local)
+    alias pSi="pacman -Si"      # remote package details
+    alias pQi="pacman -Qi"      # local package details
+
+    # Remove packages
+    alias pRs="sudo pacman -Rs"     # remove package
+    alias pRnsc="sudo pacman -Rnsc" # remove package recursively
+    alias pRnscQdtq="sudo pacman -Rnsc $(pacman -Qdtq)" # remove orphans recursively
+
+    # Clear cache
+    alias pcache1="sudo paccache -rk 1" # remove cache except last item
+    alias pcache0="sudo paccache -ruk0" # remove all cache
+fi
+
+if _checkexec yay; then
+    alias ySyu="yay -Syu"       # upgrade aur
+    alias yS="yay -S"           # sync download AUR
+    alias ySs="yay -Ss"         # search aur
+    alias ySi="yay -Si"         # see remote package details
+fi
 
 # Common tasks and utilities
 # --------------------------
