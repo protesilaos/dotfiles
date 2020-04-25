@@ -1048,6 +1048,9 @@ Bind this function in `icomplete-minibuffer-map'."
      :CUSTOM_ID: h:3dbfa7c6-7b1e-4ebc-85f3-227585eae8e1
      :END:
 **** TODO can mark-ring positions be selected?
+     :PROPERTIES:
+     :CUSTOM_ID: h:4e70d0db-a0af-496a-b310-f75af606c155
+     :END:
 **** Icomplete vertical mode
      :PROPERTIES:
      :CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
@@ -3718,6 +3721,7 @@ being a little bit cleaner than default.
   (setq gnus-auto-select-first nil)
   (setq gnus-summary-ignore-duplicates t)
   (setq gnus-suppress-duplicates t)
+  (setq gnus-save-duplicate-list t)
   (setq gnus-summary-goto-unread nil)
   (setq gnus-summary-make-false-root 'adopt)
   (setq gnus-summary-thread-gathering-function
@@ -4742,6 +4746,7 @@ I have a couple of videos about my workflow with Bongo and Dired:
   (setq bongo-header-line-mode nil)
   (setq bongo-header-line-function nil)
   (setq bongo-mode-line-indicator-mode nil)
+  (setq bongo-enabled-backends '(vlc mpv))
   (setq bongo-vlc-program-name "cvlc")
 
   (defun contrib/bongo-add-dired-files ()
@@ -5253,7 +5258,7 @@ when reviewing my themes (=rainbow-mode= is activated manually).
      circumstances.  Generally though, I do not keep it active.
 
 #+begin_src emacs-lisp
-(use-package emacs
+(use-package whitespace
   :config
   (defun prot/toggle-invisibles ()
     "Toggles the display of indentation and space characters."
@@ -5261,15 +5266,17 @@ when reviewing my themes (=rainbow-mode= is activated manually).
     (if (bound-and-true-p whitespace-mode)
         (whitespace-mode -1)
       (whitespace-mode)))
+  :bind ("<f6>" . prot/toggle-invisibles))
 
+(use-package display-line-numbers
+  :config
   (defun prot/toggle-line-numbers ()
     "Toggles the display of line numbers.  Applies to all buffers."
     (interactive)
     (if (bound-and-true-p display-line-numbers-mode)
         (display-line-numbers-mode -1)
       (display-line-numbers-mode)))
-  :bind (("<f6>" . prot/toggle-invisibles)
-         ("<f7>" . prot/toggle-line-numbers)))
+  :bind ("<f7>" . prot/toggle-line-numbers))
 #+end_src
 
 **** “Focus mode” for writing (olivetti-mode)
