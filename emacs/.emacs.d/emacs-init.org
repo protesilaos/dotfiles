@@ -3612,6 +3612,7 @@ for this task).
           "Followup-To:" "Reply-To:" "^Organization:" "^X-Newsreader:"
           "^X-Mailer:"))
   (setq gnus-sorted-header-list gnus-visible-headers)
+  :hook (gnus-select-article . gnus-article-fill-cited-article)
   :bind (:map gnus-article-mode-map
               ("i" . gnus-article-show-images)
               ("s" . gnus-mime-save-part)
