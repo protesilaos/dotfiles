@@ -99,6 +99,7 @@
 ;;     dap-mode
 ;;     dashboard (emacs-dashboard)
 ;;     deadgrep
+;;     debbugs
 ;;     define-word
 ;;     deft
 ;;     diff-hl
@@ -195,6 +196,7 @@
 ;;     lsp-ui
 ;;     magit
 ;;     magit-imerge
+;;     man
 ;;     markdown-mode
 ;;     markup-faces (`adoc-mode')
 ;;     mentor
@@ -271,6 +273,7 @@
 ;;     tomatinho
 ;;     transient (pop-up windows like Magit's)
 ;;     treemacs
+;;     tuareg
 ;;     undo-tree
 ;;     vc (built-in mode line status for version control)
 ;;     vc-annotate (C-x v g)
@@ -288,6 +291,7 @@
 ;;     window-divider-mode
 ;;     winum
 ;;     writegood-mode
+;;     woman
 ;;     xah-elisp-mode
 ;;     xref
 ;;     xterm-color (and ansi-colors)
@@ -1147,6 +1151,19 @@ AMOUNT is a customisation option."
    `(deadgrep-meta-face ((,class (:foreground ,fg-alt))))
    `(deadgrep-regexp-metachar-face ((,class (:foreground ,yellow-intense :weight bold))))
    `(deadgrep-search-term-face ((,class (:foreground ,green-intense :weight bold))))
+   ;;;; debbugs
+   `(debbugs-gnu-archived ((,class (:inverse-video t))))
+   `(debbugs-gnu-done ((,class (:foreground ,fg-alt))))
+   `(debbugs-gnu-forwarded ((,class (:foreground ,fg-special-warm))))
+   `(debbugs-gnu-handled ((,class (:foreground ,green))))
+   `(debbugs-gnu-new ((,class (:foreground ,red))))
+   `(debbugs-gnu-pending ((,class (:foreground ,cyan))))
+   `(debbugs-gnu-stale-1 ((,class (:foreground ,yellow-nuanced))))
+   `(debbugs-gnu-stale-2 ((,class (:foreground ,yellow))))
+   `(debbugs-gnu-stale-3 ((,class (:foreground ,yellow-alt))))
+   `(debbugs-gnu-stale-4 ((,class (:foreground ,yellow-alt-other))))
+   `(debbugs-gnu-stale-5 ((,class (:foreground ,red-alt))))
+   `(debbugs-gnu-tagged ((,class (:foreground ,magenta-alt))))
    ;;;; define-word
    `(define-word-face-1 ((,class (:foreground ,yellow))))
    `(define-word-face-2 ((,class (:foreground ,fg-main))))
@@ -1356,18 +1373,18 @@ AMOUNT is a customisation option."
    `(eldoc-box-body ((,class (:background ,bg-alt :foreground ,fg-main))))
    `(eldoc-box-border ((,class (:background ,fg-alt))))
    ;;;; elfeed
-   `(elfeed-log-date-face ((,class (:foreground ,blue))))
-   `(elfeed-log-debug-level-face ((,class (:inherit modus-theme-intense-magenta))))
-   `(elfeed-log-error-level-face ((,class (:inherit modus-theme-intense-red))))
-   `(elfeed-log-info-level-face ((,class (:inherit modus-theme-subtle-cyan))))
-   `(elfeed-log-warn-level-face ((,class (:inherit modus-theme-subtle-yellow))))
-   `(elfeed-search-date-face ((,class (:foreground ,fg-special-cold))))
-   `(elfeed-search-feed-face ((,class (:foreground ,cyan))))
-   `(elfeed-search-filter-face ((,class (:foreground ,fg-special-cold))))
-   `(elfeed-search-last-update-face ((,class (:foreground ,fg-special-calm))))
-   `(elfeed-search-tag-face ((,class (:foreground ,fg-special-mild))))
+   `(elfeed-log-date-face ((,class (:foreground ,cyan-alt))))
+   `(elfeed-log-debug-level-face ((,class (:foreground ,magenta))))
+   `(elfeed-log-error-level-face ((,class (:foreground ,red))))
+   `(elfeed-log-info-level-face ((,class (:foreground ,green))))
+   `(elfeed-log-warn-level-face ((,class (:foreground ,yellow))))
+   `(elfeed-search-date-face ((,class (:foreground ,cyan))))
+   `(elfeed-search-feed-face ((,class (:foreground ,blue))))
+   `(elfeed-search-filter-face ((,class (:foreground ,magenta-active))))
+   `(elfeed-search-last-update-face ((,class (:foreground ,green-active))))
+   `(elfeed-search-tag-face ((,class (:foreground ,cyan-alt-other))))
    `(elfeed-search-title-face ((,class (:foreground ,fg-main))))
-   `(elfeed-search-unread-count-face ((,class (:foreground ,fg-special-warm))))
+   `(elfeed-search-unread-count-face ((,class (:foreground ,blue-active))))
    `(elfeed-search-unread-title-face ((,class (:weight bold))))
    ;;;; elfeed-score
    `(elfeed-score-date-face ((,class (:foreground ,blue))))
@@ -1527,9 +1544,9 @@ AMOUNT is a customisation option."
    `(flycheck-posframe-warning-face ((,class (:foreground ,yellow :weight bold))))
    ;;;; flymake
    `(flymake-error
-       ((,(append '((supports :underline (:style wave))) class)
-         (:underline (:color ,fg-lang-error :style wave)))
-        (,class (:foreground ,red-nuanced :underline (:color ,fg-lang-error :style line)))))
+     ((,(append '((supports :underline (:style wave))) class)
+       (:underline (:color ,fg-lang-error :style wave)))
+      (,class (:foreground ,red-nuanced :underline (:color ,fg-lang-error :style line)))))
    `(flymake-note
      ((,(append '((supports :underline (:style wave))) class)
        (:underline (:color ,fg-lang-note :style wave)))
@@ -2176,6 +2193,10 @@ AMOUNT is a customisation option."
    `(magit-tag ((,class (:foreground ,yellow-alt-other))))
    ;;;; magit-imerge
    `(magit-imerge-overriding-value ((,class (:foreground ,red-alt :weight bold))))
+   ;;;; man
+   `(Man-overstrike ((,class (:foreground ,magenta :weight bold))))
+   `(Man-reverse ((,class (:inherit modus-theme-subtle-magenta))))
+   `(Man-underline ((,class (:foreground ,cyan :underline t))))
    ;;;; markdown-mode
    `(markdown-blockquote-face ((,class (:background ,bg-dim :foreground ,fg-special-warm :slant ,modus-theme-slant))))
    `(markdown-bold-face ((,class (:weight bold))))
@@ -2980,6 +3001,29 @@ AMOUNT is a customisation option."
    `(treemacs-root-unreadable-face ((,class (:inherit treemacs-root-face :strike-through t))))
    `(treemacs-tags-face ((,class (:foreground ,blue-alt))))
    `(treemacs-tags-face ((,class (:foreground ,magenta-alt))))
+   ;;;; tuareg
+   `(caml-types-def-face ((,class (:inherit modus-theme-subtle-red))))
+   `(caml-types-expr-face ((,class (:inherit modus-theme-subtle-green))))
+   `(caml-types-occ-face ((,class (:inherit modus-theme-subtle-green))))
+   `(caml-types-scope-face ((,class (:inherit modus-theme-subtle-blue))))
+   `(caml-types-typed-face ((,class (:inherit modus-theme-subtle-magenta))))
+   `(tuareg-font-double-semicolon-face ((,class (:foreground ,red-alt))))
+   `(tuareg-font-lock-attribute-face ((,class (:foreground ,magenta))))
+   `(tuareg-font-lock-constructor-face ((,class (:foreground ,fg-main))))
+   `(tuareg-font-lock-error-face ((,class (:inherit modus-theme-intense-red :weight bold))))
+   `(tuareg-font-lock-extension-node-face ((,class (:background ,bg-alt :foreground ,magenta))))
+   `(tuareg-font-lock-governing-face ((,class (:foreground ,fg-main :weight bold))))
+   `(tuareg-font-lock-infix-extension-node-face ((,class (:foreground ,magenta))))
+   `(tuareg-font-lock-interactive-directive-face ((,class (:foreground ,fg-special-cold))))
+   `(tuareg-font-lock-interactive-error-face ((,class (:foreground ,red :weight bold))))
+   `(tuareg-font-lock-interactive-output-face ((,class (:foreground ,blue-alt-other))))
+   `(tuareg-font-lock-label-face ((,class (:foreground ,cyan-alt-other))))
+   `(tuareg-font-lock-line-number-face ((,class (:foreground ,fg-special-warm))))
+   `(tuareg-font-lock-module-face ((,class (:foreground ,magenta-alt))))
+   `(tuareg-font-lock-multistage-face ((,class (:background ,bg-alt :foreground ,blue :weight bold))))
+   `(tuareg-font-lock-operator-face ((,class (:foreground ,red-alt))))
+   `(tuareg-opam-error-face ((,class (:foreground ,red :weight bold))))
+   `(tuareg-opam-pkg-variable-name-face ((,class (:foreground ,cyan :slant ,modus-theme-slant))))
    ;;;; undo-tree
    `(undo-tree-visualizer-active-branch-face ((,class (:foreground ,fg-main :weight bold))))
    `(undo-tree-visualizer-current-face ((,class (:foreground ,blue-intense))))
@@ -3143,6 +3187,11 @@ AMOUNT is a customisation option."
    `(writegood-duplicates-face ((,class (:background ,bg-alt :foreground ,red-alt :underline t))))
    `(writegood-passive-voice-face ((,class (:foreground ,yellow-nuanced :underline (:color ,fg-lang-warning :style line)))))
    `(writegood-weasels-face ((,class (:foreground ,red-nuanced :underline (:color ,fg-lang-error :style line)))))
+   ;;;; woman
+   `(woman-addition ((,class (:foreground ,magenta-alt-other))))
+   `(woman-bold ((,class (:foreground ,magenta :weight bold))))
+   `(woman-italic ((,class (:foreground ,cyan :slant italic))))
+   `(woman-unknown ((,class (:foreground ,yellow :slant italic))))
    ;;;; xah-elisp-mode
    `(xah-elisp-at-symbol ((,class (:foreground ,red-alt :weight bold))))
    `(xah-elisp-cap-variable ((,class (:foreground ,red-alt-other))))
@@ -3250,7 +3299,7 @@ AMOUNT is a customisation option."
 ;;;###autoload
 (when load-file-name
   (add-to-list 'custom-theme-load-path
-    (file-name-as-directory (file-name-directory load-file-name))))
+               (file-name-as-directory (file-name-directory load-file-name))))
 
 (provide-theme 'modus-vivendi)
 
