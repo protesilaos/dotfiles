@@ -4509,6 +4509,51 @@ other options in the Emacs space (e.g. with =C-u M-x shell=).
   (setq term-scroll-to-bottom-on-output nil))
 #+end_src
 
+** Tools for manual pages (manpages)
+   :PROPERTIES:
+   :CUSTOM_ID: h:ce420306-c40c-4d9a-bc01-205c5e49a5d1
+   :END:
+
+Emacs offers a couple of commands for reading manual pages: =man= and
+=woman=.  The former relies on the standard Unix tools, while the latter
+is an elisp implementation of the same idea.  As I only ever run a
+GNU/Linux system, I am okay with just =man=.
+
+Why bother?
+
++ All the goodies of consistency: fonts, themes, operating on text with
+  your familiar Emacs functionality, handling buffers…
++ Each manpage provides direct links to other items it references.
+
+What you can do inside such a buffer (with minor tweaks by me):
+
++ Hit =i= to go to the information node you want using completion (same
+  principle as with the Info pages of =C-h i= and the like).
++ =g= will generate the buffer anew.  Do it to reformat the text manually,
+  though this should also happen automatically when adjusting a window's
+  size.
++ =n= and =p= move between section headings.
++ Hit =RET= while over a referenced manpage to produce a new buffer with
+  its contents.
++ =s= takes you directly to the familiar "See Also" section.
++ Use =m= to search for another manpage using your completion framework.
+  If you invoke this command while point is over a referenced manpage,
+  it becomes the default choice (same concept as with common help
+  commands, =C-h f=, =C-h v=, and with many others like =find-library=).
+
+Need to filter out those =man= buffers?  Check [[#h:06290f9c-491c-45b2-b213-0248f890c83d][my Ibuffer entry]].
+
+While there are customisation options for this tool, I find the defaults
+to work as expected.  Note that the capitalisation of those symbols is
+canonical.
+
+#+begin_src emacs-lisp
+(use-package man
+  :bind (:map Man-mode-map
+              ("i" . Man-goto-section)
+              ("g" . Man-update-manpage)))
+#+end_src
+
 ** Proced (process monitor, similar to `top')
    :PROPERTIES:
    :CUSTOM_ID: h:6b56ce11-c84c-4b6d-98c7-bc3eefbe9325
