@@ -5637,23 +5637,31 @@ ispell dictionaries with `prot/ispell-toggle-dictionaries'."
          ("C-;" . nil)))
 #+end_src
 
-*** Flymake (code linting)
+*** Code linters
+    :PROPERTIES:
+    :CUSTOM_ID: h:20448ad8-9371-4e00-b88b-6b93f4c654d9
+    :END:
+
+There are several code linting tools in the Emacs milieu.  The two I
+configure here are front-ends to external programs for code analysis.
+
+While it is possible to run the linter globally or through hooks, I
+prefer to only do so manually on a per-buffer basis.  There are many
+cases where I am merely browsing code, where whatever diagnostics are of
+no import to the task at hand.
+
+With regard to the =defhydra= calls in this section, remember to refer to
+my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
+
+**** Flymake
     :PROPERTIES:
     :CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
     :END:
 
-This is a built-in linter that can be extended to support any
-programming language.  It seems to give me better feedback on elisp than
-the popular Flycheck alternative (though that is also excellent in its
-own right and I am not sure this statement is true---needs further
-testing).
-
-I activate =flymake-mode= manually and let it report its status only upon
-activation or after saving my edits---live feedback feels intrusive,
-while I do not need a linter when browsing code I have no intention to
-edit (e.g. Emacs libraries).
-
-Concerning this =defhydra=, remember to read my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
+This is a built-in linter interface that can be extended to support any
+programming language.  I do, however, feel that the alternative Flycheck
+(see below) offers a more refined experience, though I still am hesitant
+to reach any conclusions.
 
 #+begin_src emacs-lisp
 (use-package flymake
@@ -5682,11 +5690,122 @@ _d_: Diagnostics' buffer
               ("C-c h l" . hydra-flymake/body)))
 #+end_src
 
-With this in place we can perform checks that pertain to Emacs packages.
-I use it for my themes but also for any elisp library I may want to send
-patches to.
+**** Flycheck
+     :PROPERTIES:
+     :CUSTOM_ID: h:75069828-4b56-4341-8797-2d5a305c65e2
+     :END:
+
+This linting interface has excellent coverage for a broad range of
+languages, while there are lots of extensions to it to further broaden
+its scope.
+
+Flycheck has some subtle visual and functional advantages over the
+built-in Flymake (see above), though the most obvious one is the overall
+activity around its development.
 
 #+begin_src emacs-lisp
+(use-package flycheck
+  :ensure
+  :commands flycheck-mode
+  :config
+  (setq flycheck-check-syntax-automatically
+        '(save mode-enabled))
+
+  (defun prot/flycheck-list-errors-toggle ()
+    "Toggle the display of `flycheck-mode' diagnostics' buffer."
+    (interactive)
+    (let ((diagnostics (get-buffer-window flycheck-error-list-buffer)))
+      (unless flycheck-mode
+        (user-error "Flycheck mode not enabled"))
+      (if diagnostics
+          (delete-window diagnostics)
+      (flycheck-list-errors))))
+
+  (defhydra hydra-flycheck (:color pink :hint nil)
+    "
+   ^Actions^             ^Helpers^
+---^^--------------------^^-----------------
+_n_: Next error       _c_: Check buffer
+_p_: Previous error   _l_: List diagnostics
+_e_: Explain error    _x_: Disable checker
+_d_: Display error
+"
+    ("l" prot/flycheck-list-errors-toggle)
+    ("c" flycheck-buffer)
+    ("n" flycheck-next-errors)
+    ("p" flycheck-previous-errors)
+    ("e" flycheck-explain-error-at-point)
+    ("d" flycheck-display-error-at-point)
+    ("x" flycheck-disable-checker :color blue)
+    ("q" nil "cancel" :color blue))
+  :bind (:map flycheck-mode-map
+              ("C-c h l" . hydra-flycheck/body)))
+#+end_src
+
+***** Flycheck mode line indicator
+      :PROPERTIES:
+      :CUSTOM_ID: h:93b2aeed-d46a-4737-9d96-d8e5aedf8a67
+      :END:
+
+While Flymake has a good mode line status area, Flycheck's leaves
+something to be desired.  This package bridges that gap.  It offers a
+visual experience that involves both text and purpose-specific faces
+(set of styles).
+
+By default, the status feedback in =flycheck-indicator-status-icons=
+employs descriptive terms.  It can, nonetheless, be configured to show
+characters instead of long strings (which I guess opens the sluicegate
+for the flow of iconography, emojis, unicode symbols…).  I prefer to
+reduce verbosity using common text characters, at the potential cost of
+obscuring the meaning of some of the less common types of feedback (what
+does "suspicious" mean in this context, anyway?).
+
+I also tweak the characters that accompany all three classes of report
+(notes, warnings, errors) in an attempt to distinguish between them.
+
+If you want to be creative with your choice of symbol, note that while
+trying to complete a description through =C-x 8 RET=, you can press =?= to
+list all candidates in the "Completions" buffer with a preview next to
+each entry.  Neat!
+
+#+begin_src emacs-lisp
+(use-package flycheck-indicator
+  :ensure
+  :after flycheck
+  :config
+  (setq flycheck-indicator-icon-error (string-to-char "!"))
+  (setq flycheck-indicator-icon-info (string-to-char "·"))
+  (setq flycheck-indicator-icon-warning (string-to-char "*"))
+  (setq flycheck-indicator-status-icons
+        '((not-checked "%")
+          (no-checker "-")
+          (running "&")
+          (errored "!")
+          (finished "=")
+          (interrupted "#")
+          (suspicious "?")))
+  :hook (flycheck-mode . flycheck-indicator-mode))
+#+end_src
+
+**** Elisp packaging requirements
+     :PROPERTIES:
+     :CUSTOM_ID: h:d03342da-3035-409f-a5e7-5df1e614d507
+     :END:
+
+With these in place we can perform checks that pertain to Emacs lisp
+packaging.  I use it for my themes but also for any elisp library I may
+want to send patches to.
+
+The two packages here provide the necessary functionality for both of
+the linter front-ends configured above.
+
+#+begin_src emacs-lisp
+(use-package flycheck-package
+  :ensure
+  :after flycheck
+  :config
+  (flycheck-package-setup))
+
 (use-package package-lint-flymake
   :ensure
   :after flymake
