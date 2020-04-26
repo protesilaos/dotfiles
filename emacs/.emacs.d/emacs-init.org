@@ -6193,14 +6193,14 @@ I use visual bookmarks in much the same way.
 (use-package bm
   :ensure
   :config
-  (setq bm-annotate-on-create t)
+  (setq bm-annotate-on-create nil)
   (setq bm-buffer-persistence t)
   (setq bm-cycle-all-buffers t)
   (setq bm-goto-position nil)
   (setq bm-highlight-style 'bm-highlight-line-and-fringe)
   (setq bm-in-lifo-order t)
   (setq bm-recenter t)
-  (setq bm-repository-file "/home/prot/.emacs.d/bm-bookmarks")
+  (setq bm-repository-file "~/.emacs.d/bm-bookmarks")
   (setq bm-repository-size 100)
   (setq bm-show-annotations t)
   (setq bm-wrap-immediately t)
