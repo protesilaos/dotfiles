@@ -4195,10 +4195,10 @@ an "upper" (red) and a "lower" section (green), possibly with their
 common ancestor or last point of convergence in the middle (yellow).
 
 With this in mind we can operate on the marked differences by relying on
-the functions that Smerge provides, all of which are accessed through
-the common prefix =C-c ^=.  Start by typing the prefix followed by =C-h= to
-see all possible key chords.  These are the commands I have used the
-most:
+the functions that Smerge provides, all of which are accessed by default
+through the common prefix of =C-c ^=.  Start by typing the prefix followed
+by =C-h= to see all possible key chords.  These are the commands I have
+used the most:
 
 + =C-c ^ u= (=smerge-keep-upper=)
 + =C-c ^ l= (=smerge-keep-lower=)
@@ -4206,6 +4206,8 @@ most:
 + =C-c ^ a= (=smerge-keep-all=)
 + =C-c ^ n= (=smerge-next=)
 + =C-c ^ p= (=smerge-prev=)
+
+Also check the =defhydra= I provide for it to make things simpler.
 
 Proceed to edit the file the way you want until no more conflicts exist.
 You can also do things through manual editing, with standard commands
@@ -4250,7 +4252,9 @@ git config --global merge.conflictStyle diff3
 #+end_src
 
 This is optional, but I find that I like it.  At any rate, the
-configurations I have below are straightforward:
+configurations I have below are straightforward (learn more about this
+powerful tool by hitting =?= inside of its control panel and by consulting
+its comprehensive manual):
 
 + Do not keep all the buffers after exiting the Ediff session.
 + Keep buffers in an editable state.  Otherwise it is impossible to
@@ -4263,12 +4267,44 @@ configurations I have below are straightforward:
   the control panel will be inside an Emacs window (at the bottom part)
   rather than in a tiny frame of its own.
 
-There actually are no Smerge-related configurations here.  The package
-is small and does one thing well.  Whereas Ediff is much broader in
-scope.  Learn more about this powerful tool by hitting =?= inside of its
-control panel and by consulting its comprehensive manual.
+There actually is not much in terms of Smerge-related configurations.
+The package is small and does one thing well.  I do, however, specify a
+hydra (as explained in [[#h:af691a31-917e-4d9b-aee6-5744b1173999][the relevant section]]) to make it easier to
+navigate conflicts.  Since =smerge-mode= only gets activated when visiting
+a file with diff conflicts, we can load the hydra upon accessing it.
+Makes things nice and simple.  No need to have a separate key binding.
+
+Also watch my video of [[https://protesilaos.com/codelog/2020-04-10-emacs-smerge-ediff/][Smerge and Ediff for git conflict resolution]]
+(2020-04-10).
 
 #+begin_src emacs-lisp
+(use-package smerge-mode
+  :config
+  (defhydra prot/hydra-smerge-mode
+    (:color pink :hint nil :post (smerge-auto-leave))
+    "
+   ^Motions^      ^Actions^
+---^^-------------^^-------
+_n_: Next      _b_: Base
+_p_: Prev      _u_: Upper
+^^             _l_: Lower
+^^             _a_: All
+"
+    ("n" smerge-next)
+    ("p" smerge-prev)
+    ("b" smerge-keep-base)
+    ("u" smerge-keep-upper)
+    ("l" smerge-keep-lower)
+    ("a" smerge-keep-all)
+    ("q" nil "cancel" :color blue))
+
+  (defun prot/smerge-mode-hydra ()
+    "Load `prot/hydra-smerge-mode' in `smerge-mode'."
+    (when smerge-mode
+      (prot/hydra-smerge-mode/body)))
+  :hook ((vc-find-file . prot/smerge-mode-hydra)
+         (magit-diff-visit-file . prot/smerge-mode-hydra)))
+
 (use-package ediff
   :config
   (setq ediff-keep-variants nil)
@@ -5674,7 +5710,7 @@ to reach any conclusions.
   (setq flymake-proc-compilation-prevents-syntax-check t)
   (setq flymake-wrap-around nil)
 
-  (defhydra hydra-flymake (:color pink :hint nil)
+  (defhydra prot/hydra-flymake (:color pink :hint nil)
     "
 Actions
 -------
