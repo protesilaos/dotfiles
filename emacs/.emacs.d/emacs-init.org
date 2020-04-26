@@ -321,7 +321,8 @@ function as intended (for example, =C-x o= is also =s-o=).
 
 To find all my keybindings of this sort in the source code version of
 this document from inside of Emacs, do =M-s o= (or =M-x occur=) followed by
-the pattern ="s-[a-z0-9]"=.
+the pattern ="[a-zA-Z<]?-?s-.+?"= (please contact me if you know how to
+improve this).
 
 Note that your choice of desktop environment might render some of these
 useless.  The DE will simply intercept the key chord before it is ever
