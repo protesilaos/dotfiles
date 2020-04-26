@@ -5870,50 +5870,53 @@ commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
   (global-eldoc-mode 1))
 #+end_src
 
-*** Markdown support
+*** Support for various major modes
     :PROPERTIES:
-    :CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
+    :CUSTOM_ID: h:485bb253-208a-4a0a-99e3-ae1a205e3b7b
     :END:
+
+These provide syntax highlighting and additional features for
+environments that are not already supported by Emacs.
+
+**** Arch Linux package recipes
+     :PROPERTIES:
+     :CUSTOM_ID: h:7fa5b86b-3fc5-4118-8d56-aacf4c0fffb8
+     :END:
+
+If you are on Arch or derivatives and check PKGBUILD files, this is for
+you.
+
+#+begin_src emacs-lisp
+(use-package pkgbuild-mode
+  :ensure
+  :mode ("PKGBUILD" . pkgbuild-mode))
+#+end_src
+
+**** Markdown
+     :PROPERTIES:
+     :CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
+     :END:
 
 I edit lots of Markdown files.  This makes things easier.
 
 #+begin_src emacs-lisp
 (use-package markdown-mode
   :ensure
-  :mode ("\\.md\\'" . markdown-mode))
+  :mode ("\\.md$" . markdown-mode))
 #+end_src
 
-*** YAML support
-    :PROPERTIES:
-    :CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
-    :END:
+**** YAML
+     :PROPERTIES:
+     :CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
+     :END:
 
 This adds support for YAML files.
 
 #+begin_src emacs-lisp
 (use-package yaml-mode
   :ensure
-  :mode (("\\.yml\\'" . yaml-mode)
-         ("\\.yaml\\'" . yaml-mode)))
-#+end_src
-
-*** Support for various config files
-    :PROPERTIES:
-    :CUSTOM_ID: h:3a5ec3f9-1087-4409-88d5-2468a0aa385e
-    :END:
-
-The following rules implement the appropriate syntax highlighting in
-various configuration files that I access.
-
-The list will be expanded over time.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :mode (("offlineimaprc" . conf-mode)
-         ("sxhkdrc" . conf-mode)
-         ("Xmodmap" . conf-xdefaults-mode)
-         ("template" . shell-script-mode)
-         ("\\.rasi\\'" . css-mode)))
+  :mode (("\\.yml$" . yaml-mode)
+         ("\\.yaml$" . yaml-mode)))
 #+end_src
 
 *** Configure 'electric' behaviour
