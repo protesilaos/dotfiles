@@ -5723,7 +5723,7 @@ _d_: Diagnostics' buffer
     ("p" flymake-goto-prev-error)
     ("q" nil "cancel" :color blue))
   :bind (:map flymake-mode-map
-              ("C-c h l" . hydra-flymake/body)))
+              ("C-c h l" . prot/hydra-flymake/body)))
 #+end_src
 
 **** Flycheck
@@ -5757,7 +5757,7 @@ activity around its development.
           (delete-window diagnostics)
       (flycheck-list-errors))))
 
-  (defhydra hydra-flycheck (:color pink :hint nil)
+  (defhydra prot/hydra-flycheck (:color pink :hint nil)
     "
    ^Actions^             ^Helpers^
 ---^^--------------------^^-----------------
@@ -5775,7 +5775,7 @@ _d_: Display error
     ("x" flycheck-disable-checker :color blue)
     ("q" nil "cancel" :color blue))
   :bind (:map flycheck-mode-map
-              ("C-c h l" . hydra-flycheck/body)))
+              ("C-c h l" . prot/hydra-flycheck/body)))
 #+end_src
 
 ***** Flycheck mode line indicator
@@ -6226,7 +6226,8 @@ For the =defhydra=, refer to my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][funda
   :config
   (use-package bicycle :ensure)
 
-  (defhydra hydra-outline (:idle nil :color pink :hint nil :post (deactivate-mark))
+  (defhydra prot/hydra-outline (:idle nil :color pink
+                                      :hint nil :post (deactivate-mark))
     "
    ^Motions^                            ^Show^
 ---^------------------------------------^----------------
@@ -6245,7 +6246,7 @@ _b_: Back same level   _<S-iso-lefttab>_: Cycle global
     ("<S-iso-lefttab>" bicycle-cycle-global)
     ("q" nil "cancel" :color blue))
   :bind (:map outline-minor-mode-map
-              ("C-c h o" . hydra-outline/body)))
+              ("C-c h o" . prot/hydra-outline/body)))
 
 (use-package outline-minor-faces
   :ensure
