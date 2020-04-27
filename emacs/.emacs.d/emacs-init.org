@@ -2782,14 +2782,14 @@ structured information.  The type of data and the way to store is
 determined by a system of templates which accepts a series of possible
 specifiers as well as the evaluated part of arbitrary elisp code.
 
-Each template is accessed via a key.  These are listed in a buffer when
-you call =org-capture=.  Unique keys give direct access to their template,
-whereas templates that share a common initial key will produce a second
-selection list with the remaining options.  In the latter case, the
-initial key entry has no call to an actual function, but is just written
-as a heading.  For an example, look how I do the "contact information":
-all templates whose keys follow the pattern =cX= are only visible after
-hitting =c= and are then accessed via =X=.
+Each template is accessed via a key.  These are listed in a temporary
+buffer when you call =org-capture=.  Unique keys give direct access to
+their template, whereas templates that share a common initial key will
+produce a second selection list with the remaining options.  In the
+latter case, the initial key entry has no call to an actual function,
+but is just written as a heading.  For an example, look how I do the
+"idea" section: all templates whose keys follow the pattern =iX= are only
+visible after hitting =i= and are then accessed via =X=.
 
 The visibility of a template is further controlled by another variable:
 =org-capture-templates-contexts=.  This allows us to tell Org the context
@@ -2811,8 +2811,10 @@ Specifiers that start with the caret sign (=^=) represent prompts for
 further user input.  The pattern =^{TEXT}= is a prompt whose name is =TEXT=.
 To offer possible options, use =^{Initial|ONE|TWO|THREE}=, where the first
 entry is the text of the prompt and all the rest are the available
-choices.  In some templates I use the =^t= specifier, which is a built-in
-method to ask for a specific date.
+choices (depending on your completion framework, you may need to add an
+empty option as well, with =||=, should you ever want to insert nothing).
+In some templates I use the =^t= specifier, which is a built-in method to
+ask for a specific date.
 
 The text that goes into a template can be written as part of a string or
 inside a function that is then evaluated.  I generally prefer to use
@@ -2838,6 +2840,9 @@ when called from inside of a side window (for more on those, refer to
 the section on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).  The code is taken
 directly from this [[https://stackoverflow.com/a/54251825][Stack Overflow thread]].
 
+Consider watching my [[https://protesilaos.com/codelog/2020-02-04-emacs-org-capture-intro/][primer on org-capture]] (2020-02-04) which shows all
+of the above in action.
+
 #+begin_src emacs-lisp
 (use-package org-capture
   :after org
@@ -2851,7 +2856,7 @@ directly from this [[https://stackoverflow.com/a/54251825][Stack Overflow thread
            "* TODO [#B] %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %l" :immediate-finish t)
           ("t" "Task of importance with a tag, deadline, and further editable space" entry
            (file+headline "tasks.org" "Task list with a date")
-           "* %^{Scope of task||TODO [#A]|STUDY [#A]|MEET with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n:CAPTURED: %U\n :END:\n\n %i %?")
+           "* %^{Scope of task||TODO [#A]|STUDY [#A]|MEET with} %^{Title} %^g\n DEADLINE: %^t\n :PROPERTIES:\n :CONTEXT: %a\n :CAPTURED: %U\n :END:\n\n %i %?")
           ("r" "Reply to an email" entry
            (file+headline "tasks.org" "Mail correspondence")
            "* TODO [#B] %:subject\n SCHEDULED: %t\n :PROPERTIES:\n :CONTEXT: %a\n :END:\n\n %i %?")
