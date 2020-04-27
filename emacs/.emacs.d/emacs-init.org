@@ -1685,7 +1685,8 @@ Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][projec
   (setq rg-custom-type-aliases nil)
   (setq rg-default-alias-fallback "all")
 
-  (rg-define-search prot/grep-vc-or-dir
+  (rg-define-search prot/rg-vc-or-dir
+    "RipGrep in project root or present directory."
     :query ask
     :format regexp
     :files "everything"
@@ -1693,6 +1694,15 @@ Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][projec
            (if vc
                vc                         ; search root project dir
              default-directory))          ; or from the current dir
+    :confirm prefix
+    :flags ("--hidden -g !.git"))
+
+  (rg-define-search prot/rg-ref-in-dir
+    "RipGrep for thing at point in present directory."
+    :query point
+    :format regexp
+    :files "everything"
+    :dir default-directory
     :confirm prefix
     :flags ("--hidden -g !.git"))
 
@@ -1704,7 +1714,8 @@ This function is meant to be mapped to a key in `rg-mode-map'."
     (let ((pattern (car rg-pattern-history)))
       (rg-save-search-as-name (concat "«" pattern "»"))))
 
-  :bind (("M-s g" . prot/grep-vc-or-dir)
+  :bind (("M-s g" . prot/rg-vc-or-dir)
+         ("M-s r" . prot/rg-ref-in-dir)
          :map rg-mode-map
          ("s" . prot/rg-save-search-as-name)
          ("C-n" . next-line)
