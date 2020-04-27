@@ -5422,8 +5422,8 @@ other enhancement, such as a larger font size can be handled by another
 function.
 
 The =prot/olivetti-mode= offers a toggle for activating this mode, while
-removing the fringes (check my [[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][fringe-mode settings]]) and setting a
-larger font size.
+removing the fringes /for the selected window/ (check my [[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][fringe-mode
+settings]]) and setting a larger font size.
 
 Note that for my [[#h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11][simple presentations inside of Emacs (org-tree-slide)]] I
 use =darkroom= instead of =olivetti=.  They offer similar features, except
@@ -5445,10 +5445,10 @@ that is so pertinent to presentations.
     (if olivetti-mode
         (progn
           (olivetti-mode -1)
-          (fringe-mode nil)             ; Use default width
+          (set-window-fringes (selected-window) nil) ; Use default width
           (prot/fonts-per-monitor))
       (olivetti-mode 1)
-      (fringe-mode '(0 . 0))
+      (set-window-fringes (selected-window) 0 0)
       (prot/reading-fonts)))
   :bind ("C-c o" . prot/olivetti-mode))
 #+end_src
