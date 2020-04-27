@@ -490,8 +490,7 @@ criteria for exiting.
 Also check [[https://github.com/abo-abo/hydra][the project's source]] for more information.
 
 #+begin_src emacs-lisp
-(use-package hydra
-  :ensure)
+(use-package hydra :ensure)
 #+end_src
 
 ** Base typeface configurations
@@ -4538,7 +4537,12 @@ thus:
 My workflow is to keep the Shell as my main conduit to the command line,
 such as for when I need to call one of my scripts, and only use Vterm
 when I really need a CLI tool that is likely to produce graphical
-artifacts.
+artefacts.
+
+*Pro tip:* if you always can put the current buffer in another frame with
+the =M-x tear-off-window= command.  Works nicely when you need to keep
+Vterm in sight but out of your main editing space (e.g. to put it on a
+secondary monitor).
 
 #+begin_src emacs-lisp
 (use-package vterm
