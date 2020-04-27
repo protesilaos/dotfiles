@@ -3025,22 +3025,6 @@ demanding workflows.
       :PROPERTIES:
       :CUSTOM_ID: h:88d804f6-0e3f-44c8-9218-585378d04f12
       :END:
-*** Inherit theme styles in Org HTML export
-    :PROPERTIES:
-    :CUSTOM_ID: h:5b1d7d28-2cda-4ebb-9867-3fef9669d9f4
-    :END:
-
-With this package, every exported HTML code will inherit the styles of
-the current theme.  This makes it particularly useful for highlighting
-blocks of source code.
-
-#+begin_src emacs-lisp
-(use-package htmlize
-  :ensure
-  :after org
-  (setq htmlize-ignore-face-size t))
-#+end_src
-
 *** Consistent heading IDs (and anchor tags)
     :PROPERTIES:
     :CUSTOM_ID: h:031f7dbf-19e4-4ddf-a3d3-f648261412f6
