@@ -5923,6 +5923,21 @@ This adds support for YAML files.
          ("\\.yaml$" . yaml-mode)))
 #+end_src
 
+**** CSS
+     :PROPERTIES:
+     :CUSTOM_ID: h:ec10bfe6-5340-481c-9de2-3e346868241b
+     :END:
+
+This is the built-in mode for working with CSS and SCSS.  I just want it
+to not apply previews to colour references.  If I ever need that, there
+is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant section]]).
+
+#+begin_src emacs-lisp
+(use-package css-mode
+  :config
+  (setq css-fontify-colors nil))
+#+end_src
+
 *** Configure 'electric' behaviour
     :PROPERTIES:
     :CUSTOM_ID: h:ed95ef3e-75e6-4e53-b3bc-4aee540fe3d9
