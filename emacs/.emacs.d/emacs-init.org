@@ -96,7 +96,13 @@ Whereas in *Emacs 27.1 and onward*, they are modified thus:
   (setq use-package-always-defer nil)
   (setq use-package-always-demand nil)
   (setq use-package-expand-minimally nil)
-  (setq use-package-enable-imenu-support t))
+  (setq use-package-enable-imenu-support t)
+  ;; The following is VERY IMPORTANT.  Write hooks using their real name
+  ;; instead of a shorter version: after-init ==> `after-init-hook'.
+  ;;
+  ;; This is to empower help commands with their contextual awareness,
+  ;; such as `describe-symbol'.
+  (setq use-package-hook-name-suffix nil))
 
 (eval-when-compile
   (require 'use-package))
@@ -198,6 +204,13 @@ keyword.  The activation of a mode should always be the very last thing,
 once all variables have been set.  Make sure to read the manual for more
 information on the individual keywords.
 
+I set the variable =use-package-hook-name-suffix= to nil in order to
+always type in the proper name of a hook.  The default behaviour is to
+omit the suffix for convenience.  But that means that we can no longer
+benefit from the contextual awareness of help/documentation commands
+(e.g. =C-h o= over any of the symbols/functions/variables below will put
+the thing at point as the first completion option).
+
 Last but not least, you should be warned of a common error with handling
 package installs (with or without =use-package=): if Emacs complains that
 the package you want no longer exists, it means that *you must refresh
@@ -213,18 +226,24 @@ Emacs 27.1 starts up.  Whereas before I used to configure =use-package=
 from inside this document.
 
 #+begin_example emacs-lisp
-;; Setup `use-package'
+;; Make sure `use-package' is available.
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; Should set before loading `use-package'
+;; Configure `use-package' prior to loading it.
 (eval-and-compile
   (setq use-package-always-ensure nil)
   (setq use-package-always-defer nil)
   (setq use-package-always-demand nil)
   (setq use-package-expand-minimally nil)
-  (setq use-package-enable-imenu-support t))
+  (setq use-package-enable-imenu-support t)
+  ;; The following is VERY IMPORTANT.  Write hooks using their real name
+  ;; instead of a shorter version: after-init ==> `after-init-hook'.
+  ;;
+  ;; This is to empower help commands with their contextual awareness,
+  ;; such as `describe-symbol'.
+  (setq use-package-hook-name-suffix nil))
 
 (eval-when-compile
   (require 'use-package))
@@ -395,7 +414,7 @@ For live evaluation of elisp, we have =C-x C-e= (=eval-last-elisp=).
     (let ((configs "~/.emacs.d/emacs-init.el"))
       (when configs
         (delete-file configs))))
-  :hook (kill-emacs . prot/delete-emacs-init))
+  :hook (kill-emacs-hook . prot/delete-emacs-init))
 #+end_src
 
 ** Remove modeline "lighters"
@@ -635,7 +654,7 @@ monitor-related events."
 	      (prot/laptop-fonts)
 	    (prot/desktop-fonts))))
 
-  :hook (after-init . prot/fonts-per-monitor))
+  :hook (after-init-hook . prot/fonts-per-monitor))
 #+end_src
 
 **** Typeface suitability test
@@ -1022,7 +1041,7 @@ Bind this function in `icomplete-minibuffer-map'."
                (bound-and-true-p icomplete-mode))
       (setq truncate-lines t)))
 
-  :hook (icomplete-minibuffer-setup . prot/icomplete-minibuffer-truncate)
+  :hook (icomplete-minibuffer-setup-hook . prot/icomplete-minibuffer-truncate)
   :bind (:map icomplete-minibuffer-map
               ("<tab>" . icomplete-force-complete)
               ("<return>" . icomplete-force-complete-and-exit) ; exit with completion
@@ -1413,8 +1432,8 @@ position of the cursor after the skeleton has been inserted.
     "https://gitlab.com/protesilaos/" str "")
   (define-abbrev global-abbrev-table "megit"
     "" 'protesilaos-gitlab-skeleton)
-  :hook ((text-mode . abbrev-mode)
-         (git-commit-mode . abbrev-mode)))
+  :hook ((text-mode-hook . abbrev-mode)
+         (git-commit-mode-hook . abbrev-mode)))
 #+end_src
 
 ** Configurations for—or extensions to—built-in search commands
@@ -1808,8 +1827,8 @@ as =-AFXhlv --group-directories-first=).
   (setq dired-listing-switches
         "-AGFhlv --group-directories-first --time-style=long-iso")
   (setq dired-dwim-target t)
-  :hook ((dired-mode . dired-hide-details-mode)
-         (dired-mode . hl-line-mode)))
+  :hook ((dired-mode-hook . dired-hide-details-mode)
+         (dired-mode-hook . hl-line-mode)))
 
 (use-package dired-aux
   :config
@@ -1833,7 +1852,7 @@ as =-AFXhlv --group-directories-first=).
 
 (use-package dired-async
   :after (dired async)
-  :hook (dired-mode . dired-async-mode))
+  :hook (dired-mode-hook . dired-async-mode))
 #+end_src
 
 *Pro tip* while renaming or copying a file, =M-n= will return its original
@@ -2052,7 +2071,7 @@ packages (see the [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][section on my Modus
 #+begin_src emacs-lisp
 (use-package diredfl
   :ensure
-  :hook (dired-mode . diredfl-mode))
+  :hook (dired-mode-hook . diredfl-mode))
 #+end_src
 
 *** dired-like view for the trash directory
@@ -2170,8 +2189,7 @@ Also watch my [[https://protesilaos.com/codelog/2020-04-02-emacs-intro-ibuffer/]
                 (name 16 -1)
                 " " filename)))
   (setq ibuffer-saved-filter-groups nil)
-  :hook
-  (ibuffer-mode . hl-line-mode)
+  :hook (ibuffer-mode-hook . hl-line-mode)
   :bind (("C-x C-b" . ibuffer)
          :map ibuffer-mode-map
          ("* f" . ibuffer-mark-by-file-name-regexp)
@@ -2337,8 +2355,8 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
-  :hook ((help-mode . visual-line-mode)
-         (custom-mode . visual-line-mode))
+  :hook ((help-mode-hook . visual-line-mode)
+         (custom-mode-hook . visual-line-mode))
   :bind (("s-n" . next-buffer)
          ("s-p" . previous-buffer)
          ("s-o" . other-window)
@@ -2425,7 +2443,7 @@ its two main functions to Super and the right/left arrow keys.
 
 #+begin_src emacs-lisp
 (use-package winner
-  :hook (after-init . winner-mode)
+  :hook (after-init-hook . winner-mode)
   :bind ("<s-right>" . winner-redo)
          ("<s-left>" . winner-undo))
 #+end_src
@@ -2599,7 +2617,7 @@ input (see following sections).
                 holiday-other-holidays holiday-christian-holidays
                 holiday-islamic-holidays holiday-oriental-holidays
                 holiday-solar-holidays))
-  :hook (calendar-today-visible . calendar-mark-today))
+  :hook (calendar-today-visible-hook . calendar-mark-today))
 #+end_src
 
 ** Diary
@@ -3159,7 +3177,7 @@ activation of `org-tree-slide-mode'."
          :map org-tree-slide-mode-map
          ("<C-right>" . org-tree-slide-move-next-tree)
          ("<C-left>" . org-tree-slide-move-previous-tree))
-  :hook (org-tree-slide-mode . prot/org-presentation))
+  :hook (org-tree-slide-mode-hook . prot/org-presentation))
 #+end_src
 
 ** Email settings
@@ -3267,8 +3285,8 @@ Add this function to `message-header-setup-hook'."
             (message-add-header "Gcc: nnimap+pub:Sent"))
       (message "Gnus is not running. No GCC field inserted.")))
 
-  :hook ((message-header-setup . prot/message-header-add-gcc)
-         (message-setup . message-sort-headers)))
+  :hook ((message-header-setup-hook . prot/message-header-add-gcc)
+         (message-setup-hook . message-sort-headers)))
 #+end_src
 
 Below is a sample with the contents of my =authinfo.gpg=.  This is read by
@@ -3671,9 +3689,8 @@ to be declared last.
           (gnus-group-sort-by-alphabet)
           (gnus-group-sort-by-rank)))
   (setq gnus-group-mode-line-format "%%b")
-  :hook
-  (gnus-group-mode . hl-line-mode)
-  (gnus-select-group-hook . gnus-group-set-timestamp)
+  :hook ((gnus-group-mode-hook . hl-line-mode)
+         (gnus-select-group-hook . gnus-group-set-timestamp))
   :bind (:map gnus-agent-group-mode-map
               ("M-n" . gnus-topic-goto-next-topic)
               ("M-p" . gnus-topic-goto-previous-topic)))
@@ -3682,8 +3699,7 @@ to be declared last.
   :after (gnus gnus-group)
   :config
   (setq gnus-topic-display-empty-topics nil)
-  :hook
-  (gnus-group-mode . gnus-topic-mode))
+  :hook (gnus-group-mode-hook . gnus-topic-mode))
 #+end_src
 
 **** Gnus summary
@@ -3750,10 +3766,9 @@ being a little bit cleaner than default.
   ;;   (interactive)
   ;;   (let ((directory "~/Downloads"))
   ;;     (gnus-summary-save-parts ".*" directory)))
-  :hook
-  (gnus-summary-mode . hl-line-mode)
-  (gnus-summary-exit-hook . gnus-topic-sort-groups-by-alphabet)
-  (gnus-summary-exit-hook . gnus-group-sort-groups-by-rank)
+  :hook ((gnus-summary-mode-hook . hl-line-mode)
+         (gnus-summary-exit-hook . gnus-topic-sort-groups-by-alphabet)
+         (gnus-summary-exit-hook . gnus-group-sort-groups-by-rank))
   :bind (:map gnus-agent-summary-mode-map
               ("<delete>" . gnus-summary-delete-article)
               ("n" . gnus-summary-next-article)
@@ -3780,8 +3795,7 @@ about these concepts in the introductory [[#h:14cf6fea-54eb-4faa-bb16-3739485c92
 #+begin_src emacs-lisp
 (use-package gnus-srvr
   :after gnus
-  :hook
-  ((gnus-browse-mode gnus-server-mode) . hl-line-mode))
+  :hook ((gnus-browse-mode-hook gnus-server-mode-hook) . hl-line-mode))
 #+end_src
 
 **** Gnus intersection with Dired
@@ -3803,7 +3817,7 @@ By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][com
 #+begin_src emacs-lisp
 (use-package gnus-dired
   :after (gnus dired)
-  :hook (dired-mode . gnus-dired-mode))
+  :hook (dired-mode-hook . gnus-dired-mode))
 #+end_src
 
 **** TODO Extend Gnus [0/2]                                      :emacs:gnus:
@@ -4399,8 +4413,8 @@ _p_: Prev      _u_: Upper
     "Load `prot/hydra-smerge-mode' in `smerge-mode'."
     (when smerge-mode
       (prot/hydra-smerge-mode/body)))
-  :hook ((vc-find-file . prot/smerge-mode-hydra)
-         (magit-diff-visit-file . prot/smerge-mode-hydra)))
+  :hook ((vc-find-file-hook . prot/smerge-mode-hydra)
+         (magit-diff-visit-file-hook . prot/smerge-mode-hydra)))
 
 (use-package ediff
   :config
@@ -4745,7 +4759,7 @@ syntax for use by the `elfeed' package."
               (format "--ytdl-format=[height<=?%s]" quality-val)))
       (start-process "elfeed-mpv" nil "mpv"
                      quality-arg (elfeed-entry-link entry))))
-  :hook (after-init . prot/feeds)
+  :hook (after-init-hook . prot/feeds)
   :bind (:map elfeed-search-mode-map
               ("v" . (lambda ()
                        (interactive)
@@ -4949,8 +4963,8 @@ Upon insertion, playback starts immediately, in accordance with
          (completing-read "Select playlist: " playlists nil t))
         (prot/bongo-play-random))))
 
-  :hook ((dired-mode . prot/bongo-dired-library)
-         (bongo-playlist-mode . hl-line-mode))
+  :hook ((dired-mode-hook . prot/bongo-dired-library)
+         (bongo-playlist-mode-hook . hl-line-mode))
   :bind (("<C-XF86AudioPlay>" . bongo-pause/resume)
          ("<C-XF86AudioNext>" . bongo-next)
          ("<C-XF86AudioPrev>" . bongo-previous)
@@ -5103,7 +5117,7 @@ Also run `prot/modus-themes-toggle-hook'."
     (run-hooks 'prot/modus-themes-toggle-hook))
 
   :bind ("<f5>" . prot/modus-themes-toggle)
-  :hook (after-init . prot/modus-operandi))
+  :hook (after-init-hook . prot/modus-operandi))
 #+end_src
 
 *** Mode line
@@ -5180,7 +5194,7 @@ instead of a 100 because sometimes the battery only ever fills up to
   (setq battery-update-interval 180)
   (setq battery-load-low 20)
   (setq battery-load-critical 10)
-  :hook (after-init . display-battery-mode))
+  :hook (after-init-hook . display-battery-mode))
 #+end_src
 
 **** Display current time
@@ -5215,7 +5229,7 @@ time and date.  The rest is noise.
   (setq display-time-interval 60)
   (setq display-time-mail-directory nil)
   (setq display-time-default-load-average nil)
-  :hook (after-init . display-time-mode))
+  :hook (after-init-hook . display-time-mode))
 #+end_src
 
 **** Keycast mode
@@ -5263,7 +5277,7 @@ borders as well as their placement.
   (setq window-divider-default-right-width 1)
   (setq window-divider-default-bottom-width 1)
   (setq window-divider-default-places 'right-only)
-  :hook (after-init . window-divider-mode))
+  :hook (after-init-hook . window-divider-mode))
 #+end_src
 
 *** Fringe mode
@@ -5320,7 +5334,7 @@ section on the [[*Generic version control (VC) framework][generic version contro
   :config
   (setq diff-hl-draw-borders nil)
   (setq diff-hl-side 'left)
-  :hook ((after-init . global-diff-hl-mode)))
+  :hook (after-init-hook . global-diff-hl-mode))
 #+end_src
 
 *** Optional visual indicators or layout elements
@@ -5509,7 +5523,7 @@ and similar tools (or when manually invoking text formatting with
   (setq sentence-end-double-space t)
   (setq sentence-end-without-period nil)
   (setq colon-double-space nil)
-  :hook (after-init . column-number-mode))
+  :hook (after-init-hook . column-number-mode))
 #+end_src
 
 *** Recognise subwords
@@ -5525,7 +5539,7 @@ motions will behave accordingly.
 #+begin_src emacs-lisp
 (use-package subword
   :diminish
-  :hook (prog-mode . subword-mode))
+  :hook (prog-mode-hook . subword-mode))
 #+end_src
 
 *** Auto-fill plain text and comments
@@ -5547,8 +5561,8 @@ to it rather than the absolute beginning of the line.
   :diminish auto-fill-function
   :config
   (setq adaptive-fill-mode t)
-  :hook (text-mode . (lambda ()
-                       (turn-on-auto-fill))))
+  :hook (text-mode-hook . (lambda ()
+                            (turn-on-auto-fill))))
 #+end_src
 
 *** Comment lines, regions, boxes, etc.
@@ -5824,7 +5838,7 @@ each entry.  Neat!
           (finished "=")
           (interrupted "#")
           (suspicious "?")))
-  :hook (flycheck-mode . flycheck-indicator-mode))
+  :hook (flycheck-mode-hook . flycheck-indicator-mode))
 #+end_src
 
 **** Elisp packaging requirements
@@ -5991,10 +6005,10 @@ auto-insertion of characters.  This is a summary of my settings:
   (setq electric-quote-paragraph t)
   (setq electric-quote-string nil)
   (setq electric-quote-replace-double t)
-  :hook (after-init . (lambda ()
-                        (electric-indent-mode 1)
-                        (electric-pair-mode -1)
-                        (electric-quote-mode -1))))
+  :hook (after-init-hook . (lambda ()
+                             (electric-indent-mode 1)
+                             (electric-pair-mode -1)
+                             (electric-quote-mode -1))))
 #+end_src
 
 *** Parentheses
@@ -6025,7 +6039,7 @@ Summary of what these do:
   (setq show-paren-style 'parenthesis)
   (setq show-paren-when-point-in-periphery t)
   (setq show-paren-when-point-inside-paren nil)
-  :hook (after-init . show-paren-mode))
+  :hook (after-init-hook . show-paren-mode))
 #+end_src
 
 *** Tabs, indentation, and the TAB key
@@ -6274,7 +6288,7 @@ _b_: Back same level   _<S-iso-lefttab>_: Cycle global
   :ensure
   :after outline
   :hook
-  (outline-minor-mode . outline-minor-faces-add-font-lock-keywords))
+  (outline-minor-mode-hook . outline-minor-faces-add-font-lock-keywords))
 #+end_src
 
 ** Custom movements and motions
@@ -6686,7 +6700,7 @@ fairly short in a number of scenaria.
   (setq-default blink-cursor-blinks 50)
   (setq-default blink-cursor-interval 0.75)
   (setq-default blink-cursor-delay 0.2)
-  :hook (after-init . blink-cursor-mode))
+  :hook (after-init-hook . blink-cursor-mode))
 #+end_src
 
 *** Beacon mode (highlight cursor position)
@@ -6725,7 +6739,7 @@ This is meant to be called from `prot/modus-themes-toggle-hook'."
 
   (beacon-mode -1)
   :bind ("<s-escape>" . beacon-blink)
-  :hook (prot/modus-themes-toggle . prot/beacon-color))
+  :hook (prot/modus-themes-toggle-hook . prot/beacon-color))
 #+end_src
 
 *** Mouse wheel behaviour
@@ -6767,7 +6781,7 @@ The other options in short:
   (setq make-pointer-invisible t)
   (setq mouse-wheel-progressive-speed t)
   (setq mouse-wheel-follow-mouse t)
-  :hook (after-init . mouse-wheel-mode))
+  :hook (after-init-hook . mouse-wheel-mode))
 #+end_src
 
 *** Scrolling behaviour
@@ -6805,7 +6819,7 @@ effect (see the section on the [[#h:02572210-eb26-4941-8f7c-666a0314877b][mouse 
 
 #+begin_src emacs-lisp
 (use-package delsel
-  :hook (after-init . delete-selection-mode))
+  :hook (after-init-hook . delete-selection-mode))
 #+end_src
 
 *Pro tip*: On Emacs 27.1 you can create a rectangular region by holding
@@ -6830,7 +6844,7 @@ mouse over an actionable item:
   (setq tooltip-delay 0.5)
   (setq tooltip-short-delay 0.5)
   (setq x-gtk-use-system-tooltips nil)
-  :hook (after-init . tooltip-mode))
+  :hook (after-init-hook . tooltip-mode))
 #+end_src
 
 ** Conveniences and minor extras
@@ -6851,7 +6865,7 @@ A change can happen externally or by some other tool inside of Emacs
   :diminish
   :config
   (setq auto-revert-verbose t)
-  :hook (after-init . global-auto-revert-mode))
+  :hook (after-init-hook . global-auto-revert-mode))
 #+end_src
 
 *** Preserve contents of system clipboard
@@ -6984,7 +6998,7 @@ current line is more important than the exact column of the point.
   :commands (list-packages
              package-refresh-contents
              package-list-packages)
-  :hook (package-menu-mode . hl-line-mode))
+  :hook (package-menu-mode-hook . hl-line-mode))
 #+end_src
 
 * History and state
@@ -7015,7 +7029,7 @@ long as there is an Emacs frame attached to it.
 
 #+begin_src emacs-lisp
 (use-package server
-  :hook (after-init . server-start))
+  :hook (after-init-hook . server-start))
 #+end_src
 
 With some exceptions aside, I only ever use Emacs in a single frame.
@@ -7158,8 +7172,8 @@ display virtual buffers."
                (equal "" (file-name-nondirectory dired-directory)))
       (recentf-add-file dired-directory)))
 
-  :hook ((after-init . recentf-mode)
-         (dired-mode . contrib/recentf-add-dired-directory)))
+  :hook ((after-init-hook . recentf-mode)
+         (dired-mode-hook . contrib/recentf-add-dired-directory)))
 #+end_src
 
 *** Minibuffer history
@@ -7367,8 +7381,8 @@ package declaration is but a piece of a greater whole.
   (ivy-set-occur 'swiper 'swiper-occur)
   (ivy-set-occur 'swiper-isearch 'swiper-occur)
   (ivy-set-occur 'swiper-multi 'counsel-ag-occur)
-  :hook ((after-init . ivy-mode)
-         (ivy-occur-mode . hl-line-mode))
+  :hook ((after-init-hook . ivy-mode)
+         (ivy-occur-mode-hook . hl-line-mode))
   :bind (("<s-up>" . ivy-push-view)
 		 ("<s-down>" . ivy-switch-view)
          ("C-S-r" . ivy-resume)
@@ -7626,7 +7640,7 @@ specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
   :ensure
   :config
   (add-to-list 'ivy-initial-inputs-alist '(counsel-projectile-switch-project . ""))
-  :hook (after-init . counsel-projectile-mode)
+  :hook (after-init-hook . counsel-projectile-mode)
   ;; :bind-keymap ("M-s p" . projectile-command-map)
   :bind (("M-s b" . counsel-projectile-switch-to-buffer)
          ("M-s d" . counsel-projectile-find-dir)
@@ -7848,7 +7862,7 @@ The following configure =mu4e=, the Mail User Agent.  An overview:
     (let ((mails "~/.emacs.d/mu4e-contexts.el.gpg"))
       (when (file-exists-p mails)
         (load-file mails))))
-  :hook (after-init . prot/mu4e-contexts)
+  :hook (after-init-hook . prot/mu4e-contexts)
   :bind (:map mu4e-main-mode-map
               ("g" . mu4e-update-mail-and-index)))
 #+end_src
