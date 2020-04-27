@@ -3230,7 +3230,7 @@ Then we set up the interface for composing emails:
 
 (use-package epa-file
   :config
-  (setq epa-file-cache-passphrase-for-symmetric-encryption t))
+  (setq epa-file-cache-passphrase-for-symmetric-encryption nil))
 
 (use-package message
   :config
@@ -3249,7 +3249,7 @@ Then we set up the interface for composing emails:
   (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
   (defun prot/message-header-add-gcc ()
-    "While `gnus' is running, add a Gcc header, if missing.
+    "While `gnus' is running, add pre-populated Gcc header.
 
 The Gcc header places a copy of the outgoing message to the
 appropriate directory of the IMAP server, as per the contents of
@@ -3263,8 +3263,8 @@ Add this function to `message-header-setup-hook'."
     (if (gnus-alive-p)
         (progn
           (when (message-fetch-field "Gcc")
-            (message-remove-header "Gcc")
-            (message-add-header "Gcc: nnimap+pub:Sent")))
+            (message-remove-header "Gcc"))
+            (message-add-header "Gcc: nnimap+pub:Sent"))
       (message "Gnus is not running. No GCC field inserted.")))
 
   :hook ((message-header-setup . prot/message-header-add-gcc)
