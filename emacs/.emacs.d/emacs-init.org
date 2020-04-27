@@ -3766,9 +3766,7 @@ being a little bit cleaner than default.
   ;;   (interactive)
   ;;   (let ((directory "~/Downloads"))
   ;;     (gnus-summary-save-parts ".*" directory)))
-  :hook ((gnus-summary-mode-hook . hl-line-mode)
-         (gnus-summary-exit-hook . gnus-topic-sort-groups-by-alphabet)
-         (gnus-summary-exit-hook . gnus-group-sort-groups-by-rank))
+  :hook (gnus-summary-mode-hook . hl-line-mode)
   :bind (:map gnus-agent-summary-mode-map
               ("<delete>" . gnus-summary-delete-article)
               ("n" . gnus-summary-next-article)
