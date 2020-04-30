@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 0.7.0
+;; Version: 0.8.0
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -523,19 +523,19 @@ AMOUNT is a customisation option."
       ;; styles for the main constructs
       ;;
       ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
-      (red "#a80000") (green "#005200")
+      (red "#a80000") (green "#005f00")
       (yellow "#8b3800") (blue "#0030a6")
       (magenta "#721045") (cyan "#005589")
       ;; styles for common, but still specialised constructs
       ;;
       ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
-      (red-alt "#880000") (green-alt "#4a5700")
+      (red-alt "#972500") (green-alt "#305c00")
       (yellow-alt "#714900") (blue-alt "#223fbf")
       (magenta-alt "#8f0075") (cyan-alt "#185870")
       ;; same purpose as above, just slight differences
       ;;
       ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
-      (red-alt-other "#9d2020") (green-alt-other "#145a00")
+      (red-alt-other "#a0132f") (green-alt-other "#095f1c")
       (yellow-alt-other "#804000") (blue-alt-other "#0000bb")
       (magenta-alt-other "#5317ac") (cyan-alt-other "#005a68")
       ;; styles for elements that should be very subtle
@@ -590,10 +590,10 @@ AMOUNT is a customisation option."
       ;; styles that are meant exclusively for the fringes
       ;;
       ;; must have a minimum contrast ratio of 1.5:1 with `bg-inactive'
-      ;; and be combined with `fg-main'
-      (red-fringe-bg "#ff7a7a") (green-fringe-bg "#70cc70")
-      (yellow-fringe-bg "#e0c000") (blue-fringe-bg "#7fafff")
-      (magenta-fringe-bg "#ffa0ff") (cyan-fringe-bg "#00d0f0")
+      ;; and be combined with `fg-main' or `fg-dim'
+      (red-fringe-bg "#ff9a9a") (green-fringe-bg "#86cf86")
+      (yellow-fringe-bg "#e0c050") (blue-fringe-bg "#82afff")
+      (magenta-fringe-bg "#f0a3ff") (cyan-fringe-bg "#00d6e0")
 
       ;; styles reserved for specific faces
       ;;
@@ -621,6 +621,8 @@ AMOUNT is a customisation option."
       ;; `fg-mark', `fg-mark-del', `fg-mark-other' can be combined with
       ;; `bg-main', `bg-dim', `bg-alt', `bg-hl-line'
       ;;
+      ;; `fg-unfocused' must be combined with `fg-main'
+      ;;
       ;; the window divider colours apply to faces with just an fg value
       ;;
       ;; all pairs are combinable with themselves
@@ -641,6 +643,9 @@ AMOUNT is a customisation option."
 
       (fg-window-divider-inner "#888888")
       (fg-window-divider-outer "#585858")
+
+      (fg-unfocused "#56576d")
+
       (fg-header "#2a2a2a") (bg-header "#e5e5e5")
       (fg-whitespace "#645060") (bg-whitespace "#fff8fc")
 
@@ -648,9 +653,11 @@ AMOUNT is a customisation option."
       (fg-diff-added "#004500") (bg-diff-added "#d4fad4")
       (fg-diff-changed "#524200") (bg-diff-changed "#fcefcf")
       (fg-diff-removed "#691616") (bg-diff-removed "#ffe8ef")
+
       (fg-diff-refine-added "#002a00") (bg-diff-refine-added "#94cf94")
       (fg-diff-refine-changed "#302010") (bg-diff-refine-changed "#cccf8f")
       (fg-diff-refine-removed "#400000") (bg-diff-refine-removed "#daa2b0")
+
       (fg-diff-focus-added "#002c00") (bg-diff-focus-added "#bbeabb")
       (fg-diff-focus-changed "#392900") (bg-diff-focus-changed "#ecdfbf")
       (fg-diff-focus-removed "#4a0000") (bg-diff-focus-removed "#efcbcf")
@@ -716,12 +723,12 @@ AMOUNT is a customisation option."
    `(modus-theme-active-magenta ((,class (:background ,magenta-active :foreground ,bg-active))))
    `(modus-theme-active-cyan ((,class (:background ,cyan-active :foreground ,bg-active))))
    ;;; for fringe indicators
-   `(modus-theme-fringe-red ((,class (:background ,red-fringe-bg :foreground ,fg-main))))
-   `(modus-theme-fringe-green ((,class (:background ,green-fringe-bg :foreground ,fg-main))))
-   `(modus-theme-fringe-yellow ((,class (:background ,yellow-fringe-bg :foreground ,fg-main))))
-   `(modus-theme-fringe-blue ((,class (:background ,blue-fringe-bg :foreground ,fg-main))))
-   `(modus-theme-fringe-magenta ((,class (:background ,magenta-fringe-bg :foreground ,fg-main))))
-   `(modus-theme-fringe-cyan ((,class (:background ,cyan-fringe-bg :foreground ,fg-main))))
+   `(modus-theme-fringe-red ((,class (:background ,red-fringe-bg :foreground ,fg-dim))))
+   `(modus-theme-fringe-green ((,class (:background ,green-fringe-bg :foreground ,fg-dim))))
+   `(modus-theme-fringe-yellow ((,class (:background ,yellow-fringe-bg :foreground ,fg-dim))))
+   `(modus-theme-fringe-blue ((,class (:background ,blue-fringe-bg :foreground ,fg-dim))))
+   `(modus-theme-fringe-magenta ((,class (:background ,magenta-fringe-bg :foreground ,fg-dim))))
+   `(modus-theme-fringe-cyan ((,class (:background ,cyan-fringe-bg :foreground ,fg-dim))))
    ;;; special base values that are closer to the grayscale than
    ;;; the accents defined above
    `(modus-theme-special-cold ((,class (:background ,bg-special-cold :foreground ,fg-special-cold))))
@@ -1192,7 +1199,7 @@ AMOUNT is a customisation option."
    `(diff-changed ((,class ,(modus-operandi-theme-diffs
                              bg-main yellow
                              bg-diff-focus-changed fg-diff-focus-changed))))
-   `(diff-context ((,class (:foreground ,fg-alt))))
+   `(diff-context ((,class (:foreground ,fg-unfocused))))
    `(diff-file-header ((,class (:foreground ,blue :weight bold))))
    `(diff-function ((,class (:foreground ,fg-special-cold))))
    `(diff-header ((,class (:foreground ,blue-nuanced))))
@@ -1504,8 +1511,8 @@ AMOUNT is a customisation option."
    ;;;; flycheck
    `(flycheck-error
      ((,(append '((supports :underline (:style wave))) class)
-       (:underline (:color ,fg-lang-error :style wave)))
-      (,class (:foreground ,red-nuanced :underline (:color ,fg-lang-error :style line)))))
+       (:foreground ,red-nuanced :underline (:color ,fg-lang-error :style wave)))
+      (,class (:foreground red-nuanced :underline (:color ,fg-lang-error :style line)))))
    `(flycheck-error-list-checker-name ((,class (:foreground ,magenta-active))))
    `(flycheck-error-list-column-number ((,class (:foreground ,fg-special-cold))))
    `(flycheck-error-list-error ((,class (:foreground ,red :weight ,modus-theme-bold))))
@@ -1521,12 +1528,12 @@ AMOUNT is a customisation option."
    `(flycheck-fringe-warning ((,class (:inherit modus-theme-fringe-yellow))))
    `(flycheck-info
      ((,(append '((supports :underline (:style wave))) class)
-       (:underline (:color ,fg-lang-note :style wave)))
+       (:foreground ,blue-nuanced :underline (:color ,fg-lang-note :style wave)))
       (,class (:foreground ,blue-nuanced :underline (:color ,fg-lang-note :style line)))))
    `(flycheck-verify-select-checker ((,class (:box (:line-width 1 :color nil :style released-button)))))
    `(flycheck-warning
      ((,(append '((supports :underline (:style wave))) class)
-       (:underline (:color ,fg-lang-warning :style wave)))
+       (:foreground ,yellow-nuanced :underline (:color ,fg-lang-warning :style wave)))
       (,class (:foreground ,yellow-nuanced :underline (:color ,fg-lang-warning :style line)))))
    ;;;; flycheck-indicator
    `(flycheck-indicator-disabled ((,class (:foreground ,fg-inactive :slant ,modus-theme-slant))))
@@ -1545,15 +1552,15 @@ AMOUNT is a customisation option."
    ;;;; flymake
    `(flymake-error
      ((,(append '((supports :underline (:style wave))) class)
-       (:underline (:color ,fg-lang-error :style wave)))
+       (:foreground ,red-nuanced :underline (:color ,fg-lang-error :style wave)))
       (,class (:foreground ,red-nuanced :underline (:color ,fg-lang-error :style line)))))
    `(flymake-note
      ((,(append '((supports :underline (:style wave))) class)
-       (:underline (:color ,fg-lang-note :style wave)))
+       (:foreground ,blue-nuanced :underline (:color ,fg-lang-note :style wave)))
       (,class (:foreground ,blue-nuanced :underline (:color ,fg-lang-note :style line)))))
    `(flymake-warning
      ((,(append '((supports :underline (:style wave))) class)
-       (:underline (:color ,fg-lang-warning :style wave)))
+       (:foreground ,yellow-nuanced :underline (:color ,fg-lang-warning :style wave)))
       (,class (:foreground ,yellow-nuanced :underline (:color ,fg-lang-warning :style line)))))
    ;;;; flyspell
    `(flyspell-duplicate
@@ -1578,7 +1585,7 @@ AMOUNT is a customisation option."
    `(frog-menu-posframe-background-face ((,class (:background ,bg-dim))))
    `(frog-menu-prompt-face ((,class (:foreground ,cyan))))
    ;;;; focus
-   `(focus-unfocused ((,class (:foreground ,fg-alt))))
+   `(focus-unfocused ((,class (:foreground ,fg-unfocused))))
    ;;;; fold-this
    `(fold-this-overlay ((,class (:inherit modus-theme-special-mild))))
    ;;;; font-lock
@@ -2121,7 +2128,7 @@ AMOUNT is a customisation option."
    `(magit-diff-base-highlight ((,class ,(modus-operandi-theme-diffs
                                           bg-dim yellow
                                           bg-diff-focus-changed fg-diff-focus-changed))))
-   `(magit-diff-context ((,class (:foreground ,fg-alt))))
+   `(magit-diff-context ((,class (:foreground ,fg-unfocused))))
    `(magit-diff-context-highlight ((,class ,(modus-operandi-theme-diffs
                                              bg-dim fg-dim
                                              bg-inactive fg-inactive))))
@@ -2719,7 +2726,7 @@ AMOUNT is a customisation option."
    `(reb-regexp-grouping-construct ((,class (:foreground ,fg-escape-char-construct :weight bold))))
    ;;;; rg (rg.el)
    `(rg-column-number-face ((,class (:foreground ,magenta-alt-other))))
-   `(rg-context-face ((,class (:foreground ,fg-alt))))
+   `(rg-context-face ((,class (:foreground ,fg-unfocused))))
    `(rg-error-face ((,class (:foreground ,red :weight bold))))
    `(rg-file-tag-face ((,class (:foreground ,fg-special-cold))))
    `(rg-filename-face ((,class (:foreground ,fg-special-cold :weight bold))))
@@ -2731,7 +2738,7 @@ AMOUNT is a customisation option."
    `(rg-toggle-on-face ((,class (:foreground ,cyan-active :weight bold))))
    `(rg-warning-face ((,class (:foreground ,yellow :weight bold))))
    ;;;; ripgrep
-   `(ripgrep-context-face ((,class (:foreground ,fg-alt))))
+   `(ripgrep-context-face ((,class (:foreground ,fg-unfocused))))
    `(ripgrep-error-face ((,class (:foreground ,red :weight bold))))
    `(ripgrep-hit-face ((,class (:foreground ,cyan))))
    `(ripgrep-match-face ((,class (:inherit modus-theme-special-calm))))
