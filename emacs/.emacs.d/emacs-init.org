@@ -4510,16 +4510,159 @@ based on the directory of the current buffer."
 #+end_src
 
 **** Eshell (like M-x shell but in elisp)
-     :PROPERTIES:
-     :CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
-     :END:
+      :PROPERTIES:
+      :CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
+      :END:
 
-/WORK IN PROGRESS 2020-04-21/
+/WORK IN PROGRESS 2020-05-01/
+
+While I did read the =eshell= manual fairly early in my introduction to
+Emacs (July 2019), I failed to appreciate its added value.  Sure, you
+could run Elisp commands as well as those of the standard shells.  But
+that did not seem like an obvious step forward.  More of a lateral
+movement at best, for it was asking for a whole new way of thinking
+about the shell that could potentially complicate things in other areas.
+
+After gaining some experience with Emacs, I now (April 2020) have
+developed a newfound appreciation of Eshell's flexibility.  The fact
+that it can understand elisp means that you can develop entirely new
+modes of interaction that involve the command line and extend into other
+Emacs major modes.  For example, you can =cd= into a directory and then
+=dired= to access the full power of Emacs' /superb/ file manager (also check
+the [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][section on Dired]]).
+
+The core value of Eshell is that it behaves like an ordinary buffer.
+This means that we can build our own functions for moving around and
+operating on text.  =prot/eshell-put-last-output-to-buffer= puts that in
+concrete terms.  The function will take the output of the last command
+and put it in a new buffer.  You can then select that buffer, edit it as
+you will and, say, =C-x C-w= to write it permanently to a file.
+
+Here is another case where integration with standard Emacs commands
+truly shines.  In Eshell, =cd= followed by the equals sign will produce a
+numbered list of the directories you have accessed.  With =cd -NUM= you
+can switch to the one you want.  So far so good, how about we also
+switch to a dired buffer from there?  Do it with =cd -NUM && dired=.
+
+Speaking of directories, =eshell-cd-on-directory= allows you to omit =cd=
+and just type in the path to a directory.  Awesome!  And while on the
+topic of Dired, you can use =dired-jump= to always switch to a =dired=
+buffer of the present working directory.  To that I add my own little
+utility (=prot/eshell-file-parent-dir=) for jumping to the directory of
+the file at point: very useful in cases where you get files from
+different sources, such as with =find= (though do also check the various
+options for running =find= with =dired=, like =find-name-dired=).
+
+Extensibility is seamless.  =prot/eshell-complete-history= offers a
+completion interface to the input history.  No need for awkard back and
+forth or for searching for a regexp without any immediate feedback.  In
+a similar fashion =prot/eshell-complete-recent-dir= provides completion
+for switching directly to a recent directory.
+
+Instead of outlining the remaining features of Eshell, I strongly
+encourage you to read the manual.  It is fairly short.  What I have here
+is just an early sample of what can be achieved with fairly few little
+tweaks.
 
 #+begin_src emacs-lisp
 (use-package eshell
-  :commands eshell)
-#+end_src
+  :bind ("<s-return>" . eshell))
+
+(use-package esh-mode
+  :config
+  (defun prot/eshell-file-parent-dir ()
+    "Open `dired' with the parent directory of file at point."
+    (interactive)
+    (let ((file (ffap-file-at-point)))
+      (dired (file-name-directory file))))
+
+  (defun prot/eshell-mkcd (dir)
+    "Make a directory, or path, and switch to it."
+    (interactive)
+    (eshell/mkdir "-p" dir)
+    (eshell/cd dir))
+
+  (defun prot/eshell-put-last-output-to-buffer ()
+    "Produce a buffer with output of last `eshell' command."
+    (interactive)
+    (let ((eshell-output (kill-region (eshell-beginning-of-output)
+                                      (eshell-end-of-output))))
+      (with-current-buffer (get-buffer-create  "*last-eshell-output*")
+        (erase-buffer)
+        (yank)           ; TODO do it with `insert' and `delete-region'?
+        (switch-to-buffer-other-window (current-buffer)))))
+
+  (defun prot/eshell-complete-redirect-to-buffer ()
+    "Complete the syntax for appending to a buffer via `eshell'."
+    (interactive)
+    (insert
+     (concat " >>> #<"
+             (format "%s"
+                     (read-buffer-to-switch "Switch to buffer: "))
+             ">")))
+  :bind (:map eshell-mode-map
+              ("M-k" . eshell-kill-input)
+              ;; This one shadows `prot/olivetti-mode', but that is fine
+              ;; in this map
+              ("C-c o" . prot/eshell-put-last-output-to-buffer)
+              ("C-c >" . prot/eshell-complete-redirect-to-buffer)
+              ("C-c C-l" . eshell/clear-scrollback)
+              ("C-c C-j" . prot/eshell-file-parent-dir)))
+
+(use-package esh-module
+  :config
+  (setq eshell-modules-list             ; Needs review
+        '(eshell-alias
+          eshell-basic
+          eshell-cmpl
+          eshell-dirs
+          eshell-glob
+          eshell-hist
+          eshell-ls
+          eshell-pred
+          eshell-prompt
+          eshell-script
+          eshell-term
+          eshell-tramp
+          eshell-unix)))
+
+(use-package em-dirs
+  :config
+  (setq eshell-cd-on-directory t))
+
+(use-package em-tramp
+  :config
+  (setq password-cache t)
+  (setq password-cache-expiry 600))
+
+(use-package em-hist
+  :config
+  (setq eshell-hist-ignoredups t)
+  (setq eshell-save-history-on-exit t)
+
+  (defun prot/eshell-complete-history ()
+    "Insert element from `eshell' history using completion."
+    (interactive)
+    (let ((hist (ring-elements eshell-history-ring)))
+      (insert
+       (completing-read "Input history: " hist nil t))))
+
+  (defun prot/eshell-complete-recent-dir (&optional arg)
+    "Switch to a recent `eshell' directory using completion.
+With \\[universal-argument] also open the directory in a `dired'
+buffer."
+    (interactive "P")
+    (let* ((dirs (ring-elements eshell-last-dir-ring))
+           (dir (icomplete-vertical-do ()
+                  (completing-read "Switch to recent dir: " dirs nil t))))
+      (insert dir)                      ; Not good enough
+      (eshell-send-input)               ; Should cd directly…
+      (when arg
+        (dired dir))))
+  :bind (:map eshell-hist-mode-map
+              ("M-r" . prot/eshell-complete-history)
+              ("C-c d" . prot/eshell-complete-recent-dir)))
+ #+end_src
 
 *** Terminals inside of Emacs
     :PROPERTIES:
