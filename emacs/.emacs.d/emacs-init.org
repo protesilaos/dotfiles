@@ -1231,6 +1231,8 @@ Also see my [[*ripgrep (rg.el)][configurations for ripgrep]].
     (icomplete-vertical-do ()
       (project-find-file)))
 
+  (declare-function cl-remove-if "cl-seq")
+
   (defun prot/project-or-dir-find-subdirectory-recursive ()
     "Recursive find subdirectory of project or directory.
 
@@ -1245,19 +1247,21 @@ wisely or prepare to use \\[keyboard-quit]."
                                        (when (file-directory-p dir)
                                          (abbreviate-file-name dir)))
                                      contents))
-           (subdirs (delete nil find-directories)))
+           (subdirs (delete nil find-directories))
+           (cands (cl-remove-if (lambda (x) (string-match-p "\\.git" x)) subdirs)))
       (icomplete-vertical-do ()
         (dired
-         (completing-read "Find sub-directory: " subdirs nil t dir)))))
+         (completing-read "Find sub-directory: " cands nil t dir)))))
 
   (defun prot/find-file-from-dir-recursive ()
     "Find file recursively, starting from present dir."
     (interactive)
     (let* ((dir default-directory)
-           (files (directory-files-recursively dir ".*" nil t)))
+           (files (directory-files-recursively dir ".*" nil t))
+           (cands (cl-remove-if (lambda (x) (string-match-p "\\.git" x)) files)))
       (icomplete-vertical-do ()
         (find-file
-         (completing-read "Find file recursively: " files nil t dir)))))
+         (completing-read "Find file recursively: " cands nil t dir)))))
 
   (defun prot/find-project ()
     "Switch to sub-directory at ~/Git/Projects.
