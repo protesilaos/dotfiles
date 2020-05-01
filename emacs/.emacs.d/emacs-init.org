@@ -1334,7 +1334,9 @@ topic of [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the T
         (insert completion)
         t)))
 
-  (setq completion-in-region-function #'contrib/completing-read-in-region))
+  (setq completion-in-region-function #'contrib/completing-read-in-region)
+  :bind (:map minibuffer-local-completion-map
+              ("<tab>" . minibuffer-force-complete)))
 #+end_src
 
 **** Dabbrev (dynamic word completion)
