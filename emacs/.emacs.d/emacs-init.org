@@ -5369,7 +5369,7 @@ Run this via `contrib/after-load-theme-hook'."
 
   (defun contrib/run-after-load-theme-hook (&rest _)
     "Run `contrib/after-load-theme-hook'."
-    (run-hooks 'after-load-theme-hook))
+    (run-hooks 'contrib/after-load-theme-hook))
 
   (advice-add #'load-theme :after #'contrib/run-after-load-theme-hook)
 
