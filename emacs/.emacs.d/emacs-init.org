@@ -5371,7 +5371,7 @@ Run this via `contrib/after-load-theme-hook'."
     "Run `contrib/after-load-theme-hook'."
     (run-hooks 'after-load-theme-hook))
 
-  (advice-add #'load-theme :after #'run-after-load-theme-hook)
+  (advice-add #'load-theme :after #'contrib/run-after-load-theme-hook)
 
   (defvar prot/modus-themes-toggle-hook nil
     "Hook that runs after `prot/modus-themes-toggle' is invoked.")
