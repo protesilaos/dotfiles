@@ -517,13 +517,6 @@ Also check [[https://github.com/abo-abo/hydra][the project's source]] for more i
    :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
    :END:
 
-While we can always specify a font family for each Emacs "face"
-(i.e. customisable styles of code/interface constructs), it still is a
-good idea to establish a baseline for what typeface settings should be
-applicable by default.  In general, I like consistent typography and
-would only mix styles when it is absolutely necessary to convey a
-particular meaning.
-
 Any font I choose must support Latin and Greek character sets, be
 readable at both small and large sizes, preferably offer roman and
 italic variants with corresponding bold weights, not be too thin, not
@@ -570,12 +563,23 @@ Moving on to my configurations, the functions that follow the pattern
 use in the given context.  Their docstrings should offer you all the
 information you need.
 
-Each font declaration can accept several =fontconfig= parameters, as shown
-in =prot/fixed-pitch-params=.  Read the [[https://www.freedesktop.org/software/fontconfig/fontconfig-user.html][relevant spec]] for further details,
-while also noting that only a subset of these are supported by most
-typefaces.  The parameters we can pass here are treated as exceptions to
-environment-wide rules that one can specify for fontconfig at the user
-or system level.
+While there are many ways to define a font family in Emacs, I find that
+the best way is to do it at the "face" level.  Faces are constructs that
+specify attributes for a piece of text.  There range from a foreground
+and background colour, to text properties such as the font family, its
+height, weight, etc. (Emacs themes are, in essence, programs that
+configure these faces).
+
+To set our baseline typeface, we configure the =default= face.  To
+understand the syntax used here, do =C-h f set-face-attribute=.  In
+essence we are specifying the font that should be used /in case no other
+font applies/ for the given face.  This is actually a good thing because
+there are many cases where you want a face to retain its own attributes
+(e.g. let =org-mode= inline code be presented in its monospace font while
+using a sans-serif for the main text).
+
+The =:height= property is practically the same as setting a point size
+though your base is =100=.  So =10.5pt= is expressed as =105=.
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -586,13 +590,9 @@ or system level.
   (defconst prot/fixed-pitch-font "Hack"
     "The default fixed-pitch typeface.")
 
-  (defconst prot/fixed-pitch-params ":hintstyle=hintslight"
-    "Fontconfig parameters for the fixed-pitch typeface.")
-
   (defun prot/default-font (family size)
-    "Set frame font to FAMILY at SIZE."
-    (set-frame-font
-     (concat family "-" (number-to-string size) prot/fixed-pitch-params) t t))
+    "Set `default' face font to FAMILY at SIZE."
+    (set-face-attribute 'default nil :family family :height size))
 
   (defun prot/laptop-fonts ()
     "Fonts for the small laptop screen.
@@ -601,7 +601,7 @@ Pass desired argument to `prot/font-sizes' for use on my
 small laptop monitor."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 10.5)))
+	  (prot/default-font prot/fixed-pitch-font 105)))
 
   (defun prot/desktop-fonts ()
     "Fonts for the larger desktop screen.
@@ -610,13 +610,13 @@ Pass desired argument to `prot/font-sizes' for use on my larger
 desktop monitor (external display connected to my laptop)."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 11)))
+	  (prot/default-font prot/fixed-pitch-font 110)))
 
   (defun prot/reading-fonts ()
     "Fonts for focused reading sessions."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 12.5)))
+	  (prot/default-font prot/fixed-pitch-font 125)))
 
   (defun prot/screencast-fonts ()
     "Fonts for screen casts and video demos.
@@ -626,7 +626,7 @@ casting.  The idea is to make it easier for viewers to see what I
 am doing."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 16)))
+	  (prot/default-font prot/fixed-pitch-font 160)))
 
   (defun prot/presentation-fonts ()
     "Fonts for presentations and video blogs.
@@ -635,7 +635,7 @@ Pass desired argument to `prot/font-sizes' for use during
 presentations.  Also see `prot/org-presentation'."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 18)))
+	  (prot/default-font prot/fixed-pitch-font 180)))
 
   (defun prot/fonts-per-monitor ()
   "Use font settings based on screen size.
@@ -657,10 +657,96 @@ monitor-related events."
   :hook (after-init-hook . prot/fonts-per-monitor))
 #+end_src
 
-**** Typeface suitability test
+*** Font families for other generic face groups
     :PROPERTIES:
-    :CUSTOM_ID: h:9035a1ed-e988-4731-89a5-0d9e302c3dea
+    :CUSTOM_ID: h:a00a72af-2097-49e3-8b2c-ba7dc930c5f0
     :END:
+
+What I am doing here is define the exact font family to be used by these
+generic faces, which are designed to be inherited by other faces in
+order to keep things consistent across a theme.  We could do the same
+for practically any face, but I think that is a step too far.
+
+Do not forget that my standard font family for the =default= face and also
+for =fixed-pitch= is declared in the [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][previous section]] (I normally use a
+monospaced font for everything, so there is no real need to decouple
+=default= and =fixed-pitch=).
+
+Note that the =:height= in this snippet is specified as a floating point,
+which means that it is a multiple of the base size (defined above).
+
+Note that on my GNU/Linux system there is no need to test for the
+presence of a font before setting it.  This is handled by =fontconfig=
+with rules that can be defined at the user or system level (things work
+out-of-the-box on most distros).
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (defconst prot/variable-pitch-font "DejaVu Sans"
+    "The default variable-pitch typeface.")
+
+  (set-face-attribute 'variable-pitch nil :family prot/variable-pitch-font :height 1.0)
+  (set-face-attribute 'fixed-pitch nil :family prot/fixed-pitch-font :height 1.0))
+#+end_src
+
+*** Mode for proportional fonts
+    :PROPERTIES:
+    :CUSTOM_ID: h:414b33cd-66f7-4daf-814f-373e08dff7f8
+    :END:
+
+When Emacs operates in a graphical terminal, it can display text using
+mixed font settings: a variety of heights and families (in addition to
+other typegraphic attributes).  This means that it can draw text on the
+same line that has potentially profoundly different properties.  For
+example, a sans-serif typeface for prose with a monospaced font for
+inline code.
+
+While we can handle things on our own by calling =set-face-attribute= for
+each face we are interested in, there is a built-in mechanism to quickly
+toggle the use of proportionately-spaced fonts (in contrast to the
+monospaced ones which usually are the standard).  Depending on your
+theme this will not yield good results in Org mode, so be warned.
+
+For what it's worth, my Modus themes are designed to take full advantage
+of this facility (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes and other visuals]]).  Any face that is
+sensitive to spacing or that would break the layout if displayed in a
+variable width is designed to explicitly inherit from the =fixed-pitch=
+face (the exact font family was specified in the previous section,
+though the only thing that matters is to be monospaced).
+
+With the following package declaration my idea is to integrate
+=prot/variable-pitch-mode= into some "reading mode" configurations that I
+have, /mutatis mutandis/.  Likely candidates are the toggle for
+=olivetti-mode= (see the section on [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing]]) and my
+simple-yet-super-effective plain text presentations with Org mode (see
+[[#h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11][simple presentations inside of Emacs]]).  Please note though that this may
+be reviewed upon further testing and experimentation.
+
+#+begin_src emacs-lisp
+(use-package face-remap
+  :diminish buffer-face-mode            ; the actual mode
+  :config
+  (defun prot/variable-pitch-mode (&rest size)
+    "Toggle `variable-pitch-mode' and additional parameters.
+SIZE is intented for one of my functions for setting the primary
+font size.
+
+Example: (prot/variable-pitch-mode (prot/screencast-fonts))"
+    (interactive)
+    (let ((cursor cursor-type))         ; capture original value
+      (if (bound-and-true-p buffer-face-mode)
+          (progn
+            (variable-pitch-mode -1)
+            (prot/fonts-per-monitor))
+        (variable-pitch-mode 1)
+        size))))
+#+end_src
+
+*** Typeface suitability test
+   :PROPERTIES:
+   :CUSTOM_ID: h:9035a1ed-e988-4731-89a5-0d9e302c3dea
+   :END:
 
 Here is a simple test I have come up with to make an initial assessment
 of the overall quality of the font: /can you discern the character at a
@@ -5582,9 +5668,10 @@ buffer to the centre of the view.  This is exactly what I need.  Any
 other enhancement, such as a larger font size can be handled by another
 function.
 
-The =prot/olivetti-mode= offers a toggle for activating this mode, while
-removing the fringes /for the selected window/ (check my [[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][fringe-mode
-settings]]) and setting a larger font size.
+The =prot/olivetti-mode= offers a toggle for activating this mode, passing
+additional font-related parameters (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][base typeface configurations]])
+and removing the fringe on both sides /of the selected window/ (check my
+[[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][fringe-mode settings]]).
 
 Note that for my [[#h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11][simple presentations inside of Emacs (org-tree-slide)]] I
 use =darkroom= instead of =olivetti=.  They offer similar features, except
@@ -5601,16 +5688,18 @@ that is so pertinent to presentations.
   (setq olivetti-recall-visual-line-mode-entry-state t)
 
   (defun prot/olivetti-mode ()
-    "Toggle `olivetti-mode' without fringes and larger fonts."
+    "Toggle `olivetti-mode' with additional parameters Fringes
+are disabled for the current window.  For the font-related
+changes see `prot/variable-pitch-mode'."
     (interactive)
-    (if olivetti-mode
+    (if (bound-and-true-p olivetti-mode)
         (progn
           (olivetti-mode -1)
           (set-window-fringes (selected-window) nil) ; Use default width
-          (prot/fonts-per-monitor))
+          (prot/variable-pitch-mode))
       (olivetti-mode 1)
       (set-window-fringes (selected-window) 0 0)
-      (prot/reading-fonts)))
+      (prot/variable-pitch-mode (prot/reading-fonts))))
   :bind ("C-c o" . prot/olivetti-mode))
 #+end_src
 
