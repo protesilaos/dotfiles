@@ -734,13 +734,14 @@ font size.
 
 Example: (prot/variable-pitch-mode (prot/screencast-fonts))"
     (interactive)
-    (let ((cursor cursor-type))         ; capture original value
-      (if (bound-and-true-p buffer-face-mode)
-          (progn
-            (variable-pitch-mode -1)
-            (prot/fonts-per-monitor))
-        (variable-pitch-mode 1)
-        size))))
+    (if (bound-and-true-p buffer-face-mode)
+        (progn
+          (variable-pitch-mode -1)
+          (setq-local cursor-type 'box)   ; TODO better restore original value
+          (prot/fonts-per-monitor))
+      (variable-pitch-mode 1)
+      (setq-local cursor-type 'bar)
+      size)))
 #+end_src
 
 *** Typeface suitability test
@@ -5728,9 +5729,9 @@ that is so pertinent to presentations.
   (setq olivetti-recall-visual-line-mode-entry-state t)
 
   (defun prot/olivetti-mode ()
-    "Toggle `olivetti-mode' with additional parameters Fringes
-are disabled for the current window.  For the font-related
-changes see `prot/variable-pitch-mode'."
+    "Toggle `olivetti-mode' with additional parameters.
+Fringes are disabled for the current window.  For the
+font-related changes see `prot/variable-pitch-mode'."
     (interactive)
     (if (bound-and-true-p olivetti-mode)
         (progn
