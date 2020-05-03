@@ -180,6 +180,7 @@
 ;;     iedit
 ;;     iflipb
 ;;     imenu-list
+;;     indium
 ;;     info
 ;;     info-colors
 ;;     interaction-log
@@ -298,6 +299,7 @@
 ;;     xref
 ;;     xterm-color (and ansi-colors)
 ;;     yaml-mode
+;;     yasnippet
 ;;     ztree
 
 ;;; Code:
@@ -1964,6 +1966,14 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(imenu-list-entry-subalist-face-1 ((,class (:foreground ,cyan-alt-other :weight bold :underline t))))
    `(imenu-list-entry-subalist-face-2 ((,class (:foreground ,yellow-alt-other :weight bold :underline t))))
    `(imenu-list-entry-subalist-face-3 ((,class (:foreground ,green-alt-other :weight bold :underline t))))
+   ;;;; indium
+   `(indium-breakpoint-face ((,class (:foreground ,red-active))))
+   `(indium-frame-url-face ((,class (:foreground ,fg-alt :underline t))))
+   `(indium-keyword-face ((,class (:foreground ,magenta-alt-other))))
+   `(indium-litable-face ((,class (:foreground ,fg-special-warm :slant ,modus-theme-slant))))
+   `(indium-repl-error-face ((,class (:foreground ,red :weight bold))))
+   `(indium-repl-prompt-face ((,class (:foreground ,cyan-alt-other))))
+   `(indium-repl-stdout-face ((,class (:foreground ,fg-main))))
    ;;;; info
    `(Info-quoted ((,class (:foreground ,magenta)))) ; the capitalisation is canonical
    `(info-header-node ((,class (:foreground ,fg-special-warm))))
@@ -3242,6 +3252,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(xref-match ((,class (:inherit match))))
    ;;;; yaml-mode
    `(yaml-tab-face ((,class (:inherit modus-theme-intense-red))))
+   ;;;; yasnippet
+   `(yas-field-highlight-face ((,class (:background ,bg-alt :foreground ,fg-main))))
    ;;;; ztree
    `(ztreep-arrow-face ((,class (:foreground ,fg-inactive))))
    `(ztreep-diff-header-face ((,class (:height 1.2 :foreground ,fg-special-cold :weight bold))))
