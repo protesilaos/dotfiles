@@ -7520,6 +7520,199 @@ there is something to fall back to.
   (setq create-lockfiles nil))
 #+end_src
 
+* Frequently Asked Questions about this document
+  :PROPERTIES:
+  :CUSTOM_ID: h:4e73b827-cdf3-46a2-81c5-55b6e95701b7
+  :END:
+
+There are some persistent questions that pop up in my email exchange, so
+I thought I would cover them all in this section.
+
+** How do you learn Emacs?
+   :PROPERTIES:
+   :CUSTOM_ID: h:83730fe8-d917-4d94-96f4-bbc5c900fe38
+   :END:
+
+There is no one-size-fits-all approach to learning.  What one finds
+satisfactory, another may consider insufficient.  In my opinion, the
+best way to learn Emacs is to start small, be patient, and brace
+yourself for a lot of reading and experimentation.
+
+The best skill you can master, the one that will always help you in your
+Emacs journey, is the built-in help system.  Learn to ask Emacs about
+things you do not know about.  This section documents the essentials of
+Emacs' /introspectable nature/.
+
+Know that =C-h= is the universal key for help commands (broadly
+understood).  It works both as a prefix and as a suffix.  Some common
+help commands:
+
++ =C-h f= allows you to search for documentation about *functions*.
++ =C-h v= is the same for *variables*.
++ =C-h o= is a wrapper of the above two, so you are searching for
+  functions *or* variables.  The proper name for any of these items is
+  called a "symbol" (think of =name-of-thing= as symbolising a definition
+  in the source code).
++ =C-h k= will prompt you for a *key* binding.  Once you type it in you will
+  get help about what command corresponds to that key (if any).  Note
+  that this depends on the major mode you are in.  For example =C-c C-c=
+  does something different in Org and Eshell buffers.  Try =C-h k C-c C-c=
+  to find about the different functions these will invoke in their
+  respective major mode.
+
+In the above scenaria we see how =C-h= is used as a prefix.  You are
+starting a key sequence with it.  So here are some cases of using it as
+a suffix:
+
++ For /every incomplete key sequence/ if you follow it up with =C-h= you
+  will get a help buffer about all possible key combination that
+  complete that sequence.  For example, if you type =C-c C-h= inside of an
+  Org buffer you will get all possible commands for Org mode and for all
+  other minor modes you have active.
++ The =C-h= suffix can be appended to longer key sequences.  Indeed the
+  length is irrelevant.  Suppose you want to learn more about some of
+  the advanced features of registers. =C-x r= is the common prefix for
+  those commands, so you just do =C-x r C-h= and you get a buffer with
+  more information.
++ And, as you may imagine, you can even append the =C-h= /suffix/ to the =C-h=
+  /prefix/.  This is a fancy way of saying that =C-h C-h= will show you help
+  about help commands themselves.  But because this is a special case,
+  it comes with some extras.  Try it!
+
+*All help buffers include links* to other parts of Emacs, from where you
+can learn ever more information.  For example, the help for =C-c C-h=
+includes links to the commands that correspond to each key chord.
+Follow the link to get documentation about that symbol.
+
+More generally, you will find that a symbol is linked to its source.
+Look carefully at the top of the buffer that display symbol
+documentation and you will find a link to the source code (library) from
+where the function/variable (symbol) comes from.
+
+Also know that the source code can be accessed at any time by means of
+=M-x find-library=.
+
+Help commands that ask you for a symbol to input can also be aware of
+the context of the point (the cursor).  So if you are over the name of a
+function and you type =C-h f=, that function will be the default match.
+Hitting RET (Enter) will take you to its documentation.  /This is a great
+way to study source code/, because it will guide you to other libraries
+or other parts of the same library from where you can understand how
+things are pieced together.  And it also works with the =find-library=
+command.
+
+Finally, you should practice =C-h m= as much as possible.  This is the
+help command for getting information about the major mode you are in and
+all the minor modes you have active.  It will show you some valuable
+documentation as well as the main key bindings and their commands.  Try
+it whenever you use something you have not mastered yet.  For example,
+do it in a =dired= buffer to see the main operations you can perform
+inside of it.
+
+** What is the purpose of "prot/" and "contrib/"?
+   :PROPERTIES:
+   :CUSTOM_ID: h:0077f7e0-409f-4645-a040-018ee9b5b2f2
+   :END:
+
+The =prot/= prefix in symbols works as a namespace that captures all my
+additions.  These can be functions or variables.  Its utility or purpose
+is two-fold:
+
+1. It informs others that this symbol is not part of core Emacs or some
+   other package.  Otherwise it can be difficult to understand why
+   something you copied did not work.  Say, for example, I have a
+   function that accepts an argument: =(prot/function prot/variable)=.  If
+   none of these had the namespace you could be misled into thinking
+   that your Emacs setup already includes those symbols (and then you
+   will get an error message).
+2. It makes it easier for me (and others) to quickly discover what
+   additions I have made, for whatever reason that may.  For instance,
+   =M-x prot/= will give me matches for all my interactive functions
+   (depending on the completion framework, one can access those with
+   just =M-x p/= as in my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]]).  This also
+   means that I can do =M-s o prot/= (or =M-x occur prot/=) to produce an
+   Occur buffer with all my symbols (pass a number argument for
+   displaying N lines of context =C-u 5 M-s o=).  From there I can, say,
+   browse them all easily or even edit them using all of Emacs' relevant
+   powers (Occur is made editable with =e=, but you should be able to find
+   that by using the information in [[*How do you learn Emacs?][How do you learn Emacs?]]).
+
+The same principles apply for the =contrib/= namespace.  Whenever I copy
+something from another user, I use that namespace to tell others that
+this is not part of Emacs or any other package (and I always link to the
+source).
+
+Adding =contrib/= also has another longer-term benefit.  It tells my
+future self that some bespoke configuration was needed to solve a
+particular problem and, maybe, this has since been solved by a good
+package or even a newer version of Emacs.  A case in point is the hook I
+use for [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my themes]]: =contrib/after-load-theme-hook=.  As of 2020-05-03
+there is no built-in way of accomplishing that bit of functionality (as
+far as I know), but there may be one at some point and it might be an
+improvement overall.
+
+Again, =occur= or similar tools will filter these out when necessary.
+Imagine having to do that without any namespaces…  You would need to
+check each symbol one by one to determine its origin.
+
+Last but not least, the convention of separating namespaces with a
+forward slash is not particularly important (and the linter for Elisp
+packaging will complain about it, if you ever go down that path).  It
+could be something like =prot--= or =my-= or whatever.  What matters more is
+to keep things consistent and fairly easy to identify.
+
+** Why do you use so many `setq'?
+   :PROPERTIES:
+   :CUSTOM_ID: h:ba373e0d-29d1-4224-b0f1-64b640ceeaae
+   :END:
+
+To be clear about the question, these are equivalent:
+
+#+begin_example emacs-lisp
+;; Style A
+(setq var-1 value-1)
+(setq var-2 value-2)
+
+;; Style B
+(setq var-1 value-1
+      var-2 value-2)
+#+end_example
+
+You will notice that most of my configurations follow style A.  The
+reason is due to convenience.  It is easier for me to share code with
+users who may not be familiar with how elisp works (I was in that group
+not so long ago and am still learning my way around).
+
+Style B used to give me more problems with copy-pasting, while it did
+not solve any real issue (besides, I finalise style A using a keyboard
+macro, so there is no real difference in typing).
+
+Style A consists of balanced expressions that are easier to keep
+consistent.  This is especially true when you have a mixture of values,
+some boolean types, property lists, association lists…  Of course,
+experience is key to understanding that either style is valid.
+
+** Why do you explicitly set variables the same as default?
+   :PROPERTIES:
+   :CUSTOM_ID: h:3e4fefda-c069-4403-a2ad-6d77ee8c0914
+   :END:
+
+You may have realised that many of my configurations will use a =setq=
+that declares a value that is the same as its original in the source
+code.  I do this for two reasons:
+
+1. To raise awareness of its existence.  If someone does not like how
+   the defaults work, they know where to look.
+2. I guard against future versions that could be changing the defaults.
+
+Obviously point 2 is not particularly strong for built-in libraries that
+are already very stable, though I find that, on balance, nothing bad
+comes out of it.
+
+At any rate, one must always read the NEWS (=C-h n= for =view-emacs-news=)
+whenever they upgrade to a new version of Emacs.  Though there is no
+equivalent mechanism for individual packages…  So here we are.
+
 * Important configurations that I stopped using
   :PROPERTIES:
   :CUSTOM_ID: h:9850e597-e4b4-4e04-aad9-ce8a12b3e4ae
