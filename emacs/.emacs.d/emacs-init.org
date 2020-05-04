@@ -23,14 +23,19 @@ The present document, referred to in the source code version as
 =emacs-init.org=, contains the bulk of my configurations for GNU Emacs.
 It is designed using principles of "literate programming": a
 combination of ordinary language and inline code blocks.  Emacs knows
-how to parse this file properly so as to evaluate only the elisp
+how to parse this file properly so as to evaluate only the Elisp
 ("Emacs Lisp") included herein.  The rest is for humans to make sense
 of my additions and their underlying rationale.
 
 Literate programming allows us to be more expressive and deliberate.
-Not only we can use typography to its maximum potential, but can also
+Not only can we use typography to its maximum potential, but may also
 employ techniques such as internal links between sections.  This makes
-the end product much better for end users than a terse script.
+the final product much more useful for end users than a terse script.
+
+Each section provides information about the code it contains.  In case
+you feel something is missing, I maintain a [[#h:4e73b827-cdf3-46a2-81c5-55b6e95701b7][Frequently Asked Questions]]
+section (when in doubt, or to offer feedback, suggestions, further
+comments, etc., do [[https://protesilaos.com/contact][contact me]]).
 
 In more practical terms, this document is written using =org-mode=.  It
 contains all /package configurations/ for my Emacs setup.  To actually
@@ -283,82 +288,6 @@ whenever a reference is needed.  To create such links, you can use =C-c l=
 to capture the unique ID of the current section and then =C-c C-l= to
 create a link (the former is defined in the [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org package declaration]]—this
 is an internal link in action).
-
-** Where I run Emacs
-   :PROPERTIES:
-   :CUSTOM_ID: h:044977f2-a909-4804-bf89-576dd429d405
-   :END:
-
-My OS is mostly Debian 10 'buster' (the current stable), though I also
-work on a Void Linux machine.  My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/tree/?h=emacs-27][built from source]], using the
-=emacs-27= branch.  Normally I would be using the packages provided by my
-GNU/Linux distribution but am opting for the manual method instead in
-order to make sure my Modus themes are compatible with changes upstream.
-
-I do not optimise for portability across different versions or operating
-systems.  I do, nonetheless, provide inline comments when a certain
-option or configuration is specific to a yet-to-be-released version of
-Emacs.
-
-** Note about my methodology
-   :PROPERTIES:
-   :CUSTOM_ID: h:a654fcb5-0163-4dc6-977a-8c50175118a1
-   :END:
-
-I choose external packages only after I try the defaults.  The idea is
-to take things slowly and learn along the way, while consulting the
-official manual and relevant documentation.  This is necessary to make
-an informed decision about what is actually missing and what could be
-improved further.
-
-The process of learning the internals of Emacs means that I will, at
-times, write my own elisp functions.  External packages that I do use
-are either a clear upgrade over the defaults or otherwise extend the
-functionality of what is already available.  You will not find any
-superficialities herein: no rainbow-coloured mode lines, no icons, no
-tool bars with bells and spinning wheels, nothing.
-
-Though a former Vim user, I decided *not* to use =evil-mode= or any kind of
-Vi emulation.  I wanted to do things differently in order to ultimately
-set on the best approach going forward.  I have eventually settled on a
-system that builds on top of the "Emacs way" to key bindings.  I believe
-that a mnemonics-based set of keys is easier to memorise and to expand
-considerably, especially in light of Emacs' multitude of applications
-/beyond/ the narrow confines of editing text.
-
-** Note about the use of the Super key
-   :PROPERTIES:
-   :CUSTOM_ID: h:fbba4dea-9cc8-4e73-bffa-02aab10a6703
-   :END:
-
-Some sections of this document assign functions to =s-KEY=.  The lower
-case =s= represents the "Super" key, also known as the "Windows key" on
-some commercial keyboards.  In most cases, those key bindings are
-alternative ways of invoking /common commands/ that are by default bound
-to otherwise awkward key chords.  The original keys will continue to
-function as intended (for example, =C-x o= is also =s-o=).
-
-To find all my keybindings of this sort in the source code version of
-this document from inside of Emacs, do =M-s o= (or =M-x occur=) followed by
-the pattern ="[a-zA-Z<]?-?s-.+?"= (please contact me if you know how to
-improve this).
-
-Note that your choice of desktop environment might render some of these
-useless.  The DE will simply intercept the key chord before it is ever
-sent to Emacs.  For example, GNOME has a *hidden* key mapping to =s-p=,
-which does something with monitors (last time I checked on GNOME 3.30).
-Such bindings are scattered throughout the config database that is
-normally accessed with =gsettings= on the command line or the graphical
-=dconf-editor= (not pretty either way).
-
-Similarly, a tiling window manager that binds practically all of its
-motions to Super, will cause you trouble.  Personally, I have enabled
-the Hyper key and am now using it as an extra modifier for controlling
-my bespoke BSPWM setup ([[https://gitlab.com/protesilaos/dotfiles/commit/ec885d16be726df122d88bcf4494210ae300cfa7][comprehensive documentation in this commit]]),
-though I am starting to realise that my kind of integrated Emacs setup
-renders a tiling WM superfluous (I might actually switch to a generic
-floating window manager that does not use the keyboard for anything and
-which simply draws windows on the screen).
 
 ** COPYING
    :PROPERTIES:
@@ -7712,6 +7641,139 @@ comes out of it.
 At any rate, one must always read the NEWS (=C-h n= for =view-emacs-news=)
 whenever they upgrade to a new version of Emacs.  Though there is no
 equivalent mechanism for individual packages…  So here we are.
+
+** What is you distro and/or window manager?
+   :PROPERTIES:
+   :CUSTOM_ID: h:044977f2-a909-4804-bf89-576dd429d405
+   :END:
+
+Given that I mostly live inside of Emacs, the rest of the environment is
+no longer important to me (provided it does not impede my usage of
+Emacs).
+
+Prior to my Emacs days, I used to have a highly customised session
+centred around BSPWM.  Now I can happily live inside of any desktop
+environment or window manager.  What matters is that my Emacs works as
+intended, which practically means that the environment should /not bind
+any keys/ system-wide (with the exception of some standard ones like
+those for accessing TTYs).
+
+I have been on GNU/Linux since the summer of 2016.  For the most time I
+have used Debian and Arch Linux.  As of 2020-05-03, I am on Arch.  My
+criterion for picking a distro is that it is community-driven and has a
+strong following that ensures its longer-term continuity and overall
+stability.  This is consistent with my focus on Emacs (and thoroughgoing
+customisations of the computing setup more generally): I need things to
+work so that I may not be bothered by too much admin work (and yes, Arch
+is super-stable if you know what you are doing---and, well, Debian is
+designed for that).
+
+My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/tree/?h=emacs-27][built from source]], using the =emacs-27= branch (check the AUR
+if you are on Arch or derivatives, though /always read/ the PKGBUILD).
+Normally I would be using the packages provided by my distro's standard
+repos but am opting for this method instead in order to make sure my
+Modus themes are compatible with changes upstream.
+
+I do not optimise for portability across different versions or operating
+systems.  I do, nonetheless, provide inline comments when a certain
+option or configuration is specific to a yet-to-be-released version of
+Emacs, to the extent that I am aware that such is the case.
+
+** Did you know XYZ package is better than the defaults?
+   :PROPERTIES:
+   :CUSTOM_ID: h:a654fcb5-0163-4dc6-977a-8c50175118a1
+   :END:
+
+As a rule of thumb, I choose external packages only after I give a fair
+chance to the defaults.  The idea is to take things slowly and learn
+along the way, while consulting the official manual and relevant
+documentation (I strongly encourage you to master the information I
+provide in [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
+
+Without exposure to the built-in tools it is impossible to make an
+informed decision about what is actually missing and what could be
+improved further.  Additionally, it is difficult to appreciate the
+underlying rationale that led to a given element of design without
+actually trying to put yourself in that mindset or workflow.
+
+Put differently, keep an open mind about the alternatives before
+deciding to reproduce the thing you had before, else you are assuming
+your prior knowledge to be true in advance of any possible evidence to
+the contrary (a sign of dogmatism).
+
+The process of learning the internals of Emacs means that I write my own
+Elisp functions when I feel that a standard tool could be tweaked on the
+margin of its core utility in order to do what I want (see my answer to
+[[#h:0077f7e0-409f-4645-a040-018ee9b5b2f2][What is the purpose of "prot/" and "contrib/"?]]).  External packages that
+I do use are either a clear upgrade over the defaults or otherwise
+extend the functionality of what is already available.
+
+You will not find any superficialities herein: no rainbow-coloured mode
+lines, no icons, no tool bars with bells and spinning wheels, nothing.
+I respect the fact that they exist, but find that they do not contribute
+to my productivity.
+
+Though a former Vim user for ~3 years, I decided *not* to use =evil-mode= or
+any kind of Vi emulation (remember the point about keeping an open
+mind?).  I wanted to do things differently in order to ultimately set on
+the best approach going forward.  I have eventually settled on a system
+that builds on top of the "Emacs way" to key bindings, which I discuss
+in my hour-long presentation about [[https://protesilaos.com/codelog/2019-12-20-vlog-switch-emacs/][Switching to Emacs]] (2019-12-20).  I
+believe that a mnemonics-based set of keys is easier to get started
+with.  It expands organically as you familiarise yourself with multitude
+of Emacs' functionalities: there is an entire world of applications
+outside the narrow confines of editing code.
+
+** What is the meaning of the `s-KEY' bindings?
+   :PROPERTIES:
+   :CUSTOM_ID: h:fbba4dea-9cc8-4e73-bffa-02aab10a6703
+   :END:
+
+Some sections of this document assign functions to key combinations that
+involve the "Super" key (also known as the "Windows key" on some
+commercial keyboards).  This is represented as a lower case =s=.
+
+In most cases, those key bindings are alternative ways of invoking
+/common commands/ that are by default bound to longer key chords.  The
+original keys will continue to function as intended (for example, =C-x o=
+is also =s-o=).  Otherwise they bind my own custom functions.
+
+To find all my keybindings of this sort in the source code version of
+this document from inside of Emacs, do =M-s o= (or =M-x occur=) followed by
+the pattern ="[a-zA-Z<]?-?s-.+?"= (please contact me if you know how to
+improve this).
+
+Note that your choice of desktop environment (or window manager) might
+render some of these useless.  The DE/WM will simply intercept the key
+chord before it is ever sent to Emacs.  For example, GNOME has a *hidden*
+key mapping to =s-p=, which does something with monitors (last time I
+checked on GNOME 3.30).  Such bindings are scattered throughout the
+config database that is normally accessed with =gsettings= on the command
+line or the graphical =dconf-editor= (not pretty either way).
+
+** What hardware do you use?
+   :PROPERTIES:
+   :CUSTOM_ID: h:e134a8b2-224e-4383-bf03-b080ab6659c7
+   :END:
+
+I am using a Lenovo Thinkpad X220 that I got in 2018 for ~80 EUR.  This
+is the first computer I ever bought: before that I had a Macbook that
+was offered to me as part of an office job---but do not ask me about it
+because at the time I only knew how to copy/paste using right click and
+that sort of thing, while I never bothered with the hardware side of
+things once I got better at using the computer (my switch to GNU/Linux
+was about freedom and consumer sovereignty, i.e. politics, not tech-only
+considerations).
+
+The laptop is mostly deployed as part of a desktop setup, attached to an
+external monitor, mouse, and keyboard.  The monitor is 1080p and I got
+it for free from a clearance.  As for the mouse and keyboard, I bought
+those from a toy store for 7 EUR combined.  The keyboard's layout is US
+Qwerty.
+
+For my videos I use the built-in camera and microphone (sorry if the
+production quality is sub-standard!).  Since we are here: the recording
+software is OBS Studio, while I do no video editing.
 
 * Important configurations that I stopped using
   :PROPERTIES:
