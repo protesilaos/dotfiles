@@ -1148,7 +1148,7 @@ is a near must-have for any =icomplete= user, while I expect it to
 single-handedly convince many users to give Emacs' built-in completion
 mechanism a fair chance.
 
-Finally, not all "vertical" functions of mine are defined here.  Some
+Finally, *not all "vertical" functions of mine are defined here*.  Some
 are also found in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][completion for projects and directory trees]] and others
 still across this document (search for =icomplete-vertical-do=).
 
@@ -1160,28 +1160,6 @@ still across this document (search for =icomplete-vertical-do=).
   :config
   (setq icomplete-vertical-prospects-height (/ (window-height) 6))
   (icomplete-vertical-mode -1)
-
-  (defun prot/icomplete-recentf ()
-    "Open `recent-list' item in a new buffer.
-
-The user's $HOME directory is abbreviated as a tilde."
-    (interactive)
-    (icomplete-vertical-do ()
-      (let ((files (mapcar 'abbreviate-file-name recentf-list)))
-        (find-file
-         (completing-read "Open recentf entry: " files nil t)))))
-
-  (defun prot/icomplete-font-family-list ()
-    "Add item from the `font-family-list' to the `kill-ring'.
-
-This allows you to save the name of a font, which can then be
-used in commands such as `set-frame-font'."
-    (interactive)
-    (icomplete-vertical-do ()
-      (kill-new
-       (completing-read "Copy font family: "
-                        (print (font-family-list))
-                        nil t))))
 
   (defun prot/icomplete-yank-kill-ring ()
     "Insert the selected `kill-ring' item directly at point.
@@ -1205,7 +1183,6 @@ normally would when calling `yank' followed by `yank-pop'."
          (completing-read "Yank from kill ring: " kills nil t)))))
 
   :bind (("s-y" . prot/icomplete-yank-kill-ring)
-         ("s-r" . prot/icomplete-recentf)
          :map icomplete-minibuffer-map
          ("C-v" . icomplete-vertical-toggle)))
 #+end_src
@@ -7303,83 +7280,75 @@ Overview of my settings:
     :CUSTOM_ID: h:5723c4bb-ff6c-449f-bb60-be66fab3f137
     :END:
 
-This is a built-in mode that keeps track of the files you have opened,
-allowing you go back to them faster.  It can also integrate with a
-completion framework to populate their "virtual buffers" list.
+This is a built-in minor mode that keeps track of the files you have
+opened, allowing you revisit them faster.  Its true power consists in
+the fact that its data, maintained in =recentf-list=, is a simple
+variable.  This means that we can access it through any relevant piece
+of Elisp functionality.
 
-A few words about the variables I configure:
+To that end, the functions I define herein are meant to either control
+the contents of the list or allow me to access them through my
+completion framework or a dedicated file listing (see, in particular,
+[[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]] and [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][configurations for Dired]]).
 
-+ Enable the mode and define the file it should use to store the list of
-  files.
-+ Allow only 10 items in the menu.  This is used by the menu bar, which
-  I disable by default.
-+ Store up to 200 items at a time.  The number is arbitrary but seems
-  good enough for me to (a) find common items quickly, (b) do not keep
-  track of everything I ever access.
-+ Do not prepend a number to the first ten files that appear in the
-  dedicated =recentf= buffer (accessible via =recentf-open-files=).
-
-Now some notes on my extensions:
-
-+ The functions whose name starts with "rjs" are intended to address a
-  limitation in the original package that does not keep track of file
-  name changes.  With these we make sure that the list is updated any
-  time a file is moved/renamed.  My sole contribution to these functions
-  is to append the =recentf-cleanup= function where appropriate, to
-  ensure that only the new name is tracked, while the old is discarded.
-+ The function that includes Dired buffers to the list, is extracted
-  from the [[https://www.emacswiki.org/emacs/recentf-ext.el][recentf-ext file on the Emacs Wiki]].  I use this in tandem
-  with my completion framework's virtual buffers.  This practically
-  eliminates whatever need for a dedicated command to display
-  recently-accessed directories (dired buffers).
+Note that there exists a built-in =recentf-open-files= function for
+accessing the recent files through a bespoke buffer.  I find that I have
+no use for it.
 
 #+begin_src emacs-lisp
 (use-package recentf
   :config
   (setq recentf-save-file "~/.emacs.d/recentf")
-  (setq recentf-max-menu-items 10)
   (setq recentf-max-saved-items 200)
-  (setq recentf-show-file-shortcuts-flag nil)
+  (setq recentf-exclude '(".gz" ".xz" ".zip" "/elpa/" "/ssh:" "/sudo:"))
 
-  ;; rename entries in recentf when moving files in dired
-  (defun rjs/recentf-rename-directory (oldname newname)
-    ;; oldname, newname and all entries of recentf-list should already
-    ;; be absolute and normalised so I think this can just test whether
-    ;; oldname is a prefix of the element.
-    (setq recentf-list
-          (mapcar (lambda (name)
-                    (if (string-prefix-p oldname name)
-                        (concat newname (substring name (length oldname)))
-                      name))
-                  recentf-list))
-    (recentf-cleanup))
+  (defun prot/recentf-keep-predicate (file)
+    "Additional conditions for saving in `recentf-list'.
+Add this function to `recentf-keep'.
 
-  (defun rjs/recentf-rename-file (oldname newname)
-    (setq recentf-list
-          (mapcar (lambda (name)
-                    (if (string-equal name oldname)
-                        newname
-                      oldname))
-                  recentf-list))
-    (recentf-cleanup))
+NEEDS REVIEW."
+    (cond
+     ((file-directory-p file) (file-readable-p file))))
+  (add-to-list 'recentf-keep 'prot/recentf-keep-default-predicate)
 
-  (defun rjs/recentf-rename-notify (oldname newname &rest args)
-    (if (file-directory-p newname)
-        (rjs/recentf-rename-directory oldname newname)
-      (rjs/recentf-rename-file oldname newname)))
+  (defun prot/recentf ()
+    "Select item from `recentf-list' using completion.
+The user's $HOME directory is abbreviated as a tilde."
+    (interactive)
+    (icomplete-vertical-do ()
+      (let ((files (mapcar 'abbreviate-file-name recentf-list)))
+        (find-file
+         (completing-read "Open recentf entry: " files nil t)))))
 
-  (advice-add 'dired-rename-file :after #'rjs/recentf-rename-notify)
+  (defun prot/recentf-dirs (&optional arg)
+    "Select directory from `recentf-list' using completion.
+With \\[universal-argument] present the list in a `dired' buffer.
+This buffer is meant to be reused by subsequent invocations of
+this command (otherwise you need to remove the `when' expression.
 
-  (defun contrib/recentf-add-dired-directory ()
-    "Include Dired buffers in the `recentf' list.  Particularly
-useful when combined with a completion framework's ability to
-display virtual buffers."
-    (when (and (stringp dired-directory)
-               (equal "" (file-name-nondirectory dired-directory)))
-      (recentf-add-file dired-directory)))
+Without \\[universal-argument], the user's $HOME directory is
+abbreviated as a tilde.  In the Dired buffer paths are absolute."
+    (interactive "P")
+    (let* ((list (mapcar 'abbreviate-file-name recentf-list))
+           (dirs (delete-dups
+                  (mapcar (lambda (file)
+                            (if (file-directory-p file)
+                                (directory-file-name file)
+                              (substring (file-name-directory file) 0 -1)))
+                          list)))
+           (buf "*Recentf Dired*")
+           (default-directory "~"))
+      (when (get-buffer buf)
+        (kill-buffer buf))
+      (if arg
+          (dired (cons (generate-new-buffer-name buf) dirs))
+        (icomplete-vertical-do ()
+          (find-file
+           (completing-read "Recent dirs: " dirs nil t))))))
 
-  :hook ((after-init-hook . recentf-mode)
-         (dired-mode-hook . contrib/recentf-add-dired-directory)))
+  :hook (after-init-hook . recentf-mode)
+  :bind (("s-r" . prot/recentf)
+         ("C-x C-r" . prot/recentf-dirs)))
 #+end_src
 
 *** Minibuffer history
