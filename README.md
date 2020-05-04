@@ -7,7 +7,7 @@ setup and whatever external tweak may be necessary to improve the
 experience with that tool.
 
 The last state of my dotfiles with BSPWM and its extras can be found in
-[tag v2.2.0](https://gitlab.com/protesilaos/dotfiles/-/tags/v2.2.0).  I
+[tag v2.2.0](https://gitlab.com/protesilaos/dotfiles/-/tree/v2.2.0).  I
 provide no change logs and no support whatsover (see the README of that
 tag for more information).
 
