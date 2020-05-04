@@ -860,17 +860,22 @@ further below):
     :config
     (setq orderless-regexp-separator "[/\s_-]+")
     (setq orderless-matching-styles
-          '(orderless-literal
-            orderless-prefixes
+          '(orderless-flex
             orderless-strict-leading-initialism
-            orderless-flex
-            orderless-regexp))
+            orderless-regexp
+            orderless-prefixes
+            orderless-literal))
 
     (defun prot/orderless-literal-dispatcher (pattern _index _total)
       (when (string-suffix-p "=" pattern)
         `(orderless-literal . ,(substring pattern 0 -1))))
 
-    (setq orderless-style-dispatchers '(prot/orderless-literal-dispatcher))
+    (defun prot/orderless-initialism-dispatcher (pattern _index _total)
+      (when (string-suffix-p "," pattern)
+        `(orderless-strict-leading-initialism . ,(substring pattern 0 -1))))
+
+    (setq orderless-style-dispatchers '(prot/orderless-literal-dispatcher
+                                        prot/orderless-initialism-dispatcher))
     :bind (:map minibuffer-local-completion-map
                 ("SPC" . nil)))         ; space should never complete
 
