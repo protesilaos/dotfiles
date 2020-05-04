@@ -790,19 +790,32 @@ disabled---though you obviously lose the visual feedback.
 
 Now some comments about my implementation:
 
-+ [[https://github.com/oantolin/orderless][The “orderless” package]] is developed by Omar Antolín Camarena and you
-  will find it on MELPA.  It provides the =orderless= completion style for
-  out-of-order grouped pattern matching.  The components can be
-  determined using several styles, such as regexp, flex, prefix,
-  initialism.  Delimiters are literal spaces by default, but can be
-  configured to match other characters, with hyphens and slashes being
-  likely choices.  As such, Orderless can supersede the more aggressive
-  completion styles that come built into Emacs, adding to them the
-  powerful out-of-order capability.
++ The, dare I say, /sublime/ [[https://github.com/oantolin/orderless][“orderless” package]] is developed by Omar
+  Antolín Camarena and you will find it on MELPA (I use more packages
+  from Omar in my dotemacs, such as [[#h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1][Icomplete vertical mode]]).  It
+  provides the =orderless= completion style for efficient out-of-order
+  grouped pattern matching.  The components can be determined using
+  several styles, such as regexp, flex, prefix, initialism (check the
+  README because there are lots of variations and extras).  Delimiters
+  are literal spaces by default, but can be configured to match other
+  characters, with hyphens and slashes being likely choices.  As such,
+  Orderless can supersede---and greatly improve upon---the completion
+  styles that come built into Emacs, adding to them the powerful
+  out-of-order capability.
++ My =prot/orderless-literal-dispatcher= is based on an example from the
+  Orderless README.  By appending an equals sign to the end of a
+  component I am instructing Orderless to match that component
+  literally.  Obviously one can use the style dispatchers for each of
+  the matching patterns, though I find this to be sufficient for my
+  needs.
 + The =completion-styles= try to match candidates using one style at a
-  time, moving from the first to the last until something is matched.
-  This is why I define several of them in an order I find suitable to my
-  workflow.  As far as I know, the styles cannot be combined.
+  time (assuming you have more than one), moving from the first to the
+  last until something is matched.  In practice though, =orderless= is so
+  powerful that there is no pressing need to use the built-in styles.
+  An exception is a niche functionality of the =partial-completion=: with
+  it you can navigate to a filesystem path like =~/.l/s/fo= for
+  =~/.local/share/fonts=.  So my modest recommendation is to use those two
+  styles to cover every case.
 + The =completions-format= concerns the layout of the =*Completions*= buffer
   that pops up after trying to complete a non-unique match (or by typing
   =?= from inside the minibuffer).  By default, it can be focused directly
@@ -839,19 +852,30 @@ further below):
 #+begin_src emacs-lisp
 (use-package minibuffer
   :config
-  ;; Aggressive completion style for out-of-order groups of matches
+
+  ;; Super-powerful completion style for out-of-order groups of matches
+  ;; using a comprehensive set of matching styles.
   (use-package orderless
     :ensure
     :config
-    (setq orderless-component-matching-styles
-          '(orderless-regexp
-            orderless-flex))
     (setq orderless-regexp-separator "[/\s_-]+")
+    (setq orderless-matching-styles
+          '(orderless-literal
+            orderless-prefixes
+            orderless-strict-leading-initialism
+            orderless-flex
+            orderless-regexp))
+
+    (defun prot/orderless-literal-dispatcher (pattern _index _total)
+      (when (string-suffix-p "=" pattern)
+        `(orderless-literal . ,(substring pattern 0 -1))))
+
+    (setq orderless-style-dispatchers '(prot/orderless-literal-dispatcher))
     :bind (:map minibuffer-local-completion-map
                 ("SPC" . nil)))         ; space should never complete
 
   (setq completion-styles
-        '(basic partial-completion initials orderless))
+        '(orderless partial-completion))
   (setq completion-category-defaults nil)
   (setq completion-cycle-threshold 3)
   (setq completion-flex-nospace nil)
