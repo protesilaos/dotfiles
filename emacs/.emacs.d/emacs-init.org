@@ -1462,23 +1462,24 @@ topic of [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the T
   :config
   (defun contrib/completing-read-in-region (start end collection &optional predicate)
     "Prompt for completion of region in the minibuffer if non-unique.
- Use as a value for `completion-in-region-function'."
-    (let* ((initial (buffer-substring-no-properties start end))
-           (all (completion-all-completions initial collection predicate
-                                            (length initial)))
-           (completion (cond
-                        ((atom all) nil)
-                        ((and (consp all) (atom (cdr all))) (car all))
-                        (t (let ((completion-in-region-function
-                                  #'completion--in-region))
-                             (icomplete-vertical-do (:height (/ (window-height) 5))
-                               (completing-read
-                                "Completion: " collection predicate t initial)))))))
-      (if (null completion)
-          (progn (message "No completion") nil)
-        (delete-region start end)
-        (insert completion)
-        t)))
+Use as a value for `completion-in-region-function'."
+    (if (and (minibufferp) (not (string= (minibuffer-prompt) "Eval: ")))
+        (completion--in-region start end collection predicate)
+      (let* ((initial (buffer-substring-no-properties start end))
+             (limit (car (completion-boundaries initial collection predicate "")))
+             (all (completion-all-completions initial collection predicate
+                                              (length initial)))
+             (completion (cond
+                          ((atom all) nil)
+                          ((and (consp all) (atom (cdr all)))
+                           (concat (substring initial 0 limit) (car all)))
+                          (t (completing-read
+                              "Completion: " collection predicate t initial)))))
+        (if (null completion)
+            (progn (message "No completion") nil)
+          (delete-region start end)
+          (insert completion)
+          t))))
 
   (setq completion-in-region-function #'contrib/completing-read-in-region)
   :bind (:map minibuffer-local-completion-map
