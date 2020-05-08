@@ -5160,9 +5160,7 @@ What these do:
 
 #+begin_src emacs-lisp
 (use-package shr
-  :commands (eww eww-browse-url)
   :config
-  (setq browse-url-browser-function 'eww-browse-url)
   (setq shr-use-fonts nil)
   (setq shr-use-colors nil)
   (setq shr-max-image-proportion 0.7)
@@ -5183,6 +5181,59 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
     (with-eval-after-load 'eww
       (advice-add 'eww-display-html :around
                   'eww-display-html--override-shr-external-rendering-functions))))
+#+end_src
+
+** Emacs Web Wowser (EWW)
+
+/WORK IN PROGRESS 2020-05-08/
+
+#+begin_src emacs-lisp
+(use-package eww
+  :commands (eww
+             eww-browse-url
+             eww-search-words
+             eww-open-in-new-buffer
+             eww-open-file
+             prot/eww-visit-history)
+  :config
+  (setq eww-restore-desktop t)
+  (setq eww-header-line-format "%u")
+
+  (defun prot/eww-visit-history ()
+    "Revisit `eww' history using completion."
+    (interactive)
+    (let ((history eww-prompt-history))
+      (icomplete-vertical-do ()
+        (eww
+         (completing-read "Visit website from history: " history nil t)))))
+
+  ;; (declare-function cl-remove-if "cl-seq")
+  ;; (defun prot/eww-list-buffers ()
+  ;;   (interactive)
+  ;;   (let ((bufs (cl-remove-if (lambda (x)
+  ;;                               (with-current-buffer x
+  ;;                                 (if (derived-mode-p 'eww-mode)
+  ;;                                     x
+  ;;                                   nil)))
+  ;;                             (buffer-list))))
+  ;;      (completing-read "Visit EWW buffer: " bufs nil t)))
+
+  (defvar prot/eww-global-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map "s" 'eww-search-words)
+      (define-key map "o" 'eww-open-in-new-buffer)
+      (define-key map "f" 'eww-open-file)
+      (define-key map "w" 'prot/eww-visit-history)
+      map)
+    "Key map to scope `eww' bindings for global usage.
+The idea is to bind this to a prefix key, so that its defined
+keys follow the pattern of <PREFIX> <KEY>.")
+  :bind-keymap ("C-c w" . prot/eww-global-map))
+
+(use-package browse-url
+  :after eww
+  :config
+  (setq browse-url-browser-function 'eww-browse-url))
 #+end_src
 
 ** Bongo (Music player)
