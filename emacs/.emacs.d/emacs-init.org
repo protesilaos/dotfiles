@@ -5521,6 +5521,34 @@ Also run `prot/modus-themes-toggle-hook'."
          (contrib/after-load-theme-hook . prot/modus-themes-custom)))
 #+end_src
 
+*** Measuring relative colour luminance
+    :PROPERTIES:
+    :CUSTOM_ID: h:254c6da5-f89f-46be-ad56-ee3802a4e2b8
+    :END:
+
+The following is an Elisp implementation of [[https://www.w3.org/TR/WCAG20-TECHS/G18.html][the formula]] that determines
+whether a combination of two colours is accessible or not.  It was
+offered to me [[https://github.com/oantolin/live-completions/issues/2][by Omar Antolín Camarena]].  For the purposes of my themes,
+the contrast ratio needs to be 7:1 or higher, which conforms with the
+highest accessibility standard (WCAG AAA).
+
+#+begin_src emacs-lisp
+(defun wcag (hex)
+  (apply #'+
+         (cl-mapcar
+          (lambda (k x)
+            (* k (if (<= x 0.03928)
+                     (/ x 12.92)
+                   (expt (/ (+ x 0.055) 1.055) 2.4))))
+          '(0.2126 0.7152 0.0722)
+          (color-name-to-rgb hex))))
+
+(defun clr (c1 c2)
+  (let ((ct (/ (+ (wcag c1) 0.05)
+               (+ (wcag c2) 0.05))))
+    (max ct (/ ct))))
+#+end_src
+
 *** Mode line
     :PROPERTIES:
     :CUSTOM_ID: h:39f57b0d-300a-4310-9ba8-8c388fa72e1d
