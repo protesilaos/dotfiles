@@ -836,8 +836,21 @@ Now some comments about my implementation:
   hit =C-]= (=abort-recursive-edit=), though the regular =C-g= should also do
   the trick.  The =minibuffer-depth-indicate-mode= will show an indicator
   next to the minibuffer prompt if a recursive edit is in progress.
++ My =prot/complete-kill-or-insert-candidate= is a simple yet effective
+  tool that I bind to three key chords.  With =M-o w= you copy the current
+  candidate to the kill ring and continue with the minibuffer session.
+  With =M-o i= you insert the candidate in the buffer from where the
+  minibuffer was called, without appending to the kill ring, while still
+  keeping the session active.  And =M-o j= will insert the candidate in
+  the same way and immediately exit all recursive edits.
++ Note the nuances in the behaviour between =RET= and =C-j=.  With the
+  Return key, we instruct the minibuffer to expand the current candidate
+  and then exit the session, if possible.  Whereas =C-j= is meant to
+  insert the minibuffer's contents exactly as they are and exit
+  immediately.  You need the latter in cases where you want =foo= but the
+  match is for =foobar=.
 + The key bindings in the pattern of =s-KEY= follow the principles I
-  outlined in my introductory [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note about the use of the Super key]].
+  outlined in my [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note about the use of the Super key]].
 
 Also check my configurations pertaining to the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].
 After about two months of full time usage (as of 2020-04-03), I am
@@ -960,6 +973,32 @@ key in `completion-list-mode-map'."
     (interactive)
     (kill-new (thing-at-point 'symbol)))
 
+
+  (defun prot/complete-kill-or-insert-candidate (&optional arg)
+    "Place the matching candidate to the top of the `kill-ring'.
+This will keep the minibuffer session active.
+
+With \\[universal-argument] insert the candidate in the most
+recently used buffer, while keeping focus on the minibuffer.
+
+With \\[universal-argument] \\[universal-argument] insert the
+candidate and immediately exit all recursive editing levels and
+active minibuffers.
+
+Bind this function in `icomplete-minibuffer-map'."
+    (interactive "*P")
+    (let ((candidate (car completion-all-sorted-completions)))
+      (when (and (minibufferp)
+                 (or (bound-and-true-p icomplete-mode)
+                     (bound-and-true-p live-completions-mode))) ; see next section
+        (cond ((eq arg nil)
+               (kill-new candidate))
+              ((= (prefix-numeric-value arg) 4)
+               (with-minibuffer-selected-window (insert candidate)))
+              ((= (prefix-numeric-value arg) 16)
+               (with-minibuffer-selected-window (insert candidate))
+               (top-level))))))
+
   ;; Defines, among others, aliases for common actions to Super-KEY.
   ;; Normally these should go in individual package declarations, but
   ;; their grouping here makes things easier to understand.
@@ -974,6 +1013,16 @@ key in `completion-list-mode-map'."
                     (interactive)
                     (prot/describe-symbol-at-point '(4))))
          ("s-v" . prot/focus-minibuffer-or-completions)
+         :map minibuffer-local-completion-map
+         ("<return>" . minibuffer-force-complete-and-exit)
+         ("C-j" . exit-minibuffer)
+         ("M-o w" . prot/complete-kill-or-insert-candidate)
+         ("M-o i" . (lambda ()
+                      (interactive)
+                      (prot/complete-kill-or-insert-candidate '(4))))
+         ("M-o j" . (lambda ()
+                      (interactive)
+                      (prot/complete-kill-or-insert-candidate '(16))))
          :map completion-list-mode-map
          ("h" . prot/describe-symbol-at-point)
          ("w" . prot/completions-kill-save-symbol)
@@ -999,13 +1048,6 @@ Overview of the following package declaration:
   candidates is long.  This paradoxically makes things feel faster while
   I am still typing (because by that time the list has been narrowed to
   my input).
-+ My =prot/icomplete-kill-or-insert-candidate= is a simple yet effective
-  tool that I bind to three key chords.  With =M-o w= you copy the current
-  candidate to the kill ring and continue with the minibuffer session.
-  With =M-o i= you insert the candidate in the buffer from where the
-  minibuffer was called, without appending to the kill ring, while still
-  keeping the session active.  And =M-o j= will insert the candidate in
-  the same way and immediately exit all recursive edits.
 + For versions of Emacs above 27, there is a minor mode called =fido=
   (Fake IDO, where =ido= is an alternative option to Icomplete that tries
   to do more than just completion).  This new mode changes some of the
@@ -1021,13 +1063,14 @@ Overview of the following package declaration:
   between regular editing and the rotation of the candidates' list.  The
   default =icomplete= key bindings leave something to be desired and are
   therefore repurposed for my extensions.
-+ Note the nuances in the behaviour between =RET= and =C-j=.  With the
-  Return key, we tell Icomplete to expand the current candidate and then
-  exit the minibuffer if possible.  Whereas =C-j= is meant to insert
-  exactly what is in the minibuffer, which can be tricky in some
-  circumstances.  Use the latter when Icomplete is matching =foobar= but
-  you only want =foo= (needed when renaming files or when creating links
-  in Org to non-existent candidates).
++ As with the keys for the minibuffer, note the nuances in the behaviour
+  between =RET= and =C-j=.  With the Return key, we tell Icomplete to expand
+  the current candidate and then exit the minibuffer if possible.
+  Whereas =C-j= is meant to insert exactly what is in the minibuffer,
+  which can be tricky in some circumstances.  Use the latter when
+  Icomplete is matching =foobar= but you only want =foo= (needed when
+  renaming files or when creating links in Org to non-existent
+  candidates).
 
 #+begin_src emacs-lisp
 (use-package icomplete
@@ -1052,30 +1095,6 @@ Overview of the following package declaration:
   (fido-mode -1)                        ; Emacs 27.1
   (icomplete-mode 1)
 
-  (defun prot/icomplete-kill-or-insert-candidate (&optional arg)
-    "Place the matching candidate to the top of the `kill-ring'.
-This will keep the minibuffer session active.
-
-With \\[universal-argument] insert the candidate in the most
-recently used buffer, while keeping focus on the minibuffer.
-
-With \\[universal-argument] \\[universal-argument] insert the
-candidate and immediately exit all recursive editing levels and
-active minibuffers.
-
-Bind this function in `icomplete-minibuffer-map'."
-    (interactive "*P")
-    (let ((candidate (car completion-all-sorted-completions)))
-      (when (and (minibufferp)
-                 (bound-and-true-p icomplete-mode))
-        (cond ((eq arg nil)
-               (kill-new candidate))
-              ((= (prefix-numeric-value arg) 4)
-               (with-minibuffer-selected-window (insert candidate)))
-              ((= (prefix-numeric-value arg) 16)
-               (with-minibuffer-selected-window (insert candidate))
-               (top-level))))))
-
   (defun prot/icomplete-minibuffer-truncate ()
     "Truncate minibuffer lines in `icomplete-mode'.
   This should only affect the horizontal layout and is meant to
@@ -1098,13 +1117,13 @@ Bind this function in `icomplete-minibuffer-map'."
               ("<left>" . icomplete-backward-completions)
               ("<up>" . icomplete-backward-completions)
               ("<C-backspace>" . icomplete-fido-backward-updir) ; Emacs 27.1
-              ("M-o w" . prot/icomplete-kill-or-insert-candidate)
+              ("M-o w" . prot/complete-kill-or-insert-candidate) ; defined in the minibuffer declaration
               ("M-o i" . (lambda ()
                            (interactive)
-                           (prot/icomplete-kill-or-insert-candidate '(4))))
+                           (prot/complete-kill-or-insert-candidate '(4))))
               ("M-o j" . (lambda ()
                            (interactive)
-                           (prot/icomplete-kill-or-insert-candidate '(16))))))
+                           (prot/complete-kill-or-insert-candidate '(16))))))
 #+end_src
 
 **** TODO can registers be inserted via completion?
