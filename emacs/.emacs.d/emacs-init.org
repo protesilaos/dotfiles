@@ -1235,6 +1235,111 @@ normally would when calling `yank' followed by `yank-pop'."
          ("C-v" . icomplete-vertical-toggle)))
 #+end_src
 
+*** Live update of "completions" buffer
+    :PROPERTIES:
+    :CUSTOM_ID: h:e930a567-989a-4aa1-99a1-eaae6eb002dd
+    :END:
+
+This is another nice contribution by the ever-resourceful Omar Antolín
+Camarena (see previous sections on [[#h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1][Icomplete vertical mode]] and the
+[[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Orderless completion style]]).  It will automatically pop up the
+"Completions" buffer and continuously update as you type in your
+search.  As with =icomplete-vertical=, the package provides a macro that
+we can use to enable this behaviour on a per-function basis.  This is
+what I always want.
+
+Now to understand why I am configuring this package while also
+maintaining =icomplete-mode= and friends, you need to have the full
+picture of how I conceive of completion workflows in my Emacs usage:
+
++ One-off commands :: These are the regular motions one would use to go
+  from place A to place B, such as switching buffers.  The plan is to
+  get on with the work with as little friction as possible.  There is no
+  real need for extended interactions with the minibuffer or with any
+  other buffer for that matter.
+
+  This also explains why I use the default horizontal layout of
+  Icomplete.  It does not interfere with my windows because it is not
+  needed for the given interaction.
+
+  While Icomplete's vertical layout is used for the cases with the
+  exception that I optimise for lists with candidates that are naturally
+  long (such as when selecting an entry from the kill-ring or choosing a
+  filesystem path among the recentf-list---also see [[#h:5723c4bb-ff6c-449f-bb60-be66fab3f137][section on recentf]]).
+
++ Involved interactions :: Whereas these are cases where one expects to
+  interact with the list of candidates itself.  There likely is a need
+  to have a view of all the matches as well as a means of defining
+  commands that are specific to the task.  This is where the standard
+  "Completions" buffer enters the fray.  It feels natural for those
+  scenaria where you need to search for some documentation and are
+  probably interested in reading more than one entry (e.g. when you want
+  to configure a new package).
+
+  Here is my common use-case: search for help with =C-h f=, =C-h v=, =C-h o=.
+  The Completions buffer will show you what matches your input.  Switch
+  to that buffer, place point over an item you are interested and run a
+  bespoke command for =describe-symbol= for the thing at point (this is
+  what my =prot/describe-symbol-at-point= does, and I bind it to
+  convenient keys---this is configured in the previous section on the
+  minibuffer's essentials).  The help buffer will pop up, allowing us
+  to, say, switch to it in order to copy something, then go to some file
+  we are editing to continue with our work, and then get back to the
+  Completions buffer for more of the same.  This is also why recursive
+  minibuffers are valuable, allowing you to keep the current session
+  active while still accessing things like =M-x=.
+
+  As for the "Completions" buffer itself, I must stress that this is a
+  buffer.  It allows you to, for example, write its contents to a
+  regular file (=C-x C-w=).  It also has =completion-list-mode-map=, meaning
+  that you can binding your bespoke commands to convenient keys
+  (e.g. I use =h= for help, =w= for writing to the kill-ring---again, these
+  are defined in the minibuffer's package declaration).
+
+Against this backdrop, the =live-completions= package cover a
+narrow-yet-imminently-valuable niche: it removes the need for manually
+displaying and then updating the Completions buffer (such as with the
+default =?= from inside the minibuffer).  Of course, there is more to this
+package, which could make it suitable for a general completion user
+interface, though this is not for me because the aforementioned workflow
+with the "one-off commands" is meant to not produce too much visual
+feedback.
+
+Last but not least, these ideas and modes of interaction where all
+showcased in my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26), although the code
+has improved a lot since then, in large part courtesy of Omar's packages.
+
+#+begin_src emacs-lisp
+(use-package live-completions
+  :load-path "~/.emacs.d/prot-dev/live-completions/"
+  :after minibuffer                    ; make sure to check that as well
+  :config
+  (setq live-completions-sort-order 'cycle)
+  (live-completions-mode -1)
+  
+  (defun prot/live-completions-describe-function ()
+    "Enable `live-completions-do' for `describe-function'."
+    (interactive)
+    (live-completions-do (:height (/ (window-height) 3))
+      (call-interactively 'describe-function)))
+
+  (defun prot/live-completions-describe-variable ()
+    "Enable `live-completions-do' for `describe-variable'."
+    (interactive)
+    (live-completions-do (:height (/ (window-height) 3))
+      (call-interactively 'describe-variable)))
+
+  (defun prot/live-completions-describe-symbol ()
+    "Enable `live-completions-do' for `describe-symbol'."
+    (interactive)
+    (live-completions-do (:height (/ (window-height) 3))
+      (call-interactively 'describe-symbol)))
+
+  :bind (("C-h f" . prot/live-completions-describe-function)
+         ("C-h v" . prot/live-completions-describe-variable)
+         ("C-h o" . prot/live-completions-describe-symbol)))
+#+end_src
+
 *** Completion for projects and directory trees
     :PROPERTIES:
     :CUSTOM_ID: h:7862f39e-aed0-4d02-9f1e-60c4601a9734
