@@ -1316,7 +1316,7 @@ has improved a lot since then, in large part courtesy of Omar's packages.
   :config
   (setq live-completions-sort-order 'cycle)
   (live-completions-mode -1)
-  
+
   (defun prot/live-completions-describe-function ()
     "Enable `live-completions-do' for `describe-function'."
     (interactive)
@@ -5083,9 +5083,6 @@ bindings and their functions.
    :CUSTOM_ID: h:f2528ad5-912c-45c5-a077-fe76623ff22b
    :END:
 
-/Warning 2020-04-08: This section will be removed in the future as I
-integrate my RSS feeds in Gnus./
-
 Settings for the feed reader package.  I mostly care about the unique
 buffers tweak.  It allows me to open a feed entry and keep it around
 while I go on browsing the feed list.
@@ -5103,55 +5100,44 @@ with minor tweaks by me.
   (setq elfeed-db-directory "~/.emacs.d/elfeed")
   (setq elfeed-enclosure-default-dir "~/Downloads")
   (setq elfeed-search-clipboard-type 'CLIPBOARD)
-  (setq elfeed-search-title-max-width (current-fill-column))
   (setq elfeed-search-title-max-width 100)
   (setq elfeed-search-title-min-width 30)
   (setq elfeed-search-trailing-width 16)
   (setq elfeed-show-truncate-long-urls t)
   (setq elfeed-show-unique-buffers t)
 
-  (defun prot/feeds ()
+  (defun prot/elfeed-feeds ()
     "Loads a file with RSS/Atom feeds.  This file contains valid
 syntax for use by the `elfeed' package."
     (let ((feeds "~/.emacs.d/feeds.el.gpg"))
       (when (file-exists-p feeds)
         (load-file feeds))))
 
-  (defun ambrevar/elfeed-play-with-mpv ()
-    "Play entry link with mpv."
+  (defun prot/elfeed-eww-other-window ()
+    "Browse `elfeed' link at point in `eww' other window."
     (interactive)
-    (let ((entry (if (eq major-mode 'elfeed-show-mode)
-                     elfeed-show-entry (elfeed-search-selected :single)))
-          (quality-arg "")
-          (quality-val (completing-read "Resolution: "
-                                        '("480" "720" "1080")
-                                        nil nil)))
-      (setq quality-val (string-to-number quality-val))
-      (message "Opening %s with height≤%s..."
-               (elfeed-entry-link entry) quality-val)
-      (when (< 0 quality-val)
-        (setq quality-arg
-              (format "--ytdl-format=[height<=?%s]" quality-val)))
-      (start-process "elfeed-mpv" nil "mpv"
-                     quality-arg (elfeed-entry-link entry))))
-  :hook (after-init-hook . prot/feeds)
+    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+                      elfeed-show-entry (elfeed-search-selected :single)))
+           (link (elfeed-entry-link entry)))
+      (split-window-sensibly)
+      (eww link)))
+
+  :hook (after-init-hook . prot/elfeed-feeds)  ; Hook should be elfeed-specific
   :bind (:map elfeed-search-mode-map
-              ("v" . (lambda ()
-                       (interactive)
-                       (ambrevar/elfeed-play-with-mpv)
-                       (elfeed-search-untag-all-unread)))
               ("w" . elfeed-search-yank)
               ("g" . elfeed-update)
               ("G" . elfeed-search-update--force)
+              ("o" . prot/elfeed-eww-other-window)
               :map elfeed-show-mode-map
-              ("v" . ambrevar/elfeed-play-with-mpv)
               ("w" . elfeed-show-yank)))
 #+end_src
 
-** Emacs web browser and HTML parser
+** Emacs HTML parser
    :PROPERTIES:
    :CUSTOM_ID: h:524bc702-ff55-4ed9-9a38-26d30d64591d
    :END:
+
+/SUBJECT TO REVIEW 2020-05-08/
 
 As far as I can tell, the following =shr-*= variables concern an HTML
 parser that is used by a variety of tools, including Elfeed (defined
