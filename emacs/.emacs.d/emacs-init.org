@@ -4661,8 +4661,6 @@ based on the directory of the current buffer."
       :CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
       :END:
 
-/WORK IN PROGRESS 2020-05-01/
-
 While I did read the =eshell= manual fairly early in my introduction to
 Emacs (July 2019), I failed to appreciate its added value.  Sure, you
 could run Elisp commands as well as those of the standard shells.  But
@@ -4704,12 +4702,21 @@ Extensibility is seamless.  =prot/eshell-complete-history= offers a
 completion interface to the input history.  No need for awkard back and
 forth or for searching for a regexp without any immediate feedback.  In
 a similar fashion =prot/eshell-complete-recent-dir= provides completion
-for switching directly to a recent directory.
+for switching directly to a recent directory.  While the more general
+=prot/eshell-find-subdirectory-recursive= lets you switch to a
+subdirectory somewhere inside the path you are.
 
 Instead of outlining the remaining features of Eshell, I strongly
 encourage you to read the manual.  It is fairly short.  What I have here
 is just an early sample of what can be achieved with fairly few little
 tweaks.
+
+Also check these valuable resources:
+
++ [[https://cestlaz.github.io/post/using-emacs-66-eshell-elisp][Mike Zamansky's video demo]] that also shows how to program an Eshell
+  switcher.
++ [[https://www.youtube.com/watch?v=RhYNu6i_uY4][Howard Abrahams' video]] that covers the features of Eshell.
++ [[https://ambrevar.xyz/emacs-eshell/][Pierre Neidhardt's detailed blog post]] on the pros and cons of Eshell.
 
 #+begin_src emacs-lisp
 (use-package eshell
@@ -4717,13 +4724,47 @@ tweaks.
 
 (use-package esh-mode
   :config
+  ;; used by other functions below
+  (declare-function ffap-file-at-point "ffap.el")
+
+  (defun prot/eshell-insert-file-at-point ()
+    "Insert (cat) contents of file at point."
+    (interactive)
+    (let ((file (ffap-file-at-point)))
+      (if file
+          (progn
+            (end-of-buffer)
+            (insert (concat "cat " file))
+            (eshell-send-input))
+        (user-error "No file at point"))))
+
+  (defun prot/eshell-kill-save-file-at-point ()
+    "Add to kill-ring the absolute path of file at point."
+    (interactive)
+    (let ((file (ffap-file-at-point)))
+      (if file
+          (kill-new (concat (eshell/pwd) "/" file))
+        (user-error "No file at point"))))
+
+  (defun prot/eshell-find-file-at-point ()
+    "Run `find-file' for file at point (ordinary file or dir).
+Recall that this will produce a `dired' buffer if the file is a
+directory."
+    (interactive)
+    (let ((file (ffap-file-at-point)))
+      (if file
+          (find-file file)
+        (user-error "No file at point"))))
+
   (defun prot/eshell-file-parent-dir ()
     "Open `dired' with the parent directory of file at point."
     (interactive)
     (let ((file (ffap-file-at-point)))
-      (dired (file-name-directory file))))
+      (if file
+          (dired (file-name-directory file))
+        (user-error "No parent dir for file to jump to"))))
 
-  (defun prot/eshell-mkcd (dir)
+  (defun prot/eshell-mkcd (dir)         ; TODO define alias
     "Make a directory, or path, and switch to it."
     (interactive)
     (eshell/mkdir "-p" dir)
@@ -4747,14 +4788,26 @@ tweaks.
              (format "%s"
                      (read-buffer-to-switch "Switch to buffer: "))
              ">")))
+
+  (defun prot/eshell-narrow-output-highlight-regexp ()
+    (interactive)
+    (let ((regexp (read-regexp "Regexp to highlight")))
+      (narrow-to-region (eshell-beginning-of-output)
+                        (eshell-end-of-output))
+      (goto-char (point-min))
+      (highlight-regexp regexp 'hi-yellow)))
   :bind (:map eshell-mode-map
               ("M-k" . eshell-kill-input)
-              ;; This one shadows `prot/olivetti-mode', but that is fine
-              ;; in this map
+              ("C-c M-w" . prot/eshell-kill-save-file-at-point)
+              ("C-c i" . prot/eshell-insert-file-at-point)
+              ("C-c f" . prot/eshell-find-file-at-point)
+              ("C-c C-f" . prot/eshell-find-file-at-point)
+              ;; The C-c o shadows `prot/olivetti-mode', but that is
+              ;; fine in this map
               ("C-c o" . prot/eshell-put-last-output-to-buffer)
               ("C-c >" . prot/eshell-complete-redirect-to-buffer)
-              ("C-c C-l" . eshell/clear-scrollback)
-              ("C-c C-j" . prot/eshell-file-parent-dir)))
+              ("C-c C-j" . prot/eshell-file-parent-dir)
+              ("C-c h" . prot/eshell-narrow-output-highlight-regexp)))
 
 (use-package esh-module
   :config
@@ -4774,15 +4827,18 @@ tweaks.
           eshell-unix)))
 
 (use-package em-dirs
+  :after esh-mode
   :config
   (setq eshell-cd-on-directory t))
 
 (use-package em-tramp
+  :after esh-mode
   :config
   (setq password-cache t)
   (setq password-cache-expiry 600))
 
 (use-package em-hist
+  :after esh-mode
   :config
   (setq eshell-hist-ignoredups t)
   (setq eshell-save-history-on-exit t)
@@ -4806,9 +4862,34 @@ buffer."
       (eshell-send-input)               ; Should cd directly…
       (when arg
         (dired dir))))
+
+  ;; `cl-remove-if' is used right below
+  (declare-function cl-remove-if "cl-seq")
+
+  (defun prot/eshell-find-subdirectory-recursive ()
+    "Recursive `eshell/cd' to subdirectory.
+This command has the potential for infinite recursion: use it
+wisely or prepare to use `eshell-interrupt-process'."
+    (interactive)
+    (let* ((dir (eshell/pwd))
+           (contents (directory-files-recursively dir ".*" t nil nil))
+           ;; (contents (directory-files dir t))
+           (find-directories (mapcar (lambda (x)
+                                       (when (file-directory-p x)
+                                         (abbreviate-file-name x)))
+                                     contents))
+           (subdirs (delete nil find-directories))
+           (cands (cl-remove-if (lambda (x) (string-match-p "\\.git" x)) subdirs))
+           (selection (icomplete-vertical-do ()
+                        (completing-read "Find sub-directory: " cands nil t))))
+      (insert selection)
+      (eshell-send-input)))
+
   :bind (:map eshell-hist-mode-map
-              ("M-r" . prot/eshell-complete-history)
-              ("C-c d" . prot/eshell-complete-recent-dir)))
+              ("M-s" . nil) ; I use this for lots of more useful commands
+              ("M-r" . prot/eshell-complete-history) ; use this to find input history
+              ("C-c d" . prot/eshell-find-subdirectory-recursive)
+              ("C-c =" . prot/eshell-complete-recent-dir)))
  #+end_src
 
 *** Terminals inside of Emacs
