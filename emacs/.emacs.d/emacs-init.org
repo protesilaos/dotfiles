@@ -1758,6 +1758,26 @@ afterwards exit the search altogether."
          ("<C-return>" . prot/isearch-other-end)))
 #+end_src
 
+*** Occur (replace.el)
+    :PROPERTIES:
+    :CUSTOM_ID: h:037b7121-1238-42f8-a771-0dce43a46d23
+    :END:
+
+These are a few stylistic tweaks for the "Occur" buffer (=M-x occur=).
+The faces are part of my Modus themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][relevant section]]).
+
+#+begin_src emacs-lisp
+(use-package replace
+  :config
+  (setq list-matching-lines-jump-to-current-line t)
+  ;; See my "Modus themes" for these inherited faces
+  (setq list-matching-lines-buffer-name-face
+        '(:inherit modus-theme-intense-neutral :weight bold))
+  (setq list-matching-lines-current-line-face
+        '(:inherit modus-theme-special-mild))
+  :hook (occur-mode-hook . hl-line-mode))
+#+end_src
+
 *** Regular expressions: re-builder and visual-regexp
     :PROPERTIES:
     :CUSTOM_ID: h:6c6759c8-3ae3-40b0-8356-05cc0975e12a
