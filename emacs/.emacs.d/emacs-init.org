@@ -1105,6 +1105,9 @@ Overview of the following package declaration:
                (bound-and-true-p icomplete-mode))
       (setq truncate-lines t)))
 
+  ;; Note that the the syntax for `use-package' hooks is controlled by
+  ;; the `use-package-hook-name-suffix' variable.  The "-hook" suffix is
+  ;; not an error of mine.
   :hook (icomplete-minibuffer-setup-hook . prot/icomplete-minibuffer-truncate)
   :bind (:map icomplete-minibuffer-map
               ("<tab>" . icomplete-force-complete)
@@ -1980,6 +1983,9 @@ as =-AFXhlv --group-directories-first=).
   (setq dired-listing-switches
         "-AGFhlv --group-directories-first --time-style=long-iso")
   (setq dired-dwim-target t)
+  ;; Note that the the syntax for `use-package' hooks is controlled by
+  ;; the `use-package-hook-name-suffix' variable.  The "-hook" suffix is
+  ;; not an error of mine.
   :hook ((dired-mode-hook . dired-hide-details-mode)
          (dired-mode-hook . hl-line-mode)))
 
@@ -2508,6 +2514,9 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
+  ;; Note that the the syntax for `use-package' hooks is controlled by
+  ;; the `use-package-hook-name-suffix' variable.  The "-hook" suffix is
+  ;; not an error of mine.
   :hook ((help-mode-hook . visual-line-mode)
          (custom-mode-hook . visual-line-mode))
   :bind (("s-n" . next-buffer)
