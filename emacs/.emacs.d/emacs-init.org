@@ -2031,8 +2031,7 @@ as =-AFXhlv --group-directories-first=).
         '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
   (setq find-name-arg "-iname"))
 
-(use-package async
-  :ensure)
+(use-package async :ensure)
 
 (use-package dired-async
   :after (dired async)
@@ -3469,7 +3468,7 @@ Add this function to `message-header-setup-hook'."
         (progn
           (when (message-fetch-field "Gcc")
             (message-remove-header "Gcc"))
-            (message-add-header "Gcc: nnimap+pub:Sent"))
+          (message-add-header "Gcc: nnimap+pub:Sent"))
       (message "Gnus is not running. No GCC field inserted.")))
 
   :hook ((message-header-setup-hook . prot/message-header-add-gcc)
@@ -5218,6 +5217,9 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
 #+end_src
 
 ** Emacs Web Wowser (EWW)
+   :PROPERTIES:
+   :CUSTOM_ID: h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b
+   :END:
 
 /WORK IN PROGRESS 2020-05-08/
 
@@ -5499,12 +5501,13 @@ their development process, I am not configuring here the ELPA/MELPA
 versions.  So what you see in this =use-package= declaration is a bit
 different than what others will be using.
 
-Also note that the values I set for these variables are not indicative
-of my preferences: I try different combinations to test things across a
+Also note that *the values I set for these variables are not indicative
+of my preferences*: I try different combinations to test things across a
 range of scenaria.  The scale for the fonts I specify here is called
-"minor second", representing a =1.125= rate.  The hook that runs after the
-loading of the themes (=contrib/after-load-theme-hook=) and its
-accompaniments are taken from the [[https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-funcs.el][Centaur Emacs project]].
+"minor second", representing a =1.125= rate.
+
+The hook =contrib/after-load-theme-hook= and its accompaniments are taken
+from the [[https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-funcs.el][Centaur Emacs project]].
 
 Lastly, if you are curious about the underlying methodology, read my
 essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-emacs/][on the design of the Modus themes]] (2020-03-17).
@@ -5521,14 +5524,14 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
 This is used internally by `prot/modus-themes-toggle'."
     (setq modus-operandi-theme-slanted-constructs nil
           modus-operandi-theme-bold-constructs nil
-          modus-operandi-theme-visible-fringes nil
-          modus-operandi-theme-3d-modeline t
-          modus-operandi-theme-subtle-diffs nil
-          modus-operandi-theme-distinct-org-blocks t
-          modus-operandi-theme-proportional-fonts nil
-          modus-operandi-theme-rainbow-headings nil
-          modus-operandi-theme-section-headings t
-          modus-operandi-theme-scale-headings t
+          modus-operandi-theme-visible-fringes t
+          modus-operandi-theme-3d-modeline nil
+          modus-operandi-theme-subtle-diffs t
+          modus-operandi-theme-distinct-org-blocks nil
+          modus-operandi-theme-proportional-fonts t
+          modus-operandi-theme-rainbow-headings t
+          modus-operandi-theme-section-headings nil
+          modus-operandi-theme-scale-headings nil
           modus-operandi-theme-scale-1 1.125
           modus-operandi-theme-scale-2 1.266
           modus-operandi-theme-scale-3 1.424
@@ -5544,14 +5547,14 @@ This is used internally by `prot/modus-themes-toggle'."
 This is used internally by `prot/modus-themes-toggle'."
     (setq modus-vivendi-theme-slanted-constructs nil
           modus-vivendi-theme-bold-constructs nil
-          modus-vivendi-theme-visible-fringes nil
-          modus-vivendi-theme-3d-modeline t
-          modus-vivendi-theme-subtle-diffs nil
-          modus-vivendi-theme-distinct-org-blocks t
-          modus-vivendi-theme-proportional-fonts nil
-          modus-vivendi-theme-rainbow-headings nil
-          modus-vivendi-theme-section-headings t
-          modus-vivendi-theme-scale-headings t
+          modus-vivendi-theme-visible-fringes t
+          modus-vivendi-theme-3d-modeline nil
+          modus-vivendi-theme-subtle-diffs t
+          modus-vivendi-theme-distinct-org-blocks nil
+          modus-vivendi-theme-proportional-fonts t
+          modus-vivendi-theme-rainbow-headings t
+          modus-vivendi-theme-section-headings nil
+          modus-vivendi-theme-scale-headings nil
           modus-vivendi-theme-scale-1 1.125
           modus-vivendi-theme-scale-2 1.266
           modus-vivendi-theme-scale-3 1.424
@@ -5567,12 +5570,12 @@ This is used internally by `prot/modus-themes-toggle'."
 Run this via `contrib/after-load-theme-hook'."
     (cond
      ((eq (car custom-enabled-themes) 'modus-operandi)
-      (modus-operandi-theme-with-color-variables
+      (modus-operandi-theme-with-color-variables ; NOTE check the project's README for this one
         (custom-theme-set-faces
          'modus-operandi
          `(cursor ((,class (:background ,blue-alt)))))))
      ((eq (car custom-enabled-themes) 'modus-vivendi)
-      (modus-vivendi-theme-with-color-variables
+      (modus-vivendi-theme-with-color-variables ; NOTE check the project's README for this one
         (custom-theme-set-faces
          'modus-vivendi
          `(cursor ((,class (:background ,red-alt)))))))))
@@ -5616,6 +5619,10 @@ whether a combination of two colours is accessible or not.  It was
 offered to me [[https://github.com/oantolin/live-completions/issues/2][by Omar Antolín Camarena]].  For the purposes of my themes,
 the contrast ratio needs to be 7:1 or higher, which conforms with the
 highest accessibility standard (WCAG AAA).
+
+To see it in action, you can read the =org-mode= report on the minor
+[[https://protesilaos.com/codelog/2020-05-10-modus-operandi-palette-review/][review of Modus Operandi palette]] (2020-05-10).  Which also goes to show
+how tricky the selection of colours can be.
 
 #+begin_src emacs-lisp
 (defun wcag (hex)
@@ -5761,8 +5768,7 @@ specific piece of functionality.  Moody can also be used to customise
 the looks of the mode line, though I do not want that.
 
 #+begin_src emacs-lisp
-(use-package moody
-  :ensure)
+(use-package moody :ensure)
 
 (use-package keycast
   :ensure
@@ -6236,6 +6242,7 @@ to reach any conclusions.
 
 #+begin_src emacs-lisp
 (use-package flymake
+  :commands flymake-mode
   :config
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)
