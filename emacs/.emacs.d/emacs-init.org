@@ -5282,6 +5282,47 @@ keys follow the pattern of <PREFIX> <KEY>.")
   (setq browse-url-browser-function 'eww-browse-url))
 #+end_src
 
+** Emacs IRC client
+   :PROPERTIES:
+   :CUSTOM_ID: h:aa3cd013-0a09-463b-a6b7-9c8d90126a8a
+   :END:
+
+/WORK IN PROGRESS 2020-05-13/
+
+My =.authinfo.gpg= entry for IRC looks like this:
+
+#+begin_example
+machine irc.freenode.net port 6667 login NAME password PASS
+#+end_example
+
+The =prot/auth-get-field= is defined in [[*Base email settings][Base email settings]] (may be better
+to have it elsewhere, but I keep it now together with the email
+configurations).
+
+#+begin_src emacs-lisp
+(use-package erc
+  :disabled                             ; Needs testing and refinements
+  :defer
+  :config
+  (setq erc-prompt-for-password nil)
+
+  (defun prot/erc-dwim ()
+    "Switch to latest `erc' buffer or log in."
+    (interactive)
+    (let* ((irc "irc.freenode.net")
+           (nick (prot/auth-get-field irc :user))
+           ;; Gets the password, but does not read(?) it
+           (pass (prot/auth-get-field irc :secret))
+           (bufs (erc-buffer-list)))
+      (if bufs
+          (erc-track-switch-buffer 1)
+        (erc :server irc
+             :nick nick
+             :password pass             ; Does not work
+             :full-name nick))))
+  :bind ("C-c e" . prot/erc-dwim))
+#+end_src
+
 ** Bongo (Music player)
    :PROPERTIES:
    :CUSTOM_ID: h:758afe0d-bc7c-4afc-9c6b-b5e569901591
