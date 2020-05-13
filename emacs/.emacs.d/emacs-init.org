@@ -3405,6 +3405,16 @@ essentials: who we are, where our credentials are stored, and whether
 encryption is supported.  This is done in the first two package
 declarations.
 
+The =prot/auth-get-field= is a generic tool for finding the values
+pertaining to our login credentials.  You will see this function used
+elsewhere in this document.  For example, to find the username and
+password for host =hostname= we do:
+
+#+begin_example
+(prot/auth-get-field "hostname" :user)   ; login name
+(prot/auth-get-field "hostname" :secret) ; password
+#+end_example
+
 Then we set up the interface for composing emails:
 
 + The =mail-user-agent= and =message-mail-user-agent= concern the default
@@ -3430,7 +3440,17 @@ Then we set up the interface for composing emails:
   :config
   (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo"))
   (setq user-full-name "Protesilaos Stavrou")
-  (setq user-mail-address "public@protesilaos.com"))
+  (setq user-mail-address "public@protesilaos.com")
+
+  (defun prot/auth-get-field (host prop)
+    "Find PROP in `auth-sources' for HOST entry."
+    (let* ((source (auth-source-search :host host))
+           (field (plist-get
+                   (flatten-list source)
+                   prop)))
+      (if source
+          field
+        (error "No entry in auth sources")))))
 
 (use-package epa-file
   :config
@@ -3628,9 +3648,8 @@ Subsequent sections expand on the particulars.
   "Sent" folder of the account that replies to a given email and to use
   the right email address, depending on the context.  While the variable
   =gnus-gcc-mark-as-read= ensures that the outgoing messages are marked as
-  read.  The function =contrib/auth-source-search-host= which is used to
-  extract the email address for the given host was contributed by
-  another user in [[https://gitlab.com/protesilaos/dotfiles/-/issues/10][issue 10 on my dotfiles' repo]].
+  read.  The =prot/auth-get-field= is defined in [[#h:a82766be-daab-4925-b23a-1c5ffd47e599][Base email settings]].  It
+  is used to get the relevant user name.
 + The "agent" is enabled here and configured in the [[#h:fccaadbb-ea22-4d1f-ae79-ef1f45f3befa][following section]].
 + Setting the =gnus-novice-user= to =nil= has the effect of reducing prompts
   for potentially destructive commands, such as deleting an email.  Too
@@ -3673,29 +3692,20 @@ Subsequent sections expand on the particulars.
                   (nnimap-address "mail.gandi.net")
                   (nnimap-stream ssl)
                   (nnimap-authinfo-file "~/.authinfo.gpg"))))
-
-  (defun contrib/auth-source-search-host (host)
-    "Retrieve login name or email address for HOST.
-
-This is meant to be used in the `gnus-parameters' variable."
-    (let ((my-user-name (format "%s" (auth-source-search :host host))))
-      (string-match "\\([^ @]+\\)@\\([^ @]+\\)" my-user-name)
-      (match-string 0 my-user-name)))
-
   (setq gnus-parameters
         '(("prv"
            (posting-style
             (gcc "nnimap+prv:Sent")
             (From
              (concat user-full-name " " "<"
-                     (contrib/auth-source-search-host "prv")
+                     (prot/auth-get-field "prv" :user)
                      ">"))))
           ("inf"
            (posting-style
             (gcc "nnimap+inf:Sent")
             (From
              (concat user-full-name " " "<"
-                     (contrib/auth-source-search-host "inf")
+                     (prot/auth-get-field "inf" :user)
                      ">"))))
           ("pub"
            (posting-style               ; Uses default name+mail
