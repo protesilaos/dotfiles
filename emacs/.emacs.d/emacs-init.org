@@ -1348,7 +1348,6 @@ has improved a lot since then, in large part courtesy of Omar's packages.
   :after minibuffer                    ; make sure to check that as well
   :config
   (setq live-completions-sort-order 'cycle)
-  (live-completions-mode -1)
 
   (defun prot/live-completions-describe-function ()
     "Enable `live-completions-do' for `describe-function'."
@@ -1368,6 +1367,7 @@ has improved a lot since then, in large part courtesy of Omar's packages.
     (live-completions-do (:height (/ (frame-height) 3))
       (call-interactively 'describe-symbol)))
 
+  (live-completions-mode -1)
   :bind (("C-h f" . prot/live-completions-describe-function)
          ("C-h v" . prot/live-completions-describe-variable)
          ("C-h o" . prot/live-completions-describe-symbol)))
@@ -1732,8 +1732,8 @@ effectively supersede the functionality of =anzu=, a package I once used.
   (setq isearch-lazy-highlight t)
   ;; All of the following variables were introduced in Emacs 27.1.
   (setq isearch-lazy-count t)
-  (setq lazy-count-prefix-format "(%s/%s) ")
-  (setq lazy-count-suffix-format nil)
+  (setq lazy-count-prefix-format nil)
+  (setq lazy-count-suffix-format "  (%s/%s)")
   (setq isearch-yank-on-move 'shift)
   (setq isearch-allow-scroll 'unlimited)
 
@@ -1754,16 +1754,24 @@ confines of word boundaries (e.g. multiple words)."
       (goto-char isearch-other-end)))
 
   (defun prot/isearch-abort ()
-    "Remove non-matching `isearch' input, reverting to previous
-successful search and continuing with the search.
+    "Remove non-matching `isearch' input or single char.
 
-This is a modified variant of the original `isearch-abort',
-mapped to C-g which will remove the failed match if any and only
-afterwards exit the search altogether."
+This is a modified variant of the original `isearch-abort' that
+allows us to do a couple of things with a single call:
+
++ Delete the entirety of a non-matching part, when present.
++ Delete a single character, when possible.
+
+The standard `isearch-abort', mapped to \\[keyboard-quit] which
+will remove the failed match if any and only afterwards exit the
+search altogether.  Whereas with this we can now map that key to
+`isearch-exit' inside of `isearch-mode-map'."
     (interactive)
-    (discard-input)
-    (while (or (not isearch-success) isearch-error)
-      (isearch-pop-state))
+    (if (string= isearch-string "")
+        (ding)
+      (isearch-pop-state)
+      (while (or (not isearch-success) isearch-error)
+        (isearch-pop-state)))
     (isearch-update))
 
   (defun prot/isearch-query-replace-symbol-at-point ()
@@ -1777,9 +1785,10 @@ afterwards exit the search altogether."
          :map minibuffer-local-isearch-map
          ("M-/" . isearch-complete-edit)
          :map isearch-mode-map
+         ("C-g" . isearch-exit)         ; instead of `isearch-abort'
          ("M-/" . isearch-complete)
          ("C-SPC" . prot/isearch-mark-and-exit)
-         ("DEL" . prot/isearch-abort)
+         ("<backspace>" . prot/isearch-abort)
          ("<C-return>" . prot/isearch-other-end)))
 #+end_src
 
@@ -2760,6 +2769,7 @@ questions.  Else use completion to select the tab to switch to."
                 (completing-read "Select tab: " tabs nil t)))))))
 
   :bind (("C-x t t" . prot/icomplete-tab-bar-tab-dwim)
+         ("s-t" . prot/icomplete-tab-bar-tab-dwim)
          ("C-x t s" . tab-switcher)))
 
 ;; This is only included as a reference.
