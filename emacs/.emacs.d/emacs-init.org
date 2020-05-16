@@ -861,13 +861,17 @@ Now some comments about my implementation:
   hit =C-]= (=abort-recursive-edit=), though the regular =C-g= should also do
   the trick.  The =minibuffer-depth-indicate-mode= will show an indicator
   next to the minibuffer prompt if a recursive edit is in progress.
-+ My =prot/complete-kill-or-insert-candidate= is a simple yet effective
-  tool that I bind to three key chords.  With =M-o w= you copy the current
-  candidate to the kill ring and continue with the minibuffer session.
-  With =M-o i= you insert the candidate in the buffer from where the
-  minibuffer was called, without appending to the kill ring, while still
-  keeping the session active.  And =M-o j= will insert the candidate in
-  the same way and immediately exit all recursive edits.
++ *UPDATE 2020-05-16:* /Deprecated in favour of/ the new "embark" package,
+  though the functionality is exactly the same from an end-user
+  perspective (see [[#h:e97988bc-fd77-4dca-b74a-0897087624bd][Minibuffer actions for completion candidates]]).
+  *ORIGINAL:* My =prot/complete-kill-or-insert-candidate= is a simple yet
+  effective tool that I bind to three key chords.  With =M-o w= you copy
+  the current candidate to the kill ring and continue with the
+  minibuffer session.  With =M-o i= you insert the candidate in the buffer
+  from where the minibuffer was called, without appending to the kill
+  ring, while still keeping the session active.  And =M-o j= will insert
+  the candidate in the same way and immediately exit all recursive
+  edits.
 + Note the nuances in the behaviour between =RET= and =C-j=.  With the
   Return key, we instruct the minibuffer to expand the current candidate
   and then exit the session, if possible.  Whereas =C-j= is meant to
@@ -999,30 +1003,32 @@ key in `completion-list-mode-map'."
     (kill-new (thing-at-point 'symbol)))
 
 
-  (defun prot/complete-kill-or-insert-candidate (&optional arg)
-    "Place the matching candidate to the top of the `kill-ring'.
-This will keep the minibuffer session active.
-
-With \\[universal-argument] insert the candidate in the most
-recently used buffer, while keeping focus on the minibuffer.
-
-With \\[universal-argument] \\[universal-argument] insert the
-candidate and immediately exit all recursive editing levels and
-active minibuffers.
-
-Bind this function in `icomplete-minibuffer-map'."
-    (interactive "*P")
-    (let ((candidate (car completion-all-sorted-completions)))
-      (when (and (minibufferp)
-                 (or (bound-and-true-p icomplete-mode)
-                     (bound-and-true-p live-completions-mode))) ; see next section
-        (cond ((eq arg nil)
-               (kill-new candidate))
-              ((= (prefix-numeric-value arg) 4)
-               (with-minibuffer-selected-window (insert candidate)))
-              ((= (prefix-numeric-value arg) 16)
-               (with-minibuffer-selected-window (insert candidate))
-               (top-level))))))
+;;;; DEPRECATED in favour of the `embark' package (see further below),
+;;;; which implements the same functionality in a more efficient way.
+;;  (defun prot/complete-kill-or-insert-candidate (&optional arg)
+;;     "Place the matching candidate to the top of the `kill-ring'.
+;; This will keep the minibuffer session active.
+;;
+;; With \\[universal-argument] insert the candidate in the most
+;; recently used buffer, while keeping focus on the minibuffer.
+;;
+;; With \\[universal-argument] \\[universal-argument] insert the
+;; candidate and immediately exit all recursive editing levels and
+;; active minibuffers.
+;;
+;; Bind this function in `icomplete-minibuffer-map'."
+;;     (interactive "*P")
+;;     (let ((candidate (car completion-all-sorted-completions)))
+;;       (when (and (minibufferp)
+;;                  (or (bound-and-true-p icomplete-mode)
+;;                      (bound-and-true-p live-completions-mode))) ; see next section
+;;         (cond ((eq arg nil)
+;;                (kill-new candidate))
+;;               ((= (prefix-numeric-value arg) 4)
+;;                (with-minibuffer-selected-window (insert candidate)))
+;;               ((= (prefix-numeric-value arg) 16)
+;;                (with-minibuffer-selected-window (insert candidate))
+;;                (top-level))))))
 
   ;; Defines, among others, aliases for common actions to Super-KEY.
   ;; Normally these should go in individual package declarations, but
@@ -1041,13 +1047,14 @@ Bind this function in `icomplete-minibuffer-map'."
          :map minibuffer-local-completion-map
          ("<return>" . minibuffer-force-complete-and-exit)
          ("C-j" . exit-minibuffer)
-         ("M-o w" . prot/complete-kill-or-insert-candidate)
-         ("M-o i" . (lambda ()
-                      (interactive)
-                      (prot/complete-kill-or-insert-candidate '(4))))
-         ("M-o j" . (lambda ()
-                      (interactive)
-                      (prot/complete-kill-or-insert-candidate '(16))))
+         ;;;; DEPRECATED in favour of the `embark' package
+         ;; ("M-o w" . prot/complete-kill-or-insert-candidate)
+         ;; ("M-o i" . (lambda ()
+         ;;              (interactive)
+         ;;              (prot/complete-kill-or-insert-candidate '(4))))
+         ;; ("M-o j" . (lambda ()
+         ;;              (interactive)
+         ;;              (prot/complete-kill-or-insert-candidate '(16))))
          :map completion-list-mode-map
          ("h" . prot/describe-symbol-at-point)
          ("w" . prot/completions-kill-save-symbol)
@@ -1144,14 +1151,8 @@ Overview of the following package declaration:
               ("C-p" . icomplete-backward-completions)
               ("<left>" . icomplete-backward-completions)
               ("<up>" . icomplete-backward-completions)
-              ("<C-backspace>" . icomplete-fido-backward-updir) ; Emacs 27.1
-              ("M-o w" . prot/complete-kill-or-insert-candidate) ; defined in the minibuffer declaration
-              ("M-o i" . (lambda ()
-                           (interactive)
-                           (prot/complete-kill-or-insert-candidate '(4))))
-              ("M-o j" . (lambda ()
-                           (interactive)
-                           (prot/complete-kill-or-insert-candidate '(16))))))
+              ;; The following command is from Emacs 27.1
+              ("<C-backspace>" . icomplete-fido-backward-updir)))
 #+end_src
 
 **** TODO can registers be inserted via completion?
@@ -1620,6 +1621,79 @@ position of the cursor after the skeleton has been inserted.
     "" 'protesilaos-gitlab-skeleton)
   :hook ((text-mode-hook . abbrev-mode)
          (git-commit-mode-hook . abbrev-mode)))
+#+end_src
+
+*** Minibuffer actions for completion candidates
+    :PROPERTIES:
+    :CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
+    :END:
+
+/WORK IN PROGRESS 2020-05-16./
+
+Oftentimes you want to perform a certain action with the contents of the
+minibuffer's currently matched item.  Emacs has no standard system for
+doing so in a straightforward, efficient fashion.
+
+For several months since I switched to Icomplete in early 2020, I was
+using my own set of functions for acting on completion candidates.  My
+needs were simple: (i) copy the current match to the kill-ring, (ii)
+insert it to the point of the last buffer while keeping the minibuffer
+running, and (iii) insert while also exiting all recursive minibuffers.
+The problem with my approach was that the keys I would use were bound to
+a keymap that was specific to the completion mechanism and so my custom
+actions could not scale well or be context-aware.
+
+This is where =embark= enters the fray: to solve the problem of defining
+extended minibuffer actions that scale to match your needs.  [[https://github.com/oantolin/embark][The package]]
+is under active development as of 2020-05-16, so expect things to be in
+a state of flux for the immediate future.
+
+With Embark you can go with a simple solution that covers only a handful
+of actions, or develop a very specific and elaborate typology that
+offers you maximum flexibility and expressive power.  Whatever you do,
+the code can easily be adapted to match your needs.  This is because the
+central idea of Embark is that such actions can be bound to specific
+keymaps and these can then be layered as necessary (keymap layering is
+standard in Emacs): so a general keymap can hold all your common
+actions, while several particular keymaps may then be dedicated to
+specific types of commands.
+
+The developer of this package is none other than Omar Antolín Camarena.
+You are already familiar with his work from previous sections of this
+document that include =orderless=, =icomplete-vertical=, =live-completions=,
+and various other nice snippets of Elisp (I always provide references in
+context).  The common denominator of Omar's contributions is that they
+work with standard Emacs mechanisms, so you have the liberty to mix and
+match modules from core Emacs, your homegrown functions, third-party
+packages, to suit your preferences and expected workflows without ever
+committing to an all-encompassing framework.
+
+From my part, I will refrain from adding too many actions at this early
+stage, until I have a better idea what is provided by default and how
+things will stabilise.
+
+#+begin_src emacs-lisp
+(use-package embark
+  :load-path "~/.emacs.d/prot-dev/embark/"
+  :config
+  (defun prot/embark-insert-exit ()
+    "Like `embark-insert' but exits current recursive minibuffer."
+    (interactive)
+    (with-minibuffer-selected-window (insert (embark-target)))
+    (abort-recursive-edit))
+
+  (defun prot/embark-insert-exit-all ()
+    "Like `embark-insert' but exits all recursive minibuffers."
+    (interactive)
+    (with-minibuffer-selected-window (insert (embark-target)))
+    (top-level))
+
+  :bind (:map minibuffer-local-completion-map
+              ("M-o" . embark-act)
+              :map embark-general-map
+              ("m" . prot/embark-insert-exit)
+              ("j" . prot/embark-insert-exit-all)
+              ("h" . embark-describe-symbol)))
 #+end_src
 
 ** Configurations for—or extensions to—built-in search commands
