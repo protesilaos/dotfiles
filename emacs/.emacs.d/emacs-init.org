@@ -2101,6 +2101,18 @@ when applied, is basically an educated guess of what the user would want
 to do in the current context, given that they are not searching through
 their previous actions.
 
+**** TODO front-end for `fd' executable
+     :PROPERTIES:
+     :CUSTOM_ID: h:00db9952-8a32-4142-8f62-dc275481e5a6
+     :END:
+**** TODO better handling of `xdg-open'
+     :PROPERTIES:
+     :CUSTOM_ID: h:b622cd06-14e6-4bdf-8730-b1a659591d4a
+     :END:
+**** TODO combine arbitrary dirs with selection
+     :PROPERTIES:
+     :CUSTOM_ID: h:bac59cd7-af79-43f5-89e4-520080817a61
+     :END:
 *** Narrowed dired
     :PROPERTIES:
     :CUSTOM_ID: h:affb6142-6216-43b6-9d66-e7b18d65e79e
@@ -2250,11 +2262,11 @@ among my favourite commands.  They will always take you to the directory
 that contains the current buffer.
 
 'Jumping' works even when you are inside buffers that do not visit
-files, such as Magit.  Edit a file then proceed to do some file
-management, then invoke =previous-buffer= or =winner-undo= to go back to
-where you were (I have a key bindings for those in the [[#h:12591f89-eeea-4b12-93e8-9293504e5a12][Window
-configuration section]]).  Everything happens naturally.  Emacs'
-interconnectedness at its best!
+files, such as Magit, Diff, or Eshell.  This is its most valuable
+quality!  Edit a file then proceed to do some file management, then
+invoke =previous-buffer= or =winner-undo= to go back to where you were (I
+have a few key bindings for those in the [[#h:12591f89-eeea-4b12-93e8-9293504e5a12][Window configuration section]]).
+Everything happens naturally.  Emacs' interconnectedness at its best!
 
 I keep =dired-clean-confirm-killing-deleted-buffers= to =t= as a safety
 mechanism: if a file is ever deleted by accident I can use its buffer to
@@ -2297,6 +2309,10 @@ I call them with =M-x= as their utility is very specialised.
          ("s-J" . dired-jump-other-window)))
 #+end_src
 
+**** TODO make handling of current filename smarter
+     :PROPERTIES:
+     :CUSTOM_ID: h:11b2f4fb-3de1-4104-bee8-9ede6d410a84
+     :END:
 *** diredfl (more dired colours)
     :PROPERTIES:
     :CUSTOM_ID: h:26ddf3cb-60f0-4e06-8c03-523fc092b8e8
@@ -2368,6 +2384,10 @@ only the buffer's name.
   (setq uniquify-after-kill-buffer-p t))
 #+end_src
 
+**** TODO make uniquify better for Help, Info buffers
+     :PROPERTIES:
+     :CUSTOM_ID: h:d715be45-2a02-4202-80ea-5df4fd2056fa
+     :END:
 *** Ibuffer (dired-like buffer list manager)
     :PROPERTIES:
     :CUSTOM_ID: h:06290f9c-491c-45b2-b213-0248f890c83d
@@ -2801,6 +2821,10 @@ questions.  Else use completion to select the tab to switch to."
   (global-tab-line-mode -1))
 #+end_src
 
+**** TODO tab-line for groups that make sense, such as EWW
+     :PROPERTIES:
+     :CUSTOM_ID: h:4ac5ffc4-98a5-4eac-89eb-561dd069dff5
+     :END:
 *** Directional window motions (windmove)
     :PROPERTIES:
     :CUSTOM_ID: h:230d96c8-a955-4b82-844d-9de9a1b7c531
