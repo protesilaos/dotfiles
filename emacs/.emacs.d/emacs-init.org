@@ -1234,7 +1234,7 @@ still across this document (search for =icomplete-vertical-do=).
   :demand
   :after (minibuffer icomplete) ; do not forget to check those as well
   :config
-  (setq icomplete-vertical-prospects-height (/ (window-height) 6))
+  (setq icomplete-vertical-prospects-height (/ (frame-height) 6))
   (icomplete-vertical-mode -1)
 
   (defun prot/icomplete-yank-kill-ring ()
@@ -1252,7 +1252,7 @@ normally would when calling `yank' followed by `yank-pop'."
                (complete-with-action
                 action kill-ring string pred)))))
       (icomplete-vertical-do
-          (:separator 'dotted-line :height (/ (window-height) 4))
+          (:separator 'dotted-line :height (/ (frame-height) 4))
         (when (use-region-p)
           (delete-region (region-beginning) (region-end)))
         (insert
@@ -1353,19 +1353,19 @@ has improved a lot since then, in large part courtesy of Omar's packages.
   (defun prot/live-completions-describe-function ()
     "Enable `live-completions-do' for `describe-function'."
     (interactive)
-    (live-completions-do (:height (/ (window-height) 3))
+    (live-completions-do (:height (/ (frame-height) 3))
       (call-interactively 'describe-function)))
 
   (defun prot/live-completions-describe-variable ()
     "Enable `live-completions-do' for `describe-variable'."
     (interactive)
-    (live-completions-do (:height (/ (window-height) 3))
+    (live-completions-do (:height (/ (frame-height) 3))
       (call-interactively 'describe-variable)))
 
   (defun prot/live-completions-describe-symbol ()
     "Enable `live-completions-do' for `describe-symbol'."
     (interactive)
-    (live-completions-do (:height (/ (window-height) 3))
+    (live-completions-do (:height (/ (frame-height) 3))
       (call-interactively 'describe-symbol)))
 
   :bind (("C-h f" . prot/live-completions-describe-function)
