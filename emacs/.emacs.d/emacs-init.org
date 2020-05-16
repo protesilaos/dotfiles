@@ -1733,7 +1733,7 @@ effectively supersede the functionality of =anzu=, a package I once used.
   ;; All of the following variables were introduced in Emacs 27.1.
   (setq isearch-lazy-count t)
   (setq lazy-count-prefix-format nil)
-  (setq lazy-count-suffix-format "  (%s/%s)")
+  (setq lazy-count-suffix-format " (%s/%s)")
   (setq isearch-yank-on-move 'shift)
   (setq isearch-allow-scroll 'unlimited)
 
@@ -1753,23 +1753,19 @@ confines of word boundaries (e.g. multiple words)."
     (when isearch-other-end
       (goto-char isearch-other-end)))
 
-  (defun prot/isearch-abort ()
-    "Remove non-matching `isearch' input or single char.
+  (defun prot/isearch-abort-dwim ()
+    "Delete failed `isearch' input, single char, or cancel search.
 
-This is a modified variant of the original `isearch-abort' that
-allows us to do a couple of things with a single call:
-
-+ Delete the entirety of a non-matching part, when present.
-+ Delete a single character, when possible.
-
-The standard `isearch-abort', mapped to \\[keyboard-quit] which
-will remove the failed match if any and only afterwards exit the
-search altogether.  Whereas with this we can now map that key to
-`isearch-exit' inside of `isearch-mode-map'."
+This is a modified variant of `isearch-abort' that allows us to
+perform the following, based on the specifics of the case: (i)
+delete the entirety of a non-matching part, when present; (ii)
+delete a single character, when possible; (iii) exit current
+search if no character is present and go back to point where the
+search started."
     (interactive)
-    (if (string= isearch-string "")
-        (ding)
-      (isearch-pop-state)
+    (if (eq (length isearch-string) 0)
+        (isearch-cancel)
+      (isearch-del-char)
       (while (or (not isearch-success) isearch-error)
         (isearch-pop-state)))
     (isearch-update))
@@ -1785,10 +1781,10 @@ search altogether.  Whereas with this we can now map that key to
          :map minibuffer-local-isearch-map
          ("M-/" . isearch-complete-edit)
          :map isearch-mode-map
-         ("C-g" . isearch-exit)         ; instead of `isearch-abort'
+         ("C-g" . isearch-cancel)       ; instead of `isearch-abort'
          ("M-/" . isearch-complete)
          ("C-SPC" . prot/isearch-mark-and-exit)
-         ("<backspace>" . prot/isearch-abort)
+         ("<backspace>" . prot/isearch-abort-dwim)
          ("<C-return>" . prot/isearch-other-end)))
 #+end_src
 
