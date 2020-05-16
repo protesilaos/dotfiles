@@ -497,7 +497,7 @@ the best way is to do it at the "face" level.  Faces are constructs that
 specify attributes for a piece of text.  There range from a foreground
 and background colour, to text properties such as the font family, its
 height, weight, etc. (Emacs themes are, in essence, programs that
-configure these faces).
+configure those faces).
 
 To set our baseline typeface, we configure the =default= face.  To
 understand the syntax used here, do =C-h f set-face-attribute=.  In
@@ -505,10 +505,25 @@ essence we are specifying the font that should be used /in case no other
 font applies/ for the given face.  This is actually a good thing because
 there are many cases where you want a face to retain its own attributes
 (e.g. let =org-mode= inline code be presented in its monospace font while
-using a sans-serif for the main text).
+using a sans-serif for the main text---see [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]]).
 
-The =:height= property is practically the same as setting a point size
-though your base is =100=.  So =10.5pt= is expressed as =105=.
+The two main ways to set a font using =set-face-attribute= are as follows:
+
++ Set individual attributes :: Define the values of keywords like
+  =:family=, =:height=, =:weight= on a per-attribute basis.
++ Set font parameters ::  Pass a single string that is consistent with
+  how =fontconfig= (GNU/Linux) reads fonts.  This allows us to apply
+  parameters that are specified in the [[https://www.freedesktop.org/software/fontconfig/fontconfig-user.html][fontconfig user spec]], such as
+  whether to apply an antialiasing effect or tweak the hinting style.
+  Note that /all fontconfig parameters are optional/ and will default to
+  the rules that apply across the operating system
+
+I choose the latter because it is more flexible.  For completeness, this
+is the syntax, replacing all capitalised words with the appropriate
+values (read the docs =C-h f set-face-attribute=):
+
++ =(set-face-attribute 'FACE nil :family "NAME" :height "HEIGHT")=
++ =(set-face-attribute 'FACE nil :font "FAMILY-SIZE:PARAM1=PARAMVALUE1")=
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -516,12 +531,19 @@ though your base is =100=.  So =10.5pt= is expressed as =105=.
   (setq x-underline-at-descent-line nil)
   (setq underline-minimum-offset 0)
 
-  (defconst prot/fixed-pitch-font "Hack"
+  (defconst prot/default-font "Hack"
+    "The default typeface.")
+
+  (defconst prot/font-params "hintstyle=hintslight:antialias=true"
     "The default fixed-pitch typeface.")
 
-  (defun prot/default-font (family size)
+  (defun prot/set-face-attribute-font (family size)
     "Set `default' face font to FAMILY at SIZE."
-    (set-face-attribute 'default nil :family family :height size))
+    (set-face-attribute 'default nil :font (concat family
+                                                   "-"
+                                                   (number-to-string size)
+                                                   ":"
+                                                   prot/font-params)))
 
   (defun prot/laptop-fonts ()
     "Fonts for the small laptop screen.
@@ -530,7 +552,7 @@ Pass desired argument to `prot/font-sizes' for use on my
 small laptop monitor."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 105)))
+	  (prot/set-face-attribute-font prot/default-font 10.5)))
 
   (defun prot/desktop-fonts ()
     "Fonts for the larger desktop screen.
@@ -539,13 +561,13 @@ Pass desired argument to `prot/font-sizes' for use on my larger
 desktop monitor (external display connected to my laptop)."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 110)))
+	  (prot/set-face-attribute-font prot/default-font 11)))
 
   (defun prot/reading-fonts ()
     "Fonts for focused reading sessions."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 125)))
+	  (prot/set-face-attribute-font prot/default-font 12.5)))
 
   (defun prot/screencast-fonts ()
     "Fonts for screen casts and video demos.
@@ -555,7 +577,7 @@ casting.  The idea is to make it easier for viewers to see what I
 am doing."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 160)))
+	  (prot/set-face-attribute-font prot/default-font 16)))
 
   (defun prot/presentation-fonts ()
     "Fonts for presentations and video blogs.
@@ -564,7 +586,7 @@ Pass desired argument to `prot/font-sizes' for use during
 presentations.  Also see `prot/org-presentation'."
     (interactive)
     (when window-system
-	  (prot/default-font prot/fixed-pitch-font 180)))
+	  (prot/set-face-attribute-font prot/default-font 18)))
 
   (defun prot/fonts-per-monitor ()
   "Use font settings based on screen size.
@@ -603,20 +625,22 @@ monospaced font for everything, so there is no real need to decouple
 
 Note that the =:height= in this snippet is specified as a floating point,
 which means that it is a multiple of the base size (defined above).
+For the sake of completeness, when the =:height= property is an integer it
+is understood as the point size × 100.  So =10.5pt= is expressed as =105=.
 
-Note that on my GNU/Linux system there is no need to test for the
-presence of a font before setting it.  This is handled by =fontconfig=
-with rules that can be defined at the user or system level (things work
-out-of-the-box on most distros).
+Also bear in mind that on a GNU/Linux system there normally is no need
+to test for the presence of a font before setting it.  This is handled
+by =fontconfig= with rules that can be defined at the user or system level
+(things work out-of-the-box on every distro I tried).
 
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (defconst prot/variable-pitch-font "DejaVu Sans"
+  (defconst prot/variable-pitch-font "Noto Sans"
     "The default variable-pitch typeface.")
 
-  (set-face-attribute 'variable-pitch nil :family prot/variable-pitch-font :height 1.0)
-  (set-face-attribute 'fixed-pitch nil :family prot/fixed-pitch-font :height 1.0))
+  (set-face-attribute 'variable-pitch nil :family prot/variable-pitch-font :height 1.25)
+  (set-face-attribute 'fixed-pitch nil :family prot/default-font :height 1.0))
 #+end_src
 
 *** Mode for proportional fonts
@@ -627,9 +651,10 @@ out-of-the-box on most distros).
 When Emacs operates in a graphical terminal, it can display text using
 mixed font settings: a variety of heights and families (in addition to
 other typegraphic attributes).  This means that it can draw text on the
-same line that has potentially profoundly different properties.  For
-example, a sans-serif typeface for prose with a monospaced font for
-inline code.
+same line that has potentially profoundly different properties
+character-by-character.  For example, a sans-serif typeface for prose
+with a monospaced font for inline code (for the underlying faces that
+may be used, see [[#h:a00a72af-2097-49e3-8b2c-ba7dc930c5f0][Font families for other generic face groups]]).
 
 While we can handle things on our own by calling =set-face-attribute= for
 each face we are interested in, there is a built-in mechanism to quickly
