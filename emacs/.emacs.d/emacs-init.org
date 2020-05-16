@@ -2029,6 +2029,11 @@ show hidden directories and files /before/ their non-hidden counterparts.
 If you want to reverse this order, you must append the =-X= option (such
 as =-AFXhlv --group-directories-first=).
 
+The commands with the =contrib/= prefix in =dired-aux= are copied from the
+[[https://github.com/oantolin/emacs-config][Emacs configurations of Omar Antolín Camarena]].  They let you insert the
+path of a bookmarked directory while performing an action such as
+copying and renaming/moving a file.
+
 #+begin_src emacs-lisp
 (use-package dired
   :config
@@ -2050,9 +2055,29 @@ as =-AFXhlv --group-directories-first=).
   ;; The following variables were introduced in Emacs 27.1
   (setq dired-create-destination-dirs 'ask)
   (setq dired-vc-rename-file t)
+
+  (defun contrib/cdb--bookmarked-directories ()
+    (bookmark-maybe-load-default-file)
+    (cl-loop for (name . props) in bookmark-alist
+             for fn = (cdr (assq 'filename props))
+             when (and fn (string-suffix-p "/" fn))
+             collect (cons name fn)))
+
+  (defun contrib/cd-bookmark (bm)
+    "Insert the path of a bookmarked directory."
+    (interactive
+     (list (let ((enable-recursive-minibuffers t))
+             (completing-read
+              "Directory: " (contrib/cdb--bookmarked-directories) nil t))))
+    (when (minibufferp)
+      (delete-region (minibuffer-prompt-end) (point-max)))
+    (insert (cdr (assoc bm (contrib/cdb--bookmarked-directories)))))
+
   :bind (:map dired-mode-map
               ("C-+" . dired-create-empty-file)
-              ("M-s f" . nil)))
+              ("M-s f" . nil)
+              :map minibuffer-local-filename-completion-map
+              ("C-c d" . contrib/cd-bookmark)))
 
 (use-package find-dired
   :after dired
