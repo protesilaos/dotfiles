@@ -84,6 +84,7 @@
 ;;     centaur-tabs
 ;;     change-log and log-view (`vc-print-log' and `vc-print-root-log')
 ;;     cider
+;;     circe
 ;;     color-rg
 ;;     column-enforce-mode
 ;;     company-mode
@@ -552,206 +553,206 @@ AMOUNT is a customisation option."
 ;; The design of the colour palette and of the macro that maps it to
 ;; faces is copied from zenbern-theme.el from commit 7dd7968:
 ;; https://github.com/bbatsov/zenburn-emacs
-(defvar modus-operandi-theme-default-colors-alist
-  '(;; base values
-    ("bg-main" . "#ffffff") ("fg-main" . "#000000")
-    ("bg-alt" . "#f0f0f0") ("fg-alt" . "#505050")
-    ("bg-dim" . "#f8f8f8") ("fg-dim" . "#282828")
-    ;; specifically for on/off states (e.g. `mode-line')
-    ;;
-    ;; must be combined with themselves
-    ("bg-active" . "#e0e0e0") ("fg-active" . "#191919")
-    ("bg-inactive" . "#efedef") ("fg-inactive" . "#424242")
-    ;; special base values, used only for cases where the above
-    ;; fg-* or bg-* cannot or should not be used (to avoid confusion)
-    ;; must be combined with: {fg,bg}-{main,alt,dim}
-    ("bg-special-cold" . "#dde3f4") ("fg-special-cold" . "#093060")
-    ("bg-special-mild" . "#c4ede0") ("fg-special-mild" . "#184034")
-    ("bg-special-warm" . "#f0e0d4") ("fg-special-warm" . "#5d3026")
-    ("bg-special-calm" . "#f8ddea") ("fg-special-calm" . "#61284f")
-    ;; styles for the main constructs
-    ;;
-    ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
-    ("red" . "#a60000") ("green" . "#005e00")
-    ("yellow" . "#813e00") ("blue" . "#0030a6")
-    ("magenta" . "#721045") ("cyan" . "#00538b")
-    ;; styles for common, but still specialised constructs
-    ;;
-    ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
-    ("red-alt" . "#972500") ("green-alt" . "#315b00")
-    ("yellow-alt" . "#70480f") ("blue-alt" . "#223fbf")
-    ("magenta-alt" . "#8f0075") ("cyan-alt" . "#30517f")
-    ;; same purpose as above, just slight differences
-    ;;
-    ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
-    ("red-alt-other" . "#a0132f") ("green-alt-other" . "#145c33")
-    ("yellow-alt-other" . "#863927") ("blue-alt-other" . "#0000bb")
-    ("magenta-alt-other" . "#5317ac") ("cyan-alt-other" . "#005a5f")
-    ;; styles for elements that should be very subtle
-    ;;
-    ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
-    ("red-nuanced" . "#4d0006") ("green-nuanced" . "#003000")
-    ("yellow-nuanced" . "#3a2a00") ("blue-nuanced" . "#001170")
-    ("magenta-nuanced" . "#381050") ("cyan-nuanced" . "#003434")
-    ;; styles for slightly accented background
-    ;;
-    ;; must be combined with any of the above foreground values
-    ("red-nuanced-bg" . "#fef2f2") ("green-nuanced-bg" . "#f4faf4")
-    ("yellow-nuanced-bg" . "#fcf6f1") ("blue-nuanced-bg" . "#f4f4ff")
-    ("magenta-nuanced-bg" . "#fff4fc") ("cyan-nuanced-bg" . "#f0f6fa")
-    ;; styles for elements that should draw attention to themselves
-    ;;
-    ;; must be combined with: `bg-main'
-    ("red-intense" . "#b60000") ("green-intense" . "#006800")
-    ("yellow-intense" . "#904200") ("blue-intense" . "#1111ee")
-    ("magenta-intense" . "#7000e0") ("cyan-intense" . "#205b93")
-    ;; styles for background elements that should be visible yet
-    ;; subtle
-    ;;
-    ;; must be combined with: `fg-dim'
-    ("red-subtle-bg" . "#f2b0a2") ("green-subtle-bg" . "#aecf90")
-    ("yellow-subtle-bg" . "#e4c340") ("blue-subtle-bg" . "#b5d0ff")
-    ("magenta-subtle-bg" . "#f0d3ff") ("cyan-subtle-bg" . "#c0efff")
-    ;; styles for background elements that should be visible and
-    ;; distinguishable
-    ;;
-    ;; must be combined with: `fg-main'
-    ("red-intense-bg" . "#ff8892") ("green-intense-bg" . "#5ada88")
-    ("yellow-intense-bg" . "#f5df23") ("blue-intense-bg" . "#6aaeff")
-    ("magenta-intense-bg" . "#d5baff") ("cyan-intense-bg" . "#42cbd4")
-    ;; styles for refined contexts where both the foreground and the
-    ;; background need to have the same/similar hue
-    ;;
-    ;; must be combined with themselves OR the foregrounds can be
-    ;; combined with any of the base backgrounds
-    ("red-refine-bg" . "#ffcccc") ("red-refine-fg" . "#780000")
-    ("green-refine-bg" . "#aceaac") ("green-refine-fg" . "#004c00")
-    ("yellow-refine-bg" . "#fff29a") ("yellow-refine-fg" . "#604000")
-    ("blue-refine-bg" . "#8ac7ff") ("blue-refine-fg" . "#002288")
-    ("magenta-refine-bg" . "#ffccff") ("magenta-refine-fg" . "#770077")
-    ("cyan-refine-bg" . "#8eecf4") ("cyan-refine-fg" . "#004850")
-    ;; styles that are meant exclusively for the mode line
-    ;;
-    ;; must be combined with: `bg-active', `bg-inactive'
-    ("red-active" . "#930000") ("green-active" . "#005300")
-    ("yellow-active" . "#703700") ("blue-active" . "#0033c0")
-    ("magenta-active" . "#6320a0") ("cyan-active" . "#004882")
-    ;; styles that are meant exclusively for the fringes
-    ;;
-    ;; must have a minimum contrast ratio of 1.5:1 with `bg-inactive'
-    ;; and be combined with `fg-main' or `fg-dim'
-    ("red-fringe-bg" . "#ff9a9a") ("green-fringe-bg" . "#86cf86")
-    ("yellow-fringe-bg" . "#e0c050") ("blue-fringe-bg" . "#82afff")
-    ("magenta-fringe-bg" . "#f0a3ff") ("cyan-fringe-bg" . "#00d6e0")
-    ;; styles reserved for specific faces
-    ;;
-    ;; `bg-hl-line' is between `bg-dim' and `bg-alt', so it should
-    ;; work with all accents that cover those two, plus `bg-main'
-    ;;
-    ;; `bg-header' is between `bg-active' and `bg-inactive', so it
-    ;; can be combined with any of the "active" values, plus the
-    ;; "special" and base foreground colours
-    ;;
-    ;; `bg-paren-match', `bg-region' and `bg-tab-active' must be
-    ;; combined with `fg-main', while `bg-tab-inactive' should be
-    ;; combined with `fg-dim'
-    ;;
-    ;; `bg-tab-bar' is only intended for the bar that holds the tabs and
-    ;; can only be combined with `fg-main'
-    ;;
-    ;; `fg-tab-active' is meant to be combined with `bg-tab-active',
-    ;; though only for styling special elements, such as underlining
-    ;; the current tab
-    ;;
-    ;; `fg-escape-char-construct' and `fg-escape-char-backslash' can
-    ;; be combined `bg-main', `bg-dim', `bg-alt'
-    ;;
-    ;; `fg-lang-error', `fg-lang-warning', `fg-lang-note' can be
-    ;; combined with `bg-main', `bg-dim', `bg-alt'
-    ;;
-    ;; `fg-mark', `fg-mark-del', `fg-mark-other' can be combined with
-    ;; `bg-main', `bg-dim', `bg-alt', `bg-hl-line'
-    ;;
-    ;; `fg-unfocused' must be combined with `fg-main'
-    ;;
-    ;; the window divider colours apply to faces with just an fg value
-    ;;
-    ;; all pairs are combinable with themselves
-    ("bg-hl-line" . "#f2eff3")
-    ("bg-paren-match" . "#efcabf")
-    ("bg-region" . "#bcbcbc")
+(eval-when-compile
+  (defvar modus-operandi-theme-default-colors-alist
+    '(;; base values
+      ("bg-main" . "#ffffff") ("fg-main" . "#000000")
+      ("bg-alt" . "#f0f0f0") ("fg-alt" . "#505050")
+      ("bg-dim" . "#f8f8f8") ("fg-dim" . "#282828")
+      ;; specifically for on/off states (e.g. `mode-line')
+      ;;
+      ;; must be combined with themselves
+      ("bg-active" . "#e0e0e0") ("fg-active" . "#191919")
+      ("bg-inactive" . "#efedef") ("fg-inactive" . "#424242")
+      ;; special base values, used only for cases where the above
+      ;; fg-* or bg-* cannot or should not be used (to avoid confusion)
+      ;; must be combined with: {fg,bg}-{main,alt,dim}
+      ("bg-special-cold" . "#dde3f4") ("fg-special-cold" . "#093060")
+      ("bg-special-mild" . "#c4ede0") ("fg-special-mild" . "#184034")
+      ("bg-special-warm" . "#f0e0d4") ("fg-special-warm" . "#5d3026")
+      ("bg-special-calm" . "#f8ddea") ("fg-special-calm" . "#61284f")
+      ;; styles for the main constructs
+      ;;
+      ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
+      ("red" . "#a60000") ("green" . "#005e00")
+      ("yellow" . "#813e00") ("blue" . "#0030a6")
+      ("magenta" . "#721045") ("cyan" . "#00538b")
+      ;; styles for common, but still specialised constructs
+      ;;
+      ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
+      ("red-alt" . "#972500") ("green-alt" . "#315b00")
+      ("yellow-alt" . "#70480f") ("blue-alt" . "#223fbf")
+      ("magenta-alt" . "#8f0075") ("cyan-alt" . "#30517f")
+      ;; same purpose as above, just slight differences
+      ;;
+      ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
+      ("red-alt-other" . "#a0132f") ("green-alt-other" . "#145c33")
+      ("yellow-alt-other" . "#863927") ("blue-alt-other" . "#0000bb")
+      ("magenta-alt-other" . "#5317ac") ("cyan-alt-other" . "#005a5f")
+      ;; styles for elements that should be very subtle
+      ;;
+      ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
+      ("red-nuanced" . "#4d0006") ("green-nuanced" . "#003000")
+      ("yellow-nuanced" . "#3a2a00") ("blue-nuanced" . "#001170")
+      ("magenta-nuanced" . "#381050") ("cyan-nuanced" . "#003434")
+      ;; styles for slightly accented background
+      ;;
+      ;; must be combined with any of the above foreground values
+      ("red-nuanced-bg" . "#fef2f2") ("green-nuanced-bg" . "#f4faf4")
+      ("yellow-nuanced-bg" . "#fcf6f1") ("blue-nuanced-bg" . "#f4f4ff")
+      ("magenta-nuanced-bg" . "#fff4fc") ("cyan-nuanced-bg" . "#f0f6fa")
+      ;; styles for elements that should draw attention to themselves
+      ;;
+      ;; must be combined with: `bg-main'
+      ("red-intense" . "#b60000") ("green-intense" . "#006800")
+      ("yellow-intense" . "#904200") ("blue-intense" . "#1111ee")
+      ("magenta-intense" . "#7000e0") ("cyan-intense" . "#205b93")
+      ;; styles for background elements that should be visible yet
+      ;; subtle
+      ;;
+      ;; must be combined with: `fg-dim'
+      ("red-subtle-bg" . "#f2b0a2") ("green-subtle-bg" . "#aecf90")
+      ("yellow-subtle-bg" . "#e4c340") ("blue-subtle-bg" . "#b5d0ff")
+      ("magenta-subtle-bg" . "#f0d3ff") ("cyan-subtle-bg" . "#c0efff")
+      ;; styles for background elements that should be visible and
+      ;; distinguishable
+      ;;
+      ;; must be combined with: `fg-main'
+      ("red-intense-bg" . "#ff8892") ("green-intense-bg" . "#5ada88")
+      ("yellow-intense-bg" . "#f5df23") ("blue-intense-bg" . "#6aaeff")
+      ("magenta-intense-bg" . "#d5baff") ("cyan-intense-bg" . "#42cbd4")
+      ;; styles for refined contexts where both the foreground and the
+      ;; background need to have the same/similar hue
+      ;;
+      ;; must be combined with themselves OR the foregrounds can be
+      ;; combined with any of the base backgrounds
+      ("red-refine-bg" . "#ffcccc") ("red-refine-fg" . "#780000")
+      ("green-refine-bg" . "#aceaac") ("green-refine-fg" . "#004c00")
+      ("yellow-refine-bg" . "#fff29a") ("yellow-refine-fg" . "#604000")
+      ("blue-refine-bg" . "#8ac7ff") ("blue-refine-fg" . "#002288")
+      ("magenta-refine-bg" . "#ffccff") ("magenta-refine-fg" . "#770077")
+      ("cyan-refine-bg" . "#8eecf4") ("cyan-refine-fg" . "#004850")
+      ;; styles that are meant exclusively for the mode line
+      ;;
+      ;; must be combined with: `bg-active', `bg-inactive'
+      ("red-active" . "#930000") ("green-active" . "#005300")
+      ("yellow-active" . "#703700") ("blue-active" . "#0033c0")
+      ("magenta-active" . "#6320a0") ("cyan-active" . "#004882")
+      ;; styles that are meant exclusively for the fringes
+      ;;
+      ;; must have a minimum contrast ratio of 1.5:1 with `bg-inactive'
+      ;; and be combined with `fg-main' or `fg-dim'
+      ("red-fringe-bg" . "#ff9a9a") ("green-fringe-bg" . "#86cf86")
+      ("yellow-fringe-bg" . "#e0c050") ("blue-fringe-bg" . "#82afff")
+      ("magenta-fringe-bg" . "#f0a3ff") ("cyan-fringe-bg" . "#00d6e0")
+      ;; styles reserved for specific faces
+      ;;
+      ;; `bg-hl-line' is between `bg-dim' and `bg-alt', so it should
+      ;; work with all accents that cover those two, plus `bg-main'
+      ;;
+      ;; `bg-header' is between `bg-active' and `bg-inactive', so it
+      ;; can be combined with any of the "active" values, plus the
+      ;; "special" and base foreground colours
+      ;;
+      ;; `bg-paren-match', `bg-region' and `bg-tab-active' must be
+      ;; combined with `fg-main', while `bg-tab-inactive' should be
+      ;; combined with `fg-dim'
+      ;;
+      ;; `bg-tab-bar' is only intended for the bar that holds the tabs and
+      ;; can only be combined with `fg-main'
+      ;;
+      ;; `fg-tab-active' is meant to be combined with `bg-tab-active',
+      ;; though only for styling special elements, such as underlining
+      ;; the current tab
+      ;;
+      ;; `fg-escape-char-construct' and `fg-escape-char-backslash' can
+      ;; be combined `bg-main', `bg-dim', `bg-alt'
+      ;;
+      ;; `fg-lang-error', `fg-lang-warning', `fg-lang-note' can be
+      ;; combined with `bg-main', `bg-dim', `bg-alt'
+      ;;
+      ;; `fg-mark', `fg-mark-del', `fg-mark-other' can be combined with
+      ;; `bg-main', `bg-dim', `bg-alt', `bg-hl-line'
+      ;;
+      ;; `fg-unfocused' must be combined with `fg-main'
+      ;;
+      ;; the window divider colours apply to faces with just an fg value
+      ;;
+      ;; all pairs are combinable with themselves
+      ("bg-hl-line" . "#f2eff3")
+      ("bg-paren-match" . "#efcabf")
+      ("bg-region" . "#bcbcbc")
 
-    ("bg-tab-bar" . "#d5d5d5")
-    ("bg-tab-active" . "#f6f6f6")
-    ("bg-tab-inactive" . "#bdbdbd")
-    ("fg-tab-active" . "#30169e")
+      ("bg-tab-bar" . "#d5d5d5")
+      ("bg-tab-active" . "#f6f6f6")
+      ("bg-tab-inactive" . "#bdbdbd")
+      ("fg-tab-active" . "#30169e")
 
-    ("fg-escape-char-construct" . "#8b1030")
-    ("fg-escape-char-backslash" . "#654d0f")
+      ("fg-escape-char-construct" . "#8b1030")
+      ("fg-escape-char-backslash" . "#654d0f")
 
-    ("fg-lang-error" . "#9f004f")
-    ("fg-lang-warning" . "#604f0f")
-    ("fg-lang-note" . "#4040ae")
+      ("fg-lang-error" . "#9f004f")
+      ("fg-lang-warning" . "#604f0f")
+      ("fg-lang-note" . "#4040ae")
 
-    ("fg-window-divider-inner" . "#888888")
-    ("fg-window-divider-outer" . "#585858")
+      ("fg-window-divider-inner" . "#888888")
+      ("fg-window-divider-outer" . "#585858")
 
-    ("fg-unfocused" . "#56576d")
+      ("fg-unfocused" . "#56576d")
 
-    ("bg-header" . "#e5e5e5") ("fg-header" . "#2a2a2a")
+      ("bg-header" . "#e5e5e5") ("fg-header" . "#2a2a2a")
 
-    ("bg-whitespace" . "#fff8fc") ("fg-whitespace" . "#645060")
+      ("bg-whitespace" . "#fff8fc") ("fg-whitespace" . "#645060")
 
-    ("bg-diff-heading" . "#b7c2dd") ("fg-diff-heading" . "#043355")
-    ("bg-diff-added" . "#d4fad4") ("fg-diff-added" . "#004500")
-    ("bg-diff-changed" . "#fcefcf") ("fg-diff-changed" . "#524200")
-    ("bg-diff-removed" . "#ffe8ef") ("fg-diff-removed" . "#691616")
+      ("bg-diff-heading" . "#b7c2dd") ("fg-diff-heading" . "#043355")
+      ("bg-diff-added" . "#d4fad4") ("fg-diff-added" . "#004500")
+      ("bg-diff-changed" . "#fcefcf") ("fg-diff-changed" . "#524200")
+      ("bg-diff-removed" . "#ffe8ef") ("fg-diff-removed" . "#691616")
 
-    ("bg-diff-refine-added" . "#94cf94") ("fg-diff-refine-added" . "#002a00")
-    ("bg-diff-refine-changed" . "#cccf8f") ("fg-diff-refine-changed" . "#302010")
-    ("bg-diff-refine-removed" . "#daa2b0") ("fg-diff-refine-removed" . "#400000")
+      ("bg-diff-refine-added" . "#94cf94") ("fg-diff-refine-added" . "#002a00")
+      ("bg-diff-refine-changed" . "#cccf8f") ("fg-diff-refine-changed" . "#302010")
+      ("bg-diff-refine-removed" . "#daa2b0") ("fg-diff-refine-removed" . "#400000")
 
-    ("bg-diff-focus-added" . "#bbeabb") ("fg-diff-focus-added" . "#002c00")
-    ("bg-diff-focus-changed" . "#ecdfbf") ("fg-diff-focus-changed" . "#392900")
-    ("bg-diff-focus-removed" . "#efcbcf") ("fg-diff-focus-removed" . "#4a0000")
+      ("bg-diff-focus-added" . "#bbeabb") ("fg-diff-focus-added" . "#002c00")
+      ("bg-diff-focus-changed" . "#ecdfbf") ("fg-diff-focus-changed" . "#392900")
+      ("bg-diff-focus-removed" . "#efcbcf") ("fg-diff-focus-removed" . "#4a0000")
 
-    ("bg-diff-neutral-0" . "#979797") ("fg-diff-neutral-0" . "#040404")
-    ("bg-diff-neutral-1" . "#b0b0b0") ("fg-diff-neutral-1" . "#252525")
-    ("bg-diff-neutral-2" . "#cccccc") ("fg-diff-neutral-2" . "#3a3a3a")
+      ("bg-diff-neutral-0" . "#979797") ("fg-diff-neutral-0" . "#040404")
+      ("bg-diff-neutral-1" . "#b0b0b0") ("fg-diff-neutral-1" . "#252525")
+      ("bg-diff-neutral-2" . "#cccccc") ("fg-diff-neutral-2" . "#3a3a3a")
 
-    ("bg-mark" . "#a0f0cf") ("fg-mark" . "#005040")
-    ("bg-mark-del" . "#ffccbb") ("fg-mark-del" . "#840040")
-    ("bg-mark-other" . "#f5d88f") ("fg-mark-other" . "#782900"))
-  "The entire palette of `modus-operandi-theme'.
+      ("bg-mark" . "#a0f0cf") ("fg-mark" . "#005040")
+      ("bg-mark-del" . "#ffccbb") ("fg-mark-del" . "#840040")
+      ("bg-mark-other" . "#f5d88f") ("fg-mark-other" . "#782900"))
+    "The entire palette of `modus-operandi-theme'.
 Each element has the form (NAME . HEX).")
 
-;;;###autoload
-(defcustom modus-operandi-theme-override-colors-alist '()
-  "Place to override default theme colors.
+  (defcustom modus-operandi-theme-override-colors-alist '()
+    "Place to override default theme colors.
 You can override a subset of the theme's default colors by
 defining them in this alist."
-  :type '(alist
-          :key-type (string :tag "Name")
-          :value-type (string :tag " Hex")))
+    :type '(alist
+            :key-type (string :tag "Name")
+            :value-type (string :tag " Hex")))
 
-(defmacro modus-operandi-theme-with-color-variables (&rest body)
-  "`let' bind all colours around BODY.
+  (defmacro modus-operandi-theme-with-color-variables (&rest body)
+    "`let' bind all colours around BODY.
 Also bind `class' to ((class color) (min-colors 89))."
-  (declare (indent 0))
-  `(let ((class '((class color) (min-colors 89)))
-         ,@(mapcar (lambda (cons)
-                     (list (intern (car cons)) (cdr cons)))
-                   (append modus-operandi-theme-default-colors-alist
-                           modus-operandi-theme-override-colors-alist))
-         ;; conditional styles that evaluate user-facing customisation
-         ;; options
-         (modus-theme-slant
-          (if modus-operandi-theme-slanted-constructs 'italic 'normal))
-         (modus-theme-bold
-          (if modus-operandi-theme-bold-constructs 'bold 'normal))
-         (modus-theme-variable-pitch
-          (if modus-operandi-theme-proportional-fonts 'variable-pitch 'default)))
-     ,@body))
+    (declare (indent 0))
+    `(let ((class '((class color) (min-colors 89)))
+           ,@(mapcar (lambda (cons)
+                       (list (intern (car cons)) (cdr cons)))
+                     (append modus-operandi-theme-default-colors-alist
+                             modus-operandi-theme-override-colors-alist))
+           ;; conditional styles that evaluate user-facing customisation
+           ;; options
+           (modus-theme-slant
+            (if modus-operandi-theme-slanted-constructs 'italic 'normal))
+           (modus-theme-bold
+            (if modus-operandi-theme-bold-constructs 'bold 'normal))
+           (modus-theme-variable-pitch
+            (if modus-operandi-theme-proportional-fonts 'variable-pitch 'default)))
+       ,@body)))
 
 
 
@@ -1090,6 +1091,14 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(cider-test-success-face ((,class (:inherit modus-theme-intense-green))))
    `(cider-traced-face ((,class (:box (:line-width -1 :color ,cyan :style nil) :background ,bg-dim))))
    `(cider-warning-highlight-face ((,class (:foreground ,yellow :underline t))))
+   ;;;; circe (and lui)
+   `(circe-fool-face ((,class (:foreground ,fg-alt))))
+   `(circe-highlight-nick-face ((,class (:foreground ,blue :weight bold))))
+   `(circe-prompt-face ((,class (:foreground ,cyan-alt-other :weight bold))))
+   `(circe-server-face ((,class (:foreground ,fg-unfocused))))
+   `(lui-button-face ((,class (:foreground ,blue :underline t))))
+   `(lui-highlight-face ((,class (:foreground ,magenta-alt))))
+   `(lui-time-stamp-face ((,class (:foreground ,blue-nuanced))))
    ;;;; color-rg
    `(color-rg-font-lock-column-number ((,class (:foreground ,magenta-alt-other))))
    `(color-rg-font-lock-command ((,class (:foreground ,fg-main :weight bold))))
@@ -1503,24 +1512,24 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(erc-bold-face ((,class (:weight bold))))
    `(erc-button ((,class (:inherit button))))
    `(erc-command-indicator-face ((,class (:foreground ,cyan-alt :weight bold))))
-   `(erc-current-nick-face ((,class (:foreground ,blue))))
+   `(erc-current-nick-face ((,class (:foreground ,magenta-alt-other))))
    `(erc-dangerous-host-face ((,class (:inherit modus-theme-intense-red))))
-   `(erc-direct-msg-face ((,class (:foreground ,fg-special-mild))))
+   `(erc-direct-msg-face ((,class (:foreground ,magenta))))
    `(erc-error-face ((,class (:foreground ,red :weight bold))))
    `(erc-fool-face ((,class (:foreground ,fg-inactive))))
-   `(erc-header-line ((,class (:background ,bg-alt :foreground ,fg-main))))
+   `(erc-header-line ((,class (:background ,bg-header :foreground ,fg-header))))
    `(erc-input-face ((,class (:foreground ,fg-special-calm))))
    `(erc-inverse-face ((,class (:inherit erc-default-face :inverse-video t))))
    `(erc-keyword-face ((,class (:foreground ,magenta-alt :weight bold))))
    `(erc-my-nick-face ((,class (:foreground ,magenta :weight bold))))
    `(erc-my-nick-prefix-face ((,class (:inherit erc-my-nick-face))))
-   `(erc-nick-default-face ((,class (:foreground ,fg-special-cold :weight bold))))
+   `(erc-nick-default-face ((,class (:foreground ,blue :weight bold))))
    `(erc-nick-msg-face ((,class (:foreground ,green :weight bold))))
-   `(erc-nick-prefix-face ((,class (:inherit erc-nick-default-face :weight bold))))
-   `(erc-notice-face ((,class (:foreground ,fg-special-warm))))
-   `(erc-pal-face ((,class (:foreground ,magenta-alt-other :weight bold))))
+   `(erc-nick-prefix-face ((,class (:inherit erc-nick-default-face))))
+   `(erc-notice-face ((,class (:foreground ,fg-unfocused))))
+   `(erc-pal-face ((,class (:foreground ,red-alt :weight bold))))
    `(erc-prompt-face ((,class (:foreground ,cyan-alt-other :weight bold))))
-   `(erc-timestamp-face ((,class (:foreground ,blue-alt))))
+   `(erc-timestamp-face ((,class (:foreground ,blue-nuanced))))
    `(erc-underline-face ((,class (:underline t))))
    ;;;; ert
    `(ert-test-result-expected ((,class (:inherit modus-theme-intense-green))))
@@ -2792,12 +2801,12 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(rcirc-bright-nick ((,class (:foreground ,magenta-alt :weight bold))))
    `(rcirc-dim-nick ((,class (:foreground ,fg-alt))))
    `(rcirc-my-nick ((,class (:foreground ,magenta :weight bold))))
-   `(rcirc-nick-in-message ((,class (:foreground ,blue))))
+   `(rcirc-nick-in-message ((,class (:foreground ,magenta-alt-other))))
    `(rcirc-nick-in-message-full-line ((,class (:foreground ,fg-special-mild :weight bold))))
    `(rcirc-other-nick ((,class (:foreground ,fg-special-cold :weight bold))))
    `(rcirc-prompt ((,class (:foreground ,cyan-alt-other :weight bold))))
-   `(rcirc-server ((,class (:foreground ,fg-special-warm))))
-   `(rcirc-timestamp ((,class (:foreground ,fg-inactive))))
+   `(rcirc-server ((,class (:foreground ,fg-unfocused))))
+   `(rcirc-timestamp ((,class (:foreground ,blue-nuanced))))
    `(rcirc-url ((,class (:foreground ,blue :underline t))))
    ;;;; regexp-builder (re-builder)
    `(reb-match-0 ((,class (:inherit modus-theme-intense-blue))))
@@ -3413,8 +3422,4 @@ Also bind `class' to ((class color) (min-colors 89))."
 
 (provide 'modus-operandi-theme)
 
-;; Local Variables:
-;; no-byte-compile: t
-;; indent-tabs-mode: nil
-;; End:
 ;;; modus-operandi-theme.el ends here
