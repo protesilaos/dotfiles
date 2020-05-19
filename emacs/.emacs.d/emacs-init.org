@@ -5291,9 +5291,6 @@ Settings for the feed reader package.  I mostly care about the unique
 buffers tweak.  It allows me to open a feed entry and keep it around
 while I go on browsing the feed list.
 
-Here is [[Https://gitlab.com/ambrevar/dotfiles/blob/master/.emacs.d/lisp/init-elfeed.el][the source]] code on Gitlab for =ambrevar/elfeed-play-with-mpv=,
-with minor tweaks by me.
-
 #+begin_src emacs-lisp
 (use-package elfeed
   :ensure
