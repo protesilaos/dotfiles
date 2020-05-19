@@ -1627,8 +1627,6 @@ position of the cursor after the skeleton has been inserted.
     :CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
     :END:
 
-/WORK IN PROGRESS 2020-05-16./
-
 Oftentimes you want to perform a certain action with the contents of the
 minibuffer's currently matched item.  Emacs has no standard system for
 doing so in a straightforward, efficient fashion.
@@ -1643,9 +1641,12 @@ a keymap that was specific to the completion mechanism and so my custom
 actions could not scale well or be context-aware.
 
 This is where =embark= enters the fray: to solve the problem of defining
-extended minibuffer actions that scale to match your needs.  [[https://github.com/oantolin/embark][The package]]
-is under active development as of 2020-05-16, so expect things to be in
-a state of flux for the immediate future.
+extended minibuffer actions that scale to match your needs and are aware
+of the completion category you are in.  [[https://github.com/oantolin/embark][The package]] is under active
+development (as of 2020-05-19), so expect things to be in a state of
+flux for the immediate future (I use =:load-path= because I like to check
+the source code and try to learn some Elisp along the way---otherwise
+you should go with something like the =quelpa= package).
 
 With Embark you can go with a simple solution that covers only a handful
 of actions, or develop a very specific and elaborate typology that
@@ -1655,7 +1656,20 @@ central idea of Embark is that such actions can be bound to specific
 keymaps and these can then be layered as necessary (keymap layering is
 standard in Emacs): so a general keymap can hold all your common
 actions, while several particular keymaps may then be dedicated to
-specific types of commands.
+specific types of commands grouped by completion category.
+
+For all available default actions, check the [[https://github.com/oantolin/embark/wiki/Default-Actions][project's wiki page]], or
+just browse the source code.  This is what it looks like:
+
+#+begin_example
+(defvar embark-general-map
+  (embark-keymap
+   '(("i" . embark-insert)
+     ("w" . embark-save)
+     ("C-g" . embark-cancel)
+     ("C-u" . universal-argument))
+   universal-argument-map))
+#+end_example
 
 The developer of this package is none other than Omar Antolín Camarena.
 You are already familiar with his work from previous sections of this
@@ -1663,17 +1677,17 @@ document that include =orderless=, =icomplete-vertical=, =live-completions=,
 and various other nice snippets of Elisp (I always provide references in
 context).  The common denominator of Omar's contributions is that they
 work with standard Emacs mechanisms, so you have the liberty to mix and
-match modules from core Emacs, your homegrown functions, third-party
-packages, to suit your preferences and expected workflows without ever
+match modules from core Emacs, your homegrown functions, and third-party
+packages, to suit your preferences and expected workflows, without ever
 committing to an all-encompassing framework.
 
 From my part, I will refrain from adding too many actions at this early
-stage, until I have a better idea what is provided by default and how
+stage, until I have a better idea of what is provided by default and how
 things will stabilise.
 
 #+begin_src emacs-lisp
 (use-package embark
-  :load-path "~/.emacs.d/prot-dev/embark/"
+  :load-path "~/.emacs.d/prot-dev/embark/" ; in development
   :config
   (defun prot/embark-insert-exit ()
     "Like `embark-insert' but exits current recursive minibuffer."
@@ -1691,8 +1705,7 @@ things will stabilise.
               ("M-o" . embark-act)
               :map embark-general-map
               ("m" . prot/embark-insert-exit)
-              ("j" . prot/embark-insert-exit-all)
-              ("h" . embark-describe-symbol)))
+              ("j" . prot/embark-insert-exit-all)))
 #+end_src
 
 ** Configurations for—or extensions to—built-in search commands
