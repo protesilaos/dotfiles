@@ -2477,7 +2477,7 @@ only the buffer's name.
      :PROPERTIES:
      :CUSTOM_ID: h:d715be45-2a02-4202-80ea-5df4fd2056fa
      :END:
-*** Ibuffer (dired-like buffer list manager)
+*** Ibuffer and extras (dired-like buffer list manager)
     :PROPERTIES:
     :CUSTOM_ID: h:06290f9c-491c-45b2-b213-0248f890c83d
     :END:
@@ -2513,6 +2513,28 @@ the default behaviour and presentation:
 
 Also watch my [[https://protesilaos.com/codelog/2020-04-02-emacs-intro-ibuffer/][introduction to Ibuffer]] (2020-04-02).
 
+Now some extras after I published that video: =prot/buffers-major-mode=
+and =prot/buffers-vc-root= will produce a filtered list based on the
+current buffer's major mode or root version-control directory
+respectively.  Their standard mode of interaction is through minibuffer
+completions (see [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]]).  With a prefix
+argument =C-u= they switch to a dedicated Ibuffer view instead.
+
+For those two I received help from Omar Antolín Camarena with regard to
+the use of =read-buffer= and the =lambda= passed to it: my prototype was
+using the generic =completing-read= with =cl-remove-if-not= for filtering
+the list of candidates (all possible errors are my own).  The upside of
+using Omar's approach is that it informs other tools that this kind of
+completion concerns buffers, so they can adapt accordingly.  This is
+done, for example, by Omar's powerful =embark= package (see section on
+[[#h:e97988bc-fd77-4dca-b74a-0897087624bd][Minibuffer actions for completion candidates]]).
+
+I consider these two commands to be conceptually related to what I have
+defined in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Completion for projects and directory trees]].  The key chords
+follow the same pattern, with the =M-s= prefix being considered an entry
+point for "advanced search" methods, inspired by the default for =occur=
+(=M-s o=) as well as a few others.
+
 #+begin_src emacs-lisp
 (use-package ibuffer
   :config
@@ -2536,8 +2558,51 @@ Also watch my [[https://protesilaos.com/codelog/2020-04-02-emacs-intro-ibuffer/]
                 (name 16 -1)
                 " " filename)))
   (setq ibuffer-saved-filter-groups nil)
+
+  (defun prot/buffers-major-mode (&optional arg)
+    "Select buffers that match the current buffer's major mode.
+With \\[universal-argument] produce an `ibuffer' filtered
+accordingly.  Else use standard completion."
+    (interactive "P")
+    (let* ((major major-mode)
+           (prompt "Buffers for ")
+           (mode-string (format "%s" major))
+           (mode-string-pretty (propertize mode-string 'face 'success)))
+      (if arg
+          (ibuffer t (concat "*" prompt mode-string "*")
+                   (list (cons 'used-mode major)))
+        (switch-to-buffer
+         (read-buffer
+          (concat prompt mode-string-pretty ": ") nil t
+          (lambda (pair) ; pair is (name-string . buffer-object)
+            (with-current-buffer (cdr pair) (derived-mode-p major))))))))
+
+  (defun prot/buffers-vc-root (&optional arg)
+    "Select buffers that match the present `vc-root-dir'.
+With \\[universal-argument] produce an `ibuffer' filtered
+accordingly.  Else use standard completion.
+
+When no VC root is available, use standard `switch-to-buffer'."
+    (interactive "P")
+    (let* ((root (vc-root-dir))
+           (prompt "Buffers for VC ")
+           (vc-string (format "%s" root))
+           (vc-string-pretty (propertize vc-string 'face 'success)))
+      (if root
+          (if arg
+              (ibuffer t (concat "*" prompt vc-string "*")
+                       (list (cons 'filename (expand-file-name root))))
+            (switch-to-buffer
+             (read-buffer
+              (concat prompt vc-string-pretty ": ") nil t
+              (lambda (pair) ; pair is (name-string . buffer-object)
+                (with-current-buffer (cdr pair) (string= (vc-root-dir) root))))))
+        (call-interactively 'switch-to-buffer))))
+
   :hook (ibuffer-mode-hook . hl-line-mode)
-  :bind (("C-x C-b" . ibuffer)
+  :bind (("M-s b" . prot/buffers-major-mode)
+         ("M-s v" . prot/buffers-vc-root)
+         ("C-x C-b" . ibuffer)
          :map ibuffer-mode-map
          ("* f" . ibuffer-mark-by-file-name-regexp)
          ("* g" . ibuffer-mark-by-content-regexp) ; "g" is for "grep"
