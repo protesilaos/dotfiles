@@ -1627,6 +1627,8 @@ position of the cursor after the skeleton has been inserted.
     :CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
     :END:
 
+/2020-05-25: In active development.  Things will change./
+
 Oftentimes you want to perform a certain action with the contents of the
 minibuffer's currently matched item.  Emacs has no standard system for
 doing so in a straightforward, efficient fashion.
@@ -1640,13 +1642,14 @@ The problem with my approach was that the keys I would use were bound to
 a keymap that was specific to the completion mechanism and so my custom
 actions could not scale well or be context-aware.
 
-This is where =embark= enters the fray: to solve the problem of defining
-extended minibuffer actions that scale to match your needs and are aware
-of the completion category you are in.  [[https://github.com/oantolin/embark][The package]] is under active
-development (as of 2020-05-19), so expect things to be in a state of
-flux for the immediate future (I use =:load-path= because I like to check
-the source code and try to learn some Elisp along the way---otherwise
-you should go with something like the =quelpa= package).
+This is where =embark= enters the fray (Emacs Minibuffer Actions Rooted in
+Keymaps): to solve the problem of defining extended minibuffer actions
+that scale to match your needs and are aware of the completion category
+you are in.  [[https://github.com/oantolin/embark][The package]] is under active development (as of 2020-05-25),
+so expect things to be in a state of flux for the immediate future (I
+use =:load-path= because I like to check the source code and try to learn
+some Elisp along the way---otherwise you should go with something like
+the =quelpa= package).
 
 With Embark you can go with a simple solution that covers only a handful
 of actions, or develop a very specific and elaborate typology that
@@ -1686,9 +1689,12 @@ stage, until I have a better idea of what is provided by default and how
 things will stabilise.
 
 #+begin_src emacs-lisp
+;; TODO pending review
 (use-package embark
   :load-path "~/.emacs.d/prot-dev/embark/" ; in development
   :config
+  (setq embark-indicator (propertize "Act" 'face 'modus-theme-refine-magenta))
+
   (defun prot/embark-insert-exit ()
     "Like `embark-insert' but exits current recursive minibuffer."
     (interactive)
@@ -1703,6 +1709,8 @@ things will stabilise.
 
   :bind (:map minibuffer-local-completion-map
               ("M-o" . embark-act)
+              :map completion-list-mode-map
+              ("o" . embark-act)     ; *Completions* buffer is read-only
               :map embark-general-map
               ("m" . prot/embark-insert-exit)
               ("j" . prot/embark-insert-exit-all)))
