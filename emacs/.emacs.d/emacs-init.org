@@ -2212,20 +2212,15 @@ their previous actions.
     :CUSTOM_ID: h:affb6142-6216-43b6-9d66-e7b18d65e79e
     :END:
 
-The easiest way to produce a Dired buffer with only a handful of files
-is to mark them, either manually or with =% m=, then toggle the mark
-with =t=, and then remove (just from the view) everything with =k=.
-This will leave you with only the files you need to focus on.
+The standard way to produce a Dired buffer with only a handful of files
+is to mark them, either manually or with =% m=, then toggle the mark with
+=t=, and then remove (just from the view) everything with =k=.  This will
+leave you with only the files you need to focus on.  With =g= you get back
+to the unfiltered listing.
 
-For dynamic filtering, use this package.  Exit the narrowed view with
-=g= (which is generally used to regenerate the listing).
-
-The keys for this are meant to resemble other common search patterns
-such as =occur=.  Other useful interactive functions I considered, but
-opted against them in the interest of simplicity:
-
-+ =dired-narrow-regexp=
-+ =dired-narrow-fuzzy=
+For dynamic filtering, use this package.  It offers several commands,
+but I find that I only ever need to narrow by a regular expression
+(check the source code for all of them =M-x find-library dired-narrow=).
 
 #+begin_src emacs-lisp
 (use-package dired-narrow
@@ -2236,7 +2231,7 @@ opted against them in the interest of simplicity:
   (setq dired-narrow-enable-blinking t)
   (setq dired-narrow-blink-time 0.3)
   :bind (:map dired-mode-map
-         ("M-s n" . dired-narrow)))
+         ("/" . dired-narrow-regexp)))
 #+end_src
 
 *** wdired (writable dired)
