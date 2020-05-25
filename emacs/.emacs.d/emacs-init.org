@@ -5900,16 +5900,16 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
   (defun prot/modus-operandi ()
     "Enable some Modus Operandi variables and load the theme.
 This is used internally by `prot/modus-themes-toggle'."
-    (setq modus-operandi-theme-slanted-constructs nil
+    (setq modus-operandi-theme-slanted-constructs t
           modus-operandi-theme-bold-constructs nil
-          modus-operandi-theme-visible-fringes t
-          modus-operandi-theme-3d-modeline nil
-          modus-operandi-theme-subtle-diffs t
+          modus-operandi-theme-visible-fringes nil
+          modus-operandi-theme-3d-modeline t
+          modus-operandi-theme-subtle-diffs nil
           modus-operandi-theme-distinct-org-blocks nil
-          modus-operandi-theme-proportional-fonts t
+          modus-operandi-theme-proportional-fonts nil
           modus-operandi-theme-rainbow-headings t
           modus-operandi-theme-section-headings nil
-          modus-operandi-theme-scale-headings nil
+          modus-operandi-theme-scale-headings t
           modus-operandi-theme-scale-1 1.125
           modus-operandi-theme-scale-2 1.266
           modus-operandi-theme-scale-3 1.424
@@ -5923,16 +5923,16 @@ This is used internally by `prot/modus-themes-toggle'."
   (defun prot/modus-vivendi ()
     "Enable some Modus Vivendi variables and load the theme.
 This is used internally by `prot/modus-themes-toggle'."
-    (setq modus-vivendi-theme-slanted-constructs nil
+    (setq modus-vivendi-theme-slanted-constructs t
           modus-vivendi-theme-bold-constructs nil
-          modus-vivendi-theme-visible-fringes t
-          modus-vivendi-theme-3d-modeline nil
-          modus-vivendi-theme-subtle-diffs t
+          modus-vivendi-theme-visible-fringes nil
+          modus-vivendi-theme-3d-modeline t
+          modus-vivendi-theme-subtle-diffs nil
           modus-vivendi-theme-distinct-org-blocks nil
-          modus-vivendi-theme-proportional-fonts t
+          modus-vivendi-theme-proportional-fonts nil
           modus-vivendi-theme-rainbow-headings t
           modus-vivendi-theme-section-headings nil
-          modus-vivendi-theme-scale-headings nil
+          modus-vivendi-theme-scale-headings t
           modus-vivendi-theme-scale-1 1.125
           modus-vivendi-theme-scale-2 1.266
           modus-vivendi-theme-scale-3 1.424
