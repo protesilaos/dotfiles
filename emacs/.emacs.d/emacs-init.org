@@ -6145,6 +6145,13 @@ which I set to the current window.  The =moody= library offers that
 specific piece of functionality.  Moody can also be used to customise
 the looks of the mode line, though I do not want that.
 
+The tweaks to the =keycast-substitute-alist= prevent the display of
+self-inserting characters and some other commands that are not
+particularly useful while screen casting.  Now the indicator will only
+show commands, which looks cleaner.  I got the idea and original piece
+of Elisp from the [[https://github.com/aadcg/dotfiles][dotfiles of André Alexandre Gomes]] and then added a few
+tweaks of my own.
+
 #+begin_src emacs-lisp
 (use-package moody :ensure)
 
@@ -6156,7 +6163,27 @@ the looks of the mode line, though I do not want that.
   (setq keycast-window-predicate 'moody-window-active-p)
   (setq keycast-separator-width 1)
   (setq keycast-insert-after 'mode-line-buffer-identification)
-  (setq keycast-remove-tail-elements nil))
+  (setq keycast-remove-tail-elements nil)
+
+  ;; TODO pending review
+  (add-to-list 'keycast-substitute-alist '(mouse-event-p nil))
+  (add-to-list 'keycast-substitute-alist '(mouse-movement-p nil))
+  (add-to-list 'keycast-substitute-alist '(mwheel-scroll nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mouse-set-point nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mouse-set-region nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-secondary nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-line nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-drag nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mouse-start-end nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-region nil nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-track nil nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-region-rectangle nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-and-drop-region nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mwheel-event-button nil))
+  ;; (add-to-list 'keycast-substitute-alist '(dframe-mouse-event-p nil))
+  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-events-are-point-events-p nil))
+  (add-to-list 'keycast-substitute-alist '(self-insert-command "." "Typing…"))
+  (add-to-list 'keycast-substitute-alist '(org-self-insert-command "." "Typing…")))
 #+end_src
 
 *** Window divider mode
