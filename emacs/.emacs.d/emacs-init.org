@@ -2583,6 +2583,38 @@ Make sure to also read the section on [[#h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7]
               ("/ <deletechar>" . ibuffer-clear-filter-groups)))
 #+end_src
 
+*** Scratch buffers per-major-mode
+    :PROPERTIES:
+    :CUSTOM_ID: h:2695bfa4-89b4-4d7f-aa6e-8ef42f9177aa
+    :END:
+
+This package will produce a buffer that matches the major mode of the
+one you are currently in.  Use it with =M-x scratch=.  Doing that with a
+prefix argument (=C-u=) will prompt for a major mode instead.  Simple yet
+super effective!
+
+The =prot/scratch-buffer-setup= simply adds some text in the buffer and
+renames it appropriately for the sake of easier discovery.
+
+#+begin_src emacs-lisp
+(use-package scratch
+  :ensure
+  :commands scratch
+  :config
+  (defun prot/scratch-buffer-setup ()
+    "Add contents to `scratch' buffer and name it accordingly."
+    (let* ((mode (format "%s" major-mode))
+           (string (concat "Scratch buffer for: " mode "\n\n")))
+      (when scratch-buffer
+        (save-excursion
+          (insert string)
+          (goto-char (point-min))
+          (comment-region (point-at-bol) (point-at-eol)))
+        (next-line 2))
+      (rename-buffer (concat "*Scratch for " mode "*") t)))
+  :hook (scratch-create-buffer-hook . prot/scratch-buffer-setup))
+#+end_src
+
 ** Window configuration
    :PROPERTIES:
    :CUSTOM_ID: h:12591f89-eeea-4b12-93e8-9293504e5a12
