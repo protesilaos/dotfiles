@@ -131,6 +131,7 @@
 ;;     epa
 ;;     equake
 ;;     erc
+;;     eros
 ;;     ert
 ;;     eshell
 ;;     evil (evil-mode)
@@ -160,6 +161,7 @@
 ;;     git-timemachine
 ;;     git-walktree
 ;;     gnus
+;;     golden-ratio-scroll-screen
 ;;     helm
 ;;     helm-ls-git
 ;;     helm-switch-shell
@@ -175,6 +177,7 @@
 ;;     hl-line-mode
 ;;     hl-todo
 ;;     hydra
+;;     hyperlist
 ;;     ibuffer
 ;;     icomplete
 ;;     ido-mode
@@ -190,6 +193,7 @@
 ;;     ivy
 ;;     ivy-posframe
 ;;     jira (org-jira)
+;;     journalctl-mode
 ;;     js2-mode
 ;;     julia
 ;;     jupyter
@@ -205,6 +209,7 @@
 ;;     markup-faces (`adoc-mode')
 ;;     mentor
 ;;     messages
+;;     minimap
 ;;     modeline
 ;;     mood-line
 ;;     mu4e
@@ -837,7 +842,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(italic ((,class (:foreground ,fg-special-cold :slant italic))))
    `(nobreak-hyphen ((,class (:foreground ,fg-escape-char-construct))))
    `(nobreak-space ((,class (:foreground ,fg-escape-char-construct :underline t))))
-   `(minibuffer-prompt ((,class (:foreground ,cyan-alt))))
+   `(minibuffer-prompt ((,class (:foreground ,cyan-alt-other))))
    `(mm-command-output ((,class (:foreground ,red-alt-other))))
    `(mm-uu-extract ((,class (:background ,bg-dim :foreground ,fg-special-mild))))
    `(next-error ((,class (:inherit modus-theme-subtle-red))))
@@ -1531,6 +1536,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(erc-prompt-face ((,class (:foreground ,cyan-alt-other :weight bold))))
    `(erc-timestamp-face ((,class (:foreground ,blue-nuanced))))
    `(erc-underline-face ((,class (:underline t))))
+   ;;;; eros
+   `(eros-result-overlay-face ((,class (:box (:line-width -1 :color ,blue)
+                                             :background ,bg-dim :foreground ,fg-dim))))
    ;;;; ert
    `(ert-test-result-expected ((,class (:inherit modus-theme-intense-green))))
    `(ert-test-result-unexpected ((,class (:inherit modus-theme-intense-red))))
@@ -1835,7 +1843,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(gnus-summary-cancelled ((,class (:background ,bg-mark-other :foreground ,fg-mark-other :weight bold))))
    `(gnus-summary-high-ancient ((,class (:foreground ,fg-alt :weight bold))))
    `(gnus-summary-high-read ((,class (:foreground ,fg-special-cold :weight bold))))
-   `(gnus-summary-high-ticked ((,class (:foreground ,red-alt :weight bold))))
+   `(gnus-summary-high-ticked ((,class (:foreground ,red-alt-other :weight bold))))
    `(gnus-summary-high-undownloaded ((,class (:foreground ,yellow :weight bold))))
    `(gnus-summary-high-unread ((,class (:foreground ,fg-main :weight bold))))
    `(gnus-summary-low-ancient ((,class (:foreground ,fg-alt :slant italic))))
@@ -1845,10 +1853,12 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(gnus-summary-low-unread ((,class (:foreground ,fg-special-cold :weight bold))))
    `(gnus-summary-normal-ancient ((,class (:foreground ,fg-special-calm))))
    `(gnus-summary-normal-read ((,class (:foreground ,fg-special-cold))))
-   `(gnus-summary-normal-ticked ((,class (:foreground ,red-alt))))
+   `(gnus-summary-normal-ticked ((,class (:foreground ,red-alt-other))))
    `(gnus-summary-normal-undownloaded ((,class (:foreground ,yellow))))
    `(gnus-summary-normal-unread ((,class (:foreground ,fg-main))))
-   `(gnus-summary-selected ((,class (:inherit modus-theme-subtle-cyan))))
+   `(gnus-summary-selected ((,class (:inherit modus-theme-subtle-blue))))
+   ;;;; golden-ratio-scroll-screen
+   `(golden-ratio-scroll-highlight-line-face ((,class (:background ,cyan-subtle-bg :foreground ,fg-main))))
    ;;;; helm
    `(helm-M-x-key ((,class (:foreground ,magenta-alt-other :weight bold))))
    `(helm-action ((,class (:underline t))))
@@ -1989,6 +1999,16 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(hydra-face-pink ((,class (:foreground ,magenta-alt :weight bold))))
    `(hydra-face-red ((,class (:foreground ,red :weight bold))))
    `(hydra-face-teal ((,class (:foreground ,cyan :weight bold))))
+   ;;;; hyperlist
+   `(hyperlist-condition ((,class (:foreground ,green))))
+   `(hyperlist-hashtag ((,class (:foreground ,yellow))))
+   `(hyperlist-operator ((,class (:foreground ,blue-alt))))
+   `(hyperlist-paren ((,class (:foreground ,cyan-alt-other))))
+   `(hyperlist-quote ((,class (:foreground ,cyan-alt))))
+   `(hyperlist-ref ((,class (:foreground ,magenta-alt-other))))
+   `(hyperlist-stars ((,class (:foreground ,fg-alt))))
+   `(hyperlist-tag ((,class (:foreground ,red))))
+   `(hyperlist-toplevel ((,class (:foreground ,fg-main :weight bold))))
    ;;;; icomplete
    `(icomplete-first-match ((,class (:foreground ,magenta :weight bold))))
    ;;;; icomplete-vertical
@@ -2105,6 +2125,14 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(jiralib-link-filter-face ((,class (:underline t))))
    `(jiralib-link-issue-face ((,class (:underline t))))
    `(jiralib-link-project-face ((,class (:underline t))))
+   ;;;; journalctl-mode
+   `(journalctl-error-face ((,class (:foreground ,red :weight bold))))
+   `(journalctl-finished-face ((,class (:foreground ,green :weight bold))))
+   `(journalctl-host-face ((,class (:foreground ,blue))))
+   `(journalctl-process-face ((,class (:foreground ,cyan-alt-other))))
+   `(journalctl-starting-face ((,class (:foreground ,green))))
+   `(journalctl-timestamp-face ((,class (:foreground ,fg-special-cold))))
+   `(journalctl-warning-face ((,class (:foreground ,yellow :weight bold))))
    ;;;; js2-mode
    `(js2-error ((,class (:foreground ,red))))
    `(js2-external-variable ((,class (:foreground ,cyan-alt-other))))
@@ -2388,6 +2416,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(message-header-xheader ((,class (:foreground ,blue-alt-other))))
    `(message-mml ((,class (:foreground ,green-alt-other))))
    `(message-separator ((,class (:background ,bg-alt :foreground ,fg-special-warm))))
+   ;;;; minimap
+   `(minimap-active-region-background ((,class (:background ,bg-active))))
+   `(minimap-current-line-face ((,class (:background ,cyan-intense-bg :foreground ,fg-main))))
    ;;;; modeline
    `(mode-line ((,class (:box ,(modus-operandi-theme-modeline-box bg-inactive fg-inactive t)
                               ,@(modus-operandi-theme-modeline-props
