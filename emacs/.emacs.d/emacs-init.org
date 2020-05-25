@@ -5362,6 +5362,18 @@ fine though.
   (setq proced-filter 'user))
 #+end_src
 
+And with this nimble tool we get live narrowing of the list, based on
+the terms of our search.
+
+#+begin_src emacs-lisp
+(use-package proced-narrow
+  :ensure
+  :after proced
+  :diminish
+  :bind (:map proced-mode-map
+              ("/" . proced-narrow)))
+#+end_src
+
 ** Pass interface (password-store)
    :PROPERTIES:
    :CUSTOM_ID: h:1d2bf0d0-4806-4e04-a320-7d6538ef2e78
