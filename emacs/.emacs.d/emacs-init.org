@@ -4085,19 +4085,32 @@ be declared last, in case more that one function is to be invoked.  The
 sorting is set to reverse chronological order (newest first).
 
 Threads should not be hidden, while messages whose root has been removed
-should be grouped together in some meaningful way.  Furthermore, when
-moving up or down in the list of messages using just =n= or =p=, I want to
-go to the next message, regardless of whether it has been read or not.
-I can otherwise rely on standard Emacs motions.
+should be grouped together in some meaningful way (which may not always
+be fully accurate).  Furthermore, when moving up or down in the list of
+messages using just =n= or =p=, I want to go to the next message, regardless
+of whether it has been read or not.  I can otherwise rely on standard
+Emacs motions.
 
 The =gnus-user-date-format-alist= basically adapts the date to whether the
 message was within the day or the one before, else falls back to a
 default ISO-style value.  It is then called with =%&user-date;=.
 
-The formatting of the threads using Unicode characters was taken from
-the [[https://www.emacswiki.org/emacs/GnusFormatting][relevant Emacs wiki entry]] plus some minor tweaks by me.  Otherwise
-the summary's display is tweaked to show output in nice columns, while
-being a little bit cleaner than default.
+Also notice the standard behaviour of the =%f= specifier that is used in
+the =gnus-summary-line-format=.  It has a conditional behaviour, where it
+will show the contents of the "From" header field, unless these match
+some exception, defined in =gnus-ignored-from-addresses=.  When the
+exception is met, the specifier will fetch the contents of the "To"
+field instead, prepending to them =gnus-summary-to-prefix= and/or
+=gnus-summary-newsgroup-prefix= (I have no use for the latter).  This is
+useful when viewing a summary buffer with, say, all your sent messages.
+
+Remember to check the docstring of the relevant variables (=C-h v=), in
+order to get a list with all the available parameters.
+
+The formatting of the threads using Unicode characters was originally
+taken from the [[https://www.emacswiki.org/emacs/GnusFormatting][relevant Emacs wiki entry]] plus some minor tweaks by me.
+Otherwise the summary's display is tweaked to show output in nice
+columns, while being a little bit cleaner than default.
 
 #+begin_src emacs-lisp
 (use-package gnus-sum
@@ -4123,6 +4136,13 @@ being a little bit cleaner than default.
         '(((gnus-seconds-today) . "Today at %R")
           ((+ 86400 (gnus-seconds-today)) . "Yesterday, %R")
           (t . "%Y-%m-%d %R")))
+
+  ;; When the %f specifier in `gnus-summary-line-format' matches my
+  ;; name, this will use the contents of the "To:" field, prefixed by
+  ;; the string I specify.  Useful when checking your "Sent" summary.
+  (setq gnus-ignored-from-addresses "Protesilaos Stavrou")
+  (setq gnus-summary-to-prefix "To: ")
+
   (setq gnus-summary-line-format "%U%R%z %-16,16&user-date;  %4L:%-30,30f  %B%s\n")
   (setq gnus-summary-mode-line-format "%p")
   (setq gnus-sum-thread-tree-false-root "─┬> ")
@@ -4131,11 +4151,19 @@ being a little bit cleaner than default.
   (setq gnus-sum-thread-tree-root "")
   (setq gnus-sum-thread-tree-single-leaf "└─> ")
   (setq gnus-sum-thread-tree-vertical "│")
+
+  ;;;; TODO test and develop these concepts
   ;; (defun prot/gnus-summary-save-parts-all ()
   ;;   "Save all MIME parts (attachments) to the ~/Downloads directory."
   ;;   (interactive)
   ;;   (let ((directory "~/Downloads"))
   ;;     (gnus-summary-save-parts ".*" directory)))
+  ;;
+  ;; (defun prot/gnus-summary-search ()
+  ;;   (interactive)
+  ;;   (let ((regexp (read-from-minibuffer "Search regexp in articles: ")))
+  ;;     (when major-mode 'gnus-summary-mode
+  ;;           (gnus-summary-search-article regexp))))
   :hook (gnus-summary-mode-hook . hl-line-mode)
   :bind (:map gnus-agent-summary-mode-map
               ("<delete>" . gnus-summary-delete-article)
