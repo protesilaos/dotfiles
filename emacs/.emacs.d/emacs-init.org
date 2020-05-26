@@ -401,8 +401,6 @@ be created again the next time you start Emacs).
    :CUSTOM_ID: h:af691a31-917e-4d9b-aee6-5744b1173999
    :END:
 
-/WORK IN PROGRESS 2020-04-23/
-
 A "hydra" is an ad-hoc mode for mapping commands to a group of more
 convenient key bindings.  In an active hydra, all of its keys---the
 hydra's "heads"---can be typed in any order, keeping the mode active in
@@ -1758,6 +1756,8 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
      :PROPERTIES:
      :CUSTOM_ID: h:33cd69cc-1a50-4abb-9f09-cae98dc8998b
      :END:
+
+/NOTE 2020-05-26: Pending review./
 
 This section stores all the "skeletons" I define.  These are snippets of
 text, typically templates or code statements, that are meant to speed up
@@ -7331,7 +7331,8 @@ I use visual bookmarks in much the same way.
    :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
    :END:
 
-/WORK IN PROGRESS 2020-04-23/
+NOTE 2020-05-26: This section will need to be expanded to complement my
+[[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][configurations for Imenu]].
 
 For the =defhydra=, refer to my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
 
