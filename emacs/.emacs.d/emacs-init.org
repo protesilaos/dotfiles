@@ -792,9 +792,11 @@ is under the heading of [[#h:9850e597-e4b4-4e04-aad9-ce8a12b3e4ae][important con
     :END:
 
 For newcomers, watch my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).  This
-section contains a lot of documentation and several parts.  Make sure to
-also follow any links from here, or [[https://protesilaos.com/contact/][contact me]] in case something is
-amiss.
+section and subsquent ones contain a lot of documentation and several
+elements.  Make sure to also follow any links from here, or [[https://protesilaos.com/contact/][contact me]]
+in case something is amiss.  There is also an entry in the "Frequently
+Asked Questions" that might help you make sense of the complete picture:
+[[#h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc][Why keep many completion UIs? (typology of my completion interfaces)]].
 
 The minibuffer is the locus of extended command interaction.  Whether it
 is about offering input to a prompt, performing a search, executing a
@@ -1276,71 +1278,12 @@ you type in your search.  As with =icomplete-vertical=, the package
 provides a macro that we can use to enable this behaviour on a
 per-function basis.  This is what I always want.
 
-Now to understand why I am configuring this package while also
-maintaining =icomplete-mode= and friends, you need to have the full
-picture of how I conceive of completion workflows in my Emacs usage:
-
-+ One-off commands :: These are the regular motions one would use to go
-  from place A to place B, such as switching buffers.  The plan is to
-  get on with the work with as little friction as possible.  There is no
-  real need for extended interactions with the minibuffer or with any
-  other buffer for that matter.
-
-  This also explains why I use the horizontal layout of Icomplete by
-  default.  It does not interfere with my windows because it is not
-  needed for the given interaction.
-
-  Icomplete's vertical layout is also used for one-off commands, but
-  only where the list of candidates is expected to consist of naturally
-  long entries.  This is the case when selecting an item from the
-  kill-ring or choosing a filesystem path among the recentf-list---also
-  see [[#h:5723c4bb-ff6c-449f-bb60-be66fab3f137][section on recentf]].
-
-+ Involved interactions :: These are cases where one expects to interact
-  with the list of candidates itself.  There likely is a need to have a
-  view of all the matches as well as a means of defining commands that
-  are specific to the task.
-
-  In this light, the standard "Completions" buffer is essential.  It
-  feels natural for those scenaria when you need to search for some
-  documentation and are probably interested in reading more than one
-  entry (e.g. when you want to configure a new package), and potentially
-  perform some other action as part of a longer process of interaction.
-
-  Here is my common use-case: search for help with =C-h f=, =C-h v=, =C-h o=.
-  The Completions buffer will show you what matches your input.  Switch
-  to that buffer (e.g. =prot/focus-minibuffer-or-completions=), place
-  point over an item you are interested and run a bespoke command for
-  =describe-symbol= for the thing at point (this is what my
-  =prot/describe-symbol-at-point= does, and I bind it to convenient
-  keys---all this is configured in the previous section on the
-  minibuffer's essentials).  The help buffer will pop up, allowing us
-  to, say, switch to it in order to copy something, then go to a file
-  that is being edited to continue with the work, and then get back to
-  the Completions buffer for more of the same.  This is also why
-  recursive minibuffers are valuable, allowing you to keep the current
-  session active while still accessing things like =M-x=.
-
-  As for the "Completions" buffer itself, I must stress that this is a
-  buffer.  It allows you to, for example, write its contents to a
-  regular file (=C-x C-w=).  It also has =completion-list-mode-map=, meaning
-  that you can binding your bespoke commands to convenient keys (e.g. I
-  use =h= for help, =w= for writing to the kill-ring---again, these are
-  defined in the minibuffer's package declaration).  Plus, you can
-  control its placement by means of =display-buffer-alist= (see the
-  section on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
-
-Against this backdrop, the =live-completions= package covers a narrow yet
-imminently valuable niche: it removes the need for manually displaying
-and then updating the Completions buffer (such as with the default =?=
-from inside the minibuffer).  Of course, there is more to this package,
-which could make it suitable for a general completion user interface.
-Though this is not for me because the aforementioned workflow with the
-"one-off commands" is meant to not produce too much visual feedback.
-
-Last but not least, these ideas and modes of interaction where all
-showcased in my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26), although the code
-has improved a lot since then, in large part courtesy of Omar's packages.
+To my mind the =live-completions= package covers a narrow yet imminently
+valuable niche: it removes the need for manually displaying and then
+updating the Completions buffer (such as with the default =?= from inside
+the minibuffer).  Of course, there is more to this package, which could
+make it suitable for a general completion user interface (also read my
+[[#h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc][Why keep many completion UIs? (typology of completion interfaces)]]).
 
 #+begin_src emacs-lisp
 (use-package live-completions
@@ -1622,7 +1565,7 @@ position of the cursor after the skeleton has been inserted.
          (git-commit-mode-hook . abbrev-mode)))
 #+end_src
 
-*** Minibuffer actions for completion candidates
+*** Embark (actions for completion candidates)
     :PROPERTIES:
     :CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
     :END:
@@ -2655,7 +2598,7 @@ the list of candidates (all possible errors are my own).  The upside of
 using Omar's approach is that it informs other tools that this kind of
 completion concerns buffers, so they can adapt accordingly.  This is
 done, for example, by Omar's powerful =embark= package (see section on
-[[#h:e97988bc-fd77-4dca-b74a-0897087624bd][Minibuffer actions for completion candidates]]).
+[[#h:e97988bc-fd77-4dca-b74a-0897087624bd][Embark (actions for completion candidates)]]).
 
 I consider these two commands to be conceptually related to what I have
 defined in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Completion for projects and directory trees]].  The key chords
@@ -8683,6 +8626,99 @@ Qwerty.
 For my videos I use the built-in camera and microphone (sorry if the
 production quality is sub-standard!).  Since we are here: the recording
 software is OBS Studio, while I do no video editing.
+
+** Why keep many completion UIs? (typology of my completion interfaces)
+    :PROPERTIES:
+    :CUSTOM_ID: h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc
+    :END:
+
+In [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]] I define lots of completion-related
+functions and configure their accoutrements to deliver on a consistent
+experience (some completion-related functions are defined in a few other
+places as well, always with the appropriate references, though they
+extend the principles documented herein).
+
+To understand why I am maintaining seemingly overlapping settings for
+=icomplete=, =icomplete-vertical=, =live-completions=, and =embark= you need to
+have a sense of the full picture of how I conceive of completion
+workflows as part of my general Emacs usage:
+
++ One-off commands :: These are the regular means one would use to
+  transition from state A to state B, such as to switch buffers or call
+  an interactive function like =M-x eval-buffer=.  The plan is to get on
+  with the task with as little friction as possible.  There is no real
+  need for extended interactions with the minibuffer.  Things should
+  happen quickly and seamlessly.  Preferably with few or no extra visual
+  effects and as little fanfare as possible.
+
+  This explains why I use the standard horizontal layout of Icomplete by
+  default.  It does not interfere with my windows because that kind of
+  feedback is not needed for the given interaction.
+
+  However, the horizontal view fails when the list consists of naturally
+  long candidates, such as those returned by =imenu= (see configuration
+  for [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][Imenu (dynamic completion-based buffer navigation)]]).  In those
+  cases we still want a transient interface, but must rely on
+  verticality to make of the nuances between completion candidates.
+
+  With =icomplete-vertical= we can cope with that requirement through a
+  simple toggle that is available on demand.  Though we can enable it
+  presciently on a per-function basis, which is what I normally do for a
+  whole range of commands (search for the =icomplete-vertical-do= macro
+  call, with common cases other than Imenu being to select an entry from
+  the kill-ring or choose a filesystem path among the items in the
+  recentf-list---also see [[#h:5723c4bb-ff6c-449f-bb60-be66fab3f137][section on recentf]]).
+
++ Involved interactions :: These are scenaria where one expects to
+  interact with the list of candidates itself.  There likely is a need
+  to have a view of all the matches as well as a means of running
+  additional commands that are specific to the task and contribute
+  towards a more complex workflow.
+
+  In this light, the standard "Completions" buffer is essential, as well
+  as the bespoke buffer produced by =embark-occur= (refer to the section
+  on [[*Embark (actions for completion candidates)][Embark (actions for completion candidates)]]).  It feels natural to
+  have a sense of all the available matches for those cases where you
+  need to search, say, for some documentation and are probably
+  interested in reading more than one entry (e.g. when you want to
+  configure a new package), as well as potentially perform some other
+  action as part of a longer process of interaction (with or without
+  recursive minibuffers).
+
+  In more concrete terms: search for help with =C-h f=, =C-h v=, =C-h o=.  The
+  Completions buffer will show you what matches your input.  Switch to
+  that buffer (e.g. =prot/focus-minibuffer-or-completions=), place point
+  over an item you are interested in and run a bespoke command for
+  =describe-symbol= for the thing at point (this is what my
+  =prot/describe-symbol-at-point= does, and I bind it to convenient keys).
+  The help buffer will pop up, allowing you to, say, switch to it in
+  order to copy something, then go to a file that is being edited in the
+  other window to iterate on it, and then get back to the Completions
+  buffer for more of the same.  This is also why recursive minibuffers
+  are valuable, as they allow you to keep the current session active
+  while still accessing things like =M-x=.
+
+  As for the "Completions" buffer itself (and "Embark Occur"), I must
+  stress that this is /a buffer/.  It allows you to, for example, write
+  its contents to a regular file (=C-x C-w=).  And with dedicated key maps
+  such as those provided by =embark= or the =completion-list-mode-map=, you
+  can always define context-specific bindings for your bespoke commands
+  (e.g. I use =h= for help, =w= for writing to the kill-ring).  Plus you can
+  always control the placement of a buffer with =display-buffer-alist=
+  (see the section on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
+
+The following table summarises the above:
+
+| contents | transient          | persistent                      |
+|----------+--------------------+---------------------------------|
+| short    | icomplete          | live-completions / embark-occur |
+| long     | icomplete-vertical | live-completions / embark-occur |
+
+Finally, I also have commands that connect the completion-specific
+interface to more general tools, like =ibuffer= and =dired= (=embark= does
+that as well).  So when some involved type of interaction demands extra
+attention, I can always leverage the full power of the wider Emacs
+ecosystem.
 
 * Important configurations that I stopped using
   :PROPERTIES:
