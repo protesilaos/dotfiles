@@ -1716,6 +1716,134 @@ things will stabilise.
               ("j" . prot/embark-insert-exit-all)))
 #+end_src
 
+*** Imenu (dynamic completion-based buffer navigation)
+    :PROPERTIES:
+    :CUSTOM_ID: h:77284937-ad9d-44cc-8a3e-80f6ed9e3def
+    :END:
+
+The =imenu= is a built-in library that builds an index of buffer positions
+pointing to semantically-relevant constructs.  It then displays the list
+through a completion interface.  Selecting an item repositions the point
+there.
+
+This is a great tool for quickly jumping to a position in the buffer.
+Combine it with the sheer power of the completion framework or the
+possibility to further extend it with little helper snippets and you get
+a whole new way of thinking about moving around in a buffer.
+
+By default, =imenu= is designed to not refresh the index it builds,
+offering a "Rescan" option instead.  I find that too conservative for my
+case, opting instead for automatic rescaning.  This has the desirable
+side-effect of removing the manual refresh command from the list.
+
+With =prot/imenu-vertical= I provide much-needed verticality to the list,
+because it typically consists of naturally long candidates that make for
+a poor fit in the horizontal layout of Icomplete.  Notice that it
+configures the =orderless= completion style, while it also relies on
+=icomplete-vertical=.  Review my [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
+
+The =:hook= here will simply scroll the buffer so that the landing
+position of an Imenu interaction becomes the first visible line at the
+top.  I find this to be the easiest way to know where I am.
+
+#+begin_src emacs-lisp
+(use-package imenu
+  :config
+  (setq imenu-use-markers t)
+  (setq imenu-auto-rescan t)
+  (setq imenu-auto-rescan-maxout 600000)
+  (setq imenu-max-item-length 100)
+  (setq imenu-use-popup-menu nil)
+  (setq imenu-eager-completion-buffer t)
+  (setq imenu-space-replacement " ")
+  (setq imenu-level-separator "/")
+
+  (defun prot/imenu-vertical ()
+    "Use a vertical Icomplete layout for `imenu'.
+Also configure the value of `orderless-matching-styles' to avoid
+aggressive fuzzy-style matching for this particular command."
+    (interactive)
+    (let ((orderless-matching-styles    ; make sure to check `orderless'
+           '(orderless-literal
+             orderless-regexp
+             orderless-prefixes)))
+      (icomplete-vertical-do (:height (/ (frame-height) 4))
+        (call-interactively 'imenu))))
+
+  :hook (imenu-after-jump-hook . (lambda () (recenter 0)))
+  :bind ("C-." . prot/imenu-vertical))
+#+end_src
+
+**** Imenu-list (dedicated sidebar)
+     :PROPERTIES:
+     :CUSTOM_ID: h:603d9bb7-7fb1-4943-85b5-99605eadc8f3
+     :END:
+
+While completion for =imenu= is wonderful in its own right, you may still
+need to have a sense of the bigger picture.  With =imenu-list= we can
+place the contents of the current list in a dedicated buffer that sits
+on the right side of the frame.  We may then use that as an index to
+further support us in the task of navigating through the current buffer.
+
+#+begin_src emacs-lisp
+(use-package imenu-list
+  :ensure
+  :defer
+  :config
+  (defun prot/imenu-list-dwim (&optional arg)
+    "Convenience wrapper for `imenu-list'.
+Move between the current buffer and a dedicated window with the
+contents of `imenu'.
+
+The dedicated window is created if it does not exist, while it is
+updated once it is focused again through this command.
+
+With \\[universal-argument] toggle the display of the window."
+    (interactive "P")
+    (if arg
+        (imenu-list-smart-toggle)
+      (with-current-buffer
+          (if (eq major-mode 'imenu-list-major-mode)
+              (pop-to-buffer (other-buffer (current-buffer) t))
+            (imenu-list)))))
+
+  :bind ("C-," . prot/imenu-list-dwim))
+#+end_src
+
+**** Flat imenu index
+     :PROPERTIES:
+     :CUSTOM_ID: h:9be8e9ec-e1f2-477b-92d9-d050aef00d50
+     :END:
+
+This package offers a global and a local minor mode for flattening the
+index of =imenu=.  By default Imenu produces a multi-level index, where
+appropriate.  For example, it will put the heading of this section under
+that of its parent: [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][Imenu (dynamic completion-based buffer navigation)]].
+So to navigate to this point, you need to select the parent and then the
+child path.  Good for a tree view (see [[#h:603d9bb7-7fb1-4943-85b5-99605eadc8f3][Imenu-list (dedicated sidebar)]]).
+But not great for fuzzy-style search through the completion UI, because
+it slows down things considerably, while not offering any typographic or
+layout means of recognising the structure at first sight.
+
+In other words, a multi-level completion interface leaves much to be
+desired.  By enabling the =flimenu-global-mode= we get a flat list for the
+completion-based interaction with =imenu=.  Now we can just search
+directly for any item on the list.  Great!
+
+To make things even better, we can still access the fully fledged tree
+presentation of =imenu-list=, as it operates independently.
+
+Lastly, =flimenu= could also be used as a toggle, by virtue of its local
+minor mode, though I cannot think of a scenario where I would want that,
+given the aforementioned.
+
+#+begin_src emacs-lisp
+(use-package flimenu
+  :ensure
+  :config
+  (flimenu-global-mode 1))
+#+end_src
+
 ** Configurations for—or extensions to—built-in search commands
    :PROPERTIES:
    :CUSTOM_ID: h:67dac9fe-5c15-437d-bb3e-26b293affa45
@@ -3261,6 +3389,7 @@ Now on to the miscellaneous settings:
   (setq org-catch-invisible-edits 'show)
   (setq org-return-follows-link nil)
   (setq org-loop-over-headlines-in-active-region 'start-level)
+  (setq org-imenu-depth 7)
   :bind (("C-c l" . org-store-link)
          :map org-mode-map
          ("<C-return>" . nil)
