@@ -1316,6 +1316,235 @@ make it suitable for a general completion user interface (also read my
          ("C-h o" . prot/live-completions-describe-symbol)))
 #+end_src
 
+*** Embark (actions for completion candidates)
+    :PROPERTIES:
+    :CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
+    :END:
+
+/2020-05-25: In active development.  Things will change./
+
+Oftentimes you want to perform a certain action with the contents of the
+minibuffer's currently matched item.  Emacs has no standard system for
+doing so in a straightforward, efficient fashion.
+
+For several months since I switched to Icomplete in early 2020, I was
+using my own set of functions for acting on completion candidates.  My
+needs were simple: (i) copy the current match to the kill-ring, (ii)
+insert it to the point of the last buffer while keeping the minibuffer
+running, and (iii) insert while also exiting all recursive minibuffers.
+The problem with my approach was that the keys I would use were bound to
+a keymap that was specific to the completion mechanism and so my custom
+actions could not scale well or be context-aware.
+
+This is where =embark= enters the fray (Emacs Minibuffer Actions Rooted in
+Keymaps): to solve the problem of defining extended minibuffer actions
+that scale to match your needs and are aware of the completion category
+you are in.  [[https://github.com/oantolin/embark][The package]] is under active development (as of 2020-05-25),
+so expect things to be in a state of flux for the immediate future (I
+use =:load-path= because I like to check the source code and try to learn
+some Elisp along the way---otherwise you should go with something like
+the =quelpa= package).
+
+With Embark you can go with a simple solution that covers only a handful
+of actions, or develop a very specific and elaborate typology that
+offers you maximum flexibility and expressive power.  Whatever you do,
+the code can easily be adapted to match your needs.  This is because the
+central idea of Embark is that such actions can be bound to specific
+keymaps and these can then be layered as necessary (keymap layering is
+standard in Emacs): so a general keymap can hold all your common
+actions, while several particular keymaps may then be dedicated to
+specific types of commands grouped by completion category.
+
+For all available default actions, check the [[https://github.com/oantolin/embark/wiki/Default-Actions][project's wiki page]], or
+just browse the source code (I prefer the latter and it can be done
+easily with =M-x find-library=).  This is what it looks like:
+
+#+begin_example
+(defvar embark-general-map
+  (embark-keymap
+   '(("i" . embark-insert)
+     ("w" . embark-save)
+     ("C-g" . embark-cancel)
+     ("C-u" . universal-argument))
+   universal-argument-map))
+#+end_example
+
+The developer of this package is none other than Omar Antolín Camarena.
+You are already familiar with his work from previous sections of this
+document that include =orderless=, =icomplete-vertical=, =live-completions=,
+and various other nice snippets of Elisp (I always provide references in
+context).  The common denominator of Omar's contributions is that they
+work with standard Emacs mechanisms, so you have the liberty to mix and
+match modules from core Emacs, your homegrown functions, and third-party
+packages, to suit your preferences and expected workflows, without ever
+committing to an all-encompassing framework.
+
+From my part, I will refrain from adding too many actions at this early
+stage, until I have a better idea of what is provided by default and how
+things will stabilise.
+
+Also check my [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]] to see how the buffer for
+"Embark Occur" is positioned as part of the general layout.
+
+#+begin_src emacs-lisp
+(use-package embark
+  :load-path "~/.emacs.d/prot-dev/embark/" ; in development
+  :config
+  ;; This uses a bespoke face from my themes
+  (setq embark-indicator (propertize "Act" 'face 'modus-theme-refine-magenta))
+
+  (defun prot/embark-insert-exit ()
+    "Like `embark-insert' but exits current recursive minibuffer."
+    (interactive)
+    (with-minibuffer-selected-window (insert (embark-target)))
+    (abort-recursive-edit))
+
+  (defun prot/embark-insert-exit-all ()
+    "Like `embark-insert' but exits all recursive minibuffers."
+    (interactive)
+    (with-minibuffer-selected-window (insert (embark-target)))
+    (top-level))
+
+  :bind (:map minibuffer-local-completion-map
+              ("M-o" . embark-act)
+              ("C-M-o". embark-export)  ; uses `embark-occur' as a fallback
+              :map completion-list-mode-map
+              ("M-o" . embark-act)
+              :map embark-occur-mode-map
+              ("M-o" . embark-act)
+              :map embark-general-map
+              ("m" . prot/embark-insert-exit)
+              ("j" . prot/embark-insert-exit-all)))
+#+end_src
+
+*** Imenu (dynamic completion-based buffer navigation)
+    :PROPERTIES:
+    :CUSTOM_ID: h:77284937-ad9d-44cc-8a3e-80f6ed9e3def
+    :END:
+
+The =imenu= is a built-in library that builds an index of buffer positions
+pointing to semantically-relevant constructs.  It then displays the list
+through a completion interface.  Selecting an item repositions the point
+there.
+
+This is a great tool for quickly jumping to a position in the buffer.
+Combine it with the sheer power of the completion framework or the
+possibility to further extend it with little helper snippets and you get
+a whole new way of thinking about moving around in a buffer.
+
+By default, =imenu= is designed to not refresh the index it builds,
+offering a "Rescan" option instead.  I find that too conservative for my
+case, opting instead for automatic rescaning.  This has the desirable
+side-effect of removing the manual refresh command from the list.
+
+With =prot/imenu-vertical= I provide much-needed verticality to the list,
+because it typically consists of naturally long candidates that make for
+a poor fit in the horizontal layout of Icomplete.  Notice that it
+configures the =orderless= completion style, while it also relies on
+=icomplete-vertical=.  Review my [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
+
+The =:hook= here will simply scroll the buffer so that the landing
+position of an Imenu interaction becomes the first visible line at the
+top.  I find this to be the easiest way to know where I am.
+
+#+begin_src emacs-lisp
+(use-package imenu
+  :config
+  (setq imenu-use-markers t)
+  (setq imenu-auto-rescan t)
+  (setq imenu-auto-rescan-maxout 600000)
+  (setq imenu-max-item-length 100)
+  (setq imenu-use-popup-menu nil)
+  (setq imenu-eager-completion-buffer t)
+  (setq imenu-space-replacement " ")
+  (setq imenu-level-separator "/")
+
+  (defun prot/imenu-vertical ()
+    "Use a vertical Icomplete layout for `imenu'.
+Also configure the value of `orderless-matching-styles' to avoid
+aggressive fuzzy-style matching for this particular command."
+    (interactive)
+    (let ((orderless-matching-styles    ; make sure to check `orderless'
+           '(orderless-literal
+             orderless-regexp
+             orderless-prefixes)))
+      (icomplete-vertical-do (:height (/ (frame-height) 4))
+        (call-interactively 'imenu))))
+
+  :hook (imenu-after-jump-hook . (lambda () (recenter 0)))
+  :bind ("C-." . prot/imenu-vertical))
+#+end_src
+
+**** Imenu-list (dedicated sidebar)
+     :PROPERTIES:
+     :CUSTOM_ID: h:603d9bb7-7fb1-4943-85b5-99605eadc8f3
+     :END:
+
+While completion for =imenu= is wonderful in its own right, you may still
+need to have a sense of the bigger picture.  With =imenu-list= we can
+place the contents of the current list in a dedicated buffer that sits
+on the right side of the frame.  We may then use that as an index to
+further support us in the task of navigating through the current buffer.
+
+#+begin_src emacs-lisp
+(use-package imenu-list
+  :ensure
+  :defer
+  :config
+  (defun prot/imenu-list-dwim (&optional arg)
+    "Convenience wrapper for `imenu-list'.
+Move between the current buffer and a dedicated window with the
+contents of `imenu'.
+
+The dedicated window is created if it does not exist, while it is
+updated once it is focused again through this command.
+
+With \\[universal-argument] toggle the display of the window."
+    (interactive "P")
+    (if arg
+        (imenu-list-smart-toggle)
+      (with-current-buffer
+          (if (eq major-mode 'imenu-list-major-mode)
+              (pop-to-buffer (other-buffer (current-buffer) t))
+            (imenu-list)))))
+
+  :bind ("C-," . prot/imenu-list-dwim))
+#+end_src
+
+**** Flat imenu index
+     :PROPERTIES:
+     :CUSTOM_ID: h:9be8e9ec-e1f2-477b-92d9-d050aef00d50
+     :END:
+
+This package offers a global and a local minor mode for flattening the
+index of =imenu=.  By default Imenu produces a multi-level index, where
+appropriate.  For example, it will put the heading of this section under
+that of its parent: [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][Imenu (dynamic completion-based buffer navigation)]].
+So to navigate to this point, you need to select the parent and then the
+child path.  Good for a tree view (see [[#h:603d9bb7-7fb1-4943-85b5-99605eadc8f3][Imenu-list (dedicated sidebar)]]).
+But not great for fuzzy-style search through the completion UI, because
+it slows down things considerably, while not offering any typographic or
+layout means of recognising the structure at first sight.
+
+In other words, a multi-level completion interface leaves much to be
+desired.  By enabling the =flimenu-global-mode= we get a flat list for the
+completion-based interaction with =imenu=.  Now we can just search
+directly for any item on the list.  Great!
+
+To make things even better, we can still access the fully fledged tree
+presentation of =imenu-list=, as it operates independently.
+
+Lastly, =flimenu= could also be used as a toggle, by virtue of its local
+minor mode, though I cannot think of a scenario where I would want that,
+given the aforementioned.
+
+#+begin_src emacs-lisp
+(use-package flimenu
+  :ensure
+  :config
+  (flimenu-global-mode 1))
+#+end_src
+
 *** Completion for projects and directory trees
     :PROPERTIES:
     :CUSTOM_ID: h:7862f39e-aed0-4d02-9f1e-60c4601a9734
@@ -1563,228 +1792,6 @@ position of the cursor after the skeleton has been inserted.
     "" 'protesilaos-gitlab-skeleton)
   :hook ((text-mode-hook . abbrev-mode)
          (git-commit-mode-hook . abbrev-mode)))
-#+end_src
-
-*** Embark (actions for completion candidates)
-    :PROPERTIES:
-    :CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
-    :END:
-
-/2020-05-25: In active development.  Things will change./
-
-Oftentimes you want to perform a certain action with the contents of the
-minibuffer's currently matched item.  Emacs has no standard system for
-doing so in a straightforward, efficient fashion.
-
-For several months since I switched to Icomplete in early 2020, I was
-using my own set of functions for acting on completion candidates.  My
-needs were simple: (i) copy the current match to the kill-ring, (ii)
-insert it to the point of the last buffer while keeping the minibuffer
-running, and (iii) insert while also exiting all recursive minibuffers.
-The problem with my approach was that the keys I would use were bound to
-a keymap that was specific to the completion mechanism and so my custom
-actions could not scale well or be context-aware.
-
-This is where =embark= enters the fray (Emacs Minibuffer Actions Rooted in
-Keymaps): to solve the problem of defining extended minibuffer actions
-that scale to match your needs and are aware of the completion category
-you are in.  [[https://github.com/oantolin/embark][The package]] is under active development (as of 2020-05-25),
-so expect things to be in a state of flux for the immediate future (I
-use =:load-path= because I like to check the source code and try to learn
-some Elisp along the way---otherwise you should go with something like
-the =quelpa= package).
-
-With Embark you can go with a simple solution that covers only a handful
-of actions, or develop a very specific and elaborate typology that
-offers you maximum flexibility and expressive power.  Whatever you do,
-the code can easily be adapted to match your needs.  This is because the
-central idea of Embark is that such actions can be bound to specific
-keymaps and these can then be layered as necessary (keymap layering is
-standard in Emacs): so a general keymap can hold all your common
-actions, while several particular keymaps may then be dedicated to
-specific types of commands grouped by completion category.
-
-For all available default actions, check the [[https://github.com/oantolin/embark/wiki/Default-Actions][project's wiki page]], or
-just browse the source code.  This is what it looks like:
-
-#+begin_example
-(defvar embark-general-map
-  (embark-keymap
-   '(("i" . embark-insert)
-     ("w" . embark-save)
-     ("C-g" . embark-cancel)
-     ("C-u" . universal-argument))
-   universal-argument-map))
-#+end_example
-
-The developer of this package is none other than Omar Antolín Camarena.
-You are already familiar with his work from previous sections of this
-document that include =orderless=, =icomplete-vertical=, =live-completions=,
-and various other nice snippets of Elisp (I always provide references in
-context).  The common denominator of Omar's contributions is that they
-work with standard Emacs mechanisms, so you have the liberty to mix and
-match modules from core Emacs, your homegrown functions, and third-party
-packages, to suit your preferences and expected workflows, without ever
-committing to an all-encompassing framework.
-
-From my part, I will refrain from adding too many actions at this early
-stage, until I have a better idea of what is provided by default and how
-things will stabilise.
-
-#+begin_src emacs-lisp
-;; TODO pending review
-(use-package embark
-  :load-path "~/.emacs.d/prot-dev/embark/" ; in development
-  :config
-  (setq embark-indicator (propertize "Act" 'face 'modus-theme-refine-magenta))
-
-  (defun prot/embark-insert-exit ()
-    "Like `embark-insert' but exits current recursive minibuffer."
-    (interactive)
-    (with-minibuffer-selected-window (insert (embark-target)))
-    (abort-recursive-edit))
-
-  (defun prot/embark-insert-exit-all ()
-    "Like `embark-insert' but exits all recursive minibuffers."
-    (interactive)
-    (with-minibuffer-selected-window (insert (embark-target)))
-    (top-level))
-
-  :bind (:map minibuffer-local-completion-map
-              ("M-o" . embark-act)
-              :map completion-list-mode-map
-              ("o" . embark-act)     ; *Completions* buffer is read-only
-              :map embark-general-map
-              ("m" . prot/embark-insert-exit)
-              ("j" . prot/embark-insert-exit-all)))
-#+end_src
-
-*** Imenu (dynamic completion-based buffer navigation)
-    :PROPERTIES:
-    :CUSTOM_ID: h:77284937-ad9d-44cc-8a3e-80f6ed9e3def
-    :END:
-
-The =imenu= is a built-in library that builds an index of buffer positions
-pointing to semantically-relevant constructs.  It then displays the list
-through a completion interface.  Selecting an item repositions the point
-there.
-
-This is a great tool for quickly jumping to a position in the buffer.
-Combine it with the sheer power of the completion framework or the
-possibility to further extend it with little helper snippets and you get
-a whole new way of thinking about moving around in a buffer.
-
-By default, =imenu= is designed to not refresh the index it builds,
-offering a "Rescan" option instead.  I find that too conservative for my
-case, opting instead for automatic rescaning.  This has the desirable
-side-effect of removing the manual refresh command from the list.
-
-With =prot/imenu-vertical= I provide much-needed verticality to the list,
-because it typically consists of naturally long candidates that make for
-a poor fit in the horizontal layout of Icomplete.  Notice that it
-configures the =orderless= completion style, while it also relies on
-=icomplete-vertical=.  Review my [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
-
-The =:hook= here will simply scroll the buffer so that the landing
-position of an Imenu interaction becomes the first visible line at the
-top.  I find this to be the easiest way to know where I am.
-
-#+begin_src emacs-lisp
-(use-package imenu
-  :config
-  (setq imenu-use-markers t)
-  (setq imenu-auto-rescan t)
-  (setq imenu-auto-rescan-maxout 600000)
-  (setq imenu-max-item-length 100)
-  (setq imenu-use-popup-menu nil)
-  (setq imenu-eager-completion-buffer t)
-  (setq imenu-space-replacement " ")
-  (setq imenu-level-separator "/")
-
-  (defun prot/imenu-vertical ()
-    "Use a vertical Icomplete layout for `imenu'.
-Also configure the value of `orderless-matching-styles' to avoid
-aggressive fuzzy-style matching for this particular command."
-    (interactive)
-    (let ((orderless-matching-styles    ; make sure to check `orderless'
-           '(orderless-literal
-             orderless-regexp
-             orderless-prefixes)))
-      (icomplete-vertical-do (:height (/ (frame-height) 4))
-        (call-interactively 'imenu))))
-
-  :hook (imenu-after-jump-hook . (lambda () (recenter 0)))
-  :bind ("C-." . prot/imenu-vertical))
-#+end_src
-
-**** Imenu-list (dedicated sidebar)
-     :PROPERTIES:
-     :CUSTOM_ID: h:603d9bb7-7fb1-4943-85b5-99605eadc8f3
-     :END:
-
-While completion for =imenu= is wonderful in its own right, you may still
-need to have a sense of the bigger picture.  With =imenu-list= we can
-place the contents of the current list in a dedicated buffer that sits
-on the right side of the frame.  We may then use that as an index to
-further support us in the task of navigating through the current buffer.
-
-#+begin_src emacs-lisp
-(use-package imenu-list
-  :ensure
-  :defer
-  :config
-  (defun prot/imenu-list-dwim (&optional arg)
-    "Convenience wrapper for `imenu-list'.
-Move between the current buffer and a dedicated window with the
-contents of `imenu'.
-
-The dedicated window is created if it does not exist, while it is
-updated once it is focused again through this command.
-
-With \\[universal-argument] toggle the display of the window."
-    (interactive "P")
-    (if arg
-        (imenu-list-smart-toggle)
-      (with-current-buffer
-          (if (eq major-mode 'imenu-list-major-mode)
-              (pop-to-buffer (other-buffer (current-buffer) t))
-            (imenu-list)))))
-
-  :bind ("C-," . prot/imenu-list-dwim))
-#+end_src
-
-**** Flat imenu index
-     :PROPERTIES:
-     :CUSTOM_ID: h:9be8e9ec-e1f2-477b-92d9-d050aef00d50
-     :END:
-
-This package offers a global and a local minor mode for flattening the
-index of =imenu=.  By default Imenu produces a multi-level index, where
-appropriate.  For example, it will put the heading of this section under
-that of its parent: [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][Imenu (dynamic completion-based buffer navigation)]].
-So to navigate to this point, you need to select the parent and then the
-child path.  Good for a tree view (see [[#h:603d9bb7-7fb1-4943-85b5-99605eadc8f3][Imenu-list (dedicated sidebar)]]).
-But not great for fuzzy-style search through the completion UI, because
-it slows down things considerably, while not offering any typographic or
-layout means of recognising the structure at first sight.
-
-In other words, a multi-level completion interface leaves much to be
-desired.  By enabling the =flimenu-global-mode= we get a flat list for the
-completion-based interaction with =imenu=.  Now we can just search
-directly for any item on the list.  Great!
-
-To make things even better, we can still access the fully fledged tree
-presentation of =imenu-list=, as it operates independently.
-
-Lastly, =flimenu= could also be used as a toggle, by virtue of its local
-minor mode, though I cannot think of a scenario where I would want that,
-given the aforementioned.
-
-#+begin_src emacs-lisp
-(use-package flimenu
-  :ensure
-  :config
-  (flimenu-global-mode 1))
 #+end_src
 
 ** Configurations for—or extensions to—built-in search commands
