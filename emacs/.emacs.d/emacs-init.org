@@ -129,6 +129,9 @@ things with greater precision.  Its code is as follows:
 ;; Do not initialise the package manager.  This is done in `init.el'.
 (setq package-enable-at-startup nil)
 
+;; Allow loading from the package cache.
+(setq package-quickstart t)
+
 ;; Do not resize the frame at this early stage.
 (setq frame-inhibit-implied-resize t)
 #+end_example
@@ -317,7 +320,7 @@ along with this file.  If not, see <http://www.gnu.org/licenses/>.
 This section contains the relatively few configurations that are needed
 prior to the setup of everything else.
 
-** Always rebuild init
+** Always rebuild init and refresh package cache
    :PROPERTIES:
    :CUSTOM_ID: h:b343378b-d3ec-4c90-8117-6cf92abee45b
    :END:
@@ -333,7 +336,9 @@ instruct Emacs to terminate its process.  This ensures that edits I made
 to =emacs-init.org= are parsed into a new =emacs-init.el= at the next
 startup.
 
-For live evaluation of elisp, we have =C-x C-e= (=eval-last-elisp=).
+Similarly, I want to maintain an up-to-date cache with the installed
+packages, which can be used to speed up boot times, /ceteris paribus/.
+This "quickstart" method is part of Emacs 27+.
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -343,7 +348,8 @@ For live evaluation of elisp, we have =C-x C-e= (=eval-last-elisp=).
     (let ((configs "~/.emacs.d/emacs-init.el"))
       (when configs
         (delete-file configs))))
-  :hook (kill-emacs-hook . prot/delete-emacs-init))
+  :hook ((kill-emacs-hook . prot/delete-emacs-init)
+         (kill-emacs-hook . package-quickstart-refresh)))
 #+end_src
 
 ** Remove modeline "lighters"
