@@ -1416,6 +1416,7 @@ Also check my [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic 
               ("M-o" . embark-act)
               :map embark-occur-mode-map
               ("M-o" . embark-act)
+              ("C-M-o" . embark-occur-toggle-view)
               :map embark-general-map
               ("m" . prot/embark-insert-exit)
               ("j" . prot/embark-insert-exit-all)))
@@ -2780,7 +2781,6 @@ renames it appropriately for the sake of easier discovery.
 #+begin_src emacs-lisp
 (use-package scratch
   :ensure
-  :commands scratch
   :config
   (defun prot/scratch-buffer-setup ()
     "Add contents to `scratch' buffer and name it accordingly."
@@ -2793,7 +2793,8 @@ renames it appropriately for the sake of easier discovery.
           (comment-region (point-at-bol) (point-at-eol)))
         (next-line 2))
       (rename-buffer (concat "*Scratch for " mode "*") t)))
-  :hook (scratch-create-buffer-hook . prot/scratch-buffer-setup))
+  :hook (scratch-create-buffer-hook . prot/scratch-buffer-setup)
+  :bind ("C-c s" . scratch))
 #+end_src
 
 ** Window configuration
