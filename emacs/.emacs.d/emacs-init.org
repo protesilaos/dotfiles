@@ -3330,13 +3330,6 @@ Now on to the miscellaneous settings:
   template you must now use =C-c C-,=.
 + The =return= key should never follow a link because I sometimes call it
   by accident.  Use =C-c C-o= instead.
-+ The =org-store-link= is one of the nicest additions.  Use it to store a
-  direct link to the heading you are currently under.  Then you can
-  invoke =C-c C-l= with or without an active region, to create a link to
-  that location (when the region is active, its text will be used for
-  the link, subject to confirmation and further editing).  This is how I
-  create the various internal links that point to other parts of this
-  document.
 + With =org-loop-over-headlines-in-active-region= we can perform actions
   such as tagging and scheduling on the items within the active region.
   I configure it to only apply to headings of the same level, in order
@@ -3402,12 +3395,49 @@ Now on to the miscellaneous settings:
   (setq org-return-follows-link nil)
   (setq org-loop-over-headlines-in-active-region 'start-level)
   (setq org-imenu-depth 7)
-  :bind (("C-c l" . org-store-link)
-         :map org-mode-map
+  :bind (:map org-mode-map
          ("<C-return>" . nil)
          ("<C-S-return>" . nil)))
 #+end_src
 
+*** Org links
+    :PROPERTIES:
+    :CUSTOM_ID: h:50d5527d-a4b5-4d36-aa43-8abb21c07927
+    :END:
+
+The =org-store-link= is one of the commands I use the most, as it allows
+me to, inter alia, connect the various sections of this document.  Use
+it to store a direct link to the heading you are currently under (also
+see [[#h:031f7dbf-19e4-4ddf-a3d3-f648261412f6][Consistent Org heading IDs (and anchor tags)]]).
+
+There are several ways to insert such links.  With =C-c C-l= (which calls
+=org-insert-link=) you will be prompted to select a stored link from the
+link.  It will be inserted at point, using the right markup, but will
+first ask you for a description text.  Otherwise you can invoke =C-c C-l=
+with an active region, to create a link to that location with the
+selected text becoming the description.  Otherwise you can just call
+=org-insert-last-stored-link= to skip the interactive process and just
+insert the last link.
+
+In addition to these, =org-insert-link= can be used to create references
+on demand.  Say you have a URL on the kill-ring: =C-c C-l=, then =C-y=
+followed by =RET= to confirm your input.  Complete the process with a
+description and you are good to go.
+
+#+begin_src emacs-lisp
+(use-package ol
+  :config
+  (setq org-link-keep-stored-after-insertion t)
+  :bind (:map org-mode-map
+              ("C-c l" . org-store-link)
+              ("C-c S-l" . org-toggle-link-display)
+              ("C-c C-S-l" . org-insert-last-stored-link)))
+#+end_src
+
+**** TODO prot/org-store-link-dwim
+     :PROPERTIES:
+     :CUSTOM_ID: h:42c9e329-8a07-4947-90f8-f10c2d1be574
+     :END:
 *** Org-capture templates
     :PROPERTIES:
     :CUSTOM_ID: h:7b88b89a-6eb3-4da3-a9fe-0e447300a250
