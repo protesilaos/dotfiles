@@ -1583,37 +1583,69 @@ given the aforementioned.
     :CUSTOM_ID: h:7862f39e-aed0-4d02-9f1e-60c4601a9734
     :END:
 
-These are a set of commands for interacting with version-controlled
-directories, aka "projects", or directory trees in general.  With these
-I have no need for the third-party "Projectile" package.
+These are a set of /generic/ commands for querying version-controlled
+directories, aka "projects", or directory trees in general.  They do not
+cover every type of interaction with projects or directories, but only
+those that are not specific to other tools, such as =dired=, =ibuffer=,
+=imenu=.
 
-Some of the functions furnished herein are built into Emacs, while
-others are defined by me to satisfy my particular needs.  Whatever the
-case, they all presuppose a completion framework, so make sure to check
-the previous section on [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]] in its
-entirety.
+The idea with the commands in this section is to quickly find a file or
+a directory recursively.  Some of the functions furnished herein are
+built into Emacs, while others are helper tools defined by me to satisfy
+my particular needs.  Whatever the case, they all presuppose a
+completion framework with its extras, so make sure to check the previous
+section on [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]] in its entirety.
 
 Concerning the design of these key bindings, they are consistent with
-all "advanced search methods" (e.g. the default =M-s o= for =occur=).
+all "advanced search methods" (e.g. the default =M-s o= for =occur=).  If I
+ever identify a conflict, such as =M-s f= in =dired-mode-map=, I disable
+that function altogether (or remap its key if the function it calls is
+useful overall).
 
-Note that =project-find-regexp= produces an =xref= buffer from where one can
-run a =query-replace= on the results by hitting =r=.  If the intention is to
-make complex changes, consider =project-query-replace-regexp= instead.
-There also are other techniques which are project-agnostic, such as
-=multi-occur=, =ibuffer-do-occur=, =dired-do-find-regexp-and-replace=.  Read
-their respective docs (with =C-h f FUNCTION=).
+Note that the built-in =project-find-regexp= (which I decided not to
+integrate in my setup) produces an =xref= buffer from where one can run a
+=query-replace= on the results by hitting =r=.  If the intention is to make
+complex changes, consider =project-query-replace-regexp= instead.  There
+also are other techniques which are project-agnostic and more flexible
+overall, such as =dired-do-find-regexp-and-replace=, =multi-occur=, and
+=ibuffer-do-occur=.  Read their respective docs with =C-h f FUNCTION=.
 
-Also see my [[*ripgrep (rg.el)][configurations for ripgrep]].
+Also see my [[#h:31622bf2-526b-4426-9fda-c0fc59ac8f4b][configurations for rg.el]] as well as [[#h:06290f9c-491c-45b2-b213-0248f890c83d][those for Ibuffer]].  They
+are conceptually similar to the commands defined right below.
 
 #+begin_src emacs-lisp
 (use-package project
   :after (minibuffer icomplete icomplete-vertical) ; read those
   :config
-  (defun prot/project-find-file ()
-    "Find a file that belongs to the current project."
-    (interactive)
-    (icomplete-vertical-do ()
-      (project-find-file)))
+  (defun prot/project-or-dir-find-file (&optional arg)
+    "Find file by name that belongs to the current project or dir.
+With \\[universal-argument] match files by contents.  This
+requires the command-line executable called 'rg' or 'ripgrep'."
+    (interactive "P")
+    (let* ((project (vc-root-dir))
+           (default-directory (file-name-directory
+                               (or (locate-dominating-file "." ".git" )
+                                   default-directory))))
+      (if arg
+          (let* ((regexp (read-regexp "Files matching regexp: "))
+                 (default-directory (file-name-directory
+                                     (locate-dominating-file "." ".git" )))
+                 (results (process-lines "rg" "-l" regexp)))
+            (find-file
+             (icomplete-vertical-do ()
+               (completing-read (concat
+                                 "Files matching "
+                                 (propertize regexp 'face 'success)
+                                 (format " (%s)" (length results))
+                                 ": ")
+                                results nil t))))
+        (let* ((filenames-all (directory-files-recursively default-directory ".*" nil t))
+               (filenames (cl-remove-if (lambda (x)
+                                          (string-match-p "\\.git" x))
+                                        filenames-all)))
+          (icomplete-vertical-do ()
+            (find-file
+             (completing-read "Find file recursively: " filenames nil t)))))))
 
   (declare-function cl-remove-if "cl-seq")
 
@@ -1635,17 +1667,7 @@ wisely or prepare to use \\[keyboard-quit]."
            (cands (cl-remove-if (lambda (x) (string-match-p "\\.git" x)) subdirs)))
       (icomplete-vertical-do ()
         (dired
-         (completing-read "Find sub-directory: " cands nil t dir)))))
-
-  (defun prot/find-file-from-dir-recursive ()
-    "Find file recursively, starting from present dir."
-    (interactive)
-    (let* ((dir default-directory)
-           (files (directory-files-recursively dir ".*" nil t))
-           (cands (cl-remove-if (lambda (x) (string-match-p "\\.git" x)) files)))
-      (icomplete-vertical-do ()
-        (find-file
-         (completing-read "Find file recursively: " cands nil t dir)))))
+         (completing-read "Find sub-directory: " cands nil t)))))
 
   (defun prot/find-project ()
     "Switch to sub-directory at ~/Git/Projects.
@@ -1660,11 +1682,10 @@ inside a given location."
            (projects (mapcar 'abbreviate-file-name project-list)))
       (icomplete-vertical-do ()
         (dired
-         (completing-read "Find project: " projects nil t path)))))
+         (completing-read "Find project: " projects nil t)))))
 
   :bind (("M-s p" . prot/find-project)
-         ("M-s f" . prot/project-find-file)
-         ("M-s z" . prot/find-file-from-dir-recursive)
+         ("M-s f" . prot/project-or-dir-find-file)
          ("M-s d" . prot/project-or-dir-find-subdirectory-recursive)
          ("M-s l" . find-library)
          ("M-s C-M-%" . project-query-replace-regexp)))
