@@ -1325,7 +1325,7 @@ make it suitable for a general completion user interface (also read my
     :CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
     :END:
 
-/2020-05-25: In active development.  Things will change./
+/2020-05-28: In active development.  Things will change considerably./
 
 Oftentimes you want to perform a certain action with the contents of the
 minibuffer's currently matched item.  Emacs has no standard system for
@@ -1421,6 +1421,34 @@ Also check my [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic 
               ("j" . prot/embark-insert-exit-all)))
 #+end_src
 
+**** TODO Complete review of Embark package declaration [0/5]
+     :PROPERTIES:
+     :CUSTOM_ID: h:5042bfab-64b4-4db2-9821-128e0d099bdf
+     :END:
+***** TODO Ensure embark-occur works with my custom file-related commands
+      :PROPERTIES:
+      :CUSTOM_ID: h:91e23a92-d29a-47a9-9ef3-304029519cbb
+      :END:
+***** TODO Review embark-occur buffer display repositioning
+      :PROPERTIES:
+      :CUSTOM_ID: h:99fc2c2a-7729-4e5e-a9c1-d07e8f405b07
+      :END:
+***** TODO Explore possibility for dedicated windows of embark-occur (dired)
+      :PROPERTIES:
+      :CUSTOM_ID: h:ea5dfb98-6fe6-4667-8ecd-ae83ac7317c5
+      :END:
+***** TODO Embark actions for imenu, especially for Org buffers
+      :PROPERTIES:
+      :CUSTOM_ID: h:64cbb516-8223-4d96-ba09-3c24d06916b2
+      :END:
+***** TODO Check all key maps
+      :PROPERTIES:
+      :CUSTOM_ID: h:ce4d183f-dd99-4b2f-ae39-0f0f870c8700
+      :END:
+***** TODO Update the docs
+      :PROPERTIES:
+      :CUSTOM_ID: h:c0a248df-6c90-490c-843a-33114c115ec6
+      :END:
 *** Imenu (dynamic completion-based buffer navigation)
     :PROPERTIES:
     :CUSTOM_ID: h:77284937-ad9d-44cc-8a3e-80f6ed9e3def
@@ -2279,18 +2307,22 @@ when applied, is basically an educated guess of what the user would want
 to do in the current context, given that they are not searching through
 their previous actions.
 
-**** TODO front-end for `fd' executable
+**** TODO extend core Dired [0/3]
      :PROPERTIES:
-     :CUSTOM_ID: h:00db9952-8a32-4142-8f62-dc275481e5a6
+     :CUSTOM_ID: h:f351058c-ea25-4ec3-88ce-2df6757fc193
      :END:
-**** TODO better handling of `xdg-open'
-     :PROPERTIES:
-     :CUSTOM_ID: h:b622cd06-14e6-4bdf-8730-b1a659591d4a
-     :END:
-**** TODO combine arbitrary dirs with selection
-     :PROPERTIES:
-     :CUSTOM_ID: h:bac59cd7-af79-43f5-89e4-520080817a61
-     :END:
+***** TODO front-end for `fd' executable
+      :PROPERTIES:
+      :CUSTOM_ID: h:00db9952-8a32-4142-8f62-dc275481e5a6
+      :END:
+***** TODO better handling of `xdg-open'
+      :PROPERTIES:
+      :CUSTOM_ID: h:b622cd06-14e6-4bdf-8730-b1a659591d4a
+      :END:
+***** TODO combine arbitrary dirs with selection
+      :PROPERTIES:
+      :CUSTOM_ID: h:bac59cd7-af79-43f5-89e4-520080817a61
+      :END:
 *** Narrowed dired
     :PROPERTIES:
     :CUSTOM_ID: h:affb6142-6216-43b6-9d66-e7b18d65e79e
@@ -3610,7 +3642,7 @@ demanding workflows.
       :PROPERTIES:
       :CUSTOM_ID: h:88d804f6-0e3f-44c8-9218-585378d04f12
       :END:
-*** Consistent heading IDs (and anchor tags)
+*** Consistent Org heading IDs (and anchor tags)
     :PROPERTIES:
     :CUSTOM_ID: h:031f7dbf-19e4-4ddf-a3d3-f648261412f6
     :END:
