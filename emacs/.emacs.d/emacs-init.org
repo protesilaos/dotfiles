@@ -868,7 +868,7 @@ Now some comments about my implementation:
   next to the minibuffer prompt if a recursive edit is in progress.
 + *UPDATE 2020-05-16:* /Deprecated in favour of/ the new "embark" package,
   though the functionality is exactly the same from an end-user
-  perspective (see [[#h:e97988bc-fd77-4dca-b74a-0897087624bd][Minibuffer actions for completion candidates]]).
+  perspective (see [[#h:e97988bc-fd77-4dca-b74a-0897087624bd][Embark (actions for completion candidates)]]).
   *ORIGINAL:* My =prot/complete-kill-or-insert-candidate= is a simple yet
   effective tool that I bind to three key chords.  With =M-o w= you copy
   the current candidate to the kill ring and continue with the
@@ -970,7 +970,10 @@ The continuous switch is essentially the same as running
 succession."
     (interactive)
     (let* ((mini (active-minibuffer-window))
-           (completions (get-buffer-window "*Completions*")))
+           ;; This could be hardened a bit, but I am okay with it.
+           (completions (or (get-buffer-window "*Completions*")
+                            (get-buffer-window "*Embark Occur*")
+                            (get-buffer-window "*Embark Live Occur*"))))
       (cond ((and mini
                   (not (minibufferp)))
              (select-window mini nil))
@@ -999,6 +1002,7 @@ instead."
               (select-window help)
             (select-window (get-mru-window)))))))
 
+  ;; This will be deprecated in favour of the `embark' package
   (defun prot/completions-kill-save-symbol ()
     "Add symbol-at-point to the kill ring.
 
@@ -1269,95 +1273,36 @@ normally would when calling `yank' followed by `yank-pop'."
          ("C-v" . icomplete-vertical-toggle)))
 #+end_src
 
-*** Live update of "completions" buffer
-    :PROPERTIES:
-    :CUSTOM_ID: h:e930a567-989a-4aa1-99a1-eaae6eb002dd
-    :END:
-
-This is another nice contribution under development by the
-ever-resourceful Omar Antolín Camarena (see previous sections on
-[[#h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1][Icomplete vertical mode]] and the [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Orderless completion style]]).  It will
-automatically pop up the "Completions" buffer and continuously update as
-you type in your search.  As with =icomplete-vertical=, the package
-provides a macro that we can use to enable this behaviour on a
-per-function basis.  This is what I always want.
-
-To my mind the =live-completions= package covers a narrow yet imminently
-valuable niche: it removes the need for manually displaying and then
-updating the Completions buffer (such as with the default =?= from inside
-the minibuffer).  Of course, there is more to this package, which could
-make it suitable for a general completion user interface (also read my
-[[#h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc][Why keep many completion UIs? (typology of completion interfaces)]]).
-
-#+begin_src emacs-lisp
-(use-package live-completions
-  :load-path "~/.emacs.d/prot-dev/live-completions/"
-  :after minibuffer                    ; make sure to check that as well
-  :config
-  (setq live-completions-sort-order 'cycle)
-
-  (defun prot/live-completions-describe-function ()
-    "Enable `live-completions-do' for `describe-function'."
-    (interactive)
-    (live-completions-do (:height (/ (frame-height) 3))
-      (call-interactively 'describe-function)))
-
-  (defun prot/live-completions-describe-variable ()
-    "Enable `live-completions-do' for `describe-variable'."
-    (interactive)
-    (live-completions-do (:height (/ (frame-height) 3))
-      (call-interactively 'describe-variable)))
-
-  (defun prot/live-completions-describe-symbol ()
-    "Enable `live-completions-do' for `describe-symbol'."
-    (interactive)
-    (live-completions-do (:height (/ (frame-height) 3))
-      (call-interactively 'describe-symbol)))
-
-  (live-completions-mode -1)
-  :bind (("C-h f" . prot/live-completions-describe-function)
-         ("C-h v" . prot/live-completions-describe-variable)
-         ("C-h o" . prot/live-completions-describe-symbol)))
-#+end_src
-
 *** Embark (actions for completion candidates)
     :PROPERTIES:
     :CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
     :END:
 
-/2020-05-28: In active development.  Things will change considerably./
+/2020-05-28: In active development.  Things are stabilising but may still
+change considerably./
 
-Oftentimes you want to perform a certain action with the contents of the
-minibuffer's currently matched item.  Emacs has no standard system for
-doing so in a straightforward, efficient fashion.
+Embark (Emacs Minibuffer Actions Rooted in Keymaps) is another great
+contribution by Omar Antolín Camarena.  At its core, this tool allows
+you to perform actions on the completion framework's list of candidates.
+These can be commands like saving the matching item to the kill ring,
+inserting it to the current buffer, or even producing a =dired= buffer
+from the full list of relevant file names.
 
-For several months since I switched to Icomplete in early 2020, I was
-using my own set of functions for acting on completion candidates.  My
-needs were simple: (i) copy the current match to the kill-ring, (ii)
-insert it to the point of the last buffer while keeping the minibuffer
-running, and (iii) insert while also exiting all recursive minibuffers.
-The problem with my approach was that the keys I would use were bound to
-a keymap that was specific to the completion mechanism and so my custom
-actions could not scale well or be context-aware.
+As its expanded name suggests, Embark is based on the principle of key
+maps.  A "key map", which is standard in the Emacs space, is the list
+that holds the association between key chords and the commands they
+invoke.  Key maps provide a form of modality: they apply only where they
+are enabled, which allows them to be implemented on a context-dependent
+basis.  And they can be layered on top of each other.
 
-This is where =embark= enters the fray (Emacs Minibuffer Actions Rooted in
-Keymaps): to solve the problem of defining extended minibuffer actions
-that scale to match your needs and are aware of the completion category
-you are in.  [[https://github.com/oantolin/embark][The package]] is under active development (as of 2020-05-25),
-so expect things to be in a state of flux for the immediate future (I
-use =:load-path= because I like to check the source code and try to learn
-some Elisp along the way---otherwise you should go with something like
-the =quelpa= package).
+This means that you can bind an "entry point" to Embark, which you may
+then call from the minibuffer (=minibuffer-local-completion-map=).  I set
+that to =M-o= (=embark-act=).  This gives you access to all the relevant
+actions you may call for the given context.
 
-With Embark you can go with a simple solution that covers only a handful
-of actions, or develop a very specific and elaborate typology that
-offers you maximum flexibility and expressive power.  Whatever you do,
-the code can easily be adapted to match your needs.  This is because the
-central idea of Embark is that such actions can be bound to specific
-keymaps and these can then be layered as necessary (keymap layering is
-standard in Emacs): so a general keymap can hold all your common
-actions, while several particular keymaps may then be dedicated to
-specific types of commands grouped by completion category.
+What constitutes an "action" can either be one of the default options
+provided by =embark= or a custom function you define yourself.  Same for
+the keymaps you may use.
 
 For all available default actions, check the [[https://github.com/oantolin/embark/wiki/Default-Actions][project's wiki page]], or
 just browse the source code (I prefer the latter and it can be done
@@ -1368,34 +1313,49 @@ easily with =M-x find-library=).  This is what it looks like:
   (embark-keymap
    '(("i" . embark-insert)
      ("w" . embark-save)
+     ("RET" . embark-default-action)
      ("C-g" . embark-cancel)
+     ("C-h" . embark-keymap-help)
+     ([remap self-insert-command] . embark-undefined)
      ("C-u" . universal-argument))
    universal-argument-map))
 #+end_example
 
-The developer of this package is none other than Omar Antolín Camarena.
-You are already familiar with his work from previous sections of this
-document that include =orderless=, =icomplete-vertical=, =live-completions=,
-and various other nice snippets of Elisp (I always provide references in
-context).  The common denominator of Omar's contributions is that they
-work with standard Emacs mechanisms, so you have the liberty to mix and
-match modules from core Emacs, your homegrown functions, and third-party
-packages, to suit your preferences and expected workflows, without ever
-committing to an all-encompassing framework.
+Embark also provides facilities for placing the list of candidates in
+either a bespoke buffer (=embark-occur=) or in a content-aware buffer like
+=dired= and =ibuffer= (=embark-export= for files and buffers respectively).
+To make things ever better, there is an option for a "live completion"
+style, where the "Embark Live Occur" buffer will be updated to reflect
+your minibuffer input.  I choose to use this presciently for commands
+where I intend to carefully inspect the results themselves.  Also read:
+[[#h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc][Why keep many completion UIs? (typology of my completion interfaces)]].
 
-From my part, I will refrain from adding too many actions at this early
-stage, until I have a better idea of what is provided by default and how
-things will stabilise.
+As for how Embark fits in my completion framework, it quite simply
+offers a piece of functionality that is altogether absent from the
+upstream Emacs distribution.  This is, by the by, why I greatly
+appreciate Omar's contributions: they work with standard Emacs
+mechanisms, extending them in sensible ways, so you have the liberty to
+mix and match modules from core Emacs, your homegrown functions, and
+third-party packages, to suit your preferences and expected workflows,
+without ever committing to an all-encompassing framework (not that those
+are bad per se).
 
-Also check my [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]] to see how the buffer for
-"Embark Occur" is positioned as part of the general layout.
+[[https://github.com/oantolin/embark][The embark package]] is under active development, so expect things to be
+in a state of flux for the immediate future.  I use =:load-path= because I
+like to check the source code and try to learn some Elisp along the
+way---otherwise you should go with something like the =quelpa= package.
+
+Finally, make sure to check my [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]] to see how
+the buffers for "Embark Occur" and its "live" counterpart are positioned
+as part of the general window layout.
 
 #+begin_src emacs-lisp
 (use-package embark
   :load-path "~/.emacs.d/prot-dev/embark/" ; in development
   :config
   ;; This uses a bespoke face from my themes
-  (setq embark-indicator (propertize "Act" 'face 'modus-theme-refine-magenta))
+  (setq embark-indicator
+        (propertize "Act" 'face 'modus-theme-refine-magenta))
 
   (defun prot/embark-insert-exit ()
     "Like `embark-insert' but exits current recursive minibuffer."
@@ -1409,30 +1369,62 @@ Also check my [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic 
     (with-minibuffer-selected-window (insert (embark-target)))
     (top-level))
 
-  :bind (:map minibuffer-local-completion-map
-              ("M-o" . embark-act)
-              ("C-M-o". embark-export)  ; uses `embark-occur' as a fallback
-              :map completion-list-mode-map
-              ("M-o" . embark-act)
-              :map embark-occur-mode-map
-              ("M-o" . embark-act)
-              ("C-M-o" . embark-occur-toggle-view)
-              :map embark-general-map
-              ("m" . prot/embark-insert-exit)
-              ("j" . prot/embark-insert-exit-all)))
+  (defun prot/embark-live-occur-describe-function ()
+    "Enable `embark-live-occur' for `describe-function'."
+    (interactive)
+    (let ((icomplete-mode nil)
+          (completing-read-function 'embark-completing-read))
+      (call-interactively 'describe-function)))
+
+  (defun prot/embark-live-occur-describe-variable ()
+    "Enable `embark-live-occur' for `describe-variable'."
+    (interactive)
+    (let ((icomplete-mode nil)
+          (completing-read-function 'embark-completing-read))
+      (call-interactively 'describe-variable)))
+
+  (defun prot/embark-live-occur-describe-symbol ()
+    "Enable `embark-live-occur' for `describe-symbol'."
+    (interactive)
+    (let ((icomplete-mode nil)
+          (completing-read-function 'embark-completing-read))
+      (call-interactively 'describe-symbol)))
+
+  :hook (embark-occur-mode-hook . embark-occur-direct-action-minor-mode)
+  :bind (("C-h f" . prot/embark-live-occur-describe-function)
+         ("C-h v" . prot/embark-live-occur-describe-variable)
+         ("C-h o" . prot/embark-live-occur-describe-symbol)
+         :map minibuffer-local-completion-map
+         ("M-o" . embark-act)
+         ("E". embark-export)  ; uses `embark-occur' as a fallback
+         :map embark-general-map
+         ("?" . embark-live-occur) ; same principle as `minibuffer-completion-help'
+         ("m" . prot/embark-insert-exit)
+         ("j" . prot/embark-insert-exit-all)))
 #+end_src
 
-**** TODO Complete review of Embark package declaration [0/5]
+**** TODO Complete review of Embark package declaration [3/6]
      :PROPERTIES:
      :CUSTOM_ID: h:5042bfab-64b4-4db2-9821-128e0d099bdf
      :END:
+***** DONE Review embark-occur buffer display repositioning
+      CLOSED: [2020-05-29 Fri 13:16]
+      :PROPERTIES:
+      :CUSTOM_ID: h:99fc2c2a-7729-4e5e-a9c1-d07e8f405b07
+      :END:
+***** DONE Check all key maps
+      CLOSED: [2020-05-29 Fri 13:16]
+      :PROPERTIES:
+      :CUSTOM_ID: h:ce4d183f-dd99-4b2f-ae39-0f0f870c8700
+      :END:
+***** DONE Update the docs
+      CLOSED: [2020-05-29 Fri 14:21]
+      :PROPERTIES:
+      :CUSTOM_ID: h:c0a248df-6c90-490c-843a-33114c115ec6
+      :END:
 ***** TODO Ensure embark-occur works with my custom file-related commands
       :PROPERTIES:
       :CUSTOM_ID: h:91e23a92-d29a-47a9-9ef3-304029519cbb
-      :END:
-***** TODO Review embark-occur buffer display repositioning
-      :PROPERTIES:
-      :CUSTOM_ID: h:99fc2c2a-7729-4e5e-a9c1-d07e8f405b07
       :END:
 ***** TODO Explore possibility for dedicated windows of embark-occur (dired)
       :PROPERTIES:
@@ -1441,14 +1433,6 @@ Also check my [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic 
 ***** TODO Embark actions for imenu, especially for Org buffers
       :PROPERTIES:
       :CUSTOM_ID: h:64cbb516-8223-4d96-ba09-3c24d06916b2
-      :END:
-***** TODO Check all key maps
-      :PROPERTIES:
-      :CUSTOM_ID: h:ce4d183f-dd99-4b2f-ae39-0f0f870c8700
-      :END:
-***** TODO Update the docs
-      :PROPERTIES:
-      :CUSTOM_ID: h:c0a248df-6c90-490c-843a-33114c115ec6
       :END:
 *** Imenu (dynamic completion-based buffer navigation)
     :PROPERTIES:
@@ -2885,7 +2869,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (side . bottom)
            (slot . -1)
            (window-parameters . ((no-other-window . t))))
-          (".*\\*Completions.*"
+          (".*\\*\\(Completions\\|Embark.*Occur\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . bottom)
@@ -2919,8 +2903,6 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (slot . 1))
           ;; bottom buffer (NOT side window)
           ("\\*\\vc-\\(incoming\\|outgoing\\).*"
-           (display-buffer-at-bottom))
-          ("\\*Embark Occur.*"
            (display-buffer-at-bottom))))
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
@@ -8721,9 +8703,9 @@ places as well, always with the appropriate references, though they
 extend the principles documented herein).
 
 To understand why I am maintaining seemingly overlapping settings for
-=icomplete=, =icomplete-vertical=, =live-completions=, and =embark= you need to
-have a sense of the full picture of how I conceive of completion
-workflows as part of my general Emacs usage:
+=icomplete=, =icomplete-vertical=, and =embark= you need to have a sense of
+the full picture of how I conceive of completion workflows as part of my
+general Emacs usage:
 
 + One-off commands :: These are the regular means one would use to
   transition from state A to state B, such as to switch buffers or call
@@ -8733,23 +8715,24 @@ workflows as part of my general Emacs usage:
   happen quickly and seamlessly.  Preferably with few or no extra visual
   effects and as little fanfare as possible.
 
-  This explains why I use the standard horizontal layout of Icomplete by
-  default.  It does not interfere with my windows because that kind of
-  feedback is not needed for the given interaction.
+  This explains why I use the standard horizontal layout of Icomplete
+  /by default/.  It does not interfere with my windows because that kind
+  of feedback is not needed for the given interaction.
 
   However, the horizontal view fails when the list consists of naturally
   long candidates, such as those returned by =imenu= (see configuration
   for [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][Imenu (dynamic completion-based buffer navigation)]]).  In those
   cases we still want a transient interface, but must rely on
-  verticality to make of the nuances between completion candidates.
+  verticality to make sense of the nuances between the completion
+  candidates.
 
   With =icomplete-vertical= we can cope with that requirement through a
   simple toggle that is available on demand.  Though we can enable it
   presciently on a per-function basis, which is what I normally do for a
   whole range of commands (search for the =icomplete-vertical-do= macro
   call, with common cases other than Imenu being to select an entry from
-  the kill-ring or choose a filesystem path among the items in the
-  recentf-list---also see [[#h:5723c4bb-ff6c-449f-bb60-be66fab3f137][section on recentf]]).
+  the =kill-ring= or choose a filesystem path among the items in the
+  =recentf-list=---also see [[#h:5723c4bb-ff6c-449f-bb60-be66fab3f137][section on recentf]]).
 
 + Involved interactions :: These are scenaria where one expects to
   interact with the list of candidates itself.  There likely is a need
@@ -8757,8 +8740,8 @@ workflows as part of my general Emacs usage:
   additional commands that are specific to the task and contribute
   towards a more complex workflow.
 
-  In this light, the standard "Completions" buffer is essential, as well
-  as the bespoke buffer produced by =embark-occur= (refer to the section
+  In this light, the standard "Completions" buffer is essential.  Same
+  for the bespoke buffers produced by =embark-occur= (refer to the section
   on [[*Embark (actions for completion candidates)][Embark (actions for completion candidates)]]).  It feels natural to
   have a sense of all the available matches for those cases where you
   need to search, say, for some documentation and are probably
@@ -8771,8 +8754,9 @@ workflows as part of my general Emacs usage:
   Completions buffer will show you what matches your input.  Switch to
   that buffer (e.g. =prot/focus-minibuffer-or-completions=), place point
   over an item you are interested in and run a bespoke command for
-  =describe-symbol= for the thing at point (this is what my
-  =prot/describe-symbol-at-point= does, and I bind it to convenient keys).
+  =describe-symbol= for the thing at point (this is, for instance, what my
+  =prot/describe-symbol-at-point= does, and I bind it to convenient
+  keys---again make sure to check Embark for all the actions it offers).
   The help buffer will pop up, allowing you to, say, switch to it in
   order to copy something, then go to a file that is being edited in the
   other window to iterate on it, and then get back to the Completions
@@ -8791,10 +8775,10 @@ workflows as part of my general Emacs usage:
 
 The following table summarises the above:
 
-| contents | transient          | persistent                      |
-|----------+--------------------+---------------------------------|
-| short    | icomplete          | live-completions / embark-occur |
-| long     | icomplete-vertical | live-completions / embark-occur |
+| contents | transient          | persistent                        |
+|----------+--------------------+-----------------------------------|
+| short    | icomplete          | completions / embark-occur (grid) |
+| long     | icomplete-vertical | completions / embark-occur (list) |
 
 Finally, I also have commands that connect the completion-specific
 interface to more general tools, like =ibuffer= and =dired= (=embark= does
