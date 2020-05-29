@@ -2505,9 +2505,6 @@ available.
 While in =dired-mode=, if you need to open all marked files at once, you
 can hit =F=.  It calls =dired-do-find-marked-files=.
 
-As for my two functions, they leverage a command found in this library.
-I call them with =M-x= as their utility is very specialised.
-
 #+begin_src emacs-lisp
 (use-package dired-x
   :after dired
@@ -2517,27 +2514,12 @@ I call them with =M-x= as their utility is very specialised.
   (setq dired-x-hands-off-my-keys t)
   (setq dired-bind-man nil)
   (setq dired-bind-info nil)
-
-  (defun prot/kill-current-filename ()
-    "Place the current buffer's file name in the `kill-ring'."
-    (interactive)
-    (kill-new (dired-filename-at-point)))
-
-  (defun prot/insert-current-filename ()
-    "Insert at point the current buffer's file name."
-    (interactive)
-    (insert (dired-filename-at-point)))
-
   :bind (("C-x C-j" . dired-jump)
          ("s-j" . dired-jump)
          ("C-x 4 C-j" . dired-jump-other-window)
          ("s-J" . dired-jump-other-window)))
 #+end_src
 
-**** TODO make handling of current filename smarter
-     :PROPERTIES:
-     :CUSTOM_ID: h:11b2f4fb-3de1-4104-bee8-9ede6d410a84
-     :END:
 *** diredfl (more dired colours)
     :PROPERTIES:
     :CUSTOM_ID: h:26ddf3cb-60f0-4e06-8c03-523fc092b8e8
