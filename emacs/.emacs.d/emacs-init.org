@@ -1628,9 +1628,7 @@ requires the command-line executable called 'rg' or 'ripgrep'."
                                    default-directory))))
       (if arg
           (let* ((regexp (read-regexp "Files matching regexp: "))
-                 (default-directory (file-name-directory
-                                     (locate-dominating-file "." ".git" )))
-                 (results (process-lines "rg" "-l" regexp)))
+                 (results (process-lines "rg" "-l" "--hidden" regexp)))
             (find-file
              (icomplete-vertical-do ()
                (completing-read (concat
