@@ -2497,7 +2497,32 @@ can hit =F=.  It calls =dired-do-find-marked-files=.
   (setq dired-x-hands-off-my-keys t)
   (setq dired-bind-man nil)
   (setq dired-bind-info nil)
-  :bind (("C-x C-j" . dired-jump)
+
+  (defun prot/dired-jump-extra (&optional arg)
+    "Switch directories comprising context and bookmarks.
+NEEDS REVIEW."
+    (interactive "P")
+    (let* ((vc (vc-root-dir))
+           (buf-name (buffer-file-name))
+           (path (if buf-name
+                     buf-name
+                   default-directory))
+           (file (abbreviate-file-name path))
+           (bookmarks (mapcar (lambda (b)
+                                (cdr b))
+                              (contrib/cdb--bookmarked-directories)))
+           (collection (append bookmarks
+                             (list (file-name-directory file)
+                                   (when vc vc))))
+           (files (cl-remove-if (lambda (f)
+                                  (eq f nil))
+                                collection)))
+      (icomplete-vertical-do ()
+        (dired
+         (completing-read "Jump to context or bookmark: " files nil t)))))
+
+  :bind (("C-c j" . prot/dired-jump-extra)
+         ("C-x C-j" . dired-jump)
          ("s-j" . dired-jump)
          ("C-x 4 C-j" . dired-jump-other-window)
          ("s-J" . dired-jump-other-window)))
