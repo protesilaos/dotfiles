@@ -6567,6 +6567,9 @@ when reviewing my themes (=rainbow-mode= is activated manually).
      characters (whitespace) can be very helpful under certain
      circumstances.  Generally though, I do not keep it active.
 
+As for =delete-trailing-whitespace=, I prefer to call it manually because
+sometimes it causes problems, such as with diffs.
+
 #+begin_src emacs-lisp
 (use-package whitespace
   :config
@@ -6576,7 +6579,8 @@ when reviewing my themes (=rainbow-mode= is activated manually).
     (if (bound-and-true-p whitespace-mode)
         (whitespace-mode -1)
       (whitespace-mode)))
-  :bind ("<f6>" . prot/toggle-invisibles))
+  :bind (("<f6>" . prot/toggle-invisibles)
+         ("C-c z" . delete-trailing-whitespace)))
 
 (use-package display-line-numbers
   :config
