@@ -1612,7 +1612,7 @@ requires the command-line executable called 'rg' or 'ripgrep'."
                                    default-directory))))
       (if arg
           (let* ((regexp (read-regexp "Files matching regexp: "))
-                 (results (process-lines "rg" "-l" "--hidden" regexp)))
+                 (results (process-lines "rg" "-l" "--hidden" "-m" "1" "-M" "120" regexp)))
             (find-file
              (icomplete-vertical-do ()
                (completing-read (concat
