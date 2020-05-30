@@ -1694,12 +1694,11 @@ understand how these fit into the broader framework.
 I yanked =contrib/completing-read-in-region= straight from Omar Antolín
 Camarena's [[https://github.com/oantolin/emacs-config][dotemacs repo]].  It provides a minibuffer-completion interface
 to the standard tab-completion mechanism (also check what I have on the
-topic of [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the TAB key]]).  It also does the same for
+topic of [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the TAB key]]).  It does the same for
 =dabbrev-completion= (see next section).
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :after (minibuffer icomplete icomplete-vertical) ; review those first
   :config
   (defun contrib/completing-read-in-region (start end collection &optional predicate)
     "Prompt for completion of region in the minibuffer if non-unique.
@@ -3235,15 +3234,15 @@ calls for emphasis.
 
 What lends Org its super powers though is everything else built around
 it: a rich corpus of elisp functions that automate, link, combine,
-enhance, structure, or otherwise enrich the process of using this
-otherwise simple markup language.  This very document is written in
-=org-mode= while its website version is produced by a function that
-exports Org notation into its HTML equivalent.
+enhance, structure, or otherwise enrich the process of using this rather
+simple markup language.  This very document is written in =org-mode= while
+its website version is produced by a function that exports Org notation
+into its HTML equivalent.
 
-This section contains several sub-sections, each dedicated to a
-particular aspect of Org.  Unless otherwise specified, everything is a
-work-in-progress as I gradually build up my knowledge of this killer
-app.
+The present section contains several sub-sections, each dedicated to a
+particular aspect of Org.  Unless explicitly stated, everything should
+be considered a work-in-progress as I gradually build up my knowledge of
+this killer app.
 
 *** Org basic configurations
     :PROPERTIES:
@@ -3325,7 +3324,7 @@ Now on to the miscellaneous settings:
           (sequence "RECORD(r)" "|" "RECORDED(R)")))
   (setq org-fontify-done-headline t)
   (setq org-fontify-quote-and-verse-blocks t)
-  (setq org-fontify-whole-heading-line t)
+  (setq org-fontify-whole-heading-line nil)
   (setq org-enforce-todo-dependencies t)
   (setq org-enforce-todo-checkbox-dependencies t)
   (setq org-track-ordered-property-with-tag t)
@@ -6105,10 +6104,10 @@ This is used internally by `prot/modus-themes-toggle'."
           modus-operandi-theme-subtle-diffs nil
           modus-operandi-theme-intense-standard-completions t
           modus-operandi-theme-distinct-org-blocks nil
-          modus-operandi-theme-proportional-fonts nil
-          modus-operandi-theme-rainbow-headings t
-          modus-operandi-theme-section-headings nil
-          modus-operandi-theme-scale-headings t
+          modus-operandi-theme-proportional-fonts t
+          modus-operandi-theme-rainbow-headings nil
+          modus-operandi-theme-section-headings t
+          modus-operandi-theme-scale-headings nil
           modus-operandi-theme-scale-1 1.125
           modus-operandi-theme-scale-2 1.266
           modus-operandi-theme-scale-3 1.424
@@ -6129,10 +6128,10 @@ This is used internally by `prot/modus-themes-toggle'."
           modus-vivendi-theme-subtle-diffs nil
           modus-vivendi-theme-intense-standard-completions t
           modus-vivendi-theme-distinct-org-blocks nil
-          modus-vivendi-theme-proportional-fonts nil
-          modus-vivendi-theme-rainbow-headings t
-          modus-vivendi-theme-section-headings nil
-          modus-vivendi-theme-scale-headings t
+          modus-vivendi-theme-proportional-fonts t
+          modus-vivendi-theme-rainbow-headings nil
+          modus-vivendi-theme-section-headings t
+          modus-vivendi-theme-scale-headings nil
           modus-vivendi-theme-scale-1 1.125
           modus-vivendi-theme-scale-2 1.266
           modus-vivendi-theme-scale-3 1.424
@@ -7049,6 +7048,8 @@ I edit lots of Markdown files.  This makes things easier.
 #+begin_src emacs-lisp
 (use-package markdown-mode
   :ensure
+  :config
+  (setq markdown-fontify-code-blocks-natively t)
   :mode ("\\.md$" . markdown-mode))
 #+end_src
 
