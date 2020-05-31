@@ -461,30 +461,28 @@ While there are many good free/libre options available, only a handful
 of them cope well with my fairly demanding needs.  Some look good at
 large point sizes.  Others lack Greek characters.  While a few of them
 are virtually unreadable when cast on a light background (bitmap fonts
-in particular, including the otherwise sublime /Terminus/).
+in particular).
 
-As of 2020-05-18, my choice of primary monospaced font is a variant of
-Iosevka (version 3.0 or higher), which fixes some of the issues I had
-with earlier iterations of this typeface.  Prior to that, I was using
-"Hack" and then my [[https://gitlab.com/protesilaos/hack-font-mod][patched version of Hack]], the latter of which I now
-qualify as second-best due to its (i) slightly worse italics than
-Iosevka, and (ii) its lack of a companion proportional typeface for
-mixed font setups.
+I am using my [[https://gitlab.com/protesilaos/hack-font-mod][patched version of Hack]] as the standard typeface.  In
+technical terms, this is the family that applies to the =default= /face/.
+In Emacs parlance, "face" is a construct that groups together several
+display attributes, such as a foreground and a background colour, as
+well as all the typography-related values (Emacs themes are, in essence,
+programs that configure those faces).
 
-For a proportionately-spaced typeface, I go with /Iosevka Sparkle/ because
-it combines nicely with the monospaced version and gives a neat
-typewriter look and feel (further below I specify settings that govern
-the [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]] and link to other relevant sections).
+As for Hack itself, it is my all-time favourite font for text editing,
+proven time and again by the fact that I always return to it no matter
+how many fonts I try.  Its features make it readable at practically all
+point sizes.  It is balanced in terms of height, length, and width.  It
+is equally visible on both light and dark themes.  If you are one for
+metaphors, Hack is a working dog par excellence; one with a squared,
+chiselled head and a solid build---my type of canine.
 
-I use the =*.ttf= files of Iosevka, while I make sure that all variations
-I do not intend to use are removed from my system.  Doing this through
-=dired= (see section on [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory editor, file manager)]]):
-
-+ =% m= to mark files matching a regular expression.
-+ =.*\(semi\|medium\|thin\|light\|extra\|heavy\|oblique\|extended\).*=
-+ =D= to delete the marked items.
-
-This process leaves me with regular, italic, bold, and bold-italic.
+For a proportionately-spaced font, I go with /DejaVu Sans/.  It is part of
+the super-family from whence Hack descends from.  Further below I
+specify settings that govern the [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]] and link to
+other relevant sections, while my [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes]] are designed to also cope
+well with mixed-font settings (useful in Org).
 
 Lastly, note that on a modern GNU/Linux system that uses the =fontconfig=
 library, per-user fonts are stored in =~/.local/share/fonts=.
@@ -499,20 +497,16 @@ Moving on to my configurations, the functions that follow the pattern
 use in the given context.  Their docstrings should offer you all the
 information you need.
 
-While there are many ways to define a font family in Emacs, I find that
-the best way is to do it at the "face" level.  Faces are constructs that
-specify attributes for a piece of text.  There range from a foreground
-and background colour, to text properties such as the font family, its
-height, weight, etc. (Emacs themes are, in essence, programs that
-configure those faces).
-
-To set our baseline typeface, we configure the =default= face.  To
-understand the syntax used here, do =C-h f set-face-attribute=.  In
-essence we are specifying the font that should be used /in case no other
-font applies/ for the given face.  This is actually a good thing because
-there are many cases where you want a face to retain its own attributes
-(e.g. let =org-mode= inline code be presented in its monospace font while
-using a sans-serif for the main text---see [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]]).
+While there are many ways to define a baseline or fallback font family
+in Emacs, I find that the most consistent one in terms of overall
+configuration is to do it at the "face" level.  For the main typeface,
+we configure the =default= face.  To understand the syntax used here, do
+=C-h f set-face-attribute=.  In essence we are specifying the family that
+should be used /in case no other applies/ for the given face.  This is
+actually a good thing because there are many cases where you want a face
+to retain its own attributes (e.g. let =org-mode= inline code be presented
+in its monospace font while using a sans-serif for the main text---see
+[[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]]).
 
 The two main ways to set a font using =set-face-attribute= are as follows:
 
@@ -521,9 +515,9 @@ The two main ways to set a font using =set-face-attribute= are as follows:
 + Set font parameters ::  Pass a single string that is consistent with
   how =fontconfig= (GNU/Linux) reads fonts.  This allows us to apply
   parameters that are specified in the [[https://www.freedesktop.org/software/fontconfig/fontconfig-user.html][fontconfig user spec]], such as
-  whether to apply an antialiasing effect or tweak the hinting style.
-  Note that /all fontconfig parameters are optional/ and will default to
-  the rules that apply across the operating system
+  whether to implement an antialiasing effect or tweak the hinting
+  style.  Note that /all fontconfig parameters are optional/ and will
+  default to the rules that apply across the operating system.
 
 I choose the latter because it is more flexible.  For completeness, this
 is the syntax, replacing all capitalised words with the appropriate
@@ -535,13 +529,15 @@ values (read the docs with =C-h f set-face-attribute=):
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq x-underline-at-descent-line nil)
+  (setq x-underline-at-descent-line t)
   (setq underline-minimum-offset 0)
 
-  (defconst prot/default-font "Iosevka Curly"
+  ;; My patched version of Hack.
+  ;; https://gitlab.com/protesilaos/hack-font-mod
+  (defconst prot/default-font "Hack"
     "The default typeface.")
 
-  (defconst prot/font-params "autohint=false:hintstyle=hintslight:embeddedbitmap=false"
+  (defconst prot/font-params "autohint=false:hintstyle=hintfull:embeddedbitmap=true"
     "The default fixed-pitch typeface.")
 
   (defun prot/set-face-attribute-font (family size)
@@ -559,7 +555,7 @@ Pass desired argument to `prot/font-sizes' for use on my
 small laptop monitor."
     (interactive)
     (when window-system
-      (prot/set-face-attribute-font prot/default-font 12)))
+      (prot/set-face-attribute-font prot/default-font 11)))
 
   (defun prot/desktop-fonts ()
     "Fonts for the larger desktop screen.
@@ -568,7 +564,7 @@ Pass desired argument to `prot/font-sizes' for use on my larger
 desktop monitor (external display connected to my laptop)."
     (interactive)
     (when window-system
-      (prot/set-face-attribute-font prot/default-font 13.5)))
+      (prot/set-face-attribute-font prot/default-font 12.5)))
 
   (defun prot/screencast-fonts ()
     "Fonts for screen casts and video demos.
@@ -578,7 +574,7 @@ casting.  The idea is to make it easier for viewers to see what I
 am doing."
     (interactive)
     (when window-system
-      (prot/set-face-attribute-font prot/default-font 16.5)))
+      (prot/set-face-attribute-font prot/default-font 16)))
 
   (defun prot/presentation-fonts ()
     "Fonts for presentations and video blogs.
@@ -626,8 +622,8 @@ monospaced font for everything, so there is no real need to decouple
 
 Note that the =:height= in this snippet is specified as a floating point,
 which means that it is a multiple of the base size (defined above).
-For the sake of completeness, when the =:height= property is an integer it
-is understood as the point size × 100.  So =10.5pt= is expressed as =105=.
+When the =:height= property is an integer it is understood as the point
+size × 100.  So =10.5pt= is expressed as =105=.
 
 Also bear in mind that on a GNU/Linux system there normally is no need
 to test for the presence of a font before setting it.  This is handled
@@ -637,7 +633,7 @@ by =fontconfig= with rules that can be defined at the user or system level
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (defconst prot/variable-pitch-font "Iosevka Sparkle"
+  (defconst prot/variable-pitch-font "DejaVu Sans"
     "The default variable-pitch typeface.")
 
   (set-face-attribute 'variable-pitch nil :family prot/variable-pitch-font :height 1.0)
