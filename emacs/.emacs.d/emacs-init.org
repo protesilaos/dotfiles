@@ -6198,10 +6198,10 @@ This is used internally by `prot/modus-themes-toggle'."
           modus-operandi-theme-bold-constructs nil
           modus-operandi-theme-visible-fringes nil
           modus-operandi-theme-3d-modeline t
-          modus-operandi-theme-subtle-diffs nil
+          modus-operandi-theme-subtle-diffs t
           modus-operandi-theme-intense-standard-completions t
           modus-operandi-theme-distinct-org-blocks nil
-          modus-operandi-theme-proportional-fonts t
+          modus-operandi-theme-proportional-fonts nil
           modus-operandi-theme-rainbow-headings nil
           modus-operandi-theme-section-headings t
           modus-operandi-theme-scale-headings nil
@@ -6222,10 +6222,10 @@ This is used internally by `prot/modus-themes-toggle'."
           modus-vivendi-theme-bold-constructs nil
           modus-vivendi-theme-visible-fringes nil
           modus-vivendi-theme-3d-modeline t
-          modus-vivendi-theme-subtle-diffs nil
+          modus-vivendi-theme-subtle-diffs t
           modus-vivendi-theme-intense-standard-completions t
           modus-vivendi-theme-distinct-org-blocks nil
-          modus-vivendi-theme-proportional-fonts t
+          modus-vivendi-theme-proportional-fonts nil
           modus-vivendi-theme-rainbow-headings nil
           modus-vivendi-theme-section-headings t
           modus-vivendi-theme-scale-headings nil
