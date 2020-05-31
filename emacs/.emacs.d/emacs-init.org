@@ -559,7 +559,7 @@ Pass desired argument to `prot/font-sizes' for use on my
 small laptop monitor."
     (interactive)
     (when window-system
-	  (prot/set-face-attribute-font prot/default-font 12)))
+      (prot/set-face-attribute-font prot/default-font 12)))
 
   (defun prot/desktop-fonts ()
     "Fonts for the larger desktop screen.
@@ -568,7 +568,7 @@ Pass desired argument to `prot/font-sizes' for use on my larger
 desktop monitor (external display connected to my laptop)."
     (interactive)
     (when window-system
-	  (prot/set-face-attribute-font prot/default-font 13.5)))
+      (prot/set-face-attribute-font prot/default-font 13.5)))
 
   (defun prot/screencast-fonts ()
     "Fonts for screen casts and video demos.
@@ -578,7 +578,7 @@ casting.  The idea is to make it easier for viewers to see what I
 am doing."
     (interactive)
     (when window-system
-	  (prot/set-face-attribute-font prot/default-font 16.5)))
+      (prot/set-face-attribute-font prot/default-font 16.5)))
 
   (defun prot/presentation-fonts ()
     "Fonts for presentations and video blogs.
@@ -587,7 +587,7 @@ Pass desired argument to `prot/font-sizes' for use during
 presentations.  Also see `prot/org-presentation'."
     (interactive)
     (when window-system
-	  (prot/set-face-attribute-font prot/default-font 20)))
+      (prot/set-face-attribute-font prot/default-font 20)))
 
   (defun prot/fonts-per-monitor ()
   "Use font settings based on screen size.
@@ -602,9 +602,9 @@ While this function is interactive, it is best to run it with the
 monitor-related events."
     (interactive)
     (when window-system
-	  (if (<= (display-pixel-width) 1366)
-	      (prot/laptop-fonts)
-	    (prot/desktop-fonts))))
+      (if (<= (display-pixel-width) 1366)
+          (prot/laptop-fonts)
+        (prot/desktop-fonts))))
 
   :hook (after-init-hook . prot/fonts-per-monitor))
 #+end_src
@@ -1617,29 +1617,29 @@ With \\[universal-argument] match files by contents.  This
 requires the command-line executable called 'rg' or 'ripgrep'."
     (interactive "P")
     (let* ((default-directory (file-name-directory
-				               (or (locate-dominating-file "." ".git" )
-				                   default-directory))))
-	  (if arg
-	      (let* ((regexp (read-regexp
+                               (or (locate-dominating-file "." ".git" )
+                                   default-directory))))
+      (if arg
+          (let* ((regexp (read-regexp
                           (concat "File contents matching REGEXP in "
                                   (propertize default-directory 'face 'bold)
                                   ": ")))
-		         (results (process-lines "rg" "-l" "--hidden" "-m" "1" "-M" "120" regexp)))
-	        (find-file
-	         (icomplete-vertical-do ()
-		       (completing-read (concat
-				                 "Files with contents matching "
-				                 (propertize regexp 'face 'success)
-				                 (format " (%s)" (length results))
-				                 ": ")
-				                results nil t))))
-	    (let* ((filenames-all (directory-files-recursively default-directory ".*" nil t))
-		       (filenames (cl-remove-if (lambda (x)
-					                      (string-match-p "\\.git" x))
-					                    filenames-all)))
-	      (icomplete-vertical-do ()
-	        (find-file
-	         (completing-read "Find file recursively: " filenames nil t)))))))
+                 (results (process-lines "rg" "-l" "--hidden" "-m" "1" "-M" "120" regexp)))
+            (find-file
+             (icomplete-vertical-do ()
+               (completing-read (concat
+                                 "Files with contents matching "
+                                 (propertize regexp 'face 'success)
+                                 (format " (%s)" (length results))
+                                 ": ")
+                                results nil t))))
+        (let* ((filenames-all (directory-files-recursively default-directory ".*" nil t))
+               (filenames (cl-remove-if (lambda (x)
+                                          (string-match-p "\\.git" x))
+                                        filenames-all)))
+          (icomplete-vertical-do ()
+            (find-file
+             (completing-read "Find file recursively: " filenames nil t)))))))
 
   (defun prot/find-project (&optional arg)
     "Switch to sub-directory at the specified locations.
@@ -1647,21 +1647,21 @@ With \\[universal-argument] produce a `dired' buffer instead with
 all the possible candidates."
     (interactive "P")
     (let* ((dirs (list "~/Git/Projects/" "~/.emacs.d/prot-dev/"))
-	       (dotless directory-files-no-dot-files-regexp)
-	       (cands (mapcan (lambda (d)
-			                (directory-files d t dotless))
-			              dirs))
-	       (projects (mapcar 'abbreviate-file-name cands))
-	       (buf "*Projects Dired*"))
-	  (if arg
-	      (dired (cons (generate-new-buffer-name buf) projects))
-	    (icomplete-vertical-do ()
-	      (dired
-	       (completing-read "Find project: " projects nil t))))))
+           (dotless directory-files-no-dot-files-regexp)
+           (cands (mapcan (lambda (d)
+                            (directory-files d t dotless))
+                          dirs))
+           (projects (mapcar 'abbreviate-file-name cands))
+           (buf "*Projects Dired*"))
+      (if arg
+          (dired (cons (generate-new-buffer-name buf) projects))
+        (icomplete-vertical-do ()
+          (dired
+           (completing-read "Find project: " projects nil t))))))
 
   :bind (("M-s p" . prot/find-project)
-	     ("M-s f" . prot/find-file-vc-or-dir)
-	     ("M-s l" . find-library)))
+         ("M-s f" . prot/find-file-vc-or-dir)
+         ("M-s l" . find-library)))
 #+end_src
 
 *** In-buffer completions
@@ -3406,17 +3406,17 @@ Now on to the miscellaneous settings:
   (setq org-deadline-warning-days 3)
   ;; refile, todo
   (setq org-refile-targets
-	    '((org-agenda-files . (:maxlevel . 2))
-	      (nil . (:maxlevel . 2))))
+        '((org-agenda-files . (:maxlevel . 2))
+          (nil . (:maxlevel . 2))))
   (setq org-refile-use-outline-path t)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-refile-use-cache t)
   (setq org-reverse-note-order nil)
   (setq org-todo-keywords
-	    '((sequence "TODO(t)" "|" "DONE(D)" "CANCELLED(C)")
+        '((sequence "TODO(t)" "|" "DONE(D)" "CANCELLED(C)")
           (sequence "ACT(a)" "|" "ACTED(A)")
           (sequence "BUY(b)" "|" "BOUGHT(B)")
-	      (sequence "MEET(m)" "|" "MET(M)" "POSTPONED(P)")
+          (sequence "MEET(m)" "|" "MET(M)" "POSTPONED(P)")
           (sequence "STUDY(s)" "|" "STUDIED(S)")
           (sequence "RECORD(r)" "|" "RECORDED(R)")))
   (setq org-fontify-done-headline t)
@@ -3441,14 +3441,14 @@ Now on to the miscellaneous settings:
   (setq org-special-ctrl-k nil)
   (setq org-hide-emphasis-markers t)
   (setq org-structure-template-alist    ; CHANGED in Org 9.2, Emacs 27.1
-	    '(("s" . "src")
-	      ("E" . "src emacs-lisp")
-	      ("e" . "example")
-	      ("q" . "quote")
-	      ("v" . "verse")
-	      ("V" . "verbatim")
-	      ("c" . "center")
-	      ("C" . "comment")))
+        '(("s" . "src")
+          ("E" . "src emacs-lisp")
+          ("e" . "example")
+          ("q" . "quote")
+          ("v" . "verse")
+          ("V" . "verbatim")
+          ("c" . "center")
+          ("C" . "comment")))
   (setq org-catch-invisible-edits 'show)
   (setq org-return-follows-link nil)
   (setq org-loop-over-headlines-in-active-region 'start-level)
@@ -3738,7 +3738,7 @@ demanding workflows.
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)
   (setq org-export-backends
-	    '(ascii html latex md))
+        '(ascii html latex md))
   (setq org-export-dispatch-use-expert-ui nil))
 #+end_src
 
@@ -9029,7 +9029,7 @@ package declaration is but a piece of a greater whole.
   :hook ((after-init-hook . ivy-mode)
          (ivy-occur-mode-hook . hl-line-mode))
   :bind (("<s-up>" . ivy-push-view)
-		 ("<s-down>" . ivy-switch-view)
+         ("<s-down>" . ivy-switch-view)
          ("C-S-r" . ivy-resume)
          :map ivy-occur-mode-map
          ("f" . forward-char)
