@@ -1485,7 +1485,12 @@ aggressive fuzzy-style matching for this particular command."
       (icomplete-vertical-do (:height (/ (frame-height) 4))
         (call-interactively 'imenu))))
 
-  :hook (imenu-after-jump-hook . (lambda () (recenter 0)))
+  :hook ((imenu-after-jump-hook . (lambda () (recenter 0)))
+         (imenu-after-jump-hook . (lambda ()
+                                    (when (and (eq major-mode 'org-mode)
+                                               (org-at-heading-p))
+                                      (org-show-entry)
+                                      (org-reveal t)))))
   :bind ("C-." . prot/imenu-vertical))
 #+end_src
 
