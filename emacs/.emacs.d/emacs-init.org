@@ -555,7 +555,7 @@ Pass desired argument to `prot/font-sizes' for use on my
 small laptop monitor."
     (interactive)
     (when window-system
-      (prot/set-face-attribute-font prot/default-font 11)))
+      (prot/set-face-attribute-font prot/default-font 10.5)))
 
   (defun prot/desktop-fonts ()
     "Fonts for the larger desktop screen.
@@ -2436,6 +2436,7 @@ behaviour while inside a regular dired buffer.
   :after dired
   :config
   (setq peep-dired-cleanup-on-disable t)
+  (setq peep-dired-cleanup-eagerly t)
   (setq peep-dired-enable-on-directories nil)
   (setq peep-dired-ignored-extensions
         '("mkv" "webm" "mp4" "mp3" "ogg" "iso"))
