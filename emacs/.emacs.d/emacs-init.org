@@ -7931,6 +7931,44 @@ fairly short in a number of scenaria.
   :hook (after-init-hook . blink-cursor-mode))
 #+end_src
 
+*** Multiple cursors (edit in several parts at once)
+    :PROPERTIES:
+    :CUSTOM_ID: h:397728fd-e437-470a-a571-d03954106b9a
+    :END:
+
+The =multiple-cursors= package offers a comprehensive list of commands to
+edit text in several points of the screen at once.  Though I normally
+rely on keyboard macros and =query-replace= to perform complex edits in
+numerous parts of a buffer or set thereof, it sometimes is easier to
+just pop a few extra cursors and type directly, especially for quick,
+one-time operations.
+
+For the technically-minded, make sure to read Chris Wellons' article on
+[[https://nullprogram.com/blog/2017/09/07/][Gap Buffers Are Not Optimized for Multiple Cursors]].  Also quoting from
+the source code (=M-x find-library multiple-cursors=):
+
+#+begin_quote
+Known limitations
+
++ isearch-forward and isearch-backward aren't supported with multiple cursors.
+  You should feel free to add a simplified version that can work with it.
++ Commands run with `M-x` won't be repeated for all cursors.
++ All key bindings that refer to lambdas are always run for all cursors. If you
+  need to limit it, you will have to give it a name.
++ Redo might screw with your cursors. Undo works very well.
+#+end_quote
+
+So learn keyboard macros and =query-replace= and let this package handle
+more straightforward workflows.
+
+#+begin_src emacs-lisp
+(use-package multiple-cursors
+  :ensure
+  :bind (("C->" . mc/mark-previous-like-this)
+         ("C->" . mc/mark-next-like-this)
+         ("s->" . mc/mark-all-like-this)))
+#+end_src
+
 *** Beacon mode (highlight cursor position)
     :PROPERTIES:
     :CUSTOM_ID: h:6bbc41d6-da7c-4301-84c6-c5887c29283f
