@@ -1485,7 +1485,14 @@ aggressive fuzzy-style matching for this particular command."
       (icomplete-vertical-do (:height (/ (frame-height) 4))
         (call-interactively 'imenu))))
 
-  :hook ((imenu-after-jump-hook . (lambda () (recenter 0)))
+  (defun prot/imenu-recenter-pulse ()
+    "Recent `imenu' position at the top with subtle feedback.
+Add this to `imenu-after-jump-hook'."
+    (let ((pulse-delay .05))
+      (recenter 0)
+      (pulse-momentary-highlight-one-line (point) 'modus-theme-intense-red)))
+
+  :hook ((imenu-after-jump-hook . prot/imenu-recenter-pulse)
          (imenu-after-jump-hook . (lambda ()
                                     (when (and (eq major-mode 'org-mode)
                                                (org-at-heading-p))
