@@ -7470,7 +7470,7 @@ I use visual bookmarks in much the same way.
   (setq bm-buffer-persistence t)
   (setq bm-cycle-all-buffers t)
   (setq bm-goto-position nil)
-  (setq bm-highlight-style 'bm-highlight-line-and-fringe)
+  (setq bm-highlight-style 'bm-highlight-only-fringe)
   (setq bm-in-lifo-order t)
   (setq bm-recenter t)
   (setq bm-repository-file "~/.emacs.d/bm-bookmarks")
@@ -7498,6 +7498,11 @@ For the =defhydra=, refer to my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][funda
 (use-package outline
   :diminish outline-minor-mode
   :config
+  (use-package outline-minor-faces
+    :ensure
+    :hook
+    (outline-minor-mode-hook . outline-minor-faces-add-font-lock-keywords))
+
   (use-package bicycle :ensure)
 
   (defhydra prot/hydra-outline (:idle nil :color pink
@@ -7519,14 +7524,25 @@ _b_: Back same level   _<S-iso-lefttab>_: Cycle global
     ("TAB" bicycle-cycle)
     ("<S-iso-lefttab>" bicycle-cycle-global)
     ("q" nil "cancel" :color blue))
-  :bind (:map outline-minor-mode-map
-              ("C-c h o" . prot/hydra-outline/body)))
 
-(use-package outline-minor-faces
-  :ensure
-  :after outline
-  :hook
-  (outline-minor-mode-hook . outline-minor-faces-add-font-lock-keywords))
+  (defun prot/outline-minor-mode ()
+    "Toggles `outline-minor-mode'."
+    (interactive)
+    (if (eq major-mode 'org-mode)
+        (user-error "Don't use `outline-minor-mode' with Org")
+      (if (bound-and-true-p outline-minor-mode)
+          (outline-minor-mode -1)
+        (outline-minor-mode 1))))
+
+    :bind (("<f10>" . prot/outline-minor-mode) ; key replaces `menu-bar-open'
+           :map outline-minor-mode-map
+           ("C-c h o" . prot/hydra-outline/body)
+           ("C-c C-n" . outline-next-visible-heading)
+           ("C-c C-p" . outline-previous-visible-heading)
+           ("C-c C-f" . outline-forward-same-level)
+           ("C-c C-b" . outline-backward-same-level)
+           ("<C-tab>" . bicycle-cycle)
+           ("<S-iso-lefttab>" . bicycle-cycle-global)))
 #+end_src
 
 ** Custom movements and motions
