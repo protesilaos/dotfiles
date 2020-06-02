@@ -1977,8 +1977,7 @@ search started."
     (isearch-forward-symbol-at-point)
     (isearch-query-replace-regexp))
 
-  :bind (("M-s M-o" . multi-occur)
-         ("M-s %" . prot/isearch-query-replace-symbol-at-point)
+  :bind (("M-s %" . prot/isearch-query-replace-symbol-at-point)
          :map minibuffer-local-isearch-map
          ("M-/" . isearch-complete-edit)
          :map isearch-mode-map
@@ -2006,7 +2005,12 @@ The faces are part of my Modus themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408
         '(:inherit modus-theme-intense-neutral :weight bold))
   (setq list-matching-lines-current-line-face
         '(:inherit modus-theme-special-mild))
-  :hook (occur-mode-hook . hl-line-mode))
+  :hook ((occur-mode-hook . hl-line-mode)
+         (occur-mode-hook . (lambda ()
+                              (toggle-truncate-lines t))))
+  :bind (("M-s M-o" . multi-occur)
+         :map occur-mode-map
+         ("t" . toggle-truncate-lines)))
 #+end_src
 
 *** Regular expressions: re-builder and visual-regexp
