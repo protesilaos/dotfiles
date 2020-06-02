@@ -8002,43 +8002,33 @@ more straightforward workflows.
          ("s->" . mc/mark-all-like-this)))
 #+end_src
 
-*** Beacon mode (highlight cursor position)
+*** pulse.el (highlight cursor position)
     :PROPERTIES:
     :CUSTOM_ID: h:6bbc41d6-da7c-4301-84c6-c5887c29283f
     :END:
 
-This package will light a beam where the cursor is.  A nice way of
-quickly discovering your current position in the current window.
+This is a library that provides utilities for highlighting the region or
+area around point.  It is meant to be used by other packages as a means
+of offering visual feedback, as is the case with, for example. =M-.=
+(=xref-find-definitions=).  I also make use of this in my settings for
+[[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][Imenu (dynamic completion-based navigation)]].
 
-There is a minor mode with several customisation options, in case you
-want to have this functionality to be readily available.  I generally do
-not need it to always be on, so I just bind a key for calling the
-command manually and only tweak the visuals of the beam effect.
+Here I define a simple command for highlighting the current line on
+demand.  It fully replaces the niche I had carved for the =beacon=
+package, which is to make clear where my cursor is while doing a video
+demo.
 
-For the way the =beacon-color= is determined through a custom hook, refer
-to the section on [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][the Modus themes (my very accessible themes)]].
+In the future I might expand this to cover more cases.
 
 #+begin_src emacs-lisp
-(use-package beacon
-  :ensure
-  :diminish
+(use-package pulse
   :config
-  (setq beacon-blink-delay 0.1)
-  (setq beacon-blink-duration 0.25)
-  (setq beacon-size 25)
-
-  (defun prot/beacon-color ()
-    "Set the value of `beacon-color' depending on theme.
-
-This is meant to be called from `prot/modus-themes-toggle-hook'."
-    (cond ((eq (car custom-enabled-themes) 'modus-operandi)
-           (setq beacon-color "#b60000"))
-          ((eq (car custom-enabled-themes) 'modus-vivendi)
-           (setq beacon-color "#fb6859"))))
-
-  (beacon-mode -1)
-  :bind ("<s-escape>" . beacon-blink)
-  :hook (prot/modus-themes-toggle-hook . prot/beacon-color))
+  (defun prot/pulse-line ()
+    "Temporarily highlight the current line."
+    (interactive)
+    (let ((pulse-delay .06))
+      (pulse-momentary-highlight-one-line (point) 'modus-theme-intense-red)))
+  :bind ("<s-escape>" . prot/pulse-line))
 #+end_src
 
 *** Mouse wheel behaviour
