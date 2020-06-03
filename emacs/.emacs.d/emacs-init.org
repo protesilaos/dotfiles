@@ -968,7 +968,6 @@ succession."
     (let* ((mini (active-minibuffer-window))
            ;; This could be hardened a bit, but I am okay with it.
            (completions (or (get-buffer-window "*Completions*")
-                            (get-buffer-window "*Embark Occur*")
                             (get-buffer-window "*Embark Live Occur*"))))
       (cond ((and mini
                   (not (minibufferp)))
@@ -1274,7 +1273,7 @@ normally would when calling `yank' followed by `yank-pop'."
     :CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
     :END:
 
-/2020-05-28: In active development.  Things are stabilising but may still
+/2020-06-03: In active development.  Things are stabilising but may still
 change considerably./
 
 Embark (Emacs Minibuffer Actions Rooted in Keymaps) is another great
@@ -1365,6 +1364,13 @@ as part of the general window layout.
     (with-minibuffer-selected-window (insert (embark-target)))
     (top-level))
 
+  (defun prot/embark-live-occur-single-buffer ()
+    "Do not spawn multiple `embark-live-occur' buffers.
+Add this to `minibuffer-exit-hook'."
+    (let ((eo "*Embark Live Occur*"))
+      (when (get-buffer eo)
+        (kill-buffer eo))))
+
   (defun prot/embark-live-occur-describe-function ()
     "Enable `embark-live-occur' for `describe-function'."
     (interactive)
@@ -1386,16 +1392,16 @@ as part of the general window layout.
           (completing-read-function 'embark-completing-read))
       (call-interactively 'describe-symbol)))
 
-  :hook (embark-occur-mode-hook . embark-occur-direct-action-minor-mode)
+  :hook ((embark-occur-mode-hook . embark-occur-direct-action-minor-mode)
+         (minibuffer-exit-hook . prot/embark-live-occur-single-buffer))
   :bind (("C-h f" . prot/embark-live-occur-describe-function)
          ("C-h v" . prot/embark-live-occur-describe-variable)
          ("C-h o" . prot/embark-live-occur-describe-symbol)
          :map minibuffer-local-completion-map
          ("M-o" . embark-act)
+         ("C-o" . embark-occur)
+         ("C-M-o" . embark-export)     ; uses `embark-occur' as a fallback
          :map embark-general-map
-         ("o" . embark-occur)
-         ("O" . embark-export)  ; uses `embark-occur' as a fallback
-         ("?" . embark-live-occur) ; same principle as `minibuffer-completion-help'
          ("m" . prot/embark-insert-exit)
          ("j" . prot/embark-insert-exit-all)))
 #+end_src
@@ -1985,6 +1991,7 @@ search started."
     (isearch-query-replace-regexp))
 
   :bind (("M-s %" . prot/isearch-query-replace-symbol-at-point)
+         ("s-s" . prot/isearch-for-region)
          :map minibuffer-local-isearch-map
          ("M-/" . isearch-complete-edit)
          :map isearch-mode-map
@@ -2978,7 +2985,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (side . bottom)
            (slot . -1)
            (window-parameters . ((no-other-window . t))))
-          (".*\\*\\(Completions\\|Embark.*Occur\\).*"
+          (".*\\*\\(Completions\\|Enact Live Occur\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . bottom)
@@ -3012,6 +3019,8 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (slot . 1))
           ;; bottom buffer (NOT side window)
           ("\\*\\vc-\\(incoming\\|outgoing\\).*"
+           (display-buffer-at-bottom))
+          ("\\*Embark Occur.*"
            (display-buffer-at-bottom))))
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
