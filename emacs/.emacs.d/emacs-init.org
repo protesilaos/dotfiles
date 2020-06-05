@@ -4552,6 +4552,36 @@ about these concepts in the introductory [[#h:14cf6fea-54eb-4faa-bb16-3739485c92
   :hook ((gnus-browse-mode-hook gnus-server-mode-hook) . hl-line-mode))
 #+end_src
 
+**** Gnus window layout
+     :PROPERTIES:
+     :CUSTOM_ID: h:b1f4d418-6705-440b-a6f4-89fdd5feef3b
+     :END:
+
+/NOTE 2020-06-05: This is experimental and subject to review./
+
+The following is adapted from the example in the official manual.  To
+read the chapter, evaluate =(info "(gnus) Window Layout")= (either do it
+with =C-x C-e= after the closing parenthesis or place this expression in
+the prompt of =M-:=).
+
+#+begin_src emacs-lisp
+(use-package gnus-win
+  :config
+  (gnus-add-configuration
+   '(article
+     (horizontal 1.0
+                 (vertical 40 (group 1.0))
+                 (vertical 1.0
+                           (summary 0.16 point)
+                           (article 1.0)))))
+
+  (gnus-add-configuration
+   '(summary
+     (horizontal 1.0
+                 (vertical 40 (group 1.0))
+                 (vertical 1.0 (summary 1.0 point))))))
+#+end_src
+
 **** Gnus intersection with Dired
      :PROPERTIES:
      :CUSTOM_ID: h:0fabe523-725e-41eb-9e8b-061d74dc7bda
