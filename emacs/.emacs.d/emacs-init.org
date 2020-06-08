@@ -3322,6 +3322,12 @@ input (see following sections).
                 holiday-other-holidays holiday-christian-holidays
                 holiday-islamic-holidays holiday-oriental-holidays
                 holiday-solar-holidays))
+
+  (use-package solar
+    :config
+    (setq calendar-latitude 35.17
+          calendar-longitude 33.36))
+
   :hook (calendar-today-visible-hook . calendar-mark-today))
 #+end_src
 
