@@ -8064,11 +8064,15 @@ In the future I might expand this to cover more cases.
 #+begin_src emacs-lisp
 (use-package pulse
   :config
-  (defun prot/pulse-line ()
+  (defun prot/pulse-line (&optional face)
     "Temporarily highlight the current line."
     (interactive)
-    (let ((pulse-delay .06))
-      (pulse-momentary-highlight-one-line (point) 'modus-theme-intense-red)))
+    (let ((pulse-delay .06)
+          (face
+           (if face
+               face
+             'modus-theme-intense-red)))
+      (pulse-momentary-highlight-one-line (point) face)))
   :bind ("<s-escape>" . prot/pulse-line))
 #+end_src
 
