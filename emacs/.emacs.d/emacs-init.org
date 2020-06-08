@@ -1790,7 +1790,7 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
      :CUSTOM_ID: h:33cd69cc-1a50-4abb-9f09-cae98dc8998b
      :END:
 
-/NOTE 2020-05-26: Pending review./
+/NOTE 2020-06-08: Pending major review./
 
 This section stores all the "skeletons" I define.  These are snippets of
 text, typically templates or code statements, that are meant to speed up
@@ -1829,6 +1829,28 @@ position of the cursor after the skeleton has been inserted.
     "https://gitlab.com/protesilaos/" str "")
   (define-abbrev global-abbrev-table "megit"
     "" 'protesilaos-gitlab-skeleton)
+
+  ;; (define-skeleton org-use-package
+  ;;   "Org source block with `use-package' declaration."
+  ;;   "Package: "
+  ;;   "#+begin_src emacs-lisp\n"
+  ;;   "(use-package " _ ")\n"
+  ;;   "#+end_src\n")
+  ;; (define-abbrev global-abbrev-table "meup"
+  ;;   "" 'org-use-package)
+  ;;
+  ;; (define-skeleton markdown-jekyll-blog
+  ;;   ""
+  ;;   ""
+  ;;   "---\n"
+  ;;   (concat "title: '" (read-from-minibuffer
+  ;;                       "Blog Title: ") "'\n")
+  ;;   (concat "excerpt: '" (read-from-minibuffer
+  ;;                         "Excerpt (max 156 chars): ") "'\n")
+  ;;   "---\n\n"
+  ;;   "")
+  ;; (define-abbrev global-abbrev-table "mejb"
+  ;;   "" 'markdown-jekyll-blog)
   :hook ((text-mode-hook . abbrev-mode)
          (git-commit-mode-hook . abbrev-mode)))
 #+end_src
