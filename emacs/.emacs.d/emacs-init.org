@@ -1340,6 +1340,10 @@ in a state of flux for the immediate future.  I use =:load-path= because I
 like to check the source code and try to learn some Elisp along the
 way---otherwise you should go with something like the =quelpa= package.
 
+The =contrib/with-embark-live-occur= was offered to me by Omar.  Its
+purpose is to be used as an "advice" that will make other functions run
+a live-updating "Embark Occur" buffer.
+
 Finally, make sure to check my [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]] to see how
 the buffers for "Embark Occur" and its "live" counterpart are positioned
 as part of the general window layout.
@@ -1371,39 +1375,31 @@ Add this to `minibuffer-exit-hook'."
       (when (get-buffer eo)
         (kill-buffer eo))))
 
-  (defun prot/embark-live-occur-describe-function ()
-    "Enable `embark-live-occur' for `describe-function'."
-    (interactive)
-    (let ((icomplete-mode nil)
-          (completing-read-function 'embark-completing-read))
-      (call-interactively 'describe-function)))
+  (defun contrib/with-embark-live-occur (&rest _args)
+    "Advice to wrap function in `embark-completing-read'."
+    (interactive
+     (lambda (old-interactive-spec)
+       (let ((icomplete-mode nil)
+             (embark-occur-view 'grid)
+             (completing-read-function #'embark-completing-read))
+         (advice-eval-interactive-spec old-interactive-spec)))))
 
-  (defun prot/embark-live-occur-describe-variable ()
-    "Enable `embark-live-occur' for `describe-variable'."
-    (interactive)
-    (let ((icomplete-mode nil)
-          (completing-read-function 'embark-completing-read))
-      (call-interactively 'describe-variable)))
-
-  (defun prot/embark-live-occur-describe-symbol ()
-    "Enable `embark-live-occur' for `describe-symbol'."
-    (interactive)
-    (let ((icomplete-mode nil)
-          (completing-read-function 'embark-completing-read))
-      (call-interactively 'describe-symbol)))
+  ;; Make C-h {f,v,o} use `embark-completing-read' to live update the
+  ;; Embark Occur buffer.
+  (advice-add 'describe-function :before 'contrib/with-embark-live-occur)
+  (advice-add 'describe-variable :before 'contrib/with-embark-live-occur)
+  (advice-add 'describe-symbol :before 'contrib/with-embark-live-occur)
 
   :hook ((embark-occur-mode-hook . embark-occur-direct-action-minor-mode)
-         (minibuffer-exit-hook . prot/embark-live-occur-single-buffer))
-  :bind (("C-h f" . prot/embark-live-occur-describe-function)
-         ("C-h v" . prot/embark-live-occur-describe-variable)
-         ("C-h o" . prot/embark-live-occur-describe-symbol)
-         :map minibuffer-local-completion-map
-         ("M-o" . embark-act)
-         ("C-o" . embark-occur)
-         ("C-M-o" . embark-export)     ; uses `embark-occur' as a fallback
-         :map embark-general-map
-         ("m" . prot/embark-insert-exit)
-         ("j" . prot/embark-insert-exit-all)))
+         (minibuffer-exit-hook . prot/embark-live-occur-single-buffer)
+         (embark-pre-action-hook . completion--flush-all-sorted-completions))
+  :bind (:map minibuffer-local-completion-map
+              (":" . embark-act)
+              (";" . embark-act-noexit)
+              ("C-o" . embark-export)     ; uses `embark-occur' as a fallback
+              :map embark-general-map
+              ("m" . prot/embark-insert-exit)
+              ("j" . prot/embark-insert-exit-all)))
 #+end_src
 
 **** TODO Complete review of Embark package declaration [3/6]
