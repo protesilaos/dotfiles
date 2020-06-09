@@ -8041,9 +8041,9 @@ numerous parts of a buffer or set thereof, it sometimes is easier to
 just pop a few extra cursors and type directly, especially for quick,
 one-time operations.
 
-For the technically-minded, make sure to read Chris Wellons' article on
-[[https://nullprogram.com/blog/2017/09/07/][Gap Buffers Are Not Optimized for Multiple Cursors]].  Also quoting from
-the source code (=M-x find-library multiple-cursors=):
+For the technically-minded, make sure to read Christopher Wellons'
+article on [[https://nullprogram.com/blog/2017/09/07/][Gap Buffers Are Not Optimized for Multiple Cursors]].  Also
+quoting from the source code (=M-x find-library multiple-cursors=):
 
 #+begin_quote
 Known limitations
