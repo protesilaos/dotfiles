@@ -2979,6 +2979,11 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   :init
   (setq display-buffer-alist
         '(;; top side window
+          ("\\*elfeed-mpv-output.*"
+           (display-buffer-in-side-window)
+           (window-height . 0.16)
+           (side . top)
+           (slot . -1))
           ("\\*\\(Flycheck\\|Flymake\\|Package-Lint\\|vc-git :\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
@@ -4630,68 +4635,6 @@ By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][com
   :hook (dired-mode-hook . gnus-dired-mode))
 #+end_src
 
-**** Gnus RSS feed extension
-     :PROPERTIES:
-     :CUSTOM_ID: h:17ccd61a-6baf-4e45-a1fd-4b5d8811d2d3
-     :END:
-
-/WORK IN PROGRESS 2020-06-05/
-
-These are a set of tweaks that adapt the behaviour/styles of Gnus to the
-specific needs of RSS feeds.
-
-#+begin_src emacs-lisp
-(use-package nnrss
-  :config
-  ;; These are XML tag names from the RSS spec…
-  (setq nnrss-ignore-article-fields '(slash:comments slash:pubDate))
-
-  (add-to-list 'nnmail-extra-headers nnrss-url-field)
-
-  (defun prot/eww-nnrss-url (arg)
-    "Browse URL of Gnus Summary article at point.
-
-This function is an adaptation of the one found in the manual in
-the chapter about RSS."
-    (interactive "p")
-    (let ((url (assq nnrss-url-field
-                     (mail-header-extra
-                      (gnus-data-header
-                       (assq (gnus-summary-article-number)
-                             gnus-newsgroup-data))))))
-      (if url
-          (progn
-            (gnus-summary-expand-window)
-            (eww (cdr url))
-            (gnus-summary-mark-as-read-forward 1))
-        (gnus-summary-scroll-up arg))))
-
-  (add-to-list 'gnus-parameters
-               '("\\`nnrss:"
-                 (mm-discouraged-alternatives nil)
-                 (gnus-summary-line-format "%U  %-16,16&user-date;    %B%S\n")))
-
-  :bind (:map gnus-summary-mode-map
-              ("<return>" . prot/eww-nnrss-url)))
-#+end_src
-
-**** TODO Extend Gnus [1/3]                                      :emacs:gnus:
-     :PROPERTIES:
-     :CUSTOM_ID: h:357088a3-b88d-4928-9c8c-f6c5902421aa
-     :END:
-***** TODO fetch mail/feeds while idle (gnus daemon)
-      :PROPERTIES:
-      :CUSTOM_ID: h:6d7fb1b6-ef27-4bfc-921b-ea457ea490ed
-      :END:
-***** DONE add RSS feeds
-      CLOSED: [2020-06-04 Thu 09:32]
-      :PROPERTIES:
-      :CUSTOM_ID: h:61a91a5c-338d-4c1d-9f8c-f8ee321078a8
-      :END:
-***** TODO parse Atom feeds as well?
-      :PROPERTIES:
-      :CUSTOM_ID: h:812c503c-fbd8-40f5-ac5d-6cae20974cba
-      :END:
 *** Sending email (SMTP)
     :PROPERTIES:
     :CUSTOM_ID: h:2d793cf8-83f5-4830-b73d-78385d9b96dd
@@ -5872,6 +5815,304 @@ bindings and their functions.
 (use-package pass
   :ensure
   :commands pass)
+#+end_src
+
+** Elfeed (RSS/Atom feed reader)
+   :PROPERTIES:
+   :CUSTOM_ID: h:0cd8ddab-55d1-40df-b3db-1234850792ba
+   :END:
+
+This is a standalone feed reader by Christopher Wellons that comes with
+good defaults and is very well designed overall.  It treats the stream
+of updates as a flat list that can be narrowed incrementally using an
+efficient tagging system.
+
+In terms of feed format specifications, i.e. Atom vs RSS, things should
+just work without any kind of configuration from your side (a huge plus
+compared to, say, Gnus' =nnrss= backend that only supports the latter).
+
+Elfeed stores feed sources in a single list that associates a valid URL
+to one or more tags.  These are then written to a database.  The Elisp
+part users should care about looks like this:
+
+#+begin_example
+(setq elfeed-feeds
+      '(("https://www.archlinux.org/feeds/news/" linux distro)
+        ("https://www.gnome.org/feed/" gnu de)
+        ("https://planet.emacslife.com/atom.xml" emacs community)
+        ("https://www.ecb.europa.eu/rss/press.html" economics eu)
+        ("http://feed.pippa.io/public/shows/teamhuman" podcast culture)
+        ("https://protesilaos.com/politics.xml" personal)))
+#+end_example
+
+I keep the actual list in a GPG-encrypted file.  Emacs can decrypt and
+read those transparently, making it a great way to safely store
+sensitive data while still keeping everything perfectly functional.
+
+A good tagging system for your feeds will offer a strong foundation for
+catching up with the news.  I generally use 2-3 tags per feed, while I
+make sure that conceptually similar items will share at least one tag.
+My tags are not particularly sophisticated, though they are not random
+either: for example, I have a particular "EU" entry for all
+institutions, bodies, agencies, etc. and then I have other more general
+ones, such as "politics" and "economics".
+
+The user interface consists of two distinct types of buffers:
+
+1. The =*elfeed-search*= buffer that holds the list with all the news
+   items.
+2. The individual item entries.
+
+By default, hitting =s= (=elfeed-search-live-filter=) in the search buffer
+will place the point inside the minibuffer, where you can then edit the
+applicable filters.  The [[https://github.com/skeeto/elfeed][Elfeed README]] offers a detailed explanation of
+how to apply such filters.  The ones I use the most:
+
++ Prepend a =+= to the name of a tag to only show items that include that
+  tag.  With =-= show items that do not include it.
++ Type in a regular string with the equals sign in front of it, say
+  "=Prot", to show feeds whose name contains it.
+
+Other common cases are regular expressions and date ranges, though I
+have found that I never use those.  Probably because the tagging system
+is sufficiently powerful for my particular needs.
+
+With regard to the package declaration below, I have lots of functions
+that customise the behaviour of Elfeed to better match my expectations.
+For example, I do not like the fact that the aforementioned default =s=
+command (=elfeed-search-live-filter=) does not provide a completion UI.
+So I implement an alternative that allows for multiple choices, as well
+as arbitrary input.  In the case of the latter, you may need to "force
+insert" the final command that locks in the filter with =C-j=
+(=exit-minibuffer=), if Emacs complains that there is no matching input
+(has not happened in my case).  I define that key binding in my
+comprehensive configurations on [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]].
+
+Another function of interest which you will not find herein, is the
+integration with my =prot/buffers-major-mode=, which I bind to =M-s b=
+(start from: [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][generic completion for projects and directory trees]]).  You
+can use this in an Elfeed entry buffer to get a list of all entries you
+have opened.  Calling that command with =C-u= (prefix argument) will put
+the list in an =ibuffer= view.  From there you can, for instance, delete
+them in bulk.
+
+The MPV-related functions require the external =mpv= program.  They will
+play a video in a new app window at a resolution that matches the
+current setup's display width or, in the case of an enclosure
+(presumably a podcast), play just the audio file without popping up a
+new app window.  The process runs in a dedicated buffer, so it can be
+terminated by killing the buffer.  In the future I might make this
+cleaner, so that it understands input from, e.g., =playerctl=, though it
+is not a priority as the current simplistic design is "good enough" for
+my case.
+
+The placement of the MPV buffer is controlled by =display-buffer-alist=
+(see [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
+
+Please note that /the code below is subject to review/.
+
+#+begin_src emacs-lisp
+(use-package elfeed
+  :ensure
+  :config
+  (setq elfeed-use-curl t)
+  (setq elfeed-curl-max-connections 10)
+  (setq elfeed-db-directory "~/.emacs.d/elfeed/")
+  (setq elfeed-enclosure-default-dir "~/Downloads/")
+  (setq elfeed-search-filter "@4-months-ago +unread")
+  (setq elfeed-sort-order 'descending)
+  (setq elfeed-search-clipboard-type 'CLIPBOARD)
+  (setq elfeed-search-title-max-width 100)
+  (setq elfeed-search-title-min-width 30)
+  (setq elfeed-search-trailing-width 25)
+  (setq elfeed-show-truncate-long-urls t)
+  (setq elfeed-show-unique-buffers t)
+
+  (defun prot/elfeed-feeds ()
+    "Load file containing the `elfeed-feeds' list.
+Add this to `elfeed-search-mode-hook'."
+    (let ((feeds "~/.emacs.d/feeds.el.gpg"))
+      (if (file-exists-p feeds)
+          (load-file feeds)
+        (user-error "Missing feeds' file"))))
+
+  (defun prot/elfeed-show-eww (&optional link)
+    "Browse current `elfeed' entry link in `eww'.
+Only show the readable part once the website loads.  This can
+fail on poorly-designed websites."
+    (interactive)
+    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+                      elfeed-show-entry
+                    (elfeed-search-selected :ignore-region)))
+           (link (if link link (elfeed-entry-link entry))))
+      (eww link)
+      (add-hook 'eww-after-render-hook 'eww-readable nil t)))
+
+  (defun prot/elfeed-search-other-window (&optional arg)
+    "Browse `elfeed' entry in the other window.
+With \\[universal-argument] browse the entry in `eww' using the
+`prot/elfeed-show-eww' wrapper."
+    (interactive "P")
+    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+                      elfeed-show-entry
+                    (elfeed-search-selected :ignore-region)))
+           (link (elfeed-entry-link entry))
+           (win (selected-window)))
+      (with-current-buffer (get-buffer "*elfeed-search*")
+        (unless (one-window-p)              ; experimental
+          (delete-other-windows win))
+        (split-window win (/ (frame-height) 3) 'below)
+        (other-window 1)
+        (if arg
+            (progn
+              (when (eq major-mode 'elfeed-search-mode)
+                (elfeed-search-untag-all-unread))
+              (prot/elfeed-show-eww link))
+          (elfeed-search-show-entry entry)))))
+
+  (defun prot/elfeed-kill-buffer-close-window-dwim ()
+    "Do-what-I-mean way to handle `elfeed' windows and buffers.
+
+When in an entry buffer, kill the buffer and return to the Elfeed
+Search view.  If the entry is in its own window, delete it as
+well.
+
+When in the search view, close all other windows.  Else just kill
+the buffer."
+    (interactive)
+    (let ((win (selected-window)))
+      (cond ((eq major-mode 'elfeed-show-mode)
+             (elfeed-kill-buffer)
+             (unless (one-window-p) (delete-window win))
+             (switch-to-buffer "*elfeed-search*"))
+            ((eq major-mode 'elfeed-search-mode)
+             (if (one-window-p)
+                 (elfeed-search-quit-window)
+               (delete-other-windows win))))))
+
+  (defvar prot/elfeed-mpv-hook nil
+    "Hook called before `prot/elfeed-mpv-dwim'.")
+
+  ;; TODO make this buffer more useful, such as running it in a
+  ;; shell-aware mode.
+  (defun prot/elfeed-mpv-buffer ()
+    "Prepare \"*elfeed-mpv-output*\" buffer.
+For use by `prot/elfeed-mpv-dwim'.  To be called from
+`prot/elfeed-mpv-hook'."
+    (let ((buf (get-buffer "*elfeed-mpv-output*"))
+          (inhibit-read-only t))
+      (with-current-buffer buf
+        (delete-region (point-min) (point)))))
+
+  (defun prot/elfeed-mpv-dwim ()
+    "Play entry link with external `mpv' program.
+When there is an audio enclosure (podcast), play just the audio.
+Else spawn a video player at a resolution that accounts for the
+current monitor's width."
+    (interactive)
+    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+                      elfeed-show-entry
+                    (elfeed-search-selected :ignore-region)))
+           (link (elfeed-entry-link entry))
+           (enclosure (elt (car (elfeed-entry-enclosures entry)) 0)) ; fragile?
+           (audio "--no-video")
+           ;; Here the display width checks if I am on the laptop
+           (height (if (<= (display-pixel-width ) 1366) "720" "1080"))
+           (video (concat "--ytdl-format=[height<=?" height "]"))
+           (buf (pop-to-buffer "*elfeed-mpv-output*")))
+      (run-hooks 'prot/elfeed-mpv-hook)
+      (if enclosure              ; make this its own parametrised function
+          (progn
+            (start-process "audio-mpv" buf "mpv" audio enclosure)
+            (message (concat "Launching MPV for " (propertize enclosure 'face 'success))))
+        (start-process "video-mpv" buf "mpv" hd link)
+        (message (concat "Launching MPV for " (propertize link 'face 'success))))))
+
+  ;; TODO review and combine the next/prev into a single function
+  (defun prot/elfeed-show-next-search-update ()
+    "Update `elfeed-search-buffer' to match current entry."
+    (interactive)
+    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+                      elfeed-show-entry
+                    (elfeed-search-selected :ignore-region)))
+           (title (elfeed-entry-title entry)))
+      (elfeed-show-next)
+      (when (window-live-p (get-buffer-window "*elfeed-search*"))
+        (with-current-buffer (get-buffer "*elfeed-search*")
+          (goto-char (point-min)) ; Elfeed way to find entry window?
+          (search-forward (format "%s" title))
+          (next-line 1)
+          (prot/pulse-line 'modus-theme-subtle-cyan)))))
+
+  ;; TODO review and combine the next/prev into a single function
+  ;; even the to-do got duplicated here…
+  (defun prot/elfeed-show-prev-search-update ()
+    "Update `elfeed-search-buffer' to match current entry."
+    (interactive)
+    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+                      elfeed-show-entry
+                    (elfeed-search-selected :ignore-region)))
+           (title (elfeed-entry-title entry)))
+      (elfeed-show-prev)
+      (when (window-live-p (get-buffer-window "*elfeed-search*"))
+        (with-current-buffer (get-buffer "*elfeed-search*")
+          (goto-char (point-min)) ; Elfeed way to find entry window?
+          (search-forward (format "%s" title))
+          (previous-line 1)
+          (prot/pulse-line 'modus-theme-subtle-cyan)))))
+
+  (defun prot/elfeed-search-tag-filter ()
+    "Filter `elfeed' by tags using completion.
+
+Arbitrary input is also possible, but you may need to exit the
+minibuffer with `exit-minibuffer' (I bind it to C-j in
+`minibuffer-local-completion-map')."
+    (interactive)
+    (unwind-protect
+        (elfeed-search-clear-filter)
+      ;; NOTE for the `crm-separator' to work with just a space, you
+      ;; need to make SPC self-insert in the minibuffer (the default is
+      ;; to behave like tab-completion).
+      (let* ((crm-separator " ")
+             (elfeed-search-filter-active :live)
+             (db-tags (elfeed-db-get-all-tags))
+             (plus-tags (delete-dups
+                         (mapcar (lambda (x)
+                                   (concat "+" (format "%s" x)))
+                                 db-tags)))
+             (minus-tags (delete-dups
+                          (mapcar (lambda (x)
+                                    (concat "-" (format "%s" x)))
+                                  db-tags)))
+             (all-tags (append plus-tags minus-tags))
+             (tags (completing-read-multiple
+                    "Apply tag: "
+                    all-tags nil t))
+             (input (cons elfeed-search-filter tags)))
+        (setq elfeed-search-filter
+              ;; How to unlist properly (remove parentheses)?  Keeping
+              ;; this inelegant form until I find that…
+              (substring (format "%s" input) 1 -1)))
+      (elfeed-search-update :force)))
+
+  :hook ((elfeed-search-mode-hook . prot/elfeed-feeds)
+         (prot/elfeed-mpv-hook . prot/elfeed-mpv-buffer))
+  :bind (("C-c f" . elfeed)
+         :map elfeed-search-mode-map
+         ("s" . prot/elfeed-search-tag-filter)
+         ("w" . elfeed-search-yank)
+         ("g" . elfeed-update)
+         ("G" . elfeed-search-update--force)
+         ("o" . prot/elfeed-search-other-window)
+         ("v" . prot/elfeed-mpv-dwim)
+         ("q" . prot/elfeed-kill-buffer-close-window-dwim)
+         :map elfeed-show-mode-map
+         ("e" . prot/elfeed-show-eww)
+         ("n" . prot/elfeed-show-next-search-update)
+         ("p" . prot/elfeed-show-prev-search-update)
+         ("q" . prot/elfeed-kill-buffer-close-window-dwim)
+         ("v" . prot/elfeed-mpv-dwim)
+         ("w" . elfeed-show-yank)))
 #+end_src
 
 ** Emacs HTML parser
@@ -8076,7 +8317,7 @@ This is a library that provides utilities for highlighting the region or
 area around point.  It is meant to be used by other packages as a means
 of offering visual feedback, as is the case with, for example. =M-.=
 (=xref-find-definitions=).  I also make use of this in my settings for
-[[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][Imenu (dynamic completion-based navigation)]].
+[[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][Imenu (dynamic completion-based navigation)]] and [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed RSS reader]].
 
 Here I define a simple command for highlighting the current line on
 demand.  It fully replaces the niche I had carved for the =beacon=
