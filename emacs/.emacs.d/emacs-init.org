@@ -8303,7 +8303,7 @@ more straightforward workflows.
 #+begin_src emacs-lisp
 (use-package multiple-cursors
   :ensure
-  :bind (("C->" . mc/mark-previous-like-this)
+  :bind (("C-<" . mc/mark-previous-like-this)
          ("C->" . mc/mark-next-like-this)
          ("s->" . mc/mark-all-like-this)))
 #+end_src
