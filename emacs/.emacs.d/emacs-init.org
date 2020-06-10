@@ -6002,7 +6002,7 @@ For use by `prot/elfeed-mpv-dwim'.  To be called from
     (let ((buf (get-buffer "*elfeed-mpv-output*"))
           (inhibit-read-only t))
       (with-current-buffer buf
-        (delete-region (point-min) (point)))))
+        (erase-buffer))))
 
   (defun prot/elfeed-mpv-dwim ()
     "Play entry link with external `mpv' program.
@@ -6025,7 +6025,7 @@ current monitor's width."
           (progn
             (start-process "audio-mpv" buf "mpv" audio enclosure)
             (message (concat "Launching MPV for " (propertize enclosure 'face 'success))))
-        (start-process "video-mpv" buf "mpv" hd link)
+        (start-process "video-mpv" buf "mpv" video link)
         (message (concat "Launching MPV for " (propertize link 'face 'success))))))
 
   ;; TODO review and combine the next/prev into a single function
@@ -6088,11 +6088,8 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
              (tags (completing-read-multiple
                     "Apply tag: "
                     all-tags nil t))
-             (input (cons elfeed-search-filter tags)))
-        (setq elfeed-search-filter
-              ;; How to unlist properly (remove parentheses)?  Keeping
-              ;; this inelegant form until I find that…
-              (substring (format "%s" input) 1 -1)))
+             (input (string-join `(,elfeed-search-filter ,@tags) " ")))
+        (setq elfeed-search-filter input))
       (elfeed-search-update :force)))
 
   :hook ((elfeed-search-mode-hook . prot/elfeed-feeds)
