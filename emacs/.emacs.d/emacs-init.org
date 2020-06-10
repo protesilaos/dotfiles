@@ -3471,7 +3471,7 @@ Now on to the miscellaneous settings:
           (sequence "MEET(m)" "|" "MET(M)" "POSTPONED(P)")
           (sequence "STUDY(s)" "|" "STUDIED(S)")
           (sequence "RECORD(r)" "|" "RECORDED(R)")))
-  (setq org-fontify-done-headline t)
+  (setq org-fontify-done-headline nil)
   (setq org-fontify-quote-and-verse-blocks t)
   (setq org-fontify-whole-heading-line nil)
   (setq org-enforce-todo-dependencies t)
@@ -3717,7 +3717,7 @@ documentation facilities over each item, such as =C-h v=):
   :config
   (setq org-agenda-confirm-kill t)
   (setq org-agenda-dim-blocked-tasks t)
-  (setq org-agenda-include-diary nil)
+  (setq org-agenda-include-diary t)
   (setq org-agenda-show-all-dates t)
   (setq org-agenda-show-outline-path nil)
 
