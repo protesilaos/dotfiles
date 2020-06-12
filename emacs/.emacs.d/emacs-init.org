@@ -512,7 +512,7 @@ The two main ways to set a font using =set-face-attribute= are as follows:
 
 + Set individual attributes :: Define the values of keywords like
   =:family=, =:height=, =:weight= on a per-attribute basis.
-+ Set font parameters ::  Pass a single string that is consistent with
++ Set font parameters :: Pass a single string that is consistent with
   how =fontconfig= (GNU/Linux) reads fonts.  This allows us to apply
   parameters that are specified in the [[https://www.freedesktop.org/software/fontconfig/fontconfig-user.html][fontconfig user spec]], such as
   whether to implement an antialiasing effect or tweak the hinting
@@ -529,7 +529,7 @@ values (read the docs with =C-h f set-face-attribute=):
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (setq x-underline-at-descent-line t)
+  (setq x-underline-at-descent-line nil)
   (setq underline-minimum-offset 0)
 
   ;; My patched version of Hack.
@@ -564,7 +564,7 @@ Pass desired argument to `prot/font-sizes' for use on my larger
 desktop monitor (external display connected to my laptop)."
     (interactive)
     (when window-system
-      (prot/set-face-attribute-font prot/default-font 12.5)))
+      (prot/set-face-attribute-font prot/default-font 13)))
 
   (defun prot/screencast-fonts ()
     "Fonts for screen casts and video demos.
@@ -586,7 +586,7 @@ presentations.  Also see `prot/org-presentation'."
       (prot/set-face-attribute-font prot/default-font 20)))
 
   (defun prot/fonts-per-monitor ()
-  "Use font settings based on screen size.
+    "Use font settings based on screen size.
 
 Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
 depending on the width of the monitor.  The calculation is based
@@ -6112,7 +6112,7 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
          ("w" . elfeed-show-yank)))
 #+end_src
 
-** Emacs HTML parser
+** Emacs Simple HTML Renderer (shr)
    :PROPERTIES:
    :CUSTOM_ID: h:524bc702-ff55-4ed9-9a38-26d30d64591d
    :END:
@@ -6144,6 +6144,7 @@ What these do:
   (setq shr-use-fonts nil)
   (setq shr-use-colors nil)
   (setq shr-max-image-proportion 0.7)
+  (setq shr-image-animate nil)
   (setq shr-width (current-fill-column)))
 #+end_src
 
@@ -6513,7 +6514,7 @@ This is used internally by `prot/modus-themes-toggle'."
     (setq modus-operandi-theme-slanted-constructs nil
           modus-operandi-theme-bold-constructs nil
           modus-operandi-theme-visible-fringes t
-          modus-operandi-theme-3d-modeline nil
+          modus-operandi-theme-3d-modeline t
           modus-operandi-theme-subtle-diffs t
           modus-operandi-theme-intense-standard-completions t
           modus-operandi-theme-distinct-org-blocks t
@@ -6537,7 +6538,7 @@ This is used internally by `prot/modus-themes-toggle'."
     (setq modus-vivendi-theme-slanted-constructs nil
           modus-vivendi-theme-bold-constructs nil
           modus-vivendi-theme-visible-fringes t
-          modus-vivendi-theme-3d-modeline nil
+          modus-vivendi-theme-3d-modeline t
           modus-vivendi-theme-subtle-diffs t
           modus-vivendi-theme-intense-standard-completions t
           modus-vivendi-theme-distinct-org-blocks t
