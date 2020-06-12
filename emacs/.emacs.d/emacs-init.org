@@ -6042,6 +6042,7 @@ current monitor's width."
           (goto-char (point-min)) ; Elfeed way to find entry window?
           (search-forward (format "%s" title))
           (next-line 1)
+          (set-window-point nil (point-at-bol))
           (prot/pulse-line 'modus-theme-subtle-cyan)))))
 
   ;; TODO review and combine the next/prev into a single function
@@ -6059,6 +6060,7 @@ current monitor's width."
           (goto-char (point-min)) ; Elfeed way to find entry window?
           (search-forward (format "%s" title))
           (previous-line 1)
+          (set-window-point nil (point-at-bol))
           (prot/pulse-line 'modus-theme-subtle-cyan)))))
 
   (defun prot/elfeed-search-tag-filter ()
