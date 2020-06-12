@@ -464,49 +464,53 @@ are virtually unreadable when cast on a light background (bitmap fonts
 in particular).
 
 I am using my [[https://gitlab.com/protesilaos/hack-font-mod][patched version of Hack]] as the standard typeface.  In
-technical terms, this is the family that applies to the =default= /face/.
+technical terms, this is the family that I assign to the =default= /face/.
 In Emacs parlance, "face" is a construct that groups together several
 display attributes, such as a foreground and a background colour, as
 well as all the typography-related values (Emacs themes are, in essence,
 programs that configure those faces).
 
-As for Hack itself, it is my all-time favourite font for text editing,
-proven time and again by the fact that I always return to it no matter
-how many fonts I try.  Its features make it readable at practically all
+As for Hack itself, it is my all-time favourite libre font for text
+editing, proven time and again by the fact that I always return to it no
+matter how many I try.  Its features make it readable at practically all
 point sizes.  It is balanced in terms of height, length, and width.  It
-is equally visible on both light and dark themes.  If you are one for
-metaphors, Hack is a working dog par excellence; one with a squared,
-chiselled head and a solid build---my type of canine.
+is equally visible on both light and dark themes.  It just works!  If
+you are one for metaphors, Hack is a working dog par excellence; one
+with a squared, chiselled head and a solid build---my type of canine.
 
-For a proportionately-spaced font, I go with /DejaVu Sans/.  It is part of
-the super-family from whence Hack descends from.  Further below I
+For a proportionately-spaced font, I go with FiraGO.  It is the
+continuation of Fira Sans, extending its language coverage while
+tweaking the space between some letter combinations.  Further below I
 specify settings that govern the [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]] and link to
-other relevant sections, while my [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes]] are designed to also cope
-well with mixed-font settings (useful in Org).
+other relevant sections, while my [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes]] are designed to cope well
+with mixed-font settings (useful in Org).
 
 Lastly, note that on a modern GNU/Linux system that uses the =fontconfig=
 library, per-user fonts are stored in =~/.local/share/fonts=.
 
-*** Primary font settings
+*** Primary and complementary font settings
     :PROPERTIES:
     :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
     :END:
 
-Moving on to my configurations, the functions that follow the pattern
-=prot/SCOPE-font= allow me to conveniently define the settings I need to
-use in the given context.  Their docstrings should offer you all the
-information you need.
+Moving on to my configurations, =prot/font-set-fonts-completion= is a
+command that lets me switch font sizes through a completion interface
+(more on that in [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]]).  When the function is
+executed non-interactively, it can be given an arbitrary font size as
+well as family names for the {mono,proportionately}-spaced typefaces.
 
 While there are many ways to define a baseline or fallback font family
 in Emacs, I find that the most consistent one in terms of overall
 configuration is to do it at the "face" level.  For the main typeface,
-we configure the =default= face.  To understand the syntax used here, do
-=C-h f set-face-attribute=.  In essence we are specifying the family that
-should be used /in case no other applies/ for the given face.  This is
-actually a good thing because there are many cases where you want a face
-to retain its own attributes (e.g. let =org-mode= inline code be presented
-in its monospace font while using a sans-serif for the main text---see
-[[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]]).
+we configure the =default= face.  Then we have =variable-pitch= for
+proportionately-spaced fonts and =fixed-pitch= for monospaced ones.
+
+To understand the syntax used here, do =C-h f set-face-attribute=.  In
+essence we are specifying the family that should be used /in case no
+other applies/ for the given face.  This is actually a good idea because
+there are many cases where you want a face to retain its own attributes
+(e.g. let =org-mode= inline code be presented in its monospace font while
+using a sans-serif for the main text---see [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]]).
 
 The two main ways to set a font using =set-face-attribute= are as follows:
 
@@ -526,118 +530,99 @@ values (read the docs with =C-h f set-face-attribute=):
 + =(set-face-attribute 'FACE nil :family "NAME" :height "HEIGHT")=
 + =(set-face-attribute 'FACE nil :font "FAMILY-SIZE:PARAM1=PARAMVALUE1")=
 
+Also bear in mind that on a GNU/Linux system there normally is no need
+to test for the presence of a font before setting it.  This is handled
+by =fontconfig= with rules that can be defined at the user or system level
+(things work out-of-the-box on every distro I ever tried).
+
 #+begin_src emacs-lisp
 (use-package emacs
+  :commands (prot/font-line-spacing
+             prot/font-fonts-per-monitor)
   :config
   (setq x-underline-at-descent-line nil)
   (setq underline-minimum-offset 0)
 
   ;; My patched version of Hack.
   ;; https://gitlab.com/protesilaos/hack-font-mod
-  (defconst prot/default-font "Hack"
-    "The default typeface.")
+  (defconst prot/font-default-font-family "Hack"
+    "The default typeface.
+This is meant to be applied to the `default' and `fixed-pitch'
+faces.")
 
-  (defconst prot/font-params "autohint=false:hintstyle=hintfull:embeddedbitmap=true"
-    "The default fixed-pitch typeface.")
+  ;; The continuation of Fira Sans (I wish Fira Mono had italics,
+  ;; because I like it even more than Hack).
+  (defconst prot/font-variable-pitch-font-family "FiraGO"
+    "The default proportionately-spaced typeface.
+This is meant to be applied to the `variable-pitch' face.")
 
-  (defun prot/set-face-attribute-font (family size)
-    "Set `default' face font to FAMILY at SIZE."
-    (set-face-attribute 'default nil :font (concat family
-                                                   "-"
-                                                   (number-to-string size)
-                                                   ":"
-                                                   prot/font-params)))
+  (defconst prot/font-fontconfig-parameters
+    "autohint=true:hintstyle=hintfull:embeddedbitmap=false"
+    "Additional parameters for the given font family.
+These are specific to the fontconfig backend for GNU/Linux systems.")
 
-  (defun prot/laptop-fonts ()
-    "Fonts for the small laptop screen.
+  (defvar prot/font-switch-fonts-hook nil
+    "Hook that is called from `prot/font-set-fonts-completion'.")
 
-Pass desired argument to `prot/font-sizes' for use on my
-small laptop monitor."
+  (defconst prot/font-sizes-alist
+    '(("laptop" . 10.5)
+      ("desktop" . 13)
+      ("screencast" . 16)
+      ("presentation" . 19))
+    "Alist of desired font point sizes.")
+
+  (defun prot/set-face-attribute-font (face family size &optional parameters)
+    "Set FACE font to FAMILY at SIZE with optional PARAMETERS."
+    (let ((params (if parameters
+                      parameters
+                    prot/font-fontconfig-parameters)))
+      (set-face-attribute
+       `,face nil :font
+       (concat family "-" (number-to-string size) ":" params))))
+
+  (defun prot/font-set-fonts-completion (&optional points font-mono font-var)
+    "Set default font size using presets or in specified POINTS."
     (interactive)
-    (when window-system
-      (prot/set-face-attribute-font prot/default-font 10.5)))
+    (let* ((displays (mapcar #'car prot/font-sizes-alist))
+           (choice (unless points
+                     (completing-read "Pick font size: " displays nil t)))
+           (size (if points
+                     points
+                   (cdr (assoc `,choice prot/font-sizes-alist))))
+           (mono (if font-mono font-mono prot/font-default-font-family))
+           (var (if font-var font-var prot/font-variable-pitch-font-family)))
+      (when window-system
+        (prot/set-face-attribute-font 'default mono size)
+        (prot/set-face-attribute-font 'fixed-pitch mono size)
+        ;; Increasing the size on this to account for the innate
+        ;; difference between the families I use.  Maybe there is some
+        ;; more flexible way of creating visual harmony between
+        ;; typefaces with distinct inherent heights.
+        ;;
+        ;; TODO normalise multi-font heights?
+        (prot/set-face-attribute-font 'variable-pitch var (+ size 2))))
+    (run-hooks 'prot/font-switch-fonts-hook))
 
-  (defun prot/desktop-fonts ()
-    "Fonts for the larger desktop screen.
+  ;; TODO a better approach would be to check for a list of fonts that
+  ;; are known to require further tweaks and which I might want to use.
+  (defun prot/font-line-spacing ()
+    "Determine desirable `line-spacing', based on font family.
+Add this to `prot/font-switch-fonts-hook'."
+    (if (string= (face-attribute 'default :family) "Source Code Pro")
+        (setq-default line-spacing 1)
+      (setq-default line-spacing nil)))
 
-Pass desired argument to `prot/font-sizes' for use on my larger
-desktop monitor (external display connected to my laptop)."
-    (interactive)
-    (when window-system
-      (prot/set-face-attribute-font prot/default-font 13)))
+  (defun prot/font-fonts-per-monitor (&optional font)
+    "Use font settings based on screen size."
+    (if (<= (display-pixel-width) 1366)
+        (prot/font-set-fonts-completion 10.5)
+      (prot/font-set-fonts-completion 13)))
 
-  (defun prot/screencast-fonts ()
-    "Fonts for screen casts and video demos.
-
-Pass desired argument to `prot/font-sizes' for use during screen
-casting.  The idea is to make it easier for viewers to see what I
-am doing."
-    (interactive)
-    (when window-system
-      (prot/set-face-attribute-font prot/default-font 16)))
-
-  (defun prot/presentation-fonts ()
-    "Fonts for presentations and video blogs.
-
-Pass desired argument to `prot/font-sizes' for use during
-presentations.  Also see `prot/org-presentation'."
-    (interactive)
-    (when window-system
-      (prot/set-face-attribute-font prot/default-font 20)))
-
-  (defun prot/fonts-per-monitor ()
-    "Use font settings based on screen size.
-
-Choose between `prot/laptop-fonts' and `prot/desktop-fonts'
-depending on the width of the monitor.  The calculation is based
-on the maximum width of my laptop's screen.  So if an external
-display is attached, then it is considered a desktop scenario.
-
-While this function is interactive, it is best to run it with the
-`after-init-hook' or perhaps some other event that tracks
-monitor-related events."
-    (interactive)
-    (when window-system
-      (if (<= (display-pixel-width) 1366)
-          (prot/laptop-fonts)
-        (prot/desktop-fonts))))
-
-  :hook (after-init-hook . prot/fonts-per-monitor))
-#+end_src
-
-*** Font families for other generic face groups
-    :PROPERTIES:
-    :CUSTOM_ID: h:a00a72af-2097-49e3-8b2c-ba7dc930c5f0
-    :END:
-
-What I am doing here is define the exact font family to be used by these
-generic faces, which are designed to be inherited by other faces in
-order to keep things consistent across a theme.  We could do the same
-for practically any face, but I think that is a step too far.
-
-Do not forget that my standard font family for the =default= face and also
-for =fixed-pitch= is declared in the [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][previous section]] (I normally use a
-monospaced font for everything, so there is no real need to decouple
-=default= and =fixed-pitch=).
-
-Note that the =:height= in this snippet is specified as a floating point,
-which means that it is a multiple of the base size (defined above).
-When the =:height= property is an integer it is understood as the point
-size × 100.  So =10.5pt= is expressed as =105=.
-
-Also bear in mind that on a GNU/Linux system there normally is no need
-to test for the presence of a font before setting it.  This is handled
-by =fontconfig= with rules that can be defined at the user or system level
-(things work out-of-the-box on every distro I tried).
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (defconst prot/variable-pitch-font "DejaVu Sans"
-    "The default variable-pitch typeface.")
-
-  (set-face-attribute 'variable-pitch nil :family prot/variable-pitch-font :height 1.0)
-  (set-face-attribute 'fixed-pitch nil :family prot/default-font :height 1.0))
+  :hook ((after-init-hook . prot/font-fonts-per-monitor)
+         (prot/font-switch-fonts-hook . prot/font-line-spacing))
+  ;; Awkward key because I do not need it very often.  Maybe once a day.
+  ;; The "C-c f" is used elsewhere.
+  :bind ("C-c F" . prot/font-set-fonts-completion))
 #+end_src
 
 *** Mode for proportional fonts
@@ -651,7 +636,7 @@ other typegraphic attributes).  This means that it can draw text on the
 same line that has potentially profoundly different properties
 character-by-character.  For example, a sans-serif typeface for prose
 with a monospaced font for inline code (for the underlying faces that
-may be used, see [[#h:a00a72af-2097-49e3-8b2c-ba7dc930c5f0][Font families for other generic face groups]]).
+may be used, see [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Primary and complementary font settings]]).
 
 While we can handle things on our own by calling =set-face-attribute= for
 each face we are interested in, there is a built-in mechanism to quickly
@@ -671,30 +656,22 @@ With the following package declaration my idea is to integrate
 have, /mutatis mutandis/.  Likely candidates are the toggle for
 =olivetti-mode= (see the section on [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing]]) and my
 simple-yet-super-effective plain text presentations with Org mode (see
-[[#h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11][simple presentations inside of Emacs]]).  Please note though that this may
-be reviewed upon further testing and experimentation.
+[[#h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11][simple presentations inside of Emacs]]).  Please note though that /this
+may be reviewed upon further testing and experimentation/.
 
 #+begin_src emacs-lisp
 (use-package face-remap
   :diminish buffer-face-mode            ; the actual mode
   :config
-  (defun prot/variable-pitch-mode (&optional size)
-    "Toggle `variable-pitch-mode' and additional parameters.
-SIZE is intented for one of my functions for setting the primary
-font size.
-
-Example: (prot/variable-pitch-mode (prot/screencast-fonts))"
+  (defun prot/variable-pitch-mode ()
+    "Toggle `variable-pitch-mode' and additional parameters."
     (interactive)
     (if (bound-and-true-p buffer-face-mode)
         (progn
           (variable-pitch-mode -1)
-          (setq-local cursor-type 'box)   ; TODO better restore original value
-          (when size                      ; TODO restore previous value
-            (prot/fonts-per-monitor)))
+          (setq-local cursor-type 'box))   ; TODO better restore original value
       (variable-pitch-mode 1)
-      (setq-local cursor-type 'bar)
-      (when size
-        size))))
+      (setq-local cursor-type 'bar))))
 #+end_src
 
 *** Typeface suitability test
@@ -3912,13 +3889,15 @@ activation of `org-tree-slide-mode'."
           (org-indent-mode 1)
           (blink-cursor-mode -1)
           (setq-local cursor-type '(bar . 1))
-          (prot/presentation-fonts))
+          (prot/font-set-fonts-completion
+           (cdr (assoc "presentation" prot/font-sizes-alist))
+           "Source Code Pro"))
       (darkroom-tentative-mode -1)
       (org-superstar-mode -1)
       (org-indent-mode -1)
       (blink-cursor-mode 1)
       (setq-local cursor-type 'box)
-      (prot/fonts-per-monitor)))
+      (prot/font-fonts-per-monitor)))
 
   :bind (("<f9>" . org-tree-slide-mode)
          :map org-tree-slide-mode-map
