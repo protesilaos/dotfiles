@@ -598,19 +598,19 @@ AMOUNT is a customisation option."
       ;;
       ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
       ("red" . "#ff8059") ("green" . "#44bc44")
-      ("yellow" . "#eecc00") ("blue" . "#33beff")
+      ("yellow" . "#eecc00") ("blue" . "#29aeff")
       ("magenta" . "#feacd0") ("cyan" . "#00d3d0")
       ;; styles for common, but still specialised constructs
       ;;
       ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
-      ("red-alt" . "#f4923b") ("green-alt" . "#58dd13")
-      ("yellow-alt" . "#e5f040") ("blue-alt" . "#72a4ff")
+      ("red-alt" . "#f4923b") ("green-alt" . "#80d200")
+      ("yellow-alt" . "#cfdf30") ("blue-alt" . "#72a4ff")
       ("magenta-alt" . "#f78fe7") ("cyan-alt" . "#4ae8fc")
       ;; same purpose as above, just slight differences
       ;;
       ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
-      ("red-alt-other" . "#ff9977") ("green-alt-other" . "#90d800")
-      ("yellow-alt-other" . "#f0ce43") ("blue-alt-other" . "#00baf4")
+      ("red-alt-other" . "#ff9977") ("green-alt-other" . "#00cd68")
+      ("yellow-alt-other" . "#f0ce43") ("blue-alt-other" . "#00bdfa")
       ("magenta-alt-other" . "#b6a0ff") ("cyan-alt-other" . "#6ae4b9")
       ;; styles for elements that should be very subtle
       ;;
@@ -1072,9 +1072,10 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(change-log-date ((,class (:foreground ,magenta))))
    `(change-log-email ((,class (:foreground ,cyan))))
    `(change-log-file ((,class (:foreground ,blue))))
+   `(change-log-function ((,class (:foreground ,green-alt-other))))
    `(change-log-list ((,class (:foreground ,magenta-alt-other))))
    `(change-log-name ((,class (:foreground ,cyan))))
-   `(log-edit-header ((,class (:foreground ,blue-alt :weight bold))))
+   `(log-edit-header ((,class (:foreground ,green-alt-other :weight bold))))
    `(log-edit-summary ((,class (:foreground ,magenta-alt-other))))
    `(log-edit-unknown-header ((,class (:foreground ,fg-alt))))
    `(log-view-file ((,class (:foreground ,fg-special-cold :weight bold))))
@@ -1362,31 +1363,31 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(dired-subtree-depth-5-face ((,class (:background nil))))
    `(dired-subtree-depth-6-face ((,class (:background nil))))
    ;;;; diredfl
-   `(diredfl-autofile-name ((,class (:inherit modus-theme-refine-yellow))))
-   `(diredfl-compressed-file-name ((,class (:foreground ,red-alt :weight bold))))
-   `(diredfl-compressed-file-suffix ((,class (:inherit diredfl-compressed-file-name))))
+   `(diredfl-autofile-name ((,class (:inherit modus-theme-special-cold))))
+   `(diredfl-compressed-file-name ((,class (:foreground ,green-alt-other))))
+   `(diredfl-compressed-file-suffix ((,class (:foreground ,green-alt))))
    `(diredfl-date-time ((,class (:foreground ,fg-special-cold))))
    `(diredfl-deletion ((,class (:inherit dired-flagged))))
    `(diredfl-deletion-file-name ((,class (:inherit dired-flagged))))
    `(diredfl-dir-heading ((,class (:inherit dired-header))))
    `(diredfl-dir-name ((,class (:inherit dired-directory))))
-   `(diredfl-dir-priv ((,class (:foreground ,blue-alt))))
-   `(diredfl-exec-priv ((,class (:foreground ,cyan))))
-   `(diredfl-executable-tag ((,class (:foreground ,cyan-alt))))
+   `(diredfl-dir-priv ((,class (:foreground ,blue))))
+   `(diredfl-exec-priv ((,class (:foreground ,red-alt-other))))
+   `(diredfl-executable-tag ((,class (:foreground ,red-alt))))
    `(diredfl-file-name ((,class (:foreground ,fg-main))))
    `(diredfl-file-suffix ((,class (:foreground ,fg-special-warm))))
    `(diredfl-flag-mark ((,class (:inherit dired-marked))))
    `(diredfl-flag-mark-line ((,class (:inherit dired-marked))))
    `(diredfl-ignored-file-name ((,class (:foreground ,fg-inactive))))
-   `(diredfl-link-priv ((,class (:foreground ,blue-alt))))
+   `(diredfl-link-priv ((,class (:foreground ,blue-alt-other))))
    `(diredfl-no-priv ((,class (:foreground ,fg-inactive))))
-   `(diredfl-number ((,class (:foreground ,fg-alt))))
+   `(diredfl-number ((,class (:foreground ,cyan))))
    `(diredfl-other-priv ((,class (:foreground ,yellow))))
-   `(diredfl-rare-priv ((,class (:foreground ,green))))
+   `(diredfl-rare-priv ((,class (:foreground ,magenta-alt-other))))
    `(diredfl-read-priv ((,class (:foreground ,magenta))))
    `(diredfl-symlink ((,class (:foreground ,blue-alt :underline t))))
    `(diredfl-tagged-autofile-name ((,class (:inherit modus-theme-refine-magenta))))
-   `(diredfl-write-priv ((,class (:foreground ,magenta-alt-other))))
+   `(diredfl-write-priv ((,class (:foreground ,cyan-alt-other))))
    ;;;; disk-usage
    `(disk-usage-children ((,class (:foreground ,yellow))))
    `(disk-usage-inaccessible ((,class (:foreground ,red :weight bold))))
@@ -1526,9 +1527,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(epa-mark ((,class (:foreground ,magenta :weight bold))))
    `(epa-string ((,class (:foreground ,blue-alt))))
    `(epa-validity-disabled ((,class (:inherit modus-theme-refine-red))))
-   `(epa-validity-high ((,class (:foreground ,cyan :weight bold))))
+   `(epa-validity-high ((,class (:foreground ,green-alt-other :weight bold))))
    `(epa-validity-low ((,class (:foreground ,fg-alt))))
-   `(epa-validity-medium ((,class (:foreground ,yellow))))
+   `(epa-validity-medium ((,class (:foreground ,green-alt))))
    ;;;; equake
    `(equake-buffer-face ((,class (:background ,bg-main :foreground ,fg-main))))
    `(equake-shell-type-eshell ((,class (:background ,bg-inactive :foreground ,green-active))))
@@ -1580,7 +1581,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(eshell-ls-special ((,class (:foreground ,magenta :weight bold))))
    `(eshell-ls-symlink ((,class (:foreground ,cyan :underline t))))
    `(eshell-ls-unreadable ((,class (:background ,bg-inactive :foreground ,fg-inactive))))
-   `(eshell-prompt ((,class (:foreground ,cyan-alt-other :weight ,modus-theme-bold))))
+   `(eshell-prompt ((,class (:foreground ,green-alt-other :weight ,modus-theme-bold))))
    ;;;; evil-mode
    `(evil-ex-commands ((,class (:foreground ,magenta-alt-other))))
    `(evil-ex-info ((,class (:foreground ,cyan-alt-other))))
@@ -2084,11 +2085,21 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(indium-repl-stdout-face ((,class (:foreground ,fg-main))))
    ;;;; info
    `(Info-quoted ((,class (:foreground ,magenta)))) ; the capitalisation is canonical
-   `(info-header-node ((,class (:foreground ,fg-special-warm))))
+   `(info-header-node ((,class (:foreground ,fg-alt :weight bold))))
    `(info-header-xref ((,class (:foreground ,blue-active))))
    `(info-index-match ((,class (:inherit match))))
+   `(info-menu-header ((,class (:inherit ,modus-theme-variable-pitch :foreground ,fg-main :weight bold
+                                         ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-2)))))
    `(info-menu-star ((,class (:foreground ,fg-main))))
    `(info-node ((,class (:weight bold))))
+   `(info-title-1 ((,class (:inherit ,modus-theme-variable-pitch :foreground ,fg-main :weight bold
+                                     ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-4)))))
+   `(info-title-2 ((,class (:inherit ,modus-theme-variable-pitch :foreground ,fg-special-warm :weight bold
+                                     ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-3)))))
+   `(info-title-3 ((,class (:inherit ,modus-theme-variable-pitch :foreground ,fg-special-cold :weight bold
+                                     ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-2)))))
+   `(info-title-4 ((,class (:inherit ,modus-theme-variable-pitch :foreground ,fg-special-mild :weight bold
+                                     ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-1)))))
    ;;;; info-colors
    `(info-colors-lisp-code-block ((,class (:inherit fixed-pitch))))
    `(info-colors-ref-item-command ((,class (:foreground ,magenta))))
@@ -2351,7 +2362,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(magit-signature-good ((,class (:background ,bg-main :foreground ,green-intense))))
    `(magit-signature-revoked ((,class (:background ,bg-main :foreground ,magenta-intense))))
    `(magit-signature-untrusted ((,class (:background ,bg-main :foreground ,cyan-intense))))
-   `(magit-tag ((,class (:foreground ,yellow-alt-other))))
+   `(magit-tag ((,class (:foreground ,green-alt))))
    ;;;; magit-imerge
    `(magit-imerge-overriding-value ((,class (:foreground ,red-alt :weight bold))))
    ;;;; man
@@ -2447,7 +2458,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(message-cited-text-3 ((,class (:foreground ,yellow))))
    `(message-cited-text-4 ((,class (:foreground ,red))))
    `(message-header-cc ((,class (:foreground ,blue-alt))))
-   `(message-header-name ((,class (:foreground ,cyan-alt))))
+   `(message-header-name ((,class (:foreground ,green-alt-other))))
    `(message-header-newsgroups ((,class (:foreground ,blue :weight bold))))
    `(message-header-other ((,class (:foreground ,cyan-alt-other :weight bold))))
    `(message-header-subject ((,class (:foreground ,magenta-alt-other :weight bold))))
@@ -2647,8 +2658,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-default ((,class (:background ,bg-main :foreground ,fg-main))))
    `(org-document-info ((,class (:foreground ,fg-special-cold))))
    `(org-document-info-keyword ((,class (:inherit fixed-pitch :foreground ,fg-alt))))
-   `(org-document-title ((,class (,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-5)
-                                  :foreground ,fg-special-cold :weight bold))))
+   `(org-document-title ((,class (:inherit ,modus-theme-variable-pitch :foreground ,fg-special-cold :weight bold
+                                  ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-5)))))
    `(org-done ((,class (,@(modus-vivendi-theme-org-todo-block green-nuanced-bg green-nuanced green)))))
    `(org-drawer ((,class (:foreground ,cyan-alt))))
    `(org-ellipsis ((,class (:foreground nil)))) ; inherits from the heading's colour
