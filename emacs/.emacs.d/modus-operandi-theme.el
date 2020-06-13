@@ -576,7 +576,7 @@ AMOUNT is a customisation option."
 ;; The design of the colour palette and of the macro that maps it to
 ;; faces is copied from zenbern-theme.el from commit 7dd7968:
 ;; https://github.com/bbatsov/zenburn-emacs
-(eval-when-compile
+(eval-and-compile
   (defvar modus-operandi-theme-default-colors-alist
     '(;; base values
       ("bg-main" . "#ffffff") ("fg-main" . "#000000")
@@ -2597,19 +2597,21 @@ Also bind `class' to ((class color) (min-colors 89))."
                                          yellow-alt-other yellow-refine-bg yellow-refine-fg)
                                       :weight bold))))
    ;;;; org
-   `(org-agenda-calendar-event ((,class (:foreground ,blue-alt))))
+   `(org-agenda-calendar-event ((,class (:foreground ,fg-main))))
    `(org-agenda-calendar-sexp ((,class (:foreground ,cyan-alt))))
    `(org-agenda-clocking ((,class (:inherit modus-theme-special-cold))))
    `(org-agenda-column-dateline ((,class (:inherit modus-theme-subtle-neutral))))
    `(org-agenda-current-time ((,class (:inherit modus-theme-intense-cyan))))
-   `(org-agenda-date ((,class (:inherit ,modus-theme-variable-pitch :foreground ,fg-main
-                                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4)))))
+   `(org-agenda-date ((,class (:inherit ,modus-theme-variable-pitch :foreground ,cyan-alt-other
+                                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4)
+                                        ,@(modus-operandi-theme-heading-block cyan-nuanced-bg cyan-nuanced)))))
    `(org-agenda-date-today ((,class (:inherit ,modus-theme-variable-pitch :background ,cyan-subtle-bg
                                               :foreground ,fg-main :weight bold
                                               ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4)))))
-   `(org-agenda-date-weekend ((,class (:inherit ,modus-theme-variable-pitch :foreground ,fg-alt
-                                                ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4)))))
-   `(org-agenda-diary ((,class (:background ,bg-main :foreground ,fg-main))))
+   `(org-agenda-date-weekend ((,class (:inherit ,modus-theme-variable-pitch :foreground ,cyan
+                                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4)
+                                        ,@(modus-operandi-theme-heading-block blue-nuanced-bg cyan-nuanced)))))
+   `(org-agenda-diary ((,class (:foreground ,fg-main))))
    `(org-agenda-dimmed-todo-face ((,class (:inherit modus-theme-subtle-neutral))))
    `(org-agenda-done ((,class (,@(modus-operandi-theme-org-todo-block green-nuanced-bg green-nuanced green)))))
    `(org-agenda-filter-category ((,class (:background ,bg-active :foreground ,fg-main :box t))))
@@ -2628,18 +2630,19 @@ Also bind `class' to ((class color) (min-colors 89))."
                                            '(:extend t))
                                     :inherit fixed-pitch :background ,bg-alt :foreground ,fg-special-mild))))
    `(org-block-end-line ((,class (:inherit org-block-begin-line))))
-   `(org-checkbox ((,class (:weight bold))))
+   `(org-checkbox ((,class (:box (:line-width 1 :color ,bg-active)
+                                 :background ,bg-inactive :foreground ,fg-active))))
    `(org-checkbox-statistics-done ((,class (:foreground ,green
                                                         ,@(modus-operandi-theme-heading-block
                                                            green-nuanced-bg green-nuanced)))))
-   `(org-checkbox-statistics-todo ((,class (:foreground ,yellow
+   `(org-checkbox-statistics-todo ((,class (:foreground ,red-alt
                                                         ,@(modus-operandi-theme-heading-block
-                                                           yellow-nuanced-bg yellow-nuanced)))))
+                                                           red-nuanced-bg red-nuanced)))))
    `(org-clock-overlay ((,class (:inherit modus-theme-special-cold))))
    `(org-code ((,class (:inherit fixed-pitch :foreground ,magenta))))
    `(org-column ((,class (:background ,bg-alt))))
    `(org-column-title ((,class (:underline t :background ,bg-alt :weight bold))))
-   `(org-date ((,class (:foreground ,blue-nuanced))))
+   `(org-date ((,class (:foreground ,cyan-alt-other :underline t))))
    `(org-date-selected ((,class (:inherit modus-theme-intense-cyan :weight bold))))
    `(org-default ((,class (:background ,bg-main :foreground ,fg-main))))
    `(org-document-info ((,class (:foreground ,fg-special-cold))))
@@ -2712,9 +2715,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-tag ((,class (:foreground ,magenta-nuanced :weight normal))))
    `(org-tag-group ((,class (:foreground ,cyan-nuanced :weight bold))))
    `(org-target ((,class (:underline t))))
-   `(org-time-grid ((,class (:foreground ,cyan-nuanced))))
-   `(org-todo ((,class (,@(modus-operandi-theme-org-todo-block magenta-nuanced-bg magenta-nuanced magenta-alt-other)
-                        ,@(modus-operandi-theme-heading-foreground magenta-alt-other red-alt-other)))))
+   `(org-time-grid ((,class (:foreground ,fg-unfocused))))
+   `(org-todo ((,class (,@(modus-operandi-theme-org-todo-block red-nuanced-bg red-nuanced red-alt)
+                        ,@(modus-operandi-theme-heading-foreground red-alt red-alt-other)))))
    `(org-upcoming-deadline ((,class (:foreground ,red-alt-other))))
    `(org-upcoming-distant-deadline ((,class (:foreground ,red-nuanced))))
    `(org-verbatim ((,class (:inherit fixed-pitch :background ,bg-alt :foreground ,fg-special-calm))))
@@ -3057,7 +3060,7 @@ Also bind `class' to ((class color) (min-colors 89))."
        (:foreground ,fg-lang-error :underline (:style wave)))
       (,class (:foreground ,fg-lang-error :underline t))))
    ;;;; stripes
-   `(stripes ((,class (:background ,bg-alt))))
+   `(stripes ((,class (:background ,bg-hl-line))))
    ;;;; success
    `(suggest-heading ((,class (:foreground ,yellow-alt-other :weight bold))))
    ;;;; switch-window
