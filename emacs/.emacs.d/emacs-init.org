@@ -6494,12 +6494,12 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
 This is used internally by `prot/modus-themes-toggle'."
     (setq modus-operandi-theme-slanted-constructs nil
           modus-operandi-theme-bold-constructs nil
-          modus-operandi-theme-visible-fringes t
-          modus-operandi-theme-3d-modeline t
-          modus-operandi-theme-subtle-diffs t
-          modus-operandi-theme-intense-standard-completions t
-          modus-operandi-theme-distinct-org-blocks t
-          modus-operandi-theme-proportional-fonts nil
+          modus-operandi-theme-visible-fringes nil
+          modus-operandi-theme-3d-modeline nil
+          modus-operandi-theme-subtle-diffs nil
+          modus-operandi-theme-intense-standard-completions nil
+          modus-operandi-theme-distinct-org-blocks nil
+          modus-operandi-theme-proportional-fonts t
           modus-operandi-theme-rainbow-headings nil
           modus-operandi-theme-section-headings nil
           modus-operandi-theme-scale-headings nil
@@ -6518,12 +6518,12 @@ This is used internally by `prot/modus-themes-toggle'."
 This is used internally by `prot/modus-themes-toggle'."
     (setq modus-vivendi-theme-slanted-constructs nil
           modus-vivendi-theme-bold-constructs nil
-          modus-vivendi-theme-visible-fringes t
-          modus-vivendi-theme-3d-modeline t
-          modus-vivendi-theme-subtle-diffs t
-          modus-vivendi-theme-intense-standard-completions t
-          modus-vivendi-theme-distinct-org-blocks t
-          modus-vivendi-theme-proportional-fonts nil
+          modus-vivendi-theme-visible-fringes nil
+          modus-vivendi-theme-3d-modeline nil
+          modus-vivendi-theme-subtle-diffs nil
+          modus-vivendi-theme-intense-standard-completions nil
+          modus-vivendi-theme-distinct-org-blocks nil
+          modus-vivendi-theme-proportional-fonts t
           modus-vivendi-theme-rainbow-headings nil
           modus-vivendi-theme-section-headings nil
           modus-vivendi-theme-scale-headings nil
