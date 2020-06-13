@@ -6007,39 +6007,31 @@ current monitor's width."
         (start-process "video-mpv" buf "mpv" video link)
         (message (concat "Launching MPV for " (propertize link 'face 'success))))))
 
-  ;; TODO review and combine the next/prev into a single function
-  (defun prot/elfeed-show-next-search-update ()
-    "Update `elfeed-search-buffer' to match current entry."
-    (interactive)
-    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
-                      elfeed-show-entry
-                    (elfeed-search-selected :ignore-region)))
-           (title (elfeed-entry-title entry)))
-      (elfeed-show-next)
-      (when (window-live-p (get-buffer-window "*elfeed-search*"))
-        (with-current-buffer (get-buffer "*elfeed-search*")
-          (goto-char (point-min)) ; Elfeed way to find entry window?
-          (search-forward (format "%s" title))
-          (next-line 1)
-          (set-window-point nil (point-at-bol))
-          (prot/pulse-line 'modus-theme-subtle-cyan)))))
+  (defun prot/elfeed-show-search-update (direction)
+    "Update `elfeed-search-buffer' to match entry in DIRECTION.
 
-  ;; TODO review and combine the next/prev into a single function
-  ;; even the to-do got duplicated here…
-  (defun prot/elfeed-show-prev-search-update ()
-    "Update `elfeed-search-buffer' to match current entry."
-    (interactive)
+This is useful when Elfeed is split in two windows, with the
+search buffer on one side and an entry buffer on the other.  The
+user is changing entries while in the latter, while the former
+gets updated to put point on the current item.
+
+EXPERIMENTAL."
+    (interactive "s")
     (let* ((entry (if (eq major-mode 'elfeed-show-mode)
                       elfeed-show-entry
                     (elfeed-search-selected :ignore-region)))
-           (title (elfeed-entry-title entry)))
-      (elfeed-show-prev)
-      (when (window-live-p (get-buffer-window "*elfeed-search*"))
-        (with-current-buffer (get-buffer "*elfeed-search*")
+           (title (elfeed-entry-title entry))
+           (es "*elfeed-search*")
+           (buf (get-buffer es))
+           (win (get-buffer-window buf)))
+      (funcall (intern (concat "elfeed-show-"
+                               (substring `,direction 0 4))))
+      (when (window-live-p win)
+        (with-current-buffer buf
           (goto-char (point-min)) ; Elfeed way to find entry window?
           (search-forward (format "%s" title))
-          (previous-line 1)
-          (set-window-point nil (point-at-bol))
+          (funcall (intern (concat `,direction "-line")))
+          (set-window-point win (point-at-bol))
           (prot/pulse-line 'modus-theme-subtle-cyan)))))
 
   (defun prot/elfeed-search-tag-filter ()
@@ -6085,9 +6077,14 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
          ("v" . prot/elfeed-mpv-dwim)
          ("q" . prot/elfeed-kill-buffer-close-window-dwim)
          :map elfeed-show-mode-map
+         ;; TODO any way to do this without lambda?
+         ("n" . (lambda ()
+                  (interactive)
+                  (prot/elfeed-show-search-update "next")))
+         ("p" . (lambda ()
+                  (interactive)
+                  (prot/elfeed-show-search-update "previous")))
          ("e" . prot/elfeed-show-eww)
-         ("n" . prot/elfeed-show-next-search-update)
-         ("p" . prot/elfeed-show-prev-search-update)
          ("q" . prot/elfeed-kill-buffer-close-window-dwim)
          ("v" . prot/elfeed-mpv-dwim)
          ("w" . elfeed-show-yank)))
