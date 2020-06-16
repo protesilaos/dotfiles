@@ -4568,14 +4568,20 @@ about these concepts in the introductory [[#h:14cf6fea-54eb-4faa-bb16-3739485c92
      :CUSTOM_ID: h:b1f4d418-6705-440b-a6f4-89fdd5feef3b
      :END:
 
-/NOTE 2020-06-05: This is experimental and subject to review./
+/NOTE 2020-06-15: I am putting this here for visibility, but I do not
+care about intricate Gnus layouts./
 
 The following is adapted from the example in the official manual.  To
 read the chapter, evaluate =(info "(gnus) Window Layout")= (either do it
 with =C-x C-e= after the closing parenthesis or place this expression in
-the prompt of =M-:=).
+the prompt of =M-:=).  I tried it for a while: it works, but I do not care
+about looking at a sidebar of groups I am subscribed to.  To move
+between groups while in the Summary view, I do =C-M-{n,p}= (see the
+keybindings in [[#h:65c5eefc-a92e-41d3-a0ec-ce48dc61f1af][the Gnus summary section]]).  If I do not need to switch
+summary views in a linear fashion, I just revisit the Group buffer and
+proceed from there to find the group I am interested in.
 
-#+begin_src emacs-lisp
+#+begin_example emacs-lisp
 (use-package gnus-win
   :config
   (gnus-add-configuration
@@ -4591,7 +4597,7 @@ the prompt of =M-:=).
      (horizontal 1.0
                  (vertical 40 (group 1.0))
                  (vertical 1.0 (summary 1.0 point))))))
-#+end_src
+#+end_example
 
 **** Gnus intersection with Dired
      :PROPERTIES:
