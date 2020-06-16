@@ -600,7 +600,7 @@ These are specific to the fontconfig backend for GNU/Linux systems.")
         ;; typefaces with distinct inherent heights.
         ;;
         ;; TODO normalise multi-font heights?
-        (prot/set-face-attribute-font 'variable-pitch var (+ size 2))))
+        (prot/set-face-attribute-font 'variable-pitch var (+ size 1))))
     (run-hooks 'prot/font-switch-fonts-hook))
 
   ;; TODO a better approach would be to check for a list of fonts that
