@@ -6628,8 +6628,13 @@ appropriate string for its indicator and colours that are designed
 specifically for the mode line (the default uses the generic font-lock
 warning face).
 
+I got =contrib/toggle-mode-line= from [[https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8][William Rankin Github Gist]].  Note
+that William is the author of =olivetti-mode= (see elsewhere in this
+document [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing (olivetti-mode)]]).
+
 #+begin_src emacs-lisp
 (use-package emacs
+  :commands contrib/toggle-mode-line
   :config
   (setq mode-line-percent-position '(-3 "%p"))
   (setq mode-line-defining-kbd-macro
@@ -6650,7 +6655,14 @@ warning face).
                   mode-line-modes
                   " "
                   mode-line-misc-info
-                  mode-line-end-spaces)))
+                  mode-line-end-spaces))
+
+  (defun contrib/toggle-mode-line ()
+    "Toggle modeline visibility in the current buffer."
+    (interactive)
+    (if mode-line-format
+        (setq-local mode-line-format nil)
+      (kill-local-variable 'mode-line-format))))
 #+end_src
 
 In the following sub-sections I provide customisations for some tools
@@ -6975,6 +6987,7 @@ that is so pertinent to presentations.
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t)
 
+  ;; TODO make mode line toggle contingent on universal-argument
   (defun prot/olivetti-mode ()
     "Toggle `olivetti-mode' with additional parameters.
 Fringes are disabled for the current window.  For the
@@ -6984,10 +6997,12 @@ font-related changes see `prot/variable-pitch-mode'."
         (progn
           (olivetti-mode -1)
           (set-window-fringes (selected-window) nil) ; Use default width
-          (prot/variable-pitch-mode))
+          (prot/variable-pitch-mode)
+          (contrib/toggle-mode-line))
       (olivetti-mode 1)
       (set-window-fringes (selected-window) 0 0)
-      (prot/variable-pitch-mode)))
+      (prot/variable-pitch-mode)
+      (contrib/toggle-mode-line)))
   :bind ("C-c o" . prot/olivetti-mode))
 #+end_src
 
