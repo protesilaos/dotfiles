@@ -5997,8 +5997,8 @@ current monitor's width."
            (enclosure (elt (car (elfeed-entry-enclosures entry)) 0)) ; fragile?
            (audio "--no-video")
            ;; Here the display width checks if I am on the laptop
-           (height (if (<= (display-pixel-width ) 1366) "720" "1080"))
-           (video (concat "--ytdl-format=[height<=?" height "]"))
+           (height (if (<= (display-pixel-width ) 1366) 720 1080))
+           (video (format "--ytdl-format=[height<=?%s]" height))
            (buf (pop-to-buffer "*elfeed-mpv-output*")))
       (run-hooks 'prot/elfeed-mpv-hook)
       (if enclosure              ; make this its own parametrised function
