@@ -8,3 +8,5 @@
 	gpgsign = true
 [merge]
 	conflictStyle = diff3
+[pull]
+	rebase = false
