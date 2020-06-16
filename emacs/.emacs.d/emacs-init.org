@@ -1194,7 +1194,7 @@ enable/ =icomplete-vertical-mode= globally.  Instead, it defines the
 elements that are necessary for activating verticality on an ad-hoc or
 per-function basis (and there are lots of them).
 
-In =prot/icomplete-yank-kill-ring= you will spot a function that disables
+In =prot/kill-ring-yank-complete= you will spot a function that disables
 the sorting of the list.  Without it, the kills appear in a seemingly
 random order, which is highly undesired.  I adapted that piece of
 functionality from the [[https://github.com/jixiuf/vmacs/blob/master/conf/conf-icomplete.el][dotemacs of GitHub user jixiuf]], following a
@@ -1220,7 +1220,7 @@ still across this document (search for =icomplete-vertical-do=).
   (setq icomplete-vertical-prospects-height (/ (frame-height) 6))
   (icomplete-vertical-mode -1)
 
-  (defun prot/icomplete-yank-kill-ring ()
+  (defun prot/kill-ring-yank-complete ()
     "Insert the selected `kill-ring' item directly at point.
 When region is active, `delete-region'.
 
@@ -1241,7 +1241,7 @@ normally would when calling `yank' followed by `yank-pop'."
         (insert
          (completing-read "Yank from kill ring: " kills nil t)))))
 
-  :bind (("s-y" . prot/icomplete-yank-kill-ring)
+  :bind (("s-y" . prot/kill-ring-yank-complete)
          :map icomplete-minibuffer-map
          ("C-v" . icomplete-vertical-toggle)))
 #+end_src
@@ -3164,11 +3164,11 @@ window configuration or frameset in a register---see [[#h:6bdfe4d1-f97a-4d89-ab6
 For me tabs are useful as groups of buffers in a given window
 configuration.  I do not want a persistent bar with buttons that
 introduces extra visual clutter.  Switching to tabs is done through
-completion, specifically =prot/icomplete-tab-bar-select-tab=.  This
-extends the configurations in my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][minibuffer essentials and Icomplete]].
-Otherwise, we can use =tab-switcher= which produces a buffer with the
-entire list, plus a basic command for marking an item for deletion (same
-principle as with, e.g., =dired=).
+completion, specifically =prot/tab-bar-select-tab-dwim=.  This extends the
+configurations in my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][minibuffer essentials and Icomplete]].  Otherwise, we
+can use =tab-switcher= which produces a buffer with the entire list, plus
+a basic command for marking an item for deletion (same principle as
+with, e.g., =dired=).
 
 All settings I configure here are meant to work in accordance with this
 abstract conception of "tabs are work spaces".  Here are the main key
@@ -3205,7 +3205,7 @@ via =C-x t r=, though I find I do not use it.
   (tab-bar-mode -1)
   (tab-bar-history-mode -1)
 
-  (defun prot/icomplete-tab-bar-tab-dwim ()
+  (defun prot/tab-bar-select-tab-dwim ()
     "Do-What-I-Mean function for getting to a `tab-bar-mode' tab.
 If no other tab exists, create one and switch to it.  If there is
 one other tab (so two in total) switch to it without further
@@ -3223,8 +3223,8 @@ questions.  Else use completion to select the tab to switch to."
                (tab-bar-switch-to-tab
                 (completing-read "Select tab: " tabs nil t)))))))
 
-  :bind (("C-x t t" . prot/icomplete-tab-bar-tab-dwim)
-         ("s-t" . prot/icomplete-tab-bar-tab-dwim)
+  :bind (("C-x t t" . prot/tab-bar-select-tab-dwim)
+         ("s-t" . prot/tab-bar-select-tab-dwim)
          ("C-x t s" . tab-switcher)))
 
 ;; This is only included as a reference.
