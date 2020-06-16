@@ -897,7 +897,8 @@ further below):
     (setq orderless-style-dispatchers '(prot/orderless-literal-dispatcher
                                         prot/orderless-initialism-dispatcher))
     :bind (:map minibuffer-local-completion-map
-                ("SPC" . nil)))         ; space should never complete
+                ("SPC" . nil)         ; space should never complete
+                ("?" . nil)))         ; valid regexp character
 
   (setq completion-styles
         '(orderless partial-completion))
