@@ -5450,8 +5450,8 @@ for switching directly to a recent directory.  While the more general
 =prot/eshell-find-subdirectory-recursive= lets you switch to a
 subdirectory somewhere inside the path you are.
 
-Instead of outlining the remaining features of Eshell, I strongly
-encourage you to read the manual.  It is fairly short.  What I have here
+Instead of outlining the remaining features of Eshell, *I strongly
+encourage you to read the manual.* It is fairly short.  What I have here
 is just an early sample of what can be achieved with fairly few little
 tweaks.
 
@@ -5462,6 +5462,35 @@ Also check these valuable resources:
 + [[https://www.youtube.com/watch?v=RhYNu6i_uY4][Howard Abrahams' video]] that covers the features of Eshell.
 + [[https://ambrevar.xyz/emacs-eshell/][Pierre Neidhardt's detailed blog post]] on the pros and cons of Eshell.
 
+Finally, a few notes about contributions I have received:
+
++ [[https://gitlab.com/dije][Phil Hudson (@dije on Gitlab)]] suggested improvements to the behaviour
+  of =prot/eshell-put-last-output-to-buffer=, where it will now copy the
+  last command's output but not delete it from the Eshell buffer.  This
+  is courtesy of =kill-ring-save=.  Whereas my previous version was using
+  =kill-region=, which had the effect of copying the text while removing
+  it from the Eshell buffer.
+
++ Phil explained how =concat= is superfluous when combined with =format= and
+  demonstrated how to use a specifier (=%s=) to make a uniform string out
+  of the output of some command combined with predefined text.
+
++ Phil also helped me with =prot/eshell-find-subdirectory-recursive= by
+  highlighting some inefficient routines in the original design.  This
+  inspired me to revisit the code and make it cleaner overall.  The gist
+  is that only the present working directory needs to be abbreviated.
+
++ Another user who preferred to remain anonymous sent me
+  =contrib/eshell-cat-with-syntax-highlight= which will apply syntax
+  highlighting to the output of a =cat= command.  The code I got was using
+  =define-advice=, so I tweaked it a bit to work with =advice-add= because I
+  find that syntax easier to follow.  I also made minor tweaks to the
+  docstring.
+
++ Same principle as above for =contrib/electrify-ls=.
+
++ Any errors are my own.
+
 #+begin_src emacs-lisp
 (use-package eshell
   :bind ("<s-return>" . eshell))
@@ -5471,6 +5500,7 @@ Also check these valuable resources:
   ;; used by other functions below
   (declare-function ffap-file-at-point "ffap.el")
 
+  ;; TODO write defmacro for all those file-at-point
   (defun prot/eshell-insert-file-at-point ()
     "Insert (cat) contents of file at point."
     (interactive)
@@ -5517,8 +5547,8 @@ directory."
   (defun prot/eshell-put-last-output-to-buffer ()
     "Produce a buffer with output of last `eshell' command."
     (interactive)
-    (let ((eshell-output (kill-region (eshell-beginning-of-output)
-                                      (eshell-end-of-output))))
+    (let ((eshell-output (kill-ring-save (eshell-beginning-of-output)
+                                         (eshell-end-of-output))))
       (with-current-buffer (get-buffer-create  "*last-eshell-output*")
         (erase-buffer)
         (yank)           ; TODO do it with `insert' and `delete-region'?
@@ -5528,10 +5558,8 @@ directory."
     "Complete the syntax for appending to a buffer via `eshell'."
     (interactive)
     (insert
-     (concat " >>> #<"
-             (format "%s"
-                     (read-buffer-to-switch "Switch to buffer: "))
-             ">")))
+     (format " >>> #<%s>"
+             (read-buffer-to-switch "Switch to buffer: "))))
 
   (defun prot/eshell-narrow-output-highlight-regexp ()
     (interactive)
@@ -5540,6 +5568,62 @@ directory."
                         (eshell-end-of-output))
       (goto-char (point-min))
       (highlight-regexp regexp 'hi-yellow)))
+
+  ;;;; NOTE by Prot 2020-06-16: the following two advice-add snippets
+  ;;;; will need to be reviewed to make sure they do not produce
+  ;;;; undesirable side effects.
+
+  ;; syntax highlighting implementation modified from
+  ;; https://emacs.stackexchange.com/questions/50385/use-emacs-syntax-coloring-when-not-in-emacs
+  ;;
+  ;; This command also makes it possible to, e.g., cat an encrypted and/or
+  ;; compressed file.
+  (defun contrib/eshell-cat-with-syntax-highlight (&rest args)
+    "Like `eshell/cat' but with syntax highlighting.
+To be used as `:override' advice to `eshell/cat'."
+    (setq args (eshell-stringify-list (flatten-tree args)))
+    (dolist (filename args)
+      (let ((existing-buffer (get-file-buffer filename))
+            (buffer (find-file-noselect filename)))
+        (eshell-print
+         (with-current-buffer buffer
+           (if (fboundp 'font-lock-ensure)
+               (font-lock-ensure)
+             (with-no-warnings
+               (font-lock-fontify-buffer)))
+           (let ((contents (buffer-string)))
+             (remove-text-properties 0 (length contents) '(read-only nil) contents)
+             contents)))
+        (unless existing-buffer
+          (kill-buffer buffer)))))
+
+  (advice-add 'eshell/cat :override #'contrib/eshell-cat-with-syntax-highlight)
+
+  ;; Turn ls results into clickable links.  Especially useful when
+  ;; combined with link-hint.  Modified from
+  ;; https://www.emacswiki.org/emacs/EshellEnhancedLS
+  (define-button-type 'eshell-ls
+    'supertype 'button
+    'help-echo "RET, mouse-2: visit this file"
+    'follow-link t)
+
+  (defun contrib/electrify-ls (name)
+    "Buttonise `eshell' ls file names.
+Visit them with RET or mouse click.  This function is meant to be
+used as `:filter-return' advice to `eshell-ls-decorated-name'."
+    (add-text-properties 0 (length name)
+                         (list 'button t
+                               'keymap button-map
+                               'mouse-face 'highlight
+                               'evaporate t
+                               'action #'find-file
+                               'button-data (expand-file-name name)
+                               'category 'eshell-ls)
+                         name)
+    name)
+
+  (advice-add 'eshell-ls-decorated-name :filter-return #'contrib/electrify-ls)
+
   :bind (:map eshell-mode-map
               ("M-k" . eshell-kill-input)
               ("C-c M-w" . prot/eshell-kill-save-file-at-point)
@@ -5615,17 +5699,18 @@ buffer."
 This command has the potential for infinite recursion: use it
 wisely or prepare to use `eshell-interrupt-process'."
     (interactive)
-    (let* ((dir (eshell/pwd))
+    (let* ((dir (abbreviate-file-name (eshell/pwd)))
            (contents (directory-files-recursively dir ".*" t nil nil))
-           ;; (contents (directory-files dir t))
-           (find-directories (mapcar (lambda (x)
-                                       (when (file-directory-p x)
-                                         (abbreviate-file-name x)))
-                                     contents))
-           (subdirs (delete nil find-directories))
-           (cands (cl-remove-if (lambda (x) (string-match-p "\\.git" x)) subdirs))
+           (dirs (cl-remove-if (lambda (x)
+                                 (or (not (file-directory-p x))
+                                     (string-match-p "\\.git" x)))
+                               contents))
            (selection (icomplete-vertical-do ()
-                        (completing-read "Find sub-directory: " cands nil t))))
+                        (completing-read
+                         (format "Find sub-dir from %s (%s): "
+                                 (propertize dir 'face 'success)
+                                 (length dirs))
+                         dirs nil t))))
       (insert selection)
       (eshell-send-input)))
 
