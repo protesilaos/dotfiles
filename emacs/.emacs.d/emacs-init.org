@@ -4426,7 +4426,7 @@ to be declared last.
         '((gnus-group-sort-by-unread)
           (gnus-group-sort-by-alphabet)
           (gnus-group-sort-by-rank)))
-  (setq gnus-group-line-format "%M%p%P%5y:%B%(%c%)\n")
+  (setq gnus-group-line-format "%M%p%P%5y:%B%(%g%)\n")
   (setq gnus-group-mode-line-format "%%b")
   :hook ((gnus-group-mode-hook . hl-line-mode)
          (gnus-select-group-hook . gnus-group-set-timestamp))
