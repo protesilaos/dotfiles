@@ -8340,8 +8340,12 @@ key binding!
     :CUSTOM_ID: h:cf9086c1-1b33-4127-a716-de94259e14a0
     :END:
 
-My cursor for the current window is a box character that blinks.  Other
-windows use a vertical bar that is 2 pixels wide.
+My cursor for the current window is a box character that /does not/ blink.
+Other windows use a vertical bar that is 2 pixels wide.
+
+Even though I choose to disable blinking by default, I do maintain
+=prot/blink-cursor-toggle= to enable blinking when that makes sense
+(usually in screencasts).  As such I also configure the blink effect.
 
 The default blink settings are close to my expectations, though I do
 apply some small tweaks to the interval between blinks and the delay for
@@ -8352,13 +8356,22 @@ fairly short in a number of scenaria.
 
 #+begin_src emacs-lisp
 (use-package emacs
+  :commands prot/blink-cursor-toggle
   :config
   (setq-default cursor-type 'box)
   (setq-default cursor-in-non-selected-windows '(bar . 2))
   (setq-default blink-cursor-blinks 50)
   (setq-default blink-cursor-interval 0.75)
   (setq-default blink-cursor-delay 0.2)
-  :hook (after-init-hook . blink-cursor-mode))
+
+  (blink-cursor-mode -1)
+
+  (defun prot/blink-cursor-toggle ()
+    "Simple toggle for `blink-cursor-mode'."
+    (interactive)
+    (if (bound-and-true-p blink-cursor-mode)
+        (blink-cursor-mode -1)
+      (blink-cursor-mode 1))))
 #+end_src
 
 *** Multiple cursors (edit in several parts at once)
@@ -8420,6 +8433,7 @@ In the future I might expand this to cover more cases.
 #+begin_src emacs-lisp
 (use-package pulse
   :config
+  ;; TODO make pulse work with empty lines
   (defun prot/pulse-line (&optional face)
     "Temporarily highlight the current line."
     (interactive)
