@@ -1829,6 +1829,8 @@ position of the cursor after the skeleton has been inserted.
   ;;   "")
   ;; (define-abbrev global-abbrev-table "mejb"
   ;;   "" 'markdown-jekyll-blog)
+  :bind (("C-x a e" . expand-abbrev) ; default, just here for visibility
+         ("C-x a u" . unexpand-abbrev))
   :hook ((text-mode-hook . abbrev-mode)
          (git-commit-mode-hook . abbrev-mode)))
 #+end_src
