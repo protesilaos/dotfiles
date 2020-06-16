@@ -6465,26 +6465,26 @@ of supported packages is comprehensive.  There also are *lots of
 customisation options* to tweak the looks of the themes.
 
 The two themes are distributed as /standalone packages/ under the terms of
-the GNU General Public License.  You can find them in the official ELPA
-repository (latest tagged release), MELPA (latest commit to the =master=
-branch), as well as MELPA Stable (latest tag).  Each theme is its own
-package because I know that people tend to use one or the other.  And
-also due to the fact that one is not a prerequisite for the other.  I
-personally use both, switching between on-the-fly by calling
+the GNU General Public License.  You can find them in the official GNU
+ELPA repository (latest tagged release), MELPA (latest commit to the
+=master= branch), as well as MELPA Stable (latest tag).  Each theme is its
+own package because I know that people tend to use one or the other.
+And also due to the fact that one is not a prerequisite for the other.
+I personally use both, switching between them on-the-fly by calling
 =prot/modus-themes-toggle=.
 
 Note though that because I am using these themes locally as part of
-their development process, I am not configuring here the ELPA/MELPA
-versions.  So what you see in this =use-package= declaration is a bit
-different than what others will be using.
+their development process, I am not configuring here the aforementioned
+archive versions.  So what you see in this =use-package= declaration is a
+bit different than what others will be using.
 
 Also note that *the values I set for these variables are not indicative
 of my preferences*: I try different combinations to test things across a
 range of scenaria.  The scale for the fonts I specify here is called
 "minor second", representing a =1.125= rate.
 
-The hook =contrib/after-load-theme-hook= and its accompaniments are taken
-from the [[https://github.com/seagle0128/.emacs.d/blob/master/lisp/init-funcs.el][Centaur Emacs project]].
+The =contrib/format-sexp= and the subsequent =dolist= were copied and
+adapted from [[https://www.reddit.com/r/emacs/comments/gqsz8u/weekly_tipstricketc_thread/fsfakhg/][this comment on r/emacs]].
 
 Lastly, if you are curious about the underlying methodology, read my
 essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-emacs/][on the design of the Modus themes]] (2020-03-17).
@@ -6494,79 +6494,56 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
   :config
   (setq custom-safe-themes t)           ; Due to my dev needs
 
-  ;; The variables do not reveal my preferences.  I am always testing
-  ;; things
-  (defun prot/modus-operandi ()
-    "Enable some Modus Operandi variables and load the theme.
-This is used internally by `prot/modus-themes-toggle'."
-    (setq modus-operandi-theme-slanted-constructs nil
-          modus-operandi-theme-bold-constructs nil
-          modus-operandi-theme-visible-fringes nil
-          modus-operandi-theme-3d-modeline nil
-          modus-operandi-theme-subtle-diffs nil
-          modus-operandi-theme-intense-standard-completions nil
-          modus-operandi-theme-distinct-org-blocks nil
-          modus-operandi-theme-proportional-fonts t
-          modus-operandi-theme-rainbow-headings nil
-          modus-operandi-theme-section-headings nil
-          modus-operandi-theme-scale-headings nil
-          modus-operandi-theme-scale-1 1.125
-          modus-operandi-theme-scale-2 1.266
-          modus-operandi-theme-scale-3 1.424
-          modus-operandi-theme-scale-4 1.602
-          modus-operandi-theme-scale-5 1.802)
-    ;;;; NOTE check the project's README for the following one.  Only
-    ;;;; for advanced usage.
-    ;; modus-operandi-theme-override-colors-alist
-    (load-theme 'modus-operandi t))
+  (defmacro contrib/format-sexp (sexp &rest objects)
+    `(eval (read (format ,(format "%S" sexp) ,@objects))))
 
-  (defun prot/modus-vivendi ()
-    "Enable some Modus Vivendi variables and load the theme.
-This is used internally by `prot/modus-themes-toggle'."
-    (setq modus-vivendi-theme-slanted-constructs nil
-          modus-vivendi-theme-bold-constructs nil
-          modus-vivendi-theme-visible-fringes nil
-          modus-vivendi-theme-3d-modeline nil
-          modus-vivendi-theme-subtle-diffs nil
-          modus-vivendi-theme-intense-standard-completions nil
-          modus-vivendi-theme-distinct-org-blocks nil
-          modus-vivendi-theme-proportional-fonts t
-          modus-vivendi-theme-rainbow-headings nil
-          modus-vivendi-theme-section-headings nil
-          modus-vivendi-theme-scale-headings nil
-          modus-vivendi-theme-scale-1 1.125
-          modus-vivendi-theme-scale-2 1.266
-          modus-vivendi-theme-scale-3 1.424
-          modus-vivendi-theme-scale-4 1.602
-          modus-vivendi-theme-scale-5 1.802)
-    ;;;; NOTE check the project's README for the following one.  Only
-    ;;;; for advanced usage.
-    ;; modus-vivendi-theme-override-colors-alist
-    (load-theme 'modus-vivendi t))
+  ;; The variables do not reveal my preferences.  Always testing things.
+  (dolist (theme '("operandi" "vivendi"))
+    (contrib/format-sexp
+     (defun prot/modus-%1$s ()
+       (setq modus-%1$s-theme-slanted-constructs nil
+             modus-%1$s-theme-bold-constructs nil
+             modus-%1$s-theme-visible-fringes nil
+             modus-%1$s-theme-3d-modeline t
+             modus-%1$s-theme-subtle-diffs t
+             modus-%1$s-theme-intense-standard-completions nil
+             modus-%1$s-theme-distinct-org-blocks nil
+             modus-%1$s-theme-proportional-fonts t
+             modus-%1$s-theme-rainbow-headings nil
+             modus-%1$s-theme-section-headings nil
+             modus-%1$s-theme-scale-headings nil
+             modus-%1$s-theme-scale-1 1.125
+             modus-%1$s-theme-scale-2 1.266
+             modus-%1$s-theme-scale-3 1.424
+             modus-%1$s-theme-scale-4 1.602
+             modus-%1$s-theme-scale-5 1.802)
+       (load-theme 'modus-%1$s t)
+       (prot/modus-themes-custom))
+     theme))
 
   (defun prot/modus-themes-custom ()
-    "Override faces by accessing the theme colour variables.
-Run this via `contrib/after-load-theme-hook'."
+    "Override faces by accessing the theme colour variables."
     (cond
      ((eq (car custom-enabled-themes) 'modus-operandi)
-      (modus-operandi-theme-with-color-variables ; NOTE check the project's README for this one
+      (modus-operandi-theme-with-color-variables
         (custom-theme-set-faces
          'modus-operandi
          `(cursor ((,class (:background ,blue-alt)))))))
      ((eq (car custom-enabled-themes) 'modus-vivendi)
-      (modus-vivendi-theme-with-color-variables ; NOTE check the project's README for this one
+      (modus-vivendi-theme-with-color-variables
         (custom-theme-set-faces
          'modus-vivendi
-         `(cursor ((,class (:background ,red-alt)))))))))
+         `(cursor ((,class (:background ,green-alt)))))))))
 
-  (defvar contrib/after-load-theme-hook nil
-    "Hook run after a color theme is loaded using `load-theme'.")
-
-  (defun contrib/run-after-load-theme-hook (&rest _)
-    "Run `contrib/after-load-theme-hook'."
-    (run-hooks 'contrib/after-load-theme-hook))
-
-  (advice-add #'load-theme :after #'contrib/run-after-load-theme-hook)
+  ;;; NOTE putting this here for visibility.  It is possible to also
+  ;;; change the colour value assigned each variable in the palette.
+  ;;; Only do this if you plan to make a tweaked version of the theme
+  ;;; (and assume responsibility for it).  Here is an example:
+  ;;
+  ;; (setq modus-vivendi-theme-override-colors-alist
+  ;;       '(("magenta" . "#ffaabb")
+  ;;         ("magenta-alt" . "#ee88ff")
+  ;;         ("magenta-alt-other" . "#bbaaff")))
 
   (defvar prot/modus-themes-toggle-hook nil
     "Hook that runs after `prot/modus-themes-toggle' is invoked.")
@@ -6585,7 +6562,7 @@ Also run `prot/modus-themes-toggle-hook'."
 
   :bind ("<f5>" . prot/modus-themes-toggle)
   :hook ((after-init-hook . prot/modus-operandi)
-         (contrib/after-load-theme-hook . prot/modus-themes-custom)))
+         (prot/modus-themes-toggle-hook . prot/modus-themes-custom)))
 #+end_src
 
 *** Measuring relative colour luminance
