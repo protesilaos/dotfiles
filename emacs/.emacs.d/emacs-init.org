@@ -6188,6 +6188,25 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
         (setq elfeed-search-filter input))
       (elfeed-search-update :force)))
 
+  (defun prot/elfeed-show-archive ()
+    "Create an archive copy of the current `elfeed' entry."
+    (interactive)
+    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+                      elfeed-show-entry
+                    (elfeed-search-selected :ignore-region)))
+           ;; TODO how to cleanly add hyphens instead of spaces?
+           (title (elfeed-entry-title entry))
+           (elfeed-show-truncate-long-urls nil)
+           (archives "~/Documents/feeds/")
+           (file (format "%s%s.txt" archives title)))
+      (unless (file-exists-p archives)
+        (make-directory archives t))
+      (when (derived-mode-p 'elfeed-show-mode)
+        ;; Refresh to expand truncated URLs
+        (elfeed-show-refresh)
+        (write-file file t)
+        (message "Saved buffer at %s" file))))
+
   :hook ((elfeed-search-mode-hook . prot/elfeed-feeds)
          (prot/elfeed-mpv-hook . prot/elfeed-mpv-buffer))
   :bind (("C-c f" . elfeed)
@@ -6200,6 +6219,7 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
          ("v" . prot/elfeed-mpv-dwim)
          ("q" . prot/elfeed-kill-buffer-close-window-dwim)
          :map elfeed-show-mode-map
+         ("a" . prot/elfeed-show-archive)
          ;; TODO any way to do this without lambda?
          ("n" . (lambda ()
                   (interactive)
