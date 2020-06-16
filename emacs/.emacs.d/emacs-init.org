@@ -3029,6 +3029,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
+  (setq switch-to-buffer-in-dedicated-window 'pop)
   ;; Note that the the syntax for `use-package' hooks is controlled by
   ;; the `use-package-hook-name-suffix' variable.  The "-hook" suffix is
   ;; not an error of mine.
