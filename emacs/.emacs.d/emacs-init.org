@@ -2607,6 +2607,8 @@ packages (see the [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][section on my Modus
 #+begin_src emacs-lisp
 (use-package diredfl
   :ensure
+  :config
+  (setq diredfl-ignore-compressed-flag nil)
   :hook (dired-mode-hook . diredfl-mode))
 #+end_src
 
