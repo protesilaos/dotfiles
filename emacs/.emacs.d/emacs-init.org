@@ -6063,7 +6063,7 @@ With \\[universal-argument] browse the entry in `eww' using the
       (with-current-buffer (get-buffer "*elfeed-search*")
         (unless (one-window-p)              ; experimental
           (delete-other-windows win))
-        (split-window win (/ (frame-height) 3) 'below)
+        (split-window win (/ (frame-height) 5) 'below)
         (other-window 1)
         (if arg
             (progn
@@ -6120,7 +6120,7 @@ current monitor's width."
            (audio "--no-video")
            ;; Here the display width checks if I am on the laptop
            (height (if (<= (display-pixel-width ) 1366) 720 1080))
-           (video (format "--ytdl-format=[height<=?%s]" height))
+           (video (format "--ytdl-format=bestvideo[height<=?%s]+bestaudio/best" height))
            (buf (pop-to-buffer "*elfeed-mpv-output*")))
       (run-hooks 'prot/elfeed-mpv-hook)
       (if enclosure              ; make this its own parametrised function
