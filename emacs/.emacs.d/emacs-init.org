@@ -6634,16 +6634,16 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
   (dolist (theme '("operandi" "vivendi"))
     (contrib/format-sexp
      (defun prot/modus-%1$s ()
-       (setq modus-%1$s-theme-slanted-constructs nil
-             modus-%1$s-theme-bold-constructs nil
-             modus-%1$s-theme-visible-fringes nil
+       (setq modus-%1$s-theme-slanted-constructs t
+             modus-%1$s-theme-bold-constructs t
+             modus-%1$s-theme-visible-fringes t
              modus-%1$s-theme-3d-modeline t
-             modus-%1$s-theme-subtle-diffs t
-             modus-%1$s-theme-intense-standard-completions nil
-             modus-%1$s-theme-distinct-org-blocks nil
+             modus-%1$s-theme-subtle-diffs nil
+             modus-%1$s-theme-intense-standard-completions t
+             modus-%1$s-theme-distinct-org-blocks t
              modus-%1$s-theme-proportional-fonts t
-             modus-%1$s-theme-rainbow-headings nil
-             modus-%1$s-theme-section-headings nil
+             modus-%1$s-theme-rainbow-headings t
+             modus-%1$s-theme-section-headings t
              modus-%1$s-theme-scale-headings nil
              modus-%1$s-theme-scale-1 1.125
              modus-%1$s-theme-scale-2 1.266
