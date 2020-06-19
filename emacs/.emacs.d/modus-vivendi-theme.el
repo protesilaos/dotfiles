@@ -383,6 +383,11 @@ between foreground and background is >= 7:1)."
 (defface modus-theme-diff-focus-changed nil t)
 (defface modus-theme-diff-focus-removed nil t)
 (defface modus-theme-diff-heading nil t)
+(defface modus-theme-header nil t)      ; Name is tentative
+(defface modus-theme-mark-alt nil t)
+(defface modus-theme-mark-del nil t)
+(defface modus-theme-mark-sel nil t)
+(defface modus-theme-mark-symbol nil t)
 
 ;; User-facing customisation options.  They are all deactivated by
 ;; default (users must opt in).
@@ -694,8 +699,8 @@ AMOUNT is a customisation option."
       ;; `fg-lang-error', `fg-lang-warning', `fg-lang-note' can be
       ;; combined with `bg-main', `bg-dim', `bg-alt'
       ;;
-      ;; `fg-mark', `fg-mark-del', `fg-mark-other' can be combined with
-      ;; `bg-main', `bg-dim', `bg-alt', `bg-hl-line'
+      ;; `fg-mark-sel', `fg-mark-del', `fg-mark-alt' can be combined
+      ;; with `bg-main', `bg-dim', `bg-alt', `bg-hl-line'
       ;;
       ;; `fg-unfocused' must be combined with `fg-main'
       ;;
@@ -744,9 +749,9 @@ AMOUNT is a customisation option."
       ("bg-diff-neutral-1" . "#454545") ("fg-diff-neutral-1" . "#dddddd")
       ("bg-diff-neutral-2" . "#313131") ("fg-diff-neutral-2" . "#bfbfbf")
 
-      ("bg-mark" . "#002f2f") ("fg-mark" . "#60cfa2")
+      ("bg-mark-sel" . "#002f2f") ("fg-mark-sel" . "#60cfa2")
       ("bg-mark-del" . "#5a0000") ("fg-mark-del" . "#ff99aa")
-      ("bg-mark-other" . "#3f2210") ("fg-mark-other" . "#f0aa20"))
+      ("bg-mark-alt" . "#3f2210") ("fg-mark-alt" . "#f0aa20"))
     "The entire palette of `modus-vivendi-theme'.
 Each element has the form (NAME . HEX).")
 
@@ -840,6 +845,12 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(modus-theme-diff-focus-changed ((,class (:background ,bg-diff-focus-changed :foreground ,fg-diff-focus-changed))))
    `(modus-theme-diff-focus-removed ((,class (:background ,bg-diff-focus-removed :foreground ,fg-diff-focus-removed))))
    `(modus-theme-diff-heading ((,class (:background ,bg-diff-heading :foreground ,fg-diff-heading))))
+   ;;; colour combinations intended for Dired, Ibuffer, or equivalent
+   `(modus-theme-header ((,class (:foreground ,fg-main :weight bold))))
+   `(modus-theme-mark-alt ((,class (:background ,bg-mark-alt :foreground ,fg-mark-alt :weight bold))))
+   `(modus-theme-mark-del ((,class (:background ,bg-mark-del :foreground ,fg-mark-del :weight bold))))
+   `(modus-theme-mark-sel ((,class (:background ,bg-mark-sel :foreground ,fg-mark-sel :weight bold))))
+   `(modus-theme-mark-symbol ((,class (:foreground ,blue-alt :weight bold))))
    ;;;;;;;;;;;;;;;;;;;
    ;; actual styles ;;
    ;;;;;;;;;;;;;;;;;;;
@@ -1173,7 +1184,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    ;;;; completions
    `(completions-annotations ((,class (:foreground ,fg-special-cold :slant ,modus-theme-slant))))
    `(completions-common-part ((,class (,@(modus-vivendi-theme-completions
-                                        cyan-alt-other green-refine-bg green-refine-fg)))))
+                                          cyan-alt-other green-refine-bg green-refine-fg)))))
    `(completions-first-difference ((,class (,@(modus-vivendi-theme-completions
                                                blue-alt-other blue-intense-bg fg-main)
                                             :weight bold))))
@@ -1333,11 +1344,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(dim-autoload-cookie-line ((,class (:foreground ,fg-alt :slant ,modus-theme-slant))))
    ;;;; dired
    `(dired-directory ((,class (:foreground ,blue))))
-   `(dired-flagged ((,class (:background ,bg-mark-del :foreground ,fg-mark-del :weight bold))))
-   `(dired-header ((,class (:foreground ,fg-main :weight bold))))
+   `(dired-flagged ((,class (:inherit modus-theme-mark-del))))
+   `(dired-header ((,class (:inherit modus-theme-header))))
    `(dired-ignored ((,class (:foreground ,fg-alt))))
-   `(dired-mark ((,class (:foreground ,blue-alt :weight bold))))
-   `(dired-marked ((,class (:background ,bg-mark :foreground ,fg-mark :weight bold))))
+   `(dired-mark ((,class (:inherit modus-theme-mark-symbol))))
+   `(dired-marked ((,class (:inherit modus-theme-mark-sel))))
    `(dired-perm-write ((,class (:foreground ,fg-special-warm))))
    `(dired-symlink ((,class (:foreground ,blue-alt :underline t))))
    `(dired-warning ((,class (:foreground ,yellow :weight bold))))
@@ -1367,17 +1378,17 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(diredfl-compressed-file-name ((,class (:foreground ,green-alt-other))))
    `(diredfl-compressed-file-suffix ((,class (:foreground ,green-alt))))
    `(diredfl-date-time ((,class (:foreground ,fg-special-cold))))
-   `(diredfl-deletion ((,class (:inherit dired-flagged))))
-   `(diredfl-deletion-file-name ((,class (:inherit dired-flagged))))
-   `(diredfl-dir-heading ((,class (:inherit dired-header))))
+   `(diredfl-deletion ((,class (:inherit modus-theme-mark-del))))
+   `(diredfl-deletion-file-name ((,class (:inherit modus-theme-mark-del))))
+   `(diredfl-dir-heading ((,class (:inherit modus-theme-header))))
    `(diredfl-dir-name ((,class (:inherit dired-directory))))
    `(diredfl-dir-priv ((,class (:foreground ,blue))))
    `(diredfl-exec-priv ((,class (:foreground ,red-alt-other))))
    `(diredfl-executable-tag ((,class (:foreground ,red-alt))))
    `(diredfl-file-name ((,class (:foreground ,fg-main))))
    `(diredfl-file-suffix ((,class (:foreground ,fg-special-warm))))
-   `(diredfl-flag-mark ((,class (:inherit dired-marked))))
-   `(diredfl-flag-mark-line ((,class (:inherit dired-marked))))
+   `(diredfl-flag-mark ((,class (:inherit modus-theme-mark-sel))))
+   `(diredfl-flag-mark-line ((,class (:inherit modus-theme-mark-sel))))
    `(diredfl-ignored-file-name ((,class (:foreground ,fg-inactive))))
    `(diredfl-link-priv ((,class (:foreground ,blue-alt-other))))
    `(diredfl-no-priv ((,class (:foreground ,fg-inactive))))
@@ -1867,7 +1878,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(gnus-server-opened ((,class (:foreground ,green :weight bold))))
    `(gnus-signature ((,class (:foreground ,fg-special-cold :slant italic))))
    `(gnus-splash ((,class (:foreground ,fg-alt))))
-   `(gnus-summary-cancelled ((,class (:background ,bg-mark-other :foreground ,fg-mark-other :weight bold))))
+   `(gnus-summary-cancelled ((,class (:inherit modus-theme-mark-alt))))
    `(gnus-summary-high-ancient ((,class (:foreground ,fg-alt :weight bold))))
    `(gnus-summary-high-read ((,class (:foreground ,fg-special-cold :weight bold))))
    `(gnus-summary-high-ticked ((,class (:foreground ,red-alt-other :weight bold))))
@@ -2464,8 +2475,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(message-header-subject ((,class (:foreground ,magenta-alt-other :weight bold))))
    `(message-header-to ((,class (:foreground ,magenta-alt :weight bold))))
    `(message-header-xheader ((,class (:foreground ,blue-alt-other))))
-   `(message-mml ((,class (:foreground ,green-alt-other))))
-   `(message-separator ((,class (:background ,bg-alt :foreground ,fg-special-warm))))
+   `(message-mml ((,class (:foreground ,green-alt))))
+   `(message-separator ((,class (:background ,bg-active :foreground ,fg-special-warm))))
    ;;;; minibuffer-line
    `(minibuffer-line ((,class (:foreground ,fg-main))))
    ;;;; minimap
@@ -2620,8 +2631,8 @@ Also bind `class' to ((class color) (min-colors 89))."
                                               :foreground ,fg-main :weight bold
                                               ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-4)))))
    `(org-agenda-date-weekend ((,class (:inherit ,modus-theme-variable-pitch :foreground ,cyan
-                                        ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-4)
-                                        ,@(modus-vivendi-theme-heading-block blue-nuanced-bg cyan-nuanced)))))
+                                                ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-4)
+                                                ,@(modus-vivendi-theme-heading-block blue-nuanced-bg cyan-nuanced)))))
    `(org-agenda-diary ((,class (:foreground ,fg-main))))
    `(org-agenda-dimmed-todo-face ((,class (:inherit modus-theme-subtle-neutral))))
    `(org-agenda-done ((,class (,@(modus-vivendi-theme-org-todo-block green-nuanced-bg green-nuanced green)))))
@@ -2659,7 +2670,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-document-info ((,class (:foreground ,fg-special-cold))))
    `(org-document-info-keyword ((,class (:inherit fixed-pitch :foreground ,fg-alt))))
    `(org-document-title ((,class (:inherit ,modus-theme-variable-pitch :foreground ,fg-special-cold :weight bold
-                                  ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-5)))))
+                                           ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-5)))))
    `(org-done ((,class (,@(modus-vivendi-theme-org-todo-block green-nuanced-bg green-nuanced green)))))
    `(org-drawer ((,class (:foreground ,cyan-alt))))
    `(org-ellipsis ((,class (:foreground nil)))) ; inherits from the heading's colour
@@ -2868,8 +2879,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(powerline-evil-replace-face ((,class (:inherit modus-theme-active-red))))
    `(powerline-evil-visual-face ((,class (:inherit modus-theme-active-cyan))))
    ;;;; proced
-   `(proced-mark ((,class (:foreground ,blue-alt :weight bold))))
-   `(proced-marked ((,class (:background ,bg-mark-other :foreground ,fg-mark-other :weight bold))))
+   `(proced-mark ((,class (:inherit modus-theme-mark-symbol))))
+   `(proced-marked ((,class (:inherit modus-theme-mark-alt))))
    `(proced-sort-header ((,class (:foreground ,fg-special-calm :weight bold :underline t))))
    ;;;; prodigy
    `(prodigy-green-face ((,class (:foreground ,green))))
@@ -3146,11 +3157,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(syslog-su ((,class (:foreground ,red-alt :weight bold))))
    `(syslog-warn ((,class (:foreground ,yellow :weight bold))))
    ;;;; trashed
-   `(trashed-deleted ((,class (:background ,bg-mark-del :foreground ,fg-mark-del :weight bold))))
+   `(trashed-deleted ((,class (:inherit modus-theme-mark-del))))
    `(trashed-directory ((,class (:foreground ,blue))))
-   `(trashed-mark ((,class (:foreground ,blue-alt :weight bold))))
-   `(trashed-marked ((,class (:background ,bg-mark-other :foreground ,fg-mark-other :weight bold))))
-   `(trashed-restored ((,class (:background ,bg-mark :foreground ,fg-mark :weight bold))))
+   `(trashed-mark ((,class (:inherit modus-theme-mark-symbol))))
+   `(trashed-marked ((,class (:inherit modus-theme-mark-alt))))
+   `(trashed-restored ((,class (:inherit modus-theme-mark-sel))))
    `(trashed-symlink ((,class (:foreground ,blue-alt :underline t))))
    ;;;; telephone-line
    `(telephone-line-accent-active ((,class (:background ,fg-inactive :foreground ,bg-inactive))))
@@ -3452,85 +3463,85 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(ztreep-header-face ((,class (:height 1.2 :foreground ,fg-special-cold :weight bold))))
    `(ztreep-leaf-face ((,class (:foreground ,cyan))))
    `(ztreep-node-count-children-face ((,class (:foreground ,fg-special-warm))))
-   `(ztreep-node-face ((,class (:foreground ,fg-main))))
-   (when (>= emacs-major-version 27) ; EXPERIMENTAL this form is subject to review
-     (custom-theme-set-faces
-      'modus-vivendi
-      ;;;; tab-bar-mode
-      `(tab-bar ((,class (:background ,bg-tab-bar :foreground ,fg-main))))
-      `(tab-bar-tab ((,class (:box (:line-width 2 :color ,bg-tab-active)
+   `(ztreep-node-face ((,class (:foreground ,fg-main)))))
+  (when (>= emacs-major-version 27) ; EXPERIMENTAL this form is subject to review
+    (custom-theme-set-faces
+     'modus-vivendi
+     ;;;; tab-bar-mode
+     `(tab-bar ((,class (:background ,bg-tab-bar :foreground ,fg-main))))
+     `(tab-bar-tab ((,class (:box (:line-width 2 :color ,bg-tab-active)
+                                  :background ,bg-tab-active :foreground ,fg-main :weight bold))))
+     `(tab-bar-tab-inactive ((,class (:box (:line-width 2 :color ,bg-tab-inactive)
+                                           :background ,bg-tab-inactive :foreground ,fg-dim))))
+     ;;;; tab-line-mode
+     `(tab-line ((,class (:height 0.95 :background ,bg-tab-bar :foreground ,fg-main))))
+     `(tab-line-close-highlight ((,class (:foreground ,red))))
+     `(tab-line-highlight ((,class (:background ,blue-subtle-bg :foreground ,fg-dim))))
+     `(tab-line-tab ((,class (:box (:line-width 2 :color ,bg-tab-active)
                                    :background ,bg-tab-active :foreground ,fg-main :weight bold))))
-      `(tab-bar-tab-inactive ((,class (:box (:line-width 2 :color ,bg-tab-inactive)
-                                            :background ,bg-tab-inactive :foreground ,fg-dim))))
-      ;;;; tab-line-mode
-      `(tab-line ((,class (:height 0.95 :background ,bg-tab-bar :foreground ,fg-main))))
-      `(tab-line-close-highlight ((,class (:foreground ,red))))
-      `(tab-line-highlight ((,class (:background ,blue-subtle-bg :foreground ,fg-dim))))
-      `(tab-line-tab ((,class (:box (:line-width 2 :color ,bg-tab-active)
-                                    :background ,bg-tab-active :foreground ,fg-main :weight bold))))
-      `(tab-line-tab-current ((,class (:inherit tab-line-tab))))
-      `(tab-line-tab-inactive ((,class (:box (:line-width 2 :color ,bg-tab-inactive)
-                                             :background ,bg-tab-inactive :foreground ,fg-dim))))))
-   ;;; Theme Variables
-   (custom-theme-set-variables
-    'modus-vivendi
-    ;;;; ansi-colors
-    `(ansi-color-faces-vector [default bold shadow italic underline success warning error])
-    `(ansi-color-names-vector [,bg-main ,red ,green ,yellow ,blue ,magenta ,cyan ,fg-main])
-    ;;;; flymake fringe indicators
-    `(flymake-error-bitmap '(flymake-double-exclamation-mark modus-theme-fringe-red))
-    `(flymake-warning-bitmap '(exclamation-mark modus-theme-fringe-yellow))
-    `(flymake-note-bitmap '(exclamation-mark modus-theme-fringe-cyan))
-    ;;;; ibuffer
-    `(ibuffer-deletion-face 'dired-flagged)
-    `(ibuffer-filter-group-name-face 'dired-mark)
-    `(ibuffer-marked-face 'dired-marked)
-    `(ibuffer-title-face 'dired-header)
-    ;;;; hl-todo
-    `(hl-todo-keyword-faces
-      '(("HOLD" . ,yellow-alt)
-        ("TODO" . ,magenta)
-        ("NEXT" . ,magenta-alt-other)
-        ("THEM" . ,magenta-alt)
-        ("PROG" . ,cyan)
-        ("OKAY" . ,cyan-alt)
-        ("DONT" . ,green-alt)
-        ("FAIL" . ,red)
-        ("DONE" . ,green)
-        ("NOTE" . ,yellow-alt-other)
-        ("KLUDGE" . ,yellow)
-        ("HACK" . ,yellow)
-        ("TEMP" . ,red-nuanced)
-        ("FIXME" . ,red-alt-other)
-        ("XXX+" . ,red-alt)
-        ("REVIEW" . ,cyan-alt-other)
-        ("DEPRECATED" . ,cyan-nuanced)))
-    ;;;;; vc-annotate (C-x v g)
-    `(vc-annotate-background nil)
-    `(vc-annotate-background-mode nil)
-    `(vc-annotate-color-map
-      '((20 . ,red)
-        (40 . ,magenta)
-        (60 . ,magenta-alt)
-        (80 . ,red-alt)
-        (100 . ,yellow)
-        (120 . ,yellow-alt)
-        (140 . ,fg-special-warm)
-        (160 . ,fg-special-mild)
-        (180 . ,green)
-        (200 . ,green-alt)
-        (220 . ,cyan-alt-other)
-        (240 . ,cyan-alt)
-        (260 . ,cyan)
-        (280 . ,fg-special-cold)
-        (300 . ,blue)
-        (320 . ,blue-alt)
-        (340 . ,blue-alt-other)
-        (360 . ,magenta-alt-other)))
-    `(vc-annotate-very-old-color nil)
-    ;;;; xterm-color
-    `(xterm-color-names [,bg-main ,red ,green ,yellow ,blue ,magenta ,cyan ,fg-alt])
-    `(xterm-color-names-bright [,bg-alt ,red-alt ,green-alt ,yellow-alt ,blue-alt ,magenta-alt ,cyan-alt ,fg-main]))))
+     `(tab-line-tab-current ((,class (:inherit tab-line-tab))))
+     `(tab-line-tab-inactive ((,class (:box (:line-width 2 :color ,bg-tab-inactive)
+                                            :background ,bg-tab-inactive :foreground ,fg-dim))))))
+  ;;; Theme Variables
+  (custom-theme-set-variables
+   'modus-vivendi
+   ;;;; ansi-colors
+   `(ansi-color-faces-vector [default bold shadow italic underline success warning error])
+   `(ansi-color-names-vector [,bg-main ,red ,green ,yellow ,blue ,magenta ,cyan ,fg-main])
+   ;;;; flymake fringe indicators
+   `(flymake-error-bitmap '(flymake-double-exclamation-mark modus-theme-fringe-red))
+   `(flymake-warning-bitmap '(exclamation-mark modus-theme-fringe-yellow))
+   `(flymake-note-bitmap '(exclamation-mark modus-theme-fringe-cyan))
+   ;;;; ibuffer
+   `(ibuffer-deletion-face 'modus-theme-mark-del)
+   `(ibuffer-filter-group-name-face 'modus-theme-mark-symbol)
+   `(ibuffer-marked-face 'modus-theme-mark-sel)
+   `(ibuffer-title-face 'modus-theme-header)
+   ;;;; hl-todo
+   `(hl-todo-keyword-faces
+     '(("HOLD" . ,yellow-alt)
+       ("TODO" . ,magenta)
+       ("NEXT" . ,magenta-alt-other)
+       ("THEM" . ,magenta-alt)
+       ("PROG" . ,cyan)
+       ("OKAY" . ,cyan-alt)
+       ("DONT" . ,green-alt)
+       ("FAIL" . ,red)
+       ("DONE" . ,green)
+       ("NOTE" . ,yellow-alt-other)
+       ("KLUDGE" . ,yellow)
+       ("HACK" . ,yellow)
+       ("TEMP" . ,red-nuanced)
+       ("FIXME" . ,red-alt-other)
+       ("XXX+" . ,red-alt)
+       ("REVIEW" . ,cyan-alt-other)
+       ("DEPRECATED" . ,cyan-nuanced)))
+   ;;;;; vc-annotate (C-x v g)
+   `(vc-annotate-background nil)
+   `(vc-annotate-background-mode nil)
+   `(vc-annotate-color-map
+     '((20 . ,red)
+       (40 . ,magenta)
+       (60 . ,magenta-alt)
+       (80 . ,red-alt)
+       (100 . ,yellow)
+       (120 . ,yellow-alt)
+       (140 . ,fg-special-warm)
+       (160 . ,fg-special-mild)
+       (180 . ,green)
+       (200 . ,green-alt)
+       (220 . ,cyan-alt-other)
+       (240 . ,cyan-alt)
+       (260 . ,cyan)
+       (280 . ,fg-special-cold)
+       (300 . ,blue)
+       (320 . ,blue-alt)
+       (340 . ,blue-alt-other)
+       (360 . ,magenta-alt-other)))
+   `(vc-annotate-very-old-color nil)
+   ;;;; xterm-color
+   `(xterm-color-names [,bg-main ,red ,green ,yellow ,blue ,magenta ,cyan ,fg-alt])
+   `(xterm-color-names-bright [,bg-alt ,red-alt ,green-alt ,yellow-alt ,blue-alt ,magenta-alt ,cyan-alt ,fg-main])))
 
 ;;;###autoload
 (when load-file-name
