@@ -894,8 +894,9 @@ further below):
       (when (string-suffix-p "," pattern)
         `(orderless-strict-leading-initialism . ,(substring pattern 0 -1))))
 
-    (setq orderless-style-dispatchers '(prot/orderless-literal-dispatcher
-                                        prot/orderless-initialism-dispatcher))
+    (setq orderless-style-dispatchers
+          '(prot/orderless-literal-dispatcher
+            prot/orderless-initialism-dispatcher))
     :bind (:map minibuffer-local-completion-map
                 ("SPC" . nil)         ; space should never complete
                 ("?" . nil)))         ; valid regexp character
@@ -3012,9 +3013,11 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (window-width . 0.25)
            (side . right)
            (slot . 0)
-           (window-parameters . ((no-other-window . t)
-                                 (mode-line-format . (" "
-                                                      mode-line-buffer-identification)))))
+           (window-parameters
+            . ((no-other-window . t)
+               (mode-line-format
+                . (" "
+                   mode-line-buffer-identification)))))
           ("\\*Custom.*"
            (display-buffer-in-side-window)
            (window-width . 0.25)
