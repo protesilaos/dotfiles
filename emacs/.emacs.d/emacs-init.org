@@ -455,7 +455,8 @@ readable at both small and large sizes, preferably offer roman and
 italic variants with corresponding bold weights, not be too thin, not
 have too short of an x-height, not be too wide, not have a name that
 directly advertises some brand, not try to call too much attention to
-its details, and be equally readable against light and dark backdrops.
+its details, be equally readable against light and dark backdrops, and
+use the =*.ttf= spec which yields the best results on GNU/Linux.
 
 While there are many good free/libre options available, only a handful
 of them cope well with my fairly demanding needs.  Some look good at
@@ -543,8 +544,10 @@ by =fontconfig= with rules that can be defined at the user or system level
   (setq x-underline-at-descent-line nil)
   (setq underline-minimum-offset 0)
 
-  ;; My patched version of Hack.
-  ;; https://gitlab.com/protesilaos/hack-font-mod
+  ;; My patched version of Hack.  Uses some alternative glyphs, is built
+  ;; on top of the latest dev branch, and is meant to improve both the
+  ;; Roman and Italic variants (alt glyphs are part of the Hack
+  ;; project): https://gitlab.com/protesilaos/hack-font-mod
   (defconst prot/font-default-font-family "Hack"
     "The default typeface.
 This is meant to be applied to the `default' and `fixed-pitch'
@@ -578,7 +581,7 @@ These are specific to the fontconfig backend for GNU/Linux systems.")
                     prot/font-fontconfig-parameters)))
       (set-face-attribute
        `,face nil :font
-       (concat family "-" (number-to-string size) ":" params))))
+       (format "%s-%s:%s" family (number-to-string size) params))))
 
   (defun prot/font-set-fonts-completion (&optional points font-mono font-var)
     "Set default font size using presets or in specified POINTS."
@@ -596,8 +599,8 @@ These are specific to the fontconfig backend for GNU/Linux systems.")
         (prot/set-face-attribute-font 'fixed-pitch mono size)
         ;; Increasing the size on this to account for the innate
         ;; difference between the families I use.  Maybe there is some
-        ;; more flexible way of creating visual harmony between
-        ;; typefaces with distinct inherent heights.
+        ;; more flexible way to create visual harmony between typefaces
+        ;; with distinct inherent heights.
         ;;
         ;; TODO normalise multi-font heights?
         (prot/set-face-attribute-font 'variable-pitch var (+ size 1))))
@@ -612,11 +615,13 @@ Add this to `prot/font-switch-fonts-hook'."
         (setq-default line-spacing 1)
       (setq-default line-spacing nil)))
 
-  (defun prot/font-fonts-per-monitor (&optional font)
+  (defun prot/font-fonts-per-monitor ()
     "Use font settings based on screen size."
-    (if (<= (display-pixel-width) 1366)
-        (prot/font-set-fonts-completion 10.5)
-      (prot/font-set-fonts-completion 13)))
+    (let* ((size (if (<= (display-pixel-width) 1366)
+                    "laptop"
+                   "desktop"))
+          (display (cdr (assoc `,size prot/font-sizes-alist))))
+      (prot/font-set-fonts-completion display)))
 
   :hook ((after-init-hook . prot/font-fonts-per-monitor)
          (prot/font-switch-fonts-hook . prot/font-line-spacing))
@@ -659,19 +664,25 @@ simple-yet-super-effective plain text presentations with Org mode (see
 [[#h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11][simple presentations inside of Emacs]]).  Please note though that /this
 may be reviewed upon further testing and experimentation/.
 
+Also check my [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks]].
+
 #+begin_src emacs-lisp
 (use-package face-remap
   :diminish buffer-face-mode            ; the actual mode
   :config
-  (defun prot/variable-pitch-mode ()
+   (defun prot/variable-pitch-mode ()
     "Toggle `variable-pitch-mode' and additional parameters."
     (interactive)
     (if (bound-and-true-p buffer-face-mode)
         (progn
           (variable-pitch-mode -1)
-          (setq-local cursor-type 'box))   ; TODO better restore original value
+          (kill-local-variable 'blink-cursor-interval)
+          (kill-local-variable 'cursor-type)
+          (kill-local-variable 'cursor-in-non-selected-windows))
       (variable-pitch-mode 1)
-      (setq-local cursor-type 'bar))))
+      (setq-local blink-cursor-interval 0.75)
+      (setq-local cursor-type '(hbar . 2))
+      (setq-local cursor-in-non-selected-windows 'hollow))))
 #+end_src
 
 *** Typeface suitability test
