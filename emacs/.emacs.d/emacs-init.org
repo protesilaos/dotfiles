@@ -9104,36 +9104,51 @@ packaging will complain about it, if you ever go down that path).  It
 could be something like =prot--= or =my-= or whatever.  What matters more is
 to keep things consistent and fairly easy to identify.
 
-** Why do you use so many `setq'?
+** Why not `:custom' and why do you use so many `setq'?
    :PROPERTIES:
    :CUSTOM_ID: h:ba373e0d-29d1-4224-b0f1-64b640ceeaae
    :END:
 
-To be clear about the question, these are equivalent:
+I normally do not use the =:custom= keyword that =use-package= provides,
+opting instead for =:config= or =:init=.  This is for a couple of
+closely-related reasons:
+
++ It makes each variable more difficult to copy elsewhere, say, when
+  sharing it online or to an =emacs -Q= scratch buffer.  You either need
+  to edit the balanced expression, or hope that users will know the
+  syntax that the =:custom= keyword expects.
++ It is impossible to run =C-x C-e= (=eval-last-sexp=) on each balanced
+  expression because it lacks the =setq= special form.  Again, this
+  introduces an impediment to quick copy operations.
+
+Now you may be wondering why I define each variable in its own balanced
+expression.  To be clear, these are equivalent:
 
 #+begin_example emacs-lisp
 ;; Style A
-(setq var-1 value-1)
-(setq var-2 value-2)
+(setq var-1 'symbol)
+(setq var-2 '(a b c))
+(setq var-3 '((a . b) (c . d)))
 
 ;; Style B
-(setq var-1 value-1
-      var-2 value-2)
+(setq var-1 'symbol
+      var-2 '(a b c)
+      var-3 '((a . b) (c . d)))
 #+end_example
 
-You will notice that most of my configurations follow style A.  The
-reason is due to convenience.  It is easier for me to share code with
-users who may not be familiar with how elisp works (I was in that group
-not so long ago and am still learning my way around).
+You will notice that most of my configurations follow Style A.  The
+reasons are the same as above: (i) copying, (ii) evaluating.
 
 Style B used to give me more problems with copy-pasting, while it did
 not solve any real issue (besides, I finalise style A using a keyboard
 macro, so there is no real difference in typing).
 
-Style A consists of balanced expressions that are easier to keep
-consistent.  This is especially true when you have a mixture of values,
-some boolean types, property lists, association lists…  Of course,
-experience is key to understanding that either style is valid.
+I find that Style A consists of balanced expressions that are easier to
+keep consistent.  This is especially true when you have a mixture of
+values: boolean types, property lists, association lists…
+
+Of course, experience is key to understanding that all these styles are
+valid.
 
 ** Why do you explicitly set variables the same as default?
    :PROPERTIES:
