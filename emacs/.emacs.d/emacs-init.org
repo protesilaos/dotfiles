@@ -3858,33 +3858,32 @@ pretty simple and straightforward: just show some text, narrowing it to
 the current section.
 
 To make presentations happen, I use =org-tree-slide= to narrow the buffer
-to each heading.  The =darkroom= package centres the view, while removing
-the mode line.  While =org-superstar= prettifies the heading bullets,
-while removing the leading stars.  The other tweaks in the code block
-below are complementary to this "slideshow effect".
+to each heading.  With =olivetti-mode= I have a distraction-free view that
+centres the text on the screen and removes other visual elements (see
+my configurations in [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing (olivetti-mode)]]).  While
+=org-superstar= prettifies the heading bullets, while removing the leading
+stars.  The other tweaks in the code block below are complementary to
+this "slideshow effect".
 
-For the font specified herein, make sure to understand the overall
-configurations by reading the section on [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][primary font settings]].  I opted
-not to use =text-scale-adjust= or some variant thereof, because that only
-operates on the text of the focused window, whereas I want all
+For the font functions specified herein, make sure to understand the
+overall configurations by reading the section on [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][primary font settings]].
+I opted not to use =text-scale-adjust= or some variant thereof, because
+that only operates on the text of the focused window, whereas I want all
 interfaces to adapt to the new size so that I can, for example, show the
 minibuffer while doing a presentation.
 
 #+begin_src emacs-lisp
-(use-package darkroom
-  :ensure
-  :config
-  (setq darkroom-text-scale-increase 0))
-
 (use-package org-superstar              ; supersedes `org-bullets'
   :ensure
   :after org
+  :defer
   :config
   (setq org-superstar-remove-leading-stars t))
 
 (use-package org-tree-slide
   :ensure
-  :after (org darkroom)
+  :after org
+  :defer
   :config
   (setq org-tree-slide-breadcrumbs nil)
   (setq org-tree-slide-header nil)
@@ -3898,31 +3897,30 @@ minibuffer while doing a presentation.
   (setq org-tree-slide-skip-outline-level 8)
   (setq org-tree-slide-never-touch-face t)
 
+  ;; NOTE The effect is good overall, but I may tweak it further.
   (defun prot/org-presentation ()
-    "Specifies conditions that should apply locally upon
-activation of `org-tree-slide-mode'."
-    (if (eq darkroom-tentative-mode nil)
+    "Parameters for plain text presentations with `org-mode'."
+    (interactive)
+    (unless (eq major-mode 'org-mode)
+      (user-error "Not in an Org buffer"))
+    (if (bound-and-true-p org-tree-slide-mode)
         (progn
-          (darkroom-tentative-mode 1)
-          (org-superstar-mode 1)
-          (org-indent-mode 1)
-          (blink-cursor-mode -1)
-          (setq-local cursor-type '(bar . 1))
-          (prot/font-set-fonts-completion
-           (cdr (assoc "presentation" prot/font-sizes-alist))
-           "Source Code Pro"))
-      (darkroom-tentative-mode -1)
-      (org-superstar-mode -1)
-      (org-indent-mode -1)
-      (blink-cursor-mode 1)
-      (setq-local cursor-type 'box)
-      (prot/font-fonts-per-monitor)))
+          (org-tree-slide-mode -1)
+          (prot/olivetti-mode)
+          (org-superstar-mode -1)
+          (org-indent-mode -1)
+          (prot/font-fonts-per-monitor))
+      (org-tree-slide-mode 1)
+      (prot/olivetti-mode)
+      (org-superstar-mode 1)
+      (org-indent-mode 1)
+      (prot/font-set-fonts-completion
+       (cdr (assoc "presentation" prot/font-sizes-alist)))))
 
-  :bind (("<f9>" . org-tree-slide-mode)
+  :bind (("<f9>" . prot/org-presentation)
          :map org-tree-slide-mode-map
          ("<C-right>" . org-tree-slide-move-next-tree)
-         ("<C-left>" . org-tree-slide-move-previous-tree))
-  :hook (org-tree-slide-mode-hook . prot/org-presentation))
+         ("<C-left>" . org-tree-slide-move-previous-tree)))
 #+end_src
 
 ** Email settings
