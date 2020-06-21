@@ -860,11 +860,9 @@ Now some comments about my implementation:
   outlined in my [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note about the use of the Super key]].
 
 Also check my configurations pertaining to the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].
-After about two months of full time usage (as of 2020-04-03), I am
-confident in the built-in mechanism's ability to sort things well enough
-and to surface the results I am most likely interested in, based on
-previous selections.  This means that we do not need a third-party
-scoring and filtering library like =prescient= or =amx=.
+After several months of full time usage, I am confident in the built-in
+mechanism's ability to sort things well enough and to surface the
+results I am most likely interested in, based on previous selections.
 
 Now here is the actual code for the minibuffer part (=icomplete= is
 further below):
@@ -1098,14 +1096,14 @@ Overview of the following package declaration:
   (setq icomplete-show-matches-on-no-input t)
   (setq icomplete-hide-common-prefix nil)
   (setq icomplete-prospects-height 1)
-  ;; (setq icomplete-separator " · ")
+  (setq icomplete-separator (propertize " · " 'face 'shadow))
   ;; (setq icomplete-separator " │ ")
   ;; (setq icomplete-separator " ┆ ")
   ;; (setq icomplete-separator " ¦ ")
-  (setq icomplete-separator (propertize " ┆ " 'face 'shadow))
+  ;; (setq icomplete-separator (propertize " ┆ " 'face 'shadow))
   (setq icomplete-with-completion-tables t)
   (setq icomplete-in-buffer t)
-  (setq icomplete-tidy-shadowed-file-names nil)
+  (setq icomplete-tidy-shadowed-file-names t)
 
   (fido-mode -1)                        ; Emacs 27.1
   (icomplete-mode 1)
