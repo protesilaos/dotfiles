@@ -1251,7 +1251,7 @@ normally would when calling `yank' followed by `yank-pop'."
     :CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
     :END:
 
-*2020-06-16: WORK IN PROGRESS.  THIS SETUP IS INCOMPLETE AND PROBABLY
+*2020-06-21: WORK IN PROGRESS.  THIS SETUP IS INCOMPLETE AND PROBABLY
 FAULTY IN PARTS.*
 
 Embark (Emacs Minibuffer Actions Rooted in Keymaps) is another great
@@ -1301,7 +1301,7 @@ either a bespoke buffer (=embark-occur=) or in a content-aware buffer like
 To make things ever better, there is an option for a "live completion"
 style, where the "Embark Live Occur" buffer will be updated to reflect
 your minibuffer input.  I choose to use this presciently for commands
-where I intend to carefully inspect the results themselves.  Also read:
+where I intend to *carefully inspect the results themselves*.  Also read:
 [[#h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc][Why keep many completion UIs? (typology of my completion interfaces)]].
 
 As for how Embark fits in my completion framework, it quite simply
@@ -1319,10 +1319,10 @@ in a state of flux for the immediate future.  I use =:load-path= because I
 like to check the source code and try to learn some Elisp along the
 way---otherwise you should go with something like the =quelpa= package.
 
-The =contrib/with-embark-live-occur= was offered to me by Omar.  Its
-purpose is to be used as an "advice" that will update the interactive
-spec of other functions to automatically run a live-updating "Embark
-Occur" buffer.
+The =contrib/embark-live-occur-interactive= was offered to me by Omar.
+Its purpose is to be used as an "advice" that will update the
+interactive spec of other functions to automatically run a live-updating
+"Embark Occur" buffer.
 
 Finally, make sure to check my [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]] to see how
 the buffers for "Embark Occur" and its "live" counterpart are positioned
@@ -1334,80 +1334,60 @@ as part of the general window layout.
   :config
   ;; WORK IN PROGRESS.  DO NOT COPY.
 
-  ;; This uses a bespoke face from my themes
+  ;; Faces from my themes
   (setq embark-action-indicator
-        (propertize "Act" 'face 'modus-theme-refine-magenta))
-
+        (propertize "[Act]" 'face
+                    '(:inherit modus-theme-intense-blue :weight bold)))
   (setq embark-become-indicator
-        (propertize "Become" 'face 'modus-theme-refine-red))
+        (propertize "[Become]" 'face
+                    '(:inherit modus-theme-intense-green :weight bold)))
 
-  (setq embark-occur-initial-view-alist
-        '((file . list)
-          (buffer . list)
-          (symbol . list)
-          (t . grid)))
-
+  (setq embark-occur-initial-view-alist '((t . grid)))
   (setq embark-live-occur-delay 0.3)
   (setq embark-completing-read-delay 0.5)
 
-  ;;;; NOTE those functions will need to be rewritten to allow both an
-  ;;;; Elisp use with an argument and the standard interactive one.
-  ;; (defvar prot/embark-become-file-buffer-map
-  ;;   (embark-keymap
-  ;;    '(("b" . prot/buffers-major-mode)
-  ;;      ("d" . prot/dired-fd-dirs)
-  ;;      ("r" . prot/recentf)
-  ;;      ("v" . prot/buffers-vc-root)
-  ;;      ("z" . prot/dired-fd-files-and-dirs))))
-
-  (setq embark-become-keymaps
-        '(prot/embark-become-file-buffer-map))
-
   (defun prot/embark-live-occur-single-buffer ()
     "Do not spawn multiple `embark-live-occur' buffers.
-Add this to `minibuffer-exit-hook'."
+  Add this to `minibuffer-exit-hook'."
     (let ((eo "*Embark Live Occur*"))
       (when (get-buffer eo)
         (kill-buffer eo))))
 
-  (defun contrib/with-embark-live-occur (&rest _args)
-    "Advice to wrap function in `embark-completing-read'."
+  (defun contrib/embark-live-occur-interactive (&rest _args)
+    "Advice to wrap function in `embark-completing-read'.
+  This advises the function's interactive spec and should be
+  applied with the `:before' keyword."
     (interactive
      (lambda (old-interactive-spec)
        (let ((icomplete-mode nil)
-             (embark-occur-view 'grid)
              (completing-read-function #'embark-completing-read))
          (advice-eval-interactive-spec old-interactive-spec)))))
 
   ;; Make C-h {f,v,o} use `embark-completing-read' to live update the
-  ;; Embark Occur buffer.
-  (advice-add 'describe-function :before 'contrib/with-embark-live-occur)
-  (advice-add 'describe-variable :before 'contrib/with-embark-live-occur)
-  (advice-add 'describe-symbol :before 'contrib/with-embark-live-occur)
+  ;; Embark Occur buffer.  Remember that this is an exception to my
+  ;; regular usage of the completion framework, as explained in the docs
+  ;; above this code block.
+  (advice-add 'describe-function :before 'contrib/embark-live-occur-interactive)
+  (advice-add 'describe-variable :before 'contrib/embark-live-occur-interactive)
+  (advice-add 'describe-symbol :before 'contrib/embark-live-occur-interactive)
 
   :hook ((embark-occur-mode-hook . embark-occur-direct-action-minor-mode)
          (minibuffer-exit-hook . prot/embark-live-occur-single-buffer)
          (embark-pre-action-hook . completion--flush-all-sorted-completions))
-  :bind (("s-e" . embark-act)
-         ("s-S-e" . embark-export)   ; uses `embark-occur' as a fallback
+  :bind (("C-c e" . embark-act)         ; non-minibuffer usage
          :map minibuffer-local-completion-map
-         (":" . embark-act)
-         (";" . embark-act-noexit)
+         (";" . embark-act)
+         (":" . embark-act-noexit)
          (">" . embark-become)
          ("C-l" . embark-live-occur)
-         ("C-o" . embark-export)
-         ("s-e" . embark-export)
-         ("M-v" . embark-switch-to-live-occur)
+         ("C-o" . embark-export) ; uses `embark-occur' as a fallback
+         ("M-v" . embark-switch-to-live-occur) ; override `switch-to-completions'
          ("M-q" . embark-occur-toggle-view)
          :map embark-occur-mode-map
-         ("t" . embark-occur-toggle-view)
-         (:map embark-package-map
-               ("g" . package-refresh-contents)
-               ("a" . package-autoremove)
-               ("t" . try))))
+         ("M-q" . embark-occur-toggle-view)))
 #+end_src
 
-**** TODO Complete review of Embark package declaration [1/7]
+**** TODO Complete review of Embark package declaration [1/4]
      :PROPERTIES:
      :CUSTOM_ID: h:5042bfab-64b4-4db2-9821-128e0d099bdf
      :END:
@@ -1415,14 +1395,6 @@ Add this to `minibuffer-exit-hook'."
       CLOSED: [2020-05-29 Fri 13:16]
       :PROPERTIES:
       :CUSTOM_ID: h:99fc2c2a-7729-4e5e-a9c1-d07e8f405b07
-      :END:
-***** TODO Check all key maps
-      :PROPERTIES:
-      :CUSTOM_ID: h:ce4d183f-dd99-4b2f-ae39-0f0f870c8700
-      :END:
-***** TODO Update the docs
-      :PROPERTIES:
-      :CUSTOM_ID: h:c0a248df-6c90-490c-843a-33114c115ec6
       :END:
 ***** TODO Ensure embark-occur works with my custom file-related commands
       :PROPERTIES:
@@ -1436,7 +1408,6 @@ Add this to `minibuffer-exit-hook'."
       :PROPERTIES:
       :CUSTOM_ID: h:64cbb516-8223-4d96-ba09-3c24d06916b2
       :END:
-***** TODO Define embark-become cycles
 *** Imenu (dynamic completion-based buffer navigation)
     :PROPERTIES:
     :CUSTOM_ID: h:77284937-ad9d-44cc-8a3e-80f6ed9e3def
