@@ -3082,11 +3082,9 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
              prot/display-buffer-at-bottom)
   :config
   (defun prot/window-dired-vc-root-left ()
-    "Open root directory of current version-controlled repository
-or the present working directory with `dired' and bespoke window
-parameters.  This is meant as a proof-of-concept function,
-illustrating how to leverage window rules to display a buffer,
-plus a few concomitant extras."
+    "Open project or dir `dired' in a side window.
+
+NOTE: For demo purposes."
     (interactive)
     (let ((dir (if (eq (vc-root-dir) nil)
                    (dired-noselect default-directory)
@@ -3095,10 +3093,12 @@ plus a few concomitant extras."
        dir `((side . left)
              (slot . -1)
              (window-width . 0.16)
-             (window-parameters . ((no-other-window . t)
-                                   (no-delete-other-windows . t)
-                                   (mode-line-format . (" "
-                                                        mode-line-buffer-identification))))))
+             (window-parameters
+              . ((no-other-window . t)
+                 (no-delete-other-windows . t)
+                 (mode-line-format
+                  . (" "
+                     mode-line-buffer-identification))))))
       (with-current-buffer dir
         (rename-buffer "*Dired-Side*")
         (setq-local window-size-fixed 'width)))
@@ -3116,25 +3116,29 @@ This passes certain parameters to the newly created frame:
 - do not display the minibuffer.
 
 The name is meant to be used by the external rules of my tiling
-window manager (BSPWM) to present the frame in a floating state."
+window manager (BSPWM) to present the frame in a floating state.
+
+NOTE: For demo purposes."
     (interactive)
     (make-frame '((name . "my_float_window")
                   (window-system . x)
                   (minibuffer . nil))))
 
   (defun prot/display-buffer-at-bottom ()
-    "Move the current buffer to the bottom of the frame.  This is
-useful to take a buffer out of a side window.
+    "Move the current buffer to the bottom of the frame.
+This is useful to take a buffer out of a side window.
 
-The window parameters of this function are provided mostly for
-didactic purposes."
+NOTE: For demo purposes."
     (interactive)
     (let ((buffer (current-buffer)))
       (with-current-buffer buffer
         (delete-window)
         (display-buffer-at-bottom
-         buffer `((window-parameters . ((mode-line-format . (" "
-                                                             mode-line-buffer-identification))))))))))
+         buffer
+         `((window-parameters
+            . ((mode-line-format
+                . (" "
+                   mode-line-buffer-identification))))))))))
 #+end_src
 
 *** Window history (winner-mode)
