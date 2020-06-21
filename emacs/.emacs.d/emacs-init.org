@@ -8839,14 +8839,17 @@ NEEDS REVIEW."
      ((file-directory-p file) (file-readable-p file))))
   (add-to-list 'recentf-keep 'prot/recentf-keep-default-predicate)
 
-  (defun prot/recentf ()
+  (defun prot/recentf (&optional input)
     "Select item from `recentf-list' using completion.
+Use INPUT as an initial, yet editable, filter.
+
 The user's $HOME directory is abbreviated as a tilde."
     (interactive)
-    (icomplete-vertical-do ()
-      (let ((files (mapcar 'abbreviate-file-name recentf-list)))
-        (find-file
-         (completing-read "Open recentf entry: " files nil t)))))
+    (let* ((files (mapcar 'abbreviate-file-name recentf-list))
+           (f (icomplete-vertical-do ()
+                (completing-read "Open recentf entry: " files nil t
+                                 (when input input)))))
+      (find-file f)))
 
   (defun prot/recentf-dirs (&optional arg)
     "Select directory from `recentf-list' using completion.
