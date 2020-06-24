@@ -681,7 +681,7 @@ Also check my [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and t
           (kill-local-variable 'cursor-in-non-selected-windows))
       (variable-pitch-mode 1)
       (setq-local blink-cursor-interval 0.75)
-      (setq-local cursor-type '(hbar . 2))
+      (setq-local cursor-type '(bar . 2))
       (setq-local cursor-in-non-selected-windows 'hollow))))
 #+end_src
 
