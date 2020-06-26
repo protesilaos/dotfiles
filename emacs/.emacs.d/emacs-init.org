@@ -4438,7 +4438,7 @@ to be declared last.
   (setq gnus-level-subscribed 6)
   (setq gnus-level-unsubscribed 7)
   (setq gnus-level-zombie 8)
-  (setq gnus-activate-level 4)
+  (setq gnus-activate-level 2)
   (setq gnus-list-groups-with-ticked-articles nil)
   (setq gnus-group-sort-function
         '((gnus-group-sort-by-unread)
