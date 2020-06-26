@@ -4732,10 +4732,10 @@ with them.  For the time being, this package declaration is enough.
   (setq ebdb-add-mails 'query))
 #+end_src
 
-*** Bug tracker (debbugs)
-    :PROPERTIES:
-    :CUSTOM_ID: h:9f75a49b-b061-4fe1-ae79-04880564074c
-    :END:
+** Bug tracker (debbugs)
+   :PROPERTIES:
+   :CUSTOM_ID: h:9f75a49b-b061-4fe1-ae79-04880564074c
+   :END:
 
 This tool is dedicated to the task of browsing the list of reported bugs
 about Emacs, though one can always subscribe to the relevant Usenet
