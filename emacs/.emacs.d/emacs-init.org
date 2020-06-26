@@ -3992,6 +3992,18 @@ Then we set up the interface for composing emails:
   the date-related specifiers, it is better for you to read the
   documentation with =C-h v format-time-string=.
 
++ As for the configurations of =mm-encode= and =mml-sec=, these are meant to
+  come into effect when encrypting and signing an outgoing message with
+  =C-c C-m C-e= (=mml-secure-message-sign-encrypt=).  The guided key
+  selection will ask for confirmation on who to encrypt to.  It presents
+  a list with the available keys.  Items are marked with =m= and then the
+  mail can be sent with the standard commands (e.g. =C-c C-c=).  I select
+  myself and whomever the other party is.  This is an extra step just to
+  make sure that I have everything right with regard to the keys and the
+  correspondent[s] when using encryption.  If this becomes a task I use
+  regularly, I will need to streamline things.  For the time being, I
+  want the added confirmation.
+
 #+begin_src emacs-lisp
 (use-package auth-source
   :config
@@ -4007,7 +4019,19 @@ Then we set up the interface for composing emails:
                    prop)))
       (if source
           field
-        (error "No entry in auth sources")))))
+        (user-error "No entry in auth sources")))))
+
+(use-package mm-encode
+  :config
+  (setq mm-encrypt-option 'guided)
+  (setq mm-sign-option 'guided))
+
+(use-package mml-sec
+  :config
+  (setq mml-secure-openpgp-encrypt-to-self t)
+  (setq mml-secure-openpgp-sign-with-sender t)
+  (setq mml-secure-smime-encrypt-to-self t)
+  (setq mml-secure-smime-sign-with-sender t))
 
 (use-package epa-file
   :config
@@ -4218,17 +4242,6 @@ Subsequent sections expand on the particulars.
   a highly unlikely problem.
 + Consider reviewing =nnmail-expiry-wait= only after you have some
   experience with Gnus.  I set it to a fairly high value.
-+ As for the configurations of =mm-encode= and =mml-sec=, these are meant to
-  come into effect when encrypting and signing an outgoing message with
-  =C-c C-m C-e= (=mml-secure-message-sign-encrypt=).  The guided key
-  selection will ask for confirmation on who to encrypt to.  It presents
-  a list with the available keys.  Items are marked with =m= and then the
-  mail can be sent with the standard commands (e.g. =C-c C-c=).  I select
-  myself and whomever the other party is.  This is an extra step just to
-  make sure that I have everything right with regard to the keys and the
-  correspondent[s] when using encryption.  If this becomes a task I use
-  regularly, I will need to streamline things.  For the time being, I
-  want the added confirmation.
 
 #+begin_src emacs-lisp
 (use-package gnus
@@ -4281,17 +4294,6 @@ Subsequent sections expand on the particulars.
 (use-package nnmail
   :config
   (setq nnmail-expiry-wait 30))
-
-(use-package mm-encode
-  :config
-  (setq mm-encrypt-option 'guided))
-
-(use-package mml-sec
-  :config
-  (setq mml-secure-openpgp-encrypt-to-self t)
-  (setq mml-secure-openpgp-sign-with-sender t)
-  (setq mml-secure-smime-encrypt-to-self t)
-  (setq mml-secure-smime-sign-with-sender t))
 #+end_src
 
 **** Gnus agent
