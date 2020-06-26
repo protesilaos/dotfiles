@@ -6597,7 +6597,7 @@ My =.authinfo.gpg= entry for IRC looks like this:
 machine irc.freenode.net port 6667 login NAME password PASS
 #+end_example
 
-The =prot/auth-get-field= is defined in [[*Base email settings][Base email settings]] (may be better
+The =prot/auth-get-field= is defined in [[#h:a82766be-daab-4925-b23a-1c5ffd47e599][Base email settings]] (may be better
 to have it elsewhere, but I keep it now together with the email
 configurations).
 
