@@ -546,8 +546,7 @@ by =fontconfig= with rules that can be defined at the user or system level
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :commands (prot/font-line-spacing
-             prot/font-fonts-per-monitor)
+  :commands prot/font-line-spacing
   :config
   (setq x-underline-at-descent-line nil)
   (setq underline-minimum-offset 0)
@@ -614,14 +613,13 @@ These are specific to the fontconfig backend for GNU/Linux systems.")
         (prot/set-face-attribute-font 'variable-pitch var (+ size 1))))
     (run-hooks 'prot/font-switch-fonts-hook))
 
-  ;; TODO a better approach would be to check for a list of fonts that
-  ;; are known to require further tweaks and which I might want to use.
   (defun prot/font-line-spacing ()
     "Determine desirable `line-spacing', based on font family.
 Add this to `prot/font-switch-fonts-hook'."
-    (if (string= (face-attribute 'default :family) "Source Code Pro")
-        (setq-default line-spacing 1)
-      (setq-default line-spacing nil)))
+    (let ((fonts '("Source Code Pro" "Ubuntu Mono"))) ; In case I use them
+      (if (member (face-attribute 'default :family) fonts)
+          (setq-default line-spacing 1)
+        (setq-default line-spacing nil))))
 
   (defun prot/font-fonts-per-monitor ()
     "Use font settings based on screen size."
