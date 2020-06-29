@@ -464,27 +464,29 @@ large point sizes.  Others lack Greek characters.  While a few of them
 are virtually unreadable when cast on a light background (bitmap fonts
 in particular).
 
-I am using my [[https://gitlab.com/protesilaos/hack-font-mod][patched version of Hack]] as the standard typeface.  In
-technical terms, this is the family that I assign to the =default= /face/.
-In Emacs parlance, "face" is a construct that groups together several
-display attributes, such as a foreground and a background colour, as
-well as all the typography-related values (Emacs themes are, in essence,
-programs that configure those faces).
-
-As for Hack itself, it is my all-time favourite libre font for text
-editing, proven time and again by the fact that I always return to it no
-matter how many I try.  Its features make it readable at practically all
-point sizes.  It is balanced in terms of height, length, and width.  It
-is equally visible on both light and dark themes.  It just works!  If
-you are one for metaphors, Hack is a working dog par excellence; one
-with a squared, chiselled head and a solid build---my type of canine.
+I am using my [[https://gitlab.com/protesilaos/hack-font-mod][patched version of Hack]] as the standard typeface.  It is
+my all-time favourite libre font for text editing, proven time and again
+by the fact that I always return to it no matter how many I try.  Its
+features make it readable at practically all point sizes, including the
+smaller ones.  It is balanced in terms of height, length, and width.  It
+is equally visible on both light and dark themes.  Its punctuation marks
+are not exaggerated and they feel consistent between regular and bold
+weights.  Its typographic colour is neither too light, nor too dark.
+The greatest compliment you can give to a typeface is that /it just
+works/!  If you are one for metaphors, Hack is a working dog par
+excellence; one with a squared, chiselled head and a solid build that
+would probably fail at some show ring but excel where it really
+matters---my type of canine.
 
 For a proportionately-spaced font, I go with FiraGO.  It is the
-continuation of Fira Sans, extending its language coverage while
-tweaking the space between some letter combinations.  Further below I
-specify settings that govern the [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]] and link to
-other relevant sections, while my [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes]] are designed to cope well
-with mixed-font settings (useful in Org).
+continuation of Fira Sans (which itself inherits from the "modern
+classic" FF Meta), extending its language coverage while tweaking the
+space between some letter combinations.
+
+Further below in this section I specify certain settings that govern the
+[[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]] and link to other relevant parts of this
+document, while my [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes]] are designed to cope well with
+mixed-font scenaria (particularly useful in Org).
 
 Lastly, note that on a modern GNU/Linux system that uses the =fontconfig=
 library, per-user fonts are stored in =~/.local/share/fonts=.
@@ -506,12 +508,18 @@ configuration is to do it at the "face" level.  For the main typeface,
 we configure the =default= face.  Then we have =variable-pitch= for
 proportionately-spaced fonts and =fixed-pitch= for monospaced ones.
 
+In Emacs parlance, "face" signifies a construct that groups together
+several display attributes, such as a foreground and a background
+colour, as well as all typography-related values (Emacs themes are, in
+essence, programs that configure those faces).
+
 To understand the syntax used here, do =C-h f set-face-attribute=.  In
-essence we are specifying the family that should be used /in case no
-other applies/ for the given face.  This is actually a good idea because
-there are many cases where you want a face to retain its own attributes
-(e.g. let =org-mode= inline code be presented in its monospace font while
-using a sans-serif for the main text---see [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]]).
+essence, by changing the =default= face we are specifying the family that
+should be used /in case no other applies/ for the given construct.  This
+is actually a good idea because there are many scenaria where you want a
+face to retain its own attributes (e.g. let =org-mode= inline code be
+presented in its monospaced font while using a sans-serif for the main
+text---see [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]]).
 
 The two main ways to set a font using =set-face-attribute= are as follows:
 
@@ -1741,8 +1749,8 @@ and symbols (e.g. words separated by hyphens).  This makes it suitable
 both for code and ordinary language.
 
 While the =dabbrev-abbrev-skip-leading-regexp= is instructed to also
-expand words and symbols that start with any of these: =$=, =*=, =/=, ===.  This
-regexp may be expanded in the future, but the idea is to be able to
+expand words and symbols that start with any of these: =$=, =*=, =/=, ===, ='=.
+This regexp may be expanded in the future, but the idea is to be able to
 perform completion in contexts where the known word/symbol is preceded
 by a special characters.  For example, in the =org-mode= version of this
 document, all inline code must be placed between the equals sign.  So
@@ -1757,7 +1765,7 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
   :after (minibuffer icomplete icomplete-vertical) ; read those as well
   :config
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
-  (setq dabbrev-abbrev-skip-leading-regexp "\\$\\|\\*\\|/\\|=")
+  (setq dabbrev-abbrev-skip-leading-regexp "\\$\\|\\*\\|/\\|=\\|'")
   (setq dabbrev-backward-only nil)
   (setq dabbrev-case-distinction nil)
   (setq dabbrev-case-fold-search t)
@@ -4476,10 +4484,12 @@ for this task).
   (setq gnus-treat-display-smileys nil)
   (setq gnus-article-mode-line-format "%G %S %m")
   (setq gnus-visible-headers
-        '("^From:" "^To:" "^Cc:" "^Newsgroups:" "^Subject:" "^Date:"
+        '("^From:" "^Subject:" "^To:" "^Cc:" "^Newsgroups:" "^Date:"
           "Followup-To:" "Reply-To:" "^Organization:" "^X-Newsreader:"
           "^X-Mailer:"))
   (setq gnus-sorted-header-list gnus-visible-headers)
+  :hook (gnus-article-mode-hook . (lambda ()
+                                    (setq-local fill-column 80)))
   :bind (:map gnus-article-mode-map
               ("i" . gnus-article-show-images)
               ("s" . gnus-mime-save-part)
@@ -6257,6 +6267,9 @@ my case.
 The placement of the MPV buffer is controlled by =display-buffer-alist=
 (see [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
 
+For a demonstration of what I have here, watch [[https://protesilaos.com/codelog/2020-06-09-emacs-elfeed-demo/][my Elfeed video]]
+(2020-06-09).
+
 Please note that /the code below is subject to review/.
 
 #+begin_src emacs-lisp
@@ -6466,7 +6479,7 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
          ("q" . prot/elfeed-kill-buffer-close-window-dwim)
          :map elfeed-show-mode-map
          ("a" . prot/elfeed-show-archive)
-         ;; TODO any way to do this without lambda?
+         ;; TODO any way to do this without a lambda?
          ("n" . (lambda ()
                   (interactive)
                   (prot/elfeed-show-search-update "next")))
