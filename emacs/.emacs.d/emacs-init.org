@@ -4964,9 +4964,12 @@ buffers:
   contact information, it means I have used it before or have a clear
   intent to do so.  No automatic records, please.
 + Type =;= followed by =C-h= to bring up a help buffer with all the
-  available keybindings (this works for every key chord, by the way).
+  available keybindings (this suffix works for every key chord, by the
+  way).
 
-Some useful commands that are not specific to Gnus:
+Try =M-: (info "(ebdb) Interactive Commands")= for more on the topic.
+
+Some useful interactive functions that are not specific to Gnus:
 
 + In a message composition buffer (using e.g. the =compose-mail= bound to
   =C-x m=), hit =TAB= while in a header field where emails are appropriate
@@ -4990,12 +4993,22 @@ with them.  For the time being, this package declaration is enough.
   (require 'ebdb-message)
   (setq ebdb-default-window-size 0.2)
   (setq ebdb-mua-pop-up nil)
-  (setq ebdb-mua-auto-update-p 'query)
-  (setq ebdb-mua-sender-update-p 'query)
-  (setq ebdb-mua-reader-update-p 'query)
-  (setq ebdb-add-aka 'query)
-  (setq ebdb-add-name 'query)
-  (setq ebdb-add-mails 'query))
+
+  (defun prot/ebdb-auto-update ()
+    "Conditions for updating EBDB records."
+    (if (ebdb-mua-message-header "Newsgroups")
+        'query
+      'existing))
+
+  (setq ebdb-mua-auto-update-p #'prot/ebdb-auto-update)
+  (setq ebdb-mua-sender-update-p #'prot/ebdb-auto-update)
+  (setq ebdb-mua-reader-update-p #'prot/ebdb-auto-update)
+  (setq ebdb-add-aka t)
+  (setq ebdb-add-name nil)
+  (setq ebdb-add-mails 'query)
+  (setq ebdb-complete-mail 'capf)
+  (setq ebdb-mail-avoid-redundancy nil)
+  (setq ebdb-complete-mail-allow-cycling 3))
 #+end_src
 
 ** Bug tracker (debbugs)
