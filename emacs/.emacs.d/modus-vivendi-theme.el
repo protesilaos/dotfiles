@@ -705,6 +705,10 @@ AMOUNT is a customisation option."
       ;;
       ;; `fg-unfocused' must be combined with `fg-main'
       ;;
+      ;; `mode-line-default-border' is a special colour that is only
+      ;; intended for the active modeline when the user-facing option
+      ;; for `modus-vivendi-theme-3d-modeline' is `nil' (default)
+      ;;
       ;; the window divider colours apply to faces with just an fg value
       ;;
       ;; all pairs are combinable with themselves
@@ -728,6 +732,8 @@ AMOUNT is a customisation option."
       ("fg-window-divider-outer" . "#969696")
 
       ("fg-unfocused" . "#93959b")
+
+      ("mode-line-default-border" . "#767577")
 
       ("bg-header" . "#212121") ("fg-header" . "#dddddd")
 
@@ -1039,11 +1045,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    ;;;; calendar and diary
    `(calendar-month-header ((,class :foreground ,fg-main :weight bold)))
    `(calendar-today ((,class :background ,bg-alt :underline t)))
-   `(calendar-weekday-header ((,class :foreground ,blue-alt)))
+   `(calendar-weekday-header ((,class :foreground ,fg-dim)))
    `(calendar-weekend-header ((,class :foreground ,fg-alt)))
-   `(diary ((,class :foreground ,green-alt-other)))
-   `(diary-anniversary ((,class :foreground ,yellow-alt-other)))
-   `(diary-time ((,class :foreground ,red-alt)))
+   `(diary ((,class :foreground ,cyan-alt-other)))
+   `(diary-anniversary ((,class :foreground ,red-alt-other)))
+   `(diary-time ((,class :foreground ,blue-alt)))
    `(holiday ((,class :foreground ,magenta-alt)))
    ;;;; calfw
    `(cfw:face-annotation ((,class :background ,bg-alt :foreground ,fg-alt)))
@@ -1959,12 +1965,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(helm-mode-prefix ((,class :inherit modus-theme-intense-magenta)))
    `(helm-non-file-buffer ((,class :foreground ,fg-alt)))
    `(helm-prefarg ((,class :foreground ,red-active)))
-   `(helm-resume-need-update ((,class ,@(and (>= emacs-major-version 27) '(:extend t))
-                                      :inherit modus-theme-refine-magenta)))
-   `(helm-selection ((,class ,@(and (>= emacs-major-version 27) '(:extend t))
-                             :inherit modus-theme-refine-blue :weight bold)))
-   `(helm-selection-line ((,class ,@(and (>= emacs-major-version 27) '(:extend t))
-                                  :inherit modus-theme-special-cold)))
+   `(helm-resume-need-update ((,class :inherit modus-theme-refine-magenta)))
+   `(helm-selection ((,class :inherit modus-theme-refine-blue :weight bold)))
+   `(helm-selection-line ((,class :inherit modus-theme-special-cold)))
    `(helm-separator ((,class :foreground ,fg-special-mild)))
    `(helm-time-zone-current ((,class :foreground ,green)))
    `(helm-time-zone-home ((,class :foreground ,magenta)))
@@ -2484,7 +2487,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(minimap-active-region-background ((,class :background ,bg-active)))
    `(minimap-current-line-face ((,class :background ,cyan-intense-bg :foreground ,fg-main)))
    ;;;; modeline
-   `(mode-line ((,class :box ,(modus-vivendi-theme-modeline-box bg-inactive fg-inactive t)
+   `(mode-line ((,class :box ,(modus-vivendi-theme-modeline-box bg-inactive mode-line-default-border t)
                         ,@(modus-vivendi-theme-modeline-props
                            bg-active fg-dim
                            bg-active fg-active))))
@@ -2752,7 +2755,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-link ((,class :inherit link)))
    `(org-list-dt ((,class :weight bold)))
    `(org-macro ((,class :inherit org-latex-and-related)))
-   `(org-meta-line ((,class :inherit fixed-pitch :foreground ,fg-alt :slant ,modus-theme-slant)))
+   `(org-meta-line ((,class :inherit fixed-pitch :background ,yellow-nuanced-bg :foreground ,fg-special-warm)))
    `(org-mode-line-clock ((,class :foreground ,fg-main)))
    `(org-mode-line-clock-overrun ((,class :inherit modus-theme-active-red)))
    `(org-priority ((,class ,@(modus-vivendi-theme-org-todo-block blue-nuanced-bg blue-nuanced magenta)
