@@ -1509,6 +1509,7 @@ further support us in the task of navigating through the current buffer.
 #+begin_src emacs-lisp
 (use-package imenu-list
   :ensure
+  :after imenu
   :defer
   :config
   (defun prot/imenu-list-dwim (&optional arg)
@@ -1561,6 +1562,7 @@ given the aforementioned.
 #+begin_src emacs-lisp
 (use-package flimenu
   :ensure
+  :after imenu
   :config
   (flimenu-global-mode 1))
 #+end_src
@@ -1821,6 +1823,13 @@ position of the cursor after the skeleton has been inserted.
   (define-abbrev global-abbrev-table "megit"
     "" 'protesilaos-gitlab-skeleton)
 
+  ;; (define-skeleton org-block-skeleton
+  ;;   "Insert an org block, querying for type."
+  ;;   "Type: "
+  ;;   "#+begin_" str "\n"
+  ;;   _ - \n
+  ;;   "#+end_" str "\n")
+  ;;
   ;; (define-skeleton org-use-package
   ;;   "Org source block with `use-package' declaration."
   ;;   "Package: "
@@ -2024,6 +2033,7 @@ The faces are part of my Modus themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408
 
 #+begin_src emacs-lisp
 (use-package replace
+  :defer
   :config
   (setq list-matching-lines-jump-to-current-line t)
   ;; See my "Modus themes" for these inherited faces
@@ -2058,6 +2068,7 @@ this style as the default.  Other options are =string= and =rx=.
 
 #+begin_src emacs-lisp
 (use-package re-builder
+  :defer
   :config
   (setq reb-re-syntax 'read))
 #+end_src
@@ -2074,6 +2085,7 @@ great when dealing with complex sets of regexp constructs.
 #+begin_src emacs-lisp
 (use-package visual-regexp
   :ensure
+  :defer
   :config
   (setq vr/default-replace-preview nil)
   (setq vr/match-separator-use-custom-face t))
@@ -2093,6 +2105,7 @@ matches by leveraging the full power of Emacs' editing capabilities
 #+begin_src emacs-lisp
 (use-package wgrep
   :ensure
+  :commands wgrep
   :config
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t))
@@ -2137,7 +2150,7 @@ Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][projec
 #+begin_src emacs-lisp
 (use-package rg
   :ensure
-  :after wgrep
+  :defer
   :config
   (setq rg-group-result t)
   (setq rg-hide-command t)
@@ -3060,6 +3073,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
          ("s-0" . delete-window)
          ("s-1" . delete-other-windows)
          ("s-5" . delete-frame)
+         ("C-x _" . balance-windows)
          ("C-x +" . balance-windows-area)
          ("s-q" . window-toggle-side-windows)))
 
@@ -6899,7 +6913,6 @@ essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-em
 
   (defmacro contrib/format-sexp (sexp &rest objects)
     `(eval (read (format ,(format "%S" sexp) ,@objects))))
-
 
   (defvar prot/modus-themes-custom-hook nil
     "Hook that runs after `prot/modus-.*-theme' is invoked.
