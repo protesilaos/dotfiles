@@ -6957,10 +6957,11 @@ This can be used to further customise the active theme.")
     (contrib/format-sexp
      (defun prot/modus-%1$s ()
        (setq modus-%1$s-theme-slanted-constructs t
-             modus-%1$s-theme-bold-constructs nil
+             modus-%1$s-theme-bold-constructs t
              modus-%1$s-theme-visible-fringes nil
              modus-%1$s-theme-3d-modeline nil
              modus-%1$s-theme-subtle-diffs nil
+             modus-%1$s-theme-faint-syntax t
              modus-%1$s-theme-intense-standard-completions nil
              modus-%1$s-theme-distinct-org-blocks nil
              modus-%1$s-theme-proportional-fonts t
