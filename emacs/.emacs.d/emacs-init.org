@@ -4596,7 +4596,7 @@ to be declared last.
   (setq gnus-group-mode-line-format "%%b")
   :hook ((gnus-group-mode-hook . hl-line-mode)
          (gnus-select-group-hook . gnus-group-set-timestamp))
-  :bind (:map gnus-agent-group-mode-map
+  :bind (:map gnus-group-mode-map
               ("M-n" . gnus-topic-goto-next-topic)
               ("M-p" . gnus-topic-goto-previous-topic)))
 
@@ -4700,7 +4700,7 @@ columns, while being a little bit cleaner than default.
   ;;     (when major-mode 'gnus-summary-mode
   ;;           (gnus-summary-search-article regexp))))
   :hook (gnus-summary-mode-hook . hl-line-mode)
-  :bind (:map gnus-agent-summary-mode-map
+  :bind (:map gnus-summary-mode-map
               ("<delete>" . gnus-summary-delete-article)
               ("n" . gnus-summary-next-article)
               ("p" . gnus-summary-prev-article)
