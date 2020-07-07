@@ -3309,6 +3309,29 @@ where more than those it would actually speed up my workflow.
          ("<kp-left>" . windmove-left)))
 #+end_src
 
+*** Transposition and rotation of windows
+    :PROPERTIES:
+    :CUSTOM_ID: h:753ea060-57e4-4dba-9bf9-b6337e478839
+    :END:
+
+The =transpose-frame= library defines a set of commands for shifting the
+layout of Emacs windows.  Rather than me describing how these work, I
+strongly encourage you to read the "Commentary" section in the source
+code.  Do it with =M-x find-library transpose-frame=.
+
+#+begin_src emacs-lisp
+(use-package transpose-frame
+  :ensure
+  :commands (transpose-frame
+             flip-frame
+             flop-frame
+             rotate-frame
+             rotate-frame-clockwise
+             rotate-frame-anticlockwise)
+  :bind (("C-s-t" . flop-frame) ; what I consider "transpose" in this context
+         ("C-s-r" . rotate-frame-clockwise)))
+#+end_src
+
 * Applications and utilities
   :PROPERTIES:
   :CUSTOM_ID: h:fa8bd8af-de14-489b-bc56-1a9bb3ef9f0f
