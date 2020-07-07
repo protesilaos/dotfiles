@@ -3934,6 +3934,7 @@ minibuffer while doing a presentation.
 (use-package org-tree-slide
   :ensure
   :after org
+  :commands prot/org-presentation
   :defer
   :config
   (setq org-tree-slide-breadcrumbs nil)
@@ -3965,13 +3966,15 @@ minibuffer while doing a presentation.
       (prot/olivetti-mode)
       (org-superstar-mode 1)
       (org-indent-mode 1)
-      (prot/font-set-fonts-completion
-       (cdr (assoc "presentation" prot/font-sizes-alist)))))
+      (let ((font-data prot/font-sizes-families-alist))
+        (prot/font-set-fonts
+         (cadr (assoc "presentation" font-data))
+         (nth 2 (assoc "presentation" font-data))
+         (nth 3 (assoc "presentation" font-data))))))
 
-  :bind (("<f9>" . prot/org-presentation)
-         :map org-tree-slide-mode-map
-         ("<C-right>" . org-tree-slide-move-next-tree)
-         ("<C-left>" . org-tree-slide-move-previous-tree)))
+  :bind (:map org-tree-slide-mode-map
+              ("<C-right>" . org-tree-slide-move-next-tree)
+              ("<C-left>" . org-tree-slide-move-previous-tree)))
 #+end_src
 
 ** Email settings
