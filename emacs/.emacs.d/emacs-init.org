@@ -3372,6 +3372,14 @@ input (see following sections).
     (setq calendar-latitude 35.17
           calendar-longitude 33.36))
 
+  (use-package lunar
+    :config
+    (setq lunar-phase-names
+          '("○ New Moon"
+            "☽ First Quarter Moon"
+            "● Full Moon"
+            "☾ Last Quarter Moon")))
+
   :hook (calendar-today-visible-hook . calendar-mark-today))
 #+end_src
 
