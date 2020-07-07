@@ -7613,30 +7613,21 @@ Else toggle the comment status of the line at point."
     :CUSTOM_ID: h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c
     :END:
 
-I need spell checking for both English and Greek.  In previous versions
-of this section I had configurations that would automate spell checking
-for both languages at once.  It worked but was rather slow.
+I need spell checking mostly for English, though I also install
+dictionaries for Greek, French, and Spanish.  These are external to
+Emacs and are provided by the =aspell= library.
 
-Upon further inspection, I have realised that I seldom need to work in
-mixed language circumstances.  Moreover, I now understand that I do not
-need to have spell checking always on.  It can be activated manually,
-with the =flyspell= functions defined in the =:commands= segment below.  It
-is thus possible to keep things simple and to switch dictionaries only
-when necessary.
+In previous versions of this section I had configurations that would
+automate spell checking.  It worked but was rather slow.  Upon further
+inspection, I realised that I seldom need to work in mixed language
+circumstances.  Moreover, I now understand that I do not need to have
+spell checking always on.  It can be activated manually, with the
+=flyspell= functions defined in the =:commands= segment below or with my
+=prot/flyspell-dwim= for the active region.
 
-Also bear in mind that the key binding =C-;= is disabled because I
-re-purpose that for a faster version of =C-x C-;= (much more useful for
-my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
-
-The two functions I define are meant to ease my workflow, while
-superseding the default binding for =ispell-word=.  What I normally use
-is my =M-$=, which will spell-check the active region or toggle the
-dictionaries I use.  The =C-M-$= is defined as a fallback option in case
-I have already highlighted a region and then realise I need the other
-dictionary.
-
-Note that =aspell= and its dictionaries are not part of Emacs.  I install
-the relevant packages from my distro's archive.
+Also bear in mind that the key binding =C-;= that Flyspell uses by default
+is disabled because I re-purpose that for a faster version of =C-x C-;=
+(much more useful for my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
 
 #+begin_src emacs-lisp
 (use-package flyspell
@@ -7651,23 +7642,37 @@ the relevant packages from my distro's archive.
   (setq ispell-program-name "aspell")
   (setq ispell-dictionary "en_GB")
 
-  (defun prot/ispell-toggle-dictionaries ()
-    "Toggle between English and Greek dictionaries."
-    (interactive)
-    (if (string= ispell-current-dictionary "en")
-        (ispell-change-dictionary "el")
-      (ispell-change-dictionary "en")))
+  (defvar prot/ispell-dictionaries
+    '(("English" . "en")
+      ("Ελληνικά" . "el")
+      ("Français" . "fr")
+      ("Espanõl" . "es"))
+    "Alist of dictionaries I may use.
+It is used by `prot/ispell-dictionaries-complete'.")
 
-  (defun prot/flyspell-dwim (&optional beg end)
-    "Run `flyspell-region' on the active region, else toggle the
-ispell dictionaries with `prot/ispell-toggle-dictionaries'."
-    (interactive "r")
+  (defun prot/ispell-dictionaries-complete ()
+    "Select an item from `prot/ispell-dictionaries'."
+    (interactive)
+    (let* ((dicts (mapcar #'car prot/ispell-dictionaries))
+           (choice (completing-read "Select dictionary: " dicts nil t))
+           (key (cdr (assoc `,choice prot/ispell-dictionaries))))
+      (ispell-change-dictionary key)
+      (message "Switched to %s" key)))
+
+  (defun prot/flyspell-dwim ()
+    "Spell check region or select dictionary.
+
+Use `flyspell-region' on the active region, else invoke
+`prot/ispell-dictionaries-complete'."
+    (interactive)
+    (let ((beg (region-beginning))
+          (end (region-end)))
       (if (use-region-p)
           (flyspell-region beg end)
-        (prot/ispell-toggle-dictionaries)))
+        (prot/ispell-dictionaries-complete))))
 
   :bind (("M-$" . prot/flyspell-dwim)
-         ("C-M-$" . prot/ispell-toggle-dictionaries)
+         ("C-M-$" . prot/ispell-dictionaries-complete)
          :map flyspell-mode-map
          ("C-;" . nil)))
 #+end_src
