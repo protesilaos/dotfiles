@@ -534,8 +534,8 @@ by =fontconfig= with rules that can be defined at the user or system level
              prot/font-line-spacing
              prot/font-fonts-per-monitor)
   :config
-  (setq x-underline-at-descent-line nil)
-  (setq underline-minimum-offset 0)
+  (setq x-underline-at-descent-line t)
+  (setq underline-minimum-offset 1)
 
   (defconst prot/font-fontconfig-params
     "embeddedbitmap=false:autohint=false:hintstyle=hintslight"
@@ -549,7 +549,8 @@ These are specific to the fontconfig backend for GNU/Linux systems.")
   ;; that are suitable to the given point size.  I find that at smaller
   ;; sizes the open and wide proportions of Hack+FiraGO work well, while
   ;; the more compact Iosevka+Source Sans Pro are better at larger point
-  ;; sizes.
+  ;; sizes.  The "desktop" combo is ideal for use on a larger monitor at
+  ;; a regular point size.
   ;;
   ;; Note that the "Hack" mentioned here is my patched version of it,
   ;; which uses some alternative glyphs, is built on top of the latest
@@ -557,10 +558,14 @@ These are specific to the fontconfig backend for GNU/Linux systems.")
   ;; variants (alt glyphs are part of the Hack project):
   ;; https://gitlab.com/protesilaos/hackfontmod
   (defconst prot/font-sizes-families-alist
-    '(("laptop" . (11 "Hack" "FiraGO"))
+    '(("laptop" . (10.5 "Hack" "FiraGO"))
 	  ("desktop" . (13 "Hack" "FiraGO"))
 	  ("presentation" . (19 "Iosevka SS08" "Source Sans Pro")))
     "Alist of desired point sizes and their typefaces.
+Each association consists of a display type mapped to a point
+size, followed by monospaced and proportionately-spaced font
+names.
+
 The monospaced typeface is meant to be applied to the `default'
 and `fixed-pitch' faces.  The proportionately-space font is
 intended for the `variable-pitch' face.")
