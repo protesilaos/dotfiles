@@ -3406,24 +3406,25 @@ input (see following sections).
                      (concat " (" time-zone ")"))))
   (setq calendar-week-start-day 1)      ; Monday
   (setq calendar-date-style 'iso)
+  (setq calendar-christian-all-holidays-flag nil)
   (setq calendar-holidays
-        (append holiday-general-holidays holiday-local-holidays
-                holiday-other-holidays holiday-christian-holidays
-                holiday-islamic-holidays holiday-oriental-holidays
+        (append holiday-local-holidays  ; TODO set local holidays
                 holiday-solar-holidays))
 
   (use-package solar
+    :defer
     :config
     (setq calendar-latitude 35.17
           calendar-longitude 33.36))
 
   (use-package lunar
+    :defer
     :config
     (setq lunar-phase-names
-          '("○ New Moon"
-            "☽ First Quarter Moon"
-            "● Full Moon"
-            "☾ Last Quarter Moon")))
+          '("New Moon"
+            "First Quarter Moon"
+            "Full Moon"
+            "Last Quarter Moon")))
 
   :hook (calendar-today-visible-hook . calendar-mark-today))
 #+end_src
