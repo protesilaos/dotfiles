@@ -1435,13 +1435,13 @@ as part of the general window layout.
   :hook ((embark-occur-mode-hook . embark-occur-direct-action-minor-mode)
          (minibuffer-exit-hook . prot/embark-live-occur-single-buffer)
          (embark-pre-action-hook . completion--flush-all-sorted-completions))
-  :bind (("C-c e" . embark-act)         ; non-minibuffer usage
+  :bind (("C-c M-o" . embark-act)         ; non-minibuffer usage
          :map minibuffer-local-completion-map
-         (";" . embark-act)
-         (":" . embark-act-noexit)
-         (">" . embark-become)
-         ("C-l" . embark-live-occur)
-         ("C-o" . embark-export) ; uses `embark-occur' as a fallback
+         ("M-o" . embark-act)
+         ("C-M-o" . embark-act-noexit)
+         ("C-M->" . embark-become)
+         ("C-M-l" . embark-live-occur)
+         ("C-C C-o" . embark-export) ; uses `embark-occur' as a fallback
          ("M-v" . embark-switch-to-live-occur) ; override `switch-to-completions'
          ("M-q" . embark-occur-toggle-view)
          :map embark-occur-mode-map
