@@ -7646,34 +7646,45 @@ font-related changes see `prot/variable-pitch-mode'."
   :bind ("C-c o" . prot/olivetti-mode))
 #+end_src
 
-**** Rainbow blocks
+**** Auto-dim unfocused buffers
      :PROPERTIES:
-     :CUSTOM_ID: h:d8c7292f-e7bd-43ff-962e-d9b2c6fc6b27
+     :CUSTOM_ID: h:5a3a4968-cbda-4a0b-8f2d-1dd755eda5ac
      :END:
 
-This package is quite useful when debugging highly structured code that
-you are not familiar with.  It will highlight an entire code block in a
-single colour, making it easier to understand the overall structure (my
-Modus themes support it, of course).
+ The concept of =auto-dim-other-buffers-mode= is straightforward: apply a
+ different background on all unfocused windows, so that the current one
+ pops out more.  This is controlled at the theme level and, as with all
+ packages, [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]] provide full support for it.
 
-Also note that there is another package that applies a rainbow effect
-only to the delimiters.  Between the two, I prefer this one.  At any
-rate, I activate =rainbow-blocks-mode= manually, when I feel that I am
-missing something that I cannot spot right away.
+ In my workflow, this utility is of great value while offering a screen
+ cast or presentation.  It is safer to draw attention to the current
+ window, with its fairly large surface area, than expect the viewer to
+ discern the more nuanced elements of focus that are discernible in the
+ modeline and/or the cursor's shape.
 
-A less intrusive, built-in alternative is to set the variable
-=show-parent-style 'expression= (see my [[#h:3d374354-843f-4efa-aa38-1ba2c9ccc14c][configs for parentheses]]).
-
-#+begin_src emacs-lisp
-(use-package rainbow-blocks
+ #+begin_src emacs-lisp
+(use-package auto-dim-other-buffers
   :ensure
-  :diminish
-  :commands rainbow-blocks-mode
+  :defer
+  :commands auto-dim-other-buffers-mode
   :config
-  (setq rainbow-blocks-highlight-braces-p t)
-  (setq rainbow-blocks-highlight-brackets-p t)
-  (setq rainbow-blocks-highlight-parens-p t))
-#+end_src
+  (setq auto-dim-other-buffers-dim-on-switch-to-minibuffer nil)
+  (setq auto-dim-other-buffers-dim-on-focus-out t))
+ #+end_src
+
+**** Tone down parentheses in lisps
+     :PROPERTIES:
+     :CUSTOM_ID: h:a36e05b1-5301-4fac-a934-463529415012
+     :END:
+
+/2020-07-15: Work in progress/
+
+ #+begin_src emacs-lisp
+(use-package paren-face
+  :ensure
+  :disabled
+  :hook (after-init-hook . global-paren-face-mode))
+ #+end_src
 
 ** Language settings for prose and code
    :PROPERTIES:
