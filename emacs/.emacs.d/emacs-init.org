@@ -3639,8 +3639,8 @@ Now on to the miscellaneous settings:
   (setq org-loop-over-headlines-in-active-region 'start-level)
   (setq org-imenu-depth 7)
   :bind (:map org-mode-map
-         ("<C-return>" . nil)
-         ("<C-S-return>" . nil)))
+              ("<C-return>" . nil)
+              ("<C-S-return>" . nil)))
 #+end_src
 
 *** Org links
@@ -5122,8 +5122,8 @@ with them.  For the time being, this package declaration is enough.
   :ensure
   :pin gnu                              ; Prefer ELPA version
   :config
-  (require 'ebdb-gnus)
-  (require 'ebdb-message)
+  (use-package ebdb-gnus)
+  (use-package ebdb-message)
   (setq ebdb-default-window-size 0.2)
   (setq ebdb-mua-pop-up nil)
 
@@ -5788,24 +5788,12 @@ and corresponding functions.
 
 #+begin_src emacs-lisp
 (use-package shell
+  :defer
   :commands shell-command
   :config
   (setq ansi-color-for-comint-mode t)
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
-
-  (defun prot/shell-multi ()             ; TODO review
-    "Spawn a new instance of `shell' and give it a unique name
-based on the directory of the current buffer."
-    (interactive)
-    (let* ((parent (if (buffer-file-name)
-                       (file-name-directory (buffer-file-name))
-                     default-directory))
-           (name (car (last (split-string parent "/" t)))))
-      (with-current-buffer (shell)
-        (rename-buffer
-         (generate-new-buffer-name (concat "*shell: " name "*"))))))
-  :bind (("<s-return>" . shell)
-         ("<s-S-return>" . prot/shell-multi)))
+  :bind (("<s-S-return>" . shell)))
 #+end_src
 
 **** Eshell (like M-x shell but in elisp)
@@ -6732,6 +6720,10 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
         (eww
          (completing-read "Visit website from history: " history nil t)))))
 
+
+;; eww-current-url
+;; org-eww-copy-for-org-mode
+
   ;; (declare-function cl-remove-if "cl-seq")
   ;; (defun prot/eww-list-buffers ()
   ;;   (interactive)
@@ -7141,20 +7133,23 @@ To see it in action, you can read the =org-mode= report on the minor
 how tricky the selection of colours can be.
 
 #+begin_src emacs-lisp
-(defun wcag (hex)
-  (apply #'+
-         (cl-mapcar
-          (lambda (k x)
-            (* k (if (<= x 0.03928)
-                     (/ x 12.92)
-                   (expt (/ (+ x 0.055) 1.055) 2.4))))
-          '(0.2126 0.7152 0.0722)
-          (color-name-to-rgb hex))))
+(use-package emacs
+  :commands (wcag clr)
+  :config
+  (defun wcag (hex)
+    (apply #'+
+           (cl-mapcar
+            (lambda (k x)
+              (* k (if (<= x 0.03928)
+                       (/ x 12.92)
+                     (expt (/ (+ x 0.055) 1.055) 2.4))))
+            '(0.2126 0.7152 0.0722)
+            (color-name-to-rgb hex))))
 
-(defun clr (c1 c2)
-  (let ((ct (/ (+ (wcag c1) 0.05)
-               (+ (wcag c2) 0.05))))
-    (max ct (/ ct))))
+  (defun clr (c1 c2)
+    (let ((ct (/ (+ (wcag c1) 0.05)
+                 (+ (wcag c2) 0.05))))
+      (max ct (/ ct)))))
 #+end_src
 
 *** Mode line
@@ -7303,22 +7298,20 @@ of Elisp from the [[https://github.com/aadcg/dotfiles][dotfiles of André Alexan
 tweaks of my own.
 
 #+begin_src emacs-lisp
-(use-package moody
-  :ensure
-  :defer)
-
 (use-package keycast
   :ensure
   :defer
-  :after moody
   :commands keycast-mode
   :config
+  (use-package moody :ensure)
+
   (setq keycast-window-predicate 'moody-window-active-p)
   (setq keycast-separator-width 1)
   (setq keycast-insert-after 'mode-line-buffer-identification)
   (setq keycast-remove-tail-elements nil)
 
-  ;; TODO pending review
+  ;; TODO identify all events that should be excluded
+  ;; TODO use `dolist' to configure them
   (add-to-list 'keycast-substitute-alist '(mouse-event-p nil))
   (add-to-list 'keycast-substitute-alist '(mouse-movement-p nil))
   (add-to-list 'keycast-substitute-alist '(mwheel-scroll nil))
@@ -8312,7 +8305,7 @@ A prompt will ask for the register to operate on."
       (prepend-to-register prompt start end nil))))
 #+end_src
 
-** Visual bookmarks and extras (bm.el)
+** Visual bookmarks (bm.el)
    :PROPERTIES:
    :CUSTOM_ID: h:f20b0d69-6fac-49d5-847f-362aea9f1bef
    :END:
@@ -8408,15 +8401,15 @@ _b_: Back same level   _<S-iso-lefttab>_: Cycle global
           (outline-minor-mode -1)
         (outline-minor-mode 1))))
 
-    :bind (("<f10>" . prot/outline-minor-mode) ; key replaces `menu-bar-open'
-           :map outline-minor-mode-map
-           ("C-c h o" . prot/hydra-outline/body)
-           ("C-c C-n" . outline-next-visible-heading)
-           ("C-c C-p" . outline-previous-visible-heading)
-           ("C-c C-f" . outline-forward-same-level)
-           ("C-c C-b" . outline-backward-same-level)
-           ("<C-tab>" . bicycle-cycle)
-           ("<S-iso-lefttab>" . bicycle-cycle-global)))
+  :bind (("<f10>" . prot/outline-minor-mode) ; key replaces `menu-bar-open'
+         :map outline-minor-mode-map
+         ("C-c h o" . prot/hydra-outline/body)
+         ("C-c C-n" . outline-next-visible-heading)
+         ("C-c C-p" . outline-previous-visible-heading)
+         ("C-c C-f" . outline-forward-same-level)
+         ("C-c C-b" . outline-backward-same-level)
+         ("<C-tab>" . bicycle-cycle)
+         ("<S-iso-lefttab>" . bicycle-cycle-global)))
 #+end_src
 
 ** Custom movements and motions
