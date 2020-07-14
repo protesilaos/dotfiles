@@ -3572,7 +3572,6 @@ Now on to the miscellaneous settings:
         '("~/Org"
           "~/.emacs.d"
           "~/Documents"))
-  (setq org-deadline-warning-days 3)
   ;; refile, todo
   (setq org-refile-targets
         '((org-agenda-files . (:maxlevel . 2))
@@ -3802,29 +3801,29 @@ The =org-agenda= is not just a single interface.  It rather is your
 conduit to a set of utilities from where you can keep track of all the
 tasks you have written in the files declared as part of =org-agenda-files=
 (see its value in the [[#h:b95d0798-1cc5-4083-8728-f6a51ddbc531][section that covers the base Org configurations]]).
-Calling =org-agenda= will present you with a list of possible options.
+Calling =org-agenda= will present you with a list of possible options: the
+"dispatcher" as it called.
+
 Here is a primer (there are many more functions documented in the
 manual):
 
-+ The =a= is where you keep track of all the items that have a date
-  assigned to them, be it =SCHEDULED= or =DEADLINE=.  To assign such a value
-  to a heading use =C-c C-s= or =C-c C-d= respectively.
-+ The =t= will list all your tasks, regardless of whether they have a date
-  assigned to them.  You can then filter by keyword, regular expression,
-  etc.  Check the top of the buffer for information on how to do that.
-+ And the =n= will offer you a combined view of the above.
++ From the dispatcher, the =a= is where you keep track of all the items
+  that have a date assigned to them, be it =SCHEDULED= or =DEADLINE=.  To
+  assign such a value to a heading use =C-c C-s= or =C-c C-d= respectively.
+  Run those commands with a universal prefix (=C-u=) to remove the
+  timestamp.  Hit =/= to filter this view to match particular tags.
++ In the dispatcher's menu, the =t= will list all your tasks, regardless
+  of whether they have a date assigned to them.  You can then filter by
+  keyword, regular expression, etc.  Check the top of the buffer for
+  information on how to do that.
++ And the =n= in the dispatcher will offer you a combined view of the
+  above.
 
 Now a few words about some of my customisations (remember to use Emacs'
 documentation facilities over each item, such as =C-h v=):
 
 + Always ask for confirmation when hitting =C-k= from the agenda views.
   That command removes the entry in the original file.
-+ I do not make heavy use of the built-in =diary= and am generally not
-  interested in meticulous time tracking, the 'special' day of X, etc.
-  It is the kind of busywork that has no place in my simple,
-  as-stress-free-as-possible life.  The Org manual suggests that we can
-  use the diary functionality to /“keep track of anniversaries, lunar
-  phases, sunrise/set”/.  Sure…
 + Show all dates in the current view, including those that have no
   entries.  I find it easier that way to assess how far apart the tasks
   are.
@@ -3839,7 +3838,7 @@ documentation facilities over each item, such as =C-h v=):
   item's original context in the other window.  It can be toggled on by
   hitting =F=.
 + Time stamps should always be expressed in 24h format.
-+ Make minor tweaks to the time grid view format.
++ Stylistic tweaks to the time grid view format.
 + Disable the key bindings that cycle through the agenda files: too easy
   to hit while trying to perform some other action.  Besides, I do not
   need that kind of functionality.
@@ -3847,34 +3846,195 @@ documentation facilities over each item, such as =C-h v=):
 #+begin_src emacs-lisp
 (use-package org-agenda
   :after org
+  :defer
   :config
+  ;; Basic setup
+  (setq org-agenda-span 14)
+  (setq org-agenda-start-on-weekday 1)  ; Monday
   (setq org-agenda-confirm-kill t)
-  (setq org-agenda-dim-blocked-tasks t)
-  (setq org-agenda-include-diary t)
   (setq org-agenda-show-all-dates t)
   (setq org-agenda-show-outline-path nil)
+  (setq org-agenda-window-setup 'current-window)
+  (setq org-agenda-skip-comment-trees t)
+  (setq org-agenda-menu-show-matcher t)
+  (setq org-agenda-menu-two-columns nil)
+  (setq org-agenda-sticky nil)
+  (setq org-agenda-custom-commands-contexts nil)
+  (setq org-agenda-max-entries nil)
+  (setq org-agenda-max-todos nil)
+  (setq org-agenda-max-tags nil)
+  (setq org-agenda-max-effort nil)
 
-  ;; All the "skip" need to be reviewed
-  (setq org-agenda-skip-additional-timestamps-same-entry t)
-  (setq org-agenda-skip-deadline-prewarning-if-scheduled t)
-  (setq org-agenda-skip-scheduled-delay-if-deadline t)
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
-  (setq org-agenda-skip-scheduled-if-done t)
-  (setq org-agenda-skip-timestamp-if-deadline-is-shown t)
-  (setq org-agenda-skip-timestamp-if-done t)
+  ;; General view options
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %-12:c%?-12t% s")
+          (todo . " %i %-12:c")
+          (tags . " %i %-12:c")
+          (search . " %i %-12:c")))
+  (setq org-agenda-sorting-strategy
+        '(((agenda habit-down time-up priority-down category-keep)
+           (todo priority-down category-keep)
+           (tags priority-down category-keep)
+           (search category-keep))))
+  (setq org-agenda-breadcrumbs-separator "->")
+  (setq org-agenda-todo-keyword-format "%-1s")
+  (setq org-agenda-diary-sexp-prefix nil)
+  (setq org-agenda-fontify-priorities 'cookies)
+  (setq org-agenda-category-icon-alist nil)
+  (setq org-agenda-remove-times-when-in-prefix nil)
+  (setq org-agenda-remove-timeranges-from-blocks nil)
+  (setq org-agenda-compact-blocks nil)
+  (setq org-agenda-block-separator ?—)
 
-  (setq org-agenda-search-headline-for-time nil)
-  (setq org-agenda-span 3)
-  (setq org-agenda-start-on-weekday 1)  ; Monday
+  (defun prot/org-agenda-format-date-aligned (date)
+    "Format a DATE string for display in the daily/weekly agenda.
+This function makes sure that dates are aligned for easy reading.
+
+Slightly tweaked version of `org-agenda-format-date-aligned' that
+produces dates with a fixed length."
+    (require 'cal-iso)
+    (let* ((dayname (calendar-day-name date t))
+	       (day (cadr date))
+	       (day-of-week (calendar-day-of-week date))
+	       (month (car date))
+	       (monthname (calendar-month-name month t))
+	       (year (nth 2 date))
+	       (iso-week (org-days-to-iso-week
+		              (calendar-absolute-from-gregorian date)))
+	       (weekyear (cond ((and (= month 1) (>= iso-week 52))
+			                (1- year))
+			               ((and (= month 12) (<= iso-week 1))
+			                (1+ year))
+			               (t year)))
+	       (weekstring (if (= day-of-week 1)
+			               (format " (W%02d)" iso-week)
+		                 "")))
+      (format "%s %2d %s %4d%s"
+	          dayname day monthname year weekstring)))
+
+  (setq org-agenda-format-date #'prot/org-agenda-format-date-aligned)
+
+  ;; Marks
+  (setq org-agenda-bulk-mark-char "#")
+  (setq org-agenda-persistent-marks nil)
+
+  ;; Diary entries
+  (setq org-agenda-insert-diary-strategy 'date-tree)
+  (setq org-agenda-insert-diary-extract-time nil)
+  (setq org-agenda-include-diary t)
+
+  ;; Follow mode
   (setq org-agenda-start-with-follow-mode nil)
+  (setq org-agenda-follow-indirect t)
+
+  ;; Multi-item tasks
+  (setq org-agenda-dim-blocked-tasks t)
+  (setq org-agenda-todo-list-sublevels t)
+
+  ;; Filters and restricted views
+  (setq org-agenda-persistent-filter nil)
+  (setq org-agenda-restriction-lock-highlight-subtree t)
+
+  ;; Items with deadline and scheduled timestamps
+  (setq org-agenda-include-deadlines t)
+  (setq org-deadline-warning-days 5)
+  (setq org-agenda-skip-scheduled-if-done nil)
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (setq org-agenda-skip-timestamp-if-deadline-is-shown t)
+  (setq org-agenda-skip-deadline-if-done nil)
+  (setq org-agenda-skip-deadline-prewarning-if-scheduled 1)
+  (setq org-agenda-skip-scheduled-delay-if-deadline nil)
+  (setq org-agenda-skip-additional-timestamps-same-entry nil)
+  (setq org-agenda-skip-timestamp-if-done nil)
+  (setq org-agenda-search-headline-for-time t)
+  (setq org-scheduled-past-days 365)
+  (setq org-deadline-past-days 365)
+  (setq org-agenda-move-date-from-past-immediately-to-today t)
+  (setq org-agenda-show-future-repeats t)
+  (setq org-agenda-prefer-last-repeat nil)
+  (setq org-agenda-timerange-leaders
+        '("" "(%d/%d): "))
+  (setq org-agenda-scheduled-leaders
+        '("Scheduled: " "Sched.%2dx: "))
+  (setq org-agenda-inactive-leader "[")
+  (setq org-agenda-deadline-leaders
+        '("Deadline:  " "In %3d d.: " "%2d d. ago: "))
+  ;; Time grid
+  (setq org-agenda-time-leading-zero t)
   (setq org-agenda-timegrid-use-ampm nil)
+  (setq org-agenda-use-time-grid t)
+  (setq org-agenda-show-current-time-in-grid t)
+  (setq org-agenda-current-time-string
+        "—·—·—·—·—·—·—·—·—")
   (setq org-agenda-time-grid
         '((daily today require-timed)
-          (0800 1000 1200 1400 1600 1800 2000)
-          "      " "················"))
+          (0700 0800 0900 1000 1100
+                1200 1300 1400 1500 1600
+                1700 1800 1900 2000 2100)
+          " -----" "—————————————————"))
+  (setq org-agenda-default-appointment-duration nil)
+
+  ;; Global to-do list
+  (setq org-agenda-todo-ignore-with-date t)
+  (setq org-agenda-todo-ignore-timestamp t)
+  (setq org-agenda-todo-ignore-scheduled t)
+  (setq org-agenda-todo-ignore-deadlines t)
+  (setq org-agenda-todo-ignore-time-comparison-use-seconds t)
+  (setq org-agenda-tags-todo-honor-ignore-options nil)
+
+  ;; Tagged items
+  (setq org-agenda-show-inherited-tags t)
+  (setq org-agenda-use-tag-inheritance
+        '(todo search agenda))
+  (setq org-agenda-hide-tags-regexp nil)
+  (setq org-agenda-remove-tags nil)
+  (setq org-agenda-tags-column -120)
+
+  ;; Agenda entry
+  ;;
+  ;; NOTE I do not use this right now.  Leaving everything to its
+  ;; default value.
+  (setq org-agenda-start-with-entry-text-mode nil)
+  (setq org-agenda-entry-text-maxlines 5)
+  (setq org-agenda-entry-text-exclude-regexps nil)
+  (setq org-agenda-entry-text-leaders "    > ")
+
+  ;; Logging, clocking
+  ;;
+  ;; NOTE I do not use these yet, though I plan to.  Leaving everything to
+  ;; its default value for the time being.
+  (setq org-agenda-log-mode-items '(closed clock))
+  (setq org-agenda-clock-consistency-checks
+        '((:max-duration "10:00" :min-duration 0 :max-gap "0:05" :gap-ok-around
+                         ("4:00")
+                         :default-face ; This should definitely be reviewed
+                         ((:background "DarkRed")
+                          (:foreground "white"))
+                         :overlap-face nil :gap-face nil :no-end-time-face nil
+                         :long-face nil :short-face nil)))
+  (setq org-agenda-log-mode-add-notes t)
+  (setq org-agenda-start-with-log-mode nil)
+  (setq org-agenda-start-with-clockreport-mode nil)
+  (setq org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2))
+  (setq org-agenda-search-view-always-boolean nil)
+  (setq org-agenda-search-view-force-full-words nil)
+  (setq org-agenda-search-view-max-outline-level 0)
+  (setq org-agenda-search-headline-for-time t)
   (setq org-agenda-use-time-grid t)
-  (setq org-agenda-window-setup 'current-window)
-  (setq org-agenda-todo-list-sublevels t)
+  (setq org-agenda-cmp-user-defined nil)
+  (setq org-sort-agenda-notime-is-late t)
+  (setq org-sort-agenda-noeffort-is-high t)
+
+  ;; Agenda column view
+  ;;
+  ;; NOTE I do not use these, but may need them in the future.
+  (setq org-agenda-view-columns-initially nil)
+  (setq org-agenda-columns-show-summaries t)
+  (setq org-agenda-columns-compute-summary-properties t)
+  (setq org-agenda-columns-add-appointments-to-effort-sum nil)
+  (setq org-agenda-auto-exclude-function nil)
+  (setq org-agenda-bulk-custom-functions nil)
+
   :bind (("C-c a" . org-agenda)
          :map org-mode-map
          ("C-'" . nil)
