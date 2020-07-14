@@ -3597,6 +3597,22 @@ Now on to the miscellaneous settings:
   (setq org-highest-priority ?A)
   (setq org-lowest-priority ?C)
   (setq org-default-priority ?A)
+  ;; tags
+  (setq org-tag-alist                   ; TODO review org tag list
+        '((:startgroup)
+          ("@work")
+          ("@priv")
+          (:endgroup)
+          ("emacs")
+          ("modus")
+          ("politics")
+          ("economics")
+          ("philosophy")
+          ("paper")
+          ("book")
+          ("essay")
+          ("article")
+          ("mail")))
   ;; code blocks
   (setq org-confirm-babel-evaluate nil)
   ;; log
