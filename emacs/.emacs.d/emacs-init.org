@@ -8909,11 +8909,6 @@ The value of =mouse-wheel-scroll-amount= means the following:
 + Hold down Control to adjust the size of the text.  This is added in
   Emacs 27.
 
-By enabling =mouse-drag-copy-region= we automatically place the mouse
-selection to the kill ring.  This is the same behaviour as terminal
-emulators that place the selection to the clipboard (or the primary
-selection).
-
 The other options in short:
 
 + Hide mouse pointer while typing.
@@ -8921,6 +8916,11 @@ The other options in short:
 + Faster wheel movement means faster scroll.
 + Scroll window under mouse pointer regardless of whether it is the
   current one or not.
+
+Note that if we enable =mouse-drag-copy-region= we automatically place the
+mouse selection to the kill ring.  This is the same behaviour as
+terminal emulators that place the selection to the clipboard (or the
+primary selection).  I choose not to use this here.
 
 #+begin_src emacs-lisp
 (use-package mouse
@@ -8931,7 +8931,7 @@ The other options in short:
           ((shift) . 5)
           ((meta) . 0.5)
           ((control) . text-scale)))
-  (setq mouse-drag-copy-region t)
+  (setq mouse-drag-copy-region nil)
   (setq make-pointer-invisible t)
   (setq mouse-wheel-progressive-speed t)
   (setq mouse-wheel-follow-mouse t)
