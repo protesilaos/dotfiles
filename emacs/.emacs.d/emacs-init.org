@@ -8473,6 +8473,100 @@ I use visual bookmarks in much the same way.
          ("<f8>" . bm-toggle)))
 #+end_src
 
+** Annotations (annotate.el)
+   :PROPERTIES:
+   :CUSTOM_ID: h:b854ca55-2275-409e-a6a2-e87aa51f1ed0
+   :END:
+
+While inline statements are often the best way to take a note in its
+context, there are cases where you do not want to edit the underlying
+file or buffer yet still comment on it.  This is the basic idea of the
+=annotate= library, by Bastian Bechtold.
+
+With the point over a word, or with an active region, call the command
+to write an annotation (=annotate-annotate=).  Follow it up with your
+input.  The note will be displayed using appropriate typographic styles
+and colours.  While your file/buffer will remain in tact.
+
+The above granted, it is always possible to write these annotations
+inline, by means of =annotate-integrate-annotations=.  This can be
+particularly helpful when sharing plain text via email.  Another option
+is to export the annotation as a diff patch, but I have no use for it.
+
+Note that the annotation's text is not displayed when it is inside an
+Org block (such as the following code snippet).  This is a known issue
+that is documented in the [[https://github.com/bastibe/annotate.el][project's Git repo]].
+
+#+begin_src emacs-lisp
+(use-package annotate
+  :ensure
+  :defer
+  :diminish
+  :commands (annotate-annotate
+             prot/annotate-annotate
+             annotate-goto-next-annotation
+             annotate-goto-previous-annotation
+             annotate-export-annotations
+             annotate-integrate-annotations
+             annotate-show-annotation-summary)
+  :config
+  (setq annotate-file "~/.emacs.d/annotations")
+  (setq annotate-annotation-column 73)
+  (setq annotate-diff-export-context 5)
+  (setq annotate-use-messages nil)
+  (setq annotate-integrate-marker "")
+  (setq annotate-integrate-higlight ?^)
+  (setq annotate-fallback-comment "#")
+  (setq annotate-blacklist-major-mode '())
+  (setq annotate-annotation-max-size-not-place-new-line 50)
+  (setq annotate-search-region-lines-delta 4)
+  (setq annotate-annotation-position-policy :by-length)
+  (setq annotate-summary-ask-query nil)
+
+  (defun prot/annotate-mode ()
+    "Toggles `annotate-mode' for the current buffer."
+    (if (bound-and-true-p annotate-mode)
+        (annotate-mode -1)
+      (annotate-mode 1)))
+
+  (defun prot/annotate-annotate ()
+    "Ensure `annotate-mode' is enabled for `annotate-annotate'."
+    (unless (bound-and-true-p annotate-mode)
+      (annotate-mode 1))
+    (annotate-annotate))
+
+  (defun prot/annotate-annotate-dwim (&optional arg)
+    "Common points of entry for annotations.
+Write an annotation or toggle `annotate-mode' by prefixing this
+function with the \\[universal-argument]."
+    (interactive "P")
+    (if arg
+        (prot/annotate-mode)
+      (prot/annotate-annotate)))
+
+  (defhydra prot/hydra-annotate (:idle nil :color pink :hint nil
+                                       :post (deactivate-mark))
+    "
+   ^Motions^                ^Actions^
+---^------------------------^----------------
+_n_: Next annotation     _a_: Annotate
+_p_: Prev annotation     _i_: Integrate
+^^                       _s_: Show summary
+"
+    ("n" annotate-goto-next-annotation)
+    ("p" annotate-goto-previous-annotation)
+    ("a" prot/annotate-annotate)
+    ("i" annotate-integrate-annotations)
+    ("s" annotate-show-annotation-summary)
+    ("q" nil "cancel" :color blue))
+
+  :bind (("<f9>" . prot/annotate-annotate-dwim)
+         ("<C-f9>" . annotate-goto-next-annotation)
+         ("<C-S-f9>" . annotate-goto-previous-annotation)
+         :map annotate-mode-map
+         ("C-c h a" . prot/hydra-annotate/body)))
+#+end_src
+
 ** Outline minor mode
    :PROPERTIES:
    :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
