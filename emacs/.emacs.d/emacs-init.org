@@ -7531,7 +7531,63 @@ sometimes it causes problems, such as with diffs.
   :bind ("<f7>" . prot/toggle-line-numbers))
 #+end_src
 
-**** “Focus mode” for writing (olivetti-mode)
+**** Dim context and focus-to-thing (focus-mode)
+     :PROPERTIES:
+     :CUSTOM_ID: h:4f39bf14-cb8f-4770-9001-f5067205f0fe
+     :END:
+
+ Sometimes I opt to enlarge the font size and keep a single window so as
+ to narrow in on the task at hand, say, to write an essay or refine some
+ piece of code syntax.  With the help of =focus-mode=, it is possible to
+ also fade out the context, so that I may further facilitate my attempt
+ at offering my undivided attention to the given element.
+
+ Also check =prot/scroll-centre-cursor= in the [[#h:0c44b318-813a-4f4a-b596-75df4a86476b][Scrolling behaviour]] section.
+
+ #+begin_src emacs-lisp
+(use-package focus
+  :ensure
+  :defer
+  :commands (prot/focus-mode-to-thing
+             prot/focus-mode)
+  :config
+  (setq-default focus-mode-to-thing
+                '((prog-mode . defun)
+                  (text-mode . paragraph)))
+
+  (defun prot/focus-mode-to-thing (&optional narrow)
+    "Set local values for `focus-mode-to-thing'.
+With optional NARROW limit the scope of `focus-mode' to smaller
+syntactic units."
+    (interactive "P")
+    (let* ((units (if narrow
+                      (list 'sexp 'sentence)
+                    (list 'defun 'paragraph)))
+           (prog (car units))
+           (text (cadr units)))
+      (setq-local focus-mode-to-thing
+                  `((prog-mode . ,prog)
+                    (text-mode . ,text)))))
+
+  (defun prot/focus-mode (&optional arg)
+    "Toggle the use of `focus-mode'.
+With optional \\[universal-argument] prefix, also invoke
+`prot/focus-mode-to-thing' with its optional argument for a
+narrower field of view."
+    (interactive "P")
+    (if (bound-and-true-p focus-mode)
+        (focus-mode -1)
+      (if arg
+          (prot/focus-mode-to-thing t)
+        (kill-local-variable 'focus-mode-to-thing))
+      (focus-mode 1)))
+
+  ;; C-c o is used by `prot/olivetti-mode' and this is a good mnemonic
+  ;; for a concept of "Only the thing".
+  :bind (("C-c O" . prot/focus-mode)))
+ #+end_src
+
+**** Centred, focused text mode (olivetti-mode)
      :PROPERTIES:
      :CUSTOM_ID: h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd
      :END:
@@ -7541,7 +7597,7 @@ It is nice to be able to easily toggle a mode that centres the buffer,
 allowing for greater comfort.
 
 Olivetti fulfils that niche very nicely.  It is not aggressive in its
-interface requirements, respects my [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][existing line settings]] and with my
+interface requirements, respects my [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][existing line settings]] and my
 preference for [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][auto-filling text]], while it does not introduce any kind
 of functionality beyond the scope of bringing the current window's
 buffer to the centre of the view.  This is exactly what I need.  Any
@@ -7558,17 +7614,20 @@ use =darkroom= instead of =olivetti=.  They offer similar features, except
 that the former hides the mode line, giving the faux slide-show effect
 that is so pertinent to presentations.
 
+Also check =prot/scroll-centre-cursor= in the [[#h:0c44b318-813a-4f4a-b596-75df4a86476b][Scrolling behaviour]] section.
+
 #+begin_src emacs-lisp
 (use-package olivetti
   :ensure
   :defer
   :diminish
   :config
-  (setq olivetti-body-width 100)
-  (setq olivetti-minimum-body-width 80)
+  (setq olivetti-body-width 0.65)
+  (setq olivetti-minimum-body-width 72)
   (setq olivetti-recall-visual-line-mode-entry-state t)
 
   ;; TODO make mode line toggle contingent on universal-argument
+  ;; TODO all these toggles need an optional arg
   (defun prot/olivetti-mode ()
     "Toggle `olivetti-mode' with additional parameters.
 Fringes are disabled for the current window.  For the
