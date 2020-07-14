@@ -7424,6 +7424,21 @@ section on the [[*Generic version control (VC) framework][generic version contro
   :hook (after-init-hook . global-diff-hl-mode))
 #+end_src
 
+*** Highlight comment keywords (hl-todo)
+    :PROPERTIES:
+    :CUSTOM_ID: h:23d2928b-56a0-4a8e-a552-9af1acd45cb1
+    :END:
+
+This tool will apply highlighting to keywords that are normally used in
+code comments.  Simple and effective!
+
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :ensure
+  :config
+  (global-hl-todo-mode 1))
+#+end_src
+
 *** Optional visual indicators or layout elements
     :PROPERTIES:
     :CUSTOM_ID: h:e8d77f0b-0502-449b-bc69-18cf29b9edb0
