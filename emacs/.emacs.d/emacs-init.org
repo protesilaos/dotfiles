@@ -6615,6 +6615,18 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
         (write-file file t)
         (message "Saved buffer at %s" file))))
 
+  (defun prot/elfeed-toggle-tag (tag)
+    "Toggle TAG on current item."
+      (interactive)
+      (elfeed-search-toggle-all tag))
+
+  (defface prot/important-elfeed-entry
+    '((t :inherit error))
+    "Marks an important Elfeed entry.")
+
+  (push '(important prot/important-elfeed-entry)
+        elfeed-search-face-alist)
+
   :hook ((elfeed-search-mode-hook . prot/elfeed-feeds)
          (prot/elfeed-mpv-hook . prot/elfeed-mpv-buffer))
   :bind (("C-c f" . elfeed)
@@ -6626,6 +6638,9 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
          ("o" . prot/elfeed-search-other-window)
          ("v" . prot/elfeed-mpv-dwim)
          ("q" . prot/elfeed-kill-buffer-close-window-dwim)
+         ("!" . (lambda ()
+                  (interactive)
+                  (prot/elfeed-toggle-tag 'important)))
          :map elfeed-show-mode-map
          ("a" . prot/elfeed-show-archive)
          ;; TODO any way to do this without a lambda?
