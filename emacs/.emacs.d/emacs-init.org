@@ -7041,8 +7041,7 @@ bit different than what others will be using.
 
 Also note that *the values I set for these variables are not indicative
 of my preferences*: I try different combinations to test things across a
-range of scenaria.  The scale for the fonts I specify here is called
-"minor second", representing a =1.125= rate.
+range of scenaria.
 
 The =contrib/format-sexp= and the subsequent =dolist= were copied and
 adapted from [[https://www.reddit.com/r/emacs/comments/gqsz8u/weekly_tipstricketc_thread/fsfakhg/][this comment on r/emacs]].
@@ -7067,22 +7066,23 @@ This can be used to further customise the active theme.")
     (contrib/format-sexp
      (defun prot/modus-%1$s ()
        (setq modus-%1$s-theme-slanted-constructs t
-             modus-%1$s-theme-bold-constructs t
-             modus-%1$s-theme-visible-fringes nil
-             modus-%1$s-theme-3d-modeline nil
-             modus-%1$s-theme-subtle-diffs nil
-             modus-%1$s-theme-faint-syntax t
+             modus-%1$s-theme-bold-constructs nil
+             modus-%1$s-theme-visible-fringes t
+             modus-%1$s-theme-3d-modeline t
+             modus-%1$s-theme-subtle-diffs t
+             modus-%1$s-theme-faint-syntax nil
              modus-%1$s-theme-intense-standard-completions nil
-             modus-%1$s-theme-distinct-org-blocks nil
-             modus-%1$s-theme-proportional-fonts t
+             modus-%1$s-theme-distinct-org-blocks t
+             modus-%1$s-theme-rainbow-org-src-blocks nil
+             modus-%1$s-theme-proportional-fonts nil
              modus-%1$s-theme-rainbow-headings nil
              modus-%1$s-theme-section-headings nil
              modus-%1$s-theme-scale-headings nil
-             modus-%1$s-theme-scale-1 1.125
-             modus-%1$s-theme-scale-2 1.266
-             modus-%1$s-theme-scale-3 1.424
-             modus-%1$s-theme-scale-4 1.602
-             modus-%1$s-theme-scale-5 1.802)
+             modus-%1$s-theme-scale-1 1.1
+             modus-%1$s-theme-scale-2 1.15
+             modus-%1$s-theme-scale-3 1.21
+             modus-%1$s-theme-scale-4 1.27
+             modus-%1$s-theme-scale-5 1.33)
        (load-theme 'modus-%1$s t)
        (run-hooks 'prot/modus-themes-custom-hook))
      theme))
@@ -7092,21 +7092,20 @@ This can be used to further customise the active theme.")
   ;;; want.  For instance, this adapts the cursor colour, depending on
   ;;; the theme in use.
 
-  ;; (defun prot/modus-themes-custom ()
-  ;;   "Override faces by accessing the theme colour variables."
-  ;;   (cond
-  ;;    ((eq (car custom-enabled-themes) 'modus-operandi)
-  ;;     (modus-operandi-theme-with-color-variables
-  ;;       (custom-theme-set-faces
-  ;;        'modus-operandi
-  ;;        `(cursor ((,class (:background ,blue-alt)))))))
-  ;;    ((eq (car custom-enabled-themes) 'modus-vivendi)
-  ;;     (modus-vivendi-theme-with-color-variables
-  ;;       (custom-theme-set-faces
-  ;;        'modus-vivendi
-  ;;        `(cursor ((,class (:background ,green-alt)))))))))
-  ;;
-  ;; (add-hook 'prot/modus-themes-custom-hook 'prot/modus-themes-custom)
+  (defun prot/modus-themes-custom ()
+    "Override faces by accessing the theme colour variables.
+To be assigned to `prot/modus-themes-custom-hook'."
+    (cond
+     ((eq (car custom-enabled-themes) 'modus-operandi)
+      (modus-operandi-theme-with-color-variables
+        (custom-theme-set-faces
+         'modus-operandi
+         `(cursor ((,class (:background ,blue-alt)))))))
+     ((eq (car custom-enabled-themes) 'modus-vivendi)
+      (modus-vivendi-theme-with-color-variables
+        (custom-theme-set-faces
+         'modus-vivendi
+         `(cursor ((,class (:background ,red-alt)))))))))
 
   ;;; It is possible to also change the colour value assigned to each
   ;;; variable in the palette.  Only do this if you plan to make a
@@ -7129,7 +7128,8 @@ This can be used to further customise the active theme.")
       (disable-theme 'modus-vivendi)))
 
   :bind ("<f5>" . prot/modus-themes-toggle)
-  :hook ((after-init-hook . prot/modus-operandi)))
+  :hook ((after-init-hook . prot/modus-operandi)
+         (prot/modus-themes-custom-hook . prot/modus-themes-custom)))
 #+end_src
 
 *** Measuring relative colour luminance
