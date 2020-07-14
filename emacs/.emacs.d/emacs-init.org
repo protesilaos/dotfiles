@@ -7519,6 +7519,9 @@ sometimes it causes problems, such as with diffs.
 (use-package display-line-numbers
   :defer
   :config
+  ;; Set absolute line numbers.  A value of "relative" is also useful.
+  (setq display-line-numbers-type t)
+
   (defun prot/toggle-line-numbers ()
     "Toggles the display of line numbers.  Applies to all buffers."
     (interactive)
