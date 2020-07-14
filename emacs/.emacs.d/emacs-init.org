@@ -9236,10 +9236,22 @@ Overview of my settings:
   (setq desktop-globals-to-clear nil)
   (setq desktop-load-locked-desktop t)
   (setq desktop-missing-file-warning t)
-  (setq desktop-restore-eager 3)
+  (setq desktop-restore-eager 0)
   (setq desktop-restore-frames nil)
   (setq desktop-save 'ask-if-new)
   (desktop-save-mode 1))
+#+end_src
+
+And here we make sure that Emacs starts in the =*scratch*= buffer, no
+matter what.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :init
+  (setq initial-buffer-choice t)
+  (setq inhibit-startup-echo-area-message "prot") ; read the docstring
+  (setq inhibit-startup-screen t)
+  (setq inhibit-startup-buffer-menu t))
 #+end_src
 
 ** Record various types of history
