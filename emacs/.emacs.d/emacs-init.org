@@ -8017,6 +8017,10 @@ I edit lots of Markdown files.  This makes things easier.
 (use-package markdown-mode
   :ensure
   :config
+  ;; Allows for fenced block focus with C-c ' (same as Org blocks).
+  (use-package edit-indirect
+    :ensure
+    :defer)
   (setq markdown-fontify-code-blocks-natively t)
   :mode ("\\.md$" . markdown-mode))
 #+end_src
