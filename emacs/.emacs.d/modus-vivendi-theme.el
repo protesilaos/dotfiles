@@ -138,6 +138,9 @@
 ;;     eros
 ;;     ert
 ;;     eshell
+;;     eshell-fringe-status
+;;     eshell-git-prompt
+;;     eshell-prompt-extras (epe)
 ;;     evil (evil-mode)
 ;;     evil-goggles
 ;;     evil-visual-mark-mode
@@ -179,6 +182,7 @@
 ;;     highlight-symbol
 ;;     highlight-tail
 ;;     highlight-thing
+;;     hl-defined
 ;;     hl-fill-column
 ;;     hl-line-mode
 ;;     hl-todo
@@ -544,26 +548,30 @@ and the border.  FG is used when no block style is in effect."
       (list :background bgbox :foreground fgbox :box (list :color fgbox))
     (list :foreground fg)))
 
-(defun modus-vivendi-theme-org-block (bgblk bg)
+(defun modus-vivendi-theme-org-block (bgblk)
   "Conditionally set the background of Org blocks.
-BGBLK applies to a distinct neutral background.  BG is used to
-keep blocks the same background as the rest of the buffer."
+BGBLK applies to a distinct neutral background.  Else blocks have
+no background of their own (the default), so they look the same
+as the rest of the buffer."
   (if modus-vivendi-theme-distinct-org-blocks
       (append
        (and (>= emacs-major-version 27) '(:extend t))
        (list :background bgblk))
-    (list :background bg)))
+    (list :background nil)))
 
-(defun modus-vivendi-theme-org-block-delim (bgext fgext bg fg)
+(defun modus-vivendi-theme-org-block-delim (bgaccent fgaccent bg fg)
   "Conditionally set the styles of Org block delimiters.
-BGEXT and FGEXT apply a background and foreground colour
-respectively and set the `:extend' attribute where applicable.
-BG and FG should be a largely neutral colour combination."
-  (if (or modus-vivendi-theme-distinct-org-blocks
-          modus-vivendi-theme-rainbow-org-src-blocks)
-      (append
-       (and (>= emacs-major-version 27) '(:extend t))
-       (list :background bgext :foreground fgext))
+BG, FG, BGACCENT, FGACCENT apply a background and foreground
+colour respectively.
+
+The former pair is a greyscale combination that should be more
+distinct than the background of the block.
+
+The latter pair should be more subtle than the background of the
+block, as it is used when source blocks are cast on a
+coloured/accented backdrop."
+  (if modus-vivendi-theme-rainbow-org-src-blocks
+      (list :background bgaccent :foreground fgaccent)
     (list :background bg :foreground fg)))
 
 (defun modus-vivendi-theme-modeline-box (col3d col &optional btn int)
@@ -1674,6 +1682,33 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(eshell-ls-symlink ((,class :foreground ,cyan :underline t)))
    `(eshell-ls-unreadable ((,class :background ,bg-inactive :foreground ,fg-inactive)))
    `(eshell-prompt ((,class :foreground ,green-alt-other :weight ,modus-theme-bold)))
+   ;;;; eshell-fringe-status
+   `(eshell-fringe-status-failure ((,class :foreground ,red)))
+   `(eshell-fringe-status-success ((,class :foreground ,green)))
+   ;;;; eshell-git-prompt
+   `(eshell-git-prompt-add-face ((,class :foreground ,fg-alt)))
+   `(eshell-git-prompt-branch-face ((,class :foreground ,fg-alt)))
+   `(eshell-git-prompt-directory-face ((,class :foreground ,cyan)))
+   `(eshell-git-prompt-exit-fail-face ((,class :foreground ,red)))
+   `(eshell-git-prompt-exit-success-face ((,class :foreground ,green)))
+   `(eshell-git-prompt-modified-face ((,class :foreground ,yellow)))
+   `(eshell-git-prompt-powerline-clean-face ((,class :background ,green-refine-bg)))
+   `(eshell-git-prompt-powerline-dir-face ((,class :background ,blue-refine-bg)))
+   `(eshell-git-prompt-powerline-not-clean-face ((,class :background ,magenta-refine-bg)))
+   `(eshell-git-prompt-robyrussell-branch-face ((,class :foreground ,red)))
+   `(eshell-git-prompt-robyrussell-git-dirty-face ((,class :foreground ,yellow)))
+   `(eshell-git-prompt-robyrussell-git-face ((,class :foreground ,blue)))
+   ;;;; eshell-prompt-extras (epe)
+   `(epe-dir-face ((,class :foreground ,blue :weight ,modus-theme-bold)))
+   `(epe-git-dir-face ((,class :foreground ,red-alt-other)))
+   `(epe-git-face ((,class :foreground ,cyan-alt)))
+   `(epe-pipeline-delimiter-face ((,class :foreground ,green-alt)))
+   `(epe-pipeline-host-face ((,class :foreground ,blue)))
+   `(epe-pipeline-time-face ((,class :foreground ,fg-special-warm)))
+   `(epe-pipeline-user-face ((,class :foreground ,magenta)))
+   `(epe-remote-face ((,class :foreground ,fg-alt :slant ,modus-theme-slant)))
+   `(epe-status-face ((,class :foreground ,magenta-alt-other)))
+   `(epe-venv-face ((,class :foreground ,fg-alt :slant ,modus-theme-slant)))
    ;;;; evil-mode
    `(evil-ex-commands ((,class :foreground ,magenta-alt-other)))
    `(evil-ex-info ((,class :foreground ,cyan-alt-other)))
@@ -2144,6 +2179,10 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(highlight-symbol-face ((,class :inherit modus-theme-special-mild)))
    ;;;; highlight-thing
    `(highlight-thing ((,class :background ,bg-alt :foreground ,cyan)))
+   ;;;; hl-defined
+   `(hdefd-functions ((,class :foreground ,blue)))
+   `(hdefd-undefined ((,class :foreground ,red-alt)))
+   `(hdefd-variables ((,class :foreground ,cyan-alt)))
    ;;;; hl-fill-column
    `(hl-fill-column-face ((,class :background ,bg-active :foreground ,fg-active)))
    ;;;; hl-todo
@@ -2334,7 +2373,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(kaocha-runner-warning-face ((,class :foreground ,yellow)))
    ;;;; keycast
    `(keycast-command ((,class :foreground ,blue-active :weight bold)))
-   `(keycast-key ((,class :box ,(modus-vivendi-theme-modeline-box blue-intense blue-active t -3)
+   `(keycast-key ((,class :box ,(modus-vivendi-theme-modeline-box blue-alt blue-active t -3)
                           ,@(modus-vivendi-theme-modeline-props
                              blue-active bg-main
                              blue-active bg-active))))
@@ -2813,10 +2852,10 @@ Also bind `class' to ((class color) (min-colors 89))."
                                    :foreground ,fg-special-mild
                                    ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-3))))
    `(org-archived ((,class :background ,bg-alt :foreground ,fg-alt)))
-   `(org-block ((,class ,@(modus-vivendi-theme-org-block bg-dim bg-main)
+   `(org-block ((,class ,@(modus-vivendi-theme-org-block bg-dim)
                         :inherit fixed-pitch :foreground ,fg-main)))
    `(org-block-begin-line ((,class ,@(modus-vivendi-theme-org-block-delim
-                                      bg-active fg-special-cold
+                                      bg-dim fg-special-cold
                                       bg-alt fg-special-mild)
                                    :inherit fixed-pitch)))
    `(org-block-end-line ((,class :inherit org-block-begin-line)))
@@ -2894,9 +2933,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-mode-line-clock-overrun ((,class :inherit modus-theme-active-red)))
    `(org-priority ((,class ,@(modus-vivendi-theme-org-todo-block magenta-nuanced-bg magenta-nuanced magenta)
                            ,@(modus-vivendi-theme-heading-foreground magenta magenta-alt-other))))
-   `(org-quote ((,class ,@(modus-vivendi-theme-org-block bg-dim bg-main)
-                        :foreground ,fg-special-cold :slant ,modus-theme-slant)))
-   `(org-scheduled ((,class :foreground ,green-alt-other)))
+   `(org-quote ((,class ,@(modus-vivendi-theme-org-block bg-dim)
+                        :foreground ,fg-special-calm :slant ,modus-theme-slant)))
+   `(org-scheduled ((,class :foreground ,fg-special-warm)))
    `(org-scheduled-previously ((,class :foreground ,yellow-alt-other)))
    `(org-scheduled-today ((,class :foreground ,magenta-alt-other)))
    `(org-sexp-date ((,class :inherit org-date)))
@@ -3000,7 +3039,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(paradox-star-face ((,class :foreground ,magenta)))
    `(paradox-starred-face ((,class :foreground ,magenta-alt)))
    ;;;; paren-face
-   `(parenthesis ((,class :foreground ,fg-alt)))
+   `(parenthesis ((,class :foreground ,fg-unfocused)))
    ;;;; parrot
    `(parrot-rotate-rotation-highlight-face ((,class :inherit modus-theme-refine-magenta)))
    ;;;; pass
@@ -3746,6 +3785,7 @@ Also bind `class' to ((class color) (min-colors 89))."
        ("OKAY" . ,cyan-alt)
        ("DONT" . ,green-alt)
        ("FAIL" . ,red)
+       ("BUG" . ,red)
        ("DONE" . ,green)
        ("NOTE" . ,yellow-alt-other)
        ("KLUDGE" . ,yellow)
