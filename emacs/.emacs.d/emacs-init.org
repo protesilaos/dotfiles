@@ -4192,6 +4192,7 @@ minibuffer while doing a presentation.
   (setq org-tree-slide-never-touch-face t)
 
   ;; NOTE The effect is good overall, but I may tweak it further.
+  ;; TODO use `define-minor-mode' instead of this
   (defun prot/org-presentation ()
     "Parameters for plain text presentations with `org-mode'."
     (interactive)
@@ -7727,6 +7728,7 @@ sometimes it causes problems, such as with diffs.
                 '((prog-mode . defun)
                   (text-mode . paragraph)))
 
+  ;; TODO review in accordance with `prot/focus-mode'
   (defun prot/focus-mode-to-thing (&optional narrow)
     "Set local values for `focus-mode-to-thing'.
 With optional NARROW limit the scope of `focus-mode' to smaller
@@ -7741,6 +7743,7 @@ syntactic units."
                   `((prog-mode . ,prog)
                     (text-mode . ,text)))))
 
+  ;; TODO use `define-minor-mode' instead of this
   (defun prot/focus-mode (&optional arg)
     "Toggle the use of `focus-mode'.
 With optional \\[universal-argument] prefix, also invoke
