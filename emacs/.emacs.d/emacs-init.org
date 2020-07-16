@@ -3503,7 +3503,7 @@ it: a rich corpus of elisp functions that automate, link, combine,
 enhance, structure, or otherwise enrich the process of using this rather
 simple markup language.  This very document is written in =org-mode= while
 its website version is produced by a function that exports Org notation
-into its HTML equivalent.
+to its HTML equivalent.
 
 The present section contains several sub-sections, each dedicated to a
 particular aspect of Org.  Unless explicitly stated, everything should
@@ -3590,6 +3590,7 @@ Now on to the miscellaneous settings:
   (setq org-fontify-done-headline nil)
   (setq org-fontify-quote-and-verse-blocks t)
   (setq org-fontify-whole-heading-line nil)
+  (setq org-fontify-whole-block-delimiter-line t)
   (setq org-enforce-todo-dependencies t)
   (setq org-enforce-todo-checkbox-dependencies t)
   (setq org-track-ordered-property-with-tag t)
@@ -3621,7 +3622,7 @@ Now on to the miscellaneous settings:
   (setq org-log-reschedule nil)
   (setq org-read-date-prefer-future 'time)
   ;; general
-  (setq org-special-ctrl-a/e t)
+  (setq org-special-ctrl-a/e nil)
   (setq org-special-ctrl-k nil)
   (setq org-hide-emphasis-markers t)
   (setq org-structure-template-alist    ; CHANGED in Org 9.2, Emacs 27.1
@@ -3758,7 +3759,7 @@ of the above in action.
   :defer
   :config
   (setq org-capture-templates
-        '(("b" "Basic task" entry
+        '(("b" "Basic task for future review" entry
            (file+headline "tasks.org" "Basic tasks that need to be reviewed")
            "* %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %l")
 
@@ -3770,9 +3771,9 @@ of the above in action.
            (file+headline "work.org" "Meetings, events, and appointments")
            "* MEET [#A] %^{Title} :@work:\n SCHEDULED: %^T\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?")
 
-          ("t" "Task of general sort" entry
+          ("t" "Task with a due date" entry
            (file+headline "tasks.org" "Task list with a date")
-           "* %^{Scope of task||TODO |STUDY |MEET } %^{Title} %^g\n SCHEDULED: %^t\n :PROPERTIES:\n :CONTEXT: %a\n :CAPTURED: %U\n :END:\n\n %i %?")
+           "* %^{Scope of task||TODO|STUDY|MEET} %^{Title} %^g\n SCHEDULED: %^t\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?")
 
           ("r" "Reply to an email" entry
            (file+headline "tasks.org" "Mail correspondence")
