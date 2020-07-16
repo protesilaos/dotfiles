@@ -79,8 +79,9 @@
 ;;     auctex and TeX
 ;;     auto-dim-other-buffers
 ;;     avy
-;;     breakpoint (provided by built-in gdb-mi.el)
 ;;     bm
+;;     boon
+;;     breakpoint (provided by built-in gdb-mi.el)
 ;;     buffer-expose
 ;;     calendar and diary
 ;;     calfw
@@ -488,15 +489,43 @@ For more on the matter, read the documentation of
   "Use a visible style for fringes."
   :type 'boolean)
 
+(define-obsolete-variable-alias 'modus-vivendi-theme-distinct-org-blocks
+  'modus-vivendi-theme-org-blocks "`modus-vivendi-theme' 0.11.0")
+
 (defcustom modus-vivendi-theme-distinct-org-blocks nil
   "Use a distinct neutral background for `org-mode' blocks."
   :type 'boolean)
+
+(define-obsolete-variable-alias 'modus-vivendi-theme-rainbow-org-src-blocks
+  'modus-vivendi-theme-org-blocks "`modus-vivendi-theme' 0.11.0")
 
 (defcustom modus-vivendi-theme-rainbow-org-src-blocks nil
   "Use colour-coded backgrounds for `org-mode' source blocks.
 The colour in use depends on the language (send feedback to
 include more languages)."
   :type 'boolean)
+
+(defcustom modus-vivendi-theme-org-blocks nil
+  "Use a subtle grey or colour-coded background for Org blocks.
+
+Nil means that the block will have no background of its own and
+will use the default that applies to the rest of the buffer.
+
+Option `greyscale' will apply a subtle neutral grey background to
+the block's contents.  It also affects the begin and end lines of
+the block: their background will be extended to the edge of the
+window for Emacs version >= 27 where the ':extend' keyword is
+recognised by `set-face-attribute'.
+
+Option `rainbow' will use an accented background for the contents
+of the block.  The exact colour will depend on the programming
+language and is controlled by the `org-src-block-faces'
+variable (refer to the theme's source code for the current
+association list)."
+  :type '(choice
+	      (const :tag "No Org block background (default)" nil)
+	      (const :tag "Subtle grey block background" greyscale)
+	      (const :tag "Colour-coded background per programming language" rainbow)))
 
 (defcustom modus-vivendi-theme-3d-modeline nil
   "Use a three-dimensional style for the active mode line."
@@ -552,11 +581,15 @@ and the border.  FG is used when no block style is in effect."
   "Conditionally set the background of Org blocks.
 BGBLK applies to a distinct neutral background.  Else blocks have
 no background of their own (the default), so they look the same
-as the rest of the buffer."
-  (if modus-vivendi-theme-distinct-org-blocks
-      (append
-       (and (>= emacs-major-version 27) '(:extend t))
-       (list :background bgblk))
+as the rest of the buffer.
+
+`modus-vivendi-theme-org-blocks' also accepts a `rainbow' option
+which is applied conditionally to `org-src-block-faces' (see the
+theme's source code)."
+  (if (eq modus-vivendi-theme-org-blocks 'greyscale)
+    (append
+     (and (>= emacs-major-version 27) '(:extend t))
+     (list :background bgblk))
     (list :background nil)))
 
 (defun modus-vivendi-theme-org-block-delim (bgaccent fgaccent bg fg)
@@ -565,14 +598,22 @@ BG, FG, BGACCENT, FGACCENT apply a background and foreground
 colour respectively.
 
 The former pair is a greyscale combination that should be more
-distinct than the background of the block.
+distinct than the background of the block.  It is applied to the
+default styles or when `modus-vivendi-theme-org-blocks' is set
+to `greyscale'.
 
 The latter pair should be more subtle than the background of the
-block, as it is used when source blocks are cast on a
-coloured/accented backdrop."
-  (if modus-vivendi-theme-rainbow-org-src-blocks
-      (list :background bgaccent :foreground fgaccent)
-    (list :background bg :foreground fg)))
+block, as it is used when `modus-vivendi-theme-org-blocks' is
+set to `rainbow'."
+  (cond
+   ((eq modus-vivendi-theme-org-blocks 'greyscale)
+    (append
+     (and (>= emacs-major-version 27) '(:extend t))
+     (list :background bg :foreground fg)))
+   ((eq modus-vivendi-theme-org-blocks 'rainbow)
+    (list :background bgaccent :foreground fgaccent))
+   (t
+    (list :background bg :foreground fg))))
 
 (defun modus-vivendi-theme-modeline-box (col3d col &optional btn int)
   "Control the box properties of the mode line.
@@ -692,9 +733,9 @@ AMOUNT is a customisation option."
       ;; styles for slightly accented background
       ;;
       ;; must be combined with any of the above foreground values
-      ("red-nuanced-bg" . "#3f0000") ("green-nuanced-bg" . "#002000")
-      ("yellow-nuanced-bg" . "#321000") ("blue-nuanced-bg" . "#001055")
-      ("magenta-nuanced-bg" . "#32003f") ("cyan-nuanced-bg" . "#001a3a")
+      ("red-nuanced-bg" . "#2c0614") ("green-nuanced-bg" . "#001904")
+      ("yellow-nuanced-bg" . "#221000") ("blue-nuanced-bg" . "#0f0e39")
+      ("magenta-nuanced-bg" . "#230631") ("cyan-nuanced-bg" . "#041529")
       ;; styles for elements that should draw attention to themselves
       ;;
       ;; must be combined with: `bg-main'
@@ -966,6 +1007,17 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(success ((,class :foreground ,green :weight bold)))
    `(trailing-whitespace ((,class :background ,red-intense-bg)))
    `(warning ((,class :foreground ,yellow :weight bold)))
+   ;;;; buttons, links, widgets
+   `(button ((,class :foreground ,blue-alt-other :underline t)))
+   `(link ((,class :foreground ,blue-alt-other :underline t)))
+   `(link-visited ((,class :foreground ,magenta-alt-other :underline t)))
+   `(tooltip ((,class :background ,bg-special-cold :foreground ,fg-main)))
+   `(widget-button ((,class :inherit button)))
+   `(widget-button-pressed ((,class :inherit button :foreground ,magenta)))
+   `(widget-documentation ((,class :foreground ,green)))
+   `(widget-field ((,class :background ,bg-alt :foreground ,fg-dim)))
+   `(widget-inactive ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+   `(widget-single-line-field ((,class :inherit widget-field)))
    ;;;; ag
    `(ag-hit-face ((,class :foreground ,fg-special-cold)))
    `(ag-match-face ((,class :inherit modus-theme-special-calm)))
@@ -1106,17 +1158,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(bm-fringe-persistent-face ((,class :inherit modus-theme-fringe-blue)))
    `(bm-persistent-face ((,class :inherit modus-theme-intense-blue
                                  ,@(and (>= emacs-major-version 27) '(:extend t)))))
-   ;;;; buttons, links, widgets
-   `(button ((,class :foreground ,blue-alt-other :underline t)))
-   `(link ((,class :foreground ,blue-alt-other :underline t)))
-   `(link-visited ((,class :foreground ,magenta-alt-other :underline t)))
-   `(tooltip ((,class :background ,bg-special-cold :foreground ,fg-main)))
-   `(widget-button ((,class :inherit button)))
-   `(widget-button-pressed ((,class :inherit button :foreground ,magenta)))
-   `(widget-documentation ((,class :foreground ,green)))
-   `(widget-field ((,class :background ,bg-alt :foreground ,fg-dim)))
-   `(widget-inactive ((,class :background ,bg-inactive :foreground ,fg-inactive)))
-   `(widget-single-line-field ((,class :inherit widget-field)))
+   ;;;; boon
+   `(boon-modeline-cmd ((,class :inherit modus-theme-active-blue)))
+   `(boon-modeline-ins ((,class :inherit modus-theme-active-red)))
+   `(boon-modeline-off ((,class :inherit modus-theme-active-yellow)))
+   `(boon-modeline-spc ((,class :inherit modus-theme-active-green)))
    ;;;; breakpoint (built-in gdb-mi.el)
    `(breakpoint-disabled ((,class :foreground ,fg-alt)))
    `(breakpoint-enabled ((,class :foreground ,red :weight bold)))
@@ -3824,7 +3870,7 @@ Also bind `class' to ((class color) (min-colors 89))."
   ;;; Conditional theme variables
   ;;;; org-src-block-faces (this is a user option to add a colour-coded
   ;;;; background to source blocks for various programming languages)
-  (when modus-vivendi-theme-rainbow-org-src-blocks
+  (when (eq modus-vivendi-theme-org-blocks 'rainbow)
     (custom-theme-set-variables
      'modus-vivendi
      `(org-src-block-faces              ; TODO this list should be expanded
