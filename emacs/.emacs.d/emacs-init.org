@@ -7596,8 +7596,21 @@ code comments.  Simple and effective!
 #+begin_src emacs-lisp
 (use-package hl-todo
   :ensure
-  :config
-  (global-hl-todo-mode 1))
+  :hook (prog-mode-hook . hl-todo-mode))
+#+end_src
+
+*** Tone down parentheses in lisps
+    :PROPERTIES:
+    :CUSTOM_ID: h:a36e05b1-5301-4fac-a934-463529415012
+    :END:
+
+Apply a dedicated face to parentheses in Elisp modes.  A more subtle
+grey than the default foreground text is used.
+
+#+begin_src emacs-lisp
+(use-package paren-face
+  :ensure
+  :hook (emacs-lisp-mode-hook . paren-face-mode))
 #+end_src
 
 *** Optional visual indicators or layout elements
@@ -7831,20 +7844,6 @@ font-related changes see `prot/variable-pitch-mode'."
   :config
   (setq auto-dim-other-buffers-dim-on-switch-to-minibuffer nil)
   (setq auto-dim-other-buffers-dim-on-focus-out t))
- #+end_src
-
-**** Tone down parentheses in lisps
-     :PROPERTIES:
-     :CUSTOM_ID: h:a36e05b1-5301-4fac-a934-463529415012
-     :END:
-
-/2020-07-15: Work in progress/
-
- #+begin_src emacs-lisp
-(use-package paren-face
-  :ensure
-  :disabled
-  :hook (after-init-hook . global-paren-face-mode))
  #+end_src
 
 ** Language settings for prose and code
