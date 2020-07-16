@@ -9351,11 +9351,12 @@ interaction.  With the following =setq-default=, the point will stay at
 the top/bottom of the screen while moving in that direction (use =C-l= to
 reposition it).
 
-While =prot/scroll-centre-cursor= is a simple and super effective way to
-get the always-centred behaviour on demand.  I use it when I am reading
-and expect to perform few or no edits on the text.  As such, this
-function makes for a natural complement to [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][my configs for olivetti-mode]]
-as well as the more specialised [[#h:4f39bf14-cb8f-4770-9001-f5067205f0fe][focus-mode for dimming context]].
+While =prot/scroll-centre-cursor-mode= is a simple and super effective way
+to get the always-centred behaviour on demand.  I use it when I am
+reading prose or reviewing code and expect to perform few or no edits.
+As such, this piece of fumctionality makes for a natural complement to
+[[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][my configs for olivetti-mode]] as well as the somewhat more specialised
+[[#h:4f39bf14-cb8f-4770-9001-f5067205f0fe][focus-mode for dimming context]].
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -9364,11 +9365,13 @@ as well as the more specialised [[#h:4f39bf14-cb8f-4770-9001-f5067205f0fe][focus
   (setq-default scroll-conservatively 1) ; affects `scroll-step'
   (setq-default scroll-margin 0)
 
-  (defun prot/scroll-centre-cursor ()
+  (define-minor-mode prot/scroll-centre-cursor-mode
     "Toggle centred cursor scrolling behaviour."
-    (interactive)
-    (if (eq scroll-margin 0)
-        (setq-local scroll-margin (/ (frame-height) 2)
+    :init-value nil
+    :lighter " S="
+    :global nil
+    (if prot/scroll-centre-cursor-mode
+        (setq-local scroll-margin (* (frame-height) 2)
                     scroll-conservatively 0
                     maximum-scroll-margin 0.5)
       (dolist (local '(scroll-preserve-screen-position
@@ -9376,9 +9379,10 @@ as well as the more specialised [[#h:4f39bf14-cb8f-4770-9001-f5067205f0fe][focus
                        maximum-scroll-margin
                        scroll-margin))
         (kill-local-variable `,local))))
+
   ;; C-c l is used for `org-store-link'.  The mnemonic for this is to
   ;; focus the Line and also works as a variant of C-l.
-  :bind ("C-c L" . prot/scroll-centre-cursor))
+  :bind ("C-c L" . prot/scroll-centre-cursor-mode))
 #+end_src
 
 *** Delete selection
