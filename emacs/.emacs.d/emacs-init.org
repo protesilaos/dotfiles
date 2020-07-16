@@ -712,28 +712,23 @@ With the following package declaration my idea is to integrate
 have, /mutatis mutandis/.  Likely candidates are the toggle for
 =olivetti-mode= (see the section on [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing]]) and my
 simple-yet-super-effective plain text presentations with Org mode (see
-[[#h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11][simple presentations inside of Emacs]]).  Please note though that /this
-may be reviewed upon further testing and experimentation/.
+[[#h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11][simple presentations inside of Emacs]]).
 
 Also check my [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks]].
 
 #+begin_src emacs-lisp
 (use-package face-remap
   :diminish buffer-face-mode            ; the actual mode
+  :commands prot/variable-pitch-mode
   :config
-   (defun prot/variable-pitch-mode ()
-    "Toggle `variable-pitch-mode' and additional parameters."
-    (interactive)
-    (if (bound-and-true-p buffer-face-mode)
-        (progn
-          (variable-pitch-mode -1)
-          (kill-local-variable 'blink-cursor-interval)
-          (kill-local-variable 'cursor-type)
-          (kill-local-variable 'cursor-in-non-selected-windows))
-      (variable-pitch-mode 1)
-      (setq-local blink-cursor-interval 0.75)
-      (setq-local cursor-type '(bar . 2))
-      (setq-local cursor-in-non-selected-windows 'hollow))))
+  (define-minor-mode prot/variable-pitch-mode
+    "Toggle `variable-pitch-mode', except for `prog-mode'."
+    :init-value nil
+    :global nil
+    (if prot/variable-pitch-mode
+        (unless (derived-mode-p 'prog-mode)
+          (variable-pitch-mode 1))
+      (variable-pitch-mode -1))))
 #+end_src
 
 *** Typeface suitability test
