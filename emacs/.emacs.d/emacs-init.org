@@ -9216,13 +9216,14 @@ Otherwise it is a convenient toggle for when I need to have that effect.
     :global t
     (if prot/cursor-type-mode
         (progn
-          (setq-local blink-cursor-interval 0.75)
-          (setq-local cursor-type '(bar . 2))
-          (setq-local cursor-in-non-selected-windows 'hollow)
+          (setq-local blink-cursor-interval 0.75
+                      cursor-type '(bar . 2)
+                      cursor-in-non-selected-windows 'hollow)
           (blink-cursor-mode 1))
-      (kill-local-variable 'blink-cursor-interval)
-      (kill-local-variable 'cursor-type)
-      (kill-local-variable 'cursor-in-non-selected-windows)
+      (dolist (local '(blink-cursor-interval
+                       cursor-type
+                       cursor-in-non-selected-windows))
+        (kill-local-variable `,local))
       (blink-cursor-mode -1))))
 #+end_src
 
