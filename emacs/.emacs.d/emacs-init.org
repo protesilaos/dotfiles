@@ -7667,13 +7667,11 @@ when reviewing my themes (=rainbow-mode= is activated manually).
      :END:
 
 + Display line numbers (buffer-local) ::  I seldom use line numbers, but
-     here it is.  This toggles the setting for the local buffer.  A
-     global option is also available, but I prefer the buffer-specific
-     variant because there are contexts where global display is not
-     useful (such as =occur=).
+  here it is.  This toggles the setting for the local buffer and also
+  activates =hl-line-mode=.
 + Display invisible characters (whitespace) :: Viewing invisible
-     characters (whitespace) can be very helpful under certain
-     circumstances.  Generally though, I do not keep it active.
+  characters (whitespace) can be very helpful under certain
+  circumstances.  Generally though, I do not keep it active.
 
 As for =delete-trailing-whitespace=, I prefer to call it manually because
 sometimes it causes problems, such as with diffs.
@@ -7697,13 +7695,17 @@ sometimes it causes problems, such as with diffs.
   ;; Set absolute line numbers.  A value of "relative" is also useful.
   (setq display-line-numbers-type t)
 
-  (defun prot/toggle-line-numbers ()
-    "Toggles the display of line numbers.  Applies to all buffers."
-    (interactive)
-    (if (bound-and-true-p display-line-numbers-mode)
-        (display-line-numbers-mode -1)
-      (display-line-numbers-mode)))
-  :bind ("<f7>" . prot/toggle-line-numbers))
+  (define-minor-mode prot/display-line-numbers-mode
+    "Toggle `display-line-numbers-mode' and `hl-line-mode'."
+    :init-value nil
+    :global nil
+    (if prot/display-line-numbers-mode
+        (progn
+          (display-line-numbers-mode 1)
+          (hl-line-mode 1))
+      (display-line-numbers-mode -1)
+      (hl-line-mode -1)))
+  :bind ("<f7>" . prot/display-line-numbers-mode))
 #+end_src
 
 **** Dim context and focus-to-thing (focus-mode)
