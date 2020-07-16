@@ -7345,13 +7345,13 @@ appropriate string for its indicator and colours that are designed
 specifically for the mode line (the default uses the generic font-lock
 warning face).
 
-I got =contrib/toggle-mode-line= from [[https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8][William Rankin Github Gist]].  Note
-that William is the author of =olivetti-mode= (see elsewhere in this
-document [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing (olivetti-mode)]]).
+I got the idea for =prot/hidden-mode-line-mode= from [[https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8][William Rankin]].  Note
+that William is the author of the wonderful =olivetti-mode= (see elsewhere
+in this document [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing (olivetti-mode)]]).
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :commands contrib/toggle-mode-line
+  :commands prot/hidden-mode-line-mode
   :config
   (setq mode-line-percent-position '(-3 "%p"))
   (setq mode-line-defining-kbd-macro
@@ -7374,12 +7374,14 @@ document [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing
                   mode-line-misc-info
                   mode-line-end-spaces))
 
-  (defun contrib/toggle-mode-line ()
+  (define-minor-mode prot/hidden-mode-line-mode
     "Toggle modeline visibility in the current buffer."
-    (interactive)
-    (if mode-line-format
+    :init-value nil
+    :global nil
+    (if prot/hidden-mode-line-mode
         (setq-local mode-line-format nil)
-      (kill-local-variable 'mode-line-format))))
+      (kill-local-variable 'mode-line-format)
+      (force-mode-line-update))))
 #+end_src
 
 In the following sub-sections I provide customisations for some tools
