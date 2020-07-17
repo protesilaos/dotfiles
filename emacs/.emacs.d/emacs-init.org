@@ -609,8 +609,8 @@ holding the family's name."
                       (nth 3 (assoc `,choice data))
                     nil))))
 	  (when window-system
-	    (prot/font-set-face-attribute 'default mono size)
-	    (prot/font-set-face-attribute 'fixed-pitch mono size)
+        (dolist (face '(default fixed-pitch))
+	      (prot/font-set-face-attribute `,face mono size))
 	    ;; Increasing the size on this to account for the innate
 	    ;; difference between the families I use.  Maybe there is some
 	    ;; more flexible way to create visual harmony between typefaces
@@ -1423,9 +1423,10 @@ as part of the general window layout.
   ;; Embark Occur buffer.  Remember that this is an exception to my
   ;; regular usage of the completion framework, as explained in the docs
   ;; above this code block.
-  (advice-add 'describe-function :before 'contrib/embark-live-occur-interactive)
-  (advice-add 'describe-variable :before 'contrib/embark-live-occur-interactive)
-  (advice-add 'describe-symbol :before 'contrib/embark-live-occur-interactive)
+  (dolist (fn '(describe-function
+                describe-variable
+                describe-symbol))
+    (advice-add `,fn :before 'contrib/embark-live-occur-interactive))
 
   :hook ((embark-occur-mode-hook . embark-occur-direct-action-minor-mode)
          (minibuffer-exit-hook . prot/embark-live-occur-single-buffer)
@@ -7483,26 +7484,29 @@ tweaks of my own.
   (setq keycast-insert-after 'mode-line-buffer-identification)
   (setq keycast-remove-tail-elements nil)
 
-  ;; TODO identify all events that should be excluded
-  ;; TODO use `dolist' to configure them
-  (add-to-list 'keycast-substitute-alist '(mouse-event-p nil))
-  (add-to-list 'keycast-substitute-alist '(mouse-movement-p nil))
-  (add-to-list 'keycast-substitute-alist '(mwheel-scroll nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mouse-set-point nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mouse-set-region nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-secondary nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-line nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-drag nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mouse-start-end nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-region nil nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-track nil nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-region-rectangle nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-and-drop-region nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mwheel-event-button nil))
-  ;; (add-to-list 'keycast-substitute-alist '(dframe-mouse-event-p nil))
-  ;; (add-to-list 'keycast-substitute-alist '(mouse-drag-events-are-point-events-p nil))
-  (add-to-list 'keycast-substitute-alist '(self-insert-command "." "Typing…"))
-  (add-to-list 'keycast-substitute-alist '(org-self-insert-command "." "Typing…")))
+  (dolist (input '(self-insert-command
+                   org-self-insert-command))
+    (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
+
+  ;;; TODO identify all events that should be excluded
+  ;; mouse-set-point
+  ;; mouse-set-region
+  ;; mouse-drag-secondary
+  ;; mouse-drag-line
+  ;; mouse-drag-drag
+  ;; mouse-start-end
+  ;; mouse-drag-region nil
+  ;; mouse-drag-track nil
+  ;; mouse-drag-region-rectangle
+  ;; mouse-drag-and-drop-region
+  ;; mwheel-event-button
+  ;; dframe-mouse-event-p
+  ;; mouse-drag-events-are-point-events-p
+
+  (dolist (event '(mouse-event-p
+                   mouse-movement-p
+                   mwheel-scroll))
+    (add-to-list 'keycast-substitute-alist `(,event nil))))
 #+end_src
 
 *** Window divider mode
