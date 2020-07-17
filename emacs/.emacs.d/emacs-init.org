@@ -4152,12 +4152,13 @@ pretty simple and straightforward: just show some text, narrowing it to
 the current section.
 
 To make presentations happen, I use =org-tree-slide= to narrow the buffer
-to each heading.  With =olivetti-mode= I have a distraction-free view that
-centres the text on the screen and removes other visual elements (see
-my configurations in [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing (olivetti-mode)]]).  While
-=org-superstar= prettifies the heading bullets, while removing the leading
-stars.  The other tweaks in the code block below are complementary to
-this "slideshow effect".
+to each heading.  With =prot/olivetti-mode= (and its multiple
+accoutrements) I have a distraction-free view that centres the text on
+the screen and removes other visual elements (see my configurations in
+[[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][Centred, focused text mode (olivetti-mode)]]).  While =org-superstar=
+prettifies the heading bullets, while removing the leading stars.  The
+other tweaks in the code block below are complementary to this
+"slideshow effect".
 
 For the font functions specified herein, make sure to understand the
 overall configurations by reading the section on [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][primary font settings]].
@@ -4172,12 +4173,18 @@ minibuffer while doing a presentation.
   :after org
   :defer
   :config
-  (setq org-superstar-remove-leading-stars t))
+  (setq org-superstar-remove-leading-stars t)
+  (setq org-superstar-headline-bullets-list
+        '("🞛" "◉" "○" "▷"))
+  (setq org-superstar-item-bullet-alist
+        '((?+ . ?•)
+          (?* . ?➤)
+          (?- . ?–))))
 
 (use-package org-tree-slide
   :ensure
   :after org
-  :commands prot/org-presentation
+  :commands prot/org-presentation-mode
   :defer
   :config
   (setq org-tree-slide-breadcrumbs nil)
@@ -4191,34 +4198,39 @@ minibuffer while doing a presentation.
   (setq org-tree-slide-fold-subtrees-skipped t)
   (setq org-tree-slide-skip-outline-level 8)
   (setq org-tree-slide-never-touch-face t)
+  (setq org-tree-slide-activate-message
+        (propertize "Presentation mode ON" 'face 'success))
+  (setq org-tree-slide-deactivate-message
+        (propertize "Presentation mode OFF" 'face 'error))
 
-  ;; NOTE The effect is good overall, but I may tweak it further.
-  ;; TODO use `define-minor-mode' instead of this
-  (defun prot/org-presentation ()
+  (define-minor-mode prot/org-presentation-mode
     "Parameters for plain text presentations with `org-mode'."
-    (interactive)
-    (unless (eq major-mode 'org-mode)
-      (user-error "Not in an Org buffer"))
-    (if (bound-and-true-p org-tree-slide-mode)
+    :init-value nil
+    :global nil
+    (if prot/org-presentation-mode
         (progn
-          (org-tree-slide-mode -1)
-          (prot/olivetti-mode)
-          (org-superstar-mode -1)
-          (org-indent-mode -1)
-          (prot/font-fonts-per-monitor))
-      (org-tree-slide-mode 1)
-      (prot/olivetti-mode)
-      (org-superstar-mode 1)
-      (org-indent-mode 1)
-      (let ((font-data prot/font-sizes-families-alist))
-        (prot/font-set-fonts
-         (cadr (assoc "presentation" font-data))
-         (nth 2 (assoc "presentation" font-data))
-         (nth 3 (assoc "presentation" font-data))))))
+          (unless (eq major-mode 'org-mode)
+            (user-error "Not in an Org buffer"))
+          (org-tree-slide-mode 1)
+          (prot/olivetti-mode 1)
+          (org-superstar-mode 1)
+          (org-indent-mode 1)
+          (let ((font-data prot/font-sizes-families-alist))
+            (prot/font-set-fonts
+             (cadr (assoc "presentation" font-data))
+             (nth 2 (assoc "presentation" font-data))
+             (nth 3 (assoc "presentation" font-data)))))
+      (org-tree-slide-mode -1)
+      (prot/olivetti-mode -1)
+      (org-superstar-mode -1)
+      (org-indent-mode -1)
+      (prot/font-fonts-per-monitor)))
 
-  :bind (:map org-tree-slide-mode-map
-              ("<C-right>" . org-tree-slide-move-next-tree)
-              ("<C-left>" . org-tree-slide-move-previous-tree)))
+  :bind (("C-c P" . prot/org-presentation-mode)
+         :map org-tree-slide-mode-map
+         ("<C-down>" . org-tree-slide-display-header-toggle)
+         ("<C-right>" . org-tree-slide-move-next-tree)
+         ("<C-left>" . org-tree-slide-move-previous-tree)))
 #+end_src
 
 ** Email settings
