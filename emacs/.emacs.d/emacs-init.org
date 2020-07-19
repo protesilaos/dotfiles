@@ -7805,6 +7805,11 @@ with =prot/hidden-mode-line-mode= defined in the [[#h:39f57b0d-300a-4310-9ba8-8c
 Also check =prot/scroll-centre-cursor-mode= in the [[#h:0c44b318-813a-4f4a-b596-75df4a86476b][Scrolling behaviour]]
 section.
 
+For video demonstrantions check these:
+
++ [[https://protesilaos.com/codelog/2020-07-16-emacs-focused-editing/][“Focused editing” tools for Emacs]] (2020-07-16)
++ [[https://protesilaos.com/codelog/2020-07-17-emacs-mixed-fonts-org/][Configuring mixed fonts for Org mode and others]] (2020-07-17)
+
 #+begin_src emacs-lisp
 (use-package olivetti
   :ensure
