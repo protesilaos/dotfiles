@@ -7723,7 +7723,7 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
 :CUSTOM_ID: h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b
 :END:
 
-/WORK IN PROGRESS 2020-05-08/
+/WORK IN PROGRESS 2020-08-07/
 
 #+begin_src emacs-lisp
 (use-package eww
@@ -7734,33 +7734,37 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
              eww-open-file
              prot/eww-visit-history)
   :config
-  (setq eww-restore-desktop t)
+  (setq eww-restore-desktop nil)
+  (setq eww-desktop-remove-duplicates t)
   (setq eww-header-line-format "%u")
+  (setq eww-search-prefix "https://duckduckgo.com/html/?q=")
+  (setq eww-download-directory "~/Downloads/")
+  (setq eww-suggest-uris
+        '(eww-links-at-point
+          eww-prompt-history
+          thing-at-point-url-at-point))
+  (setq eww-bookmarks-directory "~/.emacs.d/eww-bookmarks/")
+  (setq eww-history-limit 150)
+  (setq eww-use-external-browser-for-content-type
+        "\\`\\(video/\\|audio/\\|application/pdf\\)")
+  (setq eww-browse-url-new-window-is-tab nil)
+  (setq eww-form-checkbox-selected-symbol "[X]")
+  (setq eww-form-checkbox-symbol "[ ]")
 
-  (defun prot/eww-visit-history ()
-    "Revisit `eww' history using completion."
-    (interactive)
-    (let ((history eww-prompt-history))
+  (defun prot/eww-visit-history (&optional arg)
+    "Revisit a URL from `eww-prompt-history' using completion.
+With \\[universal-argument] produce a new buffer."
+    (interactive "P")
+    (let ((history eww-prompt-history)  ; eww-bookmarks
+          (new (if arg t nil)))
       (icomplete-vertical-do ()
         (eww
-         (completing-read "Visit website from history: " history nil t)))))
+         (completing-read "Visit website from history: " history nil t)
+         new))))
 
+  ;; eww-view-source
 
-;; eww-current-url
-;; org-eww-copy-for-org-mode
-
-  ;; (declare-function cl-remove-if "cl-seq")
-  ;; (defun prot/eww-list-buffers ()
-  ;;   (interactive)
-  ;;   (let ((bufs (cl-remove-if (lambda (x)
-  ;;                               (with-current-buffer x
-  ;;                                 (if (derived-mode-p 'eww-mode)
-  ;;                                     x
-  ;;                                   nil)))
-  ;;                             (buffer-list))))
-  ;;      (completing-read "Visit EWW buffer: " bufs nil t)))
-
-  (defvar prot/eww-global-map
+  (defvar prot/eww-mode-global-map
     (let ((map (make-sparse-keymap)))
       (define-key map "s" 'eww-search-words)
       (define-key map "o" 'eww-open-in-new-buffer)
@@ -7768,9 +7772,18 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
       (define-key map "w" 'prot/eww-visit-history)
       map)
     "Key map to scope `eww' bindings for global usage.
-The idea is to bind this to a prefix key, so that its defined
-keys follow the pattern of <PREFIX> <KEY>.")
-  :bind-keymap ("C-c w" . prot/eww-global-map))
+The idea is to bind this to a prefix sequence, so that its
+defined keys follow the pattern of <PREFIX> <KEY>.")
+  :bind-keymap ("C-c w" . prot/eww-mode-global-map)
+  :bind (:map eww-mode-map
+              ("n" . next-line)
+              ("p" . previous-line)
+              ("f" . forward-char)
+              ("b" . backward-char)
+              ("a" . prot/eww-org-archive-current-url)
+              ("B" . eww-back-url)
+              ("N" . eww-next-url)
+              ("P" . eww-previous-url)))
 
 (use-package browse-url
   :after eww
