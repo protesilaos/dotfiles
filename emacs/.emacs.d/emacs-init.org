@@ -8763,69 +8763,212 @@ _p_: Prev annotation     _i_: Integrate
          ("C-c h a" . prot/hydra-annotate/body)))
 #+end_src
 
-** Outline minor mode
+** Outline mode, outline minor mode, and extras
    :PROPERTIES:
    :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
    :END:
 
-NOTE 2020-05-26: This section will need to be expanded to complement my
-[[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][configurations for Imenu]].
+/WORK-IN-PROGRESS 2020-07-20/
 
-For the =defhydra=, refer to my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
+The =outline= library defines a major mode (=outline-mode=) that is similar
+to =org-mode= in that it consists of headings which can be expanded or
+contracted individually or as a group.  It meant to work on plain text
+files that need to have some structure and the accompanying benefits of
+this mode.  In practice, however, I never found a use for this major
+mode that would justify it over the more featureful Org.
+
+Where the =outline= library truly shines is in the minor mode it defines
+(=outline-minor-mode=), which provides the familiar heading-folding
+facilities for Elisp buffers (note: it may also work with other
+programming modes, though I am not a programmer so I cannot test it).
+With some careful tweaks you can continue to work on your code while
+also benefitting from a more structured means of organising and
+reviewing what you have.
+
+In practice, to make an outline for Elisp buffers, you need to start a
+comment line /without leading spaces/ and make it at least three comment
+delimiters long (=;;;=).  That is considered a heading level 1.  Every
+extra delimiter will increase heading levels accordingly.
+
+Now on to my configurations:
+
++ The built-in =foldout= library provides two key functions for zooming in
+  and out of trees.  This is the same as narrowing to a subtree, while
+  also preserving whatever folding may already exist.  The same could be
+  done with standard narrowing commands, but I am keeping this for the
+  time being.
+
++ The =bicycle= package provides the cyclic folding behaviour of expanding
+  a tree, its children, their contents, and then contracting everything
+  at once.  Same principle as with Org.
+
++ My =imenu= hacks greatly expand the index so that it includes every code
+  point in the buffer as well as all =outline-mode= headings.  Put simply,
+  this is excellent news because we can now use the full power of my
+  [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][configurations for Imenu]] to navigate to practically every point of
+  interest in the buffer.  Sublime!
+
+For the now-deprecated =defhydra=, refer to my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].  I
+am still not sure what my niche is for those, but let's just say that I
+am not convinced they offer an upgrade over what I show here with
+bespoke keymaps, a dedicated minor mode, etc.
 
 #+begin_src emacs-lisp
 (use-package outline
-  :defer
   :diminish outline-minor-mode
   :config
+  ;;; NOTE change this to provide support for your major mode
+  ;; (setq outline-regexp "[*\^L]+")
+
   (use-package outline-minor-faces
     :ensure
-    :defer
     :hook
     (outline-minor-mode-hook . outline-minor-faces-add-font-lock-keywords))
 
-  (use-package bicycle
-    :ensure
-    :defer)
+  (use-package foldout)
+  (use-package bicycle :ensure)
 
-  (defhydra prot/hydra-outline (:idle nil :color pink
-                                      :hint nil :post (deactivate-mark))
-    "
-   ^Motions^                            ^Show^
----^------------------------------------^----------------
-_n_: Next heading                    _a_: All
-_p_: Prev heading                    _e_: Entry
-_f_: Fore same level               _TAB_: Cycle
-_b_: Back same level   _<S-iso-lefttab>_: Cycle global
-"
-    ("n" outline-next-visible-heading)
-    ("p" outline-previous-visible-heading)
-    ("f" outline-forward-same-level)
-    ("b" outline-backward-same-level)
-    ("a" outline-show-all)
-    ("e" outline-show-entry)
-    ("TAB" bicycle-cycle)
-    ("<S-iso-lefttab>" bicycle-cycle-global)
-    ("q" nil "cancel" :color blue))
+  ;;; NOTE this could also be used to auto-reveal a fold, though I find
+  ;;; it a bit annoying when things like that happen automatically.
+  ;; (use-package reveal :diminish)
 
-  (defun prot/outline-minor-mode ()
-    "Toggles `outline-minor-mode'."
+  ;;; NOTE I am keeping this older piece for reference, but I am
+  ;;; deprecating it: I prefer the approach further below.
+  ;;   (defhydra prot/hydra-outline (:idle nil :color pink
+  ;;                                       :hint nil :post (deactivate-mark))
+  ;;     "
+  ;;    ^Motions^                            ^Show^
+  ;; ---^------------------------------------^----------------
+  ;; _n_: Next heading                    _a_: All
+  ;; _p_: Prev heading                    _e_: Entry
+  ;; _f_: Fore same level               _TAB_: Cycle
+  ;; _b_: Back same level   _<S-iso-lefttab>_: Cycle global
+  ;; "
+  ;;     ("n" outline-next-visible-heading)
+  ;;     ("p" outline-previous-visible-heading)
+  ;;     ("f" outline-forward-same-level)
+  ;;     ("b" outline-backward-same-level)
+  ;;     ("a" outline-show-all)
+  ;;     ("e" outline-show-entry)
+  ;;     ("TAB" bicycle-cycle)
+  ;;     ("<S-iso-lefttab>" bicycle-cycle-global)
+  ;;     ("q" nil "cancel" :color blue))
+
+  (defun prot/outline-hide-all ()
+    "Hide all `outline-mode' subtrees."
     (interactive)
-    (if (eq major-mode 'org-mode)
-        (user-error "Don't use `outline-minor-mode' with Org")
-      (if (bound-and-true-p outline-minor-mode)
-          (outline-minor-mode -1)
-        (outline-minor-mode 1))))
+    (outline-map-region 'outline-hide-subtree (point-min) (point-max)))
 
-  :bind (("<f10>" . prot/outline-minor-mode) ; key replaces `menu-bar-open'
-         :map outline-minor-mode-map
-         ("C-c h o" . prot/hydra-outline/body)
-         ("C-c C-n" . outline-next-visible-heading)
-         ("C-c C-p" . outline-previous-visible-heading)
-         ("C-c C-f" . outline-forward-same-level)
-         ("C-c C-b" . outline-backward-same-level)
-         ("<C-tab>" . bicycle-cycle)
-         ("<S-iso-lefttab>" . bicycle-cycle-global)))
+  (defun prot/outline-down-heading ()
+    "Move to the next `outline-mode' substree."
+    (interactive)
+    ;; Hacky, but it kinda works.
+    (outline-up-heading 1 t)
+    (outline-forward-same-level 1))
+
+  (defun prot/bicycle-cycle-tab-dwim ()
+    "Convenience wrapper for TAB key in `outline-mode'."
+    (interactive)
+    (if (outline-on-heading-p)
+        (bicycle-cycle)
+      (indent-for-tab-command)))
+
+  (defvar prot/outline-minor-mode-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "M-n") 'outline-next-visible-heading)
+      (define-key map (kbd "M-p") 'outline-previous-visible-heading)
+      (define-key map (kbd "C-c C-n") 'outline-next-visible-heading)
+      (define-key map (kbd "C-c C-p") 'outline-previous-visible-heading)
+      (define-key map (kbd "C-c C-f") 'outline-forward-same-level)
+      (define-key map (kbd "C-c C-b") 'outline-backward-same-level)
+      (define-key map (kbd "C-c C-a") 'outline-show-all)
+      (define-key map (kbd "C-c C-q") 'prot/outline-hide-all)
+      (define-key map (kbd "C-c C-u") 'outline-up-heading)
+      (define-key map (kbd "C-c C-d") 'prot/outline-down-heading)
+      (define-key map (kbd "C-c C-z") 'foldout-zoom-subtree)
+      (define-key map (kbd "C-c C-x") 'foldout-exit-fold)
+      (define-key map (kbd "<tab>") 'prot/bicycle-cycle-tab-dwim)
+      (define-key map (kbd "<C-tab>") 'bicycle-cycle)
+      (define-key map (kbd "<S-iso-lefttab>") 'bicycle-cycle-global)
+      map)
+    "Key map for `prot/outline-minor-mode'.
+The idea is to make `outline-minor-mode' keys a bit easier to
+work with.")
+
+  (defvar prot/outline-minor-mode-enter-hook nil
+    "Hook that runs when `prot/outline-minor-mode' is enabled.")
+
+  (defvar prot/outline-minor-mode-exit-hook nil
+    "Hook that runs when `prot/outline-minor-mode' is disabled.")
+
+  ;; `imenu' integration with `outline-minor-mode'
+  (defun prot/outline-imenu-heading ()
+    "Move to the previous `outline-mode' heading.
+This is because `imenu' produces its index by moving backward
+from the bottom."
+    (outline-previous-heading))
+
+  (defun prot/outline-imenu-title ()
+    "Return the text of the `outline-mode' heading."
+    (interactive)
+    ;; TODO This may be too simplistic and error-prone
+    (buffer-substring (point-at-bol)
+                      (point-at-eol)))
+
+  (defun prot/outline-imenu-setup ()
+    "`imenu' bindings for the local `outline-mode' buffer.
+To be used in tandem with `prot/outline-minor-mode-enter-hook'."
+    (setq-local imenu-prev-index-position-function
+                'prot/outline-imenu-heading)
+    (setq-local imenu-extract-index-name-function
+                'prot/outline-imenu-title))
+
+  (defun prot/outline-imenu-restore ()
+    "Restore `imenu' list when `prot/outline-minor-mode' is off.
+The new index should be the same as the one you would get in a
+standard invocation of `imenu'.
+
+To be used in tandem with `prot/outline-minor-mode-exit-hook'."
+    (dolist (var '(imenu-prev-index-position-function
+                   imenu-extract-index-name-function))
+      (kill-local-variable var))
+    (save-excursion
+      (imenu-default-create-index-function)
+      (message "Refreshed `imenu' index")))
+
+  (add-hook 'prot/outline-minor-mode-enter-hook 'prot/outline-imenu-setup)
+  (add-hook 'prot/outline-minor-mode-exit-hook 'prot/outline-imenu-restore)
+
+  (defun prot/outline-minor-refontify ()
+    "Re-enable the current buffer's major mode.
+Add this to `prot/outline-minor-mode-exit-hook'."
+    (let ((mode major-mode))
+      (when (or (derived-mode-p 'text-mode)
+                (derived-mode-p 'prog-mode))
+        (funcall mode)
+        (message "Re-enabled %s" mode))))
+
+  (add-hook 'prot/outline-minor-mode-exit-hook 'prot/outline-minor-refontify)
+
+  (define-minor-mode prot/outline-minor-mode
+    "Toggles `outline-minor-mode' and extras.
+
+\\{prot/outline-minor-mode-map}"
+    :init-value nil
+    :lighter " =┆"
+    :global nil
+    :keymap prot/outline-minor-mode-map
+    (if prot/outline-minor-mode
+        (progn
+          (when (eq major-mode 'org-mode)
+            (user-error "Don't use `outline-minor-mode' with Org"))
+          (outline-minor-mode 1)
+          (run-hooks 'prot/outline-minor-mode-enter-hook))
+      (outline-minor-mode -1)
+      (run-hooks 'prot/outline-minor-mode-exit-hook)))
+
+  ;; key replaces `menu-bar-open', which I never use
+  :bind ("<f10>" . prot/outline-minor-mode))
 #+end_src
 
 ** Custom movements and motions
