@@ -7217,7 +7217,16 @@ The =contrib/format-sexp= and the subsequent =dolist= were copied and
 adapted from [[https://www.reddit.com/r/emacs/comments/gqsz8u/weekly_tipstricketc_thread/fsfakhg/][this comment on r/emacs]].
 
 Lastly, if you are curious about the underlying methodology, read my
-essay on the [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-emacs/][on the design of the Modus themes]] (2020-03-17).
+essay [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-emacs/][on the design of the Modus themes]] (2020-03-17).
+
+And here are some more resources from my website for those who are
+really into the minutia and wish to get a glimpse of how much work goes
+into this project:
+
++ [[https://protesilaos.com/codelog/2020-05-10-modus-operandi-palette-review/][Modus Operandi theme subtle palette review]] (2020-05-10)
++ [[https://protesilaos.com/codelog/2020-06-13-modus-vivendi-palette-review/][Modus Vivendi theme subtle palette review]] (2020-06-13)
++ [[https://protesilaos.com/codelog/2020-07-04-modus-themes-faint-colours/][Modus themes: new "faint syntax" option]] (2020-07-04)
++ [[https://protesilaos.com/codelog/2020-07-08-modus-themes-nuanced-colours/][Modus themes: major review of "nuanced" colours]] (2020-07-08)
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -7236,17 +7245,17 @@ This can be used to further customise the active theme.")
     (contrib/format-sexp
      (defun prot/modus-%1$s ()
        (setq modus-%1$s-theme-slanted-constructs t
-             modus-%1$s-theme-bold-constructs nil
+             modus-%1$s-theme-bold-constructs t
              modus-%1$s-theme-visible-fringes t
-             modus-%1$s-theme-3d-modeline t
+             modus-%1$s-theme-3d-modeline nil
              modus-%1$s-theme-subtle-diffs nil
              modus-%1$s-theme-faint-syntax nil
-             modus-%1$s-theme-intense-standard-completions nil
+             modus-%1$s-theme-intense-standard-completions t
              modus-%1$s-theme-org-blocks 'greyscale ; {nil,greyscale,rainbow}
-             modus-%1$s-theme-proportional-fonts nil
+             modus-%1$s-theme-variable-pitch-headings nil
              modus-%1$s-theme-rainbow-headings nil
              modus-%1$s-theme-section-headings t
-             modus-%1$s-theme-scale-headings t
+             modus-%1$s-theme-scale-headings nil
              modus-%1$s-theme-scale-1 1.1
              modus-%1$s-theme-scale-2 1.15
              modus-%1$s-theme-scale-3 1.21
