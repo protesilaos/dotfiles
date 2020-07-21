@@ -648,18 +648,56 @@ economise on dedicated key bindings."
         (prot/font-set-font-size-family)
       (prot/font-set-fonts)))
 
-  (defvar prot/font-fonts-line-spacing-list
-    '("Source Code Pro" "Ubuntu Mono")
+  (defvar prot/font-fonts-line-spacing-alist
+    '(("Iosevka SS08" . 1)
+      ("Iosevka Slab" . 1)
+      ("Source Code Pro" . 2)
+      ("Ubuntu Mono" . 2))
     "Font families in need of extra `line-spacing'.
 See `prot/font-line-spacing' for how this is used.")
 
-  (defun prot/font-line-spacing ()
-	"Determine desirable `line-spacing', based on font family.
-Add this to `prot/font-switch-fonts-hook'."
-	(let ((fonts prot/font-fonts-line-spacing-list))
-	  (if (member (face-attribute 'default :family) fonts)
-	      (setq-default line-spacing 1)
-	    (setq-default line-spacing nil))))
+  (defvar prot/font-fonts-bold-weight-alist
+    '(("Source Code Pro" . semibold))
+    "Font families in need of a variegated weight for `bold'.
+See `prot/font-bold-face' for how this is used.")
+
+  (defmacro prot/font-adjustment (fn doc alist cond1 cond2)
+    "Macro for functions that employ `prot/font-switch-fonts-hook'.
+NAME is the name of the resulting function.  DOC is its docstring.
+ALIST is an assosiation list where each cons cell has only one
+data point mapped to the car.  COND1 and COND2 is the body of an
+`if' statement's if and then part respectively."
+    `(defun ,fn ()
+       ,doc
+       (let* ((data ,alist)
+              (fonts (mapcar #'car data))
+              ;; REVIEW This should be adjusted to account for the
+              ;; possibility of a distinct font family for the `bold'
+              ;; face.
+              (font (face-attribute 'default :family))
+              (x (cdr (assoc font data))))
+	     (if (member font fonts)
+             ,cond1
+           ,cond2))))
+
+  (prot/font-adjustment
+   prot/font-line-spacing
+   "Determine desirable `line-spacing', based on font family."
+   prot/font-fonts-line-spacing-alist
+   (setq-default line-spacing `,x)
+   (setq-default line-spacing nil))
+
+  ;; XXX This will not work with every theme, but only those that
+  ;; inherit the `bold' face instead of specifying a weight property.
+  ;; The intent is to configure this once and have it propagate wherever
+  ;; a heavier weight is displayed.  My Modus themes handle this
+  ;; properly.
+  (prot/font-adjustment
+   prot/font-bold-face
+   "Determine weight for the `bold' face, based on font family."
+   prot/font-fonts-bold-weight-alist
+   (set-face-attribute 'bold nil :weight `,x)
+   (set-face-attribute 'bold nil :weight 'bold))
 
   (defun prot/font-fonts-per-monitor ()
 	"Use font settings based on screen size.
@@ -675,7 +713,8 @@ Meant to be used at some early initialisation stage, such as with
 	  (prot/font-set-fonts size mono var)))
 
   :hook ((after-init-hook . prot/font-fonts-per-monitor)
-	     (prot/font-switch-fonts-hook . prot/font-line-spacing))
+         (prot/font-switch-fonts-hook . prot/font-line-spacing)
+	     (prot/font-switch-fonts-hook . prot/font-bold-face))
   ;; Awkward key because I do not need it very often.  Maybe once a day.
   ;; The "C-c f" is used elsewhere.
   :bind ("C-c F" . prot/font-fonts-dwim))
