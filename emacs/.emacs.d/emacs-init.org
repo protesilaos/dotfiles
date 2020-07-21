@@ -7345,10 +7345,30 @@ how tricky the selection of colours can be.
       (max ct (/ ct)))))
 #+end_src
 
-*** Mode line
+*** Rainbow mode for colour testing
     :PROPERTIES:
-    :CUSTOM_ID: h:39f57b0d-300a-4310-9ba8-8c388fa72e1d
+    :CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
     :END:
+
+The following package reads a colour value, such as hexadecimal RGB,
+and sets the background for the value in that colour.  Quite useful
+when reviewing my themes (=rainbow-mode= is activated manually).
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :ensure
+  :defer
+  :diminish
+  :commands rainbow-mode
+  :config
+  (setq rainbow-ansi-colors nil)
+  (setq rainbow-x-colors nil))
+#+end_src
+
+** Mode line
+   :PROPERTIES:
+   :CUSTOM_ID: h:39f57b0d-300a-4310-9ba8-8c388fa72e1d
+   :END:
 
 The mode line is an integral part of the Emacs interface.  While there
 are lots of third party packages that style it in a variety of ways, I
@@ -7404,10 +7424,10 @@ in this document [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for
 In the following sub-sections I provide customisations for some tools
 that place information on the mode line.  Again, nothing flamboyant.
 
-**** Battery status
-     :PROPERTIES:
-     :CUSTOM_ID: h:3a759294-ab03-40cb-bb08-94275d76fc53
-     :END:
+*** Battery status
+    :PROPERTIES:
+    :CUSTOM_ID: h:3a759294-ab03-40cb-bb08-94275d76fc53
+    :END:
 
 Emacs offers a built-in library for presenting information about the
 status of the laptop's battery.  Using it allows me to eliminate my
@@ -7436,10 +7456,10 @@ instead of a 100 because sometimes the battery only ever fills up to
   :hook (after-init-hook . display-battery-mode))
 #+end_src
 
-**** Display current time
-     :PROPERTIES:
-     :CUSTOM_ID: h:da14ac1d-a06f-4531-b6c3-0414e8c98102
-     :END:
+*** Display current time
+    :PROPERTIES:
+    :CUSTOM_ID: h:da14ac1d-a06f-4531-b6c3-0414e8c98102
+    :END:
 
 I normally use Emacs in fullscreen view.  No system panels, no window
 decorations, no icons and blinking indicators.  Nothing to distract me.
@@ -7471,10 +7491,10 @@ time and date.  The rest is noise.
   :hook (after-init-hook . display-time-mode))
 #+end_src
 
-**** Keycast mode
-     :PROPERTIES:
-     :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
-     :END:
+*** Keycast mode
+    :PROPERTIES:
+    :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
+    :END:
 
 Once enabled, this package uses the mode line to show the keys being
 pressed and the command they call.  It is quite useful for screen
@@ -7530,14 +7550,14 @@ tweaks of my own.
     (add-to-list 'keycast-substitute-alist `(,event nil))))
 #+end_src
 
-*** Window divider mode
-    :PROPERTIES:
-    :CUSTOM_ID: h:6fb900e3-49db-4bc3-8a9e-cd88e020f15b
-    :END:
+** Window divider mode
+   :PROPERTIES:
+   :CUSTOM_ID: h:6fb900e3-49db-4bc3-8a9e-cd88e020f15b
+   :END:
 
 This is a built-in mode that draws vertical window borders in a slightly
 different way than the default, which I find more consistent.  Only
-using it because of that, though it can also adjust the side of the
+using it because of that, though it can also adjust the size of the
 borders as well as their placement.
 
 #+begin_src emacs-lisp
@@ -7549,10 +7569,10 @@ borders as well as their placement.
   :hook (after-init-hook . window-divider-mode))
 #+end_src
 
-*** Fringe mode
-    :PROPERTIES:
-    :CUSTOM_ID: h:26a4fac6-33e2-4f6c-8589-9463df8525c9
-    :END:
+** Fringe mode
+   :PROPERTIES:
+   :CUSTOM_ID: h:26a4fac6-33e2-4f6c-8589-9463df8525c9
+   :END:
 
 The fringes are areas to the right and left side of an Emacs frame.
 They can be used to show status-related or contextual feedback such as
@@ -7578,7 +7598,7 @@ buffer-local.
   (setq-default overflow-newline-into-fringe t))
 #+end_src
 
-*** Diff highlights in the fringe
+*** Diff highlights in the fringe (diff-hl)
     :PROPERTIES:
     :CUSTOM_ID: h:5b71e71f-353f-4290-951b-3fc575c0fcba
     :END:
@@ -7607,13 +7627,13 @@ section on the [[*Generic version control (VC) framework][generic version contro
   :hook (after-init-hook . global-diff-hl-mode))
 #+end_src
 
-*** Highlight comment keywords (hl-todo)
-    :PROPERTIES:
-    :CUSTOM_ID: h:23d2928b-56a0-4a8e-a552-9af1acd45cb1
-    :END:
+** Highlight comment keywords (hl-todo)
+   :PROPERTIES:
+   :CUSTOM_ID: h:23d2928b-56a0-4a8e-a552-9af1acd45cb1
+   :END:
 
-This tool will apply highlighting to keywords that are normally used in
-code comments.  Simple and effective!
+This tool by Jonas Bernoulli will apply highlighting to keywords that
+are normally used in code comments.  Simple and effective!
 
 #+begin_src emacs-lisp
 (use-package hl-todo
@@ -7621,10 +7641,10 @@ code comments.  Simple and effective!
   :hook (prog-mode-hook . hl-todo-mode))
 #+end_src
 
-*** Tone down parentheses in lisps
-    :PROPERTIES:
-    :CUSTOM_ID: h:a36e05b1-5301-4fac-a934-463529415012
-    :END:
+** Tone down parentheses in lisps
+   :PROPERTIES:
+   :CUSTOM_ID: h:a36e05b1-5301-4fac-a934-463529415012
+   :END:
 
 Apply a dedicated face to parentheses in Elisp modes.  A more subtle
 grey than the default foreground text is used.
@@ -7635,19 +7655,19 @@ grey than the default foreground text is used.
   :hook (emacs-lisp-mode-hook . paren-face-mode))
 #+end_src
 
-*** Optional visual indicators or layout elements
-    :PROPERTIES:
-    :CUSTOM_ID: h:e8d77f0b-0502-449b-bc69-18cf29b9edb0
-    :END:
+** Optional visual indicators or layout elements
+   :PROPERTIES:
+   :CUSTOM_ID: h:e8d77f0b-0502-449b-bc69-18cf29b9edb0
+   :END:
 
 This is a collection of modes or interfaces I seldom use or, rather, I
 use under special circumstances.  They are useful, but there is not need
 for them to be available at all times.
 
-**** Current line highlight (hl-line-mode)
-     :PROPERTIES:
-     :CUSTOM_ID: h:7e65d6e5-ac8f-4100-b7dd-14e3fbc94040
-     :END:
+*** Current line highlight (hl-line-mode)
+    :PROPERTIES:
+    :CUSTOM_ID: h:7e65d6e5-ac8f-4100-b7dd-14e3fbc94040
+    :END:
 
 This is a mode that I only activate via hooks for certain buffers
 where the current line itself is more important that the actual column
@@ -7662,30 +7682,11 @@ for when the equivalent mode is used (I have no plan to use that).
   (setq hl-line-sticky-flag nil))
 #+end_src
 
-**** Rainbow mode for colour testing
-     :PROPERTIES:
-     :CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
-     :END:
 
-The following package reads a colour value, such as hexadecimal RGB,
-and sets the background for the value in that colour.  Quite useful
-when reviewing my themes (=rainbow-mode= is activated manually).
-
-#+begin_src emacs-lisp
-(use-package rainbow-mode
-  :ensure
-  :defer
-  :diminish
-  :commands rainbow-mode
-  :config
-  (setq rainbow-ansi-colors nil)
-  (setq rainbow-x-colors nil))
-#+end_src
-
-**** Toggles for line numbers and whitespace indicators
-     :PROPERTIES:
-     :CUSTOM_ID: h:cb76fcee-e304-4b86-a764-6c3c6775da51
-     :END:
+*** Toggles for line numbers and whitespace indicators
+    :PROPERTIES:
+    :CUSTOM_ID: h:cb76fcee-e304-4b86-a764-6c3c6775da51
+    :END:
 
 + Display line numbers (buffer-local) ::  I seldom use line numbers, but
   here it is.  This toggles the setting for the local buffer and also
@@ -7729,20 +7730,20 @@ sometimes it causes problems, such as with diffs.
   :bind ("<f7>" . prot/display-line-numbers-mode))
 #+end_src
 
-**** Dim context and focus-to-thing (focus-mode)
-     :PROPERTIES:
-     :CUSTOM_ID: h:4f39bf14-cb8f-4770-9001-f5067205f0fe
-     :END:
+*** Dim context and focus-to-thing (focus-mode)
+    :PROPERTIES:
+    :CUSTOM_ID: h:4f39bf14-cb8f-4770-9001-f5067205f0fe
+    :END:
 
- Sometimes I opt to enlarge the font size and keep a single window so as
- to narrow in on the task at hand, say, to write an essay or refine some
- piece of code syntax.  With the help of =focus-mode=, it is possible to
- also fade out the context, so that I may further facilitate my attempt
- at offering my undivided attention to the given element.
+Sometimes I opt to enlarge the font size and keep a single window so as
+to narrow in on the task at hand, say, to write an essay or refine some
+piece of code syntax.  With the help of =focus-mode=, it is possible to
+also fade out the context, so that I may further facilitate my attempt
+at offering my undivided attention to the given element.
 
- Also check =prot/scroll-centre-cursor= in the [[#h:0c44b318-813a-4f4a-b596-75df4a86476b][Scrolling behaviour]] section.
+Also check =prot/scroll-centre-cursor= in the [[#h:0c44b318-813a-4f4a-b596-75df4a86476b][Scrolling behaviour]] section.
 
- #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (use-package focus
   :ensure
   :defer
@@ -7785,12 +7786,12 @@ narrower field of view."
   ;; C-c o is used by `prot/olivetti-mode' and this is a good mnemonic
   ;; for a concept of "Only the thing".
   :bind (("C-c O" . prot/focus-mode)))
- #+end_src
+#+end_src
 
-**** Centred, focused text mode (olivetti-mode)
-     :PROPERTIES:
-     :CUSTOM_ID: h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd
-     :END:
+*** Centred, focused text mode (olivetti-mode)
+    :PROPERTIES:
+    :CUSTOM_ID: h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd
+    :END:
 
 I spend much of my time in Emacs reading and writing long form texts.
 It is nice to be able to easily toggle a mode that centres the buffer,
@@ -7856,23 +7857,23 @@ The cursor becomes a blinking bar, per `prot/cursor-type-mode'."
   :bind ("C-c o" . prot/olivetti-mode))
 #+end_src
 
-**** Auto-dim unfocused buffers
-     :PROPERTIES:
-     :CUSTOM_ID: h:5a3a4968-cbda-4a0b-8f2d-1dd755eda5ac
-     :END:
+*** Auto-dim unfocused buffers
+    :PROPERTIES:
+    :CUSTOM_ID: h:5a3a4968-cbda-4a0b-8f2d-1dd755eda5ac
+    :END:
 
- The concept of =auto-dim-other-buffers-mode= is straightforward: apply a
- different background on all unfocused windows, so that the current one
- pops out more.  This is controlled at the theme level and, as with all
- packages, [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]] provide full support for it.
+The concept of =auto-dim-other-buffers-mode= is straightforward: apply a
+different background on all unfocused windows, so that the current one
+pops out more.  This is controlled at the theme level and, as with all
+packages, [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]] provide full support for it.
 
- In my workflow, this utility is of great value while offering a screen
- cast or presentation.  It is safer to draw attention to the current
- window, with its fairly large surface area, than expect the viewer to
- discern the more nuanced elements of focus that are discernible in the
- modeline and/or the cursor's shape.
+In my workflow, this utility is of great value while offering a screen
+cast or presentation.  It is safer to draw attention to the current
+window, with its fairly large surface area, than expect the viewer to
+discern the more nuanced elements of focus that are discernible in the
+modeline and/or the cursor's shape.
 
- #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (use-package auto-dim-other-buffers
   :ensure
   :defer
@@ -7880,7 +7881,7 @@ The cursor becomes a blinking bar, per `prot/cursor-type-mode'."
   :config
   (setq auto-dim-other-buffers-dim-on-switch-to-minibuffer nil)
   (setq auto-dim-other-buffers-dim-on-focus-out t))
- #+end_src
+#+end_src
 
 ** Language settings for prose and code
    :PROPERTIES:
