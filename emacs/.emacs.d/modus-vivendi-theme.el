@@ -3068,7 +3068,6 @@ Also bind `class' to ((class color) (min-colors 89))."
                         ,@(modus-vivendi-theme-heading-foreground fg-dim magenta)
                         ,@(modus-vivendi-theme-heading-block bg-alt fg-alt))))
 ;;;;; outline-minor-faces
-   ;; No need for extra properties as they inherit from `outline-mode'.
    `(outline-minor-0 ((,class nil)))
 ;;;;; package (M-x list-packages)
    `(package-description ((,class :foreground ,fg-special-cold)))
