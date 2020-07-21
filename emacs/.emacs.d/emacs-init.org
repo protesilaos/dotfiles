@@ -8354,25 +8354,6 @@ is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant secti
   (setq css-fontify-colors nil))
 #+end_src
 
-**** Web technologies (web-mode)
-     :PROPERTIES:
-     :CUSTOM_ID: h:525b209e-1995-4660-8143-fde8af8e81fb
-     :END:
-
-/2020-07-15: WORK IN PROGRESS./
-
-#+begin_src emacs-lisp
-(use-package web-mode
-  :ensure
-  :mode (("\\.html$" . web-mode)
-         ("\\.xml$" . web-mode))
-  :config
-  (setq web-mode-enable-auto-pairing t)
-  (setq web-mode-enable-css-colorization t)
-  (setq web-mode-enable-current-element-highlight t)
-  (setq web-mode-enable-current-column-highlight t))
-#+end_src
-
 *** Configure 'electric' behaviour
     :PROPERTIES:
     :CUSTOM_ID: h:ed95ef3e-75e6-4e53-b3bc-4aee540fe3d9
