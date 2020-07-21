@@ -8768,27 +8768,28 @@ _p_: Prev annotation     _i_: Integrate
    :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
    :END:
 
-/WORK-IN-PROGRESS 2020-07-20/
-
 The =outline= library defines a major mode (=outline-mode=) that is similar
 to =org-mode= in that it consists of headings which can be expanded or
-contracted individually or as a group.  It meant to work on plain text
-files that need to have some structure and the accompanying benefits of
-this mode.  In practice, however, I never found a use for this major
-mode that would justify it over the more featureful Org.
+contracted individually or as a group.  It is meant to work on plain
+text files, or be leveraged by other packages, that need to have some
+structure and the accompanying benefits of this mode.  In practice,
+however, I never found a dedicated use for this major mode that would
+justify it over the more featureful Org.
 
 Where the =outline= library truly shines is in the minor mode it defines
-(=outline-minor-mode=), which provides the familiar heading-folding
-facilities for Elisp buffers (note: it may also work with other
-programming modes, though I am not a programmer so I cannot test it).
-With some careful tweaks you can continue to work on your code while
-also benefitting from a more structured means of organising and
-reviewing what you have.
+(=outline-minor-mode=), which provides the familiar structured,
+heading-folding facilities in other major modes, such as =emacs-lisp-mode=
+and =markdown-mode= (note: it may also work with other programming modes,
+though I am not a programmer so I cannot really test it).  With some
+careful tweaks you can continue to work on your code while also
+benefitting from a more effective means of organising and reviewing what
+you have.
 
 In practice, to make an outline for Elisp buffers, you need to start a
 comment line /without leading spaces/ and make it at least three comment
 delimiters long (=;;;=).  That is considered a heading level 1.  Every
-extra delimiter will increase heading levels accordingly.
+extra delimiter will increase heading levels accordingly.  Markdown
+headings should be recognised right away.
 
 Now on to my configurations:
 
@@ -8798,9 +8799,14 @@ Now on to my configurations:
   done with standard narrowing commands, but I am keeping this for the
   time being.
 
-+ The =bicycle= package provides the cyclic folding behaviour of expanding
-  a tree, its children, their contents, and then contracting everything
-  at once.  Same principle as with Org.
++ The =bicycle= package by Jonas Bernoulli provides the cyclic folding
+  behaviour of expanding a tree, its children, their contents, and then
+  contracting everything at once.  Same principle as with Org.
+
++ The =outline-minor-faces= package, also by Jonas, will apply colouration
+  to the headings produced by =outline-minor-mode=.  These inherit from
+  =outline-mode= (they are configured to look the same as the ones of Org
+  in my Modus themes---see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][relevant section]]).
 
 + My =imenu= hacks greatly expand the index so that it includes every code
   point in the buffer as well as all =outline-mode= headings.  Put simply,
@@ -8810,14 +8816,17 @@ Now on to my configurations:
 
 For the now-deprecated =defhydra=, refer to my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].  I
 am still not sure what my niche is for those, but let's just say that I
-am not convinced they offer an upgrade over what I show here with
+am not convinced they offer an upgrade over what I include here with
 bespoke keymaps, a dedicated minor mode, etc.
+
+Also watch my [[https://protesilaos.com/codelog/2020-07-20-emacs-outline-imenu/][video demo of outline-minor-mode and imenu]] (2020-07-20).
 
 #+begin_src emacs-lisp
 (use-package outline
   :diminish outline-minor-mode
   :config
-  ;;; NOTE change this to provide support for your major mode
+  ;;; NOTE change this to provide support for your major mode, in case
+  ;;; it is missing.
   ;; (setq outline-regexp "[*\^L]+")
 
   (use-package outline-minor-faces
@@ -8832,8 +8841,8 @@ bespoke keymaps, a dedicated minor mode, etc.
   ;;; it a bit annoying when things like that happen automatically.
   ;; (use-package reveal :diminish)
 
-  ;;; NOTE I am keeping this older piece for reference, but I am
-  ;;; deprecating it: I prefer the approach further below.
+  ;;; NOTE DEPRECATED I am keeping this older piece for reference, but I
+  ;;; am discontinuing it: I prefer the approach further below.
   ;;   (defhydra prot/hydra-outline (:idle nil :color pink
   ;;                                       :hint nil :post (deactivate-mark))
   ;;     "
@@ -8860,7 +8869,7 @@ bespoke keymaps, a dedicated minor mode, etc.
     (outline-map-region 'outline-hide-subtree (point-min) (point-max)))
 
   (defun prot/outline-down-heading ()
-    "Move to the next `outline-mode' substree."
+    "Move to the next `outline-mode' subtree."
     (interactive)
     ;; Hacky, but it kinda works.
     (outline-up-heading 1 t)
@@ -8911,7 +8920,8 @@ from the bottom."
   (defun prot/outline-imenu-title ()
     "Return the text of the `outline-mode' heading."
     (interactive)
-    ;; TODO This may be too simplistic and error-prone
+    ;; NOTE This may be too simplistic and error-prone, though I have
+    ;; not ran into any problems.
     (buffer-substring (point-at-bol)
                       (point-at-eol)))
 
@@ -8928,7 +8938,7 @@ To be used in tandem with `prot/outline-minor-mode-enter-hook'."
 The new index should be the same as the one you would get in a
 standard invocation of `imenu'.
 
-To be used in tandem with `prot/outline-minor-mode-exit-hook'."
+To be used in `prot/outline-minor-mode-exit-hook'."
     (dolist (var '(imenu-prev-index-position-function
                    imenu-extract-index-name-function))
       (kill-local-variable var))
@@ -8936,9 +8946,8 @@ To be used in tandem with `prot/outline-minor-mode-exit-hook'."
       (imenu-default-create-index-function)
       (message "Refreshed `imenu' index")))
 
-  (add-hook 'prot/outline-minor-mode-enter-hook 'prot/outline-imenu-setup)
-  (add-hook 'prot/outline-minor-mode-exit-hook 'prot/outline-imenu-restore)
-
+  ;; XXX This could prove problematic when more than one major modes are
+  ;; active, such as when you use C-c ' in an Org block.
   (defun prot/outline-minor-refontify ()
     "Re-enable the current buffer's major mode.
 Add this to `prot/outline-minor-mode-exit-hook'."
@@ -8947,8 +8956,6 @@ Add this to `prot/outline-minor-mode-exit-hook'."
                 (derived-mode-p 'prog-mode))
         (funcall mode)
         (message "Re-enabled %s" mode))))
-
-  (add-hook 'prot/outline-minor-mode-exit-hook 'prot/outline-minor-refontify)
 
   (define-minor-mode prot/outline-minor-mode
     "Toggles `outline-minor-mode' and extras.
@@ -8967,10 +8974,21 @@ Add this to `prot/outline-minor-mode-exit-hook'."
       (outline-minor-mode -1)
       (run-hooks 'prot/outline-minor-mode-exit-hook)))
 
+  :hook ((prot/outline-minor-mode-enter-hook . prot/outline-imenu-setup)
+         (prot/outline-minor-mode-exit-hook . prot/outline-imenu-restore)
+         (prot/outline-minor-mode-exit-hook . prot/outline-minor-refontify))
   ;; key replaces `menu-bar-open', which I never use
   :bind ("<f10>" . prot/outline-minor-mode))
 #+end_src
 
+*** TODO Cleanly restore all major modes for outline-mode re-fontification :emacs:
+    :PROPERTIES:
+    :CUSTOM_ID: h:a636f015-6eb7-4978-999e-c6f90e08894d
+    :END:
+*** TODO How to re-fontify outline-mode without re-running the major mode? :emacs:
+    :PROPERTIES:
+    :CUSTOM_ID: h:8c50a95d-afc0-49a9-ac7c-5e53c8819a43
+    :END:
 ** Custom movements and motions
    :PROPERTIES:
    :CUSTOM_ID: h:9aa933d2-70a9-426a-aeb2-2fa21bc67d97
