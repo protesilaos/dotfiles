@@ -7927,7 +7927,7 @@ modeline and/or the cursor's shape.
    :CUSTOM_ID: h:8fc1f9ca-f5ae-407a-b721-aab414ca657b
    :END:
 
-This section is all about configurations and packages that deal with
+This section is all about configurations and/or packages that deal with
 natural or programming language enhancements.
 
 *** Line length (column count)
