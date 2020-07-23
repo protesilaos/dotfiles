@@ -9021,6 +9021,322 @@ some motions that are rather cumbersome or too specialised.  While there
 are some commands that are not available at all.  For those cases, I use
 custom functions.
 
+*** General motions (custom functions in line with simple.el)
+    :PROPERTIES:
+    :CUSTOM_ID: h:2442f3bf-3ffb-431d-82d9-8a44954355b1
+    :END:
+
+These are small functions that facilitate my day-to-day work with Emacs.
+They are written by me, unless otherwise noted.  I also use the
+following code block to map certain useful built-in functions to my
+preferred key bindings.
+
+A thematic overview follows.
+
+Functions for lines:
+
++ Copy the current line :: Just place the entire line in the kill ring.
+  Do not be smart about it.
+
++ Replace current line or region with latest kill :: Replace the
+  contents of the line at point or the active region with the most
+  recent stretch of killed text yanked from the kill ring.
+
++ New line above or below :: Create a new line above or below the
+  current one and place the point at its absolute beginning.  Does not
+  matter where the point is on the current line.  Does not try to
+  account for any indentation rules.
+
++ Kill to the begging of line :: Just kill everything from the point
+  till the beginning of the line.  Do not try anything fancy like
+  adjusting indentation or removing the line break.
+
++ Faster multiline move :: Move up or down by 15 lines at a time.  This
+  is the equivalent of =C-u 15 C-n= or =C-u 15 C-p=.
+
+Text insertion or adjustments:
+
++ Insert pairs with completion :: With =prot/insert-pair-completion= I
+  solve the problem of having to define a potentially large set of key
+  bindings for the specialised task of inserting a pair of delimiters.
+  Now I define an association list with the pairs I am interested in and
+  let that function do the work.
+
++ Shrink whitespace :: By default, =M-SPC= will reduce multiple spaces
+  into a single one, while =M-\= will remove all space at once.  Then
+  there is =C-x C-o= which is the inverse of =C-o=.  For the first two of
+  the aforementioned, I use =cycle-spacing=: a single invocation will
+  leave one space, a second removes all space, while a third consecutive
+  call restores the original state.  Also, since I have no use for the
+  default function bound to =M-o= I make it an alias for =C-x C-o=.
+
++ Unfill text :: With =M-q= we can break a long line into a block that
+  ends each line at the =fill-column= (I configure Emacs to do this
+  automatically, where appropriate, but often do it manually---refer to
+  the section [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][Auto-fill plain text and comments]]).  With =M-^= we can join
+  the line at point with the one above.  But there seems to be no way of
+  doing this for a block of text.  So I assign the following function to
+  =M-Q= (must also hold down Shift).
+
++ Backward kill symbolic expression :: I just bind the built-in
+  =backward-kill-sexp= to =C-M-backspace=.  This makes it consistent with
+  =kill-whole-line= (=C-S-backspace=).
+
++ Change case "do what I mean" :: Emacs provides =*-dwim= versions of its
+  commands for changing the casing of a word or a region.  With an
+  active region, they operate on it, else they operate on the word.  I
+  bind them in the keys where you would find the originals (which, in
+  turn, render the region-specific variants redundant).
+
+Transposition functions:
+
++ Transpose or swap objects :: This is a series of functions that are
+  constructed from the =prot/transpose= macro.  They concern larger text
+  objects: sentences, paragraphs, balanced expressions.  The idea is to
+  do a normal transposition of the text objects they operate on or, when
+  the region is active, to swap the object at mark (region beginning)
+  with the one at point (region end).
+
++ Transpose or swap words :: Same as with the other "swap" commands.  In
+  addition, this alters =transpose-words= while at the end of line where
+  it will only transpose the last two words before point.  It thus
+  avoids transposing words across lines or paragraphs, which I never
+  want.
+
++ Transpose characters :: Tweak the way the original command works, so
+  that it /always/ transposes the two characters before point.  This will
+  no longer have the effect of moving the character forward following
+  repeated invocations of the command.  Just a toggle to quickly fix the
+  last typo.
+
+Buffer-specific commands:
+
++ Rename current buffer :: Change the file name being visited by the
+  current buffer.  This updates both the name of the buffer and the file
+  system path.  I extracted this command from the [[https://github.com/bbatsov/crux][Crux package]].
+
++ Kill this buffer :: A faster way of killing the focused buffer,
+  without the need to confirm which buffer to kill.  Unsaved files will
+  still ask for confirmation though, which is exactly as it should be.
+  Bound to =s-k=.
+
++ Count words in buffer :: By default, the binding =M-== will count the
+  lines, words, characters in the region.  I never use that.  What I do
+  use is the equivalent for the whole buffer, which is automatically
+  adapted to the contents of the region, when active.
+
+#+begin_src emacs-lisp
+(use-package simple
+  :config
+;;; Text insertion/manipulation
+  ;; Got those numbers from `string-to-char'
+  (defconst prot/insert-pair-alist
+    '(("' Single quote" . (39 39))           ; ' '
+      ("\" Double quotes" . (34 34))         ; " "
+      ("` Elisp quote" . (96 39))            ; ` '
+      ("‘ Single apostrophe" . (8216 8217))  ; ‘ ’
+      ("“ Double apostrophes" . (8220 8221)) ; “ ”
+      ("( Parentheses" . (40 41))            ; ( )
+      ("{ Curly brackets" . (123 125))       ; { }
+      ("[ Square brackets" . (91 93))        ; [ ]
+      ("< Angled brackets" . (60 62))        ; < >
+      ("« Εισαγωγικά" . (171 187)))          ; « »
+    "Alist of pairs for use with `prot/insert-pair-completion'.")
+
+  (defun prot/insert-pair-completion (&optional arg)
+    "Insert pair from `prot/insert-pair-alist'."
+    (interactive "P")
+    (let* ((data prot/insert-pair-alist)
+           (chars (mapcar #'car data))
+           (choice (completing-read "Select character: " chars nil t))
+           (left (cadr (assoc choice data)))
+           (right (caddr (assoc choice data))))
+      (insert-pair arg left right)))
+
+  (defun prot/unfill-region-or-paragraph (&optional region)
+    "Unfill paragraph or, when active, the region.
+Join all lines in a region, if active, while respecting any empty
+lines (so multiple paragraphs are not joined, just unfilled).  If
+no region is active, operate on the paragraph.  The idea is to
+produce the opposite effect of both `fill-paragraph' and
+`fill-region'."
+    (interactive)
+    (let ((fill-column most-positive-fixnum))
+      (if (use-region-p)
+          (fill-region (region-beginning) (region-end))
+        (fill-paragraph nil region))))
+
+;;; Transposition of objects
+  (defmacro prot/transpose (name scope &optional doc)
+    "Macro to produce transposition functions.
+NAME is the function's symbol.  SCOPE is the text object to
+operate on.  Optional DOC is the function's docstring.
+
+Transposition over an active region will swap the object at
+mark (region beginning) with the one at point (region end)"
+    `(defun ,name (arg)
+       ,doc
+       (interactive "p")
+       (let ((x (format "%s-%s" "transpose" ,scope)))
+         (if (use-region-p)
+             (funcall (intern x) 0)
+           (funcall (intern x) arg)))))
+
+  (prot/transpose
+   prot/transpose-lines
+   "paragraphs"
+   "Transpose lines or swap over active region.")
+
+  (prot/transpose
+   prot/transpose-paragraphs
+   "paragraphs"
+   "Transpose paragraphs or swap over active region.")
+
+  (prot/transpose
+   prot/transpose-sentences
+   "paragraphs"
+   "Transpose sentences or swap over active region.")
+
+  (prot/transpose
+   prot/transpose-sexps
+   "sexps"
+   "Transpose balanced expressions or swap over active region.")
+
+  (defun prot/transpose-chars ()
+    "Always transposes the two characters before point.
+There is no 'dragging' the character forward.  This is the
+behaviour of `transpose-chars' when point is at end-of-line."
+    (interactive)
+    (transpose-chars -1)
+    (forward-char))
+
+  (defun prot/transpose-words (arg)
+    "Transpose words.
+
+If region is active, swap the word at mark (region beginning)
+with the one at point (region end).
+
+Otherwise, and while inside a sentence, this behaves as the
+built-in `transpose-words', dragging forward the word behind the
+point.  The difference lies in its behaviour at the end of a
+line, where it will always transpose the word at point with the
+one behind it (effectively the last two words).
+
+This addresses two patterns of behaviour I dislike in the
+original command:
+
+1. When a line follows, \\[transpose-words] will transpose the
+last word of the line at point with the first word of the line
+below.
+
+2. While at the end of the line, \\[transpose-words] will not
+transpose the last two words, but will instead move point one
+word backward.  To actually transpose the last two words, you
+need to invoke the command twice."
+    (interactive "p")
+    (if (use-region-p)
+        (transpose-words 0)
+      (if (eq (point) (point-at-eol))
+          (progn
+            (backward-word 1)
+            (transpose-words 1)
+            (forward-char 1))
+        (transpose-words arg))))
+
+;;; Line-oriented commands
+  (defun prot/copy-line ()
+    "Copy the entirety of the current line."
+    (interactive)
+    (copy-region-as-kill (point-at-bol) (point-at-eol))
+    (message "Current line copied"))
+
+  (defun prot/yank-replace-line-or-region ()
+    "Yank from the kill ring, replacing current line.
+If the region is active, operate over it instead.  This command
+can then be followed by the standard `yank-pop' (default is bound
+to \\[yank-pop])."
+    (interactive)
+    (if (use-region-p)
+        (progn
+          (delete-region (region-beginning) (region-end))
+          (yank))
+      (delete-region (point-at-bol) (point-at-eol))
+      (yank)))
+
+  (defun prot/multi-line-next ()
+    "Move point 15 lines down."
+    (interactive)
+    (forward-line 15))
+
+  (defun prot/multi-line-prev ()
+    "Move point 15 lines up."
+    (interactive)
+    (forward-line -15))
+
+  (defun prot/kill-line-backward ()
+    "Kill from point to the beginning of the line."
+    (interactive)
+    (kill-line 0))
+
+  (defun prot/new-line-below ()
+    "Create an empty line below the current one.
+Move the point to the absolute beginning.  Also see
+`prot/new-line-above'."
+    (interactive)
+    (end-of-line)
+    (newline))
+
+  (defun prot/new-line-above ()
+    "Create an empty line above the current one.
+Move the point to the absolute beginning.  Also see
+`prot/new-line-below'."
+    (interactive)
+    (beginning-of-line)
+    (newline)
+    (forward-line -1))
+
+  (defun contrib/rename-file-and-buffer ()
+    "Rename current buffer and, if available, its file."
+    (interactive)
+    (let ((filename (buffer-file-name)))
+      (if (not (and filename (file-exists-p filename)))
+          (rename-buffer (read-from-minibuffer "New name: " (buffer-name)))
+        (let* ((new-name (read-from-minibuffer "New name: " filename))
+               (containing-dir (file-name-directory new-name)))
+          (make-directory containing-dir t)
+          (cond
+           ((vc-backend filename) (vc-rename-file filename new-name))
+           (t
+            (rename-file filename new-name t)
+            (set-visited-file-name new-name t t)))))))
+
+  :bind (("<C-M-backspace>" . backward-kill-sexp)
+         ("M-c" . capitalize-dwim)
+         ("M-l" . downcase-dwim)        ; "lower" case
+         ("M-u" . upcase-dwim)
+         ("<C-f2>" . contrib/rename-file-and-buffer)
+         ("C-S-w" . prot/copy-line)
+         ("M-=" . count-words)
+         ("C-'" . prot/insert-pair-completion)
+         ("M-'" . prot/insert-pair-completion)
+         ("s-k" . kill-this-buffer)
+         ("M-k" . prot/kill-line-backward)
+         ("C-S-n" . prot/multi-line-next)
+         ("C-S-p" . prot/multi-line-prev)
+         ("<C-return>" . prot/new-line-below)
+         ("<C-S-return>" . prot/new-line-above)
+         ("M-SPC" . cycle-spacing)
+         ("M-o" . delete-blank-lines)
+         ("C-t" . prot/transpose-chars)
+         ("C-x C-t" . prot/transpose-lines)
+         ("C-S-t" . prot/transpose-paragraphs)
+         ("C-x M-t" . prot/transpose-sentences)
+         ("C-M-t" . prot/transpose-sexps)
+         ("M-t" . prot/transpose-words)
+         ("M-Q" . prot/unfill-region-or-paragraph)
+         ("C-S-y" . prot/yank-replace-line-or-region)))
+#+end_src
+
 *** Go to actionable beginning or end of buffer
     :PROPERTIES:
     :CUSTOM_ID: h:29ea650f-f6a9-4bb4-abca-9548b4e4c4eb
@@ -9088,290 +9404,6 @@ reference:
   :bind (("C-=" . er/expand-region)
          ("C-M-=" . er/mark-outside-pairs)
          ("C-+" . er/mark-symbol)))
-#+end_src
-
-*** Collection of unpackaged commands or tweaks
-    :PROPERTIES:
-    :CUSTOM_ID: h:2442f3bf-3ffb-431d-82d9-8a44954355b1
-    :END:
-
-These are small functions that facilitate my day-to-day work with Emacs.
-They are written by me, unless otherwise noted.
-
-+ Backward kill symbolic expression :: I just bind the built-in
-  =backward-kill-sexp= to =C-M-backspace=.  This makes it consistent with
-  =kill-whole-line= (=C-S-backspace=).
-+ Change case "do what I mean" :: Emacs provides =*-dwim= versions of its
-  commands for changing the casing of a word or a region.  With an
-  active region, they operate on it, else they operate on the word.  I
-  bind them in the keys where you would find the originals (which, in
-  turn, render the region-specific variants redundant).
-+ Copy the current line :: Just place the entire line in the kill ring.
-  Do not be smart about it.
-+ Count words in buffer :: By default, the binding =M-== will count the
-  lines, words, characters in the region.  I never use that.  What I do
-  use is the equivalent for the whole buffer.
-+ Insert pairs :: These are several functions that allow for manual
-  insertion of various common delimiters I use.  The idea is to offer
-  the means of quickly wrapping a word/symbol/region in those characters
-  without having to always run a minor mode that "intelligently" decides
-  when to insert pairs.  The basic pattern for these keybindings is
-  derived from the default =M-(= which runs =insert-parentheses=: the basis
-  of all these commands.  Note also that =M-`= shadows the default keys
-  for =tmm-menubar=, which is a command I am 100% sure I will never use.
-+ Faster multiline move :: Move up or down by 15 lines at a time.  This
-  is the equivalent of =C-u 15 C-n= or =C-u 15 C-p=.
-+ Kill this buffer :: A faster way of killing the focused buffer,
-  without the need for confirming which buffer to kill.  Unsaved files
-  will still ask for confirmation though, which is exactly as it should
-  be.  Bound to =s-k=.
-+ Kill to the begging of line :: Just remove everything from the point
-  till the beginning of the line.  Do not try anything fancy like
-  adjusting indentation or removing the line break.
-+ New line above or below :: Create a new line above or below the
-  current one and place the point at its beginning.  Does not matter
-  where the point is on the current line.  Does not try to account for
-  any indentation rules.
-+ Rename current buffer :: Change the file name being visited by the
-  current buffer.  This updates both the name of the buffer and the file
-  system path.  I extracted this command from the [[https://github.com/bbatsov/crux][Crux package]].
-+ Shrink whitespace :: By default, =M-SPC= will reduce multiple spaces
-  into a single one, while =M-\= will remove all space at once.  Then
-  there is =C-x C-o= which is the inverse of =C-o=.  For the first two of
-  the aforementioned, I use =cycle-spacing=: a single invocation will
-  leave one space; a second removes all space; while a third consecutive
-  call restores the original state.  Also, since I have no use for the
-  default function bound to =M-o= I make it an alias for =C-x C-o=.
-+ Transpose characters :: Tweak the way the original command works, so
-  that it /always/ transposes the two characters before point.  This will
-  no longer have the effect of moving the character forward following
-  repeated invocations of the command.  Just a toggle to quickly fix the
-  last typo.
-+ Transpose or swap lines :: Behave as the original =transpose-lines=, but
-  also be aware of the active region in which case swap the line at
-  point (region end) with the line at mark (region beginning).
-+ Transpose or swap paragraphs :: A wrapper around the original
-  =transpose-paragraphs= that fulfils my expectations: if region is
-  active, swap paragraph at mark (region beginning) with one at point
-  (region end), otherwise transpose current paragraph with the one after
-  it (drag paragraph downward/forward).
-+ Transpose or swap sentences :: Same principle as above.  When region
-  is active it exchanges the sentences at either end of it, otherwise is
-  drags the sentence forward.  The added effect here is that if point is
-  at the end of the paragraph, where no further 'dragging' can occur, it
-  transposes the sentence at point with the one before it.
-+ Transpose or swap words :: Same as with the other "swap" commands.
-  In addition, this alters =transpose-words= while at the end of line
-  where it will only transpose the last two words before the point.  It
-  thus avoids transposing words across lines or paragraphs.
-+ Unfill text DWIM :: With =M-q= we can break a long line into a block
-  that ends each line at the =fill-column= (I configure Emacs to do this
-  automatically, where appropriate, but often do it manually).  With =M-^=
-  we can join the line at point with the one above.  But there seems to
-  be no way of doing this for a block of text.  So I assign the
-  following function to =M-Q= (must also hold down Shift).
-+ Yank over current line or region :: Replace the contents of the line
-  at point (or the active region) with the most recent item from the
-  kill ring.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (defun prot/copy-line ()
-    "Copies the entirety of the current line."
-    (interactive)
-    (copy-region-as-kill (point-at-bol) (point-at-eol))
-    (message "Current line copied"))
-
-  (defun prot/insert-double-quotes (&optional arg)
-    "Insert a pair of double quotes or wrap ARG with them."
-    (interactive "P")
-    (insert-pair arg ?\" ?\"))
-
-  (defun prot/insert-double-smart-quotes (&optional arg)
-    "Insert a pair of double smart quotes or wrap ARG with them."
-    (interactive "P")
-    (insert-pair arg ?\“ ?\”))
-
-  (defun prot/insert-single-smart-quotes (&optional arg)
-    "Insert a pair of single smart quotes or wrap ARG with them."
-    (interactive "P")
-    (insert-pair arg ?\‘ ?\’))
-
-  (defun prot/insert-elisp-quotes (&optional arg)
-    "Insert a pair of elisp symbol quotes or wrap ARG with them."
-    (interactive "P")
-    (insert-pair arg ?\` ?\'))
-
-  (defun prot/multi-line-next ()
-    "Moves point 15 lines down."
-    (interactive)
-    (forward-line 15))
-
-  (defun prot/multi-line-prev ()
-    "Moves point 15 lines up."
-    (interactive)
-    (forward-line -15))
-
-  (defun prot/kill-line-backward ()
-    "Kill from point to the beginning of the line."
-    (interactive)
-    (kill-line 0))
-
-  (defun prot/new-line-below ()
-    "Create a new line below the current one.  Move the point to
-the absolute beginning.  Also see `prot/new-line-above'."
-    (interactive)
-    (end-of-line)
-    (newline))
-
-  (defun prot/new-line-above ()
-    "Create a new line above the current one.  Move the point to
-the absolute beginning.  Also see `prot/new-line-below'."
-    (interactive)
-    (beginning-of-line)
-    (newline)
-    (forward-line -1))
-
-  (defun contrib/rename-file-and-buffer ()
-    "Rename current buffer and if the buffer is visiting a file, rename it too."
-    (interactive)
-    (let ((filename (buffer-file-name)))
-      (if (not (and filename (file-exists-p filename)))
-          (rename-buffer (read-from-minibuffer "New name: " (buffer-name)))
-        (let* ((new-name (read-from-minibuffer "New name: " filename))
-               (containing-dir (file-name-directory new-name)))
-          (make-directory containing-dir t)
-          (cond
-           ((vc-backend filename) (vc-rename-file filename new-name))
-           (t
-            (rename-file filename new-name t)
-            (set-visited-file-name new-name t t)))))))
-
-  (defun prot/transpose-chars ()
-    "Always transposes the two characters before point.  There is
-no 'dragging' the character forward.  This is the behaviour of
-`transpose-chars' when point is at end-of-line."
-    (interactive)
-    (transpose-chars -1)
-    (forward-char))
-
-  (defun prot/transpose-or-swap-lines (arg)
-    "If region is active, swap the line at mark (region
-beginning) with the one at point (region end).  This leverages a
-facet of the built-in `transpose-lines'.  Otherwise transpose the
-current line with the one before it ('drag' line downward)."
-    (interactive "p")
-    (if (use-region-p)
-        (transpose-lines 0)
-      (transpose-lines arg)))
-
-  (defun prot/transpose-or-swap-paragraphs (arg)
-    "If region is active, swap the paragraph at mark (region
-beginning) with the one at point (region end).  This leverages a
-facet of the built-in `transpose-paragraphs'.  Otherwise
-transpose the current paragraph with the one after it ('drag'
-paragraph downward)."
-    (interactive "p")
-    (if (use-region-p)
-        (transpose-paragraphs 0)
-      (transpose-paragraphs arg)))
-
-  (defun prot/transpose-or-swap-sentences (arg)
-    "If region is active, swap the sentence at mark (region
-beginning) with the one at point (region end).  This leverages a
-facet of the built-in `transpose-sentences'.  Otherwise transpose
-the sentence before point with the one after it ('drag' sentence
-forward/downward).  Also `fill-paragraph' afterwards.
-
-Note that, by default, sentences are demarcated by two spaces."
-    (interactive "p")
-    (if (use-region-p)
-        (transpose-sentences 0)
-      (transpose-sentences arg))
-    (fill-paragraph))
-
-  (defun prot/transpose-or-swap-words (arg)
-    "If region is active, swap the word at mark (region
-beginning) with the one at point (region end).
-
-Otherwise, and while inside a sentence, this behaves as the
-built-in `transpose-words', dragging forward the word behind the
-point.  The difference lies in its behaviour at the end of a
-line, where it will always transpose the word at point with the
-one behind it (effectively the last two words).
-
-This addresses two patterns of behaviour I dislike in the
-original command:
-
-1. When a line follows, `M-t' will transpose the last word of the
-line at point with the first word of the line below.
-
-2. While at the end of the line, `M-t' will not transpose the
-last two words, but will instead move point one word backward.
-To actually transpose the last two words, you need to invoke the
-command twice."
-    (interactive "p")
-    (if (use-region-p)
-        (transpose-words 0)
-      (if (eq (point) (point-at-eol))
-          (progn
-            (backward-word 1)
-            (transpose-words 1)
-            (forward-char 1))
-        (transpose-words arg))))
-
-  (defun prot/unfill-region-or-paragraph (&optional region)
-    "Join all lines in a region, if active, while respecting any
-empty lines (so multiple paragraphs are not joined, just
-unfilled).  If no region is active, operate on the paragraph.
-The idea is to produce the opposite effect of both
-`fill-paragraph' and `fill-region'."
-    (interactive)
-    (let ((fill-column most-positive-fixnum))
-      (if (use-region-p)
-          (fill-region (region-beginning) (region-end))
-        (fill-paragraph nil region))))
-
-  (defun prot/yank-replace-line-or-region ()
-    "Replace the line at point with the contents of the last
-stretch of killed text.  If the region is active, operate over it
-instead.  This command can then be followed by the standard
-`yank-pop' (default is bound to M-y)."
-    (interactive)
-    (if (use-region-p)
-        (progn
-          (delete-region (region-beginning) (region-end))
-          (yank))
-      (delete-region (point-at-bol) (point-at-eol))
-      (yank)))
-
-  :bind (("<C-M-backspace>" . backward-kill-sexp)
-         ("M-c" . capitalize-dwim)
-         ("M-l" . downcase-dwim)        ; "lower" case
-         ("M-u" . upcase-dwim)
-         ("<C-f2>" . contrib/rename-file-and-buffer)
-         ("C-S-w" . prot/copy-line)
-         ("M-=" . count-words)
-         ("M-\"" . prot/insert-double-quotes)
-         ("C-M-\"" . prot/insert-double-smart-quotes)
-         ("C-M-'" . prot/insert-single-smart-quotes)
-         ("M-`" . prot/insert-elisp-quotes)
-         ("s-k" . kill-this-buffer)
-         ("M-k" . prot/kill-line-backward)
-         ("C-S-n" . prot/multi-line-next)
-         ("C-S-p" . prot/multi-line-prev)
-         ("<C-return>" . prot/new-line-below)
-         ("<C-S-return>" . prot/new-line-above)
-         ("M-SPC" . cycle-spacing)
-         ("M-o" . delete-blank-lines)
-         ("C-t" . prot/transpose-chars)
-         ("C-x C-t" . prot/transpose-or-swap-lines)
-         ("C-S-t" . prot/transpose-or-swap-paragraphs)
-         ("C-x M-t" . prot/transpose-or-swap-sentences)
-         ("M-t" . prot/transpose-or-swap-words)
-         ("M-Q" . prot/unfill-region-or-paragraph)
-         ("C-S-y" . prot/yank-replace-line-or-region)))
 #+end_src
 
 *** Go to last change
