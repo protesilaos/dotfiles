@@ -7291,10 +7291,10 @@ This can be used to further customise the active theme.")
              modus-%1$s-theme-faint-syntax nil
              modus-%1$s-theme-intense-standard-completions t
              modus-%1$s-theme-org-blocks 'greyscale ; {nil,greyscale,rainbow}
-             modus-%1$s-theme-variable-pitch-headings nil
+             modus-%1$s-theme-variable-pitch-headings t
              modus-%1$s-theme-rainbow-headings nil
-             modus-%1$s-theme-section-headings t
-             modus-%1$s-theme-scale-headings nil
+             modus-%1$s-theme-section-headings nil
+             modus-%1$s-theme-scale-headings t
              modus-%1$s-theme-scale-1 1.1
              modus-%1$s-theme-scale-2 1.15
              modus-%1$s-theme-scale-3 1.21
