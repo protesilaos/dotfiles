@@ -3069,7 +3069,7 @@ Also bind `class' to ((class color) (min-colors 89))."
                         ,@(modus-operandi-theme-heading-block bg-alt fg-alt))))
 ;;;;; outline-minor-faces
    `(outline-minor-0 ((,class ,@(unless modus-operandi-theme-section-headings
-                                  (list :background bg-alt)))))
+                                  (list :background cyan-nuanced-bg)))))
 ;;;;; package (M-x list-packages)
    `(package-description ((,class :foreground ,fg-special-cold)))
    `(package-help-section-name ((,class :inherit bold :foreground ,magenta-alt-other)))
@@ -3897,24 +3897,24 @@ Also bind `class' to ((class color) (min-colors 89))."
     (custom-theme-set-variables
      'modus-operandi
      `(org-src-block-faces              ; TODO this list should be expanded
-       `(("emacs-lisp" 'modus-theme-nuanced-magenta)
-         ("elisp" 'modus-theme-nuanced-magenta)
-         ("clojure" 'modus-theme-nuanced-magenta)
-         ("clojurescript" 'modus-theme-nuanced-magenta)
-         ("c" 'modus-theme-nuanced-blue)
-         ("c++" 'modus-theme-nuanced-blue)
-         ("sh" 'modus-theme-nuanced-green)
-         ("shell" 'modus-theme-nuanced-green)
-         ("html" 'modus-theme-nuanced-yellow)
-         ("xml" 'modus-theme-nuanced-yellow)
-         ("css" 'modus-theme-nuanced-red)
-         ("scss" 'modus-theme-nuanced-red)
-         ("python" 'modus-theme-nuanced-green)
-         ("ipython" 'modus-theme-nuanced-magenta)
-         ("r" 'modus-theme-nuanced-cyan)
-         ("yaml" 'modus-theme-nuanced-cyan)
-         ("docker" 'modus-theme-nuanced-cyan)
-         ("json" 'modus-theme-nuanced-cyan))))))
+       `(("emacs-lisp" modus-theme-nuanced-magenta)
+         ("elisp" modus-theme-nuanced-magenta)
+         ("clojure" modus-theme-nuanced-magenta)
+         ("clojurescript" modus-theme-nuanced-magenta)
+         ("c" modus-theme-nuanced-blue)
+         ("c++" modus-theme-nuanced-blue)
+         ("sh" modus-theme-nuanced-green)
+         ("shell" modus-theme-nuanced-green)
+         ("html" modus-theme-nuanced-yellow)
+         ("xml" modus-theme-nuanced-yellow)
+         ("css" modus-theme-nuanced-red)
+         ("scss" modus-theme-nuanced-red)
+         ("python" modus-theme-nuanced-green)
+         ("ipython" modus-theme-nuanced-magenta)
+         ("r" modus-theme-nuanced-cyan)
+         ("yaml" modus-theme-nuanced-cyan)
+         ("docker" modus-theme-nuanced-cyan)
+         ("json" modus-theme-nuanced-cyan))))))
 
 ;;; library provides
 ;;;###autoload
