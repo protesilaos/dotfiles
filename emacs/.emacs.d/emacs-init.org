@@ -9387,45 +9387,6 @@ provides.  I got this from [[https://github.com/DamienCassou/beginend/issues/43]
   (beginend-global-mode 1))
 #+end_src
 
-*** Mark by semantic unit (expand-region)
-    :PROPERTIES:
-    :CUSTOM_ID: h:0cb24401-16df-45ed-80f7-8e993f985c0d
-    :END:
-
-The =expand-region= library offers the means to mark syntactic elements by
-semantic unit: word, symbol, string, balanced expression…  The expansion
-is incremental, from the smallest to the largest match, with each
-increment performed by === following the initial invocation of the command
-(decrement with =-= or reset with =0=) or by just repeatedly hitting =C-==.
-
-There are lost of specialised functions bundled up together with this
-package.  Rather than bind each one to a key, I prefer to keep things
-simple: =er/expand-region= only ever needs a couple extra calls to match
-compound units.  The few exceptions are for commands I use all the time.
-
-Note though that this library is complementary to existing commands
-(which can be ignored or altogether superseded).  Here is a quick
-reference:
-
-| Function          | Key binding |
-|-------------------+-------------|
-| mark-paragraph    | M-h         |
-| mark-sexp         | C-M-SPC     |
-| mark-whole-buffer | C-x h       |
-| mark-word         | M-@         |
-
-#+begin_src emacs-lisp
-(use-package expand-region
-  :ensure
-  :defer
-  :pin gnu                              ; Prefer ELPA version
-  :config
-  (setq expand-region-smart-cursor t)
-  :bind (("C-=" . er/expand-region)
-         ("C-M-=" . er/mark-outside-pairs)
-         ("C-+" . er/mark-symbol)))
-#+end_src
-
 *** Go to last change
     :PROPERTIES:
     :CUSTOM_ID: h:ac889a76-1092-449e-a184-9092093f3103
