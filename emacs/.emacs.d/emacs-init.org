@@ -2789,6 +2789,56 @@ Basically, its interaction model is as follows:
    :CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
    :END:
 
+*** General buffer commands
+    :PROPERTIES:
+    :CUSTOM_ID: h:1081c372-39b8-4c24-b391-2a99285d8acb
+    :END:
+
+Here I collect general purpose commands for buffers.  I also remap
+useful keybindings to commands I prefer to use.
+
++ By default, =M-== will count the lines, words, characters in the region.
+  I never use that.  What I do use is the equivalent for the whole
+  buffer, which is automatically adapted to the contents of the region,
+  when active.
+
++ =prot/kill-buffer-current= is a faster way to kill the focused buffer,
+  without further confirmation.  Unsaved files will still ask for
+  confirmation though, which is exactly as it should be.
+
++ =contrib/rename-file-and-buffer= will prompt you to rename the current
+  buffer and its underlying file.  It is a command I extracted from the
+  [[https://github.com/bbatsov/crux][Crux package]].
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (defun prot/kill-buffer-current ()
+    "Kill current buffer or abort recursion when in minibuffer."
+    (interactive)
+    (if (minibufferp)
+        (abort-recursive-edit)
+      (kill-buffer (current-buffer))))
+
+  (defun contrib/rename-file-and-buffer ()
+    "Rename current buffer and, if available, its file."
+    (interactive)
+    (let ((filename (buffer-file-name)))
+      (if (not (and filename (file-exists-p filename)))
+          (rename-buffer (read-from-minibuffer "New name: " (buffer-name)))
+        (let* ((new-name (read-from-minibuffer "New name: " filename))
+               (containing-dir (file-name-directory new-name)))
+          (make-directory containing-dir t)
+          (cond
+           ((vc-backend filename) (vc-rename-file filename new-name))
+           (t
+            (rename-file filename new-name t)
+            (set-visited-file-name new-name t t)))))))
+  :bind (("M-=" . count-words)
+         ("<C-f2>" . contrib/rename-file-and-buffer)
+         ("s-k" . prot/kill-buffer-current)))
+#+end_src
+
 *** Unique names for buffers
     :PROPERTIES:
     :CUSTOM_ID: h:60a70340-49dc-4f45-b147-12a4141db42b
