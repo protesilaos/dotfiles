@@ -2303,6 +2303,498 @@ This function is meant to be mapped to a key in `rg-mode-map'."
          ("M-p" . rg-prev-file)))
 #+end_src
 
+* General movements and motions
+   :PROPERTIES:
+   :CUSTOM_ID: h:9aa933d2-70a9-426a-aeb2-2fa21bc67d97
+   :END:
+
+I generally rely on the default keys to move around (plus my Super-KEY
+additions to economise on some repetitive tasks).  There are, however,
+some motions that are rather cumbersome or too specialised.  While there
+are some commands that are not available at all.  For those cases, I use
+custom functions and/or remapped key bindings, as well as carefully
+considered external packages.
+
+** Custom commands in line with simple.el and lisp.el
+   :PROPERTIES:
+   :CUSTOM_ID: h:2442f3bf-3ffb-431d-82d9-8a44954355b1
+   :END:
+
+The subsections provided herein contain small functions that facilitate
+my day-to-day work with Emacs.  They are written by me, unless otherwise
+noted, and typically tweak or extend some built-in functionality.  I
+also use these code blocks to map certain useful built-in functions to
+my preferred key bindings.
+
+The commands are organised per their role.  If you are viewing the
+source version of this document, you can place the point somewhere in
+these opening paragraphs and use =C-x n s= (=org-narrow-to-subtree=) to
+focus on the relevant parts.  Remember that widening always happens with
+=C-x n w= (=widen=).
+
+*** Custom commands for lines
+    :PROPERTIES:
+    :CUSTOM_ID: h:5cfe0052-b825-468c-9765-9002665c7762
+    :END:
+
+The docstrings of my functions here should offer you all the information
+you need.  Just a couple of notes:
+
++ =delete-blank-lines= is normally mapped to =C-x C-o=, whereas I also bind
+  it to =M-o=, which makes it symmetrical with =open-line= (=C-o=).
+
++ By default, =M-SPC= (=just-one-space=) will reduce multiple spaces into a
+  single one, while =M-\= (=delete-horizontal-space=) will remove all space
+  at once from point to the end of the line.  Whereas the built-in
+  wrapper of =cycle-spacing= lets us economise on key bindings: a single
+  invocation will leave one space, a second removes all space, while a
+  third consecutive call restores the original state.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (defun prot/new-line-below (&optional arg)
+    "Create an empty line below the current one.
+Move the point to the absolute beginning.  Adapt indentation by
+passing \\[universal-argument].  Also see `prot/new-line-above'."
+    (interactive "P")
+    (end-of-line)
+    (if arg
+        (newline-and-indent)
+      (newline)))
+
+  (defun prot/new-line-above (&optional arg)
+    "Create an empty line above the current one.
+Move the point to the absolute beginning.  Adapt indentation by
+passing \\[universal-argument]."
+    (interactive "P")
+    (let ((indent (if arg arg nil)))
+      (forward-line -1)
+      (prot/new-line-below indent)))
+
+  (defun prot/copy-line-or-region (&optional arg)
+    "Kill-save the current line or active region.
+With \\[universal-argument] duplicate the target instead.  When
+region is active, also apply context-aware indentation while
+duplicating."
+    (interactive "P")
+    (let* ((rbeg (region-beginning))
+           (rend (region-end))
+           (pbol (point-at-bol))
+           (peol (point-at-eol))
+           (indent (if (eq (or rbeg rend) pbol) nil arg)))
+      (if arg
+          (progn
+            (if (use-region-p)
+                (progn
+                  (copy-region-as-kill rbeg rend)
+                  (when (eq (point) rbeg)
+                    (exchange-point-and-mark))
+                  (prot/new-line-below indent))
+              (copy-region-as-kill pbol peol)
+              (prot/new-line-below))
+            (yank))
+        (copy-region-as-kill pbol peol)
+        (message "Current line copied"))))
+
+  (defun prot/yank-replace-line-or-region ()
+    "Replace line or region with latest kill.
+This command can then be followed by the standard
+`yank-pop' (default is bound to \\[yank-pop])."
+    (interactive)
+    (if (use-region-p)
+          (delete-region (region-beginning) (region-end))
+      (delete-region (point-at-bol) (point-at-eol)))
+      (yank))
+
+  (defun prot/multi-line-next ()
+    "Move point 15 lines down."
+    (interactive)
+    (forward-line 15))
+
+  (defun prot/multi-line-prev ()
+    "Move point 15 lines up."
+    (interactive)
+    (forward-line -15))
+
+  (defun prot/kill-line-backward ()
+    "Kill from point to the beginning of the line."
+    (interactive)
+    (kill-line 0))
+
+  :bind (("C-S-w" . prot/copy-line-or-region)
+         ("C-S-y" . prot/yank-replace-line-or-region)
+         ("M-SPC" . cycle-spacing)
+         ("M-o" . delete-blank-lines)   ; alias for C-x C-o
+         ("M-k" . prot/kill-line-backward)
+         ("C-S-n" . prot/multi-line-next)
+         ("C-S-p" . prot/multi-line-prev)
+         ("<C-return>" . prot/new-line-below)
+         ("<C-S-return>" . prot/new-line-above)))
+#+end_src
+
+*** Custom commands for text insertion or manipulation
+    :PROPERTIES:
+    :CUSTOM_ID: h:66dd425b-4827-47eb-ac14-ac672596114d
+    :END:
+
++ Insert pairs with completion :: With =prot/insert-pair-completion= I
+  solve the problem of having to define a potentially large set of key
+  bindings for the specialised task of inserting a pair of delimiters.
+  Now I define an association list with the pairs I am interested in and
+  let that function do the work.
+
++ Change case "do what I mean" :: Emacs provides =*-dwim= versions of its
+  commands for changing the casing of a word or a region.  With an
+  active region, they operate on it, else they operate on the word.  I
+  bind them in the keys where you would find the originals (which, in
+  turn, render the region-specific variants redundant).
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  ;; Got those numbers from `string-to-char'
+  (defconst prot/insert-pair-alist
+    '(("' Single quote" . (39 39))           ; ' '
+      ("\" Double quotes" . (34 34))         ; " "
+      ("` Elisp quote" . (96 39))            ; ` '
+      ("‘ Single apostrophe" . (8216 8217))  ; ‘ ’
+      ("“ Double apostrophes" . (8220 8221)) ; “ ”
+      ("( Parentheses" . (40 41))            ; ( )
+      ("{ Curly brackets" . (123 125))       ; { }
+      ("[ Square brackets" . (91 93))        ; [ ]
+      ("< Angled brackets" . (60 62))        ; < >
+      ("« Εισαγωγικά Gr quote" . (171 187))) ; « »
+    "Alist of pairs for use with `prot/insert-pair-completion'.")
+
+  (defun prot/insert-pair-completion (&optional arg)
+    "Insert pair from `prot/insert-pair-alist'."
+    (interactive "P")
+    (let* ((data prot/insert-pair-alist)
+           (chars (mapcar #'car data))
+           (choice (completing-read "Select character: " chars nil t))
+           (left (cadr (assoc choice data)))
+           (right (caddr (assoc choice data))))
+      (insert-pair arg left right)))
+
+  :bind (("C-'" . prot/insert-pair-completion)
+         ("M-'" . prot/insert-pair-completion)
+         ("<C-M-backspace>" . backward-kill-sexp)
+         ("M-c" . capitalize-dwim)
+         ("M-l" . downcase-dwim)        ; "lower" case
+         ("M-u" . upcase-dwim)))
+#+end_src
+
+*** Custom commands for object transposition
+    :PROPERTIES:
+    :CUSTOM_ID: h:b6d349c6-11f5-4c7a-8dda-fc32a76aa5b1
+    :END:
+
++ Transpose or swap objects :: This is a series of functions that are
+  constructed from the =prot/transpose= macro.  They concern larger text
+  objects: sentences, paragraphs, balanced expressions.  The idea is to
+  do a normal transposition of the text objects they operate on or, when
+  the region is active, to swap the object at mark (region beginning)
+  with the one at point (region end).
+
++ Transpose or swap words :: Same as with the other "swap" commands.  In
+  addition, this alters =transpose-words= while at the end of line where
+  it will only transpose the last two words before point.  It thus
+  avoids transposing words across lines or paragraphs, which I never
+  want.
+
++ Transpose characters :: Tweak the way the original command works, so
+  that it /always/ transposes the two characters before point.  This will
+  no longer have the effect of moving the character forward following
+  repeated invocations of the command.  Just a toggle to quickly fix the
+  last typo.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :commands (prot/transpose-chars
+             prot/transpose-lines
+             prot/transpose-paragraphs
+             prot/transpose-sentences
+             prot/transpose-sexps
+             prot/transpose-words)
+  :config
+  (defmacro prot/transpose (name scope &optional doc)
+    "Macro to produce transposition functions.
+NAME is the function's symbol.  SCOPE is the text object to
+operate on.  Optional DOC is the function's docstring.
+
+Transposition over an active region will swap the object at
+mark (region beginning) with the one at point (region end)"
+    `(defun ,name (arg)
+       ,doc
+       (interactive "p")
+       (let ((x (format "%s-%s" "transpose" ,scope)))
+         (if (use-region-p)
+             (funcall (intern x) 0)
+           (funcall (intern x) arg)))))
+
+  (prot/transpose
+   prot/transpose-lines
+   "lines"
+   "Transpose lines or swap over active region.")
+
+  (prot/transpose
+   prot/transpose-paragraphs
+   "paragraphs"
+   "Transpose paragraphs or swap over active region.")
+
+  (prot/transpose
+   prot/transpose-sentences
+   "sentences"
+   "Transpose sentences or swap over active region.")
+
+  (prot/transpose
+   prot/transpose-sexps
+   "sexps"
+   "Transpose balanced expressions or swap over active region.")
+
+  (defun prot/transpose-chars ()
+    "Always transposes the two characters before point.
+There is no 'dragging' the character forward.  This is the
+behaviour of `transpose-chars' when point is at end-of-line."
+    (interactive)
+    (transpose-chars -1)
+    (forward-char))
+
+  (defun prot/transpose-words (arg)
+    "Transpose words.
+
+If region is active, swap the word at mark (region beginning)
+with the one at point (region end).
+
+Otherwise, and while inside a sentence, this behaves as the
+built-in `transpose-words', dragging forward the word behind the
+point.  The difference lies in its behaviour at the end of a
+line, where it will always transpose the word at point with the
+one behind it (effectively the last two words).
+
+This addresses two patterns of behaviour I dislike in the
+original command:
+
+1. When a line follows, \\[transpose-words] will transpose the
+last word of the line at point with the first word of the line
+below.
+
+2. While at the end of the line, \\[transpose-words] will not
+transpose the last two words, but will instead move point one
+word backward.  To actually transpose the last two words, you
+need to invoke the command twice."
+    (interactive "p")
+    (if (use-region-p)
+        (transpose-words 0)
+      (if (eq (point) (point-at-eol))
+          (progn
+            (backward-word 1)
+            (transpose-words 1)
+            (forward-char 1))
+        (transpose-words arg))))
+
+  :bind (("C-t" . prot/transpose-chars)
+         ("C-x C-t" . prot/transpose-lines)
+         ("C-S-t" . prot/transpose-paragraphs)
+         ("C-x M-t" . prot/transpose-sentences)
+         ("C-M-t" . prot/transpose-sexps)
+         ("M-t" . prot/transpose-words)))
+#+end_src
+
+*** Custom commands for marking syntactic constructs
+    :PROPERTIES:
+    :CUSTOM_ID: h:19076ddf-8c55-48da-81a3-129b18cf62c0
+    :END:
+
+I tried working with the external =expand.el= package, but realised I only
+ever used a tiny subset of its commands.  Instead of paying the penalty,
+I am opting to tweak the built-in functions for marking the syntactic
+constructs that are specific to my needs.
+
+All of the following accept a universal argument for specifying the
+total count of syntactic objects to mark and in which direction
+(e.g. =C-u -3= will mark the current word and two more before it).
+Repeated calls of the command incrementally expand the region in the
+given direction.
+
++ Mark symbol at point :: Marks the whole symbol at point.  Recall that
+  "symbol" refers to a proper/unique name, such as those of functions.
+  That granted, =prot/mark-symbol= will apply to regular words if no
+  symbol is available, making it ideal as a general purpose utility.
+
++ Mark word at point :: Unlike the built-in =mark-word= which only
+  highlights the word from point to either of its boundaries, my
+  =prot/mark-word= operates on the entire word, while retaining the rest
+  of the functionality (the use of the universal argument and
+  incremental expansion, noted above).  This command is not meant for
+  regular use, as it is covered by =prot/mark-symbol=.  Instead it is
+  reserved for some surgical intervention in the context of keyboard
+  macros and the like.
+
++ Mark sexp backward :: =prot/mark-sexp-backward= is a simple tweak over
+  the default command for marking symbolic expressions (=mark-sexp=),
+  which tells it to always move backward.
+
++ Mark constructs DWIM :: =prot/mark-construct-dwim= is the command that
+  wraps all of the above except =prot/mark-word= (due to its specificity)
+  in a convenient package.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :commands (prot/mark-symbol
+             prot/mark-sexp-backward)
+  :config
+  (defmacro prot/mark (name object &optional docstring)
+    "Produce function for marking small syntactic constructs.
+NAME is how the function should be called.  OBJECT is its scope.
+Optional DOCSTRING describes the resulting function.
+
+This is a slightly modified version of the built-in `mark-word'."
+    `(defun ,name (&optional arg allow-extend)
+       ,docstring
+       (interactive "P\np")
+       (let ((x (format "%s-%s" "forward" ,object)))
+         (cond ((and allow-extend
+	                 (or (and (eq last-command this-command) (mark t))
+		                 (region-active-p)))
+	            (setq arg (if arg (prefix-numeric-value arg)
+		                    (if (< (mark) (point)) -1 1)))
+	            (set-mark
+	             (save-excursion
+	               (goto-char (mark))
+	               (funcall (intern x) arg)
+	               (point))))
+	           (t
+                (let ((bounds (bounds-of-thing-at-point (intern ,object))))
+                  (unless (consp bounds)
+                    (user-error "No %s at point" ,object))
+                  (if (>= (prefix-numeric-value arg) 0)
+                      (goto-char (car bounds))
+                    (goto-char (cdr bounds)))
+                  (push-mark
+                   (save-excursion
+                     (funcall (intern x) (prefix-numeric-value arg))
+                     (point)))
+                  (activate-mark)))))))
+
+  (prot/mark
+   prot/mark-word
+   "word"
+   "Mark the whole word at point.
+This function is a slightly modified version of the built-in
+`mark-word', that I intend to use only in special circumstances,
+such as when recording a keyboard macro where precision is
+required.  For a general purpose utility, use `prot/mark-symbol'
+instead.")
+
+  (prot/mark
+   prot/mark-symbol
+   "symbol"
+   "Mark the whole symbol at point.
+With optional ARG, mark a total ARGth symbols away from point in
+addition to the current one.  A negative argument moves backward.
+Repeated invocations of this command mark the next symbol in the
+direction originally specified.
+
+In the absence of a symbol and if a word is present at point,
+this command will operate on it as described above.")
+
+  (defun prot/mark-sexp-backward (&optional arg)
+    "Mark previous or ARGth balanced expression[s].
+Just a convenient backward-looking `mark-sexp'."
+    (interactive "P")
+    (if arg
+        (mark-sexp (- arg) t)
+      (mark-sexp (- 1) t)))
+
+  (defun prot/mark-construct-dwim (&optional arg)
+    "Mark symbol or balanced expression at point.
+A do-what-I-mean wrapper for `prot/mark-sexp-backward',
+`mark-sexp', and `prot/mark-symbol'.
+
+When point is over a symbol, mark the entirety of it.  Regular
+words are interpreted as symbols when an actual symbol is not
+present.
+
+For balanced expressions, a backward match will happen when point
+is to the right of the closing delimiter.  A forward match is the
+fallback condition and should work when point is before a
+balanced expression, with or without whitespace in between it an
+the opening delimiter.
+
+Optional ARG will mark a total of ARGth objects while counting
+the current one (so 3 would be 1+2 more).  A negative count moves
+the mark backward (though that would invert the backward-moving
+sexp matching of `prot/mark-sexp-backward', so be mindful of
+where the point is).  Repeated invocations of this command
+incrementally mark objects in the direction originally
+specified."
+    (interactive "P")
+    (let ((x (if arg
+                 (prefix-numeric-value arg)
+               (if (< (mark) (point)) -1 1))))
+      (cond
+       ((symbol-at-point)
+        (prot/mark-symbol x t))
+       ((eq (point) (cdr (bounds-of-thing-at-point 'sexp)))
+        (prot/mark-sexp-backward x))
+       (t
+        (mark-sexp x t)))))
+
+  :bind (("M-@" . prot/mark-word)       ; replaces `mark-word'
+         ("C-M-SPC" . prot/mark-construct-dwim)))
+#+end_src
+
+** Go to actionable beginning or end of buffer (beginend.el)
+   :PROPERTIES:
+   :CUSTOM_ID: h:29ea650f-f6a9-4bb4-abca-9548b4e4c4eb
+   :END:
+
+This package by Damien Cassou offers the ability to move to the first or
+last actionable point in a buffer rather than the absolute maximum or
+minimum point.  It does so by wrapping =M-<= and =M->= around a "do what I
+mean" behaviour where the initial command will take you to the
+actionable part, while another call will go to the absolute position.
+Nice and simple!
+
+Check [[https://github.com/DamienCassou/beginend][the package upstream]] for information on the supported modes and on
+how to contribute your own extensions (I provided support for =rg.el=,
+which I [[#h:31622bf2-526b-4426-9fda-c0fc59ac8f4b][define elsewhere in this document]]).
+
+Here the =dolist= combined with the =:diminish= keyword are meant to remove
+all lighters that this package produces: one for every minor mode it
+provides.  I got this from [[https://github.com/DamienCassou/beginend/issues/43][issue 43 on the beginend repo]].
+
+#+begin_src emacs-lisp
+(use-package beginend
+  :ensure
+  :demand
+  :diminish beginend-global-mode
+  :config
+  (dolist (mode beginend-modes) (diminish (cdr mode)))
+  (beginend-global-mode 1))
+#+end_src
+
+** Go to last change
+   :PROPERTIES:
+   :CUSTOM_ID: h:ac889a76-1092-449e-a184-9092093f3103
+   :END:
+
+I could not find any built-in method of /reliably/ moving back to the
+last change.  Using the mark ring is always an option, but does not fill
+the exact same niche.
+
+The =C-z= binding is disabled in the opening sections of this document.
+It minimises the Emacs GUI.  A complete waste of an extremely valuable
+key binding!
+
+#+begin_src emacs-lisp
+(use-package goto-last-change
+  :ensure
+  :bind ("C-z" . goto-last-change))
+#+end_src
+
 * Directory, buffer, window management
   :PROPERTIES:
   :CUSTOM_ID: h:402cb0db-1e93-4b1f-8f6d-e17b4409fb86
@@ -7991,627 +8483,232 @@ modeline and/or the cursor's shape.
   (setq auto-dim-other-buffers-dim-on-focus-out t))
 #+end_src
 
-** Language settings for prose and code
-   :PROPERTIES:
-   :CUSTOM_ID: h:8fc1f9ca-f5ae-407a-b721-aab414ca657b
-   :END:
-
-This section is all about configurations and/or packages that deal with
-natural or programming language enhancements.
-
-*** Line length (column count)
+*** Outline mode, outline minor mode, and extras
     :PROPERTIES:
-    :CUSTOM_ID: h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c
+    :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
     :END:
 
-The column count is set to 72.  The standard line length is 80
-characters, so having it at something less allows for such things as
-quoting plain text, indenting, etc.  =git= commit messages also make good
-use of this method.  The column count is used by =auto-fill-mode= and
-similar tools (or when manually invoking text formatting with
-=fill-paragraph= or equivalent---normally bound to =M-q=).
+The =outline= library defines a major mode (=outline-mode=) that is similar
+to =org-mode= in that it consists of headings which can be expanded or
+contracted individually or as a group.  It is meant to work on plain
+text files, or be leveraged by other packages, that need to have some
+structure and the accompanying benefits of this mode.  In practice,
+however, I never found a dedicated use for this major mode that would
+justify it over the more featureful Org.
+
+Where the =outline= library truly shines is in the minor mode it defines
+(=outline-minor-mode=), which provides the familiar structured,
+heading-folding facilities in other major modes, such as =emacs-lisp-mode=
+and =markdown-mode= (note: it may also work with other programming modes,
+though I am not a programmer so I cannot really test it).  With some
+careful tweaks you can continue to work on your code while also
+benefitting from a more effective means of organising and reviewing what
+you have.
+
+In practice, to make an outline for Elisp buffers, you need to start a
+comment line /without leading spaces/ and make it at least three comment
+delimiters long (=;;;=).  That is considered a heading level 1.  Every
+extra delimiter will increase heading levels accordingly.  Markdown
+headings should be recognised right away.
+
+Now on to my configurations:
+
++ The built-in =foldout= library provides two key functions for zooming in
+  and out of trees.  This is the same as narrowing to a subtree, while
+  also preserving whatever folding may already exist.  The same could be
+  done with standard narrowing commands, but I am keeping this for the
+  time being.
+
++ The =bicycle= package by Jonas Bernoulli provides the cyclic folding
+  behaviour of expanding a tree, its children, their contents, and then
+  contracting everything at once.  Same principle as with Org.
+
++ The =outline-minor-faces= package, also by Jonas, will apply colouration
+  to the headings produced by =outline-minor-mode=.  These inherit from
+  =outline-mode= (they are configured to look the same as the ones of Org
+  in my Modus themes---see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][relevant section]]).
+
++ My =imenu= hacks greatly expand the index so that it includes every code
+  point in the buffer as well as all =outline-mode= headings.  Put simply,
+  this is excellent news because we can now use the full power of my
+  [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][configurations for Imenu]] to navigate to practically every point of
+  interest in the buffer.  Sublime!
+
+For the now-deprecated =defhydra=, refer to my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].  I
+am still not sure what my niche is for those, but let's just say that I
+am not convinced they offer an upgrade over what I include here with
+bespoke keymaps, a dedicated minor mode, etc.
+
+Also watch my [[https://protesilaos.com/codelog/2020-07-20-emacs-outline-imenu/][video demo of outline-minor-mode and imenu]] (2020-07-20).
 
 #+begin_src emacs-lisp
-(use-package emacs
+(use-package outline
+  :diminish outline-minor-mode
   :config
-  (setq-default fill-column 72)
-  :hook (after-init-hook . column-number-mode))
-#+end_src
-
-*** Paragraphs and fill-mode
-    :PROPERTIES:
-    :CUSTOM_ID: h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3
-    :END:
-
-Let us first configure how paragraphs should be treated.  I find that a
-double space is the best way to delimit sentences in source form.  There
-is no worry that this will be shown on a website or rendered version of
-a document, because processors know how to handle spacing.  We do this
-to make things easier to tell apart, but also to render unambiguous
-commands like =forward-sentence=.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq sentence-end-double-space t)
-  (setq colon-double-space nil)
-  (setq use-hard-newlines nil)
-  (setq sentence-end-without-period nil))
-#+end_src
-
-Now we need to make sure we run the minor mode that keeps paragraphs
-within the column [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][limit I prefer]]: you can always do it manually for the
-current paragraph or the active region with =fill-paragraph=, bound by
-default to =M-q=.
-
-By targeting =text-mode= we also affect every major mode derived from it,
-which means that we correctly do not get this utility in
-programming-related modes (in principle, those come from =prog-mode=).
-The adaptive mode improves the handling of things like bulleted and
-numbered lists, where it recognises the text's prefix and tries to align
-to it rather than the absolute beginning of the line.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :diminish auto-fill-function
-  :config
-  (setq adaptive-fill-mode t)
-
-  (defun prot/unfill-region-or-paragraph (&optional region)
-    "Unfill paragraph or, when active, the region.
-Join all lines in a region, if active, while respecting any empty
-lines (so multiple paragraphs are not joined, just unfilled).  If
-no region is active, operate on the paragraph.  The idea is to
-produce the opposite effect of both `fill-paragraph' and
-`fill-region'."
-    (interactive)
-    (let ((fill-column most-positive-fixnum))
-      (if (use-region-p)
-          (fill-region (region-beginning) (region-end))
-        (fill-paragraph nil region))))
-
-  :hook (text-mode-hook . (lambda ()
-                            (turn-on-auto-fill)))
-  :bind ("M-Q" . prot/unfill-region-or-paragraph))
-#+end_src
-
-*** Recognise subwords
-    :PROPERTIES:
-    :CUSTOM_ID: h:899cff89-a517-41d5-8c55-b91c6aba8c9d
-    :END:
-
-It is better you do =C-h f subword-mode=.  Basically, this alters the
-way Emacs understands word boundaries.  So, /camelCaseWords/ are
-exposed as their constituents rather than one long word, meaning that
-motions will behave accordingly.
-
-#+begin_src emacs-lisp
-(use-package subword
-  :diminish
-  :hook (prog-mode-hook . subword-mode))
-#+end_src
-
-*** Comment lines, regions, boxes, etc.
-    :PROPERTIES:
-    :CUSTOM_ID: h:fa56241c-6840-4a39-8f59-18460d37fc69
-    :END:
-
-Just some basic configurations for commenting structured text.  This is
-mostly a placeholder for potentially more targeted and detailed settings
-that would involve per-mode hooks.
-
-The purpose of my reviewed key bindings is to make them more consistent.
-Helps with mnemonics.  They also are more ergonomic.  To this end, I
-have the following:
-
-+ The standard commenting function is now bound to the simple =C-;=.
-  This runs a "do what I meant" function I have defined, whose detailed
-  documentation can be read below.
-+ =C-:= (=C-S-;=) will kill the comment on the current line.  This is
-  particularly helpful when the comment follows text you would like to
-  keep.  The operation can be performed regardless of where the point is
-  on the line.  *Some modes disable this behaviour* (e.g. trying it on
-  source code inside of org-mode—for those cases, focus the block with
-  =C-c '=).
-+ The =M-;= will just append a comment to the line, rather than the
-  default =comment-dwim=.
-
-Note that =C-;= is occupied by some =flyspell= command that I have no
-use for (disabled in the relevant package declaration).
-
-Lastly, use =M-j= (alias =C-M-j=) when you want to continue an existing
-comment on a new line with respect for the current indentation.  If you
-are not inside of a comment, this will just create an indentation-aware
-new line.
-
-#+begin_src emacs-lisp
-(use-package newcomment
-  :config
-  (setq comment-empty-lines t)
-  (setq comment-fill-column nil)
-  (setq comment-multi-line t)
-  (setq comment-style 'multi-line)
-
-  (defun prot/comment-dwim (&optional arg)
-    "Alternative to `comment-dwim': offers a simple wrapper
-around `comment-line' and `comment-dwim'.
-
-If the region is active, then toggle the comment status of the
-region or, if the major mode defines as much, of all the lines
-implied by the region boundaries.
-
-Else toggle the comment status of the line at point."
-    (interactive "*P")
-    (if (use-region-p)
-        (comment-dwim arg)
-      (save-excursion
-        (comment-line arg))))
-
-  :bind (("C-;" . prot/comment-dwim)
-         ("C-:" . comment-kill)
-         ("M-;" . comment-indent)
-         ("C-x C-;" . comment-box)))
-#+end_src
-
-*** Configure 'electric' behaviour
-    :PROPERTIES:
-    :CUSTOM_ID: h:ed95ef3e-75e6-4e53-b3bc-4aee540fe3d9
-    :END:
-
-Emacs labels as "electric" any behaviour that involves contextual
-auto-insertion of characters.  This is a summary of my settings:
-
-+ Indent automatically.
-+ If =electric-pair-mode= is enabled (which I might do manually), insert
-  quotes and brackets in pairs.  Only do so if there is no alphabetic
-  character after the cursor.
-+ The cryptic numbers in the pairs set, correspond to curly single and
-  double quotes and these =«»=.  The contents of this set are always
-  inserted in pairs, regardless of major mode.
-  + To get those numbers, evaluate =(string-to-char CHAR)= where CHAR is
-    the one you are interested in.  For example, get the literal tab's
-    character with =(string-to-char "\t")=.
-+ While inputting a pair, inserting the closing character will just skip
-  over the existing one, rather than add a new one.  So typing =(= will
-  insert =()= and then typing =)= will just be the same as moving forward
-  one character =C-f=.
-+ Do not skip over whitespace when operating on pairs.  Combined with
-  the above point, this means that a new character will be inserted,
-  rather than be skipped over.  I find this better, because it prevents
-  the point from jumping forward, plus it allows for more natural
-  editing.
-+ The whitespace characters are space (=\s=), tab (=\t=), and newline (=\n=).
-+ The rest concern the conditions for transforming quotes into their
-  curly equivalents.  I keep this disabled, because curly quotes are
-  distinct characters.  It is difficult to search for them.  Just note
-  that on GNU/Linux you can type them directly by hitting the "compose"
-  key and then an angled bracket (=<= or =>=) followed by a quote mark.
-
-#+begin_src emacs-lisp
-(use-package electric
-  :config
-  (setq electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
-  (setq electric-pair-preserve-balance t)
-  (setq electric-pair-pairs
-        '((8216 . 8217)
-          (8220 . 8221)
-          (171 . 187)))
-  (setq electric-pair-skip-self 'electric-pair-default-skip-self)
-  (setq electric-pair-skip-whitespace nil)
-  (setq electric-pair-skip-whitespace-chars
-        '(9
-          10
-          32))
-  (setq electric-quote-context-sensitive t)
-  (setq electric-quote-paragraph t)
-  (setq electric-quote-string nil)
-  (setq electric-quote-replace-double t)
-  :hook (after-init-hook . (lambda ()
-                             (electric-indent-mode 1)
-                             (electric-pair-mode -1)
-                             (electric-quote-mode -1))))
-#+end_src
-
-*** Parentheses (show-paren-mode)
-    :PROPERTIES:
-    :CUSTOM_ID: h:3d374354-843f-4efa-aa38-1ba2c9ccc14c
-    :END:
-
-Configure the mode that highlights matching delimiters or parentheses.
-I consider this of utmost importance when working with languages such as
-elisp.
-
-Summary of what these do:
-
-+ Activate the mode upon startup.
-+ Show the matching delimiter/parenthesis if on screen, else show
-  nothing.  It is possible to highlight the expression enclosed by the
-  delimiters, by using either =mixed= or =expression=.  The latter always
-  highlights the entire balanced expression, while the former will only
-  do so if the matching delimiter is off screen.
-+ Highlight parentheses even if the point is in their vicinity.  This
-  means the beginning or end of the line, with space in between.
-+ Do not highlight a match when the point is on the inside of the
-  parenthesis.
-
-#+begin_src emacs-lisp
-(use-package paren
-  :config
-  (setq show-paren-style 'parenthesis)
-  (setq show-paren-when-point-in-periphery t)
-  (setq show-paren-when-point-inside-paren nil)
-  :hook (after-init-hook . show-paren-mode))
-#+end_src
-
-*** Tabs, indentation, and the TAB key
-    :PROPERTIES:
-    :CUSTOM_ID: h:d51d37df-4e58-4e0b-85a1-019ceda342f6
-    :END:
-
-I believe tabs, in the sense of inserting the tab character, are best
-suited for indentation.  While spaces are superior at precisely aligning
-text.  However, I understand that elisp uses its own approach, which I
-do not want to interfere with.  Also, Emacs tends to perform alignments
-by mixing tabs with spaces, which /can actually lead to misalignments/
-depending on certain variables such as the size of the tab.  As such, I
-am disabling tabs by default.
-
-If there ever is a need to use different settings in other modes, we can
-customise them via hooks.  This is not an issue I have encountered yet
-and am therefore refraining from solving a problem that does not affect
-me.
-
-Note that =tab-always-indent= will first do indentation and then try to
-complete whatever you have typed in.  I control how completion works for
-that particular function in my [[#h:98876022-57cc-40de-936e-4ee42cefd69a][in-buffer completions]] section.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq-default tab-always-indent 'complete)
-  (setq-default tab-width 4)
-  (setq-default indent-tabs-mode nil))
-#+end_src
-
-*** Flyspell (spell check)
-    :PROPERTIES:
-    :CUSTOM_ID: h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c
-    :END:
-
-I need spell checking mostly for English, though I also install
-dictionaries for Greek, French, and Spanish.  These are external to
-Emacs and are provided by the =aspell= library.
-
-In previous versions of this section I had configurations that would
-automate spell checking.  It worked but was rather slow.  Upon further
-inspection, I realised that I seldom need to work in mixed language
-circumstances.  Moreover, I now understand that I do not need to have
-spell checking always on.  It can be activated manually, with the
-=flyspell= functions defined in the =:commands= segment below or with my
-=prot/flyspell-dwim= for the active region.
-
-Also bear in mind that the key binding =C-;= that Flyspell uses by default
-is disabled because I re-purpose that for a faster version of =C-x C-;=
-(much more useful for my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
-
-#+begin_src emacs-lisp
-(use-package flyspell
-  :commands (ispell-change-dictionary
-             ispell-word
-             flyspell-buffer
-             flyspell-mode
-             flyspell-region)
-  :config
-  (setq flyspell-issue-message-flag nil)
-  (setq flyspell-issue-welcome-flag nil)
-  (setq ispell-program-name "aspell")
-  (setq ispell-dictionary "en_GB")
-
-  (defvar prot/ispell-dictionaries
-    '(("English" . "en")
-      ("Ελληνικά" . "el")
-      ("Français" . "fr")
-      ("Espanõl" . "es"))
-    "Alist of dictionaries I may use.
-It is used by `prot/ispell-dictionaries-complete'.")
-
-  (defun prot/ispell-dictionaries-complete ()
-    "Select an item from `prot/ispell-dictionaries'."
-    (interactive)
-    (let* ((dicts (mapcar #'car prot/ispell-dictionaries))
-           (choice (completing-read "Select dictionary: " dicts nil t))
-           (key (cdr (assoc `,choice prot/ispell-dictionaries))))
-      (ispell-change-dictionary key)
-      (message "Switched to %s" key)))
-
-  (defun prot/flyspell-dwim ()
-    "Spell check region or select dictionary.
-
-Use `flyspell-region' on the active region, else invoke
-`prot/ispell-dictionaries-complete'."
-    (interactive)
-    (let ((beg (region-beginning))
-          (end (region-end)))
-      (if (use-region-p)
-          (flyspell-region beg end)
-        (prot/ispell-dictionaries-complete))))
-
-  :bind (("M-$" . prot/flyspell-dwim)
-         ("C-M-$" . prot/ispell-dictionaries-complete)
-         :map flyspell-mode-map
-         ("C-;" . nil)))
-#+end_src
-
-*** Code linters
-    :PROPERTIES:
-    :CUSTOM_ID: h:20448ad8-9371-4e00-b88b-6b93f4c654d9
-    :END:
-
-There are several code linting tools in the Emacs milieu.  The two I
-configure here are front-ends to external programs for code analysis.
-
-While it is possible to run the linter globally or through hooks, I
-prefer to only do so manually on a per-buffer basis.  There are many
-cases where I am merely browsing code, where whatever diagnostics are of
-no import to the task at hand.
-
-With regard to the =defhydra= calls in this section, remember to refer to
-my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
-
-**** Flymake
-    :PROPERTIES:
-    :CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
-    :END:
-
-This is a built-in linter interface that can be extended to support any
-programming language.  I do, however, feel that the alternative Flycheck
-(see below) offers a more refined experience, though I still am hesitant
-to reach any conclusions.
-
-#+begin_src emacs-lisp
-(use-package flymake
-  :defer
-  :commands flymake-mode
-  :config
-  (setq flymake-fringe-indicator-position 'left-fringe)
-  (setq flymake-suppress-zero-counters t)
-  (setq flymake-start-on-flymake-mode t)
-  (setq flymake-no-changes-timeout nil)
-  (setq flymake-start-on-save-buffer t)
-  (setq flymake-proc-compilation-prevents-syntax-check t)
-  (setq flymake-wrap-around nil)
-
-  (defhydra prot/hydra-flymake (:color pink :hint nil)
-    "
-Actions
--------
-_n_: Next error
-_p_: Previous error
-_d_: Diagnostics' buffer
-"
-    ("d" flymake-show-diagnostics-buffer)
-    ("n" flymake-goto-next-error)
-    ("p" flymake-goto-prev-error)
-    ("q" nil "cancel" :color blue))
-  :bind (:map flymake-mode-map
-              ("C-c h l" . prot/hydra-flymake/body)))
-#+end_src
-
-**** Flycheck
-     :PROPERTIES:
-     :CUSTOM_ID: h:75069828-4b56-4341-8797-2d5a305c65e2
-     :END:
-
-This linting interface has excellent coverage for a broad range of
-languages, while there are lots of extensions to it to further broaden
-its scope.
-
-Flycheck has some subtle visual and functional advantages over the
-built-in Flymake (see above), though the most obvious one is the overall
-activity around its development.
-
-#+begin_src emacs-lisp
-(use-package flycheck
-  :ensure
-  :defer
-  :commands flycheck-mode
-  :config
-  (setq flycheck-check-syntax-automatically
-        '(save mode-enabled))
-
-  (defun prot/flycheck-list-errors-toggle ()
-    "Toggle the display of `flycheck-mode' diagnostics' buffer."
-    (interactive)
-    (let ((diagnostics (get-buffer-window flycheck-error-list-buffer)))
-      (unless flycheck-mode
-        (user-error "Flycheck mode not enabled"))
-      (if diagnostics
-          (delete-window diagnostics)
-      (flycheck-list-errors))))
-
-  (defhydra prot/hydra-flycheck (:color pink :hint nil)
-    "
-   ^Actions^             ^Helpers^
----^^--------------------^^-----------------
-_n_: Next error       _c_: Check buffer
-_p_: Previous error   _l_: List diagnostics
-_e_: Explain error    _x_: Disable checker
-_d_: Display error
-"
-    ("l" prot/flycheck-list-errors-toggle)
-    ("c" flycheck-buffer)
-    ("n" flycheck-next-error)
-    ("p" flycheck-previous-error)
-    ("e" flycheck-explain-error-at-point)
-    ("d" flycheck-display-error-at-point)
-    ("x" flycheck-disable-checker :color blue)
-    ("q" nil "cancel" :color blue))
-  :bind (:map flycheck-mode-map
-              ("C-c h l" . prot/hydra-flycheck/body)))
-#+end_src
-
-***** Flycheck mode line indicator
-      :PROPERTIES:
-      :CUSTOM_ID: h:93b2aeed-d46a-4737-9d96-d8e5aedf8a67
-      :END:
-
-While Flymake has a good mode line status area, Flycheck's leaves
-something to be desired.  This package bridges that gap.  It offers a
-visual experience that involves both text and purpose-specific faces
-(set of styles).
-
-By default, the status feedback in =flycheck-indicator-status-icons=
-employs descriptive terms.  It can, nonetheless, be configured to show
-characters instead of long strings (which I guess opens the sluicegate
-for the flow of iconography, emojis, unicode symbols…).  I prefer to
-reduce verbosity using common text characters, at the potential cost of
-obscuring the meaning of some of the less common types of feedback (what
-does "suspicious" mean in this context, anyway?).
-
-I also tweak the characters that accompany all three classes of report
-(notes, warnings, errors) in an attempt to distinguish between them.
-
-If you want to be creative with your choice of symbol, note that while
-trying to complete a description through =C-x 8 RET=, you can press =?= to
-list all candidates in the "Completions" buffer with a preview next to
-each entry.  Neat!
-
-#+begin_src emacs-lisp
-(use-package flycheck-indicator
-  :ensure
-  :after flycheck
-  :config
-  (setq flycheck-indicator-icon-error (string-to-char "!"))
-  (setq flycheck-indicator-icon-info (string-to-char "·"))
-  (setq flycheck-indicator-icon-warning (string-to-char "*"))
-  (setq flycheck-indicator-status-icons
-        '((not-checked "%")
-          (no-checker "-")
-          (running "&")
-          (errored "!")
-          (finished "=")
-          (interrupted "#")
-          (suspicious "?")))
-  :hook (flycheck-mode-hook . flycheck-indicator-mode))
-#+end_src
-
-**** Elisp packaging requirements
-     :PROPERTIES:
-     :CUSTOM_ID: h:d03342da-3035-409f-a5e7-5df1e614d507
-     :END:
-
-With these in place we can perform checks that pertain to Emacs lisp
-packaging.  I use it for my themes but also for any elisp library I may
-want to send patches to.
-
-The two packages here provide the necessary functionality for both of
-the linter front-ends configured above.
-
-#+begin_src emacs-lisp
-(use-package flycheck-package
-  :ensure
-  :after flycheck
-  :config
-  (flycheck-package-setup))
-
-(use-package package-lint-flymake
-  :ensure
-  :after flymake
-  :config
-  (package-lint-flymake-setup))
-#+end_src
-
-*** Eldoc (elisp live documentation feedback)
-    :PROPERTIES:
-    :CUSTOM_ID: h:d0f76937-4f54-401c-aae8-ffadf8697357
-    :END:
-
-When editing elisp, this mode will display useful information about the
-construct at point in the echo area.  For functions it will display the
-list of arguments they accept.  While it will show the the first
-sentence of a variable's documentation string.
-
-At first, I dismissed this package.  Upon closer inspection, it does
-offer a lightweight complementary facility to that of the standard help
-commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
-
-#+begin_src emacs-lisp
-(use-package eldoc
-  :defer
-  :diminish
-  :config
-  (global-eldoc-mode 1))
-#+end_src
-
-*** Support for various major modes
-    :PROPERTIES:
-    :CUSTOM_ID: h:485bb253-208a-4a0a-99e3-ae1a205e3b7b
-    :END:
-
-These provide syntax highlighting and additional features for
-environments that are not already supported by Emacs.
-
-**** Arch Linux package recipes
-     :PROPERTIES:
-     :CUSTOM_ID: h:7fa5b86b-3fc5-4118-8d56-aacf4c0fffb8
-     :END:
-
-If you are on Arch or derivatives and check PKGBUILD files, this is for
-you.
-
-#+begin_src emacs-lisp
-(use-package pkgbuild-mode
-  :ensure
-  :mode ("PKGBUILD" . pkgbuild-mode))
-#+end_src
-
-**** Markdown
-     :PROPERTIES:
-     :CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
-     :END:
-
-I edit lots of Markdown files.  This makes things easier.
-
-#+begin_src emacs-lisp
-(use-package markdown-mode
-  :ensure
-  :config
-  ;; Allows for fenced block focus with C-c ' (same as Org blocks).
-  (use-package edit-indirect
+  ;;; NOTE change this to provide support for your major mode, in case
+  ;;; it is missing.
+  ;; (setq outline-regexp "[*\^L]+")
+
+  (use-package outline-minor-faces
     :ensure
-    :defer)
-  (setq markdown-fontify-code-blocks-natively t)
-  :mode ("\\.md$" . markdown-mode))
+    :hook
+    (outline-minor-mode-hook . outline-minor-faces-add-font-lock-keywords))
+
+  (use-package foldout)
+  (use-package bicycle :ensure)
+
+  ;;; NOTE this could also be used to auto-reveal a fold, though I find
+  ;;; it a bit annoying when things like that happen automatically.
+  ;; (use-package reveal :diminish)
+
+  ;;; NOTE DEPRECATED I am keeping this older piece for reference, but I
+  ;;; am discontinuing it: I prefer the approach further below.
+  ;;   (defhydra prot/hydra-outline (:idle nil :color pink
+  ;;                                       :hint nil :post (deactivate-mark))
+  ;;     "
+  ;;    ^Motions^                            ^Show^
+  ;; ---^------------------------------------^----------------
+  ;; _n_: Next heading                    _a_: All
+  ;; _p_: Prev heading                    _e_: Entry
+  ;; _f_: Fore same level               _TAB_: Cycle
+  ;; _b_: Back same level   _<S-iso-lefttab>_: Cycle global
+  ;; "
+  ;;     ("n" outline-next-visible-heading)
+  ;;     ("p" outline-previous-visible-heading)
+  ;;     ("f" outline-forward-same-level)
+  ;;     ("b" outline-backward-same-level)
+  ;;     ("a" outline-show-all)
+  ;;     ("e" outline-show-entry)
+  ;;     ("TAB" bicycle-cycle)
+  ;;     ("<S-iso-lefttab>" bicycle-cycle-global)
+  ;;     ("q" nil "cancel" :color blue))
+
+  (defun prot/outline-hide-all ()
+    "Hide all `outline-mode' subtrees."
+    (interactive)
+    (outline-map-region 'outline-hide-subtree (point-min) (point-max)))
+
+  (defun prot/outline-down-heading ()
+    "Move to the next `outline-mode' subtree."
+    (interactive)
+    ;; Hacky, but it kinda works.
+    (outline-up-heading 1 t)
+    (outline-forward-same-level 1))
+
+  (defun prot/bicycle-cycle-tab-dwim ()
+    "Convenience wrapper for TAB key in `outline-mode'."
+    (interactive)
+    (if (outline-on-heading-p)
+        (bicycle-cycle)
+      (indent-for-tab-command)))
+
+  (defvar prot/outline-minor-mode-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "M-n") 'outline-next-visible-heading)
+      (define-key map (kbd "M-p") 'outline-previous-visible-heading)
+      (define-key map (kbd "C-c C-n") 'outline-next-visible-heading)
+      (define-key map (kbd "C-c C-p") 'outline-previous-visible-heading)
+      (define-key map (kbd "C-c C-f") 'outline-forward-same-level)
+      (define-key map (kbd "C-c C-b") 'outline-backward-same-level)
+      (define-key map (kbd "C-c C-a") 'outline-show-all)
+      (define-key map (kbd "C-c C-q") 'prot/outline-hide-all)
+      (define-key map (kbd "C-c C-u") 'outline-up-heading)
+      (define-key map (kbd "C-c C-d") 'prot/outline-down-heading)
+      (define-key map (kbd "C-c C-z") 'foldout-zoom-subtree)
+      (define-key map (kbd "C-c C-x") 'foldout-exit-fold)
+      (define-key map (kbd "<tab>") 'prot/bicycle-cycle-tab-dwim)
+      (define-key map (kbd "<C-tab>") 'bicycle-cycle)
+      (define-key map (kbd "<S-iso-lefttab>") 'bicycle-cycle-global)
+      map)
+    "Key map for `prot/outline-minor-mode'.
+The idea is to make `outline-minor-mode' keys a bit easier to
+work with.")
+
+  (defvar prot/outline-minor-mode-enter-hook nil
+    "Hook that runs when `prot/outline-minor-mode' is enabled.")
+
+  (defvar prot/outline-minor-mode-exit-hook nil
+    "Hook that runs when `prot/outline-minor-mode' is disabled.")
+
+  ;; `imenu' integration with `outline-minor-mode'
+  (defun prot/outline-imenu-heading ()
+    "Move to the previous `outline-mode' heading.
+This is because `imenu' produces its index by moving backward
+from the bottom."
+    (outline-previous-heading))
+
+  (defun prot/outline-imenu-title ()
+    "Return the text of the `outline-mode' heading."
+    (interactive)
+    ;; NOTE This may be too simplistic and error-prone, though I have
+    ;; not ran into any problems.
+    (buffer-substring (point-at-bol)
+                      (point-at-eol)))
+
+  (defun prot/outline-imenu-setup ()
+    "`imenu' bindings for the local `outline-mode' buffer.
+To be used in tandem with `prot/outline-minor-mode-enter-hook'."
+    (setq-local imenu-prev-index-position-function
+                'prot/outline-imenu-heading)
+    (setq-local imenu-extract-index-name-function
+                'prot/outline-imenu-title))
+
+  (defun prot/outline-imenu-restore ()
+    "Restore `imenu' list when `prot/outline-minor-mode' is off.
+The new index should be the same as the one you would get in a
+standard invocation of `imenu'.
+
+To be used in `prot/outline-minor-mode-exit-hook'."
+    (dolist (var '(imenu-prev-index-position-function
+                   imenu-extract-index-name-function))
+      (kill-local-variable var))
+    (save-excursion
+      (imenu-default-create-index-function)
+      (message "Refreshed `imenu' index")))
+
+  ;; XXX This could prove problematic when more than one major modes are
+  ;; active, such as when you use C-c ' in an Org block.
+  (defun prot/outline-minor-refontify ()
+    "Re-enable the current buffer's major mode.
+Add this to `prot/outline-minor-mode-exit-hook'."
+    (let ((mode major-mode))
+      (when (or (derived-mode-p 'text-mode)
+                (derived-mode-p 'prog-mode))
+        (funcall mode)
+        (message "Re-enabled %s" mode))))
+
+  (define-minor-mode prot/outline-minor-mode
+    "Toggles `outline-minor-mode' and extras.
+
+\\{prot/outline-minor-mode-map}"
+    :init-value nil
+    :lighter " =┆"
+    :global nil
+    :keymap prot/outline-minor-mode-map
+    (if prot/outline-minor-mode
+        (progn
+          (when (eq major-mode 'org-mode)
+            (user-error "Don't use `outline-minor-mode' with Org"))
+          (outline-minor-mode 1)
+          (run-hooks 'prot/outline-minor-mode-enter-hook))
+      (outline-minor-mode -1)
+      (run-hooks 'prot/outline-minor-mode-exit-hook)))
+
+  :hook ((prot/outline-minor-mode-enter-hook . prot/outline-imenu-setup)
+         (prot/outline-minor-mode-exit-hook . prot/outline-imenu-restore)
+         (prot/outline-minor-mode-exit-hook . prot/outline-minor-refontify))
+  ;; key replaces `menu-bar-open', which I never use
+  :bind ("<f10>" . prot/outline-minor-mode))
 #+end_src
 
-**** YAML
+**** TODO Cleanly restore all major modes for outline-mode re-fontification :emacs:
      :PROPERTIES:
-     :CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
+     :CUSTOM_ID: h:a636f015-6eb7-4978-999e-c6f90e08894d
      :END:
-
-This adds support for YAML files.
-
-#+begin_src emacs-lisp
-(use-package yaml-mode
-  :ensure
-  :mode (("\\.yml$" . yaml-mode)
-         ("\\.yaml$" . yaml-mode)))
-#+end_src
-
-**** CSS
+**** TODO How to re-fontify outline-mode without re-running the major mode? :emacs:
      :PROPERTIES:
-     :CUSTOM_ID: h:ec10bfe6-5340-481c-9de2-3e346868241b
+     :CUSTOM_ID: h:8c50a95d-afc0-49a9-ac7c-5e53c8819a43
      :END:
-
-This is the built-in mode for working with CSS and SCSS.  I just want it
-to not apply previews to colour references.  If I ever need that, there
-is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant section]]).
-
-#+begin_src emacs-lisp
-(use-package css-mode
-  :config
-  (setq css-fontify-colors nil))
-#+end_src
 
 ** Registers
    :PROPERTIES:
@@ -8882,726 +8979,6 @@ _p_: Prev annotation     _i_: Integrate
          ("<C-S-f9>" . annotate-goto-previous-annotation)
          :map annotate-mode-map
          ("C-c h a" . prot/hydra-annotate/body)))
-#+end_src
-
-** Outline mode, outline minor mode, and extras
-   :PROPERTIES:
-   :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
-   :END:
-
-The =outline= library defines a major mode (=outline-mode=) that is similar
-to =org-mode= in that it consists of headings which can be expanded or
-contracted individually or as a group.  It is meant to work on plain
-text files, or be leveraged by other packages, that need to have some
-structure and the accompanying benefits of this mode.  In practice,
-however, I never found a dedicated use for this major mode that would
-justify it over the more featureful Org.
-
-Where the =outline= library truly shines is in the minor mode it defines
-(=outline-minor-mode=), which provides the familiar structured,
-heading-folding facilities in other major modes, such as =emacs-lisp-mode=
-and =markdown-mode= (note: it may also work with other programming modes,
-though I am not a programmer so I cannot really test it).  With some
-careful tweaks you can continue to work on your code while also
-benefitting from a more effective means of organising and reviewing what
-you have.
-
-In practice, to make an outline for Elisp buffers, you need to start a
-comment line /without leading spaces/ and make it at least three comment
-delimiters long (=;;;=).  That is considered a heading level 1.  Every
-extra delimiter will increase heading levels accordingly.  Markdown
-headings should be recognised right away.
-
-Now on to my configurations:
-
-+ The built-in =foldout= library provides two key functions for zooming in
-  and out of trees.  This is the same as narrowing to a subtree, while
-  also preserving whatever folding may already exist.  The same could be
-  done with standard narrowing commands, but I am keeping this for the
-  time being.
-
-+ The =bicycle= package by Jonas Bernoulli provides the cyclic folding
-  behaviour of expanding a tree, its children, their contents, and then
-  contracting everything at once.  Same principle as with Org.
-
-+ The =outline-minor-faces= package, also by Jonas, will apply colouration
-  to the headings produced by =outline-minor-mode=.  These inherit from
-  =outline-mode= (they are configured to look the same as the ones of Org
-  in my Modus themes---see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][relevant section]]).
-
-+ My =imenu= hacks greatly expand the index so that it includes every code
-  point in the buffer as well as all =outline-mode= headings.  Put simply,
-  this is excellent news because we can now use the full power of my
-  [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][configurations for Imenu]] to navigate to practically every point of
-  interest in the buffer.  Sublime!
-
-For the now-deprecated =defhydra=, refer to my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].  I
-am still not sure what my niche is for those, but let's just say that I
-am not convinced they offer an upgrade over what I include here with
-bespoke keymaps, a dedicated minor mode, etc.
-
-Also watch my [[https://protesilaos.com/codelog/2020-07-20-emacs-outline-imenu/][video demo of outline-minor-mode and imenu]] (2020-07-20).
-
-#+begin_src emacs-lisp
-(use-package outline
-  :diminish outline-minor-mode
-  :config
-  ;;; NOTE change this to provide support for your major mode, in case
-  ;;; it is missing.
-  ;; (setq outline-regexp "[*\^L]+")
-
-  (use-package outline-minor-faces
-    :ensure
-    :hook
-    (outline-minor-mode-hook . outline-minor-faces-add-font-lock-keywords))
-
-  (use-package foldout)
-  (use-package bicycle :ensure)
-
-  ;;; NOTE this could also be used to auto-reveal a fold, though I find
-  ;;; it a bit annoying when things like that happen automatically.
-  ;; (use-package reveal :diminish)
-
-  ;;; NOTE DEPRECATED I am keeping this older piece for reference, but I
-  ;;; am discontinuing it: I prefer the approach further below.
-  ;;   (defhydra prot/hydra-outline (:idle nil :color pink
-  ;;                                       :hint nil :post (deactivate-mark))
-  ;;     "
-  ;;    ^Motions^                            ^Show^
-  ;; ---^------------------------------------^----------------
-  ;; _n_: Next heading                    _a_: All
-  ;; _p_: Prev heading                    _e_: Entry
-  ;; _f_: Fore same level               _TAB_: Cycle
-  ;; _b_: Back same level   _<S-iso-lefttab>_: Cycle global
-  ;; "
-  ;;     ("n" outline-next-visible-heading)
-  ;;     ("p" outline-previous-visible-heading)
-  ;;     ("f" outline-forward-same-level)
-  ;;     ("b" outline-backward-same-level)
-  ;;     ("a" outline-show-all)
-  ;;     ("e" outline-show-entry)
-  ;;     ("TAB" bicycle-cycle)
-  ;;     ("<S-iso-lefttab>" bicycle-cycle-global)
-  ;;     ("q" nil "cancel" :color blue))
-
-  (defun prot/outline-hide-all ()
-    "Hide all `outline-mode' subtrees."
-    (interactive)
-    (outline-map-region 'outline-hide-subtree (point-min) (point-max)))
-
-  (defun prot/outline-down-heading ()
-    "Move to the next `outline-mode' subtree."
-    (interactive)
-    ;; Hacky, but it kinda works.
-    (outline-up-heading 1 t)
-    (outline-forward-same-level 1))
-
-  (defun prot/bicycle-cycle-tab-dwim ()
-    "Convenience wrapper for TAB key in `outline-mode'."
-    (interactive)
-    (if (outline-on-heading-p)
-        (bicycle-cycle)
-      (indent-for-tab-command)))
-
-  (defvar prot/outline-minor-mode-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "M-n") 'outline-next-visible-heading)
-      (define-key map (kbd "M-p") 'outline-previous-visible-heading)
-      (define-key map (kbd "C-c C-n") 'outline-next-visible-heading)
-      (define-key map (kbd "C-c C-p") 'outline-previous-visible-heading)
-      (define-key map (kbd "C-c C-f") 'outline-forward-same-level)
-      (define-key map (kbd "C-c C-b") 'outline-backward-same-level)
-      (define-key map (kbd "C-c C-a") 'outline-show-all)
-      (define-key map (kbd "C-c C-q") 'prot/outline-hide-all)
-      (define-key map (kbd "C-c C-u") 'outline-up-heading)
-      (define-key map (kbd "C-c C-d") 'prot/outline-down-heading)
-      (define-key map (kbd "C-c C-z") 'foldout-zoom-subtree)
-      (define-key map (kbd "C-c C-x") 'foldout-exit-fold)
-      (define-key map (kbd "<tab>") 'prot/bicycle-cycle-tab-dwim)
-      (define-key map (kbd "<C-tab>") 'bicycle-cycle)
-      (define-key map (kbd "<S-iso-lefttab>") 'bicycle-cycle-global)
-      map)
-    "Key map for `prot/outline-minor-mode'.
-The idea is to make `outline-minor-mode' keys a bit easier to
-work with.")
-
-  (defvar prot/outline-minor-mode-enter-hook nil
-    "Hook that runs when `prot/outline-minor-mode' is enabled.")
-
-  (defvar prot/outline-minor-mode-exit-hook nil
-    "Hook that runs when `prot/outline-minor-mode' is disabled.")
-
-  ;; `imenu' integration with `outline-minor-mode'
-  (defun prot/outline-imenu-heading ()
-    "Move to the previous `outline-mode' heading.
-This is because `imenu' produces its index by moving backward
-from the bottom."
-    (outline-previous-heading))
-
-  (defun prot/outline-imenu-title ()
-    "Return the text of the `outline-mode' heading."
-    (interactive)
-    ;; NOTE This may be too simplistic and error-prone, though I have
-    ;; not ran into any problems.
-    (buffer-substring (point-at-bol)
-                      (point-at-eol)))
-
-  (defun prot/outline-imenu-setup ()
-    "`imenu' bindings for the local `outline-mode' buffer.
-To be used in tandem with `prot/outline-minor-mode-enter-hook'."
-    (setq-local imenu-prev-index-position-function
-                'prot/outline-imenu-heading)
-    (setq-local imenu-extract-index-name-function
-                'prot/outline-imenu-title))
-
-  (defun prot/outline-imenu-restore ()
-    "Restore `imenu' list when `prot/outline-minor-mode' is off.
-The new index should be the same as the one you would get in a
-standard invocation of `imenu'.
-
-To be used in `prot/outline-minor-mode-exit-hook'."
-    (dolist (var '(imenu-prev-index-position-function
-                   imenu-extract-index-name-function))
-      (kill-local-variable var))
-    (save-excursion
-      (imenu-default-create-index-function)
-      (message "Refreshed `imenu' index")))
-
-  ;; XXX This could prove problematic when more than one major modes are
-  ;; active, such as when you use C-c ' in an Org block.
-  (defun prot/outline-minor-refontify ()
-    "Re-enable the current buffer's major mode.
-Add this to `prot/outline-minor-mode-exit-hook'."
-    (let ((mode major-mode))
-      (when (or (derived-mode-p 'text-mode)
-                (derived-mode-p 'prog-mode))
-        (funcall mode)
-        (message "Re-enabled %s" mode))))
-
-  (define-minor-mode prot/outline-minor-mode
-    "Toggles `outline-minor-mode' and extras.
-
-\\{prot/outline-minor-mode-map}"
-    :init-value nil
-    :lighter " =┆"
-    :global nil
-    :keymap prot/outline-minor-mode-map
-    (if prot/outline-minor-mode
-        (progn
-          (when (eq major-mode 'org-mode)
-            (user-error "Don't use `outline-minor-mode' with Org"))
-          (outline-minor-mode 1)
-          (run-hooks 'prot/outline-minor-mode-enter-hook))
-      (outline-minor-mode -1)
-      (run-hooks 'prot/outline-minor-mode-exit-hook)))
-
-  :hook ((prot/outline-minor-mode-enter-hook . prot/outline-imenu-setup)
-         (prot/outline-minor-mode-exit-hook . prot/outline-imenu-restore)
-         (prot/outline-minor-mode-exit-hook . prot/outline-minor-refontify))
-  ;; key replaces `menu-bar-open', which I never use
-  :bind ("<f10>" . prot/outline-minor-mode))
-#+end_src
-
-*** TODO Cleanly restore all major modes for outline-mode re-fontification :emacs:
-    :PROPERTIES:
-    :CUSTOM_ID: h:a636f015-6eb7-4978-999e-c6f90e08894d
-    :END:
-*** TODO How to re-fontify outline-mode without re-running the major mode? :emacs:
-    :PROPERTIES:
-    :CUSTOM_ID: h:8c50a95d-afc0-49a9-ac7c-5e53c8819a43
-    :END:
-** Custom movements and motions
-   :PROPERTIES:
-   :CUSTOM_ID: h:9aa933d2-70a9-426a-aeb2-2fa21bc67d97
-   :END:
-
-I generally rely on the default keys to move around (plus my Super-KEY
-additions to economise on some repetitive tasks).  There are, however,
-some motions that are rather cumbersome or too specialised.  While there
-are some commands that are not available at all.  For those cases, I use
-custom functions and/or remapped key bindings, as well as carefully
-considered external packages.
-
-*** General motions or commands in line with simple.el and lisp.el
-    :PROPERTIES:
-    :CUSTOM_ID: h:2442f3bf-3ffb-431d-82d9-8a44954355b1
-    :END:
-
-The subsections provided herein contain small functions that facilitate
-my day-to-day work with Emacs.  They are written by me, unless otherwise
-noted, and typically tweak or extend some built-in functionality.  I
-also use these code blocks to map certain useful built-in functions to
-my preferred key bindings.
-
-The commands are organised per their role.  If you are viewing the
-source version of this document, you can place the point somewhere in
-these opening paragraphs and use =C-x n s= (=org-narrow-to-subtree=) to
-focus on the relevant parts.  Remember that widening always happens with
-=C-x n w= (=widen=).
-
-**** Custom commands for lines
-     :PROPERTIES:
-     :CUSTOM_ID: h:5cfe0052-b825-468c-9765-9002665c7762
-     :END:
-
-The docstrings of my functions here should offer you all the information
-you need.
-
-A couple of extra notes:
-
-+ =delete-blank-lines= is normally mapped to =C-x C-o=, whereas I also bind
-  it to =M-o=, which makes it symmetrical with =open-line= (=C-o=).
-
-+ By default, =M-SPC= (=just-one-space=) will reduce multiple spaces into a
-  single one, while =M-\= (=delete-horizontal-space=) will remove all space
-  at once from point to the end of the line.  Whereas the built-in
-  wrapper of =cycle-spacing= lets us economise on key bindings: a single
-  invocation will leave one space, a second removes all space, while a
-  third consecutive call restores the original state.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (defun prot/new-line-below (&optional arg)
-    "Create an empty line below the current one.
-Move the point to the absolute beginning.  Adapt indentation by
-passing \\[universal-argument].  Also see `prot/new-line-above'."
-    (interactive "P")
-    (end-of-line)
-    (if arg
-        (newline-and-indent)
-      (newline)))
-
-  (defun prot/new-line-above (&optional arg)
-    "Create an empty line above the current one.
-Move the point to the absolute beginning.  Adapt indentation by
-passing \\[universal-argument]."
-    (interactive "P")
-    (let ((indent (if arg arg nil)))
-      (forward-line -1)
-      (prot/new-line-below indent)))
-
-  (defun prot/copy-line-or-region (&optional arg)
-    "Kill-save the current line or active region.
-With \\[universal-argument] duplicate the target instead.  When
-region is active, also apply context-aware indentation while
-duplicating."
-    (interactive "P")
-    (let* ((rbeg (region-beginning))
-           (rend (region-end))
-           (pbol (point-at-bol))
-           (peol (point-at-eol))
-           (indent (if (eq (or rbeg rend) pbol) nil arg)))
-      (if arg
-          (progn
-            (if (use-region-p)
-                (progn
-                  (copy-region-as-kill rbeg rend)
-                  (when (eq (point) rbeg)
-                    (exchange-point-and-mark))
-                  (prot/new-line-below indent))
-              (copy-region-as-kill pbol peol)
-              (prot/new-line-below))
-            (yank))
-        (copy-region-as-kill pbol peol)
-        (message "Current line copied"))))
-
-  (defun prot/yank-replace-line-or-region ()
-    "Replace line or region with latest kill.
-This command can then be followed by the standard
-`yank-pop' (default is bound to \\[yank-pop])."
-    (interactive)
-    (if (use-region-p)
-          (delete-region (region-beginning) (region-end))
-      (delete-region (point-at-bol) (point-at-eol)))
-      (yank))
-
-  (defun prot/multi-line-next ()
-    "Move point 15 lines down."
-    (interactive)
-    (forward-line 15))
-
-  (defun prot/multi-line-prev ()
-    "Move point 15 lines up."
-    (interactive)
-    (forward-line -15))
-
-  (defun prot/kill-line-backward ()
-    "Kill from point to the beginning of the line."
-    (interactive)
-    (kill-line 0))
-
-  :bind (("C-S-w" . prot/copy-line-or-region)
-         ("C-S-y" . prot/yank-replace-line-or-region)
-         ("M-SPC" . cycle-spacing)
-         ("M-o" . delete-blank-lines)   ; alias for C-x C-o
-         ("M-k" . prot/kill-line-backward)
-         ("C-S-n" . prot/multi-line-next)
-         ("C-S-p" . prot/multi-line-prev)
-         ("<C-return>" . prot/new-line-below)
-         ("<C-S-return>" . prot/new-line-above)))
-#+end_src
-
-**** Custom commands for text insertion or manipulation
-     :PROPERTIES:
-     :CUSTOM_ID: h:66dd425b-4827-47eb-ac14-ac672596114d
-     :END:
-
-+ Insert pairs with completion :: With =prot/insert-pair-completion= I
-  solve the problem of having to define a potentially large set of key
-  bindings for the specialised task of inserting a pair of delimiters.
-  Now I define an association list with the pairs I am interested in and
-  let that function do the work.
-
-+ Change case "do what I mean" :: Emacs provides =*-dwim= versions of its
-  commands for changing the casing of a word or a region.  With an
-  active region, they operate on it, else they operate on the word.  I
-  bind them in the keys where you would find the originals (which, in
-  turn, render the region-specific variants redundant).
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  ;; Got those numbers from `string-to-char'
-  (defconst prot/insert-pair-alist
-    '(("' Single quote" . (39 39))           ; ' '
-      ("\" Double quotes" . (34 34))         ; " "
-      ("` Elisp quote" . (96 39))            ; ` '
-      ("‘ Single apostrophe" . (8216 8217))  ; ‘ ’
-      ("“ Double apostrophes" . (8220 8221)) ; “ ”
-      ("( Parentheses" . (40 41))            ; ( )
-      ("{ Curly brackets" . (123 125))       ; { }
-      ("[ Square brackets" . (91 93))        ; [ ]
-      ("< Angled brackets" . (60 62))        ; < >
-      ("« Εισαγωγικά Gr quote" . (171 187))) ; « »
-    "Alist of pairs for use with `prot/insert-pair-completion'.")
-
-  (defun prot/insert-pair-completion (&optional arg)
-    "Insert pair from `prot/insert-pair-alist'."
-    (interactive "P")
-    (let* ((data prot/insert-pair-alist)
-           (chars (mapcar #'car data))
-           (choice (completing-read "Select character: " chars nil t))
-           (left (cadr (assoc choice data)))
-           (right (caddr (assoc choice data))))
-      (insert-pair arg left right)))
-
-  :bind (("C-'" . prot/insert-pair-completion)
-         ("M-'" . prot/insert-pair-completion)
-         ("<C-M-backspace>" . backward-kill-sexp)
-         ("M-c" . capitalize-dwim)
-         ("M-l" . downcase-dwim)        ; "lower" case
-         ("M-u" . upcase-dwim)))
-#+end_src
-
-**** Custom commands for object transposition
-     :PROPERTIES:
-     :CUSTOM_ID: h:b6d349c6-11f5-4c7a-8dda-fc32a76aa5b1
-     :END:
-
-+ Transpose or swap objects :: This is a series of functions that are
-  constructed from the =prot/transpose= macro.  They concern larger text
-  objects: sentences, paragraphs, balanced expressions.  The idea is to
-  do a normal transposition of the text objects they operate on or, when
-  the region is active, to swap the object at mark (region beginning)
-  with the one at point (region end).
-
-+ Transpose or swap words :: Same as with the other "swap" commands.  In
-  addition, this alters =transpose-words= while at the end of line where
-  it will only transpose the last two words before point.  It thus
-  avoids transposing words across lines or paragraphs, which I never
-  want.
-
-+ Transpose characters :: Tweak the way the original command works, so
-  that it /always/ transposes the two characters before point.  This will
-  no longer have the effect of moving the character forward following
-  repeated invocations of the command.  Just a toggle to quickly fix the
-  last typo.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :commands (prot/transpose-chars
-             prot/transpose-lines
-             prot/transpose-paragraphs
-             prot/transpose-sentences
-             prot/transpose-sexps
-             prot/transpose-words)
-  :config
-  (defmacro prot/transpose (name scope &optional doc)
-    "Macro to produce transposition functions.
-NAME is the function's symbol.  SCOPE is the text object to
-operate on.  Optional DOC is the function's docstring.
-
-Transposition over an active region will swap the object at
-mark (region beginning) with the one at point (region end)"
-    `(defun ,name (arg)
-       ,doc
-       (interactive "p")
-       (let ((x (format "%s-%s" "transpose" ,scope)))
-         (if (use-region-p)
-             (funcall (intern x) 0)
-           (funcall (intern x) arg)))))
-
-  (prot/transpose
-   prot/transpose-lines
-   "lines"
-   "Transpose lines or swap over active region.")
-
-  (prot/transpose
-   prot/transpose-paragraphs
-   "paragraphs"
-   "Transpose paragraphs or swap over active region.")
-
-  (prot/transpose
-   prot/transpose-sentences
-   "sentences"
-   "Transpose sentences or swap over active region.")
-
-  (prot/transpose
-   prot/transpose-sexps
-   "sexps"
-   "Transpose balanced expressions or swap over active region.")
-
-  (defun prot/transpose-chars ()
-    "Always transposes the two characters before point.
-There is no 'dragging' the character forward.  This is the
-behaviour of `transpose-chars' when point is at end-of-line."
-    (interactive)
-    (transpose-chars -1)
-    (forward-char))
-
-  (defun prot/transpose-words (arg)
-    "Transpose words.
-
-If region is active, swap the word at mark (region beginning)
-with the one at point (region end).
-
-Otherwise, and while inside a sentence, this behaves as the
-built-in `transpose-words', dragging forward the word behind the
-point.  The difference lies in its behaviour at the end of a
-line, where it will always transpose the word at point with the
-one behind it (effectively the last two words).
-
-This addresses two patterns of behaviour I dislike in the
-original command:
-
-1. When a line follows, \\[transpose-words] will transpose the
-last word of the line at point with the first word of the line
-below.
-
-2. While at the end of the line, \\[transpose-words] will not
-transpose the last two words, but will instead move point one
-word backward.  To actually transpose the last two words, you
-need to invoke the command twice."
-    (interactive "p")
-    (if (use-region-p)
-        (transpose-words 0)
-      (if (eq (point) (point-at-eol))
-          (progn
-            (backward-word 1)
-            (transpose-words 1)
-            (forward-char 1))
-        (transpose-words arg))))
-
-  :bind (("C-t" . prot/transpose-chars)
-         ("C-x C-t" . prot/transpose-lines)
-         ("C-S-t" . prot/transpose-paragraphs)
-         ("C-x M-t" . prot/transpose-sentences)
-         ("C-M-t" . prot/transpose-sexps)
-         ("M-t" . prot/transpose-words)))
-#+end_src
-
-**** Custom commands for marking syntactic constructs
-     :PROPERTIES:
-     :CUSTOM_ID: h:19076ddf-8c55-48da-81a3-129b18cf62c0
-     :END:
-
-I tried working with the external =expand.el= package, but realised I only
-ever used a tiny subset of its commands.  Instead of paying the penalty,
-I am opting to tweak the built-in functions for marking the syntactic
-constructs that are specific to my needs.
-
-All of the following accept a universal argument for specifying the
-total count of syntactic objects to mark and in which direction
-(e.g. =C-u -3= will mark the current word and two more before it).
-Repeated calls of the command incrementally expand the region in the
-given direction.
-
-+ Mark symbol at point :: Marks the whole symbol at point.  Recall that
-  "symbol" refers to a proper/unique name, such as those of functions.
-  That granted, =prot/mark-symbol= will apply to regular words if no
-  symbol is available, making it ideal as a general purpose utility.
-
-+ Mark word at point :: Unlike the built-in =mark-word= which only
-  highlights the word from point to either of its boundaries, my
-  =prot/mark-word= operates on the entire word, while retaining the rest
-  of the functionality (the use of the universal argument and
-  incremental expansion, noted above).  This command is not meant for
-  regular use, as it is covered by =prot/mark-symbol=.  Instead it is
-  reserved for some surgical intervention in the context of keyboard
-  macros and the like.
-
-+ Mark sexp backward :: =prot/mark-sexp-backward= is a simple tweak over
-  the default command for marking symbolic expressions (=mark-sexp=),
-  which tells it to always move backward.
-
-+ Mark constructs DWIM :: =prot/mark-construct-dwim= is the command that
-  wraps all of the above except =prot/mark-word= (due to its specificity)
-  in a convenient package.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :commands (prot/mark-symbol
-             prot/mark-sexp-backward)
-  :config
-  (defmacro prot/mark (name object &optional docstring)
-    "Produce function for marking small syntactic constructs.
-NAME is how the function should be called.  OBJECT is its scope.
-Optional DOCSTRING describes the resulting function.
-
-This is a slightly modified version of the built-in `mark-word'."
-    `(defun ,name (&optional arg allow-extend)
-       ,docstring
-       (interactive "P\np")
-       (let ((x (format "%s-%s" "forward" ,object)))
-         (cond ((and allow-extend
-	                 (or (and (eq last-command this-command) (mark t))
-		                 (region-active-p)))
-	            (setq arg (if arg (prefix-numeric-value arg)
-		                    (if (< (mark) (point)) -1 1)))
-	            (set-mark
-	             (save-excursion
-	               (goto-char (mark))
-	               (funcall (intern x) arg)
-	               (point))))
-	           (t
-                (let ((bounds (bounds-of-thing-at-point (intern ,object))))
-                  (unless (consp bounds)
-                    (user-error "No %s at point" ,object))
-                  (if (>= (prefix-numeric-value arg) 0)
-                      (goto-char (car bounds))
-                    (goto-char (cdr bounds)))
-                  (push-mark
-                   (save-excursion
-                     (funcall (intern x) (prefix-numeric-value arg))
-                     (point)))
-                  (activate-mark)))))))
-
-  (prot/mark
-   prot/mark-word
-   "word"
-   "Mark the whole word at point.
-This function is a slightly modified version of the built-in
-`mark-word', that I intend to use only in special circumstances,
-such as when recording a keyboard macro where precision is
-required.  For a general purpose utility, use `prot/mark-symbol'
-instead.")
-
-  (prot/mark
-   prot/mark-symbol
-   "symbol"
-   "Mark the whole symbol at point.
-With optional ARG, mark a total ARGth symbols away from point in
-addition to the current one.  A negative argument moves backward.
-Repeated invocations of this command mark the next symbol in the
-direction originally specified.
-
-In the absence of a symbol and if a word is present at point,
-this command will operate on it as described above.")
-
-  (defun prot/mark-sexp-backward (&optional arg)
-    "Mark previous or ARGth balanced expression[s].
-Just a convenient backward-looking `mark-sexp'."
-    (interactive "P")
-    (if arg
-        (mark-sexp (- arg) t)
-      (mark-sexp (- 1) t)))
-
-  (defun prot/mark-construct-dwim (&optional arg)
-    "Mark symbol or balanced expression at point.
-A do-what-I-mean wrapper for `prot/mark-sexp-backward',
-`mark-sexp', and `prot/mark-symbol'.
-
-When point is over a symbol, mark the entirety of it.  Regular
-words are interpreted as symbols when an actual symbol is not
-present.
-
-For balanced expressions, a backward match will happen when point
-is to the right of the closing delimiter.  A forward match is the
-fallback condition and should work when point is before a
-balanced expression, with or without whitespace in between it an
-the opening delimiter.
-
-Optional ARG will mark a total of ARGth objects while counting
-the current one (so 3 would be 1+2 more).  A negative count moves
-the mark backward (though that would invert the backward-moving
-sexp matching of `prot/mark-sexp-backward', so be mindful of
-where the point is).  Repeated invocations of this command
-incrementally mark objects in the direction originally
-specified."
-    (interactive "P")
-    (let ((x (if arg
-                 (prefix-numeric-value arg)
-               (if (< (mark) (point)) -1 1))))
-      (cond
-       ((symbol-at-point)
-        (prot/mark-symbol x t))
-       ((eq (point) (cdr (bounds-of-thing-at-point 'sexp)))
-        (prot/mark-sexp-backward x))
-       (t
-        (mark-sexp x t)))))
-
-  :bind (("M-@" . prot/mark-word)       ; replaces `mark-word'
-         ("C-M-SPC" . prot/mark-construct-dwim)))
-#+end_src
-
-*** Go to actionable beginning or end of buffer
-    :PROPERTIES:
-    :CUSTOM_ID: h:29ea650f-f6a9-4bb4-abca-9548b4e4c4eb
-    :END:
-
-This package by Damien Cassou offers the ability to move to the first or
-last actionable point in a buffer rather than the absolute maximum or
-minimum point.  It does so by wrapping =M-<= and =M->= around a "do what I
-mean" behaviour where the initial command will take you to the
-actionable part, while another call will go to the absolute position.
-Nice and simple!
-
-Check [[https://github.com/DamienCassou/beginend][the package upstream]] for information on the supported modes and on
-how to contribute your own extensions (I provided support for =rg.el=,
-which I [[#h:31622bf2-526b-4426-9fda-c0fc59ac8f4b][define elsewhere in this document]]).
-
-Here the =dolist= combined with the =:diminish= keyword are meant to remove
-all lighters that this package produces: one for every minor mode it
-provides.  I got this from [[https://github.com/DamienCassou/beginend/issues/43][issue 43 on the beginend repo]].
-
-#+begin_src emacs-lisp
-(use-package beginend
-  :ensure
-  :demand
-  :diminish beginend-global-mode
-  :config
-  (dolist (mode beginend-modes) (diminish (cdr mode)))
-  (beginend-global-mode 1))
-#+end_src
-
-*** Go to last change
-    :PROPERTIES:
-    :CUSTOM_ID: h:ac889a76-1092-449e-a184-9092093f3103
-    :END:
-
-I could not find any built-in method of /reliably/ moving back to the
-last change.  Using the mark ring is always an option, but does not fill
-the exact same niche.
-
-The =C-z= binding is disabled in the opening sections of this document.
-It minimises the Emacs GUI.  A complete waste of an extremely valuable
-key binding!
-
-#+begin_src emacs-lisp
-(use-package goto-last-change
-  :ensure
-  :bind ("C-z" . goto-last-change))
 #+end_src
 
 ** Cursor and mouse settings
@@ -10006,6 +9383,628 @@ current line is more important than the exact column of the point.
              package-refresh-contents
              package-list-packages)
   :hook (package-menu-mode-hook . hl-line-mode))
+#+end_src
+
+* Language settings for prose and code
+  :PROPERTIES:
+  :CUSTOM_ID: h:8fc1f9ca-f5ae-407a-b721-aab414ca657b
+  :END:
+
+This section is all about configurations and/or packages that deal with
+natural or programming language enhancements.
+
+** Line length (column count)
+   :PROPERTIES:
+   :CUSTOM_ID: h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c
+   :END:
+
+The column count is set to 72.  The standard line length is 80
+characters, so having it at something less allows for such things as
+quoting plain text, indenting, etc.  =git= commit messages also make good
+use of this method.  The column count is used by =auto-fill-mode= and
+similar tools (or when manually invoking text formatting with
+=fill-paragraph= or equivalent---normally bound to =M-q=).
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq-default fill-column 72)
+  :hook (after-init-hook . column-number-mode))
+#+end_src
+
+** Paragraphs and fill-mode
+   :PROPERTIES:
+   :CUSTOM_ID: h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3
+   :END:
+
+Let us first configure how paragraphs should be treated.  I find that a
+double space is the best way to delimit sentences in source form.  There
+is no worry that this will be shown on a website or rendered version of
+a document, because processors know how to handle spacing.  We do this
+to make things easier to tell apart, but also to render unambiguous
+commands like =forward-sentence=.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq sentence-end-double-space t)
+  (setq colon-double-space nil)
+  (setq use-hard-newlines nil)
+  (setq sentence-end-without-period nil))
+#+end_src
+
+Now we need to make sure we run the minor mode that keeps paragraphs
+within the column [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][limit I prefer]]: you can always do it manually for the
+current paragraph or the active region with =fill-paragraph=, bound by
+default to =M-q=.
+
+By targeting =text-mode= we also affect every major mode derived from it,
+which means that we correctly do not get this utility in
+programming-related modes (in principle, those come from =prog-mode=).
+The adaptive mode improves the handling of things like bulleted and
+numbered lists, where it recognises the text's prefix and tries to align
+to it rather than the absolute beginning of the line.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :diminish auto-fill-function
+  :config
+  (setq adaptive-fill-mode t)
+
+  (defun prot/unfill-region-or-paragraph (&optional region)
+    "Unfill paragraph or, when active, the region.
+Join all lines in a region, if active, while respecting any empty
+lines (so multiple paragraphs are not joined, just unfilled).  If
+no region is active, operate on the paragraph.  The idea is to
+produce the opposite effect of both `fill-paragraph' and
+`fill-region'."
+    (interactive)
+    (let ((fill-column most-positive-fixnum))
+      (if (use-region-p)
+          (fill-region (region-beginning) (region-end))
+        (fill-paragraph nil region))))
+
+  :hook (text-mode-hook . (lambda ()
+                            (turn-on-auto-fill)))
+  :bind ("M-Q" . prot/unfill-region-or-paragraph))
+#+end_src
+
+** Recognise subwords
+   :PROPERTIES:
+   :CUSTOM_ID: h:899cff89-a517-41d5-8c55-b91c6aba8c9d
+   :END:
+
+It is better you do =C-h f subword-mode=.  Basically, this alters the
+way Emacs understands word boundaries.  So, /camelCaseWords/ are
+exposed as their constituents rather than one long word, meaning that
+motions will behave accordingly.
+
+#+begin_src emacs-lisp
+(use-package subword
+  :diminish
+  :hook (prog-mode-hook . subword-mode))
+#+end_src
+
+** Comment lines, regions, boxes, etc.
+   :PROPERTIES:
+   :CUSTOM_ID: h:fa56241c-6840-4a39-8f59-18460d37fc69
+   :END:
+
+Just some basic configurations for commenting structured text.  This is
+mostly a placeholder for potentially more targeted and detailed settings
+that would involve per-mode hooks.
+
+The purpose of my reviewed key bindings is to make them more consistent.
+Helps with mnemonics.  They also are more ergonomic.  To this end, I
+have the following:
+
++ The standard commenting function is now bound to the simple =C-;=.
+  This runs a "do what I meant" function I have defined, whose detailed
+  documentation can be read below.
++ =C-:= (=C-S-;=) will kill the comment on the current line.  This is
+  particularly helpful when the comment follows text you would like to
+  keep.  The operation can be performed regardless of where the point is
+  on the line.  *Some modes disable this behaviour* (e.g. trying it on
+  source code inside of org-mode—for those cases, focus the block with
+  =C-c '=).
++ The =M-;= will just append a comment to the line, rather than the
+  default =comment-dwim=.
+
+Note that =C-;= is occupied by some =flyspell= command that I have no
+use for (disabled in the relevant package declaration).
+
+Lastly, use =M-j= (alias =C-M-j=) when you want to continue an existing
+comment on a new line with respect for the current indentation.  If you
+are not inside of a comment, this will just create an indentation-aware
+new line.
+
+#+begin_src emacs-lisp
+(use-package newcomment
+  :config
+  (setq comment-empty-lines t)
+  (setq comment-fill-column nil)
+  (setq comment-multi-line t)
+  (setq comment-style 'multi-line)
+
+  (defun prot/comment-dwim (&optional arg)
+    "Alternative to `comment-dwim': offers a simple wrapper
+around `comment-line' and `comment-dwim'.
+
+If the region is active, then toggle the comment status of the
+region or, if the major mode defines as much, of all the lines
+implied by the region boundaries.
+
+Else toggle the comment status of the line at point."
+    (interactive "*P")
+    (if (use-region-p)
+        (comment-dwim arg)
+      (save-excursion
+        (comment-line arg))))
+
+  :bind (("C-;" . prot/comment-dwim)
+         ("C-:" . comment-kill)
+         ("M-;" . comment-indent)
+         ("C-x C-;" . comment-box)))
+#+end_src
+
+** Configure 'electric' behaviour
+   :PROPERTIES:
+   :CUSTOM_ID: h:ed95ef3e-75e6-4e53-b3bc-4aee540fe3d9
+   :END:
+
+Emacs labels as "electric" any behaviour that involves contextual
+auto-insertion of characters.  This is a summary of my settings:
+
++ Indent automatically.
++ If =electric-pair-mode= is enabled (which I might do manually), insert
+  quotes and brackets in pairs.  Only do so if there is no alphabetic
+  character after the cursor.
++ The cryptic numbers in the pairs set, correspond to curly single and
+  double quotes and these =«»=.  The contents of this set are always
+  inserted in pairs, regardless of major mode.
+  + To get those numbers, evaluate =(string-to-char CHAR)= where CHAR is
+    the one you are interested in.  For example, get the literal tab's
+    character with =(string-to-char "\t")=.
++ While inputting a pair, inserting the closing character will just skip
+  over the existing one, rather than add a new one.  So typing =(= will
+  insert =()= and then typing =)= will just be the same as moving forward
+  one character =C-f=.
++ Do not skip over whitespace when operating on pairs.  Combined with
+  the above point, this means that a new character will be inserted,
+  rather than be skipped over.  I find this better, because it prevents
+  the point from jumping forward, plus it allows for more natural
+  editing.
++ The whitespace characters are space (=\s=), tab (=\t=), and newline (=\n=).
++ The rest concern the conditions for transforming quotes into their
+  curly equivalents.  I keep this disabled, because curly quotes are
+  distinct characters.  It is difficult to search for them.  Just note
+  that on GNU/Linux you can type them directly by hitting the "compose"
+  key and then an angled bracket (=<= or =>=) followed by a quote mark.
+
+#+begin_src emacs-lisp
+(use-package electric
+  :config
+  (setq electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
+  (setq electric-pair-preserve-balance t)
+  (setq electric-pair-pairs
+        '((8216 . 8217)
+          (8220 . 8221)
+          (171 . 187)))
+  (setq electric-pair-skip-self 'electric-pair-default-skip-self)
+  (setq electric-pair-skip-whitespace nil)
+  (setq electric-pair-skip-whitespace-chars
+        '(9
+          10
+          32))
+  (setq electric-quote-context-sensitive t)
+  (setq electric-quote-paragraph t)
+  (setq electric-quote-string nil)
+  (setq electric-quote-replace-double t)
+  :hook (after-init-hook . (lambda ()
+                             (electric-indent-mode 1)
+                             (electric-pair-mode -1)
+                             (electric-quote-mode -1))))
+#+end_src
+
+** Parentheses (show-paren-mode)
+   :PROPERTIES:
+   :CUSTOM_ID: h:3d374354-843f-4efa-aa38-1ba2c9ccc14c
+   :END:
+
+Configure the mode that highlights matching delimiters or parentheses.
+I consider this of utmost importance when working with languages such as
+elisp.
+
+Summary of what these do:
+
++ Activate the mode upon startup.
++ Show the matching delimiter/parenthesis if on screen, else show
+  nothing.  It is possible to highlight the expression enclosed by the
+  delimiters, by using either =mixed= or =expression=.  The latter always
+  highlights the entire balanced expression, while the former will only
+  do so if the matching delimiter is off screen.
++ Highlight parentheses even if the point is in their vicinity.  This
+  means the beginning or end of the line, with space in between.
++ Do not highlight a match when the point is on the inside of the
+  parenthesis.
+
+#+begin_src emacs-lisp
+(use-package paren
+  :config
+  (setq show-paren-style 'parenthesis)
+  (setq show-paren-when-point-in-periphery t)
+  (setq show-paren-when-point-inside-paren nil)
+  :hook (after-init-hook . show-paren-mode))
+#+end_src
+
+** Tabs, indentation, and the TAB key
+   :PROPERTIES:
+   :CUSTOM_ID: h:d51d37df-4e58-4e0b-85a1-019ceda342f6
+   :END:
+
+I believe tabs, in the sense of inserting the tab character, are best
+suited for indentation.  While spaces are superior at precisely aligning
+text.  However, I understand that elisp uses its own approach, which I
+do not want to interfere with.  Also, Emacs tends to perform alignments
+by mixing tabs with spaces, which /can actually lead to misalignments/
+depending on certain variables such as the size of the tab.  As such, I
+am disabling tabs by default.
+
+If there ever is a need to use different settings in other modes, we can
+customise them via hooks.  This is not an issue I have encountered yet
+and am therefore refraining from solving a problem that does not affect
+me.
+
+Note that =tab-always-indent= will first do indentation and then try to
+complete whatever you have typed in.  I control how completion works for
+that particular function in my [[#h:98876022-57cc-40de-936e-4ee42cefd69a][in-buffer completions]] section.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq-default tab-always-indent 'complete)
+  (setq-default tab-width 4)
+  (setq-default indent-tabs-mode nil))
+#+end_src
+
+** Flyspell (spell check)
+   :PROPERTIES:
+   :CUSTOM_ID: h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c
+   :END:
+
+I need spell checking mostly for English, though I also install
+dictionaries for Greek, French, and Spanish.  These are external to
+Emacs and are provided by the =aspell= library.
+
+In previous versions of this section I had configurations that would
+automate spell checking.  It worked but was rather slow.  Upon further
+inspection, I realised that I seldom need to work in mixed language
+circumstances.  Moreover, I now understand that I do not need to have
+spell checking always on.  It can be activated manually, with the
+=flyspell= functions defined in the =:commands= segment below or with my
+=prot/flyspell-dwim= for the active region.
+
+Also bear in mind that the key binding =C-;= that Flyspell uses by default
+is disabled because I re-purpose that for a faster version of =C-x C-;=
+(much more useful for my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
+
+#+begin_src emacs-lisp
+(use-package flyspell
+  :commands (ispell-change-dictionary
+             ispell-word
+             flyspell-buffer
+             flyspell-mode
+             flyspell-region)
+  :config
+  (setq flyspell-issue-message-flag nil)
+  (setq flyspell-issue-welcome-flag nil)
+  (setq ispell-program-name "aspell")
+  (setq ispell-dictionary "en_GB")
+
+  (defvar prot/ispell-dictionaries
+    '(("English" . "en")
+      ("Ελληνικά" . "el")
+      ("Français" . "fr")
+      ("Espanõl" . "es"))
+    "Alist of dictionaries I may use.
+It is used by `prot/ispell-dictionaries-complete'.")
+
+  (defun prot/ispell-dictionaries-complete ()
+    "Select an item from `prot/ispell-dictionaries'."
+    (interactive)
+    (let* ((dicts (mapcar #'car prot/ispell-dictionaries))
+           (choice (completing-read "Select dictionary: " dicts nil t))
+           (key (cdr (assoc `,choice prot/ispell-dictionaries))))
+      (ispell-change-dictionary key)
+      (message "Switched to %s" key)))
+
+  (defun prot/flyspell-dwim ()
+    "Spell check region or select dictionary.
+
+Use `flyspell-region' on the active region, else invoke
+`prot/ispell-dictionaries-complete'."
+    (interactive)
+    (let ((beg (region-beginning))
+          (end (region-end)))
+      (if (use-region-p)
+          (flyspell-region beg end)
+        (prot/ispell-dictionaries-complete))))
+
+  :bind (("M-$" . prot/flyspell-dwim)
+         ("C-M-$" . prot/ispell-dictionaries-complete)
+         :map flyspell-mode-map
+         ("C-;" . nil)))
+#+end_src
+
+** Code linters
+   :PROPERTIES:
+   :CUSTOM_ID: h:20448ad8-9371-4e00-b88b-6b93f4c654d9
+   :END:
+
+There are several code linting tools in the Emacs milieu.  The two I
+configure here are front-ends to external programs for code analysis.
+
+While it is possible to run the linter globally or through hooks, I
+prefer to only do so manually on a per-buffer basis.  There are many
+cases where I am merely browsing code, where whatever diagnostics are of
+no import to the task at hand.
+
+With regard to the =defhydra= calls in this section, remember to refer to
+my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
+
+*** Flymake
+    :PROPERTIES:
+    :CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
+    :END:
+
+This is a built-in linter interface that can be extended to support any
+programming language.  I do, however, feel that the alternative Flycheck
+(see below) offers a more refined experience, though I still am hesitant
+to reach any conclusions.
+
+#+begin_src emacs-lisp
+(use-package flymake
+  :defer
+  :commands flymake-mode
+  :config
+  (setq flymake-fringe-indicator-position 'left-fringe)
+  (setq flymake-suppress-zero-counters t)
+  (setq flymake-start-on-flymake-mode t)
+  (setq flymake-no-changes-timeout nil)
+  (setq flymake-start-on-save-buffer t)
+  (setq flymake-proc-compilation-prevents-syntax-check t)
+  (setq flymake-wrap-around nil)
+
+  (defhydra prot/hydra-flymake (:color pink :hint nil)
+    "
+Actions
+-------
+_n_: Next error
+_p_: Previous error
+_d_: Diagnostics' buffer
+"
+    ("d" flymake-show-diagnostics-buffer)
+    ("n" flymake-goto-next-error)
+    ("p" flymake-goto-prev-error)
+    ("q" nil "cancel" :color blue))
+  :bind (:map flymake-mode-map
+              ("C-c h l" . prot/hydra-flymake/body)))
+#+end_src
+
+*** Flycheck
+    :PROPERTIES:
+    :CUSTOM_ID: h:75069828-4b56-4341-8797-2d5a305c65e2
+    :END:
+
+This linting interface has excellent coverage for a broad range of
+languages, while there are lots of extensions to it to further broaden
+its scope.
+
+Flycheck has some subtle visual and functional advantages over the
+built-in Flymake (see above), though the most obvious one is the overall
+activity around its development.
+
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure
+  :defer
+  :commands flycheck-mode
+  :config
+  (setq flycheck-check-syntax-automatically
+        '(save mode-enabled))
+
+  (defun prot/flycheck-list-errors-toggle ()
+    "Toggle the display of `flycheck-mode' diagnostics' buffer."
+    (interactive)
+    (let ((diagnostics (get-buffer-window flycheck-error-list-buffer)))
+      (unless flycheck-mode
+        (user-error "Flycheck mode not enabled"))
+      (if diagnostics
+          (delete-window diagnostics)
+      (flycheck-list-errors))))
+
+  (defhydra prot/hydra-flycheck (:color pink :hint nil)
+    "
+   ^Actions^             ^Helpers^
+---^^--------------------^^-----------------
+_n_: Next error       _c_: Check buffer
+_p_: Previous error   _l_: List diagnostics
+_e_: Explain error    _x_: Disable checker
+_d_: Display error
+"
+    ("l" prot/flycheck-list-errors-toggle)
+    ("c" flycheck-buffer)
+    ("n" flycheck-next-error)
+    ("p" flycheck-previous-error)
+    ("e" flycheck-explain-error-at-point)
+    ("d" flycheck-display-error-at-point)
+    ("x" flycheck-disable-checker :color blue)
+    ("q" nil "cancel" :color blue))
+  :bind (:map flycheck-mode-map
+              ("C-c h l" . prot/hydra-flycheck/body)))
+#+end_src
+
+**** Flycheck mode line indicator
+     :PROPERTIES:
+     :CUSTOM_ID: h:93b2aeed-d46a-4737-9d96-d8e5aedf8a67
+     :END:
+
+While Flymake has a good mode line status area, Flycheck's leaves
+something to be desired.  This package bridges that gap.  It offers a
+visual experience that involves both text and purpose-specific faces
+(set of styles).
+
+By default, the status feedback in =flycheck-indicator-status-icons=
+employs descriptive terms.  It can, nonetheless, be configured to show
+characters instead of long strings (which I guess opens the sluicegate
+for the flow of iconography, emojis, unicode symbols…).  I prefer to
+reduce verbosity using common text characters, at the potential cost of
+obscuring the meaning of some of the less common types of feedback (what
+does "suspicious" mean in this context, anyway?).
+
+I also tweak the characters that accompany all three classes of report
+(notes, warnings, errors) in an attempt to distinguish between them.
+
+If you want to be creative with your choice of symbol, note that while
+trying to complete a description through =C-x 8 RET=, you can press =?= to
+list all candidates in the "Completions" buffer with a preview next to
+each entry.  Neat!
+
+#+begin_src emacs-lisp
+(use-package flycheck-indicator
+  :ensure
+  :after flycheck
+  :config
+  (setq flycheck-indicator-icon-error (string-to-char "!"))
+  (setq flycheck-indicator-icon-info (string-to-char "·"))
+  (setq flycheck-indicator-icon-warning (string-to-char "*"))
+  (setq flycheck-indicator-status-icons
+        '((not-checked "%")
+          (no-checker "-")
+          (running "&")
+          (errored "!")
+          (finished "=")
+          (interrupted "#")
+          (suspicious "?")))
+  :hook (flycheck-mode-hook . flycheck-indicator-mode))
+#+end_src
+
+*** Elisp packaging requirements
+    :PROPERTIES:
+    :CUSTOM_ID: h:d03342da-3035-409f-a5e7-5df1e614d507
+    :END:
+
+With these in place we can perform checks that pertain to Emacs lisp
+packaging.  I use it for my themes but also for any elisp library I may
+want to send patches to.
+
+The two packages here provide the necessary functionality for both of
+the linter front-ends configured above.
+
+#+begin_src emacs-lisp
+(use-package flycheck-package
+  :ensure
+  :after flycheck
+  :config
+  (flycheck-package-setup))
+
+(use-package package-lint-flymake
+  :ensure
+  :after flymake
+  :config
+  (package-lint-flymake-setup))
+#+end_src
+
+** Eldoc (elisp live documentation feedback)
+   :PROPERTIES:
+   :CUSTOM_ID: h:d0f76937-4f54-401c-aae8-ffadf8697357
+   :END:
+
+When editing elisp, this mode will display useful information about the
+construct at point in the echo area.  For functions it will display the
+list of arguments they accept.  While it will show the the first
+sentence of a variable's documentation string.
+
+At first, I dismissed this package.  Upon closer inspection, it does
+offer a lightweight complementary facility to that of the standard help
+commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
+
+#+begin_src emacs-lisp
+(use-package eldoc
+  :defer
+  :diminish
+  :config
+  (global-eldoc-mode 1))
+#+end_src
+
+** Support for various major modes
+   :PROPERTIES:
+   :CUSTOM_ID: h:485bb253-208a-4a0a-99e3-ae1a205e3b7b
+   :END:
+
+These provide syntax highlighting and additional features for
+environments that are not already supported by Emacs.
+
+*** Arch Linux package recipes
+    :PROPERTIES:
+    :CUSTOM_ID: h:7fa5b86b-3fc5-4118-8d56-aacf4c0fffb8
+    :END:
+
+If you are on Arch or derivatives and check PKGBUILD files, this is for
+you.
+
+#+begin_src emacs-lisp
+(use-package pkgbuild-mode
+  :ensure
+  :mode ("PKGBUILD" . pkgbuild-mode))
+#+end_src
+
+*** Markdown
+    :PROPERTIES:
+    :CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
+    :END:
+
+I edit lots of Markdown files.  This makes things easier.
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure
+  :config
+  ;; Allows for fenced block focus with C-c ' (same as Org blocks).
+  (use-package edit-indirect
+    :ensure
+    :defer)
+  (setq markdown-fontify-code-blocks-natively t)
+  :mode ("\\.md$" . markdown-mode))
+#+end_src
+
+*** YAML
+    :PROPERTIES:
+    :CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
+    :END:
+
+This adds support for YAML files.
+
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :ensure
+  :mode (("\\.yml$" . yaml-mode)
+         ("\\.yaml$" . yaml-mode)))
+#+end_src
+
+*** CSS
+    :PROPERTIES:
+    :CUSTOM_ID: h:ec10bfe6-5340-481c-9de2-3e346868241b
+    :END:
+
+This is the built-in mode for working with CSS and SCSS.  I just want it
+to not apply previews to colour references.  If I ever need that, there
+is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant section]]).
+
+#+begin_src emacs-lisp
+(use-package css-mode
+  :config
+  (setq css-fontify-colors nil))
 #+end_src
 
 * History and state
