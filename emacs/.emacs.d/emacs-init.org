@@ -531,8 +531,7 @@ by =fontconfig= with rules that can be defined at the user or system level
   :commands (prot/font-set-face-attribute
              prot/font-set-fonts
              prot/font-set-font-size-family
-             prot/font-line-spacing
-             prot/font-fonts-per-monitor)
+             prot/font-fonts-dwim)
   :config
   (setq x-underline-at-descent-line t)
   (setq underline-minimum-offset 1)
@@ -546,25 +545,33 @@ These are specific to the fontconfig backend for GNU/Linux systems.")
     "Hook that is called from `prot/font-set-fonts-completion'.")
 
   ;; The idea with this association list is to use font combinations
-  ;; that are suitable to the given point size.  I find that at smaller
-  ;; sizes the open and wide proportions of Hack+FiraGO work well, while
-  ;; the more compact Iosevka+Source Sans Pro are better at larger point
-  ;; sizes.  The "desktop" combo is ideal for use on a larger monitor at
-  ;; a regular point size.
+  ;; that are suitable to the given point size and intended function.
+  ;; Basically, I have three modes: my laptop's small screen, my laptop
+  ;; attached to a larger external monitor in a desktop setup (my normal
+  ;; case), and when I do presentations (i.e. my videos on Emacs).
   ;;
-  ;; Note that the "Hack" mentioned here is my patched version of it,
-  ;; which uses some alternative glyphs, is built on top of the latest
-  ;; dev branch, and is meant to improve both the Roman and Italic
-  ;; variants (alt glyphs are part of the Hack project):
+  ;; I find that at smaller sizes the open and wide proportions of
+  ;; Hack+FiraGO combined with their more intense typographic colour
+  ;; work best, while the more compact Iosevka+Source Sans Pro are
+  ;; better at larger point sizes.  The "desktop" combo is ideal for use
+  ;; on a larger monitor at a regular point size.  The latter is what I
+  ;; typically use to write prose or code.
+  ;;
+  ;; Note that the "Hack" typeface mentioned here is my patched version
+  ;; of it, which uses some alternative glyphs, is built on top of the
+  ;; latest dev branch, and is meant to improve both the Roman and
+  ;; Italic variants (alt glyphs are part of the Hack project):
   ;; https://gitlab.com/protesilaos/hackfontmod
   (defconst prot/font-sizes-families-alist
-    '(("laptop" . (10.5 "Hack" "FiraGO"))
-	  ("desktop" . (13 "Hack" "FiraGO"))
-	  ("presentation" . (19 "Iosevka SS08" "Source Sans Pro")))
+    '(("laptop" . (10.5 "Hack" "FiraGO" 1))
+      ("desktop" . (13 "Source Code Pro" "Alegreya" 3))
+      ("presentation" . (19 "Iosevka SS08" "Source Sans Pro" 1)))
     "Alist of desired point sizes and their typefaces.
 Each association consists of a display type mapped to a point
 size, followed by monospaced and proportionately-spaced font
-names.
+names, and a difference in desired size between the latter two to
+account for their innate differences in proportions (this number
+represents pixels and is found empirically).
 
 The monospaced typeface is meant to be applied to the `default'
 and `fixed-pitch' faces.  The proportionately-space font is
@@ -573,11 +580,11 @@ intended for the `variable-pitch' face.")
   (defun prot/font-set-face-attribute (face family size &optional params)
     "Set FACE font to FAMILY at SIZE with optional PARAMS."
     (let ((params (if params
-			          params
-		            prot/font-fontconfig-params)))
-	  (set-face-attribute
-	   `,face nil :font
-	   (format "%s-%s:%s" family (number-to-string size) params))))
+                      params
+                    prot/font-fontconfig-params)))
+      (set-face-attribute
+       `,face nil :font
+       (format "%s-%s:%s" family (number-to-string size) params))))
 
   (defun prot/font-set-fonts (&optional points font-mono font-var)
     "Set default font size using presets.
@@ -591,35 +598,29 @@ spacing-sensitive.  Both families must be represented as a string
 holding the family's name."
     (interactive)
     (let* ((data prot/font-sizes-families-alist)
-	       (displays (mapcar #'car data))
-	       (choice (if points
+           (displays (mapcar #'car data))
+           (choice (if points
                        points
-		             (completing-read "Pick display size: " displays nil t)))
-	       (size (if points
-		             points
-		           (nth 1 (assoc `,choice data))))
-	       (mono (if font-mono
-		             font-mono
-		           (if (member choice displays)
+                     (completing-read "Pick display size: " displays nil t)))
+           (size (if points
+                     points
+                   (nth 1 (assoc `,choice data))))
+           (mono (if font-mono
+                     font-mono
+                   (if (member choice displays)
                        (nth 2 (assoc `,choice data))
                      nil)))
-	       (var (if font-var
-		            font-var
+           (var (if font-var
+                    font-var
                   (if (member choice displays)
                       (nth 3 (assoc `,choice data))
-                    nil))))
-	  (when window-system
+                    nil)))
+           (adjust (nth 4 (assoc `,choice data))))
+      (when window-system
         (dolist (face '(default fixed-pitch))
-	      (prot/font-set-face-attribute `,face mono size))
-	    ;; Increasing the size on this to account for the innate
-	    ;; difference between the families I use.  Maybe there is some
-	    ;; more flexible way to create visual harmony between typefaces
-	    ;; with distinct inherent heights, without trying to query for
-	    ;; the current family in use.
-        ;;
-        ;; TODO normalise font heights automatically?
-	    (prot/font-set-face-attribute 'variable-pitch var (+ size 1))))
-	(run-hooks 'prot/font-switch-fonts-hook))
+          (prot/font-set-face-attribute `,face mono size))
+        (prot/font-set-face-attribute 'variable-pitch var (+ size adjust))))
+    (run-hooks 'prot/font-switch-fonts-hook))
 
   (defvar prot/font-monospaced-fonts-list
     '("Hack" "Iosevka SS08" "Iosevka Slab" "Source Code Pro"
@@ -629,14 +630,23 @@ holding the family's name."
 See `prot/font-set-font-size-family' for how this is used.")
 
   (defun prot/font-set-font-size-family ()
-    "Set point size and main typeface."
+    "Set point size and main typeface.
+This command is intended for testing various font families at
+some common point sizes.
+
+See `prot/font-set-fonts' for the function I would normally use
+or `prot/font-fonts-dwim' which just wraps this one with that."
     (interactive)
     (let* ((fonts prot/font-monospaced-fonts-list)
            (font (completing-read "Select main font: " fonts nil t))
            (nums (list 13 14 15 16))
            (sizes (mapcar 'number-to-string nums))
-           (size (completing-read "Select or insert number: " sizes nil)))
-      (prot/font-set-fonts (string-to-number size) font)))
+           (size (completing-read "Select or insert number: " sizes nil))
+           (var (face-attribute 'variable-pitch :family)))
+      (dolist (face '(default fixed-pitch))
+        (prot/font-set-face-attribute face font (string-to-number size)))
+      (prot/font-set-face-attribute 'variable-pitch var (string-to-number size))
+      (run-hooks 'prot/font-switch-fonts-hook)))
 
   (defun prot/font-fonts-dwim (&optional arg)
     "Set fonts interactively.
@@ -651,7 +661,7 @@ economise on dedicated key bindings."
   (defvar prot/font-fonts-line-spacing-alist
     '(("Iosevka SS08" . 1)
       ("Iosevka Slab" . 1)
-      ("Source Code Pro" . 2)
+      ("Source Code Pro" . 1)
       ("Ubuntu Mono" . 2))
     "Font families in need of extra `line-spacing'.
 See `prot/font-line-spacing' for how this is used.")
@@ -663,10 +673,10 @@ See `prot/font-bold-face' for how this is used.")
 
   (defmacro prot/font-adjustment (fn doc alist cond1 cond2)
     "Macro for functions that employ `prot/font-switch-fonts-hook'.
-NAME is the name of the resulting function.  DOC is its docstring.
-ALIST is an assosiation list where each cons cell has only one
-data point mapped to the car.  COND1 and COND2 is the body of an
-`if' statement's if and then part respectively."
+NAME is the name of the resulting function.  DOC is its
+docstring.  ALIST is an assosiation list of cons cells.  COND1
+and COND2 is the body of an `if' statement's 'if' and 'then' part
+respectively."
     `(defun ,fn ()
        ,doc
        (let* ((data ,alist)
@@ -676,7 +686,7 @@ data point mapped to the car.  COND1 and COND2 is the body of an
               ;; face.
               (font (face-attribute 'default :family))
               (x (cdr (assoc font data))))
-	     (if (member font fonts)
+         (if (member font fonts)
              ,cond1
            ,cond2))))
 
@@ -700,21 +710,24 @@ data point mapped to the car.  COND1 and COND2 is the body of an
    (set-face-attribute 'bold nil :weight 'bold))
 
   (defun prot/font-fonts-per-monitor ()
-	"Use font settings based on screen size.
+    "Use font settings based on screen size.
 Meant to be used at some early initialisation stage, such as with
 `after-init-hook'."
-	(let* ((display (if (<= (display-pixel-width) 1366)
-			            "laptop"
-		              "desktop"))
-	       (data prot/font-sizes-families-alist)
+    (let* ((display (if (<= (display-pixel-width) 1366)
+                        "laptop"
+                      "desktop"))
+           (data prot/font-sizes-families-alist)
            (size (cadr (assoc `,display data)))
-	       (mono (nth 2 (assoc `,display data)))
-	       (var (nth 3 (assoc `,display data))))
-	  (prot/font-set-fonts size mono var)))
+           (mono (nth 2 (assoc `,display data)))
+           (var (nth 3 (assoc `,display data))))
+      (dolist (face '(default fixed-pitch))
+        (prot/font-set-face-attribute face mono size))
+      (prot/font-set-face-attribute 'variable-pitch var size)
+      (run-hooks 'prot/font-switch-fonts-hook)))
 
   :hook ((after-init-hook . prot/font-fonts-per-monitor)
          (prot/font-switch-fonts-hook . prot/font-line-spacing)
-	     (prot/font-switch-fonts-hook . prot/font-bold-face))
+         (prot/font-switch-fonts-hook . prot/font-bold-face))
   ;; Awkward key because I do not need it very often.  Maybe once a day.
   ;; The "C-c f" is used elsewhere.
   :bind ("C-c F" . prot/font-fonts-dwim))
