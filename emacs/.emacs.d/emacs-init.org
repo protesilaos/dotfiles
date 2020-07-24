@@ -7741,7 +7741,6 @@ for when the equivalent mode is used (I have no plan to use that).
   (setq hl-line-sticky-flag nil))
 #+end_src
 
-
 *** Toggles for line numbers and whitespace indicators
     :PROPERTIES:
     :CUSTOM_ID: h:cb76fcee-e304-4b86-a764-6c3c6775da51
@@ -7957,19 +7956,73 @@ natural or programming language enhancements.
 
 The column count is set to 72.  The standard line length is 80
 characters, so having it at something less allows for such things as
-quoting plain text, indenting, etc.  =git= commit messages also make
-good use of this method.  The column count is used by =auto-fill-mode=
-and similar tools (or when manually invoking text formatting with
-=M-q=).
+quoting plain text, indenting, etc.  =git= commit messages also make good
+use of this method.  The column count is used by =auto-fill-mode= and
+similar tools (or when manually invoking text formatting with
+=fill-paragraph= or equivalent---normally bound to =M-q=).
 
 #+begin_src emacs-lisp
 (use-package emacs
   :config
   (setq-default fill-column 72)
-  (setq sentence-end-double-space t)
-  (setq sentence-end-without-period nil)
-  (setq colon-double-space nil)
   :hook (after-init-hook . column-number-mode))
+#+end_src
+
+*** Paragraphs and fill-mode
+    :PROPERTIES:
+    :CUSTOM_ID: h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3
+    :END:
+
+Let us first configure how paragraphs should be treated.  I find that a
+double space is the best way to delimit sentences in source form.  There
+is no worry that this will be shown on a website or rendered version of
+a document, because processors know how to handle spacing.  We do this
+to make things easier to tell apart, but also to render unambiguous
+commands like =forward-sentence=.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq sentence-end-double-space t)
+  (setq colon-double-space nil)
+  (setq use-hard-newlines nil)
+  (setq sentence-end-without-period nil))
+#+end_src
+
+Now we need to make sure we run the minor mode that keeps paragraphs
+within the column [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][limit I prefer]]: you can always do it manually for the
+current paragraph or the active region with =fill-paragraph=, bound by
+default to =M-q=.
+
+By targeting =text-mode= we also affect every major mode derived from it,
+which means that we correctly do not get this utility in
+programming-related modes (in principle, those come from =prog-mode=).
+The adaptive mode improves the handling of things like bulleted and
+numbered lists, where it recognises the text's prefix and tries to align
+to it rather than the absolute beginning of the line.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :diminish auto-fill-function
+  :config
+  (setq adaptive-fill-mode t)
+
+  (defun prot/unfill-region-or-paragraph (&optional region)
+    "Unfill paragraph or, when active, the region.
+Join all lines in a region, if active, while respecting any empty
+lines (so multiple paragraphs are not joined, just unfilled).  If
+no region is active, operate on the paragraph.  The idea is to
+produce the opposite effect of both `fill-paragraph' and
+`fill-region'."
+    (interactive)
+    (let ((fill-column most-positive-fixnum))
+      (if (use-region-p)
+          (fill-region (region-beginning) (region-end))
+        (fill-paragraph nil region))))
+
+  :hook (text-mode-hook . (lambda ()
+                            (turn-on-auto-fill)))
+  :bind ("M-Q" . prot/unfill-region-or-paragraph))
 #+end_src
 
 *** Recognise subwords
@@ -7986,29 +8039,6 @@ motions will behave accordingly.
 (use-package subword
   :diminish
   :hook (prog-mode-hook . subword-mode))
-#+end_src
-
-*** Auto-fill plain text and comments
-    :PROPERTIES:
-    :CUSTOM_ID: h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3
-    :END:
-
-Make sure we run the minor mode that keeps paragraphs within the column
-[[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][limit I prefer]]: you can always do it manually for the current paragraph
-with =M-q=.  By targeting =text-mode= we also affect every major mode
-derived from it, which means that we correctly do not get this utility
-in programming-related modes (in principle, those come from =prog-mode=).
-The adaptive mode improves the handling of things like bulleted and
-numbered lists, where it recognises the text's prefix and tries to align
-to it rather than the absolute beginning of the line.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :diminish auto-fill-function
-  :config
-  (setq adaptive-fill-mode t)
-  :hook (text-mode-hook . (lambda ()
-                            (turn-on-auto-fill))))
 #+end_src
 
 *** Comment lines, regions, boxes, etc.
@@ -8071,6 +8101,126 @@ Else toggle the comment status of the line at point."
          ("C-:" . comment-kill)
          ("M-;" . comment-indent)
          ("C-x C-;" . comment-box)))
+#+end_src
+
+*** Configure 'electric' behaviour
+    :PROPERTIES:
+    :CUSTOM_ID: h:ed95ef3e-75e6-4e53-b3bc-4aee540fe3d9
+    :END:
+
+Emacs labels as "electric" any behaviour that involves contextual
+auto-insertion of characters.  This is a summary of my settings:
+
++ Indent automatically.
++ If =electric-pair-mode= is enabled (which I might do manually), insert
+  quotes and brackets in pairs.  Only do so if there is no alphabetic
+  character after the cursor.
++ The cryptic numbers in the pairs set, correspond to curly single and
+  double quotes and these =«»=.  The contents of this set are always
+  inserted in pairs, regardless of major mode.
+  + To get those numbers, evaluate =(string-to-char CHAR)= where CHAR is
+    the one you are interested in.  For example, get the literal tab's
+    character with =(string-to-char "\t")=.
++ While inputting a pair, inserting the closing character will just skip
+  over the existing one, rather than add a new one.  So typing =(= will
+  insert =()= and then typing =)= will just be the same as moving forward
+  one character =C-f=.
++ Do not skip over whitespace when operating on pairs.  Combined with
+  the above point, this means that a new character will be inserted,
+  rather than be skipped over.  I find this better, because it prevents
+  the point from jumping forward, plus it allows for more natural
+  editing.
++ The whitespace characters are space (=\s=), tab (=\t=), and newline (=\n=).
++ The rest concern the conditions for transforming quotes into their
+  curly equivalents.  I keep this disabled, because curly quotes are
+  distinct characters.  It is difficult to search for them.  Just note
+  that on GNU/Linux you can type them directly by hitting the "compose"
+  key and then an angled bracket (=<= or =>=) followed by a quote mark.
+
+#+begin_src emacs-lisp
+(use-package electric
+  :config
+  (setq electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
+  (setq electric-pair-preserve-balance t)
+  (setq electric-pair-pairs
+        '((8216 . 8217)
+          (8220 . 8221)
+          (171 . 187)))
+  (setq electric-pair-skip-self 'electric-pair-default-skip-self)
+  (setq electric-pair-skip-whitespace nil)
+  (setq electric-pair-skip-whitespace-chars
+        '(9
+          10
+          32))
+  (setq electric-quote-context-sensitive t)
+  (setq electric-quote-paragraph t)
+  (setq electric-quote-string nil)
+  (setq electric-quote-replace-double t)
+  :hook (after-init-hook . (lambda ()
+                             (electric-indent-mode 1)
+                             (electric-pair-mode -1)
+                             (electric-quote-mode -1))))
+#+end_src
+
+*** Parentheses (show-paren-mode)
+    :PROPERTIES:
+    :CUSTOM_ID: h:3d374354-843f-4efa-aa38-1ba2c9ccc14c
+    :END:
+
+Configure the mode that highlights matching delimiters or parentheses.
+I consider this of utmost importance when working with languages such as
+elisp.
+
+Summary of what these do:
+
++ Activate the mode upon startup.
++ Show the matching delimiter/parenthesis if on screen, else show
+  nothing.  It is possible to highlight the expression enclosed by the
+  delimiters, by using either =mixed= or =expression=.  The latter always
+  highlights the entire balanced expression, while the former will only
+  do so if the matching delimiter is off screen.
++ Highlight parentheses even if the point is in their vicinity.  This
+  means the beginning or end of the line, with space in between.
++ Do not highlight a match when the point is on the inside of the
+  parenthesis.
+
+#+begin_src emacs-lisp
+(use-package paren
+  :config
+  (setq show-paren-style 'parenthesis)
+  (setq show-paren-when-point-in-periphery t)
+  (setq show-paren-when-point-inside-paren nil)
+  :hook (after-init-hook . show-paren-mode))
+#+end_src
+
+*** Tabs, indentation, and the TAB key
+    :PROPERTIES:
+    :CUSTOM_ID: h:d51d37df-4e58-4e0b-85a1-019ceda342f6
+    :END:
+
+I believe tabs, in the sense of inserting the tab character, are best
+suited for indentation.  While spaces are superior at precisely aligning
+text.  However, I understand that elisp uses its own approach, which I
+do not want to interfere with.  Also, Emacs tends to perform alignments
+by mixing tabs with spaces, which /can actually lead to misalignments/
+depending on certain variables such as the size of the tab.  As such, I
+am disabling tabs by default.
+
+If there ever is a need to use different settings in other modes, we can
+customise them via hooks.  This is not an issue I have encountered yet
+and am therefore refraining from solving a problem that does not affect
+me.
+
+Note that =tab-always-indent= will first do indentation and then try to
+complete whatever you have typed in.  I control how completion works for
+that particular function in my [[#h:98876022-57cc-40de-936e-4ee42cefd69a][in-buffer completions]] section.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq-default tab-always-indent 'complete)
+  (setq-default tab-width 4)
+  (setq-default indent-tabs-mode nil))
 #+end_src
 
 *** Flyspell (spell check)
@@ -8411,126 +8561,6 @@ is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant secti
 (use-package css-mode
   :config
   (setq css-fontify-colors nil))
-#+end_src
-
-*** Configure 'electric' behaviour
-    :PROPERTIES:
-    :CUSTOM_ID: h:ed95ef3e-75e6-4e53-b3bc-4aee540fe3d9
-    :END:
-
-Emacs labels as "electric" any behaviour that involves contextual
-auto-insertion of characters.  This is a summary of my settings:
-
-+ Indent automatically.
-+ If =electric-pair-mode= is enabled (which I might do manually), insert
-  quotes and brackets in pairs.  Only do so if there is no alphabetic
-  character after the cursor.
-+ The cryptic numbers in the pairs set, correspond to curly single and
-  double quotes and these =«»=.  The contents of this set are always
-  inserted in pairs, regardless of major mode.
-  + To get those numbers, evaluate =(string-to-char CHAR)= where CHAR is
-    the one you are interested in.  For example, get the literal tab's
-    character with =(string-to-char "\t")=.
-+ While inputting a pair, inserting the closing character will just skip
-  over the existing one, rather than add a new one.  So typing =(= will
-  insert =()= and then typing =)= will just be the same as moving forward
-  one character =C-f=.
-+ Do not skip over whitespace when operating on pairs.  Combined with
-  the above point, this means that a new character will be inserted,
-  rather than be skipped over.  I find this better, because it prevents
-  the point from jumping forward, plus it allows for more natural
-  editing.
-+ The whitespace characters are space (=\s=), tab (=\t=), and newline (=\n=).
-+ The rest concern the conditions for transforming quotes into their
-  curly equivalents.  I keep this disabled, because curly quotes are
-  distinct characters.  It is difficult to search for them.  Just note
-  that on GNU/Linux you can type them directly by hitting the "compose"
-  key and then an angled bracket (=<= or =>=) followed by a quote mark.
-
-#+begin_src emacs-lisp
-(use-package electric
-  :config
-  (setq electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
-  (setq electric-pair-preserve-balance t)
-  (setq electric-pair-pairs
-        '((8216 . 8217)
-          (8220 . 8221)
-          (171 . 187)))
-  (setq electric-pair-skip-self 'electric-pair-default-skip-self)
-  (setq electric-pair-skip-whitespace nil)
-  (setq electric-pair-skip-whitespace-chars
-        '(9
-          10
-          32))
-  (setq electric-quote-context-sensitive t)
-  (setq electric-quote-paragraph t)
-  (setq electric-quote-string nil)
-  (setq electric-quote-replace-double t)
-  :hook (after-init-hook . (lambda ()
-                             (electric-indent-mode 1)
-                             (electric-pair-mode -1)
-                             (electric-quote-mode -1))))
-#+end_src
-
-*** Parentheses
-    :PROPERTIES:
-    :CUSTOM_ID: h:3d374354-843f-4efa-aa38-1ba2c9ccc14c
-    :END:
-
-Configure the mode that highlights matching delimiters or parentheses.
-I consider this of utmost importance when working with languages such as
-elisp.
-
-Summary of what these do:
-
-+ Activate the mode.
-+ Show the matching delimiter/parenthesis if on screen, else show
-  nothing.  It is possible to highlight the expression enclosed by the
-  delimiters, by using either =mixed= or =expression=.  The latter always
-  highlights the entire balanced expression, while the former will only
-  do so if the matching delimiter is off screen.
-+ Highlight parentheses even if the point is in their vicinity.  This
-  means the beginning or end of the line, with space in between.
-+ Do not highlight a match when the point is on the inside of the
-  parenthesis.
-
-#+begin_src emacs-lisp
-(use-package paren
-  :config
-  (setq show-paren-style 'parenthesis)
-  (setq show-paren-when-point-in-periphery t)
-  (setq show-paren-when-point-inside-paren nil)
-  :hook (after-init-hook . show-paren-mode))
-#+end_src
-
-*** Tabs, indentation, and the TAB key
-    :PROPERTIES:
-    :CUSTOM_ID: h:d51d37df-4e58-4e0b-85a1-019ceda342f6
-    :END:
-
-I believe tabs, in the sense of inserting the tab character, are best
-suited for indentation.  While spaces are superior at precisely aligning
-text.  However, I understand that elisp uses its own approach, which I
-do not want to interfere with.  Also, Emacs tends to perform alignments
-by mixing tabs with spaces, which /can actually lead to misalignments/
-depending on certain variables such as the size of the tab.  As such, I
-am disabling tabs by default.
-
-If there ever is a need to use different settings in other modes, we can
-customise them via hooks.  This is not an issue I have encountered yet
-and am therefore refraining from solving a problem that does not affect
-me.
-
-Note that =tab-always-indent= will first do indentation and then try to
-complete whatever you have typed in.  I control how completion works for
-that particular function in my [[#h:98876022-57cc-40de-936e-4ee42cefd69a][in-buffer completions]] section.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq-default tab-always-indent 'complete)
-  (setq-default tab-width 4)
-  (setq-default indent-tabs-mode nil))
 #+end_src
 
 ** Registers
