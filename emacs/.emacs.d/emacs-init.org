@@ -1245,14 +1245,6 @@ Overview of the following package declaration:
               ("<C-backspace>" . icomplete-fido-backward-updir)))
 #+end_src
 
-**** TODO can registers be inserted via completion?
-     :PROPERTIES:
-     :CUSTOM_ID: h:3dbfa7c6-7b1e-4ebc-85f3-227585eae8e1
-     :END:
-**** TODO can mark-ring positions be selected?
-     :PROPERTIES:
-     :CUSTOM_ID: h:4e70d0db-a0af-496a-b310-f75af606c155
-     :END:
 **** Icomplete vertical mode
      :PROPERTIES:
      :CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
