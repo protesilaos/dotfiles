@@ -564,7 +564,7 @@ These are specific to the fontconfig backend for GNU/Linux systems.")
   ;; https://gitlab.com/protesilaos/hackfontmod
   (defconst prot/font-sizes-families-alist
     '(("laptop" . (10.5 "Hack" "FiraGO" 1))
-      ("desktop" . (13 "Hack" "Alegreya" 3))
+      ("desktop" . (13 "Hack" "Alegreya" 4))
       ("presentation" . (19 "Iosevka SS08" "Source Sans Pro" 1)))
     "Alist of desired point sizes and their typefaces.
 Each association consists of a display type mapped to a point
