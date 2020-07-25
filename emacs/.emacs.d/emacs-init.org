@@ -2756,17 +2756,14 @@ sexp matching of `prot/mark-sexp-backward', so be mindful of
 where the point is).  Repeated invocations of this command
 incrementally mark objects in the direction originally
 specified."
-    (interactive "p")
-    (let ((x (if arg
-                 arg
-               (if (< (mark) (point)) -1 1))))
-      (cond
-       ((symbol-at-point)
-        (prot/mark-symbol x t))
-       ((eq (point) (cdr (bounds-of-thing-at-point 'sexp)))
-        (prot/mark-sexp-backward x))
-       (t
-        (mark-sexp x t)))))
+    (interactive "P")
+    (cond
+     ((symbol-at-point)
+      (prot/mark-symbol arg t))
+     ((eq (point) (cdr (bounds-of-thing-at-point 'sexp)))
+      (prot/mark-sexp-backward arg))
+     (t
+      (mark-sexp arg t))))
 
   :bind (("M-@" . prot/mark-word)       ; replaces `mark-word'
          ("C-M-SPC" . prot/mark-construct-dwim)))
