@@ -2639,10 +2639,9 @@ I am opting to tweak the built-in functions for marking the syntactic
 constructs that are specific to my needs.
 
 All of the following accept a universal argument for specifying the
-total count of syntactic objects to mark and in which direction
-(e.g. =C-u -3= will mark the current word and two more before it).
-Repeated calls of the command incrementally expand the region in the
-given direction.
+total count of objects to mark and in which direction (e.g. =C-u -3= will
+mark the current word and two more before it).  Repeated calls of the
+command incrementally expand the region in the given direction.
 
 + Mark symbol at point :: Marks the whole symbol at point.  Recall that
   "symbol" refers to a proper/unique name, such as those of functions.
@@ -2682,16 +2681,16 @@ This is a slightly modified version of the built-in `mark-word'."
        (interactive "P\np")
        (let ((x (format "%s-%s" "forward" ,object)))
          (cond ((and allow-extend
-	                 (or (and (eq last-command this-command) (mark t))
-		                 (region-active-p)))
-	            (setq arg (if arg (prefix-numeric-value arg)
-		                    (if (< (mark) (point)) -1 1)))
-	            (set-mark
-	             (save-excursion
-	               (goto-char (mark))
-	               (funcall (intern x) arg)
-	               (point))))
-	           (t
+                     (or (and (eq last-command this-command) (mark t))
+                         (region-active-p)))
+                (setq arg (if arg (prefix-numeric-value arg)
+                            (if (< (mark) (point)) -1 1)))
+                (set-mark
+                 (save-excursion
+                   (goto-char (mark))
+                   (funcall (intern x) arg)
+                   (point))))
+               (t
                 (let ((bounds (bounds-of-thing-at-point (intern ,object))))
                   (unless (consp bounds)
                     (user-error "No %s at point" ,object))
@@ -2718,10 +2717,10 @@ instead.")
    prot/mark-symbol
    "symbol"
    "Mark the whole symbol at point.
-With optional ARG, mark a total ARGth symbols away from point in
-addition to the current one.  A negative argument moves backward.
-Repeated invocations of this command mark the next symbol in the
-direction originally specified.
+With optional ARG, mark the current symbol and any remaining
+ARGth symbols away from point.  A negative argument moves
+backward. Repeated invocations of this command mark the next
+symbol in the direction originally specified.
 
 In the absence of a symbol and if a word is present at point,
 this command will operate on it as described above.")
