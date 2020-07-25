@@ -6684,43 +6684,45 @@ Finally, a few notes about contributions I have received:
   ;; used by other functions below
   (declare-function ffap-file-at-point "ffap.el")
 
-  ;; TODO write defmacro for all those file-at-point
-  (defun prot/eshell-insert-file-at-point ()
-    "Insert (cat) contents of file at point."
-    (interactive)
-    (let ((file (ffap-file-at-point)))
-      (if file
-          (progn
-            (end-of-buffer)
-            (insert (concat "cat " file))
-            (eshell-send-input))
-        (user-error "No file at point"))))
+  (defmacro prot/eshell-ffap (name doc &rest body)
+    "Make commands for `eshell' find-file-at-point.
+NAME is how the function is called.  DOC is the function's
+documentation string.  BODY is the set of arguments passed to the
+`if' statement to be evaluated when a file at point is present."
+    `(defun ,name ()
+       ,doc
+       (interactive)
+       (let ((file (ffap-file-at-point)))
+         (if file
+             ,@body
+           (user-error "No file at point")))))
 
-  (defun prot/eshell-kill-save-file-at-point ()
-    "Add to kill-ring the absolute path of file at point."
-    (interactive)
-    (let ((file (ffap-file-at-point)))
-      (if file
-          (kill-new (concat (eshell/pwd) "/" file))
-        (user-error "No file at point"))))
+  (prot/eshell-ffap
+   prot/eshell-insert-file-at-point
+   "Insert (cat) contents of file at point."
+   (progn
+     (end-of-buffer)
+     (insert (concat "cat " file))
+     (eshell-send-input)))
 
-  (defun prot/eshell-find-file-at-point ()
-    "Run `find-file' for file at point (ordinary file or dir).
+  (prot/eshell-ffap
+   prot/eshell-kill-save-file-at-point
+   "Add to kill-ring the absolute path of file at point."
+   (progn
+     (kill-new (concat (eshell/pwd) "/" file))
+     (message "Copied full path of %s" file)))
+
+  (prot/eshell-ffap
+   prot/eshell-find-file-at-point
+   "Run `find-file' for file at point (ordinary file or dir).
 Recall that this will produce a `dired' buffer if the file is a
 directory."
-    (interactive)
-    (let ((file (ffap-file-at-point)))
-      (if file
-          (find-file file)
-        (user-error "No file at point"))))
+   (find-file file))
 
-  (defun prot/eshell-file-parent-dir ()
-    "Open `dired' with the parent directory of file at point."
-    (interactive)
-    (let ((file (ffap-file-at-point)))
-      (if file
-          (dired (file-name-directory file))
-        (user-error "No parent dir for file to jump to"))))
+  (prot/eshell-ffap
+   prot/eshell-file-parent-dir
+   "Open `dired' with the parent directory of file at point."
+   (dired (file-name-directory file)))
 
   (defun prot/eshell-mkcd (dir)         ; TODO define alias
     "Make a directory, or path, and switch to it."
@@ -6810,7 +6812,7 @@ used as `:filter-return' advice to `eshell-ls-decorated-name'."
 
   :bind (:map eshell-mode-map
               ("M-k" . eshell-kill-input)
-              ("C-c M-w" . prot/eshell-kill-save-file-at-point)
+              ("C-c w" . prot/eshell-kill-save-file-at-point)
               ("C-c i" . prot/eshell-insert-file-at-point)
               ("C-c f" . prot/eshell-find-file-at-point)
               ("C-c C-f" . prot/eshell-find-file-at-point)
