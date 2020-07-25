@@ -1968,7 +1968,7 @@ position of the cursor after the skeleton has been inserted.
 These are meant to enhance the functionality of tools that are already
 shipped with Emacs.
 
-*** Isearch enhancements
+*** Isearch configurations and enhancements
    :PROPERTIES:
    :CUSTOM_ID: h:b67687ee-25a3-4bf4-a924-180ccb63c629
    :END:
@@ -2055,6 +2055,10 @@ Here is an overview of what goes into this package declaration.
   and super effective (*pro tip*: hit =!= to answer "yes" to all possible
   matches, which is possible in all cases where Emacs asks you for
   multiple confirmations).
++ Move to occurence at start or end :: Using the symbol at point, move
+  to the first or optionally the ARGth occurence from the beginning or
+  the end of the buffer.  I map these commands to the same keys they are
+  bound to in =isearch-mode-map=, namely, =M-s M-<= and =M-s M->=.
 
 The variables about the lazy count that are commented as "Emacs 27.1"
 effectively supersede the functionality of =anzu=, a package I once used.
@@ -2115,8 +2119,36 @@ search started."
     (isearch-forward-symbol-at-point)
     (isearch-query-replace-regexp))
 
+  (defmacro prot/isearch-occurence (name edge &optional doc)
+    "Construct function for moving to `isearch' occurence.
+NAME is the name of the function.  EDGE is either the beginning
+or the end of the buffer.  Optional DOC is the resulting
+function's docstring."
+    `(defun ,name (&optional arg)
+       ,doc
+       (interactive "p")
+       (let ((x (if arg arg 1))
+             (command (intern (format "isearch-%s-of-buffer" ,edge))))
+         (isearch-forward-symbol-at-point)
+         (funcall command x))))
+
+  (prot/isearch-occurence
+   prot/isearch-beginning-of-buffer
+   "beginning"
+   "Run `isearch-beginning-of-buffer' for the symbol at point.
+With numeric ARG, move to ARGth occurence counting from the
+beginning of the buffer.")
+
+  (prot/isearch-occurence
+   prot/isearch-end-of-buffer
+   "end"
+   "Run `isearch-end-of-buffer' for the symbol at point.
+With numeric ARG, move to ARGth occurence counting from the
+end of the buffer.")
+
   :bind (("M-s %" . prot/isearch-query-replace-symbol-at-point)
-         ("s-s" . prot/isearch-for-region)
+         ("M-s M-<" . prot/isearch-beginning-of-buffer)
+         ("M-s M->" . prot/isearch-end-of-buffer)
          :map minibuffer-local-isearch-map
          ("M-/" . isearch-complete-edit)
          :map isearch-mode-map
