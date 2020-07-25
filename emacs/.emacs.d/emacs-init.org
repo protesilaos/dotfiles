@@ -4505,23 +4505,23 @@ Slightly tweaked version of `org-agenda-format-date-aligned' that
 produces dates with a fixed length."
     (require 'cal-iso)
     (let* ((dayname (calendar-day-name date t))
-	       (day (cadr date))
-	       (day-of-week (calendar-day-of-week date))
-	       (month (car date))
-	       (monthname (calendar-month-name month t))
-	       (year (nth 2 date))
-	       (iso-week (org-days-to-iso-week
-		              (calendar-absolute-from-gregorian date)))
-	       (weekyear (cond ((and (= month 1) (>= iso-week 52))
-			                (1- year))
-			               ((and (= month 12) (<= iso-week 1))
-			                (1+ year))
-			               (t year)))
-	       (weekstring (if (= day-of-week 1)
-			               (format " (W%02d)" iso-week)
-		                 "")))
+           (day (cadr date))
+           (day-of-week (calendar-day-of-week date))
+           (month (car date))
+           (monthname (calendar-month-name month t))
+           (year (nth 2 date))
+           (iso-week (org-days-to-iso-week
+                      (calendar-absolute-from-gregorian date)))
+           (weekyear (cond ((and (= month 1) (>= iso-week 52))
+                            (1- year))
+                           ((and (= month 12) (<= iso-week 1))
+                            (1+ year))
+                           (t year)))
+           (weekstring (if (= day-of-week 1)
+                           (format " (W%02d)" iso-week)
+                         "")))
       (format "%s %2d %s %4d%s"
-	          dayname day monthname year weekstring)))
+              dayname day monthname year weekstring)))
 
   (setq org-agenda-format-date #'prot/org-agenda-format-date-aligned)
 
@@ -5732,28 +5732,28 @@ Further notes:
 
   (setq mu4e-contexts
         `(,(make-mu4e-context
-	        :name "vrp" ; Is there no way to specify a key for switching?
+            :name "vrp" ; Is there no way to specify a key for switching?
             :enter-func (lambda () (mu4e-message "Entering PRV"))
             :leave-func (lambda () (mu4e-message "Leaving PRV"))
-	        :match-func (lambda (msg)
-			              (when msg
-			                (mu4e-message-contact-field-matches
+            :match-func (lambda (msg)
+                          (when msg
+                            (mu4e-message-contact-field-matches
                              msg :to (prot/auth-get-field "prv" :user))))
-	        :vars `((user-mail-address . ,(prot/auth-get-field "prv" :user))))
+            :vars `((user-mail-address . ,(prot/auth-get-field "prv" :user))))
           ,(make-mu4e-context
-	        :name "inf"
-	        :match-func (lambda (msg)
-			              (when msg
-			                (mu4e-message-contact-field-matches
+            :name "inf"
+            :match-func (lambda (msg)
+                          (when msg
+                            (mu4e-message-contact-field-matches
                              msg :to (prot/auth-get-field "inf" :user))))
-	        :vars `((user-mail-address . ,(prot/auth-get-field "inf" :user))))
+            :vars `((user-mail-address . ,(prot/auth-get-field "inf" :user))))
           ,(make-mu4e-context
-	        :name "pub"
-	        :match-func (lambda (msg)
-			              (when msg
-			                (mu4e-message-contact-field-matches
+            :name "pub"
+            :match-func (lambda (msg)
+                          (when msg
+                            (mu4e-message-contact-field-matches
                              msg :to (prot/auth-get-field "pub" :user))))
-	        :vars `((user-mail-address . ,(prot/auth-get-field "pub" :user))))))
+            :vars `((user-mail-address . ,(prot/auth-get-field "pub" :user))))))
 
   (setq mu4e-bookmarks
         '((:name "Unread messages" :query "g:unread AND NOT g:trashed" :key ?u)
