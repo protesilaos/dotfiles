@@ -8718,11 +8718,11 @@ Add this to `prot/outline-minor-mode-exit-hook'."
   :bind ("<f10>" . prot/outline-minor-mode))
 #+end_src
 
-**** TODO Cleanly restore all major modes for outline-mode re-fontification :emacs:
+**** TODO Cleanly restore all major modes for outline-mode re-fontification
      :PROPERTIES:
      :CUSTOM_ID: h:a636f015-6eb7-4978-999e-c6f90e08894d
      :END:
-**** TODO How to re-fontify outline-mode without re-running the major mode? :emacs:
+**** TODO How to re-fontify outline-mode without re-running the major mode?
      :PROPERTIES:
      :CUSTOM_ID: h:8c50a95d-afc0-49a9-ac7c-5e53c8819a43
      :END:
