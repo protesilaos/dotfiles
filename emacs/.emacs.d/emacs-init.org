@@ -2756,9 +2756,9 @@ sexp matching of `prot/mark-sexp-backward', so be mindful of
 where the point is).  Repeated invocations of this command
 incrementally mark objects in the direction originally
 specified."
-    (interactive "P")
+    (interactive "p")
     (let ((x (if arg
-                 (prefix-numeric-value arg)
+                 arg
                (if (< (mark) (point)) -1 1))))
       (cond
        ((symbol-at-point)
