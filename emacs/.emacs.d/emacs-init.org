@@ -3440,6 +3440,7 @@ point for "advanced search" methods, inspired by the default for =occur=
                 (name 16 -1)
                 " " filename)))
   (setq ibuffer-saved-filter-groups nil)
+  (setq ibuffer-old-time 48)
 
   (defun prot/buffers-major-mode (&optional arg)
     "Select buffers that match the current buffer's major mode.
