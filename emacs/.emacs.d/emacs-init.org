@@ -1569,7 +1569,7 @@ aggressive fuzzy-style matching for this particular command."
 Add this to `imenu-after-jump-hook'."
     (let ((pulse-delay .05))
       (recenter 0)
-      (pulse-momentary-highlight-one-line (point) 'modus-theme-intense-red)))
+      (prot/pulse-line)))
 
   (defun prot/imenu-show-entry ()
     "Reveal index at point after succesful `imenu' execution.
@@ -7351,7 +7351,7 @@ EXPERIMENTAL."
           (search-forward (format "%s" title))
           (funcall (intern (concat `,direction "-line")))
           (set-window-point win (point-at-bol))
-          (prot/pulse-line 'modus-theme-subtle-cyan)))))
+          (prot/pulse-line)))))
 
   (defun prot/elfeed-search-tag-filter ()
     "Filter `elfeed' by tags using completion.
@@ -9099,21 +9099,26 @@ demand.  It fully replaces the niche I had carved for the =beacon=
 package, which is to make clear where my cursor is while doing a video
 demo.
 
-In the future I might expand this to cover more cases.
-
 #+begin_src emacs-lisp
 (use-package pulse
   :config
-  ;; TODO make pulse work with empty lines
+  (defface prot/pulse-line-modus-theme
+    '((t :inherit modus-theme-subtle-green :extend t))
+    "Ad-hoc face for `prot/pulse-line'.
+This is done because it is not possible to highlight empty lines
+without the `:extend' property.")
+
   (defun prot/pulse-line (&optional face)
     "Temporarily highlight the current line."
     (interactive)
-    (let ((pulse-delay .06)
+    (let ((start (line-beginning-position))
+          (end (line-beginning-position 2)) ; FIXME fails on the last line
+          (pulse-delay .04)
           (face
            (if face
                face
-             'modus-theme-intense-red)))
-      (pulse-momentary-highlight-one-line (point) face)))
+             'prot/pulse-line-modus-theme)))
+      (pulse-momentary-highlight-region start end face)))
   :bind ("<s-escape>" . prot/pulse-line))
 #+end_src
 
