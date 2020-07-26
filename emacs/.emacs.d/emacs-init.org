@@ -6127,6 +6127,7 @@ the FAQ below):
 
 #+begin_src emacs-lisp
 (use-package diff
+  :commands prot/diff-refine-buffer
   :config
   (setq diff-default-read-only t)
   (setq diff-advance-after-apply-hunk t)
@@ -6152,6 +6153,29 @@ changes, local to the current buffer."
         (with-current-buffer (get-buffer buf)
           (setq-local diff-refine 'font-lock)))))
 
+  (defun prot/diff-refine-buffer ()
+    "Produce word-wise, 'refined' diffs in `diff-mode' buffer.
+Also see `prot/diff-refine-hunk-or-buf' that is a wrapper for the
+current command."
+    (interactive)
+    (let ((position (point)))
+      (when (derived-mode-p 'diff-mode)
+        (setq-local diff-refine 'font-lock)
+        (font-lock-fontify-region (point-min) (point-max))
+        (goto-char position))))
+
+  (defun prot/diff-refine-hunk-or-buf (&optional arg)
+    "Apply word-wise, 'refined' diffs to hunk or buffer.
+With prefix ARG (\\[universal-argument]), refine the entire
+buffer, else the diff hunk at point.
+
+This is a wrapper around `prot/diff-refine-buffer' and
+`diff-refine-hunk', meant to economise on key bindings."
+    (interactive "P")
+    (if arg
+        (prot/diff-refine-buffer)
+      (diff-refine-hunk)))
+
   (defun prot/diff-restrict-view-dwim (&optional arg)
     "Use `diff-restrict-view', or widen when already narrowed.
 By default the narrowing effect applies to the focused diff hunk.
@@ -6173,6 +6197,7 @@ With \\[universal-argument] do it for the current file instead."
   ;; (which I bind to another key---see VC section).
   :bind (("C-x v =" . prot/diff-buffer-with-file)
          :map diff-mode-map
+         ("C-c C-b" . prot/diff-refine-hunk-or-buf) ; replace `diff-refine-hunk'
          ("C-c C-n" . prot/diff-restrict-view-dwim)))
 #+end_src
 
