@@ -2506,6 +2506,18 @@ This command can then be followed by the standard
   Now I define an association list with the pairs I am interested in and
   let that function do the work.
 
++ Plain text headings :: =prot/text-mode-heading= is my solution to the
+  problem of having to insert numerous characters below a line of text
+  so that it looks like a heading.  I do this on occasion with emails,
+  git commits, and the like, where a simple format is sufficient for the
+  task at hand (Org is fine in general, though it definitely is overkill
+  for such scenaria---use Org when you need its advanced
+  text-manipulation functions and integration with its numerous extras).
+  The =prot/line-p= macro from the section on [[#h:5cfe0052-b825-468c-9765-9002665c7762][custom commands for lines]]
+  helps me define checks for what is on a given line, in order to
+  determine whether it should be excluded from becoming a heading or
+  not.
+
 + Change case "do what I mean" :: Emacs provides =*-dwim= versions of its
   commands for changing the casing of a word or a region.  With an
   active region, they operate on it, else they operate on the word.  I
@@ -2539,12 +2551,57 @@ This command can then be followed by the standard
            (right (caddr (assoc choice data))))
       (insert-pair arg left right)))
 
+  (defun prot/text-mode-heading (&optional arg)
+    "Insert equal length heading delimiter below current line.
+
+A heading delimiter is drawn as a series of dashes (-).  With
+optional ARG, i.e. by prefixing \\[universal-argument], draw the
+heading delimiter with equals signs (=).  The latter is
+considered a heading level 1, while the former is level 2.
+
+A heading delimiter is inserted only when that would not mess up
+with existing headings or lists.  In such cases, point will move
+to the next line.  For the purposes of this command, text that
+starts with a number and no further delimiter is not consider a
+list element.
+
+This command is meant to be used in `text-mode' buffers and
+derivatives, such as `markdown-mode', though not in `org-mode'."
+    (interactive "P")
+    (cond
+     ((eq major-mode 'org-mode)
+      (user-error "Do not use `prot/text-mode-heading' in `org-mode'!"))
+     ((derived-mode-p 'text-mode)
+      (let* ((count (- (point-at-eol) (point-at-bol)))
+             (char (string-to-char (if arg "=" "-"))))
+          (cond
+           ((and (eobp)
+                 (or (prot/text-list-line-p 1)
+                     (prot/text-heading-line-p 1)
+                     (prot/empty-line-p 1)
+                     (prot/indent-line-p 1)))
+            (newline 1))
+           ((or (prot/empty-line-p 1)
+                (prot/indent-line-p 1))
+            (prot/new-line-below))
+           ((or (prot/text-list-line-p 1)
+                (prot/text-heading-line-p 2))
+            (if (prot/empty-line-p 3)
+                (beginning-of-line 3)
+              (prot/new-line-below)))
+           (t
+            (prot/new-line-below)
+            (insert-char char count nil)
+            (newline 2)))))))
+
   :bind (("C-'" . prot/insert-pair-completion)
          ("M-'" . prot/insert-pair-completion)
          ("<C-M-backspace>" . backward-kill-sexp)
          ("M-c" . capitalize-dwim)
          ("M-l" . downcase-dwim)        ; "lower" case
-         ("M-u" . upcase-dwim)))
+         ("M-u" . upcase-dwim)
+         :map text-mode-map
+         ("<M-return>" . prot/text-mode-heading)))
 #+end_src
 
 *** Custom commands for object transposition
