@@ -9202,8 +9202,10 @@ without the `:extend' property.")
   (defun prot/pulse-line (&optional face)
     "Temporarily highlight the current line."
     (interactive)
-    (let ((start (line-beginning-position))
-          (end (line-beginning-position 2)) ; FIXME fails on the last line
+    (let ((start (if (eobp)
+                     (line-beginning-position 0)
+                   (line-beginning-position)))
+          (end (line-beginning-position 2))
           (pulse-delay .04)
           (face
            (if face
