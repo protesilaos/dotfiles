@@ -2376,6 +2376,12 @@ you need.  Just a couple of notes:
   invocation will leave one space, a second removes all space, while a
   third consecutive call restores the original state.
 
++ The =prot/line-p= macro is a general purpose utility to confirm a match
+  for a regular expression on a given line (1 is line at point).  Refer
+  to the section on [[#h:66dd425b-4827-47eb-ac14-ac672596114d][custom commands for text insertion or manipulation]],
+  specifically its =prot/text-mode-heading=, for a demonstration of how
+  the derived functions are used.
+
 #+begin_src emacs-lisp
 (use-package emacs
   :config
@@ -2447,6 +2453,36 @@ This command can then be followed by the standard
     "Kill from point to the beginning of the line."
     (interactive)
     (kill-line 0))
+
+  ;; Based on `org--line-empty-p'.
+  (defmacro prot/line-p (name regexp)
+    "Make NAME function to match REGEXP on line n from point."
+    `(defun ,name (n)
+       (save-excursion
+         (and (not (bobp))
+	          (or (beginning-of-line n) t)
+	          (save-match-data
+	            (looking-at ,regexp))))))
+
+  (prot/line-p
+   prot/empty-line-p
+   "[\s\t]*$")
+
+  (prot/line-p
+   prot/indent-line-p
+   "^[\s\t]+")
+
+  (prot/line-p
+   prot/non-empty-line-p
+   "^.*$")
+
+  (prot/line-p
+   prot/text-list-line-p
+   "^\\([\s\t#*+]+\\|[0-9]+[).]+\\)")
+
+  (prot/line-p
+   prot/text-heading-line-p
+   "^[=-]+")
 
   :bind (("C-S-w" . prot/copy-line-or-region)
          ("C-S-y" . prot/yank-replace-line-or-region)
