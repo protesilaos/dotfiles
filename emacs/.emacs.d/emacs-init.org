@@ -2616,17 +2616,18 @@ derivatives, such as `markdown-mode', though not in `org-mode'."
   the region is active, to swap the object at mark (region beginning)
   with the one at point (region end).
 
-+ Transpose or swap words :: Same as with the other "swap" commands.  In
-  addition, this alters =transpose-words= while at the end of line where
-  it will only transpose the last two words before point.  It thus
-  avoids transposing words across lines or paragraphs, which I never
-  want.
++ Transpose or swap words :: =prot/transpose-words= follows the same
+  principles as the other "swap" commands.  Though it differs from the
+  built-in =transpose-words= while at the beginning or end of line where
+  it will only transpose the first or last two words after or before
+  point.  It thus avoids transposing words across lines or paragraphs,
+  which I never want.
 
-+ Transpose characters :: Tweak the way the original command works, so
-  that it /always/ transposes the two characters before point.  This will
-  no longer have the effect of moving the character forward following
-  repeated invocations of the command.  Just a toggle to quickly fix the
-  last typo.
++ Transpose characters :: =prot/transpose-chars= simply tweak the way the
+  original command works, so that it /always/ transposes the two
+  characters before point.  This will no longer have the effect of
+  moving the character forward following repeated invocations of the
+  command.  Just a toggle to quickly fix the last typo.
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -2688,30 +2689,21 @@ with the one at point (region end).
 
 Otherwise, and while inside a sentence, this behaves as the
 built-in `transpose-words', dragging forward the word behind the
-point.  The difference lies in its behaviour at the end of a
-line, where it will always transpose the word at point with the
-one behind it (effectively the last two words).
-
-This addresses two patterns of behaviour I dislike in the
-original command:
-
-1. When a line follows, \\[transpose-words] will transpose the
-last word of the line at point with the first word of the line
-below.
-
-2. While at the end of the line, \\[transpose-words] will not
-transpose the last two words, but will instead move point one
-word backward.  To actually transpose the last two words, you
-need to invoke the command twice."
+point.  The difference lies in its behaviour at the end or
+beginnning of a line, where it will always transpose the word at
+point with the one behind or ahead of it (effectively the
+last/first two words)."
     (interactive "p")
-    (if (use-region-p)
-        (transpose-words 0)
-      (if (eq (point) (point-at-eol))
-          (progn
-            (backward-word 1)
-            (transpose-words 1)
-            (forward-char 1))
-        (transpose-words arg))))
+    (cond
+     ((use-region-p)
+      (transpose-words 0))
+     ((eq (point) (point-at-eol))
+      (transpose-words -1))
+     ((eq (point) (point-at-bol))
+      (forward-word 1)
+      (transpose-words 1))
+     (t
+      (transpose-words arg))))
 
   :bind (("C-t" . prot/transpose-chars)
          ("C-x C-t" . prot/transpose-lines)
