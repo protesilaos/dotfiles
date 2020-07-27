@@ -9979,6 +9979,107 @@ _d_: Display error
               ("C-c h l" . prot/hydra-flycheck/body)))
 #+end_src
 
+**** Flycheck proselint integration
+     :PROPERTIES:
+     :CUSTOM_ID: h:6dff70a8-7eba-4b5d-982c-f13d13ed3b3b
+     :END:
+
+Note that =flycheck= has built-in support for the =proselint= executable
+(check [[https://github.com/amperser/proselint][that project's README]]).  All you need is to have that program
+installed and then start =flycheck-mode= in a text buffer (I use it with
+Org and Markdown).
+
+To customise the feedback you get, define a configuration file.  Here
+are the contents of mine, placed at =~/.config/proselint/config=:
+
+#+begin_example conf
+{
+    "max_errors": 200,
+    "checks": {
+        "airlinese.misc"                : false,
+        "annotations.misc"              : true,
+        "archaism.misc"                 : true,
+        "cliches.hell"                  : true,
+        "cliches.misc"                  : true,
+        "consistency.spacing"           : true,
+        "consistency.spelling"          : true,
+        "corporate_speak.misc"          : false,
+        "cursing.filth"                 : false,
+        "cursing.nfl"                   : false,
+        "cursing.nword"                 : false,
+        "dates_times.am_pm"             : false,
+        "dates_times.dates"             : false,
+        "hedging.misc"                  : true,
+        "hyperbole.misc"                : true,
+        "jargon.misc"                   : true,
+        "lexical_illusions.misc"        : true,
+        "lgbtq.offensive_terms"         : true,
+        "lgbtq.terms"                   : true,
+        "links.broken"                  : false,
+        "malapropisms.misc"             : true,
+        "misc.apologizing"              : true,
+        "misc.back_formations"          : true,
+        "misc.bureaucratese"            : true,
+        "misc.but"                      : true,
+        "misc.capitalization"           : true,
+        "misc.chatspeak"                : false,
+        "misc.commercialese"            : true,
+        "misc.composition"              : true,
+        "misc.currency"                 : false,
+        "misc.debased"                  : true,
+        "misc.false_plurals"            : true,
+        "misc.illogic"                  : true,
+        "misc.inferior_superior"        : true,
+        "misc.institution_name"	        : true,
+        "misc.latin"                    : true,
+        "misc.many_a"                   : false,
+        "misc.metaconcepts"             : true,
+        "misc.metadiscourse"            : true,
+        "misc.narcissism"               : true,
+        "misc.not_guilty"               : true,
+        "misc.phrasal_adjectives"       : true,
+        "misc.preferred_forms"          : true,
+        "misc.pretension"               : true,
+        "misc.professions"              : true,
+        "misc.punctuation"              : true,
+        "misc.scare_quotes"             : true,
+        "misc.suddenly"                 : false,
+        "misc.tense_present"            : true,
+        "misc.waxed"                    : true,
+        "misc.whence"                   : false,
+        "mixed_metaphors.misc"          : true,
+        "mondegreens.misc"              : true,
+        "needless_variants.misc"        : true,
+        "nonwords.misc"                 : true,
+        "oxymorons.misc"                : true,
+        "psychology.misc"               : true,
+        "redundancy.misc"               : true,
+        "redundancy.ras_syndrome"       : true,
+        "skunked_terms.misc"            : true,
+        "spelling.able_atable"          : true,
+        "spelling.able_ible"            : true,
+        "spelling.athletes"             : false,
+        "spelling.em_im_en_in"          : true,
+        "spelling.er_or"                : true,
+        "spelling.in_un"                : true,
+        "spelling.misc"                 : true,
+        "security.credit_card"          : false,
+        "security.password"             : false,
+        "sexism.misc"                   : true,
+        "terms.animal_adjectives"       : true,
+        "terms.denizen_labels"          : true,
+        "terms.eponymous_adjectives"    : true,
+        "terms.venery"                  : true,
+        "typography.diacritical_marks"  : false,
+        "typography.exclamation"        : true,
+        "typography.symbols"            : true,
+        "uncomparables.misc"            : true,
+        "weasel_words.misc"             : true,
+        "weasel_words.very"             : false
+    }
+}
+#+end_example
+
 **** Flycheck mode line indicator
      :PROPERTIES:
      :CUSTOM_ID: h:93b2aeed-d46a-4737-9d96-d8e5aedf8a67
