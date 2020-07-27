@@ -9954,7 +9954,7 @@ activity around its development.
         (user-error "Flycheck mode not enabled"))
       (if diagnostics
           (delete-window diagnostics)
-      (flycheck-list-errors))))
+        (flycheck-list-errors))))
 
   (defhydra prot/hydra-flycheck (:color pink :hint nil)
     "
@@ -9973,6 +9973,8 @@ _d_: Display error
     ("d" flycheck-display-error-at-point)
     ("x" flycheck-disable-checker :color blue)
     ("q" nil "cancel" :color blue))
+
+  :hook (flycheck-error-list-mode-hook . visual-line-mode)
   :bind (:map flycheck-mode-map
               ("C-c h l" . prot/hydra-flycheck/body)))
 #+end_src
