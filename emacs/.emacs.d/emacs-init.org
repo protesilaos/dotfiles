@@ -170,7 +170,7 @@ there are other tools available from third parties, such as =straight.el=.
 
 Unlike a typical extensible program, there is no real distinction
 between native Emacs code and the one that comes from third parties.
-There is no externally-facing limited set of features that other tools
+There is no externally facing limited set of features that other tools
 can plug into.  Emacs is an interpreter of lisp (Emacs Lisp), meaning
 that any elisp is evaluated in real time, making Emacs behave in
 accordance with it.
@@ -488,7 +488,7 @@ While there are many ways to define a baseline or fallback font family
 in Emacs, I find that the most consistent one in terms of overall
 configuration is to do it at the "face" level.  For the main typeface,
 we configure the =default= face.  Then we have =variable-pitch= for
-proportionately-spaced fonts and =fixed-pitch= for monospaced ones.
+proportionately spaced fonts and =fixed-pitch= for monospaced ones.
 
 In Emacs parlance, "face" signifies a construct that groups together
 several display attributes, such as a foreground and a background
@@ -569,13 +569,13 @@ See, for example, `prot/font-set-fonts'.")
       ("presentation" . (19 "Iosevka SS08" "Source Sans Pro" 1)))
     "Alist of desired point sizes and their typefaces.
 Each association consists of a display type mapped to a point
-size, followed by monospaced and proportionately-spaced font
+size, followed by monospaced and proportionately spaced font
 names, and a difference in desired size between the latter two to
 account for their innate differences in proportions (this number
 represents pixels and is found empirically).
 
 The monospaced typeface is meant to be applied to the `default'
-and `fixed-pitch' faces.  The proportionately-space font is
+and `fixed-pitch' faces.  The proportionately space font is
 intended for the `variable-pitch' face.")
 
   (defun prot/font-set-face-attribute (face family size &optional params)
@@ -593,7 +593,7 @@ intended for the `variable-pitch' face.")
 POINTS is the font's point size, represented as either '10' or
 '10.5'.  FONT-MONO should be a monospaced typeface, due to the
 alignment requirements of the `fixed-pitch' face.  FONT-VAR could
-be a proportionately-spaced typeface or even a monospaced one,
+be a proportionately spaced typeface or even a monospaced one,
 since the `variable-pitch' it applies to is not supposed to be
 spacing-sensitive.  Both families must be represented as a string
 holding the family's name."
@@ -750,7 +750,7 @@ may be used, see [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Primary and compleme
 
 While we can handle things on our own by calling =set-face-attribute= for
 each face we are interested in, there is a built-in mechanism to quickly
-toggle the use of proportionately-spaced fonts (in contrast to the
+toggle the use of proportionately spaced fonts (in contrast to the
 monospaced ones which usually are the standard).  Depending on your
 theme this will not yield good results in Org mode, so be warned.
 
@@ -1517,7 +1517,7 @@ as part of the general window layout.
     :END:
 
 The =imenu= is a built-in library that builds an index of buffer positions
-pointing to semantically-relevant constructs.  It then displays the list
+pointing to semantically relevant constructs.  It then displays the list
 through a completion interface.  Selecting an item repositions the point
 there.
 
@@ -4400,7 +4400,7 @@ The visibility of a template is further controlled by another variable:
 =org-capture-templates-contexts=.  This allows us to tell Org the context
 in which we want certain options to appear in.  Otherwise they remain
 concealed from our view.  Equipped with this piece of functionality, we
-can freely write highly-specialised templates that capture structured
+can freely write highly specialised templates that capture structured
 text when viewing some particular item, but are not needed for more
 general purposes.  I do this for certain actions that only come into
 effect when reading email inside of the relevant =gnus= buffers (also
@@ -8561,7 +8561,7 @@ For video demonstrantions check these:
 
 Fringes are disabled.  The modeline is hidden, except for
 `prog-mode' buffers (see `prot/hidden-mode-line-mode').  The
-default typeface is set to a proportionately-spaced family,
+default typeface is set to a proportionately spaced family,
 except for programming modes (see `prot/variable-pitch-mode').
 The cursor becomes a blinking bar, per `prot/cursor-type-mode'."
     :init-value nil
@@ -8842,7 +8842,7 @@ Add this to `prot/outline-minor-mode-exit-hook'."
    :END:
 
 Registers are compartments that hold data of various sorts.  They offer
-the means for advanced, highly-efficient workflows, especially when
+the means for advanced, highly efficient workflows, especially when
 combined with keyboard macros.
 
 Registers are called by a single character, which can be a letter
@@ -9120,7 +9120,7 @@ My cursor for the current window is a box character that /does not/ blink.
 Other windows use a vertical bar that is 2 pixels wide.
 
 With =prot/cursor-type-mode= I switch to a bar cursor that blinks.  This
-is visually better when proportionately-spaced fonts are on display,
+is visually better when proportionately spaced fonts are on display,
 such as with my =prot/variable-pitch-mode= and =prot/olivetti-mode=.
 Otherwise it is a convenient toggle for when I need to have that effect.
 
@@ -9165,7 +9165,7 @@ numerous parts of a buffer or set thereof, it sometimes is easier to
 just pop a few extra cursors and type directly, especially for quick,
 one-time operations.
 
-For the technically-minded, make sure to read Christopher Wellons'
+For the technically minded, make sure to read Christopher Wellons'
 article on [[https://nullprogram.com/blog/2017/09/07/][Gap Buffers Are Not Optimized for Multiple Cursors]].  Also
 quoting from the source code (=M-x find-library multiple-cursors=):
 
@@ -10250,7 +10250,7 @@ is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant secti
 
 This section contains configurations for packages that are dedicated to
 the task of recording the state of various Emacs tools, such as the
-history of the minibuffer or the list of recently-visited files.
+history of the minibuffer or the list of recently visited files.
 
 In practice, these are some of the most useful configurations one can
 make, as lots of functions depend on them.  For example, a record of the
@@ -10627,11 +10627,11 @@ Again, =occur= or similar tools will filter these out when necessary.
 Imagine having to do that without any namespaces…  You would need to
 check each symbol one by one to determine its origin.
 
-Last but not least, the convention of separating namespaces with a
-forward slash is not particularly important (and the linter for Elisp
-packaging will complain about it, if you ever go down that path).  It
-could be something like =prot--= or =my-= or whatever.  What matters more is
-to keep things consistent and fairly easy to identify.
+The convention of separating namespaces with a forward slash is not
+particularly important, though the linter for Elisp packaging will
+complain about it, if you ever go down that path.  It could be something
+like =prot--= or =my-= or whatever.  What matters is to keep things
+consistent and fairly easy to identify.
 
 ** Why not `:custom' and why do you use so many `setq'?
    :PROPERTIES:
@@ -10640,7 +10640,7 @@ to keep things consistent and fairly easy to identify.
 
 I normally do not use the =:custom= keyword that =use-package= provides,
 opting instead for =:config= or =:init=.  This is for a couple of
-closely-related reasons:
+closely related reasons:
 
 + It makes each variable more difficult to copy elsewhere, say, when
   sharing it online or to an =emacs -Q= scratch buffer.  You either need
@@ -10825,9 +10825,9 @@ considerations).
 
 The laptop is mostly deployed as part of a desktop setup, attached to an
 external monitor, mouse, and keyboard.  The monitor is 1080p and I got
-it for free from a clearance.  As for the mouse and keyboard, I bought
-those from a toy store for 7 EUR combined.  The keyboard's layout is US
-Qwerty.
+it free of charge from a clearance.  As for the mouse and keyboard, I
+bought those from a toy store for 7 EUR combined.  The keyboard's layout
+is US Qwerty.
 
 For my videos I use the built-in camera and microphone (sorry if the
 production quality is sub-standard!).  Since we are here: the recording
@@ -11109,8 +11109,8 @@ This is extremely valuable, as it will always surface to the top the
 commands you most likely need.  Running =M-x= is now akin to starting a
 key chord chain (for example, =M-x b= will give me =bongo= as my first
 match, which is exactly what I need).  It eliminates the need for
-increasingly arcane key bindings—use keys only for the most
-frequently-used commands.
+increasingly arcane key bindings—use keys only for the most frequently
+used commands.
 
 The value of =ivy-prescient-sort-commands= defines functions that are
 exempt from all the sorting operations performed by this tool.  I think
