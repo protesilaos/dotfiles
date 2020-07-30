@@ -4820,18 +4820,19 @@ demanding workflows.
     :CUSTOM_ID: h:031f7dbf-19e4-4ddf-a3d3-f648261412f6
     :END:
 
-Everything in this section is copied directly from this detailed
-tutorial on [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][Org header IDs]].  Basically, the problem is that exported
-HTML does not have reliable anchor tags for the various sections of the
-document.  This fixes the issue (read the article for more).
+Everything in this section, minus some minor tweaks from my part, is
+copied from this detailed tutorial on [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][Org header IDs]].  Basically, the
+problem is that exported HTML does not have reliable anchor tags for the
+various sections of the document.  This fixes the issue (read the
+article for more).
 
 #+begin_src emacs-lisp
 (use-package org-id
   :after org
-  :commands (contrib/org-get-id
-             contrib/org-id-headlines)
+  :commands contrib/org-id-headlines
   :config
-  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  (setq org-id-link-to-org-use-id
+        'create-if-interactive-and-no-custom-id)
 
   (defun contrib/org-get-id (&optional pom create prefix)
     "Get the CUSTOM_ID property of the entry at point-or-marker
@@ -4840,7 +4841,6 @@ does not have an CUSTOM_ID, the function returns nil. However,
 when CREATE is non nil, create a CUSTOM_ID if none is present
 already. PREFIX will be passed through to `org-id-new'. In any
 case, the CUSTOM_ID of the entry is returned."
-    (interactive)
     (org-with-point-at pom
       (let ((id (org-entry-get nil "CUSTOM_ID")))
         (cond
@@ -4856,8 +4856,8 @@ case, the CUSTOM_ID of the entry is returned."
     "Add CUSTOM_ID properties to all headlines in the current
 file which do not already have one."
     (interactive)
-    (org-map-entries (lambda ()
-                       (contrib/org-get-id (point) 'create)))))
+    (org-map-entries
+     (funcall 'contrib/org-get-id (point) 'create))))
 #+end_src
 
 *** Simple presentations inside of Emacs (org-tree-slide)
