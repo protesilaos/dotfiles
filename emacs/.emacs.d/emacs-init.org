@@ -3,21 +3,21 @@
 #+EMAIL: public@protesilaos.com
 
 * Overview
-  :PROPERTIES:
-  :CUSTOM_ID: h:9ff13b78-42b8-49fe-9e23-0307c780de93
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: h:9ff13b78-42b8-49fe-9e23-0307c780de93
+:END:
 ** Canonical links to this document
-   :PROPERTIES:
-   :CUSTOM_ID: h:0a9b72b3-aa4a-4c5c-a654-d4bc04b31bbd
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:0a9b72b3-aa4a-4c5c-a654-d4bc04b31bbd
+:END:
 
 + HTML version :: [[https://protesilaos.com/dotemacs][protesilaos.com/dotemacs]]
 + Git repo :: [[https://gitlab.com/protesilaos/dotfiles][gitlab.com/protesilaos/dotfiles]]
 
 ** What is this
-   :PROPERTIES:
-   :CUSTOM_ID: h:8cfd5674-4997-44c7-bb7a-1869d5d53538
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:8cfd5674-4997-44c7-bb7a-1869d5d53538
+:END:
 
 The present document, referred to in the source code version as
 =emacs-init.org=, contains the bulk of my configurations for GNU Emacs.
@@ -43,9 +43,9 @@ work, it needs to be initialised from another file that only covers the
 absolute essentials.
 
 *** Contents of my init.el
-    :PROPERTIES:
-    :CUSTOM_ID: h:584c3604-55a1-49d0-9c31-abe46cb1f028
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:584c3604-55a1-49d0-9c31-abe46cb1f028
+:END:
 
 The =emacs-init.org= is actually loaded from an other file, named =init.el=
 as per the Emacs convention.  Mine is designed to add the
@@ -54,9 +54,9 @@ configure =use-package= (see [[#h:cfa129a4-3394-4911-9097-4544df4e6ed9][comprehe
 load the file with my configurations (i.e. the present document).
 
 **** Old version prior to Emacs 27
-     :PROPERTIES:
-     :CUSTOM_ID: h:7264d03a-9aac-490f-bfba-582382997105
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:7264d03a-9aac-490f-bfba-582382997105
+:END:
 
 For reference, these were the contents of my =init.el= *prior to Emacs
 27.1*.
@@ -73,9 +73,9 @@ For reference, these were the contents of my =init.el= *prior to Emacs
 #+end_example
 
 **** Current version for Emacs 27+
-     :PROPERTIES:
-     :CUSTOM_ID: h:3fd803db-1bb4-4a0b-9c50-787d88cc7594
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:3fd803db-1bb4-4a0b-9c50-787d88cc7594
+:END:
 
 Whereas in *Emacs 27.1 and onward*, they are modified thus:
 
@@ -118,9 +118,9 @@ Whereas in *Emacs 27.1 and onward*, they are modified thus:
 #+end_example
 
 **** The "early init" for Emacs 27+
-     :PROPERTIES:
-     :CUSTOM_ID: h:874944d8-7ac0-4115-aa21-6ff4e005f6f6
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:874944d8-7ac0-4115-aa21-6ff4e005f6f6
+:END:
 
 Starting with Emacs 27.1, an =early-init.el= is now required to control
 things with greater precision.  Its code is as follows:
@@ -149,9 +149,9 @@ the =early-init.el= to defer the process of initialising the package
 manager to when =init.el= is evaluated.
 
 *** About `use-package'
-    :PROPERTIES:
-    :CUSTOM_ID: h:cfa129a4-3394-4911-9097-4544df4e6ed9
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:cfa129a4-3394-4911-9097-4544df4e6ed9
+:END:
 
 This is a tool that streamlines the configuration of /packages/.  It
 handles everything from assigning key bindings, setting the value of
@@ -261,9 +261,9 @@ Settings that do not have a corresponding package are declared using the
 special =use-package emacs= notation.
 
 *** About the source code version of this document
-    :PROPERTIES:
-    :CUSTOM_ID: h:f738cdfc-a6ff-46cb-9962-31f754280af5
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:f738cdfc-a6ff-46cb-9962-31f754280af5
+:END:
 
 In the =org-mode= version of this document, I make sure that the
 above-referenced code blocks are not declared as an =emacs-lisp= source
@@ -293,9 +293,9 @@ create a link (the former is defined in the [[#h:4e8347de-415e-4804-b383-d61499e
 is an internal link in action).
 
 ** COPYING
-   :PROPERTIES:
-   :CUSTOM_ID: h:1b9e6455-ba10-4683-88d4-738ecc41cdf6
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:1b9e6455-ba10-4683-88d4-738ecc41cdf6
+:END:
 
 Copyright (c) 2019-2020 Protesilaos Stavrou <info@protesilaos.com>
 
@@ -313,17 +313,17 @@ You should have received a copy of the GNU General Public License
 along with this file.  If not, see <http://www.gnu.org/licenses/>.
 
 * Base settings
-  :PROPERTIES:
-  :CUSTOM_ID: h:4d42f3e3-e96f-4125-a819-0544a21d45f3
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: h:4d42f3e3-e96f-4125-a819-0544a21d45f3
+:END:
 
 This section contains the relatively few configurations that are needed
 prior to the setup of everything else.
 
 ** Always rebuild init and refresh package cache
-   :PROPERTIES:
-   :CUSTOM_ID: h:b343378b-d3ec-4c90-8117-6cf92abee45b
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b343378b-d3ec-4c90-8117-6cf92abee45b
+:END:
 
 When Emacs expands this =org-mode= file into the actual elisp code, it
 creates a new document: =emacs-init.org= derives =emacs-init.el=.  The
@@ -353,9 +353,9 @@ This "quickstart" method is part of Emacs 27+.
 #+end_src
 
 ** Remove modeline "lighters"
-   :PROPERTIES:
-   :CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
+:END:
 
 As was noted in the section [[#h:cfa129a4-3394-4911-9097-4544df4e6ed9][about `use-package']] we can remove the
 so-called "lighter" text that modes append to the mode line.  This is
@@ -371,9 +371,9 @@ If you actually want to edit the lighters, check the Delight package.
 #+end_src
 
 ** Put customisation settings in a "custom.el"
-   :PROPERTIES:
-   :CUSTOM_ID: h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d
+:END:
 
 When you install a package or use the various customisation interfaces
 to tweak things to your liking, Emacs will append a piece of elisp to
@@ -397,9 +397,9 @@ be created again the next time you start Emacs).
 #+end_src
 
 ** Fundamentals for Hydras
-   :PROPERTIES:
-   :CUSTOM_ID: h:af691a31-917e-4d9b-aee6-5744b1173999
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:af691a31-917e-4d9b-aee6-5744b1173999
+:END:
 
 A "hydra" is an ad-hoc mode for mapping commands to a group of more
 convenient key bindings.  In an active hydra, all of its keys---the
@@ -446,9 +446,9 @@ Also check [[https://github.com/abo-abo/hydra][the project's source]] for more i
 #+end_src
 
 ** Base typeface configurations
-   :PROPERTIES:
-   :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
+:END:
 
 Any font I choose must support Latin and Greek character sets, be
 readable at both small and large sizes, preferably offer roman and
@@ -474,9 +474,9 @@ Lastly, note that on a modern GNU/Linux system that uses the =fontconfig=
 library, per-user fonts are stored in =~/.local/share/fonts=.
 
 *** Primary and complementary font settings
-    :PROPERTIES:
-    :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
+:END:
 
 Moving on to my configurations, =prot/font-set-fonts= is a command that
 lets me switch font sizes through a completion interface (more on that
@@ -736,9 +736,9 @@ Meant to be used at some early initialisation stage, such as with
 #+end_src
 
 *** Mode for proportional fonts
-    :PROPERTIES:
-    :CUSTOM_ID: h:414b33cd-66f7-4daf-814f-373e08dff7f8
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:414b33cd-66f7-4daf-814f-373e08dff7f8
+:END:
 
 When Emacs operates in a graphical terminal, it can display text using
 mixed font settings: a variety of heights and families (in addition to
@@ -786,9 +786,9 @@ Also check my [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and t
 #+end_src
 
 *** Typeface suitability test
-   :PROPERTIES:
-   :CUSTOM_ID: h:9035a1ed-e988-4731-89a5-0d9e302c3dea
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:9035a1ed-e988-4731-89a5-0d9e302c3dea
+:END:
 
 Here is a simple test I have come up with to make an initial assessment
 of the overall quality of the font: /can you discern the character at a
@@ -832,13 +832,13 @@ abcdefghijklmnopqrstuvwxyz
 #+end_example
 
 * Selection candidates and search methods
-  :PROPERTIES:
-  :CUSTOM_ID: h:5c060e2e-231d-4896-a5d2-b3fb4134764e
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: h:5c060e2e-231d-4896-a5d2-b3fb4134764e
+:END:
 ** Completion framework and extras
-   :PROPERTIES:
-   :CUSTOM_ID: h:98d3abcc-f34e-4029-aabc-740f0b6421f8
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:98d3abcc-f34e-4029-aabc-740f0b6421f8
+:END:
 
 As discussed in my video about [[https://protesilaos.com/codelog/2019-08-18-emacs-buffers-windows/][Emacs' buffer and window management]],
 the optimal way of using Emacs is through searching and narrowing
@@ -875,9 +875,9 @@ may still need to see the code and customisations I had for those, thus
 is under the heading of [[#h:9850e597-e4b4-4e04-aad9-ce8a12b3e4ae][important configurations that I stopped using]].
 
 *** Minibuffer essentials and Icomplete (built-in completion)
-    :PROPERTIES:
-    :CUSTOM_ID: h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7
+:END:
 
 For newcomers, watch my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).  This
 section and subsquent ones contain a lot of documentation and several
@@ -1248,9 +1248,9 @@ Overview of the following package declaration:
 #+end_src
 
 **** Icomplete vertical mode
-     :PROPERTIES:
-     :CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
+:END:
 
 When I first switched to =icomplete= some time in late January to early
 February 2020, I had to implement my own admittedly sub-par tweaks for
@@ -1349,9 +1349,9 @@ normally would when calling `yank' followed by `yank-pop'."
 #+end_src
 
 *** Embark (actions for completion candidates)
-    :PROPERTIES:
-    :CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
+:END:
 
 *2020-06-21: WORK IN PROGRESS.  THIS SETUP IS INCOMPLETE AND PROBABLY
 FAULTY IN PARTS.*
@@ -1491,30 +1491,30 @@ as part of the general window layout.
 #+end_src
 
 **** TODO Complete review of Embark package declaration [1/4]
-     :PROPERTIES:
-     :CUSTOM_ID: h:5042bfab-64b4-4db2-9821-128e0d099bdf
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:5042bfab-64b4-4db2-9821-128e0d099bdf
+:END:
 ***** DONE Review embark-occur buffer display repositioning
-      CLOSED: [2020-05-29 Fri 13:16]
-      :PROPERTIES:
-      :CUSTOM_ID: h:99fc2c2a-7729-4e5e-a9c1-d07e8f405b07
-      :END:
+CLOSED: [2020-05-29 Fri 13:16]
+:PROPERTIES:
+:CUSTOM_ID: h:99fc2c2a-7729-4e5e-a9c1-d07e8f405b07
+:END:
 ***** TODO Ensure embark-occur works with my custom file-related commands
-      :PROPERTIES:
-      :CUSTOM_ID: h:91e23a92-d29a-47a9-9ef3-304029519cbb
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: h:91e23a92-d29a-47a9-9ef3-304029519cbb
+:END:
 ***** TODO Explore possibility for dedicated windows of embark-occur (dired)
-      :PROPERTIES:
-      :CUSTOM_ID: h:ea5dfb98-6fe6-4667-8ecd-ae83ac7317c5
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ea5dfb98-6fe6-4667-8ecd-ae83ac7317c5
+:END:
 ***** TODO Embark actions for imenu, especially for Org buffers
-      :PROPERTIES:
-      :CUSTOM_ID: h:64cbb516-8223-4d96-ba09-3c24d06916b2
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: h:64cbb516-8223-4d96-ba09-3c24d06916b2
+:END:
 *** Imenu (dynamic completion-based buffer navigation)
-    :PROPERTIES:
-    :CUSTOM_ID: h:77284937-ad9d-44cc-8a3e-80f6ed9e3def
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:77284937-ad9d-44cc-8a3e-80f6ed9e3def
+:END:
 
 The =imenu= is a built-in library that builds an index of buffer positions
 pointing to semantically relevant constructs.  It then displays the list
@@ -1590,9 +1590,9 @@ To be used with `imenu-after-jump-hook'."
 #+end_src
 
 **** Imenu-list (dedicated sidebar)
-     :PROPERTIES:
-     :CUSTOM_ID: h:603d9bb7-7fb1-4943-85b5-99605eadc8f3
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:603d9bb7-7fb1-4943-85b5-99605eadc8f3
+:END:
 
 While completion for =imenu= is wonderful in its own right, you may still
 need to have a sense of the bigger picture.  With =imenu-list= we can
@@ -1628,9 +1628,9 @@ With \\[universal-argument] toggle the display of the window."
 #+end_src
 
 **** Flimenu (flat imenu index)
-     :PROPERTIES:
-     :CUSTOM_ID: h:9be8e9ec-e1f2-477b-92d9-d050aef00d50
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:9be8e9ec-e1f2-477b-92d9-d050aef00d50
+:END:
 
 This package offers a global and a local minor mode for flattening the
 index of =imenu=.  By default Imenu produces a multi-level index, where
@@ -1663,9 +1663,9 @@ given the aforementioned.
 #+end_src
 
 *** Generic completion for projects and directory trees
-    :PROPERTIES:
-    :CUSTOM_ID: h:7862f39e-aed0-4d02-9f1e-60c4601a9734
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:7862f39e-aed0-4d02-9f1e-60c4601a9734
+:END:
 
 *Bear in mind* that this section only covers a set of /generic/ commands for
 querying version-controlled directories, aka "projects", or directory
@@ -1764,9 +1764,9 @@ all the possible candidates."
 #+end_src
 
 *** In-buffer completions
-    :PROPERTIES:
-    :CUSTOM_ID: h:98876022-57cc-40de-936e-4ee42cefd69a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:98876022-57cc-40de-936e-4ee42cefd69a
+:END:
 
 After trying the popular third-party "Company" package, I felt that it
 did not offer much of an added value to my typing experience, while its
@@ -1817,9 +1817,9 @@ Use as a value for `completion-in-region-function'."
 #+end_src
 
 **** Dabbrev (dynamic word completion)
-     :PROPERTIES:
-     :CUSTOM_ID: h:57dcf193-0c4e-4ee6-9b2d-6892558b0a84
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:57dcf193-0c4e-4ee6-9b2d-6892558b0a84
+:END:
 
 This is Emacs' own approach to dynamic/arbitrary text completion inside
 the buffer: "dynamic abbreviation" or else =dabbrev=.  This mechanism
@@ -1875,9 +1875,9 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
 #+end_src
 
 **** Skeletons and abbreviations
-     :PROPERTIES:
-     :CUSTOM_ID: h:33cd69cc-1a50-4abb-9f09-cae98dc8998b
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:33cd69cc-1a50-4abb-9f09-cae98dc8998b
+:END:
 
 /NOTE 2020-06-08: Pending major review./
 
@@ -1955,17 +1955,17 @@ position of the cursor after the skeleton has been inserted.
 #+end_src
 
 ** Configurations for—or extensions to—built-in search commands
-   :PROPERTIES:
-   :CUSTOM_ID: h:67dac9fe-5c15-437d-bb3e-26b293affa45
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:67dac9fe-5c15-437d-bb3e-26b293affa45
+:END:
 
 These are meant to enhance the functionality of tools that are already
 shipped with Emacs.
 
 *** Isearch configurations and enhancements
-   :PROPERTIES:
-   :CUSTOM_ID: h:b67687ee-25a3-4bf4-a924-180ccb63c629
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b67687ee-25a3-4bf4-a924-180ccb63c629
+:END:
 
 The built-in search mechanism is a thing of beauty: minimal in its
 presentation, powerful in its applications.
@@ -2154,9 +2154,9 @@ end of the buffer.")
 #+end_src
 
 *** Occur (replace.el)
-    :PROPERTIES:
-    :CUSTOM_ID: h:037b7121-1238-42f8-a771-0dce43a46d23
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:037b7121-1238-42f8-a771-0dce43a46d23
+:END:
 
 These are a few stylistic tweaks for the "Occur" buffer (=M-x occur=).
 The faces are part of my Modus themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][relevant section]]).
@@ -2180,9 +2180,9 @@ The faces are part of my Modus themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408
 #+end_src
 
 *** Regular expressions: re-builder and visual-regexp
-    :PROPERTIES:
-    :CUSTOM_ID: h:6c6759c8-3ae3-40b0-8356-05cc0975e12a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:6c6759c8-3ae3-40b0-8356-05cc0975e12a
+:END:
 
 To learn more about regular expressions, read the relevant pages in
 the official manual.  Assuming you have this installed properly on
@@ -2222,9 +2222,9 @@ great when dealing with complex sets of regexp constructs.
 #+end_src
 
 *** wgrep (writable grep)
-    :PROPERTIES:
-    :CUSTOM_ID: h:42624165-f4cb-4318-abce-c11232426880
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:42624165-f4cb-4318-abce-c11232426880
+:END:
 
 With =wgrep= we can directly edit the results of a =grep= and save the
 changes to all affected buffers.  In principle, this is the same as what
@@ -2243,9 +2243,9 @@ matches by leveraging the full power of Emacs' editing capabilities
 #+end_src
 
 *** ripgrep (rg.el)
-    :PROPERTIES:
-    :CUSTOM_ID: h:31622bf2-526b-4426-9fda-c0fc59ac8f4b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:31622bf2-526b-4426-9fda-c0fc59ac8f4b
+:END:
 
 This is a package that allows us to interface with the external command
 line program called "ripgrep".  My [[https://protesilaos.com/codelog/2020-03-25-emacs-ripgrep-rg/][video demo of rg.el]] (2020-03-25)
@@ -2330,9 +2330,9 @@ This function is meant to be mapped to a key in `rg-mode-map'."
 #+end_src
 
 * General movements and motions
-   :PROPERTIES:
-   :CUSTOM_ID: h:9aa933d2-70a9-426a-aeb2-2fa21bc67d97
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:9aa933d2-70a9-426a-aeb2-2fa21bc67d97
+:END:
 
 I generally rely on the default keys to move around (plus my Super-KEY
 additions to economise on some repetitive tasks).  There are, however,
@@ -2342,9 +2342,9 @@ custom functions and/or remapped key bindings, as well as carefully
 considered external packages.
 
 ** Custom commands in line with simple.el and lisp.el
-   :PROPERTIES:
-   :CUSTOM_ID: h:2442f3bf-3ffb-431d-82d9-8a44954355b1
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:2442f3bf-3ffb-431d-82d9-8a44954355b1
+:END:
 
 The subsections provided herein contain small functions that facilitate
 my day-to-day work with Emacs.  They are written by me, unless otherwise
@@ -2359,9 +2359,9 @@ focus on the relevant parts.  Remember that widening always happens with
 =C-x n w= (=widen=).
 
 *** Custom commands for lines
-    :PROPERTIES:
-    :CUSTOM_ID: h:5cfe0052-b825-468c-9765-9002665c7762
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:5cfe0052-b825-468c-9765-9002665c7762
+:END:
 
 The docstrings of my functions here should offer you all the information
 you need.  Just a couple of notes:
@@ -2501,9 +2501,9 @@ This command can then be followed by the standard
 #+end_src
 
 *** Custom commands for text insertion or manipulation
-    :PROPERTIES:
-    :CUSTOM_ID: h:66dd425b-4827-47eb-ac14-ac672596114d
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:66dd425b-4827-47eb-ac14-ac672596114d
+:END:
 
 + Insert pairs with completion :: With =prot/insert-pair-completion= I
   solve the problem of having to define a potentially large set of key
@@ -2610,9 +2610,9 @@ derivatives, such as `markdown-mode', though not in `org-mode'."
 #+end_src
 
 *** Custom commands for object transposition
-    :PROPERTIES:
-    :CUSTOM_ID: h:b6d349c6-11f5-4c7a-8dda-fc32a76aa5b1
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b6d349c6-11f5-4c7a-8dda-fc32a76aa5b1
+:END:
 
 + Transpose or swap objects :: This is a series of functions that are
   constructed from the =prot/transpose= macro.  They concern larger text
@@ -2719,9 +2719,9 @@ last/first two words)."
 #+end_src
 
 *** Custom commands for marking syntactic constructs
-    :PROPERTIES:
-    :CUSTOM_ID: h:19076ddf-8c55-48da-81a3-129b18cf62c0
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:19076ddf-8c55-48da-81a3-129b18cf62c0
+:END:
 
 I tried working with the external =expand.el= package, but realised I only
 ever used a tiny subset of its commands.  Instead of paying the penalty,
@@ -2859,9 +2859,9 @@ specified."
 #+end_src
 
 ** Go to actionable beginning or end of buffer (beginend.el)
-   :PROPERTIES:
-   :CUSTOM_ID: h:29ea650f-f6a9-4bb4-abca-9548b4e4c4eb
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:29ea650f-f6a9-4bb4-abca-9548b4e4c4eb
+:END:
 
 This package by Damien Cassou offers the ability to move to the first or
 last actionable point in a buffer rather than the absolute maximum or
@@ -2889,9 +2889,9 @@ provides.  I got this from [[https://github.com/DamienCassou/beginend/issues/43]
 #+end_src
 
 ** Go to last change
-   :PROPERTIES:
-   :CUSTOM_ID: h:ac889a76-1092-449e-a184-9092093f3103
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ac889a76-1092-449e-a184-9092093f3103
+:END:
 
 I could not find any built-in method of /reliably/ moving back to the
 last change.  Using the mark ring is always an option, but does not fill
@@ -2908,13 +2908,13 @@ key binding!
 #+end_src
 
 * Directory, buffer, window management
-  :PROPERTIES:
-  :CUSTOM_ID: h:402cb0db-1e93-4b1f-8f6d-e17b4409fb86
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: h:402cb0db-1e93-4b1f-8f6d-e17b4409fb86
+:END:
 ** Dired (directory editor, file manager)
-   :PROPERTIES:
-   :CUSTOM_ID: h:c519300f-8a9a-472b-b26d-c2f49adbdb5d
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:c519300f-8a9a-472b-b26d-c2f49adbdb5d
+:END:
 
 The directory editor abbreviated as "Dired" (which I pronounce like
 "tired", "mired", etc.) is a built-in tool that performs file management
@@ -2940,9 +2940,9 @@ Check some of my videos:
 + [[https://protesilaos.com/codelog/2019-12-08-emacs-multi-replace/][Search and replace across multiple files (not Dired-specific)]] (2019-12-08).
 
 *** Base settings for Dired
-   :PROPERTIES:
-   :CUSTOM_ID: h:751a310d-c63e-461c-a6e1-dfdfdb01cb92
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:751a310d-c63e-461c-a6e1-dfdfdb01cb92
+:END:
 
 The options here are meant to do the following:
 
@@ -3111,26 +3111,26 @@ to do in the current context, given that they are not searching through
 their previous actions.
 
 **** TODO extend core Dired [1/3]
-     :PROPERTIES:
-     :CUSTOM_ID: h:f351058c-ea25-4ec3-88ce-2df6757fc193
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:f351058c-ea25-4ec3-88ce-2df6757fc193
+:END:
 ***** DONE front-end for `fd' executable
-      CLOSED: [2020-05-30 Sat 20:17]
-      :PROPERTIES:
-      :CUSTOM_ID: h:00db9952-8a32-4142-8f62-dc275481e5a6
-      :END:
-***** TODO better handling of `xdg-open'
-      :PROPERTIES:
-      :CUSTOM_ID: h:b622cd06-14e6-4bdf-8730-b1a659591d4a
-      :END:
+CLOSED: [2020-05-30 Sat 20:17]
+:PROPERTIES:
+:CUSTOM_ID: h:00db9952-8a32-4142-8f62-dc275481e5a6
+:END:
+* **** TODO better handling of `xdg-open'
+:PROPERTIES:
+:CUSTOM_ID: h:b622cd06-14e6-4bdf-8730-b1a659591d4a
+:END:
 ***** TODO combine arbitrary dirs with selection
-      :PROPERTIES:
-      :CUSTOM_ID: h:bac59cd7-af79-43f5-89e4-520080817a61
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: h:bac59cd7-af79-43f5-89e4-520080817a61
+:END:
 *** Narrowed dired
-    :PROPERTIES:
-    :CUSTOM_ID: h:affb6142-6216-43b6-9d66-e7b18d65e79e
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:affb6142-6216-43b6-9d66-e7b18d65e79e
+:END:
 
 The standard way to produce a Dired buffer with only a handful of files
 is to mark them, either manually or with =% m=, then toggle the mark with
@@ -3156,9 +3156,9 @@ but I find that I only ever need to narrow by a regular expression
 #+end_src
 
 *** wdired (writable dired)
-    :PROPERTIES:
-    :CUSTOM_ID: h:ab318722-fe96-4044-8811-f04f2ed74c06
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ab318722-fe96-4044-8811-f04f2ed74c06
+:END:
 
 This is the editable state of a dired buffer.  You can access it with
 =C-x C-q=.  Write changes to files or directories, as if it were a
@@ -3179,9 +3179,9 @@ regular buffer, then confirm them with =C-c C-c=.
 #+end_src
 
 *** peep-dired (file previews including images)
-    :PROPERTIES:
-    :CUSTOM_ID: h:a90fb337-3cce-438a-a209-82b7eb42605f
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:a90fb337-3cce-438a-a209-82b7eb42605f
+:END:
 
 By default, dired does not show previews of files, while =image-dired=
 is intended for a different purpose.  We just want to toggle the
@@ -3203,9 +3203,9 @@ behaviour while inside a regular dired buffer.
 #+end_src
 
 *** image-dired (image thumbnails and previews)
-    :PROPERTIES:
-    :CUSTOM_ID: h:30e647cb-aee5-45d9-93b4-dc4e855fd0a6
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:30e647cb-aee5-45d9-93b4-dc4e855fd0a6
+:END:
 
 This tool offers facilities for generating thumbnails out of a selection
 of images and displaying them in a separate buffer.  An external program
@@ -3230,9 +3230,9 @@ to generate lots of images at once.  The culprit is the image converter.
 #+end_src
 
 *** dired-subtree (tree-style view/navigation)
-    :PROPERTIES:
-    :CUSTOM_ID: h:6f25c4c1-c504-44e8-8fe5-280d780f0897
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:6f25c4c1-c504-44e8-8fe5-280d780f0897
+:END:
 
 Tree-style navigation means that the subdirectories of the current Dired
 buffer can be expanded and contracted in place.  It then is possible to
@@ -3267,9 +3267,9 @@ What I have here:
 #+end_src
 
 *** dired-x (extra Dired functions)
-    :PROPERTIES:
-    :CUSTOM_ID: h:56cbacd7-1fe6-447c-a77f-645edbaa3c6c
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:56cbacd7-1fe6-447c-a77f-645edbaa3c6c
+:END:
 
 These are some additional features that are shipped with Emacs.  The one
 I need the most is =dired-jump= and its "other window" variant.  These are
@@ -3337,9 +3337,9 @@ NEEDS REVIEW."
 #+end_src
 
 *** diredfl (more dired colours)
-    :PROPERTIES:
-    :CUSTOM_ID: h:26ddf3cb-60f0-4e06-8c03-523fc092b8e8
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:26ddf3cb-60f0-4e06-8c03-523fc092b8e8
+:END:
 
 This package defines a few more colours for Dired, especially while in
 the detailed view.  My themes support it, as well as a ton of other
@@ -3354,9 +3354,9 @@ packages (see the [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][section on my Modus
 #+end_src
 
 *** dired-like view for the trash directory
-    :PROPERTIES:
-    :CUSTOM_ID: h:954adfb4-8f2c-4665-bb5b-e098926341b0
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:954adfb4-8f2c-4665-bb5b-e098926341b0
+:END:
 
 =trashed= applies the principles of =dired= to the management of the user's
 filesystem trash.  Use =C-h m= to see the docs and keybindings for its
@@ -3383,9 +3383,9 @@ Basically, its interaction model is as follows:
 #+end_src
 
 *** Dired disk usage (du)
-    :PROPERTIES:
-    :CUSTOM_ID: h:ae853aef-6d7d-44e4-abc6-abb66c4901b1
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ae853aef-6d7d-44e4-abc6-abb66c4901b1
+:END:
 
 Sometimes I need to check the size of directories listed in a Dired
 buffer.  I do this manually, by invoking =dired-du-mode=.
@@ -3398,14 +3398,14 @@ buffer.  I do this manually, by invoking =dired-du-mode=.
 #+end_src
 
 ** Working with buffers
-   :PROPERTIES:
-   :CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
+:END:
 
 *** General buffer commands
-    :PROPERTIES:
-    :CUSTOM_ID: h:1081c372-39b8-4c24-b391-2a99285d8acb
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:1081c372-39b8-4c24-b391-2a99285d8acb
+:END:
 
 Here I collect general purpose commands for buffers.  I also remap
 useful keybindings to commands I prefer to use.
@@ -3453,9 +3453,9 @@ useful keybindings to commands I prefer to use.
 #+end_src
 
 *** Unique names for buffers
-    :PROPERTIES:
-    :CUSTOM_ID: h:60a70340-49dc-4f45-b147-12a4141db42b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:60a70340-49dc-4f45-b147-12a4141db42b
+:END:
 
 These settings make it easier to work with multiple buffers.  When two
 buffers have the same name, Emacs will try to disambiguate them by
@@ -3476,13 +3476,13 @@ only the buffer's name.
 #+end_src
 
 **** TODO make uniquify better for Help, Info buffers
-     :PROPERTIES:
-     :CUSTOM_ID: h:d715be45-2a02-4202-80ea-5df4fd2056fa
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:d715be45-2a02-4202-80ea-5df4fd2056fa
+:END:
 *** Ibuffer and extras (dired-like buffer list manager)
-    :PROPERTIES:
-    :CUSTOM_ID: h:06290f9c-491c-45b2-b213-0248f890c83d
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:06290f9c-491c-45b2-b213-0248f890c83d
+:END:
 
 =ibuffer= is a built-in replacement for =list-buffers= that allows for
 fine-grained control over the buffer list.  For this reason I bind it to
@@ -3616,9 +3616,9 @@ When no VC root is available, use standard `switch-to-buffer'."
 #+end_src
 
 **** Ibuffer integration with VC (version control framework)
-     :PROPERTIES:
-     :CUSTOM_ID: h:fcb95193-4049-4ae3-92ae-13176606e165
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:fcb95193-4049-4ae3-92ae-13176606e165
+:END:
 
 This package offers a few functions for operating on =ibuffer= items based
 on their corresponding version control data.
@@ -3654,9 +3654,9 @@ Make sure to also read the section on [[#h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7]
 #+end_src
 
 *** Scratch buffers per-major-mode
-    :PROPERTIES:
-    :CUSTOM_ID: h:2695bfa4-89b4-4d7f-aa6e-8ef42f9177aa
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:2695bfa4-89b4-4d7f-aa6e-8ef42f9177aa
+:END:
 
 This package will produce a buffer that matches the major mode of the
 one you are currently in.  Use it with =M-x scratch=.  Doing that with a
@@ -3687,9 +3687,9 @@ renames it appropriately for the sake of easier discovery.
 #+end_src
 
 ** Window configuration
-   :PROPERTIES:
-   :CUSTOM_ID: h:12591f89-eeea-4b12-93e8-9293504e5a12
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:12591f89-eeea-4b12-93e8-9293504e5a12
+:END:
 
 I believe that Emacs' true power lies in its buffer management rather
 than its multiplexing.  The latter becomes inefficient at scale, since
@@ -3729,9 +3729,9 @@ managers such as DWM, BSPWM refer to this state as 'monocle'."
 #+end_src
 
 *** Window rules and basic tweaks
-    :PROPERTIES:
-    :CUSTOM_ID: h:3d8ebbb1-f749-412e-9c72-5d65f48d5957
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:3d8ebbb1-f749-412e-9c72-5d65f48d5957
+:END:
 
 The =display-buffer-alist= and all other functions grouped together with
 =prot/window-dired-vc-root-left= are considered *experimental and subject
@@ -3928,9 +3928,9 @@ NOTE: For demo purposes."
 #+end_src
 
 *** Window history (winner-mode)
-    :PROPERTIES:
-    :CUSTOM_ID: h:6b4f7792-6ccd-45d5-b262-01d200639072
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:6b4f7792-6ccd-45d5-b262-01d200639072
+:END:
 
 Winner is a built-in tool that keeps a record of buffer and window
 layout changes.  It then allows us to move back and forth in the
@@ -3950,9 +3950,9 @@ holding down Super and Meta because other mnemonics-based actions
 involving just Super or Meta are already occupied.
 
 *** Tabs for window layouts and buffers (Emacs 27.1)
-    :PROPERTIES:
-    :CUSTOM_ID: h:63ad472f-c9c2-40ad-9675-1dc529487788
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:63ad472f-c9c2-40ad-9675-1dc529487788
+:END:
 
 Starting with version 27.1, Emacs has built-in support for two distinct
 concepts of "tabs":
@@ -4058,13 +4058,13 @@ questions.  Else use completion to select the tab to switch to."
 #+end_src
 
 **** TODO tab-line for groups that make sense, such as EWW
-     :PROPERTIES:
-     :CUSTOM_ID: h:4ac5ffc4-98a5-4eac-89eb-561dd069dff5
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:4ac5ffc4-98a5-4eac-89eb-561dd069dff5
+:END:
 *** Directional window motions (windmove)
-    :PROPERTIES:
-    :CUSTOM_ID: h:230d96c8-a955-4b82-844d-9de9a1b7c531
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:230d96c8-a955-4b82-844d-9de9a1b7c531
+:END:
 
 While =C-x o= (=other-window=) is very useful when working with two or three
 windows, it can become tiresome.  Thankfully, Emacs comes with a
@@ -4095,9 +4095,9 @@ where more than those it would actually speed up my workflow.
 #+end_src
 
 *** Transposition and rotation of windows
-    :PROPERTIES:
-    :CUSTOM_ID: h:753ea060-57e4-4dba-9bf9-b6337e478839
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:753ea060-57e4-4dba-9bf9-b6337e478839
+:END:
 
 The =transpose-frame= library defines a set of commands for shifting the
 layout of Emacs windows.  Rather than me describing how these work, I
@@ -4119,9 +4119,9 @@ code.  Do it with =M-x find-library transpose-frame=.
 #+end_src
 
 * Applications and utilities
-  :PROPERTIES:
-  :CUSTOM_ID: h:fa8bd8af-de14-489b-bc56-1a9bb3ef9f0f
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: h:fa8bd8af-de14-489b-bc56-1a9bb3ef9f0f
+:END:
 
 This section includes configurations for programs like email clients,
 news reader, music players…  Anything you would normally see in a
@@ -4129,9 +4129,9 @@ standalone application.  The end goal is to eventually integrate every
 aspect of my computing inside of Emacs.
 
 ** Calendar
-   :PROPERTIES:
-   :CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
+:END:
 
 Some basic settings for this tool.  It is used by the diary (next
 section), as well as all Org-mode facilities that require date/time
@@ -4172,9 +4172,9 @@ input (see following sections).
 #+end_src
 
 ** Diary
-   :PROPERTIES:
-   :CUSTOM_ID: h:b07e88e2-c822-4ca0-aeb5-894a208139a7
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b07e88e2-c822-4ca0-aeb5-894a208139a7
+:END:
 
 Emacs comes with a built-in facility to record tasks and create
 notifications for them.  It is simply called =diary=.  I am still
@@ -4205,9 +4205,9 @@ configurations should be good enough at this stage.
 #+end_src
 
 ** Org-mode (personal information manager)
-   :PROPERTIES:
-   :CUSTOM_ID: h:4e8347de-415e-4804-b383-d61499e05ca1
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:4e8347de-415e-4804-b383-d61499e05ca1
+:END:
 
 Org offers you the basic tools to organise your life in super-efficient
 ways using nothing but plain text.
@@ -4230,9 +4230,9 @@ be considered a work-in-progress as I gradually build up my knowledge of
 this killer app.
 
 *** Org basic configurations
-    :PROPERTIES:
-    :CUSTOM_ID: h:b95d0798-1cc5-4083-8728-f6a51ddbc531
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b95d0798-1cc5-4083-8728-f6a51ddbc531
+:END:
 
 These are the base settings that other more specialised functions of Org
 depend on.  Here is an overview:
@@ -4341,6 +4341,7 @@ Now on to the miscellaneous settings:
   (setq org-log-reschedule nil)
   (setq org-read-date-prefer-future 'time)
   ;; general
+  (setq org-adapt-indentation nil)      ; No, thanks!
   (setq org-special-ctrl-a/e nil)
   (setq org-special-ctrl-k nil)
   (setq org-hide-emphasis-markers t)
@@ -4363,9 +4364,9 @@ Now on to the miscellaneous settings:
 #+end_src
 
 *** Org links
-    :PROPERTIES:
-    :CUSTOM_ID: h:50d5527d-a4b5-4d36-aa43-8abb21c07927
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:50d5527d-a4b5-4d36-aa43-8abb21c07927
+:END:
 
 The =org-store-link= is one of the commands I use the most, as it allows
 me to, inter alia, connect the various sections of this document.  Use
@@ -4398,13 +4399,13 @@ description and you are good to go.
 #+end_src
 
 **** TODO prot/org-store-link-dwim
-     :PROPERTIES:
-     :CUSTOM_ID: h:42c9e329-8a07-4947-90f8-f10c2d1be574
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:42c9e329-8a07-4947-90f8-f10c2d1be574
+:END:
 *** Org-capture templates
-    :PROPERTIES:
-    :CUSTOM_ID: h:7b88b89a-6eb3-4da3-a9fe-0e447300a250
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:7b88b89a-6eb3-4da3-a9fe-0e447300a250
+:END:
 
 The =org-capture= tool is a powerful way to quickly produce some kind of
 structured information.  The type of data and the way to store is
@@ -4513,9 +4514,9 @@ of the above in action.
 #+end_src
 
 *** Org agenda
-    :PROPERTIES:
-    :CUSTOM_ID: h:847477fe-ef86-4e12-a2da-6c431528da99
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:847477fe-ef86-4e12-a2da-6c431528da99
+:END:
 
 The =org-agenda= is not just a single interface.  It rather is your
 conduit to a set of utilities from where you can keep track of all the
@@ -4762,9 +4763,9 @@ produces dates with a fixed length."
 #+end_src
 
 *** Org source code blocks
-    :PROPERTIES:
-    :CUSTOM_ID: h:88a2a57d-6181-4720-a64b-8a34286c26b2
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:88a2a57d-6181-4720-a64b-8a34286c26b2
+:END:
 
 These are just some basic settings that are particularly useful when
 inserting source code blocks.  I do not want Org to mess up with my
@@ -4786,9 +4787,9 @@ code block that has a language assigned to it.
 #+end_src
 
 *** Org export
-    :PROPERTIES:
-    :CUSTOM_ID: h:6c06bd5e-7a3e-40fc-b7ca-60bbbbc6e769
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:6c06bd5e-7a3e-40fc-b7ca-60bbbbc6e769
+:END:
 
 Org's "export" facility has the power to convert a =.org= file into a
 number of common formats, including =.pdf=.  I only ever use it to produce
@@ -4808,21 +4809,21 @@ demanding workflows.
 #+end_src
 
 **** TODO review Org's exporting facilities [0/2]                 :emacs:org:
-     :PROPERTIES:
-     :CUSTOM_ID: h:ce9b2670-b2db-4bf3-bc7e-4995ef62679f
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ce9b2670-b2db-4bf3-bc7e-4995ef62679f
+:END:
 ***** TODO research derived export backends
-      :PROPERTIES:
-      :CUSTOM_ID: h:00ed7a50-84e4-444c-b127-89df423cfd0c
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: h:00ed7a50-84e4-444c-b127-89df423cfd0c
+:END:
 ***** TODO automate webpage creation for dotemacs
-      :PROPERTIES:
-      :CUSTOM_ID: h:88d804f6-0e3f-44c8-9218-585378d04f12
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: h:88d804f6-0e3f-44c8-9218-585378d04f12
+:END:
 *** Consistent Org heading IDs (and anchor tags)
-    :PROPERTIES:
-    :CUSTOM_ID: h:031f7dbf-19e4-4ddf-a3d3-f648261412f6
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:031f7dbf-19e4-4ddf-a3d3-f648261412f6
+:END:
 
 Everything in this section, minus some minor tweaks from my part, is
 copied from this detailed tutorial on [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][Org header IDs]].  Basically, the
@@ -4865,9 +4866,9 @@ file which do not already have one."
 #+end_src
 
 *** Simple presentations inside of Emacs (org-tree-slide)
-    :PROPERTIES:
-    :CUSTOM_ID: h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11
+:END:
 
 I like the idea of easily converting an =.org= file into a set of pseudo
 slides.  It is simple and has no external dependencies.  My needs are
@@ -4957,9 +4958,9 @@ minibuffer while doing a presentation.
 #+end_src
 
 ** Email settings
-   :PROPERTIES:
-   :CUSTOM_ID: h:5ad80664-3163-4d9d-be65-462637d77903
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:5ad80664-3163-4d9d-be65-462637d77903
+:END:
 
 Configuring email can be quite the challenge, largely because we have
 been used to the likes of Thunderbird, where you log in once and then
@@ -4984,9 +4985,9 @@ the following:
   both Gnus and mu4e.
 
 *** Client-agnostic email settings (credentials, message composition, encryption)
-    :PROPERTIES:
-    :CUSTOM_ID: h:a82766be-daab-4925-b23a-1c5ffd47e599
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:a82766be-daab-4925-b23a-1c5ffd47e599
+:END:
 
 Before configuring any mail user agent, we need to establish the
 absolute essentials: who we are, where our credentials are stored, and
@@ -5139,9 +5140,9 @@ public document like this one, without worrying about leaking private
 data.
 
 *** Contents of `~/.mbsyncrc' (external tool)
-    :PROPERTIES:
-    :CUSTOM_ID: h:88a605b8-d5b5-486f-87c9-0c80b423ae36
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:88a605b8-d5b5-486f-87c9-0c80b423ae36
+:END:
 
 I already noted in the introduction to [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]] that my emails are
 synced locally using the =mbsync= executable.  This program is part of a
@@ -5234,9 +5235,9 @@ SyncState *
 #+end_example
 
 *** Gnus for reading email, mailing lists, and more
-    :PROPERTIES:
-    :CUSTOM_ID: h:14cf6fea-54eb-4faa-bb16-3739485c929a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:14cf6fea-54eb-4faa-bb16-3739485c929a
+:END:
 
 The documentation describes Gnus as the /"coffee-brewing, all singing,
 all dancing, kitchen sink newsreader"/.  I chuckled when I first read it,
@@ -5337,9 +5338,9 @@ the documentation of the function =format-time-string= to understand the
 meaning of the various date/time specifiers.
 
 **** Gnus account settings and essential configurations
-     :PROPERTIES:
-     :CUSTOM_ID: h:dc8811af-dec8-4ca8-a62e-0b500928d10b
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:dc8811af-dec8-4ca8-a62e-0b500928d10b
+:END:
 
 Here I only furnish the essentials for the basic Gnus functionality.
 Subsequent sections expand on the particulars.
@@ -5425,9 +5426,9 @@ Subsequent sections expand on the particulars.
 #+end_src
 
 **** Gnus agent
-     :PROPERTIES:
-     :CUSTOM_ID: h:fccaadbb-ea22-4d1f-ae79-ef1f45f3befa
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:fccaadbb-ea22-4d1f-ae79-ef1f45f3befa
+:END:
 
 The "agent" is a technical term described in the Gnus manual which
 basically represents the bridge between our Gnus and the server to which
@@ -5457,9 +5458,9 @@ Gnus is in an unplugged state.
 #+end_src
 
 **** Gnus article (message view)
-     :PROPERTIES:
-     :CUSTOM_ID: h:81c48313-97a3-49bb-af2b-a273db31c331
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:81c48313-97a3-49bb-af2b-a273db31c331
+:END:
 
 In Gnus parlance, the "article" is the window that contains the content
 of the summary's selected item.  This has its own major mode, which is
@@ -5522,9 +5523,9 @@ for this task).
 #+end_src
 
 **** Gnus asynchronous operations
-     :PROPERTIES:
-     :CUSTOM_ID: h:169083d7-881f-486a-be04-1ebbf2a7edd5
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:169083d7-881f-486a-be04-1ebbf2a7edd5
+:END:
 
 By default, Gnus performs all its actions in a synchronous fashion.
 This means that Emacs is blocked until Gnus has finished.  By enabling
@@ -5540,9 +5541,9 @@ this for [[#h:2d793cf8-83f5-4830-b73d-78385d9b96dd][sending email]].
 #+end_src
 
 **** Gnus group (main interface)
-     :PROPERTIES:
-     :CUSTOM_ID: h:d198d238-66c8-42b6-81a3-c0819177c8c2
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:d198d238-66c8-42b6-81a3-c0819177c8c2
+:END:
 
 I already outlined the utility of the group buffer in the introductory
 section on [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]].  In short,
@@ -5590,9 +5591,9 @@ to be declared last.
 #+end_src
 
 **** Gnus summary
-     :PROPERTIES:
-     :CUSTOM_ID: h:65c5eefc-a92e-41d3-a0ec-ce48dc61f1af
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:65c5eefc-a92e-41d3-a0ec-ce48dc61f1af
+:END:
 
 This section assumes you have already read my introductory remarks on
 [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]].
@@ -5696,9 +5697,9 @@ columns, while being a little bit cleaner than default.
 #+end_src
 
 **** Gnus server
-     :PROPERTIES:
-     :CUSTOM_ID: h:7760e881-fd54-43cc-ae5f-2728384d2107
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:7760e881-fd54-43cc-ae5f-2728384d2107
+:END:
 
 The "server" is where your news sources are listed and from where you
 can browse items you would like to subscribe to (e.g. your email
@@ -5712,9 +5713,9 @@ about these concepts in the introductory [[#h:14cf6fea-54eb-4faa-bb16-3739485c92
 #+end_src
 
 **** Gnus window layout
-     :PROPERTIES:
-     :CUSTOM_ID: h:b1f4d418-6705-440b-a6f4-89fdd5feef3b
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b1f4d418-6705-440b-a6f4-89fdd5feef3b
+:END:
 
 /NOTE 2020-06-15: I am putting this here for visibility, but I do not
 care about intricate Gnus layouts./
@@ -5748,9 +5749,9 @@ proceed from there to find the group I am interested in.
 #+end_example
 
 **** Gnus intersection with Dired
-     :PROPERTIES:
-     :CUSTOM_ID: h:0fabe523-725e-41eb-9e8b-061d74dc7bda
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:0fabe523-725e-41eb-9e8b-061d74dc7bda
+:END:
 
 We can use the built-in directory editor (file manager) as a more
 convenient way of performing certain tasks that relate to emails, such
@@ -5770,9 +5771,9 @@ By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][com
 #+end_src
 
 *** Mu4e (email client for the `mu' mail indexer)
-    :PROPERTIES:
-    :CUSTOM_ID: h:2a93d8bf-200a-4d23-9be3-276a907947e1
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:2a93d8bf-200a-4d23-9be3-276a907947e1
+:END:
 
 As outlined in the opening remarks to [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]], I use both Gnus
 and Mu4e.  The former is my primary tool for handling email and mailing
@@ -5910,9 +5911,9 @@ Further notes:
 #+end_src
 
 **** mu4e extension for org-capture
-     :PROPERTIES:
-     :CUSTOM_ID: h:ab106725-ae5d-4ce2-8160-d2f8c46cb563
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ab106725-ae5d-4ce2-8160-d2f8c46cb563
+:END:
 
 With this little snippet, we allow =org-capture= convert any email into a
 note, to-do item or whatever.  The killer feature is that we get a
@@ -5928,13 +5929,13 @@ really need.  Nice!
 #+end_src
 
 ***** TODO Review need for org-mu4e
-      :PROPERTIES:
-      :CUSTOM_ID: h:1ef79c4a-f91c-4ab3-8104-9cf0c5ee3976
-      :END:
+:PROPERTIES:
+:CUSTOM_ID: h:1ef79c4a-f91c-4ab3-8104-9cf0c5ee3976
+:END:
 *** Sending email (SMTP)
-    :PROPERTIES:
-    :CUSTOM_ID: h:2d793cf8-83f5-4830-b73d-78385d9b96dd
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:2d793cf8-83f5-4830-b73d-78385d9b96dd
+:END:
 
 These are the base settings for the SMTP functionality.  Passwords and
 other critical information are stored in =~/.authinfo.gpg=, as
@@ -5962,9 +5963,9 @@ performance by carrying out the relevant tasks in a non-blocking way.
 #+end_src
 
 *** Contact management (EBDB)
-    :PROPERTIES:
-    :CUSTOM_ID: h:8171d88e-329f-43bb-8290-0e5b060a62a0
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:8171d88e-329f-43bb-8290-0e5b060a62a0
+:END:
 
 This is a contact manager that integrates nicely with Gnus (see previous
 sections in [[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).  It is an alternative to the more
@@ -6038,9 +6039,9 @@ with them.  For the time being, this package declaration is enough.
 #+end_src
 
 ** Bug tracker (debbugs)
-   :PROPERTIES:
-   :CUSTOM_ID: h:9f75a49b-b061-4fe1-ae79-04880564074c
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:9f75a49b-b061-4fe1-ae79-04880564074c
+:END:
 
 This tool is dedicated to the task of browsing the list of reported bugs
 about Emacs, though one can always subscribe to the relevant Usenet
@@ -6077,14 +6078,14 @@ set "lars" to =nil= to guard against any future expansion of its scope.
 #+end_src
 
 ** Version control tools
-   :PROPERTIES:
-   :CUSTOM_ID: h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7
+:END:
 
 *** Diff-mode
-    :PROPERTIES:
-    :CUSTOM_ID: h:2ff46d23-09d5-4d92-b0af-2339dc19719f
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:2ff46d23-09d5-4d92-b0af-2339dc19719f
+:END:
 
 This covers the standard =diff-mode=, which I use when interfacing with
 the built-in Version Control framework (see the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on VC]]), but also
@@ -6218,9 +6219,9 @@ With \\[universal-argument] do it for the current file instead."
 #+end_src
 
 *** Generic version control (VC) framework
-    :PROPERTIES:
-    :CUSTOM_ID: h:31deeff4-dfae-48d9-a906-1f3272f29bc9
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:31deeff4-dfae-48d9-a906-1f3272f29bc9
+:END:
 
 VC is a generic framework that works with several version control
 systems, else "backends".  In practice though, I only ever use it with
@@ -6421,9 +6422,9 @@ project, as defined by `vc-root-dir'."
 #+end_src
 
 **** Commit log editing
-     :PROPERTIES:
-     :CUSTOM_ID: h:4df7a1f5-a144-4848-b3aa-8796d76d5fb9
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:4df7a1f5-a144-4848-b3aa-8796d76d5fb9
+:END:
 
 The =log-edit= library defines a set of general commands that we can use
 to, inter alia, commit changes to Git, using the surprisingly powerful
@@ -6452,9 +6453,9 @@ always use =auto-fill-mode= to wrap lines to the value of =fill-column= (see
 #+end_src
 
 *** Interactive git front-end (Magit)
-    :PROPERTIES:
-    :CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
+:END:
 
 As noted in the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on the built-in Version Control framework]] I use
 Magit for easy access to the /advanced features of Git/.  While I rely on
@@ -6472,9 +6473,9 @@ Consider viewing my [[https://protesilaos.com/codelog/2020-04-04-emacs-intro-mag
 diffs, commit changes, view logs, create branches, and so on.
 
 **** Base Magit settings
-     :PROPERTIES:
-     :CUSTOM_ID: h:21ca155a-d0d7-4710-b34a-a0d7a901ac0d
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:21ca155a-d0d7-4710-b34a-a0d7a901ac0d
+:END:
 
 Magit has great defaults.  I only found a few things that I would like
 to customise, which I do in the following package declarations.
@@ -6487,9 +6488,9 @@ to customise, which I do in the following package declarations.
 #+end_src
 
 **** Magit commits
-     :PROPERTIES:
-     :CUSTOM_ID: h:f851e0cc-099c-4309-8517-b2f20ab18ab4
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:f851e0cc-099c-4309-8517-b2f20ab18ab4
+:END:
 
 The following package is configured in accordance with the guidelines
 provided by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is
@@ -6517,9 +6518,9 @@ set elsewhere in this document to 72 characters long.
 #+end_src
 
 **** Magit diffs
-     :PROPERTIES:
-     :CUSTOM_ID: h:c7a465c1-f33a-42d8-9617-fff3e1460060
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:c7a465c1-f33a-42d8-9617-fff3e1460060
+:END:
 
 The settings below are for the diff screens that Magit produces.  I just
 want to highlight changes within a line, not just the line itself.  I
@@ -6534,9 +6535,9 @@ enable it only for the focused hunk (there is an option for ='all=).
 #+end_src
 
 **** Magit repo list
-     :PROPERTIES:
-     :CUSTOM_ID: h:35972439-0b28-4d33-8091-c6b5f1f02579
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:35972439-0b28-4d33-8091-c6b5f1f02579
+:END:
 
 When maintaining a number of projects, it sometimes is necessary to
 produce a full list of them with their corresponding Magit status.  That
@@ -6554,9 +6555,9 @@ examined further.
 #+end_src
 
 *** Smerge and Ediff
-    :PROPERTIES:
-    :CUSTOM_ID: h:fb9e0507-5ab1-4ebd-8870-8c32cfe742c1
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:fb9e0507-5ab1-4ebd-8870-8c32cfe742c1
+:END:
 
 *Read this section, because it matters more than the code below it.*
 
@@ -6716,23 +6717,23 @@ sure this is a good approach."
 #+end_src
 
 ** Shells and terminal emulators
-   :PROPERTIES:
-   :CUSTOM_ID: h:0df1db3a-30ee-43e5-9086-92951a58164f
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:0df1db3a-30ee-43e5-9086-92951a58164f
+:END:
 
 It should come to no surprise that Emacs can operate as both a /terminal
 emulator for command line shells/ and /toolkit for terminal emulators/.
 The present section covers both cases.
 
 *** Command-line shells
-    :PROPERTIES:
-    :CUSTOM_ID: h:2c1966a1-bf33-4fe3-ac45-9f31158efd9b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:2c1966a1-bf33-4fe3-ac45-9f31158efd9b
+:END:
 
 **** Shell (M-x shell)
-     :PROPERTIES:
-     :CUSTOM_ID: h:98804f0d-f2dd-41a4-b8df-c1bd04ef7f7a
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:98804f0d-f2dd-41a4-b8df-c1bd04ef7f7a
+:END:
 
 This is a shell (Bash, in my case) that runs inside of Emacs.  Unlike
 the [[#h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2][terminal emulators defined below]], this one can use standard Emacs
@@ -6764,9 +6765,9 @@ and corresponding functions.
 #+end_src
 
 **** Eshell (like M-x shell but in elisp)
-     :PROPERTIES:
-     :CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
+:END:
 
 While I did read the =eshell= manual fairly early in my introduction to
 Emacs (July 2019), I failed to appreciate its added value.  Sure, you
@@ -7111,14 +7112,14 @@ wisely or prepare to use `eshell-interrupt-process'."
 #+end_src
 
 *** Terminals inside of Emacs
-    :PROPERTIES:
-    :CUSTOM_ID: h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2
+:END:
 
 **** Vterm terminal emulator
-     :PROPERTIES:
-     :CUSTOM_ID: h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2
+:END:
 
 The [[#h:87b40f59-0e11-48bc-8120-40026ebaf8a4][built-in terminal emulators]] are not up to par with the likes of
 Xterm and its peers. Perhaps they were a good compromise in yester
@@ -7167,9 +7168,9 @@ secondary monitor).
 #+end_src
 
 **** Built-in terminals (fallback option)
-     :PROPERTIES:
-     :CUSTOM_ID: h:87b40f59-0e11-48bc-8120-40026ebaf8a4
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:87b40f59-0e11-48bc-8120-40026ebaf8a4
+:END:
 
 =term= and =ansi-term= are built-in /terminal emulators/ [[#h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2][like Vterm]].  Not to
 be confused with the [[#h:2c1966a1-bf33-4fe3-ac45-9f31158efd9b][command line shells]].  They run inside of Emacs but
@@ -7198,9 +7199,9 @@ other options in the Emacs space (e.g. with =C-u M-x shell=).
 #+end_src
 
 ** Tools for manual pages (manpages)
-   :PROPERTIES:
-   :CUSTOM_ID: h:ce420306-c40c-4d9a-bc01-205c5e49a5d1
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ce420306-c40c-4d9a-bc01-205c5e49a5d1
+:END:
 
 Emacs offers a couple of commands for reading manual pages: =man= and
 =woman=.  The former relies on the standard Unix tools, while the latter
@@ -7243,9 +7244,9 @@ canonical.
 #+end_src
 
 ** Proced (process monitor, similar to `top')
-   :PROPERTIES:
-   :CUSTOM_ID: h:6b56ce11-c84c-4b6d-98c7-bc3eefbe9325
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:6b56ce11-c84c-4b6d-98c7-bc3eefbe9325
+:END:
 
 This is a built-in tool that allows you to monitor running processes
 and act on them accordingly.  These are the basic settings I have
@@ -7275,9 +7276,9 @@ the terms of our search.
 #+end_src
 
 ** Pass interface (password-store)
-   :PROPERTIES:
-   :CUSTOM_ID: h:1d2bf0d0-4806-4e04-a320-7d6538ef2e78
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:1d2bf0d0-4806-4e04-a320-7d6538ef2e78
+:END:
 
 The external =pass= program, aka "password-store", is a password manager
 that uses GPG and standard UNIX tools to handle passwords.  Encrypted
@@ -7311,9 +7312,9 @@ bindings and their functions.
 #+end_src
 
 ** Elfeed (RSS/Atom feed reader)
-   :PROPERTIES:
-   :CUSTOM_ID: h:0cd8ddab-55d1-40df-b3db-1234850792ba
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:0cd8ddab-55d1-40df-b3db-1234850792ba
+:END:
 
 This is a standalone feed reader by Christopher Wellons that comes with
 good defaults and is very well designed overall.  It treats the stream
@@ -7644,9 +7645,9 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
 #+end_src
 
 ** Emacs Simple HTML Renderer (shr)
-   :PROPERTIES:
-   :CUSTOM_ID: h:524bc702-ff55-4ed9-9a38-26d30d64591d
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:524bc702-ff55-4ed9-9a38-26d30d64591d
+:END:
 
 /SUBJECT TO REVIEW 2020-05-08/
 
@@ -7696,9 +7697,9 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
 #+end_src
 
 ** Emacs Web Wowser (EWW)
-   :PROPERTIES:
-   :CUSTOM_ID: h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b
+:END:
 
 /WORK IN PROGRESS 2020-05-08/
 
@@ -7756,9 +7757,9 @@ keys follow the pattern of <PREFIX> <KEY>.")
 #+end_src
 
 ** Emacs IRC client
-   :PROPERTIES:
-   :CUSTOM_ID: h:aa3cd013-0a09-463b-a6b7-9c8d90126a8a
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:aa3cd013-0a09-463b-a6b7-9c8d90126a8a
+:END:
 
 /WORK IN PROGRESS 2020-05-13/
 
@@ -7797,9 +7798,9 @@ configurations).
 #+end_src
 
 ** Bongo (Music player)
-   :PROPERTIES:
-   :CUSTOM_ID: h:758afe0d-bc7c-4afc-9c6b-b5e569901591
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:758afe0d-bc7c-4afc-9c6b-b5e569901591
+:END:
 
 I already tried EMMS and various other options but did not stick with
 them.  I felt I was missing something or maybe I just tested them too
@@ -7951,18 +7952,18 @@ Upon insertion, playback starts immediately, in accordance with
 #+end_src
 
 * General interface and interactions
-  :PROPERTIES:
-  :CUSTOM_ID: h:b6bd2eea-8269-4029-b446-ee340c12ebc3
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b6bd2eea-8269-4029-b446-ee340c12ebc3
+:END:
 
 This section contains configurations for all aspects of the Emacs user
 interface, as well lots of small or self-contained tweaks that cover a
 wide range of built-in libraries.
 
 ** Disable GUI components
-   :PROPERTIES:
-   :CUSTOM_ID: h:ae48fe61-a3c3-4132-8986-785f9bfbeafb
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ae48fe61-a3c3-4132-8986-785f9bfbeafb
+:END:
 
 Overview of these settings:
 
@@ -7997,9 +7998,9 @@ Overview of these settings:
 #+end_src
 
 ** Modus themes (my very accessible themes) and other visuals
-   :PROPERTIES:
-   :CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
+:END:
 
 I am using my own themes.  They are designed to conform with the highest
 accessibility standard for colour contrast between foreground and
@@ -8130,9 +8131,9 @@ To be assigned to `prot/modus-themes-custom-hook'."
 #+end_src
 
 *** Measuring relative colour luminance
-    :PROPERTIES:
-    :CUSTOM_ID: h:254c6da5-f89f-46be-ad56-ee3802a4e2b8
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:254c6da5-f89f-46be-ad56-ee3802a4e2b8
+:END:
 
 The following is an Elisp implementation of [[https://www.w3.org/TR/WCAG20-TECHS/G18.html][the formula]] that determines
 whether a combination of two colours is accessible or not.  It was
@@ -8165,9 +8166,9 @@ how tricky the selection of colours can be.
 #+end_src
 
 *** Rainbow mode for colour testing
-    :PROPERTIES:
-    :CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
+:END:
 
 The following package reads a colour value, such as hexadecimal RGB,
 and sets the background for the value in that colour.  Quite useful
@@ -8185,9 +8186,9 @@ when reviewing my themes (=rainbow-mode= is activated manually).
 #+end_src
 
 ** Mode line
-   :PROPERTIES:
-   :CUSTOM_ID: h:39f57b0d-300a-4310-9ba8-8c388fa72e1d
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:39f57b0d-300a-4310-9ba8-8c388fa72e1d
+:END:
 
 The mode line is an integral part of the Emacs interface.  While there
 are lots of third party packages that style it in a variety of ways, I
@@ -8244,9 +8245,9 @@ In the following sub-sections I provide customisations for some tools
 that place information on the mode line.  Again, nothing flamboyant.
 
 *** Battery status
-    :PROPERTIES:
-    :CUSTOM_ID: h:3a759294-ab03-40cb-bb08-94275d76fc53
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:3a759294-ab03-40cb-bb08-94275d76fc53
+:END:
 
 Emacs offers a built-in library for presenting information about the
 status of the laptop's battery.  Using it allows me to eliminate my
@@ -8276,9 +8277,9 @@ instead of a 100 because sometimes the battery only ever fills up to
 #+end_src
 
 *** Display current time
-    :PROPERTIES:
-    :CUSTOM_ID: h:da14ac1d-a06f-4531-b6c3-0414e8c98102
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:da14ac1d-a06f-4531-b6c3-0414e8c98102
+:END:
 
 I normally use Emacs in fullscreen view.  No system panels, no window
 decorations, no icons and blinking indicators.  Nothing to distract me.
@@ -8311,9 +8312,9 @@ time and date.  The rest is noise.
 #+end_src
 
 *** Keycast mode
-    :PROPERTIES:
-    :CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:e8e51a73-e583-4250-ac26-15627cd93932
+:END:
 
 Once enabled, this package uses the mode line to show the keys being
 pressed and the command they call.  It is quite useful for screen
@@ -8370,9 +8371,9 @@ tweaks of my own.
 #+end_src
 
 ** Window divider mode
-   :PROPERTIES:
-   :CUSTOM_ID: h:6fb900e3-49db-4bc3-8a9e-cd88e020f15b
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:6fb900e3-49db-4bc3-8a9e-cd88e020f15b
+:END:
 
 This is a built-in mode that draws vertical window borders in a slightly
 different way than the default, which I find more consistent.  Only
@@ -8389,9 +8390,9 @@ borders as well as their placement.
 #+end_src
 
 ** Fringe mode
-   :PROPERTIES:
-   :CUSTOM_ID: h:26a4fac6-33e2-4f6c-8589-9463df8525c9
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:26a4fac6-33e2-4f6c-8589-9463df8525c9
+:END:
 
 The fringes are areas to the right and left side of an Emacs frame.
 They can be used to show status-related or contextual feedback such as
@@ -8418,9 +8419,9 @@ buffer-local.
 #+end_src
 
 *** Diff highlights in the fringe (diff-hl)
-    :PROPERTIES:
-    :CUSTOM_ID: h:5b71e71f-353f-4290-951b-3fc575c0fcba
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:5b71e71f-353f-4290-951b-3fc575c0fcba
+:END:
 
 The =diff-hl= package uses the left or right fringe to highlight changes
 in the current buffer.  The indicators are colour-coded to denote
@@ -8447,9 +8448,9 @@ section on the [[*Generic version control (VC) framework][generic version contro
 #+end_src
 
 ** Highlight comment keywords (hl-todo)
-   :PROPERTIES:
-   :CUSTOM_ID: h:23d2928b-56a0-4a8e-a552-9af1acd45cb1
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:23d2928b-56a0-4a8e-a552-9af1acd45cb1
+:END:
 
 This tool by Jonas Bernoulli will apply highlighting to keywords that
 are normally used in code comments.  Simple and effective!
@@ -8461,9 +8462,9 @@ are normally used in code comments.  Simple and effective!
 #+end_src
 
 ** Tone down parentheses in lisps
-   :PROPERTIES:
-   :CUSTOM_ID: h:a36e05b1-5301-4fac-a934-463529415012
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:a36e05b1-5301-4fac-a934-463529415012
+:END:
 
 Apply a dedicated face to parentheses in Elisp modes.  A more subtle
 grey than the default foreground text is used.
@@ -8475,18 +8476,18 @@ grey than the default foreground text is used.
 #+end_src
 
 ** Optional visual indicators or layout elements
-   :PROPERTIES:
-   :CUSTOM_ID: h:e8d77f0b-0502-449b-bc69-18cf29b9edb0
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:e8d77f0b-0502-449b-bc69-18cf29b9edb0
+:END:
 
 This is a collection of modes or interfaces I seldom use or, rather, I
 use under special circumstances.  They are useful, but there is not need
 for them to be available at all times.
 
 *** Current line highlight (hl-line-mode)
-    :PROPERTIES:
-    :CUSTOM_ID: h:7e65d6e5-ac8f-4100-b7dd-14e3fbc94040
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:7e65d6e5-ac8f-4100-b7dd-14e3fbc94040
+:END:
 
 This is a mode that I only activate via hooks for certain buffers
 where the current line itself is more important that the actual column
@@ -8502,9 +8503,9 @@ for when the equivalent mode is used (I have no plan to use that).
 #+end_src
 
 *** Toggles for line numbers and whitespace indicators
-    :PROPERTIES:
-    :CUSTOM_ID: h:cb76fcee-e304-4b86-a764-6c3c6775da51
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:cb76fcee-e304-4b86-a764-6c3c6775da51
+:END:
 
 + Display line numbers (buffer-local) ::  I seldom use line numbers, but
   here it is.  This toggles the setting for the local buffer and also
@@ -8549,9 +8550,9 @@ sometimes it causes problems, such as with diffs.
 #+end_src
 
 *** Dim context and focus-to-thing (focus-mode)
-    :PROPERTIES:
-    :CUSTOM_ID: h:4f39bf14-cb8f-4770-9001-f5067205f0fe
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:4f39bf14-cb8f-4770-9001-f5067205f0fe
+:END:
 
 Sometimes I opt to enlarge the font size and keep a single window so as
 to narrow in on the task at hand, say, to write an essay or refine some
@@ -8607,9 +8608,9 @@ narrower field of view."
 #+end_src
 
 *** Centred, focused text mode (olivetti-mode)
-    :PROPERTIES:
-    :CUSTOM_ID: h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd
+:END:
 
 I spend much of my time in Emacs reading and writing long form texts.
 It is nice to be able to easily toggle a mode that centres the buffer,
@@ -8676,9 +8677,9 @@ The cursor becomes a blinking bar, per `prot/cursor-type-mode'."
 #+end_src
 
 *** Auto-dim unfocused buffers
-    :PROPERTIES:
-    :CUSTOM_ID: h:5a3a4968-cbda-4a0b-8f2d-1dd755eda5ac
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:5a3a4968-cbda-4a0b-8f2d-1dd755eda5ac
+:END:
 
 The concept of =auto-dim-other-buffers-mode= is straightforward: apply a
 different background on all unfocused windows, so that the current one
@@ -8702,9 +8703,9 @@ modeline and/or the cursor's shape.
 #+end_src
 
 *** Outline mode, outline minor mode, and extras
-    :PROPERTIES:
-    :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
+:END:
 
 The =outline= library defines a major mode (=outline-mode=) that is similar
 to =org-mode= in that it consists of headings which can be expanded or
@@ -8920,18 +8921,18 @@ Add this to `prot/outline-minor-mode-exit-hook'."
 #+end_src
 
 **** TODO Cleanly restore all major modes for outline-mode re-fontification
-     :PROPERTIES:
-     :CUSTOM_ID: h:a636f015-6eb7-4978-999e-c6f90e08894d
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:a636f015-6eb7-4978-999e-c6f90e08894d
+:END:
 **** TODO How to re-fontify outline-mode without re-running the major mode?
-     :PROPERTIES:
-     :CUSTOM_ID: h:8c50a95d-afc0-49a9-ac7c-5e53c8819a43
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:8c50a95d-afc0-49a9-ac7c-5e53c8819a43
+:END:
 
 ** Registers
-   :PROPERTIES:
-   :CUSTOM_ID: h:6bdfe4d1-f97a-4d89-ab68-e87448a95fea
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:6bdfe4d1-f97a-4d89-ab68-e87448a95fea
+:END:
 
 Registers are compartments that hold data of various sorts.  They offer
 the means for advanced, highly efficient workflows, especially when
@@ -9064,9 +9065,9 @@ A prompt will ask for the register to operate on."
 #+end_src
 
 ** Visual bookmarks (bm.el)
-   :PROPERTIES:
-   :CUSTOM_ID: h:f20b0d69-6fac-49d5-847f-362aea9f1bef
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:f20b0d69-6fac-49d5-847f-362aea9f1bef
+:END:
 
 This is a deceptively simple-yet-effective package for marking a point
 in a buffer for future review.  I learnt about it from Manuel Uberti's
@@ -9106,9 +9107,9 @@ I use visual bookmarks in much the same way.
 #+end_src
 
 ** Annotations (annotate.el)
-   :PROPERTIES:
-   :CUSTOM_ID: h:b854ca55-2275-409e-a6a2-e87aa51f1ed0
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b854ca55-2275-409e-a6a2-e87aa51f1ed0
+:END:
 
 While inline statements are often the best way to take a note in its
 context, there are cases where you do not want to edit the underlying
@@ -9200,13 +9201,13 @@ _p_: Prev annotation     _i_: Integrate
 #+end_src
 
 ** Cursor and mouse settings
-   :PROPERTIES:
-   :CUSTOM_ID: h:a75d07c3-22a8-4e0f-aa88-1e2e1579d820
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:a75d07c3-22a8-4e0f-aa88-1e2e1579d820
+:END:
 *** Cursor appearance and tweaks
-    :PROPERTIES:
-    :CUSTOM_ID: h:cf9086c1-1b33-4127-a716-de94259e14a0
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:cf9086c1-1b33-4127-a716-de94259e14a0
+:END:
 
 My cursor for the current window is a box character that /does not/ blink.
 Other windows use a vertical bar that is 2 pixels wide.
@@ -9246,9 +9247,9 @@ Otherwise it is a convenient toggle for when I need to have that effect.
 #+end_src
 
 *** Multiple cursors (edit in several parts at once)
-    :PROPERTIES:
-    :CUSTOM_ID: h:397728fd-e437-470a-a571-d03954106b9a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:397728fd-e437-470a-a571-d03954106b9a
+:END:
 
 The =multiple-cursors= package offers a comprehensive list of commands to
 edit text in several points of the screen at once.  Though I normally
@@ -9285,9 +9286,9 @@ more straightforward workflows.
 #+end_src
 
 *** pulse.el (highlight cursor position)
-    :PROPERTIES:
-    :CUSTOM_ID: h:6bbc41d6-da7c-4301-84c6-c5887c29283f
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:6bbc41d6-da7c-4301-84c6-c5887c29283f
+:END:
 
 This is a library that provides utilities for highlighting the region or
 area around point.  It is meant to be used by other packages as a means
@@ -9326,9 +9327,9 @@ without the `:extend' property.")
 #+end_src
 
 *** Mouse wheel behaviour
-    :PROPERTIES:
-    :CUSTOM_ID: h:02572210-eb26-4941-8f7c-666a0314877b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:02572210-eb26-4941-8f7c-666a0314877b
+:END:
 
 The value of =mouse-wheel-scroll-amount= means the following:
 
@@ -9368,9 +9369,9 @@ primary selection).  I choose not to use this here.
 #+end_src
 
 *** Scrolling behaviour
-    :PROPERTIES:
-    :CUSTOM_ID: h:0c44b318-813a-4f4a-b596-75df4a86476b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:0c44b318-813a-4f4a-b596-75df4a86476b
+:END:
 
 By default, page scrolling should keep the point at the same visual
 position, rather than force it to the top or bottom of the viewport.
@@ -9417,9 +9418,9 @@ As such, this piece of fumctionality makes for a natural complement to
 #+end_src
 
 *** Delete selection
-    :PROPERTIES:
-    :CUSTOM_ID: h:d53b7b54-924a-443b-955a-3c5b222e3a90
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:d53b7b54-924a-443b-955a-3c5b222e3a90
+:END:
 
 This is a very helpful mode.  It kills the marked region when inserting
 directly to it.  It also has checks to ensure that yanking over a
@@ -9435,9 +9436,9 @@ effect (see the section on the [[#h:02572210-eb26-4941-8f7c-666a0314877b][mouse 
 down Ctrl and Meta while dragging the mouse with the left click pressed.
 
 *** Tool tips
-    :PROPERTIES:
-    :CUSTOM_ID: h:9f492949-70fb-4fba-a0ea-569d4a240be8
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:9f492949-70fb-4fba-a0ea-569d4a240be8
+:END:
 
 These settings control how tool tips are to be handled when hovering the
 mouse over an actionable item:
@@ -9457,13 +9458,13 @@ mouse over an actionable item:
 #+end_src
 
 ** Conveniences and minor extras
-   :PROPERTIES:
-   :CUSTOM_ID: h:271c9122-280b-424e-98f0-af9e4f09bbdb
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:271c9122-280b-424e-98f0-af9e4f09bbdb
+:END:
 *** Auto revert mode
-    :PROPERTIES:
-    :CUSTOM_ID: h:7a8422e6-86d1-40f3-add4-0a1c826e44a3
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:7a8422e6-86d1-40f3-add4-0a1c826e44a3
+:END:
 
 This mode ensures that the buffer is updated whenever the file changes.
 A change can happen externally or by some other tool inside of Emacs
@@ -9478,9 +9479,9 @@ A change can happen externally or by some other tool inside of Emacs
 #+end_src
 
 *** Preserve contents of system clipboard
-    :PROPERTIES:
-    :CUSTOM_ID: h:9eae0d2a-eef1-4b14-b883-39094be4de71
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:9eae0d2a-eef1-4b14-b883-39094be4de71
+:END:
 
 Say you copied a link from your web browser, then switched to Emacs to
 paste it somewhere.  Before you do that, you notice something you want
@@ -9498,9 +9499,9 @@ Now the contents of the clipboard are stored in the kill ring and can
 be retrieved from there (e.g. with =M-y=).
 
 *** Generic feedback
-    :PROPERTIES:
-    :CUSTOM_ID: h:1f7c0bf3-8b0e-4baa-b1e0-7e89053d36cb
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:1f7c0bf3-8b0e-4baa-b1e0-7e89053d36cb
+:END:
 
 The common thread of these options is the feedback they provide us with
 or simplify common tasks so that /their/ feedback does not cause friction:
@@ -9539,9 +9540,9 @@ or simplify common tasks so that /their/ feedback does not cause friction:
 #+end_src
 
 *** Newline characters for file ending
-    :PROPERTIES:
-    :CUSTOM_ID: h:c0f0a2c1-1920-4bcf-8eb4-45f80cf1b874
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:c0f0a2c1-1920-4bcf-8eb4-45f80cf1b874
+:END:
 
 For some major modes, such as =diff-mode=, a final newline is of paramount
 importance.  Without it you cannot, for instance, apply a patch cleanly.
@@ -9555,9 +9556,9 @@ when visiting or saving a buffer of relevance.
 #+end_src
 
 *** Altered zap and easier repeats
-    :PROPERTIES:
-    :CUSTOM_ID: h:5f6ffe61-f0cc-41ad-9d2f-46ad181c3a00
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:5f6ffe61-f0cc-41ad-9d2f-46ad181c3a00
+:END:
 
 I seldom use the functionality related to this section, but when I do I
 prefer it to work the way I expect.  =zap-up-to-char= will delete
@@ -9594,9 +9595,9 @@ notion of "registers".
 #+end_src
 
 *** Package lists
-    :PROPERTIES:
-    :CUSTOM_ID: h:0d36996d-c12d-42e6-a388-b67c548c4a4b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:0d36996d-c12d-42e6-a388-b67c548c4a4b
+:END:
 
 With this I just want to enable line highlighting when browsing the list
 of packages.  I generally use =hl-line-mode= on all interfaces where the
@@ -9611,17 +9612,17 @@ current line is more important than the exact column of the point.
 #+end_src
 
 * Language settings for prose and code
-  :PROPERTIES:
-  :CUSTOM_ID: h:8fc1f9ca-f5ae-407a-b721-aab414ca657b
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: h:8fc1f9ca-f5ae-407a-b721-aab414ca657b
+:END:
 
 This section is all about configurations and/or packages that deal with
 natural or programming language enhancements.
 
 ** Line length (column count)
-   :PROPERTIES:
-   :CUSTOM_ID: h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c
+:END:
 
 The column count is set to 72.  The standard line length is 80
 characters, so having it at something less allows for such things as
@@ -9638,9 +9639,9 @@ similar tools (or when manually invoking text formatting with
 #+end_src
 
 ** Paragraphs and fill-mode
-   :PROPERTIES:
-   :CUSTOM_ID: h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3
+:END:
 
 Let us first configure how paragraphs should be treated.  I find that a
 double space is the best way to delimit sentences in source form.  There
@@ -9695,9 +9696,9 @@ produce the opposite effect of both `fill-paragraph' and
 #+end_src
 
 ** Recognise subwords
-   :PROPERTIES:
-   :CUSTOM_ID: h:899cff89-a517-41d5-8c55-b91c6aba8c9d
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:899cff89-a517-41d5-8c55-b91c6aba8c9d
+:END:
 
 It is better you do =C-h f subword-mode=.  Basically, this alters the
 way Emacs understands word boundaries.  So, /camelCaseWords/ are
@@ -9711,9 +9712,9 @@ motions will behave accordingly.
 #+end_src
 
 ** Comment lines, regions, boxes, etc.
-   :PROPERTIES:
-   :CUSTOM_ID: h:fa56241c-6840-4a39-8f59-18460d37fc69
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:fa56241c-6840-4a39-8f59-18460d37fc69
+:END:
 
 Just some basic configurations for commenting structured text.  This is
 mostly a placeholder for potentially more targeted and detailed settings
@@ -9773,9 +9774,9 @@ Else toggle the comment status of the line at point."
 #+end_src
 
 ** Configure 'electric' behaviour
-   :PROPERTIES:
-   :CUSTOM_ID: h:ed95ef3e-75e6-4e53-b3bc-4aee540fe3d9
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ed95ef3e-75e6-4e53-b3bc-4aee540fe3d9
+:END:
 
 Emacs labels as "electric" any behaviour that involves contextual
 auto-insertion of characters.  This is a summary of my settings:
@@ -9832,9 +9833,9 @@ auto-insertion of characters.  This is a summary of my settings:
 #+end_src
 
 ** Parentheses (show-paren-mode)
-   :PROPERTIES:
-   :CUSTOM_ID: h:3d374354-843f-4efa-aa38-1ba2c9ccc14c
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:3d374354-843f-4efa-aa38-1ba2c9ccc14c
+:END:
 
 Configure the mode that highlights matching delimiters or parentheses.
 I consider this of utmost importance when working with languages such as
@@ -9863,9 +9864,9 @@ Summary of what these do:
 #+end_src
 
 ** Tabs, indentation, and the TAB key
-   :PROPERTIES:
-   :CUSTOM_ID: h:d51d37df-4e58-4e0b-85a1-019ceda342f6
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:d51d37df-4e58-4e0b-85a1-019ceda342f6
+:END:
 
 I believe tabs, in the sense of inserting the tab character, are best
 suited for indentation.  While spaces are superior at precisely aligning
@@ -9893,9 +9894,9 @@ that particular function in my [[#h:98876022-57cc-40de-936e-4ee42cefd69a][in-buf
 #+end_src
 
 ** Dictionary (and local sdcv variant)
-   :PROPERTIES:
-   :CUSTOM_ID: h:72acde30-9c82-4bfb-a737-7725c26ad054
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:72acde30-9c82-4bfb-a737-7725c26ad054
+:END:
 
 Sometimes I need to access an offline version of Webster's Revised
 Unabridged Dictionary (1913) that I got following the helpful
@@ -9925,9 +9926,9 @@ connection and has access to a wide range of dictionaries.
 #+end_src
 
 ** Flyspell (spell check)
-   :PROPERTIES:
-   :CUSTOM_ID: h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c
+:END:
 
 I need spell checking mostly for English, though I also install
 dictionaries for Greek, French, and Spanish.  These are external to
@@ -9994,9 +9995,9 @@ Use `flyspell-region' on the active region, else invoke
 #+end_src
 
 ** Code and text linters
-   :PROPERTIES:
-   :CUSTOM_ID: h:20448ad8-9371-4e00-b88b-6b93f4c654d9
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:20448ad8-9371-4e00-b88b-6b93f4c654d9
+:END:
 
 There are several code linting tools in the Emacs milieu.  The two I
 configure here are front-ends to external programs for code analysis.
@@ -10010,9 +10011,9 @@ With regard to the =defhydra= calls in this section, remember to refer to
 my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
 
 *** Flymake
-    :PROPERTIES:
-    :CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
+:END:
 
 This is a built-in linter interface that can be extended to support any
 programming language.  I do, however, feel that the alternative Flycheck
@@ -10049,9 +10050,9 @@ _d_: Diagnostics' buffer
 #+end_src
 
 *** Flycheck
-    :PROPERTIES:
-    :CUSTOM_ID: h:75069828-4b56-4341-8797-2d5a305c65e2
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:75069828-4b56-4341-8797-2d5a305c65e2
+:END:
 
 This linting interface has excellent coverage for a broad range of
 languages, while there are lots of extensions to it to further broaden
@@ -10104,9 +10105,9 @@ _d_: Display error
 #+end_src
 
 **** Flycheck proselint integration
-     :PROPERTIES:
-     :CUSTOM_ID: h:6dff70a8-7eba-4b5d-982c-f13d13ed3b3b
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:6dff70a8-7eba-4b5d-982c-f13d13ed3b3b
+:END:
 
 Note that =flycheck= has built-in support for the =proselint= executable
 (check [[https://github.com/amperser/proselint][that project's README]]).  All you need is to have that program
@@ -10205,9 +10206,9 @@ are the contents of mine, placed at =~/.config/proselint/config=:
 #+end_example
 
 **** Flycheck mode line indicator
-     :PROPERTIES:
-     :CUSTOM_ID: h:93b2aeed-d46a-4737-9d96-d8e5aedf8a67
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:93b2aeed-d46a-4737-9d96-d8e5aedf8a67
+:END:
 
 While Flymake has a good mode line status area, Flycheck's leaves
 something to be desired.  This package bridges that gap.  It offers a
@@ -10250,9 +10251,9 @@ each entry.  Neat!
 #+end_src
 
 *** Elisp packaging requirements
-    :PROPERTIES:
-    :CUSTOM_ID: h:d03342da-3035-409f-a5e7-5df1e614d507
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:d03342da-3035-409f-a5e7-5df1e614d507
+:END:
 
 With these in place we can perform checks that pertain to Emacs lisp
 packaging.  I use it for my themes but also for any elisp library I may
@@ -10276,9 +10277,9 @@ the linter front-ends configured above.
 #+end_src
 
 ** Eldoc (elisp live documentation feedback)
-   :PROPERTIES:
-   :CUSTOM_ID: h:d0f76937-4f54-401c-aae8-ffadf8697357
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:d0f76937-4f54-401c-aae8-ffadf8697357
+:END:
 
 When editing elisp, this mode will display useful information about the
 construct at point in the echo area.  For functions it will display the
@@ -10298,17 +10299,17 @@ commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
 #+end_src
 
 ** Support for various major modes
-   :PROPERTIES:
-   :CUSTOM_ID: h:485bb253-208a-4a0a-99e3-ae1a205e3b7b
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:485bb253-208a-4a0a-99e3-ae1a205e3b7b
+:END:
 
 These provide syntax highlighting and additional features for
 environments that are not already supported by Emacs.
 
 *** Arch Linux package recipes
-    :PROPERTIES:
-    :CUSTOM_ID: h:7fa5b86b-3fc5-4118-8d56-aacf4c0fffb8
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:7fa5b86b-3fc5-4118-8d56-aacf4c0fffb8
+:END:
 
 If you are on Arch or derivatives and check PKGBUILD files, this is for
 you.
@@ -10320,9 +10321,9 @@ you.
 #+end_src
 
 *** Markdown
-    :PROPERTIES:
-    :CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
+:END:
 
 I edit lots of Markdown files.  This makes things easier.
 
@@ -10339,9 +10340,9 @@ I edit lots of Markdown files.  This makes things easier.
 #+end_src
 
 *** YAML
-    :PROPERTIES:
-    :CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
+:END:
 
 This adds support for YAML files.
 
@@ -10353,9 +10354,9 @@ This adds support for YAML files.
 #+end_src
 
 *** CSS
-    :PROPERTIES:
-    :CUSTOM_ID: h:ec10bfe6-5340-481c-9de2-3e346868241b
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ec10bfe6-5340-481c-9de2-3e346868241b
+:END:
 
 This is the built-in mode for working with CSS and SCSS.  I just want it
 to not apply previews to colour references.  If I ever need that, there
@@ -10368,9 +10369,9 @@ is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant secti
 #+end_src
 
 * History and state
-  :PROPERTIES:
-  :CUSTOM_ID: h:1d9437fe-1355-4c2f-8ea7-6668b4d0399b
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: h:1d9437fe-1355-4c2f-8ea7-6668b4d0399b
+:END:
 
 This section contains configurations for packages that are dedicated to
 the task of recording the state of various Emacs tools, such as the
@@ -10383,9 +10384,9 @@ the most likely course of action.  Typing =M-x g= gives me =gnus= as the
 first possible option, which is exactly what I want.
 
 ** Emacs server and desktop
-   :PROPERTIES:
-   :CUSTOM_ID: h:68d57dd2-4df1-4b7a-8766-231216e6cd9c
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:68d57dd2-4df1-4b7a-8766-231216e6cd9c
+:END:
 
 The following uses the first /running/ process of Emacs as the one others
 may connect to.  This means that calling =emacsclient= (with or without
@@ -10467,13 +10468,13 @@ matter what.
 #+end_src
 
 ** Record various types of history
-   :PROPERTIES:
-   :CUSTOM_ID: h:ab868c1a-7ca6-4f54-83d8-eab49447da82
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ab868c1a-7ca6-4f54-83d8-eab49447da82
+:END:
 *** Recentf (recent files and directories)
-    :PROPERTIES:
-    :CUSTOM_ID: h:5723c4bb-ff6c-449f-bb60-be66fab3f137
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:5723c4bb-ff6c-449f-bb60-be66fab3f137
+:END:
 
 This is a built-in minor mode that keeps track of the files you have
 opened, allowing you revisit them faster.  Its true power consists in
@@ -10550,9 +10551,9 @@ abbreviated as a tilde.  In the Dired buffer paths are absolute."
 #+end_src
 
 *** Minibuffer history
-    :PROPERTIES:
-    :CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
+:END:
 
 Keeps a record of actions involving the minibuffer.  This is of
 paramount importance to a fast and efficient workflow involving any
@@ -10578,9 +10579,9 @@ searching or.
 #+end_src
 
 *** Record cursor position
-    :PROPERTIES:
-    :CUSTOM_ID: h:ae1cad56-c12c-4bd5-a5cc-e85c0ad4b978
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ae1cad56-c12c-4bd5-a5cc-e85c0ad4b978
+:END:
 
 Just remember where the point is in any given file.  This can often be a
 subtle reminder of what you were doing the last time you visited that
@@ -10595,9 +10596,9 @@ file, allowing you to pick up from there.
 #+end_src
 
 *** Backups
-    :PROPERTIES:
-    :CUSTOM_ID: h:3d2e3e65-b860-4ad7-87d2-24e4e9d0e296
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:3d2e3e65-b860-4ad7-87d2-24e4e9d0e296
+:END:
 
 And here are some settings pertaining to backups.  I rarely need those,
 but I prefer to be safe in the knowledge that if something goes awry
@@ -10617,17 +10618,17 @@ there is something to fall back to.
 #+end_src
 
 * Frequently Asked Questions about this document
-  :PROPERTIES:
-  :CUSTOM_ID: h:4e73b827-cdf3-46a2-81c5-55b6e95701b7
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: h:4e73b827-cdf3-46a2-81c5-55b6e95701b7
+:END:
 
 There are some persistent questions that pop up in my email exchange, so
 I thought I would cover them all in this section.
 
 ** How do you learn Emacs?
-   :PROPERTIES:
-   :CUSTOM_ID: h:83730fe8-d917-4d94-96f4-bbc5c900fe38
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:83730fe8-d917-4d94-96f4-bbc5c900fe38
+:END:
 
 There is no one-size-fits-all approach to learning.  What one finds
 satisfactory, another may consider insufficient.  In my opinion, the
@@ -10706,9 +10707,9 @@ do it in a =dired= buffer to see the main operations you can perform
 inside of it.
 
 ** What is the purpose of "prot/" and "contrib/"?
-   :PROPERTIES:
-   :CUSTOM_ID: h:0077f7e0-409f-4645-a040-018ee9b5b2f2
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:0077f7e0-409f-4645-a040-018ee9b5b2f2
+:END:
 
 The =prot/= prefix in symbols works as a namespace that captures all my
 additions.  These can be functions or variables.  Its utility or purpose
@@ -10758,9 +10759,9 @@ like =prot--= or =my-= or whatever.  What matters is to keep things
 consistent and fairly easy to identify.
 
 ** Why not `:custom' and why do you use so many `setq'?
-   :PROPERTIES:
-   :CUSTOM_ID: h:ba373e0d-29d1-4224-b0f1-64b640ceeaae
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ba373e0d-29d1-4224-b0f1-64b640ceeaae
+:END:
 
 I normally do not use the =:custom= keyword that =use-package= provides,
 opting instead for =:config= or =:init=.  This is for a couple of
@@ -10804,9 +10805,9 @@ Of course, experience is key to understanding that all these styles are
 valid.
 
 ** Why do you explicitly set variables the same as default?
-   :PROPERTIES:
-   :CUSTOM_ID: h:3e4fefda-c069-4403-a2ad-6d77ee8c0914
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:3e4fefda-c069-4403-a2ad-6d77ee8c0914
+:END:
 
 You may have realised that many of my configurations will use a =setq=
 that declares a value that is the same as its original in the source
@@ -10825,9 +10826,9 @@ whenever they upgrade to a new version of Emacs.  Though there is no
 equivalent mechanism for individual packages…  So here we are.
 
 ** What is you distro and/or window manager?
-   :PROPERTIES:
-   :CUSTOM_ID: h:044977f2-a909-4804-bf89-576dd429d405
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:044977f2-a909-4804-bf89-576dd429d405
+:END:
 
 Given that I mostly live inside of Emacs, the rest of the environment is
 no longer important to me (provided it does not impede my usage of
@@ -10862,9 +10863,9 @@ option or configuration is specific to a yet-to-be-released version of
 Emacs, to the extent that I am aware that such is the case.
 
 ** Did you know XYZ package is better than the defaults?
-   :PROPERTIES:
-   :CUSTOM_ID: h:a654fcb5-0163-4dc6-977a-8c50175118a1
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:a654fcb5-0163-4dc6-977a-8c50175118a1
+:END:
 
 As a rule of thumb, I choose external packages only after I give a fair
 chance to the defaults.  The idea is to take things slowly and learn
@@ -10907,9 +10908,9 @@ of Emacs' functionalities: there is an entire world of applications
 outside the narrow confines of editing code.
 
 ** What is the meaning of the `s-KEY' bindings?
-   :PROPERTIES:
-   :CUSTOM_ID: h:fbba4dea-9cc8-4e73-bffa-02aab10a6703
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:fbba4dea-9cc8-4e73-bffa-02aab10a6703
+:END:
 
 Some sections of this document assign functions to key combinations that
 involve the "Super" key (also known as the "Windows key" on some
@@ -10934,9 +10935,9 @@ config database that is normally accessed with =gsettings= on the command
 line or the graphical =dconf-editor= (not pretty either way).
 
 ** What hardware do you use?
-   :PROPERTIES:
-   :CUSTOM_ID: h:e134a8b2-224e-4383-bf03-b080ab6659c7
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:e134a8b2-224e-4383-bf03-b080ab6659c7
+:END:
 
 I am using a Lenovo Thinkpad X220 that I got in 2018 for ~80 EUR.  This
 is the first computer I ever bought: before that I had a Macbook that
@@ -10958,9 +10959,9 @@ production quality is sub-standard!).  Since we are here: the recording
 software is OBS Studio, while I do no video editing.
 
 ** Why keep many completion UIs? (typology of my completion interfaces)
-    :PROPERTIES:
-    :CUSTOM_ID: h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc
+:END:
 
 In [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]] I define lots of completion-related
 functions and configure their accoutrements to deliver on a consistent
@@ -11053,9 +11054,9 @@ attention, I can always leverage the full power of the wider Emacs
 ecosystem.
 
 * Important configurations that I stopped using
-  :PROPERTIES:
-  :CUSTOM_ID: h:9850e597-e4b4-4e04-aad9-ce8a12b3e4ae
-  :END:
+:PROPERTIES:
+:CUSTOM_ID: h:9850e597-e4b4-4e04-aad9-ce8a12b3e4ae
+:END:
 
 As my understanding of Emacs improves, I critically assess the utility
 of tools I once used.  What is not needed is promptly removed.  However,
@@ -11070,9 +11071,9 @@ useful.
 Those are all stored in this section.
 
 ** DEPRECATED Ivy/Counsel/Swiper plus filtering and scoring
-   :PROPERTIES:
-   :CUSTOM_ID: h:d76e14b0-2002-4efa-8fef-cb3cd42d3d80
-   :END:
+:PROPERTIES:
+:CUSTOM_ID: h:d76e14b0-2002-4efa-8fef-cb3cd42d3d80
+:END:
 
 *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
 uses the built-in =icomplete= tool.  All deprecated packages contain the
@@ -11100,9 +11101,9 @@ experience.  Basically we have:
   presenting a preview of the results.
 
 *** DEPRECATED Configurations for Ivy
-    :PROPERTIES:
-    :CUSTOM_ID: h:ba8cd15e-97b8-40e1-804e-2badaca14c1d
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:ba8cd15e-97b8-40e1-804e-2badaca14c1d
+:END:
 
 *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
 uses the built-in =icomplete= tool.  All deprecated packages contain the
@@ -11204,9 +11205,9 @@ package declaration is but a piece of a greater whole.
 #+end_src
 
 *** DEPRECATED Prescient (sort, filter results)
-    :PROPERTIES:
-    :CUSTOM_ID: h:87b37547-5941-4f20-baf6-4d00cde1151a
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:87b37547-5941-4f20-baf6-4d00cde1151a
+:END:
 
 *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
 uses the built-in =icomplete= tool.  All deprecated packages contain the
@@ -11274,9 +11275,9 @@ type something anyhow).
 #+end_src
 
 *** DEPRECATED Counsel configurations and key bindings
-    :PROPERTIES:
-    :CUSTOM_ID: h:919f942a-f99d-437f-b010-af21264246f3
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:919f942a-f99d-437f-b010-af21264246f3
+:END:
 
 *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
 uses the built-in =icomplete= tool.  All deprecated packages contain the
@@ -11411,9 +11412,9 @@ repository, then the corresponding root is used instead."
 #+end_src
 
 **** DEPRECATED Counsel and projectile
-     :PROPERTIES:
-     :CUSTOM_ID: h:1dd71ddc-994d-420b-9aaf-26741aaf20cd
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:1dd71ddc-994d-420b-9aaf-26741aaf20cd
+:END:
 
 *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
 uses the built-in =icomplete= tool.  All deprecated packages contain the
@@ -11459,9 +11460,9 @@ specified in the [[#h:ba8cd15e-97b8-40e1-804e-2badaca14c1d][Ivy section]].
 #+end_src
 
 *** DEPRECATED Swiper commands and settings
-    :PROPERTIES:
-    :CUSTOM_ID: h:8b7f982b-911f-4437-a448-b7288855fbda
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:8b7f982b-911f-4437-a448-b7288855fbda
+:END:
 
 *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
 uses the built-in =icomplete= tool.  All deprecated packages contain the
@@ -11499,16 +11500,16 @@ section on [[#h:5c060e2e-231d-4896-a5d2-b3fb4134764e][Selection candidates and s
 #+end_src
 
 *** DEPRECATED Ivy extensions
-    :PROPERTIES:
-    :CUSTOM_ID: h:93cb57d4-b4ea-4431-8a95-f0437bc4206f
-    :END:
+:PROPERTIES:
+:CUSTOM_ID: h:93cb57d4-b4ea-4431-8a95-f0437bc4206f
+:END:
 
 These tools build on the foundation of Ivy and friends.
 
 **** DEPRECATED Ivy rich
-     :PROPERTIES:
-     :CUSTOM_ID: h:fe6839a7-f6cd-48c8-bf6e-d4d8519d02fc
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:fe6839a7-f6cd-48c8-bf6e-d4d8519d02fc
+:END:
 
 *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
 uses the built-in =icomplete= tool.  All deprecated packages contain the
@@ -11547,9 +11548,9 @@ absolute paths.  Will need to test this further…
 #+end_src
 
 **** DEPRECATED Ivy posframe
-     :PROPERTIES:
-     :CUSTOM_ID: h:fe69c898-3d58-4c7f-a870-3cc1b9ac438c
-     :END:
+:PROPERTIES:
+:CUSTOM_ID: h:fe69c898-3d58-4c7f-a870-3cc1b9ac438c
+:END:
 
 *WARNING 2020-02-10:* I have switched to a simpler, custom solution that
 uses the built-in =icomplete= tool.  All deprecated packages contain the
