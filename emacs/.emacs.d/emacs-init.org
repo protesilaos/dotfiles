@@ -2989,6 +2989,10 @@ copying and renaming/moving a file.  While my =prot/dired-fd-*= are
 conceptually similar to functions in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][projects and directory trees]] as
 well as the ones in [[#h:06290f9c-491c-45b2-b213-0248f890c83d][the Ibuffer section]].
 
+Finally, to see how I get commits for marked files that belong to a
+given version-controlled (git) repo, see my =prot/vc-print-log= from the
+section of this document on the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Generic version control (VC) framework]].
+
 #+begin_src emacs-lisp
 (use-package dired
   :defer
@@ -6323,28 +6327,71 @@ with the defaults.
 (use-package vc
   :config
   (setq vc-find-revision-no-save t)
-  (require 'log-view)                   ; needed for the key bindings
+
+  (use-package log-view
+    :config
+    (defun prot/vc-print-log (&optional arg)
+      "Like `vc-print-log' but for a custom fileset.
+
+With optional prefix ARG (\\[universal-argument]), query for a
+number to limit the log to.  Then prompt the user for matching
+files in the `default-directory'.  A literal space delimits
+multiple files (inserting a space will renew the prompt, asking
+for another file match).
+
+In a `dired-mode' buffer, print log for the file at point, or any
+marked files, except for when a double prefix argument is passed.
+A single prefix arg still provides for a limit to the log.
+
+If a double prefix ARG is passed, prompt for a limit and produce
+a log that covers all files in the present directory."
+      (interactive "P")
+      (let* ((lim (if arg
+                      (read-number "Limit log to N entries: " 5)
+                    nil))
+             (dir default-directory)
+             (dotless directory-files-no-dot-files-regexp)
+             (files (directory-files dir nil dotless t))
+             (crm-separator " ")
+             (set (cond
+                   ((equal arg '(16))
+                    files)
+                   ((eq major-mode 'dired-mode)
+                    (dired-get-marked-files t nil))
+                   (t
+                    (icomplete-vertical-do ()
+                      (completing-read-multiple
+                       "Select files in current dir: " files nil t)))))
+             (backend (vc-backend set)))
+        (vc-print-log-internal backend set nil nil lim)))
+
+    :bind (("C-x v SPC" . prot/vc-print-log)
+           :map log-view-mode-map
+           ("<tab>" . log-view-toggle-entry-display)
+           ("<return>" . log-view-find-revision)
+           ("s" . vc-log-search)
+           ("o" . vc-log-outgoing)
+           ("f" . vc-log-incoming)
+           ("F" . vc-update)
+           ("P" . vc-push)))
+
   :bind (("C-x v b" . vc-retrieve-tag)  ; "branch" switch
          ("C-x v t" . vc-create-tag)
          ("C-x v f" . vc-log-incoming)  ; the actual git fetch
          ("C-x v F" . vc-update)        ; "F" because "P" is push
-         ("C-x v d" . vc-diff)
-         (:map log-view-mode-map
-               ("<tab>" . log-view-toggle-entry-display)
-               ("<return>" . log-view-find-revision)
-               ("s" . vc-log-search)
-               ("o" . vc-log-outgoing)
-               ("f" . vc-log-incoming)
-               ("F" . vc-update)
-               ("P" . vc-push))))
+         ("C-x v d" . vc-diff)))
 
 (use-package vc-dir
   :config
-  (defun prot/vc-dir-project ()
-    "Unconditionally display `vc-diff' for the current project."
-    (interactive)
-    (vc-dir (vc-root-dir)))
-  :bind (("C-x v p" . prot/vc-dir-project)
+  (defun prot/vc-dir (&optional arg)
+    "Run `vc-dir' for the current project or directory.
+With optional ARG (\\[universal-argument]), use the present
+working directory, else default to the root of the current
+project, as defined by `vc-root-dir'."
+    (interactive "P")
+    (let ((dir (if arg default-directory (vc-root-dir))))
+      (vc-dir dir)))
+  :bind (("C-x v p" . prot/vc-dir)
          :map vc-dir-mode-map
          ("b" . vc-retrieve-tag)
          ("t" . vc-create-tag)
