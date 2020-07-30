@@ -6717,9 +6717,9 @@ and corresponding functions.
 #+end_src
 
 **** Eshell (like M-x shell but in elisp)
-      :PROPERTIES:
-      :CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
-      :END:
+     :PROPERTIES:
+     :CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
+     :END:
 
 While I did read the =eshell= manual fairly early in my introduction to
 Emacs (July 2019), I failed to appreciate its added value.  Sure, you
@@ -6767,9 +6767,8 @@ for switching directly to a recent directory.  While the more general
 subdirectory somewhere inside the path you are.
 
 Instead of outlining the remaining features of Eshell, *I strongly
-encourage you to read the manual.* It is fairly short.  What I have here
-is just an early sample of what can be achieved with fairly few little
-tweaks.
+encourage you to read the manual*.  It is fairly short.  What I have here
+is just an early sample of what can be achieved with a few tweaks.
 
 Also check these valuable resources:
 
@@ -7043,7 +7042,7 @@ wisely or prepare to use `eshell-interrupt-process'."
               ("M-r" . prot/eshell-complete-history) ; use this to find input history
               ("C-c d" . prot/eshell-find-subdirectory-recursive)
               ("C-c =" . prot/eshell-complete-recent-dir)))
- #+end_src
+#+end_src
 
 *** Terminals inside of Emacs
     :PROPERTIES:
@@ -9895,7 +9894,7 @@ Use `flyspell-region' on the active region, else invoke
          ("C-;" . nil)))
 #+end_src
 
-** Code linters
+** Code and text linters
    :PROPERTIES:
    :CUSTOM_ID: h:20448ad8-9371-4e00-b88b-6b93f4c654d9
    :END:
