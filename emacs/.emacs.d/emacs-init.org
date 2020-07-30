@@ -3378,6 +3378,21 @@ Basically, its interaction model is as follows:
   (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
 #+end_src
 
+*** Dired disk usage (du)
+    :PROPERTIES:
+    :CUSTOM_ID: h:ae853aef-6d7d-44e4-abc6-abb66c4901b1
+    :END:
+
+Sometimes I need to check the size of directories listed in a Dired
+buffer.  I do this manually, by invoking =dired-du-mode=.
+
+#+begin_src emacs-lisp
+(use-package dired-du
+  :ensure
+  :commands dired-du-mode
+  :defer)
+#+end_src
+
 ** Working with buffers
    :PROPERTIES:
    :CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
