@@ -8014,16 +8014,16 @@ This can be used to further customise the active theme.")
   (dolist (theme '("operandi" "vivendi"))
     (contrib/format-sexp
      (defun prot/modus-%1$s ()
-       (setq modus-%1$s-theme-slanted-constructs nil
-             modus-%1$s-theme-bold-constructs nil
+       (setq modus-%1$s-theme-slanted-constructs t
+             modus-%1$s-theme-bold-constructs t
              modus-%1$s-theme-visible-fringes nil
-             modus-%1$s-theme-3d-modeline nil
+             modus-%1$s-theme-3d-modeline t
              modus-%1$s-theme-subtle-diffs t
              modus-%1$s-theme-faint-syntax t
-             modus-%1$s-theme-intense-hl-line t
+             modus-%1$s-theme-intense-hl-line nil
              modus-%1$s-theme-intense-standard-completions nil
              modus-%1$s-theme-org-blocks nil ; {nil,'greyscale,'rainbow}
-             modus-%1$s-theme-variable-pitch-headings nil
+             modus-%1$s-theme-variable-pitch-headings t
              modus-%1$s-theme-rainbow-headings nil
              modus-%1$s-theme-section-headings nil
              modus-%1$s-theme-scale-headings nil
