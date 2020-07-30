@@ -9844,6 +9844,38 @@ that particular function in my [[#h:98876022-57cc-40de-936e-4ee42cefd69a][in-buf
   (setq-default indent-tabs-mode nil))
 #+end_src
 
+** Dictionary (and local sdcv variant)
+   :PROPERTIES:
+   :CUSTOM_ID: h:72acde30-9c82-4bfb-a737-7725c26ad054
+   :END:
+
+Sometimes I need to access an offline version of Webster's Revised
+Unabridged Dictionary (1913) that I got following the helpful
+[[http://mbork.pl/2017-01-14_I'm_now_using_the_right_dictionary][instructions in Marcin Borkowski's blog]].  Though I use the =sdcv= from the
+package archives instead of the one recommended by Marcin.
+
+The hook I add here is to remove the rather awkward use of highlighting.
+Also because I do not think you need designerism to get in the way of a
+dictionary entry.
+
+#+begin_src emacs-lisp
+(use-package sdcv
+  :ensure
+  :defer
+  :hook (sdcv-mode-hook . (lambda ()
+                            (font-lock-mode -1))))
+#+end_src
+
+When the above does not yield any helpful results, I switch to the
+=dictionary= package by Torsten Hilbrich.  It works with an Internet
+connection and has access to a wide range of dictionaries.
+
+#+begin_src emacs-lisp
+(use-package dictionary
+  :ensure
+  :defer)
+#+end_src
+
 ** Flyspell (spell check)
    :PROPERTIES:
    :CUSTOM_ID: h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c
