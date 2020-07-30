@@ -6173,7 +6173,7 @@ current command."
     (let ((position (point)))
       (when (derived-mode-p 'diff-mode)
         (setq-local diff-refine 'font-lock)
-        (force-window-update (current-buffer))
+        (font-lock-flush (point-min) (point-max))
         (goto-char position))))
 
   (defun prot/diff-refine-hunk-or-buf (&optional arg)
