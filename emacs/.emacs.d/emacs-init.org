@@ -6813,6 +6813,7 @@ Finally, a few notes about contributions I have received:
 
 (use-package esh-mode
   :defer
+  :commands prot/eshell-minor-mode
   :config
   ;; used by other functions below
   (declare-function ffap-file-at-point "ffap.el")
@@ -6943,18 +6944,37 @@ used as `:filter-return' advice to `eshell-ls-decorated-name'."
 
   (advice-add 'eshell-ls-decorated-name :filter-return #'contrib/electrify-ls)
 
-  :bind (:map eshell-mode-map
-              ("M-k" . eshell-kill-input)
-              ("C-c w" . prot/eshell-kill-save-file-at-point)
-              ("C-c i" . prot/eshell-insert-file-at-point)
-              ("C-c f" . prot/eshell-find-file-at-point)
-              ("C-c C-f" . prot/eshell-find-file-at-point)
-              ;; The C-c o shadows `prot/olivetti-mode', but that is
-              ;; fine in this map
-              ("C-c o" . prot/eshell-put-last-output-to-buffer)
-              ("C-c >" . prot/eshell-complete-redirect-to-buffer)
-              ("C-c C-j" . prot/eshell-file-parent-dir)
-              ("C-c h" . prot/eshell-narrow-output-highlight-regexp)))
+  ;; XXX HACK: This and the following minor mode are only introduced to
+  ;; circumvent an issue I have encountered with `eshell-mode-map' being
+  ;; set to nil and breaking my key bindings by forcing them into the
+  ;; global map.
+  ;;
+  ;; What I do is to define a minor mode that runs from
+  ;; `eshell-mode-hook' and pass all my custom key bindings there.
+  (defvar prot/eshell-minor-mode-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "M-n") 'outline-next-visible-heading)
+      (define-key map (kbd "M-k") 'eshell-kill-input)
+      (define-key map (kbd "C-c w") 'prot/eshell-kill-save-file-at-point)
+      (define-key map (kbd "C-c i") 'prot/eshell-insert-file-at-point)
+      (define-key map (kbd "C-c f") 'prot/eshell-find-file-at-point)
+      (define-key map (kbd "C-c C-f") 'prot/eshell-find-file-at-point)
+      (define-key map (kbd "C-c o") 'prot/eshell-put-last-output-to-buffer)
+      (define-key map (kbd "C-c >") 'prot/eshell-complete-redirect-to-buffer)
+      (define-key map (kbd "C-c C-j") 'prot/eshell-file-parent-dir)
+      (define-key map (kbd "C-c h") 'prot/eshell-narrow-output-highlight-regexp)
+      map)
+    "Key map with custom commands for `eshell'.")
+
+  ;; HACK: See comment above.
+  (define-minor-mode prot/eshell-minor-mode
+    "Special minor mode to enable custom keys in `eshell'.
+
+\\{prot/eshell-minor-mode-map}"
+    :init-value nil
+    :keymap prot/eshell-minor-mode-map)
+
+  :hook (eshell-mode-hook . prot/eshell-minor-mode))
 
 (use-package esh-module
   :defer
@@ -6988,7 +7008,6 @@ used as `:filter-return' advice to `eshell-ls-decorated-name'."
   (setq password-cache-expiry 600))
 
 (use-package em-hist
-  :defer
   :after esh-mode
   :config
   (setq eshell-hist-ignoredups t)
@@ -7037,7 +7056,7 @@ wisely or prepare to use `eshell-interrupt-process'."
       (insert selection)
       (eshell-send-input)))
 
-  :bind (:map eshell-hist-mode-map
+  :bind (:map prot/eshell-minor-mode-map
               ("M-s" . nil) ; I use this for lots of more useful commands
               ("M-r" . prot/eshell-complete-history) ; use this to find input history
               ("C-c d" . prot/eshell-find-subdirectory-recursive)
