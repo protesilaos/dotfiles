@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 0.10.0
+;; Version: 0.11.0
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -51,6 +51,7 @@
 ;;     modus-operandi-theme-subtle-diffs                   (boolean)
 ;;     modus-operandi-theme-faint-syntax                   (boolean)
 ;;     modus-operandi-theme-intense-hl-line                (boolean)
+;;     modus-operandi-theme-intense-paren-match            (boolean)
 ;;     modus-operandi-theme-intense-standard-completions   (boolean)
 ;;     modus-operandi-theme-override-colors-alist          (alist)
 ;;
@@ -80,6 +81,7 @@
 ;;     auto-dim-other-buffers
 ;;     avy
 ;;     bm
+;;     bongo
 ;;     boon
 ;;     breakpoint (provided by built-in gdb-mi.el)
 ;;     buffer-expose
@@ -109,6 +111,7 @@
 ;;     debbugs
 ;;     define-word
 ;;     deft
+;;     dictionary
 ;;     diff-hl
 ;;     diff-mode
 ;;     dim-autoload
@@ -556,6 +559,10 @@ association list)."
   "Use more prominent background for `hl-line-mode'."
   :type 'boolean)
 
+(defcustom modus-operandi-theme-intense-paren-match nil
+  "Use more prominent colour for parenthesis matching."
+  :type 'boolean)
+
 (defcustom modus-operandi-theme-faint-syntax nil
   "Use less saturated colours for code syntax highlighting."
   :type 'boolean)
@@ -568,6 +575,15 @@ association list)."
   "Conditional use of a heavier text weight."
   (when modus-operandi-theme-bold-constructs
     (list :inherit 'bold)))
+
+(defun modus-operandi-theme-paren (normalbg intensebg)
+  "Conditional use of intense colours for matching parentheses.
+NORMALBG should the special palette colour 'bg-paren-match' or
+something similar.  INTENSEBG must be easier to discern next to
+other backgrounds."
+  (if modus-operandi-theme-intense-paren-match
+      (list :background intensebg)
+    (list :background normalbg)))
 
 (defun modus-operandi-theme-syntax-foreground (normal faint)
   "Apply foreground value to code syntax.
@@ -1193,6 +1209,18 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(bm-fringe-persistent-face ((,class :inherit modus-theme-fringe-blue)))
    `(bm-persistent-face ((,class :inherit modus-theme-intense-blue
                                  ,@(and (>= emacs-major-version 27) '(:extend t)))))
+;;;;; bongo
+   `(bongo-album-title ((,class :foreground ,cyan-active)))
+   `(bongo-artist ((,class :foreground ,magenta-active)))
+   `(bongo-currently-playing-track ((,class :inherit bold)))
+   `(bongo-elapsed-track-part ((,class :background ,blue-refine-bg :foreground ,blue-refine-fg :underline t)))
+   `(bongo-filled-seek-bar ((,class :background ,blue-subtle-bg :foreground ,fg-main)))
+   `(bongo-marked-track ((,class :foreground ,fg-mark-alt)))
+   `(bongo-marked-track-line ((,class :background ,bg-mark-alt)))
+   `(bongo-played-track ((,class :foreground ,fg-unfocused :strike-through t)))
+   `(bongo-track-length ((,class :foreground ,blue-alt-other)))
+   `(bongo-track-title ((,class :foreground ,blue-active)))
+   `(bongo-unfilled-seek-bar ((,class :background ,blue-nuanced-bg :foreground ,fg-main)))
 ;;;;; boon
    `(boon-modeline-cmd ((,class :inherit modus-theme-active-blue)))
    `(boon-modeline-ins ((,class :inherit modus-theme-active-red)))
@@ -1469,6 +1497,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(deft-summary-face ((,class :foreground ,fg-alt :slant ,modus-theme-slant)))
    `(deft-time-face ((,class :foreground ,fg-special-cold)))
    `(deft-title-face ((,class :inherit bold :foreground ,fg-main)))
+;;;;; dictionary
+   `(dictionary-button-face ((,class :inherit bold :foreground ,fg-special-cold)))
+   `(dictionary-reference-face ((,class :foreground ,blue-alt-other :underline t)))
+   `(dictionary-word-definition-face ((,class :foreground ,fg-main)))
+   `(dictionary-word-entry-face ((,class :foreground ,fg-special-cold :slant ,modus-theme-slant)))
 ;;;;; diff-hl
    `(diff-hl-change ((,class :inherit modus-theme-fringe-blue)))
    `(diff-hl-delete ((,class :inherit modus-theme-fringe-red)))
@@ -1839,7 +1872,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(flycheck-error-list-column-number ((,class :foreground ,fg-special-cold)))
    `(flycheck-error-list-error ((,class ,@(modus-operandi-theme-bold-weight) :foreground ,red)))
    `(flycheck-error-list-filename ((,class :foreground ,blue)))
-   `(flycheck-error-list-highlight ((,class :inherit modus-theme-special-warm)))
+   `(flycheck-error-list-highlight ((,class :inherit modus-theme-hl-line)))
    `(flycheck-error-list-id ((,class :foreground ,magenta-alt-other)))
    `(flycheck-error-list-id-with-explainer ((,class :inherit flycheck-error-list-id :box t)))
    `(flycheck-error-list-info ((,class :foreground ,cyan)))
@@ -2740,7 +2773,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(mu4e-flagged-face ((,class :foreground ,red-alt)))
    `(mu4e-footer-face ((,class :foreground ,fg-special-cold :slant ,modus-theme-slant)))
    `(mu4e-forwarded-face ((,class :foreground ,green-alt-other)))
-   `(mu4e-header-face ((,class :foreground ,fg-main)))
+   `(mu4e-header-face ((,class :foreground ,fg-dim)))
    `(mu4e-header-highlight-face ((,class :inherit modus-theme-hl-line)))
    `(mu4e-header-key-face ((,class :foreground ,cyan)))
    `(mu4e-header-marks-face ((,class :inherit bold :foreground ,magenta-alt)))
@@ -2757,7 +2790,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(mu4e-system-face ((,class :foreground ,fg-mark-del :slant ,modus-theme-slant)))
    `(mu4e-title-face ((,class :foreground ,fg-main)))
    `(mu4e-trashed-face ((,class :foreground ,red)))
-   `(mu4e-unread-face ((,class :inherit bold)))
+   `(mu4e-unread-face ((,class :inherit bold :foreground ,fg-main)))
    `(mu4e-url-number-face ((,class :inherit bold :foreground ,cyan-alt-other)))
    `(mu4e-view-body-face ((,class :foreground ,fg-main)))
    `(mu4e-warning-face ((,class :inherit warning)))
@@ -3004,7 +3037,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-mode-line-clock-overrun ((,class :inherit modus-theme-active-red)))
    `(org-priority ((,class ,@(modus-operandi-theme-org-todo-block magenta-nuanced-bg magenta-nuanced magenta)
                            ,@(modus-operandi-theme-heading-foreground magenta magenta-alt-other))))
-   `(org-quote ((,class ,@(modus-operandi-theme-org-block bg-dim)
+   `(org-quote ((,class ,@(if modus-operandi-theme-org-blocks
+                              (append
+                               (and (>= emacs-major-version 27) '(:extend t))
+                               (list :background bg-dim))
+                            (list :background nil))
                         :foreground ,fg-special-calm :slant ,modus-theme-slant)))
    `(org-scheduled ((,class :foreground ,fg-special-warm)))
    `(org-scheduled-previously ((,class :foreground ,yellow-alt-other)))
@@ -3287,7 +3324,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(sh-heredoc ((,class :foreground ,blue-alt)))
    `(sh-quoted-exec ((,class ,@(modus-operandi-theme-bold-weight) :foreground ,magenta-alt)))
 ;;;;; show-paren-mode
-   `(show-paren-match ((,class :background ,bg-paren-match :foreground ,fg-main)))
+   `(show-paren-match ((,class ,@(modus-operandi-theme-paren bg-paren-match blue-intense-bg)
+                               :foreground ,fg-main)))
    `(show-paren-match-expression ((,class :inherit modus-theme-special-calm)))
    `(show-paren-mismatch ((,class :inherit modus-theme-intense-red)))
 ;;;;; side-notes
@@ -3323,7 +3361,8 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;;; smartparens
    `(sp-pair-overlay-face ((,class :inherit modus-theme-special-warm)))
    `(sp-show-pair-enclosing ((,class :inherit modus-theme-special-mild)))
-   `(sp-show-pair-match-face ((,class :background ,bg-paren-match :foreground ,fg-main)))
+   `(sp-show-pair-match-face ((,class ,@(modus-operandi-theme-paren bg-paren-match blue-intense-bg)
+                                      :foreground ,fg-main)))
    `(sp-show-pair-mismatch-face ((,class :inherit modus-theme-intense-red)))
    `(sp-wrap-overlay-closing-pair ((,class :inherit sp-pair-overlay-face)))
    `(sp-wrap-overlay-face ((,class :inherit sp-pair-overlay-face)))
@@ -3923,6 +3962,7 @@ Also bind `class' to ((class color) (min-colors 89))."
          ("ipython" modus-theme-nuanced-magenta)
          ("r" modus-theme-nuanced-cyan)
          ("yaml" modus-theme-nuanced-cyan)
+         ("conf" modus-theme-nuanced-cyan)
          ("docker" modus-theme-nuanced-cyan)
          ("json" modus-theme-nuanced-cyan))))))
 
