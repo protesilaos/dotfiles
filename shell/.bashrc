@@ -235,7 +235,6 @@ if _checkexec pacman; then
     # Remove packages
     alias pRs="sudo pacman -Rs"     # remove package
     alias pRnsc="sudo pacman -Rnsc" # remove package recursively
-    alias pRnscQdtq="sudo pacman -Rnsc $(pacman -Qdtq)" # remove orphans recursively
 
     # Clear cache
     alias pcache1="sudo paccache -rk 1" # remove cache except last item
