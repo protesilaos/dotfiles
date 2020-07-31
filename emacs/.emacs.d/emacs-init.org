@@ -6385,7 +6385,7 @@ a log that covers all files in the present directory."
       (interactive "P")
       (let* ((lim (if arg
                       (read-number "Limit log to N entries: " 5)
-                    nil))
+                    20))
              (dir default-directory)
              (dotless directory-files-no-dot-files-regexp)
              (files (directory-files dir nil dotless t))
@@ -6400,12 +6400,20 @@ a log that covers all files in the present directory."
                       (completing-read-multiple
                        "Select files in current dir: " files nil t)))))
              (backend (vc-backend set)))
-        (vc-print-log-internal backend set nil nil lim)))
+        (vc-print-log-internal backend set nil nil lim 'with-diff)))
+
+    (defun prot/log-view-extract-commit ()
+      "Kill commit from around point in `vc-print-log'."
+      (interactive)
+      (let ((commit (cadr (log-view-current-entry (point) t))))
+        (kill-new (format "%s" commit))
+        (message "Copied: %s" commit)))
 
     :bind (("C-x v SPC" . prot/vc-print-log)
            :map log-view-mode-map
            ("<tab>" . log-view-toggle-entry-display)
            ("<return>" . log-view-find-revision)
+           ("w" . prot/log-view-extract-commit)
            ("s" . vc-log-search)
            ("o" . vc-log-outgoing)
            ("f" . vc-log-incoming)
