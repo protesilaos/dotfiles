@@ -7892,9 +7892,7 @@ I have a couple of videos about my workflow with Bongo and Dired:
   (setq bongo-display-playback-mode-indicator t)
   (setq bongo-display-inline-playback-progress t)
   (setq bongo-mark-played-tracks t)
-  (setq bongo-header-line-mode t)
-  (setq bongo-header-line-function
-        'bongo-default-header-line-function)
+  (setq bongo-header-line-mode nil)
   (setq bongo-mode-line-indicator-mode nil)
   (setq bongo-enabled-backends '(vlc mpv))
   (setq bongo-vlc-program-name "cvlc")
@@ -7980,6 +7978,8 @@ Upon insertion, playback starts immediately, in accordance with
          ("<C-XF86AudioNext>" . bongo-next)
          ("<C-XF86AudioPrev>" . bongo-previous)
          ("<M-XF86AudioPlay>" . bongo-show)
+         ("<S-XF86AudioNext>" . bongo-seek-forward-10)
+         ("<S-XF86AudioPrev>" . bongo-seek-backward-10)
          :map bongo-playlist-mode-map
          ("C-d" . prot/bongo-clear-playlist-and-stop)
          ("I" . prot/bongo-insert-playlist)
