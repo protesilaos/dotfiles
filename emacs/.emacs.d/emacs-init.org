@@ -4381,6 +4381,7 @@ Now on to the miscellaneous settings:
   (setq org-special-ctrl-a/e nil)
   (setq org-special-ctrl-k nil)
   (setq org-hide-emphasis-markers t)
+  (setq org-hide-leading-stars nil)
   (setq org-structure-template-alist    ; CHANGED in Org 9.2, Emacs 27.1
         '(("s" . "src")
           ("E" . "src emacs-lisp")
