@@ -855,7 +855,7 @@ x×X
 '
 "
 “”
-—-~≈=_.…
+—-~≈=_.…⋯
 
 Sample character set
 Check for monospacing and Greek glyphs
@@ -916,7 +916,7 @@ is under the heading of [[#h:9850e597-e4b4-4e04-aad9-ce8a12b3e4ae][important con
 :END:
 
 For newcomers, watch my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).  This
-section and subsquent ones contain a lot of documentation and several
+section and subsequent ones contain a lot of documentation and several
 elements.  Make sure to also follow any links from here, or [[https://protesilaos.com/contact/][contact me]]
 in case something is amiss.  There is also an entry in the "Frequently
 Asked Questions" that might help you make sense of the complete picture:
@@ -1610,7 +1610,7 @@ Add this to `imenu-after-jump-hook'."
       (prot/pulse-line)))
 
   (defun prot/imenu-show-entry ()
-    "Reveal index at point after succesful `imenu' execution.
+    "Reveal index at point after successful `imenu' execution.
 To be used with `imenu-after-jump-hook'."
     (cond
      ((and (eq major-mode 'org-mode)
@@ -1813,7 +1813,7 @@ minibuffer---again, an offense against simplicity.
 
 What I have in this section is a few simple tweaks and built-in ways to
 complete terms while typing text in a buffer.  I think that, for most
-cases, the minibuffer can be used effectively to perfom in-buffer
+cases, the minibuffer can be used effectively to perform in-buffer
 completion: start from my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]] to
 understand how these fit into the broader framework.
 
@@ -2085,8 +2085,8 @@ Here is an overview of what goes into this package declaration.
   and super effective (*pro tip*: hit =!= to answer "yes" to all possible
   matches, which is possible in all cases where Emacs asks you for
   multiple confirmations).
-+ Move to occurence at start or end :: Using the symbol at point, move
-  to the first or optionally the ARGth occurence from the beginning or
++ Move to occurrence at start or end :: Using the symbol at point, move
+  to the first or optionally the ARGth occurrence from the beginning or
   the end of the buffer.  I map these commands to the same keys they are
   bound to in =isearch-mode-map=, namely, =M-s M-<= and =M-s M->=.
 
@@ -2149,8 +2149,8 @@ search started."
     (isearch-forward-symbol-at-point)
     (isearch-query-replace-regexp))
 
-  (defmacro prot/isearch-occurence (name edge &optional doc)
-    "Construct function for moving to `isearch' occurence.
+  (defmacro prot/isearch-occurrence (name edge &optional doc)
+    "Construct function for moving to `isearch' occurrence.
 NAME is the name of the function.  EDGE is either the beginning
 or the end of the buffer.  Optional DOC is the resulting
 function's docstring."
@@ -2162,18 +2162,18 @@ function's docstring."
          (isearch-forward-symbol-at-point)
          (funcall command x))))
 
-  (prot/isearch-occurence
+  (prot/isearch-occurrence
    prot/isearch-beginning-of-buffer
    "beginning"
    "Run `isearch-beginning-of-buffer' for the symbol at point.
-With numeric ARG, move to ARGth occurence counting from the
+With numeric ARG, move to ARGth occurrence counting from the
 beginning of the buffer.")
 
-  (prot/isearch-occurence
+  (prot/isearch-occurrence
    prot/isearch-end-of-buffer
    "end"
    "Run `isearch-end-of-buffer' for the symbol at point.
-With numeric ARG, move to ARGth occurence counting from the
+With numeric ARG, move to ARGth occurrence counting from the
 end of the buffer.")
 
   :bind (("M-s %" . prot/isearch-query-replace-symbol-at-point)
@@ -5015,7 +5015,7 @@ the following:
   default interface for reading email and Usenet sources.
 
 + Mu4e as my secondary mail user agent, intended for archiving purposes
-  and abritrary searches.  I used to only have Gnus configured, but its
+  and arbitrary searches.  I used to only have Gnus configured, but its
   search capabilities left something to be desired.
 
 + The built-in capabilities to compose and send email, which apply to
