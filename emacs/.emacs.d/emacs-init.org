@@ -8063,79 +8063,44 @@ into this project:
   (defmacro contrib/format-sexp (sexp &rest objects)
     `(eval (read (format ,(format "%S" sexp) ,@objects))))
 
-  (defvar prot/modus-themes-custom-hook nil
-    "Hook that runs after prot/modus-.*-theme is invoked.
-This can be used to further customise the active theme.")
-
   ;; The variables do not reveal my preferences.  Always testing things.
   (dolist (theme '("operandi" "vivendi"))
     (contrib/format-sexp
      (defun prot/modus-%1$s ()
        (setq modus-%1$s-theme-slanted-constructs t
              modus-%1$s-theme-bold-constructs t
-             modus-%1$s-theme-visible-fringes nil
+             modus-%1$s-theme-visible-fringes t
              modus-%1$s-theme-3d-modeline t
              modus-%1$s-theme-subtle-diffs t
              modus-%1$s-theme-faint-syntax t
              modus-%1$s-theme-intense-hl-line nil
+             modus-%1$s-theme-intense-paren-match t
              modus-%1$s-theme-intense-standard-completions nil
-             modus-%1$s-theme-org-blocks nil ; {nil,'greyscale,'rainbow}
+             modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
              modus-%1$s-theme-variable-pitch-headings t
              modus-%1$s-theme-rainbow-headings nil
              modus-%1$s-theme-section-headings nil
-             modus-%1$s-theme-scale-headings nil
+             modus-%1$s-theme-scale-headings t
              modus-%1$s-theme-scale-1 1.1
              modus-%1$s-theme-scale-2 1.15
              modus-%1$s-theme-scale-3 1.21
              modus-%1$s-theme-scale-4 1.27
              modus-%1$s-theme-scale-5 1.33)
-       (load-theme 'modus-%1$s t)
-       (run-hooks 'prot/modus-themes-custom-hook))
+       (load-theme 'modus-%1$s t))
      theme))
-
-  ;;; NOTE putting the following two forms here for visibility.  You can
-  ;;; access the theme's palette in order to customise any face you
-  ;;; want.  For instance, this adapts the cursor colour, depending on
-  ;;; the theme in use.
-
-  (defun prot/modus-themes-custom ()
-    "Override faces by accessing the theme colour variables.
-To be assigned to `prot/modus-themes-custom-hook'."
-    (cond
-     ((eq (car custom-enabled-themes) 'modus-operandi)
-      (modus-operandi-theme-with-color-variables
-        (custom-theme-set-faces
-         'modus-operandi
-         `(cursor ((,class (:background ,blue-alt)))))))
-     ((eq (car custom-enabled-themes) 'modus-vivendi)
-      (modus-vivendi-theme-with-color-variables
-        (custom-theme-set-faces
-         'modus-vivendi
-         `(cursor ((,class (:background ,red-alt)))))))))
-
-  ;;; It is possible to also change the colour value assigned to each
-  ;;; variable in the palette.  Only do this if you plan to make a
-  ;;; tweaked version of the theme (and assume responsibility for it).
-  ;;; Here is an example:
-
-  ;; (setq modus-vivendi-theme-override-colors-alist
-  ;;       '(("magenta" . "#ffaabb")
-  ;;         ("magenta-alt" . "#ee88ff")
-  ;;         ("magenta-alt-other" . "#bbaaff")))
 
   (defun prot/modus-themes-toggle ()
     "Toggle between `prot/modus-operandi' and `prot/modus-vivendi'."
     (interactive)
     (if (eq (car custom-enabled-themes) 'modus-operandi)
         (progn
-          (prot/modus-vivendi)
-          (disable-theme 'modus-operandi))
-      (prot/modus-operandi)
-      (disable-theme 'modus-vivendi)))
+          (disable-theme 'modus-operandi)
+          (prot/modus-vivendi))
+      (disable-theme 'modus-vivendi)
+      (prot/modus-operandi)))
 
   :bind ("<f5>" . prot/modus-themes-toggle)
-  :hook ((after-init-hook . prot/modus-operandi)
-         (prot/modus-themes-custom-hook . prot/modus-themes-custom)))
+  :hook (after-init-hook . prot/modus-operandi))
 #+end_src
 
 *** Measuring relative colour luminance
