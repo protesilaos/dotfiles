@@ -9339,7 +9339,7 @@ effect (see the section on the [[#h:02572210-eb26-4941-8f7c-666a0314877b][mouse 
 *Pro tip*: On Emacs 27.1 you can create a rectangular region by holding
 down Ctrl and Meta while dragging the mouse with the left click pressed.
 
-*** Tool tips
+*** Tooltips (tooltip-mode)
 :PROPERTIES:
 :CUSTOM_ID: h:9f492949-70fb-4fba-a0ea-569d4a240be8
 :END:
@@ -9358,6 +9358,11 @@ mouse over an actionable item:
   (setq tooltip-delay 0.5)
   (setq tooltip-short-delay 0.5)
   (setq x-gtk-use-system-tooltips nil)
+  (setq tooltip-frame-parameters
+        '((name . "tooltip")
+          (internal-border-width . 6)
+          (border-width . 0)
+          (no-special-glyphs . t)))
   :hook (after-init-hook . tooltip-mode))
 #+end_src
 
