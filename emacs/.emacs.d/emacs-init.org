@@ -8548,8 +8548,8 @@ For video demonstrantions check these:
   :ensure
   :diminish
   :config
-  (setq olivetti-body-width 0.65)
-  (setq olivetti-minimum-body-width 72)
+  (setq olivetti-body-width 0.7)
+  (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t)
 
   (define-minor-mode prot/olivetti-mode
