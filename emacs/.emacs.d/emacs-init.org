@@ -1639,9 +1639,7 @@ further support us in the task of navigating through the current buffer.
 #+begin_src emacs-lisp
 (use-package imenu-list
   :ensure
-  :defer
   :after imenu
-  :defer
   :config
   (defun prot/imenu-list-dwim (&optional arg)
     "Convenience wrapper for `imenu-list'.
@@ -1893,7 +1891,6 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
 
 #+begin_src emacs-lisp
 (use-package dabbrev
-  :defer
   :after (minibuffer icomplete icomplete-vertical) ; read those as well
   :config
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
@@ -1930,7 +1927,6 @@ position of the cursor after the skeleton has been inserted.
 
 #+begin_src emacs-lisp
 (use-package abbrev
-  :defer
   :diminish
   :config
   (setq abbrev-file-name "~/.emacs.d/abbrevs")
@@ -2095,7 +2091,6 @@ effectively supersede the functionality of =anzu=, a package I once used.
 
 #+begin_src emacs-lisp
 (use-package isearch
-  :defer
   :diminish
   :config
   (setq search-highlight t)
@@ -2199,7 +2194,6 @@ The faces are part of my Modus themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408
 
 #+begin_src emacs-lisp
 (use-package replace
-  :defer
   :config
   (setq list-matching-lines-jump-to-current-line t)
   ;; See my "Modus themes" for these inherited faces
@@ -2234,7 +2228,6 @@ this style as the default.  Other options are =string= and =rx=.
 
 #+begin_src emacs-lisp
 (use-package re-builder
-  :defer
   :config
   (setq reb-re-syntax 'read))
 #+end_src
@@ -2251,7 +2244,6 @@ great when dealing with complex sets of regexp constructs.
 #+begin_src emacs-lisp
 (use-package visual-regexp
   :ensure
-  :defer
   :config
   (setq vr/default-replace-preview nil)
   (setq vr/match-separator-use-custom-face t))
@@ -2271,7 +2263,6 @@ matches by leveraging the full power of Emacs' editing capabilities
 #+begin_src emacs-lisp
 (use-package wgrep
   :ensure
-  :defer
   :commands wgrep
   :config
   (setq wgrep-auto-save-buffer t)
@@ -2317,7 +2308,6 @@ Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][projec
 #+begin_src emacs-lisp
 (use-package rg
   :ensure
-  :defer
   :config
   (setq rg-group-result t)
   (setq rg-hide-command t)
@@ -3031,7 +3021,6 @@ section of this document on the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Gener
 
 #+begin_src emacs-lisp
 (use-package dired
-  :defer
   :config
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
@@ -3046,7 +3035,6 @@ section of this document on the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Gener
          (dired-mode-hook . hl-line-mode)))
 
 (use-package dired-aux
-  :defer
   :config
   (setq dired-isearch-filenames 'dwim)
   ;; The following variables were introduced in Emacs 27.1
@@ -3123,7 +3111,6 @@ This relies on the external 'fd' executable."
 
 ;; NOTE de facto deprecated because of my `prot/dired-fd' functions
 (use-package find-dired
-  :defer
   :after dired
   :config
   (setq find-ls-option
@@ -3133,7 +3120,6 @@ This relies on the external 'fd' executable."
 (use-package async :ensure)
 
 (use-package dired-async
-  :defer
   :after (dired async)
   :hook (dired-mode-hook . dired-async-mode))
 #+end_src
@@ -3181,7 +3167,6 @@ but I find that I only ever need to narrow by a regular expression
 #+begin_src emacs-lisp
 (use-package dired-narrow
   :ensure
-  :defer
   :after dired
   :config
   (setq dired-narrow-exit-when-one-left t)
@@ -3207,7 +3192,6 @@ regular buffer, then confirm them with =C-c C-c=.
 #+begin_src emacs-lisp
 (use-package wdired
   :after dired
-  :defer
   :commands wdired-change-to-wdired-mode
   :config
   (setq wdired-allow-to-change-permissions t)
@@ -3226,7 +3210,6 @@ behaviour while inside a regular dired buffer.
 #+begin_src emacs-lisp
 (use-package peep-dired
   :ensure
-  :defer
   :after dired
   :config
   (setq peep-dired-cleanup-on-disable t)
@@ -3254,7 +3237,6 @@ to generate lots of images at once.  The culprit is the image converter.
 
 #+begin_src emacs-lisp
 (use-package image-dired
-  :defer
   :config
   (setq image-dired-external-viewer "xdg-open")
   (setq image-dired-thumb-size 80)
@@ -3292,7 +3274,6 @@ What I have here:
 #+begin_src emacs-lisp
 (use-package dired-subtree
   :ensure
-  :defer
   :after dired
   :config
   (setq dired-subtree-use-backgrounds nil)
@@ -3333,7 +3314,6 @@ can hit =F=.  It calls =dired-do-find-marked-files=.
 
 #+begin_src emacs-lisp
 (use-package dired-x
-  :defer
   :after dired
   :config
   (setq dired-clean-up-buffers-too t)
@@ -3410,7 +3390,6 @@ Basically, its interaction model is as follows:
 #+begin_src emacs-lisp
 (use-package trashed
   :ensure
-  :defer
   :config
   (setq trashed-action-confirmer 'y-or-n-p)
   (setq trashed-use-header-line t)
@@ -3429,8 +3408,7 @@ buffer.  I do this manually, by invoking =dired-du-mode=.
 #+begin_src emacs-lisp
 (use-package dired-du
   :ensure
-  :commands dired-du-mode
-  :defer)
+  :commands dired-du-mode)
 #+end_src
 
 ** Working with buffers
@@ -3575,7 +3553,6 @@ point for "advanced search" methods, inspired by the default for =occur=
 
 #+begin_src emacs-lisp
 (use-package ibuffer
-  :defer
   :config
   (setq ibuffer-expert t)
   (setq ibuffer-display-summary nil)
@@ -3682,7 +3659,6 @@ Make sure to also read the section on [[#h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7]
 #+begin_src emacs-lisp
 (use-package ibuffer-vc
   :ensure
-  :defer
   :after (ibuffer vc)
   :bind (:map ibuffer-mode-map
               ("/ V" . ibuffer-vc-set-filter-groups-by-vc-root)
@@ -3705,7 +3681,6 @@ renames it appropriately for the sake of easier discovery.
 #+begin_src emacs-lisp
 (use-package scratch
   :ensure
-  :defer
   :config
   (defun prot/scratch-buffer-setup ()
     "Add contents to `scratch' buffer and name it accordingly."
@@ -4048,7 +4023,6 @@ via =C-x t r=, though I find I do not use it.
 
 #+begin_src emacs-lisp
 (use-package tab-bar
-  :defer
   :config
   (setq tab-bar-close-button-show nil)
   (setq tab-bar-close-last-tab-choice 'tab-bar-mode-disable)
@@ -4116,7 +4090,6 @@ where more than those it would actually speed up my workflow.
 
 #+begin_src emacs-lisp
 (use-package windmove
-  :defer
   :config
   (setq windmove-create-window nil)     ; Emacs 27.1
   :bind (("C-s-k" . windmove-up)
@@ -4143,7 +4116,6 @@ code.  Do it with =M-x find-library transpose-frame=.
 #+begin_src emacs-lisp
 (use-package transpose-frame
   :ensure
-  :defer
   :commands (transpose-frame
              flip-frame
              flop-frame
@@ -4175,7 +4147,6 @@ input (see following sections).
 
 #+begin_src emacs-lisp
 (use-package calendar
-  :defer
   :config
   (setq calendar-mark-diary-entries-flag t)
   (setq calendar-time-display-form
@@ -4190,13 +4161,11 @@ input (see following sections).
                 holiday-solar-holidays))
 
   (use-package solar
-    :defer
     :config
     (setq calendar-latitude 35.17
           calendar-longitude 33.36))
 
   (use-package lunar
-    :defer
     :config
     (setq lunar-phase-names
           '("New Moon"
@@ -4219,7 +4188,6 @@ configurations should be good enough at this stage.
 
 #+begin_src emacs-lisp
 (use-package diary-lib
-  :defer
   :config
   (setq diary-file "~/.emacs.d/diary")
   (setq diary-entry-marker "diary")
@@ -4426,7 +4394,6 @@ description and you are good to go.
 
 #+begin_src emacs-lisp
 (use-package ol
-  :defer
   :config
   (setq org-link-keep-stored-after-insertion t)
   :bind (:map org-mode-map
@@ -4513,7 +4480,6 @@ of the above in action.
 #+begin_src emacs-lisp
 (use-package org-capture
   :after org
-  :defer
   :config
   (setq org-capture-templates
         '(("b" "Basic task for future review" entry
@@ -4604,7 +4570,6 @@ documentation facilities over each item, such as =C-h v=):
 #+begin_src emacs-lisp
 (use-package org-agenda
   :after org
-  :defer
   :config
   ;; Basic setup
   (setq org-agenda-span 14)
@@ -4932,7 +4897,6 @@ minibuffer while doing a presentation.
 (use-package org-superstar              ; supersedes `org-bullets'
   :ensure
   :after org
-  :defer
   :config
   (setq org-superstar-remove-leading-stars t)
   (setq org-superstar-headline-bullets-list
@@ -4946,7 +4910,6 @@ minibuffer while doing a presentation.
   :ensure
   :after org
   :commands prot/org-presentation-mode
-  :defer
   :config
   (setq org-tree-slide-breadcrumbs nil)
   (setq org-tree-slide-header nil)
@@ -5841,7 +5804,6 @@ Further notes:
 #+begin_src emacs-lisp
 (use-package mu4e
   :load-path "/usr/share/emacs/site-lisp/"
-  :defer
   :config
   ;; (setq mail-user-agent 'mu4e-user-agent)
   (setq mu4e-use-fancy-chars nil)
@@ -6108,7 +6070,6 @@ set "lars" to =nil= to guard against any future expansion of its scope.
 #+begin_src emacs-lisp
 (use-package debbugs
   :ensure
-  :defer
   :config
   (setq debbugs-gnu-lars-workflow nil)  ; sorry Lars, I'm paranoid
   (setq debbugs-gnu-mail-backend 'gnus))
@@ -6528,7 +6489,6 @@ to customise, which I do in the following package declarations.
 #+begin_src emacs-lisp
 (use-package magit
   :ensure
-  :defer
   :bind ("C-c g" . magit-status))
 #+end_src
 
@@ -6545,7 +6505,6 @@ set elsewhere in this document to 72 characters long.
 #+begin_src emacs-lisp
 (use-package git-commit
   :after magit
-  :defer
   :config
   (setq git-commit-summary-max-length 50)
   (setq git-commit-known-pseudo-headers
@@ -6574,7 +6533,6 @@ enable it only for the focused hunk (there is an option for ='all=).
 #+begin_src emacs-lisp
 (use-package magit-diff
   :after magit
-  :defer
   :config
   (setq magit-diff-refine-hunk t))
 #+end_src
@@ -6592,7 +6550,6 @@ examined further.
 #+begin_src emacs-lisp
 (use-package magit-repos
   :after magit
-  :defer
   :commands magit-list-repositories
   :config
   (setq magit-repository-directories
@@ -6704,7 +6661,6 @@ Also watch my video of [[https://protesilaos.com/codelog/2020-04-10-emacs-smerge
 
 #+begin_src emacs-lisp
 (use-package smerge-mode
-  :defer
   :config
   (defhydra prot/hydra-smerge-mode
     (:color pink :hint nil :post (smerge-auto-leave))
@@ -6732,7 +6688,6 @@ _p_: Prev      _u_: Upper
          (magit-diff-visit-file-hook . prot/smerge-mode-hydra)))
 
 (use-package ediff
-  :defer
   :config
   (setq ediff-keep-variants nil)
   (setq ediff-make-buffers-readonly-at-startup nil)
@@ -6801,7 +6756,6 @@ and corresponding functions.
 
 #+begin_src emacs-lisp
 (use-package shell
-  :defer
   :commands shell-command
   :config
   (setq ansi-color-for-comint-mode t)
@@ -6901,11 +6855,9 @@ Finally, a few notes about contributions I have received:
 
 #+begin_src emacs-lisp
 (use-package eshell
-  :defer
   :bind ("<s-return>" . eshell))
 
 (use-package esh-mode
-  :defer
   :commands prot/eshell-minor-mode
   :config
   ;; used by other functions below
@@ -7070,7 +7022,6 @@ used as `:filter-return' advice to `eshell-ls-decorated-name'."
   :hook (eshell-mode-hook . prot/eshell-minor-mode))
 
 (use-package esh-module
-  :defer
   :config
   (setq eshell-modules-list             ; Needs review
         '(eshell-alias
@@ -7088,13 +7039,11 @@ used as `:filter-return' advice to `eshell-ls-decorated-name'."
           eshell-unix)))
 
 (use-package em-dirs
-  :defer
   :after esh-mode
   :config
   (setq eshell-cd-on-directory t))
 
 (use-package em-tramp
-  :defer
   :after esh-mode
   :config
   (setq password-cache t)
@@ -7200,7 +7149,6 @@ secondary monitor).
 #+begin_src emacs-lisp
 (use-package vterm
   :ensure
-  :defer
   :commands vterm
   :config
   (setq vterm-disable-bold-font nil)
@@ -7234,7 +7182,6 @@ other options in the Emacs space (e.g. with =C-u M-x shell=).
 
 #+begin_src emacs-lisp
 (use-package term
-  :defer
   :commands (term ansi-term)
   :config
   (setq term-buffer-maximum-size 9999)
@@ -7456,7 +7403,6 @@ Please note that /the code below is subject to review/.
 #+begin_src emacs-lisp
 (use-package elfeed
   :ensure
-  :defer
   :config
   (setq elfeed-use-curl t)
   (setq elfeed-curl-max-connections 10)
@@ -7821,7 +7767,6 @@ configurations).
 #+begin_src emacs-lisp
 (use-package erc
   :disabled                             ; Needs testing and refinements
-  :defer
   :config
   (setq erc-prompt-for-password nil)
 
@@ -7887,7 +7832,6 @@ I have a couple of videos about my workflow with Bongo and Dired:
 #+begin_src emacs-lisp
 (use-package bongo
   :ensure
-  :defer
   :commands bongo
   :config
   (setq bongo-default-directory "~/Music")
@@ -8150,7 +8094,6 @@ when reviewing my themes (=rainbow-mode= is activated manually).
 #+begin_src emacs-lisp
 (use-package rainbow-mode
   :ensure
-  :defer
   :diminish
   :commands rainbow-mode
   :config
@@ -8308,7 +8251,6 @@ tweaks of my own.
 #+begin_src emacs-lisp
 (use-package keycast
   :ensure
-  :defer
   :commands keycast-mode
   :config
   (use-package moody :ensure)
@@ -8413,7 +8355,6 @@ section on the [[*Generic version control (VC) framework][generic version contro
 (use-package diff-hl
   :ensure
   :after vc
-  :defer
   :config
   (setq diff-hl-draw-borders nil)
   (setq diff-hl-side 'left)
@@ -8470,7 +8411,6 @@ for when the equivalent mode is used (I have no plan to use that).
 
 #+begin_src emacs-lisp
 (use-package hl-line
-  :defer
   :config
   (setq hl-line-sticky-flag nil))
 #+end_src
@@ -8492,7 +8432,6 @@ sometimes it causes problems, such as with diffs.
 
 #+begin_src emacs-lisp
 (use-package whitespace
-  :defer
   :config
   (defun prot/toggle-invisibles ()
     "Toggles the display of indentation and space characters."
@@ -8504,7 +8443,6 @@ sometimes it causes problems, such as with diffs.
          ("C-c z" . delete-trailing-whitespace)))
 
 (use-package display-line-numbers
-  :defer
   :config
   ;; Set absolute line numbers.  A value of "relative" is also useful.
   (setq display-line-numbers-type t)
@@ -8538,7 +8476,6 @@ Also check =prot/scroll-centre-cursor= in the [[#h:0c44b318-813a-4f4a-b596-75df4
 #+begin_src emacs-lisp
 (use-package focus
   :ensure
-  :defer
   :commands (prot/focus-mode-to-thing
              prot/focus-mode)
   :config
@@ -8615,7 +8552,6 @@ For video demonstrantions check these:
 #+begin_src emacs-lisp
 (use-package olivetti
   :ensure
-  :defer
   :diminish
   :config
   (setq olivetti-body-width 0.65)
@@ -8668,7 +8604,6 @@ modeline and/or the cursor's shape.
 #+begin_src emacs-lisp
 (use-package auto-dim-other-buffers
   :ensure
-  :defer
   :commands auto-dim-other-buffers-mode
   :config
   (setq auto-dim-other-buffers-dim-on-switch-to-minibuffer nil)
@@ -8976,7 +8911,6 @@ Notes about some of the above:
 
 #+begin_src emacs-lisp
 (use-package register
-  :defer
   :commands (prot/clear-registers
              prot/append-register-line-separator
              prot/append-register-space-separator
@@ -9059,7 +8993,6 @@ I use visual bookmarks in much the same way.
 #+begin_src emacs-lisp
 (use-package bm
   :ensure
-  :defer
   :config
   (setq bm-annotate-on-create nil)
   (setq bm-buffer-persistence t)
@@ -9106,7 +9039,6 @@ that is documented in the [[https://github.com/bastibe/annotate.el][project's Gi
 #+begin_src emacs-lisp
 (use-package annotate
   :ensure
-  :defer
   :diminish
   :commands (annotate-annotate
              prot/annotate-annotate
@@ -9252,7 +9184,6 @@ more straightforward workflows.
 #+begin_src emacs-lisp
 (use-package multiple-cursors
   :ensure
-  :defer
   :bind (("C-<" . mc/mark-previous-like-this)
          ("C->" . mc/mark-next-like-this)
          ("s->" . mc/mark-all-like-this)))
@@ -9883,7 +9814,6 @@ dictionary entry.
 #+begin_src emacs-lisp
 (use-package sdcv
   :ensure
-  :defer
   :hook (sdcv-mode-hook . (lambda ()
                             (font-lock-mode -1))))
 #+end_src
@@ -9894,8 +9824,7 @@ connection and has access to a wide range of dictionaries.
 
 #+begin_src emacs-lisp
 (use-package dictionary
-  :ensure
-  :defer)
+  :ensure)
 #+end_src
 
 ** Flyspell (spell check)
@@ -9995,7 +9924,6 @@ to reach any conclusions.
 
 #+begin_src emacs-lisp
 (use-package flymake
-  :defer
   :commands flymake-mode
   :config
   (setq flymake-fringe-indicator-position 'left-fringe)
@@ -10038,7 +9966,6 @@ activity around its development.
 #+begin_src emacs-lisp
 (use-package flycheck
   :ensure
-  :defer
   :commands flycheck-mode
   :config
   (setq flycheck-check-syntax-automatically
@@ -10265,7 +10192,6 @@ commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
 
 #+begin_src emacs-lisp
 (use-package eldoc
-  :defer
   :diminish
   :config
   (global-eldoc-mode 1))
@@ -10305,9 +10231,7 @@ I edit lots of Markdown files.  This makes things easier.
   :ensure
   :config
   ;; Allows for fenced block focus with C-c ' (same as Org blocks).
-  (use-package edit-indirect
-    :ensure
-    :defer)
+  (use-package edit-indirect :ensure)
   (setq markdown-fontify-code-blocks-natively t)
   :mode ("\\.md$" . markdown-mode))
 #+end_src
