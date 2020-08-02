@@ -4938,17 +4938,11 @@ minibuffer while doing a presentation.
           (org-tree-slide-mode 1)
           (prot/olivetti-mode 1)
           (org-superstar-mode 1)
-          (org-indent-mode 1)
-          (let ((font-data prot/font-sizes-families-alist))
-            (prot/font-set-fonts
-             (cadr (assoc "presentation" font-data))
-             (nth 2 (assoc "presentation" font-data))
-             (nth 3 (assoc "presentation" font-data)))))
+          (org-indent-mode 1))
       (org-tree-slide-mode -1)
       (prot/olivetti-mode -1)
       (org-superstar-mode -1)
-      (org-indent-mode -1)
-      (prot/font-fonts-per-monitor)))
+      (org-indent-mode -1)))
 
   :bind (("C-c P" . prot/org-presentation-mode)
          :map org-tree-slide-mode-map
