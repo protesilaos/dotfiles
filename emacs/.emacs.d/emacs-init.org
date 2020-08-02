@@ -3691,7 +3691,7 @@ renames it appropriately for the sake of easier discovery.
           (insert string)
           (goto-char (point-min))
           (comment-region (point-at-bol) (point-at-eol)))
-        (next-line 2))
+        (forward-line 2))
       (rename-buffer (concat "*Scratch for " mode "*") t)))
   :hook (scratch-create-buffer-hook . prot/scratch-buffer-setup)
   :bind ("C-c s" . scratch))
@@ -6880,7 +6880,7 @@ documentation string.  BODY is the set of arguments passed to the
    prot/eshell-insert-file-at-point
    "Insert (cat) contents of file at point."
    (progn
-     (end-of-buffer)
+     (goto-char (point-max))
      (insert (concat "cat " file))
      (eshell-send-input)))
 
