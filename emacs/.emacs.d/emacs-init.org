@@ -448,12 +448,12 @@ be created again the next time you start Emacs).
 #+begin_src emacs-lisp
 (use-package cus-edit
   :config
-  (setq custom-file "~/.emacs.d/custom.el")
-
-  (unless (file-exists-p custom-file)
-    (write-region "" nil custom-file))
-
-  (load custom-file))
+  (defun prot/cus-edit ()
+  (let ((custom-file "~/.emacs.d/custom.el"))
+    (unless (file-exists-p custom-file)
+      (write-region "" nil custom-file))
+    (load-file custom-file)))
+  :hook (after-init-hook . prot/cus-edit))
 #+end_src
 
 ** Fundamentals for Hydras
