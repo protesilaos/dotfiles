@@ -6172,7 +6172,7 @@ the FAQ below):
   ;; The following are from Emacs 27.1
   (setq diff-refine nil)                ; I do it on demand
   (setq diff-font-lock-prettify nil)    ; better for patches
-  (setq diff-font-lock-syntax nil)      ; bad for accessibility
+  (setq diff-font-lock-syntax nil)      ; good for accessibility
 
   (defun prot/diff-buffer-with-file (&optional arg)
     "Compare buffer to its file, else run `vc-diff'.
