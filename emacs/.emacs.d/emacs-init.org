@@ -4512,23 +4512,23 @@ of the above in action.
   (setq org-capture-templates
         '(("b" "Basic task for future review" entry
            (file+headline "tasks.org" "Basic tasks that need to be reviewed")
-           "* %^{Title}\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %l")
+           "* %^{Title}\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n\n%i %l")
 
           ("w" "Work")
           ("wt" "Task or assignment" entry
            (file+headline "work.org" "Tasks and assignments")
-           "* TODO [#A] %^{Title} :@work:\n SCHEDULED: %^t\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?")
+           "* TODO [#A] %^{Title} :@work:\nSCHEDULED: %^t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n\n%i %?")
           ("wm" "Meeting, event, appointment" entry
            (file+headline "work.org" "Meetings, events, and appointments")
-           "* MEET [#A] %^{Title} :@work:\n SCHEDULED: %^T\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?")
+           "* MEET [#A] %^{Title} :@work:\nSCHEDULED: %^T\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n\n%i %?")
 
           ("t" "Task with a due date" entry
            (file+headline "tasks.org" "Task list with a date")
-           "* %^{Scope of task||TODO|STUDY|MEET} %^{Title} %^g\n SCHEDULED: %^t\n :PROPERTIES:\n :CAPTURED: %U\n :END:\n\n %i %?")
+           "* %^{Scope of task||TODO|STUDY|MEET} %^{Title} %^g\nSCHEDULED: %^t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n\n%i %?")
 
           ("r" "Reply to an email" entry
            (file+headline "tasks.org" "Mail correspondence")
-           "* TODO [#B] %:subject :mail:\n SCHEDULED: %t\n :PROPERTIES:\n :CONTEXT: %a\n :END:\n\n %i %?")))
+           "* TODO [#B] %:subject :mail:\nSCHEDULED: %t\n:PROPERTIES:\n:CONTEXT: %a\n:END:\n\n%i %?")))
 
   (setq org-capture-templates-contexts
         '(("r" ((in-mode . "gnus-article-mode")
