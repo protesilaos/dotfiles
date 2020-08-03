@@ -77,7 +77,8 @@ For reference, these were the contents of my =init.el= *prior to Emacs
 :CUSTOM_ID: h:3fd803db-1bb4-4a0b-9c50-787d88cc7594
 :END:
 
-Whereas in *Emacs 27.1 and onward*, they are modified thus:
+Whereas in *Emacs 27.1 and onward*, they are modified as follows.  For the
+=let*= part, see section: [[#h:b343378b-d3ec-4c90-8117-6cf92abee45b][Always rebuild init and refresh package cache]].
 
 #+begin_example emacs-lisp
 (require 'package)
@@ -102,6 +103,7 @@ Whereas in *Emacs 27.1 and onward*, they are modified thus:
   (setq use-package-always-demand nil)
   (setq use-package-expand-minimally nil)
   (setq use-package-enable-imenu-support t)
+  (setq use-package-compute-statistics t)
   ;; The following is VERY IMPORTANT.  Write hooks using their real name
   ;; instead of a shorter version: after-init ==> `after-init-hook'.
   ;;
@@ -112,9 +114,18 @@ Whereas in *Emacs 27.1 and onward*, they are modified thus:
 (eval-when-compile
   (require 'use-package))
 
-(require 'org)
-(setq vc-follow-symlinks t)
-(org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
+(use-package vc
+  :config
+  (setq vc-follow-symlinks t)) ; Because my dotfiles are managed that way
+
+(use-package org)
+
+(let* ((conf "~/.emacs.d/emacs-init")
+       (el (concat conf ".el"))
+       (org (concat conf ".org")))
+  (if el
+      (load-file el)
+    (org-babel-load-file org)))
 #+end_example
 
 **** The "early init" for Emacs 27+
@@ -370,7 +381,14 @@ To make sure that I do not load older settings after having made some
 tweaks to my dotemacs, I want to delete that derived file when I
 instruct Emacs to terminate its process.  This ensures that edits I made
 to =emacs-init.org= are parsed into a new =emacs-init.el= at the next
-startup.
+startup.  Doing so at the =kill-emacs-hook= is a neat trick to roll over
+the cost of building this massive document.  We now pay the few second
+cost when terminating the Emacs session.  Otherwise we would be facing
+delays at the initialisation stage.
+
+Note that choosing to load the right file is the task of my =init.el=.
+Make sure to either browse the code of my dotfiles, of which the present
+document is a part of, or read the [[#h:3fd803db-1bb4-4a0b-9c50-787d88cc7594][section on my current init.el]].
 
 Similarly, I want to maintain an up-to-date cache with the installed
 packages, which can be used to speed up boot times, /ceteris paribus/.
@@ -379,12 +397,18 @@ This "quickstart" method is part of Emacs 27+.
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (defun prot/delete-emacs-init ()
-    (interactive)
-    (let ((configs "~/.emacs.d/emacs-init.el"))
-      (when configs
-        (delete-file configs))))
-  :hook ((kill-emacs-hook . prot/delete-emacs-init)
+  (defun prot/rebuild-emacs-init ()
+    "Produce Elisp init from my Org dotemacs.
+Add this to `kill-emacs-hook', to use the newest file in the next
+session.  The idea is to reduce startup time, though just by
+rolling it over to the end of a session rather than the beginning
+of it."
+    (let ((init-el "~/.emacs.d/emacs-init.el")
+          (init-org "~/.emacs.d/emacs-init.org"))
+      (when init-el
+        (delete-file init-el))
+      (org-babel-tangle-file init-org init-el)))
+  :hook ((kill-emacs-hook . prot/rebuild-emacs-init)
          (kill-emacs-hook . package-quickstart-refresh)))
 #+end_src
 

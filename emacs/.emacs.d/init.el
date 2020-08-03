@@ -49,6 +49,7 @@
   (setq use-package-always-demand nil)
   (setq use-package-expand-minimally nil)
   (setq use-package-enable-imenu-support t)
+  (setq use-package-compute-statistics t)
   ;; The following is VERY IMPORTANT.  Write hooks using their real name
   ;; instead of a shorter version: after-init ==> `after-init-hook'.
   ;;
@@ -59,8 +60,17 @@
 (eval-when-compile
   (require 'use-package))
 
-(require 'org)
-(setq vc-follow-symlinks t)
-(org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
+(use-package vc
+  :config
+  (setq vc-follow-symlinks t)) ; Because my dotfiles are managed that way
+
+(use-package org)
+
+(let* ((conf "~/.emacs.d/emacs-init")
+       (el (concat conf ".el"))
+       (org (concat conf ".org")))
+  (if el
+      (load-file el)
+    (org-babel-load-file org)))
 
 ;;; init.el ends here
