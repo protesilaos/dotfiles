@@ -3464,12 +3464,15 @@ useful keybindings to commands I prefer to use.
 #+begin_src emacs-lisp
 (use-package emacs
   :config
-  (defun prot/kill-buffer-current ()
+  (defun prot/kill-buffer-current (&optional arg)
     "Kill current buffer or abort recursion when in minibuffer."
-    (interactive)
+    (interactive "P")
     (if (minibufferp)
         (abort-recursive-edit)
-      (kill-buffer (current-buffer))))
+      (kill-buffer (current-buffer)))
+    (when (and arg
+               (not (one-window-p)))
+      (delete-window)))
 
   (defun contrib/rename-file-and-buffer ()
     "Rename current buffer and, if available, its file."
