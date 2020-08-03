@@ -3726,11 +3726,12 @@ The =prot/window-single-toggle= is based on [[https://gitlab.com/ambrevar/emacs-
     "Current window configuration.
 Intended for use by `prot/window-monocle'.")
 
-  (defun prot/window-single-toggle ()
+  (define-minor-mode prot/window-single-toggle
     "Toggle between multiple windows and single window.
 This is the equivalent of maximising a window.  Tiling window
 managers such as DWM, BSPWM refer to this state as 'monocle'."
-    (interactive)
+    :lighter " [M]"
+    :global nil
     (if (one-window-p)
         (when prot/window-configuration
           (set-window-configuration prot/window-configuration))
