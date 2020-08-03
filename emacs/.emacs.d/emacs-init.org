@@ -123,7 +123,7 @@ Whereas in *Emacs 27.1 and onward*, they are modified as follows.  For the
 (let* ((conf "~/.emacs.d/emacs-init")
        (el (concat conf ".el"))
        (org (concat conf ".org")))
-  (if el
+  (if (file-exists-p el)
       (load-file el)
     (org-babel-load-file org)))
 #+end_example
