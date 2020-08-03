@@ -852,8 +852,8 @@ Also check my [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and t
 
 Here is a simple test I have come up with to make an initial assessment
 of the overall quality of the font: /can you discern the character at a
-quick glance?/ If yes, your choice of typeface is good /prima facie/, else
-search for something else.
+quick glance?/ If yes, your choice of typeface is good /prima facie/,
+otherwise search for something else.
 
 Note that this test is not perfect, since many typefaces fall short in
 less obvious ways, such as the space between the characters.  Also note
@@ -4450,8 +4450,8 @@ their template, whereas templates that share a common initial key will
 produce a second selection list with the remaining options.  In the
 latter case, the initial key entry has no call to an actual function,
 but is just written as a heading.  For an example, look how I do the
-"idea" section: all templates whose keys follow the pattern =iX= are only
-visible after hitting =i= and are then accessed via =X=.
+"Work" section: all templates whose keys follow the pattern =wX= are only
+visible after hitting =w= and are then accessed via =X=.
 
 The visibility of a template is further controlled by another variable:
 =org-capture-templates-contexts=.  This allows us to tell Org the context
