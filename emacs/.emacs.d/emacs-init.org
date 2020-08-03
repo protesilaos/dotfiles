@@ -3703,23 +3703,31 @@ prefix argument (=C-u=) will prompt for a major mode instead.  Simple yet
 super effective!
 
 The =prot/scratch-buffer-setup= simply adds some text in the buffer and
-renames it appropriately for the sake of easier discovery.
+renames it appropriately for the sake of easier discovery.  I got the
+idea of copying the region from [[https://gist.github.com/eev2/52edbfdb645e26aefec19226c0ca7ad0][a snippet shared by eev2 on GitHub]].
 
 #+begin_src emacs-lisp
 (use-package scratch
   :ensure
   :config
   (defun prot/scratch-buffer-setup ()
-    "Add contents to `scratch' buffer and name it accordingly."
-    (let* ((mode (format "%s" major-mode))
-           (string (concat "Scratch buffer for: " mode "\n\n")))
-      (when scratch-buffer
-        (save-excursion
-          (insert string)
-          (goto-char (point-min))
-          (comment-region (point-at-bol) (point-at-eol)))
-        (forward-line 2))
-      (rename-buffer (concat "*Scratch for " mode "*") t)))
+  "Add contents to `scratch' buffer and name it accordingly.
+If region is active, add its contents to the new buffer."
+  (let* ((mode major-mode)
+         (string (format "Scratch buffer for: %s\n\n" mode))
+         (region (with-current-buffer (current-buffer)
+                     (if (region-active-p)
+                       (kill-ring-save (region-beginning)
+                                       (region-end)))
+                     ""))
+         (text (concat string region)))
+    (when scratch-buffer
+      (save-excursion
+        (insert text)
+        (goto-char (point-min))
+        (comment-region (point-at-bol) (point-at-eol)))
+      (forward-line 2))
+    (rename-buffer (format "*Scratch for %s*" mode) t)))
   :hook (scratch-create-buffer-hook . prot/scratch-buffer-setup)
   :bind ("C-c s" . scratch))
 #+end_src
