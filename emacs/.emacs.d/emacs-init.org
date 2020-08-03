@@ -7873,7 +7873,7 @@ I have a couple of videos about my workflow with Bongo and Dired:
   (setq bongo-vlc-program-name "cvlc")
 
   (defun contrib/bongo-add-dired-files ()
-    "Add marked files inside of a Dired buffer to the Bongo library"
+    "Add marked files in a Dired buffer to the Bongo library."
     (interactive)
     (let (file-point file (files nil))
       (dired-map-over-marks
@@ -7881,8 +7881,7 @@ I have a couple of videos about my workflow with Bongo and Dired:
              file (dired-get-filename)
              files (append files (list file)))
        nil t)
-      (save-excursion
-        (set-buffer bongo-default-playlist-buffer-name)
+      (with-current-buffer bongo-default-playlist-buffer-name
         (mapc 'bongo-insert-file files))))
 
   (defun prot/bongo-dired-library ()
@@ -10476,7 +10475,7 @@ abbreviated as a tilde.  In the Dired buffer paths are absolute."
          ("C-x C-r" . prot/recentf-dirs)))
 #+end_src
 
-*** Minibuffer history
+*** Minibuffer history (savehist-mode)
 :PROPERTIES:
 :CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
 :END:
@@ -10501,7 +10500,7 @@ searching or.
   (setq history-length 30000)
   (setq history-delete-duplicates nil)
   (setq savehist-save-minibuffer-history t)
-  (savehist-mode 1))
+  :hook (after-init-hook . savehist-mode))
 #+end_src
 
 *** Record cursor position
