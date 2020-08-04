@@ -6928,12 +6928,6 @@ directory."
    "Open `dired' with the parent directory of file at point."
    (dired (file-name-directory file)))
 
-  (defun prot/eshell-mkcd (dir)         ; TODO define alias
-    "Make a directory, or path, and switch to it."
-    (interactive)
-    (eshell/mkdir "-p" dir)
-    (eshell/cd dir))
-
   (defun prot/eshell-put-last-output-to-buffer ()
     "Produce a buffer with output of last `eshell' command."
     (interactive)
