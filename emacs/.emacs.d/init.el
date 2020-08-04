@@ -69,7 +69,7 @@
 (let* ((conf "~/.emacs.d/emacs-init")
        (el (concat conf ".el"))
        (org (concat conf ".org")))
-  (if (file-exist-p el)
+  (if (file-exists-p el)
       (load-file el)
     (org-babel-load-file org)))
 
