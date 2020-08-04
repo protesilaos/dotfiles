@@ -3717,8 +3717,9 @@ If region is active, add its contents to the new buffer."
          (string (format "Scratch buffer for: %s\n\n" mode))
          (region (with-current-buffer (current-buffer)
                      (if (region-active-p)
-                       (kill-ring-save (region-beginning)
-                                       (region-end)))
+                         (buffer-substring-no-properties
+                          (region-beginning)
+                          (region-end)))
                      ""))
          (text (concat string region)))
     (when scratch-buffer
@@ -6856,16 +6857,10 @@ Also check these valuable resources:
 
 Finally, a few notes about contributions I have received:
 
-+ [[https://gitlab.com/dije][Phil Hudson (@dije on Gitlab)]] suggested improvements to the behaviour
-  of =prot/eshell-put-last-output-to-buffer=, where it will now copy the
-  last command's output but not delete it from the Eshell buffer.  This
-  is courtesy of =kill-ring-save=.  Whereas my previous version was using
-  =kill-region=, which had the effect of copying the text while removing
-  it from the Eshell buffer.
-
-+ Phil explained how =concat= is superfluous when combined with =format= and
-  demonstrated how to use a specifier (=%s=) to make a uniform string out
-  of the output of some command combined with predefined text.
++ [[https://gitlab.com/dije][Phil Hudson (@dije on Gitlab)]] explained how =concat= is superfluous when
+  combined with =format= and demonstrated how to use a specifier (=%s=) to
+  make a uniform string out of the output of some command combined with
+  predefined text.
 
 + Phil also helped me with =prot/eshell-find-subdirectory-recursive= by
   highlighting some inefficient routines in the original design.  This
@@ -6942,11 +6937,12 @@ directory."
   (defun prot/eshell-put-last-output-to-buffer ()
     "Produce a buffer with output of last `eshell' command."
     (interactive)
-    (let ((eshell-output (kill-ring-save (eshell-beginning-of-output)
-                                         (eshell-end-of-output))))
+    (let ((eshell-output (buffer-substring-no-properties
+                          (eshell-beginning-of-output)
+                          (eshell-end-of-output))))
       (with-current-buffer (get-buffer-create  "*last-eshell-output*")
         (erase-buffer)
-        (yank)           ; TODO do it with `insert' and `delete-region'?
+        (insert eshell-output)
         (switch-to-buffer-other-window (current-buffer)))))
 
   (defun prot/eshell-complete-redirect-to-buffer ()
