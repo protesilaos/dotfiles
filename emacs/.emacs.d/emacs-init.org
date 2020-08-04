@@ -362,9 +362,9 @@ Overview of these settings:
   (setq use-file-dialog nil)
   (setq use-dialog-box t)               ; only for mouse events
   (setq inhibit-splash-screen t)
-  (global-unset-key (kbd "C-z"))
-  (global-unset-key (kbd "C-x C-z"))
-  (global-unset-key (kbd "C-h h")))
+  :bind (("C-z" . nil)
+         ("C-x C-z" . nil)
+         ("C-h h" . nil)))
 #+end_src
 
 ** Always rebuild init and refresh package cache
