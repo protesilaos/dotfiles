@@ -8034,16 +8034,16 @@ into this project:
   (dolist (theme '("operandi" "vivendi"))
     (contrib/format-sexp
      (defun prot/modus-%1$s ()
-       (setq modus-%1$s-theme-slanted-constructs t
-             modus-%1$s-theme-bold-constructs t
-             modus-%1$s-theme-visible-fringes t
-             modus-%1$s-theme-3d-modeline t
-             modus-%1$s-theme-subtle-diffs t
-             modus-%1$s-theme-faint-syntax t
+       (setq modus-%1$s-theme-slanted-constructs nil
+             modus-%1$s-theme-bold-constructs nil
+             modus-%1$s-theme-fringes 'intense ; {nil,'subtle,'intense}
+             modus-%1$s-theme-3d-modeline nil
+             modus-%1$s-theme-subtle-diffs nil
+             modus-%1$s-theme-faint-syntax nil
              modus-%1$s-theme-intense-hl-line nil
              modus-%1$s-theme-intense-paren-match t
-             modus-%1$s-theme-intense-standard-completions nil
-             modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
+             modus-%1$s-theme-intense-standard-completions t
+             modus-%1$s-theme-org-blocks nil ; {nil,'greyscale,'rainbow}
              modus-%1$s-theme-variable-pitch-headings t
              modus-%1$s-theme-rainbow-headings nil
              modus-%1$s-theme-section-headings nil
@@ -8066,8 +8066,8 @@ into this project:
       (disable-theme 'modus-vivendi)
       (prot/modus-operandi)))
 
-  :bind ("<f5>" . prot/modus-themes-toggle)
-  :hook (after-init-hook . prot/modus-operandi))
+  :hook (after-init-hook . prot/modus-operandi)
+  :bind ("<f5>" . prot/modus-themes-toggle))
 #+end_src
 
 *** Measuring relative colour luminance
