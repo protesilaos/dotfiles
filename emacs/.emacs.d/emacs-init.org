@@ -7822,6 +7822,10 @@ Concerning the customisations below, these can be summarised thus:
 + Hide icons.
 + No mode line indicators.
 + Do not ask for directory tree insertion.
++ The =bongo-join-inserted-tracks= defaults to inserting headers when
+  multiple items share name components.  I dislike that because
+  sometimes I mix songs from various places and only some subsets
+  benefit from this.  Basically, the playlist does not look consistent.
 + With Dired, the "Music" directory doubles as a Bongo library (see
   =prot/bongo-dired-library= and the relevant hook).
 + Because of the above, prefer playlist buffers (*pro tip:* you can
@@ -7858,12 +7862,13 @@ I have a couple of videos about my workflow with Bongo and Dired:
   (setq bongo-prefer-library-buffers nil)
   (setq bongo-insert-whole-directory-trees t)
   (setq bongo-logo nil)
-  (setq bongo-action-track-icon nil)
   (setq bongo-display-track-icons nil)
   (setq bongo-display-track-lengths t)
   (setq bongo-display-header-icons nil)
   (setq bongo-display-playback-mode-indicator t)
   (setq bongo-display-inline-playback-progress t)
+  (setq bongo-join-inserted-tracks nil)
+  (setq bongo-field-separator (propertize " · " 'face 'shadow))
   (setq bongo-mark-played-tracks t)
   (setq bongo-header-line-mode nil)
   (setq bongo-mode-line-indicator-mode nil)
@@ -7892,7 +7897,7 @@ playlists.  The added benefit is that Dired will continue to
 behave as normal, making this a superior alternative to a
 purpose-specific library buffer."
     (when (string-match-p "\\`~/Music/" default-directory)
-      (set (make-local-variable 'bongo-dired-library-mode) 't)))
+      (setq-local bongo-dired-library-mode t)))
 
   (defun prot/bongo-clear-playlist-and-stop ()
     "Stop playback and clear the entire `bongo' playlist buffer.
@@ -7923,16 +7928,15 @@ as a library buffer (see `prot/bongo-dired-library')."
       (unless (bongo-playlist-buffer-p)
         (bongo-playlist-buffer))
       (contrib/bongo-add-dired-files)
-      (prot/bongo-play-random)))
+      (prot/bongo-play-random)
+      (bongo-recenter)))
 
   (defun prot/bongo-insert-playlist ()
     "Insert the contents of a `bongo' playlist.
 
 The files are stored in a predetermined path inside my Music
-directory.
-
-Upon insertion, playback starts immediately, in accordance with
-`prot/bongo-play-random'."
+directory.  Upon insertion, playback starts immediately, in
+accordance with `prot/bongo-play-random'."
     (interactive)
     (let* ((path "~/Music/playlists/")
            (dotless directory-files-no-dot-files-regexp)
