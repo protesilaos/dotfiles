@@ -2593,7 +2593,10 @@ This command can then be followed by the standard
       ("{ Curly brackets" . (123 125))       ; { }
       ("[ Square brackets" . (91 93))        ; [ ]
       ("< Angled brackets" . (60 62))        ; < >
-      ("« Εισαγωγικά Gr quote" . (171 187))) ; « »
+      ("« Εισαγωγικά Gr quote" . (171 187))  ; « »
+      ("= Equals signs" . (61 61))           ; = =
+      ("* Asterisks" . (42 42))              ; * *
+      ("_ underscores" . (95 95)))           ; _ _
     "Alist of pairs for use with `prot/insert-pair-completion'.")
 
   (defun prot/insert-pair-completion (&optional arg)
