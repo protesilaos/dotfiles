@@ -588,6 +588,14 @@ by =fontconfig= with rules that can be defined at the user or system level
 
 #+begin_src emacs-lisp
 (use-package emacs
+  :defines (prot/font-set-fonts-hook
+            prot/font-monospaced-fonts-list
+            prot/font-fonts-line-spacing-alist
+            prot/font-fonts-bold-weight-alist)
+  :functions (prot/font-adjustment
+              prot/font-line-spacing
+              prot/font-bold-face
+              prot/font-fonts-per-monitor)
   :commands (prot/font-set-face-attribute
              prot/font-set-fonts
              prot/font-set-font-size-family
