@@ -8488,9 +8488,11 @@ sometimes it causes problems, such as with diffs.
     (if prot/display-line-numbers-mode
         (progn
           (display-line-numbers-mode 1)
-          (hl-line-mode 1))
+          (hl-line-mode 1)
+          (setq-local truncate-lines t))
       (display-line-numbers-mode -1)
-      (hl-line-mode -1)))
+      (hl-line-mode -1)
+      (setq-local truncate-lines nil)))
   :bind ("<f7>" . prot/display-line-numbers-mode))
 #+end_src
 
