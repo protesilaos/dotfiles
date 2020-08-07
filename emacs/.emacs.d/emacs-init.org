@@ -2221,8 +2221,12 @@ end of the buffer.")
 :CUSTOM_ID: h:037b7121-1238-42f8-a771-0dce43a46d23
 :END:
 
-These are a few stylistic tweaks for the "Occur" buffer (=M-x occur=).
-The faces are part of my Modus themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][relevant section]]).
+The =setq= forms are mere stylistic tweaks for the buffer that =M-x occur=
+produces.  The faces are part of my Modus themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][relevant section]]).
+
+The functions are simple tools to either produce a list with all URLs
+present in the buffer (=prot-occur-url=), or prompt you for visiting a URL
+from those available using completion methods.
 
 #+begin_src emacs-lisp
 (use-package replace
@@ -2233,10 +2237,40 @@ The faces are part of my Modus themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408
         '(:inherit modus-theme-intense-neutral :weight bold))
   (setq list-matching-lines-current-line-face
         '(:inherit modus-theme-special-mild))
+
+  (defun prot/occur-url ()
+    "Produce list with all URLs in the current buffer."
+    (interactive)
+    (let ((urls browse-url-button-regexp))
+      (occur urls "\\&")))
+
+  (defun prot/occur-browse-url-in-buffer ()
+    "Run `eww' on a URL from the buffer using completion.
+Also see `prot/occur-url'."
+    (interactive)
+    (let ((matches nil))
+      (save-excursion
+        (goto-char (point-min))
+        (while (search-forward-regexp browse-url-button-regexp nil t)
+          (push (match-string-no-properties 0) matches)))
+      (icomplete-vertical-do
+          (:height (/ (frame-height) 4) :separator 'dotted-line)
+        (eww
+         (completing-read "Browse URL: " matches nil t)))))
+
+  (defun prot/occur-visit-or-list-urls (&optional arg)
+    "Wrap `prot/occur-visit-or-list-urls' and `prot/occur-url'.
+Meant to economise on key bindings."
+    (interactive "P")
+    (if arg
+        (prot/occur-url)
+      (prot/occur-browse-url-in-buffer)))
+
   :hook ((occur-mode-hook . hl-line-mode)
          (occur-mode-hook . (lambda ()
                               (toggle-truncate-lines t))))
-  :bind (("M-s M-o" . multi-occur)
+  :bind (("M-s u" . prot/occur-visit-or-list-urls)
+         ("M-s M-o" . multi-occur)
          :map occur-mode-map
          ("t" . toggle-truncate-lines)))
 #+end_src
