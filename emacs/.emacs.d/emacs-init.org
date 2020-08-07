@@ -7543,9 +7543,9 @@ current monitor's width."
       (run-hooks 'prot/elfeed-mpv-hook)
       (if enclosure              ; make this its own parametrised function
           (progn
-            (start-process "audio-mpv" buf "mpv" audio enclosure)
+            (async-shell-command (format "mpv %s %s" audio enclosure) buf)
             (message (concat "Launching MPV for " (propertize enclosure 'face 'success))))
-        (start-process "video-mpv" buf "mpv" video link)
+        (async-shell-command (format "mpv %s %s" video link) buf)
         (message (concat "Launching MPV for " (propertize link 'face 'success))))))
 
   (defun prot/elfeed-show-search-update (direction)
