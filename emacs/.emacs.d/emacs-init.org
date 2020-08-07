@@ -715,7 +715,7 @@ or `prot/font-fonts-dwim' which just wraps this one with that."
       (dolist (face '(default fixed-pitch))
         (prot/font-set-face-attribute face font (string-to-number size)))
       (prot/font-set-face-attribute 'variable-pitch var (string-to-number size))
-      (run-hooks 'prot/font-switch-fonts-hook)))
+      (run-hooks 'prot/font-set-fonts-hook)))
 
   (defun prot/font-fonts-dwim (&optional arg)
     "Set fonts interactively.
