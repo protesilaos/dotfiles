@@ -8466,7 +8466,7 @@ that place information on the mode line.  Again, nothing flamboyant.
 
 Emacs offers a built-in library for presenting information about the
 status of the laptop's battery.  Using it allows me to eliminate my
-dependence on the system panel and thus keep Emacs in full screen view
+reliance on the system panel and thus keep Emacs in full screen view
 without any interruptions.
 
 The default update interval is set to a single minute (in seconds),
@@ -8476,15 +8476,16 @@ context-dependent, single character indicator about the current status,
 as well as the battery's overall percentage.
 
 Variable =battery-mode-line-limit= will hide the indicator if the value is
-above the declared threshold.  99 basically means "full".  I use that
-instead of a 100 because sometimes the battery only ever fills up to
-99.99, meaning that the indicator remains present at all times.
+above the declared threshold.  95 basically means "full" for me.  I use
+that instead of a 100 because sometimes the battery only ever fills up
+to a lower threshold, meaning that the indicator remains present at all
+times.
 
 #+begin_src emacs-lisp
 (use-package battery
   :config
   (setq battery-mode-line-format " [%b%p%%]")
-  (setq battery-mode-line-limit 99)
+  (setq battery-mode-line-limit 95)
   (setq battery-update-interval 180)
   (setq battery-load-low 20)
   (setq battery-load-critical 10)
