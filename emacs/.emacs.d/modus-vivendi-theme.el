@@ -607,7 +607,8 @@ more pronounced greyscale colour."
   "Conditional use of intense colours for matching parentheses.
 NORMALBG should the special palette colour 'bg-paren-match' or
 something similar.  INTENSEBG must be easier to discern next to
-other backgrounds."
+other backgrounds, such as the special palette colour
+'bg-paren-match-intense'."
   (if modus-vivendi-theme-intense-paren-match
       (list :background intensebg)
     (list :background normalbg)))
@@ -858,9 +859,9 @@ AMOUNT is a customisation option."
       ;; can be combined with any of the "active" values, plus the
       ;; "special" and base foreground colours
       ;;
-      ;; `bg-paren-match', `bg-region' and `bg-tab-active' must be
-      ;; combined with `fg-main', while `bg-tab-inactive' should be
-      ;; combined with `fg-dim'
+      ;; `bg-paren-match', `bg-paren-match-intense', `bg-region' and
+      ;; `bg-tab-active' must be combined with `fg-main', while
+      ;; `bg-tab-inactive' should be combined with `fg-dim'
       ;;
       ;; `bg-tab-bar' is only intended for the bar that holds the tabs and
       ;; can only be combined with `fg-main'
@@ -888,7 +889,8 @@ AMOUNT is a customisation option."
       ;;
       ;; all pairs are combinable with themselves
       ("bg-hl-line" . "#151823")
-      ("bg-paren-match" . "#6e3a50")
+      ("bg-paren-match" . "#602a0f")
+      ("bg-paren-match-intense" . "#7c4d44")
       ("bg-region" . "#3c3c3c")
 
       ("bg-tab-bar" . "#2c2c2c")
@@ -1078,7 +1080,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(header-line-highlight ((,class :inherit modus-theme-active-blue)))
    `(homoglyph ((,class :foreground ,fg-escape-char-construct)))
    `(ibuffer-locked-buffer ((,class :foreground ,yellow-alt-other)))
-   `(italic ((,class :foreground ,fg-special-cold :slant italic)))
+   `(italic ((,class :slant italic)))
    `(nobreak-hyphen ((,class :foreground ,fg-escape-char-construct)))
    `(nobreak-space ((,class :foreground ,fg-escape-char-construct :underline t)))
    `(minibuffer-prompt ((,class :foreground ,cyan-alt-other)))
@@ -2676,7 +2678,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(markdown-html-tag-delimiter-face ((,class :inherit fixed-pitch :foreground ,fg-special-mild)))
    `(markdown-html-tag-name-face ((,class :inherit fixed-pitch :foreground ,magenta-alt)))
    `(markdown-inline-code-face ((,class :inherit fixed-pitch :foreground ,magenta)))
-   `(markdown-italic-face ((,class :slant italic)))
+   `(markdown-italic-face ((,class :foreground ,fg-special-cold :slant italic)))
    `(markdown-language-info-face ((,class :inherit fixed-pitch :foreground ,fg-special-cold)))
    `(markdown-language-keyword-face ((,class :inherit fixed-pitch :foreground ,green-alt-other)))
    `(markdown-line-break-face ((,class :inherit modus-theme-refine-cyan :underline t)))
@@ -2791,27 +2793,27 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(mu4e-cited-5-face ((,class :foreground ,yellow-alt)))
    `(mu4e-cited-6-face ((,class :foreground ,cyan-alt)))
    `(mu4e-cited-7-face ((,class :foreground ,magenta)))
-   `(mu4e-compose-header-face ((,class :foreground ,green-alt)))
+   `(mu4e-compose-header-face ((,class :inherit mu4e-compose-separator-face)))
    `(mu4e-compose-separator-face ((,class :background ,bg-active :foreground ,fg-special-warm)))
    `(mu4e-contact-face ((,class :inherit bold :foreground ,cyan-alt-other)))
    `(mu4e-context-face ((,class :foreground ,blue-active)))
-   `(mu4e-draft-face ((,class :foreground ,magenta)))
+   `(mu4e-draft-face ((,class :foreground ,yellow-alt)))
    `(mu4e-flagged-face ((,class :foreground ,red-alt)))
    `(mu4e-footer-face ((,class :foreground ,fg-special-cold :slant ,modus-theme-slant)))
-   `(mu4e-forwarded-face ((,class :foreground ,green-alt-other)))
+   `(mu4e-forwarded-face ((,class :foreground ,magenta-alt-other)))
    `(mu4e-header-face ((,class :foreground ,fg-dim)))
    `(mu4e-header-highlight-face ((,class :inherit modus-theme-hl-line)))
    `(mu4e-header-key-face ((,class :foreground ,cyan)))
    `(mu4e-header-marks-face ((,class :inherit bold :foreground ,magenta-alt)))
    `(mu4e-header-title-face ((,class :foreground ,fg-special-mild)))
    `(mu4e-header-value-face ((,class :inherit bold :foreground ,magenta-alt-other)))
-   `(mu4e-highlight-face ((,class :inherit bold :foreground ,blue-intense)))
+   `(mu4e-highlight-face ((,class :inherit bold :foreground ,blue-alt-other)))
    `(mu4e-link-face ((,class :inherit link)))
    `(mu4e-modeline-face ((,class :foreground ,magenta-active)))
    `(mu4e-moved-face ((,class :foreground ,yellow :slant ,modus-theme-slant)))
    `(mu4e-ok-face ((,class :inherit bold :foreground ,green)))
    `(mu4e-region-code ((,class :inherit modus-theme-special-calm)))
-   `(mu4e-replied-face ((,class :foreground ,fg-alt)))
+   `(mu4e-replied-face ((,class :foreground ,cyan)))
    `(mu4e-special-header-value-face ((,class :inherit bold :foreground ,blue-alt-other)))
    `(mu4e-system-face ((,class :foreground ,fg-mark-del :slant ,modus-theme-slant)))
    `(mu4e-title-face ((,class :foreground ,fg-main)))
@@ -2866,7 +2868,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(notmuch-crypto-signature-good-key ((,class :inherit modus-theme-refine-yellow)))
    `(notmuch-crypto-signature-unknown ((,class :inherit modus-theme-refine-red)))
    `(notmuch-hello-logo-background ((,class :background ,bg-main)))
-   `(notmuch-message-summary-face ((,class :background ,bg-dim)))
+   `(notmuch-message-summary-face ((,class :inherit modus-theme-nuanced-cyan)))
    `(notmuch-search-flagged-face ((,class :foreground ,red-alt)))
    `(notmuch-search-matching-authors ((,class :foreground ,fg-main)))
    `(notmuch-search-non-matching-authors ((,class :foreground ,fg-alt)))
@@ -3350,7 +3352,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(sh-heredoc ((,class :foreground ,blue-alt)))
    `(sh-quoted-exec ((,class ,@(modus-vivendi-theme-bold-weight) :foreground ,magenta-alt)))
 ;;;;; show-paren-mode
-   `(show-paren-match ((,class ,@(modus-vivendi-theme-paren bg-paren-match blue-intense-bg)
+   `(show-paren-match ((,class ,@(modus-vivendi-theme-paren bg-paren-match
+                                                            bg-paren-match-intense)
                                :foreground ,fg-main)))
    `(show-paren-match-expression ((,class :inherit modus-theme-special-calm)))
    `(show-paren-mismatch ((,class :inherit modus-theme-intense-red)))
@@ -3387,7 +3390,8 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;;; smartparens
    `(sp-pair-overlay-face ((,class :inherit modus-theme-special-warm)))
    `(sp-show-pair-enclosing ((,class :inherit modus-theme-special-mild)))
-   `(sp-show-pair-match-face ((,class ,@(modus-vivendi-theme-paren bg-paren-match blue-intense-bg)
+   `(sp-show-pair-match-face ((,class ,@(modus-vivendi-theme-paren bg-paren-match
+                                                                   bg-paren-match-intense)
                                       :foreground ,fg-main)))
    `(sp-show-pair-mismatch-face ((,class :inherit modus-theme-intense-red)))
    `(sp-wrap-overlay-closing-pair ((,class :inherit sp-pair-overlay-face)))
