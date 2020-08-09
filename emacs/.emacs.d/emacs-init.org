@@ -613,28 +613,15 @@ These are specific to the fontconfig backend for GNU/Linux systems.")
     "Hook that is called after setting fonts.
 See, for example, `prot/font-set-fonts'.")
 
-  ;; The idea with this association list is to use font combinations
-  ;; that are suitable to the given point size and intended function.
-  ;; Basically, I have three modes: my laptop's small screen, my laptop
-  ;; attached to a larger external monitor in a desktop setup (my normal
-  ;; case), and when I do presentations (i.e. my videos on Emacs).
-  ;;
-  ;; I find that at smaller sizes the open and wide proportions of
-  ;; Hack+FiraGO combined with their more intense typographic colour
-  ;; work best, while the more compact Iosevka+Source Sans Pro are
-  ;; better at larger point sizes.  The "desktop" combo is ideal for use
-  ;; on a larger monitor at a regular point size.  The latter is what I
-  ;; typically use to write prose or code.
-  ;;
   ;; Note that the "Hack" typeface mentioned here is my patched version
   ;; of it, which uses some alternative glyphs, is built on top of the
-  ;; latest dev branch, and is meant to improve both the Roman and
+  ;; dev branch, and is meant to improve both the Roman and
   ;; Italic variants (alt glyphs are part of the Hack project):
   ;; https://gitlab.com/protesilaos/hackfontmod
   (defconst prot/font-sizes-families-alist
     '(("laptop" . (10.5 "Hack" "FiraGO" 1))
-      ("desktop" . (13 "Hack" "Alegreya" 3))
-      ("presentation" . (19 "Iosevka SS08" "Source Sans Pro" 1)))
+      ("desktop" . (13 "Hack" "Alegreya Sans" 4))
+      ("presentation" . (16 "Hack" "Open Sans" 0)))
     "Alist of desired point sizes and their typefaces.
 Each association consists of a display type mapped to a point
 size, followed by monospaced and proportionately spaced font
@@ -736,7 +723,8 @@ economise on dedicated key bindings."
 See `prot/font-line-spacing' for how this is used.")
 
   (defvar prot/font-fonts-bold-weight-alist
-    '(("Source Code Pro" . semibold))
+    '(("Iosevka SS08" . semibold)
+      ("Source Code Pro" . semibold))
     "Font families in need of a variegated weight for `bold'.
 See `prot/font-bold-face' for how this is used.")
 
