@@ -1597,6 +1597,14 @@ The =:hook= here will simply scroll the buffer so that the landing
 position of an Imenu interaction becomes the first visible line at the
 top.  I find this to be the easiest way to know where I am.
 
+Note that Imenu combines nicely with other major/minor modes, such as
+=outline-minor-mode= (see: [[#h:a8e737b8-7c90-4c68-8814-acf2f637ffa1][Outline mode, outline minor mode, and extras]]).
+*This has the potential to upgrade your interaction with various buffers*.
+I use this combo with Elisp and Markdown buffers.  Make sure to watch my
+[[https://protesilaos.com/codelog/2020-07-20-emacs-outline-imenu/][video demo of outline-minor-mode and imenu]] (2020-07-20).  For Org, you
+need to set =org-imenu-depth= to a high value (for more, refer to the
+section on [[#h:b95d0798-1cc5-4083-8728-f6a51ddbc531][Org basic configurations]]).
+
 #+begin_src emacs-lisp
 (use-package imenu
   :config
@@ -4346,7 +4354,7 @@ Now on to the miscellaneous settings:
 + All the markup characters should be hidden from view, in the same way
   links are.  This generally reduces the distractions in the document.
 + The =org-structure-template-alist= had its value and functionality
-  changed in Org version 9.2, which ships with Emacs 27.  To insert a
+  changed in Org version 9.3, which ships with Emacs 27.  To insert a
   template you must now use =C-c C-,=.
 + The =return= key should never follow a link because I sometimes call it
   by accident.  Use =C-c C-o= instead.
@@ -4420,7 +4428,7 @@ Now on to the miscellaneous settings:
   (setq org-special-ctrl-k nil)
   (setq org-hide-emphasis-markers t)
   (setq org-hide-leading-stars nil)
-  (setq org-structure-template-alist    ; CHANGED in Org 9.2, Emacs 27.1
+  (setq org-structure-template-alist    ; CHANGED in Org 9.3, Emacs 27.1
         '(("s" . "src")
           ("E" . "src emacs-lisp")
           ("e" . "example")
@@ -7535,8 +7543,6 @@ the buffer."
   (defvar prot/elfeed-mpv-hook nil
     "Hook called before `prot/elfeed-mpv-dwim'.")
 
-  ;; TODO make this buffer more useful, such as running it in a
-  ;; shell-aware mode.
   (defun prot/elfeed-mpv-buffer ()
     "Prepare \"*elfeed-mpv-output*\" buffer.
 For use by `prot/elfeed-mpv-dwim'.  To be called from
@@ -7675,7 +7681,6 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
                   (prot/elfeed-toggle-tag 'important)))
          :map elfeed-show-mode-map
          ("a" . prot/elfeed-show-archive)
-         ;; TODO any way to do this without a lambda?
          ("n" . (lambda ()
                   (interactive)
                   (prot/elfeed-show-search-update "next")))
@@ -11019,14 +11024,14 @@ At any rate, one must always read the NEWS (=C-h n= for =view-emacs-news=)
 whenever they upgrade to a new version of Emacs.  Though there is no
 equivalent mechanism for individual packages…  So here we are.
 
-** What is you distro and/or window manager?
+** What is your distro and/or window manager?
 :PROPERTIES:
 :CUSTOM_ID: h:044977f2-a909-4804-bf89-576dd429d405
 :END:
 
 Given that I mostly live inside of Emacs, the rest of the environment is
-no longer important to me (provided it does not impede my usage of
-Emacs).
+no longer important to me, provided it does not impede my usage of
+Emacs.
 
 Prior to my Emacs days, I used to have a highly customised session
 centred around BSPWM.  Now I can happily live inside of any desktop
@@ -11039,22 +11044,13 @@ I have been on GNU/Linux since the summer of 2016.  For the most time I
 have used Debian and Arch Linux.  As of 2020-05-03, I am on Arch.  My
 criterion for picking a distro is that it is community-driven and has a
 strong following that ensures its longer-term continuity and overall
-stability.  This is consistent with my focus on Emacs (and thoroughgoing
-customisations of the computing setup more generally): I need things to
+stability.  This is consistent with my focus on Emacs: I need things to
 work so that I may not be bothered by too much admin work (and yes, Arch
 is super-stable if you know what you are doing---and, well, Debian is
 designed for that).
 
 My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/tree/?h=emacs-27][built from source]], using the =emacs-27= branch (check the AUR
 if you are on Arch or derivatives, though /always read/ the PKGBUILD).
-Normally I would be using the packages provided by my distro's standard
-repos but am opting for this method instead in order to make sure my
-Modus themes are compatible with changes upstream.
-
-I do not optimise for portability across different versions or operating
-systems.  I do, nonetheless, provide inline comments when a certain
-option or configuration is specific to a yet-to-be-released version of
-Emacs, to the extent that I am aware that such is the case.
 
 ** Did you know XYZ package is better than the defaults?
 :PROPERTIES:
