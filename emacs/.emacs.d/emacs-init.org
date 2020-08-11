@@ -10659,7 +10659,7 @@ completion framework that leverages the built-in mechanisms.
 
 Emacs will remember your input and choices and will surface the desired
 results towards the top as the most likely candidates.  Make sure to
-also check my [[*Minibuffer essentials and Icomplete (built-in completion)][configurations for the minibuffer and icomplete]].
+also check the section on [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Tools for completion candidate listing]].
 
 I set the length to a fairly high number, while I make sure that
 duplicate entries remain in tact.  The assumption is that duplicate
