@@ -903,134 +903,125 @@ on the screen and more on how fast you can bring them into focus.  This
 is, of course, a matter of realigning priorities, as we still wish to
 control every aspect of the interface.
 
-Since the day I switched to Emacs (July 2019), I was using some
-completion framework other than the default.  I started out with =ivy= and
-its companion packages, switched to the built-in =ido= and then went back
-to the former.  I never experimented with any sort of customisations to
-the generic minibuffer experience.  Nor did I ever bother with the
-oldest built-in tool of the sort (=icomplete=) that is designed to
-complement the minibuffer's internal mechanisms for matching items.  Not
-until ~10 February 2020…
-
-It turns out that, despite appearances to the contrary, the defaults are
-very powerful, opening up a range of possibilities to those eager to
-learn and experiment (a common theme in Emacs).
-
-In the following package declarations I am defining several functions
-that enhance the experience of =icomplete=.  These are part of a learning
-process to (i) explore the internals of Emacs and study how various
-problems are solved with elisp, and (ii) determine how far one can go,
-in terms of efficient functionality, without deviating from the norms
-inherent to the tools that are shipped with Emacs.
-
-*** Minibuffer essentials and Icomplete (built-in completion)
+*** Tools for completion candidate listing
 :PROPERTIES:
 :CUSTOM_ID: h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7
 :END:
 
-For newcomers, watch my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).  This
-section and subsequent ones contain a lot of documentation and several
-elements.  Make sure to also follow any links from here, or [[https://protesilaos.com/contact/][contact me]]
+This section contains two main sub-sections covering the components that
+pertain to the user-facing features of Emacs' built-in completion
+framework.  Those are (1) the minibuffer and (2) Icomplete.  They can
+work in tandem as part of a singular experience.
+
+The minibuffer is the locus of all extended interactions.  Whether it is
+about offering input to a prompt or executing a function by its name,
+the minibuffer is always there.  Simple and reliable.
+
+Icomplete is the tool that visualises the list of candidates that may be
+presented at a completion prompt, as well as the incremental narrowing
+of such a list in reaction to user input.
+
+For newcomers, watch my [[https://protesilaos.com/codelog/2020-02-26-emacs-icomplete/][video demo of Icomplete]] (2020-02-26).  *This and
+subsequent sections contain lots of documentation and code.* Make sure to
+study them carefully and also follow any links from here.  Do [[https://protesilaos.com/contact/][contact me]]
 in case something is amiss.  There is also an entry in the "Frequently
 Asked Questions" that might help you make sense of the complete picture:
-[[#h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc][Why keep many completion UIs? (typology of my completion interfaces)]].
+[[#h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc][What about the completion UI? (typology of my completion interfaces)]].
 
-The minibuffer is the locus of extended command interaction.  Whether it
-is about offering input to a prompt, performing a search, executing a
-function by its name, the minibuffer remains at the epicentre.  The
-minibuffer and Icomplete are meant to work in tandem as part of a
-singular framework.  The default experience is far more powerful than it
-seems to be.  It can get even better by tweaking the available
-customisation options and defining our own extensions.
+**** Minibuffer configurations and extras
+:PROPERTIES:
+:CUSTOM_ID: h:c110e399-3f43-4555-8427-b1afe44c0779
+:END:
 
-Icomplete is the tool that offers incremental completion feedback for
-what the minibuffer is doing (where appropriate).  There is no added
-layer of complexity, no need for another metaphor of interactivity
-beside what you already use the minibuffer for.  In essence, Icomplete
-is just a visualisation of what is going on under the hood, meaning that
-all the completion mechanisms actually work even if =icomplete-mode= is
-disabled---though you obviously lose the visual feedback.
+The code block below is specifically about the minibuffer setup.  *This
+does not cover the visualisation of completion candidates*, which is
+handled by Icomplete---those are defined in the next section about
+[[#h:b6b13f4f-91f5-416d-9934-b51b4d87770c][Icomplete configurations and extras]].
 
-Now some comments about my implementation:
+This is an overview of the settings covered herein:
 
-+ The, dare I say, /sublime/ [[https://github.com/oantolin/orderless][“orderless” package]] is developed by Omar
-  Antolín Camarena and you will find it on MELPA (I use more packages
-  from Omar in my dotemacs, such as [[#h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1][Icomplete vertical mode]]).  It
-  provides the =orderless= completion style for efficient out-of-order
-  grouped pattern matching.  The components can be determined using
-  several styles, such as regexp, flex, prefix, initialism (check the
-  README because there are lots of variations and extras).  Delimiters
-  are literal spaces by default, but can be configured to match other
-  characters, with hyphens and slashes being likely choices.  As such,
-  Orderless can supersede---and greatly improve upon---the completion
-  styles that come built into Emacs, adding to them the powerful
-  out-of-order capability.
-+ My =prot/orderless-literal-dispatcher= is based on an example from the
-  Orderless README.  By appending an equals sign to the end of a
-  component I am instructing Orderless to match that component
-  literally.  Obviously one can use the style dispatchers for each of
-  the matching patterns, though I find this to be sufficient for my
-  needs.
-+ The =completion-styles= try to match candidates using one style at a
-  time (assuming you have more than one), moving from the first to the
-  last until something is matched.  In practice though, =orderless= is so
-  powerful that there is no pressing need to use the built-in styles.
-  An exception is a niche functionality of the =partial-completion=: with
-  it you can navigate to a filesystem path like =~/.l/s/fo= for
-  =~/.local/share/fonts=.  So my modest recommendation is to use those two
-  styles to cover every case.
-+ The =completions-format= concerns the layout of the =*Completions*= buffer
-  that pops up after trying to complete a non-unique match (or by typing
-  =?= from inside the minibuffer).  By default, it can be focused directly
-  with =M-v= while inside a minibuffer prompt.
-+ To enhance the experience of the Completions buffer, I define several
++ Completion styles :: The, dare I say, /sublime/ [[https://github.com/oantolin/orderless][“orderless” package]] is
+  developed by Omar Antolín Camarena and you will find it on MELPA (also
+  see the section on [[#h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1][Icomplete vertical mode]] which configures another
+  one of Omar's packages).  It provides the =orderless= completion style
+  for efficient out-of-order grouped pattern matching.  The components
+  can be determined using several styles, such as regexp, flex, prefix,
+  initialism (check its README because there are lots of variations and
+  extras).  Delimiters are literal spaces by default, but can be
+  configured to match other characters, with hyphens and slashes being
+  likely choices.  As such, Orderless can supersede---and improve
+  upon---the completion styles that come built into Emacs, adding to
+  them the powerful out-of-order capability.
+
+  1. My =prot/orderless-literal-dispatcher= is based on an example from
+     the Orderless README.  By appending an equals sign to the end of a
+     component I am instructing Orderless to match that component
+     literally.  Same idea for =prot/orderless-initialism-dispatcher=,
+     which interprets the input as a strict initialism (i.e. each
+     character matches the first letter in a series of words).
+
+  2. The =completion-styles= try to match candidates using one style at a
+     time (assuming you have more than one), moving from the first to
+     the last until something is matched.  In practice though, =orderless=
+     is so powerful that there is no need to use the built-in styles.
+     An exception is a niche functionality of the standard
+     =partial-completion= style: with it you can navigate to a filesystem
+     path like =~/.l/s/fo= for =~/.local/share/fonts=.  So my recommendation
+     is to use those two styles to cover every case.
+
++ Completions' buffer :: The =completions-format= concerns the layout of
+  the =*Completions*= buffer that pops up after trying to complete a
+  non-unique match (or by typing =?= from inside the minibuffer).  By
+  default, it can be focused directly with =M-v= while inside a minibuffer
+  prompt, while I define commands to cycle between it and the
+  minibuffer.
+
+  To enhance the experience of the Completions buffer, I define several
   keys that make motions easier and consistent with other read-only
   interfaces.  The =h= key calls a command of mine to offer help
   (documentation) for the item at point, typically a function or a
-  variable.  I also define =M-v= to take me back to the minibuffer while
-  inside the =*Completions*= (and =s-v= to do it from anywhere else).
-  - The placement of the Completions, Help, and other buffers is defined
-    in detail in the section about [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]],
-    specifically within the =display-buffer-alist=.
-+ I enable /recursive minibuffers/.  This practically means that you can
-  start something in the minibuffer, switch to another window, call the
-  minibuffer again, run some commands, and then move back to what you
-  initiated in the original minibuffer.  To exit such recursive edits,
-  hit =C-]= (=abort-recursive-edit=), though the regular =C-g= should also do
-  the trick.  The =minibuffer-depth-indicate-mode= will show an indicator
-  next to the minibuffer prompt if a recursive edit is in progress.
-+ *UPDATE 2020-05-16:* /Deprecated in favour of/ the new "embark" package,
-  though the functionality is exactly the same from an end-user
-  perspective (see [[#h:e97988bc-fd77-4dca-b74a-0897087624bd][Embark (actions for completion candidates)]]).
-  *ORIGINAL:* My =prot/complete-kill-or-insert-candidate= is a simple yet
-  effective tool that I bind to three key chords.  With =M-o w= you copy
-  the current candidate to the kill ring and continue with the
-  minibuffer session.  With =M-o i= you insert the candidate in the buffer
-  from where the minibuffer was called, without appending to the kill
-  ring, while still keeping the session active.  And =M-o j= will insert
-  the candidate in the same way and immediately exit all recursive
-  edits.
-+ Note the nuances in the behaviour between =RET= and =C-j=.  With the
-  Return key, we instruct the minibuffer to expand the current candidate
-  and then exit the session, if possible.  Whereas =C-j= is meant to
-  insert the minibuffer's contents exactly as they are and exit
+  variable.  =i=, =j=, and =w= call commands that operate on the symbol at
+  point to (1) insert it in the most recently used buffer, (2) insert
+  and exit all recursive minibuffers, and (3) add it to the kill-ring,
+  while keeping the current minibuffer recursion in tact.  I also define
+  =M-v= to take me back to the minibuffer while inside the =*Completions*=
+  and =s-v= to do it from anywhere else.
+
+  The window placement of the Completions, Help, and other buffers is
+  defined in detail in the section about [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]],
+  specifically within the =display-buffer-alist=.
+
++ Recursive minibuffers :: I enable recursive minibuffers.  This
+  practically means that you can start something in the minibuffer,
+  switch to another window, call the minibuffer again, run some
+  commands, and then move back to what you initiated in the original
+  minibuffer.  To exit, hit =C-]= (=abort-recursive-edit=), though the
+  regular =C-g= should also do the trick.
+
+  The =minibuffer-depth-indicate-mode= will show a depth indicator,
+  represented as a number, next to the minibuffer prompt, if a recursive
+  edit is in progress.
+
++ Key bindings :: Note the nuances in the behaviour between =RET= and =C-j=.
+  With the Return key, we instruct the minibuffer to expand the current
+  candidate and then exit the session, if possible.  Whereas =C-j= is
+  meant to insert the minibuffer's contents exactly as they are and exit
   immediately.  You need the latter in cases where you want =foo= but the
   match is for =foobar=.
-+ The key bindings in the pattern of =s-KEY= follow the principles I
-  outlined in my [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note about the use of the Super key]].
 
-Also check my configurations pertaining to the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].
-After several months of full time usage, I am confident in the built-in
+  The key bindings in the pattern of =s-KEY= follow the principles I
+  outline in my [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note about the use of the Super key]].  They are included
+  here because they related to minibuffer-centric actions.
+
+Also check my configurations about the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]].  After
+several months of full time usage, I am confident in the built-in
 mechanism's ability to sort things well enough and to surface the
 results I am most likely interested in, based on previous selections.
-
-Now here is the actual code for the minibuffer part (=icomplete= is
-further below):
 
 #+begin_src emacs-lisp
 (use-package minibuffer
   :config
-
+;;; General minibuffer configurations
   ;; Super-powerful completion style for out-of-order groups of matches
   ;; using a comprehensive set of matching styles.
   (use-package orderless
@@ -1056,8 +1047,8 @@ further below):
           '(prot/orderless-literal-dispatcher
             prot/orderless-initialism-dispatcher))
     :bind (:map minibuffer-local-completion-map
-                ("SPC" . nil)         ; space should never complete
-                ("?" . nil)))         ; valid regexp character
+                ("SPC" . nil)))       ; Space should never complete: use
+                                      ; it for `orderless' groups.
 
   (setq completion-styles
         '(orderless partial-completion))
@@ -1079,6 +1070,7 @@ further below):
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
 
+;;; General minibuffer functions
   (defun prot/focus-minibuffer ()
     "Focus the active minibuffer.
 
@@ -1103,9 +1095,7 @@ The continuous switch is essentially the same as running
 succession."
     (interactive)
     (let* ((mini (active-minibuffer-window))
-           ;; This could be hardened a bit, but I am okay with it.
-           (completions (or (get-buffer-window "*Completions*")
-                            (get-buffer-window "*Embark Live Occur*"))))
+           (completions (get-buffer-window "*Completions*")))
       (cond ((and mini
                   (not (minibufferp)))
              (select-window mini nil))
@@ -1113,6 +1103,56 @@ succession."
                   (not (eq (selected-window)
                            completions)))
              (select-window completions nil)))))
+
+;;; Completions' buffer actions
+  ;; NOTE In practice I only use those while inspecting a long list
+  ;; produced by C-h {f,o,v}.  To pop the Completions buffer, use
+  ;; `minibuffer-completion-help', by default bound to ? from inside the
+  ;; minibuffer.
+
+  (defun prot/completions-kill-save-symbol ()
+    "Add symbol-at-point to the kill ring.
+
+Intended for use in the \\*Completions\\* buffer.  Bind this to a
+key in `completion-list-mode-map'."
+    (interactive)
+    (kill-new (thing-at-point 'symbol)))
+
+  (defmacro prot/completions-buffer-act (name doc &rest body)
+    `(defun ,name ()
+       ,doc
+       (interactive)
+       (let ((completions-window (get-buffer-window "*Completions*"))
+             (completions-buffer (get-buffer "*Completions*"))
+             (symbol (thing-at-point 'symbol)))
+         (if (window-live-p completions-window)
+             (with-current-buffer completions-buffer
+               ,@body)
+           (user-error "No live window with Completions")))))
+
+  (prot/completions-buffer-act
+   prot/completions-kill-symbol-at-point
+   "Add \"Completions\" buffer symbol-at-point to the kill ring."
+   (kill-new `,symbol)
+   (message "Copied %s to kill-ring"
+            (propertize `,symbol 'face 'success)))
+
+  (prot/completions-buffer-act
+   prot/completions-insert-symbol-at-point
+   "Add \"Completions\" buffer symbol-at-point to active window."
+   (let ((window (window-buffer (get-mru-window))))
+     (with-current-buffer window
+       (insert `,symbol)
+       (message "Inserted %s"
+                (propertize `,symbol 'face 'success)))))
+
+  (prot/completions-buffer-act
+   prot/completions-insert-symbol-at-point-exit
+   "Like `prot/completions-insert-symbol-at-point' plus exit."
+   (prot/completions-insert-symbol-at-point)
+   (top-level))
+
+;;; Miscellaneous functions and key bindings
 
   ;; Technically, this is not specific to the minibuffer, but I define
   ;; it here so that you can see how it is also used from inside the
@@ -1134,71 +1174,29 @@ instead."
               (select-window help)
             (select-window (get-mru-window)))))))
 
-  ;; This will be deprecated in favour of the `embark' package
-  (defun prot/completions-kill-save-symbol ()
-    "Add symbol-at-point to the kill ring.
-
-Intended for use in the \\*Completions\\* buffer.  Bind this to a
-key in `completion-list-mode-map'."
-    (interactive)
-    (kill-new (thing-at-point 'symbol)))
-
-
-;;;; DEPRECATED in favour of the `embark' package (see further below),
-;;;; which implements the same functionality in a more efficient way.
-;;  (defun prot/complete-kill-or-insert-candidate (&optional arg)
-;;     "Place the matching candidate to the top of the `kill-ring'.
-;; This will keep the minibuffer session active.
-;;
-;; With \\[universal-argument] insert the candidate in the most
-;; recently used buffer, while keeping focus on the minibuffer.
-;;
-;; With \\[universal-argument] \\[universal-argument] insert the
-;; candidate and immediately exit all recursive editing levels and
-;; active minibuffers.
-;;
-;; Bind this function in `icomplete-minibuffer-map'."
-;;     (interactive "*P")
-;;     (let ((candidate (car completion-all-sorted-completions)))
-;;       (when (and (minibufferp)
-;;                  (or (bound-and-true-p icomplete-mode)
-;;                      (bound-and-true-p live-completions-mode))) ; see next section
-;;         (cond ((eq arg nil)
-;;                (kill-new candidate))
-;;               ((= (prefix-numeric-value arg) 4)
-;;                (with-minibuffer-selected-window (insert candidate)))
-;;               ((= (prefix-numeric-value arg) 16)
-;;                (with-minibuffer-selected-window (insert candidate))
-;;                (top-level))))))
-
-  ;; Defines, among others, aliases for common actions to Super-KEY.
-  ;; Normally these should go in individual package declarations, but
-  ;; their grouping here makes things easier to understand.
+  ;; Defines, among others, aliases for common minibuffer commands to
+  ;; Super-KEY.  Normally these should go in individual package
+  ;; declarations, but their grouping here makes things easier to
+  ;; understand.  Besides, they are related to the minibuffer.
   :bind (("s-f" . find-file)
          ("s-F" . find-file-other-window)
          ("s-d" . dired)
          ("s-D" . dired-other-window)
          ("s-b" . switch-to-buffer)
          ("s-B" . switch-to-buffer-other-window)
+         ("s-v" . prot/focus-minibuffer-or-completions)
          ("s-h" . prot/describe-symbol-at-point)
          ("s-H" . (lambda ()
                     (interactive)
                     (prot/describe-symbol-at-point '(4))))
-         ("s-v" . prot/focus-minibuffer-or-completions)
          :map minibuffer-local-completion-map
-         ("<return>" . minibuffer-force-complete-and-exit)
-         ("C-j" . exit-minibuffer)
-         ;;;; DEPRECATED in favour of the `embark' package
-         ;; ("M-o w" . prot/complete-kill-or-insert-candidate)
-         ;; ("M-o i" . (lambda ()
-         ;;              (interactive)
-         ;;              (prot/complete-kill-or-insert-candidate '(4))))
-         ;; ("M-o j" . (lambda ()
-         ;;              (interactive)
-         ;;              (prot/complete-kill-or-insert-candidate '(16))))
+         ("<return>" . minibuffer-force-complete-and-exit) ; exit with completion
+         ("C-j" . exit-minibuffer)      ; force input unconditionally
          :map completion-list-mode-map
          ("h" . prot/describe-symbol-at-point)
-         ("w" . prot/completions-kill-save-symbol)
+         ("w" . prot/completions-kill-symbol-at-point)
+         ("i" . prot/completions-insert-symbol-at-point)
+         ("j" . prot/completions-insert-symbol-at-point-exit)
          ("n" . next-line)
          ("p" . previous-line)
          ("f" . next-completion)
@@ -1206,21 +1204,24 @@ key in `completion-list-mode-map'."
          ("M-v" . prot/focus-minibuffer)))
 #+end_src
 
-And the following package declaration is for the interactive completion
-interface: =icomplete= (remember, Icomplete just offers the interface, not
-the underlying mechanisms).  As such, *do not forget to also check the
-entire section* above this message, the part on [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][minibuffer history]], and
-my [[#h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1][docs+configs for ad-hoc verticality]].
+**** Icomplete configurations and extras
+:PROPERTIES:
+:CUSTOM_ID: h:b6b13f4f-91f5-416d-9934-b51b4d87770c
+:END:
+
+The following package declaration is for the built-in interactive
+minibuffer-based completion interface: =icomplete=.  Remember that the
+underlying completion mechanisms are handled by the minibuffer
+itself---see section on [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras]].
 
 Overview of the following package declaration:
 
 + The values of all variables that pertain to the delay of feedback are
-  tentative.  My initial tests suggest that they behave exactly the way
-  I want, but this might change once I test them further.  In short, I
-  want to introduce /some/ delay in the feedback I get when the list of
+  meant to introduce /some/ delay in the feedback I get when the list of
   candidates is long.  This paradoxically makes things feel faster while
-  I am still typing (because by that time the list has been narrowed to
-  my input).
+  I am still typing because by that time the list has been narrowed to
+  my input.
+
 + For versions of Emacs above 27, there is a minor mode called =fido=
   (Fake IDO, where =ido= is an alternative option to Icomplete that tries
   to do more than just completion).  This new mode changes some of the
@@ -1228,22 +1229,50 @@ Overview of the following package declaration:
   expectations of Ido users.  It is not meant as a fully fledged
   replacement of Ido, as its scope is much narrower, at least for the
   time being.  If you are curious, check the source code for both
-  =icomplete= and =ido= with the help of =M-x find-library=.  I do not use
-  Fido, though I think it is a welcome step in the right direction.  For
-  the sake completeness, note that you can always bind some Fido command
-  without activating the minor mode.
+  =icomplete= and =ido= with the help of =M-x find-library=.  *I do not use
+  Fido*, though I think it is a welcome step in the right direction.
+  For the sake completeness, note that you can always bind some Fido
+  command without activating the minor mode.
+
 + The keybindings I specify define motions that ensure consistency
   between regular editing and the rotation of the candidates' list.  The
-  default =icomplete= key bindings leave something to be desired and are
-  therefore repurposed for my extensions.
-+ As with the keys for the minibuffer, note the nuances in the behaviour
-  between =RET= and =C-j=.  With the Return key, we tell Icomplete to expand
-  the current candidate and then exit the minibuffer if possible.
-  Whereas =C-j= is meant to insert exactly what is in the minibuffer,
-  which can be tricky in some circumstances.  Use the latter when
-  Icomplete is matching =foobar= but you only want =foo= (needed when
+  default =icomplete= key bindings leave something to be desired.
+
++ As with the same keys for the minibuffer, note the nuances in the
+  behaviour between =RET= and =C-j=.  With the Return key, we tell Icomplete
+  to expand the current candidate and then exit the minibuffer /if
+  possible/.  Whereas =C-j= is meant to insert exactly what is in the
+  minibuffer, which can be tricky in some circumstances.  Use the latter
+  when Icomplete is matching =foobar= but you only want =foo= (needed when
   renaming files or when creating links in Org to non-existent
   candidates).
+
+Now a few words about my simple-yet-effective minibuffer actions.
+
++ From within the minibuffer, =M-o= functions as a prefix for "other"
+  commands.  For the time being, the key chord is finalised with any one
+  of {i,j,w}.
+
++ =prot/minibuffer-kill-completion= (=M-o w=) will save the current
+  candidate to the top of the kill-ring.
+
++ =prot/minibuffer-insert-completion= (=M-o i=) will insert the current
+  candidate in the buffer from where the minibuffer was called.
+
++ =prot/minibuffer-insert-completion-exit= (=M-o j=) will do as above, but
+  also exit all recursive minibuffers.
+
+If you checked the previous section on the Minibuffer's setup, you will
+spot the parallels between those commands and the ones that are meant to
+be used inside the =*Completions*= buffer.
+
+Note that *these form part of a simplistic implementation* which is good
+enough for my particular needs.  Unless your workflow is the same as
+mine, I encourage you to check [[https://github.com/oantolin/embark][Omar Antolín Camarena's "Embark" package]].
+It is not limited to Icomplete, has a more featureful implementation of
+a buffer that displays an overview of matching items, can be extended
+with ease, etc.  It is just better for a minibuffer-actions-heavy
+workflow (mine is not that).
 
 #+begin_src emacs-lisp
 (use-package icomplete
@@ -1260,7 +1289,7 @@ Overview of the following package declaration:
   ;; (setq icomplete-separator " │ ")
   ;; (setq icomplete-separator " ┆ ")
   ;; (setq icomplete-separator " ¦ ")
-  ;; (setq icomplete-separator (propertize " ┆ " 'face 'shadow))
+  ;; (setq icomplete-separator " ┆ ")
   (setq icomplete-with-completion-tables t)
   (setq icomplete-in-buffer t)
   (setq icomplete-tidy-shadowed-file-names t)
@@ -1270,13 +1299,58 @@ Overview of the following package declaration:
 
   (defun prot/icomplete-minibuffer-truncate ()
     "Truncate minibuffer lines in `icomplete-mode'.
-  This should only affect the horizontal layout and is meant to
-  enforce `icomplete-prospects-height' being set to 1.
+This should only affect the horizontal layout and is meant to
+enforce `icomplete-prospects-height' being set to 1, which is
+what I always want.
 
-  Hook it to `icomplete-minibuffer-setup-hook'."
+Hook it to `icomplete-minibuffer-setup-hook'."
     (when (and (minibufferp)
                (bound-and-true-p icomplete-mode))
       (setq truncate-lines t)))
+
+;;; Minibuffer actions
+  ;; For a fully fledged package that covers this niche and offers lots
+  ;; of added functionality, check Omar Antolín Camarena's "embark"
+  ;; library: https://github.com/oantolin/embark
+  ;;
+  ;; My idea here is to implement the three actions I had always relied
+  ;; on, because they are the only ones I ever use.
+  (defmacro prot/minibuffer-completion-act (name doc &rest body)
+    `(defun ,name ()
+       (interactive)
+       (let ((candidate (car completion-all-sorted-completions)))
+         (when (and (minibufferp)
+                    (bound-and-true-p icomplete-mode))
+           ,@body))))
+
+  (prot/minibuffer-completion-act
+   prot/minibuffer-kill-completion
+   "Place minibuffer candidate to the top of the `kill-ring'."
+   (kill-new `,candidate)
+   (message "Copied %s to kill-ring" (propertize `,candidate 'face 'success)))
+
+  (prot/minibuffer-completion-act
+   prot/minibuffer-insert-completion
+   "Insert minibuffer candidate in last active window."
+   (with-minibuffer-selected-window (insert `,candidate)))
+
+  (prot/minibuffer-completion-act
+   prot/minibuffer-insert-completion-exit
+   "Like `prot/minibuffer-insert-completion' but exit minibuffer."
+   (prot/minibuffer-insert-completion)
+   (top-level))
+
+  (define-prefix-command 'prot/minibuffer-completion-map)
+
+  (define-key prot/minibuffer-completion-map
+    (kbd "w") 'prot/minibuffer-kill-completion)
+  (define-key prot/minibuffer-completion-map
+    (kbd "i") 'prot/minibuffer-insert-completion)
+  (define-key prot/minibuffer-completion-map
+    (kbd "j") 'prot/minibuffer-insert-completion-exit)
+
+  (define-key minibuffer-local-completion-map
+    (kbd "M-o") prot/minibuffer-completion-map)
 
   ;; Note that the the syntax for `use-package' hooks is controlled by
   ;; the `use-package-hook-name-suffix' variable.  The "-hook" suffix is
@@ -1296,7 +1370,7 @@ Overview of the following package declaration:
               ("<C-backspace>" . icomplete-fido-backward-updir)))
 #+end_src
 
-**** Icomplete vertical mode
+***** Icomplete vertical mode
 :PROPERTIES:
 :CUSTOM_ID: h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1
 :END:
@@ -1312,14 +1386,15 @@ early April 2020) to fill in this gap.  The package provides a global
 minor mode for displaying the list of candidates vertically by default:
 simple and effective.
 
-While fairly young, =icomplete-vertical= already feels like a mature,
-feature-complete tool: it offers a robust experience out-of-the-box, but
-also provides facilities for users to introduce an element of ad-hoc
-verticality to their bespoke completion functions.  More specifically:
+While fairly young, =icomplete-vertical= is a mature, feature-complete
+tool: it offers a robust experience out-of-the-box, while also providing
+facilities for users to introduce an element of ad-hoc verticality to
+their bespoke completion functions.  More specifically:
 
 + With =icomplete-vertical-toggle=, which should be bound to a key inside
   the minibuffer, we can use whatever layout we want whenever we need
   it.  Excellent!
+
 + While the =icomplete-vertical-do= macro can be used to parametrise a
   custom function with an optional height and unique separator.  The
   latter comes with the option to pick from a list of presets:
@@ -1340,10 +1415,11 @@ should, in my opinion, be the default /only/ for lists that present
 naturally long candidates.  A good example is the =recentf-list= that
 consists of full filesystem paths, with the =kill-ring= being another one.
 
-Couched in those terms, /the following package declaration does not
-enable/ =icomplete-vertical-mode= globally.  Instead, it defines the
+Couched in those terms, *the following package declaration does not
+enable* =icomplete-vertical-mode= globally.  Instead, it defines the
 elements that are necessary for activating verticality on an ad-hoc or
-per-function basis (and there are lots of them).
+per-function basis (and there are lots of custom functions like
+that---search for the =icomplete-vertical-do= macro).
 
 In =prot/kill-ring-yank-complete= you will spot a function that disables
 the sorting of the list.  Without it, the kills appear in a seemingly
@@ -1354,9 +1430,7 @@ comment I got from them on my [[https://protesilaos.com/codelog/2020-02-26-emacs
 With =icomplete-vertical=, I can now remove all the poor code I had in
 place when I got started, relying instead on the thoughtful design and
 features that Omar has so meticulously developed.  In short: the package
-is a near must-have for any =icomplete= user, while I expect it to
-single-handedly convince many users to give Emacs' built-in completion
-mechanism a fair chance.
+is a near must-have for any =icomplete= user.
 
 Finally, *not all "vertical" functions of mine are defined here*.  Some
 are also found in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][completion for projects and directory trees]] and others
@@ -1397,169 +1471,6 @@ normally would when calling `yank' followed by `yank-pop'."
          ("C-v" . icomplete-vertical-toggle)))
 #+end_src
 
-*** Embark (actions for completion candidates)
-:PROPERTIES:
-:CUSTOM_ID: h:e97988bc-fd77-4dca-b74a-0897087624bd
-:END:
-
-*2020-06-21: WORK IN PROGRESS.  THIS SETUP IS INCOMPLETE AND PROBABLY
-FAULTY IN PARTS.*
-
-Embark (Emacs Minibuffer Actions Rooted in Keymaps) is another great
-contribution by Omar Antolín Camarena.  At its core, this tool allows
-you to perform actions on the completion framework's list of candidates.
-These can be commands like saving the matching item to the kill ring,
-inserting it to the current buffer, or even producing a =dired= buffer
-from the full list of relevant file names.
-
-As its expanded name suggests, Embark is based on the principle of key
-maps.  A "key map", which is standard in the Emacs space, is the list
-that holds the association between key chords and the commands they
-invoke.  Key maps provide a form of modality: they apply only where they
-are enabled, which allows them to be implemented on a context-dependent
-basis.  And they can be layered on top of each other.
-
-This means that you can bind an "entry point" to Embark, which you may
-then call from the minibuffer (=minibuffer-local-completion-map=).  I set
-that to =;= (=embark-act-noexit=) and =:= (=embark-act=).  This gives you access
-to all the relevant actions you may call for the given context.  The
-former point of entry will perform the action but keep the minibuffer
-open, while the latter will run the command and quit immediately.
-
-What constitutes an "action" can either be one of the default options
-provided by =embark= or a custom function you define yourself.  Same for
-the keymaps you may use.  So what Embark does is to add the necessary
-elements that allow you to contextualise your actions and to draw
-linkages between different workflows.
-
-For all available default actions, check the [[https://github.com/oantolin/embark/wiki/Default-Actions][project's wiki page]], or
-just browse the source code (I prefer the latter and it can be done
-easily with =M-x find-library=).  This is what a keymap looks like:
-
-#+begin_example
-(defvar embark-general-map
-  (embark-keymap
-   '(("i" . embark-insert)
-     ("w" . embark-save)
-     ("RET" . embark-default-action))
-   embark-meta-map)
-  "Keymap for Embark general actions.")
-#+end_example
-
-Embark also provides facilities for placing the list of candidates in
-either a bespoke buffer (=embark-occur=) or in a content-aware buffer like
-=dired= and =ibuffer= (=embark-export= for files and buffers respectively).
-To make things ever better, there is an option for a "live completion"
-style, where the "Embark Live Occur" buffer will be updated to reflect
-your minibuffer input.  I choose to use this presciently for commands
-where I intend to *carefully inspect the results themselves*.  Also read:
-[[#h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc][Why keep many completion UIs? (typology of my completion interfaces)]].
-
-As for how Embark fits in my completion framework, it quite simply
-offers a piece of functionality that is altogether absent from the
-upstream Emacs distribution.  This is, by the by, why I greatly
-appreciate Omar's contributions: they work with standard Emacs
-mechanisms, extending them in sensible ways, so you have the liberty to
-mix and match modules from core Emacs, your homegrown functions, and
-third-party packages, to suit your preferences and expected workflows,
-without ever committing to an all-encompassing framework (not that those
-are bad per se).
-
-[[https://github.com/oantolin/embark][The embark package]] is under active development, so expect things to be
-in a state of flux for the immediate future.  I use =:load-path= because I
-like to check the source code and try to learn some Elisp along the
-way---otherwise you should go with something like the =quelpa= package.
-
-The =contrib/embark-live-occur-interactive= was offered to me by Omar.
-Its purpose is to be used as an "advice" that will update the
-interactive spec of other functions to automatically run a live-updating
-"Embark Occur" buffer.
-
-Finally, make sure to check my [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]] to see how
-the buffers for "Embark Occur" and its "live" counterpart are positioned
-as part of the general window layout.
-
-#+begin_src emacs-lisp
-(use-package embark
-  :load-path "~/.emacs.d/prot-dev/embark/" ; in development
-  :config
-  ;; WORK IN PROGRESS.  DO NOT COPY.
-
-  ;; Faces from my themes
-  (setq embark-action-indicator
-        (propertize "[Act]" 'face
-                    '(:inherit modus-theme-intense-blue :weight bold)))
-  (setq embark-become-indicator
-        (propertize "[Become]" 'face
-                    '(:inherit modus-theme-intense-green :weight bold)))
-
-  (setq embark-occur-initial-view-alist '((t . grid)))
-  (setq embark-live-occur-delay 0.3)
-  (setq embark-completing-read-delay 0.5)
-
-  (defun prot/embark-live-occur-single-buffer ()
-    "Do not spawn multiple `embark-live-occur' buffers.
-  Add this to `minibuffer-exit-hook'."
-    (let ((eo "*Embark Live Occur*"))
-      (when (get-buffer eo)
-        (kill-buffer eo))))
-
-  (defun contrib/embark-live-occur-interactive (&rest _args)
-    "Advice to wrap function in `embark-completing-read'.
-  This advises the function's interactive spec and should be
-  applied with the `:before' keyword."
-    (interactive
-     (lambda (old-interactive-spec)
-       (let ((icomplete-mode nil)
-             (completing-read-function #'embark-completing-read))
-         (advice-eval-interactive-spec old-interactive-spec)))))
-
-  ;; Make C-h {f,v,o} use `embark-completing-read' to live update the
-  ;; Embark Occur buffer.  Remember that this is an exception to my
-  ;; regular usage of the completion framework, as explained in the docs
-  ;; above this code block.
-  (dolist (fn '(describe-function
-                describe-variable
-                describe-symbol))
-    (advice-add `,fn :before 'contrib/embark-live-occur-interactive))
-
-  :hook ((embark-occur-mode-hook . embark-occur-direct-action-minor-mode)
-         (minibuffer-exit-hook . prot/embark-live-occur-single-buffer)
-         (embark-pre-action-hook . completion--flush-all-sorted-completions))
-  :bind (("C-c M-o" . embark-act)         ; non-minibuffer usage
-         :map minibuffer-local-completion-map
-         ("M-o" . embark-act)
-         ("C-M-o" . embark-act-noexit)
-         ("C-M->" . embark-become)
-         ("C-M-l" . embark-live-occur)
-         ("C-C C-o" . embark-export) ; uses `embark-occur' as a fallback
-         ("M-v" . embark-switch-to-live-occur) ; override `switch-to-completions'
-         ("M-q" . embark-occur-toggle-view)
-         :map embark-occur-mode-map
-         ("M-q" . embark-occur-toggle-view)))
-#+end_src
-
-**** TODO Complete review of Embark package declaration [1/4]
-:PROPERTIES:
-:CUSTOM_ID: h:5042bfab-64b4-4db2-9821-128e0d099bdf
-:END:
-***** DONE Review embark-occur buffer display repositioning
-CLOSED: [2020-05-29 Fri 13:16]
-:PROPERTIES:
-:CUSTOM_ID: h:99fc2c2a-7729-4e5e-a9c1-d07e8f405b07
-:END:
-***** TODO Ensure embark-occur works with my custom file-related commands
-:PROPERTIES:
-:CUSTOM_ID: h:91e23a92-d29a-47a9-9ef3-304029519cbb
-:END:
-***** TODO Explore possibility for dedicated windows of embark-occur (dired)
-:PROPERTIES:
-:CUSTOM_ID: h:ea5dfb98-6fe6-4667-8ecd-ae83ac7317c5
-:END:
-***** TODO Embark actions for imenu, especially for Org buffers
-:PROPERTIES:
-:CUSTOM_ID: h:64cbb516-8223-4d96-ba09-3c24d06916b2
-:END:
 *** Imenu (dynamic completion-based buffer navigation)
 :PROPERTIES:
 :CUSTOM_ID: h:77284937-ad9d-44cc-8a3e-80f6ed9e3def
@@ -1619,7 +1530,6 @@ aggressive fuzzy-style matching for this particular command."
            '(orderless-literal
              orderless-regexp
              orderless-prefixes)))
-      (setq this-command 'imenu)        ; let `embark' know what this is
       (icomplete-vertical-do (:height (/ (frame-height) 4))
         (call-interactively 'imenu))))
 
@@ -1833,7 +1743,7 @@ minibuffer---again, an offense against simplicity.
 What I have in this section is a few simple tweaks and built-in ways to
 complete terms while typing text in a buffer.  I think that, for most
 cases, the minibuffer can be used effectively to perform in-buffer
-completion: start from my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]] to
+completion: start from my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Tools for completion candidate listing]] to
 understand how these fit into the broader framework.
 
 I yanked =contrib/completing-read-in-region= straight from Omar Antolín
@@ -3594,17 +3504,15 @@ Now some extras after I published that video: =prot/buffers-major-mode=
 and =prot/buffers-vc-root= will produce a filtered list based on the
 current buffer's major mode or root version-control directory
 respectively.  Their standard mode of interaction is through minibuffer
-completions (see [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]]).  With a prefix
-argument =C-u= they switch to a dedicated Ibuffer view instead.
+completions (start with [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Tools for completion candidate listing]]).  With a
+prefix argument =C-u= they switch to a dedicated Ibuffer view instead.
 
 For those two I received help from Omar Antolín Camarena with regard to
 the use of =read-buffer= and the =lambda= passed to it: my prototype was
 using the generic =completing-read= with =cl-remove-if-not= for filtering
 the list of candidates (all possible errors are my own).  The upside of
 using Omar's approach is that it informs other tools that this kind of
-completion concerns buffers, so they can adapt accordingly.  This is
-done, for example, by Omar's powerful =embark= package (see section on
-[[#h:e97988bc-fd77-4dca-b74a-0897087624bd][Embark (actions for completion candidates)]]).
+completion concerns buffers, so they can adapt accordingly.
 
 I consider these two commands to be conceptually related to what I have
 defined in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Completion for projects and directory trees]].  The key chords
@@ -3882,7 +3790,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (side . bottom)
            (slot . -1)
            (window-parameters . ((no-other-window . t))))
-          (".*\\*\\(Completions\\|Embark Live Occur\\).*"
+          (".*\\*Completions.*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . bottom)
@@ -3918,8 +3826,6 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (slot . 1))
           ;; bottom buffer (NOT side window)
           ("\\*\\vc-\\(incoming\\|outgoing\\).*"
-           (display-buffer-at-bottom))
-          ("\\*Embark Occur.*"
            (display-buffer-at-bottom))))
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
@@ -4068,9 +3974,9 @@ For me tabs are useful as groups of buffers in a given window
 configuration.  I do not want a persistent bar with buttons that
 introduces extra visual clutter.  Switching to tabs is done through
 completion, specifically =prot/tab-bar-select-tab-dwim=.  This extends the
-configurations in my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][minibuffer essentials and Icomplete]].  Otherwise, we
-can use =tab-switcher= which produces a buffer with the entire list, plus
-a basic command for marking an item for deletion (same principle as
+configurations in my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Tools for completion candidate listing]].  Otherwise,
+we can use =tab-switcher= which produces a buffer with the entire list,
+plus a basic command for marking an item for deletion (same principle as
 with, e.g., =dired=).
 
 All settings I configure here are meant to work in accordance with this
@@ -6804,7 +6710,7 @@ This is a shell (Bash, in my case) that runs inside of Emacs.  Unlike
 the [[#h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2][terminal emulators defined below]], this one can use standard Emacs
 keys and behaves much like an ordinary buffer.  It also integrates
 nicely with the built-in completion tools, which makes it particularly
-nice to work with (see [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]]).
+nice to work with (start from [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Tools for completion candidate listing]]).
 
 The one area where this Shell differs substantially from ordinary
 buffers is with regard to the command prompt: you can re-run a command
@@ -7426,7 +7332,7 @@ as arbitrary input.  In the case of the latter, you may need to "force
 insert" the final command that locks in the filter with =C-j=
 (=exit-minibuffer=), if Emacs complains that there is no matching input
 (has not happened in my case).  I define that key binding in my
-comprehensive configurations on [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]].
+comprehensive configurations on [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Tools for completion candidate listing]].
 
 Another function of interest which you will not find herein, is the
 integration with my =prot/buffers-major-mode=, which I bind to =M-s b=
@@ -8297,14 +8203,14 @@ into this project:
     (contrib/format-sexp
      (defun prot/modus-%1$s ()
        (setq modus-%1$s-theme-slanted-constructs t
-             modus-%1$s-theme-bold-constructs t
-             modus-%1$s-theme-fringes 'intense ; {nil,'subtle,'intense}
+             modus-%1$s-theme-bold-constructs nil
+             modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
              modus-%1$s-theme-3d-modeline nil
              modus-%1$s-theme-faint-syntax nil
              modus-%1$s-theme-intense-hl-line nil
-             modus-%1$s-theme-intense-paren-match t
+             modus-%1$s-theme-intense-paren-match nil
              modus-%1$s-theme-intense-standard-completions t
-             modus-%1$s-theme-subtle-diffs nil
+             modus-%1$s-theme-subtle-diffs t
              modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
              modus-%1$s-theme-variable-pitch-headings t
              modus-%1$s-theme-rainbow-headings nil
@@ -10677,7 +10583,7 @@ of Elisp functionality.
 To that end, the functions I define herein are meant to either control
 the contents of the list or allow me to access them through my
 completion framework or a dedicated file listing (see, in particular,
-[[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]] and [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][configurations for Dired]]).
+[[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Tools for completion candidate listing]] and [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][configurations for Dired]]).
 
 Note that there exists a built-in =recentf-open-files= function for
 accessing the recent files through a bespoke buffer.  I find that I have
@@ -10918,9 +10824,9 @@ is two-fold:
    additions I have made, for whatever reason that may.  For instance,
    =M-x prot/= will give me matches for all my interactive functions
    (depending on the completion framework, one can access those with
-   just =M-x p/= as in my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Minibuffer essentials and Icomplete]]).  This also
-   means that I can do =M-s o prot/= (or =M-x occur prot/=) to produce an
-   Occur buffer with all my symbols (pass a number argument for
+   just =M-x p/= as in my [[#h:07e173ea-e7ed-4fc0-ba3c-e44b403359a7][Tools for completion candidate listing]]).  This
+   also means that I can do =M-s o prot/= (or =M-x occur prot/=) to produce
+   an Occur buffer with all my symbols (pass a number argument for
    displaying N lines of context =C-u 5 M-s o=).  From there I can, say,
    browse them all easily or even edit them using all of Emacs' relevant
    powers (Occur is made editable with =e=, but you should be able to find
@@ -11141,7 +11047,7 @@ For my videos I use the built-in camera and microphone (sorry if the
 production quality is sub-standard!).  Since we are here: the recording
 software is OBS Studio, while I do no video editing.
 
-** Why keep many completion UIs? (typology of my completion interfaces)
+** What about the completion UI? (typology of my completion interfaces)
 :PROPERTIES:
 :CUSTOM_ID: h:ace7fa80-0beb-439c-8f3e-6ed21d10aacc
 :END:
@@ -11152,10 +11058,8 @@ experience (some completion-related functions are defined in a few other
 places as well, always with the appropriate references, though they
 extend the principles documented herein).
 
-To understand why I am maintaining seemingly overlapping settings for
-=icomplete=, =icomplete-vertical=, and =embark= you need to have a sense of
-the full picture of how I conceive of completion workflows as part of my
-general Emacs usage:
+This is how I map completion-related workflows as part of my general
+Emacs usage:
 
 + One-off commands :: These are the regular means one would use to
   transition from state A to state B, such as to switch buffers or call
@@ -11163,7 +11067,7 @@ general Emacs usage:
   with the task with as little friction as possible.  There is no real
   need for extended interactions with the minibuffer.  Things should
   happen quickly and seamlessly.  Preferably with few or no extra visual
-  effects and as little fanfare as possible.
+  effects and with as little fanfare as possible.
 
   This explains why I use the standard horizontal layout of Icomplete
   /by default/.  It does not interfere with my windows because that kind
@@ -11177,12 +11081,13 @@ general Emacs usage:
   candidates.
 
   With =icomplete-vertical= we can cope with that requirement through a
-  simple toggle that is available on demand.  Though we can enable it
-  presciently on a per-function basis, which is what I normally do for a
-  whole range of commands (search for the =icomplete-vertical-do= macro
-  call, with common cases other than Imenu being to select an entry from
-  the =kill-ring= or choose a filesystem path among the items in the
-  =recentf-list=---also see [[#h:5723c4bb-ff6c-449f-bb60-be66fab3f137][section on recentf]]).
+  simple toggle that is available on demand.  Though we can also enable
+  it presciently on a per-function basis, which is what I normally do
+  for a whole range of commands (search for the =icomplete-vertical-do=
+  macro call, with common cases other than Imenu being to select an
+  entry from the =kill-ring= or choose a filesystem path among the items
+  in the =recentf-list=---also see [[#h:5723c4bb-ff6c-449f-bb60-be66fab3f137][section on recentf]] as well as all the
+  commands referenced in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][completion for projects and directory trees]]).
 
 + Involved interactions :: These are scenaria where one expects to
   interact with the list of candidates itself.  There likely is a need
@@ -11190,48 +11095,38 @@ general Emacs usage:
   additional commands that are specific to the task and contribute
   towards a more complex workflow.
 
-  In this light, the standard "Completions" buffer is essential.  Same
-  for the bespoke buffers produced by =embark-occur= (refer to the section
-  on [[*Embark (actions for completion candidates)][Embark (actions for completion candidates)]]).  It feels natural to
-  have a sense of all the available matches for those cases where you
-  need to search, say, for some documentation and are probably
-  interested in reading more than one entry (e.g. when you want to
-  configure a new package), as well as potentially perform some other
+  In this light, the standard "Completions" buffer is essential.  It
+  feels natural to have a sense of all the available matches for those
+  cases where you need to search, say, for some documentation and are
+  probably interested in reading more than one entry (e.g. when you want
+  to configure a new package), as well as potentially perform some other
   action as part of a longer process of interaction (with or without
   recursive minibuffers).
 
   In more concrete terms: search for help with =C-h f=, =C-h v=, =C-h o=.  The
-  Completions buffer will show you what matches your input.  Switch to
-  that buffer (e.g. =prot/focus-minibuffer-or-completions=), place point
-  over an item you are interested in and run a bespoke command for
-  =describe-symbol= for the thing at point (this is, for instance, what my
-  =prot/describe-symbol-at-point= does, and I bind it to convenient
-  keys---again make sure to check Embark for all the actions it offers).
-  The help buffer will pop up, allowing you to, say, switch to it in
-  order to copy something, then go to a file that is being edited in the
-  other window to iterate on it, and then get back to the Completions
-  buffer for more of the same.  This is also why recursive minibuffers
-  are valuable, as they allow you to keep the current session active
-  while still accessing things like =M-x=.
+  Completions buffer will show you what matches your input (default key
+  is =?= from inside the minibuffer: it calls =minibuffer-completion-help=).
+  Switch to that buffer (e.g. =prot/focus-minibuffer-or-completions=),
+  place point over an item you are interested in and run a bespoke
+  command for =describe-symbol= for the thing at point (this is, for
+  instance, what my =prot/describe-symbol-at-point= does, and I bind it to
+  convenient keys).  The help buffer will pop up, allowing you to, say,
+  switch to it in order to copy something, then go to a file that is
+  being edited in the other window to iterate on it, and then get back
+  to the Completions buffer for more of the same.  This is also why
+  recursive minibuffers are valuable, as they allow you to keep the
+  current session active while still accessing things like =M-x=.
 
-  As for the "Completions" buffer itself (and "Embark Occur"), I must
-  stress that this is /a buffer/.  It allows you to, for example, write
-  its contents to a regular file (=C-x C-w=).  And with dedicated key maps
-  such as those provided by =embark= or the =completion-list-mode-map=, you
-  can always define context-specific bindings for your bespoke commands
-  (e.g. I use =h= for help, =w= for writing to the kill-ring).  Plus you can
-  always control the placement of a buffer with =display-buffer-alist=
-  (see the section on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
-
-The following table summarises the above:
-
-| contents | transient          | persistent                        |
-|----------+--------------------+-----------------------------------|
-| short    | icomplete          | completions / embark-occur (grid) |
-| long     | icomplete-vertical | completions / embark-occur (list) |
+  As for the "Completions" buffer itself, I must stress that this is /a
+  buffer/.  It allows you to, for example, write its contents to a
+  regular file (=C-x C-w=).  And with dedicated key maps such as the
+  built-in =completion-list-mode-map=, you can always define
+  context-specific bindings for your bespoke commands (e.g. I use =h= for
+  help, =w= for writing to the kill-ring).  Plus you can always control
+  the placement of a buffer's window with =display-buffer-alist= (see the
+  section on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
 
 Finally, I also have commands that connect the completion-specific
-interface to more general tools, like =ibuffer= and =dired= (=embark= does
-that as well).  So when some involved type of interaction demands extra
-attention, I can always leverage the full power of the wider Emacs
-ecosystem.
+interface to more general tools, like =ibuffer= and =dired=.  So when some
+involved type of interaction demands extra attention, I can always
+leverage the full power of the wider Emacs ecosystem.
