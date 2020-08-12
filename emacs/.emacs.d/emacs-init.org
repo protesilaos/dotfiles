@@ -613,21 +613,18 @@ These are specific to the fontconfig backend for GNU/Linux systems.")
     "Hook that is called after setting fonts.
 See, for example, `prot/font-set-fonts'.")
 
-  ;; Note that the "Hack" typeface mentioned here is my patched version
-  ;; of it, which uses some alternative glyphs, is built on top of the
-  ;; dev branch, and is meant to improve both the Roman and
-  ;; Italic variants (alt glyphs are part of the Hack project):
-  ;; https://gitlab.com/protesilaos/hackfontmod
+  ;; NOTE that "Iosevka Comfy" is my private build of Iosevka:
+  ;; https://gitlab.com/protesilaos/iosevka-comfy
   (defconst prot/font-sizes-families-alist
-    '(("laptop" . (10.5 "Hack" "FiraGO" 1))
-      ("desktop" . (13 "Hack" "Alegreya Sans" 4))
-      ("presentation" . (16 "Hack" "Open Sans" 0)))
-    "Alist of desired point sizes and their typefaces.
+    '(("laptop" . (13.5 "Iosevka Comfy" "FiraGO" 1))
+      ("desktop" . (15 "Iosevka Comfy" "Alegreya Sans" 3))
+      ("presentation" . (19 "Iosevka Comfy" "Open Sans" 0)))
+    "Alist of desired typefaces and their point sizes.
+
 Each association consists of a display type mapped to a point
 size, followed by monospaced and proportionately spaced font
-names, and a difference in desired size between the latter two to
-account for their innate differences in proportions (this number
-represents pixels and is found empirically).
+names, and a possible increase in desired size between the latter
+two to account for their innate differences in proportions.
 
 The monospaced typeface is meant to be applied to the `default'
 and `fixed-pitch' faces.  The proportionately space font is
@@ -679,11 +676,11 @@ holding the family's name."
     (run-hooks 'prot/font-set-fonts-hook))
 
   (defvar prot/font-monospaced-fonts-list
-    '("Hack" "Iosevka SS08" "Iosevka Slab" "Source Code Pro"
-      "Ubuntu Mono" "Fantasque Sans Mono" "DejaVu Sans Mono"
-      "Fira Code" "Victor Mono" "Roboto Mono")
+    '("Iosevka Comfy" "Hack" "Source Code Pro"
+      "Ubuntu Mono" "Fantasque Sans Mono")
     "List of typefaces for coding.
-See `prot/font-set-font-size-family' for how this is used.")
+See `prot/font-set-font-size-family' for how this is used
+code-wise.")
 
   (defun prot/font-set-font-size-family ()
     "Set point size and main typeface.
@@ -715,15 +712,14 @@ economise on dedicated key bindings."
       (prot/font-set-fonts)))
 
   (defvar prot/font-fonts-line-spacing-alist
-    '(("Iosevka SS08" . 1)
-      ("Iosevka Slab" . 1)
+    '(("Iosevka Comfy" . 1)
       ("Source Code Pro" . 1)
       ("Ubuntu Mono" . 2))
     "Font families in need of extra `line-spacing'.
 See `prot/font-line-spacing' for how this is used.")
 
   (defvar prot/font-fonts-bold-weight-alist
-    '(("Iosevka SS08" . semibold)
+    '(("Iosevka Comfy" . semibold)
       ("Source Code Pro" . semibold))
     "Font families in need of a variegated weight for `bold'.
 See `prot/font-bold-face' for how this is used.")
@@ -863,7 +859,7 @@ the typeface I am using.
 !ij
 5$Ss
 7Zz
-gqp
+9gqp
 nmMN
 uvvwWuuw
 x×X
