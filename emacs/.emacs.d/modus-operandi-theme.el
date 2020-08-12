@@ -243,6 +243,7 @@
 ;;     org-recur
 ;;     org-roam
 ;;     org-superstar
+;;     org-table-sticky-header
 ;;     org-treescope
 ;;     origami
 ;;     outline-mode
@@ -293,11 +294,12 @@
 ;;     tab-bar-mode
 ;;     tab-line-mode
 ;;     syslog-mode
-;;     trashed
+;;     table (built-in table.el)
 ;;     telephone-line
 ;;     term
 ;;     tomatinho
 ;;     transient (pop-up windows like Magit's)
+;;     trashed
 ;;     treemacs
 ;;     tty-menu
 ;;     tuareg
@@ -3107,6 +3109,8 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;;; org-superstar
    `(org-superstar-item ((,class :foreground ,fg-main)))
    `(org-superstar-leading ((,class :foreground ,fg-whitespace)))
+;;;;; org-table-sticky-header
+   `(org-table-sticky-header-face ((,class :inherit modus-theme-intense-neutral)))
 ;;;;; org-treescope
    `(org-treescope-faces--markerinternal-midday ((,class :inherit modus-theme-intense-blue)))
    `(org-treescope-faces--markerinternal-range ((,class :inherit modus-theme-special-mild)))
@@ -3504,13 +3508,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(syslog-ip ((,class :inherit bold :foreground ,fg-special-mild :underline t)))
    `(syslog-su ((,class :inherit bold :foreground ,red-alt)))
    `(syslog-warn ((,class :inherit bold :foreground ,yellow)))
-;;;;; trashed
-   `(trashed-deleted ((,class :inherit modus-theme-mark-del)))
-   `(trashed-directory ((,class :foreground ,blue)))
-   `(trashed-mark ((,class :inherit modus-theme-mark-symbol)))
-   `(trashed-marked ((,class :inherit modus-theme-mark-alt)))
-   `(trashed-restored ((,class :inherit modus-theme-mark-sel)))
-   `(trashed-symlink ((,class :foreground ,cyan-alt :underline t)))
+;;;;; table (built-in table.el)
+   `(table-cell ((,class :background ,blue-nuanced-bg)))
 ;;;;; telephone-line
    `(telephone-line-accent-active ((,class :background ,fg-inactive :foreground ,bg-inactive)))
    `(telephone-line-accent-inactive ((,class :background ,bg-active :foreground ,fg-active)))
@@ -3554,6 +3553,13 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(transient-unreachable ((,class :foreground ,fg-unfocused)))
    `(transient-unreachable-key ((,class :foreground ,fg-unfocused)))
    `(transient-value ((,class :foreground ,magenta-alt)))
+;;;;; trashed
+   `(trashed-deleted ((,class :inherit modus-theme-mark-del)))
+   `(trashed-directory ((,class :foreground ,blue)))
+   `(trashed-mark ((,class :inherit modus-theme-mark-symbol)))
+   `(trashed-marked ((,class :inherit modus-theme-mark-alt)))
+   `(trashed-restored ((,class :inherit modus-theme-mark-sel)))
+   `(trashed-symlink ((,class :foreground ,cyan-alt :underline t)))
 ;;;;; treemacs
    `(treemacs-directory-collapsed-face ((,class :foreground ,magenta-alt)))
    `(treemacs-directory-face ((,class :inherit dired-directory)))
