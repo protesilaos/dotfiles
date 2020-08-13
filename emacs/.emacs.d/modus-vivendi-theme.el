@@ -1076,6 +1076,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    ;;
    ;; (set-face-attribute 'bold nil :weight 'semibold)
    `(bold ((,class :weight bold)))
+   `(comint-highlight-input ((,class :inherit bold)))
+   `(comint-highlight-prompt ((,class ,@(modus-vivendi-theme-bold-weight) :foreground ,cyan-alt-other)))
    `(error ((,class :inherit bold :foreground ,red)))
    `(escape-glyph ((,class :foreground ,fg-escape-char-construct)))
    `(header-line ((,class :background ,bg-header :foreground ,fg-header)))
@@ -2319,7 +2321,7 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;;; hl-fill-column
    `(hl-fill-column-face ((,class :background ,bg-active :foreground ,fg-active)))
 ;;;;; hl-todo
-   `(hl-todo ((,class :inherit bold :foreground ,red-alt-other)))
+   `(hl-todo ((,class :inherit bold :foreground ,red-alt-other :slant ,modus-theme-slant)))
 ;;;;; hydra
    `(hydra-face-amaranth ((,class :inherit bold :foreground ,yellow)))
    `(hydra-face-blue ((,class :inherit bold :foreground ,blue-alt)))
@@ -3894,6 +3896,12 @@ Also bind `class' to ((class color) (min-colors 89))."
   (when (>= emacs-major-version 27)
     (custom-theme-set-faces
      'modus-vivendi
+;;;;; line numbers (`display-line-numbers-mode' and global variant)
+     ;; NOTE that this is specifically for the faces that were
+     ;; introduced in Emacs 27, as the other faces are already
+     ;; supported.
+     `(line-number-major-tick ((,class (:background ,yellow-nuanced-bg :foreground ,yellow-nuanced))))
+     `(line-number-minor-tick ((,class (:background ,cyan-nuanced-bg :foreground ,cyan-nuanced))))
 ;;;;; tab-bar-mode
      `(tab-bar ((,class :background ,bg-tab-bar :foreground ,fg-main)))
      `(tab-bar-tab ((,class :inherit bold :box (:line-width 2 :color ,bg-tab-active)
