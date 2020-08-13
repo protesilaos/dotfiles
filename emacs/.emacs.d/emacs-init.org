@@ -1287,7 +1287,6 @@ workflow (mine is not that).
   ;; (setq icomplete-separator " ¦ ")
   ;; (setq icomplete-separator " ┆ ")
   (setq icomplete-with-completion-tables t)
-  (setq icomplete-in-buffer t)
   (setq icomplete-tidy-shadowed-file-names t)
 
   (fido-mode -1)                        ; Emacs 27.1
@@ -4030,7 +4029,8 @@ questions.  Else use completion to select the tab to switch to."
 
   :bind (("C-x t t" . prot/tab-bar-select-tab-dwim)
          ("s-t" . prot/tab-bar-select-tab-dwim)
-         ("C-x t s" . tab-switcher)))
+         ("<s-tab>" . tab-next)
+         ("<S-s-iso-lefttab>" . tab-previous)))
 
 ;; This is only included as a reference.
 (use-package tab-line
@@ -8634,6 +8634,9 @@ sometimes it causes problems, such as with diffs.
   :config
   ;; Set absolute line numbers.  A value of "relative" is also useful.
   (setq display-line-numbers-type t)
+  ;; Those two variables were introduced in Emacs 27.1
+  (setq display-line-numbers-major-tick 20)
+  (setq display-line-numbers-minor-tick 5)
 
   (define-minor-mode prot/display-line-numbers-mode
     "Toggle `display-line-numbers-mode' and `hl-line-mode'."
