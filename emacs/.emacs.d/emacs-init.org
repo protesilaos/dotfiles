@@ -1820,11 +1820,11 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
   :after (minibuffer icomplete icomplete-vertical) ; read those as well
   :config
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
-  (setq dabbrev-abbrev-skip-leading-regexp "\\$\\|\\*\\|/\\|=\\|'")
+  (setq dabbrev-abbrev-skip-leading-regexp "[$*/=']")
   (setq dabbrev-backward-only nil)
-  (setq dabbrev-case-distinction nil)
+  (setq dabbrev-case-distinction 'case-replace)
   (setq dabbrev-case-fold-search t)
-  (setq dabbrev-case-replace nil)
+  (setq dabbrev-case-replace 'case-replace)
   (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines nil)
   (setq dabbrev-upcase-means-case-search t)
@@ -4321,6 +4321,7 @@ Now on to the miscellaneous settings:
   (setq org-adapt-indentation nil)      ; No, thanks!
   (setq org-special-ctrl-a/e nil)
   (setq org-special-ctrl-k nil)
+  (setq org-M-RET-may-split-line '((default . nil)))
   (setq org-hide-emphasis-markers t)
   (setq org-hide-leading-stars nil)
   (setq org-structure-template-alist    ; CHANGED in Org 9.3, Emacs 27.1
@@ -4336,6 +4337,7 @@ Now on to the miscellaneous settings:
   (setq org-return-follows-link nil)
   (setq org-loop-over-headlines-in-active-region 'start-level)
   (setq org-imenu-depth 7)
+  (setq org-modules '(ol-gnus ol-info ol-eww))
   :bind (:map org-mode-map
               ("<C-return>" . nil)
               ("<C-S-return>" . nil)))
@@ -4375,10 +4377,6 @@ description and you are good to go.
               ("C-c C-S-l" . org-insert-last-stored-link)))
 #+end_src
 
-**** TODO prot/org-store-link-dwim
-:PROPERTIES:
-:CUSTOM_ID: h:42c9e329-8a07-4947-90f8-f10c2d1be574
-:END:
 *** Org-capture templates
 :PROPERTIES:
 :CUSTOM_ID: h:7b88b89a-6eb3-4da3-a9fe-0e447300a250
@@ -4755,6 +4753,7 @@ code block that has a language assigned to it.
   :after org
   :config
   (setq org-src-window-setup 'current-window)
+  (setq org-edit-src-persistent-message nil)
   (setq org-src-fontify-natively t)
   (setq org-src-preserve-indentation t)
   (setq org-src-tab-acts-natively t)
@@ -8206,12 +8205,12 @@ into this project:
              modus-%1$s-theme-intense-hl-line nil
              modus-%1$s-theme-intense-paren-match nil
              modus-%1$s-theme-intense-standard-completions t
-             modus-%1$s-theme-subtle-diffs t
+             modus-%1$s-theme-subtle-diffs nil
              modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
-             modus-%1$s-theme-variable-pitch-headings t
-             modus-%1$s-theme-rainbow-headings nil
+             modus-%1$s-theme-variable-pitch-headings nil
+             modus-%1$s-theme-rainbow-headings t
              modus-%1$s-theme-section-headings nil
-             modus-%1$s-theme-scale-headings t
+             modus-%1$s-theme-scale-headings nil
              modus-%1$s-theme-scale-1 1.1
              modus-%1$s-theme-scale-2 1.15
              modus-%1$s-theme-scale-3 1.21
