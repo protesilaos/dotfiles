@@ -8562,18 +8562,28 @@ are normally used in code comments.  Simple and effective!
   :hook (prog-mode-hook . hl-todo-mode))
 #+end_src
 
-** Tone down parentheses in lisps
+** Tone down parentheses and autoload cookies in Elisp
 :PROPERTIES:
 :CUSTOM_ID: h:a36e05b1-5301-4fac-a934-463529415012
 :END:
 
-Apply a dedicated face to parentheses in Elisp modes.  A more subtle
-grey than the default foreground text is used.
+Both of these packages are developed by Jonas Bernoulli (aka tarsius).
+
++ paren-face :: Apply a dedicated face to parentheses in Elisp modes.  A
+  more subtle grey than the default foreground text is used.
++ dim-autoload :: De-emphasise the special =###autoload= cookie that Emacs
+  uses to load things where they are needed.  This package also offers
+  the possibility to completely hide those cookies, though I have no use
+  for that.
 
 #+begin_src emacs-lisp
 (use-package paren-face
   :ensure
   :hook (emacs-lisp-mode-hook . paren-face-mode))
+
+(use-package dim-autoload
+  :ensure
+  :hook (emacs-lisp-mode-hook . dim-autoload-cookies-mode))
 #+end_src
 
 ** Optional visual indicators or layout elements
