@@ -5609,6 +5609,7 @@ columns, while being a little bit cleaner than default.
   (setq gnus-summary-make-false-root 'adopt)
   (setq gnus-summary-thread-gathering-function
         'gnus-gather-threads-by-subject)
+  (setq gnus-summary-gather-subject-limit 'fuzzy)
   (setq gnus-thread-sort-functions
         '((not gnus-thread-sort-by-date)
           (not gnus-thread-sort-by-number)))
@@ -5627,29 +5628,31 @@ columns, while being a little bit cleaner than default.
   (setq gnus-ignored-from-addresses "Protesilaos Stavrou")
   (setq gnus-summary-to-prefix "To: ")
 
-  (setq gnus-summary-line-format "%U%R%z %-16,16&user-date;  %4L:%-30,30f  %B%s\n")
+  (setq gnus-summary-line-format "%U%R  %-16,16&user-date;  %4L:%-25,25f  %B%s\n")
   (setq gnus-summary-mode-line-format "%p")
-  (setq gnus-sum-thread-tree-false-root "─┬> ")
-  (setq gnus-sum-thread-tree-indent " ")
-  (setq gnus-sum-thread-tree-leaf-with-other "├─> ")
-  (setq gnus-sum-thread-tree-root "")
-  (setq gnus-sum-thread-tree-single-leaf "└─> ")
+  (setq gnus-sum-thread-tree-false-root "─┬>")
+  (setq gnus-sum-thread-tree-indent "  ")
+  (setq gnus-sum-thread-tree-single-indent "")
+  (setq gnus-sum-thread-tree-leaf-with-other "├─>")
+  (setq gnus-sum-thread-tree-root "· ")
+  (setq gnus-sum-thread-tree-single-leaf "└─>")
   (setq gnus-sum-thread-tree-vertical "│")
 
-  ;;;; TODO test and develop these concepts
-  ;; (defun prot/gnus-summary-save-parts-all ()
-  ;;   "Save all MIME parts (attachments) to the ~/Downloads directory."
-  ;;   (interactive)
-  ;;   (let ((directory "~/Downloads"))
-  ;;     (gnus-summary-save-parts ".*" directory)))
-  ;;
-  ;; (defun prot/gnus-summary-search ()
-  ;;   (interactive)
-  ;;   (let ((regexp (read-from-minibuffer "Search regexp in articles: ")))
-  ;;     (when major-mode 'gnus-summary-mode
-  ;;           (gnus-summary-search-article regexp))))
+  (defun prot/gnus-summary-save-parts-all ()
+    "Save relevant message MIME parts to a desired directory.
+EXPERIMENTAL"
+    (interactive)
+    (let ((dir "~/Downloads/mail-attachments"))
+      (if major-mode 'gnus-summary-mode
+        (progn
+          (unless (file-directory-p dir)
+          (make-directory dir))
+          (gnus-summary-save-parts "text/.*" dir nil t))
+        (user-error "Not in a `gnus' summary buffer"))))
+
   :hook (gnus-summary-mode-hook . hl-line-mode)
   :bind (:map gnus-summary-mode-map
+              ("X x" . prot/gnus-summary-save-parts-all)
               ("<delete>" . gnus-summary-delete-article)
               ("n" . gnus-summary-next-article)
               ("p" . gnus-summary-prev-article)
