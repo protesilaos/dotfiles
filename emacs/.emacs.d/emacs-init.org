@@ -10402,7 +10402,7 @@ commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
 These provide syntax highlighting and additional features for
 environments that are not already supported by Emacs.
 
-*** Arch Linux package recipes
+*** Arch Linux package recipes (pkgbuild-mode)
 :PROPERTIES:
 :CUSTOM_ID: h:7fa5b86b-3fc5-4118-8d56-aacf4c0fffb8
 :END:
@@ -10415,6 +10415,57 @@ you.
   :ensure
   :mode ("PKGBUILD" . pkgbuild-mode))
 #+end_src
+
+Since we are here, I built Emacs 27 on 2020-08-14 using a slightly
+modified script than the one in Arch's repos.  Basically, I wanted to
+have better text drawing capabilities.  Below is the file I used and on
+which I performed =makepkg= and =makepkg -i=, all from inside Emacs of
+course (note that I did not bother to read the docs for writing good
+PKGBUILDs, so feel free to improve upon this):
+
+#+begin_example sh
+# Maintainer: Juergen Hoetzel <juergen@archlinux.org>
+# Contributor: Renchi Raju <renchi@green.tam.uiuc.edu>
+
+# Modified by: Protesilaos Stavrou <info@protesilaos.com>
+
+pkgname=emacs-custom
+_name=emacs
+pkgver=27.1
+pkgrel=2
+pkgdesc="The extensible, customizable, self-documenting real-time display editor (custom build)"
+arch=('x86_64')
+url="https://www.gnu.org/software/emacs/emacs.html"
+license=('GPL3')
+depends=('librsvg' 'gpm' 'giflib' 'libxpm' 'libotf' 'm17n-lib' 'gtk3' 'hicolor-icon-theme' 'desktop-file-utils' 'alsa-lib' 'gnutls' 'jansson' 'cairo' 'harfbuzz')
+provides=('emacs')
+conflicts=('emacs' 'emacs-git')
+replaces=('emacs-git')
+validpgpkeys=('B29426DEFB07724C3C35E5D36592E9A3A0B0F199' '28D3BED851FDF3AB57FEF93C233587A47C207910')
+source=(https://ftp.gnu.org/gnu/emacs/$_name-$pkgver.tar.xz{,.sig})
+sha1sums=('d1b6b9efa666614c5628dda9ea78628796a73f7f'
+          'SKIP')
+
+build() {
+  cd "$srcdir"/$_name-$pkgver
+  ac_cv_lib_gif_EGifPutExtensionLast=yes ./configure --prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib \
+                                    --localstatedir=/var --with-x-toolkit=gtk3 --with-xft --with-wide-int \
+                                    --with-modules --with-cairo --with-harfbuzz
+  make
+}
+
+package() {
+  cd "$srcdir"/$_name-$pkgver
+  make DESTDIR="$pkgdir" install
+
+  # remove conflict with ctags package
+  mv "$pkgdir"/usr/bin/{ctags,ctags.emacs}
+  mv "$pkgdir"/usr/share/man/man1/{ctags.1.gz,ctags.emacs.1}
+
+  # fix user/root permissions on usr/share files
+  find "$pkgdir"/usr/share/emacs/$pkgver -exec chown root:root {} \;
+}
+#+end_example
 
 *** Markdown
 :PROPERTIES:
