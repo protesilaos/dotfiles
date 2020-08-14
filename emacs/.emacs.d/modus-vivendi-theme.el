@@ -166,9 +166,10 @@
 ;;     forge
 ;;     fountain (fountain-mode)
 ;;     geiser
-;;     git
+;;     git-commit
 ;;     git-gutter (and variants)
 ;;     git-lens
+;;     git-rebase
 ;;     git-timemachine
 ;;     git-walktree
 ;;     gnus
@@ -1310,9 +1311,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(centaur-tabs-unselected ((,class :background ,bg-tab-inactive :foreground ,fg-dim)))
    `(centaur-tabs-unselected-modified ((,class :background ,bg-tab-inactive :foreground ,fg-dim :slant italic)))
 ;;;;; change-log and log-view (`vc-print-log' and `vc-print-root-log')
-   `(change-log-acknowledgment ((,class :foreground ,fg-special-warm)))
+   `(change-log-acknowledgment ((,class :foreground ,fg-alt)))
    `(change-log-conditionals ((,class :foreground ,magenta-alt)))
-   `(change-log-date ((,class :foreground ,magenta)))
+   `(change-log-date ((,class :foreground ,cyan-alt-other)))
    `(change-log-email ((,class :foreground ,cyan)))
    `(change-log-file ((,class :foreground ,blue)))
    `(change-log-function ((,class :foreground ,green-alt-other)))
@@ -1322,7 +1323,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(log-edit-summary ((,class :foreground ,magenta-alt-other)))
    `(log-edit-unknown-header ((,class :foreground ,fg-alt)))
    `(log-view-file ((,class :inherit bold :foreground ,fg-special-cold)))
-   `(log-view-message ((,class :foreground ,fg-special-warm)))
+   `(log-view-message ((,class :foreground ,fg-alt)))
 ;;;;; cider
    `(cider-debug-code-overlay-face ((,class :background ,bg-alt)))
    `(cider-debug-prompt-face ((,class :foreground ,magenta-alt :underline t)))
@@ -2065,16 +2066,16 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(geiser-font-lock-xref-header ((,class :inherit bold)))
    `(geiser-font-lock-xref-link ((,class :inherit link)))
 ;;;;; git-commit
-   `(git-commit-comment-action ((,class :foreground ,fg-special-calm :slant ,modus-theme-slant)))
-   `(git-commit-comment-branch-local ((,class :foreground ,cyan :slant ,modus-theme-slant)))
-   `(git-commit-comment-branch-remote ((,class :foreground ,blue :slant ,modus-theme-slant)))
-   `(git-commit-comment-detached ((,class :foreground ,yellow :slant ,modus-theme-slant)))
-   `(git-commit-comment-file ((,class :foreground ,blue :slant ,modus-theme-slant)))
-   `(git-commit-comment-heading ((,class :inherit bold :foreground ,fg-main :slant ,modus-theme-slant)))
+   `(git-commit-comment-action ((,class :foreground ,fg-alt :slant ,modus-theme-slant)))
+   `(git-commit-comment-branch-local ((,class :foreground ,blue-alt :slant ,modus-theme-slant)))
+   `(git-commit-comment-branch-remote ((,class :foreground ,magenta-alt :slant ,modus-theme-slant)))
+   `(git-commit-comment-detached ((,class :foreground ,cyan-alt :slant ,modus-theme-slant)))
+   `(git-commit-comment-file ((,class :foreground ,fg-special-cold :slant ,modus-theme-slant)))
+   `(git-commit-comment-heading ((,class :inherit bold :foreground ,fg-alt :slant ,modus-theme-slant)))
    `(git-commit-keyword ((,class :foreground ,magenta)))
    `(git-commit-known-pseudo-header ((,class :inherit bold :foreground ,fg-special-warm)))
-   `(git-commit-nonempty-second-line ((,class :inherit (modus-theme-refine-yellow bold))))
-   `(git-commit-overlong-summary ((,class :inherit modus-theme-subtle-yellow)))
+   `(git-commit-nonempty-second-line ((,class :inherit modus-theme-refine-yellow)))
+   `(git-commit-overlong-summary ((,class :inherit modus-theme-refine-yellow)))
    `(git-commit-pseudo-header ((,class :inherit bold :foreground ,fg-alt)))
    `(git-commit-summary ((,class :foreground ,magenta-alt-other)))
 ;;;;; git-gutter
@@ -2102,6 +2103,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(git-lens-header ((,class :inherit bold :height 1.1 :foreground ,cyan)))
    `(git-lens-modified ((,class :inherit bold :foreground ,yellow)))
    `(git-lens-renamed ((,class :inherit bold :foreground ,magenta)))
+;;;;; git-rebase
+   `(git-rebase-comment-hash ((,class :foreground ,fg-special-cold :slant ,modus-theme-slant)))
+   `(git-rebase-comment-heading ((,class :inherit bold :foreground ,fg-dim :slant ,modus-theme-slant)))
+   `(git-rebase-description ((,class :foreground ,fg-main)))
+   `(git-rebase-hash ((,class :foreground ,cyan-alt-other)))
 ;;;;; git-timemachine
    `(git-timemachine-commit ((,class :inherit bold :foreground ,yellow-active)))
    `(git-timemachine-minibuffer-author-face ((,class :foreground ,fg-special-warm)))
@@ -2611,17 +2617,17 @@ Also bind `class' to ((class color) (min-colors 89))."
                                               bg-diff-focus-removed fg-diff-focus-removed))))
    `(magit-diffstat-added ((,class :foreground ,green)))
    `(magit-diffstat-removed ((,class :foreground ,red)))
-   `(magit-dimmed ((,class :foreground ,fg-alt)))
+   `(magit-dimmed ((,class :foreground ,fg-unfocused)))
    `(magit-filename ((,class :foreground ,fg-special-cold)))
-   `(magit-hash ((,class :foreground ,fg-special-warm)))
+   `(magit-hash ((,class :foreground ,fg-alt)))
    `(magit-head ((,class :inherit magit-branch-local)))
-   `(magit-header-line ((,class :inherit bold :foreground ,cyan-active)))
+   `(magit-header-line ((,class :inherit bold :foreground ,magenta-active)))
    `(magit-header-line-key ((,class :inherit bold :foreground ,red-active)))
    `(magit-header-line-log-select ((,class :inherit bold :foreground ,fg-main)))
    `(magit-keyword ((,class :foreground ,magenta)))
    `(magit-keyword-squash ((,class :inherit bold :foreground ,yellow-alt-other)))
    `(magit-log-author ((,class :foreground ,cyan)))
-   `(magit-log-date ((,class :foreground ,magenta)))
+   `(magit-log-date ((,class :foreground ,fg-alt)))
    `(magit-log-graph ((,class :foreground ,fg-dim)))
    `(magit-mode-line-process ((,class :inherit bold :foreground ,blue-active)))
    `(magit-mode-line-process-error ((,class :inherit bold :foreground ,red-active)))
@@ -2641,7 +2647,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(magit-refname-stash ((,class :foreground ,fg-alt)))
    `(magit-refname-wip ((,class :foreground ,fg-alt)))
    `(magit-section ((,class :background ,bg-dim :foreground ,fg-main)))
-   `(magit-section-heading ((,class :inherit bold :foreground ,cyan-alt-other)))
+   `(magit-section-heading ((,class :inherit bold :foreground ,fg-special-calm)))
    `(magit-section-heading-selection ((,class :inherit (modus-theme-refine-cyan bold))))
    `(magit-section-highlight ((,class :background ,bg-alt)))
    `(magit-sequence-done ((,class :foreground ,green-alt)))
@@ -2659,7 +2665,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(magit-signature-good ((,class :background ,bg-main :foreground ,green-intense)))
    `(magit-signature-revoked ((,class :background ,bg-main :foreground ,magenta-intense)))
    `(magit-signature-untrusted ((,class :background ,bg-main :foreground ,cyan-intense)))
-   `(magit-tag ((,class :foreground ,green-alt)))
+   `(magit-tag ((,class :foreground ,green-alt-other)))
 ;;;;; magit-imerge
    `(magit-imerge-overriding-value ((,class :inherit bold :foreground ,red-alt)))
 ;;;;; man
