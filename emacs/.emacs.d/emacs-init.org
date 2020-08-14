@@ -436,23 +436,28 @@ If you actually want to edit the lighters, check the Delight package.
 :END:
 
 When you install a package or use the various customisation interfaces
-to tweak things to your liking, Emacs will append a piece of elisp to
-your init file.  I prefer to have that stored in a separate file.
+to tweak things to your liking, Emacs will append a piece of Elisp to
+your init file.  In my experience, this is a common source of
+inconsistencies, arising from a conflict between the user's code and
+what is stored in that added =custom= snippet.
 
-Note that a common source of inconsistencies with configurations arises
-from a conflict between your code and what is stored in the =custom=
-snippet.  When something does not seem to work as intended, make sure to
-check =custom.el= and edit or delete it if necessary (if deleted, it will
-be created again the next time you start Emacs).
+As such, I prefer to have all "custom" code stored in a separate,
+disposable file that I do not keep under version control.  When
+something does not seem to work as intended it is easy to edit
+=~/.emacs.d/custom.el= or outright delete it.
 
 #+begin_src emacs-lisp
 (use-package cus-edit
   :config
+  (defvar prot/custom-file "~/.emacs.d/custom.el")
+
+  (setq custom-file prot/custom-file)
+
   (defun prot/cus-edit ()
-  (let ((custom-file "~/.emacs.d/custom.el"))
-    (unless (file-exists-p custom-file)
-      (write-region "" nil custom-file))
-    (load-file custom-file)))
+    (let ((file prot/custom-file))
+      (unless (file-exists-p file)
+        (make-empty-file file))
+      (load-file file)))
   :hook (after-init-hook . prot/cus-edit))
 #+end_src
 
