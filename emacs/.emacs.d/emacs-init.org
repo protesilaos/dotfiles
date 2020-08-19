@@ -3081,6 +3081,7 @@ This relies on the external 'fd' executable."
 
 ;; NOTE de facto deprecated because of my `prot/dired-fd' functions
 (use-package find-dired
+  :disabled
   :after dired
   :config
   (setq find-ls-option
@@ -5626,7 +5627,7 @@ columns, while being a little bit cleaner than default.
   (setq gnus-thread-ignore-subject nil)
   (setq gnus-user-date-format-alist
         '(((gnus-seconds-today) . "Today at %R")
-          ((+ 86400 (gnus-seconds-today)) . "Yesterday, %R")
+          ((+ (* 60 60 24) (gnus-seconds-today)) . "Yesterday, %R")
           (t . "%Y-%m-%d %R")))
 
   ;; When the %f specifier in `gnus-summary-line-format' matches my
@@ -5653,7 +5654,7 @@ EXPERIMENTAL"
       (if major-mode 'gnus-summary-mode
         (progn
           (unless (file-directory-p dir)
-          (make-directory dir))
+            (make-directory dir))
           (gnus-summary-save-parts "text/.*" dir nil t))
         (user-error "Not in a `gnus' summary buffer"))))
 
@@ -7602,7 +7603,9 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
 :CUSTOM_ID: h:524bc702-ff55-4ed9-9a38-26d30d64591d
 :END:
 
-/SUBJECT TO REVIEW 2020-05-08/
+*NOTE 2020-08-16:* This section is subject to major changes contingent on
+the eventual review of =eww= (which is documented in the next section:
+[[#h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b][Emacs Web Wowser (EWW)]]).
 
 As far as I can tell, the following =shr-*= variables concern an HTML
 parser that is used by a variety of tools, including Elfeed (defined
@@ -7620,8 +7623,8 @@ What these do:
 + Keep images to 70% of the window.  This number is arbitrary.  It
   just feels like a good upper limit (not a fan of decorative images
   inside of blog posts).
-+ Line length at same number of characters as =fill-column= (defined
-  elsewhere in this doc at 72).
++ Line length at same number of characters as =fill-column= (defined in
+  the section about [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][Line length (column count)]] at 72).
 
 #+begin_src emacs-lisp
 (use-package shr
@@ -7658,12 +7661,6 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
 
 #+begin_src emacs-lisp
 (use-package eww
-  :commands (eww
-             eww-browse-url
-             eww-search-words
-             eww-open-in-new-buffer
-             eww-open-file
-             prot/eww-visit-history)
   :config
   (setq eww-restore-desktop nil)
   (setq eww-desktop-remove-duplicates t)
@@ -8215,17 +8212,18 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
      (defun prot/modus-%1$s ()
        (setq modus-%1$s-theme-slanted-constructs t
              modus-%1$s-theme-bold-constructs t
-             modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
+             modus-%1$s-theme-fringes nil ; {nil,'subtle,'intense}
              modus-%1$s-theme-3d-modeline nil
-             modus-%1$s-theme-faint-syntax nil
+             modus-%1$s-theme-faint-syntax t
              modus-%1$s-theme-intense-hl-line nil
-             modus-%1$s-theme-intense-paren-match nil
-             modus-%1$s-theme-intense-standard-completions t
+             modus-%1$s-theme-intense-paren-match t
+             modus-%1$s-theme-prompts 'subtle ; {nil,'subtle,'intense}
+             modus-%1$s-theme-completions 'moderate ; {nil,'moderate,'opinionated}
              modus-%1$s-theme-subtle-diffs nil
-             modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
-             modus-%1$s-theme-variable-pitch-headings nil
-             modus-%1$s-theme-rainbow-headings t
-             modus-%1$s-theme-section-headings nil
+             modus-%1$s-theme-org-blocks nil ; {nil,'greyscale,'rainbow}
+             modus-%1$s-theme-variable-pitch-headings t
+             modus-%1$s-theme-rainbow-headings nil
+             modus-%1$s-theme-section-headings t
              modus-%1$s-theme-scale-headings nil
              modus-%1$s-theme-scale-1 1.1
              modus-%1$s-theme-scale-2 1.15
@@ -8645,17 +8643,6 @@ As for =delete-trailing-whitespace=, I prefer to call it manually because
 sometimes it causes problems, such as with diffs.
 
 #+begin_src emacs-lisp
-(use-package whitespace
-  :config
-  (defun prot/toggle-invisibles ()
-    "Toggles the display of indentation and space characters."
-    (interactive)
-    (if (bound-and-true-p whitespace-mode)
-        (whitespace-mode -1)
-      (whitespace-mode)))
-  :bind (("<f6>" . prot/toggle-invisibles)
-         ("C-c z" . delete-trailing-whitespace)))
-
 (use-package display-line-numbers
   :config
   ;; Set absolute line numbers.  A value of "relative" is also useful.
@@ -8663,6 +8650,8 @@ sometimes it causes problems, such as with diffs.
   ;; Those two variables were introduced in Emacs 27.1
   (setq display-line-numbers-major-tick 20)
   (setq display-line-numbers-minor-tick 5)
+  ;; Use absolute numbers in narrowed buffers
+  (setq display-line-numbers-widen t)
 
   (define-minor-mode prot/display-line-numbers-mode
     "Toggle `display-line-numbers-mode' and `hl-line-mode'."
@@ -8677,6 +8666,17 @@ sometimes it causes problems, such as with diffs.
       (hl-line-mode -1)
       (setq-local truncate-lines nil)))
   :bind ("<f7>" . prot/display-line-numbers-mode))
+
+(use-package whitespace
+  :config
+  (defun prot/toggle-invisibles ()
+    "Toggles the display of indentation and space characters."
+    (interactive)
+    (if (bound-and-true-p whitespace-mode)
+        (whitespace-mode -1)
+      (whitespace-mode)))
+  :bind (("<f6>" . prot/toggle-invisibles)
+         ("C-c z" . delete-trailing-whitespace)))
 #+end_src
 
 *** Dim context and focus-to-thing (focus-mode)
@@ -9977,8 +9977,11 @@ Summary of what these do:
   delimiters, by using either =mixed= or =expression=.  The latter always
   highlights the entire balanced expression, while the former will only
   do so if the matching delimiter is off screen.
-+ Highlight parentheses even if the point is in their vicinity.  This
-  means the beginning or end of the line, with space in between.
++ =show-paren-when-point-in-periphery= lets you highlight parentheses even
+  if the point is in their vicinity.  This means the beginning or end of
+  the line, with space in between.  I used that for a long while and it
+  server me well.  Now that I have a better understanding of Elisp, I
+  disable it.
 + Do not highlight a match when the point is on the inside of the
   parenthesis.
 
@@ -9986,7 +9989,7 @@ Summary of what these do:
 (use-package paren
   :config
   (setq show-paren-style 'parenthesis)
-  (setq show-paren-when-point-in-periphery t)
+  (setq show-paren-when-point-in-periphery nil)
   (setq show-paren-when-point-inside-paren nil)
   :hook (after-init-hook . show-paren-mode))
 #+end_src
@@ -11103,7 +11106,7 @@ I am using a Lenovo Thinkpad X220 that I got in 2018 for ~80 EUR.  This
 is the first computer I ever bought: before that I had a Macbook that
 was offered to me as part of an office job---but do not ask me about it
 because at the time I only knew how to copy/paste using right click and
-that sort of thing, while I never bothered with the hardware side of
+that sort of thing, while I only ever bothered with the hardware side of
 things once I got better at using the computer (my switch to GNU/Linux
 was about freedom and consumer sovereignty, i.e. politics, not tech-only
 considerations).
