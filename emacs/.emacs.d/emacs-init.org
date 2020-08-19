@@ -786,7 +786,9 @@ Meant to be used at some early initialisation stage, such as with
 
   :hook ((after-init-hook . prot/font-fonts-per-monitor)
          (prot/font-set-fonts-hook . prot/font-line-spacing)
-         (prot/font-set-fonts-hook . prot/font-bold-face))
+         (prot/font-set-fonts-hook . prot/font-bold-face)
+         ;; See theme section for this hook
+         (prot/modus-theme-after-load-hook . prot/font-bold-face))
   ;; Awkward key because I do not need it very often.  Maybe once a day.
   ;; The "C-c f" is used elsewhere.
   :bind ("C-c F" . prot/font-fonts-dwim))
@@ -8201,6 +8203,12 @@ into this project:
   (defmacro contrib/format-sexp (sexp &rest objects)
     `(eval (read (format ,(format "%S" sexp) ,@objects))))
 
+  ;; This is currently not used in this section.  Search for it in the
+  ;; section about setting fonts, `prot/font-bold-face' in particular.
+  (defvar prot/modus-theme-after-load-hook nil
+    "Hook that runs after loading a Modus theme.
+See `prot/modus-operandi' or `prot/modus-vivendi'.")
+
   ;; The variables do not reveal my preferences.  Always testing things.
   (dolist (theme '("operandi" "vivendi"))
     (contrib/format-sexp
@@ -8224,7 +8232,8 @@ into this project:
              modus-%1$s-theme-scale-3 1.21
              modus-%1$s-theme-scale-4 1.27
              modus-%1$s-theme-scale-5 1.33)
-       (load-theme 'modus-%1$s t))
+       (load-theme 'modus-%1$s t)
+       (run-hooks 'prot/modus-theme-after-load-hook))
      theme))
 
   (defun prot/modus-themes-toggle ()
