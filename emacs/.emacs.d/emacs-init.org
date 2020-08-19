@@ -11008,28 +11008,31 @@ equivalent mechanism for individual packages…  So here we are.
 :CUSTOM_ID: h:044977f2-a909-4804-bf89-576dd429d405
 :END:
 
-Given that I mostly live inside of Emacs, the rest of the environment is
-no longer important to me, provided it does not impede my usage of
-Emacs.
-
-Prior to my Emacs days, I used to have a highly customised session
-centred around BSPWM.  Now I can happily live inside of any desktop
-environment or window manager.  What matters is that my Emacs works as
-intended, which practically means that the environment should /not bind
-any keys/ system-wide (with the exception of some standard ones like
-those for accessing TTYs).
-
 I have been on GNU/Linux since the summer of 2016.  For the most time I
-have used Debian and Arch Linux.  As of 2020-05-03, I am on Arch.  My
-criterion for picking a distro is that it is community-driven and has a
-strong following that ensures its longer-term continuity and overall
-stability.  This is consistent with my focus on Emacs: I need things to
-work so that I may not be bothered by too much admin work (and yes, Arch
-is super-stable if you know what you are doing---and, well, Debian is
+have used Debian and Arch Linux, switching between the two.  As of
+2020-05-03, I am back on Arch.  My criterion for picking a distro is
+that it is community-driven and has a strong following that ensures its
+longer-term continuity and overall stability.  This happens to be
+consistent with my current focus on Emacs: I need things to work so that
+I may not be bothered by too much admin work (and yes, Arch is
+super-stable once you know what you are doing---and, well, Debian is
 designed for that).
 
-My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/tree/?h=emacs-27][built from source]], using the =emacs-27= branch (check the AUR
-if you are on Arch or derivatives, though /always read/ the PKGBUILD).
+Given that I mostly live inside of Emacs, the desktop environment is no
+longer important to me, provided it does not impede my usage of Emacs,
+which practically means that it does /not bind any keys/ system-wide (with
+the exception of some standard ones like those for accessing TTYs).
+
+Prior to my Emacs days, I used to have a highly customised session
+centred around BSPWM (the Binary Space Partitioning Window Manager),
+while I also spent time with i3WM, DWM, Herbestluftwm.  The tiling
+window manager paradigm offers little to no value now that practically
+my entire computing experience happens inside of a single application.
+
+My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/tree/?h=emacs-27][built from source]], using the =emacs-27= branch.  Check the AUR
+if you are on Arch or derivatives, or try my PKGBUILD which I documented
+in the section about [[#h:7fa5b86b-3fc5-4118-8d56-aacf4c0fffb8][Arch Linux package recipes]]---remember to /always
+read/ the shell scripts before you download random stuff.
 
 ** Did you know XYZ package is better than the defaults?
 :PROPERTIES:
