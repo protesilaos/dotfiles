@@ -6304,6 +6304,12 @@ with the defaults.
   :config
   (setq vc-find-revision-no-save t)
 
+  ;; NOTE: this specific package will be expanded further
+  (use-package add-log
+    :config
+    ;; I use a different account for git commits
+    (setq add-log-mailing-address "info@protesilaos.com"))
+
   (use-package log-view
     :config
     (defun prot/vc-print-log (&optional arg)
