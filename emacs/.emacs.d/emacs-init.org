@@ -6356,11 +6356,11 @@ with the defaults.
   :config
   (setq vc-find-revision-no-save t)
 
-  ;; NOTE: this specific package will be expanded further
   (use-package add-log
     :config
     ;; I use a different account for git commits
-    (setq add-log-mailing-address "info@protesilaos.com"))
+    (setq add-log-mailing-address "info@protesilaos.com")
+    (setq add-log-keep-changes-together t))
 
   (use-package log-view
     :config
@@ -6448,7 +6448,12 @@ project, as defined by `vc-root-dir'."
   (setq vc-git-diff-switches "--patch-with-stat")
   (setq vc-git-print-log-follow t)
   (setq vc-git-root-log-format
-        '("%d%h %ad %an: %s" "^\\(?:[*/\\| ]+ \\)?\\(?2: ([^)]+)\\)?\\(?1:[0-9a-z]+\\) \\(?3:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)\\(?4:.*?:\\)"
+        '("%d%h  %ad  %an: %s"
+          "^\\(?:[*/\\| ]+ \\)?\
+\\(?2: ([^)]+)\\)?\
+\\(?1:[0-9a-z]+ \\) \
+\\(?3:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)\
+\\(?4:.*?:\\)"
           ((1 'log-view-message)
            (2 'change-log-list nil lax)
            (3 'change-log-date)
@@ -7694,8 +7699,7 @@ What these do:
   (setq shr-width (current-fill-column)))
 #+end_src
 
-Support the HTML =pre= tag with proper syntax highlighting.  Got this
-snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][its GitHub project page]].
+Support the HTML =pre= tag with proper syntax highlighting.
 
 #+begin_src emacs-lisp
 (use-package shr-tag-pre-highlight
@@ -7703,11 +7707,7 @@ snippet directly from [[https://github.com/xuchunyang/shr-tag-pre-highlight.el][
   :after shr
   :config
   (add-to-list 'shr-external-rendering-functions
-               '(pre . shr-tag-pre-highlight))
-  (when (version< emacs-version "26")
-    (with-eval-after-load 'eww
-      (advice-add 'eww-display-html :around
-                  'eww-display-html--override-shr-external-rendering-functions))))
+               '(pre . shr-tag-pre-highlight)))
 #+end_src
 
 ** Emacs Web Wowser (EWW)
@@ -8270,18 +8270,18 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
      (defun prot/modus-%1$s ()
        (setq modus-%1$s-theme-slanted-constructs t
              modus-%1$s-theme-bold-constructs t
-             modus-%1$s-theme-fringes nil ; {nil,'subtle,'intense}
-             modus-%1$s-theme-3d-modeline nil
-             modus-%1$s-theme-faint-syntax t
-             modus-%1$s-theme-intense-hl-line nil
+             modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
+             modus-%1$s-theme-3d-modeline t
+             modus-%1$s-theme-faint-syntax nil
+             modus-%1$s-theme-intense-hl-line t
              modus-%1$s-theme-intense-paren-match t
-             modus-%1$s-theme-prompts 'subtle ; {nil,'subtle,'intense}
-             modus-%1$s-theme-completions 'moderate ; {nil,'moderate,'opinionated}
+             modus-%1$s-theme-prompts 'intense ; {nil,'subtle,'intense}
+             modus-%1$s-theme-completions 'opinionated ; {nil,'moderate,'opinionated}
              modus-%1$s-theme-subtle-diffs nil
-             modus-%1$s-theme-org-blocks nil ; {nil,'greyscale,'rainbow}
-             modus-%1$s-theme-variable-pitch-headings t
+             modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
+             modus-%1$s-theme-variable-pitch-headings nil
              modus-%1$s-theme-rainbow-headings nil
-             modus-%1$s-theme-section-headings t
+             modus-%1$s-theme-section-headings nil
              modus-%1$s-theme-scale-headings nil
              modus-%1$s-theme-scale-1 1.1
              modus-%1$s-theme-scale-2 1.15
