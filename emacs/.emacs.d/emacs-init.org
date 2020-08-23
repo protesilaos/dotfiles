@@ -8274,18 +8274,18 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
        (setq modus-%1$s-theme-slanted-constructs t
              modus-%1$s-theme-bold-constructs t
              modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
-             modus-%1$s-theme-3d-modeline t
+             modus-%1$s-theme-3d-modeline nil
              modus-%1$s-theme-faint-syntax nil
-             modus-%1$s-theme-intense-hl-line t
-             modus-%1$s-theme-intense-paren-match t
-             modus-%1$s-theme-prompts 'intense ; {nil,'subtle,'intense}
-             modus-%1$s-theme-completions 'opinionated ; {nil,'moderate,'opinionated}
-             modus-%1$s-theme-subtle-diffs nil
+             modus-%1$s-theme-intense-hl-line nil
+             modus-%1$s-theme-intense-paren-match nil
+             modus-%1$s-theme-prompts 'subtle ; {nil,'subtle,'intense}
+             modus-%1$s-theme-completions 'moderate ; {nil,'moderate,'opinionated}
+             modus-%1$s-theme-subtle-diffs t
              modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
-             modus-%1$s-theme-variable-pitch-headings nil
+             modus-%1$s-theme-variable-pitch-headings t
              modus-%1$s-theme-rainbow-headings nil
              modus-%1$s-theme-section-headings nil
-             modus-%1$s-theme-scale-headings nil
+             modus-%1$s-theme-scale-headings t
              modus-%1$s-theme-scale-1 1.1
              modus-%1$s-theme-scale-2 1.15
              modus-%1$s-theme-scale-3 1.21
@@ -8821,10 +8821,10 @@ removing the fringe on both sides /of the selected window/ (check my
 on [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks)]], and hiding the mode line in accordance
 with =prot/hidden-mode-line-mode= defined in the [[#h:39f57b0d-300a-4310-9ba8-8c388fa72e1d][Mode line]] section.
 
-Also check =prot/scroll-centre-cursor-mode= in the [[#h:0c44b318-813a-4f4a-b596-75df4a86476b][Scrolling behaviour]]
+Also review =prot/scroll-centre-cursor-mode= in the [[#h:0c44b318-813a-4f4a-b596-75df4a86476b][Scrolling behaviour]]
 section.
 
-For video demonstrantions check these:
+For video demonstrantions watch these:
 
 + [[https://protesilaos.com/codelog/2020-07-16-emacs-focused-editing/][“Focused editing” tools for Emacs]] (2020-07-16)
 + [[https://protesilaos.com/codelog/2020-07-17-emacs-mixed-fonts-org/][Configuring mixed fonts for Org mode and others]] (2020-07-17)
@@ -9273,13 +9273,16 @@ I use visual bookmarks in much the same way.
 #+begin_src emacs-lisp
 (use-package bm
   :ensure
+  :init
+  (setq bm-restore-repository-on-load t)
   :config
   (setq bm-annotate-on-create nil)
   (setq bm-buffer-persistence t)
   (setq bm-cycle-all-buffers t)
   (setq bm-goto-position nil)
-  (setq bm-highlight-style 'bm-highlight-only-fringe)
-  (setq bm-in-lifo-order t)
+  (setq bm-highlight-style 'bm-highlight-line-and-fringe)
+  (setq bm-marker 'bm-marker-right)
+  (setq bm-in-lifo-order nil)
   (setq bm-recenter t)
   (setq bm-repository-file "~/.emacs.d/bm-bookmarks")
   (setq bm-repository-size 100)
