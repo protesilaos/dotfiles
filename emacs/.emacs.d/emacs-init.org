@@ -8041,6 +8041,25 @@ Also see `prot/bongo-dired-make-playlist-file'."
             (prot/bongo-playlist-play-random))
         (user-error "Not in a `bongo' playlist buffer"))))
 
+  (defvar prot/bongo-playlist-change-track-hook nil
+    "Hook that runs after `bongo' switches to a new track.")
+
+  (defun prot/bongo-playlist-run-hook-change-track (&rest _)
+    "Run `prot/bongo-playlist-run-hook-change-track'.
+This is meant to be loaded after the relevant `bongo' functions
+that change tracks, such as `bongo-play-next-or-stop' and
+`bongo-play-random-or-stop'."
+    (run-hooks 'prot/bongo-playlist-change-track-hook))
+
+  (dolist (fn '(bongo-play-next-or-stop bongo-play-random-or-stop))
+    (advice-add fn :after #'prot/bongo-playlist-run-hook-change-track))
+
+  (defun prot/bongo-playlist-recenter ()
+    "Recenter `bongo' playlist buffer.
+Add to `prot/bongo-playlist-change-track-hook'."
+    (with-current-buffer (bongo-playlist-buffer)
+      (bongo-recenter)))
+
 ;;; Bongo + Dired (bongo library buffer)
   (defmacro prot/bongo-dired-library (name doc val)
     "Create `bongo' library function NAME with DOC and VAL."
@@ -8162,7 +8181,8 @@ Also see `prot/bongo-playlist-insert-playlist-file'."
         (kill-buffer))))
 
   :hook ((dired-mode-hook . prot/bongo-dired-library-enable)
-         (wdired-mode-hook . prot/bongo-dired-library-disable))
+         (wdired-mode-hook . prot/bongo-dired-library-disable)
+         (prot/bongo-playlist-change-track-hook . prot/bongo-playlist-recenter))
   :bind (("<C-XF86AudioPlay>" . bongo-pause/resume)
          ("<C-XF86AudioNext>" . bongo-next)
          ("<C-XF86AudioPrev>" . bongo-previous)
