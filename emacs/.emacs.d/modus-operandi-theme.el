@@ -1009,9 +1009,13 @@ AMOUNT is a customisation option."
 Each element has the form (NAME . HEX).")
 
   (defcustom modus-operandi-theme-override-colors-alist '()
-    "Place to override default theme colors.
-You can override a subset of the theme's default colors by
-defining them in this alist."
+    "Association list of palette colour overrides.
+Values can be mapped to variables, using the same syntax as the
+one present in `modus-operandi-theme-default-colors-alist'.
+
+This is only meant for do-it-yourself usage, with the
+understanding that the user is responsible for the resulting
+contrast ratio between new and existing colours."
     :type '(alist
             :key-type (string :tag "Name")
             :value-type (string :tag " Hex")))
@@ -2982,7 +2986,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(mu4e-flagged-face ((,class :foreground ,red-alt)))
    `(mu4e-footer-face ((,class :foreground ,fg-special-cold :slant ,modus-theme-slant)))
    `(mu4e-forwarded-face ((,class :foreground ,magenta-alt-other)))
-   `(mu4e-header-face ((,class :foreground ,fg-dim)))
+   `(mu4e-header-face ((,class :foreground ,fg-alt)))
    `(mu4e-header-highlight-face ((,class :inherit modus-theme-hl-line)))
    `(mu4e-header-key-face ((,class :foreground ,cyan)))
    `(mu4e-header-marks-face ((,class :inherit bold :foreground ,magenta-alt)))
@@ -2994,7 +2998,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(mu4e-moved-face ((,class :foreground ,yellow :slant ,modus-theme-slant)))
    `(mu4e-ok-face ((,class :inherit bold :foreground ,green)))
    `(mu4e-region-code ((,class :inherit modus-theme-special-calm)))
-   `(mu4e-replied-face ((,class :foreground ,cyan)))
+   `(mu4e-replied-face ((,class :foreground ,cyan-active)))
    `(mu4e-special-header-value-face ((,class :inherit bold :foreground ,blue-alt-other)))
    `(mu4e-system-face ((,class :foreground ,fg-mark-del :slant ,modus-theme-slant)))
    `(mu4e-title-face ((,class :foreground ,fg-main)))
@@ -3199,7 +3203,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-drawer ((,class :foreground ,cyan-alt)))
    `(org-ellipsis ((,class :foreground nil))) ; inherits from the heading's colour
    `(org-footnote ((,class :foreground ,blue-alt :underline t)))
-   `(org-formula ((,class :foreground ,red-alt)))
+   `(org-formula ((,class :inherit fixed-pitch :foreground ,red-alt)))
    `(org-habit-alert-face ((,class :inherit modus-theme-intense-yellow)))
    `(org-habit-alert-future-face ((,class :inherit modus-theme-refine-yellow)))
    `(org-habit-clear-face ((,class :inherit modus-theme-intense-magenta)))
