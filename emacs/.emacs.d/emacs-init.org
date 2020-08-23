@@ -849,10 +849,11 @@ Also check my [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and t
 :CUSTOM_ID: h:9035a1ed-e988-4731-89a5-0d9e302c3dea
 :END:
 
-Here is a simple test I have come up with to make an initial assessment
-of the overall quality of the font: /can you discern the character at a
-quick glance?/ If yes, your choice of typeface is good /prima facie/,
-otherwise search for something else.
+Here is a test I have come up with to make an initial assessment of the
+overall quality of a monospaced font that is meant to work well in a
+programming context: /can you discern each character at a quick glance?/
+If yes, your choice of typeface is good /prima facie/, otherwise search
+for something else.
 
 Note that this test is not perfect, since many typefaces fall short in
 less obvious ways, such as the space between the characters.  Also note
@@ -861,31 +862,33 @@ the typeface I am using.
 
 #+begin_example
 ()[]{}<>«»‹›
-6bB8&0ODdo
-1tiIlL|
-!ij
-5$Ss
-7Zz
-9gqp
-nmMN
+6bB8&
+0ODdoaoOQGC
+I1tilIJL|
+!¡ij
+5$§Ss
+7ZzZ2
+9gqpG6
+hnmMN
 uvvwWuuw
 x×X
-.,·°;:¡!¿?
+.,·°%
+¡!¿?
 :;
-`'
-‘’
-''"
-'
-"
-“”
-—-~≈=_.…⋯
+`''"‘’“”
+—-~≈=≠+*_
+…⋯
+...
 
 Sample character set
 Check for monospacing and Greek glyphs
 
 ABCDEFGHIJKLMNOPQRSTUVWXYZ
 abcdefghijklmnopqrstuvwxyz
-1234567890#%^*
+0123456789
+~!@#$%^&*+
+`'"‘’“”.,;:…
+()[]{}—-_=|<>/\
 ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ
 αβγδεζηθικλμνξοπρστυφχψω
 #+end_example
