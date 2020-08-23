@@ -7898,12 +7898,8 @@ Concerning the customisations below, these can be summarised thus:
   results do not look consistent.  Also, I have no use for foldable
   headings of this sort.
 
-I have a couple of older videos about my workflow with Bongo and Dired.
-However, *these do not demonstrate my latest refinements* from the review
-on 2020-08-06, even though the principles are fundamentally the same:
-
-+ [[https://protesilaos.com/codelog/2019-11-13-emacs-bongo-music/][Emacs workflow for music management]] (2019-11-13)
-+ [[https://protesilaos.com/codelog/2019-11-18-emacs-dired-bongo/][Emacs: use DIRED and BONGO to store playlists]] (2019-11-18)
+Watch my video about the [[https://protesilaos.com/codelog/2020-08-06-emacs-bongo-extras/][Bongo media manager and my extras]] (2020-08-06)
+for a demonstration of the aforementioned.
 
 #+begin_src emacs-lisp
 (use-package bongo
