@@ -7898,8 +7898,16 @@ Concerning the customisations below, these can be summarised thus:
   results do not look consistent.  Also, I have no use for foldable
   headings of this sort.
 
-Watch my video about the [[https://protesilaos.com/codelog/2020-08-06-emacs-bongo-extras/][Bongo media manager and my extras]] (2020-08-06)
-for a demonstration of the aforementioned.
+Watch [[https://protesilaos.com/codelog/2020-08-06-emacs-bongo-extras/][Bongo media manager and my extras]] (2020-08-06) for a demonstration
+of the aforementioned.
+
+Since then I have added an extra feature to automatically re-centre the
+playlist buffer whenever a track changes.  This is useful when I am not
+working on the computer (e.g. cooking) but choose to keep music playing
+in the background with the playlist's window in focus: it saves me from
+the trouble of having to manually find the name of the currently playing
+track.  For more on the implementation front, refer to the
+=prot/bongo-playlist-change-track-hook= and its accompaniments.
 
 #+begin_src emacs-lisp
 (use-package bongo
@@ -8055,7 +8063,7 @@ that change tracks, such as `bongo-play-next-or-stop' and
     (advice-add fn :after #'prot/bongo-playlist-run-hook-change-track))
 
   (defun prot/bongo-playlist-recenter ()
-    "Recenter `bongo' playlist buffer.
+    "Recenter `bongo' playlist buffer while in a live window.
 Add to `prot/bongo-playlist-change-track-hook'."
     (with-current-buffer (bongo-playlist-buffer)
       (bongo-recenter)))
