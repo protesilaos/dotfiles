@@ -4518,7 +4518,7 @@ of the above in action.
   (setq org-capture-templates
         '(("b" "Basic task for future review" entry
            (file+headline "tasks.org" "Basic tasks that need to be reviewed")
-           "* %^{Title}\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n\n%i %l")
+           "* %^{Title}\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n\n%i%l")
 
           ("w" "Work")
           ("wt" "Task or assignment" entry
@@ -7730,7 +7730,6 @@ Support the HTML =pre= tag with proper syntax highlighting.
   (setq eww-download-directory "~/Downloads/")
   (setq eww-suggest-uris
         '(eww-links-at-point
-          eww-prompt-history
           thing-at-point-url-at-point))
   (setq eww-bookmarks-directory "~/.emacs.d/eww-bookmarks/")
   (setq eww-history-limit 150)
