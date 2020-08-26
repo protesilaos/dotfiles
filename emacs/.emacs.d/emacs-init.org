@@ -10628,7 +10628,7 @@ is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant secti
 #+begin_src emacs-lisp
 (use-package css-mode
   :mode (("\\.css$" . css-mode)
-         ("\\.scss$" . css-mode))
+         ("\\.scss$" . scss-mode))
   :config
   (setq css-fontify-colors nil))
 #+end_src
