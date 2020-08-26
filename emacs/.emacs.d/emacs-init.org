@@ -8318,9 +8318,51 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
        (run-hooks 'prot/modus-theme-after-load-hook))
      theme))
 
-  (defun prot/modus-themes-toggle ()
+  (define-minor-mode prot/modus-themes-alt-mode
+    "Override specific palette variables with custom values.
+
+This is intended as a proof-of-concept.  It is, nonetheless, a
+perfectly accessible alternative, conforming with the design
+principles of the Modus themes.  It still is not as good as the
+default colours."
+    :init-value nil
+    :global t
+    (if prot/modus-themes-alt-mode
+        (setq modus-operandi-theme-override-colors-alist
+              '(("bg-main" . "#fefcf4")
+                ("bg-dim" . "#faf6ef")
+                ("bg-alt" . "#f7efe5")
+                ("bg-hl-line" . "#f4f0e3")
+                ("bg-active" . "#e8dfd1")
+                ("bg-inactive" . "#f6ece5")
+                ("bg-region" . "#c6bab1")
+                ("bg-header" . "#ede3e0")
+                ("bg-tab-bar" . "#dcd3d3")
+                ("bg-tab-active" . "#fdf6eb")
+                ("bg-tab-inactive" . "#c8bab8")
+                ("fg-unfocused" . "#55556f"))
+              modus-vivendi-theme-override-colors-alist
+              '(("bg-main" . "#100b17")
+                ("bg-dim" . "#161129")
+                ("bg-alt" . "#181732")
+                ("bg-hl-line" . "#191628")
+                ("bg-active" . "#282e46")
+                ("bg-inactive" . "#1a1e39")
+                ("bg-region" . "#393a53")
+                ("bg-header" . "#202037")
+                ("bg-tab-bar" . "#262b41")
+                ("bg-tab-active" . "#120f18")
+                ("bg-tab-inactive" . "#3a3a5a")
+                ("fg-unfocused" . "#9a9aab")))
+      (setq modus-operandi-theme-override-colors-alist nil
+            modus-vivendi-theme-override-colors-alist nil)))
+
+  (defun prot/modus-themes-toggle (&optional arg)
     "Toggle between `prot/modus-operandi' and `prot/modus-vivendi'."
-    (interactive)
+    (interactive "P")
+    (if arg
+        (prot/modus-themes-alt-mode 1)
+      (prot/modus-themes-alt-mode -1))
     (if (eq (car custom-enabled-themes) 'modus-operandi)
         (progn
           (disable-theme 'modus-operandi)
