@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 0.11.0
+;; Version: 0.12.0
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -2820,7 +2820,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(magit-refname-stash ((,class :foreground ,fg-alt)))
    `(magit-refname-wip ((,class :foreground ,fg-alt)))
    `(magit-section ((,class :background ,bg-dim :foreground ,fg-main)))
-   `(magit-section-heading ((,class :inherit bold :foreground ,fg-special-calm)))
+   `(magit-section-heading ((,class :inherit bold :foreground ,cyan)))
    `(magit-section-heading-selection ((,class :inherit (modus-theme-refine-cyan bold))))
    `(magit-section-highlight ((,class :background ,bg-alt)))
    `(magit-sequence-done ((,class :foreground ,green-alt)))
@@ -2831,14 +2831,14 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(magit-sequence-part ((,class :foreground ,yellow-alt)))
    `(magit-sequence-pick ((,class :foreground ,blue-alt)))
    `(magit-sequence-stop ((,class :foreground ,red)))
-   `(magit-signature-bad ((,class :inherit bold :background ,bg-main :foreground ,red-intense)))
-   `(magit-signature-error ((,class :background ,bg-main :foreground ,red-intense)))
-   `(magit-signature-expired ((,class :background ,bg-main :foreground ,yellow-intense)))
-   `(magit-signature-expired-key ((,class :background ,bg-main :foreground ,yellow-intense)))
-   `(magit-signature-good ((,class :background ,bg-main :foreground ,green-intense)))
-   `(magit-signature-revoked ((,class :background ,bg-main :foreground ,magenta-intense)))
-   `(magit-signature-untrusted ((,class :background ,bg-main :foreground ,cyan-intense)))
-   `(magit-tag ((,class :foreground ,green-alt-other)))
+   `(magit-signature-bad ((,class :inherit bold :foreground ,red)))
+   `(magit-signature-error ((,class :foreground ,red-alt)))
+   `(magit-signature-expired ((,class :foreground ,yellow)))
+   `(magit-signature-expired-key ((,class :foreground ,yellow)))
+   `(magit-signature-good ((,class :foreground ,green)))
+   `(magit-signature-revoked ((,class :foreground ,magenta)))
+   `(magit-signature-untrusted ((,class :foreground ,cyan)))
+   `(magit-tag ((,class :foreground ,yellow-alt-other)))
 ;;;;; magit-imerge
    `(magit-imerge-overriding-value ((,class :inherit bold :foreground ,red-alt)))
 ;;;;; man
