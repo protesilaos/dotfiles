@@ -6448,7 +6448,7 @@ project, as defined by `vc-root-dir'."
 
 (use-package vc-git
   :config
-  (setq vc-git-diff-switches "--patch-with-stat")
+  (setq vc-git-diff-switches '("--patch-with-stat" "--histogram"))
   (setq vc-git-print-log-follow t)
   (setq vc-git-root-log-format
         '("%d%h  %ad  %an: %s"
@@ -8303,7 +8303,7 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
              modus-%1$s-theme-intense-paren-match nil
              modus-%1$s-theme-prompts 'subtle ; {nil,'subtle,'intense}
              modus-%1$s-theme-completions 'moderate ; {nil,'moderate,'opinionated}
-             modus-%1$s-theme-subtle-diffs t
+             modus-%1$s-theme-diffs 'desaturated ; {nil,'desaturated,'fg-only}
              modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
              modus-%1$s-theme-variable-pitch-headings t
              modus-%1$s-theme-rainbow-headings nil
