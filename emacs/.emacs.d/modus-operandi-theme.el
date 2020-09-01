@@ -1,6 +1,6 @@
 ;;; modus-operandi-theme.el --- Accessible light theme (WCAG AAA) -*- lexical-binding:t -*-
 
-;; Copyright (c) 2019-2020 Free Software Foundation, Inc.
+;; Copyright (C) 2019-2020 Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
@@ -48,7 +48,7 @@
 ;;     modus-operandi-theme-fringes                        (choice)
 ;;     modus-operandi-theme-org-blocks                     (choice)
 ;;     modus-operandi-theme-prompts                        (choice)
-;;     modus-operandi-theme-3d-modeline                    (boolean)
+;;     modus-operandi-theme-mode-line                      (choice)
 ;;     modus-operandi-theme-diffs                          (choice)
 ;;     modus-operandi-theme-faint-syntax                   (boolean)
 ;;     modus-operandi-theme-intense-hl-line                (boolean)
@@ -81,6 +81,7 @@
 ;;     auctex and TeX
 ;;     auto-dim-other-buffers
 ;;     avy
+;;     awesome-tray
 ;;     bm
 ;;     bongo
 ;;     boon
@@ -132,6 +133,7 @@
 ;;     ediff
 ;;     eglot
 ;;     el-search
+;;     eldoc
 ;;     eldoc-box
 ;;     elfeed
 ;;     elfeed-score
@@ -566,9 +568,34 @@ association list)."
           (const :tag "Subtle grey block background" greyscale)
           (const :tag "Colour-coded background per programming language" rainbow)))
 
+(define-obsolete-variable-alias 'modus-operandi-theme-3d-modeline
+  'modus-operandi-theme-mode-line "`modus-operandi-theme' 0.13.0")
+
 (defcustom modus-operandi-theme-3d-modeline nil
   "Use a three-dimensional style for the active mode line."
   :type 'boolean)
+
+(defcustom modus-operandi-theme-mode-line nil
+  "Adjust the overall style of the mode line.
+
+Nil is a two-dimensional rectangle with a border around it.  The
+active and the inactive modelines use different shades of
+greyscale values for the background and foreground.
+
+A `3d' value will apply a three-dimensional effect to the active
+modeline.  The inactive modelines remain two-dimensional and are
+toned down a bit, relative to the nil value.
+
+The `moody' option is meant to optimise the modeline for use with
+the library of the same name.  This practically means to remove
+the box effect and rely on underline and overline properties
+instead.  It also tones down the inactive modelines.  Despite its
+intended purpose, this option can also be used without the
+`moody' library."
+  :type '(choice
+          (const :tag "Two-dimensional box (default)" nil)
+          (const :tag "Three-dimensional style for the active mode line" 3d)
+          (const :tag "No box effects, which are optimal for use with the `moody' library" moody)))
 
 (define-obsolete-variable-alias 'modus-operandi-theme-subtle-diffs
   'modus-operandi-theme-diffs "`modus-operandi-theme' 0.13.0")
@@ -647,7 +674,7 @@ effect than the former."
           (const :tag "Intense background and foreground for the prompt" intense)))
 
 (defcustom modus-operandi-theme-intense-hl-line nil
-  "Use more prominent background for `hl-line-mode'."
+  "Use more prominent background for command `hl-line-mode'."
   :type 'boolean)
 
 (defcustom modus-operandi-theme-intense-paren-match nil
@@ -763,26 +790,31 @@ set to `rainbow'."
     ('rainbow (list :background bgaccent :foreground fgaccent))
     (_ (list :background bg :foreground fg))))
 
-(defun modus-operandi-theme-modeline-box (col3d col &optional btn int)
-  "Control the box properties of the mode line.
-COL3D is the border that is intended for the three-dimensional
-modeline.  COL applies to the two-dimensional modeline.  Optional
-BTN provides the 3d button style.  Optional INT defines a border
-width."
-  (let* ((style (if btn 'released-button nil))
-         (int (if int int 1)))
-    (if modus-operandi-theme-3d-modeline
-        (list :line-width int :color col3d :style style)
-      (list :line-width 1 :color col :style nil))))
+(defun modus-operandi-theme-mode-line-attrs
+    (fg bg fg-alt bg-alt border border-3d &optional alt-style border-width)
+  "Colour combinations for `modus-operandi-theme-mode-line'.
 
-(defun modus-operandi-theme-modeline-props (bg3d fg3d &optional bg fg)
-  "Control the background and foreground of the mode line.
-BG is the modeline's background.  FG is the modeline's
-foreground.  BG3D and FG3D apply to the three-dimensional
-modeline style."
-  (if modus-operandi-theme-3d-modeline
-      (list :background bg3d :foreground fg3d)
-    (list :background bg :foreground fg)))
+FG and BG are the default colours.  FG-ALT and BG-ALT are meant
+to accommodate the options for a 3D modeline or a `moody'
+compliant one.  BORDER applies to all permutations of the
+modeline, except the three-dimensional effect, where BORDER-3D is
+used instead.
+
+Optional ALT-STYLE applies an appropriate style to the mode
+line's box property.
+
+Optional BORDER-WIDTH specifies an integer for the width of the
+rectangle that produces the box effect."
+  (pcase modus-operandi-theme-mode-line
+    ('3d
+     `(:foreground ,fg-alt :background ,bg-alt
+                   :box (:line-width ,(or border-width 1)
+                                     :color ,border-3d
+                                     :style ,(and alt-style 'released-button))))
+    ('moody
+     `(:foreground ,fg-alt :background ,bg-alt :underline ,border :overline ,border))
+    (_
+     `(:foreground ,fg :background ,bg :box ,border))))
 
 (defun modus-operandi-theme-diff (fg-only-bg fg-only-fg mainbg mainfg altbg altfg)
   "Colour combinations for `modus-operandi-theme-diffs'.
@@ -797,10 +829,10 @@ MAINFG must be the same for the foreground.
 ALTBG needs to be a slightly accented background that is meant to
 be combined with ALTFG.  Both must be less intense than MAINBG
 and MAINFG respectively."
-    (pcase modus-operandi-theme-diffs
-      ('fg-only (list :background fg-only-bg :foreground fg-only-fg))
-      ('desaturated (list :background altbg :foreground altfg))
-      (_ (list :background mainbg :foreground mainfg))))
+  (pcase modus-operandi-theme-diffs
+    ('fg-only (list :background fg-only-bg :foreground fg-only-fg))
+    ('desaturated (list :background altbg :foreground altfg))
+    (_ (list :background mainbg :foreground mainfg))))
 
 (defun modus-operandi-theme-standard-completions (mainfg subtlebg intensebg intensefg)
   "Combinations for `modus-operandi-theme-completions'.
@@ -963,6 +995,10 @@ AMOUNT is a customisation option."
       ;; `bg-hl-line' is between `bg-dim' and `bg-alt', so it should
       ;; work with all accents that cover those two, plus `bg-main'
       ;;
+      ;; `bg-hl-alt' and `bg-hl-alt-intense' should only be used when no
+      ;; other greyscale or fairly neutral background is available to
+      ;; properly draw attention to a given construct
+      ;;
       ;; `bg-header' is between `bg-active' and `bg-inactive', so it
       ;; can be combined with any of the "active" values, plus the
       ;; "special" and base foreground colours
@@ -993,6 +1029,8 @@ AMOUNT is a customisation option."
       ;;
       ;; all pairs are combinable with themselves
       ("bg-hl-line" . "#f2eff3")
+      ("bg-hl-alt" . "#fbeee0")
+      ("bg-hl-alt-intense" . "#e8dfd1")
       ("bg-paren-match" . "#e0af82")
       ("bg-paren-match-intense" . "#70af9f")
       ("bg-region" . "#bcbcbc")
@@ -1343,6 +1381,19 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(aw-leading-char-face ((,class :inherit bold :height 1.5 :background ,bg-main :foreground ,red-intense)))
    `(aw-minibuffer-leading-char-face ((,class :foreground ,magenta-active)))
    `(aw-mode-line-face ((,class :inherit bold)))
+;;;;; awesome-tray
+   `(awesome-tray-module-awesome-tab-face ((,class :inherit bold :foreground ,red-alt-other)))
+   `(awesome-tray-module-battery-face ((,class :inherit bold :foreground ,cyan-alt-other)))
+   `(awesome-tray-module-buffer-name-face ((,class :inherit bold :foreground ,yellow-alt-other)))
+   `(awesome-tray-module-circe-face ((,class :inherit bold :foreground ,blue-alt)))
+   `(awesome-tray-module-date-face ((,class :inherit bold :foreground ,fg-dim)))
+   `(awesome-tray-module-evil-face ((,class :inherit bold :foreground ,green-alt)))
+   `(awesome-tray-module-git-face ((,class :inherit bold :foreground ,magenta)))
+   `(awesome-tray-module-last-command-face ((,class :inherit bold :foreground ,blue-alt-other)))
+   `(awesome-tray-module-location-face ((,class :inherit bold :foreground ,yellow)))
+   `(awesome-tray-module-mode-name-face ((,class :inherit bold :foreground ,green)))
+   `(awesome-tray-module-parent-dir-face ((,class :inherit bold :foreground ,cyan)))
+   `(awesome-tray-module-rvm-face ((,class :inherit bold :foreground ,magenta-alt-other)))
 ;;;;; bm
    `(bm-face ((,class :inherit modus-theme-subtle-yellow
                       ,@(and (>= emacs-major-version 27) '(:extend t)))))
@@ -1856,6 +1907,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(el-search-match ((,class :inherit modus-theme-intense-green)))
    `(el-search-other-match ((,class :inherit modus-theme-special-mild)))
    `(el-search-occur-match ((,class :inherit modus-theme-special-calm)))
+;;;;; eldoc
+   `(eldoc-highlight-function-argument ((,class :inherit bold :foreground ,blue-alt-other)))
 ;;;;; eldoc-box
    `(eldoc-box-body ((,class :background ,bg-alt :foreground ,fg-main)))
    `(eldoc-box-border ((,class :background ,fg-alt)))
@@ -2733,10 +2786,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(kaocha-runner-warning-face ((,class :foreground ,yellow)))
 ;;;;; keycast
    `(keycast-command ((,class :inherit bold :foreground ,blue-active)))
-   `(keycast-key ((,class :box ,(modus-operandi-theme-modeline-box blue-alt blue-active t -3)
-                          ,@(modus-operandi-theme-modeline-props
-                             blue-active bg-main
-                             blue-active bg-active))))
+   `(keycast-key ((,class ,@(modus-operandi-theme-mode-line-attrs
+                             bg-main blue-active
+                             bg-main blue-active
+                             blue-active blue-intense
+                             'alt-style -3))))
 ;;;;; line numbers (display-line-numbers-mode and global variant)
    `(line-number ((,class :background ,bg-dim :foreground ,fg-alt)))
    `(line-number-current-line ((,class :inherit bold :background ,bg-active :foreground ,fg-active)))
@@ -3001,17 +3055,17 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(minimap-active-region-background ((,class :background ,bg-active)))
    `(minimap-current-line-face ((,class :background ,cyan-intense-bg :foreground ,fg-main)))
 ;;;;; modeline
-   `(mode-line ((,class :box ,(modus-operandi-theme-modeline-box bg-active fg-alt t)
-                        ,@(modus-operandi-theme-modeline-props
-                           bg-active fg-dim
-                           bg-active fg-active))))
+   `(mode-line ((,class ,@(modus-operandi-theme-mode-line-attrs
+                           fg-active bg-active fg-dim bg-active
+                           fg-alt bg-active 'alt-style)
+                        :distant-foreground ,bg-main)))
    `(mode-line-buffer-id ((,class :inherit bold)))
    `(mode-line-emphasis ((,class :inherit bold :foreground ,blue-active)))
    `(mode-line-highlight ((,class :inherit modus-theme-active-blue :box (:line-width -1 :style pressed-button))))
-   `(mode-line-inactive ((,class :box ,(modus-operandi-theme-modeline-box bg-active bg-region)
-                                 ,@(modus-operandi-theme-modeline-props
-                                    bg-dim fg-inactive
-                                    bg-inactive fg-inactive))))
+   `(mode-line-inactive ((,class ,@(modus-operandi-theme-mode-line-attrs
+                                    fg-inactive bg-inactive fg-alt bg-dim
+                                    bg-region bg-active)
+                                 :distant-foreground ,bg-alt)))
 ;;;;; mood-line
    `(mood-line-modified ((,class :foreground ,magenta-active)))
    `(mood-line-status-error ((,class :inherit bold :foreground ,red-active)))
@@ -3181,8 +3235,8 @@ Also bind `class' to ((class color) (min-colors 89))."
                           green-alt-other green-alt-other-faint)
                        ,@(modus-operandi-theme-bold-weight))))
 ;;;;; objed
-   `(objed-extend ((,class :background ,bg-active)))
-   `(objed-hl ((,class :background ,bg-alt)))
+   `(objed-hl ((,class :background ,(if modus-operandi-theme-intense-hl-line
+                                        bg-hl-alt-intense bg-hl-alt))))
    `(objed-mark ((,class :background ,bg-active)))
    `(objed-mode-line ((,class :foreground ,cyan-active)))
 ;;;;; orderless
@@ -4232,6 +4286,9 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;; ansi-colors
    `(ansi-color-faces-vector [default bold shadow italic underline success warning error])
    `(ansi-color-names-vector [,fg-main ,red ,green ,yellow ,blue ,magenta ,cyan ,bg-main])
+;;;; awesome-tray
+   `(awesome-tray-mode-line-active-color ,blue)
+   `(awesome-tray-mode-line-inactive-color ,bg-active)
 ;;;; flymake fringe indicators
    `(flymake-error-bitmap '(flymake-double-exclamation-mark modus-theme-fringe-red))
    `(flymake-warning-bitmap '(exclamation-mark modus-theme-fringe-yellow))
