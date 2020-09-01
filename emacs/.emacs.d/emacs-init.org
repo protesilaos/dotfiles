@@ -8244,26 +8244,34 @@ wide range of built-in libraries.
 :CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
 :END:
 
-I am using my own themes.  They are designed to conform with the highest
-accessibility standard for colour contrast between foreground and
-background values.  This stands for a minimum contrast ratio of 7:1,
-also known as the WCAG AAA standard.  In simpler terms, they are good
-for readability.
+This is a project I started as soon as I switched to Emacs in July 2019.
+Fast-forward to a year later and the themes are now part of the upstream
+Emacs distribution, available from the =master= branch.  Note that this is
+not the latest /stable release/ of Emacs, =27.1=, but only the current
+development branch that will eventually become version =28.1=.  I
+benefitted a lot from community contributions, of which I am most
+thankful of, as discussed in [[https://protesilaos.com/codelog/2020-08-27-emacs-modus-themes-core/][My Modus themes are now shipped with Emacs]]
+(2020-08-27).
 
-I call this project "Modus themes".  It consists of "Modus Operandi"
-(light theme) and "Modus Vivendi" (dark).  The source code and
-installation instructions are available [[https://gitlab.com/protesilaos/modus-themes][on their GitLab page]].  The list
-of supported packages is comprehensive.  There also are *lots of
+The Modus themes are designed to conform with the highest accessibility
+standard for colour contrast between foreground and background values.
+This stands for a minimum contrast ratio of 7:1, also known as the WCAG
+AAA standard.  In simpler terms, they are good for readability.
+
+The themes are "Modus Operandi" (light theme) and "Modus Vivendi"
+(dark).  The source code is available [[https://gitlab.com/protesilaos/modus-themes][on their GitLab page]] while you can
+read the HTML version of [[https://protesilaos.com/modus-themes][their documentation on my website]].  The list of
+supported packages is comprehensive.  There also are *lots of
 customisation options* to tweak the looks of the themes.
 
 The two themes are distributed as /standalone packages/ under the terms of
-the GNU General Public License.  You can find them in the official GNU
-ELPA repository (latest tagged release), MELPA (latest commit to the
-=master= branch), as well as MELPA Stable (latest tag).  Each theme is its
-own package because I know that people tend to use one or the other.
-And also due to the fact that one is not a prerequisite for the other.
-I personally use both, switching between them on-the-fly by calling
-=prot/modus-themes-toggle=.
+the GNU General Public License.  Besides upstream Emacs, you can find
+them in the official GNU ELPA repository (latest tagged release), MELPA
+(latest commit to my =master= branch), MELPA Stable (latest tag).  Each
+theme is its own package because I know that people tend to use one or
+the other.  And also due to the fact that one is not a prerequisite for
+the other.  I personally use both, switching between them on-the-fly by
+calling =prot/modus-themes-toggle=.
 
 Note though that because I am using these themes locally as part of
 their development process, I am not configuring here the aforementioned
@@ -8288,6 +8296,8 @@ into this project:
 + [[https://protesilaos.com/codelog/2020-06-13-modus-vivendi-palette-review/][Modus Vivendi theme subtle palette review]] (2020-06-13)
 + [[https://protesilaos.com/codelog/2020-07-04-modus-themes-faint-colours/][Modus themes: new "faint syntax" option]] (2020-07-04)
 + [[https://protesilaos.com/codelog/2020-07-08-modus-themes-nuanced-colours/][Modus themes: major review of "nuanced" colours]] (2020-07-08)
++ [[https://protesilaos.com/codelog/2020-08-09-modus-themes-paren-match/][Modus themes: review "paren-match" colours]] (2020-08-09)
++ [[https://protesilaos.com/codelog/2020-08-28-notes-emacs-theme-devs/][Notes for aspiring Emacs theme developers]] (2020-08-28)
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -8310,17 +8320,17 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
        (setq modus-%1$s-theme-slanted-constructs t
              modus-%1$s-theme-bold-constructs t
              modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
-             modus-%1$s-theme-3d-modeline nil
+             modus-%1$s-theme-mode-line '3d ; {nil,'3d,'moody}
              modus-%1$s-theme-faint-syntax nil
              modus-%1$s-theme-intense-hl-line nil
-             modus-%1$s-theme-intense-paren-match nil
+             modus-%1$s-theme-intense-paren-match t
              modus-%1$s-theme-prompts 'subtle ; {nil,'subtle,'intense}
              modus-%1$s-theme-completions 'moderate ; {nil,'moderate,'opinionated}
              modus-%1$s-theme-diffs 'desaturated ; {nil,'desaturated,'fg-only}
              modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
              modus-%1$s-theme-variable-pitch-headings t
-             modus-%1$s-theme-rainbow-headings nil
-             modus-%1$s-theme-section-headings nil
+             modus-%1$s-theme-rainbow-headings t
+             modus-%1$s-theme-section-headings t
              modus-%1$s-theme-scale-headings t
              modus-%1$s-theme-scale-1 1.1
              modus-%1$s-theme-scale-2 1.15
@@ -8371,7 +8381,10 @@ default colours."
             modus-vivendi-theme-override-colors-alist nil)))
 
   (defun prot/modus-themes-toggle (&optional arg)
-    "Toggle between `prot/modus-operandi' and `prot/modus-vivendi'."
+    "Toggle between `prot/modus-operandi' and `prot/modus-vivendi'.
+
+With optional \\[universal-argument] prefix, enable
+`prot/modus-themes-alt-mode' for the loaded theme."
     (interactive "P")
     (if arg
         (prot/modus-themes-alt-mode 1)
