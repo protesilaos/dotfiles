@@ -8605,13 +8605,24 @@ tweaks of my own.
 #+begin_src emacs-lisp
 (use-package keycast
   :ensure
+  :after moody
   :commands keycast-mode
   :config
-  (use-package moody :ensure)
+  (use-package moody
+    :ensure
+    ;; :config
+    ;; (setq moody-mode-line-height 30)
+    ;;; NOTE: update `keycast-insert-after' after enabling this
+    ;; (moody-replace-mode-line-buffer-identification)
+    )
 
   (setq keycast-window-predicate 'moody-window-active-p)
   (setq keycast-separator-width 1)
-  (setq keycast-insert-after 'mode-line-buffer-identification)
+  (setq keycast-insert-after
+        (let ((moody 'moody-mode-line-buffer-identification))
+          (if (member moody mode-line-format)
+              'moody-mode-line-buffer-identification
+            'mode-line-buffer-identification)))
   (setq keycast-remove-tail-elements nil)
 
   (dolist (input '(self-insert-command
