@@ -8471,13 +8471,13 @@ appropriate string for its indicator and colours that are designed
 specifically for the mode line (the default uses the generic font-lock
 warning face).
 
-I got the idea for =prot/hidden-mode-line-mode= from [[https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8][William Rankin]].  Note
+I got the idea for =prot/mode-line-hidden-mode= from [[https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8][William Rankin]].  Note
 that William is the author of the wonderful =olivetti-mode= (see elsewhere
 in this document [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing (olivetti-mode)]]).
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :commands prot/hidden-mode-line-mode
+  :commands prot/mode-line-hidden-mode
   :config
   (setq mode-line-percent-position '(-3 "%p"))
   (setq mode-line-defining-kbd-macro
@@ -8500,11 +8500,11 @@ in this document [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for
                   mode-line-misc-info
                   mode-line-end-spaces))
 
-  (define-minor-mode prot/hidden-mode-line-mode
+  (define-minor-mode prot/mode-line-hidden-mode
     "Toggle modeline visibility in the current buffer."
     :init-value nil
     :global nil
-    (if prot/hidden-mode-line-mode
+    (if prot/mode-line-hidden-mode
         (setq-local mode-line-format nil)
       (kill-local-variable 'mode-line-format)
       (force-mode-line-update))))
@@ -8910,7 +8910,7 @@ additional font-related parameters (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda
 removing the fringe on both sides /of the selected window/ (check my
 [[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][fringe-mode settings]]), switching to a blinking bar cursor (see section
 on [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks)]], and hiding the mode line in accordance
-with =prot/hidden-mode-line-mode= defined in the [[#h:39f57b0d-300a-4310-9ba8-8c388fa72e1d][Mode line]] section.
+with =prot/mode-line-hidden-mode= defined in the [[#h:39f57b0d-300a-4310-9ba8-8c388fa72e1d][Mode line]] section.
 
 Also review =prot/scroll-centre-cursor-mode= in the [[#h:0c44b318-813a-4f4a-b596-75df4a86476b][Scrolling behaviour]]
 section.
@@ -8933,7 +8933,7 @@ For video demonstrantions watch these:
     "Toggle buffer-local `olivetti-mode' with additional parameters.
 
 Fringes are disabled.  The modeline is hidden, except for
-`prog-mode' buffers (see `prot/hidden-mode-line-mode').  The
+`prog-mode' buffers (see `prot/mode-line-hidden-mode').  The
 default typeface is set to a proportionately spaced family,
 except for programming modes (see `prot/variable-pitch-mode').
 The cursor becomes a blinking bar, per `prot/cursor-type-mode'."
@@ -8946,13 +8946,13 @@ The cursor becomes a blinking bar, per `prot/cursor-type-mode'."
           (prot/variable-pitch-mode 1)
           (prot/cursor-type-mode 1)
           (unless (derived-mode-p 'prog-mode)
-            (prot/hidden-mode-line-mode 1)))
+            (prot/mode-line-hidden-mode 1)))
       (olivetti-mode -1)
       (set-window-fringes (selected-window) nil) ; Use default width
       (prot/variable-pitch-mode -1)
       (prot/cursor-type-mode -1)
       (unless (derived-mode-p 'prog-mode)
-        (prot/hidden-mode-line-mode -1))))
+        (prot/mode-line-hidden-mode -1))))
   :bind ("C-c o" . prot/olivetti-mode))
 #+end_src
 
