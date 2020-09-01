@@ -622,8 +622,8 @@ See, for example, `prot/font-set-fonts'.")
   ;; https://gitlab.com/protesilaos/iosevka-comfy
   (defconst prot/font-sizes-families-alist
     '(("laptop" . (13.5 "Iosevka Comfy" "FiraGO" 1))
-      ("desktop" . (15 "Iosevka Comfy" "Alegreya Sans" 3))
-      ("presentation" . (19 "Iosevka Comfy" "Open Sans" 0)))
+      ("desktop" . (15 "Iosevka Comfy" "Alegreya Sans" 2))
+      ("presentation" . (19 "Iosevka Comfy" "Source Sans Pro" 2)))
     "Alist of desired typefaces and their point sizes.
 
 Each association consists of a display type mapped to a point
