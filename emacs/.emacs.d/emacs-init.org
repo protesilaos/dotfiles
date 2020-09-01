@@ -4840,9 +4840,16 @@ demanding workflows.
   :config
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)
-  (setq org-export-backends
-        '(ascii html latex md))
-  (setq org-export-dispatch-use-expert-ui nil))
+  (setq org-export-dispatch-use-expert-ui nil)
+  ;; TODO: review how to use only desired backends in the dispatcher
+  (use-package ox-md)
+  (use-package ox-texinfo)
+  (use-package ox-icalendar :disabled)
+  (use-package ox-latex :disabled)
+  (use-package ox-odt :disabled)
+  (use-package ox-man :disabled)
+  (use-package ox-publish :disabled)
+  (setq org-export-backends nil))
 #+end_src
 
 **** TODO review Org's exporting facilities [0/2]                 :emacs:org:
