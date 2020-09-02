@@ -4722,13 +4722,13 @@ produces dates with a fixed length."
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-show-current-time-in-grid t)
   (setq org-agenda-current-time-string
-        "—·—·—·—·—·—·—·—·—")
+        "-·-·-·-·-·-·-·-·-")
   (setq org-agenda-time-grid
         '((daily today require-timed)
           (0700 0800 0900 1000 1100
                 1200 1300 1400 1500 1600
                 1700 1800 1900 2000 2100)
-          " -----" "—————————————————"))
+          " ....." "-----------------"))
   (setq org-agenda-default-appointment-duration nil)
 
   ;; Global to-do list
