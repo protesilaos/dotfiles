@@ -4883,7 +4883,7 @@ article for more).
   (setq org-id-link-to-org-use-id
         'create-if-interactive-and-no-custom-id)
 
-  (defun contrib/org-get-id (&optional pom create prefix)
+  (defun contrib/org-id-get (&optional pom create prefix)
     "Get the CUSTOM_ID property of the entry at point-or-marker
 POM. If POM is nil, refer to the entry at point. If the entry
 does not have an CUSTOM_ID, the function returns nil. However,
@@ -4898,7 +4898,7 @@ case, the CUSTOM_ID of the entry is returned."
          (create
           (setq id (org-id-new (concat prefix "h")))
           (org-entry-put pom "CUSTOM_ID" id)
-          (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
+          (org-id-add-location id (format "%s" (buffer-file-name (buffer-base-buffer))))
           id)))))
 
   (defun contrib/org-id-headlines ()
@@ -4906,7 +4906,7 @@ case, the CUSTOM_ID of the entry is returned."
 file which do not already have one."
     (interactive)
     (org-map-entries
-     (funcall 'contrib/org-get-id (point) 'create))))
+     (lambda () (contrib/org-id-get (point) t)))))
 #+end_src
 
 *** Simple presentations inside of Emacs (org-tree-slide)
