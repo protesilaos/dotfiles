@@ -1,6 +1,16 @@
 #+TITLE: GNU Emacs package configuration file
 #+AUTHOR: Protesilaos Stavrou
 #+EMAIL: public@protesilaos.com
+#+OPTIONS: toc:nil
+#+MACRO: export-date (eval (format-time-string "%F %R %z" (current-time)))
+
++ Created: 2019-08-15
++ Updated: *{{{export-date}}}*.
+
+See this file's [[https://gitlab.com/protesilaos/dotfiles/commits/master/emacs/.emacs.d/emacs-init.org][upstream git history]].  Everything is part of my
+dotfiles' repository.
+
+#+TOC: headlines 8 insert TOC here, with eight headline levels
 
 * Overview
 :PROPERTIES:
@@ -4837,19 +4847,25 @@ demanding workflows.
 #+begin_src emacs-lisp
 (use-package ox
   :after org
+  :commands (prot/ox-html prot/ox-texinfo)
   :config
   (setq org-export-with-toc t)
   (setq org-export-headline-levels 8)
   (setq org-export-dispatch-use-expert-ui nil)
-  ;; TODO: review how to use only desired backends in the dispatcher
-  (use-package ox-md)
+  (setq org-html-htmlize-output-type nil)
+  (setq org-html-head-include-default-style nil)
+  (setq org-html-head-include-scripts nil)
   (use-package ox-texinfo)
-  (use-package ox-icalendar :disabled)
-  (use-package ox-latex :disabled)
-  (use-package ox-odt :disabled)
-  (use-package ox-man :disabled)
-  (use-package ox-publish :disabled)
-  (setq org-export-backends nil))
+  ;; FIXME: how to remove everything else?
+  (setq org-export-backends '(html texinfo))
+
+  (defun prot/ox-html ()
+    (interactive)
+    (org-html-export-as-html nil nil nil t nil))
+
+  (defun prot/ox-texinfo ()
+    (interactive)
+    (org-texinfo-export-to-info)))
 #+end_src
 
 **** TODO review Org's exporting facilities [0/2]                 :emacs:org:
