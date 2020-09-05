@@ -2407,7 +2407,8 @@ Move the point to the absolute beginning.  Adapt indentation by
 passing \\[universal-argument]."
     (interactive "P")
     (let ((indent (if arg arg nil)))
-      (if (bobp)
+      (if (or (bobp)
+              (line-number-at-pos 1))
           (progn
             (beginning-of-line)
             (newline)
