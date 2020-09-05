@@ -4353,10 +4353,16 @@ Now on to the miscellaneous settings:
   (setq org-todo-keywords
         '((sequence "TODO(t)" "|" "DONE(D)" "CANCEL(C)")
           (sequence "MEET(m)" "|" "MET(M)")
-          (sequence "STUDY(s)" "|" "STUDIED(S)")))
-  ;; (setq org-todo-keyword-faces
-  ;;       '(("MEET" . (:inherit font-lock-type-face))
-  ;;         ("STUDY" . (:inherit font-lock-constant-face))))
+          (sequence "STUDY(s)" "|" "STUDIED(S)")
+          (sequence "WRITE(w)" "|" "WROTE(W)")))
+  (setq org-todo-keyword-faces
+        '(("MEET" . '(font-lock-preprocessor-face org-todo))
+          ("STUDY" . '(font-lock-variable-name-face org-todo))
+          ("WRITE" . '(font-lock-type-face org-todo))))
+  (setq org-priority-faces
+        '((?A . '(org-scheduled-today org-priority))
+          (?B . org-priority)
+          (?C . '(shadow org-priority))))
   (setq org-fontify-done-headline nil)
   (setq org-fontify-quote-and-verse-blocks t)
   (setq org-fontify-whole-heading-line nil)
@@ -4382,7 +4388,8 @@ Now on to the miscellaneous settings:
           ("book")
           ("essay")
           ("article")
-          ("mail")))
+          ("mail")
+          ("website")))
   ;; code blocks
   (setq org-confirm-babel-evaluate nil)
   ;; log
@@ -4397,6 +4404,7 @@ Now on to the miscellaneous settings:
   (setq org-special-ctrl-k nil)
   (setq org-M-RET-may-split-line '((default . nil)))
   (setq org-hide-emphasis-markers t)
+  (setq org-hide-macro-markers t)
   (setq org-hide-leading-stars nil)
   (setq org-structure-template-alist    ; CHANGED in Org 9.3, Emacs 27.1
         '(("s" . "src")
@@ -4445,10 +4453,10 @@ description and you are good to go.
 (use-package ol
   :config
   (setq org-link-keep-stored-after-insertion t)
-  :bind (:map org-mode-map
-              ("C-c l" . org-store-link)
-              ("C-c S-l" . org-toggle-link-display)
-              ("C-c C-S-l" . org-insert-last-stored-link)))
+  :bind (("C-c l" . org-store-link)
+         :map org-mode-map
+         ("C-c S-l" . org-toggle-link-display)
+         ("C-c C-S-l" . org-insert-last-stored-link)))
 #+end_src
 
 *** Org-capture templates
@@ -4530,6 +4538,10 @@ of the above in action.
         '(("b" "Basic task for future review" entry
            (file+headline "tasks.org" "Basic tasks that need to be reviewed")
            "* %^{Title}\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n\n%i%l")
+
+          ("c" "Comment or write blog" entry
+           (file+headline "tasks.org" "Writing list")
+           "* WRITE %^{Title} :@priv:website:\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n\n%i%l")
 
           ("w" "Work")
           ("wt" "Task or assignment" entry
