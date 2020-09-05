@@ -7950,6 +7950,10 @@ the trouble of having to manually find the name of the currently playing
 track.  For more on the implementation front, refer to the
 =prot/bongo-playlist-change-track-hook= and its accompaniments.
 
+The =contrib/bongo-playlist-no-banner= advice, which hides the commentary
+banner from the standard Bongo playlist buffer, is copied with a minor
+rewording from the [[https://github.com/Koekelas/dotfiles/blob/master/emacs.org][Emacs configuration file of Nicolas De Jaeghere]].
+
 #+begin_src emacs-lisp
 (use-package bongo
   :ensure
@@ -7972,6 +7976,14 @@ track.  For more on the implementation front, refer to the
   (setq bongo-vlc-program-name "cvlc")
 
 ;;; Bongo playlist buffer
+  ;; Hide the playlist's banner
+  (define-advice bongo-default-playlist-buffer
+      (:override () contrib/bongo-playlist-no-banner)
+    (with-current-buffer (get-buffer-create bongo-default-playlist-buffer-name)
+      (unless (derived-mode-p 'bongo-playlist-mode)
+        (bongo-playlist-mode))
+      (current-buffer)))
+
   (defvar prot/bongo-playlist-delimiter
     "\n******************************\n\n"
     "Delimiter for inserted items in `bongo' playlist buffers.")
