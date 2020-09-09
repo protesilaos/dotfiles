@@ -42,8 +42,7 @@
 ;;     modus-operandi-theme-slanted-constructs             (boolean)
 ;;     modus-operandi-theme-bold-constructs                (boolean)
 ;;     modus-operandi-theme-variable-pitch-headings        (boolean)
-;;     modus-operandi-theme-rainbow-headings               (boolean)
-;;     modus-operandi-theme-section-headings               (boolean)
+;;     modus-operandi-theme-headings                       (alist)
 ;;     modus-operandi-theme-scale-headings                 (boolean)
 ;;     modus-operandi-theme-fringes                        (choice)
 ;;     modus-operandi-theme-org-blocks                     (choice)
@@ -82,6 +81,7 @@
 ;;     auto-dim-other-buffers
 ;;     avy
 ;;     awesome-tray
+;;     binder
 ;;     bm
 ;;     bongo
 ;;     boon
@@ -148,6 +148,7 @@
 ;;     eshell-fringe-status
 ;;     eshell-git-prompt
 ;;     eshell-prompt-extras (epe)
+;;     eshell-syntax-highlighting
 ;;     evil (evil-mode)
 ;;     evil-goggles
 ;;     evil-visual-mark-mode
@@ -269,6 +270,7 @@
 ;;     powerline-evil
 ;;     proced
 ;;     prodigy
+;;     racket-mode
 ;;     rainbow-blocks
 ;;     rainbow-identifiers
 ;;     rainbow-delimiters
@@ -444,13 +446,109 @@ between foreground and background is >= 7:1)."
   "Use proportional fonts (variable-pitch) in headings."
   :type 'boolean)
 
+(define-obsolete-variable-alias 'modus-operandi-theme-rainbow-headings
+  'modus-operandi-theme-headings "`modus-operandi-theme' 0.13.0")
+
 (defcustom modus-operandi-theme-rainbow-headings nil
   "Use more saturated colours for headings."
   :type 'boolean)
 
+(define-obsolete-variable-alias 'modus-operandi-theme-section-headings
+  'modus-operandi-theme-headings "`modus-operandi-theme' 0.13.0")
+
 (defcustom modus-operandi-theme-section-headings nil
   "Use a background and an overline in headings."
   :type 'boolean)
+
+(defcustom modus-operandi-theme-headings
+  '((t . nil))
+  "Alist of styles for headings, with optional value per level.
+
+To control faces per level from 1-8, use something like this:
+
+  (setq modus-operandi-theme-headings
+        '((1 . highlight)
+          (2 . line)
+          (t . rainbow-line-no-bold)))
+
+To set a uniform value for all heading levels, use this pattern:
+
+  (setq modus-operandi-theme-headings
+        '((t . rainbow-line-no-bold)))
+
+The default uses a fairly desaturated foreground value in
+combination with a bold typographic weight.  To specify this
+style for a given level N (assuming you wish to have another
+fallback option), just specify the value t like this:
+
+  (setq modus-operandi-theme-headings
+        '((1 . t)
+          (2 . line)
+          (t . rainbow-line-no-bold)))
+
+A description of all possible values:
+
++ `no-bold' retains the default text colour while removing
+  the typographic weight.
+
++ `line' is the same as the default plus an overline over the
+  heading.
+
++ `line-no-bold' is the same as `line' without bold weight.
+
++ `rainbow' uses a more colourful foreground in combination
+  with bold weight.
+
++ `rainbow-line' is the same as `rainbow' plus an overline.
+
++ `rainbow-line-no-bold' is the same as `rainbow-line' without
+  the bold weight.
+
++ `highlight' retains the default style of a fairly desaturated
+  foreground combined with a bold weight and add to it a subtle
+  accented background.
+
++ `highlight-no-bold' is the same as `highlight' without a bold
+  weight.
+
++ `rainbow-highlight' is the same as `highlight' but with a more
+  colourful foreground.
+
++ `rainbow-highlight-no-bold' is the same as `rainbow-highlight'
+  without a bold weight.
+
++ `section' retains the default looks and adds to them both an
+  overline and a slightly accented background.  It is, in effect,
+  a combination of the `line' and `highlight' values.
+
++ `section-no-bold' is the same as `section' without a bold
+  weight.
+
++ `rainbow-section' is the same as `section' but with a more
+  colourful foreground.
+
++ `rainbow-section-no-bold' is the same as `rainbow-section'
+  without a bold weight."
+  :type
+  '(alist
+    :key-type symbol
+    :value-type
+    (choice (const :tag "Fairly desaturated foreground with bold weight (default)" t)
+            (const :tag "Like the default without bold weight" no-bold)
+            (const :tag "Like the default plus overline" line)
+            (const :tag "Like `line' without bold weight" line-no-bold)
+            (const :tag "Like the default but with more colourful foreground" rainbow)
+            (const :tag "Like `rainbow' plus overline" rainbow-line)
+            (const :tag "Like `rainbow' without bold weight" rainbow-no-bold)
+            (const :tag "Like `rainbow-line' without bold weight" rainbow-line-no-bold)
+            (const :tag "Like the default plus subtle background" highlight)
+            (const :tag "Like `highlight' without bold weight" highlight-no-bold)
+            (const :tag "Like `highlight' with more colourful foreground" rainbow-highlight)
+            (const :tag "Like `rainbow-highlight' without bold weight" rainbow-highlight-no-bold)
+            (const :tag "Like `highlight' plus overline" section)
+            (const :tag "Like `section' without bold weight" section-no-bold)
+            (const :tag "Like `section' with more colourful foreground" rainbow-section)
+            (const :tag "Like `rainbow-section' without bold weight" rainbow-section-no-bold))))
 
 (defcustom modus-operandi-theme-scale-headings nil
   "Use font scaling for headings."
@@ -732,29 +830,65 @@ FAINT is the less saturated colour."
       (list :foreground faint)
     (list :foreground normal)))
 
-(defun modus-operandi-theme-heading-foreground (subtle rainbow)
-  "Apply foreground value to headings.
-SUBTLE is the default aesthetic.  RAINBOW is the saturated one."
-  (if modus-operandi-theme-rainbow-headings
-      (list :foreground rainbow)
-    (list :foreground subtle)))
+(defun modus-operandi-theme-heading-p (key)
+  "Query style of KEY in `modus-operandi-theme-headings'."
+  (cdr (assoc key modus-operandi-theme-headings)))
 
-(defun modus-operandi-theme-heading-block (bg fg)
-  "Conditionally extend heading styles.
-Apply BG to background and FG to overline."
-  (if modus-operandi-theme-section-headings
-      (append
-       (and (>= emacs-major-version 27) '(:extend t))
-       (list :background bg :overline fg))
-    (list :background nil :overline nil)))
+(defun modus-operandi-theme-heading (level fg fg-alt bg border)
+  "Conditional styles for `modus-operandi-theme-headings'.
 
-(defun modus-operandi-theme-org-todo-block (bgbox fgbox fg)
-  "Conditionally extend the styles of Org keywords.
-BGBOX applies to the background.  FGBOX applies to the foreground
-and the border.  FG is used when no block style is in effect."
-  (if modus-operandi-theme-section-headings
-      (list :background bgbox :foreground fgbox :box (list :color fgbox))
-    (list :foreground fg)))
+LEVEL is the heading's position in their order.  FG is the
+default text colour.  FG-ALT is an accented, more saturated value
+than the default.  BG is a nuanced, typically accented,
+background that can work well with either of the foreground
+values.  BORDER is a colour value that combines well with the
+background and alternative foreground."
+  (let* ((key (modus-operandi-theme-heading-p `,level))
+         (style (if key key (modus-operandi-theme-heading-p t)))
+         (var (if modus-operandi-theme-variable-pitch-headings
+                  'variable-pitch
+                'default)))
+    (pcase style
+      ('no-bold
+       (list :inherit `,var :foreground fg))
+      ('line
+       (list :inherit `(bold ,var) :foreground fg :overline border))
+      ('line-no-bold
+       (list :inherit `,var :foreground fg :overline border))
+      ('rainbow
+       (list :inherit `(bold ,var) :foreground fg-alt))
+      ('rainbow-no-bold
+       (list :inherit `,var :foreground fg-alt))
+      ('rainbow-line
+       (list :inherit `(bold ,var) :foreground fg-alt :overline border))
+      ('rainbow-line-no-bold
+       (list :inherit `,var :foreground fg-alt :overline border))
+      ('highlight
+       (list :inherit `(bold ,var) :background bg :foreground fg))
+      ('highlight-no-bold
+       (list :inherit `,var :background bg :foreground fg))
+      ('rainbow-highlight
+       (list :inherit `(bold ,var) :background bg :foreground fg-alt))
+      ('rainbow-highlight-no-bold
+       (list :inherit `,var :background bg :foreground fg-alt))
+      ('section
+       (append
+        (and (>= emacs-major-version 27) '(:extend t))
+        (list :inherit `(bold ,var) :background bg :foreground fg :overline border)))
+      ('section-no-bold
+       (append
+        (and (>= emacs-major-version 27) '(:extend t))
+        (list :inherit `,var :background bg :foreground fg :overline border)))
+      ('rainbow-section
+       (append
+        (and (>= emacs-major-version 27) '(:extend t))
+        (list :inherit `(bold ,var) :background bg :foreground fg-alt :overline border)))
+      ('rainbow-section-no-bold
+       (append
+        (and (>= emacs-major-version 27) '(:extend t))
+        (list :inherit `,var :background bg :foreground fg-alt :overline border)))
+      (_
+       (list :inherit `(bold ,var) :foreground fg)))))
 
 (defun modus-operandi-theme-org-block (bgblk)
   "Conditionally set the background of Org blocks.
@@ -791,7 +925,7 @@ set to `rainbow'."
     (_ (list :background bg :foreground fg))))
 
 (defun modus-operandi-theme-mode-line-attrs
-    (fg bg fg-alt bg-alt border border-3d &optional alt-style border-width)
+    (fg bg fg-alt bg-alt border border-3d &optional alt-style border-width fg-distant)
   "Colour combinations for `modus-operandi-theme-mode-line'.
 
 FG and BG are the default colours.  FG-ALT and BG-ALT are meant
@@ -804,7 +938,11 @@ Optional ALT-STYLE applies an appropriate style to the mode
 line's box property.
 
 Optional BORDER-WIDTH specifies an integer for the width of the
-rectangle that produces the box effect."
+rectangle that produces the box effect.
+
+Optional FG-DISTANT should be close to the main background
+values.  It is intended to be used as a distant-foreground
+property."
   (pcase modus-operandi-theme-mode-line
     ('3d
      `(:foreground ,fg-alt :background ,bg-alt
@@ -812,7 +950,8 @@ rectangle that produces the box effect."
                                      :color ,border-3d
                                      :style ,(and alt-style 'released-button))))
     ('moody
-     `(:foreground ,fg-alt :background ,bg-alt :underline ,border :overline ,border))
+     `(:foreground ,fg-alt :background ,bg-alt :underline ,border :overline ,border
+                   :distant-foreground ,fg-distant))
     (_
      `(:foreground ,fg :background ,bg :box ,border))))
 
@@ -1394,6 +1533,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(awesome-tray-module-mode-name-face ((,class :inherit bold :foreground ,green)))
    `(awesome-tray-module-parent-dir-face ((,class :inherit bold :foreground ,cyan)))
    `(awesome-tray-module-rvm-face ((,class :inherit bold :foreground ,magenta-alt-other)))
+;;;;; binder
+   `(binder-sidebar-highlight ((,class :inherit modus-theme-subtle-cyan)))
+   `(binder-sidebar-marked ((,class :inherit modus-theme-mark-sel)))
+   `(binder-sidebar-missing ((,class :inherit modus-theme-subtle-red)))
+   `(binder-sidebar-tags ((,class :foreground ,cyan)))
 ;;;;; bm
    `(bm-face ((,class :inherit modus-theme-subtle-yellow
                       ,@(and (>= emacs-major-version 27) '(:extend t)))))
@@ -1908,7 +2052,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(el-search-other-match ((,class :inherit modus-theme-special-mild)))
    `(el-search-occur-match ((,class :inherit modus-theme-special-calm)))
 ;;;;; eldoc
-   `(eldoc-highlight-function-argument ((,class :inherit bold :foreground ,blue-alt-other)))
+   ;; NOTE: see https://github.com/purcell/package-lint/issues/187
+   (list 'eldoc-highlight-function-argument `((,class :inherit bold :foreground ,blue-alt-other)))
 ;;;;; eldoc-box
    `(eldoc-box-body ((,class :background ,bg-alt :foreground ,fg-main)))
    `(eldoc-box-border ((,class :background ,fg-alt)))
@@ -2036,6 +2181,15 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(epe-remote-face ((,class :foreground ,fg-alt :slant ,modus-theme-slant)))
    `(epe-status-face ((,class :foreground ,magenta-alt-other)))
    `(epe-venv-face ((,class :foreground ,fg-alt :slant ,modus-theme-slant)))
+;;;;; eshell-syntax-highlighting
+   `(eshell-syntax-highlighting-alias-face ((,class :foreground ,cyan)))
+   `(eshell-syntax-highlighting-comment-face ((,class :foreground ,fg-alt)))
+   `(eshell-syntax-highlighting-directory-face ((,class :foreground ,blue)))
+   `(eshell-syntax-highlighting-envvar-face ((,class :foreground ,magenta-alt)))
+   `(eshell-syntax-highlighting-invalid-face ((,class :foreground ,red)))
+   `(eshell-syntax-highlighting-lisp-function-face ((,class :foreground ,magenta)))
+   `(eshell-syntax-highlighting-shell-command-face ((,class :foreground ,cyan-alt-other)))
+   `(eshell-syntax-highlighting-string-face ((,class :foreground ,blue-alt)))
 ;;;;; evil-mode
    `(evil-ex-commands ((,class :foreground ,magenta-alt-other)))
    `(evil-ex-info ((,class :foreground ,cyan-alt-other)))
@@ -2261,11 +2415,6 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(git-commit-overlong-summary ((,class :inherit modus-theme-refine-yellow)))
    `(git-commit-pseudo-header ((,class :inherit bold :foreground ,fg-alt)))
    `(git-commit-summary ((,class :foreground ,magenta-alt-other)))
-;;;;; git-rebase
-   `(git-rebase-comment-hash ((,class :foreground ,fg-special-cold :slant ,modus-theme-slant)))
-   `(git-rebase-comment-heading ((,class :inherit bold :foreground ,fg-dim :slant ,modus-theme-slant)))
-   `(git-rebase-description ((,class :foreground ,fg-main)))
-   `(git-rebase-hash ((,class :foreground ,cyan-alt-other)))
 ;;;;; git-gutter
    `(git-gutter:added ((,class :inherit modus-theme-fringe-green)))
    `(git-gutter:deleted ((,class :inherit modus-theme-fringe-red)))
@@ -2291,6 +2440,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(git-lens-header ((,class :inherit bold :height 1.1 :foreground ,cyan)))
    `(git-lens-modified ((,class :inherit bold :foreground ,yellow)))
    `(git-lens-renamed ((,class :inherit bold :foreground ,magenta)))
+;;;;; git-rebase
+   `(git-rebase-comment-hash ((,class :foreground ,fg-special-cold :slant ,modus-theme-slant)))
+   `(git-rebase-comment-heading ((,class :inherit bold :foreground ,fg-dim :slant ,modus-theme-slant)))
+   `(git-rebase-description ((,class :foreground ,fg-main)))
+   `(git-rebase-hash ((,class :foreground ,cyan-alt-other)))
 ;;;;; git-timemachine
    `(git-timemachine-commit ((,class :inherit bold :foreground ,yellow-active)))
    `(git-timemachine-minibuffer-author-face ((,class :foreground ,fg-special-warm)))
@@ -2625,21 +2779,26 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(indium-repl-prompt-face ((,class :foreground ,cyan-alt-other)))
    `(indium-repl-stdout-face ((,class :foreground ,fg-main)))
 ;;;;; info
-   `(Info-quoted ((,class :foreground ,magenta))) ; the capitalisation is canonical
+   `(Info-quoted ((,class :inherit fixed-pitch :foreground ,magenta))) ; the capitalisation is canonical
    `(info-header-node ((,class :inherit bold :foreground ,fg-alt)))
    `(info-header-xref ((,class :foreground ,blue-active)))
    `(info-index-match ((,class :inherit match)))
-   `(info-menu-header ((,class :inherit (bold ,modus-theme-variable-pitch) :foreground ,fg-main
-                               ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2))))
-   `(info-menu-star ((,class :foreground ,fg-main)))
-   `(info-node ((,class :inherit bold)))
-   `(info-title-1 ((,class :inherit (bold ,modus-theme-variable-pitch) :foreground ,fg-main
-                           ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
-   `(info-title-2 ((,class :inherit (bold ,modus-theme-variable-pitch) :foreground ,fg-special-warm
-                           ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3))))
-   `(info-title-3 ((,class :inherit (bold ,modus-theme-variable-pitch) :foreground ,fg-special-cold
+   `(info-menu-header ((,class ,@(modus-operandi-theme-heading
+                              3 fg-special-cold blue blue-nuanced-bg bg-region)
                            ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2))))
-   `(info-title-4 ((,class :inherit (bold ,modus-theme-variable-pitch) :foreground ,fg-special-mild
+   `(info-menu-star ((,class :foreground ,red)))
+   `(info-node ((,class :inherit bold)))
+   `(info-title-1 ((,class ,@(modus-operandi-theme-heading
+                              1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
+                           ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
+   `(info-title-2 ((,class ,@(modus-operandi-theme-heading
+                              2 fg-special-warm magenta-alt red-nuanced-bg bg-region)
+                           ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3))))
+   `(info-title-3 ((,class ,@(modus-operandi-theme-heading
+                              3 fg-special-cold blue blue-nuanced-bg bg-region)
+                           ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2))))
+   `(info-title-4 ((,class ,@(modus-operandi-theme-heading
+                              4 fg-special-mild cyan cyan-nuanced-bg bg-region)
                            ,@(modus-operandi-theme-scale modus-operandi-theme-scale-1))))
 ;;;;; info-colors
    `(info-colors-lisp-code-block ((,class :inherit fixed-pitch)))
@@ -2959,7 +3118,19 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(markdown-footnote-text-face ((,class :foreground ,fg-main :slant ,modus-theme-slant)))
    `(markdown-gfm-checkbox-face ((,class :foreground ,cyan-alt-other)))
    `(markdown-header-delimiter-face ((,class ,@(modus-operandi-theme-bold-weight) :foreground ,fg-dim)))
-   `(markdown-header-face ((,class :inherit bold)))
+   `(markdown-header-face ((t nil)))
+   `(markdown-header-face-1 ((,class ,@(modus-operandi-theme-heading
+                                        1 fg-main magenta-alt-other magenta-nuanced-bg bg-region))))
+   `(markdown-header-face-2 ((,class ,@(modus-operandi-theme-heading
+                                        2 fg-special-warm magenta-alt red-nuanced-bg bg-region))))
+   `(markdown-header-face-3 ((,class ,@(modus-operandi-theme-heading
+                                        3 fg-special-cold blue blue-nuanced-bg bg-region))))
+   `(markdown-header-face-4 ((,class ,@(modus-operandi-theme-heading
+                                        4 fg-special-mild cyan cyan-nuanced-bg bg-region))))
+   `(markdown-header-face-5 ((,class ,@(modus-operandi-theme-heading
+                                        5 fg-special-calm green-alt-other green-nuanced-bg bg-region))))
+   `(markdown-header-face-6 ((,class ,@(modus-operandi-theme-heading
+                                        6 yellow-nuanced yellow-alt-other yellow-nuanced-bg bg-region))))
    `(markdown-header-rule-face ((,class :inherit bold :foreground ,fg-special-warm)))
    `(markdown-hr-face ((,class :inherit bold :foreground ,fg-special-warm)))
    `(markdown-html-attr-name-face ((,class :inherit fixed-pitch :foreground ,cyan)))
@@ -2987,7 +3158,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(markdown-reference-face ((,class :inherit markdown-markup-face)))
    `(markdown-strike-through-face ((,class :strike-through t)))
    `(markdown-table-face ((,class :inherit fixed-pitch :foreground ,fg-special-cold)))
-   `(markdown-url-face ((,class :foreground ,blue)))
+   `(markdown-url-face ((,class :foreground ,blue-alt)))
 ;;;;; markup-faces (`adoc-mode')
    `(markup-anchor-face ((,class :foreground ,fg-inactive)))
    `(markup-attribute-face ((,class :foreground ,fg-inactive :slant italic)))
@@ -3057,15 +3228,13 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;;; modeline
    `(mode-line ((,class ,@(modus-operandi-theme-mode-line-attrs
                            fg-active bg-active fg-dim bg-active
-                           fg-alt bg-active 'alt-style)
-                        :distant-foreground ,bg-main)))
+                           fg-alt bg-active 'alt-style nil bg-main))))
    `(mode-line-buffer-id ((,class :inherit bold)))
    `(mode-line-emphasis ((,class :inherit bold :foreground ,blue-active)))
    `(mode-line-highlight ((,class :inherit modus-theme-active-blue :box (:line-width -1 :style pressed-button))))
    `(mode-line-inactive ((,class ,@(modus-operandi-theme-mode-line-attrs
                                     fg-inactive bg-inactive fg-alt bg-dim
-                                    bg-region bg-active)
-                                 :distant-foreground ,bg-alt)))
+                                    bg-region bg-active))))
 ;;;;; mood-line
    `(mood-line-modified ((,class :foreground ,magenta-active)))
    `(mood-line-status-error ((,class :inherit bold :foreground ,red-active)))
@@ -3103,7 +3272,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(mu4e-moved-face ((,class :foreground ,yellow :slant ,modus-theme-slant)))
    `(mu4e-ok-face ((,class :inherit bold :foreground ,green)))
    `(mu4e-region-code ((,class :inherit modus-theme-special-calm)))
-   `(mu4e-replied-face ((,class :foreground ,cyan-active)))
+   `(mu4e-replied-face ((,class :foreground ,blue-faint)))
    `(mu4e-special-header-value-face ((,class :inherit bold :foreground ,blue-alt-other)))
    `(mu4e-system-face ((,class :foreground ,fg-mark-del :slant ,modus-theme-slant)))
    `(mu4e-title-face ((,class :foreground ,fg-main)))
@@ -3262,18 +3431,18 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-agenda-clocking ((,class :inherit modus-theme-special-cold)))
    `(org-agenda-column-dateline ((,class :background ,bg-alt)))
    `(org-agenda-current-time ((,class :inherit modus-theme-subtle-cyan)))
-   `(org-agenda-date ((,class :inherit ,modus-theme-variable-pitch :foreground ,cyan-alt-other
-                              ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4)
-                              ,@(modus-operandi-theme-heading-block cyan-nuanced-bg cyan-nuanced))))
+   `(org-agenda-date ((,class ,@(modus-operandi-theme-heading
+                                 1 cyan-alt-other cyan-alt-other cyan-nuanced-bg cyan-nuanced)
+                              ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
    `(org-agenda-date-today ((,class :inherit (bold ,modus-theme-variable-pitch)
                                     :background ,cyan-intense-bg :foreground ,fg-main
                                     ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
-   `(org-agenda-date-weekend ((,class :inherit ,modus-theme-variable-pitch :foreground ,cyan
-                                      ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4)
-                                      ,@(modus-operandi-theme-heading-block blue-nuanced-bg cyan-nuanced))))
+   `(org-agenda-date-weekend ((,class ,@(modus-operandi-theme-heading
+                                         1 cyan cyan blue-nuanced-bg cyan-nuanced)
+                                      ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
    `(org-agenda-diary ((,class :foreground ,fg-main)))
    `(org-agenda-dimmed-todo-face ((,class :inherit modus-theme-subtle-neutral)))
-   `(org-agenda-done ((,class ,@(modus-operandi-theme-org-todo-block green-nuanced-bg green-nuanced green))))
+   `(org-agenda-done ((,class :foreground ,green-alt)))
    `(org-agenda-filter-category ((,class :inherit bold :foreground ,magenta-active)))
    `(org-agenda-filter-effort ((,class :inherit bold :foreground ,magenta-active)))
    `(org-agenda-filter-regexp ((,class :inherit bold :foreground ,magenta-active)))
@@ -3292,27 +3461,27 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-block-end-line ((,class :inherit org-block-begin-line)))
    `(org-checkbox ((,class :box (:line-width 1 :color ,bg-active)
                            :background ,bg-inactive :foreground ,fg-active)))
-   `(org-checkbox-statistics-done ((,class :foreground ,green
-                                           ,@(modus-operandi-theme-heading-block
-                                              green-nuanced-bg green-nuanced))))
-   `(org-checkbox-statistics-todo ((,class ,@(modus-operandi-theme-heading-foreground red-alt red)
-                                           ,@(modus-operandi-theme-heading-block
-                                              red-nuanced-bg red-nuanced))))
+   `(org-checkbox-statistics-done ((,class :box ,bg-region :background ,bg-dim
+                                           :foreground ,green
+                                           :inherit ,modus-theme-variable-pitch)))
+   `(org-checkbox-statistics-todo ((,class :box ,bg-region :background ,bg-dim
+                                           :foreground ,red-alt
+                                           :inherit ,modus-theme-variable-pitch)))
    `(org-clock-overlay ((,class :inherit modus-theme-special-cold)))
    `(org-code ((,class :inherit fixed-pitch :foreground ,magenta)))
    `(org-column ((,class :background ,bg-alt)))
    `(org-column-title ((,class :inherit bold :underline t :background ,bg-alt)))
    `(org-date ((,class :inherit fixed-pitch :foreground ,cyan-alt-other :underline t)))
    `(org-date-selected ((,class :inherit bold :foreground ,blue-alt :inverse-video t)))
-   `(org-default ((,class :background ,bg-main :foreground ,fg-main)))
    `(org-document-info ((,class :foreground ,fg-special-cold)))
    `(org-document-info-keyword ((,class :inherit fixed-pitch :foreground ,fg-alt)))
    `(org-document-title ((,class :inherit (bold ,modus-theme-variable-pitch) :foreground ,fg-special-cold
                                  ,@(modus-operandi-theme-scale modus-operandi-theme-scale-5))))
-   `(org-done ((,class ,@(modus-operandi-theme-org-todo-block green-nuanced-bg green-nuanced green))))
-   `(org-drawer ((,class :foreground ,cyan-alt)))
+   `(org-done ((,class :box ,bg-region :background ,bg-dim :foreground ,green
+                       :inherit ,modus-theme-variable-pitch)))
+   `(org-drawer ((,class :inherit ,modus-theme-variable-pitch :foreground ,cyan)))
    `(org-ellipsis ((,class :foreground nil))) ; inherits from the heading's colour
-   `(org-footnote ((,class :foreground ,blue-alt :underline t)))
+   `(org-footnote ((,class :foreground ,blue-alt :underline ,blue-alt)))
    `(org-formula ((,class :inherit fixed-pitch :foreground ,red-alt)))
    `(org-habit-alert-face ((,class :inherit modus-theme-intense-yellow)))
    `(org-habit-alert-future-face ((,class :inherit modus-theme-refine-yellow)))
@@ -3322,48 +3491,39 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-habit-overdue-future-face ((,class :inherit modus-theme-refine-red)))
    `(org-habit-ready-face ((,class :inherit modus-theme-intense-blue)))
    `(org-habit-ready-future-face ((,class :inherit modus-theme-refine-blue)))
-   `(org-headline-done ((,class :foreground ,green-nuanced
-                                ,@(modus-operandi-theme-heading-block
-                                   green-nuanced-bg green-nuanced))))
+   `(org-headline-done ((,class :inherit ,modus-theme-variable-pitch :foreground ,green-nuanced)))
    `(org-hide ((,class :foreground ,bg-main)))
    `(org-indent ((,class :inherit (fixed-pitch org-hide))))
    `(org-latex-and-related ((,class :foreground ,magenta-refine-fg)))
-   `(org-level-1 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                          ,@(modus-operandi-theme-heading-foreground fg-main magenta-alt-other)
-                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4)
-                          ,@(modus-operandi-theme-heading-block magenta-nuanced-bg magenta-nuanced))))
-   `(org-level-2 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                          ,@(modus-operandi-theme-heading-foreground fg-special-warm magenta-alt)
-                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3)
-                          ,@(modus-operandi-theme-heading-block red-nuanced-bg red-nuanced))))
-   `(org-level-3 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                          ,@(modus-operandi-theme-heading-foreground fg-special-cold blue)
-                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2)
-                          ,@(modus-operandi-theme-heading-block blue-nuanced-bg blue-nuanced))))
-   `(org-level-4 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                          ,@(modus-operandi-theme-heading-foreground fg-special-mild cyan)
-                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-1)
-                          ,@(modus-operandi-theme-heading-block cyan-nuanced-bg cyan-nuanced))))
-   `(org-level-5 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                          ,@(modus-operandi-theme-heading-foreground fg-special-calm green-alt-other)
-                          ,@(modus-operandi-theme-heading-block green-nuanced-bg green-nuanced))))
-   `(org-level-6 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                          ,@(modus-operandi-theme-heading-foreground yellow-nuanced yellow-alt-other)
-                          ,@(modus-operandi-theme-heading-block yellow-nuanced-bg yellow-nuanced))))
-   `(org-level-7 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                          ,@(modus-operandi-theme-heading-foreground red-nuanced red-alt)
-                          ,@(modus-operandi-theme-heading-block red-nuanced-bg red-nuanced))))
-   `(org-level-8 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                          ,@(modus-operandi-theme-heading-foreground fg-dim magenta)
-                          ,@(modus-operandi-theme-heading-block bg-alt fg-alt))))
+   `(org-level-1 ((,class ,@(modus-operandi-theme-heading
+                             1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
+                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
+   `(org-level-2 ((,class ,@(modus-operandi-theme-heading
+                             2 fg-special-warm magenta-alt red-nuanced-bg bg-region)
+                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3))))
+   `(org-level-3 ((,class ,@(modus-operandi-theme-heading
+                             3 fg-special-cold blue blue-nuanced-bg bg-region)
+                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2))))
+   `(org-level-4 ((,class ,@(modus-operandi-theme-heading
+                             4 fg-special-mild cyan cyan-nuanced-bg bg-region)
+                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-1))))
+   `(org-level-5 ((,class ,@(modus-operandi-theme-heading
+                             5 fg-special-calm green-alt-other green-nuanced-bg bg-region))))
+   `(org-level-6 ((,class ,@(modus-operandi-theme-heading
+                             6 yellow-nuanced yellow-alt-other yellow-nuanced-bg bg-region))))
+   `(org-level-7 ((,class ,@(modus-operandi-theme-heading
+                             7 red-nuanced red-alt red-nuanced-bg bg-region))))
+   `(org-level-8 ((,class ,@(modus-operandi-theme-heading
+                             8 fg-dim magenta bg-alt bg-region))))
    `(org-link ((,class :inherit link)))
    `(org-list-dt ((,class :inherit bold)))
-   `(org-macro ((,class :inherit org-latex-and-related)))
+   `(org-macro ((,class :background ,blue-nuanced-bg :foreground ,magenta-alt-other)))
    `(org-meta-line ((,class :inherit fixed-pitch :background ,cyan-nuanced-bg :foreground ,cyan-nuanced)))
    `(org-mode-line-clock ((,class :foreground ,fg-main)))
    `(org-mode-line-clock-overrun ((,class :inherit modus-theme-active-red)))
-   `(org-priority ((,class ,@(modus-operandi-theme-org-todo-block magenta-nuanced-bg magenta-nuanced magenta)
-                           ,@(modus-operandi-theme-heading-foreground magenta magenta-alt-other))))
+   `(org-priority ((,class :box ,bg-region :background ,bg-dim :foreground ,magenta
+                           :inherit ,modus-theme-variable-pitch)))
+   `(org-property-value ((,class :foreground ,cyan-alt-other)))
    `(org-quote ((,class ,@(if modus-operandi-theme-org-blocks
                               (append
                                (and (>= emacs-major-version 27) '(:extend t))
@@ -3374,14 +3534,15 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-scheduled-previously ((,class :foreground ,yellow-alt-other)))
    `(org-scheduled-today ((,class :foreground ,magenta-alt-other)))
    `(org-sexp-date ((,class :inherit org-date)))
-   `(org-special-keyword ((,class ,@(modus-operandi-theme-org-todo-block cyan-nuanced-bg cyan-nuanced cyan-alt))))
+   `(org-special-keyword ((,class :inherit ,modus-theme-variable-pitch
+                                  :foreground ,blue-nuanced)))
    `(org-table ((,class :inherit fixed-pitch :foreground ,fg-special-cold)))
-   `(org-tag ((,class ,@(modus-operandi-theme-bold-weight) :foreground ,magenta-nuanced)))
+   `(org-tag ((,class :foreground ,magenta-nuanced)))
    `(org-tag-group ((,class :inherit bold :foreground ,cyan-nuanced)))
    `(org-target ((,class :underline t)))
    `(org-time-grid ((,class :foreground ,fg-unfocused)))
-   `(org-todo ((,class ,@(modus-operandi-theme-org-todo-block red-nuanced-bg red-nuanced red-alt)
-                       ,@(modus-operandi-theme-heading-foreground red-alt red))))
+   `(org-todo ((,class :box ,bg-region :background ,bg-dim :foreground ,red-alt
+                       :inherit ,modus-theme-variable-pitch)))
    `(org-upcoming-deadline ((,class :foreground ,red-alt-other)))
    `(org-upcoming-distant-deadline ((,class :foreground ,red-nuanced)))
    `(org-verbatim ((,class :inherit fixed-pitch :background ,bg-alt :foreground ,fg-special-calm)))
@@ -3415,37 +3576,28 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(origami-fold-header-face ((,class :background ,bg-dim :foreground ,fg-dim :box t)))
    `(origami-fold-replacement-face ((,class :background ,bg-alt :foreground ,fg-alt)))
 ;;;;; outline-mode
-   `(outline-1 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                        ,@(modus-operandi-theme-heading-foreground fg-main magenta-alt-other)
-                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4)
-                        ,@(modus-operandi-theme-heading-block magenta-nuanced-bg magenta-nuanced))))
-   `(outline-2 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                        ,@(modus-operandi-theme-heading-foreground fg-special-warm magenta-alt)
-                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3)
-                        ,@(modus-operandi-theme-heading-block red-nuanced-bg red-nuanced))))
-   `(outline-3 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                        ,@(modus-operandi-theme-heading-foreground fg-special-cold blue)
-                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2)
-                        ,@(modus-operandi-theme-heading-block blue-nuanced-bg blue-nuanced))))
-   `(outline-4 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                        ,@(modus-operandi-theme-heading-foreground fg-special-mild cyan)
-                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-1)
-                        ,@(modus-operandi-theme-heading-block cyan-nuanced-bg cyan-nuanced))))
-   `(outline-5 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                        ,@(modus-operandi-theme-heading-foreground fg-special-calm green-alt-other)
-                        ,@(modus-operandi-theme-heading-block green-nuanced-bg green-nuanced))))
-   `(outline-6 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                        ,@(modus-operandi-theme-heading-foreground yellow-nuanced yellow-alt-other)
-                        ,@(modus-operandi-theme-heading-block yellow-nuanced-bg yellow-nuanced))))
-   `(outline-7 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                        ,@(modus-operandi-theme-heading-foreground red-nuanced red-alt)
-                        ,@(modus-operandi-theme-heading-block red-nuanced-bg red-nuanced))))
-   `(outline-8 ((,class :inherit (bold ,modus-theme-variable-pitch)
-                        ,@(modus-operandi-theme-heading-foreground fg-dim magenta)
-                        ,@(modus-operandi-theme-heading-block bg-alt fg-alt))))
+   `(outline-1 ((,class ,@(modus-operandi-theme-heading
+                           1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
+                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
+   `(outline-2 ((,class ,@(modus-operandi-theme-heading
+                           2 fg-special-warm magenta-alt red-nuanced-bg bg-region)
+                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3))))
+   `(outline-3 ((,class ,@(modus-operandi-theme-heading
+                           3 fg-special-cold blue blue-nuanced-bg bg-region)
+                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2))))
+   `(outline-4 ((,class ,@(modus-operandi-theme-heading
+                           4 fg-special-mild cyan cyan-nuanced-bg bg-region)
+                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-1))))
+   `(outline-5 ((,class ,@(modus-operandi-theme-heading
+                           5 fg-special-calm green-alt-other green-nuanced-bg bg-region))))
+   `(outline-6 ((,class ,@(modus-operandi-theme-heading
+                           6 yellow-nuanced yellow-alt-other yellow-nuanced-bg bg-region))))
+   `(outline-7 ((,class ,@(modus-operandi-theme-heading
+                           7 red-nuanced red-alt red-nuanced-bg bg-region))))
+   `(outline-8 ((,class ,@(modus-operandi-theme-heading
+                           8 fg-dim magenta bg-alt bg-region))))
 ;;;;; outline-minor-faces
-   `(outline-minor-0 ((,class ,@(unless modus-operandi-theme-section-headings
-                                  (list :background cyan-nuanced-bg)))))
+   `(outline-minor-0 ((,class nil)))
 ;;;;; package (M-x list-packages)
    `(package-description ((,class :foreground ,fg-special-cold)))
    `(package-help-section-name ((,class :inherit bold :foreground ,magenta-alt-other)))
@@ -3533,6 +3685,23 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(prodigy-green-face ((,class :foreground ,green)))
    `(prodigy-red-face ((,class :foreground ,red)))
    `(prodigy-yellow-face ((,class :foreground ,yellow)))
+;;;;; racket-mode
+   `(racket-debug-break-face ((,class :inherit modus-theme-intense-red)))
+   `(racket-debug-locals-face ((,class :box (:line-width -1 :color nil)
+                                       :foreground ,green-alt-other)))
+   `(racket-debug-result-face ((,class :inherit bold :box (:line-width -1 :color nil)
+                                       :foreground ,green)))
+   `(racket-here-string-face ((,class :foreground ,blue-alt)))
+   `(racket-keyword-argument-face ((,class :foreground ,red-alt)))
+   `(racket-logger-config-face ((,class :foreground ,fg-alt :slant ,modus-theme-slant)))
+   `(racket-logger-debug-face ((,class :foreground ,blue-alt-other)))
+   `(racket-logger-info-face ((,class :foreground ,fg-lang-note)))
+   `(racket-logger-topic-face ((,class :foreground ,magenta :slant ,modus-theme-slant)))
+   `(racket-selfeval-face ((,class :foreground ,green-alt)))
+   `(racket-xp-error-face
+     ((,(append '((supports :underline (:style wave))) class)
+       :underline (:color ,fg-lang-error :style wave))
+      (,class :foreground ,fg-lang-error :underline t)))
 ;;;;; rainbow-blocks
    `(rainbow-blocks-depth-1-face ((,class :foreground ,magenta-alt-other)))
    `(rainbow-blocks-depth-2-face ((,class :foreground ,blue)))
