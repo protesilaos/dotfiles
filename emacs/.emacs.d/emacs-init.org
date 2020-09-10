@@ -6669,6 +6669,7 @@ project, as defined by `vc-root-dir'."
   :config
   (setq vc-git-diff-switches '("--patch-with-stat" "--histogram"))
   (setq vc-git-print-log-follow t)
+  (setq vc-git-revision-complete-only-branches t) ; Emacs 28
   (setq vc-git-root-log-format
         '("%d%h  %ad  %an: %s"
           "^\\(?:[*/\\| ]+ \\)?\
