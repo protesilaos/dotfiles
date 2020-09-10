@@ -446,15 +446,17 @@ between foreground and background is >= 7:1)."
   "Use proportional fonts (variable-pitch) in headings."
   :type 'boolean)
 
-(define-obsolete-variable-alias 'modus-vivendi-theme-rainbow-headings
-  'modus-vivendi-theme-headings "`modus-vivendi-theme' 0.13.0")
+(make-obsolete 'modus-vivendi-theme-rainbow-headings
+               'modus-vivendi-theme-headings
+               "`modus-vivendi-theme' 0.13.0")
 
 (defcustom modus-vivendi-theme-rainbow-headings nil
   "Use more saturated colours for headings."
   :type 'boolean)
 
-(define-obsolete-variable-alias 'modus-vivendi-theme-section-headings
-  'modus-vivendi-theme-headings "`modus-vivendi-theme' 0.13.0")
+(make-obsolete 'modus-vivendi-theme-section-headings
+               'modus-vivendi-theme-headings
+               "`modus-vivendi-theme' 0.13.0")
 
 (defcustom modus-vivendi-theme-section-headings nil
   "Use a background and an overline in headings."
@@ -609,8 +611,9 @@ For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
   :type 'number)
 
-(define-obsolete-variable-alias 'modus-vivendi-theme-visible-fringes
-  'modus-vivendi-theme-fringes "`modus-vivendi-theme' 0.12.0")
+(make-obsolete 'modus-vivendi-theme-visible-fringes
+               'modus-vivendi-theme-fringes
+               "`modus-vivendi-theme' 0.12.0")
 
 (defcustom modus-vivendi-theme-visible-fringes nil
   "Use a visible style for fringes."
@@ -628,15 +631,17 @@ pronounced greyscale value."
           (const :tag "Subtle greyscale background" subtle)
           (const :tag "Intense greyscale background" intense)))
 
-(define-obsolete-variable-alias 'modus-vivendi-theme-distinct-org-blocks
-  'modus-vivendi-theme-org-blocks "`modus-vivendi-theme' 0.11.0")
+(make-obsolete 'modus-vivendi-theme-distinct-org-blocks
+               'modus-vivendi-theme-org-blocks
+               "`modus-vivendi-theme' 0.11.0")
 
 (defcustom modus-vivendi-theme-distinct-org-blocks nil
   "Use a distinct neutral background for `org-mode' blocks."
   :type 'boolean)
 
-(define-obsolete-variable-alias 'modus-vivendi-theme-rainbow-org-src-blocks
-  'modus-vivendi-theme-org-blocks "`modus-vivendi-theme' 0.11.0")
+(make-obsolete 'modus-vivendi-theme-rainbow-org-src-blocks
+               'modus-vivendi-theme-org-blocks
+               "`modus-vivendi-theme' 0.11.0")
 
 (defcustom modus-vivendi-theme-rainbow-org-src-blocks nil
   "Use colour-coded backgrounds for `org-mode' source blocks.
@@ -666,8 +671,9 @@ association list)."
           (const :tag "Subtle grey block background" greyscale)
           (const :tag "Colour-coded background per programming language" rainbow)))
 
-(define-obsolete-variable-alias 'modus-vivendi-theme-3d-modeline
-  'modus-vivendi-theme-mode-line "`modus-vivendi-theme' 0.13.0")
+(make-obsolete 'modus-vivendi-theme-3d-modeline
+               'modus-vivendi-theme-mode-line
+               "`modus-vivendi-theme' 0.13.0")
 
 (defcustom modus-vivendi-theme-3d-modeline nil
   "Use a three-dimensional style for the active mode line."
@@ -695,8 +701,9 @@ intended purpose, this option can also be used without the
           (const :tag "Three-dimensional style for the active mode line" 3d)
           (const :tag "No box effects, which are optimal for use with the `moody' library" moody)))
 
-(define-obsolete-variable-alias 'modus-vivendi-theme-subtle-diffs
-  'modus-vivendi-theme-diffs "`modus-vivendi-theme' 0.13.0")
+(make-obsolete 'modus-vivendi-theme-subtle-diffs
+               'modus-vivendi-theme-diffs
+               "`modus-vivendi-theme' 0.13.0")
 
 (defcustom modus-vivendi-theme-subtle-diffs nil
   "Use fewer/dim backgrounds in `diff-mode', `ediff',`magit'."
@@ -724,8 +731,9 @@ greyscale value is used."
           (const :tag "Slightly accented backgrounds with tinted text" desaturated)
           (const :tag "No backgrounds, except for refined diffs" fg-only)))
 
-(define-obsolete-variable-alias 'modus-vivendi-theme-intense-standard-completions
-  'modus-vivendi-theme-completions "`modus-vivendi-theme' 0.12.0")
+(make-obsolete 'modus-vivendi-theme-intense-standard-completions
+               'modus-vivendi-theme-completions
+               "`modus-vivendi-theme' 0.12.0")
 
 (defcustom modus-vivendi-theme-intense-standard-completions nil
   "Use prominent backgrounds for Icomplete, Ido, or similar."
@@ -3120,13 +3128,17 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(markdown-header-delimiter-face ((,class ,@(modus-vivendi-theme-bold-weight) :foreground ,fg-dim)))
    `(markdown-header-face ((t nil)))
    `(markdown-header-face-1 ((,class ,@(modus-vivendi-theme-heading
-                                        1 fg-main magenta-alt-other magenta-nuanced-bg bg-region))))
+                                        1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
+                                     ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-4))))
    `(markdown-header-face-2 ((,class ,@(modus-vivendi-theme-heading
-                                        2 fg-special-warm magenta-alt red-nuanced-bg bg-region))))
+                                        2 fg-special-warm magenta-alt red-nuanced-bg bg-region)
+                                     ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-3))))
    `(markdown-header-face-3 ((,class ,@(modus-vivendi-theme-heading
-                                        3 fg-special-cold blue blue-nuanced-bg bg-region))))
+                                        3 fg-special-cold blue blue-nuanced-bg bg-region)
+                                     ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-2))))
    `(markdown-header-face-4 ((,class ,@(modus-vivendi-theme-heading
-                                        4 fg-special-mild cyan cyan-nuanced-bg bg-region))))
+                                        4 fg-special-mild cyan cyan-nuanced-bg bg-region)
+                                     ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-1))))
    `(markdown-header-face-5 ((,class ,@(modus-vivendi-theme-heading
                                         5 fg-special-calm green-alt-other green-nuanced-bg bg-region))))
    `(markdown-header-face-6 ((,class ,@(modus-vivendi-theme-heading
