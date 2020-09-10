@@ -7576,10 +7576,10 @@ part users should care about looks like this:
 #+begin_example
 (setq elfeed-feeds
       '(("https://www.archlinux.org/feeds/news/" linux distro)
-        ("https://www.gnome.org/feed/" gnu de)
         ("https://planet.emacslife.com/atom.xml" emacs community)
         ("https://www.ecb.europa.eu/rss/press.html" economics eu)
         ("http://feed.pippa.io/public/shows/teamhuman" podcast culture)
+        ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" personal video)
         ("https://protesilaos.com/politics.xml" personal)))
 #+end_example
 
@@ -7757,12 +7757,12 @@ current monitor's width."
            (audio "--no-video")
            ;; Here the display width checks if I am on the laptop
            (height (if (<= (display-pixel-width ) 1366) 720 1080))
-           (video
+           (video                       ; this assumes mpv+youtube-dl
             (format "%s --ytdl-format=bestvideo[height\\<=?%s]+bestaudio/best"
                     "--hwdec=auto-safe" height))
            (buf (pop-to-buffer "*elfeed-mpv-output*")))
       (run-hooks 'prot/elfeed-mpv-hook)
-      (if enclosure              ; make this its own parametrised function
+      (if enclosure
           (progn
             (async-shell-command (format "mpv %s %s" audio enclosure) buf)
             (message
@@ -8252,7 +8252,7 @@ To reset the playlist is to undo the marks produced by non-nil
   (defun prot/bongo-playlist-terminate ()
     "Stop playback and clear the entire `bongo' playlist buffer.
 Contrary to the standard `bongo-erase-buffer', this also removes
-the currently-playing track."
+the currently playing track."
     (interactive)
     (when (bongo-playlist-buffer-p)
       (bongo-stop)
