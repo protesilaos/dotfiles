@@ -520,6 +520,222 @@ Also check [[https://github.com/abo-abo/hydra][the project's source]] for more i
 (use-package hydra :ensure)
 #+end_src
 
+** Modus themes (my highly accessible themes)
+:PROPERTIES:
+:CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
+:END:
+
+This is a project I started as soon as I switched to Emacs in July 2019.
+Fast-forward to a year later and the themes are now part of the upstream
+Emacs distribution, available from the =master= branch.  Note that this is
+not the latest /stable release/ of Emacs, =27.1=, but only the current
+development branch that will eventually become version =28.1=.  I
+benefitted a lot from community contributions, of which I am most
+thankful of, as discussed in [[https://protesilaos.com/codelog/2020-08-27-emacs-modus-themes-core/][My Modus themes are now shipped with Emacs]]
+(2020-08-27).
+
+The Modus themes are designed to conform with the highest accessibility
+standard for colour contrast between foreground and background values.
+This stands for a minimum contrast ratio of 7:1, also known as the WCAG
+AAA standard.  In simpler terms, they are good for readability.
+
+The themes are "Modus Operandi" (light theme) and "Modus Vivendi"
+(dark).  The source code is available [[https://gitlab.com/protesilaos/modus-themes][on their GitLab page]] while you can
+read the HTML version of [[https://protesilaos.com/modus-themes][their documentation on my website]].  The list of
+supported packages is comprehensive.  There also are *lots of
+customisation options* to tweak the looks of the themes.
+
+The two themes are distributed as /standalone packages/ under the terms of
+the GNU General Public License.  Besides upstream Emacs, you can find
+them in the official GNU ELPA repository (latest tagged release), MELPA
+(latest commit to my =master= branch), MELPA Stable (latest tag).  Each
+theme is its own package because I know that people tend to use one or
+the other.  And also due to the fact that one is not a prerequisite for
+the other.  I personally use both, switching between them on-the-fly by
+calling =prot/modus-themes-toggle=.
+
+Note though that because I am using these themes locally as part of
+their development process, I am not configuring here the aforementioned
+archive or Emacs' built-in versions.  What you see in this =use-package=
+declaration is a bit different than what others will be using.
+
+Also note that *the values I set for these variables are not indicative
+of my preferences*: I try different combinations to test things across a
+range of scenaria.
+
+The =contrib/format-sexp= and the subsequent =dolist= were copied and
+adapted from [[https://www.reddit.com/r/emacs/comments/gqsz8u/weekly_tipstricketc_thread/fsfakhg/][this comment on r/emacs]].
+
+Lastly, if you are curious about the underlying methodology, read my
+essay [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-emacs/][on the design of the Modus themes]] (2020-03-17).
+
+And here are some more resources from my website for those who are
+really into the minutia and wish to get a glimpse of how much work goes
+into this project:
+
++ [[https://protesilaos.com/codelog/2020-05-10-modus-operandi-palette-review/][Modus Operandi theme subtle palette review]] (2020-05-10)
++ [[https://protesilaos.com/codelog/2020-06-13-modus-vivendi-palette-review/][Modus Vivendi theme subtle palette review]] (2020-06-13)
++ [[https://protesilaos.com/codelog/2020-07-04-modus-themes-faint-colours/][Modus themes: new "faint syntax" option]] (2020-07-04)
++ [[https://protesilaos.com/codelog/2020-07-08-modus-themes-nuanced-colours/][Modus themes: major review of "nuanced" colours]] (2020-07-08)
++ [[https://protesilaos.com/codelog/2020-08-09-modus-themes-paren-match/][Modus themes: review "paren-match" colours]] (2020-08-09)
++ [[https://protesilaos.com/codelog/2020-08-28-notes-emacs-theme-devs/][Notes for aspiring Emacs theme developers]] (2020-08-28)
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq custom-safe-themes t)           ; Due to my dev needs
+
+  (defmacro contrib/format-sexp (sexp &rest objects)
+    `(eval (read (format ,(format "%S" sexp) ,@objects))))
+
+  ;; This is currently not used in this section.  Search for it in the
+  ;; section about setting fonts, `prot/font-bold-face' in particular.
+  (defvar prot/modus-theme-after-load-hook nil
+    "Hook that runs after loading a Modus theme.
+See `prot/modus-operandi' or `prot/modus-vivendi'.")
+
+  ;; The variables do not reveal my preferences.  Always testing things.
+  (dolist (theme '("operandi" "vivendi"))
+    (contrib/format-sexp
+     (defun prot/modus-%1$s ()
+       (setq modus-%1$s-theme-slanted-constructs t
+             modus-%1$s-theme-bold-constructs t
+             modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
+             modus-%1$s-theme-mode-line nil ; {nil,'3d,'moody}
+             modus-%1$s-theme-faint-syntax nil
+             modus-%1$s-theme-intense-hl-line nil
+             modus-%1$s-theme-intense-paren-match nil
+             modus-%1$s-theme-prompts 'subtle ; {nil,'subtle,'intense}
+             modus-%1$s-theme-completions 'moderate ; {nil,'moderate,'opinionated}
+             modus-%1$s-theme-diffs nil ; {nil,'desaturated,'fg-only}
+             modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
+             modus-%1$s-theme-headings  ; Read the manual for this one
+             '((1 . line)
+               (t . line-no-bold))
+             modus-%1$s-theme-variable-pitch-headings t
+             modus-%1$s-theme-scale-headings t
+             modus-%1$s-theme-scale-1 1.1
+             modus-%1$s-theme-scale-2 1.15
+             modus-%1$s-theme-scale-3 1.21
+             modus-%1$s-theme-scale-4 1.27
+             modus-%1$s-theme-scale-5 1.33)
+       (load-theme 'modus-%1$s t)
+       (run-hooks 'prot/modus-theme-after-load-hook))
+     theme))
+
+  (define-minor-mode prot/modus-themes-alt-mode
+    "Override specific palette variables with custom values.
+
+This is intended as a proof-of-concept.  It is, nonetheless, a
+perfectly accessible alternative, conforming with the design
+principles of the Modus themes.  It still is not as good as the
+default colours."
+    :init-value nil
+    :global t
+    (if prot/modus-themes-alt-mode
+        (setq modus-operandi-theme-override-colors-alist
+              '(("bg-main" . "#fefcf4")
+                ("bg-dim" . "#faf6ef")
+                ("bg-alt" . "#f7efe5")
+                ("bg-hl-line" . "#f4f0e3")
+                ("bg-active" . "#e8dfd1")
+                ("bg-inactive" . "#f6ece5")
+                ("bg-region" . "#c6bab1")
+                ("bg-header" . "#ede3e0")
+                ("bg-tab-bar" . "#dcd3d3")
+                ("bg-tab-active" . "#fdf6eb")
+                ("bg-tab-inactive" . "#c8bab8")
+                ("fg-unfocused" . "#55556f"))
+              modus-vivendi-theme-override-colors-alist
+              '(("bg-main" . "#100b17")
+                ("bg-dim" . "#161129")
+                ("bg-alt" . "#181732")
+                ("bg-hl-line" . "#191628")
+                ("bg-active" . "#282e46")
+                ("bg-inactive" . "#1a1e39")
+                ("bg-region" . "#393a53")
+                ("bg-header" . "#202037")
+                ("bg-tab-bar" . "#262b41")
+                ("bg-tab-active" . "#120f18")
+                ("bg-tab-inactive" . "#3a3a5a")
+                ("fg-unfocused" . "#9a9aab")))
+      (setq modus-operandi-theme-override-colors-alist nil
+            modus-vivendi-theme-override-colors-alist nil)))
+
+  (defun prot/modus-themes-toggle (&optional arg)
+    "Toggle between `prot/modus-operandi' and `prot/modus-vivendi'.
+
+With optional \\[universal-argument] prefix, enable
+`prot/modus-themes-alt-mode' for the loaded theme."
+    (interactive "P")
+    (if arg
+        (prot/modus-themes-alt-mode 1)
+      (prot/modus-themes-alt-mode -1))
+    (if (eq (car custom-enabled-themes) 'modus-operandi)
+        (progn
+          (disable-theme 'modus-operandi)
+          (prot/modus-vivendi))
+      (disable-theme 'modus-vivendi)
+      (prot/modus-operandi)))
+
+  :hook (after-init-hook . prot/modus-operandi)
+  :bind ("<f5>" . prot/modus-themes-toggle))
+#+end_src
+
+*** Measuring relative colour luminance
+:PROPERTIES:
+:CUSTOM_ID: h:254c6da5-f89f-46be-ad56-ee3802a4e2b8
+:END:
+
+The following is an Elisp implementation of [[https://www.w3.org/TR/WCAG20-TECHS/G18.html][the formula]] that determines
+whether a combination of two colours is accessible or not.  It was
+offered to me [[https://github.com/oantolin/live-completions/issues/2][by Omar Antolín Camarena]].  For the purposes of my themes,
+the contrast ratio needs to be 7:1 or higher, which conforms with the
+highest accessibility standard (WCAG AAA).
+
+To see it in action, you can read the =org-mode= report on the minor
+[[https://protesilaos.com/codelog/2020-05-10-modus-operandi-palette-review/][review of Modus Operandi palette]] (2020-05-10).  Which also goes to show
+how tricky the selection of colours can be.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :commands (wcag clr)
+  :config
+  (defun wcag (hex)
+    (apply #'+
+           (cl-mapcar
+            (lambda (k x)
+              (* k (if (<= x 0.03928)
+                       (/ x 12.92)
+                     (expt (/ (+ x 0.055) 1.055) 2.4))))
+            '(0.2126 0.7152 0.0722)
+            (color-name-to-rgb hex))))
+
+  (defun clr (c1 c2)
+    (let ((ct (/ (+ (wcag c1) 0.05)
+                 (+ (wcag c2) 0.05))))
+      (max ct (/ ct)))))
+#+end_src
+
+*** Rainbow mode for colour testing
+:PROPERTIES:
+:CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
+:END:
+
+The following package reads a colour value, such as hexadecimal RGB,
+and sets the background for the value in that colour.  Quite useful
+when reviewing my themes (=rainbow-mode= is activated manually).
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :ensure
+  :diminish
+  :commands rainbow-mode
+  :config
+  (setq rainbow-ansi-colors nil)
+  (setq rainbow-x-colors nil))
+#+end_src
+
 ** Base typeface configurations
 :PROPERTIES:
 :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
@@ -8246,221 +8462,6 @@ Also see `prot/bongo-playlist-insert-playlist-file'."
 This section contains configurations for all aspects of the Emacs user
 interface, as well lots of small or self-contained tweaks that cover a
 wide range of built-in libraries.
-
-** Modus themes (my very accessible themes) and other visuals
-:PROPERTIES:
-:CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
-:END:
-
-This is a project I started as soon as I switched to Emacs in July 2019.
-Fast-forward to a year later and the themes are now part of the upstream
-Emacs distribution, available from the =master= branch.  Note that this is
-not the latest /stable release/ of Emacs, =27.1=, but only the current
-development branch that will eventually become version =28.1=.  I
-benefitted a lot from community contributions, of which I am most
-thankful of, as discussed in [[https://protesilaos.com/codelog/2020-08-27-emacs-modus-themes-core/][My Modus themes are now shipped with Emacs]]
-(2020-08-27).
-
-The Modus themes are designed to conform with the highest accessibility
-standard for colour contrast between foreground and background values.
-This stands for a minimum contrast ratio of 7:1, also known as the WCAG
-AAA standard.  In simpler terms, they are good for readability.
-
-The themes are "Modus Operandi" (light theme) and "Modus Vivendi"
-(dark).  The source code is available [[https://gitlab.com/protesilaos/modus-themes][on their GitLab page]] while you can
-read the HTML version of [[https://protesilaos.com/modus-themes][their documentation on my website]].  The list of
-supported packages is comprehensive.  There also are *lots of
-customisation options* to tweak the looks of the themes.
-
-The two themes are distributed as /standalone packages/ under the terms of
-the GNU General Public License.  Besides upstream Emacs, you can find
-them in the official GNU ELPA repository (latest tagged release), MELPA
-(latest commit to my =master= branch), MELPA Stable (latest tag).  Each
-theme is its own package because I know that people tend to use one or
-the other.  And also due to the fact that one is not a prerequisite for
-the other.  I personally use both, switching between them on-the-fly by
-calling =prot/modus-themes-toggle=.
-
-Note though that because I am using these themes locally as part of
-their development process, I am not configuring here the aforementioned
-archive versions.  So what you see in this =use-package= declaration is a
-bit different than what others will be using.
-
-Also note that *the values I set for these variables are not indicative
-of my preferences*: I try different combinations to test things across a
-range of scenaria.
-
-The =contrib/format-sexp= and the subsequent =dolist= were copied and
-adapted from [[https://www.reddit.com/r/emacs/comments/gqsz8u/weekly_tipstricketc_thread/fsfakhg/][this comment on r/emacs]].
-
-Lastly, if you are curious about the underlying methodology, read my
-essay [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-emacs/][on the design of the Modus themes]] (2020-03-17).
-
-And here are some more resources from my website for those who are
-really into the minutia and wish to get a glimpse of how much work goes
-into this project:
-
-+ [[https://protesilaos.com/codelog/2020-05-10-modus-operandi-palette-review/][Modus Operandi theme subtle palette review]] (2020-05-10)
-+ [[https://protesilaos.com/codelog/2020-06-13-modus-vivendi-palette-review/][Modus Vivendi theme subtle palette review]] (2020-06-13)
-+ [[https://protesilaos.com/codelog/2020-07-04-modus-themes-faint-colours/][Modus themes: new "faint syntax" option]] (2020-07-04)
-+ [[https://protesilaos.com/codelog/2020-07-08-modus-themes-nuanced-colours/][Modus themes: major review of "nuanced" colours]] (2020-07-08)
-+ [[https://protesilaos.com/codelog/2020-08-09-modus-themes-paren-match/][Modus themes: review "paren-match" colours]] (2020-08-09)
-+ [[https://protesilaos.com/codelog/2020-08-28-notes-emacs-theme-devs/][Notes for aspiring Emacs theme developers]] (2020-08-28)
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq custom-safe-themes t)           ; Due to my dev needs
-
-  (defmacro contrib/format-sexp (sexp &rest objects)
-    `(eval (read (format ,(format "%S" sexp) ,@objects))))
-
-  ;; This is currently not used in this section.  Search for it in the
-  ;; section about setting fonts, `prot/font-bold-face' in particular.
-  (defvar prot/modus-theme-after-load-hook nil
-    "Hook that runs after loading a Modus theme.
-See `prot/modus-operandi' or `prot/modus-vivendi'.")
-
-  ;; The variables do not reveal my preferences.  Always testing things.
-  (dolist (theme '("operandi" "vivendi"))
-    (contrib/format-sexp
-     (defun prot/modus-%1$s ()
-       (setq modus-%1$s-theme-slanted-constructs t
-             modus-%1$s-theme-bold-constructs t
-             modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
-             modus-%1$s-theme-mode-line '3d ; {nil,'3d,'moody}
-             modus-%1$s-theme-faint-syntax nil
-             modus-%1$s-theme-intense-hl-line nil
-             modus-%1$s-theme-intense-paren-match t
-             modus-%1$s-theme-prompts 'subtle ; {nil,'subtle,'intense}
-             modus-%1$s-theme-completions 'moderate ; {nil,'moderate,'opinionated}
-             modus-%1$s-theme-diffs 'desaturated ; {nil,'desaturated,'fg-only}
-             modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
-             modus-%1$s-theme-variable-pitch-headings t
-             modus-%1$s-theme-rainbow-headings t
-             modus-%1$s-theme-section-headings t
-             modus-%1$s-theme-scale-headings t
-             modus-%1$s-theme-scale-1 1.1
-             modus-%1$s-theme-scale-2 1.15
-             modus-%1$s-theme-scale-3 1.21
-             modus-%1$s-theme-scale-4 1.27
-             modus-%1$s-theme-scale-5 1.33)
-       (load-theme 'modus-%1$s t)
-       (run-hooks 'prot/modus-theme-after-load-hook))
-     theme))
-
-  (define-minor-mode prot/modus-themes-alt-mode
-    "Override specific palette variables with custom values.
-
-This is intended as a proof-of-concept.  It is, nonetheless, a
-perfectly accessible alternative, conforming with the design
-principles of the Modus themes.  It still is not as good as the
-default colours."
-    :init-value nil
-    :global t
-    (if prot/modus-themes-alt-mode
-        (setq modus-operandi-theme-override-colors-alist
-              '(("bg-main" . "#fefcf4")
-                ("bg-dim" . "#faf6ef")
-                ("bg-alt" . "#f7efe5")
-                ("bg-hl-line" . "#f4f0e3")
-                ("bg-active" . "#e8dfd1")
-                ("bg-inactive" . "#f6ece5")
-                ("bg-region" . "#c6bab1")
-                ("bg-header" . "#ede3e0")
-                ("bg-tab-bar" . "#dcd3d3")
-                ("bg-tab-active" . "#fdf6eb")
-                ("bg-tab-inactive" . "#c8bab8")
-                ("fg-unfocused" . "#55556f"))
-              modus-vivendi-theme-override-colors-alist
-              '(("bg-main" . "#100b17")
-                ("bg-dim" . "#161129")
-                ("bg-alt" . "#181732")
-                ("bg-hl-line" . "#191628")
-                ("bg-active" . "#282e46")
-                ("bg-inactive" . "#1a1e39")
-                ("bg-region" . "#393a53")
-                ("bg-header" . "#202037")
-                ("bg-tab-bar" . "#262b41")
-                ("bg-tab-active" . "#120f18")
-                ("bg-tab-inactive" . "#3a3a5a")
-                ("fg-unfocused" . "#9a9aab")))
-      (setq modus-operandi-theme-override-colors-alist nil
-            modus-vivendi-theme-override-colors-alist nil)))
-
-  (defun prot/modus-themes-toggle (&optional arg)
-    "Toggle between `prot/modus-operandi' and `prot/modus-vivendi'.
-
-With optional \\[universal-argument] prefix, enable
-`prot/modus-themes-alt-mode' for the loaded theme."
-    (interactive "P")
-    (if arg
-        (prot/modus-themes-alt-mode 1)
-      (prot/modus-themes-alt-mode -1))
-    (if (eq (car custom-enabled-themes) 'modus-operandi)
-        (progn
-          (disable-theme 'modus-operandi)
-          (prot/modus-vivendi))
-      (disable-theme 'modus-vivendi)
-      (prot/modus-operandi)))
-
-  :hook (after-init-hook . prot/modus-operandi)
-  :bind ("<f5>" . prot/modus-themes-toggle))
-#+end_src
-
-*** Measuring relative colour luminance
-:PROPERTIES:
-:CUSTOM_ID: h:254c6da5-f89f-46be-ad56-ee3802a4e2b8
-:END:
-
-The following is an Elisp implementation of [[https://www.w3.org/TR/WCAG20-TECHS/G18.html][the formula]] that determines
-whether a combination of two colours is accessible or not.  It was
-offered to me [[https://github.com/oantolin/live-completions/issues/2][by Omar Antolín Camarena]].  For the purposes of my themes,
-the contrast ratio needs to be 7:1 or higher, which conforms with the
-highest accessibility standard (WCAG AAA).
-
-To see it in action, you can read the =org-mode= report on the minor
-[[https://protesilaos.com/codelog/2020-05-10-modus-operandi-palette-review/][review of Modus Operandi palette]] (2020-05-10).  Which also goes to show
-how tricky the selection of colours can be.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :commands (wcag clr)
-  :config
-  (defun wcag (hex)
-    (apply #'+
-           (cl-mapcar
-            (lambda (k x)
-              (* k (if (<= x 0.03928)
-                       (/ x 12.92)
-                     (expt (/ (+ x 0.055) 1.055) 2.4))))
-            '(0.2126 0.7152 0.0722)
-            (color-name-to-rgb hex))))
-
-  (defun clr (c1 c2)
-    (let ((ct (/ (+ (wcag c1) 0.05)
-                 (+ (wcag c2) 0.05))))
-      (max ct (/ ct)))))
-#+end_src
-
-*** Rainbow mode for colour testing
-:PROPERTIES:
-:CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
-:END:
-
-The following package reads a colour value, such as hexadecimal RGB,
-and sets the background for the value in that colour.  Quite useful
-when reviewing my themes (=rainbow-mode= is activated manually).
-
-#+begin_src emacs-lisp
-(use-package rainbow-mode
-  :ensure
-  :diminish
-  :commands rainbow-mode
-  :config
-  (setq rainbow-ansi-colors nil)
-  (setq rainbow-x-colors nil))
-#+end_src
 
 ** Mode line
 :PROPERTIES:
