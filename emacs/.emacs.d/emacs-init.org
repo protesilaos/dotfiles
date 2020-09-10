@@ -567,39 +567,21 @@ proportionately spaced fonts and =fixed-pitch= for monospaced ones.
 
 In Emacs parlance, "face" signifies a construct that groups together
 several display attributes, such as a foreground and a background
-colour, as well as all typography-related values (Emacs themes are, in
-essence, programs that configure those faces).
+colour, as well as all typography-related values (Emacs themes are
+programs that configure those faces).
 
 To understand the syntax used here, do =C-h f set-face-attribute=.  In
 essence, by changing the =default= face we are specifying the family that
 should be used /in case no other applies/ for the given construct.  This
 is actually a good idea because there are many scenaria where you want a
 face to retain its own attributes (e.g. let =org-mode= inline code be
-presented in its monospaced font while using a sans-serif for the main
-text---see [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]]).
+presented in its monospaced font while using a variable width typeface
+for the main text---see [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]]).
 
-The two main ways to set a font using =set-face-attribute= are as follows:
+Relevant blog posts of mine:
 
-+ Set individual attributes :: Define the values of keywords like
-  =:family=, =:height=, =:weight= on a per-attribute basis.
-+ Set font parameters :: Pass a single string that is consistent with
-  how =fontconfig= (GNU/Linux) reads fonts.  This allows us to apply
-  parameters that are specified in the [[https://www.freedesktop.org/software/fontconfig/fontconfig-user.html][fontconfig user spec]], such as
-  whether to implement an antialiasing effect or tweak the hinting
-  style.  Note that /all fontconfig parameters are optional/ and will
-  default to the rules that apply across the operating system.
-
-I choose the latter because it is more flexible.  For completeness, this
-is the syntax, replacing all capitalised words with the appropriate
-values (read the docs with =C-h f set-face-attribute=):
-
-+ =(set-face-attribute 'FACE nil :family "NAME" :height "HEIGHT")=
-+ =(set-face-attribute 'FACE nil :font "FAMILY-SIZE:PARAM1=PARAMVALUE1")=
-
-Also bear in mind that on a GNU/Linux system there normally is no need
-to test for the presence of a font before setting it.  This is handled
-by =fontconfig= with rules that can be defined at the user or system level
-(things work out-of-the-box on every distro I ever tried).
++ [[https://protesilaos.com/codelog/2020-08-28-notes-emacs-theme-devs/][Notes for aspiring Emacs theme developers]] (2020-08-28)
++ [[https://protesilaos.com/codelog/2020-09-05-emacs-note-mixed-font-heights/][Emacs: note on mixed font heights]] (2020-09-05)
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -619,40 +601,30 @@ by =fontconfig= with rules that can be defined at the user or system level
   (setq x-underline-at-descent-line t)
   (setq underline-minimum-offset 1)
 
-  (defconst prot/font-fontconfig-params
-    "embeddedbitmap=false:autohint=false:hintstyle=hintslight"
-    "Additional parameters for the given font family.
-These are specific to the fontconfig backend for GNU/Linux systems.")
-
   (defvar prot/font-set-fonts-hook nil
     "Hook that is called after setting fonts.
 See, for example, `prot/font-set-fonts'.")
 
   ;; NOTE that "Iosevka Comfy" is my private build of Iosevka:
   ;; https://gitlab.com/protesilaos/iosevka-comfy
+  ;;
+  ;; Same for Hack: https://gitlab.com/protesilaos/hack-font-mod
   (defconst prot/font-sizes-families-alist
-    '(("laptop" . (13.5 "Iosevka Comfy" "FiraGO" 1))
-      ("desktop" . (15 "Iosevka Comfy" "Alegreya Sans" 2))
-      ("presentation" . (19 "Iosevka Comfy" "Source Sans Pro" 2)))
+    '(("pocket" . (105 "Hack" "FiraGO"))
+      ("laptop" . (135 "Iosevka Comfy" "FiraGO"))
+      ("desktop" . (150 "Iosevka Comfy" "Source Sans Pro"))
+      ("presentation" . (190 "Iosevka Comfy" "Alegreya Sans")))
     "Alist of desired typefaces and their point sizes.
 
 Each association consists of a display type mapped to a point
 size, followed by monospaced and proportionately spaced font
-names, and a possible increase in desired size between the latter
-two to account for their innate differences in proportions.
+names.  The monospaced typeface is meant to be applied to the
+`default' and `fixed-pitch' faces.  The proportionately spaced
+font is intended for the `variable-pitch' face.")
 
-The monospaced typeface is meant to be applied to the `default'
-and `fixed-pitch' faces.  The proportionately space font is
-intended for the `variable-pitch' face.")
-
-  (defun prot/font-set-face-attribute (face family size &optional params)
-    "Set FACE font to FAMILY at SIZE with optional PARAMS."
-    (let ((params (if params
-                      params
-                    prot/font-fontconfig-params)))
-      (set-face-attribute
-       `,face nil :font
-       (format "%s-%s:%s" family (number-to-string size) params))))
+  (defun prot/font-set-face-attribute (face family)
+    "Set FACE font to FAMILY."
+    (set-face-attribute `,face nil :family (format "%s" family)))
 
   (defun prot/font-set-fonts (&optional points font-mono font-var)
     "Set default font size using presets.
@@ -665,30 +637,27 @@ since the `variable-pitch' it applies to is not supposed to be
 spacing-sensitive.  Both families must be represented as a string
 holding the family's name."
     (interactive)
-    (let* ((data prot/font-sizes-families-alist)
-           (displays (mapcar #'car data))
-           (choice (if points
-                       points
-                     (completing-read "Pick display size: " displays nil t)))
-           (size (if points
-                     points
-                   (nth 1 (assoc `,choice data))))
-           (mono (if font-mono
-                     font-mono
-                   (if (member choice displays)
-                       (nth 2 (assoc `,choice data))
-                     nil)))
-           (var (if font-var
-                    font-var
-                  (if (member choice displays)
-                      (nth 3 (assoc `,choice data))
-                    nil)))
-           (adjust (nth 4 (assoc `,choice data))))
-      (when window-system
-        (dolist (face '(default fixed-pitch))
-          (prot/font-set-face-attribute `,face mono size))
-        (prot/font-set-face-attribute 'variable-pitch var (+ size adjust))))
-    (run-hooks 'prot/font-set-fonts-hook))
+    (if window-system
+        (let* ((data prot/font-sizes-families-alist)
+               (displays (mapcar #'car data))
+               (choice (or points
+                           (completing-read "Pick display size: " displays nil t)))
+               (size (or points
+                         (nth 1 (assoc `,choice data))))
+               (mono (or font-mono
+                         (if (member choice displays)
+                             (nth 2 (assoc `,choice data))
+                           nil)))
+               (var (or font-var
+                        (if (member choice displays)
+                            (nth 3 (assoc `,choice data))
+                          nil)))
+               (adjust (nth 4 (assoc `,choice data))))
+          (set-face-attribute 'default nil :family mono :height size)
+          (prot/font-set-face-attribute 'fixed-pitch mono)
+          (prot/font-set-face-attribute 'variable-pitch var)
+          (run-hooks 'prot/font-set-fonts-hook))
+      (user-error "Not running a graphical Emacs.  Cannot set fonts.")))
 
   (defvar prot/font-monospaced-fonts-list
     '("Iosevka Comfy" "Hack" "Source Code Pro"
@@ -705,16 +674,17 @@ some common point sizes.
 See `prot/font-set-fonts' for the function I would normally use
 or `prot/font-fonts-dwim' which just wraps this one with that."
     (interactive)
-    (let* ((fonts prot/font-monospaced-fonts-list)
-           (font (completing-read "Select main font: " fonts nil t))
-           (nums (list 13 14 15 16))
-           (sizes (mapcar 'number-to-string nums))
-           (size (completing-read "Select or insert number: " sizes nil))
-           (var (face-attribute 'variable-pitch :family)))
-      (dolist (face '(default fixed-pitch))
-        (prot/font-set-face-attribute face font (string-to-number size)))
-      (prot/font-set-face-attribute 'variable-pitch var (string-to-number size))
-      (run-hooks 'prot/font-set-fonts-hook)))
+    (if window-system
+        (let* ((fonts prot/font-monospaced-fonts-list)
+               (font (completing-read "Select main font: " fonts nil t))
+               (nums (list 130 140 150 160))
+               (sizes (mapcar 'number-to-string nums))
+               (size (completing-read "Select or insert number: " sizes nil))
+               (var (face-attribute 'variable-pitch :family)))
+          (set-face-attribute 'default nil :family font :height (string-to-number size))
+          (prot/font-set-face-attribute 'variable-pitch var)
+          (run-hooks 'prot/font-set-fonts-hook))
+      (user-error "Not running a graphical Emacs.  Cannot set fonts.")))
 
   (defun prot/font-fonts-dwim (&optional arg)
     "Set fonts interactively.
@@ -749,9 +719,6 @@ respectively."
        ,doc
        (let* ((data ,alist)
               (fonts (mapcar #'car data))
-              ;; REVIEW This should be adjusted to account for the
-              ;; possibility of a distinct font family for the `bold'
-              ;; face.
               (font (face-attribute 'default :family))
               (x (cdr (assoc font data))))
          (if (member font fonts)
@@ -765,7 +732,7 @@ respectively."
    (setq-default line-spacing `,x)
    (setq-default line-spacing nil))
 
-  ;; XXX This will not work with every theme, but only those that
+  ;; XXX: This will not work with every theme, but only those that
   ;; inherit the `bold' face instead of specifying a weight property.
   ;; The intent is to configure this once and have it propagate wherever
   ;; a heavier weight is displayed.  My Modus themes handle this
@@ -781,17 +748,17 @@ respectively."
     "Use font settings based on screen size.
 Meant to be used at some early initialisation stage, such as with
 `after-init-hook'."
-    (let* ((display (if (<= (display-pixel-width) 1366)
-                        "laptop"
-                      "desktop"))
-           (data prot/font-sizes-families-alist)
-           (size (cadr (assoc `,display data)))
-           (mono (nth 2 (assoc `,display data)))
-           (var (nth 3 (assoc `,display data)))
-           (adjust (nth 4 (assoc `,display data))))
-      (dolist (face '(default fixed-pitch))
-        (prot/font-set-face-attribute face mono size))
-      (prot/font-set-face-attribute 'variable-pitch var (+ size adjust))
+    (when window-system
+      (let* ((display (if (<= (display-pixel-width) 1366)
+                          "laptop"
+                        "desktop"))
+             (data prot/font-sizes-families-alist)
+             (size (cadr (assoc `,display data)))
+             (mono (nth 2 (assoc `,display data)))
+             (var (nth 3 (assoc `,display data))))
+        (set-face-attribute 'default nil :family mono :height size)
+        (prot/font-set-face-attribute 'fixed-pitch mono)
+        (prot/font-set-face-attribute 'variable-pitch var))
       (run-hooks 'prot/font-switch-fonts-hook)))
 
   :hook ((after-init-hook . prot/font-fonts-per-monitor)
