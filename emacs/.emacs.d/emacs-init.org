@@ -3744,7 +3744,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   :init
   (setq display-buffer-alist
         '(;; top side window
-          ("\\*elfeed-mpv-output.*"
+          ("\\*\\(elfeed-mpv-output\\|world-clock\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
@@ -8576,8 +8576,12 @@ The =display-time-mode= can output more than just the current time.  It
 also shows the load average and an email indicator.  I only need the
 time and date.  The rest is noise.
 
+Sometimes I need to check the current time on various timezones.  This
+library's =world-clock= command gets the job done.
+
 #+begin_src emacs-lisp
 (use-package time
+  :commands world-clock
   :config
   (setq display-time-format "%H:%M  %Y-%m-%d")
   ;;;; Covered by `display-time-format'
@@ -8586,6 +8590,23 @@ time and date.  The rest is noise.
   (setq display-time-interval 60)
   (setq display-time-mail-directory nil)
   (setq display-time-default-load-average nil)
+
+;;; World clock
+  (setq zoneinfo-style-world-list
+        '(("America/Los_Angeles" "Los Angeles")
+          ("America/New_York" "New York")
+          ("Europe/Brussels" "Brussels")
+          ("Asia/Shanghai" "Shanghai")
+          ("Asia/Tokyo" "Tokyo")))
+
+  ;; All of the following variables are for Emacs 28
+  (setq world-clock-list t)
+  (setq world-clock-time-format "%R %z  %A %d %B")
+  (setq world-clock-buffer-name "*world-clock*") ; Placement handled by
+                                                 ; `display-buffer-alist'
+  (setq world-clock-timer-enable t)
+  (setq world-clock-timer-second 60)
+
   :hook (after-init-hook . display-time-mode))
 #+end_src
 
