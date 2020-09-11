@@ -7655,7 +7655,7 @@ The placement of the MPV buffer is controlled by =display-buffer-alist=
 For a demonstration of what I have here, watch [[https://protesilaos.com/codelog/2020-06-09-emacs-elfeed-demo/][my Elfeed video]]
 (2020-06-09).
 
-As I also am a user of Bongo (see [[#h:758afe0d-bc7c-4afc-9c6b-b5e569901591][Bongo (music or media manager)]], there
+As I also am a user of Bongo (see [[#h:758afe0d-bc7c-4afc-9c6b-b5e569901591][Bongo (music or media manager)]]), there
 are a few functions here that are meant to make the Elfeed search buffer
 a bongo-aware library, from where we can enqueue online multimedia
 sources (videos, podcasts).
