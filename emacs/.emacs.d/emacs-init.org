@@ -599,9 +599,9 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
     (contrib/format-sexp
      (defun prot/modus-%1$s ()
        (setq modus-%1$s-theme-slanted-constructs t
-             modus-%1$s-theme-bold-constructs t
-             modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
-             modus-%1$s-theme-mode-line nil ; {nil,'3d,'moody}
+             modus-%1$s-theme-bold-constructs nil
+             modus-%1$s-theme-fringes nil ; {nil,'subtle,'intense}
+             modus-%1$s-theme-mode-line '3d ; {nil,'3d,'moody}
              modus-%1$s-theme-faint-syntax nil
              modus-%1$s-theme-intense-hl-line nil
              modus-%1$s-theme-intense-paren-match nil
@@ -828,7 +828,7 @@ See, for example, `prot/font-set-fonts'.")
   (defconst prot/font-sizes-families-alist
     '(("pocket" . (105 "Hack" "FiraGO"))
       ("laptop" . (135 "Iosevka Comfy" "FiraGO"))
-      ("desktop" . (150 "Iosevka Comfy" "Source Sans Pro"))
+      ("desktop" . (150 "Iosevka Comfy" "FiraGO"))
       ("presentation" . (190 "Iosevka Comfy" "Alegreya Sans")))
     "Alist of desired typefaces and their point sizes.
 
@@ -7166,7 +7166,7 @@ directory."
     (let ((eshell-output (buffer-substring-no-properties
                           (eshell-beginning-of-output)
                           (eshell-end-of-output))))
-      (with-current-buffer (get-buffer-create  "*last-eshell-output*")
+      (with-current-buffer (get-buffer-create "*last-eshell-output*")
         (erase-buffer)
         (insert eshell-output)
         (switch-to-buffer-other-window (current-buffer)))))
@@ -8176,7 +8176,7 @@ rewording from the [[https://github.com/Koekelas/dotfiles/blob/master/emacs.org]
     (bongo-insert-comment-text
      prot/bongo-playlist-delimiter))
 
-  (defun prot/bongo-paylist-section-next ()
+  (defun prot/bongo-playlist-section-next ()
     "Move to next `bongo' playlist custom section delimiter."
     (interactive)
     (let ((section "^\\*+$"))
@@ -8186,7 +8186,7 @@ rewording from the [[https://github.com/Koekelas/dotfiles/blob/master/emacs.org]
             (re-search-forward section nil t))
         (goto-char (point-max)))))
 
-  (defun prot/bongo-paylist-section-previous ()
+  (defun prot/bongo-playlist-section-previous ()
     "Move to previous `bongo' playlist custom section delimiter."
     (interactive)
     (let ((section "^\\*+$"))
@@ -8230,7 +8230,7 @@ This operates on a custom delimited section of the buffer.  See
       (unless (bongo-playing-p)
         (with-current-buffer (bongo-playlist-buffer)
           (bongo-play-random)
-          (bongo-random-playback-mode 1)
+          (bongo-random-playback-mode)
           (bongo-recenter)))))
 
   (defun prot/bongo-playlist-random-toggle ()
@@ -8437,8 +8437,8 @@ Also see `prot/bongo-playlist-insert-playlist-file'."
          :map bongo-playlist-mode-map
          ("n" . bongo-next-object)
          ("p" . bongo-previous-object)
-         ("M-n" . prot/bongo-paylist-section-next)
-         ("M-p" . prot/bongo-paylist-section-previous)
+         ("M-n" . prot/bongo-playlist-section-next)
+         ("M-p" . prot/bongo-playlist-section-previous)
          ("M-h" . prot/bongo-playlist-mark-section)
          ("M-d" . prot/bongo-playlist-kill-section)
          ("g" . prot/bongo-playlist-reset)
