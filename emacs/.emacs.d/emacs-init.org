@@ -415,7 +415,7 @@ rolling it over to the end of a session rather than the beginning
 of it."
     (let ((init-el "~/.emacs.d/emacs-init.el")
           (init-org "~/.emacs.d/emacs-init.org"))
-      (when init-el
+      (when (file-exists-p init-el)
         (delete-file init-el))
       (org-babel-tangle-file init-org init-el)))
   :hook ((kill-emacs-hook . prot/rebuild-emacs-init)
@@ -605,6 +605,7 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
              modus-%1$s-theme-faint-syntax nil
              modus-%1$s-theme-intense-hl-line nil
              modus-%1$s-theme-intense-paren-match nil
+             modus-%1$s-theme-no-link-underline t
              modus-%1$s-theme-prompts 'subtle ; {nil,'subtle,'intense}
              modus-%1$s-theme-completions 'moderate ; {nil,'moderate,'opinionated}
              modus-%1$s-theme-diffs nil ; {nil,'desaturated,'fg-only}
@@ -1747,7 +1748,7 @@ To be used with `imenu-after-jump-hook'."
       (org-show-entry)
       (org-reveal t))
      ((when prot/outline-minor-mode
-       (outline-show-entry)))))
+        (outline-show-entry)))))
 
   :hook ((imenu-after-jump-hook . prot/imenu-recenter-pulse)
          (imenu-after-jump-hook . prot/imenu-show-entry))
