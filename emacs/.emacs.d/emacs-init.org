@@ -5647,18 +5647,18 @@ Subsequent sections expand on the particulars.
         '((nnmaildir . notmuch)))
 
   (setq gnus-parameters
-        '(("prv"
-           (posting-style
-            (gcc "nnmaildir+prv:Sent")
-            (From
-             (format "%s <%s>" user-full-name
-                     (prot/auth-get-field "prv" :user)))))
-          ("inf"
+        '((".*"                         ; fallback option
            (posting-style
             (gcc "nnmaildir+inf:Sent")
             (From
              (format "%s <%s>" user-full-name
                      (prot/auth-get-field "inf" :user)))))
+          ("prv"
+           (posting-style
+            (gcc "nnmaildir+prv:Sent")
+            (From
+             (format "%s <%s>" user-full-name
+                     (prot/auth-get-field "prv" :user)))))
           ("pub"
            (posting-style               ; Uses default name+mail
             (gcc "nnmaildir+pub:Sent")))))
