@@ -419,11 +419,19 @@ between foreground and background is >= 7:1)."
 (defface modus-theme-diff-focus-changed nil nil)
 (defface modus-theme-diff-focus-removed nil nil)
 (defface modus-theme-diff-heading nil nil)
-(defface modus-theme-header nil nil)    ; Name is tentative
+(defface modus-theme-pseudo-header nil nil)
 (defface modus-theme-mark-alt nil nil)
 (defface modus-theme-mark-del nil nil)
 (defface modus-theme-mark-sel nil nil)
 (defface modus-theme-mark-symbol nil nil)
+(defface modus-theme-heading-1 nil nil)
+(defface modus-theme-heading-2 nil nil)
+(defface modus-theme-heading-3 nil nil)
+(defface modus-theme-heading-4 nil nil)
+(defface modus-theme-heading-5 nil nil)
+(defface modus-theme-heading-6 nil nil)
+(defface modus-theme-heading-7 nil nil)
+(defface modus-theme-heading-8 nil nil)
 (defface modus-theme-hl-line nil nil)
 
 ;;; Customisation options
@@ -1063,8 +1071,8 @@ AMOUNT is a customisation option."
       ;; specifically for on/off states (e.g. `mode-line')
       ;;
       ;; must be combined with themselves
-      ("bg-active" . "#dcdcdc") ("fg-active" . "#191919")
-      ("bg-inactive" . "#eeeeee") ("fg-inactive" . "#444344")
+      ("bg-active" . "#d7d7d7") ("fg-active" . "#0a0a0a")
+      ("bg-inactive" . "#efefef") ("fg-inactive" . "#404148")
       ;; special base values, used only for cases where the above
       ;; fg-* or bg-* cannot or should not be used (to avoid confusion)
       ;; must be combined with: {fg,bg}-{main,alt,dim}
@@ -1152,9 +1160,9 @@ AMOUNT is a customisation option."
       ;; styles that are meant exclusively for the mode line
       ;;
       ;; must be combined with: `bg-active', `bg-inactive'
-      ("red-active" . "#900000") ("green-active" . "#00502e")
-      ("yellow-active" . "#71330f") ("blue-active" . "#0032b8")
-      ("magenta-active" . "#602492") ("cyan-active" . "#00438d")
+      ("red-active" . "#8a0000") ("green-active" . "#004c2e")
+      ("yellow-active" . "#702d1f") ("blue-active" . "#0030b4")
+      ("magenta-active" . "#5c2092") ("cyan-active" . "#003f8a")
       ;; styles that are meant exclusively for the fringes
       ;;
       ;; must be combined with `fg-main' or `fg-dim'
@@ -1352,23 +1360,93 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(modus-theme-special-calm ((,class :background ,bg-special-calm :foreground ,fg-special-calm)))
 ;;;;; diff-specific combinations
    ;; intended for `diff-mode' or equivalent
-   `(modus-theme-diff-added ((,class :background ,bg-diff-added :foreground ,fg-diff-added)))
-   `(modus-theme-diff-changed ((,class :background ,bg-diff-changed :foreground ,fg-diff-changed)))
-   `(modus-theme-diff-removed ((,class :background ,bg-diff-removed :foreground ,fg-diff-removed)))
-   `(modus-theme-diff-refine-added ((,class :background ,bg-diff-refine-added :foreground ,fg-diff-refine-added)))
-   `(modus-theme-diff-refine-changed ((,class :background ,bg-diff-refine-changed :foreground ,fg-diff-refine-changed)))
-   `(modus-theme-diff-refine-removed ((,class :background ,bg-diff-refine-removed :foreground ,fg-diff-refine-removed)))
-   `(modus-theme-diff-focus-added ((,class :background ,bg-diff-focus-added :foreground ,fg-diff-focus-added)))
-   `(modus-theme-diff-focus-changed ((,class :background ,bg-diff-focus-changed :foreground ,fg-diff-focus-changed)))
-   `(modus-theme-diff-focus-removed ((,class :background ,bg-diff-focus-removed :foreground ,fg-diff-focus-removed)))
-   `(modus-theme-diff-heading ((,class :background ,bg-diff-heading :foreground ,fg-diff-heading)))
+   `(modus-theme-diff-added
+     ((,class ,@(modus-operandi-theme-diff
+                 bg-main green
+                 bg-diff-focus-added fg-diff-focus-added
+                 green-nuanced-bg fg-diff-added))))
+   `(modus-theme-diff-changed
+     ((,class ,@(modus-operandi-theme-diff
+                 bg-main yellow
+                 bg-diff-focus-changed fg-diff-focus-changed
+                 yellow-nuanced-bg fg-diff-changed))))
+   `(modus-theme-diff-removed
+     ((,class ,@(modus-operandi-theme-diff
+                 bg-main red
+                 bg-diff-focus-removed fg-diff-focus-removed
+                 red-nuanced-bg fg-diff-removed))))
+   `(modus-theme-diff-refine-added
+     ((,class ,@(modus-operandi-theme-diff
+                 bg-diff-added fg-diff-added
+                 bg-diff-refine-added fg-diff-refine-added
+                 bg-diff-focus-added fg-diff-focus-added))))
+   `(modus-theme-diff-refine-changed
+     ((,class ,@(modus-operandi-theme-diff
+                 bg-diff-changed fg-diff-changed
+                 bg-diff-refine-changed fg-diff-refine-changed
+                 bg-diff-focus-changed fg-diff-focus-changed))))
+   `(modus-theme-diff-refine-removed
+     ((,class ,@(modus-operandi-theme-diff
+                 bg-diff-removed fg-diff-removed
+                 bg-diff-refine-removed fg-diff-refine-removed
+                 bg-diff-focus-removed fg-diff-focus-removed))))
+   `(modus-theme-diff-focus-added
+     ((,class ,@(modus-operandi-theme-diff
+                 bg-dim green
+                 bg-diff-focus-added fg-diff-focus-added
+                 bg-diff-added fg-diff-added))))
+   `(modus-theme-diff-focus-changed
+     ((,class ,@(modus-operandi-theme-diff
+                 bg-dim yellow
+                 bg-diff-focus-changed fg-diff-focus-changed
+                 bg-diff-changed fg-diff-changed))))
+   `(modus-theme-diff-focus-removed
+     ((,class ,@(modus-operandi-theme-diff
+                 bg-dim red
+                 bg-diff-focus-removed fg-diff-focus-removed
+                 bg-diff-removed fg-diff-removed))))
+   `(modus-theme-diff-heading
+     ((,class ,@(modus-operandi-theme-diff
+                 bg-alt blue-alt
+                 bg-diff-heading fg-diff-heading
+                 blue-nuanced-bg blue))))
 ;;;;; mark indicators
    ;; colour combinations intended for Dired, Ibuffer, or equivalent
-   `(modus-theme-header ((,class :inherit bold :foreground ,fg-main)))
+   `(modus-theme-pseudo-header ((,class :inherit bold :foreground ,fg-main)))
    `(modus-theme-mark-alt ((,class :inherit bold :background ,bg-mark-alt :foreground ,fg-mark-alt)))
    `(modus-theme-mark-del ((,class :inherit bold :background ,bg-mark-del :foreground ,fg-mark-del)))
    `(modus-theme-mark-sel ((,class :inherit bold :background ,bg-mark-sel :foreground ,fg-mark-sel)))
    `(modus-theme-mark-symbol ((,class :inherit bold :foreground ,blue-alt)))
+;;;;; heading levels
+   ;; styles for regular headings used in Org, Markdown, Info, etc.
+   `(modus-theme-heading-1
+     ((,class ,@(modus-operandi-theme-heading
+                 1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
+              ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
+   `(modus-theme-heading-2
+     ((,class ,@(modus-operandi-theme-heading
+                 2 fg-special-warm magenta-alt red-nuanced-bg bg-region)
+              ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3))))
+   `(modus-theme-heading-3
+     ((,class ,@(modus-operandi-theme-heading
+                 3 fg-special-cold blue blue-nuanced-bg bg-region)
+              ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2))))
+   `(modus-theme-heading-4
+     ((,class ,@(modus-operandi-theme-heading
+                 4 fg-special-mild cyan cyan-nuanced-bg bg-region)
+              ,@(modus-operandi-theme-scale modus-operandi-theme-scale-1))))
+   `(modus-theme-heading-5
+     ((,class ,@(modus-operandi-theme-heading
+                 5 fg-special-calm green-alt-other green-nuanced-bg bg-region))))
+   `(modus-theme-heading-6
+     ((,class ,@(modus-operandi-theme-heading
+                 6 yellow-nuanced yellow-alt-other yellow-nuanced-bg bg-region))))
+   `(modus-theme-heading-7
+     ((,class ,@(modus-operandi-theme-heading
+                 7 red-nuanced red-alt red-nuanced-bg bg-region))))
+   `(modus-theme-heading-8
+     ((,class ,@(modus-operandi-theme-heading
+                 8 fg-dim magenta bg-alt bg-region))))
 ;;;;; other custom faces
    `(modus-theme-hl-line ((,class :background ,(if modus-operandi-theme-intense-hl-line
                                                    bg-active bg-hl-line)
@@ -1889,49 +1967,28 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(diff-hl-insert ((,class :inherit modus-theme-fringe-green)))
    `(diff-hl-reverted-hunk-highlight ((,class :inherit (modus-theme-active-magenta bold))))
 ;;;;; diff-mode
-   `(diff-added ((,class ,@(modus-operandi-theme-diff
-                            bg-main green
-                            bg-diff-focus-added fg-diff-focus-added
-                            green-nuanced-bg fg-diff-added))))
-   `(diff-changed ((,class ,@(modus-operandi-theme-diff
-                              bg-main yellow
-                              bg-diff-focus-changed fg-diff-focus-changed
-                              yellow-nuanced-bg fg-diff-changed))))
+   `(diff-added ((,class :inherit modus-theme-diff-added)))
+   `(diff-changed ((,class :inherit modus-theme-diff-changed)))
    `(diff-context ((,class :foreground ,fg-unfocused)))
    `(diff-file-header ((,class :inherit bold :foreground ,blue)))
    `(diff-function ((,class :foreground ,fg-special-cold)))
    `(diff-header ((,class :foreground ,blue-nuanced)))
-   `(diff-hunk-header ((,class ,@(modus-operandi-theme-diff
-                                  bg-alt blue-alt
-                                  bg-diff-heading fg-diff-heading
-                                  blue-nuanced-bg blue))))
+   `(diff-hunk-header ((,class :inherit modus-theme-diff-heading)))
    `(diff-index ((,class :inherit bold :foreground ,blue-alt)))
    `(diff-indicator-added ((,class :inherit diff-added)))
    `(diff-indicator-changed ((,class :inherit diff-changed)))
    `(diff-indicator-removed ((,class :inherit diff-removed)))
    `(diff-nonexistent ((,class :inherit (modus-theme-neutral bold))))
-   `(diff-refine-added ((,class ,@(modus-operandi-theme-diff
-                                   bg-diff-added fg-diff-added
-                                   bg-diff-refine-added fg-diff-refine-added
-                                   bg-diff-focus-added fg-diff-focus-added))))
-   `(diff-refine-changed ((,class ,@(modus-operandi-theme-diff
-                                     bg-diff-changed fg-diff-changed
-                                     bg-diff-refine-changed fg-diff-refine-changed
-                                     bg-diff-focus-changed fg-diff-focus-changed))))
-   `(diff-refine-removed ((,class ,@(modus-operandi-theme-diff
-                                     bg-diff-removed fg-diff-removed
-                                     bg-diff-refine-removed fg-diff-refine-removed
-                                     bg-diff-focus-removed fg-diff-focus-removed))))
-   `(diff-removed ((,class ,@(modus-operandi-theme-diff
-                              bg-main red
-                              bg-diff-focus-removed fg-diff-focus-removed
-                              red-nuanced-bg fg-diff-removed))))
+   `(diff-refine-added ((,class :inherit modus-theme-diff-refine-added)))
+   `(diff-refine-changed ((,class :inherit modus-theme-diff-refine-changed)))
+   `(diff-refine-removed ((,class :inherit modus-theme-diff-refine-removed)))
+   `(diff-removed ((,class :inherit modus-theme-diff-removed)))
 ;;;;; dim-autoload
    `(dim-autoload-cookie-line ((,class :foreground ,fg-alt :slant ,modus-theme-slant)))
 ;;;;; dired
    `(dired-directory ((,class :foreground ,blue)))
    `(dired-flagged ((,class :inherit modus-theme-mark-del)))
-   `(dired-header ((,class :inherit modus-theme-header)))
+   `(dired-header ((,class :inherit modus-theme-pseudo-header)))
    `(dired-ignored ((,class :foreground ,fg-alt)))
    `(dired-mark ((,class :inherit modus-theme-mark-symbol)))
    `(dired-marked ((,class :inherit modus-theme-mark-sel)))
@@ -1966,7 +2023,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(diredfl-date-time ((,class :foreground ,cyan-alt-other)))
    `(diredfl-deletion ((,class :inherit modus-theme-mark-del)))
    `(diredfl-deletion-file-name ((,class :inherit modus-theme-mark-del)))
-   `(diredfl-dir-heading ((,class :inherit modus-theme-header)))
+   `(diredfl-dir-heading ((,class :inherit modus-theme-pseudo-header)))
    `(diredfl-dir-name ((,class :inherit dired-directory)))
    `(diredfl-dir-priv ((,class :foreground ,blue-alt)))
    `(diredfl-exec-priv ((,class :foreground ,magenta)))
@@ -2055,6 +2112,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(ebdb-role-defunct ((,class :foreground ,fg-alt)))
    `(eieio-custom-slot-tag-face ((,class :foreground ,red-alt)))
 ;;;;; ediff
+   ;; NOTE: here we break from the pattern of inheriting from the
+   ;; modus-theme-diff-* faces.
    `(ediff-current-diff-A ((,class ,@(modus-operandi-theme-diff
                                       bg-dim red
                                       bg-diff-removed fg-diff-removed
@@ -2738,9 +2797,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(helm-xref-file-name ((,class :inherit bold :foreground ,fg-special-cold)))
    `(helm-xref-file-name ((,class :foreground ,fg-special-warm)))
 ;;;;; helpful
-   `(helpful-heading ((,class ,@(modus-operandi-theme-heading
-                                 1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
-                              ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
+   `(helpful-heading ((,class :inherit modus-theme-heading-1)))
 ;;;;; highlight region or ad-hoc regexp
    `(hi-black-b ((,class :background ,fg-main :foreground ,bg-main)))
    `(hi-blue ((,class :background ,bg-alt :foreground ,blue :underline t)))
@@ -2856,23 +2913,13 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(info-header-node ((,class :inherit bold :foreground ,fg-alt)))
    `(info-header-xref ((,class :foreground ,blue-active)))
    `(info-index-match ((,class :inherit match)))
-   `(info-menu-header ((,class ,@(modus-operandi-theme-heading
-                                  3 fg-special-cold blue blue-nuanced-bg bg-region)
-                               ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2))))
+   `(info-menu-header ((,class :inherit modus-theme-heading-3)))
    `(info-menu-star ((,class :foreground ,red)))
    `(info-node ((,class :inherit bold)))
-   `(info-title-1 ((,class ,@(modus-operandi-theme-heading
-                              1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
-                           ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
-   `(info-title-2 ((,class ,@(modus-operandi-theme-heading
-                              2 fg-special-warm magenta-alt red-nuanced-bg bg-region)
-                           ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3))))
-   `(info-title-3 ((,class ,@(modus-operandi-theme-heading
-                              3 fg-special-cold blue blue-nuanced-bg bg-region)
-                           ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2))))
-   `(info-title-4 ((,class ,@(modus-operandi-theme-heading
-                              4 fg-special-mild cyan cyan-nuanced-bg bg-region)
-                           ,@(modus-operandi-theme-scale modus-operandi-theme-scale-1))))
+   `(info-title-1 ((,class :inherit modus-theme-heading-1)))
+   `(info-title-2 ((,class :inherit modus-theme-heading-2)))
+   `(info-title-3 ((,class :inherit modus-theme-heading-3)))
+   `(info-title-4 ((,class :inherit modus-theme-heading-4)))
 ;;;;; info-colors
    `(info-colors-lisp-code-block ((,class :inherit fixed-pitch)))
    `(info-colors-ref-item-command ((,class :foreground ,magenta)))
@@ -3087,22 +3134,20 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(magit-branch-upstream ((,class :slant italic)))
    `(magit-cherry-equivalent ((,class :background ,bg-main :foreground ,magenta-intense)))
    `(magit-cherry-unmatched ((,class :background ,bg-main :foreground ,cyan-intense)))
+   ;; NOTE: here we break from the pattern of inheriting from the
+   ;; modus-theme-diff-* faces, though only for the standard actions,
+   ;; not the highlighted ones.  This is because Magit's interaction
+   ;; model relies on highlighting the current diff hunk.
    `(magit-diff-added ((,class ,@(modus-operandi-theme-diff
                                   bg-main green
                                   bg-diff-added fg-diff-added
                                   green-nuanced-bg fg-diff-added))))
-   `(magit-diff-added-highlight ((,class ,@(modus-operandi-theme-diff
-                                            bg-dim green
-                                            bg-diff-focus-added fg-diff-focus-added
-                                            bg-diff-added fg-diff-added))))
+   `(magit-diff-added-highlight ((,class :inherit modus-theme-diff-focus-added)))
    `(magit-diff-base ((,class ,@(modus-operandi-theme-diff
                                  bg-main yellow
                                  bg-diff-changed fg-diff-changed
                                  yellow-nuanced-bg fg-diff-changed))))
-   `(magit-diff-base-highlight ((,class ,@(modus-operandi-theme-diff
-                                           bg-dim yellow
-                                           bg-diff-focus-changed fg-diff-focus-changed
-                                           bg-diff-changed fg-diff-changed))))
+   `(magit-diff-base-highlight ((,class :inherit modus-theme-diff-focus-changed)))
    `(magit-diff-context ((,class :foreground ,fg-unfocused)))
    `(magit-diff-context-highlight ((,class ,@(modus-operandi-theme-diff
                                               bg-dim fg-dim
@@ -3111,8 +3156,12 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(magit-diff-file-heading ((,class :inherit bold :foreground ,fg-special-cold)))
    `(magit-diff-file-heading-highlight ((,class :inherit (modus-theme-special-cold bold))))
    `(magit-diff-file-heading-selection ((,class :background ,bg-alt :foreground ,cyan)))
-   `(magit-diff-hunk-heading ((,class :inherit bold :background ,bg-active :foreground ,fg-inactive)))
-   `(magit-diff-hunk-heading-highlight ((,class :inherit (modus-theme-diff-heading bold))))
+   ;; NOTE: here we break from the pattern of inheriting from the
+   ;; modus-theme-diff-* faces.
+   `(magit-diff-hunk-heading ((,class :inherit bold :background ,bg-active
+                                      :foreground ,fg-inactive)))
+   `(magit-diff-hunk-heading-highlight ((,class :inherit bold :background ,bg-diff-heading
+                                                :foreground ,fg-diff-heading)))
    `(magit-diff-hunk-heading-selection ((,class :inherit modus-theme-intense-cyan)))
    `(magit-diff-hunk-region ((,class :inherit bold)))
    `(magit-diff-lines-boundary ((,class :background ,fg-main)))
@@ -3121,10 +3170,7 @@ Also bind `class' to ((class color) (min-colors 89))."
                                     bg-main red
                                     bg-diff-removed fg-diff-removed
                                     red-nuanced-bg fg-diff-removed))))
-   `(magit-diff-removed-highlight ((,class ,@(modus-operandi-theme-diff
-                                              bg-dim red
-                                              bg-diff-focus-removed fg-diff-focus-removed
-                                              bg-diff-removed fg-diff-removed))))
+   `(magit-diff-removed-highlight ((,class :inherit modus-theme-diff-focus-removed)))
    `(magit-diffstat-added ((,class :foreground ,green)))
    `(magit-diffstat-removed ((,class :foreground ,red)))
    `(magit-dimmed ((,class :foreground ,fg-unfocused)))
@@ -3192,22 +3238,12 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(markdown-gfm-checkbox-face ((,class :foreground ,cyan-alt-other)))
    `(markdown-header-delimiter-face ((,class ,@(modus-operandi-theme-bold-weight) :foreground ,fg-dim)))
    `(markdown-header-face ((t nil)))
-   `(markdown-header-face-1 ((,class ,@(modus-operandi-theme-heading
-                                        1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
-                                     ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
-   `(markdown-header-face-2 ((,class ,@(modus-operandi-theme-heading
-                                        2 fg-special-warm magenta-alt red-nuanced-bg bg-region)
-                                     ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3))))
-   `(markdown-header-face-3 ((,class ,@(modus-operandi-theme-heading
-                                        3 fg-special-cold blue blue-nuanced-bg bg-region)
-                                     ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2))))
-   `(markdown-header-face-4 ((,class ,@(modus-operandi-theme-heading
-                                        4 fg-special-mild cyan cyan-nuanced-bg bg-region)
-                                     ,@(modus-operandi-theme-scale modus-operandi-theme-scale-1))))
-   `(markdown-header-face-5 ((,class ,@(modus-operandi-theme-heading
-                                        5 fg-special-calm green-alt-other green-nuanced-bg bg-region))))
-   `(markdown-header-face-6 ((,class ,@(modus-operandi-theme-heading
-                                        6 yellow-nuanced yellow-alt-other yellow-nuanced-bg bg-region))))
+   `(markdown-header-face-1 ((,class :inherit modus-theme-heading-1)))
+   `(markdown-header-face-2 ((,class :inherit modus-theme-heading-2)))
+   `(markdown-header-face-3 ((,class :inherit modus-theme-heading-3)))
+   `(markdown-header-face-4 ((,class :inherit modus-theme-heading-4)))
+   `(markdown-header-face-5 ((,class :inherit modus-theme-heading-5)))
+   `(markdown-header-face-6 ((,class :inherit modus-theme-heading-6)))
    `(markdown-header-rule-face ((,class :inherit bold :foreground ,fg-special-warm)))
    `(markdown-hr-face ((,class :inherit bold :foreground ,fg-special-warm)))
    `(markdown-html-attr-name-face ((,class ,@(modus-operandi-theme-mixed-fonts)
@@ -3518,6 +3554,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-agenda-clocking ((,class :inherit modus-theme-special-cold)))
    `(org-agenda-column-dateline ((,class :background ,bg-alt)))
    `(org-agenda-current-time ((,class :inherit modus-theme-subtle-cyan)))
+   ;; NOTE: here we break the pattern of inheriting from
+   ;; modus-theme-heading-N faces.
    `(org-agenda-date ((,class ,@(modus-operandi-theme-heading
                                  1 cyan-alt-other cyan-alt-other cyan-nuanced-bg bg-region)
                               ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
@@ -3587,26 +3625,14 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-hide ((,class :foreground ,bg-main)))
    `(org-indent ((,class :inherit (fixed-pitch org-hide))))
    `(org-latex-and-related ((,class :foreground ,magenta-refine-fg)))
-   `(org-level-1 ((,class ,@(modus-operandi-theme-heading
-                             1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
-                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
-   `(org-level-2 ((,class ,@(modus-operandi-theme-heading
-                             2 fg-special-warm magenta-alt red-nuanced-bg bg-region)
-                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3))))
-   `(org-level-3 ((,class ,@(modus-operandi-theme-heading
-                             3 fg-special-cold blue blue-nuanced-bg bg-region)
-                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2))))
-   `(org-level-4 ((,class ,@(modus-operandi-theme-heading
-                             4 fg-special-mild cyan cyan-nuanced-bg bg-region)
-                          ,@(modus-operandi-theme-scale modus-operandi-theme-scale-1))))
-   `(org-level-5 ((,class ,@(modus-operandi-theme-heading
-                             5 fg-special-calm green-alt-other green-nuanced-bg bg-region))))
-   `(org-level-6 ((,class ,@(modus-operandi-theme-heading
-                             6 yellow-nuanced yellow-alt-other yellow-nuanced-bg bg-region))))
-   `(org-level-7 ((,class ,@(modus-operandi-theme-heading
-                             7 red-nuanced red-alt red-nuanced-bg bg-region))))
-   `(org-level-8 ((,class ,@(modus-operandi-theme-heading
-                             8 fg-dim magenta bg-alt bg-region))))
+   `(org-level-1 ((,class :inherit modus-theme-heading-1)))
+   `(org-level-2 ((,class :inherit modus-theme-heading-2)))
+   `(org-level-3 ((,class :inherit modus-theme-heading-3)))
+   `(org-level-4 ((,class :inherit modus-theme-heading-4)))
+   `(org-level-5 ((,class :inherit modus-theme-heading-5)))
+   `(org-level-6 ((,class :inherit modus-theme-heading-6)))
+   `(org-level-7 ((,class :inherit modus-theme-heading-7)))
+   `(org-level-8 ((,class :inherit modus-theme-heading-8)))
    `(org-link ((,class :inherit link)))
    `(org-list-dt ((,class :inherit bold)))
    `(org-macro ((,class :background ,blue-nuanced-bg :foreground ,magenta-alt-other)))
@@ -3669,26 +3695,14 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(origami-fold-header-face ((,class :background ,bg-dim :foreground ,fg-dim :box t)))
    `(origami-fold-replacement-face ((,class :background ,bg-alt :foreground ,fg-alt)))
 ;;;;; outline-mode
-   `(outline-1 ((,class ,@(modus-operandi-theme-heading
-                           1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
-                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-4))))
-   `(outline-2 ((,class ,@(modus-operandi-theme-heading
-                           2 fg-special-warm magenta-alt red-nuanced-bg bg-region)
-                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-3))))
-   `(outline-3 ((,class ,@(modus-operandi-theme-heading
-                           3 fg-special-cold blue blue-nuanced-bg bg-region)
-                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-2))))
-   `(outline-4 ((,class ,@(modus-operandi-theme-heading
-                           4 fg-special-mild cyan cyan-nuanced-bg bg-region)
-                        ,@(modus-operandi-theme-scale modus-operandi-theme-scale-1))))
-   `(outline-5 ((,class ,@(modus-operandi-theme-heading
-                           5 fg-special-calm green-alt-other green-nuanced-bg bg-region))))
-   `(outline-6 ((,class ,@(modus-operandi-theme-heading
-                           6 yellow-nuanced yellow-alt-other yellow-nuanced-bg bg-region))))
-   `(outline-7 ((,class ,@(modus-operandi-theme-heading
-                           7 red-nuanced red-alt red-nuanced-bg bg-region))))
-   `(outline-8 ((,class ,@(modus-operandi-theme-heading
-                           8 fg-dim magenta bg-alt bg-region))))
+   `(outline-1 ((,class :inherit modus-theme-heading-1)))
+   `(outline-2 ((,class :inherit modus-theme-heading-2)))
+   `(outline-3 ((,class :inherit modus-theme-heading-3)))
+   `(outline-4 ((,class :inherit modus-theme-heading-4)))
+   `(outline-5 ((,class :inherit modus-theme-heading-5)))
+   `(outline-6 ((,class :inherit modus-theme-heading-6)))
+   `(outline-7 ((,class :inherit modus-theme-heading-7)))
+   `(outline-8 ((,class :inherit modus-theme-heading-8)))
 ;;;;; outline-minor-faces
    `(outline-minor-0 ((,class nil)))
 ;;;;; package (M-x list-packages)
@@ -4000,28 +4014,13 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(sp-wrap-overlay-opening-pair ((,class :inherit sp-pair-overlay-face)))
    `(sp-wrap-tag-overlay-face ((,class :inherit sp-pair-overlay-face)))
 ;;;;; smerge
-   `(smerge-base ((,class ,@(modus-operandi-theme-diff
-                             bg-main yellow
-                             bg-diff-focus-changed fg-diff-focus-changed
-                             yellow-nuanced-bg fg-diff-changed))))
-   `(smerge-lower ((,class ,@(modus-operandi-theme-diff
-                              bg-main green
-                              bg-diff-focus-added fg-diff-focus-added
-                              green-nuanced-bg fg-diff-added))))
+   `(smerge-base ((,class :inherit modus-theme-diff-changed)))
+   `(smerge-lower ((,class :inherit modus-theme-diff-added)))
    `(smerge-markers ((,class :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2)))
-   `(smerge-refined-added ((,class ,@(modus-operandi-theme-diff
-                                      bg-diff-added fg-diff-added
-                                      bg-diff-refine-added fg-diff-refine-added
-                                      green-refine-bg green-refine-fg))))
+   `(smerge-refined-added ((,class :inherit modus-theme-diff-refine-added)))
    `(smerge-refined-changed ((,class)))
-   `(smerge-refined-removed ((,class ,@(modus-operandi-theme-diff
-                                        bg-diff-removed fg-diff-removed
-                                        bg-diff-refine-removed fg-diff-refine-removed
-                                        red-refine-bg red-refine-fg))))
-   `(smerge-upper ((,class ,@(modus-operandi-theme-diff
-                              bg-main red
-                              bg-diff-focus-removed fg-diff-focus-removed
-                              red-nuanced-bg fg-diff-removed))))
+   `(smerge-refined-removed ((,class :inherit modus-theme-diff-refine-removed)))
+   `(smerge-upper ((,class :inherit modus-theme-diff-removed)))
 ;;;;; spaceline
    `(spaceline-evil-emacs ((,class :inherit modus-theme-active-magenta)))
    `(spaceline-evil-insert ((,class :inherit modus-theme-active-green)))
@@ -4253,38 +4252,23 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(undo-tree-visualizer-default-face ((,class :foreground ,fg-alt)))
    `(undo-tree-visualizer-register-face ((,class :foreground ,magenta-intense)))
    `(undo-tree-visualizer-unmodified-face ((,class :foreground ,green-intense)))
-;;;;; vc
-   `(vc-conflict-state ((,class ,@(modus-operandi-theme-bold-weight) :foreground ,red-active)))
+;;;;; vc (vc-hooks.el)
+   `(vc-conflict-state ((,class :foreground ,red-active :slant ,modus-theme-slant)))
    `(vc-edited-state ((,class :foreground ,yellow-active)))
    `(vc-locally-added-state ((,class :foreground ,cyan-active)))
-   `(vc-locked-state ((,class ,@(modus-operandi-theme-bold-weight) :foreground ,magenta-active)))
-   `(vc-missing-state ((,class ,@(modus-operandi-theme-bold-weight) :foreground ,yellow-active)))
-   `(vc-needs-update-state ((,class ,@(modus-operandi-theme-bold-weight) :foreground ,fg-special-mild)))
+   `(vc-locked-state ((,class :foreground ,blue-active)))
+   `(vc-missing-state ((,class :foreground ,magenta-active :slant ,modus-theme-slant)))
+   `(vc-needs-update-state ((,class :foreground ,green-active :slant ,modus-theme-slant)))
    `(vc-removed-state ((,class :foreground ,red-active)))
    `(vc-state-base ((,class :foreground ,fg-active)))
    `(vc-up-to-date-state ((,class :foreground ,fg-special-cold)))
 ;;;;; vdiff
-   `(vdiff-addition-face ((,class ,@(modus-operandi-theme-diff
-                                     bg-main green
-                                     bg-diff-focus-added fg-diff-focus-added
-                                     green-nuanced-bg fg-diff-added))))
-   `(vdiff-change-face ((,class ,@(modus-operandi-theme-diff
-                                   bg-main yellow
-                                   bg-diff-focus-changed fg-diff-focus-changed
-                                   yellow-nuanced-bg fg-diff-changed))))
+   `(vdiff-addition-face ((,class :inherit modus-theme-diff-added)))
+   `(vdiff-change-face ((,class :inherit modus-theme-diff-changed)))
    `(vdiff-closed-fold-face ((,class :background ,bg-diff-neutral-1 :foreground ,fg-diff-neutral-1)))
-   `(vdiff-refine-added ((,class ,@(modus-operandi-theme-diff
-                                    bg-diff-added fg-diff-added
-                                    bg-diff-refine-added fg-diff-refine-added
-                                    green-refine-bg green-refine-fg))))
-   `(vdiff-refine-changed ((,class ,@(modus-operandi-theme-diff
-                                      bg-diff-changed fg-diff-changed
-                                      bg-diff-refine-changed fg-diff-refine-changed
-                                      yellow-refine-bg yellow-refine-fg))))
-   `(vdiff-subtraction-face ((,class ,@(modus-operandi-theme-diff
-                                        bg-main red
-                                        bg-diff-focus-removed fg-diff-focus-removed
-                                        red-nuanced-bg fg-diff-removed))))
+   `(vdiff-refine-added ((,class :inherit modus-theme-diff-refine-added)))
+   `(vdiff-refine-changed ((,class :inherit modus-theme-diff-refine-changed)))
+   `(vdiff-subtraction-face ((,class :inherit modus-theme-diff-removed)))
    `(vdiff-target-face ((,class :inherit modus-theme-intense-blue)))
 ;;;;; vimish-fold
    `(vimish-fold-fringe ((,class :foreground ,cyan-active)))
@@ -4559,7 +4543,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(ibuffer-deletion-face 'modus-theme-mark-del)
    `(ibuffer-filter-group-name-face 'modus-theme-mark-symbol)
    `(ibuffer-marked-face 'modus-theme-mark-sel)
-   `(ibuffer-title-face 'modus-theme-header)
+   `(ibuffer-title-face 'modus-theme-pseudo-header)
 ;;;; highlight-tail
    `(highlight-tail-colors
      '((,green-subtle-bg . 0)
