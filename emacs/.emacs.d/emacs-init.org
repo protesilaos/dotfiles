@@ -4144,7 +4144,7 @@ a window in any of the cardinal directions.  I use the Vim keys while
 holding down Super and Meta because other mnemonics-based actions
 involving just Super or Meta are already occupied.
 
-*** Tabs for window layouts and buffers (Emacs 27.1)
+*** Tabs for window layouts and buffers (Emacs 27+)
 :PROPERTIES:
 :CUSTOM_ID: h:63ad472f-c9c2-40ad-9675-1dc529487788
 :END:
@@ -9750,7 +9750,7 @@ The value of =mouse-wheel-scroll-amount= means the following:
 + By default scroll by one line.
 + Hold down Shift to do so by five lines.
 + Hold down Meta to scroll half a screen.
-+ Hold down Control to adjust the size of the text.  This is added in
++ Hold down Control to adjust the size of the text.  This was added in
   Emacs 27.
 
 The other options in short:
@@ -9769,7 +9769,7 @@ primary selection).  I choose not to use this here.
 #+begin_src emacs-lisp
 (use-package mouse
   :config
-  ;; In Emacs 27, use Control + mouse wheel to scale text.
+  ;; In Emacs 27+, use Control + mouse wheel to scale text.
   (setq mouse-wheel-scroll-amount
         '(1
           ((shift) . 5)
@@ -9846,8 +9846,9 @@ effect (see the section on the [[#h:02572210-eb26-4941-8f7c-666a0314877b][mouse 
   :hook (after-init-hook . delete-selection-mode))
 #+end_src
 
-*Pro tip*: On Emacs 27.1 you can create a rectangular region by holding
-down Ctrl and Meta while dragging the mouse with the left click pressed.
+*Pro tip*: On Emacs 27.1 or higher you can create a rectangular region by
+holding down Ctrl and Meta while dragging the mouse with the left click
+pressed.
 
 *** Tooltips (tooltip-mode)
 :PROPERTIES:
@@ -10737,55 +10738,309 @@ you.
   :mode ("PKGBUILD" . pkgbuild-mode))
 #+end_src
 
-Since we are here, I built Emacs 27 on 2020-08-14 using a slightly
-modified script than the one in Arch's repos.  Basically, I wanted to
-have better text drawing capabilities.  Below is the file I used and on
-which I performed =makepkg= and =makepkg -i=, all from inside Emacs of
-course (note that I did not bother to read the docs for writing good
-PKGBUILDs, so feel free to improve upon this):
+Since we are here, I build Emacs from the =master= branch source, using a
+sightly modified script than the one in AUR's repos.  Below is the file
+on which I perform =makepkg= (followed by =makepkg -i NAME.pkg.tar.zst=),
+all from inside Emacs of course:
 
 #+begin_example sh
-# Maintainer: Juergen Hoetzel <juergen@archlinux.org>
-# Contributor: Renchi Raju <renchi@green.tam.uiuc.edu>
+# Maintainer: Pedro A. López-Valencia <https://aur.archlinux.org/users/vorbote>
 
-# Modified by: Protesilaos Stavrou <info@protesilaos.com>
+################################################################################
+# CAVEAT LECTOR: This PKGBUILD is highly opinionated. I give you
+#                enough rope to hang yourself, but by default it
+#                only enables the features I use.
+#
+#        TLDR: yaourt users, cry me a river.
+#
+#        Everyone else: do not update blindly this PKGBUILD. At least
+#        make sure to compare and understand the changes.
+#
+################################################################################
 
-pkgname=emacs-custom
-_name=emacs
-pkgver=27.1
-pkgrel=2
-pkgdesc="The extensible, customizable, self-documenting real-time display editor (custom build)"
-arch=('x86_64')
-url="https://www.gnu.org/software/emacs/emacs.html"
-license=('GPL3')
-depends=('librsvg' 'gpm' 'giflib' 'libxpm' 'libotf' 'm17n-lib' 'gtk3' 'hicolor-icon-theme' 'desktop-file-utils' 'alsa-lib' 'gnutls' 'jansson' 'cairo' 'harfbuzz')
-provides=('emacs')
-conflicts=('emacs' 'emacs-git')
-replaces=('emacs-git')
-validpgpkeys=('B29426DEFB07724C3C35E5D36592E9A3A0B0F199' '28D3BED851FDF3AB57FEF93C233587A47C207910')
-source=(https://ftp.gnu.org/gnu/emacs/$_name-$pkgver.tar.xz{,.sig})
-sha1sums=('d1b6b9efa666614c5628dda9ea78628796a73f7f'
-          'SKIP')
+################################################################################
+# Assign "YES" to the variable you want enabled; empty or any other value
+# for NO.
+#
+# Where you read experimental, replace with foobar.
+# =================================================
+#
+################################################################################
+CHECK=            # Run tests. May fail, this is developement after all.
+CLANG=            # Use clang.
+GOLD=             # Use the gold linker.
+LTO=              # Enable link-time optimization. Read emacs's INSTALL before
+                  # attempting to use it with clang.
+CLI=              # CLI only binary.
+NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
+LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
+                  #
+                  # Read https://wiki.archlinux.org/index.php/X_resources
+                  # https://en.wikipedia.org/wiki/X_resources
+                  # and https://www.emacswiki.org/emacs/XftGnuEmacs
+                  # for some tips on using outline fonts with
+                  # Xft, if you choose no toolkit or Lucid.
+                  #
+GTK2=             # GTK2 support. Why would you?
+NOCAIRO=          # Disable here. 
+XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
+DOCS_HTML=        # Generate and install html documentation.
+DOCS_PDF=         # Generate and install pdf documentation.
+MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
+                  # ImageMagick, like flash, won't die... 
+                  # -->>If you just *believe* you need ImageMagick, you don't.<<--
+NOGZ="NO"         # Don't compress .el files.
+################################################################################
+
+################################################################################
+pkgname="emacs-git"
+pkgver=28.0.50.142787
+pkgrel=1
+pkgdesc="GNU Emacs. Development master branch."
+arch=('x86_64' )
+url="http://www.gnu.org/software/emacs/"
+license=('GPL3' )
+depends=('alsa-lib' 'gnutls' 'libxml2' 'jansson' 'm17n-lib' 'libotf' 'harfbuzz' 'gpm')
+makedepends=('git')
+provides=('emacs' 'emacs-seq')
+conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq')
+replaces=('emacs26-git' 'emacs27-git' 'emacs-seq')
+source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
+# If Savannah access is blocked for reasons, use Github instead.
+# Edit the config file of your local repo copy as well.
+#source=("emacs-git::git://github.com/emacs-mirror/emacs.git")
+options=(!strip)
+md5sums=('SKIP')
+################################################################################
+
+################################################################################
+
+if [[ $GOLD == "YES" && ! $CLANG == "YES" ]]; then
+  export LD=/usr/bin/ld.gold
+  export CFLAGS+=" -fuse-ld=gold";
+  export CXXFLAGS+=" -fuse-ld=gold";
+elif [[ $GOLD == "YES" && $CLANG == "YES" ]]; then
+  echo "";
+  echo "Clang rather uses its own linker.";
+  echo "";
+  exit 1;
+fi
+
+if [[ $CLANG == "YES" ]]; then
+  export CC="/usr/bin/clang" ;
+  export CXX="/usr/bin/clang++" ;
+  export CPP="/usr/bin/clang -E" ;
+  export LD="/usr/bin/lld" ;
+  export AR="/usr/bin/llvm-ar" ;
+  export AS="/usr/bin/llvm-as" ;
+  export CCFLAGS+=' -fuse-ld=lld' ;
+  export CXXFLAGS+=' -fuse-ld=lld' ;
+  makedepends+=( 'clang' 'lld' 'llvm') ;
+fi
+
+if [[ $LTO == "YES" ]] && [[ $CLANG != "YES" ]]; then
+  CFLAGS+=" -flto -fuse-linker-plugin"
+  CXXFLAGS+=" -flto -fuse-linker-plugin"
+else
+  CFLAGS+=" -flto"
+  CXXFLAGS+=" -flto"
+fi
+
+if [[ $NOTKIT == "YES" ]]; then
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxrandr' 'lcms2' 'librsvg' 'libxfixes' );
+  makedepends+=( 'xorgproto' );
+elif [[ $LUCID == "YES" ]]; then
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxfixes' 'lcms2' 'librsvg' 'xaw3d' 'libxrandr' );
+  makedepends+=( 'xorgproto' );
+elif [[ $GTK2 == "YES" ]]; then
+  depends+=( 'gtk2' 'lcms2' );
+  makedepends+=( 'xorgproto' );
+else
+  depends+=( 'gtk3' );
+  makedepends+=( 'xorgproto' );
+fi
+
+if [[ $MAGICK == "YES" ]]; then
+  depends+=( 'imagemagick'  'libjpeg-turbo' 'giflib' );
+elif [[ ! $NOX == "YES" ]]; then
+  depends+=( 'libjpeg-turbo' 'giflib' );
+else
+  depends+=();
+fi
+
+if [[ ! $NOCAIRO == "YES" ]]; then
+  depends+=( 'cairo' );
+fi
+
+if [[ $XWIDGETS == "YES" ]]; then
+  if [[ $GTK2 == "YES" ]] || [[ $LUCID == "YES" ]] || [[ $NOTKIT == "YES" ]] || [[ $CLI == "YES" ]]; then
+    echo "";
+    echo "";
+    echo "Xwidgets support *requires* gtk+3!!!";
+    echo "";
+    echo "";
+    exit 1;
+  else
+    depends+=( 'webkit2gtk' );
+  fi
+fi
+
+if [[ $DOCS_PDF == "YES" ]]; then
+  makedepends+=( 'texlive-core' );
+fi
+################################################################################
+
+################################################################################
+pkgver() {
+  cd "$srcdir/emacs-git"
+
+  printf "%s.%s" \
+    "$(grep AC_INIT configure.ac | \
+    sed -e 's/^.\+\ \([0-9]\+\.[0-9]\+\.[0-9]\+\?\).\+$/\1/')" \
+    "$(git rev-list --count HEAD)"
+}
+
+# There is no need to run autogen.sh after first checkout.
+# Doing so, breaks incremental compilation.
+prepare() {
+  cd "$srcdir/emacs-git"
+  [[ -x configure ]] || ( ./autogen.sh git && ./autogen.sh autoconf )
+}
+
+if [[ $CHECK == "YES" ]]; then
+check() {
+  cd "$srcdir/emacs-git"
+  make check
+}
+fi
 
 build() {
-  cd "$srcdir"/$_name-$pkgver
-  ac_cv_lib_gif_EGifPutExtensionLast=yes ./configure --prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib \
-                                    --localstatedir=/var --with-x-toolkit=gtk3 --with-xft --with-wide-int \
-                                    --with-modules --with-cairo --with-harfbuzz
+  cd "$srcdir/emacs-git"
+
+  local _conf=(
+    --prefix=/usr
+    --sysconfdir=/etc
+    --libexecdir=/usr/lib
+    --localstatedir=/var
+    --mandir=/usr/share/man
+    --with-gameuser=:games
+    --with-sound=alsa
+    --with-modules
+# Beware https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
+# dconf and gconf break font settings you set in ~/.emacs.
+# If you insist you'll need to read that bug report in *full*.
+# Good luck!
+   --without-gconf
+   --without-gsettings
+  )
+
+################################################################################
+
+################################################################################
+
+if [[ $CLANG == "YES" ]]; then
+  _conf+=(
+    '--enable-autodepend'
+ );
+fi
+
+if [[ $LTO == "YES" ]]; then
+  _conf+=(
+    '--enable-link-time-optimization'
+  );
+fi
+
+if [[ $CLI == "YES" ]]; then
+  _conf+=( '--without-x' '--with-x-toolkit=no' '--without-xft' '--without-lcms2' '--without-rsvg' );
+elif [[ $NOTKIT == "YES" ]]; then
+  _conf+=( '--with-x-toolkit=no' '--without-toolkit-scroll-bars' '--with-xft' '--without-xaw3d' );
+elif [[ $LUCID == "YES" ]]; then
+  _conf+=( '--with-x-toolkit=lucid' '--with-xft' '--with-xaw3d' );
+elif [[ $GTK2 == "YES" ]]; then
+  _conf+=( '--with-x-toolkit=gtk2' '--without-gsettings' '--without-xaw3d' );
+else
+  _conf+=( '--with-x-toolkit=gtk3' '--without-xaw3d' );
+fi
+
+if [[ $MAGICK == "YES" ]]; then
+  _conf+=( '--with-imagemagick');
+else
+  _conf+=();
+fi
+
+if [[ $NOCAIRO == "YES" ]]; then
+  _conf+=( '--without-cairo' );
+fi
+
+if [[ $XWIDGETS == "YES" ]]; then
+  _conf+=( '--with-xwidgets' );
+fi
+
+if [[ $NOGZ == "YES" ]]; then
+  _conf+=( '--without-compress-install' );
+fi
+################################################################################
+
+################################################################################
+
+  ./configure "${_conf[@]}"
+
+  # Using "make" instead of "make bootstrap" enables incremental
+  # compiling. Less time recompiling. Yay! But you may
+  # need to use bootstrap sometimes to unbreak the build.
+  # Just add it to the command line.
+  #
+  # Please note that incremental compilation implies that you
+  # are reusing your src directory!
+  #
   make
+
+  # You may need to run this if 'loaddefs.el' files become corrupt.
+  #cd "$srcdir/emacs-git/lisp"
+  #make autoloads
+  #cd ../
+
+  # Optional documentation formats.
+  if [[ $DOCS_HTML == "YES" ]]; then
+    make html;
+  fi
+  if [[ $DOCS_PDF == "YES" ]]; then
+    make pdf;
+  fi
+
 }
 
 package() {
-  cd "$srcdir"/$_name-$pkgver
-  make DESTDIR="$pkgdir" install
+  cd "$srcdir/emacs-git"
+
+  make DESTDIR="$pkgdir/" install
+
+  # Install optional documentation formats
+  if [[ $DOCS_HTML == "YES" ]]; then make DESTDIR="$pkgdir/" install-html; fi
+  if [[ $DOCS_PDF == "YES" ]]; then make DESTDIR="$pkgdir/" install-pdf; fi
 
   # remove conflict with ctags package
   mv "$pkgdir"/usr/bin/{ctags,ctags.emacs}
-  mv "$pkgdir"/usr/share/man/man1/{ctags.1.gz,ctags.emacs.1}
+
+  if [[ $NOGZ == "YES" ]]; then
+    mv "$pkgdir"/usr/share/man/man1/{ctags.1,ctags.emacs.1};
+  else
+    mv "$pkgdir"/usr/share/man/man1/{ctags.1.gz,ctags.emacs.1.gz}
+  fi
 
   # fix user/root permissions on usr/share files
-  find "$pkgdir"/usr/share/emacs/$pkgver -exec chown root:root {} \;
+  find "$pkgdir"/usr/share/emacs/ | xargs chown root:root
+
+  # fix permssions on /var/games
+  mkdir -p "$pkgdir"/var/games/emacs
+  chmod 775 "$pkgdir"/var/games
+  chmod 775 "$pkgdir"/var/games/emacs
+  chown -R root:games "$pkgdir"/var/games
+
 }
+
+################################################################################
+# vim:set ft=sh ts=2 sw=2 et:
 #+end_example
 
 *** Markdown
@@ -11314,7 +11569,7 @@ while I also spent time with i3WM, DWM, Herbestluftwm.  The tiling
 window manager paradigm offers little to no value now that practically
 my entire computing experience happens inside of a single application.
 
-My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/tree/?h=emacs-27][built from source]], using the =emacs-27= branch.  Check the AUR
+My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/tree/?h=emacs-27][built from source]], using the =master= branch.  Check the AUR
 if you are on Arch or derivatives, or try my PKGBUILD which I documented
 in the section about [[#h:7fa5b86b-3fc5-4118-8d56-aacf4c0fffb8][Arch Linux package recipes]]---remember to /always
 read/ the shell scripts before you download random stuff.
