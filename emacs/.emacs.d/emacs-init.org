@@ -816,8 +816,7 @@ Relevant blog posts of mine:
              prot/font-set-font-size-family
              prot/font-fonts-dwim)
   :config
-  (setq x-underline-at-descent-line t)
-  (setq underline-minimum-offset 1)
+  (setq x-underline-at-descent-line nil)
 
   (defvar prot/font-set-fonts-hook nil
     "Hook that is called after setting fonts.
@@ -900,6 +899,7 @@ or `prot/font-fonts-dwim' which just wraps this one with that."
                (size (completing-read "Select or insert number: " sizes nil))
                (var (face-attribute 'variable-pitch :family)))
           (set-face-attribute 'default nil :family font :height (string-to-number size))
+          (set-face-attribute 'fixed-pitch nil :family font)
           (prot/font-set-face-attribute 'variable-pitch var)
           (run-hooks 'prot/font-set-fonts-hook))
       (user-error "Not running a graphical Emacs.  Cannot set fonts.")))
@@ -922,9 +922,8 @@ economise on dedicated key bindings."
 See `prot/font-line-spacing' for how this is used.")
 
   (defvar prot/font-fonts-bold-weight-alist
-    '(("Iosevka Comfy" . semibold)
-      ("Source Code Pro" . semibold))
-    "Font families in need of a variegated weight for `bold'.
+    '(("Source Code Pro" . semibold))
+    "Font families in need of a different weight for `bold'.
 See `prot/font-bold-face' for how this is used.")
 
   (defmacro prot/font-adjustment (fn doc alist cond1 cond2)
