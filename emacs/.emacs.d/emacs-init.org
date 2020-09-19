@@ -1265,6 +1265,7 @@ results I am most likely interested in, based on previous selections.
   (setq enable-recursive-minibuffers t)
   (setq read-answer-short t)
   (setq resize-mini-windows t)
+  (setq minibuffer-eldef-shorten-default t)
 
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
