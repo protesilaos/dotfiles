@@ -159,6 +159,7 @@
 ;;     eyebrowse
 ;;     fancy-dabbrev
 ;;     flycheck
+;;     flycheck-color-mode-line
 ;;     flycheck-indicator
 ;;     flycheck-posframe
 ;;     flymake
@@ -316,6 +317,7 @@
 ;;     treemacs
 ;;     tty-menu
 ;;     tuareg
+;;     typescript
 ;;     undo-tree
 ;;     vc (built-in mode line status for version control)
 ;;     vc-annotate (C-x v g)
@@ -2389,6 +2391,11 @@ Also bind `class' to ((class color) (min-colors 89))."
      ((,(append '((supports :underline (:style wave))) class)
        :underline (:color ,fg-lang-warning :style wave))
       (,class :foreground ,fg-lang-warning :underline t)))
+;;;;; flycheck-color-mode-line
+   `(flycheck-color-mode-line-error-face ((,class :inherit flycheck-fringe-error)))
+   `(flycheck-color-mode-line-info-face ((,class :inherit flycheck-fringe-info)))
+   `(flycheck-color-mode-line-running-face ((,class :foreground ,fg-inactive :slant italic)))
+   `(flycheck-color-mode-line-info-face ((,class :inherit flycheck-fringe-warning)))
 ;;;;; flycheck-indicator
    `(flycheck-indicator-disabled ((,class :foreground ,fg-inactive :slant ,modus-theme-slant)))
    `(flycheck-indicator-error ((,class ,@(modus-vivendi-theme-bold-weight) :foreground ,red-active)))
@@ -2643,12 +2650,12 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(gnus-summary-high-undownloaded ((,class :inherit bold :foreground ,yellow)))
    `(gnus-summary-high-unread ((,class :inherit bold :foreground ,fg-main)))
    `(gnus-summary-low-ancient ((,class :foreground ,fg-alt :slant italic)))
-   `(gnus-summary-low-read ((,class :foreground ,fg-special-cold :slant italic)))
+   `(gnus-summary-low-read ((,class :foreground ,fg-alt :slant italic)))
    `(gnus-summary-low-ticked ((,class :foreground ,red-refine-fg :slant italic)))
    `(gnus-summary-low-undownloaded ((,class :foreground ,yellow-refine-fg :slant italic)))
    `(gnus-summary-low-unread ((,class :inherit bold :foreground ,fg-special-cold)))
    `(gnus-summary-normal-ancient ((,class :foreground ,fg-special-calm)))
-   `(gnus-summary-normal-read ((,class :foreground ,fg-special-cold)))
+   `(gnus-summary-normal-read ((,class :foreground ,fg-alt)))
    `(gnus-summary-normal-ticked ((,class :foreground ,red-alt-other)))
    `(gnus-summary-normal-undownloaded ((,class :foreground ,yellow)))
    `(gnus-summary-normal-unread ((,class :foreground ,fg-main)))
@@ -2869,14 +2876,14 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;;; icomplete
    `(icomplete-first-match ((,class :inherit bold
                                     ,@(modus-vivendi-theme-standard-completions
-                                       fg-main bg-alt
+                                       magenta bg-alt
                                        bg-active fg-main))))
 ;;;;; icomplete-vertical
    `(icomplete-vertical-separator ((,class :foreground ,fg-alt)))
 ;;;;; ido-mode
    `(ido-first-match ((,class :inherit bold
                               ,@(modus-vivendi-theme-standard-completions
-                                 fg-main cyan-nuanced-bg
+                                 magenta bg-alt
                                  bg-active fg-main))))
    `(ido-incomplete-regexp ((,class :inherit error)))
    `(ido-indicator ((,class :inherit modus-theme-subtle-yellow)))
@@ -4241,6 +4248,10 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(tuareg-opam-pkg-variable-name-face ((,class ,@(modus-vivendi-theme-syntax-foreground
                                                     cyan cyan-faint)
                                                  :slant ,modus-theme-slant)))
+;;;;; typescript
+   `(typescript-jsdoc-tag ((,class :foreground ,fg-special-mild :slant ,modus-theme-slant)))
+   `(typescript-jsdoc-type ((,class :foreground ,fg-special-calm :slant ,modus-theme-slant)))
+   `(typescript-jsdoc-value ((,class :foreground ,fg-special-cold :slant ,modus-theme-slant)))
 ;;;;; undo-tree
    `(undo-tree-visualizer-active-branch-face ((,class :inherit bold :foreground ,fg-main)))
    `(undo-tree-visualizer-current-face ((,class :foreground ,blue-intense)))
