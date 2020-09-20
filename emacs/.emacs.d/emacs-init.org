@@ -8347,10 +8347,15 @@ the currently playing track."
 Upon insertion, playback starts immediately, in accordance with
 `prot/bongo-play-random'.
 
-The available options at the completion prompt point to files
-that hold filesystem paths of media items.  Think of them as
-'directories of directories' that mix manually selected media
-items.
+The available options at the completion prompt are pre-configured
+files that contain absolute filesystem paths of directories or
+media items one per line.  Think of them as meta-directories that
+mix manually selected media items (yes, I never liked 'smart'
+playlists).
+
+To insert multiple playlists complete the first, then type a
+space, complete a second, etc.  This assumes that SPC can
+self-insert in the minibuffer or you use C-q SPC.
 
 Also see `prot/bongo-dired-make-playlist-file'."
     (interactive)
@@ -8359,16 +8364,19 @@ Also see `prot/bongo-dired-make-playlist-file'."
            (playlists (mapcar
                        'abbreviate-file-name
                        (directory-files path nil dotless)))
-           (choice (completing-read "Insert playlist: " playlists nil t)))
-      (if (bongo-playlist-buffer-p)
-          (progn
-            (save-excursion
-              (goto-char (point-max))
-              (bongo-insert-playlist-contents
-               (format "%s%s" path choice))
-              (prot/bongo-playlist-section))
-            (prot/bongo-playlist-play-random))
-        (user-error "Not in a `bongo' playlist buffer"))))
+           (crm-separator " ")          ; Space to separate entries
+           (choice
+            (if (not (bongo-playlist-buffer-p (current-buffer)))
+                (user-error "Not in a `bongo' playlist buffer")
+              (completing-read-multiple "Add playlist: " playlists nil t))))
+      (mapcar (lambda (x)
+                    (save-excursion
+                      (goto-char (point-max))
+                      (bongo-insert-playlist-contents
+                       (format "%s%s" path x))
+                      (prot/bongo-playlist-section)))
+                    choice)
+      (prot/bongo-playlist-play-random)))
 
   (defvar prot/bongo-playlist-change-track-hook nil
     "Hook that runs after `bongo' switches to a new track.")
