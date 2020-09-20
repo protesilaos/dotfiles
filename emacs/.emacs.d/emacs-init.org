@@ -2486,10 +2486,8 @@ Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][projec
     :query ask
     :format regexp
     :files "everything"
-    :dir (let ((vc (vc-root-dir)))
-           (if vc
-               vc                         ; search root project dir
-             default-directory))          ; or from the current dir
+    :dir (or (vc-root-dir)              ; search root project dir
+             default-directory)         ; or from the current dir
     :confirm prefix
     :flags ("--hidden -g !.git"))
 
@@ -4135,8 +4133,8 @@ its two main functions to Super and the right/left arrow keys.
 #+begin_src emacs-lisp
 (use-package winner
   :hook (after-init-hook . winner-mode)
-  :bind ("<s-right>" . winner-redo)
-         ("<s-left>" . winner-undo))
+  :bind (("<s-right>" . winner-redo)
+         ("<s-left>" . winner-undo)))
 #+end_src
 
 Windmove is also built into Emacs.  It provides functions for selecting
@@ -10790,12 +10788,12 @@ LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   # Xft, if you choose no toolkit or Lucid.
                   #
 GTK2=             # GTK2 support. Why would you?
-NOCAIRO=          # Disable here. 
+NOCAIRO=          # Disable here.
 XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
 DOCS_HTML=        # Generate and install html documentation.
 DOCS_PDF=         # Generate and install pdf documentation.
 MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
-                  # ImageMagick, like flash, won't die... 
+                  # ImageMagick, like flash, won't die...
                   # -->>If you just *believe* you need ImageMagick, you don't.<<--
 NOGZ="NO"         # Don't compress .el files.
 ################################################################################
