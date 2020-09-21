@@ -8242,6 +8242,7 @@ code and ideas in a private exchange (shared with permission).
   (setq bongo-vlc-program-name "cvlc")
 
 ;;; Bongo playlist buffer
+;;;; Generic playlist extras
   ;; Hide the playlist's banner
   (define-advice bongo-default-playlist-buffer
       (:override () contrib/bongo-playlist-no-banner)
@@ -8250,33 +8251,76 @@ code and ideas in a private exchange (shared with permission).
         (bongo-playlist-mode))
       (current-buffer)))
 
-  (defvar prot/bongo-playlist-delimiter
+;;;; Bongo playlist sections
+  (defvar prot/bongo-playlist-section-delimiter
     "\n******************************\n\n"
-    "Delimiter for inserted items in `bongo' playlist buffers.")
+    "Delimiter for inserted groups in `bongo' playlist buffers.")
+
+  (defconst prot/bongo-playlist-heading-delimiter "§"
+    "Delimiter for custom headings in `bongo' playlist buffers.")
+
+  (defun prot/bongo-playlist-heading (title &optional description)
+    "Insert `bongo' comment with TITLE and DESCRIPTION.
+Use this to add a custom heading for the enqueued media items."
+    (bongo-insert-comment-text
+     (format "%s %s%s\n" prot/bongo-playlist-heading-delimiter
+             title (if description (concat " " description) ""))))
 
   (defun prot/bongo-playlist-section ()
     (bongo-insert-comment-text
-     prot/bongo-playlist-delimiter))
+     prot/bongo-playlist-section-delimiter))
 
-  (defun prot/bongo-playlist-section-next ()
-    "Move to next `bongo' playlist custom section delimiter."
-    (interactive)
-    (let ((section "^\\*+$"))
-      (if (save-excursion (re-search-forward section nil t))
-          (progn
-            (goto-char (point-at-eol))
-            (re-search-forward section nil t))
-        (goto-char (point-max)))))
+  ;; NOTE: there probably is a better way to parametrise move-buf and
+  ;; move-point so that one key checks for appropriate forward or
+  ;; backward motions, but this is okay right now.
+  (defmacro prot/bongo-playlist-motion (fn desc rx move-buf move-point)
+    "Produce interactive commands to navigate custom bongo delimiters.
 
-  (defun prot/bongo-playlist-section-previous ()
-    "Move to previous `bongo' playlist custom section delimiter."
-    (interactive)
-    (let ((section "^\\*+$"))
-      (if (save-excursion (re-search-backward section nil t))
-          (progn
-            (goto-char (point-at-bol))
-            (re-search-backward section nil t))
-        (goto-char (point-min)))))
+FN is the resulting interactive function's name.  DESC is its doc
+string.  RX is the regular expression that matches the custom
+bongo playlist delimiter (see `prot/bongo-playlist-delimiter' and
+`prot/bongo-playlist-heading').
+
+MOVE-BUF is a motion across an arbitrary number of lines.
+Currently it assumes (though does test) either
+`re-search-forward' or `re-search-backward'.  Likewise,
+MOVE-POINT expects `point-at-eol' or `point-at-bol'.  These
+motions should go in pairs, in the order they are presented here."
+    `(defun ,fn ()
+       ,desc
+       (interactive)
+       (let ((section ,rx))
+         (when (save-excursion (funcall ,move-buf section nil t))
+           (goto-char (funcall ,move-point))
+           (funcall ,move-buf section nil t)))))
+
+  (prot/bongo-playlist-motion
+   prot/bongo-playlist-heading-next
+   "Move to next `bongo' playlist custom heading."
+   "^.*§.*$"
+   're-search-forward
+   'point-at-eol)
+
+  (prot/bongo-playlist-motion
+   prot/bongo-playlist-heading-previous
+   "Move to previous `bongo' playlist custom heading."
+   "^.*§.*$"
+   're-search-backward
+   'point-at-bol)
+
+  (prot/bongo-playlist-motion
+   prot/bongo-playlist-section-next
+   "Move to next `bongo' playlist custom section delimiter."
+   "^\\*+$"
+   're-search-forward
+   'point-at-eol)
+
+  (prot/bongo-playlist-motion
+   prot/bongo-playlist-section-previous
+   "Move to previous `bongo' playlist custom section delimiter."
+   "^\\*+$"
+   're-search-backward
+   'point-at-bol)
 
   (defun prot/bongo-playlist-mark-section ()
     "Mark `bongo' playlist section, delimited by custom markers.
@@ -8302,6 +8346,30 @@ This operates on a custom delimited section of the buffer.  See
     (prot/bongo-playlist-mark-section)
     (bongo-kill))
 
+;;;; Bongo playlist imenu setup
+  (defvar prot/bongo-playlist-setup-hook nil
+    "Hook that runs after inserting items to the `bongo' playlist.
+See, for example, `prot/bongo-playlist-insert-playlist-file' or
+`prot/bongo-dired-insert-files'.")
+
+  (defun prot/bongo-playlist-imenu-heading ()
+    "Return the text of the custom `bongo' playlist heading."
+    (interactive)
+    (nth 1
+         (split-string
+          (buffer-substring-no-properties (point-at-bol) (point-at-eol))
+          "§ ")))
+
+  (defun prot/bongo-playlist-imenu-setup ()
+    "`imenu' bindings for the `bongo' playlist buffer."
+    (setq-local imenu-prev-index-position-function
+                'prot/bongo-playlist-heading-previous)
+    (setq-local imenu-extract-index-name-function
+                'prot/bongo-playlist-imenu-heading))
+
+  (add-hook 'prot/bongo-playlist-setup-hook #'prot/bongo-playlist-imenu-setup)
+
+;;;; Bongo playlist custom commands
   (defun prot/bongo-playlist-play-random ()
     "Play random `bongo' track and determine further conditions."
     (interactive)
@@ -8368,13 +8436,15 @@ Also see `prot/bongo-dired-make-playlist-file'."
                 (user-error "Not in a `bongo' playlist buffer")
               (completing-read-multiple "Add playlist: " playlists nil t))))
       (mapcar (lambda (x)
-                    (save-excursion
-                      (goto-char (point-max))
-                      (bongo-insert-playlist-contents
-                       (format "%s%s" path x))
-                      (prot/bongo-playlist-section)))
-                    choice)
-      (prot/bongo-playlist-play-random)))
+                (save-excursion
+                  (goto-char (point-max))
+                  (prot/bongo-playlist-heading x "playlist file")
+                  (bongo-insert-playlist-contents
+                   (format "%s%s" path x))
+                  (prot/bongo-playlist-section)))
+              choice)
+      (prot/bongo-playlist-play-random)
+      (run-hooks 'prot/bongo-playlist-setup-hook)))
 
   (defvar prot/bongo-playlist-change-track-hook nil
     "Hook that runs after `bongo' switches to a new track.")
@@ -8431,11 +8501,16 @@ This should be added `wdired-mode-hook'.  For more, refer to
 
   (defun prot/bongo-dired-insert-files ()
     "Add files in a `dired' buffer to the `bongo' playlist."
-    (let ((media (dired-get-marked-files)))
+    (let* ((media (dired-get-marked-files))
+           (names (mapcar #'file-name-base media)))
       (with-current-buffer (bongo-playlist-buffer)
         (goto-char (point-max))
-        (mapc 'bongo-insert-file media)
-        (prot/bongo-playlist-section))
+        (mapcar (lambda (x)
+                  (prot/bongo-playlist-heading x)
+                  (bongo-insert-file x))
+                names)
+        (prot/bongo-playlist-section)
+        (run-hooks 'prot/bongo-playlist-setup-hook))
       (with-current-buffer (bongo-library-buffer)
         (dired-next-line 1))))
 
@@ -8548,6 +8623,8 @@ Also see `prot/bongo-playlist-insert-playlist-file'."
          :map bongo-playlist-mode-map
          ("n" . bongo-next-object)
          ("p" . bongo-previous-object)
+         ("C-c C-n" . prot/bongo-playlist-heading-next)
+         ("C-c C-p" . prot/bongo-playlist-heading-previous)
          ("M-n" . prot/bongo-playlist-section-next)
          ("M-p" . prot/bongo-playlist-section-previous)
          ("M-h" . prot/bongo-playlist-mark-section)
