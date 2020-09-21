@@ -11177,7 +11177,7 @@ Overview of my settings:
   (setq desktop-files-not-to-save nil)
   (setq desktop-globals-to-clear nil)
   (setq desktop-load-locked-desktop t)
-  (setq desktop-missing-file-warning t)
+  (setq desktop-missing-file-warning nil)
   (setq desktop-restore-eager 0)
   (setq desktop-restore-frames nil)
   (setq desktop-save 'ask-if-new)
