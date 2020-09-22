@@ -2282,7 +2282,7 @@ function's docstring."
     `(defun ,name (&optional arg)
        ,doc
        (interactive "p")
-       (let ((x (if arg arg 1))
+       (let ((x (or arg 1))
              (command (intern (format "isearch-%s-of-buffer" ,edge))))
          (isearch-forward-symbol-at-point)
          (funcall command x))))
@@ -2588,7 +2588,7 @@ passing \\[universal-argument].  Also see `prot/new-line-above'."
 Move the point to the absolute beginning.  Adapt indentation by
 passing \\[universal-argument]."
     (interactive "P")
-    (let ((indent (if arg arg nil)))
+    (let ((indent (or arg nil)))
       (if (or (bobp)
               (line-number-at-pos 1))
           (progn
@@ -3217,7 +3217,7 @@ executable, each of which is a string."
        ,doc
        (interactive "P")
        (let* ((vc (vc-root-dir))
-              (dir (expand-file-name (if vc vc default-directory)))
+              (dir (expand-file-name (or vc default-directory)))
               (regexp (read-regexp
                        (format "%s matching REGEXP in %s: " ,prompt
                                (propertize dir 'face 'bold))))
@@ -3490,9 +3490,7 @@ NEEDS REVIEW."
     (interactive "P")
     (let* ((vc (vc-root-dir))
            (buf-name (buffer-file-name))
-           (path (if buf-name
-                     buf-name
-                   default-directory))
+           (path (or buf-name default-directory))
            (file (abbreviate-file-name path))
            (bookmarks (mapcar (lambda (b)
                                 (cdr b))
@@ -7699,7 +7697,7 @@ fail on poorly-designed websites."
     (let* ((entry (if (eq major-mode 'elfeed-show-mode)
                       elfeed-show-entry
                     (elfeed-search-selected :ignore-region)))
-           (link (if link link (elfeed-entry-link entry))))
+           (link (or link (elfeed-entry-link entry))))
       (eww link)
       (add-hook 'eww-after-render-hook 'eww-readable nil t)))
 
@@ -9809,10 +9807,7 @@ without the `:extend' property.")
                    (line-beginning-position)))
           (end (line-beginning-position 2))
           (pulse-delay .04)
-          (face
-           (if face
-               face
-             'prot/pulse-line-modus-theme)))
+          (face (or face 'prot/pulse-line-modus-theme)))
       (pulse-momentary-highlight-region start end face)))
   :bind ("<s-escape>" . prot/pulse-line))
 #+end_src
