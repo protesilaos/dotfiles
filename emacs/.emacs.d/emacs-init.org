@@ -3965,7 +3965,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (window-height . 0.16)
            (side . top)
            (slot . -1))
-          ("\\*\\(Flycheck\\|Flymake\\|Package-Lint\\|vc-git :\\).*"
+          ("\\*\\(Flymake\\|Package-Lint\\|vc-git :\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
@@ -10117,6 +10117,381 @@ current line is more important than the exact column of the point.
 This section is all about configurations and/or packages that deal with
 natural or programming language enhancements.
 
+** Support for various major modes
+:PROPERTIES:
+:CUSTOM_ID: h:485bb253-208a-4a0a-99e3-ae1a205e3b7b
+:END:
+
+These provide syntax highlighting and additional features for
+environments that are not already supported by Emacs.
+
+*** Markdown
+:PROPERTIES:
+:CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
+:END:
+
+I edit lots of Markdown files.  This makes things easier.
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure
+  :config
+  ;; Allows for fenced block focus with C-c ' (same as Org blocks).
+  (use-package edit-indirect :ensure)
+  (setq markdown-fontify-code-blocks-natively t)
+  :mode ("\\.md$" . markdown-mode))
+#+end_src
+
+*** YAML
+:PROPERTIES:
+:CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
+:END:
+
+This adds support for YAML files.
+
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :ensure
+  :mode (("\\.yml$" . yaml-mode)
+         ("\\.yaml$" . yaml-mode)))
+#+end_src
+
+*** CSS
+:PROPERTIES:
+:CUSTOM_ID: h:ec10bfe6-5340-481c-9de2-3e346868241b
+:END:
+
+This is the built-in mode for working with CSS and SCSS.  I just want it
+to not apply previews to colour references.  If I ever need that, there
+is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant section]]).
+
+#+begin_src emacs-lisp
+(use-package css-mode
+  :mode (("\\.css$" . css-mode)
+         ("\\.scss$" . scss-mode))
+  :config
+  (setq css-fontify-colors nil))
+#+end_src
+
+*** Arch Linux package recipes (pkgbuild-mode)
+:PROPERTIES:
+:CUSTOM_ID: h:7fa5b86b-3fc5-4118-8d56-aacf4c0fffb8
+:END:
+
+If you are on Arch or derivatives and check PKGBUILD files, this is for
+you.
+
+#+begin_src emacs-lisp
+(use-package pkgbuild-mode
+  :ensure
+  :mode ("PKGBUILD" . pkgbuild-mode))
+#+end_src
+
+Since we are here, I build Emacs from the =master= branch source, using a
+sightly modified script than the one in AUR's repos.  Below is the file
+on which I perform =makepkg= (followed by =makepkg -i NAME.pkg.tar.zst=),
+all from inside Emacs of course:
+
+#+begin_example sh
+# Maintainer: Pedro A. López-Valencia <https://aur.archlinux.org/users/vorbote>
+
+################################################################################
+# CAVEAT LECTOR: This PKGBUILD is highly opinionated. I give you
+#                enough rope to hang yourself, but by default it
+#                only enables the features I use.
+#
+#        TLDR: yaourt users, cry me a river.
+#
+#        Everyone else: do not update blindly this PKGBUILD. At least
+#        make sure to compare and understand the changes.
+#
+################################################################################
+
+################################################################################
+# Assign "YES" to the variable you want enabled; empty or any other value
+# for NO.
+#
+# Where you read experimental, replace with foobar.
+# =================================================
+#
+################################################################################
+CHECK=            # Run tests. May fail, this is developement after all.
+CLANG=            # Use clang.
+GOLD=             # Use the gold linker.
+LTO=              # Enable link-time optimization. Read emacs's INSTALL before
+                  # attempting to use it with clang.
+CLI=              # CLI only binary.
+NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
+LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
+                  #
+                  # Read https://wiki.archlinux.org/index.php/X_resources
+                  # https://en.wikipedia.org/wiki/X_resources
+                  # and https://www.emacswiki.org/emacs/XftGnuEmacs
+                  # for some tips on using outline fonts with
+                  # Xft, if you choose no toolkit or Lucid.
+                  #
+GTK2=             # GTK2 support. Why would you?
+NOCAIRO=          # Disable here.
+XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
+DOCS_HTML=        # Generate and install html documentation.
+DOCS_PDF=         # Generate and install pdf documentation.
+MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
+                  # ImageMagick, like flash, won't die...
+                  # -->>If you just *believe* you need ImageMagick, you don't.<<--
+NOGZ="NO"         # Don't compress .el files.
+################################################################################
+
+################################################################################
+pkgname="emacs-git"
+pkgver=28.0.50.142787
+pkgrel=1
+pkgdesc="GNU Emacs. Development master branch."
+arch=('x86_64' )
+url="http://www.gnu.org/software/emacs/"
+license=('GPL3' )
+depends=('alsa-lib' 'gnutls' 'libxml2' 'jansson' 'm17n-lib' 'libotf' 'harfbuzz' 'gpm')
+makedepends=('git')
+provides=('emacs' 'emacs-seq')
+conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq')
+replaces=('emacs26-git' 'emacs27-git' 'emacs-seq')
+source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
+# If Savannah access is blocked for reasons, use Github instead.
+# Edit the config file of your local repo copy as well.
+#source=("emacs-git::git://github.com/emacs-mirror/emacs.git")
+options=(!strip)
+md5sums=('SKIP')
+################################################################################
+
+################################################################################
+
+if [[ $GOLD == "YES" && ! $CLANG == "YES" ]]; then
+  export LD=/usr/bin/ld.gold
+  export CFLAGS+=" -fuse-ld=gold";
+  export CXXFLAGS+=" -fuse-ld=gold";
+elif [[ $GOLD == "YES" && $CLANG == "YES" ]]; then
+  echo "";
+  echo "Clang rather uses its own linker.";
+  echo "";
+  exit 1;
+fi
+
+if [[ $CLANG == "YES" ]]; then
+  export CC="/usr/bin/clang" ;
+  export CXX="/usr/bin/clang++" ;
+  export CPP="/usr/bin/clang -E" ;
+  export LD="/usr/bin/lld" ;
+  export AR="/usr/bin/llvm-ar" ;
+  export AS="/usr/bin/llvm-as" ;
+  export CCFLAGS+=' -fuse-ld=lld' ;
+  export CXXFLAGS+=' -fuse-ld=lld' ;
+  makedepends+=( 'clang' 'lld' 'llvm') ;
+fi
+
+if [[ $LTO == "YES" ]] && [[ $CLANG != "YES" ]]; then
+  CFLAGS+=" -flto -fuse-linker-plugin"
+  CXXFLAGS+=" -flto -fuse-linker-plugin"
+else
+  CFLAGS+=" -flto"
+  CXXFLAGS+=" -flto"
+fi
+
+if [[ $NOTKIT == "YES" ]]; then
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxrandr' 'lcms2' 'librsvg' 'libxfixes' );
+  makedepends+=( 'xorgproto' );
+elif [[ $LUCID == "YES" ]]; then
+  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxfixes' 'lcms2' 'librsvg' 'xaw3d' 'libxrandr' );
+  makedepends+=( 'xorgproto' );
+elif [[ $GTK2 == "YES" ]]; then
+  depends+=( 'gtk2' 'lcms2' );
+  makedepends+=( 'xorgproto' );
+else
+  depends+=( 'gtk3' );
+  makedepends+=( 'xorgproto' );
+fi
+
+if [[ $MAGICK == "YES" ]]; then
+  depends+=( 'imagemagick'  'libjpeg-turbo' 'giflib' );
+elif [[ ! $NOX == "YES" ]]; then
+  depends+=( 'libjpeg-turbo' 'giflib' );
+else
+  depends+=();
+fi
+
+if [[ ! $NOCAIRO == "YES" ]]; then
+  depends+=( 'cairo' );
+fi
+
+if [[ $XWIDGETS == "YES" ]]; then
+  if [[ $GTK2 == "YES" ]] || [[ $LUCID == "YES" ]] || [[ $NOTKIT == "YES" ]] || [[ $CLI == "YES" ]]; then
+    echo "";
+    echo "";
+    echo "Xwidgets support *requires* gtk+3!!!";
+    echo "";
+    echo "";
+    exit 1;
+  else
+    depends+=( 'webkit2gtk' );
+  fi
+fi
+
+if [[ $DOCS_PDF == "YES" ]]; then
+  makedepends+=( 'texlive-core' );
+fi
+################################################################################
+
+################################################################################
+pkgver() {
+  cd "$srcdir/emacs-git"
+
+  printf "%s.%s" \
+    "$(grep AC_INIT configure.ac | \
+    sed -e 's/^.\+\ \([0-9]\+\.[0-9]\+\.[0-9]\+\?\).\+$/\1/')" \
+    "$(git rev-list --count HEAD)"
+}
+
+# There is no need to run autogen.sh after first checkout.
+# Doing so, breaks incremental compilation.
+prepare() {
+  cd "$srcdir/emacs-git"
+  [[ -x configure ]] || ( ./autogen.sh git && ./autogen.sh autoconf )
+}
+
+if [[ $CHECK == "YES" ]]; then
+check() {
+  cd "$srcdir/emacs-git"
+  make check
+}
+fi
+
+build() {
+  cd "$srcdir/emacs-git"
+
+  local _conf=(
+    --prefix=/usr
+    --sysconfdir=/etc
+    --libexecdir=/usr/lib
+    --localstatedir=/var
+    --mandir=/usr/share/man
+    --with-gameuser=:games
+    --with-sound=alsa
+    --with-modules
+# Beware https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
+# dconf and gconf break font settings you set in ~/.emacs.
+# If you insist you'll need to read that bug report in *full*.
+# Good luck!
+   --without-gconf
+   --without-gsettings
+  )
+
+################################################################################
+
+################################################################################
+
+if [[ $CLANG == "YES" ]]; then
+  _conf+=(
+    '--enable-autodepend'
+ );
+fi
+
+if [[ $LTO == "YES" ]]; then
+  _conf+=(
+    '--enable-link-time-optimization'
+  );
+fi
+
+if [[ $CLI == "YES" ]]; then
+  _conf+=( '--without-x' '--with-x-toolkit=no' '--without-xft' '--without-lcms2' '--without-rsvg' );
+elif [[ $NOTKIT == "YES" ]]; then
+  _conf+=( '--with-x-toolkit=no' '--without-toolkit-scroll-bars' '--with-xft' '--without-xaw3d' );
+elif [[ $LUCID == "YES" ]]; then
+  _conf+=( '--with-x-toolkit=lucid' '--with-xft' '--with-xaw3d' );
+elif [[ $GTK2 == "YES" ]]; then
+  _conf+=( '--with-x-toolkit=gtk2' '--without-gsettings' '--without-xaw3d' );
+else
+  _conf+=( '--with-x-toolkit=gtk3' '--without-xaw3d' );
+fi
+
+if [[ $MAGICK == "YES" ]]; then
+  _conf+=( '--with-imagemagick');
+else
+  _conf+=();
+fi
+
+if [[ $NOCAIRO == "YES" ]]; then
+  _conf+=( '--without-cairo' );
+fi
+
+if [[ $XWIDGETS == "YES" ]]; then
+  _conf+=( '--with-xwidgets' );
+fi
+
+if [[ $NOGZ == "YES" ]]; then
+  _conf+=( '--without-compress-install' );
+fi
+################################################################################
+
+################################################################################
+
+  ./configure "${_conf[@]}"
+
+  # Using "make" instead of "make bootstrap" enables incremental
+  # compiling. Less time recompiling. Yay! But you may
+  # need to use bootstrap sometimes to unbreak the build.
+  # Just add it to the command line.
+  #
+  # Please note that incremental compilation implies that you
+  # are reusing your src directory!
+  #
+  make
+
+  # You may need to run this if 'loaddefs.el' files become corrupt.
+  #cd "$srcdir/emacs-git/lisp"
+  #make autoloads
+  #cd ../
+
+  # Optional documentation formats.
+  if [[ $DOCS_HTML == "YES" ]]; then
+    make html;
+  fi
+  if [[ $DOCS_PDF == "YES" ]]; then
+    make pdf;
+  fi
+
+}
+
+package() {
+  cd "$srcdir/emacs-git"
+
+  make DESTDIR="$pkgdir/" install
+
+  # Install optional documentation formats
+  if [[ $DOCS_HTML == "YES" ]]; then make DESTDIR="$pkgdir/" install-html; fi
+  if [[ $DOCS_PDF == "YES" ]]; then make DESTDIR="$pkgdir/" install-pdf; fi
+
+  # remove conflict with ctags package
+  mv "$pkgdir"/usr/bin/{ctags,ctags.emacs}
+
+  if [[ $NOGZ == "YES" ]]; then
+    mv "$pkgdir"/usr/share/man/man1/{ctags.1,ctags.emacs.1};
+  else
+    mv "$pkgdir"/usr/share/man/man1/{ctags.1.gz,ctags.emacs.1.gz}
+  fi
+
+  # fix user/root permissions on usr/share files
+  find "$pkgdir"/usr/share/emacs/ | xargs chown root:root
+
+  # fix permssions on /var/games
+  mkdir -p "$pkgdir"/var/games/emacs
+  chmod 775 "$pkgdir"/var/games
+  chmod 775 "$pkgdir"/var/games/emacs
+  chown -R root:games "$pkgdir"/var/games
+
+}
+
+################################################################################
+# vim:set ft=sh ts=2 sw=2 et:
+#+end_example
+
 ** Line length (column count)
 :PROPERTIES:
 :CUSTOM_ID: h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c
@@ -10445,13 +10820,13 @@ Also bear in mind that the key binding =C-;= that Flyspell uses by default
 is disabled because I re-purpose that for a faster version of =C-x C-;=
 (much more useful for my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
 
+Note that my use-case for Flyspell is to mark a region and test for
+errors in it.  If I need to review the entire buffer, especially if it
+is about some long-form text, I use a =flymake= interface instead (refer
+to the [[#h:aeb3e777-39fd-4b4f-8dc9-8b6aa7a595cc][section on flymake-aspell]]).
+
 #+begin_src emacs-lisp
 (use-package flyspell
-  :commands (ispell-change-dictionary
-             ispell-word
-             flyspell-buffer
-             flyspell-mode
-             flyspell-region)
   :config
   (setq flyspell-issue-message-flag nil)
   (setq flyspell-issue-welcome-flag nil)
@@ -10498,8 +10873,19 @@ Use `flyspell-region' on the active region, else invoke
 :CUSTOM_ID: h:20448ad8-9371-4e00-b88b-6b93f4c654d9
 :END:
 
-There are several code linting tools in the Emacs milieu.  The two I
-configure here are front-ends to external programs for code analysis.
+*** Flymake
+:PROPERTIES:
+:CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
+:END:
+
+This is a built-in linter interface.  It visualises in a buffer what you
+would otherwise get on the command-line prompt (or compilation log),
+while it also marks the line[s] where the note, warning, or error
+occurs.  In short, it is quite a nice tool to have.
+
+Several extensions to Flymake are already available, mostly targeted at
+programmers.  For my case, there is no need for any of those, while
+Flymake can lint Elisp without any further configuration.
 
 While it is possible to run the linter globally or through hooks, I
 prefer to only do so manually on a per-buffer basis.  There are many
@@ -10508,16 +10894,6 @@ no import to the task at hand.
 
 With regard to the =defhydra= calls in this section, remember to refer to
 my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
-
-*** Flymake
-:PROPERTIES:
-:CUSTOM_ID: h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a
-:END:
-
-This is a built-in linter interface that can be extended to support any
-programming language.  I do, however, feel that the alternative Flycheck
-(see below) offers a more refined experience, though I still am hesitant
-to reach any conclusions.
 
 #+begin_src emacs-lisp
 (use-package flymake
@@ -10545,74 +10921,60 @@ _d_: Diagnostics' buffer
     ("q" nil "cancel" :color blue))
   :bind (:map flymake-mode-map
               ("C-c h l" . prot/hydra-flymake/body)))
+
+(use-package flymake-diagnostic-at-point
+  :ensure
+  :after flymake
+  :config
+  (setq flymake-diagnostic-at-point-display-diagnostic-function
+        'flymake-diagnostic-at-point-display-minibuffer))
 #+end_src
 
-*** Flycheck
+**** Flymake + Proselint
 :PROPERTIES:
-:CUSTOM_ID: h:75069828-4b56-4341-8797-2d5a305c65e2
+:CUSTOM_ID: h:2a954862-c532-43e9-afdf-4bacd152295f
 :END:
 
-This linting interface has excellent coverage for a broad range of
-languages, while there are lots of extensions to it to further broaden
-its scope.
+Manuel Uberti has published [[https://github.com/manuel-uberti/flymake-proselint][flymake-proselint on Github]] (as of
+2020-09-21), which offers a Flymake interface to the external =proselint=
+executable (see [[#h:6dff70a8-7eba-4b5d-982c-f13d13ed3b3b][Proselint configuration]]).
 
-Flycheck has some subtle visual and functional advantages over the
-built-in Flymake (see above), though the most obvious one is the overall
-activity around its development.
+To run the program you just need to hook it to whatever major hook you
+use for prose.  The =prot/flymake-setup= macro handles this nicely
+(defined in the previous [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][section on Flymake configurations]]).  Then you
+need to enable =flymake-mode= to start using it.  I prefer to do the final
+step manually, as I normally do not run a linter while writing: it is
+too distracting.
+
+Note that the setup I have here is a placeholder for the eventual MELPA
+package.  While Manuel recommends using =straight.el= to get the source in
+a convenient way (which is a sound piece of advise), I find that I am
+not inconvenienced by doing things manually on a case-by-case basis.
 
 #+begin_src emacs-lisp
-(use-package flycheck
+(use-package flymake-quickdef
   :ensure
-  :commands flycheck-mode
+  :after flymake)
+
+(use-package flymake-proselint
+  :after (flymake-quickdef flymake)
+  :load-path "~/.emacs.d/prot-dev/flymake-proselint/"
   :config
-  (setq flycheck-check-syntax-automatically
-        '(save mode-enabled))
-
-  (defun prot/flycheck-list-errors-toggle ()
-    "Toggle the display of `flycheck-mode' diagnostics' buffer."
-    (interactive)
-    (let ((diagnostics (get-buffer-window flycheck-error-list-buffer)))
-      (unless flycheck-mode
-        (user-error "Flycheck mode not enabled"))
-      (if diagnostics
-          (delete-window diagnostics)
-        (flycheck-list-errors))))
-
-  (defhydra prot/hydra-flycheck (:color pink :hint nil)
-    "
-   ^Actions^             ^Helpers^
----^^--------------------^^-----------------
-_n_: Next error       _c_: Check buffer
-_p_: Previous error   _l_: List diagnostics
-_e_: Explain error    _x_: Disable checker
-_d_: Display error
-"
-    ("l" prot/flycheck-list-errors-toggle)
-    ("c" flycheck-buffer)
-    ("n" flycheck-next-error)
-    ("p" flycheck-previous-error)
-    ("e" flycheck-explain-error-at-point)
-    ("d" flycheck-display-error-at-point)
-    ("x" flycheck-disable-checker :color blue)
-    ("q" nil "cancel" :color blue))
-
-  :hook (flycheck-error-list-mode-hook . visual-line-mode)
-  :bind (:map flycheck-mode-map
-              ("C-c h l" . prot/hydra-flycheck/body)))
+  (dolist (mode '("markdown-mode" "org-mode" "text-mode"))
+    (add-hook (intern (concat mode "-hook")) #'flymake-proselint-setup)))
 #+end_src
 
-**** Flycheck proselint integration
+***** Proselint configuration
 :PROPERTIES:
 :CUSTOM_ID: h:6dff70a8-7eba-4b5d-982c-f13d13ed3b3b
 :END:
 
-Note that =flycheck= has built-in support for the =proselint= executable
-(check [[https://github.com/amperser/proselint][that project's README]]).  All you need is to have that program
-installed and then start =flycheck-mode= in a text buffer (I use it with
-Org and Markdown).
+This is my configuration for the external =proselint= executable (check
+[[https://github.com/amperser/proselint][that project's README]]).  The following should be made available at
+=~/.config/proselint/config=.
 
-To customise the feedback you get, define a configuration file.  Here
-are the contents of mine, placed at =~/.config/proselint/config=:
+See [[#h:2a954862-c532-43e9-afdf-4bacd152295f][Flymake + Proselint]] for how I use this tool to review my long-form
+writing.
 
 #+begin_example conf
 {
@@ -10702,49 +11064,31 @@ are the contents of mine, placed at =~/.config/proselint/config=:
 }
 #+end_example
 
-**** Flycheck mode line indicator
+**** Flymake + Aspell
 :PROPERTIES:
-:CUSTOM_ID: h:93b2aeed-d46a-4737-9d96-d8e5aedf8a67
+:CUSTOM_ID: h:aeb3e777-39fd-4b4f-8dc9-8b6aa7a595cc
 :END:
 
-While Flymake has a good mode line status area, Flycheck's leaves
-something to be desired.  This package bridges that gap.  It offers a
-visual experience that involves both text and purpose-specific faces
-(set of styles).
+I normally review a region's spelling with Flyspell, using my own
+extensions for it (see [[#h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c][Flyspell (spell check)]]).  I do, however, prefer
+to have an overview of all spelling warnings/errors as a final review
+before published a long-form text (e.g. an article on my website).
 
-By default, the status feedback in =flycheck-indicator-status-icons=
-employs descriptive terms.  It can, nonetheless, be configured to show
-characters instead of long strings (which I guess opens the sluicegate
-for the flow of iconography, emojis, unicode symbols…).  I prefer to
-reduce verbosity using common text characters, at the potential cost of
-obscuring the meaning of some of the less common types of feedback (what
-does "suspicious" mean in this context, anyway?).
+This is where =flymake-aspell= by Leo Gaskin comes in handy.  It uses the
+familiar Flymake interface (see [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][Flymake configuration]]) to highlight all
+spelling issues.  Simple and effective!
 
-I also tweak the characters that accompany all three classes of report
-(notes, warnings, errors) in an attempt to distinguish between them.
-
-If you want to be creative with your choice of symbol, note that while
-trying to complete a description through =C-x 8 RET=, you can press =?= to
-list all candidates in the "Completions" buffer with a preview next to
-each entry.  Neat!
+Note that =flyspell= is not a dependency, but I still list it in the
+=:after= directive because that is where the ispell dictionary is
+specified (as it is what I normally use).
 
 #+begin_src emacs-lisp
-(use-package flycheck-indicator
+(use-package flymake-aspell
+  :after (flyspell flymake)
   :ensure
-  :after flycheck
   :config
-  (setq flycheck-indicator-icon-error (string-to-char "!"))
-  (setq flycheck-indicator-icon-info (string-to-char "·"))
-  (setq flycheck-indicator-icon-warning (string-to-char "*"))
-  (setq flycheck-indicator-status-icons
-        '((not-checked "%")
-          (no-checker "-")
-          (running "&")
-          (errored "!")
-          (finished "=")
-          (interrupted "#")
-          (suspicious "?")))
-  :hook (flycheck-mode-hook . flycheck-indicator-mode))
+  (dolist (mode '("markdown-mode" "org-mode" "text-mode"))
+    (add-hook (intern (concat mode "-hook")) #'flymake-aspell-setup)))
 #+end_src
 
 *** Elisp packaging requirements
@@ -10752,25 +11096,16 @@ each entry.  Neat!
 :CUSTOM_ID: h:d03342da-3035-409f-a5e7-5df1e614d507
 :END:
 
-With these in place we can perform checks that pertain to Emacs lisp
+With this in place we can perform checks that pertain to Emacs lisp
 packaging.  I use it for my themes but also for any elisp library I may
 want to send patches to.
 
-The two packages here provide the necessary functionality for both of
-the linter front-ends configured above.
-
 #+begin_src emacs-lisp
-(use-package flycheck-package
-  :ensure
-  :after flycheck
-  :config
-  (flycheck-package-setup))
-
 (use-package package-lint-flymake
   :ensure
   :after flymake
   :config
-  (package-lint-flymake-setup))
+  (add-hook 'emacs-lisp-mode-hook #'package-lint-flymake-setup))
 #+end_src
 
 ** Eldoc (elisp live documentation feedback)
@@ -10792,381 +11127,6 @@ commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
   :diminish
   :config
   (global-eldoc-mode 1))
-#+end_src
-
-** Support for various major modes
-:PROPERTIES:
-:CUSTOM_ID: h:485bb253-208a-4a0a-99e3-ae1a205e3b7b
-:END:
-
-These provide syntax highlighting and additional features for
-environments that are not already supported by Emacs.
-
-*** Arch Linux package recipes (pkgbuild-mode)
-:PROPERTIES:
-:CUSTOM_ID: h:7fa5b86b-3fc5-4118-8d56-aacf4c0fffb8
-:END:
-
-If you are on Arch or derivatives and check PKGBUILD files, this is for
-you.
-
-#+begin_src emacs-lisp
-(use-package pkgbuild-mode
-  :ensure
-  :mode ("PKGBUILD" . pkgbuild-mode))
-#+end_src
-
-Since we are here, I build Emacs from the =master= branch source, using a
-sightly modified script than the one in AUR's repos.  Below is the file
-on which I perform =makepkg= (followed by =makepkg -i NAME.pkg.tar.zst=),
-all from inside Emacs of course:
-
-#+begin_example sh
-# Maintainer: Pedro A. López-Valencia <https://aur.archlinux.org/users/vorbote>
-
-################################################################################
-# CAVEAT LECTOR: This PKGBUILD is highly opinionated. I give you
-#                enough rope to hang yourself, but by default it
-#                only enables the features I use.
-#
-#        TLDR: yaourt users, cry me a river.
-#
-#        Everyone else: do not update blindly this PKGBUILD. At least
-#        make sure to compare and understand the changes.
-#
-################################################################################
-
-################################################################################
-# Assign "YES" to the variable you want enabled; empty or any other value
-# for NO.
-#
-# Where you read experimental, replace with foobar.
-# =================================================
-#
-################################################################################
-CHECK=            # Run tests. May fail, this is developement after all.
-CLANG=            # Use clang.
-GOLD=             # Use the gold linker.
-LTO=              # Enable link-time optimization. Read emacs's INSTALL before
-                  # attempting to use it with clang.
-CLI=              # CLI only binary.
-NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
-LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
-                  #
-                  # Read https://wiki.archlinux.org/index.php/X_resources
-                  # https://en.wikipedia.org/wiki/X_resources
-                  # and https://www.emacswiki.org/emacs/XftGnuEmacs
-                  # for some tips on using outline fonts with
-                  # Xft, if you choose no toolkit or Lucid.
-                  #
-GTK2=             # GTK2 support. Why would you?
-NOCAIRO=          # Disable here.
-XWIDGETS=         # Use GTK+ widgets pulled from webkit2gtk. Usable.
-DOCS_HTML=        # Generate and install html documentation.
-DOCS_PDF=         # Generate and install pdf documentation.
-MAGICK=           # ImageMagick 7 support. Deprecated (read the logs).
-                  # ImageMagick, like flash, won't die...
-                  # -->>If you just *believe* you need ImageMagick, you don't.<<--
-NOGZ="NO"         # Don't compress .el files.
-################################################################################
-
-################################################################################
-pkgname="emacs-git"
-pkgver=28.0.50.142787
-pkgrel=1
-pkgdesc="GNU Emacs. Development master branch."
-arch=('x86_64' )
-url="http://www.gnu.org/software/emacs/"
-license=('GPL3' )
-depends=('alsa-lib' 'gnutls' 'libxml2' 'jansson' 'm17n-lib' 'libotf' 'harfbuzz' 'gpm')
-makedepends=('git')
-provides=('emacs' 'emacs-seq')
-conflicts=('emacs' 'emacs26-git' 'emacs-27-git' 'emacs-seq')
-replaces=('emacs26-git' 'emacs27-git' 'emacs-seq')
-source=("emacs-git::git://git.savannah.gnu.org/emacs.git")
-# If Savannah access is blocked for reasons, use Github instead.
-# Edit the config file of your local repo copy as well.
-#source=("emacs-git::git://github.com/emacs-mirror/emacs.git")
-options=(!strip)
-md5sums=('SKIP')
-################################################################################
-
-################################################################################
-
-if [[ $GOLD == "YES" && ! $CLANG == "YES" ]]; then
-  export LD=/usr/bin/ld.gold
-  export CFLAGS+=" -fuse-ld=gold";
-  export CXXFLAGS+=" -fuse-ld=gold";
-elif [[ $GOLD == "YES" && $CLANG == "YES" ]]; then
-  echo "";
-  echo "Clang rather uses its own linker.";
-  echo "";
-  exit 1;
-fi
-
-if [[ $CLANG == "YES" ]]; then
-  export CC="/usr/bin/clang" ;
-  export CXX="/usr/bin/clang++" ;
-  export CPP="/usr/bin/clang -E" ;
-  export LD="/usr/bin/lld" ;
-  export AR="/usr/bin/llvm-ar" ;
-  export AS="/usr/bin/llvm-as" ;
-  export CCFLAGS+=' -fuse-ld=lld' ;
-  export CXXFLAGS+=' -fuse-ld=lld' ;
-  makedepends+=( 'clang' 'lld' 'llvm') ;
-fi
-
-if [[ $LTO == "YES" ]] && [[ $CLANG != "YES" ]]; then
-  CFLAGS+=" -flto -fuse-linker-plugin"
-  CXXFLAGS+=" -flto -fuse-linker-plugin"
-else
-  CFLAGS+=" -flto"
-  CXXFLAGS+=" -flto"
-fi
-
-if [[ $NOTKIT == "YES" ]]; then
-  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxrandr' 'lcms2' 'librsvg' 'libxfixes' );
-  makedepends+=( 'xorgproto' );
-elif [[ $LUCID == "YES" ]]; then
-  depends+=( 'dbus' 'hicolor-icon-theme' 'libxinerama' 'libxfixes' 'lcms2' 'librsvg' 'xaw3d' 'libxrandr' );
-  makedepends+=( 'xorgproto' );
-elif [[ $GTK2 == "YES" ]]; then
-  depends+=( 'gtk2' 'lcms2' );
-  makedepends+=( 'xorgproto' );
-else
-  depends+=( 'gtk3' );
-  makedepends+=( 'xorgproto' );
-fi
-
-if [[ $MAGICK == "YES" ]]; then
-  depends+=( 'imagemagick'  'libjpeg-turbo' 'giflib' );
-elif [[ ! $NOX == "YES" ]]; then
-  depends+=( 'libjpeg-turbo' 'giflib' );
-else
-  depends+=();
-fi
-
-if [[ ! $NOCAIRO == "YES" ]]; then
-  depends+=( 'cairo' );
-fi
-
-if [[ $XWIDGETS == "YES" ]]; then
-  if [[ $GTK2 == "YES" ]] || [[ $LUCID == "YES" ]] || [[ $NOTKIT == "YES" ]] || [[ $CLI == "YES" ]]; then
-    echo "";
-    echo "";
-    echo "Xwidgets support *requires* gtk+3!!!";
-    echo "";
-    echo "";
-    exit 1;
-  else
-    depends+=( 'webkit2gtk' );
-  fi
-fi
-
-if [[ $DOCS_PDF == "YES" ]]; then
-  makedepends+=( 'texlive-core' );
-fi
-################################################################################
-
-################################################################################
-pkgver() {
-  cd "$srcdir/emacs-git"
-
-  printf "%s.%s" \
-    "$(grep AC_INIT configure.ac | \
-    sed -e 's/^.\+\ \([0-9]\+\.[0-9]\+\.[0-9]\+\?\).\+$/\1/')" \
-    "$(git rev-list --count HEAD)"
-}
-
-# There is no need to run autogen.sh after first checkout.
-# Doing so, breaks incremental compilation.
-prepare() {
-  cd "$srcdir/emacs-git"
-  [[ -x configure ]] || ( ./autogen.sh git && ./autogen.sh autoconf )
-}
-
-if [[ $CHECK == "YES" ]]; then
-check() {
-  cd "$srcdir/emacs-git"
-  make check
-}
-fi
-
-build() {
-  cd "$srcdir/emacs-git"
-
-  local _conf=(
-    --prefix=/usr
-    --sysconfdir=/etc
-    --libexecdir=/usr/lib
-    --localstatedir=/var
-    --mandir=/usr/share/man
-    --with-gameuser=:games
-    --with-sound=alsa
-    --with-modules
-# Beware https://debbugs.gnu.org/cgi/bugreport.cgi?bug=25228
-# dconf and gconf break font settings you set in ~/.emacs.
-# If you insist you'll need to read that bug report in *full*.
-# Good luck!
-   --without-gconf
-   --without-gsettings
-  )
-
-################################################################################
-
-################################################################################
-
-if [[ $CLANG == "YES" ]]; then
-  _conf+=(
-    '--enable-autodepend'
- );
-fi
-
-if [[ $LTO == "YES" ]]; then
-  _conf+=(
-    '--enable-link-time-optimization'
-  );
-fi
-
-if [[ $CLI == "YES" ]]; then
-  _conf+=( '--without-x' '--with-x-toolkit=no' '--without-xft' '--without-lcms2' '--without-rsvg' );
-elif [[ $NOTKIT == "YES" ]]; then
-  _conf+=( '--with-x-toolkit=no' '--without-toolkit-scroll-bars' '--with-xft' '--without-xaw3d' );
-elif [[ $LUCID == "YES" ]]; then
-  _conf+=( '--with-x-toolkit=lucid' '--with-xft' '--with-xaw3d' );
-elif [[ $GTK2 == "YES" ]]; then
-  _conf+=( '--with-x-toolkit=gtk2' '--without-gsettings' '--without-xaw3d' );
-else
-  _conf+=( '--with-x-toolkit=gtk3' '--without-xaw3d' );
-fi
-
-if [[ $MAGICK == "YES" ]]; then
-  _conf+=( '--with-imagemagick');
-else
-  _conf+=();
-fi
-
-if [[ $NOCAIRO == "YES" ]]; then
-  _conf+=( '--without-cairo' );
-fi
-
-if [[ $XWIDGETS == "YES" ]]; then
-  _conf+=( '--with-xwidgets' );
-fi
-
-if [[ $NOGZ == "YES" ]]; then
-  _conf+=( '--without-compress-install' );
-fi
-################################################################################
-
-################################################################################
-
-  ./configure "${_conf[@]}"
-
-  # Using "make" instead of "make bootstrap" enables incremental
-  # compiling. Less time recompiling. Yay! But you may
-  # need to use bootstrap sometimes to unbreak the build.
-  # Just add it to the command line.
-  #
-  # Please note that incremental compilation implies that you
-  # are reusing your src directory!
-  #
-  make
-
-  # You may need to run this if 'loaddefs.el' files become corrupt.
-  #cd "$srcdir/emacs-git/lisp"
-  #make autoloads
-  #cd ../
-
-  # Optional documentation formats.
-  if [[ $DOCS_HTML == "YES" ]]; then
-    make html;
-  fi
-  if [[ $DOCS_PDF == "YES" ]]; then
-    make pdf;
-  fi
-
-}
-
-package() {
-  cd "$srcdir/emacs-git"
-
-  make DESTDIR="$pkgdir/" install
-
-  # Install optional documentation formats
-  if [[ $DOCS_HTML == "YES" ]]; then make DESTDIR="$pkgdir/" install-html; fi
-  if [[ $DOCS_PDF == "YES" ]]; then make DESTDIR="$pkgdir/" install-pdf; fi
-
-  # remove conflict with ctags package
-  mv "$pkgdir"/usr/bin/{ctags,ctags.emacs}
-
-  if [[ $NOGZ == "YES" ]]; then
-    mv "$pkgdir"/usr/share/man/man1/{ctags.1,ctags.emacs.1};
-  else
-    mv "$pkgdir"/usr/share/man/man1/{ctags.1.gz,ctags.emacs.1.gz}
-  fi
-
-  # fix user/root permissions on usr/share files
-  find "$pkgdir"/usr/share/emacs/ | xargs chown root:root
-
-  # fix permssions on /var/games
-  mkdir -p "$pkgdir"/var/games/emacs
-  chmod 775 "$pkgdir"/var/games
-  chmod 775 "$pkgdir"/var/games/emacs
-  chown -R root:games "$pkgdir"/var/games
-
-}
-
-################################################################################
-# vim:set ft=sh ts=2 sw=2 et:
-#+end_example
-
-*** Markdown
-:PROPERTIES:
-:CUSTOM_ID: h:7e0416c0-3acc-4748-9eca-4dd4da11d79b
-:END:
-
-I edit lots of Markdown files.  This makes things easier.
-
-#+begin_src emacs-lisp
-(use-package markdown-mode
-  :ensure
-  :config
-  ;; Allows for fenced block focus with C-c ' (same as Org blocks).
-  (use-package edit-indirect :ensure)
-  (setq markdown-fontify-code-blocks-natively t)
-  :mode ("\\.md$" . markdown-mode))
-#+end_src
-
-*** YAML
-:PROPERTIES:
-:CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
-:END:
-
-This adds support for YAML files.
-
-#+begin_src emacs-lisp
-(use-package yaml-mode
-  :ensure
-  :mode (("\\.yml$" . yaml-mode)
-         ("\\.yaml$" . yaml-mode)))
-#+end_src
-
-*** CSS
-:PROPERTIES:
-:CUSTOM_ID: h:ec10bfe6-5340-481c-9de2-3e346868241b
-:END:
-
-This is the built-in mode for working with CSS and SCSS.  I just want it
-to not apply previews to colour references.  If I ever need that, there
-is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant section]]).
-
-#+begin_src emacs-lisp
-(use-package css-mode
-  :mode (("\\.css$" . css-mode)
-         ("\\.scss$" . scss-mode))
-  :config
-  (setq css-fontify-colors nil))
 #+end_src
 
 * History and state
