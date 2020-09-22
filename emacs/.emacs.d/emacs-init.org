@@ -3472,11 +3472,6 @@ I keep =dired-clean-confirm-killing-deleted-buffers= to =t= as a safety
 mechanism: if a file is ever deleted by accident I can use its buffer to
 restore it (never happened in practice).
 
-With regard to binding keys, I choose to handle things myself.  There
-has never been a case where I had to run =info= or =man= inside of a
-directory listing and wished there was some keyboard shortcut readily
-available.
-
 While in =dired-mode=, if you need to open all marked files at once, you
 can hit =F=.  It calls =dired-do-find-marked-files=.
 
@@ -3486,9 +3481,9 @@ can hit =F=.  It calls =dired-do-find-marked-files=.
   :config
   (setq dired-clean-up-buffers-too t)
   (setq dired-clean-confirm-killing-deleted-buffers t)
-  (setq dired-x-hands-off-my-keys t)
+  (setq dired-x-hands-off-my-keys t)    ; easier to show the keys I use
   (setq dired-bind-man nil)
-  (setq dired-bind-info nil)
+  (setq dired-bind-info t)
 
   (defun prot/dired-jump-extra (&optional arg)
     "Switch directories comprising context and bookmarks.
