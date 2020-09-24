@@ -5268,9 +5268,9 @@ Then we set up the interface for composing emails:
   about [[#h:dc8811af-dec8-4ca8-a62e-0b500928d10b][account settings and essential configurations]].
 
 + The value of =message-citation-line-format= is expanded into something
-  like /"NAME <EMAIL> [2020-02-19, 13:54 +0200]:"/.  To learn about all
-  the date-related specifiers, it is better for you to read the
-  documentation with =C-h v format-time-string=.
+  like /"On 2020-02-19, 13:54 +0200, NAME <EMAIL> wrote:"/.  To learn
+  about all the date-related specifiers, it is better for you to read
+  the documentation with =C-h v format-time-string=.
 
 + As for the configurations of =mm-encode= and =mml-sec=, these are meant to
   come into effect when encrypting and signing an outgoing message with
@@ -5324,7 +5324,7 @@ Then we set up the interface for composing emails:
   (setq message-mail-user-agent nil)    ; default is `gnus'
   (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
   (setq message-signature "Protesilaos Stavrou\nprotesilaos.com\n")
-  (setq message-citation-line-format "%f [%Y-%m-%d, %R %z]:\n")
+  (setq message-citation-line-format "On %Y-%m-%d, %R %z, %f wrote:\n")
   (setq message-citation-line-function
         'message-insert-formatted-citation-line)
   (setq message-confirm-send nil)
