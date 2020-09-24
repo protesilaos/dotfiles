@@ -10895,7 +10895,7 @@ my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
   :config
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)
-  (setq flymake-start-on-flymake-mode t)
+  (setq flymake-start-on-flymake-mode nil)
   (setq flymake-no-changes-timeout nil)
   (setq flymake-start-on-save-buffer t)
   (setq flymake-proc-compilation-prevents-syntax-check t)
@@ -10905,10 +10905,12 @@ my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
     "
 Actions
 -------
+_s_: Start checks
 _n_: Next error
 _p_: Previous error
 _d_: Diagnostics' buffer
 "
+    ("s" flymake-start)
     ("d" flymake-show-diagnostics-buffer)
     ("n" flymake-goto-next-error)
     ("p" flymake-goto-prev-error)
@@ -11098,8 +11100,7 @@ want to send patches to.
 (use-package package-lint-flymake
   :ensure
   :after flymake
-  :config
-  (add-hook 'emacs-lisp-mode-hook #'package-lint-flymake-setup))
+  :hook (emacs-lisp-mode-hook . package-lint-flymake-setup))
 #+end_src
 
 ** Eldoc (elisp live documentation feedback)
