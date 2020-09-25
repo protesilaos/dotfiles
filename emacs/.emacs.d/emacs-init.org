@@ -6668,10 +6668,10 @@ project, as defined by `vc-root-dir'."
   (setq vc-git-print-log-follow t)
   (setq vc-git-revision-complete-only-branches t) ; Emacs 28
   (setq vc-git-root-log-format
-        '("%d%h  %ad  %an: %s"
-          "^\\(?:[*/\\| ]+ \\)?\
+        '("%d%h %ad %an: %s"
+          "^\\(?:[*/\\|]+ \\)?\
 \\(?2: ([^)]+)\\)?\
-\\(?1:[0-9a-z]+ \\) \
+\\(?1:[0-9a-z]+\\) \
 \\(?3:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)\
 \\(?4:.*?:\\)"
           ((1 'log-view-message)
