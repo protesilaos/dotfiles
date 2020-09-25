@@ -2631,7 +2631,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(gnus-group-news-low ((,class :inherit bold :foreground ,green-nuanced)))
    `(gnus-group-news-low-empty ((,class :foreground ,green-nuanced)))
    `(gnus-header-content ((,class :foreground ,cyan)))
-   `(gnus-header-from ((,class :inherit bold :foreground ,cyan-alt :underline nil)))
+   `(gnus-header-from ((,class :inherit bold :foreground ,cyan-alt-other :underline nil)))
    `(gnus-header-name ((,class :foreground ,green)))
    `(gnus-header-newsgroups ((,class :inherit bold :foreground ,blue-alt)))
    `(gnus-header-subject ((,class :inherit bold :foreground ,magenta-alt-other)))
@@ -3344,14 +3344,14 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(message-cited-text-2 ((,class :foreground ,red-alt)))
    `(message-cited-text-3 ((,class :foreground ,green-alt)))
    `(message-cited-text-4 ((,class :foreground ,magenta-alt)))
-   `(message-header-cc ((,class :foreground ,blue-alt)))
+   `(message-header-cc ((,class :inherit bold :foreground ,cyan-alt)))
    `(message-header-name ((,class :foreground ,green-alt-other)))
-   `(message-header-newsgroups ((,class :inherit bold :foreground ,blue)))
+   `(message-header-newsgroups ((,class :inherit bold :foreground ,green-alt)))
    `(message-header-other ((,class :inherit bold :foreground ,cyan-alt-other)))
    `(message-header-subject ((,class :inherit bold :foreground ,magenta-alt-other)))
-   `(message-header-to ((,class :inherit bold :foreground ,magenta-alt)))
-   `(message-header-xheader ((,class :foreground ,blue-alt-other)))
-   `(message-mml ((,class :foreground ,green-alt)))
+   `(message-header-to ((,class :inherit bold :foreground ,blue)))
+   `(message-header-xheader ((,class :foreground ,cyan)))
+   `(message-mml ((,class :foreground ,fg-special-warm)))
    `(message-separator ((,class :inherit modus-theme-intense-neutral)))
 ;;;;; minibuffer-line
    `(minibuffer-line ((,class :foreground ,fg-main)))
@@ -3567,17 +3567,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-agenda-clocking ((,class :inherit modus-theme-special-cold)))
    `(org-agenda-column-dateline ((,class :background ,bg-alt)))
    `(org-agenda-current-time ((,class :inherit modus-theme-subtle-cyan)))
-   ;; NOTE: here we break the pattern of inheriting from
-   ;; modus-theme-heading-N faces.
-   `(org-agenda-date ((,class ,@(modus-vivendi-theme-heading
-                                 1 cyan-alt-other cyan-alt-other cyan-nuanced-bg bg-region)
-                              ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-4))))
-   `(org-agenda-date-today ((,class :inherit (bold ,modus-theme-variable-pitch)
-                                    :background ,cyan-intense-bg :foreground ,fg-main
-                                    ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-4))))
-   `(org-agenda-date-weekend ((,class ,@(modus-vivendi-theme-heading
-                                         1 cyan cyan blue-nuanced-bg bg-region)
-                                      ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-4))))
+   `(org-agenda-date ((,class :inherit bold :foreground ,cyan)))
+   `(org-agenda-date-today ((,class :inherit (bold modus-theme-intense-cyan))))
+   `(org-agenda-date-weekend ((,class :inherit bold :foreground ,cyan-alt-other)))
    `(org-agenda-diary ((,class :foreground ,fg-main)))
    `(org-agenda-dimmed-todo-face ((,class :inherit modus-theme-subtle-neutral)))
    `(org-agenda-done ((,class :foreground ,green-alt)))
@@ -3586,9 +3578,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-agenda-filter-regexp ((,class :inherit bold :foreground ,magenta-active)))
    `(org-agenda-filter-tags ((,class :inherit bold :foreground ,magenta-active)))
    `(org-agenda-restriction-lock ((,class :background ,bg-dim :foreground ,fg-dim)))
-   `(org-agenda-structure ((,class :inherit ,modus-theme-variable-pitch
-                                   :foreground ,fg-special-mild
-                                   ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-3))))
+   `(org-agenda-structure ((,class :foreground ,blue-alt)))
    `(org-archived ((,class :background ,bg-alt :foreground ,fg-alt)))
    `(org-block ((,class ,@(modus-vivendi-theme-mixed-fonts)
                         ,@(modus-vivendi-theme-org-block bg-dim)
@@ -3617,8 +3607,7 @@ Also bind `class' to ((class color) (min-colors 89))."
                                         :foreground ,fg-alt)))
    `(org-document-title ((,class :inherit (bold ,modus-theme-variable-pitch) :foreground ,fg-special-cold
                                  ,@(modus-vivendi-theme-scale modus-vivendi-theme-scale-5))))
-   `(org-done ((,class :box ,bg-region :background ,bg-dim :foreground ,green
-                       :inherit ,modus-theme-variable-pitch)))
+   `(org-done ((,class :box ,bg-region :background ,bg-dim :foreground ,green)))
    `(org-drawer ((,class ,@(modus-vivendi-theme-mixed-fonts)
                          :foreground ,cyan)))
    `(org-ellipsis ((,class :foreground nil))) ; inherits from the heading's colour
