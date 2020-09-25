@@ -9900,7 +9900,7 @@ As such, this piece of fumctionality makes for a natural complement to
 
   ;; C-c l is used for `org-store-link'.  The mnemonic for this is to
   ;; focus the Line and also works as a variant of C-l.
-  :bind ("C-c L" . prot/scroll-centre-cursor-mode))
+  :bind ("s-l" . prot/scroll-centre-cursor-mode))
 #+end_src
 
 *** Delete selection
