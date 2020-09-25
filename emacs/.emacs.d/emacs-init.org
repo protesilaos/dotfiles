@@ -1226,7 +1226,10 @@ results I am most likely interested in, based on previous selections.
   (use-package orderless
     :ensure
     :config
-    (setq orderless-regexp-separator "[/\s_-]+")
+    ;;; NOTE: Not sure why I had that value before.  Keeping it around
+    ;;; it case the one below proves problematic in some edge case…
+    ;; (setq orderless-component-separator "[/\s_-]+")
+    (setq orderless-component-separator " +")
     (setq orderless-matching-styles
           '(orderless-flex
             orderless-strict-leading-initialism
