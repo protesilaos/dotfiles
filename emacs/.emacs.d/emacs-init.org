@@ -816,7 +816,7 @@ Relevant blog posts of mine:
              prot/font-set-font-size-family
              prot/font-fonts-dwim)
   :config
-  (setq x-underline-at-descent-line nil)
+  (setq x-underline-at-descent-line t)
 
   (defvar prot/font-set-fonts-hook nil
     "Hook that is called after setting fonts.
@@ -828,7 +828,7 @@ See, for example, `prot/font-set-fonts'.")
   ;; 1. https://gitlab.com/protesilaos/hack-font-mod
   ;; 2. https://gitlab.com/protesilaos/iosevka-comfy
   (defconst prot/font-sizes-families-alist
-    '(("pocket" . (105 "Hack" "DejaVu Sans Mono"))
+    '(("pocket" . (105 "Hack" "DejaVu Sans"))
       ("laptop" . (110 "Hack" "Open Serif"))
       ("desktop" . (130 "Hack" "Open Serif"))
       ("presentation" . (190 "Iosevka Comfy" "Source Sans Pro")))
