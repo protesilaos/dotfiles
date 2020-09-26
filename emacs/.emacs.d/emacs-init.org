@@ -822,15 +822,16 @@ Relevant blog posts of mine:
     "Hook that is called after setting fonts.
 See, for example, `prot/font-set-fonts'.")
 
-  ;; NOTE that "Iosevka Comfy" is my private build of Iosevka:
-  ;; https://gitlab.com/protesilaos/iosevka-comfy
+  ;; NOTE: "Hack" and "Iosevka Comfy" are my private builds of Hack and
+  ;; Iosevka respectively:
   ;;
-  ;; Same for Hack: https://gitlab.com/protesilaos/hack-font-mod
+  ;; 1. https://gitlab.com/protesilaos/hack-font-mod
+  ;; 2. https://gitlab.com/protesilaos/iosevka-comfy
   (defconst prot/font-sizes-families-alist
-    '(("pocket" . (105 "Hack" "FiraGO"))
-      ("laptop" . (135 "Iosevka Comfy" "FiraGO"))
-      ("desktop" . (150 "Iosevka Comfy" "FiraGO"))
-      ("presentation" . (190 "Iosevka Comfy" "Alegreya Sans")))
+    '(("pocket" . (105 "Hack" "DejaVu Sans Mono"))
+      ("laptop" . (110 "Hack" "Open Serif"))
+      ("desktop" . (130 "Hack" "Open Serif"))
+      ("presentation" . (190 "Iosevka Comfy" "Source Sans Pro")))
     "Alist of desired typefaces and their point sizes.
 
 Each association consists of a display type mapped to a point
