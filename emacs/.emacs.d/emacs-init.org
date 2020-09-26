@@ -5906,7 +5906,8 @@ columns, while being a little bit cleaner than default.
 
   ;; When the %f specifier in `gnus-summary-line-format' matches my
   ;; name, this will use the contents of the "To:" field, prefixed by
-  ;; the string I specify.  Useful when checking your "Sent" summary.
+  ;; the string I specify.  Useful when checking your "Sent" summary or
+  ;; a mailing list you participate in.
   (setq gnus-ignored-from-addresses "Protesilaos Stavrou")
   (setq gnus-summary-to-prefix "To: ")
 
