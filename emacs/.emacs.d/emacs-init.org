@@ -6306,44 +6306,6 @@ with them.  For the time being, this package declaration is enough.
   (setq ebdb-complete-mail-allow-cycling 3))
 #+end_src
 
-** Bug tracker (debbugs)
-:PROPERTIES:
-:CUSTOM_ID: h:9f75a49b-b061-4fe1-ae79-04880564074c
-:END:
-
-This tool is dedicated to the task of browsing the list of reported bugs
-about Emacs, though one can always subscribe to the relevant Usenet
-source (mailing list).
-
-Reading bug reports can help discover aspects of Emacs I am not aware
-of.  Plus, this is where I can track any entry that concerns my themes
-on ELPA (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][section on the Modus themes]]).
-
-Technically, =debbugs= is not part of my email configurations, in the
-sense that it does not extend the functionality of Gnus.  It does,
-nonetheless, produce a summary of messages using Gnus as its backend.
-So it inherits all my Gnus customisations and feels part of the same
-experience.
-
-Note that in the package declaration below the =debbugs-gnu-lars-workflow=
-is a reference to Lars Magne Ingebrigtsen.  As far as I can tell, that
-variable simply wraps two others that remove duplicate entries.  Per the
-source code in =debbugs-gnu.el=:
-
-+ =gnus-suppress-duplicates t=
-+ =gnus-save-duplicate-list t=
-
-While I agree with that approach and already configure these, I still
-set "lars" to =nil= to guard against any future expansion of its scope.
-
-#+begin_src emacs-lisp
-(use-package debbugs
-  :ensure
-  :config
-  (setq debbugs-gnu-lars-workflow nil)  ; sorry Lars, I'm paranoid
-  (setq debbugs-gnu-mail-backend 'gnus))
-#+end_src
-
 ** Version control tools
 :PROPERTIES:
 :CUSTOM_ID: h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7
