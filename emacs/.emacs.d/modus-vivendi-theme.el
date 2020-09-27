@@ -1171,10 +1171,10 @@ AMOUNT is a customisation option."
       ("magenta-active" . "#d5b1ff") ("cyan-active" . "#00d8b4")
       ;; styles that are meant exclusively for the fringes
       ;;
-      ;; must be combined with `fg-main' or `fg-dim'
-      ("red-fringe-bg" . "#8f0040") ("green-fringe-bg" . "#006000")
-      ("yellow-fringe-bg" . "#6f4a00") ("blue-fringe-bg" . "#3a30ab")
-      ("magenta-fringe-bg" . "#692089") ("cyan-fringe-bg" . "#0068a0")
+      ;; must be combined with `fg-main'
+      ("red-fringe-bg" . "#8f1f4b") ("green-fringe-bg" . "#006700")
+      ("yellow-fringe-bg" . "#6f4f00") ("blue-fringe-bg" . "#3f33af")
+      ("magenta-fringe-bg" . "#6f2f89") ("cyan-fringe-bg" . "#004f8f")
       ;; styles reserved for specific faces
       ;;
       ;; `bg-hl-line' is between `bg-dim' and `bg-alt', so it should
@@ -1214,10 +1214,11 @@ AMOUNT is a customisation option."
       ;;
       ;; all pairs are combinable with themselves
       ("bg-hl-line" . "#151823")
+      ("bg-hl-line-intense" . "#2f2f2f")
       ("bg-hl-alt" . "#181732")
       ("bg-hl-alt-intense" . "#282e46")
       ("bg-paren-match" . "#5f362f")
-      ("bg-paren-match-intense" . "#255650")
+      ("bg-paren-match-intense" . "#7416b5")
       ("bg-region" . "#3c3c3c")
 
       ("bg-tab-bar" . "#2c2c2c")
@@ -1350,12 +1351,12 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(modus-theme-nuanced-cyan ((,class :background ,cyan-nuanced-bg
                                        ,@(and (>= emacs-major-version 27) '(:extend t)))))
 ;;;;; fringe-specific combinations
-   `(modus-theme-fringe-red ((,class :background ,red-fringe-bg :foreground ,fg-dim)))
-   `(modus-theme-fringe-green ((,class :background ,green-fringe-bg :foreground ,fg-dim)))
-   `(modus-theme-fringe-yellow ((,class :background ,yellow-fringe-bg :foreground ,fg-dim)))
-   `(modus-theme-fringe-blue ((,class :background ,blue-fringe-bg :foreground ,fg-dim)))
-   `(modus-theme-fringe-magenta ((,class :background ,magenta-fringe-bg :foreground ,fg-dim)))
-   `(modus-theme-fringe-cyan ((,class :background ,cyan-fringe-bg :foreground ,fg-dim)))
+   `(modus-theme-fringe-red ((,class :background ,red-fringe-bg :foreground ,fg-main)))
+   `(modus-theme-fringe-green ((,class :background ,green-fringe-bg :foreground ,fg-main)))
+   `(modus-theme-fringe-yellow ((,class :background ,yellow-fringe-bg :foreground ,fg-main)))
+   `(modus-theme-fringe-blue ((,class :background ,blue-fringe-bg :foreground ,fg-main)))
+   `(modus-theme-fringe-magenta ((,class :background ,magenta-fringe-bg :foreground ,fg-main)))
+   `(modus-theme-fringe-cyan ((,class :background ,cyan-fringe-bg :foreground ,fg-main)))
 ;;;;; special base values
    ;; these are closer to the grayscale than the accents defined above
    ;; and should only be used when the next closest alternative would be
@@ -1455,7 +1456,7 @@ Also bind `class' to ((class color) (min-colors 89))."
                  8 fg-dim magenta bg-alt bg-region))))
 ;;;;; other custom faces
    `(modus-theme-hl-line ((,class :background ,(if modus-vivendi-theme-intense-hl-line
-                                                   bg-active bg-hl-line)
+                                                   bg-hl-line-intense bg-hl-line)
                                   (and (>= emacs-major-version 27) '(:extend t)))))
 ;;;; standard faces
 ;;;;; absolute essentials
@@ -3082,7 +3083,7 @@ Also bind `class' to ((class color) (min-colors 89))."
                              'alt-style -3))))
 ;;;;; line numbers (display-line-numbers-mode and global variant)
    `(line-number ((,class :inherit default :background ,bg-dim :foreground ,fg-alt)))
-   `(line-number-current-line ((,class :inherit (default bold) :background ,bg-active :foreground ,fg-active)))
+   `(line-number-current-line ((,class :inherit default :background ,bg-active :foreground ,fg-main)))
 ;;;;; lsp-mode
    `(lsp-face-highlight-read ((,class :inherit modus-theme-subtle-blue :underline t)))
    `(lsp-face-highlight-textual ((,class :inherit modus-theme-subtle-blue)))
@@ -3165,14 +3166,14 @@ Also bind `class' to ((class color) (min-colors 89))."
                                               bg-dim fg-alt))))
    `(magit-diff-file-heading ((,class :inherit bold :foreground ,fg-special-cold)))
    `(magit-diff-file-heading-highlight ((,class :inherit (modus-theme-special-cold bold))))
-   `(magit-diff-file-heading-selection ((,class :background ,bg-alt :foreground ,cyan)))
+   `(magit-diff-file-heading-selection ((,class :inherit modus-theme-refine-cyan)))
    ;; NOTE: here we break from the pattern of inheriting from the
    ;; modus-theme-diff-* faces.
    `(magit-diff-hunk-heading ((,class :inherit bold :background ,bg-active
                                       :foreground ,fg-inactive)))
    `(magit-diff-hunk-heading-highlight ((,class :inherit bold :background ,bg-diff-heading
                                                 :foreground ,fg-diff-heading)))
-   `(magit-diff-hunk-heading-selection ((,class :inherit modus-theme-intense-cyan)))
+   `(magit-diff-hunk-heading-selection ((,class :inherit modus-theme-refine-blue)))
    `(magit-diff-hunk-region ((,class :inherit bold)))
    `(magit-diff-lines-boundary ((,class :background ,fg-main)))
    `(magit-diff-lines-heading ((,class :inherit modus-theme-refine-magenta)))
@@ -4506,8 +4507,12 @@ Also bind `class' to ((class color) (min-colors 89))."
      ;; NOTE that this is specifically for the faces that were
      ;; introduced in Emacs 27, as the other faces are already
      ;; supported.
-     `(line-number-major-tick ((,class :inherit default :background ,yellow-nuanced-bg :foreground ,yellow-nuanced)))
-     `(line-number-minor-tick ((,class :inherit default :background ,cyan-nuanced-bg :foreground ,cyan-nuanced)))
+     `(line-number-major-tick ((,class :inherit (bold default)
+                                       :background ,yellow-nuanced-bg
+                                       :foreground ,yellow-nuanced)))
+     `(line-number-minor-tick ((,class :inherit (bold default)
+                                       :background ,bg-inactive
+                                       :foreground ,fg-inactive)))
 ;;;;; tab-bar-mode
      `(tab-bar ((,class :background ,bg-tab-bar :foreground ,fg-main)))
      `(tab-bar-tab ((,class :inherit bold :box (:line-width 2 :color ,bg-tab-active)
