@@ -3485,10 +3485,13 @@ Everything happens naturally.  Emacs' interconnectedness at its best!
 
 I keep =dired-clean-confirm-killing-deleted-buffers= to =t= as a safety
 mechanism: if a file is ever deleted by accident I can use its buffer to
-restore it (never happened in practice).
+restore it.  Never happened in practice, but still.
 
 While in =dired-mode=, if you need to open all marked files at once, you
 can hit =F=.  It calls =dired-do-find-marked-files=.
+
+Note that =contrib/cdb--bookmarked-directories= is defined further above,
+in the [[#h:751a310d-c63e-461c-a6e1-dfdfdb01cb92][section about the basic Dired settings]].
 
 #+begin_src emacs-lisp
 (use-package dired-x
@@ -3498,11 +3501,10 @@ can hit =F=.  It calls =dired-do-find-marked-files=.
   (setq dired-clean-confirm-killing-deleted-buffers t)
   (setq dired-x-hands-off-my-keys t)    ; easier to show the keys I use
   (setq dired-bind-man nil)
-  (setq dired-bind-info t)
+  (setq dired-bind-info nil)
 
   (defun prot/dired-jump-extra (&optional arg)
-    "Switch directories comprising context and bookmarks.
-NEEDS REVIEW."
+    "Switch directories comprising context and bookmarks."
     (interactive "P")
     (let* ((vc (vc-root-dir))
            (buf-name (buffer-file-name))
@@ -3525,7 +3527,9 @@ NEEDS REVIEW."
          ("C-x C-j" . dired-jump)
          ("s-j" . dired-jump)
          ("C-x 4 C-j" . dired-jump-other-window)
-         ("s-J" . dired-jump-other-window)))
+         ("s-J" . dired-jump-other-window)
+         :map dired-mode-map
+         ("I" . dired-info)))
 #+end_src
 
 *** diredfl (more dired colours)
