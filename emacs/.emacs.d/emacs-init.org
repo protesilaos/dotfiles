@@ -1060,11 +1060,11 @@ the typeface I am using.
 0ODdoaoOQGC
 I1tilIJL|
 !¡ij
-5$§Ss
-7ZzZ2
+5$§SsS5
+17ZzZ2
 9gqpG6
 hnmMN
-uvvwWuuw
+uvvwWuuwvy
 x×X
 .,·°%
 ¡!¿?
@@ -1085,6 +1085,18 @@ abcdefghijklmnopqrstuvwxyz
 ()[]{}—-_=|<>/\
 ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ
 αβγδεζηθικλμνξοπρστυφχψω
+
+// NOTE that I got this from Hack's website:
+// https://source-foundry.github.io/Hack/font-specimen.html
+//  The four boxing wizards jump
+#include <stdio.h> // <= quickly.
+int main(int argc, char **argv) {
+  long il1[]={1-2/3.4,5+6==7/8};
+  int OxFaced=0xBAD||"[{(CQUINE";
+  unsigned O0,l1,Z2,S5,G6,B8__XY;
+  printf("@$Hamburgefo%c`",'\n');
+  return ~7&8^9?0:l1|!"j->k+=*w";
+}
 #+end_example
 
 * Selection candidates and search methods
