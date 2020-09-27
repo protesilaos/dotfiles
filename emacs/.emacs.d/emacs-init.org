@@ -10918,30 +10918,26 @@ _d_: Diagnostics' buffer
 :CUSTOM_ID: h:2a954862-c532-43e9-afdf-4bacd152295f
 :END:
 
-Manuel Uberti has published [[https://github.com/manuel-uberti/flymake-proselint][flymake-proselint on Github]] (as of
-2020-09-21), which offers a Flymake interface to the external =proselint=
-executable (see [[#h:6dff70a8-7eba-4b5d-982c-f13d13ed3b3b][Proselint configuration]]).
+Manuel Uberti has published [[https://github.com/manuel-uberti/flymake-proselint][flymake-proselint on Github]] and MELPA.  It
+offers a Flymake interface to the external =proselint= executable (see
+[[#h:6dff70a8-7eba-4b5d-982c-f13d13ed3b3b][Proselint configuration]]).
 
-To run the program you just need to hook it to whatever major hook you
-use for prose.  The =prot/flymake-setup= macro handles this nicely
-(defined in the previous [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][section on Flymake configurations]]).  Then you
-need to enable =flymake-mode= to start using it.  I prefer to do the final
-step manually, as I normally do not run a linter while writing: it is
-too distracting.
+This comes in handy when I need to review some long-form text for common
+inconsistencies and stylistic irregularities.  Errors will be marked on
+the fringe, while you can quickly get an overview with pointers to the
+precise line number by invoking =flymake-show-diagnostics-buffer= (also
+check my [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][configurations for Flymake]]).
 
-Note that the setup I have here is a placeholder for the eventual MELPA
-package.  While Manuel recommends using =straight.el= to get the source in
-a convenient way (which is a sound piece of advise), I find that I am
-not inconvenienced by doing things manually on a case-by-case basis.
+To run the program, you just need to hook it to whatever major-mode you
+use for prose.  The following =dolist= handles this nicely.  Then you need
+to enable =flymake-mode= to start using it.  I prefer to do the final step
+manually, as I normally do not run a linter while writing: it is too
+distracting.
 
 #+begin_src emacs-lisp
-(use-package flymake-quickdef
-  :ensure
-  :after flymake)
-
 (use-package flymake-proselint
-  :after (flymake-quickdef flymake)
-  :load-path "~/.emacs.d/prot-dev/flymake-proselint/"
+  :ensure
+  :after flymake
   :config
   (dolist (mode '("markdown-mode" "org-mode" "text-mode"))
     (add-hook (intern (concat mode "-hook")) #'flymake-proselint-setup)))
