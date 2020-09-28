@@ -4736,7 +4736,11 @@ of the above in action.
   :after org
   :config
   (setq org-capture-templates
-        '(("b" "Basic task for future review" entry
+        '(("a" "Article for my website" entry
+           (file+headline "tasks.org" "Writing list")
+           "* WRITE %^{Title} %^g\nSCHEDULED: %^t\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n\n%i%?")
+
+          ("b" "Basic task for future review" entry
            (file+headline "tasks.org" "Basic tasks that need to be reviewed")
            "* %^{Title}\n:PROPERTIES:\n:CAPTURED: %U\n:END:\n\n%i%l")
 
