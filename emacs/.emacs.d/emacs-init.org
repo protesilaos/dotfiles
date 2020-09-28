@@ -91,6 +91,8 @@ Whereas in *Emacs 27.1 and onward*, they are modified as follows.  For the
 =let*= part, see section: [[#h:b343378b-d3ec-4c90-8117-6cf92abee45b][Always rebuild init and refresh package cache]].
 
 #+begin_example emacs-lisp
+(require 'package)
+
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
