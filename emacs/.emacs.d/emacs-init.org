@@ -388,16 +388,16 @@ instruct Emacs to terminate its process.  This ensures that edits I made
 to =emacs-init.org= are parsed into a new =emacs-init.el= at the next
 startup.  Doing so at the =kill-emacs-hook= is a neat trick to roll over
 the cost of building this massive document.  We now pay the few second
-cost when terminating the Emacs session.  Otherwise we would be facing
-delays at the initialisation stage.
+penalty when terminating the Emacs session.  Otherwise we would be
+facing delays at the initialisation stage.
 
 Note that choosing to load the right file is the task of my =init.el=.
-Make sure to either browse the code of my dotfiles, of which the present
-document is a part of, or read the [[#h:3fd803db-1bb4-4a0b-9c50-787d88cc7594][section on my current init.el]].
+Make sure to either browse the source code of my dotfiles, of which the
+present document is a part of, or read the [[#h:3fd803db-1bb4-4a0b-9c50-787d88cc7594][section on my init.el]].
 
 Similarly, I want to maintain an up-to-date cache with the installed
-packages, which can be used to speed up boot times, /ceteris paribus/.
-This "quickstart" method is part of Emacs 27+.
+packages, which is used to speed up boot times, /ceteris paribus/.  The
+"quickstart" method is part of Emacs 27 or higher.
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -4766,8 +4766,7 @@ of the above in action.
     (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
       (apply oldfun args)))
 
-  (with-eval-after-load "org-capture"
-    (advice-add 'org-capture-place-template :around 'contrib/org-capture-no-delete-windows))
+  (advice-add 'org-capture-place-template :around 'contrib/org-capture-no-delete-windows)
 
   :bind ("C-c c" . org-capture))
 #+end_src
@@ -5080,18 +5079,6 @@ demanding workflows.
     (org-texinfo-export-to-info)))
 #+end_src
 
-**** TODO review Org's exporting facilities [0/2]                 :emacs:org:
-:PROPERTIES:
-:CUSTOM_ID: h:ce9b2670-b2db-4bf3-bc7e-4995ef62679f
-:END:
-***** TODO research derived export backends
-:PROPERTIES:
-:CUSTOM_ID: h:00ed7a50-84e4-444c-b127-89df423cfd0c
-:END:
-***** TODO automate webpage creation for dotemacs
-:PROPERTIES:
-:CUSTOM_ID: h:88d804f6-0e3f-44c8-9218-585378d04f12
-:END:
 *** Consistent Org heading IDs (and anchor tags)
 :PROPERTIES:
 :CUSTOM_ID: h:031f7dbf-19e4-4ddf-a3d3-f648261412f6
@@ -5885,14 +5872,6 @@ exception is met, the specifier will fetch the contents of the "To"
 field instead, prepending to them =gnus-summary-to-prefix= and/or
 =gnus-summary-newsgroup-prefix= (I have no use for the latter).  This is
 useful when viewing a summary buffer with, say, all your sent messages.
-
-Remember to check the docstring of the relevant variables (=C-h v=), in
-order to get a list with all the available parameters.
-
-The formatting of the threads using Unicode characters was originally
-taken from the [[https://www.emacswiki.org/emacs/GnusFormatting][relevant Emacs wiki entry]] plus some minor tweaks by me.
-Otherwise the summary's display is tweaked to show output in nice
-columns, while being a little bit cleaner than default.
 
 #+begin_src emacs-lisp
 (use-package gnus-sum
