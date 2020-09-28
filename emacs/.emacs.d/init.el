@@ -32,11 +32,6 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
-;; Initialise the packages, avoiding a re-initialisation.
-(unless (bound-and-true-p package--initialized)
-  (setq package-enable-at-startup nil)
-  (package-initialize))
-
 ;; Make sure `use-package' is available.
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -49,7 +44,7 @@
   (setq use-package-always-demand nil)
   (setq use-package-expand-minimally nil)
   (setq use-package-enable-imenu-support t)
-  (setq use-package-compute-statistics t)
+  (setq use-package-compute-statistics nil)
   ;; The following is VERY IMPORTANT.  Write hooks using their real name
   ;; instead of a shorter version: after-init ==> `after-init-hook'.
   ;;
@@ -64,13 +59,19 @@
   :config
   (setq vc-follow-symlinks t)) ; Because my dotfiles are managed that way
 
-(use-package org)
-
+;; I create an "el" version of my Org configuration file as a final step
+;; before closing down Emacs.  This is done to load the latest version
+;; of my code upon startup.
+;;
+;; Also helps with initialisation times.  Not that I care too much about
+;; those… Hence why I no longer bother with deferring package loading
+;; either by default or on a case-by-case basis.
 (let* ((conf "~/.emacs.d/emacs-init")
        (el (concat conf ".el"))
        (org (concat conf ".org")))
   (if (file-exists-p el)
       (load-file el)
+    (use-package org)
     (org-babel-load-file org)))
 
 ;;; init.el ends here

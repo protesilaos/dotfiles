@@ -91,15 +91,8 @@ Whereas in *Emacs 27.1 and onward*, they are modified as follows.  For the
 =let*= part, see section: [[#h:b343378b-d3ec-4c90-8117-6cf92abee45b][Always rebuild init and refresh package cache]].
 
 #+begin_example emacs-lisp
-(require 'package)
-
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
-
-;; Initialise the packages, avoiding a re-initialisation.
-(unless (bound-and-true-p package--initialized)
-  (setq package-enable-at-startup nil)
-  (package-initialize))
 
 ;; Make sure `use-package' is available.
 (unless (package-installed-p 'use-package)
@@ -113,7 +106,7 @@ Whereas in *Emacs 27.1 and onward*, they are modified as follows.  For the
   (setq use-package-always-demand nil)
   (setq use-package-expand-minimally nil)
   (setq use-package-enable-imenu-support t)
-  (setq use-package-compute-statistics t)
+  (setq use-package-compute-statistics nil)
   ;; The following is VERY IMPORTANT.  Write hooks using their real name
   ;; instead of a shorter version: after-init ==> `after-init-hook'.
   ;;
@@ -128,13 +121,19 @@ Whereas in *Emacs 27.1 and onward*, they are modified as follows.  For the
   :config
   (setq vc-follow-symlinks t)) ; Because my dotfiles are managed that way
 
-(use-package org)
-
+;; I create an "el" version of my Org configuration file as a final step
+;; before closing down Emacs.  This is done to load the latest version
+;; of my code upon startup.
+;;
+;; Also helps with initialisation times.  Not that I care too much about
+;; those… Hence why I no longer bother with deferring package loading
+;; either by default or on a case-by-case basis.
 (let* ((conf "~/.emacs.d/emacs-init")
        (el (concat conf ".el"))
        (org (concat conf ".org")))
   (if (file-exists-p el)
       (load-file el)
+    (use-package org)
     (org-babel-load-file org)))
 #+end_example
 
@@ -147,8 +146,8 @@ Starting with Emacs 27.1, an =early-init.el= is now required to control
 things with greater precision.  Its code is as follows:
 
 #+begin_example emacs-lisp
-;; Do not initialise the package manager.  This is done in `init.el'.
-(setq package-enable-at-startup nil)
+;; Initialise installed packages
+(setq package-enable-at-startup t)
 
 ;; Allow loading from the package cache.
 (setq package-quickstart t)
@@ -162,12 +161,6 @@ way Emacs initialises the package manager. Prior to Emacs 27.1, the
 =init.el= was supposed to handle that task by means of calling
 =package-initialize=.  Whereas for Emacs 27.1, the default behaviour is
 to start the package manager /before/ loading the user's init file.
-This can create unexpected results with regard to how existing
-configuration files are parsed—or at least that was my experience with
-certain settings not being parsed consistently (was not able to
-reproduce it reliably).  I prefer the old behaviour so I simply tell
-the =early-init.el= to defer the process of initialising the package
-manager to when =init.el= is evaluated.
 
 *** About `use-package'
 :PROPERTIES:
