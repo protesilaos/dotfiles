@@ -10065,6 +10065,12 @@ current line is more important than the exact column of the point.
   :commands (list-packages
              package-refresh-contents
              package-list-packages)
+  :config
+  ;; All variables are for Emacs 28+
+  (setq package-name-column-width 40)
+  (setq package-version-column-width 14)
+  (setq package-status-column-width 12)
+  (setq package-archive-column-width 8)
   :hook (package-menu-mode-hook . hl-line-mode))
 #+end_src
 
