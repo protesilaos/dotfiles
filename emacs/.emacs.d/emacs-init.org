@@ -7666,6 +7666,7 @@ made public with permission).
   (setq elfeed-search-trailing-width 25)
   (setq elfeed-show-truncate-long-urls t)
   (setq elfeed-show-unique-buffers t)
+  (setq elfeed-search-date-format '("%F %R" 16 :left))
 
   (defun prot/elfeed-feeds ()
     "Load file containing the `elfeed-feeds' list.
