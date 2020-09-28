@@ -598,22 +598,21 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
   (dolist (theme '("operandi" "vivendi"))
     (contrib/format-sexp
      (defun prot/modus-%1$s ()
-       (setq modus-%1$s-theme-slanted-constructs t
-             modus-%1$s-theme-bold-constructs t
-             modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
+       (setq modus-%1$s-theme-slanted-constructs nil
+             modus-%1$s-theme-bold-constructs nil
+             modus-%1$s-theme-fringes 'intense ; {nil,'subtle,'intense}
              modus-%1$s-theme-mode-line nil ; {nil,'3d,'moody}
              modus-%1$s-theme-faint-syntax nil
-             modus-%1$s-theme-intense-hl-line nil
+             modus-%1$s-theme-intense-hl-line t
              modus-%1$s-theme-intense-paren-match t
              modus-%1$s-theme-no-link-underline nil
              modus-%1$s-theme-no-mixed-fonts nil
              modus-%1$s-theme-prompts nil ; {nil,'subtle,'intense}
              modus-%1$s-theme-completions 'opinionated ; {nil,'moderate,'opinionated}
              modus-%1$s-theme-diffs 'fg-only ; {nil,'desaturated,'fg-only}
-             modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
+             modus-%1$s-theme-org-blocks nil ; {nil,'greyscale,'rainbow}
              modus-%1$s-theme-headings  ; Read the manual for this one
-             '((1 . section)
-               (2 . rainbow-section-no-bold)
+             '((1 . section-no-bold)
                (t . line-no-bold))
              modus-%1$s-theme-variable-pitch-headings nil
              modus-%1$s-theme-scale-headings nil
