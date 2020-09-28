@@ -9701,6 +9701,34 @@ Otherwise it is a convenient toggle for when I need to have that effect.
       (blink-cursor-mode -1))))
 #+end_src
 
+*** Mouse avoidance mode
+:PROPERTIES:
+:CUSTOM_ID: h:369fe8f1-13d1-4862-a36c-58f914846581
+:END:
+
+While my normal Emacs usage does not involve the mouse, I do sometimes
+have to use it.  Minutes later the pointer is in the way of whatever it
+is I am staring at and so I must manually move it out of the way.
+
+Thankfully Emacs has a built-in mode that automates that kind of
+process.  =mouse-avoidance-mode= has several possible styles for moving
+the pointer out of your way: read them with =C-h f mouse-avoidance-mode=.
+I just find =banish= to be good enough: moves the point to a predictable
+position without any fancy extras.
+
+#+begin_src emacs-lisp
+(use-package avoid
+  :config
+  (setq mouse-avoidance-banish-position
+        '((frame-or-window . frame)
+          (side . right)
+          (side-pos . 0)
+          (top-or-bottom . top)
+          (top-or-bottom-pos . 0)))
+
+  (mouse-avoidance-mode 'banish))
+#+end_src
+
 *** Multiple cursors (edit in several parts at once)
 :PROPERTIES:
 :CUSTOM_ID: h:397728fd-e437-470a-a571-d03954106b9a
