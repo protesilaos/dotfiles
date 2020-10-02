@@ -11011,7 +11011,7 @@ distracting.
 (use-package flymake-proselint
   :ensure
   :after flymake
-  :config
+  :init
   (dolist (mode '("markdown-mode" "org-mode" "text-mode"))
     (add-hook (intern (concat mode "-hook")) #'flymake-proselint-setup)))
 #+end_src
@@ -11143,7 +11143,7 @@ For a related package, consult my [[#h:2a954862-c532-43e9-afdf-4bacd152295f][con
 (use-package flymake-aspell
   :after (flyspell flymake)
   :ensure
-  :config
+  :init
   (dolist (mode '("markdown-mode" "org-mode" "text-mode"))
     (add-hook (intern (concat mode "-hook")) #'flymake-aspell-setup)))
 #+end_src
