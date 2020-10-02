@@ -5350,10 +5350,6 @@ Then we set up the interface for composing emails:
   (setq mml-secure-smime-encrypt-to-self t)
   (setq mml-secure-smime-sign-with-sender t))
 
-(use-package epa-file
-  :config
-  (setq epa-file-cache-passphrase-for-symmetric-encryption nil))
-
 (use-package message
   :config
   (setq mail-user-agent 'message-user-agent)
