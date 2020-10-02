@@ -8520,14 +8520,16 @@ This should be added `wdired-mode-hook'.  For more, refer to
 
   (defun prot/bongo-dired-insert-files ()
     "Add files in a `dired' buffer to the `bongo' playlist."
-    (let* ((media (dired-get-marked-files))
-           (names (mapcar #'file-name-base media)))
+    (let ((media (or (dired-get-marked-files) (dired-filename-at-point))))
       (with-current-buffer (bongo-playlist-buffer)
         (goto-char (point-max))
         (mapcar (lambda (x)
-                  (prot/bongo-playlist-heading x)
-                  (bongo-insert-file x))
-                names)
+                  (if (file-directory-p x)
+                      (progn
+                        (prot/bongo-playlist-heading (file-name-base x))
+                        (bongo-insert-directory-tree x))
+                    (bongo-insert-file x)))
+                media)
         (prot/bongo-playlist-section)
         (run-hooks 'prot/bongo-playlist-setup-hook))
       (with-current-buffer (bongo-library-buffer)
