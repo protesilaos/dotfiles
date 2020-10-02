@@ -823,8 +823,8 @@ See, for example, `prot/font-set-fonts'.")
   ;; 2. https://gitlab.com/protesilaos/iosevka-comfy
   (defconst prot/font-sizes-families-alist
     '(("pocket" . (105 "Hack" "DejaVu Sans"))
-      ("laptop" . (110 "Hack" "Open Serif"))
-      ("desktop" . (130 "Hack" "Open Serif"))
+      ("laptop" . (110 "Hack" "Inter"))
+      ("desktop" . (130 "Hack" "Inter"))
       ("presentation" . (190 "Iosevka Comfy" "Source Sans Pro")))
     "Alist of desired typefaces and their point sizes.
 
