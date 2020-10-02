@@ -9776,8 +9776,6 @@ is I am staring at and so I must manually move it out of the way.
 Thankfully Emacs has a built-in mode that automates that kind of
 process.  =mouse-avoidance-mode= has several possible styles for moving
 the pointer out of your way: read them with =C-h f mouse-avoidance-mode=.
-I just find =banish= to be good enough: moves the point to a predictable
-position without any fancy extras.
 
 #+begin_src emacs-lisp
 (use-package avoid
@@ -9789,7 +9787,7 @@ position without any fancy extras.
           (top-or-bottom . top)
           (top-or-bottom-pos . 0)))
 
-  (mouse-avoidance-mode 'banish))
+  (mouse-avoidance-mode 'animate))
 #+end_src
 
 *** Multiple cursors (edit in several parts at once)
