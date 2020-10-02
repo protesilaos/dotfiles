@@ -7672,6 +7672,8 @@ made public with permission).
   (setq elfeed-show-unique-buffers t)
   (setq elfeed-search-date-format '("%F %R" 16 :left))
 
+;;; Elfeed general purpose commands
+
   (defun prot/elfeed-feeds ()
     "Load file containing the `elfeed-feeds' list.
 Add this to `elfeed-search-mode-hook'."
@@ -7734,6 +7736,8 @@ the buffer."
                  (elfeed-search-quit-window)
                (delete-other-windows win))))))
 
+;;; Elfeed multimedia extras
+
   (defvar prot/elfeed-mpv-hook nil
     "Hook called before `prot/elfeed-mpv-dwim'.")
 
@@ -7775,6 +7779,8 @@ current monitor's width."
         (message
          (concat "Launching MPV for "
                  (propertize link 'face 'success))))))
+
+;;; Elfeed and Bongo integration
 
   (defvar prot/elfeed-bongo-playlist "*Bongo-Elfeed Queue*"
     "Name of the Elfeed+Bongo multimedia playlist.")
@@ -7827,6 +7833,8 @@ interfere with the default `bongo-playlist-buffer'."
       (if buffer
           (switch-to-buffer buffer)
         (message "No `bongo' playlist is associated with `elfeed'."))))
+
+;;; Elfeed search extensions
 
   (defun prot/elfeed-show-search-update (direction)
     "Update `elfeed-search-buffer' to match entry in DIRECTION.
@@ -7905,17 +7913,44 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
         (write-file file t)
         (message "Saved buffer at %s" file))))
 
-  (defun prot/elfeed-toggle-tag (tag)
-    "Toggle TAG on current item."
+  (defface prot/elfeed-entry-critical
+    '((t :inherit (font-lock-builtin-face elfeed-search-title-face)))
+    "Face for Elfeed entries tagged 'critical'.")
+
+  (defface prot/elfeed-entry-essential
+    '((t :inherit (font-lock-keyword-face elfeed-search-title-face)))
+    "Face for Elfeed entries tagged 'essential'.")
+
+  (defface prot/elfeed-entry-important
+    '((t :inherit (font-lock-string-face elfeed-search-title-face)))
+    "Face for Elfeed entries tagged 'important'.")
+
+  (defface prot/elfeed-entry-personal
+    '((t :inherit (font-lock-warning-face elfeed-search-title-face)))
+    "Face for Elfeed entries tagged 'personal'.")
+
+  (setq elfeed-search-face-alist
+        '((critical prot/elfeed-entry-critical)
+          (essential prot/elfeed-entry-essential)
+          (important prot/elfeed-entry-important)
+          (personal prot/elfeed-entry-personal)
+          (unread elfeed-search-unread-title-face)))
+
+  (defvar prot/elfeed-search-tags
+    '(critical essential important)
+    "List of tags used by `prot/elfeed-toggle-tag'.")
+
+  (defun prot/elfeed-toggle-tag (&optional tag)
+    "Toggle tag on current item.
+
+A list of tags is provided by `prot/elfeed-search-tags'.
+Otherwise an optional TAG symbol will suffice."
     (interactive)
-    (elfeed-search-toggle-all tag))
+    (let* ((tags prot/elfeed-search-tags)
+           (input (or tag (intern (completing-read "Set tag: " tags nil t)))))
+      (elfeed-search-toggle-all input)))
 
-  (defface prot/important-elfeed-entry
-    '((t :inherit error))
-    "Marks an important Elfeed entry.")
-
-  (push '(important prot/important-elfeed-entry)
-        elfeed-search-face-alist)
+;;; Hooks and key bindings
 
   :hook ((elfeed-search-mode-hook . prot/elfeed-feeds)
          (prot/elfeed-mpv-hook . prot/elfeed-mpv-buffer))
@@ -7931,6 +7966,7 @@ minibuffer with `exit-minibuffer' (I bind it to C-j in
          ("!" . (lambda ()
                   (interactive)
                   (prot/elfeed-toggle-tag 'important)))
+         ("+" . prot/elfeed-toggle-tag)
          ("b" . prot/elfeed-bongo-insert-item)
          ("h" . prot/elfeed-bongo-switch-to-playlist) ; "hop" mnemonic
          :map elfeed-show-mode-map
