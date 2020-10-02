@@ -492,9 +492,7 @@ a particular task.  In other words, it does not scale.
 I thus employ =C-c h= as a common prefix for all my hydras (knowing that
 it is meant for private use), binding each sequence to the relevant
 minor mode's map.  An extra key completes the chord following mnemonics.
-For instance, a hydra about the linter when that is active is =C-c h l=,
-for the outline viewer =C-c h o=, for git merge conflicts =C-c h g=, and so
-on.
+For instance, a hydra about the linter when that is active is =C-c h l=.
 
 Look for the =defhydra= macro in the relevant package declarations (these
 will evolve over time).  Hydras are colour-coded as a means of denoting
@@ -733,7 +731,7 @@ when reviewing my themes (=rainbow-mode= is activated manually).
   (setq rainbow-x-colors nil))
 #+end_src
 
-** Base typeface configurations
+** Typeface configurations
 :PROPERTIES:
 :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
 :END:
@@ -1033,7 +1031,7 @@ Also check my [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and t
       (variable-pitch-mode -1))))
 #+end_src
 
-*** Typeface suitability test
+*** Simple font suitability test
 :PROPERTIES:
 :CUSTOM_ID: h:9035a1ed-e988-4731-89a5-0d9e302c3dea
 :END:
