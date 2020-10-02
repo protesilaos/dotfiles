@@ -1093,6 +1093,38 @@ int main(int argc, char **argv) {
 }
 #+end_example
 
+*** Bidirectional writing and ~so-long.el~
+:PROPERTIES:
+:CUSTOM_ID: h:1d0e8ab3-d779-41d4-b478-d735dc3ad7ae
+:END:
+
+I only ever write/read in Latin and Greek alphabets.  So, while I
+appreciate the fact that Emacs can natively handle other scripts, I have
+no use for that particular feature.  Setting the default directionality
+to what my languages use can help improve the responsiveness of Emacs in
+some cases.
+
+Consistent performance is the reason to also enable =global-so-long-mode=,
+built into Emacs versions >= 27, which allows the active major mode to
+gracefully adapt to buffers with very long lines.  What "very long"
+means is, of course, configurable: =M-x find-library so-long= covers
+several customisation options, though I find that the defaults require
+no further intervention from my part.
+
+The code below is a minor adaptation of the insights of Alain M. Lafon
+in the [[https://200ok.ch/posts/2020-09-29_comprehensive_guide_on_handling_long_lines_in_emacs.html][Comprehensive guide on handling long lines in Emacs]] (2020-09-29).
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq-default bidi-paragraph-direction 'left-to-right)
+  (setq bidi-inhibit-bpa t))
+
+(use-package so-long
+  :config
+  (global-so-long-mode 1))
+#+end_src
+
 * Selection candidates and search methods
 :PROPERTIES:
 :CUSTOM_ID: h:5c060e2e-231d-4896-a5d2-b3fb4134764e
