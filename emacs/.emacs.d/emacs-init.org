@@ -7602,6 +7602,10 @@ Madhavan Krishnan: we shared code and ideas that helped establish the
 modalities of interaction between Elfeed and Bongo (this information is
 made public with permission).
 
+Demo: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Manage podcasts in Emacs with Elfeed and Bongo]] (2020-09-11).
+
+Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MPV (Elfeed+Bongo extension)]].
+
 #+begin_src emacs-lisp
 (use-package elfeed
   :ensure
@@ -7747,7 +7751,6 @@ interfere with the default `bongo-playlist-buffer'."
              (enclosure (elt (car (elfeed-entry-enclosures entry)) 0))
              (url (or enclosure link))
              (title (elfeed-entry-title entry))
-             (height (if (<= (display-pixel-width) 1366) 720 1080))
              (bongo-pl prot/elfeed-bongo-playlist)
              (buffer (get-buffer-create bongo-pl)))
         (unless (bongo-playlist-buffer)
@@ -7758,10 +7761,6 @@ interfere with the default `bongo-playlist-buffer'."
  	        (bongo-playlist-mode)
             (setq-local bongo-library-buffer (get-buffer "*elfeed-search*"))
             (setq-local bongo-enabled-backends '(mpv))
-            (setq-local bongo-mpv-extra-arguments
-                        (format           ; this assumes mpv+youtube-dl
-                         "%s --ytdl-format=bestvideo[height\\<=?%s]+bestaudio/best"
-                         "--hwdec=auto-safe" height))
             (bongo-progressive-playback-mode))
  	      (goto-char (point-max))
           (bongo-insert-uri url title)
@@ -7931,6 +7930,22 @@ Otherwise an optional TAG symbol will suffice."
          ("v" . prot/elfeed-mpv-dwim)
          ("w" . elfeed-show-yank)))
 #+end_src
+
+*** Sample configuration for MPV (Elfeed+Bongo extension)
+:PROPERTIES:
+:CUSTOM_ID: h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f
+:END:
+
+In the previous section I configure Elfeed to integrate with the Bongo
+media manager.  The external =mpv= executable is used to play back audio
+and video links.  Instead of passing command-line arguments to control
+the settings of the player, I just add the following to my local
+configuration files, specifically =~/.config/mpv/mpv.conf=:
+
+#+begin_example conf
+hwdec=auto-safe
+ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
+#+end_example
 
 ** Emacs Simple HTML Renderer (shr)
 :PROPERTIES:
@@ -8186,6 +8201,8 @@ distinct playlist+library for tracking online multimedia sources (videos
 and podcasts).  See [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed (RSS/Atom feed reader)]] for the implementation
 details.  Madhavan Krishnan helped me flesh out this project by sharing
 code and ideas in a private exchange (shared with permission).
+
+Watch: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Manage podcasts in Emacs with Elfeed and Bongo]] (2020-09-11).
 
 #+begin_src emacs-lisp
 (use-package bongo
