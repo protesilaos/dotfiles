@@ -598,7 +598,7 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
              modus-%1$s-theme-faint-syntax nil
              modus-%1$s-theme-intense-hl-line nil
              modus-%1$s-theme-intense-paren-match t
-             modus-%1$s-theme-no-link-underline t
+             modus-%1$s-theme-no-link-underline nil
              modus-%1$s-theme-no-mixed-fonts nil
              modus-%1$s-theme-prompts 'intense ; {nil,'subtle,'intense}
              modus-%1$s-theme-completions 'opinionated ; {nil,'moderate,'opinionated}
@@ -606,10 +606,10 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
              modus-%1$s-theme-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
              modus-%1$s-theme-headings  ; Read the manual for this one
              '((1 . section)
-               (2 . line)
+               (2 . section-no-bold)
                (t . line-no-bold))
-             modus-%1$s-theme-variable-pitch-headings t
-             modus-%1$s-theme-scale-headings t
+             modus-%1$s-theme-variable-pitch-headings nil
+             modus-%1$s-theme-scale-headings nil
              modus-%1$s-theme-scale-1 1.1
              modus-%1$s-theme-scale-2 1.15
              modus-%1$s-theme-scale-3 1.21
