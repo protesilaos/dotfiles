@@ -4429,58 +4429,6 @@ configurations should be good enough at this stage.
           (dayname "\\W"))))
 #+end_src
 
-** Remember mode
-:PROPERTIES:
-:CUSTOM_ID: h:8044df56-9819-4c61-abe6-43d352087211
-:END:
-
-=remember= is built into Emacs.  It is a fairly and flexible lightweight
-solution for writing notes.  Obviously Org can handle that task like a
-champion, but there still are cases where you need something quick
-without the approximately one bajillion extras that Org furnishes.
-
-What I have here works, though I consider it a /work in progress/ (as of
-2020-08-16).
-
-#+begin_src emacs-lisp
-(use-package remember
-  :config
-  (setq remember-data-file "~/.emacs.d/remember")
-  (setq remember-data-directory "~/.emacs.d/remember-files/")
-  (setq remember-notes-buffer-name "*remember*")
-  (setq remember-leader-text "** ")
-  (setq remember-time-format "%F %T")
-  (setq remember-directory-file-name-format "%F_%T")
-  (setq remember-notes-bury-on-kill nil) ; kill means kill
-  (setq remember-notes-initial-major-mode 'text-mode)
-  (setq remember-handler-functions '(remember-append-to-file))
-  (setq remember-all-handler-functions t)
-  (setq remember-save-after-remembering t)
-  (setq remember-annotation-functions '(buffer-file-name))
-
-  (defun prot/remember-header-line ()
-    "Add `header-line-format' information to `remember' buffers.
-Call this from `remember-mode-hook'."
-    (when (eq major-mode 'remember-mode)
-      (setq-local header-line-format
-                  (format "Type %s to confirm, %s to cancel"
-                          (propertize "C-c C-c" 'face 'bold)
-                          (propertize "C-c C-k" 'face 'bold)))))
-
-  (defun prot/remember (&optional arg)
-    "Produce a buffer to capture a `remember' note.
-With prefix \\[universal-argument], switch to the buffer defined
-by `remember-notes-buffer-name'."
-    (interactive "P")
-    (if arg
-        (remember-notes t)
-      (remember nil)))
-
-  :hook ((remember-mode-hook . prot/remember-header-line)
-         (remember-notes-mode-hook . prot/outline-minor-mode))
-  :bind ("<f12>" . prot/remember))
-#+end_src
-
 ** Org-mode (personal information manager)
 :PROPERTIES:
 :CUSTOM_ID: h:4e8347de-415e-4804-b383-d61499e05ca1
