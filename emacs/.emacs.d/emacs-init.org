@@ -4709,7 +4709,7 @@ of the above in action.
   :after org
   :config
   (setq org-capture-templates
-        `(("a" "Article for my website" entry
+        `(("a" "Article to write" entry
            (file+headline "tasks.org" "Writing list")
            ,(concat "* WRITE %^{Title} %^g\n"
                     "SCHEDULED: %^t\n"
@@ -4719,13 +4719,6 @@ of the above in action.
           ("b" "Basic task for future review" entry
            (file+headline "tasks.org" "Basic tasks that need to be reviewed")
            ,(concat "* %^{Title}\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":END:\n\n"
-                    "%i%l"))
-          ("c" "Comment or write blog" entry
-           (file+headline "tasks.org" "Writing list")
-           ,(concat "* WRITE %^{Title} :@priv:website:\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
@@ -4765,7 +4758,8 @@ of the above in action.
     (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
       (apply oldfun args)))
 
-  (advice-add 'org-capture-place-template :around 'contrib/org-capture-no-delete-windows)
+  (advice-add 'org-capture-place-template
+              :around 'contrib/org-capture-no-delete-windows)
 
   :bind ("C-c c" . org-capture))
 #+end_src
