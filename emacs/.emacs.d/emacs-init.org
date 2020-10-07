@@ -4514,6 +4514,8 @@ Now on to the miscellaneous settings:
 
 #+begin_src emacs-lisp
 (use-package org
+  ;; NOTE: I track Org from its Git source
+  :load-path "/home/prot/.emacs.d/prot-dev/org-mode/lisp/"
   :config
   ;; agenda and basic directory structure
   (setq org-directory "~/Org")
