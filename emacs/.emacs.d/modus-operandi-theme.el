@@ -120,6 +120,7 @@
 ;;     diff-hl
 ;;     diff-mode
 ;;     dim-autoload
+;;     dir-treeview
 ;;     dired
 ;;     dired-async
 ;;     dired-git
@@ -990,12 +991,12 @@ values.  It is intended to be used as a distant-foreground
 property."
   (pcase modus-operandi-theme-mode-line
     ('3d
-     `(:foreground ,fg-alt :background ,bg-alt
+     `(:background ,bg-alt :foreground ,fg-alt
                    :box (:line-width ,(or border-width 1)
                                      :color ,border-3d
                                      :style ,(and alt-style 'released-button))))
     ('moody
-     `(:foreground ,fg-alt :background ,bg-alt :underline ,border :overline ,border
+     `(:background ,bg-alt :foreground ,fg-alt :underline ,border :overline ,border
                    :distant-foreground ,fg-distant))
     (_
      `(:foreground ,fg :background ,bg :box ,border))))
@@ -1992,6 +1993,27 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(diff-removed ((,class :inherit modus-theme-diff-removed)))
 ;;;;; dim-autoload
    `(dim-autoload-cookie-line ((,class :foreground ,fg-alt :slant ,modus-theme-slant)))
+;;;;; dir-treeview
+   `(dir-treeview-archive-face ((,class :foreground ,fg-special-warm)))
+   `(dir-treeview-archive-icon-face ((,class :inherit dir-treeview-default-icon-face :foreground ,yellow)))
+   `(dir-treeview-audio-face ((,class :foreground ,magenta)))
+   `(dir-treeview-audio-icon-face ((,class :inherit dir-treeview-default-icon-face :foreground ,magenta-alt)))
+   `(dir-treeview-control-face ((,class :foreground ,fg-alt)))
+   `(dir-treeview-control-mouse-face ((,class :inherit highlight)))
+   `(dir-treeview-default-icon-face ((,class :inherit bold :family "Font Awesome" :foreground ,fg-alt)))
+   `(dir-treeview-default-filename-face ((,class :foreground ,fg-main)))
+   `(dir-treeview-directory-face ((,class :foreground ,blue)))
+   `(dir-treeview-directory-icon-face ((,class :inherit dir-treeview-default-icon-face :foreground ,blue-alt)))
+   `(dir-treeview-executable-face ((,class :foreground ,red-alt)))
+   `(dir-treeview-executable-icon-face ((,class :inherit dir-treeview-default-icon-face :foreground ,red-alt-other)))
+   `(dir-treeview-image-face ((,class :foreground ,green-alt-other)))
+   `(dir-treeview-image-icon-face ((,class :inherit dir-treeview-default-icon-face :foreground ,green-alt)))
+   `(dir-treeview-indent-face ((,class :foreground ,fg-alt)))
+   `(dir-treeview-label-mouse-face ((,class :inherit highlight)))
+   `(dir-treeview-start-dir-face ((,class :inherit modus-theme-pseudo-header)))
+   `(dir-treeview-symlink-face ((,class :inherit button :foreground ,cyan)))
+   `(dir-treeview-video-face ((,class :foreground ,magenta-alt-other)))
+   `(dir-treeview-video-icon-face ((,class :inherit dir-treeview-default-icon-face :foreground ,magenta-alt-other)))
 ;;;;; dired
    `(dired-directory ((,class :foreground ,blue)))
    `(dired-flagged ((,class :inherit modus-theme-mark-del)))
@@ -3240,7 +3262,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(Man-reverse ((,class :inherit modus-theme-subtle-magenta)))
    `(Man-underline ((,class :foreground ,cyan :underline t)))
 ;;;;; markdown-mode
-   `(markdown-blockquote-face ((,class :foreground ,fg-special-warm :slant ,modus-theme-slant)))
+   `(markdown-blockquote-face ((,class :foreground ,fg-special-cold :slant ,modus-theme-slant)))
    `(markdown-bold-face ((,class :inherit bold)))
    `(markdown-code-face ((,class ,@(modus-operandi-theme-mixed-fonts))))
    `(markdown-comment-face ((,class :foreground ,fg-alt :slant ,modus-theme-slant)))
@@ -3565,14 +3587,15 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;;; org
    `(org-agenda-calendar-event ((,class :foreground ,fg-main)))
    `(org-agenda-calendar-sexp ((,class :foreground ,cyan-alt)))
-   `(org-agenda-clocking ((,class :inherit modus-theme-special-cold)))
+   `(org-agenda-clocking ((,class :inherit modus-theme-special-cold
+                                  ,@(and (>= emacs-major-version 27) '(:extend t)))))
    `(org-agenda-column-dateline ((,class :background ,bg-alt)))
-   `(org-agenda-current-time ((,class :inherit modus-theme-subtle-cyan)))
-   `(org-agenda-date ((,class :inherit bold :foreground ,cyan)))
-   `(org-agenda-date-today ((,class :inherit (bold modus-theme-intense-cyan))))
-   `(org-agenda-date-weekend ((,class :inherit bold :foreground ,cyan-alt-other)))
+   `(org-agenda-current-time ((,class :inherit bold :foreground ,blue-alt-other)))
+   `(org-agenda-date ((,class :foreground ,cyan)))
+   `(org-agenda-date-today ((,class :inherit bold :foreground ,fg-main :underline t)))
+   `(org-agenda-date-weekend ((,class :foreground ,cyan-alt-other)))
    `(org-agenda-diary ((,class :foreground ,fg-main)))
-   `(org-agenda-dimmed-todo-face ((,class :inherit modus-theme-subtle-neutral)))
+   `(org-agenda-dimmed-todo-face ((,class :inherit bold :foreground ,fg-alt)))
    `(org-agenda-done ((,class :foreground ,green-alt)))
    `(org-agenda-filter-category ((,class :inherit bold :foreground ,magenta-active)))
    `(org-agenda-filter-effort ((,class :inherit bold :foreground ,magenta-active)))
@@ -3591,12 +3614,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-block-end-line ((,class :inherit org-block-begin-line)))
    `(org-checkbox ((,class :box (:line-width 1 :color ,bg-active)
                            :background ,bg-inactive :foreground ,fg-active)))
-   `(org-checkbox-statistics-done ((,class :box ,bg-region :background ,bg-dim
-                                           :foreground ,green
-                                           :inherit ,modus-theme-variable-pitch)))
-   `(org-checkbox-statistics-todo ((,class :box ,bg-region :background ,bg-dim
-                                           :foreground ,red-alt
-                                           :inherit ,modus-theme-variable-pitch)))
+   `(org-checkbox-statistics-done ((,class :inherit org-done)))
+   `(org-checkbox-statistics-todo ((,class :inherit org-todo)))
    `(org-clock-overlay ((,class :inherit modus-theme-special-cold)))
    `(org-code ((,class ,@(modus-operandi-theme-mixed-fonts) :foreground ,magenta)))
    `(org-column ((,class :background ,bg-alt)))
@@ -3646,7 +3665,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-property-value ((,class ,@(modus-operandi-theme-mixed-fonts)
                                  :foreground ,cyan-alt-other)))
    `(org-quote ((,class ,@(modus-operandi-theme-org-block bg-dim)
-                        :foreground ,fg-special-calm :slant ,modus-theme-slant)))
+                        :foreground ,fg-special-cold :slant ,modus-theme-slant)))
    `(org-scheduled ((,class :foreground ,fg-special-warm)))
    `(org-scheduled-previously ((,class :foreground ,yellow-alt-other)))
    `(org-scheduled-today ((,class :foreground ,magenta-alt-other)))
@@ -3681,8 +3700,11 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;;; org-recur
    `(org-recur ((,class :foreground ,magenta-active)))
 ;;;;; org-roam
-   `(org-roam-link ((,class :inherit button :foreground ,blue-alt-other)))
-   `(org-roam-backlink ((,class :inherit button :foreground ,green-alt-other)))
+   `(org-roam-link ((,class :inherit button :foreground ,green)))
+   `(org-roam-link-current ((,class :inherit button :foreground ,green-alt)))
+   `(org-roam-link-invalid ((,class :inherit button :foreground ,red)))
+   `(org-roam-link-shielded ((,class :inherit button :foreground ,yellow)))
+   `(org-roam-tag ((,class :foreground ,fg-alt :slant italic)))
 ;;;;; org-superstar
    `(org-superstar-item ((,class :foreground ,fg-main)))
    `(org-superstar-leading ((,class :foreground ,fg-whitespace)))
