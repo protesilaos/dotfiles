@@ -2368,7 +2368,7 @@ The =setq= forms are mere stylistic tweaks for the buffer that =M-x occur=
 produces.  The faces are part of my Modus themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][relevant section]]).
 
 The functions are simple tools to either produce a list with all URLs
-present in the buffer (=prot-occur-url=), or prompt you for visiting a URL
+present in the buffer (=prot/occur-url=), or prompt you for visiting a URL
 from those available using completion methods.
 
 #+begin_src emacs-lisp
@@ -4942,7 +4942,7 @@ produces dates with a fixed length."
         "-·-·-·-·-·-·-·-·-")
   (setq org-agenda-time-grid
         '((daily today require-timed)
-          (0700 0800 0900 1000 1100
+          (0600 0700 0800 0900 1000 1100
                 1200 1300 1400 1500 1600
                 1700 1800 1900 2000 2100)
           " ....." "-----------------"))
