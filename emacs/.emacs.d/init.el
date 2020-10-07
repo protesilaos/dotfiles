@@ -59,6 +59,9 @@
   :config
   (setq vc-follow-symlinks t)) ; Because my dotfiles are managed that way
 
+;; For my custom libraries
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+
 ;; I create an "el" version of my Org configuration file as a final step
 ;; before closing down Emacs.  This is done to load the latest version
 ;; of my code upon startup.
