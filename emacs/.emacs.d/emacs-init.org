@@ -2475,7 +2475,10 @@ matches by leveraging the full power of Emacs' editing capabilities
   :commands wgrep
   :config
   (setq wgrep-auto-save-buffer t)
-  (setq wgrep-change-readonly-file t))
+  (setq wgrep-change-readonly-file t)
+  :bind (:map grep-mode-map
+              ("e" . wgrep-change-to-wgrep-mode)
+              ("C-x C-q" . wgrep-change-to-wgrep-mode)))
 #+end_src
 
 *** ripgrep (rg.el)
