@@ -24,10 +24,8 @@
 
 ;;; Commentary:
 ;;
-;; This is a work-in-progress.  Please understand that I am sharing it
-;; in the hope that it will be helpful, but I still plan to keep working
-;; on it as a private project that meets my particular needs.
-;;
+;; Read about my rationale and workflow with this tool:
+;; <https://protesilaos.com/codelog/2020-10-08-intro-usls-emacs-notes/>
 ;;
 ;; `usls', aka the "Unassuming Sidenotes of Little Significance" (USLS),
 ;; is a personal system of storing notes of arbitrary length in a flat
@@ -36,8 +34,6 @@
 ;; `usls' leverages built-in Emacs functions to help streamline the
 ;; process of making and linking together plain text notes.  It does not
 ;; rely on `org-mode' or any other major library.
-;;
-;; TODO: Explain the rationale and workflow.
 ;;
 ;; The totally unintentional constraint of this library is that both its
 ;; name (`usls') and its expanded description are unwieldly.  The author
@@ -107,7 +103,7 @@
 ;;;; Categories
 
 (defvar usls-known-categories
-  '(politics philosophy economics)
+  '(economics philosophy politics)
   "List of predefined categories for `usls-new-note'.
 Also see `usls-categories' for a dynamically generated list that
 gets combined with this one in relevant prompts.")
@@ -221,9 +217,6 @@ If the region is active, append it to the newly created file."
          (completing-read "Follow link: " links nil t))
       (usls-find-file))))
 
-(defvar usls--file-history nil
-  "Used internally by `usls-find-file' to record filenames.")
-
 ;;;###autoload
 (defun usls-find-file ()
   "Visit a file in `usls-directory' using completion."
@@ -245,8 +238,10 @@ If the region is active, append it to the newly created file."
 
 ;;; User-facing setup
 
-;; TODO how to define a prefix key?
-;; Users are expected to bind this to something more useful
+;; TODO: how to define a prefix key?
+;;
+;; NOTE: Users are expected to bind this to something more useful.  Did
+;; not want to violate key binding conventions.
 (global-set-key (kbd "C-c _ d") 'usls-dired)
 (global-set-key (kbd "C-c _ f") 'usls-find-file)
 (global-set-key (kbd "C-c _ n") 'usls-new-note)
