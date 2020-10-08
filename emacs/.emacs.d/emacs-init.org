@@ -5464,13 +5464,17 @@ titles, categories, links…  Valuable knowledge!
     (when (re-search-forward regexp nil t -1)
       (match-string 1))))
 
+;; REVIEW: any character class that captures those?  It seems to work
+;; though...
 (defun usls--slug-no-punct (str)
   "Convert STR to a file name slug."
-  (replace-regexp-in-string "[[:punct:]]*" "" str))
+  (replace-regexp-in-string "[][{}!@#$%^&*()_=+'\"?,.\|;:~`]*" "" str))
 
+;; REVIEW: this looks inelegant.  We want to remove spaces or multiple
+;; hyphens, as well as a final hyphen.
 (defun usls--slug-hyphenate (str)
   "Replace spaces with hyphens in STR."
-  (replace-regexp-in-string "--+" "-" (replace-in-string " " "-" str)))
+  (replace-regexp-in-string "-$" "" (replace-regexp-in-string "--+\\|\s+" "-" str)))
 
 (defun usls-sluggify (str)
   "Make STR an appropriate file name slug."
@@ -5662,12 +5666,24 @@ If the region is active, append it to the newly created file."
   :group 'faces)
 
 (defface usls-header-data-primary
-  '((t :inherit (bold font-lock-constant-face)))
-  "Face for displaying primary header information.")
+  '((((class color) (min-colors 88) (background light))
+     :inherit bold :foreground "#093060")
+    (((class color) (min-colors 88) (background dark))
+     :inherit bold :foreground "#c6eaff")
+    (t :inherit (bold font-lock-constant-face)))
+  "Face for primary header information.")
 
 (defface usls-header-data-secondary
   '((t :inherit (bold shadow)))
-  "Face for displaying secondary header information.")
+  "Face for secondary header information.")
+
+(defface usls-section-delimiter
+  '((((class color) (min-colors 88) (background light))
+     :background "#d7d7d7" :foreground "#0a0a0a")
+    (((class color) (min-colors 88) (background dark))
+     :background "#323232" :foreground "#bfc0c4")
+    (t :inherit (bold shadow)))
+  "Face for section delimiters.")
 
 (defconst usls-font-lock-keywords
   '(("\\(\\(title\\|date\\|category\\):\\) \\(.*\\)"
@@ -5679,7 +5695,7 @@ If the region is active, append it to the newly created file."
      (2 'shadow t)
      (3 'usls-header-data-secondary t))
     ("\\(-\\{24\\}\\|[*\s]\\{5\\}\\)"
-     (1 'secondary-selection t))
+     (1 'usls-section-delimiter t))
     ("\\(\\^\\)\\([0-9_]\\{15\\}\\)"
      (1 'escape-glyph t)
      (2 'font-lock-variable-name-face t))
