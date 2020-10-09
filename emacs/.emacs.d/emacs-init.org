@@ -5214,171 +5214,23 @@ minibuffer while doing a presentation.
 :CUSTOM_ID: h:787df548-0d95-4512-a61d-27852198f561
 :END:
 
-/WORK IN PROGRESS 2020-10-07/.
-
 This is a library that I am developing to help me flesh out my
-simplistic note-taking system.  In essence, =usls= is a set of helper
-functions around standard Emacs tools, such as =find-file=, =dired=, and
-internal libraries like =thingatpt=.  It has no external dependencies
-whatsoever.  The intent is two-fold:
+note-taking system.  In essence, =usls= is a set of helper functions
+around standard Emacs tools, such as =find-file=, =dired=, and internal
+libraries like =thingatpt=.  It has no external dependencies whatsoever.
+This blog post of mine documents the principles and general ideas about
+it: [[https://protesilaos.com/codelog/2020-10-08-intro-usls-emacs-notes/][My simple note-taking system for Emacs (without Org)]] (2020-10-08).
 
-1. Streamline the note-taking process.
-2. Keep notes as close to plain text as possible.
-
-I adopt a broad conception of "plain text", to cover everything from the
-file extension, to the naming conventions of the files, as well as the
-absence of meta data or whatever database.
-
-The notes must be simple files that can be accessed on the most
-rudimentary piece of equipment, such as through a TTY while using the
-standard Unix =less= command, or some generic text editor.  This ensures
-that my records can be accessed at all times, including from people who
-do not know how to use Emacs (say I need to share a note).
-
-The naming scheme is of paramount importance, because it provides the
-elements of a filtering mechanism that starts from the visual level.
-Here is a sample list:
-
-#+begin_example
-/home/prot/Documents/notes:
-20201006_113858--politics--eu-deep-concerns-about-varosha.txt
-20201006_120634--economics--google-and-fitbit-merger-is-a-scary-prospect.txt
-20201007_124941--economics--plentiful-and-predictable-liquidity.txt
-#+end_example
-
-File names consist of three fields: (i) date+time, (ii) category, (iii)
-title's content.  By just looking at the list we can already discern
-patterns.  This is of great value when combined with Dired's ability to
-filter a listing using a regular expression.  While in a Dired buffer,
-type =% m= (=dired-mark-files-regexp=) followed by a regexp.  Then toggle
-the mark with =t= (=dired-toggle-marks=) and dismiss the irrelevant entries
-with =k= (=dired-do-kill-lines=).  Hit =g= to get back to the full list.
+Note that =usls= is not meant to replace what Org does with to-do lists,
+the agenda, etc.  This is about private records of longer form notes,
+such as commentary on a paper I read.  I still use Org to keep track of
+the minutia (and also to produce documents such as this one or the Info
+manual of my Modus themes).
 
 Because this is standard Emacs stuff, I can always benefit from the rest
 of my setup, such as to search for file contents in the current
-directory.  See [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Generic completion for projects and directory trees]].  As
-such, there is no need to ever bother with duplication of efforts.  Why
-have a usls-specific =grep= command when there is nothing special about
-its directory or its contents?  More generally, I see no longer term
-value in creating tools that lock you in to their modalities of
-interaction.
-
-As for the format of each note, I do not have any particular
-requirements here.  I already use =auto-fill-mode= to keep my paragraphs
-from overflowing beyond the desired character limit (see configurations
-for [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][Paragraphs and fill-mode]]).  Other than that, files can be structured
-in whatever way makes sense to the person who writes/reads them.
-
-That granted, =usls-new-note= does added a "standard" set of headers.
-This is a sample that gets auto-generated once you call that command,
-with =%?= showing where the point is:
-
-#+begin_example
-title: Plentiful and predictable liquidity
-date: 2020-10-07
-category: Economics
-orig_name: ~/Documents/notes/20201007_124941--economics--plentiful-and-predictable-liquidity.txt
-orig_id: 20201007_124941
-------------------------
-
-%?
-#+end_example
-
-If a region is active while calling =usls-new-note=, it will get appended
-thus:
-
-#+begin_example
-title: Plentiful and predictable liquidity
-date: 2020-10-07
-category: Economics
-orig_name: ~/Documents/notes/20201007_124941--economics--plentiful-and-predictable-liquidity.txt
-orig_id: 20201007_124941
-------------------------
-
-%?
-
-,* * *
-
-REGION GOES HERE
-#+end_example
-
-I use this feature practically every time I write a note.  It helps me
-record my thoughts about an email, website, news feed that I read (all
-inside of Emacs), while putting the original text right below.
-
-The creation of file names is done in a two-step process of minibuffer
-prompts.  First you input the title of the document, which gets stripped
-down to a standard hyphenated slug.  Then you are prompted for a
-category where you can use completion to select an item from the list.
-A new category can be always created on the spot by typing it in.
-Depending on your completion framework, you will need to "force input"
-the new category---I do that, for example, with =C-j= as can be seen in my
+directory.  See [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Generic completion for projects and directory trees]] and
 [[#h:b6b13f4f-91f5-416d-9934-b51b4d87770c][Icomplete configurations and extras]].
-
-The available categories are derived from two sources: a predetermined
-list of items and a dynamically inferred one drawn from the contents of
-the =usls-directory=.  This gives you, I feel, the best of both worlds:
-premeditated and emergent structure.
-
-For our purposes, a "category" is a single word that should capture the
-domain of the given note: general enough to encompass related topics,
-though sufficiently descriptive in its own right.  Think, for example,
-how "economics" is a good choice for topics pertaining to monetary or
-fiscal affairs.  Whereas "science" would not offer adequate specificity,
-while "fiscal", "monetary" or similar sub-categories would just cause
-disruptions and needless compartmentalisation.  Disambiguation comes
-from studying the file contents.  The operative term is "studying", for
-these are carefully written entries.
-
-I never found tagging systems to be useful at scale and never bothered
-with things like "tag cloud" widgets for my website (years ago when I
-was using Wordpress).  The reason is that you add a bunch of words that
-can only properly describe the entry /when examined together/ but are
-otherwise meaningless on their own.  Imagine if this section was a
-standalone note tagged with "library", "emacs", "code", "notes",
-"documentation".  Each of these tags does not offer much insight in
-isolation.  You need to study complex associations of words to arrive at
-some meaningful pattern.  Yes, there is value in that, especially if you
-are harvesting data on a monumental scale.  My case is none of that:
-tags are just a nuisance.
-
-With regard to the file contents, =usls= does not implement any backward
-linking feature.  Instead it offers a generic forward linking mechanism
-for citations.  While the interface and feedback loops are evolving, the
-core idea is to grab a note's unique identified, which is its timestamp,
-add it at point, and then place a relative path (plain text file name)
-to the file it signifies.  This is how it looks right now:
-
-#+begin_example
-Some text I am writing.^20201007_124941
-
-^^ 20201007_124941--economics--plentiful-and-predictable-liquidity.txt
-#+end_example
-
-A single uptick denotes the inline reference, while a double uptick and
-a space present the footnote with the proper file name.  Keeping with
-the simplicity of this tool, there is no function to produce a clickable
-link.  To visit the referenced note just leverage Emacs' standard
-=find-file=.  Type =C-x C-f= with the point over either the ID or the
-filename and follow it up with =M-n=.  You should always get a unique
-match.  This works reliably for my workflow, though I understand it may
-not be the most attractive proposition.
-
-Still, =usls-follow-link= helps speed things up a bit by compiling all
-referenced links in a single list that you can narrow down with
-completion.  Again, the exact user interface may undergo change, though
-the principle is to run =find-file= on whatever is already on offer.
-
-To identify file assosiations you rely on standard Unix tools.  Want to
-find out which files reference the current file's ID?  Just run a
-directory-wide search for it (such as with the tools I referenced
-earlier about projects and directory trees).
-
-Finally, developing this tools offers me yet another opportunity to work
-on my Emacs Lisp skills.  For example, learning how to convert a string
-into a hyphenated slug is something I never tried to accomplish before.
-Or how I implemented distinct minibuffer histories for the insertion of
-titles, categories, links…  Valuable knowledge!
 
 #+begin_src emacs-lisp :tangle lisp/usls.el
 ;;; usls.el --- Unassuming Sidenotes of Little Significance -*- lexical-binding: t -*-
