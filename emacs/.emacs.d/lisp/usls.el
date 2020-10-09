@@ -140,7 +140,8 @@ If the region is active, append it to the newly created file."
          (cathist '(usls--category-history . 0))
          (title (read-string "File title: " nil titlehist))
          (categories (usls-categories))
-         (category (completing-read "File category: " categories nil nil nil cathist))
+         (crm-separator "[, ]") ; Insert multiple categories with comma/space between them
+         (category (completing-read-multiple "File category: " categories nil nil nil cathist))
          (slug (usls-sluggify title))
          (path usls-directory)
          (id (format-time-string usls-id))
@@ -148,7 +149,7 @@ If the region is active, append it to the newly created file."
           (format "%s%s--%s--%s.txt"
                   path
                   id
-                  (downcase category)
+                  (mapconcat #'downcase category "-")
                   slug))
          (date (format-time-string "%F"))
          (region (with-current-buffer (current-buffer)
@@ -164,7 +165,7 @@ If the region is active, append it to the newly created file."
       (usls-mode 1)
       (insert (concat "title: " title "\n"
                       "date: " date "\n"
-                      "category: " (capitalize category) "\n"
+                      "category: " (mapconcat #'capitalize category ", ") "\n"
                       "orig_name: " filename "\n"
                       "orig_id: " id "\n"))
       (insert-char ?- 24 nil)
