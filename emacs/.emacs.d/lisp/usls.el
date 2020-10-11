@@ -224,7 +224,7 @@ If the region is active, append it to the newly created file."
   "Visit a file in `usls-directory' using completion."
   (interactive)
   (let* ((files (usls--directory-files))
-         (file (completing-read "Visit file: " files nil t nil usls--link-history))
+         (file (completing-read "Visit file: " files nil t nil 'usls--link-history))
          (item (concat (file-truename (concat usls-directory file)))))
     (find-file item)
     (add-to-history 'usls--link-history item)))
