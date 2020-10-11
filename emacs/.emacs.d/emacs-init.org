@@ -5417,20 +5417,39 @@ If the region is active, append it to the newly created file."
      (string= (file-name-nondirectory (buffer-file-name)) x))
    (usls--directory-files)))
 
+(defun usls--insert-file-reference (file delimiter)
+  "Insert formatted reference to FILE with DELIMITER."
+  (save-excursion
+    (goto-char (point-max))
+    (newline 1)
+    (insert
+     (format "%s %s\n" delimiter file))))
+
+(defun usls--delete-duplicate-links ()
+  "Remove duplicate references to files."
+  (delete-duplicate-lines
+   (save-excursion
+     (goto-char (point-min))
+     (search-forward-regexp "\\(@@\\|\\^\\^\\) " nil t nil))
+   (point-max)))
+
 ;;;###autoload
-(defun usls-id-insert (file)
-  "Insert at point the identity (timestamp) of FILE."
-  (interactive
-   (list (completing-read "Link to: "
-           (usls--directory-files-not-current) nil t nil usls--link-history)))
-  (let ((id (usls-extract usls-id-regexp file)))
+(defun usls-id-insert ()
+  "Insert at point the identity of a file using completion."
+  (interactive)
+  (let* ((file (completing-read "Link to: "
+                                (usls--directory-files-not-current)
+                                nil t nil 'usls--link-history))
+         (this-file (file-name-nondirectory (buffer-file-name)))
+         (id (usls-extract usls-id-regexp file)))
     (insert (concat usls-link-indicator id))
-    (save-excursion
-      (goto-char (point-max))
-      (newline 1)
-      (insert
-       (format "^^ %s\n" file)))
-    (add-to-history 'usls--link-history id)))
+    (usls--insert-file-reference (format "%s" file) "^^")
+    (with-current-buffer (find-file-noselect file)
+      (save-excursion
+        (usls--insert-file-reference this-file "@@")
+        (usls--delete-duplicate-links)))
+    (usls--delete-duplicate-links)
+    (add-to-history 'usls--link-history file)))
 
 (defvar usls--file-link-regexp "\\(^\\^\\^ \\)\\(.*\\.txt\\)"
   "Regexp for file links at the end of the buffer.")
@@ -5549,6 +5568,9 @@ If the region is active, append it to the newly created file."
      (1 'escape-glyph t)
      (2 'font-lock-variable-name-face t))
     ("\\(^\\^\\^\\) \\([0-9_]+\\{15\\}.*\\.txt\\)"
+     (1 'escape-glyph t)
+     (2 'font-lock-constant-face t))
+    ("\\(^@@\\) \\([0-9_]+\\{15\\}.*\\.txt\\)"
      (1 'escape-glyph t)
      (2 'font-lock-constant-face t)))
   "Rules to apply font-lock highlighting with `usls--fontify'.")
