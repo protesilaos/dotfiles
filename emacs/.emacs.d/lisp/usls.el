@@ -44,6 +44,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'crm)
 (require 'ffap)
 (require 'thingatpt)
 

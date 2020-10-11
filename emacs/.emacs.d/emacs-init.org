@@ -5279,6 +5279,7 @@ directory.  See [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Generic completion fo
 ;;; Code:
 
 (require 'cl-lib)
+(require 'crm)
 (require 'ffap)
 (require 'thingatpt)
 
