@@ -59,7 +59,7 @@
 (defconst usls-id-regexp "\\([0-9_]+\\{15\\}\\)"
   "Regular expression to match `usls-id'.")
 
-(defconst usls-category-regexp "--\\([[:alnum:]]*\\)--"
+(defconst usls-category-regexp "--\\([0-9A-Za-z_-]*\\)--"
   "Regular expression to match `usls-categories'.")
 
 (defconst usls-file-regexp (concat usls-id-regexp usls-category-regexp ".*.txt")
@@ -100,6 +100,10 @@
 
 ;;;; Categories
 
+;; NOTE: The implicit assumption is that a "category" is a single word.
+;; If you need it to be more than one, separate them with an underscore.
+;; Do not use a hyphen though, as it is assumed to demarcate distinct
+;; categories.  See `usls--inferred-categories'.
 (defvar usls-known-categories
   '(economics philosophy politics)
   "List of predefined categories for `usls-new-note'.
@@ -108,9 +112,12 @@ gets combined with this one in relevant prompts.")
 
 (defun usls--inferred-categories ()
   "Extract categories from `usls--directory-files'."
-  (mapcar (lambda (x)
-            (usls-extract usls-category-regexp x))
-          (usls--directory-files)))
+  (let ((sequence (mapcar (lambda (x)
+                    (usls-extract usls-category-regexp x))
+                  (usls--directory-files))))
+    (mapcan (lambda (s)
+              (split-string s "-" t))
+            sequence)))
 
 (defun usls-categories ()
   "Combine `usls--inferred-categories' with `usls-known-categories'."
