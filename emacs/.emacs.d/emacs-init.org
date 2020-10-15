@@ -6299,7 +6299,7 @@ useful when viewing a summary buffer with, say, all your sent messages.
   (setq gnus-ignored-from-addresses "Protesilaos Stavrou")
   (setq gnus-summary-to-prefix "To: ")
 
-  (setq gnus-summary-line-format "%U%R %-16,16&user-date; %4L:%-25,25f %B%s\n")
+  (setq gnus-summary-line-format "%U%R %-18,18&user-date; %4L:%-25,25f %B%s\n")
   (setq gnus-summary-mode-line-format "[%U] %p")
   (setq gnus-sum-thread-tree-false-root "")
   (setq gnus-sum-thread-tree-indent " ")
