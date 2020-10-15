@@ -4944,7 +4944,7 @@ produces dates with a fixed length."
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-show-current-time-in-grid t)
   (setq org-agenda-current-time-string
-        "-·-·-·-·-·-·-·-·-")
+        "Now -·-·-·-·-·-·-")
   (setq org-agenda-time-grid
         '((daily today require-timed)
           (0600 0700 0800 0900 1000 1100
