@@ -65,9 +65,6 @@
 (defconst usls-file-regexp (concat usls-id-regexp usls-category-regexp ".*.txt")
   "Regular expression to match file names from `usls-new-note'.")
 
-(defvar usls-link-indicator "^"
-  "Character to denote links between notes.")
-
 ;;; Basic utilities
 
 ;;;; File name helpers
@@ -207,7 +204,7 @@ If the region is active, append it to the newly created file."
                                 nil t nil 'usls--link-history))
          (this-file (file-name-nondirectory (buffer-file-name)))
          (id (usls-extract usls-id-regexp file)))
-    (insert (concat usls-link-indicator id))
+    (insert (concat "^" id))
     (usls--insert-file-reference (format "%s" file) "^^")
     (with-current-buffer (find-file-noselect file)
       (save-excursion
