@@ -819,7 +819,7 @@ Relevant blog posts of mine:
     "Hook that is called after setting fonts.
 See, for example, `prot/font-set-fonts'.")
 
-  ;; NOTE: "Hack" and "Iosevka Comfy" are my private builds of Hack and
+  ;; NOTE: "Hack" and "Iosevka Comfy" are my personal builds of Hack and
   ;; Iosevka respectively:
   ;;
   ;; 1. https://gitlab.com/protesilaos/hack-font-mod
@@ -828,6 +828,7 @@ See, for example, `prot/font-set-fonts'.")
     '(("pocket" . (105 "Hack" "DejaVu Sans"))
       ("laptop" . (110 "Hack" "Inter"))
       ("desktop" . (130 "Hack" "Inter"))
+      ("reader" . (160 "Iosevka Comfy" "Source Sans Pro"))
       ("presentation" . (190 "Iosevka Comfy" "Source Sans Pro")))
     "Alist of desired typefaces and their point sizes.
 
@@ -844,13 +845,12 @@ font is intended for the `variable-pitch' face.")
   (defun prot/font-set-fonts (&optional points font-mono font-var)
     "Set default font size using presets.
 
-POINTS is the font's point size, represented as either '10' or
-'10.5'.  FONT-MONO should be a monospaced typeface, due to the
-alignment requirements of the `fixed-pitch' face.  FONT-VAR could
-be a proportionately spaced typeface or even a monospaced one,
-since the `variable-pitch' it applies to is not supposed to be
-spacing-sensitive.  Both families must be represented as a string
-holding the family's name."
+POINTS is the font's height.  FONT-MONO should be a monospaced
+typeface, due to the alignment requirements of the `fixed-pitch'
+face.  FONT-VAR could be a proportionately spaced typeface or
+even a monospaced one, since the `variable-pitch' it applies to
+is not supposed to be spacing-sensitive.  Both families must be
+represented as a string holding the family's name."
     (interactive)
     (if window-system
         (let* ((data prot/font-sizes-families-alist)
