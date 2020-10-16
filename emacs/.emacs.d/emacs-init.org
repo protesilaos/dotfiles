@@ -5451,7 +5451,9 @@ If the region is active, append it to the newly created file."
     (with-current-buffer (find-file-noselect file)
       (save-excursion
         (usls--insert-file-reference this-file "@@")
-        (usls--delete-duplicate-links)))
+        (usls--delete-duplicate-links))
+      (save-buffer)
+      (kill-buffer))
     (usls--delete-duplicate-links)
     (add-to-history 'usls--link-history file)))
 
@@ -5528,55 +5530,127 @@ If the region is active, append it to the newly created file."
 
 (defun usls-mode-activate ()
   "Activate mode when inside `usls-directory'."
-  (when (string-match-p (expand-file-name usls-directory) default-directory)
+  (when (or (string-match-p (expand-file-name usls-directory) default-directory)
+            (string-match-p usls-directory default-directory))
     (usls-mode 1)))
 
 (add-hook 'find-file-hook #'usls-mode-activate)
+(add-hook 'dired-mode-hook #'usls-mode-activate)
 
 (defgroup usls-faces ()
   "Faces for `usls-mode'."
   :group 'faces)
 
-(defface usls-header-data-primary
-  '((((class color) (min-colors 88) (background light))
-     :inherit bold :foreground "#093060")
+(defface usls-header-data-date
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#0031a9")
     (((class color) (min-colors 88) (background dark))
-     :inherit bold :foreground "#c6eaff")
-    (t :inherit (bold font-lock-constant-face)))
-  "Face for primary header information.")
+     :foreground "#2fafff")
+    (t :foreground "blue"))
+  "Face for header date entry.")
+
+(defface usls-header-data-category
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#721045")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#feacd0")
+    (t :foreground "magenta"))
+  "Face for header category entry.")
+
+(defface usls-header-data-title
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#000000")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#ffffff")
+    (t :foreground "blue"))
+  "Face for header title entry.")
 
 (defface usls-header-data-secondary
-  '((t :inherit (bold shadow)))
+  '((((class color) (min-colors 88) (background light))
+     :foreground "#093060")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#c6eaff")
+    (t :inherit (bold shadow)))
+  "Face for secondary header information.")
+
+(defface usls-header-data-key
+  '((((class color) (min-colors 88) (background light))
+     :foreground "#505050")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#a8a8a8")
+    (t :inherit shadow))
   "Face for secondary header information.")
 
 (defface usls-section-delimiter
   '((((class color) (min-colors 88) (background light))
-     :background "#d7d7d7" :foreground "#0a0a0a")
+     :background "#d7d7d7" :foreground "#404148")
     (((class color) (min-colors 88) (background dark))
      :background "#323232" :foreground "#bfc0c4")
-    (t :inherit (bold shadow)))
+    (t :inherit shadow))
   "Face for section delimiters.")
 
+(defface usls-dired-field-date
+  '((((class color) (min-colors 88) (background light))
+     :foreground "#2544bb")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#79a8ff")
+    (t :inherit font-lock-string-face))
+  "Face for file name date in `dired-mode' buffers.")
+
+(defface usls-dired-field-delimiter
+  '((t :inherit shadow))
+  "Face for file name field delimiters in `dired-mode' buffers.")
+
+(defface usls-dired-field-category
+  '((((class color) (min-colors 88) (background light))
+     :foreground "#8f0075")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#f78fe7")
+    (t :inherit font-lock-builtin-face))
+  "Face for file name category in `dired-mode' buffers.")
+
+(defface usls-dired-field-name
+  '((((class color) (min-colors 88) (background light))
+     :foreground "#000000")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#ffffff")
+    (t :inherit default))
+  "Face for file name title in `dired-mode' buffers.")
+
 (defconst usls-font-lock-keywords
-  '(("\\(\\(title\\|date\\|category\\):\\) \\(.*\\)"
-     (1 'shadow t)
-     (2 'shadow t)
-     (3 'usls-header-data-primary t))
+  '(("\\(title:\\) \\(.*\\)"
+     (1 'usls-header-data-key)
+     (2 'usls-header-data-title))
+    ("\\(date:\\) \\(.*\\)"
+     (1 'usls-header-data-key)
+     (2 'usls-header-data-date))
+    ("\\(category:\\) \\(.*\\)"
+     (1 'usls-header-data-key)
+     (2 'usls-header-data-category))
     ("\\(orig_\\(name\\|id\\):\\) \\(.*\\)"
-     (1 'shadow t)
-     (2 'shadow t)
-     (3 'usls-header-data-secondary t))
+     (1 'usls-header-data-key)
+     (2 'usls-header-data-key)
+     (3 'usls-header-data-secondary))
     ("\\(-\\{24\\}\\|[*\s]\\{5\\}\\)"
-     (1 'usls-section-delimiter t))
+     (1 'usls-section-delimiter))
     ("\\(\\^\\)\\([0-9_]\\{15\\}\\)"
+     (1 'escape-glyph)
+     (2 'font-lock-variable-name-face))
+    ("\\(^\\(@@\\|\\^^\\)\\) \\([0-9_]+\\{15\\}.*\\.txt\\)"
      (1 'escape-glyph t)
-     (2 'font-lock-variable-name-face t))
-    ("\\(^\\^\\^\\) \\([0-9_]+\\{15\\}.*\\.txt\\)"
-     (1 'escape-glyph t)
-     (2 'font-lock-constant-face t))
-    ("\\(^@@\\) \\([0-9_]+\\{15\\}.*\\.txt\\)"
-     (1 'escape-glyph t)
-     (2 'font-lock-constant-face t)))
+     (2 'font-lock-constant-face))
+    ;; These conflict with `diredfl-mode'.  Maybe there is some way to
+    ;; avoid that?
+    ("\\([0-9_]\\{15\\}\\)\\(--\\)\\([0-9A-Za-z_-]*\\)\\(--\\)\\(.*\\)\\(\\.txt\\)"
+     (1 'usls-dired-field-date)
+     (2 'usls-dired-field-delimiter)
+     (3 'usls-dired-field-category)
+     (4 'usls-dired-field-delimiter)
+     (5 'usls-dired-field-name)
+     (6 'usls-dired-field-delimiter)))
   "Rules to apply font-lock highlighting with `usls--fontify'.")
 
 (defun usls--fontify ()
