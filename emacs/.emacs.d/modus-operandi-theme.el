@@ -273,6 +273,7 @@
 ;;     phi-search
 ;;     pkgbuild-mode
 ;;     pomidor
+;;     popup
 ;;     powerline
 ;;     powerline-evil
 ;;     proced
@@ -883,22 +884,23 @@ Nil means to use a neutral grey colour.  Options `green' and
 
 (defun modus-operandi-theme-slant ()
   "Conditional use of italics for slant attribute."
-  (when modus-operandi-theme-slanted-constructs
-    (list :slant 'italic)))
+  (if modus-operandi-theme-slanted-constructs
+      (list 'italic)
+    (list 'normal)))
 
 (defun modus-operandi-theme-variable-pitch ()
   "Conditional use of `variable-pitch' in headings."
   (when modus-operandi-theme-variable-pitch-headings
-    (list 'variable-pitch)))
+    (list :inherit 'variable-pitch)))
 
-(defun modus-operandi-theme-fringe (subtlebg intensebg)
+(defun modus-operandi-theme-fringe (mainbg subtlebg intensebg)
   "Conditional use of background colours for fringes.
-SUBTLEBG should be a subtle greyscale value.  INTENSEBG must be a
-more pronounced greyscale colour."
+MAINBG is the default.  SUBTLEBG should be a subtle greyscale
+value.  INTENSEBG must be a more pronounced greyscale colour."
   (pcase modus-operandi-theme-fringes
     ('intense (list :background intensebg))
     ('subtle (list :background subtlebg))
-    (_ (list :background nil))))
+    (_ (list :background mainbg))))
 
 (defun modus-operandi-theme-prompt (mainfg subtlebg subtlefg intensebg intensefg)
   "Conditional use of background colours for prompts.
@@ -1545,13 +1547,13 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(modus-theme-hl-line ((,class :background ,(if modus-operandi-theme-intense-hl-line
                                                    bg-hl-line-intense bg-hl-line)
                                   (and (>= emacs-major-version 27) '(:extend t)))))
-   `(modus-theme-slant ((,class :inherit (italic ,@(modus-operandi-theme-slant)))))
-   `(modus-theme-variable-pitch ((,class :inherit ,@(modus-operandi-theme-variable-pitch))))
+   `(modus-theme-slant ((,class :inherit italic :slant ,@(modus-operandi-theme-slant))))
+   `(modus-theme-variable-pitch ((,class ,@(modus-operandi-theme-variable-pitch))))
 ;;;; standard faces
 ;;;;; absolute essentials
    `(default ((,class :background ,bg-main :foreground ,fg-main)))
    `(cursor ((,class :background ,fg-main)))
-   `(fringe ((,class ,@(modus-operandi-theme-fringe bg-inactive bg-active)
+   `(fringe ((,class ,@(modus-operandi-theme-fringe bg-main bg-inactive bg-active)
                      :foreground ,fg-main)))
    `(vertical-border ((,class :foreground ,fg-window-divider-inner)))
 ;;;;; basic and/or ungrouped styles
@@ -1564,6 +1566,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    ;; (set-face-attribute 'bold nil :weight 'semibold)
    `(bold ((,class :weight bold)))
    `(bold-italic ((,class :inherit (bold italic))))
+   `(buffer-menu-buffer ((,class :inherit bold)))
    `(comint-highlight-input ((,class :inherit bold)))
    `(comint-highlight-prompt ((,class :inherit modus-theme-bold
                                       ,@(modus-operandi-theme-prompt
@@ -1700,7 +1703,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(font-latex-bold-face ((,class :inherit bold :foreground ,fg-special-calm)))
    `(font-latex-doctex-documentation-face ((,class :inherit modus-theme-slant :foreground ,fg-special-cold)))
    `(font-latex-doctex-preprocessor-face ((,class :inherit modus-theme-bold :foreground ,red-alt-other)))
-   `(font-latex-italic-face ((,class :foreground ,fg-special-calm :slant italic)))
+   `(font-latex-italic-face ((,class :inherit italic :foreground ,fg-special-calm)))
    `(font-latex-math-face ((,class :foreground ,cyan-alt-other)))
    `(font-latex-script-char-face ((,class :foreground ,cyan-alt-other)))
    `(font-latex-sectioning-0-face ((,class :inherit modus-theme-variable-pitch :foreground ,blue-nuanced)))
@@ -1828,9 +1831,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(centaur-tabs-modified-marker-unselected ((,class :inherit centaur-tabs-unselected)))
    `(centaur-tabs-default ((,class :background ,bg-main :foreground ,bg-main)))
    `(centaur-tabs-selected ((,class :inherit bold :background ,bg-tab-active :foreground ,fg-main)))
-   `(centaur-tabs-selected-modified ((,class :background ,bg-tab-active :foreground ,fg-main :slant italic)))
+   `(centaur-tabs-selected-modified ((,class :inherit italic :background ,bg-tab-active :foreground ,fg-main)))
    `(centaur-tabs-unselected ((,class :background ,bg-tab-inactive :foreground ,fg-dim)))
-   `(centaur-tabs-unselected-modified ((,class :background ,bg-tab-inactive :foreground ,fg-dim :slant italic)))
+   `(centaur-tabs-unselected-modified ((,class :inherit italic :background ,bg-tab-inactive :foreground ,fg-dim)))
 ;;;;; change-log and log-view (`vc-print-log' and `vc-print-root-log')
    `(change-log-acknowledgment ((,class :foreground ,fg-alt)))
    `(change-log-conditionals ((,class :foreground ,magenta-alt)))
@@ -1849,7 +1852,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(cider-debug-code-overlay-face ((,class :background ,bg-alt)))
    `(cider-debug-prompt-face ((,class :foreground ,magenta-alt :underline t)))
    `(cider-deprecated-face ((,class :inherit modus-theme-refine-yellow)))
-   `(cider-docview-emphasis-face ((,class :foreground ,fg-special-cold :slant italic)))
+   `(cider-docview-emphasis-face ((,class :inherit italic :foreground ,fg-special-cold)))
    `(cider-docview-literal-face ((,class :foreground ,blue-alt)))
    `(cider-docview-strong-face ((,class :inherit bold :foreground ,fg-special-cold)))
    `(cider-docview-table-border-face ((,class :foreground ,fg-alt)))
@@ -1859,19 +1862,19 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(cider-fragile-button-face ((,class :box (:line-width 3 :color ,fg-alt :style released-button) :foreground ,yellow)))
    `(cider-fringe-good-face ((,class :foreground ,green-active)))
    `(cider-instrumented-face ((,class :box (:line-width -1 :color ,red :style nil) :background ,bg-dim)))
-   `(cider-reader-conditional-face ((,class :foreground ,fg-special-warm :slant italic)))
+   `(cider-reader-conditional-face ((,class :inherit italic :foreground ,fg-special-warm)))
    `(cider-repl-input-face ((,class :inherit bold)))
    `(cider-repl-prompt-face ((,class :foreground ,cyan-alt-other)))
    `(cider-repl-stderr-face ((,class :inherit bold :foreground ,red)))
    `(cider-repl-stdout-face ((,class :foreground ,blue)))
    `(cider-result-overlay-face ((,class :box (:line-width -1 :color ,blue :style nil) :background ,bg-dim)))
    `(cider-stacktrace-error-class-face ((,class :inherit bold :foreground ,red)))
-   `(cider-stacktrace-error-message-face ((,class :foreground ,red-alt-other :slant italic)))
+   `(cider-stacktrace-error-message-face ((,class :inherit italic :foreground ,red-alt-other)))
    `(cider-stacktrace-face ((,class :foreground ,fg-main)))
    `(cider-stacktrace-filter-active-face ((,class :foreground ,cyan-alt :underline t)))
    `(cider-stacktrace-filter-inactive-face ((,class :foreground ,cyan-alt)))
    `(cider-stacktrace-fn-face ((,class :inherit bold :foreground ,fg-main)))
-   `(cider-stacktrace-ns-face ((,class :foreground ,fg-alt :slant italic)))
+   `(cider-stacktrace-ns-face ((,class :inherit italic :foreground ,fg-alt)))
    `(cider-stacktrace-promoted-button-face ((,class :box (:line-width 3 :color ,fg-alt :style released-button) :foreground ,red)))
    `(cider-stacktrace-suppressed-button-face ((,class :box (:line-width 3 :color ,fg-alt :style pressed-button)
                                                       :background ,bg-alt :foreground ,fg-alt)))
@@ -2018,7 +2021,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(dap-ui-compile-errline ((,class :inherit bold :foreground ,red-intense)))
    `(dap-ui-locals-scope-face ((,class :inherit bold :foreground ,magenta :underline t)))
    `(dap-ui-locals-variable-face ((,class :inherit bold :foreground ,cyan)))
-   `(dap-ui-locals-variable-leaf-face ((,class :foreground ,cyan-alt-other :slant italic)))
+   `(dap-ui-locals-variable-leaf-face ((,class :inherit italic :foreground ,cyan-alt-other)))
    `(dap-ui-marker-face ((,class :inherit modus-theme-subtle-blue)))
    `(dap-ui-sessions-stack-frame-face ((,class :inherit bold :foreground ,magenta-alt)))
    `(dap-ui-sessions-terminated-active-face ((,class :inherit bold :foreground ,fg-alt)))
@@ -2092,7 +2095,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(diff-refine-removed ((,class :inherit modus-theme-diff-refine-removed)))
    `(diff-removed ((,class :inherit modus-theme-diff-removed)))
 ;;;;; dim-autoload
-   `(dim-autoload-cookie-line ((,class :inherit modus-theme-slant :foreground ,fg-alt)))
+   `(dim-autoload-cookie-line ((,class :inherit font-lock-comment-face)))
 ;;;;; dir-treeview
    `(dir-treeview-archive-face ((,class :foreground ,fg-special-warm)))
    `(dir-treeview-archive-icon-face ((,class :inherit dir-treeview-default-icon-face :foreground ,yellow)))
@@ -2207,18 +2210,18 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(doom-modeline-evil-replace-state ((,class :inherit bold :foreground ,red-active)))
    `(doom-modeline-evil-visual-state ((,class :inherit bold :foreground ,cyan-active)))
    `(doom-modeline-highlight ((,class :inherit bold :foreground ,blue-active)))
-   `(doom-modeline-host ((,class :slant italic)))
+   `(doom-modeline-host ((,class :inherit italic)))
    `(doom-modeline-info ((,class :foreground ,green-active)))
    `(doom-modeline-lsp-error ((,class :inherit bold :foreground ,red-active)))
    `(doom-modeline-lsp-success ((,class :inherit bold :foreground ,green-active)))
    `(doom-modeline-lsp-warning ((,class :inherit bold :foreground ,yellow-active)))
    `(doom-modeline-panel ((,class :inherit modus-theme-active-blue)))
-   `(doom-modeline-persp-buffer-not-in-persp ((,class :foreground ,yellow-active :slant italic)))
+   `(doom-modeline-persp-buffer-not-in-persp ((,class :inherit italic :foreground ,yellow-active)))
    `(doom-modeline-persp-name ((,class :foreground ,fg-active)))
    `(doom-modeline-project-dir ((,class :inherit bold :foreground ,blue-active)))
    `(doom-modeline-project-parent-dir ((,class :foreground ,blue-active)))
    `(doom-modeline-project-root-dir ((,class :foreground ,fg-active)))
-   `(doom-modeline-unread-number ((,class :foreground ,fg-active :slant italic)))
+   `(doom-modeline-unread-number ((,class :inherit italic :foreground ,fg-active)))
    `(doom-modeline-urgent ((,class :inherit bold :foreground ,red-active)))
    `(doom-modeline-warning ((,class :inherit bold :foreground ,yellow-active)))
 ;;;;; dynamic-ruler
@@ -2524,7 +2527,7 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;;; flycheck-color-mode-line
    `(flycheck-color-mode-line-error-face ((,class :inherit flycheck-fringe-error)))
    `(flycheck-color-mode-line-info-face ((,class :inherit flycheck-fringe-info)))
-   `(flycheck-color-mode-line-running-face ((,class :foreground ,fg-inactive :slant italic)))
+   `(flycheck-color-mode-line-running-face ((,class :inherit italic :foreground ,fg-inactive)))
    `(flycheck-color-mode-line-info-face ((,class :inherit flycheck-fringe-warning)))
 ;;;;; flycheck-indicator
    `(flycheck-indicator-disabled ((,class :inherit modus-theme-slant :foreground ,fg-inactive)))
@@ -2740,7 +2743,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(gnus-cite-7 ((,class :foreground ,blue-alt-other)))
    `(gnus-cite-8 ((,class :foreground ,red-alt-other)))
    `(gnus-cite-9 ((,class :foreground ,green-alt-other)))
-   `(gnus-cite-attribution ((,class :foreground ,fg-main :slant italic)))
+   `(gnus-cite-attribution ((,class :inherit italic :foreground ,fg-main)))
    `(gnus-emphasis-bold ((,class :inherit bold)))
    `(gnus-emphasis-bold-italic ((,class :inherit bold-italic)))
    `(gnus-emphasis-highlight-words ((,class :inherit modus-theme-refine-yellow)))
@@ -2782,7 +2785,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(gnus-server-denied ((,class :inherit bold :foreground ,red)))
    `(gnus-server-offline ((,class :inherit bold :foreground ,yellow)))
    `(gnus-server-opened ((,class :inherit bold :foreground ,green)))
-   `(gnus-signature ((,class :foreground ,fg-special-cold :slant italic)))
+   `(gnus-signature ((,class :inherit italic :foreground ,fg-special-cold)))
    `(gnus-splash ((,class :foreground ,fg-alt)))
    `(gnus-summary-cancelled ((,class :inherit modus-theme-mark-alt)))
    `(gnus-summary-high-ancient ((,class :inherit bold :foreground ,fg-alt)))
@@ -2790,10 +2793,10 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(gnus-summary-high-ticked ((,class :inherit bold :foreground ,red-alt-other)))
    `(gnus-summary-high-undownloaded ((,class :inherit bold :foreground ,yellow)))
    `(gnus-summary-high-unread ((,class :inherit bold :foreground ,fg-main)))
-   `(gnus-summary-low-ancient ((,class :foreground ,fg-alt :slant italic)))
-   `(gnus-summary-low-read ((,class :foreground ,fg-alt :slant italic)))
-   `(gnus-summary-low-ticked ((,class :foreground ,red-refine-fg :slant italic)))
-   `(gnus-summary-low-undownloaded ((,class :foreground ,yellow-refine-fg :slant italic)))
+   `(gnus-summary-low-ancient ((,class :inherit italic :foreground ,fg-alt)))
+   `(gnus-summary-low-read ((,class :inherit italic :foreground ,fg-alt)))
+   `(gnus-summary-low-ticked ((,class :inherit italic :foreground ,red-refine-fg)))
+   `(gnus-summary-low-undownloaded ((,class :inherit italic :foreground ,yellow-refine-fg)))
    `(gnus-summary-low-unread ((,class :inherit bold :foreground ,fg-special-cold)))
    `(gnus-summary-normal-ancient ((,class :foreground ,fg-special-calm)))
    `(gnus-summary-normal-read ((,class :foreground ,fg-alt)))
@@ -3270,7 +3273,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(lsp-ui-sideline-code-action ((,class :foreground ,yellow)))
    `(lsp-ui-sideline-current-symbol ((,class :inherit bold :height 0.99 :box (:line-width -1 :style nil) :foreground ,fg-main)))
    `(lsp-ui-sideline-symbol ((,class :inherit bold :height 0.99 :box (:line-width -1 :style nil) :foreground ,fg-alt)))
-   `(lsp-ui-sideline-symbol-info ((,class :height 0.99 :slant italic)))
+   `(lsp-ui-sideline-symbol-info ((,class :inherit italic :height 0.99)))
 ;;;;; magit
    `(magit-bisect-bad ((,class :foreground ,red-alt-other)))
    `(magit-bisect-good ((,class :foreground ,green-alt-other)))
@@ -3287,7 +3290,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(magit-branch-local ((,class :foreground ,blue-alt)))
    `(magit-branch-remote ((,class :foreground ,magenta-alt)))
    `(magit-branch-remote-head ((,class :foreground ,magenta-alt-other :box t)))
-   `(magit-branch-upstream ((,class :slant italic)))
+   `(magit-branch-upstream ((,class :inherit italic)))
    `(magit-cherry-equivalent ((,class :background ,bg-main :foreground ,magenta-intense)))
    `(magit-cherry-unmatched ((,class :background ,bg-main :foreground ,cyan-intense)))
    ;; NOTE: here we break from the pattern of inheriting from the
@@ -3414,7 +3417,7 @@ Also bind `class' to ((class color) (min-colors 89))."
                                           :foreground ,magenta-alt)))
    `(markdown-inline-code-face ((,class ,@(modus-operandi-theme-mixed-fonts)
                                         :foreground ,magenta)))
-   `(markdown-italic-face ((,class :foreground ,fg-special-cold :slant italic)))
+   `(markdown-italic-face ((,class :inherit italic :foreground ,fg-special-cold)))
    `(markdown-language-info-face ((,class ,@(modus-operandi-theme-mixed-fonts)
                                           :foreground ,fg-special-cold)))
    `(markdown-language-keyword-face ((,class ,@(modus-operandi-theme-mixed-fonts)
@@ -3440,7 +3443,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(markdown-url-face ((,class :foreground ,blue-alt)))
 ;;;;; markup-faces (`adoc-mode')
    `(markup-anchor-face ((,class :foreground ,fg-inactive)))
-   `(markup-attribute-face ((,class :foreground ,fg-inactive :slant italic)))
+   `(markup-attribute-face ((,class :inherit italic :foreground ,fg-inactive)))
    `(markup-big-face ((,class :height 1.3 :foreground ,blue-nuanced)))
    `(markup-bold-face ((,class :inherit bold :foreground ,red-nuanced)))
    `(markup-code-face ((,class :inherit fixed-pitch :foreground ,magenta)))
@@ -3448,11 +3451,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(markup-comment-face ((,class :inherit font-lock-comment-face)))
    `(markup-complex-replacement-face ((,class :box (:line-width 2 :color nil :style released-button)
                                               :inherit modus-theme-refine-magenta)))
-   `(markup-emphasis-face ((,class :foreground ,fg-special-cold :slant italic)))
+   `(markup-emphasis-face ((,class :inherit italic :foreground ,fg-special-cold)))
    `(markup-error-face ((,class :inherit bold :foreground ,red)))
    `(markup-gen-face ((,class :foreground ,magenta-alt)))
    `(markup-internal-reference-face ((,class :inherit button :foreground ,fg-alt)))
-   `(markup-italic-face ((,class :foreground ,fg-special-cold :slant italic)))
+   `(markup-italic-face ((,class :inherit italic :foreground ,fg-special-cold)))
    `(markup-list-face ((,class :inherit modus-theme-special-calm)))
    `(markup-meta-face ((,class :foreground ,fg-inactive)))
    `(markup-meta-hide-face ((,class :foreground ,fg-alt)))
@@ -3790,7 +3793,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-mode-line-clock-overrun ((,class :inherit modus-theme-active-red)))
    `(org-priority ((,class :foreground ,magenta)))
    `(org-property-value ((,class ,@(modus-operandi-theme-mixed-fonts)
-                                 :foreground ,blue-nuanced)))
+                                 :foreground ,fg-special-cold)))
    `(org-quote ((,class :inherit modus-theme-slant
                         ,@(modus-operandi-theme-org-block bg-dim)
                         :foreground ,fg-special-cold)))
@@ -3840,7 +3843,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(org-roam-link-shielded ((,class :inherit button
                                      ,@(modus-operandi-theme-link-colour
                                         yellow yellow-faint))))
-   `(org-roam-tag ((,class :foreground ,fg-alt :slant italic)))
+   `(org-roam-tag ((,class :inherit italic :foreground ,fg-alt)))
 ;;;;; org-superstar
    `(org-superstar-item ((,class :foreground ,fg-main)))
    `(org-superstar-leading ((,class :foreground ,fg-whitespace)))
@@ -3926,6 +3929,15 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(pomidor-overwork-face ((,class :foreground ,red-alt-other)))
    `(pomidor-skip-face ((,class :inherit modus-theme-slant :foreground ,fg-alt)))
    `(pomidor-work-face ((,class :foreground ,green-alt-other)))
+;;;;; popup
+   `(popup-face ((,class :background ,bg-alt :foreground ,fg-main)))
+   `(popup-isearch-match ((,class :inherit (modus-theme-refine-cyan bold))))
+   `(popup-menu-mouse-face ((,class :inherit modus-theme-intense-blue)))
+   `(popup-menu-selection-face ((,class :inherit (modus-theme-subtle-cyan bold))))
+   `(popup-scroll-bar-background-face ((,class :background ,bg-active)))
+   `(popup-scroll-bar-foreground-face ((,class :foreground ,fg-active)))
+   `(popup-summary-face ((,class :background ,bg-active :foreground ,fg-inactive)))
+   `(popup-tip-face ((,class :inherit modus-theme-refine-yellow)))
 ;;;;; powerline
    `(powerline-active0 ((,class :background ,bg-main :foreground ,blue-faint :inverse-video t)))
    `(powerline-active1 ((,class :background ,blue-nuanced-bg :foreground ,blue-nuanced)))
@@ -4059,11 +4071,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(ruler-mode-pad ((,class :background ,bg-active :foreground ,fg-inactive)))
    `(ruler-mode-tab-stop ((,class :inherit ruler-mode-default :foreground ,yellow-active)))
 ;;;;; sallet
-   `(sallet-buffer-compressed ((,class :foreground ,yellow-nuanced :slant italic)))
+   `(sallet-buffer-compressed ((,class :inherit italic :foreground ,yellow-nuanced)))
    `(sallet-buffer-default-directory ((,class :foreground ,cyan-nuanced)))
    `(sallet-buffer-directory ((,class :foreground ,blue-nuanced)))
    `(sallet-buffer-help ((,class :foreground ,fg-special-cold)))
-   `(sallet-buffer-modified ((,class :foreground ,yellow-alt-other :slant italic)))
+   `(sallet-buffer-modified ((,class :inherit italic :foreground ,yellow-alt-other)))
    `(sallet-buffer-ordinary ((,class :foreground ,fg-main)))
    `(sallet-buffer-read-only ((,class :foreground ,yellow-alt)))
    `(sallet-buffer-size ((,class :foreground ,fg-special-calm)))
@@ -4543,7 +4555,7 @@ Also bind `class' to ((class color) (min-colors 89))."
                                                  red red-faint)
                                               :underline t)))
    `(web-mode-inlay-face ((,class :background ,bg-alt)))
-   `(web-mode-italic-face ((,class :slant italic)))
+   `(web-mode-italic-face ((,class :inherit italic)))
    `(web-mode-javascript-comment-face ((,class :inherit web-mode-comment-face)))
    `(web-mode-javascript-string-face ((,class :inherit web-mode-string-face)))
    `(web-mode-json-comment-face ((,class :inherit web-mode-comment-face)))
@@ -4626,8 +4638,8 @@ Also bind `class' to ((class color) (min-colors 89))."
 ;;;;; woman
    `(woman-addition ((,class :foreground ,magenta-alt-other)))
    `(woman-bold ((,class :inherit bold :foreground ,magenta)))
-   `(woman-italic ((,class :foreground ,cyan :slant italic)))
-   `(woman-unknown ((,class :foreground ,yellow :slant italic)))
+   `(woman-italic ((,class :inherit italic :foreground ,cyan)))
+   `(woman-unknown ((,class :inherit italic :foreground ,yellow)))
 ;;;;; xah-elisp-mode
    `(xah-elisp-at-symbol ((,class :inherit bold
                                   ,@(modus-operandi-theme-syntax-foreground
