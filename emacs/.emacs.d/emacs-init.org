@@ -830,8 +830,8 @@ See, for example, `prot/font-set-fonts'.")
     '(("pocket" . (105 "Hack" "DejaVu Sans"))
       ("laptop" . (110 "Hack" "Inter"))
       ("desktop" . (130 "Hack" "Inter"))
-      ("reader" . (160 "Iosevka Comfy" "Source Sans Pro"))
-      ("presentation" . (190 "Iosevka Comfy" "Source Sans Pro")))
+      ("reader" . (160 "Iosevka Comfy" "FiraGO"))
+      ("presentation" . (190 "Iosevka Comfy" "FiraGO")))
     "Alist of desired typefaces and their point sizes.
 
 Each association consists of a display type mapped to a point
