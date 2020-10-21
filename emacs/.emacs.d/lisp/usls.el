@@ -406,7 +406,8 @@ If the region is active, append it to the newly created file."
      (2 'font-lock-variable-name-face))
     ("\\(^\\(@@\\|\\^^\\)\\) \\([0-9_]+\\{15\\}.*\\.txt\\)"
      (1 'escape-glyph t)
-     (2 'font-lock-constant-face))
+     (2 'escape-glyph t)
+     (3 'font-lock-constant-face t))
     ;; These conflict with `diredfl-mode'.  Maybe there is some way to
     ;; avoid that?
     ("\\([0-9_]\\{15\\}\\)\\(--\\)\\([0-9A-Za-z_-]*\\)\\(--\\)\\(.*\\)\\(\\.txt\\)"
