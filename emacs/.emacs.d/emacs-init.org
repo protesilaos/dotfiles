@@ -3564,23 +3564,6 @@ in the [[#h:751a310d-c63e-461c-a6e1-dfdfdb01cb92][section about the basic Dired 
          ("I" . dired-info)))
 #+end_src
 
-*** diredfl (more dired colours)
-:PROPERTIES:
-:CUSTOM_ID: h:26ddf3cb-60f0-4e06-8c03-523fc092b8e8
-:END:
-
-This package defines a few more colours for Dired, especially while in
-the detailed view.  My themes support it, as well as a ton of other
-packages (see the [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][section on my Modus themes]]).
-
-#+begin_src emacs-lisp
-(use-package diredfl
-  :ensure
-  :config
-  (setq diredfl-ignore-compressed-flag nil)
-  :hook (dired-mode-hook . diredfl-mode))
-#+end_src
-
 *** dired-like view for the trash directory
 :PROPERTIES:
 :CUSTOM_ID: h:954adfb4-8f2c-4665-bb5b-e098926341b0
@@ -5152,18 +5135,6 @@ interfaces to adapt to the new size so that I can, for example, show the
 minibuffer while doing a presentation.
 
 #+begin_src emacs-lisp
-(use-package org-superstar              ; supersedes `org-bullets'
-  :ensure
-  :after org
-  :config
-  (setq org-superstar-remove-leading-stars t)
-  (setq org-superstar-headline-bullets-list
-        '("🞛" "◉" "○" "▷"))
-  (setq org-superstar-item-bullet-alist
-        '((?+ . ?•)
-          (?* . ?➤)
-          (?- . ?–))))
-
 (use-package org-tree-slide
   :ensure
   :after org
@@ -5195,11 +5166,9 @@ minibuffer while doing a presentation.
             (user-error "Not in an Org buffer"))
           (org-tree-slide-mode 1)
           (prot/olivetti-mode 1)
-          (org-superstar-mode 1)
           (org-indent-mode 1))
       (org-tree-slide-mode -1)
       (prot/olivetti-mode -1)
-      (org-superstar-mode -1)
       (org-indent-mode -1)))
 
   :bind (("C-c P" . prot/org-presentation-mode)
