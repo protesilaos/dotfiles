@@ -5158,6 +5158,7 @@ minibuffer while doing a presentation.
   (setq org-tree-slide-deactivate-message
         (propertize "Presentation mode OFF" 'face 'error))
 
+  ;; TODO: these should be handled with hooks.
   (define-minor-mode prot/org-presentation-mode
     "Parameters for plain text presentations with `org-mode'."
     :init-value nil
