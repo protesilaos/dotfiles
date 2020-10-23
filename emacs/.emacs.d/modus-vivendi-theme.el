@@ -50,11 +50,10 @@
 ;;     modus-vivendi-theme-prompts                        (choice)
 ;;     modus-vivendi-theme-mode-line                      (choice)
 ;;     modus-vivendi-theme-diffs                          (choice)
-;;     modus-vivendi-theme-faint-syntax                   (boolean)
+;;     modus-vivendi-theme-syntax                         (choice)
 ;;     modus-vivendi-theme-intense-hl-line                (boolean)
 ;;     modus-vivendi-theme-intense-paren-match            (boolean)
 ;;     modus-vivendi-theme-links                          (choice)
-;;     modus-vivendi-theme-comments                       (choice)
 ;;     modus-vivendi-theme-completions                    (choice)
 ;;     modus-vivendi-theme-override-colors-alist          (alist)
 ;;
@@ -294,6 +293,7 @@
 ;;     sesman
 ;;     shell-script-mode
 ;;     show-paren-mode
+;;     shr
 ;;     side-notes
 ;;     skewer-mode
 ;;     smart-mode-line
@@ -822,9 +822,63 @@ effect than the former."
   "Use a more prominent color for parenthesis matching."
   :type 'boolean)
 
+(make-obsolete 'modus-vivendi-theme-faint-syntax
+               'modus-vivendi-theme-syntax
+               "`modus-vivendi-theme' 0.14.0")
+
 (defcustom modus-vivendi-theme-faint-syntax nil
   "Use less saturated colors for code syntax highlighting."
   :type 'boolean)
+
+(make-obsolete 'modus-vivendi-theme-comments
+               'modus-vivendi-theme-syntax
+               "`modus-vivendi-theme' 0.14.0")
+
+(defcustom modus-vivendi-theme-comments nil
+  "Set the style of comments.
+
+Nil means to use a neutral grey color.  Options `green' and
+`yellow' apply a variant of the color they name."
+  :type '(choice
+          (const :tag "Use a subtle grey foreground for comments (default)" nil)
+          (const :tag "Use a green foreground for comments" green)
+          (const :tag "Use a yellow foreground for comments" yellow)))
+
+(defcustom modus-vivendi-theme-syntax nil
+  "Control the overall style of code syntax highlighting.
+
+Nil (the default) means to use colors on the cyan-blue-magenta
+side of the spectrum.  There is little to no use of greens,
+yellows, and reds.
+
+Option `faint' is like the default in terms of the choice of
+palette but applies desaturated color values.
+
+Option `yellow-comments' applies a yellow tint to comments.  The
+rest of the syntax is the same as the default.
+
+Option `green-strings' replaces the blue/cyan/cold color variants
+in strings with greener alternatives.  The rest of the syntax
+remains the same.
+
+Option `yellow-comments-green-strings' combines yellow comments
+with green strings and the rest of the default syntax
+highlighting style.
+
+Option `alt-syntax' expands the color palette and applies new
+color combinations.  Strings are green.  Doc strings are magenta
+tinted.  Comments are gray.
+
+Option `alt-syntax-yellow-comments' combines `alt-syntax' with
+`yellow-comments'."
+  :type '(choice
+          (const :tag "Balanced use of blue, cyan, magenta, purple variants (default)" nil)
+          (const :tag "Like the default, but with desaturated color values" faint)
+          (const :tag "Apply yellow tint to comments, keep the default style for the rest" yellow-comments)
+          (const :tag "Use green for strings, keep the default style for the rest" green-strings)
+          (const :tag "Use green for strings, yellow for comments, keep the default style for the rest" yellow-comments-green-strings)
+          (const :tag "Refashion syntax highlighting with more colors, gray comments" alt-syntax)
+          (const :tag "Like `alt-syntax' but with yellow comments" alt-syntax-yellow-comments)))
 
 (make-obsolete 'modus-vivendi-theme-no-link-underline
                'modus-vivendi-theme-links
@@ -856,16 +910,6 @@ Option `no-underline' removes link underlines altogether."
           (const :tag "Change the color of link underlines to a neutral grey" neutral-underline)
           (const :tag "Desaturated foreground with neutral grey underline" faint-neutral-underline)
           (const :tag "Remove underline property from links, keeping their foreground as-is" no-underline)))
-
-(defcustom modus-vivendi-theme-comments nil
-  "Set the style of comments.
-
-Nil means to use a neutral grey color.  Options `green' and
-`yellow' apply a variant of the color they name."
-  :type '(choice
-          (const :tag "Use a subtle grey foreground for comments (default)" nil)
-          (const :tag "Use a green foreground for comments" green)
-          (const :tag "Use a yellow foreground for comments" yellow)))
 
 
 
@@ -924,13 +968,58 @@ other backgrounds, such as the special palette color
       (list :background intensebg)
     (list :background normalbg)))
 
-(defun modus-vivendi-theme-syntax-foreground (normal faint)
+(defun modus-vivendi-theme-syntax-foreground (fg faint)
   "Apply foreground value to code syntax.
-NORMAL is the more saturated color, which should be the default.
-FAINT is the less saturated color."
-  (if modus-vivendi-theme-faint-syntax
-      (list :foreground faint)
-    (list :foreground normal)))
+FG is the default.  FAINT is typically the same color in its
+desaturated version."
+  (pcase modus-vivendi-theme-syntax
+    ('faint (list :foreground faint))
+    (_ (list :foreground fg))))
+
+(defun modus-vivendi-theme-syntax-extra (fg faint alt)
+  "Apply foreground value to code syntax.
+FG is the default.  FAINT is typically the same color in its
+desaturated version.  ALT is another hue."
+  (pcase modus-vivendi-theme-syntax
+    ('faint (list :foreground faint))
+    ('alt-syntax (list :foreground alt))
+    ('alt-syntax-yellow-comments (list :foreground alt))
+    (_ (list :foreground fg))))
+
+(defun modus-vivendi-theme-syntax-string (fg faint green alt)
+  "Apply foreground value to strings in code syntax.
+FG is the default.  FAINT is typically the same color in its
+desaturated version.  GREEN is a color variant in that side of
+the spectrum.  ALT is another hue."
+  (pcase modus-vivendi-theme-syntax
+    ('faint (list :foreground faint))
+    ('green-strings (list :foreground green))
+    ('yellow-comments-green-strings (list :foreground alt))
+    ('alt-syntax (list :foreground alt))
+    ('alt-syntax-yellow-comments (list :foreground alt))
+    (_ (list :foreground fg))))
+
+(defun modus-vivendi-theme-syntax-docstring (fg faint green alt)
+  "Apply foreground value to strings in code syntax.
+FG is the default.  FAINT is typically the same color in its
+desaturated version.  GREEN is a color variant in that side of
+the spectrum.  ALT is another hue."
+  (pcase modus-vivendi-theme-syntax
+    ('faint (list :foreground faint))
+    ('green-strings (list :foreground green))
+    ('yellow-comments-green-strings (list :foreground green))
+    ('alt-syntax (list :foreground alt))
+    ('alt-syntax-yellow-comments (list :foreground alt))
+    (_ (list :foreground fg))))
+
+(defun modus-vivendi-theme-syntax-comment (fg yellow)
+  "Apply foreground value to strings in code syntax.
+FG is the default.  YELLOW is a color variant of that name."
+  (pcase modus-vivendi-theme-syntax
+    ('yellow-comments (list :foreground yellow))
+    ('yellow-comments-green-strings (list :foreground yellow))
+    ('alt-syntax-yellow-comments (list :foreground yellow))
+    (_ (list :foreground fg))))
 
 (defun modus-vivendi-theme-heading-p (key)
   "Query style of KEY in `modus-vivendi-theme-headings'."
@@ -1131,16 +1220,6 @@ FG is the main foreground.  FGFAINT is the desaturated one."
     ('faint-neutral-underline (list :foreground fgfaint))
     (_ (list :foreground fg))))
 
-(defun modus-vivendi-theme-comment (green yellow neutral)
-  "Apply `modus-vivendi-theme-comments'.
-GREEN, YELLOW are accented values that correspond to the named
-color.  NEUTRAL is the default text color for comments and should
-be a shade of grey."
-  (pcase modus-vivendi-theme-comments
-    ('green (list :foreground green))
-    ('yellow (list :foreground yellow))
-    (_ (list :foreground neutral))))
-
 (defun modus-vivendi-theme-scale (amount)
   "Scale heading by AMOUNT.
 AMOUNT is a customization option."
@@ -1193,8 +1272,7 @@ AMOUNT is a customization option."
       ("red-alt-other" . "#ff9977") ("green-alt-other" . "#00cd68")
       ("yellow-alt-other" . "#f0ce43") ("blue-alt-other" . "#00bcff")
       ("magenta-alt-other" . "#b6a0ff") ("cyan-alt-other" . "#6ae4b9")
-      ;; styles for desaturated foreground text, intended for use with
-      ;; the `modus-vivendi-theme-faint-syntax' option
+      ;; styles for desaturated foreground text
       ;;
       ;; must be combined with: `bg-main', `bg-alt', `bg-dim'
       ("red-faint" . "#ffa0a0") ("green-faint" . "#88cf88")
@@ -1299,8 +1377,8 @@ AMOUNT is a customization option."
       ;;
       ;; `fg-unfocused' must be combined with `fg-main'
       ;;
-      ;; `fg-comment-green', `fg-comment-yellow', and their "doc"
-      ;; counterparts can be combined with `bg-main', `bg-dim', `bg-alt'
+      ;; `fg-docstring', `fg-comment-yellow' can be `bg-main', `bg-dim',
+      ;; `bg-alt'
       ;;
       ;; the window divider colors apply to faces with just an fg value
       ;;
@@ -1330,8 +1408,8 @@ AMOUNT is a customization option."
 
       ("fg-unfocused" . "#93959b")
 
-      ("fg-comment-green" . "#66b766") ("fg-comment-green-doc" . "#8ff0cf")
-      ("fg-comment-yellow" . "#cab98f") ("fg-comment-yellow-doc" . "#d0f0ba")
+      ("fg-docstring" . "#b0d6f5")
+      ("fg-comment-yellow" . "#cab98f")
 
       ("bg-header" . "#212121") ("fg-header" . "#dddddd")
 
@@ -2590,24 +2668,22 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(fold-this-overlay ((,class :inherit modus-theme-special-mild)))
 ;;;;; font-lock
    `(font-lock-builtin-face ((,class :inherit modus-theme-bold
-                                     ,@(modus-vivendi-theme-syntax-foreground
-                                        magenta-alt magenta-alt-faint))))
+                                     ,@(modus-vivendi-theme-syntax-extra
+                                        magenta-alt magenta-alt-faint magenta-alt-other))))
    `(font-lock-comment-delimiter-face ((,class :inherit font-lock-comment-face)))
    `(font-lock-comment-face ((,class :inherit modus-theme-slant
-                                     ,@(modus-vivendi-theme-comment
-                                        fg-comment-green fg-comment-yellow fg-alt))))
-   `(font-lock-constant-face ((,class ,@(modus-vivendi-theme-syntax-foreground
-                                         blue-alt-other blue-alt-other-faint))))
+                                     ,@(modus-vivendi-theme-syntax-comment
+                                        fg-alt fg-comment-yellow))))
+   `(font-lock-constant-face ((,class ,@(modus-vivendi-theme-syntax-extra
+                                         blue-alt-other blue-alt-other-faint magenta-alt))))
    `(font-lock-doc-face ((,class :inherit modus-theme-slant
-                                 ,@(modus-vivendi-theme-comment
-                                    fg-comment-green-doc fg-comment-yellow-doc
-                                    `,@(if modus-vivendi-theme-faint-syntax
-                                        cyan-alt-other-faint fg-special-cold)))))
-   `(font-lock-function-name-face ((,class ,@(modus-vivendi-theme-syntax-foreground
-                                              magenta magenta-faint))))
+                                 ,@(modus-vivendi-theme-syntax-docstring
+                                    fg-docstring cyan-alt-other-faint green-alt-faint fg-special-calm))))
+   `(font-lock-function-name-face ((,class ,@(modus-vivendi-theme-syntax-extra
+                                              magenta magenta-faint red-alt-other))))
    `(font-lock-keyword-face ((,class :inherit modus-theme-bold
-                                     ,@(modus-vivendi-theme-syntax-foreground
-                                        magenta-alt-other magenta-alt-other-faint))))
+                                     ,@(modus-vivendi-theme-syntax-extra
+                                        magenta-alt-other magenta-alt-other-faint cyan-alt-other))))
    `(font-lock-negation-char-face ((,class :inherit modus-theme-bold
                                            ,@(modus-vivendi-theme-syntax-foreground
                                               yellow yellow-faint))))
@@ -2615,12 +2691,12 @@ Also bind `class' to ((class color) (min-colors 89))."
                                              red-alt-other red-alt-other-faint))))
    `(font-lock-regexp-grouping-backslash ((,class :inherit bold :foreground ,fg-escape-char-backslash)))
    `(font-lock-regexp-grouping-construct ((,class :inherit bold :foreground ,fg-escape-char-construct)))
-   `(font-lock-string-face ((,class ,@(modus-vivendi-theme-syntax-foreground
-                                       blue-alt blue-alt-faint))))
-   `(font-lock-type-face ((,class ,@(modus-vivendi-theme-syntax-foreground
-                                     magenta-alt magenta-alt-faint))))
-   `(font-lock-variable-name-face ((,class ,@(modus-vivendi-theme-syntax-foreground
-                                              cyan cyan-faint))))
+   `(font-lock-string-face ((,class ,@(modus-vivendi-theme-syntax-string
+                                       blue-alt blue-alt-faint green green))))
+   `(font-lock-type-face ((,class ,@(modus-vivendi-theme-syntax-extra
+                                     magenta-alt magenta-alt-faint magenta-active))))
+   `(font-lock-variable-name-face ((,class ,@(modus-vivendi-theme-syntax-extra
+                                              cyan cyan-faint blue))))
    `(font-lock-warning-face ((,class :inherit modus-theme-bold
                                      ,@(modus-vivendi-theme-syntax-foreground
                                         yellow-active yellow-alt-faint))))
@@ -2680,11 +2756,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(git-commit-comment-branch-remote ((,class :inherit modus-theme-slant :foreground ,magenta-alt)))
    `(git-commit-comment-detached ((,class :inherit modus-theme-slant :foreground ,cyan-alt)))
    `(git-commit-comment-file ((,class :inherit modus-theme-slant
-                                      ,@(modus-vivendi-theme-comment
-                                         cyan-nuanced red-nuanced fg-special-cold))))
+                                      ,@(modus-vivendi-theme-syntax-comment
+                                         fg-special-cold red-nuanced))))
    `(git-commit-comment-heading ((,class :inherit (bold modus-theme-slant)
-                                         ,@(modus-vivendi-theme-comment
-                                            fg-special-mild fg-special-warm fg-dim))))
+                                         ,@(modus-vivendi-theme-syntax-comment
+                                            fg-dim fg-special-warm))))
    `(git-commit-keyword ((,class :foreground ,magenta)))
    `(git-commit-known-pseudo-header ((,class :foreground ,cyan-alt-other)))
    `(git-commit-nonempty-second-line ((,class :inherit modus-theme-refine-yellow)))
@@ -2718,11 +2794,11 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(git-lens-renamed ((,class :inherit bold :foreground ,magenta)))
 ;;;;; git-rebase
    `(git-rebase-comment-hash ((,class :inherit modus-theme-slant
-                                      ,@(modus-vivendi-theme-comment
-                                         cyan-nuanced red-nuanced fg-special-cold))))
+                                      ,@(modus-vivendi-theme-syntax-comment
+                                         fg-special-cold red-nuanced))))
    `(git-rebase-comment-heading  ((,class :inherit (bold modus-theme-slant)
-                                          ,@(modus-vivendi-theme-comment
-                                             fg-special-mild fg-special-warm fg-dim))))
+                                          ,@(modus-vivendi-theme-syntax-comment
+                                             fg-dim fg-special-warm))))
    `(git-rebase-description ((,class :foreground ,fg-main)))
    `(git-rebase-hash ((,class :foreground ,cyan-alt-other)))
 ;;;;; git-timemachine
@@ -3340,7 +3416,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(magit-hash ((,class :foreground ,fg-alt)))
    `(magit-head ((,class :inherit magit-branch-local)))
    `(magit-header-line ((,class :inherit bold :foreground ,magenta-active)))
-   `(magit-header-line-key ((,class :inherit bold :foreground ,red-active)))
+   `(magit-header-line-key ((,class :inherit bold :foreground ,blue-active)))
    `(magit-header-line-log-select ((,class :inherit bold :foreground ,fg-main)))
    `(magit-keyword ((,class :foreground ,magenta)))
    `(magit-keyword-squash ((,class :inherit bold :foreground ,yellow-alt-other)))
@@ -3753,6 +3829,7 @@ Also bind `class' to ((class color) (min-colors 89))."
                        ,@(modus-vivendi-theme-link-color
                           cyan cyan-faint))))
    `(org-date-selected ((,class :inherit bold :foreground ,blue-alt :inverse-video t)))
+   `(org-dispatcher-highlight ((,class :inherit bold :background ,yellow-nuanced-bg :foreground ,red-alt)))
    `(org-document-info ((,class :foreground ,fg-special-cold)))
    `(org-document-info-keyword ((,class ,@(modus-vivendi-theme-mixed-fonts)
                                         :foreground ,fg-alt)))
@@ -3888,7 +3965,7 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(page-break-lines ((,class :inherit default :foreground ,fg-window-divider-outer)))
 ;;;;; paradox
    `(paradox-archive-face ((,class :foreground ,fg-special-mild)))
-   `(paradox-comment-face ((,class :inherit modus-theme-slant :foreground ,fg-alt)))
+   `(paradox-comment-face ((,class :inherit font-lock-comment-face)))
    `(paradox-commit-tag-face ((,class :inherit modus-theme-refine-magenta :box t)))
    `(paradox-description-face ((,class :foreground ,fg-special-cold)))
    `(paradox-description-face-multiline ((,class :foreground ,fg-special-cold)))
@@ -4688,6 +4765,12 @@ Also bind `class' to ((class color) (min-colors 89))."
      `(line-number-minor-tick ((,class :inherit (bold default)
                                        :background ,bg-inactive
                                        :foreground ,fg-inactive)))
+;;;;; shr
+     `(shr-abbreviation
+       ((,(append '((supports :underline (:style wave))) class)
+         :foreground ,fg-docstring :underline (:color ,fg-alt :style wave))
+        (,class :foreground ,fg-docstring :underline t)))
+     `(shr-selected-link ((,class :inherit modus-theme-subtle-cyan)))
 ;;;;; tab-bar-mode
      `(tab-bar ((,class :background ,bg-tab-bar :foreground ,fg-main)))
      `(tab-bar-tab ((,class :inherit bold :box (:line-width 2 :color ,bg-tab-active)
