@@ -8684,7 +8684,7 @@ Watch: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Manage 
   (setq bongo-display-track-lengths nil)
   (setq bongo-display-header-icons nil)
   (setq bongo-display-playback-mode-indicator t)
-  (setq bongo-display-inline-playback-progress t)
+  (setq bongo-display-inline-playback-progress nil) ; t slows down the playlist buffer
   (setq bongo-join-inserted-tracks nil)
   (setq bongo-field-separator (propertize " · " 'face 'shadow))
   (setq bongo-mark-played-tracks t)
