@@ -11903,19 +11903,25 @@ help commands:
   does something different in Org and Eshell buffers.  Try =C-h k C-c C-c=
   to find about the different functions these will invoke in their
   respective major mode.
++ =C-h l= produces a log with your most recent key presses and the
+  commands they call.  Emacs calls this the "lossage".  Ever mistyped
+  something and got to the wrong place?  Use this as an opportunity to
+  learn and, perhaps, a way to identify key sequences you would like to
+  modify.  (*pro tip*: you can edit/convert your lossage into a keyboard
+  macro with =C-x C-k l=---also watch [[https://protesilaos.com/codelog/2020-03-14-emacs-kmacro-edit/][Edit keyboard macros]] (2020-03-14)).
 
 In the above scenaria we see how =C-h= is used as a prefix.  You are
 starting a key sequence with it.  So here are some cases of using it as
 a suffix:
 
 + For /every incomplete key sequence/ if you follow it up with =C-h= you
-  will get a help buffer about all possible key combination that
+  will get a help buffer about all possible key combinations that
   complete that sequence.  For example, if you type =C-c C-h= inside of an
   Org buffer you will get all possible commands for Org mode and for all
   other minor modes you have active.
 + The =C-h= suffix can be appended to longer key sequences.  Indeed the
   length is irrelevant.  Suppose you want to learn more about some of
-  the advanced features of registers. =C-x r= is the common prefix for
+  the advanced features of registers.  =C-x r= is the common prefix for
   those commands, so you just do =C-x r C-h= and you get a buffer with
   more information.
 + And, as you may imagine, you can even append the =C-h= /suffix/ to the =C-h=
