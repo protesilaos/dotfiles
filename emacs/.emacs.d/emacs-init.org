@@ -594,19 +594,18 @@ See `prot/modus-operandi' or `prot/modus-vivendi'.")
   (dolist (theme '("operandi" "vivendi"))
     (contrib/format-sexp
      (defun prot/modus-%1$s ()
-       (setq modus-%1$s-theme-slanted-constructs nil
-             modus-%1$s-theme-bold-constructs nil
+       (setq modus-%1$s-theme-slanted-constructs t
+             modus-%1$s-theme-bold-constructs t
              modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
              modus-%1$s-theme-mode-line nil ; {nil,'3d,'moody}
-             modus-%1$s-theme-faint-syntax nil
+             modus-%1$s-theme-syntax 'alt-syntax ; {nil,faint,'yellow-comments,'green-strings,'yellow-comments-green-strings,'alt-syntax,'alt-syntax-yellow-comments}
              modus-%1$s-theme-intense-hl-line nil
              modus-%1$s-theme-intense-paren-match nil
              modus-%1$s-theme-links 'neutral-underline ; {nil,'faint,'neutral-underline,'faint-neutral-underline,'no-underline}
-             modus-%1$s-theme-comments 'green ; {nil,'green,'yellow}
              modus-%1$s-theme-no-mixed-fonts nil
              modus-%1$s-theme-prompts 'subtle ; {nil,'subtle,'intense}
              modus-%1$s-theme-completions 'moderate ; {nil,'moderate,'opinionated}
-             modus-%1$s-theme-diffs nil ; {nil,'desaturated,'fg-only}
+             modus-%1$s-theme-diffs 'fg-only ; {nil,'desaturated,'fg-only}
              modus-%1$s-theme-org-blocks nil ; {nil,'grayscale,'rainbow}
              modus-%1$s-theme-headings  ; Read the manual for this one
              '((1 . section)
