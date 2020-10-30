@@ -228,6 +228,7 @@
 ;;     lsp-ui
 ;;     magit
 ;;     magit-imerge
+;;     make-mode
 ;;     man
 ;;     markdown-mode
 ;;     markup-faces (`adoc-mode')
@@ -266,6 +267,7 @@
 ;;     paren-face
 ;;     parrot
 ;;     pass
+;;     pdf-tools
 ;;     persp-mode
 ;;     perspective
 ;;     phi-grep
@@ -1914,19 +1916,19 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(centaur-tabs-unselected ((,class :background ,bg-tab-inactive :foreground ,fg-dim)))
    `(centaur-tabs-unselected-modified ((,class :inherit italic :background ,bg-tab-inactive :foreground ,fg-dim)))
 ;;;;; change-log and log-view (`vc-print-log' and `vc-print-root-log')
-   `(change-log-acknowledgment ((,class :foreground ,fg-alt)))
+   `(change-log-acknowledgment ((,class :foreground ,green-alt-other-faint)))
    `(change-log-conditionals ((,class :foreground ,magenta-alt)))
-   `(change-log-date ((,class :foreground ,cyan-alt-other)))
-   `(change-log-email ((,class :foreground ,cyan)))
-   `(change-log-file ((,class :foreground ,blue)))
+   `(change-log-date ((,class :foreground ,magenta-faint)))
+   `(change-log-email ((,class :foreground ,blue)))
+   `(change-log-file ((,class :inherit bold :foreground ,fg-special-cold)))
    `(change-log-function ((,class :foreground ,green-alt-other)))
    `(change-log-list ((,class :foreground ,magenta-alt-other)))
    `(change-log-name ((,class :foreground ,cyan)))
    `(log-edit-header ((,class :foreground ,fg-special-warm)))
-   `(log-edit-summary ((,class :inherit bold :foreground ,cyan)))
+   `(log-edit-summary ((,class :inherit bold :foreground ,blue)))
    `(log-edit-unknown-header ((,class :foreground ,fg-alt)))
    `(log-view-file ((,class :inherit bold :foreground ,fg-special-cold)))
-   `(log-view-message ((,class :foreground ,fg-alt)))
+   `(log-view-message ((,class :foreground ,green-alt-other-faint)))
 ;;;;; cider
    `(cider-debug-code-overlay-face ((,class :background ,bg-alt)))
    `(cider-debug-prompt-face ((,class :foreground ,magenta-alt :underline t)))
@@ -2160,9 +2162,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(diff-added ((,class :inherit modus-theme-diff-added)))
    `(diff-changed ((,class :inherit modus-theme-diff-changed)))
    `(diff-context ((,class :foreground ,fg-unfocused)))
-   `(diff-file-header ((,class :inherit bold :foreground ,blue)))
-   `(diff-function ((,class :foreground ,fg-special-cold)))
-   `(diff-header ((,class :foreground ,blue-nuanced)))
+   `(diff-file-header ((,class :inherit bold :foreground ,fg-main)))
+   `(diff-function ((,class :foreground ,blue)))
+   `(diff-header ((,class :foreground ,fg-main)))
    `(diff-hunk-header ((,class :inherit modus-theme-diff-heading)))
    `(diff-index ((,class :inherit bold :foreground ,blue-alt)))
    `(diff-indicator-added ((,class :inherit diff-added)))
@@ -3462,6 +3464,9 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(magit-tag ((,class :foreground ,yellow-alt-other)))
 ;;;;; magit-imerge
    `(magit-imerge-overriding-value ((,class :inherit bold :foreground ,red-alt)))
+;;;;; make-mode (makefiles)
+   `(makefile-makepp-perl ((,class :background ,cyan-nuanced-bg)))
+   `(makefile-space ((,class :background ,magenta-nuanced-bg)))
 ;;;;; man
    `(Man-overstrike ((,class :inherit bold :foreground ,magenta)))
    `(Man-reverse ((,class :inherit modus-theme-subtle-magenta)))
@@ -4835,6 +4840,9 @@ Also bind `class' to ((class color) (min-colors 89))."
        ("XXX+" . ,red-alt)
        ("REVIEW" . ,cyan-alt-other)
        ("DEPRECATED" . ,blue-nuanced)))
+;;;; pdf-tools
+   `(pdf-view-midnight-colors
+     '(,fg-main . ,bg-dim))
 ;;;; vc-annotate (C-x v g)
    `(vc-annotate-background nil)
    `(vc-annotate-background-mode nil)
