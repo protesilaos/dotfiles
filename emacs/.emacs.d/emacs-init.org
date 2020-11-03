@@ -2088,6 +2088,14 @@ based on that input.
 To check what I have on regular expressions, see further below my
 configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][re-builder and visual-regexp]].
 
+The =prot/dabbrev-completion= is based on [[https://www.reddit.com/r/emacs/comments/jix6od/weekly_tipstricketc_thread/gaid3f4/][an idea shared]] by Omar Antolín
+Camarena on Reddit.  It helps you continue with a =dabbrev-completion=
+sequence that encompasses multiple words.  Take Omar's full name for
+example.  I typed =Om= then =s-/= (=prot/dabbrev-completion=) to find the form
+I was looking for using minibuffer completion.  Then followed it up with
+two =s-/=.  It filled in the rest of the name without prompting me for
+completion again.  Nice and simple!
+
 #+begin_src emacs-lisp
 (use-package dabbrev
   :after (minibuffer icomplete icomplete-vertical) ; read those as well
@@ -2099,11 +2107,26 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
   (setq dabbrev-case-fold-search t)
   (setq dabbrev-case-replace 'case-replace)
   (setq dabbrev-check-other-buffers t)
-  (setq dabbrev-eliminate-newlines nil)
+  (setq dabbrev-eliminate-newlines t)
   (setq dabbrev-upcase-means-case-search t)
+
+  (defun prot/dabbrev-completion ()
+    "Expand current phrase or call `dabbrev-completion'."
+    (interactive)
+    (let* ((abbrev (dabbrev--abbrev-at-point))
+           (ignore-case-p (dabbrev--ignore-case-p abbrev))
+           (completion-list (dabbrev--find-all-expansions abbrev ignore-case-p)))
+      (cond
+       ((when (and (eq completion-list nil)
+                   (not (eq last-repeatable-command 'mode-exit)))
+          (insert " ")
+          (dabbrev-expand 1)))
+       (t
+        (dabbrev-completion)))))
+
   :bind (("M-/" . dabbrev-expand)
-         ("C-M-/" . dabbrev-completion)
-         ("s-/" . dabbrev-completion)))
+         ("C-M-/" . prot/dabbrev-completion)
+         ("s-/" . prot/dabbrev-completion)))
 #+end_src
 
 **** Skeletons and abbreviations
