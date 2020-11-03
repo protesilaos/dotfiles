@@ -7075,10 +7075,29 @@ a log that covers all files in the present directory."
         (kill-new (format "%s" commit))
         (message "Copied: %s" commit)))
 
+    (defvar prot/vc-shell-output "*vc-shell-output*"
+      "Name of buffer for VC-related shell output.")
+
+    (defun prot/log-view-create-patch ()
+      "Create patch for commit at point in `log-view'."
+      (interactive)
+      (let* ((commit (cadr (log-view-current-entry (point) t)))
+             (vc-dir (or (vc-root-dir) default-directory))
+             (dirs (list "~/" "~/Desktop/" vc-dir))
+             (out-dir ;; (read-directory-name "Output directory: ")
+              (completing-read "Output directory: " dirs))
+            (buf (get-buffer-create prot/vc-shell-output)))
+        (shell-command
+         (format "git format-patch -1 %s -o %s" commit out-dir) buf)
+        (message "Prepared patch for `%s' and sent it to %s"
+                 (propertize commit 'face 'bold)
+                 (propertize out-dir 'face 'success))))
+
     :bind (("C-x v SPC" . prot/vc-print-log)
            :map log-view-mode-map
            ("<tab>" . log-view-toggle-entry-display)
            ("<return>" . log-view-find-revision)
+           ("c" . prot/log-view-create-patch)
            ("w" . prot/log-view-extract-commit)
            ("s" . vc-log-search)
            ("o" . vc-log-outgoing)
