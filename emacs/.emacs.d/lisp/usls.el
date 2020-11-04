@@ -263,7 +263,7 @@ If the region is active, append it to the newly created file."
   (interactive)
   (let* ((files (usls--directory-files))
          (file (completing-read "Visit file: " files nil t nil 'usls--link-history))
-         (item (file-truename file)))
+         (item (concat (file-truename (concat usls-directory file)))))
     (find-file item)
     (add-to-history 'usls--link-history item)))
 
