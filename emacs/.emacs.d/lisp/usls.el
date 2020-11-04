@@ -107,7 +107,7 @@
   (let ((path usls-directory)
         (dotless directory-files-no-dot-files-regexp))
     (unless (file-directory-p path)
-      (make-directory path))
+      (make-directory path t))
     (directory-files path nil dotless t)))
 
 ;;;; Categories
