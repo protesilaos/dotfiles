@@ -104,8 +104,11 @@
 
 (defun usls--directory-files ()
   "List directory files."
-  (let ((dotless directory-files-no-dot-files-regexp))
-    (directory-files usls-directory nil dotless t)))
+  (let ((path usls-directory)
+        (dotless directory-files-no-dot-files-regexp))
+    (unless (file-directory-p path)
+      (make-directory path))
+    (directory-files path nil dotless t)))
 
 ;;;; Categories
 
@@ -157,7 +160,7 @@ If the region is active, append it to the newly created file."
          (crm-separator "[, ]") ; Insert multiple categories with comma/space between them
          (category (completing-read-multiple "File category: " categories nil nil nil cathist))
          (slug (usls-sluggify title))
-         (path usls-directory)
+         (path (file-name-as-directory usls-directory))
          (id (format-time-string usls-id))
          (filename
           (format "%s%s--%s--%s.txt"
@@ -173,8 +176,6 @@ If the region is active, append it to the newly created file."
                                 (region-beginning)
                                 (region-end)))
                      ""))))
-    (unless (file-directory-p path)
-      (make-directory path))
     (with-current-buffer (find-file filename)
       (usls-mode 1)
       (insert (concat "title: " title "\n"
