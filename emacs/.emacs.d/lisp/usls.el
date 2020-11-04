@@ -60,6 +60,19 @@
   :group 'usls
   :type 'directory)
 
+(defcustom usls-known-categories '(economics philosophy politics)
+  "List of predefined categories for `usls-new-note'.
+
+The implicit assumption is that a category is a single word.  If
+you need a category to be multiple words long, use underscores to
+separate them.  Do not use hyphens, as those are assumed to
+demarcate distinct categories, per `usls--inferred-categories'.
+
+Also see `usls-categories' for a dynamically generated list that
+gets combined with this one in relevant prompts."
+  :group 'usls
+  :type 'list)
+
 ;;; Main variables
 
 (defconst usls-id "%Y%m%d_%H%M%S"
@@ -111,16 +124,6 @@
     (directory-files path nil dotless t)))
 
 ;;;; Categories
-
-;; NOTE: The implicit assumption is that a "category" is a single word.
-;; If you need it to be more than one, separate them with an underscore.
-;; Do not use a hyphen though, as it is assumed to demarcate distinct
-;; categories.  See `usls--inferred-categories'.
-(defvar usls-known-categories
-  '(economics philosophy politics)
-  "List of predefined categories for `usls-new-note'.
-Also see `usls-categories' for a dynamically generated list that
-gets combined with this one in relevant prompts.")
 
 (defun usls--inferred-categories ()
   "Extract categories from `usls--directory-files'."
