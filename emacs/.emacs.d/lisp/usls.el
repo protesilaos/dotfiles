@@ -48,10 +48,19 @@
 (require 'ffap)
 (require 'thingatpt)
 
-;;; Main variables
+;;; User-facing options
 
-(defvar usls-directory "~/Documents/notes/"
-  "Directory for storing personal notes.")
+(defgroup usls ()
+  "Simple tool for plain text notes."
+  :group 'files
+  :prefix "usls-")
+
+(defcustom usls-directory "~/Documents/notes/"
+  "Directory for storing personal notes."
+  :group 'usls
+  :type 'directory)
+
+;;; Main variables
 
 (defconst usls-id "%Y%m%d_%H%M%S"
   "Function to produce a unique ID prefix for note filenames.")
