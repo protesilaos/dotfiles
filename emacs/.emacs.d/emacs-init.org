@@ -582,11 +582,12 @@ into this project:
   (setq custom-safe-themes t)           ; Due to my dev needs
 
   (use-package modus-operandi-theme
-    :load-path "~/.emacs.d/themes/")    ; Due to my dev needs
+    :load-path "~/.emacs.d/themes/")    ; Custom path due to my dev needs
 
   (use-package modus-vivendi-theme
     :load-path "~/.emacs.d/themes/")
 
+  ;; TODO simplify this to avoid formating a string, then read and eval.
   (defmacro modus-themes-format-sexp (sexp &rest objects)
     `(eval (read (format ,(format "%S" sexp) ,@objects))))
 
@@ -598,9 +599,9 @@ See `modus-operandi-theme-load' or `modus-vivendi-theme-load'.")
     (modus-themes-format-sexp
      (defun modus-%1$s-theme-load ()
        (setq modus-%1$s-theme-slanted-constructs t
-             modus-%1$s-theme-bold-constructs t
+             modus-%1$s-theme-bold-constructs nil
              modus-%1$s-theme-fringes 'subtle ; {nil,'subtle,'intense}
-             modus-%1$s-theme-mode-line '3d ; {nil,'3d,'moody}
+             modus-%1$s-theme-mode-line nil ; {nil,'3d,'moody}
              modus-%1$s-theme-syntax nil ; {nil,faint,'yellow-comments,'green-strings,'yellow-comments-green-strings,'alt-syntax,'alt-syntax-yellow-comments}
              modus-%1$s-theme-intense-hl-line nil
              modus-%1$s-theme-intense-paren-match nil
@@ -642,67 +643,8 @@ See `modus-operandi-theme-load' or `modus-vivendi-theme-load'.")
         (modus-themes-dark)
       (modus-themes-light)))
 
-  ;; ;; Theme to load at startup
-  ;; (add-hook 'after-init-hook #'modus-operandi-theme-load)
-
-  ;; Or load theme based on sun{rise,set} in your location...
-  (with-eval-after-load 'solar
-    (setq calendar-latitude 35.17
-          calendar-longitude 33.36))
-
-  ;; Light at sunrise
-  (run-at-time (nth 1 (split-string (sunrise-sunset)))
-               (* 60 60 24) #'modus-themes-light)
-
-  ;; Dark at sunset
-  (run-at-time "00:00" (* 60 60 24) #'modus-themes-dark)
-  (run-at-time (nth 4 (split-string (sunrise-sunset)))
-               (* 60 60 24) #'modus-themes-dark)
-
-  ;; ;; In case you prefer a fixed time instead of the above approach
-  ;; (run-at-time "08:00" (* 60 60 24) #'modus-themes-light)
-  ;; (run-at-time "21:00" (* 60 60 24) #'modus-themes-dark)
-
-  ;; The following are OPTIONAL for users to tweak faces on their end,
-  ;; including by declaring color variables defined by the active theme.
-  (defun modus-themes-col-var (name)
-    "Get color value of NAME string from active Modus theme.
-
-Consult `modus-operandi-theme-default-colors-alist' for all
-possible NAMEs."
-    (let ((palette
-           (pcase (car custom-enabled-themes)
-             ('modus-operandi modus-operandi-theme-default-colors-alist)
-             ('modus-vivendi modus-vivendi-theme-default-colors-alist)
-             (_ (user-error "No Modus theme is enabled")))))
-      (cdr (assoc name palette))))
-
-  (defun modus-themes-set-face (face &rest props)
-    "Run `set-face-attribute' on FACE and apply PROPS."
-    (eval `(set-face-attribute face nil ,@props)))
-
-  (defun modus-themes-apply-tweaks ()
-    "Sample function to tweak faces at the user level.
-Meant to be assigned to `modus-themes-after-load-hook' so that the
-change persists while switching between Modus Operandi and Modus
-Vivendi."
-    ;; Change the color of a given face
-    (modus-themes-set-face 'cursor :background (modus-themes-col-var "blue"))
-    ;; The themes allow you change the exact weight of bold constructs by
-    ;; just tweaking the `bold' face, provided your typeface of choice
-    ;; supports it (e.g. Source Code Pro has multiple heavier weights).
-    ;; NOTE: this particular form requires two successive single quotes
-    ;; because `semibold' is a symbol.
-    (modus-themes-set-face 'bold :weight `'semibold)
-    ;; Similarly, you can control the properties of all italicized text.
-    ;; For example, if your main typeface does not have good support for
-    ;; italics, you can assign another family with the same overall
-    ;; metrics.
-    (modus-themes-set-face 'italic :family "Source Code Pro"))
-
-  (add-hook 'modus-themes-after-load-hook #'modus-themes-apply-tweaks)
-
-  (global-set-key (kbd "<f5>") #'modus-themes-toggle))
+  :hook (after-init-hook . modus-operandi-theme-load)
+  :bind ("<f5>" . modus-themes-toggle))
 #+end_src
 
 *** Measuring relative colour luminance
