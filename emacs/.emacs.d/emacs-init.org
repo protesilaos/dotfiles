@@ -5477,7 +5477,7 @@ If the region is active, append it to the newly created file."
     ('directory-files-recursively
      (file-truename file))
     (_
-     (concat (file-truename (concat usls-directory file))))))
+     (file-truename (concat usls-directory file)))))
 
 ;;;###autoload
 (defun usls-find-file ()
