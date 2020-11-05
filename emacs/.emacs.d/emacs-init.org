@@ -5267,6 +5267,22 @@ gets combined with this one in relevant prompts."
   :group 'usls
   :type 'list)
 
+(defcustom usls-directory-files-function #'directory-files
+  "Function for retrieving `usls-directory' files.
+
+The default workflow of USLS is to maintain a flat directory
+where all the notes are stored in.  This allows us to omit the
+common filesystem path and only show file names.  As such, the
+default option is the function `directory-files'.
+
+Users who prefer a notes' directory with subdirectories must use
+`directory-files-recursively'.  It can handle that workflow at
+the expense of making all file names more verbose, as it needs to
+include the complete path."
+  :group 'usls
+  :type 'function
+  :options '(directory-files directory-files-recursively))
+
 ;;; Main variables
 
 (defconst usls-id "%Y%m%d_%H%M%S"
@@ -5315,7 +5331,11 @@ gets combined with this one in relevant prompts."
         (dotless directory-files-no-dot-files-regexp))
     (unless (file-directory-p path)
       (make-directory path t))
-    (directory-files path nil dotless t)))
+    (pcase usls-directory-files-function
+      ('directory-files-recursively     ; TODO: avoid duplication
+        (directory-files-recursively path ".*" nil t))
+      (_
+       (directory-files path nil dotless t)))))
 
 ;;;; Categories
 
@@ -5451,13 +5471,21 @@ If the region is active, append it to the newly created file."
          (completing-read "Follow link: " links nil t))
       (usls-find-file))))
 
+(defun usls--file-name (file)
+  "Return properly formatted name of FILE."
+  (pcase usls-directory-files-function
+    ('directory-files-recursively
+     (file-truename file))
+    (_
+     (concat (file-truename (concat usls-directory file))))))
+
 ;;;###autoload
 (defun usls-find-file ()
   "Visit a file in `usls-directory' using completion."
   (interactive)
   (let* ((files (usls--directory-files))
          (file (completing-read "Visit file: " files nil t nil 'usls--link-history))
-         (item (concat (file-truename (concat usls-directory file)))))
+         (item (usls--file-name file)))
     (find-file item)
     (add-to-history 'usls--link-history item)))
 
