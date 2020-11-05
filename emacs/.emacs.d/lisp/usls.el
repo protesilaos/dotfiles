@@ -145,11 +145,16 @@ include the complete path."
 
 ;;;; Categories
 
+(defun usls--categories-in-files ()
+  "Produce list of categories in `usls--directory-files'."
+  (cl-remove-if nil
+   (mapcar (lambda (x)
+             (usls-extract usls-category-regexp x))
+           (usls--directory-files))))
+
 (defun usls--inferred-categories ()
   "Extract categories from `usls--directory-files'."
-  (let ((sequence (mapcar (lambda (x)
-                    (usls-extract usls-category-regexp x))
-                  (usls--directory-files))))
+  (let ((sequence (usls--categories-in-files)))
     (mapcan (lambda (s)
               (split-string s "-" t))
             sequence)))
