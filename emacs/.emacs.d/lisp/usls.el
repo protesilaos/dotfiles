@@ -332,7 +332,10 @@ note in."
     (save-excursion
       (goto-char (point-min))
       (while (search-forward-regexp usls--file-link-regexp nil t)
-        (push (match-string-no-properties 2) links)))
+        (push
+         (concat (match-string-no-properties 2)
+                 (match-string-no-properties 3))
+         links)))
     (cl-remove-duplicates links)))
 
 ;;;###autoload
