@@ -3087,6 +3087,33 @@ specified."
          ("C-M-SPC" . prot/mark-construct-dwim)))
 #+end_src
 
+*** Custom commands for Elisp code navigation
+:PROPERTIES:
+:CUSTOM_ID: h:7394d56e-4879-4e30-a446-a7e44e3e6969
+:END:
+
+/Work in progress 2020-11-06./
+
+Emacs covers most of my needs with key bindings such as =C-M-n=
+(=forward-list=), =C-M-b= (=backward-sexp=), and the like.  They have good
+mnemonics and make my life easier when working with structured text
+(basically just Elisp).
+
+The few motions that I miss are defined here.
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (defun prot/downward-list (&optional arg)
+    "Like `backward-up-list' but defaults to a forward motion.
+With optional ARG, move that many times in the given
+direction (negative is forward due to this being a
+'backward'-facing command)."
+    (interactive "P")
+    (backward-up-list (or arg -1)))
+  :bind ("C-M-d" . prot/downward-list)) ; inverse of C-M-u
+#+end_src
+
 ** Go to actionable beginning or end of buffer (beginend.el)
 :PROPERTIES:
 :CUSTOM_ID: h:29ea650f-f6a9-4bb4-abca-9548b4e4c4eb
