@@ -24,22 +24,31 @@
 
 ;;; Commentary:
 ;;
-;; Read about my rationale and workflow with this tool:
-;; <https://protesilaos.com/codelog/2020-10-08-intro-usls-emacs-notes/>
+;; This is alpha quality software.  It works for its author, but still
+;; needs some refinements before others can benefit from it.
 ;;
 ;; `usls', aka the "Unassuming Sidenotes of Little Significance" (USLS),
-;; is a personal system of storing notes of arbitrary length in a flat
-;; directory listing.
+;; is a personal system of storing notes of arbitrary length in a
+;; directory listing, based on a strict file naming convention.  It
+;; leverages built-in Emacs functions to help streamline the process of
+;; making plain text notes and adding cross references between them.  It
+;; does not rely on `org-mode' or any other major library, nor does it
+;; try to re-invent commands for retrieving files in a directory,
+;; searching for file contents, or anything else that a general purpose
+;; tool can handle (and which users are likely to already have).
 ;;
-;; `usls' leverages built-in Emacs functions to help streamline the
-;; process of making and linking together plain text notes.  It does not
-;; rely on `org-mode' or any other major library.
+;; TODO: provide overview of main points of entry
 ;;
-;; The totally unintentional constraint of this library is that both its
-;; name (`usls') and its expanded description are unwieldly.  The author
-;; is not aware of an elegant solution.  Users may instead opt to call
-;; it a common word that denotes its utility to the wider public and
-;; contains the characters "u" "s" "l" "s".
+;; Now to the real reason you are reading this commentary.  The totally
+;; unintentional constraint of this library is that both its name
+;; (`usls') and its expanded description are unwieldly.  The author is
+;; not aware of an elegant solution.  Users may instead opt to call it a
+;; common word that denotes its utility to the wider public and contains
+;; the characters "u" "s" "l" "s".
+;;
+;; Read about my rationale and workflow with this tool:
+;; <https://protesilaos.com/codelog/2020-10-08-intro-usls-emacs-notes/>.
+;; Expect things to be refined as this library evolves.
 ;;
 ;;; Code:
 
