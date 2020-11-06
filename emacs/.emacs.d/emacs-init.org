@@ -5418,7 +5418,7 @@ accident."
 
 (defun usls--directory-subdirs-prompt ()
   "Handle user input on choice of subdirectory."
-  (let* ((hist '(usls--subdirectory-history . 0))
+  (let* ((hist usls--subdirectory-history)
          (subdirs
           (if (eq (usls--directory-subdirs) nil)
               (user-error "No subdirs in `%s'; create them manually"
@@ -5465,8 +5465,8 @@ With prefix key (\\[universal-argument]) as optional ARG also
 prompt for a subdirectory of `usls-directory' to place the new
 note in."
   (interactive "P")
-  (let* ((titlehist '(usls--title-history . 0))
-         (cathist '(usls--category-history . 0))
+  (let* ((titlehist usls--title-history)
+         (cathist usls--category-history)
          (subdir (when arg (usls--directory-subdirs-prompt)))
          (title (read-string "File title: " nil titlehist))
          (categories (usls-categories))
