@@ -133,6 +133,9 @@ accident."
   (concat usls-id-regexp usls-category-regexp "\\(.*\\)\\.\\(txt\\|md\\|org\\)")
   "Regular expression to match file names from `usls-new-note'.")
 
+(defvar usls--file-link-regexp "^\\(@@\\|\\^^\\) \\(.*\\.\\)\\(txt\\|md\\|org\\)"
+  "Regexp for file links.")
+
 ;;;; Input history lists
 
 (defvar usls--title-history nil
@@ -323,8 +326,6 @@ note in."
     (usls--delete-duplicate-links)
     (add-to-history 'usls--link-history file)))
 
-(defvar usls--file-link-regexp "^\\(@@\\|\\^^\\) \\(.*\\.\\)\\(txt\\|md\\|org\\)"
-  "Regexp for file links.")
 
 (defun usls--links ()
   "Gather links to files in the current buffer."
