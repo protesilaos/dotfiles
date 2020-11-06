@@ -5276,6 +5276,10 @@ gets combined with this one in relevant prompts."
   :group 'usls
   :type 'list)
 
+(make-obsolete 'usls-directory-files-function
+               'usls-subdir-support
+               "`usls' 0.1.0")
+
 (defcustom usls-directory-files-function #'directory-files
   "Function for retrieving `usls-directory' files.
 
@@ -5291,6 +5295,22 @@ include the complete path."
   :group 'usls
   :type 'function
   :options '(directory-files directory-files-recursively))
+
+(defcustom usls-subdir-support nil
+  "Enable support for subdirectories in `usls-directory'.
+
+The default workflow of USLS is to maintain a flat directory
+where all the notes are stored in.  This allows us to omit the
+common filesystem path and only show file names.
+
+When set to non-nil, the usls workflow can handle subdirectories
+at the expense of making all file names more verbose, as it needs
+to include the complete path.
+
+NOTE: such subdirectories must be created manually to make sure
+that no destructive filesystem operations are performed by
+accident."
+  :type 'boolean)
 
 ;;; Main variables
 
@@ -5317,6 +5337,9 @@ include the complete path."
 
 (defvar usls--link-history nil
   "Used internally by `usls-id-insert' to record links.")
+
+(defvar usls--subdirectory-history nil
+  "Used internally by `usls-new-note' to record subdirectories.")
 
 ;;; Basic utilities
 
@@ -5352,11 +5375,30 @@ include the complete path."
         (dotless directory-files-no-dot-files-regexp))
     (unless (file-directory-p path)
       (make-directory path t))
-    (pcase usls-directory-files-function
-      ('directory-files-recursively     ; TODO: avoid duplication
-        (directory-files-recursively path ".*" nil t))
-      (_
-       (directory-files path nil dotless t)))))
+    (if usls-subdir-support
+        (directory-files-recursively path ".*" nil t)
+      (directory-files path nil dotless t))))
+
+(defun usls--directory-subdirs ()
+  "Return list of subdirectories in `usls-directory'."
+  (cl-remove-if-not
+   (lambda (x)
+     (file-directory-p x))
+   (directory-files-recursively usls-directory ".*" t t)))
+
+(defun usls--directory-subdirs-prompt ()
+  "Handle user input on choice of subdirectory."
+  (let* ((hist '(usls--subdirectory-history . 0))
+         (subdirs
+          (if (eq (usls--directory-subdirs) nil)
+              (user-error "No subdirs in `%s'; create them manually"
+                          usls-directory)
+            (usls--directory-subdirs)))
+         (subdirs-short (mapcar #'file-name-base subdirs))
+         (choice (completing-read "Subdirectory of new note: " subdirs-short
+                                  nil nil hist))
+         (subdir (file-truename (concat usls-directory choice))))
+    subdir))
 
 ;;;; Categories
 
@@ -5381,18 +5423,27 @@ include the complete path."
 ;;; Interactive functions
 
 ;;;###autoload
-(defun usls-new-note ()
-  "Create new note with the appropriate metadata.
-If the region is active, append it to the newly created file."
-  (interactive)
+(defun usls-new-note (&optional arg)
+  "Create new note with the appropriate metadata and file name.
+If the region is active, append it to the newly created file.
+
+This command first prompts for a file title and then for a
+category.  The latter supports completion.  To input multiple
+categories, separate them with a space or a comma.
+
+With prefix key (\\[universal-argument]) as optional ARG also
+prompt for a subdirectory of `usls-directory' to place the new
+note in."
+  (interactive "P")
   (let* ((titlehist '(usls--title-history . 0))
          (cathist '(usls--category-history . 0))
+         (subdir (when arg (usls--directory-subdirs-prompt)))
          (title (read-string "File title: " nil titlehist))
          (categories (usls-categories))
          (crm-separator "[, ]") ; Insert multiple categories with comma/space between them
          (category (completing-read-multiple "File category: " categories nil nil nil cathist))
          (slug (usls-sluggify title))
-         (path (file-name-as-directory usls-directory))
+         (path (file-name-as-directory (or subdir usls-directory)))
          (id (format-time-string usls-id))
          (filename
           (format "%s%s--%s--%s.txt"
@@ -5425,7 +5476,9 @@ If the region is active, append it to the newly created file."
   "Return list of files minus the current one."
   (cl-remove-if
    (lambda (x)
-     (string= (file-name-nondirectory (buffer-file-name)) x))
+     (if usls-subdir-support
+         (string= (abbreviate-file-name (buffer-file-name)) x)
+       (string= (file-name-nondirectory (buffer-file-name)) x)))
    (usls--directory-files)))
 
 (defun usls--insert-file-reference (file delimiter)
@@ -5488,11 +5541,9 @@ If the region is active, append it to the newly created file."
 
 (defun usls--file-name (file)
   "Return properly formatted name of FILE."
-  (pcase usls-directory-files-function
-    ('directory-files-recursively
-     (file-truename file))
-    (_
-     (file-truename (concat usls-directory file)))))
+  (if usls-subdir-support
+     (file-truename file)
+    (file-truename (concat usls-directory file))))
 
 ;;;###autoload
 (defun usls-find-file ()
