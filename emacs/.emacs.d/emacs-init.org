@@ -5544,7 +5544,7 @@ note in."
     (usls--delete-duplicate-links)
     (add-to-history 'usls--link-history file)))
 
-(defvar usls--file-link-regexp "^\\(@@\\|\\^^\\) \\(.*\\.txt\\|md\\|org\\)"
+(defvar usls--file-link-regexp "^\\(@@\\|\\^^\\) \\(.*\\.\\)\\(txt\\|md\\|org\\)"
   "Regexp for file links.")
 
 (defun usls--links ()
@@ -5736,7 +5736,8 @@ note in."
      (2 'font-lock-variable-name-face))
     (,usls--file-link-regexp
      (1 'escape-glyph)
-     (2 'font-lock-constant-face))
+     (2 'font-lock-constant-face)
+     (3 'font-lock-constant-face))
     ;; These conflict with `diredfl-mode'.  Maybe there is some way to
     ;; avoid that?
     (,usls-file-regexp
