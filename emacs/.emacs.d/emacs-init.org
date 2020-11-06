@@ -7802,10 +7802,10 @@ wisely or prepare to use `eshell-interrupt-process'."
     (interactive)
     (let* ((dir (abbreviate-file-name (eshell/pwd)))
            (contents (directory-files-recursively dir ".*" t nil nil))
-           (dirs (cl-remove-if (lambda (x)
-                                 (or (not (file-directory-p x))
-                                     (string-match-p "\\.git" x)))
-                               contents))
+           (dirs (cl-remove-if-not (lambda (x)
+                                     (or (file-directory-p x)
+                                         (string-match-p "\\.git" x)))
+                                   contents))
            (selection (icomplete-vertical-do ()
                         (completing-read
                          (format "Find sub-dir from %s (%s): "
