@@ -112,6 +112,17 @@ include the complete path."
 (defconst usls-file-regexp (concat usls-id-regexp usls-category-regexp ".*.txt")
   "Regular expression to match file names from `usls-new-note'.")
 
+;;;; Input history lists
+
+(defvar usls--title-history nil
+  "Used internally by `usls-new-note' to record titles.")
+
+(defvar usls--category-history nil
+  "Used internally by `usls-new-note' to record categories.")
+
+(defvar usls--link-history nil
+  "Used internally by `usls-id-insert' to record links.")
+
 ;;; Basic utilities
 
 ;;;; File name helpers
@@ -171,17 +182,6 @@ include the complete path."
 (defun usls-categories ()
   "Combine `usls--inferred-categories' with `usls-known-categories'."
   (append (usls--inferred-categories) usls-known-categories))
-
-;;;; Input history lists
-
-(defvar usls--title-history nil
-  "Used internally by `usls-new-note' to record titles.")
-
-(defvar usls--category-history nil
-  "Used internally by `usls-new-note' to record categories.")
-
-(defvar usls--link-history nil
-  "Used internally by `usls-id-insert' to record links.")
 
 ;;; Interactive functions
 
