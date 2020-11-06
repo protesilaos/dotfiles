@@ -109,7 +109,8 @@ include the complete path."
 (defconst usls-category-regexp "--\\([0-9A-Za-z_-]*\\)--"
   "Regular expression to match `usls-categories'.")
 
-(defconst usls-file-regexp (concat usls-id-regexp usls-category-regexp ".*.txt")
+(defconst usls-file-regexp
+  (concat usls-id-regexp usls-category-regexp "\\(.*\\)\\.\\(txt\\|md\\|org\\)")
   "Regular expression to match file names from `usls-new-note'.")
 
 ;;;; Input history lists
@@ -440,8 +441,10 @@ If the region is active, append it to the newly created file."
     (t :inherit default))
   "Face for file name title in `dired-mode' buffers.")
 
+;; TODO: re-use regular expressions as is already done for
+;; `usls-file-regexp'.
 (defconst usls-font-lock-keywords
-  '(("\\(title:\\) \\(.*\\)"
+  `(("\\(title:\\) \\(.*\\)"
      (1 'usls-header-data-key)
      (2 'usls-header-data-title))
     ("\\(date:\\) \\(.*\\)"
@@ -465,13 +468,11 @@ If the region is active, append it to the newly created file."
      (3 'font-lock-constant-face t))
     ;; These conflict with `diredfl-mode'.  Maybe there is some way to
     ;; avoid that?
-    ("\\([0-9_]\\{15\\}\\)\\(--\\)\\([0-9A-Za-z_-]*\\)\\(--\\)\\(.*\\)\\(\\.txt\\)"
+    (,usls-file-regexp
      (1 'usls-dired-field-date)
-     (2 'usls-dired-field-delimiter)
-     (3 'usls-dired-field-category)
-     (4 'usls-dired-field-delimiter)
-     (5 'usls-dired-field-name)
-     (6 'usls-dired-field-delimiter)))
+     (2 'usls-dired-field-category)
+     (3 'usls-dired-field-name)
+     (4 'usls-dired-field-delimiter)))
   "Rules to apply font-lock highlighting with `usls--fontify'.")
 
 (defun usls--fontify ()
