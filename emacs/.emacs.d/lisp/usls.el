@@ -69,10 +69,6 @@
   :group 'usls
   :type 'directory)
 
-(defun usls--directory ()
-  "Valid name format for `usls-directory'."
-  (file-name-as-directory usls-directory))
-
 (defcustom usls-known-categories '(economics philosophy politics)
   "List of predefined categories for `usls-new-note'.
 
@@ -158,6 +154,10 @@ accident."
 
 ;;;; File name helpers
 (defun usls-extract (regexp str)
+(defun usls--directory ()
+  "Valid name format for `usls-directory'."
+  (file-name-as-directory usls-directory))
+
   "Extract REGEXP from STR."
   (with-temp-buffer
     (insert str)
