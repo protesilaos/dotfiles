@@ -154,11 +154,12 @@ accident."
 ;;; Basic utilities
 
 ;;;; File name helpers
-(defun usls-extract (regexp str)
+
 (defun usls--directory ()
   "Valid name format for `usls-directory'."
   (file-name-as-directory usls-directory))
 
+(defun usls--extract (regexp str)
   "Extract REGEXP from STR."
   (with-temp-buffer
     (insert str)
@@ -177,7 +178,7 @@ accident."
   "Replace spaces with hyphens in STR."
   (replace-regexp-in-string "-$" "" (replace-regexp-in-string "--+\\|\s+" "-" str)))
 
-(defun usls-sluggify (str)
+(defun usls--sluggify (str)
   "Make STR an appropriate file name slug."
   (downcase (usls--slug-hyphenate (usls--slug-no-punct str))))
 
@@ -220,7 +221,7 @@ accident."
   "Produce list of categories in `usls--directory-files'."
   (cl-remove-if nil
    (mapcar (lambda (x)
-             (usls-extract usls-category-regexp x))
+             (usls--extract usls-category-regexp x))
            (usls--directory-files))))
 
 (defun usls--inferred-categories ()
@@ -284,7 +285,7 @@ note in."
   (let* ((subdir (when arg (usls--directory-subdirs-prompt)))
          (title (read-string "File title: " nil 'usls--title-history))
          (categories (usls--categories-prompt))
-         (slug (usls-sluggify title))
+         (slug (usls--sluggify title))
          (path (file-name-as-directory (or subdir usls-directory)))
          (id (format-time-string usls-id))
          (filename
@@ -347,7 +348,7 @@ note in."
                                 (usls--directory-files-not-current)
                                 nil t nil 'usls--link-history))
          (this-file (file-name-nondirectory (buffer-file-name)))
-         (id (usls-extract usls-id-regexp file)))
+         (id (usls--extract usls-id-regexp file)))
     (insert (concat "^" id))
     (usls--insert-file-reference (format "%s" file) "^^")
     (with-current-buffer (find-file-noselect file)
