@@ -119,6 +119,17 @@ accident."
   :group 'usls
   :type 'boolean)
 
+(defcustom usls-file-type-extension ".txt"
+  "File type extension for new USLS notes.
+
+Available options cover plain text (.txt), Markdown (.md), and
+Org (.org) formats."
+  :group 'usls
+  :type '(choice
+          (const :tag "Plain text format" ".txt")
+          (const :tag "Markdown format" ".md")
+          (const :tag "Org format" ".org")))
+
 ;;; Main variables
 
 (defconst usls-id "%Y%m%d_%H%M%S"
@@ -267,6 +278,36 @@ accident."
         (add-to-history 'usls--category-history x))
     (add-to-history 'usls--category-history categories)))
 
+;;; Templates
+
+(defun usls--file-meta-header (title date categories filename id)
+  "Front matter template based on `usls-file-type-extension'.
+
+This helper function is meant to integrate with `usls-new-note'.
+As such TITLE, DATE, CATEGORIES, FILENAME, ID are all retrieved
+from there."
+  (pcase usls-file-type-extension
+    ;; TODO: make those templates somewhat customisable.  We need to
+    ;; determine what should be parametrised.
+    (".md" `(concat "---" "\n"
+                    "title: " ,title "\n"
+                    "date: " ,date "\n"
+                    "category: " (usls--categories-capitalize ,categories) "\n"
+                    "orig_name: " ,filename "\n"
+                    "orig_id: " ,id "\n"
+                    "---" "\n\n"))
+    (".org" `(concat "#+title: " ,title "\n"
+                     "#+date: " ,date "\n"
+                     "#+category: " (usls--categories-capitalize ,categories) "\n"
+                     "#+orig_name: " ,filename "\n"
+                     "#+orig_id: " ,id "\n\n"))
+    (_ `(concat "title: " ,title "\n"
+                "date: " ,date "\n"
+                "category: " (usls--categories-capitalize ,categories) "\n"
+                "orig_name: " ,filename "\n"
+                "orig_id: " ,id "\n"
+                (make-string 24 ?-) "\n\n"))))
+
 ;;; Interactive functions
 
 ;;;###autoload
@@ -289,11 +330,12 @@ note in."
          (path (file-name-as-directory (or subdir usls-directory)))
          (id (format-time-string usls-id))
          (filename
-          (format "%s%s--%s--%s.txt"
+          (format "%s%s--%s--%s%s"
                   path
                   id
                   (usls--categories-hyphenate categories)
-                  slug))
+                  slug
+                  usls-file-type-extension))
          (date (format-time-string "%F"))
          (region (with-current-buffer (current-buffer)
                    (if (region-active-p)
@@ -303,14 +345,7 @@ note in."
                                 (region-end)))
                      ""))))
     (with-current-buffer (find-file filename)
-      (usls-mode 1)
-      (insert (concat "title: " title "\n"
-                      "date: " date "\n"
-                      "category: " (usls--categories-capitalize categories) "\n"
-                      "orig_name: " filename "\n"
-                      "orig_id: " id "\n"))
-      (insert-char ?- 24 nil)
-      (insert "\n\n")
+      (insert (eval (usls--file-meta-header title date categories filename id)))
       (save-excursion (insert region)))
     (add-to-history 'usls--title-history title)
     (usls--categories-add-to-history categories)))
@@ -442,7 +477,9 @@ note in."
   "Activate mode when inside `usls-directory'."
   (when (or (string-match-p (expand-file-name usls-directory) default-directory)
             (string-match-p usls-directory default-directory))
-    (usls-mode 1)))
+    (unless (or (string= usls-file-type-extension ".md")
+                (string= usls-file-type-extension ".org"))
+      (usls-mode 1))))
 
 (add-hook 'find-file-hook #'usls-mode-activate)
 (add-hook 'dired-mode-hook #'usls-mode-activate)
