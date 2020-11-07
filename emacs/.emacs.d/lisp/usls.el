@@ -116,6 +116,7 @@ to include the complete path.
 NOTE: such subdirectories must be created manually to make sure
 that no destructive filesystem operations are performed by
 accident."
+  :group 'usls
   :type 'boolean)
 
 ;;; Main variables
