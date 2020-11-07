@@ -791,8 +791,8 @@ See, for example, `prot/font-set-fonts'.")
   (defconst prot/font-sizes-families-alist
     '(("pocket" . (105 "Hack" "DejaVu Sans"))
       ("laptop" . (110 "Hack" "Inter"))
-      ("desktop" . (130 "Hack" "Inter"))
-      ("reader" . (160 "Iosevka Comfy" "FiraGO"))
+      ("desktop" . (150 "Iosevka Comfy" "Inter"))
+      ("reader" . (170 "Iosevka Comfy" "FiraGO"))
       ("presentation" . (190 "Iosevka Comfy" "FiraGO")))
     "Alist of desired typefaces and their point sizes.
 
@@ -883,7 +883,8 @@ economise on dedicated key bindings."
 See `prot/font-line-spacing' for how this is used.")
 
   (defvar prot/font-fonts-bold-weight-alist
-    '(("Source Code Pro" . semibold))
+    '(("Iosevka Comfy" . semibold)
+      ("Source Code Pro" . semibold))
     "Font families in need of a different weight for `bold'.
 See `prot/font-bold-face' for how this is used.")
 
