@@ -69,8 +69,9 @@
   :group 'usls
   :type 'directory)
 
-(defvar usls--directory (file-name-as-directory usls-directory)
-  "Valid name format for `usls-directory'.")
+(defun usls--directory ()
+  "Valid name format for `usls-directory'."
+  (file-name-as-directory usls-directory))
 
 (defcustom usls-known-categories '(economics philosophy politics)
   "List of predefined categories for `usls-new-note'.
@@ -183,7 +184,7 @@ accident."
 
 (defun usls--directory-files ()
   "List directory files."
-  (let ((path usls--directory)
+  (let ((path (usls--directory))
         (dotless directory-files-no-dot-files-regexp))
     (unless (file-directory-p path)
       (make-directory path t))
@@ -203,12 +204,12 @@ accident."
   (let* ((subdirs
           (if (eq (usls--directory-subdirs) nil)
               (user-error "No subdirs in `%s'; create them manually"
-                          usls--directory)
+                          (usls--directory))
             (usls--directory-subdirs)))
          (subdirs-short (mapcar #'file-name-base subdirs))
          (choice (completing-read "Subdirectory of new note: " subdirs-short
                                   nil t nil 'usls--subdirectory-history))
-         (subdir (file-truename (concat usls--directory choice))))
+         (subdir (file-truename (concat (usls--directory) choice))))
     (add-to-history 'usls--subdirectory-history choice)
     subdir))
 
@@ -384,7 +385,7 @@ note in."
   "Return properly formatted name of FILE."
   (if usls-subdir-support
      (file-truename file)
-    (file-truename (concat usls--directory file))))
+    (file-truename (concat (usls--directory) file))))
 
 ;;;###autoload
 (defun usls-find-file ()
