@@ -69,6 +69,9 @@
   :group 'usls
   :type 'directory)
 
+(defvar usls--directory (file-name-as-directory usls-directory)
+  "Valid name format for `usls-directory'.")
+
 (defcustom usls-known-categories '(economics philosophy politics)
   "List of predefined categories for `usls-new-note'.
 
@@ -121,7 +124,7 @@ accident."
 ;;; Main variables
 
 (defconst usls-id "%Y%m%d_%H%M%S"
-  "Function to produce a unique ID prefix for note filenames.")
+  "Format of ID prefix of a note's filename.")
 
 (defconst usls-id-regexp "\\([0-9_]+\\{15\\}\\)"
   "Regular expression to match `usls-id'.")
@@ -138,16 +141,16 @@ accident."
 
 ;;;; Input history lists
 
-(defvar usls--title-history nil
+(defvar usls--title-history '()
   "Used internally by `usls-new-note' to record titles.")
 
-(defvar usls--category-history nil
+(defvar usls--category-history '()
   "Used internally by `usls-new-note' to record categories.")
 
-(defvar usls--link-history nil
+(defvar usls--link-history '()
   "Used internally by `usls-id-insert' to record links.")
 
-(defvar usls--subdirectory-history nil
+(defvar usls--subdirectory-history '()
   "Used internally by `usls-new-note' to record subdirectories.")
 
 ;;; Basic utilities
@@ -180,7 +183,7 @@ accident."
 
 (defun usls--directory-files ()
   "List directory files."
-  (let ((path usls-directory)
+  (let ((path usls--directory)
         (dotless directory-files-no-dot-files-regexp))
     (unless (file-directory-p path)
       (make-directory path t))
@@ -197,16 +200,16 @@ accident."
 
 (defun usls--directory-subdirs-prompt ()
   "Handle user input on choice of subdirectory."
-  (let* ((hist usls--subdirectory-history)
-         (subdirs
+  (let* ((subdirs
           (if (eq (usls--directory-subdirs) nil)
               (user-error "No subdirs in `%s'; create them manually"
-                          usls-directory)
+                          usls--directory)
             (usls--directory-subdirs)))
          (subdirs-short (mapcar #'file-name-base subdirs))
          (choice (completing-read "Subdirectory of new note: " subdirs-short
-                                  nil nil hist))
-         (subdir (file-truename (concat usls-directory choice))))
+                                  nil t nil 'usls--subdirectory-history))
+         (subdir (file-truename (concat usls--directory choice))))
+    (add-to-history 'usls--subdirectory-history choice)
     subdir))
 
 ;;;; Categories
@@ -229,6 +232,38 @@ accident."
   "Combine `usls--inferred-categories' with `usls-known-categories'."
   (append (usls--inferred-categories) usls-known-categories))
 
+(defun usls--categories-prompt ()
+  "Prompt for one or more categories (comma/space separated)."
+  (let* ((categories (usls-categories))
+         (crm-separator "[, ]")
+         (choice (completing-read-multiple "File category: " categories
+                                           nil nil nil 'usls--category-history)))
+    (if (= (length choice) 1)
+        (car choice)
+      choice)))
+
+(defun usls--categories-hyphenate (categories)
+  "Format CATEGORIES output of `usls--categories-prompt'."
+  (if (and (> (length categories) 1)
+           (not (stringp categories)))
+      (mapconcat #'downcase `,categories "-")
+    categories))
+
+(defun usls--categories-capitalize (categories)
+  "`capitalize' CATEGORIES output of `usls--categories-prompt'."
+  (if (and (> (length categories) 1)
+           (not (stringp categories)))
+      (mapconcat #'capitalize categories ", ")
+    (capitalize categories)))
+
+(defun usls--categories-add-to-history (categories)
+  "Append CATEGORIES to `usls--category-history'."
+  (if (and (> (length categories) 1)
+           (not (stringp categories)))
+      (dolist (x categories)
+        (add-to-history 'usls--category-history x))
+    (add-to-history 'usls--category-history categories)))
+
 ;;; Interactive functions
 
 ;;;###autoload
@@ -244,13 +279,9 @@ With prefix key (\\[universal-argument]) as optional ARG also
 prompt for a subdirectory of `usls-directory' to place the new
 note in."
   (interactive "P")
-  (let* ((titlehist usls--title-history)
-         (cathist usls--category-history)
-         (subdir (when arg (usls--directory-subdirs-prompt)))
-         (title (read-string "File title: " nil titlehist))
-         (categories (usls-categories))
-         (crm-separator "[, ]") ; Insert multiple categories with comma/space between them
-         (category (completing-read-multiple "File category: " categories nil nil nil cathist))
+  (let* ((subdir (when arg (usls--directory-subdirs-prompt)))
+         (title (read-string "File title: " nil 'usls--title-history))
+         (categories (usls--categories-prompt))
          (slug (usls-sluggify title))
          (path (file-name-as-directory (or subdir usls-directory)))
          (id (format-time-string usls-id))
@@ -258,7 +289,7 @@ note in."
           (format "%s%s--%s--%s.txt"
                   path
                   id
-                  (mapconcat #'downcase category "-")
+                  (usls--categories-hyphenate categories)
                   slug))
          (date (format-time-string "%F"))
          (region (with-current-buffer (current-buffer)
@@ -272,14 +303,14 @@ note in."
       (usls-mode 1)
       (insert (concat "title: " title "\n"
                       "date: " date "\n"
-                      "category: " (mapconcat #'capitalize category ", ") "\n"
+                      "category: " (usls--categories-capitalize categories) "\n"
                       "orig_name: " filename "\n"
                       "orig_id: " id "\n"))
       (insert-char ?- 24 nil)
       (insert "\n\n")
       (save-excursion (insert region)))
     (add-to-history 'usls--title-history title)
-    (add-to-history 'usls--category-history category)))
+    (usls--categories-add-to-history categories)))
 
 (defun usls--directory-files-not-current ()
   "Return list of files minus the current one."
@@ -353,7 +384,7 @@ note in."
   "Return properly formatted name of FILE."
   (if usls-subdir-support
      (file-truename file)
-    (file-truename (concat usls-directory file))))
+    (file-truename (concat usls--directory file))))
 
 ;;;###autoload
 (defun usls-find-file ()
