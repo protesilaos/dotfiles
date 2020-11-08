@@ -358,6 +358,12 @@ from there."
                   "orig_id: " ,id "\n"
                   (make-string 24 ?-) "\n\n")))))
 
+(defun usls--file-region-separator (region)
+  "Separator for captured REGION in `usls-new-note'."
+  (pcase usls-file-type-extension
+    (".org" `(concat "\n\n" (make-string 5 ?-) "\n\n" ,region))
+    (_ `(concat "\n\n* * *\n\n" ,region))))
+
 ;;; Interactive functions
 
 ;;;###autoload
@@ -389,10 +395,10 @@ note in."
          (date (format-time-string "%F"))
          (region (with-current-buffer (current-buffer)
                    (if (region-active-p)
-                       (concat "\n\n* * *\n\n"
-                               (buffer-substring-no-properties
-                                (region-beginning)
-                                (region-end)))
+                       (eval (usls--file-region-separator
+                              (buffer-substring-no-properties
+                               (region-beginning)
+                               (region-end))))
                      ""))))
     (with-current-buffer (find-file filename)
       (insert (eval (usls--file-meta-header title date categories filename id)))
