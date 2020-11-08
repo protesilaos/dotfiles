@@ -5506,27 +5506,28 @@ Org (.org) formats."
 This helper function is meant to integrate with `usls-new-note'.
 As such TITLE, DATE, CATEGORIES, FILENAME, ID are all retrieved
 from there."
-  (pcase usls-file-type-extension
-    ;; TODO: make those templates somewhat customisable.  We need to
-    ;; determine what should be parametrised.
-    (".md" `(concat "---" "\n"
-                    "title: " ,title "\n"
-                    "date: " ,date "\n"
-                    "category: " (usls--categories-capitalize ,categories) "\n"
-                    "orig_name: " ,filename "\n"
-                    "orig_id: " ,id "\n"
-                    "---" "\n\n"))
-    (".org" `(concat "#+title: " ,title "\n"
-                     "#+date: " ,date "\n"
-                     "#+category: " (usls--categories-capitalize ,categories) "\n"
-                     "#+orig_name: " ,filename "\n"
-                     "#+orig_id: " ,id "\n\n"))
-    (_ `(concat "title: " ,title "\n"
-                "date: " ,date "\n"
-                "category: " (usls--categories-capitalize ,categories) "\n"
-                "orig_name: " ,filename "\n"
-                "orig_id: " ,id "\n"
-                (make-string 24 ?-) "\n\n"))))
+  (let ((cat (usls--categories-capitalize `,categories)))
+    (pcase usls-file-type-extension
+      ;; TODO: make those templates somewhat customisable.  We need to
+      ;; determine what should be parametrised.
+      (".md" `(concat "---" "\n"
+                      "title: " ,title "\n"
+                      "date: " ,date "\n"
+                      "category: " ,cat "\n"
+                      "orig_name: " ,filename "\n"
+                      "orig_id: " ,id "\n"
+                      "---" "\n\n"))
+      (".org" `(concat "#+title: " ,title "\n"
+                       "#+date: " ,date "\n"
+                       "#+category: " ,cat "\n"
+                       "#+orig_name: " ,filename "\n"
+                       "#+orig_id: " ,id "\n\n"))
+      (_ `(concat "title: " ,title "\n"
+                  "date: " ,date "\n"
+                  "category: " ,cat "\n"
+                  "orig_name: " ,filename "\n"
+                  "orig_id: " ,id "\n"
+                  (make-string 24 ?-) "\n\n")))))
 
 ;;; Interactive functions
 
