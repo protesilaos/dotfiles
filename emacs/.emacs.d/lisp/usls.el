@@ -24,32 +24,101 @@
 
 ;;; Commentary:
 ;;
-;; This is alpha quality software.  It works for its author, but still
-;; needs some refinements before others can benefit from it.
+;; usls.el -- Unassuming Sidenotes of Little Significance
+;; ======================================================
 ;;
-;; `usls', aka the "Unassuming Sidenotes of Little Significance" (USLS),
-;; is a personal system of storing notes of arbitrary length in a
-;; directory listing, based on a strict file naming convention.  It
-;; leverages built-in Emacs functions to help streamline the process of
-;; making plain text notes and adding cross references between them.  It
-;; does not rely on `org-mode' or any other major library, nor does it
-;; try to re-invent commands for retrieving files in a directory,
-;; searching for file contents, or anything else that a general purpose
-;; tool can handle (and which users are likely to already have).
+;; WARNING: This software is pre-alpha quality.  There will be bugs,
+;; errors, cases where improvements could be made.  Please do not try it
+;; with sensitive data that you have not safely backed up.  If you do
+;; use it, I encourage you to send me feedback about anything you feel
+;; could be improved or otherwise made different.
 ;;
-;; TODO: provide overview of main points of entry
 ;;
-;; Now to the real reason you are reading this commentary.  The totally
-;; unintentional constraint of this library is that both its name
-;; (`usls') and its expanded description are unwieldly.  The author is
-;; not aware of an elegant solution.  Users may instead opt to call it a
-;; common word that denotes its utility to the wider public and contains
-;; the characters "u" "s" "l" "s".
+;; USLS, which may be pronounced as a series of letters or just
+;; "useless", is a set of utilities for fleshing out a note-taking
+;; workflow that revolves around a strict file naming convention and
+;; relies exclusively on core Emacs tools.
 ;;
-;; Read about my rationale and workflow with this tool:
+;; usls.el is meant to be a simple tool for streamlining the process of
+;; creating notes.  It does not provide utilities that already exist in
+;; the Emacs milieu or standard Unix tools, such as dired or grep
+;; respectively.  As such, the focus is on the main points of
+;; interaction: (i) creating notes, (ii) adding forward/backward
+;; references to other notes, (iii) quickly browsing such references for
+;; the current file, (iv) visiting the 'usls-directory', (v) visiting a
+;; file that belongs to said directory.
+;;
+;; Please refer to the 'defcustom' declarations in the source code.
+;; Also review the available commands by searching for the 'interactive'
+;; spec.
+;;
+;;
+;; The file name convention
+;; ------------------------
+;;
+;; All files created with usls have a file name that follows this
+;; pattern:
+;;
+;;     DATE--CATEGORY--TITLE.EXTENSION
+;;
+;; All fields are separated by two hyphens.
+;;
+;; The DATE field represents the date in year-month-day followed by an
+;; underscore and the current time in hour-minute-second notation.  The
+;; presentation is compact, with only the underscore separating the two
+;; components.  Like this: 20201108_091625.  The DATE serves as the
+;; unique identifier of each note.
+;;
+;; CATEGORY is one or more entries separated by a hyphen.  Items that
+;; need to be more than one word long must be written with an
+;; underscore.  So "emacs_library" is one category, while
+;; "emacs-library" are two.
+;;
+;; The TITLE is the title of the note that gets extracted and
+;; hyphenated.  An entry about "This is a test" produces a
+;; "this-is-a-test" TITLE.
+;;
+;; Some complete examples:
+;;
+;; 20201007_124941--economics--plentiful-and-predictable-liquidity.txt
+;; 20201007_104945--emacs-git--git-patch-formatting.txt
+;; 20201105_113805--monetary_policy--asset-bubbles-macroprudential-policy.txt
+;;
+;;
+;; Main points of entry
+;; --------------------
+;;
+;; The aforementioned are handled automatically by the 'usls-new-note'
+;; command.  Invoking it brings up a minibuffer prompt for entering the
+;; note's title.  Once that is done, it opens a second prompt, with
+;; completion, for inputting the category.  To enter multiple
+;; categories, separate them with a comma or a space.  The date is
+;; always derived automatically, while the EXTENSION is subject to a
+;; user-facing customisation option.
+;;
+;; Completion for categories presents a list that combines two sources:
+;; (1) a customisable list of "known categories", (2) a dynamic list of
+;; inferred categories from existing file names.  The latter is possible
+;; due to the assumption that the file name convention is fully
+;; respected.
+;;
+;; To create a new category, just enter text that does not match any of
+;; the existing items.  To input multiple categories, separate them with
+;; a comma or a space.  If your completion framework does not support
+;; such actions, then it should be considered undesirable behaviour and
+;; reported upstream.
+;;
+;; A key feature of 'usls-new-note' is the ability to extract the
+;; current region and place it below the area where the point will be
+;; in.  This is useful for quickly capturing some text you wish to
+;; comment on and keep it in context.
+;;
+;; This blog post from 2020-10-08 describes the core ideas of usls:
 ;; <https://protesilaos.com/codelog/2020-10-08-intro-usls-emacs-notes/>.
-;; Expect things to be refined as this library evolves.
-;;
+;; Some references are out-of-date, since the library is expanded to
+;; support Org and Markdown file types, while it can be configured to
+;; access subdirectories inside the 'usls-directory'.
+
 ;;; Code:
 
 (require 'cl-lib)
@@ -81,26 +150,6 @@ Also see `usls-categories' for a dynamically generated list that
 gets combined with this one in relevant prompts."
   :group 'usls
   :type 'list)
-
-(make-obsolete 'usls-directory-files-function
-               'usls-subdir-support
-               "`usls' 0.1.0")
-
-(defcustom usls-directory-files-function #'directory-files
-  "Function for retrieving `usls-directory' files.
-
-The default workflow of USLS is to maintain a flat directory
-where all the notes are stored in.  This allows us to omit the
-common filesystem path and only show file names.  As such, the
-default option is the function `directory-files'.
-
-Users who prefer a notes' directory with subdirectories must use
-`directory-files-recursively'.  It can handle that workflow at
-the expense of making all file names more verbose, as it needs to
-include the complete path."
-  :group 'usls
-  :type 'function
-  :options '(directory-files directory-files-recursively))
 
 (defcustom usls-subdir-support nil
   "Enable support for subdirectories in `usls-directory'.
