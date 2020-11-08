@@ -5239,7 +5239,7 @@ And here is the =usls.el= README:
 
 #+begin_quote
 usls.el -- Unassuming Sidenotes of Little Significance
-======================================================
+------------------------------------------------------
 
 WARNING: This software is pre-alpha quality.  There will be bugs,
 errors, cases where improvements could be made.  Please do not try it
@@ -5248,21 +5248,18 @@ it, I encourage you to send me feedback about anything you feel could be
 improved or otherwise made different.
 
 
-USLS, which may be pronounced as a series of letters or just "useless",
-is a set of utilities for fleshing out a note-taking workflow that
-revolves around a strict file naming convention and relies exclusively
-on core Emacs tools.
+USLS or usls, which may be pronounced as a series of letters or just
+"useless", is a set of utilities for fleshing out a note-taking workflow
+that revolves around a strict file naming convention and relies
+exclusively on core Emacs tools.
 
 usls.el is meant to be a simple tool for streamlining the process of
 creating notes.  It does not provide utilities that already exist in the
-Emacs milieu or standard Unix tools, such as dired or grep respectively.
-As such, the focus is on the main points of interaction: (i) creating
-notes, (ii) adding forward/backward references to other notes, (iii)
-quickly browsing such references for the current file, (iv) visiting the
-'usls-directory', (v) visiting a file that belongs to said directory.
-
-Please refer to the 'defcustom' declarations in the source code.  Also
-review the available commands by searching for the 'interactive' spec.
+Emacs milieu or standard Unix tools, such as dired and grep
+respectively.  The focus is on the main points of interaction: (i)
+creating notes, (ii) adding forward/backward references to other notes,
+(iii) browsing such references for the current file, (iv) visiting the
+'usls-directory', (v) finding a file that belongs to said directory.
 
 
 The file name convention
@@ -5293,6 +5290,9 @@ Some complete examples:
 20201007_104945--emacs-git--git-patch-formatting.txt
 20201105_113805--monetary_policy--asset-bubbles-macroprudential-policy.txt
 
+EXTENSION is one of ".txt", ".md", ".org" and is subject to a
+user-facing customisation option.
+
 
 Main points of entry
 --------------------
@@ -5300,10 +5300,8 @@ Main points of entry
 The aforementioned are handled automatically by the 'usls-new-note'
 command.  Invoking it brings up a minibuffer prompt for entering the
 note's title.  Once that is done, it opens a second prompt, with
-completion, for inputting the category.  To enter multiple categories,
-separate them with a comma or a space.  The date is always derived
-automatically, while the EXTENSION is subject to a user-facing
-customisation option.
+completion, for inputting the category.  The date is always derived
+automatically.
 
 Completion for categories presents a list that combines two sources: (1)
 a customisable list of "known categories", (2) a dynamic list of
@@ -5316,10 +5314,116 @@ comma or a space.  If your completion framework does not support such
 actions, then it should be considered undesirable behaviour and reported
 upstream.
 
+'usls-new-note' accepts an optional prefix argument, with C-u.  Doing so
+will start the command with a completion prompt for the subdirectory to
+be used for the new note.  Subdirectories must already exist in the
+filesystem, else an error message is displayed.
+
 A key feature of 'usls-new-note' is the ability to extract the current
-region and place it below the area where the point will be in.  This is
-useful for quickly capturing some text you wish to comment on and keep
-it in context.
+region, if active, and place it below the area where the point will be
+in.  This is useful for quickly capturing some text you wish to comment
+on and keep it in context.
+
+The note's text and the captured region are demarcated by a horizontal
+rule, denoted by three space-separated asterisks for plain text and
+markdown (* * *), or five consecutive hyphens for org (-----), plus
+empty lines before and after the separator.
+
+
+References to other notes
+-------------------------
+
+In the interest of simplicity, usls.el does not maintain a database and
+does not try to be too smart about linking between notes in the
+'usls-directory'.  A "link" is, for our purposes, a plain text reference
+to the unique identifier of a file (the DATE mentioned above).
+
+Inserting such text is made simple with the use of 'usls-id-insert'.  It
+will produce a minibuffer completion prompt with a list of all notes
+except the current one.  Selecting an item will place its ID at point,
+preceded by an uptick.  Like this:
+
+    A reference here.^20201108_141930
+
+An endnote is also included, now with two successive upticks (^^) which
+points to the full file name of the referenced entry.  If support for
+subdirectories is enabled (via 'usls-subdir-support'), such endnotes
+will include a complete filesystem path.  Otherwise they are assumed as
+relative to the 'usls-directory'.
+
+In the background, the referenced file will get a backward reference as
+an endnote, now denoted by two adjacent at-signs (@@) followed by the
+file name of the item where the reference was created.
+
+USLS makes sure to remove duplicate backward references whenever a new
+one is created, but it does not try to update them in case things
+change.  This is where general-purpose tools come in handy, such as the
+ability to edit a grep buffer with the wgrep package.  Combine that with
+your completion framework's directory-wide search or something like the
+rg.el library to edit references in bulk (e.g. when renaming a file
+name).
+
+To visit the reference at point, one can rely on Emacs' ability to
+identify a file name contextually (among others).  Type C-x C-f or M-x
+find-file and follow it up with M-n.  You will get the file-at-point
+(i.e. the referenced entry) as the selected item.  Or call the command
+'usls-follow-link' which uses minibuffer completion, with candidates
+being the file references documented in the endnotes.
+
+
+Accessing notes
+---------------
+
+Two commands allow you to quickly visit your notes with usls.el:
+
+1. 'usls-dired' will produce a dired buffer with the contents of the
+   'usls-directory'.
+
+2. 'usls-find-file' uses minibuffer completion to run 'find-file' on the
+   selected entry, with options in the list being all the files in the
+   'usls-directory'.
+
+
+Standard Emacs commands for extending usls.el
+---------------------------------------------
+
+As we do not have any intent to reproduce general purpose tools for
+usls-specific cases, we encourage the usage of existing solutions within
+the Emacs milieu.  Some ideas:
+
++ Use a completion framework, such as Icomplete (built-in), Ivy, Helm,
+  Selectrum.  Packages such as the Orderless completion style can
+  further improve your experience, depending on your choice and needs.
+
++ Learn how to run directory-wide searches and how to refactor entries
+  in bulk.  A common workflow involves some grep command and the wgrep
+  package.  Though you could also use 'ibuffer-do-query-replace',
+  'dired-do-find-regexp-and-replace', 'multi-occur'.
+
++ Benefit from dired's numerous capabilities.
+
+  * For example, the key sequence '% m' (dired-mark-files-regexp) lets
+    you mark files based on a regular expression or just a string.  Say
+    you wish to only see notes about "emacs".  Do '% m emacs', then
+    toggle the mark with 't' and complete the process with 'k'.  What
+    you just did is to remove from view all entries that do no match the
+    pattern you searched for.  Bring everything back to the standard
+    view with 'g'.
+
+  * Another neat feature of dired is 'dired-goto-file' which is bound to
+    'j' by default.  It lets you jump to the line of a given file using
+    minibuffer completion.  So if your completion framework supports
+    fuzzy search or out-of-order matching of regular expression groups,
+    you can interactively find virtually any file with only a few key
+    strokes.
+
+The principle is to learn how to use Emacs' existing capabilities or
+extensions to your advantage---not just for usls but for your day-to-day
+operations.
+
+
+General principles of usls.el
+-----------------------------
 
 This blog post from 2020-10-08 describes the core ideas of usls:
 <https://protesilaos.com/codelog/2020-10-08-intro-usls-emacs-notes/>.
