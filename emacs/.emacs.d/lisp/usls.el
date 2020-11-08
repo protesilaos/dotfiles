@@ -260,7 +260,7 @@ Org (.org) formats."
   "Format CATEGORIES output of `usls--categories-prompt'."
   (if (and (> (length categories) 1)
            (not (stringp categories)))
-      (mapconcat #'downcase `,categories "-")
+      (mapconcat #'downcase categories "-")
     categories))
 
 (defun usls--categories-capitalize (categories)
