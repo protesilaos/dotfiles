@@ -789,10 +789,9 @@ See, for example, `prot/font-set-fonts'.")
   ;; 1. https://gitlab.com/protesilaos/hack-font-mod
   ;; 2. https://gitlab.com/protesilaos/iosevka-comfy
   (defconst prot/font-sizes-families-alist
-    '(("pocket" . (105 "Hack" "DejaVu Sans"))
-      ("laptop" . (110 "Hack" "Inter"))
-      ("desktop" . (150 "Iosevka Comfy" "Inter"))
-      ("reader" . (170 "Iosevka Comfy" "FiraGO"))
+    '(("laptop" . (105 "Hack" "DejaVu Sans"))
+      ("desktop" . (120 "Iosevka Comfy Extended" "Inter"))
+      ("reader" . (150 "Iosevka Comfy" "FiraGO"))
       ("presentation" . (190 "Iosevka Comfy" "FiraGO")))
     "Alist of desired typefaces and their point sizes.
 
