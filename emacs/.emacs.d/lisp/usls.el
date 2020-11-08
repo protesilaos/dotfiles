@@ -366,10 +366,9 @@ Org (.org) formats."
               (user-error "No subdirs in `%s'; create them manually"
                           (usls--directory))
             (usls--directory-subdirs)))
-         (subdirs-short (mapcar #'file-name-base subdirs))
-         (choice (completing-read "Subdirectory of new note: " subdirs-short
+         (choice (completing-read "Subdirectory of new note: " subdirs
                                   nil t nil 'usls--subdirectory-history))
-         (subdir (file-truename (concat (usls--directory) choice))))
+         (subdir (file-truename choice)))
     (add-to-history 'usls--subdirectory-history choice)
     subdir))
 
