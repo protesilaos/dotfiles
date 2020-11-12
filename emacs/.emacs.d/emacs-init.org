@@ -560,7 +560,8 @@ of my preferences*: I try different combinations to test things across a
 range of scenaria.
 
 The =modus-themes-format-sexp= and the subsequent =dolist= were copied and
-adapted from [[https://www.reddit.com/r/emacs/comments/gqsz8u/weekly_tipstricketc_thread/fsfakhg/][this comment on r/emacs]].
+adapted from [[https://www.reddit.com/r/emacs/comments/gqsz8u/weekly_tipstricketc_thread/fsfakhg/][this comment on r/emacs]] by user =b3n=.  While the
+=contrib/dark-p= was [[https://www.reddit.com/r/emacs/comments/jq7jxs/displaying_extra_information_in_org_agenda/gbl0iiw/][also taken from Reddit]], shared by user =Krautoni=.
 
 Lastly, if you are curious about the underlying methodology, read my
 essay [[https://protesilaos.com/codelog/2020-03-17-design-modus-themes-emacs/][on the design of the Modus themes]] (2020-03-17).
@@ -604,17 +605,20 @@ See `modus-operandi-theme-load' or `modus-vivendi-theme-load'.")
              modus-%1$s-theme-mode-line nil ; {nil,'3d,'moody}
              modus-%1$s-theme-syntax nil ; {nil,faint,'yellow-comments,'green-strings,'yellow-comments-green-strings,'alt-syntax,'alt-syntax-yellow-comments}
              modus-%1$s-theme-intense-hl-line nil
-             modus-%1$s-theme-intense-paren-match nil
-             modus-%1$s-theme-links 'neutral-underline ; {nil,'faint,'neutral-underline,'faint-neutral-underline,'no-underline}
+             modus-%1$s-theme-intense-paren-match t
+             modus-%1$s-theme-links nil ; {nil,'faint,'neutral-underline,'faint-neutral-underline,'no-underline}
              modus-%1$s-theme-no-mixed-fonts nil
-             modus-%1$s-theme-prompts nil ; {nil,'subtle,'intense}
+             modus-%1$s-theme-prompts 'subtle ; {nil,'subtle,'intense}
              modus-%1$s-theme-completions 'moderate ; {nil,'moderate,'opinionated}
-             modus-%1$s-theme-diffs nil ; {nil,'desaturated,'fg-only}
-             modus-%1$s-theme-org-blocks 'grayscale ; {nil,'grayscale,'rainbow}
+             modus-%1$s-theme-diffs 'desaturated ; {nil,'desaturated,'fg-only}
+             modus-%1$s-theme-org-blocks nil ; {nil,'grayscale,'rainbow}
              modus-%1$s-theme-headings  ; Read the manual for this one
-             '((t . nil))
+             '((1 . rainbow-section)
+               (2 . rainbow-section)
+               (3 . rainbow-line)
+               (t . rainbow))
              modus-%1$s-theme-variable-pitch-headings t
-             modus-%1$s-theme-scale-headings nil
+             modus-%1$s-theme-scale-headings t
              modus-%1$s-theme-scale-1 1.1
              modus-%1$s-theme-scale-2 1.15
              modus-%1$s-theme-scale-3 1.21
@@ -641,7 +645,32 @@ See `modus-operandi-theme-load' or `modus-vivendi-theme-load'.")
         (modus-themes-dark)
       (modus-themes-light)))
 
-  :hook (after-init-hook . modus-operandi-theme-load)
+  (defun contrib/dark-p ()
+    "Return t if it's dark outside, otherwise nil.
+
+Will look at the `current-time' and calculate sunset and sunrise times
+according to `calendar-longitude' and `calendar-latitude' using
+`solar-sunrise-sunset', so make sure you've set your location."
+    (require 'solar)
+    (let* ((solar (solar-sunrise-sunset (calendar-current-date)))
+	       (sunrise (car (car solar)))
+	       (sunset (car (car (cdr solar))))
+	       (time (decode-time (current-time)))
+	       (hour (nth 2 time))
+	       (minute (nth 1 time))
+	       (minute-fraction (/ minute 60.0))
+	       (time-decimal (+ hour minute-fraction)))
+      (or (> time-decimal sunset) (< time-decimal sunrise))))
+
+  (defun prot/modus-theme-load ()
+    "Load theme depending on time of day.
+This is meant to be evaluated at startup, such as via
+`after-init-hook'."
+    (if (contrib/dark-p)
+        (modus-vivendi-theme-load)
+      (modus-operandi-theme-load)))
+
+  :hook (after-init-hook . prot/modus-theme-load)
   :bind ("<f5>" . modus-themes-toggle))
 #+end_src
 
