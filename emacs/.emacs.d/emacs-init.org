@@ -5400,7 +5400,7 @@ the Emacs milieu.  Some ideas:
   package.  Though you could also use 'ibuffer-do-query-replace',
   'dired-do-find-regexp-and-replace', 'multi-occur'.
 
-+ Benefit from dired's numerous capabilities.
++ Benefit from dired's numerous capabilities (which can be combined).
 
   * For example, the key sequence '% m' (dired-mark-files-regexp) lets
     you mark files based on a regular expression or just a string.  Say
@@ -5417,9 +5417,25 @@ the Emacs milieu.  Some ideas:
     you can interactively find virtually any file with only a few key
     strokes.
 
+  * To work with dired subdirectories, you can produce a recursive list
+    of the current buffer.  Place the point over the file system path
+    that is at the top of the dired buffer (it shows the directory you
+    are in).  Then use 'C-u l' to modify the 'ls' flags that are active.
+    You want to pass the '-R' switch to those already in effect.  Doing
+    so will populate the buffer with listings from the current directory
+    and all its subdirectories.
+
+    (Note: 'C-u l' is for any directory path at point.  If you only ever
+    want for the directory shown by dired, use 'C-u s' instead, which is
+    not sensitive to the location of the cursor.)
+
 The principle is to learn how to use Emacs' existing capabilities or
 extensions to your advantage---not just for usls but for your day-to-day
 operations.
+
+To that end, this video tutorial offers a primer on regexp:
+<https://protesilaos.com/codelog/2020-01-23-emacs-regexp-primer/>.
+Other videos in that list may also be of help.
 
 
 General principles of usls.el
@@ -5430,6 +5446,16 @@ This blog post from 2020-10-08 describes the core ideas of usls:
 Some references are out-of-date, since the library is expanded to
 support Org and Markdown file types, while it can be configured to
 access subdirectories inside the 'usls-directory'.
+
+
+Free software license
+---------------------
+
+usls.el is distributed under the terms of the GNU General Public
+License, Version 3 or, at your convenience, a later version.
+
+Refer to the COPYING document, distributed as part of this project, for
+the legal text.
 #+end_quote
 
 ** Email settings
@@ -8912,13 +8938,11 @@ The mode line is an integral part of the Emacs interface.  While there
 are lots of third party packages that style it in a variety of ways, I
 find the default to be particularly good.
 
-I just configure it to reshuffle some of the indicators.  Nothing too
-fancy.
-
-Meanwhile, the =mode-line-defining-kbd-macro= is tweaked to use a more
-appropriate string for its indicator and colours that are designed
-specifically for the mode line (the default uses the generic font-lock
-warning face).
+In the code snippet right below I reshuffle some of the mode line
+indicators.  Nothing too fancy.  The =mode-line-defining-kbd-macro= is
+tweaked to use a more appropriate string for its indicator and to apply
+colours that are designed specifically for the mode line (the default
+uses the generic font-lock warning face).
 
 I got the idea for =prot/mode-line-hidden-mode= from [[https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8][William Rankin]].  Note
 that William is the author of the wonderful =olivetti-mode= (see elsewhere
