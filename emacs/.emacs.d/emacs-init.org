@@ -819,7 +819,7 @@ See, for example, `prot/font-set-fonts'.")
   ;; 2. https://gitlab.com/protesilaos/iosevka-comfy
   (defconst prot/font-sizes-families-alist
     '(("laptop" . (105 "Hack" "DejaVu Sans"))
-      ("desktop" . (120 "Iosevka Comfy Extended" "Inter"))
+      ("desktop" . (110 "Hack" "Inter"))
       ("reader" . (150 "Iosevka Comfy" "FiraGO"))
       ("presentation" . (190 "Iosevka Comfy" "FiraGO")))
     "Alist of desired typefaces and their point sizes.
