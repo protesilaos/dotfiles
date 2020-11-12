@@ -745,8 +745,6 @@ note in."
      (1 'escape-glyph)
      (2 'font-lock-constant-face)
      (3 'font-lock-constant-face))
-    ;; These conflict with `diredfl-mode'.  Maybe there is some way to
-    ;; avoid that?
     (,usls-file-regexp
      (1 'usls-dired-field-date)
      (2 'usls-dired-field-category)
@@ -758,7 +756,7 @@ note in."
   "Font-lock setup for `usls-font-lock-keywords'."
   (font-lock-flush (point-min) (point-max))
   (if usls-mode
-      (font-lock-add-keywords nil usls-font-lock-keywords)
+      (font-lock-add-keywords nil usls-font-lock-keywords t)
     (font-lock-remove-keywords nil usls-font-lock-keywords))
   (font-lock-flush (point-min) (point-max)))
 
