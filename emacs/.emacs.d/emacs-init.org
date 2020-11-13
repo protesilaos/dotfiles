@@ -1943,7 +1943,7 @@ whatever your completion framework may provide out-of-the-box.
   (defun prot/project-remove-project ()
     "Remove project from `project--list' using completion."
     (interactive)
-    (when (eq project--list 'unset) (project--read-project-list))
+    (project--ensure-read-project-list)
     (let* ((projects project--list)
            (dir (completing-read "REMOVE project from list: " projects nil t)))
       (setq project--list (delete (assoc dir projects) projects))))
