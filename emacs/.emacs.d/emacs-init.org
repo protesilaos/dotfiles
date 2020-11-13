@@ -40,7 +40,8 @@ of my additions and their underlying rationale.
 Literate programming allows us to be more expressive and deliberate.
 Not only can we use typography to its maximum potential, but may also
 employ techniques such as internal links between sections.  This makes
-the final product much more useful for end users than a terse script.
+the final product much more useful for end users than, say, a terse
+script.
 
 Each section provides information about the code it contains.  In case
 you feel something is missing, I maintain a [[#h:4e73b827-cdf3-46a2-81c5-55b6e95701b7][Frequently Asked Questions]]
@@ -52,43 +53,17 @@ contains all /package configurations/ for my Emacs setup.  To actually
 work, it needs to be initialised from another file that only covers the
 absolute essentials.
 
-*** Contents of my init.el
+*** Contents of my init.el (for Emacs 27+)
 :PROPERTIES:
 :CUSTOM_ID: h:584c3604-55a1-49d0-9c31-abe46cb1f028
 :END:
 
-The =emacs-init.org= is actually loaded from an other file, named =init.el=
-as per the Emacs convention.  Mine is designed to add the
-community-driven MELPA archive to the list of package repositories,
-configure =use-package= (see [[#h:cfa129a4-3394-4911-9097-4544df4e6ed9][comprehensive explanation below]]) and then
-load the file with my configurations (i.e. the present document).
-
-**** Old version prior to Emacs 27
-:PROPERTIES:
-:CUSTOM_ID: h:7264d03a-9aac-490f-bfba-582382997105
-:END:
-
-For reference, these were the contents of my =init.el= *prior to Emacs
-27.1*.
-
-#+begin_example emacs-lisp
-(require 'package)
-(setq package-enable-at-startup nil)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
-(unless package--initialized (package-initialize))
-
-(require 'org)
-(org-babel-load-file (expand-file-name "~/.emacs.d/emacs-init.org"))
-#+end_example
-
-**** Current version for Emacs 27+
-:PROPERTIES:
-:CUSTOM_ID: h:3fd803db-1bb4-4a0b-9c50-787d88cc7594
-:END:
-
-Whereas in *Emacs 27.1 and onward*, they are modified as follows.  For the
-=let*= part, see section: [[#h:b343378b-d3ec-4c90-8117-6cf92abee45b][Always rebuild init and refresh package cache]].
+The =emacs-init.org= is loaded from an other file, named =init.el= per the
+Emacs conventions.  Mine is designed to add the community-driven MELPA
+archive to the list of package repositories, configure =use-package= (see
+[[#h:cfa129a4-3394-4911-9097-4544df4e6ed9][comprehensive explanation below]]) and then load the file with my
+configurations (i.e. the present document).  For the =let*= part, see:
+[[#h:b343378b-d3ec-4c90-8117-6cf92abee45b][Always rebuild init and refresh package cache]].
 
 #+begin_example emacs-lisp
 (require 'package)
@@ -167,7 +142,7 @@ way Emacs initialises the package manager. Prior to Emacs 27.1, the
 =package-initialize=.  Whereas for Emacs 27.1, the default behaviour is
 to start the package manager /before/ loading the user's init file.
 
-*** About `use-package'
+*** About use-package
 :PROPERTIES:
 :CUSTOM_ID: h:cfa129a4-3394-4911-9097-4544df4e6ed9
 :END:
@@ -8797,7 +8772,7 @@ Note, though, that this will interfere with `wdired-mode'.  See
   ;; TODO reactivate bongo dired library upon wdired exit
   (prot/bongo-dired-library
    prot/bongo-dired-library-disable
-   "Unset `bongo-dired-library-mode' when accessing ~/Music.
+   "Disable `bongo-dired-library-mode' when accessing ~/Music.
 This should be added `wdired-mode-hook'.  For more, refer to
 `prot/bongo-dired-library-enable'."
    -1)
