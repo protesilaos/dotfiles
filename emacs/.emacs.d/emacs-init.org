@@ -221,9 +221,9 @@ the old one that is still registered on your list has been removed from
 the source.  Do that with either =M-x package-refresh-contents= or the
 package browser =M-x list-packages=.
 
-The following snippet of elisp sets up and configures =use-package= to
-my liking.  It is already referenced in the previous section
-concerning the [[*Contents of my init.el][contents of my init.el]].  This is due to changes in how
+The following snippet of elisp sets up and configures =use-package= to my
+liking.  It is already referenced in the previous section concerning the
+[[#h:584c3604-55a1-49d0-9c31-abe46cb1f028][Contents of my init.el (for Emacs 27+)]].  This is due to changes in how
 Emacs 27.1 starts up.  Whereas before I used to configure =use-package=
 from inside this document.
 
@@ -370,8 +370,8 @@ penalty when terminating the Emacs session.  Otherwise we would be
 facing delays at the initialisation stage.
 
 Note that choosing to load the right file is the task of my =init.el=.
-Make sure to either browse the source code of my dotfiles, of which the
-present document is a part of, or read the [[#h:3fd803db-1bb4-4a0b-9c50-787d88cc7594][section on my init.el]].
+Browse the source code of my dotfiles, of which the present document is
+a part of, or read the [[#h:584c3604-55a1-49d0-9c31-abe46cb1f028][Contents of my init.el (for Emacs 27+)]].
 
 Similarly, I want to maintain an up-to-date cache with the installed
 packages, which is used to speed up boot times, /ceteris paribus/.  The
