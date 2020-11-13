@@ -1839,30 +1839,77 @@ given the aforementioned.
   (flimenu-global-mode 1))
 #+end_src
 
-*** Generic completion for projects and directory trees
+*** Generic completion for projects and directory trees (project.el)
 :PROPERTIES:
 :CUSTOM_ID: h:7862f39e-aed0-4d02-9f1e-60c4601a9734
 :END:
 
-*Bear in mind* that this section only covers a set of /generic/ commands for
-querying version-controlled directories, aka "projects", or directory
-trees in general.  They do not cover every type of interaction with
-projects or directories, but only those that are not specific to other
-tools, such as =dired= and =ibuffer=.
+Starting with Emacs 28, the current development target, =project.el=
+contains lots of interesting additions that make it an all-round useful
+tool.  Chief among them is a new prefix key bound to =C-x p=.  This has
+good mnemonic value, like those for tabs (=C-x t=) and registers (=C-x r=).
 
-Overview of "advanced searches" as of 2020-05-31 (subject to further
+A "project" is, in our case, a directory whose contents are related to
+each other in terms of the end product they can provide.  Think, for
+example, how Emacs' source code is a single "project" that delivers the
+program we use.  In practical terms, a project is a version controlled
+directory (or directory tree).  For my case that means =git= though other
+backends are also supported (same principle as with VC---see section on
+[[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Generic version control framework]]).
+
+Using any of the commands listed in =C-x p C-h= will append the current
+project to a list of "known projects", stored in the dynamically updated
+=project--list= variable, whose contents are stored in a file controlled
+by =project-list-file= (remember that =C-h= can be added to any key sequence
+to show its extensions and the commands associated with them---read my
+brief guide on [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).  It is then possible to switch
+between your projects and proceed to immediately perform an action on
+them with =C-x p p=.  A menu with possible actions will appear once you
+select a project.  That is customisable via =project-switch-commands=.
+
+Also note that =C-x p p= (=project-switch-project=) can be used to store a
+new directory in the =project--list=.  Look for the =... (choose a dir)=
+option.
+
+One action I felt in need of was the ability to remove an item from the
+list of projects, perhaps because I added it by mistake or realised I no
+longer had to operate on it.  =prot/project-remove-project= is there to do
+just that.
+
+Another area where I feel project-switching could be improved is with
+regard to the inclusion of lots of version controlled directories inside
+a common root.  For example, =~/Git/Projects/= is where I store the local
+copies of my projects, while =~/Git/build/= is for third party code that I
+may need to inspect, for a program I need to compile, etc..  Neither of
+those paths constitutes a "project" as such, so the aforementioned
+methods are not applicable.  My =prot/project-switch-project= is meant to
+work around that problem and be more direct than =C-x p p= in that it only
+switches to a dired buffer.  Plus, it can be used with a universal
+argument (=C-u= prefix key) to produce a Dired buffer with all of my
+projects.
+
+To my mind, =project.el= is part of a broader toolkit of utilities that
+operate on closely-related files, directories, buffers.  I consider
+those "advanced searches".  Both in the following code block and in
+other sections of this document, I define more commands that perform
+actions on projects or directories; commands that integrate with
+external command line tools, such as =rg= and =fd=, and which provide
+additional functionality of integrating with Dired or Ibuffer when
+invoked with a universal argument (check each command's doc string).
+
+Overview of "advanced searches" as of 2020-11-13 (subject to further
 refinements):
 
-| Function name                | Key   | Description                                    |
-|------------------------------+-------+------------------------------------------------|
-| prot/find-file-vc-or-dir     | M-s f | Recursive file search from project root or dir |
-| prot/find-project            | M-s p | Switch to project (projects across many paths) |
-| prot/rg-vc-or-dir            | M-s g | Grep regexp recursively (editable buffer)      |
-| prot/rg-ref-in-dir           | M-s r | Grep for ref in present dir (edit buf)         |
-| prot/dired-fd-dirs           | M-s d | Recursive search for subdirs                   |
-| prot/dired-fd-files-and-dirs | M-s z | Recursive files and dirs                       |
-| prot/buffers-major-mode      | M-s b | Buffers matching current's major mode          |
-| prot/buffers-vc-root         | M-s v | Buffers in current project                     |
+| Command name                     | Keys  | Description                               |
+|----------------------------------+-------+-------------------------------------------|
+| prot/project-find-file-vc-or-dir | M-s f | Recursive file search in project or dir   |
+| prot/project-switch-project      | M-s p | Switch to project directory               |
+| prot/rg-vc-or-dir                | M-s g | Grep regexp recursively (editable buffer) |
+| prot/rg-ref-in-dir               | M-s r | Grep for thing-at-point in present dir    |
+| prot/dired-fd-dirs               | M-s d | Recursive search for subdirs              |
+| prot/dired-fd-files-and-dirs     | M-s z | Recursive files and dirs                  |
+| prot/buffers-major-mode          | M-s b | Buffers matching current's major mode     |
+| prot/buffers-vc-root             | M-s v | Buffers in current project                |
 
 Only the first two are in this section.  For the rest see:
 
@@ -1870,73 +1917,103 @@ Only the first two are in this section.  For the rest see:
 + [[#h:751a310d-c63e-461c-a6e1-dfdfdb01cb92][Dired and extras]]
 + [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer and extras]]
 
-Many of those accept a prefix argument (=C-u=), which will put the results
-in a Dired/Ibuffer.  Otherwise they use the completion framework
-(Icomplete in my case, though technically the underlying =completing-read=
-should work with any compliant front-end).
-
 Concerning the design of these key bindings, they are consistent with
 all my "advanced search methods" (e.g. the default =M-s o= for =occur=).  If
 I ever identify a conflict, such as =M-s f= in =dired-mode-map=, I disable
 that function altogether in favour of my own (or remap its key if the
 function it calls is useful overall).
 
-*Recall that my motivation for writing those is to practice some Elisp.*
-Otherwise you may be better off with a library like Projectile.
+*Recall that my motivation for writing those is to practice some Elisp*
+and because I like to have commands that do exactly what I want.
+Otherwise you may be better off with a library like Projectile or
+whatever your completion framework may provide out-of-the-box.
 
 #+begin_src emacs-lisp
 (use-package project
+  :init
+  (setq project-switch-commands
+        '((?f "Find file" project-find-file)
+          (?g "Find regexp" project-find-regexp)
+          (?d "Dired" project-dired)
+          (?b "Buffer" project-switch-to-buffer)
+          (?q "Query replace" project-query-replace-regexp)
+          (?v "VC-Dir" project-vc-dir)
+          (?e "Eshell" project-eshell)))
   :config
-  (defun prot/find-file-vc-or-dir (&optional arg)
+  (defun prot/project-remove-project ()
+    "Remove project from `project--list' using completion."
+    (interactive)
+    (when (eq project--list 'unset) (project--read-project-list))
+    (let* ((projects project--list)
+           (dir (completing-read "REMOVE project from list: " projects nil t)))
+      (setq project--list (delete (assoc dir projects) projects))))
+
+  (defun prot/project--dir-or-vc ()
+    "Return project root or current directory.
+To be used by `prot/find-file-vc-or-dir'."
+    (file-name-directory
+     (or (locate-dominating-file "." ".git" )
+         default-directory)))
+
+  (defun prot/project--filenames-no-git-dir ()
+    "List of files except those in a .git directory.
+To be used by `prot/find-file-vc-or-dir'."
+    (cl-remove-if (lambda (x)
+                    (string-match-p "\\.git" x))
+                  (directory-files-recursively
+                   default-directory ".*" nil t)))
+
+  (defun prot/project-find-file-vc-or-dir (&optional arg)
     "Find file by name that belongs to the current project or dir.
-With \\[universal-argument] match files by contents.  This
+With \\[universal-argument] prefix match files by contents.  This
 requires the command-line executable called 'rg' or 'ripgrep'."
     (interactive "P")
-    (let* ((default-directory (file-name-directory
-                               (or (locate-dominating-file "." ".git" )
-                                   default-directory))))
+    (let ((default-directory (prot/project--dir-or-vc)))
       (if arg
           (let* ((regexp (read-regexp
-                          (concat "File contents matching REGEXP in "
-                                  (propertize default-directory 'face 'bold)
-                                  ": ")))
-                 (results (process-lines "rg" "-l" "--hidden" "-m" "1" "-M" "120" regexp)))
+                          (format "File contents matching REGEXP in %s: "
+                           (propertize default-directory 'face 'bold))))
+                 (results (process-lines "rg" "-l" "--hidden"
+                                         "-m" "1" "-M" "120" regexp)))
             (find-file
-             (icomplete-vertical-do ()
-               (completing-read (concat
-                                 "Files with contents matching "
-                                 (propertize regexp 'face 'success)
-                                 (format " (%s)" (length results))
-                                 ": ")
-                                results nil t))))
-        (let* ((filenames-all (directory-files-recursively default-directory ".*" nil t))
-               (filenames (cl-remove-if (lambda (x)
-                                          (string-match-p "\\.git" x))
-                                        filenames-all)))
-          (icomplete-vertical-do ()
+             (completing-read
+              (format "Files with contents matching %s: "
+                      (propertize regexp 'face 'success))
+              results nil t)))
+        (let ((filenames (prot/project--filenames-no-git-dir)))
             (find-file
-             (completing-read "Find file recursively: " filenames nil t)))))))
+             (completing-read "Find file recursively: " filenames nil t))))))
 
-  (defun prot/find-project (&optional arg)
-    "Switch to sub-directory at the specified locations.
-With \\[universal-argument] produce a `dired' buffer instead with
-all the possible candidates."
-    (interactive "P")
-    (let* ((dirs (list "~/Git/Projects/" "~/.emacs.d/prot-dev/"))
+  (defvar prot/project-roots (list "~/Git/Projects/" "~/.emacs.d/prot-dev/")
+    "List of directories with version-controlled projects.
+To be used by `prot/project-switch-project'.")
+
+  (defun prot/project--list-projects ()
+    "Produce list of projects in `prot/project-roots'.
+To be used by `prot/project-switch-project'."
+    (let* ((dirs prot/project-roots)
            (dotless directory-files-no-dot-files-regexp)
            (cands (mapcan (lambda (d)
                             (directory-files d t dotless))
-                          dirs))
-           (projects (mapcar 'abbreviate-file-name cands))
-           (buf "*Projects Dired*"))
+                          dirs)))
+      (mapcar 'abbreviate-file-name cands)))
+
+  (defun prot/project-switch-project (&optional arg)
+    "Switch to sub-directory at the specified locations.
+With \\[universal-argument] prefix produce a `dired' buffer
+instead with all the possible candidates."
+    (interactive "P")
+    (let ((buf "*Projects Dired*")
+          (projects (prot/project--list-projects)))
       (if arg
           (dired (cons (generate-new-buffer-name buf) projects))
-        (icomplete-vertical-do ()
-          (dired
-           (completing-read "Find project: " projects nil t))))))
+        (dired
+         (completing-read "Find project: " projects nil t)))))
 
-  :bind (("M-s p" . prot/find-project)
-         ("M-s f" . prot/find-file-vc-or-dir)
+  :bind (("C-x p q" . project-query-replace-regexp) ; C-x p is `project-prefix-map'
+         ("C-x p <delete>" . prot/project-remove-project)
+         ("M-s p" . prot/project-switch-project)
+         ("M-s f" . prot/project-find-file-vc-or-dir)
          ("M-s l" . find-library)))
 #+end_src
 
