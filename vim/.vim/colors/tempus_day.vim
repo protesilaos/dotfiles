@@ -13,8 +13,13 @@ let g:colors_name = "tempus_day"
 
 " General
 " -------
-" NOTE the ctermbg=none is for terminals with transparency
-hi Normal guibg=#f8f2e5 guifg=#464340 ctermbg=none ctermfg=0
+if exists("g:tempus_enforce_background_color")
+	hi Normal guibg=#f8f2e5 guifg=#464340 ctermbg=15 ctermfg=0
+else
+	" NOTE the ctermbg=none is for terminals with transparency
+	hi Normal guibg=#f8f2e5 guifg=#464340 ctermbg=none ctermfg=0
+endif
+
 hi Visual guibg=#464340 guifg=#f8f2e5 ctermbg=0 ctermfg=15
 hi Search gui=underline,bold guibg=#eae9dd guifg=#464340 cterm=underline,bold ctermbg=7 ctermfg=3
 hi IncSearch gui=underline,bold guibg=#68607d guifg=#f8f2e5 term=none cterm=underline,bold ctermbg=8 ctermfg=15
@@ -127,6 +132,48 @@ hi Pmenu gui=italic guibg=#eae9dd guifg=#464340 cterm=none ctermbg=7 ctermfg=0
 hi PmenuSel gui=none,bold guibg=#68607d guifg=#f8f2e5 cterm=none,bold ctermbg=8 ctermfg=15
 hi PmenuSbar guibg=#eae9dd ctermbg=7
 hi PmenuThumb guibg=#68607d ctermbg=8
+
+" Terminal
+" --------
+
+if exists('*term_setansicolors')
+	let g:terminal_ansi_colors = [
+				\ "#464340",
+				\ "#c81000",
+				\ "#107410",
+				\ "#806000",
+				\ "#385dc4",
+				\ "#b63052",
+				\ "#007070",
+				\ "#eae9dd",
+				\ "#68607d",
+				\ "#b94000",
+				\ "#4a7240",
+				\ "#706a00",
+				\ "#0d66c9",
+				\ "#8055aa",
+				\ "#337087",
+				\ "#f8f2e5"
+				\ ]
+endif
+if has('nvim')
+	let g:terminal_color_0 = "#464340"
+	let g:terminal_color_1 = "#c81000"
+	let g:terminal_color_2 = "#107410"
+	let g:terminal_color_3 = "#806000"
+	let g:terminal_color_4 = "#385dc4"
+	let g:terminal_color_5 = "#b63052"
+	let g:terminal_color_6 = "#007070"
+	let g:terminal_color_7 = "#eae9dd"
+	let g:terminal_color_8 = "#68607d"
+	let g:terminal_color_9 = "#b94000"
+	let g:terminal_color_10 = "#4a7240"
+	let g:terminal_color_11 = "#706a00"
+	let g:terminal_color_12 = "#0d66c9"
+	let g:terminal_color_13 = "#8055aa"
+	let g:terminal_color_14 = "#337087"
+	let g:terminal_color_15 = "#f8f2e5"
+endif
 
 " Diffs
 " -----
