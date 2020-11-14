@@ -630,9 +630,7 @@ note in."
   "Activate mode when inside `usls-directory'."
   (when (or (string-match-p (expand-file-name usls-directory) default-directory)
             (string-match-p usls-directory default-directory))
-    (unless (or (string= usls-file-type-extension ".md")
-                (string= usls-file-type-extension ".org"))
-      (usls-mode 1))))
+      (usls-mode 1)))
 
 (add-hook 'find-file-hook #'usls-mode-activate)
 (add-hook 'dired-mode-hook #'usls-mode-activate)
