@@ -359,13 +359,21 @@ Org (.org) formats."
      (file-directory-p x))
    (directory-files-recursively usls-directory ".*" t t)))
 
+;; TODO: generalise this for all VC backends?  Which ones?
+(defun usls--directory-subdirs-no-git ()
+  "Remove .git directories from `usls--directory-subdirs'."
+  (cl-remove-if
+   (lambda (x)
+     (string-match-p "\\.git" x))
+   (usls--directory-subdirs)))
+
 (defun usls--directory-subdirs-prompt ()
   "Handle user input on choice of subdirectory."
   (let* ((subdirs
-          (if (eq (usls--directory-subdirs) nil)
+          (if (eq (usls--directory-subdirs-no-git) nil)
               (user-error "No subdirs in `%s'; create them manually"
                           (usls--directory))
-            (usls--directory-subdirs)))
+            (usls--directory-subdirs-no-git)))
          (choice (completing-read "Subdirectory of new note: " subdirs
                                   nil t nil 'usls--subdirectory-history))
          (subdir (file-truename choice)))
