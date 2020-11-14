@@ -596,13 +596,19 @@ note in."
     (add-to-history 'usls--link-history item)))
 
 ;;;###autoload
-(defun usls-dired ()
-  "Switch to `usls-directory'."
-  (interactive)
-  (let ((path usls-directory))
-    (if (file-directory-p path)
-        (dired path)
-      (error "`usls-directory' not found"))))
+(defun usls-dired (&optional arg)
+  "Switch to `usls-directory' using `dired'.
+With optional \\[universal-argument] prefix ARG prompt for a usls
+subdirectory to switch to.  If none is available, the main
+directory will be directly displayed instead."
+  (interactive "P")
+  (let ((path usls-directory)
+        (subdirs (usls--directory-subdirs-no-git)))
+    (unless (file-directory-p path)
+      (user-error "`usls-directory' not found at %s" usls-directory))
+    (if (and arg subdirs)
+        (dired (usls--directory-subdirs-prompt))
+      (dired path))))
 
 ;;; User-facing setup
 
