@@ -277,6 +277,59 @@ Org (.org) formats."
           (const :tag "Markdown format" ".md")
           (const :tag "Org format" ".org")))
 
+(defcustom usls-file-region-separator 'line
+  "Separator for `usls-new-note' delimiting the captured region.
+
+The default value of 'line' produces a horizontal rule depending
+on the `usls-file-type-extension'.
+
+* For plain text and Markdown this results in the following
+  string (without the quotes): '\\n\\n* * *\\n\\n'.  It means to put
+  two new lines before and two after the three space-separated
+  asterisks.  In practice, that means an empty line before and
+  after.  This notation is a common way to denote a horizontal
+  rule or page/section break and is a standard in Markdown.
+
+* For Org files it produces five consecutive hyphens with
+  newlines before and after ('\\n\\n-----\\n\\n').  This is the valid
+  syntax for a horizontal rule in `org-mode'.
+
+Option 'heading' produces a heading that is formatted according
+to `usls-file-type-extension'.  Its text is 'Reference':
+
+* For plain text, the formatting of the heading involves a series
+  of hyphens below the heading's text, followed by an empty line.
+  The length of the hyphens is equal to that of the heading's
+  text.
+
+* For Markdown and Org the heading is formatted per the
+  respective major mode's syntax, plus an empty line before and
+  after.
+
+It is also possible to provide a string of your own.  This should
+contain just the text that you wish to turn into a heading.  For
+example, you want to use the word 'Captured region' instead of
+'Reference', so provide only that.  Your input will be processed
+according to `usls-file-type-extension' to offer the correct
+heading format.  The result will mimic that of the aforementioned
+options.
+
+The level of the heading is controlled by the customisation
+option `usls-file-region-separator-heading-level' and defaults to
+1 (one # for Markdown or one * for Org)."
+  :group 'usls
+  :type '(choice
+          (const :tag "Line with surrounding space (default)" line)
+          (const :tag "A 'Reference' heading" heading)
+          (string :tag "A heading with text of your choice")))
+
+(defcustom usls-file-region-separator-heading-level 1
+  "Heading level for `usls-file-region-separator'.
+Has effect when `usls-file-type-extension' is either that for
+Markdown or Org types."
+  :group 'usls
+  :type 'integer)
+
 ;;; Main variables
 
 (defconst usls-id "%Y%m%d_%H%M%S"
@@ -463,11 +516,35 @@ from there."
                   "orig_id: " ,id "\n"
                   (make-string 24 ?-) "\n\n")))))
 
+(defun usls--file-region-separator-heading-level (mark str)
+  "Format MARK and STR for `usls--file-region-separator-str'.
+MARK must be a single character string.  For multiple character
+strings only the first one is used."
+  (let ((num usls-file-region-separator-heading-level)
+        (char (when (stringp mark)
+                (string-to-char (substring mark 0 1)))))
+    (format "\n\n%s %s\n\n" (make-string num char) str)))
+
+(defun usls--file-region-separator-str ()
+  "Produce region delimiter string for use in `usls-new-note'."
+  (let* ((str (format "%s" usls-file-region-separator))
+         (num (length str)))
+    (pcase usls-file-region-separator
+      ('line (pcase usls-file-type-extension
+               (".org" (format "\n\n%s\n\n" (make-string 5 ?-)))
+               (_ "\n\n* * *\n\n")))
+      ('heading (pcase usls-file-type-extension
+                  (".md" (usls--file-region-separator-heading-level "#" "Reference"))
+                  (".org" (usls--file-region-separator-heading-level "*" "Reference"))
+                  (_ (format "\n\nReference\n%s\n\n" (make-string 9 ?-)))))
+      (_ (pcase usls-file-type-extension
+           (".md" (usls--file-region-separator-heading-level "#" str))
+           (".org" (usls--file-region-separator-heading-level "*" str))
+           (_ (format "\n\n%s\n%s\n\n" str (make-string num ?-))))))))
+
 (defun usls--file-region-separator (region)
-  "Separator for captured REGION in `usls-new-note'."
-  (pcase usls-file-type-extension
-    (".org" `(concat "\n\n" (make-string 5 ?-) "\n\n" ,region))
-    (_ `(concat "\n\n* * *\n\n" ,region))))
+  "`usls--file-region-separator-str' and `usls-new-note' REGION."
+  `(concat (usls--file-region-separator-str) ,region))
 
 ;;; Interactive functions
 
