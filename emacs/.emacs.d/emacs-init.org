@@ -859,7 +859,7 @@ or `prot/font-fonts-dwim' which just wraps this one with that."
     (if window-system
         (let* ((fonts prot/font-monospaced-fonts-list)
                (font (completing-read "Select main font: " fonts nil t))
-               (nums (list 130 140 150 160))
+               (nums (list 100 105 110 120 130 140 150 160))
                (sizes (mapcar 'number-to-string nums))
                (size (completing-read "Select or insert number: " sizes nil))
                (var (face-attribute 'variable-pitch :family)))
