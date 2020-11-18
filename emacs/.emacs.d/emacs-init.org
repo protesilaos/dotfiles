@@ -594,15 +594,7 @@ into this project:
         modus-themes-scale-4 1.27
         modus-themes-scale-5 1.33)
 
-  (defun prot/modus-theme-load ()
-    "Load theme depending on time of day.
-This is meant to be evaluated at startup, such as via
-`after-init-hook'."
-    (if (contrib/dark-p)
-        (modus-themes--dark)
-      (modus-themes--light)))
-
-  :hook (after-init-hook . prot/modus-theme-load)
+  :hook (after-init-hook . modus-themes--light)
   :bind ("<f5>" . modus-themes-toggle))
 #+end_src
 
