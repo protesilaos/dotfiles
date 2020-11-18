@@ -5308,6 +5308,8 @@ README below the package declaration.
   (setq usls-known-categories '(economics philosophy politics))
   (setq usls-file-type-extension ".txt") ; {.txt,.org,.md}
   (setq usls-subdir-support nil)
+  (setq usls-file-region-separator 'line) ; {'line,'heading, OR string of your choice}
+  (setq usls-file-region-separator-heading-level 1)
   :bind (("C-c n d" . usls-dired)
          ("C-c n f" . usls-find-file)
          ("C-c n n" . usls-new-note)
