@@ -3340,7 +3340,7 @@ This relies on the external 'fd' executable."
 With \\[universal-argument] put the results in a `dired' buffer.
 This relies on the external 'fd' executable."
    "Files and dirs"
-    "-i" "-H" "-a" "-t" "d" "-t" "f" "-c" "never")
+   "-i" "-H" "-a" "-t" "d" "-t" "f" "-c" "never")
 
   (defun contrib/cdb--bookmarked-directories ()
     (bookmark-maybe-load-default-file)
@@ -3590,8 +3590,8 @@ in the [[#h:751a310d-c63e-461c-a6e1-dfdfdb01cb92][section about the basic Dired 
                                 (cdr b))
                               (contrib/cdb--bookmarked-directories)))
            (collection (append bookmarks
-                             (list (file-name-directory file)
-                                   (when vc vc))))
+                               (list (file-name-directory file)
+                                     (when vc vc))))
            (files (cl-remove-if (lambda (f)
                                   (eq f nil))
                                 collection)))
@@ -6875,7 +6875,7 @@ a log that covers all files in the present directory."
              (dirs (list "~/" "~/Desktop/" vc-dir))
              (out-dir ;; (read-directory-name "Output directory: ")
               (completing-read "Output directory: " dirs))
-            (buf (get-buffer-create prot/vc-shell-output)))
+             (buf (get-buffer-create prot/vc-shell-output)))
         (shell-command
          (format "git format-patch -1 %s -o %s" commit out-dir) buf)
         (message "Prepared patch for `%s' and sent it to %s"
