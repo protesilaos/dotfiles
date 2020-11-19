@@ -2413,10 +2413,8 @@ Also see `prot/occur-url'."
         (goto-char (point-min))
         (while (search-forward-regexp browse-url-button-regexp nil t)
           (push (match-string-no-properties 0) matches)))
-      (icomplete-vertical-do
-          (:height (/ (frame-height) 4) :separator 'dotted-line)
-        (eww
-         (completing-read "Browse URL: " matches nil t)))))
+      (eww
+       (completing-read "Browse URL: " matches nil t))))
 
   (defun prot/occur-visit-or-list-urls (&optional arg)
     "Wrap `prot/occur-visit-or-list-urls' and `prot/occur-url'.
@@ -3318,12 +3316,11 @@ executable, each of which is a string."
          (if names
              (if arg
                  (dired (cons (generate-new-buffer-name buf) names))
-               (icomplete-vertical-do ()
-                 (find-file
-                  (completing-read (format "Items matching %s (%s): "
-                                           (propertize regexp 'face 'success)
-                                           (length names))
-                                   names nil t)))))
+               (find-file
+                (completing-read (format "Items matching %s (%s): "
+                                         (propertize regexp 'face 'success)
+                                         (length names))
+                                 names nil t))))
          (user-error (format "No matches for « %s » in %s" regexp dir)))))
 
   (prot/dired-fd
@@ -3595,9 +3592,8 @@ in the [[#h:751a310d-c63e-461c-a6e1-dfdfdb01cb92][section about the basic Dired 
            (files (cl-remove-if (lambda (f)
                                   (eq f nil))
                                 collection)))
-      (icomplete-vertical-do ()
-        (dired
-         (completing-read "Jump to context or bookmark: " files nil t)))))
+      (dired
+       (completing-read "Jump to context or bookmark: " files nil t))))
 
   :bind (("C-c j" . prot/dired-jump-extra)
          ("C-x C-j" . dired-jump)
@@ -4304,9 +4300,8 @@ questions.  Else use completion to select the tab to switch to."
             ((eq (length tabs) 1)
              (tab-next))
             (t
-             (icomplete-vertical-do ()
-               (tab-bar-switch-to-tab
-                (completing-read "Select tab: " tabs nil t)))))))
+             (tab-bar-switch-to-tab
+              (completing-read "Select tab: " tabs nil t))))))
 
   :bind (("C-x t t" . prot/tab-bar-select-tab-dwim)
          ("s-t" . prot/tab-bar-select-tab-dwim)
@@ -6851,9 +6846,8 @@ a log that covers all files in the present directory."
                    ((eq major-mode 'dired-mode)
                     (dired-get-marked-files t nil))
                    (t
-                    (icomplete-vertical-do ()
-                      (completing-read-multiple
-                       "Select files in current dir: " files nil t)))))
+                    (completing-read-multiple
+                     "Select files in current dir: " files nil t))))
              (backend (vc-backend set)))
         (vc-print-log-internal backend set nil nil lim 'with-diff)))
 
@@ -8326,10 +8320,9 @@ With \\[universal-argument] produce a new buffer."
     (interactive "P")
     (let ((history eww-prompt-history)  ; eww-bookmarks
           (new (if arg t nil)))
-      (icomplete-vertical-do ()
-        (eww
-         (completing-read "Visit website from history: " history nil t)
-         new))))
+      (eww
+       (completing-read "Visit website from history: " history nil t)
+       new)))
 
   ;; eww-view-source
 
@@ -11594,9 +11587,8 @@ Use INPUT as an initial, yet editable, filter.
 The user's $HOME directory is abbreviated as a tilde."
     (interactive)
     (let* ((files (mapcar 'abbreviate-file-name recentf-list))
-           (f (icomplete-vertical-do ()
-                (completing-read "Open recentf entry: " files nil t
-                                 (when input input)))))
+           (f (completing-read "Open recentf entry: " files nil t
+                               (when input input))))
       (find-file f)))
 
   (defun prot/recentf-dirs (&optional arg)
@@ -11621,9 +11613,8 @@ abbreviated as a tilde.  In the Dired buffer paths are absolute."
         (kill-buffer buf))
       (if arg
           (dired (cons (generate-new-buffer-name buf) dirs))
-        (icomplete-vertical-do ()
-          (find-file
-           (completing-read "Recent dirs: " dirs nil t))))))
+        (find-file
+         (completing-read "Recent dirs: " dirs nil t)))))
 
   :hook (after-init-hook . recentf-mode)
   :bind (("s-r" . prot/recentf)
