@@ -773,8 +773,10 @@ Relevant blog posts of mine:
   ;; This is defined in Emacs' C code, though I feel this is a good
   ;; place to put it.
   (setq x-underline-at-descent-line t)
-  :hook ((after-init-hook . prot-fonts-fonts-per-monitor)
-         (prot-fonts-set-typeface-hook . prot-fonts-line-spacing)
+  ;; And this just sets the right font depending on whether my laptop is
+  ;; connected to an external monitor or not.
+  (prot-fonts-fonts-per-monitor)
+  :hook ((prot-fonts-set-typeface-hook . prot-fonts-line-spacing)
          (prot-fonts-set-typeface-hook . prot-fonts-bold-face)
          ;; See theme section for this hook
          (modus-themes-after-load-theme-hook . prot-fonts-bold-face))

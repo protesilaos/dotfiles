@@ -251,8 +251,7 @@ keys from `prot-fonts-laptop-desktop-keys-list'."
 
 ;;;###autoload
 (defun prot-fonts-fonts-per-monitor ()
-  "Use font settings based on screen size.
-Meant to be ran from a hook, such as `after-init-hook'."
+  "Use font settings based on screen size."
   (when window-system
     (let* ((display (prot-fonts--display-type-for-monitor))
            (data prot-fonts-typeface-sets-alist)
