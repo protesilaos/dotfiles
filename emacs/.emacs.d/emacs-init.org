@@ -558,16 +558,10 @@ into this project:
 ;; 1.0.0.
 ;;
 ;; Read https://gitlab.com/protesilaos/modus-themes/-/issues/119#note_449764086
-(use-package emacs
-  :config
+(use-package modus-themes
+  :load-path "~/.emacs.d/themes/"      ; Custom path due to my dev needs
+  :init
   (setq custom-safe-themes t)           ; Due to my dev needs
-
-  (use-package modus-operandi-theme
-    :load-path "~/.emacs.d/themes/")    ; Custom path due to my dev needs
-
-  (use-package modus-vivendi-theme
-    :load-path "~/.emacs.d/themes/")
-
   (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs t
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -593,7 +587,9 @@ into this project:
         modus-themes-scale-3 1.21
         modus-themes-scale-4 1.27
         modus-themes-scale-5 1.33)
-
+  :config
+  (use-package modus-operandi-theme)
+  (use-package modus-vivendi-theme)
   :hook (after-init-hook . modus-themes--light)
   :bind ("<f5>" . modus-themes-toggle))
 #+end_src
