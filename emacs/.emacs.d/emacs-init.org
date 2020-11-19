@@ -662,11 +662,11 @@ its details, be equally readable against light and dark backdrops, and
 use the =*.ttf= spec which yields the best results on GNU/Linux.
 
 While there are many good free/libre options available, only a handful
-of them cope well with my fairly demanding needs.  Some look good at
-large point sizes.  Others lack Greek characters.  While a few of them
-are virtually unreadable when cast on a light background (bitmap fonts
-in particular).  The section on [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]]
-defines typefaces that I consider suitable to my needs.
+of them cover my fairly demanding needs.  Some look good at large point
+sizes.  Others lack Greek characters.  While a few of them are virtually
+unreadable when cast on a light background (bitmap fonts in particular).
+The section on [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]] defines typefaces
+that I consider suitable for my needs.
 
 Further below in this section I also specify certain settings that
 govern the [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]] and link to other relevant parts
@@ -681,8 +681,9 @@ library, per-user fonts are stored in =~/.local/share/fonts=.
 :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
 :END:
 
-Moving on to my configurations, =prot-fonts= is a library I have written
-which contains lots of extras pertaining to my typeface configurations.
+Moving on to my configurations, =prot-fonts.el= is a library I have
+written which contains lots of extras pertaining to my typeface
+configurations and preferences.
 
 Some highlights:
 
@@ -717,7 +718,7 @@ themes, though themes are just Elisp programs hence there is no real
 distinction here and it is perfectly fine to have one program define
 some properties of a face while another specifies some others.  The key
 is to make those complementary, so that one does not override the other.
-Put concretely, =prot-fonts= sets properties such as =:family=, while my
+Put concretely, =prot-fonts.el= sets properties such as =:family=, while my
 themes handle things like colours.
 
 To appreciate this point, consider that in Emacs parlance a "face"
@@ -731,14 +732,14 @@ interest: the =default=, =variable-pitch=, and =fixed-pitch=.  The first is
 the session's main typeface, the second specifies a proportionately
 spaced font, and the third does the same for a monospaced family.
 
-To understand the syntax used in =prot-fonts=, read the documentation in
-=C-h f set-face-attribute=.  In essence, by changing the =default= face we
-are specifying the family that should be used /in case no other applies/
-for the given construct.  This is actually a good idea because there are
-many scenaria where you want a face to retain its own attributes
-(e.g. let =org-mode= inline code be presented in its monospaced font while
-using a variable width typeface for the main text---see [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for
-proportional fonts]]).
+To understand the syntax used in =prot-fonts.el=, read the documentation
+in =C-h f set-face-attribute=.  In essence, by changing the =default= face
+we are specifying the family that should be used /in case no other
+applies/ for the given construct.  This is actually a good idea because
+there are many scenaria where you want a face to retain its own
+attributes (e.g. let =org-mode= inline code be presented in its monospaced
+font while using a variable width typeface for the main text---see, in
+particular, [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]]).
 
 Relevant blog posts of mine:
 
@@ -785,7 +786,8 @@ Relevant blog posts of mine:
   :bind ("C-c F" . prot-fonts-set-fonts-dwim))
 #+end_src
 
-This is the source code of =prot-fonts.el=:
+This is the source code of =prot-fonts.el= (you can always find the source
+if you directly clone [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]).
 
 #+include: lisp/prot-fonts.el src emacs-lisp :tangle no
 
@@ -5127,8 +5129,8 @@ my own setup I can do whatever I want.  So let us make sure we use a
 more convenient set of key combinations.  The other options I have here
 are for the sake of visibility and are left to their default values.
 
-The code for this project is on the [[https://gitlab.com/protesilaos/usls][USLS Gitlab repo]].  I reproduce the
-README below the package declaration.
+The code for this project is on the [[https://gitlab.com/protesilaos/usls][USLS Gitlab repo]] and reproduced in
+the subsequent code block.
 
 #+begin_src emacs-lisp
 (use-package usls
@@ -5149,7 +5151,8 @@ README below the package declaration.
          ("C-c n l" . usls-follow-link)))
 #+end_src
 
-And here is the =usls.el= source code:
+Here is the =usls.el= code, which is also part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as
+with all my Elisp code):
 
 #+include: lisp/usls.el src emacs-lisp :tangle no
 
