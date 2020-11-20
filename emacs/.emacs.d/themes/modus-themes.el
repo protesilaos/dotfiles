@@ -1333,28 +1333,28 @@ symbol and the latter as a string.")
 
 ;; Helper functions that are meant to ease the implementation of the
 ;; above customization options.
-(defun modus-themes-bold-weight ()
+(defun modus-themes--bold-weight ()
   "Conditional use of a heavier text weight."
   (when modus-themes-bold-constructs
     (list :inherit 'bold)))
 
-(defun modus-themes-mixed-fonts ()
+(defun modus-themes--mixed-fonts ()
   "Conditional application of `fixed-pitch' inheritance."
   (unless modus-themes-no-mixed-fonts
     (list :inherit 'fixed-pitch)))
 
-(defun modus-themes-slant ()
+(defun modus-themes--slant ()
   "Conditional use of italics for slant attribute."
   (if modus-themes-slanted-constructs
       (list 'italic)
     (list 'normal)))
 
-(defun modus-themes-variable-pitch ()
+(defun modus-themes--variable-pitch ()
   "Conditional use of `variable-pitch' in headings."
   (when modus-themes-variable-pitch-headings
     (list :inherit 'variable-pitch)))
 
-(defun modus-themes-fringe (mainbg subtlebg intensebg)
+(defun modus-themes--fringe (mainbg subtlebg intensebg)
   "Conditional use of background colors for fringes.
 MAINBG is the default.  SUBTLEBG should be a subtle greyscale
 value.  INTENSEBG must be a more pronounced greyscale color."
@@ -1363,7 +1363,7 @@ value.  INTENSEBG must be a more pronounced greyscale color."
     ('subtle (list :background subtlebg))
     (_ (list :background mainbg))))
 
-(defun modus-themes-prompt (mainfg subtlebg subtlefg intensebg intensefg)
+(defun modus-themes--prompt (mainfg subtlebg subtlefg intensebg intensefg)
   "Conditional use of background colors for prompts.
 MAINFG is the prompt's standard foreground.  SUBTLEBG should be a
 subtle accented background that works with SUBTLEFG.  INTENSEBG
@@ -1374,7 +1374,7 @@ combinable with INTENSEFG."
     ('subtle (list :background subtlebg :foreground subtlefg))
     (_ (list :background nil :foreground mainfg))))
 
-(defun modus-themes-paren (normalbg intensebg)
+(defun modus-themes--paren (normalbg intensebg)
   "Conditional use of intense colors for matching parentheses.
 NORMALBG should the special palette color 'bg-paren-match' or
 something similar.  INTENSEBG must be easier to discern next to
@@ -1384,7 +1384,7 @@ other backgrounds, such as the special palette color
       (list :background intensebg)
     (list :background normalbg)))
 
-(defun modus-themes-syntax-foreground (fg faint)
+(defun modus-themes--syntax-foreground (fg faint)
   "Apply foreground value to code syntax.
 FG is the default.  FAINT is typically the same color in its
 desaturated version."
@@ -1392,7 +1392,7 @@ desaturated version."
     ('faint (list :foreground faint))
     (_ (list :foreground fg))))
 
-(defun modus-themes-syntax-extra (fg faint alt)
+(defun modus-themes--syntax-extra (fg faint alt)
   "Apply foreground value to code syntax.
 FG is the default.  FAINT is typically the same color in its
 desaturated version.  ALT is another hue."
@@ -1402,7 +1402,7 @@ desaturated version.  ALT is another hue."
     ('alt-syntax-yellow-comments (list :foreground alt))
     (_ (list :foreground fg))))
 
-(defun modus-themes-syntax-string (fg faint green alt)
+(defun modus-themes--syntax-string (fg faint green alt)
   "Apply foreground value to strings in code syntax.
 FG is the default.  FAINT is typically the same color in its
 desaturated version.  GREEN is a color variant in that side of
@@ -1415,7 +1415,7 @@ the spectrum.  ALT is another hue."
     ('alt-syntax-yellow-comments (list :foreground alt))
     (_ (list :foreground fg))))
 
-(defun modus-themes-syntax-docstring (fg faint green alt)
+(defun modus-themes--syntax-docstring (fg faint green alt)
   "Apply foreground value to strings in code syntax.
 FG is the default.  FAINT is typically the same color in its
 desaturated version.  GREEN is a color variant in that side of
@@ -1428,7 +1428,7 @@ the spectrum.  ALT is another hue."
     ('alt-syntax-yellow-comments (list :foreground alt))
     (_ (list :foreground fg))))
 
-(defun modus-themes-syntax-comment (fg yellow)
+(defun modus-themes--syntax-comment (fg yellow)
   "Apply foreground value to strings in code syntax.
 FG is the default.  YELLOW is a color variant of that name."
   (pcase modus-themes-syntax
@@ -1437,11 +1437,11 @@ FG is the default.  YELLOW is a color variant of that name."
     ('alt-syntax-yellow-comments (list :foreground yellow))
     (_ (list :foreground fg))))
 
-(defun modus-themes-heading-p (key)
+(defun modus-themes--heading-p (key)
   "Query style of KEY in `modus-themes-headings'."
   (cdr (assoc key modus-themes-headings)))
 
-(defun modus-themes-heading (level fg fg-alt bg border)
+(defun modus-themes--heading (level fg fg-alt bg border)
   "Conditional styles for `modus-themes-headings'.
 
 LEVEL is the heading's position in their order.  FG is the
@@ -1450,8 +1450,8 @@ than the default.  BG is a nuanced, typically accented,
 background that can work well with either of the foreground
 values.  BORDER is a color value that combines well with the
 background and alternative foreground."
-  (let* ((key (modus-themes-heading-p `,level))
-         (style (or key (modus-themes-heading-p t)))
+  (let* ((key (modus-themes--heading-p `,level))
+         (style (or key (modus-themes--heading-p t)))
          (var (if modus-themes-variable-pitch-headings
                   'variable-pitch
                 'default)))
@@ -1497,7 +1497,7 @@ background and alternative foreground."
       (_
        (list :inherit `(bold ,var) :foreground fg)))))
 
-(defun modus-themes-org-block (bgblk)
+(defun modus-themes--org-block (bgblk)
   "Conditionally set the background of Org blocks.
 BGBLK applies to a distinct neutral background.  Else blocks have
 no background of their own (the default), so they look the same
@@ -1513,7 +1513,7 @@ theme's source code)."
        (list :background bgblk))
     (list :background nil)))
 
-(defun modus-themes-org-block-delim (bgaccent fgaccent bg fg)
+(defun modus-themes--org-block-delim (bgaccent fgaccent bg fg)
   "Conditionally set the styles of Org block delimiters.
 BG, FG, BGACCENT, FGACCENT apply a background and foreground
 color respectively.
@@ -1534,7 +1534,7 @@ set to `rainbow'."
     ('rainbow (list :background bgaccent :foreground fgaccent))
     (_ (list :background bg :foreground fg))))
 
-(defun modus-themes-mode-line-attrs
+(defun modus-themes--mode-line-attrs
     (fg bg fg-alt bg-alt border border-3d &optional alt-style border-width fg-distant)
   "Color combinations for `modus-themes-mode-line'.
 
@@ -1564,7 +1564,7 @@ property."
     (_
      `(:foreground ,fg :background ,bg :box ,border))))
 
-(defun modus-themes-diff (fg-only-bg fg-only-fg mainbg mainfg altbg altfg)
+(defun modus-themes--diff (fg-only-bg fg-only-fg mainbg mainfg altbg altfg)
   "Color combinations for `modus-themes-diffs'.
 
 FG-ONLY-BG should be similar or the same as the main background.
@@ -1582,7 +1582,7 @@ and MAINFG respectively."
     ('desaturated (list :background altbg :foreground altfg))
     (_ (list :background mainbg :foreground mainfg))))
 
-(defun modus-themes-standard-completions (mainfg subtlebg intensebg intensefg)
+(defun modus-themes--standard-completions (mainfg subtlebg intensebg intensefg)
   "Combinations for `modus-themes-completions'.
 
 MAINFG is an accented foreground value.  SUBTLEBG is an accented
@@ -1596,7 +1596,7 @@ These are intended for Icomplete, Ido, and related."
     ('moderate (list :background subtlebg :foreground mainfg))
     (_ (list :foreground mainfg))))
 
-(defun modus-themes-extra-completions (subtleface intenseface altface &optional altfg bold)
+(defun modus-themes--extra-completions (subtleface intenseface altface &optional altfg bold)
   "Combinations for `modus-themes-completions'.
 
 SUBTLEFACE and INTENSEFACE are custom theme faces that combine a
@@ -1616,7 +1616,7 @@ These are intended for Helm, Ivy, etc."
     ('moderate (list :inherit (list subtleface bold)))
     (_ (list :inherit (list intenseface bold)))))
 
-(defun modus-themes-link (fg fgfaint underline)
+(defun modus-themes--link (fg fgfaint underline)
   "Conditional application of link styles.
 FG is the link's default color for its text and underline
 property.  FGFAINT is a desaturated color for the text and
@@ -1628,15 +1628,15 @@ underline.  UNDERLINE is a grey color only for the undeline."
     ('no-underline (list :foreground fg :underline nil))
     (_ (list :foreground fg :underline t))))
 
-(defun modus-themes-link-color (fg fgfaint)
-  "Extends `modus-themes-link'.
+(defun modus-themes--link-color (fg fgfaint)
+  "Extends `modus-themes--link'.
 FG is the main foreground.  FGFAINT is the desaturated one."
   (pcase modus-themes-links
     ('faint (list :foreground fgfaint))
     ('faint-neutral-underline (list :foreground fgfaint))
     (_ (list :foreground fg))))
 
-(defun modus-themes-scale (amount)
+(defun modus-themes--scale (amount)
   "Scale heading by AMOUNT.
 AMOUNT is a customization option."
   (when modus-themes-scale-headings
@@ -1704,7 +1704,7 @@ calling the internal `modus-themes--light' and
 
 ;;;; Face specifications
 
-(defvar modus-themes
+(defvar modus-themes-faces
   '(
 ;;;; custom faces
     ;; these bespoke faces are inherited by other constructs below
@@ -1773,52 +1773,52 @@ calling the internal `modus-themes--light' and
 ;;;;; diff-specific combinations
     ;; intended for `diff-mode' or equivalent
     `(modus-theme-diff-added
-      ((,class ,@(modus-themes-diff
+      ((,class ,@(modus-themes--diff
                   bg-main green
                   bg-diff-focus-added fg-diff-focus-added
                   green-nuanced-bg fg-diff-added))))
     `(modus-theme-diff-changed
-      ((,class ,@(modus-themes-diff
+      ((,class ,@(modus-themes--diff
                   bg-main yellow
                   bg-diff-focus-changed fg-diff-focus-changed
                   yellow-nuanced-bg fg-diff-changed))))
     `(modus-theme-diff-removed
-      ((,class ,@(modus-themes-diff
+      ((,class ,@(modus-themes--diff
                   bg-main red
                   bg-diff-focus-removed fg-diff-focus-removed
                   red-nuanced-bg fg-diff-removed))))
     `(modus-theme-diff-refine-added
-      ((,class ,@(modus-themes-diff
+      ((,class ,@(modus-themes--diff
                   bg-diff-added fg-diff-added
                   bg-diff-refine-added fg-diff-refine-added
                   bg-diff-focus-added fg-diff-focus-added))))
     `(modus-theme-diff-refine-changed
-      ((,class ,@(modus-themes-diff
+      ((,class ,@(modus-themes--diff
                   bg-diff-changed fg-diff-changed
                   bg-diff-refine-changed fg-diff-refine-changed
                   bg-diff-focus-changed fg-diff-focus-changed))))
     `(modus-theme-diff-refine-removed
-      ((,class ,@(modus-themes-diff
+      ((,class ,@(modus-themes--diff
                   bg-diff-removed fg-diff-removed
                   bg-diff-refine-removed fg-diff-refine-removed
                   bg-diff-focus-removed fg-diff-focus-removed))))
     `(modus-theme-diff-focus-added
-      ((,class ,@(modus-themes-diff
+      ((,class ,@(modus-themes--diff
                   bg-dim green
                   bg-diff-focus-added fg-diff-focus-added
                   bg-diff-added fg-diff-added))))
     `(modus-theme-diff-focus-changed
-      ((,class ,@(modus-themes-diff
+      ((,class ,@(modus-themes--diff
                   bg-dim yellow
                   bg-diff-focus-changed fg-diff-focus-changed
                   bg-diff-changed fg-diff-changed))))
     `(modus-theme-diff-focus-removed
-      ((,class ,@(modus-themes-diff
+      ((,class ,@(modus-themes--diff
                   bg-dim red
                   bg-diff-focus-removed fg-diff-focus-removed
                   bg-diff-removed fg-diff-removed))))
     `(modus-theme-diff-heading
-      ((,class ,@(modus-themes-diff
+      ((,class ,@(modus-themes--diff
                   bg-alt blue-alt
                   bg-diff-heading fg-diff-heading
                   blue-nuanced-bg blue))))
@@ -1832,40 +1832,40 @@ calling the internal `modus-themes--light' and
 ;;;;; heading levels
     ;; styles for regular headings used in Org, Markdown, Info, etc.
     `(modus-theme-heading-1
-      ((,class ,@(modus-themes-heading
+      ((,class ,@(modus-themes--heading
                   1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
-               ,@(modus-themes-scale modus-themes-scale-4))))
+               ,@(modus-themes--scale modus-themes-scale-4))))
     `(modus-theme-heading-2
-      ((,class ,@(modus-themes-heading
+      ((,class ,@(modus-themes--heading
                   2 fg-special-warm magenta-alt red-nuanced-bg bg-region)
-               ,@(modus-themes-scale modus-themes-scale-3))))
+               ,@(modus-themes--scale modus-themes-scale-3))))
     `(modus-theme-heading-3
-      ((,class ,@(modus-themes-heading
+      ((,class ,@(modus-themes--heading
                   3 fg-special-cold blue blue-nuanced-bg bg-region)
-               ,@(modus-themes-scale modus-themes-scale-2))))
+               ,@(modus-themes--scale modus-themes-scale-2))))
     `(modus-theme-heading-4
-      ((,class ,@(modus-themes-heading
+      ((,class ,@(modus-themes--heading
                   4 fg-special-mild cyan cyan-nuanced-bg bg-region)
-               ,@(modus-themes-scale modus-themes-scale-1))))
+               ,@(modus-themes--scale modus-themes-scale-1))))
     `(modus-theme-heading-5
-      ((,class ,@(modus-themes-heading
+      ((,class ,@(modus-themes--heading
                   5 fg-special-calm green-alt-other green-nuanced-bg bg-region))))
     `(modus-theme-heading-6
-      ((,class ,@(modus-themes-heading
+      ((,class ,@(modus-themes--heading
                   6 yellow-nuanced-fg yellow-alt-other yellow-nuanced-bg bg-region))))
     `(modus-theme-heading-7
-      ((,class ,@(modus-themes-heading
+      ((,class ,@(modus-themes--heading
                   7 red-nuanced-fg red-alt red-nuanced-bg bg-region))))
     `(modus-theme-heading-8
-      ((,class ,@(modus-themes-heading
+      ((,class ,@(modus-themes--heading
                   8 fg-dim magenta bg-alt bg-region))))
 ;;;;; other custom faces
-    `(modus-theme-bold ((,class ,@(modus-themes-bold-weight))))
+    `(modus-theme-bold ((,class ,@(modus-themes--bold-weight))))
     `(modus-theme-hl-line ((,class :background ,(if modus-themes-intense-hl-line
                                                     bg-hl-line-intense bg-hl-line)
                                    (and (>= emacs-major-version 27) '(:extend t)))))
-    `(modus-theme-slant ((,class :inherit italic :slant ,@(modus-themes-slant))))
-    `(modus-theme-variable-pitch ((,class ,@(modus-themes-variable-pitch))))
+    `(modus-theme-slant ((,class :inherit italic :slant ,@(modus-themes--slant))))
+    `(modus-theme-variable-pitch ((,class ,@(modus-themes--variable-pitch))))
 
 
 
@@ -1877,7 +1877,7 @@ calling the internal `modus-themes--light' and
 ;;;;; absolute essentials
     `(default ((,class :background ,bg-main :foreground ,fg-main)))
     `(cursor ((,class :background ,fg-main)))
-    `(fringe ((,class ,@(modus-themes-fringe bg-main bg-inactive bg-active)
+    `(fringe ((,class ,@(modus-themes--fringe bg-main bg-inactive bg-active)
                       :foreground ,fg-main)))
     `(vertical-border ((,class :foreground ,fg-window-divider-inner)))
 ;;;;; basic and/or ungrouped styles
@@ -1893,7 +1893,7 @@ calling the internal `modus-themes--light' and
     `(buffer-menu-buffer ((,class :inherit bold)))
     `(comint-highlight-input ((,class :inherit bold)))
     `(comint-highlight-prompt ((,class :inherit modus-theme-bold
-                                       ,@(modus-themes-prompt
+                                       ,@(modus-themes--prompt
                                           cyan
                                           blue-nuanced-bg blue-alt
                                           blue-refine-bg fg-main))))
@@ -1903,12 +1903,12 @@ calling the internal `modus-themes--light' and
     `(header-line ((,class :background ,bg-header :foreground ,fg-header)))
     `(header-line-highlight ((,class :inherit modus-theme-active-blue)))
     `(help-argument-name ((,class :inherit modus-theme-slant :foreground ,cyan)))
-    `(homoglyph ((,class :foreground ,fg-escape-char-construct)))
-    `(ibuffer-locked-buffer ((,class :foreground ,yellow-alt-other)))
+    `(homoglyph ((,class :foreground ,red-alt-faint)))
+    `(ibuffer-locked-buffer ((,class :foreground ,yellow-alt-other-faint)))
     `(italic ((,class :slant italic)))
     `(nobreak-hyphen ((,class :foreground ,fg-escape-char-construct)))
     `(nobreak-space ((,class :foreground ,fg-escape-char-construct :underline t)))
-    `(minibuffer-prompt ((,class ,@(modus-themes-prompt
+    `(minibuffer-prompt ((,class ,@(modus-themes--prompt
                                     cyan-alt-other
                                     cyan-nuanced-bg cyan
                                     cyan-refine-bg fg-main))))
@@ -1923,16 +1923,16 @@ calling the internal `modus-themes--light' and
     `(trailing-whitespace ((,class :background ,red-intense-bg)))
     `(warning ((,class :inherit bold :foreground ,yellow)))
 ;;;;; buttons, links, widgets
-    `(button ((,class ,@(modus-themes-link
+    `(button ((,class ,@(modus-themes--link
                          blue-alt-other blue-alt-other-faint bg-region))))
     `(link ((,class :inherit button)))
     `(link-visited ((,class :inherit button
-                            ,@(modus-themes-link-color
+                            ,@(modus-themes--link-color
                                magenta-alt-other magenta-alt-other-faint))))
     `(tooltip ((,class :background ,bg-special-cold :foreground ,fg-main)))
     `(widget-button ((,class :inherit button)))
     `(widget-button-pressed ((,class :inherit button
-                                     ,@(modus-themes-link-color
+                                     ,@(modus-themes--link-color
                                         magenta magenta-faint))))
     `(widget-documentation ((,class :foreground ,green)))
     `(widget-field ((,class :background ,bg-alt :foreground ,fg-dim)))
@@ -1998,19 +1998,19 @@ calling the internal `modus-themes--light' and
     `(anzu-replace-to ((,class :inherit (modus-theme-intense-green bold))))
 ;;;;; apropos
     `(apropos-function-button ((,class :inherit button
-                                       ,@(modus-themes-link-color
+                                       ,@(modus-themes--link-color
                                           magenta-alt-other magenta-alt-other-faint))))
     `(apropos-keybinding ((,class :inherit bold :foreground ,cyan)))
     `(apropos-misc-button ((,class :inherit button
-                                   ,@(modus-themes-link-color
+                                   ,@(modus-themes--link-color
                                       cyan-alt-other cyan-alt-other-faint))))
     `(apropos-property ((,class :inherit modus-theme-bold :foreground ,magenta-alt)))
     `(apropos-symbol ((,class :inherit modus-theme-bold :foreground ,blue-alt-other)))
     `(apropos-user-option-button ((,class :inherit button
-                                          ,@(modus-themes-link-color
+                                          ,@(modus-themes--link-color
                                              green-alt-other green-alt-other-faint))))
     `(apropos-variable-button ((,class :inherit button
-                                       ,@(modus-themes-link-color
+                                       ,@(modus-themes--link-color
                                           blue blue-faint))))
 ;;;;; apt-sources-list
     `(apt-sources-list-components ((,class :foreground ,cyan)))
@@ -2038,19 +2038,19 @@ calling the internal `modus-themes--light' and
     `(font-latex-sectioning-5-face ((,class :inherit modus-theme-variable-pitch :foreground ,blue-nuanced-fg)))
     `(font-latex-sedate-face ((,class :inherit modus-theme-bold :foreground ,magenta-alt-other)))
     `(font-latex-slide-title-face ((,class :inherit (bold modus-theme-variable-pitch) :foreground ,cyan-nuanced-fg
-                                           ,@(modus-themes-scale modus-themes-scale-4))))
-    `(font-latex-string-face ((,class :foreground ,blue-alt)))
+                                           ,@(modus-themes--scale modus-themes-scale-4))))
+    `(font-latex-string-face ((,class :inherit font-lock-string-face)))
     `(font-latex-subscript-face ((,class :height 0.95)))
     `(font-latex-superscript-face ((,class :height 0.95)))
     `(font-latex-verbatim-face ((,class :background ,bg-dim :foreground ,fg-special-mild)))
-    `(font-latex-warning-face ((,class :foreground ,yellow-alt-other)))
+    `(font-latex-warning-face ((,class :inherit font-lock-warning-face)))
     `(tex-match ((,class :foreground ,blue-alt-other)))
     `(tex-verbatim ((,class :background ,bg-dim :foreground ,fg-special-mild)))
     `(texinfo-heading ((,class :foreground ,magenta)))
-    `(TeX-error-description-error ((,class :inherit bold :foreground ,red)))
+    `(TeX-error-description-error ((,class :inherit error)))
     `(TeX-error-description-help ((,class :foreground ,blue)))
     `(TeX-error-description-tex-said ((,class :foreground ,blue)))
-    `(TeX-error-description-warning ((,class :inherit bold :foreground ,yellow)))
+    `(TeX-error-description-warning ((,class :inherit warning)))
 ;;;;; auto-dim-other-buffers
     `(auto-dim-other-buffers-face ((,class :background ,bg-alt)))
 ;;;;; avy
@@ -2139,7 +2139,7 @@ calling the internal `modus-themes--light' and
     `(cfw:face-sunday ((,class :inherit bold :foreground ,cyan-alt-other)))
     `(cfw:face-title ((,class :inherit modus-theme-variable-pitch
                               :foreground ,fg-special-cold
-                              ,@(modus-themes-scale modus-themes-scale-5))))
+                              ,@(modus-themes--scale modus-themes-scale-5))))
     `(cfw:face-today ((,class :background ,bg-inactive)))
     `(cfw:face-today-title ((,class :background ,bg-active)))
     `(cfw:face-toolbar ((,class :background ,bg-alt :foreground ,bg-alt)))
@@ -2170,6 +2170,7 @@ calling the internal `modus-themes--light' and
     `(log-edit-header ((,class :foreground ,fg-special-warm)))
     `(log-edit-summary ((,class :inherit bold :foreground ,blue)))
     `(log-edit-unknown-header ((,class :foreground ,fg-alt)))
+    `(log-view-commit-body ((,class :background ,bg-alt :foreground ,fg-main)))
     `(log-view-file ((,class :inherit bold :foreground ,fg-special-cold)))
     `(log-view-message ((,class :foreground ,green-alt-other-faint)))
 ;;;;; cider
@@ -2264,11 +2265,11 @@ calling the internal `modus-themes--light' and
     `(compilation-warning ((,class :inherit modus-theme-bold :foreground ,yellow)))
 ;;;;; completions
     `(completions-annotations ((,class :inherit modus-theme-slant :foreground ,fg-special-cold)))
-    `(completions-common-part ((,class ,@(modus-themes-standard-completions
+    `(completions-common-part ((,class ,@(modus-themes--standard-completions
                                           blue-alt blue-nuanced-bg
                                           cyan-refine-bg cyan-refine-fg))))
     `(completions-first-difference ((,class :inherit bold
-                                            ,@(modus-themes-standard-completions
+                                            ,@(modus-themes--standard-completions
                                                magenta-alt blue-nuanced-bg
                                                magenta-intense-bg fg-main))))
 ;;;;; counsel
@@ -2405,6 +2406,7 @@ calling the internal `modus-themes--light' and
     `(diff-added ((,class :inherit modus-theme-diff-added)))
     `(diff-changed ((,class :inherit modus-theme-diff-changed)))
     `(diff-context ((,class :foreground ,fg-unfocused)))
+    `(diff-error ((,class :inherit modus-theme-intense-red)))
     `(diff-file-header ((,class :inherit bold :foreground ,fg-main)))
     `(diff-function ((,class :foreground ,blue)))
     `(diff-header ((,class :background ,bg-dim :foreground ,fg-main)))
@@ -2439,11 +2441,12 @@ calling the internal `modus-themes--light' and
     `(dir-treeview-label-mouse-face ((,class :inherit highlight)))
     `(dir-treeview-start-dir-face ((,class :inherit modus-theme-pseudo-header)))
     `(dir-treeview-symlink-face ((,class :inherit button
-                                         ,@(modus-themes-link-color
+                                         ,@(modus-themes--link-color
                                             cyan cyan-faint))))
     `(dir-treeview-video-face ((,class :foreground ,magenta-alt-other)))
     `(dir-treeview-video-icon-face ((,class :inherit dir-treeview-default-icon-face :foreground ,magenta-alt-other)))
 ;;;;; dired
+    `(dired-broken-symlink ((,class :inherit button :foreground ,red)))
     `(dired-directory ((,class :foreground ,blue)))
     `(dired-flagged ((,class :inherit modus-theme-mark-del)))
     `(dired-header ((,class :inherit modus-theme-pseudo-header)))
@@ -2452,7 +2455,7 @@ calling the internal `modus-themes--light' and
     `(dired-marked ((,class :inherit modus-theme-mark-sel)))
     `(dired-perm-write ((,class :foreground ,fg-special-warm)))
     `(dired-symlink ((,class :inherit button
-                             ,@(modus-themes-link-color
+                             ,@(modus-themes--link-color
                                 cyan-alt cyan-alt-faint))))
     `(dired-warning ((,class :inherit bold :foreground ,yellow)))
 ;;;;; dired-async
@@ -2574,19 +2577,19 @@ calling the internal `modus-themes--light' and
 ;;;;; ediff
     ;; NOTE: here we break from the pattern of inheriting from the
     ;; modus-theme-diff-* faces.
-    `(ediff-current-diff-A ((,class ,@(modus-themes-diff
+    `(ediff-current-diff-A ((,class ,@(modus-themes--diff
                                        bg-dim red
                                        bg-diff-removed fg-diff-removed
                                        red-nuanced-bg red-faint))))
-    `(ediff-current-diff-Ancestor ((,class ,@(modus-themes-diff
+    `(ediff-current-diff-Ancestor ((,class ,@(modus-themes--diff
                                               bg-dim fg-special-cold
                                               bg-special-cold fg-special-cold
                                               blue-nuanced-bg blue))))
-    `(ediff-current-diff-B ((,class ,@(modus-themes-diff
+    `(ediff-current-diff-B ((,class ,@(modus-themes--diff
                                        bg-dim green
                                        bg-diff-added fg-diff-added
                                        green-nuanced-bg green-faint))))
-    `(ediff-current-diff-C ((,class ,@(modus-themes-diff
+    `(ediff-current-diff-C ((,class ,@(modus-themes--diff
                                        bg-dim yellow
                                        bg-diff-changed fg-diff-changed
                                        yellow-nuanced-bg yellow-faint))))
@@ -2737,11 +2740,11 @@ calling the internal `modus-themes--light' and
     `(eshell-ls-readonly ((,class :foreground ,fg-special-cold)))
     `(eshell-ls-special ((,class :inherit bold :foreground ,magenta)))
     `(eshell-ls-symlink ((,class :inherit button
-                                 ,@(modus-themes-link-color
+                                 ,@(modus-themes--link-color
                                     cyan cyan-faint))))
     `(eshell-ls-unreadable ((,class :background ,bg-inactive :foreground ,fg-inactive)))
     `(eshell-prompt ((,class :inherit modus-theme-bold
-                             ,@(modus-themes-prompt
+                             ,@(modus-themes--prompt
                                 green-alt-other
                                 green-nuanced-bg green-alt
                                 green-refine-bg fg-main))))
@@ -2892,7 +2895,7 @@ calling the internal `modus-themes--light' and
 ;;;;; flyspell-correct
     `(flyspell-correct-highlight-face ((,class :inherit modus-theme-refine-green)))
 ;;;;; flx
-    `(flx-highlight-face ((,class ,@(modus-themes-extra-completions
+    `(flx-highlight-face ((,class ,@(modus-themes--extra-completions
                                      'modus-theme-subtle-magenta
                                      'modus-theme-intense-magenta
                                      'modus-theme-nuanced-magenta
@@ -2913,38 +2916,38 @@ calling the internal `modus-themes--light' and
     `(fold-this-overlay ((,class :inherit modus-theme-special-mild)))
 ;;;;; font-lock
     `(font-lock-builtin-face ((,class :inherit modus-theme-bold
-                                      ,@(modus-themes-syntax-extra
+                                      ,@(modus-themes--syntax-extra
                                          magenta-alt magenta-alt-faint magenta-alt-other))))
     `(font-lock-comment-delimiter-face ((,class :inherit font-lock-comment-face)))
     `(font-lock-comment-face ((,class :inherit modus-theme-slant
-                                      ,@(modus-themes-syntax-comment
+                                      ,@(modus-themes--syntax-comment
                                          fg-alt fg-comment-yellow))))
-    `(font-lock-constant-face ((,class ,@(modus-themes-syntax-extra
+    `(font-lock-constant-face ((,class ,@(modus-themes--syntax-extra
                                           blue-alt-other blue-alt-other-faint magenta-alt))))
     `(font-lock-doc-face ((,class :inherit modus-theme-slant
-                                  ,@(modus-themes-syntax-docstring
+                                  ,@(modus-themes--syntax-docstring
                                      fg-docstring cyan-alt-other-faint green-alt-faint blue-alt-other-faint))))
-    `(font-lock-function-name-face ((,class ,@(modus-themes-syntax-extra
+    `(font-lock-function-name-face ((,class ,@(modus-themes--syntax-extra
                                                magenta magenta-faint red-alt-other))))
     `(font-lock-keyword-face ((,class :inherit modus-theme-bold
-                                      ,@(modus-themes-syntax-extra
+                                      ,@(modus-themes--syntax-extra
                                          magenta-alt-other magenta-alt-other-faint cyan-alt-other))))
     `(font-lock-negation-char-face ((,class :inherit modus-theme-bold
-                                            ,@(modus-themes-syntax-foreground
+                                            ,@(modus-themes--syntax-foreground
                                                yellow yellow-faint))))
-    `(font-lock-preprocessor-face ((,class ,@(modus-themes-syntax-foreground
+    `(font-lock-preprocessor-face ((,class ,@(modus-themes--syntax-foreground
                                               red-alt-other red-alt-other-faint))))
     `(font-lock-regexp-grouping-backslash ((,class :inherit bold :foreground ,fg-escape-char-backslash)))
     `(font-lock-regexp-grouping-construct ((,class :inherit bold :foreground ,fg-escape-char-construct)))
-    `(font-lock-string-face ((,class ,@(modus-themes-syntax-string
+    `(font-lock-string-face ((,class ,@(modus-themes--syntax-string
                                         blue-alt blue-alt-faint green green))))
     `(font-lock-type-face ((,class :inherit modus-theme-bold
-                                   ,@(modus-themes-syntax-extra
+                                   ,@(modus-themes--syntax-extra
                                       cyan-alt-other magenta-alt-faint magenta-alt))))
-    `(font-lock-variable-name-face ((,class ,@(modus-themes-syntax-extra
+    `(font-lock-variable-name-face ((,class ,@(modus-themes--syntax-extra
                                                cyan cyan-faint blue))))
     `(font-lock-warning-face ((,class :inherit modus-theme-bold
-                                      ,@(modus-themes-syntax-foreground
+                                      ,@(modus-themes--syntax-foreground
                                          yellow-active yellow-alt-faint))))
 ;;;;; forge
     `(forge-post-author ((,class :inherit bold :foreground ,fg-main)))
@@ -2975,25 +2978,15 @@ calling the internal `modus-themes--light' and
     `(fountain-synopsis ((,class :foreground ,cyan-alt)))
     `(fountain-trans ((,class :foreground ,yellow-alt-other)))
 ;;;;; geiser
-    `(geiser-font-lock-autodoc-current-arg ((,class ,@(modus-themes-syntax-foreground
-                                                       magenta magenta-faint))))
-    `(geiser-font-lock-autodoc-identifier ((,class ,@(modus-themes-syntax-foreground
-                                                      blue blue-faint))))
-    `(geiser-font-lock-doc-button ((,class ,@(modus-themes-syntax-foreground
-                                              cyan-alt cyan-alt-faint)
-                                           :underline t)))
+    `(geiser-font-lock-autodoc-current-arg ((,class :inherit font-lock-function-name-face)))
+    `(geiser-font-lock-autodoc-identifier ((,class :inherit font-lock-constant-face)))
+    `(geiser-font-lock-doc-button ((,class :inherit button :foreground ,fg-docstring)))
     `(geiser-font-lock-doc-link ((,class :inherit button)))
-    `(geiser-font-lock-error-link ((,class ,@(modus-themes-syntax-foreground
-                                              red-alt red-alt-faint)
-                                           :underline t)))
-    `(geiser-font-lock-image-button ((,class ,@(modus-themes-syntax-foreground
-                                                green-alt green-alt-faint)
-                                             :underline t)))
+    `(geiser-font-lock-error-link ((,class :inherit button :foreground ,red)))
+    `(geiser-font-lock-image-button ((,class :inherit button :foreground ,green-alt)))
     `(geiser-font-lock-repl-input ((,class :inherit bold)))
-    `(geiser-font-lock-repl-output ((,class ,@(modus-themes-syntax-foreground
-                                               magenta-alt-other magenta-alt-other-faint))))
-    `(geiser-font-lock-repl-prompt ((,class ,@(modus-themes-syntax-foreground
-                                               cyan-alt-other cyan-alt-other-faint))))
+    `(geiser-font-lock-repl-output ((,class :inherit font-lock-keyword-face)))
+    `(geiser-font-lock-repl-prompt ((,class :inherit minibuffer-prompt)))
     `(geiser-font-lock-xref-header ((,class :inherit bold)))
     `(geiser-font-lock-xref-link ((,class :inherit button)))
 ;;;;; git-commit
@@ -3002,10 +2995,10 @@ calling the internal `modus-themes--light' and
     `(git-commit-comment-branch-remote ((,class :inherit modus-theme-slant :foreground ,magenta-alt)))
     `(git-commit-comment-detached ((,class :inherit modus-theme-slant :foreground ,cyan-alt)))
     `(git-commit-comment-file ((,class :inherit modus-theme-slant
-                                       ,@(modus-themes-syntax-comment
+                                       ,@(modus-themes--syntax-comment
                                           fg-special-cold red-nuanced-fg))))
     `(git-commit-comment-heading ((,class :inherit (bold modus-theme-slant)
-                                          ,@(modus-themes-syntax-comment
+                                          ,@(modus-themes--syntax-comment
                                              fg-dim fg-special-warm))))
     `(git-commit-keyword ((,class :foreground ,magenta)))
     `(git-commit-known-pseudo-header ((,class :foreground ,cyan-alt-other)))
@@ -3040,10 +3033,10 @@ calling the internal `modus-themes--light' and
     `(git-lens-renamed ((,class :inherit bold :foreground ,magenta)))
 ;;;;; git-rebase
     `(git-rebase-comment-hash ((,class :inherit modus-theme-slant
-                                       ,@(modus-themes-syntax-comment
+                                       ,@(modus-themes--syntax-comment
                                           fg-special-cold red-nuanced-fg))))
     `(git-rebase-comment-heading  ((,class :inherit (bold modus-theme-slant)
-                                           ,@(modus-themes-syntax-comment
+                                           ,@(modus-themes--syntax-comment
                                               fg-dim fg-special-warm))))
     `(git-rebase-description ((,class :foreground ,fg-main)))
     `(git-rebase-hash ((,class :foreground ,cyan-alt-other)))
@@ -3160,7 +3153,7 @@ calling the internal `modus-themes--light' and
     `(helm-eshell-prompts-promptidx ((,class :foreground ,cyan-active)))
     `(helm-etags-file ((,class :foreground ,fg-dim :underline t)))
     `(helm-ff-backup-file ((,class :foreground ,fg-alt)))
-    `(helm-ff-denied ((,class ,@(modus-themes-extra-completions
+    `(helm-ff-denied ((,class ,@(modus-themes--extra-completions
                                  'modus-theme-subtle-red
                                  'modus-theme-intense-red
                                  'modus-theme-nuanced-red
@@ -3173,26 +3166,26 @@ calling the internal `modus-themes--light' and
     `(helm-ff-file ((,class :foreground ,fg-main)))
     `(helm-ff-file-extension ((,class :foreground ,fg-special-warm)))
     `(helm-ff-invalid-symlink ((,class :inherit button
-                                       ,@(modus-themes-link-color
+                                       ,@(modus-themes--link-color
                                           red red-faint))))
-    `(helm-ff-pipe ((,class ,@(modus-themes-extra-completions
+    `(helm-ff-pipe ((,class ,@(modus-themes--extra-completions
                                'modus-theme-refine-magenta
                                'modus-theme-subtle-magenta
                                'modus-theme-nuanced-magenta
                                magenta))))
-    `(helm-ff-prefix ((,class ,@(modus-themes-extra-completions
+    `(helm-ff-prefix ((,class ,@(modus-themes--extra-completions
                                  'modus-theme-refine-yellow
                                  'modus-theme-subtle-yellow
                                  'modus-theme-nuanced-yellow
                                  yellow-alt-other))))
     `(helm-ff-socket ((,class :foreground ,red-alt-other)))
-    `(helm-ff-suid ((,class ,@(modus-themes-extra-completions
+    `(helm-ff-suid ((,class ,@(modus-themes--extra-completions
                                'modus-theme-subtle-red
                                'modus-theme-refine-red
                                'modus-theme-nuanced-yellow
                                red-alt))))
     `(helm-ff-symlink ((,class :inherit button
-                               ,@(modus-themes-link-color
+                               ,@(modus-themes--link-color
                                   cyan cyan-faint))))
     `(helm-ff-truename ((,class :foreground ,blue-alt-other)))
     `(helm-grep-cmd-line ((,class :foreground ,yellow-alt-other)))
@@ -3202,7 +3195,7 @@ calling the internal `modus-themes--light' and
     `(helm-grep-match ((,class :inherit modus-theme-special-calm)))
     `(helm-header ((,class :inherit bold :foreground ,fg-special-cold)))
     `(helm-header-line-left-margin ((,class :inherit bold :foreground ,yellow-intense)))
-    `(helm-history-deleted ((,class ,@(modus-themes-extra-completions
+    `(helm-history-deleted ((,class ,@(modus-themes--extra-completions
                                        'modus-theme-subtle-red
                                        'modus-theme-intense-red
                                        'modus-theme-nuanced-red
@@ -3210,29 +3203,29 @@ calling the internal `modus-themes--light' and
                                        'bold))))
     `(helm-history-remote ((,class :foreground ,red-alt-other)))
     `(helm-lisp-completion-info ((,class :foreground ,fg-special-warm)))
-    `(helm-lisp-show-completion ((,class ,@(modus-themes-extra-completions
+    `(helm-lisp-show-completion ((,class ,@(modus-themes--extra-completions
                                             'modus-theme-subtle-yellow
                                             'modus-theme-refine-yellow
                                             'modus-theme-nuanced-yellow
                                             yellow
                                             'bold))))
     `(helm-locate-finish ((,class :foreground ,green-active)))
-    `(helm-match ((,class ,@(modus-themes-extra-completions
+    `(helm-match ((,class ,@(modus-themes--extra-completions
                              'modus-theme-subtle-cyan
                              'modus-theme-refine-cyan
                              'modus-theme-nuanced-cyan
                              cyan
                              'bold))))
-    `(helm-match-item ((,class ,@(modus-themes-extra-completions
+    `(helm-match-item ((,class ,@(modus-themes--extra-completions
                                   'modus-theme-subtle-neutral
                                   'modus-theme-subtle-cyan
                                   'modus-theme-nuanced-cyan
                                   cyan-alt-other))))
     `(helm-minibuffer-prompt ((,class :inherit minibuffer-prompt)))
     `(helm-moccur-buffer ((,class :inherit button
-                                  ,@(modus-themes-link-color
+                                  ,@(modus-themes--link-color
                                      cyan-alt-other cyan-alt-other-faint))))
-    `(helm-mode-prefix ((,class ,@(modus-themes-extra-completions
+    `(helm-mode-prefix ((,class ,@(modus-themes--extra-completions
                                    'modus-theme-subtle-magenta
                                    'modus-theme-intense-magenta
                                    'modus-theme-nuanced-magenta
@@ -3240,12 +3233,12 @@ calling the internal `modus-themes--light' and
                                    'bold))))
     `(helm-non-file-buffer ((,class :foreground ,fg-alt)))
     `(helm-prefarg ((,class :foreground ,red-active)))
-    `(helm-resume-need-update ((,class ,@(modus-themes-extra-completions
+    `(helm-resume-need-update ((,class ,@(modus-themes--extra-completions
                                           'modus-theme-subtle-magenta
                                           'modus-theme-refine-magenta
                                           'modus-theme-nuanced-magenta
                                           magenta-alt-other))))
-    `(helm-selection ((,class ,@(modus-themes-extra-completions
+    `(helm-selection ((,class ,@(modus-themes--extra-completions
                                  'modus-theme-subtle-blue
                                  'modus-theme-refine-blue
                                  'modus-theme-special-cold
@@ -3256,7 +3249,7 @@ calling the internal `modus-themes--light' and
     `(helm-time-zone-current ((,class :foreground ,green)))
     `(helm-time-zone-home ((,class :foreground ,magenta)))
     `(helm-source-header ((,class :inherit bold :foreground ,red-alt
-                                  ,@(modus-themes-scale modus-themes-scale-4))))
+                                  ,@(modus-themes--scale modus-themes-scale-4))))
     `(helm-top-columns ((,class :inherit helm-header)))
     `(helm-ucs-char ((,class :foreground ,yellow-alt-other)))
     `(helm-visible-mark ((,class :inherit modus-theme-subtle-cyan)))
@@ -3271,7 +3264,7 @@ calling the internal `modus-themes--light' and
     `(helm-ls-git-renamed-modified-face ((,class :foreground ,magenta)))
     `(helm-ls-git-untracked-face ((,class :foreground ,fg-special-cold)))
 ;;;;; helm-switch-shell
-    `(helm-switch-shell-new-shell-face ((,class ,@(modus-themes-extra-completions
+    `(helm-switch-shell-new-shell-face ((,class ,@(modus-themes--extra-completions
                                                    'modus-theme-subtle-magenta
                                                    'modus-theme-refine-magenta
                                                    'modus-theme-nuanced-magenta
@@ -3350,20 +3343,20 @@ calling the internal `modus-themes--light' and
     `(hyperlist-toplevel ((,class :inherit bold :foreground ,fg-main)))
 ;;;;; icomplete
     `(icomplete-first-match ((,class :inherit bold
-                                     ,@(modus-themes-standard-completions
+                                     ,@(modus-themes--standard-completions
                                         magenta bg-alt
                                         bg-active fg-main))))
 ;;;;; icomplete-vertical
     `(icomplete-vertical-separator ((,class :foreground ,fg-alt)))
 ;;;;; ido-mode
     `(ido-first-match ((,class :inherit bold
-                               ,@(modus-themes-standard-completions
+                               ,@(modus-themes--standard-completions
                                   magenta bg-alt
                                   bg-active fg-main))))
     `(ido-incomplete-regexp ((,class :inherit error)))
     `(ido-indicator ((,class :inherit modus-theme-subtle-yellow)))
     `(ido-only-match ((,class :inherit bold
-                              ,@(modus-themes-standard-completions
+                              ,@(modus-themes--standard-completions
                                  green green-nuanced-bg
                                  green-intense-bg fg-main))))
     `(ido-subdir ((,class :foreground ,blue)))
@@ -3392,7 +3385,7 @@ calling the internal `modus-themes--light' and
     `(indium-repl-prompt-face ((,class :foreground ,cyan-alt-other)))
     `(indium-repl-stdout-face ((,class :foreground ,fg-main)))
 ;;;;; info
-    `(Info-quoted ((,class ,@(modus-themes-mixed-fonts)
+    `(Info-quoted ((,class ,@(modus-themes--mixed-fonts)
                            :foreground ,magenta))) ; the capitalization is canonical
     `(info-header-node ((,class :inherit bold :foreground ,fg-alt)))
     `(info-header-xref ((,class :foreground ,blue-active)))
@@ -3434,10 +3427,12 @@ calling the internal `modus-themes--light' and
                                    :inherit modus-theme-refine-blue)))
     `(ioccur-regexp-face ((,class :inherit (modus-theme-intense-magenta bold))))
     `(ioccur-title-face ((,class :inherit bold :foreground ,red-alt
-                                 ,@(modus-themes-scale modus-themes-scale-4))))
+                                 ,@(modus-themes--scale modus-themes-scale-4))))
 ;;;;; isearch, occur, and the like
     `(isearch ((,class :inherit (modus-theme-intense-green bold))))
     `(isearch-fail ((,class :inherit modus-theme-refine-red)))
+    `(isearch-group-1 ((,class :inherit modus-theme-intense-blue)))
+    `(isearch-group-2 ((,class :inherit modus-theme-intense-magenta)))
     `(lazy-highlight ((,class :inherit modus-theme-refine-cyan)))
     `(match ((,class :inherit modus-theme-special-calm)))
     `(query-replace ((,class :inherit (modus-theme-intense-yellow bold))))
@@ -3445,7 +3440,7 @@ calling the internal `modus-themes--light' and
     `(ivy-action ((,class :inherit bold :foreground ,red-alt)))
     `(ivy-completions-annotations ((,class :inherit modus-theme-slant :foreground ,fg-special-cold)))
     `(ivy-confirm-face ((,class :foreground ,cyan)))
-    `(ivy-current-match ((,class ,@(modus-themes-extra-completions
+    `(ivy-current-match ((,class ,@(modus-themes--extra-completions
                                     'modus-theme-refine-cyan
                                     'modus-theme-intense-cyan
                                     'modus-theme-special-warm
@@ -3456,30 +3451,30 @@ calling the internal `modus-themes--light' and
     `(ivy-grep-line-number ((,class :foreground ,fg-special-warm)))
     `(ivy-highlight-face ((,class :foreground ,magenta)))
     `(ivy-match-required-face ((,class :inherit error)))
-    `(ivy-minibuffer-match-face-1 ((,class ,@(modus-themes-extra-completions
+    `(ivy-minibuffer-match-face-1 ((,class ,@(modus-themes--extra-completions
                                               'modus-theme-subtle-neutral
                                               'modus-theme-intense-neutral
                                               'modus-theme-subtle-neutral
                                               fg-alt))))
-    `(ivy-minibuffer-match-face-2 ((,class ,@(modus-themes-extra-completions
+    `(ivy-minibuffer-match-face-2 ((,class ,@(modus-themes--extra-completions
                                               'modus-theme-subtle-green
                                               'modus-theme-refine-green
                                               'modus-theme-nuanced-green
                                               green-alt-other
                                               'bold))))
-    `(ivy-minibuffer-match-face-3 ((,class ,@(modus-themes-extra-completions
+    `(ivy-minibuffer-match-face-3 ((,class ,@(modus-themes--extra-completions
                                               'modus-theme-subtle-cyan
                                               'modus-theme-refine-cyan
                                               'modus-theme-nuanced-cyan
                                               cyan-alt-other
                                               'bold))))
-    `(ivy-minibuffer-match-face-4 ((,class ,@(modus-themes-extra-completions
+    `(ivy-minibuffer-match-face-4 ((,class ,@(modus-themes--extra-completions
                                               'modus-theme-subtle-magenta
                                               'modus-theme-refine-magenta
                                               'modus-theme-nuanced-magenta
                                               magenta-alt-other
                                               'bold))))
-    `(ivy-minibuffer-match-highlight ((,class ,@(modus-themes-extra-completions
+    `(ivy-minibuffer-match-highlight ((,class ,@(modus-themes--extra-completions
                                                  'modus-theme-subtle-blue
                                                  'modus-theme-intense-blue
                                                  'modus-theme-nuanced-blue
@@ -3493,7 +3488,7 @@ calling the internal `modus-themes--light' and
     `(ivy-separator ((,class :foreground ,fg-alt)))
     `(ivy-subdir ((,class :foreground ,blue-alt-other)))
     `(ivy-virtual ((,class :foreground ,magenta-alt-other)))
-    `(ivy-yanked-word ((,class ,@(modus-themes-extra-completions
+    `(ivy-yanked-word ((,class ,@(modus-themes--extra-completions
                                   'modus-theme-subtle-blue
                                   'modus-theme-refine-blue
                                   'modus-theme-nuanced-blue
@@ -3549,7 +3544,7 @@ calling the internal `modus-themes--light' and
     `(kaocha-runner-warning-face ((,class :foreground ,yellow)))
 ;;;;; keycast
     `(keycast-command ((,class :inherit bold :foreground ,blue-active)))
-    `(keycast-key ((,class ,@(modus-themes-mode-line-attrs
+    `(keycast-key ((,class ,@(modus-themes--mode-line-attrs
                               bg-main blue-active
                               bg-main blue-active
                               blue-active blue-intense
@@ -3557,6 +3552,12 @@ calling the internal `modus-themes--light' and
 ;;;;; line numbers (display-line-numbers-mode and global variant)
     `(line-number ((,class :inherit default :background ,bg-dim :foreground ,fg-alt)))
     `(line-number-current-line ((,class :inherit default :background ,bg-active :foreground ,fg-main)))
+    `(line-number-major-tick ((,class :inherit (bold default)
+                                      :background ,yellow-nuanced-bg
+                                      :foreground ,yellow-nuanced-fg)))
+    `(line-number-minor-tick ((,class :inherit (bold default)
+                                      :background ,bg-inactive
+                                      :foreground ,fg-inactive)))
 ;;;;; lsp-mode
     `(lsp-face-highlight-read ((,class :inherit modus-theme-subtle-blue :underline t)))
     `(lsp-face-highlight-textual ((,class :inherit modus-theme-subtle-blue)))
@@ -3631,18 +3632,18 @@ calling the internal `modus-themes--light' and
     ;; modus-theme-diff-* faces, though only for the standard actions,
     ;; not the highlighted ones.  This is because Magit's interaction
     ;; model relies on highlighting the current diff hunk.
-    `(magit-diff-added ((,class ,@(modus-themes-diff
+    `(magit-diff-added ((,class ,@(modus-themes--diff
                                    bg-main green
                                    bg-diff-added fg-diff-added
                                    green-nuanced-bg fg-diff-added))))
     `(magit-diff-added-highlight ((,class :inherit modus-theme-diff-focus-added)))
-    `(magit-diff-base ((,class ,@(modus-themes-diff
+    `(magit-diff-base ((,class ,@(modus-themes--diff
                                   bg-main yellow
                                   bg-diff-changed fg-diff-changed
                                   yellow-nuanced-bg fg-diff-changed))))
     `(magit-diff-base-highlight ((,class :inherit modus-theme-diff-focus-changed)))
     `(magit-diff-context ((,class :foreground ,fg-unfocused)))
-    `(magit-diff-context-highlight ((,class ,@(modus-themes-diff
+    `(magit-diff-context-highlight ((,class ,@(modus-themes--diff
                                                bg-dim fg-dim
                                                bg-inactive fg-inactive
                                                bg-dim fg-alt))))
@@ -3659,7 +3660,7 @@ calling the internal `modus-themes--light' and
     `(magit-diff-hunk-region ((,class :inherit bold)))
     `(magit-diff-lines-boundary ((,class :background ,fg-main)))
     `(magit-diff-lines-heading ((,class :inherit modus-theme-refine-magenta)))
-    `(magit-diff-removed ((,class ,@(modus-themes-diff
+    `(magit-diff-removed ((,class ,@(modus-themes--diff
                                      bg-main red
                                      bg-diff-removed fg-diff-removed
                                      red-nuanced-bg fg-diff-removed))))
@@ -3728,7 +3729,7 @@ calling the internal `modus-themes--light' and
     `(markdown-blockquote-face ((,class :inherit modus-theme-slant :foreground ,fg-special-cold)))
     `(markdown-bold-face ((,class :inherit bold)))
     `(markdown-code-face ((,class ,@(and (>= emacs-major-version 27) '(:extend t))
-                                  ,@(modus-themes-mixed-fonts)
+                                  ,@(modus-themes--mixed-fonts)
                                   :background ,bg-dim)))
     `(markdown-comment-face ((,class :inherit font-lock-comment-face)))
     `(markdown-footnote-marker-face ((,class :inherit bold :foreground ,cyan-alt)))
@@ -3744,22 +3745,22 @@ calling the internal `modus-themes--light' and
     `(markdown-header-face-6 ((,class :inherit modus-theme-heading-6)))
     `(markdown-header-rule-face ((,class :inherit bold :foreground ,fg-special-warm)))
     `(markdown-hr-face ((,class :inherit bold :foreground ,fg-special-warm)))
-    `(markdown-html-attr-name-face ((,class ,@(modus-themes-mixed-fonts)
+    `(markdown-html-attr-name-face ((,class ,@(modus-themes--mixed-fonts)
                                             :foreground ,cyan)))
-    `(markdown-html-attr-value-face ((,class ,@(modus-themes-mixed-fonts)
+    `(markdown-html-attr-value-face ((,class ,@(modus-themes--mixed-fonts)
                                              :foreground ,blue)))
-    `(markdown-html-entity-face ((,class ,@(modus-themes-mixed-fonts)
+    `(markdown-html-entity-face ((,class ,@(modus-themes--mixed-fonts)
                                          :foreground ,cyan)))
-    `(markdown-html-tag-delimiter-face ((,class ,@(modus-themes-mixed-fonts)
+    `(markdown-html-tag-delimiter-face ((,class ,@(modus-themes--mixed-fonts)
                                                 :foreground ,fg-special-mild)))
-    `(markdown-html-tag-name-face ((,class ,@(modus-themes-mixed-fonts)
+    `(markdown-html-tag-name-face ((,class ,@(modus-themes--mixed-fonts)
                                            :foreground ,magenta-alt)))
-    `(markdown-inline-code-face ((,class ,@(modus-themes-mixed-fonts)
+    `(markdown-inline-code-face ((,class ,@(modus-themes--mixed-fonts)
                                          :background ,bg-alt :foreground ,fg-special-calm)))
     `(markdown-italic-face ((,class :inherit italic :foreground ,fg-special-cold)))
-    `(markdown-language-info-face ((,class ,@(modus-themes-mixed-fonts)
+    `(markdown-language-info-face ((,class ,@(modus-themes--mixed-fonts)
                                            :foreground ,fg-special-cold)))
-    `(markdown-language-keyword-face ((,class ,@(modus-themes-mixed-fonts)
+    `(markdown-language-keyword-face ((,class ,@(modus-themes--mixed-fonts)
                                               :foreground ,green-alt-other)))
     `(markdown-line-break-face ((,class :inherit modus-theme-refine-cyan :underline t)))
     `(markdown-link-face ((,class :inherit button)))
@@ -3774,7 +3775,7 @@ calling the internal `modus-themes--light' and
     `(markdown-pre-face ((,class :inherit markdown-code-face :foreground ,fg-special-mild)))
     `(markdown-reference-face ((,class :inherit markdown-markup-face)))
     `(markdown-strike-through-face ((,class :strike-through t)))
-    `(markdown-table-face ((,class ,@(modus-themes-mixed-fonts)
+    `(markdown-table-face ((,class ,@(modus-themes--mixed-fonts)
                                    :foreground ,fg-special-cold)))
     `(markdown-url-face ((,class :foreground ,blue-alt)))
 ;;;;; markup-faces (`adoc-mode')
@@ -3844,13 +3845,13 @@ calling the internal `modus-themes--light' and
     `(minimap-active-region-background ((,class :background ,bg-active)))
     `(minimap-current-line-face ((,class :background ,cyan-intense-bg :foreground ,fg-main)))
 ;;;;; modeline
-    `(mode-line ((,class ,@(modus-themes-mode-line-attrs
+    `(mode-line ((,class ,@(modus-themes--mode-line-attrs
                             fg-active bg-active fg-dim bg-active
                             fg-alt bg-active 'alt-style nil bg-main))))
     `(mode-line-buffer-id ((,class :inherit bold)))
     `(mode-line-emphasis ((,class :inherit bold :foreground ,blue-active)))
     `(mode-line-highlight ((,class :inherit modus-theme-active-blue :box (:line-width -1 :style pressed-button))))
-    `(mode-line-inactive ((,class ,@(modus-themes-mode-line-attrs
+    `(mode-line-inactive ((,class ,@(modus-themes--mode-line-attrs
                                      fg-inactive bg-inactive fg-alt bg-dim
                                      bg-region bg-active))))
 ;;;;; mood-line
@@ -3974,56 +3975,30 @@ calling the internal `modus-themes--light' and
     `(num3-face-even ((,class :inherit bold :background ,bg-alt)))
 ;;;;; nxml-mode
     `(nxml-attribute-colon ((,class :foreground ,fg-main)))
-    `(nxml-attribute-local-name ((,class ,@(modus-themes-syntax-foreground
-                                            cyan-alt cyan-alt-faint))))
-    `(nxml-attribute-prefix ((,class :inherit modus-theme-bold
-                                     ,@(modus-themes-syntax-foreground
-                                        cyan-alt-other cyan-alt-other-faint))))
-    `(nxml-attribute-value ((,class ,@(modus-themes-syntax-foreground
-                                       blue blue-faint))))
-    `(nxml-cdata-section-CDATA ((,class :inherit modus-theme-bold
-                                        ,@(modus-themes-syntax-foreground
-                                           red-alt red-alt-faint))))
-    `(nxml-cdata-section-delimiter ((,class ,@(modus-themes-syntax-foreground
-                                               red-alt red-alt-faint))))
-    `(nxml-char-ref-delimiter ((,class ,@(modus-themes-syntax-foreground
-                                          green-alt-other green-alt-other-faint))))
-    `(nxml-char-ref-number ((,class :inherit modus-theme-bold
-                                    ,@(modus-themes-syntax-foreground
-                                       green-alt-other green-alt-other-faint))))
+    `(nxml-attribute-local-name ((,class :inherit font-lock-variable-name-face)))
+    `(nxml-attribute-prefix ((,class  :inherit font-lock-type-face)))
+    `(nxml-attribute-value ((,class :inherit font-lock-constant-face)))
+    `(nxml-cdata-section-CDATA ((,class :inherit error)))
+    `(nxml-cdata-section-delimiter ((,class :inherit error)))
+    `(nxml-char-ref-delimiter ((,class :foreground ,fg-special-mild)))
+    `(nxml-char-ref-number ((,class :inherit modus-theme-bold :foreground ,fg-special-mild)))
     `(nxml-delimited-data ((,class :inherit modus-theme-slant :foreground ,fg-special-cold)))
     `(nxml-delimiter ((,class :foreground ,fg-dim)))
     `(nxml-element-colon ((,class :foreground ,fg-main)))
-    `(nxml-element-local-name ((,class ,@(modus-themes-syntax-foreground
-                                          magenta magenta-faint))))
-    `(nxml-element-prefix ((,class :inherit modus-theme-bold
-                                   ,@(modus-themes-syntax-foreground
-                                      magenta-alt magenta-alt-faint))))
-    `(nxml-entity-ref-delimiter ((,class ,@(modus-themes-syntax-foreground
-                                            green-alt-other green-alt-other-faint))))
-    `(nxml-entity-ref-name ((,class :inherit modus-theme-bold
-                                    ,@(modus-themes-syntax-foreground
-                                       green-alt-other green-alt-other-faint))))
+    `(nxml-element-local-name ((,class :inherit font-lock-function-name-face)))
+    `(nxml-element-prefix ((,class :inherit font-lock-builtin-face)))
+    `(nxml-entity-ref-delimiter ((,class :foreground ,fg-special-mild)))
+    `(nxml-entity-ref-name ((,class :inherit modus-theme-bold :foreground ,fg-special-mild)))
     `(nxml-glyph ((,class :inherit modus-theme-intense-neutral)))
-    `(nxml-hash ((,class :inherit modus-theme-bold
-                         ,@(modus-themes-syntax-foreground
-                            blue-alt blue-alt-faint))))
+    `(nxml-hash ((,class :inherit (bold font-lock-string-face))))
     `(nxml-heading ((,class :inherit bold)))
-    `(nxml-name ((,class :inherit modus-theme-bold
-                         ,@(modus-themes-syntax-foreground
-                            magenta-alt magenta-alt-faint))))
+    `(nxml-name ((,class :inherit font-lock-builtin-face)))
     `(nxml-namespace-attribute-colon ((,class :foreground ,fg-main)))
-    `(nxml-namespace-attribute-prefix ((,class ,@(modus-themes-syntax-foreground
-                                                  cyan cyan-faint))))
-    `(nxml-processing-instruction-target ((,class :inherit modus-theme-bold
-                                                  ,@(modus-themes-syntax-foreground
-                                                     magenta-alt-other magenta-alt-other-faint))))
-    `(nxml-prolog-keyword ((,class :inherit modus-theme-bold
-                                   ,@(modus-themes-syntax-foreground
-                                      magenta-alt-other magenta-alt-other-faint))))
-    `(nxml-ref ((,class :inherit modus-theme-bold
-                        ,@(modus-themes-syntax-foreground
-                           green-alt-other green-alt-other-faint))))
+    `(nxml-namespace-attribute-prefix ((,class :inherit font-lock-variable-name-face)))
+    `(nxml-processing-instruction-target ((,class :inherit font-lock-keyword-face)))
+    `(nxml-prolog-keyword ((,class :inherit font-lock-keyword-face)))
+    `(nxml-ref ((,class :inherit modus-theme-bold :foreground ,fg-special-mild)))
+    `(rng-error ((,class :inherit error)))
 ;;;;; objed
     `(objed-hl ((,class :background ,(if modus-themes-intense-hl-line
                                          bg-hl-alt-intense bg-hl-alt))))
@@ -4031,19 +4006,19 @@ calling the internal `modus-themes--light' and
     `(objed-mode-line ((,class :foreground ,cyan-active)))
 ;;;;; orderless
     `(orderless-match-face-0 ((,class :inherit bold
-                                      ,@(modus-themes-standard-completions
+                                      ,@(modus-themes--standard-completions
                                          blue-alt-other blue-nuanced-bg
                                          blue-refine-bg blue-refine-fg))))
     `(orderless-match-face-1 ((,class :inherit bold
-                                      ,@(modus-themes-standard-completions
+                                      ,@(modus-themes--standard-completions
                                          magenta-alt magenta-nuanced-bg
                                          magenta-refine-bg magenta-refine-fg))))
     `(orderless-match-face-2 ((,class :inherit bold
-                                      ,@(modus-themes-standard-completions
+                                      ,@(modus-themes--standard-completions
                                          green green-nuanced-bg
                                          green-refine-bg green-refine-fg))))
     `(orderless-match-face-3 ((,class :inherit bold
-                                      ,@(modus-themes-standard-completions
+                                      ,@(modus-themes--standard-completions
                                          yellow yellow-nuanced-bg
                                          yellow-refine-bg yellow-refine-fg))))
 ;;;;; org
@@ -4066,11 +4041,11 @@ calling the internal `modus-themes--light' and
     `(org-agenda-restriction-lock ((,class :background ,bg-dim :foreground ,fg-dim)))
     `(org-agenda-structure ((,class :foreground ,blue-alt)))
     `(org-archived ((,class :background ,bg-alt :foreground ,fg-alt)))
-    `(org-block ((,class ,@(modus-themes-mixed-fonts)
-                         ,@(modus-themes-org-block bg-dim)
+    `(org-block ((,class ,@(modus-themes--mixed-fonts)
+                         ,@(modus-themes--org-block bg-dim)
                          :foreground ,fg-main)))
-    `(org-block-begin-line ((,class ,@(modus-themes-mixed-fonts)
-                                    ,@(modus-themes-org-block-delim
+    `(org-block-begin-line ((,class ,@(modus-themes--mixed-fonts)
+                                    ,@(modus-themes--org-block-delim
                                        bg-dim fg-special-cold
                                        bg-alt fg-special-mild))))
     `(org-block-end-line ((,class :inherit org-block-begin-line)))
@@ -4079,27 +4054,27 @@ calling the internal `modus-themes--light' and
     `(org-checkbox-statistics-done ((,class :inherit org-done)))
     `(org-checkbox-statistics-todo ((,class :inherit org-todo)))
     `(org-clock-overlay ((,class :inherit modus-theme-special-cold)))
-    `(org-code ((,class ,@(modus-themes-mixed-fonts) :foreground ,magenta)))
+    `(org-code ((,class ,@(modus-themes--mixed-fonts) :foreground ,magenta)))
     `(org-column ((,class :background ,bg-alt)))
     `(org-column-title ((,class :inherit bold :underline t :background ,bg-alt)))
     `(org-date ((,class :inherit (button fixed-pitch)
-                        ,@(modus-themes-link-color
+                        ,@(modus-themes--link-color
                            cyan cyan-faint))))
     `(org-date-selected ((,class :inherit bold :foreground ,blue-alt :inverse-video t)))
     `(org-dispatcher-highlight ((,class :inherit bold :background ,yellow-nuanced-bg :foreground ,red-alt)))
     `(org-document-info ((,class :foreground ,fg-special-cold)))
-    `(org-document-info-keyword ((,class ,@(modus-themes-mixed-fonts)
+    `(org-document-info-keyword ((,class ,@(modus-themes--mixed-fonts)
                                          :foreground ,fg-alt)))
     `(org-document-title ((,class :inherit (bold modus-theme-variable-pitch) :foreground ,fg-special-cold
-                                  ,@(modus-themes-scale modus-themes-scale-5))))
+                                  ,@(modus-themes--scale modus-themes-scale-5))))
     `(org-done ((,class :foreground ,green)))
-    `(org-drawer ((,class ,@(modus-themes-mixed-fonts)
+    `(org-drawer ((,class ,@(modus-themes--mixed-fonts)
                           :foreground ,fg-alt)))
     `(org-ellipsis ((,class :foreground nil))) ; inherits from the heading's color
     `(org-footnote ((,class :inherit button
-                            ,@(modus-themes-link-color
+                            ,@(modus-themes--link-color
                                blue-alt blue-alt-faint))))
-    `(org-formula ((,class ,@(modus-themes-mixed-fonts)
+    `(org-formula ((,class ,@(modus-themes--mixed-fonts)
                            :foreground ,red-alt)))
     `(org-habit-alert-face ((,class :inherit modus-theme-intense-yellow)))
     `(org-habit-alert-future-face ((,class :inherit modus-theme-refine-yellow)))
@@ -4125,22 +4100,22 @@ calling the internal `modus-themes--light' and
     `(org-link ((,class :inherit button)))
     `(org-list-dt ((,class :inherit bold)))
     `(org-macro ((,class :background ,blue-nuanced-bg :foreground ,magenta-alt-other)))
-    `(org-meta-line ((,class ,@(modus-themes-mixed-fonts) :foreground ,fg-alt)))
+    `(org-meta-line ((,class ,@(modus-themes--mixed-fonts) :foreground ,fg-alt)))
     `(org-mode-line-clock ((,class :foreground ,fg-main)))
     `(org-mode-line-clock-overrun ((,class :inherit modus-theme-active-red)))
     `(org-priority ((,class :foreground ,magenta)))
-    `(org-property-value ((,class ,@(modus-themes-mixed-fonts)
+    `(org-property-value ((,class ,@(modus-themes--mixed-fonts)
                                   :foreground ,fg-special-cold)))
     `(org-quote ((,class :inherit modus-theme-slant
-                         ,@(modus-themes-org-block bg-dim)
+                         ,@(modus-themes--org-block bg-dim)
                          :foreground ,fg-special-cold)))
     `(org-scheduled ((,class :foreground ,fg-special-warm)))
     `(org-scheduled-previously ((,class :foreground ,yellow-alt-other)))
     `(org-scheduled-today ((,class :foreground ,magenta-alt-other)))
     `(org-sexp-date ((,class :inherit org-date)))
-    `(org-special-keyword ((,class ,@(modus-themes-mixed-fonts)
+    `(org-special-keyword ((,class ,@(modus-themes--mixed-fonts)
                                    :foreground ,fg-alt)))
-    `(org-table ((,class ,@(modus-themes-mixed-fonts)
+    `(org-table ((,class ,@(modus-themes--mixed-fonts)
                          :foreground ,fg-special-cold)))
     `(org-table-header ((,class :inherit (fixed-pitch modus-theme-intense-neutral))))
     `(org-tag ((,class :foreground ,magenta-nuanced-fg)))
@@ -4150,7 +4125,7 @@ calling the internal `modus-themes--light' and
     `(org-todo ((,class :foreground ,red)))
     `(org-upcoming-deadline ((,class :foreground ,red-alt-other)))
     `(org-upcoming-distant-deadline ((,class :foreground ,red-nuanced-fg)))
-    `(org-verbatim ((,class ,@(modus-themes-mixed-fonts)
+    `(org-verbatim ((,class ,@(modus-themes--mixed-fonts)
                             :background ,bg-alt :foreground ,fg-special-calm)))
     `(org-verse ((,class :inherit org-quote)))
     `(org-warning ((,class :inherit bold :foreground ,red-alt-other)))
@@ -4169,16 +4144,16 @@ calling the internal `modus-themes--light' and
     `(org-recur ((,class :foreground ,magenta-active)))
 ;;;;; org-roam
     `(org-roam-link ((,class :inherit button
-                             ,@(modus-themes-link-color
+                             ,@(modus-themes--link-color
                                 green green-faint))))
     `(org-roam-link-current ((,class :inherit button
-                                     ,@(modus-themes-link-color
+                                     ,@(modus-themes--link-color
                                         green-alt green-alt-faint))))
     `(org-roam-link-invalid ((,class :inherit button
-                                     ,@(modus-themes-link-color
+                                     ,@(modus-themes--link-color
                                         red red-faint))))
     `(org-roam-link-shielded ((,class :inherit button
-                                      ,@(modus-themes-link-color
+                                      ,@(modus-themes--link-color
                                          yellow yellow-faint))))
     `(org-roam-tag ((,class :inherit italic :foreground ,fg-alt)))
 ;;;;; org-superstar
@@ -4249,7 +4224,7 @@ calling the internal `modus-themes--light' and
     `(persp-selected-face ((,class :inherit bold :foreground ,blue-active)))
 ;;;;; phi-grep
     `(phi-grep-heading-face  ((,class :inherit bold :foreground ,red-alt
-                                      ,@(modus-themes-scale modus-themes-scale-4))))
+                                      ,@(modus-themes--scale modus-themes-scale-4))))
     `(phi-grep-line-number-face ((,class :foreground ,fg-special-warm)))
     `(phi-grep-match-face ((,class :inherit modus-theme-special-calm)))
     `(phi-grep-modified-face ((,class :inherit modus-theme-refine-yellow)))
@@ -4417,21 +4392,21 @@ calling the internal `modus-themes--light' and
     `(sallet-buffer-read-only ((,class :foreground ,yellow-alt)))
     `(sallet-buffer-size ((,class :foreground ,fg-special-calm)))
     `(sallet-buffer-special ((,class :foreground ,magenta-alt-other)))
-    `(sallet-flx-match ((,class ,@(modus-themes-extra-completions
+    `(sallet-flx-match ((,class ,@(modus-themes--extra-completions
                                    'modus-theme-subtle-cyan
                                    'modus-theme-refine-cyan
                                    'modus-theme-nuanced-cyan
                                    cyan-alt-other))))
     `(sallet-recentf-buffer-name ((,class :foreground ,blue-nuanced-fg)))
     `(sallet-recentf-file-path ((,class :foreground ,fg-special-mild)))
-    `(sallet-regexp-match ((,class ,@(modus-themes-extra-completions
+    `(sallet-regexp-match ((,class ,@(modus-themes--extra-completions
                                       'modus-theme-subtle-magenta
                                       'modus-theme-refine-magenta
                                       'modus-theme-nuanced-magenta
                                       magenta-alt-other))))
     `(sallet-source-header ((,class :inherit bold :foreground ,red-alt
-                                    ,@(modus-themes-scale modus-themes-scale-4))))
-    `(sallet-substring-match ((,class ,@(modus-themes-extra-completions
+                                    ,@(modus-themes--scale modus-themes-scale-4))))
+    `(sallet-substring-match ((,class ,@(modus-themes--extra-completions
                                          'modus-theme-subtle-blue
                                          'modus-theme-refine-blue
                                          'modus-theme-nuanced-blue
@@ -4443,11 +4418,11 @@ calling the internal `modus-themes--light' and
                                ('opinionated (list bg-active))
                                (_ (list bg-inactive))))))
     `(selectrum-primary-highlight ((,class :inherit bold
-                                           ,@(modus-themes-standard-completions
+                                           ,@(modus-themes--standard-completions
                                               magenta-alt magenta-nuanced-bg
                                               magenta-refine-bg magenta-refine-fg))))
     `(selectrum-secondary-highlight ((,class :inherit bold
-                                             ,@(modus-themes-standard-completions
+                                             ,@(modus-themes--standard-completions
                                                 cyan-alt-other cyan-nuanced-bg
                                                 cyan-refine-bg cyan-refine-fg))))
 ;;;;; semantic
@@ -4472,11 +4447,17 @@ calling the internal `modus-themes--light' and
     `(sh-heredoc ((,class :foreground ,blue-alt)))
     `(sh-quoted-exec ((,class :inherit modus-theme-bold :foreground ,magenta-alt)))
 ;;;;; show-paren-mode
-    `(show-paren-match ((,class ,@(modus-themes-paren bg-paren-match
-                                                      bg-paren-match-intense)
+    `(show-paren-match ((,class ,@(modus-themes--paren bg-paren-match
+                                                       bg-paren-match-intense)
                                 :foreground ,fg-main)))
     `(show-paren-match-expression ((,class :inherit modus-theme-special-calm)))
     `(show-paren-mismatch ((,class :inherit modus-theme-intense-red)))
+;;;;; shr
+    `(shr-abbreviation
+      ((,(append '((supports :underline (:style wave))) class)
+        :foreground ,fg-docstring :underline (:color ,fg-alt :style wave))
+       (,class :foreground ,fg-docstring :underline t)))
+    `(shr-selected-link ((,class :inherit modus-theme-subtle-cyan)))
 ;;;;; side-notes
     `(side-notes ((,class :background ,bg-dim :foreground ,fg-dim)))
 ;;;;; sieve-mode
@@ -4515,8 +4496,8 @@ calling the internal `modus-themes--light' and
 ;;;;; smartparens
     `(sp-pair-overlay-face ((,class :inherit modus-theme-special-warm)))
     `(sp-show-pair-enclosing ((,class :inherit modus-theme-special-mild)))
-    `(sp-show-pair-match-face ((,class ,@(modus-themes-paren bg-paren-match
-                                                             bg-paren-match-intense)
+    `(sp-show-pair-match-face ((,class ,@(modus-themes--paren bg-paren-match
+                                                              bg-paren-match-intense)
                                        :foreground ,fg-main)))
     `(sp-show-pair-mismatch-face ((,class :inherit modus-theme-intense-red)))
     `(sp-wrap-overlay-closing-pair ((,class :inherit sp-pair-overlay-face)))
@@ -4579,9 +4560,9 @@ calling the internal `modus-themes--light' and
     `(swiper-match-face-4 ((,class :inherit swiper-line-face)))
 ;;;;; swoop
     `(swoop-face-header-format-line ((,class :inherit bold :foreground ,red-alt
-                                             ,@(modus-themes-scale modus-themes-scale-3))))
+                                             ,@(modus-themes--scale modus-themes-scale-3))))
     `(swoop-face-line-buffer-name ((,class :inherit bold :foreground ,blue-alt
-                                           ,@(modus-themes-scale modus-themes-scale-4))))
+                                           ,@(modus-themes--scale modus-themes-scale-4))))
     `(swoop-face-line-number ((,class :foreground ,fg-special-warm)))
     `(swoop-face-target-line ((,class :inherit modus-theme-intense-blue
                                       ,@(and (>= emacs-major-version 27) '(:extend t)))))
@@ -4634,6 +4615,21 @@ calling the internal `modus-themes--light' and
     `(syslog-ip ((,class :inherit bold :foreground ,fg-special-mild :underline t)))
     `(syslog-su ((,class :inherit bold :foreground ,red-alt)))
     `(syslog-warn ((,class :inherit bold :foreground ,yellow)))
+;;;;; tab-bar-mode
+    `(tab-bar ((,class :background ,bg-tab-bar :foreground ,fg-main)))
+    `(tab-bar-tab ((,class :inherit bold :box (:line-width 2 :color ,bg-tab-active)
+                           :background ,bg-tab-active :foreground ,fg-main)))
+    `(tab-bar-tab-inactive ((,class :box (:line-width 2 :color ,bg-tab-inactive)
+                                    :background ,bg-tab-inactive :foreground ,fg-dim)))
+;;;;; tab-line-mode
+    `(tab-line ((,class :height 0.95 :background ,bg-tab-bar :foreground ,fg-main)))
+    `(tab-line-close-highlight ((,class :foreground ,red)))
+    `(tab-line-highlight ((,class :background ,blue-subtle-bg :foreground ,fg-dim)))
+    `(tab-line-tab ((,class :inherit bold :box (:line-width 2 :color ,bg-tab-active)
+                            :background ,bg-tab-active :foreground ,fg-main)))
+    `(tab-line-tab-current ((,class :inherit tab-line-tab)))
+    `(tab-line-tab-inactive ((,class :box (:line-width 2 :color ,bg-tab-inactive)
+                                     :background ,bg-tab-inactive :foreground ,fg-dim)))
 ;;;;; table (built-in table.el)
     `(table-cell ((,class :background ,blue-nuanced-bg)))
 ;;;;; telephone-line
@@ -4693,7 +4689,7 @@ calling the internal `modus-themes--light' and
     `(trashed-marked ((,class :inherit modus-theme-mark-alt)))
     `(trashed-restored ((,class :inherit modus-theme-mark-sel)))
     `(trashed-symlink ((,class :inherit button
-                               ,@(modus-themes-link-color
+                               ,@(modus-themes--link-color
                                   cyan-alt cyan-alt-faint))))
 ;;;;; treemacs
     `(treemacs-directory-collapsed-face ((,class :foreground ,magenta-alt)))
@@ -4728,38 +4724,23 @@ calling the internal `modus-themes--light' and
     `(caml-types-occ-face ((,class :inherit modus-theme-subtle-green)))
     `(caml-types-scope-face ((,class :inherit modus-theme-subtle-blue)))
     `(caml-types-typed-face ((,class :inherit modus-theme-subtle-magenta)))
-    `(tuareg-font-double-semicolon-face ((,class ,@(modus-themes-syntax-foreground
-                                                    red-alt red-alt-faint))))
-    `(tuareg-font-lock-attribute-face ((,class ,@(modus-themes-syntax-foreground
-                                                  magenta magenta-faint))))
+    `(tuareg-font-double-semicolon-face ((,class :inherit font-lock-preprocessor-face)))
+    `(tuareg-font-lock-attribute-face ((,class :inherit font-lock-function-name-face)))
     `(tuareg-font-lock-constructor-face ((,class :foreground ,fg-main)))
     `(tuareg-font-lock-error-face ((,class :inherit (modus-theme-intense-red bold))))
     `(tuareg-font-lock-extension-node-face ((,class :background ,bg-alt :foreground ,magenta)))
     `(tuareg-font-lock-governing-face ((,class :inherit bold :foreground ,fg-main)))
-    `(tuareg-font-lock-infix-extension-node-face ((,class ,@(modus-themes-syntax-foreground
-                                                             magenta magenta-faint))))
+    `(tuareg-font-lock-infix-extension-node-face ((,class :inherit font-lock-function-name-face)))
     `(tuareg-font-lock-interactive-directive-face ((,class :foreground ,fg-special-cold)))
-    `(tuareg-font-lock-interactive-error-face ((,class :inherit bold
-                                                       ,@(modus-themes-syntax-foreground
-                                                          red red-faint))))
-    `(tuareg-font-lock-interactive-output-face ((,class ,@(modus-themes-syntax-foreground
-                                                           blue-alt-other blue-alt-other-faint))))
-    `(tuareg-font-lock-label-face ((,class ,@(modus-themes-syntax-foreground
-                                              cyan-alt-other cyan-alt-other-faint))))
+    `(tuareg-font-lock-interactive-error-face ((,class :inherit error)))
+    `(tuareg-font-lock-interactive-output-face ((,class :inherit font-lock-constant-face)))
+    `(tuareg-font-lock-label-face ((,class :inherit font-lock-type-face)))
     `(tuareg-font-lock-line-number-face ((,class :foreground ,fg-special-warm)))
-    `(tuareg-font-lock-module-face ((,class ,@(modus-themes-syntax-foreground
-                                               magenta-alt magenta-alt-faint))))
-    `(tuareg-font-lock-multistage-face ((,class :inherit bold :background ,bg-alt
-                                                ,@(modus-themes-syntax-foreground
-                                                   blue blue-faint))))
-    `(tuareg-font-lock-operator-face ((,class ,@(modus-themes-syntax-foreground
-                                                 red-alt red-alt-faint))))
-    `(tuareg-opam-error-face ((,class :inherit bold
-                                      ,@(modus-themes-syntax-foreground
-                                         red red-faint))))
-    `(tuareg-opam-pkg-variable-name-face ((,class :inherit modus-theme-slant
-                                                  ,@(modus-themes-syntax-foreground
-                                                     cyan cyan-faint))))
+    `(tuareg-font-lock-module-face ((,class :inherit font-lock-builtin-face)))
+    `(tuareg-font-lock-multistage-face ((,class :inherit bold :background ,bg-alt :foreground blue)))
+    `(tuareg-font-lock-operator-face ((,class :inherit font-lock-preprocessor-face)))
+    `(tuareg-opam-error-face ((,class :inherit error)))
+    `(tuareg-opam-pkg-variable-name-face ((,class :inherit font-lock-variable-name-face)))
 ;;;;; typescript
     `(typescript-jsdoc-tag ((,class :inherit modus-theme-slant :foreground ,fg-special-mild)))
     `(typescript-jsdoc-type ((,class :inherit modus-theme-slant :foreground ,fg-special-calm)))
@@ -4826,88 +4807,53 @@ calling the internal `modus-themes--light' and
     `(web-mode-annotation-face ((,class :inherit web-mode-comment-face)))
     `(web-mode-annotation-html-face ((,class :inherit web-mode-comment-face)))
     `(web-mode-annotation-tag-face ((,class :inherit web-mode-comment-face :underline t)))
-    `(web-mode-block-attr-name-face ((,class ,@(modus-themes-syntax-foreground
-                                                blue blue-faint))))
-    `(web-mode-block-attr-value-face ((,class ,@(modus-themes-syntax-foreground
-                                                 cyan-alt-other cyan-alt-other-faint))))
+    `(web-mode-block-attr-name-face ((,class :inherit font-lock-constant-face)))
+    `(web-mode-block-attr-value-face ((,class :inherit font-lock-type-face)))
     `(web-mode-block-comment-face ((,class :inherit web-mode-comment-face)))
-    `(web-mode-block-control-face ((,class :inherit modus-theme-bold
-                                           ,@(modus-themes-syntax-foreground
-                                              magenta-alt magenta-alt-faint))))
+    `(web-mode-block-control-face ((,class :inherit font-lock-builtin-face)))
     `(web-mode-block-delimiter-face ((,class :foreground ,fg-main)))
     `(web-mode-block-face ((,class :background ,bg-dim)))
     `(web-mode-block-string-face ((,class :inherit web-mode-string-face)))
     `(web-mode-bold-face ((,class :inherit bold)))
-    `(web-mode-builtin-face ((,class :inherit modus-theme-bold
-                                     ,@(modus-themes-syntax-foreground
-                                        magenta-alt magenta-alt-faint))))
+    `(web-mode-builtin-face ((,class :inherit font-lock-builtin-face)))
     `(web-mode-comment-face ((,class :inherit font-lock-comment-face)))
-    `(web-mode-comment-keyword-face ((,class :inherit bold :background ,bg-dim
-                                             ,@(modus-themes-syntax-foreground
-                                                yellow yellow-faint))))
-    `(web-mode-constant-face ((,class ,@(modus-themes-syntax-foreground
-                                         blue-alt-other blue-alt-other-faint))))
-    `(web-mode-css-at-rule-face ((,class ,@(modus-themes-syntax-foreground
-                                            blue-alt-other blue-alt-other-faint))))
-    `(web-mode-css-color-face ((,class :inherit modus-theme-bold
-                                       ,@(modus-themes-syntax-foreground
-                                          magenta-alt magenta-alt-faint))))
+    `(web-mode-comment-keyword-face ((,class :inherit font-lock-warning-face)))
+    `(web-mode-constant-face ((,class :inherit font-lock-constant-face)))
+    `(web-mode-css-at-rule-face ((,class :inherit font-lock-constant-face)))
+    `(web-mode-css-color-face ((,class :inherit font-lock-builtin-face)))
     `(web-mode-css-comment-face ((,class :inherit web-mode-comment-face)))
-    `(web-mode-css-function-face ((,class :inherit modus-theme-bold
-                                          ,@(modus-themes-syntax-foreground
-                                             magenta-alt magenta-alt-faint))))
-    `(web-mode-css-priority-face ((,class :inherit modus-theme-bold
-                                          ,@(modus-themes-syntax-foreground
-                                             yellow-alt yellow-alt-faint))))
-    `(web-mode-css-property-name-face ((,class ,@(modus-themes-syntax-foreground
-                                                  cyan cyan-faint))))
-    `(web-mode-css-pseudo-class-face ((,class ,@(modus-themes-syntax-foreground
-                                                 cyan-alt-other cyan-alt-other-faint))))
-    `(web-mode-css-selector-face ((,class :inherit modus-theme-bold
-                                          ,@(modus-themes-syntax-foreground
-                                             magenta-alt-other magenta-alt-other-faint))))
+    `(web-mode-css-function-face ((,class :inherit font-lock-builtin-face)))
+    `(web-mode-css-priority-face ((,class :inherit font-lock-warning-face)))
+    `(web-mode-css-property-name-face ((,class :inherit font-lock-keyword-face)))
+    `(web-mode-css-pseudo-class-face ((,class :inherit font-lock-doc-face)))
+    `(web-mode-css-selector-face ((,class :inherit font-lock-keyword-face)))
     `(web-mode-css-string-face ((,class :inherit web-mode-string-face)))
     `(web-mode-css-variable-face ((,class :foreground ,fg-special-warm)))
     `(web-mode-current-column-highlight-face ((,class :background ,bg-alt)))
     `(web-mode-current-element-highlight-face ((,class :inherit modus-theme-special-mild)))
     `(web-mode-doctype-face ((,class :inherit modus-theme-slant :foreground ,fg-special-cold)))
     `(web-mode-error-face ((,class :inherit modus-theme-intense-red)))
-    `(web-mode-filter-face ((,class ,@(modus-themes-syntax-foreground
-                                       magenta magenta-faint))))
+    `(web-mode-filter-face ((,class :inherit font-lock-function-name-face)))
     `(web-mode-folded-face ((,class :underline t)))
-    `(web-mode-function-call-face ((,class ,@(modus-themes-syntax-foreground
-                                              magenta magenta-faint))))
-    `(web-mode-function-name-face ((,class ,@(modus-themes-syntax-foreground
-                                              magenta magenta-faint))))
-    `(web-mode-html-attr-custom-face ((,class ,@(modus-themes-syntax-foreground
-                                                 cyan cyan-faint))))
+    `(web-mode-function-call-face ((,class :inherit font-lock-function-name-face)))
+    `(web-mode-function-name-face ((,class :inherit font-lock-function-name-face)))
+    `(web-mode-html-attr-custom-face ((,class :inherit font-lock-variable-name-face)))
     `(web-mode-html-attr-engine-face ((,class :foreground ,fg-main)))
     `(web-mode-html-attr-equal-face ((,class :foreground ,fg-main)))
-    `(web-mode-html-attr-name-face ((,class ,@(modus-themes-syntax-foreground
-                                               cyan cyan-faint))))
-    `(web-mode-html-attr-value-face ((,class ,@(modus-themes-syntax-foreground
-                                                blue-alt-other blue-alt-other-faint))))
-    `(web-mode-html-entity-face ((,class :inherit modus-theme-slant
-                                         ,@(modus-themes-syntax-foreground
-                                            yellow-alt-other yellow-alt-other-faint))))
+    `(web-mode-html-attr-name-face ((,class :inherit font-lock-variable-name-face)))
+    `(web-mode-html-attr-value-face ((,class :inherit font-lock-constant-face)))
+    `(web-mode-html-entity-face ((,class :inherit font-lock-negation-char-face)))
     `(web-mode-html-tag-bracket-face ((,class :foreground ,fg-dim)))
-    `(web-mode-html-tag-custom-face ((,class ,@(modus-themes-syntax-foreground
-                                                magenta magenta-faint))))
-    `(web-mode-html-tag-face ((,class ,@(modus-themes-syntax-foreground
-                                         magenta magenta-faint))))
-    `(web-mode-html-tag-namespaced-face ((,class :inherit modus-theme-bold
-                                                 ,@(modus-themes-syntax-foreground
-                                                    magenta-alt magenta-alt-faint))))
-    `(web-mode-html-tag-unclosed-face ((,class ,@(modus-themes-syntax-foreground
-                                                  red red-faint)
-                                               :underline t)))
+    `(web-mode-html-tag-custom-face ((,class :inherit font-lock-function-name-face)))
+    `(web-mode-html-tag-face ((,class :inherit font-lock-function-name-face)))
+    `(web-mode-html-tag-namespaced-face ((,class :inherit font-lock-builtin-face)))
+    `(web-mode-html-tag-unclosed-face ((,class :inherit error :underline t)))
     `(web-mode-inlay-face ((,class :background ,bg-alt)))
     `(web-mode-italic-face ((,class :inherit italic)))
     `(web-mode-javascript-comment-face ((,class :inherit web-mode-comment-face)))
     `(web-mode-javascript-string-face ((,class :inherit web-mode-string-face)))
     `(web-mode-json-comment-face ((,class :inherit web-mode-comment-face)))
-    `(web-mode-json-context-face ((,class ,@(modus-themes-syntax-foreground
-                                             magenta-alt magenta-alt-faint))))
+    `(web-mode-json-context-face ((,class :inherit font-lock-builtin-face)))
     `(web-mode-json-key-face ((,class :foreground ,blue-nuanced-fg)))
     `(web-mode-json-string-face ((,class :inherit web-mode-string-face)))
     `(web-mode-jsx-depth-1-face ((,class :background ,blue-intense-bg :foreground ,fg-main)))
@@ -4915,33 +4861,21 @@ calling the internal `modus-themes--light' and
     `(web-mode-jsx-depth-3-face ((,class :background ,bg-special-cold :foreground ,fg-special-cold)))
     `(web-mode-jsx-depth-4-face ((,class :background ,bg-alt :foreground ,blue-refine-fg)))
     `(web-mode-jsx-depth-5-face ((,class :background ,bg-alt :foreground ,blue-nuanced-fg)))
-    `(web-mode-keyword-face ((,class :inherit modus-theme-bold
-                                     ,@(modus-themes-syntax-foreground
-                                        magenta-alt-other magenta-alt-other-faint))))
-    `(web-mode-param-name-face ((,class ,@(modus-themes-syntax-foreground
-                                           magenta magenta-faint))))
+    `(web-mode-keyword-face ((,class :inherit :inherit font-lock-keyword-face)))
+    `(web-mode-param-name-face ((,class :inherit font-lock-function-name-face)))
     `(web-mode-part-comment-face ((,class :inherit web-mode-comment-face)))
     `(web-mode-part-face ((,class :inherit web-mode-block-face)))
     `(web-mode-part-string-face ((,class :inherit web-mode-string-face)))
-    `(web-mode-preprocessor-face ((,class ,@(modus-themes-syntax-foreground
-                                             red-alt-other red-alt-other-faint))))
+    `(web-mode-preprocessor-face ((,class :inherit font-lock-preprocessor-face)))
     `(web-mode-script-face ((,class :inherit web-mode-part-face)))
-    `(web-mode-sql-keyword-face ((,class :inherit bold
-                                         ,@(modus-themes-syntax-foreground
-                                            yellow yellow-faint))))
-    `(web-mode-string-face ((,class ,@(modus-themes-syntax-foreground
-                                       blue-alt blue-alt-faint))))
+    `(web-mode-sql-keyword-face ((,class :inherit font-lock-negation-char-face)))
+    `(web-mode-string-face ((,class :inherit font-lock-string-face)))
     `(web-mode-style-face ((,class :inherit web-mode-part-face)))
-    `(web-mode-symbol-face ((,class ,@(modus-themes-syntax-foreground
-                                       blue-alt-other blue-alt-other-faint))))
-    `(web-mode-type-face ((,class ,@(modus-themes-syntax-foreground
-                                     magenta-alt magenta-alt-faint))))
+    `(web-mode-symbol-face ((,class :inherit font-lock-constant-face)))
+    `(web-mode-type-face ((,class :inherit font-lock-builtin-face)))
     `(web-mode-underline-face ((,class :underline t)))
-    `(web-mode-variable-name-face ((,class ,@(modus-themes-syntax-foreground
-                                              cyan cyan-faint))))
-    `(web-mode-warning-face ((,class :inherit bold :background ,bg-alt
-                                     ,@(modus-themes-syntax-foreground
-                                        yellow-alt-other yellow-alt-other-faint))))
+    `(web-mode-variable-name-face ((,class :inherit font-lock-variable-name-face)))
+    `(web-mode-warning-face ((,class :inherit font-lock-warning-face)))
     `(web-mode-whitespace-face ((,class :background ,bg-whitespace :foreground ,fg-whitespace)))
 ;;;;; wgrep
     `(wgrep-delete-face ((,class :inherit modus-theme-refine-yellow)))
@@ -4988,15 +4922,10 @@ calling the internal `modus-themes--light' and
     `(woman-italic ((,class :inherit italic :foreground ,cyan)))
     `(woman-unknown ((,class :inherit italic :foreground ,yellow)))
 ;;;;; xah-elisp-mode
-    `(xah-elisp-at-symbol ((,class :inherit bold
-                                   ,@(modus-themes-syntax-foreground
-                                      red-alt red-alt-faint))))
-    `(xah-elisp-cap-variable ((,class ,@(modus-themes-syntax-foreground
-                                         red-alt-other red-alt-other-faint))))
-    `(xah-elisp-command-face ((,class ,@(modus-themes-syntax-foreground
-                                         cyan-alt-other cyan-alt-other-faint))))
-    `(xah-elisp-dollar-symbol ((,class ,@(modus-themes-syntax-foreground
-                                          green green-faint))))
+    `(xah-elisp-at-symbol ((,class :inherit font-lock-warning-face)))
+    `(xah-elisp-cap-variable ((,class :inherit font-lock-preprocessor-face)))
+    `(xah-elisp-command-face ((,class :inherit font-lock-type-face)))
+    `(xah-elisp-dollar-symbol ((,class :inherit font-lock-variable-name-face)))
 ;;;;; xref
     `(xref-file-header ((,class :inherit bold :foreground ,fg-special-cold)))
     `(xref-line-number ((,class :foreground ,fg-alt)))
@@ -5017,154 +4946,101 @@ calling the internal `modus-themes--light' and
     `(ztreep-header-face ((,class :inherit bold :height 1.2 :foreground ,fg-special-cold)))
     `(ztreep-leaf-face ((,class :foreground ,cyan)))
     `(ztreep-node-count-children-face ((,class :foreground ,fg-special-warm)))
-    `(ztreep-node-face ((,class :foreground ,fg-main)))
-;;;; Emacs 27+
-    (when (>= emacs-major-version 27)
-      (custom-theme-set-faces
-       'user
-;;;;; line numbers (`display-line-numbers-mode' and global variant)
-       ;; NOTE that this is specifically for the faces that were
-       ;; introduced in Emacs 27, as the other faces are already
-       ;; supported.
-       `(line-number-major-tick ((,class :inherit (bold default)
-                                         :background ,yellow-nuanced-bg
-                                         :foreground ,yellow-nuanced-fg)))
-       `(line-number-minor-tick ((,class :inherit (bold default)
-                                         :background ,bg-inactive
-                                         :foreground ,fg-inactive)))
-;;;;; shr
-       `(shr-abbreviation
-         ((,(append '((supports :underline (:style wave))) class)
-           :foreground ,fg-docstring :underline (:color ,fg-alt :style wave))
-          (,class :foreground ,fg-docstring :underline t)))
-       `(shr-selected-link ((,class :inherit modus-theme-subtle-cyan)))
-;;;;; tab-bar-mode
-       `(tab-bar ((,class :background ,bg-tab-bar :foreground ,fg-main)))
-       `(tab-bar-tab ((,class :inherit bold :box (:line-width 2 :color ,bg-tab-active)
-                              :background ,bg-tab-active :foreground ,fg-main)))
-       `(tab-bar-tab-inactive ((,class :box (:line-width 2 :color ,bg-tab-inactive)
-                                       :background ,bg-tab-inactive :foreground ,fg-dim)))
-;;;;; tab-line-mode
-       `(tab-line ((,class :height 0.95 :background ,bg-tab-bar :foreground ,fg-main)))
-       `(tab-line-close-highlight ((,class :foreground ,red)))
-       `(tab-line-highlight ((,class :background ,blue-subtle-bg :foreground ,fg-dim)))
-       `(tab-line-tab ((,class :inherit bold :box (:line-width 2 :color ,bg-tab-active)
-                               :background ,bg-tab-active :foreground ,fg-main)))
-       `(tab-line-tab-current ((,class :inherit tab-line-tab)))
-       `(tab-line-tab-inactive ((,class :box (:line-width 2 :color ,bg-tab-inactive)
-                                        :background ,bg-tab-inactive :foreground ,fg-dim)))))
-;;;; Emacs 28+
-    (when (>= emacs-major-version 28)
-      (custom-theme-set-faces
-       'user
-;;;;; dired
-       `(dired-broken-symlink ((,class :inherit button :foreground ,red)))
-;;;;; diff-mode
-       `(diff-error ((,class :inherit modus-theme-intense-red)))
-;;;;; isearch regexp groups
-       `(isearch-group-1 ((,class :inherit modus-theme-intense-blue)))
-       `(isearch-group-2 ((,class :inherit modus-theme-intense-magenta)))
-;;;;; log-view
-       `(log-view-commit-body ((,class :background ,bg-alt :foreground ,fg-main)))))
-;;; variables
-    (custom-theme-set-variables
-     'user
-;;;; ansi-colors
-     `(ansi-color-faces-vector [default bold shadow italic underline success warning error])
-     `(ansi-color-names-vector [,fg-main ,red ,green ,yellow ,blue ,magenta ,cyan ,bg-main])
-;;;; awesome-tray
-     `(awesome-tray-mode-line-active-color ,blue)
-     `(awesome-tray-mode-line-inactive-color ,bg-active)
-;;;; flymake fringe indicators
-     `(flymake-error-bitmap '(flymake-double-exclamation-mark modus-theme-fringe-red))
-     `(flymake-warning-bitmap '(exclamation-mark modus-theme-fringe-yellow))
-     `(flymake-note-bitmap '(exclamation-mark modus-theme-fringe-cyan))
-;;;; ibuffer
-     `(ibuffer-deletion-face 'modus-theme-mark-del)
-     `(ibuffer-filter-group-name-face 'modus-theme-mark-symbol)
-     `(ibuffer-marked-face 'modus-theme-mark-sel)
-     `(ibuffer-title-face 'modus-theme-pseudo-header)
-;;;; highlight-tail
-     `(highlight-tail-colors
-       '((,green-subtle-bg . 0)
-         (,cyan-subtle-bg . 20)))
-;;;; hl-todo
-     `(hl-todo-keyword-faces
-       '(("HOLD" . ,yellow-alt)
-         ("TODO" . ,magenta)
-         ("NEXT" . ,magenta-alt-other)
-         ("THEM" . ,magenta-alt)
-         ("PROG" . ,cyan)
-         ("OKAY" . ,cyan-alt)
-         ("DONT" . ,green-alt)
-         ("FAIL" . ,red)
-         ("BUG" . ,red)
-         ("DONE" . ,green)
-         ("NOTE" . ,yellow-alt-other)
-         ("KLUDGE" . ,yellow)
-         ("HACK" . ,yellow)
-         ("TEMP" . ,red-nuanced-fg)
-         ("FIXME" . ,red-alt-other)
-         ("XXX+" . ,red-alt)
-         ("REVIEW" . ,cyan-alt-other)
-         ("DEPRECATED" . ,blue-nuanced-fg)))
-;;;; pdf-tools
-     `(pdf-view-midnight-colors
-       '(,fg-main . ,bg-dim))
-;;;; vc-annotate (C-x v g)
-     `(vc-annotate-background nil)
-     `(vc-annotate-background-mode nil)
-     `(vc-annotate-color-map
-       '((20 . ,red)
-         (40 . ,magenta)
-         (60 . ,magenta-alt)
-         (80 . ,red-alt)
-         (100 . ,yellow)
-         (120 . ,yellow-alt)
-         (140 . ,fg-special-warm)
-         (160 . ,fg-special-mild)
-         (180 . ,green)
-         (200 . ,green-alt)
-         (220 . ,cyan-alt-other)
-         (240 . ,cyan-alt)
-         (260 . ,cyan)
-         (280 . ,fg-special-cold)
-         (300 . ,blue)
-         (320 . ,blue-alt)
-         (340 . ,blue-alt-other)
-         (360 . ,magenta-alt-other)))
-     `(vc-annotate-very-old-color nil)
-;;;; xterm-color
-     `(xterm-color-names ["black" ,red ,green ,yellow ,blue ,magenta ,cyan "gray65"])
-     `(xterm-color-names-bright ["gray35" ,red-alt ,green-alt ,yellow-alt ,blue-alt ,magenta-alt ,cyan-alt "white"]))
-;;; Conditional theme variables
-;;;; org-src-block-faces
-    ;; this is a user option to add a color-coded background to source
-    ;; blocks for various programming languages
-    (when (eq modus-themes-org-blocks 'rainbow)
-      (custom-theme-set-variables
-       'user
-       `(org-src-block-faces              ; TODO this list should be expanded
-         `(("emacs-lisp" modus-theme-nuanced-magenta)
-           ("elisp" modus-theme-nuanced-magenta)
-           ("clojure" modus-theme-nuanced-magenta)
-           ("clojurescript" modus-theme-nuanced-magenta)
-           ("c" modus-theme-nuanced-blue)
-           ("c++" modus-theme-nuanced-blue)
-           ("sh" modus-theme-nuanced-green)
-           ("shell" modus-theme-nuanced-green)
-           ("html" modus-theme-nuanced-yellow)
-           ("xml" modus-theme-nuanced-yellow)
-           ("css" modus-theme-nuanced-red)
-           ("scss" modus-theme-nuanced-red)
-           ("python" modus-theme-nuanced-green)
-           ("ipython" modus-theme-nuanced-magenta)
-           ("r" modus-theme-nuanced-cyan)
-           ("yaml" modus-theme-nuanced-cyan)
-           ("conf" modus-theme-nuanced-cyan)
-           ("docker" modus-theme-nuanced-cyan)
-           ("json" modus-theme-nuanced-cyan))))))
+    `(ztreep-node-face ((,class :foreground ,fg-main))))
   "Face specs for use with `modus-themes-core-theme'.")
+
+(defvar modus-themes-custom-variables
+  '(
+;;;; ansi-colors
+    `(ansi-color-faces-vector [default bold shadow italic underline success warning error])
+    `(ansi-color-names-vector ["gray35" ,red ,green ,yellow ,blue ,magenta ,cyan "gray65"])
+;;;; awesome-tray
+    `(awesome-tray-mode-line-active-color ,blue)
+    `(awesome-tray-mode-line-inactive-color ,bg-active)
+;;;; flymake fringe indicators
+    `(flymake-error-bitmap '(flymake-double-exclamation-mark modus-theme-fringe-red))
+    `(flymake-warning-bitmap '(exclamation-mark modus-theme-fringe-yellow))
+    `(flymake-note-bitmap '(exclamation-mark modus-theme-fringe-cyan))
+;;;; ibuffer
+    `(ibuffer-deletion-face 'modus-theme-mark-del)
+    `(ibuffer-filter-group-name-face 'modus-theme-mark-symbol)
+    `(ibuffer-marked-face 'modus-theme-mark-sel)
+    `(ibuffer-title-face 'modus-theme-pseudo-header)
+;;;; highlight-tail
+    `(highlight-tail-colors
+      '((,green-subtle-bg . 0)
+        (,cyan-subtle-bg . 20)))
+;;;; hl-todo
+    `(hl-todo-keyword-faces
+      '(("HOLD" . ,yellow-alt)
+        ("TODO" . ,magenta)
+        ("NEXT" . ,magenta-alt-other)
+        ("THEM" . ,magenta-alt)
+        ("PROG" . ,cyan)
+        ("OKAY" . ,cyan-alt)
+        ("DONT" . ,green-alt)
+        ("FAIL" . ,red)
+        ("BUG" . ,red)
+        ("DONE" . ,green)
+        ("NOTE" . ,yellow-alt-other)
+        ("KLUDGE" . ,yellow)
+        ("HACK" . ,yellow)
+        ("TEMP" . ,red-nuanced-fg)
+        ("FIXME" . ,red-alt-other)
+        ("XXX+" . ,red-alt)
+        ("REVIEW" . ,cyan-alt-other)
+        ("DEPRECATED" . ,blue-nuanced-fg)))
+;;;; pdf-tools
+    `(pdf-view-midnight-colors
+      '(,fg-main . ,bg-dim))
+;;;; vc-annotate (C-x v g)
+    `(vc-annotate-background nil)
+    `(vc-annotate-background-mode nil)
+    `(vc-annotate-color-map
+      '((20 . ,red)
+        (40 . ,magenta)
+        (60 . ,magenta-alt)
+        (80 . ,red-alt)
+        (100 . ,yellow)
+        (120 . ,yellow-alt)
+        (140 . ,fg-special-warm)
+        (160 . ,fg-special-mild)
+        (180 . ,green)
+        (200 . ,green-alt)
+        (220 . ,cyan-alt-other)
+        (240 . ,cyan-alt)
+        (260 . ,cyan)
+        (280 . ,fg-special-cold)
+        (300 . ,blue)
+        (320 . ,blue-alt)
+        (340 . ,blue-alt-other)
+        (360 . ,magenta-alt-other)))
+    `(vc-annotate-very-old-color nil)
+;;;; xterm-color
+    `(xterm-color-names ["black" ,red ,green ,yellow ,blue ,magenta ,cyan "gray65"])
+    `(xterm-color-names-bright ["gray35" ,red-alt ,green-alt ,yellow-alt ,blue-alt ,magenta-alt ,cyan-alt "white"])
+    (if (eq modus-themes-org-blocks 'rainbow)
+      `(org-src-block-faces              ; TODO this list should be expanded
+        `(("emacs-lisp" modus-theme-nuanced-magenta)
+          ("elisp" modus-theme-nuanced-magenta)
+          ("clojure" modus-theme-nuanced-magenta)
+          ("clojurescript" modus-theme-nuanced-magenta)
+          ("c" modus-theme-nuanced-blue)
+          ("c++" modus-theme-nuanced-blue)
+          ("sh" modus-theme-nuanced-green)
+          ("shell" modus-theme-nuanced-green)
+          ("html" modus-theme-nuanced-yellow)
+          ("xml" modus-theme-nuanced-yellow)
+          ("css" modus-theme-nuanced-red)
+          ("scss" modus-theme-nuanced-red)
+          ("python" modus-theme-nuanced-green)
+          ("ipython" modus-theme-nuanced-magenta)
+          ("r" modus-theme-nuanced-cyan)
+          ("yaml" modus-theme-nuanced-cyan)
+          ("conf" modus-theme-nuanced-cyan)
+          ("docker" modus-theme-nuanced-cyan)))
+      `(org-src-block-faces '())))
+    "Custom variables for `modus-themes-core-theme'.")
 
 (provide 'modus-themes)
 ;;; modus-themes.el ends here
