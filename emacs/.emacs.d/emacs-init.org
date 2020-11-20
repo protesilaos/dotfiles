@@ -8610,7 +8610,8 @@ wide range of built-in libraries.
 
 The mode line is an integral part of the Emacs interface.  While there
 are lots of third party packages that style it in a variety of ways, I
-find the default to be particularly good.
+find the default to be particularly good /as a starting point/ (more about
+that in the next section on [[#h:c07b9dfc-14a2-41a6-9310-53539dec8684][Moody.el]]).
 
 In the code snippet right below I reshuffle some of the mode line
 indicators.  Nothing too fancy.  The =mode-line-defining-kbd-macro= is
@@ -8659,6 +8660,56 @@ in this document [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for
 
 In the following sub-sections I provide customisations for some tools
 that place information on the mode line.  Again, nothing flamboyant.
+
+*** Moody.el (simple mode line configuration utility)
+:PROPERTIES:
+:CUSTOM_ID: h:c07b9dfc-14a2-41a6-9310-53539dec8684
+:END:
+
+My complaint with the out-of-the-box experience with the mode line is
+two-fold: (i) there is no easy way to tweak individual components other
+than using inelegant workarounds and (ii) adjust the line's height.
+
+What I need is an ever so slight adjustment to the height of the mode
+line so that it is a bit taller than the typeface's innate line height,
+plus an easy way to make the buffer identification more noticeable.
+Thankfully, the lightweight =moody.el= by Jonas Bernoulli covers the exact
+niche I want to occupy.
+
+My tweaks here align Moody with my [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]].
+What I basically want is to make the mode line gracefully adapt to
+changes in font size.  Furthermore, to make things work the way Moody
+expects, I set the relevant option in [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]].
+
+#+begin_src emacs-lisp
+(use-package moody
+  :ensure
+  :after prot-fonts                     ; we need its hook
+  :config
+  (moody-replace-mode-line-buffer-identification)
+
+  ;; TODO: this should be part of a future `prot-simple.el' or something
+  (defun prot/moody--even-p (n)
+    (if (numberp n)
+        (= (% n 2) 0)
+      (user-error "%s is not a number" n)))
+
+  (defun prot/moody--height ()
+    "Set Moody height to an even number.
+Bind this to a hook that gets called after loading/changing the
+mode line's typeface (or the default one if they are the same)."
+    (let* ((font (face-font 'mode-line))
+           (height (truncate (* 1.35 (aref (font-info font) 2))))
+           (height-even (if (prot/moody--even-p height) height (+ height 1))))
+      (if font
+          height-even
+        20)))
+
+  (defun prot/moody--mode-line-height ()
+    "Set Moody height to the value of `prot/moody--height'."
+    (setq moody-mode-line-height (funcall 'prot/moody--height)))
+  :hook (prot-fonts-set-typeface-hook . prot/moody--mode-line-height))
+#+end_src
 
 *** Battery status
 :PROPERTIES:
@@ -8759,9 +8810,9 @@ pressed and the command they call.  It is quite useful for screen
 casting.
 
 The placement of the indicator is controlled by =keycast-window-predicate=
-which I set to the current window.  The =moody= library offers that
-specific piece of functionality.  Moody can also be used to customise
-the looks of the mode line, though I do not want that.
+which I set to the current window.  The =moody.el= library offers that
+specific piece of functionality (though [[#h:c07b9dfc-14a2-41a6-9310-53539dec8684][I also configure Moody]] for its
+primary purpose of styling the mode line).
 
 The tweaks to the =keycast-substitute-alist= prevent the display of
 self-inserting characters and some other commands that are not
@@ -8773,10 +8824,9 @@ tweaks of my own.
 #+begin_src emacs-lisp
 (use-package keycast
   :ensure
+  :after moody
   :commands keycast-mode
   :config
-  (use-package moody :ensure)
-
   (setq keycast-window-predicate 'moody-window-active-p)
   (setq keycast-separator-width 1)
   (setq keycast-insert-after 'mode-line-buffer-identification)
