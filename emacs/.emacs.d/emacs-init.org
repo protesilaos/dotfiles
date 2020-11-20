@@ -563,25 +563,23 @@ into this project:
   :init
   (setq custom-safe-themes t)           ; Due to my dev needs
   (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-fringes nil ; {nil,'subtle,'intense}
-        modus-themes-mode-line nil ; {nil,'3d,'moody}
+        modus-themes-mode-line 'moody ; {nil,'3d,'moody}
         modus-themes-syntax nil ; {nil,'faint,'yellow-comments,'green-strings,'yellow-comments-green-strings,'alt-syntax,'alt-syntax-yellow-comments}
         modus-themes-intense-hl-line nil
-        modus-themes-intense-paren-match t
-        modus-themes-links nil ; {nil,'faint,'neutral-underline,'faint-neutral-underline,'no-underline}
+        modus-themes-intense-paren-match nil
+        modus-themes-links 'neutral-underline ; {nil,'faint,'neutral-underline,'faint-neutral-underline,'no-underline}
         modus-themes-no-mixed-fonts nil
         modus-themes-prompts 'subtle ; {nil,'subtle,'intense}
         modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
-        modus-themes-diffs 'desaturated ; {nil,'desaturated,'fg-only}
+        modus-themes-diffs 'fg-only ; {nil,'desaturated,'fg-only}
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-headings  ; Read the manual for this one
-        '((1 . rainbow-section)
-          (2 . rainbow-section)
-          (3 . rainbow-line)
-          (t . rainbow))
-        modus-themes-variable-pitch-headings t
-        modus-themes-scale-headings t
+        '((1 . section)
+          (t . line))
+        modus-themes-variable-pitch-headings nil
+        modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
