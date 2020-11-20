@@ -1765,6 +1765,10 @@ Otherwise you may be better off with a library like Projectile or
 whatever your completion framework may provide out-of-the-box.
 
 #+begin_src emacs-lisp
+;; TODO: add reference to Manuel Uberti's work on `project.el'
+;;   1. https://www.manueluberti.eu/emacs/2020/09/18/project/
+;;   2. https://www.manueluberti.eu/emacs/2020/11/14/extending-project/
+;; TODO: put all my extensions in `prot-project.el'
 (use-package project
   :init
   (setq project-switch-commands
