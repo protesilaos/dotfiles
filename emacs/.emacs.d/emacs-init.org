@@ -1770,6 +1770,7 @@ whatever your completion framework may provide out-of-the-box.
 ;;   2. https://www.manueluberti.eu/emacs/2020/11/14/extending-project/
 ;; TODO: put all my extensions in `prot-project.el'
 (use-package project
+  :demand
   :init
   (setq project-switch-commands
         '((?f "Find file" project-find-file)
@@ -10920,42 +10921,45 @@ Several extensions to Flymake are already available, mostly targeted at
 programmers.  For my case, there is no need for any of those, while
 Flymake can lint Elisp without any further configuration.
 
-While it is possible to run the linter globally or through hooks, I
-prefer to only do so manually on a per-buffer basis.  There are many
-cases where I am merely browsing code, where whatever diagnostics are of
-no import to the task at hand.
-
-With regard to the =defhydra= calls in this section, remember to refer to
-my [[#h:af691a31-917e-4d9b-aee6-5744b1173999][fundamentals for hydras]].
-
 #+begin_src emacs-lisp
 (use-package flymake
+  :after project
   :commands flymake-mode
-  :config
+  :init
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)
-  (setq flymake-start-on-flymake-mode nil)
+  (setq flymake-start-on-flymake-mode t)
   (setq flymake-no-changes-timeout nil)
   (setq flymake-start-on-save-buffer t)
   (setq flymake-proc-compilation-prevents-syntax-check t)
   (setq flymake-wrap-around nil)
 
-  (defhydra prot/hydra-flymake (:color pink :hint nil)
-    "
-Actions
--------
-_s_: Start checks
-_n_: Next error
-_p_: Previous error
-_d_: Diagnostics' buffer
-"
-    ("s" flymake-start)
-    ("d" flymake-show-diagnostics-buffer)
-    ("n" flymake-goto-next-error)
-    ("p" flymake-goto-prev-error)
-    ("q" nil "cancel" :color blue))
+  ;; NOTE: this is just a placeholder.  I need to rework the project
+  ;; directory part once I make changes to my project.el configurations.
+  (defun prot/flymake-mode-activate ()
+    "Activate `flymake-mode' for my code projects."
+    (let* ((projects (mapcar #'file-name-as-directory
+                             (prot/project--list-projects)))
+           (dir (or (vc-root-dir) default-directory))
+           (modes (delq nil
+                        (mapcar
+                         (lambda (x)
+                           (let ((y (car x)))
+                             (when (and (symbolp y) (symbol-value y))
+                               x)))
+                         minor-mode-alist))))
+      (if (and (eq buffer-read-only nil)
+               (member dir projects)
+               (not (member 'org-src-mode modes)))
+          (flymake-mode 1)
+        (flymake-mode -1))))
+
+  :hook (prog-mode-hook . prot/flymake-mode-activate)
   :bind (:map flymake-mode-map
-              ("C-c h l" . prot/hydra-flymake/body)))
+              ("C-c ! s" . flymake-start)
+              ("C-c ! d" . flymake-show-diagnostics-buffer)
+              ("C-c ! n" . flymake-goto-next-error)
+              ("C-c ! p" . flymake-goto-prev-error)))
 
 (use-package flymake-diagnostic-at-point
   :ensure
@@ -11140,7 +11144,7 @@ want to send patches to.
 (use-package package-lint-flymake
   :ensure
   :after flymake
-  :hook (emacs-lisp-mode-hook . package-lint-flymake-setup))
+  :hook (flymake-diagnostic-functions . package-lint-flymake))
 #+end_src
 
 ** Eldoc (elisp live documentation feedback)
