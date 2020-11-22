@@ -1,4 +1,4 @@
-;;; modus-themes.el --- Main code of the Modus themes -*- lexical-binding:t -*-
+;;; modus-themes.el --- Highly accessible themes (WCAG AAA) -*- lexical-binding:t -*-
 
 ;; Copyright (C) 2019-2020 Free Software Foundation, Inc.
 
@@ -28,7 +28,9 @@
 ;; The Modus themes conform with the highest standard for color-contrast
 ;; accessibility between background and foreground values (WCAG AAA).
 ;; This file contains all customisation options, helper functions,
-;; interactive commands, and face specifications.
+;; interactive commands, and face specifications.  Please refer to the
+;; official Info manual for further documentation (distributed with the
+;; themes, or available at: <https://protesilaos.com/modus-themes>).
 ;;
 ;; The themes share the following customization options, all of which
 ;; are disabled by default (nil):
@@ -445,14 +447,17 @@
 
 (defcustom modus-themes-slanted-constructs nil
   "Use slanted text in more code constructs (italics or oblique)."
+  :version "1.0.0"
   :type 'boolean)
 
 (defcustom modus-themes-bold-constructs nil
   "Use bold text in more code constructs."
+  :version "1.0.0"
   :type 'boolean)
 
 (defcustom modus-themes-variable-pitch-headings nil
   "Use proportional fonts (variable-pitch) in headings."
+  :version "1.0.0"
   :type 'boolean)
 
 (defcustom modus-themes-no-mixed-fonts nil
@@ -466,6 +471,7 @@ configure the font family of `fixed-pitch' in order to get a
 consistent experience.  That may be something they do not want to
 do.  Hence this option to disable any kind of technique for
 mixing fonts."
+  :version "1.0.0"
   :type 'boolean)
 
 (defcustom modus-themes-headings
@@ -537,6 +543,7 @@ A description of all possible values:
 
 + `rainbow-section-no-bold' is the same as `rainbow-section'
   without a bold weight."
+  :version "1.0.0"
   :type
   '(alist
     :key-type symbol
@@ -560,6 +567,7 @@ A description of all possible values:
 
 (defcustom modus-themes-scale-headings nil
   "Use font scaling for headings."
+  :version "1.0.0"
   :type 'boolean)
 
 (defcustom modus-themes-scale-1 1.05
@@ -571,6 +579,7 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
+  :version "1.0.0"
   :type 'number)
 
 (defcustom modus-themes-scale-2 1.1
@@ -582,6 +591,7 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
+  :version "1.0.0"
   :type 'number)
 
 (defcustom modus-themes-scale-3 1.15
@@ -593,6 +603,7 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
+  :version "1.0.0"
   :type 'number)
 
 (defcustom modus-themes-scale-4 1.2
@@ -604,6 +615,7 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
+  :version "1.0.0"
   :type 'number)
 
 (defcustom modus-themes-scale-5 1.3
@@ -615,6 +627,7 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
+  :version "1.0.0"
   :type 'number)
 
 (defcustom modus-themes-fringes nil
@@ -624,6 +637,7 @@ Nil means the fringes have no background color.  Option `subtle'
 will apply a greyscale value that is visible yet close to the
 main buffer background color.  Option `intense' will use a more
 pronounced greyscale value."
+  :version "1.0.0"
   :type '(choice
           (const :tag "No visible fringes (default)" nil)
           (const :tag "Subtle greyscale background" subtle)
@@ -646,6 +660,7 @@ of the block.  The exact color will depend on the programming
 language and is controlled by the `org-src-block-faces'
 variable (refer to the theme's source code for the current
 association list)."
+  :version "1.0.0"
   :type '(choice
           (const :tag "No Org block background (default)" nil)
           (const :tag "Subtle gray block background" grayscale)
@@ -669,6 +684,7 @@ the box effect and rely on underline and overline properties
 instead.  It also tones down the inactive modelines.  Despite its
 intended purpose, this option can also be used without the
 `moody' library."
+  :version "1.0.0"
   :type '(choice
           (const :tag "Two-dimensional box (default)" nil)
           (const :tag "Three-dimensional style for the active mode line" 3d)
@@ -691,6 +707,7 @@ from word-wise changes.  It instead uses color-coded foreground
 values to differentiate between added/removed/changed lines.  If
 a background is necessary, such as with `ediff', then a subtle
 greyscale value is used."
+  :version "1.0.0"
   :type '(choice
           (const :tag "Intensely colored backgrounds (default)" nil)
           (const :tag "Slightly accented backgrounds with tinted text" desaturated)
@@ -719,6 +736,7 @@ Option `opinionated' will apply color combinations that refashion
 the completion UI.  So Icomplete et al will now use styles that
 resemble the defaults of Ivy and co., while the latter group will
 revert to an even more nuanced aesthetic."
+  :version "1.0.0"
   :type '(choice
           (const :tag "Respect the framework's established aesthetic (default)" nil)
           (const :tag "Subtle backgrounds for various elements" moderate)
@@ -732,6 +750,7 @@ Nil means to only use an accented foreground color.
 Options `subtle' and `intense' will change both the background
 and the foreground values.  The latter has a more pronounced
 effect than the former."
+  :version "1.0.0"
   :type '(choice
           (const :tag "No prompt background (default)" nil)
           (const :tag "Subtle accented background for the prompt" subtle)
@@ -739,10 +758,12 @@ effect than the former."
 
 (defcustom modus-themes-intense-hl-line nil
   "Use a more prominent background for command `hl-line-mode'."
+  :version "1.0.0"
   :type 'boolean)
 
 (defcustom modus-themes-intense-paren-match nil
   "Use a more prominent color for parenthesis matching."
+  :version "1.0.0"
   :type 'boolean)
 
 (defcustom modus-themes-syntax nil
@@ -772,6 +793,7 @@ tinted.  Comments are gray.
 
 Option `alt-syntax-yellow-comments' combines `alt-syntax' with
 `yellow-comments'."
+  :version "1.0.0"
   :type '(choice
           (const :tag "Balanced use of blue, cyan, magenta, purple variants (default)" nil)
           (const :tag "Like the default, but with desaturated color values" faint)
@@ -797,6 +819,7 @@ Option `faint-neutral-underline' combines a desaturated text
 color with a subtle grey underline.
 
 Option `no-underline' removes link underlines altogether."
+  :version "1.0.0"
   :type '(choice
           (const :tag "Undeline link using the same color as the text (default)" nil)
           (const :tag "Like the default, but apply less intense colors to links" faint)
@@ -816,10 +839,10 @@ Option `no-underline' removes link underlines altogether."
 
 (define-obsolete-variable-alias
   'modus-operandi-theme-default-colors-alist
-  'modus-themes-operandi-colors
+  'modus-themes-colors-operandi
   "1.0.0")
 
-(defconst modus-themes-operandi-colors
+(defconst modus-themes-colors-operandi
   '(;; base values
     (bg-main . "#ffffff") (fg-main . "#000000")
     (bg-dim . "#f8f8f8") (fg-dim . "#282828")
@@ -1038,10 +1061,10 @@ symbol and the latter as a string.")
 
 (define-obsolete-variable-alias
   'modus-vivendi-theme-default-colors-alist
-  'modus-themes-vivendi-colors
+  'modus-themes-colors-vivendi
   "1.0.0")
 
-(defconst modus-themes-vivendi-colors
+(defconst modus-themes-colors-vivendi
   '(;; base values
     (bg-main . "#000000") (fg-main . "#ffffff")
     (bg-dim . "#110b11") (fg-dim . "#e0e6f0")
@@ -1646,17 +1669,38 @@ AMOUNT is a customization option."
 
 ;;;; Utilities for DIY users
 
+;; This is the WCAG formula: https://www.w3.org/TR/WCAG20-TECHS/G18.html
+(defun modus-themes-wcag-formula (hex)
+  "Get WCAG value of color value HEX.
+The value is defined in hexadecimal RGB notation, such as those in
+`modus-themes-colors-operandi' and `modus-themes-colors-vivendi'."
+  (cl-loop for k in '(0.2126 0.7152 0.0722)
+           for x in (color-name-to-rgb hex)
+           sum (* k (if (<= x 0.03928)
+                        (/ x 12.92)
+                      (expt (/ (+ x 0.055) 1.055) 2.4)))))
+
+;;;###autoload
+(defun modus-themes-contrast (c1 c2)
+  "Measure WCAG contrast ratio between C1 and C2.
+C1 and C2 are color values written in hexadecimal RGB."
+  (let ((ct (/ (+ (modus-themes-wcag-formula c1) 0.05)
+               (+ (modus-themes-wcag-formula c2) 0.05))))
+    (max ct (/ ct))))
+
 (defun modus-themes--active-theme ()
   "Return appropriate alist of color values for active theme."
   (let ((theme (car custom-enabled-themes)))
     (pcase theme
-      ('modus-operandi modus-themes-operandi-colors)
-      ('modus-vivendi modus-themes-vivendi-colors)
+      ('modus-operandi modus-themes-colors-operandi)
+      ('modus-vivendi modus-themes-colors-vivendi)
       (_ (user-error "'%s' not a Modus theme; check `custom-enabled-themes'" theme)))))
 
 ;;;###autoload
 (defun modus-themes-color (key)
-  "Return color value for KEY."
+  "Return color value for KEY.
+The KEY is the car of each cons cell in the alists
+`modus-themes-colors-operandi', `modus-themes-colors-vivendi'."
   (let ((alist (modus-themes--active-theme)))
     (cdr (assoc `,key alist))))
 
@@ -1665,16 +1709,20 @@ AMOUNT is a customization option."
 (defvar modus-themes-after-load-theme-hook nil
   "Hook that runs after the `modus-themes-toggle' routines.")
 
-(defun modus-themes--light ()
-  "Load `modus-operandi' and disable `modus-vivendi'."
+;;;###autoload
+(defun modus-themes-load-operandi ()
+  "Load `modus-operandi' and disable `modus-vivendi'.
+Also run `modus-themes-after-load-theme-hook'."
   (disable-theme 'modus-vivendi)
-  (load-theme 'modus-operandi)
+  (load-theme 'modus-operandi t)
   (run-hooks 'modus-themes-after-load-theme-hook))
 
-(defun modus-themes--dark ()
-  "Load `modus-vivendi' and disable `modus-operandi'."
+;;;###autoload
+(defun modus-themes-load-vivendi ()
+  "Load `modus-vivendi' and disable `modus-operandi'.
+Also run `modus-themes-after-load-theme-hook'."
   (disable-theme 'modus-operandi)
-  (load-theme 'modus-vivendi)
+  (load-theme 'modus-vivendi t)
   (run-hooks 'modus-themes-after-load-theme-hook))
 
 (defun modus-themes--load-prompt ()
@@ -1685,26 +1733,26 @@ AMOUNT is a customization option."
                            '(modus-operandi modus-vivendi) nil t))))
     (mapc #'disable-theme custom-enabled-themes)
     (pcase theme
-      ('modus-operandi (modus-themes--light))
-      ('modus-vivendi (modus-themes--dark)))))
+      ('modus-operandi (modus-themes-load-operandi))
+      ('modus-vivendi (modus-themes-load-vivendi)))))
 
 ;;;###autoload
 (defun modus-themes-toggle ()
   "Toggle between `modus-operandi' and `modus-vivendi' themes.
 Also runs `modus-themes-after-load-theme-hook' by virtue of
-calling the internal `modus-themes--light' and
-`modus-themes--dark' functions."
+calling the internal `modus-themes-load-operandi' and
+`modus-themes-load-vivendi' functions."
   (interactive)
   (pcase (car custom-enabled-themes)
-    ('modus-operandi (modus-themes--dark))
-    ('modus-vivendi (modus-themes--light))
+    ('modus-operandi (modus-themes-load-vivendi))
+    ('modus-vivendi (modus-themes-load-operandi))
     (_ (modus-themes--load-prompt))))
 
 
 
 ;;;; Face specifications
 
-(defvar modus-themes-faces
+(defconst modus-themes-faces
   '(
 ;;;; custom faces
     ;; these bespoke faces are inherited by other constructs below
@@ -4949,7 +4997,7 @@ calling the internal `modus-themes--light' and
     `(ztreep-node-face ((,class :foreground ,fg-main))))
   "Face specs for use with `modus-themes-core-theme'.")
 
-(defvar modus-themes-custom-variables
+(defconst modus-themes-custom-variables
   '(
 ;;;; ansi-colors
     `(ansi-color-faces-vector [default bold shadow italic underline success warning error])
