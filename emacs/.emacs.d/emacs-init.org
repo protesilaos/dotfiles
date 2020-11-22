@@ -3603,9 +3603,9 @@ useful keybindings to commands I prefer to use.
 
 These settings make it easier to work with multiple buffers.  When two
 buffers have the same name, Emacs will try to disambiguate them by
-displaying their unique path inside angled brackets.  With the addition
-of =uniquify-strip-common-suffix= it will also remove the part of the
-file system path they have in common.
+displaying their element of differentiation in accordance with the style
+of =uniquify-buffer-name-style=.  While =uniquify-strip-common-suffix= will
+remove the part of the file system path they have in common.
 
 All such operations are reversed once an offending buffer is removed
 from the list, allowing Emacs to revert to the standard of displaying
@@ -3614,7 +3614,7 @@ only the buffer's name.
 #+begin_src emacs-lisp
 (use-package uniquify
   :config
-  (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
+  (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-strip-common-suffix t)
   (setq uniquify-after-kill-buffer-p t))
 #+end_src
