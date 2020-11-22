@@ -733,19 +733,19 @@ directory will be directly displayed instead."
 (defface usls-header-data-date
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
-     :foreground "#0031a9")
+     :foreground "#2544bb")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#2fafff")
-    (t :foreground "blue"))
+     :foreground "#79a8ff")
+    (t :inherit font-lock-string-face))
   "Face for header date entry.")
 
 (defface usls-header-data-category
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
-     :foreground "#721045")
+     :foreground "#1f0f6f")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#feacd0")
-    (t :foreground "magenta"))
+     :foreground "#92baff")
+    (t :inherit font-lock-builtin-face))
   "Face for header category entry.")
 
 (defface usls-header-data-title
@@ -754,14 +754,14 @@ directory will be directly displayed instead."
      :foreground "#000000")
     (((class color) (min-colors 88) (background dark))
      :foreground "#ffffff")
-    (t :foreground "blue"))
+    (t :inherit default))
   "Face for header title entry.")
 
 (defface usls-header-data-secondary
   '((((class color) (min-colors 88) (background light))
-     :foreground "#093060")
+     :foreground "#61284f")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#c6eaff")
+     :foreground "#fbd6f4")
     (t :inherit (bold shadow)))
   "Face for secondary header information.")
 
@@ -783,9 +783,9 @@ directory will be directly displayed instead."
 
 (defface usls-dired-field-date
   '((((class color) (min-colors 88) (background light))
-     :foreground "#2544bb")
+     :foreground "#003f78")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#79a8ff")
+     :foreground "#a4b0ff")
     (t :inherit font-lock-string-face))
   "Face for file name date in `dired-mode' buffers.")
 
@@ -794,10 +794,11 @@ directory will be directly displayed instead."
   "Face for file name field delimiters in `dired-mode' buffers.")
 
 (defface usls-dired-field-category
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#8f0075")
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#002f88")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#f78fe7")
+     :foreground "#92baff")
     (t :inherit font-lock-builtin-face))
   "Face for file name category in `dired-mode' buffers.")
 
