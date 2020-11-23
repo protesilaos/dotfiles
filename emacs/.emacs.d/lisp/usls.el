@@ -551,8 +551,8 @@ strings only the first one is used."
   (cond
    ((derived-mode-p 'eww-mode)
     (concat (plist-get eww-data :url) "\n\n"))
-   ((when (buffer-file-name)
-    (concat (buffer-file-name) "\n\n")))
+   ((buffer-file-name)
+    (concat (buffer-file-name) "\n\n"))
    (t
     "")))
 
