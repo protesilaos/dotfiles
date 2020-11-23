@@ -542,9 +542,36 @@ strings only the first one is used."
            (".org" (usls--file-region-separator-heading-level "*" str))
            (_ (format "\n\n%s\n%s\n\n" str (make-string num ?-))))))))
 
+;; This just silences the compiler for the subsequent function
+(defvar eww-data)
+
+;; TODO: get some link for gnus, mu4e?  What else?
+(defun usls--file-region-source ()
+  "Capture path to file or URL for `usls--file-region'."
+  (cond
+   ((derived-mode-p 'eww-mode)
+    (concat (plist-get eww-data :url) "\n\n"))
+   ((when (buffer-file-name)
+    (concat (buffer-file-name) "\n\n")))
+   (t
+    "")))
+
 (defun usls--file-region-separator (region)
   "`usls--file-region-separator-str' and `usls-new-note' REGION."
-  `(concat (usls--file-region-separator-str) ,region))
+  `(concat
+    (usls--file-region-separator-str)
+    (usls--file-region-source)
+    ,region))
+
+(defun usls--file-region ()
+  "Capture active region for use in `usls-new-note'."
+  (with-current-buffer (current-buffer)
+    (if (region-active-p)
+        (eval (usls--file-region-separator
+               (buffer-substring-no-properties
+                (region-beginning)
+                (region-end))))
+      "")))
 
 ;;; Interactive functions
 
@@ -575,13 +602,7 @@ note in."
                   slug
                   usls-file-type-extension))
          (date (format-time-string "%F"))
-         (region (with-current-buffer (current-buffer)
-                   (if (region-active-p)
-                       (eval (usls--file-region-separator
-                              (buffer-substring-no-properties
-                               (region-beginning)
-                               (region-end))))
-                     ""))))
+         (region (usls--file-region)))
     (with-current-buffer (find-file filename)
       (insert (eval (usls--file-meta-header title date categories filename id)))
       (save-excursion (insert region)))
