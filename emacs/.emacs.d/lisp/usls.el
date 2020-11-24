@@ -600,6 +600,9 @@ strings only the first one is used."
              (region-end))))
     ""))
 
+;;; Commands and their helper functions
+
+;;;; New note
 
 ;;;###autoload
 (defun usls-new-note (&optional arg)
@@ -644,6 +647,8 @@ note in."
        (string= (file-name-nondirectory (buffer-file-name)) x)))
    (usls--directory-files)))
 
+;;;; Insert reference
+
 (defun usls--insert-file-reference (file delimiter)
   "Insert formatted reference to FILE with DELIMITER."
   (save-excursion
@@ -681,6 +686,8 @@ note in."
     (add-to-history 'usls--link-history file)))
 
 
+;;;; Follow links
+
 (defun usls--links ()
   "Gather links to files in the current buffer."
   (let ((links))
@@ -703,6 +710,8 @@ note in."
          (completing-read "Follow link: " links nil t))
       (usls-find-file))))
 
+;;;; Find file
+
 (defun usls--file-name (file)
   "Return properly formatted name of FILE."
   (if usls-subdir-support
@@ -718,6 +727,9 @@ note in."
          (item (usls--file-name file)))
     (find-file item)
     (add-to-history 'usls--file-history file)))
+
+
+;;;; Dired
 
 ;;;###autoload
 (defun usls-dired (&optional arg)
