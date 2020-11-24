@@ -356,6 +356,9 @@ Markdown or Org types."
 (defvar usls--category-history '()
   "Used internally by `usls-new-note' to record categories.")
 
+(defvar usls--file-history '()
+  "Used internally by `usls-find-file' to record file names.")
+
 (defvar usls--link-history '()
   "Used internally by `usls-id-insert' to record links.")
 
@@ -688,10 +691,10 @@ note in."
   "Visit a file in `usls-directory' using completion."
   (interactive)
   (let* ((files (usls--directory-files))
-         (file (completing-read "Visit file: " files nil t nil 'usls--link-history))
+         (file (completing-read "Visit file: " files nil t nil 'usls--file-history))
          (item (usls--file-name file)))
     (find-file item)
-    (add-to-history 'usls--link-history item)))
+    (add-to-history 'usls--file-history file)))
 
 ;;;###autoload
 (defun usls-dired (&optional arg)
