@@ -591,6 +591,15 @@ strings only the first one is used."
               (region-end))))
     ""))
 
+(defun usls--file-region-append ()
+  "Capture active region for use in `usls-append-region-buffer-or-file'."
+  (if (region-active-p)
+      (eval (concat "\n\n"
+             (buffer-substring-no-properties
+             (region-beginning)
+             (region-end))))
+    ""))
+
 
 ;;;###autoload
 (defun usls-new-note (&optional arg)
