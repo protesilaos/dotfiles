@@ -728,6 +728,100 @@ note in."
     (find-file item)
     (add-to-history 'usls--file-history file)))
 
+;;;; Append to file
+
+;; REVIEW: Maybe all those filtered lists can be simplified into maybe
+;; one or two.  This feels needlessly complex.
+
+(defun usls--window-buffer-list ()
+  "Return list of windows."
+  (mapcar (lambda (x)
+            (window-buffer x))
+          (window-list)))
+
+(defun usls--window-buffer-file-names-list ()
+  "Return file names in `usls--window-buffer-list'."
+  (cl-remove-if nil
+   (mapcar (lambda (x)
+             (buffer-file-name x))
+           (usls--window-buffer-list))))
+
+(defun usls--window-usls-file-buffers ()
+  "Return USLS files in `usls--window-buffer-file-names-list'."
+  (let ((files (usls--directory-files-recursive))
+        (buf-files (mapcar #'abbreviate-file-name (usls--window-buffer-file-names-list))))
+    (cl-remove-if nil
+     (mapcar (lambda (x)
+               (member x files))
+             buf-files))))
+
+(defun usls--window-usls-buffers ()
+  "Return buffer names from `usls--window-usls-file-buffers'."
+  (mapcar (lambda (x)
+            (get-file-buffer x))
+          (cadr (usls--window-usls-file-buffers))))
+
+(defun usls--window-buffers-live ()
+  "Return live windows matching `usls--window-usls-buffers'."
+  (cl-remove-if-not (lambda (x)
+                      (window-live-p x))
+                    (mapcar (lambda (y)
+                              (get-buffer-window y))
+                            (usls--window-usls-buffers))))
+
+(defun usls--window-buffers ()
+  "Return buffer names in `usls--window-buffers-live'."
+  (mapcar (lambda (x)
+            (window-buffer x))
+          (usls--window-buffers-live)))
+
+(defun usls--window-single-buffer-or-prompt ()
+  "Return buffer name if one, else prompt with completion."
+  (let* ((buffers
+          (mapcar (lambda (x)
+                    (format "%s" x))
+                  (usls--window-buffers)))
+         (buf (if (> (length buffers) 1)
+                  (completing-read "Pick buffer: "
+                                   buffers nil t)
+                (car buffers))))
+    (unless (eq buf nil)
+      (get-buffer-window buf))))
+
+(defun usls--window-buffer-or-file ()
+  "Return window with a USLS buffer or prompt for a file."
+  (let ((files (usls--directory-files)))
+    (or (usls--window-single-buffer-or-prompt)
+        (completing-read "Visit file: " files nil t nil 'usls--file-history))))
+
+;;;###autoload
+(defun usls-append-region-buffer-or-file ()
+  "Append active region to buffer or file.
+
+If there exist one or more windows whose buffers visit a file
+found in `usls-directory', then they are used as targets for
+appending the active region.  When multiple windows are
+available, a minibuffer prompt with completion is provided to
+select one among them.
+
+When no such windows are live, the minibuffer prompt asks for a
+file to visit.
+
+The appended region is not preceded by a delimiter, as is the
+case with `usls-new-note'."
+  (interactive)
+  (let* ((object (usls--window-buffer-or-file))
+         (buf (when (windowp object) (window-buffer object)))
+         (region (usls--file-region-append)))
+    (if (bufferp buf)
+        (with-current-buffer buf
+          (goto-char (point-max))
+          (insert region))
+      (with-current-buffer (find-file (usls--file-name object))
+        (goto-char (point-max))
+        (insert region))
+      ;; Only add to history when we are dealing with a file
+      (add-to-history 'usls--file-history object))))
 
 ;;;; Dired
 
@@ -754,6 +848,7 @@ directory will be directly displayed instead."
 ;; not want to violate key binding conventions.
 (global-set-key (kbd "C-c _ d") 'usls-dired)
 (global-set-key (kbd "C-c _ f") 'usls-find-file)
+(global-set-key (kbd "C-c _ a") 'usls-append-region-buffer-or-file)
 (global-set-key (kbd "C-c _ n") 'usls-new-note)
 
 (defvar usls-mode-map
