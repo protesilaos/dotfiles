@@ -1914,13 +1914,6 @@ calling the internal `modus-themes-load-operandi' and
                                    (and (>= emacs-major-version 27) '(:extend t)))))
     `(modus-theme-slant ((,class :inherit italic :slant ,@(modus-themes--slant))))
     `(modus-theme-variable-pitch ((,class ,@(modus-themes--variable-pitch))))
-
-
-
-
-
-
-
 ;;;; standard faces
 ;;;;; absolute essentials
     `(default ((,class :background ,bg-main :foreground ,fg-main)))
@@ -1929,13 +1922,6 @@ calling the internal `modus-themes-load-operandi' and
                       :foreground ,fg-main)))
     `(vertical-border ((,class :foreground ,fg-window-divider-inner)))
 ;;;;; basic and/or ungrouped styles
-    ;; Modify the `bold' face to change the weight of all "bold" elements
-    ;; defined by the theme.  You need a typeface that supports a
-    ;; multitude of heavier weights than the regular one and then you
-    ;; must specify the exact name of the one you wish to apply.  Example
-    ;; for your init.el after loading the theme:
-    ;;
-    ;; (set-face-attribute 'bold nil :weight 'semibold)
     `(bold ((,class :weight bold)))
     `(bold-italic ((,class :inherit (bold italic))))
     `(buffer-menu-buffer ((,class :inherit bold)))
