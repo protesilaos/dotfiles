@@ -398,15 +398,31 @@ Markdown or Org types."
 
 ;;;; Files in directory
 
+(defun usls--directory-files-flat ()
+  "List `usls-directory' files, assuming flat directory."
+  (let ((dotless directory-files-no-dot-files-regexp))
+    (cl-remove-if
+     (lambda (x)
+       ;; TODO: generalise this for all VC backends?  Which ones?
+       (string-match-p "\\.git" x))
+     (directory-files (usls--directory) nil dotless t))))
+
+(defun usls--directory-files-recursive ()
+  "List `usls-directory' files, assuming directory tree."
+    (cl-remove-if
+     (lambda (x)
+       ;; TODO: generalise this for all VC backends?  Which ones?
+       (string-match-p "\\.git" x))
+     (directory-files-recursively (usls--directory) ".*" nil t)))
+
 (defun usls--directory-files ()
   "List directory files."
-  (let ((path (usls--directory))
-        (dotless directory-files-no-dot-files-regexp))
+  (let ((path (usls--directory)))
     (unless (file-directory-p path)
       (make-directory path t))
     (if usls-subdir-support
-        (directory-files-recursively path ".*" nil t)
-      (directory-files path nil dotless t))))
+        (usls--directory-files-recursive)
+      (usls--directory-files-flat))))
 
 (defun usls--directory-subdirs ()
   "Return list of subdirectories in `usls-directory'."
