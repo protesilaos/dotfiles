@@ -584,15 +584,13 @@ strings only the first one is used."
 
 (defun usls--file-region ()
   "Capture active region for use in `usls-new-note'."
-  (with-current-buffer (current-buffer)
-    (if (region-active-p)
-        (eval (usls--file-region-separator
-               (buffer-substring-no-properties
-                (region-beginning)
-                (region-end))))
-      "")))
+  (if (region-active-p)
+      (eval (usls--file-region-separator
+             (buffer-substring-no-properties
+              (region-beginning)
+              (region-end))))
+    ""))
 
-;;; Interactive functions
 
 ;;;###autoload
 (defun usls-new-note (&optional arg)
