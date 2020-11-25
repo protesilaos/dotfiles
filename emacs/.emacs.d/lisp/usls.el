@@ -45,7 +45,7 @@
 ;; respectively.  The focus is on the main points of interaction: (i)
 ;; creating notes, (ii) adding forward/backward references to other notes,
 ;; (iii) browsing such references for the current file, (iv) visiting the
-;; 'usls-directory', (v) finding a file that belongs to said directory.
+;; `usls-directory', (v) finding a file that belongs to said directory.
 ;;
 ;;
 ;; The file name convention
@@ -83,7 +83,7 @@
 ;; Main points of entry
 ;; --------------------
 ;;
-;; The aforementioned are handled automatically by the 'usls-new-note'
+;; The aforementioned are handled automatically by the `usls-new-note'
 ;; command.  Invoking it brings up a minibuffer prompt for entering the
 ;; note's title.  Once that is done, it opens a second prompt, with
 ;; completion, for inputting the category.  The date is always derived
@@ -100,12 +100,12 @@
 ;; actions, then it should be considered undesirable behaviour and reported
 ;; upstream.
 ;;
-;; 'usls-new-note' accepts an optional prefix argument, with C-u.  Doing so
+;; `usls-new-note' accepts an optional prefix argument, with C-u.  Doing so
 ;; will start the command with a completion prompt for the subdirectory to
 ;; be used for the new note.  Subdirectories must already exist in the
 ;; filesystem, else an error message is displayed.
 ;;
-;; A key feature of 'usls-new-note' is the ability to extract the current
+;; A key feature of `usls-new-note' is the ability to extract the current
 ;; region, if active, and place it below the area where the point will be
 ;; in.  This is useful for quickly capturing some text you wish to comment
 ;; on and keep it in context.
@@ -113,7 +113,10 @@
 ;; The note's text and the captured region are demarcated by a horizontal
 ;; rule, denoted by three space-separated asterisks for plain text and
 ;; markdown (* * *), or five consecutive hyphens for org (-----), plus
-;; empty lines before and after the separator.
+;; empty lines before and after the separator.  Though there also exists
+;; `usls-file-region-separator' that can be configured to introduce a
+;; heading instead of a dividing line.  The heading's text and level are
+;; customisable, the latter via `usls-file-region-separator-heading-level'.
 ;;
 ;;
 ;; References to other notes
@@ -121,10 +124,10 @@
 ;;
 ;; In the interest of simplicity, usls.el does not maintain a database and
 ;; does not try to be too smart about linking between notes in the
-;; 'usls-directory'.  A "link" is, for our purposes, a plain text reference
+;; `usls-directory'.  A "link" is, for our purposes, a plain text reference
 ;; to the unique identifier of a file (the DATE mentioned above).
 ;;
-;; Inserting such text is made simple with the use of 'usls-id-insert'.  It
+;; Inserting such text is made simple with the use of `usls-id-insert'.  It
 ;; will produce a minibuffer completion prompt with a list of all notes
 ;; except the current one.  Selecting an item will place its ID at point,
 ;; preceded by an uptick.  Like this:
@@ -133,9 +136,9 @@
 ;;
 ;; An endnote is also included, now with two successive upticks (^^) which
 ;; points to the full file name of the referenced entry.  If support for
-;; subdirectories is enabled (via 'usls-subdir-support'), such endnotes
+;; subdirectories is enabled (via `usls-subdir-support'), such endnotes
 ;; will include a complete filesystem path.  Otherwise they are assumed as
-;; relative to the 'usls-directory'.
+;; relative to the `usls-directory'.
 ;;
 ;; In the background, the referenced file will get a backward reference as
 ;; an endnote, now denoted by two adjacent at-signs (@@) followed by the
@@ -153,21 +156,29 @@
 ;; identify a file name contextually (among others).  Type C-x C-f or M-x
 ;; find-file and follow it up with M-n.  You will get the file-at-point
 ;; (i.e. the referenced entry) as the selected item.  Or call the command
-;; 'usls-follow-link' which uses minibuffer completion, with candidates
+;; `usls-follow-link' which uses minibuffer completion, with candidates
 ;; being the file references documented in the endnotes.
 ;;
 ;;
 ;; Accessing notes
 ;; ---------------
 ;;
-;; Two commands allow you to quickly visit your notes with usls.el:
+;; Three commands allow you to quickly visit your notes with usls.el:
 ;;
-;; 1. 'usls-dired' will produce a dired buffer with the contents of the
-;;    'usls-directory'.
+;; 1. `usls-dired' will produce a dired buffer with the contents of the
+;;    `usls-directory'.
 ;;
-;; 2. 'usls-find-file' uses minibuffer completion to run 'find-file' on the
+;; 2. `usls-find-file' uses minibuffer completion to run `find-file' on the
 ;;    selected entry, with options in the list being all the files in the
-;;    'usls-directory'.
+;;    `usls-directory'.
+;;
+;; 3. `usls-append-region-buffer-or-file' places the active region to the
+;;    very end of a USLS buffer or file.  A "buffer" is, for our purposes,
+;;    a live window holding a buffer that visits a file present in the
+;;    `usls-directory'.  When multiple such windows are available, a
+;;    minibuffer prompt asks for a choice between them, otherwise goes with
+;;    the one present.  When no live windows of the sort exist, a
+;;    minibuffer prompt will ask for a file.
 ;;
 ;;
 ;; Standard Emacs commands for extending usls.el
@@ -183,29 +194,56 @@
 ;;
 ;; + Learn how to run directory-wide searches and how to refactor entries
 ;;   in bulk.  A common workflow involves some grep command and the wgrep
-;;   package.  Though you could also use 'ibuffer-do-query-replace',
-;;   'dired-do-find-regexp-and-replace', 'multi-occur'.
+;;   package.  Though you could also use `ibuffer-do-query-replace',
+;;   `dired-do-find-regexp-and-replace', `multi-occur'.
 ;;
-;; + Benefit from dired's numerous capabilities.
+;; + If you are running Emacs 28 (current development target) make sure you
+;;   give a fair chance to project.el, as it contains lots of commands that
+;;   can operate on a per-project basis (find a file, grep, query and
+;;   replace...).  Just make the `usls-directory' a "project" and the rest
+;;   follows from there.  To do so, either run any of the commands listed
+;;   in 'C-x p C-h' while inside the `usls-directory' or choose that
+;;   directory from the 'C-x p p' prompt.  For more on project.el, evaluate
+;;   the following expression to read the Info node:
+;;
+;;       (info "(emacs) Projects")
+;;
+;; + Benefit from dired's numerous capabilities (which can be combined).
 ;;
 ;;   * For example, the key sequence '% m' (dired-mark-files-regexp) lets
 ;;     you mark files based on a regular expression or just a string.  Say
-;;     you wish to only see notes about "Emacs".  Do '% m Emacs', then
+;;     you wish to only see notes about "emacs".  Do '% m emacs', then
 ;;     toggle the mark with 't' and complete the process with 'k'.  What
 ;;     you just did is to remove from view all entries that do no match the
 ;;     pattern you searched for.  Bring everything back to the standard
 ;;     view with 'g'.
 ;;
-;;   * Another neat feature of dired is 'dired-goto-file' which is bound to
+;;   * Another neat feature of dired is `dired-goto-file' which is bound to
 ;;     'j' by default.  It lets you jump to the line of a given file using
 ;;     minibuffer completion.  So if your completion framework supports
 ;;     fuzzy search or out-of-order matching of regular expression groups,
 ;;     you can interactively find virtually any file with only a few key
 ;;     strokes.
 ;;
+;;   * To work with dired subdirectories, you can produce a recursive list
+;;     of the current buffer.  Place the point over the file system path
+;;     that is at the top of the dired buffer (it shows the directory you
+;;     are in).  Then use 'C-u l' to modify the 'ls' flags that are active.
+;;     You want to pass the '-R' switch to those already in effect.  Doing
+;;     so will populate the buffer with listings from the current directory
+;;     and all its subdirectories.
+;;
+;;     (Note: 'C-u l' is for any directory path at point.  If you only ever
+;;     want for the directory shown by dired, use 'C-u s' instead, which is
+;;     not sensitive to the location of the cursor.)
+;;
 ;; The principle is to learn how to use Emacs' existing capabilities or
 ;; extensions to your advantage---not just for usls but for your day-to-day
 ;; operations.
+;;
+;; To that end, this video tutorial offers a primer on regexp:
+;; <https://protesilaos.com/codelog/2020-01-23-emacs-regexp-primer/>.
+;; Other videos in that list may also be of help.
 ;;
 ;;
 ;; General principles of usls.el
@@ -215,7 +253,21 @@
 ;; <https://protesilaos.com/codelog/2020-10-08-intro-usls-emacs-notes/>.
 ;; Some references are out-of-date, since the library is expanded to
 ;; support Org and Markdown file types, while it can be configured to
-;; access subdirectories inside the 'usls-directory'.
+;; access subdirectories inside the `usls-directory'.
+;;
+;; The gist is that usls should keep your notes as close to plain text as
+;; possible.  You should always be able to can access them from outside
+;; Emacs, such as a Unix shell prompt operated via a TTY.
+;;
+;;
+;; Free software license
+;; ---------------------
+;;
+;; usls.el is distributed under the terms of the GNU General Public
+;; License, Version 3 or, at your convenience, a later version.
+;;
+;; Refer to the COPYING document, distributed as part of this project, for
+;; the legal text.
 
 ;;; Code:
 
