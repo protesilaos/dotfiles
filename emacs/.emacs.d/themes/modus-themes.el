@@ -447,17 +447,20 @@
 
 (defcustom modus-themes-slanted-constructs nil
   "Use slanted text in more code constructs (italics or oblique)."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'boolean)
 
 (defcustom modus-themes-bold-constructs nil
   "Use bold text in more code constructs."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'boolean)
 
 (defcustom modus-themes-variable-pitch-headings nil
   "Use proportional fonts (variable-pitch) in headings."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'boolean)
 
 (defcustom modus-themes-no-mixed-fonts nil
@@ -471,7 +474,8 @@ configure the font family of `fixed-pitch' in order to get a
 consistent experience.  That may be something they do not want to
 do.  Hence this option to disable any kind of technique for
 mixing fonts."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'boolean)
 
 (defcustom modus-themes-headings
@@ -543,7 +547,8 @@ A description of all possible values:
 
 + `rainbow-section-no-bold' is the same as `rainbow-section'
   without a bold weight."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type
   '(alist
     :key-type symbol
@@ -567,7 +572,8 @@ A description of all possible values:
 
 (defcustom modus-themes-scale-headings nil
   "Use font scaling for headings."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'boolean)
 
 (defcustom modus-themes-scale-1 1.05
@@ -579,7 +585,8 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'number)
 
 (defcustom modus-themes-scale-2 1.1
@@ -591,7 +598,8 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'number)
 
 (defcustom modus-themes-scale-3 1.15
@@ -603,7 +611,8 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'number)
 
 (defcustom modus-themes-scale-4 1.2
@@ -615,7 +624,8 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'number)
 
 (defcustom modus-themes-scale-5 1.3
@@ -627,7 +637,8 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'number)
 
 (defcustom modus-themes-fringes nil
@@ -637,7 +648,8 @@ Nil means the fringes have no background color.  Option `subtle'
 will apply a greyscale value that is visible yet close to the
 main buffer background color.  Option `intense' will use a more
 pronounced greyscale value."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type '(choice
           (const :tag "No visible fringes (default)" nil)
           (const :tag "Subtle greyscale background" subtle)
@@ -660,7 +672,8 @@ of the block.  The exact color will depend on the programming
 language and is controlled by the `org-src-block-faces'
 variable (refer to the theme's source code for the current
 association list)."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type '(choice
           (const :tag "No Org block background (default)" nil)
           (const :tag "Subtle gray block background" grayscale)
@@ -684,7 +697,8 @@ the box effect and rely on underline and overline properties
 instead.  It also tones down the inactive modelines.  Despite its
 intended purpose, this option can also be used without the
 `moody' library."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type '(choice
           (const :tag "Two-dimensional box (default)" nil)
           (const :tag "Three-dimensional style for the active mode line" 3d)
@@ -706,12 +720,20 @@ Option `fg-only' will remove all accented backgrounds, except
 from word-wise changes.  It instead uses color-coded foreground
 values to differentiate between added/removed/changed lines.  If
 a background is necessary, such as with `ediff', then a subtle
-greyscale value is used."
-  :version "1.0.0"
+greyscale value is used.
+
+Option `bg-only' applies a background but does not override the
+text's foreground.  This makes it suitable for a non-nil value
+passed to `diff-font-lock-syntax' (note: Magit does not support
+syntax highlighting in diffs as of 2020-11-25, version
+20201116.1057)."
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type '(choice
           (const :tag "Intensely colored backgrounds (default)" nil)
           (const :tag "Slightly accented backgrounds with tinted text" desaturated)
-          (const :tag "No backgrounds, except for refined diffs" fg-only)))
+          (const :tag "No backgrounds, except for refined diffs" fg-only)
+          (const :tag "Apply color-coded backgrounds; keep syntax colors in tact" bg-only)))
 
 (defcustom modus-themes-completions nil
   "Apply special styles to the UI of completion frameworks.
@@ -736,7 +758,8 @@ Option `opinionated' will apply color combinations that refashion
 the completion UI.  So Icomplete et al will now use styles that
 resemble the defaults of Ivy and co., while the latter group will
 revert to an even more nuanced aesthetic."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type '(choice
           (const :tag "Respect the framework's established aesthetic (default)" nil)
           (const :tag "Subtle backgrounds for various elements" moderate)
@@ -750,7 +773,8 @@ Nil means to only use an accented foreground color.
 Options `subtle' and `intense' will change both the background
 and the foreground values.  The latter has a more pronounced
 effect than the former."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type '(choice
           (const :tag "No prompt background (default)" nil)
           (const :tag "Subtle accented background for the prompt" subtle)
@@ -758,12 +782,14 @@ effect than the former."
 
 (defcustom modus-themes-intense-hl-line nil
   "Use a more prominent background for command `hl-line-mode'."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'boolean)
 
 (defcustom modus-themes-intense-paren-match nil
   "Use a more prominent color for parenthesis matching."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type 'boolean)
 
 (defcustom modus-themes-syntax nil
@@ -793,7 +819,8 @@ tinted.  Comments are gray.
 
 Option `alt-syntax-yellow-comments' combines `alt-syntax' with
 `yellow-comments'."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type '(choice
           (const :tag "Balanced use of blue, cyan, magenta, purple variants (default)" nil)
           (const :tag "Like the default, but with desaturated color values" faint)
@@ -819,7 +846,8 @@ Option `faint-neutral-underline' combines a desaturated text
 color with a subtle grey underline.
 
 Option `no-underline' removes link underlines altogether."
-  :version "1.0.0"
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
   :type '(choice
           (const :tag "Undeline link using the same color as the text (default)" nil)
           (const :tag "Like the default, but apply less intense colors to links" faint)
@@ -1310,7 +1338,7 @@ symbol and the latter as a string.")
 (make-obsolete 'modus-operandi-theme-faint-syntax 'modus-themes-syntax "1.0.0")
 (make-obsolete 'modus-operandi-theme-comments 'modus-themes-syntax "1.0.0")
 (make-obsolete 'modus-operandi-theme-syntax 'modus-themes-syntax "1.0.0")
-(make-obsolete 'modus-operandi-theme-no-link-underline 'modus-themes-no-link-underline "1.0.0")
+(make-obsolete 'modus-operandi-theme-no-link-underline 'modus-themes-links "1.0.0")
 (make-obsolete 'modus-operandi-theme-links 'modus-themes-links "1.0.0")
 
 ;;;;; Modus Vivendi obsolete options
@@ -1347,7 +1375,7 @@ symbol and the latter as a string.")
 (make-obsolete 'modus-vivendi-theme-faint-syntax 'modus-themes-syntax "1.0.0")
 (make-obsolete 'modus-vivendi-theme-comments 'modus-themes-syntax "1.0.0")
 (make-obsolete 'modus-vivendi-theme-syntax 'modus-themes-syntax "1.0.0")
-(make-obsolete 'modus-vivendi-theme-no-link-underline 'modus-themes-no-link-underline "1.0.0")
+(make-obsolete 'modus-vivendi-theme-no-link-underline 'modus-themes-links "1.0.0")
 (make-obsolete 'modus-vivendi-theme-links 'modus-themes-links "1.0.0")
 
 
@@ -1587,7 +1615,8 @@ property."
     (_
      `(:foreground ,fg :background ,bg :box ,border))))
 
-(defun modus-themes--diff (fg-only-bg fg-only-fg mainbg mainfg altbg altfg)
+(defun modus-themes--diff
+    (fg-only-bg fg-only-fg mainbg mainfg altbg altfg &optional bg-only-fg)
   "Color combinations for `modus-themes-diffs'.
 
 FG-ONLY-BG should be similar or the same as the main background.
@@ -1599,10 +1628,14 @@ MAINFG must be the same for the foreground.
 
 ALTBG needs to be a slightly accented background that is meant to
 be combined with ALTFG.  Both must be less intense than MAINBG
-and MAINFG respectively."
+and MAINFG respectively.
+
+Optional BG-ONLY-FG applies ALTFG else leaves the foreground
+unspecified."
   (pcase modus-themes-diffs
     ('fg-only (list :background fg-only-bg :foreground fg-only-fg))
     ('desaturated (list :background altbg :foreground altfg))
+    ('bg-only (list :background altbg :foreground (if bg-only-fg altfg 'unspecified)))
     (_ (list :background mainbg :foreground mainfg))))
 
 (defun modus-themes--standard-completions (mainfg subtlebg intensebg intensefg)
@@ -1869,7 +1902,7 @@ calling the internal `modus-themes-load-operandi' and
       ((,class ,@(modus-themes--diff
                   bg-alt blue-alt
                   bg-diff-heading fg-diff-heading
-                  blue-nuanced-bg blue))))
+                  blue-nuanced-bg blue t))))
 ;;;;; mark indicators
     ;; color combinations intended for Dired, Ibuffer, or equivalent
     `(modus-theme-pseudo-header ((,class :inherit bold :foreground ,fg-main)))
@@ -2446,9 +2479,9 @@ calling the internal `modus-themes-load-operandi' and
     `(diff-header ((,class :background ,bg-dim :foreground ,fg-main)))
     `(diff-hunk-header ((,class :inherit modus-theme-diff-heading)))
     `(diff-index ((,class :inherit bold :foreground ,blue-alt)))
-    `(diff-indicator-added ((,class :inherit diff-added)))
-    `(diff-indicator-changed ((,class :inherit diff-changed)))
-    `(diff-indicator-removed ((,class :inherit diff-removed)))
+    `(diff-indicator-added ((,class :inherit (diff-added bold) :foreground ,green)))
+    `(diff-indicator-changed ((,class :inherit (diff-changed bold) :foreground ,yellow)))
+    `(diff-indicator-removed ((,class :inherit (diff-removed bold) :foreground ,red)))
     `(diff-nonexistent ((,class :inherit (modus-theme-neutral bold))))
     `(diff-refine-added ((,class :inherit modus-theme-diff-refine-added)))
     `(diff-refine-changed ((,class :inherit modus-theme-diff-refine-changed)))
