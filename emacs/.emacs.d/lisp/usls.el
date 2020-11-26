@@ -804,14 +804,15 @@ note in."
         (buf-files (mapcar #'abbreviate-file-name (usls--window-buffer-file-names-list))))
     (cl-remove-if nil
      (mapcar (lambda (x)
-               (member x files))
+               (when (member x files)
+                 x))
              buf-files))))
 
 (defun usls--window-usls-buffers ()
   "Return buffer names from `usls--window-usls-file-buffers'."
   (mapcar (lambda (x)
             (get-file-buffer x))
-          (cadr (usls--window-usls-file-buffers))))
+          (usls--window-usls-file-buffers)))
 
 (defun usls--window-buffers-live ()
   "Return live windows matching `usls--window-usls-buffers'."
