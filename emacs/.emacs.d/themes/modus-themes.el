@@ -48,7 +48,8 @@
 ;;     modus-themes-diffs                          (choice)
 ;;     modus-themes-syntax                         (choice)
 ;;     modus-themes-intense-hl-line                (boolean)
-;;     modus-themes-intense-paren-match            (boolean)
+;;     modus-themes-paren-match                    (choice)
+;;     modus-themes-region                         (choice)
 ;;     modus-themes-links                          (choice)
 ;;     modus-themes-completions                    (choice)
 ;;
@@ -786,11 +787,25 @@ effect than the former."
   :version "28.1"
   :type 'boolean)
 
-(defcustom modus-themes-intense-paren-match nil
-  "Use a more prominent color for parenthesis matching."
+(defcustom modus-themes-paren-match nil
+  "Choose the style of matching parentheses or delimiters.
+
+Nil means to use a subtle tinted background color (the default).
+
+Option `intense' applies a saturated background color.
+
+Option `subtle-bold' is the same as the default, but also makes
+use of bold typographic weight (inherits the `bold' face).
+
+Option `intense-bold' is the same as `intense', while it also
+uses a bold weight."
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
-  :type 'boolean)
+  :type '(choice
+          (const :tag "Sublte tinted background (default)" nil)
+          (const :tag "Like the default, but also use bold typographic weight" subtle-bold)
+          (const :tag "Intense saturated background" intense)
+          (const :tag "Like `intense' but with bold weight" intense-bold)))
 
 (defcustom modus-themes-syntax nil
   "Control the overall style of code syntax highlighting.
@@ -854,6 +869,31 @@ Option `no-underline' removes link underlines altogether."
           (const :tag "Change the color of link underlines to a neutral grey" neutral-underline)
           (const :tag "Desaturated foreground with neutral grey underline" faint-neutral-underline)
           (const :tag "Remove underline property from links, keeping their foreground as-is" no-underline)))
+
+(defcustom modus-themes-region nil
+  "Change the overall appearance of the active region.
+
+Nil (the default) means to only use a prominent gray background
+with a neutral foreground.  The foreground overrides all syntax
+highlighting.  The region extends to the edge of the window.
+
+Option `no-extend' preserves the default aesthetic but prevents
+the region from extending to the edge of the window.
+
+Option `bg-only' applies a faint tinted background that is
+distinct from all others used in the theme, while it does not
+override any existing colors.  It extends to the edge of the
+window.
+
+Option `bg-only-no-extend' is a combination of the `bg-only' and
+`no-extend' options."
+  :package-version '(modus-themes . "1.0.0")
+  :version "28.1"
+  :type '(choice
+          (const :tag "Intense background; overrides colors; extends to edge of window (default)" nil)
+          (const :tag "As with the default, but does not extend" no-extend)
+          (const :tag "Subtle background; preserves colors; extends to edge of window" bg-only)
+          (const :tag "As with the `subtle' option, but does not extend" bg-only-no-extend)))
 
 
 
@@ -1334,7 +1374,7 @@ symbol and the latter as a string.")
 (make-obsolete 'modus-operandi-theme-completions 'modus-themes-completions "1.0.0")
 (make-obsolete 'modus-operandi-theme-prompts 'modus-themes-prompts "1.0.0")
 (make-obsolete 'modus-operandi-theme-intense-hl-line 'modus-themes-intense-hl-line "1.0.0")
-(make-obsolete 'modus-operandi-theme-intense-paren-match 'modus-themes-intense-paren-match "1.0.0")
+(make-obsolete 'modus-operandi-theme-intense-paren-match 'modus-themes-paren-match "1.0.0")
 (make-obsolete 'modus-operandi-theme-faint-syntax 'modus-themes-syntax "1.0.0")
 (make-obsolete 'modus-operandi-theme-comments 'modus-themes-syntax "1.0.0")
 (make-obsolete 'modus-operandi-theme-syntax 'modus-themes-syntax "1.0.0")
@@ -1371,7 +1411,7 @@ symbol and the latter as a string.")
 (make-obsolete 'modus-vivendi-theme-completions 'modus-themes-completions "1.0.0")
 (make-obsolete 'modus-vivendi-theme-prompts 'modus-themes-prompts "1.0.0")
 (make-obsolete 'modus-vivendi-theme-intense-hl-line 'modus-themes-intense-hl-line "1.0.0")
-(make-obsolete 'modus-vivendi-theme-intense-paren-match 'modus-themes-intense-paren-match "1.0.0")
+(make-obsolete 'modus-vivendi-theme-intense-paren-match 'modus-themes-paren-match "1.0.0")
 (make-obsolete 'modus-vivendi-theme-faint-syntax 'modus-themes-syntax "1.0.0")
 (make-obsolete 'modus-vivendi-theme-comments 'modus-themes-syntax "1.0.0")
 (make-obsolete 'modus-vivendi-theme-syntax 'modus-themes-syntax "1.0.0")
@@ -1427,13 +1467,15 @@ combinable with INTENSEFG."
 
 (defun modus-themes--paren (normalbg intensebg)
   "Conditional use of intense colors for matching parentheses.
-NORMALBG should the special palette color 'bg-paren-match' or
+NORMALBG should be the special palette color 'bg-paren-match' or
 something similar.  INTENSEBG must be easier to discern next to
 other backgrounds, such as the special palette color
 'bg-paren-match-intense'."
-  (if modus-themes-intense-paren-match
-      (list :background intensebg)
-    (list :background normalbg)))
+  (pcase modus-themes-paren-match
+    ('subtle-bold (list :inherit 'bold :background normalbg))
+    ('intense-bold (list :inherit 'bold :background intensebg))
+    ('intense (list :background intensebg))
+    (_ (list :background normalbg))))
 
 (defun modus-themes--syntax-foreground (fg faint)
   "Apply foreground value to code syntax.
@@ -1698,6 +1740,18 @@ AMOUNT is a customization option."
   (when modus-themes-scale-headings
     (list :height amount)))
 
+(defun modus-themes--region (bg fg bgsubtle)
+  "Apply `modus-themes-region' styles.
+
+BG and FG are the main values that are used by default.  BGSUBTLE
+is a subtle background value that can be combined with all colors
+used to fontify text and code syntax."
+  (pcase modus-themes-region
+    ('bg-only (list :background bgsubtle))
+    ('bg-only-no-extend (list :background bgsubtle :extend nil))
+    ('no-extend (list :background bg :foreground fg :extend nil))
+    (_ (list :background bg :foreground bg))))
+
 
 
 ;;;; Utilities for DIY users
@@ -1736,6 +1790,17 @@ The KEY is the car of each cons cell in the alists
 `modus-themes-colors-operandi', `modus-themes-colors-vivendi'."
   (let ((alist (modus-themes--active-theme)))
     (cdr (assoc `,key alist))))
+
+;;;###autoload
+(defun modus-themes-color-alts (key-light key-dark)
+  "Return color value for KEY-LIGHT and KEY-DARK.
+Both arguments must reference the car of a cons cell in
+`modus-themes-colors-operandi', `modus-themes-colors-vivendi'."
+  (let ((theme (car custom-enabled-themes)))
+    (pcase theme
+      ('modus-operandi (cdr (assoc `,key-light modus-themes-colors-operandi)))
+      ('modus-vivendi (cdr (assoc `,key-dark modus-themes-colors-vivendi)))
+      (_ (user-error "'%s' not a Modus theme; check `custom-enabled-themes'" theme)))))
 
 ;;;; Commands
 
@@ -1983,7 +2048,7 @@ calling the internal `modus-themes-load-operandi' and
     `(mm-uu-extract ((,class :background ,bg-dim :foreground ,fg-special-mild)))
     `(next-error ((,class :inherit modus-theme-subtle-red)))
     `(rectangle-preview ((,class :inherit modus-theme-special-mild)))
-    `(region ((,class :background ,bg-region :foreground ,fg-main)))
+    `(region ((,class ,@(modus-themes--region bg-region fg-main bg-hl-alt-intense))))
     `(secondary-selection ((,class :inherit modus-theme-special-cold)))
     `(shadow ((,class :foreground ,fg-alt)))
     `(success ((,class :inherit bold :foreground ,green)))
@@ -4124,7 +4189,9 @@ calling the internal `modus-themes-load-operandi' and
     `(org-code ((,class ,@(modus-themes--mixed-fonts) :foreground ,magenta)))
     `(org-column ((,class :background ,bg-alt)))
     `(org-column-title ((,class :inherit bold :underline t :background ,bg-alt)))
-    `(org-date ((,class :inherit (button fixed-pitch)
+    `(org-date ((,class :inherit ,(if modus-themes-no-mixed-fonts
+                                      'button
+                                    '(button fixed-pitch))
                         ,@(modus-themes--link-color
                            cyan cyan-faint))))
     `(org-date-selected ((,class :inherit bold :foreground ,blue-alt :inverse-video t)))
