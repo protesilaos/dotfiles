@@ -831,13 +831,14 @@ note in."
 (defun usls--window-single-buffer-or-prompt ()
   "Return buffer name if one, else prompt with completion."
   (let* ((buffers
-          (mapcar (lambda (x)
-                    (format "%s" x))
-                  (usls--window-buffers)))
+          (delete-dups
+           (mapcar (lambda (x)
+                     (format "%s" x))
+                   (usls--window-buffers))))
          (buf (if (> (length buffers) 1)
                   (completing-read "Pick buffer: "
                                    buffers nil t)
-                (car buffers))))
+                buffers)))
     (unless (eq buf nil)
       (get-buffer-window buf))))
 
