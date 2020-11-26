@@ -573,7 +573,7 @@ into this project:
         modus-themes-no-mixed-fonts nil
         modus-themes-prompts nil ; {nil,'subtle,'intense}
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
-        modus-themes-diffs nil ; {nil,'desaturated,'fg-only}
+        modus-themes-diffs 'bg-only ; {nil,'desaturated,'fg-only,'bg-only}
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-headings  ; Read the manual for this one
         '((1 . section)
@@ -592,41 +592,6 @@ into this project:
   (use-package modus-vivendi-theme)
   :hook (after-init-hook . modus-themes-load-operandi)
   :bind ("<f5>" . modus-themes-toggle))
-#+end_src
-
-*** Measuring relative colour luminance
-:PROPERTIES:
-:CUSTOM_ID: h:254c6da5-f89f-46be-ad56-ee3802a4e2b8
-:END:
-
-The following is an Elisp implementation of [[https://www.w3.org/TR/WCAG20-TECHS/G18.html][the formula]] that determines
-whether a combination of two colours is accessible or not.  It was
-offered to me [[https://github.com/oantolin/live-completions/issues/2][by Omar Antolín Camarena]].  For the purposes of my themes,
-the contrast ratio needs to be 7:1 or higher, which conforms with the
-highest accessibility standard (WCAG AAA).
-
-To see it in action, you can read the =org-mode= report on the minor
-[[https://protesilaos.com/codelog/2020-05-10-modus-operandi-palette-review/][review of Modus Operandi palette]] (2020-05-10).  Which also goes to show
-how tricky the selection of colours can be.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :commands (wcag clr)
-  :config
-  (defun wcag (hex)
-    (apply #'+
-           (cl-mapcar
-            (lambda (k x)
-              (* k (if (<= x 0.03928)
-                       (/ x 12.92)
-                     (expt (/ (+ x 0.055) 1.055) 2.4))))
-            '(0.2126 0.7152 0.0722)
-            (color-name-to-rgb hex))))
-
-  (defun clr (c1 c2)
-    (let ((ct (/ (+ (wcag c1) 0.05)
-                 (+ (wcag c2) 0.05))))
-      (max ct (/ ct)))))
 #+end_src
 
 *** Rainbow mode for colour testing
