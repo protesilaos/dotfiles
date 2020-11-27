@@ -646,10 +646,9 @@ strings only the first one is used."
 (defun usls--file-region-append ()
   "Capture active region for use in `usls-append-region-buffer-or-file'."
   (if (region-active-p)
-      (eval (concat "\n\n"
-             (buffer-substring-no-properties
+      (eval (buffer-substring-no-properties
              (region-beginning)
-             (region-end))))
+             (region-end)))
     ""))
 
 ;;; Commands and their helper functions
@@ -848,9 +847,19 @@ note in."
     (or (usls--window-single-buffer-or-prompt)
         (completing-read "Visit file: " files nil t nil 'usls--file-history))))
 
+(defun usls--append-region (buf region arg)
+  "Routines to append active region."
+  (let ((window (get-buffer-window buf)))
+    (with-current-buffer `,buf
+      (goto-char (if (not (eq arg nil)) (point-max) (window-point window)))
+      (insert `,region))))
+
 ;;;###autoload
-(defun usls-append-region-buffer-or-file ()
+(defun usls-append-region-buffer-or-file (&optional arg)
   "Append active region to buffer or file.
+
+To 'append' is to insert at point.  To insert at the end of text
+instead, pass a \\[universal-argument] prefix argument ARG.
 
 If there exist one or more windows whose buffers visit a file
 found in `usls-directory', then they are used as targets for
@@ -863,17 +872,14 @@ file to visit.
 
 The appended region is not preceded by a delimiter, as is the
 case with `usls-new-note'."
-  (interactive)
+  (interactive "P")
   (let* ((object (usls--window-buffer-or-file))
          (buf (when (windowp object) (window-buffer object)))
-         (region (usls--file-region-append)))
+         (region (usls--file-region-append))
+         (append (if arg t nil)))
     (if (bufferp buf)
-        (with-current-buffer buf
-          (goto-char (point-max))
-          (insert region))
-      (with-current-buffer (find-file (usls--file-name object))
-        (goto-char (point-max))
-        (insert region))
+        (usls--append-region buf region append)
+      (usls--append-region (find-file (usls--file-name object)) region append)
       ;; Only add to history when we are dealing with a file
       (add-to-history 'usls--file-history object))))
 
