@@ -838,7 +838,7 @@ note in."
          (buf (if (> (length buffers) 1)
                   (completing-read "Pick buffer: "
                                    buffers nil t)
-                buffers)))
+                (if (listp buffers) (car buffers) buffers))))
     (unless (eq buf nil)
       (get-buffer-window buf))))
 
