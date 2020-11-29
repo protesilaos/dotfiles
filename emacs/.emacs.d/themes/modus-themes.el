@@ -98,6 +98,7 @@
 ;;     company-posframe
 ;;     compilation-mode
 ;;     completions
+;;     consult
 ;;     counsel
 ;;     counsel-css
 ;;     counsel-notmuch
@@ -360,6 +361,8 @@
 ;;; Code:
 
 
+
+(require 'cl-lib)
 
 ;;; Custom faces
 
@@ -2396,7 +2399,7 @@ calling the internal `modus-themes-load-operandi' and
     `(compilation-mode-line-run ((,class :inherit modus-theme-bold :foreground ,magenta-active)))
     `(compilation-warning ((,class :inherit modus-theme-bold :foreground ,yellow)))
 ;;;;; completions
-    `(completions-annotations ((,class :inherit modus-theme-slant :foreground ,fg-special-cold)))
+    `(completions-annotations ((,class :inherit modus-theme-slant :foreground ,cyan-faint)))
     `(completions-common-part ((,class ,@(modus-themes--standard-completions
                                           blue-alt blue-nuanced-bg
                                           cyan-refine-bg cyan-refine-fg))))
@@ -2404,6 +2407,15 @@ calling the internal `modus-themes-load-operandi' and
                                             ,@(modus-themes--standard-completions
                                                magenta-alt blue-nuanced-bg
                                                magenta-intense-bg fg-main))))
+;;;;; consult
+    `(consult-bookmark ((,class :foreground ,blue)))
+    `(consult-file ((,class :foreground ,magenta-alt-other)))
+    `(consult-lighter ((,class :foreground ,fg-alt)))
+    `(consult-off ((,class :inherit error)))
+    `(consult-on ((,class :inherit success)))
+    `(consult-preview-cursor ((,class :inherit modus-theme-intense-blue)))
+    `(consult-preview-line ((,class :inherit modus-theme-special-mild)))
+    `(consult-view ((,class :inherit bold :foreground ,fg-special-warm)))
 ;;;;; counsel
     `(counsel-active-mode ((,class :foreground ,magenta-alt-other)))
     `(counsel-application-name ((,class :foreground ,red-alt-other)))
@@ -3570,12 +3582,12 @@ calling the internal `modus-themes-load-operandi' and
     `(query-replace ((,class :inherit (modus-theme-intense-yellow bold))))
 ;;;;; ivy
     `(ivy-action ((,class :inherit bold :foreground ,red-alt)))
-    `(ivy-completions-annotations ((,class :inherit modus-theme-slant :foreground ,fg-special-cold)))
+    `(ivy-completions-annotations ((,class :inherit completions-annotations)))
     `(ivy-confirm-face ((,class :foreground ,cyan)))
     `(ivy-current-match ((,class ,@(modus-themes--extra-completions
                                     'modus-theme-refine-cyan
                                     'modus-theme-intense-cyan
-                                    'modus-theme-special-warm
+                                    'modus-theme-special-cold
                                     nil
                                     'bold))))
     `(ivy-cursor ((,class :background ,fg-main :foreground ,bg-main)))
@@ -3586,7 +3598,7 @@ calling the internal `modus-themes-load-operandi' and
     `(ivy-minibuffer-match-face-1 ((,class ,@(modus-themes--extra-completions
                                               'modus-theme-subtle-neutral
                                               'modus-theme-intense-neutral
-                                              'modus-theme-subtle-neutral
+                                              'modus-theme-nuanced-cyan
                                               fg-alt))))
     `(ivy-minibuffer-match-face-2 ((,class ,@(modus-themes--extra-completions
                                               'modus-theme-subtle-green
@@ -3595,10 +3607,10 @@ calling the internal `modus-themes-load-operandi' and
                                               green-alt-other
                                               'bold))))
     `(ivy-minibuffer-match-face-3 ((,class ,@(modus-themes--extra-completions
-                                              'modus-theme-subtle-cyan
-                                              'modus-theme-refine-cyan
-                                              'modus-theme-nuanced-cyan
-                                              cyan-alt-other
+                                              'modus-theme-subtle-blue
+                                              'modus-theme-refine-blue
+                                              'modus-theme-nuanced-blue
+                                              blue-alt-other
                                               'bold))))
     `(ivy-minibuffer-match-face-4 ((,class ,@(modus-themes--extra-completions
                                               'modus-theme-subtle-magenta
@@ -3607,10 +3619,10 @@ calling the internal `modus-themes-load-operandi' and
                                               magenta-alt-other
                                               'bold))))
     `(ivy-minibuffer-match-highlight ((,class ,@(modus-themes--extra-completions
-                                                 'modus-theme-subtle-blue
-                                                 'modus-theme-intense-blue
-                                                 'modus-theme-nuanced-blue
-                                                 blue-alt-other
+                                                 'modus-theme-subtle-cyan
+                                                 'modus-theme-intense-cyan
+                                                 'modus-theme-nuanced-cyan
+                                                 cyan-alt-other
                                                  'bold))))
     `(ivy-modified-buffer ((,class :inherit modus-theme-slant :foreground ,yellow)))
     `(ivy-modified-outside-buffer ((,class :inherit modus-theme-slant :foreground ,yellow-alt)))
@@ -4195,7 +4207,7 @@ calling the internal `modus-themes-load-operandi' and
                         ,@(modus-themes--link-color
                            cyan cyan-faint))))
     `(org-date-selected ((,class :inherit bold :foreground ,blue-alt :inverse-video t)))
-    `(org-dispatcher-highlight ((,class :inherit bold :background ,yellow-nuanced-bg :foreground ,red-alt)))
+    `(org-dispatcher-highlight ((,class :inherit (bold modus-theme-mark-alt))))
     `(org-document-info ((,class :foreground ,fg-special-cold)))
     `(org-document-info-keyword ((,class ,@(modus-themes--mixed-fonts)
                                          :foreground ,fg-alt)))
@@ -4683,15 +4695,14 @@ calling the internal `modus-themes-load-operandi' and
     `(switch-window-label ((,class :height 3.0 :foreground ,blue-intense)))
 ;;;;; swiper
     `(swiper-background-match-face-1 ((,class :inherit modus-theme-subtle-neutral)))
-    `(swiper-background-match-face-2 ((,class :inherit modus-theme-subtle-cyan)))
-    `(swiper-background-match-face-3 ((,class :inherit modus-theme-subtle-magenta)))
-    `(swiper-background-match-face-4 ((,class :inherit modus-theme-subtle-green)))
-    `(swiper-line-face ((,class ,@(and (>= emacs-major-version 27) '(:extend t))
-                                :inherit modus-theme-special-cold)))
-    `(swiper-match-face-1 ((,class :inherit swiper-line-face)))
-    `(swiper-match-face-2 ((,class :inherit swiper-line-face)))
-    `(swiper-match-face-3 ((,class :inherit swiper-line-face)))
-    `(swiper-match-face-4 ((,class :inherit swiper-line-face)))
+    `(swiper-background-match-face-2 ((,class :inherit modus-theme-refine-cyan)))
+    `(swiper-background-match-face-3 ((,class :inherit modus-theme-refine-magenta)))
+    `(swiper-background-match-face-4 ((,class :inherit modus-theme-refine-yellow)))
+    `(swiper-line-face ((,class :inherit modus-theme-special-cold)))
+    `(swiper-match-face-1 ((,class :inherit (bold modus-theme-intense-neutral))))
+    `(swiper-match-face-2 ((,class :inherit (bold modus-theme-intense-green))))
+    `(swiper-match-face-3 ((,class :inherit (bold modus-theme-intense-blue))))
+    `(swiper-match-face-4 ((,class :inherit (bold modus-theme-intense-red))))
 ;;;;; swoop
     `(swoop-face-header-format-line ((,class :inherit bold :foreground ,red-alt
                                              ,@(modus-themes--scale modus-themes-scale-3))))
