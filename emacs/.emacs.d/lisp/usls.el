@@ -203,20 +203,17 @@
 ;;   replace...).  Just make the `usls-directory' a "project" and the rest
 ;;   follows from there.  To do so, either run any of the commands listed
 ;;   in 'C-x p C-h' while inside the `usls-directory' or choose that
-;;   directory from the 'C-x p p' prompt.  For more on project.el, evaluate
-;;   the following expression to read the Info node:
-;;
-;;       (info "(emacs) Projects")
+;;   directory from the 'C-x p p' prompt.
 ;;
 ;; + Benefit from dired's numerous capabilities (which can be combined).
 ;;
 ;;   * For example, the key sequence '% m' (dired-mark-files-regexp) lets
 ;;     you mark files based on a regular expression or just a string.  Say
-;;     you wish to only see notes about "emacs".  Do '% m emacs', then
-;;     toggle the mark with 't' and complete the process with 'k'.  What
-;;     you just did is to remove from view all entries that do no match the
-;;     pattern you searched for.  Bring everything back to the standard
-;;     view with 'g'.
+;;     you wish to only see notes about "politics".  Do '% m politics',
+;;     then toggle the mark with 't' and complete the process with 'k'.
+;;     What you just did is to remove from view all entries that do no
+;;     match the pattern you searched for.  Bring everything back to the
+;;     standard view with 'g'.
 ;;
 ;;   * Another neat feature of dired is `dired-goto-file' which is bound to
 ;;     'j' by default.  It lets you jump to the line of a given file using
@@ -848,7 +845,9 @@ note in."
         (completing-read "Visit file: " files nil t nil 'usls--file-history))))
 
 (defun usls--append-region (buf region arg)
-  "Routines to append active region."
+  "Routines to append active region.
+All of BUF, REGION, ARG are intended to be passed by another
+function, such as with `usls-append-region-buffer-or-file'."
   (let ((window (get-buffer-window buf)))
     (with-current-buffer `,buf
       (goto-char (if (not (eq arg nil)) (point-max) (window-point window)))
