@@ -852,7 +852,11 @@ note in."
   (let ((window (get-buffer-window buf)))
     (with-current-buffer `,buf
       (goto-char (if (not (eq arg nil)) (point-max) (window-point window)))
-      (insert `,region))))
+      (set-mark (point))
+      (insert `,region)
+      ;; REVIEW: is this the correct way to go to the last mark?  Are we
+      ;; polluting the mark-ring?
+      (goto-char (car mark-ring)))))
 
 ;;;###autoload
 (defun usls-append-region-buffer-or-file (&optional arg)
