@@ -478,7 +478,7 @@ Markdown or Org types."
   (cl-remove-if-not
    (lambda (x)
      (file-directory-p x))
-   (directory-files-recursively usls-directory ".*" t t)))
+   (directory-files-recursively (usls--directory) ".*" t t)))
 
 ;; TODO: generalise this for all VC backends?  Which ones?
 (defun usls--directory-subdirs-no-git ()
