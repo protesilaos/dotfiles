@@ -1753,7 +1753,7 @@ used to fontify text and code syntax."
     ('bg-only (list :background bgsubtle))
     ('bg-only-no-extend (list :background bgsubtle :extend nil))
     ('no-extend (list :background bg :foreground fg :extend nil))
-    (_ (list :background bg :foreground bg))))
+    (_ (list :background bg :foreground fg))))
 
 
 
@@ -2255,10 +2255,10 @@ calling the internal `modus-themes-load-operandi' and
     `(calendar-today ((,class :underline t)))
     `(calendar-weekday-header ((,class :foreground ,fg-dim)))
     `(calendar-weekend-header ((,class :foreground ,fg-alt)))
-    `(diary ((,class :foreground ,cyan-alt-other)))
+    `(diary ((,class :background ,green-nuanced-bg :foreground ,cyan-alt-other)))
     `(diary-anniversary ((,class :foreground ,red-alt-other)))
     `(diary-time ((,class :foreground ,blue-alt)))
-    `(holiday ((,class :foreground ,red-alt)))
+    `(holiday ((,class :inherit bold :background ,red-nuanced-bg :foreground ,yellow)))
 ;;;;; calfw
     `(cfw:face-annotation ((,class :foreground ,fg-special-warm)))
     `(cfw:face-day-title ((,class :foreground ,fg-main)))
