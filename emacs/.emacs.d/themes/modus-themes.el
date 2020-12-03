@@ -2258,7 +2258,7 @@ calling the internal `modus-themes-load-operandi' and
     `(diary ((,class :foreground ,cyan-alt-other)))
     `(diary-anniversary ((,class :foreground ,red-alt-other)))
     `(diary-time ((,class :foreground ,blue-alt)))
-    `(holiday ((,class :foreground ,magenta-alt)))
+    `(holiday ((,class :foreground ,red-alt)))
 ;;;;; calfw
     `(cfw:face-annotation ((,class :foreground ,fg-special-warm)))
     `(cfw:face-day-title ((,class :foreground ,fg-main)))
@@ -3639,7 +3639,7 @@ calling the internal `modus-themes-load-operandi' and
                                   blue-alt))))
 ;;;;; ivy-posframe
     `(ivy-posframe ((,class :background ,bg-dim :foreground ,fg-main)))
-    `(ivy-posframe-border ((,class :background ,bg-active)))
+    `(ivy-posframe-border ((,class :background ,fg-window-divider-inner)))
     `(ivy-posframe-cursor ((,class :background ,fg-main :foreground ,bg-main)))
 ;;;;; jira (org-jira)
     `(jiralib-comment-face ((,class :background ,bg-alt)))
