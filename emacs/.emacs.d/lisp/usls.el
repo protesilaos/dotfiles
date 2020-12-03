@@ -416,6 +416,13 @@ Markdown or Org types."
 
 ;;; Basic utilities
 
+(defun usls--completion-table (category candidates)
+  "Pass appropriate metadata CATEGORY to completion CANDIDATES."
+  (lambda (string pred action)
+    (if (eq action 'metadata)
+        `(metadata (category . ,category))
+      (complete-with-action action candidates string pred))))
+
 ;;;; File name helpers
 
 (defun usls--directory ()
@@ -717,9 +724,8 @@ note in."
 (defun usls-id-insert ()
   "Insert at point the identity of a file using completion."
   (interactive)
-  (let* ((file (completing-read "Link to: "
-                                (usls--directory-files-not-current)
-                                nil t nil 'usls--link-history))
+  (let* ((files (usls--completion-table 'file (usls--directory-files-not-current)))
+         (file (completing-read "Link to: " files nil t nil 'usls--link-history))
          (this-file (file-name-nondirectory (buffer-file-name)))
          (id (usls--extract usls-id-regexp file)))
     (insert (concat "^" id))
@@ -752,7 +758,8 @@ note in."
 (defun usls-follow-link ()
   "Visit link referenced in the note using completion."
   (interactive)
-  (let ((links (usls--links)))
+  (let ((default-directory (usls--directory))
+        (links (usls--completion-table 'file (usls--links))))
     (if links
         (find-file
          (completing-read "Follow link: " links nil t))
@@ -770,7 +777,8 @@ note in."
 (defun usls-find-file ()
   "Visit a file in `usls-directory' using completion."
   (interactive)
-  (let* ((files (usls--directory-files))
+  (let* ((default-directory (usls--directory))
+         (files (usls--completion-table 'file (usls--directory-files)))
          (file (completing-read "Visit file: " files nil t nil 'usls--file-history))
          (item (usls--file-name file)))
     (find-file item)
@@ -831,9 +839,10 @@ note in."
            (mapcar (lambda (x)
                      (format "%s" x))
                    (usls--window-buffers))))
+         (bufs (usls--completion-table 'buffer buffers))
          (buf (if (> (length buffers) 1)
                   (completing-read "Pick buffer: "
-                                   buffers nil t)
+                                   bufs nil t)
                 (if (listp buffers) (car buffers) buffers))))
     (unless (eq buf nil)
       (get-buffer-window buf))))
