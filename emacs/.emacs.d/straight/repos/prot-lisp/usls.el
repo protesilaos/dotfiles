@@ -640,7 +640,7 @@ strings only the first one is used."
 
 (defun usls--file-region ()
   "Capture active region for use in `usls-new-note'."
-  (if (region-active-p)
+  (if (use-region-p)
       (eval (usls--file-region-separator
              (buffer-substring-no-properties
               (region-beginning)
@@ -649,7 +649,7 @@ strings only the first one is used."
 
 (defun usls--file-region-append ()
   "Capture active region for use in `usls-append-region-buffer-or-file'."
-  (if (region-active-p)
+  (if (use-region-p)
       (eval (buffer-substring-no-properties
              (region-beginning)
              (region-end)))

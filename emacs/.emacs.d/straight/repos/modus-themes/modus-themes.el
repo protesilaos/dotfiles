@@ -903,10 +903,6 @@ Option `bg-only-no-extend' is a combination of the `bg-only' and
 ;;; Variables for each variant
 
 ;;;; Modus Operandi
-(deftheme modus-operandi
-  "Light theme that conforms with the highest accessibility
-  standard for color contrast between background and foreground
-  elements (WCAG AAA).")
 
 (define-obsolete-variable-alias
   'modus-operandi-theme-default-colors-alist
@@ -1124,11 +1120,6 @@ Each element has the form (NAME . HEX) with the former as a
 symbol and the latter as a string.")
 
 ;;;; Modus Vivendi
-
-(deftheme modus-vivendi
-  "Dark theme that conforms with the highest accessibility
-  standard for color contrast between background and foreground
-  elements (WCAG AAA).")
 
 (define-obsolete-variable-alias
   'modus-vivendi-theme-default-colors-alist
@@ -2305,7 +2296,7 @@ calling the internal `modus-themes-load-operandi' and
     `(log-edit-header ((,class :foreground ,fg-special-warm)))
     `(log-edit-summary ((,class :inherit bold :foreground ,blue)))
     `(log-edit-unknown-header ((,class :foreground ,fg-alt)))
-    `(log-view-commit-body ((,class :background ,bg-alt :foreground ,fg-main)))
+    `(log-view-commit-body ((,class :background ,bg-dim :foreground ,fg-main :extend t)))
     `(log-view-file ((,class :inherit bold :foreground ,fg-special-cold)))
     `(log-view-message ((,class :foreground ,green-alt-other-faint)))
 ;;;;; cider
@@ -5078,7 +5069,7 @@ calling the internal `modus-themes-load-operandi' and
 ;;;;; yaml-mode
     `(yaml-tab-face ((,class :inherit modus-theme-intense-red)))
 ;;;;; yasnippet
-    `(yas-field-highlight-face ((,class :background ,bg-alt :foreground ,fg-main)))
+    `(yas-field-highlight-face ((,class :background ,bg-hl-alt-intense)))
 ;;;;; ztree
     `(ztreep-arrow-face ((,class :foreground ,fg-inactive)))
     `(ztreep-diff-header-face ((,class :inherit bold :height 1.2 :foreground ,fg-special-cold)))
