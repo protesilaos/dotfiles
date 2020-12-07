@@ -398,5 +398,36 @@ paragraph.  The idea is to produce the opposite effect of both
         (fill-region beg end)
       (fill-paragraph))))
 
+;;;; Commands for windows
+
+;; Inspired by Pierre Neidhardt's windower:
+;; https://gitlab.com/ambrevar/emacs-windower/-/blob/master/windower.el
+(defvar prot-simple--windows-current nil
+  "Current window configuration.'.")
+
+;;;###autoload
+(define-minor-mode prot-simple-monocle
+  "Toggle between multiple windows and single window.
+This is the equivalent of maximising a window.  Tiling window
+managers such as DWM, BSPWM refer to this state as 'monocle'."
+  :lighter " [M]"
+  :global nil
+  (let ((win prot-simple--windows-current))
+    (if (one-window-p)
+        (when win
+          (set-window-configuration win))
+      (setq prot-simple--windows-current (current-window-configuration))
+      (delete-other-windows))))
+
+(defun prot-simple--monocle-disable ()
+  "Set variable `prot-simple-monocle' to nil, when appropriate.
+To be hooked to `window-configuration-change-hook'."
+  (when (and prot-simple-monocle (not (one-window-p)))
+    (delete-other-windows)
+    (prot-simple-monocle -1)
+    (set-window-configuration prot-simple--windows-current)))
+
+(add-hook 'window-configuration-change-hook #'prot-simple--monocle-disable)
+
 (provide 'prot-simple)
 ;;; prot-simple.el ends here
