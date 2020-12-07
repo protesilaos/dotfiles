@@ -2003,6 +2003,7 @@ configure it further.
 #+begin_src emacs-lisp
 (use-package xref
   :config
+  (setq xref-show-definitions-function #'xref--show-defs-minibuffer)
   (setq xref-search-program 'ripgrep))  ; Emacs 28
 #+end_src
 
