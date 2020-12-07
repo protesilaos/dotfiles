@@ -3269,6 +3269,9 @@ overview of its components, which are contingent on other features:
   relevant configurations, while their overall presentation is
   controlled by the active theme).
 
++ Scroll lock :: Sometimes I want the cursor to remain centred on the
+  screen.  This is controlled by the variable =prot-logos-scroll-lock=.
+
 All those combined contribute to an outcome that is appropriate for long
 reading or writing sessions, as well as presentations.  I intentionally
 do not introduce any font-resizing effect, as my needs vary in that
@@ -3321,6 +3324,7 @@ these:
   :straight (:type built-in)
   :config
   (setq prot-logos-org-presentation-always nil)
+  (setq prot-logos-scroll-lock nil)
   :bind ("<f9>" . prot-logos-focus-mode))
 #+end_src
 

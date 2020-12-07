@@ -42,6 +42,19 @@
   "Setup for reading and presenting text-heavy buffers."
   :group 'files)
 
+(defcustom prot-logos-org-presentation nil
+  "Whether Org files should always switch to presentation view.
+This concerns cases where variable `prot-logos-focus-mode' is set
+to non-nil and determines whether headings should be converted
+into pseudo slides and indentation be adjusted accordingly."
+  :type 'boolean
+  :group 'prot-logos)
+
+(defcustom prot-logos-scroll-lock nil
+  "Use centred scrolling while in focused view."
+  :type 'boolean
+  :group 'prot-logos)
+
 (defvar prot-logos--focus-mode-hook nil
   "Hook that runs from function `prot-logos-focus-mode'.")
 
@@ -89,14 +102,6 @@ on its own."
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--fringe-toggle)
 
-(defcustom prot-logos-org-presentation nil
-  "Whether Org files should always switch to presentation view.
-This concerns cases where variable `prot-logos-focus-mode' is set
-to non-nil and determines whether headings should be converted
-into pseudo slides and indentation be adjusted accordingly."
-  :type 'boolean
-  :group 'prot-logos)
-
 (declare-function org-tree-slide-mode "org-tree-slide")
 
 (defun prot-logos--org-tree-slide-mode ()
@@ -126,6 +131,17 @@ into pseudo slides and indentation be adjusted accordingly."
 	    (org-indent-mode 1)))))
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--org-indent-mode)
+
+(defun prot-logos--scroll-lock ()
+  "Keep the point at the centre."
+  (when prot-logos-scroll-lock
+    (if (or (bound-and-true-p scroll-lock-mode)
+		    (not (bound-and-true-p prot-logos-focus-mode)))
+        (scroll-lock-mode -1)
+      (recenter nil)
+      (scroll-lock-mode 1))))
+
+(add-hook 'prot-logos--focus-mode-hook #'prot-logos--scroll-lock)
 
 (provide 'prot-logos)
 ;;; prot-logos.el ends here
