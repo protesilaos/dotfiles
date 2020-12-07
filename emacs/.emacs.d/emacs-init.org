@@ -591,11 +591,6 @@ unreadable when cast on a light background (bitmap fonts in particular).
 The section on [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]] defines typefaces
 that I consider suitable for my needs.
 
-Further below in this section I also specify certain settings that
-govern the [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]] and link to other relevant parts
-of this document, while my [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes]] are designed to cope well with
-mixed-font scenaria (particularly useful in Org).
-
 Lastly, note that on a modern GNU/Linux system that uses the =fontconfig=
 library, per-user fonts are stored in =~/.local/share/fonts=.
 
@@ -662,7 +657,7 @@ applies/ for the given construct.  This is actually a good idea because
 there are many scenaria where you want a face to retain its own
 attributes (e.g. let =org-mode= inline code be presented in its monospaced
 font while using a variable width typeface for the main text---see, in
-particular, [[#h:414b33cd-66f7-4daf-814f-373e08dff7f8][Mode for proportional fonts]]).
+particular, [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (prot-logos.el)]]).
 
 Relevant blog posts of mine:
 
@@ -710,56 +705,6 @@ This is the source code of =prot-fonts.el= (you can always find the source
 if you directly clone [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]).
 
 #+include: straight/repos/prot-lisp/prot-fonts.el src emacs-lisp :tangle no
-
-*** Mode for proportional fonts
-:PROPERTIES:
-:CUSTOM_ID: h:414b33cd-66f7-4daf-814f-373e08dff7f8
-:END:
-
-When Emacs operates in a graphical terminal, it can display text using
-mixed font settings: a variety of heights and families (in addition to
-other typegraphic attributes).  This means that it can draw text on the
-same line that has potentially profoundly different properties
-character-by-character.  For example, a sans-serif typeface for prose
-with a monospaced font for inline code (for the underlying faces that
-may be used, see [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]]).
-
-While we can handle things on our own by calling =set-face-attribute= for
-each face we are interested in, there is a built-in mechanism to quickly
-toggle the use of proportionately spaced fonts (in contrast to the
-monospaced ones which usually are the standard).  Depending on your
-theme this will not yield good results in Org mode, so be warned.
-
-For what it's worth, my Modus themes are designed to take full advantage
-of this facility (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes and other visuals]]).  Any face that is
-sensitive to spacing or that would break the layout if displayed in a
-variable width is designed to explicitly inherit from the =fixed-pitch=
-face (the exact font family was specified in the previous section,
-though the only thing that matters is to be monospaced).
-
-With the following package declaration my idea is to integrate
-=prot/variable-pitch-mode= into some "reading mode" configurations that I
-have, /mutatis mutandis/.  Likely candidates are the toggle for
-=olivetti-mode= (see the section on [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing]]) and my
-simple-yet-super-effective plain text presentations with Org mode (see
-[[#h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11][simple presentations inside of Emacs]]).
-
-Also check my [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks]].
-
-#+begin_src emacs-lisp
-(use-package face-remap
-  :diminish buffer-face-mode            ; the actual mode
-  :commands prot/variable-pitch-mode
-  :config
-  (define-minor-mode prot/variable-pitch-mode
-    "Toggle `variable-pitch-mode', except for `prog-mode'."
-    :init-value nil
-    :global nil
-    (if prot/variable-pitch-mode
-        (unless (derived-mode-p 'prog-mode)
-          (variable-pitch-mode 1))
-      (variable-pitch-mode -1))))
-#+end_src
 
 *** Simple font suitability test
 :PROPERTIES:
@@ -3279,6 +3224,110 @@ news reader, music players…  Anything you would normally see in a
 standalone application.  The end goal is to eventually integrate every
 aspect of my computing inside of Emacs.
 
+** Custom extensions for "focus mode" (prot-logos.el)
+:PROPERTIES:
+:CUSTOM_ID: h:77d14350-978d-4820-ab7f-4641706c445a
+:END:
+
+My =prot-logos.el= (copied verbatim after the package declaration)
+provides the necessary infrastructure for my preferred "focus mode"
+aesthetic.  Everything is toggled with =prot-logos-focus-mode=.  An
+overview of its components, which are contingent on other features:
+
++ =variable-pitch-mode= (mixed fonts) :: This is a built-in mode that
+  remaps the =default= face's font family to a proportionately spaced one
+  (also see [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]]).  It is quite
+  aggressive as it affects all other faces, unless the active theme
+  makes provisions to retain fixed typographic spacing for those
+  elements that require it, such as code blocks and indentation (refer
+  to [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes (my highly accessible themes)]]).  By activating this
+  mode, we get a pleasant, prose-friendly effect.
+
++ Olivetti (centred buffer content) :: I spend much of my time in Emacs
+  reading and writing long form texts.  It is nice to be able to easily
+  toggle a mode that centres the buffer, allowing for greater comfort.
+  Olivetti fulfils that niche very nicely.  It is not aggressive in its
+  interface requirements, respects my [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][existing line settings]] and my
+  preference for [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][auto-filling text]], while it does not introduce any kind
+  of functionality beyond the scope of bringing the current window's
+  buffer to the centre of the view.  This is exactly what I need.  Any
+  other enhancement, such as a larger font size can be delegated to a
+  specialised instrument.
+
++ =org-tree-slide= and =org-indent= :: The former is a third-party package
+  and the latter is part of the Org distribution.  What the first does
+  is to convert headings into pseudo slides.  While the other indents
+  content visually, without actually affecting the underlying initial
+  spacing, to match the heading's depth.  Those two are disabled by
+  default and the =prot-logos-org-presentation= toggle determines
+  whether they should be activated.
+
++ Fringes :: There is also a function that disables fringes on the edge
+  of the window.  This ensures that we do not see that area and any
+  indicators that may be placed on it (refer to [[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][Fringe mode]] for the
+  relevant configurations, while their overall presentation is
+  controlled by the active theme).
+
+All those combined contribute to an outcome that is appropriate for long
+reading or writing sessions, as well as presentations.  I intentionally
+do not introduce any font-resizing effect, as my needs vary in that
+regard depending on the context (though do refer to the =prot-fonts.el= I
+linked to earlier).
+
+For video demonstrations, albeit with earlier versions of my code, watch
+these:
+
++ [[https://protesilaos.com/codelog/2020-07-16-emacs-focused-editing/][“Focused editing” tools for Emacs]] (2020-07-16)
++ [[https://protesilaos.com/codelog/2020-07-17-emacs-mixed-fonts-org/][Configuring mixed fonts for Org mode and others]] (2020-07-17)
+
+#+begin_src emacs-lisp
+(use-package face-remap :diminish buffer-face-mode)
+
+(use-package olivetti
+  :straight t
+  :diminish
+  :config
+  (setq olivetti-body-width 0.7)
+  (setq olivetti-minimum-body-width 80)
+  (setq olivetti-recall-visual-line-mode-entry-state t))
+
+(use-package org-tree-slide
+  :straight t
+  :after org
+  :commands prot/org-presentation-mode
+  :config
+  (setq org-tree-slide-breadcrumbs nil)
+  (setq org-tree-slide-header nil)
+  (setq org-tree-slide-slide-in-effect nil)
+  (setq org-tree-slide-heading-emphasis nil)
+  (setq org-tree-slide-cursor-init t)
+  (setq org-tree-slide-modeline-display nil)
+  (setq org-tree-slide-skip-done nil)
+  (setq org-tree-slide-skip-comments t)
+  (setq org-tree-slide-fold-subtrees-skipped t)
+  (setq org-tree-slide-skip-outline-level 8)
+  (setq org-tree-slide-never-touch-face t)
+  (setq org-tree-slide-activate-message
+        (format "Presentation %s" (propertize "ON" 'face 'success)))
+  (setq org-tree-slide-deactivate-message
+        (format "Presentation %s" (propertize "OFF" 'face 'error)))
+  :bind (:map org-tree-slide-mode-map
+         ("<C-down>" . org-tree-slide-display-header-toggle)
+         ("<C-right>" . org-tree-slide-move-next-tree)
+         ("<C-left>" . org-tree-slide-move-previous-tree)))
+
+(use-package prot-logos
+  :straight (:type built-in)
+  :config
+  (setq prot-logos-org-presentation-always nil)
+  :bind ("<f9>" . prot-logos-focus-mode))
+#+end_src
+
+And here is =prot-logos.el= in its totality.  It is available as a file in
+[[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (same for all my Emacs libraries):
+
+#+include: straight/repos/prot-lisp/prot-logos.el src emacs-lisp :tangle no
+
 ** Calendar
 :PROPERTIES:
 :CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
@@ -3428,6 +3477,9 @@ Now on to the miscellaneous settings:
   such as tagging and scheduling on the items within the active region.
   I configure it to only apply to headings of the same level, in order
   to avoid possible inconveniences.
+
+Finally, note that I sometimes deliver simple presentations using Org.
+Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (prot-logos.el)]].
 
 #+begin_src emacs-lisp
 (use-package org
@@ -4042,77 +4094,6 @@ file which do not already have one."
     (interactive)
     (org-map-entries
      (lambda () (contrib/org-id-get (point) t)))))
-#+end_src
-
-*** Simple presentations inside of Emacs (org-tree-slide)
-:PROPERTIES:
-:CUSTOM_ID: h:5571e3b2-1593-4c9c-82f4-ed5f50f69f11
-:END:
-
-I like the idea of easily converting an =.org= file into a set of pseudo
-slides.  It is simple and has no external dependencies.  My needs are
-pretty simple and straightforward: just show some text, narrowing it to
-the current section.
-
-To make presentations happen, I use =org-tree-slide= to narrow the buffer
-to each heading.  With =prot/olivetti-mode= (and its multiple
-accoutrements) I have a distraction-free view that centres the text on
-the screen and removes other visual elements (see my configurations in
-[[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][Centred, focused text mode (olivetti-mode)]]).  While =org-superstar=
-prettifies the heading bullets, while removing the leading stars.  The
-other tweaks in the code block below are complementary to this
-"slideshow effect".
-
-For the font functions specified herein, make sure to understand the
-overall configurations by reading the section on [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][primary font settings]].
-I opted not to use =text-scale-adjust= or some variant thereof, because
-that only operates on the text of the focused window, whereas I want all
-interfaces to adapt to the new size so that I can, for example, show the
-minibuffer while doing a presentation.
-
-#+begin_src emacs-lisp
-(use-package org-tree-slide
-  :straight t
-  :after org
-  :commands prot/org-presentation-mode
-  :config
-  (setq org-tree-slide-breadcrumbs nil)
-  (setq org-tree-slide-header nil)
-  (setq org-tree-slide-slide-in-effect nil)
-  (setq org-tree-slide-heading-emphasis nil)
-  (setq org-tree-slide-cursor-init t)
-  (setq org-tree-slide-modeline-display nil)
-  (setq org-tree-slide-skip-done nil)
-  (setq org-tree-slide-skip-comments t)
-  (setq org-tree-slide-fold-subtrees-skipped t)
-  (setq org-tree-slide-skip-outline-level 8)
-  (setq org-tree-slide-never-touch-face t)
-  (setq org-tree-slide-activate-message
-        (propertize "Presentation mode ON" 'face 'success))
-  (setq org-tree-slide-deactivate-message
-        (propertize "Presentation mode OFF" 'face 'error))
-
-  ;; TODO: these should be handled with hooks.
-  (define-minor-mode prot/org-presentation-mode
-    "Parameters for plain text presentations with `org-mode'."
-    :init-value nil
-    :global nil
-    (if prot/org-presentation-mode
-        (progn
-          (unless (eq major-mode 'org-mode)
-            (user-error "Not in an Org buffer"))
-          (org-tree-slide-mode 1)
-          (prot/olivetti-mode 1)
-          (org-indent-mode 1))
-      (org-tree-slide-mode -1)
-      (prot/olivetti-mode -1)
-      (org-indent-mode -1)))
-
-  :bind (("C-c P" . prot/org-presentation-mode)
-         :map org-tree-slide-mode-map
-         ("<C-down>" . org-tree-slide-display-header-toggle)
-         ("<C-right>" . org-tree-slide-move-next-tree)
-         ("<C-left>" . org-tree-slide-move-previous-tree)))
 #+end_src
 
 ** USLS --- Unassuming Sidenotes of Little Significance
@@ -7558,7 +7539,7 @@ uses the generic font-lock warning face).
 
 I got the idea for =prot/mode-line-hidden-mode= from [[https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8][William Rankin]].  Note
 that William is the author of the wonderful =olivetti-mode= (see elsewhere
-in this document [[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][“Focus mode” for writing (olivetti-mode)]]).
+in this document: [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (prot-logos.el)]]).
 
 #+begin_src emacs-lisp
 (use-package emacs
@@ -7958,70 +7939,6 @@ sometimes it causes problems, such as with diffs.
          ("C-c z" . delete-trailing-whitespace)))
 #+end_src
 
-*** Centred, focused text mode (olivetti-mode)
-:PROPERTIES:
-:CUSTOM_ID: h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd
-:END:
-
-I spend much of my time in Emacs reading and writing long form texts.
-It is nice to be able to easily toggle a mode that centres the buffer,
-allowing for greater comfort.
-
-Olivetti fulfils that niche very nicely.  It is not aggressive in its
-interface requirements, respects my [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][existing line settings]] and my
-preference for [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][auto-filling text]], while it does not introduce any kind
-of functionality beyond the scope of bringing the current window's
-buffer to the centre of the view.  This is exactly what I need.  Any
-other enhancement, such as a larger font size can be handled by another
-function.
-
-The =prot/olivetti-mode= offers a toggle for activating this mode, passing
-additional font-related parameters (see [[#h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9][base typeface configurations]]),
-removing the fringe on both sides /of the selected window/ (check my
-[[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][fringe-mode settings]]), and hiding the mode line in accordance with
-=prot/mode-line-hidden-mode= defined in the [[#h:39f57b0d-300a-4310-9ba8-8c388fa72e1d][Mode line]] section.
-
-Also review =prot/scroll-centre-cursor-mode= in the [[#h:0c44b318-813a-4f4a-b596-75df4a86476b][Scrolling behaviour]]
-section.
-
-For video demonstrantions watch these:
-
-+ [[https://protesilaos.com/codelog/2020-07-16-emacs-focused-editing/][“Focused editing” tools for Emacs]] (2020-07-16)
-+ [[https://protesilaos.com/codelog/2020-07-17-emacs-mixed-fonts-org/][Configuring mixed fonts for Org mode and others]] (2020-07-17)
-
-#+begin_src emacs-lisp
-(use-package olivetti
-  :straight t
-  :diminish
-  :config
-  (setq olivetti-body-width 0.7)
-  (setq olivetti-minimum-body-width 80)
-  (setq olivetti-recall-visual-line-mode-entry-state t)
-
-  (define-minor-mode prot/olivetti-mode
-    "Toggle buffer-local `olivetti-mode' with additional parameters.
-
-Fringes are disabled.  The modeline is hidden, except for
-`prog-mode' buffers (see `prot/mode-line-hidden-mode').  The
-default typeface is set to a proportionately spaced family,
-except for programming modes (see `prot/variable-pitch-mode')."
-    :init-value nil
-    :global nil
-    (if prot/olivetti-mode
-        (progn
-          (olivetti-mode 1)
-          (set-window-fringes (selected-window) 0 0)
-          (prot/variable-pitch-mode 1)
-          (unless (derived-mode-p 'prog-mode)
-            (prot/mode-line-hidden-mode 1)))
-      (olivetti-mode -1)
-      (set-window-fringes (selected-window) nil) ; Use default width
-      (prot/variable-pitch-mode -1)
-      (unless (derived-mode-p 'prog-mode)
-        (prot/mode-line-hidden-mode -1))))
-  :bind ("C-c o" . prot/olivetti-mode))
-#+end_src
-
 *** Outline mode, outline minor mode, and extras (prot-outline.el)
 :PROPERTIES:
 :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
@@ -8343,12 +8260,6 @@ re-centring the point: it is too aggressive as a standard mode of
 interaction.  With the following =setq-default=, the point will stay at
 the top/bottom of the screen while moving in that direction (use =C-l= to
 reposition it).
-
-While =prot/scroll-centre-cursor-mode= is a simple and super effective way
-to get the always-centred behaviour on demand.  I use it when I am
-reading prose or reviewing code and expect to perform few or no edits.
-As such, this piece of fumctionality makes for a natural complement to
-[[#h:7591160f-052a-4d24-8a12-0f7f2e1d5ecd][my configs for olivetti-mode]].
 
 #+begin_src emacs-lisp
 (use-package emacs
