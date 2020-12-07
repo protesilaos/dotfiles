@@ -3078,72 +3078,6 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
          ("C-x _" . balance-windows)
          ("C-x +" . balance-windows-area)
          ("s-q" . window-toggle-side-windows)))
-
-;; These are all experimental.  Just showcasing the power of passing
-;; parameters to windows or frames.
-(use-package emacs
-  :commands (prot/window-dired-vc-root-left
-             prot/make-frame-floating-with-current-buffer
-             prot/display-buffer-at-bottom)
-  :config
-  (defun prot/window-dired-vc-root-left ()
-    "Open project or dir `dired' in a side window.
-
-NOTE: For demo purposes."
-    (interactive)
-    (let ((dir (if (eq (vc-root-dir) nil)
-                   (dired-noselect default-directory)
-                 (dired-noselect (vc-root-dir)))))
-      (display-buffer-in-side-window
-       dir `((side . left)
-             (slot . -1)
-             (window-width . 0.16)
-             (window-parameters
-              . ((no-other-window . t)
-                 (no-delete-other-windows . t)
-                 (mode-line-format
-                  . (" "
-                     mode-line-buffer-identification))))))
-      (with-current-buffer dir
-        (rename-buffer "*Dired-Side*")
-        (setq-local window-size-fixed 'width)))
-    (with-eval-after-load 'ace-window
-      (when (boundp 'aw-ignored-buffers)
-        (add-to-list 'aw-ignored-buffers "*Dired-Side*"))))
-
-  (defun prot/make-frame-floating-with-current-buffer ()
-    "Display the current buffer in a new floating frame.
-
-This passes certain parameters to the newly created frame:
-
-- use a different name than the default;
-- use a graphical frame;
-- do not display the minibuffer.
-
-The name is meant to be used by the external rules of my tiling
-window manager (BSPWM) to present the frame in a floating state.
-
-NOTE: For demo purposes."
-    (interactive)
-    (make-frame '((name . "my_float_window")
-                  (window-system . x)
-                  (minibuffer . nil))))
-
-  (defun prot/display-buffer-at-bottom ()
-    "Move the current buffer to the bottom of the frame.
-This is useful to take a buffer out of a side window.
-
-NOTE: For demo purposes."
-    (interactive)
-    (let ((buffer (current-buffer)))
-      (with-current-buffer buffer
-        (delete-window)
-        (display-buffer-at-bottom
-         buffer
-         `((window-parameters
-            . ((mode-line-format
-                . (" "
-                   mode-line-buffer-identification))))))))))
 #+end_src
 
 *** Window history (winner-mode)
@@ -8403,26 +8337,7 @@ As such, this piece of fumctionality makes for a natural complement to
   :config
   (setq-default scroll-preserve-screen-position t)
   (setq-default scroll-conservatively 1) ; affects `scroll-step'
-  (setq-default scroll-margin 0)
-
-  (define-minor-mode prot/scroll-centre-cursor-mode
-    "Toggle centred cursor scrolling behaviour."
-    :init-value nil
-    :lighter " S="
-    :global nil
-    (if prot/scroll-centre-cursor-mode
-        (setq-local scroll-margin (* (frame-height) 2)
-                    scroll-conservatively 0
-                    maximum-scroll-margin 0.5)
-      (dolist (local '(scroll-preserve-screen-position
-                       scroll-conservatively
-                       maximum-scroll-margin
-                       scroll-margin))
-        (kill-local-variable `,local))))
-
-  ;; C-c l is used for `org-store-link'.  The mnemonic for this is to
-  ;; focus the Line and also works as a variant of C-l.
-  :bind ("s-l" . prot/scroll-centre-cursor-mode))
+  (setq-default scroll-margin 0))
 #+end_src
 
 *** Delete selection
