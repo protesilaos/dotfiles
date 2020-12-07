@@ -3272,6 +3272,12 @@ overview of its components, which are contingent on other features:
 + Scroll lock :: Sometimes I want the cursor to remain centred on the
   screen.  This is controlled by the variable =prot-logos-scroll-lock=.
 
++ Modeline :: The variable =prot-logos-hidden-modeline= can be set to =t= to
+  hide the modeline while entering the focused state.  For me this is
+  mostly useful for presentations.  The technical implementation of this
+  idea is based on [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][a code snippet by William Ranking]] (who is the
+  developer of =olivetti-mode=).
+
 All those combined contribute to an outcome that is appropriate for long
 reading or writing sessions, as well as presentations.  I intentionally
 do not introduce any font-resizing effect, as my needs vary in that
@@ -3325,6 +3331,7 @@ these:
   :config
   (setq prot-logos-org-presentation-always nil)
   (setq prot-logos-scroll-lock nil)
+  (setq prot-logos-hidden-modeline nil)
   :bind ("<f9>" . prot-logos-focus-mode))
 #+end_src
 
@@ -7542,13 +7549,12 @@ tweaked to use a more appropriate string for its indicator and to apply
 colours that are designed specifically for the mode line (the default
 uses the generic font-lock warning face).
 
-I got the idea for =prot/mode-line-hidden-mode= from [[https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8][William Rankin]].  Note
-that William is the author of the wonderful =olivetti-mode= (see elsewhere
-in this document: [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (prot-logos.el)]]).
+Note that in [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (prot-logos.el)]] I
+provide a snippet that optionally toggles the visibility of the modeline
+while entering a bespoke "focus mode" for writing/reading.
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :commands prot/mode-line-hidden-mode
   :config
   (setq mode-line-percent-position '(-3 "%p"))
   (setq mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
@@ -7570,16 +7576,7 @@ in this document: [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions f
                   mode-line-modes
                   " "
                   mode-line-misc-info
-                  mode-line-end-spaces))
-
-  (define-minor-mode prot/mode-line-hidden-mode
-    "Toggle modeline visibility in the current buffer."
-    :init-value nil
-    :global nil
-    (if prot/mode-line-hidden-mode
-        (setq-local mode-line-format nil)
-      (kill-local-variable 'mode-line-format)
-      (force-mode-line-update))))
+                  mode-line-end-spaces)))
 #+end_src
 
 In the following sub-sections I provide customisations for some tools

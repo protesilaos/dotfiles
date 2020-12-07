@@ -43,7 +43,7 @@
   :group 'files)
 
 (defcustom prot-logos-org-presentation nil
-  "Whether Org files should always switch to presentation view.
+  "Org files should switch to presentation view.
 This concerns cases where variable `prot-logos-focus-mode' is set
 to non-nil and determines whether headings should be converted
 into pseudo slides and indentation be adjusted accordingly."
@@ -52,6 +52,11 @@ into pseudo slides and indentation be adjusted accordingly."
 
 (defcustom prot-logos-scroll-lock nil
   "Use centred scrolling while in focused view."
+  :type 'boolean
+  :group 'prot-logos)
+
+(defcustom prot-logos-hidden-modeline nil
+  "Hide the modeline."
   :type 'boolean
   :group 'prot-logos)
 
@@ -142,6 +147,19 @@ on its own."
       (scroll-lock-mode 1))))
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--scroll-lock)
+
+;; Based on William Rankin's code:
+;; https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8
+(defun prot-logos--hidden-modeline ()
+  "Toggle mode line visibility."
+  (when prot-logos-hidden-modeline
+    (if (or (eq mode-line-format nil)
+		    (not (bound-and-true-p prot-logos-focus-mode)))
+        (kill-local-variable 'mode-line-format)
+      (setq-local mode-line-format nil)
+      (force-mode-line-update))))
+
+(add-hook 'prot-logos--focus-mode-hook #'prot-logos--hidden-modeline)
 
 (provide 'prot-logos)
 ;;; prot-logos.el ends here
