@@ -3332,7 +3332,7 @@ aspect of my computing inside of Emacs.
 :CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
 :END:
 
-Some basic settings for this tool.  It is used by the diary (next
+Some basic settings for =calendar.el=.  It is used by the diary (next
 section), as well as all Org-mode facilities that require date/time
 input (see following sections).
 
@@ -3373,30 +3373,31 @@ input (see following sections).
 :END:
 
 Emacs comes with a built-in facility to record tasks and create
-notifications for them.  It is simply called =diary=.  I am still
-assessing its overall utility in my workflow, though these
-configurations should be good enough at this stage.
+notifications for them.  It is simply called =diary=.  And I have no use
+for it whatsoever, so let's make sure it is disabled.
 
 #+begin_src emacs-lisp
 (use-package diary-lib
-  :config
-  (setq diary-file "~/.emacs.d/diary")
-  (setq diary-entry-marker "diary")
-  (setq diary-show-holidays-flag t)
-  (setq diary-header-line-flag nil)
-  (setq diary-mail-addr "public@protesilaos.com")
-  (setq diary-mail-days 3)
-  (setq diary-number-of-entries 3)
-  (setq diary-comment-start ";")
-  (setq diary-comment-end "")
-  (setq diary-date-forms
-        '((day "/" month "[^/0-9]")
-          (day "/" month "/" year "[^0-9]")
-          (day " *" monthname " *" year "[^0-9]")
-          (monthname " *" day "[^,0-9]")
-          (monthname " *" day ", *" year "[^0-9]")
-          (year "[-/]" month "[-/]" day "[^0-9]")
-          (dayname "\\W"))))
+  :disabled
+  ;; :config
+  ;; (setq diary-file "~/.emacs.d/diary")
+  ;; (setq diary-entry-marker "diary")
+  ;; (setq diary-show-holidays-flag t)
+  ;; (setq diary-header-line-flag nil)
+  ;; (setq diary-mail-addr "public@protesilaos.com")
+  ;; (setq diary-mail-days 3)
+  ;; (setq diary-number-of-entries 3)
+  ;; (setq diary-comment-start ";")
+  ;; (setq diary-comment-end "")
+  ;; (setq diary-date-forms
+  ;;       '((day "/" month "[^/0-9]")
+  ;;         (day "/" month "/" year "[^0-9]")
+  ;;         (day " *" monthname " *" year "[^0-9]")
+  ;;         (monthname " *" day "[^,0-9]")
+  ;;         (monthname " *" day ", *" year "[^0-9]")
+  ;;         (year "[-/]" month "[-/]" day "[^0-9]")
+  ;;         (dayname "\\W")))
+  )
 #+end_src
 
 ** Org-mode (personal information manager)
