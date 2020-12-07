@@ -703,9 +703,7 @@ Relevant blog posts of mine:
          (prot-fonts-set-typeface-hook . prot-fonts-bold-face)
          ;; See theme section for this hook
          (modus-themes-after-load-theme-hook . prot-fonts-bold-face))
-  ;; Awkward key because I do not need it very often.  Maybe once a day.
-  ;; The "C-c f" is used elsewhere.
-  :bind ("C-c F" . prot-fonts-set-fonts-dwim))
+  :bind ("C-c f" . prot-fonts-set-fonts-dwim))
 #+end_src
 
 This is the source code of =prot-fonts.el= (you can always find the source
@@ -6816,7 +6814,7 @@ Otherwise an optional TAG symbol will suffice."
 
   :hook ((elfeed-search-mode-hook . prot/elfeed-feeds)
          (prot/elfeed-mpv-hook . prot/elfeed-mpv-buffer))
-  :bind (("C-c f" . elfeed)
+  :bind (("C-c e" . elfeed)
          :map elfeed-search-mode-map
          ("s" . prot/elfeed-search-tag-filter)
          ("w" . elfeed-search-yank)
