@@ -357,5 +357,46 @@ direction (negative is forward due to this being a
   (interactive "P")
   (backward-up-list (or arg -1)))
 
+;;;; Commands for paragraphs
+
+(defvar-local prot-simple--auto-fill-cycle-state 1
+  "Representation of `prot-simple-auto-fill-cycle' state.")
+
+;; Based on gungadin-cylocal.el (private communication with Christopher
+;; Dimech---disclosed with permission).
+;;;###autoload
+(defun prot-simple-auto-fill-cycle ()
+  "Cycles auto fill for comments, everything, nothing."
+  (interactive)
+  (let ((n prot-simple--auto-fill-cycle-state))
+    (pcase n
+      (2
+       (message "Auto fill %s" (propertize "buffer" 'face 'warning))
+       (setq-local comment-auto-fill-only-comments nil)
+       (setq-local prot-simple--auto-fill-cycle-state (1+ n)))
+      (3
+       (message "Disable auto fill")
+       (auto-fill-mode 0)
+       (setq-local prot-simple--auto-fill-cycle-state (1+ n)))
+      (_
+       (message "Auto fill %s" (propertize "comments" 'face 'success))
+       (setq-local comment-auto-fill-only-comments t)
+       (auto-fill-mode 1)
+       (setq-local prot-simple--auto-fill-cycle-state 2)))))
+
+;;;###autoload
+(defun prot-simple-unfill-region-or-paragraph (&optional beg end)
+  "Unfill paragraph or, when active, the region.
+Join all lines in region delimited by BEG and END, if active,
+while respecting any empty lines (so multiple paragraphs are not
+joined, just unfilled).  If no region is active, operate on the
+paragraph.  The idea is to produce the opposite effect of both
+`fill-paragraph' and `fill-region'."
+  (interactive "r")
+  (let ((fill-column most-positive-fixnum))
+    (if (use-region-p)
+        (fill-region beg end)
+      (fill-paragraph))))
+
 (provide 'prot-simple)
 ;;; prot-simple.el ends here
