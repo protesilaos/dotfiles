@@ -330,70 +330,74 @@ elements that I do not want to keep around, as well as re-bind or free
 up some common key combinations.
 
 #+begin_src emacs-lisp
-  (use-package prot-simple
-    :straight (:type built-in)
-    :demand
-    :init
-    ;; Configure some common Emacs elements
-    (menu-bar-mode -1)
-    (tool-bar-mode -1)
-    (scroll-bar-mode -1)
-    (setq use-file-dialog nil)
-    (setq use-dialog-box t)               ; only for mouse events
-    (setq inhibit-splash-screen t)
-    :config
-    (setq prot-simple-insert-pair-alist
-	  '(("' Single quote" . (39 39))           ; ' '
-	    ("\" Double quotes" . (34 34))         ; " "
-	    ("` Elisp quote" . (96 39))            ; ` '
-	    ("‘ Single apostrophe" . (8216 8217))  ; ‘ ’
-	    ("“ Double apostrophes" . (8220 8221)) ; “ ”
-	    ("( Parentheses" . (40 41))            ; ( )
-	    ("{ Curly brackets" . (123 125))       ; { }
-	    ("[ Square brackets" . (91 93))        ; [ ]
-	    ("< Angled brackets" . (60 62))        ; < >
-	    ("« Εισαγωγικά Gr quote" . (171 187))  ; « »
-	    ("= Equals signs" . (61 61))           ; = =
-	    ("* Asterisks" . (42 42))              ; * *
-	    ("_ underscores" . (95 95))))          ; _ _
-    :bind (;; General commands
-	   ("C-z" . nil)
-	   ("C-x C-z" . nil)
-	   ("C-h h" . nil)
-	   ("M-`" . nil)
-	   ("s-h" . prot-simple-describe-symbol)
-	   ("s-H" . (lambda ()
-		      (interactive)
-		      (prot-simple-describe-symbol '(4))))
-	   ;; Commands for lines
-	   ("C-S-w" . prot-simple-copy-line-or-region)
-	   ("C-S-y" . prot-simple-yank-replace-line-or-region)
-	   ("M-SPC" . cycle-spacing)
-	   ("M-o" . delete-blank-lines)   ; alias for C-x C-o
-	   ("M-k" . prot-simple-kill-line-backward)
-	   ("C-S-n" . prot-simple-multi-line-next)
-	   ("C-S-p" . prot-simple-multi-line-prev)
-	   ("<C-return>" . prot-simple-new-line-below)
-	   ("<C-S-return>" . prot-simple-new-line-above)
-	   ;; Commands for text insertion or manipulation
-	   ("C-'" . prot-simple-insert-pair-completion)
-	   ("M-'" . prot-simple-insert-pair-completion)
-	   ("<C-M-backspace>" . backward-kill-sexp)
-	   ("M-c" . capitalize-dwim)
-	   ("M-l" . downcase-dwim)        ; "lower" case
-	   ("M-u" . upcase-dwim)
-	   ;; Commands for object transposition
-	   ("C-t" . prot-simple-transpose-chars)
-	   ("C-x C-t" . prot-simple-transpose-lines)
-	   ("C-S-t" . prot-simple-transpose-paragraphs)
-	   ("C-x M-t" . prot-simple-transpose-sentences)
-	   ("C-M-t" . prot-simple-transpose-sexps)
-	   ("M-t" . prot-simple-transpose-words)
-	   ;; Commands for marking objects
-	   ("M-@" . prot-simple-mark-word)       ; replaces `mark-word'
-	   ("C-M-SPC" . prot-simple-mark-construct-dwim)
-	   ("C-M-d" . prot-simple-downward-list))
-    :hook (kill-emacs-hook . prot-common-rebuild-emacs-init))
+(use-package prot-simple
+  :straight (:type built-in)
+  :demand
+  :init
+  ;; Configure some common Emacs elements
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (setq use-file-dialog nil)
+  (setq use-dialog-box t)               ; only for mouse events
+  (setq inhibit-splash-screen t)
+  :config
+  (setq prot-simple-insert-pair-alist
+	    '(("' Single quote" . (39 39))           ; ' '
+	      ("\" Double quotes" . (34 34))         ; " "
+	      ("` Elisp quote" . (96 39))            ; ` '
+	      ("‘ Single apostrophe" . (8216 8217))  ; ‘ ’
+	      ("“ Double apostrophes" . (8220 8221)) ; “ ”
+	      ("( Parentheses" . (40 41))            ; ( )
+	      ("{ Curly brackets" . (123 125))       ; { }
+	      ("[ Square brackets" . (91 93))        ; [ ]
+	      ("< Angled brackets" . (60 62))        ; < >
+	      ("« Εισαγωγικά Gr quote" . (171 187))  ; « »
+	      ("= Equals signs" . (61 61))           ; = =
+	      ("* Asterisks" . (42 42))              ; * *
+	      ("_ underscores" . (95 95))))          ; _ _
+  :bind (;; General commands
+	     ("C-z" . nil)
+	     ("C-x C-z" . nil)
+	     ("C-h h" . nil)
+	     ("M-`" . nil)
+	     ("s-h" . prot-simple-describe-symbol)
+	     ("s-H" . (lambda ()
+		            (interactive)
+		            (prot-simple-describe-symbol '(4))))
+	     ;; Commands for lines
+	     ("C-S-w" . prot-simple-copy-line-or-region)
+	     ("C-S-y" . prot-simple-yank-replace-line-or-region)
+	     ("M-SPC" . cycle-spacing)
+	     ("M-o" . delete-blank-lines)   ; alias for C-x C-o
+	     ("M-k" . prot-simple-kill-line-backward)
+	     ("C-S-n" . prot-simple-multi-line-next)
+	     ("C-S-p" . prot-simple-multi-line-prev)
+	     ("<C-return>" . prot-simple-new-line-below)
+	     ("<C-S-return>" . prot-simple-new-line-above)
+	     ;; Commands for text insertion or manipulation
+	     ("C-'" . prot-simple-insert-pair-completion)
+	     ("M-'" . prot-simple-insert-pair-completion)
+	     ("<C-M-backspace>" . backward-kill-sexp)
+	     ("M-c" . capitalize-dwim)
+	     ("M-l" . downcase-dwim)        ; "lower" case
+	     ("M-u" . upcase-dwim)
+	     ;; Commands for object transposition
+	     ("C-t" . prot-simple-transpose-chars)
+	     ("C-x C-t" . prot-simple-transpose-lines)
+	     ("C-S-t" . prot-simple-transpose-paragraphs)
+	     ("C-x M-t" . prot-simple-transpose-sentences)
+	     ("C-M-t" . prot-simple-transpose-sexps)
+	     ("M-t" . prot-simple-transpose-words)
+	     ;; Commands for marking objects
+	     ("M-@" . prot-simple-mark-word)       ; replaces `mark-word'
+	     ("C-M-SPC" . prot-simple-mark-construct-dwim)
+	     ("C-M-d" . prot-simple-downward-list)
+         ;; Commands for paragraphs
+         ("M-Q" . prot-simple-unfill-region-or-paragraph)
+         ;; Commands for windows
+         ("s-m" . prot-simple-monocle))
+  :hook (kill-emacs-hook . prot-common-rebuild-emacs-init))
 #+end_src
 
 These are the contents of the =prot-simple.el= library (find the file in
@@ -8800,28 +8804,15 @@ The adaptive mode improves the handling of things like bulleted and
 numbered lists, where it recognises the text's prefix and tries to align
 to it rather than the absolute beginning of the line.
 
+Note that [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common custom functions (prot-simple.el)]] contains some
+commands related to auto-fill.
+
 #+begin_src emacs-lisp
 (use-package emacs
   :diminish auto-fill-function
   :config
   (setq adaptive-fill-mode t)
-
-  (defun prot/unfill-region-or-paragraph (&optional region)
-    "Unfill paragraph or, when active, the region.
-Join all lines in a region, if active, while respecting any empty
-lines (so multiple paragraphs are not joined, just unfilled).  If
-no region is active, operate on the paragraph.  The idea is to
-produce the opposite effect of both `fill-paragraph' and
-`fill-region'."
-    (interactive)
-    (let ((fill-column most-positive-fixnum))
-      (if (use-region-p)
-          (fill-region (region-beginning) (region-end))
-        (fill-paragraph nil region))))
-
-  :hook (text-mode-hook . (lambda ()
-                            (turn-on-auto-fill)))
-  :bind ("M-Q" . prot/unfill-region-or-paragraph))
+  :hook (text-mode-hook . turn-on-auto-fill))
 #+end_src
 
 ** Recognise subwords
