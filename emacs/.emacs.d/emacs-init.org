@@ -2043,6 +2043,24 @@ Meant to economise on key bindings."
          ("t" . toggle-truncate-lines)))
 #+end_src
 
+*** Cross-references (xref.el)
+:PROPERTIES:
+:CUSTOM_ID: h:594bca38-542c-4aac-95f5-349f034c6802
+:END:
+
+This is a tool that gets used by a variety of tools, including
+=project.el= (see [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  Xref
+provides helpful commands for code navigation and discovery, such as
+=xref-find-definitions= (=M-.=) and its counterpart =xref-pop-marker-stack=
+(=M-,=).  I like the way it is set up by default and have no need to
+configure it further.
+
+#+begin_src emacs-lisp
+(use-package xref
+  :config
+  (setq xref-search-program 'ripgrep))  ; Emacs 28
+#+end_src
+
 *** Regular expressions: re-builder and visual-regexp
 :PROPERTIES:
 :CUSTOM_ID: h:6c6759c8-3ae3-40b0-8356-05cc0975e12a
