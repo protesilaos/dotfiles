@@ -37,7 +37,14 @@
   "Test if N is an even number."
   (if (numberp n)
       (= (% n 2) 0)
-    (user-error "%s is not a number" n)))
+    (error "%s is not a number" n)))
+
+;;;###autoload
+(defun prot-common-number-integer-p (n)
+  "Test if N is an integer."
+  (if (integerp n)
+      n
+    (error "%s is not an integer" n)))
 
 ;;;###autoload
 (defun prot-common-minor-modes-active ()
