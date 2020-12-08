@@ -701,7 +701,7 @@ Relevant blog posts of mine:
   :bind ("C-c f" . prot-fonts-set-fonts-dwim))
 #+end_src
 
-This is the source code of =prot-fonts.el= (you can always find the source
+This is the source code of =prot-fonts.el= (you can always find the file
 if you directly clone [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]).
 
 #+include: straight/repos/prot-lisp/prot-fonts.el src emacs-lisp :tangle no
@@ -3495,7 +3495,8 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 
 #+begin_src emacs-lisp
 (use-package org
-  :straight t                           ; Get Org from its source
+  :straight (:host nil :type git
+             :repo "https://code.orgmode.org/bzg/org-mode") ; Get Org from its source
   ;; ;; Use this instead of the above if you want the built-in version.
   ;; :straight (:type built-in)
   :init
