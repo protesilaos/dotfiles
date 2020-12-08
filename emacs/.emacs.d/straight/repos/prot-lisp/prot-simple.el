@@ -410,7 +410,7 @@ paragraph.  The idea is to produce the opposite effect of both
   "Toggle between multiple windows and single window.
 This is the equivalent of maximising a window.  Tiling window
 managers such as DWM, BSPWM refer to this state as 'monocle'."
-  :lighter " [M]"
+  :lighter " -M-"
   :global nil
   (let ((win prot-simple--windows-current))
     (if (one-window-p)

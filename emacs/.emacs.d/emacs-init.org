@@ -3303,8 +3303,7 @@ these:
 
 (use-package org-tree-slide
   :straight t
-  :after org
-  :commands prot/org-presentation-mode
+  :diminish
   :config
   (setq org-tree-slide-breadcrumbs nil)
   (setq org-tree-slide-header nil)
@@ -3328,8 +3327,9 @@ these:
 
 (use-package prot-logos
   :straight (:type built-in)
+  :diminish visual-line-mode
   :config
-  (setq prot-logos-org-presentation-always nil)
+  (setq prot-logos-org-presentation nil)
   (setq prot-logos-scroll-lock nil)
   (setq prot-logos-hidden-modeline nil)
   :bind ("<f9>" . prot-logos-focus-mode))
