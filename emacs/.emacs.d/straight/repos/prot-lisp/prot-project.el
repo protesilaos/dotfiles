@@ -50,6 +50,13 @@ A value of 0 means 'unlimited'."
   :type 'integer
   :group 'prot-project)
 
+(defcustom prot-project-large-file-lines 1000
+  "How many lines constitute a 'large file' (integer).
+This determines whether some automatic checks should be executed
+or not, such as `prot-project-flymake-mode-activate'."
+  :type 'integer
+  :group 'prot-project)
+
 ;; Copied from Manuel Uberti:
 ;; <https://www.manueluberti.eu/emacs/2020/11/14/extending-project/>.
 ;;
@@ -168,7 +175,7 @@ The log is limited to the integer specified by
          (default-directory dir) ; otherwise fails at spontaneous M-x calls
          (backend (vc-responsible-backend dir))
          (num prot-project-commit-log-limit)
-         (int (if (integerp num) num (error "%s is not an integer" num)))
+         (int (prot-common-number-integer-p num))
          (limit (if (= int 0) t int))
          (diffs (if arg 'with-diff nil))
          (vc-log-short-style (unless diffs '(directory))))
@@ -199,6 +206,19 @@ Basically switches to a new branch or tag."
          (dir (cdr pr)))
     (magit-status dir)))
 
+(defun prot-project--max-line ()
+  "Return the last line's number."
+  (save-excursion
+    (goto-char (point-max))
+    (line-number-at-pos)))
+
+(defun prot-project--large-file-p (&optional n)
+  "Check if lines exceed `prot-project-large-file-lines'.
+Optional N integer overrides that variable's value."
+  (let* ((num (or n prot-project-large-file-lines))
+         (int (prot-common-number-integer-p num)))
+    (> (prot-project--max-line) int)))
+
 ;; Copied from Manuel Uberti, whom I had inspired with an earlier
 ;; version of this, and adapted accordingly:
 ;; <https://www.manueluberti.eu/emacs/2020/11/21/flymake-projects/>.
@@ -213,6 +233,7 @@ Basically switches to a new branch or tag."
         (modes (prot-common-minor-modes-active)))
     (if (and (eq buffer-read-only nil)
              (member pr known-projects)
+             (not (prot-project--large-file-p))
              (not (member 'org-src-mode modes))
              (not (string-match-p "edit-indirect" (buffer-name))))
         (flymake-mode 1)

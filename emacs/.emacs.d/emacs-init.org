@@ -1459,6 +1459,7 @@ referenced in the source code below this configuration block):
   :init
   (setq prot-project-project-roots '("~/Git/Projects/" "~/Git/build/"))
   (setq prot-project-commit-log-limit 25)
+  (setq prot-project-large-file-lines 1000)
   (setq project-switch-commands
         '((?f "File" project-find-file)
           (?s "Subdir" prot-project-find-subdir)
