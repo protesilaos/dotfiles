@@ -504,7 +504,6 @@ and wish to get a glimpse of how much work goes into this project:
 (use-package modus-themes
   :straight (:local-repo "modus-themes")
   :init
-  (setq custom-safe-themes t) ; Due to my dev needs
   (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs t
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -520,9 +519,7 @@ and wish to get a glimpse of how much work goes into this project:
         modus-themes-diffs 'bg-only ; {nil,'desaturated,'fg-only,'bg-only}
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-headings ; Read the manual for this one
-        '((1 . section)
-          (2 . section-no-bold)
-          (t . rainbow-line-no-bold))
+        '((t . nil))
         modus-themes-variable-pitch-headings nil
         modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
@@ -546,7 +543,7 @@ and wish to get a glimpse of how much work goes into this project:
 
   ;; Also check my package declaration for `prot-fonts' because I use
   ;; the `modus-themes-after-load-theme-hook' for some typeface-related
-  ;; tweaks (because those are made at the "face" level).
+  ;; tweaks (as those are made at the "face" level).
   :hook ((after-init-hook . modus-themes-load-operandi)
          (modus-themes-after-load-theme-hook . prot/modus-themes-custom-faces))
   :bind ("<f5>" . modus-themes-toggle))
@@ -671,7 +668,7 @@ Relevant blog posts of mine:
   :init
   (setq prot-fonts-typeface-sets-alist
         '((laptop . (105 "Hack" "DejaVu Sans Condensed"))
-          (desktop . (110 "Hack" "DejaVu Sans Condensed"))
+          (desktop . (110 "Hack" "DejaVu Sans"))
           (reader . (150 "Iosevka Comfy" "FiraGO"))
           (presentation . (160 "Hack" "DejaVu Sans"))))
   (setq prot-fonts-monospaced-list
@@ -2735,6 +2732,7 @@ point for "advanced search" methods, inspired by the default for =occur=
 (=M-s o=) as well as a few others.
 
 #+begin_src emacs-lisp
+;; TODO 2020-12-09: put all my code in prot-ibuffer.el and review it
 (use-package ibuffer
   :config
   (setq ibuffer-expert t)
@@ -5368,6 +5366,7 @@ default and /I might still review them further/.  When in doubt, stick
 with the defaults.
 
 #+begin_src emacs-lisp
+;; TODO 2020-12-09: put all my code in prot-vc.el and review it
 (use-package vc
   :config
   (setq vc-find-revision-no-save t)
