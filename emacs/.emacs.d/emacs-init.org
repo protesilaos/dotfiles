@@ -2190,48 +2190,60 @@ Check some of my videos:
 
 The options here are meant to do the following:
 
-+ Copy and delete recursively.  Do not ask about it.
-+ Search only file names while point is there, else the rest (useful
-  when using the detailed view).
++ Copy and delete recursively.  No need to be prompted about each
+  action.
+
++ While in detailed view, search only file names while point is on one
+  of them, else apply the query to all the rest.
+
 + Deletion sends items to the system's Trash, making it safer than the
   standard =rm=.
-+ Prettify output.  Sort directories first.  Show dotfiles first.  Omit
-  implicit directories (the single and double dots).  Use human-readable
-  size units.  There are also options for tweaking the behaviour of
-  =find-name-dired=, in the same spirit.  To learn everything about
-  these switches, you need to read the manpage of =ls=.  You can do it
-  with =M-x man RET ls=.
-+ Hide all the verbose details by default (permissions, size, etc.).
-  These can easily be toggled on using the left parenthesis =(= inside a
-  dired buffer.  Also enable highlighting of the current line, which
-  makes it even easier to spot the current item (I do not enable this
-  globally, because I only want it for per-line interfaces, such as
-  Dired's, but not for per-character ones, such as text editing).
-+ While having two dired buffers side-by-side, the rename and copy
-  operations of one are easily propagated to the other.  Dired is smart
-  about your intentions and uses the adjacent Dired buffer's path as a
-  prefix when performing such actions.
+
++ Reformat output.  Sort directories first.  Show dotfiles and place
+  them before anything else.  Omit implicit directories (the single and
+  double dots).  Use human-readable size units.  There are also options
+  for tweaking the behaviour of =find-name-dired=, in the same spirit,
+  even though I no longer use that, due to my =prot-dired.el= (more
+  below).  To learn everything about these switches, you need to read
+  the manpage of =ls=.  You can do so with =M-x man RET ls=.
+
+  - Note that =dired-listing-switches= and =find-ls-option= are configured
+    to show hidden directories and files /before/ their non-hidden
+    counterparts.  If you want to reverse this order, you must include
+    the =-X= option (such as =-AFXhlv --group-directories-first=).
+
++ Hide all the details by default (permissions, size, etc.).  Those can
+  easily be toggled on using the left parenthesis =(=.  Also enable
+  highlighting of the current line, which makes it even easier to spot
+  the current item (I do not enable this globally, because I only want
+  it for line-oriented interfaces, such as Dired's, but not for text
+  editing).
+
++ While having two dired buffers open, the rename and copy operations
+  will place the path of the inactive one as the target destination.
+  When multiple dired buffers are present, this works between the curent
+  and most recently used ones.
+
 + For Emacs 27.1, Dired can automatically create destination directories
-  for its copy and remove operations.  So you can, for example, rename
+  for its copy and rename operations.  So you can, for example, move
   =file= to =/non-existent-path/file= and you will get what you want right
   away.
+
 + For Emacs 27.1, renaming a file of a version-controlled repository
   (git) will be done using the appropriate VC mechanism.
-+ Let the relevant =find= commands use case-insensitive names.
-+ Enable asynchronous mode.  This is subject to change, as I need to
-  test it a bit more.
-
-Note that =dired-listing-switches= and =find-ls-option= are configured to
-show hidden directories and files /before/ their non-hidden counterparts.
-If you want to reverse this order, you must append the =-X= option (such
-as =-AFXhlv --group-directories-first=).
 
 The commands with the =contrib/= prefix in =dired-aux= are copied from the
 [[https://github.com/oantolin/emacs-config][Emacs configurations of Omar Antolín Camarena]].  They let you insert the
 path of a bookmarked directory while performing an action such as
-copying and renaming/moving a file.  While my =prot/dired-fd-*= are
-conceptually similar to functions in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][projects and directory trees]] as
-well as the ones in [[#h:06290f9c-491c-45b2-b213-0248f890c83d][the Ibuffer section]].
+copying and renaming/moving a file.
+
+While =prot-dired.el= (reproduced after the package configurations)
+contains a set of commands that are conceptually related to those
+present in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]], as well as the
+ones in [[#h:06290f9c-491c-45b2-b213-0248f890c83d][the Ibuffer section]].  In short, they leverage the =fd= executable
+to recursively search for directories or directories+files from the root
+of the current version-controlled directory tree, if inside one, or just
+the present working directory.
 
 Finally, to see how I get commits for marked files that belong to a
 given version-controlled (git) repo, see my =prot/vc-print-log= from the
@@ -2258,48 +2270,6 @@ section of this document on the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Gener
   (setq dired-create-destination-dirs 'ask)
   (setq dired-vc-rename-file t)
 
-  (defmacro prot/dired-fd (name doc prompt &rest flags)
-    "Make commands for selecting 'fd' results with completion.
-NAME is how the function should be named.  DOC is the function's
-documentation string.  PROMPT describes the scope of the query.
-FLAGS are the command-line arguments passed to the 'fd'
-executable, each of which is a string."
-    `(defun ,name (&optional arg)
-       ,doc
-       (interactive "P")
-       (let* ((vc (vc-root-dir))
-              (dir (expand-file-name (or vc default-directory)))
-              (regexp (read-regexp
-                       (format "%s matching REGEXP in %s: " ,prompt
-                               (propertize dir 'face 'bold))))
-              (names (process-lines "fd" ,@flags regexp dir))
-              (buf "*FD Dired*"))
-         (if names
-             (if arg
-                 (dired (cons (generate-new-buffer-name buf) names))
-               (find-file
-                (completing-read (format "Items matching %s (%s): "
-                                         (propertize regexp 'face 'success)
-                                         (length names))
-                                 names nil t))))
-         (user-error (format "No matches for « %s » in %s" regexp dir)))))
-
-  (prot/dired-fd
-   prot/dired-fd-dirs
-   "Search for directories in VC root or PWD.
-With \\[universal-argument] put the results in a `dired' buffer.
-This relies on the external 'fd' executable."
-   "Subdirectories"
-   "-i" "-H" "-a" "-t" "d" "-c" "never")
-
-  (prot/dired-fd
-   prot/dired-fd-files-and-dirs
-   "Search for files and directories in VC root or PWD.
-With \\[universal-argument] put the results in a `dired' buffer.
-This relies on the external 'fd' executable."
-   "Files and dirs"
-   "-i" "-H" "-a" "-t" "d" "-t" "f" "-c" "never")
-
   (defun contrib/cdb--bookmarked-directories ()
     (bookmark-maybe-load-default-file)
     (cl-loop for (name . props) in bookmark-alist
@@ -2317,15 +2287,18 @@ This relies on the external 'fd' executable."
       (delete-region (minibuffer-prompt-end) (point-max)))
     (insert (cdr (assoc bm (contrib/cdb--bookmarked-directories)))))
 
-  :bind (("M-s d" .  prot/dired-fd-dirs)
-         ("M-s z" . prot/dired-fd-files-and-dirs)
-         :map dired-mode-map
-         ("C-+" . dired-create-empty-file)
-         ("M-s f" . nil)
-         :map minibuffer-local-filename-completion-map
-         ("C-c d" . contrib/cd-bookmark)))
+  :bind (:map dired-mode-map
+              ("C-+" . dired-create-empty-file)
+              ("M-s f" . nil)
+              :map minibuffer-local-filename-completion-map
+              ("C-c d" . contrib/cd-bookmark)))
 
-;; NOTE de facto deprecated because of my `prot/dired-fd' functions
+(use-package prot-dired
+  :straight (:type built-in)
+  :bind (("M-s d" .  prot-dired-fd-dirs)
+         ("M-s z" . prot-dired-fd-files-and-dirs)))
+
+;; NOTE: deprecated in favour of prot-dired
 (use-package find-dired
   :disabled
   :after dired
@@ -2341,13 +2314,9 @@ This relies on the external 'fd' executable."
   :hook (dired-mode-hook . dired-async-mode))
 #+end_src
 
-*Pro tip* while renaming or copying a file, =M-n= will return its original
-name, thus allowing you to easily {pre,ap}pend to it.  This leverages an
-intriguing concept of Emacs' design called "future history" (because =M-p=
-goes back to your previous entries).  The notion of the future history,
-when applied, is basically an educated guess of what the user would want
-to do in the current context, given that they are not searching through
-their previous actions.
+These are the contents of =prot-dired.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-dired.el src emacs-lisp :tangle no
 
 *** Narrowed dired
 :PROPERTIES:
