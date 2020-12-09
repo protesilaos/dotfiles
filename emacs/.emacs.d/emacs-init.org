@@ -5162,69 +5162,83 @@ performance by carrying out the relevant tasks in a non-blocking way.
 :CUSTOM_ID: h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7
 :END:
 
-*** Diff-mode
+*** Diff-mode (and prot-diff.el extensions)
 :PROPERTIES:
 :CUSTOM_ID: h:2ff46d23-09d5-4d92-b0af-2339dc19719f
 :END:
 
-This covers the standard =diff-mode=, which I use when interfacing with
-the built-in Version Control framework (see the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on VC]]), but also
-find while browsing various newsgroups via Gnus (see [[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).
+This covers the standard =diff-mode.el=, which I use quite often, such as
+while interfacing with the built-in Version Control framework (see the
+[[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on VC]]), or while browsing various code-related newsgroups
+through Gnus (refer to the [[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).
 
-Overview of these tweaks:
+Overview of my preferences for how diffs should look:
 
 + Always start the buffer in a read-only state.  A typo will mess things
   up when trying to apply a patch.
-+ After applying a diff hunk move on to the next one.
++ After applying a diff hunk (=diff-apply-hunk= with =C-c C-a=) move on to
+  the next one.
 + Update hunk headers automatically following an edit to the diff.
 + Do not show word-wise ("refined") changes upon activation.  I prefer
-  to do so manually with =C-c C-b= for the current diff hunk.  All such
-  highlights are removed if you generate the buffer again (with =g= as
-  expected) and the default is to not show word-wise changes.
+  to do so manually.  All such highlights are removed if you generate
+  the buffer again (with =g= as expected) and the default is to not show
+  word-wise changes.
 + Do not prettify headers.  I like the standard "patch" looks.  It also
-  makes it easier to copy the diff elsewhere such as in an email or on
-  an issue tracker.
-+ Do not do any further syntax highlighting.  This is not the place to
-  check your pretty code, plus it will most likely render colours highly
-  inaccessible.
+  makes it easier to copy the diff elsewhere.
 
-Basics for =diff-mode= buffers (as always you can learn more about the
-current buffer's major mode with =C-h m=---read [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]] in
-the FAQ below):
+Now some notes on my =prot-diff.el= extensions, combined with a
+description of the basics of =diff-mode= (as always you can get
+documentation about the current buffer's major mode with =C-h m=---read
+[[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]] in the FAQ section appended to this document):
+
++ =prot-diff-buffer-dwim= will produce a diff that compares the current
+  buffer to the last saved state of the underlying file.  If the buffer
+  has no unsaved edits, the command will produce a diff that compares
+  the file to its last registered version-controlled state.  Calling the
+  command with an optional prefix argument (=C-u=) will enable word-wise
+  highlighting across the diff.
+
++ =prot-diff-refine-dwim= is how I manually control word-wise diff
+  highlights.  By default, the command will turn on refined changes
+  throughout the buffer.  If called with an optional prefix argument, it
+  will operate only on the diff hunk at point.  If the region is active,
+  it will instead apply fontification to the diff hunks encompassed by
+  the region.  And if word-wise highlights are already present, the
+  command will remove everything and leave point back where it was.
+
++ =prot-diff-narrow-dwim= narrows to the diff hunk at point.  If narrowing
+  is already present, it widens the buffer.  When invoked with an
+  optional prefix argument, it narrows to the current file.
 
 + =C-c C-c= or =M-o= takes you to the point of the changes in the source
   file.  If you run this of the diff hunk's heading, you go to the
   beginning of the context.  But if you place the point somewhere inside
   of the diff's added changes or context, you will visit that exact
   position in the original file (does not work for removed text because
-  technically it does not exist).  Awesome feature!
+  technically it does not exist).
+
 + When working with patches to source code, which are distributed
   e.g. through email, you can apply the current hunk with =C-c C-a= or
   test for compatibility with =C-c C-t=.  This is a nice way to easily
   merge contributions from others, without having to go through the
   workflow of some proprietary Git/Version-Control forge.
-+ By default =C-c C-n= offers a convenience wrapper for Emacs' narrowing
-  commands (such as =C-x n n= for =narrow-to-region=.  The standard is to
-  narrow to the current diff hunk.  With the =C-u= prefix it will narrow
-  to the current file instead (obviously this only makes sense when
-  inspecting a multi-file set of changes).  If you use the default, you
-  must manually exit narrowing with the standard =C-x n w=, but for this
-  case I prefer =prot/diff-restrict-view-dwim= which will widen the view
-  when narrowing is already in effect, else narrow as intended (I bind
-  it to =C-c C-n= to replace the original).
-+ With =prot/diff-buffer-with-file= I have a simple wrapper around a
-  built-in command that compares a buffer to its underlying file.  This
-  compares the changes made since the last save and my wrapper is about
-  picking the current buffer directly.  If there are no differences,
-  then the command with run =vc-diff= instead.  Note that in my
-  configurations for the [[*Generic version control (VC) framework][Generic version control (VC) framework]], I remap
-  the keys that pertain to diffs.
+
 + With =M-n= and =M-p= you move between hunks.  With =M-}= and =M-{= or =M-N=, =M-P=
   do the same between files.
 
+The =prot-diff-*= commands are part of my =prot-diff.el= library, reproduced
+in its entirety after this set of package declarations.
+
+*Pro tip:* enable =outline-minor-mode= to make diff sections foldable.
+Check [[#h:a8e737b8-7c90-4c68-8814-acf2f637ffa1][Outline mode, outline minor mode, and extras (prot-outline.el)]].
+
+Also read these sections:
+
++ [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]].
++ [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Generic version control (VC) framework]].
+
 #+begin_src emacs-lisp
-(use-package diff
-  :commands prot/diff-refine-buffer
+(use-package diff-mode
   :config
   (setq diff-default-read-only t)
   (setq diff-advance-after-apply-hunk t)
@@ -5232,71 +5246,21 @@ the FAQ below):
   ;; The following are from Emacs 27.1
   (setq diff-refine nil)                ; I do it on demand
   (setq diff-font-lock-prettify nil)    ; better for patches
-  (setq diff-font-lock-syntax 'hunk-also)
+  (setq diff-font-lock-syntax 'hunk-also))
 
-  (defun prot/diff-buffer-with-file (&optional arg)
-    "Compare buffer to its file, else run `vc-diff'.
-With \\[universal-argument] also enable highlighting of word-wise
-changes, local to the current buffer."
-    (interactive "P")
-    (let ((buf nil))     ; this method will "fail" if multi diff buffers
-      (if (buffer-modified-p)
-          (progn
-            (diff-buffer-with-file (current-buffer))
-            (setq buf "*Diff*"))
-        (vc-diff)
-        (setq buf "*vc-diff*"))
-      (when arg
-        (with-current-buffer (get-buffer buf)
-          (setq-local diff-refine 'font-lock)))))
-
-  (defun prot/diff-refine-buffer ()
-    "Produce word-wise, 'refined' diffs in `diff-mode' buffer.
-Also see `prot/diff-refine-hunk-or-buf' that is a wrapper for the
-current command."
-    (interactive)
-    (let ((position (point)))
-      (when (derived-mode-p 'diff-mode)
-        (setq-local diff-refine 'font-lock)
-        (font-lock-flush (point-min) (point-max))
-        (goto-char position))))
-
-  (defun prot/diff-refine-hunk-or-buf (&optional arg)
-    "Apply word-wise, 'refined' diffs to hunk or buffer.
-With prefix ARG (\\[universal-argument]), refine the entire
-buffer, else the diff hunk at point.
-
-This is a wrapper around `prot/diff-refine-buffer' and
-`diff-refine-hunk', meant to economise on key bindings."
-    (interactive "P")
-    (if arg
-        (prot/diff-refine-buffer)
-      (diff-refine-hunk)))
-
-  (defun prot/diff-restrict-view-dwim (&optional arg)
-    "Use `diff-restrict-view', or widen when already narrowed.
-By default the narrowing effect applies to the focused diff hunk.
-With \\[universal-argument] do it for the current file instead."
-    (interactive "P")
-    (when (derived-mode-p 'diff-mode)
-      (if (buffer-narrowed-p)
-          (progn
-            (widen)
-            (message "Widened the view"))
-        (if arg
-            (progn
-              (diff-restrict-view arg)
-              (message "Narrowed to file"))
-          (diff-restrict-view)
-          (message "Narrowed to diff hunk")))))
-
-  ;; `prot/diff-buffer-with-file' replaces the default for `vc-diff'
-  ;; (which I bind to another key---see VC section).
-  :bind (("C-x v =" . prot/diff-buffer-with-file)
+(use-package prot-diff
+  :straight (:type built-in)
+  ;; `prot-diff-buffer-dwim' replaces the default for `vc-diff' (which I
+  ;; bind to another key---see VC section).
+  :bind (("C-x v =" . prot-diff-buffer-dwim)
          :map diff-mode-map
-         ("C-c C-b" . prot/diff-refine-hunk-or-buf) ; replace `diff-refine-hunk'
-         ("C-c C-n" . prot/diff-restrict-view-dwim)))
+         ("C-c C-b" . prot-diff-refine-dwim) ; replace `diff-refine-hunk'
+         ("C-c C-n" . prot-diff-narrow-dwim)))
 #+end_src
+
+This is =prot-diff.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-diff.el src emacs-lisp :tangle no
 
 *** Generic version control (VC) framework
 :PROPERTIES:
