@@ -1150,7 +1150,37 @@ inside the minibuffer.  I invoke the toggle whenever the need arises.
               ("C-v" . icomplete-vertical-toggle)))
 #+end_src
 
-*** Enhanced minibuffer commands (Consult)
+*** Completion annotations (marginalia)
+:PROPERTIES:
+:CUSTOM_ID: h:09d657c7-eb4d-4fe3-987a-4a2cf419bb40
+:END:
+
+This is a utility jointly developed by Daniel Mendler and Omar Antolín
+Camarena that provides annotations to completion candidates.  It is
+meant to be a framework-agnostic tool, so it works nicely with Consult,
+Icomplete vertical, and Embark.
+
+Refer to the relevant sections:
+
++ [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]].
++ [[#h:b6b13f4f-91f5-416d-9934-b51b4d87770c][Icomplete configurations and extras (prot-icomplete.el)]].
++ [[#h:c8325f81-b5a9-47a6-b4d1-dfe1c54a44d1][Icomplete vertical mode (icomplete-vertical)]].
++ [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]].
++ [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]].
+
+#+begin_src emacs-lisp
+(use-package marginalia
+  :straight (:host github :repo "minad/marginalia" :branch "main")
+  :demand
+  :config
+  (marginalia-mode)
+  (setq marginalia-annotators '(marginalia-annotators-heavy
+                                marginalia-annotators-light))
+  :bind (:map minibuffer-local-completion-map
+              ("C-i" . marginalia-cycle-annotators)))
+#+end_src
+
+*** Enhanced minibuffer commands (consult.el and prot-consult.el)
 :PROPERTIES:
 :CUSTOM_ID: h:9c9401d6-8c53-4276-be4c-3bff345d3eeb
 :END:
