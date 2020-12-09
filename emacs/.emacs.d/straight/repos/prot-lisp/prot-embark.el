@@ -66,7 +66,7 @@
     (embark-live-occur))
   (run-hooks 'prot-embark-live-occur-hook))
 
-(defun prot-embark-icomplete-toggle ()
+(defun prot-embark--icomplete-toggle ()
   "Toggle Icomplete for `prot-embark-live-occur-toggle'."
   (let ((icomplete-default (symbol-value icomplete-mode)))
     (when prot-embark-live-occur-disable-icomplete
@@ -74,14 +74,15 @@
           (icomplete-mode -1)
         (icomplete-mode 1)))))
 
+;;;###autoload
 (defun prot-embark-icomplete-hooks ()
-  "Set up hooks for `prot-embark-icomplete-toggle'."
+  "Set up hooks for `prot-embark--icomplete-toggle'."
   (if prot-embark-live-occur-disable-icomplete
       (progn
-        (add-hook 'prot-embark-live-occur-hook #'prot-embark-icomplete-toggle)
-        (add-hook 'minibuffer-exit-hook #'prot-embark-icomplete-toggle))
-    (remove-hook 'prot-embark-live-occur-hook #'prot-embark-icomplete-toggle)
-    (remove-hook 'minibuffer-exit-hook #'prot-embark-icomplete-toggle)))
+        (add-hook 'prot-embark-live-occur-hook #'prot-embark--icomplete-toggle)
+        (add-hook 'minibuffer-exit-hook #'prot-embark--icomplete-toggle))
+    (remove-hook 'prot-embark-live-occur-hook #'prot-embark--icomplete-toggle)
+    (remove-hook 'minibuffer-exit-hook #'prot-embark--icomplete-toggle)))
 
 (provide 'prot-embark)
 ;;; prot-embark.el ends here

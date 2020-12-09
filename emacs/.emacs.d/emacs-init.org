@@ -7520,7 +7520,7 @@ while entering a bespoke "focus mode" for writing/reading.
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :config
+  :init
   (setq mode-line-percent-position '(-3 "%p"))
   (setq mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
   (setq mode-line-defining-kbd-macro
