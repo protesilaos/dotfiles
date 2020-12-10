@@ -1209,10 +1209,11 @@ to the various jump actions that Consult makes possible.
   (setq consult-preview-outline nil)
   (setq completion-in-region-function #'consult-completion-in-region)
   (consult-preview-mode -1)
-  :bind (("C-." . consult-outline)
-         ("s-y" . consult-yank)
+  :bind (("M-s s" . consult-outline)
+         ("M-s M-s" . consult-outline)
          ("M-s m" . consult-mark)
          ("M-s l" . consult-line)
+         ("M-s y" . consult-yank)
          :map minibuffer-local-completion-map
          ("<tab>" . minibuffer-force-complete)))
 
