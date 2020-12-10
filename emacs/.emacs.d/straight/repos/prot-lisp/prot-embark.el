@@ -30,7 +30,8 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'embark)
+(when (featurep 'embark)
+  (require 'embark))
 
 (defgroup prot-embark ()
   "Extensions for `embark'."
