@@ -429,5 +429,29 @@ To be hooked to `window-configuration-change-hook'."
 
 (add-hook 'window-configuration-change-hook #'prot-simple--monocle-disable)
 
+;;;; Commands for buffers
+
+;;;###autoload
+(defun prot-simple-kill-buffer-current (&optional arg)
+  "Kill current buffer or abort recursion when in minibuffer.
+With optional prefix ARG (\\[universal-argument]) delete the
+buffer's window as well."
+  (interactive "P")
+  (if (minibufferp)
+      (abort-recursive-edit)
+    (kill-buffer (current-buffer)))
+  (when (and arg
+             (not (one-window-p)))
+    (delete-window)))
+
+;;;###autoload
+(defun prot-simple-rename-file-and-buffer (name)
+  "Apply NAME to current file and rename its buffer.
+Do not try to make a new directory or anything fancy."
+  (interactive
+   (list (read-string "Rename current file: " (buffer-file-name))))
+  (rename-file (buffer-file-name) name)
+  (set-visited-file-name name t t))
+
 (provide 'prot-simple)
 ;;; prot-simple.el ends here
