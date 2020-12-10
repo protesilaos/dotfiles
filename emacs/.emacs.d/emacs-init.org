@@ -1213,7 +1213,6 @@ to the various jump actions that Consult makes possible.
          ("M-s M-s" . consult-outline)
          ("M-s m" . consult-mark)
          ("M-s l" . consult-line)
-         ("M-s y" . consult-yank)
          :map minibuffer-local-completion-map
          ("<tab>" . minibuffer-force-complete)))
 
