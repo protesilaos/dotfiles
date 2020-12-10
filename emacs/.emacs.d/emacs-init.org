@@ -1232,32 +1232,46 @@ Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my
 
 Embark, aka "Emacs Mini-Buffer Actions Rooted in Keymaps", is another
 neat library by Omar Antolín Camarena.  It provides common actions
-through what essentially amounts to a common prefix key.
+through what essentially amounts to a prefix key.  Your main point of
+entry to this tool is the =embark-act= command: bind it to a convenient
+key combination that will make it easy for you to use it and, thus,
+maximise its potential.
 
 The premise of Embark is that targets are interpreted based on their
 context, so you are automagically presented with a list of relevant
-actions.  For example, while running a minibuffer completion against
-files, =embark-act= will provide access to standard filesystem operations
-such as to copy, rename, delete the current candidate.
+commands that apply to them.  For example, while running a minibuffer
+completion against files, =embark-act= will provide access to standard
+filesystem operations such as to copy, rename, delete the current
+candidate.
 
 All those types of interaction are grouped together in keymaps.  So our
 example for file names corresponds to =embark-file-map=.  Expect to find
 the equivalent in =embark-buffer-map=, =embark-region-map=, and so on.
 
-To learn which keymap gets enabled in the present context, follow up the
-=embark-act= key with =C-h= (remember that this conforms with the Emacs
-convention of using =C-h= as a suffix to display help about possible key
-chords that complete what has already been typed in---if you are new to
-Emacs, consult my note on [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).  Furthermore, bear
-in mind that Embark's README offers instructions on how to use =which-key=
-instead of this method.  So please adapt things to your liking.
+To learn which keymap's contents get enabled in the present context,
+follow up the =embark-act= key with =C-h= (remember that this conforms with
+the Emacs convention of using =C-h= as a suffix to display help about
+possible key chords that complete what has already been typed in---if
+you are new to Emacs, consult my note on [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
+Embark's README offers instructions on how to use =which-key= instead of
+this method.  So please adapt things to your liking.
 
 While Embark is touted as a tool for minibuffer actions, it is easier to
 think of it as the equivalent of a right-click/context menu, with
 =embark-act= performing the primary function of the right-click call.
-This is because you can use Embark outside a minibuffer session, such as
-when the point is over a file name, URL, symbol.  Same for the active
-region.
+This is because you can use Embark outside of a minibuffer session, such
+as when the point is over a file name, URL, symbol.  Same for the active
+region.  Making =embark-act= second nature will help you gain access to
+commands you seldom use, or at least be reminded of their presence.
+
+A more nuanced command you can benefit from is =embark-act-noexit=.  It
+behaves like its counterpart except that it does not exit the minibuffer
+while inside one.  Use it when you need to string together a series of
+actions pertaining to the present list of candidates.
+
+Because Embark is all about keymaps whose scope is a given context, you
+can easily extend it with your own functions.  Do you have a command
+that, say, operates on files?  Add an entry for it in =embark-file-map=.
 
 Apart from actions, Embark contains two key components for operating on
 groups of candidates:
@@ -1293,7 +1307,7 @@ following block with the package configurations:
   If yes, then Icomplete gets disabled whenever the live occur buffer is
   present and is re-enabled once live occur switches off or the
   minibuffer exits.  Two functions handle this task: (i)
-  =prot-embark-icomplete-toggle=, and (ii) =prot-embark-icomplete-hooks=.
+  =prot-embark--icomplete-toggle=, and (ii) =prot-embark-icomplete-hooks=.
 
 #+begin_src emacs-lisp
 (use-package embark
@@ -1308,18 +1322,19 @@ following block with the package configurations:
   (setq embark-completing-read-delay 0.6)
   (setq embark-annotator-alist '((t . embark-annotation-function-metadatum)))
   :hook (embark-occur-mode-hook . (lambda () (toggle-truncate-lines -1)))
-  :bind (("M-\\" . embark-act)     ; overrides `delete-horizontal-space'
+  :bind (("C-," . embark-act)
          :map minibuffer-local-completion-map
-         ("M-\\" . embark-act)
-         ("M-q" . embark-occur-toggle-view)
-         ("M-o" . embark-export)        ; falls back to `embark-occur'
+         ("C-," . embark-act)
+         ("C-." . embark-act-noexit)
+         ("M-q" . embark-occur-toggle-view) ; parallel of `fill-paragraph'
+         ("M-o" . embark-export) ; falls back to `embark-occur'
          ("M-v" . embark-switch-to-live-occur)
          :map embark-occur-mode-map
-         ("\\" . embark-act)
+         ("," . embark-act)
          ("M-t" . toggle-truncate-lines)
          ("M-q" . embark-occur-toggle-view)
          ("M-v" . prot-minibuffer-focus-mini) ; from `prot-minibuffer.el'
-         ("M-q" . embark-occur-toggle-view))) ; parallel of `fill-paragraph'
+         ("M-q" . embark-occur-toggle-view)))
 
 (use-package prot-embark
   :straight (:type built-in)
