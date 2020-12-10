@@ -396,7 +396,11 @@ up some common key combinations.
          ;; Commands for paragraphs
          ("M-Q" . prot-simple-unfill-region-or-paragraph)
          ;; Commands for windows
-         ("s-m" . prot-simple-monocle))
+         ("s-m" . prot-simple-monocle)
+         ;; Commands for buffers
+         ("M-=" . count-words)
+         ("<C-f2>" . prot-simple-rename-file-and-buffer)
+         ("s-k" . prot-simple-kill-buffer-current))
   :hook (kill-emacs-hook . prot-common-rebuild-emacs-init))
 #+end_src
 
@@ -2318,33 +2322,6 @@ These are the contents of =prot-dired.el= (part of [[https://gitlab.com/protesil
 
 #+include: straight/repos/prot-lisp/prot-dired.el src emacs-lisp :tangle no
 
-*** Narrowed dired
-:PROPERTIES:
-:CUSTOM_ID: h:affb6142-6216-43b6-9d66-e7b18d65e79e
-:END:
-
-The standard way to produce a Dired buffer with only a handful of files
-is to mark them, either manually or with =% m=, then toggle the mark with
-=t=, and then remove (just from the view) everything with =k=.  This will
-leave you with only the files you need to focus on.  With =g= you get back
-to the unfiltered listing.
-
-For dynamic filtering, use this package.  It offers several commands,
-but I find that I only ever need to narrow by a regular expression
-(check the source code for all of them =M-x find-library dired-narrow=).
-
-#+begin_src emacs-lisp
-(use-package dired-narrow
-  :straight t
-  :after dired
-  :config
-  (setq dired-narrow-exit-when-one-left t)
-  (setq dired-narrow-enable-blinking t)
-  (setq dired-narrow-blink-time 0.3)
-  :bind (:map dired-mode-map
-         ("/" . dired-narrow-regexp)))
-#+end_src
-
 *** wdired (writable dired)
 :PROPERTIES:
 :CUSTOM_ID: h:ab318722-fe96-4044-8811-f04f2ed74c06
@@ -2365,29 +2342,6 @@ regular buffer, then confirm them with =C-c C-c=.
   :config
   (setq wdired-allow-to-change-permissions t)
   (setq wdired-create-parent-directories t))
-#+end_src
-
-*** peep-dired (file previews including images)
-:PROPERTIES:
-:CUSTOM_ID: h:a90fb337-3cce-438a-a209-82b7eb42605f
-:END:
-
-By default, dired does not show previews of files, while =image-dired=
-is intended for a different purpose.  We just want to toggle the
-behaviour while inside a regular dired buffer.
-
-#+begin_src emacs-lisp
-(use-package peep-dired
-  :straight t
-  :after dired
-  :config
-  (setq peep-dired-cleanup-on-disable t)
-  (setq peep-dired-cleanup-eagerly t)
-  (setq peep-dired-enable-on-directories nil)
-  (setq peep-dired-ignored-extensions
-        '("mkv" "webm" "mp4" "mp3" "ogg" "iso"))
-  :bind (:map dired-mode-map
-              ("P" . peep-dired)))
 #+end_src
 
 *** image-dired (image thumbnails and previews)
@@ -2476,9 +2430,6 @@ restore it.  Never happened in practice, but still.
 While in =dired-mode=, if you need to open all marked files at once, you
 can hit =F=.  It calls =dired-do-find-marked-files=.
 
-Note that =contrib/cdb--bookmarked-directories= is defined further above,
-in the [[#h:751a310d-c63e-461c-a6e1-dfdfdb01cb92][section about the basic Dired settings]].
-
 #+begin_src emacs-lisp
 (use-package dired-x
   :after dired
@@ -2488,28 +2439,7 @@ in the [[#h:751a310d-c63e-461c-a6e1-dfdfdb01cb92][section about the basic Dired 
   (setq dired-x-hands-off-my-keys t)    ; easier to show the keys I use
   (setq dired-bind-man nil)
   (setq dired-bind-info nil)
-
-  (defun prot/dired-jump-extra (&optional arg)
-    "Switch directories comprising context and bookmarks."
-    (interactive "P")
-    (let* ((vc (vc-root-dir))
-           (buf-name (buffer-file-name))
-           (path (or buf-name default-directory))
-           (file (abbreviate-file-name path))
-           (bookmarks (mapcar (lambda (b)
-                                (cdr b))
-                              (contrib/cdb--bookmarked-directories)))
-           (collection (append bookmarks
-                               (list (file-name-directory file)
-                                     (when vc vc))))
-           (files (cl-remove-if (lambda (f)
-                                  (eq f nil))
-                                collection)))
-      (dired
-       (completing-read "Jump to context or bookmark: " files nil t))))
-
-  :bind (("C-c j" . prot/dired-jump-extra)
-         ("C-x C-j" . dired-jump)
+  :bind (("C-x C-j" . dired-jump)
          ("s-j" . dired-jump)
          ("C-x 4 C-j" . dired-jump-other-window)
          ("s-J" . dired-jump-other-window)
@@ -2545,77 +2475,10 @@ Basically, its interaction model is as follows:
   (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
 #+end_src
 
-*** Dired disk usage (du)
-:PROPERTIES:
-:CUSTOM_ID: h:ae853aef-6d7d-44e4-abc6-abb66c4901b1
-:END:
-
-Sometimes I need to check the size of directories listed in a Dired
-buffer.  I do this manually, by invoking =dired-du-mode=.
-
-#+begin_src emacs-lisp
-(use-package dired-du
-  :straight t
-  :commands dired-du-mode)
-#+end_src
-
 ** Working with buffers
 :PROPERTIES:
 :CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
 :END:
-
-*** General buffer commands
-:PROPERTIES:
-:CUSTOM_ID: h:1081c372-39b8-4c24-b391-2a99285d8acb
-:END:
-
-Here I collect general purpose commands for buffers.  I also remap
-useful keybindings to commands I prefer to use.
-
-+ By default, =M-== will count the lines, words, characters in the region.
-  I never use that.  What I do use is the equivalent for the whole
-  buffer, which is automatically adapted to the contents of the region,
-  when active.
-
-+ =prot/kill-buffer-current= is a faster way to kill the focused buffer,
-  without further confirmation.  Unsaved files will still ask for
-  confirmation though, which is exactly as it should be.
-
-+ =contrib/rename-file-and-buffer= will prompt you to rename the current
-  buffer and its underlying file.  It is a command I extracted from the
-  [[https://github.com/bbatsov/crux][Crux package]].
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (defun prot/kill-buffer-current (&optional arg)
-    "Kill current buffer or abort recursion when in minibuffer."
-    (interactive "P")
-    (if (minibufferp)
-        (abort-recursive-edit)
-      (kill-buffer (current-buffer)))
-    (when (and arg
-               (not (one-window-p)))
-      (delete-window)))
-
-  (defun contrib/rename-file-and-buffer ()
-    "Rename current buffer and, if available, its file."
-    (interactive)
-    (let ((filename (buffer-file-name)))
-      (if (not (and filename (file-exists-p filename)))
-          (rename-buffer (read-from-minibuffer "New name: " (buffer-name)))
-        (let* ((new-name (read-from-minibuffer "New name: " filename))
-               (containing-dir (file-name-directory new-name)))
-          (make-directory containing-dir t)
-          (cond
-           ((vc-backend filename) (vc-rename-file filename new-name))
-           (t
-            (rename-file filename new-name t)
-            (set-visited-file-name new-name t t)))))))
-  :bind (("M-=" . count-words)
-         ("<C-f2>" . contrib/rename-file-and-buffer)
-         ("s-k" . prot/kill-buffer-current)))
-#+end_src
 
 *** Unique names for buffers
 :PROPERTIES:
@@ -2640,18 +2503,15 @@ only the buffer's name.
   (setq uniquify-after-kill-buffer-p t))
 #+end_src
 
-**** TODO make uniquify better for Help, Info buffers
-:PROPERTIES:
-:CUSTOM_ID: h:d715be45-2a02-4202-80ea-5df4fd2056fa
-:END:
 *** Ibuffer and extras (dired-like buffer list manager)
 :PROPERTIES:
 :CUSTOM_ID: h:06290f9c-491c-45b2-b213-0248f890c83d
 :END:
 
-=ibuffer= is a built-in replacement for =list-buffers= that allows for
-fine-grained control over the buffer list.  For this reason I bind it to
-=C-x C-b=.
+=ibuffer.el= ships with Emacs and it provides a drop-in replacement for
+=list-buffers=.  Compared to its counterpart, it allows for granular
+control over the buffer list and is more powerful overall.  For this
+reason I bind it to =C-x C-b=.
 
 Overview of its features:
 
@@ -2661,8 +2521,7 @@ Overview of its features:
 - sort buffers by name, filesystem path, major mode, size;
 - run =occur= on the marked buffers (remember: Occur produces a buffer
   that you can edit once you enable the editable state with =e=);
-- run =query-replace= on marked buffers or its regular-expression-aware
-  equivalent.
+- run =query-replace= or =query-replace-regexp= on marked buffers.
 
 Run the universal help command for major mode documentation (=C-h m=)
 while inside =ibuffer= to get a detailed list of all available commands
@@ -2673,35 +2532,38 @@ the default behaviour and presentation:
 
 + Prompt for confirmation only when deleting a modified buffer.
 + Hide the summary.
-+ Do not open on the other window (not focused window).
++ Do not open on the other window; use the current one.
 + Do not show empty filter groups.
 + Do not cycle movements.  So do not go to the top when moving downward
   at the last item on the list.
 
 Also watch my [[https://protesilaos.com/codelog/2020-04-02-emacs-intro-ibuffer/][introduction to Ibuffer]] (2020-04-02).
 
-Now some extras after I published that video: =prot/buffers-major-mode=
-and =prot/buffers-vc-root= will produce a filtered list based on the
-current buffer's major mode or root version-control directory
-respectively.  Their standard mode of interaction is through minibuffer
-completions.  With a prefix argument =C-u= they switch to a dedicated
-Ibuffer view instead.
+Now some extras that I introduced after I published that video, which
+pertain to my =prot-ibuffer.el= library (copied in its entirety below the
+package declarations):
 
-For those two I received help from Omar Antolín Camarena with regard to
-the use of =read-buffer= and the =lambda= passed to it: my prototype was
-using the generic =completing-read= with =cl-remove-if-not= for filtering
-the list of candidates (all possible errors are my own).  The upside of
-using Omar's approach is that it informs other tools that this kind of
-completion concerns buffers, so they can adapt accordingly.
++ =prot-ibuffer-buffers-major-mode= produces a filtered list of buffers
+  that match the major mode of the current buffer and lets you pick one
+  using minibuffer completion.  With an optional prefix argument (=C-u=)
+  it places the results in an Ibuffer list.
 
-I consider these two commands to be conceptually related to what I have
-defined in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Completion for projects and directory trees]].  The key chords
-follow the same pattern, with the =M-s= prefix being considered an entry
-point for "advanced search" methods, inspired by the default for =occur=
-(=M-s o=) as well as a few others.
++ =prot-ibuffer-buffers-vc-root= filters the list to items that match the
+  current buffer's version-controlled directory.  In practice, this
+  fills the same niche as the built-in =project-switch-to-buffer= (for
+  Emacs 28+), with the crucial difference that it neither reads from nor
+  writes to the list of known projects (also check my configurations for
+  [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  When called with an
+  optional prefix argument, this command puts its matching candidates in
+  an Ibuffer view.
+
+For those two I received guidance from Omar Antolín Camarena with regard
+to the use of =read-buffer= and the =lambda= passed to it (any errors are my
+own).  This method informs other tools that this type of completion
+pertains to buffers, so they can adapt accordingly.  See, in particular,
+[[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]].
 
 #+begin_src emacs-lisp
-;; TODO 2020-12-09: put all my code in prot-ibuffer.el and review it
 (use-package ibuffer
   :config
   (setq ibuffer-expert t)
@@ -2725,95 +2587,24 @@ point for "advanced search" methods, inspired by the default for =occur=
                 " " filename)))
   (setq ibuffer-saved-filter-groups nil)
   (setq ibuffer-old-time 48)
-
-  (defun prot/buffers-major-mode (&optional arg)
-    "Select buffers that match the current buffer's major mode.
-With \\[universal-argument] produce an `ibuffer' filtered
-accordingly.  Else use standard completion."
-    (interactive "P")
-    (let* ((major major-mode)
-           (prompt "Buffers for ")
-           (mode-string (format "%s" major))
-           (mode-string-pretty (propertize mode-string 'face 'success)))
-      (if arg
-          (ibuffer t (concat "*" prompt mode-string "*")
-                   (list (cons 'used-mode major)))
-        (switch-to-buffer
-         (read-buffer
-          (concat prompt mode-string-pretty ": ") nil t
-          (lambda (pair) ; pair is (name-string . buffer-object)
-            (with-current-buffer (cdr pair) (derived-mode-p major))))))))
-
-  (defun prot/buffers-vc-root (&optional arg)
-    "Select buffers that match the present `vc-root-dir'.
-With \\[universal-argument] produce an `ibuffer' filtered
-accordingly.  Else use standard completion.
-
-When no VC root is available, use standard `switch-to-buffer'."
-    (interactive "P")
-    (let* ((root (vc-root-dir))
-           (prompt "Buffers for VC ")
-           (vc-string (format "%s" root))
-           (vc-string-pretty (propertize vc-string 'face 'success)))
-      (if root
-          (if arg
-              (ibuffer t (concat "*" prompt vc-string "*")
-                       (list (cons 'filename (expand-file-name root))))
-            (switch-to-buffer
-             (read-buffer
-              (concat prompt vc-string-pretty ": ") nil t
-              (lambda (pair) ; pair is (name-string . buffer-object)
-                (with-current-buffer (cdr pair) (string= (vc-root-dir) root))))))
-        (call-interactively 'switch-to-buffer))))
-
   :hook (ibuffer-mode-hook . hl-line-mode)
-  :bind (("M-s b" . prot/buffers-major-mode)
-         ("M-s v" . prot/buffers-vc-root)
-         ("C-x C-b" . ibuffer)
+  :bind (("C-x C-b" . ibuffer)
          :map ibuffer-mode-map
          ("* f" . ibuffer-mark-by-file-name-regexp)
          ("* g" . ibuffer-mark-by-content-regexp) ; "g" is for "grep"
          ("* n" . ibuffer-mark-by-name-regexp)
          ("s n" . ibuffer-do-sort-by-alphabetic)  ; "sort name" mnemonic
          ("/ g" . ibuffer-filter-by-content)))
+
+(use-package prot-ibuffer
+  :straight (:type built-in)
+  :bind (("M-s b" . prot-ibuffer-buffers-major-mode)
+         ("M-s v" . prot-ibuffer-buffers-vc-root)))
 #+end_src
 
-**** Ibuffer integration with VC (version control framework)
-:PROPERTIES:
-:CUSTOM_ID: h:fcb95193-4049-4ae3-92ae-13176606e165
-:END:
+Here is =prot-ibuffer.el= (find everything in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-This package offers a few functions for operating on =ibuffer= items based
-on their corresponding version control data.
-
-To me the most common case is to establish filter groups on a
-per-project basis with =ibuffer-vc-set-filter-groups-by-vc-root=.  This
-makes it easier to get an overview of where each buffer belongs,
-especially in cases where you have similar looking names.
-
-In terms of functionality, filter groups allow for per-group actions:
-
-+ Move between group headings with =M-n= and =M-p=.
-+ Toggle the visibility of the group with =RET=, while the point is over
-  the heading.
-+ With point over a heading, =m= will mark all its buffers, while =d= will
-  mark them for deletion (confirm the latter with =x=, same as with
-  =dired=).
-
-The above granted, I prefer to create such filter groups manually via a
-convenient key binding, rather than calling the function through a
-relevant hook.
-
-Make sure to also read the section on [[#h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7][version control tools]].
-
-#+begin_src emacs-lisp
-(use-package ibuffer-vc
-  :straight t
-  :after (ibuffer vc)
-  :bind (:map ibuffer-mode-map
-              ("/ V" . ibuffer-vc-set-filter-groups-by-vc-root)
-              ("/ <deletechar>" . ibuffer-clear-filter-groups)))
-#+end_src
+#+include: straight/repos/prot-lisp/prot-ibuffer.el src emacs-lisp :tangle no
 
 *** Scratch buffers per-major-mode
 :PROPERTIES:
