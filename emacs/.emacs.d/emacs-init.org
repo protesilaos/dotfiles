@@ -1106,6 +1106,8 @@ following =use-package= declarations.
   (icomplete-mode 1)
 
   :bind (:map icomplete-minibuffer-map
+              ("C-," . nil)             ; disable defaults
+              ("C-." . nil)             ; same
               ("<tab>" . icomplete-force-complete)
               ("<return>" . icomplete-force-complete-and-exit) ; exit with completion
               ("C-j" . exit-minibuffer) ; force input unconditionally
