@@ -1307,6 +1307,7 @@ following block with the package configurations:
   (setq embark-live-occur-delay 0.3)
   (setq embark-completing-read-delay 0.6)
   (setq embark-annotator-alist '((t . embark-annotation-function-metadatum)))
+  :hook (embark-occur-mode-hook . (lambda () (toggle-truncate-lines -1)))
   :bind (("M-\\" . embark-act)     ; overrides `delete-horizontal-space'
          :map minibuffer-local-completion-map
          ("M-\\" . embark-act)
@@ -1315,6 +1316,8 @@ following block with the package configurations:
          ("M-v" . embark-switch-to-live-occur)
          :map embark-occur-mode-map
          ("\\" . embark-act)
+         ("M-t" . toggle-truncate-lines)
+         ("M-q" . embark-occur-toggle-view)
          ("M-v" . prot-minibuffer-focus-mini) ; from `prot-minibuffer.el'
          ("M-q" . embark-occur-toggle-view))) ; parallel of `fill-paragraph'
 
