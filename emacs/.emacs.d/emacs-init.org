@@ -2886,7 +2886,7 @@ window configuration or frameset in a register---see [[#h:6bdfe4d1-f97a-4d89-ab6
 For me tabs are useful as groups of buffers in a given window
 configuration.  I do not want a persistent bar with buttons that
 introduces extra visual clutter.  Switching to tabs is done through
-completion, specifically =prot-tab-tab-bar-toggle=.
+completion, specifically =prot-tab-select-tab-dwim=.
 
 All settings I configure here are meant to work in accordance with this
 abstract conception of "tabs are work spaces".  Here are the main key
@@ -2906,6 +2906,8 @@ These are consistent with the standard commands for handling windows and
 accessing buffers/files in the "other window" (the =C-x 4 KEY= pattern).
 There is also a command for giving a name to the current tab, accessed
 via =C-x t r=, though I find I do not use it.
+
+Here my settings, followed by the entirety of =prot-tab.el=.
 
 #+begin_src emacs-lisp
 (use-package tab-bar
