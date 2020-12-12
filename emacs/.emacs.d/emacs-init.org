@@ -543,7 +543,13 @@ and wish to get a glimpse of how much work goes into this project:
     (set-face-attribute 'tab-bar nil :inherit 'variable-pitch)
     (set-face-attribute 'mode-line nil :inherit 'variable-pitch)
     (set-face-attribute 'mode-line-inactive nil :inherit 'variable-pitch)
-    (set-face-attribute 'mode-line-buffer-id nil :weight 'normal))
+    (set-face-attribute 'mode-line-buffer-id nil :weight 'normal)
+    (set-face-attribute 'line-number nil
+                        :background 'unspecified
+                        :foreground (modus-themes-color 'fg-unfocused))
+    (set-face-attribute 'line-number-current-line nil
+                        :background 'unspecified
+                        :foreground (modus-themes-color 'red-alt-other)))
 
   ;; Also check my package declaration for `prot-fonts' because I use
   ;; the `modus-themes-after-load-theme-hook' for some typeface-related
@@ -7654,8 +7660,8 @@ sometimes it causes problems, such as with diffs.
   ;; Set absolute line numbers.  A value of "relative" is also useful.
   (setq display-line-numbers-type t)
   ;; Those two variables were introduced in Emacs 27.1
-  (setq display-line-numbers-major-tick 20)
-  (setq display-line-numbers-minor-tick 5)
+  (setq display-line-numbers-major-tick 0)
+  (setq display-line-numbers-minor-tick 0)
   ;; Use absolute numbers in narrowed buffers
   (setq display-line-numbers-widen t)
 
