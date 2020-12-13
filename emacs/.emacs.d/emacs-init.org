@@ -1205,16 +1205,17 @@ defines some quick and dirty extensions that add minor visual feedback
 to the various jump actions that Consult makes possible.
 
 #+begin_src emacs-lisp
+;; TODO: configure pattern-matching on a per-command basis
 (use-package consult
   :straight (:host github :repo "minad/consult" :branch "master")
   :config
   (setq consult-line-numbers-widen t)
   (setq consult-preview-buffer nil)
-  (setq consult-preview-mark nil)
-  (setq consult-preview-line nil)
+  (setq consult-preview-mark t)
+  (setq consult-preview-line t)
   (setq consult-preview-outline nil)
   (setq completion-in-region-function #'consult-completion-in-region)
-  (consult-preview-mode -1)
+  (consult-preview-mode 1)
   :bind (("M-s s" . consult-outline)
          ("M-s M-s" . consult-outline)
          ("M-s m" . consult-mark)
