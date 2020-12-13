@@ -8318,7 +8318,7 @@ I edit lots of Markdown files.  This makes things easier.
   :mode ("\\.md$" . markdown-mode))
 #+end_src
 
-*** YAML
+*** YAML (yaml-mode)
 :PROPERTIES:
 :CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
 :END:
@@ -8332,7 +8332,7 @@ This adds support for YAML files.
          ("\\.yaml$" . yaml-mode)))
 #+end_src
 
-*** CSS
+*** CSS (css-mode)
 :PROPERTIES:
 :CUSTOM_ID: h:ec10bfe6-5340-481c-9de2-3e346868241b
 :END:
