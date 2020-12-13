@@ -61,8 +61,8 @@ If any such fontification is already present, revert the buffer
 and place point back where it was."
   (interactive "P")
   (let ((position (point))
-        (beg (or (region-beginning) (point-min)))
-        (end (or (region-end) (point-max))))
+        (beg (or (when (mark) (region-beginning)) (point-min)))
+        (end (or (when (mark) (region-end)) (point-max))))
     (when (derived-mode-p 'diff-mode)
       (cond
        ((and arg (not (region-active-p)))
