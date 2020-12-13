@@ -115,6 +115,15 @@ to pass to the `bold' face's weight property."
 (defvar prot-fonts-set-typeface-hook nil
   "Hook that is called after setting fonts.")
 
+(defvar prot-fonts-font-display-hist '()
+  "History of inputs for display-related font associations.")
+
+(defvar prot-fonts-font-family-hist '()
+  "History of inputs for font families.")
+
+(defvar prot-fonts-font-height-hist '()
+  "History of inputs for font heights.")
+
 ;;; Functions
 
 (defun prot-fonts--set-face-attribute (face family)
@@ -139,10 +148,10 @@ holding the family's name."
              (display-strings (mapcar (lambda (x)
                                         (format "%s" (car x)))
                                       prot-fonts-typeface-sets-alist))
-             (choice (or height
-                         (intern
-                          (completing-read "Pick display size: "
-                                           display-strings nil t))))
+             (prompt (completing-read "Pick display size: "
+                                      display-strings nil t
+                                      nil 'prot-fonts-font-display-hist))
+             (choice (or height (intern prompt)))
              (size (or height
                        (nth 1 (assoc choice data))))
              (mono (or font-mono
@@ -156,7 +165,8 @@ holding the family's name."
         (set-face-attribute 'default nil :family mono :height size)
         (prot-fonts--set-face-attribute 'fixed-pitch mono)
         (prot-fonts--set-face-attribute 'variable-pitch var)
-        (run-hooks 'prot-fonts-set-typeface-hook))
+        (run-hooks 'prot-fonts-set-typeface-hook)
+        (add-to-history 'prot-fonts-font-display-hist prompt))
     (user-error "Not running a graphical Emacs; cannot set fonts")))
 
 ;;;###autoload
@@ -168,15 +178,19 @@ This command is mostly intended for testing typefaces defined in
   (interactive)
   (if window-system
       (let* ((fonts prot-fonts-monospaced-list)
-             (font (completing-read "Select main font: " fonts nil t))
+             (font (completing-read "Select main font: " fonts nil nil
+                                    nil 'prot-fonts-font-family-hist))
              (nums prot-fonts-heights-list)
              (sizes (mapcar 'number-to-string nums))
-             (size (completing-read "Select or insert number: " sizes nil))
+             (size (completing-read "Select or insert number: " sizes nil nil
+                                    nil 'prot-fonts-font-height-hist))
              (var (face-attribute 'variable-pitch :family)))
         (set-face-attribute 'default nil :family font :height (string-to-number size))
         (set-face-attribute 'fixed-pitch nil :family font)
         (prot-fonts--set-face-attribute 'variable-pitch var)
-        (run-hooks 'prot-fonts-set-typeface-hook))
+        (run-hooks 'prot-fonts-set-typeface-hook)
+        (add-to-history 'prot-fonts-font-family-hist font)
+        (add-to-history 'prot-fonts-font-height-hist size))
     (user-error "Not running a graphical Emacs; cannot set fonts")))
 
 ;;;###autoload
