@@ -933,7 +933,7 @@ window, insert and then exit all recirsive minibuffers.  In practice,
 those three commands are not part of my day-to-day workflow, because I
 normally rely on [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Embark for extended minibuffer actions]].  At any rate,
 the =prot-minibuffer.el= is reproduced after this set of =use-package=
-declarations.
+declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks]].
 
 #+begin_src emacs-lisp
 (use-package prot-minibuffer
@@ -947,7 +947,8 @@ declarations.
          ;; normally use `embark' and its own buffers.
          ("w" . prot-minibuffer-completions-kill-symbol-at-point)
          ("i" . prot-minibuffer-completions-insert-symbol-at-point)
-         ("j" . prot-minibuffer-completions-insert-symbol-at-point-exit)))
+         ("j" . prot-minibuffer-completions-insert-symbol-at-point-exit))
+  :hook (minibuffer-setup-hook . prot-minibuffer-mini-cursor))
 
 (use-package minibuffer
   :demand
@@ -7842,6 +7843,9 @@ A prompt will ask for the register to operate on."
 
 Nothing special here.  Just some tweaks for the cursor's appearance.  Do
 =C-h f cursor-type= to learn everything about the availble options.
+
+Note that in [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]] I
+also add a local variable for the minibuffer's cursor.
 
 #+begin_src emacs-lisp
 (use-package frame

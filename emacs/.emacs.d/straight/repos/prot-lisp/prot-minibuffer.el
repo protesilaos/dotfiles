@@ -118,5 +118,20 @@ Intended to be used from inside the Completions' buffer."
               (propertize `,symbol 'face 'success))))
  (top-level))
 
+(defun prot-minibuffer--cursor-type ()
+  "Determine whether `cursor-type' is a list and return value.
+If it is a list, this actually returns its car."
+  (if (listp cursor-type)
+      (car cursor-type)
+    cursor-type))
+
+;;;###autoload
+(defun prot-minibuffer-mini-cursor ()
+  "Local value of `cursor-type' for `minibuffer-setup-hook'."
+  (pcase (prot-minibuffer--cursor-type)
+    ('hbar (setq-local cursor-type '(hbar . 8)))
+    ('bar (setq-local cursor-type '(hbar . 3)))
+    (_  (setq-local cursor-type '(bar . 2)))))
+
 (provide 'prot-minibuffer)
 ;;; prot-minibuffer.el ends here
