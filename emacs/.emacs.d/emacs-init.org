@@ -1774,26 +1774,53 @@ position of the cursor after the skeleton has been inserted.
 These are meant to enhance the functionality of tools that are already
 shipped with Emacs.
 
-*** Isearch configurations and enhancements
+*** Isearch, occur, and extras (prot-search.el)
 :PROPERTIES:
 :CUSTOM_ID: h:b67687ee-25a3-4bf4-a924-180ccb63c629
 :END:
 
-The built-in search mechanism is a thing of beauty: minimal in its
-presentation, powerful in its applications.
+The built-in search mechanisms, defined in the libraries =isearch.el= and
+=replace.el= are minimal in their presentation, yet powerful in their
+applications.  There are the main points of entry to the commands they
+offer:
 
-I use =isearch= all the time for quick navigation, either to a visible
-part of the buffer or to some specific string I am aware of.  It also is
-essential when used in the context of a keyboard macro, as demonstrated
-in my video about [[https://protesilaos.com/codelog/2020-01-21-emacs-isearch-kmacro/][Isearch powers in keyboard macros]] (2020-01-21).
++ =isearch-forward= (=C-s=) prompts for a string after point and offers live
+  feedback on its progress.  =isearch-backward= (=C-r=) moves in the
+  opposite direction.
 
-Run =C-h k C-s= to get an /awesome/ help menu with all the extra keys
-you can use with =isearch=.  These are the ones I use the most:
+  - Two distinct keys may seem redundant at first, but you really
+    appreciate this level of precision when recording keyboard macros
+    (see, for example, my video about [[https://protesilaos.com/codelog/2020-01-21-emacs-isearch-kmacro/][Isearch powers in keyboard macros]]
+    (2020-01-21)).
+
+  - Use =C-M-s= and =C-M-r= for running a search against a regular
+    expression, or call =isearch-toggle-regexp= (=M-r=) after starting a
+    regular isearch.
+
++ =query-replace= (=M-%=) replaces all matches of a string and asks you for
+  confirmation on each of them.  If you check its help page (press =?=
+  after invoking the command), you will learn that =!= stands for an
+  affirmative answer to all, which is a standard in all such prompts.
+
+  - =query-replace-regexp= (=C-M-%=) does the same for regular expressions.
+
++ =occur= (=M-s o=) places all matches of a regular expression or string in
+  a dedicated buffer.  That can function as an index for moving to the
+  relevant points in the buffer, but also as a means of refactoring all
+  matches at once.  Just make the =*Occur*= buffer editable with =e=.
+  Running =occur= with a numeric argument provides N lines of context
+  around the given match.
+
+The beauty of the Occur and Replace commands is that they can be
+initiated from within an active Isearch session, using the same keys.
+So =C-s INPUT M-s o= will search for input and then run =occur= on it.  Try
+=C-h k C-s= to get a help menu with all the extra keys you can use with
+=isearch=.  These are the ones I use the most:
 
 | Key chord | Description                  |
 |-----------+------------------------------|
 | C-s C-w   | Search char or word at point |
-| M-s .     | Similar, but broader match   |
+| M-s .     | Search for symbol at point   |
 | M-s o     | Run `occur' on regexp        |
 | M-s h r   | Highlight regexp             |
 | M-s h u   | Undo the highlight           |
@@ -1801,72 +1828,73 @@ you can use with =isearch=.  These are the ones I use the most:
 | M-%       | Run `query-replace'          |
 | C-M-%     | `query-replace-regexp'       |
 
-Many commands can be invoked while running =isearch= to operate on the
-current match.  For example, =C-s SEARCH M-s o= will produce an "Occur"
-buffer with the contents of the search terms.  Absolutely great!
+Every one of the above, except the first item, can be executed on their
+own, or as extensions of =C-s= (and variants).
 
-With regard to the replace commands, note that you can use them on the
-active region.  Furthermore, you do not need to confirm each action, but
-can instead type =!= to answer "yes" to all possible replacements.  Better
-only use this while having already limited the results to the active
-region, to some specialised editable buffer like the one of =occur=, or by
-using Emacs' narrowing techniques, such as =narrow-to-region=.
+The Occur and Replace operations are aware of the active region, so if
+you highlight, say, a paragraph and do =M-%= you will only replace matches
+inside of that area (while not relevant to our point, this also works
+for =undo= (=C-/=), which is super useful).  Though one can achieve pretty
+much the same result by leveraging Emacs' narrowing commands, like
+=narrow-to-defun= (learn about all of them with =C-x n C-h=)
 
-In the package declaration below, the combined effect of the variables
-for whitespace is a valuable hack: typing a space is the same as
-inserting a wildcard, which is much more useful as far as I am
-concerned.  A single space represents a wildcard that matches items in a
-non-greedy fashion.  *This affects regular searches* (the standard =C-s= and
-=C-r=).  The regexp-sensitive functions =C-M-s= and =C-M-r= remain in tact.
-You can always toggle whitespace matching behaviour while performing a
-search, with =M-s SPC= (revert back to just literal spaces).
+Now here is a neat trick I discovered a while ago that makes Isearch
+even better for most tasks: the ability to interpret a space as a
+wildcard.  This is due to the combined effect of the values assigned to
+the variables =search-whitespace-regexp=, =isearch-lax-whitespace=,
+=isearch-regexp-lax-whitespace=.  So you can now search for something like
+=se di bu al= and it will return =setq display-buffer-alist=.  And you can
+still combine it with all of the aforementioned!  Note that *this affects
+regular searches* (the standard =C-s= and =C-r=).  The regexp-sensitive
+functions =C-M-s= and =C-M-r= remain in tact.  You can always toggle
+whitespace matching behaviour while performing a search, with =M-s SPC=
+(revert back to just literal spaces).
 
-Now on to some custom functions, all of which are derived from the
-source code of =isearch= (do it with =M-x find-library RET isearch RET=).
-Here is an overview of what goes into this package declaration.
+Now on to my =prot-search.el= library which provides some extensions to
+an already well-designed architecture (the code is reproduced after the
+package declarations).
 
-+ Mark isearch match :: Replaces the default mark command following a
-  successful search.  I prefer to mark the match.  Besides, it is always
-  possible to mark a region from point to search string by running
-  =exchange-point-and-mark= (=C-x C-x= by default) following a successful
-  search.
-+ Move to opposite end :: Isearch places the point at either the
-  beginning or the end of the match, depending on the direction it is
-  moving in.  For single words or balanced expressions this is not an
-  issue because you can always confirm a search by using a motion key
-  (so, for example, move to the end of the matching word with =M-f=).
-  There are, however, matches that are not limited to such boundaries.
-  For those cases moving to the opposite end might require multiple
-  key presses, which is bad when trying to record an efficient
-  keyboard macro.  =prot/isearch-other-end= addresses the issue.  It is
-  bound to =C-RET= while running a successful search.  The direct
-  inspiration [[https://emacs.stackexchange.com/a/52554][is this forum answer]].  Note though that you can achieve
-  the same result by changing the direction the search is moving
-  towards with =C-s= or =C-r= (though I still prefer my minor addition).
-+ Delete non-match :: The built-in method to remove the entirety of a
-  mismatched input is to hit =C-g= following a failed search.  This
-  keeps the valid part and allows you to continue searching.  However,
-  I find that the choice of key binding can prove problematic, since
-  =C-g= also exits a standard/successful search.  As such, the simple
-  function =prot/isearch-abort= is designed to remove the entirety of a
-  mismatch, just by hitting backspace (aka =DEL=).  For valid searches,
-  backspace functions exactly as expected, deleting one character at a
-  time.  Note, though, that it is no longer possible to delete part of
-  a failed search, just by hitting backspace: you can still rely on
-  =C-M-d= for that (or edit the input with =M-e=).
-+ Replace symbol at point :: Combine the built-in functions of
-  =isearch-forward-symbol-at-point= and =isearch-query-replace-regexp=
-  into a single command that is bound to the key chord =M-s %=.  Simple
-  and super effective (*pro tip*: hit =!= to answer "yes" to all possible
-  matches, which is possible in all cases where Emacs asks you for
-  multiple confirmations).
-+ Move to occurrence at start or end :: Using the symbol at point, move
-  to the first or optionally the ARGth occurrence from the beginning or
-  the end of the buffer.  I map these commands to the same keys they are
-  bound to in =isearch-mode-map=, namely, =M-s M-<= and =M-s M->=.
++ =prot-search-isearch-other-end= simply places point at the opposite end
+  of the current match.  Particularly helpful while recording keyboard
+  macros.  This is to work around the default behaviour of Isearch which
+  puts the point at either the beginning or the end of the match,
+  depending on the direction it is moving in.  For single words or
+  balanced expressions this is not an issue because you can always
+  confirm+exit a search by using a motion key (so, for example, move to
+  the end of the matching word with =M-f=).  There are, however, matches
+  that are not limited to such boundaries, especially with the wildcard
+  hack mentioned above.  For those cases moving to the opposite end
+  might require multiple key presses, which is bad when trying to record
+  an efficient keyboard macro.  Note though that you can achieve the
+  same result by changing the direction the search is moving towards
+  with =C-s= or =C-r= (though I still prefer my minor addition).
 
-The variables about the lazy count that are commented as "Emacs 27.1"
-effectively supersede the functionality of =anzu=, a package I once used.
++ =prot-search-isearch-abort-dwim= deletes the entirety of the
+  non-matching input while leaving the valid parts in place.  Otherwise
+  it behaves like a standard backward character deletion. The built-in
+  method to remove the entirety of a mismatched input is to hit =C-g=
+  following a failed search.  However, I find that the choice of key
+  binding can prove problematic, since =C-g= also exits a successful
+  search, while I also prefer a "do-what-I-mean" behaviour.
+
++ =prot-search-isearch-replace-symbol= runs a forward-looking
+  =query-replace= for the symbol at point.  Simple and effective for
+  quickly refactoring a given function/variable name (and one of the
+  reasons why I have never needed an extra package for such tasks).
+
++ =prot-search-isearch-beginning-of-buffer= and its counterpart
+  =prot-search-isearch-end-of-buffer= move to the first or last instance
+  of the symbol at point.  They also accept a numeric argument, which
+  they interpret as an offset.  In practice, this is the same as running
+  =M-s . M-s <= or =M-s . M-s >=.
+
++ =prot-search-occur-urls= gathers all URLs in the current buffer and
+  places them in an Occur buffer /without their context/ while also making
+  them clickable (we say that it "buttonises" them).
+
++ =prot-search-occur-browse-url= gathers all URLs in the buffer and
+  prompts you to select one with completion.  It then browses that item
+  using whatever browser you have for =browse-url-browser-function=.
 
 #+begin_src emacs-lisp
 (use-package isearch
@@ -1883,161 +1911,37 @@ effectively supersede the functionality of =anzu=, a package I once used.
   (setq lazy-count-suffix-format " (%s/%s)")
   (setq isearch-yank-on-move 'shift)
   (setq isearch-allow-scroll 'unlimited)
-
-  (defun prot/isearch-mark-and-exit ()
-    "Mark the current search string and exit the search."
-    (interactive)
-    (push-mark isearch-other-end t 'activate)
-    (setq deactivate-mark nil)
-    (isearch-done))
-
-  (defun prot/isearch-other-end ()
-    "End current search in the opposite side of the match.
-Particularly useful when the match does not fall within the
-confines of word boundaries (e.g. multiple words)."
-    (interactive)
-    (isearch-done)
-    (when isearch-other-end
-      (goto-char isearch-other-end)))
-
-  (defun prot/isearch-abort-dwim ()
-    "Delete failed `isearch' input, single char, or cancel search.
-
-This is a modified variant of `isearch-abort' that allows us to
-perform the following, based on the specifics of the case: (i)
-delete the entirety of a non-matching part, when present; (ii)
-delete a single character, when possible; (iii) exit current
-search if no character is present and go back to point where the
-search started."
-    (interactive)
-    (if (eq (length isearch-string) 0)
-        (isearch-cancel)
-      (isearch-del-char)
-      (while (or (not isearch-success) isearch-error)
-        (isearch-pop-state)))
-    (isearch-update))
-
-  (defun prot/isearch-query-replace-symbol-at-point ()
-    "Run `query-replace-regexp' for the symbol at point."
-    (interactive)
-    (isearch-forward-symbol-at-point)
-    (isearch-query-replace-regexp))
-
-  (defmacro prot/isearch-occurrence (name edge &optional doc)
-    "Construct function for moving to `isearch' occurrence.
-NAME is the name of the function.  EDGE is either the beginning
-or the end of the buffer.  Optional DOC is the resulting
-function's docstring."
-    `(defun ,name (&optional arg)
-       ,doc
-       (interactive "p")
-       (let ((x (or arg 1))
-             (command (intern (format "isearch-%s-of-buffer" ,edge))))
-         (isearch-forward-symbol-at-point)
-         (funcall command x))))
-
-  (prot/isearch-occurrence
-   prot/isearch-beginning-of-buffer
-   "beginning"
-   "Run `isearch-beginning-of-buffer' for the symbol at point.
-With numeric ARG, move to ARGth occurrence counting from the
-beginning of the buffer.")
-
-  (prot/isearch-occurrence
-   prot/isearch-end-of-buffer
-   "end"
-   "Run `isearch-end-of-buffer' for the symbol at point.
-With numeric ARG, move to ARGth occurrence counting from the
-end of the buffer.")
-
-  :bind (("M-s %" . prot/isearch-query-replace-symbol-at-point)
-         ("M-s M-<" . prot/isearch-beginning-of-buffer)
-         ("M-s M->" . prot/isearch-end-of-buffer)
-         :map minibuffer-local-isearch-map
+  :bind (:map minibuffer-local-isearch-map
          ("M-/" . isearch-complete-edit)
          :map isearch-mode-map
          ("C-g" . isearch-cancel)       ; instead of `isearch-abort'
-         ("M-/" . isearch-complete)
-         ("C-SPC" . prot/isearch-mark-and-exit)
-         ("<backspace>" . prot/isearch-abort-dwim)
-         ("<C-return>" . prot/isearch-other-end)))
-#+end_src
+         ("M-/" . isearch-complete)))
 
-*** Occur (replace.el)
-:PROPERTIES:
-:CUSTOM_ID: h:037b7121-1238-42f8-a771-0dce43a46d23
-:END:
-
-The =setq= forms are mere stylistic tweaks for the buffer that =M-x occur=
-produces.  The faces are part of my Modus themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][relevant section]]).
-
-The functions are simple tools to either produce a list with all URLs
-present in the buffer (=prot/occur-url=), or prompt you for visiting a URL
-from those available using completion methods.
-
-#+begin_src emacs-lisp
 (use-package replace
   :config
   (setq list-matching-lines-jump-to-current-line t)
-  ;; See my "Modus themes" for these inherited faces
-  (setq list-matching-lines-buffer-name-face
-        '(:inherit modus-theme-intense-neutral :weight bold))
-  (setq list-matching-lines-current-line-face
-        '(:inherit modus-theme-special-mild))
-
-  (defun prot/occur-url ()
-    "Produce list with all URLs in the current buffer."
-    (interactive)
-    (let ((urls browse-url-button-regexp))
-      (occur urls "\\&")))
-
-  (defun prot/occur-browse-url-in-buffer ()
-    "Run `eww' on a URL from the buffer using completion.
-Also see `prot/occur-url'."
-    (interactive)
-    (let ((matches nil))
-      (save-excursion
-        (goto-char (point-min))
-        (while (search-forward-regexp browse-url-button-regexp nil t)
-          (push (match-string-no-properties 0) matches)))
-      (eww
-       (completing-read "Browse URL: " matches nil t))))
-
-  (defun prot/occur-visit-or-list-urls (&optional arg)
-    "Wrap `prot/occur-visit-or-list-urls' and `prot/occur-url'.
-Meant to economise on key bindings."
-    (interactive "P")
-    (if arg
-        (prot/occur-url)
-      (prot/occur-browse-url-in-buffer)))
-
   :hook ((occur-mode-hook . hl-line-mode)
          (occur-mode-hook . (lambda ()
                               (toggle-truncate-lines t))))
-  :bind (("M-s u" . prot/occur-visit-or-list-urls)
-         ("M-s M-o" . multi-occur)
+  :bind (("M-s M-o" . multi-occur)
          :map occur-mode-map
          ("t" . toggle-truncate-lines)))
+
+(use-package prot-isearch
+  :straight (:type built-in)
+  :bind (("M-s %" . prot-search-isearch-replace-symbol)
+         ("M-s M-<" . prot-search-isearch-beginning-of-buffer)
+         ("M-s M->" . prot-search-isearch-end-of-buffer)
+         ("M-s u" . prot-search-occur-urls)
+         ("M-s M-u" . prot-search-occur-browse-url)
+         :map isearch-mode-map
+         ("<backspace>" . prot-search-isearch-abort-dwim)
+         ("<C-return>" . prot-search-isearch-other-end)))
 #+end_src
 
-*** Cross-references (xref.el)
-:PROPERTIES:
-:CUSTOM_ID: h:594bca38-542c-4aac-95f5-349f034c6802
-:END:
+Here is =prot-search.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-This is a tool that gets used by a variety of tools, including
-=project.el= (see [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  Xref
-provides helpful commands for code navigation and discovery, such as
-=xref-find-definitions= (=M-.=) and its counterpart =xref-pop-marker-stack=
-(=M-,=).  I like the way it is set up by default and have no need to
-configure it further.
-
-#+begin_src emacs-lisp
-(use-package xref
-  :config
-  (setq xref-show-definitions-function #'xref--show-defs-minibuffer)
-  (setq xref-search-program 'ripgrep))  ; Emacs 28
-#+end_src
+#+include: straight/repos/prot-lisp/prot-search.el src emacs-lisp :tangle no
 
 *** Regular expressions: re-builder and visual-regexp
 :PROPERTIES:
@@ -2184,6 +2088,25 @@ This function is meant to be mapped to a key in `rg-mode-map'."
          ("C-p" . previous-line)
          ("M-n" . rg-next-file)
          ("M-p" . rg-prev-file)))
+#+end_src
+
+*** Cross-references (xref.el)
+:PROPERTIES:
+:CUSTOM_ID: h:594bca38-542c-4aac-95f5-349f034c6802
+:END:
+
+This is a tool that gets used by a variety of tools, including
+=project.el= (see [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  Xref
+provides helpful commands for code navigation and discovery, such as
+=xref-find-definitions= (=M-.=) and its counterpart =xref-pop-marker-stack=
+(=M-,=).  I like the way it is set up by default and have no need to
+configure it further.
+
+#+begin_src emacs-lisp
+(use-package xref
+  :config
+  (setq xref-show-definitions-function #'xref--show-defs-minibuffer)
+  (setq xref-search-program 'ripgrep))  ; Emacs 28
 #+end_src
 
 * Directory, buffer, window management
