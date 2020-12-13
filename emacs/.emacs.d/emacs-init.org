@@ -3873,6 +3873,39 @@ with all my Elisp code):
 
 #+include: straight/repos/prot-lisp/usls.el src emacs-lisp :tangle no
 
+** TMR Must Recur (just my simplistic timer)
+:PROPERTIES:
+:CUSTOM_ID: h:c90ba6fa-ebec-42a2-98a6-3ff9027b1ffa
+:END:
+
+Sometimes I need to set off a timer with a notification.  I used to rely
+on a homegrown shell script for such a task, but where is the fun in
+that?
+
+=tmr.el= satisfies my curiosity to experiment with Elisp, while it also
+provides the =tmr= function that I only ever use from Eshell or through
+=eval-expression= (=M-:=).
+
+=tmr= works by accepting a number, which it interprets as a count of
+minutes.  It can also read strings, such as "1h" for 1 hour and "30s"
+for 30 seconds.  Once the time elapses, it produces a system
+notification as well as a message in the echo area with information
+about the start and end times (review the echo area log with =C-h e=).
+Then it plays back some otherwise annoying sound, just to be sure that
+you feel an urge to quit whatever caught your attention in the meantime.
+
+#+begin_src emacs-lisp
+(use-package tmr
+  :straight (:type built-in)
+  :config
+  (setq tmr-sound-file
+        "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"))
+#+end_src
+
+This is its code (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/tmr.el src emacs-lisp :tangle no
+
 ** Email settings
 :PROPERTIES:
 :CUSTOM_ID: h:5ad80664-3163-4d9d-be65-462637d77903
