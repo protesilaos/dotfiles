@@ -1515,13 +1515,9 @@ referenced in the source code below this configuration block):
 + [[https://www.manueluberti.eu/emacs/2020/11/21/flymake-projects/][Restricting Flymake to my projects]] (2020-11-21)
 
 #+begin_src emacs-lisp
-(use-package prot-project
-  :straight (:type built-in)
+(use-package project
   :demand
   :init
-  (setq prot-project-project-roots '("~/Git/Projects/" "~/Git/build/"))
-  (setq prot-project-commit-log-limit 25)
-  (setq prot-project-large-file-lines 1000)
   (setq project-switch-commands
         '((?f "File" project-find-file)
           (?s "Subdir" prot-project-find-subdir)
@@ -1534,8 +1530,16 @@ referenced in the source code below this configuration block):
           (?v "VC dir" project-vc-dir)
           (?l "Log VC" prot-project-commit-log)
           (?e "Eshell" project-eshell)))
-  :bind (("C-x p q" . project-query-replace-regexp) ; C-x p is `project-prefix-map'
-         ("C-x p <delete>" . prot-project-remove-project)
+  :bind ("C-x p q" . project-query-replace-regexp)) ; C-x p is `project-prefix-map'
+
+(use-package prot-project
+  :straight (:type built-in)
+  :demand
+  :init
+  (setq prot-project-project-roots '("~/Git/Projects/" "~/Git/build/"))
+  (setq prot-project-commit-log-limit 25)
+  (setq prot-project-large-file-lines 1000)
+  :bind (("C-x p <delete>" . prot-project-remove-project)
          ("C-x p l" . prot-project-commit-log)
          ("C-x p m" . prot-project-magit-status)
          ("C-x p s" . prot-project-find-subdir)
