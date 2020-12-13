@@ -4527,7 +4527,7 @@ calling the internal `modus-themes-load-operandi' and
                                          blue-alt-other))))
 ;;;;; selectrum
     `(selectrum-current-candidate
-      ((,class :inherit bold :foreground ,fg-main :underline ,fg-main
+      ((,class :inherit bold :foreground ,fg-main
                :background ,@(pcase modus-themes-completions
                                ('opinionated (list bg-active))
                                (_ (list bg-inactive))))))
@@ -4849,7 +4849,7 @@ calling the internal `modus-themes-load-operandi' and
     `(tuareg-font-lock-label-face ((,class :inherit font-lock-type-face)))
     `(tuareg-font-lock-line-number-face ((,class :foreground ,fg-special-warm)))
     `(tuareg-font-lock-module-face ((,class :inherit font-lock-builtin-face)))
-    `(tuareg-font-lock-multistage-face ((,class :inherit bold :background ,bg-alt :foreground blue)))
+    `(tuareg-font-lock-multistage-face ((,class :inherit bold :background ,bg-alt :foreground ,blue)))
     `(tuareg-font-lock-operator-face ((,class :inherit font-lock-preprocessor-face)))
     `(tuareg-opam-error-face ((,class :inherit error)))
     `(tuareg-opam-pkg-variable-name-face ((,class :inherit font-lock-variable-name-face)))
