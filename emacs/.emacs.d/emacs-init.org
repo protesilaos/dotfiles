@@ -8349,6 +8349,24 @@ is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant secti
   (setq css-fontify-colors nil))
 #+end_src
 
+*** Shell scripts (sh-mode)
+:PROPERTIES:
+:CUSTOM_ID: h:fee2b8ff-80d6-4669-904c-c8ee64c9719c
+:END:
+
+Another built-in mode that targets shell scripts.  I think it works well
+out-of-the-box, even though it provides lots of configuration options to
+further control its behaviour.
+
+All I want here is to enable =sh-mode= in various files that are not
+obvious shell scripts, like Arch Linux's package recipes.  As such, the
+=:mode= list will be expanded over time.
+
+#+begin_src emacs-lisp
+(use-package sh-script
+  :mode (("PKGBUILD" . sh-mode)))
+#+end_src
+
 ** Line length (column count)
 :PROPERTIES:
 :CUSTOM_ID: h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c
