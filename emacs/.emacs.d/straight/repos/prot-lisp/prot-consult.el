@@ -29,8 +29,9 @@
 
 ;;; Code:
 
-(require 'consult)
-(require 'prot-imenu)
+(when (featurep 'consult)
+  (require 'consult))
+(require 'prot-pulse)
 
 (defgroup prot-consult ()
   "Tweaks for consult.el."
@@ -41,11 +42,21 @@
   :group 'prot-consult
   :type 'boolean)
 
-(defvar prot-consult-jump-recentre-hook nil
-  "Hook that runs after select Consult commands.
-To be used with `advice-add'.")
+(defcustom prot-consult-command-centre-list '(consult-line consult-mark)
+  "Commands to run `prot-consult-jump-recentre-hook'.
+You must restart function `prot-consult-set-up-hooks-mode' for
+changes to take effect."
+  :group 'prot-consult
+  :type 'list)
 
-(defvar prot-consult-jump-top-hook nil
+(defcustom prot-consult-command-top-list '(consult-outline)
+  "Commands to run `prot-consult-jump-top-hook'.
+You must restart function `prot-consult-set-up-hooks-mode' for
+changes to take effect."
+  :group 'prot-consult
+  :type 'list)
+
+(defvar prot-consult-jump-recentre-hook nil
   "Hook that runs after select Consult commands.
 To be used with `advice-add'.")
 
@@ -53,27 +64,36 @@ To be used with `advice-add'.")
   "Run `prot-consult-jump-recentre-hook'."
   (run-hooks 'prot-consult-jump-recentre-hook))
 
+(defvar prot-consult-jump-top-hook nil
+  "Hook that runs after select Consult commands.
+To be used with `advice-add'.")
+
 (defun prot-consult-after-jump-top (&rest _)
   "Run `prot-consult-jump-top-hook'."
   (run-hooks 'prot-consult-jump-top-hook))
 
 ;;;###autoload
-(defun prot-consult-set-up-hooks ()
-  "Set up hooks for select Consult commands."
-  (if prot-consult-add-advice-set-hooks
+(define-minor-mode prot-consult-set-up-hooks-mode
+  "Set up hooks for Consult."
+  :init-value nil
+  :global t
+  (if (and prot-consult-add-advice-set-hooks
+           prot-consult-set-up-hooks-mode)
       (progn
-        (dolist (fn '(consult-line consult-mark))
+        (dolist (fn prot-consult-command-centre-list)
           (advice-add fn :after #'prot-consult-after-jump-recentre))
-        (advice-add #'consult-outline :after #'prot-consult-after-jump-top)
-        (add-hook 'prot-consult-jump-recentre-hook #'prot-imenu-recentre-pulse-centre)
-        (add-hook 'prot-consult-jump-top-hook #'prot-imenu-recentre-pulse-top)
-        (add-hook 'prot-consult-jump-top-hook #'prot-imenu-show-entry))
-    (dolist (fn '(consult-line consult-mark))
+        (dolist (fn prot-consult-command-top-list)
+          (advice-add fn :after #'prot-consult-after-jump-top))
+        (add-hook 'prot-consult-jump-recentre-hook #'prot-pulse-recentre-centre)
+        (add-hook 'prot-consult-jump-top-hook #'prot-pulse-recentre-top)
+        (add-hook 'prot-consult-jump-top-hook #'prot-pulse-show-entry))
+    (dolist (fn prot-consult-command-centre-list)
       (advice-remove fn #'prot-consult-after-jump-recentre))
-    (advice-remove #'consult-outline #'prot-consult-after-jump-top)
-    (remove-hook 'prot-consult-jump-recentre-hook #'prot-imenu-recentre-pulse-centre)
-    (remove-hook 'prot-consult-jump-top-hook #'prot-imenu-recentre-pulse-top)
-    (remove-hook 'prot-consult-jump-top-hook #'prot-imenu-show-entry)))
+    (dolist (fn prot-consult-command-top-list)
+      (advice-remove fn #'prot-consult-after-jump-top))
+    (remove-hook 'prot-consult-jump-recentre-hook #'prot-pulse-recentre-centre)
+    (remove-hook 'prot-consult-jump-top-hook #'prot-pulse-recentre-top)
+    (remove-hook 'prot-consult-jump-top-hook #'prot-pulse-show-entry)))
 
 (provide 'prot-consult)
 ;;; prot-consult.el ends here

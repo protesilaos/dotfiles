@@ -1225,10 +1225,14 @@ to the various jump actions that Consult makes possible.
          ("<tab>" . minibuffer-force-complete)))
 
 (use-package prot-consult
-  :after (consult prot-imenu)
+  :straight (:type built-in)
+  :after prot-pulse
   :config
   (setq prot-consult-add-advice-set-hooks t)
-  (prot-consult-set-up-hooks))
+  (setq prot-consult-command-centre-list '(consult-line consult-mark))
+  (setq prot-consult-command-top-list '(consult-outline))
+
+  (prot-consult-set-up-hooks-mode 1))
 #+end_src
 
 Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
