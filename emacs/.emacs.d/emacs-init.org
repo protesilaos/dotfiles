@@ -1352,7 +1352,7 @@ following block with the package configurations:
   :after embark
   :config
   (setq prot-embark-live-occur-disable-icomplete t)
-  (prot-embark-icomplete-hooks)
+  (prot-embark-icomplete-hooks-mode 1)
   :bind (:map embark-occur-mode-map
          ("h" . prot-simple-describe-symbol)  ; from `prot-simple.el'
          :map minibuffer-local-completion-map

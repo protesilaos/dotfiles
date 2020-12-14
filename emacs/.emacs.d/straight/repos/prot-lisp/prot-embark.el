@@ -76,9 +76,12 @@
         (icomplete-mode 1)))))
 
 ;;;###autoload
-(defun prot-embark-icomplete-hooks ()
+(define-minor-mode prot-embark-icomplete-hooks-mode
   "Set up hooks for `prot-embark--icomplete-toggle'."
-  (if prot-embark-live-occur-disable-icomplete
+  :init-value nil
+  :global t
+  (if (and prot-embark-icomplete-hooks-mode
+           prot-embark-live-occur-disable-icomplete)
       (progn
         (add-hook 'prot-embark-live-occur-hook #'prot-embark--icomplete-toggle)
         (add-hook 'minibuffer-exit-hook #'prot-embark--icomplete-toggle))
