@@ -1395,7 +1395,7 @@ text below the heading when used in Org or Outline modes.
 Make sure to watch my [[https://protesilaos.com/codelog/2020-07-20-emacs-outline-imenu/][video demo of outline-minor-mode and imenu]]
 (2020-07-20), with the proviso that it was recorded with earlier
 versions of my code.  For Org, you need to set =org-imenu-depth= to a high
-value (refer to the section on [[#h:b95d0798-1cc5-4083-8728-f6a51ddbc531][Org basic configurations]]).
+value (refer to the section on [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org-mode (personal information manager)]]).
 
 #+begin_src emacs-lisp
 (use-package imenu
@@ -4061,10 +4061,10 @@ wisely or prepare to use `eshell-interrupt-process'."
 /NOTE 2020-12-14: Pending major review/.
 
 This is a shell (Bash, in my case) that runs inside of Emacs.  Unlike
-the [[#h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2][terminal emulators defined below]], this one can use standard Emacs
-keys and behaves much like an ordinary buffer.  It also integrates
-nicely with the built-in completion tools, which makes it particularly
-nice to work with.
+terminal emulators, this one can use standard Emacs keys and behaves
+much like an ordinary buffer.  It also integrates nicely with the
+built-in completion tools, which makes it particularly nice to work
+with.
 
 The one area where this Shell differs substantially from ordinary
 buffers is with regard to the command prompt: you can re-run a command
