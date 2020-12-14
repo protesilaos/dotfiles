@@ -3046,775 +3046,6 @@ And here is =prot-logos.el= in its totality.  It is available as a file in
 
 #+include: straight/repos/prot-lisp/prot-logos.el src emacs-lisp :tangle no
 
-** Calendar
-:PROPERTIES:
-:CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
-:END:
-
-Some basic settings for =calendar.el=.  It is used by the diary (next
-section), as well as all Org-mode facilities that require date/time
-input (see following sections).
-
-#+begin_src emacs-lisp
-(use-package calendar
-  :config
-  (setq calendar-mark-diary-entries-flag t)
-  (setq calendar-time-display-form
-        '(24-hours ":" minutes
-                   (when time-zone
-                     (concat " (" time-zone ")"))))
-  (setq calendar-week-start-day 1)      ; Monday
-  (setq calendar-date-style 'iso)
-  (setq calendar-christian-all-holidays-flag nil)
-  (setq calendar-holidays
-        (append holiday-local-holidays  ; TODO set local holidays
-                holiday-solar-holidays))
-
-  (use-package solar
-    :config
-    (setq calendar-latitude 35.17
-          calendar-longitude 33.36))
-
-  (use-package lunar
-    :config
-    (setq lunar-phase-names
-          '("New Moon"
-            "First Quarter Moon"
-            "Full Moon"
-            "Last Quarter Moon")))
-
-  :hook (calendar-today-visible-hook . calendar-mark-today))
-#+end_src
-
-** Diary
-:PROPERTIES:
-:CUSTOM_ID: h:b07e88e2-c822-4ca0-aeb5-894a208139a7
-:END:
-
-Emacs comes with a built-in facility to record tasks and create
-notifications for them.  It is simply called =diary=.  And I have no use
-for it whatsoever, so let's make sure it is disabled.
-
-#+begin_src emacs-lisp
-(use-package diary-lib
-  :disabled
-  ;; :config
-  ;; (setq diary-file "~/.emacs.d/diary")
-  ;; (setq diary-entry-marker "diary")
-  ;; (setq diary-show-holidays-flag t)
-  ;; (setq diary-header-line-flag nil)
-  ;; (setq diary-mail-addr "public@protesilaos.com")
-  ;; (setq diary-mail-days 3)
-  ;; (setq diary-number-of-entries 3)
-  ;; (setq diary-comment-start ";")
-  ;; (setq diary-comment-end "")
-  ;; (setq diary-date-forms
-  ;;       '((day "/" month "[^/0-9]")
-  ;;         (day "/" month "/" year "[^0-9]")
-  ;;         (day " *" monthname " *" year "[^0-9]")
-  ;;         (monthname " *" day "[^,0-9]")
-  ;;         (monthname " *" day ", *" year "[^0-9]")
-  ;;         (year "[-/]" month "[-/]" day "[^0-9]")
-  ;;         (dayname "\\W")))
-  )
-#+end_src
-
-** Org-mode (personal information manager)
-:PROPERTIES:
-:CUSTOM_ID: h:4e8347de-415e-4804-b383-d61499e05ca1
-:END:
-
-Org offers you the basic tools to organise your life in super-efficient
-ways using nothing but plain text.
-
-In its purest form, Org is a markup language that is similar to
-Markdown: symbols are used to denote the meaning of a construct in its
-context, such as what may represent a headline element or a phrase that
-calls for emphasis.
-
-What lends Org its super powers though is everything else built around
-it: a rich corpus of elisp functions that automate, link, combine,
-enhance, structure, or otherwise enrich the process of using this rather
-simple markup language.  This very document is written in =org-mode= while
-its website version is produced by a function that exports Org notation
-to its HTML equivalent.
-
-The present section contains several sub-sections, each dedicated to a
-particular aspect of Org.  Unless explicitly stated, everything should
-be considered a work-in-progress as I gradually build up my knowledge of
-this killer app.
-
-*** Org basic configurations
-:PROPERTIES:
-:CUSTOM_ID: h:b95d0798-1cc5-4083-8728-f6a51ddbc531
-:END:
-
-These are the base settings that other more specialised functions of Org
-depend on.  Here is an overview:
-
-+ Agenda and default setup :: The bulk of the =org-agenda= configurations
-  is defined in a [[#h:847477fe-ef86-4e12-a2da-6c431528da99][subsequent section]].  Here we just declare the default
-  file system paths for searching for relevant files.  The "notes" file
-  is meant as a fallback option for when =org-capture= has not been given
-  a file to write to (also see the [[#h:7b88b89a-6eb3-4da3-a9fe-0e447300a250][org-capture section]]).
-+ Re-filing items :: This is done with =C-c C-w= which then prompts us for
-  a heading under which the current item should be positioned.  I set my
-  Org agenda files as one possible target and the current buffer as the
-  other.  The maximum depth should be 2 levels.  Re-filing can also be
-  done from inside an =org-capture= interface.  Any new entry should go at
-  the end of the heading it is filled under.
-+ To-do settings :: I generally use a very simple system of writing
-  tasks, in the sense that I do not really care about time-tracking or
-  assigning an intermediate state, etc.  I let tags and the description
-  further qualify the meaning.  The letter inside parentheses is for
-  faster access when using the =C-c C-t= method.  The upside of having
-  lots of specialised keywords is that it becomes easier to filter your
-  tasks in the relevant agenda views.
-+ Logging meta data :: I do not really care about tracking all the
-  minutia of why a deadline was reviewed or whatnot.  Though it is kind
-  of nice to have a timestamp of when a task was concluded (still don't
-  care about it).
-
-Now on to the miscellaneous settings:
-
-+ With the =t= value of =org-special-ctrl-a/e= we assign a special meaning
-  to the motions that take us to the beginning or end of the line when
-  those are performed over a heading.  The idea here is that we can
-  always perform changes to the absolute beginning of the line, such as
-  by increasing the heading's depth with =M-right=.
-+ I do not enable this sort of contextual awareness for the =C-k= command,
-  because I do consider it rather unpredictable.
-+ All the markup characters should be hidden from view, in the same way
-  links are.  This generally reduces the distractions in the document.
-+ The =org-structure-template-alist= had its value and functionality
-  changed in Org version 9.3, which ships with Emacs 27.  To insert a
-  template you must now use =C-c C-,=.
-+ The =return= key should never follow a link because I sometimes call it
-  by accident.  Use =C-c C-o= instead.
-+ With =org-loop-over-headlines-in-active-region= we can perform actions
-  such as tagging and scheduling on the items within the active region.
-  I configure it to only apply to headings of the same level, in order
-  to avoid possible inconveniences.
-
-Finally, note that I sometimes deliver simple presentations using Org.
-Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (prot-logos.el)]].
-
-#+begin_src emacs-lisp
-(use-package org
-  :straight (:host nil :type git
-             :repo "https://code.orgmode.org/bzg/org-mode") ; Get Org from its source
-  ;; ;; Use this instead of the above if you want the built-in version.
-  ;; :straight (:type built-in)
-  :init
-  (setq org-imenu-depth 7)
-  :config
-  ;; agenda and basic directory structure
-  (setq org-directory "~/Org")
-  (setq org-default-notes-file "~/Org/notes.org")
-  (setq org-agenda-files
-        '("~/Org"
-          "~/.emacs.d"
-          "~/Documents"))
-  ;; refile, todo
-  (setq org-refile-targets
-        '((org-agenda-files . (:maxlevel . 2))
-          (nil . (:maxlevel . 2))))
-  (setq org-refile-use-outline-path t)
-  (setq org-refile-allow-creating-parent-nodes 'confirm)
-  (setq org-refile-use-cache t)
-  (setq org-reverse-note-order nil)
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "|" "DONE(D)" "CANCEL(C)")
-          (sequence "MEET(m)" "|" "MET(M)")
-          (sequence "STUDY(s)" "|" "STUDIED(S)")
-          (sequence "WRITE(w)" "|" "WROTE(W)")))
-  (setq org-todo-keyword-faces
-        '(("MEET" . '(font-lock-preprocessor-face org-todo))
-          ("STUDY" . '(font-lock-variable-name-face org-todo))
-          ("WRITE" . '(font-lock-type-face org-todo))))
-  (setq org-priority-faces
-        '((?A . '(org-scheduled-today org-priority))
-          (?B . org-priority)
-          (?C . '(shadow org-priority))))
-  (setq org-fontify-done-headline nil)
-  (setq org-fontify-quote-and-verse-blocks t)
-  (setq org-fontify-whole-heading-line nil)
-  (setq org-fontify-whole-block-delimiter-line t)
-  (setq org-enforce-todo-dependencies t)
-  (setq org-enforce-todo-checkbox-dependencies t)
-  (setq org-track-ordered-property-with-tag t)
-  (setq org-highest-priority ?A)
-  (setq org-lowest-priority ?C)
-  (setq org-default-priority ?A)
-  ;; tags
-  (setq org-tag-alist                   ; TODO review org tag list
-        '((:startgroup)
-          ("@work")
-          ("@priv")
-          (:endgroup)
-          ("emacs")
-          ("modus")
-          ("politics")
-          ("economics")
-          ("philosophy")
-          ("paper")
-          ("book")
-          ("essay")
-          ("article")
-          ("mail")
-          ("website")))
-  ;; code blocks
-  (setq org-confirm-babel-evaluate nil)
-  ;; log
-  (setq org-log-done 'time)
-  (setq org-log-note-clock-out nil)
-  (setq org-log-redeadline nil)
-  (setq org-log-reschedule nil)
-  (setq org-read-date-prefer-future 'time)
-  ;; general
-  (setq org-adapt-indentation nil)      ; No, thanks!
-  (setq org-special-ctrl-a/e nil)
-  (setq org-special-ctrl-k nil)
-  (setq org-M-RET-may-split-line '((default . nil)))
-  (setq org-hide-emphasis-markers t)
-  (setq org-hide-macro-markers t)
-  (setq org-hide-leading-stars nil)
-  (setq org-structure-template-alist    ; CHANGED in Org 9.3, Emacs 27.1
-        '(("s" . "src")
-          ("E" . "src emacs-lisp")
-          ("e" . "example")
-          ("q" . "quote")
-          ("v" . "verse")
-          ("V" . "verbatim")
-          ("c" . "center")
-          ("C" . "comment")))
-  (setq org-catch-invisible-edits 'show)
-  (setq org-return-follows-link nil)
-  (setq org-loop-over-headlines-in-active-region 'start-level)
-  (setq org-modules '(ol-gnus ol-info ol-eww))
-  :bind (:map org-mode-map
-              ("<C-return>" . nil)
-              ("<C-S-return>" . nil)))
-#+end_src
-
-*** Org links
-:PROPERTIES:
-:CUSTOM_ID: h:50d5527d-a4b5-4d36-aa43-8abb21c07927
-:END:
-
-The =org-store-link= is one of the commands I use the most, as it allows
-me to, inter alia, connect the various sections of this document.  Use
-it to store a direct link to the heading you are currently under (also
-see [[#h:031f7dbf-19e4-4ddf-a3d3-f648261412f6][Consistent Org heading IDs (and anchor tags)]]).
-
-There are several ways to insert such links.  With =C-c C-l= (which calls
-=org-insert-link=) you will be prompted to select a stored link from the
-link.  It will be inserted at point, using the right markup, but will
-first ask you for a description text.  Otherwise you can invoke =C-c C-l=
-with an active region, to create a link to that location with the
-selected text becoming the description.  Otherwise you can just call
-=org-insert-last-stored-link= to skip the interactive process and just
-insert the last link.
-
-In addition to these, =org-insert-link= can be used to create references
-on demand.  Say you have a URL on the kill-ring: =C-c C-l=, then =C-y=
-followed by =RET= to confirm your input.  Complete the process with a
-description and you are good to go.
-
-#+begin_src emacs-lisp
-(use-package ol
-  :config
-  (setq org-link-keep-stored-after-insertion t)
-  :bind (("C-c l" . org-store-link)
-         :map org-mode-map
-         ("C-c S-l" . org-toggle-link-display)
-         ("C-c C-S-l" . org-insert-last-stored-link)))
-#+end_src
-
-*** Org-capture templates
-:PROPERTIES:
-:CUSTOM_ID: h:7b88b89a-6eb3-4da3-a9fe-0e447300a250
-:END:
-
-The =org-capture= tool is a powerful way to quickly produce some kind of
-structured information.  The type of data and the way to store is
-determined by a system of templates which accepts a series of possible
-specifiers as well as the evaluated part of arbitrary elisp code.
-
-Each template is accessed via a key.  These are listed in a temporary
-buffer when you call =org-capture=.  Unique keys give direct access to
-their template, whereas templates that share a common initial key will
-produce a second selection list with the remaining options.  In the
-latter case, the initial key entry has no call to an actual function,
-but is just written as a heading.  For an example, look how I do the
-"Work" section: all templates whose keys follow the pattern =wX= are only
-visible after hitting =w= and are then accessed via =X=.
-
-The visibility of a template is further controlled by another variable:
-=org-capture-templates-contexts=.  This allows us to tell Org the context
-in which we want certain options to appear in.  Otherwise they remain
-concealed from our view.  Equipped with this piece of functionality, we
-can freely write highly specialised templates that capture structured
-text when viewing some particular item, but are not needed for more
-general purposes.  I do this for certain actions that only come into
-effect when reading email inside of the relevant =gnus= buffers (also
-check my [[#h:5ad80664-3163-4d9d-be65-462637d77903][comprehensive configurations for email]] and the Gnus news/mail
-reader).
-
-Speaking of mail, you will notice some specifiers like =:fromname=.  This
-refers to the =From= field in emails and will capture the name part only.
-Other similar keywords are =:from= (name and email), =:fromaddress= (email
-only), =:subject=.
-
-Specifiers that start with the caret sign (=^=) represent prompts for
-further user input.  The pattern =^{TEXT}= is a prompt whose name is =TEXT=.
-To offer possible options, use =^{Initial|ONE|TWO|THREE}=, where the first
-entry is the text of the prompt and all the rest are the available
-choices (depending on your completion framework, you may need to add an
-empty option as well, with =||=, should you ever want to insert nothing).
-In some templates I use the =^t= specifier, which is a built-in method to
-ask for a specific date.
-
-The text that goes into a template can be written as part of a string or
-inside a function that is then evaluated.  I generally prefer to use
-simple strings, though I might revise this approach going forward.  To
-insert a new line inside of a string, use =\n=.
-
-The =%?= determines where the point should be once the template is filled
-in.  While =%i= will insert the contents of the active region.
-
-As things currently stand, my capture templates always write to headings
-inside of files.  Note though that there are more possibilities, as
-described in the manual.
-
-A file can be specified by its absolute path or just a name.  In the
-latter case, its location is understood relative to =org-directory=.  When
-using the =file+headline= pattern, non-existing files are created
-automatically once you call the relevant template.  Same for their
-respective headings.
-
-Finally, the =contrib/org-capture-no-delete-windows= and relevant =advice=
-address a problem I have when =org-capture= fails to conclude its actions
-when called from inside of a side window (for more on those, refer to
-the section on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).  The code is taken
-directly from this [[https://stackoverflow.com/a/54251825][Stack Overflow thread]].
-
-Consider watching my [[https://protesilaos.com/codelog/2020-02-04-emacs-org-capture-intro/][primer on org-capture]] (2020-02-04) which shows all
-of the above in action.
-
-#+begin_src emacs-lisp
-(use-package org-capture
-  :after org
-  :config
-  (setq org-capture-templates
-        `(("a" "Article to write" entry
-           (file+headline "tasks.org" "Writing list")
-           ,(concat "* WRITE %^{Title} %^g\n"
-                    "SCHEDULED: %^t\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n:END:\n\n"
-                    "%i%?"))
-          ("b" "Basic task for future review" entry
-           (file+headline "tasks.org" "Basic tasks that need to be reviewed")
-           ,(concat "* %^{Title}\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n"
-                    ":END:\n\n"
-                    "%i%l"))
-          ("w" "Work")
-          ("wt" "Task or assignment" entry
-           (file+headline "work.org" "Tasks and assignments")
-           ,(concat "* TODO [#A] %^{Title} :@work:\n"
-                    "SCHEDULED: %^t\n"
-                    ":PROPERTIES:\n:CAPTURED: %U\n:END:\n\n"
-                    "%i%?"))
-          ("wm" "Meeting, event, appointment" entry
-           (file+headline "work.org" "Meetings, events, and appointments")
-           ,(concat "* MEET [#A] %^{Title} :@work:\n"
-                    "SCHEDULED: %^T\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n:END:\n\n"
-                    "%i%?"))
-          ("t" "Task with a due date" entry
-           (file+headline "tasks.org" "Task list with a date")
-           ,(concat "* %^{Scope of task||TODO|STUDY|MEET} %^{Title} %^g\n"
-                    "SCHEDULED: %^t\n"
-                    ":PROPERTIES:\n:CAPTURED: %U\n:END:\n\n"
-                    "%i%?"))
-          ("r" "Reply to an email" entry
-           (file+headline "tasks.org" "Mail correspondence")
-           ,(concat "* TODO [#B] %:subject :mail:\n"
-                    "SCHEDULED: %t\n:"
-                    "PROPERTIES:\n:CONTEXT: %a\n:END:\n\n"
-                    "%i%?"))))
-
-  (setq org-capture-templates-contexts
-        '(("r" ((in-mode . "gnus-article-mode")
-                (in-mode . "gnus-summary-mode")))))
-
-  (defun contrib/org-capture-no-delete-windows (oldfun args)
-    (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
-      (apply oldfun args)))
-
-  (advice-add 'org-capture-place-template
-              :around 'contrib/org-capture-no-delete-windows)
-
-  :bind ("C-c c" . org-capture))
-#+end_src
-
-*** Org agenda
-:PROPERTIES:
-:CUSTOM_ID: h:847477fe-ef86-4e12-a2da-6c431528da99
-:END:
-
-The =org-agenda= is not just a single interface.  It rather is your
-conduit to a set of utilities from where you can keep track of all the
-tasks you have written in the files declared as part of =org-agenda-files=
-(see its value in the [[#h:b95d0798-1cc5-4083-8728-f6a51ddbc531][section that covers the base Org configurations]]).
-Calling =org-agenda= will present you with a list of possible options: the
-"dispatcher" as it called.
-
-Here is a primer (there are many more functions documented in the
-manual):
-
-+ From the dispatcher, the =a= is where you keep track of all the items
-  that have a date assigned to them, be it =SCHEDULED= or =DEADLINE=.  To
-  assign such a value to a heading use =C-c C-s= or =C-c C-d= respectively.
-  Run those commands with a universal prefix (=C-u=) to remove the
-  timestamp.  Hit =/= to filter this view to match particular tags.
-+ In the dispatcher's menu, the =t= will list all your tasks, regardless
-  of whether they have a date assigned to them.  You can then filter by
-  keyword, regular expression, etc.  Check the top of the buffer for
-  information on how to do that.
-+ And the =n= in the dispatcher will offer you a combined view of the
-  above.
-
-Now a few words about some of my customisations (remember to use Emacs'
-documentation facilities over each item, such as =C-h v=):
-
-+ Always ask for confirmation when hitting =C-k= from the agenda views.
-  That command removes the entry in the original file.
-+ Show all dates in the current view, including those that have no
-  entries.  I find it easier that way to assess how far apart the tasks
-  are.
-+ Do not produce a message in the echo area showing the outline path.
-  It is too distracting.
-+ Any valid time expressions in headlines should be ignored.  Otherwise
-  they are used as part of the relevant sorting methods.
-+ The default view should just show me a three day span.  All the
-  commands for changing views still work as expected (e.g. hit =w= to show
-  the current week).
-+ Disable follow mode by default.  This produces a view of the current
-  item's original context in the other window.  It can be toggled on by
-  hitting =F=.
-+ Time stamps should always be expressed in 24h format.
-+ Stylistic tweaks to the time grid view format.
-+ Disable the key bindings that cycle through the agenda files: too easy
-  to hit while trying to perform some other action.  Besides, I do not
-  need that kind of functionality.
-
-#+begin_src emacs-lisp
-(use-package org-agenda
-  :after org
-  :config
-  ;; Basic setup
-  (setq org-agenda-span 14)
-  (setq org-agenda-start-on-weekday 1)  ; Monday
-  (setq org-agenda-confirm-kill t)
-  (setq org-agenda-show-all-dates t)
-  (setq org-agenda-show-outline-path nil)
-  (setq org-agenda-window-setup 'current-window)
-  (setq org-agenda-skip-comment-trees t)
-  (setq org-agenda-menu-show-matcher t)
-  (setq org-agenda-menu-two-columns nil)
-  (setq org-agenda-sticky nil)
-  (setq org-agenda-custom-commands-contexts nil)
-  (setq org-agenda-max-entries nil)
-  (setq org-agenda-max-todos nil)
-  (setq org-agenda-max-tags nil)
-  (setq org-agenda-max-effort nil)
-
-  ;; General view options
-  (setq org-agenda-prefix-format
-        '((agenda . " %i %-12:c%?-12t% s")
-          (todo . " %i %-12:c")
-          (tags . " %i %-12:c")
-          (search . " %i %-12:c")))
-  (setq org-agenda-sorting-strategy
-        '(((agenda habit-down time-up priority-down category-keep)
-           (todo priority-down category-keep)
-           (tags priority-down category-keep)
-           (search category-keep))))
-  (setq org-agenda-breadcrumbs-separator "->")
-  (setq org-agenda-todo-keyword-format "%-1s")
-  (setq org-agenda-diary-sexp-prefix nil)
-  (setq org-agenda-fontify-priorities 'cookies)
-  (setq org-agenda-category-icon-alist nil)
-  (setq org-agenda-remove-times-when-in-prefix nil)
-  (setq org-agenda-remove-timeranges-from-blocks nil)
-  (setq org-agenda-compact-blocks nil)
-  (setq org-agenda-block-separator ?—)
-
-  (defun prot/org-agenda-format-date-aligned (date)
-    "Format a DATE string for display in the daily/weekly agenda.
-This function makes sure that dates are aligned for easy reading.
-
-Slightly tweaked version of `org-agenda-format-date-aligned' that
-produces dates with a fixed length."
-    (require 'cal-iso)
-    (let* ((dayname (calendar-day-name date t))
-           (day (cadr date))
-           (day-of-week (calendar-day-of-week date))
-           (month (car date))
-           (monthname (calendar-month-name month t))
-           (year (nth 2 date))
-           (iso-week (org-days-to-iso-week
-                      (calendar-absolute-from-gregorian date)))
-           (weekyear (cond ((and (= month 1) (>= iso-week 52))
-                            (1- year))
-                           ((and (= month 12) (<= iso-week 1))
-                            (1+ year))
-                           (t year)))
-           (weekstring (if (= day-of-week 1)
-                           (format " (W%02d)" iso-week)
-                         "")))
-      (format "%s %2d %s %4d%s"
-              dayname day monthname year weekstring)))
-
-  (setq org-agenda-format-date #'prot/org-agenda-format-date-aligned)
-
-  ;; Marks
-  (setq org-agenda-bulk-mark-char "#")
-  (setq org-agenda-persistent-marks nil)
-
-  ;; Diary entries
-  (setq org-agenda-insert-diary-strategy 'date-tree)
-  (setq org-agenda-insert-diary-extract-time nil)
-  (setq org-agenda-include-diary t)
-
-  ;; Follow mode
-  (setq org-agenda-start-with-follow-mode nil)
-  (setq org-agenda-follow-indirect t)
-
-  ;; Multi-item tasks
-  (setq org-agenda-dim-blocked-tasks t)
-  (setq org-agenda-todo-list-sublevels t)
-
-  ;; Filters and restricted views
-  (setq org-agenda-persistent-filter nil)
-  (setq org-agenda-restriction-lock-highlight-subtree t)
-
-  ;; Items with deadline and scheduled timestamps
-  (setq org-agenda-include-deadlines t)
-  (setq org-deadline-warning-days 5)
-  (setq org-agenda-skip-scheduled-if-done nil)
-  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
-  (setq org-agenda-skip-timestamp-if-deadline-is-shown t)
-  (setq org-agenda-skip-deadline-if-done nil)
-  (setq org-agenda-skip-deadline-prewarning-if-scheduled 1)
-  (setq org-agenda-skip-scheduled-delay-if-deadline nil)
-  (setq org-agenda-skip-additional-timestamps-same-entry nil)
-  (setq org-agenda-skip-timestamp-if-done nil)
-  (setq org-agenda-search-headline-for-time t)
-  (setq org-scheduled-past-days 365)
-  (setq org-deadline-past-days 365)
-  (setq org-agenda-move-date-from-past-immediately-to-today t)
-  (setq org-agenda-show-future-repeats t)
-  (setq org-agenda-prefer-last-repeat nil)
-  (setq org-agenda-timerange-leaders
-        '("" "(%d/%d): "))
-  (setq org-agenda-scheduled-leaders
-        '("Scheduled: " "Sched.%2dx: "))
-  (setq org-agenda-inactive-leader "[")
-  (setq org-agenda-deadline-leaders
-        '("Deadline:  " "In %3d d.: " "%2d d. ago: "))
-  ;; Time grid
-  (setq org-agenda-time-leading-zero t)
-  (setq org-agenda-timegrid-use-ampm nil)
-  (setq org-agenda-use-time-grid t)
-  (setq org-agenda-show-current-time-in-grid t)
-  (setq org-agenda-current-time-string
-        "Now -·-·-·-·-·-·-")
-  (setq org-agenda-time-grid
-        '((daily today require-timed)
-          (0600 0700 0800 0900 1000 1100
-                1200 1300 1400 1500 1600
-                1700 1800 1900 2000 2100)
-          " ....." "-----------------"))
-  (setq org-agenda-default-appointment-duration nil)
-
-  ;; Global to-do list
-  (setq org-agenda-todo-ignore-with-date t)
-  (setq org-agenda-todo-ignore-timestamp t)
-  (setq org-agenda-todo-ignore-scheduled t)
-  (setq org-agenda-todo-ignore-deadlines t)
-  (setq org-agenda-todo-ignore-time-comparison-use-seconds t)
-  (setq org-agenda-tags-todo-honor-ignore-options nil)
-
-  ;; Tagged items
-  (setq org-agenda-show-inherited-tags t)
-  (setq org-agenda-use-tag-inheritance
-        '(todo search agenda))
-  (setq org-agenda-hide-tags-regexp nil)
-  (setq org-agenda-remove-tags nil)
-  (setq org-agenda-tags-column -120)
-
-  ;; Agenda entry
-  ;;
-  ;; NOTE I do not use this right now.  Leaving everything to its
-  ;; default value.
-  (setq org-agenda-start-with-entry-text-mode nil)
-  (setq org-agenda-entry-text-maxlines 5)
-  (setq org-agenda-entry-text-exclude-regexps nil)
-  (setq org-agenda-entry-text-leaders "    > ")
-
-  ;; Logging, clocking
-  ;;
-  ;; NOTE I do not use these yet, though I plan to.  Leaving everything to
-  ;; its default value for the time being.
-  (setq org-agenda-log-mode-items '(closed clock))
-  (setq org-agenda-clock-consistency-checks
-        '((:max-duration "10:00" :min-duration 0 :max-gap "0:05" :gap-ok-around
-                         ("4:00")
-                         :default-face ; This should definitely be reviewed
-                         ((:background "DarkRed")
-                          (:foreground "white"))
-                         :overlap-face nil :gap-face nil :no-end-time-face nil
-                         :long-face nil :short-face nil)))
-  (setq org-agenda-log-mode-add-notes t)
-  (setq org-agenda-start-with-log-mode nil)
-  (setq org-agenda-start-with-clockreport-mode nil)
-  (setq org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2))
-  (setq org-agenda-search-view-always-boolean nil)
-  (setq org-agenda-search-view-force-full-words nil)
-  (setq org-agenda-search-view-max-outline-level 0)
-  (setq org-agenda-search-headline-for-time t)
-  (setq org-agenda-use-time-grid t)
-  (setq org-agenda-cmp-user-defined nil)
-  (setq org-sort-agenda-notime-is-late t)
-  (setq org-sort-agenda-noeffort-is-high t)
-
-  ;; Agenda column view
-  ;;
-  ;; NOTE I do not use these, but may need them in the future.
-  (setq org-agenda-view-columns-initially nil)
-  (setq org-agenda-columns-show-summaries t)
-  (setq org-agenda-columns-compute-summary-properties t)
-  (setq org-agenda-columns-add-appointments-to-effort-sum nil)
-  (setq org-agenda-auto-exclude-function nil)
-  (setq org-agenda-bulk-custom-functions nil)
-
-  :bind (("C-c a" . org-agenda)
-         :map org-mode-map
-         ("C-'" . nil)
-         ("C-," . nil)))
-#+end_src
-
-*** Org source code blocks
-:PROPERTIES:
-:CUSTOM_ID: h:88a2a57d-6181-4720-a64b-8a34286c26b2
-:END:
-
-These are just some basic settings that are particularly useful when
-inserting source code blocks.  I do not want Org to mess up with my
-indentation, while I need to see the native syntax highlighting for that
-language.
-
-The =org-src-window-setup= is accessed via the =C-c '= key once inside a
-code block that has a language assigned to it.
-
-#+begin_src emacs-lisp
-(use-package org-src
-  :after org
-  :config
-  (setq org-src-window-setup 'current-window)
-  (setq org-edit-src-persistent-message nil)
-  (setq org-src-fontify-natively t)
-  (setq org-src-preserve-indentation t)
-  (setq org-src-tab-acts-natively t)
-  (setq org-edit-src-content-indentation 0))
-#+end_src
-
-*** Org export
-:PROPERTIES:
-:CUSTOM_ID: h:6c06bd5e-7a3e-40fc-b7ca-60bbbbc6e769
-:END:
-
-Org's "export" facility has the power to convert a =.org= file into a
-number of common formats, including =.pdf=.  I only ever use it to produce
-the HTML version of this document or similar tasks along those lines.
-In the future, I might spend some time leveraging its potential for more
-demanding workflows.
-
-#+begin_src emacs-lisp
-(use-package ox
-  :after org
-  :commands (prot/ox-html prot/ox-texinfo)
-  :config
-  (setq org-export-with-toc t)
-  (setq org-export-headline-levels 8)
-  (setq org-export-dispatch-use-expert-ui nil)
-  (setq org-html-htmlize-output-type nil)
-  (setq org-html-head-include-default-style nil)
-  (setq org-html-head-include-scripts nil)
-  (use-package ox-texinfo)
-  ;; FIXME: how to remove everything else?
-  (setq org-export-backends '(html texinfo))
-
-  (defun prot/ox-html ()
-    (interactive)
-    (org-html-export-as-html nil nil nil t nil))
-
-  (defun prot/ox-texinfo ()
-    (interactive)
-    (org-texinfo-export-to-info)))
-#+end_src
-
-*** Consistent Org heading IDs (and anchor tags)
-:PROPERTIES:
-:CUSTOM_ID: h:031f7dbf-19e4-4ddf-a3d3-f648261412f6
-:END:
-
-Everything in this section, minus some minor tweaks from my part, is
-copied from this detailed tutorial on [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][Org header IDs]].  Basically, the
-problem is that exported HTML does not have reliable anchor tags for the
-various sections of the document.  This fixes the issue (read the
-article for more).
-
-#+begin_src emacs-lisp
-(use-package org-id
-  :after org
-  :commands contrib/org-id-headlines
-  :config
-  (setq org-id-link-to-org-use-id
-        'create-if-interactive-and-no-custom-id)
-
-  (defun contrib/org-id-get (&optional pom create prefix)
-    "Get the CUSTOM_ID property of the entry at point-or-marker
-POM. If POM is nil, refer to the entry at point. If the entry
-does not have an CUSTOM_ID, the function returns nil. However,
-when CREATE is non nil, create a CUSTOM_ID if none is present
-already. PREFIX will be passed through to `org-id-new'. In any
-case, the CUSTOM_ID of the entry is returned."
-    (org-with-point-at pom
-      (let ((id (org-entry-get nil "CUSTOM_ID")))
-        (cond
-         ((and id (stringp id) (string-match "\\S-" id))
-          id)
-         (create
-          (setq id (org-id-new (concat prefix "h")))
-          (org-entry-put pom "CUSTOM_ID" id)
-          (org-id-add-location id (format "%s" (buffer-file-name (buffer-base-buffer))))
-          id)))))
-
-  (defun contrib/org-id-headlines ()
-    "Add CUSTOM_ID properties to all headlines in the current
-file which do not already have one."
-    (interactive)
-    (org-map-entries
-     (lambda () (contrib/org-id-get (point) t)))))
-#+end_src
-
 ** USLS --- Unassuming Sidenotes of Little Significance
 :PROPERTIES:
 :CUSTOM_ID: h:787df548-0d95-4512-a61d-27852198f561
@@ -3896,6 +3127,1554 @@ you feel an urge to quit whatever caught your attention in the meantime.
 This is its code (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: straight/repos/prot-lisp/tmr.el src emacs-lisp :tangle no
+
+** Version control tools
+:PROPERTIES:
+:CUSTOM_ID: h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7
+:END:
+
+*** Diff-mode (and prot-diff.el extensions)
+:PROPERTIES:
+:CUSTOM_ID: h:2ff46d23-09d5-4d92-b0af-2339dc19719f
+:END:
+
+This covers the standard =diff-mode.el=, which I use quite often, such as
+while interfacing with the built-in Version Control framework (see the
+[[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on VC]]), or while browsing various code-related newsgroups
+through Gnus (refer to the [[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).
+
+Overview of my preferences for how diffs should look:
+
++ Always start the buffer in a read-only state.  A typo will mess things
+  up when trying to apply a patch.
++ After applying a diff hunk (=diff-apply-hunk= with =C-c C-a=) move on to
+  the next one.
++ Update hunk headers automatically following an edit to the diff.
++ Do not show word-wise ("refined") changes upon activation.  I prefer
+  to do so manually.  All such highlights are removed if you generate
+  the buffer again (with =g= as expected) and the default is to not show
+  word-wise changes.
++ Do not prettify headers.  I like the standard "patch" looks.  It also
+  makes it easier to copy the diff elsewhere.
+
+Now some notes on my =prot-diff.el= extensions, combined with a
+description of the basics of =diff-mode= (as always you can get
+documentation about the current buffer's major mode with =C-h m=---read
+[[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]] in the FAQ section appended to this document):
+
++ =prot-diff-buffer-dwim= will produce a diff that compares the current
+  buffer to the last saved state of the underlying file.  If the buffer
+  has no unsaved edits, the command will produce a diff that compares
+  the file to its last registered version-controlled state.  Calling the
+  command with an optional prefix argument (=C-u=) will enable word-wise
+  highlighting across the diff.
+
++ =prot-diff-refine-dwim= is how I manually control word-wise diff
+  highlights.  By default, the command will turn on refined changes
+  throughout the buffer.  If called with an optional prefix argument, it
+  will operate only on the diff hunk at point.  If the region is active,
+  it will instead apply fontification to the diff hunks encompassed by
+  the region.  And if word-wise highlights are already present, the
+  command will remove everything and leave point back where it was.
+
++ =prot-diff-narrow-dwim= narrows to the diff hunk at point.  If narrowing
+  is already present, it widens the buffer.  When invoked with an
+  optional prefix argument, it narrows to the current file.
+
++ =C-c C-c= or =M-o= takes you to the point of the changes in the source
+  file.  If you run this of the diff hunk's heading, you go to the
+  beginning of the context.  But if you place the point somewhere inside
+  of the diff's added changes or context, you will visit that exact
+  position in the original file (does not work for removed text because
+  technically it does not exist).
+
++ When working with patches to source code, which are distributed
+  e.g. through email, you can apply the current hunk with =C-c C-a= or
+  test for compatibility with =C-c C-t=.  This is a nice way to easily
+  merge contributions from others, without having to go through the
+  workflow of some proprietary Git/Version-Control forge.
+
++ With =M-n= and =M-p= you move between hunks.  With =M-}= and =M-{= or =M-N=, =M-P=
+  do the same between files.
+
+The =prot-diff-*= commands are part of my =prot-diff.el= library, reproduced
+in its entirety after this set of package declarations.
+
+*Pro tip:* enable =outline-minor-mode= to make diff sections foldable.
+Check [[#h:a8e737b8-7c90-4c68-8814-acf2f637ffa1][Outline mode, outline minor mode, and extras (prot-outline.el)]].
+
+Also read these sections:
+
++ [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]].
++ [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Generic version control (VC) framework]].
+
+#+begin_src emacs-lisp
+(use-package diff-mode
+  :config
+  (setq diff-default-read-only t)
+  (setq diff-advance-after-apply-hunk t)
+  (setq diff-update-on-the-fly t)
+  ;; The following are from Emacs 27.1
+  (setq diff-refine nil)                ; I do it on demand
+  (setq diff-font-lock-prettify nil)    ; better for patches
+  (setq diff-font-lock-syntax 'hunk-also))
+
+(use-package prot-diff
+  :straight (:type built-in)
+  ;; `prot-diff-buffer-dwim' replaces the default for `vc-diff' (which I
+  ;; bind to another key---see VC section).
+  :bind (("C-x v =" . prot-diff-buffer-dwim)
+         :map diff-mode-map
+         ("C-c C-b" . prot-diff-refine-dwim) ; replace `diff-refine-hunk'
+         ("C-c C-n" . prot-diff-narrow-dwim)))
+#+end_src
+
+This is =prot-diff.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-diff.el src emacs-lisp :tangle no
+
+*** Generic version control (VC) framework
+:PROPERTIES:
+:CUSTOM_ID: h:31deeff4-dfae-48d9-a906-1f3272f29bc9
+:END:
+
+VC is a generic framework that works with several version control
+systems, else "backends".  In practice though, I only ever use it with
+=git=.  Compared with =magit= (see section on [[#h:76d1b392-e693-40dc-b320-d4c1047115ab][Magit configs]]), =vc= offers a
+more abstract, buffer-oriented workflow that, I feel, covers all common
+version control cases.
+
+With VC we can track and ignore files, commit changes, view diffs and
+logs, push and pull from a remote…  Everything you would expect from a
+version control system.  But I am not sure it is possible or convenient
+to perform tasks such as staging only a particular part of a diff,
+handling multiple remotes, interactively rebasing the commit log, etc.
+
+As such, I employ VC as my generalist interface to the most common Git
+interactions: diffs, commits, logs.  While I rely on Magit for expedient
+access to the more advanced features of Git, all of which are rendered
+approachable through an interactive/modal interface.
+
+I started using VC with this a common scenario: to produce a diff of my
+current changes formatted as a ready-to-apply patch.  This is done with
+=vc-diff= (also see the =vc-git-diff-switches= variable).  A diff hunk can
+be applied while in the =*vc-diff*= buffer by hitting =C-c C-a=.  Fairly
+easy.  One can always save the diff buffer using the standard =C-x C-w=
+command (=write-file=).  Use these to send patches (e.g. via email),
+without having to go through proprietary web tools.
+
+Another nice feature is a region-specific commit log with =C-x v h=
+(=vc-region-history=).  Highlight a region and run the command to get a
+clear view of how it took form.  Quite an easy way to "git blame".  For
+a more macroscopic view of the file's entire history you can always rely
+on =C-x v g= or my alias =C-x v a= which calls =vc-annotate=.  Commits are
+colour-coded with those on the red side of the spectrum being the newest
+ones, while those on the blue end representing the older ones.
+
+=C-x v v= (=vc-next-action=) is a hidden gem: a paradigm of minimalism done
+right.  On a new project it will first ask you for a backend.  Selecting
+=git= will run =git init=.  Invoking the command again will track the file
+and commit the changes.  If the file is already being tracked, it will
+just proceed to the next step.  It always follows a logical sequence
+which translates into a powerful metaphor of going through the process
+of committing changes to files.
+
+The commit buffer presents you with a summary section followed by the
+body of the commit message, separated by an empty line (shown as a
+border) as per the conventions that govern good commit messages.  In the
+lower part you can see the affected files (just the current file by
+default).  The standard =C-c C-c= confirms the commit, while =C-c C-k=
+cancels it.  Furthermore, there is =C-c C-f= to view the file set
+concerned (in case it is not already visible below the message area), as
+well as =C-c C-d= to produce a diff of what is being committed.
+
+You can review the commit log for the current file with =C-x v l=
+(=vc-print-log=) or for the entirety of the current project with =C-x v L=
+(=vc-print-root-log=).  From there you can display any diff with =d= or find
+the prior state of the commit at point with =f=.  Use the latter as a
+starting point for reverting to a prior state.  Also note that while
+inside the root log view, you can use an active region to show diffs in
+that range of commits.
+
+With =vc-dir=, which I rebind to the more logical "project" mnemonic of
+=C-x v p= (=prot/vc-dir-project=), you can mark with =m= several files to add
+to a commit.  Use =M= to mark all files with the same status.  This mode
+offers easy access to the standard VC actions.  To commit the file at
+point or the marked ones hit =v=.  To push do =P=.  Same principle for
+diffs, logs, etc.
+
+By the way, rebinding =vc-dir= has another upside of allowing its original
+key binding to be assigned to =vc-diff=; which in turn makes that
+mnemonically consistent with the =C-x v D= sequence, else =vc-root-diff=
+(make sure to check my key re-bindings or aliases).
+
+Some more common actions (read their docstrings for further help):
+
+| Command         | Key chord | VC-dir key |
+|-----------------+-----------+------------|
+| vc-update       | C-x v +   | +          |
+| vc-push         | C-x v P   | P          |
+| vc-log-incoming | C-x v I   | I          |
+| vc-log-outgoing | C-x v O   | O          |
+
+Based on these (and there are more), you can already see how VC may be
+used as your main tool for version control, from committing changes, to
+pulling/pushing from/to a remote, viewing commit logs, etc.  It depends
+on your needs and preferences.  Run =C-x v C-h= to get a full list of the
+possible commands.  Read the docstring of each command for further
+information.  Then in each of the various VC modes try =C-h m= for further
+help.  Also consult the manual and make liberal use of =C-h f= or =C-h v=.
+
+Changes to all tracked files are highlighted in the fringe thanks to the
+=diff-hl= package which is [[#h:5b71e71f-353f-4290-951b-3fc575c0fcba][defined elsewhere in this document]] (as I
+consider it an "interface" element).  Any rules that control the
+placement of VC-related (and other) buffers are defined in the section
+on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (specifically, refer to the variable
+=display-buffer-alist=).
+
+Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]]
+(2020-03-30).
+
+*Careful with the keybindings* I define.  Many of them do other things by
+default and /I might still review them further/.  When in doubt, stick
+with the defaults.
+
+#+begin_src emacs-lisp
+;; TODO 2020-12-09: put all my code in prot-vc.el and review it
+(use-package vc
+  :config
+  (setq vc-find-revision-no-save t)
+
+  (use-package add-log
+    :config
+    ;; I use a different account for git commits
+    (setq add-log-mailing-address "info@protesilaos.com")
+    (setq add-log-keep-changes-together t))
+
+  (use-package log-view
+    :config
+    (defun prot/vc-print-log (&optional arg)
+      "Like `vc-print-log' but for a custom fileset.
+
+With optional prefix ARG (\\[universal-argument]), query for a
+number to limit the log to.  Then prompt the user for matching
+files in the `default-directory'.  A literal space delimits
+multiple files (inserting a space will renew the prompt, asking
+for another file match).
+
+In a `dired-mode' buffer, print log for the file at point, or any
+marked files, except for when a double prefix argument is passed.
+A single prefix arg still provides for a limit to the log.
+
+If a double prefix ARG is passed, prompt for a limit and produce
+a log that covers all files in the present directory."
+      (interactive "P")
+      (let* ((lim (if arg
+                      (read-number "Limit log to N entries: " 5)
+                    20))
+             (dir default-directory)
+             (dotless directory-files-no-dot-files-regexp)
+             (files (directory-files dir nil dotless t))
+             (crm-separator " ")
+             (set (cond
+                   ((equal arg '(16))
+                    files)
+                   ((eq major-mode 'dired-mode)
+                    (dired-get-marked-files t nil))
+                   (t
+                    (completing-read-multiple
+                     "Select files in current dir: " files nil t))))
+             (backend (vc-backend set)))
+        (vc-print-log-internal backend set nil nil lim 'with-diff)))
+
+    (defun prot/log-view-extract-commit ()
+      "Kill commit from around point in `vc-print-log'."
+      (interactive)
+      (let ((commit (cadr (log-view-current-entry (point) t))))
+        (kill-new (format "%s" commit))
+        (message "Copied: %s" commit)))
+
+    (defvar prot/vc-shell-output "*vc-shell-output*"
+      "Name of buffer for VC-related shell output.")
+
+    (defun prot/log-view-create-patch ()
+      "Create patch for commit at point in `log-view'."
+      (interactive)
+      (let* ((commit (cadr (log-view-current-entry (point) t)))
+             (vc-dir (or (vc-root-dir) default-directory))
+             (dirs (list "~/" "~/Desktop/" vc-dir))
+             (out-dir ;; (read-directory-name "Output directory: ")
+              (completing-read "Output directory: " dirs))
+             (buf (get-buffer-create prot/vc-shell-output)))
+        (shell-command
+         (format "git format-patch -1 %s -o %s" commit out-dir) buf)
+        (message "Prepared patch for `%s' and sent it to %s"
+                 (propertize commit 'face 'bold)
+                 (propertize out-dir 'face 'success))))
+
+    :bind (("C-x v SPC" . prot/vc-print-log)
+           :map log-view-mode-map
+           ("<tab>" . log-view-toggle-entry-display)
+           ("<return>" . log-view-find-revision)
+           ("c" . prot/log-view-create-patch)
+           ("w" . prot/log-view-extract-commit)
+           ("s" . vc-log-search)
+           ("o" . vc-log-outgoing)
+           ("f" . vc-log-incoming)
+           ("F" . vc-update)
+           ("P" . vc-push)))
+
+  :bind (("C-x v b" . vc-retrieve-tag)  ; "branch" switch
+         ("C-x v t" . vc-create-tag)
+         ("C-x v f" . vc-log-incoming)  ; the actual git fetch
+         ("C-x v F" . vc-update)        ; "F" because "P" is push
+         ("C-x v d" . vc-diff)))
+
+(use-package vc-dir
+  :config
+  (defun prot/vc-dir (&optional arg)
+    "Run `vc-dir' for the current project or directory.
+With optional ARG (\\[universal-argument]), use the present
+working directory, else default to the root of the current
+project, as defined by `vc-root-dir'."
+    (interactive "P")
+    (let ((dir (if arg default-directory (vc-root-dir))))
+      (vc-dir dir)))
+  :bind (("C-x v p" . prot/vc-dir)
+         :map vc-dir-mode-map
+         ("b" . vc-retrieve-tag)
+         ("t" . vc-create-tag)
+         ("o" . vc-log-outgoing)
+         ("f" . vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
+         ("F" . vc-update)       ; symmetric with P: `vc-push'
+         ("d" . vc-diff)         ; align with D: `vc-root-diff'
+         ("k" . vc-dir-clean-files)))
+
+(use-package vc-git
+  :config
+  (setq vc-git-diff-switches '("--patch-with-stat" "--histogram"))
+  (setq vc-git-print-log-follow t)
+  (setq vc-git-revision-complete-only-branches nil) ; Emacs 28
+  (setq vc-git-root-log-format
+        '("%d%h %ad %an: %s"
+          ;; The first shy group matches the characters drawn by --graph.
+          ;; We use numbered groups because `log-view-message-re' wants the
+          ;; revision number to be group 1.
+          "^\\(?:[*/\\| ]+ \\)?\
+\\(?2: ([^)]+)\\)?\\(?1:[0-9a-z]+\\) \
+\\(?4:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\) \
+\\(?3:.*?\\):"
+          ((1 'log-view-message)
+           (2 'change-log-list nil lax)
+           (3 'change-log-name)
+           (4 'change-log-date)))))
+
+(use-package vc-annotate
+  :config
+  (setq vc-annotate-display-mode 'scale) ; scale to oldest
+  :bind (("C-x v a" . vc-annotate)       ; `vc-update-change-log' is not in git
+         :map vc-annotate-mode-map
+         ("<tab>" . vc-annotate-toggle-annotation-visibility)))
+#+end_src
+
+**** Commit log editing
+:PROPERTIES:
+:CUSTOM_ID: h:4df7a1f5-a144-4848-b3aa-8796d76d5fb9
+:END:
+
+The =log-edit= library defines a set of general commands that we can use
+to, inter alia, commit changes to Git, using the surprisingly powerful
+[[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][built-in Version Control (VC) framework]].
+
+Overview of the following tweaks:
+
++ While editing a commit message, only prompt for confirmation if the
+  list of files has changed since the beginning of the editing session.
++ Once the commit is done, remove its buffer.
++ Always add a newline.
++ Do not offer to manually write an =Author:= header.  Though this can be
+  useful if someone sends a patch.
+
+Also make sure to read the guide for [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  I
+always use =auto-fill-mode= to wrap lines to the value of =fill-column= (see
+[[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][relevant configs]]).
+
+#+begin_src emacs-lisp
+(use-package log-edit
+  :config
+  (setq log-edit-confirm 'changed)
+  (setq log-edit-keep-buffer nil)
+  (setq log-edit-require-final-newline t)
+  (setq log-edit-setup-add-author nil))
+#+end_src
+
+*** Interactive git front-end (Magit)
+:PROPERTIES:
+:CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
+:END:
+
+As noted in the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on the built-in Version Control framework]] I use
+Magit for easy access to the /advanced features of Git/.  While I rely on
+the built-in tools for all day-to-day operations.
+
+Magit offers a modal interface where the full power of =git= is neatly
+organised in sets of keys that are directly accessible without holding
+down any modifiers.
+
+While inside the =magit-status= buffer, hit =?= to produce a transient menu
+with the possible vectors to action.  Do it again inside each of the
+Magit buffers to view the keys that work for their context.
+
+Consider viewing my [[https://protesilaos.com/codelog/2020-04-04-emacs-intro-magit/][Introduction to Magit]] (2020-04-04) for how to stage
+diffs, commit changes, view logs, create branches, and so on.
+
+**** Base Magit settings
+:PROPERTIES:
+:CUSTOM_ID: h:21ca155a-d0d7-4710-b34a-a0d7a901ac0d
+:END:
+
+Magit has great defaults.  I only found a few things that I would like
+to customise, which I do in the following package declarations.
+
+#+begin_src emacs-lisp
+(use-package magit
+  :straight t
+  :bind ("C-c g" . magit-status))
+#+end_src
+
+**** Magit commits
+:PROPERTIES:
+:CUSTOM_ID: h:f851e0cc-099c-4309-8517-b2f20ab18ab4
+:END:
+
+The following package is configured in accordance with the guidelines
+provided by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is
+to write commits that are clean and easy to read.  The =fill-column= is
+set elsewhere in this document to 72 characters long.
+
+#+begin_src emacs-lisp
+(use-package git-commit
+  :after magit
+  :config
+  (setq git-commit-summary-max-length 50)
+  (setq git-commit-known-pseudo-headers
+        '("Signed-off-by"
+          "Acked-by"
+          "Modified-by"
+          "Cc"
+          "Suggested-by"
+          "Reported-by"
+          "Tested-by"
+          "Reviewed-by"))
+  (setq git-commit-style-convention-checks
+        '(non-empty-second-line
+          overlong-summary-line)))
+#+end_src
+
+**** Magit diffs
+:PROPERTIES:
+:CUSTOM_ID: h:c7a465c1-f33a-42d8-9617-fff3e1460060
+:END:
+
+The settings below are for the diff screens that Magit produces.  I just
+want to highlight changes within a line, not just the line itself.  I
+enable it only for the focused hunk (there is an option for ='all=).
+
+#+begin_src emacs-lisp
+(use-package magit-diff
+  :after magit
+  :config
+  (setq magit-diff-refine-hunk t))
+#+end_src
+
+**** Magit repo list
+:PROPERTIES:
+:CUSTOM_ID: h:35972439-0b28-4d33-8091-c6b5f1f02579
+:END:
+
+When maintaining a number of projects, it sometimes is necessary to
+produce a full list of them with their corresponding Magit status.  That
+way you can determine very quickly which repositories need to be
+examined further.
+
+#+begin_src emacs-lisp
+(use-package magit-repos
+  :after magit
+  :commands magit-list-repositories
+  :config
+  (setq magit-repository-directories
+        '(("~/Git/Projects" . 1))))
+#+end_src
+
+*** Smerge and Ediff
+:PROPERTIES:
+:CUSTOM_ID: h:fb9e0507-5ab1-4ebd-8870-8c32cfe742c1
+:END:
+
+*Read this section, because it matters more than the code below it.*
+
+Sometimes we face a situation where we have conflicting versions of a
+file and the version control backend cannot solve them on its own.  This
+can happen fairly often when collaborating with other people or, more
+generally, when we keep our work spread across multiple feature branches
+with diverging histories.  Whenever such conflicts arise, Emacs will
+automatically annotate the offending files with special markers that
+show the conflicting differences.  Visiting those files will then
+activate =smerge-mode=.  At which point we are in control.
+
+Smerge revolves around the concept of dividing the conflicting part into
+an "upper" (red) and a "lower" section (green), possibly with their
+common ancestor or last point of convergence in the middle (yellow).
+
+With this in mind we can operate on the marked differences by relying on
+the functions that Smerge provides, all of which are accessed by default
+through the common prefix of =C-c ^=.  Start by typing the prefix followed
+by =C-h= to see all possible key chords.  These are the commands I have
+used the most:
+
++ =C-c ^ u= (=smerge-keep-upper=)
++ =C-c ^ l= (=smerge-keep-lower=)
++ =C-c ^ b= (=smerge-keep-base=)
++ =C-c ^ a= (=smerge-keep-all=)
++ =C-c ^ n= (=smerge-next=)
++ =C-c ^ p= (=smerge-prev=)
+
+Proceed to edit the file the way you want until no more conflicts exist.
+You can also do things through manual editing, with standard commands
+and motions, but that can be prone to errors (which lead to more
+conflicts).  At any moment in this process, you can switch to =ediff=,
+which offers a more powerful way of working with differences.  Type the
+key chord =C-c ^ E= (=smerge-ediff=).
+
+Ediff is a powerhouse that is likely to cover all your needs in this
+area (including those you are not aware of).  For our purposes, what
+matters is to understand the basic concepts.
+
+The way this tool works is that it starts by producing a layout of the
+two conflicting versions with access to a "control panel" for operating
+on them.  By default, the panel is positioned on a new frame, but I find
+that rather awkward---my config puts it inside an Emacs window instead.
+While focusing the control panel, you can move between each diff range
+with =n= and =p=.  The focused section will be coloured using red, green,
+and yellow, while all other diffs will be presented in gray.
+
+On each diff, you have three options: to use the version of buffer A
+(red), of buffer B (green), or a combination of the two.  The keys for
+each of those are =a=, =b=, and =+= respectively.  Your choice will be
+reflected in buffer C (the yellow one).  Use these to resolve all
+conflicts and then quit the session with =q=.
+
+Concerning the combination of versions between A and B, Ediff has the
+behaviour of also inserting as plain text the annotation markers that
+Smerge relied on.  As of this writing (2020-04-10), I am not aware of an
+automatic or convenient way to omit those prior to confirming our edits.
+To that end, I tweak the wording of the markers to some unique string
+(see package below) and then run =flush-lines= to remove them before
+saving the resulting buffer (so right after the =q=).  For more on this,
+check =prot/ediff-flush-combination-pattern=.
+
+For =git= users, to actually /reference the common ancestor/ (the point
+before the branching paths started) we must run this command once in our
+command-line prompt (writes to your global =.gitconfig= file):
+
+#+begin_src
+git config --global merge.conflictStyle diff3
+#+end_src
+
+This is optional, but I find that I like it.  At any rate, the
+configurations I have below are straightforward (learn more about this
+powerful tool by hitting =?= inside of its control panel and by consulting
+its comprehensive manual):
+
++ Do not keep all the buffers after exiting the Ediff session.
++ Keep buffers in an editable state.  Otherwise it is impossible to
+  perform the changes we are interested in.
++ Show the common ancestor in another buffer.  This helps provide
+  further context of how things took their form.
++ Show only the conflicting parts.  This is not a review of all diffs.
++ Prefer putting windows side-by-side, rather than one below the other.
++ Do not enter the ediff session in a new frame.  This also means that
+  the control panel will be inside an Emacs window (at the bottom part)
+  rather than in a tiny frame of its own.
+
+There actually is nothing in terms of Smerge-related configurations.
+The package is small and does one thing well.
+
+Also watch my video of [[https://protesilaos.com/codelog/2020-04-10-emacs-smerge-ediff/][Smerge and Ediff for git conflict resolution]]
+(2020-04-10).
+
+#+begin_src emacs-lisp
+(use-package smerge-mode)
+
+(use-package ediff
+  :config
+  (setq ediff-keep-variants nil)
+  (setq ediff-make-buffers-readonly-at-startup nil)
+  (setq ediff-merge-revisions-with-ancestor t)
+  (setq ediff-show-clashes-only t)
+  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+  ;; Tweak those for safer identification and removal
+  (setq ediff-combination-pattern
+        '("<<<<<<< prot-ediff-combine Variant A" A
+          ">>>>>>> prot-ediff-combine Variant B" B
+          "####### prot-ediff-combine Ancestor" Ancestor
+          "======= prot-ediff-combine End"))
+
+  ;; TODO automate process in a robust way, or at least offer a good key
+  ;; binding.
+  (defun prot/ediff-flush-combination-pattern ()
+    "Remove my custom `ediff-combination-pattern' markers.
+
+This is a quick-and-dirty way to get rid of the markers that are
+left behind by `smerge-ediff' when combining the output of two
+diffs.  While this could be automated via a hook, I am not yet
+sure this is a good approach."
+    (interactive)
+    (flush-lines ".*prot-ediff.*" (point-min) (point-max) nil)))
+#+end_src
+
+** Command-line shells
+:PROPERTIES:
+:CUSTOM_ID: h:2c1966a1-bf33-4fe3-ac45-9f31158efd9b
+:END:
+
+It should come to no surprise that Emacs can operate as both a /terminal
+emulator for command line shells/ and /toolkit for terminal emulators/.
+The present section covers both cases.
+
+**** Eshell (like M-x shell but in elisp)
+:PROPERTIES:
+:CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
+:END:
+
+/NOTE 2020-12-14: Pending major review/.
+
+While I did read the =eshell= manual fairly early in my introduction to
+Emacs (July 2019), I failed to appreciate its added value.  Sure, you
+could run Elisp commands as well as those of the standard shells.  But
+that did not seem like an obvious step forward.  More of a lateral
+movement at best, for it was asking for a whole new way of thinking
+about the shell that could potentially complicate things in other areas.
+
+After gaining some experience with Emacs, I now (April 2020) have
+developed a newfound appreciation of Eshell's flexibility.  The fact
+that it can understand elisp means that you can develop entirely new
+modes of interaction that involve the command line and extend into other
+Emacs major modes.  For example, you can =cd= into a directory and then
+=dired= to access the full power of Emacs' /superb/ file manager (also check
+the [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][section on Dired]]).
+
+The core value of Eshell is that it behaves like an ordinary buffer.
+This means that we can build our own functions for moving around and
+operating on text.  =prot/eshell-put-last-output-to-buffer= puts that in
+concrete terms.  The function will take the output of the last command
+and put it in a new buffer.  You can then select that buffer, edit it as
+you will and, say, =C-x C-w= to write it permanently to a file.
+
+Here is another case where integration with standard Emacs commands
+truly shines.  In Eshell, =cd= followed by the equals sign will produce a
+numbered list of the directories you have accessed.  With =cd -NUM= you
+can switch to the one you want.  So far so good, how about we also
+switch to a dired buffer from there?  Do it with =cd -NUM && dired=.
+
+Speaking of directories, =eshell-cd-on-directory= allows you to omit =cd=
+and just type in the path to a directory.  Awesome!  And while on the
+topic of Dired, you can use =dired-jump= to always switch to a =dired=
+buffer of the present working directory.  To that I add my own little
+utility (=prot/eshell-file-parent-dir=) for jumping to the directory of
+the file at point: very useful in cases where you get files from
+different sources, such as with =find= (though do also check the various
+options for running =find= with =dired=, like =find-name-dired=).
+
+Extensibility is seamless.  =prot/eshell-complete-history= offers a
+completion interface to the input history.  No need for awkard back and
+forth or for searching for a regexp without any immediate feedback.  In
+a similar fashion =prot/eshell-complete-recent-dir= provides completion
+for switching directly to a recent directory.  While the more general
+=prot/eshell-find-subdirectory-recursive= lets you switch to a
+subdirectory somewhere inside the path you are.
+
+Instead of outlining the remaining features of Eshell, *I strongly
+encourage you to read the manual*.  It is fairly short.  What I have here
+is just an early sample of what can be achieved with a few tweaks.
+
+Also check these valuable resources:
+
++ [[https://cestlaz.github.io/post/using-emacs-66-eshell-elisp][Mike Zamansky's video demo]] that also shows how to program an Eshell
+  switcher.
++ [[https://www.youtube.com/watch?v=RhYNu6i_uY4][Howard Abrahams' video]] that covers the features of Eshell.
++ [[https://ambrevar.xyz/emacs-eshell/][Pierre Neidhardt's detailed blog post]] on the pros and cons of Eshell.
+
+Finally, a few notes about contributions I have received:
+
++ [[https://gitlab.com/dije][Phil Hudson (@dije on Gitlab)]] explained how =concat= is superfluous when
+  combined with =format= and demonstrated how to use a specifier (=%s=) to
+  make a uniform string out of the output of some command combined with
+  predefined text.
+
++ Phil also helped me with =prot/eshell-find-subdirectory-recursive= by
+  highlighting some inefficient routines in the original design.  This
+  inspired me to revisit the code and make it cleaner overall.  The gist
+  is that only the present working directory needs to be abbreviated.
+
++ Another user who preferred to remain anonymous sent me
+  =contrib/eshell-cat-with-syntax-highlight= which will apply syntax
+  highlighting to the output of a =cat= command.  The code I got was using
+  =define-advice=, so I tweaked it a bit to work with =advice-add= because I
+  find that syntax easier to follow.  I also made minor tweaks to the
+  docstring.
+
++ Same principle as above for =contrib/electrify-ls=.
+
++ Any errors are my own.
+
+#+begin_src emacs-lisp
+(use-package eshell
+  :bind ("<s-return>" . eshell))
+
+(use-package esh-mode
+  :commands prot/eshell-minor-mode
+  :config
+  ;; used by other functions below
+  (declare-function ffap-file-at-point "ffap.el")
+
+  (defmacro prot/eshell-ffap (name doc &rest body)
+    "Make commands for `eshell' find-file-at-point.
+NAME is how the function is called.  DOC is the function's
+documentation string.  BODY is the set of arguments passed to the
+`if' statement to be evaluated when a file at point is present."
+    `(defun ,name ()
+       ,doc
+       (interactive)
+       (let ((file (ffap-file-at-point)))
+         (if file
+             ,@body
+           (user-error "No file at point")))))
+
+  (prot/eshell-ffap
+   prot/eshell-insert-file-at-point
+   "Insert (cat) contents of file at point."
+   (progn
+     (goto-char (point-max))
+     (insert (concat "cat " file))
+     (eshell-send-input)))
+
+  (prot/eshell-ffap
+   prot/eshell-kill-save-file-at-point
+   "Add to kill-ring the absolute path of file at point."
+   (progn
+     (kill-new (concat (eshell/pwd) "/" file))
+     (message "Copied full path of %s" file)))
+
+  (prot/eshell-ffap
+   prot/eshell-find-file-at-point
+   "Run `find-file' for file at point (ordinary file or dir).
+Recall that this will produce a `dired' buffer if the file is a
+directory."
+   (find-file file))
+
+  (prot/eshell-ffap
+   prot/eshell-file-parent-dir
+   "Open `dired' with the parent directory of file at point."
+   (dired (file-name-directory file)))
+
+  (defun prot/eshell-put-last-output-to-buffer ()
+    "Produce a buffer with output of last `eshell' command."
+    (interactive)
+    (let ((eshell-output (buffer-substring-no-properties
+                          (eshell-beginning-of-output)
+                          (eshell-end-of-output))))
+      (with-current-buffer (get-buffer-create "*last-eshell-output*")
+        (erase-buffer)
+        (insert eshell-output)
+        (switch-to-buffer-other-window (current-buffer)))))
+
+  (defun prot/eshell-complete-redirect-to-buffer ()
+    "Complete the syntax for appending to a buffer via `eshell'."
+    (interactive)
+    (insert
+     (format " >>> #<%s>"
+             (read-buffer-to-switch "Switch to buffer: "))))
+
+  (defun prot/eshell-narrow-output-highlight-regexp ()
+    (interactive)
+    (let ((regexp (read-regexp "Regexp to highlight")))
+      (narrow-to-region (eshell-beginning-of-output)
+                        (eshell-end-of-output))
+      (goto-char (point-min))
+      (highlight-regexp regexp 'hi-yellow)))
+
+  ;;;; NOTE by Prot 2020-06-16: the following two advice-add snippets
+  ;;;; will need to be reviewed to make sure they do not produce
+  ;;;; undesirable side effects.
+
+  ;; syntax highlighting implementation modified from
+  ;; https://emacs.stackexchange.com/questions/50385/use-emacs-syntax-coloring-when-not-in-emacs
+  ;;
+  ;; This command also makes it possible to, e.g., cat an encrypted and/or
+  ;; compressed file.
+  (defun contrib/eshell-cat-with-syntax-highlight (&rest args)
+    "Like `eshell/cat' but with syntax highlighting.
+To be used as `:override' advice to `eshell/cat'."
+    (setq args (eshell-stringify-list (flatten-tree args)))
+    (dolist (filename args)
+      (let ((existing-buffer (get-file-buffer filename))
+            (buffer (find-file-noselect filename)))
+        (eshell-print
+         (with-current-buffer buffer
+           (if (fboundp 'font-lock-ensure)
+               (font-lock-ensure)
+             (with-no-warnings
+               (font-lock-fontify-buffer)))
+           (let ((contents (buffer-string)))
+             (remove-text-properties 0 (length contents) '(read-only nil) contents)
+             contents)))
+        (unless existing-buffer
+          (kill-buffer buffer)))))
+
+  (advice-add 'eshell/cat :override #'contrib/eshell-cat-with-syntax-highlight)
+
+  ;; Turn ls results into clickable links.  Especially useful when
+  ;; combined with link-hint.  Modified from
+  ;; https://www.emacswiki.org/emacs/EshellEnhancedLS
+  (define-button-type 'eshell-ls
+    'supertype 'button
+    'help-echo "RET, mouse-2: visit this file"
+    'follow-link t)
+
+  (defun contrib/electrify-ls (name)
+    "Buttonise `eshell' ls file names.
+Visit them with RET or mouse click.  This function is meant to be
+used as `:filter-return' advice to `eshell-ls-decorated-name'."
+    (add-text-properties 0 (length name)
+                         (list 'button t
+                               'keymap button-map
+                               'mouse-face 'highlight
+                               'evaporate t
+                               'action #'find-file
+                               'button-data (expand-file-name name)
+                               'category 'eshell-ls)
+                         name)
+    name)
+
+  (advice-add 'eshell-ls-decorated-name :filter-return #'contrib/electrify-ls)
+  :bind (:map eshell-mode-map
+              ("M-k" . eshell-kill-input)
+              ("C-c i" . prot/eshell-insert-file-at-point)
+              ("C-c f" . prot/eshell-find-file-at-point)
+              ("C-c C-f" . prot/eshell-find-file-at-point)
+              ("C-c o" . prot/eshell-put-last-output-to-buffer)
+              ("C-c w" . prot/eshell-kill-save-file-at-point)
+              ("C-c >" . prot/eshell-complete-redirect-to-buffer)
+              ("C-c C-j" . prot/eshell-file-parent-dir)
+              ("C-c h" . prot/eshell-narrow-output-highlight-regexp)
+              ("C-c =" . prot/eshell-complete-recent-dir)))
+
+(use-package esh-module
+  :config
+  (setq eshell-modules-list             ; Needs review
+        '(eshell-alias
+          eshell-basic
+          eshell-cmpl
+          eshell-dirs
+          eshell-glob
+          eshell-hist
+          eshell-ls
+          eshell-pred
+          eshell-prompt
+          eshell-script
+          eshell-term
+          eshell-tramp
+          eshell-unix)))
+
+(use-package em-dirs
+  :after esh-mode
+  :config
+  (setq eshell-cd-on-directory t))
+
+(use-package em-tramp
+  :after esh-mode
+  :config
+  (setq password-cache t)
+  (setq password-cache-expiry 600))
+
+(use-package em-hist
+  :after esh-mode
+  :config
+  (setq eshell-hist-ignoredups t)
+  (setq eshell-save-history-on-exit t)
+
+  (defun prot/eshell-complete-history ()
+    "Insert element from `eshell' history using completion."
+    (interactive)
+    (let ((hist (ring-elements eshell-history-ring)))
+      (insert
+       (completing-read "Input history: " hist nil t))))
+
+  (defun prot/eshell-complete-recent-dir (&optional arg)
+    "Switch to a recent `eshell' directory using completion.
+With \\[universal-argument] also open the directory in a `dired'
+buffer."
+    (interactive "P")
+    (let* ((dirs (ring-elements eshell-last-dir-ring))
+           (dir (completing-read "Switch to recent dir: " dirs nil t)))
+      (insert dir)
+      (eshell-send-input)
+      (when arg
+        (dired dir))))
+
+  ;; `cl-remove-if' is used right below
+  (declare-function cl-remove-if "cl-seq")
+
+  (defun prot/eshell-find-subdirectory-recursive ()
+    "Recursive `eshell/cd' to subdirectory.
+This command has the potential for infinite recursion: use it
+wisely or prepare to use `eshell-interrupt-process'."
+    (interactive)
+    (let* ((dir (abbreviate-file-name (eshell/pwd)))
+           (contents (directory-files-recursively dir ".*" t nil nil))
+           (dirs (cl-remove-if-not (lambda (x)
+                                     (or (file-directory-p x)
+                                         (string-match-p "\\.git" x)))
+                                   contents))
+           (selection (completing-read
+                       (format "Find sub-dir from %s (%s): "
+                               (propertize dir 'face 'success)
+                               (length dirs))
+                       dirs nil t)))
+      (insert selection)
+      (eshell-send-input)))
+
+  :bind (:map eshell-hist-mode-map
+              ("M-s" . nil) ; I use this for lots of more useful commands
+              ("M-r" . prot/eshell-complete-history) ; use this to find input history
+              ("C-c d" . prot/eshell-find-subdirectory-recursive)))
+#+end_src
+
+**** Shell (M-x shell)
+:PROPERTIES:
+:CUSTOM_ID: h:98804f0d-f2dd-41a4-b8df-c1bd04ef7f7a
+:END:
+
+/NOTE 2020-12-14: Pending major review/.
+
+This is a shell (Bash, in my case) that runs inside of Emacs.  Unlike
+the [[#h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2][terminal emulators defined below]], this one can use standard Emacs
+keys and behaves much like an ordinary buffer.  It also integrates
+nicely with the built-in completion tools, which makes it particularly
+nice to work with.
+
+The one area where this Shell differs substantially from ordinary
+buffers is with regard to the command prompt: you can re-run a command
+on the scroll-back buffer by just hitting =RET= while point is on its line
+(no need to go back to the end and cycle the command history with =M-p= or
+=M-n=).
+
+Another peculiarity relative to the standard commands in the terminal is
+to search backward through your history with =M-r= (whereas in a terminal
+emulator you use =C-r=).
+
+Run =C-h m= inside of a shell buffer to learn about all the key bindings
+and corresponding functions.
+
+#+begin_src emacs-lisp
+(use-package shell
+  :commands shell-command
+  :config
+  (setq ansi-color-for-comint-mode t)
+  (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
+  :bind (("<s-S-return>" . shell)))
+#+end_src
+
+** Calendar
+:PROPERTIES:
+:CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
+:END:
+
+Some basic settings for =calendar.el=.  It is used by the diary (next
+section), as well as all Org-mode facilities that require date/time
+input (see following sections).
+
+#+begin_src emacs-lisp
+(use-package calendar
+  :config
+  (setq calendar-mark-diary-entries-flag t)
+  (setq calendar-time-display-form
+        '(24-hours ":" minutes
+                   (when time-zone
+                     (concat " (" time-zone ")"))))
+  (setq calendar-week-start-day 1)      ; Monday
+  (setq calendar-date-style 'iso)
+  (setq calendar-christian-all-holidays-flag nil)
+  (setq calendar-holidays
+        (append holiday-local-holidays  ; TODO set local holidays
+                holiday-solar-holidays))
+
+  (use-package solar
+    :config
+    (setq calendar-latitude 35.17
+          calendar-longitude 33.36))
+
+  (use-package lunar
+    :config
+    (setq lunar-phase-names
+          '("New Moon"
+            "First Quarter Moon"
+            "Full Moon"
+            "Last Quarter Moon")))
+
+  :hook (calendar-today-visible-hook . calendar-mark-today))
+#+end_src
+
+** Org-mode (personal information manager)
+:PROPERTIES:
+:CUSTOM_ID: h:4e8347de-415e-4804-b383-d61499e05ca1
+:END:
+
+In its purest form, Org is a markup language that is similar to
+Markdown: symbols are used to denote the meaning of a construct in its
+context, such as what may represent a headline element or a phrase that
+calls for emphasis.
+
+What lends Org its super powers though is everything else built around
+it: a rich corpus of Elisp functions that automate, link, combine,
+enhance, structure, or otherwise enrich the process of using this rather
+straightforward system of plain text notation.
+
+Couched in those terms, Org is at once a distribution of well integrated
+libraries and a vibrant ecosystem that keeps producing new ideas and
+workflows on how to organise one's life with plain text.
+
+The present document is written in =org-mode= while its website version is
+outputted by a tool (also part of Org) that exports Org notation to its
+HTML equivalent.
+
+Regarding the following code block, I strongly encourage you to make
+liberal use of Emacs' documentation facilities to learn more about
+functions, variables, symbols provided herein.  And do not forget to
+read Org's manual.
+
+What follows in an exposition about each of the subsesctions of this
+package declaration:
+
++ Org links :: The =org-store-link= is one of the commands I use the most,
+  as it allows me to, inter alia, connect the various sections of this
+  document.  Use it to store a direct link to the heading you are
+  currently under.  Or to produce a properly formatted link to supported
+  buffers you are visiting (e.g. another file).
+
+  There are several ways to insert such links.  With =C-c C-l= (which
+  calls =org-insert-link=) you will be prompted to select a stored link
+  from the link.  It will be inserted at point, using the right markup,
+  but will first ask you for a description text.  Otherwise you can
+  invoke =C-c C-l= with an active region, to create a link to that
+  location with the selected text becoming the description.  Else just
+  call =org-insert-last-stored-link= to skip the interactive process and
+  insert the last link outright.
+
+  In addition to these, =org-insert-link= can be used to create references
+  on demand.  Say you have a URL on the kill-ring: =C-c C-l=, then =C-y=
+  followed by =RET= to confirm your input.  Complete the process with a
+  description and you are good to go.
+
++ Org capture :: The =org-capture= tool is a powerful way to quickly
+  produce some kind of structured information that gets stored in the
+  appropriate place.  The type of data and the way to store is
+  determined by a system of templates which accepts a series of possible
+  specifiers as well as the evaluated part of arbitrary elisp code.
+
+  Each template is accessed via a key.  These are listed in a temporary
+  buffer when you call =org-capture=.  Unique keys give direct access to
+  their template, whereas templates that share a common initial key will
+  produce a second selection list with the remaining options.  In the
+  latter case, the initial key entry has no call to an actual function,
+  but is just written as a heading.
+
+  The visibility of a template is explicitly controlled by the alist
+  =org-capture-templates-contexts=.  This allows us to tell Org the
+  context in which we want certain options to appear in.  Otherwise they
+  remain concealed from our view.  Equipped with this piece of
+  functionality, we can freely write highly specialised templates that
+  capture structured text when viewing some particular item, but are not
+  needed for more general purposes.  I do this for certain actions that
+  only come into effect when reading email inside of the relevant =gnus=
+  buffers (also check my [[#h:5ad80664-3163-4d9d-be65-462637d77903][comprehensive configurations for email]] and the
+  Gnus news/mail reader).
+
+  Speaking of mail, you will notice some specifiers like =:fromname=.  This
+  refers to the =From= field in emails and will capture the name part only.
+  Other similar keywords are =:from= (name and email), =:fromaddress= (email
+  only), =:subject=.
+
+  Specifiers that start with the caret sign (=^=) represent prompts for
+  further user input.  The pattern =^{TEXT}= is a prompt whose expression
+  is =TEXT=.  To offer possible options, use =^{Initial|ONE|TWO|THREE}=,
+  where the first entry is the text of the prompt and all the rest are
+  the available choices (depending on your completion framework, you may
+  need to add an empty option as well, with =||=, should you ever want to
+  insert nothing).  In some templates I use the =^t= specifier, which is a
+  built-in method to ask for a specific date.
+
+  The text that goes into a template can be written as part of a string or
+  inside a function that is then evaluated.  I generally prefer to use
+  simple strings, though I might revise this approach going forward.  To
+  insert a new line inside of a string, use =\n=.
+
+  The =%?= specifier determines where the point shall end in once the
+  template is parsed.  While =%i= will insert the contents of the active
+  region, if any.
+
+  As things currently stand, my capture templates always write to headings
+  inside of files.  Note though that there are more possibilities, as
+  described in the manual.
+
+  A file can be specified by its absolute path or just a name.  In the
+  latter case, its location is understood relative to =org-directory=.
+  When using the =file+headline= pattern, non-existent files are created
+  automatically once you call the relevant template.  Same for their
+  respective headings.
+
+  Finally, the =contrib/org-capture-no-delete-windows= and relevant =advice=
+  address a problem I have when =org-capture= fails to conclude its actions
+  when called from inside of a side window (for more on those, refer to
+  the section on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).  The code is taken
+  directly from this [[https://stackoverflow.com/a/54251825][Stack Overflow thread]].
+
+  Consider watching my [[https://protesilaos.com/codelog/2020-02-04-emacs-org-capture-intro/][primer on org-capture]] (2020-02-04) which shows all
+  of the above in action.
+
++ Org agenda :: The =org-agenda= is not just a single interface.  It
+  rather is your conduit to a set of utilities for reading timestamped
+  tasks.  From there you can keep track of all the relevant entries you
+  have inserted in the files declared as part of =org-agenda-files= list.
+
+  Running =org-agenda= will present you with a list of possible options:
+  the "dispatcher" as it called.  Here is a primer (there are many more
+  functions documented in the manual):
+
+  - From the dispatcher, the =a= is where you keep track of all the items
+    that have a date assigned to them, be it =SCHEDULED= or =DEADLINE=.  To
+    assign such a value to a heading use =C-c C-s= or =C-c C-d= respectively.
+    Run those commands with a universal prefix (=C-u=) to remove the
+    timestamp.  Hit =/= to filter this view to match particular tags.
+
+  - In the dispatcher's menu, the =t= will list all your tasks, regardless
+    of whether they have a date assigned to them.  You can then filter by
+    keyword, regular expression, etc.  Check the top of the buffer for
+    information on how to do that.
+
+  - And the =n= in the dispatcher will offer you a combined view of the
+    above.
+
++ Org export :: I do not have much to offer here, apart from the setup
+  that handles consistent heading IDs and anchor tags (the latter
+  concerns the HTML output).  Everything in that segment, minus some
+  minor tweaks from my part, is copied from this detailed tutorial on
+  [[https://writequit.org/articles/emacs-org-mode-generate-ids.html][Org header IDs]].  Basically, the problem is that exported HTML does not
+  have reliable anchor tags for the various sections of the document.
+  This fixes the issue (read the article for more).
+
+Finally, note that I sometimes deliver simple presentations using Org.
+Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (prot-logos.el)]].
+
+#+begin_src emacs-lisp
+;; Pro tip: If you are reading the source code, use C-c '
+;; (`org-edit-special') to put the code block in a dedicated buffer and
+;; then activate `prot-outline-minor-mode-safe' to conveniently browse
+;; this massive package declaration.
+(use-package org
+  :straight (:host nil :type git
+             :repo "https://code.orgmode.org/bzg/org-mode") ; Get Org from its source
+  ;; ;; Use this instead of the above if you want the built-in version.
+  ;; :straight (:type built-in)
+  :init
+  (setq org-directory "~/Org")
+  (setq org-imenu-depth 7)
+  :config
+;;;; general settings
+  (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
+  (setq org-special-ctrl-a/e nil)
+  (setq org-special-ctrl-k nil)
+  (setq org-M-RET-may-split-line '((default . nil)))
+  (setq org-hide-emphasis-markers t)
+  (setq org-hide-macro-markers t)
+  (setq org-hide-leading-stars nil)
+  (setq org-structure-template-alist    ; CHANGED in Org 9.3, Emacs 27.1
+        '(("s" . "src")
+          ("E" . "src emacs-lisp")
+          ("e" . "example")
+          ("q" . "quote")
+          ("v" . "verse")
+          ("V" . "verbatim")
+          ("c" . "center")
+          ("C" . "comment")))
+  (setq org-catch-invisible-edits 'show)
+  (setq org-return-follows-link nil)
+  (setq org-loop-over-headlines-in-active-region 'start-level)
+  (setq org-modules '(ol-gnus ol-info ol-eww))
+
+;;;; refile, todo
+  (setq org-refile-targets
+        '((org-agenda-files . (:maxlevel . 2))
+          (nil . (:maxlevel . 2))))
+  (setq org-refile-use-outline-path t)
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-refile-use-cache t)
+  (setq org-reverse-note-order nil)
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "|" "DONE(D)" "CANCEL(C)")
+          (sequence "MEET(m)" "|" "MET(M)")
+          (sequence "STUDY(s)" "|" "STUDIED(S)")
+          (sequence "WRITE(w)" "|" "WROTE(W)")))
+  (setq org-todo-keyword-faces
+        '(("MEET" . '(font-lock-preprocessor-face org-todo))
+          ("STUDY" . '(font-lock-variable-name-face org-todo))
+          ("WRITE" . '(font-lock-type-face org-todo))))
+  (setq org-priority-faces
+        '((?A . '(org-scheduled-today org-priority))
+          (?B . org-priority)
+          (?C . '(shadow org-priority))))
+  (setq org-fontify-done-headline nil)
+  (setq org-fontify-quote-and-verse-blocks t)
+  (setq org-fontify-whole-heading-line nil)
+  (setq org-fontify-whole-block-delimiter-line t)
+  (setq org-enforce-todo-dependencies t)
+  (setq org-enforce-todo-checkbox-dependencies t)
+  (setq org-track-ordered-property-with-tag t)
+  (setq org-highest-priority ?A)
+  (setq org-lowest-priority ?C)
+  (setq org-default-priority ?A)
+
+;;;; tags
+  (setq org-tag-alist                   ; TODO review org tag list
+        '((:startgroup)
+          ("@work")
+          ("@priv")
+          (:endgroup)
+          ("emacs")
+          ("modus")
+          ("politics")
+          ("economics")
+          ("philosophy")
+          ("paper")
+          ("book")
+          ("essay")
+          ("article")
+          ("mail")
+          ("website")))
+
+;;;; log
+  (setq org-log-done 'time)
+  (setq org-log-note-clock-out nil)
+  (setq org-log-redeadline nil)
+  (setq org-log-reschedule nil)
+  (setq org-read-date-prefer-future 'time)
+
+;;;; links
+  (setq org-link-keep-stored-after-insertion t)
+
+;;;; capture
+  (setq org-capture-templates
+        `(("a" "Article to write" entry
+           (file+headline "tasks.org" "Writing list")
+           ,(concat "* WRITE %^{Title} %^g\n"
+                    "SCHEDULED: %^t\n"
+                    ":PROPERTIES:\n"
+                    ":CAPTURED: %U\n:END:\n\n"
+                    "%i%?"))
+          ("b" "Basic task for future review" entry
+           (file+headline "tasks.org" "Basic tasks that need to be reviewed")
+           ,(concat "* %^{Title}\n"
+                    ":PROPERTIES:\n"
+                    ":CAPTURED: %U\n"
+                    ":END:\n\n"
+                    "%i%l"))
+          ("t" "Task with a due date" entry
+           (file+headline "tasks.org" "Task list with a date")
+           ,(concat "* %^{Scope of task||TODO|STUDY|MEET} %^{Title} %^g\n"
+                    "SCHEDULED: %^t\n"
+                    ":PROPERTIES:\n:CAPTURED: %U\n:END:\n\n"
+                    "%i%?"))
+          ("r" "Reply to an email" entry
+           (file+headline "tasks.org" "Mail correspondence")
+           ,(concat "* TODO [#B] %:subject :mail:\n"
+                    "SCHEDULED: %t\n:"
+                    "PROPERTIES:\n:CONTEXT: %a\n:END:\n\n"
+                    "%i%?"))))
+
+  (setq org-capture-templates-contexts
+        '(("r" ((in-mode . "gnus-article-mode")
+                (in-mode . "gnus-summary-mode")))))
+
+  ;; Source: https://stackoverflow.com/a/54251825
+  (defun contrib/org-capture-no-delete-windows (oldfun args)
+    (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
+      (apply oldfun args)))
+
+  ;; Same source as above
+  (advice-add 'org-capture-place-template
+              :around 'contrib/org-capture-no-delete-windows)
+
+;;;; agenda
+;;;;; Basic agenda setup
+  (setq org-default-notes-file "~/Org/notes.org")
+  (setq org-agenda-files '("~/Org" "~/.emacs.d" "~/Documents"))
+  (setq org-agenda-span 14)
+  (setq org-agenda-start-on-weekday 1)  ; Monday
+  (setq org-agenda-confirm-kill t)
+  (setq org-agenda-show-all-dates t)
+  (setq org-agenda-show-outline-path nil)
+  (setq org-agenda-window-setup 'current-window)
+  (setq org-agenda-skip-comment-trees t)
+  (setq org-agenda-menu-show-matcher t)
+  (setq org-agenda-menu-two-columns nil)
+  (setq org-agenda-sticky nil)
+  (setq org-agenda-custom-commands-contexts nil)
+  (setq org-agenda-max-entries nil)
+  (setq org-agenda-max-todos nil)
+  (setq org-agenda-max-tags nil)
+  (setq org-agenda-max-effort nil)
+
+;;;;; General agenda view options
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %-12:c%?-12t% s")
+          (todo . " %i %-12:c")
+          (tags . " %i %-12:c")
+          (search . " %i %-12:c")))
+  (setq org-agenda-sorting-strategy
+        '(((agenda habit-down time-up priority-down category-keep)
+           (todo priority-down category-keep)
+           (tags priority-down category-keep)
+           (search category-keep))))
+  (setq org-agenda-breadcrumbs-separator "->")
+  (setq org-agenda-todo-keyword-format "%-1s")
+  (setq org-agenda-diary-sexp-prefix nil)
+  (setq org-agenda-fontify-priorities 'cookies)
+  (setq org-agenda-category-icon-alist nil)
+  (setq org-agenda-remove-times-when-in-prefix nil)
+  (setq org-agenda-remove-timeranges-from-blocks nil)
+  (setq org-agenda-compact-blocks nil)
+  (setq org-agenda-block-separator ?—)
+
+  (defun prot/org-agenda-format-date-aligned (date)
+    "Format a DATE string for display in the daily/weekly agenda.
+This function makes sure that dates are aligned for easy reading.
+
+Slightly tweaked version of `org-agenda-format-date-aligned' that
+produces dates with a fixed length."
+    (require 'cal-iso)
+    (let* ((dayname (calendar-day-name date t))
+           (day (cadr date))
+           (day-of-week (calendar-day-of-week date))
+           (month (car date))
+           (monthname (calendar-month-name month t))
+           (year (nth 2 date))
+           (iso-week (org-days-to-iso-week
+                      (calendar-absolute-from-gregorian date)))
+           (weekyear (cond ((and (= month 1) (>= iso-week 52))
+                            (1- year))
+                           ((and (= month 12) (<= iso-week 1))
+                            (1+ year))
+                           (t year)))
+           (weekstring (if (= day-of-week 1)
+                           (format " (W%02d)" iso-week)
+                         "")))
+      (format "%s %2d %s %4d%s"
+              dayname day monthname year weekstring)))
+
+  (setq org-agenda-format-date #'prot/org-agenda-format-date-aligned)
+
+;;;;; Agenda marks
+  (setq org-agenda-bulk-mark-char "#")
+  (setq org-agenda-persistent-marks nil)
+
+;;;;; Agenda diary entries
+  ;; NOTE: I don't use the diary, but here it is anyway
+  (setq org-agenda-insert-diary-strategy 'date-tree)
+  (setq org-agenda-insert-diary-extract-time nil)
+  (setq org-agenda-include-diary t)
+
+;;;;; Agenda follow mode
+  (setq org-agenda-start-with-follow-mode nil)
+  (setq org-agenda-follow-indirect t)
+
+;;;;; Agenda multi-item tasks
+  (setq org-agenda-dim-blocked-tasks t)
+  (setq org-agenda-todo-list-sublevels t)
+
+;;;;; Agenda filters and restricted views
+  (setq org-agenda-persistent-filter nil)
+  (setq org-agenda-restriction-lock-highlight-subtree t)
+
+;;;;; Agenda items with deadline and scheduled timestamps
+  (setq org-agenda-include-deadlines t)
+  (setq org-deadline-warning-days 5)
+  (setq org-agenda-skip-scheduled-if-done nil)
+  (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
+  (setq org-agenda-skip-timestamp-if-deadline-is-shown t)
+  (setq org-agenda-skip-deadline-if-done nil)
+  (setq org-agenda-skip-deadline-prewarning-if-scheduled 1)
+  (setq org-agenda-skip-scheduled-delay-if-deadline nil)
+  (setq org-agenda-skip-additional-timestamps-same-entry nil)
+  (setq org-agenda-skip-timestamp-if-done nil)
+  (setq org-agenda-search-headline-for-time t)
+  (setq org-scheduled-past-days 365)
+  (setq org-deadline-past-days 365)
+  (setq org-agenda-move-date-from-past-immediately-to-today t)
+  (setq org-agenda-show-future-repeats t)
+  (setq org-agenda-prefer-last-repeat nil)
+  (setq org-agenda-timerange-leaders
+        '("" "(%d/%d): "))
+  (setq org-agenda-scheduled-leaders
+        '("Scheduled: " "Sched.%2dx: "))
+  (setq org-agenda-inactive-leader "[")
+  (setq org-agenda-deadline-leaders
+        '("Deadline:  " "In %3d d.: " "%2d d. ago: "))
+  ;; Time grid
+  (setq org-agenda-time-leading-zero t)
+  (setq org-agenda-timegrid-use-ampm nil)
+  (setq org-agenda-use-time-grid t)
+  (setq org-agenda-show-current-time-in-grid t)
+  (setq org-agenda-current-time-string
+        "Now -·-·-·-·-·-·-")
+  (setq org-agenda-time-grid
+        '((daily today require-timed)
+          (0600 0700 0800 0900 1000 1100
+                1200 1300 1400 1500 1600
+                1700 1800 1900 2000 2100)
+          " ....." "-----------------"))
+  (setq org-agenda-default-appointment-duration nil)
+
+;;;;; Agenda global to-do list
+  (setq org-agenda-todo-ignore-with-date t)
+  (setq org-agenda-todo-ignore-timestamp t)
+  (setq org-agenda-todo-ignore-scheduled t)
+  (setq org-agenda-todo-ignore-deadlines t)
+  (setq org-agenda-todo-ignore-time-comparison-use-seconds t)
+  (setq org-agenda-tags-todo-honor-ignore-options nil)
+
+;;;;; Agenda tagged items
+  (setq org-agenda-show-inherited-tags t)
+  (setq org-agenda-use-tag-inheritance
+        '(todo search agenda))
+  (setq org-agenda-hide-tags-regexp nil)
+  (setq org-agenda-remove-tags nil)
+  (setq org-agenda-tags-column -120)
+
+;;;;; Agenda entry
+  ;; NOTE: I do not use this right now.  Leaving everything to its
+  ;; default value.
+  (setq org-agenda-start-with-entry-text-mode nil)
+  (setq org-agenda-entry-text-maxlines 5)
+  (setq org-agenda-entry-text-exclude-regexps nil)
+  (setq org-agenda-entry-text-leaders "    > ")
+
+;;;;; Agenda logging and clocking
+  ;; NOTE: I do not use these yet, though I plan to.  Leaving everything
+  ;; to its default value for the time being.
+  (setq org-agenda-log-mode-items '(closed clock))
+  (setq org-agenda-clock-consistency-checks
+        '((:max-duration "10:00" :min-duration 0 :max-gap "0:05" :gap-ok-around
+                         ("4:00")
+                         :default-face ; This should definitely be reviewed
+                         ((:background "DarkRed")
+                          (:foreground "white"))
+                         :overlap-face nil :gap-face nil :no-end-time-face nil
+                         :long-face nil :short-face nil)))
+  (setq org-agenda-log-mode-add-notes t)
+  (setq org-agenda-start-with-log-mode nil)
+  (setq org-agenda-start-with-clockreport-mode nil)
+  (setq org-agenda-clockreport-parameter-plist '(:link t :maxlevel 2))
+  (setq org-agenda-search-view-always-boolean nil)
+  (setq org-agenda-search-view-force-full-words nil)
+  (setq org-agenda-search-view-max-outline-level 0)
+  (setq org-agenda-search-headline-for-time t)
+  (setq org-agenda-use-time-grid t)
+  (setq org-agenda-cmp-user-defined nil)
+  (setq org-sort-agenda-notime-is-late t)
+  (setq org-sort-agenda-noeffort-is-high t)
+
+;;;;; Agenda column view
+  ;; NOTE I do not use these, but may need them in the future.
+  (setq org-agenda-view-columns-initially nil)
+  (setq org-agenda-columns-show-summaries t)
+  (setq org-agenda-columns-compute-summary-properties t)
+  (setq org-agenda-columns-add-appointments-to-effort-sum nil)
+  (setq org-agenda-auto-exclude-function nil)
+  (setq org-agenda-bulk-custom-functions nil)
+
+;;;; code blocks
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-src-window-setup 'current-window)
+  (setq org-edit-src-persistent-message nil)
+  (setq org-src-fontify-natively t)
+  (setq org-src-preserve-indentation t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-edit-src-content-indentation 0)
+
+;;;; export
+  (setq org-export-with-toc t)
+  (setq org-export-headline-levels 8)
+  (setq org-export-dispatch-use-expert-ui nil)
+  (setq org-html-htmlize-output-type nil)
+  (setq org-html-head-include-default-style nil)
+  (setq org-html-head-include-scripts nil)
+  (use-package ox-texinfo)
+  ;; FIXME: how to remove everything else?
+  (setq org-export-backends '(html texinfo))
+
+  (defun prot/ox-html ()
+    (interactive)
+    (org-html-export-as-html nil nil nil t nil))
+
+  (defun prot/ox-texinfo ()
+    (interactive)
+    (org-texinfo-export-to-info))
+
+;;;; IDs
+  (setq org-id-link-to-org-use-id
+        'create-if-interactive-and-no-custom-id)
+
+  ;; Copied from this article (with minor tweaks from my side):
+  ;; <https://writequit.org/articles/emacs-org-mode-generate-ids.html>.
+  (defun contrib/org-id-get (&optional pom create prefix)
+    "Get the CUSTOM_ID property of the entry at point-or-marker
+POM. If POM is nil, refer to the entry at point. If the entry
+does not have an CUSTOM_ID, the function returns nil. However,
+when CREATE is non nil, create a CUSTOM_ID if none is present
+already. PREFIX will be passed through to `org-id-new'. In any
+case, the CUSTOM_ID of the entry is returned."
+    (org-with-point-at pom
+      (let ((id (org-entry-get nil "CUSTOM_ID")))
+        (cond
+         ((and id (stringp id) (string-match "\\S-" id))
+          id)
+         (create
+          (setq id (org-id-new (concat prefix "h")))
+          (org-entry-put pom "CUSTOM_ID" id)
+          (org-id-add-location id (format "%s" (buffer-file-name (buffer-base-buffer))))
+          id)))))
+
+  (defun contrib/org-id-headlines ()
+    "Add CUSTOM_ID properties to all headlines in the current
+file which do not already have one."
+    (interactive)
+    (org-map-entries
+     (lambda () (contrib/org-id-get (point) t))))
+
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-c l" . org-store-link)
+         :map org-mode-map
+         ("C-'" . nil)
+         ("C-," . nil)
+         ("<C-return>" . nil)
+         ("<C-S-return>" . nil)
+         ("C-c S-l" . org-toggle-link-display)
+         ("C-c C-S-l" . org-insert-last-stored-link)))
+#+end_src
 
 ** Email settings
 :PROPERTIES:
@@ -4895,1169 +5674,12 @@ performance by carrying out the relevant tasks in a non-blocking way.
   (setq message-send-mail-function 'async-smtpmail-send-it))
 #+end_src
 
-** Version control tools
-:PROPERTIES:
-:CUSTOM_ID: h:0e2fe4c7-9d4b-4570-a293-9a9629021ff7
-:END:
-
-*** Diff-mode (and prot-diff.el extensions)
-:PROPERTIES:
-:CUSTOM_ID: h:2ff46d23-09d5-4d92-b0af-2339dc19719f
-:END:
-
-This covers the standard =diff-mode.el=, which I use quite often, such as
-while interfacing with the built-in Version Control framework (see the
-[[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on VC]]), or while browsing various code-related newsgroups
-through Gnus (refer to the [[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).
-
-Overview of my preferences for how diffs should look:
-
-+ Always start the buffer in a read-only state.  A typo will mess things
-  up when trying to apply a patch.
-+ After applying a diff hunk (=diff-apply-hunk= with =C-c C-a=) move on to
-  the next one.
-+ Update hunk headers automatically following an edit to the diff.
-+ Do not show word-wise ("refined") changes upon activation.  I prefer
-  to do so manually.  All such highlights are removed if you generate
-  the buffer again (with =g= as expected) and the default is to not show
-  word-wise changes.
-+ Do not prettify headers.  I like the standard "patch" looks.  It also
-  makes it easier to copy the diff elsewhere.
-
-Now some notes on my =prot-diff.el= extensions, combined with a
-description of the basics of =diff-mode= (as always you can get
-documentation about the current buffer's major mode with =C-h m=---read
-[[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]] in the FAQ section appended to this document):
-
-+ =prot-diff-buffer-dwim= will produce a diff that compares the current
-  buffer to the last saved state of the underlying file.  If the buffer
-  has no unsaved edits, the command will produce a diff that compares
-  the file to its last registered version-controlled state.  Calling the
-  command with an optional prefix argument (=C-u=) will enable word-wise
-  highlighting across the diff.
-
-+ =prot-diff-refine-dwim= is how I manually control word-wise diff
-  highlights.  By default, the command will turn on refined changes
-  throughout the buffer.  If called with an optional prefix argument, it
-  will operate only on the diff hunk at point.  If the region is active,
-  it will instead apply fontification to the diff hunks encompassed by
-  the region.  And if word-wise highlights are already present, the
-  command will remove everything and leave point back where it was.
-
-+ =prot-diff-narrow-dwim= narrows to the diff hunk at point.  If narrowing
-  is already present, it widens the buffer.  When invoked with an
-  optional prefix argument, it narrows to the current file.
-
-+ =C-c C-c= or =M-o= takes you to the point of the changes in the source
-  file.  If you run this of the diff hunk's heading, you go to the
-  beginning of the context.  But if you place the point somewhere inside
-  of the diff's added changes or context, you will visit that exact
-  position in the original file (does not work for removed text because
-  technically it does not exist).
-
-+ When working with patches to source code, which are distributed
-  e.g. through email, you can apply the current hunk with =C-c C-a= or
-  test for compatibility with =C-c C-t=.  This is a nice way to easily
-  merge contributions from others, without having to go through the
-  workflow of some proprietary Git/Version-Control forge.
-
-+ With =M-n= and =M-p= you move between hunks.  With =M-}= and =M-{= or =M-N=, =M-P=
-  do the same between files.
-
-The =prot-diff-*= commands are part of my =prot-diff.el= library, reproduced
-in its entirety after this set of package declarations.
-
-*Pro tip:* enable =outline-minor-mode= to make diff sections foldable.
-Check [[#h:a8e737b8-7c90-4c68-8814-acf2f637ffa1][Outline mode, outline minor mode, and extras (prot-outline.el)]].
-
-Also read these sections:
-
-+ [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]].
-+ [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Generic version control (VC) framework]].
-
-#+begin_src emacs-lisp
-(use-package diff-mode
-  :config
-  (setq diff-default-read-only t)
-  (setq diff-advance-after-apply-hunk t)
-  (setq diff-update-on-the-fly t)
-  ;; The following are from Emacs 27.1
-  (setq diff-refine nil)                ; I do it on demand
-  (setq diff-font-lock-prettify nil)    ; better for patches
-  (setq diff-font-lock-syntax 'hunk-also))
-
-(use-package prot-diff
-  :straight (:type built-in)
-  ;; `prot-diff-buffer-dwim' replaces the default for `vc-diff' (which I
-  ;; bind to another key---see VC section).
-  :bind (("C-x v =" . prot-diff-buffer-dwim)
-         :map diff-mode-map
-         ("C-c C-b" . prot-diff-refine-dwim) ; replace `diff-refine-hunk'
-         ("C-c C-n" . prot-diff-narrow-dwim)))
-#+end_src
-
-This is =prot-diff.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
-
-#+include: straight/repos/prot-lisp/prot-diff.el src emacs-lisp :tangle no
-
-*** Generic version control (VC) framework
-:PROPERTIES:
-:CUSTOM_ID: h:31deeff4-dfae-48d9-a906-1f3272f29bc9
-:END:
-
-VC is a generic framework that works with several version control
-systems, else "backends".  In practice though, I only ever use it with
-=git=.  Compared with =magit= (see section on [[#h:76d1b392-e693-40dc-b320-d4c1047115ab][Magit configs]]), =vc= offers a
-more abstract, buffer-oriented workflow that, I feel, covers all common
-version control cases.
-
-With VC we can track and ignore files, commit changes, view diffs and
-logs, push and pull from a remote…  Everything you would expect from a
-version control system.  But I am not sure it is possible or convenient
-to perform tasks such as staging only a particular part of a diff,
-handling multiple remotes, interactively rebasing the commit log, etc.
-
-As such, I employ VC as my generalist interface to the most common Git
-interactions: diffs, commits, logs.  While I rely on Magit for expedient
-access to the more advanced features of Git, all of which are rendered
-approachable through an interactive/modal interface.
-
-I started using VC with this a common scenario: to produce a diff of my
-current changes formatted as a ready-to-apply patch.  This is done with
-=vc-diff= (also see the =vc-git-diff-switches= variable).  A diff hunk can
-be applied while in the =*vc-diff*= buffer by hitting =C-c C-a=.  Fairly
-easy.  One can always save the diff buffer using the standard =C-x C-w=
-command (=write-file=).  Use these to send patches (e.g. via email),
-without having to go through proprietary web tools.
-
-Another nice feature is a region-specific commit log with =C-x v h=
-(=vc-region-history=).  Highlight a region and run the command to get a
-clear view of how it took form.  Quite an easy way to "git blame".  For
-a more macroscopic view of the file's entire history you can always rely
-on =C-x v g= or my alias =C-x v a= which calls =vc-annotate=.  Commits are
-colour-coded with those on the red side of the spectrum being the newest
-ones, while those on the blue end representing the older ones.
-
-=C-x v v= (=vc-next-action=) is a hidden gem: a paradigm of minimalism done
-right.  On a new project it will first ask you for a backend.  Selecting
-=git= will run =git init=.  Invoking the command again will track the file
-and commit the changes.  If the file is already being tracked, it will
-just proceed to the next step.  It always follows a logical sequence
-which translates into a powerful metaphor of going through the process
-of committing changes to files.
-
-The commit buffer presents you with a summary section followed by the
-body of the commit message, separated by an empty line (shown as a
-border) as per the conventions that govern good commit messages.  In the
-lower part you can see the affected files (just the current file by
-default).  The standard =C-c C-c= confirms the commit, while =C-c C-k=
-cancels it.  Furthermore, there is =C-c C-f= to view the file set
-concerned (in case it is not already visible below the message area), as
-well as =C-c C-d= to produce a diff of what is being committed.
-
-You can review the commit log for the current file with =C-x v l=
-(=vc-print-log=) or for the entirety of the current project with =C-x v L=
-(=vc-print-root-log=).  From there you can display any diff with =d= or find
-the prior state of the commit at point with =f=.  Use the latter as a
-starting point for reverting to a prior state.  Also note that while
-inside the root log view, you can use an active region to show diffs in
-that range of commits.
-
-With =vc-dir=, which I rebind to the more logical "project" mnemonic of
-=C-x v p= (=prot/vc-dir-project=), you can mark with =m= several files to add
-to a commit.  Use =M= to mark all files with the same status.  This mode
-offers easy access to the standard VC actions.  To commit the file at
-point or the marked ones hit =v=.  To push do =P=.  Same principle for
-diffs, logs, etc.
-
-By the way, rebinding =vc-dir= has another upside of allowing its original
-key binding to be assigned to =vc-diff=; which in turn makes that
-mnemonically consistent with the =C-x v D= sequence, else =vc-root-diff=
-(make sure to check my key re-bindings or aliases).
-
-Some more common actions (read their docstrings for further help):
-
-| Command         | Key chord | VC-dir key |
-|-----------------+-----------+------------|
-| vc-update       | C-x v +   | +          |
-| vc-push         | C-x v P   | P          |
-| vc-log-incoming | C-x v I   | I          |
-| vc-log-outgoing | C-x v O   | O          |
-
-Based on these (and there are more), you can already see how VC may be
-used as your main tool for version control, from committing changes, to
-pulling/pushing from/to a remote, viewing commit logs, etc.  It depends
-on your needs and preferences.  Run =C-x v C-h= to get a full list of the
-possible commands.  Read the docstring of each command for further
-information.  Then in each of the various VC modes try =C-h m= for further
-help.  Also consult the manual and make liberal use of =C-h f= or =C-h v=.
-
-Changes to all tracked files are highlighted in the fringe thanks to the
-=diff-hl= package which is [[#h:5b71e71f-353f-4290-951b-3fc575c0fcba][defined elsewhere in this document]] (as I
-consider it an "interface" element).  Any rules that control the
-placement of VC-related (and other) buffers are defined in the section
-on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (specifically, refer to the variable
-=display-buffer-alist=).
-
-Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]]
-(2020-03-30).
-
-*Careful with the keybindings* I define.  Many of them do other things by
-default and /I might still review them further/.  When in doubt, stick
-with the defaults.
-
-#+begin_src emacs-lisp
-;; TODO 2020-12-09: put all my code in prot-vc.el and review it
-(use-package vc
-  :config
-  (setq vc-find-revision-no-save t)
-
-  (use-package add-log
-    :config
-    ;; I use a different account for git commits
-    (setq add-log-mailing-address "info@protesilaos.com")
-    (setq add-log-keep-changes-together t))
-
-  (use-package log-view
-    :config
-    (defun prot/vc-print-log (&optional arg)
-      "Like `vc-print-log' but for a custom fileset.
-
-With optional prefix ARG (\\[universal-argument]), query for a
-number to limit the log to.  Then prompt the user for matching
-files in the `default-directory'.  A literal space delimits
-multiple files (inserting a space will renew the prompt, asking
-for another file match).
-
-In a `dired-mode' buffer, print log for the file at point, or any
-marked files, except for when a double prefix argument is passed.
-A single prefix arg still provides for a limit to the log.
-
-If a double prefix ARG is passed, prompt for a limit and produce
-a log that covers all files in the present directory."
-      (interactive "P")
-      (let* ((lim (if arg
-                      (read-number "Limit log to N entries: " 5)
-                    20))
-             (dir default-directory)
-             (dotless directory-files-no-dot-files-regexp)
-             (files (directory-files dir nil dotless t))
-             (crm-separator " ")
-             (set (cond
-                   ((equal arg '(16))
-                    files)
-                   ((eq major-mode 'dired-mode)
-                    (dired-get-marked-files t nil))
-                   (t
-                    (completing-read-multiple
-                     "Select files in current dir: " files nil t))))
-             (backend (vc-backend set)))
-        (vc-print-log-internal backend set nil nil lim 'with-diff)))
-
-    (defun prot/log-view-extract-commit ()
-      "Kill commit from around point in `vc-print-log'."
-      (interactive)
-      (let ((commit (cadr (log-view-current-entry (point) t))))
-        (kill-new (format "%s" commit))
-        (message "Copied: %s" commit)))
-
-    (defvar prot/vc-shell-output "*vc-shell-output*"
-      "Name of buffer for VC-related shell output.")
-
-    (defun prot/log-view-create-patch ()
-      "Create patch for commit at point in `log-view'."
-      (interactive)
-      (let* ((commit (cadr (log-view-current-entry (point) t)))
-             (vc-dir (or (vc-root-dir) default-directory))
-             (dirs (list "~/" "~/Desktop/" vc-dir))
-             (out-dir ;; (read-directory-name "Output directory: ")
-              (completing-read "Output directory: " dirs))
-             (buf (get-buffer-create prot/vc-shell-output)))
-        (shell-command
-         (format "git format-patch -1 %s -o %s" commit out-dir) buf)
-        (message "Prepared patch for `%s' and sent it to %s"
-                 (propertize commit 'face 'bold)
-                 (propertize out-dir 'face 'success))))
-
-    :bind (("C-x v SPC" . prot/vc-print-log)
-           :map log-view-mode-map
-           ("<tab>" . log-view-toggle-entry-display)
-           ("<return>" . log-view-find-revision)
-           ("c" . prot/log-view-create-patch)
-           ("w" . prot/log-view-extract-commit)
-           ("s" . vc-log-search)
-           ("o" . vc-log-outgoing)
-           ("f" . vc-log-incoming)
-           ("F" . vc-update)
-           ("P" . vc-push)))
-
-  :bind (("C-x v b" . vc-retrieve-tag)  ; "branch" switch
-         ("C-x v t" . vc-create-tag)
-         ("C-x v f" . vc-log-incoming)  ; the actual git fetch
-         ("C-x v F" . vc-update)        ; "F" because "P" is push
-         ("C-x v d" . vc-diff)))
-
-(use-package vc-dir
-  :config
-  (defun prot/vc-dir (&optional arg)
-    "Run `vc-dir' for the current project or directory.
-With optional ARG (\\[universal-argument]), use the present
-working directory, else default to the root of the current
-project, as defined by `vc-root-dir'."
-    (interactive "P")
-    (let ((dir (if arg default-directory (vc-root-dir))))
-      (vc-dir dir)))
-  :bind (("C-x v p" . prot/vc-dir)
-         :map vc-dir-mode-map
-         ("b" . vc-retrieve-tag)
-         ("t" . vc-create-tag)
-         ("o" . vc-log-outgoing)
-         ("f" . vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
-         ("F" . vc-update)       ; symmetric with P: `vc-push'
-         ("d" . vc-diff)         ; align with D: `vc-root-diff'
-         ("k" . vc-dir-clean-files)))
-
-(use-package vc-git
-  :config
-  (setq vc-git-diff-switches '("--patch-with-stat" "--histogram"))
-  (setq vc-git-print-log-follow t)
-  (setq vc-git-revision-complete-only-branches nil) ; Emacs 28
-  (setq vc-git-root-log-format
-        '("%d%h %ad %an: %s"
-          ;; The first shy group matches the characters drawn by --graph.
-          ;; We use numbered groups because `log-view-message-re' wants the
-          ;; revision number to be group 1.
-          "^\\(?:[*/\\| ]+ \\)?\
-\\(?2: ([^)]+)\\)?\\(?1:[0-9a-z]+\\) \
-\\(?4:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\) \
-\\(?3:.*?\\):"
-          ((1 'log-view-message)
-           (2 'change-log-list nil lax)
-           (3 'change-log-name)
-           (4 'change-log-date)))))
-
-(use-package vc-annotate
-  :config
-  (setq vc-annotate-display-mode 'scale) ; scale to oldest
-  :bind (("C-x v a" . vc-annotate)       ; `vc-update-change-log' is not in git
-         :map vc-annotate-mode-map
-         ("<tab>" . vc-annotate-toggle-annotation-visibility)))
-#+end_src
-
-**** Commit log editing
-:PROPERTIES:
-:CUSTOM_ID: h:4df7a1f5-a144-4848-b3aa-8796d76d5fb9
-:END:
-
-The =log-edit= library defines a set of general commands that we can use
-to, inter alia, commit changes to Git, using the surprisingly powerful
-[[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][built-in Version Control (VC) framework]].
-
-Overview of the following tweaks:
-
-+ While editing a commit message, only prompt for confirmation if the
-  list of files has changed since the beginning of the editing session.
-+ Once the commit is done, remove its buffer.
-+ Always add a newline.
-+ Do not offer to manually write an =Author:= header.  Though this can be
-  useful if someone sends a patch.
-
-Also make sure to read the guide for [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  I
-always use =auto-fill-mode= to wrap lines to the value of =fill-column= (see
-[[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][relevant configs]]).
-
-#+begin_src emacs-lisp
-(use-package log-edit
-  :config
-  (setq log-edit-confirm 'changed)
-  (setq log-edit-keep-buffer nil)
-  (setq log-edit-require-final-newline t)
-  (setq log-edit-setup-add-author nil))
-#+end_src
-
-*** Interactive git front-end (Magit)
-:PROPERTIES:
-:CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
-:END:
-
-As noted in the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on the built-in Version Control framework]] I use
-Magit for easy access to the /advanced features of Git/.  While I rely on
-the built-in tools for all day-to-day operations.
-
-Magit offers a modal interface where the full power of =git= is neatly
-organised in sets of keys that are directly accessible without holding
-down any modifiers.
-
-While inside the =magit-status= buffer, hit =?= to produce a transient menu
-with the possible vectors to action.  Do it again inside each of the
-Magit buffers to view the keys that work for their context.
-
-Consider viewing my [[https://protesilaos.com/codelog/2020-04-04-emacs-intro-magit/][Introduction to Magit]] (2020-04-04) for how to stage
-diffs, commit changes, view logs, create branches, and so on.
-
-**** Base Magit settings
-:PROPERTIES:
-:CUSTOM_ID: h:21ca155a-d0d7-4710-b34a-a0d7a901ac0d
-:END:
-
-Magit has great defaults.  I only found a few things that I would like
-to customise, which I do in the following package declarations.
-
-#+begin_src emacs-lisp
-(use-package magit
-  :straight t
-  :bind ("C-c g" . magit-status))
-#+end_src
-
-**** Magit commits
-:PROPERTIES:
-:CUSTOM_ID: h:f851e0cc-099c-4309-8517-b2f20ab18ab4
-:END:
-
-The following package is configured in accordance with the guidelines
-provided by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is
-to write commits that are clean and easy to read.  The =fill-column= is
-set elsewhere in this document to 72 characters long.
-
-#+begin_src emacs-lisp
-(use-package git-commit
-  :after magit
-  :config
-  (setq git-commit-summary-max-length 50)
-  (setq git-commit-known-pseudo-headers
-        '("Signed-off-by"
-          "Acked-by"
-          "Modified-by"
-          "Cc"
-          "Suggested-by"
-          "Reported-by"
-          "Tested-by"
-          "Reviewed-by"))
-  (setq git-commit-style-convention-checks
-        '(non-empty-second-line
-          overlong-summary-line)))
-#+end_src
-
-**** Magit diffs
-:PROPERTIES:
-:CUSTOM_ID: h:c7a465c1-f33a-42d8-9617-fff3e1460060
-:END:
-
-The settings below are for the diff screens that Magit produces.  I just
-want to highlight changes within a line, not just the line itself.  I
-enable it only for the focused hunk (there is an option for ='all=).
-
-#+begin_src emacs-lisp
-(use-package magit-diff
-  :after magit
-  :config
-  (setq magit-diff-refine-hunk t))
-#+end_src
-
-**** Magit repo list
-:PROPERTIES:
-:CUSTOM_ID: h:35972439-0b28-4d33-8091-c6b5f1f02579
-:END:
-
-When maintaining a number of projects, it sometimes is necessary to
-produce a full list of them with their corresponding Magit status.  That
-way you can determine very quickly which repositories need to be
-examined further.
-
-#+begin_src emacs-lisp
-(use-package magit-repos
-  :after magit
-  :commands magit-list-repositories
-  :config
-  (setq magit-repository-directories
-        '(("~/Git/Projects" . 1))))
-#+end_src
-
-*** Smerge and Ediff
-:PROPERTIES:
-:CUSTOM_ID: h:fb9e0507-5ab1-4ebd-8870-8c32cfe742c1
-:END:
-
-*Read this section, because it matters more than the code below it.*
-
-Sometimes we face a situation where we have conflicting versions of a
-file and the version control backend cannot solve them on its own.  This
-can happen fairly often when collaborating with other people or, more
-generally, when we keep our work spread across multiple feature branches
-with diverging histories.  Whenever such conflicts arise, Emacs will
-automatically annotate the offending files with special markers that
-show the conflicting differences.  Visiting those files will then
-activate =smerge-mode=.  At which point we are in control.
-
-Smerge revolves around the concept of dividing the conflicting part into
-an "upper" (red) and a "lower" section (green), possibly with their
-common ancestor or last point of convergence in the middle (yellow).
-
-With this in mind we can operate on the marked differences by relying on
-the functions that Smerge provides, all of which are accessed by default
-through the common prefix of =C-c ^=.  Start by typing the prefix followed
-by =C-h= to see all possible key chords.  These are the commands I have
-used the most:
-
-+ =C-c ^ u= (=smerge-keep-upper=)
-+ =C-c ^ l= (=smerge-keep-lower=)
-+ =C-c ^ b= (=smerge-keep-base=)
-+ =C-c ^ a= (=smerge-keep-all=)
-+ =C-c ^ n= (=smerge-next=)
-+ =C-c ^ p= (=smerge-prev=)
-
-Proceed to edit the file the way you want until no more conflicts exist.
-You can also do things through manual editing, with standard commands
-and motions, but that can be prone to errors (which lead to more
-conflicts).  At any moment in this process, you can switch to =ediff=,
-which offers a more powerful way of working with differences.  Type the
-key chord =C-c ^ E= (=smerge-ediff=).
-
-Ediff is a powerhouse that is likely to cover all your needs in this
-area (including those you are not aware of).  For our purposes, what
-matters is to understand the basic concepts.
-
-The way this tool works is that it starts by producing a layout of the
-two conflicting versions with access to a "control panel" for operating
-on them.  By default, the panel is positioned on a new frame, but I find
-that rather awkward---my config puts it inside an Emacs window instead.
-While focusing the control panel, you can move between each diff range
-with =n= and =p=.  The focused section will be coloured using red, green,
-and yellow, while all other diffs will be presented in gray.
-
-On each diff, you have three options: to use the version of buffer A
-(red), of buffer B (green), or a combination of the two.  The keys for
-each of those are =a=, =b=, and =+= respectively.  Your choice will be
-reflected in buffer C (the yellow one).  Use these to resolve all
-conflicts and then quit the session with =q=.
-
-Concerning the combination of versions between A and B, Ediff has the
-behaviour of also inserting as plain text the annotation markers that
-Smerge relied on.  As of this writing (2020-04-10), I am not aware of an
-automatic or convenient way to omit those prior to confirming our edits.
-To that end, I tweak the wording of the markers to some unique string
-(see package below) and then run =flush-lines= to remove them before
-saving the resulting buffer (so right after the =q=).  For more on this,
-check =prot/ediff-flush-combination-pattern=.
-
-For =git= users, to actually /reference the common ancestor/ (the point
-before the branching paths started) we must run this command once in our
-command-line prompt (writes to your global =.gitconfig= file):
-
-#+begin_src
-git config --global merge.conflictStyle diff3
-#+end_src
-
-This is optional, but I find that I like it.  At any rate, the
-configurations I have below are straightforward (learn more about this
-powerful tool by hitting =?= inside of its control panel and by consulting
-its comprehensive manual):
-
-+ Do not keep all the buffers after exiting the Ediff session.
-+ Keep buffers in an editable state.  Otherwise it is impossible to
-  perform the changes we are interested in.
-+ Show the common ancestor in another buffer.  This helps provide
-  further context of how things took their form.
-+ Show only the conflicting parts.  This is not a review of all diffs.
-+ Prefer putting windows side-by-side, rather than one below the other.
-+ Do not enter the ediff session in a new frame.  This also means that
-  the control panel will be inside an Emacs window (at the bottom part)
-  rather than in a tiny frame of its own.
-
-There actually is nothing in terms of Smerge-related configurations.
-The package is small and does one thing well.
-
-Also watch my video of [[https://protesilaos.com/codelog/2020-04-10-emacs-smerge-ediff/][Smerge and Ediff for git conflict resolution]]
-(2020-04-10).
-
-#+begin_src emacs-lisp
-(use-package smerge-mode)
-
-(use-package ediff
-  :config
-  (setq ediff-keep-variants nil)
-  (setq ediff-make-buffers-readonly-at-startup nil)
-  (setq ediff-merge-revisions-with-ancestor t)
-  (setq ediff-show-clashes-only t)
-  (setq ediff-split-window-function 'split-window-horizontally)
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-
-  ;; Tweak those for safer identification and removal
-  (setq ediff-combination-pattern
-        '("<<<<<<< prot-ediff-combine Variant A" A
-          ">>>>>>> prot-ediff-combine Variant B" B
-          "####### prot-ediff-combine Ancestor" Ancestor
-          "======= prot-ediff-combine End"))
-
-  ;; TODO automate process in a robust way, or at least offer a good key
-  ;; binding.
-  (defun prot/ediff-flush-combination-pattern ()
-    "Remove my custom `ediff-combination-pattern' markers.
-
-This is a quick-and-dirty way to get rid of the markers that are
-left behind by `smerge-ediff' when combining the output of two
-diffs.  While this could be automated via a hook, I am not yet
-sure this is a good approach."
-    (interactive)
-    (flush-lines ".*prot-ediff.*" (point-min) (point-max) nil)))
-#+end_src
-
-** Shells and terminal emulators
-:PROPERTIES:
-:CUSTOM_ID: h:0df1db3a-30ee-43e5-9086-92951a58164f
-:END:
-
-It should come to no surprise that Emacs can operate as both a /terminal
-emulator for command line shells/ and /toolkit for terminal emulators/.
-The present section covers both cases.
-
-*** Command-line shells
-:PROPERTIES:
-:CUSTOM_ID: h:2c1966a1-bf33-4fe3-ac45-9f31158efd9b
-:END:
-
-**** Shell (M-x shell)
-:PROPERTIES:
-:CUSTOM_ID: h:98804f0d-f2dd-41a4-b8df-c1bd04ef7f7a
-:END:
-
-This is a shell (Bash, in my case) that runs inside of Emacs.  Unlike
-the [[#h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2][terminal emulators defined below]], this one can use standard Emacs
-keys and behaves much like an ordinary buffer.  It also integrates
-nicely with the built-in completion tools, which makes it particularly
-nice to work with.
-
-The one area where this Shell differs substantially from ordinary
-buffers is with regard to the command prompt: you can re-run a command
-on the scroll-back buffer by just hitting =RET= while point is on its line
-(no need to go back to the end and cycle the command history with =M-p= or
-=M-n=).
-
-Another peculiarity relative to the standard commands in the terminal is
-to search backward through your history with =M-r= (whereas in a terminal
-emulator you use =C-r=).
-
-Run =C-h m= inside of a shell buffer to learn about all the key bindings
-and corresponding functions.
-
-#+begin_src emacs-lisp
-(use-package shell
-  :commands shell-command
-  :config
-  (setq ansi-color-for-comint-mode t)
-  (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
-  :bind (("<s-S-return>" . shell)))
-#+end_src
-
-**** Eshell (like M-x shell but in elisp)
-:PROPERTIES:
-:CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
-:END:
-
-While I did read the =eshell= manual fairly early in my introduction to
-Emacs (July 2019), I failed to appreciate its added value.  Sure, you
-could run Elisp commands as well as those of the standard shells.  But
-that did not seem like an obvious step forward.  More of a lateral
-movement at best, for it was asking for a whole new way of thinking
-about the shell that could potentially complicate things in other areas.
-
-After gaining some experience with Emacs, I now (April 2020) have
-developed a newfound appreciation of Eshell's flexibility.  The fact
-that it can understand elisp means that you can develop entirely new
-modes of interaction that involve the command line and extend into other
-Emacs major modes.  For example, you can =cd= into a directory and then
-=dired= to access the full power of Emacs' /superb/ file manager (also check
-the [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][section on Dired]]).
-
-The core value of Eshell is that it behaves like an ordinary buffer.
-This means that we can build our own functions for moving around and
-operating on text.  =prot/eshell-put-last-output-to-buffer= puts that in
-concrete terms.  The function will take the output of the last command
-and put it in a new buffer.  You can then select that buffer, edit it as
-you will and, say, =C-x C-w= to write it permanently to a file.
-
-Here is another case where integration with standard Emacs commands
-truly shines.  In Eshell, =cd= followed by the equals sign will produce a
-numbered list of the directories you have accessed.  With =cd -NUM= you
-can switch to the one you want.  So far so good, how about we also
-switch to a dired buffer from there?  Do it with =cd -NUM && dired=.
-
-Speaking of directories, =eshell-cd-on-directory= allows you to omit =cd=
-and just type in the path to a directory.  Awesome!  And while on the
-topic of Dired, you can use =dired-jump= to always switch to a =dired=
-buffer of the present working directory.  To that I add my own little
-utility (=prot/eshell-file-parent-dir=) for jumping to the directory of
-the file at point: very useful in cases where you get files from
-different sources, such as with =find= (though do also check the various
-options for running =find= with =dired=, like =find-name-dired=).
-
-Extensibility is seamless.  =prot/eshell-complete-history= offers a
-completion interface to the input history.  No need for awkard back and
-forth or for searching for a regexp without any immediate feedback.  In
-a similar fashion =prot/eshell-complete-recent-dir= provides completion
-for switching directly to a recent directory.  While the more general
-=prot/eshell-find-subdirectory-recursive= lets you switch to a
-subdirectory somewhere inside the path you are.
-
-Instead of outlining the remaining features of Eshell, *I strongly
-encourage you to read the manual*.  It is fairly short.  What I have here
-is just an early sample of what can be achieved with a few tweaks.
-
-Also check these valuable resources:
-
-+ [[https://cestlaz.github.io/post/using-emacs-66-eshell-elisp][Mike Zamansky's video demo]] that also shows how to program an Eshell
-  switcher.
-+ [[https://www.youtube.com/watch?v=RhYNu6i_uY4][Howard Abrahams' video]] that covers the features of Eshell.
-+ [[https://ambrevar.xyz/emacs-eshell/][Pierre Neidhardt's detailed blog post]] on the pros and cons of Eshell.
-
-Finally, a few notes about contributions I have received:
-
-+ [[https://gitlab.com/dije][Phil Hudson (@dije on Gitlab)]] explained how =concat= is superfluous when
-  combined with =format= and demonstrated how to use a specifier (=%s=) to
-  make a uniform string out of the output of some command combined with
-  predefined text.
-
-+ Phil also helped me with =prot/eshell-find-subdirectory-recursive= by
-  highlighting some inefficient routines in the original design.  This
-  inspired me to revisit the code and make it cleaner overall.  The gist
-  is that only the present working directory needs to be abbreviated.
-
-+ Another user who preferred to remain anonymous sent me
-  =contrib/eshell-cat-with-syntax-highlight= which will apply syntax
-  highlighting to the output of a =cat= command.  The code I got was using
-  =define-advice=, so I tweaked it a bit to work with =advice-add= because I
-  find that syntax easier to follow.  I also made minor tweaks to the
-  docstring.
-
-+ Same principle as above for =contrib/electrify-ls=.
-
-+ Any errors are my own.
-
-#+begin_src emacs-lisp
-(use-package eshell
-  :bind ("<s-return>" . eshell))
-
-(use-package esh-mode
-  :commands prot/eshell-minor-mode
-  :config
-  ;; used by other functions below
-  (declare-function ffap-file-at-point "ffap.el")
-
-  (defmacro prot/eshell-ffap (name doc &rest body)
-    "Make commands for `eshell' find-file-at-point.
-NAME is how the function is called.  DOC is the function's
-documentation string.  BODY is the set of arguments passed to the
-`if' statement to be evaluated when a file at point is present."
-    `(defun ,name ()
-       ,doc
-       (interactive)
-       (let ((file (ffap-file-at-point)))
-         (if file
-             ,@body
-           (user-error "No file at point")))))
-
-  (prot/eshell-ffap
-   prot/eshell-insert-file-at-point
-   "Insert (cat) contents of file at point."
-   (progn
-     (goto-char (point-max))
-     (insert (concat "cat " file))
-     (eshell-send-input)))
-
-  (prot/eshell-ffap
-   prot/eshell-kill-save-file-at-point
-   "Add to kill-ring the absolute path of file at point."
-   (progn
-     (kill-new (concat (eshell/pwd) "/" file))
-     (message "Copied full path of %s" file)))
-
-  (prot/eshell-ffap
-   prot/eshell-find-file-at-point
-   "Run `find-file' for file at point (ordinary file or dir).
-Recall that this will produce a `dired' buffer if the file is a
-directory."
-   (find-file file))
-
-  (prot/eshell-ffap
-   prot/eshell-file-parent-dir
-   "Open `dired' with the parent directory of file at point."
-   (dired (file-name-directory file)))
-
-  (defun prot/eshell-put-last-output-to-buffer ()
-    "Produce a buffer with output of last `eshell' command."
-    (interactive)
-    (let ((eshell-output (buffer-substring-no-properties
-                          (eshell-beginning-of-output)
-                          (eshell-end-of-output))))
-      (with-current-buffer (get-buffer-create "*last-eshell-output*")
-        (erase-buffer)
-        (insert eshell-output)
-        (switch-to-buffer-other-window (current-buffer)))))
-
-  (defun prot/eshell-complete-redirect-to-buffer ()
-    "Complete the syntax for appending to a buffer via `eshell'."
-    (interactive)
-    (insert
-     (format " >>> #<%s>"
-             (read-buffer-to-switch "Switch to buffer: "))))
-
-  (defun prot/eshell-narrow-output-highlight-regexp ()
-    (interactive)
-    (let ((regexp (read-regexp "Regexp to highlight")))
-      (narrow-to-region (eshell-beginning-of-output)
-                        (eshell-end-of-output))
-      (goto-char (point-min))
-      (highlight-regexp regexp 'hi-yellow)))
-
-  ;;;; NOTE by Prot 2020-06-16: the following two advice-add snippets
-  ;;;; will need to be reviewed to make sure they do not produce
-  ;;;; undesirable side effects.
-
-  ;; syntax highlighting implementation modified from
-  ;; https://emacs.stackexchange.com/questions/50385/use-emacs-syntax-coloring-when-not-in-emacs
-  ;;
-  ;; This command also makes it possible to, e.g., cat an encrypted and/or
-  ;; compressed file.
-  (defun contrib/eshell-cat-with-syntax-highlight (&rest args)
-    "Like `eshell/cat' but with syntax highlighting.
-To be used as `:override' advice to `eshell/cat'."
-    (setq args (eshell-stringify-list (flatten-tree args)))
-    (dolist (filename args)
-      (let ((existing-buffer (get-file-buffer filename))
-            (buffer (find-file-noselect filename)))
-        (eshell-print
-         (with-current-buffer buffer
-           (if (fboundp 'font-lock-ensure)
-               (font-lock-ensure)
-             (with-no-warnings
-               (font-lock-fontify-buffer)))
-           (let ((contents (buffer-string)))
-             (remove-text-properties 0 (length contents) '(read-only nil) contents)
-             contents)))
-        (unless existing-buffer
-          (kill-buffer buffer)))))
-
-  (advice-add 'eshell/cat :override #'contrib/eshell-cat-with-syntax-highlight)
-
-  ;; Turn ls results into clickable links.  Especially useful when
-  ;; combined with link-hint.  Modified from
-  ;; https://www.emacswiki.org/emacs/EshellEnhancedLS
-  (define-button-type 'eshell-ls
-    'supertype 'button
-    'help-echo "RET, mouse-2: visit this file"
-    'follow-link t)
-
-  (defun contrib/electrify-ls (name)
-    "Buttonise `eshell' ls file names.
-Visit them with RET or mouse click.  This function is meant to be
-used as `:filter-return' advice to `eshell-ls-decorated-name'."
-    (add-text-properties 0 (length name)
-                         (list 'button t
-                               'keymap button-map
-                               'mouse-face 'highlight
-                               'evaporate t
-                               'action #'find-file
-                               'button-data (expand-file-name name)
-                               'category 'eshell-ls)
-                         name)
-    name)
-
-  (advice-add 'eshell-ls-decorated-name :filter-return #'contrib/electrify-ls)
-  :bind (:map eshell-mode-map
-              ("M-k" . eshell-kill-input)
-              ("C-c i" . prot/eshell-insert-file-at-point)
-              ("C-c f" . prot/eshell-find-file-at-point)
-              ("C-c C-f" . prot/eshell-find-file-at-point)
-              ("C-c o" . prot/eshell-put-last-output-to-buffer)
-              ("C-c w" . prot/eshell-kill-save-file-at-point)
-              ("C-c >" . prot/eshell-complete-redirect-to-buffer)
-              ("C-c C-j" . prot/eshell-file-parent-dir)
-              ("C-c h" . prot/eshell-narrow-output-highlight-regexp)
-              ("C-c =" . prot/eshell-complete-recent-dir)))
-
-(use-package esh-module
-  :config
-  (setq eshell-modules-list             ; Needs review
-        '(eshell-alias
-          eshell-basic
-          eshell-cmpl
-          eshell-dirs
-          eshell-glob
-          eshell-hist
-          eshell-ls
-          eshell-pred
-          eshell-prompt
-          eshell-script
-          eshell-term
-          eshell-tramp
-          eshell-unix)))
-
-(use-package em-dirs
-  :after esh-mode
-  :config
-  (setq eshell-cd-on-directory t))
-
-(use-package em-tramp
-  :after esh-mode
-  :config
-  (setq password-cache t)
-  (setq password-cache-expiry 600))
-
-(use-package em-hist
-  :after esh-mode
-  :config
-  (setq eshell-hist-ignoredups t)
-  (setq eshell-save-history-on-exit t)
-
-  (defun prot/eshell-complete-history ()
-    "Insert element from `eshell' history using completion."
-    (interactive)
-    (let ((hist (ring-elements eshell-history-ring)))
-      (insert
-       (completing-read "Input history: " hist nil t))))
-
-  (defun prot/eshell-complete-recent-dir (&optional arg)
-    "Switch to a recent `eshell' directory using completion.
-With \\[universal-argument] also open the directory in a `dired'
-buffer."
-    (interactive "P")
-    (let* ((dirs (ring-elements eshell-last-dir-ring))
-           (dir (completing-read "Switch to recent dir: " dirs nil t)))
-      (insert dir)
-      (eshell-send-input)
-      (when arg
-        (dired dir))))
-
-  ;; `cl-remove-if' is used right below
-  (declare-function cl-remove-if "cl-seq")
-
-  (defun prot/eshell-find-subdirectory-recursive ()
-    "Recursive `eshell/cd' to subdirectory.
-This command has the potential for infinite recursion: use it
-wisely or prepare to use `eshell-interrupt-process'."
-    (interactive)
-    (let* ((dir (abbreviate-file-name (eshell/pwd)))
-           (contents (directory-files-recursively dir ".*" t nil nil))
-           (dirs (cl-remove-if-not (lambda (x)
-                                     (or (file-directory-p x)
-                                         (string-match-p "\\.git" x)))
-                                   contents))
-           (selection (completing-read
-                       (format "Find sub-dir from %s (%s): "
-                               (propertize dir 'face 'success)
-                               (length dirs))
-                       dirs nil t)))
-      (insert selection)
-      (eshell-send-input)))
-
-  :bind (:map eshell-hist-mode-map
-              ("M-s" . nil) ; I use this for lots of more useful commands
-              ("M-r" . prot/eshell-complete-history) ; use this to find input history
-              ("C-c d" . prot/eshell-find-subdirectory-recursive)))
-#+end_src
-
-*** Terminals inside of Emacs
-:PROPERTIES:
-:CUSTOM_ID: h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2
-:END:
-
-**** Vterm terminal emulator
-:PROPERTIES:
-:CUSTOM_ID: h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2
-:END:
-
-The [[#h:87b40f59-0e11-48bc-8120-40026ebaf8a4][built-in terminal emulators]] are not up to par with the likes of
-Xterm and its peers. Perhaps they were a good compromise in yester
-years, but we have come to expect better from our system.  Thankfully
-there is a package that /might/ eventually makes its way into Emacs
-proper, provided all legal requirements are met.  This is Vterm, which
-is an implementation of the external =libvterm= library (and which
-requires =cmake= in order to be compiled).
-
-Vterm is a fully fledged terminal emulator (not mere shell) inside of
-Emacs.  Its main differences with [[#h:98804f0d-f2dd-41a4-b8df-c1bd04ef7f7a][Shell (M-x shell)]] can be summarised
-thus:
-
-+ Vterm can handle graphics and ANSI escape sequences.  Shell cannot.
-+ Shell behaves more like an ordinary Emacs buffer.  Vterm is like an
-  external application that has been embedded in the Emacs frame.
-+ Vterm does tab-completion like a standard terminal.  Shell can use the
-  Emacs completion framework.  To make this concrete, with Vterm if you
-  type =cd G <tab>= it expands the =Git= subdirectory.  Whereas in Shell
-  with my completion framework (and tweaks) I can do =cd G/P/m-t <tab>= to
-  expand to =cd Git/Projects/modus-themes/=.
-
-My workflow is to keep the Shell as my main conduit to the command line,
-such as for when I need to call one of my scripts, and only use Vterm
-when I really need a CLI tool that is likely to produce graphical
-artefacts.
-
-*Pro tip:* if you always can put the current buffer in another frame with
-the =M-x tear-off-window= command.  Works nicely when you need to keep
-Vterm in sight but out of your main editing space (e.g. to put it on a
-secondary monitor).
-
-#+begin_src emacs-lisp
-(use-package vterm
-  :straight t
-  :commands vterm
-  :config
-  (setq vterm-disable-bold-font nil)
-  (setq vterm-disable-inverse-video nil)
-  (setq vterm-disable-underline nil)
-  (setq vterm-kill-buffer-on-exit nil)
-  (setq vterm-max-scrollback 9999)
-  (setq vterm-shell "/bin/bash")
-  (setq vterm-term-environment-variable "xterm-256color"))
-#+end_src
-
-**** Built-in terminals (fallback option)
-:PROPERTIES:
-:CUSTOM_ID: h:87b40f59-0e11-48bc-8120-40026ebaf8a4
-:END:
-
-=term= and =ansi-term= are built-in /terminal emulators/ [[#h:91be4c80-d9ca-4628-8f4f-89bbbfeb32e2][like Vterm]].  Not to
-be confused with the [[#h:2c1966a1-bf33-4fe3-ac45-9f31158efd9b][command line shells]].  They run inside of Emacs but
-are basically alien to the rest of the Emacs milieu: they do not reuse
-standard key bindings like =C-n=.
-
-*Only call those if you absolutely need them AND you have no access to
-either Vterm or a standalone, fully fledged terminal emulator*.
-
-As far as I can tell, based on reading the comments in =term.el= and
-elsewhere in the docs, the major difference between =term= and
-=ansi-term= is the ability of the latter to run one or multiple buffers
-simultaneously.  Better check the documentation for this point.  It does
-not seem to be a strong point, since this is also possible with the
-other options in the Emacs space (e.g. with =C-u M-x shell=).
-
-#+begin_src emacs-lisp
-(use-package term
-  :commands (term ansi-term)
-  :config
-  (setq term-buffer-maximum-size 9999)
-  (setq term-completion-autolist t)
-  (setq term-completion-recexact t)
-  (setq term-scroll-to-bottom-on-output nil))
-#+end_src
-
-** Tools for manual pages (manpages)
-:PROPERTIES:
-:CUSTOM_ID: h:ce420306-c40c-4d9a-bc01-205c5e49a5d1
-:END:
-
-Emacs offers a couple of commands for reading manual pages: =man= and
-=woman=.  The former relies on the standard Unix tools, while the latter
-is an elisp implementation of the same idea.  As I only ever run a
-GNU/Linux system, I am okay with just =man=.
-
-Why bother?
-
-+ All the goodies of consistency: fonts, themes, operating on text with
-  your familiar Emacs functionality, handling buffers…
-+ Each manpage provides direct links to other items it references.
-
-What you can do inside such a buffer (with minor tweaks by me):
-
-+ Hit =i= to go to the information node you want using completion (same
-  principle as with the Info pages of =C-h i= and the like).
-+ =g= will generate the buffer anew.  Do it to reformat the text manually,
-  though this should also happen automatically when adjusting a window's
-  size.
-+ =n= and =p= move between section headings.
-+ Hit =RET= while over a referenced manpage to produce a new buffer with
-  its contents.
-+ =s= takes you directly to the familiar "See Also" section.
-+ Use =m= to search for another manpage using your completion framework.
-  If you invoke this command while point is over a referenced manpage,
-  it becomes the default choice (same concept as with common help
-  commands, =C-h f=, =C-h v=, and with many others like =find-library=).
-
-Need to filter out those =man= buffers?  Check [[#h:06290f9c-491c-45b2-b213-0248f890c83d][my Ibuffer entry]].
-
-While there are customisation options for this tool, I find the defaults
-to work as expected.  Note that the capitalisation of those symbols is
-canonical.
-
-#+begin_src emacs-lisp
-(use-package man
-  :bind (:map Man-mode-map
-              ("i" . Man-goto-section)
-              ("g" . Man-update-manpage)))
-#+end_src
-
-** Proced (process monitor, similar to `top')
-:PROPERTIES:
-:CUSTOM_ID: h:6b56ce11-c84c-4b6d-98c7-bc3eefbe9325
-:END:
-
-This is a built-in tool that allows you to monitor running processes
-and act on them accordingly.  These are the basic settings I have
-right now.  Would need to experiment with it a bit more.  It works
-fine though.
-
-#+begin_src emacs-lisp
-(use-package proced
-  :commands proced
-  :config
-  (setq proced-auto-update-flag t)
-  (setq proced-auto-update-interval 1)
-  (setq proced-descend t)
-  (setq proced-filter 'user))
-#+end_src
-
-And with this nimble tool we get live narrowing of the list, based on
-the terms of our search.
-
-#+begin_src emacs-lisp
-(use-package proced-narrow
-  :straight t
-  :after proced
-  :diminish
-  :bind (:map proced-mode-map
-              ("/" . proced-narrow)))
-#+end_src
-
-** Pass interface (password-store)
-:PROPERTIES:
-:CUSTOM_ID: h:1d2bf0d0-4806-4e04-a320-7d6538ef2e78
-:END:
-
-The external =pass= program, aka "password-store", is a password manager
-that uses GPG and standard UNIX tools to handle passwords.  Encrypted
-files are stored in a plain directory structure.  Very simple, very
-nice: now all data is available with a variety of interfaces, such as
-standard CLI, a =dmenu= interface, a graphical front-end like =qtpass=, etc.
-
-The package below provides an Emacs interface to some of the most common
-actions, in the form of a list of candidates that can be narrowed down
-(such as with =icomplete=).  I use it to quickly store a password to the
-kill ring.
-
-#+begin_src emacs-lisp
-(use-package password-store
-  :straight t
-  :commands (password-store-copy
-             password-store-edit
-             password-store-insert)
-  :config
-  (setq password-store-time-before-clipboard-restore 30))
-#+end_src
-
-And this one adds a major mode for browsing the =pass= keychain.  Call
-it with =M-x pass=.  There is a helpful section at the top with key
-bindings and their functions.
-
-#+begin_src emacs-lisp
-(use-package pass
-  :straight t
-  :commands pass)
-#+end_src
-
 ** Elfeed (RSS/Atom feed reader)
 :PROPERTIES:
 :CUSTOM_ID: h:0cd8ddab-55d1-40df-b3db-1234850792ba
 :END:
+
+/NOTE 2020-12-14: Pending major review/.
 
 This is a standalone feed reader by Christopher Wellons that comes with
 good defaults and is very well designed overall.  It treats the stream
@@ -6511,151 +6133,12 @@ hwdec=auto-safe
 ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
 #+end_example
 
-** Emacs Simple HTML Renderer (shr)
-:PROPERTIES:
-:CUSTOM_ID: h:524bc702-ff55-4ed9-9a38-26d30d64591d
-:END:
-
-*NOTE 2020-08-16:* This section is subject to major changes contingent on
-the eventual review of =eww= (which is documented in the next section:
-[[#h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b][Emacs Web Wowser (EWW)]]).
-
-As far as I can tell, the following =shr-*= variables concern an HTML
-parser that is used by a variety of tools, including Elfeed (defined
-right above).  I guess we could scope them by using hooks, but I see no
-need for different settings.
-
-What these do:
-
-+ Open links in a new /Emacs/ window, instead of the system's browser.
-  This Emacs web browser is called =eww=.
-+ Use monospaced fonts, since that is what I want to have everywhere
-  in Emacs.
-+ Do not preserve colours from websites, as they may be inaccessible
-  (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus theme]]).
-+ Keep images to 70% of the window.  This number is arbitrary.  It
-  just feels like a good upper limit (not a fan of decorative images
-  inside of blog posts).
-+ Line length at same number of characters as =fill-column= (defined in
-  the section about [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][Line length (column count)]] at 72).
-
-#+begin_src emacs-lisp
-(use-package shr
-  :config
-  (setq shr-use-fonts nil)
-  (setq shr-use-colors nil)
-  (setq shr-max-image-proportion 0.7)
-  (setq shr-image-animate nil)
-  (setq shr-width (current-fill-column)))
-#+end_src
-
-** Emacs Web Wowser (EWW)
-:PROPERTIES:
-:CUSTOM_ID: h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b
-:END:
-
-#+begin_src emacs-lisp
-;; TODO prot-eww.el
-(use-package eww
-  :config
-  (setq eww-restore-desktop nil)
-  (setq eww-desktop-remove-duplicates t)
-  (setq eww-header-line-format "%u")
-  (setq eww-search-prefix "https://duckduckgo.com/html/?q=")
-  (setq eww-download-directory "~/Downloads/")
-  (setq eww-suggest-uris
-        '(eww-links-at-point
-          thing-at-point-url-at-point))
-  (setq eww-bookmarks-directory "~/.emacs.d/eww-bookmarks/")
-  (setq eww-history-limit 150)
-  (setq eww-use-external-browser-for-content-type
-        "\\`\\(video/\\|audio/\\|application/pdf\\)")
-  (setq eww-browse-url-new-window-is-tab nil)
-  (setq eww-form-checkbox-selected-symbol "[X]")
-  (setq eww-form-checkbox-symbol "[ ]")
-
-  (defun prot/eww-visit-history (&optional arg)
-    "Revisit a URL from `eww-prompt-history' using completion.
-With \\[universal-argument] produce a new buffer."
-    (interactive "P")
-    (let ((history eww-prompt-history)  ; eww-bookmarks
-          (new (if arg t nil)))
-      (eww
-       (completing-read "Visit website from history: " history nil t)
-       new)))
-
-  ;; eww-view-source
-
-  (defvar prot/eww-mode-global-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map "s" 'eww-search-words)
-      (define-key map "o" 'eww-open-in-new-buffer)
-      (define-key map "f" 'eww-open-file)
-      (define-key map "w" 'prot/eww-visit-history)
-      map)
-    "Key map to scope `eww' bindings for global usage.
-The idea is to bind this to a prefix sequence, so that its
-defined keys follow the pattern of <PREFIX> <KEY>.")
-  :bind-keymap ("C-c w" . prot/eww-mode-global-map)
-  :bind (:map eww-mode-map
-              ("n" . next-line)
-              ("p" . previous-line)
-              ("f" . forward-char)
-              ("b" . backward-char)
-              ("a" . prot/eww-org-archive-current-url)
-              ("B" . eww-back-url)
-              ("N" . eww-next-url)
-              ("P" . eww-previous-url)))
-
-(use-package browse-url
-  :after eww
-  :config
-  (setq browse-url-browser-function 'eww-browse-url))
-#+end_src
-
-** Emacs IRC client
-:PROPERTIES:
-:CUSTOM_ID: h:aa3cd013-0a09-463b-a6b7-9c8d90126a8a
-:END:
-
-/WORK IN PROGRESS 2020-05-13/
-
-My =.authinfo.gpg= entry for IRC looks like this:
-
-#+begin_example
-machine irc.freenode.net port 6667 login NAME password PASS
-#+end_example
-
-The =prot-common-auth-get-field= is a utility of mine that is defined in
-[[#h:c82dcbfa-97d0-4f7c-85af-768ce90f1372][Common auxiliary functions (prot-common.el)]].
-
-#+begin_src emacs-lisp
-(use-package erc
-  :disabled                             ; Needs testing and refinements
-  :config
-  (setq erc-prompt-for-password nil)
-
-  (defun prot/erc-dwim ()
-    "Switch to latest `erc' buffer or log in."
-    (interactive)
-    (let* ((irc "irc.freenode.net")
-           (nick (prot-common-auth-get-field irc :user))
-           ;; Gets the password, but does not read(?) it
-           (pass (prot-common-auth-get-field irc :secret))
-           (bufs (erc-buffer-list)))
-      (if bufs
-          (erc-track-switch-buffer 1)
-        (erc :server irc
-             :nick nick
-             :password pass             ; Does not work
-             :full-name nick))))
-  :bind ("C-c e" . prot/erc-dwim))
-#+end_src
-
 ** Bongo (music or media manager)
 :PROPERTIES:
 :CUSTOM_ID: h:758afe0d-bc7c-4afc-9c6b-b5e569901591
 :END:
+
+/NOTE 2020-12-14: Pending major review/.
 
 Bongo is a buffer oriented media manager.  It provides an interface to
 external media players, such as VLC or MPV.  Those are known as
@@ -7178,6 +6661,176 @@ Also see `prot/bongo-playlist-insert-playlist-file'."
          ("<C-return>" . prot/bongo-dired-insert)
          ("C-c SPC" . prot/bongo-dired-insert)
          ("C-c +" . prot/bongo-dired-make-playlist-file)))
+#+end_src
+
+** Proced (process monitor, similar to `top')
+:PROPERTIES:
+:CUSTOM_ID: h:6b56ce11-c84c-4b6d-98c7-bc3eefbe9325
+:END:
+
+This is a built-in tool that allows you to monitor running processes
+and act on them accordingly.  These are the basic settings I have
+right now.  Would need to experiment with it a bit more.  It works
+fine though.
+
+#+begin_src emacs-lisp
+(use-package proced
+  :commands proced
+  :config
+  (setq proced-auto-update-flag t)
+  (setq proced-auto-update-interval 1)
+  (setq proced-descend t)
+  (setq proced-filter 'user))
+#+end_src
+
+And with this nimble tool we get live narrowing of the list, based on
+the terms of our search.
+
+#+begin_src emacs-lisp
+(use-package proced-narrow
+  :straight t
+  :after proced
+  :diminish
+  :bind (:map proced-mode-map
+              ("/" . proced-narrow)))
+#+end_src
+
+** Pass interface (password-store)
+:PROPERTIES:
+:CUSTOM_ID: h:1d2bf0d0-4806-4e04-a320-7d6538ef2e78
+:END:
+
+The external =pass= program, aka "password-store", is a password manager
+that uses GPG and standard UNIX tools to handle passwords.  Encrypted
+files are stored in a plain directory structure.  Very simple, very
+nice: now all data is available with a variety of interfaces, such as
+standard CLI, a =dmenu= interface, a graphical front-end like =qtpass=, etc.
+
+The package below provides an Emacs interface to some of the most common
+actions, in the form of a list of candidates that can be narrowed down
+(such as with =icomplete=).  I use it to quickly store a password to the
+kill ring.
+
+#+begin_src emacs-lisp
+(use-package password-store
+  :straight t
+  :commands (password-store-copy
+             password-store-edit
+             password-store-insert)
+  :config
+  (setq password-store-time-before-clipboard-restore 30))
+#+end_src
+
+And this one adds a major mode for browsing the =pass= keychain.  Call
+it with =M-x pass=.  There is a helpful section at the top with key
+bindings and their functions.
+
+#+begin_src emacs-lisp
+(use-package pass
+  :straight t
+  :commands pass)
+#+end_src
+
+** Emacs Simple HTML Renderer (shr)
+:PROPERTIES:
+:CUSTOM_ID: h:524bc702-ff55-4ed9-9a38-26d30d64591d
+:END:
+
+*NOTE 2020-08-16:* This section is subject to major changes contingent on
+the eventual review of =eww= (which is documented in the next section:
+[[#h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b][Emacs Web Wowser (EWW)]]).
+
+As far as I can tell, the following =shr-*= variables concern an HTML
+parser that is used by a variety of tools, including Elfeed (defined
+right above).  I guess we could scope them by using hooks, but I see no
+need for different settings.
+
+What these do:
+
++ Open links in a new /Emacs/ window, instead of the system's browser.
+  This Emacs web browser is called =eww=.
++ Use monospaced fonts, since that is what I want to have everywhere
+  in Emacs.
++ Do not preserve colours from websites, as they may be inaccessible
+  (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus theme]]).
++ Keep images to 70% of the window.  This number is arbitrary.  It
+  just feels like a good upper limit (not a fan of decorative images
+  inside of blog posts).
++ Line length at same number of characters as =fill-column= (defined in
+  the section about [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][Line length (column count)]] at 72).
+
+#+begin_src emacs-lisp
+(use-package shr
+  :config
+  (setq shr-use-fonts nil)
+  (setq shr-use-colors nil)
+  (setq shr-max-image-proportion 0.7)
+  (setq shr-image-animate nil)
+  (setq shr-width (current-fill-column)))
+#+end_src
+
+** Emacs Web Wowser (EWW)
+:PROPERTIES:
+:CUSTOM_ID: h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b
+:END:
+
+#+begin_src emacs-lisp
+;; TODO prot-eww.el
+(use-package eww
+  :config
+  (setq eww-restore-desktop nil)
+  (setq eww-desktop-remove-duplicates t)
+  (setq eww-header-line-format "%u")
+  (setq eww-search-prefix "https://duckduckgo.com/html/?q=")
+  (setq eww-download-directory "~/Downloads/")
+  (setq eww-suggest-uris
+        '(eww-links-at-point
+          thing-at-point-url-at-point))
+  (setq eww-bookmarks-directory "~/.emacs.d/eww-bookmarks/")
+  (setq eww-history-limit 150)
+  (setq eww-use-external-browser-for-content-type
+        "\\`\\(video/\\|audio/\\|application/pdf\\)")
+  (setq eww-browse-url-new-window-is-tab nil)
+  (setq eww-form-checkbox-selected-symbol "[X]")
+  (setq eww-form-checkbox-symbol "[ ]")
+
+  (defun prot/eww-visit-history (&optional arg)
+    "Revisit a URL from `eww-prompt-history' using completion.
+With \\[universal-argument] produce a new buffer."
+    (interactive "P")
+    (let ((history eww-prompt-history)  ; eww-bookmarks
+          (new (if arg t nil)))
+      (eww
+       (completing-read "Visit website from history: " history nil t)
+       new)))
+
+  ;; eww-view-source
+
+  (defvar prot/eww-mode-global-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map "s" 'eww-search-words)
+      (define-key map "o" 'eww-open-in-new-buffer)
+      (define-key map "f" 'eww-open-file)
+      (define-key map "w" 'prot/eww-visit-history)
+      map)
+    "Key map to scope `eww' bindings for global usage.
+The idea is to bind this to a prefix sequence, so that its
+defined keys follow the pattern of <PREFIX> <KEY>.")
+  :bind-keymap ("C-c w" . prot/eww-mode-global-map)
+  :bind (:map eww-mode-map
+              ("n" . next-line)
+              ("p" . previous-line)
+              ("f" . forward-char)
+              ("b" . backward-char)
+              ("a" . prot/eww-org-archive-current-url)
+              ("B" . eww-back-url)
+              ("N" . eww-next-url)
+              ("P" . eww-previous-url)))
+
+(use-package browse-url
+  :after eww
+  :config
+  (setq browse-url-browser-function 'eww-browse-url))
 #+end_src
 
 * General interface and interactions
@@ -8899,6 +8552,51 @@ commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
   :diminish
   :config
   (global-eldoc-mode 1))
+#+end_src
+
+** Tools for manual pages (manpages)
+:PROPERTIES:
+:CUSTOM_ID: h:ce420306-c40c-4d9a-bc01-205c5e49a5d1
+:END:
+
+Emacs offers a couple of commands for reading manual pages: =man= and
+=woman=.  The former relies on the standard Unix tools, while the latter
+is an elisp implementation of the same idea.  As I only ever run a
+GNU/Linux system, I am okay with just =man=.
+
+Why bother?
+
++ All the goodies of consistency: fonts, themes, operating on text with
+  your familiar Emacs functionality, handling buffers…
++ Each manpage provides direct links to other items it references.
+
+What you can do inside such a buffer (with minor tweaks by me):
+
++ Hit =i= to go to the information node you want using completion (same
+  principle as with the Info pages of =C-h i= and the like).
++ =g= will generate the buffer anew.  Do it to reformat the text manually,
+  though this should also happen automatically when adjusting a window's
+  size.
++ =n= and =p= move between section headings.
++ Hit =RET= while over a referenced manpage to produce a new buffer with
+  its contents.
++ =s= takes you directly to the familiar "See Also" section.
++ Use =m= to search for another manpage using your completion framework.
+  If you invoke this command while point is over a referenced manpage,
+  it becomes the default choice (same concept as with common help
+  commands, =C-h f=, =C-h v=, and with many others like =find-library=).
+
+Need to filter out those =man= buffers?  Check [[#h:06290f9c-491c-45b2-b213-0248f890c83d][my Ibuffer entry]].
+
+While there are customisation options for this tool, I find the defaults
+to work as expected.  Note that the capitalisation of those symbols is
+canonical.
+
+#+begin_src emacs-lisp
+(use-package man
+  :bind (:map Man-mode-map
+              ("i" . Man-goto-section)
+              ("g" . Man-update-manpage)))
 #+end_src
 
 * History and state
