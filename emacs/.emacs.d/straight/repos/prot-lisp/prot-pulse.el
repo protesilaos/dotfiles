@@ -35,6 +35,18 @@
   "Extensions for `pulse.el'."
   :group 'editing)
 
+(defcustom prot-pulse-pulse-command-list '(recenter-top-bottom)
+  "Commands that should automatically `prot-pulse-pulse-line'.
+You must restart function `prot-pulse-advice-commands-mode' for
+changes to take effect."
+  :type 'list
+  :group 'prot-pulse)
+
+(defcustom prot-pulse-advice-commands t
+  "Add advice to `prot-pulse-pulse-command-list' items."
+  :type 'boolean
+  :group 'prot-pulse)
+
 (defface prot-pulse-line
   '((default :extend t)
     (((class color) (min-colors 88) (background light))
@@ -42,7 +54,7 @@
     (((class color) (min-colors 88) (background dark))
      :background "#71206a" :foreground "#ffcaf0")
     (t :inverse-video t))
-  "Default face `prot-pulse-pulse-line'."
+  "Default face for `prot-pulse-pulse-line'."
   :group 'prot-pulse)
 
 ;;;###autoload
@@ -56,6 +68,63 @@
         (pulse-delay .04)
         (face (or face 'prot-pulse-line)))
     (pulse-momentary-highlight-region start end face)))
+
+;;;###autoload
+(defun prot-pulse-recentre-top ()
+  "Reposition at the top and pulse line.
+Add this to a hook, such as `imenu-after-jump-hook'."
+  (let ((pulse-delay .05))
+    (recenter 0)
+    (prot-pulse-pulse-line)))
+
+;;;###autoload
+(defun prot-pulse-recentre-centre ()
+  "Recentre and pulse line.
+Add this to a hook, such as `imenu-after-jump-hook'."
+  (let ((pulse-delay .05))
+    (recenter nil)
+    (prot-pulse-pulse-line)))
+
+(declare-function org-at-heading-p "org")
+(declare-function org-show-entry "org")
+(declare-function org-reveal "org")
+(declare-function outline-show-entry "outline")
+
+;;;###autoload
+(defun prot-pulse-show-entry ()
+  "Reveal index at point in outline views.
+To be used with a hook such as `imenu-after-jump-hook'."
+  (cond
+   ((and (eq major-mode 'org-mode)
+         (org-at-heading-p))
+    (org-show-entry)
+    (org-reveal t))
+   ((bound-and-true-p prot-outline-minor-mode)
+    (outline-show-entry))))
+
+(defvar prot-pulse-after-command-hook nil
+  "Hook that runs after select commands.
+To be used with `advice-add' after those functions declared in
+`prot-pulse-pulse-command-list'.")
+
+(defun prot-pulse-after-command (&rest _)
+  "Run `prot-pulse-after-command-hook'."
+  (run-hooks 'prot-pulse-after-command-hook))
+
+;;;###autoload
+(define-minor-mode prot-pulse-advice-commands-mode
+  "Set up for `prot-pulse-pulse-command-list'."
+  :init-value nil
+  :global t
+  (if (and prot-pulse-advice-commands
+           prot-pulse-advice-commands-mode)
+      (progn
+        (dolist (fn prot-pulse-pulse-command-list)
+          (advice-add fn :after #'prot-pulse-after-command))
+        (add-hook 'prot-pulse-after-command-hook #'prot-pulse-pulse-line))
+    (dolist (fn prot-pulse-pulse-command-list)
+      (advice-remove fn #'prot-pulse-after-command))
+    (remove-hook 'prot-pulse-after-command-hook #'prot-pulse-pulse-line)))
 
 (provide 'prot-pulse)
 ;;; prot-pulse.el ends here

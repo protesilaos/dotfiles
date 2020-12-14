@@ -1363,7 +1363,7 @@ This is =prot-embark.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my 
 
 #+include: straight/repos/prot-lisp/prot-embark.el src emacs-lisp :tangle no
 
-*** Imenu and prot-imenu.el (dynamic completion-based buffer navigation)
+*** Imenu (dynamic completion-based buffer navigation)
 :PROPERTIES:
 :CUSTOM_ID: h:77284937-ad9d-44cc-8a3e-80f6ed9e3def
 :END:
@@ -1382,19 +1382,11 @@ offering a "Rescan" option instead.  I find that too conservative for my
 case, opting instead for automatic rescaning.  This has the desirable
 side-effect of removing the manual refresh command from the list.
 
-While my =prot-imenu.el= defines some minor extensions for an already
-well-designed tool.  In particular:
-
-+ The function =prot-imenu-show-entry= expands an =org-mode= or
-  =prot-outline-minor-mode= heading, so that we do not land on some hidden
-  text (see [[#h:a8e737b8-7c90-4c68-8814-acf2f637ffa1][Outline minor mode and extras (prot-outline.el)]]).  This
-  behaviour is added to =imenu-after-jump-hook=.
-
-+ The function =prot-imenu-recentre-pulse-top= repositions point at the
-  top of the buffer.  The first, top-most visible line is where we jump
-  to, which is good for predictability.  This also calls the command
-  =prot-pulse-pulse-line=, which subtly highlights the current line (also
-  check [[#h:6bbc41d6-da7c-4301-84c6-c5887c29283f][prot-pulse.el (highlight cursor position)]]).
+While my =prot-pulse.el= library provides some extensions to an already
+well-designed tool (check [[#h:6bbc41d6-da7c-4301-84c6-c5887c29283f][prot-pulse.el (highlight cursor position)]]).
+Namely, to make Imenu's line jumping more predictable by repositioning
+it at the top, adding a subtle colour pulse, and revealing any hidden
+text below the heading when used in Org or Outline modes.
 
 Make sure to watch my [[https://protesilaos.com/codelog/2020-07-20-emacs-outline-imenu/][video demo of outline-minor-mode and imenu]]
 (2020-07-20), with the proviso that it was recorded with earlier
@@ -1402,8 +1394,6 @@ versions of my code.  For Org, you need to set =org-imenu-depth= to a high
 value (refer to the section on [[#h:b95d0798-1cc5-4083-8728-f6a51ddbc531][Org basic configurations]]).
 
 #+begin_src emacs-lisp
-(use-package prot-imenu :straight (:type built-in))
-
 (use-package imenu
   :config
   (setq imenu-use-markers t)
@@ -1414,13 +1404,10 @@ value (refer to the section on [[#h:b95d0798-1cc5-4083-8728-f6a51ddbc531][Org ba
   (setq imenu-eager-completion-buffer t)
   (setq imenu-space-replacement " ")
   (setq imenu-level-separator "/")
-  :hook ((imenu-after-jump-hook . prot-imenu-recentre-pulse-top)
-         (imenu-after-jump-hook . prot-imenu-show-entry)))
+  :after prot-pulse
+  :hook ((imenu-after-jump-hook . prot-pulse-recentre-top)
+         (imenu-after-jump-hook . prot-pulse-show-entry)))
 #+end_src
-
-What follows is a copy of =prot-imenu.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
-
-#+include: straight/repos/prot-lisp/prot-imenu.el src emacs-lisp :tangle no
 
 **** Flimenu (flat imenu index)
 :PROPERTIES:
@@ -7696,12 +7683,12 @@ concepts:
   that already provide its functionality, namely, =org-mode=,
   =outline-mode=, =markdown-mode=.
 
-+ Establish bindings with =imenu.el= (also read [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][Imenu and prot-imenu.el]]).
++ Establish bindings with =imenu.el= (also read [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][my Imenu configurations]]).
   This is done via the aforementioned hooks and, in my experience,
   yields more accurate results than the defaults.  A quick reminder of
   why this matters: you can now navigate the outline using minibuffer
-  completion, which is my favourite way to navigate a file I am
-  familiar with.
+  completion, which is my favourite way to navigate a file I am familiar
+  with.
 
 Finally, an element of improved design: the =outline-minor-faces= package,
 by Jonas Bernoulli, will apply colouration to the headings produced by
@@ -7907,14 +7894,16 @@ provides some extensions that are useful to my workflow.  Specifically,
 it declares a new face and provides a command that implements it:
 =prot-pulse-pulse-line=.  This is useful to quickly highlight the line and
 buffer I am on, but can also be utilised by other tools that move the
-point an arbitrary distance.  To that end, I make use of it in my
-settings for [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][imenu.el and prot-imenu.el]] and the [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed RSS reader]].
+point an arbitrary distance.
 
 #+begin_src emacs-lisp
 (use-package prot-pulse
   :straight (:type built-in)
   :demand
   :config
+  (setq prot-pulse-advice-commands t)
+  (setq prot-pulse-pulse-command-list '(recenter-top-bottom))
+  (prot-pulse-advice-commands-mode 1)
   :bind ("<s-escape>" . prot-pulse-pulse-line))
 #+end_src
 
