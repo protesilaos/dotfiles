@@ -7558,7 +7558,9 @@ point an arbitrary distance.
   :demand
   :config
   (setq prot-pulse-advice-commands t)
-  (setq prot-pulse-pulse-command-list '(recenter-top-bottom))
+  (setq prot-pulse-pulse-command-list
+        '(recenter-top-bottom
+          reposition-window))
   (prot-pulse-advice-commands-mode 1)
   :bind ("<s-escape>" . prot-pulse-pulse-line))
 #+end_src

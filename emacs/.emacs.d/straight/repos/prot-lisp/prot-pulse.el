@@ -35,7 +35,8 @@
   "Extensions for `pulse.el'."
   :group 'editing)
 
-(defcustom prot-pulse-pulse-command-list '(recenter-top-bottom)
+(defcustom prot-pulse-pulse-command-list
+  '(recenter-top-bottom reposition-window)
   "Commands that should automatically `prot-pulse-pulse-line'.
 You must restart function `prot-pulse-advice-commands-mode' for
 changes to take effect."
