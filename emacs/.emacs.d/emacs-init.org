@@ -1915,7 +1915,7 @@ package declarations).
          :map occur-mode-map
          ("t" . toggle-truncate-lines)))
 
-(use-package prot-isearch
+(use-package prot-search
   :straight (:type built-in)
   :bind (("M-s %" . prot-search-isearch-replace-symbol)
          ("M-s M-<" . prot-search-isearch-beginning-of-buffer)
@@ -7875,7 +7875,6 @@ also add a local variable for the minibuffer's cursor.
   (setq-default blink-cursor-blinks 50)
   (setq-default blink-cursor-interval 0.2)
   (setq-default blink-cursor-delay 0.2)
-
   (blink-cursor-mode 1))
 #+end_src
 
