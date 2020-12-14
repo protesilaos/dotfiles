@@ -4093,9 +4093,8 @@ and corresponding functions.
 :CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
 :END:
 
-Some basic settings for =calendar.el=.  It is used by the diary (next
-section), as well as all Org-mode facilities that require date/time
-input (see following sections).
+Some basic settings for =calendar.el=.  It is used by Org-mode facilities
+that require date/time input (see following sections).
 
 #+begin_src emacs-lisp
 (use-package calendar
