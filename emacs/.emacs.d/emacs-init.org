@@ -365,6 +365,7 @@ up some common key combinations.
 	     ("s-H" . (lambda ()
 		            (interactive)
 		            (prot-simple-describe-symbol '(4))))
+         ("C-h K" . describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
 	     ;; Commands for lines
 	     ("C-S-w" . prot-simple-copy-line-or-region)
 	     ("C-S-y" . prot-simple-yank-replace-line-or-region)
