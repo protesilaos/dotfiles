@@ -230,6 +230,7 @@
 ;;     magit-imerge
 ;;     make-mode
 ;;     man
+;;     marginalia
 ;;     markdown-mode
 ;;     markup-faces (`adoc-mode')
 ;;     mentor
@@ -284,6 +285,7 @@
 ;;     rainbow-identifiers
 ;;     rainbow-delimiters
 ;;     rcirc
+;;     recursion-indicator
 ;;     regexp-builder (also known as `re-builder')
 ;;     rg
 ;;     ripgrep
@@ -3840,6 +3842,18 @@ calling the internal `modus-themes-load-operandi' and
     `(Man-overstrike ((,class :inherit bold :foreground ,magenta)))
     `(Man-reverse ((,class :inherit modus-theme-subtle-magenta)))
     `(Man-underline ((,class :foreground ,cyan :underline t)))
+;;;;; marginalia
+    `(marginalia-archive ((,class :foreground ,green-nuanced-fg)))
+    `(marginalia-date ((,class :foreground ,blue-nuanced-fg)))
+    `(marginalia-documentation ((,class :foreground ,fg-special-cold :inherit modus-theme-slant)))
+    `(marginalia-file-modes ((,class :foreground ,fg-alt)))
+    `(marginalia-file-name ((,class :foreground ,fg-special-mild)))
+    `(marginalia-file-owner ((,class :foreground ,green-nuanced-fg)))
+    `(marginalia-key ((,class :foreground ,magenta-active)))
+    `(marginalia-mode ((,class :foreground ,cyan-active)))
+    `(marginalia-size ((,class :foreground ,cyan-active)))
+    `(marginalia-variable ((,class :foreground ,yellow-nuanced-fg)))
+    `(marginalia-version ((,class :foreground ,cyan-active)))
 ;;;;; markdown-mode
     `(markdown-blockquote-face ((,class :inherit modus-theme-slant :foreground ,fg-special-cold)))
     `(markdown-bold-face ((,class :inherit bold)))
@@ -4063,9 +4077,12 @@ calling the internal `modus-themes-load-operandi' and
     `(notmuch-crypto-signature-unknown ((,class :inherit modus-theme-refine-red)))
     `(notmuch-hello-logo-background ((,class :background ,bg-main)))
     `(notmuch-message-summary-face ((,class :inherit modus-theme-nuanced-cyan)))
+    `(notmuch-search-count ((,class :foreground ,fg-alt)))
+    `(notmuch-search-date ((,class :foreground ,magenta-alt)))
     `(notmuch-search-flagged-face ((,class :foreground ,red-alt)))
     `(notmuch-search-matching-authors ((,class :foreground ,fg-main)))
     `(notmuch-search-non-matching-authors ((,class :foreground ,fg-alt)))
+    `(notmuch-search-subject ((,class :foreground ,fg-dim)))
     `(notmuch-search-unread-face ((,class :inherit bold)))
     `(notmuch-tag-added
       ((,(append '((supports :underline (:style wave))) class)
@@ -4079,9 +4096,11 @@ calling the internal `modus-themes-load-operandi' and
     `(notmuch-tag-flagged ((,class :foreground ,red-alt)))
     `(notmuch-tag-unread ((,class :foreground ,magenta-alt)))
     `(notmuch-tree-match-author-face ((,class :foreground ,fg-special-cold)))
+    `(notmuch-tree-match-date-face ((,class :foreground ,magenta-alt)))
     `(notmuch-tree-match-face ((,class :foreground ,fg-main)))
     `(notmuch-tree-match-tag-face ((,class :inherit bold :foreground ,blue-alt)))
     `(notmuch-tree-no-match-face ((,class :foreground ,fg-alt)))
+    `(notmuch-tree-no-match-date-face ((,class :foreground ,fg-alt)))
     `(notmuch-wash-cited-text ((,class :foreground ,cyan)))
     `(notmuch-wash-toggle-button ((,class :background ,bg-alt :foreground ,fg-alt)))
 ;;;;; num3-mode
@@ -4457,6 +4476,9 @@ calling the internal `modus-themes-load-operandi' and
     `(rcirc-server ((,class :foreground ,fg-unfocused)))
     `(rcirc-timestamp ((,class :foreground ,blue-nuanced-fg)))
     `(rcirc-url ((,class :foreground ,blue :underline t)))
+;;;;; recursion-indicator
+    `(recursion-indicator-general ((,class :foreground ,blue-active)))
+    `(recursion-indicator-minibuffer ((,class :foreground ,red-active)))
 ;;;;; regexp-builder (re-builder)
     `(reb-match-0 ((,class :inherit modus-theme-refine-blue)))
     `(reb-match-1 ((,class :inherit modus-theme-refine-magenta)))
