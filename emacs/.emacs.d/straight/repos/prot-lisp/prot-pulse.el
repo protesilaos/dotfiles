@@ -51,9 +51,9 @@ changes to take effect."
 (defface prot-pulse-line
   '((default :extend t)
     (((class color) (min-colors 88) (background light))
-     :background "#ffccff" :foreground "#770077")
+     :background "#8eecf4")
     (((class color) (min-colors 88) (background dark))
-     :background "#71206a" :foreground "#ffcaf0")
+     :background "#004065")
     (t :inverse-video t))
   "Default face for `prot-pulse-pulse-line'."
   :group 'prot-pulse)
