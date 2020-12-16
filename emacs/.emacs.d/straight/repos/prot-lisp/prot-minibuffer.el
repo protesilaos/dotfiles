@@ -33,6 +33,16 @@
   "Minibuffer-related configurations for my dotemacs."
   :group 'minibuffer)
 
+;; Thanks to Omar Antolín Camarena for providing this and the following
+;; advice.  Source: <https://github.com/oantolin/emacs-config>.
+(defun prot-minibuffer--messageless (fn &rest args)
+  "Set `minibuffer-message-timeout' to 0.
+Meant as advice for minibuffer completion FN with ARGS."
+  (let ((minibuffer-message-timeout 0))
+    (apply fn args)))
+
+(advice-add 'minibuffer-force-complete-and-exit :around #'prot-minibuffer--messageless)
+
 (defun prot-minibuffer-focus-mini ()
   "Focus the active minibuffer.
 
