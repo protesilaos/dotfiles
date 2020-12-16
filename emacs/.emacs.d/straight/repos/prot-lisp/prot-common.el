@@ -52,7 +52,7 @@
   (let ((active-modes))
     (mapc (lambda (m)
             (when (and (boundp m) (symbol-value m))
-              (add-to-list 'active-modes m)))
+              (push m active-modes)))
           minor-mode-list)
     active-modes))
 
