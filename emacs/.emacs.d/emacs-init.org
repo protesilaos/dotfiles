@@ -941,7 +941,8 @@ declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e1
 (use-package prot-minibuffer
   :straight (:type built-in)
   :demand
-  :bind (("s-v" . prot-minibuffer-focus-mini-or-completions)
+  :bind (("M-X" . prot-minibuffer-mode-commands)
+         ("s-v" . prot-minibuffer-focus-mini-or-completions)
          :map completion-list-mode-map
          ("M-v" . prot-minibuffer-focus-mini)
          ("h" . prot-simple-describe-symbol) ; from `prot-simple.el'

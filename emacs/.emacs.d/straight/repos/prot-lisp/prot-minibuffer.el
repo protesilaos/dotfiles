@@ -143,5 +143,49 @@ If it is a list, this actually returns its car."
     ('bar (setq-local cursor-type '(hbar . 3)))
     (_  (setq-local cursor-type '(bar . 2)))))
 
+;;;; M-X utility (M-x limited to buffer's major and minor modes)
+;; Adapted from the smex.el library of Cornelius Mika:
+;; <https://github.com/nonsequitur/smex>.
+
+(defun prot-minibuffer--extract-commands (mode)
+  "Extract commands from MODE."
+  (let ((commands)
+        (library-path (symbol-file mode))
+        (mode-name (substring (symbol-name major-mode) 0 -5)))
+    (dolist (feature load-history)
+      (let ((feature-path (car feature)))
+        (when (and feature-path
+                   (or (equal feature-path library-path)
+                       (string-match mode-name (file-name-nondirectory
+                                                feature-path))))
+          (dolist (item (cdr feature))
+            (when (and (listp item) (eq 'defun (car item)))
+              (let ((function (cdr item)))
+                (when (commandp function)
+                  (setq commands (append commands (list function))))))))))
+    commands))
+
+(declare-function prot-common-minor-modes-active "prot-common")
+
+(defun prot-minibuffer--extract-commands-minor ()
+  "Extract commands from active minor modes."
+  (let ((modes))
+    (dolist (mode (prot-common-minor-modes-active))
+      (push (prot-minibuffer--extract-commands mode) modes))
+    modes))
+
+(defun prot-minibuffer--commands ()
+  "Merge and clean list of commands."
+  (delete-dups
+   (append (prot-minibuffer--extract-commands major-mode)
+           (prot-minibuffer--extract-commands-minor))))
+
+;;;###autoload
+(defun prot-minibuffer-mode-commands ()
+  "Run commands from current major mode and active minor modes."
+  (interactive)
+  (let ((commands (prot-minibuffer--commands)))
+    (command-execute (intern (completing-read "M-X: " commands)))))
+
 (provide 'prot-minibuffer)
 ;;; prot-minibuffer.el ends here
