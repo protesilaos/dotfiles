@@ -1542,42 +1542,44 @@ values.  BORDER is a color value that combines well with the
 background and alternative foreground."
   (let* ((key (modus-themes--heading-p `,level))
          (style (or key (modus-themes--heading-p t)))
-         (var (if modus-themes-variable-pitch-headings
-                  'variable-pitch
-                'default)))
+         (var (when modus-themes-variable-pitch-headings
+                'variable-pitch))
+         (varbold (if var
+                      (append (list 'bold) (list var))
+                    'bold)))
     (pcase style
       ('no-bold
        (list :inherit `,var :foreground fg))
       ('line
-       (list :inherit `(bold ,var) :foreground fg :overline border))
+       (list :inherit `,varbold :foreground fg :overline border))
       ('line-no-bold
        (list :inherit `,var :foreground fg :overline border))
       ('rainbow
-       (list :inherit `(bold ,var) :foreground fg-alt))
+       (list :inherit `,varbold :foreground fg-alt))
       ('rainbow-no-bold
        (list :inherit `,var :foreground fg-alt))
       ('rainbow-line
-       (list :inherit `(bold ,var) :foreground fg-alt :overline border))
+       (list :inherit `,varbold :foreground fg-alt :overline border))
       ('rainbow-line-no-bold
        (list :inherit `,var :foreground fg-alt :overline border))
       ('highlight
-       (list :inherit `(bold ,var) :background bg :foreground fg))
+       (list :inherit `,varbold :background bg :foreground fg))
       ('highlight-no-bold
        (list :inherit `,var :background bg :foreground fg))
       ('rainbow-highlight
-       (list :inherit `(bold ,var) :background bg :foreground fg-alt))
+       (list :inherit `,varbold :background bg :foreground fg-alt))
       ('rainbow-highlight-no-bold
        (list :inherit `,var :background bg :foreground fg-alt))
       ('section
-       (list :inherit `(bold ,var) :background bg :foreground fg :overline border :extend t))
+       (list :inherit `,varbold :background bg :foreground fg :overline border :extend t))
       ('section-no-bold
        (list :inherit `,var :background bg :foreground fg :overline border :extend t))
       ('rainbow-section
-       (list :inherit `(bold ,var) :background bg :foreground fg-alt :overline border :extend t))
+       (list :inherit `,varbold :background bg :foreground fg-alt :overline border :extend t))
       ('rainbow-section-no-bold
-        (list :inherit `,var :background bg :foreground fg-alt :overline border :extend t))
+       (list :inherit `,var :background bg :foreground fg-alt :overline border :extend t))
       (_
-       (list :inherit `(bold ,var) :foreground fg)))))
+       (list :inherit `,varbold :foreground fg)))))
 
 (defun modus-themes--org-block (bgblk)
   "Conditionally set the background of Org blocks.
@@ -2394,15 +2396,15 @@ calling the internal `modus-themes-load-operandi' and
     `(counsel-active-mode ((,class :foreground ,magenta-alt-other)))
     `(counsel-application-name ((,class :foreground ,red-alt-other)))
     `(counsel-key-binding ((,class :inherit bold :foreground ,blue-alt-other)))
-    `(counsel-outline-1 ((,class :inherit outline-1)))
-    `(counsel-outline-2 ((,class :inherit outline-2)))
-    `(counsel-outline-3 ((,class :inherit outline-3)))
-    `(counsel-outline-4 ((,class :inherit outline-4)))
-    `(counsel-outline-5 ((,class :inherit outline-5)))
-    `(counsel-outline-6 ((,class :inherit outline-6)))
-    `(counsel-outline-7 ((,class :inherit outline-7)))
-    `(counsel-outline-8 ((,class :inherit outline-8)))
-    `(counsel-outline-default ((,class :inherit bold :foreground ,green-alt-other)))
+    `(counsel-outline-1 ((,class :inherit org-level-1)))
+    `(counsel-outline-2 ((,class :inherit org-level-2)))
+    `(counsel-outline-3 ((,class :inherit org-level-3)))
+    `(counsel-outline-4 ((,class :inherit org-level-4)))
+    `(counsel-outline-5 ((,class :inherit org-level-5)))
+    `(counsel-outline-6 ((,class :inherit org-level-6)))
+    `(counsel-outline-7 ((,class :inherit org-level-7)))
+    `(counsel-outline-8 ((,class :inherit org-level-8)))
+    `(counsel-outline-default ((,class :foreground ,fg-main)))
     `(counsel-variable-documentation ((,class :inherit modus-theme-slant :foreground ,yellow-alt-other)))
 ;;;;; counsel-css
     `(counsel-css-selector-depth-face-1 ((,class :foreground ,blue)))
