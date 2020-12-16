@@ -29,9 +29,22 @@
 
 ;;; Code:
 
-(defgroup prot-minibuffer ()
-  "Minibuffer-related configurations for my dotemacs."
-  :group 'minibuffer)
+;;;; General utilities
+
+(defun prot-minibuffer--cursor-type ()
+  "Determine whether `cursor-type' is a list and return value.
+If it is a list, this actually returns its car."
+  (if (listp cursor-type)
+      (car cursor-type)
+    cursor-type))
+
+;;;###autoload
+(defun prot-minibuffer-mini-cursor ()
+  "Local value of `cursor-type' for `minibuffer-setup-hook'."
+  (pcase (prot-minibuffer--cursor-type)
+    ('hbar (setq-local cursor-type '(hbar . 8)))
+    ('bar (setq-local cursor-type '(hbar . 3)))
+    (_  (setq-local cursor-type '(bar . 2)))))
 
 ;; Thanks to Omar Antolín Camarena for providing this and the following
 ;; advice.  Source: <https://github.com/oantolin/emacs-config>.
@@ -75,6 +88,11 @@ succession."
                 (not (eq (selected-window)
                          completions)))
            (select-window completions nil)))))
+
+;;;; Simple actions for the Completions' buffer
+;; NOTE: I practically do not use those, though I keep the code around.
+;; Check Omar Antolín Camarena's `embark' for a superior alternative
+;; (and my `prot-embark.el' for the minor tweaks of mine).
 
 (defun prot-minibuffer-completions-kill-save-symbol ()
   "Add `symbol-at-point' to the kill ring.
@@ -127,21 +145,6 @@ Intended to be used from inside the Completions' buffer."
      (message "Inserted %s"
               (propertize `,symbol 'face 'success))))
  (top-level))
-
-(defun prot-minibuffer--cursor-type ()
-  "Determine whether `cursor-type' is a list and return value.
-If it is a list, this actually returns its car."
-  (if (listp cursor-type)
-      (car cursor-type)
-    cursor-type))
-
-;;;###autoload
-(defun prot-minibuffer-mini-cursor ()
-  "Local value of `cursor-type' for `minibuffer-setup-hook'."
-  (pcase (prot-minibuffer--cursor-type)
-    ('hbar (setq-local cursor-type '(hbar . 8)))
-    ('bar (setq-local cursor-type '(hbar . 3)))
-    (_  (setq-local cursor-type '(bar . 2)))))
 
 ;;;; M-X utility (M-x limited to buffer's major and minor modes)
 ;; Adapted from the smex.el library of Cornelius Mika:
