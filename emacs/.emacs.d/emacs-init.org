@@ -909,7 +909,7 @@ Here is an overview of the settings covered herein:
 
   The =minibuffer-depth-indicate-mode= will show a depth indicator,
   represented as a number, next to the minibuffer prompt, if a recursive
-  edit is in progress.
+  edit is in progress (also check [[#h:bb707bec-bcaf-44d0-bb82-1ed6bb0cb33b][Mode line recursion indicators]]).
 
 + Key bindings :: Note the nuances in the behaviour between =RET= and =C-j=.
   With the Return key, we instruct the minibuffer to expand the current
@@ -6921,6 +6921,34 @@ while entering a bespoke "focus mode" for writing/reading.
   (setq mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
   (setq mode-line-defining-kbd-macro
         (propertize " Macro" 'face 'mode-line-emphasis))
+
+  ;; Remove recursion indicators
+  ;; REVIEW: maybe there is a cleaner way to handle this
+  (setq mode-line-modes
+        (list
+	     "("
+	     `(:propertize ("" mode-name)
+			           help-echo "Major mode\n\
+mouse-1: Display major mode menu\n\
+mouse-2: Show help for major mode\n\
+mouse-3: Toggle minor modes"
+			           mouse-face mode-line-highlight
+			           local-map ,mode-line-major-mode-keymap)
+	     '("" mode-line-process)
+	     `(:propertize ("" minor-mode-alist)
+			           mouse-face mode-line-highlight
+			           help-echo "Minor mode\n\
+mouse-1: Display minor mode menu\n\
+mouse-2: Show help for minor mode\n\
+mouse-3: Toggle minor modes"
+			           local-map ,mode-line-minor-mode-keymap)
+	     (propertize "%n" 'help-echo "mouse-2: Remove narrowing from buffer"
+		             'mouse-face 'mode-line-highlight
+		             'local-map (make-mode-line-mouse-map
+				                 'mouse-2 #'mode-line-widen))
+	     ")"
+	     " "))
+
   (setq-default mode-line-format
                 '("%e"
                   mode-line-front-space
@@ -6986,6 +7014,26 @@ mode line's typeface (or the default one if they are the same)."
     "Set Moody height to the value of `prot/moody--height'."
     (setq moody-mode-line-height (funcall 'prot/moody--height)))
   :hook (prot-fonts-set-typeface-hook . prot/moody--mode-line-height))
+#+end_src
+
+*** Mode line recursion indicators
+:PROPERTIES:
+:CUSTOM_ID: h:bb707bec-bcaf-44d0-bb82-1ed6bb0cb33b
+:END:
+
+This utility by Daniel Mendler provides a couple of indicators for
+denoting minibuffer recursion.  They offer a reminder that we are in the
+midst of a recursive editing session when we should, perhaps, not be in
+one.  I consider =recursion-indicator= complementary to what is already
+built into Emacs in the form of =minibuffer-depth-indicate-mode= which
+shows the level of recursion at the current minibuffer prompt (refer to
+[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]]).
+
+#+begin_src emacs-lisp
+(use-package recursion-indicator
+  :straight (:host github :repo "minad/recursion-indicator" :branch "master")
+  :config
+  (recursion-indicator-mode 1))
 #+end_src
 
 *** Battery status
