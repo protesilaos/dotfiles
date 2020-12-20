@@ -4289,7 +4289,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 ;; this massive package declaration.
 (use-package org
   :straight (:host nil :type git
-             :repo "https://code.orgmode.org/bzg/org-mode") ; Get Org from its source
+             :repo "https://code.orgmode.org/bzg/org-mode.git") ; Get Org from its source
   ;; ;; Use this instead of the above if you want the built-in version.
   ;; :straight (:type built-in)
   :init
@@ -6568,8 +6568,8 @@ item at point will be used instead.
 Selecting a non-existent file at the prompt will create a new
 entry whose name matches user input.  Depending on the completion
 framework, such as with `icomplete-mode', this may require a
-forced exit (e.g. \\[exit-minibuffer] to parse the input without
-further questions).
+forced exit (e.g. `exit-minibuffer' (\\[exit-minibuffer]) to
+parse the input without further questions).
 
 Also see `prot/bongo-playlist-insert-playlist-file'."
     (interactive)
@@ -6922,32 +6922,16 @@ while entering a bespoke "focus mode" for writing/reading.
   (setq mode-line-defining-kbd-macro
         (propertize " Macro" 'face 'mode-line-emphasis))
 
-  ;; Remove recursion indicators
-  ;; REVIEW: maybe there is a cleaner way to handle this
-  (setq mode-line-modes
-        (list
-	     "("
-	     `(:propertize ("" mode-name)
-			           help-echo "Major mode\n\
-mouse-1: Display major mode menu\n\
-mouse-2: Show help for major mode\n\
-mouse-3: Toggle minor modes"
-			           mouse-face mode-line-highlight
-			           local-map ,mode-line-major-mode-keymap)
-	     '("" mode-line-process)
-	     `(:propertize ("" minor-mode-alist)
-			           mouse-face mode-line-highlight
-			           help-echo "Minor mode\n\
-mouse-1: Display minor mode menu\n\
-mouse-2: Show help for minor mode\n\
-mouse-3: Toggle minor modes"
-			           local-map ,mode-line-minor-mode-keymap)
-	     (propertize "%n" 'help-echo "mouse-2: Remove narrowing from buffer"
-		             'mouse-face 'mode-line-highlight
-		             'local-map (make-mode-line-mouse-map
-				                 'mouse-2 #'mode-line-widen))
-	     ")"
-	     " "))
+  ;; Thanks to Daniel Mendler for this!  It removes the square brackets
+  ;; that denote recursive edits in the modeline.  I do not need them
+  ;; because I am using Daniel's `recursion-indicator':
+  ;; <https://github.com/minad/recursion-indicator>.
+  (setq-default mode-line-modes
+                (seq-filter (lambda (s)
+                              (not (and (stringp s)
+                                        (string-match-p
+                                         "^\\(%\\[\\|%\\]\\)$" s))))
+                            mode-line-modes))
 
   (setq-default mode-line-format
                 '("%e"
@@ -7154,7 +7138,8 @@ tweaks of my own.
   :config
   (setq keycast-window-predicate 'moody-window-active-p)
   (setq keycast-separator-width 1)
-  (setq keycast-insert-after 'mode-line-buffer-identification)
+  (setq keycast-insert-after (or 'moody-mode-line-buffer-identification
+                                 'mode-line-buffer-identification))
   (setq keycast-remove-tail-elements nil)
 
   (dolist (input '(self-insert-command
