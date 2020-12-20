@@ -37,26 +37,13 @@
   "Extensions for `embark'."
   :group 'editing)
 
-(defcustom prot-embark-live-occur-disable-icomplete nil
-  "Whether `prot-embark-live-occur-toggle' should disable Icomplete."
-  :group 'prot-embark
-  :type 'boolean)
-
 ;; Thanks to Omar Antolín Camarena for providing this!
 (defun prot-embark--live-occur-window (&rest _)
-  "Fit Embark's live occur window to its buffer."
-  (when (and (eq major-mode 'embark-occur-mode)
-             (string-match-p "Live" (buffer-name)))
-    (fit-window-to-buffer (get-buffer-window) (floor (frame-height) 2) 1)))
-
-(declare-function tabulated-list-revert "tabulated-list")
-
-(advice-add #'tabulated-list-revert :after #'prot-embark--live-occur-window)
-
-(declare-function icomplete-mode "icomplete")
-
-(defvar prot-embark-live-occur-hook nil
-  "Hook that runs after `prot-embark-live-occur-toggle'.")
+  "Fit Embark's live occur window to its buffer.
+To be added to `embark-occur-post-revert-hook'."
+  (when (string-match-p "Live" (buffer-name))
+    (fit-window-to-buffer (get-buffer-window)
+                          (floor (frame-height) 2) 1)))
 
 ;;;###autoload
 (defun prot-embark-live-occur-toggle ()
@@ -66,6 +53,20 @@
       (embark-occur--kill-live-occur-buffer)
     (embark-live-occur))
   (run-hooks 'prot-embark-live-occur-hook))
+
+;;;; Icomplete integration
+
+;; DEPRECATED: I just use Embark for my completion UI, but am keeping
+;; this around in case I ever revisit Icomplete.
+(defcustom prot-embark-live-occur-disable-icomplete nil
+  "Whether `prot-embark-live-occur-toggle' should disable Icomplete."
+  :group 'prot-embark
+  :type 'boolean)
+
+(declare-function icomplete-mode "icomplete")
+
+(defvar prot-embark-live-occur-hook nil
+  "Hook that runs after `prot-embark-live-occur-toggle'.")
 
 (defun prot-embark--icomplete-toggle ()
   "Toggle Icomplete for `prot-embark-live-occur-toggle'."

@@ -25,7 +25,7 @@
 ;;; Commentary:
 ;;
 ;; Icomplete extensions for use in my Emacs setup:
-;; <https://protesilaos.com/dotemacs/>.
+;; <https://protesilaos.com/dotemacs/>.  De facto DEPRECATED.
 
 ;;; Code:
 

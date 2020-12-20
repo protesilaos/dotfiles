@@ -31,6 +31,34 @@
 
 ;;;; General utilities
 
+(defgroup prot-minibuffer ()
+  "Extensions for the minibuffer."
+  :group 'minibuffer)
+
+(defcustom prot-minibuffer-completion-windows-regexp
+  "\\*\\(Completions\\|Embark Live Occur\\)"
+  "Regexp to match window names with completion candidates.
+Used by `prot-minibuffer--get-completion-window'."
+  :group 'prot-minibuffer
+  :type 'string)
+
+;;;; Minibuffer behaviour
+
+;; Thanks to Omar Antolín Camarena for providing this.  Source:
+;; <https://github.com/oantolin/emacs-config>.
+(defun prot-minibuffer--messageless (fn &rest args)
+  "Set `minibuffer-message-timeout' to 0.
+Meant as advice for minibuffer completion FN with ARGS."
+  (let ((minibuffer-message-timeout 0))
+    (apply fn args)))
+
+(dolist (fn '(minibuffer-force-complete-and-exit
+              minibuffer-complete-and-exit
+              exit-minibuffer))
+  (advice-add fn :around #'prot-minibuffer--messageless))
+
+;;;; Cursor appearance
+
 (defun prot-minibuffer--cursor-type ()
   "Determine whether `cursor-type' is a list and return value.
 If it is a list, this actually returns its car."
@@ -46,29 +74,26 @@ If it is a list, this actually returns its car."
     ('bar (setq-local cursor-type '(hbar . 3)))
     (_  (setq-local cursor-type '(bar . 2)))))
 
-;; Thanks to Omar Antolín Camarena for providing this and the following
-;; advice.  Source: <https://github.com/oantolin/emacs-config>.
-(defun prot-minibuffer--messageless (fn &rest args)
-  "Set `minibuffer-message-timeout' to 0.
-Meant as advice for minibuffer completion FN with ARGS."
-  (let ((minibuffer-message-timeout 0))
-    (apply fn args)))
+;;;; Minibuffer interactions
 
-(advice-add 'minibuffer-force-complete-and-exit :around #'prot-minibuffer--messageless)
-
+;;;###autoload
 (defun prot-minibuffer-focus-mini ()
-  "Focus the active minibuffer.
-
-Bind this to `completion-list-mode-map' to easily jump between
-the list of candidates present in the \\*Completions\\* buffer
-and the minibuffer."
+  "Focus the active minibuffer."
   (interactive)
   (let ((mini (active-minibuffer-window)))
     (when mini
       (select-window mini))))
 
+(defun prot-minibuffer--get-completion-window ()
+  "Find a live window showing completion candidates."
+  (get-window-with-predicate
+   (lambda (window)
+     (string-match-p
+      prot-minibuffer-completion-windows-regexp
+      (format "%s" window)))))
+
 (defun prot-minibuffer-focus-mini-or-completions ()
-  "Focus the active minibuffer or the \\*Completions\\*.
+  "Focus the active minibuffer or the completions' window.
 
 If both the minibuffer and the Completions are present, this
 command will first move per invocation to the former, then the
@@ -76,23 +101,67 @@ latter, and then continue to switch between the two.
 
 The continuous switch is essentially the same as running
 `prot-minibuffer-focus-minibuffer' and `switch-to-completions' in
-succession."
+succession.
+
+What constitutes a completions' window is ultimately determined
+by `prot-minibuffer-completion-windows-regexp'."
   (interactive)
   (let* ((mini (active-minibuffer-window))
-         (completions (or (get-buffer-window "*Completions*")
-                          (get-buffer-window "*Embark Live Occur*"))))
-    (cond ((and mini
-                (not (minibufferp)))
+         (completions (prot-minibuffer--get-completion-window)))
+    (cond ((and mini (not (minibufferp)))
            (select-window mini nil))
-          ((and completions
-                (not (eq (selected-window)
-                         completions)))
+          ((and completions (not (eq (selected-window) completions)))
            (select-window completions nil)))))
 
-;;;; Simple actions for the Completions' buffer
-;; NOTE: I practically do not use those, though I keep the code around.
-;; Check Omar Antolín Camarena's `embark' for a superior alternative
-;; (and my `prot-embark.el' for the minor tweaks of mine).
+;;;; M-X utility (M-x limited to buffer's major and minor modes)
+
+;; Adapted from the smex.el library of Cornelius Mika:
+;; <https://github.com/nonsequitur/smex>.
+
+(defun prot-minibuffer--extract-commands (mode)
+  "Extract commands from MODE."
+  (let ((commands)
+        (library-path (symbol-file mode))
+        (mode-name (substring (symbol-name major-mode) 0 -5)))
+    (dolist (feature load-history)
+      (let ((feature-path (car feature)))
+        (when (and feature-path
+                   (or (equal feature-path library-path)
+                       (string-match mode-name (file-name-nondirectory
+                                                feature-path))))
+          (dolist (item (cdr feature))
+            (when (and (listp item) (eq 'defun (car item)))
+              (let ((function (cdr item)))
+                (when (commandp function)
+                  (setq commands (append commands (list function))))))))))
+    commands))
+
+(declare-function prot-common-minor-modes-active "prot-common")
+
+(defun prot-minibuffer--extract-commands-minor ()
+  "Extract commands from active minor modes."
+  (let ((modes))
+    (dolist (mode (prot-common-minor-modes-active))
+      (push (prot-minibuffer--extract-commands mode) modes))
+    modes))
+
+(defun prot-minibuffer--commands ()
+  "Merge and clean list of commands."
+  (delete-dups
+   (append (prot-minibuffer--extract-commands major-mode)
+           (prot-minibuffer--extract-commands-minor))))
+
+;;;###autoload
+(defun prot-minibuffer-mode-commands ()
+  "Run commands from current major mode and active minor modes."
+  (interactive)
+  (let ((commands (prot-minibuffer--commands)))
+    (command-execute (intern (completing-read "M-X: " commands)))))
+
+;;;; Simple actions for the "*Completions*" buffer
+
+;; DEPRECATED: I just use Embark for such tasks, but am keeping this
+;; around in case I ever need it.
 
 (defun prot-minibuffer-completions-kill-save-symbol ()
   "Add `symbol-at-point' to the kill ring.
@@ -145,50 +214,6 @@ Intended to be used from inside the Completions' buffer."
      (message "Inserted %s"
               (propertize `,symbol 'face 'success))))
  (top-level))
-
-;;;; M-X utility (M-x limited to buffer's major and minor modes)
-;; Adapted from the smex.el library of Cornelius Mika:
-;; <https://github.com/nonsequitur/smex>.
-
-(defun prot-minibuffer--extract-commands (mode)
-  "Extract commands from MODE."
-  (let ((commands)
-        (library-path (symbol-file mode))
-        (mode-name (substring (symbol-name major-mode) 0 -5)))
-    (dolist (feature load-history)
-      (let ((feature-path (car feature)))
-        (when (and feature-path
-                   (or (equal feature-path library-path)
-                       (string-match mode-name (file-name-nondirectory
-                                                feature-path))))
-          (dolist (item (cdr feature))
-            (when (and (listp item) (eq 'defun (car item)))
-              (let ((function (cdr item)))
-                (when (commandp function)
-                  (setq commands (append commands (list function))))))))))
-    commands))
-
-(declare-function prot-common-minor-modes-active "prot-common")
-
-(defun prot-minibuffer--extract-commands-minor ()
-  "Extract commands from active minor modes."
-  (let ((modes))
-    (dolist (mode (prot-common-minor-modes-active))
-      (push (prot-minibuffer--extract-commands mode) modes))
-    modes))
-
-(defun prot-minibuffer--commands ()
-  "Merge and clean list of commands."
-  (delete-dups
-   (append (prot-minibuffer--extract-commands major-mode)
-           (prot-minibuffer--extract-commands-minor))))
-
-;;;###autoload
-(defun prot-minibuffer-mode-commands ()
-  "Run commands from current major mode and active minor modes."
-  (interactive)
-  (let ((commands (prot-minibuffer--commands)))
-    (command-execute (intern (completing-read "M-X: " commands)))))
 
 (provide 'prot-minibuffer)
 ;;; prot-minibuffer.el ends here
