@@ -7799,6 +7799,26 @@ or simplify common tasks so that /their/ feedback does not cause friction:
   (put 'overwrite-mode 'disabled t))
 #+end_src
 
+*** Pulse highlight changes (goggles.el)
+:PROPERTIES:
+:CUSTOM_ID: h:fbfa2021-7713-450d-ac14-7ac0553ccc69
+:END:
+
+This is another package by Daniel Mendler which pulses the area where
+some change took effect.  It is a subtle, yet effective, method to
+visually capture the affected region of text and, thus, be confident
+that no mistakes were made in the process (or notice those as they
+occur).
+
+#+begin_src emacs-lisp
+(use-package goggles
+  :straight (:host github :repo "minad/goggles" :branch "master")
+  :diminish
+  :config
+  (setq-default goggles-pulse t)
+  (goggles-mode 1))
+#+end_src
+
 *** Newline characters for file ending
 :PROPERTIES:
 :CUSTOM_ID: h:c0f0a2c1-1920-4bcf-8eb4-45f80cf1b874
