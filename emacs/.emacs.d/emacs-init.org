@@ -1146,6 +1146,7 @@ following block with the package configurations:
 (use-package embark
   :straight (:host github :repo "oantolin/embark" :branch "master")
   :demand
+  :diminish embark-occur-zebra-minor-mode
   :after prot-minibuffer
   :config
   (setq embark-occur-initial-view-alist '((t . zebra)))
@@ -1209,7 +1210,7 @@ fact be reviewed in favour of better alternatives.
 #+begin_src emacs-lisp
 ;; TODO: configure pattern-matching on a per-command basis
 (use-package consult
-  :straight (:host github :repo "minad/consult" :branch "master")
+  :straight (:host github :repo "minad/consult" :branch "main")
   :config
   (setq consult-line-numbers-widen t)
   (setq consult-preview-buffer nil)
@@ -2044,8 +2045,8 @@ The options here are meant to do the following:
 
 + While having two dired buffers open, the rename and copy operations
   will place the path of the inactive one as the target destination.
-  When multiple dired buffers are present, this works between the curent
-  and most recently used ones.
+  When multiple dired buffers are present, this works between the
+  current and most recently used ones.
 
 + For Emacs 27.1, Dired can automatically create destination directories
   for its copy and rename operations.  So you can, for example, move
@@ -2854,7 +2855,7 @@ overview of its components, which are contingent on other features:
 + Modeline :: The variable =prot-logos-hidden-modeline= can be set to =t= to
   hide the modeline while entering the focused state.  For me this is
   mostly useful for presentations.  The technical implementation of this
-  idea is based on [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][a code snippet by William Ranking]] (who is the
+  idea is based on [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][a code snippet by Paul W. Rankin]] (who is the
   developer of =olivetti-mode=).
 
 All those combined contribute to an outcome that is appropriate for long
@@ -4155,7 +4156,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 ;; (`org-edit-special') to put the code block in a dedicated buffer and
 ;; then activate `prot-outline-minor-mode-safe' to conveniently browse
 ;; this massive package declaration.
-(use-package org
+(use-package org-mode
   :straight (:host nil :type git
              :repo "https://code.orgmode.org/bzg/org-mode.git") ; Get Org from its source
   ;; ;; Use this instead of the above if you want the built-in version.
@@ -4163,7 +4164,6 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   :init
   (setq org-directory "~/Org")
   (setq org-imenu-depth 7)
-  :config
 ;;;; general settings
   (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
   (setq org-special-ctrl-a/e nil)
@@ -7423,7 +7423,7 @@ A prompt will ask for the register to operate on."
 :END:
 
 Nothing special here.  Just some tweaks for the cursor's appearance.  Do
-=C-h f cursor-type= to learn everything about the availble options.
+=C-h f cursor-type= to learn everything about the available options.
 
 Note that in [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]] I
 also add a local variable for the minibuffer's cursor.
@@ -7797,7 +7797,7 @@ commands, though I plan to add more of them.
 
 + =prot-text-cite-region= reformats the active region to look like a
   quoted block.  It is meant to be simple and so does not test for
-  indentation (remember, this is striclty about plain text, not
+  indentation (remember, this is strictly about plain text, not
   structured program code).  When called with an optional =C-u= prefix
   argument, it prompts for a description, which it places at the top of
   the formatted text inside square brackets.  Instead of trying to
@@ -8811,7 +8811,7 @@ The main benefits of packaging my code are thus:
   dotemacs does not work on another's setup.
 
 + Modularity :: Since my files render their dependencies and bindings
-  explict, it is easier to catch errors and debug them.
+  explicit, it is easier to catch errors and debug them.
 
 While my =prot-*.el= are distributed as packages, please understand that I
 consider this an exercise in programming.  I develop them because I

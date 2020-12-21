@@ -163,7 +163,7 @@ DIRS."
 ;;;###autoload
 (defun prot-project-commit-log (&optional arg)
   "Print commit log for the current project.
-With optional perfix ARG (\\[universal-argument]) shows expanded
+With optional prefix ARG (\\[universal-argument]) shows expanded
 commit messages and corresponding diffs.
 
 The log is limited to the integer specified by
