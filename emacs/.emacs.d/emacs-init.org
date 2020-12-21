@@ -6885,6 +6885,8 @@ shows the level of recursion at the current minibuffer prompt (refer to
 (use-package recursion-indicator
   :straight (:host github :repo "minad/recursion-indicator" :branch "master")
   :config
+  (setq recursion-indicator-general "&")
+  (setq recursion-indicator-minibuffer "@")
   (recursion-indicator-mode 1))
 #+end_src
 
