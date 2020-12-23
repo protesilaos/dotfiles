@@ -6769,8 +6769,7 @@ binding!
 
 The mode line is an integral part of the Emacs interface.  While there
 are lots of third party packages that style it in a variety of ways, I
-find the default to be particularly good /as a starting point/ (more about
-that in the next section on [[#h:c07b9dfc-14a2-41a6-9310-53539dec8684][Moody.el]]).
+find the default to be "good enough".
 
 In the code snippet right below I reshuffle some of the mode line
 indicators.  Nothing too fancy.  The =mode-line-defining-kbd-macro= is
@@ -6828,45 +6827,29 @@ that place information on the mode line.  Again, nothing flamboyant.
 :CUSTOM_ID: h:c07b9dfc-14a2-41a6-9310-53539dec8684
 :END:
 
-My complaint with the out-of-the-box experience with the mode line is
-two-fold: (i) there is no easy way to tweak individual components other
-than using inelegant workarounds and (ii) adjust the line's height.
+=moody.el= is a lightweight library for adding some flair to the mode
+line.  I have been using it on and off to make sure that it works well
+with my themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes (my highly accessible themes)]]).
 
-What I need is an ever so slight adjustment to the height of the mode
-line so that it is a bit taller than the typeface's innate line height,
-plus an easy way to make the buffer identification more noticeable.
-Thankfully, the lightweight =moody.el= by Jonas Bernoulli covers the exact
-niche I want to occupy.
-
-My tweaks here align Moody with my [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]].
-What I basically want is to make the mode line gracefully adapt to
-changes in font size.  Furthermore, to make things work the way Moody
-expects, I set the relevant option in [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]].
+My fairly minor tweaks in =prot-moody.el= (reproduced further below) align
+Moody with my [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]].  What I basically
+want is to make the mode line gracefully adapt to changes in font size.
 
 #+begin_src emacs-lisp
-(use-package moody
-  :straight t
-  :after (prot-fonts             ; we need its hook
-          prot-simple)           ; provides `prot-simple--number-even-p'
+(use-package moody :straight t)
+
+(use-package prot-moody
+  :straight (:type built-in)
+  :after (moody
+          prot-fonts              ; we use its hook
+          prot-common)            ; provides `prot-common-number-even-p'
   :config
-  (moody-replace-mode-line-buffer-identification)
-
-  (defun prot/moody--height ()
-    "Set Moody height to an even number.
-Bind this to a hook that gets called after loading/changing the
-mode line's typeface (or the default one if they are the same)."
-    (let* ((font (face-font 'mode-line))
-           (height (truncate (* 1.35 (aref (font-info font) 2))))
-           (height-even (if (prot-common-number-even-p height) height (+ height 1))))
-      (if font
-          height-even
-        20)))
-
-  (defun prot/moody--mode-line-height ()
-    "Set Moody height to the value of `prot/moody--height'."
-    (setq moody-mode-line-height (funcall 'prot/moody--height)))
-  :hook (prot-fonts-set-typeface-hook . prot/moody--mode-line-height))
+  (prot-moody-set-height -1))
 #+end_src
+
+Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-moody.el src emacs-lisp :tangle no
 
 *** Mode line recursion indicators
 :PROPERTIES:
