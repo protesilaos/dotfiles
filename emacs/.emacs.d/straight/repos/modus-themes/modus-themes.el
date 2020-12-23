@@ -4460,6 +4460,10 @@ calling the internal `modus-themes-load-operandi' and
     `(pass-mode-directory-face ((,class :inherit bold :foreground ,fg-special-cold)))
     `(pass-mode-entry-face ((,class :background ,bg-main :foreground ,fg-main)))
     `(pass-mode-header-face ((,class :foreground ,fg-special-warm)))
+;;;;; pdf-tools
+    `(pdf-links-read-link ((,class :background ,fg-main :foreground ,magenta-intense-bg :inherit bold))) ; Foreground is background and vice versa
+    `(pdf-occur-document-face ((,class :inherit shadow)))
+    `(pdf-occur-page-face ((,class :inherit shadow)))
 ;;;;; persp-mode
     `(persp-face-lighter-buffer-not-in-persp ((,class :inherit modus-theme-intense-red)))
     `(persp-face-lighter-default ((,class :inherit bold :foreground ,blue-active)))
@@ -4763,7 +4767,7 @@ calling the internal `modus-themes-load-operandi' and
     `(solaire-default-face ((,class :inherit default :background ,bg-alt :foreground ,fg-dim)))
     `(solaire-line-number-face ((,class :inherit solaire-default-face :foreground ,fg-unfocused)))
     `(solaire-hl-line-face ((,class :background ,bg-active)))
-    `(solaire-org-hide-face ((,class :background ,fg-dim :foreground ,bg-alt)))
+    `(solaire-org-hide-face ((,class :background ,bg-alt :foreground ,bg-alt)))
 ;;;;; spaceline
     `(spaceline-evil-emacs ((,class :inherit modus-theme-active-magenta)))
     `(spaceline-evil-insert ((,class :inherit modus-theme-active-green)))
