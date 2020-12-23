@@ -3972,7 +3972,7 @@ that require date/time input (see following sections).
 #+begin_src emacs-lisp
 (use-package calendar
   :config
-  (setq calendar-mark-diary-entries-flag t)
+  (setq calendar-mark-diary-entries-flag nil)
   (setq calendar-time-display-form
         '(24-hours ":" minutes
                    (when time-zone
@@ -4365,7 +4365,7 @@ produces dates with a fixed length."
   ;; NOTE: I don't use the diary, but here it is anyway
   (setq org-agenda-insert-diary-strategy 'date-tree)
   (setq org-agenda-insert-diary-extract-time nil)
-  (setq org-agenda-include-diary t)
+  (setq org-agenda-include-diary nil)
 
 ;;;;; Agenda follow mode
   (setq org-agenda-start-with-follow-mode nil)
