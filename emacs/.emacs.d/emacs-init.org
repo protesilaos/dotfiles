@@ -513,7 +513,7 @@ and wish to get a glimpse of how much work goes into this project:
   (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs t
         modus-themes-fringes nil ; {nil,'subtle,'intense}
-        modus-themes-mode-line 'moody ; {nil,'3d,'moody}
+        modus-themes-mode-line '3d ; {nil,'3d,'moody}
         modus-themes-syntax nil ; {nil,'faint,'yellow-comments,'green-strings,'yellow-comments-green-strings,'alt-syntax,'alt-syntax-yellow-comments}
         modus-themes-intense-hl-line nil
         modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
@@ -545,7 +545,6 @@ and wish to get a glimpse of how much work goes into this project:
     (set-face-attribute 'tab-bar nil :inherit 'variable-pitch)
     (set-face-attribute 'mode-line nil :inherit 'variable-pitch)
     (set-face-attribute 'mode-line-inactive nil :inherit 'variable-pitch)
-    (set-face-attribute 'mode-line-buffer-id nil :weight 'normal)
     (set-face-attribute 'line-number nil
                         :background 'unspecified
                         :foreground (modus-themes-color 'fg-unfocused))
@@ -680,7 +679,7 @@ Relevant blog posts of mine:
   :init
   (setq prot-fonts-typeface-sets-alist
         '((laptop . (105 "Hack" "DejaVu Sans Condensed"))
-          (desktop . (110 "Hack" "DejaVu Sans"))
+          (desktop . (110 "Hack" "Inter"))
           (reader . (150 "Iosevka Comfy" "FiraGO"))
           (presentation . (160 "Hack" "DejaVu Sans"))))
   (setq prot-fonts-monospaced-list
