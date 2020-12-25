@@ -3613,63 +3613,95 @@ sure this is a good approach."
 
 It should come to no surprise that Emacs can operate as both a /terminal
 emulator for command line shells/ and /toolkit for terminal emulators/.
-The present section covers both cases.
+The present section covers only the former category as I never use the
+likes of =ansi-term= or =vterm=.
 
-**** Eshell (like M-x shell but in elisp)
+**** Eshell and prot-eshell.el
 :PROPERTIES:
 :CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
 :END:
 
-/NOTE 2020-12-14: Pending major review/.
+Eshell is a strictly line-oriented command prompt written in Emacs Lisp.
+This comes with its pros and cons: it can understand Elisp but does not
+behave exactly like Unix shells, say, Bash.  Eshell cannot display the
+kind of pseudo graphics a terminal emulator can, such as those you find
+in =mutt=, =htop=, =ncmpcpp=, =newsboat= and so on.  As each user's needs are
+different, you will have to determine whether Eshell can fit into your
+workflow.  Start by reading its fairly short, yet insightful, manual.
 
-While I did read the =eshell= manual fairly early in my introduction to
-Emacs (July 2019), I failed to appreciate its added value.  Sure, you
-could run Elisp commands as well as those of the standard shells.  But
-that did not seem like an obvious step forward.  More of a lateral
-movement at best, for it was asking for a whole new way of thinking
-about the shell that could potentially complicate things in other areas.
+For me this tool is one of the most promising in the Emacs milieu
+because while it is a competent shell it can seamlessly integrate with
+the rest of Emacs' capabilities.  This is best exemplified by its
+extensibility, such as what I am doing with =prot-eshell.el=.  More on
+that below.
 
-After gaining some experience with Emacs, I now (April 2020) have
-developed a newfound appreciation of Eshell's flexibility.  The fact
-that it can understand elisp means that you can develop entirely new
-modes of interaction that involve the command line and extend into other
-Emacs major modes.  For example, you can =cd= into a directory and then
-=dired= to access the full power of Emacs' /superb/ file manager (also check
-the [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][section on Dired]]).
+The fact that Eshell cannot reproduce the artefacts of the ncurses
+library does not pose a hindrance to my workflow, as I have replacements
+for all such "graphical" programs within Emacs.  Gnus handles my email,
+=M-x proced= lets me interact with system processes, Bongo deals with
+media playback, while Elfeed fills the niche of following RSS/Atom feed.
 
-The core value of Eshell is that it behaves like an ordinary buffer.
-This means that we can build our own functions for moving around and
-operating on text.  =prot/eshell-put-last-output-to-buffer= puts that in
-concrete terms.  The function will take the output of the last command
-and put it in a new buffer.  You can then select that buffer, edit it as
-you will and, say, =C-x C-w= to write it permanently to a file.
+Read relevant sections:
 
-Here is another case where integration with standard Emacs commands
-truly shines.  In Eshell, =cd= followed by the equals sign will produce a
-numbered list of the directories you have accessed.  With =cd -NUM= you
-can switch to the one you want.  So far so good, how about we also
-switch to a dired buffer from there?  Do it with =cd -NUM && dired=.
++ [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]].
++ [[#h:6b56ce11-c84c-4b6d-98c7-bc3eefbe9325][Proced (process monitor, similar to `top')]].
++ [[#h:758afe0d-bc7c-4afc-9c6b-b5e569901591][Bongo (music or media manager)]].
++ [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed (RSS/Atom feed reader)]].
 
-Speaking of directories, =eshell-cd-on-directory= allows you to omit =cd=
-and just type in the path to a directory.  Awesome!  And while on the
-topic of Dired, you can use =dired-jump= to always switch to a =dired=
-buffer of the present working directory.  To that I add my own little
-utility (=prot/eshell-file-parent-dir=) for jumping to the directory of
-the file at point: very useful in cases where you get files from
-different sources, such as with =find= (though do also check the various
-options for running =find= with =dired=, like =find-name-dired=).
+Now an overview of =prot-eshell.el=, with the full code reproduced right
+after the package configurations:
 
-Extensibility is seamless.  =prot/eshell-complete-history= offers a
-completion interface to the input history.  No need for awkard back and
-forth or for searching for a regexp without any immediate feedback.  In
-a similar fashion =prot/eshell-complete-recent-dir= provides completion
-for switching directly to a recent directory.  While the more general
-=prot/eshell-find-subdirectory-recursive= lets you switch to a
-subdirectory somewhere inside the path you are.
++ There are several =prot-eshell-ffap-*= commands that operate on the file
+  at point.  Say you have called =ls= and wish to expand the contents of a
+  file at the command prompt.  With point over the file name of
+  interest, use =prot-eshell-ffap-insert=.  Wish to visit the file
+  instead, so that you may edit it?  Try =prot-eshell-ffap-find-file=.
+  The command =prot-eshell-ffap-kill-save= copies the file's full file
+  system path, while =prot-eshell-ffap-dired-jump= opens a Dired buffer in
+  that file's directory (see [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory editor, file manager)]]).
 
-Instead of outlining the remaining features of Eshell, *I strongly
-encourage you to read the manual*.  It is fairly short.  What I have here
-is just an early sample of what can be achieved with a few tweaks.
++ =prot-eshell-export= takes the prompt and output of the last command and
+  places it in a bespoke buffer.  The name of the buffer is controlled
+  by the variable =prot-eshell-output-buffer=.  If that buffer does not
+  exist, it is created.  Otherwise subsequent invocations of this
+  "export" command will append their contents to the existing ones.
+  This is good for keeping a record of something you are working on.
+  And because this is a standard buffer, you can edit it a will as well
+  as call =write-file= (=C-x C-w=) to save it permanently to a file.
+
++ =prot-eshell-redirect-to-buffer= provides a completion prompt to help
+  you redirect the output of a command to a given buffer.  Simple and
+  effective.
+
++ =prot-eshell-narrow-output-highlight-regexp= prompts for a regexp to
+  highlight in the output of the last command.  It then narrows the
+  Eshell buffer to the contents of that output and emphasises the
+  matches of the regexp.  Very useful when you need to inspect some logs
+  or other terse output.  Remember that to widen the view you use the
+  standard =widen= command, bound to =C-x n w= by default.
+
++ =prot-eshell-complete-history= lets you pick a command from your history
+  using minibuffer completion.  Forget about a non-interactive regexp
+  search or, worse, consecutive calls to =M-p= and =M-n= to cycle through
+  your recent inputs one at a time.
+
++ =prot-eshell-complete-recent-dir= provides a minibuffer prompt with
+  completion that queries through all paths in your =cd= input history.
+  This is much more convenient that standard actions like =cd -= or =cd -N=
+  where =N= is the position of the item in the history of entries
+  (retrieved with =cd ==).
+
++ =prot-eshell-find-subdirectory-recursive= uses completion to help you
+  pick a subdirectory that extends the present working directory.  It
+  does so recursively, which makes it powerful, but can cause problems
+  when called from the root of some massive directory tree.  Exercise
+  restraint.
+
++ =prot-eshell-root-dir= switches the present working directory to that of
+  the current project's root directory, if one is found.
+
+Here is a [[https://protesilaos.com/codelog/2020-05-08-emacs-eshell-demo/][video on Eshell and my extras]] (2020-05-08) which, however,
+showcases older code than what I have here.
 
 Also check these valuable resources:
 
@@ -3678,174 +3710,12 @@ Also check these valuable resources:
 + [[https://www.youtube.com/watch?v=RhYNu6i_uY4][Howard Abrahams' video]] that covers the features of Eshell.
 + [[https://ambrevar.xyz/emacs-eshell/][Pierre Neidhardt's detailed blog post]] on the pros and cons of Eshell.
 
-Finally, a few notes about contributions I have received:
-
-+ [[https://gitlab.com/dije][Phil Hudson (@dije on Gitlab)]] explained how =concat= is superfluous when
-  combined with =format= and demonstrated how to use a specifier (=%s=) to
-  make a uniform string out of the output of some command combined with
-  predefined text.
-
-+ Phil also helped me with =prot/eshell-find-subdirectory-recursive= by
-  highlighting some inefficient routines in the original design.  This
-  inspired me to revisit the code and make it cleaner overall.  The gist
-  is that only the present working directory needs to be abbreviated.
-
-+ Another user who preferred to remain anonymous sent me
-  =contrib/eshell-cat-with-syntax-highlight= which will apply syntax
-  highlighting to the output of a =cat= command.  The code I got was using
-  =define-advice=, so I tweaked it a bit to work with =advice-add= because I
-  find that syntax easier to follow.  I also made minor tweaks to the
-  docstring.
-
-+ Same principle as above for =contrib/electrify-ls=.
-
-+ Any errors are my own.
-
 #+begin_src emacs-lisp
-(use-package eshell
-  :bind ("<s-return>" . eshell))
-
-(use-package esh-mode
-  :commands prot/eshell-minor-mode
-  :config
-  ;; used by other functions below
-  (declare-function ffap-file-at-point "ffap.el")
-
-  (defmacro prot/eshell-ffap (name doc &rest body)
-    "Make commands for `eshell' find-file-at-point.
-NAME is how the function is called.  DOC is the function's
-documentation string.  BODY is the set of arguments passed to the
-`if' statement to be evaluated when a file at point is present."
-    `(defun ,name ()
-       ,doc
-       (interactive)
-       (let ((file (ffap-file-at-point)))
-         (if file
-             ,@body
-           (user-error "No file at point")))))
-
-  (prot/eshell-ffap
-   prot/eshell-insert-file-at-point
-   "Insert (cat) contents of file at point."
-   (progn
-     (goto-char (point-max))
-     (insert (concat "cat " file))
-     (eshell-send-input)))
-
-  (prot/eshell-ffap
-   prot/eshell-kill-save-file-at-point
-   "Add to kill-ring the absolute path of file at point."
-   (progn
-     (kill-new (concat (eshell/pwd) "/" file))
-     (message "Copied full path of %s" file)))
-
-  (prot/eshell-ffap
-   prot/eshell-find-file-at-point
-   "Run `find-file' for file at point (ordinary file or dir).
-Recall that this will produce a `dired' buffer if the file is a
-directory."
-   (find-file file))
-
-  (prot/eshell-ffap
-   prot/eshell-file-parent-dir
-   "Open `dired' with the parent directory of file at point."
-   (dired (file-name-directory file)))
-
-  (defun prot/eshell-put-last-output-to-buffer ()
-    "Produce a buffer with output of last `eshell' command."
-    (interactive)
-    (let ((eshell-output (buffer-substring-no-properties
-                          (eshell-beginning-of-output)
-                          (eshell-end-of-output))))
-      (with-current-buffer (get-buffer-create "*last-eshell-output*")
-        (erase-buffer)
-        (insert eshell-output)
-        (switch-to-buffer-other-window (current-buffer)))))
-
-  (defun prot/eshell-complete-redirect-to-buffer ()
-    "Complete the syntax for appending to a buffer via `eshell'."
-    (interactive)
-    (insert
-     (format " >>> #<%s>"
-             (read-buffer-to-switch "Switch to buffer: "))))
-
-  (defun prot/eshell-narrow-output-highlight-regexp ()
-    (interactive)
-    (let ((regexp (read-regexp "Regexp to highlight")))
-      (narrow-to-region (eshell-beginning-of-output)
-                        (eshell-end-of-output))
-      (goto-char (point-min))
-      (highlight-regexp regexp 'hi-yellow)))
-
-  ;;;; NOTE by Prot 2020-06-16: the following two advice-add snippets
-  ;;;; will need to be reviewed to make sure they do not produce
-  ;;;; undesirable side effects.
-
-  ;; syntax highlighting implementation modified from
-  ;; https://emacs.stackexchange.com/questions/50385/use-emacs-syntax-coloring-when-not-in-emacs
-  ;;
-  ;; This command also makes it possible to, e.g., cat an encrypted and/or
-  ;; compressed file.
-  (defun contrib/eshell-cat-with-syntax-highlight (&rest args)
-    "Like `eshell/cat' but with syntax highlighting.
-To be used as `:override' advice to `eshell/cat'."
-    (setq args (eshell-stringify-list (flatten-tree args)))
-    (dolist (filename args)
-      (let ((existing-buffer (get-file-buffer filename))
-            (buffer (find-file-noselect filename)))
-        (eshell-print
-         (with-current-buffer buffer
-           (if (fboundp 'font-lock-ensure)
-               (font-lock-ensure)
-             (with-no-warnings
-               (font-lock-fontify-buffer)))
-           (let ((contents (buffer-string)))
-             (remove-text-properties 0 (length contents) '(read-only nil) contents)
-             contents)))
-        (unless existing-buffer
-          (kill-buffer buffer)))))
-
-  (advice-add 'eshell/cat :override #'contrib/eshell-cat-with-syntax-highlight)
-
-  ;; Turn ls results into clickable links.  Especially useful when
-  ;; combined with link-hint.  Modified from
-  ;; https://www.emacswiki.org/emacs/EshellEnhancedLS
-  (define-button-type 'eshell-ls
-    'supertype 'button
-    'help-echo "RET, mouse-2: visit this file"
-    'follow-link t)
-
-  (defun contrib/electrify-ls (name)
-    "Buttonise `eshell' ls file names.
-Visit them with RET or mouse click.  This function is meant to be
-used as `:filter-return' advice to `eshell-ls-decorated-name'."
-    (add-text-properties 0 (length name)
-                         (list 'button t
-                               'keymap button-map
-                               'mouse-face 'highlight
-                               'evaporate t
-                               'action #'find-file
-                               'button-data (expand-file-name name)
-                               'category 'eshell-ls)
-                         name)
-    name)
-
-  (advice-add 'eshell-ls-decorated-name :filter-return #'contrib/electrify-ls)
-  :bind (:map eshell-mode-map
-              ("M-k" . eshell-kill-input)
-              ("C-c i" . prot/eshell-insert-file-at-point)
-              ("C-c f" . prot/eshell-find-file-at-point)
-              ("C-c C-f" . prot/eshell-find-file-at-point)
-              ("C-c o" . prot/eshell-put-last-output-to-buffer)
-              ("C-c w" . prot/eshell-kill-save-file-at-point)
-              ("C-c >" . prot/eshell-complete-redirect-to-buffer)
-              ("C-c C-j" . prot/eshell-file-parent-dir)
-              ("C-c h" . prot/eshell-narrow-output-highlight-regexp)
-              ("C-c =" . prot/eshell-complete-recent-dir)))
-
+(use-package eshell)
+(use-package esh-mode)
 (use-package esh-module
   :config
-  (setq eshell-modules-list             ; Needs review
+  (setq eshell-modules-list             ; It works but may need review
         '(eshell-alias
           eshell-basic
           eshell-cmpl
@@ -3875,61 +3745,44 @@ used as `:filter-return' advice to `eshell-ls-decorated-name'."
   :after esh-mode
   :config
   (setq eshell-hist-ignoredups t)
-  (setq eshell-save-history-on-exit t)
+  (setq eshell-save-history-on-exit t))
 
-  (defun prot/eshell-complete-history ()
-    "Insert element from `eshell' history using completion."
-    (interactive)
-    (let ((hist (ring-elements eshell-history-ring)))
-      (insert
-       (completing-read "Input history: " hist nil t))))
-
-  (defun prot/eshell-complete-recent-dir (&optional arg)
-    "Switch to a recent `eshell' directory using completion.
-With \\[universal-argument] also open the directory in a `dired'
-buffer."
-    (interactive "P")
-    (let* ((dirs (ring-elements eshell-last-dir-ring))
-           (dir (completing-read "Switch to recent dir: " dirs nil t)))
-      (insert dir)
-      (eshell-send-input)
-      (when arg
-        (dired dir))))
-
-  ;; `cl-remove-if' is used right below
-  (declare-function cl-remove-if "cl-seq")
-
-  (defun prot/eshell-find-subdirectory-recursive ()
-    "Recursive `eshell/cd' to subdirectory.
-This command has the potential for infinite recursion: use it
-wisely or prepare to use `eshell-interrupt-process'."
-    (interactive)
-    (let* ((dir (abbreviate-file-name (eshell/pwd)))
-           (contents (directory-files-recursively dir ".*" t nil nil))
-           (dirs (cl-remove-if-not (lambda (x)
-                                     (or (file-directory-p x)
-                                         (string-match-p "\\.git" x)))
-                                   contents))
-           (selection (completing-read
-                       (format "Find sub-dir from %s (%s): "
-                               (propertize dir 'face 'success)
-                               (length dirs))
-                       dirs nil t)))
-      (insert selection)
-      (eshell-send-input)))
-
-  :bind (:map eshell-hist-mode-map
-              ("M-s" . nil) ; I use this for lots of more useful commands
-              ("M-r" . prot/eshell-complete-history) ; use this to find input history
-              ("C-c d" . prot/eshell-find-subdirectory-recursive)))
+(use-package prot-eshell
+  :straight (:type built-in)
+  :after (eshell esh-mode em-dirs em-hist)
+  :config
+  (setq prot-eshell-output-buffer "*Exported Eshell output*")
+  (setq prot-eshell-output-delimiter "* * *")
+  :bind (("<s-return>" . eshell)
+         :map eshell-mode-map
+         ("M-k" . eshell-kill-input)
+         ("C-c C-f" . prot-eshell-ffap-find-file)
+         ("C-c C-j" . prot-eshell-ffap-dired-jump)
+         ("C-c C-w" . prot-eshell-ffap-kill-save)
+         ("C-c C->" . prot-eshell-redirect-to-buffer)
+         ("C-c C-e" . prot-eshell-export)
+         ("C-c C-r" . prot-eshell-root-dir)
+         :map eshell-cmpl-mode-map
+         ("C-c TAB" . prot-eshell-ffap-insert) ; C-c C-i
+         ("C-c M-h" . prot-eshell-narrow-output-highlight-regexp)
+         :map eshell-hist-mode-map
+         ("M-s" . nil) ; I use this prefix for lots of more useful commands
+         ("M-r" . prot-eshell-complete-history)
+         ("C-c C-d" . prot-eshell-complete-recent-dir)
+         ("C-c C-s" . prot-eshell-find-subdirectory-recursive)))
 #+end_src
+
+This is =prot-eshell.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-eshell.el src emacs-lisp :tangle no
 
 **** Shell (M-x shell)
 :PROPERTIES:
 :CUSTOM_ID: h:98804f0d-f2dd-41a4-b8df-c1bd04ef7f7a
 :END:
 
-/NOTE 2020-12-14: Pending major review/.
+NOTE: I normally use Eshell.  Refer to the [[#h:103a8795-c29c-474f-9ddf-ecafaa2f6775][Eshell and prot-eshell.el]]
+section.
 
 This is a shell (Bash, in my case) that runs inside of Emacs.  Unlike
 terminal emulators, this one can use standard Emacs keys and behaves
