@@ -987,6 +987,7 @@ declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e1
   (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-show-help nil)
   (setq completion-ignore-case t)
+  (setq-default case-fold-search nil)   ; For general regexp
 
   ;; The following two are updated in Emacs 28.  They concern the
   ;; *Completions* buffer.
