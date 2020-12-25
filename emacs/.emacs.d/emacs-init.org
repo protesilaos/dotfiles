@@ -2637,10 +2637,30 @@ its two main functions to Super and the right/left arrow keys.
          ("<s-left>" . winner-undo)))
 #+end_src
 
+*** Directional window motions (windmove)
+:PROPERTIES:
+:CUSTOM_ID: h:230d96c8-a955-4b82-844d-9de9a1b7c531
+:END:
+
 Windmove is also built into Emacs.  It provides functions for selecting
-a window in any of the cardinal directions.  I use the Vim keys while
-holding down Super and Meta because other mnemonics-based actions
-involving just Super or Meta are already occupied.
+a window in any of the cardinal directions.  A decent addition to the
+simpler =other-window= command (=C-x o= by default).
+
+The =windmove-create-window= specifies what should happen when trying to
+move past the edge of the frame.  The idea with this is to allow it to
+create a new window with the contents of the current buffer.  I tried it
+for a while but felt that the times it would interfere with my layout
+where more than those it would actually speed up my workflow.
+
+#+begin_src emacs-lisp
+(use-package windmove
+  :config
+  (setq windmove-create-window nil)     ; Emacs 27.1
+  :bind (("<C-M-up>" . windmove-up)
+         ("<C-M-right>" . windmove-right)
+         ("<C-M-down>" . windmove-down)
+         ("<C-M-left>" . windmove-left)))
+#+end_src
 
 *** Tabs for window layouts (and prot-tab.el)
 :PROPERTIES:
@@ -2685,14 +2705,14 @@ abstract conception of "tabs are work spaces".  Here are the main key
 chords for =tab-bar= (they will all work properly if you keep the mode
 active):
 
-| Key     | Description                       |
-|---------+-----------------------------------|
-| C-x t b | Open a buffer in a new tab        |
-| C-x t d | Open a directory in a new tab     |
-| C-x t f | Open a file in a new tab          |
-| C-x t 0 | Close current tab                 |
-| C-x t 1 | Close all other tabs              |
-| C-x t 2 | Open current buffer in new tab    |
+| Key     | Description                    |
+|---------+--------------------------------|
+| C-x t b | Open a buffer in a new tab     |
+| C-x t d | Open a directory in a new tab  |
+| C-x t f | Open a file in a new tab       |
+| C-x t 0 | Close current tab              |
+| C-x t 1 | Close all other tabs           |
+| C-x t 2 | Open current buffer in new tab |
 
 These are consistent with the standard commands for handling windows and
 accessing buffers/files in the "other window" (the =C-x 4 KEY= pattern).
@@ -2737,38 +2757,6 @@ Here my settings, followed by the entirety of =prot-tab.el=.
 The =prot-tab.el= code, which is in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]:
 
 #+include: straight/repos/prot-lisp/prot-tab.el src emacs-lisp :tangle no
-
-*** Directional window motions (windmove)
-:PROPERTIES:
-:CUSTOM_ID: h:230d96c8-a955-4b82-844d-9de9a1b7c531
-:END:
-
-While =C-x o= (=other-window=) is very useful when working with two or three
-windows, it can become tiresome.  Thankfully, Emacs comes with a
-built-in package to move to a window in the given direction.  I bind the
-cardinal directions to Super+Ctrl plus the Vim keys (heresy!), with
-aliases for the arrows you find on a standard keyboard's number pad.
-
-The =windmove-create-window= specifies what should happen when trying to
-move past the edge of the frame.  The idea with this is to allow it to
-create a new window with the contents of the current buffer.  I tried it
-for a while but felt that the times it would interfere with my layout
-where more than those it would actually speed up my workflow.
-
-#+begin_src emacs-lisp
-(use-package windmove
-  :config
-  (setq windmove-create-window nil)     ; Emacs 27.1
-  :bind (("C-s-k" . windmove-up)
-         ("C-s-l" . windmove-right)
-         ("C-s-j" . windmove-down)
-         ("C-s-h" . windmove-left)
-         ;; numpad keys clockwise: 8 6 2 4
-         ("<kp-up>" . windmove-up)
-         ("<kp-right>" . windmove-right)
-         ("<kp-down>" . windmove-down)
-         ("<kp-left>" . windmove-left)))
-#+end_src
 
 *** Transposition and rotation of windows
 :PROPERTIES:
