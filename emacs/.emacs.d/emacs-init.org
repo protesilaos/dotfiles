@@ -2561,23 +2561,12 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (slot . 2)
            (window-parameters . ((no-other-window . t))))
           ;; bottom side window
-          ("\\*\\(Output\\|Register Preview\\).*"
-           (display-buffer-in-side-window)
-           (window-width . 0.16)       ; See the :hook
-           (side . bottom)
-           (slot . -1)
-           (window-parameters . ((no-other-window . t))))
           ("\\*\\(Completions\\|Embark Live Occur\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . bottom)
            (slot . 0)
            (window-parameters . ((no-other-window . t))))
-          (".*\\(e?shell\\|vterm\\).*"
-           (display-buffer-in-side-window)
-           (window-height . 0.16)
-           (side . bottom)
-           (slot . 1))
           ;; left side window
           ("\\*Help.*"
            (display-buffer-in-side-window)
@@ -2600,9 +2589,15 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (display-buffer-in-side-window)
            (window-width . 0.25)
            (side . right)
-           (slot . 1))
+           (slot . 1)
+           (window-parameters . ((no-other-window . t))))
           ;; bottom buffer (NOT side window)
           ("\\*\\vc-\\(incoming\\|outgoing\\).*"
+           (display-buffer-at-bottom))
+          ("\\*\\(Output\\|Register Preview\\).*"
+           (display-buffer-at-bottom)
+           (window-parameters . ((no-other-window . t))))
+          ("\\*.*\\([^E]eshell\\|shell\\|v?term\\).*"
            (display-buffer-at-bottom))))
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
