@@ -115,6 +115,10 @@ by `prot-minibuffer-completion-windows-regexp'."
 
 ;;;; M-X utility (M-x limited to buffer's major and minor modes)
 
+;; UPDATE 2020-12-23: A better version of this is now part of Consult.
+;; I am using that one instead, but keeping the code here:
+;; <https://github.com/minad/consult>.
+
 ;; Adapted from the smex.el library of Cornelius Mika:
 ;; <https://github.com/nonsequitur/smex>.
 
