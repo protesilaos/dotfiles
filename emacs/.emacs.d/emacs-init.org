@@ -1125,8 +1125,8 @@ beauty of minimalism!
 Now a few words about =prot-embark.el= that is reproduced after the
 following block with the package configurations:
 
-+ =prot-embark--live-occur-window= ensures that Embark's live occur buffer
-  shrinks and expands to match the window's contents.
++ =prot-embark--live-occur-fit-window= ensures that Embark's live occur
+  buffer shrinks and expands to match the window's contents.
 
 + =prot-embark-live-occur-toggle= toggles the display of the live occur
   buffer.  It also fires =prot-embark-live-occur-hook= as its final step.
@@ -1176,7 +1176,7 @@ following block with the package configurations:
   ;; :config
   ;; (setq prot-embark-live-occur-disable-icomplete nil)
   ;; (prot-embark-icomplete-hooks-mode -1)
-  :hook (embark-occur-post-revert-hook . prot-embark--live-occur-window)
+  :hook (embark-occur-post-revert-hook . prot-embark--live-occur-fit-window)
   :bind (:map embark-occur-mode-map
          ("h" . prot-simple-describe-symbol)  ; from `prot-simple.el'
          :map minibuffer-local-completion-map

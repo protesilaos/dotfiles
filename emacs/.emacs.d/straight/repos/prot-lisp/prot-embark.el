@@ -38,7 +38,7 @@
   :group 'editing)
 
 ;; Thanks to Omar Antolín Camarena for providing this!
-(defun prot-embark--live-occur-window (&rest _)
+(defun prot-embark--live-occur-fit-window (&rest _)
   "Fit Embark's live occur window to its buffer.
 To be added to `embark-occur-post-revert-hook'."
   (when (string-match-p "Live" (buffer-name))
