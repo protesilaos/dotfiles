@@ -50,6 +50,13 @@ into pseudo slides and indentation be adjusted accordingly."
   :type 'boolean
   :group 'prot-logos)
 
+(defcustom prot-logos-variable-pitch nil
+  "Non-programming buffers should switch to `variable-pitch-mode'.
+In programming modes the default font is always used, as that is
+assumed to be a monospaced typeface."
+  :type 'boolean
+  :group 'prot-logos)
+
 (defcustom prot-logos-scroll-lock nil
   "Use centred scrolling while in focused view."
   :type 'boolean
@@ -79,7 +86,8 @@ on its own."
 
 (defun prot-logos--variable-pitch-toggle ()
   "Make text use `variable-pitch' face, except for programming."
-  (unless (derived-mode-p 'prog-mode)
+  (when (and prot-logos-variable-pitch
+             (derived-mode-p 'text-mode))
     (if (or (bound-and-true-p buffer-face-mode)
 	        (not (bound-and-true-p prot-logos-focus-mode)))
 	    (variable-pitch-mode -1)
