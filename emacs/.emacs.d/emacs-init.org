@@ -2798,17 +2798,9 @@ aspect of my computing inside of Emacs.
 
 My =prot-logos.el= (copied verbatim after the package declaration)
 provides the necessary infrastructure for my preferred "focus mode"
-aesthetic.  Everything is toggled with =prot-logos-focus-mode=.  An
-overview of its components, which are contingent on other features:
-
-+ =variable-pitch-mode= (mixed fonts) :: This is a built-in mode that
-  remaps the =default= face's font family to a proportionately spaced one
-  (also see [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]]).  It is quite
-  aggressive as it affects all other faces, unless the active theme
-  makes provisions to retain fixed typographic spacing for those
-  elements that require it, such as code blocks and indentation (refer
-  to [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes (my highly accessible themes)]]).  By activating this
-  mode, we get a pleasant, prose-friendly effect.
+aesthetic.  Everything is controlled by =prot-logos-focus-mode=.  Bind
+that to a key and you are good to go.  An overview of its components,
+which are contingent on other features:
 
 + Olivetti (centred buffer content) :: I spend much of my time in Emacs
   reading and writing long form texts.  It is nice to be able to easily
@@ -2819,7 +2811,23 @@ overview of its components, which are contingent on other features:
   of functionality beyond the scope of bringing the current window's
   buffer to the centre of the view.  This is exactly what I need.  Any
   other enhancement, such as a larger font size can be delegated to a
-  specialised instrument.
+  specialised instrument.  Thanks to Paul W. Rankin for providing such a
+  nimble tool!  For =prot-logos= Olivetti always gets activated.
+
++ =variable-pitch-mode= (mixed fonts) :: This is a built-in mode that
+  remaps the =default= face's font family to a proportionately spaced one
+  (also see [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]]).  It can produce a
+  prose-friendly presentation, especially if the =variable-pitch= face is
+  set to some nice font family.  As the effect is not particularly good
+  in =prog-mode= buffers, due to misalignments in spacing and indentation,
+  =prot-logos= only applies variable width fonts in =text-mode= buffers.
+  The activation is further controlled by =prot-logos-variable-pitch= (off
+  by default).  Bear in mind that =variable-pitch-mode= is quite
+  aggressive in its application, as it affects all other faces, unless
+  the active theme (or some minor mode) makes provisions to retain fixed
+  typographic spacing for those elements that require it, such as code
+  blocks and inline code elements, tables, and indentation (refer to
+  [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes (my highly accessible themes)]]).
 
 + =org-tree-slide= and =org-indent= :: The former is a third-party package
   and the latter is part of the Org distribution.  What the first does
@@ -2829,20 +2837,20 @@ overview of its components, which are contingent on other features:
   default and the =prot-logos-org-presentation= toggle determines
   whether they should be activated.
 
-+ Fringes :: There is also a function that disables fringes on the edge
-  of the window.  This ensures that we do not see that area and any
-  indicators that may be placed on it (refer to [[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][Fringe mode]] for the
-  relevant configurations, while their overall presentation is
-  controlled by the active theme).
++ Scroll lock :: Sometimes you want the cursor to remain centred on the
+  screen while your focus is on writing or reading.  This is controlled
+  by the variable =prot-logos-scroll-lock= (off by default), which
+  controls the activation of the built-in =scroll-lock-mode=.
 
-+ Scroll lock :: Sometimes I want the cursor to remain centred on the
-  screen.  This is controlled by the variable =prot-logos-scroll-lock=.
++ Modeline :: The variable =prot-logos-hidden-modeline= (off by default)
+  can be set to =t= to hide the modeline while entering the focused state.
+  For me this is mostly useful for presentations.
 
-+ Modeline :: The variable =prot-logos-hidden-modeline= can be set to =t= to
-  hide the modeline while entering the focused state.  For me this is
-  mostly useful for presentations.  The technical implementation of this
-  idea is based on [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][a code snippet by Paul W. Rankin]] (who is the
-  developer of =olivetti-mode=).
++ Fringes :: There is also a function that unconditionally disables
+  fringes on the edge of the window.  It ensures that we do not see that
+  area and any indicators that may be placed on it while entering the
+  focus state (refer to [[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][Fringe mode]] for the relevant configurations,
+  while their overall presentation is controlled by the active theme).
 
 All those combined contribute to an outcome that is appropriate for long
 reading or writing sessions, as well as presentations.  I intentionally
@@ -2896,6 +2904,7 @@ these:
   :diminish visual-line-mode
   :config
   (setq prot-logos-org-presentation nil)
+  (setq prot-logos-variable-pitch nil)
   (setq prot-logos-scroll-lock nil)
   (setq prot-logos-hidden-modeline nil)
   :bind ("<f9>" . prot-logos-focus-mode))
