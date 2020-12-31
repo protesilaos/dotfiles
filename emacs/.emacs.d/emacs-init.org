@@ -2004,14 +2004,15 @@ This is a tool that gets used by a variety of tools, including
 =project.el= (see [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  Xref
 provides helpful commands for code navigation and discovery, such as
 =xref-find-definitions= (=M-.=) and its counterpart =xref-pop-marker-stack=
-(=M-,=).  I like the way it is set up by default and have no need to
-configure it further.
+(=M-,=).
 
 #+begin_src emacs-lisp
 (use-package xref
   :config
-  (setq xref-show-definitions-function #'xref--show-defs-minibuffer)
-  (setq xref-search-program 'ripgrep))  ; Emacs 28
+  ;; All those have been changed for Emacs 28
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
+  (setq xref-show-xrefs-function #'xref-show-definitions-completing-read)
+  (setq xref-search-program 'ripgrep))
 #+end_src
 
 * Directory, buffer, window management
