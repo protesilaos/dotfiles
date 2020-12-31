@@ -282,6 +282,7 @@
 ;;     popup
 ;;     powerline
 ;;     powerline-evil
+;;     prism (see "Note for prism.el" in the manual)
 ;;     proced
 ;;     prodigy
 ;;     racket-mode
@@ -361,7 +362,6 @@
 ;; (should be distributed in the same repository/directory as the
 ;; current item):
 ;;
-;; - modus-themes-core.el       (Code used to produce the themes)
 ;; - modus-operandi-theme.el    (Light theme)
 ;; - modus-vivendi-theme.el     (Dark theme)
 
@@ -449,12 +449,42 @@
 (defface modus-theme-bold nil nil)
 (defface modus-theme-slant nil nil)
 (defface modus-theme-variable-pitch nil nil)
+(defface modus-theme-graph-red-0 nil nil)
+(defface modus-theme-graph-red-1 nil nil)
+(defface modus-theme-graph-green-0 nil nil)
+(defface modus-theme-graph-green-1 nil nil)
+(defface modus-theme-graph-yellow-0 nil nil)
+(defface modus-theme-graph-yellow-1 nil nil)
+(defface modus-theme-graph-blue-0 nil nil)
+(defface modus-theme-graph-blue-1 nil nil)
+(defface modus-theme-graph-magenta-0 nil nil)
+(defface modus-theme-graph-magenta-1 nil nil)
+(defface modus-theme-graph-cyan-0 nil nil)
+(defface modus-theme-graph-cyan-1 nil nil)
 
 
 
 ;;; Customization options
 
 ;;;; Current customisation options (>= 1.0.0)
+
+(defcustom modus-themes-operandi-color-overrides nil
+  "Alist of color name to color value pairs.
+Pair is a cons cell, a pair of the same name in
+`modus-themes-operandi-colors' to overwrite.  Name is a symbol, a
+color name.  Value is a string, a hexadecimal color value."
+  :package-version '(modus-themes . "1.1.0")
+  :version "28.1"
+  :type '(alist :key-type symbol :value-type string))
+
+(defcustom modus-themes-vivendi-color-overrides nil
+  "Alist of color name to color value pairs.
+Pair is a cons cell, a pair of the same name in
+`modus-themes-vivendi-colors' to overwrite.  Name is a symbol, a
+color name.  Value is a string, a hexadecimal color value."
+  :package-version '(modus-themes . "1.1.0")
+  :version "28.1"
+  :type '(alist :key-type symbol :value-type string))
 
 (defcustom modus-themes-slanted-constructs nil
   "Use slanted text in more code constructs (italics or oblique)."
@@ -952,7 +982,12 @@ Option `bg-only-no-extend' is a combination of the `bg-only' and
   'modus-themes-colors-operandi
   "1.0.0")
 
-(defconst modus-themes-colors-operandi
+(define-obsolete-variable-alias
+  'modus-themes-colors-operandi
+  'modus-themes-operandi-colors
+  "1.1.0")
+
+(defconst modus-themes-operandi-colors
   '(;; base values
     (bg-main . "#ffffff") (fg-main . "#000000")
     (bg-dim . "#f8f8f8") (fg-dim . "#282828")
@@ -1011,11 +1046,13 @@ Option `bg-only-no-extend' is a combination of the `bg-only' and
     ;; these foreground values can only be combined with bg-main and are
     ;; thus not suitable for general purpose highlighting
     (red-intense . "#b60000")
+    (orange-intense . "#904200")
     (green-intense . "#006800")
-    (yellow-intense . "#904200")
-    (blue-intense . "#1111ee")
-    (magenta-intense . "#7000e0")
-    (cyan-intense . "#205b93")
+    (yellow-intense . "#605b00")
+    (blue-intense . "#1f1fce")
+    (magenta-intense . "#a8007f")
+    (purple-intense . "#7f10d0")
+    (cyan-intense . "#005f88")
     ;; those foregrounds are meant exclusively for bg-active, bg-inactive
     (red-active . "#8a0000")
     (green-active . "#004c2e")
@@ -1184,7 +1221,12 @@ symbol and the latter as a string.")
   'modus-themes-colors-vivendi
   "1.0.0")
 
-(defconst modus-themes-colors-vivendi
+(define-obsolete-variable-alias
+  'modus-themes-colors-vivendi
+  'modus-themes-vivendi-colors
+  "1.1.0")
+
+(defconst modus-themes-vivendi-colors
   '(;; base values
     (bg-main . "#000000") (fg-main . "#ffffff")
     (bg-dim . "#110b11") (fg-dim . "#e0e6f0")
@@ -1242,12 +1284,14 @@ symbol and the latter as a string.")
     (cyan-alt-other-faint . "#a4d0bb")
     ;; these foreground values can only be combined with bg-main and are
     ;; thus not suitable for general purpose highlighting
-    (red-intense . "#fb6859")
-    (green-intense . "#00fc50")
-    (yellow-intense . "#ffdd00")
-    (blue-intense . "#00a2ff")
-    (magenta-intense . "#ff8bd4")
-    (cyan-intense . "#30ffc0")
+    (red-intense . "#fe6060")
+    (orange-intense . "#fba849")
+    (green-intense . "#4fe42f")
+    (yellow-intense . "#f0dd60")
+    (blue-intense . "#4fafff")
+    (magenta-intense . "#ff62d4")
+    (purple-intense . "#9f80ff")
+    (cyan-intense . "#3fdfd0")
     ;; those foregrounds are meant exclusively for bg-active, bg-inactive
     (red-active . "#ffa7ba")
     (green-active . "#70d73f")
@@ -1488,6 +1532,47 @@ symbol and the latter as a string.")
 
 
 ;;; Internal functions
+
+(defun modus-themes--palette (theme)
+  "Return color palette for Modus theme THEME.
+THEME is a symbol, either modus-operandi or modus-vivendi."
+  (pcase theme
+    ('modus-operandi
+     (append modus-themes-operandi-color-overrides
+             modus-themes-operandi-colors))
+    ('modus-vivendi
+     (append modus-themes-vivendi-color-overrides
+             modus-themes-vivendi-colors))
+    (_theme
+     (error "'%s' is not a Modus theme" theme))))
+
+(defvar modus-themes-faces)
+(defvar modus-themes-custom-variables)
+
+(defmacro modus-themes-theme (name)
+  "Bind NAME's color palette around face specs and variables.
+
+NAME should be the proper name of a Modus theme, either
+`modus-operandi' or `modus-vivendi'.
+
+Face specifications are passed to `custom-theme-set-faces'.
+While variables are handled by `custom-theme-set-variables'.
+Those are stored in `modus-themes-faces' and
+`modus-themes-custom-variables' respectively."
+  (declare (indent 0))
+  (let ((palette-sym (gensym))
+        (colors (mapcar #'car modus-themes-operandi-colors)))
+    `(let* ((class '((class color) (min-colors 89)))
+            (,palette-sym (modus-themes--palette ',name))
+            ,@(mapcar (lambda (color)
+                        (list color `(alist-get ',color ,palette-sym)))
+                      colors))
+       (custom-theme-set-faces ',name ,@modus-themes-faces)
+       (custom-theme-set-variables ',name ,@modus-themes-custom-variables))))
+
+(defun modus-themes--current-theme ()
+  "Return current theme."
+  (car custom-enabled-themes))
 
 ;; Helper functions that are meant to ease the implementation of the
 ;; above customization options.
@@ -1826,7 +1911,7 @@ used to fontify text and code syntax."
 (defun modus-themes-wcag-formula (hex)
   "Get WCAG value of color value HEX.
 The value is defined in hexadecimal RGB notation, such as those in
-`modus-themes-colors-operandi' and `modus-themes-colors-vivendi'."
+`modus-themes-operandi-colors' and `modus-themes-vivendi-colors'."
   (cl-loop for k in '(0.2126 0.7152 0.0722)
            for x in (color-name-to-rgb hex)
            sum (* k (if (<= x 0.03928)
@@ -1841,32 +1926,46 @@ C1 and C2 are color values written in hexadecimal RGB."
                (+ (modus-themes-wcag-formula c2) 0.05))))
     (max ct (/ ct))))
 
-(defun modus-themes--active-theme ()
-  "Return appropriate alist of color values for active theme."
-  (let ((theme (car custom-enabled-themes)))
-    (pcase theme
-      ('modus-operandi modus-themes-colors-operandi)
-      ('modus-vivendi modus-themes-colors-vivendi)
-      (_ (user-error "'%s' not a Modus theme; check `custom-enabled-themes'" theme)))))
+(defun modus-themes-current-palette ()
+  "Return current color palette."
+  (modus-themes--palette (modus-themes--current-theme)))
 
 ;;;###autoload
-(defun modus-themes-color (key)
-  "Return color value for KEY.
-The KEY is the car of each cons cell in the alists
-`modus-themes-colors-operandi', `modus-themes-colors-vivendi'."
-  (let ((alist (modus-themes--active-theme)))
-    (cdr (assoc `,key alist))))
+(defun modus-themes-color (color)
+  "Return color value for COLOR from current palette.
+COLOR is a key in `modus-themes-operandi-colors' or
+`modus-themes-vivendi-colors'."
+  (alist-get color (modus-themes-current-palette)))
 
 ;;;###autoload
-(defun modus-themes-color-alts (key-light key-dark)
-  "Return color value for KEY-LIGHT and KEY-DARK.
-Both arguments must reference the car of a cons cell in
-`modus-themes-colors-operandi', `modus-themes-colors-vivendi'."
-  (let ((theme (car custom-enabled-themes)))
-    (pcase theme
-      ('modus-operandi (cdr (assoc `,key-light modus-themes-colors-operandi)))
-      ('modus-vivendi (cdr (assoc `,key-dark modus-themes-colors-vivendi)))
-      (_ (user-error "'%s' not a Modus theme; check `custom-enabled-themes'" theme)))))
+(defun modus-themes-color-alts (light-color dark-color)
+  "Return color value from current palette.
+When Modus Operandi is enabled, return color value for color
+LIGHT-COLOR.  When Modus Vivendi is enabled, return color value
+for DARK-COLOR.  LIGHT-COLOR and DARK-COLOR are keys in
+`modus-themes-operandi-colors' or `modus-themes-vivendi-colors'."
+  (let* ((theme (modus-themes--current-theme))
+         (color (pcase theme
+                  ('modus-operandi light-color)
+                  ('modus-vivendi dark-color)
+                  (_theme
+                   (error "'%s' is not a Modus theme" theme)))))
+    (alist-get color (modus-themes--palette theme))))
+
+(defmacro modus-themes-with-colors (&rest body)
+  "Evaluate BODY with colors from current palette bound.
+For colors bound, see `modus-themes-operandi-colors' or
+`modus-themes-vivendi-colors'."
+  (declare (indent 0))
+  (let ((palette-sym (gensym))
+        (colors (mapcar #'car modus-themes-operandi-colors)))
+    `(let* ((class '((class color) (min-colors 89)))
+            (,palette-sym (modus-themes-current-palette))
+            ,@(mapcar (lambda (color)
+                        (list color `(alist-get ',color ,palette-sym)))
+                      colors))
+       (ignore class ,@colors)          ; Silence unused variable warnings
+       ,@body)))
 
 ;;;; Commands
 
@@ -1903,11 +2002,11 @@ Also run `modus-themes-after-load-theme-hook'."
 ;;;###autoload
 (defun modus-themes-toggle ()
   "Toggle between `modus-operandi' and `modus-vivendi' themes.
-Also runs `modus-themes-after-load-theme-hook' by virtue of
-calling the internal `modus-themes-load-operandi' and
+Also runs `modus-themes-after-load-theme-hook' at its last stage
+by virtue of calling either of `modus-themes-load-operandi' and
 `modus-themes-load-vivendi' functions."
   (interactive)
-  (pcase (car custom-enabled-themes)
+  (pcase (modus-themes--current-theme)
     ('modus-operandi (modus-themes-load-vivendi))
     ('modus-vivendi (modus-themes-load-operandi))
     (_ (modus-themes--load-prompt))))
@@ -2065,6 +2164,19 @@ calling the internal `modus-themes-load-operandi' and
     `(modus-theme-heading-8
       ((,class ,@(modus-themes--heading
                   8 fg-dim magenta bg-alt bg-region))))
+;;;;; graph-specific faces
+    `(modus-theme-graph-red-0 ((,class :background ,red-graph-0-bg)))
+    `(modus-theme-graph-red-1 ((,class :background ,red-graph-1-bg)))
+    `(modus-theme-graph-green-0 ((,class :background ,green-graph-0-bg)))
+    `(modus-theme-graph-green-1 ((,class :background ,green-graph-1-bg)))
+    `(modus-theme-graph-yellow-0 ((,class :background ,yellow-graph-0-bg)))
+    `(modus-theme-graph-yellow-1 ((,class :background ,yellow-graph-1-bg)))
+    `(modus-theme-graph-blue-0 ((,class :background ,blue-graph-0-bg)))
+    `(modus-theme-graph-blue-1 ((,class :background ,blue-graph-1-bg)))
+    `(modus-theme-graph-magenta-0 ((,class :background ,magenta-graph-0-bg)))
+    `(modus-theme-graph-magenta-1 ((,class :background ,magenta-graph-1-bg)))
+    `(modus-theme-graph-cyan-0 ((,class :background ,cyan-graph-0-bg)))
+    `(modus-theme-graph-cyan-1 ((,class :background ,cyan-graph-1-bg)))
 ;;;;; other custom faces
     `(modus-theme-bold ((,class ,@(modus-themes--bold-weight))))
     `(modus-theme-hl-line ((,class :background ,(if modus-themes-intense-hl-line
@@ -3937,10 +4049,12 @@ calling the internal `modus-themes-load-operandi' and
     `(marginalia-documentation ((,class :foreground ,fg-special-cold :inherit modus-theme-slant)))
     `(marginalia-file-modes ((,class :inherit shadow)))
     `(marginalia-file-name ((,class :foreground ,fg-special-mild)))
-    `(marginalia-file-owner ((,class :foreground ,green-nuanced-fg)))
+    `(marginalia-file-owner ((,class :foreground ,red-nuanced-fg)))
     `(marginalia-key ((,class :foreground ,magenta-active)))
     `(marginalia-mode ((,class :foreground ,cyan-active)))
-    `(marginalia-size ((,class :foreground ,cyan-active)))
+    `(marginalia-modified ((,class :foreground ,yellow-active)))
+    `(marginalia-number ((,class :foreground ,blue-active)))
+    `(marginalia-size ((,class :foreground ,green-active)))
     `(marginalia-variable ((,class :foreground ,yellow-nuanced-fg)))
     `(marginalia-version ((,class :foreground ,cyan-active)))
 ;;;;; markdown-mode
@@ -4571,19 +4685,19 @@ calling the internal `modus-themes-load-operandi' and
     `(rainbow-identifiers-identifier-14 ((,class :foreground ,blue-alt)))
     `(rainbow-identifiers-identifier-15 ((,class :foreground ,red-alt)))
 ;;;;; rainbow-delimiters
-    `(rainbow-delimiters-base-face-error ((,class :foreground ,red)))
+    `(rainbow-delimiters-base-error-face ((,class :background ,red-subtle-bg :foreground ,fg-main)))
     `(rainbow-delimiters-base-face ((,class :foreground ,fg-main)))
-    `(rainbow-delimiters-depth-1-face ((,class :foreground ,green-alt-other)))
-    `(rainbow-delimiters-depth-2-face ((,class :foreground ,magenta-alt-other)))
-    `(rainbow-delimiters-depth-3-face ((,class :foreground ,cyan-alt-other)))
-    `(rainbow-delimiters-depth-4-face ((,class :foreground ,yellow-alt-other)))
-    `(rainbow-delimiters-depth-5-face ((,class :foreground ,blue-alt-other)))
-    `(rainbow-delimiters-depth-6-face ((,class :foreground ,green-alt)))
-    `(rainbow-delimiters-depth-7-face ((,class :foreground ,magenta-alt)))
-    `(rainbow-delimiters-depth-8-face ((,class :foreground ,cyan-alt)))
-    `(rainbow-delimiters-depth-9-face ((,class :foreground ,yellow-alt)))
-    `(rainbow-delimiters-mismatched-face ((,class :inherit bold :foreground ,red-alt)))
-    `(rainbow-delimiters-unmatched-face ((,class :inherit bold :foreground ,red)))
+    `(rainbow-delimiters-depth-1-face ((,class :foreground ,fg-main)))
+    `(rainbow-delimiters-depth-2-face ((,class :foreground ,magenta-intense)))
+    `(rainbow-delimiters-depth-3-face ((,class :foreground ,cyan-intense)))
+    `(rainbow-delimiters-depth-4-face ((,class :foreground ,orange-intense)))
+    `(rainbow-delimiters-depth-5-face ((,class :foreground ,purple-intense)))
+    `(rainbow-delimiters-depth-6-face ((,class :foreground ,green-intense)))
+    `(rainbow-delimiters-depth-7-face ((,class :foreground ,red-intense)))
+    `(rainbow-delimiters-depth-8-face ((,class :foreground ,blue-intense)))
+    `(rainbow-delimiters-depth-9-face ((,class :foreground ,yellow-intense)))
+    `(rainbow-delimiters-mismatched-face ((,class :inherit (bold modus-theme-refine-yellow))))
+    `(rainbow-delimiters-unmatched-face ((,class :inherit (bold modus-theme-refine-red))))
 ;;;;; rcirc
     `(rcirc-bright-nick ((,class :inherit bold :foreground ,magenta-alt)))
     `(rcirc-dim-nick ((,class :inherit shadow)))
@@ -5204,7 +5318,7 @@ calling the internal `modus-themes-load-operandi' and
     `(ztreep-leaf-face ((,class :foreground ,cyan)))
     `(ztreep-node-count-children-face ((,class :foreground ,fg-special-warm)))
     `(ztreep-node-face ((,class :foreground ,fg-main))))
-  "Face specs for use with `modus-themes-core-theme'.")
+  "Face specs for use with `modus-themes-theme'.")
 
 (defconst modus-themes-custom-variables
   '(
@@ -5299,7 +5413,7 @@ calling the internal `modus-themes-load-operandi' and
           ("conf" modus-theme-nuanced-cyan)
           ("docker" modus-theme-nuanced-cyan)))
       `(org-src-block-faces '())))
-    "Custom variables for `modus-themes-core-theme'.")
+    "Custom variables for `modus-themes-theme'.")
 
 ;;;###autoload
 (when (and (boundp 'custom-theme-load-path) load-file-name)
