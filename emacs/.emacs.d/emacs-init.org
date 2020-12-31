@@ -714,10 +714,10 @@ Relevant blog posts of mine:
   :after modus-themes                   ; Because I use its hook
   :init
   (setq prot-fonts-typeface-sets-alist
-        '((laptop . (105 "Hack" "DejaVu Sans Condensed"))
+        '((laptop . (105 "Hack" "Inter"))
           (desktop . (110 "Hack" "Inter"))
           (reader . (150 "Iosevka Comfy" "FiraGO"))
-          (presentation . (160 "Hack" "DejaVu Sans"))))
+          (presentation . (190 "Iosevka Comfy" "FiraGO"))))
   (setq prot-fonts-monospaced-list
         '("Hack" "DejaVu Sans Mono" "Iosevka Comfy" "Source Code Pro"
           "Ubuntu Mono" "Fantasque Sans Mono" "Fira Code" "Monoid"))
