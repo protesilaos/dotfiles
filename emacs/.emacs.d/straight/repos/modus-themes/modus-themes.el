@@ -63,9 +63,16 @@
 ;;     modus-themes-scale-4 1.2
 ;;     modus-themes-scale-5 1.3
 ;;
+;; There also exist two unique customization options for overriding
+;; color palette values.  The specifics are documented in the manual.
+;; The symbols are:
+;;
+;;     modus-themes-operandi-color-overrides       (alist)
+;;     modus-themes-vivendi-color-overrides        (alist)
+;;
 ;; Below is the list of explicitly supported packages or face groups
 ;; (there are implicitly supported packages as well, which inherit from
-;; font-lock or some basic group).  You are encouraged to report of any
+;; font-lock or some basic group).  You are encouraged to report any
 ;; missing package or change you would like to see.
 ;;
 ;;     ace-window
@@ -371,15 +378,16 @@
 
 (require 'cl-lib)
 
+(defgroup modus-themes ()
+  "Options for `modus-operandi', `modus-vivendi'."
+  :group 'faces
+  :prefix "modus-themes-"
+  :tag "Modus Themes")
+
 ;;; Custom faces
 
-(defgroup modus-theme ()
-  "Custom faces for the Modus themes."
-  :group 'faces
-  :prefix "modus-theme-"
-  :link '(url-link :tag "GitLab" "https://gitlab.com/protesilaos/modus-themes")
-  :tag "Modus Operandi")
-
+;; These faces are used internally to ensure consistency between various
+;; groups.  Their properties are assigned in `modus-themes-faces'.
 (defface modus-theme-subtle-red nil nil)
 (defface modus-theme-subtle-green nil nil)
 (defface modus-theme-subtle-yellow nil nil)
@@ -466,13 +474,14 @@
 
 ;;; Customization options
 
-;;;; Current customisation options (>= 1.0.0)
+;;;; Current customization options (>= 1.0.0)
 
 (defcustom modus-themes-operandi-color-overrides nil
   "Alist of color name to color value pairs.
 Pair is a cons cell, a pair of the same name in
 `modus-themes-operandi-colors' to overwrite.  Name is a symbol, a
 color name.  Value is a string, a hexadecimal color value."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.1.0")
   :version "28.1"
   :type '(alist :key-type symbol :value-type string))
@@ -482,24 +491,28 @@ color name.  Value is a string, a hexadecimal color value."
 Pair is a cons cell, a pair of the same name in
 `modus-themes-vivendi-colors' to overwrite.  Name is a symbol, a
 color name.  Value is a string, a hexadecimal color value."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.1.0")
   :version "28.1"
   :type '(alist :key-type symbol :value-type string))
 
 (defcustom modus-themes-slanted-constructs nil
   "Use slanted text in more code constructs (italics or oblique)."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type 'boolean)
 
 (defcustom modus-themes-bold-constructs nil
   "Use bold text in more code constructs."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type 'boolean)
 
 (defcustom modus-themes-variable-pitch-headings nil
   "Use proportional fonts (variable-pitch) in headings."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type 'boolean)
@@ -515,6 +528,7 @@ configure the font family of `fixed-pitch' in order to get a
 consistent experience.  That may be something they do not want to
 do.  Hence this option to disable any kind of technique for
 mixing fonts."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type 'boolean)
@@ -588,6 +602,7 @@ A description of all possible values:
 
 + `rainbow-section-no-bold' is the same as `rainbow-section'
   without a bold weight."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type
@@ -613,6 +628,7 @@ A description of all possible values:
 
 (defcustom modus-themes-scale-headings nil
   "Use font scaling for headings."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type 'boolean)
@@ -626,6 +642,7 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type 'number)
@@ -639,6 +656,7 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type 'number)
@@ -652,6 +670,7 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type 'number)
@@ -665,6 +684,7 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type 'number)
@@ -678,6 +698,7 @@ the same as setting the font at 14 point size).
 
 For more on the matter, read the documentation of
 `set-face-attribute', specifically the ':height' section."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type 'number)
@@ -689,6 +710,7 @@ Nil means the fringes have no background color.  Option `subtle'
 will apply a greyscale value that is visible yet close to the
 main buffer background color.  Option `intense' will use a more
 pronounced greyscale value."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type '(choice
@@ -713,6 +735,7 @@ of the block.  The exact color will depend on the programming
 language and is controlled by the `org-src-block-faces'
 variable (refer to the theme's source code for the current
 association list)."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type '(choice
@@ -750,6 +773,7 @@ This is meant to capture the use-case where a habit task being
 difference between ready and clear states is attenuated by
 painting both of them using shades of green.  This option thus
 highlights the alert and overdue states."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.1.0")
   :version "28.1"
   :type '(choice
@@ -774,6 +798,7 @@ the box effect and rely on underline and overline properties
 instead.  It also tones down the inactive modelines.  Despite its
 intended purpose, this option can also be used without the
 `moody' library."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type '(choice
@@ -804,6 +829,7 @@ text's foreground.  This makes it suitable for a non-nil value
 passed to `diff-font-lock-syntax' (note: Magit does not support
 syntax highlighting in diffs as of 2020-11-25, version
 20201116.1057)."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type '(choice
@@ -835,6 +861,7 @@ Option `opinionated' will apply color combinations that refashion
 the completion UI.  So Icomplete et al will now use styles that
 resemble the defaults of Ivy and co., while the latter group will
 revert to an even more nuanced aesthetic."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type '(choice
@@ -850,6 +877,7 @@ Nil means to only use an accented foreground color.
 Options `subtle' and `intense' will change both the background
 and the foreground values.  The latter has a more pronounced
 effect than the former."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type '(choice
@@ -859,6 +887,7 @@ effect than the former."
 
 (defcustom modus-themes-intense-hl-line nil
   "Use a more prominent background for command `hl-line-mode'."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type 'boolean)
@@ -875,6 +904,7 @@ use of bold typographic weight (inherits the `bold' face).
 
 Option `intense-bold' is the same as `intense', while it also
 uses a bold weight."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type '(choice
@@ -910,6 +940,7 @@ tinted.  Comments are gray.
 
 Option `alt-syntax-yellow-comments' combines `alt-syntax' with
 `yellow-comments'."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type '(choice
@@ -937,6 +968,7 @@ Option `faint-neutral-underline' combines a desaturated text
 color with a subtle grey underline.
 
 Option `no-underline' removes link underlines altogether."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type '(choice
@@ -963,6 +995,7 @@ window.
 
 Option `bg-only-no-extend' is a combination of the `bg-only' and
 `no-extend' options."
+  :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type '(choice
@@ -973,7 +1006,7 @@ Option `bg-only-no-extend' is a combination of the `bg-only' and
 
 
 
-;;; Variables for each variant
+;;; Variables for each theme variant
 
 ;;;; Modus Operandi
 
@@ -1453,7 +1486,9 @@ symbol and the latter as a string.")
 Each element has the form (NAME . HEX) with the former as a
 symbol and the latter as a string.")
 
-;;;; Deprecated customisation options (prior to 1.0.0)
+
+
+;;;; Deprecated customization options (prior to 1.0.0)
 
 ;;;;; Modus Operandi obsolete options
 
@@ -1535,7 +1570,7 @@ symbol and the latter as a string.")
 
 (defun modus-themes--palette (theme)
   "Return color palette for Modus theme THEME.
-THEME is a symbol, either modus-operandi or modus-vivendi."
+THEME is a symbol, either `modus-operandi' or `modus-vivendi'."
   (pcase theme
     ('modus-operandi
      (append modus-themes-operandi-color-overrides
@@ -2472,7 +2507,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(log-edit-header ((,class :foreground ,fg-special-warm)))
     `(log-edit-summary ((,class :inherit bold :foreground ,blue)))
     `(log-edit-unknown-header ((,class :inherit shadow)))
-    `(log-view-commit-body ((,class :background ,bg-dim :foreground ,fg-main :extend t)))
+    `(log-view-commit-body ((,class :foreground ,blue-nuanced-fg)))
     `(log-view-file ((,class :inherit bold :foreground ,fg-special-cold)))
     `(log-view-message ((,class :foreground ,green-alt-other-faint)))
 ;;;;; cider
@@ -3236,18 +3271,19 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; font-lock
     `(font-lock-builtin-face ((,class :inherit modus-theme-bold
                                       ,@(modus-themes--syntax-extra
-                                         magenta-alt magenta-alt-faint magenta-alt-other))))
+                                         magenta-alt magenta-alt-faint blue-alt))))
     `(font-lock-comment-delimiter-face ((,class :inherit font-lock-comment-face)))
     `(font-lock-comment-face ((,class :inherit modus-theme-slant
                                       ,@(modus-themes--syntax-comment
                                          fg-alt fg-comment-yellow))))
     `(font-lock-constant-face ((,class ,@(modus-themes--syntax-extra
-                                          blue-alt-other blue-alt-other-faint magenta-alt))))
+                                          blue-alt-other blue-alt-other-faint magenta-alt-other))))
     `(font-lock-doc-face ((,class :inherit modus-theme-slant
                                   ,@(modus-themes--syntax-docstring
-                                     fg-docstring cyan-alt-other-faint green-alt-faint blue-alt-other-faint))))
+                                     fg-docstring cyan-alt-other-faint
+                                     green-alt-faint magenta-nuanced-fg))))
     `(font-lock-function-name-face ((,class ,@(modus-themes--syntax-extra
-                                               magenta magenta-faint red-alt-other))))
+                                               magenta magenta-faint magenta-alt))))
     `(font-lock-keyword-face ((,class :inherit modus-theme-bold
                                       ,@(modus-themes--syntax-extra
                                          magenta-alt-other magenta-alt-other-faint cyan-alt-other))))
@@ -3259,12 +3295,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(font-lock-regexp-grouping-backslash ((,class :inherit bold :foreground ,fg-escape-char-backslash)))
     `(font-lock-regexp-grouping-construct ((,class :inherit bold :foreground ,fg-escape-char-construct)))
     `(font-lock-string-face ((,class ,@(modus-themes--syntax-string
-                                        blue-alt blue-alt-faint green green))))
+                                        blue-alt blue-alt-faint green green-alt))))
     `(font-lock-type-face ((,class :inherit modus-theme-bold
                                    ,@(modus-themes--syntax-extra
-                                      cyan-alt-other magenta-alt-faint magenta-alt))))
+                                      cyan-alt-other magenta-alt-faint cyan-alt))))
     `(font-lock-variable-name-face ((,class ,@(modus-themes--syntax-extra
-                                               cyan cyan-faint blue))))
+                                               cyan cyan-faint blue-alt-faint))))
     `(font-lock-warning-face ((,class :inherit modus-theme-bold
                                       ,@(modus-themes--syntax-foreground
                                          yellow-active yellow-alt-faint))))
@@ -5270,12 +5306,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(whitespace-empty ((,class :inherit modus-theme-intense-magenta)))
     `(whitespace-hspace ((,class :background ,bg-whitespace :foreground ,fg-whitespace)))
     `(whitespace-indentation ((,class :background ,bg-whitespace :foreground ,fg-whitespace)))
-    `(whitespace-line ((,class :inherit modus-theme-special-warm)))
+    `(whitespace-line ((,class :background ,bg-alt)))
     `(whitespace-newline ((,class :background ,bg-whitespace :foreground ,fg-whitespace)))
     `(whitespace-space ((,class :background ,bg-whitespace :foreground ,fg-whitespace)))
     `(whitespace-space-after-tab ((,class :inherit modus-theme-subtle-magenta)))
     `(whitespace-space-before-tab ((,class :inherit modus-theme-subtle-cyan)))
-    `(whitespace-tab ((,class :background ,bg-whitespace :foreground ,fg-whitespace)))
+    `(whitespace-tab ((,class :inherit modus-theme-subtle-green)))
     `(whitespace-trailing ((,class :inherit modus-theme-intense-red)))
 ;;;;; window-divider-mode
     `(window-divider ((,class :foreground ,fg-window-divider-inner)))
@@ -5393,27 +5429,27 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(xterm-color-names ["black" ,red ,green ,yellow ,blue ,magenta ,cyan "gray65"])
     `(xterm-color-names-bright ["gray35" ,red-alt ,green-alt ,yellow-alt ,blue-alt ,magenta-alt ,cyan-alt "white"])
     (if (eq modus-themes-org-blocks 'rainbow)
-      `(org-src-block-faces              ; TODO this list should be expanded
-        `(("emacs-lisp" modus-theme-nuanced-magenta)
-          ("elisp" modus-theme-nuanced-magenta)
-          ("clojure" modus-theme-nuanced-magenta)
-          ("clojurescript" modus-theme-nuanced-magenta)
-          ("c" modus-theme-nuanced-blue)
-          ("c++" modus-theme-nuanced-blue)
-          ("sh" modus-theme-nuanced-green)
-          ("shell" modus-theme-nuanced-green)
-          ("html" modus-theme-nuanced-yellow)
-          ("xml" modus-theme-nuanced-yellow)
-          ("css" modus-theme-nuanced-red)
-          ("scss" modus-theme-nuanced-red)
-          ("python" modus-theme-nuanced-green)
-          ("ipython" modus-theme-nuanced-magenta)
-          ("r" modus-theme-nuanced-cyan)
-          ("yaml" modus-theme-nuanced-cyan)
-          ("conf" modus-theme-nuanced-cyan)
-          ("docker" modus-theme-nuanced-cyan)))
+        `(org-src-block-faces              ; TODO this list should be expanded
+          `(("emacs-lisp" modus-theme-nuanced-magenta)
+            ("elisp" modus-theme-nuanced-magenta)
+            ("clojure" modus-theme-nuanced-magenta)
+            ("clojurescript" modus-theme-nuanced-magenta)
+            ("c" modus-theme-nuanced-blue)
+            ("c++" modus-theme-nuanced-blue)
+            ("sh" modus-theme-nuanced-green)
+            ("shell" modus-theme-nuanced-green)
+            ("html" modus-theme-nuanced-yellow)
+            ("xml" modus-theme-nuanced-yellow)
+            ("css" modus-theme-nuanced-red)
+            ("scss" modus-theme-nuanced-red)
+            ("python" modus-theme-nuanced-green)
+            ("ipython" modus-theme-nuanced-magenta)
+            ("r" modus-theme-nuanced-cyan)
+            ("yaml" modus-theme-nuanced-cyan)
+            ("conf" modus-theme-nuanced-cyan)
+            ("docker" modus-theme-nuanced-cyan)))
       `(org-src-block-faces '())))
-    "Custom variables for `modus-themes-theme'.")
+  "Custom variables for `modus-themes-theme'.")
 
 ;;;###autoload
 (when (and (boundp 'custom-theme-load-path) load-file-name)
