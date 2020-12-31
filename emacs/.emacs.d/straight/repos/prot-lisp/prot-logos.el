@@ -156,7 +156,7 @@ on its own."
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--scroll-lock)
 
-;; Based on William Rankin's code:
+;; Based on Paul W. Rankin's code:
 ;; https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8
 (defun prot-logos--hidden-modeline ()
   "Toggle mode line visibility."
