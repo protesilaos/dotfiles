@@ -596,25 +596,6 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   :bind ("<f5>" . modus-themes-toggle))
 #+end_src
 
-*** Rainbow mode for colour testing
-:PROPERTIES:
-:CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
-:END:
-
-The following package reads a colour value, such as hexadecimal RGB,
-and sets the background for the value in that colour.  Quite useful
-when reviewing my themes (=rainbow-mode= is activated manually).
-
-#+begin_src emacs-lisp
-(use-package rainbow-mode
-  :straight t
-  :diminish
-  :commands rainbow-mode
-  :config
-  (setq rainbow-ansi-colors nil)
-  (setq rainbow-x-colors nil))
-#+end_src
-
 ** Typeface configurations
 :PROPERTIES:
 :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
@@ -6996,6 +6977,104 @@ are normally used in code comments.  Simple and effective!
 (use-package hl-todo
   :straight t
   :hook (prog-mode-hook . hl-todo-mode))
+#+end_src
+
+** Prism.el ( highlight code by depth level)
+:PROPERTIES:
+:CUSTOM_ID: h:bee4eca3-76c6-4e83-adb6-d2017240178a
+:END:
+
+This library by Adam Porter, aka "alphapapa" or "github-alphapapa",
+implements an alternative to the typical colouration of code.  Instead
+of highligting the syntactic constructs, it applies colour to different
+levels of depth in the code.  I find this particularly helpful for code
+that has deep levels of indentation or which I am not familiar with.
+=M-x prism-mode= is all we need.
+
+=prism.el= is highly configurable.  Users can specify the exact colours to
+use and the sequence they should appear in.  This is controlled by the
+function =prism-set-colors=.  While the total number is handled by the
+variable =prism-num-faces=.
+
+In this package declaration I leverage the =modus-themes-with-colors=
+macro to pull in named colour values [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][from my Modus themes]].  I also
+specify presets for different stylistic alternatives with 16, 8, and 4
+colours respectively.
+
+#+begin_src emacs-lisp
+(use-package prism
+  :straight (:host github :repo "alphapapa/prism.el" :branch "master")
+  :defer
+  :config
+  (setq prism-comments nil) ; non-nil distorts colours
+  (setq prism-num-faces 8)
+
+  ;; ;; NOTE: read the manual of the `modus-themes' for prism.el
+
+  ;; ;; for 4 colours (the closest to the default)
+  ;; (prism-set-colors
+  ;;   :desaturations '(0) ; may lower the contrast ratio
+  ;;   :lightens '(0)      ; same
+  ;;   :colors (modus-themes-with-colors
+  ;;             `(,fg-main
+  ;;               ,cyan-alt-other
+  ;;               ,magenta-alt-other
+  ;;               ,magenta)))
+  ;;
+  ;; ;; for 16 colours
+  ;; (prism-set-colors
+  ;;   :desaturations '(0) ; may lower the contrast ratio
+  ;;   :lightens '(0)      ; same
+  ;;   :colors (modus-themes-with-colors
+  ;;             `(,fg-main
+  ;;               ,magenta
+  ;;               ,cyan-alt-other
+  ;;               ,magenta-alt-other
+  ;;               ,blue
+  ;;               ,magenta-alt
+  ;;               ,cyan-alt
+  ;;               ,red-alt-other
+  ;;               ,green
+  ;;               ,fg-main
+  ;;               ,cyan
+  ;;               ,yellow
+  ;;               ,blue-alt
+  ;;               ,red-alt
+  ;;               ,green-alt-other
+  ;;               ,fg-special-warm)))
+  ;;
+  ;; for 8 colours
+  (prism-set-colors
+    :desaturations '(0) ; may lower the contrast ratio
+    :lightens '(0)      ; same
+    :colors (modus-themes-with-colors
+              `(,fg-special-cold
+                ,magenta
+                ,magenta-alt-other
+                ,cyan-alt-other
+                ,fg-main
+                ,blue-alt
+                ,red-alt-other
+                ,cyan))))
+#+end_src
+
+** Rainbow mode for colour testing
+:PROPERTIES:
+:CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
+:END:
+
+The following package reads a colour value, such as hexadecimal RGB,
+and sets the background for the value in that colour.  Quite useful
+when reviewing my themes (=rainbow-mode= is activated manually).
+
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :straight t
+  :diminish
+  :commands rainbow-mode
+  :config
+  (setq rainbow-ansi-colors nil)
+  (setq rainbow-x-colors nil))
 #+end_src
 
 ** Optional visual indicators or layout elements
