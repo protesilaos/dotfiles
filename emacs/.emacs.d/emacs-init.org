@@ -2091,8 +2091,8 @@ of the current version-controlled directory tree, if inside one, or just
 the present working directory.
 
 Finally, to see how I get commits for marked files that belong to a
-given version-controlled (git) repo, see my =prot/vc-print-log= from the
-section of this document on the [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Generic version control (VC) framework]].
+given version-controlled (git) repo, see the section of this document on
+[[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]].
 
 #+begin_src emacs-lisp
 (use-package dired
@@ -3095,7 +3095,14 @@ Check [[#h:a8e737b8-7c90-4c68-8814-acf2f637ffa1][Outline mode, outline minor mod
 Also read these sections:
 
 + [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]].
-+ [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Generic version control (VC) framework]].
++ [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]].
+
+Changes to all tracked files are highlighted in the fringe thanks to the
+=diff-hl= package which is [[#h:5b71e71f-353f-4290-951b-3fc575c0fcba][defined elsewhere in this document]] (as I
+consider it an "interface" element).  Any rules that control the
+placement of VC-related (and other) buffers are defined in the section
+on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (specifically, refer to the variable
+=display-buffer-alist=).
 
 #+begin_src emacs-lisp
 (use-package diff-mode
@@ -3122,225 +3129,94 @@ This is =prot-diff.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my do
 
 #+include: straight/repos/prot-lisp/prot-diff.el src emacs-lisp :tangle no
 
-*** Generic version control (VC) framework
+*** Version control framework (vc.el and prot-vc.el)
 :PROPERTIES:
 :CUSTOM_ID: h:31deeff4-dfae-48d9-a906-1f3272f29bc9
 :END:
 
-VC is a generic framework that works with several version control
-systems, else "backends".  In practice though, I only ever use it with
-=git=.  Compared with =magit= (see section on [[#h:76d1b392-e693-40dc-b320-d4c1047115ab][Magit configs]]), =vc= offers a
-more abstract, buffer-oriented workflow that, I feel, covers all common
-version control cases.
+VC consists of set of libraries that provide the means for working with
+several version control systems, else "backends".  It is built into
+Emacs.  Compared with =magit= (see section on [[#h:76d1b392-e693-40dc-b320-d4c1047115ab][Magit configs]]), =vc= offers a
+more abstract, buffer-oriented paradigm that does a fine job at covering
+all basic versioning needs.  It however never stands as Magit's peer
+when it comes to the sheer coverage of Git features.
 
-With VC we can track and ignore files, commit changes, view diffs and
-logs, push and pull from a remote…  Everything you would expect from a
-version control system.  But I am not sure it is possible or convenient
-to perform tasks such as staging only a particular part of a diff,
-handling multiple remotes, interactively rebasing the commit log, etc.
+To my mind, VC and Magit can be used as part of the same setup.  Employ
+the former for common tasks such as viewing diffs and logs, committing
+changes in bulk, pushing and pulling from a remote.  And let Magit
+handle the more involved and specialised cases of staging a partial
+diff, rebasing commits interactively, writing a commit fixup, and so on.
 
-As such, I employ VC as my generalist interface to the most common Git
-interactions: diffs, commits, logs.  While I rely on Magit for expedient
-access to the more advanced features of Git, all of which are rendered
-approachable through an interactive/modal interface.
-
-I started using VC with this a common scenario: to produce a diff of my
-current changes formatted as a ready-to-apply patch.  This is done with
-=vc-diff= (also see the =vc-git-diff-switches= variable).  A diff hunk can
-be applied while in the =*vc-diff*= buffer by hitting =C-c C-a=.  Fairly
-easy.  One can always save the diff buffer using the standard =C-x C-w=
-command (=write-file=).  Use these to send patches (e.g. via email),
-without having to go through proprietary web tools.
-
-Another nice feature is a region-specific commit log with =C-x v h=
-(=vc-region-history=).  Highlight a region and run the command to get a
-clear view of how it took form.  Quite an easy way to "git blame".  For
-a more macroscopic view of the file's entire history you can always rely
-on =C-x v g= or my alias =C-x v a= which calls =vc-annotate=.  Commits are
-colour-coded with those on the red side of the spectrum being the newest
-ones, while those on the blue end representing the older ones.
-
-=C-x v v= (=vc-next-action=) is a hidden gem: a paradigm of minimalism done
-right.  On a new project it will first ask you for a backend.  Selecting
-=git= will run =git init=.  Invoking the command again will track the file
-and commit the changes.  If the file is already being tracked, it will
-just proceed to the next step.  It always follows a logical sequence
-which translates into a powerful metaphor of going through the process
-of committing changes to files.
-
-The commit buffer presents you with a summary section followed by the
-body of the commit message, separated by an empty line (shown as a
-border) as per the conventions that govern good commit messages.  In the
-lower part you can see the affected files (just the current file by
-default).  The standard =C-c C-c= confirms the commit, while =C-c C-k=
-cancels it.  Furthermore, there is =C-c C-f= to view the file set
-concerned (in case it is not already visible below the message area), as
-well as =C-c C-d= to produce a diff of what is being committed.
-
-You can review the commit log for the current file with =C-x v l=
-(=vc-print-log=) or for the entirety of the current project with =C-x v L=
-(=vc-print-root-log=).  From there you can display any diff with =d= or find
-the prior state of the commit at point with =f=.  Use the latter as a
-starting point for reverting to a prior state.  Also note that while
-inside the root log view, you can use an active region to show diffs in
-that range of commits.
-
-With =vc-dir=, which I rebind to the more logical "project" mnemonic of
-=C-x v p= (=prot/vc-dir-project=), you can mark with =m= several files to add
-to a commit.  Use =M= to mark all files with the same status.  This mode
-offers easy access to the standard VC actions.  To commit the file at
-point or the marked ones hit =v=.  To push do =P=.  Same principle for
-diffs, logs, etc.
-
-By the way, rebinding =vc-dir= has another upside of allowing its original
-key binding to be assigned to =vc-diff=; which in turn makes that
-mnemonically consistent with the =C-x v D= sequence, else =vc-root-diff=
-(make sure to check my key re-bindings or aliases).
-
-Some more common actions (read their docstrings for further help):
-
-| Command         | Key chord | VC-dir key |
-|-----------------+-----------+------------|
-| vc-update       | C-x v +   | +          |
-| vc-push         | C-x v P   | P          |
-| vc-log-incoming | C-x v I   | I          |
-| vc-log-outgoing | C-x v O   | O          |
-
-Based on these (and there are more), you can already see how VC may be
-used as your main tool for version control, from committing changes, to
-pulling/pushing from/to a remote, viewing commit logs, etc.  It depends
-on your needs and preferences.  Run =C-x v C-h= to get a full list of the
-possible commands.  Read the docstring of each command for further
-information.  Then in each of the various VC modes try =C-h m= for further
-help.  Also consult the manual and make liberal use of =C-h f= or =C-h v=.
-
-Changes to all tracked files are highlighted in the fringe thanks to the
-=diff-hl= package which is [[#h:5b71e71f-353f-4290-951b-3fc575c0fcba][defined elsewhere in this document]] (as I
-consider it an "interface" element).  Any rules that control the
-placement of VC-related (and other) buffers are defined in the section
-on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (specifically, refer to the variable
-=display-buffer-alist=).
-
-Also watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]]
+Also refer to the section on [[#h:2ff46d23-09d5-4d92-b0af-2339dc19719f][Diff-mode (and prot-diff.el extensions)]].
+And watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]]
 (2020-03-30).
 
-*Careful with the keybindings* I define.  Many of them do other things by
-default and /I might still review them further/.  When in doubt, stick
-with the defaults.
+Here is an overview of the keys I define, with only a few of them being
+left to their default values (note that =prot-diff-buffer-dwim= is part of
+the =prot-diff.el= that I linked to above):
+
+| Command                | C-x v prefix | Mnemonic          |
+|------------------------+--------------+-------------------|
+| vc-annotate            | a            |                   |
+| vc-update              | F            | Fetch and merge   |
+| vc-push                | P            |                   |
+| vc-log-incoming        | f            | Fetch only        |
+| vc-log-outgoing        | O            |                   |
+| vc-create-tag          | t            |                   |
+| vc-retrieve-tag        | b            | Branch/tag switch |
+| vc-diff                | d            | Diff current file |
+| vc-root-diff           | D            | Diff project      |
+| prot-diff-buffer-dwim  | =            |                   |
+| prot-vc-project-or-dir | p            | Project status    |
+| prot-vc-custom-log     | SPC          |                   |
+| prot-vc-patch-dwim     | c            | Create patch      |
+
+My =prot-vc.el= library (reproduced after the package declarations)
+defines a few commands that extend VC to suit my needs.  In short:
+
++ =prot-vc-patch-dwim= produce a properly formatted patch for a given
+  commit.  When browsing a =log-view= buffer, the commit is the one around
+  point, otherwise the commit is selected with completion from a log of
+  recent entries (the length of the log is controlled by the variable
+  =prot-vc-log-limit=).  Prompting for a commit can also be done by
+  calling this command with a universal prefix argument (=C-u=).  The
+  patch is saved as a file in a directory that can be selected with
+  another completion prompt: default candidates are stored in the list
+  =prot-vc-patch-output-dirs=.
+
++ =prot-vc-custom-log= prints a log of commits that matches a custom file
+  set.  This is of great value when you need to inspect the history of
+  only some files rather than that of the entire repository.  What files
+  to choose is determined in two ways: (1) the file-at-point in Dired
+  buffers, or all marked files, and (2) files in the current directory
+  selected with completion.  The latter is invoked by passing a double
+  prefix argument (=C-u C-u=).  While a single prefix arg (=C-u=), starts
+  with a prompts for a number to limit the log to, otherwise it falls
+  back to the number in =prot-vc-log-limit=.
+
++ =prot-vc-project-or-dir= produces a =vc-dir= buffer for the current
+  project (also see [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  With a
+  =C-u= prefix argument the command limits the matches to the present
+  directory.
+
++ =prot-vc-log-kill-hash= appends to the kill-ring the hash of the commit
+  around point.  It is meant to be used in =log-view= buffers.  Simple and
+  effective.
 
 #+begin_src emacs-lisp
-;; TODO 2020-12-09: put all my code in prot-vc.el and review it
 (use-package vc
   :config
+  (use-package vc-annotate)
+  (use-package vc-dir)
+  (use-package vc-git)
+  (use-package add-log)
+  (use-package log-view)
+
   (setq vc-find-revision-no-save t)
-
-  (use-package add-log
-    :config
-    ;; I use a different account for git commits
-    (setq add-log-mailing-address "info@protesilaos.com")
-    (setq add-log-keep-changes-together t))
-
-  (use-package log-view
-    :config
-    (defun prot/vc-print-log (&optional arg)
-      "Like `vc-print-log' but for a custom fileset.
-
-With optional prefix ARG (\\[universal-argument]), query for a
-number to limit the log to.  Then prompt the user for matching
-files in the `default-directory'.  A literal space delimits
-multiple files (inserting a space will renew the prompt, asking
-for another file match).
-
-In a `dired-mode' buffer, print log for the file at point, or any
-marked files, except for when a double prefix argument is passed.
-A single prefix arg still provides for a limit to the log.
-
-If a double prefix ARG is passed, prompt for a limit and produce
-a log that covers all files in the present directory."
-      (interactive "P")
-      (let* ((lim (if arg
-                      (read-number "Limit log to N entries: " 5)
-                    20))
-             (dir default-directory)
-             (dotless directory-files-no-dot-files-regexp)
-             (files (directory-files dir nil dotless t))
-             (crm-separator " ")
-             (set (cond
-                   ((equal arg '(16))
-                    files)
-                   ((eq major-mode 'dired-mode)
-                    (dired-get-marked-files t nil))
-                   (t
-                    (completing-read-multiple
-                     "Select files in current dir: " files nil t))))
-             (backend (vc-backend set)))
-        (vc-print-log-internal backend set nil nil lim 'with-diff)))
-
-    (defun prot/log-view-extract-commit ()
-      "Kill commit from around point in `vc-print-log'."
-      (interactive)
-      (let ((commit (cadr (log-view-current-entry (point) t))))
-        (kill-new (format "%s" commit))
-        (message "Copied: %s" commit)))
-
-    (defvar prot/vc-shell-output "*vc-shell-output*"
-      "Name of buffer for VC-related shell output.")
-
-    (defun prot/log-view-create-patch ()
-      "Create patch for commit at point in `log-view'."
-      (interactive)
-      (let* ((commit (cadr (log-view-current-entry (point) t)))
-             (vc-dir (or (vc-root-dir) default-directory))
-             (dirs (list "~/" "~/Desktop/" vc-dir))
-             (out-dir ;; (read-directory-name "Output directory: ")
-              (completing-read "Output directory: " dirs))
-             (buf (get-buffer-create prot/vc-shell-output)))
-        (shell-command
-         (format "git format-patch -1 %s -o %s" commit out-dir) buf)
-        (message "Prepared patch for `%s' and sent it to %s"
-                 (propertize commit 'face 'bold)
-                 (propertize out-dir 'face 'success))))
-
-    :bind (("C-x v SPC" . prot/vc-print-log)
-           :map log-view-mode-map
-           ("<tab>" . log-view-toggle-entry-display)
-           ("<return>" . log-view-find-revision)
-           ("c" . prot/log-view-create-patch)
-           ("w" . prot/log-view-extract-commit)
-           ("s" . vc-log-search)
-           ("o" . vc-log-outgoing)
-           ("f" . vc-log-incoming)
-           ("F" . vc-update)
-           ("P" . vc-push)))
-
-  :bind (("C-x v b" . vc-retrieve-tag)  ; "branch" switch
-         ("C-x v t" . vc-create-tag)
-         ("C-x v f" . vc-log-incoming)  ; the actual git fetch
-         ("C-x v F" . vc-update)        ; "F" because "P" is push
-         ("C-x v d" . vc-diff)))
-
-(use-package vc-dir
-  :config
-  (defun prot/vc-dir (&optional arg)
-    "Run `vc-dir' for the current project or directory.
-With optional ARG (\\[universal-argument]), use the present
-working directory, else default to the root of the current
-project, as defined by `vc-root-dir'."
-    (interactive "P")
-    (let ((dir (if arg default-directory (vc-root-dir))))
-      (vc-dir dir)))
-  :bind (("C-x v p" . prot/vc-dir)
-         :map vc-dir-mode-map
-         ("b" . vc-retrieve-tag)
-         ("t" . vc-create-tag)
-         ("o" . vc-log-outgoing)
-         ("f" . vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
-         ("F" . vc-update)       ; symmetric with P: `vc-push'
-         ("d" . vc-diff)         ; align with D: `vc-root-diff'
-         ("k" . vc-dir-clean-files)))
-
-(use-package vc-git
-  :config
+  (setq vc-annotate-display-mode 'scale) ; scale to oldest
+  ;; I use a different account for git commits
+  (setq add-log-mailing-address "info@protesilaos.com")
+  (setq add-log-keep-changes-together t)
   (setq vc-git-diff-switches '("--patch-with-stat" "--histogram"))
   (setq vc-git-print-log-follow t)
   (setq vc-git-revision-complete-only-branches nil) ; Emacs 28
@@ -3356,15 +3232,52 @@ project, as defined by `vc-root-dir'."
           ((1 'log-view-message)
            (2 'change-log-list nil lax)
            (3 'change-log-name)
-           (4 'change-log-date)))))
-
-(use-package vc-annotate
-  :config
-  (setq vc-annotate-display-mode 'scale) ; scale to oldest
-  :bind (("C-x v a" . vc-annotate)       ; `vc-update-change-log' is not in git
+           (4 'change-log-date))))
+  :bind (("C-x v a" . vc-annotate) ; `vc-update-change-log' is not in git
+         ("C-x v b" . vc-retrieve-tag)  ; "branch" switch
+         ("C-x v t" . vc-create-tag)
+         ("C-x v f" . vc-log-incoming)  ; the actual git fetch
+         ("C-x v o" . vc-log-outgoing)
+         ("C-x v F" . vc-update)        ; "F" because "P" is push
+         ("C-x v d" . vc-diff)
+         :map vc-dir-mode-map
+         ("a" . vc-annotate)
+         ("b" . vc-retrieve-tag)
+         ("t" . vc-create-tag)
+         ("o" . vc-log-outgoing)
+         ("f" . vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
+         ("F" . vc-update)       ; symmetric with P: `vc-push'
+         ("d" . vc-diff)         ; parallel to D: `vc-root-diff'
+         ("k" . vc-dir-clean-files)
          :map vc-annotate-mode-map
-         ("<tab>" . vc-annotate-toggle-annotation-visibility)))
+         ("M-q" . vc-annotate-toggle-annotation-visibility)
+         :map log-view-mode-map
+         ("<tab>" . log-view-toggle-entry-display)
+         ("<return>" . log-view-find-revision)
+         ("s" . vc-log-search)
+         ("o" . vc-log-outgoing)
+         ("f" . vc-log-incoming)
+         ("F" . vc-update)
+         ("P" . vc-push)))
+
+(use-package prot-vc
+  :straight (:type built-in)
+  :after vc
+  :config
+  (setq prot-vc-log-limit 20)
+  (setq prot-vc-shell-output "*prot-vc-shell-output*")
+  (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
+  :bind (("C-x v p" . prot-vc-project-or-dir)
+         ("C-x v SPC" . prot-vc-custom-log)
+         ("C-x v c" . prot-vc-patch-dwim)
+         :map log-view-mode-map
+         ("c" . prot-vc-patch-dwim)
+         ("w" . prot-vc-log-kill-hash)))
 #+end_src
+
+And here is =prot-vc.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-vc.el src emacs-lisp :tangle no
 
 **** Commit log editing
 :PROPERTIES:
@@ -6951,9 +6864,9 @@ The package offers some more features, such as the ability to move
 between diff hunks while editing the buffer.  I still need to experiment
 with those before customising them to my liking.
 
-At any rate, this package is meant a general tool for version control
+At any rate, this package is meant as a general tool for version control
 systems, rather than a git-specific one.  Much like the built-in VC (see
-section on the [[*Generic version control (VC) framework][generic version control (VC) framework]]).
+section on [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]).
 
 #+begin_src emacs-lisp
 (use-package diff-hl

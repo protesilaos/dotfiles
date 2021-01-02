@@ -52,6 +52,11 @@
   :type 'list
   :group 'prot-vc)
 
+(defcustom prot-vc-advice-vc-git t
+  "Whether to pass advice to `vc-git' functions."
+  :type 'list
+  :group 'prot-vc)
+
 ;;;; Commands
 
 ;;;###autoload
@@ -116,8 +121,14 @@ that covers all files in the present directory."
     (kill-new (format "%s" commit))
     (message "Copied: %s" commit)))
 
+(defvar prot-vc--patch-commit-hist '()
+  "Minibuffer history for `prot-vc-patch-dwim' commits.")
+
+(defvar prot-vc--patch-output-hist '()
+  "Minibuffer history for `prot-vc-patch-dwim' output.")
+
 ;; TODO: abstract `process-lines' and make format customisable
-;; REVIEW: using __ %h __ works but is a dirty hack
+;; REVIEW: using __ %h __ works but is a quick and dirty hack
 (defun prot-vc--log-commit-prompt (&optional prompt)
   "Select git log commit with completion using optional PROMPT."
   (let ((text (or prompt "Select a commit: "))
@@ -128,7 +139,7 @@ that covers all files in the present directory."
         (completing-read
          text
          (process-lines "git" "log" "--pretty=format:%d __ %h __ %ad %an: %s" "-n" num)
-         nil t nil)
+         nil t nil 'prot-vc--patch-commit-hist)
       (error "'%s' is not under version control" default-directory))))
 
 (defun prot-vc--log-commit-hash ()
@@ -152,13 +163,55 @@ commit with completion."
                      default-directory))
          (dirs (append (list vc-dir) prot-vc-patch-output-dirs))
          (out-dir
-          (completing-read "Output directory: " dirs nil t))
+          (completing-read "Output directory: "
+                           dirs nil t nil 'prot-vc--patch-output-hist))
          (buf (get-buffer-create prot-vc-shell-output)))
     (shell-command
-     (format "git format-patch -1 %s -o %s" commit out-dir) buf)
+     (format "git format-patch -1 %s -o %s --" commit out-dir) buf)
     (message "Prepared patch for `%s' and sent it to %s"
              (propertize commit 'face 'bold)
-             (propertize out-dir 'face 'success))))
+             (propertize out-dir 'face 'success))
+    (add-to-history 'prot-vc--patch-commit-hist commit)
+    (add-to-history 'prot-vc--patch-output-hist out-dir)))
+
+;; This is a tweaked variant of `vc-git-expanded-log-entry'
+(defun prot-vc-git-expanded-log-entry (revision)
+  "Expand git commit message for REVISION."
+  (with-temp-buffer
+    (apply 'vc-git-command t nil nil (list "log" revision "--stat" "-1" "--"))
+    (goto-char (point-min))
+    (unless (eobp)
+      ;; Indent the expanded log entry.
+      (while (re-search-forward "^  " nil t)
+        (replace-match "")
+        (forward-line))
+      (buffer-string))))
+
+(defun prot-vc-git-expand-function ()
+  "Set `log-view-expanded-log-entry-function' for `vc-git'."
+  (setq-local log-view-expanded-log-entry-function
+              #'prot-vc-git-expanded-log-entry))
+
+(defvar prot-vc-git-log-view-mode-hook nil
+  "Hook that runs after `vc-git-log-view-mode'.")
+
+(defun prot-vc-git-log-view-add-hook (&rest _)
+  "Run `prot-vc-git-log-view-mode-hook'."
+  (run-hooks 'prot-vc-git-log-view-mode-hook))
+
+(declare-function vc-git-log-view-mode "vc-git")
+
+;;;###autoload
+(define-minor-mode prot-vc-git-setup-mode
+  "Extend `vc-git'."
+  :init-value nil
+  :global t
+  (if (and prot-vc-advice-vc-git prot-vc-git-setup-mode)
+      (progn
+        (advice-add #'vc-git-log-view-mode :after #'prot-vc-git-log-view-add-hook)
+        (add-hook 'prot-vc-git-log-view-mode-hook #'prot-vc-git-expand-function))
+    (advice-remove #'vc-git-log-view-mode #'prot-vc-git-log-view-add-hook)
+    (remove-hook 'prot-vc-git-log-view-mode-hook #'prot-vc-git-expand-function)))
 
 (provide 'prot-vc)
 ;;; prot-vc.el ends here
