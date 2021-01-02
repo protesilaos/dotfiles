@@ -3203,6 +3203,12 @@ defines a few commands that extend VC to suit my needs.  In short:
   around point.  It is meant to be used in =log-view= buffers.  Simple and
   effective.
 
++ =prot-vc-git-setup-mode= is a minor mode that tweaks the log view of
+  =vc-git= so that when we expand commits it uses a different format than
+  the default.  Basically this is an elaborate workaround to make it
+  show add/remove stats and affected file names.  It is set up as a
+  minor mode to make it easy to disable.
+
 #+begin_src emacs-lisp
 (use-package vc
   :config
@@ -3267,6 +3273,8 @@ defines a few commands that extend VC to suit my needs.  In short:
   (setq prot-vc-log-limit 20)
   (setq prot-vc-shell-output "*prot-vc-shell-output*")
   (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
+
+  (prot-vc-git-setup-mode 1)
   :bind (("C-x v p" . prot-vc-project-or-dir)
          ("C-x v SPC" . prot-vc-custom-log)
          ("C-x v c" . prot-vc-patch-dwim)
