@@ -1,6 +1,6 @@
 ;;; prot-icomplete.el --- Icomplete extensions for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020  Protesilaos Stavrou
+;; Copyright (C) 2020-2021  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs

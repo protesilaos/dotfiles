@@ -1,6 +1,6 @@
 ;;; prot-eshell.el --- Extensions to Eshell for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020  Protesilaos Stavrou
+;; Copyright (C) 2020-2021  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs

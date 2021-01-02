@@ -1,6 +1,6 @@
 ;; early-init.el --- Early Init File for >= Emacs 27.
 
-;; Copyright (c) 2020 Protesilaos Stavrou <info@protesilaos.com>
+;; Copyright (c) 2020-2021  Protesilaos Stavrou <info@protesilaos.com>
 ;;
 ;; This file is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the
