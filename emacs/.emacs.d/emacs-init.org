@@ -1987,12 +1987,16 @@ provides helpful commands for code navigation and discovery, such as
 =xref-find-definitions= (=M-.=) and its counterpart =xref-pop-marker-stack=
 (=M-,=).
 
+This package declaration contains only the basics.  I might add more in
+the future.
+
 #+begin_src emacs-lisp
 (use-package xref
   :config
   ;; All those have been changed for Emacs 28
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
   (setq xref-show-xrefs-function #'xref-show-definitions-completing-read)
+  (setq xref-file-name-display 'project-relative)
   (setq xref-search-program 'ripgrep))
 #+end_src
 
