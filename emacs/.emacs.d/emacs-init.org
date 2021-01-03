@@ -700,8 +700,9 @@ Relevant blog posts of mine:
   :after modus-themes                   ; Because I use its hook
   :init
   (setq prot-fonts-typeface-sets-alist
-        '((laptop . (105 "Hack" "Inter"))
-          (desktop . (110 "Hack" "Inter"))
+        '((pocket . (90 "Hack" "DejaVu Sans Condensed"))
+          (laptop . (105 "Hack" "Inter"))
+          (desktop . (120 "Iosevka comfy" "Source Sans Pro"))
           (reader . (150 "Iosevka Comfy" "FiraGO"))
           (presentation . (190 "Iosevka Comfy" "FiraGO"))))
   (setq prot-fonts-monospaced-list
