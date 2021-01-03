@@ -520,6 +520,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs t
         modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-lang-checkers nil ; {nil,'subtle-foreground,'intense-foreground}
         modus-themes-mode-line nil ; {nil,'3d,'moody}
         modus-themes-syntax 'alt-syntax ; {nil,'faint,'yellow-comments,'green-strings,'yellow-comments-green-strings,'alt-syntax,'alt-syntax-yellow-comments}
         modus-themes-intense-hl-line nil
