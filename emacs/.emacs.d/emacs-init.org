@@ -3225,6 +3225,7 @@ defines a few commands that extend VC to suit my needs.  In short:
 
 #+begin_src emacs-lisp
 (use-package vc
+  :demand
   :config
   (use-package vc-annotate)
   (use-package vc-dir)
@@ -3283,7 +3284,7 @@ defines a few commands that extend VC to suit my needs.  In short:
 (use-package prot-vc
   :straight (:type built-in)
   :after vc
-  :config
+  :init
   (setq prot-vc-log-limit 20)
   (setq prot-vc-shell-output "*prot-vc-shell-output*")
   (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
