@@ -31,6 +31,9 @@
 
 (require 'prot-common)
 
+;; NOTE 2021-01-04: This library is deprecated and superseded by
+;; `prot-consult.el'.
+
 (defun prot-dired--expand-root-dir ()
   "Expand file name of project or current directory."
   (expand-file-name (or (vc-root-dir)

@@ -1222,10 +1222,15 @@ This is =prot-embark.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my 
 :CUSTOM_ID: h:9c9401d6-8c53-4276-be4c-3bff345d3eeb
 :END:
 
-Daniel Mendler's Consult is a new entry to the ecosystem of small,
-modular tools that work with the standard Emacs completion framework
-and, by extension, with every user interface that conforms with it
-(Embark, Icomplete, Selectrum).
+NOTE 2021-01-04: This section is largely incomplete and remains a
+work-in-progress, even though my plan is to make it an integral part of
+my setup.  It has thus far replaced code I used to maintain on the
+built-in =imenu=, custom extensions to =dired=, as well as =rg.el=.
+
+Daniel Mendler's Consult is a welcome addition to the ecosystem of
+small, modular, extensible tools that work with the standard Emacs
+completion framework and, by extension, with every user interface that
+conforms with it (Embark, Icomplete, Selectrum).
 
 Consult provides enhanced versions of several common commands, like
 =switch-to-buffer=, while it offers additional useful functionality, such
@@ -1243,13 +1248,17 @@ fact be reviewed in favour of better alternatives.
   :config
   (setq consult-line-numbers-widen t)
   (setq consult-preview-buffer nil)
+  (setq consult-preview-grep t)
   (setq consult-preview-mark t)
   (setq consult-preview-line t)
   (setq consult-preview-outline nil)
   (setq completion-in-region-function #'consult-completion-in-region)
+  (setq consult-async-input-debounce 0.5)
+  (setq consult-async-input-throttle 0.8)
   (consult-preview-mode 1)
   :bind (("M-X" . consult-mode-command)
-         ("M-s s" . consult-outline)
+         ("M-s i" . consult-imenu)
+         ("M-s s" . consult-outline)    ; M-s o is `occur'
          ("M-s M-s" . consult-outline)
          ("M-s m" . consult-mark)
          ("M-s l" . consult-line)
@@ -1261,96 +1270,18 @@ fact be reviewed in favour of better alternatives.
   :straight (:type built-in)
   :after prot-pulse
   :config
+  (setq consult-project-root-function #'prot-consult-project-root)
   (setq prot-consult-add-advice-set-hooks t)
   (setq prot-consult-command-centre-list '(consult-line consult-mark))
   (setq prot-consult-command-top-list '(consult-outline))
-  (prot-consult-set-up-hooks-mode 1))
+  (prot-consult-set-up-hooks-mode 1)
+  :bind (("M-s f" . prot-consult-fd)
+         ("M-s g" . prot-consult-rg)))
 #+end_src
 
 Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: straight/repos/prot-lisp/prot-consult.el src emacs-lisp :tangle no
-
-*** Imenu (dynamic completion-based buffer navigation)
-:PROPERTIES:
-:CUSTOM_ID: h:77284937-ad9d-44cc-8a3e-80f6ed9e3def
-:END:
-
-=imenu.el= is a built-in library that constructs an index of buffer
-positions pointing to semantically relevant constructs.  With =M-x imenu=
-it displays the list through a completion interface.  Selecting an item
-repositions the point there.  Simple yet super effective!
-
-Combine it with the sheer power of the completion framework or the
-possibility to further extend it with little helper snippets and you get
-a whole new way of thinking about navigating a buffer.
-
-By default, =imenu= is designed to not refresh the index it builds,
-offering a "Rescan" option instead.  I find that too conservative for my
-case, opting instead for automatic rescaning.  This has the desirable
-side-effect of removing the manual refresh command from the list.
-
-While my =prot-pulse.el= library provides some extensions to an already
-well-designed tool (check [[#h:6bbc41d6-da7c-4301-84c6-c5887c29283f][prot-pulse.el (highlight cursor position)]]).
-Namely, to make Imenu's line jumping more predictable by repositioning
-it at the top, adding a subtle colour pulse, and revealing any hidden
-text below the heading when used in Org or Outline modes.
-
-Make sure to watch my [[https://protesilaos.com/codelog/2020-07-20-emacs-outline-imenu/][video demo of outline-minor-mode and imenu]]
-(2020-07-20), with the proviso that it was recorded with earlier
-versions of my code.  For Org, you need to set =org-imenu-depth= to a high
-value (refer to the section on [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org-mode (personal information manager)]]).
-
-#+begin_src emacs-lisp
-(use-package imenu
-  :config
-  (setq imenu-use-markers t)
-  (setq imenu-auto-rescan t)
-  (setq imenu-auto-rescan-maxout 600000)
-  (setq imenu-max-item-length 100)
-  (setq imenu-use-popup-menu nil)
-  (setq imenu-eager-completion-buffer t)
-  (setq imenu-space-replacement " ")
-  (setq imenu-level-separator "/")
-  :after prot-pulse
-  :hook ((imenu-after-jump-hook . prot-pulse-recentre-top)
-         (imenu-after-jump-hook . prot-pulse-show-entry)))
-#+end_src
-
-**** Flimenu (flat imenu index)
-:PROPERTIES:
-:CUSTOM_ID: h:9be8e9ec-e1f2-477b-92d9-d050aef00d50
-:END:
-
-This package offers a global and a local minor mode for flattening the
-index of =imenu=.  By default Imenu produces a multi-level index, where
-appropriate.  For example, it will put the heading of this section under
-that of its parent: [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][Imenu (dynamic completion-based buffer navigation)]].
-So to navigate to this point, you need to select the parent and then the
-child path.  Good for a tree view REVIEW.
-But not great for fuzzy-style search through the completion UI, because
-it slows down things considerably, while not offering any typographic or
-layout means of recognising the structure at first sight.
-
-In other words, a multi-level completion interface leaves much to be
-desired.  By enabling the =flimenu-global-mode= we get a flat list for the
-completion-based interaction with =imenu=.  Now we can just search
-directly for any item on the list.  Great!
-
-To make things even better, we can still access the fully fledged tree
-presentation of =imenu-list=, as it operates independently.
-
-Lastly, =flimenu= could also be used as a toggle, by virtue of its local
-minor mode, though I cannot think of a scenario where I would want that,
-given the aforementioned.
-
-#+begin_src emacs-lisp
-(use-package flimenu
-  :straight t
-  :after imenu
-  :config
-  (flimenu-global-mode 1))
-#+end_src
 
 *** Projects (project.el and prot-project.el)
 :PROPERTIES:
@@ -1902,90 +1833,6 @@ matches by leveraging the full power of Emacs' editing capabilities
               ("C-x C-q" . wgrep-change-to-wgrep-mode)))
 #+end_src
 
-*** ripgrep (rg.el)
-:PROPERTIES:
-:CUSTOM_ID: h:31622bf2-526b-4426-9fda-c0fc59ac8f4b
-:END:
-
-This is a package that allows us to interface with the external command
-line program called "ripgrep".  My [[https://protesilaos.com/codelog/2020-03-25-emacs-ripgrep-rg/][video demo of rg.el]] (2020-03-25)
-covers the main features of this tool.
-
-What I find particularly appealing about =rg.el= is that it follows the
-interface paradigms of built-in Emacs functions, such as =grep= or =occur=.
-With regard to the latter, it even uses the same key to convert the
-results' buffer into an editable one: =e= (the ability to write changes is
-provided by the =wgrep= package that [[#h:42624165-f4cb-4318-abce-c11232426880][I define right above]]).
-
-Furthermore, =rg.el= interfaces with =ibuffer=, another built-in package, to
-list saved searches (see my =prot/rg-save-search-as-name= in the package
-declaration below).  Saved searches are regular buffers.  You can switch
-to any of them the normal way.
-
-While inside of an =rg.el= buffer, hit =m= to produce a transient menu from
-where you can refine your search.  This works just like =magit=.  In
-addition, you can consult the universal =C-h m= for documentation
-concerning the major mode you are in.
-
-Concerning the key bindings for navigating the results buffer, I find
-that the standard motions should retain their general function, while
-moving between file headings can be done with =M-{n,p}=.
-
-=rg.el= is designed in such a way that it offers useful functionality
-without depending on a particular completion framework (e.g. Ivy, Helm).
-I consider this an advantage, especially when combined with the overall
-alignment of this package with standard Emacs tools.
-
-Also see my configurations for [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][project-related commands]].
-
-#+begin_src emacs-lisp
-(use-package rg
-  :straight t
-  :config
-  (setq rg-group-result t)
-  (setq rg-hide-command t)
-  (setq rg-show-columns nil)
-  (setq rg-show-header t)
-  (setq rg-custom-type-aliases nil)
-  (setq rg-default-alias-fallback "all")
-
-  (rg-define-search prot/rg-vc-or-dir
-    "RipGrep in project root or present directory."
-    :query ask
-    :format regexp
-    :files "everything"
-    :dir (or (vc-root-dir)              ; search root project dir
-             default-directory)         ; or from the current dir
-    :confirm prefix
-    :flags ("--hidden -g !.git"))
-
-  (rg-define-search prot/rg-ref-in-dir
-    "RipGrep for thing at point in present directory."
-    :query point
-    :format regexp
-    :files "everything"
-    :dir default-directory
-    :confirm prefix
-    :flags ("--hidden -g !.git"))
-
-  (defun prot/rg-save-search-as-name ()
-    "Save `rg' buffer, naming it after the current search query.
-
-This function is meant to be mapped to a key in `rg-mode-map'."
-    (interactive)
-    (let ((pattern (car rg-pattern-history)))
-      (rg-save-search-as-name (concat "«" pattern "»"))))
-
-  :bind (("M-s g" . prot/rg-vc-or-dir)
-         ("M-s r" . prot/rg-ref-in-dir)
-         :map rg-mode-map
-         ("s" . prot/rg-save-search-as-name)
-         ("C-n" . next-line)
-         ("C-p" . previous-line)
-         ("M-n" . rg-next-file)
-         ("M-p" . rg-prev-file)))
-#+end_src
-
 *** Cross-references (xref.el)
 :PROPERTIES:
 :CUSTOM_ID: h:594bca38-542c-4aac-95f5-349f034c6802
@@ -2060,11 +1907,9 @@ The options here are meant to do the following:
 
 + Reformat output.  Sort directories first.  Show dotfiles and place
   them before anything else.  Omit implicit directories (the single and
-  double dots).  Use human-readable size units.  There are also options
-  for tweaking the behaviour of =find-name-dired=, in the same spirit,
-  even though I no longer use that, due to my =prot-dired.el= (more
-  below).  To learn everything about these switches, you need to read
-  the manpage of =ls=.  You can do so with =M-x man RET ls=.
+  double dots).  Use human-readable size units.  To learn everything
+  about these switches, you need to read the manpage of =ls=.  You can do
+  so with =M-x man RET ls=.
 
   - Note that =dired-listing-switches= and =find-ls-option= are configured
     to show hidden directories and files /before/ their non-hidden
@@ -2153,11 +1998,13 @@ given version-controlled (git) repo, see the section of this document on
               ("C-c d" . contrib/cd-bookmark)))
 
 (use-package prot-dired
+  :disabled                            ; superseded by `prot-consult.el'
   :straight (:type built-in)
   :bind (("M-s d" .  prot-dired-fd-dirs)
          ("M-s z" . prot-dired-fd-files-and-dirs)))
 
-;; NOTE: deprecated in favour of prot-dired
+;; NOTE 2021-01-04: deprecated first in favour of `prot-dired.el' and
+;; eventually by `prot-consult.el'
 (use-package find-dired
   :disabled
   :after dired
@@ -6531,8 +6378,7 @@ actionable part, while another call will go to the absolute position.
 Nice and simple!
 
 Check [[https://github.com/DamienCassou/beginend][the package upstream]] for information on the supported modes and on
-how to contribute your own extensions (I provided support for =rg.el=,
-which I [[#h:31622bf2-526b-4426-9fda-c0fc59ac8f4b][define elsewhere in this document]]).
+how to contribute your own extensions.
 
 Here the =dolist= combined with the =:diminish= keyword are meant to remove
 all lighters that this package produces: one for every minor mode it
@@ -7132,12 +6978,12 @@ concepts:
   that already provide its functionality, namely, =org-mode=,
   =outline-mode=, =markdown-mode=.
 
-+ Establish bindings with =imenu.el= (also read [[#h:77284937-ad9d-44cc-8a3e-80f6ed9e3def][my Imenu configurations]]).
-  This is done via the aforementioned hooks and, in my experience,
-  yields more accurate results than the defaults.  A quick reminder of
-  why this matters: you can now navigate the outline using minibuffer
-  completion, which is my favourite way to navigate a file I am familiar
-  with.
++ Establish bindings with =imenu.el= (though this practically works with
+  [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).  This
+  is done via the aforementioned hooks and, in my experience, yields
+  more accurate results than the defaults.  A quick reminder of why this
+  matters: you can now navigate the outline using minibuffer completion,
+  which is my favourite way to navigate a file I am familiar with.
 
 Finally, an element of improved design: the =outline-minor-faces= package,
 by Jonas Bernoulli, will apply colouration to the headings produced by

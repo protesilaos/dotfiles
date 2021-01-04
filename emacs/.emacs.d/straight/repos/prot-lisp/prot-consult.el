@@ -56,6 +56,21 @@ changes to take effect."
   :group 'prot-consult
   :type 'list)
 
+(defcustom prot-consult-fd-flags '("fd" "-i" "-H" "-a" "-c" "never")
+  "List of strings for invoking the fd executable."
+  :type 'list
+  :group 'prot-consult)
+
+(defcustom prot-consult-rg-flags
+  '("rg" "--null" "--line-buffered" "--color=always"
+    "--hidden" "-g" "!.git" "--max-columns=500"
+    "--no-heading" "--line-number" "." "-e")
+  "List of strings for invoking the rg executable."
+  :type 'list
+  :group 'prot-consult)
+
+;;;; Setup for some consult commands (TODO: needs review)
+
 (defvar prot-consult-jump-recentre-hook nil
   "Hook that runs after select Consult commands.
 To be used with `advice-add'.")
@@ -94,6 +109,56 @@ To be used with `advice-add'.")
     (remove-hook 'prot-consult-jump-recentre-hook #'prot-pulse-recentre-centre)
     (remove-hook 'prot-consult-jump-top-hook #'prot-pulse-recentre-top)
     (remove-hook 'prot-consult-jump-top-hook #'prot-pulse-show-entry)))
+
+;;;; Commands
+
+(defvar consult--find-cmd)
+(defvar consult--directory-prompt)
+(declare-function consult--find "consult")
+
+;;;###autoload
+(defun prot-consult-project-root ()
+  "Return path to project or `default-directory'.
+Intended to be assigned to `consult-project-root-function'."
+  (or (vc-root-dir)
+      (locate-dominating-file "." ".git")
+      default-directory))
+
+(defun prot-consult--fg-flags (list)
+  "Append LIST to `prot-consult-fd-flags'."
+  (if (listp list)
+      (append prot-consult-fd-flags list)
+    (error "'%s' is not a list" list)))
+
+;;;###autoload
+(defun prot-consult-fd (&optional arg)
+  "Use `consult--find' to search with the FD executable.
+
+The search is performed against the root of the current version
+controlled project or, if none is available, from inside the
+`default-directory'.
+
+With optional prefix ARG (\\[universal-argument]) search for
+directories instead."
+  (interactive "P")
+  (let* ((cmd (if arg
+                    (prot-consult--fg-flags (list "-t" "d"))
+                (prot-consult--fg-flags (list "-t" "f"))))
+         (scope (if arg "directories" "files"))
+         (default-directory (prot-consult-project-root))
+         (prompt (format "Find %s in %s: " scope (propertize default-directory 'face 'bold))))
+    (consult--find prompt cmd)))
+
+(defvar consult--ripgrep-command)
+(declare-function consult--grep "consult")
+
+(defun prot-consult-rg ()
+  "Ripgrep with `consult--grep' in `prot-consult-project-root'."
+  (interactive)
+  (let* ((cmd prot-consult-rg-flags)
+         (default-directory (prot-consult-project-root))
+         (prompt (format "RipGrep in %s" (propertize default-directory 'face 'bold))))
+      (consult--grep prompt cmd default-directory nil)))
 
 (provide 'prot-consult)
 ;;; prot-consult.el ends here
