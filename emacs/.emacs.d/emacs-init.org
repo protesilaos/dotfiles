@@ -508,7 +508,7 @@ and wish to get a glimpse of how much work goes into this project:
   (2020-09-14)
 + [[https://protesilaos.com/codelog/2020-12-27-modus-themes-review-rainbow-delimiters/][Modus themes: review rainbow-delimiters faces]] (2020-12-27)
 
-And if you do enjoy reading such entried, then you may also wish to
+And if you do enjoy reading such entries, then you may also wish to
 check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the Modus themes]].
 
 #+begin_src emacs-lisp
@@ -520,7 +520,11 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs t
         modus-themes-fringes nil ; {nil,'subtle,'intense}
-        modus-themes-lang-checkers nil ; {nil,'subtle-foreground,'intense-foreground}
+        ;; Options for lang checkers are: nil, 'straight-underline,
+        ;; 'subtle-foreground, 'subtle-foreground-straight-underline,
+        ;; 'intense-foreground, 'intense-foreground-straight-underline,
+        ;; 'colored-background
+        modus-themes-lang-checkers nil
         modus-themes-mode-line nil ; {nil,'3d,'moody}
         modus-themes-syntax 'alt-syntax ; {nil,'faint,'yellow-comments,'green-strings,'yellow-comments-green-strings,'alt-syntax,'alt-syntax-yellow-comments}
         modus-themes-intense-hl-line nil
