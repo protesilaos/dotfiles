@@ -200,7 +200,9 @@ Basically switches to a new branch or tag."
   "Run `magit-status' on project."
   (interactive)
   (if (featurep 'magit)
-      (declare-function magit-status "magit")
+      (progn
+        (declare-function magit-status "magit")
+        (load-library "magit"))
     (user-error "Magit is not loaded"))
   (let* ((pr (project-current t))
          (dir (cdr pr)))
