@@ -45,12 +45,19 @@ To be added to `embark-occur-post-revert-hook'."
     (fit-window-to-buffer (get-buffer-window)
                           (floor (frame-height) 2) 1)))
 
+(defun prot-embark--live-buffer-p ()
+  "Determine presence of a linked live occur buffer."
+  (let* ((buf-link embark-occur-linked-buffer)
+         (buf-name (buffer-name buf-link)))
+    (when buf-name
+      (string-match-p "Embark Live Occur" buf-name))))
+
 ;;;###autoload
 (defun prot-embark-live-occur-toggle ()
   "Toggle `embark-live-occur', call `prot-embark-live-occur-hook'."
   (interactive)
-  (if (embark-occur--linked-buffer-is-live-p)
-      (embark-occur--kill-live-occur-buffer)
+  (if (prot-embark--live-buffer-p)
+      (kill-buffer embark-occur-linked-buffer)
     (embark-live-occur))
   (run-hooks 'prot-embark-live-occur-hook))
 
@@ -72,7 +79,7 @@ To be added to `embark-occur-post-revert-hook'."
   "Toggle Icomplete for `prot-embark-live-occur-toggle'."
   (let ((icomplete-default (symbol-value icomplete-mode)))
     (when prot-embark-live-occur-disable-icomplete
-      (if (and icomplete-default (embark-occur--linked-buffer-is-live-p))
+      (if (and icomplete-default (prot-embark--live-buffer-p))
           (icomplete-mode -1)
         (icomplete-mode 1)))))
 
