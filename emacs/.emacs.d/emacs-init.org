@@ -1178,7 +1178,9 @@ following block with the package configurations:
   :diminish embark-occur-zebra-minor-mode
   :after prot-minibuffer
   :config
-  (setq embark-occur-initial-view-alist '((t . zebra)))
+  (setq embark-occur-initial-view-alist
+        '((kill-ring . zebra)
+          (t . list)))
   (setq embark-occur-minibuffer-completion t)
   (setq embark-live-occur-update-delay 0.5)
   (setq embark-live-occur-initial-delay 0.8)
