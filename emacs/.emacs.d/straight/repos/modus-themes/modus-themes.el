@@ -137,6 +137,7 @@
 ;;     dired-subtree
 ;;     diredc
 ;;     diredfl
+;;     diredp (dired+)
 ;;     disk-usage
 ;;     doom-modeline
 ;;     dynamic-ruler
@@ -2673,7 +2674,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; compilation feedback
     `(compilation-column-number ((,class :foreground ,magenta-alt-other)))
     `(compilation-error ((,class :inherit modus-theme-bold :foreground ,red)))
-    `(compilation-info ((,class :foreground ,fg-special-cold)))
+    `(compilation-info ((,class :inherit modus-theme-bold :foreground ,fg-special-cold)))
     `(compilation-line-number ((,class :foreground ,fg-special-warm)))
     `(compilation-mode-line-exit ((,class :inherit modus-theme-bold :foreground ,blue-active)))
     `(compilation-mode-line-fail ((,class :inherit modus-theme-bold :foreground ,red-active)))
@@ -2935,6 +2936,36 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(diredfl-symlink ((,class :inherit dired-symlink)))
     `(diredfl-tagged-autofile-name ((,class :inherit modus-theme-refine-magenta)))
     `(diredfl-write-priv ((,class :foreground ,cyan)))
+;;;;; dired+
+    `(diredp-autofile-name ((,class :inherit modus-theme-special-cold)))
+    `(diredp-compressed-file-name ((,class :foreground ,fg-special-warm)))
+    `(diredp-compressed-file-suffix ((,class :foreground ,red-alt)))
+    `(diredp-date-time ((,class :foreground ,cyan-alt-other)))
+    `(diredp-deletion ((,class :inherit modus-theme-mark-del)))
+    `(diredp-deletion-file-name ((,class :inherit modus-theme-mark-del)))
+    `(diredp-dir-heading ((,class :inherit modus-theme-pseudo-header)))
+    `(diredp-dir-name ((,class :inherit dired-directory)))
+    `(diredp-dir-priv ((,class :foreground ,blue-alt)))
+    `(diredp-exec-priv ((,class :foreground ,magenta)))
+    `(diredp-executable-tag ((,class :foreground ,magenta-alt)))
+    `(diredp-file-name ((,class :foreground ,fg-main)))
+    `(diredp-file-suffix ((,class :foreground ,cyan)))
+    `(diredp-flag-mark ((,class :inherit modus-theme-mark-sel)))
+    `(diredp-flag-mark-line ((,class :inherit modus-theme-mark-sel)))
+    `(diredp-ignored-file-name ((,class :inherit shadow)))
+    `(diredp-link-priv ((,class :foreground ,blue-alt-other)))
+    `(diredp-mode-line-marked ((,class :inherit modus-theme-mark-sel)))
+    `(diredp-mode-line-flagged ((,class :inherit modus-theme-mark-del)))
+    `(diredp-number ((,class :foreground ,cyan-alt)))
+    `(diredp-no-priv ((,class :inherit shadow)))
+    `(diredp-number ((,class :foreground ,cyan-alt)))
+    `(diredp-omit-file-name ((,class :inherit shadow :strike-through t)))
+    `(diredp-other-priv ((,class :foreground ,yellow)))
+    `(diredp-rare-priv ((,class :foreground ,red-alt)))
+    `(diredp-read-priv ((,class :foreground ,fg-main)))
+    `(diredp-symlink ((,class :inherit dired-symlink)))
+    `(diredp-tagged-autofile-name ((,class :inherit modus-theme-refine-magenta)))
+    `(diredp-write-priv ((,class :foreground ,cyan)))
 ;;;;; disk-usage
     `(disk-usage-children ((,class :foreground ,yellow)))
     `(disk-usage-inaccessible ((,class :inherit bold :foreground ,red)))
