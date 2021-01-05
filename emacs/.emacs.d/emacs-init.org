@@ -1247,7 +1247,6 @@ to the various jump actions that Consult makes possible.  They may in
 fact be reviewed in favour of better alternatives.
 
 #+begin_src emacs-lisp
-;; TODO: configure pattern-matching on a per-command basis
 (use-package consult
   :straight (:host github :repo "minad/consult" :branch "main")
   :config
@@ -1262,11 +1261,7 @@ fact be reviewed in favour of better alternatives.
   (setq consult-async-input-throttle 0.8)
   (consult-preview-mode 1)
   :bind (("M-X" . consult-mode-command)
-         ("M-s i" . consult-imenu)
-         ("M-s s" . consult-outline)    ; M-s o is `occur'
-         ("M-s M-s" . consult-outline)
          ("M-s m" . consult-mark)
-         ("M-s l" . consult-line)
          :map minibuffer-local-completion-map
          ("<tab>" . minibuffer-force-complete)))
 
@@ -1276,10 +1271,22 @@ fact be reviewed in favour of better alternatives.
   :config
   (setq consult-project-root-function #'prot-consult-project-root)
   (setq prot-consult-add-advice-set-hooks t)
-  (setq prot-consult-command-centre-list '(consult-line consult-mark))
-  (setq prot-consult-command-top-list '(consult-outline))
+  (setq prot-consult-command-centre-list
+        '(consult-line
+          prot-consult-line
+          consult-mark))
+  (setq prot-consult-command-top-list
+        '(consult-outline
+          consult-imenu
+          prot-consult-outline
+          prot-consult-imenu))
   (prot-consult-set-up-hooks-mode 1)
-  :bind (("M-s f" . prot-consult-fd)
+  :bind (("M-s i" . prot-consult-imenu)
+         ("M-s s" . prot-consult-outline)    ; M-s o is `occur'
+         ("M-s M-s" . prot-consult-outline)  ; this is just convenient
+         ("M-s y" . prot-consult-yank)
+         ("M-s l" . prot-consult-line)
+         ("M-s f" . prot-consult-fd)
          ("M-s g" . prot-consult-rg)))
 #+end_src
 

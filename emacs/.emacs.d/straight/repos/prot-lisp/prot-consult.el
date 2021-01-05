@@ -32,6 +32,7 @@
 (when (featurep 'consult)
   (require 'consult))
 (require 'prot-pulse)
+(require 'prot-orderless)
 
 (defgroup prot-consult ()
   "Tweaks for consult.el."
@@ -159,6 +160,30 @@ directories instead."
          (default-directory (prot-consult-project-root))
          (prompt (format "RipGrep in %s" (propertize default-directory 'face 'bold))))
       (consult--grep prompt cmd default-directory nil)))
+
+;;;###autoload
+(defun prot-consult-outline ()
+  "Run `consult-outline' through `prot-orderless-with-styles'."
+  (interactive)
+  (prot-orderless-with-styles 'consult-outline))
+
+;;;###autoload
+(defun prot-consult-imenu ()
+  "Run `consult-imenu' through `prot-orderless-with-styles'."
+  (interactive)
+  (prot-orderless-with-styles 'consult-imenu))
+
+;;;###autoload
+(defun prot-consult-line ()
+  "Run `consult-line' through `prot-orderless-with-styles'."
+  (interactive)
+  (prot-orderless-with-styles 'consult-line))
+
+;;;###autoload
+(defun prot-consult-yank ()
+  "Run `consult-yank' through `prot-orderless-with-styles'."
+  (interactive)
+  (prot-orderless-with-styles 'consult-yank))
 
 (provide 'prot-consult)
 ;;; prot-consult.el ends here
