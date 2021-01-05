@@ -6842,7 +6842,7 @@ colours respectively.
                     cyan))))
 #+end_src
 
-** Rainbow mode for colour testing
+** Rainbow mode for colour previewing (rainbow-mode.el)
 :PROPERTIES:
 :CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
 :END:
