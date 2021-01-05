@@ -853,7 +853,7 @@ on the screen and more on how fast you can bring them into focus.  This
 is, of course, a matter of realigning priorities, as we still wish to
 control every aspect of the interface.
 
-*** Orderless completion style
+*** Orderless completion style (and prot-orderless.el)
 :PROPERTIES:
 :CUSTOM_ID: h:7b1374dd-6b1f-4548-8fbf-1034230c80e0
 :END:
@@ -874,19 +874,44 @@ appended to the minibuffer's customisation option for =completion-styles=.
 That is defined in [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras]].
 
 My =prot-orderless.el= contains the few minor tweaks I introduce (full
-code further below).  In particular, it defines two style dispatchers.
-Those are single characters that acquire a special meaning while at the
-end of a given input:
+code further below).
 
-+ With the equals sign appended to a sequence of characters, we call
-  =prot-orderless-literal-dispatcher= which instructs orderless to match
-  that sequence as a literal string.
+1. It defines two style dispatchers. Those are single characters that
+   acquire a special meaning while at the end of a given input:
 
-+ While a comma at the end of a string of characters reads it as an
-  initialism, per =prot-orderless-initialism-dispatcher=.
+  - With the equals sign appended to a sequence of characters, we call
+    =prot-orderless-literal-dispatcher= which instructs orderless to match
+    that sequence as a literal string.
+
+  - While a comma at the end of a string of characters reads that group
+    as an initialism, per =prot-orderless-initialism-dispatcher=.
+
+2. =prot-orderless-with-styles= is a function that changes the default
+   pattern-matching styles on a per-command basis.  The idea is to use a
+   flex style for most completion sessions, but prioritise an
+   alternative when needed.  I use this with some Consult commands
+   ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
+
+   - The two customisation options =prot-orderless-default-styles= and
+     =prot-orderless-alternative-styles= are designed for this particular
+     task.
 
 #+begin_src emacs-lisp
-(use-package prot-orderless :straight (:type built-in) :demand)
+(use-package prot-orderless
+  :straight (:type built-in)
+  :demand
+  :config
+  (setq prot-orderless-default-styles
+        '(orderless-flex
+          orderless-strict-leading-initialism
+          orderless-regexp
+          orderless-prefixes
+          orderless-literal))
+  (setq prot-orderless-alternative-styles
+        '(orderless-literal
+          orderless-prefixes
+          orderless-strict-leading-initialism
+          orderless-regexp)))
 
 (use-package orderless
   :straight t
@@ -894,12 +919,7 @@ end of a given input:
   :after prot-orderless
   :config
   (setq orderless-component-separator " +")
-  (setq orderless-matching-styles
-        '(orderless-flex
-          orderless-strict-leading-initialism
-          orderless-regexp
-          orderless-prefixes
-          orderless-literal))
+  (setq orderless-matching-styles prot-orderless-default-styles)
   (setq orderless-style-dispatchers
         '(prot-orderless-literal-dispatcher
           prot-orderless-initialism-dispatcher))
