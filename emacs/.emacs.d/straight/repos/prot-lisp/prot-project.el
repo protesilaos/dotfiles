@@ -195,15 +195,12 @@ Basically switches to a new branch or tag."
                             (vc-responsible-backend dir))))
     (vc-retrieve-tag dir name)))
 
+(declare-function magit-status "magit")
+
 ;;;###autoload
 (defun prot-project-magit-status ()
   "Run `magit-status' on project."
   (interactive)
-  (if (featurep 'magit)
-      (progn
-        (declare-function magit-status "magit")
-        (load-library "magit"))
-    (user-error "Magit is not loaded"))
   (let* ((pr (project-current t))
          (dir (cdr pr)))
     (magit-status dir)))
