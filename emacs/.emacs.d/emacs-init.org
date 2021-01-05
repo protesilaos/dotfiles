@@ -6842,6 +6842,24 @@ colours respectively.
                     cyan))))
 #+end_src
 
+** Color-tools.el
+:PROPERTIES:
+:CUSTOM_ID: h:755d055b-ef80-4f63-af08-ce9e931de30c
+:END:
+
+The =color-tools.el= library by Github user "neeasade" provides various
+utilities for manipulating values across several spaces.  The developer
+also has an interesting article on the matter: [[https://notes.neeasade.net/color-spaces.html][Reasoning about Colors]].
+I may need some of those tools while developing my Modus themes.
+
+Note that the library has =(provide 'ct)= for its feature, so the package
+declaration is configured accordingly.
+
+#+begin_src emacs-lisp
+(use-package ct
+  :straight (:host github :repo "neeasade/color-tools.el" :branch "master"))
+#+end_src
+
 ** Rainbow mode for colour previewing (rainbow-mode.el)
 :PROPERTIES:
 :CUSTOM_ID: h:9061c694-5f45-46b0-a878-6bcfb018e18d
