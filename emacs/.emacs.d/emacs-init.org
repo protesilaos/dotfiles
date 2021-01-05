@@ -6763,7 +6763,7 @@ are normally used in code comments.  Simple and effective!
   :hook (prog-mode-hook . hl-todo-mode))
 #+end_src
 
-** Prism.el ( highlight code by depth level)
+** Prism.el (highlight code by depth level)
 :PROPERTIES:
 :CUSTOM_ID: h:bee4eca3-76c6-4e83-adb6-d2017240178a
 :END:
@@ -6800,46 +6800,46 @@ colours respectively.
   ;;   :desaturations '(0) ; may lower the contrast ratio
   ;;   :lightens '(0)      ; same
   ;;   :colors (modus-themes-with-colors
-  ;;             `(,fg-main
-  ;;               ,cyan-alt-other
-  ;;               ,magenta-alt-other
-  ;;               ,magenta)))
+  ;;             (list fg-main
+  ;;                   cyan-alt-other
+  ;;                   magenta-alt-other
+  ;;                   magenta)))
   ;;
   ;; ;; for 16 colours
   ;; (prism-set-colors
   ;;   :desaturations '(0) ; may lower the contrast ratio
   ;;   :lightens '(0)      ; same
   ;;   :colors (modus-themes-with-colors
-  ;;             `(,fg-main
-  ;;               ,magenta
-  ;;               ,cyan-alt-other
-  ;;               ,magenta-alt-other
-  ;;               ,blue
-  ;;               ,magenta-alt
-  ;;               ,cyan-alt
-  ;;               ,red-alt-other
-  ;;               ,green
-  ;;               ,fg-main
-  ;;               ,cyan
-  ;;               ,yellow
-  ;;               ,blue-alt
-  ;;               ,red-alt
-  ;;               ,green-alt-other
-  ;;               ,fg-special-warm)))
+  ;;             (list fg-main
+  ;;                   magenta
+  ;;                   cyan-alt-other
+  ;;                   magenta-alt-other
+  ;;                   blue
+  ;;                   magenta-alt
+  ;;                   cyan-alt
+  ;;                   red-alt-other
+  ;;                   green
+  ;;                   fg-main
+  ;;                   cyan
+  ;;                   yellow
+  ;;                   blue-alt
+  ;;                   red-alt
+  ;;                   green-alt-other
+  ;;                   fg-special-warm)))
   ;;
   ;; for 8 colours
   (prism-set-colors
     :desaturations '(0) ; may lower the contrast ratio
     :lightens '(0)      ; same
     :colors (modus-themes-with-colors
-              `(,fg-special-cold
-                ,magenta
-                ,magenta-alt-other
-                ,cyan-alt-other
-                ,fg-main
-                ,blue-alt
-                ,red-alt-other
-                ,cyan))))
+              (list fg-special-cold
+                    magenta
+                    magenta-alt-other
+                    cyan-alt-other
+                    fg-main
+                    blue-alt
+                    red-alt-other
+                    cyan))))
 #+end_src
 
 ** Rainbow mode for colour testing
