@@ -707,11 +707,10 @@ Relevant blog posts of mine:
   :after modus-themes                   ; Because I use its hook
   :init
   (setq prot-fonts-typeface-sets-alist
-        '((pocket . (90 "Hack" "DejaVu Sans Condensed"))
-          (laptop . (105 "Hack" "Inter"))
-          (desktop . (120 "Iosevka comfy" "Source Sans Pro"))
+        '((laptop . (90 "Hack" "DejaVu Sans Condensed"))
+          (desktop . (110 "Hack" "DejaVu Sans Condensed"))
           (reader . (150 "Iosevka Comfy" "FiraGO"))
-          (presentation . (190 "Iosevka Comfy" "FiraGO"))))
+          (presentation . (180 "Iosevka Comfy" "Source Sans Pro"))))
   (setq prot-fonts-monospaced-list
         '("Hack" "DejaVu Sans Mono" "Iosevka Comfy" "Source Code Pro"
           "Ubuntu Mono" "Fantasque Sans Mono" "Fira Code" "Monoid"))
@@ -722,9 +721,9 @@ Relevant blog posts of mine:
           ("Ubuntu Mono" . 2)))
   (setq prot-fonts-laptop-desktop-keys-list '(laptop desktop))
   (setq prot-fonts-max-small-resolution-width 1366)
-  (setq  prot-fonts-bold-weight-alist
-         '(("Iosevka Comfy" . semibold)
-           ("Source Code Pro" . semibold)))
+  (setq prot-fonts-bold-weight-alist
+        '(("Iosevka Comfy" . semibold)
+          ("Source Code Pro" . semibold)))
   :config
   ;; This is defined in Emacs' C code, though I feel this is a good
   ;; place to put it.
