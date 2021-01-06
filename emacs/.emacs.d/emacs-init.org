@@ -1249,18 +1249,14 @@ my setup.  It has thus far replaced code I used to maintain on the
 built-in =imenu=, custom extensions to =dired=, as well as =rg.el=.
 
 Daniel Mendler's Consult is a welcome addition to the ecosystem of
-small, modular, extensible tools that work with the standard Emacs
-completion framework and, by extension, with every user interface that
-conforms with it (Embark, Icomplete, Selectrum).
-
-Consult provides enhanced versions of several common commands, like
-=switch-to-buffer=, while it offers additional useful functionality, such
-as the ability to visualise---and revisit---items in the mark ring.
+small, modular, extensible tools that work with the standard minibuffer
+completion mechanisms and, by extension, with every user interface that
+largely conforms with them (Icomplete, Selectrum) or fully respects them
+(Embark).
 
 While this section is a work-in-progress, note that my =prot-consult.el=
-defines some quick and dirty extensions that add minor visual feedback
-to the various jump actions that Consult makes possible.  They may in
-fact be reviewed in favour of better alternatives.
+defines some quick and dirty extensions.  They may be reviewed in favour
+of better alternatives.
 
 #+begin_src emacs-lisp
 (use-package consult
@@ -1268,14 +1264,18 @@ fact be reviewed in favour of better alternatives.
   :config
   (setq consult-line-numbers-widen t)
   (setq consult-preview-buffer nil)
-  (setq consult-preview-grep t)
-  (setq consult-preview-mark t)
-  (setq consult-preview-line t)
+  (setq consult-preview-grep nil)
+  (setq consult-preview-mark nil)
+  (setq consult-preview-line nil)
   (setq consult-preview-outline nil)
   (setq completion-in-region-function #'consult-completion-in-region)
   (setq consult-async-input-debounce 0.5)
   (setq consult-async-input-throttle 0.8)
-  (consult-preview-mode 1)
+  (setq consult-narrow-key ">")
+  (setq consult-widen-key "<")
+  (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+
+  (consult-preview-mode -1)
   :bind (("M-X" . consult-mode-command)
          ("M-s m" . consult-mark)
          :map minibuffer-local-completion-map
@@ -1299,7 +1299,6 @@ fact be reviewed in favour of better alternatives.
   (prot-consult-set-up-hooks-mode 1)
   :bind (("M-s i" . prot-consult-imenu)
          ("M-s s" . prot-consult-outline)    ; M-s o is `occur'
-         ("M-s M-s" . prot-consult-outline)  ; this is just convenient
          ("M-s y" . prot-consult-yank)
          ("M-s l" . prot-consult-line)
          ("M-s f" . prot-consult-fd)
