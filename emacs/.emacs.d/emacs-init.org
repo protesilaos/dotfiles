@@ -6879,12 +6879,12 @@ utilities for manipulating values across several spaces.  The developer
 also has an interesting article on the matter: [[https://notes.neeasade.net/color-spaces.html][Reasoning about Colors]].
 I may need some of those tools while developing my Modus themes.
 
-Note that the library has =(provide 'ct)= for its feature, so the package
-declaration is configured accordingly.
-
 #+begin_src emacs-lisp
-(use-package ct
-  :straight (:host github :repo "neeasade/color-tools.el" :branch "master"))
+(straight-use-package
+ '(color-tools
+   :host github
+   :repo "neeasade/color-tools.el"
+   :branch "master"))
 #+end_src
 
 ** Rainbow mode for colour previewing (rainbow-mode.el)
