@@ -1197,12 +1197,16 @@ following block with the package configurations:
   :after prot-minibuffer
   :config
   (setq embark-occur-initial-view-alist
-        '((kill-ring . zebra)
-          (t . list)))
+        '((file . list)
+          (buffer . list)
+          (symbol . list)
+          (line . list)
+          (xref-location . list)
+          (kill-ring . zebra)
+          (t . grid)))
   (setq embark-occur-minibuffer-completion t)
   (setq embark-live-occur-update-delay 0.5)
   (setq embark-live-occur-initial-delay 0.8)
-  (setq embark-annotator-alist '((t . embark-annotation-function-metadatum)))
   :hook (minibuffer-setup-hook . embark-live-occur-after-input)
   :bind (("C-," . embark-act)
          :map minibuffer-local-completion-map
