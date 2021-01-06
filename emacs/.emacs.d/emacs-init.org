@@ -899,11 +899,11 @@ code further below).
   :demand
   :config
   (setq prot-orderless-default-styles
-        '(orderless-flex
+        '(orderless-prefixes
+          orderless-literal
           orderless-strict-leading-initialism
           orderless-regexp
-          orderless-prefixes
-          orderless-literal))
+          orderless-flex))
   (setq prot-orderless-alternative-styles
         '(orderless-literal
           orderless-prefixes
