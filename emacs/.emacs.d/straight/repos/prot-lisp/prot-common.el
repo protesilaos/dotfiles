@@ -118,7 +118,7 @@ of it."
 
 (prot-common--line-p
  prot-common-non-empty-line-p
- "^.*$")
+ "^.+$")
 
 (prot-common--line-p
  prot-common-text-list-line-p
