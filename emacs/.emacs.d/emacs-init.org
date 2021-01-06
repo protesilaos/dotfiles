@@ -1218,8 +1218,6 @@ following block with the package configurations:
          ("M-o" . embark-export)
          ("C-o" . embark-export)
          ("M-t" . toggle-truncate-lines)
-         ("M-q" . embark-occur-toggle-view)
-         ("M-v" . prot-minibuffer-focus-mini) ; from `prot-minibuffer.el'
          ("M-q" . embark-occur-toggle-view)))
 
 (use-package prot-embark
