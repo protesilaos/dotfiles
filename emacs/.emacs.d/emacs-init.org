@@ -1851,13 +1851,13 @@ matches by leveraging the full power of Emacs' editing capabilities
 #+begin_src emacs-lisp
 (use-package wgrep
   :straight t
-  :commands wgrep
   :config
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t)
   :bind (:map grep-mode-map
               ("e" . wgrep-change-to-wgrep-mode)
-              ("C-x C-q" . wgrep-change-to-wgrep-mode)))
+              ("C-x C-q" . wgrep-change-to-wgrep-mode)
+              ("C-c C-c" . wgrep-finish-edit)))
 #+end_src
 
 *** Cross-references (xref.el)
