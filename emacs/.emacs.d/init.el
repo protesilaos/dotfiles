@@ -83,7 +83,7 @@
        (org (concat conf ".org")))
   (if (file-exists-p el)
       (load-file el)
-    (use-package org)
+    (use-package org-mode :straight (:type built-in))
     (org-babel-load-file org)))
 
 ;;; init.el ends here

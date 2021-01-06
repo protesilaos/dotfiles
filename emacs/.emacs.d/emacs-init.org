@@ -124,7 +124,7 @@ configurations (i.e. the present document).
        (org (concat conf ".org")))
   (if (file-exists-p el)
       (load-file el)
-    (use-package org)
+    (use-package org-mode :straight (:type built-in))
     (org-babel-load-file org)))
 #+end_example
 
@@ -3836,10 +3836,10 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 ;; then activate `prot-outline-minor-mode-safe' to conveniently browse
 ;; this massive package declaration.
 (use-package org-mode
-  :straight (:host nil :type git
-             :repo "https://code.orgmode.org/bzg/org-mode.git") ; Get Org from its source
+  ;; :straight (:host nil :type git
+  ;;            :repo "https://code.orgmode.org/bzg/org-mode.git") ; Get Org from its source
   ;; ;; Use this instead of the above if you want the built-in version.
-  ;; :straight (:type built-in)
+  :straight (:type built-in)
   :init
   (setq org-directory "~/Org")
   (setq org-imenu-depth 7)
