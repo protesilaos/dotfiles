@@ -6670,8 +6670,10 @@ tweaks of my own.
   :config
   (setq keycast-window-predicate 'moody-window-active-p)
   (setq keycast-separator-width 1)
-  (setq keycast-insert-after (or 'moody-mode-line-buffer-identification
-                                 'mode-line-buffer-identification))
+  (setq keycast-insert-after
+        (if prot-moody-set-height
+            'moody-mode-line-buffer-identification
+          'mode-line-buffer-identification))
   (setq keycast-remove-tail-elements nil)
 
   (dolist (input '(self-insert-command
