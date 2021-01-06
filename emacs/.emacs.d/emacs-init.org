@@ -950,11 +950,10 @@ for visualising the standard completion framework's output---see
   :straight (:host github :repo "minad/marginalia" :branch "main")
   :demand
   :config
-  (marginalia-mode 1)
-  (setq marginalia-annotators '(marginalia-annotators-heavy
-                                marginalia-annotators-light))
-  :bind (:map minibuffer-local-completion-map
-              ("C-i" . marginalia-cycle-annotators)))
+  (setq marginalia-annotators
+        '(marginalia-annotators-heavy
+          marginalia-annotators-light))
+  (marginalia-mode 1))
 #+end_src
 
 *** Minibuffer configurations and extras (prot-minibuffer.el)
