@@ -68,6 +68,9 @@ mode line's typeface (or the default one if they are the same)."
         (moody-replace-mode-line-buffer-identification)
         (add-hook 'prot-fonts-set-typeface-hook #'prot-moody--mode-line-height)
         (run-hooks 'prot-fonts-set-typeface-hook))
+    ;; TODO: this needs to be executed after checking that the target
+    ;; exists.  Or at least be called in a way that hides its innocuous
+    ;; error message.
     (moody-replace-mode-line-buffer-identification 'reverse)
     (remove-hook 'prot-fonts-set-typeface-hook #'prot-moody--mode-line-height)))
 
