@@ -1210,6 +1210,7 @@ following block with the package configurations:
          :map minibuffer-local-completion-map
          ("C-," . embark-act)
          ("C-." . embark-act-noexit)
+         ("C->" . embark-become)
          ("M-q" . embark-occur-toggle-view) ; parallel of `fill-paragraph'
          ("M-o" . embark-export) ; falls back to `embark-occur'
          ("C-o" . embark-export)
@@ -1444,7 +1445,9 @@ no use for it.
   :config
   (add-to-list 'recentf-keep #'prot-recentf-keep-default-predicate)
   :bind (("s-r" . prot-recentf-recent-files)
-         ("C-x C-r" . prot-recentf-recent-dirs)))
+         ("C-x C-r" . prot-recentf-recent-dirs)
+         :map embark-become-file+buffer-map
+         ("r" . prot-recentf-recent-files)))
 #+end_src
 
 This is a copy of =prot-recentf.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
