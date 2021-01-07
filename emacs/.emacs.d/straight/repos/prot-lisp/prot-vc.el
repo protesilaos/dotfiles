@@ -30,6 +30,7 @@
 ;;; Code:
 
 (require 'vc)
+(require 'prot-common)
 
 ;;;; Customisation options
 
@@ -138,7 +139,9 @@ that covers all files in the present directory."
     (if vc
         (completing-read
          text
-         (process-lines "git" "log" "--pretty=format:%d __ %h __ %ad %an: %s" "-n" num)
+         (prot-common-completion-table
+          'line
+          (process-lines "git" "log" "--pretty=format:%d __ %h __ %ad %an: %s" "-n" num))
          nil t nil 'prot-vc--patch-commit-hist)
       (error "'%s' is not under version control" default-directory))))
 
@@ -151,8 +154,9 @@ that covers all files in the present directory."
 ;;;###autoload
 (defun prot-vc-patch-dwim (&optional arg)
   "Create patch for commit at point in `log-view'.
-With optional prefix ARG (\\[universal-argument]) prompt for
-commit with completion."
+With optional prefix ARG (\\[universal-argument]), or if no
+commit at or around point is available, prompt for commit with
+completion."
   (interactive "P")
   (let* ((commit-at-point (cadr (log-view-current-entry (point) t)))
          (commit (if (or arg (not commit-at-point))
@@ -163,8 +167,10 @@ commit with completion."
                      default-directory))
          (dirs (append (list vc-dir) prot-vc-patch-output-dirs))
          (out-dir
-          (completing-read "Output directory: "
-                           dirs nil t nil 'prot-vc--patch-output-hist))
+          (completing-read
+           "Output directory: "
+           (prot-common-completion-table 'file dirs)
+           nil t nil 'prot-vc--patch-output-hist))
          (buf (get-buffer-create prot-vc-shell-output)))
     (shell-command
      (format "git format-patch -1 %s -o %s --" commit out-dir) buf)
