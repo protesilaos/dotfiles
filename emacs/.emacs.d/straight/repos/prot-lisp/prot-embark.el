@@ -45,12 +45,16 @@ To be added to `embark-occur-post-revert-hook'."
     (fit-window-to-buffer (get-buffer-window)
                           (floor (frame-height) 2) 1)))
 
+(defvar embark-occur-linked-buffer)
+
 (defun prot-embark--live-buffer-p ()
   "Determine presence of a linked live occur buffer."
   (let* ((buf-link embark-occur-linked-buffer)
          (buf-name (buffer-name buf-link)))
     (when buf-name
       (string-match-p "Embark Live Occur" buf-name))))
+
+(declare-function embark-live-occur "embark")
 
 ;;;###autoload
 (defun prot-embark-live-occur-toggle ()
