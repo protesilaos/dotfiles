@@ -1219,7 +1219,12 @@ following block with the package configurations:
          ("M-o" . embark-export)
          ("C-o" . embark-export)
          ("M-t" . toggle-truncate-lines)
-         ("M-q" . embark-occur-toggle-view)))
+         ("M-q" . embark-occur-toggle-view)
+         :map embark-symbol-map
+         ;; NOTE: this is later rewritten by `prot-consult.el', but I
+         ;; keep the "g" to a reasonable default action.
+         ("g" . project-find-regexp)      ; part of project.el
+         ("." . embark-find-definition)))
 
 (use-package prot-embark
   :straight (:type built-in)
@@ -1285,7 +1290,7 @@ of better alternatives.
 
 (use-package prot-consult
   :straight (:type built-in)
-  :after prot-pulse
+  :after (consult prot-pulse)
   :config
   (setq consult-project-root-function #'prot-consult-project-root)
   (setq prot-consult-add-advice-set-hooks t)
@@ -1304,7 +1309,9 @@ of better alternatives.
          ("M-s y" . prot-consult-yank)
          ("M-s l" . prot-consult-line)
          ("M-s f" . prot-consult-fd)
-         ("M-s g" . prot-consult-rg)))
+         ("M-s g" . prot-consult-rg)
+         :map embark-symbol-map
+         ("g" . prot-consult-rg-ref)))
 #+end_src
 
 Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):

@@ -153,6 +153,7 @@ directories instead."
 (defvar consult--ripgrep-command)
 (declare-function consult--grep "consult")
 
+;;;###autoload
 (defun prot-consult-rg ()
   "Ripgrep with `consult--grep' in `prot-consult-project-root'."
   (interactive)
@@ -160,6 +161,25 @@ directories instead."
          (default-directory (prot-consult-project-root))
          (prompt (format "RipGrep in %s" (propertize default-directory 'face 'bold))))
       (consult--grep prompt cmd default-directory nil)))
+
+(defvar consult-async-default-split)
+
+;; TODO: unify `prot-consult-rg' and `prot-consult-rg-ref'?
+;; TODO: same principle for fd.
+
+;;;###autoload
+(defun prot-consult-rg-ref (ref)
+  "Like `prot-consult-rg' but for REF.
+Mostly intended for use as an Embark action."
+  (interactive
+   (list (read-regexp "Search for regexp: ")))
+  (let* ((cmd prot-consult-rg-flags)
+         (default-directory (prot-consult-project-root))
+         (prompt (format "RipGrep for %s in %s"
+                         (propertize ref 'face 'success)
+                         (propertize default-directory 'face 'bold))))
+    (consult--grep prompt cmd default-directory
+                   (concat ref consult-async-default-split))))
 
 ;;;###autoload
 (defun prot-consult-outline ()
