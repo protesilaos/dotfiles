@@ -1322,21 +1322,16 @@ of better alternatives.
 #+begin_src emacs-lisp
 (use-package consult
   :straight (:host github :repo "minad/consult" :branch "main")
+  :demand
   :config
   (setq consult-line-numbers-widen t)
-  (setq consult-preview-buffer nil)
-  (setq consult-preview-grep nil)
-  (setq consult-preview-mark nil)
-  (setq consult-preview-line nil)
-  (setq consult-preview-outline nil)
   (setq completion-in-region-function #'consult-completion-in-region)
   (setq consult-async-input-debounce 0.5)
   (setq consult-async-input-throttle 0.8)
   (setq consult-narrow-key ">")
   (setq consult-widen-key "<")
+  (setq consult-preview-key "\C-v")
   (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
-
-  (consult-preview-mode -1)
   :bind (("M-X" . consult-mode-command)
          ("M-s m" . consult-mark)
          :map minibuffer-local-completion-map
