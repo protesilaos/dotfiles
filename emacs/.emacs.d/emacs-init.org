@@ -1131,123 +1131,129 @@ And here is =prot-minibuffer.el= (from [[https://gitlab.com/protesilaos/dotfiles
 :END:
 
 Embark, aka "Emacs Mini-Buffer Actions Rooted in Keymaps", is another
-neat library by Omar Antolín Camarena.  It provides common actions
-through what essentially amounts to a prefix key.  Your main point of
-entry to this tool is the =embark-act= command: bind it to a convenient
-key combination that will make it easy for you to use it and, thus,
-maximise its potential.
+neat library by Omar Antolín Camarena.  It provides a unified framework
+of regular keymaps which let you carry out /contextually relevant actions/
+on /targets/ through a /prefix key/.
 
-The premise of Embark is that targets are interpreted based on their
-context, so you are automagically presented with a list of relevant
-commands that apply to them.  For example, while running a minibuffer
-completion against files, =embark-act= will provide access to standard
-filesystem operations such as to copy, rename, delete the current
-candidate.
++ "Actions" are standard Emacs commands, such as =describe-symbol= or some
+  interactive command you have that reads an argument from the
+  minibuffer.
 
-All those types of interaction are grouped together in keymaps.  So our
-example for file names corresponds to =embark-file-map=.  Expect to find
-the equivalent in =embark-buffer-map=, =embark-region-map=, and so on.
++ "Targets" are semantically sensitive constructs, such as the symbol at
+  point, a URL, a file name, the active region, the current completion
+  candidate in the minibuffer (or the "Completions" buffer, if you use
+  that).
 
-To learn which keymap's contents get enabled in the present context,
-follow up the =embark-act= key with =C-h= (remember that this conforms with
-the Emacs convention of using =C-h= as a suffix to display help about
-possible key chords that complete what has already been typed in---if
-you are new to Emacs, consult my note on [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
-Embark's README offers instructions on how to use =which-key= instead of
-this method.  So please adapt things to your liking.
++ While "contextually relevant [actions]" are defined in keymaps whose
+  scope matches that of the target.  So =embark-file-map= holds all key
+  and command assossiations for when Embark recognises a file name as
+  its target.  =embark-region-map= is for actions pertaining to the active
+  region; =embark-buffer-map= for buffer names that you access through,
+  say, =switch-to-buffer= (=C-x b=).  And so on.
 
-While Embark is touted as a tool for minibuffer actions, it is easier to
-think of it as the equivalent of a right-click/context menu, with
-=embark-act= performing the primary function of the right-click call.
-This is because you can use Embark outside of a minibuffer session, such
-as when the point is over a file name, URL, symbol.  Same for the active
-region.  Making =embark-act= second nature will, inter alia, help you gain
-access to commands you seldom use, or at least be reminded of their
-presence.
++ As for the "prefix key", it is a command, such as =embark-act=, that
+  activates the appropriate keymap, thus granting you access to the
+  relevant commands.
 
-A more nuanced command you can benefit from is =embark-act-noexit=.  It
-behaves like its counterpart except that it does not exit the minibuffer
-while inside one.  Use it when you need to string together a series of
-actions pertaining to the present list of candidates.
+Emacs users are already familiar with this contextuality of Embark, even
+though they may not realise it.  Think, for example, that hitting the =j=
+key in an =org-mode= buffer performs the action of inserting that letter
+in the buffer: you type something.  While the same =j= key performs a
+different action in, say, a =dired-mode= buffer.  There is no conflict
+between those actions because each of them is bound to a distinct
+keymap, and only one of those keymaps applies in their respective
+context.
 
-Because Embark is all about keymaps whose scope is a given context, you
-can easily extend it with your own functions.  Do you have a command
-that, say, operates on files?  Add an entry for it in =embark-file-map=.
+The beauty of Embark's design is that you configure its contextuality in
+the exact same way you define all of your Emacs key bindings.  So you
+can bind any command to whatever key you want and confine that action to
+a context you specify.
 
-Apart from actions, Embark contains two key components for operating on
-groups of candidates:
+Learn more about the available keymaps with =M-x describe-keymap= and then
+search for =embark=.
 
-+ =embark-occur= pops a buffer that lists all candidates. The buffer can
-  be presented as a grid, a list, or a list with alternating backgrounds
-  ("zebra" style), with the possibility to manually switch between them
-  with the =embark-occur-toggle-view= command.  The list/zebra view
-  provides useful annotations (see [[#h:09d657c7-eb4d-4fe3-987a-4a2cf419bb40][Completion annotations (marginalia)]]),
-  such as the first line of a command's doc string, a command's key
-  binding, the value of a variable, and so on.  Embark's "occur buffer"
-  also has a live-updating version, which is what I normally use to get
-  live feedback on what I am matching against (more on that further
-  below).
+Now a few things about actions that you can gain access to by invoking
+either of =embark-act= (most common case), =embark-act-noexit=,
+=embark-become=:
 
-+ =embark-export= gathers the list of candidates and tries to display them
-  in the appropriate major mode.  If you are completing against file
-  names, this command will export the list to Dired (also refer to the
-  section on [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory editor, file manager)]]).  While it will use
-  Ibuffer when the list consists of buffers (check [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer and extras]]).
-  Otherwise it falls back to =embark-occur=.
++ To learn which keymap's contents get enabled in the present context,
+  either set up =which-key.el=, or follow up the =embark-act= call with =C-h=
+  (remember that this conforms with the Emacs convention of using =C-h= as
+  a suffix to display help about possible key chords that complete what
+  has already been typed in---if you are new to Emacs, consult my note
+  on [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).  For the sake of user-friendliness, I do
+  set up =which-key= in this document ([[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]]) and
+  apply the necessary tweaks in the following package declaration.
 
-Here comes the "power user" insight.  Recall that Emacs does not need a
-completion UI in order to perform pattern matching on lists of
-candidates.  In fact, it does not even need to visualise its results,
-even though that is helpful for the user.  The minibuffer is fully
-equipped to handle the task of narrowing the list based on some input
-and can even be extended further (e.g. [[#h:7b1374dd-6b1f-4548-8fbf-1034230c80e0][Orderless completion style]], also
-by Omar Antolín Camarena).  This means that we can forgo something like
-=icomplete-mode=, which would visualise the list of candidates and just
-use Embark's live occur capabilities.  And, contrary to expectations, by
-combining the default completion framework of the minibuffer with
-Embark's live occur, we get a system that is more powerful and
-user-friendly than plain =icomplete-mode= (Icomplete visualises the list
-of candidates and delegates the rest to the minibuffer, whereas Ivy
-provides its own underlying completion framework---I prefer source code
-that is fairly easy for me to understand, so here we are).
++ You will often be targeting individual items, such as the current
+  completion candidate in the minibuffer, or the symbol at point.  You
+  can, however, collect the entire set of targets and store it in a
+  buffer, which you can then re-use at your convenience or save it on
+  disk (with =write-file= bound to =C-x C-w= by default).  This is done by
+  the =embark-collect-snapshot= command, which you can always access
+  through =embark-act=.
 
-All we need to make Embark visualise---and not interfere with---the
-standard minibuffer completion facilities is to hook either of
-=embark-live-occur-after-input= or =embark-live-occur-initial-delay= to the
-=minibuffer-setup-hook=.  I prefer the former which hide all candidates
-until it receives some input.  In practice this means that I can type
-something, follow it up with TAB and RET and go exactly where I want to
-be without ever seeing the live occur buffer.  And when I do want to see
-it, I just wait a fraction of a second or toggle it manually.  The
-beauty of minimalism!
+  - The "Embark Collect" buffer can be presented as a grid or a list,
+    with the possibility to manually switch between the two by means of
+    the =embark-collect-toggle-view= command.  The list view offers more
+    room to the side of each candidate.  It can be used to display
+    annotations (see [[#h:09d657c7-eb4d-4fe3-987a-4a2cf419bb40][Completion annotations (marginalia)]]), such as the
+    first line of a variable's doc string and current value, a command's
+    key binding, the buffer's underlying file system path if it is
+    visiting a file, and so on.
 
-Now a few words about =prot-embark.el= that is reproduced after the
-following block with the package configurations:
+  - Embark's "collect" buffer also has a live-updating version, which
+    can be use to filter the list of targets.  This particular feature
+    can, in fact, be used as a medium for visualising the list of
+    candidates in the active minibuffer session.  I do use it together
+    with the default minibuffer as part my completion framework (also
+    watch my presentation on [[https://protesilaos.com/codelog/2021-01-06-emacs-default-completion/][Default Emacs completion and extras]]
+    (2021-01-06)).
 
-+ =prot-embark--live-occur-fit-window= ensures that Embark's live occur
-  buffer shrinks and expands to match the window's contents.
+  - Other than producing a snapshot, Embark can also collect the targets
+    and present them in a buffer whose major-mode is specialised to work
+    on the category those targets belong to.  This is done with the
+    =embark-export= command.  If you are targeting files, then the export
+    takes you to a =dired-mode= buffer (also refer to this document's
+    section on [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory editor, file manager)]]); buffers go to
+    =ibuffer-mode= (check [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer and extras]]); grep results in a =grep-mode=
+    buffer.
 
-+ =prot-embark-live-occur-toggle= toggles the display of the live occur
-  buffer.  It also fires =prot-embark-live-occur-hook= as its final step.
+Finally, a few words about the following package declaration:
 
-+ The customisation option =prot-embark-live-occur-disable-icomplete=
-  controls whether the aforementioned toggle should have an effect on
-  Icomplete.  If yes, then Icomplete gets disabled whenever the live
-  occur buffer is present and is re-enabled once live occur switches off
-  or the minibuffer exits.  Two functions handle this task: (i)
-  =prot-embark--icomplete-toggle=, and (ii) =prot-embark-icomplete-hooks=.
-  This was useful in my old setup (prior to 2020-12-20) where
-  =icomplete-mode= was the default.  *I now consider it surplus to
-  requirements*.
++ I use Embark's "live collection" feature as my front-end to the
+  default minibuffer.  This is done with the =minibuffer-setup-hook=.  The
+  "live completions" buffer pops up only after I have already typed
+  something into the minibuffer, which helps minimise distractions (and
+  which often means that I complete against candidates without ever
+  seeing the completions' buffer---e.g. =M-x M-n RET= is precise and does
+  not need to alter the window layout).
+
++ The =embark-action-indicator= sets up =which-key=.  I do this to help
+  users who may want to get started with Embark.
+
++ My =prot-embark.el= that is reproduced after the following block with
+  the package configurations contains the following:
+
+  - =prot-embark--collect-fit-window= ensures that Embark's live occur
+    buffer shrinks and expands to match the window's contents.
+
+  - =prot-embark-completions-toggle= toggles the display of the live
+    completions' buffer.
+
++ NOTE: I also define a =prot-embark-extras.el= library which unifies
+  Embark with all of my other libraries.  It is mostly meant to define
+  actions for =embark-become= (please check this section first and then
+  visit [[#h:18e1f5b6-0dd1-41ec-ba41-ee48ebb2060b][Cross-package integration for Embark (prot-embark-extras.el)]]).
 
 #+begin_src emacs-lisp
 (use-package embark
   :straight (:host github :repo "oantolin/embark" :branch "master")
   :demand
-  :diminish embark-occur-zebra-minor-mode
+  :diminish embark-collect-zebra-minor-mode
   :after prot-minibuffer
   :config
-  (setq embark-occur-initial-view-alist
+  (setq embark-collect-initial-view-alist
         '((file . list)
           (buffer . list)
           (symbol . list)
@@ -1255,44 +1261,48 @@ following block with the package configurations:
           (xref-location . list)
           (kill-ring . zebra)
           (t . grid)))
-  (setq embark-occur-minibuffer-completion t)
-  (setq embark-live-occur-update-delay 0.5)
-  (setq embark-live-occur-initial-delay 0.8)
-  :hook (minibuffer-setup-hook . embark-live-occur-after-input)
+  (setq embark-collect-live-update-delay 0.5)
+  (setq embark-collect-live-initial-delay 0.8)
+  ;; NOTE: I keep this around for when I do videos, otherwise I do not
+  ;; use it.
+  (setq embark-action-indicator
+        (lambda (map)
+          (which-key--show-keymap "Embark ACT" map nil nil 'no-paging)
+          #'which-key--hide-popup-ignore-command)
+        embark-become-indicator embark-action-indicator)
+  :hook (minibuffer-setup-hook . embark-collect-completions-after-input)
   :bind (("C-," . embark-act)
          :map minibuffer-local-completion-map
          ("C-," . embark-act)
          ("C-." . embark-act-noexit)
          ("C->" . embark-become)
-         ("M-q" . embark-occur-toggle-view) ; parallel of `fill-paragraph'
-         ("M-o" . embark-export) ; falls back to `embark-occur'
+         ("M-q" . embark-collect-toggle-view) ; parallel of `fill-paragraph'
+         ("M-o" . embark-export) ; falls back to `embark-collect-snapshot'
          ("C-o" . embark-export)
-         ("M-v" . embark-switch-to-live-occur)
-         :map embark-occur-mode-map
+         ;; NOTE: to switch to the live collection buffer, I use
+         ;; `prot-minibuffer-focus-mini-or-completions' which is bound
+         ;; to "s-v".
+         :map embark-collect-mode-map
          ("," . embark-act)
          ("M-o" . embark-export)
          ("C-o" . embark-export)
          ("M-t" . toggle-truncate-lines)
-         ("M-q" . embark-occur-toggle-view)
+         ("M-q" . embark-collect-toggle-view)
          :map embark-symbol-map
-         ;; NOTE: this is later rewritten by `prot-consult.el', but I
-         ;; keep the "g" to a reasonable default action.
-         ("g" . project-find-regexp)      ; part of project.el
+         ;; NOTE: this is later rewritten by `prot-embark-extras.el',
+         ;; but I keep the "g" to a reasonable default action.
+         ("g" . project-find-regexp)      ; part of `project.el'
          ("." . embark-find-definition)))
 
 (use-package prot-embark
   :straight (:type built-in)
   :demand
   :after embark
-  ;; ;; Those are DEPRECATED; I no longer use Icomplete (since 2020-12-20)
-  ;; :config
-  ;; (setq prot-embark-live-occur-disable-icomplete nil)
-  ;; (prot-embark-icomplete-hooks-mode -1)
-  :hook (embark-occur-post-revert-hook . prot-embark--live-occur-fit-window)
-  :bind (:map embark-occur-mode-map
-         ("h" . prot-simple-describe-symbol)  ; from `prot-simple.el'
-         :map minibuffer-local-completion-map
-         ("C-l" . prot-embark-live-occur-toggle)))
+  :hook (embark-collect-post-revert-hook . prot-embark--collect-fit-window)
+  :bind (:map embark-collect-mode-map
+              ("h" . prot-simple-describe-symbol)  ; from `prot-simple.el'
+              :map minibuffer-local-completion-map
+              ("C-l" . prot-embark-completions-toggle)))
 #+end_src
 
 This is =prot-embark.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -1360,7 +1370,7 @@ of better alternatives.
          ("M-s f" . prot-consult-fd)
          ("M-s g" . prot-consult-rg)
          :map embark-symbol-map
-         ("g" . prot-consult-rg-ref)))
+         ("g" . prot-consult-rg)))
 #+end_src
 
 Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -1489,18 +1499,41 @@ no use for it.
   :hook (after-init-hook . recentf-mode))
 
 (use-package prot-recentf
-  :after recentf
   :config
-  (add-to-list 'recentf-keep #'prot-recentf-keep-default-predicate)
+  (add-to-list 'recentf-keep 'prot-recentf-keep-predicate)
   :bind (("s-r" . prot-recentf-recent-files)
-         ("C-x C-r" . prot-recentf-recent-dirs)
-         :map embark-become-file+buffer-map
-         ("r" . prot-recentf-recent-files)))
+         ("C-x C-r" . prot-recentf-recent-dirs)))
 #+end_src
 
 This is a copy of =prot-recentf.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: straight/repos/prot-lisp/prot-recentf.el src emacs-lisp :tangle no
+
+*** Cross-package integration for Embark (prot-embark-extras.el)
+:PROPERTIES:
+:CUSTOM_ID: h:18e1f5b6-0dd1-41ec-ba41-ee48ebb2060b
+:END:
+
+NOTE: This section extends Embark so that it works with the rest of my
+packages and custom code.  I keep it separate from =prot-embark.el= so
+that there is a clear distinction between my generic setup and the
+somewhat more opinionated extentions that may be unique to my use-case:
+[[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]].
+
+The way to extend Embark is to follow its own design: define keymaps and
+add them to the list of Embark's known keymaps.
+
+#+begin_src emacs-lisp
+(use-package prot-embark-extras
+  :straight (:type built-in)
+  :config
+  (setq prot-embark-extras-add-keymaps t)
+  (prot-embark-extras-keymaps))
+#+end_src
+
+This is =prot-embark-extras.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-embark-extras.el src emacs-lisp :tangle no
 
 *** In-buffer completions
 :PROPERTIES:
@@ -2526,7 +2559,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (slot . 2)
            (window-parameters . ((no-other-window . t))))
           ;; bottom side window
-          ("\\*\\(Completions\\|Embark Live Occur\\).*"
+          ("\\*\\(Completions\\|Embark Collect Live\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . bottom)
@@ -2799,11 +2832,11 @@ which are contingent on other features:
 
 + =org-tree-slide= and =org-indent= :: The former is a third-party package
   and the latter is part of the Org distribution.  What the first does
-  is to convert headings into pseudo slides.  While the other indents
+  is convert headings into pseudo slides.  While the other indents
   content visually, without actually affecting the underlying initial
   spacing, to match the heading's depth.  Those two are disabled by
-  default and the =prot-logos-org-presentation= toggle determines
-  whether they should be activated.
+  default and the =prot-logos-org-presentation= toggle determines whether
+  they should be activated.
 
 + Scroll lock :: Sometimes you want the cursor to remain centred on the
   screen while your focus is on writing or reading.  This is controlled

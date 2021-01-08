@@ -36,7 +36,7 @@
   :group 'minibuffer)
 
 (defcustom prot-minibuffer-completion-windows-regexp
-  "\\*\\(Completions\\|Embark Live Occur\\)"
+  "\\*\\(Completions\\|Embark Collect \\(Live\\|Completions\\)\\)"
   "Regexp to match window names with completion candidates.
 Used by `prot-minibuffer--get-completion-window'."
   :group 'prot-minibuffer

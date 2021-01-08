@@ -125,30 +125,24 @@ Intended to be assigned to `consult-project-root-function'."
       (locate-dominating-file "." ".git")
       default-directory))
 
-(defun prot-consult--fg-flags (list)
+(defun prot-consult--fd-flags (list)
   "Append LIST to `prot-consult-fd-flags'."
   (if (listp list)
       (append prot-consult-fd-flags list)
     (error "'%s' is not a list" list)))
 
 ;;;###autoload
-(defun prot-consult-fd (&optional arg)
+(defun prot-consult-fd ()
   "Use `consult--find' to search with the FD executable.
 
 The search is performed against the root of the current version
 controlled project or, if none is available, from inside the
-`default-directory'.
-
-With optional prefix ARG (\\[universal-argument]) search for
-directories instead."
-  (interactive "P")
-  (let* ((cmd (if arg
-                    (prot-consult--fg-flags (list "-t" "d"))
-                (prot-consult--fg-flags (list "-t" "f"))))
-         (scope (if arg "directories" "files"))
+`default-directory'."
+  (interactive)
+  (let* ((cmd prot-consult-fd-flags)
          (default-directory (prot-consult-project-root))
-         (prompt (format "Find %s in %s: " scope (propertize default-directory 'face 'bold))))
-    (consult--find prompt cmd)))
+         (prompt (format "FdFind in %s: " (propertize default-directory 'face 'bold))))
+    (consult--find prompt cmd nil)))
 
 (defvar consult--ripgrep-command)
 (declare-function consult--grep "consult")
@@ -161,25 +155,6 @@ directories instead."
          (default-directory (prot-consult-project-root))
          (prompt (format "RipGrep in %s" (propertize default-directory 'face 'bold))))
       (consult--grep prompt cmd default-directory nil)))
-
-(defvar consult-async-default-split)
-
-;; TODO: unify `prot-consult-rg' and `prot-consult-rg-ref'?
-;; TODO: same principle for fd.
-
-;;;###autoload
-(defun prot-consult-rg-ref (ref)
-  "Like `prot-consult-rg' but for REF.
-Mostly intended for use as an Embark action."
-  (interactive
-   (list (read-regexp "Search for regexp: ")))
-  (let* ((cmd prot-consult-rg-flags)
-         (default-directory (prot-consult-project-root))
-         (prompt (format "RipGrep for %s in %s"
-                         (propertize ref 'face 'success)
-                         (propertize default-directory 'face 'bold))))
-    (consult--grep prompt cmd default-directory
-                   (concat ref consult-async-default-split))))
 
 ;;;###autoload
 (defun prot-consult-outline ()

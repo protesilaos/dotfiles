@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "24.4"))
+;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -37,68 +37,67 @@
   "Extensions for `embark'."
   :group 'editing)
 
-;; Thanks to Omar Antolín Camarena for providing this!
-(defun prot-embark--live-occur-fit-window (&rest _)
+(defcustom prot-embark-collect-window-regexp
+  "\\*Embark Collect \\(Live\\|Completions\\).*"
+  "Regexp to match window names with Embark collections."
+  :group 'prot-embark
+  :type 'string)
+
+;; Thanks to Omar Antolín Camarena for providing a variant of this!
+;; (mistakes are always my own).
+(defun prot-embark--collect-fit-window (&rest _)
   "Fit Embark's live occur window to its buffer.
 To be added to `embark-occur-post-revert-hook'."
-  (when (string-match-p "Live" (buffer-name))
+  (when (string-match-p prot-embark-collect-window-regexp (buffer-name))
     (fit-window-to-buffer (get-buffer-window)
                           (floor (frame-height) 2) 1)))
 
-(defvar embark-occur-linked-buffer)
+(defvar embark-collect-linked-buffer)
 
 (defun prot-embark--live-buffer-p ()
   "Determine presence of a linked live occur buffer."
-  (let* ((buf-link embark-occur-linked-buffer)
+  (let* ((buf-link embark-collect-linked-buffer)
          (buf-name (buffer-name buf-link)))
     (when buf-name
-      (string-match-p "Embark Live Occur" buf-name))))
+      (string-match-p prot-embark-collect-window-regexp buf-name))))
 
-(declare-function embark-live-occur "embark")
+(declare-function embark-collect-completions "embark")
 
 ;;;###autoload
-(defun prot-embark-live-occur-toggle ()
-  "Toggle `embark-live-occur', call `prot-embark-live-occur-hook'."
+(defun prot-embark-completions-toggle ()
+  "Toggle `embark-collect-completions'."
   (interactive)
   (if (prot-embark--live-buffer-p)
-      (kill-buffer embark-occur-linked-buffer)
-    (embark-live-occur))
-  (run-hooks 'prot-embark-live-occur-hook))
+      (kill-buffer embark-collect-linked-buffer)
+    (embark-collect-completions)))
 
-;;;; Icomplete integration
-
-;; DEPRECATED: I just use Embark for my completion UI, but am keeping
-;; this around in case I ever revisit Icomplete.
-(defcustom prot-embark-live-occur-disable-icomplete nil
-  "Whether `prot-embark-live-occur-toggle' should disable Icomplete."
-  :group 'prot-embark
-  :type 'boolean)
-
-(declare-function icomplete-mode "icomplete")
-
-(defvar prot-embark-live-occur-hook nil
-  "Hook that runs after `prot-embark-live-occur-toggle'.")
-
-(defun prot-embark--icomplete-toggle ()
-  "Toggle Icomplete for `prot-embark-live-occur-toggle'."
-  (let ((icomplete-default (symbol-value icomplete-mode)))
-    (when prot-embark-live-occur-disable-icomplete
-      (if (and icomplete-default (prot-embark--live-buffer-p))
-          (icomplete-mode -1)
-        (icomplete-mode 1)))))
-
-;;;###autoload
-(define-minor-mode prot-embark-icomplete-hooks-mode
-  "Set up hooks for `prot-embark--icomplete-toggle'."
-  :init-value nil
-  :global t
-  (if (and prot-embark-icomplete-hooks-mode
-           prot-embark-live-occur-disable-icomplete)
-      (progn
-        (add-hook 'prot-embark-live-occur-hook #'prot-embark--icomplete-toggle)
-        (add-hook 'minibuffer-exit-hook #'prot-embark--icomplete-toggle))
-    (remove-hook 'prot-embark-live-occur-hook #'prot-embark--icomplete-toggle)
-    (remove-hook 'minibuffer-exit-hook #'prot-embark--icomplete-toggle)))
+;; ;; FIXME: we need a more robust approach than `this-command'.
+;;
+;; (declare-function embark-collect-completions-after-delay "embark")
+;; (declare-function embark-collect-completions-after-input "embark")
+;;
+;; ;; TODO: consider pros and cons of a blocklist.
+;; (defcustom prot-embark-completions-passlist nil
+;;   "Command list that can display Embark Collect automatically.
+;; Those are run with `embark-collect-completions-after-delay',
+;; otherwise we revert to `embark-collect-completions-after-input'.
+;;
+;; This list is intended for `prot-embark-collect-completions'."
+;;   :type 'list
+;;   :group 'prot-embark)
+;;
+;; ;;;###autoload
+;; (defun prot-embark-collect-completions ()
+;;   "Control how to display Embark Collection Completions.
+;;
+;; If `this-command' belongs to `prot-embark-completions-passlist',
+;; the completions' buffer is automatically displayed following a
+;; delay.  Otherwise it only shows up after some minibuffer input.
+;;
+;; Use this function with `minibuffer-setup-hook'."
+;;   (if (member this-command prot-embark-completions-passlist)
+;;       (embark-collect-completions-after-delay)
+;;     (embark-collect-completions-after-input)))
 
 (provide 'prot-embark)
 ;;; prot-embark.el ends here
