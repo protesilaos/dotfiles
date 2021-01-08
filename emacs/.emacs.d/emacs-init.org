@@ -834,6 +834,50 @@ in the [[https://200ok.ch/posts/2020-09-29_comprehensive_guide_on_handling_long_
   (global-so-long-mode 1))
 #+end_src
 
+** Key chord hints (which-key.el)
+:PROPERTIES:
+:CUSTOM_ID: h:835d7498-31f3-4121-baaa-381599b8389a
+:END:
+
+This library provides hints on the possible tails of a key chord.  So if
+you type =C-x r= and wait for =which-key-idle-delay=, a pop-up window will
+appear showing you the keys you can use and the actions bound to them.
+
+I do not use =which-key= as I have already memorised all the key sequences
+I type.  Plus, I prefer the default way of following up a key chord with
+=C-h=, which produces a help buffer with the relevant key bindings (a
+regular buffer can be renamed, written to a file, and generally acted
+upon, whereas some auto-disappearing pop-up does not lend itself to such
+workflows).
+
+The only reason I keep this package here is to make things easier when I
+record videos of my setup in which I invoke some Embark action or employ
+Consult's narrowing facility.  Please refer to the relevant sections:
+
++ [[#h:18e1f5b6-0dd1-41ec-ba41-ee48ebb2060b][Cross-package integration for Embark (prot-embark-extras.el)]].
++ [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]].
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :straight t
+  :diminish
+  :config
+  ;; NOTE: I only use this for `embark' and `consult' and for the sake
+  ;; of producing more user-friendly video demonstrations.
+  (setq which-key-dont-use-unicode t)
+  (setq which-key-add-column-padding 2)
+  (setq which-key-show-early-on-C-h nil)
+  (setq which-key-idle-delay most-positive-fixnum)
+  (setq which-key-idle-secondary-delay 0.05)
+  (setq which-key-popup-type 'side-window)
+  (setq which-key-show-prefix 'echo)
+  (setq which-key-max-display-columns 3)
+  (setq which-key-separator "  ")
+  (setq which-key-special-keys nil)
+  (setq which-key-paging-key "<next>")
+  (which-key-mode -1))
+#+end_src
+
 * Selection candidates and search methods
 :PROPERTIES:
 :CUSTOM_ID: h:5c060e2e-231d-4896-a5d2-b3fb4134764e
