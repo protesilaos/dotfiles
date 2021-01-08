@@ -1065,8 +1065,9 @@ declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e1
          :map completion-list-mode-map
          ("M-v" . prot-minibuffer-focus-mini)
          ("h" . prot-simple-describe-symbol) ; from `prot-simple.el'
-         ;; Those are generic actions for the "*Completions*" buffer.  I
-         ;; normally use `embark' and its own buffers.
+         ;; Those are DE FACTO DEPRECATED generic actions for the
+         ;; "*Completions*" buffer.  I normally use `embark' and its own
+         ;; buffers.
          ("w" . prot-minibuffer-completions-kill-symbol-at-point)
          ("i" . prot-minibuffer-completions-insert-symbol-at-point)
          ("j" . prot-minibuffer-completions-insert-symbol-at-point-exit))
