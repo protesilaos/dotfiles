@@ -133,25 +133,27 @@ configurations (i.e. the present document).
 :CUSTOM_ID: h:874944d8-7ac0-4115-aa21-6ff4e005f6f6
 :END:
 
-Starting with Emacs 27.1, an =early-init.el= is now required to control
-things with greater precision.  Its code is as follows:
+Starting with Emacs 27.1, an =early-init.el= is required to control things
+with greater precision.  Its code is as follows:
 
 #+begin_example emacs-lisp
-;; Initialise installed packages
-(setq package-enable-at-startup t)
+;; Do not initialise installed packages (I use `straight.el')
+(setq package-enable-at-startup nil)
 
-;; Allow loading from the package cache.
-(setq package-quickstart t)
+;; Do not allow loading from the package cache (same reason).
+(setq package-quickstart nil)
 
 ;; Do not resize the frame at this early stage.
 (setq frame-inhibit-implied-resize t)
-#+end_example
 
-These adjustments are of paramount importance due to changes in the
-way Emacs initialises the package manager. Prior to Emacs 27.1, the
-=init.el= was supposed to handle that task by means of calling
-=package-initialize=.  Whereas for Emacs 27.1, the default behaviour is
-to start the package manager /before/ loading the user's init file.
+;; Disable GUI elements
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(setq inhibit-splash-screen t)
+(setq use-dialog-box t)               ; only for mouse events
+(setq use-file-dialog nil)
+#+end_example
 
 *** About use-package
 :PROPERTIES:
@@ -329,22 +331,13 @@ concomitant documentation strings are clear enough for you to peruse the
 source directly (reproduced further below).
 
 Given that this is a foundational piece of my Emacs setup, its package
-declaration serves as the appropriate place to disable various GUI
-elements that I do not want to keep around, as well as re-bind or free
-up some common key combinations.
+declaration serves as the appropriate place to re-bind or free up some
+common key combinations.
 
 #+begin_src emacs-lisp
 (use-package prot-simple
   :straight (:type built-in)
   :demand
-  :init
-  ;; Configure some common Emacs elements
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
-  (setq use-file-dialog nil)
-  (setq use-dialog-box t)               ; only for mouse events
-  (setq inhibit-splash-screen t)
   :config
   (setq prot-simple-insert-pair-alist
 	    '(("' Single quote" . (39 39))           ; ' '
