@@ -1123,30 +1123,35 @@ And here is =prot-minibuffer.el= (from [[https://gitlab.com/protesilaos/dotfiles
 :CUSTOM_ID: h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984
 :END:
 
-Embark, aka "Emacs Mini-Buffer Actions Rooted in Keymaps", is another
-neat library by Omar Antolín Camarena.  It provides a unified framework
-of regular keymaps which let you carry out /contextually relevant actions/
-on /targets/ through a /prefix key/.
+Embark provides a unified framework of regular Emacs keymaps which let
+you carry out /contextually relevant actions/ on *targets* through a common
+*point of entry*, typically a /prefix key/.
 
 + "Actions" are standard Emacs commands, such as =describe-symbol= or some
-  interactive command you have that reads an argument from the
+  interactive command you have defined that reads an argument from the
   minibuffer.
 
 + "Targets" are semantically sensitive constructs, such as the symbol at
-  point, a URL, a file name, the active region, the current completion
-  candidate in the minibuffer (or the "Completions" buffer, if you use
-  that).
+  point, a URL, a file name, the active region, or the current
+  completion candidate in the minibuffer (or the completions'
+  buffer---more on that in the next section).  Embark has so-called
+  "clasifiers" which help it determine the category that the target
+  belongs to.
 
-+ While "contextually relevant [actions]" are defined in keymaps whose
-  scope matches that of the target.  So =embark-file-map= holds all key
-  and command assossiations for when Embark recognises a file name as
-  its target.  =embark-region-map= is for actions pertaining to the active
-  region; =embark-buffer-map= for buffer names that you access through,
-  say, =switch-to-buffer= (=C-x b=).  And so on.
++ The "contextually relevant [actions]" are defined in keymaps whose
+  scope matches the category of the target.  So =embark-file-map= holds
+  all key and command assossiations for when Embark recognises a file
+  name as its target.  =embark-region-map= is for actions pertaining to
+  the active region; =embark-buffer-map= for buffer names that you access
+  through, say, =switch-to-buffer= (=C-x b=).  And so on.
 
-+ As for the "prefix key", it is a command, such as =embark-act=, that
-  activates the appropriate keymap, thus granting you access to the
++ As for the "point of entry" or "prefix key", it is an Embark command,
+  such as =embark-act=, =embark-act-noexit=, or =embark-become=.  Those
+  activate the appropriate keymap, thus granting you access to the
   relevant commands.
+
+Embark can act on individual targets (e.g. the region) or sets of
+targets (e.g. the list of minibuffer completion candidates).
 
 Emacs users are already familiar with this contextuality of Embark, even
 though they may not realise it.  Think, for example, that hitting the =j=
