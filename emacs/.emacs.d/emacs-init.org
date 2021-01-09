@@ -1258,39 +1258,38 @@ Finally, a few words about the following package declaration:
           (line . list)
           (xref-location . list)
           (kill-ring . zebra)
-          (t . grid)))
+          (t . list)))
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
   ;; NOTE: I keep this around for when I do videos, otherwise I do not
   ;; use it.
   (setq embark-action-indicator
         (lambda (map)
-          (which-key--show-keymap "Embark ACT" map nil nil 'no-paging)
+          (which-key--show-keymap "Embark" map nil nil 'no-paging)
           #'which-key--hide-popup-ignore-command)
         embark-become-indicator embark-action-indicator)
-  :hook (minibuffer-setup-hook . embark-collect-completions-after-input)
+  :hook ((minibuffer-setup-hook . embark-collect-completions-after-input)
+         (embark-post-action-hook . embark-collect--update-linked)
+         (embark-collect-mode-hook . hl-line-mode))
   :bind (("C-," . embark-act)
          :map minibuffer-local-completion-map
          ("C-," . embark-act)
          ("C-." . embark-act-noexit)
          ("C->" . embark-become)
          ("M-q" . embark-collect-toggle-view) ; parallel of `fill-paragraph'
-         ("M-o" . embark-export) ; falls back to `embark-collect-snapshot'
-         ("C-o" . embark-export)
          ;; NOTE: to switch to the live collection buffer, I use
          ;; `prot-minibuffer-focus-mini-or-completions' which is bound
          ;; to "s-v".
          :map embark-collect-mode-map
          ("," . embark-act)
+         ("." . embark-act-noexit)
          ("M-o" . embark-export)
          ("C-o" . embark-export)
          ("M-t" . toggle-truncate-lines)
          ("M-q" . embark-collect-toggle-view)
          :map embark-symbol-map
-         ;; NOTE: this is later rewritten by `prot-embark-extras.el',
-         ;; but I keep the "g" to a reasonable default action.
-         ("g" . project-find-regexp)      ; part of `project.el'
-         ("." . embark-find-definition)))
+         ("." . embark-find-definition)
+         ("k" . describe-keymap)))
 
 (use-package prot-embark
   :straight (:type built-in)
@@ -1298,9 +1297,16 @@ Finally, a few words about the following package declaration:
   :after embark
   :hook (embark-collect-post-revert-hook . prot-embark--collect-fit-window)
   :bind (:map embark-collect-mode-map
-              ("h" . prot-simple-describe-symbol)  ; from `prot-simple.el'
-              :map minibuffer-local-completion-map
-              ("C-l" . prot-embark-completions-toggle)))
+         ("h" . prot-simple-describe-symbol)  ; from `prot-simple.el'
+         ("C-M-n" . prot-embark-completions-act-next)
+         ("C-M-p" . prot-embark-completions-act-previous)
+         ("C-M-j" . prot-embark-completions-act-current)
+         ("C-n" . prot-embark-next-line-or-mini)
+         ("C-p" . prot-embark-previous-line-or-mini)
+         :map minibuffer-local-completion-map
+         ("C-n" . prot-embark-switch-to-completions-top)
+         ("C-p" . prot-embark-switch-to-completions-bottom)
+         ("C-l" . prot-embark-completions-toggle)))
 #+end_src
 
 This is =prot-embark.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -1526,7 +1532,9 @@ add them to the list of Embark's known keymaps.
   :straight (:type built-in)
   :config
   (setq prot-embark-extras-add-keymaps t)
-  (prot-embark-extras-keymaps))
+  (prot-embark-extras-keymaps)
+  :bind (:map embark-symbol-map
+         ("g" . prot-consult-rg-ref)))
 #+end_src
 
 This is =prot-embark-extras.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):

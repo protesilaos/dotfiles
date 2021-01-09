@@ -54,6 +54,14 @@
     map)
   "General custom cross-package `embark-become' keymap.")
 
+(defvar prot-embark-extras-become-line-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "l") 'consult-line)
+    (define-key map (kbd "i") 'consult-imenu)
+    (define-key map (kbd "s") 'consult-outline) ; as my default is 'M-s s'
+    map)
+  "Line-specific custom cross-package `embark-become' keymap.")
+
 (defvar embark-become-file+buffer-map)
 (declare-function prot-recentf-recent-files "prot-recentf")
 
@@ -61,6 +69,8 @@
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map embark-become-file+buffer-map)
     (define-key map (kbd "r") 'prot-recentf-recent-files)
+    (define-key map (kbd "B") 'project-switch-to-buffer)
+    (define-key map (kbd "F") 'project-find-file)
     map)
   "File+buffer custom cross-package `embark-become' keymap.")
 
@@ -73,6 +83,7 @@ This is based on the value of `prot-embark-extras-add-keymaps'
 and is meant to keep things clean in case I ever wish to disable
 those so-called 'extras'."
   (let ((maps (list 'prot-embark-extras-become-general-map
+                    'prot-embark-extras-become-line-map
                     'prot-embark-extras-become-file+buffer-map)))
     (if prot-embark-extras-add-keymaps
         (dolist (map maps)

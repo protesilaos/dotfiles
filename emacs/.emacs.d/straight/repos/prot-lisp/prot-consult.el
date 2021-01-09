@@ -154,7 +154,19 @@ controlled project or, if none is available, from inside the
   (let* ((cmd prot-consult-rg-flags)
          (default-directory (prot-consult-project-root))
          (prompt (format "RipGrep in %s" (propertize default-directory 'face 'bold))))
-      (consult--grep prompt cmd default-directory nil)))
+    (consult--grep prompt cmd default-directory nil)))
+
+;;;###autoload
+(defun prot-consult-rg-ref (ref)
+  "Ripgrep REF with Consult in `prot-consult-project-root'."
+  (interactive
+   (list (read-regexp "Search regexp: ")))
+  (let* ((cmd prot-consult-rg-flags)
+         (default-directory (prot-consult-project-root))
+         (prompt (format "RipGrep %s in %s"
+                         (propertize ref 'face 'success)
+                         (propertize default-directory 'face 'bold))))
+      (consult--grep prompt cmd default-directory ref)))
 
 ;;;###autoload
 (defun prot-consult-outline ()

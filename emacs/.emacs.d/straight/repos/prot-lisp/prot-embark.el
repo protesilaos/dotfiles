@@ -32,6 +32,8 @@
 (require 'cl-lib)
 (when (featurep 'embark)
   (require 'embark))
+(require 'prot-common)
+(require 'prot-minibuffer)
 
 (defgroup prot-embark ()
   "Extensions for `embark'."
@@ -70,6 +72,87 @@ To be added to `embark-occur-post-revert-hook'."
   (if (prot-embark--live-buffer-p)
       (kill-buffer embark-collect-linked-buffer)
     (embark-collect-completions)))
+
+(declare-function embark--act "embark")
+(declare-function embark-default-action "embark")
+(declare-function embark--target "embark")
+
+(defun prot-embark--completions-act (arg)
+  "Move ARG lines and perform `embark-default-action'."
+  (forward-line arg)
+  (embark--act #'embark-default-action (cdr (embark--target))))
+
+;;;###autoload
+(defun prot-embark-completions-act-next (&optional arg)
+  "Run default action on next or ARGth Embark target.
+This calls `prot-embark--completions-act' and is meant to be
+assigned to a key in `embark-collect-mode-map'."
+  (interactive "p")
+  (prot-embark--completions-act (or arg 1)))
+
+;;;###autoload
+(defun prot-embark-completions-act-previous (&optional arg)
+  "Run default action on previous or ARGth Embark target.
+This calls `prot-embark--completions-act' and is meant to be
+assigned to a key in `embark-collect-mode-map'."
+  (interactive "p")
+  (let ((num (prot-common-number-negative arg))) ; from `prot-common.el'
+    (prot-embark--completions-act (or num -1))))
+
+;;;###autoload
+(defun prot-embark-completions-act-current ()
+  "Run default action on Embark target without exiting.
+Meant to be assigned to a key in `embark-collect-mode-map'."
+  (interactive)
+  (embark--act #'embark-default-action (cdr (embark--target))))
+
+(defun prot-embark--switch-to-completions ()
+  "Subroutine for switching to the Embark completions buffer."
+  (unless (prot-embark--live-buffer-p)
+    (prot-embark-completions-toggle))
+  (pop-to-buffer embark-collect-linked-buffer))
+
+;;;###autoload
+(defun prot-embark-switch-to-completions-top ()
+  "Switch to the top of Embark's completions buffer.
+Meant to be bound in `minibuffer-local-completion-map'."
+  (interactive)
+  (prot-embark--switch-to-completions)
+  (goto-char (point-min)))
+
+;;;###autoload
+(defun prot-embark-switch-to-completions-bottom ()
+  "Switch to the bottom of Embark's completions buffer.
+Meant to be bound in `minibuffer-local-completion-map'."
+  (interactive)
+  (prot-embark--switch-to-completions)
+  (goto-char (point-max))
+  (forward-line -1)
+  (goto-char (point-at-bol)))
+
+;;;###autoload
+(defun prot-embark-next-line-or-mini (&optional arg)
+  "Move to the next line or switch to the minibuffer.
+This performs a regular motion for optional ARG lines, but when
+point can no longer move in that direction, then it switches to
+the minibuffer."
+  (interactive "p")
+  (if (or (eobp) (eq (point-max) (save-excursion (forward-line 1) (point))))
+      (prot-minibuffer-focus-mini)    ; from `prot-minibuffer.el'
+    (forward-line (or arg 1)))
+  (setq this-command 'next-line))
+
+;;;###autoload
+(defun prot-embark-previous-line-or-mini (&optional arg)
+  "Move to the next line or switch to the minibuffer.
+This performs a regular motion for optional ARG lines, but when
+point can no longer move in that direction, then it switches to
+the minibuffer."
+  (interactive "p")
+  (let ((num (prot-common-number-negative arg))) ; from `prot-common.el'
+    (if (bobp)
+        (prot-minibuffer-focus-mini)    ; from `prot-minibuffer.el'
+      (forward-line (or num 1)))))
 
 ;; ;; FIXME: we need a more robust approach than `this-command'.
 ;;

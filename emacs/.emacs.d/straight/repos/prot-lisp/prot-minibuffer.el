@@ -44,8 +44,8 @@ Used by `prot-minibuffer--get-completion-window'."
 
 ;;;; Minibuffer behaviour
 
-;; Thanks to Omar Antolín Camarena for providing this.  Source:
-;; <https://github.com/oantolin/emacs-config>.
+;; Thanks to Omar Antolín Camarena for providing the messageless and
+;; stealthily.  Source: <https://github.com/oantolin/emacs-config>.
 (defun prot-minibuffer--messageless (fn &rest args)
   "Set `minibuffer-message-timeout' to 0.
 Meant as advice for minibuffer completion FN with ARGS."
@@ -56,6 +56,17 @@ Meant as advice for minibuffer completion FN with ARGS."
               minibuffer-complete-and-exit
               exit-minibuffer))
   (advice-add fn :around #'prot-minibuffer--messageless))
+
+;; Note that this solves bug#45686 and is only considered a temporary
+;; measure: <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=45686>
+(defun prot-minibuffer--stealthily (fn &rest args)
+  "Prevent minibuffer default from counting as a modification.
+Meant as advice for FN `minibuf-eldef-setup-minibuffer' with rest
+ARGS."
+  (let ((inhibit-modification-hooks t))
+    (apply fn args)))
+
+(advice-add 'minibuf-eldef-setup-minibuffer :around #'prot-minibuffer--stealthily)
 
 ;;;; Cursor appearance
 
