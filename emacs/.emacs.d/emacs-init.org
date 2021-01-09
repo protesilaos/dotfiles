@@ -354,6 +354,7 @@ common key combinations.
 	      ("* Asterisks" . (42 42))              ; * *
 	      ("_ underscores" . (95 95))))          ; _ _
   :bind (;; General commands
+         ("<insert>" . nil)
 	     ("C-z" . nil)
 	     ("C-x C-z" . nil)
 	     ("C-h h" . nil)
