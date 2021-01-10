@@ -1079,7 +1079,7 @@ declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e1
   (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-show-help nil)
   (setq completion-ignore-case t)
-  (setq-default case-fold-search nil)   ; For general regexp
+  (setq-default case-fold-search t)   ; For general regexp
 
   ;; The following two are updated in Emacs 28.  They concern the
   ;; *Completions* buffer.
@@ -1123,6 +1123,8 @@ And here is =prot-minibuffer.el= (from [[https://gitlab.com/protesilaos/dotfiles
 :PROPERTIES:
 :CUSTOM_ID: h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984
 :END:
+
+Video introduction: [[https://protesilaos.com/codelog/2021-01-09-emacs-embark-extras/][Embark and my extras]] (2021-01-09).
 
 Embark provides a unified framework of regular Emacs keymaps which let
 you carry out /contextually relevant actions/ on *targets* through a common
@@ -1260,15 +1262,21 @@ Finally, a few words about the following package declaration:
           (xref-location . list)
           (kill-ring . zebra)
           (t . list)))
-  (setq embark-collect-live-update-delay 0.5)
-  (setq embark-collect-live-initial-delay 0.8)
-  ;; NOTE: I keep this around for when I do videos, otherwise I do not
-  ;; use it.
-  (setq embark-action-indicator
-        (lambda (map)
-          (which-key--show-keymap "Embark" map nil nil 'no-paging)
-          #'which-key--hide-popup-ignore-command)
-        embark-become-indicator embark-action-indicator)
+  (setq embark-collect-live-update-delay 0.25)
+  (setq embark-collect-live-initial-delay 0.5)
+
+  ;; Please don't read too much into the names of those faces.  Just
+  ;; green and yellow.
+  (setq embark-action-indicator (propertize "Act" 'face 'success))
+  (setq embark-become-indicator (propertize "Become" 'face 'warning))
+
+  ;; ;; NOTE: I keep this around for when I do videos, otherwise I do not
+  ;; ;; use it.
+  ;; (setq embark-action-indicator
+  ;;       (lambda (map)
+  ;;         (which-key--show-keymap "Embark" map nil nil 'no-paging)
+  ;;         #'which-key--hide-popup-ignore-command)
+  ;;       embark-become-indicator embark-action-indicator)
   :hook ((minibuffer-setup-hook . embark-collect-completions-after-input)
          (embark-post-action-hook . embark-collect--update-linked)
          (embark-collect-mode-hook . hl-line-mode))
@@ -1345,10 +1353,23 @@ of better alternatives.
   (setq consult-async-input-throttle 0.8)
   (setq consult-narrow-key ">")
   (setq consult-widen-key "<")
-  (setq consult-preview-key "\C-v")
-  (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+  ;; ;; Those previews are useful if you are using Icomplete or Selectrum.
+  ;; ;; I am using just the default minibuffer, so I have a slightly
+  ;; ;; different way of triggering manual views.  This is demonstrated in
+  ;; ;; my video: <https://protesilaos.com/codelog/2021-01-09-emacs-embark-extras/>
+  ;; (setq consult-preview-key 'any)
+  ;; (setq consult-preview-key (kbd "C-v"))
+  ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+
+  ;; ;; Also check this if you are using Icomplete or Selectrum:
+  ;; (setq consult-config `((consult-theme :preview-key nil)
+  ;;                        (consult-buffer :preview-key ,(kbd "M-p"))
+  ;;                        (consult-buffer :preview-key ,(kbd "M-p"))
+  ;;                        (consult-line :preview-key (list ,(kbd "<S-down>") ,(kbd "<S-up>")))))
   :bind (("M-X" . consult-mode-command)
          ("M-s m" . consult-mark)
+         :map consult-narrow-map
+         ("?" . consult-narrow-help)
          :map minibuffer-local-completion-map
          ("<tab>" . minibuffer-force-complete)))
 
@@ -1375,7 +1396,7 @@ of better alternatives.
          ("M-s f" . prot-consult-fd)
          ("M-s g" . prot-consult-rg)
          :map embark-symbol-map
-         ("g" . prot-consult-rg)))
+         ("g" . prot-consult-rg-ref)))
 #+end_src
 
 Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -8480,7 +8501,7 @@ Overview of my settings:
 (use-package desktop
   :config
   (setq desktop-auto-save-timeout 300)
-  (setq desktop-dirname "~/.emacs.d/")
+  (setq desktop-path "~/.emacs.d/")
   (setq desktop-base-file-name "desktop")
   (setq desktop-files-not-to-save nil)
   (setq desktop-globals-to-clear nil)
