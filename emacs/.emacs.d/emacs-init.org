@@ -1307,6 +1307,7 @@ Finally, a few words about the following package declaration:
   :hook (embark-collect-post-revert-hook . prot-embark--collect-fit-window)
   :bind (:map embark-collect-mode-map
          ("h" . prot-simple-describe-symbol)  ; from `prot-simple.el'
+         ("C-g" . prot-embark-keyboard-quit)
          ("C-M-n" . prot-embark-completions-act-next)
          ("C-M-p" . prot-embark-completions-act-previous)
          ("C-M-j" . prot-embark-completions-act-current)

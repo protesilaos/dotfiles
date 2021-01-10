@@ -63,6 +63,26 @@ To be added to `embark-occur-post-revert-hook'."
     (when buf-name
       (string-match-p prot-embark-collect-window-regexp buf-name))))
 
+;; Thanks to Karthik Chikmagalur for providing the
+;; `prot-embark-keyboard-quit' command!  Sources to Karthik's work:
+;;
+;; + https://karthinks.com/
+;; + https://github.com/karthink/.emacs.d/tree/clean
+;;
+;;;###autoload
+(defun prot-embark-keyboard-quit ()
+  "Control the exit behaviour for Embark collect buffers.
+
+If in an Embark live collect/completions buffer, run
+`abort-recursive-edit'.  Otherwise run `keyboard-quit'.
+
+This matches `prot-embark-collect-window-regexp' and is meant to
+be bound in `embark-live-collect-mode-map'."
+  (interactive)
+  (if (string-match-p prot-embark-collect-window-regexp (buffer-name))
+      (abort-recursive-edit)
+    (keyboard-quit)))
+
 (declare-function embark-collect-completions "embark")
 
 ;;;###autoload
