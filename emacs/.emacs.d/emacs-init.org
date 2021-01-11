@@ -1553,7 +1553,7 @@ add them to the list of Embark's known keymaps.
 #+begin_src emacs-lisp
 (use-package prot-embark-extras
   :straight (:type built-in)
-  :config
+  :init
   (setq prot-embark-extras-add-keymaps t)
   (prot-embark-extras-keymaps)
   :bind (:map embark-symbol-map
