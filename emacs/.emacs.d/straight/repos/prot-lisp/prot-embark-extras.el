@@ -92,5 +92,29 @@ those so-called 'extras'."
             (dolist (map maps)
               (delete map embark-become-keymaps))))))
 
+;;;; Keycast integration
+
+;; Got this from Embark's wiki.  Renamed it to placate the compiler:
+;; <https://github.com/oantolin/embark/wiki/Additional-Configuration>.
+
+(defvar keycast--this-command-keys)
+(defvar keycast--this-command)
+
+(defun prot-embark-extras--store-action-key+cmd (cmd)
+  "Configure keycast variables for keys and CMD.
+To be used as filter-return advice to `embark-keymap-prompter'."
+  (setq keycast--this-command-keys (this-single-command-keys)
+        keycast--this-command cmd))
+
+(advice-add 'embark-keymap-prompter :filter-return #'prot-embark-extras--store-action-key+cmd)
+
+(defun prot-embark-extras--force-keycast-update (&rest _)
+  "Update keycast's mode line.
+To be passed as advice before `embark--prompt-for-action'."
+  (force-mode-line-update t))
+
+(advice-add 'embark--prompt-for-action :before #'prot-embark-extras--force-keycast-update)
+(advice-add 'embark-become :before #'prot-embark-extras--force-keycast-update)
+
 (provide 'prot-embark-extras)
 ;;; prot-embark-extras.el ends here
