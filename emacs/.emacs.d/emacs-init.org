@@ -1262,8 +1262,8 @@ Finally, a few words about the following package declaration:
           (xref-location . list)
           (kill-ring . zebra)
           (t . list)))
-  (setq embark-collect-live-update-delay 0.25)
-  (setq embark-collect-live-initial-delay 0.5)
+  (setq embark-collect-live-update-delay 0.4)
+  (setq embark-collect-live-initial-delay 0.6)
 
   ;; Please don't read too much into the names of those faces.  Just
   ;; green and yellow.
