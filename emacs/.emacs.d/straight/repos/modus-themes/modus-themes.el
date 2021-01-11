@@ -226,6 +226,7 @@
 ;;     interaction-log
 ;;     ioccur
 ;;     isearch, occur, etc.
+;;     isl (isearch-light)
 ;;     ivy
 ;;     ivy-posframe
 ;;     jira (org-jira)
@@ -442,21 +443,21 @@
     (blue . "#0031a9")
     (blue-alt . "#2544bb")
     (blue-alt-other . "#0000c0")
-    (blue-faint . "#002f88")
-    (blue-alt-faint . "#003f78")
-    (blue-alt-other-faint . "#1f0f6f")
+    (blue-faint . "#003497")
+    (blue-alt-faint . "#0f3d8c")
+    (blue-alt-other-faint . "#001087")
     (magenta . "#721045")
     (magenta-alt . "#8f0075")
     (magenta-alt-other . "#5317ac")
     (magenta-faint . "#752f50")
-    (magenta-alt-faint . "#702565")
-    (magenta-alt-other-faint . "#5f3f7f")
+    (magenta-alt-faint . "#7b206f")
+    (magenta-alt-other-faint . "#55348e")
     (cyan . "#00538b")
     (cyan-alt . "#30517f")
     (cyan-alt-other . "#005a5f")
-    (cyan-faint . "#12506f")
+    (cyan-faint . "#005077")
     (cyan-alt-faint . "#354f6f")
-    (cyan-alt-other-faint . "#2e584f")
+    (cyan-alt-other-faint . "#125458")
     ;; these foreground values can only be combined with bg-main and are
     ;; thus not suitable for general purpose highlighting
     (red-intense . "#b60000")
@@ -685,19 +686,19 @@ symbol and the latter as a string.")
     (blue-alt . "#79a8ff" )
     (blue-alt-other . "#00bcff")
     (blue-faint . "#92baff")
-    (blue-alt-faint . "#a4b0ff")
-    (blue-alt-other-faint . "#8fc5ff")
+    (blue-alt-faint . "#a0acf5")
+    (blue-alt-other-faint . "#87c8ff")
     (magenta . "#feacd0")
     (magenta-alt . "#f78fe7")
     (magenta-alt-other . "#b6a0ff")
     (magenta-faint . "#e0b2d6")
     (magenta-alt-faint . "#ef9fe4")
-    (magenta-alt-other-faint . "#d0b4ff")
+    (magenta-alt-other-faint . "#cfa6ff")
     (cyan . "#00d3d0")
     (cyan-alt . "#4ae8fc")
     (cyan-alt-other . "#6ae4b9")
-    (cyan-faint . "#a0bfdf")
-    (cyan-alt-faint . "#90c4ed")
+    (cyan-faint . "#90c4ed")
+    (cyan-alt-faint . "#a0bfdf")
     (cyan-alt-other-faint . "#a4d0bb")
     ;; these foreground values can only be combined with bg-main and are
     ;; thus not suitable for general purpose highlighting
@@ -2076,6 +2077,8 @@ For colors bound, see `modus-themes-operandi-colors' or
        (ignore class ,@colors)          ; Silence unused variable warnings
        ,@body)))
 
+
+
 ;;;; Commands
 
 ;; The `modus-themes-load-themes' is meant to be included in user
@@ -2112,10 +2115,7 @@ For colors bound, see `modus-themes-operandi-colors' or
 ;; something like this:
 ;;
 ;; (defun modus-themes-toggle-enabled ()
-;;   "Toggle between `modus-operandi' and `modus-vivendi' themes.
-;; Also runs `modus-themes-after-load-theme-hook' at its last stage
-;; by virtue of calling either of `modus-themes-load-operandi' and
-;; `modus-themes-load-vivendi' functions."
+;;   "Toggle between `modus-operandi' and `modus-vivendi' themes."
 ;;   (interactive)
 ;;   (pcase (modus-themes--current-theme)
 ;;     ('modus-operandi (progn (enable-theme 'modus-vivendi)
@@ -3413,8 +3413,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                           blue-alt-other blue-alt-other-faint magenta-alt-other))))
     `(font-lock-doc-face ((,class :inherit modus-theme-slant
                                   ,@(modus-themes--syntax-docstring
-                                     fg-docstring cyan-alt-other-faint
-                                     green-alt-faint magenta-nuanced-fg))))
+                                     fg-docstring green-alt-other-faint
+                                     green-alt-other-faint magenta-nuanced-fg))))
     `(font-lock-function-name-face ((,class ,@(modus-themes--syntax-extra
                                                magenta magenta-faint magenta-alt))))
     `(font-lock-keyword-face ((,class :inherit modus-theme-bold
@@ -3437,7 +3437,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                         blue-alt blue-alt-faint green green-alt))))
     `(font-lock-type-face ((,class :inherit modus-theme-bold
                                    ,@(modus-themes--syntax-extra
-                                      cyan-alt-other magenta-alt-faint cyan-alt))))
+                                      cyan-alt-other cyan-alt-faint cyan-alt))))
     `(font-lock-variable-name-face ((,class ,@(modus-themes--syntax-extra
                                                cyan cyan-faint blue-alt-faint))))
     `(font-lock-warning-face ((,class :inherit modus-theme-bold
@@ -3929,6 +3929,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(lazy-highlight ((,class :inherit modus-theme-refine-cyan)))
     `(match ((,class :inherit modus-theme-special-calm)))
     `(query-replace ((,class :inherit (modus-theme-intense-yellow bold))))
+;;;;; isl (isearch-light)
+    `(isl-line ((,class :inherit modus-theme-subtle-green)))
+    `(isl-match ((,class :inherit modus-theme-refine-cyan)))
+    `(isl-number ((,class :inherit modus-theme-bold :foreground ,green-active)))
+    `(isl-on ((,class :inherit (bold modus-theme-intense-green))))
+    `(isl-string ((,class :inherit modus-theme-bold :foreground ,cyan-active)))
 ;;;;; ivy
     `(ivy-action ((,class :inherit bold :foreground ,red-alt)))
     `(ivy-completions-annotations ((,class :inherit completions-annotations)))
