@@ -8502,7 +8502,7 @@ Overview of my settings:
 (use-package desktop
   :config
   (setq desktop-auto-save-timeout 300)
-  (setq desktop-path "~/.emacs.d/")
+  (setq desktop-path '("~/.emacs.d/"))
   (setq desktop-base-file-name "desktop")
   (setq desktop-files-not-to-save nil)
   (setq desktop-globals-to-clear nil)
