@@ -1395,9 +1395,7 @@ of better alternatives.
          ("M-s y" . prot-consult-yank)
          ("M-s l" . prot-consult-line)
          ("M-s f" . prot-consult-fd)
-         ("M-s g" . prot-consult-rg)
-         :map embark-symbol-map
-         ("g" . prot-consult-rg-ref)))
+         ("M-s g" . prot-consult-rg)))
 #+end_src
 
 Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
