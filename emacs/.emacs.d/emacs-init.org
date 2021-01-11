@@ -1242,6 +1242,8 @@ Finally, a few words about the following package declaration:
   - =prot-embark-completions-toggle= toggles the display of the live
     completions' buffer.
 
+  - Extensions for cycling through the list of candidates.
+
 + NOTE: I also define a =prot-embark-extras.el= library which unifies
   Embark with all of my other libraries.  It is mostly meant to define
   actions for =embark-become= (please check this section first and then
@@ -1290,6 +1292,8 @@ Finally, a few words about the following package declaration:
          ;; `prot-minibuffer-focus-mini-or-completions' which is bound
          ;; to "s-v".
          :map embark-collect-mode-map
+         ("C-," . embark-act)
+         ("C-." . embark-act-noexit)
          ("," . embark-act)
          ("." . embark-act-noexit)
          ("M-o" . embark-export)
