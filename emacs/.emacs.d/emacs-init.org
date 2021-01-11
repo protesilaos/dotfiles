@@ -516,19 +516,25 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.
-  (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs t
+  (setq modus-themes-slanted-constructs nil
+        modus-themes-bold-constructs nil
         modus-themes-fringes nil ; {nil,'subtle,'intense}
-        ;; Options for lang checkers are: nil, 'straight-underline,
-        ;; 'subtle-foreground, 'subtle-foreground-straight-underline,
-        ;; 'intense-foreground, 'intense-foreground-straight-underline,
-        ;; 'colored-background
+        ;; Options for `modus-themes-lang-checkers': nil,
+        ;; 'straight-underline, 'subtle-foreground,
+        ;; 'subtle-foreground-straight-underline, 'intense-foreground,
+        ;; 'intense-foreground-straight-underline, 'colored-background
         modus-themes-lang-checkers nil
-        modus-themes-mode-line '3d ; {nil,'3d,'moody}
-        modus-themes-syntax nil ; {nil,'faint,'yellow-comments,'green-strings,'yellow-comments-green-strings,'alt-syntax,'alt-syntax-yellow-comments}
+        modus-themes-mode-line nil ; {nil,'3d,'moody}
+        ;; Options for `modus-themes-syntax': nil, 'faint,
+        ;; 'yellow-comments, 'green-strings,
+        ;; 'yellow-comments-green-strings, 'alt-syntax,
+        ;; 'alt-syntax-yellow-comments
+        modus-themes-syntax 'yellow-comments-green-strings
         modus-themes-intense-hl-line nil
         modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
-        modus-themes-links 'neutral-underline ; {nil,'faint,'neutral-underline,'faint-neutral-underline,'no-underline}
+        ;; Options for `modus-themes-links': nil, 'faint,
+        ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline
+        modus-themes-links 'neutral-underline
         modus-themes-no-mixed-fonts nil
         modus-themes-prompts nil ; {nil,'subtle,'intense}
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
