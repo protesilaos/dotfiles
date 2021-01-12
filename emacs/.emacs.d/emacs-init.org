@@ -1429,6 +1429,8 @@ Finally, a few words about the following package declaration:
          ("C-M-j" . prot-embark-completions-act-current)
          ("C-n" . prot-embark-next-line-or-mini)
          ("C-p" . prot-embark-previous-line-or-mini)
+         ("M-F" . prot-embark-collection-flush-lines) ; M-S-f like M-S-5 (M-%)
+         ("M-K" . prot-embark-collection-keep-lines)  ; M-S-k like M-S-5 (M-%)
          :map minibuffer-local-completion-map
          ("C-n" . prot-embark-switch-to-completions-top)
          ("C-p" . prot-embark-switch-to-completions-bottom)
