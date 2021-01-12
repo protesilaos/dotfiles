@@ -1134,6 +1134,80 @@ And here is =prot-minibuffer.el= (from [[https://gitlab.com/protesilaos/dotfiles
 
 #+include: straight/repos/prot-lisp/prot-minibuffer.el src emacs-lisp :tangle no
 
+*** Enhanced minibuffer commands (consult.el and prot-consult.el)
+:PROPERTIES:
+:CUSTOM_ID: h:9c9401d6-8c53-4276-be4c-3bff345d3eeb
+:END:
+
+NOTE 2021-01-04: This section is largely incomplete and remains a
+work-in-progress, even though my plan is to make it an integral part of
+my setup.  It has thus far replaced code I used to maintain on the
+built-in =imenu=, custom extensions to =dired=, as well as =rg.el=.
+
+Daniel Mendler's Consult is a welcome addition to the ecosystem of
+small, modular, extensible tools that work with the standard minibuffer
+completion mechanisms and, by extension, with every user interface that
+largely conforms with them (Icomplete, Selectrum) or fully respects them
+(Embark).
+
+Consult provides previews for its commands: this should work without any
+further intervention for users of Icomplete or Selectrum.  For my case,
+however, where I rely on the default minibuffer plus Embark's ability to
+show and live-update completion candidates, this can be achieved with
+the =embark-consult= package: [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][embark.el, emacs-consult.el, prot-embark.el]].
+
+While this section is a work-in-progress, note that my =prot-consult.el=
+defines some /quick and dirty/ extensions.  They *will be reviewed* in
+favour of better alternatives.
+
+#+begin_src emacs-lisp
+(use-package consult
+  :straight t
+  :demand
+  :config
+  (setq consult-line-numbers-widen t)
+  (setq completion-in-region-function #'consult-completion-in-region)
+  (setq consult-async-min-input 3)
+  (setq consult-async-input-debounce 0.5)
+  (setq consult-async-input-throttle 0.8)
+  (setq consult-narrow-key ">")
+  (setq consult-widen-key "<")
+  ;; NOTE: check `embark-consult' for previews
+  :bind (("M-X" . consult-mode-command)
+         ("M-s m" . consult-mark)
+         :map consult-narrow-map
+         ("?" . consult-narrow-help)
+         :map minibuffer-local-completion-map
+         ("<tab>" . minibuffer-force-complete)))
+
+(use-package prot-consult
+  :straight (:type built-in)
+  :after (consult prot-pulse)
+  :config
+  (setq consult-project-root-function #'prot-consult-project-root)
+  (setq prot-consult-add-advice-set-hooks t)
+  (setq prot-consult-command-centre-list
+        '(consult-line
+          prot-consult-line
+          consult-mark))
+  (setq prot-consult-command-top-list
+        '(consult-outline
+          consult-imenu
+          prot-consult-outline
+          prot-consult-imenu))
+  (prot-consult-set-up-hooks-mode 1)
+  :bind (("M-s i" . prot-consult-imenu)
+         ("M-s s" . prot-consult-outline)    ; M-s o is `occur'
+         ("M-s y" . prot-consult-yank)
+         ("M-s l" . prot-consult-line)
+         ("M-s f" . prot-consult-fd)
+         ("M-s g" . prot-consult-rg)))
+#+end_src
+
+Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-consult.el src emacs-lisp :tangle no
+
 *** Extended minibuffer actions and more (embark.el and prot-embark.el)
 :PROPERTIES:
 :CUSTOM_ID: h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984
@@ -1363,80 +1437,6 @@ Finally, a few words about the following package declaration:
 This is =prot-embark.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: straight/repos/prot-lisp/prot-embark.el src emacs-lisp :tangle no
-
-*** Enhanced minibuffer commands (consult.el and prot-consult.el)
-:PROPERTIES:
-:CUSTOM_ID: h:9c9401d6-8c53-4276-be4c-3bff345d3eeb
-:END:
-
-NOTE 2021-01-04: This section is largely incomplete and remains a
-work-in-progress, even though my plan is to make it an integral part of
-my setup.  It has thus far replaced code I used to maintain on the
-built-in =imenu=, custom extensions to =dired=, as well as =rg.el=.
-
-Daniel Mendler's Consult is a welcome addition to the ecosystem of
-small, modular, extensible tools that work with the standard minibuffer
-completion mechanisms and, by extension, with every user interface that
-largely conforms with them (Icomplete, Selectrum) or fully respects them
-(Embark).
-
-Consult provides previews for its commands: this should work without any
-further intervention for users of Icomplete or Selectrum.  For my case,
-however, where I rely on the default minibuffer plus Embark's ability to
-show and live-update completion candidates, this can be achieved with
-the =embark-consult= package: [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][embark.el, emacs-consult.el, prot-embark.el]].
-
-While this section is a work-in-progress, note that my =prot-consult.el=
-defines some /quick and dirty/ extensions.  They *will be reviewed* in
-favour of better alternatives.
-
-#+begin_src emacs-lisp
-(use-package consult
-  :straight t
-  :demand
-  :config
-  (setq consult-line-numbers-widen t)
-  (setq completion-in-region-function #'consult-completion-in-region)
-  (setq consult-async-min-input 3)
-  (setq consult-async-input-debounce 0.5)
-  (setq consult-async-input-throttle 0.8)
-  (setq consult-narrow-key ">")
-  (setq consult-widen-key "<")
-  ;; NOTE: check `embark-consult' for previews
-  :bind (("M-X" . consult-mode-command)
-         ("M-s m" . consult-mark)
-         :map consult-narrow-map
-         ("?" . consult-narrow-help)
-         :map minibuffer-local-completion-map
-         ("<tab>" . minibuffer-force-complete)))
-
-(use-package prot-consult
-  :straight (:type built-in)
-  :after (consult prot-pulse)
-  :config
-  (setq consult-project-root-function #'prot-consult-project-root)
-  (setq prot-consult-add-advice-set-hooks t)
-  (setq prot-consult-command-centre-list
-        '(consult-line
-          prot-consult-line
-          consult-mark))
-  (setq prot-consult-command-top-list
-        '(consult-outline
-          consult-imenu
-          prot-consult-outline
-          prot-consult-imenu))
-  (prot-consult-set-up-hooks-mode 1)
-  :bind (("M-s i" . prot-consult-imenu)
-         ("M-s s" . prot-consult-outline)    ; M-s o is `occur'
-         ("M-s y" . prot-consult-yank)
-         ("M-s l" . prot-consult-line)
-         ("M-s f" . prot-consult-fd)
-         ("M-s g" . prot-consult-rg)))
-#+end_src
-
-Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
-
-#+include: straight/repos/prot-lisp/prot-consult.el src emacs-lisp :tangle no
 
 *** Projects (project.el and prot-project.el)
 :PROPERTIES:
