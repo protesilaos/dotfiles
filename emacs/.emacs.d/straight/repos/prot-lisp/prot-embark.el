@@ -198,6 +198,7 @@ the minibuffer."
               (flush-lines regexp)))
       (user-error "Not in an Embark collect buffer"))))
 
+;;;###autoload
 (defun prot-embark-collection-keep-lines (regexp)
   "`keep-lines' matching REGEXP in Embark collect buffers."
   (interactive
