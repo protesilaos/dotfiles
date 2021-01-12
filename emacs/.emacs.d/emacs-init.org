@@ -567,10 +567,16 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
        `(cursor ((,class :background ,(modus-themes-color-alts 'blue 'green))))
        `(header-line ((,class :inherit variable-pitch)))
        `(tab-bar ((,class :inherit variable-pitch)))
-       `(mode-line ((,class :inherit variable-pitch)))
+       `(mode-line
+         ((,class :inherit variable-pitch
+                  :box ,(modus-themes-color-alts 'yellow-subtle-bg 'magenta-subtle-bg)
+                  :background ,(modus-themes-color-alts 'yellow-nuanced-bg 'magenta-nuanced-bg)
+                  :foreground ,(modus-themes-color-alts 'yellow-nuanced-fg 'magenta-nuanced-fg))))
        `(mode-line-inactive ((,class :inherit variable-pitch)))
        `(line-number ((,class :background unspecified :foreground ,fg-unfocused)))
-       `(line-number-current-line ((,class :background unspecified :foreground ,red-alt-other))))))
+       `(line-number-current-line
+         ((,class :background ,(modus-themes-color-alts 'yellow-nuanced-bg 'magenta-nuanced-bg)
+                  :foreground ,(modus-themes-color-alts 'red-alt 'magenta-alt-other)))))))
 
   ;; Have I told you about the manual?
   (define-minor-mode prot/modus-themes-tinted
