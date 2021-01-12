@@ -1405,12 +1405,7 @@ Finally, a few words about the following package declaration:
                             :branch "master"
                             :files ("embark-consult.el"))
   :after (embark consult)
-  ;; ;; Use the hook for auto-previews in the completions' buffer.  I
-  ;; ;; prefer to do things manually.  Also note that my C-M-j which
-  ;; ;; runs `prot-embark-completions-act-current' can fake a "preview"
-  ;; ;; though it technically calls the default action on the target.
-  ;; ;; So be careful.  Whereas `embark-consult-preview-at-point' is
-  ;; ;; safe.
+  ;; ;; Use the hook, or check `prot-embark-consult-preview-toggle'.
   ;; :hook (embark-collect-mode-hook . embark-consult-preview-minor-mode)
   :bind (:map embark-collect-mode-map
          ("C-j" . embark-consult-preview-at-point)))
@@ -1427,6 +1422,7 @@ Finally, a few words about the following package declaration:
          ("C-M-n" . prot-embark-completions-act-next)
          ("C-M-p" . prot-embark-completions-act-previous)
          ("C-M-j" . prot-embark-completions-act-current)
+         ("C-M-v" . prot-embark-consult-preview-toggle) ; "view", "visualise" mnemonic
          ("C-n" . prot-embark-next-line-or-mini)
          ("C-p" . prot-embark-previous-line-or-mini)
          ("M-F" . prot-embark-collection-flush-lines) ; M-S-f like M-S-5 (M-%)

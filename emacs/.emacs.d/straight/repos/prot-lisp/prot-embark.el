@@ -211,5 +211,22 @@ the minibuffer."
               (keep-lines regexp)))
       (user-error "Not in an Embark collect buffer"))))
 
+(declare-function embark-consult-preview-minor-mode "embark-consult")
+(defvar embark-consult-preview-minor-mode)
+
+;;;###autoload
+(defun prot-embark-consult-preview-toggle ()
+  "Toggle preview mode for Embark's Consult collections."
+  (interactive)
+  (when (featurep 'embark-consult)
+    (require 'embark-consult)
+    (if (and (bound-and-true-p embark-consult-preview-minor-mode)
+             (string-match-p prot-embark-collect-buffer-regexp (buffer-name)))
+        (progn
+          (remove-hook 'embark-collect-mode-hook #'embark-consult-preview-minor-mode)
+          (embark-consult-preview-minor-mode -1))
+      (add-hook 'embark-collect-mode-hook #'embark-consult-preview-minor-mode)
+      (embark-consult-preview-minor-mode 1))))
+
 (provide 'prot-embark)
 ;;; prot-embark.el ends here
