@@ -39,18 +39,12 @@
   "Extensions for `embark'."
   :group 'editing)
 
-(defcustom prot-embark-collect-buffer-regexp
-  "\\Embark Collect.*\\(Live\\|Completions\\)?.*"
-  "Regexp to match window names with Embark collections."
-  :group 'prot-embark
-  :type 'string)
-
 ;; Thanks to Omar Antolín Camarena for providing a variant of this!
 ;; (mistakes are always my own).
 (defun prot-embark--collect-fit-window (&rest _)
   "Fit Embark's live occur window to its buffer.
 To be added to `embark-occur-post-revert-hook'."
-  (when (string-match-p prot-embark-collect-buffer-regexp (buffer-name))
+  (when (derived-mode-p 'embark-collect-mode)
     (fit-window-to-buffer (get-buffer-window)
                           (floor (frame-height) 2) 1)))
 
@@ -61,7 +55,7 @@ To be added to `embark-occur-post-revert-hook'."
   (let* ((buf-link embark-collect-linked-buffer)
          (buf-name (buffer-name buf-link)))
     (when buf-name
-      (string-match-p prot-embark-collect-buffer-regexp buf-name))))
+      (derived-mode-p 'embark-collect-mode))))
 
 ;; Thanks to Karthik Chikmagalur for providing the
 ;; `prot-embark-keyboard-quit' command!  Sources to Karthik's work:
@@ -79,7 +73,7 @@ If in an Embark live collect/completions buffer, run
 This matches `prot-embark-collect-buffer-regexp' and is meant to
 be bound in `embark-live-collect-mode-map'."
   (interactive)
-  (if (string-match-p prot-embark-collect-buffer-regexp (buffer-name))
+  (if (derived-mode-p 'embark-collect-mode)
       (abort-recursive-edit)
     (keyboard-quit)))
 
@@ -191,7 +185,7 @@ the minibuffer."
   (interactive
    (list (read-regexp "Flush lines matching regexp: ")))
   (let ((inhibit-read-only t))
-    (if (string-match-p prot-embark-collect-buffer-regexp (buffer-name))
+    (if (derived-mode-p 'embark-collect-mode)
         (with-current-buffer (current-buffer)
             (save-excursion
               (goto-char (point-min))
@@ -204,7 +198,7 @@ the minibuffer."
   (interactive
    (list (read-regexp "Keep lines matching regexp: ")))
   (let ((inhibit-read-only t))
-    (if (string-match-p prot-embark-collect-buffer-regexp (buffer-name))
+    (if (derived-mode-p 'embark-collect-mode)
         (with-current-buffer (current-buffer)
             (save-excursion
               (goto-char (point-min))
@@ -221,7 +215,7 @@ the minibuffer."
   (when (featurep 'embark-consult)
     (require 'embark-consult)
     (if (and (bound-and-true-p embark-consult-preview-minor-mode)
-             (string-match-p prot-embark-collect-buffer-regexp (buffer-name)))
+             (derived-mode-p 'embark-collect-mode))
         (progn
           (remove-hook 'embark-collect-mode-hook #'embark-consult-preview-minor-mode)
           (embark-consult-preview-minor-mode -1))
