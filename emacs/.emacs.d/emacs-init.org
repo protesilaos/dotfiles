@@ -1331,7 +1331,21 @@ Finally, a few words about the following package declaration:
   - =prot-embark-completions-toggle= toggles the display of the live
     completions' buffer.
 
-  - Extensions for cycling through the list of candidates.
+  - Several extensions for cycling through the list of candidates and/or
+    performing the default action while moving in a given direction.
+
+  - Commands to clear lines in an Embark collect buffer.  This can be
+    done on a line-wise basis with =prot-embark-collection-kill-line=, or
+    by matching a regular expression (search for the "flush lines" and
+    "keep lines" wrappers).
+
+  - The convenience command =prot-embark-keyboard-quit= which makes =C-g=
+    abort a completions' buffer instead of just cancelling the active
+    minibuffer's input.
+
+  - The =prot-embark-consult-preview-toggle= to preview Consult matches.
+    This leverages the =embark-consult= package (also check my
+    configurations for [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][consult.el and prot-consult.el]]).
 
 + NOTE: I also define a =prot-embark-extras.el= library which unifies
   Embark with all of my other libraries.  It is mostly meant to define
