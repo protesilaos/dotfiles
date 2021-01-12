@@ -39,11 +39,6 @@
   "Custom cross-package extensions for `embark'."
   :group 'editing)
 
-(defcustom prot-embark-extras-add-keymaps nil
-  "Whether to add custom, cross-package keymaps to Embark."
-  :type 'boolean
-  :group 'prot-embark-extras)
-
 (declare-function prot-consult-fd "prot-consult")
 (declare-function prot-consult-rg "prot-consult")
 
@@ -77,15 +72,17 @@
 (defvar embark-become-keymaps)
 
 ;;;###autoload
-(defun prot-embark-extras-keymaps ()
+(define-minor-mode prot-embark-extras-keymaps
   "Add or remove keymaps from Embark.
 This is based on the value of `prot-embark-extras-add-keymaps'
 and is meant to keep things clean in case I ever wish to disable
 those so-called 'extras'."
+  :init-value nil
+  :global t
   (let ((maps (list 'prot-embark-extras-become-general-map
                     'prot-embark-extras-become-line-map
                     'prot-embark-extras-become-file+buffer-map)))
-    (if prot-embark-extras-add-keymaps
+    (if prot-embark-extras-keymaps
         (dolist (map maps)
           (cl-pushnew map embark-become-keymaps))
       (setq embark-become-keymaps
@@ -110,11 +107,21 @@ To be used as filter-return advice to `embark-keymap-prompter'."
 
 (defun prot-embark-extras--force-keycast-update (&rest _)
   "Update keycast's mode line.
-To be passed as advice before `embark--prompt-for-action'."
+To be passed as advice before `embark-act' and others."
   (force-mode-line-update t))
 
-(advice-add 'embark--prompt-for-action :before #'prot-embark-extras--force-keycast-update)
-(advice-add 'embark-become :before #'prot-embark-extras--force-keycast-update)
+;; NOTE: This has a generic name because my plan is to add more packages
+;; to it.
+;;;###autoload
+(define-minor-mode prot-embark-extras-setup-packages
+  "Set up advice to integrate Embark with various commands."
+  :init-value nil
+  :global t
+  (if prot-embark-extras-setup-packages
+      (dolist (cmd '(embark-act embark-act-noexit embark-become))
+        (advice-add cmd :before #'prot-embark-extras--force-keycast-update))
+    (dolist (cmd '(embark-act embark-act-noexit embark-become))
+      (advice-remove cmd #'prot-embark-extras--force-keycast-update))))
 
 (provide 'prot-embark-extras)
 ;;; prot-embark-extras.el ends here

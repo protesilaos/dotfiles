@@ -1562,9 +1562,10 @@ add them to the list of Embark's known keymaps.
 #+begin_src emacs-lisp
 (use-package prot-embark-extras
   :straight (:type built-in)
-  :init
-  (setq prot-embark-extras-add-keymaps t)
-  (prot-embark-extras-keymaps)
+  :demand
+  :config
+  (prot-embark-extras-keymaps 1)
+  (prot-embark-extras-setup-packages 1)
   :bind (:map embark-symbol-map
          ("g" . prot-consult-rg-ref)))
 #+end_src
