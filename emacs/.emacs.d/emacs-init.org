@@ -519,7 +519,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; configurations.
   (setq modus-themes-slanted-constructs nil
         modus-themes-bold-constructs nil
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
         ;; 'subtle-foreground-straight-underline, 'intense-foreground,
@@ -530,7 +530,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments
-        modus-themes-syntax 'yellow-comments-green-strings
+        modus-themes-syntax nil
         modus-themes-intense-hl-line nil
         modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
         ;; Options for `modus-themes-links': nil, 'faint,
@@ -557,7 +557,9 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; 'modus-operandi)' after the `:config' keyword.
   (modus-themes-load-themes)
   :config
-  ;; Don't forget to read the manual.  This is explained there.
+  ;; Don't forget to read the manual.  This is explained there.  And
+  ;; please don't read too much into those: I am testing various
+  ;; combinations and scenaria.
   (defun prot/modus-themes-custom-faces ()
     "Tweak faces after `modus-themes-after-load-theme-hook'."
     (modus-themes-with-colors
@@ -715,7 +717,7 @@ Relevant blog posts of mine:
   :init
   (setq prot-fonts-typeface-sets-alist
         '((laptop . (90 "Hack" "DejaVu Sans Condensed"))
-          (desktop . (110 "Hack" "DejaVu Sans Condensed"))
+          (desktop . (110 "Source Code Pro" "Roboto"))
           (reader . (150 "Iosevka Comfy" "FiraGO"))
           (presentation . (180 "Iosevka Comfy" "Source Sans Pro"))))
   (setq prot-fonts-monospaced-list
@@ -724,8 +726,7 @@ Relevant blog posts of mine:
   (setq prot-fonts-heights-list
         '(100 105 110 120 130 140 150 160 170 180 190))
   (setq prot-fonts-line-spacing-alist
-        '(("Source Code Pro" . 1)
-          ("Ubuntu Mono" . 2)))
+        '(("Ubuntu Mono" . 2)))
   (setq prot-fonts-laptop-desktop-keys-list '(laptop desktop))
   (setq prot-fonts-max-small-resolution-width 1366)
   (setq prot-fonts-bold-weight-alist
@@ -1085,6 +1086,7 @@ declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e1
   (setq completion-pcm-complete-word-inserts-delimiters t)
   (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-show-help nil)
+  (setq completion-auto-help nil)
   (setq completion-ignore-case t)
   (setq-default case-fold-search t)   ; For general regexp
 
@@ -1271,8 +1273,8 @@ Finally, a few words about the following package declaration:
           (xref-location . list)
           (kill-ring . zebra)
           (t . list)))
-  (setq embark-collect-live-update-delay 0.4)
-  (setq embark-collect-live-initial-delay 0.6)
+  (setq embark-collect-live-update-delay 0.5)
+  (setq embark-collect-live-initial-delay 0.8)
 
   ;; Please don't read too much into the names of those faces.  Just
   ;; green and yellow.
@@ -1280,7 +1282,7 @@ Finally, a few words about the following package declaration:
   (setq embark-become-indicator (propertize "Become" 'face 'warning))
 
   ;; ;; NOTE: I keep this around for when I do videos, otherwise I do not
-  ;; ;; use it.
+  ;; ;; use it.  It requires `which-key' to display key hints.
   ;; (setq embark-action-indicator
   ;;       (lambda (map)
   ;;         (which-key--show-keymap "Embark" map nil nil 'no-paging)
@@ -1303,9 +1305,6 @@ Finally, a few words about the following package declaration:
          ("C-." . embark-act-noexit)
          ("," . embark-act)
          ("." . embark-act-noexit)
-         ("M-o" . embark-export)
-         ("C-o" . embark-export)
-         ("M-t" . toggle-truncate-lines)
          ("M-q" . embark-collect-toggle-view)
          :map embark-symbol-map
          ("." . embark-find-definition)
@@ -2618,8 +2617,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (side . right)
            (slot . 0)
            (window-parameters
-            . ((no-other-window . t)
-               (mode-line-format
+            . ((mode-line-format
                 . (" "
                    mode-line-buffer-identification)))))
           ("\\*Custom.*"
