@@ -174,33 +174,41 @@ the minibuffer."
         (prot-minibuffer-focus-mini)    ; from `prot-minibuffer.el'
       (forward-line (or num 1)))))
 
-;; ;; FIXME: we need a more robust approach than `this-command'.
-;;
-;; (declare-function embark-collect-completions-after-delay "embark")
-;; (declare-function embark-collect-completions-after-input "embark")
-;;
-;; ;; TODO: consider pros and cons of a blocklist.
-;; (defcustom prot-embark-completions-passlist nil
-;;   "Command list that can display Embark Collect automatically.
-;; Those are run with `embark-collect-completions-after-delay',
-;; otherwise we revert to `embark-collect-completions-after-input'.
-;;
-;; This list is intended for `prot-embark-collect-completions'."
-;;   :type 'list
-;;   :group 'prot-embark)
-;;
-;; ;;;###autoload
-;; (defun prot-embark-collect-completions ()
-;;   "Control how to display Embark Collection Completions.
-;;
-;; If `this-command' belongs to `prot-embark-completions-passlist',
-;; the completions' buffer is automatically displayed following a
-;; delay.  Otherwise it only shows up after some minibuffer input.
-;;
-;; Use this function with `minibuffer-setup-hook'."
-;;   (if (member this-command prot-embark-completions-passlist)
-;;       (embark-collect-completions-after-delay)
-;;     (embark-collect-completions-after-input)))
+;;;###autoload
+(defun prot-embark-collection-kill-line ()
+  "Delete line from Embark collect buffer."
+  (interactive)
+  (let* ((inhibit-read-only t)
+         (eol (point-at-eol))
+         (eol-dwim (if (= eol (point-max)) eol (1+ eol))))
+    (save-excursion
+      (goto-char (point-at-bol))
+      (delete-region (point) eol-dwim))))
+
+;;;###autoload
+(defun prot-embark-collection-flush-lines (regexp)
+  "`flush-lines' matching REGEXP in Embark collect buffers."
+  (interactive
+   (list (read-regexp "Flush lines matching regexp: ")))
+  (let ((inhibit-read-only t))
+    (if (string-match-p prot-embark-collect-buffer-regexp (buffer-name))
+        (with-current-buffer (current-buffer)
+            (save-excursion
+              (goto-char (point-min))
+              (flush-lines regexp)))
+      (user-error "Not in an Embark collect buffer"))))
+
+(defun prot-embark-collection-keep-lines (regexp)
+  "`keep-lines' matching REGEXP in Embark collect buffers."
+  (interactive
+   (list (read-regexp "Keep lines matching regexp: ")))
+  (let ((inhibit-read-only t))
+    (if (string-match-p prot-embark-collect-buffer-regexp (buffer-name))
+        (with-current-buffer (current-buffer)
+            (save-excursion
+              (goto-char (point-min))
+              (keep-lines regexp)))
+      (user-error "Not in an Embark collect buffer"))))
 
 (provide 'prot-embark)
 ;;; prot-embark.el ends here
