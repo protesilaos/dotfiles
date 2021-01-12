@@ -1266,7 +1266,13 @@ Finally, a few words about the following package declaration:
 
 #+begin_src emacs-lisp
 (use-package embark
-  :straight (:host github :repo "oantolin/embark" :branch "master")
+  ;; Note that this gets only the main library.  That repo contains
+  ;; other packages as well (which are small *.el files that are
+  ;; distributed separately).
+  :straight (embark :host github
+                    :repo "oantolin/embark"
+                    :branch "master"
+                    :files ("embark.el"))
   :demand
   :diminish embark-collect-zebra-minor-mode
   :after prot-minibuffer
@@ -1316,6 +1322,25 @@ Finally, a few words about the following package declaration:
          ("." . embark-find-definition)
          ("k" . describe-keymap)))
 
+;; Integration with Consult.  Note that the package is `embark-consult',
+;; but because it comes from the same repo as Embark I prefer to use
+;; this straight.el directive (check the main embark package above).
+(use-package embark
+  :straight (embark-consult :host github
+                            :repo "oantolin/embark"
+                            :branch "master"
+                            :files ("embark-consult.el"))
+  :after (embark consult)
+  ;; ;; Use the hook for auto-previews in the completions' buffer.  I
+  ;; ;; prefer to do things manually.  Also note that my C-M-j which
+  ;; ;; runs `prot-embark-completions-act-current' can fake a "preview"
+  ;; ;; though it technically calls the default action on the target.
+  ;; ;; So be careful.  Whereas `embark-consult-preview-at-point' is
+  ;; ;; safe.
+  ;; :hook (embark-collect-mode-hook . embark-consult-preview-minor-mode)
+  :bind (:map embark-collect-mode-map
+         ("C-j" . embark-consult-preview-at-point)))
+
 (use-package prot-embark
   :straight (:type built-in)
   :demand
@@ -1355,34 +1380,29 @@ completion mechanisms and, by extension, with every user interface that
 largely conforms with them (Icomplete, Selectrum) or fully respects them
 (Embark).
 
+Consult provides previews for its commands: this should work without any
+further intervention for users of Icomplete or Selectrum.  For my case,
+however, where I rely on the default minibuffer plus Embark's ability to
+show and live-update completion candidates, this can be achieved with
+the =embark-consult= package: [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][embark.el, emacs-consult.el, prot-embark.el]].
+
 While this section is a work-in-progress, note that my =prot-consult.el=
-defines some quick and dirty extensions.  They may be reviewed in favour
-of better alternatives.
+defines some /quick and dirty/ extensions.  They *will be reviewed* in
+favour of better alternatives.
 
 #+begin_src emacs-lisp
 (use-package consult
-  :straight (:host github :repo "minad/consult" :branch "main")
+  :straight t
   :demand
   :config
   (setq consult-line-numbers-widen t)
   (setq completion-in-region-function #'consult-completion-in-region)
+  (setq consult-async-min-input 3)
   (setq consult-async-input-debounce 0.5)
   (setq consult-async-input-throttle 0.8)
   (setq consult-narrow-key ">")
   (setq consult-widen-key "<")
-  ;; ;; Those previews are useful if you are using Icomplete or Selectrum.
-  ;; ;; I am using just the default minibuffer, so I have a slightly
-  ;; ;; different way of triggering manual views.  This is demonstrated in
-  ;; ;; my video: <https://protesilaos.com/codelog/2021-01-09-emacs-embark-extras/>
-  ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key (kbd "C-v"))
-  ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
-
-  ;; ;; Also check this if you are using Icomplete or Selectrum:
-  ;; (setq consult-config `((consult-theme :preview-key nil)
-  ;;                        (consult-buffer :preview-key ,(kbd "M-p"))
-  ;;                        (consult-buffer :preview-key ,(kbd "M-p"))
-  ;;                        (consult-line :preview-key (list ,(kbd "<S-down>") ,(kbd "<S-up>")))))
+  ;; NOTE: check `embark-consult' for previews
   :bind (("M-X" . consult-mode-command)
          ("M-s m" . consult-mark)
          :map consult-narrow-map
@@ -1533,6 +1553,7 @@ no use for it.
 
 #+begin_src emacs-lisp
 (use-package recentf
+  :demand
   :config
   (setq recentf-save-file "~/.emacs.d/recentf")
   (setq recentf-max-saved-items 200)
@@ -1540,6 +1561,7 @@ no use for it.
   :hook (after-init-hook . recentf-mode))
 
 (use-package prot-recentf
+  :demand
   :config
   (add-to-list 'recentf-keep 'prot-recentf-keep-predicate)
   :bind (("s-r" . prot-recentf-recent-files)
