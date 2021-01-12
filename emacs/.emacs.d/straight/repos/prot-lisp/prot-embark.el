@@ -39,8 +39,8 @@
   "Extensions for `embark'."
   :group 'editing)
 
-(defcustom prot-embark-collect-window-regexp
-  "\\*Embark Collect \\(Live\\|Completions\\).*"
+(defcustom prot-embark-collect-buffer-regexp
+  "\\Embark Collect.*\\(Live\\|Completions\\)?.*"
   "Regexp to match window names with Embark collections."
   :group 'prot-embark
   :type 'string)
@@ -50,7 +50,7 @@
 (defun prot-embark--collect-fit-window (&rest _)
   "Fit Embark's live occur window to its buffer.
 To be added to `embark-occur-post-revert-hook'."
-  (when (string-match-p prot-embark-collect-window-regexp (buffer-name))
+  (when (string-match-p prot-embark-collect-buffer-regexp (buffer-name))
     (fit-window-to-buffer (get-buffer-window)
                           (floor (frame-height) 2) 1)))
 
@@ -61,7 +61,7 @@ To be added to `embark-occur-post-revert-hook'."
   (let* ((buf-link embark-collect-linked-buffer)
          (buf-name (buffer-name buf-link)))
     (when buf-name
-      (string-match-p prot-embark-collect-window-regexp buf-name))))
+      (string-match-p prot-embark-collect-buffer-regexp buf-name))))
 
 ;; Thanks to Karthik Chikmagalur for providing the
 ;; `prot-embark-keyboard-quit' command!  Sources to Karthik's work:
@@ -76,10 +76,10 @@ To be added to `embark-occur-post-revert-hook'."
 If in an Embark live collect/completions buffer, run
 `abort-recursive-edit'.  Otherwise run `keyboard-quit'.
 
-This matches `prot-embark-collect-window-regexp' and is meant to
+This matches `prot-embark-collect-buffer-regexp' and is meant to
 be bound in `embark-live-collect-mode-map'."
   (interactive)
-  (if (string-match-p prot-embark-collect-window-regexp (buffer-name))
+  (if (string-match-p prot-embark-collect-buffer-regexp (buffer-name))
       (abort-recursive-edit)
     (keyboard-quit)))
 
