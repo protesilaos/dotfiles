@@ -1154,8 +1154,9 @@ largely conforms with them (Icomplete, Selectrum) or fully respects them
 included in [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
 
 Consult's value proposition is two-fold: (1) remain aligned with the
-Emacs completion API, and (2) offer minibuffer-centric commands that
-enhance aspects of interactivity and functionality.
+Emacs completion paradigm, and (2) offer minibuffer-centric commands
+that either enhance aspects of interactivity and functionality found in
+existing commands or outright provide them from scratch.
 
 Some Consult commands are drop-in replacements for built-in options.
 For example =consult-complex-command= offers an improved interactive
@@ -1172,8 +1173,8 @@ This "filtering" mechanism, which is internally known as "narrowing",
 can be accessed via a key binding for all commands that support it.  In
 my case, that key is the right angled bracket, or greater than sign (=>=)
 from inside the minibuffer (configure =consult-narrow-key=).  So you type
-the narrow key and follow it up another key that matches the relevant
-targets, such as => f= to narrow the =consult-imenu= candidates to
+the narrow key and follow it up with another key that matches the
+relevant targets, such as => f= to narrow the =consult-imenu= candidates to
 functions.  Hit backspace to remove the narrowing (users may wish to set
 up [[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]], though I just memorise what I need,
 or call =consult-narrow-help=).
@@ -1193,7 +1194,21 @@ external processes, such as =grep= and =find=.  Those calls can be
 configured to return some output based on a minimum number of
 characters, while they also allows for tweaks to their update delays.
 Interactivity is already a given, meaning that you can continue typing
-and see the results pop up.
+and see the results pop up.  Furthermore, they implement a two-stage
+input scheme, separated by a configurable delimiter (=#= by default and
+controlled with =consult-async-default-split=):
+
++ First you type in the pattern that should be sent to the external
+  program.  This is what triggers the asynchronous call.  So your input
+  looks like this: =#PATTERN=.  The pattern will typically consist of some
+  text or a regular expression, but can also include command line flags
+  for the underlying CLI program (check Consult's documentation for the
+  technicalities).
++ Then you can add another field delimiter, to instruct Consult to (i)
+  keep the results that =#PATTERN= gave you and (ii) leverage Emacs' own
+  mechanisms to further narrow the list.  Now your input looks like
+  this: =#PATTERN#MORE-PATTERNS=.  The =#MORE-PATTERNS= will use whatever
+  completion styles you have configured (check my =completion-styles=).
 
 As already suggested, Consult provides previews for its commands.  This
 feature should work without any further intervention for users of

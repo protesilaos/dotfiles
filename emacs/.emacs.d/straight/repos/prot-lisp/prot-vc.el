@@ -53,12 +53,12 @@
   :type 'list
   :group 'prot-vc)
 
-(defcustom prot-vc-advice-vc-git t
-  "Whether to pass advice to `vc-git' functions."
-  :type 'list
-  :group 'prot-vc)
+;;;; Commands and helper functions
 
-;;;; Commands
+(defun prot-vc--current-project ()
+  "Return root directory of current project."
+  (or (vc-root-dir)
+      (locate-dominating-file "." ".git")))
 
 ;;;###autoload
 (defun prot-vc-project-or-dir (&optional arg)
@@ -66,8 +66,7 @@
 With optional prefix ARG (\\[universal-argument]), use the
 `default-directory' instead."
   (interactive "P")
-  (let* ((root (or (vc-root-dir)
-                   (locate-dominating-file "." ".git")))
+  (let* ((root (prot-vc--current-project))
          (dir (if arg default-directory root)))
     (vc-dir dir)))
 
@@ -133,8 +132,7 @@ that covers all files in the present directory."
 (defun prot-vc--log-commit-prompt (&optional prompt)
   "Select git log commit with completion using optional PROMPT."
   (let ((text (or prompt "Select a commit: "))
-        (vc (or (vc-root-dir)
-                (locate-dominating-file "." ".git")))
+        (vc (prot-vc--current-project))
         (num (format "%s" prot-vc-log-limit)))
     (if vc
         (completing-read
@@ -162,8 +160,7 @@ completion."
          (commit (if (or arg (not commit-at-point))
                      (prot-vc--log-commit-hash)
                    commit-at-point))
-         (vc-dir (or (vc-root-dir)
-                     (locate-dominating-file "." ".git")
+         (vc-dir (or (prot-vc--current-project)
                      default-directory))
          (dirs (append (list vc-dir) prot-vc-patch-output-dirs))
          (out-dir
@@ -212,7 +209,7 @@ completion."
   "Extend `vc-git'."
   :init-value nil
   :global t
-  (if (and prot-vc-advice-vc-git prot-vc-git-setup-mode)
+  (if prot-vc-git-setup-mode
       (progn
         (advice-add #'vc-git-log-view-mode :after #'prot-vc-git-log-view-add-hook)
         (add-hook 'prot-vc-git-log-view-mode-hook #'prot-vc-git-expand-function))
