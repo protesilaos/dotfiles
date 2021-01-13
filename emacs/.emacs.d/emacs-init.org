@@ -903,12 +903,14 @@ Consult's narrowing facility.  Please refer to the relevant sections:
 :CUSTOM_ID: h:98d3abcc-f34e-4029-aabc-740f0b6421f8
 :END:
 
-As discussed in my video about [[https://protesilaos.com/codelog/2019-08-18-emacs-buffers-windows/][Emacs' buffer and window management]],
-the optimal way of using Emacs is through searching and narrowing
+The optimal way of using Emacs is through searching and narrowing
 selection candidates.  Spend less time worrying about where things are
 on the screen and more on how fast you can bring them into focus.  This
 is, of course, a matter of realigning priorities, as we still wish to
 control every aspect of the interface.
+
+To get a sense of my current completion framework, watch my presentation
+on [[https://protesilaos.com/codelog/2021-01-06-emacs-default-completion/][Default Emacs completion and extras]] (2021-01-06).
 
 *** Orderless completion style (and prot-orderless.el)
 :PROPERTIES:
@@ -1097,7 +1099,8 @@ declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e1
   (setq-default case-fold-search t)   ; For general regexp
 
   ;; The following two are updated in Emacs 28.  They concern the
-  ;; *Completions* buffer.
+  ;; *Completions* buffer.  Note that I actually do not use that buffer,
+  ;; because I rely on Embark's version of it.
   (setq completions-format 'one-column)
   (setq completions-detailed t)
 
@@ -1123,6 +1126,10 @@ declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e1
          ("s-F" . find-file-other-window)
          ("s-d" . dired)
          ("s-D" . dired-other-window)
+         :map minibuffer-local-completion-map
+         ("<tab>" . minibuffer-force-complete)
+         ;; De facto deprecated as I use Embark and its own completions'
+         ;; buffer.
          :map completion-list-mode-map
          ("n" . next-line)
          ("p" . previous-line)
