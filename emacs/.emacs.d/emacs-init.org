@@ -1146,26 +1146,74 @@ And here is =prot-minibuffer.el= (from [[https://gitlab.com/protesilaos/dotfiles
 :CUSTOM_ID: h:9c9401d6-8c53-4276-be4c-3bff345d3eeb
 :END:
 
-NOTE 2021-01-04: This section is largely incomplete and remains a
-work-in-progress, even though my plan is to make it an integral part of
-my setup.  It has thus far replaced code I used to maintain on the
-built-in =imenu=, custom extensions to =dired=, as well as =rg.el=.
-
 Daniel Mendler's Consult is a welcome addition to the ecosystem of
-small, modular, extensible tools that work with the standard minibuffer
+modular, extensible tools that work with the standard minibuffer
 completion mechanisms and, by extension, with every user interface that
 largely conforms with them (Icomplete, Selectrum) or fully respects them
-(Embark).
+(Embark).  For my case, this means that it works with everything
+included in [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
 
-Consult provides previews for its commands: this should work without any
-further intervention for users of Icomplete or Selectrum.  For my case,
-however, where I rely on the default minibuffer plus Embark's ability to
-show and live-update completion candidates, this can be achieved with
-the =embark-consult= package: [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][embark.el, emacs-consult.el, prot-embark.el]].
+Consult's value proposition is two-fold: (1) remain aligned with the
+Emacs completion API, and (2) offer minibuffer-centric commands that
+enhance aspects of interactivity and functionality.
 
-While this section is a work-in-progress, note that my =prot-consult.el=
-defines some /quick and dirty/ extensions.  They *will be reviewed* in
-favour of better alternatives.
+Some Consult commands are drop-in replacements for built-in options.
+For example =consult-complex-command= offers an improved interactive
+experience over the default =repeat-complex-command=.  Same principle for
+=consult-goto-line= which displays the line numbers and offers a preview
+while you type of where you are about to land.
+
+Other commands enhance the defaults with a filtering mechanism that
+targets candidates by their type.  A case in point is =consult-imenu=
+which recognised syntactic constructs that are variables, functions,
+macros (configurable via =consult-imenu-narrow=, =consult-imenu-toplevel=).
+
+This "filtering" mechanism, which is internally known as "narrowing",
+can be accessed via a key binding for all commands that support it.  In
+my case, that key is the right angled bracket, or greater than sign (=>=)
+from inside the minibuffer (configure =consult-narrow-key=).  So you type
+the narrow key and follow it up another key that matches the relevant
+targets, such as => f= to narrow the =consult-imenu= candidates to
+functions.  Hit backspace to remove the narrowing (users may wish to set
+up [[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]], though I just memorise what I need,
+or call =consult-narrow-help=).
+
+An all-in-one command that supports this kind of narrowing while also
+expanding on the features of its default equivalent is =consult-buffer=.
+Unlike the built-in =switch-to-buffer=, it grants direct access to recent
+files that no longer have a buffer visiting them, as well as to
+bookmarks.  While I like this idea, I prefer to not mix my buffers with
+anything else, as then I get too many false positives that slow me down.
+However, you may prefer to economise on key bindings and/or like quick,
+seamless access to your "points of interest", regardless of whether they
+are internally stored as buffers, recent files, bookmarks.
+
+Another intriguing facility of Consult is its asynchronous call to
+external processes, such as =grep= and =find=.  Those calls can be
+configured to return some output based on a minimum number of
+characters, while they also allows for tweaks to their update delays.
+Interactivity is already a given, meaning that you can continue typing
+and see the results pop up.
+
+As already suggested, Consult provides previews for its commands.  This
+feature should work without any further intervention for users of
+Icomplete or Selectrum.  For my case, however, where I rely on the
+default minibuffer plus Embark's ability to show and live-update
+completion candidates, this can be achieved with the =embark-consult=
+package: [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][embark.el, emacs-consult.el, prot-embark.el]].
+
+Speaking of Embark, that tool can be used in tandem with Consult to
+produce buffers that hold all the candidates of a minibuffer command.
+For example, =embark-export= can be called from inside =consult-grep= (and
+variants) to deliver a dedicated =grep-mode= buffer, which can then be
+edited with the help of the =wgrep= package (check [[#h:42624165-f4cb-4318-abce-c11232426880][wgrep (writable grep)]]).
+Use that to quickly refactor some pattern across your files.
+
+Note that my =prot-consult.el= (reproduced after the following package
+declarations) defines some /quick and dirty/ extensions or thin wrappers
+around Consult commands.  The former *will be reviewed* in favour of
+better alternatives, even though they "simply work" with everything I
+try.
 
 #+begin_src emacs-lisp
 (use-package consult
@@ -1178,14 +1226,18 @@ favour of better alternatives.
   (setq consult-async-input-debounce 0.5)
   (setq consult-async-input-throttle 0.8)
   (setq consult-narrow-key ">")
-  (setq consult-widen-key "<")
-  ;; NOTE: check `embark-consult' for previews
-  :bind (("M-X" . consult-mode-command)
+  ;; NOTE: check `embark-consult' for previews that can be used with the
+  ;; default minibuffer and Embark collections.
+  :bind (("C-x M-:" . consult-complex-command)
+         ("C-x M-m" . consult-minor-mode-menu)
+         ("C-x M-k" . consult-kmacro)
+         ("M-g g" . consult-goto-line)
+         ("M-g M-g" . consult-goto-line)
+         ("M-X" . consult-mode-command)
+         ("M-K" . consult-keep-lines)  ; M-S-k is similar to M-S-5 (M-%)
          ("M-s m" . consult-mark)
          :map consult-narrow-map
-         ("?" . consult-narrow-help)
-         :map minibuffer-local-completion-map
-         ("<tab>" . minibuffer-force-complete)))
+         ("?" . consult-narrow-help)))
 
 (use-package prot-consult
   :straight (:type built-in)
