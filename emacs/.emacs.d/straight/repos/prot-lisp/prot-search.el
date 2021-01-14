@@ -34,6 +34,7 @@
 
 ;;;; Isearch
 
+;;;###autoload
 (defun prot-search-isearch-other-end ()
   "End current search in the opposite side of the match.
 Particularly useful when the match does not fall within the
@@ -43,6 +44,7 @@ confines of word boundaries (e.g. multiple words)."
   (when isearch-other-end
     (goto-char isearch-other-end)))
 
+;;;###autoload
 (defun prot-search-isearch-abort-dwim ()
   "Delete failed `isearch' input, single char, or cancel search.
 
@@ -118,16 +120,15 @@ Copy of variable `browse-url-button-regexp'.")
 
 (declare-function goto-address-mode "goto-addr")
 
+;;;###autoload
 (defun prot-search-occur-urls ()
   "Produce buttonised list of all URLs in the current buffer."
   (interactive)
-  ;; TODO: the use of hooks is hacky, but it works.  What is the best
-  ;; way to get the resulting buffer's name, given that uniquify may be
-  ;; in effect?
   (add-hook 'occur-hook #'goto-address-mode)
   (occur prot-search-url-regexp "\\&")
   (remove-hook 'occur-hook #'goto-address-mode))
 
+;;;###autoload
 (defun prot-search-occur-browse-url ()
   "Point browser at a URL in the buffer using completion.
 Which web browser to use depends on the value of the variable
@@ -142,8 +143,6 @@ Also see `prot-search-occur-url'."
         (push (match-string-no-properties 0) matches)))
     (funcall browse-url-browser-function
              (completing-read "Browse URL: " matches nil t))))
-
-;; TODO `flush-lines', `keep-lines'
 
 (provide 'prot-search)
 ;;; prot-search.el ends here
