@@ -1207,7 +1207,7 @@ controlled with =consult-async-default-split=):
   text or a regular expression, but can also include command line flags
   for the underlying CLI program (check Consult's documentation for the
   technicalities).
-+ Then you can add another field delimiter, to instruct Consult to (i)
++ Then you can add another field delimiter to instruct Consult to (i)
   keep the results that =#PATTERN= gave you and (ii) leverage Emacs' own
   mechanisms to further narrow the list.  Now your input looks like
   this: =#PATTERN#MORE-PATTERNS=.  The =#MORE-PATTERNS= will use whatever
