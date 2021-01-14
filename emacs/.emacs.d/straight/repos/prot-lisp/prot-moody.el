@@ -43,11 +43,11 @@
 Bind this to a hook that gets called after loading/changing the
 mode line's typeface (or the default one if they are the same)."
   (let* ((font (face-font 'mode-line))
-         (height (truncate (* 1.35 (aref (font-info font) 2))))
+         (height (truncate (* 1.65 (aref (font-info font) 2))))
          (height-even (if (prot-common-number-even-p height) height (+ height 1))))
     (if font
         height-even
-      20)))
+      24)))
 
 (defvar moody-mode-line-height)
 
@@ -57,6 +57,7 @@ mode line's typeface (or the default one if they are the same)."
     (setq moody-mode-line-height height)))
 
 (declare-function moody-replace-mode-line-buffer-identification "moody")
+(declare-function moody-replace-vc-mode "moody")
 
 ;;;###autoload
 (define-minor-mode prot-moody-set-height
