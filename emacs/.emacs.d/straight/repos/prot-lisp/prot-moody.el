@@ -66,12 +66,14 @@ mode line's typeface (or the default one if they are the same)."
   (if prot-moody-set-height
       (progn
         (moody-replace-mode-line-buffer-identification)
+        (moody-replace-vc-mode)
         (add-hook 'prot-fonts-set-typeface-hook #'prot-moody--mode-line-height)
         (run-hooks 'prot-fonts-set-typeface-hook))
-    ;; TODO: this needs to be executed after checking that the target
-    ;; exists.  Or at least be called in a way that hides its innocuous
-    ;; error message.
-    (moody-replace-mode-line-buffer-identification 'reverse)
+    (let ((format (default-value 'mode-line-format)))
+      (when (member 'moody-mode-line-buffer-identification format)
+        (moody-replace-mode-line-buffer-identification 'reverse))
+      (when (member '(vc-mode moody-vc-mode) format)
+        (moody-replace-vc-mode 'reverse)))
     (remove-hook 'prot-fonts-set-typeface-hook #'prot-moody--mode-line-height)))
 
 (provide 'prot-moody)
