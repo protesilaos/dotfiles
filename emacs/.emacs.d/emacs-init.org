@@ -517,15 +517,15 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.
-  (setq modus-themes-slanted-constructs nil
-        modus-themes-bold-constructs nil
-        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
+  (setq modus-themes-slanted-constructs t
+        modus-themes-bold-constructs t
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
         ;; 'subtle-foreground-straight-underline, 'intense-foreground,
         ;; 'intense-foreground-straight-underline, 'colored-background
         modus-themes-lang-checkers nil
-        modus-themes-mode-line 'moody ; {nil,'3d,'moody}
+        modus-themes-mode-line '3d ; {nil,'3d,'moody}
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
@@ -534,8 +534,9 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-intense-hl-line nil
         modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
         ;; Options for `modus-themes-links': nil, 'faint,
-        ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline
-        modus-themes-links 'faint
+        ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
+        ;; 'underline-only
+        modus-themes-links 'underline-only
         modus-themes-no-mixed-fonts nil
         modus-themes-prompts 'subtle ; {nil,'subtle,'intense}
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
@@ -565,17 +566,10 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
     "Tweak faces after `modus-themes-after-load-theme-hook'."
     (modus-themes-with-colors
       (custom-set-faces
-       `(cursor ((,class :background ,(modus-themes-color-alts 'blue 'green))))
+       `(cursor ((,class :background ,(modus-themes-color-alts 'blue 'red))))
        `(line-number ((,class :background unspecified :foreground ,fg-unfocused)))
        `(line-number-current-line
-         ((,class :background ,bg-special-cold :foreground ,fg-special-cold)))
-       ;; Rember that I am just testing things here!
-       `(mode-line
-         ((,class :underline ,(modus-themes-color-alts 'green-subtle-bg 'yellow-subtle-bg)
-                  :overline ,(modus-themes-color-alts 'green-subtle-bg 'yellow-subtle-bg)
-                  :background ,(modus-themes-color-alts 'green-nuanced-bg 'yellow-nuanced-bg)
-                  :foreground ,(modus-themes-color-alts 'green-nuanced-fg 'yellow-nuanced-fg))))
-       `(mode-line-inactive ((,class :underline ,bg-alt :overline ,bg-alt :foreground ,fg-alt))))))
+         ((,class :background ,bg-special-cold :foreground ,fg-special-cold))))))
 
   ;; Have I told you about the manual?  This is just meant to showcase
   ;; the option of overriding individual colours from each theme's
@@ -1253,6 +1247,7 @@ try.
          ("M-g M-g" . consult-goto-line)
          ("M-X" . consult-mode-command)
          ("M-K" . consult-keep-lines)  ; M-S-k is similar to M-S-5 (M-%)
+         ("M-F" . consult-flush-lines) ; M-S-f is similar to M-S-5 (M-%)
          ("M-s m" . consult-mark)
          :map consult-narrow-map
          ("?" . consult-narrow-help)))
@@ -6724,7 +6719,7 @@ while entering a bespoke "focus mode" for writing/reading.
                                          "^\\(%\\[\\|%\\]\\)$" s))))
                             mode-line-modes))
 
-  (setq mode-line-compact nil)            ; Emacs 28
+  (setq mode-line-compact t)            ; Emacs 28
   (setq-default mode-line-format
                 '("%e"
                   mode-line-front-space
@@ -6769,7 +6764,7 @@ want is to make the mode line gracefully adapt to changes in font size.
           prot-fonts              ; we use its hook
           prot-common)            ; provides `prot-common-number-even-p'
   :config
-  (prot-moody-set-height 1))
+  (prot-moody-set-height -1))
 #+end_src
 
 Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
