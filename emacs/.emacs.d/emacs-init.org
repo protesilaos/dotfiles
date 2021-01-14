@@ -2263,11 +2263,12 @@ given version-controlled (git) repo, see the section of this document on
       (delete-region (minibuffer-prompt-end) (point-max)))
     (insert (cdr (assoc bm (contrib/cdb--bookmarked-directories)))))
 
-  :bind (:map dired-mode-map
-              ("C-+" . dired-create-empty-file)
-              ("M-s f" . nil)
-              :map minibuffer-local-filename-completion-map
-              ("C-c d" . contrib/cd-bookmark)))
+  :bind ( :map dired-mode-map
+          ("C-+" . dired-create-empty-file)
+          ("M-s f" . nil)
+          ("C-x v v" . dired-vc-next-action) ; Emacs 28
+          :map minibuffer-local-filename-completion-map
+          ("C-c d" . contrib/cd-bookmark)))
 
 (use-package prot-dired
   :disabled                            ; superseded by `prot-consult.el'
@@ -3902,10 +3903,8 @@ that require date/time input (see following sections).
                      (concat " (" time-zone ")"))))
   (setq calendar-week-start-day 1)      ; Monday
   (setq calendar-date-style 'iso)
-  (setq calendar-christian-all-holidays-flag nil)
-  (setq calendar-holidays
-        (append holiday-local-holidays  ; TODO set local holidays
-                holiday-solar-holidays))
+  (setq calendar-mark-holidays-flag nil)
+  (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
 
   (use-package solar
     :config
@@ -6722,6 +6721,7 @@ while entering a bespoke "focus mode" for writing/reading.
                                          "^\\(%\\[\\|%\\]\\)$" s))))
                             mode-line-modes))
 
+  (setq mode-line-compact nil)            ; Emacs 28
   (setq-default mode-line-format
                 '("%e"
                   mode-line-front-space
