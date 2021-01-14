@@ -6736,9 +6736,9 @@ while entering a bespoke "focus mode" for writing/reading.
                   mode-line-buffer-identification
                   "  "
                   mode-line-position
-                  (vc-mode vc-mode)
-                  "  "
                   mode-line-modes
+                  "  "
+                  (vc-mode vc-mode)
                   " "
                   mode-line-misc-info
                   mode-line-end-spaces)))
@@ -6769,7 +6769,7 @@ want is to make the mode line gracefully adapt to changes in font size.
           prot-fonts              ; we use its hook
           prot-common)            ; provides `prot-common-number-even-p'
   :config
-  (prot-moody-set-height -1))
+  (prot-moody-set-height 1))
 #+end_src
 
 Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
