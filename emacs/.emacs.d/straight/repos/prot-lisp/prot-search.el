@@ -62,6 +62,26 @@ search started."
       (isearch-pop-state)))
   (isearch-update))
 
+;;;###autoload
+(defun prot-search-isearch-repeat-forward (&optional arg)
+  "Move forward, keeping point at the beginning of the match.
+Optionally move to ARGth match in the given direction."
+  (interactive "p")
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end))
+  (isearch-repeat-forward (or arg 1))
+  (when isearch-other-end
+    (goto-char isearch-other-end)))
+
+;;;###autoload
+(defun prot-search-isearch-repeat-backward (&optional arg)
+  "Move backward, keeping point at the beginning of the match.
+Optionally move to ARGth match in the given direction."
+  (interactive "p")
+  (when (and (not isearch-forward) isearch-other-end)
+    (goto-char isearch-other-end))
+  (isearch-repeat-backward (or arg 1)))
+
 (defmacro prot-search-isearch-occurrence (name edge &optional doc)
   "Construct function for moving to `isearch' occurrence.
 NAME is the name of the function.  EDGE is either the beginning

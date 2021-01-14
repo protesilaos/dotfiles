@@ -2032,6 +2032,8 @@ package declarations).
          ("M-s u" . prot-search-occur-urls)
          ("M-s M-u" . prot-search-occur-browse-url)
          :map isearch-mode-map
+         ("<up>" . prot-search-isearch-repeat-backward)
+         ("<down>" . prot-search-isearch-repeat-forward)
          ("<backspace>" . prot-search-isearch-abort-dwim)
          ("<C-return>" . prot-search-isearch-other-end)))
 #+end_src
