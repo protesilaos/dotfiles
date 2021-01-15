@@ -2684,12 +2684,12 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   :init
   (setq display-buffer-alist
         '(;; top side window
-          ("\\*Bongo-Elfeed Queue.*"
+          ("\\**prot-elfeed-bongo-queue.*"
            (display-buffer-reuse-window display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
            (slot . -2))
-          ("\\*\\(elfeed-mpv-output\\|world-clock\\).*"
+          ("\\*\\(prot-elfeed-mpv-output\\|world-clock\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
@@ -5467,12 +5467,10 @@ performance by carrying out the relevant tasks in a non-blocking way.
   (setq message-send-mail-function 'async-smtpmail-send-it))
 #+end_src
 
-** Elfeed (RSS/Atom feed reader)
+** Elfeed feed reader and my prot-elfeed.el extras
 :PROPERTIES:
 :CUSTOM_ID: h:0cd8ddab-55d1-40df-b3db-1234850792ba
 :END:
-
-/NOTE 2020-12-14: Pending major review/.
 
 This is a standalone feed reader by Christopher Wellons that comes with
 good defaults and is very well designed overall.  It treats the stream
@@ -5494,20 +5492,25 @@ part users should care about looks like this:
         ("https://www.ecb.europa.eu/rss/press.html" economics eu)
         ("http://feed.pippa.io/public/shows/teamhuman" podcast culture)
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" personal video)
-        ("https://protesilaos.com/politics.xml" personal)))
+        ("https://protesilaos.com/codelog.xml" personal)))
 #+end_example
 
-I keep the actual list in a GPG-encrypted file.  Emacs can decrypt and
-read those transparently, making it a great way to safely store
-sensitive data while still keeping everything perfectly functional.
+I keep the actual list in a GPG-encrypted file (defined in the variable
+=prot-elfeed-feeds-file= which is part of my =prot-elfeed.el= library that
+is reproduced after the following package declaratios).  Emacs can
+transparently decrypt and read gpg-protected files, making it a great
+way to safely store sensitive data while still keeping everything
+perfectly functional.
 
 A good tagging system for your feeds will offer a strong foundation for
 catching up with the news.  I generally use 2-3 tags per feed, while I
 make sure that conceptually similar items will share at least one tag.
 My tags are not particularly sophisticated, though they are not random
 either: for example, I have a particular "EU" entry for all
-institutions, bodies, agencies, etc. and then I have other more general
-ones, such as "politics" and "economics".
+institutions, bodies, agencies, etc. of the European Union and then I
+have other more general ones, such as "politics" and "economics".  So,
+in this case, the European Central Bank gets tagged with =eu=, =economics=,
+while the European Parliamen is =eu=, =politics=.
 
 The user interface consists of two distinct types of buffers:
 
@@ -5523,30 +5526,19 @@ how to apply such filters.  The ones I use the most:
 + Prepend a =+= to the name of a tag to only show items that include that
   tag.  With =-= show items that do not include it.
 + Type in a regular string with the equals sign in front of it, say
-  "=Prot", to show feeds whose name contains it.
+  "=TITLE", to show feeds whose name contains it.
 
 Other common cases are regular expressions and date ranges, though I
 have found that I never use those.  Probably because the tagging system
 is sufficiently powerful for my particular needs.
 
-With regard to the package declaration below, I have lots of functions
-that customise the behaviour of Elfeed to better match my expectations.
-For example, I do not like the fact that the aforementioned default =s=
-command (=elfeed-search-live-filter=) does not provide a completion UI.
-So I implement an alternative that allows for multiple choices, as well
-as arbitrary input.  In the case of the latter, you may need to "force
-insert" the final command that locks in the filter with =C-j=
-(=exit-minibuffer=), if Emacs complains that there is no matching input
-(has not happened in my case).  I define that key binding in the section
-about [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]].
-
-Another function of interest which you will not find herein, is the
-integration with my =prot/buffers-major-mode=, which I bind to =M-s b=
-(start from: [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][generic completion for projects and directory trees]]).  You
-can use this in an Elfeed entry buffer to get a list of all entries you
-have opened.  Calling that command with =C-u= (prefix argument) will put
-the list in an =ibuffer= view.  From there you can, for instance, delete
-them in bulk.
+My only inconvenience with =elfeed-search-live-filter= is that it does not
+support completion out-of-the-box.  Instead it expects full user input,
+which ins understandable given the types of searches it can conduct.
+Since I only need this facility to filter by tag, I rebind =s= to my
+=prot-elfeed-search-tag-filter=.  While =S-s= (shift and s) can still be
+used to access the original command, whenever we need more precise
+control over the search filters.
 
 The MPV-related functions require the external =mpv= program.  They will
 play a video in a new app window at a resolution that matches the
@@ -5558,32 +5550,30 @@ cleaner, so that it understands input from, e.g., =playerctl=, though it
 is not a priority as the current simplistic design is "good enough" for
 my case.
 
-The placement of the MPV buffer is controlled by =display-buffer-alist=
-(see [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
-
-For a demonstration of what I have here, watch [[https://protesilaos.com/codelog/2020-06-09-emacs-elfeed-demo/][my Elfeed video]]
-(2020-06-09).
+For an older, albeit still relevant, demonstration of what I have here,
+watch [[https://protesilaos.com/codelog/2020-06-09-emacs-elfeed-demo/][my Elfeed video]] (2020-06-09).
 
 As I also am a user of Bongo (see [[#h:758afe0d-bc7c-4afc-9c6b-b5e569901591][Bongo (music or media manager)]]), there
 are a few functions here that are meant to make the Elfeed search buffer
-a bongo-aware library, from where we can enqueue online multimedia
-sources (videos, podcasts).
+a bongo-aware media library, from where we can enqueue online multimedia
+sources (videos, podcasts).  The key part here is to not interfere with
+the main Bongo playlist and library, which are dedicated to my local
+music collection, but to maintain a separate playlist which can be
+controlled independently.
 
-The key part here is to not interfere with the main Bongo playlist and
-library, which are dedicated to my local music collection, but to
-maintain a separate playlist which can be controlled independently.
+The placement of my custom buffers for Elfeed's multimedia output is
+controlled by =display-buffer-alist= (see [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
 
-The placement of the =*Bongo-Elfeed Queue*= buffer is controlled by the
-=display-buffer-alist= (see [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
-
-I benefited in this particular workflow from an email exchange with
-Madhavan Krishnan: we shared code and ideas that helped establish the
-modalities of interaction between Elfeed and Bongo (this information is
-made public with permission).
-
-Demo: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Manage podcasts in Emacs with Elfeed and Bongo]] (2020-09-11).
+I benefited in this particular Elfeed+Bongo workflow from an email
+exchange I had with Madhavan Krishnan: we shared code and ideas that
+helped establish the modalities of interaction between Elfeed and Bongo
+(this information is made public with permission).  Video demo with
+older code: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Manage podcasts in Emacs with Elfeed and Bongo]] (2020-09-11).
 
 Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MPV (Elfeed+Bongo extension)]].
+
+Remember that my =prot-elfeed.el= is produced verbatim after the package
+declarations.
 
 #+begin_src emacs-lisp
 (use-package elfeed
@@ -5602,313 +5592,43 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
   (setq elfeed-show-truncate-long-urls t)
   (setq elfeed-show-unique-buffers t)
   (setq elfeed-search-date-format '("%F %R" 16 :left))
-
-;;; Elfeed general purpose commands
-
-  (defun prot/elfeed-feeds ()
-    "Load file containing the `elfeed-feeds' list.
-Add this to `elfeed-search-mode-hook'."
-    (let ((feeds "~/.emacs.d/feeds.el.gpg"))
-      (if (file-exists-p feeds)
-          (load-file feeds)
-        (user-error "Missing feeds' file"))))
-
-  (defun prot/elfeed-show-eww (&optional link)
-    "Browse current `elfeed' entry link in `eww'.
-Only show the readable part once the website loads.  This can
-fail on poorly-designed websites."
-    (interactive)
-    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
-                      elfeed-show-entry
-                    (elfeed-search-selected :ignore-region)))
-           (link (or link (elfeed-entry-link entry))))
-      (eww link)
-      (add-hook 'eww-after-render-hook 'eww-readable nil t)))
-
-  (defun prot/elfeed-search-other-window (&optional arg)
-    "Browse `elfeed' entry in the other window.
-With \\[universal-argument] browse the entry in `eww' using the
-`prot/elfeed-show-eww' wrapper."
-    (interactive "P")
-    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
-                      elfeed-show-entry
-                    (elfeed-search-selected :ignore-region)))
-           (link (elfeed-entry-link entry))
-           (win (selected-window)))
-      (with-current-buffer (get-buffer "*elfeed-search*")
-        (unless (one-window-p)              ; experimental
-          (delete-other-windows win))
-        (split-window win (/ (frame-height) 5) 'below)
-        (other-window 1)
-        (if arg
-            (progn
-              (when (eq major-mode 'elfeed-search-mode)
-                (elfeed-search-untag-all-unread))
-              (prot/elfeed-show-eww link))
-          (elfeed-search-show-entry entry)))))
-
-  (defun prot/elfeed-kill-buffer-close-window-dwim ()
-    "Do-what-I-mean way to handle `elfeed' windows and buffers.
-
-When in an entry buffer, kill the buffer and return to the Elfeed
-Search view.  If the entry is in its own window, delete it as
-well.
-
-When in the search view, close all other windows.  Else just kill
-the buffer."
-    (interactive)
-    (let ((win (selected-window)))
-      (cond ((eq major-mode 'elfeed-show-mode)
-             (elfeed-kill-buffer)
-             (unless (one-window-p) (delete-window win))
-             (switch-to-buffer "*elfeed-search*"))
-            ((eq major-mode 'elfeed-search-mode)
-             (if (one-window-p)
-                 (elfeed-search-quit-window)
-               (delete-other-windows win))))))
-
-;;; Elfeed multimedia extras
-
-  (defvar prot/elfeed-mpv-hook nil
-    "Hook called before `prot/elfeed-mpv-dwim'.")
-
-  (defun prot/elfeed-mpv-buffer ()
-    "Prepare \"*elfeed-mpv-output*\" buffer.
-For use by `prot/elfeed-mpv-dwim'.  To be called from
-`prot/elfeed-mpv-hook'."
-    (let ((buf (get-buffer "*elfeed-mpv-output*"))
-          (inhibit-read-only t))
-      (with-current-buffer buf
-        (erase-buffer))))
-
-  (defun prot/elfeed-mpv-dwim ()
-    "Play entry link with external `mpv' program.
-When there is an audio enclosure (podcast), play just the audio.
-Else spawn a video player at a resolution that accounts for the
-current monitor's width."
-    (interactive)
-    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
-                      elfeed-show-entry
-                    (elfeed-search-selected :ignore-region)))
-           (link (elfeed-entry-link entry))
-           (enclosure (elt (car (elfeed-entry-enclosures entry)) 0)) ; fragile?
-           (audio "--no-video")
-           ;; Here the display width checks if I am on the laptop
-           (height (if (<= (display-pixel-width ) 1366) 720 1080))
-           (video                       ; this assumes mpv+youtube-dl
-            (format "%s --ytdl-format=bestvideo[height\\<=?%s]+bestaudio/best"
-                    "--hwdec=auto-safe" height))
-           (buf (pop-to-buffer "*elfeed-mpv-output*")))
-      (run-hooks 'prot/elfeed-mpv-hook)
-      (if enclosure
-          (progn
-            (async-shell-command (format "mpv %s %s" audio enclosure) buf)
-            (message
-             (concat "Launching MPV for "
-                     (propertize enclosure 'face 'success))))
-        (async-shell-command (format "mpv %s %s" video link) buf)
-        (message
-         (concat "Launching MPV for "
-                 (propertize link 'face 'success))))))
-
-;;; Elfeed and Bongo integration
-
-  (defvar prot/elfeed-bongo-playlist "*Bongo-Elfeed Queue*"
-    "Name of the Elfeed+Bongo multimedia playlist.")
-
-  (defun prot/elfeed-bongo-insert-item ()
-    "Insert `elfeed' multimedia links in `bongo' playlist buffer.
-
-The playlist buffer has a unique name so that it will never
-interfere with the default `bongo-playlist-buffer'."
-    (interactive)
-    (with-eval-after-load 'bongo
-      (let* ((entry (if (eq major-mode 'elfeed-show-mode)
-                        elfeed-show-entry
-                      (elfeed-search-selected :ignore-region)))
-             (link (elfeed-entry-link entry))
-             (enclosure (elt (car (elfeed-entry-enclosures entry)) 0))
-             (url (or enclosure link))
-             (title (elfeed-entry-title entry))
-             (bongo-pl prot/elfeed-bongo-playlist)
-             (buffer (get-buffer-create bongo-pl)))
-        (unless (bongo-playlist-buffer)
-          (bongo-playlist-buffer))
-        (display-buffer buffer)
-        (with-current-buffer buffer
- 	      (when (not (bongo-playlist-buffer-p))
- 	        (bongo-playlist-mode)
-            (setq-local bongo-library-buffer (get-buffer "*elfeed-search*"))
-            (setq-local bongo-enabled-backends '(mpv))
-            (bongo-progressive-playback-mode))
- 	      (goto-char (point-max))
-          (bongo-insert-uri url title)
-          (bongo-insert-comment-text (format "     ==> %s\n" url))
-          (let ((inhibit-read-only t))
-            (delete-duplicate-lines (point-min) (point-max)))
-          (bongo-recenter))
-        (message "Enqueued %s “%s” in %s"
-                 (if enclosure "podcast" "video")
-                 (propertize title 'face 'italic)
-                 (propertize bongo-pl 'face 'bold)))))
-
-  (defun prot/elfeed-bongo-switch-to-playlist ()
-    (interactive)
-    (let* ((bongo-pl prot/elfeed-bongo-playlist)
-           (buffer (get-buffer bongo-pl)))
-      (if buffer
-          (switch-to-buffer buffer)
-        (message "No `bongo' playlist is associated with `elfeed'."))))
-
-;;; Elfeed search extensions
-
-  (defun prot/elfeed-show-search-update (direction)
-    "Update `elfeed-search-buffer' to match entry in DIRECTION.
-
-This is useful when Elfeed is split in two windows, with the
-search buffer on one side and an entry buffer on the other.  The
-user is changing entries while in the latter, while the former
-gets updated to put point on the current item.
-
-EXPERIMENTAL."
-    (interactive "s")
-    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
-                      elfeed-show-entry
-                    (elfeed-search-selected :ignore-region)))
-           (title (elfeed-entry-title entry))
-           (es "*elfeed-search*")
-           (buf (get-buffer es))
-           (win (get-buffer-window buf)))
-      (funcall (intern (concat "elfeed-show-"
-                               (substring `,direction 0 4))))
-      (when (window-live-p win)
-        (with-current-buffer buf
-          (goto-char (point-min)) ; Elfeed way to find entry window?
-          (search-forward (format "%s" title))
-          (funcall (intern (concat `,direction "-line")))
-          (set-window-point win (point-at-bol))
-          (prot-pulse-pulse-line)))))
-
-  (defun prot/elfeed-search-tag-filter ()
-    "Filter `elfeed' by tags using completion.
-
-Arbitrary input is also possible, but you may need to exit the
-minibuffer with `exit-minibuffer' (I bind it to C-j in
-`minibuffer-local-completion-map')."
-    (interactive)
-    (unwind-protect
-        (elfeed-search-clear-filter)
-      ;; NOTE for the `crm-separator' to work with just a space, you
-      ;; need to make SPC self-insert in the minibuffer (the default is
-      ;; to behave like tab-completion).
-      (let* ((crm-separator " ")
-             (elfeed-search-filter-active :live)
-             (db-tags (elfeed-db-get-all-tags))
-             (plus-tags (delete-dups
-                         (mapcar (lambda (x)
-                                   (concat "+" (format "%s" x)))
-                                 db-tags)))
-             (minus-tags (delete-dups
-                          (mapcar (lambda (x)
-                                    (concat "-" (format "%s" x)))
-                                  db-tags)))
-             (all-tags (append plus-tags minus-tags))
-             (tags (completing-read-multiple
-                    "Apply tag: "
-                    all-tags nil t))
-             (input (string-join `(,elfeed-search-filter ,@tags) " ")))
-        (setq elfeed-search-filter input))
-      (elfeed-search-update :force)))
-
-  (defun prot/elfeed-show-archive ()
-    "Create an archive copy of the current `elfeed' entry."
-    (interactive)
-    (let* ((entry (if (eq major-mode 'elfeed-show-mode)
-                      elfeed-show-entry
-                    (elfeed-search-selected :ignore-region)))
-           ;; TODO how to cleanly add hyphens instead of spaces?
-           (title (elfeed-entry-title entry))
-           (elfeed-show-truncate-long-urls nil)
-           (archives "~/Documents/feeds/")
-           (file (format "%s%s.txt" archives title)))
-      (unless (file-exists-p archives)
-        (make-directory archives t))
-      (when (derived-mode-p 'elfeed-show-mode)
-        ;; Refresh to expand truncated URLs
-        (elfeed-show-refresh)
-        (write-file file t)
-        (message "Saved buffer at %s" file))))
-
-  (defface prot/elfeed-entry-critical
-    '((t :inherit (font-lock-builtin-face elfeed-search-title-face)))
-    "Face for Elfeed entries tagged 'critical'.")
-
-  (defface prot/elfeed-entry-essential
-    '((t :inherit (font-lock-keyword-face elfeed-search-title-face)))
-    "Face for Elfeed entries tagged 'essential'.")
-
-  (defface prot/elfeed-entry-important
-    '((t :inherit (font-lock-string-face elfeed-search-title-face)))
-    "Face for Elfeed entries tagged 'important'.")
-
-  (defface prot/elfeed-entry-personal
-    '((t :inherit (font-lock-warning-face elfeed-search-title-face)))
-    "Face for Elfeed entries tagged 'personal'.")
-
-  (setq elfeed-search-face-alist
-        '((critical prot/elfeed-entry-critical)
-          (essential prot/elfeed-entry-essential)
-          (important prot/elfeed-entry-important)
-          (personal prot/elfeed-entry-personal)
-          (unread elfeed-search-unread-title-face)))
-
-  (defvar prot/elfeed-search-tags
-    '(critical essential important)
-    "List of tags used by `prot/elfeed-toggle-tag'.")
-
-  (defun prot/elfeed-toggle-tag (&optional tag)
-    "Toggle tag on current item.
-
-A list of tags is provided by `prot/elfeed-search-tags'.
-Otherwise an optional TAG symbol will suffice."
-    (interactive)
-    (let* ((tags prot/elfeed-search-tags)
-           (input (or tag (intern (completing-read "Set tag: " tags nil t)))))
-      (elfeed-search-toggle-all input)))
-
-;;; Hooks and key bindings
-
-  :hook ((elfeed-search-mode-hook . prot/elfeed-feeds)
-         (prot/elfeed-mpv-hook . prot/elfeed-mpv-buffer))
   :bind (("C-c e" . elfeed)
          :map elfeed-search-mode-map
-         ("s" . prot/elfeed-search-tag-filter)
          ("w" . elfeed-search-yank)
          ("g" . elfeed-update)
          ("G" . elfeed-search-update--force)
-         ("o" . prot/elfeed-search-other-window)
-         ("v" . prot/elfeed-mpv-dwim)
-         ("q" . prot/elfeed-kill-buffer-close-window-dwim)
-         ("!" . (lambda ()
-                  (interactive)
-                  (prot/elfeed-toggle-tag 'important)))
-         ("+" . prot/elfeed-toggle-tag)
-         ("b" . prot/elfeed-bongo-insert-item)
-         ("h" . prot/elfeed-bongo-switch-to-playlist) ; "hop" mnemonic
          :map elfeed-show-mode-map
-         ("a" . prot/elfeed-show-archive)
-         ("b" . prot/elfeed-bongo-insert-item)
-         ("n" . (lambda ()
-                  (interactive)
-                  (prot/elfeed-show-search-update "next")))
-         ("p" . (lambda ()
-                  (interactive)
-                  (prot/elfeed-show-search-update "previous")))
-         ("e" . prot/elfeed-show-eww)
-         ("q" . prot/elfeed-kill-buffer-close-window-dwim)
-         ("v" . prot/elfeed-mpv-dwim)
          ("w" . elfeed-show-yank)))
+
+(use-package prot-elfeed
+  :straight (:type built-in)
+  :init
+  (setq prot-elfeed-tag-faces t)
+  :config
+  (prot-elfeed-fontify-tags)
+  :hook (elfeed-search-mode-hook . prot-elfeed-load-feeds)
+  :bind ( :map elfeed-search-mode-map
+          ("s" . prot-elfeed-search-tag-filter)
+          ("o" . prot-elfeed-search-open-other-window)
+          ("q" . prot-elfeed-kill-buffer-close-window-dwim)
+          ("v" . prot-elfeed-mpv-dwim)
+          ("+" . prot-elfeed-toggle-tag)
+          ("!" . (lambda ()
+                   (interactive)
+                   (prot-elfeed-toggle-tag 'important)))
+          ("b" . prot-elfeed-bongo-insert-item)
+          ("h" . prot-elfeed-bongo-switch-to-playlist) ; "hop" mnemonic
+          :map elfeed-show-mode-map
+          ("a" . prot-elfeed-show-archive-entry)
+          ("e" . prot-elfeed-show-eww)
+          ("q" . prot-elfeed-kill-buffer-close-window-dwim)
+          ("b" . prot-elfeed-bongo-insert-item)
+          ("v" . prot-elfeed-mpv-dwim)))
 #+end_src
+
+This is =prot-elfeed.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-elfeed.el src emacs-lisp :tangle no
 
 *** Sample configuration for MPV (Elfeed+Bongo extension)
 :PROPERTIES:
@@ -6534,9 +6254,9 @@ the eventual review of =eww= (which is documented in the next section:
 [[#h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b][Emacs Web Wowser (EWW)]]).
 
 As far as I can tell, the following =shr-*= variables concern an HTML
-parser that is used by a variety of tools, including Elfeed (defined
-right above).  I guess we could scope them by using hooks, but I see no
-need for different settings.
+parser that is used by a variety of tools, including Elfeed (refer to
+[[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed reader and my prot-elfeed.el extras]]).  I guess we could
+scope them by using hooks, but I see no need for different settings.
 
 What these do:
 
