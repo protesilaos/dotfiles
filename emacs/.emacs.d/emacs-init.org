@@ -720,9 +720,9 @@ Relevant blog posts of mine:
   :init
   (setq prot-fonts-typeface-sets-alist
         '((laptop . (90 "Hack" "DejaVu Sans Condensed"))
-          (desktop . (110 "Source Code Pro" "Roboto"))
-          (reader . (150 "Iosevka Comfy" "FiraGO"))
-          (presentation . (180 "Iosevka Comfy" "Source Sans Pro"))))
+          (desktop . (130 "Iosevka Comfy" "Roboto Condensed" light normal))
+          (reader . (150 "Iosevka Comfy" "FiraGO" light normal))
+          (presentation . (180 "Iosevka Comfy" "Source Sans Pro" light normal))))
   (setq prot-fonts-monospaced-list
         '("Hack" "DejaVu Sans Mono" "Iosevka Comfy" "Source Code Pro"
           "Ubuntu Mono" "Fantasque Sans Mono" "Fira Code" "Monoid"))
@@ -734,6 +734,7 @@ Relevant blog posts of mine:
   (setq prot-fonts-max-small-resolution-width 1366)
   (setq prot-fonts-bold-weight-alist
         '(("Iosevka Comfy" . semibold)
+          ("Fira Code" . semibold)
           ("Source Code Pro" . semibold)))
   :config
   ;; This is defined in Emacs' C code, though I feel this is a good

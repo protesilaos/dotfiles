@@ -37,26 +37,37 @@
   "Font-related configurations for my dotemacs."
   :group 'font)
 
-;; NOTE: "Hack" and "Iosevka Comfy" are, in my case, personal builds of
-;; Hack and Iosevka respectively:
+;; NOTE: "Hack" and "Iosevka Comfy" are personal builds of Hack and
+;; Iosevka respectively:
 ;;
 ;; 1. https://gitlab.com/protesilaos/hack-font-mod
 ;; 2. https://gitlab.com/protesilaos/iosevka-comfy
 (defcustom prot-fonts-typeface-sets-alist
-  '((laptop . (105 "Hack" "DejaVu Sans"))
-    (desktop . (110 "Hack" "Inter"))
-    (reader . (150 "Iosevka Comfy" "FiraGO"))
-    (presentation . (190 "Iosevka Comfy" "FiraGO")))
-  "Alist of desired typefaces and their point sizes.
+  '((laptop . (90 "Hack" "DejaVu Sans Condensed"))
+    (desktop . (130 "Iosevka Comfy" "Roboto Condensed" light normal))
+    (reader . (150 "Iosevka Comfy" "FiraGO" light normal))
+    (presentation . (180 "Iosevka Comfy" "Source Sans Pro" light normal)))
+  "Alist of desired typefaces and their particularities.
 
 Each association consists of an arbitrary display type or context
-mapped to a font height (as and integer that is 10x the point
-size), followed by the family names (as strings) of mono and
-proportionately spaced typefaces.  The latter two are assigned to
-the `fixed-pitch' and `variable-pitch' faces respectively.
+mapped to a list.  The list specifies, in this order:
 
-It is assumed that those typefaces already exist on the system,
-otherwise an error will be displayed when trying to set them."
+1. Font height as an integer that is 10x the point size.
+
+2. The family name (as a string) of the monospaced typeface that
+will be assigned to the `default' and `fixed-pitch' faces.
+
+3. The family name of the proportionately spaced typeface that
+will be assigned to the `variable-pitch' face.
+
+4. The weight of the monospaced family.  If none is declared, a
+normal weight is assumed.
+
+5. The weight of the proportionately spaced family.  Again, the
+absence of this implies a normal weight.
+
+It is assumed that all those typefaces already exist on the
+system and we make no effort whatsoever to run relevant tests."
   :group 'prot-fonts
   :type 'alist)
 
@@ -71,7 +82,7 @@ an error will be displayed when trying to set one of them."
   :type 'list)
 
 (defcustom prot-fonts-heights-list
-  '(100 105 110 120 130 140 150 160)
+  '(100 105 110 120 130 140 150 160 170 180 190)
   "List of font heights for `prot-fonts-set-font-size-family'."
   :group 'prot-fonts
   :type 'list)
@@ -102,6 +113,7 @@ display's key in that same alist."
 
 (defcustom prot-fonts-bold-weight-alist
   '(("Iosevka Comfy" . semibold)
+    ("Fira Code" . semibold)
     ("Source Code Pro" . semibold))
   "Font families in need of a different weight for `bold'.
 
@@ -126,12 +138,14 @@ to pass to the `bold' face's weight property."
 
 ;;; Functions
 
-(defun prot-fonts--set-face-attribute (face family)
-  "Set FACE font to FAMILY."
-  (set-face-attribute `,face nil :family (format "%s" family)))
+(defun prot-fonts--set-face-attribute (face family &optional height weight)
+  "Set FACE font to FAMILY, with optional HEIGHT and WEIGHT."
+  (let ((h (or height 1.0))
+        (w (or weight 'normal)))
+    (set-face-attribute `,face nil :family (format "%s" family) :height h :weight w)))
 
 ;;;###autoload
-(defun prot-fonts-set-fonts (&optional height font-mono font-var)
+(defun prot-fonts-set-fonts (&optional height font-mono font-var weight-mono weight-var)
   "Set default font size using presets.
 
 HEIGHT is the font's height as 10x its point size.  FONT-MONO
@@ -140,7 +154,10 @@ requirements of the `fixed-pitch' face.  FONT-VAR could be a
 proportionately spaced typeface or even a monospaced one, since
 the `variable-pitch' it applies to is not supposed to be
 spacing-sensitive.  Both families must be represented as a string
-holding the family's name."
+holding the family's name.
+
+WEIGHT-MONO is the weight property of FONT-MONO, while WEIGHT-VAR
+is that of FONT-VAR."
   (interactive)
   (if window-system
       (let* ((data prot-fonts-typeface-sets-alist)
@@ -161,10 +178,18 @@ holding the family's name."
              (var (or font-var
                       (if (member choice displays)
                           (nth 3 (assoc choice data))
-                        nil))))
-        (set-face-attribute 'default nil :family mono :height size)
-        (prot-fonts--set-face-attribute 'fixed-pitch mono)
-        (prot-fonts--set-face-attribute 'variable-pitch var)
+                        nil)))
+             (weight-m (or weight-mono
+                           (if (member choice displays)
+                               (nth 4 (assoc choice data))
+                             'normal)))
+             (weight-v (or weight-var
+                           (if (member choice displays)
+                               (nth 5 (assoc choice data))
+                             'normal))))
+        (prot-fonts--set-face-attribute 'default mono size weight-m)
+        (prot-fonts--set-face-attribute 'fixed-pitch mono nil weight-m)
+        (prot-fonts--set-face-attribute 'variable-pitch var nil weight-v)
         (run-hooks 'prot-fonts-set-typeface-hook)
         (add-to-history 'prot-fonts-font-display-hist prompt))
     (user-error "Not running a graphical Emacs; cannot set fonts")))
