@@ -2718,7 +2718,6 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
           ;; bottom side window
           ("\\*\\(Completions\\|Embark Collect\\).*"
            (display-buffer-in-side-window)
-           (window-height . 0.16)
            (side . bottom)
            (slot . 0)
            (window-parameters . ((no-other-window . t)
