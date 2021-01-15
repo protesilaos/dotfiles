@@ -5655,7 +5655,7 @@ ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
 :CUSTOM_ID: h:758afe0d-bc7c-4afc-9c6b-b5e569901591
 :END:
 
-/NOTE 2020-12-14: Pending major review/.
+/NOTE 2021-01-15: Pending major review/.
 
 Bongo is a buffer oriented media manager.  It provides an interface to
 external media players, such as VLC or MPV.  Those are known as
@@ -5772,8 +5772,13 @@ Watch: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Manage 
   (setq bongo-mark-played-tracks t)
   (setq bongo-header-line-mode nil)
   (setq bongo-mode-line-indicator-mode nil)
-  (setq bongo-enabled-backends '(vlc mpv))
   (setq bongo-vlc-program-name "cvlc")
+
+  ;; EXPERIMENTAL
+  (defun prot/bongo--enabled-backends ()
+    (setq bongo-enabled-backends '(mpv vlc)))
+
+  (add-hook 'bongo-mode-hook #'prot/bongo--enabled-backends)
 
 ;;; Bongo playlist buffer
 ;;;; Generic playlist extras
