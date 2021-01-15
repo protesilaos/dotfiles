@@ -85,6 +85,14 @@ If it is a list, this actually returns its car."
     ('bar (setq-local cursor-type '(hbar . 3)))
     (_  (setq-local cursor-type '(bar . 2)))))
 
+;;;###autoload
+(defun prot-minibuffer-completions-cursor ()
+  "Local value of `cursor-type' for `completion-setup-hook'."
+  (pcase (prot-minibuffer--cursor-type)
+    ('hbar (setq-local cursor-type 'box))
+    ('bar (setq-local cursor-type '(hbar . 8)))
+    (_  (setq-local cursor-type '(bar . 3)))))
+
 ;;;; Minibuffer interactions
 
 ;;;###autoload
