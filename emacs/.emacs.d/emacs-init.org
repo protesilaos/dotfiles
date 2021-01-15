@@ -517,8 +517,8 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.
-  (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs t
+  (setq modus-themes-slanted-constructs nil
+        modus-themes-bold-constructs nil
         modus-themes-fringes nil ; {nil,'subtle,'intense}
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
@@ -1124,6 +1124,7 @@ declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e1
          ("s-d" . dired)
          ("s-D" . dired-other-window)
          :map minibuffer-local-completion-map
+         ("C-j" . exit-minibuffer)
          ("<tab>" . minibuffer-force-complete)
          ;; De facto deprecated as I use Embark and its own completions'
          ;; buffer.
@@ -2768,6 +2769,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
          ("s-3" . split-window-right)
          ("s-0" . delete-window)
          ("s-1" . delete-other-windows)
+         ("s-!" . delete-other-windows-vertically) ; s-S-1
          ("s-5" . delete-frame)
          ("C-x _" . balance-windows)
          ("C-x +" . balance-windows-area)
