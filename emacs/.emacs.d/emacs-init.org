@@ -4443,6 +4443,7 @@ file which do not already have one."
     (org-map-entries
      (lambda () (contrib/org-id-get (point) t))))
 
+  :hook (org-follow-link-hook . prot-pulse-recentre-top)
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c l" . org-store-link)
