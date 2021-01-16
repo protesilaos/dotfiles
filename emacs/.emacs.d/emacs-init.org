@@ -718,6 +718,10 @@ Relevant blog posts of mine:
   :straight (:type built-in)
   :after modus-themes                   ; Because I use its hook
   :init
+  ;; Note that the light weight I pass to Iosevka Comfy is thicker than
+  ;; the equivalent for standard Iosevka.  In my build instructions, I
+  ;; set that to 350, while normal light is at 300 and regular is at
+  ;; 400.  Source: <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
         '((laptop . (90 "Hack" "DejaVu Sans Condensed"))
           (desktop . (130 "Iosevka Comfy" "Roboto Condensed" light normal))
