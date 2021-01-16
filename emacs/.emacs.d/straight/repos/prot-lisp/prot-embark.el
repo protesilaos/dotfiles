@@ -54,7 +54,8 @@ Add this to `minibuffer-exit-hook'."
 
 ;; Thanks to Omar Antolín Camarena for providing a variant of this!
 ;; (mistakes are always my own).
-(defun prot-embark--collect-fit-window (&rest _)
+;;;###autoload
+(defun prot-embark-collect-fit-window (&rest _)
   "Fit Embark's live occur window to its buffer.
 To be added to `embark-occur-post-revert-hook'."
   (when (derived-mode-p 'embark-collect-mode)
