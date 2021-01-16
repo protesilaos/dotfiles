@@ -1503,7 +1503,8 @@ Finally, a few words about the following package declaration:
   :straight (:type built-in)
   :demand
   :after embark
-  :hook (embark-collect-post-revert-hook . prot-embark--collect-fit-window)
+  :hook ((minibuffer-exit-hook . prot-embark-clear-live-buffers)
+         (embark-collect-post-revert-hook . prot-embark-collect-fit-window))
   :bind (:map embark-collect-mode-map
          ("h" . prot-simple-describe-symbol)  ; from `prot-simple.el'
          ("C-g" . prot-embark-keyboard-quit)
