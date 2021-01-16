@@ -70,7 +70,7 @@ To be added to `embark-occur-post-revert-hook'."
     (when buf-link
       (window-live-p (get-buffer-window buf-link)))))
 
-;; Thanks to Karthik Chikmagalur for providing the
+;; Thanks to Karthik Chikmagalur for providing an earlier version of
 ;; `prot-embark-keyboard-quit' command!  Sources to Karthik's work:
 ;;
 ;; + https://karthinks.com/
@@ -80,14 +80,16 @@ To be added to `embark-occur-post-revert-hook'."
 (defun prot-embark-keyboard-quit ()
   "Control the exit behaviour for Embark collect buffers.
 
-If in an Embark live collect/completions buffer, run
+If in a live Embark collect/completions buffer, run
 `abort-recursive-edit'.  Otherwise run `keyboard-quit'.
 
-This matches `prot-embark-collect-buffer-regexp' and is meant to
-be bound in `embark-live-collect-mode-map'."
+This is meant to be bound in `embark-collect-mode-map'."
   (interactive)
-  (if (derived-mode-p 'embark-collect-mode)
-      (abort-recursive-edit)
+  (if (and (derived-mode-p 'embark-collect-mode)
+           (prot-embark--live-buffer-p))
+      (progn
+        (kill-buffer)
+        (abort-recursive-edit))
     (keyboard-quit)))
 
 (declare-function embark-collect-completions "embark")
