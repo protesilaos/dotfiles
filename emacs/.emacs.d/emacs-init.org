@@ -1253,7 +1253,6 @@ try.
          ("M-g M-g" . consult-goto-line)
          ("M-X" . consult-mode-command)
          ("M-K" . consult-keep-lines)  ; M-S-k is similar to M-S-5 (M-%)
-         ("M-F" . consult-flush-lines) ; M-S-f is similar to M-S-5 (M-%)
          ("M-s m" . consult-mark)
          :map consult-narrow-map
          ("?" . consult-narrow-help)))
