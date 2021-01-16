@@ -70,6 +70,15 @@ To be added to `embark-occur-post-revert-hook'."
     (when buf
       (window-live-p (get-buffer-window buf)))))
 
+(defvar embark-collect--kind)
+
+;; Thanks to Omar Antolín Camarena for sharing this:
+;; <https://github.com/oantolin/embark/issues/114#issuecomment-761583395>
+(defun prot-embark--live-completions-p ()
+  "Determine whether current collection is for live completions."
+  (and (derived-mode-p 'embark-collect-mode)
+       (eq embark-collect--kind :completions)))
+
 ;; Thanks to Karthik Chikmagalur for providing an earlier version of
 ;; `prot-embark-keyboard-quit' command!  Sources to Karthik's work:
 ;;
