@@ -723,10 +723,10 @@ Relevant blog posts of mine:
   ;; set that to 350, while normal light is at 300 and regular is at
   ;; 400.  Source: <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
-        '((laptop . (90 "Hack" "DejaVu Sans Condensed"))
-          (desktop . (130 "Iosevka Comfy" "Roboto Condensed" light normal))
-          (reader . (150 "Iosevka Comfy" "FiraGO" light normal))
-          (presentation . (180 "Iosevka Comfy" "Source Sans Pro" light normal))))
+        '((laptop 90 "Hack" normal "DejaVu Sans Condensed" normal)
+          (desktop 130 "Iosevka Comfy" light "Roboto Condensed" normal)
+          (reader 150 "Iosevka Comfy" light "FiraGO" normal)
+          (presentation 180 "Iosevka Comfy" light "Source Sans Pro" normal)))
   (setq prot-fonts-monospaced-list
         '("Hack" "DejaVu Sans Mono" "Iosevka Comfy" "Source Code Pro"
           "Ubuntu Mono" "Fantasque Sans Mono" "Fira Code" "Monoid"))

@@ -43,28 +43,27 @@
 ;; 1. https://gitlab.com/protesilaos/hack-font-mod
 ;; 2. https://gitlab.com/protesilaos/iosevka-comfy
 (defcustom prot-fonts-typeface-sets-alist
-  '((laptop . (90 "Hack" "DejaVu Sans Condensed"))
-    (desktop . (130 "Iosevka Comfy" "Roboto Condensed" light normal))
-    (reader . (150 "Iosevka Comfy" "FiraGO" light normal))
-    (presentation . (180 "Iosevka Comfy" "Source Sans Pro" light normal)))
+  '((laptop 90 "Hack" normal "DejaVu Sans Condensed" normal)
+    (desktop 130 "Iosevka Comfy" light "Roboto Condensed" normal)
+    (reader 150 "Iosevka Comfy" light "FiraGO" normal)
+    (presentation 180 "Iosevka Comfy" light "Source Sans Pro" normal))
   "Alist of desired typefaces and their particularities.
 
-Each association consists of an arbitrary display type or context
-mapped to a list.  The list specifies, in this order:
+The list specifies, in this order:
+
+0. Display type of context, used to recognise the association.
 
 1. Font height as an integer that is 10x the point size.
 
 2. The family name (as a string) of the monospaced typeface that
 will be assigned to the `default' and `fixed-pitch' faces.
 
-3. The family name of the proportionately spaced typeface that
+3. The main weight of the monospaced family.
+
+4. The family name of the proportionately spaced typeface that
 will be assigned to the `variable-pitch' face.
 
-4. The weight of the monospaced family.  If none is declared, a
-normal weight is assumed.
-
-5. The weight of the proportionately spaced family.  Again, the
-absence of this implies a normal weight.
+5. The weight of the proportionately spaced family.
 
 It is assumed that all those typefaces already exist on the
 system and we make no effort whatsoever to run relevant tests."
@@ -138,11 +137,23 @@ to pass to the `bold' face's weight property."
 
 ;;; Functions
 
-(defun prot-fonts--set-face-attribute (face family &optional height weight)
+(defun prot-fonts--set-face-attribute (face family &optional weight height)
   "Set FACE font to FAMILY, with optional HEIGHT and WEIGHT."
-  (let ((h (or height 1.0))
-        (w (or weight 'normal)))
-    (set-face-attribute `,face nil :family (format "%s" family) :height h :weight w)))
+  (let* ((u (if (eq face 'default) 100 1.0))
+         (h (or height u))
+         (w (or weight 'normal)))
+    ;; ;; Read this: <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=45920>
+    ;; ;; Hence why the following fails.  Keeping it for posterity...
+    ;; (set-face-attribute face nil :family family :weight w :height h)
+    (internal-set-lisp-face-attribute face :weight w 0)
+    (internal-set-lisp-face-attribute face :height h 0)
+    (internal-set-lisp-face-attribute face :family family 0)))
+
+(defun prot-fonts--return-nth (choice displays data n)
+  "Check if CHOICE maps to DISPLAYS from DATA; return N."
+  (if (member choice displays)
+      (nth n (assoc choice data))
+    (error "'%s' not a member of %s" choice displays)))
 
 ;;;###autoload
 (defun prot-fonts-set-fonts (&optional height font-mono font-var weight-mono weight-var)
@@ -165,34 +176,22 @@ is that of FONT-VAR."
              (display-strings (mapcar (lambda (x)
                                         (format "%s" (car x)))
                                       prot-fonts-typeface-sets-alist))
-             (prompt (completing-read "Pick display size: "
-                                      display-strings nil t
-                                      nil 'prot-fonts-font-display-hist))
+             (prompt (unless height
+                       (completing-read "Pick display size: "
+                                        display-strings nil t
+                                        nil 'prot-fonts-font-display-hist)))
              (choice (or height (intern prompt)))
-             (size (or height
-                       (nth 1 (assoc choice data))))
-             (mono (or font-mono
-                       (if (member choice displays)
-                           (nth 2 (assoc choice data))
-                         nil)))
-             (var (or font-var
-                      (if (member choice displays)
-                          (nth 3 (assoc choice data))
-                        nil)))
-             (weight-m (or weight-mono
-                           (if (member choice displays)
-                               (nth 4 (assoc choice data))
-                             'normal)))
-             (weight-v (or weight-var
-                           (if (member choice displays)
-                               (nth 5 (assoc choice data))
-                             'normal))))
-        (prot-fonts--set-face-attribute 'default mono size weight-m)
-        (prot-fonts--set-face-attribute 'fixed-pitch mono nil weight-m)
-        (prot-fonts--set-face-attribute 'variable-pitch var nil weight-v)
+             (size (or height (prot-fonts--return-nth choice displays data 1)))
+             (mono (or font-mono (prot-fonts--return-nth choice displays data 2)))
+             (weight-m (or weight-mono (prot-fonts--return-nth choice displays data 3)))
+             (var (or font-var (prot-fonts--return-nth choice displays data 4)))
+             (weight-v (or weight-var (prot-fonts--return-nth choice displays data 5))))
+        (prot-fonts--set-face-attribute 'default mono weight-m size)
+        (prot-fonts--set-face-attribute 'fixed-pitch mono weight-m)
+        (prot-fonts--set-face-attribute 'variable-pitch var weight-v)
         (run-hooks 'prot-fonts-set-typeface-hook)
         (add-to-history 'prot-fonts-font-display-hist prompt))
-    (user-error "Not running a graphical Emacs; cannot set fonts")))
+    (error "Not running a graphical Emacs; cannot set fonts")))
 
 ;;;###autoload
 (defun prot-fonts-set-font-size-family ()
@@ -210,13 +209,13 @@ This command is mostly intended for testing typefaces defined in
              (size (completing-read "Select or insert number: " sizes nil nil
                                     nil 'prot-fonts-font-height-hist))
              (var (face-attribute 'variable-pitch :family)))
-        (set-face-attribute 'default nil :family font :height (string-to-number size))
-        (set-face-attribute 'fixed-pitch nil :family font)
+        (prot-fonts--set-face-attribute 'default font 'normal (string-to-number size))
+        (prot-fonts--set-face-attribute 'fixed-pitch font)
         (prot-fonts--set-face-attribute 'variable-pitch var)
         (run-hooks 'prot-fonts-set-typeface-hook)
         (add-to-history 'prot-fonts-font-family-hist font)
         (add-to-history 'prot-fonts-font-height-hist size))
-    (user-error "Not running a graphical Emacs; cannot set fonts")))
+    (error "Not running a graphical Emacs; cannot set fonts")))
 
 ;;;###autoload
 (defun prot-fonts-set-fonts-dwim (&optional arg)
@@ -253,7 +252,7 @@ respectively."
  prot-fonts-line-spacing
  "Determine desirable `line-spacing', based on font family."
  prot-fonts-line-spacing-alist
- (setq-default line-spacing `,x)
+ (setq-default line-spacing x)
  (setq-default line-spacing nil))
 
 ;; XXX: This will not work with every theme, but only those that
@@ -265,7 +264,7 @@ respectively."
  prot-fonts-bold-face
  "Determine weight for the `bold' face, based on font family."
  prot-fonts-bold-weight-alist
- (set-face-attribute 'bold nil :weight `,x)
+ (set-face-attribute 'bold nil :weight x)
  (set-face-attribute 'bold nil :weight 'bold))
 
 (defun prot-fonts--display-type-for-monitor (&optional smaller larger)
@@ -296,14 +295,12 @@ keys from `prot-fonts-laptop-desktop-keys-list'."
            (data prot-fonts-typeface-sets-alist)
            (size (cadr (assoc `,display data)))
            (mono (nth 2 (assoc `,display data)))
-           (var (nth 3 (assoc `,display data)))
-           (weight-m (or (nth 4 (assoc `,display data))
-                       'normal))
-           (weight-v (or (nth 5 (assoc `,display data))
-                         'normal)))
-      (prot-fonts--set-face-attribute 'default mono size weight-m)
-      (prot-fonts--set-face-attribute 'fixed-pitch mono nil weight-m)
-      (prot-fonts--set-face-attribute 'variable-pitch var nil weight-v)
+           (weight-m (nth 3 (assoc `,display data)))
+           (var (nth 4 (assoc `,display data)))
+           (weight-v (nth 5 (assoc `,display data))))
+      (prot-fonts--set-face-attribute 'default mono weight-m size)
+      (prot-fonts--set-face-attribute 'fixed-pitch mono weight-m)
+      (prot-fonts--set-face-attribute 'variable-pitch var weight-v)
     (run-hooks 'prot-fonts-set-typeface-hook))))
 
 (provide 'prot-fonts)
