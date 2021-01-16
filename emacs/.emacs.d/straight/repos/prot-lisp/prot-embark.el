@@ -66,9 +66,9 @@ To be added to `embark-occur-post-revert-hook'."
 
 (defun prot-embark--live-buffer-p ()
   "Determine presence of a linked live occur buffer."
-  (let ((buf-link embark-collect-linked-buffer))
-    (when buf-link
-      (window-live-p (get-buffer-window buf-link)))))
+  (let ((buf embark-collect-linked-buffer))
+    (when buf
+      (window-live-p (get-buffer-window buf)))))
 
 ;; Thanks to Karthik Chikmagalur for providing an earlier version of
 ;; `prot-embark-keyboard-quit' command!  Sources to Karthik's work:
