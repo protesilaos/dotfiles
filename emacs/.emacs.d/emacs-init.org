@@ -1751,6 +1751,11 @@ based on that input.
 To check what I have on regular expressions, see further below my
 configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][re-builder and visual-regexp]].
 
+As for =hippie-exp=, this is another built-in library that builds on top
+of dabbrev.  I like what it does, but feel that its lack of visual
+feedback prevents it from realising its potential.  Maybe we will one
+day have [[https://github.com/minad/consult/issues/6#issuecomment-761529838][a consult-hippie alternative]]...
+
 #+begin_src emacs-lisp
 (use-package dabbrev
   :config
@@ -1765,6 +1770,25 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
   (setq dabbrev-upcase-means-case-search t)
   :bind (("M-/" . dabbrev-expand)
          ("s-/" . dabbrev-completion)))
+
+(use-package hippie-exp
+  :config
+  (setq hippie-expand-try-functions-list
+        '(try-expand-dabbrev
+          try-expand-dabbrev-all-buffers
+          try-expand-dabbrev-from-kill
+          try-expand-all-abbrevs
+          try-expand-list
+          try-expand-line
+          try-complete-lisp-symbol-partially
+          try-complete-lisp-symbol
+          try-complete-file-name-partially
+          try-complete-file-name))
+  (setq hippie-expand-verbose t)
+  (setq hippie-expand-dabbrev-skip-space nil)
+  (setq hippie-expand-dabbrev-as-symbol t)
+  (setq hippie-expand-no-restriction t)
+  :bind ("C-M-/" . hippie-expand))
 #+end_src
 
 **** Skeletons and abbreviations
