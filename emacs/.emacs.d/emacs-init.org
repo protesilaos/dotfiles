@@ -1758,13 +1758,12 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
   (setq dabbrev-backward-only nil)
   (setq dabbrev-case-distinction 'case-replace)
-  (setq dabbrev-case-fold-search t)
+  (setq dabbrev-case-fold-search nil)
   (setq dabbrev-case-replace 'case-replace)
   (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines t)
   (setq dabbrev-upcase-means-case-search t)
   :bind (("M-/" . dabbrev-expand)
-         ("C-M-/" . dabbrev-completion)
          ("s-/" . dabbrev-completion)))
 #+end_src
 
