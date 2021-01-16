@@ -79,6 +79,14 @@ To be added to `embark-occur-post-revert-hook'."
   (and (derived-mode-p 'embark-collect-mode)
        (eq embark-collect--kind :completions)))
 
+;;;###autoload
+(defun prot-embark-completions-cursor ()
+  "`prot-minibuffer-completions-cursor' for Embark completions.
+Add this to `embark-collect-mode-hook'."
+  (if (prot-embark--live-completions-p)
+      (prot-minibuffer-completions-cursor) ; from `prot-minibuffer.el'
+    (kill-local-variable 'cursor-type)))
+
 ;; Thanks to Karthik Chikmagalur for providing an earlier version of
 ;; `prot-embark-keyboard-quit' command!  Sources to Karthik's work:
 ;;

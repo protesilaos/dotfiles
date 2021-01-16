@@ -1468,7 +1468,7 @@ Finally, a few words about the following package declaration:
   :hook ((minibuffer-setup-hook . embark-collect-completions-after-input)
          (embark-post-action-hook . embark-collect--update-linked)
          (embark-collect-mode-hook . hl-line-mode)
-         (embark-collect-mode-hook . prot-minibuffer-completions-cursor)) ; from `prot-minibuffer.el'
+         (embark-collect-mode-hook . prot-embark-completions-cursor))
   :bind (("C-," . embark-act)
          :map minibuffer-local-completion-map
          ("C-," . embark-act)
