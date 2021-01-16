@@ -94,11 +94,11 @@
 ;; inferred categories from existing file names.  The latter is possible
 ;; due to the assumption that the file name convention is fully respected.
 ;;
-;; To create a new category, just enter text that does not match any of the
-;; existing items.  To input multiple categories, separate them with a
-;; comma or a space.  If your completion framework does not support such
-;; actions, then it should be considered undesirable behaviour and reported
-;; upstream.
+;; To create a new category, just enter text that does not match any of
+;; the existing items.  To input multiple categories, separate them with
+;; a comma or whatever matches your `crm-separator'.  If your completion
+;; framework does not support such actions, then it should be considered
+;; undesirable behaviour and reported upstream.
 ;;
 ;; `usls-new-note' accepts an optional prefix argument, with C-u.  Doing so
 ;; will start the command with a completion prompt for the subdirectory to
@@ -269,7 +269,6 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'crm)
 (require 'ffap)
 (require 'thingatpt)
 
@@ -531,7 +530,6 @@ Markdown or Org types."
 (defun usls--categories-prompt ()
   "Prompt for one or more categories (comma/space separated)."
   (let* ((categories (usls-categories))
-         (crm-separator "[, ]")
          (choice (completing-read-multiple "File category: " categories
                                            nil nil nil 'usls--category-history)))
     (if (= (length choice) 1)
