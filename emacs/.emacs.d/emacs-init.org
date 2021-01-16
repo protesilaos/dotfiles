@@ -1475,9 +1475,6 @@ Finally, a few words about the following package declaration:
          ("C-." . embark-act-noexit)
          ("C->" . embark-become)
          ("M-q" . embark-collect-toggle-view) ; parallel of `fill-paragraph'
-         ;; NOTE: to switch to the live collection buffer, I use
-         ;; `prot-minibuffer-focus-mini-or-completions' which is bound
-         ;; to "s-v".
          :map embark-collect-mode-map
          ("C-," . embark-act)
          ("C-." . embark-act-noexit)
@@ -1508,6 +1505,9 @@ Finally, a few words about the following package declaration:
   :after embark
   :hook ((minibuffer-exit-hook . prot-embark-clear-live-buffers)
          (embark-collect-post-revert-hook . prot-embark-collect-fit-window))
+  ;; NOTE: to switch to the live collection buffer, I also use
+  ;; `prot-minibuffer-focus-mini-or-completions' which is bound to
+  ;; "s-v".
   :bind (:map embark-collect-mode-map
          ("h" . prot-simple-describe-symbol)  ; from `prot-simple.el'
          ("C-g" . prot-embark-keyboard-quit)
@@ -1519,7 +1519,7 @@ Finally, a few words about the following package declaration:
          ("C-n" . prot-embark-next-line-or-mini)
          ("C-p" . prot-embark-previous-line-or-mini)
          ("M-F" . prot-embark-collection-flush-lines) ; M-S-f like M-S-5 (M-%)
-         ("M-K" . prot-embark-collection-keep-lines)  ; M-S-k like M-S-5 (M-%)
+         ("M-K" . prot-embark-collection-keep-lines)  ; same principle as right above
          :map minibuffer-local-completion-map
          ("C-n" . prot-embark-switch-to-completions-top)
          ("C-p" . prot-embark-switch-to-completions-bottom)
