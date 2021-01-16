@@ -94,8 +94,7 @@ If in a live Embark collect/completions buffer, run
 
 This is meant to be bound in `embark-collect-mode-map'."
   (interactive)
-  (if (and (derived-mode-p 'embark-collect-mode)
-           (prot-embark--live-buffer-p))
+  (if (prot-embark--live-completions-p)
       (progn
         (kill-buffer)
         (abort-recursive-edit))
