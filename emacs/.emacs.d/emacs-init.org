@@ -1720,29 +1720,31 @@ This is Emacs' own approach to dynamic/arbitrary text completion inside
 the buffer: "dynamic abbreviation" or else =dabbrev=.  This mechanism
 works by reading all text before point to find a suitable match.
 Different scenaria determine whether it should also look forward and in
-other buffers.
-
-In essence, Dabbrev can help you type again what you already have.  It
-will not draw findings from some knowledge bank, nor will it try to read
-your mind (though Emacs will definitely have an =M-x= conduit to such a
-technology).
+other buffers.  In essence, Dabbrev can help you type again what you
+already have.  It will not draw candidates from some knowledge bank.
 
 With =dabbrev-expand= we make an attempt to complete the text at point.
 Repeated invocations will cycle through the candidates.  No feedback is
-provided, much in the same way yanking from the kill-ring works.
-Whereas =dabbrev-completion= benefits from minibuffer interactivity,
-courtesy of =contrib/completing-read-in-region= that was defined in the
-section right above.
+provided, much in the same way yanking from the kill-ring works.  To
+complete a phrase, matching the last succesful =dabbrev-expand=, you need
+to supply an empty space and call the command again.  This will match
+the next word, and so on for N words.
+
+Whereas =dabbrev-completion= benefits from minibuffer interactivity and
+the pattern matching styles in effect ([[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]]).
+If you configure =completion-in-region-function= to display a list of
+candidates, such as how I do with Consult, then you can use that to pick
+the candidate you want ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el)]]).
 
 The =dabbrev-abbrev-char-regexp= is configured to match both regular words
-and symbols (e.g. words separated by hyphens).  This makes it suitable
-both for code and ordinary language.
+and symbols (e.g. words separated by hyphens).  This makes it equally
+suitable for code and ordinary language.
 
 While the =dabbrev-abbrev-skip-leading-regexp= is instructed to also
-expand words and symbols that start with any of these: =$=, =*=, =/=, ===, ='=.
+expand words and symbols that start with any of these: =$=, =*=, =/=, ===, =~=, ='=.
 This regexp may be expanded in the future, but the idea is to be able to
 perform completion in contexts where the known word/symbol is preceded
-by a special characters.  For example, in the =org-mode= version of this
+by a special character.  For example, in the =org-mode= version of this
 document, all inline code must be placed between the equals sign.  So
 now typing the ===, then a letter, will still allow me to expand text
 based on that input.
@@ -1750,20 +1752,11 @@ based on that input.
 To check what I have on regular expressions, see further below my
 configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][re-builder and visual-regexp]].
 
-The =prot/dabbrev-completion= is based on [[https://www.reddit.com/r/emacs/comments/jix6od/weekly_tipstricketc_thread/gaid3f4/][an idea shared]] by Omar Antolín
-Camarena on Reddit.  It helps you continue with a =dabbrev-completion=
-sequence that encompasses multiple words.  Take Omar's full name for
-example.  I typed =Om= then =s-/= (=prot/dabbrev-completion=) to find the form
-I was looking for using minibuffer completion.  Then followed it up with
-two =s-/=.  It filled in the rest of the name without prompting me for
-completion again.  Nice and simple!
-
 #+begin_src emacs-lisp
 (use-package dabbrev
-  :after minibuffer ; read those as well
   :config
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
-  (setq dabbrev-abbrev-skip-leading-regexp "[$*/=']")
+  (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
   (setq dabbrev-backward-only nil)
   (setq dabbrev-case-distinction 'case-replace)
   (setq dabbrev-case-fold-search t)
@@ -1771,25 +1764,9 @@ completion again.  Nice and simple!
   (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines t)
   (setq dabbrev-upcase-means-case-search t)
-
-  ;; FIXME: this is not reliable
-  (defun prot/dabbrev-completion ()
-    "Expand current phrase or call `dabbrev-completion'."
-    (interactive)
-    (let* ((abbrev (dabbrev--abbrev-at-point))
-           (ignore-case-p (dabbrev--ignore-case-p abbrev))
-           (completion-list (dabbrev--find-all-expansions abbrev ignore-case-p)))
-      (cond
-       ((when (and (eq completion-list nil)
-                   (not (eq last-repeatable-command 'mode-exit)))
-          (insert " ")
-          (dabbrev-expand 1)))
-       (t
-        (dabbrev-completion)))))
-
   :bind (("M-/" . dabbrev-expand)
-         ("C-M-/" . prot/dabbrev-completion)
-         ("s-/" . prot/dabbrev-completion)))
+         ("C-M-/" . dabbrev-completion)
+         ("s-/" . dabbrev-completion)))
 #+end_src
 
 **** Skeletons and abbreviations
