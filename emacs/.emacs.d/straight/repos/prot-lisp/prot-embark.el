@@ -139,7 +139,8 @@ Meant to be assigned to a key in `embark-collect-mode-map'."
   "Subroutine for switching to the Embark completions buffer."
   (unless (prot-embark--live-buffer-p)
     (prot-embark-completions-toggle))
-  (pop-to-buffer embark-collect-linked-buffer))
+  (let ((win (get-buffer-window embark-collect-linked-buffer)))
+    (select-window win)))
 
 ;;;###autoload
 (defun prot-embark-switch-to-completions-top ()
