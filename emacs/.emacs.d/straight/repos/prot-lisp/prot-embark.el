@@ -157,7 +157,12 @@ Meant to be bound in `minibuffer-local-completion-map'."
   (prot-embark--switch-to-completions)
   (goto-char (point-max))
   (forward-line -1)
-  (goto-char (point-at-bol)))
+  (goto-char (point-at-bol))
+  (recenter
+   (- -1
+      (min (max 0 scroll-margin)
+           (truncate (/ (window-body-height) 4.0))))
+      t))
 
 ;;;###autoload
 (defun prot-embark-next-line-or-mini (&optional arg)
