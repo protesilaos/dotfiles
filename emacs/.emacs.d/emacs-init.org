@@ -1797,7 +1797,8 @@ completion again.  Nice and simple!
 :CUSTOM_ID: h:33cd69cc-1a50-4abb-9f09-cae98dc8998b
 :END:
 
-/NOTE 2020-06-08: Pending major review./
+/NOTE 2020-06-08: Pending major review. UPDATE 2021-01-16: I still plan
+to review this./
 
 This section stores all the "skeletons" I define.  These are snippets of
 text, typically templates or code statements, that are meant to speed up
