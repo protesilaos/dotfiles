@@ -3104,7 +3104,8 @@ the subsequent code block.
 
 #+begin_src emacs-lisp
 (use-package usls
-  :straight (:type built-in)
+  :straight (:type built-in
+             :no-byte-compile t)      ; Omit this: only for my dev needs
   :config
   (setq usls-directory "~/Documents/notes/")
   (setq usls-known-categories '(economics philosophy politics))
