@@ -69,9 +69,7 @@ Optionally move to ARGth match in the given direction."
   (interactive "p")
   (when (and isearch-forward isearch-other-end)
     (goto-char isearch-other-end))
-  (isearch-repeat-forward (or arg 1))
-  (when isearch-other-end
-    (goto-char isearch-other-end)))
+  (isearch-repeat-forward (or arg 1)))
 
 ;;;###autoload
 (defun prot-search-isearch-repeat-backward (&optional arg)
