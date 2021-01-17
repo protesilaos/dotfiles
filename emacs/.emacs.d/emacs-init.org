@@ -518,8 +518,8 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-slanted-constructs nil
-        modus-themes-bold-constructs nil
+  (setq modus-themes-slanted-constructs t
+        modus-themes-bold-constructs t
         modus-themes-fringes 'intense ; {nil,'subtle,'intense}
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
@@ -546,10 +546,10 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-org-blocks 'grayscale ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
-        '((t . no-bold))
-        modus-themes-variable-pitch-ui t
-        modus-themes-variable-pitch-headings t
-        modus-themes-scale-headings t
+        '((t . nil))
+        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-headings nil
+        modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
