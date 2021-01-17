@@ -6941,7 +6941,7 @@ sometimes it causes problems, such as with diffs.
   (setq display-line-numbers-major-tick 0)
   (setq display-line-numbers-minor-tick 0)
   ;; Use absolute numbers in narrowed buffers
-  (setq display-line-numbers-widen t)
+  (setq-default display-line-numbers-widen t)
 
   (define-minor-mode prot/display-line-numbers-mode
     "Toggle `display-line-numbers-mode' and `hl-line-mode'."
