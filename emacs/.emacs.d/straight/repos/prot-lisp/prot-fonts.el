@@ -145,9 +145,12 @@ to pass to the `bold' face's weight property."
     ;; ;; Read this: <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=45920>
     ;; ;; Hence why the following fails.  Keeping it for posterity...
     ;; (set-face-attribute face nil :family family :weight w :height h)
-    (internal-set-lisp-face-attribute face :weight w 0)
-    (internal-set-lisp-face-attribute face :height h 0)
-    (internal-set-lisp-face-attribute face :family family 0)))
+    (if (eq (face-attribute face :weight) w)
+          (internal-set-lisp-face-attribute face :family family 0)
+      (internal-set-lisp-face-attribute face :weight w 0)
+      (internal-set-lisp-face-attribute face :family family 0)
+      (internal-set-lisp-face-attribute face :weight w 0))
+    (internal-set-lisp-face-attribute face :height h 0)))
 
 (defun prot-fonts--return-nth (choice displays data n)
   "Check if CHOICE maps to DISPLAYS from DATA; return N."
