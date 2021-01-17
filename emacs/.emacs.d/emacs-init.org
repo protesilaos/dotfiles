@@ -3256,12 +3256,15 @@ on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (s
   ;; The following are from Emacs 27.1
   (setq diff-refine nil)                ; I do it on demand
   (setq diff-font-lock-prettify nil)    ; better for patches
+  ;; The following is further controlled by
+  ;; `prot-diff-modus-themes-diffs'
   (setq diff-font-lock-syntax 'hunk-also))
 
 (use-package prot-diff
   :straight (:type built-in)
   ;; `prot-diff-buffer-dwim' replaces the default for `vc-diff' (which I
   ;; bind to another key---see VC section).
+  :hook (modus-themes-after-load-theme-hook . prot-diff-modus-themes-diffs)
   :bind (("C-x v =" . prot-diff-buffer-dwim)
          :map diff-mode-map
          ("C-c C-b" . prot-diff-refine-dwim) ; replace `diff-refine-hunk'

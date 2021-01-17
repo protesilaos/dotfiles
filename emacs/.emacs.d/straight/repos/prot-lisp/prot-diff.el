@@ -97,5 +97,26 @@ current file instead."
         (diff-restrict-view)
         (message "Narrowed to diff hunk")))))
 
+(defvar modus-themes-diffs)
+
+;;;###autoload
+(defun prot-diff-modus-themes-diffs ()
+  "Configure `diff-font-lock-syntax' for accessibility.
+
+A non-nil value for that variable will apply fontification to the
+text while also trying to add the familiar diff styles.  This can
+easily result in inaccessible colour combinations.
+
+My Modus themes, which are designed for the highest accessibility
+standard in legibility, provide an option that can work well with
+such non-nil values.  Otherwise `diff-font-lock-syntax' should be
+set to nil.
+
+Run this function at the post theme load phase, such as with the
+hook `modus-themes-after-load-theme-hook'."
+  (if (eq modus-themes-diffs 'bg-only)
+      (setq diff-font-lock-syntax 'hunk-also)
+    (setq diff-font-lock-syntax nil)))
+
 (provide 'prot-diff)
 ;;; prot-diff.el ends here
