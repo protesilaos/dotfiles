@@ -511,7 +511,8 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
 #+begin_src emacs-lisp
 (use-package modus-themes
-  :straight (:local-repo "modus-themes") ; due to my dev needs
+  :straight (:local-repo "modus-themes" ; Just use :straight t OR :ensure t
+             :no-byte-compile t)        ; Omit this---only for my dev needs
   :init
   ;; Add all your customizations prior to loading the themes
   ;;
