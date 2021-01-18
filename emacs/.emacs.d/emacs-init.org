@@ -1489,11 +1489,12 @@ Finally, a few words about the following package declaration:
 ;; Integration with Consult.  Note that the package is `embark-consult',
 ;; but because it comes from the same repo as Embark I prefer to use
 ;; this straight.el directive (check the main embark package above).
-(use-package embark
+(use-package embark-consult
   :straight (embark-consult :host github
                             :repo "oantolin/embark"
                             :branch "master"
                             :files ("embark-consult.el"))
+  :demand
   :after (embark consult)
   ;; ;; Use the hook, or check `prot-embark-consult-preview-toggle'.
   ;; :hook (embark-collect-mode-hook . embark-consult-preview-minor-mode)
