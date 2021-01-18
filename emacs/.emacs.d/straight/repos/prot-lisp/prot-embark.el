@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -78,6 +78,16 @@ To be added to `embark-occur-post-revert-hook'."
   "Determine whether current collection is for live completions."
   (and (derived-mode-p 'embark-collect-mode)
        (eq embark-collect--kind :completions)))
+
+(declare-function display-line-numbers-mode "display-line-numbers")
+
+;;;###autoload
+(defun prot-embark-display-line-numbers ()
+  "Set up line numbers for live Embark collect buffers.
+Add this to `embark-collect-mode-hook'."
+  (if (prot-embark--live-completions-p)
+      (display-line-numbers-mode 1)
+    (display-line-numbers-mode -1)))
 
 ;;;###autoload
 (defun prot-embark-completions-cursor ()

@@ -1505,7 +1505,8 @@ Finally, a few words about the following package declaration:
   :demand
   :after embark
   :hook ((minibuffer-exit-hook . prot-embark-clear-live-buffers)
-         (embark-collect-post-revert-hook . prot-embark-collect-fit-window))
+         (embark-collect-post-revert-hook . prot-embark-collect-fit-window)
+         (embark-collect-mode-hook . prot-embark-display-line-numbers))
   ;; NOTE: to switch to the live collection buffer, I also use
   ;; `prot-minibuffer-focus-mini-or-completions' which is bound to
   ;; "s-v".
