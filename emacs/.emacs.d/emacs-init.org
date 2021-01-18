@@ -5853,9 +5853,9 @@ This is =prot-elfeed.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my 
 
 #+include: straight/repos/prot-lisp/prot-elfeed.el src emacs-lisp :tangle no
 
-And here is =prot-eldeed-bongo.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+And here is =prot-elfeed-bongo.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-eldeed-bongo.el src emacs-lisp :tangle no
+#+include: straight/repos/prot-lisp/prot-elfeed-bongo.el src emacs-lisp :tangle no
 
 *** Sample configuration for MPV (Elfeed+Bongo extension)
 :PROPERTIES:
