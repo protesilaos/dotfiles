@@ -5484,7 +5484,208 @@ performance by carrying out the relevant tasks in a non-blocking way.
   (setq message-send-mail-function 'async-smtpmail-send-it))
 #+end_src
 
-** Elfeed feed reader and my prot-elfeed.el extras
+** Bongo music or media manager (and prot-bongo.el)
+:PROPERTIES:
+:CUSTOM_ID: h:758afe0d-bc7c-4afc-9c6b-b5e569901591
+:END:
+
+Bongo is a buffer oriented media manager.  It provides an interface to
+external players, such as VLC or MPV.  Those are known as "back-ends"
+(=prot-bongo-enabled-backends= sets up my preferred ones).  A "library"
+buffer contains the media collection, which consists of music or video
+files, or even links to online streams.  While a "playlist" buffer holds
+the items that wait in the queue to be played by the back-end program.
+We normally use the Library to browse our multimedia collection and to
+pick the items we wish to add to the playlist.  In my case, the Library
+is just a Dired buffer, so I also benefit from everything this powerful
+tool provides (for configurations and commentary, check [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory
+editor, file manager)]]).
+
+I mostly use Bongo for my local Music collection, but also as an
+interface to the various video or audio streams I access via their RSS
+feed (the latter is done through the integration with Elfeed---as such,
+consult [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el]]).
+
+My music directories inside =~/Music= are, in principle, organised in file
+system paths that follow the pattern =Artist/Album/Tracks=.  Each track
+inside of them is named in the style of =Artist - Album - Title=.  As part
+of this collection comes from physical discs, I never bothered writing
+metadata for all them and, consequently, do not rely on it to either
+play back or organise my files.  The directory structure and its
+concomitant naming conventions are sufficient and, in my opinion, more
+precise and easier to predict.  My methodology aside, Bongo will read
+the media's file name and interpret each hyphen as a field delimiter
+that it can then use to better present the information in the playlist
+queue.
+
+I prefer this manual approach to organising my music collection over all
+metadata-centric alternatives.  Reading metadata requires more than just
+looking at a plain text name: it is opaque or at least not immediately
+obvious.  Besides, how many times have you bought an album that has one
+track with a guest author and that one track gets auto-filtered in some
+random place because of its unique meta datum for the "artist" field?
+So you need to supply a track "artist", then an "album artist" to avoid
+the pains of unpredictability...  This is the kind of busy work I want
+to eschew by organising my files in a way that I understand intuitively.
+As for whether Bongo can handle metadata, I do not know.
+
+My way of listening to music is straightforward: load up a directory or
+directory tree, randomise the playback order, and let it play in the
+background.  To ease this workflow, I make my =~/Music= directory a valid
+Bongo library.  As already noted in the introduction, this practically
+means that I can access it with =dired=, while still benefiting from the
+Bongo-specific extensions (the technical implementation is handled by my
+comprehensive =prot-bongo.el= library, which is produced after the
+following package declarations).
+
+Two main uses of the Dired+Bongo combination:
+
++ Enqueue items for immediate playback :: Mark some directories or files
+  the way you always do with Dired, and hit a key to insert them to the
+  Bongo playlist (the command is =prot-bongo-dired-insert=).  This will do
+  a number of things, specifically, (i) enqueue those Dired marks to the
+  playlist buffer, (ii) perform playback randomisation where
+  appropriate, (iii) mark this inserted group by bespoke section
+  delimiters for easier future retrieval, and (iv) start playing an item
+  unless one is already playing.  When there are no marked items in the
+  Dired buffer, the file/directory at point will be used instead.
+
++ Add items to plain playlist files :: Add the absolute filesystem path
+  of marked items (typically directories) to either an existing /playlist
+  file/ or a new one that is created on demand.  This is done using
+  minibuffer completion (check =prot-bongo-dired-make-playlist-file=).
+  Those files can at any time be inserted in a Bongo /playlist buffer/ to
+  start playing their contents, following the same conditional patterns
+  of behaviour described in the previous point (see, in particular,
+  =prot-bongo-playlist-insert-playlist-file=).  Put simply, you have a
+  "rock" /playlist file/ that includes file paths to "~/Music/Scorpions"
+  and "~/Music/Queen", so inserting that file plays all songs that are
+  found in those two directories (files are found recursively, so don't
+  worry if you have multiple albums inside each directory).
+
+Now a few words about my custom delimiters that the likes of
+=prot-bongo-dired-insert= will add to the Bongo playlist buffer:
+
++ The "section delimiters" (=prot-bongo-playlist-section-delimiter=)
+  demarcate sets of inserted media.  For example, if you mark three
+  items in Dired and proceed to enqueue them, then the section delimiter
+  goes after those three.  Such delimiters provide visual feedback, but
+  can also be used to either navigate between them and/or remove all of
+  their contents in one go (with =prot-bongo-playlist-kill-section=).
+
++ Then there is my concept of "headings" that complements those section
+  delimiters (=prot-bongo-playlist-heading-delimiter=).  Headings are
+  comments in the Bongo playlist buffer that contain the name of the
+  directory or file that includes the tracks diretly below them.  Other
+  than being informative, they function as anchors for navigation
+  (e.g. with =prot-bongo-playlist-heading-next=), while they double as
+  pointers in an =M-x imenu= index (by virtue of =prot-bongo-imenu-setup=).
+  So we can use key bindings to go to the next or previous heading or
+  employ minibuffer completion to jump directly to the heading of
+  interest.  The beauty of this is that we can then use either the
+  built-in Imenu, or the excellent =consult-imenu= to navigate to a
+  heading using minibuffer completion.  For more on the latter, refer to
+  the mega-section on [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].  It covers
+  everything about the minibuffer, Consult, Embark, and more.
+
+For the video demo of some of the aforementioned, you may want to watch
+the recording on [[https://protesilaos.com/codelog/2020-08-06-emacs-bongo-extras/][Bongo media manager and my extras]] (2020-08-06).  Though
+note that it showcases code that is considerably older than what I
+currently have with =prot-bongo.el= (as of 2021-01-18).
+
+By default, all the Bongo buffers have a prominent header that provides
+some basic information about the program.  As I have no use for that, I
+run the function =prot-bongo-remove-headers=: it takes care of clearing
+the buffers while setting them up.  The idea for this is derived from
+the [[https://github.com/Koekelas/dotfiles/blob/master/emacs.org][Emacs configuration file of Nicolas De Jaeghere]].
+
+Finally, note that I combine Bongo with Elfeed to keep track of video or
+audio streams that I follow.  The code, shared as =prot-elfeed-bongo.el=,
+is included in the section on [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed (RSS/Atom feed reader)]].  Thanks to
+Madhavan Krishnan who helped me flesh out this project by sharing code
+and ideas in a private exchange (disclosed with permission).
+
+Also watch: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Manage podcasts in Emacs with Elfeed and Bongo]] (2020-09-11),
+though please bear in my that my current code is not exactly what was
+demonstrated back then (as of 2021-01-18).
+
+#+begin_src emacs-lisp
+(use-package bongo
+  :straight t
+  :demand
+  :init
+  (setq bongo-default-directory "~/Music")
+  (setq bongo-prefer-library-buffers nil)
+  (setq bongo-insert-whole-directory-trees t)
+  (setq bongo-logo nil)
+  (setq bongo-display-track-icons nil)
+  (setq bongo-display-track-lengths nil)
+  (setq bongo-display-header-icons nil)
+  (setq bongo-display-playback-mode-indicator t)
+  (setq bongo-display-inline-playback-progress nil) ; t slows down the playlist buffer
+  (setq bongo-join-inserted-tracks nil)
+  (setq bongo-field-separator (propertize " · " 'face 'shadow))
+  (setq bongo-mark-played-tracks t)
+  (setq bongo-vlc-program-name "cvlc")
+  :config
+  (bongo-mode-line-indicator-mode -1)
+  (bongo-header-line-mode -1)
+  :bind (("C-c b" . bongo)
+         ("<C-XF86AudioPlay>" . bongo-pause/resume)
+         ("<C-XF86AudioNext>" . bongo-next)
+         ("<C-XF86AudioPrev>" . bongo-previous)
+         ("<M-XF86AudioPlay>" . bongo-show)
+         ("<S-XF86AudioNext>" . bongo-seek-forward-10)
+         ("<S-XF86AudioPrev>" . bongo-seek-backward-10)
+         :map bongo-playlist-mode-map
+         ("n" . bongo-next-object)
+         ("p" . bongo-previous-object)
+         ("R" . bongo-rename-line)
+         ("j" . bongo-dired-line)       ; Jump to dir of file at point
+         ("J" . dired-jump)             ; Jump to library buffer
+         ("I" . bongo-insert-special)))
+
+(use-package prot-bongo
+  :straight (:type built-in)
+  :init
+  (setq prot-bongo-enabled-backends '(mpv vlc))
+  (setq prot-bongo-playlist-section-delimiter (make-string 30 ?*))
+  (setq prot-bongo-playlist-heading-delimiter "§")
+  (setq prot-bongo-playlist-directory
+        (concat
+         (file-name-as-directory bongo-default-directory)
+         (file-name-as-directory "playlists")))
+  ;; Those set up a few extras: read each function's doc string.  Pass
+  ;; an argument to undo their effects.
+  :config
+  (prot-bongo-enabled-backends)
+  (prot-bongo-remove-headers)
+  (prot-bongo-imenu-setup)
+  :hook ((dired-mode-hook . prot-bongo-dired-library-enable)
+         (wdired-mode-hook . prot-bongo-dired-library-disable)
+         (prot-bongo-playlist-change-track-hook . prot-bongo-playlist-recenter))
+  :bind (:map bongo-playlist-mode-map
+              ("C-c C-n" . prot-bongo-playlist-heading-next)
+              ("C-c C-p" . prot-bongo-playlist-heading-previous)
+              ("M-n" . prot-bongo-playlist-section-next)
+              ("M-p" . prot-bongo-playlist-section-previous)
+              ("M-h" . prot-bongo-playlist-mark-section)
+              ("M-d" . prot-bongo-playlist-kill-section)
+              ("g" . prot-bongo-playlist-reset)
+              ("D" . prot-bongo-playlist-terminate)
+              ("r" . prot-bongo-playlist-random-toggle)
+              ("i" . prot-bongo-playlist-insert-playlist-file)
+              :map bongo-dired-library-mode-map
+              ("<C-return>" . prot-bongo-dired-insert)
+              ("C-c SPC" . prot-bongo-dired-insert)
+              ("C-c +" . prot-bongo-dired-make-playlist-file)))
+#+end_src
+
+Here is my =prot-bongo.el= library (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-bongo.el src emacs-lisp :tangle no
+
+** Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el
 :PROPERTIES:
 :CUSTOM_ID: h:0cd8ddab-55d1-40df-b3db-1234850792ba
 :END:
@@ -5514,7 +5715,7 @@ part users should care about looks like this:
 
 I keep the actual list in a GPG-encrypted file (defined in the variable
 =prot-elfeed-feeds-file= which is part of my =prot-elfeed.el= library that
-is reproduced after the following package declaratios).  Emacs can
+is reproduced after the following package declarations).  Emacs can
 transparently decrypt and read gpg-protected files, making it a great
 way to safely store sensitive data while still keeping everything
 perfectly functional.
@@ -5527,7 +5728,7 @@ either: for example, I have a particular "EU" entry for all
 institutions, bodies, agencies, etc. of the European Union and then I
 have other more general ones, such as "politics" and "economics".  So,
 in this case, the European Central Bank gets tagged with =eu=, =economics=,
-while the European Parliamen is =eu=, =politics=.
+while the European Parliament is =eu=, =politics=.
 
 The user interface consists of two distinct types of buffers:
 
@@ -5570,13 +5771,16 @@ my case.
 For an older, albeit still relevant, demonstration of what I have here,
 watch [[https://protesilaos.com/codelog/2020-06-09-emacs-elfeed-demo/][my Elfeed video]] (2020-06-09).
 
-As I also am a user of Bongo (see [[#h:758afe0d-bc7c-4afc-9c6b-b5e569901591][Bongo (music or media manager)]]), there
-are a few functions here that are meant to make the Elfeed search buffer
-a bongo-aware media library, from where we can enqueue online multimedia
-sources (videos, podcasts).  The key part here is to not interfere with
-the main Bongo playlist and library, which are dedicated to my local
-music collection, but to maintain a separate playlist which can be
-controlled independently.
+As I also am a user of Bongo, and because Emacs lets one handle things
+with precision, there are a few functions here that are meant to make
+the Elfeed search buffer a bongo-aware media library, from where we can
+enqueue online multimedia sources (video links, or podcast enclosures).
+The key is to not interfere with the primary Bongo playlist and library
+tandem, which is dedicated to my local music collection, but to maintain
+a separate playlist which can be controlled independently.  The entirety
+of my =prot-elfeed-bongo.el= is shared after =prot-elfeed.el= below the
+following package declarations (for my other configurations, refer to
+[[#h:758afe0d-bc7c-4afc-9c6b-b5e569901591][Bongo music or media manager (and prot-bongo.el)]]).
 
 The placement of my custom buffers for Elfeed's multimedia output is
 controlled by =display-buffer-alist= (see [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
@@ -5588,9 +5792,6 @@ helped establish the modalities of interaction between Elfeed and Bongo
 older code: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Manage podcasts in Emacs with Elfeed and Bongo]] (2020-09-11).
 
 Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MPV (Elfeed+Bongo extension)]].
-
-Remember that my =prot-elfeed.el= is produced verbatim after the package
-declarations.
 
 #+begin_src emacs-lisp
 (use-package elfeed
@@ -5624,28 +5825,37 @@ declarations.
   :config
   (prot-elfeed-fontify-tags)
   :hook (elfeed-search-mode-hook . prot-elfeed-load-feeds)
-  :bind ( :map elfeed-search-mode-map
-          ("s" . prot-elfeed-search-tag-filter)
-          ("o" . prot-elfeed-search-open-other-window)
-          ("q" . prot-elfeed-kill-buffer-close-window-dwim)
-          ("v" . prot-elfeed-mpv-dwim)
-          ("+" . prot-elfeed-toggle-tag)
-          ("!" . (lambda ()
-                   (interactive)
-                   (prot-elfeed-toggle-tag 'important)))
-          ("b" . prot-elfeed-bongo-insert-item)
-          ("h" . prot-elfeed-bongo-switch-to-playlist) ; "hop" mnemonic
-          :map elfeed-show-mode-map
-          ("a" . prot-elfeed-show-archive-entry)
-          ("e" . prot-elfeed-show-eww)
-          ("q" . prot-elfeed-kill-buffer-close-window-dwim)
-          ("b" . prot-elfeed-bongo-insert-item)
-          ("v" . prot-elfeed-mpv-dwim)))
+  :bind (:map elfeed-search-mode-map
+         ("s" . prot-elfeed-search-tag-filter)
+         ("o" . prot-elfeed-search-open-other-window)
+         ("q" . prot-elfeed-kill-buffer-close-window-dwim)
+         ("v" . prot-elfeed-mpv-dwim)
+         ("+" . prot-elfeed-toggle-tag)
+         ("!" . (lambda ()
+                  (interactive)
+                  (prot-elfeed-toggle-tag 'important)))
+         :map elfeed-show-mode-map
+         ("a" . prot-elfeed-show-archive-entry)
+         ("e" . prot-elfeed-show-eww)
+         ("q" . prot-elfeed-kill-buffer-close-window-dwim)
+         ("v" . prot-elfeed-mpv-dwim)))
+
+(use-package prot-elfeed-bongo
+  :straight (:type built-in)
+  :bind (:map elfeed-search-mode-map
+         ("b" . prot-elfeed-bongo-insert-item)
+         ("h" . prot-elfeed-bongo-switch-to-playlist) ; "hop" mnemonic
+         :map elfeed-show-mode-map
+         ("b" . prot-elfeed-bongo-insert-item)))
 #+end_src
 
 This is =prot-elfeed.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: straight/repos/prot-lisp/prot-elfeed.el src emacs-lisp :tangle no
+
+And here is =prot-eldeed-bongo.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-eldeed-bongo.el src emacs-lisp :tangle no
 
 *** Sample configuration for MPV (Elfeed+Bongo extension)
 :PROPERTIES:
@@ -5662,541 +5872,6 @@ configuration files, specifically =~/.config/mpv/mpv.conf=:
 hwdec=auto-safe
 ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
 #+end_example
-
-** Bongo (music or media manager)
-:PROPERTIES:
-:CUSTOM_ID: h:758afe0d-bc7c-4afc-9c6b-b5e569901591
-:END:
-
-/NOTE 2021-01-15: Pending major review/.
-
-Bongo is a buffer oriented media manager.  It provides an interface to
-external media players, such as VLC or MPV.  Those are known as
-"back-ends".  A "library" buffer contains the media collection, which
-consists of music or video files, or even links to online streams.  A
-"playlist" buffer holds the items that wait in the queue to be played by
-the back-end program.
-
-I use Bongo for my local Music collection.  My directories are, in
-principle, organised following the pattern =Artist/Album/Tracks=.  Each
-track is named in the style of =Artist - Album - Title=.  As part of this
-collection comes from physical discs, I never bothered writing metadata
-for all them and, consequently, I do not rely on it to play back my
-files.  The directory structure and its concomitant naming conventions
-are sufficient.  Besides, reading metadata requires more than just
-looking at a plain text name: it is opaque.  As such, I never bothered
-trying to make Bongo handle metadata the way, say, the Music Player
-Daemon does (external program).
-
-My approach to listening to music is straightforward: load up a
-directory or directory tree, randomise the playback order, and let it
-play in the background.  To ease this workflow, I make my =~/Music=
-directory a valid Bongo library.  I can access it with =dired=, while
-still benefiting from the Bongo-specific extras (see the macro
-=prot/bongo-dired-library= and its derived functions).
-
-Two main uses of the Dired+Bongo combination:
-
-1. Mark some directories or files the way you always do with Dired, hit
-   a key that will (i) enqueue those to the playlist buffer, (ii)
-   perform the randomisation where appropriate, (iii) mark this inserted
-   group by bespoke section delimiters for easier future retrieval, and
-   (iv) start playing an item unless one is already active (see
-   =prot/bongo-dired-insert-files=).
-
-2. Add the absolute filesystem path of marked items (typically
-   directories) to either an existing /playlist file/ or a new one that is
-   created on demand (check =prot/bongo-dired-make-playlist-file=).  These
-   files can be inserted in a Bongo /playlist buffer/ to start playing
-   music right away, following the same conditional patterns of
-   behaviour described in the previous point (see, in particular,
-   =prot/bongo-playlist-insert-playlist-file=).
-
-Let us press on with the logic of =prot/bongo-dired-insert-files=: it will
-start playing immediately if the playlist buffer is empty, but will not
-do so if the buffer already plays back some track.  It therefore is
-trivial to keep adding items to the queue.  The "section delimiters"
-(=prot/bongo-playlist-section=) it inserts, set up the playlist buffer in
-a way that is easier to navigate (e.g. =prot/bongo-paylist-section-next=)
-and to edit blocks in the queue.
-
-These custom sections separate batches of inserted media.  They follow
-my approach of picking an ad-hoc collection of related items that match
-a certain theme.  I want to treat them as an indivisible unit for the
-purposes of adding or removing sets from the playlist buffer.  With
-point within a section, call =prot/bongo-playlist-kill-section= to remove
-it from the playlist, then optionally follow it up with a new set you
-wish to insert, using the aforementioned techniques.
-
-Concerning the customisations below, these can be summarised thus:
-
-+ Hide all icons that can be easily hidden.
-+ No mode line indicators.  Same for the header line.
-+ Add visual indicators for played tracks and the progress on the
-  current one (by the way, [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]] are designed to enhance this
-  experience).
-+ Do not ask for confirmation upon inserting a directory tree.
-+ The =bongo-join-inserted-tracks= defaults to adding inline headers when
-  multiple items share name components.  I dislike that because
-  sometimes I mix songs from various places and only some subsets are
-  named appropriately to fully benefit from this.  Basically, the
-  results do not look consistent.  Also, I have no use for foldable
-  headings of this sort.
-
-Watch [[https://protesilaos.com/codelog/2020-08-06-emacs-bongo-extras/][Bongo media manager and my extras]] (2020-08-06) for a demonstration
-of the aforementioned.
-
-Since then I have added an extra feature to automatically re-centre the
-playlist buffer whenever a track changes.  This is useful when I am not
-working on the computer (e.g. cooking) but choose to keep music playing
-in the background with the playlist's window in focus: it saves me from
-the trouble of having to manually find the name of the currently playing
-track.  For more on the implementation front, refer to the
-=prot/bongo-playlist-change-track-hook= and its accompaniments.
-
-The =contrib/bongo-playlist-no-banner= advice, which hides the commentary
-banner from the standard Bongo playlist buffer, is copied with a minor
-rewording from the [[https://github.com/Koekelas/dotfiles/blob/master/emacs.org][Emacs configuration file of Nicolas De Jaeghere]].
-
-The =define-bongo-backend mpv= you see in this section is meant to
-facilitate the integration with Elfeed, where we want to maintain a
-distinct playlist+library for tracking online multimedia sources (videos
-and podcasts).  See [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed (RSS/Atom feed reader)]] for the implementation
-details.  Madhavan Krishnan helped me flesh out this project by sharing
-code and ideas in a private exchange (shared with permission).
-
-Watch: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Manage podcasts in Emacs with Elfeed and Bongo]] (2020-09-11).
-
-#+begin_src emacs-lisp
-(use-package bongo
-  :straight t
-  :config
-  (setq bongo-default-directory "~/Music")
-  (setq bongo-prefer-library-buffers nil)
-  (setq bongo-insert-whole-directory-trees t)
-  (setq bongo-logo nil)
-  (setq bongo-display-track-icons nil)
-  (setq bongo-display-track-lengths nil)
-  (setq bongo-display-header-icons nil)
-  (setq bongo-display-playback-mode-indicator t)
-  (setq bongo-display-inline-playback-progress nil) ; t slows down the playlist buffer
-  (setq bongo-join-inserted-tracks nil)
-  (setq bongo-field-separator (propertize " · " 'face 'shadow))
-  (setq bongo-mark-played-tracks t)
-  (setq bongo-header-line-mode nil)
-  (setq bongo-mode-line-indicator-mode nil)
-  (setq bongo-vlc-program-name "cvlc")
-
-  ;; EXPERIMENTAL
-  (defun prot/bongo--enabled-backends ()
-    (setq bongo-enabled-backends '(mpv vlc)))
-
-  (add-hook 'bongo-mode-hook #'prot/bongo--enabled-backends)
-
-;;; Bongo playlist buffer
-;;;; Generic playlist extras
-  ;; Hide the playlist's banner
-  (define-advice bongo-default-playlist-buffer
-      (:override () contrib/bongo-playlist-no-banner)
-    (with-current-buffer (get-buffer-create bongo-default-playlist-buffer-name)
-      (unless (derived-mode-p 'bongo-playlist-mode)
-        (bongo-playlist-mode))
-      (current-buffer)))
-
-;;;; Bongo playlist sections
-  (defvar prot/bongo-playlist-section-delimiter
-    "\n******************************\n\n"
-    "Delimiter for inserted groups in `bongo' playlist buffers.")
-
-  (defconst prot/bongo-playlist-heading-delimiter "§"
-    "Delimiter for custom headings in `bongo' playlist buffers.")
-
-  (defun prot/bongo-playlist-heading (title &optional description)
-    "Insert `bongo' comment with TITLE and DESCRIPTION.
-Use this to add a custom heading for the enqueued media items."
-    (bongo-insert-comment-text
-     (format "%s %s%s\n" prot/bongo-playlist-heading-delimiter
-             title (if description (concat " " description) ""))))
-
-  (defun prot/bongo-playlist-section ()
-    (bongo-insert-comment-text
-     prot/bongo-playlist-section-delimiter))
-
-  ;; NOTE: there probably is a better way to parametrise move-buf and
-  ;; move-point so that one key checks for appropriate forward or
-  ;; backward motions, but this is okay right now.
-  (defmacro prot/bongo-playlist-motion (fn desc rx move-buf move-point)
-    "Produce interactive commands to navigate custom bongo delimiters.
-
-FN is the resulting interactive function's name.  DESC is its doc
-string.  RX is the regular expression that matches the custom
-bongo playlist delimiter (see `prot/bongo-playlist-delimiter' and
-`prot/bongo-playlist-heading').
-
-MOVE-BUF is a motion across an arbitrary number of lines.
-Currently it assumes (though does test) either
-`re-search-forward' or `re-search-backward'.  Likewise,
-MOVE-POINT expects `point-at-eol' or `point-at-bol'.  These
-motions should go in pairs, in the order they are presented here."
-    `(defun ,fn ()
-       ,desc
-       (interactive)
-       (let ((section ,rx))
-         (when (save-excursion (funcall ,move-buf section nil t))
-           (goto-char (funcall ,move-point))
-           (funcall ,move-buf section nil t)))))
-
-  (prot/bongo-playlist-motion
-   prot/bongo-playlist-heading-next
-   "Move to next `bongo' playlist custom heading."
-   "^.*§.*$"
-   're-search-forward
-   'point-at-eol)
-
-  (prot/bongo-playlist-motion
-   prot/bongo-playlist-heading-previous
-   "Move to previous `bongo' playlist custom heading."
-   "^.*§.*$"
-   're-search-backward
-   'point-at-bol)
-
-  (prot/bongo-playlist-motion
-   prot/bongo-playlist-section-next
-   "Move to next `bongo' playlist custom section delimiter."
-   "^\\*+$"
-   're-search-forward
-   'point-at-eol)
-
-  (prot/bongo-playlist-motion
-   prot/bongo-playlist-section-previous
-   "Move to previous `bongo' playlist custom section delimiter."
-   "^\\*+$"
-   're-search-backward
-   'point-at-bol)
-
-  (defun prot/bongo-playlist-mark-section ()
-    "Mark `bongo' playlist section, delimited by custom markers.
-The marker is `prot/bongo-playlist-delimiter'."
-    (interactive)
-    (let ((section "^\\*+$"))
-      (search-forward-regexp section nil t)
-      (push-mark nil t)
-      (forward-line -1)
-      ;; REVIEW any predicate to replace this `save-excursion'?
-      (if (save-excursion (re-search-backward section nil t))
-          (progn
-            (search-backward-regexp section nil t)
-            (forward-line 1))
-        (goto-char (point-min)))
-      (activate-mark)))
-
-  (defun prot/bongo-playlist-kill-section ()
-    "Kill `bongo' playlist-section at point.
-This operates on a custom delimited section of the buffer.  See
-`prot/bongo-playlist-kill-section'."
-    (interactive)
-    (prot/bongo-playlist-mark-section)
-    (bongo-kill))
-
-;;;; Bongo playlist imenu setup
-  (defvar prot/bongo-playlist-setup-hook nil
-    "Hook that runs after inserting items to the `bongo' playlist.
-See, for example, `prot/bongo-playlist-insert-playlist-file' or
-`prot/bongo-dired-insert-files'.")
-
-  (defun prot/bongo-playlist-imenu-heading ()
-    "Return the text of the custom `bongo' playlist heading."
-    (interactive)
-    (nth 1
-         (split-string
-          (buffer-substring-no-properties (point-at-bol) (point-at-eol))
-          "§ ")))
-
-  (defun prot/bongo-playlist-imenu-setup ()
-    "`imenu' bindings for the `bongo' playlist buffer."
-    (setq-local imenu-prev-index-position-function
-                'prot/bongo-playlist-heading-previous)
-    (setq-local imenu-extract-index-name-function
-                'prot/bongo-playlist-imenu-heading))
-
-  (add-hook 'prot/bongo-playlist-setup-hook #'prot/bongo-playlist-imenu-setup)
-
-;;;; Bongo playlist custom commands
-  (defun prot/bongo-playlist-play-random ()
-    "Play random `bongo' track and determine further conditions."
-    (interactive)
-    (unless (bongo-playlist-buffer)
-      (bongo-playlist-buffer))
-    (when (or (bongo-playlist-buffer-p)
-              (bongo-library-buffer-p))
-      (unless (bongo-playing-p)
-        (with-current-buffer (bongo-playlist-buffer)
-          (bongo-play-random)
-          (bongo-random-playback-mode)
-          (bongo-recenter)))))
-
-  (defun prot/bongo-playlist-random-toggle ()
-    "Toggle `bongo-random-playback-mode' in playlist buffers."
-    (interactive)
-    (if (eq bongo-next-action 'bongo-play-random-or-stop)
-        (bongo-progressive-playback-mode)
-      (bongo-random-playback-mode)))
-
-  (defun prot/bongo-playlist-reset ()
-    "Stop playback and reset `bongo' playlist marks.
-To reset the playlist is to undo the marks produced by non-nil
-`bongo-mark-played-tracks'."
-    (interactive)
-    (when (bongo-playlist-buffer-p)
-      (bongo-stop)
-      (bongo-reset-playlist)))
-
-  (defun prot/bongo-playlist-terminate ()
-    "Stop playback and clear the entire `bongo' playlist buffer.
-Contrary to the standard `bongo-erase-buffer', this also removes
-the currently playing track."
-    (interactive)
-    (when (bongo-playlist-buffer-p)
-      (bongo-stop)
-      (bongo-erase-buffer)))
-
-  (defun prot/bongo-playlist-insert-playlist-file ()
-    "Insert contents of playlist file to a `bongo' playlist.
-Upon insertion, playback starts immediately, in accordance with
-`prot/bongo-play-random'.
-
-The available options at the completion prompt are pre-configured
-files that contain absolute filesystem paths of directories or
-media items one per line.  Think of them as meta-directories that
-mix manually selected media items (yes, I never liked 'smart'
-playlists).
-
-To insert multiple playlists complete the first, then type a
-space, complete a second, etc.  This assumes that SPC can
-self-insert in the minibuffer or you use C-q SPC.
-
-Also see `prot/bongo-dired-make-playlist-file'."
-    (interactive)
-    (let* ((path "~/Music/playlists/")
-           (dotless directory-files-no-dot-files-regexp)
-           (playlists (mapcar
-                       'abbreviate-file-name
-                       (directory-files path nil dotless)))
-           (crm-separator " ")          ; Space to separate entries
-           (choice
-            (if (not (bongo-playlist-buffer-p (current-buffer)))
-                (user-error "Not in a `bongo' playlist buffer")
-              (completing-read-multiple "Add playlist: " playlists nil t))))
-      (mapcar (lambda (x)
-                (save-excursion
-                  (goto-char (point-max))
-                  (prot/bongo-playlist-heading x "playlist file")
-                  (bongo-insert-playlist-contents
-                   (format "%s%s" path x))
-                  (prot/bongo-playlist-section)))
-              choice)
-      (prot/bongo-playlist-play-random)
-      (run-hooks 'prot/bongo-playlist-setup-hook)))
-
-  (defvar prot/bongo-playlist-change-track-hook nil
-    "Hook that runs after `bongo' switches to a new track.")
-
-  (defun prot/bongo-playlist-run-hook-change-track (&rest _)
-    "Run `prot/bongo-playlist-run-hook-change-track'.
-This is meant to be loaded after the relevant `bongo' functions
-that change tracks, such as `bongo-play-next-or-stop' and
-`bongo-play-random-or-stop'."
-    (run-hooks 'prot/bongo-playlist-change-track-hook))
-
-  (dolist (fn '(bongo-play-next-or-stop bongo-play-random-or-stop))
-    (advice-add fn :after #'prot/bongo-playlist-run-hook-change-track))
-
-  (defun prot/bongo-playlist-recenter ()
-    "Recenter `bongo' playlist buffer while in a live window.
-Add to `prot/bongo-playlist-change-track-hook'."
-    (with-current-buffer (bongo-playlist-buffer)
-      (bongo-recenter)))
-
-;;; Bongo + Dired (bongo library buffer)
-  (defmacro prot/bongo-dired-library (name doc val)
-    "Create `bongo' library function NAME with DOC and VAL."
-    `(defun ,name ()
-       ,doc
-       (when (string-match-p "\\`~/Music/" default-directory)
-         (bongo-dired-library-mode ,val))))
-
-  (prot/bongo-dired-library
-   prot/bongo-dired-library-enable
-   "Set `bongo-dired-library-mode' when accessing ~/Music.
-
-Add this to `dired-mode-hook'.  Upon activation, the directory
-and all its sub-directories become a valid library buffer for
-Bongo, from where we can, among others, add tracks to playlists.
-The added benefit is that Dired will continue to behave as
-normal, making this a superior alternative to a purpose-specific
-library buffer.
-
-Note, though, that this will interfere with `wdired-mode'.  See
-`prot/bongo-dired-library-disable'."
-   1)
-
-  ;; NOTE `prot/bongo-dired-library-enable' does not get reactivated
-  ;; upon exiting `wdired-mode'.
-  ;;
-  ;; TODO reactivate bongo dired library upon wdired exit
-  (prot/bongo-dired-library
-   prot/bongo-dired-library-disable
-   "Disable `bongo-dired-library-mode' when accessing ~/Music.
-This should be added `wdired-mode-hook'.  For more, refer to
-`prot/bongo-dired-library-enable'."
-   -1)
-
-  (defun prot/bongo-dired-insert-files ()
-    "Add files in a `dired' buffer to the `bongo' playlist."
-    (let ((media (or (dired-get-marked-files) (dired-filename-at-point))))
-      (with-current-buffer (bongo-playlist-buffer)
-        (goto-char (point-max))
-        (mapcar (lambda (x)
-                  (if (file-directory-p x)
-                      (progn
-                        (prot/bongo-playlist-heading (file-name-base x))
-                        (bongo-insert-directory-tree x))
-                    (bongo-insert-file x)))
-                media)
-        (prot/bongo-playlist-section)
-        (run-hooks 'prot/bongo-playlist-setup-hook))
-      (with-current-buffer (bongo-library-buffer)
-        (dired-next-line 1))))
-
-  (defun prot/bongo-dired-insert ()
-    "Add `dired' item at point or marks to `bongo' playlist.
-
-The playlist is created, if necessary, while some other tweaks
-are introduced.  See `prot/bongo-dired-insert-files' as well as
-`prot/bongo-playlist-play-random'.
-
-Meant to work while inside a `dired' buffer that doubles as a
-library buffer (see `prot/bongo-dired-library')."
-    (interactive)
-    (when (bongo-library-buffer-p)
-      (unless (bongo-playlist-buffer-p)
-        (bongo-playlist-buffer))
-      (prot/bongo-dired-insert-files)
-      (prot/bongo-playlist-play-random)))
-
-  (defun prot/bongo-dired-make-playlist-file ()
-    "Add `dired' marked items to playlist file using completion.
-
-These files are meant to reference filesystem paths.  They ease
-the task of playing media from closely related directory trees,
-without having to interfere with the user's directory
-structure (e.g. a playlist file 'rock' can include the paths of
-~/Music/Scorpions and ~/Music/Queen).
-
-This works by appending the absolute filesystem path of each item
-to the selected playlist file.  If no marks are available, the
-item at point will be used instead.
-
-Selecting a non-existent file at the prompt will create a new
-entry whose name matches user input.  Depending on the completion
-framework, such as with `icomplete-mode', this may require a
-forced exit (e.g. `exit-minibuffer' (\\[exit-minibuffer]) to
-parse the input without further questions).
-
-Also see `prot/bongo-playlist-insert-playlist-file'."
-    (interactive)
-    (let* ((dotless directory-files-no-dot-files-regexp)
-           (pldir "~/Music/playlists")
-           (playlists (mapcar
-                       'abbreviate-file-name
-                       (directory-files pldir nil dotless)))
-           (plname (completing-read "Select playlist: " playlists nil nil))
-           (plfile (format "%s/%s" pldir plname))
-           (media-paths
-            (if (derived-mode-p 'dired-mode)
-                ;; TODO more efficient way to do ensure newline ending?
-                ;;
-                ;; The issue is that we need to have a newline at the
-                ;; end of the file, so that when we append again we
-                ;; start on an empty line.
-                (concat
-                 (mapconcat #'identity
-                            (dired-get-marked-files)
-                            "\n")
-                 "\n")
-              (user-error "Not in a `dired' buffer"))))
-      ;; The following `when' just checks for an empty string.  If we
-      ;; wanted to make this more robust we should also check for names
-      ;; that contain only spaces and/or invalid characters…  This is
-      ;; good enough for me.
-      (when (string-empty-p plname)
-        (user-error "No playlist file has been specified"))
-      (unless (file-directory-p pldir)
-        (make-directory pldir))
-      (unless (and (file-exists-p plfile)
-                   (file-readable-p plfile)
-                   (not (file-directory-p plfile)))
-        (make-empty-file plfile))
-      (append-to-file media-paths nil plfile)
-      (with-current-buffer (find-file-noselect plfile)
-        (delete-duplicate-lines (point-min) (point-max))
-        (sort-lines nil (point-min) (point-max))
-        (save-buffer)
-        (kill-buffer))))
-
-;;; Bongo + Elfeed integration
-
-  ;; Here we define a slightly tweaked variant of the standard mpv
-  ;; backend.  We will be using this to play back audio and video URLs.
-  ;; The latter will spawn a new MPV player window.  Refer to my Elfeed
-  ;; section for the implementation details.
-  (define-bongo-backend mpv
-    ;; :constructor 'bongo-start-mpv-player
-    :program-name 'mpv
-    :extra-program-arguments nil
-    :matcher '((local-file "file:" "http:" "ftp:")
-               "ogg" "flac" "mp3" "mka" "wav" "wma"
-               "mpg" "mpeg" "vob" "avi" "ogm" "mp4" "mkv"
-               "mov" "asf" "wmv" "rm" "rmvb" "ts")
-    :matcher '(("mms:" "mmst:" "rtp:" "rtsp:" "udp:" "unsv:"
-                "dvd:" "vcd:" "tv:" "dvb:" "mf:" "cdda:" "cddb:"
-                "cue:" "sdp:" "mpst:" "tivo:") . t)
-    :matcher '(("http:" "https:") . t))
-
-;;; Hooks and key bindings
-
-  :hook ((dired-mode-hook . prot/bongo-dired-library-enable)
-         (wdired-mode-hook . prot/bongo-dired-library-disable)
-         (prot/bongo-playlist-change-track-hook . prot/bongo-playlist-recenter))
-  :bind (("C-c b" . bongo)
-         ("<C-XF86AudioPlay>" . bongo-pause/resume)
-         ("<C-XF86AudioNext>" . bongo-next)
-         ("<C-XF86AudioPrev>" . bongo-previous)
-         ("<M-XF86AudioPlay>" . bongo-show)
-         ("<S-XF86AudioNext>" . bongo-seek-forward-10)
-         ("<S-XF86AudioPrev>" . bongo-seek-backward-10)
-         :map bongo-playlist-mode-map
-         ("n" . bongo-next-object)
-         ("p" . bongo-previous-object)
-         ("C-c C-n" . prot/bongo-playlist-heading-next)
-         ("C-c C-p" . prot/bongo-playlist-heading-previous)
-         ("M-n" . prot/bongo-playlist-section-next)
-         ("M-p" . prot/bongo-playlist-section-previous)
-         ("M-h" . prot/bongo-playlist-mark-section)
-         ("M-d" . prot/bongo-playlist-kill-section)
-         ("g" . prot/bongo-playlist-reset)
-         ("D" . prot/bongo-playlist-terminate)
-         ("r" . prot/bongo-playlist-random-toggle)
-         ("R" . bongo-rename-line)
-         ("j" . bongo-dired-line)       ; Jump to dir of file at point
-         ("J" . dired-jump)             ; Jump to library buffer
-         ("i" . prot/bongo-playlist-insert-playlist-file)
-         ("I" . bongo-insert-special)
-         :map bongo-dired-library-mode-map
-         ("<C-return>" . prot/bongo-dired-insert)
-         ("C-c SPC" . prot/bongo-dired-insert)
-         ("C-c +" . prot/bongo-dired-make-playlist-file)))
-#+end_src
 
 ** Proced (process monitor, similar to `top')
 :PROPERTIES:
