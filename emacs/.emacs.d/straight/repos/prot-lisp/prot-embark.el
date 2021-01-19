@@ -79,15 +79,71 @@ To be added to `embark-occur-post-revert-hook'."
   (and (derived-mode-p 'embark-collect-mode)
        (eq embark-collect--kind :completions)))
 
-(declare-function display-line-numbers-mode "display-line-numbers")
+(defface prot-embark-hl-line
+  '((default :extend t)
+    (((class color) (min-colors 88) (background light))
+     :background "#b0d8ff" :foreground "#000000")
+    (((class color) (min-colors 88) (background dark))
+     :background "#103265" :foreground "#ffffff")
+    (t :inherit (font-lock-string-face elfeed-search-title-face)))
+  "Face for current line in Embark completions."
+  :group 'prot-embark)
+
+(defface prot-embark-line-number
+  '((default :inherit default)
+    (((class color) (min-colors 88) (background light))
+     :background "#f2eff3" :foreground "#252525")
+    (((class color) (min-colors 88) (background dark))
+     :background "#151823" :foreground "#dddddd")
+    (t :inverse-video t))
+  "Face for line numbers in Embark completions."
+  :group 'prot-embark)
+
+(defface prot-embark-line-number-current-line
+  '((default :inherit default)
+    (((class color) (min-colors 88) (background light))
+     :background "#8ac7ff" :foreground "#000000")
+    (((class color) (min-colors 88) (background dark))
+     :background "#142a79" :foreground "#ffffff")
+    (t :inverse-video t))
+  "Face for current line number in Embark completions."
+  :group 'prot-embark)
+
+(autoload 'display-line-numbers-mode "display-line-numbers")
+(autoload 'face-remap-remove-relative "face-remap")
 
 ;;;###autoload
 (defun prot-embark-display-line-numbers ()
   "Set up line numbers for live Embark collect buffers.
 Add this to `embark-collect-mode-hook'."
   (if (prot-embark--live-completions-p)
-      (display-line-numbers-mode 1)
-    (display-line-numbers-mode -1)))
+      (progn
+        (face-remap-add-relative 'line-number 'prot-embark-line-number)
+        (face-remap-add-relative 'line-number-current-line
+                                 'prot-embark-line-number-current-line)
+        (display-line-numbers-mode 1))
+    (display-line-numbers-mode -1)
+    ;; TODO: can we avoid `face-remap-add-relative' and just use the
+    ;; value it previously returned?
+    (face-remap-remove-relative
+     (face-remap-add-relative 'line-number
+                              'prot-embark-line-number))
+    (face-remap-remove-relative
+     (face-remap-add-relative 'line-number-current-line
+                              'prot-embark-line-number-current-line))))
+
+;;;###autoload
+(defun prot-embark-hl-line ()
+  "Set up line numbers for live Embark collect buffers.
+Add this to `embark-collect-mode-hook'."
+  (if (prot-embark--live-completions-p)
+      (progn
+        (face-remap-add-relative 'hl-line 'prot-embark-hl-line)
+        (hl-line-mode 1))
+    (hl-line-mode -1)
+    ;; TODO: same as above with regard to `face-remap-add-relative'.
+    (face-remap-remove-relative
+     (face-remap-add-relative 'hl-line 'prot-embark-hl-line))))
 
 ;;;###autoload
 (defun prot-embark-completions-cursor ()
