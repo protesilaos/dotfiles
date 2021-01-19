@@ -6541,12 +6541,8 @@ also has an interesting article on the matter: [[https://notes.neeasade.net/colo
 I may need some of those tools while developing my Modus themes.
 
 #+begin_src emacs-lisp
-;; NOTE: This package declaration is temporary.  It will be replaced by
-;; a more consistent one in the near future.
-(straight-register-package
- '(color-tools :host github :repo "neeasade/color-tools.el" :branch "master"))
-(straight-use-package 'color-tools)
-(require 'ct "color-tools.el")
+(use-package color-tools
+  :straight (:host github :repo "neeasade/color-tools.el" :branch "master"))
 #+end_src
 
 ** Rainbow mode for colour previewing (rainbow-mode.el)
