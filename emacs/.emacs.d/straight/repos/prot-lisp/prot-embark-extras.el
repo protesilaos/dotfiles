@@ -39,8 +39,8 @@
   "Custom cross-package extensions for `embark'."
   :group 'editing)
 
-(declare-function prot-consult-fd "prot-consult")
-(declare-function prot-consult-rg "prot-consult")
+(autoload 'prot-consult-fd "prot-consult")
+(autoload 'prot-consult-rg "prot-consult")
 
 (defvar prot-embark-extras-become-general-map
   (let ((map (make-sparse-keymap)))
@@ -58,7 +58,7 @@
   "Line-specific custom cross-package `embark-become' keymap.")
 
 (defvar embark-become-file+buffer-map)
-(declare-function prot-recentf-recent-files "prot-recentf")
+(autoload 'prot-recentf-recent-files "prot-recentf")
 
 (defvar prot-embark-extras-become-file+buffer-map
   (let ((map (make-sparse-keymap)))
