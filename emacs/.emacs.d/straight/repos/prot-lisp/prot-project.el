@@ -234,7 +234,7 @@ Optional N integer overrides that variable's value."
              (member pr known-projects)
              (not (prot-project--large-file-p))
              (not (member 'org-src-mode modes))
-             (not (string-match-p "edit-indirect" (buffer-name))))
+             (not (eq buffer-file-truename nil)))
         (flymake-mode 1)
       (flymake-mode -1))))
 
