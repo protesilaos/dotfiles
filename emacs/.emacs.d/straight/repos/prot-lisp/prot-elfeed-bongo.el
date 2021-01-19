@@ -46,20 +46,19 @@
   :type 'string
   :group 'prot-elfeed-bongo)
 
-(declare-function bongo-insert-comment-text "bongo")
-(declare-function bongo-insert-uri "bongo")
-(declare-function bongo-playlist-buffer "bongo")
-(declare-function bongo-playlist-buffer-p "bongo")
-(declare-function bongo-playlist-mode "bongo")
-(declare-function bongo-progressive-playback-mode "bongo")
-(declare-function bongo-recenter "bongo")
-(declare-function define-bongo-backend "bongo")
-(declare-function elfeed-entry-enclosures "elfeed")
-(declare-function elfeed-entry-link "elfeed")
-(declare-function elfeed-entry-title "elfeed")
-(declare-function elfeed-search-selected "elfeed")
+(autoload 'bongo-insert-comment-text "bongo")
+(autoload 'bongo-insert-uri "bongo")
+(autoload 'bongo-playlist-buffer "bongo")
+(autoload 'bongo-playlist-buffer-p "bongo")
+(autoload 'bongo-playlist-mode "bongo")
+(autoload 'bongo-progressive-playback-mode "bongo")
+(autoload 'bongo-recenter "bongo")
+(autoload 'define-bongo-backend "bongo")
+(autoload 'elfeed-entry-enclosures "elfeed")
+(autoload 'elfeed-entry-link "elfeed")
+(autoload 'elfeed-entry-title "elfeed")
+(autoload 'elfeed-search-selected "elfeed")
 (defvar elfeed-show-entry)
-
 (defvar prot-elfeed-bongo-mpv)
 
 ;; Here we define a slightly tweaked variant of the standard mpv
