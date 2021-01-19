@@ -29,23 +29,20 @@
 
 ;;; Code:
 
-(when (featurep 'embark)
-  (require 'embark))
-(require 'prot-consult)
-(require 'prot-embark)
-(require 'prot-recentf)
-
 (defgroup prot-embark-extras ()
   "Custom cross-package extensions for `embark'."
   :group 'editing)
 
-(autoload 'prot-consult-fd "prot-consult")
-(autoload 'prot-consult-rg "prot-consult")
+(autoload 'consult-find "consult")
+(autoload 'consult-grep "consult")
+(autoload 'consult-line "consult")
+(autoload 'consult-imenu "consult")
+(autoload 'consult-outline "consult")
 
 (defvar prot-embark-extras-become-general-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "f") 'prot-consult-fd)
-    (define-key map (kbd "g") 'prot-consult-rg)
+    (define-key map (kbd "f") 'consult-find)
+    (define-key map (kbd "g") 'consult-grep)
     map)
   "General custom cross-package `embark-become' keymap.")
 
@@ -59,6 +56,8 @@
 
 (defvar embark-become-file+buffer-map)
 (autoload 'prot-recentf-recent-files "prot-recentf")
+(autoload 'project-switch-to-buffer "project")
+(autoload 'project-find-file "project")
 
 (defvar prot-embark-extras-become-file+buffer-map
   (let ((map (make-sparse-keymap)))
@@ -109,6 +108,10 @@ To be used as filter-return advice to `embark-keymap-prompter'."
   "Update keycast's mode line.
 To be passed as advice before `embark-act' and others."
   (force-mode-line-update t))
+
+(autoload 'embark-act "embark")
+(autoload 'embark-act-noexit "embark")
+(autoload 'embark-become "embark")
 
 ;; NOTE: This has a generic name because my plan is to add more packages
 ;; to it.

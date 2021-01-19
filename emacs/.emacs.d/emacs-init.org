@@ -1255,6 +1255,8 @@ try.
          ("M-g M-g" . consult-goto-line)
          ("M-X" . consult-mode-command)
          ("M-K" . consult-keep-lines)  ; M-S-k is similar to M-S-5 (M-%)
+         ("M-s f" . consult-find)
+         ("M-s g" . consult-grep)
          ("M-s m" . consult-mark)
          :map consult-narrow-map
          ("?" . consult-narrow-help)))
@@ -1278,9 +1280,7 @@ try.
   :bind (("M-s i" . prot-consult-imenu)
          ("M-s s" . prot-consult-outline)    ; M-s o is `occur'
          ("M-s y" . prot-consult-yank)
-         ("M-s l" . prot-consult-line)
-         ("M-s f" . prot-consult-fd)
-         ("M-s g" . prot-consult-rg)))
+         ("M-s l" . prot-consult-line)))
 #+end_src
 
 Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -1688,9 +1688,7 @@ add them to the list of Embark's known keymaps.
   :demand
   :config
   (prot-embark-extras-keymaps 1)
-  (prot-embark-extras-setup-packages 1)
-  :bind (:map embark-symbol-map
-         ("g" . prot-consult-rg-ref)))
+  (prot-embark-extras-setup-packages 1))
 #+end_src
 
 This is =prot-embark-extras.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -2283,13 +2281,13 @@ given version-controlled (git) repo, see the section of this document on
           ("C-c d" . contrib/cd-bookmark)))
 
 (use-package prot-dired
-  :disabled                            ; superseded by `prot-consult.el'
+  :disabled                            ; superseded by `consult.el'
   :straight (:type built-in)
   :bind (("M-s d" .  prot-dired-fd-dirs)
          ("M-s z" . prot-dired-fd-files-and-dirs)))
 
 ;; NOTE 2021-01-04: deprecated first in favour of `prot-dired.el' and
-;; eventually by `prot-consult.el'
+;; eventually by `consult.el'
 (use-package find-dired
   :disabled
   :after dired

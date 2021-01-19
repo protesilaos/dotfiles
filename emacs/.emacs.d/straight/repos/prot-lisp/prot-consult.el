@@ -57,19 +57,6 @@ changes to take effect."
   :group 'prot-consult
   :type 'list)
 
-(defcustom prot-consult-fd-flags '("fd" "-i" "-H" "-a" "-c" "never")
-  "List of strings for invoking the fd executable."
-  :type 'list
-  :group 'prot-consult)
-
-(defcustom prot-consult-rg-flags
-  '("rg" "--null" "--line-buffered" "--color=always"
-    "--hidden" "-g" "!.git" "--max-columns=500"
-    "--no-heading" "--line-number" "." "-e")
-  "List of strings for invoking the rg executable."
-  :type 'list
-  :group 'prot-consult)
-
 ;;;; Setup for some consult commands (TODO: needs review)
 
 (defvar prot-consult-jump-recentre-hook nil
@@ -124,49 +111,6 @@ Intended to be assigned to `consult-project-root-function'."
   (or (vc-root-dir)
       (locate-dominating-file "." ".git")
       default-directory))
-
-(defun prot-consult--fd-flags (list)
-  "Append LIST to `prot-consult-fd-flags'."
-  (if (listp list)
-      (append prot-consult-fd-flags list)
-    (error "'%s' is not a list" list)))
-
-;;;###autoload
-(defun prot-consult-fd ()
-  "Use `consult--find' to search with the FD executable.
-
-The search is performed against the root of the current version
-controlled project or, if none is available, from inside the
-`default-directory'."
-  (interactive)
-  (let* ((cmd prot-consult-fd-flags)
-         (default-directory (prot-consult-project-root))
-         (prompt (format "FdFind in %s: " (propertize default-directory 'face 'bold))))
-    (consult--find prompt cmd nil)))
-
-(defvar consult--ripgrep-command)
-(declare-function consult--grep "consult")
-
-;;;###autoload
-(defun prot-consult-rg ()
-  "Ripgrep with `consult--grep' in `prot-consult-project-root'."
-  (interactive)
-  (let* ((cmd prot-consult-rg-flags)
-         (default-directory (prot-consult-project-root))
-         (prompt (format "RipGrep in %s" (propertize default-directory 'face 'bold))))
-    (consult--grep prompt cmd default-directory nil)))
-
-;;;###autoload
-(defun prot-consult-rg-ref (ref)
-  "Ripgrep REF with Consult in `prot-consult-project-root'."
-  (interactive
-   (list (read-regexp "Search regexp: ")))
-  (let* ((cmd prot-consult-rg-flags)
-         (default-directory (prot-consult-project-root))
-         (prompt (format "RipGrep %s in %s"
-                         (propertize ref 'face 'success)
-                         (propertize default-directory 'face 'bold))))
-      (consult--grep prompt cmd default-directory ref)))
 
 ;;;###autoload
 (defun prot-consult-outline ()
