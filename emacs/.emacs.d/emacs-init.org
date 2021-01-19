@@ -543,7 +543,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
         modus-themes-region 'bg-only-no-extend ; {nil,'no-extend,'bg-only,'bg-only-no-extend}
         modus-themes-diffs nil ; {nil,'desaturated,'fg-only,'bg-only}
-        modus-themes-org-blocks 'grayscale ; {nil,'grayscale,'rainbow}
+        modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
         '((t . no-color-no-bold))
@@ -567,6 +567,8 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
     "Tweak faces after `modus-themes-after-load-theme-hook'."
     (modus-themes-with-colors
       (custom-set-faces
+       `(dired-flagged ((,class :strike-through t)))
+       `(gnus-summary-cancelled ((,class :strike-through t)))
        `(line-number ((,class :background unspecified :foreground ,fg-unfocused)))
        `(line-number-current-line
          ((,class :background ,bg-special-cold :foreground ,fg-special-cold))))))
