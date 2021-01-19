@@ -70,8 +70,8 @@ With optional prefix ARG (\\[universal-argument]), use the
          (dir (if arg default-directory root)))
     (vc-dir dir)))
 
-(declare-function log-view-current-entry "log-view")
-(declare-function dired-get-marked-files "dired")
+(autoload 'log-view-current-entry "log-view")
+(autoload 'dired-get-marked-files "dired")
 
 (defun prot-vc--commit-num ()
   "Determime whether NUM is a positive integer."
@@ -202,7 +202,7 @@ completion."
   "Run `prot-vc-git-log-view-mode-hook'."
   (run-hooks 'prot-vc-git-log-view-mode-hook))
 
-(declare-function vc-git-log-view-mode "vc-git")
+(autoload 'vc-git-log-view-mode "vc-git")
 
 ;;;###autoload
 (define-minor-mode prot-vc-git-setup-mode

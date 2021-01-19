@@ -36,7 +36,7 @@
 
 ;;;; General commands
 
-(declare-function symbol-at-point "thingatpt")
+(autoload 'symbol-at-point "thingatpt")
 
 ;;;###autoload
 (defun prot-simple-describe-symbol (&optional arg)

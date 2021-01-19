@@ -159,7 +159,7 @@ by `prot-minibuffer-completion-windows-regexp'."
                   (setq commands (append commands (list function))))))))))
     commands))
 
-(declare-function prot-common-minor-modes-active "prot-common")
+(autoload 'prot-common-minor-modes-active "prot-common")
 
 (defun prot-minibuffer--extract-commands-minor ()
   "Extract commands from active minor modes."

@@ -29,6 +29,7 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'subr-x))
 (when (featurep 'elfeed)
   (require 'elfeed))
 
@@ -237,7 +238,6 @@ the buffer."
 (defvar elfeed-search-filter-active)
 (defvar elfeed-search-filter)
 (declare-function elfeed-db-get-all-tags "elfeed")
-(declare-function string-join "elfeed")
 (declare-function elfeed-search-update "elfeed")
 (declare-function elfeed-search-clear-filter "elfeed")
 

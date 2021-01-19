@@ -195,7 +195,7 @@ Basically switches to a new branch or tag."
                             (vc-responsible-backend dir))))
     (vc-retrieve-tag dir name)))
 
-(declare-function magit-status "magit")
+(autoload 'magit-status "magit")
 
 ;;;###autoload
 (defun prot-project-magit-status ()

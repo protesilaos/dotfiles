@@ -136,7 +136,7 @@ end of the buffer.")
   "Regular expression that matches URLs.
 Copy of variable `browse-url-button-regexp'.")
 
-(declare-function goto-address-mode "goto-addr")
+(autoload 'goto-address-mode "goto-addr")
 
 ;;;###autoload
 (defun prot-search-occur-urls ()

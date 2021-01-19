@@ -66,7 +66,7 @@ visibility.  Else call `indent-for-tab-command'."
 
 ;;; Minor mode setup
 
-(declare-function org-src-mode "org-src")
+(autoload 'org-src-mode "org-src")
 (defvar outline-minor-faces--font-lock-keywords)
 
 ;;;###autoload

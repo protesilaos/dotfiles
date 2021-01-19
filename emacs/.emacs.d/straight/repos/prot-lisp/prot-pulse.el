@@ -86,10 +86,10 @@ Add this to a hook, such as `imenu-after-jump-hook'."
     (recenter nil)
     (prot-pulse-pulse-line)))
 
-(declare-function org-at-heading-p "org")
-(declare-function org-show-entry "org")
-(declare-function org-reveal "org")
-(declare-function outline-show-entry "outline")
+(autoload 'org-at-heading-p "org")
+(autoload 'org-show-entry "org")
+(autoload 'org-reveal "org")
+(autoload 'outline-show-entry "outline")
 
 ;;;###autoload
 (defun prot-pulse-show-entry ()

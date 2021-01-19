@@ -81,8 +81,8 @@ on its own."
   :lighter " -Λ-"			; greek lambda majuscule
   (run-hooks 'prot-logos--focus-mode-hook))
 
-(declare-function buffer-face-mode "face-remap")
-(declare-function variable-pitch-mode "face-remap")
+(autoload 'buffer-face-mode "face-remap")
+(autoload 'variable-pitch-mode "face-remap")
 
 (defun prot-logos--variable-pitch-toggle ()
   "Make text use `variable-pitch' face, except for programming."
@@ -95,7 +95,7 @@ on its own."
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--variable-pitch-toggle)
 
-(declare-function olivetti-mode "olivetti")
+(autoload 'olivetti-mode "olivetti")
 
 (defun prot-logos--olivetti-toggle ()
   "Toggle the variable `olivetti-mode', if available."
@@ -115,7 +115,7 @@ on its own."
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--fringe-toggle)
 
-(declare-function org-tree-slide-mode "org-tree-slide")
+(autoload 'org-tree-slide-mode "org-tree-slide")
 
 (defun prot-logos--org-tree-slide-mode ()
   "Toggle variable `org-tree-slide-mode' if loaded and needed."
@@ -130,7 +130,7 @@ on its own."
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--org-tree-slide-mode)
 
-(declare-function org-indent-mode "org")
+(autoload 'org-indent-mode "org")
 
 (defun prot-logos--org-indent-mode ()
   "Toggle variable `org-tree-slide-mode' if loaded and needed."

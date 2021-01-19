@@ -408,9 +408,9 @@ Add to `prot-bongo-playlist-change-track-hook'."
 (declare-function bongo-insert-directory-tree "bongo")
 (declare-function bongo-insert-file "bongo")
 (declare-function bongo-library-buffer "bongo")
-(declare-function dired-filename-at-point "bongo")
-(declare-function dired-get-marked-files "bongo")
-(declare-function dired-next-line "bongo")
+(autoload 'dired-filename-at-point "bongo")
+(autoload 'dired-get-marked-files "bongo")
+(autoload 'dired-next-line "bongo")
 
 (defmacro prot-bongo-dired-library (name doc val)
   "Create Bongo library function NAME with DOC and VAL."

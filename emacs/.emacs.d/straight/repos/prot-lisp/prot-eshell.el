@@ -55,7 +55,7 @@ and after it."
 
 ;;;; Commands
 
-(declare-function ffap-file-at-point "ffap.el")
+(autoload 'ffap-file-at-point "ffap.el")
 
 (defmacro prot-eshell-ffap (name doc &rest body)
   "Make `find-file-at-point' commands for Eshell.
@@ -161,7 +161,7 @@ open the directory in a `dired' buffer."
     (insert
      (completing-read "Input from history: " hist nil t))))
 
-(declare-function cl-remove-if-not "cl-seq")
+(autoload 'cl-remove-if-not "cl-seq")
 
 ;;;###autoload
 (defun prot-eshell-find-subdirectory-recursive ()

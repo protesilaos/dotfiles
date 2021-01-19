@@ -56,8 +56,8 @@ mode line's typeface (or the default one if they are the same)."
   (let ((height (prot-moody--height)))
     (setq moody-mode-line-height height)))
 
-(declare-function moody-replace-mode-line-buffer-identification "moody")
-(declare-function moody-replace-vc-mode "moody")
+(autoload 'moody-replace-mode-line-buffer-identification "moody")
+(autoload 'moody-replace-vc-mode "moody")
 
 ;;;###autoload
 (define-minor-mode prot-moody-set-height
