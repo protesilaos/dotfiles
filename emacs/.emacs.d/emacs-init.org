@@ -2593,7 +2593,7 @@ Here is =prot-ibuffer.el= (find everything in [[https://gitlab.com/protesilaos/d
 
 #+include: straight/repos/prot-lisp/prot-ibuffer.el src emacs-lisp :tangle no
 
-*** Scratch buffers per-major-mode
+*** Scratch buffers per major-mode
 :PROPERTIES:
 :CUSTOM_ID: h:2695bfa4-89b4-4d7f-aa6e-8ef42f9177aa
 :END:
@@ -2611,6 +2611,7 @@ idea of copying the region from [[https://gist.github.com/eev2/52edbfdb645e26aef
 (use-package scratch
   :straight t
   :config
+  ;; TODO 2021-01-19: refine `prot/scratch-buffer-setup'
   (defun prot/scratch-buffer-setup ()
   "Add contents to `scratch' buffer and name it accordingly.
 If region is active, add its contents to the new buffer."
@@ -3498,6 +3499,7 @@ Magit has great defaults.  I only found a few things that I would like
 to customise, which I do in the following package declarations.
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all magit settings
 (use-package magit
   :straight t
   :bind ("C-c g" . magit-status))
@@ -3514,6 +3516,7 @@ to write commits that are clean and easy to read.  The =fill-column= is
 set elsewhere in this document to 72 characters long.
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all magit settings
 (use-package git-commit
   :after magit
   :config
@@ -3542,6 +3545,7 @@ want to highlight changes within a line, not just the line itself.  I
 enable it only for the focused hunk (there is an option for ='all=).
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all magit settings
 (use-package magit-diff
   :after magit
   :config
@@ -3559,6 +3563,7 @@ way you can determine very quickly which repositories need to be
 examined further.
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all magit settings
 (use-package magit-repos
   :after magit
   :commands magit-list-repositories
@@ -4905,6 +4910,7 @@ Subsequent sections expand on the particulars.
   experience with Gnus.  I set it to a fairly high value.
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all gnus settings
 (use-package gnus
   :config
   ;; accounts
@@ -4967,6 +4973,7 @@ message is deleted, or we can create a queue of outgoing messages when
 Gnus is in an unplugged state.
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all gnus settings
 (use-package gnus-agent
   :after gnus
   :config
@@ -5018,6 +5025,7 @@ and =epa-import-keys-region= (though I should probably write a function
 for this task).
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all gnus settings
 (use-package gnus-art
   :after gnus
   :demand
@@ -5059,6 +5067,7 @@ this library, we can use certain functions in a non-blocking way.  I do
 this for [[#h:2d793cf8-83f5-4830-b73d-78385d9b96dd][sending email]].
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all gnus settings
 (use-package gnus-async
   :after gnus
   :config
@@ -5088,6 +5097,7 @@ Note that =gnus-group-sort-functions= requires the most important function
 to be declared last.
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all gnus settings
 (use-package gnus-group
   :after gnus
   :demand
@@ -5149,6 +5159,7 @@ field instead, prepending to them =gnus-summary-to-prefix= and/or
 useful when viewing a summary buffer with, say, all your sent messages.
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all gnus settings
 (use-package gnus-sum
   :after (gnus gnus-group)
   :demand
@@ -5191,21 +5202,8 @@ useful when viewing a summary buffer with, say, all your sent messages.
   (setq gnus-sum-thread-tree-single-leaf "\\-> ")
   (setq gnus-sum-thread-tree-vertical "|")
 
-  (defun prot/gnus-summary-save-parts-all ()
-    "Save relevant message MIME parts to a desired directory.
-EXPERIMENTAL"
-    (interactive)
-    (let ((dir "~/Downloads/mail-attachments"))
-      (if major-mode 'gnus-summary-mode
-        (progn
-          (unless (file-directory-p dir)
-            (make-directory dir))
-          (gnus-summary-save-parts "text/.*" dir nil t))
-        (user-error "Not in a `gnus' summary buffer"))))
-
   :hook (gnus-summary-mode-hook . hl-line-mode)
   :bind (:map gnus-summary-mode-map
-              ("X x" . prot/gnus-summary-save-parts-all)
               ("<delete>" . gnus-summary-delete-article)
               ("n" . gnus-summary-next-article)
               ("p" . gnus-summary-prev-article)
@@ -5229,6 +5227,7 @@ account's Inbox or some mailing list on Usenet).  Make sure to read
 about these concepts in the introductory [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][section about Gnus]].
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all gnus settings
 (use-package gnus-srvr
   :after gnus
   :hook ((gnus-browse-mode-hook gnus-server-mode-hook) . hl-line-mode))
@@ -5253,6 +5252,7 @@ summary views in a linear fashion, I just revisit the Group buffer and
 proceed from there to find the group I am interested in.
 
 #+begin_example emacs-lisp
+;; TODO 2021-01-19: merge all gnus settings.  THIS WILL BE REMOVED!
 (use-package gnus-win
   :config
   (gnus-add-configuration
@@ -5287,6 +5287,7 @@ they call.  I only ever use =C-c C-m C-a= (=C-m= is the same as =RET=).
 By the way, make sure to check my [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][comprehensive Dired configurations]].
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: merge all gnus settings
 (use-package gnus-dired
   :after (gnus dired)
   :hook (dired-mode-hook . gnus-dired-mode))
@@ -5451,10 +5452,6 @@ really need.  Nice!
   (setq org-mu4e-link-query-in-headers-mode nil))
 #+end_src
 
-***** TODO Review need for org-mu4e
-:PROPERTIES:
-:CUSTOM_ID: h:1ef79c4a-f91c-4ab3-8104-9cf0c5ee3976
-:END:
 *** Sending email (SMTP)
 :PROPERTIES:
 :CUSTOM_ID: h:2d793cf8-83f5-4830-b73d-78385d9b96dd
@@ -5986,7 +5983,8 @@ What these do:
 :END:
 
 #+begin_src emacs-lisp
-;; TODO prot-eww.el
+;; TODO 2021-01-19: Everything about eww is subject to review.  It is
+;; not in a good state.
 (use-package eww
   :config
   (setq eww-restore-desktop nil)
@@ -6435,6 +6433,7 @@ section on [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework 
   :config
   (setq diff-hl-draw-borders nil)
   (setq diff-hl-side 'left)
+  ;; TODO 2021-01-19: write toggle for diff-hl-mode
   :hook (after-init-hook . global-diff-hl-mode))
 #+end_src
 
@@ -6617,6 +6616,8 @@ sometimes it causes problems, such as with diffs.
   ;; Use absolute numbers in narrowed buffers
   (setq-default display-line-numbers-widen t)
 
+  ;; TODO 2021-01-19: this is subject to review, as it is fragile in its
+  ;; current state.
   (define-minor-mode prot/display-line-numbers-mode
     "Toggle `display-line-numbers-mode' and `hl-line-mode'."
     :init-value nil
@@ -6724,6 +6725,9 @@ These are the contents of the =prot-outline.el= library (find the file in
 :CUSTOM_ID: h:6bdfe4d1-f97a-4d89-ab68-e87448a95fea
 :END:
 
+Watch: [[https://protesilaos.com/codelog/2020-03-08-emacs-registers/][Primer on Emacs “registers”]] (2020-03-08).  The rest is just an
+overview of the topic, meaning that I have no custom code to share.
+
 Registers are compartments that hold data of various sorts.  They offer
 the means for advanced, highly efficient workflows, especially when
 combined with keyboard macros.
@@ -6787,70 +6791,9 @@ Notes about some of the above:
   place.  Remember that you can always go back to your previous window
   configuration without using registers, such as with the built-in
   =winner-mode= (see section on [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][window history and directional motions]]).
-+ While on the topics of storing registers across sessions, I find that
-  sometimes I will collect too many registers that I do not really need
-  any more.  So =prot/clear-registers= just resets the list.
 
 #+begin_src emacs-lisp
-(use-package register
-  :commands (prot/clear-registers
-             prot/append-register-line-separator
-             prot/append-register-space-separator
-             prot/prepend-register-line-separator
-             prot/prepend-register-space-separator)
-  :config
-  ;;;;;; Use this if you need it
-  ;;;; Define f5 as an alias for C-x r
-  ;; (global-set-key (kbd "<f5>") (lookup-key global-map (kbd "C-x r")))
-
-  (defun prot/clear-registers ()
-    "Remove all saved registers."
-    (interactive)
-    (setq register-alist nil))
-
-  (defun prot/append-register-space-separator (start end)
-    "Append region to register with space in between entries.
-
-A prompt will ask for the register to operate on."
-    (interactive "r")
-    (let* ((prompt (register-read-with-preview
-                    "Append to register with space separator: ")))
-      (setq register-separator ?+)
-      (set-register register-separator " ")
-      (append-to-register prompt start end nil)))
-
-  (defun prot/append-register-line-separator (start end)
-    "Append region to register with an empty line in between entries.
-
-A prompt will ask for the register to operate on."
-    (interactive "r")
-    (let* ((prompt (register-read-with-preview
-                    "Append to register with line separator: ")))
-      (setq register-separator ?+)
-      (set-register register-separator "\n\n")
-      (append-to-register prompt start end nil)))
-
-  (defun prot/prepend-register-space-separator (start end)
-    "Prepend region to register with space in between entries.
-
-A prompt will ask for the register to operate on."
-    (interactive "r")
-    (let* ((prompt (register-read-with-preview
-                    "Prepend to register with space separator: ")))
-      (setq register-separator ?+)
-      (set-register register-separator " ")
-      (prepend-to-register prompt start end nil)))
-
-  (defun prot/prepend-register-line-separator (start end)
-    "Prepend region to register with an empty line in between entries.
-
-A prompt will ask for the register to operate on."
-    (interactive "r")
-    (let* ((prompt (register-read-with-preview
-                    "Prepend to register with line separator: ")))
-      (setq register-separator ?+)
-      (set-register register-separator "\n\n")
-      (prepend-to-register prompt start end nil))))
+(use-package register)
 #+end_src
 
 ** Cursor and mouse settings
@@ -7192,6 +7135,7 @@ of packages.  I generally use =hl-line-mode= on all interfaces where the
 current line is more important than the exact column of the point.
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: review package.el, given that I no longer use it.
 (use-package package
   :commands (list-packages
              package-refresh-contents
@@ -7356,6 +7300,11 @@ similar tools (or when manually invoking text formatting with
 =fill-paragraph= or equivalent---normally bound to =M-q=).
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: fill-column for text-mode should be 72, 80 for
+;; prog-mode; check for rest.
+
+;; TODO 2021-01-19: this should be merged with configurations for
+;; paragraphs and fill-mode
 (use-package emacs
   :config
   (setq-default fill-column 72)
@@ -7375,6 +7324,8 @@ to make things easier to tell apart, but also to render unambiguous
 commands like =forward-sentence=.
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: this should be merged with configurations for line
+;; length.
 (use-package emacs
   :config
   (setq sentence-end-double-space t)
@@ -7399,6 +7350,8 @@ Note that [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common custom functions (pr
 commands related to auto-fill.
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: this should be merged with configurations for line
+;; length.
 (use-package emacs
   :diminish auto-fill-function
   :config
@@ -7417,6 +7370,8 @@ exposed as their constituents rather than one long word, meaning that
 motions will behave accordingly.
 
 #+begin_src emacs-lisp
+;; TODO 2021-01-19: subword-mode is SUBJECT TO REMOVAL!  I never read
+;; code that has subwords.
 (use-package subword
   :diminish
   :hook (prog-mode-hook . subword-mode))
@@ -7463,6 +7418,8 @@ new line.
   (setq comment-multi-line t)
   (setq comment-style 'multi-line)
 
+  ;; TODO 2021-01-19: this is subject to review and any custom code must
+  ;; be placed in a new prot-comment.el
   (defun prot/comment-dwim (&optional arg)
     "Alternative to `comment-dwim': offers a simple wrapper
 around `comment-line' and `comment-dwim'.
@@ -7641,6 +7598,8 @@ to the [[#h:aeb3e777-39fd-4b4f-8dc9-8b6aa7a595cc][section on flymake-aspell]]).
   (setq ispell-program-name "aspell")
   (setq ispell-dictionary "en_GB")
 
+  ;; TODO 2021-01-19: this is subject to review and any custom code must
+  ;; be placed in a new prot-flyspell.el
   (defvar prot/ispell-dictionaries
     '(("English" . "en")
       ("Ελληνικά" . "el")
