@@ -1267,7 +1267,6 @@ try.
   :after (consult prot-pulse)
   :config
   (setq consult-project-root-function #'prot-consult-project-root)
-  (setq prot-consult-add-advice-set-hooks t)
   (setq prot-consult-command-centre-list
         '(consult-line
           prot-consult-line

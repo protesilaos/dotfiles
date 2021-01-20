@@ -32,16 +32,10 @@
 (when (featurep 'consult)
   (require 'consult))
 (require 'prot-pulse)
-(require 'prot-orderless)
 
 (defgroup prot-consult ()
   "Tweaks for consult.el."
   :group 'minibuffer)
-
-(defcustom prot-consult-add-advice-set-hooks nil
-  "Whether to `advice-add' certain commands."
-  :group 'prot-consult
-  :type 'boolean)
 
 (defcustom prot-consult-command-centre-list '(consult-line consult-mark)
   "Commands to run `prot-consult-jump-recentre-hook'.
@@ -80,8 +74,7 @@ To be used with `advice-add'.")
   "Set up hooks for Consult."
   :init-value nil
   :global t
-  (if (and prot-consult-add-advice-set-hooks
-           prot-consult-set-up-hooks-mode)
+  (if prot-consult-set-up-hooks-mode
       (progn
         (dolist (fn prot-consult-command-centre-list)
           (advice-add fn :after #'prot-consult-after-jump-recentre))
@@ -103,6 +96,7 @@ To be used with `advice-add'.")
 (defvar consult--find-cmd)
 (defvar consult--directory-prompt)
 (declare-function consult--find "consult")
+(autoload 'prot-orderless-with-styles "prot-orderless")
 
 ;;;###autoload
 (defun prot-consult-project-root ()
