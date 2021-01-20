@@ -140,6 +140,7 @@
 ;;     diredfl
 ;;     diredp (dired+)
 ;;     disk-usage
+;;     display-fill-column-indicator-mode
 ;;     doom-modeline
 ;;     dynamic-ruler
 ;;     easy-jekyll
@@ -2899,9 +2900,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(deft-title-face ((,class :inherit bold :foreground ,fg-main)))
 ;;;;; dictionary
     `(dictionary-button-face ((,class :inherit bold :foreground ,fg-special-cold)))
-    `(dictionary-reference-face ((,class :inherit button :foreground ,blue-alt-other)))
-    `(dictionary-word-definition-face ((,class :foreground ,fg-main)))
-    `(dictionary-word-entry-face ((,class :inherit modus-theme-slant :foreground ,fg-special-cold)))
+    `(dictionary-reference-face ((,class :inherit button)))
+    `(dictionary-word-definition-face ((,class)))
+    `(dictionary-word-entry-face ((,class :inherit font-lock-comment-face)))
 ;;;;; diff-hl
     `(diff-hl-change ((,class :inherit modus-theme-fringe-yellow)))
     `(diff-hl-delete ((,class :inherit modus-theme-fringe-red)))
@@ -3056,6 +3057,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(disk-usage-size ((,class :foreground ,cyan)))
     `(disk-usage-symlink ((,class :inherit button)))
     `(disk-usage-symlink-directory ((,class :inherit bold :foreground ,blue-alt)))
+;;;;; display-fill-column-indicator-mode
+    `(fill-column-indicator ((,class :foreground ,bg-active)))
 ;;;;; doom-modeline
     `(doom-modeline-bar ((,class :inherit modus-theme-active-blue)))
     `(doom-modeline-bar-inactive ((,class :background ,fg-inactive :foreground ,bg-main)))
