@@ -72,6 +72,7 @@ parses its input."
 
 (defvar orderless-matching-styles)
 
+;;;###autoload
 (defun prot-orderless-with-styles (cmd &optional styles)
   "Call CMD with optional orderless STYLES.
 
