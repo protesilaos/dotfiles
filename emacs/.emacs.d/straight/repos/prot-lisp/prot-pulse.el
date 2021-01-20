@@ -43,11 +43,6 @@ changes to take effect."
   :type 'list
   :group 'prot-pulse)
 
-(defcustom prot-pulse-advice-commands t
-  "Add advice to `prot-pulse-pulse-command-list' items."
-  :type 'boolean
-  :group 'prot-pulse)
-
 (defface prot-pulse-line
   '((default :extend t)
     (((class color) (min-colors 88) (background light))
@@ -117,8 +112,7 @@ To be used with `advice-add' after those functions declared in
   "Set up for `prot-pulse-pulse-command-list'."
   :init-value nil
   :global t
-  (if (and prot-pulse-advice-commands
-           prot-pulse-advice-commands-mode)
+  (if prot-pulse-advice-commands-mode
       (progn
         (dolist (fn prot-pulse-pulse-command-list)
           (advice-add fn :after #'prot-pulse-after-command))

@@ -6842,7 +6842,6 @@ point an arbitrary distance.
   :straight (:type built-in)
   :demand
   :config
-  (setq prot-pulse-advice-commands t)
   (setq prot-pulse-pulse-command-list
         '(recenter-top-bottom
           reposition-window))
