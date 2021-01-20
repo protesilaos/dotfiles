@@ -1278,6 +1278,7 @@ try.
           prot-consult-imenu))
   (prot-consult-set-up-hooks-mode 1)
   :bind (("M-s i" . prot-consult-imenu)
+         ("M-s f" . prot-consult-fd)
          ("M-s s" . prot-consult-outline)    ; M-s o is `occur'
          ("M-s y" . prot-consult-yank)
          ("M-s l" . prot-consult-line)))

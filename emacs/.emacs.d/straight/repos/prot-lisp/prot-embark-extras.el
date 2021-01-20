@@ -33,7 +33,7 @@
   "Custom cross-package extensions for `embark'."
   :group 'editing)
 
-(autoload 'consult-find "consult")
+(autoload 'prot-consult-fd "prot-consult")
 (autoload 'consult-grep "consult")
 (autoload 'consult-line "consult")
 (autoload 'consult-imenu "consult")
@@ -41,7 +41,7 @@
 
 (defvar prot-embark-extras-become-general-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "f") 'consult-find)
+    (define-key map (kbd "f") 'prot-consult-fd)
     (define-key map (kbd "g") 'consult-grep)
     map)
   "General custom cross-package `embark-become' keymap.")

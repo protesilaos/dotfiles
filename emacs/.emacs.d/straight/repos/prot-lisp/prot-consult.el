@@ -51,6 +51,11 @@ changes to take effect."
   :group 'prot-consult
   :type 'list)
 
+(defcustom prot-consult-find-args '("fd" "-i" "-H" "-a" "-c" "never")
+  "List of strings with the FD command and its arguments."
+  :type 'list
+  :group 'prot-consult)
+
 ;;;; Setup for some consult commands (TODO: needs review)
 
 (defvar prot-consult-jump-recentre-hook nil
@@ -92,6 +97,25 @@ To be used with `advice-add'.")
     (remove-hook 'prot-consult-jump-top-hook #'prot-pulse-show-entry)))
 
 ;;;; Commands
+
+(defvar consult-find-command)
+(autoload 'consult-find "consult")
+(declare-function consult--directory-prompt "consult")
+
+;;;###autoload
+(defun prot-consult-fd (&optional dir initial)
+  "Use `consult--find' with FD executable.
+
+With optional DIR, or prefix argument (\\[universal-argument]),
+prompt for a directory to search in.  Else default to the
+directory determined by `consult-project-root-function'.
+
+Optional INITIAL is the input to pre-populate the search."
+  (interactive "P")
+  (let* ((cmd prot-consult-find-args)
+         (prompt-dir (consult--directory-prompt "Find" dir))
+         (default-directory (cdr prompt-dir)))
+    (consult--find (car prompt-dir) cmd initial)))
 
 (defvar consult--find-cmd)
 (defvar consult--directory-prompt)
