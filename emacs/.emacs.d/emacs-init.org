@@ -989,7 +989,8 @@ code further below).
           prot-orderless-initialism-dispatcher))
   ;; SPC should never complete: use it for `orderless' groups.
   :bind (:map minibuffer-local-completion-map
-              ("SPC" . nil)))
+              ("SPC" . nil)
+              ("?" . nil)))
 #+end_src
 
 These are the contents of the =prot-orderless.el= library (get the file
