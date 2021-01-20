@@ -1093,7 +1093,7 @@ declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e1
   :demand
   :after prot-minibuffer
   :config
-  (setq completion-styles '(orderless partial-completion))
+  (setq completion-styles '(partial-completion substring flex orderless))
   (setq completion-category-defaults nil)
   (setq completion-cycle-threshold 3)
   (setq completion-flex-nospace nil)
