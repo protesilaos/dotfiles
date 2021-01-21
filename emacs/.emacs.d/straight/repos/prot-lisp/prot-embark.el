@@ -169,7 +169,8 @@ If in a live Embark collect/completions buffer, run
 This is meant to be bound in `embark-collect-mode-map'."
   (interactive)
   (if (prot-embark--live-completions-p)
-      (progn
+      (if (region-active-p)
+          (keyboard-quit)
         (kill-buffer)
         (abort-recursive-edit))
     (keyboard-quit)))
