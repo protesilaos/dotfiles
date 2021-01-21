@@ -175,7 +175,7 @@ This is meant to be bound in `embark-collect-mode-map'."
         (abort-recursive-edit))
     (keyboard-quit)))
 
-(declare-function embark-collect-completions "embark")
+(autoload 'embark-collect-completions "embark")
 
 ;;;###autoload
 (defun prot-embark-completions-toggle ()
@@ -186,8 +186,8 @@ This is meant to be bound in `embark-collect-mode-map'."
     (embark-collect-completions)))
 
 (declare-function embark--act "embark")
-(declare-function embark-default-action "embark")
 (declare-function embark--target "embark")
+(autoload 'embark-default-action "embark")
 
 (defun prot-embark--completions-act (arg)
   "Move ARG lines and perform `embark-default-action'."
