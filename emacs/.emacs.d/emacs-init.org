@@ -3304,44 +3304,54 @@ Here is an overview of the keys I define, with only a few of them being
 left to their default values (note that =prot-diff-buffer-dwim= is part of
 the =prot-diff.el= that I linked to above):
 
-| Command                | C-x v prefix | Mnemonic          |
-|------------------------+--------------+-------------------|
-| vc-annotate            | a            |                   |
-| vc-update              | F            | Fetch and merge   |
-| vc-push                | P            |                   |
-| vc-log-incoming        | f            | Fetch only        |
-| vc-log-outgoing        | O            |                   |
-| vc-create-tag          | t            |                   |
-| vc-retrieve-tag        | b            | Branch/tag switch |
-| vc-diff                | d            | Diff current file |
-| vc-root-diff           | D            | Diff project      |
-| prot-diff-buffer-dwim  | =            |                   |
-| prot-vc-project-or-dir | p            | Project status    |
-| prot-vc-custom-log     | SPC          |                   |
-| prot-vc-patch-dwim     | c            | Create patch      |
+| Command                          | C-x v prefix | Mnemonic          |
+|----------------------------------+--------------+-------------------|
+| vc-annotate                      | a            |                   |
+| vc-update                        | F            | Fetch and Fuse    |
+| vc-push                          | P            |                   |
+| vc-log-incoming                  | f            | Fetch only        |
+| vc-log-outgoing                  | O            |                   |
+| vc-create-tag                    | t            |                   |
+| vc-retrieve-tag                  | b            | Branch/tag switch |
+| vc-diff                          | d            | Diff current file |
+| vc-root-diff                     | D            | Diff project      |
+| prot-diff-buffer-dwim            | =            | Compare equality  |
+| prot-vc-project-or-dir           | p            | Project status    |
+| prot-vc-custom-log               | SPC          |                   |
+| prot-vc-git-patch-dwim           | c            | Create patch      |
+| prot-vc-git-show                 | s            | git-show commit   |
+| prot-vc-find-revision            | r            | Find file Rev     |
+| prot-vc-git-blame-region-or-file | B            | Blame             |
 
 My =prot-vc.el= library (reproduced after the package declarations)
 defines a few commands that extend VC to suit my needs.  In short:
 
-+ =prot-vc-patch-dwim= produce a properly formatted patch for a given
++ =prot-vc-git-patch-dwim= produce a properly formatted patch for a given
   commit.  When browsing a =log-view= buffer, the commit is the one around
   point, otherwise the commit is selected with completion from a log of
-  recent entries (the length of the log is controlled by the variable
-  =prot-vc-log-limit=).  Prompting for a commit can also be done by
-  calling this command with a universal prefix argument (=C-u=).  The
-  patch is saved as a file in a directory that can be selected with
-  another completion prompt: default candidates are stored in the list
-  =prot-vc-patch-output-dirs=.
+  commits.  Prompting for a commit can also be done by calling this
+  command with a universal prefix argument (=C-u=).  The patch is saved as
+  a file in a directory that can be selected with another completion
+  prompt: default candidates are stored in =prot-vc-patch-output-dirs=.
 
 + =prot-vc-custom-log= prints a log of commits that matches a custom file
   set.  This is of great value when you need to inspect the history of
   only some files rather than that of the entire repository.  What files
   to choose is determined in two ways: (1) the file-at-point in Dired
   buffers, or all marked files, and (2) files in the current directory
-  selected with completion.  The latter is invoked by passing a double
-  prefix argument (=C-u C-u=).  While a single prefix arg (=C-u=), starts
-  with a prompts for a number to limit the log to, otherwise it falls
-  back to the number in =prot-vc-log-limit=.
+  selected with completion.
+
++ =prot-vc-log-view-toggle-entry-all= will toggle the visibility of all
+  commits in a compact log view.  I often employ this in tandem with
+  =prot-vc-custom-log=.
+
++ =prot-vc-git-show= lets you read a given commit that you access with
+  completion.  Simple and effective.
+
++ =prot-vc-find-revision= allows you to revisit a previous state of the
+  current file, by selecting a commit with completion.  Quite powerful
+  when you want to search, for example, my dotemacs from when I first
+  introduced a certain package, say, =prot-vc.el=.
 
 + =prot-vc-project-or-dir= produces a =vc-dir= buffer for the current
   project (also see [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  With a
@@ -3355,8 +3365,9 @@ defines a few commands that extend VC to suit my needs.  In short:
 + =prot-vc-git-setup-mode= is a minor mode that tweaks the log view of
   =vc-git= so that when we expand commits it uses a different format than
   the default.  Basically this is an elaborate workaround to make it
-  show add/remove stats and affected file names.  It is set up as a
-  minor mode to make it easy to disable.
+  show diff stats and affected file names, while also creating some much
+  needed negative space for better usability.  It is set up as a minor
+  mode to make it easy to disable.
 
 #+begin_src emacs-lisp
 (use-package vc
@@ -3407,6 +3418,8 @@ defines a few commands that extend VC to suit my needs.  In short:
          ("k" . vc-dir-clean-files)
          :map vc-annotate-mode-map
          ("M-q" . vc-annotate-toggle-annotation-visibility)
+         ("C-c C-c" . vc-annotate-goto-line)
+         ("<return>" . vc-annotate-find-revision-at-line)
          :map log-view-mode-map
          ("<tab>" . log-view-toggle-entry-display)
          ("<return>" . log-view-find-revision)
@@ -3421,15 +3434,19 @@ defines a few commands that extend VC to suit my needs.  In short:
   :after vc
   :init
   (setq prot-vc-log-limit 20)
-  (setq prot-vc-shell-output "*prot-vc-shell-output*")
+  (setq prot-vc-shell-output "*prot-vc-output*")
   (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
 
   (prot-vc-git-setup-mode 1)
   :bind (("C-x v p" . prot-vc-project-or-dir)
          ("C-x v SPC" . prot-vc-custom-log)
-         ("C-x v c" . prot-vc-patch-dwim)
+         ("C-x v c" . prot-vc-git-patch-dwim)
+         ("C-x v s" . prot-vc-git-show)
+         ("C-x v r" . prot-vc-find-revision)
+         ("C-x v B" . prot-vc-git-blame-region-or-file)
          :map log-view-mode-map
-         ("c" . prot-vc-patch-dwim)
+         ("<C-tab>" . prot-vc-log-view-toggle-entry-all)
+         ("c" . prot-vc-git-patch-dwim)
          ("w" . prot-vc-log-kill-hash)))
 #+end_src
 
