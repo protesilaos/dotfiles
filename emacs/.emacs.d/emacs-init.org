@@ -1234,6 +1234,47 @@ variants) to deliver a dedicated =grep-mode= buffer, which can then be
 edited with the help of the =wgrep= package (check [[#h:42624165-f4cb-4318-abce-c11232426880][wgrep (writable grep)]]).
 Use that to quickly refactor some pattern across your files.
 
+Other nice extensions of Consult are (i) its ability to work as a
+generic front-end for completion, and (ii) its preview facility for
+registers.  The former is done by =consult-completion-in-region= which
+provides completion for commands such as =dabbrev-completion= or the TAB
+key in programming buffers (see [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the TAB key]]).
+While the latter is an overall prettier presentation for the familiar
+register preview window (also read about [[#h:6bdfe4d1-f97a-4d89-ab68-e87448a95fea][Registers]]).
+
+As for registers themselves, Consult furnishes three commands, one
+focused on minibuffer completion and two as do-what-I-mean alternatives
+to the built-in facilities of storing and inserting---or jumping
+to---registered data.
+
++ =consult-register= is what you use for completion.  It searches through
+  the contents of the registered compartments and, thus, works well when
+  you have text-heavy registers that you need to filter through before
+  inserting one at point.
+
++ =consult-register-store= will save a "thing" to the specified key.  What
+  the thing is depends on the context:
+
+  + If the region is active, it will operate on the affected text.
+  + If you call it with a numeric argument, it will store that number.
+  + If no region is active and no numeric prefix is supplied, it will
+    let you select between the current position (point), window
+    configuration (window), set of frames with their window
+    configurations (frameset), or keyboard macro (kmacro).
+
+  This do-what-I-mean facility is complemented by an actions' menu that
+  offers hints on the keys you can use to specify the desired step
+  forward.  For example, if you are operating on a region, =M-a= will let
+  you append the text to the given register.
+
++ =consult-register-load= simplifies the mental workload of actually using
+  a register.  Unlike the Emacs default where you need to know in
+  advance what type of data does the register holds in order to use the
+  right action for it, Consult's version just handles that for you.  All
+  you have to do is instruct it to use the given register and it will
+  know whether it should insert some text or jump to a point/frameset,
+  etc.
+
 Note that my =prot-consult.el= (reproduced after the following package
 declarations) defines some /quick and dirty/ extensions or thin wrappers
 around Consult commands.  The former *will be reviewed* in favour of
@@ -1251,6 +1292,28 @@ try.
   (setq consult-async-input-debounce 0.5)
   (setq consult-async-input-throttle 0.8)
   (setq consult-narrow-key ">")
+
+  ;; Registers' setup -- From Consult's README
+  ;;
+  ;; This gives a consistent display for `consult-register',
+  ;; `consult-register-load', `consult-register-store', and the Emacs
+  ;; built-ins.
+  (setq register-preview-delay 0
+        register-preview-function #'consult-register-preview)
+  ;; Tweak the register preview window.
+  ;; * Sort the registers
+  ;; * Hide the mode line
+  ;; * Resize the window, such that the contents fit exactly
+  (advice-add #'register-preview :around
+              (lambda (fun buffer &optional show-empty)
+                (let ((register-alist (seq-sort #'car-less-than-car register-alist)))
+                  (funcall fun buffer show-empty))
+                (when-let (win (get-buffer-window buffer))
+                  (with-selected-window win
+                    (setq-local mode-line-format nil)
+                    (setq-local window-min-height 1)
+                    (fit-window-to-buffer)))))
+
   ;; NOTE: check `embark-consult' for previews that can be used with the
   ;; default minibuffer and Embark collections.
   :bind (("C-x M-:" . consult-complex-command)
@@ -1262,6 +1325,9 @@ try.
          ("M-K" . consult-keep-lines)  ; M-S-k is similar to M-S-5 (M-%)
          ("M-s g" . consult-grep)
          ("M-s m" . consult-mark)
+         ("C-x r r" . consult-register) ; Use the register's prefix
+         ("C-x r S" . consult-register-store)
+         ("C-x r L" . consult-register-load)
          :map consult-narrow-map
          ("?" . consult-narrow-help)))
 
