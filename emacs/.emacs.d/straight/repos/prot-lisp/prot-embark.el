@@ -153,6 +153,8 @@ Add this to `embark-collect-mode-hook'."
       (prot-minibuffer-completions-cursor) ; from `prot-minibuffer.el'
     (kill-local-variable 'cursor-type)))
 
+(autoload 'embark-quit "embark")
+
 ;; Thanks to Karthik Chikmagalur for providing an earlier version of
 ;; `prot-embark-keyboard-quit' command!  Sources to Karthik's work:
 ;;
@@ -172,7 +174,7 @@ This is meant to be bound in `embark-collect-mode-map'."
       (if (region-active-p)
           (keyboard-quit)
         (kill-buffer)
-        (abort-recursive-edit))
+        (embark-quit))
     (keyboard-quit)))
 
 (autoload 'embark-collect-completions "embark")
