@@ -3297,8 +3297,10 @@ handle the more involved and specialised cases of staging a partial
 diff, rebasing commits interactively, writing a commit fixup, and so on.
 
 Also refer to the section on [[#h:2ff46d23-09d5-4d92-b0af-2339dc19719f][Diff-mode (and prot-diff.el extensions)]].
-And watch my [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]]
-(2020-03-30).
+And watch my two videos on this:
+
+1. [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]] (2020-03-30).
+2. [[https://protesilaos.com/codelog/2021-01-22-emacs-vc-git-extras/][Extensions for Emacs' vc-git]] (2021-01-22).
 
 Here is an overview of the keys I define, with only a few of them being
 left to their default values (note that =prot-diff-buffer-dwim= is part of
@@ -3333,6 +3335,10 @@ defines a few commands that extend VC to suit my needs.  In short:
   command with a universal prefix argument (=C-u=).  The patch is saved as
   a file in a directory that can be selected with another completion
   prompt: default candidates are stored in =prot-vc-patch-output-dirs=.
+  That granted, I also use [[#h:81c71e25-d6c4-4ef2-ad21-4fd57b00c301][git-email.el for preparing patches]], because
+  it streamlines the workflow and lets you produce a series of patch for
+  a given range by specifying the commit that should be matched against
+  the current HEAD.
 
 + =prot-vc-custom-log= prints a log of commits that matches a custom file
   set.  This is of great value when you need to inspect the history of
@@ -3483,6 +3489,48 @@ always use =auto-fill-mode= to wrap lines to the value of =fill-column= (see
   (setq log-edit-keep-buffer nil)
   (setq log-edit-require-final-newline t)
   (setq log-edit-setup-add-author nil))
+#+end_src
+
+**** git-email.el for preparing patches
+:PROPERTIES:
+:CUSTOM_ID: h:81c71e25-d6c4-4ef2-ad21-4fd57b00c301
+:END:
+
+This neat library by Xinglu Chen streamlines the process of formatting
+and sending Git patches via email.  Its main point of entry is the
+command =git-email-format-patch=, which prompts you for a commit that is
+read as the range between the current HEAD and the one you specify.  In
+doing so, it allows you to properly prepare a series of patches, using
+the correct message headers.
+
+=git-email.el= is meant to work with the standard message composition
+buffer, such as the one you get when you call =M-x compose-email= (by
+default it is bound to =C-x m= and I keep it that way).  Email clients
+like Gnus and Notmuch are also supported.  For my case as a user of the
+former, I just activate =git-email-gnus-mode= in order to add the relevant
+paraphernalia to the message composition buffers: a special "Gcc" header
+that Gnus uses to place a copy of the outgoing message to a given
+destination.
+
+For more on Gnus and related configurations, please refer to the
+mega-section on [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]].
+
+Overall, =git-email.el= is a welcome addition to the ecosystem.  Apart
+from working with the built-in Version Control framework of Emacs
+(consult [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]), it offers us
+the means to conveniently implement a truly decentralised workflow for
+collaboration: git and email empower you utilise the tools you want,
+instead of forcing you through some unwieldy pull/merge request process
+that certain git forges encourage.  I prefer this approach and am eager
+to see it getting more widespread adoption.
+
+#+begin_src emacs-lisp
+(use-package git-email
+  :straight (:host: nil :type git
+             :repo "https://git.sr.ht/~yoctocell/git-email")
+  :config
+  (with-eval-after-load 'gnus
+    (git-email-gnus-mode 1)))
 #+end_src
 
 *** Interactive git front-end (Magit)
