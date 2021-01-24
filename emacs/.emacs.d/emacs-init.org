@@ -1321,9 +1321,8 @@ you carry out /contextually relevant actions/ on *targets* through a common
   through, say, =switch-to-buffer= (=C-x b=).  And so on.
 
 + As for the "point of entry" or "prefix key", it is an Embark command,
-  such as =embark-act=, =embark-act-noexit=, or =embark-become=.  Those
-  activate the appropriate keymap, thus granting you access to the
-  relevant commands.
+  such as =embark-act= or =embark-become=.  Those activate the appropriate
+  keymap, thus granting you access to the relevant commands.
 
 Embark can act on individual targets (e.g. the region) or sets of
 targets (e.g. the list of minibuffer completion candidates).
@@ -1346,8 +1345,7 @@ Learn more about the available keymaps with =M-x describe-keymap= and then
 search for =embark=.
 
 Now a few things about actions that you can gain access to by invoking
-either of =embark-act= (most common case), =embark-act-noexit=,
-=embark-become=:
+either of =embark-act= (most cases), or =embark-become= (where appropriate):
 
 + To learn which keymap's contents get enabled in the present context,
   either set up =which-key.el=, or follow up the =embark-act= call with =C-h=
@@ -1456,6 +1454,7 @@ Finally, a few words about the following package declaration:
           (xref-location . list)
           (kill-ring . zebra)
           (t . list)))
+  (setq embark-quit-after-action t)     ; XXX: Read the doc string!
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
 
@@ -1477,14 +1476,11 @@ Finally, a few words about the following package declaration:
   :bind (("C-," . embark-act)
          :map minibuffer-local-completion-map
          ("C-," . embark-act)
-         ("C-." . embark-act-noexit)
          ("C->" . embark-become)
          ("M-q" . embark-collect-toggle-view) ; parallel of `fill-paragraph'
          :map embark-collect-mode-map
          ("C-," . embark-act)
-         ("C-." . embark-act-noexit)
          ("," . embark-act)
-         ("." . embark-act-noexit)
          ("M-q" . embark-collect-toggle-view)
          :map embark-symbol-map
          ("." . embark-find-definition)
