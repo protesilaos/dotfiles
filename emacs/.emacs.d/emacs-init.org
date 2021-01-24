@@ -3599,7 +3599,7 @@ to see it getting more widespread adoption.
     (git-email-gnus-mode 1)))
 #+end_src
 
-*** Interactive git front-end (Magit)
+*** Interactive and powerful git front-end (Magit)
 :PROPERTIES:
 :CUSTOM_ID: h:76d1b392-e693-40dc-b320-d4c1047115ab
 :END:
@@ -3619,33 +3619,18 @@ Magit buffers to view the keys that work for their context.
 Consider viewing my [[https://protesilaos.com/codelog/2020-04-04-emacs-intro-magit/][Introduction to Magit]] (2020-04-04) for how to stage
 diffs, commit changes, view logs, create branches, and so on.
 
-**** Base Magit settings
-:PROPERTIES:
-:CUSTOM_ID: h:21ca155a-d0d7-4710-b34a-a0d7a901ac0d
-:END:
-
-Magit has great defaults.  I only found a few things that I would like
-to customise, which I do in the following package declarations.
+Magit has great defaults and it should work admirably without any
+further tweaks of extra setup.  That granted, the =git-commit= package
+(part of Magit) is configured in accordance with the guidelines provided
+by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is to compose
+commits that are clean and easy to read.  The =fill-column= is set
+elsewhere in this document to 72 characters long.
 
 #+begin_src emacs-lisp
-;; TODO 2021-01-19: merge all magit settings
 (use-package magit
   :straight t
   :bind ("C-c g" . magit-status))
-#+end_src
 
-**** Magit commits
-:PROPERTIES:
-:CUSTOM_ID: h:f851e0cc-099c-4309-8517-b2f20ab18ab4
-:END:
-
-The following package is configured in accordance with the guidelines
-provided by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is
-to write commits that are clean and easy to read.  The =fill-column= is
-set elsewhere in this document to 72 characters long.
-
-#+begin_src emacs-lisp
-;; TODO 2021-01-19: merge all magit settings
 (use-package git-commit
   :after magit
   :config
@@ -3662,37 +3647,12 @@ set elsewhere in this document to 72 characters long.
   (setq git-commit-style-convention-checks
         '(non-empty-second-line
           overlong-summary-line)))
-#+end_src
 
-**** Magit diffs
-:PROPERTIES:
-:CUSTOM_ID: h:c7a465c1-f33a-42d8-9617-fff3e1460060
-:END:
-
-The settings below are for the diff screens that Magit produces.  I just
-want to highlight changes within a line, not just the line itself.  I
-enable it only for the focused hunk (there is an option for ='all=).
-
-#+begin_src emacs-lisp
-;; TODO 2021-01-19: merge all magit settings
 (use-package magit-diff
   :after magit
   :config
   (setq magit-diff-refine-hunk t))
-#+end_src
 
-**** Magit repo list
-:PROPERTIES:
-:CUSTOM_ID: h:35972439-0b28-4d33-8091-c6b5f1f02579
-:END:
-
-When maintaining a number of projects, it sometimes is necessary to
-produce a full list of them with their corresponding Magit status.  That
-way you can determine very quickly which repositories need to be
-examined further.
-
-#+begin_src emacs-lisp
-;; TODO 2021-01-19: merge all magit settings
 (use-package magit-repos
   :after magit
   :commands magit-list-repositories
