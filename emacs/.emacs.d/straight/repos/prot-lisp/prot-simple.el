@@ -162,6 +162,16 @@ This command can then be followed by the standard
   :type 'alist
   :group 'prot-simple)
 
+(defvar prot-simple--character-hist '()
+  "History of inputs for `prot-simple-insert-pair-completion'.")
+
+(defun prot-simple--character-prompt (chars)
+  "Helper of `prot-simple-insert-pair-completion' to read CHARS."
+  (let ((def (car prot-simple--character-hist)))
+    (completing-read
+     (format-prompt "Select character" def)
+     chars nil t nil 'prot-simple--character-hist def)))
+
 ;;;###autoload
 (defun prot-simple-insert-pair-completion (&optional num)
   "Insert pair from `prot-simple-insert-pair-alist'.
@@ -170,7 +180,7 @@ constructs.  A negative number counts backwards."
   (interactive "p")
   (let* ((data prot-simple-insert-pair-alist)
          (chars (mapcar #'car data))
-         (choice (completing-read "Select character: " chars nil t))
+         (choice (prot-simple--character-prompt chars))
          (left (cadr (assoc choice data)))
          (right (caddr (assoc choice data)))
          (n (or num 1)))
