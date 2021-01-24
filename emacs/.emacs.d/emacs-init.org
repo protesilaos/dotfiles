@@ -7615,13 +7615,13 @@ and am therefore refraining from solving a problem that does not affect
 me.
 
 Note that =tab-always-indent= will first do indentation and then try to
-complete whatever you have typed in.  I control how completion works for
-that particular function in my [[#h:98876022-57cc-40de-936e-4ee42cefd69a][in-buffer completions]] section.
+complete whatever you have typed in.
 
 #+begin_src emacs-lisp
 (use-package emacs
   :config
   (setq-default tab-always-indent 'complete)
+  (setq-default tab-first-completion 'word-or-paren-or-punct) ; Emacs 27
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil))
 #+end_src
