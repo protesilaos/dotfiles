@@ -6854,8 +6854,10 @@ These are the contents of the =prot-outline.el= library (find the file in
 :CUSTOM_ID: h:6bdfe4d1-f97a-4d89-ab68-e87448a95fea
 :END:
 
-Watch: [[https://protesilaos.com/codelog/2020-03-08-emacs-registers/][Primer on Emacs “registers”]] (2020-03-08).  The rest is just an
-overview of the topic, meaning that I have no custom code to share.
+*There is no extra code here, but only some useful documentation.* For a
+few nice utilities pertaining to registers, refer to the section on
+[[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]].  Also
+watch: [[https://protesilaos.com/codelog/2020-03-08-emacs-registers/][Primer on Emacs “registers”]] (2020-03-08).
 
 Registers are compartments that hold data of various sorts.  They offer
 the means for advanced, highly efficient workflows, especially when
