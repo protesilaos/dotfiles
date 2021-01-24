@@ -10,3 +10,5 @@
 	conflictStyle = diff3
 [pull]
 	rebase = false
+[format]
+  thread = true
