@@ -3597,7 +3597,9 @@ to see it getting more widespread adoption.
   :config
   (with-eval-after-load 'gnus
     (git-email-gnus-mode 1))
-  :bind ("C-x v RET" . git-email-format-patch)) ; VC prefix and C-m
+  :bind (("C-x v RET" . git-email-format-patch) ; VC prefix and C-m
+         :map dired-mode-map
+         ("C-x v RET" . git-email-send-email)))
 #+end_src
 
 *** Interactive and powerful git front-end (Magit)
