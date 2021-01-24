@@ -5898,13 +5898,17 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
   (setq elfeed-show-truncate-long-urls t)
   (setq elfeed-show-unique-buffers t)
   (setq elfeed-search-date-format '("%F %R" 16 :left))
+  (use-package prot-elfeed-bongo :straight (:type built-in))
   :bind (("C-c e" . elfeed)
          :map elfeed-search-mode-map
          ("w" . elfeed-search-yank)
          ("g" . elfeed-update)
          ("G" . elfeed-search-update--force)
+         ("b" . prot-elfeed-bongo-insert-item)
+         ("h" . prot-elfeed-bongo-switch-to-playlist) ; "hop" mnemonic
          :map elfeed-show-mode-map
-         ("w" . elfeed-show-yank)))
+         ("w" . elfeed-show-yank)
+         ("b" . prot-elfeed-bongo-insert-item)))
 
 (use-package prot-elfeed
   :straight (:type built-in)
@@ -5914,27 +5918,19 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
   (prot-elfeed-fontify-tags)
   :hook (elfeed-search-mode-hook . prot-elfeed-load-feeds)
   :bind (:map elfeed-search-mode-map
-         ("s" . prot-elfeed-search-tag-filter)
-         ("o" . prot-elfeed-search-open-other-window)
-         ("q" . prot-elfeed-kill-buffer-close-window-dwim)
-         ("v" . prot-elfeed-mpv-dwim)
-         ("+" . prot-elfeed-toggle-tag)
-         ("!" . (lambda ()
-                  (interactive)
-                  (prot-elfeed-toggle-tag 'important)))
-         :map elfeed-show-mode-map
-         ("a" . prot-elfeed-show-archive-entry)
-         ("e" . prot-elfeed-show-eww)
-         ("q" . prot-elfeed-kill-buffer-close-window-dwim)
-         ("v" . prot-elfeed-mpv-dwim)))
-
-(use-package prot-elfeed-bongo
-  :straight (:type built-in)
-  :bind (:map elfeed-search-mode-map
-         ("b" . prot-elfeed-bongo-insert-item)
-         ("h" . prot-elfeed-bongo-switch-to-playlist) ; "hop" mnemonic
-         :map elfeed-show-mode-map
-         ("b" . prot-elfeed-bongo-insert-item)))
+              ("s" . prot-elfeed-search-tag-filter)
+              ("o" . prot-elfeed-search-open-other-window)
+              ("q" . prot-elfeed-kill-buffer-close-window-dwim)
+              ("v" . prot-elfeed-mpv-dwim)
+              ("+" . prot-elfeed-toggle-tag)
+              ("!" . (lambda ()
+                       (interactive)
+                       (prot-elfeed-toggle-tag 'important)))
+              :map elfeed-show-mode-map
+              ("a" . prot-elfeed-show-archive-entry)
+              ("e" . prot-elfeed-show-eww)
+              ("q" . prot-elfeed-kill-buffer-close-window-dwim)
+              ("v" . prot-elfeed-mpv-dwim)))
 #+end_src
 
 This is =prot-elfeed.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
