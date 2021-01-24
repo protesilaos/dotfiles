@@ -53,30 +53,11 @@
 (autoload 'bongo-playlist-mode "bongo")
 (autoload 'bongo-progressive-playback-mode "bongo")
 (autoload 'bongo-recenter "bongo")
-(autoload 'define-bongo-backend "bongo")
 (autoload 'elfeed-entry-enclosures "elfeed")
 (autoload 'elfeed-entry-link "elfeed")
 (autoload 'elfeed-entry-title "elfeed")
 (autoload 'elfeed-search-selected "elfeed")
 (defvar elfeed-show-entry)
-(defvar prot-elfeed-bongo-mpv)
-
-;; Here we define a slightly tweaked variant of the standard mpv
-;; backend.  We will be using this to play back audio and video URLs.
-;; The latter will spawn a new MPV player window.  Refer to my Elfeed
-;; section for the implementation details.
-(define-bongo-backend prot-elfeed-bongo-mpv
-  ;; :constructor 'bongo-start-mpv-player
-  :program-name 'mpv
-  :extra-program-arguments nil
-  :matcher '((local-file "file:" "http:" "ftp:")
-             "ogg" "flac" "mp3" "mka" "wav" "wma"
-             "mpg" "mpeg" "vob" "avi" "ogm" "mp4" "mkv"
-             "mov" "asf" "wmv" "rm" "rmvb" "ts")
-  :matcher '(("mms:" "mmst:" "rtp:" "rtsp:" "udp:" "unsv:"
-              "dvd:" "vcd:" "tv:" "dvb:" "mf:" "cdda:" "cddb:"
-              "cue:" "sdp:" "mpst:" "tivo:") . t)
-  :matcher '(("http:" "https:") . t))
 
 ;;;###autoload
 (defun prot-elfeed-bongo-insert-item ()
@@ -101,7 +82,7 @@ interfere with the default variable `bongo-playlist-buffer'."
  	  (when (not (bongo-playlist-buffer-p))
  	    (bongo-playlist-mode)
         (setq-local bongo-library-buffer (get-buffer "*elfeed-search*"))
-        (setq-local bongo-enabled-backends '(prot-elfeed-bongo-mpv))
+        (setq-local bongo-enabled-backends '(vlc mpv))
         (bongo-progressive-playback-mode))
  	  (goto-char (point-max))
       (bongo-insert-uri url title)
