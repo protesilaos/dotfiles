@@ -7653,7 +7653,7 @@ complete whatever you have typed in.
   (setq-default indent-tabs-mode nil))
 #+end_src
 
-** Flyspell (spell check)
+** Flyspell and prot-spell.el (spell check)
 :PROPERTIES:
 :CUSTOM_ID: h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c
 :END:
@@ -7666,18 +7666,23 @@ In previous versions of this section I had configurations that would
 automate spell checking.  It worked but was rather slow.  Upon further
 inspection, I realised that I seldom need to work in mixed language
 circumstances.  Moreover, I now understand that I do not need to have
-spell checking always on.  It can be activated manually, with the
-=flyspell= functions defined in the =:commands= segment below or with my
-=prot/flyspell-dwim= for the active region.
+spell checking always on: it is distracting.
+
+My workflow is to call an interactive command to perform spell checking.
+This is =prot-spell-spell-dwim=, which is part of my =prot-spell.el= library
+(reproduced after the following package declarations).  What it does is
+search for errors in the active region or, if that does not apply,
+operate on the word at point.  Its fallback condition is a call to
+=prot-spell-change-dictionary=, which I use to switch between languages
+using minibuffer completion.
+
+If I ever need to review the entire buffer, especially if it is about
+some long-form text, I use a =flymake= interface instead (refer to the
+[[#h:aeb3e777-39fd-4b4f-8dc9-8b6aa7a595cc][section on flymake-aspell]]).
 
 Also bear in mind that the key binding =C-;= that Flyspell uses by default
-is disabled because I re-purpose that for a faster version of =C-x C-;=
+is disabled because I re-purpose it for a faster version of =C-x C-;=
 (much more useful for my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
-
-Note that my use-case for Flyspell is to mark a region and test for
-errors in it.  If I need to review the entire buffer, especially if it
-is about some long-form text, I use a =flymake= interface instead (refer
-to the [[#h:aeb3e777-39fd-4b4f-8dc9-8b6aa7a595cc][section on flymake-aspell]]).
 
 #+begin_src emacs-lisp
 (use-package flyspell
@@ -7686,43 +7691,23 @@ to the [[#h:aeb3e777-39fd-4b4f-8dc9-8b6aa7a595cc][section on flymake-aspell]]).
   (setq flyspell-issue-welcome-flag nil)
   (setq ispell-program-name "aspell")
   (setq ispell-dictionary "en_GB")
+  :bind (:map flyspell-mode-map
+              ("C-;" . nil)))
 
-  ;; TODO 2021-01-19: this is subject to review and any custom code must
-  ;; be placed in a new prot-flyspell.el
-  (defvar prot/ispell-dictionaries
-    '(("English" . "en")
-      ("Ελληνικά" . "el")
-      ("Français" . "fr")
-      ("Espanõl" . "es"))
-    "Alist of dictionaries I may use.
-It is used by `prot/ispell-dictionaries-complete'.")
-
-  (defun prot/ispell-dictionaries-complete ()
-    "Select an item from `prot/ispell-dictionaries'."
-    (interactive)
-    (let* ((dicts (mapcar #'car prot/ispell-dictionaries))
-           (choice (completing-read "Select dictionary: " dicts nil t))
-           (key (cdr (assoc `,choice prot/ispell-dictionaries))))
-      (ispell-change-dictionary key)
-      (message "Switched to %s" key)))
-
-  (defun prot/flyspell-dwim ()
-    "Spell check region or select dictionary.
-
-Use `flyspell-region' on the active region, else invoke
-`prot/ispell-dictionaries-complete'."
-    (interactive)
-    (let ((beg (region-beginning))
-          (end (region-end)))
-      (if (use-region-p)
-          (flyspell-region beg end)
-        (prot/ispell-dictionaries-complete))))
-
-  :bind (("M-$" . prot/flyspell-dwim)
-         ("C-M-$" . prot/ispell-dictionaries-complete)
-         :map flyspell-mode-map
-         ("C-;" . nil)))
+(use-package prot-spell
+  :config
+  (setq prot-spell-dictionaries
+        '(("EN English" . "en")
+          ("EL Ελληνικά" . "el")
+          ("FR Français" . "fr")
+          ("ES Espanõl" . "es")))
+  :bind (("M-$" . prot-spell-spell-dwim)
+         ("C-M-$" . prot-spell-change-dictionary)))
 #+end_src
+
+This is =prot-spell.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-spell.el src emacs-lisp :tangle no
 
 ** Code and text linters
 :PROPERTIES:
