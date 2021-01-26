@@ -153,7 +153,7 @@ and will be created if it does not exist."
   (let* ((entry (if (eq major-mode 'elfeed-show-mode)
                     elfeed-show-entry
                   (elfeed-search-selected :ignore-region)))
-         (title (elfeed-entry-title entry))
+         (title (replace-regexp-in-string " " "-" (elfeed-entry-title entry))
          (elfeed-show-truncate-long-urls nil)
          (archives (file-name-as-directory prot-elfeed-archives-directory))
          (file (format "%s%s.txt" archives title)))
