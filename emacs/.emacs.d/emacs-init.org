@@ -3563,29 +3563,48 @@ always use =auto-fill-mode= to wrap lines to the value of =fill-column= (see
 :END:
 
 This neat library by Xinglu Chen streamlines the process of formatting
-and sending Git patches via email.  Its main point of entry is the
-command =git-email-format-patch=, which prompts you for a commit that is
-read as the range between the current HEAD and the one you specify.  In
-doing so, it allows you to properly prepare a series of patches, using
-the correct message headers.
+and sending Git patches via email, all from the comfort of Emacs.  Its
+main point of entry is the command =git-email-format-patch=, which prompts
+you for a commit that is read as the range between the current HEAD and
+the one you specify.  In doing so, it allows you to prepare a series of
+patches, using the correct message headers.
 
 =git-email.el= is meant to work with the standard message composition
 buffer, such as the one you get when you call =M-x compose-email= (by
-default it is bound to =C-x m= and I keep it that way).  Email clients
-like Gnus and Notmuch are also supported.  For my case as a user of the
-former, I just activate =git-email-gnus-mode= in order to add the relevant
-paraphernalia to the message composition buffers: a special "Gcc" header
-that Gnus uses to place a copy of the outgoing message to a given
-destination.
+default that command is bound to =C-x m= and I keep it that way).  Email
+clients like Gnus and Notmuch are also supported.  For my case as a user
+of the former, I just activate =git-email-gnus-mode= in order to add the
+relevant paraphernalia to the message composition buffers: a special
+"Gcc" header that Gnus uses to place a copy of the outgoing message to a
+given destination.  For more on Gnus and related configurations, please
+refer to the mega-section on [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]].
 
-For more on Gnus and related configurations, please refer to the
-mega-section on [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]].
+So here is the typical workflow with this package:
+
++ Visit a file and make some changes.
++ Commit those changes.
++ Invoke =git-email-format-patch= and select the base commit against which
+  your commits are to be read.  So if your commit is the current HEAD,
+  then just pick the one right before.
++ Pass any optional flags.  Multiple flags can be completed against
+  using a comma as a separator (or whatever your =crm-separator= is).
++ Fill in the email details, which probably is just an email address
+  (and a cover letter, if you use that option).
++ Send.  Done!
+
+The maintainer of the project will then be able to apply your patch,
+using standard git commands (read the manpage for =git-apply=).
+
+Alternatively, you may already have a patch available and wish to email
+it directly.  Visit its directory and with the point over it call the
+command =git-email-send-email=.  This also works for the marked items of
+the Dired buffer ([[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory editor, file manager)]]).
 
 Overall, =git-email.el= is a welcome addition to the ecosystem.  Apart
-from working with the built-in Version Control framework of Emacs
+from also working with the built-in Version Control framework of Emacs
 (consult [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]), it offers us
 the means to conveniently implement a truly decentralised workflow for
-collaboration: git and email empower you utilise the tools you want,
+collaboration: git and email empower you to utilise the tools you want,
 instead of forcing you through some unwieldy pull/merge request process
 that certain git forges encourage.  I prefer this approach and am eager
 to see it getting more widespread adoption.
