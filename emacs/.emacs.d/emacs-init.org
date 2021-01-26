@@ -4612,6 +4612,9 @@ file which do not already have one."
 :CUSTOM_ID: h:5ad80664-3163-4d9d-be65-462637d77903
 :END:
 
+/NOTE 2021-01-26 17:33 +0200: The GNUS section is being refactored.
+This particular section will also be reviewed./
+
 Configuring email can be quite the challenge, largely because we have
 been used to the likes of Thunderbird, where you log in once and then
 everything "just works".  The toolset for my current setup consists of
@@ -4638,6 +4641,9 @@ the following:
 :PROPERTIES:
 :CUSTOM_ID: h:a82766be-daab-4925-b23a-1c5ffd47e599
 :END:
+
+/NOTE 2021-01-26 17:33 +0200: The GNUS section is being refactored.
+This particular section will also be reviewed./
 
 Before configuring any mail user agent, we need to establish the
 absolute essentials: who we are, where our credentials are stored, and
@@ -4670,7 +4676,7 @@ Then we set up the interface for composing emails:
   declared in =user-mail-address=.  This concerns only the creation of new
   emails.  While replying to a message, the appropriate information is
   filled in automatically, based on parameters I specify in the section
-  about [[#h:dc8811af-dec8-4ca8-a62e-0b500928d10b][account settings and essential configurations]].
+  about [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]].
 
 + The value of =message-citation-line-format= is expanded into something
   like /"On 2020-02-19, 13:54 +0200, NAME <EMAIL> wrote:"/.  To learn
