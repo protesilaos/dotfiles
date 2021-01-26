@@ -32,6 +32,37 @@
   "Generic utilities for my dotemacs."
   :group 'editing)
 
+;; Got those numbers from `string-to-char'
+(defcustom prot-simple-insert-pair-alist
+  '(("' Single quote" . (39 39))           ; ' '
+    ("\" Double quotes" . (34 34))         ; " "
+    ("` Elisp quote" . (96 39))            ; ` '
+    ("‘ Single apostrophe" . (8216 8217))  ; ‘ ’
+    ("“ Double apostrophes" . (8220 8221)) ; “ ”
+    ("( Parentheses" . (40 41))            ; ( )
+    ("{ Curly brackets" . (123 125))       ; { }
+    ("[ Square brackets" . (91 93))        ; [ ]
+    ("< Angled brackets" . (60 62))        ; < >
+    ("« Εισαγωγικά Gr quote" . (171 187))  ; « »
+    ("= Equals signs" . (61 61))           ; = =
+    ("* Asterisks" . (42 42))              ; * *
+    ("_ underscores" . (95 95)))           ; _ _
+  "Alist of pairs for use with `prot-simple-insert-pair-completion'."
+  :type 'alist
+  :group 'prot-simple)
+
+(defcustom prot-simple-date-specifier "%F"
+  "Date specifier for `format-time-string'.
+Used by `prot-simple-inset-date'."
+  :type 'string
+  :group 'prot-simple)
+
+(defcustom prot-simple-time-specifier "%R %z"
+  "Time specifier for `format-time-string'.
+Used by `prot-simple-inset-date'."
+  :type 'string
+  :group 'prot-simple)
+
 ;;; Commands
 
 ;;;; General commands
@@ -143,25 +174,6 @@ This command can then be followed by the standard
 
 ;;;; Commands for text insertion or manipulation
 
-;; Got those numbers from `string-to-char'
-(defcustom prot-simple-insert-pair-alist
-  '(("' Single quote" . (39 39))           ; ' '
-    ("\" Double quotes" . (34 34))         ; " "
-    ("` Elisp quote" . (96 39))            ; ` '
-    ("‘ Single apostrophe" . (8216 8217))  ; ‘ ’
-    ("“ Double apostrophes" . (8220 8221)) ; “ ”
-    ("( Parentheses" . (40 41))            ; ( )
-    ("{ Curly brackets" . (123 125))       ; { }
-    ("[ Square brackets" . (91 93))        ; [ ]
-    ("< Angled brackets" . (60 62))        ; < >
-    ("« Εισαγωγικά Gr quote" . (171 187))  ; « »
-    ("= Equals signs" . (61 61))           ; = =
-    ("* Asterisks" . (42 42))              ; * *
-    ("_ underscores" . (95 95)))           ; _ _
-  "Alist of pairs for use with `prot-simple-insert-pair-completion'."
-  :type 'alist
-  :group 'prot-simple)
-
 (defvar prot-simple--character-hist '()
   "History of inputs for `prot-simple-insert-pair-completion'.")
 
@@ -185,6 +197,23 @@ constructs.  A negative number counts backwards."
          (right (caddr (assoc choice data)))
          (n (or num 1)))
     (insert-pair n left right)))
+
+;;;###autoload
+(defun prot-simple-inset-date (&optional arg)
+  "Insert the current date as `prot-simple-date-specifier'.
+
+With optional prefix ARG (\\[universal-argument]) also append the
+current time understood as `prot-simple-time-specifier'.
+
+When region is active, delete the highlighted text and replace it
+with the specified date."
+  (interactive "P")
+  (let* ((date prot-simple-date-specifier)
+         (time prot-simple-time-specifier)
+         (format (if arg (format "%s %s" date time) date)))
+    (when (use-region-p)
+      (delete-region (region-beginning) (region-end)))
+    (insert (format-time-string format))))
 
 ;;;; Commands for object transposition
 

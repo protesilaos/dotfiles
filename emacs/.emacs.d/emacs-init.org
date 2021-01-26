@@ -353,6 +353,8 @@ common key combinations.
 	      ("= Equals signs" . (61 61))           ; = =
 	      ("* Asterisks" . (42 42))              ; * *
 	      ("_ underscores" . (95 95))))          ; _ _
+  (setq prot-simple-date-specifier "%F")
+  (setq prot-simple-time-specifier "%R %z")
   :bind (;; General commands
          ("<insert>" . nil)
 	     ("C-z" . nil)
@@ -375,6 +377,7 @@ common key combinations.
 	     ("<C-return>" . prot-simple-new-line-below)
 	     ("<C-S-return>" . prot-simple-new-line-above)
 	     ;; Commands for text insertion or manipulation
+         ("C-=" . prot-simple-inset-date)
 	     ("C-'" . prot-simple-insert-pair-completion)
 	     ("M-'" . prot-simple-insert-pair-completion)
 	     ("<C-M-backspace>" . backward-kill-sexp)
