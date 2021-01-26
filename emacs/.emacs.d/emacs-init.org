@@ -3593,7 +3593,8 @@ So here is the typical workflow with this package:
 + Send.  Done!
 
 The maintainer of the project will then be able to apply your patch,
-using standard git commands (read the manpage for =git-apply=).
+using standard git commands (read the manpages of =git-apply= for
+attachments and =git-am= for mailbox-type patches).
 
 Alternatively, you may already have a patch available and wish to email
 it directly.  Visit its directory and with the point over it call the
