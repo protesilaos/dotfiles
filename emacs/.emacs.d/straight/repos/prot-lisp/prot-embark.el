@@ -165,16 +165,20 @@ Add this to `embark-collect-mode-hook'."
 (defun prot-embark-keyboard-quit ()
   "Control the exit behaviour for Embark collect buffers.
 
-If in a live Embark collect/completions buffer, run
-`abort-recursive-edit'.  Otherwise run `keyboard-quit'.
+If in a live Embark collect/completions buffer and unless the
+region is active, run `abort-recursive-edit'.  Otherwise run
+`keyboard-quit'.
+
+If the region is active, deactivate it.  A second invocation of
+this command is then required to abort the session.
 
 This is meant to be bound in `embark-collect-mode-map'."
   (interactive)
   (if (prot-embark--live-completions-p)
-      (if (region-active-p)
+      (if (use-region-p)
           (keyboard-quit)
         (kill-buffer)
-        (embark-quit))
+        (abort-recursive-edit))
     (keyboard-quit)))
 
 (autoload 'embark-collect-completions "embark")
