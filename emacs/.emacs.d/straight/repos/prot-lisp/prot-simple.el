@@ -81,7 +81,7 @@ to the most recently used window instead."
       (when symbol
         (describe-symbol symbol)))
     (when arg
-      (let ((help (get-buffer-window "*Help*")))
+      (let ((help (get-buffer-window "*Help*"))) ; FIXME: This is fragile
         (when (window-live-p help)
           (if (not (eq (selected-window) help))
               (select-window help)
