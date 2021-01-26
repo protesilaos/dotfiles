@@ -7718,6 +7718,7 @@ is disabled because I re-purpose it for a faster version of =C-x C-;=
               ("C-;" . nil)))
 
 (use-package prot-spell
+  :straight (:type built-in)
   :config
   (setq prot-spell-dictionaries
         '(("EN English" . "en")
