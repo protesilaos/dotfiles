@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 1.1.0
+;; Version: 1.1.1
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -298,6 +298,7 @@
 ;;     prism (see "Note for prism.el" in the manual)
 ;;     proced
 ;;     prodigy
+;;     quick-peek
 ;;     racket-mode
 ;;     rainbow-blocks
 ;;     rainbow-identifiers
@@ -4909,6 +4910,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(prodigy-green-face ((,class :foreground ,green)))
     `(prodigy-red-face ((,class :foreground ,red)))
     `(prodigy-yellow-face ((,class :foreground ,yellow)))
+;;;;; quick-peek
+    `(quick-peek-background-face ((,class :background ,bg-alt)))
+    `(quick-peek-border-face ((,class :background ,fg-window-divider-inner :height 1)))
+    `(quick-peek-padding-face ((,class :background ,bg-alt :height 0.15)))
 ;;;;; racket-mode
     `(racket-debug-break-face ((,class :inherit modus-theme-intense-red)))
     `(racket-debug-locals-face ((,class :box (:line-width -1 :color nil)
