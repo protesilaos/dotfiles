@@ -1,0 +1,19 @@
+[user]
+  name = Protesilaos Stavrou
+  email = info@protesilaos.com
+  signingkey = 99BD6459CD5CA3EA
+[core]
+  excludesfile = ~/.config/git/ignore
+  attributesfile = ~/.config/git/attributes
+[commit]
+  gpgsign = true
+[merge]
+  conflictstyle = diff3
+[pull]
+  rebase = false
+[format]
+  thread = true
+[diff "lisp"]
+  xfuncname = "^(\\(.*)$"
+[diff "org"]
+  xfuncname = "^(\\*+.*)$"
