@@ -5123,6 +5123,7 @@ the meaning of the various date/time specifiers.
   (setq gnus-sum-thread-tree-vertical "|")
 
   (use-package gnus-dired)
+  (use-package gnus-topic)
   (use-package prot-gnus :straight (:type built-in))
 
   :hook ((dired-mode-hook . gnus-dired-mode) ; dired integration
