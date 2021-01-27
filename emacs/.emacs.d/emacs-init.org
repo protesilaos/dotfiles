@@ -1527,15 +1527,18 @@ Finally, a few words about the following package declaration:
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
 
+  (setq embark-key-action-separator (propertize " · " 'face 'shadow))
   ;; Please don't read too much into the names of those faces.  Just
   ;; green and yellow.
-  (setq embark-action-indicator (propertize "Act" 'face 'success))
+  (setq embark-action-indicator
+        (let ((act (propertize "Act" 'face 'success)))
+          (cons act (concat act " on '%s'"))))
   (setq embark-become-indicator (propertize "Become" 'face 'warning))
 
   ;; ;; NOTE: I keep this around for when I do videos, otherwise I do not
   ;; ;; use it.  It requires `which-key' to display key hints.
   ;; (setq embark-action-indicator
-  ;;       (lambda (map)
+  ;;       (lambda (map _target)
   ;;         (which-key--show-keymap "Embark" map nil nil 'no-paging)
   ;;         #'which-key--hide-popup-ignore-command)
   ;;       embark-become-indicator embark-action-indicator)
