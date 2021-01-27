@@ -16,4 +16,4 @@
 [diff "lisp"]
   xfuncname = "^(\\(.*)$"
 [diff "org"]
-  xfuncname = "^(\\* +.*)$"
+  xfuncname = "^(\\*+ +.*)$"
