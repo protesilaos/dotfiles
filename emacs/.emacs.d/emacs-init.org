@@ -3042,14 +3042,16 @@ which are contingent on other features:
 + Olivetti (centred buffer content) :: I spend much of my time in Emacs
   reading and writing long form texts.  It is nice to be able to easily
   toggle a mode that centres the buffer, allowing for greater comfort.
-  Olivetti fulfils that niche very nicely.  It is not aggressive in its
-  interface requirements, respects my [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][existing line settings]] and my
-  preference for [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][auto-filling text]], while it does not introduce any kind
-  of functionality beyond the scope of bringing the current window's
-  buffer to the centre of the view.  This is exactly what I need.  Any
-  other enhancement, such as a larger font size can be delegated to a
-  specialised instrument.  Thanks to Paul W. Rankin for providing such a
-  nimble tool!  For =prot-logos= Olivetti always gets activated.
+  Olivetti covers that niche very nicely.  It is not aggressive in its
+  requirements, which is important to play well with my paragraph and
+  fill-mode settings ([[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][Paragraphs and fill-mode (prot-fill.el)]]): it
+  respects my existing line length and my preference for auto-filling
+  text, while it does not introduce any kind of functionality beyond the
+  scope of bringing the current window's buffer to the centre of the
+  view.  This is exactly what I need.  Any other enhancement, such as a
+  larger font size can be delegated to a specialised instrument.  Thanks
+  to Paul W. Rankin for providing such a nimble tool!  For =prot-logos=
+  Olivetti always gets activated.
 
 + =variable-pitch-mode= (mixed fonts) :: This is a built-in mode that
   remaps the =default= face's font family to a proportionately spaced one
@@ -3551,7 +3553,7 @@ Overview of the following tweaks:
 
 Also make sure to read the guide for [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  I
 always use =auto-fill-mode= to wrap lines to the value of =fill-column= (see
-[[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][relevant configs]]).
+[[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][Paragraphs and fill-mode (prot-fill.el)]]).
 
 #+begin_src emacs-lisp
 (use-package log-edit
@@ -5830,7 +5832,7 @@ What these do:
   just feels like a good upper limit (not a fan of decorative images
   inside of blog posts).
 + Line length at same number of characters as =fill-column= (defined in
-  the section about [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][Line length (column count)]] at 72).
+  the section about [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][Paragraphs and fill-mode (prot-fill.el)]]).
 
 #+begin_src emacs-lisp
 (use-package shr
@@ -7153,94 +7155,54 @@ obvious shell scripts, like Arch Linux's package recipes.  As such, the
   :mode (("PKGBUILD" . sh-mode)))
 #+end_src
 
-** Line length (column count)
-:PROPERTIES:
-:CUSTOM_ID: h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c
-:END:
-
-The column count is set to 72.  The standard line length is 80
-characters, so having it at something less allows for such things as
-quoting plain text, indenting, etc.  =git= commit messages also make good
-use of this method.  The column count is used by =auto-fill-mode= and
-similar tools (or when manually invoking text formatting with
-=fill-paragraph= or equivalent---normally bound to =M-q=).
-
-#+begin_src emacs-lisp
-;; TODO 2021-01-19: fill-column for text-mode should be 72, 80 for
-;; prog-mode; check for rest.
-
-;; TODO 2021-01-19: this should be merged with configurations for
-;; paragraphs and fill-mode
-(use-package emacs
-  :config
-  (setq-default fill-column 72)
-  :hook (after-init-hook . column-number-mode))
-#+end_src
-
-** Paragraphs and fill-mode
+** Paragraphs and fill-mode (prot-fill.el)
 :PROPERTIES:
 :CUSTOM_ID: h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3
 :END:
 
-Let us first configure how paragraphs should be treated.  I find that a
-double space is the best way to delimit sentences in source form.  There
-is no worry that this will be shown on a website or rendered version of
-a document, because processors know how to handle spacing.  We do this
-to make things easier to tell apart, but also to render unambiguous
-commands like =forward-sentence=.
+The =prot-fill.el= library (reproduced below) is a tiny wrapper around
+some Emacs settings and modes that are scrattered around several files,
+which control (i) how paragraphs or comments in programming modes should
+be wrapped to a given column count, and (ii) what constitutes a
+sentence.  I put them all together here to make things easier to track.
 
-#+begin_src emacs-lisp
-;; TODO 2021-01-19: this should be merged with configurations for line
-;; length.
-(use-package emacs
-  :config
-  (setq sentence-end-double-space t)
-  (setq colon-double-space nil)
-  (setq use-hard-newlines nil)
-  (setq sentence-end-without-period nil))
-#+end_src
++ With regard to paragraphs, I find that a double space is the best way
+  to delimit sentences in source form, where a monospaced typeface is
+  customary.  There is no worry that this will be shown on a website or
+  rendered version of a document, because processors know how to handle
+  spacing.  We do this to make phrases easier to tell apart, but also to
+  render unambiguous commands like =forward-sentence=.
 
-Now we need to make sure we run the minor mode that keeps paragraphs
-within the column [[#h:c392fef1-17b7-4cc0-b0e2-2b3edd0eed3c][limit I prefer]]: you can always do it manually for the
-current paragraph or the active region with =fill-paragraph=, bound by
-default to =M-q=.
-
-By targeting =text-mode= we also affect every major mode derived from it,
-which means that we correctly do not get this utility in
-programming-related modes (in principle, those come from =prog-mode=).
-The adaptive mode improves the handling of things like bulleted and
-numbered lists, where it recognises the text's prefix and tries to align
-to it rather than the absolute beginning of the line.
++ =prot-fill-fill-mode= sets my desired default column width for all
+  buffers, while it applies another value for programming modes (in case
+  there is a need to control the two cases separately).  Those values
+  are stored in the variables =prot-fill-default-column= and
+  =prot-fill-prog-mode-column= respectively.  My minor mode also enables
+  =auto-fill-mode= in =text-mode= and =prog-mode= buffers through the
+  appropriate hooks.  Disabling =prot-fill-fill-mode= will remove all
+  those customisations.
 
 Note that [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common custom functions (prot-simple.el)]] contains some
-commands related to auto-fill.
+commands related to auto-fill.  Besides, you can always do it manually
+for the current paragraph or the active region with =M-x fill-paragraph=,
+bound by default to =M-q=.
 
 #+begin_src emacs-lisp
-;; TODO 2021-01-19: this should be merged with configurations for line
-;; length.
-(use-package emacs
+(use-package prot-fill
+  :straight (:type built-in)
   :diminish auto-fill-function
   :config
+  (setq prot-fill-default-column 72)
+  (setq prot-fill-prog-mode-column 72)  ; Set this to another value if you want
+  ;; Those variables come from various sources, though they feel part of the
+  ;; same conceptual framework.
+  (setq sentence-end-double-space t)
+  (setq sentence-end-without-period nil)
+  (setq colon-double-space nil)
+  (setq use-hard-newlines nil)
   (setq adaptive-fill-mode t)
-  :hook (text-mode-hook . turn-on-auto-fill))
-#+end_src
-
-** Recognise subwords
-:PROPERTIES:
-:CUSTOM_ID: h:899cff89-a517-41d5-8c55-b91c6aba8c9d
-:END:
-
-It is better you do =C-h f subword-mode=.  Basically, this alters the
-way Emacs understands word boundaries.  So, /camelCaseWords/ are
-exposed as their constituents rather than one long word, meaning that
-motions will behave accordingly.
-
-#+begin_src emacs-lisp
-;; TODO 2021-01-19: subword-mode is SUBJECT TO REMOVAL!  I never read
-;; code that has subwords.
-(use-package subword
-  :diminish
-  :hook (prog-mode-hook . subword-mode))
+  (prot-fill-fill-mode 1)
+  :hook (after-init-hook . column-number-mode))
 #+end_src
 
 ** Comment lines, regions, boxes, etc.
