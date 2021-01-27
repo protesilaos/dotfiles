@@ -1574,8 +1574,7 @@ Finally, a few words about the following package declaration:
   :straight (:type built-in)
   :demand
   :after embark
-  :hook ((minibuffer-exit-hook . prot-embark-clear-live-buffers)
-         (embark-collect-post-revert-hook . prot-embark-collect-fit-window)
+  :hook ((embark-collect-post-revert-hook . prot-embark-collect-fit-window)
          (embark-collect-mode-hook . prot-embark-hl-line)
          (embark-collect-mode-hook . prot-embark-display-line-numbers))
   ;; NOTE: to switch to the live collection buffer, I also use

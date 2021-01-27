@@ -39,19 +39,6 @@
   "Extensions for `embark'."
   :group 'editing)
 
-;;;###autoload
-(defun prot-embark-clear-live-buffers ()
-  "Remove lingering Embark Collect Completions' buffers.
-Add this to `minibuffer-exit-hook'."
-  (let* ((buffers (buffer-list))
-         (case-fold-search nil)
-         (completions
-          (cl-remove-if-not (lambda (buf)
-                              (string-match "\\*Embark.*Completions.*"
-                                            (format "%s" buf)))
-                            buffers)))
-    (mapc #'kill-buffer completions)))
-
 ;; Thanks to Omar Antolín Camarena for providing a variant of this!
 ;; (mistakes are always my own).
 ;;;###autoload
@@ -177,7 +164,6 @@ This is meant to be bound in `embark-collect-mode-map'."
   (if (prot-embark--live-completions-p)
       (if (use-region-p)
           (keyboard-quit)
-        (kill-buffer)
         (abort-recursive-edit))
     (keyboard-quit)))
 
