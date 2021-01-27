@@ -7205,38 +7205,30 @@ bound by default to =M-q=.
   :hook (after-init-hook . column-number-mode))
 #+end_src
 
-** Comment lines, regions, boxes, etc.
+These are the contents of =prot-fill.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-fill.el src emacs-lisp :tangle no
+
+** Comments (newcomment.el and prot-comment.el)
 :PROPERTIES:
 :CUSTOM_ID: h:fa56241c-6840-4a39-8f59-18460d37fc69
 :END:
 
-Just some basic configurations for commenting structured text.  This is
-mostly a placeholder for potentially more targeted and detailed settings
-that would involve per-mode hooks.
+The built-in =newcomment.el= library offers several useful commands for
+working with comments in source code.  While my =prot-comment.el=
+(reproduced after the package declarations) adds some simple extras.
 
-The purpose of my reviewed key bindings is to make them more consistent.
-Helps with mnemonics.  They also are more ergonomic.  To this end, I
-have the following:
+The intent of my configurations here is straightforward: re-configure
+key bindings to make the most common action easier to access and then
+arrange the rest in a meaningful way, while also setting up the
+appropriate variables.
 
-+ The standard commenting function is now bound to the simple =C-;=.
-  This runs a "do what I meant" function I have defined, whose detailed
-  documentation can be read below.
-+ =C-:= (=C-S-;=) will kill the comment on the current line.  This is
-  particularly helpful when the comment follows text you would like to
-  keep.  The operation can be performed regardless of where the point is
-  on the line.  *Some modes disable this behaviour* (e.g. trying it on
-  source code inside of org-mode—for those cases, focus the block with
-  =C-c '=).
-+ The =M-;= will just append a comment to the line, rather than the
-  default =comment-dwim=.
-
-Note that =C-;= is occupied by some =flyspell= command that I have no
-use for (disabled in the relevant package declaration).
-
-Lastly, use =M-j= (alias =C-M-j=) when you want to continue an existing
-comment on a new line with respect for the current indentation.  If you
-are not inside of a comment, this will just create an indentation-aware
-new line.
+The most common action is the command =prot-comment-comment-dwim= which is
+bound to =C-;=.  Note that =C-;= is normally occupied by some =flyspell=
+command (disabled in [[#h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c][Flyspell and prot-spell.el (spell check)]]).  Compare
+that keybinding to the one I have for the much more specialised
+=prot-comment-timestamp-keyword=: =C-x C-;=.  What those commands do is
+documented in their docstrings, so please check the code below.
 
 #+begin_src emacs-lisp
 (use-package newcomment
@@ -7245,29 +7237,21 @@ new line.
   (setq comment-fill-column nil)
   (setq comment-multi-line t)
   (setq comment-style 'multi-line)
+  :bind (("C-:" . comment-kill)         ; C-S-;
+         ("M-;" . comment-indent)))
 
-  ;; TODO 2021-01-19: this is subject to review and any custom code must
-  ;; be placed in a new prot-comment.el
-  (defun prot/comment-dwim (&optional arg)
-    "Alternative to `comment-dwim': offers a simple wrapper
-around `comment-line' and `comment-dwim'.
-
-If the region is active, then toggle the comment status of the
-region or, if the major mode defines as much, of all the lines
-implied by the region boundaries.
-
-Else toggle the comment status of the line at point."
-    (interactive "*P")
-    (if (use-region-p)
-        (comment-dwim arg)
-      (save-excursion
-        (comment-line arg))))
-
-  :bind (("C-;" . prot/comment-dwim)
-         ("C-:" . comment-kill)
-         ("M-;" . comment-indent)
-         ("C-x C-;" . comment-box)))
+(use-package prot-comment
+  :straight (:type built-in)
+  :config
+  (setq prot-comment-comment-keywords
+        '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
+  :bind (("C-;" . prot-comment-comment-dwim)
+         ("C-x C-;" . prot-comment-timestamp-keyword)))
 #+end_src
+
+And here is =prot-comment.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: straight/repos/prot-lisp/prot-comment.el src emacs-lisp :tangle no
 
 ** Configure 'electric' behaviour
 :PROPERTIES:
