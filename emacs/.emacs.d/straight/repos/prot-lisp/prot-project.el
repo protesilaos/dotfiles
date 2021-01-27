@@ -148,15 +148,20 @@ DIRS."
    'file
    (prot-project--directory-subdirs-no-git dir)))
 
+(defvar prot-project--subdir-hist '()
+  "Minibuffer history for `prot-project-find-subdir'.")
+
 ;;;###autoload
 (defun prot-project-find-subdir ()
   "Find subdirectories in the current project, using completion."
   (interactive)
   (let* ((pr (project-current t))
          (dir (cdr pr))
-         (subdirs (prot-project--subdirs-completion-table dir)))
-    (dired
-     (completing-read "Select Project subdir: " subdirs))))
+         (subdirs (prot-project--subdirs-completion-table dir))
+         (directory (completing-read "Select Project subdir: " subdirs
+                                     nil t nil 'prot-project--subdir-hist)))
+    (dired directory)
+    (add-to-history 'prot-project--subdir-hist dir)))
 
 ;; FIXME: the buttons at the bottom of the log for displaying more
 ;; commits do not seem to work with this.
