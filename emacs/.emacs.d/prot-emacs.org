@@ -155,9 +155,7 @@ by other libraries of mine.  As such, all we do in this package
 declaration is load the file.
 
 #+begin_src emacs-lisp
-(use-package prot-common
-  :straight (:local-repo "prot-lisp")
-  :demand)
+(require 'prot-common)
 #+end_src
 
 And here is =prot-common.el= in its totality.  It is available as a file
