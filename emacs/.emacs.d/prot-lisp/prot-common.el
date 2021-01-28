@@ -99,8 +99,8 @@ Add this to `kill-emacs-hook', to use the newest file in the next
 session.  The idea is to reduce startup time, though just by
 rolling it over to the end of a session rather than the beginning
 of it."
-  (let ((init-el (concat user-emacs-directory "emacs-init.el"))
-        (init-org (concat user-emacs-directory "emacs-init.org")))
+  (let ((init-el (concat user-emacs-directory "prot-emacs.el"))
+        (init-org (concat user-emacs-directory "prot-emacs.org")))
     (when (file-exists-p init-el)
       (delete-file init-el))
     (org-babel-tangle-file init-org init-el)))
