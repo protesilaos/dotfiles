@@ -61,4 +61,16 @@
     (require 'org)
     (org-babel-load-file org)))
 
+(defvar prot-emacs-ensure-install nil
+  "List of package names to install, if missing.")
+
+(defun prot-emacs-install-ensured ()
+  "Install all `prot-emacs-ensure-install' packages, if needed."
+  (interactive)
+  (package-refresh-contents)
+  (mapcar (lambda (package)
+            (unless (package-installed-p package)
+              (package-install package)))
+          prot-emacs-ensure-install))
+
 ;;; init.el ends here
