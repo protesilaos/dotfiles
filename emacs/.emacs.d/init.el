@@ -39,12 +39,24 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
+(defvar prot-emacs-ensure-install nil
+  "List of package names to install, if missing.")
+
+(defun prot-emacs-install-ensured ()
+  "Install all `prot-emacs-ensure-install' packages, if needed."
+  (interactive)
+  (package-refresh-contents)
+  (mapcar (lambda (package)
+            (unless (package-installed-p package)
+              (package-install package)))
+          prot-emacs-ensure-install))
+
 (require 'vc)
 (setq vc-follow-symlinks t) ; Because my dotfiles are managed that way
 
 ;; For my custom libraries
 (add-to-list 'load-path (concat user-emacs-directory "prot-lisp/"))
-(add-to-list 'load-path (concat user-emacs-directory "themes/"))
+(add-to-list 'load-path (concat user-emacs-directory "modus-themes/"))
 
 ;; I create an "el" version of my Org configuration file as a final step
 ;; before closing down Emacs.  This is done to load the latest version
@@ -60,17 +72,5 @@
       (load-file el)
     (require 'org)
     (org-babel-load-file org)))
-
-(defvar prot-emacs-ensure-install nil
-  "List of package names to install, if missing.")
-
-(defun prot-emacs-install-ensured ()
-  "Install all `prot-emacs-ensure-install' packages, if needed."
-  (interactive)
-  (package-refresh-contents)
-  (mapcar (lambda (package)
-            (unless (package-installed-p package)
-              (package-install package)))
-          prot-emacs-ensure-install))
 
 ;;; init.el ends here
