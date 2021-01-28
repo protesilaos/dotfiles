@@ -5059,23 +5059,6 @@ Further notes:
     (define-key map (kbd "C-M-u") #'mu4e-mark-unmark-all)))
 #+end_src
 
-**** mu4e extension for org-capture
-:PROPERTIES:
-:CUSTOM_ID: h:ab106725-ae5d-4ce2-8160-d2f8c46cb563
-:END:
-
-With this little snippet, we allow =org-capture= convert any email into a
-note, to-do item or whatever.  The killer feature is that we get a
-direct link back to the original email.  This way, we can avoid the
-problem of searching through a pile of messages until we find the one we
-really need.  Nice!
-
-#+begin_src emacs-lisp
-(require 'org-mu4e)
-(with-eval-after-load 'org-mu4e
-  (setq org-mu4e-link-query-in-headers-mode nil))
-#+end_src
-
 *** Sending email (SMTP)
 :PROPERTIES:
 :CUSTOM_ID: h:2d793cf8-83f5-4830-b73d-78385d9b96dd
