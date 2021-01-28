@@ -53,7 +53,7 @@
 ;; Also helps with initialisation times.  Not that I care too much about
 ;; those… Hence why I no longer bother with deferring package loading
 ;; either by default or on a case-by-case basis.
-(let* ((conf (concat user-emacs-directory "emacs-init"))
+(let* ((conf (concat user-emacs-directory "prot-emacs"))
        (el (concat conf ".el"))
        (org (concat conf ".org")))
   (if (file-exists-p el)
