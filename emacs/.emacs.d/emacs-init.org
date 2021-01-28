@@ -6304,20 +6304,6 @@ section on [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework 
   :hook (after-init-hook . global-diff-hl-mode))
 #+end_src
 
-** Highlight comment keywords (hl-todo)
-:PROPERTIES:
-:CUSTOM_ID: h:23d2928b-56a0-4a8e-a552-9af1acd45cb1
-:END:
-
-This tool by Jonas Bernoulli will apply highlighting to keywords that
-are normally used in code comments.  Simple and effective!
-
-#+begin_src emacs-lisp
-(use-package hl-todo
-  :straight t
-  :hook (prog-mode-hook . hl-todo-mode))
-#+end_src
-
 ** Prism.el (highlight code by depth level)
 :PROPERTIES:
 :CUSTOM_ID: h:bee4eca3-76c6-4e83-adb6-d2017240178a
