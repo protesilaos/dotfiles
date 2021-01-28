@@ -36,7 +36,7 @@ dotfiles' repository.
 :END:
 
 The present document, referred to in the source code version as
-=emacs-init.org=, contains the bulk of my configurations for GNU Emacs.
+=prot-emacs.org=, contains the bulk of my configurations for GNU Emacs.
 It is designed using principles of "literate programming": a
 combination of ordinary language and inline code blocks.  Emacs knows
 how to parse this file properly so as to evaluate only the Elisp
@@ -64,11 +64,11 @@ absolute essentials.
 :CUSTOM_ID: h:584c3604-55a1-49d0-9c31-abe46cb1f028
 :END:
 
-The =emacs-init.org= is loaded from an other file, named =init.el= per the
-Emacs conventions.  Mine is designed to add the community-driven MELPA
-archive to the list of package repositories, configure =use-package= (see
-[[#h:cfa129a4-3394-4911-9097-4544df4e6ed9][comprehensive explanation below]]) and then load the file with my
-configurations (i.e. the present document).
+The =prot-emacs.org= is loaded from an other file, named =init.el= per the
+Emacs conventions.  Mine is designed to initialise the package lists
+add the community-driven MELPA archive to the list of package
+repositories, and load the file with my configurations (i.e. the
+present document).
 
 #+include: init.el src emacs-lisp :tangle no
 
