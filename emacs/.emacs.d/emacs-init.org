@@ -7190,7 +7190,8 @@ bound by default to =M-q=.
 #+begin_src emacs-lisp
 (use-package prot-fill
   :straight (:type built-in)
-  :diminish auto-fill-function
+  :init
+  (diminish 'auto-fill-function) ; Why does `:diminish auto-fill-function' not work?
   :config
   (setq prot-fill-default-column 72)
   (setq prot-fill-prog-mode-column 72)  ; Set this to another value if you want
