@@ -274,7 +274,7 @@ few of them is usually okay, but a lot of them do not scale well.
   (minions-mode 1))
 #+end_src
 
-** Put customisation settings in a "custom.el"
+** Put customisation settings in a disposable "custom.el"
 :PROPERTIES:
 :CUSTOM_ID: h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d
 :END:
@@ -283,26 +283,19 @@ When you install a package or use the various customisation interfaces
 to tweak things to your liking, Emacs will append a piece of Elisp to
 your init file.  In my experience, this is a common source of
 inconsistencies, arising from a conflict between the user's code and
-what is stored in that added =custom= snippet.
+what is stored in that =custom= snippet.
 
-As such, I prefer to have all "custom" code stored in a separate,
-disposable file that I do not keep under version control.  When
-something does not seem to work as intended it is easy to edit
-=~/.emacs.d/custom.el= or outright delete it.
+As it does not seem possible to outright disable this behaviour, I
+instruct Emacs to place all "custom" code in a temporary file that
+never gets loaded.  This feels kinda hacky but is better than having
+some arbitrary code that you accidentally evaluated from messing up
+with your carefully designed (and version-controlled) configuration.
 
 #+begin_src emacs-lisp
-(use-package cus-edit
-  :config
-  (defvar prot/custom-file "~/.emacs.d/custom.el")
-
-  (setq custom-file prot/custom-file)
-
-  (defun prot/cus-edit ()
-    (let ((file prot/custom-file))
-      (unless (file-exists-p file)
-        (make-empty-file file))
-      (load-file file)))
-  :hook (after-init-hook . prot/cus-edit))
+(require 'cus-edit)
+(with-eval-after-load 'cus-edit
+  ;; Disable the damn thing
+  (setq custom-file (make-temp-file "emacs-custom-")))
 #+end_src
 
 ** Modus themes (my highly accessible themes)
