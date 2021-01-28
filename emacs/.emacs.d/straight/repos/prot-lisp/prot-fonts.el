@@ -158,6 +158,13 @@ to pass to the `bold' face's weight property."
       (nth n (assoc choice data))
     (error "'%s' not a member of %s" choice displays)))
 
+(defun prot-fonts--display-prompt (displays)
+  "Prompt for candidate among DISPLAYS."
+  (let ((def (nth 1 prot-fonts-font-display-hist)))
+    (completing-read
+     (format-prompt "Pick display size" def)
+     displays nil nil nil 'prot-fonts-font-display-hist def)))
+
 ;;;###autoload
 (defun prot-fonts-set-fonts (&optional height font-mono font-var weight-mono weight-var)
   "Set default font size using presets.
@@ -180,9 +187,7 @@ is that of FONT-VAR."
                                         (format "%s" (car x)))
                                       prot-fonts-typeface-sets-alist))
              (prompt (unless height
-                       (completing-read "Pick display size: "
-                                        display-strings nil t
-                                        nil 'prot-fonts-font-display-hist)))
+                       (prot-fonts--display-prompt display-strings)))
              (choice (or height (intern prompt)))
              (size (or height (prot-fonts--return-nth choice displays data 1)))
              (mono (or font-mono (prot-fonts--return-nth choice displays data 2)))
