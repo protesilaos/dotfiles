@@ -4916,6 +4916,10 @@ the meaning of the various date/time specifiers.
   (setq nnmail-expiry-wait 30))         ; careful with this
 #+end_src
 
+And here is =prot-gnus.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: prot-lisp/prot-gnus.el src emacs-lisp :tangle no
+
 *** Mu4e (email client for the `mu' mail indexer)
 :PROPERTIES:
 :CUSTOM_ID: h:2a93d8bf-200a-4d23-9be3-276a907947e1
