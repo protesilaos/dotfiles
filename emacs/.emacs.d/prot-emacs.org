@@ -559,10 +559,8 @@ Relevant blog posts of mine:
 + [[https://protesilaos.com/codelog/2020-09-05-emacs-note-mixed-font-heights/][Emacs: note on mixed font heights]] (2020-09-05)
 
 #+begin_src emacs-lisp
-(use-package prot-fonts
-  :straight (:type built-in)
-  :after modus-themes                   ; Because I use its hook
-  :init
+(require 'prot-fonts)
+(with-eval-after-load 'prot-fonts
   ;; Note that the light weight I pass to Iosevka Comfy is thicker than
   ;; the equivalent for standard Iosevka.  In my build instructions, I
   ;; set that to 350, while normal light is at 300 and regular is at
@@ -585,18 +583,17 @@ Relevant blog posts of mine:
         '(("Iosevka Comfy" . semibold)
           ("Fira Code" . semibold)
           ("Source Code Pro" . semibold)))
-  :config
   ;; This is defined in Emacs' C code, though I feel this is a good
   ;; place to put it.
   (setq x-underline-at-descent-line t)
   ;; And this just sets the right font depending on whether my laptop is
   ;; connected to an external monitor or not.
   (prot-fonts-fonts-per-monitor)
-  :hook ((prot-fonts-set-typeface-hook . prot-fonts-line-spacing)
-         (prot-fonts-set-typeface-hook . prot-fonts-bold-face)
-         ;; See theme section for this hook
-         (modus-themes-after-load-theme-hook . prot-fonts-bold-face))
-  :bind ("C-c f" . prot-fonts-set-fonts-dwim))
+  (add-hook 'prot-fonts-set-typeface-hook #'prot-fonts-line-spacing)
+  (add-hook 'prot-fonts-set-typeface-hook #'prot-fonts-bold-face)
+  ;; See theme section for this hook
+  (add-hook 'modus-themes-after-load-theme-hook #'prot-fonts-bold-face)
+  (define-key global-map (kbd "C-c f") #'prot-fonts-set-fonts-dwim))
 #+end_src
 
 This is the source code of =prot-fonts.el= (you can always find the file
