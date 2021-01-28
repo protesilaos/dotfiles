@@ -351,10 +351,8 @@ And if you do enjoy reading such entries, then you may also wish to
 check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the Modus themes]].
 
 #+begin_src emacs-lisp
-(use-package modus-themes
-  :straight (:local-repo "modus-themes" ; Just use :straight t OR :ensure t
-             :no-byte-compile t)        ; Omit this---only for my dev needs
-  :init
+(require 'modus-themes)
+(with-eval-after-load 'modus-themes
   ;; Add all your customizations prior to loading the themes
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
@@ -404,7 +402,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; `after-init-hook', though you could also add `(enable-theme
   ;; 'modus-operandi)' after the `:config' keyword.
   (modus-themes-load-themes)
-  :config
+
   ;; Don't forget to read the manual.  This is explained there.  And
   ;; please don't read too much into those: I am testing various
   ;; combinations and scenaria.
@@ -462,9 +460,9 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; Also check my package declaration for `prot-fonts' because I use
   ;; the `modus-themes-after-load-theme-hook' for some typeface-related
   ;; tweaks (as those are made at the "face" level).
-  :hook ((after-init-hook . modus-themes-load-operandi)
-         (modus-themes-after-load-theme-hook . prot/modus-themes-custom-faces))
-  :bind ("<f5>" . modus-themes-toggle))
+  (add-hook 'after-init-hook #'modus-themes-load-operandi)
+  (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
+  (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
 #+end_src
 
 ** Typeface configurations
