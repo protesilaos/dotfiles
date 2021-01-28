@@ -1,7 +1,14 @@
-;; early-init.el --- Early Init File for >= Emacs 27.
+;;; early-init.el --- Early Init File -*- lexical-binding: t -*-
 
 ;; Copyright (c) 2020-2021  Protesilaos Stavrou <info@protesilaos.com>
-;;
+
+;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; URL: https://protesilaos.com/dotemacs
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "27.1"))
+
+;; This file is NOT part of GNU Emacs.
+
 ;; This file is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the
 ;; Free Software Foundation, either version 3 of the License, or (at
@@ -21,19 +28,19 @@
 ;; initialisation of the package manager, by means of calling
 ;; `package-initialize'.  Starting with Emacs 27, the default
 ;; behaviour is to start the package manager before loading the init
-;; file.  This can create unexpected results with existing
-;; configuration files.  I prefer the old behaviour so I defer the
-;; process to `init.el'.
+;; file.
 ;;
 ;; See my dotfiles: https://gitlab.com/protesilaos/dotfiles
 
 ;;; Code:
 
-;; Do not initialise installed packages (I use `straight.el')
-(setq package-enable-at-startup nil)
+;; Initialise installed packages
+(setq package-enable-at-startup t)
 
-;; Do not allow loading from the package cache (same reason).
-(setq package-quickstart nil)
+(defvar package-quickstart)
+
+;; Allow loading from the package cache
+(setq package-quickstart t)
 
 ;; Do not resize the frame at this early stage.
 (setq frame-inhibit-implied-resize t)
@@ -43,5 +50,7 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (setq inhibit-splash-screen t)
-(setq use-dialog-box t)               ; only for mouse events
+(setq use-dialog-box t)                 ; only for mouse events
 (setq use-file-dialog nil)
+
+;;; early-init.el ends here
