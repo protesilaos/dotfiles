@@ -1135,7 +1135,7 @@ try.
   ;; `consult-register-load', `consult-register-store', and the Emacs
   ;; built-ins.
   (setq register-preview-delay 0.8
-        register-preview-function #'consult-register-preview)
+        register-preview-function #'consult-register-format)
   ;; Tweak the register preview window.
   ;; * Sort the registers
   ;; * Hide the mode line
@@ -4276,8 +4276,8 @@ produces dates with a fixed length."
   (setq org-agenda-search-headline-for-time t)
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-cmp-user-defined nil)
-  (setq org-sort-agenda-notime-is-late t)
-  (setq org-sort-agenda-noeffort-is-high t)
+  (setq org-agenda-sort-notime-is-late t) ; Org 9.4
+  (setq org-agenda-sort-noeffort-is-high t) ; Org 9.4
 
 ;;;;; Agenda column view
   ;; NOTE I do not use these, but may need them in the future.
@@ -4491,7 +4491,6 @@ Then we set up the interface for composing emails:
   (setq message-confirm-send nil)
   (setq message-kill-buffer-on-exit t)
   (setq message-wide-reply-confirm-recipients t)
-  (setq message-default-charset 'utf-8)
   (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
   (defun prot/message-header-add-gcc ()
@@ -4759,7 +4758,8 @@ the meaning of the various date/time specifiers.
           (nnmaildir "inf" (directory "~/.mail/inf"))
           (nnmaildir "pub" (directory "~/.mail/pub"))))
 
-  (setq nnir-method-default-engines
+  ;;  TODO 2021-01-28: Leverage the new Gnus search facility.
+  (setq gnus-search-default-engines     ; Emacs 28
         '((nnmaildir . notmuch)))
 
   (setq gnus-parameters
