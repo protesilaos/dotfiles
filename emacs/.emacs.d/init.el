@@ -58,6 +58,24 @@
 (add-to-list 'load-path (concat user-emacs-directory "prot-lisp/"))
 (add-to-list 'load-path (concat user-emacs-directory "modus-themes/"))
 
+;; For other libraries
+(add-to-list 'load-path (concat user-emacs-directory "contrib-lisp/"))
+
+;; Some basic settings
+(setq frame-title-format '("%b"))
+(setq echo-keystrokes 0.25)
+(setq default-input-method "greek")
+(setq ring-bell-function 'ignore)
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
+(put 'overwrite-mode 'disabled t)
+
+(setq initial-buffer-choice t)			; always start with *scratch*
+
 ;; I create an "el" version of my Org configuration file as a final step
 ;; before closing down Emacs.  This is done to load the latest version
 ;; of my code upon startup.
