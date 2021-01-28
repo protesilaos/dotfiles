@@ -34,6 +34,11 @@
 
 ;;; Code:
 
+(require 'package)
+
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+
 (require 'vc)
 (setq vc-follow-symlinks t) ; Because my dotfiles are managed that way
 
