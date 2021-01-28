@@ -256,22 +256,22 @@ These are the contents of the =prot-simple.el= library (find the file in
 
 #+include: straight/repos/prot-lisp/prot-simple.el src emacs-lisp :tangle no
 
-** Remove modeline "lighters"
+** Hide modeline "lighters" (minions.el)
 :PROPERTIES:
 :CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
 :END:
 
-As was noted in the section [[#h:cfa129a4-3394-4911-9097-4544df4e6ed9][about `use-package']] we can remove the
-so-called "lighter" text that modes append to the mode line.  This is
-all that Diminish does and you will see a =:diminish= keyword in the
-relevant packages.
-
-If you actually want to edit the lighters, check the Delight package.
+This package by Jonas Bernoulli neatly wraps up all minor mode
+"lighters" and hides them behind a single character.  The "lighter" is
+the text that identifies the minor mode on the mode line.  Having a
+few of them is usually okay, but a lot of them do not scale well.
 
 #+begin_src emacs-lisp
-(use-package diminish
-  :straight t
-  :after use-package)
+(require 'minions)
+(with-eval-after-load 'minions
+  (add-to-list 'prot-emacs-ensure-install 'minions)
+  (setq minions-mode-line-lighter "+")
+  (minions-mode 1))
 #+end_src
 
 ** Put customisation settings in a "custom.el"
