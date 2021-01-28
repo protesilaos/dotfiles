@@ -5,13 +5,16 @@
 #+MACRO: export-date (eval (format-time-string "%F %R %z" (current-time)))
 #+MACRO: emacs-ver (eval (substring (emacs-version) 0 17))
 
+NOTE 2021-01-28: *major refactoring in progress*.  I am removing
+=use-package= and =straight=.  Things work, though I will need more time
+to test everything.
+
 + Created: 2019-08-15
 + Updated: *{{{export-date}}}*.
++ Emacs Version: {{{emacs-ver}}}.
 
 See this file's [[https://gitlab.com/protesilaos/dotfiles/commits/master/emacs/.emacs.d/emacs-init.org][upstream git history]].  Everything is part of my
 dotfiles' repository.
-
-Note that I am running {{{emacs-ver}}}.
 
 #+TOC: headlines 8 insert TOC here, with eight headline levels
 
