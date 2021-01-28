@@ -41,20 +41,31 @@
 
 ;;;###autoload
 (defun prot-comment-comment-dwim (arg)
-  "Wrapper around `comment-line' and `comment-dwim'.
+  "Flexible, do-what-I-mean commenting.
 
-If the region is active, then toggle the comment status of the
-region or, if the major mode defines as much, of all the lines
-implied by the region boundaries.
+If region is active and ARG is either a numeric argument greater
+than one or a universal prefix (\\[universal-argument]), then
+apply `comment-kill' on all comments in the region.
 
-Else toggle the comment status of the line at point.
+If the region is active and no ARG is supplied, or is equal to a
+numeric prefix of 1, then toggle the comment status of the region.
 
-ARG is a numerix prefix that controls how many lines to comment
-on.  It defaults to 1 when no prefix is supplied."
+Else toggle the comment status of the line at point.  With a
+numeric prefix ARG, do so for ARGth lines (negative prefix
+operates on the lines before point)."
   (interactive "p")
-  (if (use-region-p)
-      (comment-dwim (or arg 1))
-    (comment-line (or arg 1))))
+  (cond
+   ((and (> arg 1) (use-region-p))
+    (let* ((beg (region-beginning))
+           (end (region-end))
+           (num (count-lines beg end)))
+      (save-excursion
+        (goto-char beg)
+        (comment-kill num))))
+   ((use-region-p)
+    (comment-or-uncomment-region (region-beginning) (region-end)))
+   (t
+    (save-excursion (comment-line (or arg 1))))))
 
 (defvar prot-comment--keyword-hist '()
   "Input history of selected comment keywords.")
