@@ -179,75 +179,76 @@ declaration serves as the appropriate place to re-bind or free up some
 common key combinations.
 
 #+begin_src emacs-lisp
-(use-package prot-simple
-  :straight (:type built-in)
-  :demand
-  :config
+(require 'prot-simple)
+(with-eval-after-load 'prot-simple
   (setq prot-simple-insert-pair-alist
-	    '(("' Single quote" . (39 39))           ; ' '
-	      ("\" Double quotes" . (34 34))         ; " "
-	      ("` Elisp quote" . (96 39))            ; ` '
-	      ("‘ Single apostrophe" . (8216 8217))  ; ‘ ’
-	      ("“ Double apostrophes" . (8220 8221)) ; “ ”
-	      ("( Parentheses" . (40 41))            ; ( )
-	      ("{ Curly brackets" . (123 125))       ; { }
-	      ("[ Square brackets" . (91 93))        ; [ ]
-	      ("< Angled brackets" . (60 62))        ; < >
-	      ("« Εισαγωγικά Gr quote" . (171 187))  ; « »
-	      ("= Equals signs" . (61 61))           ; = =
-	      ("* Asterisks" . (42 42))              ; * *
-	      ("_ underscores" . (95 95))))          ; _ _
+	  '(("' Single quote" . (39 39))           ; ' '
+	    ("\" Double quotes" . (34 34))         ; " "
+	    ("` Elisp quote" . (96 39))            ; ` '
+	    ("‘ Single apostrophe" . (8216 8217))  ; ‘ ’
+	    ("“ Double apostrophes" . (8220 8221)) ; “ ”
+	    ("( Parentheses" . (40 41))            ; ( )
+	    ("{ Curly brackets" . (123 125))       ; { }
+	    ("[ Square brackets" . (91 93))        ; [ ]
+	    ("< Angled brackets" . (60 62))        ; < >
+	    ("« Εισαγωγικά Gr quote" . (171 187))  ; « »
+	    ("= Equals signs" . (61 61))           ; = =
+	    ("* Asterisks" . (42 42))              ; * *
+	    ("_ underscores" . (95 95))))          ; _ _
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
-  :bind (;; General commands
-         ("<insert>" . nil)
-	     ("C-z" . nil)
-	     ("C-x C-z" . nil)
-	     ("C-h h" . nil)
-	     ("M-`" . nil)
-	     ("s-h" . prot-simple-describe-symbol)
-	     ("s-H" . (lambda ()
-		            (interactive)
-		            (prot-simple-describe-symbol '(4))))
-         ("C-h K" . describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
-	     ;; Commands for lines
-	     ("C-S-w" . prot-simple-copy-line-or-region)
-	     ("C-S-y" . prot-simple-yank-replace-line-or-region)
-	     ("M-SPC" . cycle-spacing)
-	     ("M-o" . delete-blank-lines)   ; alias for C-x C-o
-	     ("M-k" . prot-simple-kill-line-backward)
-	     ("C-S-n" . prot-simple-multi-line-next)
-	     ("C-S-p" . prot-simple-multi-line-prev)
-	     ("<C-return>" . prot-simple-new-line-below)
-	     ("<C-S-return>" . prot-simple-new-line-above)
-	     ;; Commands for text insertion or manipulation
-         ("C-=" . prot-simple-inset-date)
-	     ("C-'" . prot-simple-insert-pair-completion)
-	     ("M-'" . prot-simple-insert-pair-completion)
-	     ("<C-M-backspace>" . backward-kill-sexp)
-	     ("M-c" . capitalize-dwim)
-	     ("M-l" . downcase-dwim)        ; "lower" case
-	     ("M-u" . upcase-dwim)
-	     ;; Commands for object transposition
-	     ("C-t" . prot-simple-transpose-chars)
-	     ("C-x C-t" . prot-simple-transpose-lines)
-	     ("C-S-t" . prot-simple-transpose-paragraphs)
-	     ("C-x M-t" . prot-simple-transpose-sentences)
-	     ("C-M-t" . prot-simple-transpose-sexps)
-	     ("M-t" . prot-simple-transpose-words)
-	     ;; Commands for marking objects
-	     ("M-@" . prot-simple-mark-word)       ; replaces `mark-word'
-	     ("C-M-SPC" . prot-simple-mark-construct-dwim)
-	     ("C-M-d" . prot-simple-downward-list)
-         ;; Commands for paragraphs
-         ("M-Q" . prot-simple-unfill-region-or-paragraph)
-         ;; Commands for windows
-         ("s-m" . prot-simple-monocle)
-         ;; Commands for buffers
-         ("M-=" . count-words)
-         ("<C-f2>" . prot-simple-rename-file-and-buffer)
-         ("s-k" . prot-simple-kill-buffer-current))
-  :hook (kill-emacs-hook . prot-common-rebuild-emacs-init))
+
+  ;; General commands
+  (let ((global global-map))
+    (define-key global (kbd "<insert>") nil)
+    (define-key global (kbd "C-z") nil)
+    (define-key global (kbd "C-x C-z") nil)
+    (define-key global (kbd "C-h h") nil)
+    (define-key global (kbd "M-`") nil)
+    (define-key global (kbd "s-h") #'prot-simple-describe-symbol)
+    (define-key global (kbd "s-H") (lambda ()
+				       (interactive)
+				       (prot-simple-describe-symbol '(4))))
+    (define-key global (kbd "C-h K") #'describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
+    ;; Commands for lines
+    (define-key global (kbd "C-S-w") #'prot-simple-copy-line-or-region)
+    (define-key global (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
+    (define-key global (kbd "M-SPC") #'cycle-spacing)
+    (define-key global (kbd "M-o") #'delete-blank-lines)   ; alias for C-x C-o
+    (define-key global (kbd "M-k") #'prot-simple-kill-line-backward)
+    (define-key global (kbd "C-S-n") #'prot-simple-multi-line-next)
+    (define-key global (kbd "C-S-p") #'prot-simple-multi-line-prev)
+    (define-key global (kbd "<C-return>") #'prot-simple-new-line-below)
+    (define-key global (kbd "<C-S-return>") #'prot-simple-new-line-above)
+    ;; Commands for text insertion or manipulation
+    (define-key global (kbd "C-=") #'prot-simple-inset-date)
+    (define-key global (kbd "C-'") #'prot-simple-insert-pair-completion)
+    (define-key global (kbd "M-'") #'prot-simple-insert-pair-completion)
+    (define-key global (kbd "<C-M-backspace>") #'backward-kill-sexp)
+    (define-key global (kbd "M-c") #'capitalize-dwim)
+    (define-key global (kbd "M-l") #'downcase-dwim)        ; "lower" case
+    (define-key global (kbd "M-u") #'upcase-dwim)
+    ;; Commands for object transposition
+    (define-key global (kbd "C-t") #'prot-simple-transpose-chars)
+    (define-key global (kbd "C-x C-t") #'prot-simple-transpose-lines)
+    (define-key global (kbd "C-S-t") #'prot-simple-transpose-paragraphs)
+    (define-key global (kbd "C-x M-t") #'prot-simple-transpose-sentences)
+    (define-key global (kbd "C-M-t") #'prot-simple-transpose-sexps)
+    (define-key global (kbd "M-t") #'prot-simple-transpose-words)
+    ;; Commands for marking objects
+    (define-key global (kbd "M-@") #'prot-simple-mark-word)       ; replaces `mark-word'
+    (define-key global (kbd "C-M-SPC") #'prot-simple-mark-construct-dwim)
+    (define-key global (kbd "C-M-d") #'prot-simple-downward-list)
+    ;; Commands for paragraphs
+    (define-key global (kbd "M-Q") #'prot-simple-unfill-region-or-paragraph)
+    ;; Commands for windows
+    (define-key global (kbd "s-m") #'prot-simple-monocle)
+    ;; Commands for buffers
+    (define-key global (kbd "M-=") #'count-words)
+    (define-key global (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
+    (define-key global (kbd "s-k") #'prot-simple-kill-buffer-current))
+
+  (add-hook 'kill-emacs-hook #'prot-common-rebuild-emacs-init))
 #+end_src
 
 These are the contents of the =prot-simple.el= library (find the file in
