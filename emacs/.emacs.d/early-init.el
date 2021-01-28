@@ -53,4 +53,8 @@
 (setq use-dialog-box t)                 ; only for mouse events
 (setq use-file-dialog nil)
 
+(setq inhibit-startup-echo-area-message "prot") ; read the docstring
+(setq inhibit-startup-screen t)
+(setq inhibit-startup-buffer-menu t)
+
 ;;; early-init.el ends here
