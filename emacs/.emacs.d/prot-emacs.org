@@ -5,16 +5,13 @@
 #+MACRO: export-date (eval (format-time-string "%F %R %z" (current-time)))
 #+MACRO: emacs-ver (eval (substring (emacs-version) 0 17))
 
-NOTE 2021-01-28: *major refactoring in progress*.  I am removing
-=use-package= and =straight=.  Things work, though I will need more time
-to test everything.
+NOTE 2021-01-28: *major refactoring in progress*.  I have removed
+=use-package= and =straight=.  Things work, though I will need more time to
+test everything and delete relevant references.
 
 + Created: 2019-08-15
 + Updated: *{{{export-date}}}*.
 + Emacs Version: {{{emacs-ver}}}.
-
-See this file's [[https://gitlab.com/protesilaos/dotfiles/commits/master/emacs/.emacs.d/emacs-init.org][upstream git history]].  Everything is part of my
-dotfiles' repository.
 
 #+TOC: headlines 8 insert TOC here, with eight headline levels
 
@@ -27,8 +24,8 @@ dotfiles' repository.
 :CUSTOM_ID: h:0a9b72b3-aa4a-4c5c-a654-d4bc04b31bbd
 :END:
 
-+ HTML version :: [[https://protesilaos.com/dotemacs][protesilaos.com/dotemacs]]
-+ Git repo :: [[https://gitlab.com/protesilaos/dotfiles][gitlab.com/protesilaos/dotfiles]]
++ HTML version :: <https://protesilaos.com/dotemacs>
++ Git repo :: <https://gitlab.com/protesilaos/dotfiles>
 
 ** What is this
 :PROPERTIES:
@@ -161,7 +158,7 @@ declaration is load the file.
 And here is =prot-common.el= in its totality.  It is available as a file
 in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (same for all my Emacs libraries):
 
-#+include: straight/repos/prot-lisp/prot-common.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-common.el src emacs-lisp :tangle no
 
 ** Common custom functions (prot-simple.el)
 :PROPERTIES:
@@ -182,71 +179,71 @@ common key combinations.
 (require 'prot-simple)
 (with-eval-after-load 'prot-simple
   (setq prot-simple-insert-pair-alist
-	  '(("' Single quote" . (39 39))           ; ' '
-	    ("\" Double quotes" . (34 34))         ; " "
-	    ("` Elisp quote" . (96 39))            ; ` '
-	    ("‘ Single apostrophe" . (8216 8217))  ; ‘ ’
-	    ("“ Double apostrophes" . (8220 8221)) ; “ ”
-	    ("( Parentheses" . (40 41))            ; ( )
-	    ("{ Curly brackets" . (123 125))       ; { }
-	    ("[ Square brackets" . (91 93))        ; [ ]
-	    ("< Angled brackets" . (60 62))        ; < >
-	    ("« Εισαγωγικά Gr quote" . (171 187))  ; « »
-	    ("= Equals signs" . (61 61))           ; = =
-	    ("* Asterisks" . (42 42))              ; * *
-	    ("_ underscores" . (95 95))))          ; _ _
+	    '(("' Single quote" . (39 39))           ; ' '
+	      ("\" Double quotes" . (34 34))         ; " "
+	      ("` Elisp quote" . (96 39))            ; ` '
+	      ("‘ Single apostrophe" . (8216 8217))  ; ‘ ’
+	      ("“ Double apostrophes" . (8220 8221)) ; “ ”
+	      ("( Parentheses" . (40 41))            ; ( )
+	      ("{ Curly brackets" . (123 125))       ; { }
+	      ("[ Square brackets" . (91 93))        ; [ ]
+	      ("< Angled brackets" . (60 62))        ; < >
+	      ("« Εισαγωγικά Gr quote" . (171 187))  ; « »
+	      ("= Equals signs" . (61 61))           ; = =
+	      ("* Asterisks" . (42 42))              ; * *
+	      ("_ underscores" . (95 95))))          ; _ _
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
 
   ;; General commands
-  (let ((global global-map))
-    (define-key global (kbd "<insert>") nil)
-    (define-key global (kbd "C-z") nil)
-    (define-key global (kbd "C-x C-z") nil)
-    (define-key global (kbd "C-h h") nil)
-    (define-key global (kbd "M-`") nil)
-    (define-key global (kbd "s-h") #'prot-simple-describe-symbol)
-    (define-key global (kbd "s-H") (lambda ()
-				       (interactive)
-				       (prot-simple-describe-symbol '(4))))
-    (define-key global (kbd "C-h K") #'describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
+  (let ((map global-map))
+    (define-key map (kbd "<insert>") nil)
+    (define-key map (kbd "C-z") nil)
+    (define-key map (kbd "C-x C-z") nil)
+    (define-key map (kbd "C-h h") nil)
+    (define-key map (kbd "M-`") nil)
+    (define-key map (kbd "s-h") #'prot-simple-describe-symbol)
+    (define-key map (kbd "s-H") (lambda ()
+				                  (interactive)
+				                  (prot-simple-describe-symbol '(4))))
+    (define-key map (kbd "C-h K") #'describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
     ;; Commands for lines
-    (define-key global (kbd "C-S-w") #'prot-simple-copy-line-or-region)
-    (define-key global (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
-    (define-key global (kbd "M-SPC") #'cycle-spacing)
-    (define-key global (kbd "M-o") #'delete-blank-lines)   ; alias for C-x C-o
-    (define-key global (kbd "M-k") #'prot-simple-kill-line-backward)
-    (define-key global (kbd "C-S-n") #'prot-simple-multi-line-next)
-    (define-key global (kbd "C-S-p") #'prot-simple-multi-line-prev)
-    (define-key global (kbd "<C-return>") #'prot-simple-new-line-below)
-    (define-key global (kbd "<C-S-return>") #'prot-simple-new-line-above)
+    (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
+    (define-key map (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
+    (define-key map (kbd "M-SPC") #'cycle-spacing)
+    (define-key map (kbd "M-o") #'delete-blank-lines)   ; alias for C-x C-o
+    (define-key map (kbd "M-k") #'prot-simple-kill-line-backward)
+    (define-key map (kbd "C-S-n") #'prot-simple-multi-line-next)
+    (define-key map (kbd "C-S-p") #'prot-simple-multi-line-prev)
+    (define-key map (kbd "<C-return>") #'prot-simple-new-line-below)
+    (define-key map (kbd "<C-S-return>") #'prot-simple-new-line-above)
     ;; Commands for text insertion or manipulation
-    (define-key global (kbd "C-=") #'prot-simple-inset-date)
-    (define-key global (kbd "C-'") #'prot-simple-insert-pair-completion)
-    (define-key global (kbd "M-'") #'prot-simple-insert-pair-completion)
-    (define-key global (kbd "<C-M-backspace>") #'backward-kill-sexp)
-    (define-key global (kbd "M-c") #'capitalize-dwim)
-    (define-key global (kbd "M-l") #'downcase-dwim)        ; "lower" case
-    (define-key global (kbd "M-u") #'upcase-dwim)
+    (define-key map (kbd "C-=") #'prot-simple-inset-date)
+    (define-key map (kbd "C-'") #'prot-simple-insert-pair-completion)
+    (define-key map (kbd "M-'") #'prot-simple-insert-pair-completion)
+    (define-key map (kbd "<C-M-backspace>") #'backward-kill-sexp)
+    (define-key map (kbd "M-c") #'capitalize-dwim)
+    (define-key map (kbd "M-l") #'downcase-dwim)        ; "lower" case
+    (define-key map (kbd "M-u") #'upcase-dwim)
     ;; Commands for object transposition
-    (define-key global (kbd "C-t") #'prot-simple-transpose-chars)
-    (define-key global (kbd "C-x C-t") #'prot-simple-transpose-lines)
-    (define-key global (kbd "C-S-t") #'prot-simple-transpose-paragraphs)
-    (define-key global (kbd "C-x M-t") #'prot-simple-transpose-sentences)
-    (define-key global (kbd "C-M-t") #'prot-simple-transpose-sexps)
-    (define-key global (kbd "M-t") #'prot-simple-transpose-words)
+    (define-key map (kbd "C-t") #'prot-simple-transpose-chars)
+    (define-key map (kbd "C-x C-t") #'prot-simple-transpose-lines)
+    (define-key map (kbd "C-S-t") #'prot-simple-transpose-paragraphs)
+    (define-key map (kbd "C-x M-t") #'prot-simple-transpose-sentences)
+    (define-key map (kbd "C-M-t") #'prot-simple-transpose-sexps)
+    (define-key map (kbd "M-t") #'prot-simple-transpose-words)
     ;; Commands for marking objects
-    (define-key global (kbd "M-@") #'prot-simple-mark-word)       ; replaces `mark-word'
-    (define-key global (kbd "C-M-SPC") #'prot-simple-mark-construct-dwim)
-    (define-key global (kbd "C-M-d") #'prot-simple-downward-list)
+    (define-key map (kbd "M-@") #'prot-simple-mark-word)       ; replaces `mark-word'
+    (define-key map (kbd "C-M-SPC") #'prot-simple-mark-construct-dwim)
+    (define-key map (kbd "C-M-d") #'prot-simple-downward-list)
     ;; Commands for paragraphs
-    (define-key global (kbd "M-Q") #'prot-simple-unfill-region-or-paragraph)
+    (define-key map (kbd "M-Q") #'prot-simple-unfill-region-or-paragraph)
     ;; Commands for windows
-    (define-key global (kbd "s-m") #'prot-simple-monocle)
+    (define-key map (kbd "s-m") #'prot-simple-monocle)
     ;; Commands for buffers
-    (define-key global (kbd "M-=") #'count-words)
-    (define-key global (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
-    (define-key global (kbd "s-k") #'prot-simple-kill-buffer-current))
+    (define-key map (kbd "M-=") #'count-words)
+    (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
+    (define-key map (kbd "s-k") #'prot-simple-kill-buffer-current))
 
   (add-hook 'kill-emacs-hook #'prot-common-rebuild-emacs-init))
 #+end_src
@@ -254,25 +251,39 @@ common key combinations.
 These are the contents of the =prot-simple.el= library (find the file in
 [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
 
-#+include: straight/repos/prot-lisp/prot-simple.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-simple.el src emacs-lisp :tangle no
 
-** Hide modeline "lighters" (minions.el)
+*** prot-pulse.el (highlight cursor position)
 :PROPERTIES:
-:CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
+:CUSTOM_ID: h:6bbc41d6-da7c-4301-84c6-c5887c29283f
 :END:
 
-This package by Jonas Bernoulli neatly wraps up all minor mode
-"lighters" and hides them behind a single character.  The "lighter" is
-the text that identifies the minor mode on the mode line.  Having a
-few of them is usually okay, but a lot of them do not scale well.
+=pulse.el= is a library that provides utilities for highlighting the
+region or area around point.  It is meant to be used by other packages
+as a means of offering visual feedback, as is the case with, for
+example, =M-.= (=xref-find-definitions=).
+
+While =prot-pulse.el= (complete code further below) is a thin wrapper that
+provides some extensions that are useful to my workflow.  Specifically,
+it declares a new face and provides a command that implements it:
+=prot-pulse-pulse-line=.  This is useful to quickly highlight the line and
+buffer I am on, but can also be utilised by other tools that move the
+point an arbitrary distance.
 
 #+begin_src emacs-lisp
-(require 'minions)
-(with-eval-after-load 'minions
-  (add-to-list 'prot-emacs-ensure-install 'minions)
-  (setq minions-mode-line-lighter "+")
-  (minions-mode 1))
+(require 'prot-pulse)
+(with-eval-after-load 'prot-pulse
+  (setq prot-pulse-pulse-command-list
+        '(recenter-top-bottom
+          reposition-window))
+  (prot-pulse-advice-commands-mode 1)
+  (define-key global-map (kbd "<s-escape>") #'prot-pulse-pulse-line))
 #+end_src
+
+This is the code for =prot-pulse.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]], in case
+you wish to get the file):
+
+#+include: prot-lisp/prot-pulse.el src emacs-lisp :tangle no
 
 ** Put customisation settings in a disposable "custom.el"
 :PROPERTIES:
@@ -389,10 +400,10 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
-        '((t . no-color))
+        '((t . no-color-no-bold))
         modus-themes-variable-pitch-ui t
         modus-themes-variable-pitch-headings t
-        modus-themes-scale-headings nil
+        modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
@@ -599,7 +610,7 @@ Relevant blog posts of mine:
 This is the source code of =prot-fonts.el= (you can always find the file
 if you directly clone [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]).
 
-#+include: straight/repos/prot-lisp/prot-fonts.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-fonts.el src emacs-lisp :tangle no
 
 *** Simple font suitability test
 :PROPERTIES:
@@ -684,13 +695,11 @@ The code below is a minor adaptation of the insights of Alain M. Lafon
 in the [[https://200ok.ch/posts/2020-09-29_comprehensive_guide_on_handling_long_lines_in_emacs.html][Comprehensive guide on handling long lines in Emacs]] (2020-09-29).
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq-default bidi-paragraph-direction 'left-to-right)
-  (setq bidi-inhibit-bpa t))
+(setq-default bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
 
-(use-package so-long
-  :config
+(require 'so-long)
+(with-eval-after-load 'so-long
   (global-so-long-mode 1))
 #+end_src
 
@@ -718,10 +727,9 @@ Consult's narrowing facility.  Please refer to the relevant sections:
 + [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]].
 
 #+begin_src emacs-lisp
-(use-package which-key
-  :straight t
-  :diminish
-  :config
+(require 'which-key)
+(with-eval-after-load 'which-key
+  (add-to-list 'prot-emacs-ensure-install 'which-key)
   ;; NOTE: I only use this for `embark' and `consult' and for the sake
   ;; of producing more user-friendly video demonstrations.
   (setq which-key-dont-use-unicode t)
@@ -735,7 +743,7 @@ Consult's narrowing facility.  Please refer to the relevant sections:
   (setq which-key-separator "  ")
   (setq which-key-special-keys nil)
   (setq which-key-paging-key "<next>")
-  (which-key-mode -1))       ; and turn this on, if you want to use this
+  (which-key-mode -1))	   ; and turn this on, if you want to use this
 #+end_src
 
 * Selection candidates and search methods
@@ -782,12 +790,12 @@ code further below).
 1. It defines two style dispatchers. Those are single characters that
    acquire a special meaning while at the end of a given input:
 
-  - With the equals sign appended to a sequence of characters, we call
-    =prot-orderless-literal-dispatcher= which instructs orderless to match
-    that sequence as a literal string.
+   - With the equals sign appended to a sequence of characters, we call
+     =prot-orderless-literal-dispatcher= which instructs orderless to match
+     that sequence as a literal string.
 
-  - While a comma at the end of a string of characters reads that group
-    as an initialism, per =prot-orderless-initialism-dispatcher=.
+   - While a comma at the end of a string of characters reads that group
+     as an initialism, per =prot-orderless-initialism-dispatcher=.
 
 2. =prot-orderless-with-styles= is a function that changes the default
    pattern-matching styles on a per-command basis.  The idea is to use a
@@ -800,10 +808,8 @@ code further below).
      task.
 
 #+begin_src emacs-lisp
-(use-package prot-orderless
-  :straight (:type built-in)
-  :demand
-  :config
+(require 'prot-orderless)
+(with-eval-after-load 'prot-orderless
   (setq prot-orderless-default-styles
         '(orderless-prefixes
           orderless-literal
@@ -816,26 +822,24 @@ code further below).
           orderless-strict-leading-initialism
           orderless-regexp)))
 
-(use-package orderless
-  :straight t
-  :demand
-  :after prot-orderless
-  :config
+(require 'orderless)
+(with-eval-after-load 'orderless
+  (add-to-list 'prot-emacs-ensure-install 'orderless)
   (setq orderless-component-separator " +")
   (setq orderless-matching-styles prot-orderless-default-styles)
   (setq orderless-style-dispatchers
         '(prot-orderless-literal-dispatcher
           prot-orderless-initialism-dispatcher))
   ;; SPC should never complete: use it for `orderless' groups.
-  :bind (:map minibuffer-local-completion-map
-              ("SPC" . nil)
-              ("?" . nil)))
+  (let ((map minibuffer-local-completion-map))
+    (define-key map (kbd "SPC") nil)
+    (define-key map (kbd "?") nil)))
 #+end_src
 
 These are the contents of the =prot-orderless.el= library (get the file
 from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
 
-#+include: straight/repos/prot-lisp/prot-orderless.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-orderless.el src emacs-lisp :tangle no
 
 *** Completion annotations (marginalia)
 :PROPERTIES:
@@ -850,10 +854,9 @@ for visualising the standard completion framework's output---see
 [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]]).
 
 #+begin_src emacs-lisp
-(use-package marginalia
-  :straight (:host github :repo "minad/marginalia" :branch "main")
-  :demand
-  :config
+(require 'marginalia)
+(with-eval-after-load 'marginalia
+  (add-to-list 'prot-emacs-ensure-install 'marginalia)
   (setq marginalia-annotators
         '(marginalia-annotators-heavy
           marginalia-annotators-light))
@@ -909,29 +912,26 @@ three /de facto deprecated/ commands that are pertinent to the
 in the most recently used window, insert and then exit all recirsive
 minibuffers.  Those are not part of my day-to-day workflow, because I
 normally rely on [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Embark for extended minibuffer actions]].  At any rate,
-the =prot-minibuffer.el= is reproduced after this set of =use-package=
-declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks]].
+the =prot-minibuffer.el= is reproduced after this set of package
+declarations.  For its hook also check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks]].
 
 #+begin_src emacs-lisp
-(use-package prot-minibuffer
-  :straight (:type built-in)
-  :demand
-  :bind (("s-v" . prot-minibuffer-focus-mini-or-completions)
-         :map completion-list-mode-map
-         ("M-v" . prot-minibuffer-focus-mini)
-         ("h" . prot-simple-describe-symbol) ; from `prot-simple.el'
-         ;; Those are DE FACTO DEPRECATED generic actions for the
-         ;; "*Completions*" buffer.  I normally use `embark' and its own
-         ;; buffers.
-         ("w" . prot-minibuffer-completions-kill-symbol-at-point)
-         ("i" . prot-minibuffer-completions-insert-symbol-at-point)
-         ("j" . prot-minibuffer-completions-insert-symbol-at-point-exit))
-  :hook (minibuffer-setup-hook . prot-minibuffer-mini-cursor))
+(require 'prot-minibuffer)
+(with-eval-after-load 'prot-minibuffer
+  (define-key global-map (kbd "s-v") #'prot-minibuffer-focus-mini-or-completions)
+  (let ((map completion-list-mode-map))
+    (define-key map (kbd "M-v") #'prot-minibuffer-focus-mini)
+    (define-key map (kbd "h") #'prot-simple-describe-symbol) ; from `prot-simple.el'
+    ;; Those are DE FACTO DEPRECATED generic actions for the
+    ;; "*Completions*" buffer.  I normally use `embark' and its own
+    ;; buffers.
+    (define-key map (kbd "w") #'prot-minibuffer-completions-kill-symbol-at-point)
+    (define-key map (kbd "i") #'prot-minibuffer-completions-insert-symbol-at-point)
+    (define-key map (kbd "j") #'prot-minibuffer-completions-insert-symbol-at-point-exit))
+  (add-hook 'minibuffer-setup-hook #'prot-minibuffer-mini-cursor))
 
-(use-package minibuffer
-  :demand
-  :after prot-minibuffer
-  :config
+(require 'minibuffer)
+(with-eval-after-load 'minibuffer
   (setq completion-styles '(partial-completion substring flex orderless))
   (setq completion-category-defaults nil)
   (setq completion-cycle-threshold 3)
@@ -965,27 +965,28 @@ declarations.  For its =:hook= also check [[#h:cf9086c1-1b33-4127-a716-de94259e1
   ;; Super-KEY.  Normally these should go in individual package
   ;; declarations, but their grouping here makes things easier to
   ;; understand.  Besides, they are related to the minibuffer.
-  :bind (("s-b" . switch-to-buffer)
-         ("s-B" . switch-to-buffer-other-window)
-         ("s-f" . find-file)
-         ("s-F" . find-file-other-window)
-         ("s-d" . dired)
-         ("s-D" . dired-other-window)
-         :map minibuffer-local-completion-map
-         ("C-j" . exit-minibuffer)
-         ("<tab>" . minibuffer-force-complete)
-         ;; De facto deprecated as I use Embark and its own completions'
-         ;; buffer.
-         :map completion-list-mode-map
-         ("n" . next-line)
-         ("p" . previous-line)
-         ("f" . next-completion)
-         ("b" . previous-completion)))
+  (let ((map global-map))
+    (define-key map (kbd "s-b") #'switch-to-buffer)
+    (define-key map (kbd "s-B") #'switch-to-buffer-other-window)
+    (define-key map (kbd "s-f") #'find-file)
+    (define-key map (kbd "s-F") #'find-file-other-window)
+    (define-key map (kbd "s-d") #'dired)
+    (define-key map (kbd "s-D") #'dired-other-window))
+  (let ((map minibuffer-local-completion-map))
+    (define-key map (kbd "C-j") #'exit-minibuffer)
+    (define-key map (kbd "<tab>") #'minibuffer-force-complete))
+  ;; De facto deprecated as I use Embark and its own completions'
+  ;; buffer.
+  (let ((map completion-list-mode-map))
+    (define-key map (kbd "n") #'next-line)
+    (define-key map (kbd "p") #'previous-line)
+    (define-key map (kbd "f") #'next-completion)
+    (define-key map (kbd "b") #'previous-completion)))
 #+end_src
 
 And here is =prot-minibuffer.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-minibuffer.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-minibuffer.el src emacs-lisp :tangle no
 
 *** Enhanced minibuffer commands (consult.el and prot-consult.el)
 :PROPERTIES:
@@ -1118,10 +1119,9 @@ better alternatives, even though they "simply work" with everything I
 try.
 
 #+begin_src emacs-lisp
-(use-package consult
-  :straight t
-  :demand
-  :config
+(require 'consult)
+(with-eval-after-load 'consult
+  (add-to-list 'prot-emacs-ensure-install 'consult)
   (setq consult-line-numbers-widen t)
   (setq completion-in-region-function #'consult-completion-in-region)
   (setq consult-async-min-input 3)
@@ -1150,27 +1150,23 @@ try.
                     (setq-local window-min-height 1)
                     (fit-window-to-buffer)))))
 
-  ;; NOTE: check `embark-consult' for previews that can be used with the
-  ;; default minibuffer and Embark collections.
-  :bind (("C-x M-:" . consult-complex-command)
-         ("C-x M-m" . consult-minor-mode-menu)
-         ("C-x M-k" . consult-kmacro)
-         ("M-g g" . consult-goto-line)
-         ("M-g M-g" . consult-goto-line)
-         ("M-X" . consult-mode-command)
-         ("M-K" . consult-keep-lines)  ; M-S-k is similar to M-S-5 (M-%)
-         ("M-s g" . consult-grep)
-         ("M-s m" . consult-mark)
-         ("C-x r r" . consult-register) ; Use the register's prefix
-         ("C-x r S" . consult-register-store)
-         ("C-x r L" . consult-register-load)
-         :map consult-narrow-map
-         ("?" . consult-narrow-help)))
+  (let ((map global-map))
+    (define-key map (kbd "C-x M-:") #'consult-complex-command)
+    (define-key map (kbd "C-x M-m") #'consult-minor-mode-menu)
+    (define-key map (kbd "C-x M-k") #'consult-kmacro)
+    (define-key map (kbd "M-g g") #'consult-goto-line)
+    (define-key map (kbd "M-g M-g") #'consult-goto-line)
+    (define-key map (kbd "M-X") #'consult-mode-command)
+    (define-key map (kbd "M-K") #'consult-keep-lines)  ; M-S-k is similar to M-S-5 (M-%)
+    (define-key map (kbd "M-s g") #'consult-grep)
+    (define-key map (kbd "M-s m") #'consult-mark)
+    (define-key map (kbd "C-x r r") #'consult-register) ; Use the register's prefix
+    (define-key map (kbd "C-x r S") #'consult-register-store)
+    (define-key map (kbd "C-x r L") #'consult-register-load)
+    (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)))
 
-(use-package prot-consult
-  :straight (:type built-in)
-  :after (consult prot-pulse)
-  :config
+(require 'prot-consult)
+(with-eval-after-load 'prot-consult
   (setq consult-project-root-function #'prot-consult-project-root)
   (setq prot-consult-command-centre-list
         '(consult-line
@@ -1182,16 +1178,17 @@ try.
           prot-consult-outline
           prot-consult-imenu))
   (prot-consult-set-up-hooks-mode 1)
-  :bind (("M-s i" . prot-consult-imenu)
-         ("M-s f" . prot-consult-fd)
-         ("M-s s" . prot-consult-outline)    ; M-s o is `occur'
-         ("M-s y" . prot-consult-yank)
-         ("M-s l" . prot-consult-line)))
+  (let ((map global-map))
+    (define-key map (kbd "M-s i") #'prot-consult-imenu)
+    (define-key map (kbd "M-s f") #'prot-consult-fd)
+    (define-key map (kbd "M-s s") #'prot-consult-outline)    ; M-s o is `occur'
+    (define-key map (kbd "M-s y") #'prot-consult-yank)
+    (define-key map (kbd "M-s l") #'prot-consult-line)))
 #+end_src
 
 Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-consult.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-consult.el src emacs-lisp :tangle no
 
 *** Extended minibuffer actions and more (embark.el and prot-embark.el)
 :PROPERTIES:
@@ -1336,18 +1333,10 @@ Finally, a few words about the following package declaration:
   visit [[#h:18e1f5b6-0dd1-41ec-ba41-ee48ebb2060b][Cross-package integration for Embark (prot-embark-extras.el)]]).
 
 #+begin_src emacs-lisp
-(use-package embark
-  ;; Note that this gets only the main library.  That repo contains
-  ;; other packages as well (which are small *.el files that are
-  ;; distributed separately).
-  :straight (embark :host github
-                    :repo "oantolin/embark"
-                    :branch "master"
-                    :files ("embark.el"))
-  :demand
-  :diminish embark-collect-zebra-minor-mode
-  :after prot-minibuffer
-  :config
+(require 'embark)
+(add-to-list 'prot-emacs-ensure-install 'embark)
+(with-eval-after-load 'embark
+  ;; (with-eval-after-load 'prot-minibuffer)
   (setq embark-collect-initial-view-alist
         '((file . list)
           (buffer . list)
@@ -1375,68 +1364,58 @@ Finally, a few words about the following package declaration:
   ;;         (which-key--show-keymap "Embark" map nil nil 'no-paging)
   ;;         #'which-key--hide-popup-ignore-command)
   ;;       embark-become-indicator embark-action-indicator)
-  :hook ((minibuffer-setup-hook . embark-collect-completions-after-input)
-         (embark-post-action-hook . embark-collect--update-linked)
-         (embark-collect-mode-hook . prot-embark-completions-cursor))
-  :bind (("C-," . embark-act)
-         :map minibuffer-local-completion-map
-         ("C-," . embark-act)
-         ("C->" . embark-become)
-         ("M-q" . embark-collect-toggle-view) ; parallel of `fill-paragraph'
-         :map embark-collect-mode-map
-         ("C-," . embark-act)
-         ("," . embark-act)
-         ("M-q" . embark-collect-toggle-view)
-         :map embark-symbol-map
-         ("." . embark-find-definition)
-         ("k" . describe-keymap)))
+  (add-hook 'minibuffer-setup-hook #'embark-collect-completions-after-input)
+  (add-hook 'embark-post-action-hook #'embark-collect--update-linked)
+  (add-hook 'embark-collect-mode-hook #'prot-embark-completions-cursor)
+  (define-key global-map (kbd "C-,") #'embark-act)
+  (let ((map minibuffer-local-completion-map))
+    (define-key map (kbd "C-,") #'embark-act)
+    (define-key map (kbd "C->") #'embark-become)
+    (define-key map (kbd "M-q") #'embark-collect-toggle-view)) ; parallel of `fill-paragraph'
+  (let ((map embark-collect-mode-map))
+    (define-key map (kbd "C-,") #'embark-act)
+    (define-key map (kbd ",") #'embark-act)
+    (define-key map (kbd "M-q") #'embark-collect-toggle-view))
+  (let ((map embark-symbol-map))
+    (define-key map (kbd ".") #'embark-find-definition)
+    (define-key map (kbd "k") #'describe-keymap)))
 
-;; Integration with Consult.  Note that the package is `embark-consult',
-;; but because it comes from the same repo as Embark I prefer to use
-;; this straight.el directive (check the main embark package above).
-(use-package embark-consult
-  :straight (embark-consult :host github
-                            :repo "oantolin/embark"
-                            :branch "master"
-                            :files ("embark-consult.el"))
-  :demand
-  :after (embark consult)
+(require 'embark-consult)
+(with-eval-after-load 'embark-consult
+  (add-to-list 'prot-emacs-ensure-install 'embark-consult)
   ;; ;; Use the hook, or check `prot-embark-consult-preview-toggle'.
   ;; :hook (embark-collect-mode-hook . embark-consult-preview-minor-mode)
-  :bind (:map embark-collect-mode-map
-         ("C-j" . embark-consult-preview-at-point)))
+  (define-key embark-collect-mode-map (kbd "C-j") #'embark-consult-preview-at-point))
 
-(use-package prot-embark
-  :straight (:type built-in)
-  :demand
-  :after embark
-  :hook ((embark-collect-post-revert-hook . prot-embark-collect-fit-window)
-         (embark-collect-mode-hook . prot-embark-hl-line)
-         (embark-collect-mode-hook . prot-embark-display-line-numbers))
+(require 'prot-embark)
+(with-eval-after-load 'prot-embark
+  (add-hook 'embark-collect-post-revert-hook #'prot-embark-collect-fit-window)
+  (add-hook 'embark-collect-mode-hook #'prot-embark-hl-line)
+  (add-hook 'embark-collect-mode-hook #'prot-embark-display-line-numbers)
   ;; NOTE: to switch to the live collection buffer, I also use
   ;; `prot-minibuffer-focus-mini-or-completions' which is bound to
   ;; "s-v".
-  :bind (:map embark-collect-mode-map
-         ("h" . prot-simple-describe-symbol)  ; from `prot-simple.el'
-         ("C-g" . prot-embark-keyboard-quit)
-         ("C-k" . prot-embark-collection-kill-line)
-         ("C-M-n" . prot-embark-completions-act-next)
-         ("C-M-p" . prot-embark-completions-act-previous)
-         ("C-M-j" . prot-embark-completions-act-current)
-         ("C-M-v" . prot-embark-consult-preview-toggle) ; "view", "visualise" mnemonic
-         ("C-n" . prot-embark-next-line-or-mini)
-         ("C-p" . prot-embark-previous-line-or-mini)
-         ("M-F" . prot-embark-collection-flush-lines) ; M-S-f like M-S-5 (M-%)
-         ("M-K" . prot-embark-collection-keep-lines)  ; same principle as right above
-         :map minibuffer-local-completion-map
-         ("C-n" . prot-embark-switch-to-completions-top)
-         ("C-p" . prot-embark-switch-to-completions-bottom)
-         ("C-l" . prot-embark-completions-toggle)))
+  (let ((map embark-collect-mode-map))
+    (define-key map (kbd "h") #'prot-simple-describe-symbol)  ; from `prot-simple.el'
+    (define-key map (kbd "C-g") #'prot-embark-keyboard-quit)
+    (define-key map (kbd "C-k") #'prot-embark-collection-kill-line)
+    (define-key map (kbd "C-M-n") #'prot-embark-completions-act-next)
+    (define-key map (kbd "C-M-p") #'prot-embark-completions-act-previous)
+    (define-key map (kbd "C-M-j") #'prot-embark-completions-act-current)
+    (define-key map (kbd "C-M-v") #'prot-embark-consult-preview-toggle) ; "view", "visualise" mnemonic
+    (define-key map (kbd "C-n") #'prot-embark-next-line-or-mini)
+    (define-key map (kbd "C-p") #'prot-embark-previous-line-or-mini)
+    (define-key map (kbd "M-F") #'prot-embark-collection-flush-lines) ; M-S-f like M-S-5 (M-%)
+    (define-key map (kbd "M-K") #'prot-embark-collection-keep-lines))  ; same principle as right above
+  (let ((map minibuffer-local-completion-map))
+    (define-key map (kbd "C-n") #'prot-embark-switch-to-completions-top)
+    (define-key map (kbd "C-p") #'prot-embark-switch-to-completions-bottom)
+    (define-key map (kbd "C-l") #'prot-embark-completions-toggle)))
 #+end_src
 
 This is =prot-embark.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-embark.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-embark.el src emacs-lisp :tangle no
 
 *** Projects (project.el and prot-project.el)
 :PROPERTIES:
@@ -1497,9 +1476,10 @@ referenced in the source code below this configuration block):
 + [[https://www.manueluberti.eu/emacs/2020/11/21/flymake-projects/][Restricting Flymake to my projects]] (2020-11-21)
 
 #+begin_src emacs-lisp
-(use-package project
-  :demand
-  :init
+(require 'project)
+(with-eval-after-load 'project
+  ;; ;; Use this for Emacs 27 (I am on 28)
+  ;; (add-to-list 'prot-emacs-ensure-install 'project)
   (setq project-switch-commands
         '((?f "File" project-find-file)
           (?s "Subdir" prot-project-find-subdir)
@@ -1512,25 +1492,24 @@ referenced in the source code below this configuration block):
           (?v "VC dir" project-vc-dir)
           (?l "Log VC" prot-project-commit-log)
           (?e "Eshell" project-eshell)))
-  :bind ("C-x p q" . project-query-replace-regexp)) ; C-x p is `project-prefix-map'
+  (define-key global-map (kbd "C-x p q") #'project-query-replace-regexp)) ; C-x p is `project-prefix-map'
 
-(use-package prot-project
-  :straight (:type built-in)
-  :demand
-  :init
+(require 'prot-project)
+(with-eval-after-load 'prot-project
   (setq prot-project-project-roots '("~/Git/Projects/" "~/Git/build/"))
   (setq prot-project-commit-log-limit 25)
   (setq prot-project-large-file-lines 1000)
-  :bind (("C-x p <delete>" . prot-project-remove-project)
-         ("C-x p l" . prot-project-commit-log)
-         ("C-x p m" . prot-project-magit-status)
-         ("C-x p s" . prot-project-find-subdir)
-         ("C-x p t" . prot-project-retrieve-tag)))
+  (let ((map global-map))
+    (define-key map (kbd "C-x p <delete>") #'prot-project-remove-project)
+    (define-key map (kbd "C-x p l") #'prot-project-commit-log)
+    (define-key map (kbd "C-x p m") #'prot-project-magit-status)
+    (define-key map (kbd "C-x p s") #'prot-project-find-subdir)
+    (define-key map (kbd "C-x p t") #'prot-project-retrieve-tag)))
 #+end_src
 
 This is =prot-project.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-project.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-project.el src emacs-lisp :tangle no
 
 *** Completion for recent files and directories (prot-recentf.el)
 :PROPERTIES:
@@ -1552,25 +1531,24 @@ accessing the recent files through a bespoke buffer.  I find that I have
 no use for it.
 
 #+begin_src emacs-lisp
-(use-package recentf
-  :demand
-  :config
-  (setq recentf-save-file "~/.emacs.d/recentf")
+(require 'recentf)
+(with-eval-after-load 'recentf
+  (setq recentf-save-file (concat user-emacs-directory "recentf"))
   (setq recentf-max-saved-items 200)
   (setq recentf-exclude '(".gz" ".xz" ".zip" "/elpa/" "/ssh:" "/sudo:"))
-  :hook (after-init-hook . recentf-mode))
+  (add-hook 'after-init-hook #'recentf-mode))
 
-(use-package prot-recentf
-  :demand
-  :config
+(require 'prot-recentf)
+(with-eval-after-load 'prot-recentf
   (add-to-list 'recentf-keep 'prot-recentf-keep-predicate)
-  :bind (("s-r" . prot-recentf-recent-files)
-         ("C-x C-r" . prot-recentf-recent-dirs)))
+  (let ((map global-map))
+    (define-key map (kbd "s-r") #'prot-recentf-recent-files)
+    (define-key map (kbd "C-x C-r") #'prot-recentf-recent-dirs)))
 #+end_src
 
 This is a copy of =prot-recentf.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-recentf.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-recentf.el src emacs-lisp :tangle no
 
 *** Cross-package integration for Embark (prot-embark-extras.el)
 :PROPERTIES:
@@ -1587,17 +1565,15 @@ The way to extend Embark is to follow its own design: define keymaps and
 add them to the list of Embark's known keymaps.
 
 #+begin_src emacs-lisp
-(use-package prot-embark-extras
-  :straight (:type built-in)
-  :demand
-  :config
+(require 'prot-embark-extras)
+(with-eval-after-load 'prot-embark-extras
   (prot-embark-extras-keymaps 1)
   (prot-embark-extras-setup-packages 1))
 #+end_src
 
 This is =prot-embark-extras.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-embark-extras.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-embark-extras.el src emacs-lisp :tangle no
 
 *** In-buffer completions
 :PROPERTIES:
@@ -1663,8 +1639,8 @@ feedback prevents it from realising its potential.  Maybe we will one
 day have [[https://github.com/minad/consult/issues/6#issuecomment-761529838][a consult-hippie alternative]]...
 
 #+begin_src emacs-lisp
-(use-package dabbrev
-  :config
+(require 'dabbrev)
+(with-eval-after-load 'dabbrev
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
   (setq dabbrev-backward-only nil)
@@ -1674,11 +1650,12 @@ day have [[https://github.com/minad/consult/issues/6#issuecomment-761529838][a c
   (setq dabbrev-check-other-buffers t)
   (setq dabbrev-eliminate-newlines t)
   (setq dabbrev-upcase-means-case-search t)
-  :bind (("M-/" . dabbrev-expand)
-         ("s-/" . dabbrev-completion)))
+  (let ((map global-map))
+    (define-key map (kbd "M-/") #'dabbrev-expand)
+    (define-key map (kbd "s-/") #'dabbrev-completion)))
 
-(use-package hippie-exp
-  :config
+(require 'hippie-exp)
+(with-eval-after-load 'hippie-exp
   (setq hippie-expand-try-functions-list
         '(try-expand-dabbrev
           try-expand-dabbrev-all-buffers
@@ -1694,7 +1671,7 @@ day have [[https://github.com/minad/consult/issues/6#issuecomment-761529838][a c
   (setq hippie-expand-dabbrev-skip-space nil)
   (setq hippie-expand-dabbrev-as-symbol t)
   (setq hippie-expand-no-restriction t)
-  :bind ("C-M-/" . hippie-expand))
+  (define-key global-map (kbd "C-M-/") #'hippie-expand))
 #+end_src
 
 **** Skeletons and abbreviations
@@ -1717,10 +1694,9 @@ front.  Also note that wherever you see =" _ "= it signifies the
 position of the cursor after the skeleton has been inserted.
 
 #+begin_src emacs-lisp
-(use-package abbrev
-  :diminish
-  :config
-  (setq abbrev-file-name "~/.emacs.d/abbrevs")
+(require 'abbrev)
+(with-eval-after-load 'abbrev
+  (setq abbrev-file-name (concat user-emacs-directory "abbrevs"))
   (setq only-global-abbrevs nil)
 
   ;;;;;;;;;;;;;;;;;;;;;;
@@ -1743,38 +1719,11 @@ position of the cursor after the skeleton has been inserted.
   (define-abbrev global-abbrev-table "megit"
     "" 'protesilaos-gitlab-skeleton)
 
-  ;; (define-skeleton org-block-skeleton
-  ;;   "Insert an org block, querying for type."
-  ;;   "Type: "
-  ;;   "#+begin_" str "\n"
-  ;;   _ - \n
-  ;;   "#+end_" str "\n")
-  ;;
-  ;; (define-skeleton org-use-package
-  ;;   "Org source block with `use-package' declaration."
-  ;;   "Package: "
-  ;;   "#+begin_src emacs-lisp\n"
-  ;;   "(use-package " _ ")\n"
-  ;;   "#+end_src\n")
-  ;; (define-abbrev global-abbrev-table "meup"
-  ;;   "" 'org-use-package)
-  ;;
-  ;; (define-skeleton markdown-jekyll-blog
-  ;;   ""
-  ;;   ""
-  ;;   "---\n"
-  ;;   (concat "title: '" (read-from-minibuffer
-  ;;                       "Blog Title: ") "'\n")
-  ;;   (concat "excerpt: '" (read-from-minibuffer
-  ;;                         "Excerpt (max 156 chars): ") "'\n")
-  ;;   "---\n\n"
-  ;;   "")
-  ;; (define-abbrev global-abbrev-table "mejb"
-  ;;   "" 'markdown-jekyll-blog)
-  :bind (("C-x a e" . expand-abbrev) ; default, just here for visibility
-         ("C-x a u" . unexpand-abbrev))
-  :hook ((text-mode-hook . abbrev-mode)
-         (git-commit-mode-hook . abbrev-mode)))
+  (let ((map global-map))
+    (define-key map (kbd "C-x a e") #'expand-abbrev) ; default, just here for visibility
+    (define-key map (kbd "C-x a u") #'unexpand-abbrev))
+  (add-hook 'text-mode-hook #'abbrev-mode)
+  (add-hook 'git-commit-mode-hook #'abbrev-mode))
 #+end_src
 
 ** Configurations for—or extensions to—built-in search commands
@@ -1908,9 +1857,8 @@ package declarations).
   using whatever browser you have for =browse-url-browser-function=.
 
 #+begin_src emacs-lisp
-(use-package isearch
-  :diminish
-  :config
+(require 'isearch)
+(with-eval-after-load 'isearch
   (setq search-highlight t)
   (setq search-whitespace-regexp ".*?")
   (setq isearch-lax-whitespace t)
@@ -1922,39 +1870,38 @@ package declarations).
   (setq lazy-count-suffix-format " (%s/%s)")
   (setq isearch-yank-on-move 'shift)
   (setq isearch-allow-scroll 'unlimited)
-  :bind (:map minibuffer-local-isearch-map
-         ("M-/" . isearch-complete-edit)
-         :map isearch-mode-map
-         ("C-g" . isearch-cancel)       ; instead of `isearch-abort'
-         ("M-/" . isearch-complete)))
+  (define-key minibuffer-local-isearch-map (kbd "M-/") #'isearch-complete-edit)
+  (let ((map isearch-mode-map))
+    (define-key map (kbd "C-g") #'isearch-cancel) ; instead of `isearch-abort'
+    (define-key map (kbd "M-/") #'isearch-complete)))
 
-(use-package replace
-  :config
+(require 'replace)
+(with-eval-after-load 'replace
   (setq list-matching-lines-jump-to-current-line t)
-  :hook ((occur-mode-hook . hl-line-mode)
-         (occur-mode-hook . (lambda ()
-                              (toggle-truncate-lines t))))
-  :bind (("M-s M-o" . multi-occur)
-         :map occur-mode-map
-         ("t" . toggle-truncate-lines)))
+  (add-hook 'occur-mode-hook #'hl-line-mode)
+  (add-hook 'occur-mode-hook (lambda ()
+			                   (toggle-truncate-lines t)))
+  (define-key global-map (kbd "M-s M-o") #'multi-occur)
+  (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
 
-(use-package prot-search
-  :straight (:type built-in)
-  :bind (("M-s %" . prot-search-isearch-replace-symbol)
-         ("M-s M-<" . prot-search-isearch-beginning-of-buffer)
-         ("M-s M->" . prot-search-isearch-end-of-buffer)
-         ("M-s u" . prot-search-occur-urls)
-         ("M-s M-u" . prot-search-occur-browse-url)
-         :map isearch-mode-map
-         ("<up>" . prot-search-isearch-repeat-backward)
-         ("<down>" . prot-search-isearch-repeat-forward)
-         ("<backspace>" . prot-search-isearch-abort-dwim)
-         ("<C-return>" . prot-search-isearch-other-end)))
+(require 'prot-search)
+(with-eval-after-load 'prot-search
+  (let ((map global-map))
+    (define-key map (kbd "M-s %") #'prot-search-isearch-replace-symbol)
+    (define-key map (kbd "M-s M-<") #'prot-search-isearch-beginning-of-buffer)
+    (define-key map (kbd "M-s M->") #'prot-search-isearch-end-of-buffer)
+    (define-key map (kbd "M-s u") #'prot-search-occur-urls)
+    (define-key map (kbd "M-s M-u") #'prot-search-occur-browse-url))
+  (let ((map isearch-mode-map))
+    (define-key map (kbd "<up>") #'prot-search-isearch-repeat-backward)
+    (define-key map (kbd "<down>") #'prot-search-isearch-repeat-forward)
+    (define-key map (kbd "<backspace>") #'prot-search-isearch-abort-dwim)
+    (define-key map (kbd "<C-return>") #'prot-search-isearch-other-end)))
 #+end_src
 
 Here is =prot-search.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-search.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-search.el src emacs-lisp :tangle no
 
 *** Regular expressions: re-builder and visual-regexp
 :PROPERTIES:
@@ -1974,8 +1921,8 @@ using =C-c TAB= inside of the regexp builder's buffer.  I choose to keep
 this style as the default.  Other options are =string= and =rx=.
 
 #+begin_src emacs-lisp
-(use-package re-builder
-  :config
+(require 're-builder)
+(with-eval-after-load 're-builder
   (setq reb-re-syntax 'read))
 #+end_src
 
@@ -1989,9 +1936,9 @@ and offers a live preview of the replacement, making it absolutely
 great when dealing with complex sets of regexp constructs.
 
 #+begin_src emacs-lisp
-(use-package visual-regexp
-  :straight t
-  :config
+(require 'visual-regexp)
+(with-eval-after-load 'visual-regexp
+  (add-to-list 'prot-emacs-ensure-install 'visual-regexp)
   (setq vr/default-replace-preview nil)
   (setq vr/match-separator-use-custom-face t))
 #+end_src
@@ -2008,15 +1955,15 @@ matches by leveraging the full power of Emacs' editing capabilities
 (e.g. keyboard macros, query and replace a regexp...).
 
 #+begin_src emacs-lisp
-(use-package wgrep
-  :straight t
-  :config
+(require 'wgrep)
+(add-to-list 'prot-emacs-ensure-install 'wgrep)
+(with-eval-after-load 'wgrep
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t)
-  :bind (:map grep-mode-map
-              ("e" . wgrep-change-to-wgrep-mode)
-              ("C-x C-q" . wgrep-change-to-wgrep-mode)
-              ("C-c C-c" . wgrep-finish-edit)))
+  (let ((map grep-mode-map))
+    (define-key map (kbd "e") #'wgrep-change-to-wgrep-mode)
+    (define-key map (kbd "C-x C-q") #'wgrep-change-to-wgrep-mode)
+    (define-key map (kbd "C-c C-c") #'wgrep-finish-edit)))
 #+end_src
 
 *** Cross-references (xref.el)
@@ -2034,8 +1981,11 @@ This package declaration contains only the basics.  I might add more in
 the future.
 
 #+begin_src emacs-lisp
-(use-package xref
-  :config
+(require 'xref)
+(with-eval-after-load 'xref
+  ;; ;; Use this for Emacs 27 (I am on 28)
+  ;; (add-to-list 'prot-emacs-ensure-install 'xref)
+
   ;; All those have been changed for Emacs 28
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
   (setq xref-show-xrefs-function #'xref-show-definitions-completing-read)
@@ -2140,21 +2090,19 @@ given version-controlled (git) repo, see the section of this document on
 [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]].
 
 #+begin_src emacs-lisp
-(use-package dired
-  :config
+(require 'dired)
+(with-eval-after-load 'dired
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
   (setq delete-by-moving-to-trash t)
   (setq dired-listing-switches
         "-AGFhlv --group-directories-first --time-style=long-iso")
   (setq dired-dwim-target t)
-  ;; Hooks' syntax is controlled by the `use-package-hook-name-suffix'
-  ;; variable.  The "-hook" suffix is intentional.
-  :hook ((dired-mode-hook . dired-hide-details-mode)
-         (dired-mode-hook . hl-line-mode)))
+  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+  (add-hook 'dired-mode-hook #'hl-line-mode))
 
-(use-package dired-aux
-  :config
+(require 'dired-aux)
+(with-eval-after-load 'dired-aux
   (setq dired-isearch-filenames 'dwim)
   ;; The following variables were introduced in Emacs 27.1
   (setq dired-create-destination-dirs 'ask)
@@ -2177,39 +2125,39 @@ given version-controlled (git) repo, see the section of this document on
       (delete-region (minibuffer-prompt-end) (point-max)))
     (insert (cdr (assoc bm (contrib/cdb--bookmarked-directories)))))
 
-  :bind ( :map dired-mode-map
-          ("C-+" . dired-create-empty-file)
-          ("M-s f" . nil)
-          ("C-x v v" . dired-vc-next-action) ; Emacs 28
-          :map minibuffer-local-filename-completion-map
-          ("C-c d" . contrib/cd-bookmark)))
+  (let ((map dired-mode-map))
+    (define-key map (kbd "C-+") #'dired-create-empty-file)
+    (define-key map (kbd "M-s f") #'nil)
+    (define-key map (kbd "C-x v v") #'dired-vc-next-action)) ; Emacs 28
+  (define-key minibuffer-local-filename-completion-map (kbd "C-c d") #'contrib/cd-bookmark))
 
-(use-package prot-dired
-  :disabled                            ; superseded by `consult.el'
-  :straight (:type built-in)
-  :bind (("M-s d" .  prot-dired-fd-dirs)
-         ("M-s z" . prot-dired-fd-files-and-dirs)))
+;; (require 'prot-dired)
+;; (with-eval-after-load 'prot-dired
+;;  (let ((map global-map))
+;;    (define-key map (kbd "M-s d") #' prot-dired-fd-dirs)
+;;    (define-key map (kbd "M-s z") #'prot-dired-fd-files-and-dirs)))
 
-;; NOTE 2021-01-04: deprecated first in favour of `prot-dired.el' and
-;; eventually by `consult.el'
-(use-package find-dired
-  :disabled
-  :after dired
-  :config
-  (setq find-ls-option
-        '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
-  (setq find-name-arg "-iname"))
+;; ;; NOTE 2021-01-04: deprecated first in favour of `prot-dired.el' and
+;; ;; eventually by `consult.el'
+;; (require 'find-dired)
+;; (with-eval-after-load 'find-dired
+;;   (setq find-ls-option
+;;         '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
+;;   (setq find-name-arg "-iname"))
 
-(use-package async :straight t)
+;; TODO 2021-01-28: `async' should not be bundled with `dired'
+(require 'async)
+(add-to-list 'prot-emacs-ensure-install 'async)
 
-(use-package dired-async
-  :after (dired async)
-  :hook (dired-mode-hook . dired-async-mode))
+;; part of `async' package
+(require 'dired-async)
+(with-eval-after-load 'dired-async
+  (add-hook 'dired-mode-hook #'dired-async-mode))
 #+end_src
 
 These are the contents of =prot-dired.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-dired.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-dired.el src emacs-lisp :tangle no
 
 *** wdired (writable dired)
 :PROPERTIES:
@@ -2225,10 +2173,8 @@ regular buffer, then confirm them with =C-c C-c=.
   and *is created directly* upon successful exit.
 
 #+begin_src emacs-lisp
-(use-package wdired
-  :after dired
-  :commands wdired-change-to-wdired-mode
-  :config
+(require 'wdired)
+(with-eval-after-load 'wdired
   (setq wdired-allow-to-change-permissions t)
   (setq wdired-create-parent-directories t))
 #+end_src
@@ -2248,15 +2194,15 @@ I feel this process is a bit cumbersome and can be very slow if you try
 to generate lots of images at once.  The culprit is the image converter.
 
 #+begin_src emacs-lisp
-(use-package image-dired
-  :config
+(require 'image-dired)
+(with-eval-after-load 'image-dired
   (setq image-dired-external-viewer "xdg-open")
   (setq image-dired-thumb-size 80)
   (setq image-dired-thumb-margin 2)
   (setq image-dired-thumb-relief 0)
   (setq image-dired-thumbs-per-row 4)
-  :bind (:map image-dired-thumbnail-mode-map
-              ("<return>" . image-dired-thumbnail-display-external)))
+  (define-key image-dired-thumbnail-mode-map
+    (kbd "<return>") #'image-dired-thumbnail-display-external))
 #+end_src
 
 *** dired-subtree (tree-style view/navigation)
@@ -2284,15 +2230,14 @@ What I have here:
   inside of it/.
 
 #+begin_src emacs-lisp
-(use-package dired-subtree
-  :straight t
-  :after dired
-  :config
+(require 'dired-subtree)
+(with-eval-after-load 'dired-subtree
+  (add-to-list 'prot-emacs-ensure-install 'dired-subtree)
   (setq dired-subtree-use-backgrounds nil)
-  :bind (:map dired-mode-map
-              ("<tab>" . dired-subtree-toggle)
-              ("<C-tab>" . dired-subtree-cycle)
-              ("<S-iso-lefttab>" . dired-subtree-remove)))
+  (let ((map dired-mode-map))
+    (define-key map (kbd "<tab>") #'dired-subtree-toggle)
+    (define-key map (kbd "<C-tab>") #'dired-subtree-cycle)
+    (define-key map (kbd "<S-iso-lefttab>") #'dired-subtree-remove)))
 #+end_src
 
 *** dired-x (extra Dired functions)
@@ -2320,20 +2265,19 @@ While in =dired-mode=, if you need to open all marked files at once, you
 can hit =F=.  It calls =dired-do-find-marked-files=.
 
 #+begin_src emacs-lisp
-(use-package dired-x
-  :after dired
-  :config
+(require 'dired-x)
+(with-eval-after-load 'dired-x
   (setq dired-clean-up-buffers-too t)
   (setq dired-clean-confirm-killing-deleted-buffers t)
   (setq dired-x-hands-off-my-keys t)    ; easier to show the keys I use
   (setq dired-bind-man nil)
   (setq dired-bind-info nil)
-  :bind (("C-x C-j" . dired-jump)
-         ("s-j" . dired-jump)
-         ("C-x 4 C-j" . dired-jump-other-window)
-         ("s-J" . dired-jump-other-window)
-         :map dired-mode-map
-         ("I" . dired-info)))
+  (let ((map global-map))
+    (define-key map (kbd "C-x C-j") #'dired-jump)
+    (define-key map (kbd "s-j") #'dired-jump)
+    (define-key map (kbd "C-x 4 C-j") #'dired-jump-other-window)
+    (define-key map (kbd "s-J") #'dired-jump-other-window))
+  (define-key dired-mode-map (kbd "I") #'dired-info))
 #+end_src
 
 *** dired-like view for the trash directory
@@ -2355,9 +2299,9 @@ Basically, its interaction model is as follows:
 - =x= to execute these special marks.
 
 #+begin_src emacs-lisp
-(use-package trashed
-  :straight t
-  :config
+(require 'trashed)
+(with-eval-after-load 'trashed
+  (add-to-list 'prot-emacs-ensure-install 'trashed)
   (setq trashed-action-confirmer 'y-or-n-p)
   (setq trashed-use-header-line t)
   (setq trashed-sort-key '("Date deleted" . t))
@@ -2385,8 +2329,8 @@ from the list, allowing Emacs to revert to the standard of displaying
 only the buffer's name.
 
 #+begin_src emacs-lisp
-(use-package uniquify
-  :config
+(require 'uniquify)
+(with-eval-after-load 'uniquify
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-strip-common-suffix t)
   (setq uniquify-after-kill-buffer-p t))
@@ -2453,8 +2397,8 @@ pertains to buffers, so they can adapt accordingly.  See, in particular,
 [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]].
 
 #+begin_src emacs-lisp
-(use-package ibuffer
-  :config
+(require 'ibuffer)
+(with-eval-after-load 'ibuffer
   (setq ibuffer-expert t)
   (setq ibuffer-display-summary nil)
   (setq ibuffer-use-other-window nil)
@@ -2476,24 +2420,25 @@ pertains to buffers, so they can adapt accordingly.  See, in particular,
                 " " filename)))
   (setq ibuffer-saved-filter-groups nil)
   (setq ibuffer-old-time 48)
-  :hook (ibuffer-mode-hook . hl-line-mode)
-  :bind (("C-x C-b" . ibuffer)
-         :map ibuffer-mode-map
-         ("* f" . ibuffer-mark-by-file-name-regexp)
-         ("* g" . ibuffer-mark-by-content-regexp) ; "g" is for "grep"
-         ("* n" . ibuffer-mark-by-name-regexp)
-         ("s n" . ibuffer-do-sort-by-alphabetic)  ; "sort name" mnemonic
-         ("/ g" . ibuffer-filter-by-content)))
+  (add-hook 'ibuffer-mode-hook #'hl-line-mode)
+  (define-key global-map (kbd "C-x C-b") #'ibuffer)
+  (let ((map ibuffer-mode-map))
+    (define-key map (kbd "* f") #'ibuffer-mark-by-file-name-regexp)
+    (define-key map (kbd "* g") #'ibuffer-mark-by-content-regexp) ; "g" is for "grep"
+    (define-key map (kbd "* n") #'ibuffer-mark-by-name-regexp)
+    (define-key map (kbd "s n") #'ibuffer-do-sort-by-alphabetic)  ; "sort name" mnemonic
+    (define-key map (kbd "/ g") #'ibuffer-filter-by-content)))
 
-(use-package prot-ibuffer
-  :straight (:type built-in)
-  :bind (("M-s b" . prot-ibuffer-buffers-major-mode)
-         ("M-s v" . prot-ibuffer-buffers-vc-root)))
+(require 'prot-ibuffer)
+(with-eval-after-load 'prot-ibuffer
+  (let ((map global-map))
+    (define-key map (kbd "M-s b") #'prot-ibuffer-buffers-major-mode)
+    (define-key map (kbd "M-s v") #'prot-ibuffer-buffers-vc-root)))
 #+end_src
 
 Here is =prot-ibuffer.el= (find everything in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-ibuffer.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-ibuffer.el src emacs-lisp :tangle no
 
 *** Scratch buffers per major-mode
 :PROPERTIES:
@@ -2510,31 +2455,31 @@ renames it appropriately for the sake of easier discovery.  I got the
 idea of copying the region from [[https://gist.github.com/eev2/52edbfdb645e26aefec19226c0ca7ad0][a snippet shared by eev2 on GitHub]].
 
 #+begin_src emacs-lisp
-(use-package scratch
-  :straight t
-  :config
+(require 'scratch)
+(with-eval-after-load 'scratch
+  (add-to-list 'prot-emacs-ensure-install 'scratch)
   ;; TODO 2021-01-19: refine `prot/scratch-buffer-setup'
   (defun prot/scratch-buffer-setup ()
-  "Add contents to `scratch' buffer and name it accordingly.
+    "Add contents to `scratch' buffer and name it accordingly.
 If region is active, add its contents to the new buffer."
-  (let* ((mode major-mode)
-         (string (format "Scratch buffer for: %s\n\n" mode))
-         (region (with-current-buffer (current-buffer)
+    (let* ((mode major-mode)
+           (string (format "Scratch buffer for: %s\n\n" mode))
+           (region (with-current-buffer (current-buffer)
                      (if (region-active-p)
                          (buffer-substring-no-properties
                           (region-beginning)
                           (region-end)))
                      ""))
-         (text (concat string region)))
-    (when scratch-buffer
-      (save-excursion
-        (insert text)
-        (goto-char (point-min))
-        (comment-region (point-at-bol) (point-at-eol)))
-      (forward-line 2))
-    (rename-buffer (format "*Scratch for %s*" mode) t)))
-  :hook (scratch-create-buffer-hook . prot/scratch-buffer-setup)
-  :bind ("C-c s" . scratch))
+           (text (concat string region)))
+      (when scratch-buffer
+	    (save-excursion
+          (insert text)
+          (goto-char (point-min))
+          (comment-region (point-at-bol) (point-at-eol)))
+	    (forward-line 2))
+      (rename-buffer (format "*Scratch for %s*" mode) t)))
+  (add-hook 'scratch-create-buffer-hook #'prot/scratch-buffer-setup)
+  (define-key global-map (kbd "C-c s") #'scratch))
 #+end_src
 
 ** Window configuration
@@ -2577,26 +2522,26 @@ sequence, but my usage thus far suggests that a simpler method is just
 as effective for my case.
 
 Everything pertaining to buffer actions is documented at length in the
-[[https://www.gnu.org/software/emacs/manual/html_node/elisp/index.html#Top][GNU Emacs Lisp Reference Manual]], currently corresponding to version
-26.3.  Information can also be found via =C-h f display-buffer= and, for
-my settings, =C-h f display-buffer-in-side-window=.
+GNU Emacs Lisp Reference Manual.  Information can also be found at all
+times via =C-h f display-buffer= and, for my particular settings, with
+=C-h f display-buffer-in-side-window=.
 
-With regard to the contents of the =:bind= keyword of the =window= library,
-most key combinations are complementary to the standard ones, such as
-=C-x 1= becoming =s-1=, =C-x o= turning into =s-o= and the like.  They *do not
-replace* the defaults: they just provide more convenient access to their
-corresponding functions.  They all involve the Super key, following the
-norms described in the [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][introductory note on the matter]].  Concerning the
-=balance-windows-area= I find that it is less intrusive than the original
-=balance-windows= normally bound to the same =C-x +=.
+With regard to the key bindings, most combinations are complementary to
+the standard ones, such as =C-x 1= becoming =s-1=, =C-x o= turning into
+=s-o= and the like.  They *do not replace* the defaults: they just
+provide more convenient access to their corresponding functions.  They
+all involve the Super key, following the norms described in the relevant
+[[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note on the matter]].  Concerning the =balance-windows-area= I find that
+it is less intrusive than the original =balance-windows= normally bound
+to the same =C-x +=.
 
 For a demo of the =display-buffer-alist= and the functions that
 accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-display-buffer/][video on rules for buffer placement]]
 (2020-01-07).
 
 #+begin_src emacs-lisp
-(use-package window
-  :init
+(require 'window)
+(with-eval-after-load 'window
   (setq display-buffer-alist
         '(;; top side window
           ("\\**prot-elfeed-bongo-queue.*"
@@ -2672,22 +2617,21 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
   (setq switch-to-buffer-in-dedicated-window 'pop)
-  ;; Hooks' syntax is controlled by the `use-package-hook-name-suffix'
-  ;; variable.  The "-hook" suffix is intentional.
-  :hook ((help-mode-hook . visual-line-mode)
-         (custom-mode-hook . visual-line-mode))
-  :bind (("s-n" . next-buffer)
-         ("s-p" . previous-buffer)
-         ("s-o" . other-window)
-         ("s-2" . split-window-below)
-         ("s-3" . split-window-right)
-         ("s-0" . delete-window)
-         ("s-1" . delete-other-windows)
-         ("s-!" . delete-other-windows-vertically) ; s-S-1
-         ("s-5" . delete-frame)
-         ("C-x _" . balance-windows)
-         ("C-x +" . balance-windows-area)
-         ("s-q" . window-toggle-side-windows)))
+  (add-hook 'help-mode-hook #'visual-line-mode)
+  (add-hook 'custom-mode-hook #'visual-line-mode)
+  (let ((map global-map))
+    (define-key map (kbd "s-n") #'next-buffer)
+    (define-key map (kbd "s-p") #'previous-buffer)
+    (define-key map (kbd "s-o") #'other-window)
+    (define-key map (kbd "s-2") #'split-window-below)
+    (define-key map (kbd "s-3") #'split-window-right)
+    (define-key map (kbd "s-0") #'delete-window)
+    (define-key map (kbd "s-1") #'delete-other-windows)
+    (define-key map (kbd "s-!") #'delete-other-windows-vertically) ; s-S-1
+    (define-key map (kbd "s-5") #'delete-frame)
+    (define-key map (kbd "C-x _") #'balance-windows)
+    (define-key map (kbd "C-x +") #'balance-windows-area)
+    (define-key map (kbd "s-q") #'window-toggle-side-windows)))
 #+end_src
 
 *** Window history (winner-mode)
@@ -2701,10 +2645,12 @@ history of said changes.  I have it enabled by default, while I assign
 its two main functions to Super and the right/left arrow keys.
 
 #+begin_src emacs-lisp
-(use-package winner
-  :hook (after-init-hook . winner-mode)
-  :bind (("<s-right>" . winner-redo)
-         ("<s-left>" . winner-undo)))
+(require 'winner)
+(with-eval-after-load 'winner
+  (add-hook 'after-init-hook #'winner-mode)
+  (let ((map global-map))
+    (define-key map (kbd "<s-right>") #'winner-redo)
+    (define-key map (kbd "<s-left>") #'winner-undo)))
 #+end_src
 
 *** Directional window motions (windmove)
@@ -2723,13 +2669,14 @@ for a while but felt that the times it would interfere with my layout
 where more than those it would actually speed up my workflow.
 
 #+begin_src emacs-lisp
-(use-package windmove
-  :config
+(require 'windmove)
+(with-eval-after-load 'windmove
   (setq windmove-create-window nil)     ; Emacs 27.1
-  :bind (("<C-M-up>" . windmove-up)
-         ("<C-M-right>" . windmove-right)
-         ("<C-M-down>" . windmove-down)
-         ("<C-M-left>" . windmove-left)))
+  (let ((map global-map))
+    (define-key map (kbd "<C-M-up>") #'windmove-up)
+    (define-key map (kbd "<C-M-right>") #'windmove-right)
+    (define-key map (kbd "<C-M-down>") #'windmove-down)
+    (define-key map (kbd "<C-M-left>") #'windmove-left)))
 #+end_src
 
 *** Tabs for window layouts (and prot-tab.el)
@@ -2792,8 +2739,8 @@ via =C-x t r=, though I find I do not use it.
 Here my settings, followed by the entirety of =prot-tab.el=.
 
 #+begin_src emacs-lisp
-(use-package tab-bar
-  :init
+(require 'tab-bar)
+(with-eval-after-load 'tab-bar
   (setq tab-bar-close-button-show nil)
   (setq tab-bar-close-last-tab-choice 'tab-bar-mode-disable)
   (setq tab-bar-close-tab-select 'recent)
@@ -2803,30 +2750,28 @@ Here my settings, followed by the entirety of =prot-tab.el=.
   (setq tab-bar-show nil)
   (setq tab-bar-tab-hints nil)
   (setq tab-bar-tab-name-function 'tab-bar-tab-name-all)
-  :config
   (tab-bar-mode -1)
   (tab-bar-history-mode -1)
-  :bind (("<s-tab>" . tab-next)
-         ("<S-s-iso-lefttab>" . tab-previous)))
+  (let ((map global-map))
+    (define-key map (kbd "<s-tab>") #'tab-next)
+    (define-key map (kbd "<S-s-iso-lefttab>") #'tab-previous)))
 
-(use-package prot-tab
-  :straight (:type built-in)
-  :after tab-bar
-  :bind (("<f8>" . prot-tab-tab-bar-toggle)
-         ("C-x t t" . prot-tab-select-tab-dwim)
-         ("s-t" . prot-tab-select-tab-dwim)))
+(require 'prot-tab)
+(with-eval-after-load 'prot-tab
+  (let ((map global-map))
+    (define-key map (kbd "<f8>") #'prot-tab-tab-bar-toggle)
+    (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)
+    (define-key map (kbd "s-t") #'prot-tab-select-tab-dwim)))
 
-;; This is only included as a reference.
-(use-package tab-line
-  :disabled
-  :commands (tab-line-mode global-tab-line-mode)
-  :config
-  (global-tab-line-mode -1))
+;; ;; This is only included as a reference.
+;; (require 'tab-line)
+;; (with-eval-after-load 'tab-line
+;;   (global-tab-line-mode -1))
 #+end_src
 
 The =prot-tab.el= code, which is in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]:
 
-#+include: straight/repos/prot-lisp/prot-tab.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-tab.el src emacs-lisp :tangle no
 
 *** Transposition and rotation of windows
 :PROPERTIES:
@@ -2839,16 +2784,12 @@ strongly encourage you to read the "Commentary" section in the source
 code.  Do it with =M-x find-library transpose-frame=.
 
 #+begin_src emacs-lisp
-(use-package transpose-frame
-  :straight t
-  :commands (transpose-frame
-             flip-frame
-             flop-frame
-             rotate-frame
-             rotate-frame-clockwise
-             rotate-frame-anticlockwise)
-  :bind (("C-s-t" . flop-frame) ; what I consider "transpose" in this context
-         ("C-s-r" . rotate-frame-clockwise)))
+(require 'transpose-frame)
+(with-eval-after-load 'transpose-frame
+  (add-to-list 'prot-emacs-ensure-install 'transpose-frame)
+  (let ((map global-map))
+    (define-key map (kbd "C-s-t") #'flop-frame) ; what I consider "transpose" in this context
+    (define-key map (kbd "C-s-r") #'rotate-frame-clockwise)))
 #+end_src
 
 * Applications and utilities
@@ -2937,20 +2878,18 @@ these:
 + [[https://protesilaos.com/codelog/2020-07-17-emacs-mixed-fonts-org/][Configuring mixed fonts for Org mode and others]] (2020-07-17)
 
 #+begin_src emacs-lisp
-(use-package face-remap :diminish buffer-face-mode)
+(require 'face-remap)
 
-(use-package olivetti
-  :straight t
-  :diminish
-  :config
+(require 'olivetti)
+(with-eval-after-load 'olivetti
+  (add-to-list 'prot-emacs-ensure-install 'olivetti)
   (setq olivetti-body-width 0.7)
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t))
 
-(use-package org-tree-slide
-  :straight t
-  :diminish
-  :config
+(require 'org-tree-slide)
+(with-eval-after-load 'org-tree-slide
+  (add-to-list 'prot-emacs-ensure-install 'org-tree-slide)
   (setq org-tree-slide-breadcrumbs nil)
   (setq org-tree-slide-header nil)
   (setq org-tree-slide-slide-in-effect nil)
@@ -2966,26 +2905,24 @@ these:
         (format "Presentation %s" (propertize "ON" 'face 'success)))
   (setq org-tree-slide-deactivate-message
         (format "Presentation %s" (propertize "OFF" 'face 'error)))
-  :bind (:map org-tree-slide-mode-map
-         ("<C-down>" . org-tree-slide-display-header-toggle)
-         ("<C-right>" . org-tree-slide-move-next-tree)
-         ("<C-left>" . org-tree-slide-move-previous-tree)))
+  (let ((map org-tree-slide-mode-map))
+    (define-key map (kbd "<C-down>") #'org-tree-slide-display-header-toggle)
+    (define-key map (kbd "<C-right>") #'org-tree-slide-move-next-tree)
+    (define-key map (kbd "<C-left>") #'org-tree-slide-move-previous-tree)))
 
-(use-package prot-logos
-  :straight (:type built-in)
-  :diminish visual-line-mode
-  :config
+(require 'prot-logos)
+(with-eval-after-load 'prot-logos
   (setq prot-logos-org-presentation nil)
   (setq prot-logos-variable-pitch nil)
   (setq prot-logos-scroll-lock nil)
   (setq prot-logos-hidden-modeline nil)
-  :bind ("<f9>" . prot-logos-focus-mode))
+  (define-key global-map (kbd "<f9>") #'prot-logos-focus-mode))
 #+end_src
 
 And here is =prot-logos.el= in its totality.  It is available as a file in
 [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (same for all my Emacs libraries):
 
-#+include: straight/repos/prot-lisp/prot-logos.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-logos.el src emacs-lisp :tangle no
 
 ** USLS --- Unassuming Sidenotes of Little Significance
 :PROPERTIES:
@@ -3012,29 +2949,28 @@ The code for this project is on the [[https://gitlab.com/protesilaos/usls][USLS 
 the subsequent code block.
 
 #+begin_src emacs-lisp
-(use-package usls
-  :straight (:type built-in
-             :no-byte-compile t)      ; Omit this: only for my dev needs
-  :config
+(require 'usls)
+(with-eval-after-load 'usls
   (setq usls-directory "~/Documents/notes/")
   (setq usls-known-categories '(economics philosophy politics))
   (setq usls-file-type-extension ".txt") ; {.txt,.org,.md}
   (setq usls-subdir-support nil)
   (setq usls-file-region-separator 'line) ; {'line,'heading, OR string of your choice}
   (setq usls-file-region-separator-heading-level 1)
-  :bind (("C-c n d" . usls-dired)
-         ("C-c n f" . usls-find-file)
-         ("C-c n n" . usls-new-note)
-         ("C-c n a" . usls-append-region-buffer-or-file)
-         :map usls-mode-map
-         ("C-c n i" . usls-id-insert)
-         ("C-c n l" . usls-follow-link)))
+  (let ((map global-map))
+    (define-key map (kbd "C-c n d") #'usls-dired)
+    (define-key map (kbd "C-c n f") #'usls-find-file)
+    (define-key map (kbd "C-c n n") #'usls-new-note)
+    (define-key map (kbd "C-c n a") #'usls-append-region-buffer-or-file))
+  (let ((map usls-mode-map))
+    (define-key map (kbd "C-c n i") #'usls-id-insert)
+    (define-key map (kbd "C-c n l") #'usls-follow-link)))
 #+end_src
 
 Here is the =usls.el= code, which is also part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as
 with all my Elisp code):
 
-#+include: straight/repos/prot-lisp/usls.el src emacs-lisp :tangle no
+#+include: prot-lisp/usls.el src emacs-lisp :tangle no
 
 ** TMR Must Recur (just my simplistic timer)
 :PROPERTIES:
@@ -3058,16 +2994,15 @@ Then it plays back some otherwise annoying sound, just to be sure that
 you feel an urge to quit whatever caught your attention in the meantime.
 
 #+begin_src emacs-lisp
-(use-package tmr
-  :straight (:type built-in)
-  :config
+(require 'tmr)
+(with-eval-after-load 'tmr
   (setq tmr-sound-file
         "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"))
 #+end_src
 
 This is its code (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/tmr.el src emacs-lisp :tangle no
+#+include: prot-lisp/tmr.el src emacs-lisp :tangle no
 
 ** Version control tools
 :PROPERTIES:
@@ -3157,8 +3092,8 @@ on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (s
 =display-buffer-alist=).
 
 #+begin_src emacs-lisp
-(use-package diff-mode
-  :config
+(require 'diff-mode)
+(with-eval-after-load 'diff-mode
   (setq diff-default-read-only t)
   (setq diff-advance-after-apply-hunk t)
   (setq diff-update-on-the-fly t)
@@ -3169,20 +3104,20 @@ on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (s
   ;; `prot-diff-modus-themes-diffs'
   (setq diff-font-lock-syntax 'hunk-also))
 
-(use-package prot-diff
-  :straight (:type built-in)
+(require 'prot-diff)
+(with-eval-after-load 'prot-diff
   ;; `prot-diff-buffer-dwim' replaces the default for `vc-diff' (which I
   ;; bind to another key---see VC section).
-  :hook (modus-themes-after-load-theme-hook . prot-diff-modus-themes-diffs)
-  :bind (("C-x v =" . prot-diff-buffer-dwim)
-         :map diff-mode-map
-         ("C-c C-b" . prot-diff-refine-dwim) ; replace `diff-refine-hunk'
-         ("C-c C-n" . prot-diff-narrow-dwim)))
+  (add-hook 'modus-themes-after-load-theme-hook #'prot-diff-modus-themes-diffs)
+  (define-key global-map (kbd "C-x v =") #'prot-diff-buffer-dwim)
+  (let ((map diff-mode-map))
+    (define-key map (kbd "C-c C-b") #'prot-diff-refine-dwim) ; replace `diff-refine-hunk'
+    (define-key map (kbd "C-c C-n") #'prot-diff-narrow-dwim)))
 #+end_src
 
 This is =prot-diff.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-diff.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-diff.el src emacs-lisp :tangle no
 
 *** Version control framework (vc.el and prot-vc.el)
 :PROPERTIES:
@@ -3282,14 +3217,14 @@ defines a few commands that extend VC to suit my needs.  In short:
   mode to make it easy to disable.
 
 #+begin_src emacs-lisp
-(use-package vc
-  :demand
-  :config
-  (use-package vc-annotate)
-  (use-package vc-dir)
-  (use-package vc-git)
-  (use-package add-log)
-  (use-package log-view)
+;; ;; NOTE: this is already `require'd in init.el
+;; (require 'vc)
+(with-eval-after-load 'vc
+  (require 'vc-annotate)
+  (require 'vc-dir)
+  (require 'vc-git)
+  (require 'add-log)
+  (require 'log-view)
 
   (setq vc-find-revision-no-save t)
   (setq vc-annotate-display-mode 'scale) ; scale to oldest
@@ -3312,59 +3247,59 @@ defines a few commands that extend VC to suit my needs.  In short:
            (2 'change-log-list nil lax)
            (3 'change-log-name)
            (4 'change-log-date))))
-  :bind (("C-x v a" . vc-annotate) ; `vc-update-change-log' is not in git
-         ("C-x v b" . vc-retrieve-tag)  ; "branch" switch
-         ("C-x v t" . vc-create-tag)
-         ("C-x v f" . vc-log-incoming)  ; the actual git fetch
-         ("C-x v o" . vc-log-outgoing)
-         ("C-x v F" . vc-update)        ; "F" because "P" is push
-         ("C-x v d" . vc-diff)
-         :map vc-dir-mode-map
-         ("a" . vc-annotate)
-         ("b" . vc-retrieve-tag)
-         ("t" . vc-create-tag)
-         ("o" . vc-log-outgoing)
-         ("f" . vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
-         ("F" . vc-update)       ; symmetric with P: `vc-push'
-         ("d" . vc-diff)         ; parallel to D: `vc-root-diff'
-         ("k" . vc-dir-clean-files)
-         :map vc-annotate-mode-map
-         ("M-q" . vc-annotate-toggle-annotation-visibility)
-         ("C-c C-c" . vc-annotate-goto-line)
-         ("<return>" . vc-annotate-find-revision-at-line)
-         :map log-view-mode-map
-         ("<tab>" . log-view-toggle-entry-display)
-         ("<return>" . log-view-find-revision)
-         ("s" . vc-log-search)
-         ("o" . vc-log-outgoing)
-         ("f" . vc-log-incoming)
-         ("F" . vc-update)
-         ("P" . vc-push)))
+  (let ((map global-map))
+    (define-key map (kbd "C-x v a") #'vc-annotate) ; `vc-update-change-log' is not in git
+    (define-key map (kbd "C-x v b") #'vc-retrieve-tag)  ; "branch" switch
+    (define-key map (kbd "C-x v t") #'vc-create-tag)
+    (define-key map (kbd "C-x v f") #'vc-log-incoming)  ; the actual git fetch
+    (define-key map (kbd "C-x v o") #'vc-log-outgoing)
+    (define-key map (kbd "C-x v F") #'vc-update)        ; "F" because "P" is push
+    (define-key map (kbd "C-x v d") #'vc-diff))
+  (let ((map vc-dir-mode-map))
+    (define-key map (kbd "a") #'vc-annotate)
+    (define-key map (kbd "b") #'vc-retrieve-tag)
+    (define-key map (kbd "t") #'vc-create-tag)
+    (define-key map (kbd "o") #'vc-log-outgoing)
+    (define-key map (kbd "f") #'vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
+    (define-key map (kbd "F") #'vc-update)       ; symmetric with P: `vc-push'
+    (define-key map (kbd "d") #'vc-diff)         ; parallel to D: `vc-root-diff'
+    (define-key map (kbd "k") #'vc-dir-clean-files))
+  (let ((map vc-annotate-mode-map))
+    (define-key map (kbd "M-q") #'vc-annotate-toggle-annotation-visibility)
+    (define-key map (kbd "C-c C-c") #'vc-annotate-goto-line)
+    (define-key map (kbd "<return>") #'vc-annotate-find-revision-at-line))
+  (let ((map log-view-mode-map))
+    (define-key map (kbd "<tab>") #'log-view-toggle-entry-display)
+    (define-key map (kbd "<return>") #'log-view-find-revision)
+    (define-key map (kbd "s") #'vc-log-search)
+    (define-key map (kbd "o") #'vc-log-outgoing)
+    (define-key map (kbd "f") #'vc-log-incoming)
+    (define-key map (kbd "F") #'vc-update)
+    (define-key map (kbd "P") #'vc-push)))
 
-(use-package prot-vc
-  :straight (:type built-in)
-  :after vc
-  :init
+(require 'prot-vc)
+(with-eval-after-load 'prot-vc
   (setq prot-vc-log-limit 20)
   (setq prot-vc-shell-output "*prot-vc-output*")
   (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
 
   (prot-vc-git-setup-mode 1)
-  :bind (("C-x v p" . prot-vc-project-or-dir)
-         ("C-x v SPC" . prot-vc-custom-log)
-         ("C-x v c" . prot-vc-git-patch-dwim)
-         ("C-x v s" . prot-vc-git-show)
-         ("C-x v r" . prot-vc-find-revision)
-         ("C-x v B" . prot-vc-git-blame-region-or-file)
-         :map log-view-mode-map
-         ("<C-tab>" . prot-vc-log-view-toggle-entry-all)
-         ("c" . prot-vc-git-patch-dwim)
-         ("w" . prot-vc-log-kill-hash)))
+  (let ((map global-map))
+    (define-key map (kbd "C-x v p") #'prot-vc-project-or-dir)
+    (define-key map (kbd "C-x v SPC") #'prot-vc-custom-log)
+    (define-key map (kbd "C-x v c") #'prot-vc-git-patch-dwim)
+    (define-key map (kbd "C-x v s") #'prot-vc-git-show)
+    (define-key map (kbd "C-x v r") #'prot-vc-find-revision)
+    (define-key map (kbd "C-x v B") #'prot-vc-git-blame-region-or-file))
+  (let ((map log-view-mode-map))
+    (define-key map (kbd "<C-tab>") #'prot-vc-log-view-toggle-entry-all)
+    (define-key map (kbd "c") #'prot-vc-git-patch-dwim)
+    (define-key map (kbd "w") #'prot-vc-log-kill-hash)))
 #+end_src
 
 And here is =prot-vc.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-vc.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-vc.el src emacs-lisp :tangle no
 
 **** Commit log editing
 :PROPERTIES:
@@ -3389,8 +3324,8 @@ always use =auto-fill-mode= to wrap lines to the value of =fill-column= (see
 [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][Paragraphs and fill-mode (prot-fill.el)]]).
 
 #+begin_src emacs-lisp
-(use-package log-edit
-  :config
+(require 'log-edit)
+(with-eval-after-load 'log-edit
   (setq log-edit-confirm 'changed)
   (setq log-edit-keep-buffer nil)
   (setq log-edit-require-final-newline t)
@@ -3451,15 +3386,16 @@ that certain git forges encourage.  I prefer this approach and am eager
 to see it getting more widespread adoption.
 
 #+begin_src emacs-lisp
-(use-package git-email
-  :straight (:host: nil :type git
-             :repo "https://git.sr.ht/~yoctocell/git-email")
-  :config
+;; Project repo: <https://git.sr.ht/~yoctocell/git-email>.  This is one
+;; of the packages I handle manually via git.
+(add-to-list 'load-path (concat user-emacs-directory "contrib-lisp/git-email/"))
+(require 'git-email)
+(with-eval-after-load 'git-email
   (with-eval-after-load 'gnus
+    (require 'git-email-gnus)
     (git-email-gnus-mode 1))
-  :bind (("C-x v RET" . git-email-format-patch) ; VC prefix and C-m
-         :map dired-mode-map
-         ("C-x v RET" . git-email-send-email)))
+  (define-key global-map (kbd "C-x v RET") #'git-email-format-patch) ; VC prefix and C-m
+  (define-key dired-mode-map (kbd "C-x v RET") #'git-email-send-email))
 #+end_src
 
 *** Interactive and powerful git front-end (Magit)
@@ -3490,13 +3426,12 @@ commits that are clean and easy to read.  The =fill-column= is set
 elsewhere in this document to 72 characters long.
 
 #+begin_src emacs-lisp
-(use-package magit
-  :straight t
-  :bind ("C-c g" . magit-status))
+(require 'magit)
+(with-eval-after-load 'magit
+  (add-to-list 'prot-emacs-ensure-install 'magit)
+  (define-key global-map (kbd "C-c g") #'magit-status)
 
-(use-package git-commit
-  :after magit
-  :config
+  (require 'git-commit)
   (setq git-commit-summary-max-length 50)
   (setq git-commit-known-pseudo-headers
         '("Signed-off-by"
@@ -3509,17 +3444,12 @@ elsewhere in this document to 72 characters long.
           "Reviewed-by"))
   (setq git-commit-style-convention-checks
         '(non-empty-second-line
-          overlong-summary-line)))
+          overlong-summary-line))
 
-(use-package magit-diff
-  :after magit
-  :config
-  (setq magit-diff-refine-hunk t))
+  (require 'magit-diff)
+  (setq magit-diff-refine-hunk t)
 
-(use-package magit-repos
-  :after magit
-  :commands magit-list-repositories
-  :config
+  (require 'magit-repos)
   (setq magit-repository-directories
         '(("~/Git/Projects" . 1))))
 #+end_src
@@ -3622,10 +3552,10 @@ Also watch my video of [[https://protesilaos.com/codelog/2020-04-10-emacs-smerge
 (2020-04-10).
 
 #+begin_src emacs-lisp
-(use-package smerge-mode)
+(require 'smerge-mode)
 
-(use-package ediff
-  :config
+(require 'ediff)
+(with-eval-after-load 'ediff
   (setq ediff-keep-variants nil)
   (setq ediff-make-buffers-readonly-at-startup nil)
   (setq ediff-merge-revisions-with-ancestor t)
@@ -3758,10 +3688,10 @@ Also check these valuable resources:
 + [[https://ambrevar.xyz/emacs-eshell/][Pierre Neidhardt's detailed blog post]] on the pros and cons of Eshell.
 
 #+begin_src emacs-lisp
-(use-package eshell)
-(use-package esh-mode)
-(use-package esh-module
-  :config
+(require 'eshell)
+(with-eval-after-load 'eshell
+  (require 'esh-mode)
+  (require 'esh-module)
   (setq eshell-modules-list             ; It works but may need review
         '(eshell-alias
           eshell-basic
@@ -3775,53 +3705,46 @@ Also check these valuable resources:
           eshell-script
           eshell-term
           eshell-tramp
-          eshell-unix)))
+          eshell-unix))
 
-(use-package em-dirs
-  :after esh-mode
-  :config
-  (setq eshell-cd-on-directory t))
+  (require 'em-dirs)
+  (setq eshell-cd-on-directory t)
 
-(use-package em-tramp
-  :after esh-mode
-  :config
+  (require 'em-tramp)
   (setq password-cache t)
-  (setq password-cache-expiry 600))
+  (setq password-cache-expiry 600)
 
-(use-package em-hist
-  :after esh-mode
-  :config
+  (require 'em-hist)
   (setq eshell-hist-ignoredups t)
   (setq eshell-save-history-on-exit t))
 
-(use-package prot-eshell
-  :straight (:type built-in)
-  :after (eshell esh-mode em-dirs em-hist)
-  :config
+(require 'prot-eshell)
+(with-eval-after-load 'prot-eshell
   (setq prot-eshell-output-buffer "*Exported Eshell output*")
   (setq prot-eshell-output-delimiter "* * *")
-  :bind (("<s-return>" . eshell)
-         :map eshell-mode-map
-         ("M-k" . eshell-kill-input)
-         ("C-c C-f" . prot-eshell-ffap-find-file)
-         ("C-c C-j" . prot-eshell-ffap-dired-jump)
-         ("C-c C-w" . prot-eshell-ffap-kill-save)
-         ("C-c C->" . prot-eshell-redirect-to-buffer)
-         ("C-c C-e" . prot-eshell-export)
-         ("C-c C-r" . prot-eshell-root-dir)
-         :map eshell-cmpl-mode-map
-         ("C-c TAB" . prot-eshell-ffap-insert) ; C-c C-i
-         ("C-c M-h" . prot-eshell-narrow-output-highlight-regexp)
-         :map eshell-hist-mode-map
-         ("M-s" . nil) ; I use this prefix for lots of more useful commands
-         ("M-r" . prot-eshell-complete-history)
-         ("C-c C-d" . prot-eshell-complete-recent-dir)
-         ("C-c C-s" . prot-eshell-find-subdirectory-recursive)))
+  (define-key global-map (kbd "<s-return>") #'eshell)
+  (let ((map eshell-mode-map))
+    (define-key map (kbd "M-k") #'eshell-kill-input)
+    (define-key map (kbd "C-c C-f") #'prot-eshell-ffap-find-file)
+    (define-key map (kbd "C-c C-j") #'prot-eshell-ffap-dired-jump)
+    (define-key map (kbd "C-c C-w") #'prot-eshell-ffap-kill-save)
+    (define-key map (kbd "C-c C->") #'prot-eshell-redirect-to-buffer)
+    (define-key map (kbd "C-c C-e") #'prot-eshell-export)
+    (define-key map (kbd "C-c C-r") #'prot-eshell-root-dir)
+    ;; ;; TODO: debug `eshell-cmpl-mode-map'
+    ;;  (let ((map eshell-cmpl-mode-map))
+    (define-key map (kbd "C-c TAB") #'prot-eshell-ffap-insert) ; C-c C-i
+    (define-key map (kbd "C-c M-h") #'prot-eshell-narrow-output-highlight-regexp))
+  (let ((map eshell-hist-mode-map))
+    (define-key map (kbd "M-s") #'nil) ; I use this prefix for lots of more useful commands
+    (define-key map (kbd "M-r") #'prot-eshell-complete-history)
+    (define-key map (kbd "C-c C-d") #'prot-eshell-complete-recent-dir)
+    (define-key map (kbd "C-c C-s") #'prot-eshell-find-subdirectory-recursive)))
 #+end_src
 
 This is =prot-eshell.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-eshell.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-eshell.el src emacs-lisp :tangle no
 
 **** Shell (M-x shell)
 :PROPERTIES:
@@ -3851,12 +3774,11 @@ Run =C-h m= inside of a shell buffer to learn about all the key bindings
 and corresponding functions.
 
 #+begin_src emacs-lisp
-(use-package shell
-  :commands shell-command
-  :config
+(require 'shell)
+(with-eval-after-load 'shell
   (setq ansi-color-for-comint-mode t)
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
-  :bind (("<s-S-return>" . shell)))
+  (define-key global-map (kbd "<s-S-return>") #'shell))
 #+end_src
 
 ** Calendar
@@ -3868,8 +3790,8 @@ Some basic settings for =calendar.el=.  It is used by Org-mode facilities
 that require date/time input (see following sections).
 
 #+begin_src emacs-lisp
-(use-package calendar
-  :config
+(require 'calendar)
+(with-eval-after-load 'calendar
   (setq calendar-mark-diary-entries-flag nil)
   (setq calendar-time-display-form
         '(24-hours ":" minutes
@@ -3880,20 +3802,18 @@ that require date/time input (see following sections).
   (setq calendar-mark-holidays-flag nil)
   (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
 
-  (use-package solar
-    :config
-    (setq calendar-latitude 35.17
-          calendar-longitude 33.36))
+  ;; (require 'solar)
+  ;; (setq calendar-latitude 35.17
+  ;;       calendar-longitude 33.36)
+  ;;
+  ;; (require 'lunar)
+  ;; (setq lunar-phase-names
+  ;;       '("New Moon"
+  ;;         "First Quarter Moon"
+  ;;         "Full Moon"
+  ;;         "Last Quarter Moon"))
 
-  (use-package lunar
-    :config
-    (setq lunar-phase-names
-          '("New Moon"
-            "First Quarter Moon"
-            "Full Moon"
-            "Last Quarter Moon")))
-
-  :hook (calendar-today-visible-hook . calendar-mark-today))
+  (add-hook 'calendar-today-visible-hook #'calendar-mark-today))
 #+end_src
 
 ** Org-mode (personal information manager)
@@ -4052,12 +3972,8 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 ;; (`org-edit-special') to put the code block in a dedicated buffer and
 ;; then activate `prot-outline-minor-mode-safe' to conveniently browse
 ;; this massive package declaration.
-(use-package org-mode
-  ;; :straight (:host nil :type git
-  ;;            :repo "https://code.orgmode.org/bzg/org-mode.git") ; Get Org from its source
-  ;; ;; Use this instead of the above if you want the built-in version.
-  :straight (:type built-in)
-  :init
+(require 'org)
+(with-eval-after-load 'org
   (setq org-directory "~/Org")
   (setq org-imenu-depth 7)
 ;;;; general settings
@@ -4187,7 +4103,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 ;;;; agenda
 ;;;;; Basic agenda setup
   (setq org-default-notes-file "~/Org/notes.org")
-  (setq org-agenda-files '("~/Org" "~/.emacs.d" "~/Documents"))
+  (setq org-agenda-files `("~/Org" ,user-emacs-directory "~/Documents"))
   (setq org-agenda-span 14)
   (setq org-agenda-start-on-weekday 1)  ; Monday
   (setq org-agenda-confirm-kill t)
@@ -4388,7 +4304,7 @@ produces dates with a fixed length."
   (setq org-html-htmlize-output-type nil)
   (setq org-html-head-include-default-style nil)
   (setq org-html-head-include-scripts nil)
-  (use-package ox-texinfo)
+  (require 'ox-texinfo)
   ;; FIXME: how to remove everything else?
   (setq org-export-backends '(html texinfo))
 
@@ -4431,17 +4347,18 @@ file which do not already have one."
     (org-map-entries
      (lambda () (contrib/org-id-get (point) t))))
 
-  :hook (org-follow-link-hook . prot-pulse-recentre-top)
-  :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-c l" . org-store-link)
-         :map org-mode-map
-         ("C-'" . nil)
-         ("C-," . nil)
-         ("<C-return>" . nil)
-         ("<C-S-return>" . nil)
-         ("C-c S-l" . org-toggle-link-display)
-         ("C-c C-S-l" . org-insert-last-stored-link)))
+  (add-hook 'org-follow-link-hook #'prot-pulse-recentre-top)
+  (let ((map global-map))
+    (define-key map (kbd "C-c a") #'org-agenda)
+    (define-key map (kbd "C-c c") #'org-capture)
+    (define-key map (kbd "C-c l") #'org-store-link))
+  (let ((map org-mode-map))
+    (define-key map (kbd "C-'") nil)
+    (define-key map (kbd "C-,") nil)
+    (define-key map (kbd "<C-return>") nil)
+    (define-key map (kbd "<C-S-return>") nil)
+    (define-key map (kbd "C-c S-l") #'org-toggle-link-display)
+    (define-key map (kbd "C-c C-S-l") #'org-insert-last-stored-link)))
 #+end_src
 
 ** Email settings
@@ -4533,8 +4450,8 @@ Then we set up the interface for composing emails:
   want the added confirmation.
 
 #+begin_src emacs-lisp
-(use-package auth-source
-  :init
+(require 'auth-source)
+(with-eval-after-load 'auth-source
   (setq auth-sources '("~/.authinfo.gpg"))
   (setq user-full-name "Protesilaos Stavrou")
   (setq user-mail-address "public@protesilaos.com")
@@ -4549,20 +4466,20 @@ Then we set up the interface for composing emails:
           field
         (user-error "No entry in auth sources")))))
 
-(use-package mm-encode
-  :config
+(require 'mm-encode)
+(with-eval-after-load 'mm-encode
   (setq mm-encrypt-option 'guided)
   (setq mm-sign-option 'guided))
 
-(use-package mml-sec
-  :config
+(require 'mml-sec)
+(with-eval-after-load 'mml-sec
   (setq mml-secure-openpgp-encrypt-to-self t)
   (setq mml-secure-openpgp-sign-with-sender t)
   (setq mml-secure-smime-encrypt-to-self t)
   (setq mml-secure-smime-sign-with-sender t))
 
-(use-package message
-  :config
+(require 'message)
+(with-eval-after-load 'message
   (setq mail-user-agent 'message-user-agent)
   (setq compose-mail-user-agent-warnings nil)
   (setq message-mail-user-agent nil)    ; default is `gnus'
@@ -4596,8 +4513,8 @@ Add this function to `message-header-setup-hook'."
           (message-add-header "Gcc: nnmaildir+pub:Sent"))
       (message "Gnus is not running. No GCC field inserted.")))
 
-  :hook ((message-header-setup-hook . prot/message-header-add-gcc)
-         (message-setup-hook . message-sort-headers)))
+  (add-hook 'message-header-setup-hook #'prot/message-header-add-gcc)
+  (add-hook 'message-setup-hook #'message-sort-headers))
 #+end_src
 
 Below is a sample with the contents of my =authinfo.gpg=.  This is read,
@@ -4832,8 +4749,8 @@ the meaning of the various date/time specifiers.
 #+begin_src emacs-lisp
 ;; NOTE 2021-01-26 17:33 +0200: This section is being refactored.  There
 ;; may still be some errors or omissions.
-(use-package gnus
-  :config
+(require 'gnus)
+(with-eval-after-load 'gnus
 ;;; accounts
   (setq gnus-select-method '(nnnil ""))
   (setq gnus-secondary-select-methods
@@ -4957,43 +4874,45 @@ the meaning of the various date/time specifiers.
   (setq gnus-sum-thread-tree-single-leaf "\\-> ")
   (setq gnus-sum-thread-tree-vertical "|")
 
-  (use-package gnus-dired)
-  (use-package gnus-topic)
-  (use-package prot-gnus :straight (:type built-in))
+  (require 'gnus-sum)
+  (require 'gnus-dired)
+  (require 'gnus-topic)
+  (require 'prot-gnus)
 
-  :hook ((dired-mode-hook . gnus-dired-mode) ; dired integration
-         (gnus-group-mode-hook . hl-line-mode)
-         (gnus-group-mode-hook . gnus-topic-mode)
-         (gnus-summary-mode-hook . hl-line-mode)
-         (gnus-browse-mode-hook . hl-line-mode)
-         (gnus-server-mode-hook . hl-line-mode)
-         (gnus-select-group-hook . gnus-group-set-timestamp)
-         (gnus-article-mode-hook . (lambda ()
-                                     (setq-local fill-column 80))))
-  :bind (("C-c m" . gnus)
-         :map gnus-article-mode-map
-         ("i" . gnus-article-show-images)
-         ("s" . gnus-mime-save-part)
-         ("o" . gnus-mime-copy-part)
-         :map gnus-group-mode-map       ; I always use `gnus-topic-mode'
-         ("n" . gnus-group-next-group)
-         ("p" . prot-gnus-group-previous-group) ; from `prot-gnus.el'
-         ("M-n" . gnus-topic-goto-next-topic)
-         ("M-p" . gnus-topic-goto-previous-topic)
-         :map gnus-summary-mode-map
-         ("<delete>" . gnus-summary-delete-article)
-         ("n" . gnus-summary-next-article)
-         ("p" . gnus-summary-prev-article)
-         ("N" . gnus-summary-next-unread-article)
-         ("P" . gnus-summary-prev-unread-article)
-         ("M-n" . gnus-summary-next-thread)
-         ("M-p" . gnus-summary-prev-thread)
-         ("C-M-n" . gnus-summary-next-group)
-         ("C-M-p" . gnus-summary-prev-group)
-         ("C-M-^" . gnus-summary-refer-thread)))
+  (add-hook 'dired-mode-hook #'gnus-dired-mode) ; dired integration
+  (add-hook 'gnus-group-mode-hook #'hl-line-mode)
+  (add-hook 'gnus-group-mode-hook #'gnus-topic-mode)
+  (add-hook 'gnus-summary-mode-hook #'hl-line-mode)
+  (add-hook 'gnus-browse-mode-hook #'hl-line-mode)
+  (add-hook 'gnus-server-mode-hook #'hl-line-mode)
+  (add-hook 'gnus-select-group-hook #'gnus-group-set-timestamp)
+  ;; ;; TODO 2021-01-28: fill for `gnus-article-mode-hook' should be
+  ;; ;; reviewed in light of prot-fill.el
+  ;; (add-hook 'gnus-article-mode-hook (lambda () (setq-local fill-column 80)))
+  (define-key global-map (kbd "C-c m") #'gnus)
+  (let ((map gnus-article-mode-map))
+    (define-key map (kbd "i") #'gnus-article-show-images)
+    (define-key map (kbd "s") #'gnus-mime-save-part)
+    (define-key map (kbd "o") #'gnus-mime-copy-part))
+  (let ((map gnus-group-mode-map))       ; I always use `gnus-topic-mode'
+    (define-key map (kbd "n") #'gnus-group-next-group)
+    (define-key map (kbd "p") #'prot-gnus-group-previous-group) ; from `prot-gnus.el'
+    (define-key map (kbd "M-n") #'gnus-topic-goto-next-topic)
+    (define-key map (kbd "M-p") #'gnus-topic-goto-previous-topic))
+  (let ((map gnus-summary-mode-map))
+    (define-key map (kbd "<delete>") #'gnus-summary-delete-article)
+    (define-key map (kbd "n") #'gnus-summary-next-article)
+    (define-key map (kbd "p") #'gnus-summary-prev-article)
+    (define-key map (kbd "N") #'gnus-summary-next-unread-article)
+    (define-key map (kbd "P") #'gnus-summary-prev-unread-article)
+    (define-key map (kbd "M-n") #'gnus-summary-next-thread)
+    (define-key map (kbd "M-p") #'gnus-summary-prev-thread)
+    (define-key map (kbd "C-M-n") #'gnus-summary-next-group)
+    (define-key map (kbd "C-M-p") #'gnus-summary-prev-group)
+    (define-key map (kbd "C-M-^") #'gnus-summary-refer-thread)))
 
-(use-package nnmail
-  :config
+(require 'nnmail)
+(with-eval-after-load 'nnmail
   (setq nnmail-expiry-wait 30))         ; careful with this
 #+end_src
 
@@ -5029,11 +4948,11 @@ Further notes:
 + The =prot-common-auth-get-field= is defined in [[#h:c82dcbfa-97d0-4f7c-85af-768ce90f1372][prot-common.el]].
 
 #+begin_src emacs-lisp
-(use-package mu4e
-  ;; This is an exception because I install it from the Arch Linux
-  ;; package archives (depends on non-Emacs code)
-  :load-path "/usr/share/emacs/site-lisp/"
-  :config
+;; This is an exception because I install it from the Arch Linux
+;; package archives (depends on non-Emacs code)
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/")
+(require 'mu4e)
+(with-eval-after-load 'mu4e
   ;; (setq mail-user-agent 'mu4e-user-agent)
   (setq mu4e-use-fancy-chars nil)
   (setq mu4e-headers-advance-after-mark t)
@@ -5125,17 +5044,19 @@ Further notes:
                                   (prot-common-auth-get-field "pub" :user))
                  :key ?P)))
 
-  :bind (("C-c M" . mu4e)
-         :map mu4e-headers-mode-map
-         ("!" .  (lambda (&optional arg)
-                   (interactive "P")
-                   (if arg
-                       (mu4e-headers-mark-for-unflag)
-                     (mu4e-headers-mark-for-flag))))
-         ("r" . mu4e-headers-mark-for-read)
-         ("u" . mu4e-headers-mark-for-unread)
-         ("M-u" . mu4e-headers-mark-for-unmark)
-         ("C-M-u" . mu4e-mark-unmark-all)))
+  (define-key global-map (kbd "C-c M") #'mu4e)
+
+  (let ((map mu4e-headers-mode-map))
+    ;; TODO 2021-01-28: Add wrapper for `mu4e-headers-mark-for-unflag'
+    (define-key map (kbd "!") (lambda (&optional arg)
+                                (interactive "P")
+                                (if arg
+                                    (mu4e-headers-mark-for-unflag)
+                                  (mu4e-headers-mark-for-flag))))
+    (define-key map (kbd "r") #'mu4e-headers-mark-for-read)
+    (define-key map (kbd "u") #'mu4e-headers-mark-for-unread)
+    (define-key map (kbd "M-u") #'mu4e-headers-mark-for-unmark)
+    (define-key map (kbd "C-M-u") #'mu4e-mark-unmark-all)))
 #+end_src
 
 **** mu4e extension for org-capture
@@ -5150,9 +5071,8 @@ problem of searching through a pile of messages until we find the one we
 really need.  Nice!
 
 #+begin_src emacs-lisp
-(use-package org-mu4e                   ; no need for `:straight t'
-  :after (org mu4e)
-  :config
+(require 'org-mu4e)
+(with-eval-after-load 'org-mu4e
   (setq org-mu4e-link-query-in-headers-mode nil))
 #+end_src
 
@@ -5170,18 +5090,17 @@ With regard to the asynchronous functionality, it is meant to improve
 performance by carrying out the relevant tasks in a non-blocking way.
 
 #+begin_src emacs-lisp
-(use-package smtpmail
-  :init
+(require 'smtpmail)
+(with-eval-after-load 'smtpmail
   (setq smtpmail-default-smtp-server "mail.gandi.net")
-  :config
   (setq smtpmail-smtp-server "mail.gandi.net")
   (setq smtpmail-stream-type 'ssl)
   (setq smtpmail-smtp-service 465)
   (setq smtpmail-queue-mail nil))
 
-(use-package smtpmail-async
-  :after smtpmail
-  :config
+;; part of `async' package
+(require 'smtpmail-async)
+(with-eval-after-load 'smtpmail-async
   (setq send-mail-function 'async-smtpmail-send-it)
   (setq message-send-mail-function 'async-smtpmail-send-it))
 #+end_src
@@ -5312,10 +5231,9 @@ though please bear in my that my current code is not exactly what was
 demonstrated back then (as of 2021-01-18).
 
 #+begin_src emacs-lisp
-(use-package bongo
-  :straight t
-  :demand
-  :init
+(require 'bongo)
+(with-eval-after-load 'bongo
+  (add-to-list 'prot-emacs-ensure-install 'bongo)
   (setq bongo-default-directory "~/Music")
   (setq bongo-prefer-library-buffers nil)
   (setq bongo-insert-whole-directory-trees t)
@@ -5329,27 +5247,26 @@ demonstrated back then (as of 2021-01-18).
   (setq bongo-field-separator (propertize " · " 'face 'shadow))
   (setq bongo-mark-played-tracks t)
   (setq bongo-vlc-program-name "cvlc")
-  :config
   (bongo-mode-line-indicator-mode -1)
   (bongo-header-line-mode -1)
-  :bind (("C-c b" . bongo)
-         ("<C-XF86AudioPlay>" . bongo-pause/resume)
-         ("<C-XF86AudioNext>" . bongo-next)
-         ("<C-XF86AudioPrev>" . bongo-previous)
-         ("<M-XF86AudioPlay>" . bongo-show)
-         ("<S-XF86AudioNext>" . bongo-seek-forward-10)
-         ("<S-XF86AudioPrev>" . bongo-seek-backward-10)
-         :map bongo-playlist-mode-map
-         ("n" . bongo-next-object)
-         ("p" . bongo-previous-object)
-         ("R" . bongo-rename-line)
-         ("j" . bongo-dired-line)       ; Jump to dir of file at point
-         ("J" . dired-jump)             ; Jump to library buffer
-         ("I" . bongo-insert-special)))
+  (let ((map global-map))
+    (define-key map (kbd "C-c b") #'bongo)
+    (define-key map (kbd "<C-XF86AudioPlay>") #'bongo-pause/resume)
+    (define-key map (kbd "<C-XF86AudioNext>") #'bongo-next)
+    (define-key map (kbd "<C-XF86AudioPrev>") #'bongo-previous)
+    (define-key map (kbd "<M-XF86AudioPlay>") #'bongo-show)
+    (define-key map (kbd "<S-XF86AudioNext>") #'bongo-seek-forward-10)
+    (define-key map (kbd "<S-XF86AudioPrev>") #'bongo-seek-backward-10))
+  (let ((map bongo-playlist-mode-map))
+    (define-key map (kbd "n") #'bongo-next-object)
+    (define-key map (kbd "p") #'bongo-previous-object)
+    (define-key map (kbd "R") #'bongo-rename-line)
+    (define-key map (kbd "j") #'bongo-dired-line)       ; Jump to dir of file at point
+    (define-key map (kbd "J") #'dired-jump)             ; Jump to library buffer
+    (define-key map (kbd "I") #'bongo-insert-special)))
 
-(use-package prot-bongo
-  :straight (:type built-in)
-  :init
+(require 'prot-bongo)
+(with-eval-after-load 'prot-bongo
   (setq prot-bongo-enabled-backends '(mpv vlc))
   (setq prot-bongo-playlist-section-delimiter (make-string 30 ?*))
   (setq prot-bongo-playlist-heading-delimiter "§")
@@ -5359,33 +5276,32 @@ demonstrated back then (as of 2021-01-18).
          (file-name-as-directory "playlists")))
   ;; Those set up a few extras: read each function's doc string.  Pass
   ;; an argument to undo their effects.
-  :config
   (prot-bongo-enabled-backends)
   (prot-bongo-remove-headers)
   (prot-bongo-imenu-setup)
-  :hook ((dired-mode-hook . prot-bongo-dired-library-enable)
-         (wdired-mode-hook . prot-bongo-dired-library-disable)
-         (prot-bongo-playlist-change-track-hook . prot-bongo-playlist-recenter))
-  :bind (:map bongo-playlist-mode-map
-              ("C-c C-n" . prot-bongo-playlist-heading-next)
-              ("C-c C-p" . prot-bongo-playlist-heading-previous)
-              ("M-n" . prot-bongo-playlist-section-next)
-              ("M-p" . prot-bongo-playlist-section-previous)
-              ("M-h" . prot-bongo-playlist-mark-section)
-              ("M-d" . prot-bongo-playlist-kill-section)
-              ("g" . prot-bongo-playlist-reset)
-              ("D" . prot-bongo-playlist-terminate)
-              ("r" . prot-bongo-playlist-random-toggle)
-              ("i" . prot-bongo-playlist-insert-playlist-file)
-              :map bongo-dired-library-mode-map
-              ("<C-return>" . prot-bongo-dired-insert)
-              ("C-c SPC" . prot-bongo-dired-insert)
-              ("C-c +" . prot-bongo-dired-make-playlist-file)))
+  (add-hook 'dired-mode-hook #'prot-bongo-dired-library-enable)
+  (add-hook 'wdired-mode-hook #'prot-bongo-dired-library-disable)
+  (add-hook 'prot-bongo-playlist-change-track-hook #'prot-bongo-playlist-recenter)
+  (let ((map bongo-playlist-mode-map))
+    (define-key map (kbd "C-c C-n") #'prot-bongo-playlist-heading-next)
+    (define-key map (kbd "C-c C-p") #'prot-bongo-playlist-heading-previous)
+    (define-key map (kbd "M-n") #'prot-bongo-playlist-section-next)
+    (define-key map (kbd "M-p") #'prot-bongo-playlist-section-previous)
+    (define-key map (kbd "M-h") #'prot-bongo-playlist-mark-section)
+    (define-key map (kbd "M-d") #'prot-bongo-playlist-kill-section)
+    (define-key map (kbd "g") #'prot-bongo-playlist-reset)
+    (define-key map (kbd "D") #'prot-bongo-playlist-terminate)
+    (define-key map (kbd "r") #'prot-bongo-playlist-random-toggle)
+    (define-key map (kbd "i") #'prot-bongo-playlist-insert-playlist-file))
+  (let ((map bongo-dired-library-mode-map))
+    (define-key map (kbd "<C-return>") #'prot-bongo-dired-insert)
+    (define-key map (kbd "C-c SPC") #'prot-bongo-dired-insert)
+    (define-key map (kbd "C-c +") #'prot-bongo-dired-make-playlist-file)))
 #+end_src
 
 Here is my =prot-bongo.el= library (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-bongo.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-bongo.el src emacs-lisp :tangle no
 
 ** Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el
 :PROPERTIES:
@@ -5496,12 +5412,12 @@ older code: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Ma
 Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MPV (Elfeed+Bongo extension)]].
 
 #+begin_src emacs-lisp
-(use-package elfeed
-  :straight t
-  :config
+(require 'elfeed)
+(with-eval-after-load 'elfeed
+  (add-to-list 'prot-emacs-ensure-install 'elfeed)
   (setq elfeed-use-curl t)
   (setq elfeed-curl-max-connections 10)
-  (setq elfeed-db-directory "~/.emacs.d/elfeed/")
+  (setq elfeed-db-directory (concat user-emacs-directory "elfeed/"))
   (setq elfeed-enclosure-default-dir "~/Downloads/")
   (setq elfeed-search-filter "@4-months-ago +unread")
   (setq elfeed-sort-order 'descending)
@@ -5512,48 +5428,46 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
   (setq elfeed-show-truncate-long-urls t)
   (setq elfeed-show-unique-buffers t)
   (setq elfeed-search-date-format '("%F %R" 16 :left))
-  (use-package prot-elfeed-bongo :straight (:type built-in))
-  :bind (("C-c e" . elfeed)
-         :map elfeed-search-mode-map
-         ("w" . elfeed-search-yank)
-         ("g" . elfeed-update)
-         ("G" . elfeed-search-update--force)
-         ("b" . prot-elfeed-bongo-insert-item)
-         ("h" . prot-elfeed-bongo-switch-to-playlist) ; "hop" mnemonic
-         :map elfeed-show-mode-map
-         ("w" . elfeed-show-yank)
-         ("b" . prot-elfeed-bongo-insert-item)))
+  (require 'prot-elfeed-bongo)
+  (define-key global-map (kbd "C-c e") #'elfeed)
+  (let ((map elfeed-search-mode-map))
+    (define-key map (kbd "w") #'elfeed-search-yank)
+    (define-key map (kbd "g") #'elfeed-update)
+    (define-key map (kbd "G") #'elfeed-search-update--force)
+    (define-key map (kbd "b") #'prot-elfeed-bongo-insert-item)
+    (define-key map (kbd "h") #'prot-elfeed-bongo-switch-to-playlist)) ; "hop" mnemonic
+  (let ((map elfeed-show-mode-map))
+    (define-key map (kbd "w") #'elfeed-show-yank)
+    (define-key map (kbd "b") #'prot-elfeed-bongo-insert-item)))
 
-(use-package prot-elfeed
-  :straight (:type built-in)
-  :init
+(require 'prot-elfeed)
+(with-eval-after-load 'prot-elfeed
   (setq prot-elfeed-tag-faces t)
-  :config
   (prot-elfeed-fontify-tags)
-  :hook (elfeed-search-mode-hook . prot-elfeed-load-feeds)
-  :bind (:map elfeed-search-mode-map
-              ("s" . prot-elfeed-search-tag-filter)
-              ("o" . prot-elfeed-search-open-other-window)
-              ("q" . prot-elfeed-kill-buffer-close-window-dwim)
-              ("v" . prot-elfeed-mpv-dwim)
-              ("+" . prot-elfeed-toggle-tag)
-              ("!" . (lambda ()
-                       (interactive)
-                       (prot-elfeed-toggle-tag 'important)))
-              :map elfeed-show-mode-map
-              ("a" . prot-elfeed-show-archive-entry)
-              ("e" . prot-elfeed-show-eww)
-              ("q" . prot-elfeed-kill-buffer-close-window-dwim)
-              ("v" . prot-elfeed-mpv-dwim)))
+  (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
+  (let ((map elfeed-search-mode-map))
+    (define-key map (kbd "s") #'prot-elfeed-search-tag-filter)
+    (define-key map (kbd "o") #'prot-elfeed-search-open-other-window)
+    (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
+    (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
+    (define-key map (kbd "+") #'prot-elfeed-toggle-tag)
+    (define-key map (kbd "!") (lambda ()
+				                (interactive)
+				                (prot-elfeed-toggle-tag 'important))))
+  (let ((map elfeed-show-mode-map))
+    (define-key map (kbd "a") #'prot-elfeed-show-archive-entry)
+    (define-key map (kbd "e") #'prot-elfeed-show-eww)
+    (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
+    (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)))
 #+end_src
 
 This is =prot-elfeed.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-elfeed.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-elfeed.el src emacs-lisp :tangle no
 
 And here is =prot-elfeed-bongo.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-elfeed-bongo.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-elfeed-bongo.el src emacs-lisp :tangle no
 
 *** Sample configuration for MPV (Elfeed+Bongo extension)
 :PROPERTIES:
@@ -5582,25 +5496,12 @@ right now.  Would need to experiment with it a bit more.  It works
 fine though.
 
 #+begin_src emacs-lisp
-(use-package proced
-  :commands proced
-  :config
+(require 'proced)
+(with-eval-after-load 'proced
   (setq proced-auto-update-flag t)
   (setq proced-auto-update-interval 1)
   (setq proced-descend t)
   (setq proced-filter 'user))
-#+end_src
-
-And with this nimble tool we get live narrowing of the list, based on
-the terms of our search.
-
-#+begin_src emacs-lisp
-(use-package proced-narrow
-  :straight t
-  :after proced
-  :diminish
-  :bind (:map proced-mode-map
-              ("/" . proced-narrow)))
 #+end_src
 
 ** Pass interface (password-store)
@@ -5620,12 +5521,9 @@ using completion methods (study [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Compl
 it to quickly store a password to the kill ring.
 
 #+begin_src emacs-lisp
-(use-package password-store
-  :straight t
-  :commands (password-store-copy
-             password-store-edit
-             password-store-insert)
-  :config
+(require 'password-store)
+(with-eval-after-load 'password-store
+  (add-to-list 'prot-emacs-ensure-install 'password-store)
   (setq password-store-time-before-clipboard-restore 30))
 #+end_src
 
@@ -5634,9 +5532,8 @@ it with =M-x pass=.  There is a helpful section at the top with key
 bindings and their functions.
 
 #+begin_src emacs-lisp
-(use-package pass
-  :straight t
-  :commands pass)
+(require 'pass)
+(add-to-list 'prot-emacs-ensure-install 'pass)
 #+end_src
 
 ** Emacs Simple HTML Renderer (shr)
@@ -5668,8 +5565,8 @@ What these do:
   the section about [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][Paragraphs and fill-mode (prot-fill.el)]]).
 
 #+begin_src emacs-lisp
-(use-package shr
-  :config
+(require 'shr)
+(with-eval-after-load 'shr
   (setq shr-use-fonts nil)
   (setq shr-use-colors nil)
   (setq shr-max-image-proportion 0.7)
@@ -5685,8 +5582,8 @@ What these do:
 #+begin_src emacs-lisp
 ;; TODO 2021-01-19: Everything about eww is subject to review.  It is
 ;; not in a good state.
-(use-package eww
-  :config
+(require 'eww)
+(with-eval-after-load 'eww
   (setq eww-restore-desktop nil)
   (setq eww-desktop-remove-duplicates t)
   (setq eww-header-line-format "%u")
@@ -5695,7 +5592,7 @@ What these do:
   (setq eww-suggest-uris
         '(eww-links-at-point
           thing-at-point-url-at-point))
-  (setq eww-bookmarks-directory "~/.emacs.d/eww-bookmarks/")
+  (setq eww-bookmarks-directory (concat user-emacs-directory "eww-bookmarks/"))
   (setq eww-history-limit 150)
   (setq eww-use-external-browser-for-content-type
         "\\`\\(video/\\|audio/\\|application/pdf\\)")
@@ -5703,42 +5600,41 @@ What these do:
   (setq eww-form-checkbox-selected-symbol "[X]")
   (setq eww-form-checkbox-symbol "[ ]")
 
-  (defun prot/eww-visit-history (&optional arg)
-    "Revisit a URL from `eww-prompt-history' using completion.
-With \\[universal-argument] produce a new buffer."
-    (interactive "P")
-    (let ((history eww-prompt-history)  ; eww-bookmarks
-          (new (if arg t nil)))
-      (eww
-       (completing-read "Visit website from history: " history nil t)
-       new)))
+  ;;   (defun prot/eww-visit-history (&optional arg)
+  ;;     "Revisit a URL from `eww-prompt-history' using completion.
+  ;; With \\[universal-argument] produce a new buffer."
+  ;;     (interactive "P")
+  ;;     (let ((history eww-prompt-history)  ; eww-bookmarks
+  ;;           (new (if arg t nil)))
+  ;;       (eww
+  ;;        (completing-read "Visit website from history: " history nil t)
+  ;;        new)))
 
   ;; eww-view-source
 
-  (defvar prot/eww-mode-global-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map "s" 'eww-search-words)
-      (define-key map "o" 'eww-open-in-new-buffer)
-      (define-key map "f" 'eww-open-file)
-      (define-key map "w" 'prot/eww-visit-history)
-      map)
-    "Key map to scope `eww' bindings for global usage.
-The idea is to bind this to a prefix sequence, so that its
-defined keys follow the pattern of <PREFIX> <KEY>.")
-  :bind-keymap ("C-c w" . prot/eww-mode-global-map)
-  :bind (:map eww-mode-map
-              ("n" . next-line)
-              ("p" . previous-line)
-              ("f" . forward-char)
-              ("b" . backward-char)
-              ("a" . prot/eww-org-archive-current-url)
-              ("B" . eww-back-url)
-              ("N" . eww-next-url)
-              ("P" . eww-previous-url)))
+  ;;   (defvar prot/eww-mode-global-map
+  ;;     (let ((map (make-sparse-keymap)))
+  ;;       (define-key map "s" 'eww-search-words)
+  ;;       (define-key map "o" 'eww-open-in-new-buffer)
+  ;;       (define-key map "f" 'eww-open-file)
+  ;;       (define-key map "w" 'prot/eww-visit-history)
+  ;;       map)
+  ;;     "Key map to scope `eww' bindings for global usage.
+  ;; The idea is to bind this to a prefix sequence, so that its
+  ;; defined keys follow the pattern of <PREFIX> <KEY>.")
 
-(use-package browse-url
-  :after eww
-  :config
+  (let ((map eww-mode-map))
+    (define-key map (kbd "n") #'next-line)
+    (define-key map (kbd "p") #'previous-line)
+    (define-key map (kbd "f") #'forward-char)
+    (define-key map (kbd "b") #'backward-char)
+    (define-key map (kbd "a") #'prot/eww-org-archive-current-url)
+    (define-key map (kbd "B") #'eww-back-url)
+    (define-key map (kbd "N") #'eww-next-url)
+    (define-key map (kbd "P") #'eww-previous-url)))
+
+(require 'browse-url)
+(with-eval-after-load 'browse-url
   (setq browse-url-browser-function 'eww-browse-url))
 #+end_src
 
@@ -5766,17 +5662,10 @@ Nice and simple!
 Check [[https://github.com/DamienCassou/beginend][the package upstream]] for information on the supported modes and on
 how to contribute your own extensions.
 
-Here the =dolist= combined with the =:diminish= keyword are meant to remove
-all lighters that this package produces: one for every minor mode it
-provides.  I got this from [[https://github.com/DamienCassou/beginend/issues/43][issue 43 on the beginend repo]].
-
 #+begin_src emacs-lisp
-(use-package beginend
-  :straight t
-  :demand
-  :diminish beginend-global-mode
-  :config
-  (dolist (mode beginend-modes) (diminish (cdr mode)))
+(require 'beginend)
+(with-eval-after-load 'beginend
+  (add-to-list 'prot-emacs-ensure-install 'beginend)
   (beginend-global-mode 1))
 #+end_src
 
@@ -5794,9 +5683,10 @@ the Emacs GUI by default.  A complete waste of an extremely valuable key
 binding!
 
 #+begin_src emacs-lisp
-(use-package goto-last-change
-  :straight t
-  :bind ("C-z" . goto-last-change))
+(require 'goto-last-change)
+(with-eval-after-load 'goto-last-change
+  (add-to-list 'prot-emacs-ensure-install 'goto-last-change)
+  (define-key global-map (kbd "C-z") #'goto-last-change))
 #+end_src
 
 ** Mode line
@@ -5819,42 +5709,40 @@ provide a snippet that optionally toggles the visibility of the modeline
 while entering a bespoke "focus mode" for writing/reading.
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :init
-  (setq mode-line-percent-position '(-3 "%p"))
-  (setq mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
-  (setq mode-line-defining-kbd-macro
-        (propertize " Macro" 'face 'mode-line-emphasis))
+(setq mode-line-percent-position '(-3 "%p"))
+(setq mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
+(setq mode-line-defining-kbd-macro
+      (propertize " Macro" 'face 'mode-line-emphasis))
 
-  ;; Thanks to Daniel Mendler for this!  It removes the square brackets
-  ;; that denote recursive edits in the modeline.  I do not need them
-  ;; because I am using Daniel's `recursion-indicator':
-  ;; <https://github.com/minad/recursion-indicator>.
-  (setq-default mode-line-modes
-                (seq-filter (lambda (s)
-                              (not (and (stringp s)
-                                        (string-match-p
-                                         "^\\(%\\[\\|%\\]\\)$" s))))
-                            mode-line-modes))
+;; Thanks to Daniel Mendler for this!  It removes the square brackets
+;; that denote recursive edits in the modeline.  I do not need them
+;; because I am using Daniel's `recursion-indicator':
+;; <https://github.com/minad/recursion-indicator>.
+(setq-default mode-line-modes
+              (seq-filter (lambda (s)
+                            (not (and (stringp s)
+                                      (string-match-p
+                                       "^\\(%\\[\\|%\\]\\)$" s))))
+                          mode-line-modes))
 
-  (setq mode-line-compact t)            ; Emacs 28
-  (setq-default mode-line-format
-                '("%e"
-                  mode-line-front-space
-                  mode-line-mule-info
-                  mode-line-client
-                  mode-line-modified
-                  mode-line-remote
-                  mode-line-frame-identification
-                  mode-line-buffer-identification
-                  "  "
-                  mode-line-position
-                  mode-line-modes
-                  "  "
-                  (vc-mode vc-mode)
-                  "  "
-                  mode-line-misc-info
-                  mode-line-end-spaces)))
+(setq mode-line-compact t)            ; Emacs 28
+(setq-default mode-line-format
+              '("%e"
+                mode-line-front-space
+                mode-line-mule-info
+                mode-line-client
+                mode-line-modified
+                mode-line-remote
+                mode-line-frame-identification
+                mode-line-buffer-identification
+                "  "
+                mode-line-position
+                mode-line-modes
+                "  "
+                (vc-mode vc-mode)
+                "  "
+                mode-line-misc-info
+                mode-line-end-spaces))
 #+end_src
 
 In the following sub-sections I provide customisations for some tools
@@ -5865,29 +5753,47 @@ that place information on the mode line.  Again, nothing flamboyant.
 :CUSTOM_ID: h:c07b9dfc-14a2-41a6-9310-53539dec8684
 :END:
 
-=moody.el= is a lightweight library for adding some flair to the mode
-line.  I have been using it on and off to make sure that it works well
-with my themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes (my highly accessible themes)]]).
+=moody.el= is a lightweight library that adds some flair to the mode line
+without complicating things.  It is developed by Jonas Bernoulli.  I
+have been using it on and off to make sure that it works well with my
+themes (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes (my highly accessible themes)]]).
 
 My fairly minor tweaks in =prot-moody.el= (reproduced further below) align
 Moody with my [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]].  What I basically
 want is to make the mode line gracefully adapt to changes in font size.
 
 #+begin_src emacs-lisp
-(use-package moody :straight t)
+(require 'moody)
+(add-to-list 'prot-emacs-ensure-install 'moody)
 
-(use-package prot-moody
-  :straight (:type built-in)
-  :after (moody
-          prot-fonts              ; we use its hook
-          prot-common)            ; provides `prot-common-number-even-p'
-  :config
+(require 'prot-moody)
+(with-eval-after-load 'prot-moody
   (prot-moody-set-height -1))
 #+end_src
 
 Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-moody.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-moody.el src emacs-lisp :tangle no
+
+*** Hide modeline "lighters" (minions.el)
+:PROPERTIES:
+:CUSTOM_ID: h:b31005e3-c475-4be9-87fd-85b404550d8c
+:END:
+
+This package by Jonas Bernoulli neatly wraps up all minor mode
+"lighters" and hides them behind a single character.  The "lighter" is
+the text that identifies the minor mode on the mode line.  Having a
+few of them is usually okay, but a lot of them do not scale well.
+
+#+begin_src emacs-lisp
+(require 'minions)
+(with-eval-after-load 'minions
+  (add-to-list 'prot-emacs-ensure-install 'minions)
+  (setq minions-mode-line-lighter "+")
+  ;; NOTE: This will be expanded whenever I find a mode that should not be hidden
+  (setq minions-direct '(defining-kbd-macro))
+  (minions-mode 1))
+#+end_src
 
 *** Mode line recursion indicators
 :PROPERTIES:
@@ -5903,9 +5809,9 @@ shows the level of recursion at the current minibuffer prompt (refer to
 [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]]).
 
 #+begin_src emacs-lisp
-(use-package recursion-indicator
-  :straight (:host github :repo "minad/recursion-indicator" :branch "master")
-  :config
+(require 'recursion-indicator)
+(with-eval-after-load 'recursion-indicator
+  (add-to-list 'prot-emacs-ensure-install 'recursion-indicator)
   (setq recursion-indicator-general "&")
   (setq recursion-indicator-minibuffer "@")
   (recursion-indicator-mode 1))
@@ -5934,14 +5840,14 @@ to a lower threshold, meaning that the indicator remains present at all
 times.
 
 #+begin_src emacs-lisp
-(use-package battery
-  :config
+(require 'battery)
+(with-eval-after-load 'battery
   (setq battery-mode-line-format " [%b%p%%]")
   (setq battery-mode-line-limit 95)
   (setq battery-update-interval 180)
   (setq battery-load-low 20)
   (setq battery-load-critical 10)
-  :hook (after-init-hook . display-battery-mode))
+  (add-hook 'after-init-hook #'display-battery-mode))
 #+end_src
 
 *** Display current time
@@ -5970,9 +5876,8 @@ Sometimes I need to check the current time on various timezones.  This
 library's =world-clock= command gets the job done.
 
 #+begin_src emacs-lisp
-(use-package time
-  :commands world-clock
-  :config
+(require 'time)
+(with-eval-after-load 'time
   (setq display-time-format "%H:%M  %Y-%m-%d")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
@@ -5992,12 +5897,11 @@ library's =world-clock= command gets the job done.
   ;; All of the following variables are for Emacs 28
   (setq world-clock-list t)
   (setq world-clock-time-format "%R %z  %A %d %B")
-  (setq world-clock-buffer-name "*world-clock*") ; Placement handled by
-                                                 ; `display-buffer-alist'
+  (setq world-clock-buffer-name "*world-clock*") ; Placement handled by `display-buffer-alist'
   (setq world-clock-timer-enable t)
   (setq world-clock-timer-second 60)
 
-  :hook (after-init-hook . display-time-mode))
+  (add-hook 'after-init-hook #'display-time-mode))
 #+end_src
 
 *** Keycast mode
@@ -6022,11 +5926,9 @@ of Elisp from the [[https://github.com/aadcg/dotfiles][dotfiles of André Alexan
 tweaks of my own.
 
 #+begin_src emacs-lisp
-(use-package keycast
-  :straight t
-  :after moody
-  :commands keycast-mode
-  :config
+(require 'keycast)
+(with-eval-after-load 'keycast
+  (add-to-list 'prot-emacs-ensure-install 'keycast)
   (setq keycast-window-predicate 'moody-window-active-p)
   (setq keycast-separator-width 1)
   (setq keycast-insert-after
@@ -6071,12 +5973,10 @@ using it because of that, though it can also adjust the size of the
 borders as well as their placement.
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq window-divider-default-right-width 1)
-  (setq window-divider-default-bottom-width 1)
-  (setq window-divider-default-places 'right-only)
-  :hook (after-init-hook . window-divider-mode))
+(setq window-divider-default-right-width 1)
+(setq window-divider-default-bottom-width 1)
+(setq window-divider-default-places 'right-only)
+(add-hook 'after-init-hook #'window-divider-mode)
 #+end_src
 
 ** Fringe mode
@@ -6099,8 +5999,8 @@ The use of =setq-default= is necessary, otherwise these values become
 buffer-local.
 
 #+begin_src emacs-lisp
-(use-package fringe
-  :config
+(require 'fringe)
+(with-eval-after-load 'fringe
   (fringe-mode nil)
   (setq-default fringes-outside-margins nil)
   (setq-default indicate-buffer-boundaries nil)
@@ -6127,93 +6027,13 @@ systems, rather than a git-specific one.  Much like the built-in VC (see
 section on [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]).
 
 #+begin_src emacs-lisp
-(use-package diff-hl
-  :straight t
-  :after vc
-  :config
+(require 'diff-hl)
+(with-eval-after-load 'diff-hl
+  (add-to-list 'prot-emacs-ensure-install 'diff-hl)
   (setq diff-hl-draw-borders nil)
   (setq diff-hl-side 'left)
   ;; TODO 2021-01-19: write toggle for diff-hl-mode
-  :hook (after-init-hook . global-diff-hl-mode))
-#+end_src
-
-** Prism.el (highlight code by depth level)
-:PROPERTIES:
-:CUSTOM_ID: h:bee4eca3-76c6-4e83-adb6-d2017240178a
-:END:
-
-This library by Adam Porter, aka "alphapapa" or "github-alphapapa",
-implements an alternative to the typical colouration of code.  Instead
-of highligting the syntactic constructs, it applies colour to different
-levels of depth in the code.  I find this particularly helpful for code
-that has deep levels of indentation or which I am not familiar with.
-=M-x prism-mode= is all we need.
-
-=prism.el= is highly configurable.  Users can specify the exact colours to
-use and the sequence they should appear in.  This is controlled by the
-function =prism-set-colors=.  While the total number is handled by the
-variable =prism-num-faces=.
-
-In this package declaration I leverage the =modus-themes-with-colors=
-macro to pull in named colour values [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][from my Modus themes]].  I also
-specify presets for different stylistic alternatives with 16, 8, and 4
-colours respectively.
-
-#+begin_src emacs-lisp
-(use-package prism
-  :straight (:host github :repo "alphapapa/prism.el" :branch "master")
-  :defer
-  :config
-  (setq prism-comments nil) ; non-nil distorts colours
-  (setq prism-num-faces 8)
-
-  ;; ;; NOTE: read the manual of the `modus-themes' for prism.el
-
-  ;; ;; for 4 colours (the closest to the default)
-  ;; (prism-set-colors
-  ;;   :desaturations '(0) ; may lower the contrast ratio
-  ;;   :lightens '(0)      ; same
-  ;;   :colors (modus-themes-with-colors
-  ;;             (list fg-main
-  ;;                   cyan-alt-other
-  ;;                   magenta-alt-other
-  ;;                   magenta)))
-  ;;
-  ;; ;; for 16 colours
-  ;; (prism-set-colors
-  ;;   :desaturations '(0) ; may lower the contrast ratio
-  ;;   :lightens '(0)      ; same
-  ;;   :colors (modus-themes-with-colors
-  ;;             (list fg-main
-  ;;                   magenta
-  ;;                   cyan-alt-other
-  ;;                   magenta-alt-other
-  ;;                   blue
-  ;;                   magenta-alt
-  ;;                   cyan-alt
-  ;;                   red-alt-other
-  ;;                   green
-  ;;                   fg-main
-  ;;                   cyan
-  ;;                   yellow
-  ;;                   blue-alt
-  ;;                   red-alt
-  ;;                   green-alt-other
-  ;;                   fg-special-warm)))
-  ;;
-  ;; for 8 colours
-  (prism-set-colors
-    :desaturations '(0) ; may lower the contrast ratio
-    :lightens '(0)      ; same
-    :colors (modus-themes-with-colors
-              (list fg-special-cold
-                    magenta
-                    magenta-alt-other
-                    cyan-alt-other
-                    fg-main
-                    blue-alt
-                    red-alt-other
-                    cyan))))
+  (add-hook 'after-init-hook #'global-diff-hl-mode))
 #+end_src
 
 ** Color tools (ct.el)
@@ -6227,8 +6047,8 @@ an interesting article on the matter: [[https://notes.neeasade.net/color-spaces.
 need some of those tools while developing my Modus themes.
 
 #+begin_src emacs-lisp
-(use-package ct
-  :straight (:host github :repo "neeasade/ct.el" :branch "master"))
+(require 'ct)
+(add-to-list 'prot-emacs-ensure-install 'ct)
 #+end_src
 
 ** Rainbow mode for colour previewing (rainbow-mode.el)
@@ -6241,11 +6061,9 @@ and sets the background for the value in that colour.  Quite useful
 when reviewing my themes (=rainbow-mode= is activated manually).
 
 #+begin_src emacs-lisp
-(use-package rainbow-mode
-  :straight t
-  :diminish
-  :commands rainbow-mode
-  :config
+(require 'rainbow-mode)
+(with-eval-after-load 'rainbow-mode
+  (add-to-list 'prot-emacs-ensure-install 'rainbow-mode)
   (setq rainbow-ansi-colors nil)
   (setq rainbow-x-colors nil))
 #+end_src
@@ -6271,8 +6089,8 @@ applies only to the current window.  There is also a "global" variant,
 for when the equivalent mode is used (I have no plan to use that).
 
 #+begin_src emacs-lisp
-(use-package hl-line
-  :config
+(require 'hl-line)
+(with-eval-after-load 'hl-line
   (setq hl-line-sticky-flag nil))
 #+end_src
 
@@ -6292,8 +6110,8 @@ As for =delete-trailing-whitespace=, I prefer to call it manually because
 sometimes it causes problems, such as with diffs.
 
 #+begin_src emacs-lisp
-(use-package display-line-numbers
-  :config
+(require 'display-line-numbers)
+(with-eval-after-load 'display-line-numbers
   ;; Set absolute line numbers.  A value of "relative" is also useful.
   (setq display-line-numbers-type t)
   ;; Those two variables were introduced in Emacs 27.1
@@ -6316,18 +6134,21 @@ sometimes it causes problems, such as with diffs.
       (display-line-numbers-mode -1)
       (hl-line-mode -1)
       (setq-local truncate-lines nil)))
-  :bind ("<f7>" . prot/display-line-numbers-mode))
 
-(use-package whitespace
-  :config
+  (define-key global-map (kbd "<f7>") #'prot/display-line-numbers-mode))
+
+(require 'whitespace)
+(with-eval-after-load 'whitespace
   (defun prot/toggle-invisibles ()
     "Toggles the display of indentation and space characters."
     (interactive)
     (if (bound-and-true-p whitespace-mode)
         (whitespace-mode -1)
       (whitespace-mode)))
-  :bind (("<f6>" . prot/toggle-invisibles)
-         ("C-c z" . delete-trailing-whitespace)))
+
+  (let ((map global-map))
+    (define-key map (kbd "<f6>") #'prot/toggle-invisibles)
+    (define-key map (kbd "C-c z") #'delete-trailing-whitespace)))
 #+end_src
 
 *** Outline mode, outline minor mode, and extras (prot-outline.el)
@@ -6380,31 +6201,27 @@ concepts:
 
 Finally, an element of improved design: the =outline-minor-faces= package,
 by Jonas Bernoulli, will apply colouration to the headings produced by
-=outline-minor-mode=.  These inherit from =outline-mode= (they are
-configured to look the same as the ones of Org in my Modus themes---see
-[[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][relevant section]]).
+=outline-minor-mode=.  These inherit from =outline-mode=.
 
 Watch my [[https://protesilaos.com/codelog/2020-07-20-emacs-outline-imenu/][video demo of outline-minor-mode and imenu]] (2020-07-20), though
 note that it was recorder long before I wrote =prot-outline.el=.
 
 #+begin_src emacs-lisp
-(use-package prot-outline
-  :straight (:type built-in)
-  :diminish outline-minor-mode
-  ;; key replaces `menu-bar-open', which I never use
-  :bind ("<f10>" . prot-outline-minor-mode-safe))
+(require 'prot-outline)
+(with-eval-after-load 'prot-outline
+  (define-key global-map (kbd "<f10>") #'prot-outline-minor-mode-safe))
 
-(use-package outline-minor-faces
-  :straight t
-  :after prot-outline
-  :hook
-  (prot-outline-minor-mode-enter-hook . outline-minor-faces-add-font-lock-keywords))
+(require 'outline-minor-faces)
+(with-eval-after-load 'outline-minor-faces
+  (add-to-list 'prot-emacs-ensure-install 'outline-minor-faces)
+  (add-hook 'prot-outline-minor-mode-enter-hook
+	        #'outline-minor-faces-add-font-lock-keywords))
 #+end_src
 
 These are the contents of the =prot-outline.el= library (find the file in
 [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
 
-#+include: straight/repos/prot-lisp/prot-outline.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-outline.el src emacs-lisp :tangle no
 
 ** Registers
 :PROPERTIES:
@@ -6481,7 +6298,7 @@ Notes about some of the above:
   =winner-mode= (see section on [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][window history and directional motions]]).
 
 #+begin_src emacs-lisp
-(use-package register)
+(require 'register)
 #+end_src
 
 ** Cursor and mouse settings
@@ -6500,49 +6317,13 @@ Note that in [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configuration
 also add a local variable for the minibuffer's cursor.
 
 #+begin_src emacs-lisp
-(use-package frame
-  :config
-  (setq-default cursor-type '(hbar . 3))
-  (setq-default cursor-in-non-selected-windows 'hollow)
-  (setq-default blink-cursor-blinks 50)
-  (setq-default blink-cursor-interval 0.2)
-  (setq-default blink-cursor-delay 0.2)
-  (blink-cursor-mode 1))
+(setq-default cursor-type '(hbar . 3))
+(setq-default cursor-in-non-selected-windows 'hollow)
+(setq-default blink-cursor-blinks 50)
+(setq-default blink-cursor-interval 0.2)
+(setq-default blink-cursor-delay 0.2)
+(blink-cursor-mode 1)
 #+end_src
-
-*** prot-pulse.el (highlight cursor position)
-:PROPERTIES:
-:CUSTOM_ID: h:6bbc41d6-da7c-4301-84c6-c5887c29283f
-:END:
-
-=pulse.el= is a library that provides utilities for highlighting the
-region or area around point.  It is meant to be used by other packages
-as a means of offering visual feedback, as is the case with, for
-example, =M-.= (=xref-find-definitions=).
-
-While =prot-pulse.el= (complete code further below) is a thin wrapper that
-provides some extensions that are useful to my workflow.  Specifically,
-it declares a new face and provides a command that implements it:
-=prot-pulse-pulse-line=.  This is useful to quickly highlight the line and
-buffer I am on, but can also be utilised by other tools that move the
-point an arbitrary distance.
-
-#+begin_src emacs-lisp
-(use-package prot-pulse
-  :straight (:type built-in)
-  :demand
-  :config
-  (setq prot-pulse-pulse-command-list
-        '(recenter-top-bottom
-          reposition-window))
-  (prot-pulse-advice-commands-mode 1)
-  :bind ("<s-escape>" . prot-pulse-pulse-line))
-#+end_src
-
-This is the code for =prot-pulse.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]], in case
-you wish to get the file):
-
-#+include: straight/repos/prot-lisp/prot-pulse.el src emacs-lisp :tangle no
 
 *** Mouse wheel behaviour
 :PROPERTIES:
@@ -6571,8 +6352,8 @@ terminal emulators that place the selection to the clipboard (or the
 primary selection).  I choose not to use this here.
 
 #+begin_src emacs-lisp
-(use-package mouse
-  :config
+(require 'mouse)
+(with-eval-after-load 'mouse
   ;; In Emacs 27+, use Control + mouse wheel to scale text.
   (setq mouse-wheel-scroll-amount
         '(1
@@ -6583,7 +6364,7 @@ primary selection).  I choose not to use this here.
   (setq make-pointer-invisible t)
   (setq mouse-wheel-progressive-speed t)
   (setq mouse-wheel-follow-mouse t)
-  :hook (after-init-hook . mouse-wheel-mode))
+  (add-hook 'after-init-hook #'mouse-wheel-mode))
 #+end_src
 
 *** Scrolling behaviour
@@ -6602,11 +6383,9 @@ the top/bottom of the screen while moving in that direction (use =C-l= to
 reposition it).
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq-default scroll-preserve-screen-position t)
-  (setq-default scroll-conservatively 1) ; affects `scroll-step'
-  (setq-default scroll-margin 0))
+(setq-default scroll-preserve-screen-position t)
+(setq-default scroll-conservatively 1) ; affects `scroll-step'
+(setq-default scroll-margin 0)
 #+end_src
 
 *** Delete selection
@@ -6620,8 +6399,9 @@ selected region will not insert itself when =mouse-drag-copy-region= is in
 effect (see the section on the [[#h:02572210-eb26-4941-8f7c-666a0314877b][mouse wheel behaviour]]).
 
 #+begin_src emacs-lisp
-(use-package delsel
-  :hook (after-init-hook . delete-selection-mode))
+(require 'delsel)
+(with-eval-after-load 'delsel
+  (add-hook 'after-init-hook #'delete-selection-mode))
 #+end_src
 
 *Pro tip*: On Emacs 27.1 or higher you can create a rectangular region by
@@ -6642,8 +6422,8 @@ mouse over an actionable item:
   been increased for immediate pop-ups thereafter.
 
 #+begin_src emacs-lisp
-(use-package tooltip
-  :config
+(require 'tooltip)
+(with-eval-after-load 'tooltip
   (setq tooltip-delay 0.5)
   (setq tooltip-short-delay 0.5)
   (setq x-gtk-use-system-tooltips nil)
@@ -6652,7 +6432,7 @@ mouse over an actionable item:
           (internal-border-width . 6)
           (border-width . 0)
           (no-special-glyphs . t)))
-  :hook (after-init-hook . tooltip-mode))
+  (add-hook 'after-init-hook #'tooltip-mode))
 #+end_src
 
 ** Conveniences and minor extras
@@ -6669,11 +6449,10 @@ A change can happen externally or by some other tool inside of Emacs
 (e.g. kill a Magit diff).
 
 #+begin_src emacs-lisp
-(use-package autorevert
-  :diminish
-  :config
+(require 'autorevert)
+(with-eval-after-load 'autorevert
   (setq auto-revert-verbose t)
-  :hook (after-init-hook . global-auto-revert-mode))
+  (add-hook 'after-init-hook #'global-auto-revert-mode))
 #+end_src
 
 *** Preserve contents of system clipboard
@@ -6688,54 +6467,11 @@ overriding the thing you copied earlier.  We can have a kill ring
 solution to this with the following:
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq save-interprogram-paste-before-kill t))
+(setq save-interprogram-paste-before-kill t)
 #+end_src
 
 Now the contents of the clipboard are stored in the kill ring and can
 be retrieved from there (e.g. with =M-y=).
-
-*** Generic feedback
-:PROPERTIES:
-:CUSTOM_ID: h:1f7c0bf3-8b0e-4baa-b1e0-7e89053d36cb
-:END:
-
-The common thread of these options is the feedback they provide us with
-or simplify common tasks so that /their/ feedback does not cause friction:
-
-+ Show the current buffer's name as the frame's title.  This only
-  affects window managers that have window decorations.  If you do not
-  know what that means, then you are most likely using an environment
-  where frame titles are already visible.
-+ Faster feedback for key chords (keys appear in the echo area).
-+ Allow inputting Greek while preserving Emacs keys.  Toggle with =C-\=.
-+ Ignore visual or audible bells.  Emacs has more appropriate ways of
-  providing error/warning messages or hints that something is not
-  producing the desired results (e.g. a failed =isearch= will return no
-  results, while the failed match will be styled accordingly in the echo
-  area).  By the way, use =C-h e= to bring up the log with the echo area's
-  messages.
-+ Answer with just the initials when dealing with "yes/no" questions.
-+ Enable actions for narrowing the buffer, region {up,down}casing (all
-  caps or no caps), =dired= single-buffer navigation (bound to =a=).
-  Disable overwrite-mode.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq frame-title-format '("%b"))
-  (setq echo-keystrokes 0.25)
-  (setq default-input-method "greek")
-  (setq ring-bell-function 'ignore)
-
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  (put 'narrow-to-region 'disabled nil)
-  (put 'upcase-region 'disabled nil)
-  (put 'downcase-region 'disabled nil)
-  (put 'dired-find-alternate-file 'disabled nil)
-  (put 'overwrite-mode 'disabled t))
-#+end_src
 
 *** Pulse highlight changes (goggles.el)
 :PROPERTIES:
@@ -6749,10 +6485,9 @@ that no mistakes were made in the process (or notice those as they
 occur).
 
 #+begin_src emacs-lisp
-(use-package goggles
-  :straight (:host github :repo "minad/goggles" :branch "master")
-  :diminish
-  :config
+(require 'goggles)
+(with-eval-after-load 'goggles
+  (add-to-list 'prot-emacs-ensure-install 'goggles)
   (setq-default goggles-pulse t)
   (goggles-mode 1))
 #+end_src
@@ -6768,9 +6503,7 @@ As such, the =mode-require-final-newline= will add a newline character
 when visiting or saving a buffer of relevance.
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq mode-require-final-newline 'visit-save))
+(setq mode-require-final-newline 'visit-save)
 #+end_src
 
 *** Altered zap and easier repeats
@@ -6805,11 +6538,9 @@ rely on: for more deliberate actions of this sort, consider Emacs'
 notion of "registers".
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq repeat-on-final-keystroke t)
-  (setq set-mark-command-repeat-pop t)
-  :bind ("M-z" . zap-up-to-char))
+(setq repeat-on-final-keystroke t)
+(setq set-mark-command-repeat-pop t)
+(define-key global-map (kbd "M-z") #'zap-up-to-char)
 #+end_src
 
 *** Package lists
@@ -6822,18 +6553,14 @@ of packages.  I generally use =hl-line-mode= on all interfaces where the
 current line is more important than the exact column of the point.
 
 #+begin_src emacs-lisp
-;; TODO 2021-01-19: review package.el, given that I no longer use it.
-(use-package package
-  :commands (list-packages
-             package-refresh-contents
-             package-list-packages)
-  :config
+(require 'package)
+(with-eval-after-load 'package
   ;; All variables are for Emacs 28+
   (setq package-name-column-width 40)
   (setq package-version-column-width 14)
   (setq package-status-column-width 12)
   (setq package-archive-column-width 8)
-  :hook (package-menu-mode-hook . hl-line-mode))
+  (add-hook 'package-menu-mode-hook #'hl-line-mode))
 #+end_src
 
 * Language settings for prose and code
@@ -6889,24 +6616,23 @@ we would like to quote
 +----
 #+end_example
 
-Here is the =use-package= declaration.  Remember that =text-mode= is a
+Here is the package declaration.  Remember that =text-mode= is a
 dependency of =prot-text=, so no need to include it here.
 
 #+begin_src emacs-lisp
-(use-package prot-text
-  :straight (:type built-in)
-  :mode ("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)$")
-  :bind (:map text-mode-map
-              ("<M-return>" . prot-text-insert-heading)
-              ("M-;" . prot-text-cite-region)
-              :map org-mode-map
-              ("M-;" . nil)))
+(require 'prot-text)
+(with-eval-after-load 'prot-text
+  (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)$" . text-mode))
+  (let ((map text-mode-map))
+    (define-key map (kbd "<M-return>") #'prot-text-insert-heading)
+    (define-key map (kbd "M-;") #'prot-text-cite-region))
+  (define-key org-mode-map (kbd "M-;") nil))
 #+end_src
 
 Finally, those are the contents of the =prot-text.el= library (find the
 file in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
 
-#+include: straight/repos/prot-lisp/prot-text.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-text.el src emacs-lisp :tangle no
 
 *** Markdown (markdown-mode)
 :PROPERTIES:
@@ -6916,13 +6642,14 @@ file in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with 
 I edit lots of Markdown files.  This makes things easier.
 
 #+begin_src emacs-lisp
-(use-package markdown-mode
-  :straight t
-  :config
+(require 'markdown-mode)
+(with-eval-after-load 'markdown-mode
+  (add-to-list 'prot-emacs-ensure-install 'markdown-mode)
   ;; Allows for fenced block focus with C-c ' (same as Org blocks).
-  (use-package edit-indirect :straight t)
+  (require 'edit-indirect)
+  (add-to-list 'prot-emacs-ensure-install 'edit-indirect)
   (setq markdown-fontify-code-blocks-natively t)
-  :mode ("\\.md$" . markdown-mode))
+  (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode)))
 #+end_src
 
 *** YAML (yaml-mode)
@@ -6933,10 +6660,10 @@ I edit lots of Markdown files.  This makes things easier.
 This adds support for YAML files.
 
 #+begin_src emacs-lisp
-(use-package yaml-mode
-  :straight t
-  :mode (("\\.yml$" . yaml-mode)
-         ("\\.yaml$" . yaml-mode)))
+(require 'yaml-mode)
+(with-eval-after-load 'yaml-mode
+  (add-to-list 'prot-emacs-ensure-install 'yaml-mode)
+  (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode)))
 #+end_src
 
 *** CSS (css-mode)
@@ -6949,10 +6676,10 @@ to not apply previews to colour references.  If I ever need that, there
 is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant section]]).
 
 #+begin_src emacs-lisp
-(use-package css-mode
-  :mode (("\\.css$" . css-mode)
-         ("\\.scss$" . scss-mode))
-  :config
+(require 'css-mode)
+(with-eval-after-load 'css-mode
+  (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
+  (add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
   (setq css-fontify-colors nil))
 #+end_src
 
@@ -6961,17 +6688,19 @@ is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant secti
 :CUSTOM_ID: h:fee2b8ff-80d6-4669-904c-c8ee64c9719c
 :END:
 
-Another built-in mode that targets shell scripts.  I think it works well
-out-of-the-box, even though it provides lots of configuration options to
-further control its behaviour.
+=sh-mode.el= is another built-in mode that targets shell scripts.  I
+think it works well out-of-the-box, even though it provides lots of
+configuration options to further control its behaviour.
 
 All I want here is to enable =sh-mode= in various files that are not
 obvious shell scripts, like Arch Linux's package recipes.  As such, the
-=:mode= list will be expanded over time.
+value assigned to =auto-mode-alist= will be expanded each time I
+identify such a file.
 
 #+begin_src emacs-lisp
-(use-package sh-script
-  :mode (("PKGBUILD" . sh-mode)))
+(require 'sh-script)
+(with-eval-after-load 'sh-script
+  (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
 #+end_src
 
 ** Paragraphs and fill-mode (prot-fill.el)
@@ -7007,11 +6736,8 @@ for the current paragraph or the active region with =M-x fill-paragraph=,
 bound by default to =M-q=.
 
 #+begin_src emacs-lisp
-(use-package prot-fill
-  :straight (:type built-in)
-  :init
-  (diminish 'auto-fill-function) ; Why does `:diminish auto-fill-function' not work?
-  :config
+(require 'prot-fill)
+(with-eval-after-load 'prot-fill
   (setq prot-fill-default-column 72)
   (setq prot-fill-prog-mode-column 72)  ; Set this to another value if you want
   ;; Those variables come from various sources, though they feel part of the
@@ -7022,12 +6748,12 @@ bound by default to =M-q=.
   (setq use-hard-newlines nil)
   (setq adaptive-fill-mode t)
   (prot-fill-fill-mode 1)
-  :hook (after-init-hook . column-number-mode))
+  (add-hook 'after-init-hook #'column-number-mode))
 #+end_src
 
 These are the contents of =prot-fill.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-fill.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-fill.el src emacs-lisp :tangle no
 
 ** Comments (newcomment.el and prot-comment.el)
 :PROPERTIES:
@@ -7051,27 +6777,28 @@ that keybinding to the one I have for the much more specialised
 documented in their docstrings, so please check the code below.
 
 #+begin_src emacs-lisp
-(use-package newcomment
-  :config
+(require 'newcomment)
+(with-eval-after-load 'newcomment
   (setq comment-empty-lines t)
   (setq comment-fill-column nil)
   (setq comment-multi-line t)
   (setq comment-style 'multi-line)
-  :bind (("C-:" . comment-kill)         ; C-S-;
-         ("M-;" . comment-indent)))
+  (let ((map global-map))
+    (define-key map (kbd "C-:") #'comment-kill)         ; C-S-;
+    (define-key map (kbd "M-;") #'comment-indent)))
 
-(use-package prot-comment
-  :straight (:type built-in)
-  :config
+(require 'prot-comment)
+(with-eval-after-load 'prot-comment
   (setq prot-comment-comment-keywords
         '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
-  :bind (("C-;" . prot-comment-comment-dwim)
-         ("C-x C-;" . prot-comment-timestamp-keyword)))
+  (let ((map global-map))
+    (define-key map (kbd "C-;") #'prot-comment-comment-dwim)
+    (define-key map (kbd "C-x C-;") #'prot-comment-timestamp-keyword)))
 #+end_src
 
 And here is =prot-comment.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-comment.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-comment.el src emacs-lisp :tangle no
 
 ** Configure 'electric' behaviour
 :PROPERTIES:
@@ -7108,8 +6835,8 @@ auto-insertion of characters.  This is a summary of my settings:
   key and then an angled bracket (=<= or =>=) followed by a quote mark.
 
 #+begin_src emacs-lisp
-(use-package electric
-  :config
+(require 'electric)
+(with-eval-after-load 'electric
   (setq electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
   (setq electric-pair-preserve-balance t)
   (setq electric-pair-pairs
@@ -7126,10 +6853,9 @@ auto-insertion of characters.  This is a summary of my settings:
   (setq electric-quote-paragraph t)
   (setq electric-quote-string nil)
   (setq electric-quote-replace-double t)
-  :hook (after-init-hook . (lambda ()
-                             (electric-indent-mode 1)
-                             (electric-pair-mode -1)
-                             (electric-quote-mode -1))))
+  (electric-indent-mode 1)
+  (electric-pair-mode -1)
+  (electric-quote-mode -1))
 #+end_src
 
 ** Parentheses (show-paren-mode)
@@ -7158,12 +6884,12 @@ Summary of what these do:
   parenthesis.
 
 #+begin_src emacs-lisp
-(use-package paren
-  :config
+(require 'paren)
+(with-eval-after-load 'paren
   (setq show-paren-style 'parenthesis)
   (setq show-paren-when-point-in-periphery nil)
   (setq show-paren-when-point-inside-paren nil)
-  :hook (after-init-hook . show-paren-mode))
+  (add-hook 'after-init-hook #'show-paren-mode))
 #+end_src
 
 ** Tabs, indentation, and the TAB key
@@ -7188,12 +6914,10 @@ Note that =tab-always-indent= will first do indentation and then try to
 complete whatever you have typed in.
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq-default tab-always-indent 'complete)
-  (setq-default tab-first-completion 'word-or-paren-or-punct) ; Emacs 27
-  (setq-default tab-width 4)
-  (setq-default indent-tabs-mode nil))
+(setq-default tab-always-indent 'complete)
+(setq-default tab-first-completion 'word-or-paren-or-punct) ; Emacs 27
+(setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
 #+end_src
 
 ** Flyspell and prot-spell.el (spell check)
@@ -7228,30 +6952,29 @@ is disabled because I re-purpose it for a faster version of =C-x C-;=
 (much more useful for my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
 
 #+begin_src emacs-lisp
-(use-package flyspell
-  :config
+(require 'flyspell)
+(with-eval-after-load 'flyspell
   (setq flyspell-issue-message-flag nil)
   (setq flyspell-issue-welcome-flag nil)
   (setq ispell-program-name "aspell")
   (setq ispell-dictionary "en_GB")
-  :bind (:map flyspell-mode-map
-              ("C-;" . nil)))
+  (define-key flyspell-mode-map (kbd "C-;") nil))
 
-(use-package prot-spell
-  :straight (:type built-in)
-  :config
+(require 'prot-spell)
+(with-eval-after-load 'prot-spell
   (setq prot-spell-dictionaries
         '(("EN English" . "en")
           ("EL Ελληνικά" . "el")
           ("FR Français" . "fr")
           ("ES Espanõl" . "es")))
-  :bind (("M-$" . prot-spell-spell-dwim)
-         ("C-M-$" . prot-spell-change-dictionary)))
+  (let ((map global-map))
+    (define-key map (kbd "M-$") #'prot-spell-spell-dwim)
+    (define-key map (kbd "C-M-$") #'prot-spell-change-dictionary)))
 #+end_src
 
 This is =prot-spell.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: straight/repos/prot-lisp/prot-spell.el src emacs-lisp :tangle no
+#+include: prot-lisp/prot-spell.el src emacs-lisp :tangle no
 
 ** Code and text linters
 :PROPERTIES:
@@ -7273,10 +6996,8 @@ programmers.  For my case, there is no need for any of those, while
 Flymake can lint Elisp without any further configuration.
 
 #+begin_src emacs-lisp
-(use-package flymake
-  :after prot-project
-  :commands flymake-mode
-  :init
+(require 'flymake)
+(with-eval-after-load 'flymake
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)
   (setq flymake-start-on-flymake-mode t)
@@ -7284,16 +7005,15 @@ Flymake can lint Elisp without any further configuration.
   (setq flymake-start-on-save-buffer t)
   (setq flymake-proc-compilation-prevents-syntax-check t)
   (setq flymake-wrap-around nil)
-  :bind (:map flymake-mode-map
-              ("C-c ! s" . flymake-start)
-              ("C-c ! d" . flymake-show-diagnostics-buffer)
-              ("C-c ! n" . flymake-goto-next-error)
-              ("C-c ! p" . flymake-goto-prev-error)))
+  (let ((map flymake-mode-map))
+    (define-key map (kbd "C-c ! s") #'flymake-start)
+    (define-key map (kbd "C-c ! d") #'flymake-show-diagnostics-buffer)
+    (define-key map (kbd "C-c ! n") #'flymake-goto-next-error)
+    (define-key map (kbd "C-c ! p") #'flymake-goto-prev-error)))
 
-(use-package flymake-diagnostic-at-point
-  :straight t
-  :after flymake
-  :config
+(require 'flymake-diagnostic-at-point)
+(with-eval-after-load 'flymake-diagnostic-at-point
+  (add-to-list 'prot-emacs-ensure-install 'flymake-diagnostic-at-point)
   (setq flymake-diagnostic-at-point-display-diagnostic-function
         'flymake-diagnostic-at-point-display-minibuffer))
 #+end_src
@@ -7320,12 +7040,12 @@ manually, as I normally do not run a linter while writing: it is too
 distracting.
 
 #+begin_src emacs-lisp
-(use-package flymake-proselint
-  :straight t
-  :after flymake
-  :init
-  (dolist (mode '("markdown-mode" "org-mode" "text-mode"))
-    (add-hook (intern (concat mode "-hook")) #'flymake-proselint-setup)))
+(require 'flymake-proselint)
+(with-eval-after-load 'flymake-proselint
+  (add-to-list 'prot-emacs-ensure-install 'flymake-proselint)
+  (add-hook 'markdown-mode #'flymake-proselint-setup)
+  (add-hook 'org-mode #'flymake-proselint-setup)
+  (add-hook 'text-mode #'flymake-proselint-setup))
 #+end_src
 
 ***** Proselint configuration
@@ -7442,22 +7162,15 @@ This is where =flymake-aspell= by Leo Gaskin comes in handy.  It uses the
 familiar Flymake interface (see [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][Flymake configuration]]) to highlight all
 spelling issues.  Simple and effective!
 
-Note that =flyspell= is not a dependency, but I still list it in the
-=:after= directive because that is where the ispell dictionary is
-specified (as it is what I normally use).  This would normally be a bad
-practice, though I do not run into problems since flyspell is always
-invoked before I ever have any need for =flymake-aspell=, so the
-dependency is satisfied.
-
 For a related package, consult my [[#h:2a954862-c532-43e9-afdf-4bacd152295f][configurations for flymake-proselint]].
 
 #+begin_src emacs-lisp
-(use-package flymake-aspell
-  :after (flyspell flymake)
-  :straight t
-  :init
-  (dolist (mode '("markdown-mode" "org-mode" "text-mode"))
-    (add-hook (intern (concat mode "-hook")) #'flymake-aspell-setup)))
+(require 'flymake-aspell)
+(with-eval-after-load 'flymake-aspell
+  (add-to-list 'prot-emacs-ensure-install 'flymake-aspell)
+  (add-hook 'markdown-mode #'flymake-aspell-setup)
+  (add-hook 'org-mode #'flymake-aspell-setup)
+  (add-hook 'text-mode #'flymake-aspell-setup))
 #+end_src
 
 *** Elisp packaging requirements
@@ -7470,10 +7183,10 @@ packaging.  I use it for my themes but also for any elisp library I may
 want to send patches to.
 
 #+begin_src emacs-lisp
-(use-package package-lint-flymake
-  :straight t
-  :after flymake
-  :hook (flymake-diagnostic-functions . package-lint-flymake))
+(require 'package-lint-flymake)
+(with-eval-after-load 'package-lint-flymake
+  (add-to-list 'prot-emacs-ensure-install 'package-lint-flymake)
+  (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
 #+end_src
 
 ** Eldoc (elisp live documentation feedback)
@@ -7491,9 +7204,8 @@ offer a lightweight complementary facility to that of the standard help
 commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
 
 #+begin_src emacs-lisp
-(use-package eldoc
-  :diminish
-  :config
+(require 'eldoc)
+(with-eval-after-load 'eldoc
   (global-eldoc-mode 1))
 #+end_src
 
@@ -7536,10 +7248,11 @@ to work as expected.  Note that the capitalisation of those symbols is
 canonical.
 
 #+begin_src emacs-lisp
-(use-package man
-  :bind (:map Man-mode-map
-              ("i" . Man-goto-section)
-              ("g" . Man-update-manpage)))
+(require 'man)
+(with-eval-after-load 'man
+  (let ((map Man-mode-map))
+    (define-key map (kbd "i") #'Man-goto-section)
+    (define-key map (kbd "g") #'Man-update-manpage)))
 #+end_src
 
 * History and state
@@ -7569,8 +7282,9 @@ original running process, aka "the server".  The server persists for as
 long as there is an Emacs frame attached to it.
 
 #+begin_src emacs-lisp
-(use-package server
-  :hook (after-init-hook . server-start))
+(require 'server)
+(with-eval-after-load 'server
+  (add-hook 'after-init-hook #'server-start))
 #+end_src
 
 With some exceptions aside, I only ever use Emacs in a single frame.
@@ -7614,10 +7328,10 @@ Overview of my settings:
   the older one).
 
 #+begin_src emacs-lisp
-(use-package desktop
-  :config
+(require 'desktop)
+(with-eval-after-load 'desktop
   (setq desktop-auto-save-timeout 300)
-  (setq desktop-path '("~/.emacs.d/"))
+  (setq desktop-path `(,user-emacs-directory))
   (setq desktop-base-file-name "desktop")
   (setq desktop-files-not-to-save nil)
   (setq desktop-globals-to-clear nil)
@@ -7627,18 +7341,6 @@ Overview of my settings:
   (setq desktop-restore-frames nil)
   (setq desktop-save 'ask-if-new)
   (desktop-save-mode 1))
-#+end_src
-
-And here we make sure that Emacs starts in the =*scratch*= buffer, no
-matter what.
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :init
-  (setq initial-buffer-choice t)
-  (setq inhibit-startup-echo-area-message "prot") ; read the docstring
-  (setq inhibit-startup-screen t)
-  (setq inhibit-startup-buffer-menu t))
 #+end_src
 
 ** Record various types of history
@@ -7659,13 +7361,13 @@ results towards the top as the most likely candidates.  Make sure to
 also read the [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]].
 
 #+begin_src emacs-lisp
-(use-package savehist
-  :config
-  (setq savehist-file "~/.emacs.d/savehist")
+(require 'savehist)
+(with-eval-after-load 'savehist
+  (setq savehist-file (concat user-emacs-directory "savehist"))
   (setq history-length 1000)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
-  :hook (after-init-hook . savehist-mode))
+  (add-hook 'after-init-hook #'savehist-mode))
 #+end_src
 
 *** Record cursor position
@@ -7678,9 +7380,9 @@ subtle reminder of what you were doing the last time you visited that
 file, allowing you to pick up from there.
 
 #+begin_src emacs-lisp
-(use-package saveplace
-  :config
-  (setq save-place-file "~/.emacs.d/saveplace")
+(require 'saveplace)
+(with-eval-after-load 'saveplace
+  (setq save-place-file (concat user-emacs-directory "saveplace"))
   (setq save-place-forget-unreadable-files t)
   (save-place-mode 1))
 #+end_src
@@ -7695,16 +7397,14 @@ but I prefer to be safe in the knowledge that if something goes awry
 there is something to fall back to.
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (setq backup-directory-alist
-        '(("." . "~/.emacs.d/backup/")))
-  (setq backup-by-copying t)
-  (setq version-control t)
-  (setq delete-old-versions t)
-  (setq kept-new-versions 6)
-  (setq kept-old-versions 2)
-  (setq create-lockfiles nil))
+(setq backup-directory-alist
+      `(("." . ,(concat user-emacs-directory "backup/"))))
+(setq backup-by-copying t)
+(setq version-control t)
+(setq delete-old-versions t)
+(setq kept-new-versions 6)
+(setq kept-old-versions 2)
+(setq create-lockfiles nil)
 #+end_src
 
 * Frequently Asked Questions about this document
@@ -7865,8 +7565,7 @@ or variables.  Its utility is two-fold:
    say, browse them all easily or even edit them using the full array of
    Emacs' relevant powers (occur's results buffer is made editable with
    =e=, but you should be able to find that by using the information
-   documented in [[*How do you learn
-    Emacs?][How do you learn Emacs?]]).
+   documented in [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]].
 
 The same principles apply for the =contrib/= namespace.  Whenever I copy
 something from another user, I use that namespace to tell others that
@@ -7888,26 +7587,12 @@ complain about it, if you ever go down that path.  It could be something
 like =prot-= or =my-= or whatever.  What matters is to keep things
 consistent and fairly easy to identify.
 
-** Why not `:custom' and why do you use so many `setq'?
+** Why do you use so many `setq'?
 :PROPERTIES:
 :CUSTOM_ID: h:ba373e0d-29d1-4224-b0f1-64b640ceeaae
 :END:
 
-I normally do not use the =:custom= keyword that =use-package= provides,
-opting instead for =:config= or =:init=.  This is for a couple of
-closely related reasons:
-
-+ It makes each variable more difficult to copy elsewhere, say, when
-  sharing it online or to an =emacs -Q= scratch buffer.  You either need
-  to edit the balanced expression, or hope that users will know the
-  syntax that the =:custom= keyword expects.
-
-+ It is impossible to run =C-x C-e= (=eval-last-sexp=) on each balanced
-  expression because it lacks the =setq= special form.  Again, this
-  introduces an impediment to quick copy/paste operations.
-
-Now you may be wondering why I define each variable in its own balanced
-expression.  To be clear, these are equivalent:
+To be clear, these are equivalent:
 
 #+begin_example emacs-lisp
 ;; Style A
@@ -7921,8 +7606,17 @@ expression.  To be clear, these are equivalent:
       var-3 '((a . b) (c . d)))
 #+end_example
 
-You will notice that most of my configurations follow Style A.  The
-reasons are the same as above: (i) copying, (ii) evaluating.
+You will notice that most of my configurations follow Style A.  I do so
+for a couple of reasons:
+
++ It makes each variable easier to copy elsewhere, say, when sharing it
+  online or to an =emacs -Q= scratch buffer.
+
++ It is trivial to run =C-x C-e= (=eval-last-sexp=) on each balanced
+  expression.
+
+There are some cases where I use a single =setq= to configure several
+variables (Style B), but those are the exception to the norm.
 
 Style B used to give me more problems with copy-pasting, while it did
 not solve any real issues (besides, I finalise style A using a keyboard
@@ -7931,9 +7625,6 @@ macro, so there is no real difference in typing).
 I find that Style A consists of balanced expressions that are easier to
 keep consistent.  This is especially true when you have a mixture of
 values: boolean types, property lists, association lists…
-
-Of course, experience is key to understanding that all these styles are
-valid.
 
 ** Why do you explicitly set variables the same as default?
 :PROPERTIES:
