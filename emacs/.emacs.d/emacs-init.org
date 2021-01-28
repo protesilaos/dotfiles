@@ -522,7 +522,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-slanted-constructs nil
-        modus-themes-bold-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
@@ -536,9 +536,9 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments
-        modus-themes-syntax 'yellow-comments
+        modus-themes-syntax nil
         modus-themes-intense-hl-line nil
-        modus-themes-paren-match 'intense ; {nil,'subtle-bold,'intense,'intense-bold}
+        modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only
@@ -554,8 +554,8 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
         '((t . no-color))
-        modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings nil
+        modus-themes-variable-pitch-ui t
+        modus-themes-variable-pitch-headings t
         modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
