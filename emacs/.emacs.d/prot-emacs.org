@@ -5772,9 +5772,10 @@ few of them is usually okay, but a lot of them do not scale well.
 (require 'minions)
 (with-eval-after-load 'minions
   (add-to-list 'prot-emacs-ensure-install 'minions)
-  (setq minions-mode-line-lighter "+")
+  (setq minions-mode-line-lighter "⋯")
   ;; NOTE: This will be expanded whenever I find a mode that should not be hidden
-  (setq minions-direct '(defining-kbd-macro))
+  (setq minions-direct (list 'defining-kbd-macro
+                             'flymake-mode))
   (minions-mode 1))
 #+end_src
 
