@@ -103,7 +103,8 @@ of it."
         (init-org (concat user-emacs-directory "prot-emacs.org")))
     (when (file-exists-p init-el)
       (delete-file init-el))
-    (org-babel-tangle-file init-org init-el)))
+    (org-babel-tangle-file init-org init-el)
+    (byte-compile-file init-el)))
 
 ;; Based on `org--line-empty-p'.
 (defmacro prot-common--line-p (name regexp)
