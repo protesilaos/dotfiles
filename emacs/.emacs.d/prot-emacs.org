@@ -366,7 +366,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-slanted-constructs nil
+  (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs nil
         modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
         ;; Options for `modus-themes-lang-checkers': nil,
@@ -407,10 +407,21 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-scale-3 1.21
         modus-themes-scale-4 1.27
         modus-themes-scale-5 1.33)
-  ;; Load the theme files before enabling a theme (I do this via the
-  ;; `after-init-hook', though you could also add `(enable-theme
-  ;; 'modus-operandi)' after the `:config' keyword.
+
+  ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
+
+  ;; Enable the theme at startup.  This is done after loading the files.
+  ;; You only need `modus-themes-load-operandi' for the light theme or
+  ;; `modus-themes-load-vivendi' for the dark one.  What I have here is
+  ;; a simple test to load a light/dark theme based on some general time
+  ;; ranges (just accounting for the hour and without checking for the
+  ;; actual sunrise/sunset times).  Plus we have `modus-themes-toggle'
+  ;; to switch themes at will.
+  (let ((time (string-to-number (format-time-string "%H"))))
+    (if (and (> time 5) (< time 18))
+        (modus-themes-load-operandi)
+      (modus-themes-load-vivendi)))
 
   ;; Don't forget to read the manual.  This is explained there.  And
   ;; please don't read too much into those: I am testing various
@@ -469,7 +480,6 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; Also check my package declaration for `prot-fonts' because I use
   ;; the `modus-themes-after-load-theme-hook' for some typeface-related
   ;; tweaks (as those are made at the "face" level).
-  (add-hook 'after-init-hook #'modus-themes-load-operandi)
   (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
 #+end_src
