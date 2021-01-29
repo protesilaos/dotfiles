@@ -72,6 +72,12 @@ used, else `prot-elfeed-video-resolution-small'."
   :type 'integer
   :group 'prot-elfeed)
 
+(defcustom prot-elfeed-search-tags '(critical important personal)
+  "List of user-defined tags.
+Used by `prot-elfeed-toggle-tag'."
+  :type 'list
+  :group 'prot-elfeed)
+
 (defface prot-elfeed-entry-critical
   '((((class color) (min-colors 88) (background light))
      :inherit elfeed-search-title-face :foreground "#972500")
@@ -121,24 +127,42 @@ Add this to `elfeed-search-mode-hook'."
     (setq elfeed-search-face-alist
           '((unread elfeed-search-unread-title-face)))))
 
-(defvar prot-elfeed-search-tags
-  '(critical essential important)
-  "List of tags used by `prot-elfeed-toggle-tag'.")
+(defvar prot-elfeed--tag-hist '()
+  "History of inputs for `prot-elfeed-toggle-tag'.")
 
-(declare-function elfeed-search-toggle-all "elfeed")
-
-;;;###autoload
-(defun prot-elfeed-toggle-tag (&optional tag)
-  "Toggle tag on current item.
-
-A list of tags is provided by `prot-elfeed-search-tags'.
-Otherwise an optional TAG symbol will suffice."
-  (interactive)
-  (let* ((tags prot-elfeed-search-tags)
-         (input (or tag (intern (completing-read "Set tag: " tags nil t)))))
-    (elfeed-search-toggle-all input)))
+(defun prot-elfeed--character-prompt (tags)
+  "Helper of `prot-elfeed-toggle-tag' to read TAGS."
+  (let ((def (car prot-elfeed--tag-hist)))
+    (completing-read
+     (format-prompt "Toggle tag" def)
+     tags nil t nil 'prot-elfeed--tag-hist def)))
 
 (defvar elfeed-show-entry)
+(declare-function elfeed-tagged-p "elfeed")
+(declare-function elfeed-search-toggle-all "elfeed")
+(declare-function elfeed-show-tag "elfeed")
+(declare-function elfeed-show-untag "elfeed")
+
+;;;###autoload
+(defun prot-elfeed-toggle-tag (tag)
+  "Toggle TAG for the current item.
+
+When the region is active in the `elfeed-search-mode' buffer, all
+entries encompassed by it are affected.  Otherwise the item at
+point is the target.  For `elfeed-show-mode', the current entry
+is always the target.
+
+The list of tags is provided by `prot-elfeed-search-tags'."
+  (interactive
+   (list
+    (intern
+     (prot-elfeed--character-prompt prot-elfeed-search-tags))))
+  (if (derived-mode-p 'elfeed-show-mode)
+      (if (elfeed-tagged-p tag elfeed-show-entry)
+          (elfeed-show-untag tag)
+        (elfeed-show-tag tag))
+    (elfeed-search-toggle-all tag)))
+
 (defvar elfeed-show-truncate-long-urls)
 (declare-function elfeed-entry-title "elfeed")
 (declare-function elfeed-show-refresh "elfeed")
