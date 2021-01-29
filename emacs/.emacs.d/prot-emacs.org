@@ -263,7 +263,7 @@ example, =M-.= (=xref-find-definitions=).
 
 While =prot-pulse.el= (complete code further below) is a thin wrapper that
 provides some extensions that are useful to my workflow.  Specifically,
-it declares a new face and provides a command that implements it:
+it declares a new face and defines a command that implements it:
 =prot-pulse-pulse-line=.  This is useful to quickly highlight the line and
 buffer I am on, but can also be utilised by other tools that move the
 point an arbitrary distance.
@@ -6431,14 +6431,17 @@ prefer it to work the way I expect.  =zap-up-to-char= will delete
 everything from point up to the character you provide it with.  Think of
 how you may want to delete a file name but keep its file type extension.
 
-The repeat command is bound by default to =C-x z=.  I make it so that
-subsequent repetitions require only hitting another =z=.  In practice
-though, you should not bother with this.  Let keyboard macros handle
-that task.
+The =repeat= command is bound by default to =C-x z=, with =s-z= serving as my
+alias for it (read [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][What is the meaning of the `s-KEY' bindings?]]).  I
+make it so that subsequent repetitions require only hitting another =z=.
+Depending on what you do, a =repeat= can save you from multiple key
+presses, such as when switching windows with =other-window= (=C-x o= by
+default).  For more demanding tasks you are better off with keyboard
+macros.
 
-*Pro tip:* to make a keyboard macro out of your most recent commands,
-use =C-x C-k l= which calls =kmacro-edit-lossage=.  The list is editable, so
-remove anything that is not required and then save what is left.  The
+*Pro tip:* to make a keyboard macro out of your most recent commands, use
+=C-x C-k l= which calls =kmacro-edit-lossage=.  The list is editable, so
+remove any line that is not required and then save what is left.  The
 result is stored as the latest keyboard macro (and you also have the
 power to cycle through kmacros, store them in specific keys, etc.).
 
@@ -6456,6 +6459,7 @@ notion of "registers".
 (setq repeat-on-final-keystroke t)
 (setq set-mark-command-repeat-pop t)
 (define-key global-map (kbd "M-z") #'zap-up-to-char)
+(define-key global-map (kbd "s-z") #'repeat)
 #+end_src
 
 *** Package lists
