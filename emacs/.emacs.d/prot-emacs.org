@@ -4747,25 +4747,27 @@ to the documentation of the function =format-time-string= to understand
 the meaning of the various date/time specifiers.
 
 #+begin_src emacs-lisp
-;; NOTE 2021-01-26 17:33 +0200: This section is being refactored.  There
-;; may still be some errors or omissions.
-;;
-;; UPDATE 2021-01-29 08:18 +0200: Everything works the way I want.  The
-;; current plan is to extend Gnus to search for mail.  Then I will
-;; remove mu4e, which I do not use anyhow.
 (require 'gnus)
 (with-eval-after-load 'gnus
+  (require 'gnus-sum)
+  (require 'gnus-dired)
+  (require 'gnus-topic)
+  (require 'prot-gnus)
 ;;; accounts
   (setq gnus-select-method '(nnnil ""))
   (setq gnus-secondary-select-methods
         '((nntp "news.gwene.org")
-          (nnmaildir "prv" (directory "~/.mail/prv"))
-          (nnmaildir "inf" (directory "~/.mail/inf"))
-          (nnmaildir "pub" (directory "~/.mail/pub"))))
+          (nnmaildir "prv" (directory "~/.mail/prv")
+           (gnus-search-engine gnus-search-notmuch ; this feature is from Emacs 28
+ 					           (remove-prefix "~/.mail/prv")))
+          (nnmaildir "inf" (directory "~/.mail/inf")
+           (gnus-search-engine gnus-search-notmuch
+ 					           (remove-prefix "~/.mail/inf")))
+          (nnmaildir "pub" (directory "~/.mail/pub")
+           (gnus-search-engine gnus-search-notmuch
+ 					           (remove-prefix "~/.mail/pub")))))
 
-  ;;  TODO 2021-01-28: Leverage the new Gnus search facility.
-  (setq gnus-search-default-engines     ; Emacs 28
-        '((nnmaildir . notmuch)))
+  (setq gnus-search-use-parsed-queries t) ; Emacs 28
 
   (setq gnus-parameters
         '((".*"                         ; fallback option
@@ -4831,7 +4833,7 @@ the meaning of the various date/time specifiers.
   (setq gnus-level-subscribed 6)
   (setq gnus-level-unsubscribed 7)
   (setq gnus-level-zombie 8)
-  (setq gnus-activate-level 2)
+  (setq gnus-activate-level 1)
   (setq gnus-list-groups-with-ticked-articles nil)
   (setq gnus-group-sort-function
         '((gnus-group-sort-by-unread)
@@ -4878,11 +4880,6 @@ the meaning of the various date/time specifiers.
   (setq gnus-sum-thread-tree-root "")
   (setq gnus-sum-thread-tree-single-leaf "\\-> ")
   (setq gnus-sum-thread-tree-vertical "|")
-
-  (require 'gnus-sum)
-  (require 'gnus-dired)
-  (require 'gnus-topic)
-  (require 'prot-gnus)
 
   (add-hook 'dired-mode-hook #'gnus-dired-mode) ; dired integration
   (add-hook 'gnus-group-mode-hook #'hl-line-mode)
