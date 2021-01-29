@@ -6974,6 +6974,10 @@ Several extensions to Flymake are already available, mostly targeted at
 programmers.  For my case, there is no need for any of those, while
 Flymake can lint Elisp without any further configuration.
 
+The external =flymake-diagnostic-at-point= package provides a simple and
+effective interface to displaying information about the warning at
+point.
+
 #+begin_src emacs-lisp
 (require 'flymake)
 (with-eval-after-load 'flymake
@@ -7009,14 +7013,14 @@ offers a Flymake interface to the external =proselint= executable (see
 This comes in handy when I need to review some long-form text for common
 inconsistencies and stylistic irregularities.  Errors will be marked on
 the fringe, while you can quickly get an overview with pointers to the
-precise line number by invoking =flymake-show-diagnostics-buffer= (also
-check my [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][configurations for Flymake]]).
+precise line number by invoking =flymake-show-diagnostics-buffer= (check
+my [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][configurations for Flymake]] and then also review what I have to
+spelling in [[#h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c][Flyspell and prot-spell.el (spell check)]]).
 
 To run the program, you just need to hook it to whatever major-mode you
-use for prose.  The following =dolist= handles this nicely.  Then you need
-to enable =flymake-mode= to start using it.  I prefer to do the final step
-manually, as I normally do not run a linter while writing: it is too
-distracting.
+use for prose.  Then you need to enable =flymake-mode= to start using it.
+I prefer to do the final step manually, as I normally do not run a
+linter while writing: it is too distracting.
 
 #+begin_src emacs-lisp
 (require 'flymake-proselint)
