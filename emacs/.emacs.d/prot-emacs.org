@@ -7413,27 +7413,29 @@ Know that =C-h= is the universal key for help commands (broadly
 understood).  It works both as a prefix and as a suffix.  Some common
 help commands:
 
-+ =C-h f= allows you to search for documentation about *functions*.
-+ =C-h v= is the same for *variables*.
-+ =C-h o= is a wrapper of the above two, so you are searching for
-  functions *or* variables.  The proper name for any of these items is
-  called a "symbol" (think of =name-of-thing= as symbolising a definition
-  in the source code).
-+ =C-h k= will prompt you for a *key* binding.  Once you type it in you will
-  get help about what command corresponds to that key (if any).  Note
-  that this depends on the major mode you are in.  For example =C-c C-c=
-  does something different in Org and Eshell buffers.  Try =C-h k C-c C-c=
-  to find about the different functions these will invoke in their
-  respective major mode.
-+ =C-h l= produces a log with your most recent key presses and the
-  commands they call.  Emacs calls this the "lossage".  Ever mistyped
-  something and got to the wrong place?  Use this as an opportunity to
-  learn and, perhaps, a way to identify key sequences you would like to
-  modify.  (*pro tip*: you can edit/convert your lossage into a keyboard
-  macro with =C-x C-k l=---also watch [[https://protesilaos.com/codelog/2020-03-14-emacs-kmacro-edit/][Edit keyboard macros]] (2020-03-14)).
++ =C-h f= (=describe-function=) allows you to search for documentation about
+  *functions*.
++ =C-h v= (=describe-variable=) is the same for *variables*.
++ =C-h o= (=describe-symbol=) is a wrapper of the above two, so you are
+  searching for functions *or* variables.  The proper name for any of
+  these items is called a "symbol" (think of =name-of-thing= as
+  symbolising a definition in the source code).
++ =C-h k= (=describe-key=) will prompt you for a *key* binding.  Once you type
+  it in you will get help about what command corresponds to that key (if
+  any).  Note that this depends on the major mode you are in.  For
+  example =C-c C-c= does something different in Org and Eshell buffers.
+  Try =C-h k C-c C-c= to find about the different functions these will
+  invoke in their respective major mode.
++ =C-h l= (=view-lossage=)produces a log with your most recent key presses
+  and the commands they call.  Emacs calls this the "lossage".  Ever
+  mistyped something and got to the wrong place?  Use this as an
+  opportunity to learn and, perhaps, a way to identify key sequences you
+  would like to modify.  (*pro tip*: you can edit/convert your lossage
+  into a keyboard macro with =C-x C-k l=---also watch [[https://protesilaos.com/codelog/2020-03-14-emacs-kmacro-edit/][Edit keyboard macros]]
+  (2020-03-14)).
 
-In the above scenaria we see how =C-h= is used as a prefix.  You are
-starting a key sequence with it.  So here are some cases of using it as
+In the above scenaria we see how =C-h= is used as a prefix: you are
+starting a key sequence with it.  Now here are some cases of using it as
 a suffix:
 
 + For /every incomplete key sequence/ if you follow it up with =C-h= you
@@ -7457,15 +7459,18 @@ includes links to the commands that correspond to each key chord.
 Follow the link to get documentation about that symbol.
 
 More generally, you will find that a symbol is linked to its source.
-Look carefully at the top of the buffer that display symbol
+Look carefully at the top of the buffer that displays the symbol's
 documentation and you will find a link to the source code (library) from
 where the function/variable (symbol) comes from.
 
 Also know that the source code can be accessed at any time by means of
-=M-x find-library=.
+=M-x find-library= followed by the name you are looking for.  Those are
+called "features", by the way, and each library declares them using the
+=provide= form at the end of the file (so when you use =require= you pass a
+quoted feature symbol).
 
 Help commands that ask you for a symbol to input can also be aware of
-the context of the point (the cursor).  So if you are over the name of a
+the context of the point (the cursor).  If you are over the name of a
 function and you type =C-h f=, that function will be the default match.
 Hitting RET (Enter) will take you to its documentation.  /This is a great
 way to study source code/, because it will guide you to other libraries
@@ -7473,13 +7478,24 @@ or other parts of the same library from where you can understand how
 things are pieced together.  And it also works with the =find-library=
 command.
 
-Finally, you should practice =C-h m= as much as possible.  This is the
-help command for getting information about the major mode you are in and
-all the minor modes you have active.  It will show you some valuable
+While browsing Elisp source code, there are two commands that can be of
+great help to navigate definitions.  =xref-find-definitions=, bound to =M-.=
+will take you to the definition of the symbol at point.  While its
+counterpart, the =xref-pop-marker-stack= (=M-,=), will bring you back to
+where you where before.  Similarly, the built-in Isearch tool can search
+for the symbol at point with =M-s .= (the =isearch-forward-symbol-at-point=
+command), which can then be followed up with =M-s o= to produce an "Occur"
+buffer with all the results---use that as an index to move around (also
+check: [[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][Isearch, occur, and extras (prot-search.el)]]).
+
+Finally, you should practice =C-h m= (=describe-mode=) as much as possible.
+This is the help command for getting information about the major mode
+you are in and for all the minor modes you have active and which are
+pertinent to the current buffer.  It will show you some valuable
 documentation as well as the main key bindings and their commands.  Try
 it whenever you use something you have not mastered yet.  For example,
 do it in a =dired= buffer to see the main operations you can perform
-inside of it.
+inside of it (see [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory editor, file manager)]]).
 
 ** Why maintain all those 'prot-*.el' files?
 :PROPERTIES:
@@ -7489,7 +7505,8 @@ inside of it.
 Those contain my custom Elisp code.  Several of them provide extensions
 to existing tools, while others introduce some new functionality.  They
 are written in accordance with the best coding practices and are, for
-all intents and purposes, regular packages.
+all intents and purposes, regular packages even though they only target
+my use-case.
 
 The main benefits of packaging my code are thus:
 
@@ -7511,9 +7528,9 @@ The main benefits of packaging my code are thus:
 
 While my =prot-*.el= are distributed as packages, please understand that I
 consider this an exercise in programming.  I develop them because I
-believe they will be useful to me.  Please do not unilaterally put them
-in some package archive as I cannot promise that I will keep them around
-forever (distributing a package implies a commitment to its users).
+believe they will be useful to me.  Do not unilaterally put them in some
+package archive as I cannot promise that I will keep them around forever
+(distributing a package implies a commitment to its users).
 
 ** What is the purpose of "prot/" and "contrib/"?
 :PROPERTIES:
@@ -7540,13 +7557,13 @@ or variables.  Its utility is two-fold:
    (depending on the completion framework, one can access those with
    just =M-x p/=).  This also means that I can do =M-x occur prot/= to
    produce an Occur buffer with all my symbols (pass a numeric argument
-   for displaying N lines of context =C-u 5 M-s o=).  From there I can,
-   say, browse them all easily or even edit them using the full array of
+   to display N lines of context =C-u 5 M-s o=).  From there I can, say,
+   browse them all easily or even edit them using the full array of
    Emacs' relevant powers (occur's results buffer is made editable with
    =e=, but you should be able to find that by using the information
-   documented in [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]].
+   documented in [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
 
-The same principles apply for the =contrib/= namespace.  Whenever I copy
+The same principles apply to the =contrib/= namespace.  Whenever I copy
 something from another user, I use that namespace to tell others that
 this is not part of Emacs or any other package (and I always link to the
 source).
@@ -7554,7 +7571,8 @@ source).
 Adding =contrib/= also has another longer-term benefit.  It tells my
 future self that some bespoke configuration was needed to solve a
 particular problem and, maybe, this has since been solved by a good
-package or even a newer version of Emacs.
+package or even a newer version of Emacs (or I want to supply my own
+alternative).
 
 Again, =occur= or similar tools will filter those out when necessary.
 Imagine having to do that without any namespaces…  You would need to
@@ -7626,6 +7644,10 @@ comes out of it.
 At any rate, one must always read the NEWS (=C-h n= for =view-emacs-news=)
 whenever they upgrade to a new version of Emacs.  Though there is no
 equivalent mechanism for individual packages…  So here we are.
+
+By the way, the fastest way to find a package's customisation options is
+to visit its source code and produce an Occur buffer for its =defcustom=
+declarations (which extends the ideas in [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
 
 ** What is your distro and/or window manager?
 :PROPERTIES:
@@ -7722,7 +7744,7 @@ commercial keyboards).  This is represented as a lower case =s=.
 In most cases, those key bindings are alternative ways of invoking
 /common commands/ that are by default bound to longer key chords.  The
 original keys will continue to function as intended (for example, =C-x o=
-is also =s-o=).  Otherwise they bind my own custom functions.
+is also =s-o=).  Otherwise they are bound to my own custom commands.
 
 To find all my keybindings of this sort in the source code version of
 this document from inside of Emacs, do =M-s o= (or =M-x occur=) followed by
@@ -7735,7 +7757,9 @@ chord before it is ever sent to Emacs.  For example, GNOME has a *hidden*
 key mapping to =s-p=, which does something with monitors (last time I
 checked on GNOME 3.30).  Such bindings are scattered throughout the
 config database that is normally accessed with =gsettings= on the command
-line or the graphical =dconf-editor= (not pretty either way).
+line or the graphical =dconf-editor= (not pretty either way).  For me this
+is not a problem, because I disable all of the DE's key bindings (also
+read: [[#h:044977f2-a909-4804-bf89-576dd429d405][What is your distro and/or window manager?]]).
 
 ** What hardware do you use?
 :PROPERTIES:
