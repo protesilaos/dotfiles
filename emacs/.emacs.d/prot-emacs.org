@@ -4760,6 +4760,10 @@ the meaning of the various date/time specifiers.
 #+begin_src emacs-lisp
 ;; NOTE 2021-01-26 17:33 +0200: This section is being refactored.  There
 ;; may still be some errors or omissions.
+;;
+;; UPDATE 2021-01-29 08:18 +0200: Everything works the way I want.  The
+;; current plan is to extend Gnus to search for mail.  Then I will
+;; remove mu4e, which I do not use anyhow.
 (require 'gnus)
 (with-eval-after-load 'gnus
 ;;; accounts
