@@ -63,7 +63,6 @@
 
 ;; Some basic settings
 (setq frame-title-format '("%b"))
-(setq echo-keystrokes 0.25)
 (setq default-input-method "greek")
 (setq ring-bell-function 'ignore)
 

@@ -981,6 +981,8 @@ declarations.  For its hook also check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0
   (setq resize-mini-windows t)
   (setq minibuffer-eldef-shorten-default t)
 
+  (setq echo-keystrokes 0.25)           ; from the C source code
+
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
