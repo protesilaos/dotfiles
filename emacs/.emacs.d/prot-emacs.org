@@ -3707,6 +3707,8 @@ Also check these valuable resources:
           eshell-tramp
           eshell-unix))
 
+  (require 'em-cmpl)
+
   (require 'em-dirs)
   (setq eshell-cd-on-directory t)
 
@@ -3730,9 +3732,8 @@ Also check these valuable resources:
     (define-key map (kbd "C-c C-w") #'prot-eshell-ffap-kill-save)
     (define-key map (kbd "C-c C->") #'prot-eshell-redirect-to-buffer)
     (define-key map (kbd "C-c C-e") #'prot-eshell-export)
-    (define-key map (kbd "C-c C-r") #'prot-eshell-root-dir)
-    ;; ;; TODO: debug `eshell-cmpl-mode-map'
-    ;;  (let ((map eshell-cmpl-mode-map))
+    (define-key map (kbd "C-c C-r") #'prot-eshell-root-dir))
+  (let ((map eshell-cmpl-mode-map))
     (define-key map (kbd "C-c TAB") #'prot-eshell-ffap-insert) ; C-c C-i
     (define-key map (kbd "C-c M-h") #'prot-eshell-narrow-output-highlight-regexp))
   (let ((map eshell-hist-mode-map))
