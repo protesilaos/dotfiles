@@ -7127,31 +7127,6 @@ writing.
 }
 #+end_example
 
-**** Flymake + Aspell
-:PROPERTIES:
-:CUSTOM_ID: h:aeb3e777-39fd-4b4f-8dc9-8b6aa7a595cc
-:END:
-
-I normally review a region's spelling with Flyspell, using my own
-extensions for it (see [[#h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c][Flyspell (spell check)]]).  I do, however, prefer
-to have an overview of all spelling warnings/errors as a final test
-before publishing a long-form text (e.g. an article on my website).
-
-This is where =flymake-aspell= by Leo Gaskin comes in handy.  It uses the
-familiar Flymake interface (see [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][Flymake configuration]]) to highlight all
-spelling issues.  Simple and effective!
-
-For a related package, consult my [[#h:2a954862-c532-43e9-afdf-4bacd152295f][configurations for flymake-proselint]].
-
-#+begin_src emacs-lisp
-(require 'flymake-aspell)
-(with-eval-after-load 'flymake-aspell
-  (add-to-list 'prot-emacs-ensure-install 'flymake-aspell)
-  (add-hook 'markdown-mode #'flymake-aspell-setup)
-  (add-hook 'org-mode #'flymake-aspell-setup)
-  (add-hook 'text-mode #'flymake-aspell-setup))
-#+end_src
-
 *** Elisp packaging requirements
 :PROPERTIES:
 :CUSTOM_ID: h:d03342da-3035-409f-a5e7-5df1e614d507
