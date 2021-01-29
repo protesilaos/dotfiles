@@ -2915,7 +2915,7 @@ these:
   (setq prot-logos-org-presentation nil)
   (setq prot-logos-variable-pitch nil)
   (setq prot-logos-scroll-lock nil)
-  (setq prot-logos-hidden-modeline nil)
+  (setq prot-logos-hidden-modeline t)
   (define-key global-map (kbd "<f9>") #'prot-logos-focus-mode))
 #+end_src
 
