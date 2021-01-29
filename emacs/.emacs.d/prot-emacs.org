@@ -1103,7 +1103,8 @@ registers.  The former is done by =consult-completion-in-region= which
 provides completion for commands such as =dabbrev-completion= or the TAB
 key in programming buffers (see [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the TAB key]]).
 While the latter is an overall prettier presentation for the familiar
-register preview window (also read about [[#h:6bdfe4d1-f97a-4d89-ab68-e87448a95fea][Registers]]).
+register preview window (watch: [[https://protesilaos.com/codelog/2020-03-08-emacs-registers/][Primer on Emacs “registers”]]
+(2020-03-08)).
 
 As for registers themselves, Consult furnishes three commands, one
 focused on minibuffer completion and two as do-what-I-mean alternatives
@@ -6213,84 +6214,6 @@ These are the contents of the =prot-outline.el= library (find the file in
 [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
 
 #+include: prot-lisp/prot-outline.el src emacs-lisp :tangle no
-
-** Registers
-:PROPERTIES:
-:CUSTOM_ID: h:6bdfe4d1-f97a-4d89-ab68-e87448a95fea
-:END:
-
-*There is no extra code here, but only some useful documentation.* For a
-few nice utilities pertaining to registers, refer to the section on
-[[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]].  Also
-watch: [[https://protesilaos.com/codelog/2020-03-08-emacs-registers/][Primer on Emacs “registers”]] (2020-03-08).
-
-Registers are compartments that hold data of various sorts.  They offer
-the means for advanced, highly efficient workflows, especially when
-combined with keyboard macros.
-
-Registers are called by a single character, which can be a letter
-(case-sensitive), number, or symbol.  Each character can only contain a
-single register at a time.
-
-To define a register, you call the appropriate command (see table below)
-and then specify the character you want to store that data at.
-
-| Key chord | Command                                               |
-|-----------+-------------------------------------------------------|
-| C-x r n   | number-to-register                                    |
-| C-x r s   | copy-to-register (think "save string")                |
-| C-x r r   | copy-rectangle-to-register                            |
-| C-x r SPC | point-to-register                                     |
-| C-x r w   | window-configuration-to-register                      |
-| C-x r f   | frameset-to-register (frames and their windows)       |
-| C-x r +   | increment-register (better used with numbers)         |
-| C-x r i   | insert-register (text, number, rectangle)             |
-| C-x r j   | jump-to-register (to point or window/frameset config) |
-
-Notes about some of the above:
-
-+ Using =point-to-register= allows you to revisit a specific location in a
-  buffer, but also reopen the file visited by that buffer in case the
-  buffer is deleted.
-+ Calling =number-to-register= without an argument will just store the
-  number =0= to the register you specify.  Whereas =C-u 100 C-x r n= will
-  store =100=.  In practice, you often want to use the latter method.
-+ Use =increment-register= to increment a number by one.  Pass a numeric
-  argument to increment by that amount instead.  For example, to
-  increment by five do =C-u 5 C-x r += and then select the register you
-  want to operate on.  This only affects the value stored in the
-  register.  It does not also insert it in the buffer.
-+ Number registers are particularly useful when you want to increment
-  several numbers through a keyboard macro.  You can record the motions
-  you need, run =increment-register= as noted above followed by the
-  standard =insert-register=.  If, however, you just want to increment a
-  single number through a keyboard macro, then just use the counter
-  provided by that facility (refer to my video on [[https://protesilaos.com/codelog/2019-10-14-emacs-easier-kmacro-counter/][easier kmacro counter]]
-  from 2019-10-14).
-+ The registers that store text as a string or a rectangle rely on the
-  active region to capture the data.  They are also great for keyboard
-  macros where you cannot rely on yanking from the head of the kill ring
-  (because, say, you are killing other things which push that value
-  further down).  Note though that =increment-register= has a different
-  behaviour when applied to them, where it will append to the register
-  instead (with an option to override the previous value).
-+ While on the topic of appending to registers, I define several
-  functions that change how the accumulation of text is supposed to
-  happen.  They introduce a space or line separator between the entries
-  you {ap,pre}-pend to the register.
-+ In my testing, I could never make =window-configuration-to-register=
-  persist between sessions (see section on [[#h:68d57dd2-4df1-4b7a-8766-231216e6cd9c][Emacs server and desktop]]).
-  Whereas all other registers retain their values.  So use this command
-  to store window configurations that are otherwise transient in nature.
-  For more permanent setups, rely on =frameset-to-register= which will
-  produce a new frame (or more if you had) with all the windows in
-  place.  Remember that you can always go back to your previous window
-  configuration without using registers, such as with the built-in
-  =winner-mode= (see section on [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][window history and directional motions]]).
-
-#+begin_src emacs-lisp
-(require 'register)
-#+end_src
 
 ** Cursor and mouse settings
 :PROPERTIES:
