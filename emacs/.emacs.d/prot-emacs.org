@@ -746,6 +746,22 @@ Consult's narrowing facility.  Please refer to the relevant sections:
   (which-key-mode -1))	   ; and turn this on, if you want to use this
 #+end_src
 
+** Some async facilities
+:PROPERTIES:
+:CUSTOM_ID: h:adca8953-98ea-4ed2-9844-b592bca66ced
+:END:
+
+This package provides some asynchronous processing facilities for
+various Emacs interfaces, such as for Dired's copy and rename operations
+(also read [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory editor, file manager)]]).
+
+All we need here is to just load the feature.
+
+#+begin_src emacs-lisp
+(require 'async)
+(add-to-list 'prot-emacs-ensure-install 'async)
+#+end_src
+
 * Selection candidates and search methods
 :PROPERTIES:
 :CUSTOM_ID: h:5c060e2e-231d-4896-a5d2-b3fb4134764e
@@ -2144,10 +2160,6 @@ given version-controlled (git) repo, see the section of this document on
 ;;   (setq find-ls-option
 ;;         '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
 ;;   (setq find-name-arg "-iname"))
-
-;; TODO 2021-01-28: `async' should not be bundled with `dired'
-(require 'async)
-(add-to-list 'prot-emacs-ensure-install 'async)
 
 ;; part of `async' package
 (require 'dired-async)
