@@ -5442,15 +5442,13 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
     (define-key map (kbd "o") #'prot-elfeed-search-open-other-window)
     (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
     (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
-    (define-key map (kbd "+") #'prot-elfeed-toggle-tag)
-    (define-key map (kbd "!") (lambda ()
-				                (interactive)
-				                (prot-elfeed-toggle-tag 'important))))
+    (define-key map (kbd "+") #'prot-elfeed-toggle-tag))
   (let ((map elfeed-show-mode-map))
     (define-key map (kbd "a") #'prot-elfeed-show-archive-entry)
     (define-key map (kbd "e") #'prot-elfeed-show-eww)
     (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
-    (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)))
+    (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
+    (define-key map (kbd "+") #'prot-elfeed-toggle-tag)))
 #+end_src
 
 This is =prot-elfeed.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
