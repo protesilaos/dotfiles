@@ -6932,10 +6932,6 @@ operate on the word at point.  Its fallback condition is a call to
 =prot-spell-change-dictionary=, which I use to switch between languages
 using minibuffer completion.
 
-If I ever need to review the entire buffer, especially if it is about
-some long-form text, I use a =flymake= interface instead (refer to the
-[[#h:aeb3e777-39fd-4b4f-8dc9-8b6aa7a595cc][section on flymake-aspell]]).
-
 Also bear in mind that the key binding =C-;= that Flyspell uses by default
 is disabled because I re-purpose it for a faster version of =C-x C-;=
 (much more useful for my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
