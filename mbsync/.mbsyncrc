@@ -1,0 +1,78 @@
+IMAPAccount pub
+Host mail.gandi.net
+User public@protesilaos.com
+PassCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/pub/ { print $NF; exit; }'"
+SSLType IMAPS
+
+IMAPStore pub-remote
+Account pub
+
+MaildirStore pub-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/.mail/pub/
+Inbox ~/.mail/pub/Inbox
+
+Channel pub
+Master :pub-remote:
+Slave :pub-local:
+# Include everything
+Patterns *
+
+Create Both
+# Expunge Both
+SyncState *
+
+##########
+
+IMAPAccount inf
+Host mail.gandi.net
+User info@protesilaos.com
+PassCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/inf/ { print $NF; exit; }'"
+SSLType IMAPS
+
+IMAPStore inf-remote
+Account inf
+
+MaildirStore inf-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/.mail/inf/
+Inbox ~/.mail/inf/Inbox
+
+Channel inf
+Master :inf-remote:
+Slave :inf-local:
+# Include everything
+Patterns *
+
+Create Both
+# Expunge Both
+SyncState *
+
+##########
+
+IMAPAccount prv
+Host mail.gandi.net
+User stavrou@protesilaos.com
+PassCmd "gpg2 -q --for-your-eyes-only -d ~/.authinfo.gpg | awk -F ' ' '/prv/ { print $NF; exit; }'"
+SSLType IMAPS
+
+IMAPStore prv-remote
+Account prv
+
+MaildirStore prv-local
+Subfolders Verbatim
+# The trailing "/" is important
+Path ~/.mail/prv/
+Inbox ~/.mail/prv/Inbox
+
+Channel prv
+Master :prv-remote:
+Slave :prv-local:
+# Include everything
+Patterns *
+
+Create Both
+# Expunge Both
+SyncState *
