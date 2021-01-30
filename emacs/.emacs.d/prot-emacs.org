@@ -4370,64 +4370,48 @@ file which do not already have one."
 :CUSTOM_ID: h:5ad80664-3163-4d9d-be65-462637d77903
 :END:
 
-/NOTE 2021-01-26 17:33 +0200: The GNUS section is being refactored.
-This particular section will also be reviewed./
+Once you delve into the technical details, email is hard as it consists
+of arcane specs and protocols.  Combined with Emacs' open-endedness,
+there are seemingly infinite ways to set things up.  The toolset for my
+current setup consists of the following:
 
-Configuring email can be quite the challenge, largely because we have
-been used to the likes of Thunderbird, where you log in once and then
-everything "just works".  The toolset for my current setup consists of
-the following:
++ The external =mbsync= program to periodically synchronise my remote
+  email server and my local mail directories.  This allows me to keep a
+  copy of my correspondence, while it removes the burden of updating
+  mail sources from the client.  The latter benefit is particularly
+  important to avoid slowing down Emacs.
 
-+ =mbsync= to synchronise my email server and my local mail directories.
-  This is a new addition to my toolkit.  Gnus used to fetch mail
-  directly, but a dedicated tool is better for performance and
-  flexibility.  Also good for keeping local copies of messages and for
-  using multiple mail clients.
++ The built-in Gnus framework (I call it "Gnu-s" with a "G", though it
+  is also pronounced as "News" or "Nooz", etc.).  This is a powerful
+  news reader and email client.  It serves as my default interface for
+  reading email and Usenet sources.  In this context "Usenet sources"
+  are mailing lists, such as emacs-devel, with the upside that you do
+  not have to subscribe to them and, thus, flood your main inbox with
+  potentially irrelevant messages.
 
-+ Gnus (also pronounced as "News" or "Nooz", etc.), which is a powerful
-  newsreader and email client that is built into Emacs.  It serves as my
-  default interface for reading email and Usenet sources.
++ The built-in capabilities to compose and send email.
 
-+ Mu4e as my secondary mail user agent, intended for archiving purposes
-  and arbitrary searches.  I used to only have Gnus configured, but its
-  search capabilities left something to be desired.
-
-+ The built-in capabilities to compose and send email, which apply to
-  both Gnus and mu4e.
+*This is a mega section that encompasses all of the aforementioned.*
+Please study it carefully.
 
 *** Client-agnostic email settings (credentials, message composition, encryption)
 :PROPERTIES:
 :CUSTOM_ID: h:a82766be-daab-4925-b23a-1c5ffd47e599
 :END:
 
-/NOTE 2021-01-26 17:33 +0200: The GNUS section is being refactored.
-This particular section will also be reviewed./
-
 Before configuring any mail user agent, we need to establish the
-absolute essentials: who we are, where our credentials are stored, and
-whether encryption is supported.  We must also define how message
-composition should work.  This is what the following configurations are
-about.
-
-The =prot-common-auth-get-field= is a generic tool for finding the values
-pertaining to our login credentials (see [[#h:c82dcbfa-97d0-4f7c-85af-768ce90f1372][prot-common.el]]).  You will see
-this function used elsewhere in this document.  For example, to find the
-username and password for host =hostname= we do:
-
-#+begin_example emacs-lisp
-(prot-common-auth-get-field "hostname" :user)   ; login name
-(prot-common-auth-get-field "hostname" :secret) ; password
-#+end_example
-
-Then we set up the interface for composing emails:
+absolute essentials: who we are, where our authentication credentials
+are stored, and whether encryption is to be supported.  We must also
+define how message composition should work.  This is what the following
+configurations are about.
 
 + The =mail-user-agent= and =message-mail-user-agent= concern the default
   email composition buffer, called with =C-x m= or any other facility that
   falls back to the =compose-mail= function.  The default is =message-mode=.
-  When Gnus is running, it will insert relevant paraphernalia, the most
-  important of which is the "Gcc" header.  The Gcc saves a copy of the
-  outgoing message to a specified group.  In my case that is the "Sent"
-  directory of my default account.
+  When Gnus is running, it will insert relevant paraphernalia, else the
+  "Gcc" header.  The Gcc saves a copy of the outgoing message to a
+  specified group.  In my case that is the "Sent" directory of my
+  corresponding email account.
 
 + Function =prot/message-header-add-gcc= is directly related to the above.
   The inserted header points to my public email account, which is
@@ -4438,8 +4422,8 @@ Then we set up the interface for composing emails:
 
 + The value of =message-citation-line-format= is expanded into something
   like /"On 2020-02-19, 13:54 +0200, NAME <EMAIL> wrote:"/.  To learn
-  about all the date-related specifiers, it is better for you to read
-  the documentation with =C-h v format-time-string=.
+  about all the date-related specifiers, it is better to read the
+  documentation with =M-x describe-variable RET format-time-string RET=.
 
 + As for the configurations of =mm-encode= and =mml-sec=, these are meant to
   come into effect when encrypting and signing an outgoing message with
@@ -4449,26 +4433,14 @@ Then we set up the interface for composing emails:
   mail can be sent with the standard commands (e.g. =C-c C-c=).  I select
   myself and whomever the other party is.  This is an extra step just to
   make sure that I have everything right with regard to the keys and the
-  correspondent[s] when using encryption.  If this becomes a task I use
-  regularly, I will need to streamline things.  For the time being, I
-  want the added confirmation.
+  correspondent[s] when using encryption.
 
 #+begin_src emacs-lisp
 (require 'auth-source)
 (with-eval-after-load 'auth-source
   (setq auth-sources '("~/.authinfo.gpg"))
   (setq user-full-name "Protesilaos Stavrou")
-  (setq user-mail-address "public@protesilaos.com")
-
-  (defun prot-common-auth-get-field (host prop)
-    "Find PROP in `auth-sources' for HOST entry."
-    (let* ((source (auth-source-search :host host))
-           (field (plist-get
-                   (flatten-list source)
-                   prop)))
-      (if source
-          field
-        (user-error "No entry in auth sources")))))
+  (setq user-mail-address "public@protesilaos.com"))
 
 (require 'mm-encode)
 (with-eval-after-load 'mm-encode
@@ -4548,6 +4520,18 @@ reference each name in the Gnus configurations, and share those in a
 public document like this one, without worrying about leaking private
 data.
 
+Which brings us to the point of actually retrieving those values in a
+secure way.  The =prot-common-auth-get-field= is designed to return a
+field from the authinfo file (see [[#h:c82dcbfa-97d0-4f7c-85af-768ce90f1372][prot-common.el]]).  You will find this
+function used elsewhere in this document.  For example, to get the
+username and password for host =inf= we do:
+
+#+begin_example emacs-lisp
+(prot-common-auth-get-field "inf" :user)   ; login name
+(prot-common-auth-get-field "inf" :secret) ; password
+#+end_example
+
+
 *** Contents of `~/.mbsyncrc' (external tool)
 :PROPERTIES:
 :CUSTOM_ID: h:88a605b8-d5b5-486f-87c9-0c80b423ae36
@@ -4569,9 +4553,6 @@ the =~/.authinfo.gpg= that I document at the end of the section on
 :CUSTOM_ID: h:14cf6fea-54eb-4faa-bb16-3739485c929a
 :END:
 
-/NOTE 2021-01-26 17:33 +0200: This section is being refactored.  There
-may still be some errors or omissions./
-
 The documentation describes Gnus as the /"coffee-brewing, all singing,
 all dancing, kitchen sink newsreader"/.  I chuckled when I first read it,
 thinking to myself that the developers have an interesting sense of
@@ -4582,7 +4563,7 @@ Simply put, Gnus is massive.  This makes it both extremely powerful and
 incredibly intimidating for new users.  Do not let that dissuade you
 though: start small and gradually tweak things as you go.  This is how
 you approach Emacs itself.  Learn the basics and then figure out your
-needs as you go.  This is what I always do.
+needs as your skills evolve.  This is what I always do.
 
 Now some basic information on the abstractions that Gnus relies on
 (Consider watching my [[https://protesilaos.com/codelog/2020-02-02-emacs-gnus-intro/][Introduction to Gnus]] (2020-02-02)):
@@ -4845,149 +4826,6 @@ the meaning of the various date/time specifiers.
 And here is =prot-gnus.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-gnus.el src emacs-lisp :tangle no
-
-*** Mu4e (email client for the `mu' mail indexer)
-:PROPERTIES:
-:CUSTOM_ID: h:2a93d8bf-200a-4d23-9be3-276a907947e1
-:END:
-
-As outlined in the opening remarks to [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]], I use both Gnus
-and Mu4e.  The former is my primary tool for handling email and mailing
-lists.  While the latter is kept around for its superior search
-capabilities, in those cases where I really need to have a carefully
-considered filtered output of my messages.
-
-Put differently, I use mu4e because Gnus' =nnir= backend does not work as
-expected with my multi-email-account maildir setup: if anyone has a
-maildir with multiple subdirectories that can be queried with =notmuch=
-from inside of Gnus, then please contact me.
-
-My particular setup aside, mu4e is a superb tool.  Its interface is
-clean.  It comes with well-considered defaults.  The best part though,
-is that it offers a front-end to the =mu= command line tool for email
-indexing and searching.
-
-Further notes:
-
-+ The following code is a work-in-progress, though it already works the
-  way I want.
-
-+ Run =M-x man RET mu-query= to understand how to construct a search
-  command.
-
-+ The =prot-common-auth-get-field= is defined in [[#h:c82dcbfa-97d0-4f7c-85af-768ce90f1372][prot-common.el]].
-
-#+begin_src emacs-lisp
-;; This is an exception because I install it from the Arch Linux
-;; package archives (depends on non-Emacs code)
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/")
-(require 'mu4e)
-(with-eval-after-load 'mu4e
-  ;; (setq mail-user-agent 'mu4e-user-agent)
-  (setq mu4e-use-fancy-chars nil)
-  (setq mu4e-headers-advance-after-mark t)
-  (setq mu4e-headers-auto-update t)
-  (setq mu4e-headers-date-format "%F")
-  (setq mu4e-headers-time-format "%R")
-  (setq mu4e-headers-long-date-format "%F, %R")
-
-  (setq mu4e-headers-fields
-        '((:human-date . 12)
-          (:flags . 6)
-          (:mailing-list . 10)
-          (:from . 22)
-          (:subject)))
-
-  (setq mu4e-get-mail-command "true")
-  (setq mu4e-hide-index-messages t)
-  (setq mu4e-update-interval (* 60 5))
-  (setq mu4e-completing-read-function 'completing-read)
-  (setq mu4e-compose-signature "Protesilaos Stavrou\nprotesilaos.com\n")
-  (setq mu4e-compose-signature-auto-include t)
-  (setq mu4e-maildir "~/.mail")
-  (setq mu4e-attachment-dir "~/Downloads")
-  (setq mu4e-sent-messages-behavior 'sent)
-  (setq mu4e-view-show-addresses t)
-  (setq mu4e-context-policy 'pick-first)
-  (setq mu4e-compose-context-policy 'ask)
-  (setq mu4e-index-lazy-check t)
-  (setq mu4e-change-filenames-when-moving t) ; better for `mbsync'?
-  (setq mu4e-modeline-max-width 30)
-  (setq mu4e-display-update-status-in-modeline t)
-  (setq mu4e-view-show-images nil)
-  (setq mu4e-decryption-policy 'ask)
-
-  (setq mu4e-contexts
-        `(,(make-mu4e-context
-            :name "vrp" ; Is there no way to specify a key for switching?
-            :enter-func (lambda () (mu4e-message "Entering PRV"))
-            :leave-func (lambda () (mu4e-message "Leaving PRV"))
-            :match-func (lambda (msg)
-                          (when msg
-                            (mu4e-message-contact-field-matches
-                             msg :to (prot-common-auth-get-field "prv" :user))))
-            :vars `((user-mail-address . ,(prot-common-auth-get-field "prv" :user))))
-          ,(make-mu4e-context
-            :name "inf"
-            :match-func (lambda (msg)
-                          (when msg
-                            (mu4e-message-contact-field-matches
-                             msg :to (prot-common-auth-get-field "inf" :user))))
-            :vars `((user-mail-address . ,(prot-common-auth-get-field "inf" :user))))
-          ,(make-mu4e-context
-            :name "pub"
-            :match-func (lambda (msg)
-                          (when msg
-                            (mu4e-message-contact-field-matches
-                             msg :to (prot-common-auth-get-field "pub" :user))))
-            :vars `((user-mail-address . ,(prot-common-auth-get-field "pub" :user))))))
-
-  (setq mu4e-bookmarks
-        '((:name "Unread messages" :query "g:unread AND NOT g:trashed" :key ?u)
-          (:name "Today's messages" :query "d:today..now" :key ?t)
-          (:name "Last 7 days" :query "d:7d..now" :key ?w)
-          (:name "PRV Unread"
-                 :query `,(format "to:%s %s"
-                                  (prot-common-auth-get-field "prv" :user)
-                                  "AND g:unread AND NOT g:trashed")
-                 :key ?v)
-          (:name "PRV Inbox"
-                 :query `,(format "to:%s"
-                                  (prot-common-auth-get-field "prv" :user))
-                 :key ?V)
-          (:name "INF Unread"
-                 :query `,(format "to:%s %s"
-                                  (prot-common-auth-get-field "inf" :user)
-                                  "AND g:unread AND NOT g:trashed")
-                 :key ?i)
-          (:name "INF Inbox"
-                 :query `,(format "to:%s"
-                                  (prot-common-auth-get-field "inf" :user))
-                 :key ?I)
-          (:name "PUB Unread"
-                 :query `,(format "to:%s %s"
-                                  (prot-common-auth-get-field "pub" :user)
-                                  "AND g:unread AND NOT g:trashed")
-                 :key ?p)
-          (:name "PUB Inbox"
-                 :query `,(format "to:%s"
-                                  (prot-common-auth-get-field "pub" :user))
-                 :key ?P)))
-
-  (define-key global-map (kbd "C-c M") #'mu4e)
-
-  (let ((map mu4e-headers-mode-map))
-    ;; TODO 2021-01-28: Add wrapper for `mu4e-headers-mark-for-unflag'
-    (define-key map (kbd "!") (lambda (&optional arg)
-                                (interactive "P")
-                                (if arg
-                                    (mu4e-headers-mark-for-unflag)
-                                  (mu4e-headers-mark-for-flag))))
-    (define-key map (kbd "r") #'mu4e-headers-mark-for-read)
-    (define-key map (kbd "u") #'mu4e-headers-mark-for-unread)
-    (define-key map (kbd "M-u") #'mu4e-headers-mark-for-unmark)
-    (define-key map (kbd "C-M-u") #'mu4e-mark-unmark-all)))
-#+end_src
 
 *** Sending email (SMTP)
 :PROPERTIES:
