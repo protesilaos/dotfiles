@@ -611,7 +611,7 @@
 
     (bg-whitespace . "#f5efef") (fg-whitespace . "#624956")
 
-    (bg-diff-heading . "#b7c4dd") (fg-diff-heading . "#042665")
+    (bg-diff-heading . "#b7cfe0") (fg-diff-heading . "#041645")
     (bg-diff-added . "#d4fad4") (fg-diff-added . "#004500")
     (bg-diff-changed . "#fcefcf") (fg-diff-changed . "#524200")
     (bg-diff-removed . "#ffe8ef") (fg-diff-removed . "#691616")
@@ -853,7 +853,7 @@ symbol and the latter as a string.")
 
     (bg-whitespace . "#101424") (fg-whitespace . "#aa9e9f")
 
-    (bg-diff-heading . "#304466") (fg-diff-heading . "#dadffe")
+    (bg-diff-heading . "#304466") (fg-diff-heading . "#dae7ff")
     (bg-diff-added . "#0a280a") (fg-diff-added . "#94ba94")
     (bg-diff-changed . "#2a2000") (fg-diff-changed . "#b0ba9f")
     (bg-diff-removed . "#40160f") (fg-diff-removed . "#c6adaa")
@@ -3014,9 +3014,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(diff-changed ((,class :inherit modus-theme-diff-changed)))
     `(diff-context ((,class :foreground ,fg-unfocused)))
     `(diff-error ((,class :inherit modus-theme-intense-red)))
-    `(diff-file-header ((,class :inherit bold :foreground ,fg-main)))
+    `(diff-file-header ((,class :inherit bold)))
     `(diff-function ((,class :inherit modus-theme-diff-heading)))
-    `(diff-header ((,class :background ,bg-dim :foreground ,fg-main)))
+    `(diff-header ((,class :foreground ,fg-main)))
     `(diff-hunk-header ((,class :inherit (bold modus-theme-diff-heading))))
     `(diff-index ((,class :inherit bold :foreground ,blue-alt)))
     `(diff-indicator-added ((,class :inherit (diff-added bold) :foreground ,green)))
