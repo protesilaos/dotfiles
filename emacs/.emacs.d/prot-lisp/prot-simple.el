@@ -70,22 +70,10 @@ Used by `prot-simple-inset-date'."
 (autoload 'symbol-at-point "thingatpt")
 
 ;;;###autoload
-(defun prot-simple-describe-symbol (&optional arg)
-    "Run `describe-symbol' for the `symbol-at-point'.
-
-With an optional ARG prefix argument (\\[universal-argument]),
-switch to the *Help* window.  If that is already focused, switch
-to the most recently used window instead."
-    (interactive "P")
-    (let ((symbol (symbol-at-point)))
-      (when symbol
-        (describe-symbol symbol)))
-    (when arg
-      (let ((help (get-buffer-window "*Help*"))) ; FIXME: This is fragile
-        (when (window-live-p help)
-          (if (not (eq (selected-window) help))
-              (select-window help)
-            (select-window (get-mru-window)))))))
+(defun prot-simple-describe-symbol ()
+  "Run `describe-symbol' for the `symbol-at-point'."
+  (interactive)
+  (describe-symbol (symbol-at-point)))
 
 ;;;; Comands for lines
 

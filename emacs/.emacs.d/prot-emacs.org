@@ -201,9 +201,6 @@ common key combinations.
     (define-key map (kbd "C-h h") nil)
     (define-key map (kbd "M-`") nil)
     (define-key map (kbd "s-h") #'prot-simple-describe-symbol)
-    (define-key map (kbd "s-H") (lambda ()
-				                  (interactive)
-				                  (prot-simple-describe-symbol '(4))))
     (define-key map (kbd "C-h K") #'describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
     ;; Commands for lines
     (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
