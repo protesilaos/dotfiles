@@ -31,7 +31,10 @@
 ;; errors, cases where improvements could be made.  Please do not try it
 ;; with sensitive data that you have not safely backed up.  If you do use
 ;; it, I encourage you to send me feedback about anything you feel could be
-;; improved or otherwise made different.
+;; improved or otherwise made different.  This README is intentionally
+;; written in a not-so-easy-to-scan plain text format to remind you that
+;; this is pre-alpha software---a fully fledged Info manual will be
+;; furnished once the time is right.
 ;;
 ;;
 ;; USLS or usls, which may be pronounced as a series of letters or just
@@ -46,6 +49,42 @@
 ;; creating notes, (ii) adding forward/backward references to other notes,
 ;; (iii) browsing such references for the current file, (iv) visiting the
 ;; `usls-directory', (v) finding a file that belongs to said directory.
+;;
+;;
+;; Manual setup
+;; ------------
+;;
+;; Clone this repo to an appropriate path.  For example, using the command
+;; line:
+;;
+;;     $ mkdir ~/.emacs.d/custom-lisp
+;;     $ git clone https://gitlab.com/protesilaos/usls.git ~/.emacs.d/custom-lisp/usls
+;;
+;; Then make use the desired directory is part of the `load-path'.  Such
+;; as by evaluating this Elisp form:
+;;
+;;     (add-to-list 'load-path "~/.emacs.d/custom-lisp/usls/")
+;;
+;; And finally set up the package:
+;;
+;;     (require 'usls)
+;;     (with-eval-after-load 'usls
+;;       (setq usls-directory "~/Documents/notes/")
+;;       (setq usls-known-categories '("economics" "philosophy" "politics"))
+;;       (setq usls-file-type-extension ".txt")
+;;       (setq usls-subdir-support nil)
+;;       (setq usls-file-region-separator 'line)
+;;       (setq usls-file-region-separator-heading-level 1)
+;;       (setq usls-custom-header-function nil)
+;;
+;;       (let ((map global-map))               ; globally bound keys
+;;         (define-key map (kbd "C-c n d") 'usls-dired)
+;;         (define-key map (kbd "C-c n f") 'usls-find-file)
+;;         (define-key map (kbd "C-c n a") 'usls-append-region-buffer-or-file)
+;;         (define-key map (kbd "C-c n n") 'usls-new-note))
+;;       (let ((map usls-mode-map))            ; only for usls buffers
+;;         (define-key map (kbd "C-c n i") 'usls-id-insert)
+;;         (define-key map (kbd "C-c n l") 'usls-follow-link)))
 ;;
 ;;
 ;; The file name convention
@@ -94,9 +133,9 @@
 ;; inferred categories from existing file names.  The latter is possible
 ;; due to the assumption that the file name convention is fully respected.
 ;;
-;; To create a new category, just enter text that does not match any of
-;; the existing items.  To input multiple categories, separate them with
-;; a comma or whatever matches your `crm-separator'.  If your completion
+;; To create a new category, just enter text that does not match any of the
+;; existing items.  To input multiple categories, separate them with a
+;; comma or whatever matches your `crm-separator'.  If your completion
 ;; framework does not support such actions, then it should be considered
 ;; undesirable behaviour and reported upstream.
 ;;
@@ -483,6 +522,13 @@ To be used as the PREDICATE of `completing-read-multiple'."
         (not flag))
     t))
 
+(defvar usls-mode)
+
+(defun usls--barf-non-text-usls-mode ()
+  "Throw error if not in a proper USLS buffer."
+  (unless (and usls-mode (derived-mode-p 'text-mode))
+    (user-error "Not in a writable USLS buffer; aborting")))
+
 ;;;; File name helpers
 
 (defun usls--directory ()
@@ -820,6 +866,7 @@ note in."
 (defun usls-id-insert ()
   "Insert at point the identity of a file using completion."
   (interactive)
+  (usls--barf-non-text-usls-mode)
   (let* ((files (usls--completion-table 'file (usls--directory-files-not-current)))
          (file (completing-read "Link to: " files nil t nil 'usls--link-history))
          (this-file (file-name-nondirectory (buffer-file-name)))
@@ -854,6 +901,7 @@ note in."
 (defun usls-follow-link ()
   "Visit link referenced in the note using completion."
   (interactive)
+  (usls--barf-non-text-usls-mode)
   (let ((default-directory (usls--directory))
         (links (usls--completion-table 'file (usls--links))))
     (if links
@@ -1009,33 +1057,10 @@ directory will be directly displayed instead."
 
 ;;; User-facing setup
 
-;; TODO 2021-01-31: How to best handle global bindings?  Should there be
-;; a defcustom?  Or maybe a global minor-mode?  Or just docs to let
-;; users handle it?
-(defvar usls-global-prefix-map nil
-  "Prefix key for USLS commands.")
-
-;; ;; Disable the prefix like this:
-;; (define-key global-map (kbd "C-c _") nil)
-
-(define-prefix-command 'usls-global-prefix-map)
-(define-key global-map (kbd "C-c _") 'usls-global-prefix-map)
-
-(let ((map usls-global-prefix-map))
-  (define-key map "d" 'usls-dired)
-  (define-key map "f" 'usls-find-file)
-  (define-key map "a" 'usls-append-region-buffer-or-file)
-  (define-key map "n" 'usls-new-note))
-
 (defvar usls-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "i" 'usls-id-insert)
-    (define-key map "l" 'usls-follow-link)
     map)
   "Key map for use when variable `usls-mode' is non-nil.")
-
-(define-prefix-command 'usls-mode-prefix-map 'usls-mode-map)
-(define-key usls-mode-map (kbd "C-c _") 'usls-mode-prefix-map)
 
 (defvar usls-mode-hook nil
   "Hook called when variable `usls-mode' is non-nil.")
