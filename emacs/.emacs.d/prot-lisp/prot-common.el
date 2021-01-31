@@ -83,10 +83,9 @@ tools (e.g. `embark')."
 
 ;;;###autoload
 (defun prot-common-crm-exclude-selected-p (input)
-  "Filter out last INPUT from `completing-read-multiple'.
-Hide non-destructively the previously selected entries from the
-completion table, thus avoiding the risk of inputting the same
-match twice.
+  "Filter out INPUT from `completing-read-multiple'.
+Hide non-destructively the selected entries from the completion
+table, thus avoiding the risk of inputting the same match twice.
 
 To be used as the PREDICATE of `completing-read-multiple'."
   (if-let* ((pos (string-match-p crm-separator input))
