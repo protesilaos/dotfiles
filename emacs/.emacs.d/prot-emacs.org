@@ -1359,6 +1359,7 @@ Finally, a few words about the following package declaration:
 
 (require 'prot-embark)
 (with-eval-after-load 'prot-embark
+  (add-hook 'minibuffer-exit-hook #'prot-embark-clear-live-buffers)
   (add-hook 'embark-collect-post-revert-hook #'prot-embark-collect-fit-window)
   (add-hook 'embark-collect-mode-hook #'prot-embark-hl-line)
   (add-hook 'embark-collect-mode-hook #'prot-embark-display-line-numbers)
