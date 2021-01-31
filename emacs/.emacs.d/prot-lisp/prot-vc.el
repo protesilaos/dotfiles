@@ -111,7 +111,8 @@ that covers all files in the present directory."
                 (dired-get-marked-files t nil))
                (t
                 (completing-read-multiple
-                 "Select files in current dir: " files nil t))))
+                 "Select files in current dir: " files
+                 #'prot-common-crm-exclude-selected-p t))))
          (backend (vc-backend set))
          (vc-log-short-style (if (> (length set) 1) '(file) '(directory))))
     (vc-print-log-internal backend set nil nil lim nil)))

@@ -76,6 +76,35 @@ tools (e.g. `embark')."
         `(metadata (category . ,category))
       (complete-with-action action candidates string pred))))
 
+;; Thanks to Igor Lima for the `prot-common-crm-exclude-selected-p':
+;; <https://github.com/0x462e41>.
+;; This is used as a filter predicate in the relevant prompts.
+(defvar crm-separator)
+
+;;;###autoload
+(defun prot-common-crm-exclude-selected-p (input)
+  "Filter out last INPUT from `completing-read-multiple'.
+Hide non-destructively the previously selected entries from the
+completion table, thus avoiding the risk of inputting the same
+match twice.
+
+To be used as the PREDICATE of `completing-read-multiple'."
+  (if-let* ((pos (string-match-p crm-separator input))
+            (rev-input (reverse input))
+            (element (reverse
+                      (substring rev-input 0
+                                 (string-match-p crm-separator rev-input))))
+            (flag t))
+      (progn
+        (while pos
+          (if (string= (substring input 0 pos) element)
+              (setq pos nil)
+            (setq input (substring input (1+ pos))
+                  pos (string-match-p crm-separator input)
+                  flag (when pos t))))
+        (not flag))
+    t))
+
 (declare-function auth-source-search "auth-source")
 
 ;;;###autoload

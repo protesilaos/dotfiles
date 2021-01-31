@@ -34,6 +34,7 @@
 (eval-when-compile (require 'subr-x))
 (when (featurep 'bongo)
   (require 'bongo))
+(require 'prot-common)
 
 (defgroup prot-bongo ()
   "Personal extensions for Bongo."
@@ -340,7 +341,9 @@ Helper function for `prot-bongo-playlist-insert-playlist-file'."
                        'abbreviate-file-name
                        (directory-files path nil dotless))))
     (completing-read-multiple
-     "Add playlist: " playlists nil t nil 'prot-bongo--playlist-history)))
+     "Add playlist: " playlists
+     #'prot-common-crm-exclude-selected-p
+     t nil 'prot-bongo--playlist-history)))
 
 (declare-function bongo-insert-playlist-contents "bongo")
 

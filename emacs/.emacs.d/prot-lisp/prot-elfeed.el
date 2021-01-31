@@ -32,6 +32,7 @@
 (eval-when-compile (require 'subr-x))
 (when (featurep 'elfeed)
   (require 'elfeed))
+(require 'prot-common)
 
 (defgroup prot-elfeed ()
   "Personal extensions for Elfeed."
@@ -284,7 +285,9 @@ minibuffer with something like `exit-minibuffer'."
                                  (format "-%s" tag))
                                db-tags))
            (all-tags (delete-dups (append plus-tags minus-tags)))
-           (tags (completing-read-multiple "Apply one or more tags: " all-tags nil t))
+           (tags (completing-read-multiple
+                  "Apply one or more tags: "
+                  all-tags #'prot-common-crm-exclude-selected-p t))
            (input (string-join `(,elfeed-search-filter ,@tags) " ")))
       (setq elfeed-search-filter input))
     (elfeed-search-update :force)))
