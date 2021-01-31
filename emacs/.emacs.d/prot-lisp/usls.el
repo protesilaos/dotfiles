@@ -426,7 +426,7 @@ Markdown or Org types."
 
 (defvar crm-separator)
 
-;; Contributed by Igor Limar in another context :
+;; Contributed by Igor Lima in another context :
 ;; <https://github.com/0x462e41>.
 (defun usls-crm-exclude-selected-p (input)
   "Filter out last INPUT from `completing-read-multiple'.
