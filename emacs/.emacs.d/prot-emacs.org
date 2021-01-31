@@ -710,7 +710,8 @@ All we need here is to just load the feature.
 
 #+begin_src emacs-lisp
 (require 'async)
-(add-to-list 'prot-emacs-ensure-install 'async)
+(with-eval-after-load 'async
+  (add-to-list 'prot-emacs-ensure-install 'async))
 #+end_src
 
 * Selection candidates and search methods
@@ -1304,8 +1305,8 @@ Finally, a few words about the following package declaration:
 
 #+begin_src emacs-lisp
 (require 'embark)
-(add-to-list 'prot-emacs-ensure-install 'embark)
 (with-eval-after-load 'embark
+  (add-to-list 'prot-emacs-ensure-install 'embark)
   ;; (with-eval-after-load 'prot-minibuffer)
   (setq embark-collect-initial-view-alist
         '((file . list)
@@ -1379,7 +1380,7 @@ Finally, a few words about the following package declaration:
     (define-key map (kbd "C-p") #'prot-embark-previous-line-or-mini)
     (define-key map (kbd "<up>") #'prot-embark-previous-line-or-mini)
     (define-key map (kbd "M-F") #'prot-embark-collection-flush-lines) ; M-S-f like M-S-5 (M-%)
-    (define-key map (kbd "M-K") #'prot-embark-collection-keep-lines))  ; same principle as right above
+    (define-key map (kbd "M-K") #'prot-embark-collection-keep-lines)) ; same principle
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "C-n") #'prot-embark-switch-to-completions-top)
     (define-key map (kbd "<down>") #'prot-embark-switch-to-completions-top)
@@ -1931,8 +1932,8 @@ matches by leveraging the full power of Emacs' editing capabilities
 
 #+begin_src emacs-lisp
 (require 'wgrep)
-(add-to-list 'prot-emacs-ensure-install 'wgrep)
 (with-eval-after-load 'wgrep
+  (add-to-list 'prot-emacs-ensure-install 'wgrep)
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t)
   (let ((map grep-mode-map))
@@ -5226,7 +5227,8 @@ bindings and their functions.
 
 #+begin_src emacs-lisp
 (require 'pass)
-(add-to-list 'prot-emacs-ensure-install 'pass)
+(with-eval-after-load 'pass
+  (add-to-list 'prot-emacs-ensure-install 'pass))
 #+end_src
 
 ** Emacs Simple HTML Renderer (shr)
@@ -5457,7 +5459,8 @@ want is to make the mode line gracefully adapt to changes in font size.
 
 #+begin_src emacs-lisp
 (require 'moody)
-(add-to-list 'prot-emacs-ensure-install 'moody)
+(with-eval-after-load 'moody
+  (add-to-list 'prot-emacs-ensure-install 'moody))
 
 (require 'prot-moody)
 (with-eval-after-load 'prot-moody
@@ -5742,7 +5745,8 @@ need some of those tools while developing my Modus themes.
 
 #+begin_src emacs-lisp
 (require 'ct)
-(add-to-list 'prot-emacs-ensure-install 'ct)
+(with-eval-after-load 'ct
+  (add-to-list 'prot-emacs-ensure-install 'ct))
 #+end_src
 
 ** Rainbow mode for colour previewing (rainbow-mode.el)
@@ -6265,11 +6269,11 @@ I edit lots of Markdown files.  This makes things easier.
 (require 'markdown-mode)
 (with-eval-after-load 'markdown-mode
   (add-to-list 'prot-emacs-ensure-install 'markdown-mode)
+  (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
+  (setq markdown-fontify-code-blocks-natively t)
   ;; Allows for fenced block focus with C-c ' (same as Org blocks).
   (require 'edit-indirect)
-  (add-to-list 'prot-emacs-ensure-install 'edit-indirect)
-  (setq markdown-fontify-code-blocks-natively t)
-  (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode)))
+  (add-to-list 'prot-emacs-ensure-install 'edit-indirect))
 #+end_src
 
 *** YAML (yaml-mode)
