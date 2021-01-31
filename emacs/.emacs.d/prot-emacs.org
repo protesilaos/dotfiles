@@ -2501,14 +2501,12 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
-           (slot . 0)
-           (window-parameters . ((no-other-window . t))))
+           (slot . 0))
           ("\\*Messages.*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
-           (slot . 1)
-           (window-parameters . ((no-other-window . t))))
+           (slot . 1))
           ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\)\\*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
@@ -2527,30 +2525,23 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (display-buffer-in-side-window)
            (window-width . 0.20)       ; See the :hook
            (side . left)
-           (slot . 0)
-           (window-parameters . ((no-other-window . t))))
+           (slot . 0))
           ;; right side window
           ("\\*Faces\\*"
            (display-buffer-in-side-window)
            (window-width . 0.25)
            (side . right)
-           (slot . 0)
-           (window-parameters
-            . ((mode-line-format
-                . (" "
-                   mode-line-buffer-identification)))))
+           (slot . 0))
           ("\\*Custom.*"
            (display-buffer-in-side-window)
            (window-width . 0.25)
            (side . right)
-           (slot . 1)
-           (window-parameters . ((no-other-window . t))))
+           (slot . 1))
           ;; bottom buffer (NOT side window)
           ("\\*\\vc-\\(incoming\\|outgoing\\).*"
            (display-buffer-at-bottom))
           ("\\*\\(Output\\|Register Preview\\).*"
-           (display-buffer-at-bottom)
-           (window-parameters . ((no-other-window . t))))
+           (display-buffer-at-bottom))
           ("\\*.*\\([^E]eshell\\|shell\\|v?term\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.2)
