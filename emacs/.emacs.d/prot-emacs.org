@@ -423,7 +423,6 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; Also check my package declaration for `prot-fonts' because I use
   ;; the `modus-themes-after-load-theme-hook' for some typeface-related
   ;; tweaks (as those are made at the "face" level).
-  (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
 #+end_src
 
