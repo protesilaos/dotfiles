@@ -2880,10 +2880,10 @@ Because this is standard Emacs stuff, I can always benefit from the rest
 of my setup, such as to search for file contents in the current
 directory.  Study the entirety of my [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
 
-In the =usls.el= code I wanted to respect key binding conventions, but on
-my own setup I can do whatever I want.  So let us make sure we use a
-more convenient set of key combinations.  The other options I have here
-are for the sake of visibility and are left to their default values.
+In the =usls.el= code I wanted to respect key binding conventions, so I
+did not bind any keys: this is a user-level customisation.  The other
+options I have here are for the sake of visibility and are left to their
+default values.
 
 The code for this project is on the [[https://gitlab.com/protesilaos/usls][USLS Gitlab repo]] and reproduced in
 the subsequent code block.
@@ -2899,19 +2899,14 @@ the subsequent code block.
   (setq usls-file-region-separator-heading-level 1)
   (setq usls-custom-header-function nil)
 
-  (define-key global-map (kbd "C-c n") 'usls-global-prefix-map)
-
-  (let ((map usls-global-prefix-map))
-    (define-key map "d" #'usls-dired)
-    (define-key map "f" #'usls-find-file)
-    (define-key map "n" #'usls-new-note)
-    (define-key map "a" #'usls-append-region-buffer-or-file))
-
-  (define-key usls-mode-map (kbd "C-c n") 'usls-mode-prefix-map)
-
-  (let ((map usls-mode-prefix-map))
-    (define-key map "i" #'usls-id-insert)
-    (define-key map "l" #'usls-follow-link)))
+  (let ((map global-map))               ; globally bound keys
+    (define-key map (kbd "C-c n d") 'usls-dired)
+    (define-key map (kbd "C-c n f") 'usls-find-file)
+    (define-key map (kbd "C-c n a") 'usls-append-region-buffer-or-file)
+    (define-key map (kbd "C-c n n") 'usls-new-note))
+  (let ((map usls-mode-map))            ; only for usls buffers
+    (define-key map (kbd "C-c n i") 'usls-id-insert)
+    (define-key map (kbd "C-c n l") 'usls-follow-link)))
 #+end_src
 
 Here is the =usls.el= code, which is also part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as
