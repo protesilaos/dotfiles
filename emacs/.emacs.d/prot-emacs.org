@@ -2886,7 +2886,7 @@ the subsequent code block.
 (require 'usls)
 (with-eval-after-load 'usls
   (setq usls-directory "~/Documents/notes/")
-  (setq usls-known-categories '(economics philosophy politics))
+  (setq usls-known-categories '("economics" "philosophy" "politics"))
   (setq usls-file-type-extension ".txt") ; {.txt,.org,.md}
   (setq usls-subdir-support nil)
   (setq usls-file-region-separator 'line) ; {'line,'heading, OR string of your choice}
