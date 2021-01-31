@@ -147,7 +147,7 @@ that covers all files in the present directory."
 (defun prot-vc-log-kill-hash ()
   "Save to `kill-ring' contextual commit hash in `vc-print-log'."
   (interactive)
-  (let ((commit (substring (cadr (log-view-current-entry (point) t)) 0 8)))
+  (let ((commit (cadr (log-view-current-entry (point) t))))
     (kill-new (format "%s" commit))
     (message "Copied: %s" commit)))
 
