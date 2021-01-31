@@ -378,6 +378,38 @@ Markdown or Org types."
   :group 'usls
   :type 'integer)
 
+(defcustom usls-custom-header-function nil
+  "Function to format headers for new files (EXPERIMENTAL!!!).
+
+It should accept five arguments and catenate them as a string,
+preferably with the appropriate new lines in place.  The
+arguments are: title, date, categories, filename, id.  Those are
+supplied by `usls-new-note'.
+
+While all five arguments will be passed to this function, not all
+of them need to be part of the output.  Users may prefer, for
+example, to only include a title, a date, and a category.
+
+For ideas on how to format such a function, refer to the source
+code of `usls--file-meta-header'.
+
+Although this customisation can be set globally, another viable
+use-case is to `let' bind it in wrapper functions around
+`usls-new-note'.  In that scenario, it could be desirable to also
+set the value of `usls-file-type-extension', so as to generate a
+different type of note than the default: such as to write
+something in '.tex' while the default extension remains in tact.
+In this case, users are expected to define a wrapper for
+`usls-new-note' like this (without the backslashes that appear in
+the source of this docstring):
+
+  (defun my-usls-new-note-for-tex ()
+    (let ((usls-file-type-extension \".tex\")
+          (usls-custom-header-function #'my-usls-custom-header))
+      (usls-new-note)))"
+  :group 'usls
+  :type 'symbol)
+
 ;;; Main variables
 
 (defconst usls-id "%Y%m%d_%H%M%S"
@@ -487,8 +519,9 @@ To be used as the PREDICATE of `completing-read-multiple'."
   (let ((dotless directory-files-no-dot-files-regexp))
     (cl-remove-if
      (lambda (x)
-       ;; TODO: generalise this for all VC backends?  Which ones?
-       (string-match-p "\\.git" x))
+       ;; TODO: generalise this for all VC backends?  Which ones? "
+       (or (string-match-p "\\.git" x)
+           (file-directory-p x)))
      (directory-files (usls--directory) nil dotless t))))
 
 (defun usls--directory-files-recursive ()
@@ -523,6 +556,14 @@ To be used as the PREDICATE of `completing-read-multiple'."
      (string-match-p "\\.git" x))
    (usls--directory-subdirs)))
 
+(defun usls--directory-subdirs-completion-table (dirs)
+  "Match DIRS as a completion table."
+  (let ((def (car usls--subdirectory-history))
+        (table (usls--completion-table 'file dirs)))
+    (completing-read
+     (format-prompt "Subdirectory of new note" def)
+     table nil t nil 'usls--subdirectory-history def)))
+
 (defun usls--directory-subdirs-prompt ()
   "Handle user input on choice of subdirectory."
   (let* ((subdirs
@@ -530,8 +571,7 @@ To be used as the PREDICATE of `completing-read-multiple'."
               (user-error "No subdirs in `%s'; create them manually"
                           (usls--directory))
             (usls--directory-subdirs-no-git)))
-         (choice (completing-read "Subdirectory of new note: " subdirs
-                                  nil t nil 'usls--subdirectory-history))
+         (choice (usls--directory-subdirs-completion-table subdirs))
          (subdir (file-truename choice)))
     (add-to-history 'usls--subdirectory-history choice)
     subdir))
@@ -699,6 +739,18 @@ strings only the first one is used."
 
 ;;;; New note
 
+(defun usls--format-file (path id categories slug extension)
+  "Helper for `usls-new-note' to format file names.
+PATH, ID, CATEGORIES, SLUG, AND EXTENSION are expected to be
+supplied by `usls-new-note': they will all be converted into a
+single string."
+  (format "%s%s--%s--%s%s"
+          path
+          id
+          categories
+          slug
+          extension))
+
 ;;;###autoload
 (defun usls-new-note (&optional arg)
   "Create new note with the appropriate metadata and file name.
@@ -723,17 +775,16 @@ note in."
          (slug (usls--sluggify title))
          (path (file-name-as-directory (or subdir usls-directory)))
          (id (format-time-string usls-id))
-         (filename
-          (format "%s%s--%s--%s%s"
-                  path
-                  id
-                  (usls--categories-hyphenate categories)
-                  slug
-                  usls-file-type-extension))
+         (filename (usls--format-file path id
+                    (usls--categories-hyphenate categories)
+                    slug usls-file-type-extension))
          (date (format-time-string "%F"))
          (region (usls--file-region)))
     (with-current-buffer (find-file filename)
-      (insert (eval (usls--file-meta-header title date categories filename id)))
+      (insert (eval (if usls-custom-header-function
+                        (funcall usls-custom-header-function title date
+                                 categories filename id)
+                      (usls--file-meta-header title date categories filename id))))
       (save-excursion (insert region)))
     (add-to-history 'usls--title-history title)
     (usls--categories-add-to-history categories)))
