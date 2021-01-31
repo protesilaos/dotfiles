@@ -30,6 +30,7 @@
 ;;; Code:
 
 (require 'recentf)
+(require 'prot-common)
 
 ;;;###autoload
 (defun prot-recentf-keep-predicate (file)
@@ -44,52 +45,53 @@ Add this function to `recentf-keep'."
 (defvar prot-recentf--history-dirs '()
   "Minibuffer history for prot-recentf directories.")
 
-;;;###autoload
-(defun prot-recentf-recent-files (&optional input)
-  "Select item from `recentf-list' using completion.
-Use INPUT as an initial, yet editable, filter.
+(defun prot-recentf--files ()
+  "Return completion table with files in `recentf-list'."
+  (prot-common-completion-table
+   'file
+   (mapcar 'abbreviate-file-name recentf-list)))
 
-The user's $HOME directory is abbreviated as a tilde."
-  (interactive)
-  (let* ((files (mapcar 'abbreviate-file-name recentf-list))
-         (f (completing-read "Open recentf entry: " files nil t
-                             (or input nil) 'prot-recentf--history-files)))
-    (find-file f)
-    (add-to-history 'prot-recentf--history-files f)))
+(defun prot-recentf--files-prompt (files)
+  "Helper of `prot-recentf-recent-files' to read FILES."
+  (let ((def (car prot-recentf--history-files)))
+    (completing-read
+     (format-prompt "Recentf" def)
+     files nil t nil 'prot-recentf--history-files def)))
+
+;;;###autoload
+(defun prot-recentf-recent-files (file)
+  "Select FILE from `recentf-list' using completion."
+  (interactive
+   (list (prot-recentf--files-prompt (prot-recentf--files))))
+  (find-file file)
+  (add-to-history 'prot-recentf--history-files file))
 
 (defun prot-recentf--dirs ()
-  "Return list of directories in `recentf-list'."
+  "Return completion table with directories in `recentf-list'."
   (let ((list (mapcar 'abbreviate-file-name recentf-list)))
-    (delete-dups
-     (mapcar (lambda (file)
-               (if (file-directory-p file)
-                   (directory-file-name file)
-                 (substring (file-name-directory file) 0 -1)))
-             list))))
+    (prot-common-completion-table
+     'file
+     (delete-dups
+      (mapcar (lambda (file)
+                (if (file-directory-p file)
+                    (directory-file-name file)
+                  (substring (file-name-directory file) 0 -1)))
+              list)))))
+
+(defun prot-recentf--dirs-prompt (dirs)
+  "Helper of `prot-recentf-recent-dirs' to read DIRS."
+  (let ((def (car prot-recentf--history-dirs)))
+    (completing-read
+     (format-prompt "Recent dir" def)
+     dirs nil t nil 'prot-recentf--history-dirs def)))
 
 ;;;###autoload
-(defun prot-recentf-recent-dirs (&optional arg)
-  "Select directory from `recentf-list' using completion.
-With optional prefix ARG (\\[universal-argument]) present the
-list in a `dired' buffer.  This buffer is meant to be reused by
-subsequent invocations of this command (otherwise you need to
-remove the `when' expression.
-
-Without \\[universal-argument], the user's $HOME directory is
-abbreviated as a tilde.  In the Dired buffer paths are absolute."
-  (interactive "P")
-  (let* ((dirs (prot-recentf--dirs))
-         (buf "*Recentf Dired*")
-         (default-directory "~")
-         (f (unless arg (completing-read
-                         "Recent dirs: " dirs nil t nil
-                         'prot-recentf--history-dirs))))
-    (when (get-buffer buf)
-      (kill-buffer buf))
-    (if arg
-        (dired (cons (generate-new-buffer-name buf) dirs))
-      (find-file f)
-      (add-to-history 'prot-recentf--history-dirs f))))
+(defun prot-recentf-recent-dirs (dir)
+  "Select DIR from `recentf-list' using completion."
+  (interactive
+   (list (prot-recentf--dirs-prompt (prot-recentf--dirs))))
+  (find-file dir)
+  (add-to-history 'prot-recentf--history-dirs dir))
 
 (provide 'prot-recentf)
 ;;; prot-recentf.el ends here
