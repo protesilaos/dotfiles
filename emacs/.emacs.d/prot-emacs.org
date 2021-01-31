@@ -367,7 +367,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-slanted-constructs nil
-        modus-themes-bold-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-fringes nil ; {nil,'subtle,'intense}
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
@@ -376,14 +376,14 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-lang-checkers nil
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody
-        modus-themes-mode-line 'borderless
+        modus-themes-mode-line nil
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments
-        modus-themes-syntax 'yellow-comments
+        modus-themes-syntax nil
         modus-themes-intense-hl-line nil
-        modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
+        modus-themes-paren-match 'intense-bold ; {nil,'subtle-bold,'intense,'intense-bold}
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only
@@ -394,14 +394,11 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-prompts 'subtle-gray
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
         modus-themes-region 'no-extend ; {nil,'no-extend,'bg-only,'bg-only-no-extend}
-        modus-themes-diffs nil ; {nil,'desaturated,'fg-only,'bg-only}
+        modus-themes-diffs 'desaturated ; {nil,'desaturated,'fg-only,'bg-only}
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
-        '((1 . section-no-bold)
-          (2 . rainbow-section-no-bold)
-          (3 . line-no-bold)
-          (t . no-color-no-bold))
+        '((t . no-color-no-bold))
         modus-themes-variable-pitch-ui t
         modus-themes-variable-pitch-headings t
         modus-themes-scale-headings t
@@ -425,60 +422,6 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
     (if (and (> time 5) (< time 18))
         (modus-themes-load-operandi)
       (modus-themes-load-vivendi)))
-
-  ;; Don't forget to read the manual.  This is explained there.  And
-  ;; please don't read too much into those: I am testing various
-  ;; combinations and scenaria.
-  (defun prot/modus-themes-custom-faces ()
-    "Tweak faces after `modus-themes-after-load-theme-hook'."
-    (modus-themes-with-colors
-      (custom-set-faces
-       `(dired-flagged ((,class :strike-through t)))
-       `(gnus-summary-cancelled ((,class :strike-through t)))
-       `(line-number ((,class :background unspecified :foreground ,fg-unfocused)))
-       `(line-number-current-line
-         ((,class :background ,bg-special-cold :foreground ,fg-special-cold))))))
-
-  ;; Have I told you about the manual?  This is just meant to showcase
-  ;; the option of overriding individual colours from each theme's
-  ;; palette.
-  (define-minor-mode prot/modus-themes-tinted
-    "Tweak key Modus themes colors."
-    :init-value nil
-    :global t
-    (if prot/modus-themes-tinted
-        (setq modus-themes-operandi-color-overrides
-              '((bg-main . "#fefcf4")
-                (bg-dim . "#faf6ef")
-                (bg-alt . "#f7efe5")
-                (bg-hl-line . "#f4f0e3")
-                (bg-active . "#e8dfd1")
-                (bg-inactive . "#f6ece5")
-                (bg-region . "#c6bab1")
-                (bg-header . "#ede3e0")
-                (bg-tab-bar . "#dcd3d3")
-                (bg-tab-active . "#fdf6eb")
-                (bg-tab-inactive . "#c8bab8")
-                (fg-unfocused . "#55556f"))
-              modus-themes-vivendi-color-overrides
-              '((bg-main . "#100b17")
-                (bg-dim . "#161129")
-                (bg-alt . "#181732")
-                (bg-hl-line . "#191628")
-                (bg-active . "#282e46")
-                (bg-inactive . "#1a1e39")
-                (bg-region . "#393a53")
-                (bg-header . "#202037")
-                (bg-tab-bar . "#262b41")
-                (bg-tab-active . "#120f18")
-                (bg-tab-inactive . "#3a3a5a")
-                (fg-unfocused . "#9a9aab")))
-      (setq modus-themes-operandi-color-overrides nil
-            modus-themes-vivendi-color-overrides nil)))
-
-  ;; Toggle the minor mode and switch between the themes to see the
-  ;; effect.
-  (prot/modus-themes-tinted -1)
 
   ;; Also check my package declaration for `prot-fonts' because I use
   ;; the `modus-themes-after-load-theme-hook' for some typeface-related
