@@ -188,7 +188,7 @@ The log is limited to the integer specified by
 
 ;;;###autoload
 (defun prot-project-retrieve-tag ()
-  "Run `vc-retrieve-tag' on project.
+  "Run `vc-retrieve-tag' on project and switch to the root dir.
 Basically switches to a new branch or tag."
   (interactive)
   (let* ((pr (project-current t))
@@ -198,7 +198,8 @@ Basically switches to a new branch or tag."
           (vc-read-revision "Tag name: "
                             (list dir)
                             (vc-responsible-backend dir))))
-    (vc-retrieve-tag dir name)))
+    (vc-retrieve-tag dir name)
+    (project-dired)))
 
 (autoload 'magit-status "magit")
 
