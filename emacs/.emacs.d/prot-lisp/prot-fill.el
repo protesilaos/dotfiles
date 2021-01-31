@@ -58,11 +58,9 @@ Meant to be called via `prog-mode-hook'."
       (progn
         (setq-default fill-column prot-fill-default-column)
         (add-hook 'prog-mode-hook #'prot-fill--fill-prog)
-        (add-hook 'prog-mode-hook #'turn-on-auto-fill)
         (add-hook 'text-mode-hook #'turn-on-auto-fill))
     (setq-default fill-column 70)
     (remove-hook 'prog-mode-hook #'prot-fill--fill-prog)
-    (remove-hook 'prog-mode-hook #'turn-on-auto-fill)
     (remove-hook 'text-mode-hook #'turn-on-auto-fill)))
 
 (provide 'prot-fill)
