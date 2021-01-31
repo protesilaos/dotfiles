@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -284,8 +284,8 @@
   :group 'usls
   :type 'directory)
 
-(defcustom usls-known-categories '(economics philosophy politics)
-  "List of predefined categories for `usls-new-note'.
+(defcustom usls-known-categories '("economics" "philosophy" "politics")
+  "List of strings with predefined categories for `usls-new-note'.
 
 The implicit assumption is that a category is a single word.  If
 you need a category to be multiple words long, use underscores to
@@ -295,7 +295,7 @@ demarcate distinct categories, per `usls--inferred-categories'.
 Also see `usls-categories' for a dynamically generated list that
 gets combined with this one in relevant prompts."
   :group 'usls
-  :type 'list)
+  :type '(repeat string))
 
 (defcustom usls-subdir-support nil
   "Enable support for subdirectories in `usls-directory'.
@@ -339,8 +339,8 @@ on the `usls-file-type-extension'.
   rule or page/section break and is a standard in Markdown.
 
 * For Org files it produces five consecutive hyphens with
-  newlines before and after ('\\n\\n-----\\n\\n').  This is the valid
-  syntax for a horizontal rule in `org-mode'.
+  newlines before and after ('\\n\\n-----\\n\\n').  This is the
+  valid syntax for a horizontal rule in Org mode.
 
 Option 'heading' produces a heading that is formatted according
 to `usls-file-type-extension'.  Its text is 'Reference':
@@ -415,12 +415,41 @@ Markdown or Org types."
 
 ;;; Basic utilities
 
+;; Contributed by Omar Antolín Camarena in another context:
+;; <https://github.com/oantolin>.
 (defun usls--completion-table (category candidates)
   "Pass appropriate metadata CATEGORY to completion CANDIDATES."
   (lambda (string pred action)
     (if (eq action 'metadata)
         `(metadata (category . ,category))
       (complete-with-action action candidates string pred))))
+
+(defvar crm-separator)
+
+;; Contributed by Igor Limar in another context :
+;; <https://github.com/0x462e41>.
+(defun usls-crm-exclude-selected-p (input)
+  "Filter out last INPUT from `completing-read-multiple'.
+Hide non-destructively the previously selected entries from the
+completion table, thus avoiding the risk of inputting the same
+match twice.
+
+To be used as the PREDICATE of `completing-read-multiple'."
+  (if-let* ((pos (string-match-p crm-separator input))
+            (rev-input (reverse input))
+            (element (reverse
+                      (substring rev-input 0
+                                 (string-match-p crm-separator rev-input))))
+            (flag t))
+      (progn
+        (while pos
+          (if (string= (substring input 0 pos) element)
+              (setq pos nil)
+            (setq input (substring input (1+ pos))
+                  pos (string-match-p crm-separator input)
+                  flag (when pos t))))
+        (not flag))
+    t))
 
 ;;;; File name helpers
 
@@ -525,13 +554,17 @@ Markdown or Org types."
 
 (defun usls-categories ()
   "Combine `usls--inferred-categories' with `usls-known-categories'."
-  (append (usls--inferred-categories) usls-known-categories))
+  (delete-dups (append (usls--inferred-categories) usls-known-categories)))
 
 (defun usls--categories-prompt ()
-  "Prompt for one or more categories (comma/space separated)."
+  "Prompt for one or more categories.
+Those are separated by the `crm-sepator', which typically is a
+comma."
   (let* ((categories (usls-categories))
-         (choice (completing-read-multiple "File category: " categories
-                                           nil nil nil 'usls--category-history)))
+         (choice (completing-read-multiple
+                  "File category: " categories
+                  #'usls-crm-exclude-selected-p
+                  nil nil 'usls--category-history)))
     (if (= (length choice) 1)
         (car choice)
       choice)))
@@ -552,10 +585,19 @@ Markdown or Org types."
 
 (defun usls--categories-add-to-history (categories)
   "Append CATEGORIES to `usls--category-history'."
-  (if (and (> (length categories) 1)
-           (not (stringp categories)))
-      (dolist (x categories)
-        (add-to-history 'usls--category-history x))
+  (if (and (listp categories)
+           (> (length categories) 1))
+      (let ((cats (delete-dups
+                   (mapc (lambda (cat)
+                           (split-string cat "," t))
+                         categories))))
+        (mapc (lambda (cat)
+                (add-to-history 'usls--category-history cat))
+              cats)
+        (setq usls--category-history
+              (cl-remove-if (lambda (x)
+                              (string-match-p crm-separator x))
+                            usls--category-history)))
     (add-to-history 'usls--category-history categories)))
 
 ;;; Templates
@@ -566,7 +608,7 @@ Markdown or Org types."
 This helper function is meant to integrate with `usls-new-note'.
 As such TITLE, DATE, CATEGORIES, FILENAME, ID are all retrieved
 from there."
-  (let ((cat (usls--categories-capitalize `,categories)))
+  (let ((cat (usls--categories-capitalize categories)))
     (pcase usls-file-type-extension
       ;; TODO: make those templates somewhat customisable.  We need to
       ;; determine what should be parametrised.
@@ -663,8 +705,13 @@ strings only the first one is used."
 If the region is active, append it to the newly created file.
 
 This command first prompts for a file title and then for a
-category.  The latter supports completion.  To input multiple
-categories, separate them with a space or a comma.
+category.  The latter supports completion.
+
+To input multiple categories, separate them with a comma or
+whatever the value of `crm-separator' is on your end.  While
+inputting multiple categories, those already selected are removed
+from the list of completion candidates, meaning that it is not
+possible to select the same item twice.
 
 With prefix key (\\[universal-argument]) as optional ARG also
 prompt for a subdirectory of `usls-directory' to place the new
@@ -855,14 +902,13 @@ note in."
   "Routines to append active region.
 All of BUF, REGION, ARG are intended to be passed by another
 function, such as with `usls-append-region-buffer-or-file'."
-  (let ((window (get-buffer-window buf)))
-    (with-current-buffer `,buf
+  (let ((window (get-buffer-window buf))
+        (mark (gensym)))
+    (with-current-buffer buf
       (goto-char (if (not (eq arg nil)) (point-max) (window-point window)))
-      (set-mark (point))
-      (insert `,region)
-      ;; REVIEW: is this the correct way to go to the last mark?  Are we
-      ;; polluting the mark-ring?
-      (goto-char (car mark-ring)))))
+      (setq mark (point))
+      (insert region)
+      (goto-char mark))))
 
 ;;;###autoload
 (defun usls-append-region-buffer-or-file (&optional arg)
