@@ -60,7 +60,7 @@
 ;;     $ mkdir ~/.emacs.d/custom-lisp
 ;;     $ git clone https://gitlab.com/protesilaos/usls.git ~/.emacs.d/custom-lisp/usls
 ;;
-;; Then make use the desired directory is part of the `load-path'.  Such
+;; Then make sure the desired directory is part of the `load-path'.  Such
 ;; as by evaluating this Elisp form:
 ;;
 ;;     (add-to-list 'load-path "~/.emacs.d/custom-lisp/usls/")
