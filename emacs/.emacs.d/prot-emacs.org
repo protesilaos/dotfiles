@@ -4476,7 +4476,6 @@ username and password for host =inf= we do:
 (prot-common-auth-get-field "inf" :secret) ; password
 #+end_example
 
-
 *** Contents of `~/.mbsyncrc' (external tool)
 :PROPERTIES:
 :CUSTOM_ID: h:88a605b8-d5b5-486f-87c9-0c80b423ae36
