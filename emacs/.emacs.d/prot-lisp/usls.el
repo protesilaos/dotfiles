@@ -447,7 +447,7 @@ the source of this docstring):
           (usls-custom-header-function #'my-usls-custom-header))
       (usls-new-note)))"
   :group 'usls
-  :type 'symbol)
+  :type '(choice (const nil) function))
 
 ;;; Main variables
 
