@@ -1255,7 +1255,7 @@ accordance with it in cases where it changes, such as while using
 (defcustom modus-themes-scale-5 1.3
   "Font size slightly larger than `modus-themes-scale-4'.
 
-This size is only used for 'special' top-level headings, such as
+This size is only used for 'special' top level headings, such as
 Org's file title heading, denoted by the #+title key word, and
 the Org agenda structure headers.
 
@@ -2866,13 +2866,15 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                                magenta-alt blue-nuanced-bg
                                                magenta-intense-bg fg-main))))
 ;;;;; consult
+    `(consult-async-running ((,class :inherit bold :foreground ,blue)))
     `(consult-async-split ((,class :foreground ,magenta-alt)))
     `(consult-bookmark ((,class :foreground ,blue)))
     `(consult-file ((,class :foreground ,fg-special-cold)))
-    `(consult-imenu-prefix ((,class :inherit bold)))
+    `(consult-imenu-prefix ((,class :inherit bold :foreground ,cyan-faint)))
     `(consult-key ((,class :inherit modus-themes-bold :foreground ,magenta-alt-other)))
     `(consult-line-number ((,class :foreground ,fg-special-warm)))
     `(consult-line-number-prefix ((,class :foreground ,fg-unfocused)))
+    `(consult-narrow-indicator ((,class :inherit bold :foreground ,magenta-alt)))
     `(consult-preview-cursor ((,class :inherit modus-theme-intense-blue)))
     `(consult-preview-error ((,class :inherit modus-theme-intense-red)))
     `(consult-preview-line ((,class :background ,bg-hl-alt-intense)))
