@@ -3082,8 +3082,9 @@ changes in bulk, pushing and pulling from a remote.  And let Magit
 handle the more involved and specialised cases of staging a partial
 diff, rebasing commits interactively, writing a commit fixup, and so on.
 
-Also refer to the section on [[#h:2ff46d23-09d5-4d92-b0af-2339dc19719f][Diff-mode (and prot-diff.el extensions)]].
-And watch my two videos on this:
+Also refer to the section on [[#h:2ff46d23-09d5-4d92-b0af-2339dc19719f][Diff-mode (and prot-diff.el extensions)]]
+which includes various neat extras, such as extra fontification rules
+for diff buffers.  And watch my videos on this topic:
 
 1. [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]] (2020-03-30).
 2. [[https://protesilaos.com/codelog/2021-01-22-emacs-vc-git-extras/][Extensions for Emacs' vc-git]] (2021-01-22).
@@ -3161,15 +3162,44 @@ defines a few commands that extend VC to suit my needs.  In short:
   needed negative space for better usability.  It is set up as a minor
   mode to make it easy to disable.
 
+Finally, a few tips for acting in the log-edit buffer (remember to use
+=C-h m= (=M-x describe-mode=) in every unfamiliar major mode and read the
+manual for more on the matter):
+
++ Use =C-c C-d= (=log-edit-show-diff=) to produce a diff of the changes
+  to-be-committed.
+
++ With =C-c C-w= (=log-edit-generate-changelog-from-diff=) generate an
+  overview of documented changes to the given file set.  While this may
+  not be useful for everyday commits, it is mandatory when preparing
+  patches for upstream Emacs (and probably other GNU projects).
+
++ =C-c C-k= (=log-edit-kill-buffer=) cancels the log editing process.
+
++ =M-n= (=log-edit-next-comment=) and =M-p= (=log-edit-previous-comment=) let
+  you cycle through prior commit messages.
+
 #+begin_src emacs-lisp
-;; ;; NOTE: this is already `require'd in init.el
+;; ;; NOTE: this is already `require'd in init.el: not adding it again.
 ;; (require 'vc)
 (with-eval-after-load 'vc
+
+  ;; Those offer various types of functionality, such as blaming,
+  ;; viewing logs, showing a dedicated buffer with changes to affected
+  ;; files.
   (require 'vc-annotate)
   (require 'vc-dir)
   (require 'vc-git)
   (require 'add-log)
   (require 'log-view)
+
+  ;; This one is for editing commit messages.
+  (require 'log-edit)
+  (with-eval-after-load 'log-edit
+    (setq log-edit-confirm 'changed)
+    (setq log-edit-keep-buffer nil)
+    (setq log-edit-require-final-newline t)
+    (setq log-edit-setup-add-author nil))
 
   (setq vc-find-revision-no-save t)
   (setq vc-annotate-display-mode 'scale) ; scale to oldest
@@ -3192,6 +3222,7 @@ defines a few commands that extend VC to suit my needs.  In short:
            (2 'change-log-list nil lax)
            (3 'change-log-name)
            (4 'change-log-date))))
+
   (let ((map global-map))
     (define-key map (kbd "C-x v a") #'vc-annotate) ; `vc-update-change-log' is not in git
     (define-key map (kbd "C-x v b") #'vc-retrieve-tag)  ; "branch" switch
@@ -3245,37 +3276,6 @@ defines a few commands that extend VC to suit my needs.  In short:
 And here is =prot-vc.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-vc.el src emacs-lisp :tangle no
-
-**** Commit log editing
-:PROPERTIES:
-:CUSTOM_ID: h:4df7a1f5-a144-4848-b3aa-8796d76d5fb9
-:END:
-
-The =log-edit= library defines a set of general commands that we can use
-to, inter alia, commit changes to Git, using the surprisingly powerful
-[[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][built-in Version Control (VC) framework]].
-
-Overview of the following tweaks:
-
-+ While editing a commit message, only prompt for confirmation if the
-  list of files has changed since the beginning of the editing session.
-+ Once the commit is done, remove its buffer.
-+ Always add a newline.
-+ Do not offer to manually write an =Author:= header.  Though this can be
-  useful if someone sends a patch.
-
-Also make sure to read the guide for [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  I
-always use =auto-fill-mode= to wrap lines to the value of =fill-column= (see
-[[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][Paragraphs and fill-mode (prot-fill.el)]]).
-
-#+begin_src emacs-lisp
-(require 'log-edit)
-(with-eval-after-load 'log-edit
-  (setq log-edit-confirm 'changed)
-  (setq log-edit-keep-buffer nil)
-  (setq log-edit-require-final-newline t)
-  (setq log-edit-setup-add-author nil))
-#+end_src
 
 **** git-email.el for preparing patches
 :PROPERTIES:
