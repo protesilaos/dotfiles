@@ -391,14 +391,14 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-prompts 'subtle-gray
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
         modus-themes-region 'no-extend ; {nil,'no-extend,'bg-only,'bg-only-no-extend}
-        modus-themes-diffs 'desaturated ; {nil,'desaturated,'fg-only,'bg-only}
+        modus-themes-diffs 'bg-only ; {nil,'desaturated,'fg-only,'bg-only}
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
-        '((t . no-color-no-bold))
+        '((t . no-color))
         modus-themes-variable-pitch-ui t
         modus-themes-variable-pitch-headings t
-        modus-themes-scale-headings t
+        modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
