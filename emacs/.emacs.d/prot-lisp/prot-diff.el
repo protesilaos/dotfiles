@@ -26,6 +26,9 @@
 ;;
 ;; This covers my diff-mode.el extensions, for use in my Emacs setup:
 ;; https://protesilaos.com/dotemacs.
+;;
+;; Make sure to also inspect prot-vc.el and prot-project.el for a more
+;; complete view of what I have on the topic of version control.
 
 ;;; Code:
 
