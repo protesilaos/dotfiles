@@ -1406,9 +1406,10 @@ A "project" is, in our case, a directory whose contents are related to
 each other in terms of the end product they can provide.  Think, for
 example, how Emacs' source code is a single "project" that delivers the
 program we use.  In practical terms, a project is a version controlled
-directory (or directory tree).  For my case that means =git= though other
-backends are also supported (same principle as with VC---see section on
-[[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Generic version control framework]]).
+directory (or directory tree) governed by some program.  For my case
+that is =git= though other backends are supported (by virte of VC---see
+section on [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]] as well as
+my related extras in [[#h:2ff46d23-09d5-4d92-b0af-2339dc19719f][Diff-mode (and prot-diff.el extensions)]]).
 
 Using any of the commands listed in =C-x p C-h= will append the current
 project to a list of "known projects", stored in the dynamically updated
@@ -2957,8 +2958,9 @@ This is its code (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' r
 
 This covers the standard =diff-mode.el=, which I use quite often, such as
 while interfacing with the built-in Version Control framework (see the
-[[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][section on VC]]), or while browsing various code-related newsgroups
-through Gnus (refer to the [[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).
+section on [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]), or while
+browsing various code-related newsgroups through Gnus (refer to the
+[[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).
 
 Overview of my preferences for how diffs should look:
 
@@ -3104,16 +3106,35 @@ the =prot-diff.el= that I linked to above):
 | vc-retrieve-tag                  | b            | Branch/tag switch |
 | vc-diff                          | d            | Diff current file |
 | vc-root-diff                     | D            | Diff project      |
-| prot-diff-buffer-dwim            | =            | Compare equality  |
+| prot-diff-buffer-dwim            | =            | Equality check    |
 | prot-vc-project-or-dir           | p            | Project status    |
 | prot-vc-custom-log               | SPC          |                   |
 | prot-vc-git-patch-dwim           | c            | Create patch      |
-| prot-vc-git-show                 | s            | git-show commit   |
-| prot-vc-find-revision            | r            | Find file Rev     |
+| prot-vc-git-show                 | s            | Show commit       |
+| prot-vc-find-revision            | r            | Revisit version   |
 | prot-vc-git-blame-region-or-file | B            | Blame             |
+| prot-vc-log-insert-commits       | i            | Insert commit log |
 
 My =prot-vc.el= library (reproduced after the package declarations)
-defines a few commands that extend VC to suit my needs.  In short:
+defines a few commands that extend VC to suit my needs.  Check the key
+maps I assign them to, in order to further appreciate the scope of each
+action.  In short:
+
++ =prot-vc-log-extract-file-name= is used in log-edit buffers to derive
+  the file name of the item being committed.  For example, as I am
+  writing this, I may want to compose a summary of my changes like
+  "prot-emacs: expand VC section docs".  The "prot-emacs: " part comes
+  directly from this command, which reads from the "prot-emacs.org"
+  file.  If there are multiple files to be committed, then a minibuffer
+  prompt asks to pick one among them.  This helps me write clean and
+  meaningful summaries.
+
++ =prot-vc-log-insert-commits= will simply insert at point N number of
+  commits starting from the HEAD of the current project.  The number is
+  inserted at the minibuffer following a prompt.  This runs the =git log=
+  shell command in the background.  If the command is not called from
+  inside a version-controlled directory, it first asks for a project and
+  eventually prints a log for it.
 
 + =prot-vc-git-patch-dwim= produce a properly formatted patch for a given
   commit.  When browsing a =log-view= buffer, the commit is the one around
