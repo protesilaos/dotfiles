@@ -26,6 +26,9 @@
 ;;
 ;; This covers my vc.el extensions, for use in my Emacs setup:
 ;; https://protesilaos.com/dotemacs.
+;;
+;; Make sure to also inspect prot-project.el and prot-diff.el for a more
+;; complete view of what I have on the topic of version control.
 
 ;;; Code:
 
@@ -69,6 +72,56 @@ With optional prefix ARG (\\[universal-argument]), use the
   (let* ((root (prot-vc--current-project))
          (dir (if arg default-directory root)))
     (vc-dir dir)))
+
+(autoload 'log-edit-files "log-edit")
+
+(defun prot-vc--log-edit-files-prompt ()
+  "Helper completion for `prot-vc-extract-file-name'."
+  (let ((files (log-edit-files)))
+    (completing-read
+     "Derive shortname from: " files nil nil)))
+
+;;;###autoload
+(defun prot-vc-log-extract-file-name ()
+  "Insert at point shortname from file in log edit buffers.
+If multiple files are part of the log, a minibuffer completion
+prompt will be produced: it can be used to narrow down to an
+existing item or input an arbitrary string of characters."
+  (interactive)
+  (unless (derived-mode-p 'log-edit-mode)
+    (user-error "Only try this in Log Edit mode"))
+  (let* ((files (log-edit-files))
+         (file (if (> (length files) 1)
+                   (prot-vc--log-edit-files-prompt)
+                 (car files)))
+         (name (file-name-sans-extension
+                (file-name-nondirectory
+                 file))))
+    (insert (concat name ": "))))
+
+(autoload 'project-current "project")
+
+(defvar prot-vc--log-insert-num-hist '()
+  "History for `prot-vc-log-insert-commits'.")
+
+;;;###autoload
+(defun prot-vc-log-insert-commits ()
+  "Insert at point number of commits starting from git HEAD.
+If in a version-controlled directory, the commit log is based on
+the root of the project, else a prompt for project selection is
+produced with `project-current'."
+  (interactive)
+  (let ((default-directory (or (prot-vc--current-project)
+                               (cdr (project-current t))))
+        (number (number-to-string
+                 (read-number "Insert N commits from HEAD: " 5
+                              'prot-vc--log-insert-num-hist))))
+    (insert
+     (with-temp-buffer
+       (apply 'vc-git-command t nil nil (list "log" "--pretty=format:%h %cs %s"
+                                              "-n" number "--"))
+       (buffer-string)))
+    (add-to-history 'prot-vc--log-insert-num-hist number)))
 
 (autoload 'log-view-current-entry "log-view")
 (autoload 'dired-get-marked-files "dired")
