@@ -3047,10 +3047,13 @@ on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (s
 
 (require 'prot-diff)
 (with-eval-after-load 'prot-diff
+  (prot-diff-modus-themes-diffs)
+  (add-hook 'modus-themes-after-load-theme-hook #'prot-diff-modus-themes-diffs)
+
   (prot-diff-extra-keywords 1)
+
   ;; `prot-diff-buffer-dwim' replaces the default for `vc-diff' (which I
   ;; bind to another key---see VC section).
-  (add-hook 'modus-themes-after-load-theme-hook #'prot-diff-modus-themes-diffs)
   (define-key global-map (kbd "C-x v =") #'prot-diff-buffer-dwim)
   (let ((map diff-mode-map))
     (define-key map (kbd "C-c C-b") #'prot-diff-refine-dwim) ; replace `diff-refine-hunk'
