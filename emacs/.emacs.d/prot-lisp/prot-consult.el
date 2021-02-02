@@ -51,9 +51,9 @@ changes to take effect."
   :group 'prot-consult
   :type 'list)
 
-(defcustom prot-consult-find-args '("fd" "-i" "-H" "-a" "-c" "never")
+(defcustom prot-consult-find-args "fd -i -H -a -c never"
   "List of strings with the FD command and its arguments."
-  :type 'list
+  :type 'string
   :group 'prot-consult)
 
 ;;;; Setup for some consult commands (TODO: needs review)
