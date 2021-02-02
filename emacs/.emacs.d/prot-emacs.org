@@ -524,10 +524,11 @@ Relevant blog posts of mine:
 (with-eval-after-load 'prot-fonts
   ;; Note that the light weight I pass to Iosevka Comfy is thicker than
   ;; the equivalent for standard Iosevka.  In my build instructions, I
-  ;; set that to 350, while normal light is at 300 and regular is at
-  ;; 400.  Source: <https://gitlab.com/protesilaos/iosevka-comfy>.
+  ;; set that to 350, while the standard light is at 300 and regular is
+  ;; at 400.  Source: <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
         '((laptop 90 "Hack" normal "DejaVu Sans Condensed" normal)
+          (small-desktop 100 "Source Code Pro" normal "FiraGO" normal)
           (desktop 130 "Iosevka Comfy" light "Roboto Condensed" normal)
           (reader 150 "Iosevka Comfy" light "FiraGO" normal)
           (presentation 180 "Iosevka Comfy" light "Source Sans Pro" normal)))
