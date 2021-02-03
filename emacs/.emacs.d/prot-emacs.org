@@ -3306,6 +3306,7 @@ manual for more on the matter):
     (define-key map (kbd "C-x v r") #'prot-vc-find-revision)
     (define-key map (kbd "C-x v B") #'prot-vc-git-blame-region-or-file))
   (let ((map vc-git-log-edit-mode-map))
+    (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
     (define-key map (kbd "C-C C-n") #'prot-vc-log-extract-file-name)
     (define-key map (kbd "C-C C-i") #'prot-vc-log-insert-commits))
   (let ((map log-view-mode-map))

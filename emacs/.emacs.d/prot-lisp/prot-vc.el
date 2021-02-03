@@ -400,5 +400,111 @@ will be used instead."
     (advice-remove #'vc-git-log-view-mode #'prot-vc-git-log-view-add-hook)
     (remove-hook 'prot-vc-git-log-view-mode-hook #'prot-vc-git-expand-function)))
 
+;;;; Utilities
+
+;; TODO 2021-02-03: Make this setup optional.
+
+(autoload 'log-edit-add-field "log-edit")
+
+;; FIXME: The comment block should be formatted in a separate function.
+(defun prot-vc-git-log-edit-comment ()
+  "Add comment block to Git Log Edit buffer."
+  (let* ((eoh (save-excursion (rfc822-goto-eoh) (point)))
+         (branch-name (process-lines "git" "branch" "--show-current"))
+         (branch (or (car branch-name) "Detached HEAD"))
+         (remote-name (when branch-name
+                        (car (process-lines "git" "branch" "-r")))) ; REVIEW Is this reliable?
+         (remote (cadr (split-string remote-name "->" t "[\s\t]+")))
+         (files (mapconcat (lambda (x)
+                             (concat "#   " x))
+                           (log-edit-files)
+                           "\n")))
+    (save-excursion
+      (when (<= (point) eoh)
+	    (goto-char eoh)
+	    (when (looking-at "\n") (forward-char 1)))
+      (log-edit-add-field "Summary" "")
+      (insert
+       (format "\n\n# %s `%s' tracking `%s':\n#\n%s\n#\n# %s"
+               "Files to be committed to branch"
+               branch remote
+               files
+               "All lines starting with `#' are ignored.")))
+    (rfc822-goto-eoh)
+    (when (looking-at "\n") (forward-char -1))))
+
+(add-hook 'log-edit-hook #'prot-vc-git-log-edit-comment)
+
+(defun prot-vc-git-log-remove-comment ()
+  "Remove Git Log Edit comment and empty lines.
+Ensure a final newline."
+  (let ((buffer (get-buffer "*vc-log*")))
+    (with-current-buffer (if (buffer-live-p buffer)
+                             buffer
+                           (window-buffer (get-mru-window)))
+      (save-excursion
+        (goto-char (point-min)))
+      (flush-lines "\\(^#\\|^\n\\)")
+      (or (= (point-min) (point-max))
+          (= (char-before (point-max)) ?\n)
+          (save-excursion
+            (goto-char (point-max))
+            (insert "\n"))))))
+
+;; FIXME: Why does `prot-vc-git-log-remove-comment' not work when added
+;; to `log-edit-done-hook'?
+;;;###autoload
+(defun prot-vc-git-log-edit-done ()
+  "Remove Git Log Edit comments and commit change set.
+This is a thin wrapper around `log-edit-done', which first calls
+`prot-vc-git-log-remove-comment'."
+  (interactive)
+  (prot-vc-git-log-remove-comment)
+  (call-interactively 'log-edit-done))
+
+(defface prot-vc-git-log-edit-file-name
+  '((default :inherit font-lock-comment-face)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#00538b")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#00d3d0")
+    (t :foreground "cyan"))
+  "Face for remote branch name in VC Git Log Edit buffers.")
+
+(defface prot-vc-git-log-edit-local-branch-name
+  '((default :inherit font-lock-comment-face)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#0031a9")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#2fafff")
+    (t :foreground "blue"))
+  "Face for local branch name in VC Git Log Edit buffers.")
+
+(defface prot-vc-git-log-edit-remote-branch-name
+  '((default :inherit font-lock-comment-face)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#55348e")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#cfa6ff")
+    (t :foreground "magenta"))
+  "Face for remote branch name in VC Git Log Edit buffers.")
+
+(defconst prot-vc-git-log-edit-font-lock
+  '(("^#.*"
+     (0 'font-lock-comment-face))
+    ("^#.*`\\(.+?\\)'.*`\\(.+?\\)'"
+     (1 'prot-vc-git-log-edit-local-branch-name t)
+     (2 'prot-vc-git-log-edit-remote-branch-name t))
+    ("^#[\s\t][\s\t]+\\(.+\\)"
+     (1 'prot-vc-git-log-edit-file-name t)))
+  "Fontification rules for Log Edit buffers.")
+
+(defun prot-vc-log-edit-extra-keywords ()
+  "Apply `prot-vc-git-log-edit-font-lock' to Log Edit buffers."
+  (font-lock-flush (point-min) (point-max))
+  (font-lock-add-keywords nil prot-vc-git-log-edit-font-lock nil))
+
+(add-hook 'log-edit-hook #'prot-vc-log-edit-extra-keywords)
+
 (provide 'prot-vc)
 ;;; prot-vc.el ends here
