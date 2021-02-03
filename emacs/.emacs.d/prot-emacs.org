@@ -3332,7 +3332,7 @@ the one you specify.  In doing so, it allows you to prepare a series of
 patches, using the correct message headers.
 
 =git-email.el= is meant to work with the standard message composition
-buffer, such as the one you get when you call =M-x compose-email= (by
+buffer, such is the one you get when you call =M-x compose-email= (by
 default that command is bound to =C-x m= and I keep it that way).  Email
 clients like Gnus and Notmuch are also supported.  For my case as a user
 of the former, I just activate =git-email-gnus-mode= in order to add the
