@@ -3228,7 +3228,8 @@ manual for more on the matter):
     (setq log-edit-confirm 'changed)
     (setq log-edit-keep-buffer nil)
     (setq log-edit-require-final-newline t)
-    (setq log-edit-setup-add-author nil))
+    (setq log-edit-setup-add-author nil)
+    (remove-hook 'log-edit-hook #'log-edit-show-files))
 
   (setq vc-find-revision-no-save t)
   (setq vc-annotate-display-mode 'scale) ; scale to oldest
