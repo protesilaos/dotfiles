@@ -117,23 +117,6 @@ To be used as the PREDICATE of `completing-read-multiple'."
         field
       (user-error "No entry in auth sources"))))
 
-(declare-function org-babel-tangle-file "ob-tangle")
-
-;; TODO defcustom for the emacs-init file
-;;;###autoload
-(defun prot-common-rebuild-emacs-init ()
-  "Produce Elisp init from my Org dotemacs.
-Add this to `kill-emacs-hook', to use the newest file in the next
-session.  The idea is to reduce startup time, though just by
-rolling it over to the end of a session rather than the beginning
-of it."
-  (let ((init-el (concat user-emacs-directory "prot-emacs.el"))
-        (init-org (concat user-emacs-directory "prot-emacs.org")))
-    (when (file-exists-p init-el)
-      (delete-file init-el))
-    (org-babel-tangle-file init-org init-el)
-    (byte-compile-file init-el)))
-
 ;; Based on `org--line-empty-p'.
 (defmacro prot-common--line-p (name regexp)
   "Make NAME function to match REGEXP on line n from point."

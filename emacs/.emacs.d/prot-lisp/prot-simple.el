@@ -483,5 +483,24 @@ Do not try to make a new directory or anything fancy."
       (rename-file file name))
     (set-visited-file-name name t t)))
 
+;;; Miscellaneous
+
+(declare-function org-babel-tangle-file "ob-tangle")
+
+;; TODO defcustom for the init file
+;;;###autoload
+(defun prot-simple-rebuild-emacs-init ()
+  "Produce Elisp init from my Org dotemacs.
+Add this to `kill-emacs-hook', to use the newest file in the next
+session.  The idea is to reduce startup time, though just by
+rolling it over to the end of a session rather than the beginning
+of it."
+  (let ((init-el (concat user-emacs-directory "prot-emacs.el"))
+        (init-org (concat user-emacs-directory "prot-emacs.org")))
+    (when (file-exists-p init-el)
+      (delete-file init-el))
+    (org-babel-tangle-file init-org init-el)
+    (byte-compile-file init-el)))
+
 (provide 'prot-simple)
 ;;; prot-simple.el ends here

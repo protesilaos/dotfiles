@@ -240,7 +240,7 @@ common key combinations.
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
     (define-key map (kbd "s-k") #'prot-simple-kill-buffer-current))
 
-  (add-hook 'kill-emacs-hook #'prot-common-rebuild-emacs-init))
+  (add-hook 'kill-emacs-hook #'prot-simple-rebuild-emacs-init))
 #+end_src
 
 These are the contents of the =prot-simple.el= library (find the file in
