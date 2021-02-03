@@ -1099,7 +1099,13 @@ try.
   (setq consult-async-input-debounce 0.5)
   (setq consult-async-input-throttle 0.8)
   (setq consult-narrow-key ">")
-
+  (setq consult-imenu-config
+        '((emacs-lisp-mode :toplevel "Functions"
+                           :types ((?f "Functions" font-lock-function-name-face)
+                                   (?m "Macros"    font-lock-keyword-face)
+                                   (?p "Packages"  font-lock-constant-face)
+                                   (?t "Types"     font-lock-type-face)
+                                   (?v "Variables" font-lock-variable-name-face)))))
   ;; Registers' setup -- From Consult's README
   ;;
   ;; This gives a consistent display for `consult-register',
