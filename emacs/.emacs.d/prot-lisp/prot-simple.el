@@ -430,7 +430,7 @@ paragraph.  The idea is to produce the opposite effect of both
 ;; Inspired by Pierre Neidhardt's windower:
 ;; https://gitlab.com/ambrevar/emacs-windower/-/blob/master/windower.el
 (defvar prot-simple--windows-current nil
-  "Current window configuration.'.")
+  "Current window configuration.")
 
 ;;;###autoload
 (define-minor-mode prot-simple-monocle
