@@ -404,7 +404,7 @@ will be used instead."
 
 ;; TODO 2021-02-03: Make this setup optional.
 
-(autoload 'log-edit-add-field "log-edit")
+(declare-function log-edit-add-field "log-edit")
 
 ;; FIXME: The comment block should be formatted in a separate function.
 (defun prot-vc-git-log-edit-comment ()
@@ -451,6 +451,24 @@ Ensure a final newline."
             (goto-char (point-max))
             (insert "\n"))))))
 
+(declare-function log-edit-show-diff "log-edit")
+
+(defvar prot-vc--windows-current nil
+  "Current window configuration.")
+
+(defun prot-vc-log-diff-window-configuration ()
+  "Show current diff for Git Log Edit buffer."
+  (let ((buffer (get-buffer "*vc-log*")))
+    (setq prot-vc--windows-current (current-window-configuration))
+    (with-current-buffer (if (buffer-live-p buffer)
+                             buffer
+                           (window-buffer (get-mru-window)))
+      (delete-other-windows)
+      (log-edit-show-diff)
+      (other-window -1))))
+
+(add-hook 'log-edit-hook #'prot-vc-log-diff-window-configuration)
+
 ;; FIXME: Why does `prot-vc-git-log-remove-comment' not work when added
 ;; to `log-edit-done-hook'?
 ;;;###autoload
@@ -460,7 +478,8 @@ This is a thin wrapper around `log-edit-done', which first calls
 `prot-vc-git-log-remove-comment'."
   (interactive)
   (prot-vc-git-log-remove-comment)
-  (call-interactively 'log-edit-done))
+  (call-interactively 'log-edit-done)
+  (set-window-configuration prot-vc--windows-current))
 
 (defface prot-vc-git-log-edit-file-name
   '((default :inherit font-lock-comment-face)
