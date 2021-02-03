@@ -3203,6 +3203,10 @@ manual for more on the matter):
   not be useful for everyday commits, it is mandatory when preparing
   patches for upstream Emacs (and probably other GNU projects).
 
++ Normally the window layout is set up to include files for the given
+  commit, but I disable that.  You can display them with =C-c C-f=
+  (=log-edit-show-files=).
+
 + =C-c C-k= (=log-edit-kill-buffer=) cancels the log editing process.
 
 + =M-n= (=log-edit-next-comment=) and =M-p= (=log-edit-previous-comment=) let
@@ -3229,7 +3233,7 @@ manual for more on the matter):
     (setq log-edit-keep-buffer nil)
     (setq log-edit-require-final-newline t)
     (setq log-edit-setup-add-author nil)
-    (remove-hook 'log-edit-hook #'log-edit-show-files))
+    (remove-hook 'log-edit-hook #'log-edit-show-files)) ; Show them with C-c C-f
 
   (setq vc-find-revision-no-save t)
   (setq vc-annotate-display-mode 'scale) ; scale to oldest
