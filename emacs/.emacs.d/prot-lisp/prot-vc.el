@@ -441,7 +441,8 @@ will be used instead."
 (defun prot-vc--store-window-configuration ()
   "Store window configuration before calling `log-edit'.
 This should be called via `prot-vc-git-pre-log-edit-hook'."
-  (unless (one-window-p)
+  (if (one-window-p)
+      (setq prot-vc--windows-current nil)
     (setq prot-vc--windows-current (current-window-configuration))))
 
 (defvar prot-vc-git-pre-log-edit-hook nil
