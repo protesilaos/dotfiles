@@ -466,10 +466,12 @@ To be used as advice before `log-edit'."
 
 (defun prot-vc-log--restore-window-configuration ()
   "Set window configuration to the pre Log Edit state."
-  (when prot-vc--windows-current
-    (set-window-configuration prot-vc--windows-current)
-    (other-window -1)                   ; REVIEW: Why do we need this?
-    (setq prot-vc--windows-current nil)))
+  (if prot-vc--windows-current
+      (progn
+        (set-window-configuration prot-vc--windows-current)
+        (other-window -1)                   ; REVIEW: Why do we need this?
+        (setq prot-vc--windows-current nil))
+    (delete-other-windows)))
 
 ;; FIXME: Why does `prot-vc-git-log-remove-comment' not work when added
 ;; to `log-edit-done-hook'?
