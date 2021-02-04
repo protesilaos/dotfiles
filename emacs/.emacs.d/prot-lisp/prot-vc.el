@@ -474,6 +474,9 @@ To be used as advice before `log-edit'."
         (setq prot-vc--windows-current nil))
     (delete-other-windows)))
 
+(defvar prot-vc-git-log-edit-done-hook nil
+  "Hook that runs after `prot-vc-git-log-edit-done'.")
+
 ;; FIXME: Why does `prot-vc-git-log-remove-comment' not work when added
 ;; to `log-edit-done-hook'?
 ;;;###autoload
@@ -484,7 +487,7 @@ This is a thin wrapper around `log-edit-done', which first calls
   (interactive)
   (prot-vc-git-log-remove-comment)
   (log-edit-done)
-  (prot-vc-log--restore-window-configuration))
+  (run-hooks 'prot-vc-git-log-edit-done-hook))
 
 (defface prot-vc-git-log-edit-file-name
   '((default :inherit font-lock-comment-face)
@@ -579,6 +582,7 @@ This is a thin wrapper around `log-edit-done', which first calls
         (add-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
         (advice-add #'log-edit-kill-buffer :after #'prot-vc-log--restore-window-configuration)
         (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
+        (add-hook 'prot-vc-git-log-edit-done-hook #'prot-vc-log--restore-window-configuration)
         (add-hook 'log-edit-hook #'prot-vc--log-diff-window-configuration)
         ;; Extra font lock rules for Log Edit comment block
         (add-hook 'log-edit-hook #'prot-vc-git-log-edit-extra-keywords))
@@ -590,6 +594,7 @@ This is a thin wrapper around `log-edit-done', which first calls
     (remove-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
     (advice-remove #'log-edit-kill-buffer #'prot-vc-log--restore-window-configuration)
     (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'log-edit-done)
+    (remove-hook 'prot-vc-git-log-edit-done-hook #'prot-vc-log--restore-window-configuration)
     (remove-hook 'log-edit-hook #'prot-vc--log-diff-window-configuration)
     (remove-hook 'log-edit-hook #'prot-vc-git-log-edit-extra-keywords)))
 
