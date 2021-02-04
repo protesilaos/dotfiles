@@ -424,12 +424,7 @@ will be used instead."
       (save-excursion
         (goto-char (point-min)))
       (when (derived-mode-p 'log-edit-mode)
-        (flush-lines "\\(^#\\|^\n\\)")
-        (or (= (point-min) (point-max))
-            (= (char-before (point-max)) ?\n)
-            (save-excursion
-              (goto-char (point-max))
-              (insert "\n")))))))
+        (flush-lines "^#")))))
 
 (defun prot-vc--buffer-string-omit-comment ()
   "Remove Git comment and empty lines from buffer string."
