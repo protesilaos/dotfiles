@@ -533,9 +533,10 @@ This is a thin wrapper around `log-edit-done', which first calls
   (font-lock-add-keywords nil prot-vc-git-log-edit-font-lock nil))
 
 (autoload 'vc-git-log-view-mode "vc-git")
-(declare-function log-edit-show-files "vc-git")
-(declare-function log-edit-kill-buffer "vc-git")
-(declare-function log-edit-done "vc-git")
+(declare-function log-edit-show-files "log-edit")
+(declare-function log-edit-kill-buffer "log-edit")
+(declare-function log-edit-done "log-edit")
+(declare-function log-edit-remember-comment "log-edit")
 (defvar vc-git-log-edit-mode-map)
 
 ;;;###autoload
