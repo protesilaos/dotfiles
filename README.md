@@ -2,19 +2,20 @@
 
 This is the set of files that powers my day-to-day computing experience.
 GNU Emacs is its centrepiece, with other programs providing ancillary
-support, where relevant.  In some cases, such as with the configurations
-for Vim and Xterm, all relevant files are maintained from my pre-Emacs
-days and are preserved as a contingency plan.
+functionalities.  In some cases, such as with the configurations for Vim
+and Xterm, all relevant files are carried over from my pre-Emacs days
+and are maintained as a contingency plan or in case I need to revisit
+some old setup.
  
 ## Do not track my dotfiles (rolling, unstable, and untested)
 
-_Ceci n'est pas une distribution Emacs._ If you know what I mean.
+_Ceci n'est pas une distribution Emacs._
 
 This repo functions as a laboratory of experimentation for my computing
-environment.  What I do with Emacs or other programs in the GNU/Linux
-milieu is only meant to work for me.  As such, I offer no support
-whatsoever to those tracking my dotfiles and may introduce breaking
-changes without prior notice.
+environment.  What I do with Emacs or any other programs in the
+GNU/Linux milieu that form part of my dotfiles is only meant to work for
+me.  As such, I offer no support whatsoever to those tracking this
+repository and may introduce breaking changes without prior notice.
 
 This is all to say that **you understand the risks associated with
 tracking an ever-changing project that does not enjoy widespread testing
@@ -22,6 +23,12 @@ and whose target audience is only me**.  If you are fine with that and
 are willing to assume responsibility for any possible breakage, then
 please feel welcome to follow along.  You can always open an issue here
 or contribute any fixes, if you will.
+
+Furthermore, my Emacs files are currently designed in a way that does
+not make their end product reproducible.  Missing packages are not
+installed automatically and no measures are set in place to easily
+replicate what I have on my end.  That might change in the future,
+though the key take is that **this is not an Emacs distribution**.
 
 ## Deployment with GNU Stow
 
