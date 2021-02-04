@@ -433,9 +433,7 @@ will be used instead."
                    (with-current-buffer buffer
                      (buffer-substring-no-properties (point-min) (point-max))))))
     (when string
-      (replace-regexp-in-string
-       "^\n" ""
-       (replace-regexp-in-string "^#.*" "" string)))))
+      (replace-regexp-in-string "^#.*" "" string))))
 
 (defvar log-edit-comment-ring)
 (autoload 'ring-empty-p "ring")
