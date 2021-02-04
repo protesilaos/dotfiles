@@ -528,7 +528,7 @@ Relevant blog posts of mine:
   ;; at 400.  Source: <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
         '((laptop 90 "Hack" normal "DejaVu Sans Condensed" normal)
-          (small-desktop 100 "Source Code Pro" normal "FiraGO" normal)
+          (small-desktop 100 "Hack" normal "FiraGO" normal)
           (desktop 130 "Iosevka Comfy" light "Roboto Condensed" normal)
           (reader 150 "Iosevka Comfy" light "FiraGO" normal)
           (presentation 180 "Iosevka Comfy" light "Source Sans Pro" normal)))
