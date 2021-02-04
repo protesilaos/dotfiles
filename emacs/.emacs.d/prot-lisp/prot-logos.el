@@ -29,15 +29,6 @@
 
 ;;; Code:
 
-(when (featurep 'org-tree-slide)
-  (require 'org-tree-slide))
-(when (featurep 'org-indent)
-  (require 'org-indent))
-(when (featurep 'olivetti)
-  (require 'olivetti))
-(require 'face-remap)
-(require 'org)
-
 (defgroup prot-logos ()
   "Setup for reading and presenting text-heavy buffers."
   :group 'files)
@@ -78,7 +69,7 @@ introduce their effects.  Otherwise this minor mode has no effect
 on its own."
   :init-value nil
   :global nil
-  :lighter " -Λ-"			; greek lambda majuscule
+  :lighter " -Λ-"           ; greek lambda majuscule
   (run-hooks 'prot-logos--focus-mode-hook))
 
 (autoload 'buffer-face-mode "face-remap")
@@ -89,8 +80,8 @@ on its own."
   (when (and prot-logos-variable-pitch
              (derived-mode-p 'text-mode))
     (if (or (bound-and-true-p buffer-face-mode)
-	        (not (bound-and-true-p prot-logos-focus-mode)))
-	    (variable-pitch-mode -1)
+            (not (bound-and-true-p prot-logos-focus-mode)))
+        (variable-pitch-mode -1)
       (variable-pitch-mode 1))))
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--variable-pitch-toggle)
@@ -101,8 +92,8 @@ on its own."
   "Toggle the variable `olivetti-mode', if available."
   (if (or (bound-and-true-p olivetti-mode)
           (not (bound-and-true-p prot-logos-focus-mode)))
-	  (olivetti-mode -1)
-	(olivetti-mode 1)))
+      (olivetti-mode -1)
+    (olivetti-mode 1)))
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--olivetti-toggle)
 
@@ -123,10 +114,10 @@ on its own."
          (mode (with-current-buffer buf major-mode)))
     (when (and prot-logos-org-presentation
                (eq mode 'org-mode))
-	  (if (or (bound-and-true-p org-tree-slide-mode)
-		      (not (bound-and-true-p prot-logos-focus-mode)))
-	      (org-tree-slide-mode -1)
-	    (org-tree-slide-mode 1)))))
+      (if (or (bound-and-true-p org-tree-slide-mode)
+              (not (bound-and-true-p prot-logos-focus-mode)))
+          (org-tree-slide-mode -1)
+        (org-tree-slide-mode 1)))))
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--org-tree-slide-mode)
 
@@ -138,10 +129,10 @@ on its own."
          (mode (with-current-buffer buf major-mode)))
     (when (and prot-logos-org-presentation
                (eq mode 'org-mode))
-	  (if (or (bound-and-true-p org-indent-mode)
-		      (not (bound-and-true-p prot-logos-focus-mode)))
-	      (org-indent-mode -1)
-	    (org-indent-mode 1)))))
+      (if (or (bound-and-true-p org-indent-mode)
+              (not (bound-and-true-p prot-logos-focus-mode)))
+          (org-indent-mode -1)
+        (org-indent-mode 1)))))
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--org-indent-mode)
 
@@ -149,7 +140,7 @@ on its own."
   "Keep the point at the centre."
   (when prot-logos-scroll-lock
     (if (or (bound-and-true-p scroll-lock-mode)
-		    (not (bound-and-true-p prot-logos-focus-mode)))
+            (not (bound-and-true-p prot-logos-focus-mode)))
         (scroll-lock-mode -1)
       (recenter nil)
       (scroll-lock-mode 1))))
@@ -162,7 +153,7 @@ on its own."
   "Toggle mode line visibility."
   (when prot-logos-hidden-modeline
     (if (or (eq mode-line-format nil)
-		    (not (bound-and-true-p prot-logos-focus-mode)))
+            (not (bound-and-true-p prot-logos-focus-mode)))
         (kill-local-variable 'mode-line-format)
       (setq-local mode-line-format nil)
       (force-mode-line-update))))
