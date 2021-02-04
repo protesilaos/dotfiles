@@ -426,6 +426,21 @@ will be used instead."
       (when (derived-mode-p 'log-edit-mode)
         (flush-lines "^#")))))
 
+(autoload 'log-edit-toggle-header "log-edit")
+
+;;;###autoload
+(defun prot-vc-git-log-edit-toggle-amend ()
+  "Toggle 'Amend' header for current Log Edit buffer.
+
+Setting the header to 'yes' means that the current commit will
+edit the previous one.
+
+Unlike `vc-git-log-edit-toggle-amend', only change the state of
+the 'Amend' header, without attempting to alter the contents of
+the buffer."
+  (interactive)
+  (when (log-edit-toggle-header "Amend" "yes")))
+
 (defun prot-vc--buffer-string-omit-comment ()
   "Remove Git comment and empty lines from buffer string."
   (let* ((buffer (get-buffer "*vc-log*"))
@@ -560,6 +575,7 @@ This is a thin wrapper around `log-edit-done', which first calls
 (declare-function log-edit-kill-buffer "log-edit")
 (declare-function log-edit-done "log-edit")
 (declare-function log-edit-remember-comment "log-edit")
+(declare-function vc-git-log-edit-toggle-amend "log-edit")
 (defvar vc-git-log-edit-mode-map)
 
 ;;;###autoload
@@ -609,6 +625,7 @@ This is a thin wrapper around `log-edit-done', which first calls
         (add-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
         (advice-add #'log-edit-remember-comment :around #'prot-vc-git-log-edit-remember-comment)
         (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
+        (define-key vc-git-log-edit-mode-map (kbd "C-c C-e") #'prot-vc-git-log-edit-toggle-amend)
         (add-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
         (add-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
         (add-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
@@ -622,6 +639,7 @@ This is a thin wrapper around `log-edit-done', which first calls
     (remove-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
     (advice-remove #'log-edit-remember-comment #'prot-vc-git-log-edit-remember-comment)
     (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'log-edit-done)
+    (define-key vc-git-log-edit-mode-map (kbd "C-c C-e") #'vc-git-log-edit-toggle-amend)
     (remove-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
     (remove-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
     (remove-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
