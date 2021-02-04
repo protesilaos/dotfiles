@@ -3119,16 +3119,16 @@ the =prot-diff.el= that I linked to above):
 | prot-vc-custom-log               | SPC          |                   |
 | prot-vc-git-patch-dwim           | c            | Create patch      |
 | prot-vc-git-show                 | s            | Show commit       |
-| prot-vc-find-revision            | r            | Revisit version   |
+| prot-vc-git-find-revision        | r            | Revisit version   |
 | prot-vc-git-blame-region-or-file | B            | Blame             |
-| prot-vc-log-insert-commits       | i            | Insert commit log |
+| prot-vc-git-log-insert-commits   | i            | Insert commit log |
 
 My =prot-vc.el= library (reproduced after the package declarations)
-defines a few commands that extend VC to suit my needs.  Check the key
-maps I assign them to, in order to further appreciate the scope of each
-action.  In short:
+defines several commands that extend VC to suit my needs as a Git user.
+Check the key maps I assign those commands to, in order to further
+appreciate the scope of each action.  In short:
 
-+ =prot-vc-log-extract-file-name= is used in log-edit buffers to derive
++ =prot-vc-git-log-extract-file-name= is used in log-edit buffers to derive
   the file name of the item being committed.  For example, as I am
   writing this, I may want to compose a summary of my changes like
   "prot-emacs: expand VC section docs".  The "prot-emacs: " part comes
@@ -3137,14 +3137,16 @@ action.  In short:
   prompt asks to pick one among them.  This helps me write clean and
   meaningful summaries.
 
-+ =prot-vc-log-insert-commits= will simply insert at point N number of
++ =prot-vc-git-log-insert-commits= will simply insert at point N number of
   commits starting from the HEAD of the current project.  The number is
   inserted at the minibuffer following a prompt.  This runs the =git log=
   shell command in the background.  If the command is not called from
   inside a version-controlled directory, it first asks for a project and
-  eventually prints a log for it.
+  eventually prints a log for it.  Again, this is useful while writing
+  the message of a commit, as I occasionally need to reference earlier
+  changes.
 
-+ =prot-vc-git-patch-dwim= produce a properly formatted patch for a given
++ =prot-vc-git-patch-dwim= produces a properly formatted patch for a given
   commit.  When browsing a =log-view= buffer, the commit is the one around
   point, otherwise the commit is selected with completion from a log of
   commits.  Prompting for a commit can also be done by calling this
@@ -3161,16 +3163,16 @@ action.  In short:
   only some files rather than that of the entire repository.  What files
   to choose is determined in two ways: (1) the file-at-point in Dired
   buffers, or all marked files, and (2) files in the current directory
-  selected with completion.
+  selected with minibuffer completion.
 
 + =prot-vc-log-view-toggle-entry-all= will toggle the visibility of all
   commits in a compact log view.  I often employ this in tandem with
   =prot-vc-custom-log=.
 
 + =prot-vc-git-show= lets you read a given commit that you access with
-  completion.  Simple and effective.
+  completion.  A simple and effective wrapper for =git show=.
 
-+ =prot-vc-find-revision= allows you to revisit a previous state of the
++ =prot-vc-git-find-revision= allows you to revisit a previous state of the
   current file, by selecting a commit with completion.  Quite powerful
   when you want to search, for example, my dotemacs from when I first
   introduced a certain package, say, =prot-vc.el=.
@@ -3181,22 +3183,44 @@ action.  In short:
   directory.
 
 + =prot-vc-log-kill-hash= appends to the kill-ring the hash of the commit
-  around point.  It is meant to be used in =log-view= buffers.  Simple and
-  effective.
+  around point.  It is meant to be used in =log-view= buffers.
 
-+ =prot-vc-git-setup-mode= is a minor mode that tweaks the log view of
-  =vc-git= so that when we expand commits it uses a different format than
-  the default.  Basically this is an elaborate workaround to make it
-  show diff stats and affected file names, while also creating some much
-  needed negative space for better usability.  It is set up as a minor
-  mode to make it easy to disable.
++ =prot-vc-git-setup-mode= is a minor mode that refashions the log edit
+  buffer while adding a small tweak to the log view buffers.
+
+  - Normally the log edit buffer (what you use to write the commit
+    message) will pop up in a window with a smaller window below it
+    showing the files to be committed.  The window layout does not
+    automatically show the corresponding diff, while there is no readily
+    available information as to what branch we are about to commit the
+    changes to.  So my minor mode removes the small window with the
+    files and in its stead adds a comment block in the main message
+    composition buffer (like the standard =git commit=).  It then
+    instructs the layout to put the corresponding diff on one side and
+    the edit buffer on the other (yes, just like Magit).  The prior
+    window configuration is saved before entering the log edit state and
+    is restored upon exit (either by committing the changes or
+    aborting).
+
+  - For the log view buffers (commit logs) the minor mode instructs the
+    command that expands the message of a commit on the current line to
+    include more information from =git log= than what it normally would.
+    It shows diff stats and affected file names, while also creating
+    some much needed negative space for better usability.  Those file
+    names are not purely cosmetic, as they can now serve to power Emacs'
+    contextuality and "future history" such as when you put point over
+    the name and type =C-x p f= (=project-find-file=): the file at point
+    becomes the default choice and the one you will also get with =M-n= in
+    the minibuffer (=next-history-element=).
 
 Finally, a few tips for acting in the log-edit buffer (remember to use
 =C-h m= (=M-x describe-mode=) in every unfamiliar major mode and read the
 manual for more on the matter):
 
 + Use =C-c C-d= (=log-edit-show-diff=) to produce a diff of the changes
-  to-be-committed.
+  to-be-committed.  Of course this is of no use if my aforementioned
+  minor mode is enabled.  Still, it is good to know (by the way, this
+  command also works in Magit's commit composition buffers).
 
 + With =C-c C-w= (=log-edit-generate-changelog-from-diff=) generate an
   overview of documented changes to the given file set.  While this may
@@ -3204,8 +3228,8 @@ manual for more on the matter):
   patches for upstream Emacs (and probably other GNU projects).
 
 + Normally the window layout is set up to include files for the given
-  commit, but I disable that.  You can display them with =C-c C-f=
-  (=log-edit-show-files=).
+  commit, but I disable that via my minor mode.  You can opt to display
+  them with =C-c C-f= (=log-edit-show-files=).
 
 + =C-c C-k= (=log-edit-kill-buffer=) cancels the log editing process.
 
@@ -3232,8 +3256,15 @@ manual for more on the matter):
     (setq log-edit-confirm 'changed)
     (setq log-edit-keep-buffer nil)
     (setq log-edit-require-final-newline t)
-    (setq log-edit-setup-add-author nil)
-    (remove-hook 'log-edit-hook #'log-edit-show-files)) ; Show them with C-c C-f
+    (setq log-edit-setup-add-author nil))
+
+  ;; Note that `prot-vc-git-setup-mode' will run the following when
+  ;; activated:
+  ;;
+  ;;   (remove-hook 'log-edit-hook #'log-edit-show-files)
+  ;;
+  ;; If you need the window to pop back up, do it manually with C-c C-f
+  ;; which calls `log-edit-show-files'.
 
   (setq vc-find-revision-no-save t)
   (setq vc-annotate-display-mode 'scale) ; scale to oldest
@@ -3294,21 +3325,24 @@ manual for more on the matter):
   (setq prot-vc-shell-output "*prot-vc-output*")
   (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
 
+  ;; This refashions log view and log edit buffers
   (prot-vc-git-setup-mode 1)
 
   ;; NOTE: I override lots of the defaults
   (let ((map global-map))
-    (define-key map (kbd "C-x v i") #'prot-vc-log-insert-commits)
+    (define-key map (kbd "C-x v i") #'prot-vc-git-log-insert-commits)
     (define-key map (kbd "C-x v p") #'prot-vc-project-or-dir)
     (define-key map (kbd "C-x v SPC") #'prot-vc-custom-log)
     (define-key map (kbd "C-x v c") #'prot-vc-git-patch-dwim)
     (define-key map (kbd "C-x v s") #'prot-vc-git-show)
-    (define-key map (kbd "C-x v r") #'prot-vc-find-revision)
+    (define-key map (kbd "C-x v r") #'prot-vc-git-find-revision)
     (define-key map (kbd "C-x v B") #'prot-vc-git-blame-region-or-file))
   (let ((map vc-git-log-edit-mode-map))
-    (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
-    (define-key map (kbd "C-C C-n") #'prot-vc-log-extract-file-name)
-    (define-key map (kbd "C-C C-i") #'prot-vc-log-insert-commits))
+    (define-key map (kbd "C-C C-n") #'prot-vc-git-log-extract-file-name)
+    (define-key map (kbd "C-C C-i") #'prot-vc-git-log-insert-commits)
+    ;; Also done by `prot-vc-git-setup-mode', but I am putting it here
+    ;; as well for visibility.
+    (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done))
   (let ((map log-view-mode-map))
     (define-key map (kbd "<C-tab>") #'prot-vc-log-view-toggle-entry-all)
     (define-key map (kbd "c") #'prot-vc-git-patch-dwim)
