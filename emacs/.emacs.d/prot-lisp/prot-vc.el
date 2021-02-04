@@ -478,7 +478,7 @@ This is a thin wrapper around `log-edit-done', which first calls
 `prot-vc-git-log-remove-comment'."
   (interactive)
   (prot-vc-git-log-remove-comment)
-  (call-interactively 'log-edit-done)
+  (log-edit-done)
   (prot-vc-log--restore-window-configuration))
 
 (defface prot-vc-git-log-edit-file-name
