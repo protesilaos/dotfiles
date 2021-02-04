@@ -24,8 +24,8 @@
 
 ;;; Commentary:
 ;;
-;; This covers my vc.el extensions, for use in my Emacs setup:
-;; https://protesilaos.com/dotemacs.
+;; This covers my vc.el extensions, which mostly concern Git.  For use
+;; in my Emacs setup: https://protesilaos.com/dotemacs.
 ;;
 ;; Make sure to also inspect prot-project.el and prot-diff.el for a more
 ;; complete view of what I have on the topic of version control.
