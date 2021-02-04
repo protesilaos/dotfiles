@@ -3450,6 +3450,7 @@ elsewhere in this document to 72 characters long.
 (require 'magit)
 (with-eval-after-load 'magit
   (add-to-list 'prot-emacs-ensure-install 'magit)
+  (setq magit-define-global-key-bindings nil)
   (define-key global-map (kbd "C-c g") #'magit-status)
 
   (require 'git-commit)
