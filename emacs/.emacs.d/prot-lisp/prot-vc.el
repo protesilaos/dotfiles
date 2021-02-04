@@ -481,8 +481,6 @@ This is a thin wrapper around `log-edit-done', which first calls
   (call-interactively 'log-edit-done)
   (prot-vc-log--restore-window-configuration))
 
-(add-hook 'vc-before-checkin-hook #'prot-vc-git-log-remove-comment)
-
 (defface prot-vc-git-log-edit-file-name
   '((default :inherit font-lock-comment-face)
     (((class color) (min-colors 88) (background light))
