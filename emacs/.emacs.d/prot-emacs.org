@@ -3125,9 +3125,9 @@ defines several commands that extend VC to suit my needs as a Git user.
 Check the key maps I assign those commands to, in order to further
 appreciate the scope of each action.  In short:
 
-+ =prot-vc-git-log-extract-file-name= is used in log-edit buffers to derive
-  the file name of the item being committed.  For example, as I am
-  writing this, I may want to compose a summary of my changes like
++ =prot-vc-git-log-edit-extract-file-name= is used in log-edit buffers to
+  derive the file name of the item being committed.  For example, as I
+  am writing this, I may want to compose a summary of my changes like
   "prot-emacs: expand VC section docs".  The "prot-emacs: " part comes
   directly from this command, which reads from the "prot-emacs.org"
   file.  If there are multiple files to be committed, then a minibuffer
@@ -3336,7 +3336,7 @@ manual for more on the matter):
     (define-key map (kbd "C-x v B") #'prot-vc-git-blame-region-or-file))
   (let ((map vc-git-log-edit-mode-map))
     (define-key map (kbd "C-c C-a") #'prot-vc-git-log-edit-toggle-amend)
-    (define-key map (kbd "C-C C-n") #'prot-vc-git-log-extract-file-name)
+    (define-key map (kbd "C-C C-n") #'prot-vc-git-log-edit-extract-file-name)
     (define-key map (kbd "C-C C-i") #'prot-vc-git-log-insert-commits)
     ;; Also done by `prot-vc-git-setup-mode', but I am putting it here
     ;; as well for visibility.

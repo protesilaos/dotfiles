@@ -82,7 +82,7 @@ With optional prefix ARG (\\[universal-argument]), use the
      "Derive shortname from: " files nil nil)))
 
 ;;;###autoload
-(defun prot-vc-git-log-extract-file-name ()
+(defun prot-vc-git-log-edit-extract-file-name ()
   "Insert at point shortname from file in log edit buffers.
 If multiple files are part of the log, a minibuffer completion
 prompt will be produced: it can be used to narrow down to an
