@@ -420,18 +420,42 @@ will be used instead."
 (defun prot-vc-git-log-remove-comment ()
   "Remove Git Log Edit comment, empty lines; keep final newline."
   (let ((buffer (get-buffer "*vc-log*"))) ; REVIEW: This is fragile
-    (with-current-buffer (if (buffer-live-p buffer)
-                             buffer
-                           (window-buffer (get-mru-window))) ; FIXME: We need a more reliable approach
+    (with-current-buffer (when (buffer-live-p buffer) buffer)
       (save-excursion
         (goto-char (point-min)))
-      (when (derived-mode-p 'log-edit-mode)  ; This saves us from the issue above
+      (when (derived-mode-p 'log-edit-mode)
         (flush-lines "\\(^#\\|^\n\\)")
         (or (= (point-min) (point-max))
             (= (char-before (point-max)) ?\n)
             (save-excursion
               (goto-char (point-max))
               (insert "\n")))))))
+
+(defun prot-vc--buffer-string-omit-comment ()
+  "Remove Git comment and empty lines from buffer string."
+  (let* ((buffer (get-buffer "*vc-log*"))
+         (string (when buffer
+                   (with-current-buffer buffer
+                     (buffer-substring-no-properties (point-min) (point-max))))))
+    (when string
+      (replace-regexp-in-string
+       "^\n" ""
+       (replace-regexp-in-string "^#.*" "" string)))))
+
+(defvar log-edit-comment-ring)
+(autoload 'ring-empty-p "ring")
+(autoload 'ring-ref "ring")
+(autoload 'ring-insert "ring")
+
+(defun prot-vc-git-log-edit-remember-comment (&optional comment)
+  "Store Log Edit text or optional COMMENT.
+Remove special Git comment block before storing the genuine
+commit message."
+  (let ((commit (or comment (gensym))))
+    (setq commit (prot-vc--buffer-string-omit-comment))
+    (when (or (ring-empty-p log-edit-comment-ring)
+              (not (equal commit (ring-ref log-edit-comment-ring 0))))
+      (ring-insert log-edit-comment-ring commit))))
 
 (declare-function log-edit-show-diff "log-edit")
 
@@ -590,7 +614,7 @@ This is a thin wrapper around `log-edit-done', which first calls
         ;; commit).
         (advice-add #'vc-start-logentry :before #'prot-vc-git-pre-log-edit)
         (add-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
-        (advice-add #'log-edit-remember-comment :before #'prot-vc-git-log-remove-comment)
+        (advice-add #'log-edit-remember-comment :around #'prot-vc-git-log-edit-remember-comment)
         (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
         (add-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
         (add-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
@@ -603,7 +627,7 @@ This is a thin wrapper around `log-edit-done', which first calls
     (add-hook 'log-edit-hook #'log-edit-show-files)
     (advice-remove #'vc-start-logentry #'prot-vc-git-pre-log-edit)
     (remove-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
-    (advice-remove #'log-edit-remember-comment #'prot-vc-git-log-remove-comment)
+    (advice-remove #'log-edit-remember-comment #'prot-vc-git-log-edit-remember-comment)
     (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'log-edit-done)
     (remove-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
     (remove-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
