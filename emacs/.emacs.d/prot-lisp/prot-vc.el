@@ -435,13 +435,17 @@ will be used instead."
 
 (declare-function log-edit-show-diff "log-edit")
 
-(defvar prot-vc--windows-current nil
-  "Current window configuration.")
+(defvar prot-vc--current-window-configuration nil
+  "Current window configuration for use with Log Edit.")
+
+(defvar prot-vc--current-window-configuration-point nil
+  "Point in current window configuration for use with Log Edit.")
 
 (defun prot-vc--store-window-configuration ()
   "Store window configuration before calling `vc-start-logentry'.
 This should be called via `prot-vc-git-pre-log-edit-hook'."
-  (setq prot-vc--windows-current (current-window-configuration)))
+  (setq prot-vc--current-window-configuration (current-window-configuration))
+  (setq prot-vc--current-window-configuration-point (point)))
 
 (defvar prot-vc-git-pre-log-edit-hook nil
   "Hook that runs right before `vc-start-logentry'.")
@@ -451,7 +455,14 @@ This should be called via `prot-vc-git-pre-log-edit-hook'."
 To be used as advice before `vc-start-logentry'."
   (run-hooks 'prot-vc-git-pre-log-edit-hook))
 
-(defun prot-vc--log-diff-window-configuration ()
+(defun prot-vc--log-edit-restore-window-configuration ()
+  "Set window configuration to the pre Log Edit state."
+  (when prot-vc--current-window-configuration
+    (set-window-configuration prot-vc--current-window-configuration))
+  (when prot-vc--current-window-configuration-point
+    (goto-char prot-vc--current-window-configuration-point)))
+
+(defun prot-vc--log-edit-diff-window-configuration ()
   "Show current diff for Git Log Edit buffer."
   (let ((buffer (get-buffer "*vc-log*")))
     (with-current-buffer (if (buffer-live-p buffer)
@@ -463,15 +474,11 @@ To be used as advice before `vc-start-logentry'."
         (log-edit-show-diff))
       (other-window -1))))
 
-(defun prot-vc-log--restore-window-configuration ()
-  "Set window configuration to the pre Log Edit state."
-  (when prot-vc--windows-current
-    (set-window-configuration prot-vc--windows-current)))
-
 (defun prot-vc--kill-log-edit ()
   "Local hook to restore windows when Log Edit buffer is killed."
-  (when (derived-mode-p 'log-edit-mode)
-    (add-hook 'kill-buffer-hook #'prot-vc-log--restore-window-configuration 0 t)))
+  (when (or (derived-mode-p 'log-edit-mode)
+            (derived-mode-p 'diff-mode))
+    (add-hook 'kill-buffer-hook #'prot-vc--log-edit-restore-window-configuration 0 t)))
 
 (defvar prot-vc-git-log-edit-done-hook nil
   "Hook that runs after `prot-vc-git-log-edit-done'.")
@@ -586,8 +593,8 @@ This is a thin wrapper around `log-edit-done', which first calls
         (advice-add #'log-edit-remember-comment :before #'prot-vc-git-log-remove-comment)
         (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
         (add-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
-        (add-hook 'prot-vc-git-log-edit-done-hook #'prot-vc-log--restore-window-configuration)
-        (add-hook 'log-edit-hook #'prot-vc--log-diff-window-configuration)
+        (add-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
+        (add-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
         ;; Extra font lock rules for Log Edit comment block
         (add-hook 'log-edit-hook #'prot-vc-git-log-edit-extra-keywords))
     (advice-remove #'vc-git-log-view-mode #'prot-vc-git-log-view-add-hook)
@@ -599,8 +606,8 @@ This is a thin wrapper around `log-edit-done', which first calls
     (advice-remove #'log-edit-remember-comment #'prot-vc-git-log-remove-comment)
     (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'log-edit-done)
     (remove-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
-    (remove-hook 'prot-vc-git-log-edit-done-hook #'prot-vc-log--restore-window-configuration)
-    (remove-hook 'log-edit-hook #'prot-vc--log-diff-window-configuration)
+    (remove-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
+    (remove-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
     (remove-hook 'log-edit-hook #'prot-vc-git-log-edit-extra-keywords)))
 
 (provide 'prot-vc)
