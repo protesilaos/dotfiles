@@ -562,7 +562,9 @@ This is a thin wrapper around `log-edit-done', which first calls
 
 5. Bind C-c C-c to `prot-vc-git-log-edit-done' so that point 4 is
    fully realised, while the comment from point 2 is removed
-   before recording the changes."
+   before recording the changes.  That command calls the normal
+   hook `prot-vc-git-log-edit-done-hook' which is used to restore
+   the window layout."
   :init-value nil
   :global t
   (if prot-vc-git-setup-mode
