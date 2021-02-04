@@ -583,6 +583,7 @@ This is a thin wrapper around `log-edit-done', which first calls
         ;; commit).
         (advice-add #'log-edit :before #'prot-vc-git-pre-log-edit)
         (add-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
+        (advice-add #'log-edit-remember-comment :before #'prot-vc-git-log-remove-comment)
         (advice-add #'log-edit-kill-buffer :after #'prot-vc-log--restore-window-configuration)
         (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
         (add-hook 'prot-vc-git-log-edit-done-hook #'prot-vc-log--restore-window-configuration)
@@ -595,6 +596,7 @@ This is a thin wrapper around `log-edit-done', which first calls
     (add-hook 'log-edit-hook #'log-edit-show-files)
     (advice-remove #'log-edit #'prot-vc-git-pre-log-edit)
     (remove-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
+    (advice-remove #'log-edit-remember-comment #'prot-vc-git-log-remove-comment)
     (advice-remove #'log-edit-kill-buffer #'prot-vc-log--restore-window-configuration)
     (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'log-edit-done)
     (remove-hook 'prot-vc-git-log-edit-done-hook #'prot-vc-log--restore-window-configuration)
