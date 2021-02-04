@@ -3035,12 +3035,12 @@ Also read these sections:
 + [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]].
 + [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]].
 
-Changes to all tracked files are highlighted in the fringe thanks to the
-=diff-hl= package which is [[#h:5b71e71f-353f-4290-951b-3fc575c0fcba][defined elsewhere in this document]] (as I
-consider it an "interface" element).  Any rules that control the
-placement of VC-related (and other) buffers are defined in the section
-on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (specifically, refer to the variable
-=display-buffer-alist=).
+Changes to all tracked files are optionally highlighted in the fringe
+thanks to the =diff-hl= package by Dmitry Gutov (refer to the section on
+[[#h:cb76fcee-e304-4b86-a764-6c3c6775da51][Line numbers and relevant indicators (prot-sideline.el)]]).  Any rules
+that control the placement of VC-related (and other) buffers are defined
+in the section on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and basic tweaks]] (specifically, refer to
+the variable =display-buffer-alist=).
 
 #+begin_src emacs-lisp
 (require 'diff-mode)
@@ -5778,34 +5778,6 @@ buffer-local.
   (setq-default overflow-newline-into-fringe t))
 #+end_src
 
-*** Diff highlights in the fringe (diff-hl)
-:PROPERTIES:
-:CUSTOM_ID: h:5b71e71f-353f-4290-951b-3fc575c0fcba
-:END:
-
-The =diff-hl= package uses the left or right fringe to highlight changes
-in the current buffer.  The indicators are colour-coded to denote
-whether a change is an addition, removal, or change that includes a bit
-of both.
-
-The package offers some more features, such as the ability to move
-between diff hunks while editing the buffer.  I still need to experiment
-with those before customising them to my liking.
-
-At any rate, this package is meant as a general tool for version control
-systems, rather than a git-specific one.  Much like the built-in VC (see
-section on [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]).
-
-#+begin_src emacs-lisp
-(require 'diff-hl)
-(with-eval-after-load 'diff-hl
-  (add-to-list 'prot-emacs-ensure-install 'diff-hl)
-  (setq diff-hl-draw-borders nil)
-  (setq diff-hl-side 'left)
-  ;; TODO 2021-01-19: write toggle for diff-hl-mode
-  (add-hook 'after-init-hook #'global-diff-hl-mode))
-#+end_src
-
 ** Color tools (ct.el)
 :PROPERTIES:
 :CUSTOM_ID: h:755d055b-ef80-4f63-af08-ce9e931de30c
@@ -5839,90 +5811,66 @@ when reviewing my themes (=rainbow-mode= is activated manually).
   (setq rainbow-x-colors nil))
 #+end_src
 
-** Optional visual indicators or layout elements
-:PROPERTIES:
-:CUSTOM_ID: h:e8d77f0b-0502-449b-bc69-18cf29b9edb0
-:END:
-
-This is a collection of modes or interfaces I seldom use or, rather, I
-use under special circumstances.  They are useful, but there is not need
-for them to be available at all times.
-
-*** Current line highlight (hl-line-mode)
-:PROPERTIES:
-:CUSTOM_ID: h:7e65d6e5-ac8f-4100-b7dd-14e3fbc94040
-:END:
-
-This is a mode that I only activate via hooks for certain buffers
-where the current line itself is more important that the actual column
-(e.g. in Dired buffers).  Here I configure it so that the highlight
-applies only to the current window.  There is also a "global" variant,
-for when the equivalent mode is used (I have no plan to use that).
-
-#+begin_src emacs-lisp
-(require 'hl-line)
-(with-eval-after-load 'hl-line
-  (setq hl-line-sticky-flag nil))
-#+end_src
-
-*** Toggles for line numbers and whitespace indicators
+** Line numbers and relevant indicators (prot-sideline.el)
 :PROPERTIES:
 :CUSTOM_ID: h:cb76fcee-e304-4b86-a764-6c3c6775da51
 :END:
 
-+ Display line numbers (buffer-local) ::  I seldom use line numbers, but
-  here it is.  This toggles the setting for the local buffer and also
-  activates =hl-line-mode=.
-+ Display invisible characters (whitespace) :: Viewing invisible
-  characters (whitespace) can be very helpful under certain
-  circumstances.  Generally though, I do not keep it active.
+=prot-sideline.el= (reproduced after the package configurations) is a set
+of simplete-minded features:
 
-As for =delete-trailing-whitespace=, I prefer to call it manually because
-sometimes it causes problems, such as with diffs.
+1. It bundles up together three distinct visual elements as part of a
+   common minor mode: =prot-sideline-mode=.  Its constituents are current
+   line highlighting (=hl-line-mode=), diff indicators (=diff-hl-mode=), and
+   line numbers (=display-line-numbers-mode=).  Line numbers and line
+   highlighting are built into Emacs.
+
+2. A simple toggle for =whitespace-mode=, which I only ever use to double
+   check some area's indentation or to confirm that no newline is
+   missing at the end of the file.
+
+Note that the =diff-hl= package offers some more features other than the
+obvious colour-coded highlighting of changes, such as the ability to
+move between diff hunks (with =C-x v [= and =C-x v ]=) or to revert the
+current hunk (=C-x v n=).  Those can come in handy (check my comprehensive
+extensions in [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]).
 
 #+begin_src emacs-lisp
-(require 'display-line-numbers)
-(with-eval-after-load 'display-line-numbers
-  ;; Set absolute line numbers.  A value of "relative" is also useful.
-  (setq display-line-numbers-type t)
-  ;; Those two variables were introduced in Emacs 27.1
-  (setq display-line-numbers-major-tick 0)
-  (setq display-line-numbers-minor-tick 0)
-  ;; Use absolute numbers in narrowed buffers
-  (setq-default display-line-numbers-widen t)
+(require 'prot-sideline)
+(with-eval-after-load 'prot-sideline
+  (require 'display-line-numbers)
+  (with-eval-after-load 'display-line-numbers
+    ;; Set absolute line numbers.  A value of "relative" is also useful.
+    (setq display-line-numbers-type t)
+    ;; Those two variables were introduced in Emacs 27.1
+    (setq display-line-numbers-major-tick 0)
+    (setq display-line-numbers-minor-tick 0)
+    ;; Use absolute numbers in narrowed buffers
+    (setq-default display-line-numbers-widen t))
 
-  ;; TODO 2021-01-19: this is subject to review, as it is fragile in its
-  ;; current state.
-  (define-minor-mode prot/display-line-numbers-mode
-    "Toggle `display-line-numbers-mode' and `hl-line-mode'."
-    :init-value nil
-    :global nil
-    (if prot/display-line-numbers-mode
-        (progn
-          (display-line-numbers-mode 1)
-          (hl-line-mode 1)
-          (setq-local truncate-lines t))
-      (display-line-numbers-mode -1)
-      (hl-line-mode -1)
-      (setq-local truncate-lines nil)))
+  (require 'diff-hl)
+  (with-eval-after-load 'diff-hl
+    (add-to-list 'prot-emacs-ensure-install 'diff-hl)
+    (setq diff-hl-draw-borders nil)
+    (setq diff-hl-side 'left))
 
-  (define-key global-map (kbd "<f7>") #'prot/display-line-numbers-mode))
+  (require 'hl-line)
+  (with-eval-after-load 'hl-line
+    (setq hl-line-sticky-flag nil))
 
-(require 'whitespace)
-(with-eval-after-load 'whitespace
-  (defun prot/toggle-invisibles ()
-    "Toggles the display of indentation and space characters."
-    (interactive)
-    (if (bound-and-true-p whitespace-mode)
-        (whitespace-mode -1)
-      (whitespace-mode)))
+  (require 'whitespace)
 
   (let ((map global-map))
-    (define-key map (kbd "<f6>") #'prot/toggle-invisibles)
+    (define-key map (kbd "<f6>") #'prot-sideline-negative-space-toggle)
+    (define-key map (kbd "<f7>") #'prot-sideline-mode)
     (define-key map (kbd "C-c z") #'delete-trailing-whitespace)))
 #+end_src
 
-*** Outline mode, outline minor mode, and extras (prot-outline.el)
+This is =prot-sideline.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: prot-lisp/prot-sideline.el src emacs-lisp :tangle no
+
+** Outline mode, outline minor mode, and extras (prot-outline.el)
 :PROPERTIES:
 :CUSTOM_ID: h:a8e737b8-7c90-4c68-8814-acf2f637ffa1
 :END:
