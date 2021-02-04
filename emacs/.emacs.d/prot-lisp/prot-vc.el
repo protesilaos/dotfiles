@@ -572,9 +572,9 @@ This is a thin wrapper around `log-edit-done', which first calls
         ;; commit).
         (advice-add #'log-edit :before #'prot-vc-git-pre-log-edit)
         (add-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
-        (add-hook 'log-edit-hook #'prot-vc--log-diff-window-configuration)
         (advice-add #'log-edit-kill-buffer :after #'prot-vc-log--restore-window-configuration)
         (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
+        (add-hook 'log-edit-hook #'prot-vc--log-diff-window-configuration)
         ;; Extra font lock rules for Log Edit comment block
         (add-hook 'log-edit-hook #'prot-vc-git-log-edit-extra-keywords))
     (advice-remove #'vc-git-log-view-mode #'prot-vc-git-log-view-add-hook)
@@ -583,9 +583,9 @@ This is a thin wrapper around `log-edit-done', which first calls
     (add-hook 'log-edit-hook #'log-edit-show-files)
     (advice-remove #'log-edit #'prot-vc-git-pre-log-edit)
     (remove-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
-    (remove-hook 'log-edit-hook #'prot-vc--log-diff-window-configuration)
     (advice-remove #'log-edit-kill-buffer #'prot-vc-log--restore-window-configuration)
     (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'log-edit-done)
+    (remove-hook 'log-edit-hook #'prot-vc--log-diff-window-configuration)
     (remove-hook 'log-edit-hook #'prot-vc-git-log-edit-extra-keywords)))
 
 (provide 'prot-vc)
