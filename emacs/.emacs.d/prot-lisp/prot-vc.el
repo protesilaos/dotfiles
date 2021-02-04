@@ -409,7 +409,7 @@ will be used instead."
 	    (when (looking-at "\n") (forward-char 1)))
       (log-edit-add-field "Summary" "")
       (insert
-       (format "\n\n# %s `%s' tracking `%s':\n#\n%s\n#\n# %s"
+       (format "\n\n# %s `%s' tracking `%s':\n#\n%s\n#\n# %s\n"
                "Files to be committed to branch"
                branch remote
                files
