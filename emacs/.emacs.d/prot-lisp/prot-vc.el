@@ -304,12 +304,12 @@ Optionally apply LIMIT to the log."
                (format "%d" (prot-vc--commit-num)))
               (t
                (format "%d" -1)))))
-  (completing-read
-   (format "Find revision for %s: " file)
-   (prot-common-completion-table
-    'line
-    (process-lines "git" "log" "--pretty=format:%d · %h · %cs %an: %s" "-n" num "--" file))
-   nil t nil 'prot-vc--commit-hist)))
+    (completing-read
+     (format "Find revision for %s: " file)
+     (prot-common-completion-table
+      'line
+      (process-lines "git" "log" "--pretty=format:%d · %h · %cs %an: %s" "-n" num "--" file))
+     nil t nil 'prot-vc--commit-hist)))
 
 ;;;###autoload
 (defun prot-vc-git-find-revision (&optional limit)
@@ -468,7 +468,7 @@ To be used as advice before `log-edit'."
   "Set window configuration to the pre Log Edit state."
   (when prot-vc--windows-current
     (set-window-configuration prot-vc--windows-current)
-    (other-window -1)                  ; REVIEW: Why do we need this?
+    (other-window -1)                   ; REVIEW: Why do we need this?
     (setq prot-vc--windows-current nil)))
 
 ;; FIXME: Why does `prot-vc-git-log-remove-comment' not work when added
