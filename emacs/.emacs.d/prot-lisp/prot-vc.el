@@ -441,7 +441,8 @@ will be used instead."
 (defun prot-vc--store-window-configuration ()
   "Store window configuration before calling `log-edit'.
 This should be called via `prot-vc-git-pre-log-edit-hook'."
-  (setq prot-vc--windows-current (current-window-configuration)))
+  (unless (one-window-p)
+    (setq prot-vc--windows-current (current-window-configuration))))
 
 (defvar prot-vc-git-pre-log-edit-hook nil
   "Hook that runs right before `log-edit'.")
@@ -467,7 +468,8 @@ To be used as advice before `log-edit'."
   "Set window configuration to the pre Log Edit state."
   (when prot-vc--windows-current
     (set-window-configuration prot-vc--windows-current)
-    (other-window -1)))                 ; REVIEW: Why do we need this?
+    (other-window -1)                  ; REVIEW: Why do we need this?
+    (setq prot-vc--windows-current nil)))
 
 ;; FIXME: Why does `prot-vc-git-log-remove-comment' not work when added
 ;; to `log-edit-done-hook'?
