@@ -33,6 +33,7 @@
 ;;; Code:
 
 (require 'vc)
+(require 'log-edit)
 (require 'prot-common)
 
 ;;;; Customisation options
@@ -72,8 +73,6 @@ With optional prefix ARG (\\[universal-argument]), use the
   (let* ((root (prot-vc--current-project))
          (dir (if arg default-directory root)))
     (vc-dir dir)))
-
-(autoload 'log-edit-files "log-edit")
 
 (defun prot-vc--log-edit-files-prompt ()
   "Helper completion for `prot-vc-extract-file-name'."
@@ -414,10 +413,11 @@ will be used instead."
 
 (declare-function log-edit-add-field "log-edit")
 
-(defun prot-vc-git-log-edit-comment ()
-  "Add comment block to Git Log Edit buffer."
-  (let* ((eoh (save-excursion (rfc822-goto-eoh) (point)))
-         (branch-name (process-lines "git" "branch" "--show-current"))
+(defun prot-vc-git-log-edit-comment (&optional no-headers)
+  "Append comment block to Git Log Edit buffer.
+With optional NO-HEADERS skip the step of inserting the special
+headers 'Amend' and 'Summary'."
+  (let* ((branch-name (process-lines "git" "branch" "--show-current"))
          (branch (or (car branch-name) "Detached HEAD"))
          (remote-name (when branch-name
                         (process-lines "git" "branch" "-r"))) ; REVIEW Is this reliable?
@@ -428,19 +428,44 @@ will be used instead."
                              (concat "#   " x))
                            (log-edit-files)
                            "\n")))
-    (save-excursion
-      (when (<= (point) eoh)
-	    (goto-char eoh)
-	    (when (looking-at "\n") (forward-char 1)))
-      (log-edit-add-field "Summary" "")
-      (insert
-       (format "\n\n# %s `%s' tracking `%s':\n#\n%s\n#\n# %s\n"
-               "Files to be committed to branch"
-               branch remote
-               files
-               "All lines starting with `#' are ignored.")))
+    (unless no-headers
+      (save-excursion
+        (rfc822-goto-eoh)
+        (unless (re-search-backward "Amend: .*" nil t)
+          (log-edit-add-field "Amend" ""))
+        (rfc822-goto-eoh)
+        (unless (re-search-backward "Summary: .*" nil t)
+          (log-edit-add-field "Summary" ""))))
+    (goto-char (point-max))
+    (insert "\n")
+    (insert
+     (format "\n\n# ---\n# %s `%s' tracking `%s':\n#\n%s\n#\n# %s\n"
+             "Files to be committed to branch"
+             branch remote
+             files
+             "All lines starting with `#' are ignored."))
     (rfc822-goto-eoh)
     (when (looking-at "\n") (forward-char -1))))
+
+(defun prot-vc-log-edit-previous-comment (arg)
+  "Cycle backwards through comment history.
+With a numeric prefix ARG, go back ARG comments."
+  (interactive "*p")
+  (let ((len (ring-length log-edit-comment-ring)))
+    (if (<= len 0)
+	    (progn (message "Empty comment ring") (ding))
+      ;; Don't use `erase-buffer' because we don't want to `widen'.
+      (delete-region (point-min) (point-max))
+      (setq log-edit-comment-ring-index (log-edit-new-comment-index arg len))
+      (message "Comment %d" (1+ log-edit-comment-ring-index))
+      (insert (ring-ref log-edit-comment-ring log-edit-comment-ring-index))
+      (prot-vc-git-log-edit-comment t))))
+
+(defun prot-vc-log-edit-next-comment (arg)
+  "Cycle forwards through comment history.
+With a numeric prefix ARG, go forward ARG comments."
+  (interactive "*p")
+  (prot-vc-log-edit-previous-comment (- arg)))
 
 (defun prot-vc-git-log-remove-comment ()
   "Remove Git Log Edit comment, empty lines; keep final newline."
@@ -450,8 +475,6 @@ will be used instead."
         (goto-char (point-min)))
       (when (derived-mode-p 'log-edit-mode)
         (flush-lines "^#")))))
-
-(autoload 'log-edit-toggle-header "log-edit")
 
 ;;;###autoload
 (defun prot-vc-git-log-edit-toggle-amend ()
@@ -649,8 +672,11 @@ This is a thin wrapper around `log-edit-done', which first calls
         (advice-add #'vc-start-logentry :before #'prot-vc-git-pre-log-edit)
         (add-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
         (advice-add #'log-edit-remember-comment :around #'prot-vc-git-log-edit-remember-comment)
-        (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
-        (define-key vc-git-log-edit-mode-map (kbd "C-c C-e") #'prot-vc-git-log-edit-toggle-amend)
+        (let ((map vc-git-log-edit-mode-map))
+          (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
+          (define-key map (kbd "C-c C-e") #'prot-vc-git-log-edit-toggle-amend)
+          (define-key map (kbd "M-p") #'prot-vc-log-edit-previous-comment)
+          (define-key map (kbd "M-n") #'prot-vc-log-edit-next-comment))
         (add-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
         (add-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
         (add-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
@@ -663,8 +689,11 @@ This is a thin wrapper around `log-edit-done', which first calls
     (advice-remove #'vc-start-logentry #'prot-vc-git-pre-log-edit)
     (remove-hook 'prot-vc-git-pre-log-edit-hook #'prot-vc--store-window-configuration)
     (advice-remove #'log-edit-remember-comment #'prot-vc-git-log-edit-remember-comment)
-    (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'log-edit-done)
-    (define-key vc-git-log-edit-mode-map (kbd "C-c C-e") #'vc-git-log-edit-toggle-amend)
+    (let ((map vc-git-log-edit-mode-map))
+      (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'log-edit-done)
+      (define-key vc-git-log-edit-mode-map (kbd "C-c C-e") #'vc-git-log-edit-toggle-amend)
+      (define-key map (kbd "M-p") #'log-edit-previous-comment)
+      (define-key map (kbd "M-n") #'log-edit-next-comment))
     (remove-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
     (remove-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
     (remove-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
