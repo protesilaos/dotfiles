@@ -6102,6 +6102,31 @@ mouse over an actionable item:
   (add-hook 'after-init-hook #'tooltip-mode))
 #+end_src
 
+** Dired-like list for registers (rlist)
+:PROPERTIES:
+:CUSTOM_ID: h:aad79917-cd80-491b-9020-db27867ab132
+:END:
+
+This package by Sévère Durand implements a Dired-like interface for the
+purpose of deleting an entry from the list.  I feel this is the one
+major feature that is missing from the registers' toolkit: it provides
+you with the means to remain in control of the data you accumulate in
+those compartments, so nothing ever gets out of hand.
+
+Note that this is a fairly new project (as of 2021-02-05), so things are
+likely to change over the near term.
+
+#+begin_src emacs-lisp
+;; Project repo: <https://gitlab.com/mmemmew/rlist>.  This is one of the
+;; packages I handle manually via git.
+(add-to-list 'load-path (concat user-emacs-directory "contrib-lisp/rlist/"))
+(require 'rlist)
+(with-eval-after-load 'rlist
+  (let ((map global-map))
+    (define-key map (kbd "C-x r <backspace>") #'rlist-list-registers)
+    (define-key map (kbd "C-x r <delete>") #'rlist-list-registers)))
+#+end_src
+
 ** Conveniences and minor extras
 :PROPERTIES:
 :CUSTOM_ID: h:271c9122-280b-424e-98f0-af9e4f09bbdb
