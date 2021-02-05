@@ -173,27 +173,31 @@ that covers all files in the present directory."
 (autoload 'log-view-msg-next "log-view")
 (autoload 'log-view-toggle-entry-display "log-view")
 
+(defvar vc-git-root-log-format)
+
 ;;;###autoload
 (defun prot-vc-log-view-toggle-entry-all ()
   "Run `log-view-toggle-entry-display' on all commits."
   (interactive)
   (let ((oldlines (count-lines (point-min) (point-max)))
         (point (point))
-        (newlines))
-    ;; FIXME: how to handle the case of long logs where performance
-    ;; takes a hit?  Using line count is not reliable: we need the
-    ;; number of commits and then say if NUM > LIMIT then prompt with
-    ;; yes or no on whether to proceed.
-    (save-excursion
-      (goto-char (point-max))
-      (while (not (eq (line-number-at-pos) 1))
-        (log-view-msg-prev)
-        (log-view-toggle-entry-display))
-      (goto-char point)
-      (setq newlines (count-lines (point-min) (point-max))))
-    (when (> newlines oldlines)
-      (log-view-msg-next))
-    (recenter)))
+        (newlines)
+        (commits (count-matches (nth 1 vc-git-root-log-format)
+                                (point-min) (point-max))))
+    (cond
+     ((<= commits 50)       ; Arbitrary, but seems okay performance-wise
+      (save-excursion
+        (goto-char (point-max))
+        (while (not (eq (line-number-at-pos) 1))
+          (log-view-msg-prev)
+          (log-view-toggle-entry-display))
+        (goto-char point)
+        (setq newlines (count-lines (point-min) (point-max))))
+      (when (> newlines oldlines)
+        (log-view-msg-next))
+      (recenter))
+     (t
+      (user-error "Here are %d commits; won't expand more than 50" commits)))))
 
 ;;;###autoload
 (defun prot-vc-log-kill-hash ()
