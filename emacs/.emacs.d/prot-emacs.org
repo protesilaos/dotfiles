@@ -3134,6 +3134,12 @@ appreciate the scope of each action.  In short:
   prompt asks to pick one among them.  This helps me write clean and
   meaningful summaries.
 
++ The commands =prot-vc-log-edit-{next,previous,complete}-comment= are
+  used to access information about previous commit messages that are
+  stored in the dedicated ring.  The next/previous operations will cycle
+  through the ring in the given direction.  While the "complete" command
+  will use minibuffer completion to insert the select item at point.
+
 + =prot-vc-git-log-insert-commits= will simply insert at point N number of
   commits starting from the HEAD of the current project.  The number is
   inserted at the minibuffer following a prompt.  This runs the =git log=
@@ -3359,7 +3365,9 @@ manual for more on the matter):
     (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
     (define-key map (kbd "C-c C-a") #'prot-vc-git-log-edit-toggle-amend)
     (define-key map (kbd "M-p") #'prot-vc-log-edit-previous-comment)
-    (define-key map (kbd "M-n") #'prot-vc-log-edit-next-comment))
+    (define-key map (kbd "M-n") #'prot-vc-log-edit-next-comment)
+    (define-key map (kbd "M-s") #'prot-vc-log-edit-complete-comment)
+    (define-key map (kbd "M-r") #'prot-vc-log-edit-complete-comment))
   (let ((map log-view-mode-map))
     (define-key map (kbd "<C-tab>") #'prot-vc-log-view-toggle-entry-all)
     (define-key map (kbd "c") #'prot-vc-git-patch-dwim)

@@ -483,6 +483,32 @@ With a numeric prefix ARG, go forward ARG comments."
   (interactive "*p")
   (prot-vc-log-edit-previous-comment (- arg)))
 
+(defvar prot-vc--log-edit-comment-hist '()
+  "History of inputs for `prot-vc-log-edit-complete-comment'.")
+
+(defun prot-vc--log-edit-complete-prompt (comments)
+  "Select entry from COMMENTS."
+  (completing-read
+   "Select comment: "
+   comments nil t nil 'prot-vc--log-edit-comment-hist))
+
+;;;###autoload
+(defun prot-vc-log-edit-complete-comment ()
+  "Insert text from Log Edit history ring using completion."
+  (interactive)
+  (let* ((newline (propertize "^J" 'face 'escape-glyph))
+         (ring (ring-elements log-edit-comment-ring))
+         (completions
+          (mapcar (lambda (s)
+                    (string-replace "\n" newline s))
+                  ring))
+         (selection (prot-vc--log-edit-complete-prompt completions))
+         (comment (replace-regexp-in-string "\\(Summary\\|Amend\\): " ""
+                   (string-replace newline "\n" selection))))
+    (add-to-history 'prot-vc--log-edit-comment-hist comment)
+    (insert
+     comment)))
+
 (defun prot-vc-git-log-remove-comment ()
   "Remove Git Log Edit comment, empty lines; keep final newline."
   (let ((buffer (get-buffer "*vc-log*"))) ; REVIEW: This is fragile
@@ -692,7 +718,9 @@ This is a thin wrapper around `log-edit-done', which first calls
           (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
           (define-key map (kbd "C-c C-e") #'prot-vc-git-log-edit-toggle-amend)
           (define-key map (kbd "M-p") #'prot-vc-log-edit-previous-comment)
-          (define-key map (kbd "M-n") #'prot-vc-log-edit-next-comment))
+          (define-key map (kbd "M-n") #'prot-vc-log-edit-next-comment)
+          (define-key map (kbd "M-s") #'prot-vc-log-edit-complete-comment)
+          (define-key map (kbd "M-r") #'prot-vc-log-edit-complete-comment))
         (add-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
         (add-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
         (add-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
@@ -709,7 +737,9 @@ This is a thin wrapper around `log-edit-done', which first calls
       (define-key vc-git-log-edit-mode-map (kbd "C-c C-c") #'log-edit-done)
       (define-key vc-git-log-edit-mode-map (kbd "C-c C-e") #'vc-git-log-edit-toggle-amend)
       (define-key map (kbd "M-p") #'log-edit-previous-comment)
-      (define-key map (kbd "M-n") #'log-edit-next-comment))
+      (define-key map (kbd "M-n") #'log-edit-next-comment)
+      (define-key map (kbd "M-s") #'log-edit-comment-search-forward)
+      (define-key map (kbd "M-r") #'log-edit-comment-search-backward))
     (remove-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
     (remove-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
     (remove-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
