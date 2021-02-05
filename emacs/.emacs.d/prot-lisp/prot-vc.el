@@ -385,6 +385,20 @@ will be used instead."
       (shell-command (format "git reset --soft %s --quiet --" commit) buf)
       (vc-refresh-state))))
 
+;;;###autoload
+(defun prot-vc-git-log-reset (&optional hard)
+  "Select commit in VC Git Log to 'git reset --soft' back to.
+With optional prefix argument (\\[universal-argument]) for HARD,
+pass the '--hard' flag instead."
+  (interactive "P")
+  (let* ((commit (cadr (log-view-current-entry (point) t)))
+         (buf-name prot-vc-shell-output)
+         (buf (get-buffer-create buf-name))
+         (flag (if hard "--hard" "--soft")))
+    (when (yes-or-no-p (format "Run 'git reset %s %s'?" flag commit))
+      (shell-command (format "git reset %s %s --quiet --" flag commit) buf)
+      (revert-buffer))))
+
 ;;;; User Interface setup
 
 ;; This is a tweaked variant of `vc-git-expanded-log-entry'

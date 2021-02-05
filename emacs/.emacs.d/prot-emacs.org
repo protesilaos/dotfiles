@@ -3174,11 +3174,20 @@ appreciate the scope of each action.  In short:
   when you want to search, for example, my dotemacs from when I first
   introduced a certain package, say, =prot-vc.el=.
 
-+ =prot-vc-git-reset= prompts for a commit to reset back to.  This is a
-  "soft" undo process in that all changes are kept in place while any
-  commits are removed.  Remember to only do this for local logs as it is
-  not good practice to reset publicly available histories: it will break
-  the local copies of other users.
++ =prot-vc-git-reset= prompts for a commit to reset back to, using
+  minibuffer completion.  This is a "soft" undo process in that all
+  changes are kept in place while any commits are removed.  Remember to
+  only do this for local logs as it is not good practice to reset
+  publicly available histories: it will break the local copies of other
+  users.
+
++ =prot-vc-git-log-reset= is like the above command, only that it is meant
+  to be called from inside a Log View buffer (e.g.  =vc-print-root-log=
+  which is bound to =C-x v L= by default).  The commit to reset back to is
+  the one at point.  Calling the command with a prefix argument (=C-u=)
+  will change the meaning of the reset operation from a soft to a hard
+  one.  The latter deletes all commits up to the selected commit /and
+  removes all changes/, so please be careful.
 
 + =prot-vc-project-or-dir= produces a =vc-dir= buffer for the current
   project (also see [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  With a
@@ -3354,6 +3363,7 @@ manual for more on the matter):
   (let ((map log-view-mode-map))
     (define-key map (kbd "<C-tab>") #'prot-vc-log-view-toggle-entry-all)
     (define-key map (kbd "c") #'prot-vc-git-patch-dwim)
+    (define-key map (kbd "R") #'prot-vc-git-log-reset)
     (define-key map (kbd "w") #'prot-vc-log-kill-hash)))
 #+end_src
 
