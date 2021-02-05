@@ -3298,7 +3298,8 @@ manual for more on the matter):
     (define-key map (kbd "a") #'vc-annotate)
     (define-key map (kbd "b") #'vc-retrieve-tag)
     (define-key map (kbd "t") #'vc-create-tag)
-    (define-key map (kbd "o") #'vc-log-outgoing)
+    (define-key map (kbd "O") #'vc-log-outgoing)
+    (define-key map (kbd "o") #'vc-dir-find-file-other-window)
     (define-key map (kbd "f") #'vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
     (define-key map (kbd "F") #'vc-update)       ; symmetric with P: `vc-push'
     (define-key map (kbd "d") #'vc-diff)         ; parallel to D: `vc-root-diff'
