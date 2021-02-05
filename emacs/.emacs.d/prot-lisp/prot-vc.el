@@ -461,6 +461,7 @@ headers 'Amend' and 'Summary'."
     (rfc822-goto-eoh)
     (when (looking-at "\n") (forward-char -1))))
 
+;;;###autoload
 (defun prot-vc-log-edit-previous-comment (arg)
   "Cycle backwards through comment history.
 With a numeric prefix ARG, go back ARG comments."
@@ -475,6 +476,7 @@ With a numeric prefix ARG, go back ARG comments."
       (insert (ring-ref log-edit-comment-ring log-edit-comment-ring-index))
       (prot-vc-git-log-edit-comment t))))
 
+;;;###autoload
 (defun prot-vc-log-edit-next-comment (arg)
   "Cycle forwards through comment history.
 With a numeric prefix ARG, go forward ARG comments."
