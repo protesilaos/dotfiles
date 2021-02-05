@@ -378,7 +378,7 @@ will be used instead."
                (t
                 t)))
          (commit (prot-vc--log-commit-hash
-                  (prot-vc--log-commit-prompt "Commit to git-show: " num)))
+                  (prot-vc--log-commit-prompt "Run 'git reset --soft' on: " num)))
          (buf-name prot-vc-shell-output)
          (buf (get-buffer-create buf-name)))
     (when (yes-or-no-p (format "Run 'git reset --soft %s'?" commit))
