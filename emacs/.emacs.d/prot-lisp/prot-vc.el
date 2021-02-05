@@ -361,6 +361,31 @@ will be used instead."
       (setq-local vc-annotate-parent-display-mode 'scale)
       (vc-annotate-display-select buf 'fullscale))))
 
+(autoload 'vc-refresh-state "vc-hooks")
+
+;;;###autoload
+(defun prot-vc-git-reset (&optional limit)
+  "Select commit to 'git reset --soft' back to.
+With optional LIMIT as a prefix arg (\\[universal-argument]),
+prompt for a number to confine the log to.  If LIMIT is a number,
+accept it directly.  In the absence of LIMIT, `prot-vc-log-limit'
+will be used instead."
+  (interactive "P")
+  (let* ((num (cond
+               ((and limit (listp limit))
+                (read-number "Limit to N commits: " 50))
+               (limit
+                (prefix-numeric-value limit))
+               (t
+                t)))
+         (commit (prot-vc--log-commit-hash
+                  (prot-vc--log-commit-prompt "Commit to git-show: " num)))
+         (buf-name prot-vc-shell-output)
+         (buf (get-buffer-create buf-name)))
+    (when (yes-or-no-p (format "Run 'git reset --soft %s'?" commit))
+      (shell-command (format "git reset --soft %s --quiet --" commit) buf)
+      (vc-refresh-state))))
+
 ;;;; User Interface setup
 
 ;; This is a tweaked variant of `vc-git-expanded-log-entry'

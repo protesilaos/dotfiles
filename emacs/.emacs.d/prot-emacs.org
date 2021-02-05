@@ -3119,6 +3119,7 @@ the =prot-diff.el= that I linked to above):
 | prot-vc-git-find-revision        | r            | Revisit version   |
 | prot-vc-git-blame-region-or-file | B            | Blame             |
 | prot-vc-git-log-insert-commits   | i            | Insert commit log |
+| prot-vc-git-reset                | R            | Reset (--soft)    |
 
 My =prot-vc.el= library (reproduced after the package configurations)
 defines several commands that extend VC to suit my needs as a Git user.
@@ -3173,6 +3174,12 @@ appreciate the scope of each action.  In short:
   current file, by selecting a commit with completion.  Quite powerful
   when you want to search, for example, my dotemacs from when I first
   introduced a certain package, say, =prot-vc.el=.
+
++ =prot-vc-git-reset= prompts for a commit to reset back to.  This is a
+  "soft" undo process in that all changes are kept in place while any
+  commits are removed.  Remember to only do this for local logs as it is
+  not good practice to reset publicly available histories: it will break
+  the local copies of other users.
 
 + =prot-vc-project-or-dir= produces a =vc-dir= buffer for the current
   project (also see [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  With a
@@ -3334,7 +3341,8 @@ manual for more on the matter):
     (define-key map (kbd "C-x v c") #'prot-vc-git-patch-dwim)
     (define-key map (kbd "C-x v s") #'prot-vc-git-show)
     (define-key map (kbd "C-x v r") #'prot-vc-git-find-revision)
-    (define-key map (kbd "C-x v B") #'prot-vc-git-blame-region-or-file))
+    (define-key map (kbd "C-x v B") #'prot-vc-git-blame-region-or-file)
+    (define-key map (kbd "C-x v R") #'prot-vc-git-reset))
   (let ((map vc-git-log-edit-mode-map))
     (define-key map (kbd "C-c C-a") #'prot-vc-git-log-edit-toggle-amend)
     (define-key map (kbd "C-C C-n") #'prot-vc-git-log-edit-extract-file-name)
