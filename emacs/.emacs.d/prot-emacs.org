@@ -3134,7 +3134,7 @@ appreciate the scope of each action.  In short:
   prompt asks to pick one among them.  This helps me write clean and
   meaningful summaries.
 
-+ The commands =prot-vc-log-edit-{next,previous,complete}-comment= are
++ The commands =prot-vc-git-log-edit-{next,previous,complete}-comment= are
   used to access information about previous commit messages that are
   stored in the dedicated ring.  The next/previous operations will cycle
   through the ring in the given direction.  While the "complete" command
@@ -3365,10 +3365,10 @@ manual for more on the matter):
     ;; as well for visibility.
     (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
     (define-key map (kbd "C-c C-a") #'prot-vc-git-log-edit-toggle-amend)
-    (define-key map (kbd "M-p") #'prot-vc-log-edit-previous-comment)
-    (define-key map (kbd "M-n") #'prot-vc-log-edit-next-comment)
-    (define-key map (kbd "M-s") #'prot-vc-log-edit-complete-comment)
-    (define-key map (kbd "M-r") #'prot-vc-log-edit-complete-comment))
+    (define-key map (kbd "M-p") #'prot-vc-git-log-edit-previous-comment)
+    (define-key map (kbd "M-n") #'prot-vc-git-log-edit-next-comment)
+    (define-key map (kbd "M-s") #'prot-vc-git-log-edit-complete-comment)
+    (define-key map (kbd "M-r") #'prot-vc-git-log-edit-complete-comment))
   (let ((map log-view-mode-map))
     (define-key map (kbd "<C-tab>") #'prot-vc-log-view-toggle-entry-all)
     (define-key map (kbd "c") #'prot-vc-git-patch-dwim)

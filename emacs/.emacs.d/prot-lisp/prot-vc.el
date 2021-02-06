@@ -474,7 +474,7 @@ headers 'Amend' and 'Summary'."
     (when (looking-at "\n") (forward-char -1))))
 
 ;;;###autoload
-(defun prot-vc-log-edit-previous-comment (arg)
+(defun prot-vc-git-log-edit-previous-comment (arg)
   "Cycle backwards through comment history.
 With a numeric prefix ARG, go back ARG comments."
   (interactive "*p")
@@ -489,14 +489,14 @@ With a numeric prefix ARG, go back ARG comments."
       (prot-vc-git-log-edit-comment t))))
 
 ;;;###autoload
-(defun prot-vc-log-edit-next-comment (arg)
+(defun prot-vc-git-log-edit-next-comment (arg)
   "Cycle forwards through comment history.
 With a numeric prefix ARG, go forward ARG comments."
   (interactive "*p")
-  (prot-vc-log-edit-previous-comment (- arg)))
+  (prot-vc-git-log-edit-previous-comment (- arg)))
 
 (defvar prot-vc--log-edit-comment-hist '()
-  "History of inputs for `prot-vc-log-edit-complete-comment'.")
+  "History of inputs for `prot-vc-git-log-edit-complete-comment'.")
 
 (defun prot-vc--log-edit-complete-prompt (comments)
   "Select entry from COMMENTS."
@@ -505,7 +505,7 @@ With a numeric prefix ARG, go forward ARG comments."
    comments nil t nil 'prot-vc--log-edit-comment-hist))
 
 ;;;###autoload
-(defun prot-vc-log-edit-complete-comment ()
+(defun prot-vc-git-log-edit-complete-comment ()
   "Insert text from Log Edit history ring using completion."
   (interactive)
   (let* ((newline (propertize "^J" 'face 'escape-glyph))
@@ -729,10 +729,10 @@ This is a thin wrapper around `log-edit-done', which first calls
         (let ((map vc-git-log-edit-mode-map))
           (define-key map (kbd "C-c C-c") #'prot-vc-git-log-edit-done)
           (define-key map (kbd "C-c C-e") #'prot-vc-git-log-edit-toggle-amend)
-          (define-key map (kbd "M-p") #'prot-vc-log-edit-previous-comment)
-          (define-key map (kbd "M-n") #'prot-vc-log-edit-next-comment)
-          (define-key map (kbd "M-s") #'prot-vc-log-edit-complete-comment)
-          (define-key map (kbd "M-r") #'prot-vc-log-edit-complete-comment))
+          (define-key map (kbd "M-p") #'prot-vc-git-log-edit-previous-comment)
+          (define-key map (kbd "M-n") #'prot-vc-git-log-edit-next-comment)
+          (define-key map (kbd "M-s") #'prot-vc-git-log-edit-complete-comment)
+          (define-key map (kbd "M-r") #'prot-vc-git-log-edit-complete-comment))
         (add-hook 'log-edit-mode-hook #'prot-vc--kill-log-edit)
         (add-hook 'prot-vc-git-log-edit-done-hook #'prot-vc--log-edit-restore-window-configuration)
         (add-hook 'log-edit-hook #'prot-vc--log-edit-diff-window-configuration)
