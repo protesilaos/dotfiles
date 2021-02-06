@@ -42,7 +42,7 @@
   "Extensions for vc.el and related libraries."
   :group 'project)
 
-(defcustom prot-vc-log-limit 20
+(defcustom prot-vc-log-limit 100
   "Limit commits in `prot-vc-custom-log' and others."
   :type 'integer
   :group 'prot-vc)
