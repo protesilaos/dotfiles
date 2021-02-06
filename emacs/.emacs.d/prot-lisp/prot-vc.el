@@ -47,6 +47,13 @@
   :type 'integer
   :group 'prot-vc)
 
+(defcustom prot-vc-log-bulk-action-limit 50
+  "Limit for `prot-vc-log-view-toggle-entry-all'.
+This is to ensure that performance does not take a hit.  The
+default value is conservative."
+  :type 'integer
+  :group 'prot-vc)
+
 (defcustom prot-vc-shell-output "*prot-vc-output*"
   "Name of buffer for VC-related shell output."
   :type 'string
@@ -183,9 +190,10 @@ that covers all files in the present directory."
         (point (point))
         (newlines)
         (commits (count-matches (nth 1 vc-git-root-log-format)
-                                (point-min) (point-max))))
+                                (point-min) (point-max)))
+        (limit prot-vc-log-bulk-action-limit))
     (cond
-     ((<= commits 50)       ; Arbitrary, but seems okay performance-wise
+     ((<= commits limit)
       (save-excursion
         (goto-char (point-max))
         (while (not (eq (line-number-at-pos) 1))
@@ -197,7 +205,7 @@ that covers all files in the present directory."
         (log-view-msg-next))
       (recenter))
      (t
-      (user-error "Here are %d commits; won't expand more than 50" commits)))))
+      (user-error "%d commits here; won't expand more than %d" commits limit)))))
 
 ;;;###autoload
 (defun prot-vc-log-kill-hash ()

@@ -3341,6 +3341,7 @@ manual for more on the matter):
 (require 'prot-vc)
 (with-eval-after-load 'prot-vc
   (setq prot-vc-log-limit 20)
+  (setq prot-vc-log-bulk-action-limit 50)
   (setq prot-vc-shell-output "*prot-vc-output*")
   (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
 
