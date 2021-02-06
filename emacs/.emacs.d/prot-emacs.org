@@ -3365,6 +3365,8 @@ manual for more on the matter):
 (with-eval-after-load 'prot-vc
   (setq prot-vc-log-limit 100)
   (setq prot-vc-log-bulk-action-limit 50)
+  (setq prot-vc-git-log-edit-show-commits t)
+  (setq prot-vc-git-log-edit-show-commit-count 10)
   (setq prot-vc-shell-output "*prot-vc-output*")
   (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
 

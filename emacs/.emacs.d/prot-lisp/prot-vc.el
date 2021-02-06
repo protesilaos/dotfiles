@@ -54,6 +54,16 @@ default value is conservative."
   :type 'integer
   :group 'prot-vc)
 
+(defcustom prot-vc-git-log-edit-show-commits nil
+  "Show recent commits in Git Log Edit comments."
+  :type 'boolean
+  :group 'prot-vc)
+
+(defcustom prot-vc-git-log-edit-show-commit-count 10
+  "Commit number for `prot-vc-git-log-edit-show-commits'."
+  :type 'integer
+  :group 'prot-vc)
+
 (defcustom prot-vc-shell-output "*prot-vc-output*"
   "Name of buffer for VC-related shell output."
   :type 'string
@@ -489,6 +499,15 @@ pass the '--hard' flag instead."
 
 (declare-function log-edit-add-field "log-edit")
 
+(defun prot-vc--format-git-comment (branch remote files &optional commits)
+  "Add Git Log Edit comment with BRANCH, REMOTE, FILES, COMMITS."
+  (let ((log (if commits (concat "\n# Recent commits:\n#\n" commits "\n#") "")))
+    (concat
+     "\n\n# ---\n# "
+     "Files to be committed to branch " "`" branch "' tracking `" remote "':"
+     "\n#\n" files "\n#" log
+     "\n# All lines starting with `#' are ignored.")))
+
 (defun prot-vc-git-log-edit-comment (&optional no-headers)
   "Append comment block to Git Log Edit buffer.
 With optional NO-HEADERS skip the step of inserting the special
@@ -503,7 +522,14 @@ headers 'Amend' and 'Summary'."
          (files (mapconcat (lambda (x)
                              (concat "#   " x))
                            (log-edit-files)
-                           "\n")))
+                           "\n"))
+         (commits (when prot-vc-git-log-edit-show-commits
+                    (mapconcat (lambda (x)
+                                 (concat "#   " x))
+                               (process-lines
+                                "git" "log" "--pretty=format:%h  %cs  %s"
+                                (format "-n %d" prot-vc-git-log-edit-show-commit-count))
+                               "\n"))))
     (unless no-headers
       (save-excursion
         (rfc822-goto-eoh)
@@ -514,12 +540,7 @@ headers 'Amend' and 'Summary'."
           (log-edit-add-field "Summary" ""))))
     (goto-char (point-max))
     (insert "\n")
-    (insert
-     (format "\n\n# ---\n# %s `%s' tracking `%s':\n#\n%s\n#\n# %s\n"
-             "Files to be committed to branch"
-             branch remote
-             files
-             "All lines starting with `#' are ignored."))
+    (insert (prot-vc--format-git-comment branch remote files commits))
     (rfc822-goto-eoh)
     (when (looking-at "\n") (forward-char -1))))
 
