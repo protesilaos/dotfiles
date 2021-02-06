@@ -1383,9 +1383,7 @@ Finally, a few words about the following package configurations:
     (define-key map (kbd "C-n") #'prot-embark-next-line-or-mini)
     (define-key map (kbd "<down>") #'prot-embark-next-line-or-mini)
     (define-key map (kbd "C-p") #'prot-embark-previous-line-or-mini)
-    (define-key map (kbd "<up>") #'prot-embark-previous-line-or-mini)
-    (define-key map (kbd "M-F") #'prot-embark-collection-flush-lines) ; M-S-f like M-S-5 (M-%)
-    (define-key map (kbd "M-K") #'prot-embark-collection-keep-lines)) ; same principle
+    (define-key map (kbd "<up>") #'prot-embark-previous-line-or-mini))
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "C-n") #'prot-embark-switch-to-completions-top)
     (define-key map (kbd "<down>") #'prot-embark-switch-to-completions-top)

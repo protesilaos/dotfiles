@@ -289,6 +289,7 @@ the minibuffer."
       (goto-char (point-at-bol))
       (delete-region (point) eol-dwim))))
 
+;; NOTE 2021-02-06: De facto deprecated in favour of Consult's variants
 ;;;###autoload
 (defun prot-embark-collection-flush-lines (regexp)
   "`flush-lines' matching REGEXP in Embark collect buffers."
@@ -302,6 +303,7 @@ the minibuffer."
               (flush-lines regexp)))
       (user-error "Not in an Embark collect buffer"))))
 
+;; NOTE 2021-02-06: De facto deprecated in favour of Consult's variants
 ;;;###autoload
 (defun prot-embark-collection-keep-lines (regexp)
   "`keep-lines' matching REGEXP in Embark collect buffers."
