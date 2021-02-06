@@ -253,7 +253,7 @@ instead of producing a complete log."
 
 ;;;###autoload
 (defun prot-vc-git-patch-dwim (&optional arg)
-  "Create patch for commit at point in `log-view'.
+  "Do-What-I-mean to output Git patches to a directory.
 
 When the region is active inside of a Log View buffer, produce
 patches for the commits within that range.  Remember how Git
@@ -261,17 +261,23 @@ interprets those ranges where the base commit is the one before
 the earliest in the range: if you need to produce patches for the
 topmost 4 commits, you must include the last 5 in the region.
 
-With optional prefix ARG (\\[universal-argument]), or if no
-commit is available at or around point, prompt for one with
-completion.  In that case, the list of candidates is confined to
-`prot-vc-log-limit'."
+With no active region, and while in a Log View buffer, a patch is
+produced for the commit at point.
+
+While not in a Log View buffer, prompt for a single commit to
+produce a patch for.
+
+Optional prefix ARG (\\[universal-argument]) prompts for a commit
+using completion.  The selected item is used as the base of a
+range against HEAD (in the format of 'base..HEAD').  When in Log
+View buffers, and while no region is active, ARG will skip the
+check for the commit at point in order to produce the prompt for
+a base commit.
+
+Whatever the case, the list of completion candidates for commits
+is always confined to `prot-vc-log-limit'."
   (interactive "P")
-  (let* ((commit-at-point (cadr (log-view-current-entry (point) t)))
-         (commit (if (or arg (not commit-at-point))
-                     (prot-vc--log-commit-hash
-                      (prot-vc--log-commit-prompt "Prepare patch for commit: " t))
-                   commit-at-point))
-         (vc-dir (or (prot-vc--current-project)
+  (let* ((vc-dir (or (prot-vc--current-project)
                      default-directory))
          (dirs (append (list vc-dir) prot-vc-patch-output-dirs))
          (out-dir
@@ -286,25 +292,42 @@ completion.  In that case, the list of candidates is confined to
              (end (region-end))
              (one (cadr (log-view-current-entry beg t)))
              (two (cadr (log-view-current-entry end t)))
-             (range (cond
-                     ((> beg end)
-                      (format "%s..%s" one two))
-                     ((< beg end)
-                      (format "%s..%s" two one))
-                     (t
-                      (format "-1 %s" commit)))))
+             (line-count (count-lines beg end))
+             (range (if (> line-count 1)
+                        (cond
+                         ((> beg end)
+                          (format "%s..%s" one two))
+                         ((< beg end)
+                          (format "%s..%s" two one)))
+                     (format "-1 %s" (cadr (log-view-current-entry (point) t))))))
         (shell-command
          (format "git format-patch %s -o %s --" range out-dir) buf)
         (message "Prepared patch for `%s' and sent it to %s"
                  (propertize range 'face 'bold)
                  (propertize out-dir 'face 'success))))
+     (arg
+      (let ((base (prot-vc--log-commit-hash
+                   (prot-vc--log-commit-prompt
+                    "Select base commit for base..HEAD: " t))))
+        (shell-command
+         (format "git format-patch %s..HEAD -o %s --" base out-dir) buf)
+        (message "Prepared patch for `%s..HEAD' and sent it to %s"
+                 (propertize base 'face 'bold)
+                 (propertize out-dir 'face 'success))))
      (t
-      (shell-command
-       (format "git format-patch -1 %s -o %s --" commit out-dir) buf)
-      (message "Prepared patch for `%s' and sent it to %s"
-               (propertize commit 'face 'bold)
-               (propertize out-dir 'face 'success))
-      (add-to-history 'prot-vc--commit-hist commit))
+      (let* ((commit-at-point (when (derived-mode-p 'log-view-mode)
+                                (cadr (log-view-current-entry (point) t))))
+             (commit (if (not commit-at-point)
+                         (prot-vc--log-commit-hash
+                          (prot-vc--log-commit-prompt
+                           "Prepare patch for commit: " t))
+                       commit-at-point)))
+        (shell-command
+         (format "git format-patch -1 %s -o %s --" commit out-dir) buf)
+        (message "Prepared patch for `%s' and sent it to %s"
+                 (propertize commit 'face 'bold)
+                 (propertize out-dir 'face 'success))
+        (add-to-history 'prot-vc--commit-hist commit)))
      (add-to-history 'prot-vc--patch-output-hist out-dir))))
 
 ;;;###autoload
