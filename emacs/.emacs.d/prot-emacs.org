@@ -3172,7 +3172,7 @@ appreciate the scope of each action.  In short:
     the region.
 
   - That granted, I also use [[#h:81c71e25-d6c4-4ef2-ad21-4fd57b00c301][git-email.el for preparing patches]] that
-    must be sent via email outrigh.
+    must be sent via email outright.
 
 + =prot-vc-custom-log= prints a log of commits that matches a custom file
   set.  This is of great value when you need to inspect the history of
