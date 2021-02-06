@@ -3226,12 +3226,24 @@ appreciate the scope of each action.  In short:
     available information as to what branch we are about to commit the
     changes to.  So my minor mode removes the small window with the
     files and in its stead adds a comment block in the main message
-    composition buffer (like the standard =git commit=).  It then
-    instructs the layout to put the corresponding diff on one side and
-    the edit buffer on the other (yes, just like Magit).  The prior
-    window configuration is saved before entering the log edit state and
-    is restored upon exit (either by committing the changes or
-    aborting).
+    composition buffer (like the standard =git commit=).  It then displays
+    the diff window on one side and the edit buffer on the other (yes,
+    just like Magit, though the order of the windows is always the
+    same).  The prior window configuration and the point are saved
+    before entering the log edit session and immediately restored upon
+    exit (either by committing the changes or aborting).
+
+  - The behaviour of cycling the ring of prior commits is reworked to
+    account for the custom git comment.  In addition to back/forth
+    motions through the ring's items (=M-p=, =M-n=), a command for picking a
+    commit message with minibuffer completion is also made available in
+    the stead of the generic commands for searching through the ring,
+    with =M-s= or =M-r= (the defaults lack visual feedback and are, in my
+    opinion, not appropriate for the task).
+
+  - The =Amend= pseudo header is displayed by default to make it easier to
+    edit the last commit, if necessary, and to raise awareness about
+    this possibility.
 
   - For the log view buffers (commit logs) the minor mode instructs the
     command that expands the message of a commit on the current line to
