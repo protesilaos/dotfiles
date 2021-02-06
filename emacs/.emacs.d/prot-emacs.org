@@ -3156,10 +3156,13 @@ appreciate the scope of each action.  In short:
   command with a universal prefix argument (=C-u=).  The patch is saved as
   a file in a directory that can be selected with another completion
   prompt: default candidates are stored in =prot-vc-patch-output-dirs=.
-  That granted, I also use [[#h:81c71e25-d6c4-4ef2-ad21-4fd57b00c301][git-email.el for preparing patches]], because
-  it streamlines the workflow and lets you produce a series of patch for
-  a given range by specifying the commit that should be matched against
-  the current HEAD.
+  When the region is active in Log View buffers, the command will
+  capture the included range of commits.  Beware of how Git interprets
+  those ranges: the base commit is the one before the earliest in the
+  range, so if you need to produce patches for the topmost 4 commits,
+  you must to include the last 5 in the region.  That granted, I also
+  use [[#h:81c71e25-d6c4-4ef2-ad21-4fd57b00c301][git-email.el for preparing patches]] that must be sent via email
+  outright.
 
 + =prot-vc-custom-log= prints a log of commits that matches a custom file
   set.  This is of great value when you need to inspect the history of

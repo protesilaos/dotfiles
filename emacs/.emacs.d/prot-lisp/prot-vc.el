@@ -254,6 +254,13 @@ instead of producing a complete log."
 ;;;###autoload
 (defun prot-vc-git-patch-dwim (&optional arg)
   "Create patch for commit at point in `log-view'.
+
+When the region is active inside of a Log View buffer, produce
+patches for the commits within that range.  Remember how Git
+interprets those ranges where the base commit is the one before
+the earliest in the range: if you need to produce patches for the
+topmost 4 commits, you must include the last 5 in the region.
+
 With optional prefix ARG (\\[universal-argument]), or if no
 commit is available at or around point, prompt for one with
 completion.  In that case, the list of candidates is confined to
@@ -273,13 +280,32 @@ completion.  In that case, the list of candidates is confined to
            (prot-common-completion-table 'file dirs)
            nil t nil 'prot-vc--patch-output-hist))
          (buf (get-buffer-create prot-vc-shell-output)))
-    (shell-command
-     (format "git format-patch -1 %s -o %s --" commit out-dir) buf)
-    (message "Prepared patch for `%s' and sent it to %s"
-             (propertize commit 'face 'bold)
-             (propertize out-dir 'face 'success))
-    (add-to-history 'prot-vc--commit-hist commit)
-    (add-to-history 'prot-vc--patch-output-hist out-dir)))
+    (cond
+     ((and (use-region-p) (derived-mode-p 'log-view-mode))
+      (let* ((beg (region-beginning))
+             (end (region-end))
+             (one (cadr (log-view-current-entry beg t)))
+             (two (cadr (log-view-current-entry end t)))
+             (range (cond
+                     ((> beg end)
+                      (format "%s..%s" one two))
+                     ((< beg end)
+                      (format "%s..%s" two one))
+                     (t
+                      (format "-1 %s" commit)))))
+        (shell-command
+         (format "git format-patch %s -o %s --" range out-dir) buf)
+        (message "Prepared patch for `%s' and sent it to %s"
+                 (propertize range 'face 'bold)
+                 (propertize out-dir 'face 'success))))
+     (t
+      (shell-command
+       (format "git format-patch -1 %s -o %s --" commit out-dir) buf)
+      (message "Prepared patch for `%s' and sent it to %s"
+               (propertize commit 'face 'bold)
+               (propertize out-dir 'face 'success))
+      (add-to-history 'prot-vc--commit-hist commit))
+     (add-to-history 'prot-vc--patch-output-hist out-dir))))
 
 ;;;###autoload
 (defun prot-vc-git-show (&optional limit)
