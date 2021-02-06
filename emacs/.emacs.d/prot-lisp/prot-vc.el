@@ -272,7 +272,8 @@ using completion.  The selected item is used as the base of a
 range against HEAD (in the format of 'base..HEAD').  When in Log
 View buffers, and while no region is active, ARG will skip the
 check for the commit at point in order to produce the prompt for
-a base commit.
+a base commit.  If the region is active in Log View buffers, ARG
+is ignored.
 
 Whatever the case, the list of completion candidates for commits
 is always confined to `prot-vc-log-limit'."
