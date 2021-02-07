@@ -42,6 +42,13 @@ Used by `prot-minibuffer--get-completion-window'."
   :group 'prot-minibuffer
   :type 'string)
 
+(defcustom prot-minibuffer-mini-cursors nil
+  "Allow `cursor-type' to be modified in the minibuffer.
+Refer to the source of `prot-minibuffer-mini-cursor' and
+`prot-minibuffer-completions-cursor'"
+  :group 'prot-minibuffer
+  :type 'boolean)
+
 ;;;; Minibuffer behaviour
 
 ;; Thanks to Omar Antolín Camarena for providing the messageless and
@@ -80,18 +87,20 @@ If it is a list, this actually returns its car."
 ;;;###autoload
 (defun prot-minibuffer-mini-cursor ()
   "Local value of `cursor-type' for `minibuffer-setup-hook'."
-  (pcase (prot-minibuffer--cursor-type)
-    ('hbar (setq-local cursor-type '(hbar . 8)))
-    ('bar (setq-local cursor-type '(hbar . 3)))
-    (_  (setq-local cursor-type '(bar . 2)))))
+  (when prot-minibuffer-mini-cursors
+    (pcase (prot-minibuffer--cursor-type)
+      ('hbar (setq-local cursor-type '(hbar . 8)))
+      ('bar (setq-local cursor-type '(hbar . 3)))
+      (_  (setq-local cursor-type '(bar . 2))))))
 
 ;;;###autoload
 (defun prot-minibuffer-completions-cursor ()
   "Local value of `cursor-type' for `completion-setup-hook'."
-  (pcase (prot-minibuffer--cursor-type)
-    ('hbar (setq-local cursor-type 'box))
-    ('bar (setq-local cursor-type '(hbar . 8)))
-    (_  (setq-local cursor-type '(bar . 3)))))
+  (when prot-minibuffer-mini-cursors
+    (pcase (prot-minibuffer--cursor-type)
+      ('hbar (setq-local cursor-type 'box))
+      ('bar (setq-local cursor-type '(hbar . 8)))
+      (_  (setq-local cursor-type '(bar . 3))))))
 
 ;;;; Minibuffer interactions
 

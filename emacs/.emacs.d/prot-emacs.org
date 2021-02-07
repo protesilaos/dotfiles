@@ -884,6 +884,8 @@ configurations.  For its hook also check [[#h:cf9086c1-1b33-4127-a716-de94259e14
 #+begin_src emacs-lisp
 (require 'prot-minibuffer)
 (with-eval-after-load 'prot-minibuffer
+  (setq-default prot-minibuffer-mini-cursors t) ; also check `prot-cursor.el'
+
   (define-key global-map (kbd "s-v") #'prot-minibuffer-focus-mini-or-completions)
   (let ((map completion-list-mode-map))
     (define-key map (kbd "M-v") #'prot-minibuffer-focus-mini)
@@ -1342,7 +1344,6 @@ Finally, a few words about the following package configurations:
   ;;       embark-become-indicator embark-action-indicator)
   (add-hook 'minibuffer-setup-hook #'embark-collect-completions-after-input)
   (add-hook 'embark-post-action-hook #'embark-collect--update-linked)
-  (add-hook 'embark-collect-mode-hook #'prot-embark-completions-cursor)
   (define-key global-map (kbd "C-,") #'embark-act)
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "C-,") #'embark-act)
@@ -1366,6 +1367,7 @@ Finally, a few words about the following package configurations:
 (require 'prot-embark)
 (with-eval-after-load 'prot-embark
   (add-hook 'minibuffer-exit-hook #'prot-embark-clear-live-buffers)
+  (add-hook 'embark-collect-mode-hook #'prot-embark-completions-cursor)
   (add-hook 'embark-collect-post-revert-hook #'prot-embark-collect-fit-window)
   (add-hook 'embark-collect-mode-hook #'prot-embark-hl-line)
   (add-hook 'embark-collect-mode-hook #'prot-embark-display-line-numbers)
@@ -6009,25 +6011,33 @@ These are the contents of the =prot-outline.el= library (find the file in
 :PROPERTIES:
 :CUSTOM_ID: h:a75d07c3-22a8-4e0f-aa88-1e2e1579d820
 :END:
-*** Cursor appearance and tweaks
+*** Cursor appearance and tweaks (prot-cursor.el)
 :PROPERTIES:
 :CUSTOM_ID: h:cf9086c1-1b33-4127-a716-de94259e14a0
 :END:
 
-Nothing special here.  Just some tweaks for the cursor's appearance.  Do
-=C-h f cursor-type= to learn everything about the available options.
+Nothing special here: =prot-cursor.el= defines a minor mode that lets me
+control the overall looks and behaviour of the cursor depending on
+whether I am doing my usual work on Emacs or am preparing a
+presentation.
 
 Note that in [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]] I
-also add a local variable for the minibuffer's cursor.
+also add a customisation option for the minibuffer's cursor.  This
+controls two functions that can be used to differentiate cursors in the
+minibuffer and completions' windows.  Also refer to the section on
+[[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]], as
+I configure =prot-embark-completions-cursor= for Embark's completions'
+buffer.
 
 #+begin_src emacs-lisp
-(setq-default cursor-type '(hbar . 3))
-(setq-default cursor-in-non-selected-windows 'hollow)
-(setq-default blink-cursor-blinks 50)
-(setq-default blink-cursor-interval 0.2)
-(setq-default blink-cursor-delay 0.2)
-(blink-cursor-mode 1)
+(require 'prot-cursor)
+(with-eval-after-load 'prot-cursor
+  (prot-cursor-presentation-mode -1))
 #+end_src
+
+This is =prot-cursor.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: prot-lisp/prot-cursor.el src emacs-lisp :tangle no
 
 *** Mouse wheel behaviour
 :PROPERTIES:
