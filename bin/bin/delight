@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Delight --- Toggle the themes of the GNOME desktop
+# Delight --- Toggle GNOME or Xfce Adwaita themes and Emacs Modus themes
 #
-# Copyright (c) 2020  Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (c) 2020-2021  Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,14 +20,31 @@
 ## Commentary:
 #
 # Simple tool to switch between Adwaita and Adwaita-dark and to perform
-# the equivalent action for Emacs.  This has been tested with GNOME
-# version 3.36, though it is expected to work in several of the recent
-# previous releases.
+# the equivalent action for Emacs using my Modus themes.
+#
+# This has been tested with GNOME version 3.36 and Xfce 4.16, though it
+# is expected to work with several of the recent previous releases of
+# those Desktop Environments.
 #
 # Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
 
+_depcheck() {
+    command -v "$1" > /dev/null || { echo "Missing dependency: $1."; return 1; }
+}
 
-# Generic `gsettings' call
+_emacs() {
+    _depcheck emacs
+
+    pgrep -x emacs > /dev/null || return 1
+
+    # Just switch to the appropriate theme for Emacs:
+    # https://gitlab.com/protesilaos/modus-themes
+    case "$1" in
+        l*) emacsclient -e "(modus-themes-load-operandi)" ;;
+        d*) emacsclient -e "(modus-themes-load-vivendi)"  ;;
+    esac
+}
+
 _ggtk () {
     gsettings "$1" org.gnome.desktop.interface gtk-theme "${@:2}"
 }
@@ -42,32 +59,37 @@ _gset () {
     _ggtk 'set' "$1"
 }
 
-# Check for dependency, else exit the given function that calls this.
-_depcheck() {
-	command -v "$1" > /dev/null || { echo "Missing dependency: $1."; return 1; }
+_gnome() {
+    if [ "$(_gget)" = "'Adwaita'" ]; then
+        _emacs dark
+        _gset 'Adwaita-dark'
+    else
+        _emacs light
+        _gset 'Adwaita'
+    fi
 }
 
-_emacs() {
-    _depcheck emacs
-
-    # Only proceed if Emacs is running
-    pgrep -x emacs > /dev/null || return 1
-
-    # Just switch to the appropriate theme for Emacs:
-    # https://gitlab.com/protesilaos/modus-themes
-    #
-    # This relies on functions of mine that are part of my Emacs
-    # configurations.  As such, this design can be considered fragile.
-    case "$1" in
-        l*) emacsclient -e "(prot/modus-operandi)" ;;
-        d*) emacsclient -e "(prot/modus-vivendi)"  ;;
-	esac
+_xfquery() {
+    xfconf-query -c xfwm4 -p /general/theme
 }
 
-if [ "$(_gget)" = "'Adwaita'" ]; then
-    _emacs dark
-    _gset 'Adwaita-dark'
-else
-    _emacs light
-    _gset 'Adwaita'
-fi
+_xfquerys() {
+    xfconf-query -c "$1" -p "$2" -s "$3"
+}
+
+_xfce() {
+    if [ "$(_xfquery)" = 'Adwaita' ]; then
+        _emacs dark
+        _xfquerys 'xfwm4' '/general/theme' 'Adwaita-dark'
+        _xfquerys 'xsettings' '/Net/ThemeName' 'Adwaita-dark'
+    else
+        _emacs light
+        _xfquerys 'xfwm4' '/general/theme' 'Adwaita'
+        _xfquerys 'xsettings' '/Net/ThemeName' 'Adwaita'
+    fi
+}
+
+case "$DESKTOP_SESSION" in
+    gnome) _gnome ;;
+	xfce)  _xfce  ;;
+esac
