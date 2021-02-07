@@ -383,14 +383,14 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only
-        modus-themes-links 'underline-only
+        modus-themes-links 'neutral-underline
         modus-themes-no-mixed-fonts nil
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts 'subtle-gray
-        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
+        modus-themes-prompts nil
+        modus-themes-completions nil ; {nil,'moderate,'opinionated}
         modus-themes-region 'no-extend ; {nil,'no-extend,'bg-only,'bg-only-no-extend}
-        modus-themes-diffs 'bg-only ; {nil,'desaturated,'fg-only,'bg-only}
+        modus-themes-diffs nil ; {nil,'desaturated,'fg-only,'bg-only}
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
