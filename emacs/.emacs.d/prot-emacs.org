@@ -3347,7 +3347,19 @@ manual for more on the matter):
     (define-key map (kbd "f") #'vc-log-incoming) ; replaces `vc-dir-find-file' (use RET)
     (define-key map (kbd "F") #'vc-update)       ; symmetric with P: `vc-push'
     (define-key map (kbd "d") #'vc-diff)         ; parallel to D: `vc-root-diff'
-    (define-key map (kbd "k") #'vc-dir-clean-files))
+    (define-key map (kbd "k") #'vc-dir-clean-files)
+    (define-key map (kbd "G") #'vc-revert)
+    (let ((prot-vc-git-stash-map (make-sparse-keymap)))
+      (define-key map "S" prot-vc-git-stash-map)
+      (define-key prot-vc-git-stash-map "c" 'vc-git-stash) ; "create" named stash
+      (define-key prot-vc-git-stash-map "S" 'vc-git-stash-snapshot)))
+  (let ((map vc-git-stash-shared-map))
+      (define-key map "a" 'vc-git-stash-apply-at-point)
+      (define-key map "c" 'vc-git-stash) ; "create" named stash
+      (define-key map "d" 'vc-git-stash-delete-at-point)
+      (define-key map "p" 'vc-git-stash-pop-at-point)
+      (define-key map "s" 'vc-git-stash-show-at-point)
+      (define-key map "S" 'vc-git-stash-snapshot))
   (let ((map vc-annotate-mode-map))
     (define-key map (kbd "M-q") #'vc-annotate-toggle-annotation-visibility)
     (define-key map (kbd "C-c C-c") #'vc-annotate-goto-line)
