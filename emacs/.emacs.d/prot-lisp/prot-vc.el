@@ -514,11 +514,14 @@ With optional NO-HEADERS skip the step of inserting the special
 headers 'Amend' and 'Summary'."
   (let* ((branch-name (process-lines "git" "branch" "--show-current"))
          (branch (or (car branch-name) "Detached HEAD"))
-         (remote-name (when branch-name
-                        (process-lines "git" "branch" "-r"))) ; REVIEW Is this reliable?
-         (remote (if remote-name
-                     (cadr (split-string (car remote-name) "->" t "[\s\t]+"))
-                   "No Remote Found"))
+         (remotes (when branch-name
+                        (process-lines "git" "branch" "-r")))
+         (remote-name (if remotes
+                     (cl-remove-if-not (lambda (s)
+                                         (string-match-p "->" s))
+                                       (process-lines "git" "branch" "-r"))
+                     "No Remote Found"))
+         (remote (cadr (split-string (car remote-name) "->" t "[\s\t]+")))
          (files (mapconcat (lambda (x)
                              (concat "#   " x))
                            (log-edit-files)
