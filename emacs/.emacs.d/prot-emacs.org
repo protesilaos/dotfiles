@@ -3352,14 +3352,13 @@ manual for more on the matter):
     (let ((prot-vc-git-stash-map (make-sparse-keymap)))
       (define-key map "S" prot-vc-git-stash-map)
       (define-key prot-vc-git-stash-map "c" 'vc-git-stash) ; "create" named stash
-      (define-key prot-vc-git-stash-map "S" 'vc-git-stash-snapshot)))
+      (define-key prot-vc-git-stash-map "s" 'vc-git-stash-snapshot)))
   (let ((map vc-git-stash-shared-map))
       (define-key map "a" 'vc-git-stash-apply-at-point)
       (define-key map "c" 'vc-git-stash) ; "create" named stash
-      (define-key map "d" 'vc-git-stash-delete-at-point)
+      (define-key map "D" 'vc-git-stash-delete-at-point)
       (define-key map "p" 'vc-git-stash-pop-at-point)
-      (define-key map "s" 'vc-git-stash-show-at-point)
-      (define-key map "S" 'vc-git-stash-snapshot))
+      (define-key map "s" 'vc-git-stash-snapshot))
   (let ((map vc-annotate-mode-map))
     (define-key map (kbd "M-q") #'vc-annotate-toggle-annotation-visibility)
     (define-key map (kbd "C-c C-c") #'vc-annotate-goto-line)
