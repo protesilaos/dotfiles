@@ -178,9 +178,10 @@ To be used in `prot-outline-minor-mode-exit-hook'."
   (dolist (var '(imenu-prev-index-position-function
                  imenu-extract-index-name-function))
     (kill-local-variable var))
-  (save-excursion
-    (imenu-default-create-index-function))
-  (message "Refreshed `imenu' index"))
+  (ignore-errors
+    (save-excursion
+      (imenu-default-create-index-function))
+    (message "Refreshed `imenu' index")))
 
 (add-hook 'prot-outline-minor-mode-enter-hook #'prot-outline-imenu-setup)
 (add-hook 'prot-outline-minor-mode-exit-hook #'prot-outline-imenu-restore)
