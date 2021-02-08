@@ -365,6 +365,26 @@ will be used instead."
       (diff-mode))
     (add-to-history 'prot-vc--commit-hist commit)))
 
+(autoload 'vc-git-region-history-mode "vc-git")
+
+;;;###autoload
+(defun prot-vc-git-log-grep (pattern &optional diff)
+  "Run ’git log --grep’ for PATTERN.
+With optional DIFF as a prefix (\\[universal-argument])
+argument, also show the corresponding diffs."
+  (interactive
+   (list (read-regexp "Run 'git log --grep' for PATTERN")
+         current-prefix-arg))
+   (let* ((buf-name prot-vc-shell-output)
+          (buf (get-buffer-create buf-name))
+          (diffs (if diff "-p" ""))
+          (type (if diff 'with-diff 'log-search))
+          (resize-mini-windows nil))
+     (shell-command (format "git log %s --grep=%s -E --" diffs pattern) buf)
+     (with-current-buffer buf
+       (setq-local vc-log-view-type type)
+       (vc-git-region-history-mode))))
+     
 (defun prot-vc-git--file-rev (file &optional limit)
   "Select revision for FILE using completion.
 Optionally apply LIMIT to the log."
