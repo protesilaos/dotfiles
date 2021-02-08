@@ -568,7 +568,7 @@
     ;; fg-mark-sel, fg-mark-del, fg-mark-alt can be combined
     ;; with bg-main, bg-dim, bg-alt, bg-hl-line
     ;;
-    ;; fg-unfocused must be combined with fg-main
+    ;; fg-unfocused must be combined with bg-main
     ;;
     ;; fg-docstring, fg-comment-yellow can be combined with
     ;; bg-main, bg-dim, bg-alt
@@ -810,7 +810,7 @@ symbol and the latter as a string.")
     ;; fg-mark-sel, fg-mark-del, fg-mark-alt can be combined
     ;; with bg-main, bg-dim, bg-alt, bg-hl-line
     ;;
-    ;; fg-unfocused must be combined with fg-main
+    ;; fg-unfocused must be combined with bg-main
     ;;
     ;; fg-docstring, fg-comment-yellow can be combined with
     ;; bg-main, bg-dim, bg-alt
@@ -5447,7 +5447,16 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(undo-tree-visualizer-default-face ((,class :inherit shadow)))
     `(undo-tree-visualizer-register-face ((,class :foreground ,magenta-intense)))
     `(undo-tree-visualizer-unmodified-face ((,class :foreground ,green-intense)))
-;;;;; vc (vc-hooks.el)
+;;;;; vc (vc-dir.el, vc-hooks.el)
+    `(vc-dir-directory ((,class :foreground ,blue)))
+    `(vc-dir-file ((,class :foreground ,fg-main)))
+    `(vc-dir-header ((,class :foreground ,cyan-alt-other)))
+    `(vc-dir-header-value ((,class :foreground ,magenta-alt-other)))
+    `(vc-dir-ignored ((,class :foreground ,fg-unfocused)))
+    `(vc-dir-mark-indicator ((,class :foreground ,blue-alt-other)))
+    `(vc-dir-status-edited ((,class :foreground ,yellow)))
+    `(vc-dir-status-up-to-date ((,class :foreground ,cyan)))
+    `(vc-dir-status-warning ((,class :foreground ,red)))
     `(vc-conflict-state ((,class :inherit modus-theme-slant :foreground ,red-active)))
     `(vc-edited-state ((,class :foreground ,yellow-active)))
     `(vc-locally-added-state ((,class :foreground ,cyan-active)))
