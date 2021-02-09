@@ -778,32 +778,33 @@ This is a thin wrapper around `log-edit-done', which first calls
 
 ;;;###autoload
 (define-minor-mode prot-vc-git-setup-mode
-  "Extend `vc-git' log view and log edit buffers.
+  "Extend `vc-git' Log View and Log Edit buffers.
 
-1. Tweak the format of expanded commit messages in log view
-   buffers.  The full information now includes a diff stat as
-   well as all affected file paths.  Those files can then be used
-   for file-at-point operations like `project-find-file'.
+Tweak the format of expanded commit messages in Log View buffers.  The
+full information now includes a diff stat as well as all affected file
+paths.  Those files can then be used for file-at-point operations like
+`project-find-file'.
 
-2. Append a comment block to log edit buffer with information
-   about the files being committed and the branch they are a part
-   of.
+Make Log Edit window configurations split between the message
+composition buffer and the corresponding diff view: the previous window
+configuration is restored upon the successful conclusion of the commit
+or its termination by means of `log-edit-kill-buffer'.
 
-3. Set up font-lock directives to make the aforementioned block
-   look like a comment.  Also highlight file and branch names
-   inside the comment block.
+Append a comment block to the Log Edit buffer with information about the
+files being committed and the branch they are a part of.  When
+`prot-vc-git-log-edit-show-commits' is non-nil, also include a commit
+log.  The number of commits in that log is controlled by
+`prot-vc-git-log-edit-show-commit-count'.
 
-4. Make log edit window configurations split between the message
-   composition buffer and the corresponding diff view: the
-   previous window configuration is restored upon the successful
-   conclusion of the commit or its termination by means of
-   `log-edit-kill-buffer'.
+For Log Edit buffers, bind C-c C-c to `prot-vc-git-log-edit-done' which
+is designed to remove the comment block before checking in the changes.
+Rebind other keys in the same vein.  `prot-vc-git-log-edit-done' calls
+the normal hook `prot-vc-git-log-edit-done-hook' which is used to
+restore the window layout.
 
-5. Bind C-c C-c to `prot-vc-git-log-edit-done' so that point 4 is
-   fully realised, while the comment from point 2 is removed
-   before recording the changes.  That command calls the normal
-   hook `prot-vc-git-log-edit-done-hook' which is used to restore
-   the window layout."
+Set up font-lock directives to make the aforementioned block look like a
+comment in Log Edit buffers.  Also highlight file and branch names
+inside the comment block."
   :init-value nil
   :global t
   (if prot-vc-git-setup-mode
