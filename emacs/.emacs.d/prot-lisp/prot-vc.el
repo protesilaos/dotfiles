@@ -548,7 +548,7 @@ headers 'Amend' and 'Summary'."
                            (log-edit-files)
                            "\n"))
          (commits (when (and prot-vc-git-log-edit-show-commits
-                             (ignore-errors (process-lines "git" "log")))
+                             (ignore-errors (process-lines "git" "log" "-1")))
                     (mapconcat (lambda (x)
                                  (concat "#   " x))
                                (process-lines
