@@ -534,19 +534,21 @@ With optional NO-HEADERS skip the step of inserting the special
 headers 'Amend' and 'Summary'."
   (let* ((branch-name (process-lines "git" "branch" "--show-current"))
          (branch (or (car branch-name) "Detached HEAD"))
-         (remotes (when branch-name
-                        (process-lines "git" "branch" "-r")))
+         (remotes (process-lines "git" "branch" "-r"))
          (remote-name (if remotes
-                     (cl-remove-if-not (lambda (s)
-                                         (string-match-p "->" s))
-                                       (process-lines "git" "branch" "-r"))
-                     "No Remote Found"))
-         (remote (cadr (split-string (car remote-name) "->" t "[\s\t]+")))
+                        (cl-remove-if-not (lambda (s)
+                                            (string-match-p "->" s))
+                                          remotes)
+                        "None"))
+         (remote (if (listp remote-name)
+                   (cadr (split-string (car remote-name) "->" t "[\s\t]+"))
+                   "No Remote Found"))
          (files (mapconcat (lambda (x)
                              (concat "#   " x))
                            (log-edit-files)
                            "\n"))
-         (commits (when prot-vc-git-log-edit-show-commits
+         (commits (when (and prot-vc-git-log-edit-show-commits
+                             (ignore-errors (process-lines "git" "log")))
                     (mapconcat (lambda (x)
                                  (concat "#   " x))
                                (process-lines
