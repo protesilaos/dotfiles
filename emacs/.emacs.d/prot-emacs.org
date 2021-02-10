@@ -213,6 +213,7 @@ common key combinations.
     (define-key map (kbd "<C-S-return>") #'prot-simple-new-line-above)
     ;; Commands for text insertion or manipulation
     (define-key map (kbd "C-=") #'prot-simple-inset-date)
+    (define-key map (kbd "C-<") #'prot-simple-escape-url)
     (define-key map (kbd "C-'") #'prot-simple-insert-pair-completion)
     (define-key map (kbd "M-'") #'prot-simple-insert-pair-completion)
     (define-key map (kbd "<C-M-backspace>") #'backward-kill-sexp)

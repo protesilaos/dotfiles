@@ -203,6 +203,24 @@ with the specified date."
       (delete-region (region-beginning) (region-end)))
     (insert (format-time-string format))))
 
+
+(autoload 'ffap-url-at-point "ffap")
+(defvar ffap-string-at-point-region)
+
+;;;###autoload
+(defun prot-simple-escape-url ()
+  "Wrap URL in angled brackets."
+  (interactive)
+  (when-let ((url (ffap-url-at-point)))
+    (let* ((reg ffap-string-at-point-region)
+           (beg (car reg))
+           (end (cadr reg))
+           (string (if (string-match-p "^mailto:" url)
+                       (substring url 7)
+                     url)))
+      (delete-region beg end)
+      (insert (format "<%s>" string)))))
+
 ;;;; Commands for object transposition
 
 (defmacro prot-simple-transpose (name scope &optional doc)
