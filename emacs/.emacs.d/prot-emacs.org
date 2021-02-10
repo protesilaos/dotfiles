@@ -3094,6 +3094,7 @@ for diff buffers.  And watch my videos on this topic:
 
 1. [[https://protesilaos.com/codelog/2020-03-30-emacs-intro-vc/][Introduction to the Emacs Version Control framework]] (2020-03-30).
 2. [[https://protesilaos.com/codelog/2021-01-22-emacs-vc-git-extras/][Extensions for Emacs' vc-git]] (2021-01-22).
+3. [[https://protesilaos.com/codelog/2021-02-08-emacs-vc-workflow/][My workflow with VC for Git projects]] (2021-02-08).
 
 Here is an overview of the keys I define, with only a few of them being
 left to their default values (note that =prot-diff-buffer-dwim= is part of
