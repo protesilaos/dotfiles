@@ -1,4 +1,3 @@
-*.lisp  diff=lisp
-*.el    diff=lisp
+*.el    diff=elisp
 *.org   diff=org
 *.md    diff=markdown

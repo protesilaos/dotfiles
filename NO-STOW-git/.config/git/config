@@ -13,7 +13,7 @@
   rebase = false
 [format]
   thread = true
-[diff "lisp"]
-  xfuncname = "^(\\(.*)$"
+[diff "elisp"]
+  xfuncname = "^\\([^[:space:]]*def[^[:space:]]+[[:space:]]+([^()[:space:]]+)"
 [diff "org"]
   xfuncname = "^(\\*+ +.*)$"
