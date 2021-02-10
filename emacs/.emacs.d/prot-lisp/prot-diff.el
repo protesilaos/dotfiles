@@ -174,21 +174,6 @@ hook `modus-themes-after-load-theme-hook'."
      :foreground "#ffffff"))
   "Face for diff commit header keys like 'Author:'.")
 
-(defface prot-diff-commit-message-title
-  '((default :inherit bold)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#001087")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#87c8ff"))
-  "Face for diff commit message title (the commit's summary).")
-
-(defface prot-diff-commit-message-body
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#000000")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#ffffff"))
-  "Face for diff commit message body.")
-
 (defface prot-diff-commit-hash
   '((((class color) (min-colors 88) (background light))
      :foreground "#184034")
@@ -221,17 +206,25 @@ hook `modus-themes-after-load-theme-hook'."
     (t :foreground "magenta"))
   "Face for diff commit date.")
 
+(defface prot-diff-commit-subject
+  '((((class color) (min-colors 88) (background light))
+     :foreground "#005a5f")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#6ae4b9")
+    (t :foreground "cyan"))
+  "Face for diff commit message subject.")
+
 ;; NOTE 2021-01-30: These work in all scenaria I tried, but there may
 ;; still be errors or omissions.
 (defconst prot-diff-keywords
   '(("\\(^[^+@-]?\\)\\(.*?\s+|\s+\\)\\([0-9]*\\) \\(\\++\\)"
      (2 'prot-diff-diffstat-file-changed)
      (4 'prot-diff-diffstat-added))
-    ("\\(^[^+-]?\\)\\(\\+\\{3\\}\\) \\(.*\\)"
+    ("\\(^[^+-]?\\)\\(\\+\\{3\\}\\) \\(.*?\\)$"
      (2 'prot-diff-diffstat-added)
      ;; (3 'prot-diff-hunk-file-added)
      )
-    ("\\(^[^+-]?\\)\\(-+\\{3\\}\\) \\(.*\\)"
+    ("\\(^[^+-]?\\)\\(-+\\{3\\}\\) \\([ab].*\\)"
      (2 'prot-diff-diffstat-removed)
      ;; (3 'prot-diff-hunk-file-removed)
      )
@@ -247,10 +240,6 @@ hook `modus-themes-after-load-theme-hook'."
      ;; (3 'prot-diff-diffstat-file-changed)
      ;; (4 'prot-diff-hunk-file-removed)
      )
-    ("^\s\\{4\\}\\(.+\n\s\\{4\\}\n\\)"  ; Fragile?
-     (1 'prot-diff-commit-message-title))
-    ("^\s\\{4\\}\\([a-zA-Z]+.*?\\)\n"   ; Is this bound to fail?
-     (1 'prot-diff-commit-message-body))
     ("^---\n"
      (0 'prot-diff-commit-header))
     ("\\(^commit \\)\\(.*\\)"
@@ -262,6 +251,22 @@ hook `modus-themes-after-load-theme-hook'."
      (3 'prot-diff-commit-header)
      (4 'prot-diff-commit-email)
      (5 'prot-diff-commit-header))
+    ("\\(^From:\\|^To:\\|^Cc:\\) ?\\(.*\\)?\\(<\\)\\(.*\\)\\(>\\)"
+     (1 'prot-diff-commit-header)
+     (2 'prot-diff-commit-author)
+     (3 'prot-diff-commit-header)
+     (4 'prot-diff-commit-email)
+     (5 'prot-diff-commit-header))
+    ("\\(^Subject:\\) \\(.*\\)"
+     (1 'prot-diff-commit-header)
+     (2 'prot-diff-commit-subject))
+    ("\\(^From\\)\\( [0-9a-zA-Z]+ \\)\\(.*\\)"
+     (1 'prot-diff-commit-header)
+     (2 'prot-diff-commit-hash)
+     (3 'prot-diff-commit-date))
+    ("\\(^Message-Id:\\) \\(<.+>\\)"
+     (1 'prot-diff-commit-header)
+     (2 'prot-diff-commit-hash))
     ("\\(^Date: \\)\\(.*\\)"
      (1 'prot-diff-commit-header)
      (2 'prot-diff-commit-date)))
