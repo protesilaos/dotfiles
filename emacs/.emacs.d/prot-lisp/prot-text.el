@@ -29,11 +29,9 @@
 
 ;;; Code:
 
-(require 'text-mode)
 (require 'prot-common)
 (require 'prot-simple)
 
-;; TODO: make this more robust
 ;;;###autoload
 (defun prot-text-insert-heading (&optional arg)
   "Insert equal length heading delimiter below current line.
@@ -49,12 +47,13 @@ to the next line.  For the purposes of this command, text that
 starts with a number and no further delimiter is not consider a
 list element.
 
-This command is meant to be used in `text-mode' buffers and
-derivatives, such as `markdown-mode', though not in `org-mode'."
+This command is meant to be used in Text mode buffers and
+compatible derivatives, such as Markdown mode, though not Org
+mode which has its own conventions."
   (interactive "P")
   (cond
-   ((eq major-mode 'org-mode)
-    (user-error "Do not use `prot-common-text-mode-heading' in `org-mode'!"))
+   ((derived-mode-p 'outline-mode)
+    (user-error "Do not use `prot-common-text-mode-heading' in `outline-mode' or derivatives!"))
    ((derived-mode-p 'text-mode)
     (let* ((num (- (point-at-eol) (point-at-bol)))
            (char (string-to-char (if arg "=" "-"))))
@@ -73,6 +72,12 @@ derivatives, such as `markdown-mode', though not in `org-mode'."
         (if (prot-common-empty-line-p 3)
             (beginning-of-line 3)
           (prot-simple-new-line-below)))
+       ((or (prot-common-empty-line-p 2)
+            (prot-common-indent-line-p 2))
+        (prot-simple-new-line-below)
+        (insert (make-string num char))
+        (newline 1)
+        (beginning-of-line 2))
        (t
         (prot-simple-new-line-below)
         (insert (make-string num char))

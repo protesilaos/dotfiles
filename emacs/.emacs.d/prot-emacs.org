@@ -6337,9 +6337,9 @@ environments that are not already supported by Emacs.
 :CUSTOM_ID: h:a04db751-9675-4f31-befc-0b48671c4b3b
 :END:
 
-My =prot-text.el= (copied verbatim further below), provides a set of
-extensions for the built-in =text-mode.el=.  Currently there are only two
-commands, though I plan to add more of them.
+My =prot-text.el= (copied verbatim further below) is meant to provide a
+set of extensions for the built-in =text-mode.el=.  Currently there are
+only two commands, though I plan to add more of them over time:
 
 + =prot-text-insert-heading= lets you add a heading delimiter to the line
   at point.  The length of the delimiter is equal to that of the line.
@@ -6369,10 +6369,11 @@ we would like to quote
 +----
 #+end_example
 
-Here is the package configuration.  Remember that =text-mode= is a
-dependency of =prot-text=, so no need to include it here.
+Here is the package configuration.
 
 #+begin_src emacs-lisp
+(require 'text-mode)
+
 (require 'prot-text)
 (with-eval-after-load 'prot-text
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)$" . text-mode))
@@ -6383,8 +6384,8 @@ dependency of =prot-text=, so no need to include it here.
   (define-key org-mode-map (kbd "M-;") nil))
 #+end_src
 
-Finally, those are the contents of the =prot-text.el= library (find the
-file in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
+Those are the contents of the =prot-text.el= library (find the file in [[https://gitlab.com/protesilaos/dotfiles][my
+dotfiles' repo]] (as with all my Elisp code)):
 
 #+include: prot-lisp/prot-text.el src emacs-lisp :tangle no
 

@@ -122,6 +122,7 @@ To be used as the PREDICATE of `completing-read-multiple'."
   "Make NAME function to match REGEXP on line n from point."
   `(defun ,name (n)
      (save-excursion
+       (goto-char (point-at-bol))
        (and (not (bobp))
 	        (or (beginning-of-line n) t)
 	        (save-match-data
