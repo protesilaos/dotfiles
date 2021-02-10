@@ -507,8 +507,9 @@ pass the '--hard' flag instead."
 
 (defun prot-vc-git-expand-function ()
   "Set `log-view-expanded-log-entry-function' for `vc-git'."
-  (setq-local log-view-expanded-log-entry-function
-              #'prot-vc-git-expanded-log-entry))
+  (when (eq vc-log-view-type 'short)
+    (setq-local log-view-expanded-log-entry-function
+                #'prot-vc-git-expanded-log-entry)))
 
 (defvar prot-vc-git-log-view-mode-hook nil
   "Hook that runs after `vc-git-log-view-mode'.")
