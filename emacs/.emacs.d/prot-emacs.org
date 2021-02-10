@@ -6376,6 +6376,7 @@ dependency of =prot-text=, so no need to include it here.
 (require 'prot-text)
 (with-eval-after-load 'prot-text
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)$" . text-mode))
+  (add-hook 'text-mode-hook #'goto-address-mode)
   (let ((map text-mode-map))
     (define-key map (kbd "<M-return>") #'prot-text-insert-heading)
     (define-key map (kbd "M-;") #'prot-text-cite-region))
