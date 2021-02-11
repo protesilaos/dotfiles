@@ -380,6 +380,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'alt-syntax-yellow-comments
         modus-themes-syntax 'alt-syntax-yellow-comments
         modus-themes-intense-hl-line nil
+        modus-themes-subtle-line-numbers t
         modus-themes-paren-match 'intense ; {nil,'subtle-bold,'intense,'intense-bold}
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
