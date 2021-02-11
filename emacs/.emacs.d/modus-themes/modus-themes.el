@@ -2074,6 +2074,16 @@ unspecified."
     ('bg-only (list :background altbg :foreground (if bg-only-fg altfg 'unspecified)))
     (_ (list :background mainbg :foreground mainfg))))
 
+(defun modus-themes--diff-text (fg-only-fg default-fg)
+  "Like `modus-themes--diff', but only for foregrounds.
+FG-ONLY-FG is the foreground that is used when diffs are styled
+using only foreground colors.  DEFAULT-FG covers all other
+cases."
+  (pcase modus-themes-diffs
+    ('fg-only (list :foreground fg-only-fg))
+    ('bg-only (list :foreground 'unspecified))
+    (_ (list :foreground default-fg))))
+
 (defun modus-themes--standard-completions (mainfg subtlebg intensebg intensefg)
   "Combinations for `modus-themes-completions'.
 
@@ -2377,8 +2387,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
       ((,class ,@(modus-themes--diff
                   bg-main yellow
                   bg-diff-focus-changed fg-diff-focus-changed
-                  yellow-nuanced-bg fg-diff-changed)
-               :extend t)))
+                  yellow-nuanced-bg fg-diff-changed))))
     `(modus-theme-diff-removed
       ((,class ,@(modus-themes--diff
                   bg-main red
@@ -2416,7 +2425,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
                   bg-diff-removed fg-diff-removed))))
     `(modus-theme-diff-heading
       ((,class ,@(modus-themes--diff
-                  bg-alt blue-alt
+                  bg-main blue
                   bg-diff-heading fg-diff-heading
                   cyan-nuanced-bg cyan-nuanced-fg t))))
 ;;;;; mark indicators
@@ -2691,17 +2700,17 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(bm-fringe-persistent-face ((,class :inherit modus-theme-fringe-blue)))
     `(bm-persistent-face ((,class :inherit modus-theme-intense-blue :extend t)))
 ;;;;; bongo
-    `(bongo-album-title ((,class :foreground ,cyan-active)))
+    `(bongo-album-title ((,class :foreground ,green-active)))
     `(bongo-artist ((,class :foreground ,magenta-active)))
     `(bongo-currently-playing-track ((,class :inherit bold)))
     `(bongo-elapsed-track-part ((,class :inherit modus-theme-subtle-magenta :underline t)))
-    `(bongo-filled-seek-bar ((,class :background ,blue-subtle-bg :foreground ,fg-main)))
+    `(bongo-filled-seek-bar ((,class :background ,blue-intense-bg :foreground ,fg-main)))
     `(bongo-marked-track ((,class :foreground ,fg-mark-alt)))
     `(bongo-marked-track-line ((,class :background ,bg-mark-alt)))
     `(bongo-played-track ((,class :foreground ,fg-unfocused :strike-through t)))
-    `(bongo-track-length ((,class :foreground ,blue-alt-other)))
-    `(bongo-track-title ((,class :foreground ,blue-active)))
-    `(bongo-unfilled-seek-bar ((,class :background ,blue-nuanced-bg :foreground ,fg-main)))
+    `(bongo-track-length ((,class :foreground ,fg-active)))
+    `(bongo-track-title ((,class :foreground ,cyan-active)))
+    `(bongo-unfilled-seek-bar ((,class :background ,bg-special-cold :foreground ,fg-main)))
 ;;;;; boon
     `(boon-modeline-cmd ((,class :inherit modus-theme-active-blue)))
     `(boon-modeline-ins ((,class :inherit modus-theme-active-red)))
@@ -3018,12 +3027,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(diff-hl-reverted-hunk-highlight ((,class :inherit (modus-theme-active-magenta bold))))
 ;;;;; diff-mode
     `(diff-added ((,class :inherit modus-theme-diff-added)))
-    `(diff-changed ((,class :inherit modus-theme-diff-changed)))
-    `(diff-context ((,class :foreground ,fg-unfocused)))
+    `(diff-changed ((,class :inherit modus-theme-diff-changed :extend t)))
+    `(diff-context ((,class ,@(modus-themes--diff-text fg-main fg-unfocused))))
     `(diff-error ((,class :inherit modus-theme-intense-red)))
-    `(diff-file-header ((,class :inherit bold)))
+    `(diff-file-header ((,class :inherit (bold diff-header))))
     `(diff-function ((,class :inherit modus-theme-diff-heading)))
-    `(diff-header ((,class :foreground ,fg-main)))
+    `(diff-header ((,class ,@(modus-themes--diff-text cyan-faint fg-main))))
     `(diff-hunk-header ((,class :inherit (bold modus-theme-diff-heading))))
     `(diff-index ((,class :inherit bold :foreground ,blue-alt)))
     `(diff-indicator-added ((,class :inherit (diff-added bold) :foreground ,green)))
