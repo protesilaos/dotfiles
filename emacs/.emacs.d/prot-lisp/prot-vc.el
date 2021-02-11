@@ -586,7 +586,13 @@ With a numeric prefix ARG, go back ARG comments."
       (setq log-edit-comment-ring-index (log-edit-new-comment-index arg len))
       (message "Comment %d" (1+ log-edit-comment-ring-index))
       (insert (ring-ref log-edit-comment-ring log-edit-comment-ring-index))
-      (prot-vc-git-log-edit-comment t))))
+      (prot-vc-git-log-edit-comment t)
+      (save-excursion
+        (goto-char (point-min))
+        (search-forward "# ---")
+        (forward-line -1)
+        (delete-blank-lines)
+        (newline 2)))))
 
 ;;;###autoload
 (defun prot-vc-git-log-edit-next-comment (arg)
@@ -615,11 +621,17 @@ With a numeric prefix ARG, go forward ARG comments."
                     (string-replace "\n" newline s))
                   ring))
          (selection (prot-vc--log-edit-complete-prompt completions))
-         (comment (replace-regexp-in-string "\\(Summary\\|Amend\\): " ""
-                   (string-replace newline "\n" selection))))
+         (comment (string-replace newline "\n" selection)))
     (add-to-history 'prot-vc--log-edit-comment-hist comment)
-    (insert
-     comment)))
+    (delete-region (point-min) (point-max))
+    (insert comment)
+    (prot-vc-git-log-edit-comment t)
+    (save-excursion
+      (goto-char (point-min))
+      (search-forward "# ---")
+      (forward-line -1)
+      (delete-blank-lines)
+      (newline 2))))
 
 (defun prot-vc-git-log-remove-comment ()
   "Remove Git Log Edit comment, empty lines; keep final newline."
