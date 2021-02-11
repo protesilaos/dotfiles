@@ -14,6 +14,6 @@
 [format]
   thread = true
 [diff "elisp"]
-  xfuncname = "^\\([^[:space:]]*def[^[:space:]]+[[:space:]]+([^()[:space:]]+)"
+  xfuncname = "^((\\(|;;;+ ).*)$"
 [diff "org"]
   xfuncname = "^(\\*+ +.*)$"
