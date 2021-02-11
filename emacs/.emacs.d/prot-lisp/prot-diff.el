@@ -220,11 +220,11 @@ hook `modus-themes-after-load-theme-hook'."
   '(("\\(^[^+@-]?\\)\\(.*?\s+|\s+\\)\\([0-9]*\\) \\(\\++\\)"
      (2 'prot-diff-diffstat-file-changed)
      (4 'prot-diff-diffstat-added))
-    ("\\(^[^+-]?\\)\\(\\+\\{3\\}\\) \\(.*?\\)$"
+    ("\\(^[^+-]?\\)\\(\\+\\{3\\}\\) \\([ab].*?\\)"
      (2 'prot-diff-diffstat-added)
      ;; (3 'prot-diff-hunk-file-added)
      )
-    ("\\(^[^+-]?\\)\\(-+\\{3\\}\\) \\([ab].*\\)"
+    ("\\(^[^+-]?\\)\\(-+\\{3\\}\\) \\([ab].*?\\)"
      (2 'prot-diff-diffstat-removed)
      ;; (3 'prot-diff-hunk-file-removed)
      )
