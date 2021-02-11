@@ -362,6 +362,7 @@ will be used instead."
          (buf (get-buffer-create buf-name)))
     (shell-command (format "git show %s -u --stat -1 --" commit) buf)
     (with-current-buffer buf-name
+      (setq-local revert-buffer-function nil)
       (diff-mode))
     (add-to-history 'prot-vc--commit-hist commit)))
 
@@ -383,6 +384,7 @@ argument, also show the corresponding diffs."
      (shell-command (format "git log %s --grep=%s -E --" diffs pattern) buf)
      (with-current-buffer buf
        (setq-local vc-log-view-type type)
+       (setq-local revert-buffer-function nil)
        (vc-git-region-history-mode))))
      
 (defun prot-vc-git--file-rev (file &optional limit)
@@ -445,6 +447,7 @@ will be used instead."
      (format "git blame -L %d,%d -- %s" beg-line end-line file) buf)
     (with-current-buffer buf-name
       (unless (equal major-mode 'vc-annotate-mode)
+        (setq-local revert-buffer-function nil)
         (vc-annotate-mode))
       (setq-local vc-annotate-backend backend)
       (setq-local vc-annotate-parent-file file)
