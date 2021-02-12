@@ -187,7 +187,7 @@ constructs.  A negative number counts backwards."
     (insert-pair n left right)))
 
 ;;;###autoload
-(defun prot-simple-inset-date (&optional arg)
+(defun prot-simple-insert-date (&optional arg)
   "Insert the current date as `prot-simple-date-specifier'.
 
 With optional prefix ARG (\\[universal-argument]) also append the
