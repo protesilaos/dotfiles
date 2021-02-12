@@ -3178,6 +3178,11 @@ appreciate the scope of each action.  In short:
   - That granted, I also use [[#h:81c71e25-d6c4-4ef2-ad21-4fd57b00c301][git-email.el for preparing patches]] that
     must be sent via email outright.
 
++ =prot-vc-git-checkout-remote= prompts for a remote branch and proceeds
+  to checkout a local branch that is set up to track it.  So if you have
+  a remote named =origin/dev= it will do =git checkout -b dev origin/dev=.
+  I only use this command inside VC-dir buffers.
+
 + =prot-vc-custom-log= prints a log of commits that matches a custom file
   set.  This is of great value when you need to inspect the history of
   only some files rather than that of the entire repository.  What files
@@ -3361,6 +3366,12 @@ manual for more on the matter):
     (define-key map (kbd "d") #'vc-diff)         ; parallel to D: `vc-root-diff'
     (define-key map (kbd "k") #'vc-dir-clean-files)
     (define-key map (kbd "G") #'vc-revert)
+    (let ((prot-vc-git-branch-map (make-sparse-keymap)))
+      (define-key map "B" prot-vc-git-branch-map)
+      (define-key prot-vc-git-branch-map "n" #'vc-create-tag) ; new branch/tag
+      (define-key prot-vc-git-branch-map "s" #'vc-retrieve-tag) ; switch branch/tag
+      (define-key prot-vc-git-branch-map "c" #'prot-vc-git-checkout-remote) ; "checkout" remote
+      (define-key prot-vc-git-branch-map "l" #'vc-print-branch-log))
     (let ((prot-vc-git-stash-map (make-sparse-keymap)))
       (define-key map "S" prot-vc-git-stash-map)
       (define-key prot-vc-git-stash-map "c" 'vc-git-stash) ; "create" named stash
