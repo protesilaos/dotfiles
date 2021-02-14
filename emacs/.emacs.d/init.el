@@ -39,6 +39,18 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
+(defmacro prot-emacs-manual-package (package &rest args)
+  "Set up manually installed PACKAGE (symbol) with rest ARGS."
+  (declare (indent defun))
+  `(let ((path (file-name-as-directory
+                (concat user-emacs-directory
+                        "contrib-lisp/"
+                        (pp-to-string ,package))))
+         (feature ,package))
+     (if (file-directory-p path)
+         (progn ,@args)
+       (user-error "`%s' is not available in `%s'" feature path))))
+
 (defvar prot-emacs-ensure-install nil
   "List of package names to install, if missing.")
 
