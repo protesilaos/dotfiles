@@ -1495,6 +1495,47 @@ This is =prot-project.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my
 
 #+include: prot-lisp/prot-project.el src emacs-lisp :tangle no
 
+**** Extra features for projects (project-x.el)
+:PROPERTIES:
+:CUSTOM_ID: h:4de10a0e-af55-4fdd-8000-d1e3a8ca8055
+:END:
+
+This package by Karthik Chikmagalur provides some helpful extensions to
+the =project.el= library (see [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).
+
++ Persistent storage of window configuration :: The window layout for
+  the given project can be saved and restored at will.  This is similar
+  to how registers can store a window layout, with the key difference
+  being that =project-x='s variants persist between Emacs sessions.  So
+  you can start work on a project, save the window configuration and
+  revisit it the day after.
++ Arbitrary project declaration :: By adding an empty =.project= file to
+  the root of a directory, we make it a valid project.  This means that
+  we can revisit it with the familiar =C-x p p= (=project-switch-project=)
+  and generally perform every project-related operation we want.  The
+  upside of using this method is that you can specify arbitrary file
+  paths that (i) do not necessary work under version and (ii) you do not
+  intend to treat them as your regular projects (e.g. the =elpa= directory
+  where Emacs installs packages by default).
+
+The =project-x-mode= streamlines the experience by adding a couple of key
+bindings to the =C-x p= project prefix key chord.  Those bindings will be
+familiar to anyone who has ever used registers: =C-x p w= will capture the
+project's window configuration, while =C-x p j= will jump to an already
+stored layout.
+
+#+begin_src emacs-lisp
+;; Project repo: <https://github.com/karthink/project-x>.  This is one
+;; of the packages I handle manually via git, at least until it becomes
+;; available through an ELPA.
+;;
+;; `prot-common-manual-package' is defined in prot-common.el
+(prot-common-manual-package 'project-x
+  (setq project-x-window-list-file (locate-user-emacs-file "project-x-window-list"))
+  (setq project-x-local-identifier ".project")
+  (project-x-mode 1))
+#+end_src
+
 *** Completion for recent files and directories (prot-recentf.el)
 :PROPERTIES:
 :CUSTOM_ID: h:5723c4bb-ff6c-449f-bb60-be66fab3f137
