@@ -758,11 +758,11 @@ This is a thin wrapper around `log-edit-done', which first calls
 (defface prot-vc-git-log-edit-file-name
   '((default :inherit font-lock-comment-face)
     (((class color) (min-colors 88) (background light))
-     :foreground "#00538b")
+     :foreground "#2a486a")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#00d3d0")
+     :foreground "#b0d6f5")
     (t :foreground "cyan"))
-  "Face for remote branch name in VC Git Log Edit buffers.")
+  "Face for file names in VC Git Log Edit buffers.")
 
 (defface prot-vc-git-log-edit-local-branch-name
   '((default :inherit font-lock-comment-face)
