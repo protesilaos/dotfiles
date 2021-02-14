@@ -42,16 +42,16 @@
 (defmacro prot-emacs-manual-package (package &rest args)
   "Set up manually installed PACKAGE (symbol) with rest ARGS."
   (declare (indent defun))
-  `(let ((path (file-name-as-directory
-                (concat user-emacs-directory
-                        "contrib-lisp/"
-                        (pp-to-string ,package)))))
+  `(let ((path (expand-file-name
+                (file-name-as-directory
+                 (concat user-emacs-directory
+                         "contrib-lisp/"
+                         (symbol-name ,package))))))
      (if (file-directory-p path)
          (progn
            (add-to-list 'load-path path)
            (require ,package)
-           (with-eval-after-load ,package
-             ,@args))
+           ,@args)
        (user-error "`%s' is not available in `%s'" ,package path))))
 
 (defvar prot-emacs-ensure-install nil
