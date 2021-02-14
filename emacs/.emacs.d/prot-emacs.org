@@ -3496,10 +3496,11 @@ to see it getting more widespread adoption.
 
 #+begin_src emacs-lisp
 ;; Project repo: <https://git.sr.ht/~yoctocell/git-email>.  This is one
-;; of the packages I handle manually via git.
-(add-to-list 'load-path (concat user-emacs-directory "contrib-lisp/git-email/"))
-(require 'git-email)
-(with-eval-after-load 'git-email
+;; of the packages I handle manually via git, at least until it becomes
+;; available through an ELPA.
+;;
+;; `prot-common-manual-package' is defined in prot-common.el
+(prot-common-manual-package 'git-email
   (with-eval-after-load 'gnus
     (require 'git-email-gnus)
     (git-email-gnus-mode 1))
