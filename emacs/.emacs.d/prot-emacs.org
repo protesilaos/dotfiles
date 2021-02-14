@@ -1529,7 +1529,7 @@ stored layout.
 ;; of the packages I handle manually via git, at least until it becomes
 ;; available through an ELPA.
 ;;
-;; `prot-emacs-manual-package' is defined in prot-common.el
+;; `prot-emacs-manual-package' is defined in my init.el
 (prot-emacs-manual-package 'project-x
   (setq project-x-window-list-file (locate-user-emacs-file "project-x-window-list"))
   (setq project-x-local-identifier ".project")
@@ -3540,7 +3540,7 @@ to see it getting more widespread adoption.
 ;; of the packages I handle manually via git, at least until it becomes
 ;; available through an ELPA.
 ;;
-;; `prot-emacs-manual-package' is defined in prot-common.el
+;; `prot-emacs-manual-package' is defined in my init.el
 (prot-emacs-manual-package 'git-email
   (with-eval-after-load 'gnus
     (require 'git-email-gnus)
@@ -6233,7 +6233,7 @@ likely to change over the near term.
 ;; packages I handle manually via git, at least until it becomes
 ;; available through an ELPA.
 ;;
-;; `prot-emacs-manual-package' is defined in prot-common.el
+;; `prot-emacs-manual-package' is defined in my init.el
 (prot-emacs-manual-package 'rlist
   (let ((map global-map))
     (define-key map (kbd "C-x r <backspace>") #'rlist-list-registers)
