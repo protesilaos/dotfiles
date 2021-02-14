@@ -45,11 +45,14 @@
   `(let ((path (file-name-as-directory
                 (concat user-emacs-directory
                         "contrib-lisp/"
-                        (pp-to-string ,package))))
-         (feature ,package))
+                        (pp-to-string ,package)))))
      (if (file-directory-p path)
-         (progn ,@args)
-       (user-error "`%s' is not available in `%s'" feature path))))
+         (progn
+           (add-to-list 'load-path path)
+           (require ,package)
+           (with-eval-after-load ,package
+             ,@args))
+       (user-error "`%s' is not available in `%s'" ,package path))))
 
 (defvar prot-emacs-ensure-install nil
   "List of package names to install, if missing.")
