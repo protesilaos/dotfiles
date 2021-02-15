@@ -49,6 +49,21 @@ expressions."
        (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :error))
      ,@body))
 
+(defmacro prot-emacs-elpa-package (package &rest body)
+  "Set up PACKAGE from an Elisp archive with rest BODY.
+PACKAGE is a quoted symbol, while BODY consists of balanced
+expressions."
+  (declare (indent 1))
+  `(progn
+     (unless (require ,package nil 'noerror)
+       (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :error)
+       (add-to-list 'prot-emacs-ensure-install ,package)
+       (display-warning
+        'prot-emacs
+        (format "Run `prot-emacs-install-ensured' to install all packages in `prot-emacs-ensure-install'")
+        :warning))
+     ,@body))
+
 (defmacro prot-emacs-manual-package (package &rest body)
   "Set up manually installed PACKAGE with rest BODY.
 PACKAGE is a quoted symbol, while BODY consists of balanced
