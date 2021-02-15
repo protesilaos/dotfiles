@@ -141,18 +141,46 @@ expressions."
 (setq initial-buffer-choice t)			; always start with *scratch*
 
 ;; I create an "el" version of my Org configuration file as a final step
-;; before closing down Emacs.  This is done to load the latest version
-;; of my code upon startup.
-;;
-;; Also helps with initialisation times.  Not that I care too much about
-;; those… Hence why I no longer bother with deferring package loading
-;; either by default or on a case-by-case basis.
-(let* ((conf (concat user-emacs-directory "prot-emacs"))
-       (el (concat conf ".el"))
-       (org (concat conf ".org")))
-  (if (file-exists-p el)
-      (load-file el)
+;; before closing down Emacs (see further below).  This is done to load
+;; the latest version of my code upon startup.  Also helps with
+;; initialisation times.  Not that I care too much about those...
+
+(defvar prot-emacs-file-name "prot-emacs")
+
+(defun prot-emacs--expand-file-name (extension)
+  "Return canonical path to `prot-emacs-file-name' with EXTENSION."
+  (expand-file-name
+   (concat user-emacs-directory prot-emacs-file-name extension)))
+
+(defun prot-emacs-load-config ()
+  "Load main Emacs configurations, either '.el' or '.org' file."
+  (let ((init-el (prot-emacs--expand-file-name ".el"))
+        (init-org (prot-emacs--expand-file-name ".org")))
+    (if (file-exists-p init-el)
+        (load-file init-el)
+      (require 'org)
+      (org-babel-load-file init-org))))
+
+;; Run now
+(prot-emacs-load-config)
+
+;; These are for later
+(declare-function org-babel-tangle-file "ob-tangle")
+
+(defun prot-emacs-build-config ()
+  "Produce Elisp init from my Org dotemacs.
+Add this to `kill-emacs-hook', to use the newest file in the next
+session.  The idea is to reduce startup time, though just by
+rolling it over to the end of a session rather than the beginning
+of it."
+  (let ((init-el (prot-emacs--expand-file-name ".el"))
+        (init-org (prot-emacs--expand-file-name ".org")))
+    (when (file-exists-p init-el)
+      (delete-file init-el))
     (require 'org)
-    (org-babel-load-file org)))
+    (org-babel-tangle-file init-org init-el)
+    (byte-compile-file init-el)))
+
+(add-hook 'kill-emacs-hook #'prot-emacs-build-config)
 
 ;;; init.el ends here

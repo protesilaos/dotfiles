@@ -54,7 +54,7 @@ contains all /package configurations/ for my Emacs setup.  To actually
 work, it needs to be initialised from another file that only covers the
 absolute essentials.
 
-*** Contents of my init.el (for Emacs 28)
+*** Main macros and other contents of my init.el (for Emacs 28)
 :PROPERTIES:
 :CUSTOM_ID: h:584c3604-55a1-49d0-9c31-abe46cb1f028
 :END:
@@ -63,6 +63,55 @@ The =prot-emacs.org= is loaded from an other file, named =init.el= per the
 Emacs conventions.  Mine includes some helper macros for package
 configuration and is otherwise designed to initialise the package lists
 and load the file with my configurations (i.e. the present document).
+
+*Those macros are integral parts of my setup*, as they control the
+configuration of all packages declared herein.  In particular:
+
++ =prot-emacs-builtin-package= is used for libraries that are either
+  shipped with Emacs or are part of my dotfiles' directory.  The latter
+  class consists of all those =prot-*.el= files, as well as a few others.
+  All this macro does is to =require= the given feature and then evaluate
+  all of its forms (variables, key bindings, hooks, etc.).
+
++ =prot-emacs-elpa-package= controls packages that I install from some
+  Emacs Lisp Package Archive, like MELPA or GNU ELPA.  This macro will
+  load the package if it is already installed and then evaluate all of
+  its forms.  If the package is not installed, it will produce a warning
+  telling the user that all the uninstalled-yet-declared packages can be
+  installed in one go with the command =prot-emacs-install-ensured=.
+
++ =prot-emacs-manual-package= handles the few packages that I install
+  manually via their Git repository.  Each of those repos must be inside
+  of =(expand-file-name (concat user-emacs-directory "contrib-lisp"))=
+  (typically at =~/.emacs.d/contrib-lisp=).  The macro will load the
+  package normally and configure it accordingly if it exists at the
+  desired path, else it will log a warning about what file path it
+  expects to read.  In concrete terms, if you want =package-A= you must
+  first place all of its files at =~/.emacs.d/contrib-lisp/package-A=.
+
+*I must stress that no package is ever automatically installed:* the user
+is expected to do so on their own.  The idea is to avoid the malpractice
+of installing software without explicit consent.  This means, of course,
+that my dotemacs cannot be reproduced without direct intervention, which
+amounts to running the command =prot-emacs-install-ensured= after the
+first startup and setting up the manually controlled packages, as
+explained above.
+
+The =init.el= (reproduced further below) also sets some variables to their
+desired values and provides a couple of functions that control the start
+and end phases of my Emacs sessions.
+
++ =prot-emacs-build-config= is the final function from my part that runs
+  before terminating the running Emacs process.  It regenerates my
+  configurations and byte compiles the output.  This speeds things up
+  the next time I launch Emacs, while it also ensures that I am always
+  running the latest version of my setup.
+
++ =prot-emacs-load-config= will either load the output of the
+  aforementioned function or, if that is not available, parse the
+  literate program that holds my code (this Org file if you are viewing
+  the source code or the document that produces the HTML of this web
+  page).  Either way, it load my configurations.
 
 #+include: init.el src emacs-lisp :tangle no
 
@@ -235,9 +284,7 @@ appropriate place to re-bind or free up some common key combinations.
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
-    (define-key map (kbd "s-k") #'prot-simple-kill-buffer-current))
-
-  (add-hook 'kill-emacs-hook #'prot-simple-rebuild-emacs-init))
+    (define-key map (kbd "s-k") #'prot-simple-kill-buffer-current)))
 #+end_src
 
 These are the contents of the =prot-simple.el= library (find the file in
