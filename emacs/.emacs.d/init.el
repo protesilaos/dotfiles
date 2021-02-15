@@ -39,21 +39,22 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
-(eval-and-compile
-  (defmacro prot-emacs-manual-package (package &rest args)
-    "Set up manually installed PACKAGE (symbol) with rest ARGS."
-    (declare (indent defun))
-    `(let ((path (expand-file-name
-                  (file-name-as-directory
-                   (concat user-emacs-directory
-                           "contrib-lisp/"
-                           (symbol-name ,package))))))
-       (if (file-directory-p path)
-           (progn
-             (add-to-list 'load-path path)
-             (require ,package)
-             ,@args)
-         (user-error "`%s' is not available in `%s'" ,package path)))))
+(defmacro prot-emacs-manual-package (package &rest body)
+  "Set up manually installed PACKAGE with rest BODY.
+PACKAGE is a quoted symbol, while BODY consists of balanced
+expressions."
+  (declare (indent 1))
+  (let ((path (thread-last user-emacs-directory
+                (expand-file-name "contrib-lisp")
+                (expand-file-name (symbol-name (eval package))))))
+    `(progn
+       (eval-and-compile
+         (add-to-list 'load-path ,path))
+       (unless (require ,package nil 'noerror)
+         (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :error))
+       (with-eval-after-load ,package
+         ,@body))))
+
 
 (defvar prot-emacs-ensure-install nil
   "List of package names to install, if missing.")
