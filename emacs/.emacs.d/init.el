@@ -39,6 +39,39 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
+;; This variable is incremented in prot-emacs.org.  The idea is to
+;; produce a list of packages that we want to install on demand from an
+;; ELPA.  So someone who tries to reproduce my Emacs setup will first
+;; get a bunch of warnings about unavailable packages, though not
+;; show-stopping errors, and will then have to use the command
+;; `prot-emacs-builtin-package'.  After that command does its job, a
+;; re-run of my Emacs configurations will yield the expected results.
+;;
+;; The assumption is that such a user will want to inspect the elements
+;; of `prot-emacs-ensure-install', remove from the setup whatever code
+;; block they do not want, and then call the aforementioned command.
+;;
+;; I do not want to maintain a setup that auto-installs everything on
+;; first boot.  I think that is a bad practice because it teaches the
+;; user to just trust the provider, which they should not do in advance.
+;; Besides, this is not an Emacs distro targeted at a general audience:
+;; it is just my personal config.
+(defvar prot-emacs-ensure-install nil
+  "List of package names used by `prot-emacs-install-ensured'.")
+
+(defun prot-emacs-install-ensured ()
+  "Install all `prot-emacs-ensure-install' packages, if needed.
+If a package is already installed, no further action is performed
+on it."
+  (interactive)
+  (when (yes-or-no-p (format "Try to install %d packages?"
+                             (length prot-emacs-ensure-install)))
+    (package-refresh-contents)
+    (mapc (lambda (package)
+            (unless (package-installed-p package)
+              (package-install package)))
+          prot-emacs-ensure-install)))
+
 (defmacro prot-emacs-builtin-package (package &rest body)
   "Set up builtin PACKAGE with rest BODY.
 PACKAGE is a quoted symbol, while BODY consists of balanced
@@ -79,19 +112,6 @@ expressions."
          (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :error))
        (with-eval-after-load ,package
          ,@body))))
-
-
-(defvar prot-emacs-ensure-install nil
-  "List of package names to install, if missing.")
-
-(defun prot-emacs-install-ensured ()
-  "Install all `prot-emacs-ensure-install' packages, if needed."
-  (interactive)
-  (package-refresh-contents)
-  (mapcar (lambda (package)
-            (unless (package-installed-p package)
-              (package-install package)))
-          prot-emacs-ensure-install))
 
 (require 'vc)
 (setq vc-follow-symlinks t) ; Because my dotfiles are managed that way
