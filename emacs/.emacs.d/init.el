@@ -72,11 +72,14 @@ expressions."
 (setq vc-follow-symlinks t) ; Because my dotfiles are managed that way
 
 ;; For my custom libraries
-(add-to-list 'load-path (concat user-emacs-directory "prot-lisp/"))
-(add-to-list 'load-path (concat user-emacs-directory "modus-themes/"))
+(add-to-list 'load-path (expand-file-name
+                         (concat user-emacs-directory "prot-lisp")))
+(add-to-list 'load-path (expand-file-name
+                         (concat user-emacs-directory "modus-themes")))
 
 ;; For other libraries
-(add-to-list 'load-path (concat user-emacs-directory "contrib-lisp/"))
+(add-to-list 'load-path (expand-file-name
+                         (concat user-emacs-directory "contrib-lisp")))
 
 ;; Some basic settings
 (setq frame-title-format '("%b"))
