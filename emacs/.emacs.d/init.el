@@ -109,7 +109,8 @@ expressions."
        (eval-and-compile
          (add-to-list 'load-path ,path))
        (unless (require ,package nil 'noerror)
-         (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :error))
+         (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :error)
+         (display-warning 'prot-emacs (format "This must be available at %s" ,path) :warning))
        (with-eval-after-load ,package
          ,@body))))
 
