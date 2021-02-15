@@ -2696,6 +2696,28 @@ The =prot-tab.el= code, which is in [[https://gitlab.com/protesilaos/dotfiles][m
 
 #+include: prot-lisp/prot-tab.el src emacs-lisp :tangle no
 
+**** Tab-bar tabs in the echo area (tab-bar-echo-area.el)
+:PROPERTIES:
+:CUSTOM_ID: h:88872e4c-7143-4f93-b8a0-9e92cf36fb78
+:END:
+
+In the previous section on [[#h:63ad472f-c9c2-40ad-9675-1dc529487788][Tabs for window layouts (and prot-tab.el)]], I
+explicitly disable the presentation of the tab bar, even though I still
+use its functionality.  This keeps the overall aesthetics minimalist,
+which I like.  The problem with such a configuration is that we lose
+context: it is no longer possible to determine the number of open tabs
+nor understand the position of the current one in the list.
+
+This is where Fritz Grabo's =tab-bar-echo-area.el= enters the fray: it
+prints a message in the echo area showing the tab list, while it
+highlights the current item.  So we can retain both our minimalism and
+the contextuality a bar offers.  Simple, yet super effective!
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'tab-bar-echo-area
+  (tab-bar-echo-area-mode 1))
+#+end_src
+
 *** Transposition and rotation of windows
 :PROPERTIES:
 :CUSTOM_ID: h:753ea060-57e4-4dba-9bf9-b6337e478839
