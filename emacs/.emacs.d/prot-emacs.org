@@ -167,9 +167,8 @@ offer an overview of each item in my library, I feel the code and
 concomitant documentation strings are clear enough for you to peruse the
 source directly (reproduced further below).
 
-Given that this is a foundational piece of my Emacs setup, its package
-configurations serve as the appropriate place to re-bind or free up some
-common key combinations.
+Given that this is a foundational piece of my Emacs setup, it is the
+appropriate place to re-bind or free up some common key combinations.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'prot-simple
@@ -1125,24 +1124,25 @@ try.
     (define-key map (kbd "C-x r L") #'consult-register-load)
     (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)))
 
-(prot-emacs-builtin-package 'prot-consult
-  (setq consult-project-root-function #'prot-consult-project-root)
-  (setq prot-consult-command-centre-list
-        '(consult-line
-          prot-consult-line
-          consult-mark))
-  (setq prot-consult-command-top-list
-        '(consult-outline
-          consult-imenu
-          prot-consult-outline
-          prot-consult-imenu))
-  (prot-consult-set-up-hooks-mode 1)
-  (let ((map global-map))
-    (define-key map (kbd "M-s i") #'prot-consult-imenu)
-    (define-key map (kbd "M-s f") #'prot-consult-fd)
-    (define-key map (kbd "M-s s") #'prot-consult-outline)    ; M-s o is `occur'
-    (define-key map (kbd "M-s y") #'prot-consult-yank)
-    (define-key map (kbd "M-s l") #'prot-consult-line)))
+(with-eval-after-load 'consult
+  (prot-emacs-builtin-package 'prot-consult
+    (setq consult-project-root-function #'prot-consult-project-root)
+    (setq prot-consult-command-centre-list
+          '(consult-line
+            prot-consult-line
+            consult-mark))
+    (setq prot-consult-command-top-list
+          '(consult-outline
+            consult-imenu
+            prot-consult-outline
+            prot-consult-imenu))
+    (prot-consult-set-up-hooks-mode 1)
+    (let ((map global-map))
+      (define-key map (kbd "M-s i") #'prot-consult-imenu)
+      (define-key map (kbd "M-s f") #'prot-consult-fd)
+      (define-key map (kbd "M-s s") #'prot-consult-outline)    ; M-s o is `occur'
+      (define-key map (kbd "M-s y") #'prot-consult-yank)
+      (define-key map (kbd "M-s l") #'prot-consult-line))))
 #+end_src
 
 Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -1340,33 +1340,34 @@ Finally, a few words about the following package configurations:
   ;; :hook (embark-collect-mode-hook . embark-consult-preview-minor-mode)
   (define-key embark-collect-mode-map (kbd "C-j") #'embark-consult-preview-at-point))
 
-(prot-emacs-builtin-package 'prot-embark
-  (add-hook 'minibuffer-exit-hook #'prot-embark-clear-live-buffers)
-  (add-hook 'embark-collect-mode-hook #'prot-embark-completions-cursor)
-  (add-hook 'embark-collect-post-revert-hook #'prot-embark-collect-fit-window)
-  (add-hook 'embark-collect-mode-hook #'prot-embark-hl-line)
-  (add-hook 'embark-collect-mode-hook #'prot-embark-display-line-numbers)
-  ;; NOTE: to switch to the live collection buffer, I also use
-  ;; `prot-minibuffer-focus-mini-or-completions' which is bound to
-  ;; "s-v".
-  (let ((map embark-collect-mode-map))
-    (define-key map (kbd "h") #'prot-simple-describe-symbol)  ; from `prot-simple.el'
-    (define-key map (kbd "C-g") #'prot-embark-keyboard-quit)
-    (define-key map (kbd "C-k") #'prot-embark-collection-kill-line)
-    (define-key map (kbd "C-M-n") #'prot-embark-completions-act-next)
-    (define-key map (kbd "C-M-p") #'prot-embark-completions-act-previous)
-    (define-key map (kbd "C-M-j") #'prot-embark-completions-act-current)
-    (define-key map (kbd "C-M-v") #'prot-embark-consult-preview-toggle) ; "view", "visualise" mnemonic
-    (define-key map (kbd "C-n") #'prot-embark-next-line-or-mini)
-    (define-key map (kbd "<down>") #'prot-embark-next-line-or-mini)
-    (define-key map (kbd "C-p") #'prot-embark-previous-line-or-mini)
-    (define-key map (kbd "<up>") #'prot-embark-previous-line-or-mini))
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "C-n") #'prot-embark-switch-to-completions-top)
-    (define-key map (kbd "<down>") #'prot-embark-switch-to-completions-top)
-    (define-key map (kbd "C-p") #'prot-embark-switch-to-completions-bottom)
-    (define-key map (kbd "<up>") #'prot-embark-switch-to-completions-bottom)
-    (define-key map (kbd "C-l") #'prot-embark-completions-toggle)))
+(with-eval-after-load 'embark
+  (prot-emacs-builtin-package 'prot-embark
+    (add-hook 'minibuffer-exit-hook #'prot-embark-clear-live-buffers)
+    (add-hook 'embark-collect-mode-hook #'prot-embark-completions-cursor)
+    (add-hook 'embark-collect-post-revert-hook #'prot-embark-collect-fit-window)
+    (add-hook 'embark-collect-mode-hook #'prot-embark-hl-line)
+    (add-hook 'embark-collect-mode-hook #'prot-embark-display-line-numbers)
+    ;; NOTE: to switch to the live collection buffer, I also use
+    ;; `prot-minibuffer-focus-mini-or-completions' which is bound to
+    ;; "s-v".
+    (let ((map embark-collect-mode-map))
+      (define-key map (kbd "h") #'prot-simple-describe-symbol)  ; from `prot-simple.el'
+      (define-key map (kbd "C-g") #'prot-embark-keyboard-quit)
+      (define-key map (kbd "C-k") #'prot-embark-collection-kill-line)
+      (define-key map (kbd "C-M-n") #'prot-embark-completions-act-next)
+      (define-key map (kbd "C-M-p") #'prot-embark-completions-act-previous)
+      (define-key map (kbd "C-M-j") #'prot-embark-completions-act-current)
+      (define-key map (kbd "C-M-v") #'prot-embark-consult-preview-toggle) ; "view", "visualise" mnemonic
+      (define-key map (kbd "C-n") #'prot-embark-next-line-or-mini)
+      (define-key map (kbd "<down>") #'prot-embark-next-line-or-mini)
+      (define-key map (kbd "C-p") #'prot-embark-previous-line-or-mini)
+      (define-key map (kbd "<up>") #'prot-embark-previous-line-or-mini))
+    (let ((map minibuffer-local-completion-map))
+      (define-key map (kbd "C-n") #'prot-embark-switch-to-completions-top)
+      (define-key map (kbd "<down>") #'prot-embark-switch-to-completions-top)
+      (define-key map (kbd "C-p") #'prot-embark-switch-to-completions-bottom)
+      (define-key map (kbd "<up>") #'prot-embark-switch-to-completions-bottom)
+      (define-key map (kbd "C-l") #'prot-embark-completions-toggle))))
 #+end_src
 
 This is =prot-embark.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -1559,9 +1560,10 @@ The way to extend Embark is to follow its own design: define keymaps and
 add them to the list of Embark's known keymaps.
 
 #+begin_src emacs-lisp
-(prot-emacs-builtin-package 'prot-embark-extras
-  (prot-embark-extras-keymaps 1)
-  (prot-embark-extras-setup-packages 1))
+(with-eval-after-load 'embark
+  (prot-emacs-builtin-package 'prot-embark-extras
+    (prot-embark-extras-keymaps 1)
+    (prot-embark-extras-setup-packages 1)))
 #+end_src
 
 This is =prot-embark-extras.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -5064,37 +5066,38 @@ demonstrated back then (as of 2021-01-18).
     (define-key map (kbd "J") #'dired-jump)             ; Jump to library buffer
     (define-key map (kbd "I") #'bongo-insert-special)))
 
-(prot-emacs-builtin-package 'prot-bongo
-  (setq prot-bongo-enabled-backends '(mpv vlc))
-  (setq prot-bongo-playlist-section-delimiter (make-string 30 ?*))
-  (setq prot-bongo-playlist-heading-delimiter "§")
-  (setq prot-bongo-playlist-directory
-        (concat
-         (file-name-as-directory bongo-default-directory)
-         (file-name-as-directory "playlists")))
-  ;; Those set up a few extras: read each function's doc string.  Pass
-  ;; an argument to undo their effects.
-  (prot-bongo-enabled-backends)
-  (prot-bongo-remove-headers)
-  (prot-bongo-imenu-setup)
-  (add-hook 'dired-mode-hook #'prot-bongo-dired-library-enable)
-  (add-hook 'wdired-mode-hook #'prot-bongo-dired-library-disable)
-  (add-hook 'prot-bongo-playlist-change-track-hook #'prot-bongo-playlist-recenter)
-  (let ((map bongo-playlist-mode-map))
-    (define-key map (kbd "C-c C-n") #'prot-bongo-playlist-heading-next)
-    (define-key map (kbd "C-c C-p") #'prot-bongo-playlist-heading-previous)
-    (define-key map (kbd "M-n") #'prot-bongo-playlist-section-next)
-    (define-key map (kbd "M-p") #'prot-bongo-playlist-section-previous)
-    (define-key map (kbd "M-h") #'prot-bongo-playlist-mark-section)
-    (define-key map (kbd "M-d") #'prot-bongo-playlist-kill-section)
-    (define-key map (kbd "g") #'prot-bongo-playlist-reset)
-    (define-key map (kbd "D") #'prot-bongo-playlist-terminate)
-    (define-key map (kbd "r") #'prot-bongo-playlist-random-toggle)
-    (define-key map (kbd "i") #'prot-bongo-playlist-insert-playlist-file))
-  (let ((map bongo-dired-library-mode-map))
-    (define-key map (kbd "<C-return>") #'prot-bongo-dired-insert)
-    (define-key map (kbd "C-c SPC") #'prot-bongo-dired-insert)
-    (define-key map (kbd "C-c +") #'prot-bongo-dired-make-playlist-file)))
+(with-eval-after-load 'bongo
+  (prot-emacs-builtin-package 'prot-bongo
+    (setq prot-bongo-enabled-backends '(mpv vlc))
+    (setq prot-bongo-playlist-section-delimiter (make-string 30 ?*))
+    (setq prot-bongo-playlist-heading-delimiter "§")
+    (setq prot-bongo-playlist-directory
+          (concat
+           (file-name-as-directory bongo-default-directory)
+           (file-name-as-directory "playlists")))
+    ;; Those set up a few extras: read each function's doc string.  Pass
+    ;; an argument to undo their effects.
+    (prot-bongo-enabled-backends)
+    (prot-bongo-remove-headers)
+    (prot-bongo-imenu-setup)
+    (add-hook 'dired-mode-hook #'prot-bongo-dired-library-enable)
+    (add-hook 'wdired-mode-hook #'prot-bongo-dired-library-disable)
+    (add-hook 'prot-bongo-playlist-change-track-hook #'prot-bongo-playlist-recenter)
+    (let ((map bongo-playlist-mode-map))
+      (define-key map (kbd "C-c C-n") #'prot-bongo-playlist-heading-next)
+      (define-key map (kbd "C-c C-p") #'prot-bongo-playlist-heading-previous)
+      (define-key map (kbd "M-n") #'prot-bongo-playlist-section-next)
+      (define-key map (kbd "M-p") #'prot-bongo-playlist-section-previous)
+      (define-key map (kbd "M-h") #'prot-bongo-playlist-mark-section)
+      (define-key map (kbd "M-d") #'prot-bongo-playlist-kill-section)
+      (define-key map (kbd "g") #'prot-bongo-playlist-reset)
+      (define-key map (kbd "D") #'prot-bongo-playlist-terminate)
+      (define-key map (kbd "r") #'prot-bongo-playlist-random-toggle)
+      (define-key map (kbd "i") #'prot-bongo-playlist-insert-playlist-file))
+    (let ((map bongo-dired-library-mode-map))
+      (define-key map (kbd "<C-return>") #'prot-bongo-dired-insert)
+      (define-key map (kbd "C-c SPC") #'prot-bongo-dired-insert)
+      (define-key map (kbd "C-c +") #'prot-bongo-dired-make-playlist-file))))
 #+end_src
 
 Here is my =prot-bongo.el= library (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -5238,22 +5241,23 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
     (define-key map (kbd "w") #'elfeed-show-yank)
     (define-key map (kbd "b") #'prot-elfeed-bongo-insert-item)))
 
-(prot-emacs-builtin-package 'prot-elfeed
-  (setq prot-elfeed-tag-faces t)
-  (prot-elfeed-fontify-tags)
-  (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
-  (let ((map elfeed-search-mode-map))
-    (define-key map (kbd "s") #'prot-elfeed-search-tag-filter)
-    (define-key map (kbd "o") #'prot-elfeed-search-open-other-window)
-    (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
-    (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
-    (define-key map (kbd "+") #'prot-elfeed-toggle-tag))
-  (let ((map elfeed-show-mode-map))
-    (define-key map (kbd "a") #'prot-elfeed-show-archive-entry)
-    (define-key map (kbd "e") #'prot-elfeed-show-eww)
-    (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
-    (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
-    (define-key map (kbd "+") #'prot-elfeed-toggle-tag)))
+(with-eval-after-load 'elfeed
+  (prot-emacs-builtin-package 'prot-elfeed
+    (setq prot-elfeed-tag-faces t)
+    (prot-elfeed-fontify-tags)
+    (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
+    (let ((map elfeed-search-mode-map))
+      (define-key map (kbd "s") #'prot-elfeed-search-tag-filter)
+      (define-key map (kbd "o") #'prot-elfeed-search-open-other-window)
+      (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
+      (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
+      (define-key map (kbd "+") #'prot-elfeed-toggle-tag))
+    (let ((map elfeed-show-mode-map))
+      (define-key map (kbd "a") #'prot-elfeed-show-archive-entry)
+      (define-key map (kbd "e") #'prot-elfeed-show-eww)
+      (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
+      (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
+      (define-key map (kbd "+") #'prot-elfeed-toggle-tag))))
 #+end_src
 
 This is =prot-elfeed.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -6308,9 +6312,9 @@ I edit lots of Markdown files.  This makes things easier.
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'markdown-mode
   (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
-  (setq markdown-fontify-code-blocks-natively t)
-  ;; Allows for fenced block focus with C-c ' (same as Org blocks).
-  (prot-emacs-elpa-package 'edit-indirect))
+  (setq markdown-fontify-code-blocks-natively t))
+;; Allows for fenced block focus with C-c ' (same as Org blocks).
+(prot-emacs-elpa-package 'edit-indirect)
 #+end_src
 
 *** YAML (yaml-mode)

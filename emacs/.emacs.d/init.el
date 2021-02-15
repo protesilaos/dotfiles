@@ -44,7 +44,7 @@
 ;; ELPA.  So someone who tries to reproduce my Emacs setup will first
 ;; get a bunch of warnings about unavailable packages, though not
 ;; show-stopping errors, and will then have to use the command
-;; `prot-emacs-builtin-package'.  After that command does its job, a
+;; `prot-emacs-install-ensured'.  After that command does its job, a
 ;; re-run of my Emacs configurations will yield the expected results.
 ;;
 ;; The assumption is that such a user will want to inspect the elements
@@ -79,7 +79,7 @@ expressions."
   (declare (indent 1))
   `(progn
      (unless (require ,package nil 'noerror)
-       (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :error))
+       (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :warning))
      ,@body))
 
 (defmacro prot-emacs-elpa-package (package &rest body)
@@ -87,15 +87,14 @@ expressions."
 PACKAGE is a quoted symbol, while BODY consists of balanced
 expressions."
   (declare (indent 1))
-  `(progn
-     (unless (require ,package nil 'noerror)
-       (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :error)
-       (add-to-list 'prot-emacs-ensure-install ,package)
-       (display-warning
-        'prot-emacs
-        (format "Run `prot-emacs-install-ensured' to install all packages in `prot-emacs-ensure-install'")
-        :warning))
-     ,@body))
+  `(if (require ,package nil 'noerror)
+       (progn ,@body)
+     (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :warning)
+     (add-to-list 'prot-emacs-ensure-install ,package)
+     (display-warning
+      'prot-emacs
+      (format "Run `prot-emacs-install-ensured' to install all packages in `prot-emacs-ensure-install'")
+      :warning)))
 
 (defmacro prot-emacs-manual-package (package &rest body)
   "Set up manually installed PACKAGE with rest BODY.
@@ -108,11 +107,11 @@ expressions."
     `(progn
        (eval-and-compile
          (add-to-list 'load-path ,path))
-       (unless (require ,package nil 'noerror)
-         (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :error)
-         (display-warning 'prot-emacs (format "This must be available at %s" ,path) :warning))
-       (with-eval-after-load ,package
-         ,@body))))
+       (if (require ,package nil 'noerror)
+	       (with-eval-after-load ,package
+             ,@body)
+         (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :warning)
+         (display-warning 'prot-emacs (format "This must be available at %s" ,path) :warning)))))
 
 (require 'vc)
 (setq vc-follow-symlinks t) ; Because my dotfiles are managed that way
