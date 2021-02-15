@@ -54,26 +54,25 @@ contains all /package configurations/ for my Emacs setup.  To actually
 work, it needs to be initialised from another file that only covers the
 absolute essentials.
 
-*** Contents of my init.el (for Emacs 27+)
+*** Contents of my init.el (for Emacs 28)
 :PROPERTIES:
 :CUSTOM_ID: h:584c3604-55a1-49d0-9c31-abe46cb1f028
 :END:
 
 The =prot-emacs.org= is loaded from an other file, named =init.el= per the
-Emacs conventions.  Mine is designed to initialise the package lists
-add the community-driven MELPA archive to the list of package
-repositories, and load the file with my configurations (i.e. the
-present document).
+Emacs conventions.  Mine includes some helper macros for package
+configuration and is otherwise designed to initialise the package lists
+and load the file with my configurations (i.e. the present document).
 
 #+include: init.el src emacs-lisp :tangle no
 
-**** The "early init" for Emacs 27+
+**** The "early init"
 :PROPERTIES:
 :CUSTOM_ID: h:874944d8-7ac0-4115-aa21-6ff4e005f6f6
 :END:
 
 Starting with Emacs 27.1, an =early-init.el= is required to control things
-with greater precision.  Its code is as follows:
+with greater precision.  My code is as follows:
 
 #+include: early-init.el src emacs-lisp :tangle no
 
