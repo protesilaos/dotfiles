@@ -39,6 +39,16 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
+(defmacro prot-emacs-builtin-package (package &rest body)
+  "Set up builtin PACKAGE with rest BODY.
+PACKAGE is a quoted symbol, while BODY consists of balanced
+expressions."
+  (declare (indent 1))
+  `(progn
+     (unless (require ,package nil 'noerror)
+       (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :error))
+     ,@body))
+
 (defmacro prot-emacs-manual-package (package &rest body)
   "Set up manually installed PACKAGE with rest BODY.
 PACKAGE is a quoted symbol, while BODY consists of balanced
