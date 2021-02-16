@@ -3559,7 +3559,7 @@ Consider viewing my [[https://protesilaos.com/codelog/2020-04-04-emacs-intro-mag
 diffs, commit changes, view logs, create branches, and so on.
 
 Magit has great defaults and it should work admirably without any
-further tweaks of extra setup.  That granted, the =git-commit= package
+further tweaks or extra setup.  That granted, the =git-commit= package
 (part of Magit) is configured in accordance with the guidelines provided
 by this article on [[https://chris.beams.io/posts/git-commit/][writing a Git commit message]].  The gist is to compose
 commits that are clean and easy to read.  The =fill-column= is set
