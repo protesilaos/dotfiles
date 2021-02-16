@@ -116,15 +116,12 @@ expressions."
 (require 'vc)
 (setq vc-follow-symlinks t) ; Because my dotfiles are managed that way
 
-;; For my custom libraries
-(add-to-list 'load-path (expand-file-name
-                         (concat user-emacs-directory "prot-lisp")))
-(add-to-list 'load-path (expand-file-name
-                         (concat user-emacs-directory "modus-themes")))
-
-;; For other libraries
-(add-to-list 'load-path (expand-file-name
-                         (concat user-emacs-directory "contrib-lisp")))
+;; "prot-lisp" is for all my custom libraries; "contrib-lisp" is for
+;; third-party code that I handle manually; while "modus-themes"
+;; contains my themes which I use directly from source for development
+;; purposes.
+(dolist (path '("prot-lisp" "contrib-lisp" "modus-themes"))
+  (add-to-list 'load-path (thread-last user-emacs-directory (expand-file-name path))))
 
 ;; Some basic settings
 (setq frame-title-format '("%b"))
