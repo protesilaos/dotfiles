@@ -4583,6 +4583,7 @@ configurations are about.
 
 (prot-emacs-builtin-package 'message
   (setq mail-user-agent 'message-user-agent)
+  (setq mail-header-separator (purecopy "* * *"))
   (setq compose-mail-user-agent-warnings nil)
   (setq message-mail-user-agent nil)    ; default is `gnus'
   (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
