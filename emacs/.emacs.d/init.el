@@ -177,10 +177,10 @@ expressions."
       (when (file-exists-p user-init-org)
         (org-babel-load-file user-init-org)))))
 
-;; Run now
+;; Load configurations.
 (prot-emacs-load-config)
 
-;; These are for later
+;; The following as for when we close the Emacs session.
 (declare-function org-babel-tangle-file "ob-tangle")
 
 (defun prot-emacs-build-config ()
