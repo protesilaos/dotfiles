@@ -145,21 +145,37 @@ expressions."
 ;; the latest version of my code upon startup.  Also helps with
 ;; initialisation times.  Not that I care too much about those...
 
-(defvar prot-emacs-file-name "prot-emacs")
+(defvar prot-emacs-configuration-main-file "prot-emacs"
+  "Base name of the main configuration file.")
 
-(defun prot-emacs--expand-file-name (extension)
-  "Return canonical path to `prot-emacs-file-name' with EXTENSION."
+;; THIS IS EXPERIMENTAL.  Basically I want to test how we can let users
+;; include their own customisations in addition to my own.  Those will
+;; be stored in a separate Org file.
+(defvar prot-emacs-configuration-user-file "user-emacs"
+  "Base name of user-specific configuration file.")
+
+(defun prot-emacs--expand-file-name (file extension)
+  "Return canonical path to FILE with EXTENSION."
   (expand-file-name
-   (concat user-emacs-directory prot-emacs-file-name extension)))
+   (concat user-emacs-directory file extension)))
 
 (defun prot-emacs-load-config ()
   "Load main Emacs configurations, either '.el' or '.org' file."
-  (let ((init-el (prot-emacs--expand-file-name ".el"))
-        (init-org (prot-emacs--expand-file-name ".org")))
-    (if (file-exists-p init-el)
-        (load-file init-el)
-      (require 'org)
-      (org-babel-load-file init-org))))
+  (let* ((main-init prot-emacs-configuration-main-file)
+         (main-init-el (prot-emacs--expand-file-name main-init ".el"))
+         (main-init-org (prot-emacs--expand-file-name main-init ".org"))
+         (user-init prot-emacs-configuration-user-file)
+         (user-init-el (prot-emacs--expand-file-name user-init ".el"))
+         (user-init-org (prot-emacs--expand-file-name user-init ".org")))
+    (require 'org)
+    (if (file-exists-p main-init-el)    ; FIXME 2021-02-16: this should be improved
+        (load-file main-init-el)
+      (when (file-exists-p main-init-org)
+        (org-babel-load-file main-init-org)))
+    (if (file-exists-p user-init-el)
+        (load-file user-init-el)
+      (when (file-exists-p user-init-org)
+        (org-babel-load-file user-init-org)))))
 
 ;; Run now
 (prot-emacs-load-config)
@@ -173,13 +189,23 @@ Add this to `kill-emacs-hook', to use the newest file in the next
 session.  The idea is to reduce startup time, though just by
 rolling it over to the end of a session rather than the beginning
 of it."
-  (let ((init-el (prot-emacs--expand-file-name ".el"))
-        (init-org (prot-emacs--expand-file-name ".org")))
-    (when (file-exists-p init-el)
-      (delete-file init-el))
+  (let* ((main-init prot-emacs-configuration-main-file)
+         (main-init-el (prot-emacs--expand-file-name main-init ".el"))
+         (main-init-org (prot-emacs--expand-file-name main-init ".org"))
+         (user-init prot-emacs-configuration-user-file)
+         (user-init-el (prot-emacs--expand-file-name user-init ".el"))
+         (user-init-org (prot-emacs--expand-file-name user-init ".org")))
+    (when (file-exists-p main-init-el)
+      (delete-file main-init-el))
+    (when (file-exists-p user-init-el)
+      (delete-file user-init-el))
     (require 'org)
-    (org-babel-tangle-file init-org init-el)
-    (byte-compile-file init-el)))
+    (when (file-exists-p main-init-org)
+      (org-babel-tangle-file main-init-org main-init-el)
+      (byte-compile-file main-init-el))
+    (when (file-exists-p user-init-org)
+      (org-babel-tangle-file user-init-org user-init-el)
+      (byte-compile-file user-init-el))))
 
 (add-hook 'kill-emacs-hook #'prot-emacs-build-config)
 
