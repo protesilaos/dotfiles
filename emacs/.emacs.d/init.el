@@ -39,6 +39,36 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 
+(defvar prot-emacs-autoinstall-elpa nil
+  "Whether `prot-emacs-elpa-package' should install packages.
+The default nil value means never to automatically install
+packages.  A non-nil value is always interpreted as consent for
+auto-installing everything---this process does not cover manually
+maintained git repos, controlled by `prot-emacs-manual-package'.")
+
+(defvar prot-emacs-basic-init "basic-init.el"
+  "Name of 'basic init' file.
+
+This file is meant to store user configurations that are evaluated
+before loading `prot-emacs-configuration-main-file' and, when
+available, `prot-emacs-configuration-user-file'.  Those values
+control the behaviour of the Emacs setup.
+
+The only variable that is currently expected to be in the 'basic
+init' file is `prot-emacs-autoinstall-elpa'.
+
+See `prot-emacs-basic-init-setup' for the actual initialisation
+process.")
+
+(defun prot-emacs-basic-init-setup ()
+  "Load 'basic-init.el' if it exists.
+This is meant to evaluate forms that control the rest of my Emacs
+setup."
+  (let* ((init prot-emacs-basic-init)
+         (file (thread-last user-emacs-directory (expand-file-name init))))
+    (when (file-exists-p file)
+      (load-file file))))
+
 ;; This variable is incremented in prot-emacs.org.  The idea is to
 ;; produce a list of packages that we want to install on demand from an
 ;; ELPA.  So someone who tries to reproduce my Emacs setup will first
@@ -85,16 +115,23 @@ expressions."
 (defmacro prot-emacs-elpa-package (package &rest body)
   "Set up PACKAGE from an Elisp archive with rest BODY.
 PACKAGE is a quoted symbol, while BODY consists of balanced
-expressions."
+expressions.
+
+When `prot-emacs-autoinstall-elpa' is non-nil try to install the
+package if it is missing."
   (declare (indent 1))
-  `(if (require ,package nil 'noerror)
-       (progn ,@body)
-     (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :warning)
-     (add-to-list 'prot-emacs-ensure-install ,package)
-     (display-warning
-      'prot-emacs
-      (format "Run `prot-emacs-install-ensured' to install all packages in `prot-emacs-ensure-install'")
-      :warning)))
+  `(progn
+     (when (and prot-emacs-autoinstall-elpa
+                (not (package-installed-p ,package)))
+       (package-install ,package))
+     (if (require ,package nil 'noerror)
+         (progn ,@body)
+       (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :warning)
+       (add-to-list 'prot-emacs-ensure-install ,package)
+       (display-warning
+        'prot-emacs
+        (format "Run `prot-emacs-install-ensured' to install all packages in `prot-emacs-ensure-install'")
+        :warning))))
 
 (defmacro prot-emacs-manual-package (package &rest body)
   "Set up manually installed PACKAGE with rest BODY.
@@ -164,6 +201,7 @@ expressions."
          (user-init prot-emacs-configuration-user-file)
          (user-init-el (prot-emacs--expand-file-name user-init ".el"))
          (user-init-org (prot-emacs--expand-file-name user-init ".org")))
+    (prot-emacs-basic-init-setup)
     (require 'org)
     (if (file-exists-p main-init-el)    ; FIXME 2021-02-16: this should be improved
         (load-file main-init-el)

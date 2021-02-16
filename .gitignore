@@ -27,3 +27,4 @@
 *.sqlite
 *.uuid
 user-emacs.*
+basic-init.el
