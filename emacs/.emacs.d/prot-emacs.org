@@ -78,7 +78,8 @@ configuration of all packages declared herein.  In particular:
   load the package if it is already installed and then evaluate all of
   its forms.  If the package is not installed, it will produce a warning
   telling the user that all the uninstalled-yet-declared packages can be
-  installed in one go with the command =prot-emacs-install-ensured=.
+  installed in one go with the command =prot-emacs-install-ensured=
+  (though read further below about auto-installing packages).
 
 + =prot-emacs-manual-package= handles the few packages that I install
   manually via their Git repository.  Each of those repos must be inside
@@ -89,13 +90,15 @@ configuration of all packages declared herein.  In particular:
   expects to read.  In concrete terms, if you want =package-A= you must
   first place all of its files at =~/.emacs.d/contrib-lisp/package-A=.
 
-*I must stress that no package is ever automatically installed:* the user
-is expected to do so on their own.  The idea is to avoid the malpractice
-of installing software without explicit consent.  This means, of course,
-that my dotemacs cannot be reproduced without direct intervention, which
-amounts to running the command =prot-emacs-install-ensured= after the
-first startup and setting up the manually controlled packages, as
-explained above.
+*I must stress that no package is automatically installed by default:* the
+user is expected to do so on their own either by calling a command or by
+providing their explicit consent to the auto-installation of packages
+from Emacs Lisp Package Archives.  The idea is to avoid the malpractice
+of installing software without asking the user to opt in to such a deal.
+To actually instruct my packages to be installed automatically, a user
+must create a new file called =basic-init.el=, place it in the same
+directory as my =init.el= and =prot-emacs.org= and include in it this form:
+=(setq prot-emacs-autoinstall-elpa t)=.
 
 The =init.el= (reproduced further below) also sets some variables to their
 desired values and provides a couple of functions that control the start

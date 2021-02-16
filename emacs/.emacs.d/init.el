@@ -71,8 +71,10 @@ setup."
 
 ;; This variable is incremented in prot-emacs.org.  The idea is to
 ;; produce a list of packages that we want to install on demand from an
-;; ELPA.  So someone who tries to reproduce my Emacs setup will first
-;; get a bunch of warnings about unavailable packages, though not
+;; ELPA, when `prot-emacs-autoinstall-elpa' is set to nil (the default).
+;;
+;; So someone who tries to reproduce my Emacs setup will first get a
+;; bunch of warnings about unavailable packages, though not
 ;; show-stopping errors, and will then have to use the command
 ;; `prot-emacs-install-ensured'.  After that command does its job, a
 ;; re-run of my Emacs configurations will yield the expected results.
@@ -82,10 +84,9 @@ setup."
 ;; block they do not want, and then call the aforementioned command.
 ;;
 ;; I do not want to maintain a setup that auto-installs everything on
-;; first boot.  I think that is a bad practice because it teaches the
-;; user to just trust the provider, which they should not do in advance.
-;; Besides, this is not an Emacs distro targeted at a general audience:
-;; it is just my personal config.
+;; first boot without requiring explicit consent.  I think that is a bad
+;; practice because it teaches the user to simply put their faith in the
+;; provider.
 (defvar prot-emacs-ensure-install nil
   "List of package names used by `prot-emacs-install-ensured'.")
 
