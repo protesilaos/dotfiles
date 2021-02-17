@@ -100,6 +100,8 @@ a user must create a new file called =basic-init.el=, place it in the same
 directory as my =init.el= and =prot-emacs.org= and include in it this form:
 =(setq prot-emacs-autoinstall-elpa t)=.
 
+For more read: [[#h:0675f798-e2d9-4762-9df2-f47cd24cf00a][How to reproduce your dotemacs?]].
+
 The =init.el= (reproduced further below) also sets some variables to their
 desired values and provides a couple of functions that control the start
 and end phases of my Emacs sessions.
@@ -7358,6 +7360,213 @@ line or the graphical =dconf-editor= (not pretty either way).  For me this
 is not a problem, because I disable all of the DE's key bindings (also
 read: [[#h:044977f2-a909-4804-bf89-576dd429d405][What is your distro and/or window manager?]]).
 
+** How to reproduce your dotemacs?
+:PROPERTIES:
+:CUSTOM_ID: h:0675f798-e2d9-4762-9df2-f47cd24cf00a
+:END:
+
+First you must understand that this is my personal setup: I have never
+tried to develop a framework that works out-of-the-box for other users.
+It runs contrary to how I approach Emacs as a long-term investment that
+involves learning everything from the basics to the more advanced
+issues: which means starting from scratch while being patient,
+persistent, and humble.
+
+Furthermore, it is important to understand that the very nature of this
+setup makes it highly opinionated and, thus, several of its components
+may be predicated on implicit assumptions about preferences.  For
+example, I only use my Modus themes because that is the design I want to
+interface with, and will therefore not make any effort whatsoever to
+provide options that can let someone pick a theme out of the multitude
+that is on offer: this is not to say that those options are inherently
+wrong, just that they make no sense in a /personal Emacs setup/.
+
+As you may know from René Magritte's famous /Ceci n'est pas une pipe/
+painting, what you think you are looking at is not equivalent to its
+actuality.  You may be led to believe that my dotemacs is in fact an
+"Emacs distro", or "starter kit", or whatnot, and that you can just
+clone it and re-use it right away.  In truth /ceci n'est pas une
+distribution Emacs/.  It is my personal setup.
+
+With those granted, I understand that people may want to benefit from
+what I already make public and, in turn, I want to help them to that
+end.  It is not my intent to create impediments to one's progress as an
+Emacs user, nor to obfuscate my otherwise readily available corpus of
+labour.  I wish to make things easy and accessible, without prejudice to
+the aforementioned points about what /this/ is.
+
+To reproduce my setup, you first need to clone my dotfiles' repository.
+This includes more stuff than just my Emacs files, though it is what I
+use.  Let's say you plan to clone the repo at =~/Git/prot-dotfiles=.  You
+invoke this command from your shell:
+
+#+begin_example sh
+git clone https://gitlab.com/protesilaos/dotfiles.git ~/Git/prot-dotfiles
+#+end_example
+
+If you do not want to copy the entire history of the project, you can
+pass the =--depth= flag, like this:
+
+#+begin_example sh
+git clone --depth 1 https://gitlab.com/protesilaos/dotfiles.git ~/Git/prot-dotfiles
+#+end_example
+
+That one fetches just the latest commit and is considerably faster.
+Though the full history is useful if you plan to retrieve some datum
+from it.
+
+My dotfiles are managed with the help of the GNU Stow program.  What
+that does is create and handle symlinks from a source directory to a
+destination.  The file structure of my dotfiles is designed to reflect
+the expected end result at the =$HOME= directory.
+
+Stow operates on what it calls a "package": a set of files whose file
+structure will be reproduced at the target filesystem path.  Take a look
+at the tree representation of my "emacs package", per Stow's parlance
+(this output may not be exactly the same you will get depending on when
+you review it, but that is beside the point).
+
+#+begin_example sh
+~/Git/prot-dotfiles $ tree -aF --dirsfirst emacs
+emacs
+└── .emacs.d/
+    ├── modus-themes/
+    │   ├── modus-operandi-theme.el
+    │   ├── modus-themes.el
+    │   └── modus-vivendi-theme.el
+    ├── prot-lisp/
+    │   ├── prot-bongo.el
+    │   ├── prot-comment.el
+    │   ├── prot-common.el
+    │   ├── prot-consult.el
+    │   ├── prot-cursor.el
+    │   ├── prot-diff.el
+    │   ├── prot-dired.el
+    │   ├── prot-elfeed-bongo.el
+    │   ├── prot-elfeed.el
+    │   ├── prot-embark.el
+    │   ├── prot-embark-extras.el
+    │   ├── prot-eshell.el
+    │   ├── prot-fill.el
+    │   ├── prot-fonts.el
+    │   ├── prot-gnus.el
+    │   ├── prot-ibuffer.el
+    │   ├── prot-icomplete.el
+    │   ├── prot-logos.el
+    │   ├── prot-minibuffer.el
+    │   ├── prot-moody.el
+    │   ├── prot-orderless.el
+    │   ├── prot-outline.el
+    │   ├── prot-project.el
+    │   ├── prot-pulse.el
+    │   ├── prot-recentf.el
+    │   ├── prot-search.el
+    │   ├── prot-sideline.el
+    │   ├── prot-simple.el
+    │   ├── prot-spell.el
+    │   ├── prot-tab.el
+    │   ├── prot-text.el
+    │   ├── prot-vc.el
+    │   ├── tmr.el
+    │   └── usls.el
+    ├── basic-init.el
+    ├── early-init.el
+    ├── init.el
+    ├── prot-emacs.org
+    └── user-emacs.org
+
+3 directories, 42 files
+#+end_example
+
+When we invoke a =stow= command on this =emacs= package we are instructing
+the program to create symlinks to a directory called =.emacs.d= and to
+place all relevant files/directories inside of it.  What we want is to
+mirror this tree in our =$HOME= directory (I only use GNU/Linux, by the
+way):
+
+#+begin_example sh
+~/Git/prot-dotfiles $ stow -t "$HOME" emacs
+#+end_example
+
+As you will learn from Stow's manpage, the =-t= flag points at the target
+destination.  So we want to mirror the =.emacs.d= of my dotfiles to that
+found in =~/.emacs.d=.  If the latter exists, only the relevant files will
+be symlinked.  Otherwise it will be created outright as a symlink
+itself.
+
+If files that conflict with mine, like =init.el=, already exist at the
+target path, then Stow will throw an error and abort its operation.
+This is good: we do not want to overwrite existing data.  So make sure
+to create backups of everything and move them to another location.
+
+Whenever I add or remove a file, my "emacs package" needs to be updated
+accordingly: the symlinks have to be generated anew.  Adding the =-R= flag
+does the trick:
+
+#+begin_example sh
+~/Git/prot-dotfiles $ stow -t "$HOME" -R emacs
+#+end_example
+
+Similarly, if you ever want to delete those symlinks in a clean way,
+pass the =-D= flag instead of =-R=:
+
+#+begin_example sh
+~/Git/prot-dotfiles $ stow -t "$HOME" -D emacs
+#+end_example
+
+The same is true for all other "packages" in my dotfiles' repo.
+
+At this point you are ready to start using my Emacs setup.  But not
+everything will work just yet.  As was already discussed in the section
+about [[#h:584c3604-55a1-49d0-9c31-abe46cb1f028][Main macros and other contents of my init.el (for Emacs 28)]], I
+have a policy of not auto-installing packages by default.  If you want
+to do that when you first launch my Emacs, you must create a new file
+called =basic-init.el= and place it in the same place where my =init.el= and
+=prot-emacs.org= are found (the =basic-init.el= is read before initiating my
+main configuration file).  In that file you must add the following:
+
+#+begin_example emacs-lisp
+(setq prot-emacs-autoinstall-elpa t)
+#+end_example
+
+This means that you explicitly opt in to automatically installing all my
+defined packages that are found in GNU ELPA or MELPA.
+
+If you do not create the =basic-init.el= with those contents, then the
+default behaviour is to run my setup and produce a series of warnings
+about missing packages that you need to install on your own.  The
+resulting log's messages will explain how to do that in one go, though
+you can always opt for another approach if you want.  This default
+method offers you the opportunity to think carefully about what packages
+you really need and proceed to remove the ones you do not want to keep
+around.
+
+Whatever you do with the installation of items from Emacs Lisp Package
+Archives, you will always have to manually configure the few packages I
+maintain through their source code.  Again, the warning messages will
+tell you what they expect from you.  Basically, you will need to look up
+their names in the =prot-emacs.org= file to find their repo's URL.  Then
+you will have to clone that to the =contrib-elisp= path inside of your
+=.emacs.d=.  Or comment out their code block (or delete it) if you do not
+want them.
+
+You are finally done and ready to start using what I develop.  And you
+have realised by now that /this definitely is my personal Emacs setup and
+I only target my use-case/ which means, among others, that I will never
+add bells and whistles that I do not use just to satisfy demand for them
+(e.g. icons).
+
+To append your own configurations, you can create a new =user-emacs.org=
+file and place it in the same path as my =prot-emacs.org=.  It must
+include code blocks like the ones I provide in my Org config.  Those
+will be evaluated at startup and everything will work as expected:
+=user-emacs.org= is loaded after =prot-emacs.org= and you assume
+responsibility for everything.
+
+This hopefully covers it.  If you have any questions, either open an
+issue in [[https://gitlab.com/protesilaos/dotfiles/][my dotfiles' repo]] or [[https://protesilaos.com/contact/][contact me directly]].  Remember that I wish
+to be helpful, though I have no plan to turn this into yet another Emacs
+distro.
 
 ** What is your distro and/or window manager?
 :PROPERTIES:
