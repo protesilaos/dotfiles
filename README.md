@@ -6,7 +6,15 @@ functionalities.  In some cases, such as with the configurations for Vim
 and Xterm, all relevant files are carried over from my pre-Emacs days
 and are maintained as a contingency plan or in case I need to revisit
 some old setup.
- 
+
+## How to reproduce my Emacs setup
+
+This is discussed in the heading _"How to reproduce your dotemacs?"_ of
+my `prot-emacs.org`.  Either find it there, or read it on the website:
+<https://protesilaos.com/dotemacs/#h:0675f798-e2d9-4762-9df2-f47cd24cf00a>.
+
+It also explains how to manage my dotfiles with the help of GNU Stow.
+
 ## Do not track my dotfiles (rolling, unstable, and untested)
 
 _Ceci n'est pas une distribution Emacs._
@@ -24,115 +32,12 @@ are willing to assume responsibility for any possible breakage, then
 please feel welcome to follow along.  You can always open an issue here
 or contribute any fixes, if you will.
 
-Furthermore, my Emacs files are currently designed in a way that does
-not make their end product reproducible.  Missing packages are not
-installed automatically and no measures are set in place to easily
-replicate what I have on my end.  That might change in the future,
-though the key take is that **this is not an Emacs distribution**.
-
-## Deployment with GNU Stow
-
-This repository is managed with the help of GNU Stow.  What that program
-does is create and manage symlinks from a target directory to a
-destination.  The file structure of this repo is thus designed to
-reflect the expected end result on a `$HOME` directory.
-
-For example (the `-v` flag is for verbose output):
-
-```sh
-$ git clone --depth 1 https://gitlab.com/protesilaos/dotfiles.git ~/prot-dotfiles
-$ cd ~/prot-dotfiles
-~/prot-dotfiles $ stow -v -t "$HOME" emacs
-LINK: .emacs.d/early-init.el => ../Git/Projects/dotfiles/emacs/.emacs.d/early-init.el
-LINK: .emacs.d/prot-emacs.org => ../Git/Projects/dotfiles/emacs/.emacs.d/prot-emacs.org
-LINK: .emacs.d/modus-themes => ../Git/Projects/dotfiles/emacs/.emacs.d/modus-themes
-LINK: .emacs.d/prot-lisp => ../Git/Projects/dotfiles/emacs/.emacs.d/prot-lisp
-LINK: .emacs.d/init.el => ../Git/Projects/dotfiles/emacs/.emacs.d/init.el
-```
-
-Please understand what link creation means in this context: if the files
-in the home directory already exist, then `stow` will report a warning
-and abort its operations.  As such, **always back up your files** and
-please remember that **this is not an Emacs distro**.
-
-Those granted, the above commands will first shallow clone my dotfiles
-to your `~/prot-dotfiles` path ("shallow" means to only fetch the Nth
-`--depth` commit instead of the entire history, so just the latest one
-in our example).  Then `stow` will make symbolic links of my Emacs files
-to the home directory.
-
-The argument passed to `stow` is called a "package" in the program's
-manual---make sure to always read the docs.  All subdirectories of my
-dotfiles, like `fontconfig` and `shell`, are such "packages".
-
-Other common `stow` operations for the purposes of managing this
-repository:
-
-```sh
-# Re-install stow package
-~/prot-dotfiles $ stow -t "$HOME" -R emacs
-
-# Delete stow package
-~/prot-dotfiles $ stow -t "$HOME" -D emacs
-```
-
-Here is a sample of my Emacs files (may not represent the actual file
-structure).
-
-```sh
-~/prot-dotfiles $ tree -aF emacs
-emacs
-└── .emacs.d/
-    ├── early-init.el
-    ├── init.el
-    ├── modus-themes/
-    │   ├── modus-operandi-theme.el
-    │   ├── modus-themes.el
-    │   └── modus-vivendi-theme.el
-    ├── prot-emacs.org
-    └── prot-lisp/
-        ├── prot-bongo.el
-        ├── prot-comment.el
-        ├── prot-common.el
-        ├── prot-consult.el
-        ├── prot-diff.el
-        ├── prot-dired.el
-        ├── prot-elfeed-bongo.el
-        ├── prot-elfeed.el
-        ├── prot-embark.el
-        ├── prot-embark-extras.el
-        ├── prot-eshell.el
-        ├── prot-fill.el
-        ├── prot-fonts.el
-        ├── prot-gnus.el
-        ├── prot-ibuffer.el
-        ├── prot-icomplete.el
-        ├── prot-logos.el
-        ├── prot-minibuffer.el
-        ├── prot-moody.el
-        ├── prot-orderless.el
-        ├── prot-outline.el
-        ├── prot-project.el
-        ├── prot-pulse.el
-        ├── prot-recentf.el
-        ├── prot-search.el
-        ├── prot-simple.el
-        ├── prot-spell.el
-        ├── prot-tab.el
-        ├── prot-text.el
-        ├── prot-vc.el
-        ├── tmr.el
-        └── usls.el
-
-3 directories, 38 files
-```
-
 ## Old BSPWM configuration
 
 **DEPRECATION NOTICE 2020-05-04.** I am no longer using BSPWM and
 several of its accoutrements.  My focus is on my comprehensive Emacs
 setup and whatever external tweak may be necessary to improve the
-experience with that tool.
+experience with this tool.
 
 The last state of my dotfiles with BSPWM and its extras can be found in
 [tag v2.2.0](https://gitlab.com/protesilaos/dotfiles/-/tree/v2.2.0).  I
