@@ -70,7 +70,7 @@ configuration of all packages declared herein.  In particular:
 + =prot-emacs-builtin-package= is used for libraries that are either
   shipped with Emacs or are part of my dotfiles' directory.  The latter
   class consists of all those =prot-*.el= files, as well as a few others.
-  All this macro does is to =require= the given feature and then evaluate
+  What this macro does is to =require= the given feature and then evaluate
   all of its forms (variables, key bindings, hooks, etc.).
 
 + =prot-emacs-elpa-package= controls packages that I install from some
@@ -78,12 +78,12 @@ configuration of all packages declared herein.  In particular:
   load the package if it is already installed and then evaluate all of
   its forms.  If the package is not installed, it will produce a warning
   telling the user that all the uninstalled-yet-declared packages can be
-  installed in one go with the command =prot-emacs-install-ensured=
+  downloaded in one go with the command =prot-emacs-install-ensured=
   (though read further below about auto-installing packages).
 
 + =prot-emacs-manual-package= handles the few packages that I install
   manually via their Git repository.  Each of those repos must be inside
-  of =(expand-file-name (concat user-emacs-directory "contrib-lisp"))=
+  =(thread-last user-emacs-directory (expand-file-name "contrib-lisp"))=
   (typically at =~/.emacs.d/contrib-lisp=).  The macro will load the
   package normally and configure it accordingly if it exists at the
   desired path, else it will log a warning about what file path it
@@ -95,8 +95,8 @@ user is expected to do so on their own either by calling a command or by
 providing their explicit consent to the auto-installation of packages
 from Emacs Lisp Package Archives.  The idea is to avoid the malpractice
 of installing software without asking the user to opt in to such a deal.
-To actually instruct my packages to be installed automatically, a user
-must create a new file called =basic-init.el=, place it in the same
+To actually instruct my declared packages to be installed automatically,
+a user must create a new file called =basic-init.el=, place it in the same
 directory as my =init.el= and =prot-emacs.org= and include in it this form:
 =(setq prot-emacs-autoinstall-elpa t)=.
 
@@ -7136,7 +7136,7 @@ my use-case.
 
 The main benefits of packaging my code are thus:
 
-+ Lexical scope :: The code in written in a way that does not introduce
++ Lexical scope :: The code is written in a way that does not introduce
   implicit dependencies on the environment.  Everything within the file
   has to be known so that the compiler can properly interpret it.
 
@@ -7167,7 +7167,7 @@ package archive as I cannot promise that I will keep them around forever
 
 The =prot/= prefix in some unpackaged symbols works as a namespace that
 captures all my custom, yet-to-be-reviewed code.  These can be functions
-or variables.  Its utility is two-fold:
+or variables.  The utility of this prefix is two-fold:
 
 1. It informs others that this symbol is not part of core Emacs or some
    other package.  Otherwise it can be difficult to understand why
@@ -7175,7 +7175,7 @@ or variables.  Its utility is two-fold:
    function that accepts an argument: =(prot/function prot/variable)=.  If
    none of these had the namespace you could be misled into thinking
    that your Emacs setup already includes those symbols (and then you
-   will get an error message).
+   would get an error message).
 
 2. It makes it easier for me (and others) to quickly discover what
    additions I have made, for whatever reason that may.  For instance,
@@ -7194,11 +7194,11 @@ something from another user, I use that namespace to tell others that
 this is not part of Emacs or any other package (and I always link to the
 source).
 
-Adding =contrib/= also has another longer-term benefit.  It tells my
+Adding =contrib/= also has another longer-term benefit.  It informs my
 future self that some bespoke configuration was needed to solve a
 particular problem and, maybe, this has since been solved by a good
-package or even a newer version of Emacs (or I want to supply my own
-alternative).
+package, a newer version of Emacs, or I may eventually be able to
+furnish my own alternative.
 
 Again, =occur= or similar tools will filter those out when necessary.
 Imagine having to do that without any namespaces…  You would need to
@@ -7236,13 +7236,15 @@ for a couple of reasons:
   online or to an =emacs -Q= scratch buffer.
 
 + It is trivial to run =C-x C-e= (=eval-last-sexp=) on each balanced
-  expression.
+  expression individually (note that =C-M-x= (=eval-defun=) can be used in
+  Elisp buffers to evaluate the expression at point).
 
 There are some cases where I use a single =setq= to configure several
-variables (Style B), but those are the exception to the norm.
+closely related variables (Style B), but those are the exception to the
+norm.
 
-Style B used to give me more problems with copy-pasting, while it did
-not solve any real issues (besides, I finalise style A using a keyboard
+Style B gives me more problems with copy-pasting, while it does not
+solve any real issues (besides, I finalise style A using a keyboard
 macro, so there is no real difference in typing).
 
 I find that Style A consists of balanced expressions that are easier to
@@ -7274,37 +7276,6 @@ equivalent mechanism for individual packages…  So here we are.
 By the way, the fastest way to find a package's customisation options is
 to visit its source code and produce an Occur buffer for its =defcustom=
 configurations (which extends the ideas in [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
-
-** What is your distro and/or window manager?
-:PROPERTIES:
-:CUSTOM_ID: h:044977f2-a909-4804-bf89-576dd429d405
-:END:
-
-I have been on GNU/Linux since the summer of 2016.  For the most time I
-have used Debian and Arch Linux, switching between the two.  As of
-2020-05-03, I am back on Arch.
-
-My criterion for picking a distro is that it is community-driven and has
-a strong following that ensures its longer-term continuity and overall
-stability.  This happens to be consistent with my current focus on
-Emacs: I need things to work so that I may not be bothered by too much
-admin work (and yes, Arch is super-stable once you know what you are
-doing---and, well, Debian is designed for that).
-
-Given that I mostly live inside of Emacs, the desktop environment is no
-longer important to me, provided it does not impede my usage of Emacs,
-which practically means that it does /not bind any keys/ system-wide (with
-the exception of some standard ones like those for accessing TTYs).
-
-Prior to my Emacs days, I used to have a highly customised session
-centred around BSPWM (the Binary Space Partitioning Window Manager),
-while I also spent time with i3WM, DWM, Herbestluftwm.  The tiling
-window manager paradigm offers little to no value now that practically
-my entire computing experience happens inside of a single application,
-which is why I have no interest whatsoever in EXWM.
-
-My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/][built from source]], directly from trunk (i.e. the =master=
-branch).
 
 ** Did you know XYZ package is better than the defaults?
 :PROPERTIES:
@@ -7386,6 +7357,38 @@ config database that is normally accessed with =gsettings= on the command
 line or the graphical =dconf-editor= (not pretty either way).  For me this
 is not a problem, because I disable all of the DE's key bindings (also
 read: [[#h:044977f2-a909-4804-bf89-576dd429d405][What is your distro and/or window manager?]]).
+
+
+** What is your distro and/or window manager?
+:PROPERTIES:
+:CUSTOM_ID: h:044977f2-a909-4804-bf89-576dd429d405
+:END:
+
+I have been on GNU/Linux since the summer of 2016.  For the most time I
+have used Debian and Arch Linux, switching between the two.  As of
+2020-05-03, I am back on Arch.
+
+My criterion for picking a distro is that it is community-driven and has
+a strong following that ensures its longer-term continuity and overall
+stability.  This happens to be consistent with my current focus on
+Emacs: I need things to work so that I may not be bothered by too much
+admin work (and yes, Arch is super-stable once you know what you are
+doing---and, well, Debian is designed for that).
+
+Given that I mostly live inside of Emacs, the desktop environment is no
+longer important to me, provided it does not impede my usage of Emacs,
+which practically means that it does /not bind any keys/ system-wide (with
+the exception of some standard ones like those for accessing TTYs).
+
+Prior to my Emacs days, I used to have a highly customised session
+centred around BSPWM (the Binary Space Partitioning Window Manager),
+while I also spent time with i3WM, DWM, Herbestluftwm.  The tiling
+window manager paradigm offers little to no value now that practically
+my entire computing experience happens inside of a single application,
+which is why I have no interest whatsoever in EXWM.
+
+My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/][built from source]], directly from trunk (i.e. the =master=
+branch).
 
 ** What hardware do you use?
 :PROPERTIES:
