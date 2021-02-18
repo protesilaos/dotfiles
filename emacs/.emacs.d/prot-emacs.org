@@ -1581,7 +1581,7 @@ no use for it.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'recentf
-  (setq recentf-save-file (concat user-emacs-directory "recentf"))
+  (setq recentf-save-file (locate-user-emacs-file "recentf"))
   (setq recentf-max-saved-items 200)
   (setq recentf-exclude '(".gz" ".xz" ".zip" "/elpa/" "/ssh:" "/sudo:"))
   (add-hook 'after-init-hook #'recentf-mode))
@@ -1741,7 +1741,7 @@ position of the cursor after the skeleton has been inserted.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'abbrev
-  (setq abbrev-file-name (concat user-emacs-directory "abbrevs"))
+  (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
   (setq only-global-abbrevs nil)
 
   ;;;;;;;;;;;;;;;;;;;;;;
@@ -4113,7 +4113,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 ;; then activate `prot-outline-minor-mode-safe' to conveniently browse
 ;; this massive code block.
 (prot-emacs-builtin-package 'org
-  (setq org-directory "~/Org")
+  (setq org-directory (convert-standard-filename "~/Org"))
   (setq org-imenu-depth 7)
 ;;;; general settings
   (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
@@ -4241,8 +4241,8 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 
 ;;;; agenda
 ;;;;; Basic agenda setup
-  (setq org-default-notes-file "~/Org/notes.org")
-  (setq org-agenda-files `("~/Org" ,user-emacs-directory "~/Documents"))
+  (setq org-default-notes-file (thread-last org-directory (expand-file-name "notes.org")))
+  (setq org-agenda-files `(,org-directory ,user-emacs-directory "~/Documents"))
   (setq org-agenda-span 14)
   (setq org-agenda-start-on-weekday 1)  ; Monday
   (setq org-agenda-confirm-kill t)
@@ -7088,7 +7088,7 @@ also read the [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configuratio
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'savehist
-  (setq savehist-file (concat user-emacs-directory "savehist"))
+  (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 1000)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
@@ -7106,7 +7106,7 @@ file, allowing you to pick up from there.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'saveplace
-  (setq save-place-file (concat user-emacs-directory "saveplace"))
+  (setq save-place-file (locate-user-emacs-file "saveplace"))
   (setq save-place-forget-unreadable-files t)
   (save-place-mode 1))
 #+end_src
