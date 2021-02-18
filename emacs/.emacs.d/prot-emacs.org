@@ -2949,13 +2949,13 @@ the subsequent code block.
   (setq usls-custom-header-function nil)
 
   (let ((map global-map))               ; globally bound keys
-    (define-key map (kbd "C-c n d") 'usls-dired)
-    (define-key map (kbd "C-c n f") 'usls-find-file)
-    (define-key map (kbd "C-c n a") 'usls-append-region-buffer-or-file)
-    (define-key map (kbd "C-c n n") 'usls-new-note))
+    (define-key map (kbd "C-c n d") #'usls-dired)
+    (define-key map (kbd "C-c n f") #'usls-find-file)
+    (define-key map (kbd "C-c n a") #'usls-append-region-buffer-or-file)
+    (define-key map (kbd "C-c n n") #'usls-new-note))
   (let ((map usls-mode-map))            ; only for usls buffers
-    (define-key map (kbd "C-c n i") 'usls-id-insert)
-    (define-key map (kbd "C-c n l") 'usls-follow-link)))
+    (define-key map (kbd "C-c n i") #'usls-id-insert)
+    (define-key map (kbd "C-c n l") #'usls-follow-link)))
 #+end_src
 
 Here is the =usls.el= code, which is also part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as
@@ -5092,12 +5092,12 @@ lots of options and commands: make sure to read its official manual.
   (setq ebdb-use-diary nil)   ; how can I banish the diary from my life?
 
   (let ((map ebdb-mode-map))
-    (define-key map (kbd "D") 'ebdb-delete-field-or-record)
-    (define-key map (kbd "M") 'ebdb-email) ; disables `ebdb-mail-each'
-    (define-key map (kbd "m") 'ebdb-toggle-record-mark)
-    (define-key map (kbd "t") 'ebdb-toggle-all-record-marks)
-    (define-key map (kbd "T") 'ebdb-toggle-records-format) ; disables `ebdb-toggle-all-records-format'
-    (define-key map (kbd "U") 'ebdb-unmark-all-records)))
+    (define-key map (kbd "D") #'ebdb-delete-field-or-record)
+    (define-key map (kbd "M") #'ebdb-email) ; disables `ebdb-mail-each'
+    (define-key map (kbd "m") #'ebdb-toggle-record-mark)
+    (define-key map (kbd "t") #'ebdb-toggle-all-record-marks)
+    (define-key map (kbd "T") #'ebdb-toggle-records-format) ; disables `ebdb-toggle-all-records-format'
+    (define-key map (kbd "U") #'ebdb-unmark-all-records)))
 #+end_src
 
 ** Bongo music or media manager (and prot-bongo.el)
