@@ -4773,6 +4773,8 @@ capture, capture.  Same principle applies to the integration with Dired
 as a means of attaching files to emails, and to the EPA subsystem for
 GPG encryption.
 
+For contact management, read the section on [[#h:d386e14b-dcf7-46a2-851f-867cd84c6cae][EBDB (mail contacts)]].
+
 The package configurations below are divided into several subsections to
 make things easier to read and keep track of.  Remember to use =C-h v VAR=
 to read documentation about each =VAR= or simply place the point over it
@@ -4981,6 +4983,121 @@ performance by carrying out the relevant tasks in a non-blocking way.
 (prot-emacs-builtin-package 'smtpmail-async
   (setq send-mail-function 'async-smtpmail-send-it)
   (setq message-send-mail-function 'async-smtpmail-send-it))
+#+end_src
+
+*** EBDB (mail contacts)
+:PROPERTIES:
+:CUSTOM_ID: h:d386e14b-dcf7-46a2-851f-867cd84c6cae
+:END:
+
+EBDB is a contacts' manager by Eric Abrahamsen that integrates with Mail
+User Agents inside of Emacs.  I use it as part of my Gnus setup (which I
+document at length in [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]]).
+
+What I need from it is to perform the task of storing every address that
+I exchange messages with.  When I send someone a message, their email
+should be saved automatically.  While if I merely read an item, say, on
+the emacs-devel mailing list, I prefer to only update existing records
+else do nothing.
+
+One could set everything to automatically update in all contexts, though
+I find that such an approach will either create too many false positives
+that will distract you from the immediate task of handling your
+correspondence, or they will simply contribute to the creation of a
+database that contains a lot of largely useless information.  Save only
+what matters---ignore the rest.
+
+While "ignore the rest" can mean to simply pass it over in silence, EDBD
+actually provides a mechanism to permanently exclude individual
+addresses or domain names from ever being recorded.  Those are stored in
+the file specified by the variable =ebdb-permanent-ignores-file=: you can
+edit it manually, adding one address per line with no attached name or
+angled brackets, or a domain name that starts with the =@= sign.  No
+regexp notation is accepted.  For example:
+
+#+begin_example
+@debbugs.gnu.org
+help-debbugs@gnu.org
+#+end_example
+
+EBDB binds some common commands to the semicolon (=;=) prefix key inside
+Gnus' summary and article buffers.  For example, =; := will update all
+records that are found in the message at point, while =; s= will scan
+(called "snarf") the body of the message for names and email addresses
+in an attempt to create records of any findings.  As always, append =C-h=
+to the prefix key to get help about all key bindings that complete the
+sequence and what commands they call.
+
+The =ebdb-mua-pop-up= controls whether a window with relevant contact
+information should be displayed automatically.  Perhaps it is good to
+have some extra feedback on what we know or what has been collected thus
+far, though I prefer not to see anything by default (it can still be
+displayed with the various commands under the =;= prefix key).  Its
+informative nature aside, this window can be used to further edit
+entries.  With point over a field, type =e= to edit it or =C-k= to remove it
+(I bind =D= to delete).  The latter command behaves differently when the
+point is before the record's main field, typically the name, where it
+will prompt to delete the whole entry altogether.  For more about that
+specific major mode and its associated buffers, use =C-h m= (which invokes
+=describe-mode=).
+
+To view all of your contacts, or just those matching a pattern (or
+string), use =M-x ebdb=, which will prompt for a search.  Input an empty
+query if you prefer to view everything in the database.  While in the
+=*EBDB*= buffer, you gain access to commands for operating on the records.
+Same principle as with the aforementioned =ebdb-mua-pop-up=: =c= to create a
+new entry, =e= to edit the field at point, =i= to insert a new datum to the
+current record, =C-k= (or my preferred =D=) to delete...  Again, =C-h m= is
+your friend.
+
+Apart from gathering data and operating on it, EBDB can auto-complete
+email addresses in the message composition buffer: hit TAB in a "To:",
+"Cc:" or equivalent header and then use the completion framework's
+interaction model to retrieve what you want.
+
+Finally, note that this package is fairly comprehensive as it defines
+lots of options and commands: make sure to read its official manual.
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'ebdb
+  (require 'ebdb-gnus)
+  (require 'ebdb-message)
+  (setq ebdb-sources (locate-user-emacs-file "ebdb"))
+  (setq ebdb-permanent-ignores-file (locate-user-emacs-file "ebdb-permanent-ignores"))
+
+  (setq ebdb-mua-pop-up nil)
+  (setq ebdb-gnus-window-size 0.25)
+  (setq ebdb-mua-default-formatter ebdb-default-multiline-formatter)
+
+  (setq ebdb-mua-auto-update-p 'existing)
+  (setq ebdb-gnus-auto-update-p 'existing)
+  (setq ebdb-mua-reader-update-p 'existing)
+  (setq ebdb-mua-sender-update-p 'create)
+
+  (setq ebdb-message-try-all-headers t)
+  (setq ebdb-message-headers
+        '((sender "From" "Resent-From" "Reply-To" "Sender")
+          (recipients "Resent-To" "Resent-Cc" "Resent-CC" "To" "Cc" "CC" "Bcc" "BCC")))
+  (setq ebdb-message-all-addresses t)
+
+  (setq ebdb-complete-mail 'capf)
+  (setq ebdb-mail-avoid-redundancy t)
+  (setq ebdb-completion-display-record nil)
+  (setq ebdb-complete-mail-allow-cycling nil)
+
+  (setq ebdb-record-self "ace719a4-61f8-4bee-a1ca-2f07e2292305")
+  (setq ebdb-user-name-address-re 'self) ; match the above
+  (setq ebdb-save-on-exit t)
+
+  (setq ebdb-use-diary nil)   ; how can I banish the diary from my life?
+
+  (let ((map ebdb-mode-map))
+    (define-key map (kbd "D") 'ebdb-delete-field-or-record)
+    (define-key map (kbd "M") 'ebdb-email) ; disables `ebdb-mail-each'
+    (define-key map (kbd "m") 'ebdb-toggle-record-mark)
+    (define-key map (kbd "t") 'ebdb-toggle-all-record-marks)
+    (define-key map (kbd "T") 'ebdb-toggle-records-format) ; disables `ebdb-toggle-all-records-format'
+    (define-key map (kbd "U") 'ebdb-unmark-all-records)))
 #+end_src
 
 ** Bongo music or media manager (and prot-bongo.el)
