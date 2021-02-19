@@ -6189,6 +6189,10 @@ mouse selection to the kill ring.  This is the same behaviour as
 terminal emulators that place the selection to the clipboard (or the
 primary selection).  I choose not to use this here.
 
+=mouse-tear-off-window= is the same as =tear-off-window=, in that it places
+the current window in a new frame.  On my generic mouse, =<mouse-3>= is
+the right click.
+
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'mouse
   ;; In Emacs 27+, use Control + mouse wheel to scale text.
@@ -6201,7 +6205,8 @@ primary selection).  I choose not to use this here.
   (setq make-pointer-invisible t)
   (setq mouse-wheel-progressive-speed t)
   (setq mouse-wheel-follow-mouse t)
-  (add-hook 'after-init-hook #'mouse-wheel-mode))
+  (add-hook 'after-init-hook #'mouse-wheel-mode)
+  (define-key global-map (kbd "C-M-<mouse-3>") #'mouse-tear-off-window))
 #+end_src
 
 *** Scrolling behaviour
