@@ -2573,6 +2573,14 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (side . left)
            (slot . 0))
           ;; right side window
+          ("\\*keycast\\*"
+           (display-buffer-in-side-window)
+           (dedicated . t)
+           (window-width . 0.25)
+           (side . right)
+           (slot . -1)
+           (window-parameters . ((no-other-window . t)
+                                 (mode-line-format . none))))
           ("\\*Faces\\*"
            (display-buffer-in-side-window)
            (window-width . 0.25)
@@ -5902,6 +5910,7 @@ tweaks of my own.
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'keycast
+  ;; Those are for `keycast-mode'
   (setq keycast-window-predicate 'moody-window-active-p)
   (setq keycast-separator-width 1)
   (setq keycast-insert-after
@@ -5914,25 +5923,16 @@ tweaks of my own.
                    org-self-insert-command))
     (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 
-  ;;; TODO identify all events that should be excluded
-  ;; mouse-set-point
-  ;; mouse-set-region
-  ;; mouse-drag-secondary
-  ;; mouse-drag-line
-  ;; mouse-drag-drag
-  ;; mouse-start-end
-  ;; mouse-drag-region nil
-  ;; mouse-drag-track nil
-  ;; mouse-drag-region-rectangle
-  ;; mouse-drag-and-drop-region
-  ;; mwheel-event-button
-  ;; dframe-mouse-event-p
-  ;; mouse-drag-events-are-point-events-p
-
   (dolist (event '(mouse-event-p
                    mouse-movement-p
                    mwheel-scroll))
-    (add-to-list 'keycast-substitute-alist `(,event nil))))
+    (add-to-list 'keycast-substitute-alist `(,event nil)))
+
+  ;; Those are for the `keycast-log-mode'
+  (setq keycast-log-format "%-20K%C\n")
+  (setq keycast-log-frame-alist
+        '((minibuffer . nil)))
+  (setq keycast-log-newest-first t))
 #+end_src
 
 ** Window divider mode
