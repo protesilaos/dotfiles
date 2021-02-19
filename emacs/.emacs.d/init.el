@@ -146,8 +146,7 @@ expressions."
        (eval-and-compile
          (add-to-list 'load-path ,path))
        (if (require ,package nil 'noerror)
-	       (with-eval-after-load ,package
-             ,@body)
+	       (progn ,@body)
          (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :warning)
          (display-warning 'prot-emacs (format "This must be available at %s" ,path) :warning)))))
 
