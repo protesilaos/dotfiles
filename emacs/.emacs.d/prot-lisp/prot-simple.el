@@ -117,19 +117,25 @@ indentation while duplicating."
          (pbol (point-at-bol))
          (peol (point-at-eol))
          (indent (if (eq (or rbeg rend) pbol) nil arg)))
-    (if arg
-        (progn
-          (if (use-region-p)
-              (progn
-                (copy-region-as-kill rbeg rend)
-                (when (eq (point) rbeg)
-                  (exchange-point-and-mark))
-                (prot-simple-new-line-below indent))
+    (cond
+     ((use-region-p)
+      (if arg
+          (progn
+            (copy-region-as-kill rbeg rend)
+            (when (eq (point) rbeg)
+              (exchange-point-and-mark))
+            (prot-simple-new-line-below indent)
+            (yank))
+        (copy-region-as-kill rbeg rend)
+        (message "Current region copied")))
+     (t
+      (if arg
+          (progn
             (copy-region-as-kill pbol peol)
-            (prot-simple-new-line-below))
-          (yank))
-      (copy-region-as-kill pbol peol)
-      (message "Current line copied"))))
+            (prot-simple-new-line-below)
+            (yank))
+        (copy-region-as-kill pbol peol)
+        (message "Current line copied"))))))
 
 ;;;###autoload
 (defun prot-simple-yank-replace-line-or-region ()
