@@ -366,6 +366,19 @@ will be used instead."
       (diff-mode))
     (add-to-history 'prot-vc--commit-hist commit)))
 
+(autoload 'vc-git-grep "vc-git")
+
+;;;###autoload
+(defun prot-vc-git-grep (regexp)
+  "Run 'git grep' for REGEXP in current project.
+This is a simple wrapper around `vc-git-grep' to streamline the
+basic task of searching for a regexp in the current project.  Use
+the original command for its other features."
+  (interactive
+   (list (read-regexp "git-grep for PATTERN: "
+				      nil 'grep-history)))
+  (vc-git-grep regexp "*" (prot-vc--current-project)))
+
 (autoload 'vc-git-region-history-mode "vc-git")
 
 ;;;###autoload

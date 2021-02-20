@@ -3163,7 +3163,8 @@ the =prot-diff.el= that I linked to above):
 | prot-vc-custom-log               | SPC          |                   |
 | prot-vc-git-patch-dwim           | c            | Create patch      |
 | prot-vc-git-show                 | s            | Show commit       |
-| prot-vc-git-log-grep             | g            | Grep              |
+| prot-vc-git-grep                 | g            |                   |
+| prot-vc-git-log-grep             | G            |                   |
 | prot-vc-git-find-revision        | r            | Revisit version   |
 | prot-vc-git-blame-region-or-file | B            | Blame             |
 | prot-vc-git-log-insert-commits   | i            | Insert commit log |
@@ -3173,6 +3174,11 @@ My =prot-vc.el= library (reproduced after the package configurations)
 defines several commands that extend VC to suit my needs as a Git user.
 Check the key maps I assign those commands to, in order to further
 appreciate the scope of each action.  In short:
+
++ =prot-vc-git-grep= is a simple wrapper around =vc-git-grep=.  Instead of
+  asking for a directory and a file extension pattern, it just prompts
+  for a regexp and performs the search across the entire VC-controlled
+  directory tree.  All matches are placed directly in a buffer.
 
 + =prot-vc-git-log-edit-extract-file-name= is used in log-edit buffers to
   derive the file name of the item being committed.  For example, as I
@@ -3453,7 +3459,8 @@ manual for more on the matter):
     (define-key map (kbd "C-x v i") #'prot-vc-git-log-insert-commits)
     (define-key map (kbd "C-x v p") #'prot-vc-project-or-dir)
     (define-key map (kbd "C-x v SPC") #'prot-vc-custom-log)
-    (define-key map (kbd "C-x v g") #'prot-vc-git-log-grep)
+    (define-key map (kbd "C-x v g") #'prot-vc-git-grep)
+    (define-key map (kbd "C-x v G") #'prot-vc-git-log-grep)
     (define-key map (kbd "C-x v c") #'prot-vc-git-patch-dwim)
     (define-key map (kbd "C-x v s") #'prot-vc-git-show)
     (define-key map (kbd "C-x v r") #'prot-vc-git-find-revision)
