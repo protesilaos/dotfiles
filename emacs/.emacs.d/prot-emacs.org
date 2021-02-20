@@ -5100,6 +5100,13 @@ lots of options and commands: make sure to read its official manual.
 
   (setq ebdb-use-diary nil)   ; how can I banish the diary from my life?
 
+  (defun prot/ebdb-message-setup ()
+    "Load EBDB if not done already."
+    (unless ebdb-db-list
+      (ebdb-load)))
+
+  (add-hook 'message-setup-hook #'prot/ebdb-message-setup)
+
   (let ((map ebdb-mode-map))
     (define-key map (kbd "D") #'ebdb-delete-field-or-record)
     (define-key map (kbd "M") #'ebdb-email) ; disables `ebdb-mail-each'
