@@ -1164,13 +1164,12 @@ try.
     (define-key map (kbd "C-x M-:") #'consult-complex-command)
     (define-key map (kbd "C-x M-m") #'consult-minor-mode-menu)
     (define-key map (kbd "C-x M-k") #'consult-kmacro)
-    (define-key map (kbd "M-g g") #'consult-goto-line)
     (define-key map (kbd "M-g M-g") #'consult-goto-line)
     (define-key map (kbd "M-X") #'consult-mode-command)
     (define-key map (kbd "M-K") #'consult-keep-lines) ; M-S-k is similar to M-S-5 (M-%)
     (define-key map (kbd "M-F") #'consult-focus-lines) ; same principle
-    (define-key map (kbd "M-s g") #'consult-grep)
-    (define-key map (kbd "M-s m") #'consult-mark)
+    (define-key map (kbd "M-s M-g") #'consult-grep)
+    (define-key map (kbd "M-s M-m") #'consult-mark)
     (define-key map (kbd "C-x r r") #'consult-register) ; Use the register's prefix
     (define-key map (kbd "C-x r S") #'consult-register-store)
     (define-key map (kbd "C-x r L") #'consult-register-load)
@@ -1779,7 +1778,7 @@ position of the cursor after the skeleton has been inserted.
 These are meant to enhance the functionality of tools that are already
 shipped with Emacs.
 
-*** Isearch, occur, and extras (prot-search.el)
+*** Isearch, occur, grep, and extras (prot-search.el)
 :PROPERTIES:
 :CUSTOM_ID: h:b67687ee-25a3-4bf4-a924-180ccb63c629
 :END:
@@ -1901,6 +1900,15 @@ package configurations).
   prompts you to select one with completion.  It then browses that item
   using whatever browser you have for =browse-url-browser-function=.
 
++ =prot-search-grep= runs a local grep in the current directory.  With a
+  prefix argument, it runs recursively instead.  This is a thin wrapper
+  around the built-in =lgrep= and =rgrep= commands: it makes the process
+  faster by not asking for a directory and file extension pattern.  All
+  output is placed in a separate buffer.  Note that I also have a
+  variant for git-controlled projects: it is =prot-vc-git-grep= from
+  [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]].  Also note that
+  Consult provides a live version: refer to the [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][section on consult.el]].
+
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'isearch
   (setq search-highlight t)
@@ -1927,11 +1935,14 @@ package configurations).
   (define-key global-map (kbd "M-s M-o") #'multi-occur)
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
 
+(prot-emacs-builtin-package 'grep)
+
 (prot-emacs-builtin-package 'prot-search
   (let ((map global-map))
     (define-key map (kbd "M-s %") #'prot-search-isearch-replace-symbol)
     (define-key map (kbd "M-s M-<") #'prot-search-isearch-beginning-of-buffer)
     (define-key map (kbd "M-s M->") #'prot-search-isearch-end-of-buffer)
+    (define-key map (kbd "M-s g") #'prot-search-grep)
     (define-key map (kbd "M-s u") #'prot-search-occur-urls)
     (define-key map (kbd "M-s M-u") #'prot-search-occur-browse-url))
   (let ((map isearch-mode-map))

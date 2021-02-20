@@ -1,4 +1,4 @@
-;;; prot-search.el --- Extensions to isearch.el and replace.el for my dotemacs -*- lexical-binding: t -*-
+;;; prot-search.el --- Extensions to isearch, replace, grep for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2021  Protesilaos Stavrou
 
@@ -24,13 +24,14 @@
 
 ;;; Commentary:
 ;;
-;; This covers my isearch.el and replace.el extensions, for use in my
-;; Emacs setup: https://protesilaos.com/dotemacs.
+;; This covers my isearch.el, replace.el, and grep.el extensions, for
+;; use in my Emacs setup: <https://protesilaos.com/dotemacs>.
 
 ;;; Code:
 
 (require 'isearch)
 (require 'replace)
+(require 'grep)
 
 ;;;; Isearch
 
@@ -161,6 +162,39 @@ Also see `prot-search-occur-url'."
         (push (match-string-no-properties 0) matches)))
     (funcall browse-url-browser-function
              (completing-read "Browse URL: " matches nil t))))
+
+;;;; Grep
+
+;;;###autoload
+(defun prot-search-lgrep (regexp)
+  "Run local grep for REGEXP in current directory.
+This is a simple wrapper around `lgrep' to streamline the basic
+task of searching for a regexp in the current working directory.
+Use the original command for its other features."
+  (interactive
+   (list (read-regexp "Local grep for PATTERN: "
+				      nil 'grep-history)))
+  (lgrep regexp "*" default-directory nil))
+
+;;;###autoload
+(defun prot-search-rgrep (regexp)
+  "Run recursive grep for REGEXP starting from current directory.
+This is a simple wrapper around `rgrep' to streamline the basic
+task of searching for a regexp in the current directory tree.
+Use the original command for its other features."
+  (interactive
+   (list (read-regexp "Recursive grep for PATTERN: "
+				      nil 'grep-history)))
+  (rgrep regexp "*" default-directory nil))
+
+;;;###autoload
+(defun prot-search-grep (&optional arg)
+  "Run `prot-search-lgrep' or, with ARG, `prot-search-rgrep'.
+Use this instead of the other two to economise on key bindings."
+  (interactive "P")
+  (if arg
+      (call-interactively #'prot-search-rgrep)
+    (call-interactively #'prot-search-lgrep)))
 
 (provide 'prot-search)
 ;;; prot-search.el ends here
