@@ -2017,12 +2017,9 @@ Here are just the basics.  I might add more in the future.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'xref
-  ;; ;; Use this for Emacs 27 (I am on 28)
-  ;; (add-to-list 'prot-emacs-ensure-install 'xref)
-
   ;; All those have been changed for Emacs 28
-  (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
-  (setq xref-show-xrefs-function #'xref-show-definitions-completing-read)
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
+  (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
   (setq xref-file-name-display 'project-relative)
   (setq xref-search-program 'ripgrep))
 #+end_src
