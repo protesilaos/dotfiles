@@ -5081,6 +5081,7 @@ lots of options and commands: make sure to read its official manual.
   (setq ebdb-gnus-auto-update-p 'existing)
   (setq ebdb-mua-reader-update-p 'existing)
   (setq ebdb-mua-sender-update-p 'create)
+  (setq ebdb-message-auto-update-p 'create)
 
   (setq ebdb-message-try-all-headers t)
   (setq ebdb-message-headers
