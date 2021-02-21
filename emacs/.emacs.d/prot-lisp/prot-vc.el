@@ -571,7 +571,7 @@ headers 'Amend' and 'Summary'."
                                             (string-match-p "->" s))
                                           remotes)
                         "None"))
-         (remote (if (listp remote-name)
+         (remote (if (and remote-name (listp remote-name))
                    (cadr (split-string (car remote-name) "->" t "[\s\t]+"))
                    "No Remote Found"))
          (files (mapconcat (lambda (x)
