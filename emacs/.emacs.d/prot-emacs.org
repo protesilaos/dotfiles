@@ -3871,9 +3871,8 @@ Also check these valuable resources:
           eshell-term
           eshell-tramp
           eshell-unix))
-
+  (setenv "PAGER" "cat") ; solves issues, such as with 'git log' and the default 'less'
   (require 'em-cmpl)
-
   (require 'em-dirs)
   (setq eshell-cd-on-directory t)
 
