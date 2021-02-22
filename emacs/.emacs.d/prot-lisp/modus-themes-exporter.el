@@ -447,7 +447,8 @@ file."
         (with-temp-buffer
           (insert (eval fn))
           (write-region (point-min) (point-max) path))
-        (unless no-visit
+        (if (or no-visit (prefix-numeric-value '(16)))
+            (message "Wrote %s template to %s" template path)
           (when (yes-or-no-p (format "Wrote to file; visit new %s?" path))
             (find-file path)))))
      ((when (and path
