@@ -39,6 +39,9 @@
 ;;
 ;; Consult the doc string of `modus-themes-exporter-export' for how to
 ;; use this library.
+;;
+;; Also read "Introducing the Modus themes exporter (Emacs library)":
+;; <https://protesilaos.com/codelog/2021-02-22-modus-themes-exporter/>
 
 ;;; Code:
 
