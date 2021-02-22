@@ -47,10 +47,39 @@
 (require 'modus-themes)
 
 (defvar modus-themes-exporter-templates-alist
-  '(("urxvt" . modus-themes-exporter-urxvt)
-    ("vim"   . modus-themes-exporter-vim)
-    ("xfce"  . modus-themes-exporter-xfce)
-    ("xterm" . modus-themes-exporter-xterm)))
+  '(("urxvt"   . modus-themes-exporter-urxvt)
+    ("vim"     . modus-themes-exporter-vim)
+    ("xcolors" . modus-themes-exporter-xcolors)
+    ("xfce"    . modus-themes-exporter-xfce)
+    ("xterm"   . modus-themes-exporter-xterm)))
+
+(defun modus-themes-exporter-xcolors ()
+  "Template for generic Xcolors."
+  (modus-themes-with-colors
+    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+      (with-temp-buffer
+        (concat
+         "! Theme: " theme-name "\n"
+         "! Description: Generic Xcolors port of " theme-name " (Modus themes for Emacs)" "\n"
+         "! Author: Protesilaos Stavrou, <https://protesilaos.com>" "\n"
+         "*background: " bg-main "\n"
+         "*foreground: " fg-main "\n"
+         "*color0: " "#000000" "\n"
+         "*color1: " red "\n"
+         "*color2: " green "\n"
+         "*color3: " yellow "\n"
+         "*color4: " blue "\n"
+         "*color5: " magenta "\n"
+         "*color6: " cyan "\n"
+         "*color7: " "#bfbfbf" "\n"
+         "*color8: " "#595959" "\n"
+         "*color9: " red-alt "\n"
+         "*color10: " green-alt "\n"
+         "*color11: " yellow-alt "\n"
+         "*color12: " blue-alt "\n"
+         "*color13: " magenta-alt-other "\n"
+         "*color14: " cyan-alt-other "\n"
+         "*color15: " "#ffffff" "\n")))))
 
 (defun modus-themes-exporter-xterm ()
   "Template for XTerm."
