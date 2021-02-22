@@ -86,4 +86,5 @@ iab medot https://gitlab.com/protesilaos/dotfiles
 syntax enable
 " DO NOT EDIT MANUALLY IF YOU USE MY DOTFILES.  Themes are updated
 " programmatically via my `tempus` script.
-colorscheme tempus_classic
+" UPDATE 2021-02-22: testing EXPERIMENTAL port of the Modus themes for Emacs
+colorscheme modus_operandi
