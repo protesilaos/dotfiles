@@ -1189,11 +1189,11 @@ try.
             prot-consult-imenu))
     (prot-consult-set-up-hooks-mode 1)
     (let ((map global-map))
-      (define-key map (kbd "M-s i") #'prot-consult-imenu)
-      (define-key map (kbd "M-s f") #'prot-consult-fd)
-      (define-key map (kbd "M-s s") #'prot-consult-outline)    ; M-s o is `occur'
-      (define-key map (kbd "M-s y") #'prot-consult-yank)
-      (define-key map (kbd "M-s l") #'prot-consult-line))))
+      (define-key map (kbd "M-s M-i") #'prot-consult-imenu)
+      (define-key map (kbd "M-s M-f") #'prot-consult-fd)
+      (define-key map (kbd "M-s M-s") #'prot-consult-outline)    ; M-s o is `occur'
+      (define-key map (kbd "M-s M-y") #'prot-consult-yank)
+      (define-key map (kbd "M-s M-l") #'prot-consult-line))))
 #+end_src
 
 Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
