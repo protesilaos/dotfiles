@@ -32,7 +32,6 @@
 ;;; Code:
 
 (require 'gnus)
-(require 'prot-common)
 
 (defgroup prot-gnus ()
   "Extensions for ignus and flygnus."
@@ -44,7 +43,7 @@
   "Move to the ARGth previous group.
 If no numeric prefix ARG is supplied move by one."
   (interactive "p")
-  (let ((num (prot-common-number-negative arg))) ; from `prot-common.el'
+  (let ((num (natnump arg)))
     (gnus-group-next-group (or num -1) t)))
 
 (provide 'prot-gnus)

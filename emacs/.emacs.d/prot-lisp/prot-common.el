@@ -47,13 +47,6 @@
     (error "%s is not an integer" n)))
 
 ;;;###autoload
-(defun prot-common-number-negative (n)
-  "Make N negative."
-  (if (numberp n)
-      (string-to-number (format "-%d" n)) ; TODO: better way?
-    (error "%s is not a number" n)))
-
-;;;###autoload
 (defun prot-common-minor-modes-active ()
   "Return list of active minor modes for the current buffer."
   (let ((active-modes))
