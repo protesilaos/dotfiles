@@ -399,7 +399,7 @@ argument, also show the corresponding diffs."
        (setq-local vc-log-view-type type)
        (setq-local revert-buffer-function nil)
        (vc-git-region-history-mode))))
-     
+
 (defun prot-vc-git--file-rev (file &optional limit)
   "Select revision for FILE using completion.
 Optionally apply LIMIT to the log."
