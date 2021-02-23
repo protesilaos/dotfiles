@@ -5279,6 +5279,7 @@ demonstrated back then (as of 2021-01-18).
     (define-key map (kbd "<C-XF86AudioPlay>") #'bongo-pause/resume)
     (define-key map (kbd "<C-XF86AudioNext>") #'bongo-next)
     (define-key map (kbd "<C-XF86AudioPrev>") #'bongo-previous)
+    (define-key map (kbd "<C-M-XF86AudioPlay>") #'bongo-play-random)
     (define-key map (kbd "<M-XF86AudioPlay>") #'bongo-show)
     (define-key map (kbd "<S-XF86AudioNext>") #'bongo-seek-forward-10)
     (define-key map (kbd "<S-XF86AudioPrev>") #'bongo-seek-backward-10))
