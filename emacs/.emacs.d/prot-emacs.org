@@ -4887,6 +4887,7 @@ the meaning of the various date/time specifiers.
           "Followup-To:" "Reply-To:" "^Organization:" "^X-Newsreader:"
           "^X-Mailer:"))
   (setq gnus-sorted-header-list gnus-visible-headers)
+  (setq gnus-article-x-face-too-ugly ".*") ; all images in headers are outright annoying---disabled!
 ;;; async
   (setq gnus-asynchronous t)
   (setq gnus-use-article-prefetch 15)
