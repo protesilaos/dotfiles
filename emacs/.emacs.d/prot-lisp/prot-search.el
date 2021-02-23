@@ -165,6 +165,9 @@ Also see `prot-search-occur-url'."
 
 ;;;; Grep
 
+(defvar prot-search--grep-hist '()
+  "Input history of grep searches.")
+
 ;;;###autoload
 (defun prot-search-lgrep (regexp)
   "Run local grep for REGEXP in current directory.
@@ -173,8 +176,9 @@ task of searching for a regexp in the current working directory.
 Use the original command for its other features."
   (interactive
    (list (read-regexp "Local grep for PATTERN: "
-				      nil 'grep-history)))
-  (lgrep regexp "*" default-directory nil))
+				      nil 'prot-search--grep-hist)))
+  (lgrep regexp "*" default-directory)
+  (add-to-history 'prot-search--grep-hist regexp))
 
 ;;;###autoload
 (defun prot-search-rgrep (regexp)
@@ -184,8 +188,9 @@ task of searching for a regexp in the current directory tree.
 Use the original command for its other features."
   (interactive
    (list (read-regexp "Recursive grep for PATTERN: "
-				      nil 'grep-history)))
-  (rgrep regexp "*" default-directory nil))
+				      nil 'prot-search--grep-hist)))
+  (rgrep regexp "*" default-directory)
+  (add-to-history 'prot-search--grep-hist regexp))
 
 ;;;###autoload
 (defun prot-search-grep (&optional arg)
