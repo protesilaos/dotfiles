@@ -314,6 +314,7 @@
 ;;     ruler-mode
 ;;     sallet
 ;;     selectrum
+;;     selectrum-prescient
 ;;     semantic
 ;;     sesman
 ;;     shell-script-mode
@@ -4598,8 +4599,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(indium-repl-prompt-face ((,class :foreground ,cyan-alt-other)))
     `(indium-repl-stdout-face ((,class :foreground ,fg-main)))
 ;;;;; info
-    `(Info-quoted ((,class ,@(modus-themes--mixed-fonts)
-                           :foreground ,magenta))) ; the capitalization is canonical
+    `(Info-quoted ((,class ,@(modus-themes--mixed-fonts) ; the capitalization is canonical
+                           :background ,bg-alt :foreground ,fg-special-calm)))
     `(info-header-node ((,class :inherit bold :foreground ,fg-alt)))
     `(info-header-xref ((,class :foreground ,blue-active)))
     `(info-index-match ((,class :inherit match)))
@@ -4613,15 +4614,15 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; info-colors
     `(info-colors-lisp-code-block ((,class :inherit fixed-pitch)))
     `(info-colors-ref-item-command ((,class :foreground ,magenta)))
-    `(info-colors-ref-item-constant ((,class :foreground ,blue-alt-other)))
-    `(info-colors-ref-item-function ((,class :foreground ,magenta)))
-    `(info-colors-ref-item-macro ((,class :inherit modus-theme-bold :foreground ,magenta-alt-other)))
-    `(info-colors-ref-item-other ((,class :foreground ,cyan)))
-    `(info-colors-ref-item-special-form ((,class :inherit modus-theme-bold :foreground ,magenta-alt-other)))
-    `(info-colors-ref-item-syntax-class ((,class :foreground ,magenta)))
-    `(info-colors-ref-item-type ((,class :foreground ,magenta-alt)))
-    `(info-colors-ref-item-user-option ((,class :foreground ,cyan)))
-    `(info-colors-ref-item-variable ((,class :foreground ,cyan)))
+    `(info-colors-ref-item-constant ((,class :inherit font-lock-constant-face)))
+    `(info-colors-ref-item-function ((,class :inherit font-lock-function-name-face)))
+    `(info-colors-ref-item-macro ((,class :inherit font-lock-keyword-face)))
+    `(info-colors-ref-item-other ((,class :inherit font-lock-doc-face)))
+    `(info-colors-ref-item-special-form ((,class :inherit font-lock-keyword-face)))
+    `(info-colors-ref-item-syntax-class ((,class :inherit font-lock-builtin-face)))
+    `(info-colors-ref-item-type ((,class :inherit font-lock-type-face)))
+    `(info-colors-ref-item-user-option ((,class :inherit font-lock-variable-name-face)))
+    `(info-colors-ref-item-variable ((,class :inherit font-lock-variable-name-face)))
 ;;;;; interaction-log
     `(ilog-buffer-face ((,class :foreground ,magenta-alt-other)))
     `(ilog-change-face ((,class :foreground ,magenta-alt)))
@@ -5698,19 +5699,36 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                          'modus-theme-nuanced-blue
                                          blue-alt-other))))
 ;;;;; selectrum
+;; NOTE 2021-02-22: The `selectrum-primary-highlight' and
+;; `selectrum-secondary-highlight' are deprecated upstream in favour of
+;; their selectrum-prescient counterparts.  We shall remove those faces
+;; from the themes once we are certain that they are no longer relevant.
     `(selectrum-current-candidate
       ((,class :inherit bold :foreground ,fg-main
                :background ,@(pcase modus-themes-completions
                                ('opinionated (list bg-active))
                                (_ (list bg-inactive))))))
-    `(selectrum-primary-highlight ((,class :inherit bold
-                                           ,@(modus-themes--standard-completions
-                                              magenta-alt magenta-nuanced-bg
-                                              magenta-refine-bg magenta-refine-fg))))
-    `(selectrum-secondary-highlight ((,class :inherit bold
-                                             ,@(modus-themes--standard-completions
-                                                cyan-alt-other cyan-nuanced-bg
-                                                cyan-refine-bg cyan-refine-fg))))
+    `(selectrum-primary-highlight
+      ((,class :inherit bold
+               ,@(modus-themes--standard-completions
+                  magenta-alt magenta-nuanced-bg
+                  magenta-refine-bg magenta-refine-fg))))
+    `(selectrum-secondary-highlight
+      ((,class :inherit bold
+               ,@(modus-themes--standard-completions
+                  cyan-alt-other cyan-nuanced-bg
+                  cyan-refine-bg cyan-refine-fg))))
+;;;;; selectrum-prescient
+    `(selectrum-prescient-primary-highlight
+      ((,class :inherit bold
+               ,@(modus-themes--standard-completions
+                  magenta-alt magenta-nuanced-bg
+                  magenta-refine-bg magenta-refine-fg))))
+    `(selectrum-prescient-secondary-highlight
+      ((,class :inherit bold
+               ,@(modus-themes--standard-completions
+                  cyan-alt-other cyan-nuanced-bg
+                  cyan-refine-bg cyan-refine-fg))))
 ;;;;; semantic
     `(semantic-complete-inline-face ((,class :foreground ,fg-special-warm :underline t)))
     `(semantic-decoration-on-fileless-includes ((,class :inherit modus-theme-refine-green)))
