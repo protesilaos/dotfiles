@@ -32,6 +32,7 @@
 (require 'cl-lib)
 (when (featurep 'embark)
   (require 'embark))
+(require 'prot-common)
 (require 'prot-minibuffer)
 
 (defgroup prot-embark ()
@@ -213,7 +214,7 @@ assigned to a key in `embark-collect-mode-map'."
 This calls `prot-embark--completions-act' and is meant to be
 assigned to a key in `embark-collect-mode-map'."
   (interactive "p")
-  (let ((num (natnump arg)))
+  (let ((num (prot-common-number-negative arg))) ; from `prot-common.el'
     (prot-embark--completions-act (or num -1))))
 
 ;;;###autoload
@@ -272,7 +273,7 @@ This performs a regular motion for optional ARG lines, but when
 point can no longer move in that direction, then it switches to
 the minibuffer."
   (interactive "p")
-  (let ((num (natnump arg)))
+  (let ((num (prot-common-number-negative arg))) ; from `prot-common.el'
     (if (bobp)
         (prot-minibuffer-focus-mini)    ; from `prot-minibuffer.el'
       (forward-line (or num 1)))))
