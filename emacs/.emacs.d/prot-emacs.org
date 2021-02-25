@@ -435,19 +435,19 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-no-mixed-fonts nil
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts 'intense-accented
+        modus-themes-prompts nil
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
         modus-themes-region 'no-extend ; {nil,'no-extend,'bg-only,'bg-only-no-extend}
         modus-themes-diffs nil ; {nil,'desaturated,'fg-only,'bg-only}
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
-        '((1 . section)
-          (2 . line)
+        '((1 . rainbow-section)
+          (2 . rainbow-line)
           (t . rainbow-line-no-bold))
         modus-themes-variable-pitch-ui t
-        modus-themes-variable-pitch-headings nil
-        modus-themes-scale-headings nil
+        modus-themes-variable-pitch-headings t
+        modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
