@@ -6322,6 +6322,8 @@ likely to change over the near term.
 ;;
 ;; `prot-emacs-manual-package' is defined in my init.el
 (prot-emacs-manual-package 'rlist
+  (setq rlist-expert t)
+  (setq rlist-verbose t)
   (let ((map global-map))
     (define-key map (kbd "C-x r <backspace>") #'rlist-list-registers)
     (define-key map (kbd "C-x r <delete>") #'rlist-list-registers)))
