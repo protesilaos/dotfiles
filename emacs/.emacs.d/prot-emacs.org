@@ -438,7 +438,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-prompts nil
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
         modus-themes-region 'no-extend ; {nil,'no-extend,'bg-only,'bg-only-no-extend}
-        modus-themes-diffs nil ; {nil,'desaturated,'fg-only,'bg-only}
+        modus-themes-diffs 'deuteranopia ; {nil,'desaturated,'fg-only,'bg-only,'deuteranopia}
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
