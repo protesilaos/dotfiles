@@ -318,6 +318,7 @@
 ;;     semantic
 ;;     sesman
 ;;     shell-script-mode
+;;     shortdoc
 ;;     show-paren-mode
 ;;     shr
 ;;     side-notes
@@ -618,14 +619,17 @@
 
     (bg-diff-heading . "#b7cfe0") (fg-diff-heading . "#041645")
     (bg-diff-added . "#d4fad4") (fg-diff-added . "#004500")
+    (bg-diff-added-deuteran . "#daefff") (fg-diff-added-deuteran . "#002044")
     (bg-diff-changed . "#fcefcf") (fg-diff-changed . "#524200")
     (bg-diff-removed . "#ffe8ef") (fg-diff-removed . "#691616")
 
     (bg-diff-refine-added . "#94cf94") (fg-diff-refine-added . "#002a00")
+    (bg-diff-refine-added-deuteran . "#77c0ef") (fg-diff-refine-added-deuteran . "#000035")
     (bg-diff-refine-changed . "#cccf8f") (fg-diff-refine-changed . "#302010")
     (bg-diff-refine-removed . "#daa2b0") (fg-diff-refine-removed . "#400000")
 
     (bg-diff-focus-added . "#bbeabb") (fg-diff-focus-added . "#002c00")
+    (bg-diff-focus-added-deuteran . "#bacfff") (fg-diff-focus-added-deuteran . "#001755")
     (bg-diff-focus-changed . "#ecdfbf") (fg-diff-focus-changed . "#392900")
     (bg-diff-focus-removed . "#efcbcf") (fg-diff-focus-removed . "#4a0000")
 
@@ -860,14 +864,17 @@ symbol and the latter as a string.")
 
     (bg-diff-heading . "#304466") (fg-diff-heading . "#dae7ff")
     (bg-diff-added . "#0a280a") (fg-diff-added . "#94ba94")
+    (bg-diff-added-deuteran . "#001a3f") (fg-diff-added-deuteran . "#c4cdf2")
     (bg-diff-changed . "#2a2000") (fg-diff-changed . "#b0ba9f")
     (bg-diff-removed . "#40160f") (fg-diff-removed . "#c6adaa")
 
     (bg-diff-refine-added . "#005a36") (fg-diff-refine-added . "#e0f6e0")
+    (bg-diff-refine-added-deuteran . "#234f8f") (fg-diff-refine-added-deuteran . "#dde4ff")
     (bg-diff-refine-changed . "#585800") (fg-diff-refine-changed . "#ffffcc")
     (bg-diff-refine-removed . "#852828") (fg-diff-refine-removed . "#ffd9eb")
 
     (bg-diff-focus-added . "#203d20") (fg-diff-focus-added . "#b4ddb4")
+    (bg-diff-focus-added-deuteran . "#00405f") (fg-diff-focus-added-deuteran . "#bfe4ff")
     (bg-diff-focus-changed . "#4a3a10") (fg-diff-focus-changed . "#d0daaf")
     (bg-diff-focus-removed . "#5e2526") (fg-diff-focus-removed . "#eebdba")
 
@@ -1642,7 +1649,7 @@ A description of all possible values:
 + `no-color-no-bold' is like `no-color' but without the bold
   weight."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.1.0")
+  :package-version '(modus-themes . "1.2.0")
   :version "28.1"
   :type
   '(alist
@@ -1664,8 +1671,8 @@ A description of all possible values:
             (const :tag "Like `section' without bold weight" section-no-bold)
             (const :tag "Like `section' with more colorful foreground" rainbow-section)
             (const :tag "Like `rainbow-section' without bold weight" rainbow-section-no-bold)
-            (const :tag "Do not use any color; just bold weight" no-color)
-            (const :tag "Like `no-bold' but without the bold weight" no-color-no-bold)))
+            (const :tag "Do not use any distinct foreground color; just bold weight" no-color)
+            (const :tag "Like `no-bold' but without the distinct foreground color" no-color-no-bold)))
   :link '(info-link "(modus-themes) Heading styles"))
 
 (defcustom modus-themes-scale-headings nil
@@ -1977,15 +1984,21 @@ Option `bg-only' applies a background but does not override the
 text's foreground.  This makes it suitable for a non-nil value
 passed to `diff-font-lock-syntax' (note: Magit does not support
 syntax highlighting in diffs as of 2020-11-25, version
-20201116.1057)."
+20201116.1057).
+
+Option `deuteranopia' accounts for red-green color defficiency by
+replacing all instances of green with colors on the blue side of
+the spectrum.  Other stylistic changes are made in the interest
+of optimizing for such a use-case."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.0.0")
+  :package-version '(modus-themes . "1.2.0")
   :version "28.1"
   :type '(choice
           (const :tag "Intensely colored backgrounds (default)" nil)
           (const :tag "Slightly accented backgrounds with tinted text" desaturated)
           (const :tag "No backgrounds, except for refined diffs" fg-only)
-          (const :tag "Apply color-coded backgrounds; keep syntax colors in tact" bg-only))
+          (const :tag "Apply color-coded backgrounds; keep syntax colors in tact" bg-only)
+          (const :tag "Optimized for red-green color defficiency" deuteranopia))
   :link '(info-link "(modus-themes) Diffs"))
 
 (defcustom modus-themes-completions nil
@@ -2615,7 +2628,7 @@ property."
      `(:foreground ,fg :background ,bg :box ,border))))
 
 (defun modus-themes--diff
-    (fg-only-bg fg-only-fg mainbg mainfg altbg altfg &optional bg-only-fg)
+    (fg-only-bg fg-only-fg mainbg mainfg altbg altfg &optional deuteranbg deuteranfg  bg-only-fg)
   "Color combinations for `modus-themes-diffs'.
 
 FG-ONLY-BG should be similar or the same as the main background.
@@ -2629,13 +2642,25 @@ ALTBG needs to be a slightly accented background that is meant to
 be combined with ALTFG.  Both must be less intense than MAINBG
 and MAINFG respectively.
 
+DEUTERANBG and DEUTERANFG must be combinations of colors that account
+for red-green color defficiency (deuteranopia).
+
 Optional BG-ONLY-FG applies ALTFG else leaves the foreground
 unspecified."
   (pcase modus-themes-diffs
     ('fg-only (list :background fg-only-bg :foreground fg-only-fg))
     ('desaturated (list :background altbg :foreground altfg))
+    ('deuteranopia (list :background (or deuteranbg mainbg) :foreground (or deuteranfg mainfg)))
     ('bg-only (list :background altbg :foreground (if bg-only-fg altfg 'unspecified)))
     (_ (list :background mainbg :foreground mainfg))))
+
+(defun modus-themes--diff-deuteran (deuteran main)
+  "Determine whether the DEUTERAN or MAIN color should be used.
+This is based on whether `modus-themes-diffs' has the value
+`deuteranopia'."
+  (if (eq modus-themes-diffs 'deuteranopia)
+      (list deuteran)
+    (list main)))
 
 (defun modus-themes--diff-text (fg-only-fg default-fg)
   "Like `modus-themes--diff', but only for foregrounds.
@@ -2945,7 +2970,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
       ((,class ,@(modus-themes--diff
                   bg-main green
                   bg-diff-focus-added fg-diff-focus-added
-                  green-nuanced-bg fg-diff-added))))
+                  green-nuanced-bg fg-diff-added
+                  bg-diff-focus-added-deuteran fg-diff-focus-added-deuteran))))
     `(modus-theme-diff-changed
       ((,class ,@(modus-themes--diff
                   bg-main yellow
@@ -2960,7 +2986,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
       ((,class ,@(modus-themes--diff
                   bg-diff-added fg-diff-added
                   bg-diff-refine-added fg-diff-refine-added
-                  bg-diff-focus-added fg-diff-focus-added))))
+                  bg-diff-focus-added fg-diff-focus-added
+                  bg-diff-refine-added-deuteran fg-diff-refine-added-deuteran))))
     `(modus-theme-diff-refine-changed
       ((,class ,@(modus-themes--diff
                   bg-diff-changed fg-diff-changed
@@ -2975,7 +3002,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
       ((,class ,@(modus-themes--diff
                   bg-dim green
                   bg-diff-focus-added fg-diff-focus-added
-                  bg-diff-added fg-diff-added))))
+                  bg-diff-added fg-diff-added
+                  bg-diff-focus-added-deuteran fg-diff-focus-added-deuteran))))
     `(modus-theme-diff-focus-changed
       ((,class ,@(modus-themes--diff
                   bg-dim yellow
@@ -2990,7 +3018,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
       ((,class ,@(modus-themes--diff
                   bg-main blue
                   bg-diff-heading fg-diff-heading
-                  cyan-nuanced-bg cyan-nuanced-fg t))))
+                  cyan-nuanced-bg cyan-nuanced-fg
+                  bg-header fg-main
+                  t))))
 ;;;;; mark indicators
     ;; color combinations intended for Dired, Ibuffer, or equivalent
     `(modus-theme-pseudo-header ((,class :inherit bold :foreground ,fg-main)))
@@ -3234,10 +3264,11 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(avy-lead-face-1 ((,class :inherit (modus-theme-intense-red bold))))
     `(avy-lead-face-2 ((,class :inherit (modus-theme-intense-green bold))))
 ;;;;; aw (ace-window)
-    `(aw-background-face ((,class :background ,bg-dim :foreground ,fg-dim)))
+    `(aw-background-face ((,class :foreground ,fg-unfocused)))
     `(aw-key-face ((,class :inherit bold :foreground ,blue-intense)))
-    `(aw-leading-char-face ((,class :inherit bold :height 1.5 :background ,bg-main :foreground ,red-intense)))
-    `(aw-minibuffer-leading-char-face ((,class :foreground ,magenta-active)))
+    `(aw-leading-char-face ((,class :inherit (modus-theme-intense-cyan bold fixed-pitch)
+                                    :height 1.5 :slant normal)))
+    `(aw-minibuffer-leading-char-face ((,class :inherit (modus-theme-intense-red bold))))
     `(aw-mode-line-face ((,class :inherit bold)))
 ;;;;; awesome-tray
     `(awesome-tray-module-awesome-tab-face ((,class :inherit bold :foreground ,red-alt-other)))
@@ -3602,7 +3633,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(diff-header ((,class ,@(modus-themes--diff-text cyan-faint fg-main))))
     `(diff-hunk-header ((,class :inherit (bold modus-theme-diff-heading))))
     `(diff-index ((,class :inherit bold :foreground ,blue-alt)))
-    `(diff-indicator-added ((,class :inherit (diff-added bold) :foreground ,green)))
+    `(diff-indicator-added ((,class :inherit (diff-added bold)
+                                    :foreground ,@(modus-themes--diff-deuteran blue green))))
     `(diff-indicator-changed ((,class :inherit (diff-changed bold) :foreground ,yellow)))
     `(diff-indicator-removed ((,class :inherit (diff-removed bold) :foreground ,red)))
     `(diff-nonexistent ((,class :inherit (modus-theme-neutral bold))))
@@ -3811,7 +3843,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(ediff-current-diff-B ((,class ,@(modus-themes--diff
                                        bg-dim green
                                        bg-diff-added fg-diff-added
-                                       green-nuanced-bg green-faint))))
+                                       green-nuanced-bg green-faint
+                                       bg-diff-added-deuteran fg-diff-added-deuteran))))
     `(ediff-current-diff-C ((,class ,@(modus-themes--diff
                                        bg-dim yellow
                                        bg-diff-changed fg-diff-changed
@@ -3822,7 +3855,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(ediff-even-diff-C ((,class :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2)))
     `(ediff-fine-diff-A ((,class :background ,bg-diff-focus-removed :foreground ,fg-diff-focus-removed)))
     `(ediff-fine-diff-Ancestor ((,class :inherit modus-theme-refine-cyan)))
-    `(ediff-fine-diff-B ((,class :background ,bg-diff-focus-added :foreground ,fg-diff-focus-added)))
+    `(ediff-fine-diff-B
+      ((,class :background ,@(modus-themes--diff-deuteran bg-diff-focus-added-deuteran bg-diff-focus-added)
+               :foreground ,@(modus-themes--diff-deuteran fg-diff-focus-added-deuteran fg-diff-focus-added))))
     `(ediff-fine-diff-C ((,class :background ,bg-diff-focus-changed :foreground ,fg-diff-focus-changed)))
     `(ediff-odd-diff-A ((,class :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2)))
     `(ediff-odd-diff-Ancestor ((,class :background ,bg-diff-neutral-0 :foreground ,fg-diff-neutral-0)))
@@ -4865,7 +4900,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(magit-diff-added ((,class ,@(modus-themes--diff
                                    bg-main green
                                    bg-diff-added fg-diff-added
-                                   green-nuanced-bg fg-diff-added))))
+                                   green-nuanced-bg fg-diff-added
+                                   bg-diff-added-deuteran fg-diff-added-deuteran))))
     `(magit-diff-added-highlight ((,class :inherit modus-theme-diff-focus-added)))
     `(magit-diff-base ((,class ,@(modus-themes--diff
                                   bg-main yellow
@@ -4884,8 +4920,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
     ;; modus-theme-diff-* faces.
     `(magit-diff-hunk-heading ((,class :inherit bold :background ,bg-active
                                        :foreground ,fg-inactive)))
-    `(magit-diff-hunk-heading-highlight ((,class :inherit bold :background ,bg-diff-heading
-                                                 :foreground ,fg-diff-heading)))
+    `(magit-diff-hunk-heading-highlight
+      ((,class :inherit bold
+               :background ,@(modus-themes--diff-deuteran bg-region bg-diff-heading)
+               :foreground ,@(modus-themes--diff-deuteran fg-main fg-diff-heading))))
     `(magit-diff-hunk-heading-selection ((,class :inherit modus-theme-refine-blue)))
     `(magit-diff-hunk-region ((,class :inherit bold)))
     `(magit-diff-lines-boundary ((,class :background ,fg-main)))
@@ -4895,7 +4933,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                      bg-diff-removed fg-diff-removed
                                      red-nuanced-bg fg-diff-removed))))
     `(magit-diff-removed-highlight ((,class :inherit modus-theme-diff-focus-removed)))
-    `(magit-diffstat-added ((,class :foreground ,green)))
+    `(magit-diffstat-added ((,class :foreground ,@(modus-themes--diff-deuteran blue green))))
     `(magit-diffstat-removed ((,class :foreground ,red)))
     `(magit-dimmed ((,class :foreground ,fg-unfocused)))
     `(magit-filename ((,class :foreground ,fg-special-cold)))
@@ -5005,7 +5043,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(markdown-language-info-face ((,class ,@(modus-themes--mixed-fonts)
                                            :foreground ,fg-special-cold)))
     `(markdown-language-keyword-face ((,class ,@(modus-themes--mixed-fonts)
-                                              :foreground ,green-alt-other)))
+                                              :background ,bg-alt
+                                              :foreground ,fg-alt)))
     `(markdown-line-break-face ((,class :inherit modus-theme-refine-cyan :underline t)))
     `(markdown-link-face ((,class :inherit button)))
     `(markdown-link-title-face ((,class :inherit modus-theme-slant :foreground ,fg-special-cold)))
@@ -5439,7 +5478,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; org-table-sticky-header
     `(org-table-sticky-header-face ((,class :inherit modus-theme-intense-neutral)))
 ;;;;; org-tree-slide
-    `(org-tree-slide-header-overlay-face ((,class :background ,bg-main :foreground ,fg-main)))
+    `(org-tree-slide-header-overlay-face
+      ((,class :inherit (bold modus-theme-variable-pitch) :background ,bg-main
+               :foreground ,fg-special-cold :overline nil
+               ,@(modus-themes--scale modus-themes-scale-5))))
 ;;;;; org-treescope
     `(org-treescope-faces--markerinternal-midday ((,class :inherit modus-theme-intense-blue)))
     `(org-treescope-faces--markerinternal-range ((,class :inherit modus-theme-special-mild)))
@@ -5750,6 +5792,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; shell-script-mode
     `(sh-heredoc ((,class :foreground ,blue-alt)))
     `(sh-quoted-exec ((,class :inherit modus-theme-bold :foreground ,magenta-alt)))
+;;;;; shortdoc
+    `(shortdoc-heading ((,class :inherit modus-theme-pseudo-header)))
+    `(shortdoc-section ((,class))) ; remove the default's variable-pitch style
 ;;;;; show-paren-mode
     `(show-paren-match ((,class ,@(modus-themes--paren bg-paren-match
                                                        bg-paren-match-intense)
