@@ -411,43 +411,43 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs t
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
         ;; 'subtle-foreground-straight-underline, 'intense-foreground,
         ;; 'intense-foreground-straight-underline, 'colored-background
-        modus-themes-lang-checkers 'subtle-foreground-straight-underline
+        modus-themes-lang-checkers 'subtle-foreground
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody
-        modus-themes-mode-line '3d
+        modus-themes-mode-line 'borderless-moody
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments,'faint-yellow-comments,
         modus-themes-syntax nil
         modus-themes-intense-hl-line nil
-        modus-themes-subtle-line-numbers t
+        modus-themes-subtle-line-numbers nil
         modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only, 'neutral-underline-only
-        modus-themes-links 'neutral-underline
+        modus-themes-links nil
         modus-themes-no-mixed-fonts nil
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts nil
-        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
+        modus-themes-prompts 'subtle-accented
+        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
         modus-themes-region 'no-extend ; {nil,'no-extend,'bg-only,'bg-only-no-extend}
         modus-themes-diffs 'deuteranopia ; {nil,'desaturated,'fg-only,'bg-only,'deuteranopia}
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
-        '((1 . rainbow-section)
-          (2 . rainbow-line)
-          (t . rainbow-line-no-bold))
+        '((1 . section)
+          (2 . line)
+          (t . line-no-bold))
         modus-themes-variable-pitch-ui t
-        modus-themes-variable-pitch-headings t
-        modus-themes-scale-headings t
+        modus-themes-variable-pitch-headings nil
+        modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
@@ -5782,7 +5782,7 @@ want is to make the mode line gracefully adapt to changes in font size.
 (prot-emacs-builtin-package 'prot-moody
   ;; Also check the Modus themes' `modus-themes-mode-line' which can set
   ;; the styles specifically for Moody.
-  (prot-moody-set-height -1))
+  (prot-moody-set-height 1))
 #+end_src
 
 Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
