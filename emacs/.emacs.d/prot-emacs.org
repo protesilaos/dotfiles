@@ -575,7 +575,8 @@ Relevant blog posts of mine:
   ;; set that to 350, while the standard light is at 300 and regular is
   ;; at 400.  Source: <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
-        '((laptop 90 "Hack" normal "DejaVu Sans Condensed" normal)
+        '((pocket 80 "Hack" normal "DejaVu Sans Condensed" normal)
+          (laptop 90 "Hack" normal "DejaVu Sans Condensed" normal)
           (desktop 100 "Hack" normal "FiraGO" normal)
           (reader 135 "Iosevka Comfy" light "FiraGO" normal)
           (presentation 135 "Hack" normal "DejaVu Sans Condensed" normal)))
