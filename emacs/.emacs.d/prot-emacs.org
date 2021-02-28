@@ -416,16 +416,16 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'straight-underline, 'subtle-foreground,
         ;; 'subtle-foreground-straight-underline, 'intense-foreground,
         ;; 'intense-foreground-straight-underline, 'colored-background
-        modus-themes-lang-checkers 'subtle-foreground
+        modus-themes-lang-checkers 'colored-background
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody
-        modus-themes-mode-line 'borderless-moody
+        modus-themes-mode-line 'borderless-3d
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments,'faint-yellow-comments,
-        modus-themes-syntax nil
-        modus-themes-intense-hl-line nil
+        modus-themes-syntax 'alt-syntax
+        modus-themes-intense-hl-line t
         modus-themes-subtle-line-numbers nil
         modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
         ;; Options for `modus-themes-links': nil, 'faint,
@@ -5788,7 +5788,7 @@ want is to make the mode line gracefully adapt to changes in font size.
 (prot-emacs-builtin-package 'prot-moody
   ;; Also check the Modus themes' `modus-themes-mode-line' which can set
   ;; the styles specifically for Moody.
-  (prot-moody-set-height 1))
+  (prot-moody-set-height -1))
 #+end_src
 
 Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
