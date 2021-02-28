@@ -2745,7 +2745,12 @@ Here my settings, followed by the entirety of =prot-tab.el=.
   (setq tab-bar-position nil)
   (setq tab-bar-show nil)
   (setq tab-bar-tab-hints nil)
-  (setq tab-bar-tab-name-function 'tab-bar-tab-name-all)
+  (setq tab-bar-tab-name-function 'tab-bar-tab-name-current)
+  (setq tab-bar-format                  ; Emacs 28
+      '(tab-bar-format-tabs 
+        tab-bar-separator
+        tab-bar-format-align-right
+        tab-bar-format-global))
   (tab-bar-mode -1)
   (tab-bar-history-mode -1)
   (let ((map global-map))
