@@ -7780,3 +7780,100 @@ keyboard's layout is US Qwerty.
 For my videos I use the built-in camera and microphone (sorry if the
 production quality is sub-standard!).  Since we are here: the recording
 software is OBS Studio, while I do no video editing whatsoever.
+
+* Other people's Emacs work
+:PROPERTIES:
+:CUSTOM_ID: h:7b39c38c-ae23-4385-b439-afca89baca52
+:END:
+
+Emacs is both a piece of software and a diverse community of people that
+are brought together by their shared interest in this unique program.
+Emacs' development unfolds through a distributed network of volunteer
+efforts coordinated by members of the GNU project.  While the community
+at-large contributes lots of valuable ideas to a pool of accumulated
+knowledge, such as configurations with custom Elisp code, video or
+written tutorials on particular workflows, and packages that cover a
+broad range of needs.
+
+Outside the narrow confines of computer, Emacs is it people.
+
+Here is a non-exhaustive list of users that I have found to be helpful,
+each in their own unique way:
+
++ Mike Zamansky :: Mike is a computer science professor who has been
+  doing [[https://www.youtube.com/channel/UCxkMDXQ5qzYOgXPRnOBrp1w][videos on Emacs]] for several years.  There is a wealth of
+  information to gather from those presentations as well as the
+  concomitant [[https://github.com/zamansky/dot-emacs][dot-emacs code repository]].
+
++ Emacs Elements :: This is [[https://www.youtube.com/channel/UCe5excZqMeG1CIW-YhMTCEQ][a channel on Youtube]] where Raoul Comninos
+  shows how to get things done using Emacs.  There are tutorials on how
+  to use the =diary=, =calendar=, and =org-agenda=, while you will also find
+  more advanced topics such as how to install, use, and make sense of
+  the powerful Icicles completion framework.
+
++ System Crafters :: David Wilson's work on Emacs covers a broad range
+  of themes, encapsulated in the [[https://github.com/daviwil/emacs-from-scratch][Emacs from scratch]] configuration.  The
+  corresponding [[https://youtube.com/c/SystemCrafters][Youtube channel]] contains lots of videos on how to set up
+  and use all sorts of packages in Emacs, such as Org and the Mu4e email
+  client.
+
++ Omar Antolín Camarena :: Omar's work is mentioned several times in
+  this document (author of Orderless, Embark, and co-author of
+  Marginalia).  Apart from those inherently useful packages, Omar also
+  maintains [[https://github.com/oantolin/emacs-config][a personal Emacs configuration]] which doubles as a laboratory
+  of experimentation for new packages.
+
++ Daniel Mendler :: Daniel's name is referenced in a number of this
+  document's sections (author of Consult, Goggles, Recursion indicator,
+  co-author of Marginalia...).  As far as I can tell, Daniel does not
+  share an Emacs configuration, though one can still learn a lot by
+  studying the code of the numerous repositories on [[https://github.com/minad][@minad's Github]].
+
++ Manuel Uberti :: Manuel's contributions have been of paramount
+  importance to the development of my Modus themes.  Manuel offers a lot
+  to the Emacs milieu through code but also by reporting issues and
+  communicating with package maintainers.  The website [[https://www.manueluberti.eu/][manueluberti.eu]]
+  hosts a blog with Manuel's musings on Emacs.  For example, you will
+  find articles that I have already referenced in this document, such as
+  [[https://www.manueluberti.eu/emacs/2020/11/14/extending-project/][Extending project.el]] (2020-11-14).
+
++ Nicolas De Jaeghere :: Nicolas is another contributor to my Modus
+  themes and has helped me understand several Elisp concepts, such as by
+  refining the macros that are defined in my =init.el=.  Nicolas maintains
+  [[https://github.com/Koekelas/dotfiles][a personal dotfiles repo]] where you can find an =emacs.org= file with
+  lots of advanced code snippets.
+
++ Karthik Chikmagalur ::  Karthik's [[https://karthinks.com/software/batteries-included-with-emacs/][Batteries included with Emacs]]
+  (2020-11-17) and [[https://karthinks.com/software/more-batteries-included-with-emacs/][More batteries included with Emacs]] (2020-12-11) are
+  essential reading for anyone wanting to gain an overview of some of
+  Emacs' capabilities out-of-the-box and learn about its 'hidden gems'.
+  Karthik's website includes philosophical insights as well, such as
+  those found in [[https://karthinks.com/blog/thoughts-on-strength-training/][Thoughts on Strength Training]] (2019-03-02).
+
++ James Norman Vladimir Cash :: James produces videos on Emacs, such as
+  this one [[https://occasionallycogent.com/custom_emacs_modeline_video_edition/index.html][on customising the modeline]] and writes about similar topics,
+  like reading email in Emacs.  Though I also appreciate commentary of a
+  political sort: [[https://occasionallycogent.com/against_mindless_minimalism/index.html][Against Mindless Software Minimalism]] (2019-03-24).
+
++ Sacha Chua :: Sacha's work is instrumental to the Emacs community's
+  self awareness.  The [[https://sachachua.com/blog/category/geek/emacs/][weekly "Emacs news" blog entries]] offers an
+  overview of what is happening in our space---consider it essential
+  reading.  While Sacha was among the organisers of the last two yearly
+  Emacsconf events and has shared a lot of valuable insights throughout
+  the years, such as hand-drawn guides to using Emacs, chats with
+  prominent members of the Emacs community, and more.
+
+Please note that this is a non-exhaustive list.  Lots of people help in
+the betterment of the Emacs milieu, such as Jonas Bernoulli (developer
+of Magit, among many others), Oleh Krehel (developer of Ivy, Counsel,
+Swiper, and more), Thierry Volpiatto (maintainer of Helm), Bastien
+Guerry (Org maintainer), Eli Zaretskii (Emacs maintainer), Lars
+Ingebrigtsen (author of Gnus, co-maintainer of Emacs), Dmitry Gutov
+(maintainer of several built-in subsystems like project.el, as well as
+external packages like Company, diff-hl...), and many more.
+
+Every bit counts: a bug report, a blog post detailing one's workflow,
+participation in a mailing list thread, etc.  Do not hesitate to add
+your part and become a member of this wonderful community.
+
+A big thank you to everyone!
