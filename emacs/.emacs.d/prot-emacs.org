@@ -4950,12 +4950,12 @@ the meaning of the various date/time specifiers.
   (setq gnus-sum-thread-tree-vertical "|")
 
   (add-hook 'dired-mode-hook #'gnus-dired-mode) ; dired integration
-  (add-hook 'gnus-group-mode-hook #'hl-line-mode)
   (add-hook 'gnus-group-mode-hook #'gnus-topic-mode)
-  (add-hook 'gnus-summary-mode-hook #'hl-line-mode)
-  (add-hook 'gnus-browse-mode-hook #'hl-line-mode)
-  (add-hook 'gnus-server-mode-hook #'hl-line-mode)
   (add-hook 'gnus-select-group-hook #'gnus-group-set-timestamp)
+
+  (dolist (mode '(gnus-group-mode-hook gnus-summary-mode-hook gnus-browse-mode-hook))
+    (add-hook mode #'hl-line-mode))
+
   ;; ;; TODO 2021-01-28: fill for `gnus-article-mode-hook' should be
   ;; ;; reviewed in light of prot-fill.el
   ;; (add-hook 'gnus-article-mode-hook (lambda () (setq-local fill-column 80)))
