@@ -3303,7 +3303,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(bm-fringe-persistent-face ((,class :inherit modus-theme-fringe-blue)))
     `(bm-persistent-face ((,class :inherit modus-theme-intense-blue :extend t)))
 ;;;;; bongo
-    `(bongo-album-title ((,class :foreground ,green-active)))
+    `(bongo-album-title ((,class :foreground ,yellow-active)))
     `(bongo-artist ((,class :foreground ,magenta-active)))
     `(bongo-currently-playing-track ((,class :inherit bold)))
     `(bongo-elapsed-track-part ((,class :inherit modus-theme-subtle-magenta :underline t)))
@@ -3697,15 +3697,16 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; dired-narrow
     `(dired-narrow-blink ((,class :inherit (modus-theme-subtle-cyan bold))))
 ;;;;; dired-subtree
-    ;; remove background from dired-subtree, else it breaks
+    ;; remove backgrounds from dired-subtree faces, else they break
     ;; dired-{flagged,marked} and any other face that sets a background
-    ;; such as hl-line
-    `(dired-subtree-depth-1-face ((,class :background nil)))
-    `(dired-subtree-depth-2-face ((,class :background nil)))
-    `(dired-subtree-depth-3-face ((,class :background nil)))
-    `(dired-subtree-depth-4-face ((,class :background nil)))
-    `(dired-subtree-depth-5-face ((,class :background nil)))
-    `(dired-subtree-depth-6-face ((,class :background nil)))
+    ;; such as hl-line.  Also, denoting depth by varying shades of gray
+    ;; is not good for accessibility.
+    `(dired-subtree-depth-1-face (()))
+    `(dired-subtree-depth-2-face (()))
+    `(dired-subtree-depth-3-face (()))
+    `(dired-subtree-depth-4-face (()))
+    `(dired-subtree-depth-5-face (()))
+    `(dired-subtree-depth-6-face (()))
 ;;;;; diredc
     `(diredc-face-chmod-font-lock-dir ((,class :foreground ,blue-alt)))
     `(diredc-face-chmod-font-lock-exec ((,class :foreground ,magenta)))
