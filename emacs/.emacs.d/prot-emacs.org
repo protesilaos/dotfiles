@@ -411,23 +411,23 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs t
-        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
+        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
         ;; 'subtle-foreground-straight-underline, 'intense-foreground,
         ;; 'intense-foreground-straight-underline, 'colored-background
-        modus-themes-lang-checkers 'colored-background
+        modus-themes-lang-checkers nil
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody
-        modus-themes-mode-line 'borderless-3d
+        modus-themes-mode-line nil
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments,'faint-yellow-comments,
-        modus-themes-syntax 'alt-syntax
-        modus-themes-intense-hl-line t
+        modus-themes-syntax 'yellow-comments
+        modus-themes-intense-hl-line nil
         modus-themes-subtle-line-numbers nil
-        modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
+        modus-themes-paren-match 'intense ; {nil,'subtle-bold,'intense,'intense-bold}
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only, 'neutral-underline-only
@@ -435,7 +435,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-no-mixed-fonts nil
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts 'subtle-accented
+        modus-themes-prompts 'intense-accented
         modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
         modus-themes-region 'no-extend ; {nil,'no-extend,'bg-only,'bg-only-no-extend}
         modus-themes-diffs 'deuteranopia ; {nil,'desaturated,'fg-only,'bg-only,'deuteranopia}
