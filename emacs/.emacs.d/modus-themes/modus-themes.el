@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 1.1.1
+;; Version: 1.2.2
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -331,6 +331,7 @@
 ;;     spaceline
 ;;     speedbar
 ;;     spell-fu
+;;     spray
 ;;     stripes
 ;;     suggest
 ;;     switch-window
@@ -389,7 +390,7 @@
 
 
 
-(require 'cl-lib)
+(eval-when-compile (require 'cl-lib))
 
 (defgroup modus-themes ()
   "Options for `modus-operandi', `modus-vivendi'."
@@ -3269,11 +3270,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(avy-lead-face-1 ((,class :inherit (modus-theme-intense-red bold))))
     `(avy-lead-face-2 ((,class :inherit (modus-theme-intense-green bold))))
 ;;;;; aw (ace-window)
-    `(aw-background-face ((,class :foreground ,fg-unfocused)))
+    `(aw-background-face ((,class :background ,bg-dim :foreground ,fg-dim)))
     `(aw-key-face ((,class :inherit bold :foreground ,blue-intense)))
-    `(aw-leading-char-face ((,class :inherit (modus-theme-intense-cyan bold fixed-pitch)
-                                    :height 1.5 :slant normal)))
-    `(aw-minibuffer-leading-char-face ((,class :inherit (modus-theme-intense-red bold))))
+    `(aw-leading-char-face ((,class :inherit bold :height 1.5 :slant normal :background ,bg-main :foreground ,red-intense)))
+    `(aw-minibuffer-leading-char-face ((,class :foreground ,magenta-active)))
     `(aw-mode-line-face ((,class :inherit bold)))
 ;;;;; awesome-tray
     `(awesome-tray-module-awesome-tab-face ((,class :inherit bold :foreground ,red-alt-other)))
@@ -3616,7 +3616,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; dictionary
     `(dictionary-button-face ((,class :inherit bold :foreground ,fg-special-cold)))
     `(dictionary-reference-face ((,class :inherit button)))
-    `(dictionary-word-definition-face ((,class)))
+    `(dictionary-word-definition-face (()))
     `(dictionary-word-entry-face ((,class :inherit font-lock-comment-face)))
 ;;;;; diff-hl
     `(diff-hl-change ((,class :inherit modus-theme-fringe-yellow)))
@@ -5359,7 +5359,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-checkbox-statistics-done ((,class :inherit org-done)))
     `(org-checkbox-statistics-todo ((,class :inherit org-todo)))
     `(org-clock-overlay ((,class :inherit modus-theme-special-cold)))
-    `(org-code ((,class ,@(modus-themes--mixed-fonts) :foreground ,magenta)))
+    `(org-code ((,class ,@(modus-themes--mixed-fonts)
+                        :background ,red-nuanced-bg :foreground ,magenta)))
     `(org-column ((,class :background ,bg-alt)))
     `(org-column-title ((,class :inherit bold :underline t :background ,bg-alt)))
     `(org-date ((,class :inherit ,(if modus-themes-no-mixed-fonts
@@ -5377,7 +5378,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-done ((,class :foreground ,green)))
     `(org-drawer ((,class ,@(modus-themes--mixed-fonts)
                           :foreground ,fg-alt)))
-    `(org-ellipsis ((,class))) ; inherits from the heading's color
+    `(org-ellipsis (())) ; inherits from the heading's color
     `(org-footnote ((,class :inherit button
                             ,@(modus-themes--link-color
                                blue-alt blue-alt-faint))))
@@ -5430,7 +5431,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-level-8 ((,class :inherit modus-theme-heading-8)))
     `(org-link ((,class :inherit button)))
     `(org-list-dt ((,class :inherit bold)))
-    `(org-macro ((,class :background ,blue-nuanced-bg :foreground ,magenta-alt-other)))
+    `(org-macro ((,class ,@(modus-themes--mixed-fonts)
+                         :background ,blue-nuanced-bg :foreground ,magenta-alt-other)))
     `(org-meta-line ((,class ,@(modus-themes--mixed-fonts) :foreground ,fg-alt)))
     `(org-mode-line-clock ((,class :foreground ,fg-main)))
     `(org-mode-line-clock-overrun ((,class :inherit modus-theme-active-red)))
@@ -5809,7 +5811,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(sh-quoted-exec ((,class :inherit modus-theme-bold :foreground ,magenta-alt)))
 ;;;;; shortdoc
     `(shortdoc-heading ((,class :inherit modus-theme-pseudo-header)))
-    `(shortdoc-section ((,class))) ; remove the default's variable-pitch style
+    `(shortdoc-section (())) ; remove the default's variable-pitch style
 ;;;;; show-paren-mode
     `(show-paren-match ((,class ,@(modus-themes--paren bg-paren-match
                                                        bg-paren-match-intense)
@@ -5873,7 +5875,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(smerge-lower ((,class :inherit modus-theme-diff-added)))
     `(smerge-markers ((,class :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2)))
     `(smerge-refined-added ((,class :inherit modus-theme-diff-refine-added)))
-    `(smerge-refined-changed ((,class)))
+    `(smerge-refined-changed (()))
     `(smerge-refined-removed ((,class :inherit modus-theme-diff-refine-removed)))
     `(smerge-upper ((,class :inherit modus-theme-diff-removed)))
 ;;;;; solaire
@@ -5906,6 +5908,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(speedbar-tag-face ((,class :foreground ,yellow-alt-other)))
 ;;;;; spell-fu
     `(spell-fu-incorrect-face ((,class :inherit modus-theme-lang-error)))
+;;;;; spray
+    `(spray-accent-face ((,class :foreground ,red-intense)))
+    `(spray-base-face ((,class :inherit default :foreground ,fg-special-cold)))
 ;;;;; stripes
     `(stripes ((,class :inherit modus-theme-hl-line)))
 ;;;;; success
@@ -6430,7 +6435,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;###autoload
 (when (and (boundp 'custom-theme-load-path) load-file-name)
   (add-to-list 'custom-theme-load-path
-               (file-name-as-directory (file-name-directory load-file-name))))
+               (expand-file-name (file-name-directory load-file-name))))
 
 (provide 'modus-themes)
 ;;; modus-themes.el ends here
