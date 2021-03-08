@@ -165,7 +165,9 @@ expressions."
 (setq default-input-method "greek")
 (setq ring-bell-function 'ignore)
 
-(defalias 'yes-or-no-p 'y-or-n-p)
+(setq use-short-answers t)    ; for Emacs28, replaces the defalias below
+;; (defalias 'yes-or-no-p 'y-or-n-p)
+
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
