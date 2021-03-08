@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 1.2.2
+;; Version: 1.2.3
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -65,7 +65,5 @@ which corresponds to a minimum contrast in relative luminance of
 (modus-themes-theme modus-vivendi)
 
 (provide-theme 'modus-vivendi)
-
-(provide 'modus-vivendi-theme)
 
 ;;; modus-vivendi-theme.el ends here
