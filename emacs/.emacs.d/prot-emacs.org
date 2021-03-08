@@ -411,43 +411,49 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs t
-        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
+
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
         ;; 'subtle-foreground-straight-underline, 'intense-foreground,
         ;; 'intense-foreground-straight-underline, 'colored-background
         modus-themes-lang-checkers nil
+
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody
         modus-themes-mode-line nil
+
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments,'faint-yellow-comments,
-        modus-themes-syntax 'yellow-comments
-        modus-themes-intense-hl-line nil
-        modus-themes-subtle-line-numbers nil
-        modus-themes-paren-match 'intense ; {nil,'subtle-bold,'intense,'intense-bold}
+        modus-themes-syntax nil
+
+        ;; Options for `modus-themes-hl-line': nil, 'intense-background,
+        ;; 'underline-accented
+        modus-themes-hl-line 'underline-accented
+        modus-themes-subtle-line-numbers t
+        modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
+
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only, 'neutral-underline-only
-        modus-themes-links nil
+        modus-themes-links 'faint
         modus-themes-no-mixed-fonts nil
+
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts 'intense-accented
-        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
+        modus-themes-prompts 'subtle-accented
+        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
         modus-themes-region 'no-extend ; {nil,'no-extend,'bg-only,'bg-only-no-extend}
-        modus-themes-diffs 'deuteranopia ; {nil,'desaturated,'fg-only,'bg-only,'deuteranopia}
+        modus-themes-diffs nil ; {nil,'desaturated,'fg-only,'bg-only,'deuteranopia}
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
-        '((1 . section)
-          (2 . line)
-          (t . line-no-bold))
+        '((t . section))
         modus-themes-variable-pitch-ui t
-        modus-themes-variable-pitch-headings nil
-        modus-themes-scale-headings nil
+        modus-themes-variable-pitch-headings t
+        modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
