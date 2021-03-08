@@ -6534,6 +6534,7 @@ Here is the package configuration.
   (add-hook 'text-mode-hook #'goto-address-mode)
   (let ((map text-mode-map))
     (define-key map (kbd "<M-return>") #'prot-text-insert-heading)
+    (define-key map (kbd "C-M-^") #'prot-text-insert-undercaret)
     (define-key map (kbd "M-;") #'prot-text-cite-region))
   (define-key org-mode-map (kbd "M-;") nil))
 #+end_src

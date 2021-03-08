@@ -99,5 +99,39 @@ newly formatted text."
     (delete-region beg end)
     (insert (concat description text-new "\n+----"))))
 
+;; `prot-text-insert-undercaret' was shared with me by Gregory Heytings:
+;; <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=45068#250>.
+;;;###autoload
+(defun prot-text-insert-undercaret (&optional arg)
+  "Draw carets below the characters on the current line or region."
+  (interactive "p")
+  (let* ((begin (if (region-active-p) (region-beginning) (line-beginning-position)))
+         (end (if (region-active-p) (region-end) (line-end-position)))
+         (lines (- (line-number-at-pos end) (line-number-at-pos begin) -1))
+         (comment (and (/= arg 1) (= lines 1)))
+         (final-forward-line -1))
+    (goto-char begin)
+    (dotimes (i lines)
+      (let* ((line-begin (if (zerop i) begin (line-beginning-position)))
+             (line-end (if (= (1+ i) lines) end (line-end-position)))
+             (begin-column (progn (goto-char line-begin) (current-column)))
+             (end-column (progn (goto-char line-end) (current-column)))
+             (prefix-begin (line-beginning-position))
+             (prefix-end (progn (beginning-of-line-text) (point)))
+             (prefix-end-column (progn (goto-char prefix-end) (current-column)))
+             (delta (if (< begin-column prefix-end-column) (- prefix-end-column begin-column) 0))
+             (prefix-string (buffer-substring-no-properties prefix-begin prefix-end))
+             (prefix (if (string-match-p "\\` *\\'" prefix-string) "" prefix-string))
+             (whitespace (make-string (- (+ begin-column delta) (string-width prefix)) ?\ ))
+             (do-under (< delta (- line-end line-begin)))
+             (under (if do-under (make-string (- end-column begin-column delta) ?^) ""))
+             (under-string (concat prefix whitespace under "\n")))
+        (forward-line 1)
+        (if do-under (insert under-string) (setq final-forward-line -2))
+        (setq end (+ end (length under-string)))
+        (when comment (insert prefix whitespace "\n"))))
+    (forward-line final-forward-line)
+    (goto-char (line-end-position))))
+
 (provide 'prot-text)
 ;;; prot-text.el ends here
