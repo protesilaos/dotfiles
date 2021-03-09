@@ -7495,6 +7495,68 @@ consider two highly valuable blog posts by Karthik Chikmagalur:
 + [[https://karthinks.com/software/batteries-included-with-emacs/][Batteries included with Emacs]] (2020-11-17).
 + [[https://karthinks.com/software/more-batteries-included-with-emacs/][More batteries included with Emacs]] (2020-12-11).
 
+** Have you tried Gnus for RSS feeds?
+:PROPERTIES:
+:CUSTOM_ID: h:7e4448ec-3878-4ea2-9cd6-75e9faaac373
+:END:
+
+For the relevant setup, refer to the mega-section on [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]].
+
+I tried to make feeds work with Gnus because I generally like it and
+wish to extend it further.  The issues I encountered are manifold.
+These qualify as "problems" based on my expectations, so please do not
+take this as a pretence of objectivity.
+
+1. The ~nnrss~ backend does not support the Atom spec.  To make feeds work
+   you need to pipe them through some other script that will convert
+   them to the RSS format.  I do not like that, because it puts the
+   burden on the user for something that should work out-of-the-box.
+   The Atom spec has been around for a long time; long enough to expect
+   feed readers to have caught up to the current state of affairs.
+
+2. The ~nnrss-opml-import~ command prompts you twice for every feed.
+   First to confirm it and then to add a name for it.  Try that for,
+   say, 200 feeds.  Not pretty.  Maybe there is some way to bypass this
+   and just do it programmatically.  I could not find it.  Again, this
+   may be due to my false expectations, where I consider it a basic
+   thing that should "just work" (because while I like customising
+   everything, this is not a substitute for things working well by
+   default).
+
+3. Fetching feeds blocks Emacs entirely.  Especially when the list is
+   long.  Again, think of a 200-long list.  I am fine with this
+   happening for email when I choose to update things manually, because
+   I only have three accounts and the interruption is barely noticeable.
+   But it otherwise is a show-stopper.  This means that you must run the
+   process externally.  Fine in principle, though I cannot avoid the
+   fact that Elfeed already has an option for that (also refer to the
+   section [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el]]).
+
+4. Updating feeds often produces duplicate items or fetches the same
+   item again, even though it was already read.  The solution is to
+   customise ~nnrss-ignore-article-fields~.  Its default value is an XML
+   tag that you only learn about if you actually read a relevant feed's
+   source code: "(slash:comments)".  So if you want to, say, ignore the
+   published date, you need to check the XML and find the =pubDate= tag.
+   Fine, I can do that, but it is not a good idea to expect users to
+   know such technicalities.
+
+5. Gwene is a good compromise in lieu of a genuine solution, namely:
+   proper support for the Atom spec and the option to fetch feed updates
+   through curl/wget (or equivalent).  However, I do not like the whole
+   workflow around it.  It runs contrary to what I am doing with Emacs:
+   which is to control things from inside of Emacs.  Gwene is a website
+   facade and a public server.  You go to the website to upload your
+   OPML file.  Where is the =M-x= command for that?  And why should a list
+   of decentralised feeds be dependent on a centralised server, anyway?
+   And why should the list be made public?  What about private feeds?
+
+Apologies if this sounds too negative.  I am sure there are workarounds
+and there is always a good chance that either I missed something, or I
+simply am not knowledgeable enough to make Gnus+Feeds work properly.  I
+also wish I had better Elisp skills to help patch those issues in core
+Emacs, but I must work with what I have.
+
 ** What is the meaning of the `s-KEY' bindings?
 :PROPERTIES:
 :CUSTOM_ID: h:fbba4dea-9cc8-4e73-bffa-02aab10a6703
