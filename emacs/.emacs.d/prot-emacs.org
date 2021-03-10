@@ -410,9 +410,9 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs t
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+  (setq modus-themes-slanted-constructs nil
+        modus-themes-bold-constructs nil
+        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
@@ -422,26 +422,26 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody
-        modus-themes-mode-line '3d
+        modus-themes-mode-line nil
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
-        ;; 'alt-syntax-yellow-comments,'faint-yellow-comments,
-        modus-themes-syntax 'alt-syntax
+        ;; 'alt-syntax-yellow-comments,'faint-yellow-comments
+        modus-themes-syntax 'faint-yellow-comments
 
         ;; Options for `modus-themes-hl-line': nil, 'intense-background,
         ;; 'accented-background, 'underline-neutral,
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
-        modus-themes-hl-line 'underline-accented
-        modus-themes-subtle-line-numbers t
+        modus-themes-hl-line 'underline-only-neutral
+        modus-themes-subtle-line-numbers nil
         modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
 
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only, 'neutral-underline-only
-        modus-themes-links nil
+        modus-themes-links 'faint-neutral-underline
         modus-themes-no-mixed-fonts nil
 
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
@@ -453,7 +453,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
-        '((t . section))
+        '((t . rainbow-highlight))
         modus-themes-variable-pitch-ui t
         modus-themes-variable-pitch-headings t
         modus-themes-scale-headings t
