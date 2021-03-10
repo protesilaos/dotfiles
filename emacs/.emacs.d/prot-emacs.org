@@ -1367,6 +1367,16 @@ Finally, a few words about the following package configurations:
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
 
+  ;; ;; NOTE: Use the following {remove,add}-hook if you want Embark's
+  ;; ;; Completions' buffer to sort candidates in the order they were
+  ;; ;; last used.  This is, for example, how Icomplete does it.
+  ;; ;; Personally I do not want that because I normally narrow the list
+  ;; ;; to a very small set, where the order does not matter.  Also, I
+  ;; ;; do not wish to assume any performance cost for such a feature.
+
+  ;; (remove-hook 'embark-candidate-collectors #'embark-minibuffer-candidates)
+  ;; (add-hook 'embark-candidate-collectors #'embark-sorted-minibuffer-candidates)
+
   (setq embark-key-action-separator (propertize " · " 'face 'shadow))
   (setq embark-action-indicator
         (let ((act (propertize "Act" 'face 'highlight)))
