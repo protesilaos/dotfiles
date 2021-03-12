@@ -7124,6 +7124,9 @@ Overview of my settings:
   (setq desktop-restore-eager 0)
   (setq desktop-restore-frames nil)
   (setq desktop-save 'ask-if-new)
+  (dolist (symbol '(kill-ring log-edit-comment-ring))
+    (add-to-list 'desktop-globals-to-save symbol))
+
   (desktop-save-mode 1))
 #+end_src
 
