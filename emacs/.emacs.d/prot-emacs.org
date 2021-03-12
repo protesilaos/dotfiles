@@ -3,11 +3,11 @@
 #+EMAIL: public@protesilaos.com
 #+OPTIONS: toc:nil
 #+MACRO: export-date (eval (format-time-string "%F %R %z" (current-time)))
-#+MACRO: emacs-ver (eval (substring (emacs-version) 0 17))
+#+MACRO: emacs-development-version (eval (substring (emacs-version) 0 17))
 
 + Created: 2019-08-15
 + Updated: *{{{export-date}}}*.
-+ Emacs Version: {{{emacs-ver}}}.
++ Emacs Version: {{{emacs-development-version}}}.
 + File history:
   <https://gitlab.com/protesilaos/dotfiles/-/commits/master/emacs/.emacs.d/prot-emacs.org>.
 
