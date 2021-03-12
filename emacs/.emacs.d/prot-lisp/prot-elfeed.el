@@ -83,25 +83,22 @@ Used by `prot-elfeed-toggle-tag'."
   '((((class color) (min-colors 88) (background light))
      :inherit elfeed-search-title-face :foreground "#972500")
     (((class color) (min-colors 88) (background dark))
-     :inherit elfeed-search-title-face :foreground "#f4923b")
-    (t :inherit (font-lock-builtin-face elfeed-search-title-face)))
-  "Face for Elfeed entries tagged 'critical'.")
+     :inherit elfeed-search-title-face :foreground "#f4923b"))
+  "Face for Elfeed entries tagged with 'critical'.")
 
 (defface prot-elfeed-entry-important
   '((((class color) (min-colors 88) (background light))
-     :inherit elfeed-search-title-face :foreground "#315b00")
+     :inherit elfeed-search-title-face :foreground "#5d3026")
     (((class color) (min-colors 88) (background dark))
-     :inherit elfeed-search-title-face :foreground "#70c900")
-    (t :inherit (font-lock-string-face elfeed-search-title-face)))
-  "Face for Elfeed entries tagged 'important'.")
+     :inherit elfeed-search-title-face :foreground "#f8dec0"))
+  "Face for Elfeed entries tagged with 'important'.")
 
 (defface prot-elfeed-entry-personal
     '((((class color) (min-colors 88) (background light))
-     :inherit elfeed-search-title-face :foreground "#8f0075")
+     :inherit elfeed-search-title-face :foreground "#0031a9")
     (((class color) (min-colors 88) (background dark))
-     :inherit elfeed-search-title-face :foreground "#f78fe7")
-    (t :inherit (font-lock-keyword-face elfeed-search-title-face)))
-  "Face for Elfeed entries tagged 'personal'.")
+     :inherit elfeed-search-title-face :foreground "#2fafff"))
+  "Face for Elfeed entries tagged with 'personal'.")
 
 ;;;; Utilities
 
