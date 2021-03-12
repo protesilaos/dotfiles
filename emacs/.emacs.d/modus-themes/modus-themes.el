@@ -638,10 +638,6 @@
     (bg-diff-focus-changed . "#ecdfbf") (fg-diff-focus-changed . "#392900")
     (bg-diff-focus-removed . "#efcbcf") (fg-diff-focus-removed . "#4a0000")
 
-    (bg-diff-neutral-0 . "#979797") (fg-diff-neutral-0 . "#040404")
-    (bg-diff-neutral-1 . "#b0b0b0") (fg-diff-neutral-1 . "#252525")
-    (bg-diff-neutral-2 . "#cccccc") (fg-diff-neutral-2 . "#3a3a3a")
-
     (bg-mark-sel . "#a0f0cf") (fg-mark-sel . "#005040")
     (bg-mark-del . "#ffccbb") (fg-mark-del . "#840040")
     (bg-mark-alt . "#f5d88f") (fg-mark-alt . "#782900"))
@@ -884,10 +880,6 @@ symbol and the latter as a string.")
     (bg-diff-focus-added-deuteran . "#00405f") (fg-diff-focus-added-deuteran . "#bfe4ff")
     (bg-diff-focus-changed . "#4a3a10") (fg-diff-focus-changed . "#d0daaf")
     (bg-diff-focus-removed . "#5e2526") (fg-diff-focus-removed . "#eebdba")
-
-    (bg-diff-neutral-0 . "#575757") (fg-diff-neutral-0 . "#fcfcfc")
-    (bg-diff-neutral-1 . "#454545") (fg-diff-neutral-1 . "#dddddd")
-    (bg-diff-neutral-2 . "#313131") (fg-diff-neutral-2 . "#bfbfbf")
 
     (bg-mark-sel . "#002f2f") (fg-mark-sel . "#60cfa2")
     (bg-mark-del . "#5a0000") (fg-mark-del . "#ff99aa")
@@ -1270,19 +1262,19 @@ The actual styling of the face is done by `modus-themes-faces'.")
 The actual styling of the face is done by `modus-themes-faces'.")
 
 (defface modus-themes-mark-alt nil
-  "Combines yellow colors for marking special lines
+  "Combines yellow colors for marking special lines.
 This is intended for use in modes such as Dired, Ibuffer, Proced.
 
 The actual styling of the face is done by `modus-themes-faces'.")
 
 (defface modus-themes-mark-del nil
-  "Combines red colors for marking deletable lines
+  "Combines red colors for marking deletable lines.
 This is intended for use in modes such as Dired, Ibuffer, Proced.
 
 The actual styling of the face is done by `modus-themes-faces'.")
 
 (defface modus-themes-mark-sel nil
-  "Combines green colors for marking lines
+  "Combines green colors for marking lines.
 This is intended for use in modes such as Dired, Ibuffer, Proced.
 
 The actual styling of the face is done by `modus-themes-faces'.")
@@ -1294,7 +1286,7 @@ This is intended for use in modes such as Dired, Ibuffer, Proced.
 The actual styling of the face is done by `modus-themes-faces'.")
 
 (defface modus-themes-heading-1 nil
-  "General purpose face for use in headings level 1
+  "General purpose face for use in headings level 1.
 The exact attributes assigned to this face are contingent on the values
 assigned to the `modus-themes-headings' variable.
 
@@ -3920,39 +3912,25 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(ebdb-phone-default ((,class :foreground ,cyan)))
     `(eieio-custom-slot-tag-face ((,class :foreground ,red-alt)))
 ;;;;; ediff
-    ;; NOTE: here we break from the pattern of inheriting from the
-    ;; modus-themes-diff-* faces.
-    `(ediff-current-diff-A ((,class ,@(modus-themes--diff
-                                       bg-dim red
-                                       bg-diff-removed fg-diff-removed
-                                       red-nuanced-bg red-faint))))
+    `(ediff-current-diff-A ((,class :inherit modus-themes-diff-removed)))
     `(ediff-current-diff-Ancestor ((,class ,@(modus-themes--diff
-                                              bg-dim fg-special-cold
+                                              bg-inactive fg-special-cold
                                               bg-special-cold fg-special-cold
                                               blue-nuanced-bg blue))))
-    `(ediff-current-diff-B ((,class ,@(modus-themes--diff
-                                       bg-dim green
-                                       bg-diff-added fg-diff-added
-                                       green-nuanced-bg green-faint
-                                       bg-diff-added-deuteran fg-diff-added-deuteran))))
-    `(ediff-current-diff-C ((,class ,@(modus-themes--diff
-                                       bg-dim yellow
-                                       bg-diff-changed fg-diff-changed
-                                       yellow-nuanced-bg yellow-faint))))
-    `(ediff-even-diff-A ((,class :background ,bg-diff-neutral-1 :foreground ,fg-diff-neutral-1)))
-    `(ediff-even-diff-Ancestor ((,class :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-1)))
-    `(ediff-even-diff-B ((,class :background ,bg-diff-neutral-1 :foreground ,fg-diff-neutral-1)))
-    `(ediff-even-diff-C ((,class :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2)))
-    `(ediff-fine-diff-A ((,class :background ,bg-diff-focus-removed :foreground ,fg-diff-focus-removed)))
+    `(ediff-current-diff-B ((,class :inherit modus-themes-diff-added)))
+    `(ediff-current-diff-C ((,class :inherit modus-themes-diff-changed)))
+    `(ediff-even-diff-A ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+    `(ediff-even-diff-Ancestor ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+    `(ediff-even-diff-B ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+    `(ediff-even-diff-C ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+    `(ediff-fine-diff-A ((,class :inherit modus-themes-diff-refine-removed)))
     `(ediff-fine-diff-Ancestor ((,class :inherit modus-themes-refine-cyan)))
-    `(ediff-fine-diff-B
-      ((,class :background ,@(modus-themes--diff-deuteran bg-diff-focus-added-deuteran bg-diff-focus-added)
-               :foreground ,@(modus-themes--diff-deuteran fg-diff-focus-added-deuteran fg-diff-focus-added))))
-    `(ediff-fine-diff-C ((,class :background ,bg-diff-focus-changed :foreground ,fg-diff-focus-changed)))
-    `(ediff-odd-diff-A ((,class :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2)))
-    `(ediff-odd-diff-Ancestor ((,class :background ,bg-diff-neutral-0 :foreground ,fg-diff-neutral-0)))
-    `(ediff-odd-diff-B ((,class :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2)))
-    `(ediff-odd-diff-C ((,class :background ,bg-diff-neutral-1 :foreground ,fg-diff-neutral-1)))
+    `(ediff-fine-diff-B ((,class :inherit modus-themes-diff-refine-added)))
+    `(ediff-fine-diff-C ((,class :inherit modus-themes-diff-refine-changed)))
+    `(ediff-odd-diff-A ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+    `(ediff-odd-diff-Ancestor ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+    `(ediff-odd-diff-B ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+    `(ediff-odd-diff-C ((,class :background ,bg-inactive :foreground ,fg-inactive)))
 ;;;;; eglot
     `(eglot-mode-line ((,class :inherit modus-themes-bold :foreground ,magenta-active)))
 ;;;;; el-search
@@ -4441,7 +4419,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(gnus-server-opened ((,class :inherit bold :foreground ,green)))
     `(gnus-signature ((,class :inherit italic :foreground ,fg-special-cold)))
     `(gnus-splash ((,class :inherit shadow)))
-    `(gnus-summary-cancelled ((,class :inherit modus-themes-mark-alt)))
+    `(gnus-summary-cancelled ((,class :inherit modus-themes-mark-alt :extend t)))
     `(gnus-summary-high-ancient ((,class :inherit bold :foreground ,fg-alt)))
     `(gnus-summary-high-read ((,class :inherit bold :foreground ,fg-special-cold)))
     `(gnus-summary-high-ticked ((,class :inherit bold :foreground ,red-alt-other)))
@@ -4457,7 +4435,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(gnus-summary-normal-ticked ((,class :foreground ,red-alt-other)))
     `(gnus-summary-normal-undownloaded ((,class :foreground ,yellow)))
     `(gnus-summary-normal-unread ((,class :foreground ,fg-main)))
-    `(gnus-summary-selected ((,class :inherit modus-themes-subtle-blue)))
+    `(gnus-summary-selected ((,class :inherit modus-themes-subtle-blue :extend t)))
 ;;;;; golden-ratio-scroll-screen
     `(golden-ratio-scroll-highlight-line-face ((,class :background ,cyan-subtle-bg :foreground ,fg-main)))
 ;;;;; helm
@@ -5965,7 +5943,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; smerge
     `(smerge-base ((,class :inherit modus-themes-diff-changed)))
     `(smerge-lower ((,class :inherit modus-themes-diff-added)))
-    `(smerge-markers ((,class :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2)))
+    `(smerge-markers ((,class :inherit diff-header)))
     `(smerge-refined-added ((,class :inherit modus-themes-diff-refine-added)))
     `(smerge-refined-changed (()))
     `(smerge-refined-removed ((,class :inherit modus-themes-diff-refine-removed)))
@@ -6245,7 +6223,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; vdiff
     `(vdiff-addition-face ((,class :inherit modus-themes-diff-added)))
     `(vdiff-change-face ((,class :inherit modus-themes-diff-changed)))
-    `(vdiff-closed-fold-face ((,class :background ,bg-diff-neutral-1 :foreground ,fg-diff-neutral-1)))
+    `(vdiff-closed-fold-face ((,class :inherit diff-header)))
     `(vdiff-refine-added ((,class :inherit modus-themes-diff-refine-added)))
     `(vdiff-refine-changed ((,class :inherit modus-themes-diff-refine-changed)))
     `(vdiff-subtraction-face ((,class :inherit modus-themes-diff-removed)))
