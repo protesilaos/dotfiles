@@ -7605,6 +7605,9 @@ read: [[#h:044977f2-a909-4804-bf89-576dd429d405][What is your distro and/or wind
 :CUSTOM_ID: h:0675f798-e2d9-4762-9df2-f47cd24cf00a
 :END:
 
+/Remember that I am not using Emacs 27 or some other stable release.  I
+currently am on {{{emacs-development-version}}}./
+
 First you must understand that this is my personal setup: I have never
 tried to develop a framework that works out-of-the-box for other users.
 It runs contrary to how I approach Emacs as a long-term investment that
