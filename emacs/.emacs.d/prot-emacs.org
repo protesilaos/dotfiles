@@ -6944,9 +6944,9 @@ linter while writing: it is too distracting.
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'flymake-proselint
-  (add-hook 'markdown-mode #'flymake-proselint-setup)
-  (add-hook 'org-mode #'flymake-proselint-setup)
-  (add-hook 'text-mode #'flymake-proselint-setup))
+  (add-hook 'markdown-mode-hook #'flymake-proselint-setup)
+  (add-hook 'org-mode-hook #'flymake-proselint-setup)
+  (add-hook 'text-mode-hook #'flymake-proselint-setup))
 #+end_src
 
 ***** Proselint configuration
