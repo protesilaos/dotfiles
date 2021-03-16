@@ -169,37 +169,23 @@ Also see `prot-search-occur-url'."
   "Input history of grep searches.")
 
 ;;;###autoload
-(defun prot-search-lgrep (regexp)
-  "Run local grep for REGEXP in current directory.
-This is a simple wrapper around `lgrep' to streamline the basic
-task of searching for a regexp in the current working directory.
-Use the original command for its other features."
-  (interactive
-   (list (read-regexp "Local grep for PATTERN: "
-				      nil 'prot-search--grep-hist)))
-  (lgrep regexp "*" default-directory)
-  (add-to-history 'prot-search--grep-hist regexp))
+(defun prot-search-grep (regexp &optional recursive)
+  "Run grep for REGEXP.
 
-;;;###autoload
-(defun prot-search-rgrep (regexp)
-  "Run recursive grep for REGEXP starting from current directory.
-This is a simple wrapper around `rgrep' to streamline the basic
-task of searching for a regexp in the current directory tree.
-Use the original command for its other features."
+Search in the current directory using `lgrep'.  With optional
+prefix argument (\\[universal-argument]) for RECURSIVE, run a
+search starting from the current directory with `rgrep'."
   (interactive
-   (list (read-regexp "Recursive grep for PATTERN: "
-				      nil 'prot-search--grep-hist)))
-  (rgrep regexp "*" default-directory)
-  (add-to-history 'prot-search--grep-hist regexp))
-
-;;;###autoload
-(defun prot-search-grep (&optional arg)
-  "Run `prot-search-lgrep' or, with ARG, `prot-search-rgrep'.
-Use this instead of the other two to economise on key bindings."
-  (interactive "P")
-  (if arg
-      (call-interactively #'prot-search-rgrep)
-    (call-interactively #'prot-search-lgrep)))
+   (list
+    (read-from-minibuffer "Local grep for PATTERN: "
+				          nil nil nil 'prot-search--grep-hist)
+    current-prefix-arg))
+  (unless grep-command
+    (grep-compute-defaults))
+  (if recursive
+        (rgrep regexp "*" default-directory)
+    (lgrep regexp "*" default-directory)
+  (add-to-history 'prot-search--grep-hist regexp)))
 
 (provide 'prot-search)
 ;;; prot-search.el ends here
