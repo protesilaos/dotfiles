@@ -199,7 +199,7 @@ prior to the setup of everything else.
 There are a few utilities that I keep re-using in various parts of my
 Emacs code base.  To keep things modular, I place them all in a
 dedicated =prot-common.el= file, which can then be marked as a dependency
-by other libraries of mine.  As such, all we here is load the file.
+by other libraries of mine.  As such, all we do here is load the file.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'prot-common)
