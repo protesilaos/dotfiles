@@ -46,12 +46,14 @@
       n
     (error "%s is not an integer" n)))
 
+;; Thanks to Gabriel for providing a cleaner version of
+;; `prot-common-number-negative': <https://github.com/gabriel376>.
 ;;;###autoload
 (defun prot-common-number-negative (n)
   "Make N negative."
-  (if (numberp n)
-      (string-to-number (format "-%d" n)) ; TODO: better way?
-    (error "%s is not a number" n)))
+  (if (and (numberp n) (> n 0))
+      (* -1 n)
+    (error "%s is not a valid positive number" n)))
 
 ;;;###autoload
 (defun prot-common-minor-modes-active ()
