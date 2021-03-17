@@ -6362,6 +6362,42 @@ likely to change over the near term.
 :PROPERTIES:
 :CUSTOM_ID: h:271c9122-280b-424e-98f0-af9e4f09bbdb
 :END:
+*** Automatic time stamps for files (time-stamp.el)
+:PROPERTIES:
+:CUSTOM_ID: h:24c2ac42-a537-4658-8a08-9aebb0de1a73
+:END:
+
+The built-in =time-stamp.el= provides the means to automatically update a
+predefined header with the time its file was last edited/saved.  This
+is, in my experience, particularly useful for packages that have a
+stable version but also need to disambiguate their latest tagged release
+from their current development state.
+
+By default, this is done by checking the first eight lines of the file
+for the =Time-stamp: <>= entry.  Though that is configurable.  To properly
+utilise this library, you need to implement file-local variables.  Those
+should control the exact format of the time stamp.  For examples, this
+is what I have in my =modus-themes.el=:
+
+#+begin_example
+;; Local Variables:
+;; time-stamp-start: "Last-Modified:[ \t]+\\\\?[\"<]"
+;; time-stamp-end: "\\\\?[\">]"
+;; time-stamp-format: "%Y-%02m-%02d %02H:%02M:%02S %5z"
+;; End:
+#+end_example
+
+Check =M-x find-library RET time-stamp RET= for all variables you may want
+to control.
+
+All we do here is enable the package and add a hook to insert a time
+stamp upon save, where relevant.  It works seamlessly.
+
+#+begin_src emacs-lisp
+(prot-emacs-builtin-package 'time-stamp
+  (add-hook 'before-save-hook #'time-stamp))
+#+end_src
+
 *** Auto revert mode
 :PROPERTIES:
 :CUSTOM_ID: h:7a8422e6-86d1-40f3-add4-0a1c826e44a3
