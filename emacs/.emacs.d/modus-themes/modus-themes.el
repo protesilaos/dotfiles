@@ -4618,8 +4618,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(hi-salmon ((,class :background ,red-subtle-bg :foreground ,fg-main)))
     `(hi-yellow ((,class :background ,yellow-subtle-bg :foreground ,fg-main)))
     `(highlight ((,class :inherit modus-themes-subtle-blue)))
-    `(highlight-changes ((,class :foreground ,yellow-alt-other)))
-    `(highlight-changes-delete ((,class :foreground ,red-alt-other :underline t)))
+    `(highlight-changes ((,class :foreground ,red-alt :underline nil)))
+    `(highlight-changes-delete ((,class :background ,red-nuanced-bg
+                                        :foreground ,red :underline t)))
     `(hl-line ((,class :inherit modus-themes-hl-line)))
 ;;;;; highlight-blocks
     `(highlight-blocks-depth-1-face ((,class :background ,bg-dim :foreground ,fg-main)))
@@ -5957,7 +5958,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; smerge
     `(smerge-base ((,class :inherit modus-themes-diff-changed)))
     `(smerge-lower ((,class :inherit modus-themes-diff-added)))
-    `(smerge-markers ((,class :inherit diff-header)))
+    `(smerge-markers ((,class :inherit modus-themes-diff-heading)))
     `(smerge-refined-added ((,class :inherit modus-themes-diff-refine-added)))
     `(smerge-refined-changed (()))
     `(smerge-refined-removed ((,class :inherit modus-themes-diff-refine-removed)))
@@ -6237,7 +6238,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; vdiff
     `(vdiff-addition-face ((,class :inherit modus-themes-diff-added)))
     `(vdiff-change-face ((,class :inherit modus-themes-diff-changed)))
-    `(vdiff-closed-fold-face ((,class :inherit diff-header)))
+    `(vdiff-closed-fold-face ((,class :inherit modus-themes-diff-heading)))
     `(vdiff-refine-added ((,class :inherit modus-themes-diff-refine-added)))
     `(vdiff-refine-changed ((,class :inherit modus-themes-diff-refine-changed)))
     `(vdiff-subtraction-face ((,class :inherit modus-themes-diff-removed)))
