@@ -50,7 +50,8 @@
 (require 'modus-themes)
 
 (defvar modus-themes-exporter-templates-alist
-  '(("urxvt"   . modus-themes-exporter-urxvt)
+  '(("alacritty" . modus-themes-exporter-alacritty)
+    ("urxvt"   . modus-themes-exporter-urxvt)
     ("vim"     . modus-themes-exporter-vim)
     ("xcolors" . modus-themes-exporter-xcolors)
     ("xfce"    . modus-themes-exporter-xfce)
@@ -111,6 +112,38 @@
          "xterm*color13: " magenta-alt-other "\n"
          "xterm*color14: " cyan-alt-other "\n"
          "xterm*color15: " "#ffffff" "\n")))))
+
+(defun modus-themes-exporter-alacritty ()
+  "Template for Alacritty."
+  (modus-themes-with-colors
+    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+      (with-temp-buffer
+        (concat
+         "# Theme: " theme-name "\n"
+         "# Description: Alacritty port of " theme-name " (Modus themes for Emacs)" "\n"
+         "# Author: Protesilaos Stavrou, <https://protesilaos.com>" "\n"
+         "colors:" "\n"
+         "  primary:" "\n"
+         "    background: '" bg-main "'" "\n"
+         "    foreground: '" fg-main "'" "\n"
+         "  normal:" "\n"
+         "    black:   '#000000'" "\n"
+         "    red:     '" red "'" "\n"
+         "    green:   '" green "'" "\n"
+         "    yellow:  '" yellow "'" "\n"
+         "    blue:    '" blue "'" "\n"
+         "    magenta: '" magenta "'" "\n"
+         "    cyan:    '" cyan "'" "\n"
+         "    white:   '#bfbfbf'" "\n"
+         "  bright:" "\n"
+         "    black:   '#595959'" "\n"
+         "    red:     '" red-alt "'" "\n"
+         "    green:   '" green-alt "'" "\n"
+         "    yellow:  '" yellow-alt "'" "\n"
+         "    blue:    '" blue-alt "'" "\n"
+         "    magenta: '" magenta-alt-other "'" "\n"
+         "    cyan:    '" cyan-alt-other "'" "\n"
+         "    white:   '#ffffff'" "\n")))))
 
 (defun modus-themes-exporter-urxvt ()
   "Template for URxvt (Rxvt-unicode)."
