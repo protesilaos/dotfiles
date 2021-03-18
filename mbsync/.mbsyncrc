@@ -14,11 +14,10 @@ Path ~/.mail/pub/
 Inbox ~/.mail/pub/Inbox
 
 Channel pub
-Master :pub-remote:
-Slave :pub-local:
+Far :pub-remote:
+Near :pub-local:
 # Include everything
 Patterns *
-
 Create Both
 # Expunge Both
 SyncState *
@@ -41,11 +40,10 @@ Path ~/.mail/inf/
 Inbox ~/.mail/inf/Inbox
 
 Channel inf
-Master :inf-remote:
-Slave :inf-local:
+Far :inf-remote:
+Near :inf-local:
 # Include everything
 Patterns *
-
 Create Both
 # Expunge Both
 SyncState *
@@ -68,11 +66,10 @@ Path ~/.mail/prv/
 Inbox ~/.mail/prv/Inbox
 
 Channel prv
-Master :prv-remote:
-Slave :prv-local:
+Far :prv-remote:
+Near :prv-local:
 # Include everything
 Patterns *
-
 Create Both
 # Expunge Both
 SyncState *
