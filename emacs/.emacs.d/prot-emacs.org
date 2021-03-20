@@ -6215,7 +6215,7 @@ by Jonas Bernoulli, will apply colouration to the headings produced by
 =outline-minor-mode=.  These inherit from =outline-mode=.
 
 Watch my [[https://protesilaos.com/codelog/2020-07-20-emacs-outline-imenu/][video demo of outline-minor-mode and imenu]] (2020-07-20), though
-note that it was recorder long before I wrote =prot-outline.el=.
+note that it was recorded long before I wrote =prot-outline.el=.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'prot-outline
