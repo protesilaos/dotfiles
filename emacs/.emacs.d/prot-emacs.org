@@ -2815,6 +2815,50 @@ the contextuality a bar offers.  Simple, yet super effective!
   (tab-bar-echo-area-mode 1))
 #+end_src
 
+**** Tab bar groups
+:PROPERTIES:
+:CUSTOM_ID: h:bf641d03-ce20-4253-93ae-bee742447ec1
+:END:
+
+Fritz Grabo, author of the wonderfully minimalist =tab-bar-echo-area=
+(read section on [[#h:88872e4c-7143-4f93-b8a0-9e92cf36fb78][Tab-bar tabs in the echo area (tab-bar-echo-area.el)]]),
+has another neat package for grouping tabs using colour-coded labels.
+Such functionality exists for Emacs28, which is the version I am
+running, though Fritz's library currently has the advantage of
+applying unique colours to each group.
+
+Grouping helps me maintain a longer list of tabs without losing my sense
+of place.  This is particularly useful to my workflow when I need to
+keep several tabs open that pertain to different topics.  For example, I
+want one tab for elpa.git and another for emacs.git when I am preparing
+to release a new version of my Modus themes.  Each of those may be doing
+some compilation work and/or have a project shell, so the separate
+window layouts that tabs provide are necessary.  In such a case, those
+two are distinct projects yet they belong to the same task of patching
+upstream Emacs sources, so they get the "Emacs" group.  Whereas other
+tabs, say, one for Gnus and another for Elfeed, get the "News" tag.
+
+It is possible to integrate those tab groups with the presentation of
+=tab-bar-echo-area-mode=, by evaluating the helper function
+=tab-bar-groups-activate-for-tab-bar-echo-area=.  I prefer not to do that
+because when I need to use groups, I am also likely to maintain several
+open tabs in which case it is easier to keep the tab-bar visible at all
+times (I toggle it on with =prot-tab-tab-bar-toggle=).
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'tab-bar-groups
+  (tab-bar-groups-activate)
+
+  (let ((map tab-prefix-map))           ; the prefix is C-x t
+    (define-key map (kbd "g 0") #'tab-bar-groups-close-group)
+    (define-key map (kbd "g 2") #'tab-bar-groups-new-tab)
+    (define-key map (kbd "g a") #'tab-bar-groups-assign-group)
+    (define-key map (kbd "g g") #'tab-bar-groups-regroup-tabs)
+    (define-key map (kbd "g d") #'tab-bar-groups-duplicate-tab)
+    (define-key map (kbd "g e") #'tab-bar-groups-eject-tab)
+    (define-key map (kbd "g r") #'tab-bar-groups-rename-group)))
+#+end_src
+
 *** Transposition and rotation of windows
 :PROPERTIES:
 :CUSTOM_ID: h:753ea060-57e4-4dba-9bf9-b6337e478839
