@@ -434,7 +434,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'accented-background, 'underline-neutral,
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
-        modus-themes-hl-line 'accented-background
+        modus-themes-hl-line 'underline-only-accented
         modus-themes-subtle-line-numbers nil
         modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
 
@@ -450,7 +450,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
         modus-themes-region 'no-extend ; {nil,'no-extend,'bg-only,'bg-only-no-extend}
         modus-themes-diffs nil ; {nil,'desaturated,'fg-only,'bg-only,'deuteranopia}
-        modus-themes-org-blocks 'grayscale ; {nil,'grayscale,'rainbow}
+        modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
         modus-themes-headings ; Read the manual for this one
         '((1 . section-no-bold)
