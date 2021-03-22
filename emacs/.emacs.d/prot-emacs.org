@@ -1403,6 +1403,8 @@ Finally, a few words about the following package configurations:
     (define-key map (kbd "C-,") #'embark-act)
     (define-key map (kbd ",") #'embark-act)
     (define-key map (kbd "M-q") #'embark-collect-toggle-view))
+  (let ((map embark-region-map))
+    (define-key map (kbd "s") #'sort-lines))
   (let ((map embark-symbol-map))
     (define-key map (kbd ".") #'embark-find-definition)
     (define-key map (kbd "k") #'describe-keymap)))
