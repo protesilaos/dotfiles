@@ -99,7 +99,7 @@ newly formatted text."
     (delete-region beg end)
     (insert (concat description text-new "\n+----"))))
 
-;; `prot-text-insert-undercaret' was shared with me by Gregory Heytings:
+;; `prot-text-insert-undercaret' was offered to me by Gregory Heytings:
 ;; <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=45068#250>.
 ;;;###autoload
 (defun prot-text-insert-undercaret (&optional arg)
