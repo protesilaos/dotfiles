@@ -1320,9 +1320,6 @@ Finally, a few words about the following package configurations:
   seeing the completions' buffer---e.g. =M-x M-n RET= is precise and does
   not need to alter the window layout).
 
-+ The =embark-action-indicator= sets up =which-key=.  I do this to help
-  users who may want to get started with Embark.
-
 + My =prot-embark.el= that is reproduced after the following block with
   the package configurations contains the following:
 
@@ -1334,6 +1331,10 @@ Finally, a few words about the following package configurations:
 
   - Several extensions for cycling through the list of candidates and/or
     performing the default action while moving in a given direction.
+
+  - A toggle for setting up =which-key= for the =embark-action-indicator=.
+    This shows key hints but only for Embark actions, as I normally do
+    not use them elsewhere (read [[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]]).
 
   - Commands to clear lines in an Embark collect buffer.  This can be
     done on a line-wise basis with =prot-embark-collection-kill-line=, or
@@ -1383,13 +1384,6 @@ Finally, a few words about the following package configurations:
           (cons act (concat act " on '%s'"))))
   (setq embark-become-indicator (propertize "Become" 'face 'highlight))
 
-  ;; ;; NOTE: I keep this around for when I do videos, otherwise I do not
-  ;; ;; use it.  It requires `which-key' to display key hints.
-  ;; (setq embark-action-indicator
-  ;;       (lambda (map _target)
-  ;;         (which-key--show-keymap "Embark" map nil nil 'no-paging)
-  ;;         #'which-key--hide-popup-ignore-command)
-  ;;       embark-become-indicator embark-action-indicator)
   (add-hook 'minibuffer-setup-hook #'embark-collect-completions-after-input)
   (add-hook 'embark-post-action-hook #'embark-collect--update-linked)
   (define-key global-map (kbd "C-,") #'embark-act)
@@ -1420,6 +1414,8 @@ Finally, a few words about the following package configurations:
     (add-hook 'embark-collect-post-revert-hook #'prot-embark-collect-fit-window)
     (add-hook 'embark-collect-mode-hook #'prot-embark-hl-line)
     (add-hook 'embark-collect-mode-hook #'prot-embark-display-line-numbers)
+
+    (define-key embark-general-map (kbd "C-M-w") #'prot-embark-toggle-which-key)
     ;; NOTE: to switch to the live collection buffer, I also use
     ;; `prot-minibuffer-focus-mini-or-completions' which is bound to
     ;; "s-v".
@@ -1431,6 +1427,7 @@ Finally, a few words about the following package configurations:
       (define-key map (kbd "C-M-p") #'prot-embark-completions-act-previous)
       (define-key map (kbd "C-M-j") #'prot-embark-completions-act-current)
       (define-key map (kbd "C-M-v") #'prot-embark-consult-preview-toggle) ; "view", "visualise" mnemonic
+      (define-key map (kbd "C-M-w") #'prot-embark-toggle-which-key)
       (define-key map (kbd "C-n") #'prot-embark-next-line-or-mini)
       (define-key map (kbd "<down>") #'prot-embark-next-line-or-mini)
       (define-key map (kbd "C-p") #'prot-embark-previous-line-or-mini)
