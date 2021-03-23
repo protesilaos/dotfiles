@@ -5971,8 +5971,8 @@ directory's contents.  The approach of using the =directory-files=
 function to perform that task is copied from [[https://ruzkuku.com/files/init.el.html][philip k.'s Emacs init]]
 file (the exact path is specified in my =.mbsyncrc= settings).
 
-Sometimes I need to check the current time on various timezones.  This
-library's =world-clock= command gets the job done.
+Lastly, I use the =world-clock= command (for Emacs28+) when I need to get
+an overview of the current time in various parts of the planet.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'time
