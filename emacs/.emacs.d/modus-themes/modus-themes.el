@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.2.3
-;; Last-Modified: <2021-03-19 07:44:28 +0200>
+;; Last-Modified: <2021-03-23 21:09:45 +0200>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -346,6 +346,7 @@
 ;;     tab-bar-mode
 ;;     tab-line-mode
 ;;     table (built-in table.el)
+;;     telega
 ;;     telephone-line
 ;;     terraform-mode
 ;;     term
@@ -3373,12 +3374,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; auto-dim-other-buffers
     `(auto-dim-other-buffers-face ((,class :background ,bg-alt)))
 ;;;;; avy
-    `(avy-background-face ((,class :background ,bg-dim :foreground ,fg-dim)))
-    `(avy-goto-char-timer-face ((,class :inherit (modus-themes-intense-yellow bold))))
-    `(avy-lead-face ((,class :inherit (modus-themes-intense-magenta bold))))
-    `(avy-lead-face-0 ((,class :inherit (modus-themes-intense-blue bold))))
-    `(avy-lead-face-1 ((,class :inherit (modus-themes-intense-red bold))))
-    `(avy-lead-face-2 ((,class :inherit (modus-themes-intense-green bold))))
+    `(avy-background-face ((,class :background ,bg-dim :foreground ,fg-dim :extend t)))
+    `(avy-goto-char-timer-face ((,class :inherit (modus-themes-intense-yellow bold modus-themes-reset))))
+    `(avy-lead-face ((,class :inherit (modus-themes-intense-magenta bold modus-themes-reset))))
+    `(avy-lead-face-0 ((,class :inherit (modus-themes-refine-cyan bold modus-themes-reset))))
+    `(avy-lead-face-1 ((,class :inherit (modus-themes-intense-neutral bold modus-themes-reset))))
+    `(avy-lead-face-2 ((,class :inherit (modus-themes-refine-red bold modus-themes-reset))))
 ;;;;; aw (ace-window)
     `(aw-background-face ((,class :foreground ,fg-unfocused)))
     `(aw-key-face ((,class :inherit modus-themes-key-binding)))
@@ -3949,23 +3950,23 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; ediff
     `(ediff-current-diff-A ((,class :inherit modus-themes-diff-removed)))
     `(ediff-current-diff-Ancestor ((,class ,@(modus-themes--diff
-                                              bg-inactive fg-special-cold
+                                              bg-alt fg-special-cold
                                               bg-special-cold fg-special-cold
                                               blue-nuanced-bg blue))))
     `(ediff-current-diff-B ((,class :inherit modus-themes-diff-added)))
     `(ediff-current-diff-C ((,class :inherit modus-themes-diff-changed)))
-    `(ediff-even-diff-A ((,class :background ,bg-inactive :foreground ,fg-inactive)))
-    `(ediff-even-diff-Ancestor ((,class :background ,bg-inactive :foreground ,fg-inactive)))
-    `(ediff-even-diff-B ((,class :background ,bg-inactive :foreground ,fg-inactive)))
-    `(ediff-even-diff-C ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+    `(ediff-even-diff-A ((,class :background ,bg-alt)))
+    `(ediff-even-diff-Ancestor ((,class :background ,bg-alt)))
+    `(ediff-even-diff-B ((,class :background ,bg-alt)))
+    `(ediff-even-diff-C ((,class :background ,bg-alt)))
     `(ediff-fine-diff-A ((,class :inherit modus-themes-diff-refine-removed)))
     `(ediff-fine-diff-Ancestor ((,class :inherit modus-themes-refine-cyan)))
     `(ediff-fine-diff-B ((,class :inherit modus-themes-diff-refine-added)))
     `(ediff-fine-diff-C ((,class :inherit modus-themes-diff-refine-changed)))
-    `(ediff-odd-diff-A ((,class :background ,bg-inactive :foreground ,fg-inactive)))
-    `(ediff-odd-diff-Ancestor ((,class :background ,bg-inactive :foreground ,fg-inactive)))
-    `(ediff-odd-diff-B ((,class :background ,bg-inactive :foreground ,fg-inactive)))
-    `(ediff-odd-diff-C ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+    `(ediff-odd-diff-A ((,class :inherit ediff-even-diff-A)))
+    `(ediff-odd-diff-Ancestor ((,class :inherit ediff-even-diff-Ancestor)))
+    `(ediff-odd-diff-B ((,class :inherit ediff-even-diff-B)))
+    `(ediff-odd-diff-C ((,class :inherit ediff-even-diff-C)))
 ;;;;; eglot
     `(eglot-mode-line ((,class :inherit modus-themes-bold :foreground ,magenta-active)))
 ;;;;; el-search
@@ -4176,8 +4177,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; evil-visual-mark-mode
     `(evil-visual-mark-face ((,class :inherit modus-themes-intense-magenta)))
 ;;;;; eww
-    `(eww-invalid-certificate ((,class :foreground ,red-active)))
-    `(eww-valid-certificate ((,class :foreground ,green-active)))
+    `(eww-invalid-certificate ((,class :foreground ,red-faint)))
+    `(eww-valid-certificate ((,class :foreground ,blue-faint)))
     `(eww-form-checkbox ((,class :box (:line-width 1 :color ,fg-inactive :style released-button) :background ,bg-inactive :foreground ,fg-main)))
     `(eww-form-file ((,class :box (:line-width 1 :color ,fg-inactive :style released-button) :background ,bg-active :foreground ,fg-main)))
     `(eww-form-select ((,class :inherit eww-form-checkbox)))
@@ -4985,11 +4986,11 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(magit-bisect-good ((,class :foreground ,green-alt-other)))
     `(magit-bisect-skip ((,class :foreground ,yellow-alt-other)))
     `(magit-blame-date ((,class :foreground ,blue)))
-    `(magit-blame-dimmed ((,class :inherit shadow)))
+    `(magit-blame-dimmed ((,class :inherit (shadow modus-themes-reset))))
     `(magit-blame-hash ((,class :foreground ,fg-special-warm)))
-    `(magit-blame-heading ((,class :background ,bg-alt)))
+    `(magit-blame-heading ((,class :inherit modus-themes-reset :background ,bg-alt :extend t)))
     `(magit-blame-highlight ((,class :inherit modus-themes-nuanced-cyan)))
-    `(magit-blame-margin ((,class :inherit magit-blame-highlight)))
+    `(magit-blame-margin ((,class :inherit (magit-blame-highlight modus-themes-reset))))
     `(magit-blame-name ((,class :foreground ,magenta-alt-other)))
     `(magit-blame-summary ((,class :foreground ,cyan-alt-other)))
     `(magit-branch-current ((,class :foreground ,blue-alt-other :box t)))
@@ -5537,7 +5538,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-link ((,class :inherit button)))
     `(org-list-dt ((,class :inherit bold)))
     `(org-macro ((,class ,@(modus-themes--mixed-fonts)
-                         :background ,blue-nuanced-bg :foreground ,blue-nuanced-fg)))
+                         :background ,cyan-nuanced-bg :foreground ,cyan-nuanced-fg)))
     `(org-meta-line ((,class ,@(modus-themes--mixed-fonts) :foreground ,fg-alt)))
     `(org-mode-line-clock ((,class :foreground ,fg-main)))
     `(org-mode-line-clock-overrun ((,class :inherit modus-themes-active-red)))
@@ -5883,6 +5884,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
                ,@(modus-themes--standard-completions
                   cyan-alt-other cyan-nuanced-bg
                   cyan-refine-bg cyan-refine-fg))))
+    `(selectrum-quick-keys-highlight
+      ((,class :inherit modus-themes-refine-red)))
+    `(selectrum-quick-keys-match
+      ((,class :inherit (bold modus-themes-intense-green))))
 ;;;;; selectrum-prescient
     `(selectrum-prescient-primary-highlight
       ((,class :inherit bold
@@ -6128,6 +6133,29 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                                :background ,bg-tab-inactive-alt :foreground ,fg-main)))
 ;;;;; table (built-in table.el)
     `(table-cell ((,class :background ,blue-nuanced-bg)))
+;;;;; telega
+    ;; TODO 2021-03-22: Some aspects of `telega' are not fully
+    ;; supported or have not been tested thoroughly.  Please understand
+    ;; that I do not use that service.  Help is appreciated.
+    `(telega-button ((,class :box t :foreground ,blue)))
+    `(telega-button-active ((,class :box ,blue-intense-bg :background ,blue-intense-bg :foreground ,fg-main)))
+    `(telega-button-highlight ((,class :inherit modus-themes-subtle-magenta)))
+    `(telega-chat-prompt ((,class :inherit bold)))
+    `(telega-entity-type-code ((,class :inherit fixed-pitch)))
+    `(telega-entity-type-mention ((,class :foreground ,cyan)))
+    `(telega-entity-type-pre ((,class :inherit fixed-pitch)))
+    `(telega-msg-heading ((,class :background ,bg-dim)))
+    `(telega-msg-self-title ((,class :inherit bold)))
+    `(telega-root-heading ((,class :inherit modus-themes-subtle-neutral)))
+    `(telega-secret-title ((,class :foreground ,magenta-alt)))
+    `(telega-unmuted-count ((,class :foreground ,blue-alt-other)))
+    `(telega-user-online-status ((,class :foreground ,cyan-active)))
+    `(telega-username ((,class :foreground ,cyan-alt-other)))
+    `(telega-webpage-chat-link ((,class :background ,bg-alt)))
+    `(telega-webpage-fixed ((,class :inherit fixed-pitch :height 0.85)))
+    `(telega-webpage-header ((,class :inherit modus-themes-variable-pitch :height 1.3)))
+    `(telega-webpage-preformatted ((,class :inherit fixed-pitch :background ,bg-alt)))
+    `(telega-webpage-subheader ((,class :inherit modus-themes-variable-pitch :height 1.15)))
 ;;;;; telephone-line
     `(telephone-line-accent-active ((,class :background ,fg-inactive :foreground ,bg-inactive)))
     `(telephone-line-accent-inactive ((,class :background ,bg-active :foreground ,fg-active)))
