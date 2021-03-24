@@ -2432,7 +2432,7 @@ pertains to buffers, so they can adapt accordingly.  See, in particular,
   (setq ibuffer-default-shrink-to-minimum-size nil)
   (setq ibuffer-formats
         '((mark modified read-only locked " "
-                (name 30 30 :left :elide)
+                (name 40 40 :left :elide)
                 " "
                 (size 9 -1 :right)
                 " "
