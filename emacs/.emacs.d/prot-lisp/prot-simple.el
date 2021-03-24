@@ -121,20 +121,21 @@ indentation while duplicating."
     (cond
      ((use-region-p)
       (if arg
-          (progn
-            (copy-region-as-kill rbeg rend)
+          (let ((text (buffer-substring rbeg rend)))
             (when (eq (point) rbeg)
               (exchange-point-and-mark))
             (prot-simple-new-line-below indent)
-            (yank))
+            (insert text))
         (copy-region-as-kill rbeg rend)
         (message "Current region copied")))
      (t
       (if arg
-          (progn
-            (copy-region-as-kill pbol peol)
-            (prot-simple-new-line-below)
-            (yank))
+          (let ((text (buffer-substring pbol peol)))
+            (when (eq (point) rbeg)
+              (exchange-point-and-mark))
+            (goto-char (point-at-eol))
+            (newline)
+            (insert text))
         (copy-region-as-kill pbol peol)
         (message "Current line copied"))))))
 
