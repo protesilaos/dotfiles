@@ -5522,6 +5522,11 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
   (setq elfeed-show-unique-buffers t)
   (setq elfeed-search-date-format '("%F %R" 16 :left))
 
+  ;; Make sure to also check the section on shr and eww for how I handle
+  ;; `shr-width' there.
+  (add-hook 'elfeed-show-mode-hook
+            (lambda () (setq-local shr-width (current-fill-column))))
+
   (prot-emacs-builtin-package 'prot-elfeed-bongo)
 
   (define-key global-map (kbd "C-c e") #'elfeed)
@@ -5625,104 +5630,204 @@ bindings and their functions.
 (prot-emacs-elpa-package 'pass)
 #+end_src
 
-** Emacs Simple HTML Renderer (shr)
+** Simple HTML Renderer (shr), Emacs Web Wowser (eww), and prot-eww.el
 :PROPERTIES:
 :CUSTOM_ID: h:524bc702-ff55-4ed9-9a38-26d30d64591d
 :END:
 
-*NOTE 2020-08-16:* This section is subject to major changes contingent on
-the eventual review of =eww= (which is documented in the next section:
-[[#h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b][Emacs Web Wowser (EWW)]]).
+The following code block encompasses libraries that power Emacs' web
+browsing experience.
 
-As far as I can tell, the following =shr-*= variables concern an HTML
-parser that is used by a variety of tools, including Elfeed (refer to
-[[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed reader and my prot-elfeed.el extras]]).  I guess we could
-scope them by using hooks, but I see no need for different settings.
++ =browse-url= is determines what Emacs should do when the user follows a
+  link to the Internet.  For my purposes, I configure it to open the web
+  page inside of Emacs, while I let the Desktop Environment's default
+  graphical browser be declared as a secondary option.  Put simply, when
+  I click on a URL, I go to an EWW buffer and from there I can opt to
+  open that page in the GUI browser via =eww-browse-with-external-browser=
+  which is bound to =&=.  That is only ever needed for websites that do
+  not work well in a text-centric interface.
 
-What these do:
++ =shr= is the "Simple HTML Renderer", which basically means to interpret
+  the underlying code of a web page and showing it in the way it is
+  intended for the end user.  Unlike graphical web browsers, =shr=
+  capabilities are limited, because it does not use style sheets (CSS)
+  and more demanding resources (javascript, embedded multimedia, etc.).
 
-+ Open links in a new /Emacs/ window, instead of the system's browser.
-  This Emacs web browser is called =eww=.
-+ Use monospaced fonts, since that is what I want to have everywhere
-  in Emacs.
-+ Do not preserve colours from websites, as they may be inaccessible
-  (see [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus theme]]).
-+ Keep images to 70% of the window.  This number is arbitrary.  It
-  just feels like a good upper limit (not a fan of decorative images
-  inside of blog posts).
-+ Line length at same number of characters as =fill-column= (defined in
-  the section about [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][Paragraphs and fill-mode (prot-fill.el)]]).
++ =eww= is what we use to browse the Web.  It effectively is the front-end
+  to =shr=, adding on top of it the layer of interactivity that is
+  expected of a basic browser, such as to keep a history of visited
+  pages, handle bookmarks, navigate through links, and the like.  As
+  always, remember to read the manual of EWW, such as by evaluating this
+  form: =(info "(eww) Top")=.  It is short and should give you an idea of
+  what its features are.
+
++ =prot-eww= adds commands that align EWW with my expectations and make it
+  do what I want to achieve in a primarily text-based web browsing
+  experience.
+
+My configurations for =browse-url= and =shr= are straightforward and are
+meant to keep things simple.  I want EWW to behave like the rest of
+Emacs, which means that it should not try to introduce random colours
+from web pages, nor use its own fonts.  Both intefere with the
+consistency I seek in my computing environment (and why I use Emacs to
+begin with).
+
+For =eww=, I repurpose some of its key bindings that I never plan to use,
+such as the toggle for proportional fonts, while I move around a few
+others.  Just to make things easier for me.
+
+As for =prot-eww=, it includes functionality that make EWW good enough for
+my day-to-day needs.  In particular:
+
++ It includes an unconditional internal mechanism that renames EWW
+  buffers based on the rendered web page's title or, when that is not
+  available, the URL.  This ensures that I can maintain multiple buffers
+  without getting lost in the noise of what would otherwise be an
+  awkward naming scheme in the form of =*eww*=, =*eww<2>*= and so on.  Now
+  it looks like =*Emacs - ArchWiki # eww*=, with a possible number
+  identifier added only for duplicate entries.
+
++ The =prot-eww-browse-dwim= is my main point of entry to EWW.  When I
+  call it from a random place inside of Emacs, it just offers a prompt
+  that asks for a URL or search terms with which to query DuckDuckGo.
+  In addition, it reads through a history of such inputs, so that =M-p=,
+  =M-n= can quickly give me something I tried before.  Plus it supports
+  completion (check the mega-section [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]]).
+  When this command is called from inside an EWW buffer it retains the
+  aforementioned functionality, but its prompt is pre-populated with the
+  URL of the current page.  This is particularly useful for editing the
+  path directly, such as to go from =https://protesilaos.com/contact= to
+  =https://protesilaos.com=.  When called with a universal prefix argument
+  (=C-u=), it opens a new EWW buffer instead of using the last one.
+
++ =prot-eww-search-engine= offers selection among the custom search
+  commands I define, such as to query Wikipedia directly or search for a
+  bug number in the Emacs issue tracker.  Those search engine commands
+  can be invoked on their own, while each of them has its own minibuffer
+  history (so if you searched for "elephant" in Wikipedia, you will not
+  get that for the Arch Wiki).
+
++ =prot-eww-bookmark-page= does what its name suggests though, unlike the
+  built-in equivalent, it first asks for how to name the bookmarked
+  entry before storing it in the relevant memory compartment.
+
++ =prot-eww-visit-bookmark= prompts with completion to visit an entry in
+  EWW's bookmark list.  A =C-u= prefix means to open it in a new EWW
+  buffer.
+
++ =prot-eww-visit-url-on-page= traverses the entire web page to construct
+  a list of all links and their anchor text.  The list can be narrowed
+  with completion.  Selecting a item with visit its corresponding web
+  page.
+
++ =prot-eww-jump-to-url-on-page= is similar to the above, with the major
+  difference that it only stores buffer positions and jumps to them.
+  This makes it ideal for generating an ad-hoc index of "points of
+  interest" in the current buffer with the help of Embark's ability to
+  collect a list of candidates into a bespoke buffer (make sure to check
+  [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]]).
+  Of course, it can be used on its own to jump around the web page.
+
++ =prot-eww-find-feed= inspects the source code of the current web page
+  and produces an =occur= buffer with links that represent RSS or Atom
+  feeds.  This command is quite useful for retrieving the feed of a
+  website whose designers failed to provide a user-facing link for it
+  (which is the norm nowadays).  I read feeds on a daily basis: it is
+  the best way to keep track of updates to web pages (read section
+  [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el]]).
+
++ =prot-eww-readable= is a more opinionated take on the built-in option.
+  It specifies a narrower =shr-width=, specifically at the 72 character
+  limit which is my =current-fill-column=.  Furthermore, it reduces images
+  to a maximum of 0.35 of the window's width/height.  This is not always
+  a good approach, though it works most of the time for the kind of
+  content I am interested in: text-heavy articles.
+
++ =prot-eww-download-html= downloads the current web page as an =.html=
+  file.  It asks for a name to give to it, defaulting to the title of
+  the page, and it also prepends the current date and time.  So if the
+  page is titled "GNU Emacs manual" the saved file will be stored as a
+  file path like =~/Downloads/eww/20210324_185035-GNU Emacs manual.html=.
+  I find that this is superior to the generic =eww-download= which neither
+  asks for a name, nor adds a date and file type extension.  Where
+  =eww-download= still excels is for downloading the link at point, when
+  that is not an HTML file (e.g. a pdf or zip archive).
 
 #+begin_src emacs-lisp
+(prot-emacs-builtin-package 'browse-url
+  (setq browse-url-browser-function 'eww-browse-url)
+  (setq browse-url-secondary-browser-function 'browse-url-default-browser))
+
 (prot-emacs-builtin-package 'shr
-  (setq shr-use-fonts nil)
-  (setq shr-use-colors nil)
-  (setq shr-max-image-proportion 0.7)
-  (setq shr-image-animate nil)
-  (setq shr-width (current-fill-column)))
-#+end_src
+  (setq shr-use-colors nil)             ; t is bad for accessibility
+  (setq shr-use-fonts nil)              ; t is not for me
+  (setq shr-max-image-proportion 0.6)
+  (setq shr-image-animate nil)          ; No GIFs, thank you!
+  (setq shr-width nil)                  ; check `prot-eww-readable'
+  (setq shr-discard-aria-hidden t)
+  (setq shr-cookie-policy nil))
 
-** Emacs Web Wowser (EWW)
-:PROPERTIES:
-:CUSTOM_ID: h:4523c31a-d638-4ab2-bc2c-4bdeadc2c86b
-:END:
-
-#+begin_src emacs-lisp
-;; TODO 2021-01-19: Everything about eww is subject to review.  It is
-;; not in a good state.
 (prot-emacs-builtin-package 'eww
-  (setq eww-restore-desktop nil)
+  (setq eww-restore-desktop t)
   (setq eww-desktop-remove-duplicates t)
-  (setq eww-header-line-format "%u")
+  (setq eww-header-line-format "%t <%u>")
   (setq eww-search-prefix "https://duckduckgo.com/html/?q=")
-  (setq eww-download-directory "~/Downloads/")
+  (setq eww-download-directory (expand-file-name "~/Downloads/eww"))
   (setq eww-suggest-uris
         '(eww-links-at-point
           thing-at-point-url-at-point))
-  (setq eww-bookmarks-directory (concat user-emacs-directory "eww-bookmarks/"))
+  (setq eww-bookmarks-directory
+        (thread-last user-emacs-directory (expand-file-name "eww-bookmarks/")))
   (setq eww-history-limit 150)
   (setq eww-use-external-browser-for-content-type
-        "\\`\\(video/\\|audio/\\|application/pdf\\)")
+        "\\`\\(video/\\|audio\\)") ; On GNU/Linux check your mimeapps.list
   (setq eww-browse-url-new-window-is-tab nil)
   (setq eww-form-checkbox-selected-symbol "[X]")
   (setq eww-form-checkbox-symbol "[ ]")
+  ;; NOTE `eww-retrieve-command' is for Emacs28.  I tried the following
+  ;; two values.  The first would not render properly some plain text
+  ;; pages, such as by messing up the spacing between paragraphs.  The
+  ;; second is more reliable but feels slower.  So I just use the
+  ;; default (nil), though I find wget to be a bit faster.  In that case
+  ;; one could live with the occasional errors by using `eww-download'
+  ;; on the offending page, but I prefer consistency.
+  ;;
+  ;; '("wget" "--quiet" "--output-document=-")
+  ;; '("chromium" "--headless" "--dump-dom")
+  (setq eww-retrieve-command nil)
 
-  ;;   (defun prot/eww-visit-history (&optional arg)
-  ;;     "Revisit a URL from `eww-prompt-history' using completion.
-  ;; With \\[universal-argument] produce a new buffer."
-  ;;     (interactive "P")
-  ;;     (let ((history eww-prompt-history)  ; eww-bookmarks
-  ;;           (new (if arg t nil)))
-  ;;       (eww
-  ;;        (completing-read "Visit website from history: " history nil t)
-  ;;        new)))
+  (define-key eww-mode-map (kbd "L") #'eww-list-bookmarks)
+  (define-key dired-mode-map (kbd "E") #'eww-open-file) ; to render local HTML files
+  (define-key eww-buffers-mode-map (kbd "d") #'eww-bookmark-kill)   ; it actually deletes
+  (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
 
-  ;; eww-view-source
-
-  ;;   (defvar prot/eww-mode-global-map
-  ;;     (let ((map (make-sparse-keymap)))
-  ;;       (define-key map "s" 'eww-search-words)
-  ;;       (define-key map "o" 'eww-open-in-new-buffer)
-  ;;       (define-key map "f" 'eww-open-file)
-  ;;       (define-key map "w" 'prot/eww-visit-history)
-  ;;       map)
-  ;;     "Key map to scope `eww' bindings for global usage.
-  ;; The idea is to bind this to a prefix sequence, so that its
-  ;; defined keys follow the pattern of <PREFIX> <KEY>.")
-
+(prot-emacs-builtin-package 'prot-eww
+  (define-prefix-command 'prot-eww-map)
+  (define-key global-map (kbd "C-c w") 'prot-eww-map)
+  (define-key global-map (kbd "s-w") 'prot-eww-map)
+  (let ((map prot-eww-map))
+    (define-key map (kbd "b") #'prot-eww-visit-bookmark)
+    (define-key map (kbd "e") #'prot-eww-browse-dwim)
+    (define-key map (kbd "a") #'prot-eww-search-arch-wiki)
+    (define-key map (kbd "A") #'prot-eww-search-arch-aur)
+    (define-key map (kbd "d") #'prot-eww-search-debbugs)
+    (define-key map (kbd "w") #'prot-eww-search-wikipedia)
+    (define-key map (kbd "s") #'prot-eww-search-engine))
   (let ((map eww-mode-map))
-    (define-key map (kbd "n") #'next-line)
-    (define-key map (kbd "p") #'previous-line)
-    (define-key map (kbd "f") #'forward-char)
-    (define-key map (kbd "b") #'backward-char)
-    (define-key map (kbd "a") #'prot/eww-org-archive-current-url)
-    (define-key map (kbd "B") #'eww-back-url)
-    (define-key map (kbd "N") #'eww-next-url)
-    (define-key map (kbd "P") #'eww-previous-url)))
-
-(prot-emacs-builtin-package 'browse-url
-  (setq browse-url-browser-function 'eww-browse-url))
+    (define-key map (kbd "B") #'prot-eww-bookmark-page)
+    (define-key map (kbd "D") #'prot-eww-download-html)
+    (define-key map (kbd "F") #'prot-eww-find-feed)
+    (define-key map (kbd "b") #'prot-eww-visit-bookmark)
+    (define-key map (kbd "e") #'prot-eww-browse-dwim)
+    (define-key map (kbd "E") #'prot-eww-visit-url-on-page)
+    (define-key map (kbd "J") #'prot-eww-jump-to-url-on-page)
+    (define-key map (kbd "R") #'prot-eww-readable)))
 #+end_src
+
+And here is =prot-eww.el= in its entirety.  It is available as a file in
+[[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (same for all my Emacs libraries):
+
+#+include: prot-lisp/prot-eww.el src emacs-lisp :tangle no
 
 * General interface and interactions
 :PROPERTIES:
