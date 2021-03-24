@@ -158,23 +158,23 @@ With optional N, search in the Nth line from point."
 ;; 	        (or (beginning-of-line n) t)
 ;; 	        (save-match-data
 ;; 	          (looking-at ,regexp))))))
-;; 
+;;
 ;; (prot-common--line-p
 ;;  prot-common-empty-line-p
 ;;  "[\s\t]*$")
-;; 
+;;
 ;; (prot-common--line-p
 ;;  prot-common-indent-line-p
 ;;  "^[\s\t]+")
-;; 
+;;
 ;; (prot-common--line-p
 ;;  prot-common-non-empty-line-p
 ;;  "^.+$")
-;; 
+;;
 ;; (prot-common--line-p
 ;;  prot-common-text-list-line-p
 ;;  "^\\([\s\t#*+]+\\|[0-9]+[^\s]?[).]+\\)")
-;; 
+;;
 ;; (prot-common--line-p
 ;;  prot-common-text-heading-line-p
 ;;  "^[=-]+")
