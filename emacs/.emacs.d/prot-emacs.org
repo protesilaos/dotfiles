@@ -830,10 +830,8 @@ code further below).
 (prot-emacs-builtin-package 'prot-orderless
   (setq prot-orderless-default-styles
         '(orderless-prefixes
-          orderless-literal
           orderless-strict-leading-initialism
-          orderless-regexp
-          orderless-flex))
+          orderless-regexp))
   (setq prot-orderless-alternative-styles
         '(orderless-literal
           orderless-prefixes
@@ -845,7 +843,8 @@ code further below).
   (setq orderless-matching-styles prot-orderless-default-styles)
   (setq orderless-style-dispatchers
         '(prot-orderless-literal-dispatcher
-          prot-orderless-initialism-dispatcher))
+          prot-orderless-initialism-dispatcher
+          prot-orderless-flex-dispatcher))
   ;; SPC should never complete: use it for `orderless' groups.
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "SPC") nil)
@@ -946,7 +945,7 @@ configurations.  For its hook also check [[#h:cf9086c1-1b33-4127-a716-de94259e14
   (add-hook 'minibuffer-setup-hook #'prot-minibuffer-mini-cursor))
 
 (prot-emacs-builtin-package 'minibuffer
-  (setq completion-styles '(partial-completion substring flex orderless))
+  (setq completion-styles '(orderless partial-completion))
   (setq completion-category-defaults nil)
   (setq completion-cycle-threshold 3)
   (setq completion-flex-nospace nil)
