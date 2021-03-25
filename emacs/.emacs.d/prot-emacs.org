@@ -5753,6 +5753,18 @@ my day-to-day needs.  In particular:
   =eww-download= still excels is for downloading the link at point, when
   that is not an HTML file (e.g. a pdf or zip archive).
 
+Some final tips:
+
++ =g= reloads the web page by fetching it anew over the network, while its
+  =C-u g= counterpart re-renders what has already been downloaded.  The
+  latter is useful when, for example, you have a new window
+  configuration and wish to fit the EWW buffer's contents in the window.
+
++ As already noted above, several commands that open an EWW buffer
+  accept a =C-u= prefix to put their contents in a new buffer rather than
+  re-use the existing one.  With =M-RET= over a link in an EWW buffer, you
+  can do the same.
+
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'browse-url
   (setq browse-url-browser-function 'eww-browse-url)
