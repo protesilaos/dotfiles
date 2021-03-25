@@ -146,6 +146,18 @@ With optional N, search in the Nth line from point."
            (looking-at
             (alist-get type prot-common--line-regexp-alist))))))
 
+;; The `prot-common-shell-command-with-exit-code-and-output' function is
+;; courtesy of Harold Carr, who also sent a patch that improved
+;; `prot-eww-download-html' (from the `prot-eww.el' library).
+;;
+;; More about Harold: <http://haroldcarr.com/about/>.
+(defun prot-common-shell-command-with-exit-code-and-output (command &rest args)
+  "Run COMMAND with ARGS.
+Return the exit code and output in a list."
+  (with-temp-buffer
+    (list (apply 'call-process command nil (current-buffer) nil args)
+          (buffer-string))))
+
 ;; This was my old approach to the task:
 ;;
 ;; ;; Based on `org--line-empty-p'.

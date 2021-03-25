@@ -31,6 +31,7 @@
 
 (require 'shr)
 (require 'eww)
+(require 'prot-common)
 
 (defgroup prot-eww ()
   "Tweaks for eww appearance."
@@ -246,18 +247,12 @@ images."
   (let* ((path (thread-last eww-download-directory
                  (expand-file-name
                   (concat (format-time-string "%Y%m%d_%H%M%S") "-" name ".html"))))
-         (out (shell-command-with-exit-code-and-output
+         (out (prot-common-shell-command-with-exit-code-and-output
                "wget" "-q" (format "%s" (plist-get eww-data :url))
                       "-O" (format "%s" (shell-quote-argument path)))))
     (if (= (car out) 0)
         (message "Downloaded page at %s" path)
       (message "Error downloading page: %s" (cdr out)))))
-
-(defun shell-command-with-exit-code-and-output (command &rest args)
-  "Run COMMAND with ARGS. Return the exit code and output in a list."
-  (with-temp-buffer
-    (list (apply 'call-process command nil (current-buffer) nil args)
-          (buffer-string))))
 
 (autoload 'ffap-url-at-point "ffap")
 
