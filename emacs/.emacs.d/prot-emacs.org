@@ -5648,7 +5648,7 @@ browsing experience.
   not work well in a text-centric interface.
 
 + =shr= is the "Simple HTML Renderer", which basically means to interpret
-  the underlying code of a web page and showing it in the way it is
+  the underlying code of a web page and show it in the way it is
   intended for the end user.  Unlike graphical web browsers, =shr=
   capabilities are limited, because it does not use style sheets (CSS)
   and more demanding resources (javascript, embedded multimedia, etc.).
