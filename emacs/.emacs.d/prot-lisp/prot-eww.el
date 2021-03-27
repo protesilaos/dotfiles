@@ -77,7 +77,7 @@ new EWW buffer."
 
 ;;;###autoload
 (defun prot-eww-visit-url-on-page (&optional arg)
-  "Visit URL from list of links in the page using completion.
+  "Visit URL from list of links on the page using completion.
 
 With optional prefix ARG (\\[universal-argument]) open URL in a
 new EWW buffer."
@@ -99,7 +99,7 @@ new EWW buffer."
 
 ;;;###autoload
 (defun prot-eww-jump-to-url-on-page ()
-  "Jump to URL position in the page using completion.
+  "Jump to URL position on the page using completion.
 
 With optional prefix ARG (\\[universal-argument]) open URL in a
 new EWW buffer."
@@ -116,7 +116,7 @@ new EWW buffer."
                           (propertize (get-text-property (point) 'shr-url) 'face 'link)
                           (point))
                   links))))
-      (let* ((selection (completing-read "Jump to URL in page: " links nil t))
+      (let* ((selection (completing-read "Jump to URL on page: " links nil t))
              (position (replace-regexp-in-string ".*~ " "" selection))
              (point (string-to-number position)))
         (goto-char point)))))
@@ -206,7 +206,7 @@ new EWW buffer."
 
 ;;;###autoload
 (defun prot-eww-search-arch-aur (string &optional arg)
-  "Search Arch Linux Wiki page matching STRING.
+  "Search Arch User Repository page matching STRING.
 
 With optional prefix ARG (\\[universal-argument]) open URL in a
 new EWW buffer."
