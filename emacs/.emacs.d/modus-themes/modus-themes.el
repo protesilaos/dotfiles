@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.2.3
-;; Last-Modified: <2021-03-25 22:20:53 +0200>
+;; Last-Modified: <2021-03-26 21:13:24 +0200>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -286,6 +286,7 @@
 ;;     outline-minor-faces
 ;;     package (M-x list-packages)
 ;;     page-break-lines
+;;     pandoc-mode
 ;;     paradox
 ;;     paren-face
 ;;     parrot
@@ -3195,7 +3196,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(modus-themes-key-binding ((,class :inherit bold :foreground ,blue-alt-other)))
     `(modus-themes-slant ((,class :inherit italic :slant ,@(modus-themes--slant))))
     `(modus-themes-variable-pitch ((,class ,@(modus-themes--variable-pitch))))
-    `(modus-themes-reset ((,class :inherit default :background nil :weight normal :slant normal
+    `(modus-themes-reset ((,class :inherit fixed-pitch :background nil :weight normal :slant normal
                                   :strike-through nil :box nil :underline nil :overline nil :extend nil)))
 ;;;; standard faces
 ;;;;; absolute essentials
@@ -3415,7 +3416,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(bm-fringe-persistent-face ((,class :inherit modus-themes-fringe-blue)))
     `(bm-persistent-face ((,class :inherit modus-themes-intense-blue :extend t)))
 ;;;;; bongo
-    `(bongo-album-title ((,class :foreground ,yellow-active)))
+    `(bongo-album-title ((,class :foreground ,fg-active)))
     `(bongo-artist ((,class :foreground ,magenta-active)))
     `(bongo-currently-playing-track ((,class :inherit bold)))
     `(bongo-elapsed-track-part ((,class :inherit modus-themes-subtle-magenta :underline t)))
@@ -3423,8 +3424,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(bongo-marked-track ((,class :foreground ,fg-mark-alt)))
     `(bongo-marked-track-line ((,class :background ,bg-mark-alt)))
     `(bongo-played-track ((,class :foreground ,fg-unfocused :strike-through t)))
-    `(bongo-track-length ((,class :foreground ,fg-active)))
-    `(bongo-track-title ((,class :foreground ,cyan-active)))
+    `(bongo-track-length ((,class :foreground ,fg-alt)))
+    `(bongo-track-title ((,class :foreground ,blue-active)))
     `(bongo-unfilled-seek-bar ((,class :background ,bg-special-cold :foreground ,fg-main)))
 ;;;;; boon
     `(boon-modeline-cmd ((,class :inherit modus-themes-active-blue)))
@@ -5637,6 +5638,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(package-status-unsigned ((,class :inherit bold :foreground ,red-alt)))
 ;;;;; page-break-lines
     `(page-break-lines ((,class :inherit default :foreground ,fg-window-divider-outer)))
+;;;;; pandoc-mode
+    `(pandoc-citation-key-face ((,class :background ,bg-dim :foreground ,magenta-alt)))
+    `(pandoc-directive-@@-face ((,class :background ,bg-dim  :foreground ,blue-alt-other)))
+    `(pandoc-directive-braces-face ((,class :foreground ,blue-alt-other)))
+    `(pandoc-directive-contents-face ((,class :foreground ,cyan-alt-other)))
+    `(pandoc-directive-type-face ((,class :foreground ,magenta)))
 ;;;;; paradox
     `(paradox-archive-face ((,class :foreground ,fg-special-mild)))
     `(paradox-comment-face ((,class :inherit font-lock-comment-face)))
@@ -5932,7 +5939,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
       ((,(append '((supports :underline (:style wave))) class)
         :foreground ,fg-docstring :underline (:color ,fg-alt :style wave))
        (,class :foreground ,fg-docstring :underline t)))
-    `(shr-selected-link ((,class :inherit modus-themes-subtle-cyan)))
+    `(shr-selected-link ((,class :inherit modus-themes-subtle-red)))
 ;;;;; side-notes
     `(side-notes ((,class :background ,bg-dim :foreground ,fg-dim)))
 ;;;;; sieve-mode
