@@ -128,7 +128,7 @@ new EWW buffer."
   "Produce Occur buffer with RSS/Atom links from XML source."
   (interactive)
   (eww-view-source)
-  (occur "\\(rss\\|atom\\)\\+xml.*href=[\"']\\(.*?\\)[\"']" "\\2")
+  (occur "\\(rss\\|atom\\)\\+xml.\\(.\\|\n\\).*href=[\"']\\(.*?\\)[\"']" "\\2")
   (View-quit))
 
 (defvar prot-eww-search-engines
