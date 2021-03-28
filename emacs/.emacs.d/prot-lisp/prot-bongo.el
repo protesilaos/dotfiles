@@ -497,8 +497,8 @@ This works by appending the absolute filesystem path of each item
 to the selected playlist file.  If no Dired marked items are
 available, the item at point will be used instead.
 
-Forcibly selecting a non-existent file at the prompt will create
-a new entry whose name matches the minibuffer input.
+Selecting a non-existent file at the prompt will create a new
+entry whose name matches the minibuffer input.
 
 Also see `prot-bongo-playlist-insert-playlist-file'."
   (interactive)
@@ -507,7 +507,7 @@ Also see `prot-bongo-playlist-insert-playlist-file'."
          (playlists (mapcar
                      'abbreviate-file-name
                      (directory-files pldir nil dotless)))
-         (plname (completing-read "Select playlist: " playlists nil t))
+         (plname (completing-read "Select playlist: " playlists nil))
          (plfile (concat pldir plname))
          (media-paths
           (if (derived-mode-p 'dired-mode)
