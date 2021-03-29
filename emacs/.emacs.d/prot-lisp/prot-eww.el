@@ -149,6 +149,9 @@ new EWW buffer."
 The car of each cons cell is an arbitrary string that describes
 the function it is associated with.")
 
+(defvar prot-eww--engine-hist '()
+  "Input history for `prot-eww-search-engine'.")
+
 ;;;###autoload
 (defun prot-eww-search-engine (engine)
   "Use ENGINE stored in `prot-eww-search-engines'."
@@ -156,8 +159,10 @@ the function it is associated with.")
    (list
     (completing-read
      "Search with: "
-     (mapcar (lambda (x) (format "%s" (car x))) prot-eww-search-engines) nil t)))
-  (call-interactively (alist-get (intern engine) prot-eww-search-engines)))
+     (mapcar (lambda (x) (format "%s" (car x))) prot-eww-search-engines) nil t
+     nil 'prot-eww--engine-hist)))
+  (call-interactively (alist-get (intern engine) prot-eww-search-engines))
+  (add-to-history 'prot-eww--engine-hist engine))
 
 (defvar prot-eww--debbugs-hist '()
   "Input history for `prot-eww-search-debbugs'.")
