@@ -5757,6 +5757,10 @@ my day-to-day needs.  In particular:
   =eww-download= still excels is for downloading the link at point, when
   that is not an HTML file (e.g. a pdf or zip archive).
 
++ =prot-eww-open-in-other-window= is meant to open the link at point in a
+  new buffer and in another window.  It complements the default =M-RET=
+  (=eww-open-in-new-buffer=) which re-uses the same window.
+
 Some final tips:
 
 + =g= reloads the web page by fetching it anew over the network, while its
@@ -5824,6 +5828,7 @@ Some final tips:
   (let ((map prot-eww-map))
     (define-key map (kbd "b") #'prot-eww-visit-bookmark)
     (define-key map (kbd "e") #'prot-eww-browse-dwim)
+    (define-key map (kbd "o") #'prot-eww-open-in-other-window)
     (define-key map (kbd "a") #'prot-eww-search-arch-wiki)
     (define-key map (kbd "A") #'prot-eww-search-arch-aur)
     (define-key map (kbd "d") #'prot-eww-search-debbugs)

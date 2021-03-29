@@ -228,6 +228,13 @@ new EWW buffer."
   (add-to-history 'prot-eww--arch-aur-hist string))
 
 ;;;###autoload
+(defun prot-eww-open-in-other-window ()
+  "Use `eww-open-in-new-buffer' in another window."
+  (interactive)
+  (other-window-prefix)       ; For emacs28 -- it's a hack, but why not?
+  (eww-open-in-new-buffer))
+
+;;;###autoload
 (defun prot-eww-readable ()
   "Use more opinionated `eww-readable'.
 
