@@ -32,6 +32,7 @@
 (require 'shr)
 (require 'eww)
 (require 'prot-common)
+(require 'prot-pulse)
 
 (defgroup prot-eww ()
   "Tweaks for eww appearance."
@@ -119,7 +120,8 @@ new EWW buffer."
       (let* ((selection (completing-read "Jump to URL on page: " links nil t))
              (position (replace-regexp-in-string ".*~ " "" selection))
              (point (string-to-number position)))
-        (goto-char point)))))
+        (goto-char point)
+        (prot-pulse-pulse-line)))))
 
 (autoload 'View-quit "view")
 
