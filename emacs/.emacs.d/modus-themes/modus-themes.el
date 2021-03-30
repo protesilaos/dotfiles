@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.2.3
-;; Last-Modified: <2021-03-28 18:41:44 +0300>
+;; Last-Modified: <2021-03-29 21:42:14 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -158,7 +158,7 @@
 ;;     elfeed-score
 ;;     embark
 ;;     emms
-;;     enhanced-ruby-mode
+;;     enh-ruby-mode (enhanced-ruby-mode)
 ;;     epa
 ;;     equake
 ;;     erc
@@ -611,7 +611,7 @@
     (bg-paren-match . "#e0af82")
     (bg-paren-match-intense . "#c488ff")
     (bg-region . "#bcbcbc")
-    (bg-region-accent . "#af9fdf")
+    (bg-region-accent . "#afafef")
 
     (bg-tab-bar . "#d5d5d5")
     (bg-tab-active . "#f6f6f6")
@@ -3529,7 +3529,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(cider-instrumented-face ((,class :box (:line-width -1 :color ,red :style nil) :background ,bg-dim)))
     `(cider-reader-conditional-face ((,class :inherit italic :foreground ,fg-special-warm)))
     `(cider-repl-input-face ((,class :inherit bold)))
-    `(cider-repl-prompt-face ((,class :foreground ,cyan-alt-other)))
+    `(cider-repl-prompt-face ((,class :inherit comint-highlight-prompt)))
     `(cider-repl-stderr-face ((,class :inherit bold :foreground ,red)))
     `(cider-repl-stdout-face ((,class :foreground ,blue)))
     `(cider-result-overlay-face ((,class :box (:line-width -1 :color ,blue :style nil) :background ,bg-dim)))
@@ -3551,7 +3551,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; circe (and lui)
     `(circe-fool-face ((,class :inherit shadow)))
     `(circe-highlight-nick-face ((,class :inherit bold :foreground ,blue)))
-    `(circe-prompt-face ((,class :inherit bold :foreground ,cyan-alt-other)))
+    `(circe-prompt-face ((,class :inherit comint-highlight-prompt)))
     `(circe-server-face ((,class :foreground ,fg-unfocused)))
     `(lui-button-face ((,class :inherit button)))
     `(lui-highlight-face ((,class :foreground ,magenta-alt)))
@@ -4020,14 +4020,14 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; emms
     `(emms-playlist-track-face ((,class :foreground ,blue)))
     `(emms-playlist-selected-face ((,class :inherit bold :foreground ,magenta)))
-;;;;; enhanced-ruby-mode
-    `(enh-ruby-heredoc-delimiter-face ((,class :foreground ,blue-alt-other)))
+;;;;; enh-ruby-mode (enhanced-ruby-mode)
+    `(enh-ruby-heredoc-delimiter-face ((,class :inherit font-lock-constant-face)))
     `(enh-ruby-op-face ((,class :foreground ,fg-main)))
-    `(enh-ruby-regexp-delimiter-face ((,class :foreground ,green)))
-    `(enh-ruby-regexp-face ((,class :foreground ,magenta)))
-    `(enh-ruby-string-delimiter-face ((,class :foreground ,blue-alt)))
-    `(erm-syn-errline ((,class :foreground ,red :underline t)))
-    `(erm-syn-warnline ((,class :foreground ,yellow :underline t)))
+    `(enh-ruby-regexp-delimiter-face ((,class :inherit font-lock-regexp-grouping-construct)))
+    `(enh-ruby-regexp-face ((,class :inherit font-lock-string-face)))
+    `(enh-ruby-string-delimiter-face ((,class :inherit font-lock-string-face)))
+    `(erm-syn-errline ((,class :inherit modus-themes-lang-error)))
+    `(erm-syn-warnline ((,class :inherit modus-themes-lang-warning)))
 ;;;;; epa
     `(epa-field-body ((,class :foreground ,fg-main)))
     `(epa-field-name ((,class :inherit bold :foreground ,fg-dim)))
@@ -4067,7 +4067,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(erc-nick-prefix-face ((,class :inherit erc-nick-default-face)))
     `(erc-notice-face ((,class :foreground ,fg-unfocused)))
     `(erc-pal-face ((,class :inherit bold :foreground ,red-alt)))
-    `(erc-prompt-face ((,class :inherit bold :foreground ,cyan-alt-other)))
+    `(erc-prompt-face ((,class :inherit comint-highlight-prompt)))
     `(erc-timestamp-face ((,class :foreground ,blue-nuanced-fg)))
     `(erc-underline-face ((,class :underline t)))
     `(bg:erc-color-face0 ((,class :background "white")))
@@ -4750,10 +4750,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; indium
     `(indium-breakpoint-face ((,class :foreground ,red-active)))
     `(indium-frame-url-face ((,class :inherit button :foreground ,fg-alt)))
-    `(indium-keyword-face ((,class :foreground ,magenta-alt-other)))
+    `(indium-keyword-face ((,class :inherit font-lock-keyword-face)))
     `(indium-litable-face ((,class :inherit modus-themes-slant :foreground ,fg-special-warm)))
-    `(indium-repl-error-face ((,class :inherit bold :foreground ,red)))
-    `(indium-repl-prompt-face ((,class :foreground ,cyan-alt-other)))
+    `(indium-repl-error-face ((,class :inherit error)))
+    `(indium-repl-prompt-face ((,class :inherit comint-highlight-prompt)))
     `(indium-repl-stdout-face ((,class :foreground ,fg-main)))
 ;;;;; info
     `(Info-quoted ((,class ,@(modus-themes--mixed-fonts) ; the capitalization is canonical
@@ -4770,7 +4770,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(info-title-4 ((,class :inherit modus-themes-heading-4)))
 ;;;;; info-colors
     `(info-colors-lisp-code-block ((,class :inherit fixed-pitch)))
-    `(info-colors-ref-item-command ((,class :foreground ,magenta)))
+    `(info-colors-ref-item-command ((,class :inherit font-lock-function-name-face)))
     `(info-colors-ref-item-constant ((,class :inherit font-lock-constant-face)))
     `(info-colors-ref-item-function ((,class :inherit font-lock-function-name-face)))
     `(info-colors-ref-item-macro ((,class :inherit font-lock-keyword-face)))
@@ -4882,32 +4882,32 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(jiralib-link-issue-face ((,class :underline t)))
     `(jiralib-link-project-face ((,class :underline t)))
 ;;;;; journalctl-mode
-    `(journalctl-error-face ((,class :inherit bold :foreground ,red)))
-    `(journalctl-finished-face ((,class :inherit bold :foreground ,green)))
+    `(journalctl-error-face ((,class :inherit error)))
+    `(journalctl-finished-face ((,class :inherit success)))
     `(journalctl-host-face ((,class :foreground ,blue)))
     `(journalctl-process-face ((,class :foreground ,cyan-alt-other)))
     `(journalctl-starting-face ((,class :foreground ,green)))
     `(journalctl-timestamp-face ((,class :foreground ,fg-special-cold)))
-    `(journalctl-warning-face ((,class :inherit bold :foreground ,yellow)))
+    `(journalctl-warning-face ((,class :inherit warning)))
 ;;;;; js2-mode
-    `(js2-error ((,class :foreground ,red)))
-    `(js2-external-variable ((,class :foreground ,cyan-alt-other)))
-    `(js2-function-call ((,class :foreground ,magenta)))
-    `(js2-function-param ((,class :foreground ,blue)))
-    `(js2-instance-member ((,class :foreground ,magenta-alt-other)))
+    `(js2-error ((,class :inherit modus-themes-lang-error)))
+    `(js2-external-variable ((,class :inherit font-lock-variable-name-face)))
+    `(js2-function-call ((,class :inherit font-lock-function-name-face)))
+    `(js2-function-param ((,class :inherit font-lock-constant-face)))
+    `(js2-instance-member ((,class :inherit font-lock-keyword-face)))
     `(js2-jsdoc-html-tag-delimiter ((,class :foreground ,fg-main)))
-    `(js2-jsdoc-html-tag-name ((,class :foreground ,cyan)))
-    `(js2-jsdoc-tag ((,class :foreground ,fg-special-calm)))
-    `(js2-jsdoc-type ((,class :foreground ,fg-special-cold)))
-    `(js2-jsdoc-value ((,class :foreground ,fg-special-warm)))
+    `(js2-jsdoc-html-tag-name ((,class :inherit font-lock-function-name-face)))
+    `(js2-jsdoc-tag ((,class :inherit (font-lock-builtin-face font-lock-comment-face) :weight normal)))
+    `(js2-jsdoc-type ((,class :inherit (font-lock-type-face font-lock-comment-face) :weight normal)))
+    `(js2-jsdoc-value ((,class :inherit (font-lock-constant-face font-lock-comment-face) :weight normal)))
     `(js2-object-property ((,class :foreground ,fg-main)))
     `(js2-object-property-access ((,class :foreground ,fg-main)))
-    `(js2-private-function-call ((,class :foreground ,green-alt-other)))
-    `(js2-private-member ((,class :foreground ,fg-special-mild)))
-    `(js2-warning ((,class :foreground ,yellow-alt :underline t)))
+    `(js2-private-function-call ((,class :inherit font-lock-preprocessor-face)))
+    `(js2-private-member ((,class :inherit font-lock-warning-face)))
+    `(js2-warning ((,class :inherit modus-themes-lang-warning)))
 ;;;;; julia
-    `(julia-macro-face ((,class :inherit modus-themes-bold :foreground ,magenta)))
-    `(julia-quoted-symbol-face ((,class :foreground ,blue-alt-other)))
+    `(julia-macro-face ((,class :inherit font-lock-builtin-face)))
+    `(julia-quoted-symbol-face ((,class :inherit font-lock-constant-face)))
 ;;;;; jupyter
     `(jupyter-eval-overlay ((,class :inherit bold :foreground ,blue)))
     `(jupyter-repl-input-prompt ((,class :foreground ,cyan-alt-other)))
@@ -6293,9 +6293,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(tuareg-opam-error-face ((,class :inherit error)))
     `(tuareg-opam-pkg-variable-name-face ((,class :inherit font-lock-variable-name-face)))
 ;;;;; typescript
-    `(typescript-jsdoc-tag ((,class :inherit modus-themes-slant :foreground ,fg-special-mild)))
-    `(typescript-jsdoc-type ((,class :inherit modus-themes-slant :foreground ,fg-special-calm)))
-    `(typescript-jsdoc-value ((,class :inherit modus-themes-slant :foreground ,fg-special-cold)))
+    `(typescript-jsdoc-tag ((,class :inherit (font-lock-builtin-face font-lock-comment-face) :weight normal)))
+    `(typescript-jsdoc-type ((,class :inherit (font-lock-type-face font-lock-comment-face) :weight normal)))
+    `(typescript-jsdoc-value ((,class :inherit (font-lock-constant-face font-lock-comment-face) :weight normal)))
 ;;;;; undo-tree
     `(undo-tree-visualizer-active-branch-face ((,class :inherit bold :foreground ,fg-main)))
     `(undo-tree-visualizer-current-face ((,class :foreground ,blue-intense)))
