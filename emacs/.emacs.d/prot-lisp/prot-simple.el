@@ -131,8 +131,6 @@ indentation while duplicating."
      (t
       (if arg
           (let ((text (buffer-substring pbol peol)))
-            (when (eq (point) rbeg)
-              (exchange-point-and-mark))
             (goto-char (point-at-eol))
             (newline)
             (insert text))
