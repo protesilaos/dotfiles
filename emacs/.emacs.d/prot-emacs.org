@@ -5733,6 +5733,8 @@ my day-to-day needs.  In particular:
   collect a list of candidates into a bespoke buffer (make sure to check
   [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]]).
   Of course, it can be used on its own to jump around the web page.
+  Upon jumping, the line will pulse momentarily to help keep a sense of
+  context (also read: [[#h:6bbc41d6-da7c-4301-84c6-c5887c29283f][prot-pulse.el (highlight cursor position)]]).
 
 + =prot-eww-find-feed= inspects the source code of the current web page
   and produces an =occur= buffer with links that represent RSS or Atom
@@ -5774,6 +5776,9 @@ Some final tips:
   accept a =C-u= prefix to put their contents in a new buffer rather than
   re-use the existing one.  With =M-RET= over a link in an EWW buffer, you
   can do the same.
+
+Also watch [[https://protesilaos.com/codelog/2021-03-25-emacs-eww/][EWW and my extras]] (2021-03-25) for a video demonstration of
+some of the above.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'browse-url
