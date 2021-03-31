@@ -154,27 +154,39 @@ new EWW buffer."
         (goto-char point)
         (prot-pulse-pulse-line)))))
 
-(autoload 'View-quit "view")
+(defvar prot-eww--occur-feed-regexp
+  (concat "\\(rss\\|atom\\)\\+xml.\\(.\\|\n\\)"
+          ".*href=[\"']\\(.*?\\)[\"']")
+  "Regular expression to match web feeds in HTML source.")
 
 ;;;###autoload
 (defun prot-eww-find-feed ()
-  "Produce Occur buffer with RSS/Atom links from XML source."
+  "Produce bespoke buffer with RSS/Atom links from XML source."
   (interactive)
-  (let ((url (or (plist-get eww-data :start)
-                 (plist-get eww-data :contents)
-                 (plist-get eww-data :home)
-                 (plist-get eww-data :url))))
-    (eww-view-source)
-    (occur "\\(rss\\|atom\\)\\+xml.\\(.\\|\n\\).*href=[\"']\\(.*?\\)[\"']" "\\3")
+  (let* ((url (or (plist-get eww-data :start)
+                  (plist-get eww-data :contents)
+                  (plist-get eww-data :home)
+                  (plist-get eww-data :url)))
+         (title (or (plist-get eww-data :title) url))
+         (source (plist-get eww-data :source))
+         (buf-name (format "*feeds: %s # eww*" title)))
+    (with-temp-buffer
+      (insert source)
+      (occur-1 prot-eww--occur-feed-regexp "\\3" (list (current-buffer)) buf-name))
     ;; Handle relative URLs, so that we get an absolute URL out of them.
     ;; Findings like "rss.xml" are not particularly helpful.
-    (with-current-buffer "*Occur*"  ; FIXME 2021-03-28: make this robust
-      (let ((inhibit-read-only t))
-        (goto-char (point-min))
-        (unless (re-search-forward prot-common-url-regexp nil t)
-          (re-search-forward ".*")
-          (replace-match (concat url "\\&")))))
-    (View-quit)))
+    ;;
+    ;; NOTE 2021-03-31: the base-url heuristic may not always be
+    ;; correct, though it has worked in all websites I have tested it
+    ;; in.
+    (when (get-buffer buf-name)
+      (with-current-buffer (get-buffer buf-name)
+        (let ((inhibit-read-only t)
+              (base-url (replace-regexp-in-string "\\(.*/\\)[^/]+\\'" "\\1" url)))
+          (goto-char (point-min))
+          (unless (re-search-forward prot-common-url-regexp nil t)
+            (re-search-forward ".*")
+            (replace-match (concat base-url "\\&"))))))))
 
 (defvar prot-eww-search-engines
   '((debbugs . prot-eww-search-debbugs)
