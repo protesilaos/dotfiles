@@ -8122,7 +8122,8 @@ each in their own unique way:
   shows how to get things done using Emacs.  There are tutorials on how
   to use the =diary=, =calendar=, and =org-agenda=, while you will also find
   more advanced topics such as how to install, use, and make sense of
-  the powerful Icicles completion framework.
+  the powerful Icicles completion framework, as well as other useful
+  packages.
 
 + System Crafters :: David Wilson's work on Emacs covers a broad range
   of themes, encapsulated in the [[https://github.com/daviwil/emacs-from-scratch][Emacs from scratch]] configuration.  The
@@ -8144,11 +8145,11 @@ each in their own unique way:
 
 + Manuel Uberti :: Manuel's contributions have been of paramount
   importance to the development of my Modus themes.  Manuel offers a lot
-  to the Emacs milieu through code but also by reporting issues and
-  communicating with package maintainers.  The website [[https://www.manueluberti.eu/][manueluberti.eu]]
-  hosts a blog with Manuel's musings on Emacs.  For example, you will
-  find articles that I have already referenced in this document, such as
-  [[https://www.manueluberti.eu/emacs/2020/11/14/extending-project/][Extending project.el]] (2020-11-14).
+  to the Emacs milieu through code contributions but also by reporting
+  issues and communicating with package maintainers.  The website
+  [[https://www.manueluberti.eu/][manueluberti.eu]] hosts a blog with Manuel's musings on Emacs.  For
+  example, you will find articles that I have already referenced in this
+  document, such as [[https://www.manueluberti.eu/emacs/2020/11/14/extending-project/][Extending project.el]] (2020-11-14).
 
 + Nicolas De Jaeghere :: Nicolas is another contributor to my Modus
   themes and has helped me understand several Elisp concepts, such as by
@@ -8156,7 +8157,7 @@ each in their own unique way:
   [[https://github.com/Koekelas/dotfiles][a personal dotfiles repo]] where you can find an =emacs.org= file with
   lots of advanced code snippets.
 
-+ Karthik Chikmagalur ::  Karthik's [[https://karthinks.com/software/batteries-included-with-emacs/][Batteries included with Emacs]]
++ Karthik Chikmagalur :: Karthik's [[https://karthinks.com/software/batteries-included-with-emacs/][Batteries included with Emacs]]
   (2020-11-17) and [[https://karthinks.com/software/more-batteries-included-with-emacs/][More batteries included with Emacs]] (2020-12-11) are
   essential reading for anyone wanting to gain an overview of some of
   Emacs' capabilities out-of-the-box and learn about its 'hidden gems'.
