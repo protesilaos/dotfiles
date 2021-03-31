@@ -3263,10 +3263,10 @@ appreciate the scope of each action.  In short:
   commits starting from the HEAD of the current project.  The number is
   inserted at the minibuffer following a prompt.  This runs the =git log=
   shell command in the background.  If the command is not called from
-  inside a version-controlled directory, it first asks for a project and
-  eventually prints a log for it.  Again, this is useful while writing
-  the message of a commit, as I occasionally need to reference earlier
-  changes.
+  inside a version-controlled directory or if it is invoked with a
+  prefix argument (=C-u=), it first asks for a project and eventually
+  prints a log for it.  Again, this is useful while writing the message
+  of a commit, as I occasionally need to reference earlier changes.
 
 + =prot-vc-git-patch-dwim= produces a properly formatted patch for a given
   commit.  The outputted file is saved in a directory that is selected

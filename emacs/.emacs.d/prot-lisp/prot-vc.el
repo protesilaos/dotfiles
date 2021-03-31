@@ -120,16 +120,23 @@ existing item or input an arbitrary string of characters."
 (defvar prot-vc--log-insert-num-hist '()
   "History for `prot-vc-git-log-insert-commits'.")
 
+(declare-function project-prompt-project-dir "project")
+
 ;;;###autoload
-(defun prot-vc-git-log-insert-commits ()
+(defun prot-vc-git-log-insert-commits (&optional arg)
   "Insert at point number of commits starting from git HEAD.
 If in a version-controlled directory, the commit log is based on
 the root of the project, else a prompt for project selection is
-produced with `project-current'."
-  (interactive)
-  (let ((default-directory (or (prot-vc--current-project)
-                               (cdr (project-current t))))
-        (number (number-to-string
+produced with `project-current'.
+
+With optional prefix ARG (\\[universal-argument]) always prompt
+for a known project."
+  (interactive "P")
+  (let* ((dir (when arg (project-prompt-project-dir)))
+         (default-directory (or dir
+                                (prot-vc--current-project)
+                                (cdr (project-current t))))
+         (number (number-to-string
                  (read-number "Insert N commits from HEAD: " 5
                               'prot-vc--log-insert-num-hist))))
     (insert
