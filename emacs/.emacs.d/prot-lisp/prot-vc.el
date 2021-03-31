@@ -142,7 +142,7 @@ for a known project."
     (insert
      (with-temp-buffer
        (apply 'vc-git-command t nil nil
-              (list "log" "--pretty=format:%h %cs %s" "-n" number "--"))
+              (list "log" "--pretty=format:%h  %cs  %s" "-n" number "--"))
        (buffer-string)))
     (add-to-history 'prot-vc--log-insert-num-hist number)))
 
