@@ -129,7 +129,10 @@ new EWW buffer."
 (defun prot-eww-find-feed ()
   "Produce Occur buffer with RSS/Atom links from XML source."
   (interactive)
-  (let ((url (plist-get eww-data :url)))
+  (let ((url (or (plist-get eww-data :start)
+                 (plist-get eww-data :contents)
+                 (plist-get eww-data :home)
+                 (plist-get eww-data :url))))
     (eww-view-source)
     (occur "\\(rss\\|atom\\)\\+xml.\\(.\\|\n\\).*href=[\"']\\(.*?\\)[\"']" "\\3")
     ;; Handle relative URLs, so that we get an absolute URL out of them.
@@ -137,7 +140,7 @@ new EWW buffer."
     (with-current-buffer "*Occur*"  ; FIXME 2021-03-28: make this robust
       (let ((inhibit-read-only t))
         (goto-char (point-min))
-        (unless (re-search-forward url nil t)
+        (unless (re-search-forward prot-common-url-regexp nil t)
           (re-search-forward ".*")
           (replace-match (concat url "\\&")))))
     (View-quit)))
