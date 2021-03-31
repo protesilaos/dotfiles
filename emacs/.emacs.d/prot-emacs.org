@@ -8107,6 +8107,12 @@ Outside the narrow confines of computer, Emacs is it people.
 Here is a non-exhaustive list of users that I have found to be helpful,
 each in their own unique way:
 
++ Rainer König :: Rainer has [[https://www.youtube.com/playlist?list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE][a series of video tutorials]] on how to
+  organise your life using various Org features, such as check lists and
+  the agenda.  Each video covers a single utility or closely related
+  concepts, while the whole playlist offers a progression from basic to
+  more advanced workflows.  Highly recommended!
+
 + Mike Zamansky :: Mike is a computer science professor who has been
   doing [[https://www.youtube.com/channel/UCxkMDXQ5qzYOgXPRnOBrp1w][videos on Emacs]] for several years.  There is a wealth of
   information to gather from those presentations as well as the
