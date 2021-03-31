@@ -43,6 +43,37 @@
   :type 'string
   :group 'prot-eww)
 
+;;;; Basic setup
+
+(autoload 'ffap-url-at-point "ffap")
+
+(defun prot-eww--rename-buffer ()
+  "Rename EWW buffer using page title or URL.
+To be used by `eww-after-render-hook'."
+  (let ((name (if (eq "" (plist-get eww-data :title))
+                  (plist-get eww-data :url)
+                (plist-get eww-data :title))))
+    (rename-buffer (format "*%s # eww*" name) t)))
+
+(add-hook 'eww-after-render-hook #'prot-eww--rename-buffer)
+(advice-add 'eww-back-url :after #'prot-eww--rename-buffer)
+(advice-add 'eww-forward-url :after #'prot-eww--rename-buffer)
+
+(defvar prot-eww-visited-history '()
+  "History of visited URLs.")
+
+(defun prot-eww--record-history ()
+  "Store URL in `prot-eww-visited-history'.
+To be used by `eww-after-render-hook'."
+  (let ((url (plist-get eww-data :url)))
+    (add-to-history 'prot-eww-visited-history url)))
+
+(add-hook 'eww-after-render-hook #'prot-eww--record-history)
+(advice-add 'eww-back-url :after #'prot-eww--record-history)
+(advice-add 'eww-forward-url :after #'prot-eww--record-history)
+
+;;;; Commands
+
 ;;;###autoload
 (defun prot-eww-browse-dwim (url &optional arg)
   "Visit a URL, maybe from `eww-prompt-history', with completion.
@@ -57,7 +88,7 @@ When called from an eww buffer, provide the current link as
 initial input."
   (interactive
    (list
-    (completing-read "Run EWW on: " eww-prompt-history
+    (completing-read "Run EWW on: " (append prot-eww-visited-history eww-prompt-history)
                      nil nil (plist-get eww-data :url) 'eww-prompt-history)
     current-prefix-arg))
   (eww url (if arg 4 nil)))
@@ -279,20 +310,6 @@ images."
     (if (= (car out) 0)
         (message "Downloaded page at %s" path)
       (message "Error downloading page: %s" (cdr out)))))
-
-(autoload 'ffap-url-at-point "ffap")
-
-(defun prot-eww--rename-buffer ()
-  "Rename EWW buffer using page title or URL.
-To be used by `eww-after-render-hook'."
-  (let ((name (if (eq "" (plist-get eww-data :title))
-                  (plist-get eww-data :url)
-                (plist-get eww-data :title))))
-    (rename-buffer (format "*%s # eww*" name) t)))
-
-(add-hook 'eww-after-render-hook #'prot-eww--rename-buffer)
-(advice-add 'eww-back-url :after #'prot-eww--rename-buffer)
-(advice-add 'eww-forward-url :after #'prot-eww--rename-buffer)
 
 (provide 'prot-eww)
 ;;; prot-eww.el ends here

@@ -5670,6 +5670,14 @@ my day-to-day needs.  In particular:
   it looks like =*Emacs - ArchWiki # eww*=, with a possible number
   identifier added only for duplicate entries.
 
++ The variable =prot-eww-visited-history= records the URL of every
+  rendered page.  This is then used by =prot-eww-browse-dwim= (more
+  below).  To keep things in check, =prot-eww-visited-history= is
+  implemented as a minibuffer history which is ultimately limited to the
+  value of =history-length= (read: [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][Minibuffer history (savehist-mode)]]).
+  Remember that each command can have its own history and this is common
+  in a lot of my extras.
+
 + The =prot-eww-browse-dwim= is my main point of entry to EWW.  When I
   call it from a random place inside of Emacs, it just offers a prompt
   that asks for a URL or search terms with which to query DuckDuckGo.
@@ -7364,7 +7372,7 @@ also read the [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configuratio
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'savehist
   (setq savehist-file (locate-user-emacs-file "savehist"))
-  (setq history-length 1000)
+  (setq history-length 10000)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
   (add-hook 'after-init-hook #'savehist-mode))
