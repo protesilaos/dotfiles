@@ -606,7 +606,7 @@ To be used as the PREDICATE of `completing-read-multiple'."
   (let ((def (car usls--subdirectory-history))
         (table (usls--completion-table 'file dirs)))
     (completing-read
-     (format-prompt "Subdirectory of new note" def)
+     (format "Subdirectory of new note [%s]: " def)
      table nil t nil 'usls--subdirectory-history def)))
 
 (defun usls--directory-subdirs-prompt ()
