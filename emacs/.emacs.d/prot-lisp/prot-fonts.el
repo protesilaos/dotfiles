@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "24.3"))
+;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -26,9 +26,6 @@
 ;;
 ;; This set of configurations pertains to my font settings, for use in
 ;; my Emacs setup: https://protesilaos.com/dotemacs.
-;;
-;; Note that this package "requires" Emacs 24.3 or higher, though I only
-;; tested it with versions 27 and 28.
 
 ;;; Code:
 
@@ -162,7 +159,7 @@ to pass to the `bold' face's weight property."
   "Prompt for candidate among DISPLAYS."
   (let ((def (nth 1 prot-fonts-font-display-hist)))
     (completing-read
-     (format-prompt "Pick display size" def)
+     (format "Pick display size [%s]: " def)
      displays nil nil nil 'prot-fonts-font-display-hist def)))
 
 ;;;###autoload
