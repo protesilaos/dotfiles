@@ -32,6 +32,7 @@
 (require 'isearch)
 (require 'replace)
 (require 'grep)
+(require 'prot-common)
 
 ;;;; Isearch
 
@@ -117,26 +118,6 @@ end of the buffer.")
   (isearch-forward-symbol-at-point)
   (isearch-query-replace-regexp))
 
-(defvar prot-search-url-regexp
-  (concat
-   "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|"
-   "nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)"
-   "\\(//[-a-z0-9_.]+:[0-9]*\\)?"
-   (let ((chars "-a-z0-9_=#$@~%&*+\\/[:word:]")
-	     (punct "!?:;.,"))
-     (concat
-      "\\(?:"
-      ;; Match paired parentheses, e.g. in Wikipedia URLs:
-      ;; http://thread.gmane.org/47B4E3B2.3050402@gmail.com
-      "[" chars punct "]+" "(" "[" chars punct "]+" ")"
-      "\\(?:" "[" chars punct "]+" "[" chars "]" "\\)?"
-      "\\|"
-      "[" chars punct "]+" "[" chars "]"
-      "\\)"))
-   "\\)")
-  "Regular expression that matches URLs.
-Copy of variable `browse-url-button-regexp'.")
-
 (autoload 'goto-address-mode "goto-addr")
 
 ;;;###autoload
@@ -144,7 +125,7 @@ Copy of variable `browse-url-button-regexp'.")
   "Produce buttonised list of all URLs in the current buffer."
   (interactive)
   (add-hook 'occur-hook #'goto-address-mode)
-  (occur prot-search-url-regexp "\\&")
+  (occur prot-common-url-regexp "\\&")
   (remove-hook 'occur-hook #'goto-address-mode))
 
 ;;;###autoload
@@ -158,7 +139,7 @@ Also see `prot-search-occur-url'."
   (let ((matches nil))
     (save-excursion
       (goto-char (point-min))
-      (while (search-forward-regexp prot-search-url-regexp nil t)
+      (while (search-forward-regexp prot-common-url-regexp nil t)
         (push (match-string-no-properties 0) matches)))
     (funcall browse-url-browser-function
              (completing-read "Browse URL: " matches nil t))))
