@@ -1414,37 +1414,36 @@ Finally, a few words about the following package configurations:
   ;; :hook (embark-collect-mode-hook . embark-consult-preview-minor-mode)
   (define-key embark-collect-mode-map (kbd "C-j") #'embark-consult-preview-at-point))
 
-(with-eval-after-load 'embark
-  (prot-emacs-builtin-package 'prot-embark
-    (add-hook 'minibuffer-exit-hook #'prot-embark-clear-live-buffers)
-    (add-hook 'embark-collect-mode-hook #'prot-embark-completions-cursor)
-    (add-hook 'embark-collect-post-revert-hook #'prot-embark-collect-fit-window)
-    (add-hook 'embark-collect-mode-hook #'prot-embark-hl-line)
-    (add-hook 'embark-collect-mode-hook #'prot-embark-display-line-numbers)
+(prot-emacs-builtin-package 'prot-embark
+  (add-hook 'minibuffer-exit-hook #'prot-embark-clear-live-buffers)
+  (add-hook 'embark-collect-mode-hook #'prot-embark-completions-cursor)
+  (add-hook 'embark-collect-post-revert-hook #'prot-embark-collect-fit-window)
+  (add-hook 'embark-collect-mode-hook #'prot-embark-hl-line)
+  (add-hook 'embark-collect-mode-hook #'prot-embark-display-line-numbers)
 
-    (define-key embark-general-map (kbd "C-M-w") #'prot-embark-toggle-which-key)
-    ;; NOTE: to switch to the live collection buffer, I also use
-    ;; `prot-minibuffer-focus-mini-or-completions' which is bound to
-    ;; "s-v".
-    (let ((map embark-collect-mode-map))
-      (define-key map (kbd "h") #'prot-simple-describe-symbol)  ; from `prot-simple.el'
-      (define-key map (kbd "C-g") #'prot-embark-keyboard-quit)
-      (define-key map (kbd "C-k") #'prot-embark-collection-kill-line)
-      (define-key map (kbd "C-M-n") #'prot-embark-completions-act-next)
-      (define-key map (kbd "C-M-p") #'prot-embark-completions-act-previous)
-      (define-key map (kbd "C-M-j") #'prot-embark-completions-act-current)
-      (define-key map (kbd "C-M-v") #'prot-embark-consult-preview-toggle) ; "view", "visualise" mnemonic
-      (define-key map (kbd "C-M-w") #'prot-embark-toggle-which-key)
-      (define-key map (kbd "C-n") #'prot-embark-next-line-or-mini)
-      (define-key map (kbd "<down>") #'prot-embark-next-line-or-mini)
-      (define-key map (kbd "C-p") #'prot-embark-previous-line-or-mini)
-      (define-key map (kbd "<up>") #'prot-embark-previous-line-or-mini))
-    (let ((map minibuffer-local-completion-map))
-      (define-key map (kbd "C-n") #'prot-embark-switch-to-completions-top)
-      (define-key map (kbd "<down>") #'prot-embark-switch-to-completions-top)
-      (define-key map (kbd "C-p") #'prot-embark-switch-to-completions-bottom)
-      (define-key map (kbd "<up>") #'prot-embark-switch-to-completions-bottom)
-      (define-key map (kbd "C-l") #'prot-embark-completions-toggle))))
+  (define-key embark-general-map (kbd "C-M-w") #'prot-embark-toggle-which-key)
+  ;; NOTE: to switch to the live collection buffer, I also use
+  ;; `prot-minibuffer-focus-mini-or-completions' which is bound to
+  ;; "s-v".
+  (let ((map embark-collect-mode-map))
+    (define-key map (kbd "h") #'prot-simple-describe-symbol)  ; from `prot-simple.el'
+    (define-key map (kbd "C-g") #'prot-embark-keyboard-quit)
+    (define-key map (kbd "C-k") #'prot-embark-collection-kill-line)
+    (define-key map (kbd "C-M-n") #'prot-embark-completions-act-next)
+    (define-key map (kbd "C-M-p") #'prot-embark-completions-act-previous)
+    (define-key map (kbd "C-M-j") #'prot-embark-completions-act-current)
+    (define-key map (kbd "C-M-v") #'prot-embark-consult-preview-toggle) ; "view", "visualise" mnemonic
+    (define-key map (kbd "C-M-w") #'prot-embark-toggle-which-key)
+    (define-key map (kbd "C-n") #'prot-embark-next-line-or-mini)
+    (define-key map (kbd "<down>") #'prot-embark-next-line-or-mini)
+    (define-key map (kbd "C-p") #'prot-embark-previous-line-or-mini)
+    (define-key map (kbd "<up>") #'prot-embark-previous-line-or-mini))
+  (let ((map minibuffer-local-completion-map))
+    (define-key map (kbd "C-n") #'prot-embark-switch-to-completions-top)
+    (define-key map (kbd "<down>") #'prot-embark-switch-to-completions-top)
+    (define-key map (kbd "C-p") #'prot-embark-switch-to-completions-bottom)
+    (define-key map (kbd "<up>") #'prot-embark-switch-to-completions-bottom)
+    (define-key map (kbd "C-l") #'prot-embark-completions-toggle)))
 #+end_src
 
 This is =prot-embark.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
