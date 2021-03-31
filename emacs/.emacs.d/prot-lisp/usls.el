@@ -750,7 +750,9 @@ strings only the first one is used."
   "Capture path to file or URL for `usls--file-region'."
   (cond
    ((derived-mode-p 'eww-mode)
-    (concat (plist-get eww-data :url) "\n\n"))
+    (if (plist-get eww-data :title)
+        (format "%s <%s>\n\n" (plist-get eww-data :title) (plist-get eww-data :url))
+      (concat (plist-get eww-data :url) "\n\n")))
    ((buffer-file-name)
     (concat (buffer-file-name) "\n\n"))
    (t
@@ -1084,7 +1086,7 @@ directory will be directly displayed instead."
 (add-hook 'dired-mode-hook #'usls-mode-activate)
 
 (defgroup usls-faces ()
-  "Faces for `usls-mode'."
+  "Faces for USLS mode."
   :group 'faces)
 
 (defface usls-header-data-date
