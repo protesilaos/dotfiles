@@ -74,7 +74,7 @@ operates on the lines before point)."
   "Prompt for candidate among KEYWORDS."
   (let ((def (car prot-comment--keyword-hist)))
     (completing-read
-     (format-prompt "Select keyword" def)
+     (format "Select keyword [%s]: " def)
      keywords nil nil nil 'prot-comment--keyword-hist def)))
 
 ;;;###autoload

@@ -50,7 +50,7 @@ Used by `prot-spell-change-dictionary'."
   "Helper prompt to select from `prot-spell-dictionaries'."
   (let ((def (car prot-spell--dictionary-hist)))
     (completing-read
-     (format-prompt "Select dictionary" def)
+     (format "Select dictionary [%s]: " def)
      (mapcar #'car prot-spell-dictionaries)
      nil t nil 'prot-spell--dictionary-hist def)))
 

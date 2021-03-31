@@ -175,7 +175,7 @@ This command can then be followed by the standard
   "Helper of `prot-simple-insert-pair-completion' to read CHARS."
   (let ((def (car prot-simple--character-hist)))
     (completing-read
-     (format-prompt "Select character" def)
+     (format "Select character [%s]: " def)
      chars nil t nil 'prot-simple--character-hist def)))
 
 ;;;###autoload

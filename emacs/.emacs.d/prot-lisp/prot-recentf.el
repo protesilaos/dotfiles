@@ -55,7 +55,7 @@ Add this function to `recentf-keep'."
   "Helper of `prot-recentf-recent-files' to read FILES."
   (let ((def (car prot-recentf--history-files)))
     (completing-read
-     (format-prompt "Recentf" def)
+     (format "Recentf [%s]: " def)
      files nil t nil 'prot-recentf--history-files def)))
 
 ;;;###autoload
@@ -82,7 +82,7 @@ Add this function to `recentf-keep'."
   "Helper of `prot-recentf-recent-dirs' to read DIRS."
   (let ((def (car prot-recentf--history-dirs)))
     (completing-read
-     (format-prompt "Recent dir" def)
+     (format "Recent dir [%s]: " def)
      dirs nil t nil 'prot-recentf--history-dirs def)))
 
 ;;;###autoload

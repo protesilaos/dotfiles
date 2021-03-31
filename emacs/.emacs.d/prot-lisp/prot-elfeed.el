@@ -132,7 +132,7 @@ Add this to `elfeed-search-mode-hook'."
   "Helper of `prot-elfeed-toggle-tag' to read TAGS."
   (let ((def (car prot-elfeed--tag-hist)))
     (completing-read
-     (format-prompt "Toggle tag" def)
+     (format "Toggle tag [%s]: " def)
      tags nil t nil 'prot-elfeed--tag-hist def)))
 
 (defvar elfeed-show-entry)
