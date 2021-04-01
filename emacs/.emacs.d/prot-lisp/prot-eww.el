@@ -307,15 +307,37 @@ images."
   (plist-put eww-data :title title)
   (eww-add-bookmark))
 
+(defvar prot-eww--punctuation-regexp "[][{}!@#$%^&*()_=+'\"?,.\|;:~`‘’“”]*"
+  "Regular expression of punctionation that should be removed.")
+
+(defun prot-eww--slug-no-punct (str)
+  "Convert STR to a file name slug."
+  (replace-regexp-in-string prot-eww--punctuation-regexp "" str))
+
+(defun prot-eww--slug-hyphenate (str)
+  "Replace spaces with hyphens in STR.
+Also replace multiple hyphens with a single one and remove any
+trailing hyphen."
+  (replace-regexp-in-string
+    "-$" ""
+   (replace-regexp-in-string
+   "-\\{2,\\}" "-"
+    (replace-regexp-in-string "--+\\|\s+" "-" str))))
+
+(defun prot-eww--sluggify (str)
+  "Make STR an appropriate file name slug."
+  (downcase (prot-eww--slug-hyphenate (prot-eww--slug-no-punct str))))
+
 ;;;###autoload
 (defun prot-eww-download-html (name)
   "Download web page and call the file with NAME."
   (interactive
    (list
-    (read-string "Set downloaded file name: " (plist-get eww-data :title))))
+    (prot-eww--sluggify
+     (read-string "Set downloaded file name: " (plist-get eww-data :title)))))
   (let* ((path (thread-last eww-download-directory
                  (expand-file-name
-                  (concat (format-time-string "%Y%m%d_%H%M%S") "-" name ".html"))))
+                  (concat (format-time-string "%Y%m%d_%H%M%S") "--" name ".html"))))
          (out (prot-common-shell-command-with-exit-code-and-output
                "wget" "-q" (format "%s" (plist-get eww-data :url))
                       "-O" (format "%s" (shell-quote-argument path)))))

@@ -5738,9 +5738,12 @@ my day-to-day needs.  In particular:
 
 + =prot-eww-download-html= downloads the current web page as an =.html=
   file.  It asks for a name to give to it, defaulting to the title of
-  the page, and it also prepends the current date and time.  So if the
-  page is titled "GNU Emacs manual" the saved file will be stored as a
-  file path like =~/Downloads/eww/20210324_185035-GNU Emacs manual.html=.
+  the page, and it also prepends the current date and time.  To ensure
+  that the file name is easily accessible with Unix tools, all
+  punctuation marks and spaces are removed or replaced with hyphens.  So
+  if the page is titled ="GNU Emacs manual | My ‘cool’ “website”!?"= the
+  saved file will be processed and stored as a filesystem path like
+  =~/Downloads/eww/20210324_185035--gnu-emacs-manual-my-cool-website.html=.
   I find that this is superior to the generic =eww-download= which neither
   asks for a name, nor adds a date and file type extension.  Where
   =eww-download= still excels is for downloading the link at point, when
