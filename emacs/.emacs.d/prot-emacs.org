@@ -422,13 +422,13 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody
-        modus-themes-mode-line 'borderless
+        modus-themes-mode-line nil
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
-        ;; 'alt-syntax-yellow-comments,'faint-yellow-comments
-        modus-themes-syntax 'faint-yellow-comments
+        ;; 'alt-syntax-yellow-comments, 'faint-yellow-comments
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line': nil, 'intense-background,
         ;; 'accented-background, 'underline-neutral,
@@ -436,17 +436,17 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'underline-only-accented
         modus-themes-hl-line 'underline-neutral
         modus-themes-subtle-line-numbers nil
-        modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
+        modus-themes-paren-match 'intense ; {nil,'subtle-bold,'intense,'intense-bold}
 
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only, 'neutral-underline-only
-        modus-themes-links 'faint-neutral-underline
+        modus-themes-links nil
         modus-themes-no-mixed-fonts nil
 
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts 'subtle-accented
+        modus-themes-prompts nil
         modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
 
         ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
