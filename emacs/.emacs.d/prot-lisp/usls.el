@@ -541,17 +541,22 @@ To be used as the PREDICATE of `completing-read-multiple'."
     (when (re-search-forward regexp nil t -1)
       (match-string 1))))
 
-;; REVIEW: any character class that captures those?  It seems to work
-;; though...
+(defvar usls--punctuation-regexp "[][{}!@#$%^&*()_=+'\"?,.\|;:~`‘’“”]*"
+  "Regular expression of punctionation that should be removed.")
+
 (defun usls--slug-no-punct (str)
   "Convert STR to a file name slug."
-  (replace-regexp-in-string "[][{}!@#$%^&*()_=+'\"?,.\|;:~`]*" "" str))
+  (replace-regexp-in-string usls--punctuation-regexp "" str))
 
-;; REVIEW: this looks inelegant.  We want to remove spaces or multiple
-;; hyphens, as well as a final hyphen.
 (defun usls--slug-hyphenate (str)
-  "Replace spaces with hyphens in STR."
-  (replace-regexp-in-string "-$" "" (replace-regexp-in-string "--+\\|\s+" "-" str)))
+  "Replace spaces with hyphens in STR.
+Also replace multiple hyphens with a single one and remove any
+trailing hyphen."
+  (replace-regexp-in-string
+   "-$" ""
+   (replace-regexp-in-string
+    "-\\{2,\\}" "-"
+    (replace-regexp-in-string "--+\\|\s+" "-" str))))
 
 (defun usls--sluggify (str)
   "Make STR an appropriate file name slug."
