@@ -2063,8 +2063,7 @@ package configurations).
 (prot-emacs-builtin-package 'replace
   (setq list-matching-lines-jump-to-current-line t)
   (add-hook 'occur-mode-hook #'hl-line-mode)
-  (add-hook 'occur-mode-hook (lambda ()
-			                   (toggle-truncate-lines t)))
+  (add-hook 'occur-mode-hook (lambda () (toggle-truncate-lines t)))
   (define-key global-map (kbd "M-s M-o") #'multi-occur)
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
 
