@@ -973,13 +973,37 @@ What my completion selection interface does in a nutshell:
   delete =file/= and so on.  This is what the built-in Ido mode does and
   what Fido mode re-implements for Icomplete.
 
++ By default, hitting =RET= in the =*Completions*= buffer will take the
+  candidate and place it in the minibuffer.  To actually complete the
+  process, you need to confirm it again from there.  I prefer to take a
+  shortcut, hence =prot-minibuffer-choose-completion-exit=.
+
++ While we normally type in the minibuffer for narrowing and use the
+  =*Completions*= to pick a candidate, we can also operate directly from
+  the latter.  =prot-minibuffer-choose-completion-dwim= lets you append a
+  candidate to the minibuffer and to act on it depending on the context.
+  For completing buffers, this command will just switch to the desired
+  buffer.  For file names, it will append the path, and stay in the
+  =*Completions*= from where we can append a candidate among those in the
+  new list.  Though my favourite mode of action is while interfacing
+  with =completing-read-multiple= prompts, where it will append the
+  candidate, add a =,= for the separator, and go back to the
+  =*Completions*=, letting you pick another entry from those available
+  (e.g. this is how I insert multiple custom playlists in a Bongo
+  buffer---[[#h:758afe0d-bc7c-4afc-9c6b-b5e569901591][Bongo music or media manager (and prot-bongo.el)]]).  The
+  elegance of this latter aspect is that my =prot-common.el= contains a
+  snippet which removes selected entries from the candidates, so we
+  never input them twice ([[#h:c82dcbfa-97d0-4f7c-85af-768ce90f1372][Common auxiliary functions (prot-common.el)]]).
+  This is the best =completing-read-multiple= experience I have had to
+  date.
+
 Finally, here is an overview of the settings covered herein:
 
 + Completion styles :: I mostly rely on [[#h:7b1374dd-6b1f-4548-8fbf-1034230c80e0][the Orderless completion style]].
   An exception is a niche functionality of the =partial-completion= style
   which is built-in: with it you can navigate to a filesystem path like
   =~/.l/s/fo= for =~/.local/share/fonts= (combine that with the file
-  shadowing mentioned above, for a particularly decluttered flow).  So I
+  shadowing mentioned above, for a minimalist, decluttered flow).  So I
   use those two styles to cover every case by default, while the
   variable =completion-category-defaults= can override the standard option
   of =completion-styles= on a per-category basis.
@@ -1028,6 +1052,8 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
     (define-key map (kbd "<up>") #'prot-minibuffer-previous-completion-or-mini)
     (define-key map (kbd "C-M-n") #'prot-minibuffer-next-completions-act)
     (define-key map (kbd "C-M-p") #'prot-minibuffer-previous-completions-act)
+    (define-key map (kbd "<return>") #'prot-minibuffer-choose-completion-exit)
+    (define-key map (kbd "<M-return>") #'prot-minibuffer-choose-completion-dwim)
     ;; Those are generic actions for the "*Completions*" buffer, though
     ;; I normally use `embark'.
     (define-key map (kbd "w") #'prot-minibuffer-completions-kill-symbol-at-point)

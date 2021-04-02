@@ -171,7 +171,7 @@ If it is a list, this actually returns its car."
       ('bar (setq-local cursor-type '(hbar . 8)))
       (_  (setq-local cursor-type '(bar . 3))))))
 
-;;;; Minibuffer and interactions
+;;;; Basic minibuffer interactions
 
 ;;;###autoload
 (defun prot-minibuffer-focus-mini ()
@@ -468,8 +468,32 @@ minibuffer."
       (clone-buffer buf-name))
     (prot-minibuffer--run-after-abort #'prot-minibuffer--display-at-bottom buf-name)))
 
-;; ;;;###autoload
-;; (defun prot-minibuffer-choose-completion-dwim ()
+;;;###autoload
+(defun prot-minibuffer-choose-completion-exit ()
+  "Run `choose-completion' in the Completions buffer and exit."
+  (interactive)
+  (when (and (derived-mode-p 'completion-list-mode)
+             (active-minibuffer-window))
+    (choose-completion)
+    (minibuffer-force-complete-and-exit)))
+
+(defvar crm-completion-table)
+
+;;;###autoload
+(defun prot-minibuffer-choose-completion-dwim ()
+  "Run `choose-completion' and append it to the minibuffer.
+Return point to the completions' buffer.  This is useful while
+interfacing with a `completing-read-multiple' prompt."
+  (interactive)
+  (when (and (derived-mode-p 'completion-list-mode)
+             (active-minibuffer-window))
+    (choose-completion)
+    (with-current-buffer (window-buffer (active-minibuffer-window))
+      (unless (eq (prot-minibuffer--completion-category) 'file)
+        (minibuffer-force-complete))
+      (when crm-completion-table
+        (insert ","))) ; FIXME 2021-04-02: assumes the `crm-separator' as constant
+    (switch-to-completions)))
 
 
 ;;;; Simple actions for the "*Completions*" buffer
