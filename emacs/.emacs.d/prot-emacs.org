@@ -780,14 +780,16 @@ All we need here is to just load the feature.
 :CUSTOM_ID: h:98d3abcc-f34e-4029-aabc-740f0b6421f8
 :END:
 
-The optimal way of using Emacs is through searching and narrowing
-selection candidates.  Spend less time worrying about where things are
-on the screen and more on how fast you can bring them into focus.  This
-is, of course, a matter of realigning priorities, as we still wish to
-control every aspect of the interface.
+Unlike the desktop metaphor, the optimal way to use Emacs is through
+searching and narrowing selection candidates.  Spend less time worrying
+about where things are on the screen and more on how fast you can bring
+them into focus.  This is, of course, a matter of realigning priorities,
+as we still wish to control every aspect of the interface, as we do
+elsewhere in this document.
 
 To get a sense of my current completion framework, watch my presentation
-on [[https://protesilaos.com/codelog/2021-01-06-emacs-default-completion/][Default Emacs completion and extras]] (2021-01-06).
+on [[https://protesilaos.com/codelog/2021-01-06-emacs-default-completion/][Default Emacs completion and extras]] (2021-01-06).  There have been
+some changes since then, but the core idea stands.
 
 *** Orderless completion style (and prot-orderless.el)
 :PROPERTIES:
@@ -812,25 +814,26 @@ That is defined in [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configu
 My =prot-orderless.el= contains the few minor tweaks I introduce (full
 code further below).
 
-1. It defines two style dispatchers. Those are single characters that
+1. It defines three style dispatchers. Those are single characters that
    acquire a special meaning while at the end of a given input:
 
    - With the equals sign appended to a sequence of characters, we call
      =prot-orderless-literal-dispatcher= which instructs orderless to match
      that sequence as a literal string.
 
-   - While a comma at the end of a string of characters reads that group
-     as an initialism, per =prot-orderless-initialism-dispatcher=.
+   - A comma at the end of a string of characters treats that group as
+     an initialism, per =prot-orderless-initialism-dispatcher=.
+
+   - While a tilde (=prot-orderless-flex-dispatcher=) makes it makes it a
+     flex match.
 
 2. =prot-orderless-with-styles= is a function that changes the default
    pattern-matching styles on a per-command basis.  The idea is to use a
-   flex style for most completion sessions, but prioritise an
+   certain style for most completion sessions, but prioritise an
    alternative when needed.  I use this with some Consult commands
-   ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
-
-   - The two customisation options =prot-orderless-default-styles= and
-     =prot-orderless-alternative-styles= are designed for this particular
-     task.
+   ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).  The
+   =prot-orderless-default-styles= and =prot-orderless-alternative-styles=
+   variables are designed for this particular task.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'prot-orderless
