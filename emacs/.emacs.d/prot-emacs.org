@@ -964,7 +964,7 @@ What my completion selection interface does in a nutshell:
   works while =file-name-shadow-mode= is enabled.  User of Icomplete will
   be familiar with this functionality.
 
-+ For file name completion, the backspace assumes a "do-what-I-mean"
++ For file name completion, the =M-backspace= exhibits a "do-what-I-mean"
   behaviour (=prot-minibuffer-backward-updir=): when point is after a
   character, the backspace will just delete it as usual, but when it
   finds a directory signified by =/= it will instead remove the entirety
@@ -1066,7 +1066,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
     (define-key map (kbd "<up>") #'prot-minibuffer-switch-to-completions-bottom)
     (define-key map (kbd "C-l") #'prot-minibuffer-toggle-completions)) ; "list" mnemonic
   (let ((map minibuffer-local-filename-completion-map))
-    (define-key map (kbd "<backspace>") #'prot-minibuffer-backward-updir))
+    (define-key map (kbd "<M-backspace>") #'prot-minibuffer-backward-updir))
   (add-hook 'minibuffer-setup-hook #'prot-minibuffer-mini-cursor)
   (add-hook 'completion-list-mode-hook #'prot-minibuffer-completions-cursor)
   (add-hook 'completion-list-mode-hook #'prot-minibuffer-hl-line)
