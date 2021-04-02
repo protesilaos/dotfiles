@@ -324,8 +324,7 @@ the minibuffer."
 (defun prot-embark-consult-preview-toggle ()
   "Toggle preview mode for Embark's Consult collections."
   (interactive)
-  (when (featurep 'embark-consult)
-    (require 'embark-consult)
+  (when (require 'embark-consult nil t)
     (if (and (bound-and-true-p embark-consult-preview-minor-mode)
              (derived-mode-p 'embark-collect-mode))
         (progn
