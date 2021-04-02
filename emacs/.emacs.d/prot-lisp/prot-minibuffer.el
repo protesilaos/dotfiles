@@ -469,6 +469,21 @@ minibuffer."
     (prot-minibuffer--run-after-abort #'prot-minibuffer--display-at-bottom buf-name)))
 
 ;;;###autoload
+(defun prot-minibuffer-force-complete-dwim ()
+  "Use `minibuffer-force-complete-and-exit' when appropriate.
+
+Respect the default of `minibuffer-complete-and-exit' when
+multiple completion candidates are available.  Otherwise apply
+`minibuffer-force-complete-and-exit'.  This is, for example,
+useful when typing foo only gives one foobar candidate, so this
+command will match it instead of accepting foo as-is."
+  (interactive)
+  (when (minibufferp)
+    (if (<= (length completion-all-sorted-completions) 1)
+        (minibuffer-force-complete-and-exit)
+      (minibuffer-complete-and-exit))))
+
+;;;###autoload
 (defun prot-minibuffer-choose-completion-exit ()
   "Run `choose-completion' in the Completions buffer and exit."
   (interactive)
