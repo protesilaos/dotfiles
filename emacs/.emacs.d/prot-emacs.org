@@ -592,8 +592,7 @@ Relevant blog posts of mine:
   (setq prot-fonts-typeface-sets-alist
         '((laptop 80 "Hack" normal "DejaVu Sans Condensed" normal)
           (desktop 100 "Hack" normal "Inter" normal)
-          (reader 135 "Iosevka Comfy" light "FiraGO" normal)
-          (presentation 150 "Iosevka Comfy" light "FiraGO" normal)))
+          (presentation 150 "Iosevka Comfy" light "Source Sans Pro" normal)))
   (setq prot-fonts-monospaced-list
         '("Hack" "DejaVu Sans Mono" "Iosevka Comfy" "Source Code Pro"
           "Ubuntu Mono" "Fantasque Sans Mono" "Fira Code" "Monoid"))
