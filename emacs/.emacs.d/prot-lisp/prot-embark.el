@@ -26,6 +26,17 @@
 ;;
 ;; Extensions to `embark.el' for my Emacs configuration:
 ;; <https://protesilaos.com/dotemacs/>.
+;;
+;; NOTE 2021-04-02: Everything pertaining to the completions' buffer has
+;; been moved to `prot-minibuffer.el'.  What I have here about that
+;; niche was useful because I was using Embark's live updating
+;; completions' collection buffer.  However, Emacs28 provides a
+;; one-column layout for the default Completions' buffer, so it is easy
+;; to move that code there and adapt it to work without the otherwise
+;; minor Embark extras.
+;;
+;; As such, most of this file's contents are kept here for posterity
+;; and/or are subject to review/removal.
 
 ;;; Code:
 

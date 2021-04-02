@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -31,6 +31,8 @@
 
 ;;;; General utilities
 
+(require 'prot-common)
+
 (defgroup prot-minibuffer ()
   "Extensions for the minibuffer."
   :group 'minibuffer)
@@ -49,20 +51,44 @@ Refer to the source of `prot-minibuffer-mini-cursor' and
   :group 'prot-minibuffer
   :type 'boolean)
 
+(defcustom prot-minibuffer-remove-shadowed-file-names nil
+  "Delete shadowed parts of file names.
+
+For example, if the user types ~/ after a long path name,
+everything preceding the ~/ is removed so the interactive
+selection process starts again from the user's $HOME.
+
+Only works when variable `file-name-shadow-mode' is non-nil."
+  :type 'boolean
+  :group 'prot-minibuffer)
+
 ;;;; Minibuffer behaviour
 
 ;; Thanks to Omar Antolín Camarena for providing the messageless and
 ;; stealthily.  Source: <https://github.com/oantolin/emacs-config>.
 (defun prot-minibuffer--messageless (fn &rest args)
   "Set `minibuffer-message-timeout' to 0.
-Meant as advice for minibuffer completion FN with ARGS."
+Meant as advice around minibuffer completion FN with ARGS."
   (let ((minibuffer-message-timeout 0))
     (apply fn args)))
 
-(dolist (fn '(minibuffer-force-complete-and-exit
+(dolist (fn '(exit-minibuffer
+              choose-completion
+              minibuffer-force-complete
               minibuffer-complete-and-exit
-              exit-minibuffer))
+              minibuffer-force-complete-and-exit))
   (advice-add fn :around #'prot-minibuffer--messageless))
+
+;; Adapted from Omar Antolín Camarena's live-completions library:
+;; <https://github.com/oantolin/live-completions>.
+(defun prot-minibuffer--honor-inhibit-message (fn &rest args)
+  "Skip applying FN to ARGS if `inhibit-message' is t.
+Meant as `:around' advice for `minibuffer-message', which does
+not honor minibuffer message."
+  (unless inhibit-message
+    (apply fn args)))
+
+(advice-add #'minibuffer-message :around #'prot-minibuffer--honor-inhibit-message)
 
 ;; Note that this solves bug#45686 and is only considered a temporary
 ;; measure: <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=45686>
@@ -74,6 +100,49 @@ ARGS."
     (apply fn args)))
 
 (advice-add 'minibuf-eldef-setup-minibuffer :around #'prot-minibuffer--stealthily)
+
+;; Copied from icomplete.el
+(defun prot-minibuffer--field-beg ()
+  "Determine beginning of completion."
+  (if (window-minibuffer-p)
+      (minibuffer-prompt-end)
+    (nth 0 completion-in-region--data)))
+
+;; Copied from icomplete.el
+(defun prot-minibuffer--field-end ()
+  "Determine end of completion."
+  (if (window-minibuffer-p)
+      (point-max)
+    (nth 1 completion-in-region--data)))
+
+;; Copied from icomplete.el
+(defun prot-minibuffer--completion-category ()
+  "Return completion category."
+  (let* ((beg (prot-minibuffer--field-beg))
+         (md (completion--field-metadata beg)))
+    (alist-get 'category (cdr md))))
+
+;; Adapted from icomplete.el
+(defun prot-minibuffer--shadow-filenames (&rest _)
+  "Hide shadowed file names."
+  (let ((saved-point (point)))
+    (when (and
+           prot-minibuffer-remove-shadowed-file-names
+           (eq (prot-minibuffer--completion-category) 'file)
+           rfn-eshadow-overlay (overlay-buffer rfn-eshadow-overlay)
+           (eq this-command 'self-insert-command)
+           (= saved-point (prot-minibuffer--field-end))
+           (or (>= (- (point) (overlay-end rfn-eshadow-overlay)) 2)
+               (eq ?/ (char-before (- (point) 2)))))
+      (delete-region (overlay-start rfn-eshadow-overlay)
+                     (overlay-end rfn-eshadow-overlay)))))
+
+(defun prot-minibuffer--setup-shadow-files ()
+  "Set up shadowed file name deletion.
+To be assigned to `minibuffer-setup-hook'."
+  (add-hook 'after-change-functions #'prot-minibuffer--shadow-filenames nil t))
+
+(add-hook 'minibuffer-setup-hook #'prot-minibuffer--setup-shadow-files)
 
 ;;;; Cursor appearance
 
@@ -95,14 +164,14 @@ If it is a list, this actually returns its car."
 
 ;;;###autoload
 (defun prot-minibuffer-completions-cursor ()
-  "Local value of `cursor-type' for `completion-setup-hook'."
+  "Local value of `cursor-type' for `completion-list-mode-hook'."
   (when prot-minibuffer-mini-cursors
     (pcase (prot-minibuffer--cursor-type)
       ('hbar (setq-local cursor-type 'box))
       ('bar (setq-local cursor-type '(hbar . 8)))
       (_  (setq-local cursor-type '(bar . 3))))))
 
-;;;; Minibuffer interactions
+;;;; Minibuffer and interactions
 
 ;;;###autoload
 (defun prot-minibuffer-focus-mini ()
@@ -141,67 +210,294 @@ by `prot-minibuffer-completion-windows-regexp'."
           ((and completions (not (eq (selected-window) completions)))
            (select-window completions nil)))))
 
-;;;; M-X utility (M-x limited to buffer's major and minor modes)
+;; Adaptation of `icomplete-fido-backward-updir'.
+;;;###autoload
+(defun prot-minibuffer-backward-updir ()
+  "Delete char before or go up directory.
+Must be bound to `minibuffer-local-filename-completion-map'."
+  (interactive)
+  (if (and (eq (char-before) ?/)
+           (eq (prot-minibuffer--completion-category) 'file))
+      (save-excursion
+        (goto-char (1- (point)))
+        (when (search-backward "/" (point-min) t)
+          (delete-region (1+ (point)) (point-max))))
+    (call-interactively 'backward-delete-char)))
 
-;; UPDATE 2020-12-23: A better version of this is now part of Consult.
-;; I am using that one instead, but keeping the code here:
-;; <https://github.com/minad/consult>.
+;;;; Minibuffer and Completions' buffer intersection
+;; NOTE 2021-04-02: The bulk of this code resided in `prot-embark.el'
+;; because I was using Embark's live-updating completions' collection
+;; buffer.  However, Emacs28 provides a one-column layout for the
+;; default Completions' buffer, so it is easy to bring this here and
+;; adapt it to work without the otherwise minor Embark extras.
 
-;; Adapted from the smex.el library of Cornelius Mika:
-;; <https://github.com/nonsequitur/smex>.
+(defface prot-minibuffer-hl-line
+  '((default :extend t)
+    (((class color) (min-colors 88) (background light))
+     :background "#b0d8ff" :foreground "#000000")
+    (((class color) (min-colors 88) (background dark))
+     :background "#103265" :foreground "#ffffff")
+    (t :inherit (font-lock-string-face elfeed-search-title-face)))
+  "Face for current line in the completions' buffer."
+  :group 'prot-minibuffer)
 
-(defun prot-minibuffer--extract-commands (mode)
-  "Extract commands from MODE."
-  (let ((commands)
-        (library-path (symbol-file mode))
-        (mode-name (substring (symbol-name major-mode) 0 -5)))
-    (dolist (feature load-history)
-      (let ((feature-path (car feature)))
-        (when (and feature-path
-                   (or (equal feature-path library-path)
-                       (string-match mode-name (file-name-nondirectory
-                                                feature-path))))
-          (dolist (item (cdr feature))
-            (when (and (listp item) (eq 'defun (car item)))
-              (let ((function (cdr item)))
-                (when (commandp function)
-                  (setq commands (append commands (list function))))))))))
-    commands))
+(defface prot-minibuffer-line-number
+  '((default :inherit default)
+    (((class color) (min-colors 88) (background light))
+     :background "#f2eff3" :foreground "#252525")
+    (((class color) (min-colors 88) (background dark))
+     :background "#151823" :foreground "#dddddd")
+    (t :inverse-video t))
+  "Face for line numbers in the completions' buffer."
+  :group 'prot-minibuffer)
 
-(autoload 'prot-common-minor-modes-active "prot-common")
+(defface prot-minibuffer-line-number-current-line
+  '((default :inherit default)
+    (((class color) (min-colors 88) (background light))
+     :background "#8ac7ff" :foreground "#000000")
+    (((class color) (min-colors 88) (background dark))
+     :background "#142a79" :foreground "#ffffff")
+    (t :inverse-video t))
+  "Face for current line number in the completions' buffer."
+  :group 'prot-minibuffer)
 
-(defun prot-minibuffer--extract-commands-minor ()
-  "Extract commands from active minor modes."
-  (let ((modes))
-    (dolist (mode (prot-common-minor-modes-active))
-      (push (prot-minibuffer--extract-commands mode) modes))
-    modes))
-
-(defun prot-minibuffer--commands ()
-  "Merge and clean list of commands."
-  (delete-dups
-   (append (prot-minibuffer--extract-commands major-mode)
-           (prot-minibuffer--extract-commands-minor))))
+(autoload 'display-line-numbers-mode "display-line-numbers")
+(autoload 'face-remap-remove-relative "face-remap")
 
 ;;;###autoload
-(defun prot-minibuffer-mode-commands ()
-  "Run commands from current major mode and active minor modes."
+(defun prot-minibuffer-display-line-numbers ()
+  "Set up line numbers for the completions' buffer.
+Add this to `completion-list-mode-hook'."
+  (if (derived-mode-p 'completion-list-mode)
+      (progn
+        (face-remap-add-relative 'line-number 'prot-minibuffer-line-number)
+        (face-remap-add-relative 'line-number-current-line
+                                 'prot-minibuffer-line-number-current-line)
+        (display-line-numbers-mode 1))
+    (display-line-numbers-mode -1)
+    ;; TODO: can we avoid `face-remap-add-relative' and just use the
+    ;; value it previously returned?
+    (face-remap-remove-relative
+     (face-remap-add-relative 'line-number
+                              'prot-minibuffer-line-number))
+    (face-remap-remove-relative
+     (face-remap-add-relative 'line-number-current-line
+                              'prot-minibuffer-line-number-current-line))))
+
+;;;###autoload
+(defun prot-minibuffer-hl-line ()
+  "Set up line highlighting for the completions' buffer.
+Add this to `completion-list-mode-hook'."
+  (if (derived-mode-p 'completion-list-mode)
+      (progn
+        (face-remap-add-relative 'hl-line 'prot-minibuffer-hl-line)
+        (hl-line-mode 1))
+    (hl-line-mode -1)
+    ;; TODO: same as above with regard to `face-remap-add-relative'.
+    (face-remap-remove-relative
+     (face-remap-add-relative 'hl-line 'prot-minibuffer-hl-line))))
+
+(defun prot-minibuffer--clean-completions ()
+  "Keep only completion candidates in the Completions."
+  (with-current-buffer standard-output
+    (let ((inhibit-read-only t))
+      (goto-char (point-min))
+      (delete-region (point-at-bol) (1+ (point-at-eol)))
+      ;; NOTE 2021-04-01: This hack is needed because when we delete the
+      ;; first line, we are somehow messing up the completion candidate
+      ;; that follows it.  More specifically, the first completion is
+      ;; not recognised.  I cannot determine why that happens.
+      (insert " ")
+      (put-text-property (point-at-bol) (point) 'invisible t))))
+
+(add-hook 'completion-setup-hook #'prot-minibuffer--clean-completions)
+
+(defun prot-minibuffer--fit-completions-window ()
+  "Fit Completions' buffer to its window."
+  (fit-window-to-buffer (get-buffer-window "*Completions*")
+                        (floor (frame-height) 2) 1))
+
+;; Adapted from Omar Antolín Camarena's live-completions library:
+;; <https://github.com/oantolin/live-completions>.
+(defun prot-minibuffer--live-completions (&rest _)
+  "Update the *Completions* buffer.
+Meant to be added to `after-change-functions'."
+  (when (minibufferp) ; skip if we've exited already
+    (let ((while-no-input-ignore-events '(selection-request)))
+      (while-no-input
+        (condition-case nil
+            (save-match-data
+              (save-excursion
+                (goto-char (point-max))
+                (let ((inhibit-message t)
+                      ;; don't ring the bell in `minibuffer-completion-help'
+                      ;; when <= 1 completion exists.
+                      (ring-bell-function #'ignore))
+                  (minibuffer-completion-help)
+                  (prot-minibuffer--fit-completions-window))))
+          (quit (abort-recursive-edit)))))))
+
+(defun prot-minibuffer--setup-completions ()
+  "Set up the completions buffer."
+  (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t))
+
+(add-hook 'minibuffer-setup-hook #'prot-minibuffer--setup-completions)
+
+;;;###autoload
+(defun prot-minibuffer-toggle-completions ()
+  "Toggle the presentation of the completions' buffer."
   (interactive)
-  (let ((commands (prot-minibuffer--commands)))
-    (command-execute (intern (completing-read "M-X: " commands)))))
+  (if (get-buffer-window "*Completions*" 0)
+      (minibuffer-hide-completions)
+    (minibuffer-completion-help)))
+
+;;;###autoload
+(defun prot-minibuffer-keyboard-quit-dwim ()
+  "Control the exit behaviour for completions' buffers.
+
+If in a completions' buffer and unless the region is active, run
+`abort-recursive-edit'.  Otherwise run `keyboard-quit'.
+
+If the region is active, deactivate it.  A second invocation of
+this command is then required to abort the session."
+  (interactive)
+  (when (derived-mode-p 'completion-list-mode) ; TODO: account for `prot-minibuffer-save-completions' case
+    (if (use-region-p)
+        (keyboard-quit)
+      (abort-recursive-edit))))
+
+(defun prot-minibuffer--switch-to-completions ()
+  "Subroutine for switching to the completions' buffer."
+  (unless (get-buffer-window "*Completions*" 0)
+    (minibuffer-completion-help))
+  (switch-to-completions)
+  (prot-minibuffer--fit-completions-window))
+
+;;;###autoload
+(defun prot-minibuffer-switch-to-completions-top ()
+  "Switch to the top of the completions' buffer.
+Meant to be bound in `minibuffer-local-completion-map'."
+  (interactive)
+  (prot-minibuffer--switch-to-completions)
+  (goto-char (point-min))
+  (next-completion 1))
+
+;;;###autoload
+(defun prot-minibuffer-switch-to-completions-bottom ()
+  "Switch to the bottom of the completions' buffer.
+Meant to be bound in `minibuffer-local-completion-map'."
+  (interactive)
+  (prot-minibuffer--switch-to-completions)
+  (goto-char (point-max))
+  (next-completion -1)
+  (goto-char (point-at-bol))
+  (recenter
+   (- -1
+      (min (max 0 scroll-margin)
+           (truncate (/ (window-body-height) 4.0))))
+      t))
+
+;;;###autoload
+(defun prot-minibuffer-next-completion-or-mini (&optional arg)
+  "Move to the next completion or switch to the minibuffer.
+This performs a regular motion for optional ARG lines, but when
+point can no longer move in that direction it switches to the
+minibuffer."
+  (interactive "p")
+  (cond
+   ((and (bobp)   ; see hack in `prot-minibuffer--clean-completions'
+         (get-text-property (point) 'invisible))
+    (forward-char 1)
+    (next-completion (or arg 1)))
+   ((or (eobp)
+        (eq (point-max)
+            (save-excursion (forward-line 1) (point))))
+    (prot-minibuffer-focus-mini))
+   (t
+    (next-completion (or arg 1))))
+  (setq this-command 'next-line))
+
+;;;###autoload
+(defun prot-minibuffer-previous-completion-or-mini (&optional arg)
+  "Move to the next completion or switch to the minibuffer.
+This performs a regular motion for optional ARG lines, but when
+point can no longer move in that direction it switches to the
+minibuffer."
+  (interactive "p")
+  (let ((num (prot-common-number-negative arg)))
+    (if (or (bobp)
+            (eq (point) (1+ (point-min)))) ; see hack in `prot-minibuffer--clean-completions'
+        (prot-minibuffer-focus-mini)
+      (next-completion (or num 1)))))
+
+;; This design is adapted from Omar Antolín Camarena's Embark:
+;; <https://github.com/oantolin/embark>.  We need to call the function
+;; after aborting the minibuffer, otherwise we cannot get the new
+;; window.
+(defun prot-minibuffer--run-after-abort (fn &rest args)
+  "Call FN with rest ARGS while aborting recursive edit."
+  (apply #'run-at-time 0 nil fn args)
+  (abort-recursive-edit))
+
+(defun prot-minibuffer--display-at-bottom (buf-name)
+  "Display BUF-NAME in bottom window."
+  (display-buffer-at-bottom
+   (get-buffer buf-name)
+   '((window-height . shrink-window-if-larger-than-buffer))))
+
+;; NOTE 2021-04-02: I wrote this because when I use Embark's snapshot
+;; facility on a Completions buffer I do not get annotations from
+;; Marginalia.  Whereas cloning the buffer that already displays them
+;; does the trick.
+;;
+;; FIXME 2021-04-02: Unlike Embark's snapshots, we do not retain the
+;; default action for the candidates.  The solution is to make Embark
+;; capture annotations, so that we do not maintain our own hacks here.
+(defun prot-minibuffer-save-completions ()
+  "Save completions in a bespoke buffer."
+  (interactive)
+  (let* ((completion (when (active-minibuffer-window)
+                       (save-excursion
+                         (prot-minibuffer-focus-mini)
+                         (buffer-substring-no-properties
+                          (minibuffer-prompt-end) (point-max)))))
+         (buf-name (format "*%s # Completions*" completion)))
+    (when (get-buffer buf-name)
+      (kill-buffer buf-name))
+    (with-current-buffer "*Completions*"
+      (clone-buffer buf-name))
+    (prot-minibuffer--run-after-abort #'prot-minibuffer--display-at-bottom buf-name)))
+
+;; ;;;###autoload
+;; (defun prot-minibuffer-choose-completion-dwim ()
+
 
 ;;;; Simple actions for the "*Completions*" buffer
 
 ;; DEPRECATED: I just use Embark for such tasks, but am keeping this
 ;; around in case I ever need it.
 
-(defun prot-minibuffer-completions-kill-save-symbol ()
-  "Add `symbol-at-point' to the kill ring.
-
-Intended for use in the \\*Completions\\* buffer.  Bind this to a
-key in `completion-list-mode-map'."
-  (interactive)
-  (kill-new (thing-at-point 'symbol)))
+;; Adapted from `choose-completion'.
+(defun prot-minibuffer--completion-at-point ()
+  "Find completion candidate at point in the Completions buffer."
+  (when (derived-mode-p 'completion-list-mode)
+    (let (beg end)
+      (cond
+       ((and (not (eobp)) (get-text-property (point) 'mouse-face))
+        (setq end (point) beg (1+ (point))))
+       ((and (not (bobp))
+             (get-text-property (1- (point)) 'mouse-face))
+        (setq end (1- (point)) beg (point)))
+       ((and (bobp)   ; see hack in `prot-minibuffer--clean-completions'
+             (get-text-property (point) 'invisible))
+        (save-excursion
+          (forward-char 1)
+          (setq end (point) beg (1+ (point)))))
+       (t (user-error "No completion here")))
+      (setq beg (previous-single-property-change beg 'mouse-face))
+      (setq end (or (next-single-property-change end 'mouse-face)
+                    (point-max)))
+      (buffer-substring-no-properties beg end))))
 
 (defmacro prot-minibuffer-completions-buffer-act (name doc &rest body)
   "Produce NAME function with DOC and rest BODY.
@@ -210,13 +506,10 @@ Completions' buffer."
   `(defun ,name ()
      ,doc
      (interactive)
-     (let ((completions-window (get-buffer-window "*Completions*"))
-           (completions-buffer (get-buffer "*Completions*"))
-           (symbol (thing-at-point 'symbol)))
-       (if (window-live-p completions-window)
-           (with-current-buffer completions-buffer
-             ,@body)
-         (user-error "No live window with Completions")))))
+     (let ((completions-buffer (get-buffer "*Completions*"))
+           (symbol (prot-minibuffer--completion-at-point)))
+       (with-current-buffer completions-buffer
+         ,@body))))
 
 (prot-minibuffer-completions-buffer-act
  prot-minibuffer-completions-kill-symbol-at-point
