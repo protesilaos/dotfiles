@@ -56,6 +56,16 @@
     (error "%s is not a valid positive number" n)))
 
 ;;;###autoload
+(defun prot-common-empty-buffer-p ()
+  "Test whether the buffer is empty."
+  (or (= (point-min) (point-max))
+      (save-excursion
+        (goto-char (point-min))
+        (while (and (looking-at "^\\([a-zA-Z]+: ?\\)?$")
+                    (zerop (forward-line 1))))
+        (eobp))))
+
+;;;###autoload
 (defun prot-common-minor-modes-active ()
   "Return list of active minor modes for the current buffer."
   (let ((active-modes))
