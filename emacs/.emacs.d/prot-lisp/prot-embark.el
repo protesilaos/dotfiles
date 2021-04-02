@@ -134,7 +134,7 @@ Add this to `embark-collect-mode-hook'."
 
 ;;;###autoload
 (defun prot-embark-hl-line ()
-  "Set up line numbers for live Embark collect buffers.
+  "Set up line highlighting for live Embark collect buffers.
 Add this to `embark-collect-mode-hook'."
   (if (prot-embark--live-completions-p)
       (progn
