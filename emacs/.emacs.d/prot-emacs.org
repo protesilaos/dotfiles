@@ -996,20 +996,6 @@ What my completion selection interface does in a nutshell:
   This is the best =completing-read-multiple= experience I have had to
   date.
 
-+ The original behaviour of =RET= (=minibuffer-complete-and-exit=) in the
-  minibuffer is to complete the input or, if that is not possible, to
-  accept it as-is when that is appropriate (i.e. when there is no
-  =REQUIRE-MATCH= argument passed to the completion prompt).  In practice,
-  this works well except when we only have one candidate left.  Say you
-  are switching buffers and have typed =foo= while the single candidate is
-  =foobar=.  Using =minibuffer-complete-and-exit= in that case will put you
-  in an empty buffer named =foo=, which is not what you wanted (if you
-  did, use =exit-minibuffer=, i.e. =C-j=).  Whereas my command that I bind
-  to =RET= (=prot-minibuffer-force-complete-dwim=) in the minibuffer will
-  behave as usual in all regular scenaria, but will also do the right
-  thing when faced with a single completion candidate.  Simple and
-  effective!
-
 Finally, here is an overview of the settings covered herein:
 
 + Completion styles :: I mostly rely on [[#h:7b1374dd-6b1f-4548-8fbf-1034230c80e0][the Orderless completion style]].
@@ -1073,7 +1059,6 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
     (define-key map (kbd "i") #'prot-minibuffer-completions-insert-symbol-at-point)
     (define-key map (kbd "j") #'prot-minibuffer-completions-insert-symbol-at-point-exit))
   (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "<return>") #'prot-minibuffer-force-complete-dwim)
     (define-key map (kbd "C-M-s") #'prot-minibuffer-save-completions)
     (define-key map (kbd "C-n") #'prot-minibuffer-switch-to-completions-top)
     (define-key map (kbd "<down>") #'prot-minibuffer-switch-to-completions-top)
