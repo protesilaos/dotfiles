@@ -1107,6 +1107,8 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
 
+  (add-hook 'completion-list-mode-hook (lambda () (toggle-truncate-lines t)))
+
   ;; Defines, among others, aliases for common minibuffer commands to
   ;; Super-KEY.  Normally these should go in individual package
   ;; configurations, but their grouping here makes things easier to
