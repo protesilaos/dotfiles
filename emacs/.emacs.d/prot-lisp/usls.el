@@ -911,7 +911,7 @@ directory will be directly displayed instead."
      (1 'usls-header-data-key)
      (2 'usls-header-data-key)
      (3 'usls-header-data-secondary))
-    ("^\\(-\\{24\\}\\|[*\s]\\{5\\}\\)$"
+    ("^\\(-\\{26\\}\\|[*\s]\\{5\\}\\)$"
      (1 'usls-section-delimiter))
     ("\\(\\^\\)\\([0-9_]\\{15\\}\\)"
      (1 'escape-glyph)
