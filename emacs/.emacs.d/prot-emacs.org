@@ -3139,7 +3139,7 @@ the subsequent code block.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'usls
-  (setq usls-directory "~/Documents/notes/")
+  (setq usls-directory (expand-file-name "~/Documents/notes/"))
   (setq usls-known-categories '("economics" "philosophy" "politics"))
   (setq usls-file-type-extension ".txt") ; {.txt,.org,.md}
   (setq usls-subdir-support nil)
