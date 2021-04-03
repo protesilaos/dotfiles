@@ -513,7 +513,6 @@ interfacing with a `completing-read-multiple' prompt."
         (insert ","))) ; FIXME 2021-04-02: assumes the `crm-separator' as constant
     (switch-to-completions)))
 
-
 ;;;; Simple actions for the "*Completions*" buffer
 
 ;; DEPRECATED: I just use Embark for such tasks, but am keeping this

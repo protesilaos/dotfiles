@@ -193,6 +193,16 @@ constructs.  A negative number counts backwards."
     (insert-pair n left right)))
 
 ;;;###autoload
+(defun prot-simple-delete-pair-dwim ()
+  "Delete pair following or preceding point.
+For Emacs version 28 or higher, the feedback's delay is
+controlled by `delete-pair-blink-delay'."
+  (interactive)
+  (if (eq (point) (cdr (bounds-of-thing-at-point 'sexp)))
+      (delete-pair -1)
+    (delete-pair 1)))
+
+;;;###autoload
 (defun prot-simple-insert-date (&optional arg)
   "Insert the current date as `prot-simple-date-specifier'.
 
