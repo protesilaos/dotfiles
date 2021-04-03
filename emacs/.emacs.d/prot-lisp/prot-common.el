@@ -75,6 +75,12 @@
           minor-mode-list)
     active-modes))
 
+;;;###autoload
+(defun prot-common-truncate-lines-silently ()
+  "Toggle line truncation without printing messages."
+  (let ((inhibit-message t))
+    (toggle-truncate-lines t)))
+
 ;; Thanks to Omar Antolín Camarena for providing this snippet!
 ;;;###autoload
 (defun prot-common-completion-table (category candidates)

@@ -1109,7 +1109,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
 
-  (add-hook 'completion-list-mode-hook (lambda () (toggle-truncate-lines t)))
+  (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
 
   ;; Defines, among others, aliases for common minibuffer commands to
   ;; Super-KEY.  Normally these should go in individual package
@@ -2065,7 +2065,7 @@ package configurations).
 (prot-emacs-builtin-package 'replace
   (setq list-matching-lines-jump-to-current-line t)
   (add-hook 'occur-mode-hook #'hl-line-mode)
-  (add-hook 'occur-mode-hook (lambda () (toggle-truncate-lines t)))
+  (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
   (define-key global-map (kbd "M-s M-o") #'multi-occur)
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
 
