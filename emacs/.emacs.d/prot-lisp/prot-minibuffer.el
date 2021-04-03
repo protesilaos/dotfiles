@@ -62,6 +62,14 @@ Only works when variable `file-name-shadow-mode' is non-nil."
   :type 'boolean
   :group 'prot-minibuffer)
 
+(defcustom prot-minibuffer-minimum-input 3
+  "Live update completions when input is >= N.
+
+Setting this to a value greater than 1 can help reduce the total
+number of candidates that are being computed."
+  :type 'integer
+  :group 'prot-minibuffer)
+
 ;;;; Minibuffer behaviour
 
 ;; Thanks to Omar Antolín Camarena for providing the messageless and
@@ -317,6 +325,14 @@ Add this to `completion-list-mode-hook'."
   (fit-window-to-buffer (get-buffer-window "*Completions*")
                         (floor (frame-height) 2) 1))
 
+(defun prot-minibuffer--input-string ()
+  "Return the contents of the minibuffer as a string."
+  (buffer-substring-no-properties (minibuffer-prompt-end) (point-max)))
+
+(defun prot-minibuffer--minimum-input ()
+  "Test for minimum requisite input for live completions."
+  (>= (length (prot-minibuffer--input-string)) prot-minibuffer-minimum-input))
+
 ;; Adapted from Omar Antolín Camarena's live-completions library:
 ;; <https://github.com/oantolin/live-completions>.
 (defun prot-minibuffer--live-completions (&rest _)
@@ -325,17 +341,19 @@ Meant to be added to `after-change-functions'."
   (when (minibufferp) ; skip if we've exited already
     (let ((while-no-input-ignore-events '(selection-request)))
       (while-no-input
-        (condition-case nil
-            (save-match-data
-              (save-excursion
-                (goto-char (point-max))
-                (let ((inhibit-message t)
-                      ;; don't ring the bell in `minibuffer-completion-help'
-                      ;; when <= 1 completion exists.
-                      (ring-bell-function #'ignore))
-                  (minibuffer-completion-help)
-                  (prot-minibuffer--fit-completions-window))))
-          (quit (abort-recursive-edit)))))))
+        (if (prot-minibuffer--minimum-input)
+            (condition-case nil
+                (save-match-data
+                  (save-excursion
+                    (goto-char (point-max))
+                    (let ((inhibit-message t)
+                          ;; don't ring the bell in `minibuffer-completion-help'
+                          ;; when <= 1 completion exists.
+                          (ring-bell-function #'ignore))
+                      (minibuffer-completion-help)
+                      (prot-minibuffer--fit-completions-window))))
+              (quit (abort-recursive-edit)))
+          (minibuffer-hide-completions))))))
 
 (defun prot-minibuffer--setup-completions ()
   "Set up the completions buffer."
@@ -459,11 +477,11 @@ minibuffer."
   (let* ((completion (when (active-minibuffer-window)
                        (save-excursion
                          (prot-minibuffer-focus-mini)
-                         (buffer-substring-no-properties
-                          (minibuffer-prompt-end) (point-max)))))
+                         (prot-minibuffer--input-string))))
          (buf-name (format "*%s # Completions*" completion)))
     (when (get-buffer buf-name)
       (kill-buffer buf-name))
+    (minibuffer-completion-help)
     (with-current-buffer "*Completions*"
       (clone-buffer buf-name))
     (prot-minibuffer--run-after-abort #'prot-minibuffer--display-at-bottom buf-name)))

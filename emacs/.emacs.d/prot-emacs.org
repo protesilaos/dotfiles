@@ -936,7 +936,9 @@ What my completion selection interface does in a nutshell:
   [[#h:09d657c7-eb4d-4fe3-987a-4a2cf419bb40][Completion annotations (marginalia)]]).  This only happens after some
   input has been provided, otherwise all you see is an empty minibuffer
   (though =prot-minibuffer-toggle-completions= or any of the cycling
-  motions will display the candidates).
+  motions will display the candidates).  The length of minimum input
+  that triggers live completions when met or hides them when unmatched
+  is controlled by the variable =prot-minibuffer-minimum-input=.
 
 + Using up/down motions or =C-n= and =C-p=, we can seamlessly switch from
   the minibuffer to the completions and vice versa by treating the two
@@ -1038,6 +1040,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
 (prot-emacs-builtin-package 'prot-minibuffer
   (setq-default prot-minibuffer-mini-cursors t) ; also check `prot-cursor.el'
   (setq prot-minibuffer-remove-shadowed-file-names t)
+  (setq prot-minibuffer-minimum-input 3)
 
   (define-key global-map (kbd "s-v") #'prot-minibuffer-focus-mini-or-completions)
   (let ((map completion-list-mode-map))
