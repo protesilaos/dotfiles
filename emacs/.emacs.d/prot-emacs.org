@@ -5897,6 +5897,13 @@ Some final tips:
   re-use the existing one.  With =M-RET= over a link in an EWW buffer, you
   can do the same.
 
++ When point is over an image, the =shr-image-map= gets activated.  This
+  allows you to run commands such as =image-increase-size=, bound to =+=,
+  and =image-decrease-size= on =-=.  This means that you can always view an
+  image at an appropriate size, regardless of whether its initial
+  dimensions were affected by =shr-max-image-proportion= and the size of
+  the window holding the EWW buffer.
+
 Also watch [[https://protesilaos.com/codelog/2021-03-25-emacs-eww/][EWW and my extras]] (2021-03-25) for a video demonstration of
 some of the above.
 
