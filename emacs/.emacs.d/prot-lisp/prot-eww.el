@@ -35,7 +35,7 @@
 (require 'prot-pulse)
 
 (defgroup prot-eww ()
-  "Tweaks for eww appearance."
+  "Tweaks for EWW."
   :group 'eww)
 
 (defcustom prot-eww-shell-output "*prot-eww-shell-output*"
