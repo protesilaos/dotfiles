@@ -1062,7 +1062,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (setq read-file-name-completion-ignore-case t)
 
   (setq enable-recursive-minibuffers t)
-  (setq read-answer-short t)
+  (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
   (setq resize-mini-windows t)
   (setq minibuffer-eldef-shorten-default t)
 
