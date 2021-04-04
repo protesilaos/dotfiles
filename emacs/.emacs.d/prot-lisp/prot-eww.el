@@ -38,11 +38,6 @@
   "Tweaks for EWW."
   :group 'eww)
 
-(defcustom prot-eww-shell-output "*prot-eww-shell-output*"
-  "Name of buffer for EWW-related shell output."
-  :type 'string
-  :group 'prot-eww)
-
 ;;;; Basic setup
 
 (autoload 'ffap-url-at-point "ffap")
