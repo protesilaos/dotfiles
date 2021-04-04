@@ -51,11 +51,11 @@
 
 (defvar modus-themes-exporter-templates-alist
   '(("alacritty" . modus-themes-exporter-alacritty)
-    ("urxvt"   . modus-themes-exporter-urxvt)
-    ("vim"     . modus-themes-exporter-vim)
-    ("xcolors" . modus-themes-exporter-xcolors)
-    ("xfce"    . modus-themes-exporter-xfce)
-    ("xterm"   . modus-themes-exporter-xterm)))
+    ("urxvt"     . modus-themes-exporter-urxvt)
+    ("vim"       . modus-themes-exporter-vim)
+    ("xcolors"   . modus-themes-exporter-xcolors)
+    ("xfce"      . modus-themes-exporter-xfce)
+    ("xterm"     . modus-themes-exporter-xterm)))
 
 (defun modus-themes-exporter-xcolors ()
   "Template for generic Xcolors."
