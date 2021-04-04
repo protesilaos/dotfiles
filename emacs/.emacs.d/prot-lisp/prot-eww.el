@@ -40,8 +40,6 @@
 
 ;;;; Basic setup
 
-(autoload 'ffap-url-at-point "ffap")
-
 (defun prot-eww--rename-buffer ()
   "Rename EWW buffer using page title or URL.
 To be used by `eww-after-render-hook'."
