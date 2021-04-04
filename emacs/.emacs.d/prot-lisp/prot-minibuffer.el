@@ -70,6 +70,18 @@ number of candidates that are being computed."
   :type 'integer
   :group 'prot-minibuffer)
 
+(defcustom prot-minibuffer-completion-blocklist nil
+  "Commands that do not do live updating of completions.
+
+A less drastic measure is to set `prot-minibuffer-minimum-input'
+to an appropriate value.
+
+The Completions' buffer can still be accessed with commands that
+put it in a window (e.g. `prot-minibuffer-toggle-completions',
+`prot-minibuffer-switch-to-completions-top')."
+  :type '(repeat symbol)
+  :group 'prot-minibuffer)
+
 ;;;; Minibuffer behaviour
 
 ;; Thanks to Omar Antolín Camarena for providing the messageless and
@@ -357,7 +369,8 @@ Meant to be added to `after-change-functions'."
 
 (defun prot-minibuffer--setup-completions ()
   "Set up the completions buffer."
-  (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t))
+  (unless (member this-command prot-minibuffer-completion-blocklist)
+    (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t)))
 
 (add-hook 'minibuffer-setup-hook #'prot-minibuffer--setup-completions)
 
