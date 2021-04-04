@@ -496,94 +496,105 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 :PROPERTIES:
 :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
 :END:
-
-Any font I choose must support Latin and Greek character sets, be
-readable at both small and large sizes, preferably offer roman and
-italic variants with corresponding bold weights, not be too thin, not
-have too short of an x-height, not be too wide, not have a name that
-directly advertises some brand, not try to call too much attention to
-its details, be equally readable against light and dark backdrops, and
-use the =*.ttf= spec which yields the best results on GNU/Linux.
-
-While there are many good free/libre options available, only a handful
-of them cover my fairly demanding needs.  Some look good at large point
-sizes.  Others lack Greek characters.  While a few of them are virtually
-unreadable when cast on a light background (bitmap fonts in particular).
-The section on [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]] defines typefaces
-that I consider suitable for my needs.
-
-Lastly, note that on a modern GNU/Linux system that uses the =fontconfig=
-library, per-user fonts are stored in =~/.local/share/fonts=.
-
 *** Font configurations (prot-fonts.el)
 :PROPERTIES:
 :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
 :END:
 
-Moving on to my configurations, =prot-fonts.el= is a library I have
-written which contains lots of extras pertaining to my typeface
-configurations and preferences.
+Any font I choose must conform with the following:
 
-Some highlights:
++ support Latin and Greek character sets;
++ be readable at small sizes and look okay at large sizes;
++ offer both roman and italic variants, preferably with corresponding
+  bold weights;
++ not be too thin or at least have multiple weights from which to choose
+  from;
++ not have too short of an x-height, which makes combinations of text
+  and numbers or delimiters somewhat unbalanced;
++ not have a name that directly advertises some brand (e.g. "Helvetica"
+  is fine as a name, even though a certain corporation tried to be
+  identified with it; but "CORPORATION Sans" is not);
++ not be flamboyant by seeking to call too much attention to its
+  details or by exaggerating some glyph shapes;
++ be equally readable against light and dark backdrops (for instance,
+  bitmap fonts are not legible on a white background---too bad because I
+  really like Terminus);
++ use the =*.ttf= spec which yields the best results on GNU/Linux.
 
-+ =prot-fonts-set-fonts= is a command that lets me select with completion
-  a predetermined set of font configurations depending on the display
-  context (more on completion in [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]]).  Such
-  a "context" is configurable: I define them as "laptop", "desktop",
-  etc.  When the function is executed non-interactively, it can be given
-  an arbitrary font size as well as family names for the
-  {mono,proportionately}-spaced typefaces.
+While there are many good free/libre options available, only a handful
+of them cover my fairly demanding needs.  Some look good at large point
+sizes.  Others lack Greek characters.  Some do not have italics...
 
-+ =prot-fonts-fonts-per-monitor= sets the appropriate font family and size
-  depending on whether I am only on my laptop or have connected to it an
-  external monitor.  In the latter case we use the "desktop" context.
+Moving on to my configurations, =prot-fonts.el= covers my elaborate
+typeface requirements.  At its heart is =prot-fonts-typeface-sets-alist=.
+It contains associations of property lists (an alist of plists), each of
+which pertains to a give display type.  For example, when I am doing a
+video presentation, I require font configurations that differ from what
+I normally use.  So I have a =video= key in the alist to accommodate that
+particular need.  Those associations provide granular control over font
+attributes, as they specify both mono and proportionately spaced font
+families, each with their corresponding weights and heights.
 
-+ =prot-fonts-bold-face= lets me associate a list of typefaces with
-  desired weights for their "bold" variation.  This practically means
-  that if my font family has lots of weights, such as "light",
-  "extrabold", "semibold", I can control what constitutes the normal one
-  and what should be used for heavy emphasis.  Note that this only works
-  if your theme of choice use the =bold= face to assign such emphasis
-  instead of hard-wiring the =:weight bold= property.  [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][My Modus themes]] are
-  designed to account for such a requirement (the default remains the
-  bold weight property---no need to specify that).
+The command =prot-fonts-set-fonts= prompts with completion for a display
+type.  It gives options like =laptop=, =desktop=, =video=, which are drawn
+from the =prot-fonts-typeface-sets-alist= (more on completion in
+[[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]]).  When called from Lisp it expects a
+=DISPLAY= argument, which is a symbol that matches the car of a cons cell
+in the aforementioned alist.
+
+=prot-fonts-fonts-per-monitor= sets the appropriate font family and size
+depending on whether I am only on my laptop or have connected to it an
+external monitor.  In the latter case we use the =desktop= display type.
+
+As noted above, =prot-fonts-typeface-sets-alist= associates a list of
+typefaces with desired weights, including for their bold variation.
+This is useful when the active theme (e.g. [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]) is designed
+in a way that parameterises the exact value of a bold weight, by calling
+=:inherit bold= instead of specifying =:weight bold=.  The former applies
+the =bold= face, whereas the latter sets the weight at a constant number,
+which typically is 700.  Thus, when the theme is designed that way, we
+can configure the =:weight= of the =bold= face to, e.g., =semibold= and have
+that propagate across all the faces that the theme defines.
 
 Now a few notes about setting fonts in Emacs.
 
 While there are many ways to define a baseline or fallback font family,
 I find that the most consistent one in terms of overall configuration is
-to do it at the "face" level.  Faces are understood as the domain of
-themes, though themes are just Elisp programs hence there is no real
-distinction here and it is perfectly fine to have one program define
-some properties of a face while another specifies some others.  The key
-is to make those complementary, so that one does not override the other.
-Put concretely, =prot-fonts.el= sets properties such as =:family=, while my
-themes handle things like colours.
+to do it at the "face" level (read the docstring of =set-face-attribute=).
+Faces are understood as the domain of themes, though themes are just
+Elisp programs hence there is no real distinction here and it is
+perfectly fine to have one program define some properties of a face
+while another specifies some others.  The key is to make those
+complementary, so that one does not override the other.  Put concretely,
+=prot-fonts.el= sets properties such as =:family=, while my themes handle
+things like colours.
 
 To appreciate this point, consider that in Emacs parlance a "face"
-signifies a construct that groups together several display attributes,
-such as a foreground and a background colour, as well as all
+signifies a construct that bundles up together several display
+attributes, such as a foreground and a background colour, as well as all
 typography-related values.  Multiple assignments of value can expand the
-face's specifications, unless one explicitly overrules a given property.
+face's specifications, except when one explicitly overrules a given
+property.
 
-With regard to fonts, there are three faces that are of immediate
-interest: the =default=, =variable-pitch=, and =fixed-pitch=.  The first is
-the session's main typeface, the second specifies a proportionately
-spaced font, and the third does the same for a monospaced family.
+There are three faces that are of immediate interest to =prot-fonts.el=:
+the =default=, =variable-pitch=, and =fixed-pitch=.  The first is the Emacs
+frame's main typeface, the second specifies a proportionately spaced
+font, and the third does the same for a monospaced family.  There are
+various scenaria where text on display needs to be rendered in
+=variable-pitch=, while others must remain in =fixed-pitch=.  For example,
+let =org-mode= inline code be presented in its monospaced font while using
+a variable width typeface for the main text, or just use =variable-pitch=
+for User Interface elements such as the mode line to economise on
+spacing, and so on.  Again, my Modus themes cover that niche
+out-of-the-box (and offer relevant customisation options).  We call this
+a "mixed font" setup: the easiest way to get to it is to enable
+=variable-pitch-mode= (read: [[#h:77d14350-978d-4820-ab7f-4641706c445a][Extensions for "focus mode" (prot-logos.el)]]).
 
-To understand the syntax used in =prot-fonts.el=, read the documentation
-in =C-h f set-face-attribute=.  In essence, by changing the =default= face
-we are specifying the family that should be used /in case no other
-applies/ for the given construct.  This is actually a good idea because
-there are many scenaria where you want a face to retain its own
-attributes (e.g. let =org-mode= inline code be presented in its monospaced
-font while using a variable width typeface for the main text---see, in
-particular, [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (prot-logos.el)]]).
+Relevant publications of mine that are not part of this document:
 
-Relevant blog posts of mine:
-
-+ [[https://protesilaos.com/codelog/2020-08-28-notes-emacs-theme-devs/][Notes for aspiring Emacs theme developers]] (2020-08-28)
-+ [[https://protesilaos.com/codelog/2020-09-05-emacs-note-mixed-font-heights/][Emacs: note on mixed font heights]] (2020-09-05)
++ [[https://protesilaos.com/codelog/2020-08-28-notes-emacs-theme-devs/][Notes for aspiring Emacs theme developers]] (2020-08-28).
++ [[https://protesilaos.com/codelog/2020-09-05-emacs-note-mixed-font-heights/][Emacs: note on mixed font heights]] (2020-09-05).
++ [[https://protesilaos.com/modus-themes/#h:defcf4fc-8fa8-4c29-b12e-7119582cc929][Modus themes' manual on font configurations]].
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'prot-fonts
@@ -592,33 +603,44 @@ Relevant blog posts of mine:
   ;; set that to 350, while the standard light is at 300 and regular is
   ;; at 400.  Source: <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
-        '((laptop 80 "Hack" normal "DejaVu Sans Condensed" normal)
-          (desktop 100 "Hack" normal "Inter" normal)
-          (presentation 150 "Iosevka Comfy" light "Source Sans Pro" normal)))
-  (setq prot-fonts-monospaced-list
-        '("Hack" "DejaVu Sans Mono" "Iosevka Comfy" "Source Code Pro"
-          "Ubuntu Mono" "Fantasque Sans Mono" "Fira Code" "Monoid"))
-  (setq prot-fonts-heights-list
-        '(100 105 110 120 130 140 150 160 170 180 190))
-  (setq prot-fonts-line-spacing-alist
-        '(("Ubuntu Mono" . 2)))
-  (setq prot-fonts-laptop-desktop-keys-list '(laptop desktop))
-  (setq prot-fonts-max-small-resolution-width 1366)
-  (setq prot-fonts-bold-weight-alist
-        '(("Iosevka Comfy" . semibold)
-          ("Fira Code" . semibold)
-          ("Source Code Pro" . semibold)))
-  ;; This is defined in Emacs' C code, though I feel this is a good
-  ;; place to put it.
+        '((laptop  . ( :fixed-pitch-family "Hack"
+                       :fixed-pitch-regular-weight normal
+                       :fixed-pitch-heavy-weight bold
+                       :fixed-pitch-height 80
+                       :fixed-pitch-line-spacing 1
+                       :variable-pitch-family "DejaVu Sans Condensed"
+                       :variable-pitch-height 1.0
+                       :variable-pitch-regular-weight normal))
+
+          (desktop . ( :fixed-pitch-family "Source Code Pro"
+                       :fixed-pitch-regular-weight normal
+                       :fixed-pitch-heavy-weight semibold
+                       :fixed-pitch-height 100
+                       :fixed-pitch-line-spacing 1
+                       :variable-pitch-family "Inter"
+                       :variable-pitch-height 0.9
+                       :variable-pitch-regular-weight normal))
+
+          (video   . ( :fixed-pitch-family "Iosevka Comfy"
+                       :fixed-pitch-regular-weight light
+                       :fixed-pitch-heavy-weight semibold
+                       :fixed-pitch-height 150
+                       :fixed-pitch-line-spacing 2
+                       :variable-pitch-family "Roboto"
+                       :variable-pitch-height 1.0
+                       :variable-pitch-regular-weight normal))))
+
   (setq x-underline-at-descent-line t)
+
+  ;; See theme section for this hook and also read the doc string of
+  ;; `prot-fonts-restore-last'.
+  (add-hook 'modus-themes-after-load-theme-hook #'prot-fonts-restore-last)
+
   ;; And this just sets the right font depending on whether my laptop is
   ;; connected to an external monitor or not.
   (prot-fonts-fonts-per-monitor)
-  (add-hook 'prot-fonts-set-typeface-hook #'prot-fonts-line-spacing)
-  (add-hook 'prot-fonts-set-typeface-hook #'prot-fonts-bold-face)
-  ;; See theme section for this hook
-  (add-hook 'modus-themes-after-load-theme-hook #'prot-fonts-bold-face)
-  (define-key global-map (kbd "C-c f") #'prot-fonts-set-fonts-dwim))
+
+  (define-key global-map (kbd "C-c f") #'prot-fonts-set-fonts))
 #+end_src
 
 This is the source code of =prot-fonts.el= (you can always find the file
