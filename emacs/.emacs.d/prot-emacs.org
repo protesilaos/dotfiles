@@ -1039,54 +1039,6 @@ completions' buffer.  The idea is to make the focus more noticeable.
 For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks]].
 
 #+begin_src emacs-lisp
-(prot-emacs-builtin-package 'prot-minibuffer
-  (setq-default prot-minibuffer-mini-cursors t) ; also check `prot-cursor.el'
-  (setq prot-minibuffer-remove-shadowed-file-names t)
-  (setq prot-minibuffer-minimum-input 3)
-
-  ;; ;; NOTE: `prot-minibuffer-completion-blocklist' can be used for
-  ;; ;; commands with lots of candidates, depending also on how low
-  ;; ;; `prot-minibuffer-minimum-input' is.  With my current settings,
-  ;; ;; this is not required, otherwise I would use this list:
-  ;;
-  ;; '( describe-symbol describe-function
-  ;;    describe-variable execute-extended-command
-  ;;    insert-char)
-  (setq prot-minibuffer-completion-blocklist nil)
-
-  (define-key global-map (kbd "s-v") #'prot-minibuffer-focus-mini-or-completions)
-  (let ((map completion-list-mode-map))
-    (define-key map (kbd "h") #'prot-simple-describe-symbol) ; from `prot-simple.el'
-    (define-key map (kbd "S") #'prot-minibuffer-save-completions)
-    (define-key map (kbd "M-v") #'prot-minibuffer-focus-mini)
-    (define-key map (kbd "C-g") #'prot-minibuffer-keyboard-quit-dwim)
-    (define-key map (kbd "C-n") #'prot-minibuffer-next-completion-or-mini)
-    (define-key map (kbd "<down>") #'prot-minibuffer-next-completion-or-mini)
-    (define-key map (kbd "C-p") #'prot-minibuffer-previous-completion-or-mini)
-    (define-key map (kbd "<up>") #'prot-minibuffer-previous-completion-or-mini)
-    (define-key map (kbd "C-M-n") #'prot-minibuffer-next-completions-act)
-    (define-key map (kbd "C-M-p") #'prot-minibuffer-previous-completions-act)
-    (define-key map (kbd "<return>") #'prot-minibuffer-choose-completion-exit)
-    (define-key map (kbd "<M-return>") #'prot-minibuffer-choose-completion-dwim)
-    ;; Those are generic actions for the "*Completions*" buffer, though
-    ;; I normally use `embark'.
-    (define-key map (kbd "w") #'prot-minibuffer-completions-kill-symbol-at-point)
-    (define-key map (kbd "i") #'prot-minibuffer-completions-insert-symbol-at-point)
-    (define-key map (kbd "j") #'prot-minibuffer-completions-insert-symbol-at-point-exit))
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "C-M-s") #'prot-minibuffer-save-completions)
-    (define-key map (kbd "C-n") #'prot-minibuffer-switch-to-completions-top)
-    (define-key map (kbd "<down>") #'prot-minibuffer-switch-to-completions-top)
-    (define-key map (kbd "C-p") #'prot-minibuffer-switch-to-completions-bottom)
-    (define-key map (kbd "<up>") #'prot-minibuffer-switch-to-completions-bottom)
-    (define-key map (kbd "C-l") #'prot-minibuffer-toggle-completions)) ; "list" mnemonic
-  (let ((map minibuffer-local-filename-completion-map))
-    (define-key map (kbd "<M-backspace>") #'prot-minibuffer-backward-updir))
-  (add-hook 'minibuffer-setup-hook #'prot-minibuffer-mini-cursor)
-  (add-hook 'completion-list-mode-hook #'prot-minibuffer-completions-cursor)
-  (add-hook 'completion-list-mode-hook #'prot-minibuffer-hl-line)
-  (add-hook 'completion-list-mode-hook #'prot-minibuffer-display-line-numbers))
-
 (prot-emacs-builtin-package 'minibuffer
   (setq completion-styles '(orderless partial-completion))
   (setq completion-category-overrides
@@ -1102,8 +1054,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (setq-default case-fold-search t)   ; For general regexp
 
   ;; The following two are updated in Emacs 28.  They concern the
-  ;; *Completions* buffer.  Note that I actually do not use that buffer,
-  ;; because I rely on Embark's version of it.
+  ;; *Completions* buffer.
   (setq completions-format 'one-column)
   (setq completions-detailed t)
 
@@ -1137,6 +1088,52 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "C-j") #'exit-minibuffer)
     (define-key map (kbd "<tab>") #'minibuffer-force-complete)))
+
+(prot-emacs-builtin-package 'prot-minibuffer
+  (setq-default prot-minibuffer-mini-cursors t) ; also check `prot-cursor.el'
+  (setq prot-minibuffer-remove-shadowed-file-names t)
+  (setq prot-minibuffer-minimum-input 3)
+
+  ;; ;; NOTE: `prot-minibuffer-completion-blocklist' can be used for
+  ;; ;; commands with lots of candidates, depending also on how low
+  ;; ;; `prot-minibuffer-minimum-input' is.  With my current settings,
+  ;; ;; this is not required, otherwise I would use this list:
+  ;;
+  ;; '( describe-symbol describe-function
+  ;;    describe-variable execute-extended-command
+  ;;    insert-char)
+  (setq prot-minibuffer-completion-blocklist nil)
+
+  (define-key global-map (kbd "s-v") #'prot-minibuffer-focus-mini-or-completions)
+  (let ((map completion-list-mode-map))
+    (define-key map (kbd "h") #'prot-simple-describe-symbol) ; from `prot-simple.el'
+    (define-key map (kbd "S") #'prot-minibuffer-save-completions)
+    (define-key map (kbd "M-v") #'prot-minibuffer-focus-mini)
+    (define-key map (kbd "C-g") #'prot-minibuffer-keyboard-quit-dwim)
+    (define-key map (kbd "C-n") #'prot-minibuffer-next-completion-or-mini)
+    (define-key map (kbd "<down>") #'prot-minibuffer-next-completion-or-mini)
+    (define-key map (kbd "C-p") #'prot-minibuffer-previous-completion-or-mini)
+    (define-key map (kbd "<up>") #'prot-minibuffer-previous-completion-or-mini)
+    (define-key map (kbd "<return>") #'prot-minibuffer-choose-completion-exit)
+    (define-key map (kbd "<M-return>") #'prot-minibuffer-choose-completion-dwim)
+    ;; Those are generic actions for the "*Completions*" buffer, though
+    ;; I normally use `embark'.
+    (define-key map (kbd "w") #'prot-minibuffer-completions-kill-symbol-at-point)
+    (define-key map (kbd "i") #'prot-minibuffer-completions-insert-symbol-at-point)
+    (define-key map (kbd "j") #'prot-minibuffer-completions-insert-symbol-at-point-exit))
+  (let ((map minibuffer-local-completion-map))
+    (define-key map (kbd "C-M-s") #'prot-minibuffer-save-completions)
+    (define-key map (kbd "C-n") #'prot-minibuffer-switch-to-completions-top)
+    (define-key map (kbd "<down>") #'prot-minibuffer-switch-to-completions-top)
+    (define-key map (kbd "C-p") #'prot-minibuffer-switch-to-completions-bottom)
+    (define-key map (kbd "<up>") #'prot-minibuffer-switch-to-completions-bottom)
+    (define-key map (kbd "C-l") #'prot-minibuffer-toggle-completions)) ; "list" mnemonic
+  (let ((map minibuffer-local-filename-completion-map))
+    (define-key map (kbd "<M-backspace>") #'prot-minibuffer-backward-updir))
+  (add-hook 'minibuffer-setup-hook #'prot-minibuffer-mini-cursor)
+  (add-hook 'completion-list-mode-hook #'prot-minibuffer-completions-cursor)
+  (add-hook 'completion-list-mode-hook #'prot-minibuffer-hl-line)
+  (add-hook 'completion-list-mode-hook #'prot-minibuffer-display-line-numbers))
 #+end_src
 
 And here is =prot-minibuffer.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
