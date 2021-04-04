@@ -107,7 +107,11 @@ first two entries in `prot-fonts-typeface-sets-alist'."
   :type 'list)
 
 (defcustom prot-fonts-max-small-resolution-width 1366
-  "Maximum width for use in `prot-fonts-fonts-per-monitor'."
+  "Maximum width for use in `prot-fonts-fonts-per-monitor'.
+If the screen width is higher than this value (measuring pixels),
+then the larger fonts will be used, as specified by the nth 1 of
+`prot-fonts-laptop-desktop-keys-list'.  Otherwise the smaller
+fonts, else nth 0, are applied."
   :group 'prot-fonts
   :type 'integer)
 
@@ -194,7 +198,11 @@ keys from `prot-fonts-laptop-desktop-keys-list'."
 
 ;;;###autoload
 (defun prot-fonts-fonts-per-monitor ()
-  "Use font settings based on screen size."
+  "Use font settings based on screen size.
+The breakpoint is `prot-fonts-max-small-resolution-width', while
+`prot-fonts-laptop-desktop-keys-list' contains the keys of the
+two font sets to be used: its first element should point at
+smaller fonts than the second element."
   (when window-system
     (let ((display (prot-fonts--display-type-for-monitor)))
       (prot-fonts-set-fonts display))))
