@@ -27,7 +27,10 @@
 ;; TMR Must Recur.  Else a super simple timer for my Emacs setup:
 ;; https://protesilaos.com/dotemacs.
 ;;
-;; THIS IS EXPERIMENTAL and I still plan to iterate on it.
+;; Remember that every piece of Elisp that I write is for my own
+;; educational and recreational purposes.  I am not a programmer and I
+;; do not recommend that you copy any of this if you are not certain of
+;; what it does.
 
 ;;; Code:
 

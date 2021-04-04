@@ -37,6 +37,11 @@
 ;;
 ;; As such, most of this file's contents are kept here for posterity
 ;; and/or are subject to review/removal.
+;;
+;; Remember that every piece of Elisp that I write is for my own
+;; educational and recreational purposes.  I am not a programmer and I
+;; do not recommend that you copy any of this if you are not certain of
+;; what it does.
 
 ;;; Code:
 
