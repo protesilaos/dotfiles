@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.2.3
-;; Last-Modified: <2021-04-04 16:00:34 +0300>
+;; Last-Modified: <2021-04-05 18:25:03 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -1523,12 +1523,23 @@ The exact attributes and color combinations are controlled by
 
 The actual styling of the face is done by `modus-themes-faces'.")
 
-(defface modus-themes-reset nil
+(defface modus-themes-reset-soft nil
+  "Generic face to set most face properties to nil.
+
+This is intended to be inherited by faces that should not retain
+properties from their context (e.g. an overlay over an underlined
+text should not be underlined as well) yet still blend in.  Also
+see `modus-themes-reset-hard'.
+
+The actual styling of the face is done by `modus-themes-faces'.")
+
+(defface modus-themes-reset-hard nil
   "Generic face to set all face properties to nil.
 
 This is intended to be inherited by faces that should not retain
-properties from their context (e.g. an overlay over an underlined text
-should not be underlined as well).
+properties from their context (e.g. an overlay over an underlined
+text should not be underlined as well) and not blend in.  Also
+see `modus-themes-reset-soft'.
 
 The actual styling of the face is done by `modus-themes-faces'.")
 
@@ -2009,7 +2020,7 @@ they apply a slightly more prominent background to them than what
 their counterparts do (same inactive background as with the
 default)."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.0.0")
+  :package-version '(modus-themes . "1.1.0")
   :version "28.1"
   :type '(choice
           (const :format "[%v] %t\n" :tag "Two-dimensional box (default)" nil)
@@ -2107,7 +2118,7 @@ Options `subtle-gray' and `intense-gray' are like their
 `subtle-accented' and `intense-accented' counterparts, except
 they use grayscale values instead of accented ones."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.0.0")
+  :package-version '(modus-themes . "1.1.0")
   :version "28.1"
   :type '(choice
           ;; `subtle' is the same as `subtle-accented', while `intense' is
@@ -3210,8 +3221,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(modus-themes-key-binding ((,class :inherit bold :foreground ,blue-alt-other)))
     `(modus-themes-slant ((,class :inherit italic :slant ,@(modus-themes--slant))))
     `(modus-themes-variable-pitch ((,class ,@(modus-themes--variable-pitch))))
-    `(modus-themes-reset ((,class :inherit fixed-pitch :background nil :weight normal :slant normal
-                                  :strike-through nil :box nil :underline nil :overline nil :extend nil)))
+    `(modus-themes-reset-soft ((,class :background nil :weight normal :slant normal :strike-through nil
+                                       :box nil :underline nil :overline nil :extend nil)))
+    `(modus-themes-reset-hard ((,class :inherit (fixed-pitch modus-themes-reset-soft))))
 ;;;; standard faces
 ;;;;; absolute essentials
     `(default ((,class :background ,bg-main :foreground ,fg-main)))
@@ -3390,15 +3402,15 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(auto-dim-other-buffers-face ((,class :background ,bg-alt)))
 ;;;;; avy
     `(avy-background-face ((,class :background ,bg-dim :foreground ,fg-dim :extend t)))
-    `(avy-goto-char-timer-face ((,class :inherit (modus-themes-intense-yellow bold modus-themes-reset))))
-    `(avy-lead-face ((,class :inherit (modus-themes-intense-magenta bold modus-themes-reset))))
-    `(avy-lead-face-0 ((,class :inherit (modus-themes-refine-cyan bold modus-themes-reset))))
-    `(avy-lead-face-1 ((,class :inherit (modus-themes-intense-neutral bold modus-themes-reset))))
-    `(avy-lead-face-2 ((,class :inherit (modus-themes-refine-red bold modus-themes-reset))))
+    `(avy-goto-char-timer-face ((,class :inherit (modus-themes-intense-yellow bold))))
+    `(avy-lead-face ((,class :inherit (modus-themes-intense-magenta bold modus-themes-reset-soft))))
+    `(avy-lead-face-0 ((,class :inherit (modus-themes-refine-cyan bold modus-themes-reset-soft))))
+    `(avy-lead-face-1 ((,class :inherit (modus-themes-intense-neutral bold modus-themes-reset-soft))))
+    `(avy-lead-face-2 ((,class :inherit (modus-themes-refine-red bold modus-themes-reset-soft))))
 ;;;;; aw (ace-window)
     `(aw-background-face ((,class :foreground ,fg-unfocused)))
     `(aw-key-face ((,class :inherit modus-themes-key-binding)))
-    `(aw-leading-char-face ((,class :inherit (bold modus-themes-reset) :height 1.5
+    `(aw-leading-char-face ((,class :inherit (bold modus-themes-reset-soft) :height 1.5
                                     :foreground ,red-intense)))
     `(aw-minibuffer-leading-char-face ((,class :inherit (modus-themes-intense-red bold))))
     `(aw-mode-line-face ((,class :inherit bold)))
@@ -5001,11 +5013,11 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(magit-bisect-good ((,class :foreground ,green-alt-other)))
     `(magit-bisect-skip ((,class :foreground ,yellow-alt-other)))
     `(magit-blame-date ((,class :foreground ,blue)))
-    `(magit-blame-dimmed ((,class :inherit (shadow modus-themes-reset))))
+    `(magit-blame-dimmed ((,class :inherit (shadow modus-themes-reset-hard))))
     `(magit-blame-hash ((,class :foreground ,fg-special-warm)))
-    `(magit-blame-heading ((,class :inherit modus-themes-reset :background ,bg-alt :extend t)))
+    `(magit-blame-heading ((,class :inherit modus-themes-reset-hard :background ,bg-alt :extend t)))
     `(magit-blame-highlight ((,class :inherit modus-themes-nuanced-cyan)))
-    `(magit-blame-margin ((,class :inherit (magit-blame-highlight modus-themes-reset))))
+    `(magit-blame-margin ((,class :inherit (magit-blame-highlight modus-themes-reset-hard))))
     `(magit-blame-name ((,class :foreground ,magenta-alt-other)))
     `(magit-blame-summary ((,class :foreground ,cyan-alt-other)))
     `(magit-branch-current ((,class :foreground ,blue-alt-other :box t)))
