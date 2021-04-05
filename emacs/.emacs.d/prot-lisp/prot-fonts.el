@@ -78,7 +78,36 @@ describes the display type.  We use 'laptop', 'desktop' though
 any symbol will do, e.g. 'video'.
 
 The cdr is a plist that specifies the typographic properties of
-fixed-pitch and variable-pitch fonts.
+fixed-pitch and variable-pitch fonts.  A few notes about those
+properties:
+
+- We specify typographic properties both for the `fixed-pitch'
+  and `variable-pitch' faces.  This allows us to be explicit
+  about all font families that may be used by the active
+  theme (Modus themes) under various circumstances (e.g. enabling
+  `variable-pitch' for the UI, or using `variable-pitch-mode').
+
+- A semibold weight can only be used by font families that have
+  one.  Otherwise it is better to specify bold, in order to avoid
+  any potential unpredictable behaviour.
+
+- Never set the :variable-pitch-height to an absolute number
+  because that will break the layout of `text-scale-adjust'.  Use
+  a floating point instead, so that when the text scale is
+  adjusted those expand or contract accordingly.
+
+- An absolute height is only need for the `default' face, which
+  we here designated as a fixed-pitch typeface (so the faces
+  `fixed-pitch' and `default' share the same font family, though
+  their role remains distinct).
+
+- The line height applies to the entirety of the Emacs session.
+  We declare it as :fixed-pitch-line-spacing because the face
+  `default' starts with a fixed-pitch font family.
+
+- No tests are performed to determined the presence of the font
+  families specified herein.  It is assumed that those always
+  exist.
 
 It is recommended that the order of the cons cells follows from
 the smallest to largest font heights, to simplify the process of
@@ -94,7 +123,8 @@ of `prot-fonts-laptop-desktop-keys-list'"
   (let ((sets (mapcar #'car prot-fonts-typeface-sets-alist)))
     (list (nth 0 sets) (nth 1 sets))))
 
-(defcustom prot-fonts-laptop-desktop-keys-list (prot-fonts-laptop-desktop-keys) ; '(laptop desktop)
+(defcustom prot-fonts-laptop-desktop-keys-list
+  (prot-fonts-laptop-desktop-keys) ; '(laptop desktop)
   "Symbols for `prot-fonts-fonts-per-monitor'.
 This is a list whose first item denotes the smallest desirable
 entry in `prot-fonts-typeface-sets-alist' for use on a laptop or
@@ -159,9 +189,12 @@ DISPLAY is a symbol that represents the car of a cons cell in
              (variable-pitch-family (plist-get properties :variable-pitch-family))
              (variable-pitch-height (plist-get properties :variable-pitch-height))
              (variable-pitch-regular-weight (plist-get properties :variable-pitch-regular-weight)))
-        (prot-fonts--set-face-attribute 'default fixed-pitch-family fixed-pitch-regular-weight fixed-pitch-height)
-        (prot-fonts--set-face-attribute 'fixed-pitch fixed-pitch-family fixed-pitch-regular-weight)
-        (prot-fonts--set-face-attribute 'variable-pitch variable-pitch-family variable-pitch-regular-weight variable-pitch-height)
+        (prot-fonts--set-face-attribute
+         'default fixed-pitch-family fixed-pitch-regular-weight fixed-pitch-height)
+        (prot-fonts--set-face-attribute
+         'fixed-pitch fixed-pitch-family fixed-pitch-regular-weight)
+        (prot-fonts--set-face-attribute
+         'variable-pitch variable-pitch-family variable-pitch-regular-weight variable-pitch-height)
         (set-face-attribute 'bold nil :weight fixed-pitch-heavy-weight)
         (setq-default line-spacing fixed-pitch-line-spacing)
         (add-to-history 'prot-fonts-font-display-hist (format "%s" display)))

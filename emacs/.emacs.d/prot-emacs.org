@@ -598,10 +598,17 @@ Relevant publications of mine that are not part of this document:
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'prot-fonts
-  ;; Note that the light weight I pass to Iosevka Comfy is thicker than
-  ;; the equivalent for standard Iosevka.  In my build instructions, I
-  ;; set that to 350, while the standard light is at 300 and regular is
-  ;; at 400.  Source: <https://gitlab.com/protesilaos/iosevka-comfy>.
+  ;; This is defined in Emacs C code: it belongs to font settings.
+  (setq x-underline-at-descent-line t)
+
+  ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
+  ;; as it explains what those property lists should contain.
+  ;;
+  ;; Beware that the light weight I pass to Iosevka Comfy (my custom
+  ;; variant) is thicker than the equivalent for standard Iosevka.  In
+  ;; my build instructions, I set that to 350, while the standard light
+  ;; is at 300, while regular is at 400.  Source:
+  ;; <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
         '((laptop  . ( :fixed-pitch-family "Hack"
                        :fixed-pitch-regular-weight normal
@@ -630,7 +637,18 @@ Relevant publications of mine that are not part of this document:
                        :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))))
 
-  (setq x-underline-at-descent-line t)
+  ;; The value of `prot-fonts-laptop-desktop-keys-list' becomes '(laptop
+  ;; desktop) based on the car of the first two cons cells found in
+  ;; `prot-fonts-typeface-sets-alist'.  The assumption is that those
+  ;; contain sets from smaller to larger display types.
+  (setq prot-fonts-laptop-desktop-keys-list
+        (prot-fonts-laptop-desktop-keys))
+
+  ;; This is the breakpoint, in pixels, for determining whether we are
+  ;; on the small or large screen layout.  The number here is my
+  ;; laptop's screen width, while it expands beyond that when I connect
+  ;; it to an external monitor (how I normally set it up on my desk).
+  (setq prot-fonts-max-small-resolution-width 1366)
 
   ;; See theme section for this hook and also read the doc string of
   ;; `prot-fonts-restore-last'.
