@@ -795,9 +795,6 @@ directory will be directly displayed instead."
     map)
   "Key map for use when USLS mode is active.")
 
-(defvar usls-mode-hook nil
-  "Hook called when USLS mode is active.")
-
 (define-minor-mode usls-mode
   "Extras for working with `usls' notes.
 
@@ -805,8 +802,7 @@ directory will be directly displayed instead."
   :init-value nil
   :global nil
   :lighter " usls"
-  :keymap usls-mode-map
-  (run-hooks 'usls-mode-hook))
+  :keymap usls-mode-map)
 
 (defun usls-mode-activate ()
   "Activate mode when inside `usls-directory'."
