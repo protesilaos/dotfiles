@@ -6289,7 +6289,7 @@ an overview of the current time in various parts of the planet.
               (directory-files "~/.mail/pub/Inbox/new" nil "^[^.]"))))
   (setq display-time-use-mail-icon nil)
   (setq display-time-mail-string "@+")
-  (setq display-time-mail-face 'bold)
+  (setq display-time-mail-face 'mode-line-emphasis)
 
 ;;; World clock
   (setq zoneinfo-style-world-list
