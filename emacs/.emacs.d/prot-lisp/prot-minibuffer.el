@@ -104,6 +104,14 @@ Meant as advice around minibuffer completion FN with ARGS."
               minibuffer-force-complete-and-exit))
   (advice-add fn :around #'prot-minibuffer--messageless))
 
+;; Copied from Daniel Mendler's `vertico' library:
+;; <https://github.com/minad/vertico>.
+(defun prot-minibuffer--crm-indicator (args)
+  "Add prompt indicator to `completing-read-multiple' filter ARGS."
+  (cons (concat "[CRM] " (car args)) (cdr args)))
+
+(advice-add #'completing-read-multiple :filter-args #'prot-minibuffer--crm-indicator)
+
 ;; Adapted from Omar Antolín Camarena's live-completions library:
 ;; <https://github.com/oantolin/live-completions>.
 (defun prot-minibuffer--honor-inhibit-message (fn &rest args)
