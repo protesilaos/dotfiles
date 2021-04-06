@@ -626,15 +626,17 @@ note in.  Subdirectories must already exist."
 
 ;;;###autoload
 (defun usls-follow-link ()
-  "Visit link referenced in the note using completion."
+  "Visit link referenced in the note using completion.
+If no links are available, call `usls-find-file'."
   (interactive)
   (usls--barf-non-text-usls-mode)
-  (let ((default-directory (usls--directory))
-        (links (usls--completion-table 'file (usls--links))))
-    (if links
+  (let* ((default-directory (usls--directory))
+         (links (usls--links))
+         (refs (when links (usls--completion-table 'file links))))
+    (if refs
         (find-file
-         (completing-read "Follow link: " links nil t))
-      (usls-find-file))))
+         (completing-read "Follow link: " refs nil t))
+      (call-interactively 'usls-find-file))))
 
 ;;;; Find file
 
@@ -644,13 +646,17 @@ note in.  Subdirectories must already exist."
      (file-truename file)
     (file-truename (concat (usls--directory) file))))
 
+(defun usls--find-file-prompt ()
+  "Completion prompt for `usls-find-file'."
+  (let ((files (usls--completion-table 'file (usls--directory-files))))
+    (completing-read "Visit file: " files nil t nil 'usls--file-history)))
+
 ;;;###autoload
-(defun usls-find-file ()
-  "Visit a file in `usls-directory' using completion."
-  (interactive)
+(defun usls-find-file (file)
+  "Visit a FILE in `usls-directory'.
+When called interactively use completion."
+  (interactive (list (usls--find-file-prompt)))
   (let* ((default-directory (usls--directory))
-         (files (usls--completion-table 'file (usls--directory-files)))
-         (file (completing-read "Visit file: " files nil t nil 'usls--file-history))
          (item (usls--file-name file)))
     (find-file item)
     (add-to-history 'usls--file-history file)))
@@ -805,6 +811,7 @@ directory will be directly displayed instead."
 (defun usls-mode-activate ()
   "Activate mode when inside `usls-directory'."
   (when (or (string-match-p (expand-file-name usls-directory) default-directory)
+            (string-match-p (abbreviate-file-name usls-directory) default-directory)
             (string-match-p usls-directory default-directory))
       (usls-mode 1)))
 
@@ -827,19 +834,19 @@ directory will be directly displayed instead."
 (defface usls-header-data-category
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
-     :foreground "#1f0f6f")
+     :foreground "#5317ac")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#92baff")
-    (t :inherit font-lock-builtin-face))
+     :foreground "#b6a0ff")
+    (t :inherit font-lock-keyword-face))
   "Face for header category entry.")
 
 (defface usls-header-data-title
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
-     :foreground "#000000")
+     :foreground "#8f0075")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#ffffff")
-    (t :inherit default))
+     :foreground "#f78fe7")
+    (t :inherit font-lock-builtin-face))
   "Face for header title entry.")
 
 (defface usls-header-data-secondary
@@ -852,10 +859,10 @@ directory will be directly displayed instead."
 
 (defface usls-header-data-key
   '((((class color) (min-colors 88) (background light))
-     :foreground "#505050")
+     :foreground "#00538b")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#a8a8a8")
-    (t :inherit shadow))
+     :foreground "#00d3d0")
+    (t :inherit font-lock-variable-name-face))
   "Face for secondary header information.")
 
 (defface usls-section-delimiter
@@ -868,10 +875,10 @@ directory will be directly displayed instead."
 
 (defface usls-dired-field-date
   '((((class color) (min-colors 88) (background light))
-     :foreground "#003f78")
+     :foreground "#005077")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#a4b0ff")
-    (t :inherit font-lock-string-face))
+     :foreground "#90c4ed")
+    (t :inherit font-lock-variable-name-face))
   "Face for file name date in `dired-mode' buffers.")
 
 (defface usls-dired-field-delimiter
@@ -879,12 +886,11 @@ directory will be directly displayed instead."
   "Face for file name field delimiters in `dired-mode' buffers.")
 
 (defface usls-dired-field-category
-  '((default :inherit bold)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#002f88")
+  '((((class color) (min-colors 88) (background light))
+     :foreground "#5317ac")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#92baff")
-    (t :inherit font-lock-builtin-face))
+     :foreground "#b6a0ff")
+    (t :inherit font-lock-keyword-face))
   "Face for file name category in `dired-mode' buffers.")
 
 (defface usls-dired-field-name
@@ -898,7 +904,13 @@ directory will be directly displayed instead."
 ;; TODO: re-use regular expressions as is already done for
 ;; `usls-file-regexp'.
 (defconst usls-font-lock-keywords
-  `(("\\(title:\\) \\(.*\\)"
+  `((,usls-file-regexp
+     (0 'usls-dired-field-delimiter)
+     (1 'usls-dired-field-date t)
+     (2 'usls-dired-field-category t)
+     (3 'usls-dired-field-name t)
+     (4 'usls-dired-field-delimiter t))
+    ("\\(title:\\) \\(.*\\)"
      (1 'usls-header-data-key)
      (2 'usls-header-data-title))
     ("\\(date:\\) \\(.*\\)"
@@ -910,7 +922,7 @@ directory will be directly displayed instead."
     ("\\(orig_\\(name\\|id\\):\\) \\(.*\\)"
      (1 'usls-header-data-key)
      (2 'usls-header-data-key)
-     (3 'usls-header-data-secondary))
+     (3 'usls-header-data-secondary t))
     ("^\\(-\\{26\\}\\|[*\s]\\{5\\}\\)$"
      (1 'usls-section-delimiter))
     ("\\(\\^\\)\\([0-9_]\\{15\\}\\)"
@@ -918,13 +930,8 @@ directory will be directly displayed instead."
      (2 'font-lock-variable-name-face))
     (,usls--file-link-regexp
      (1 'escape-glyph)
-     (2 'font-lock-constant-face)
-     (3 'font-lock-constant-face))
-    (,usls-file-regexp
-     (1 'usls-dired-field-date)
-     (2 'usls-dired-field-category)
-     (3 'usls-dired-field-name)
-     (4 'usls-dired-field-delimiter)))
+     (2 'font-lock-constant-face t)
+     (3 'font-lock-constant-face t)))
   "Rules to apply font-lock highlighting with `usls--fontify'.")
 
 (defun usls--fontify ()
