@@ -489,28 +489,29 @@ minibuffer."
    (get-buffer buf-name)
    '((window-height . shrink-window-if-larger-than-buffer))))
 
-;; NOTE 2021-04-02: I wrote this because when I use Embark's snapshot
-;; facility on a Completions buffer I do not get annotations from
-;; Marginalia.  Whereas cloning the buffer that already displays them
-;; does the trick.
-;;
-;; FIXME 2021-04-02: Unlike Embark's snapshots, we do not retain the
-;; default action for the candidates.  The solution is to make Embark
-;; capture annotations, so that we do not maintain our own hacks here.
-(defun prot-minibuffer-save-completions ()
-  "Save completions in a bespoke buffer."
-  (interactive)
-  (let* ((completion (when (active-minibuffer-window)
-                       (save-excursion
-                         (prot-minibuffer-focus-mini)
-                         (prot-minibuffer--input-string))))
-         (buf-name (format "*%s # Completions*" completion)))
-    (when (get-buffer buf-name)
-      (kill-buffer buf-name))
-    (minibuffer-completion-help)
-    (with-current-buffer "*Completions*"
-      (clone-buffer buf-name))
-    (prot-minibuffer--run-after-abort #'prot-minibuffer--display-at-bottom buf-name)))
+;; ;; NOTE 2021-04-07: This was written as a temporary solution to get a
+;; ;; copy of the completions' buffer.  It is no longer needed in my
+;; ;; setup because Embark's ability to capture a snapshot of the
+;; ;; completion candidates works as intended.  It also captures
+;; ;; annotations provided by Marginalia and retains the default action
+;; ;; attached to each completion candidate.
+;; ;;
+;; ;; I am keeping this here for posterity.
+;;;###autoload
+;; (defun prot-minibuffer-save-completions ()
+;;   "Save completions in a bespoke buffer."
+;;   (interactive)
+;;   (let* ((completion (when (active-minibuffer-window)
+;;                        (save-excursion
+;;                          (prot-minibuffer-focus-mini)
+;;                          (prot-minibuffer--input-string))))
+;;          (buf-name (format "*%s # Completions*" completion)))
+;;     (when (get-buffer buf-name)
+;;       (kill-buffer buf-name))
+;;     (minibuffer-completion-help)
+;;     (with-current-buffer "*Completions*"
+;;       (clone-buffer buf-name))
+;;     (prot-minibuffer--run-after-abort #'prot-minibuffer--display-at-bottom buf-name)))
 
 ;;;###autoload
 (defun prot-minibuffer-choose-completion-exit ()
