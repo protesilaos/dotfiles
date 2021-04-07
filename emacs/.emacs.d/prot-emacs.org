@@ -6284,9 +6284,10 @@ an overview of the current time in various parts of the planet.
   (setq display-time-default-load-average nil)
   (setq display-time-mail-function
         (lambda ()
-          (or (directory-files "~/.mail/inf/Inbox/new" nil "^[^.]")
-              (directory-files "~/.mail/prv/Inbox/new" nil "^[^.]")
-              (directory-files "~/.mail/pub/Inbox/new" nil "^[^.]"))))
+          (let ((nodots directory-files-no-dot-files-regexp))
+            (or (directory-files "~/.mail/inf/Inbox/new" nil nodots)
+                (directory-files "~/.mail/prv/Inbox/new" nil nodots)
+                (directory-files "~/.mail/pub/Inbox/new" nil nodots)))))
   (setq display-time-use-mail-icon nil)
   (setq display-time-mail-string "@+")
   (setq display-time-mail-face 'mode-line-emphasis)
