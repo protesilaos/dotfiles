@@ -36,10 +36,8 @@
 
 (require 'package)
 
-;; ;; NOTE: this is experimental and I might activate it at some later
-;; ;; point.
-;; (add-to-list 'package-archives
-;;              '("elpa-devel" . "https://elpa.gnu.org/devel/"))
+(add-to-list 'package-archives
+             '("elpa-devel" . "https://elpa.gnu.org/devel/"))
 
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
