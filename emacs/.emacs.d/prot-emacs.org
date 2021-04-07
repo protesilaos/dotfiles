@@ -5966,7 +5966,7 @@ some of the above.
 (prot-emacs-builtin-package 'eww
   (setq eww-restore-desktop t)
   (setq eww-desktop-remove-duplicates t)
-  (setq eww-header-line-format "%t <%u>")
+  (setq eww-header-line-format nil)
   (setq eww-search-prefix "https://duckduckgo.com/html/?q=")
   (setq eww-download-directory (expand-file-name "~/Downloads/eww"))
   (setq eww-suggest-uris
@@ -5992,6 +5992,7 @@ some of the above.
   ;; '("chromium" "--headless" "--dump-dom")
   (setq eww-retrieve-command nil)
 
+  (define-key eww-link-keymap (kbd "v") nil) ; stop overriding `eww-view-source'
   (define-key eww-mode-map (kbd "L") #'eww-list-bookmarks)
   (define-key dired-mode-map (kbd "E") #'eww-open-file) ; to render local HTML files
   (define-key eww-buffers-mode-map (kbd "d") #'eww-bookmark-kill)   ; it actually deletes
