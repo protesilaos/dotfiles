@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.2.3
-;; Last-Modified: <2021-04-07 13:04:23 +0300>
+;; Last-Modified: <2021-04-09 11:19:33 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -509,13 +509,13 @@
     ;; the "subtle" values below be combined with fg-dim, while the
     ;; "intense" should be paired with fg-main
     (red-subtle-bg . "#f2b0a2")
-    (red-intense-bg . "#ff8892")
+    (red-intense-bg . "#ff9f9f")
     (green-subtle-bg . "#aecf90")
     (green-intense-bg . "#5ada88")
     (yellow-subtle-bg . "#e4c340")
     (yellow-intense-bg . "#f5df23")
     (blue-subtle-bg . "#b5d0ff")
-    (blue-intense-bg . "#6aaeff")
+    (blue-intense-bg . "#77baff")
     (magenta-subtle-bg . "#f0d3ff")
     (magenta-intense-bg . "#d5baff")
     (cyan-subtle-bg . "#c0efff")
@@ -550,7 +550,7 @@
     (red-refine-bg . "#ffcccc") (red-refine-fg . "#780000")
     (green-refine-bg . "#aceaac") (green-refine-fg . "#004c00")
     (yellow-refine-bg . "#fff29a") (yellow-refine-fg . "#604000")
-    (blue-refine-bg . "#8ac7ff") (blue-refine-fg . "#002288")
+    (blue-refine-bg . "#8fcfff") (blue-refine-fg . "#002f88")
     (magenta-refine-bg . "#ffccff") (magenta-refine-fg . "#770077")
     (cyan-refine-bg . "#8eecf4") (cyan-refine-fg . "#004850")
     ;; the "nuanced" backgrounds can be combined with all of the above
@@ -803,7 +803,7 @@ symbol and the latter as a string.")
     (red-refine-bg . "#77002a") (red-refine-fg . "#ffb9ab")
     (green-refine-bg . "#00422a") (green-refine-fg . "#9ff0cf")
     (yellow-refine-bg . "#693200") (yellow-refine-fg . "#e2d980")
-    (blue-refine-bg . "#242679") (blue-refine-fg . "#8ec6ff")
+    (blue-refine-bg . "#242679") (blue-refine-fg . "#8ecfff")
     (magenta-refine-bg . "#71206a") (magenta-refine-fg . "#ffcaf0")
     (cyan-refine-bg . "#004065") (cyan-refine-fg . "#8ae4f2")
     ;; the "nuanced" backgrounds can be combined with all of the above
@@ -4965,10 +4965,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(lsp-face-highlight-textual ((,class :inherit modus-themes-subtle-blue)))
     `(lsp-face-highlight-write ((,class :inherit (modus-themes-refine-blue bold))))
     `(lsp-face-semhl-constant ((,class :foreground ,blue-alt-other)))
-    `(lsp-face-semhl-deprecated
-      ((,(append '((supports :underline (:style wave))) class)
-        :foreground ,yellow :underline (:style wave))
-       (,class :foreground ,yellow :underline t)))
+    `(lsp-face-semhl-deprecated ((,class :inherit modus-themes-lang-warning)))
     `(lsp-face-semhl-enummember ((,class :foreground ,blue-alt-other)))
     `(lsp-face-semhl-field ((,class :foreground ,cyan-alt)))
     `(lsp-face-semhl-field-static ((,class :inherit modus-themes-slant :foreground ,cyan-alt)))
@@ -5379,11 +5376,11 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; no-emoji
     `(no-emoji ((,class :foreground ,cyan)))
 ;;;;; notmuch
-    `(notmuch-crypto-decryption ((,class :inherit modus-themes-refine-magenta)))
+    `(notmuch-crypto-decryption ((,class :inherit modus-themes-special-mild)))
     `(notmuch-crypto-part-header ((,class :foreground ,magenta-alt-other)))
     `(notmuch-crypto-signature-bad ((,class :inherit modus-themes-intense-red)))
-    `(notmuch-crypto-signature-good ((,class :inherit modus-themes-refine-green)))
-    `(notmuch-crypto-signature-good-key ((,class :inherit modus-themes-refine-yellow)))
+    `(notmuch-crypto-signature-good ((,class :inherit modus-themes-refine-blue)))
+    `(notmuch-crypto-signature-good-key ((,class :inherit modus-themes-refine-cyan)))
     `(notmuch-crypto-signature-unknown ((,class :inherit modus-themes-refine-red)))
     `(notmuch-hello-logo-background ((,class :background "gray50")))
     `(notmuch-message-summary-face ((,class :inherit modus-themes-nuanced-cyan)))
@@ -5394,14 +5391,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(notmuch-search-non-matching-authors ((,class :inherit shadow)))
     `(notmuch-search-subject ((,class :foreground ,fg-dim)))
     `(notmuch-search-unread-face ((,class :inherit bold)))
-    `(notmuch-tag-added
-      ((,(append '((supports :underline (:style wave))) class)
-        :underline (:color ,green :style wave))
-       (,class :foreground ,green :underline t)))
-    `(notmuch-tag-deleted
-      ((,(append '((supports :underline (:style wave))) class)
-        :underline (:color ,red :style wave))
-       (,class :foreground ,red :underline t)))
+    `(notmuch-tag-added ((,class :inherit modus-themes-lang-note)))
+    `(notmuch-tag-deleted ((,class :inherit modus-themes-lang-error)))
     `(notmuch-tag-face ((,class :inherit bold :foreground ,blue-alt)))
     `(notmuch-tag-flagged ((,class :foreground ,red-alt)))
     `(notmuch-tag-unread ((,class :foreground ,magenta-alt)))
@@ -5964,10 +5955,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(show-paren-match-expression ((,class :inherit modus-themes-special-calm)))
     `(show-paren-mismatch ((,class :inherit modus-themes-intense-red)))
 ;;;;; shr
-    `(shr-abbreviation
-      ((,(append '((supports :underline (:style wave))) class)
-        :foreground ,fg-docstring :underline (:color ,fg-alt :style wave))
-       (,class :foreground ,fg-docstring :underline t)))
+    `(shr-abbreviation ((,class :inherit modus-themes-lang-note)))
     `(shr-selected-link ((,class :inherit modus-themes-subtle-red)))
 ;;;;; side-notes
     `(side-notes ((,class :background ,bg-dim :foreground ,fg-dim)))
