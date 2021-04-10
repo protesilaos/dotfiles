@@ -1312,7 +1312,8 @@ try.
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'consult
   (setq consult-line-numbers-widen t)
-  (setq completion-in-region-function #'consult-completion-in-region)
+  ;; ;; FIXME 2021-04-10: This does not work with `prot-minibuffer.el'.
+  ;; (setq completion-in-region-function #'consult-completion-in-region)
   (setq consult-async-min-input 3)
   (setq consult-async-input-debounce 0.5)
   (setq consult-async-input-throttle 0.8)
