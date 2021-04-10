@@ -1364,7 +1364,7 @@ try.
   (prot-consult-set-up-hooks-mode 1)
   (let ((map global-map))
     (define-key map (kbd "M-s M-i") #'prot-consult-imenu)
-    (define-key map (kbd "M-s M-s") #'prot-consult-outline)    ; M-s o is `occur'
+    (define-key map (kbd "M-s M-s") #'prot-consult-outline)
     (define-key map (kbd "M-s M-y") #'prot-consult-yank)
     (define-key map (kbd "M-s M-l") #'prot-consult-line)))
 #+end_src
