@@ -247,15 +247,16 @@ by `prot-minibuffer-completion-windows-regexp'."
   (interactive)
   (let* ((mini (active-minibuffer-window))
          (completions (prot-minibuffer--get-completion-window)))
-    (cond ((and mini (not (minibufferp)))
-           (select-window mini nil))
-          ((and completions (not (eq (selected-window) completions)))
-           (select-window completions nil)))))
+    (cond
+     ((and mini (not (minibufferp)))
+      (select-window mini nil))
+     ((and completions (not (eq (selected-window) completions)))
+      (select-window completions nil)))))
 
 ;; Adaptation of `icomplete-fido-backward-updir'.
 ;;;###autoload
 (defun prot-minibuffer-backward-updir ()
-  "Delete char before or go up directory.
+  "Delete char before point or go up a directory.
 Must be bound to `minibuffer-local-filename-completion-map'."
   (interactive)
   (if (and (eq (char-before) ?/)
@@ -403,7 +404,7 @@ If in a completions' buffer and unless the region is active, run
 If the region is active, deactivate it.  A second invocation of
 this command is then required to abort the session."
   (interactive)
-  (when (derived-mode-p 'completion-list-mode) ; TODO: account for `prot-minibuffer-save-completions' case
+  (when (derived-mode-p 'completion-list-mode)
     (if (use-region-p)
         (keyboard-quit)
       (abort-recursive-edit))))
