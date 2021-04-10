@@ -1309,6 +1309,10 @@ to---registered data.
   know whether it should insert some text or jump to a point/frameset,
   etc.
 
+In practice, I only ever use =consult-register= because I have already
+developed muscle memory for the register-related actions.  Though using
+all three of the above is easier to learn and more consistent overall.
+
 Note that my =prot-consult.el= (reproduced after the following package
 configurations) defines some /quick and dirty/ extensions or thin wrappers
 around Consult commands.  The former *will be reviewed* in favour of
@@ -1331,26 +1335,8 @@ try.
                                    (?p "Packages"  font-lock-constant-face)
                                    (?t "Types"     font-lock-type-face)
                                    (?v "Variables" font-lock-variable-name-face)))))
-  ;; Registers' setup -- From Consult's README
-  ;;
-  ;; This gives a consistent display for `consult-register',
-  ;; `consult-register-load', `consult-register-store', and the Emacs
-  ;; built-ins.
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
-  ;; Tweak the register preview window.
-  ;; * Sort the registers
-  ;; * Hide the mode line
-  ;; * Resize the window, such that the contents fit exactly
-  (advice-add #'register-preview :around
-              (lambda (fun buffer &optional show-empty)
-                (let ((register-alist (seq-sort #'car-less-than-car register-alist)))
-                  (funcall fun buffer show-empty))
-                (when-let (win (get-buffer-window buffer))
-                  (with-selected-window win
-                    (setq-local mode-line-format nil)
-                    (setq-local window-min-height 1)
-                    (fit-window-to-buffer)))))
 
   (let ((map global-map))
     (define-key map (kbd "C-x M-:") #'consult-complex-command)
@@ -1361,10 +1347,8 @@ try.
     (define-key map (kbd "M-F") #'consult-focus-lines) ; same principle
     (define-key map (kbd "M-s M-g") #'consult-grep)
     (define-key map (kbd "M-s M-m") #'consult-mark)
-    (define-key map (kbd "C-x r r") #'consult-register) ; Use the register's prefix
-    (define-key map (kbd "C-x r S") #'consult-register-store)
-    (define-key map (kbd "C-x r L") #'consult-register-load)
-    (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)))
+    (define-key map (kbd "C-x r r") #'consult-register)) ; Use the register's prefix
+  (define-key consult-narrow-map (kbd "?") #'consult-narrow-help))
 
 (prot-emacs-builtin-package 'prot-consult
   (setq consult-project-root-function #'prot-consult-project-root)
