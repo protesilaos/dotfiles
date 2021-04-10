@@ -34,8 +34,7 @@
 
 ;;; Code:
 
-(when (featurep 'consult)
-  (require 'consult))
+(require 'consult nil t)
 (require 'prot-pulse)
 
 (defgroup prot-consult ()
