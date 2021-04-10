@@ -773,10 +773,8 @@ workflows).
 
 The only reason I keep this package here is to make things easier when I
 record videos of my setup in which I invoke some Embark action or employ
-Consult's narrowing facility.  Please refer to the relevant sections:
-
-+ [[#h:18e1f5b6-0dd1-41ec-ba41-ee48ebb2060b][Cross-package integration for Embark (prot-embark-extras.el)]].
-+ [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]].
+Consult's narrowing facility.  Please refer to the relevant section:
+[[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]].
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'which-key
@@ -1477,11 +1475,11 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
   - Embark's "collect" buffer also has a live-updating version, which
     can be use to filter the list of targets.  This particular feature
     can, in fact, be used as a medium for visualising the list of
-    candidates in the active minibuffer session.  I used that for
+    candidates in the active minibuffer session.  I used that setup for
     several months together with the default minibuffer as part my
-    completion framework, though as of 2021-04-02 I handle that task
-    independently of Embark (read the note at the start of this
-    section).
+    bespoke completion framework, though as of 2021-04-02 I handle the
+    live-updating completions' buffer independently of Embark
+    ([[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]]).
 
   - Other than producing a snapshot, Embark can also collect the targets
     and present them in a buffer whose major-mode is specialised to work
@@ -1492,41 +1490,17 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
     =ibuffer-mode= (check [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer and extras]]); grep results in a =grep-mode=
     buffer, and so on.
 
-Finally, a few words about the following package configurations:
+Finally, a few words about =prot-embark.el= that is reproduced after the
+following block with the package configurations:
 
-+ My =prot-embark.el= that is reproduced after the following block with
-  the package configurations contains the following:
+- Extra keymaps that integrate Embark with packages like =consult=
+  ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
 
-  - =prot-embark--collect-fit-window= ensures that Embark's live occur
-    buffer shrinks and expands to match the window's contents.
+- Tweaks to let =keycast= track and display Embark actions ([[#h:e8e51a73-e583-4250-ac26-15627cd93932][Keycast mode]]).
 
-  - =prot-embark-completions-toggle= toggles the display of the live
-    completions' buffer.
-
-  - Several extensions for cycling through the list of candidates and/or
-    performing the default action while moving in a given direction.
-
-  - A toggle for setting up =which-key= for the =embark-action-indicator=.
-    This shows key hints but only for Embark actions, as I normally do
-    not use them elsewhere (read [[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]]).
-
-  - Commands to clear lines in an Embark collect buffer.  This can be
-    done on a line-wise basis with =prot-embark-collection-kill-line=, or
-    by matching a regular expression (search for the "flush lines" and
-    "keep lines" wrappers).
-
-  - The convenience command =prot-embark-keyboard-quit= which makes =C-g=
-    abort a completions' buffer instead of just cancelling the active
-    minibuffer's input.
-
-  - The =prot-embark-consult-preview-toggle= to preview Consult matches.
-    This leverages the =embark-consult= package (also check my
-    configurations for [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][consult.el and prot-consult.el]]).
-
-+ NOTE: I also define a =prot-embark-extras.el= library which unifies
-  Embark with all of my other libraries.  It is mostly meant to define
-  actions for =embark-become= (please check this section first and then
-  visit [[#h:18e1f5b6-0dd1-41ec-ba41-ee48ebb2060b][Cross-package integration for Embark (prot-embark-extras.el)]]).
+- A toggle for setting up =which-key= for the =embark-action-indicator=.
+  This shows key hints but only for Embark actions, as I normally do not
+  use them elsewhere (read [[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]]).
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'embark
@@ -1541,30 +1515,6 @@ Finally, a few words about the following package configurations:
   (setq embark-quit-after-action t)     ; XXX: Read the doc string!
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
-
-  ;; ;; NOTE: Use the following {remove,add}-hook if you want Embark's
-  ;; ;; Completions' buffer to sort candidates in the order they were
-  ;; ;; last used.  This is, for example, how Icomplete does it.
-  ;; ;; Personally I do not want that because I normally narrow the list
-  ;; ;; to a very small set, where the order does not matter.  Also, I
-  ;; ;; do not wish to assume any performance cost for such a feature.
-
-  ;; (remove-hook 'embark-candidate-collectors #'embark-minibuffer-candidates)
-  ;; (add-hook 'embark-candidate-collectors #'embark-sorted-minibuffer-candidates)
-
-  (setq embark-key-action-separator (propertize " · " 'face 'shadow))
-  (setq embark-action-indicator
-        (let ((act (propertize "Act" 'face 'highlight)))
-          (cons act (concat act " on '%s'"))))
-  (setq embark-become-indicator (propertize "Become" 'face 'highlight))
-
-  ;; ;; NOTE 2021-04-02: enable those hooks if you want to use Embark's
-  ;; ;; live updating collection buffer to visualise minibuffer
-  ;; ;; completion candidates.  I no longer do that, as I delegated that
-  ;; ;; task to `prot-minibuffer.el'.
-
-  ;; (add-hook 'minibuffer-setup-hook #'embark-collect-completions-after-input)
-  ;; (add-hook 'embark-post-action-hook #'embark-collect--update-linked)
 
   (define-key global-map (kbd "C-,") #'embark-act)
   (let ((map minibuffer-local-completion-map))
@@ -1584,46 +1534,9 @@ Finally, a few words about the following package configurations:
     (define-key map (kbd ".") #'embark-find-definition)
     (define-key map (kbd "k") #'describe-keymap)))
 
-(prot-emacs-elpa-package 'embark-consult
-  ;; ;; Use the hook, or check `prot-embark-consult-preview-toggle'.
-  ;; :hook (embark-collect-mode-hook . embark-consult-preview-minor-mode)
-  (define-key embark-collect-mode-map (kbd "C-j") #'embark-consult-preview-at-point))
-
-;; ;; NOTE 2021-04-02: the bulk of this code was about Embark's
-;; completions.  It has now been moved to `prot-minibuffer.el', as I am
-;; enhancing the default "*Completions*" buffer.  I still use Embark for
-;; its primary function.
-
-;; (prot-emacs-builtin-package 'prot-embark (add-hook
-;; 'minibuffer-exit-hook #'prot-embark-clear-live-buffers) (add-hook
-;; 'embark-collect-mode-hook #'prot-embark-completions-cursor) (add-hook
-;; 'embark-collect-post-revert-hook #'prot-embark-collect-fit-window)
-;; (add-hook 'embark-collect-mode-hook #'prot-embark-hl-line) (add-hook
-;; 'embark-collect-mode-hook #'prot-embark-display-line-numbers)
-;;
-;;   (define-key embark-general-map (kbd "C-M-w") #'prot-embark-toggle-which-key)
-;;   ;; NOTE: to switch to the live collection buffer, I also use
-;;   ;; `prot-minibuffer-focus-mini-or-completions' which is bound to
-;;   ;; "s-v".
-;;   (let ((map embark-collect-mode-map))
-;;     (define-key map (kbd "h") #'prot-simple-describe-symbol)  ; from `prot-simple.el'
-;;     (define-key map (kbd "C-g") #'prot-embark-keyboard-quit)
-;;     (define-key map (kbd "C-k") #'prot-embark-collection-kill-line)
-;;     (define-key map (kbd "C-M-n") #'prot-embark-completions-act-next)
-;;     (define-key map (kbd "C-M-p") #'prot-embark-completions-act-previous)
-;;     (define-key map (kbd "C-M-j") #'prot-embark-completions-act-current)
-;;     (define-key map (kbd "C-M-v") #'prot-embark-consult-preview-toggle) ; "view", "visualise" mnemonic
-;;     (define-key map (kbd "C-M-w") #'prot-embark-toggle-which-key)
-;;     (define-key map (kbd "C-n") #'prot-embark-next-line-or-mini)
-;;     (define-key map (kbd "<down>") #'prot-embark-next-line-or-mini)
-;;     (define-key map (kbd "C-p") #'prot-embark-previous-line-or-mini)
-;;     (define-key map (kbd "<up>") #'prot-embark-previous-line-or-mini))
-;;   (let ((map minibuffer-local-completion-map))
-;;     (define-key map (kbd "C-n") #'prot-embark-switch-to-completions-top)
-;;     (define-key map (kbd "<down>") #'prot-embark-switch-to-completions-top)
-;;     (define-key map (kbd "C-p") #'prot-embark-switch-to-completions-bottom)
-;;     (define-key map (kbd "<up>") #'prot-embark-switch-to-completions-bottom)
-;;     (define-key map (kbd "C-l") #'prot-embark-completions-toggle)))
+(prot-emacs-builtin-package 'prot-embark
+  (prot-embark-keymaps 1)
+  (prot-embark-setup-packages 1))
 #+end_src
 
 This is =prot-embark.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -1800,33 +1713,6 @@ no use for it.
 This is a copy of =prot-recentf.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-recentf.el src emacs-lisp :tangle no
-
-*** Cross-package integration for Embark (prot-embark-extras.el)
-:PROPERTIES:
-:CUSTOM_ID: h:18e1f5b6-0dd1-41ec-ba41-ee48ebb2060b
-:END:
-
-/WARNING 2021-04-02: This section is subject to review./
-
-This section extends Embark so that it works with the rest of my
-packages and custom code.  I keep it separate from =prot-embark.el= so
-that there is a clear distinction between my generic setup and the
-somewhat more opinionated extentions that may be unique to my use-case:
-[[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]].
-
-The way to extend Embark is to follow its own design: define keymaps and
-add them to the list of Embark's known keymaps.
-
-#+begin_src emacs-lisp
-(with-eval-after-load 'embark
-  (prot-emacs-builtin-package 'prot-embark-extras
-    (prot-embark-extras-keymaps 1)
-    (prot-embark-extras-setup-packages 1)))
-#+end_src
-
-This is =prot-embark-extras.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
-
-#+include: prot-lisp/prot-embark-extras.el src emacs-lisp :tangle no
 
 *** In-buffer completions
 :PROPERTIES:
