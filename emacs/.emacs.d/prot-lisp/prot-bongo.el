@@ -37,8 +37,7 @@
 ;; XXX Written on 2021-01-18.  Remains to be reviewed.
 
 (eval-when-compile (require 'subr-x))
-(when (featurep 'bongo)
-  (require 'bongo))
+(require 'bongo nil t)
 (require 'prot-common)
 
 (defgroup prot-bongo ()

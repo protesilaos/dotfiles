@@ -36,8 +36,7 @@
 
 (require 'prot-common)
 (require 'prot-fonts)
-(when (featurep 'moody)
-  (require 'moody))
+(require 'moody nil t)
 
 (defgroup prot-moody ()
   "Tweaks for moody.el."

@@ -37,10 +37,8 @@
 ;; XXX Written on 2021-01-18.  Remains to be reviewed.
 
 (eval-when-compile (require 'subr-x))
-(when (featurep 'bongo)
-  (require 'bongo))
-(when (featurep 'elfeed)
-  (require 'elfeed))
+(require 'bongo nil t)
+(require 'elfeed nil t)
 
 (defgroup prot-elfeed-bongo ()
   "Personal extensions for Bongo."

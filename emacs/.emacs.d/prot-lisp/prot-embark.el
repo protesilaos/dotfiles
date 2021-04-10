@@ -41,8 +41,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(when (featurep 'embark)
-  (require 'embark))
+(require 'embark nil t)
 (require 'prot-common)
 (require 'prot-minibuffer)
 

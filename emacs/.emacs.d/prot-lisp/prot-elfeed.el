@@ -35,8 +35,7 @@
 ;;; Code:
 
 (eval-when-compile (require 'subr-x))
-(when (featurep 'elfeed)
-  (require 'elfeed))
+(require 'elfeed nil t)
 (require 'prot-common)
 
 (defgroup prot-elfeed ()
