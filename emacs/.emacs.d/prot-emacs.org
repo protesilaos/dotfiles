@@ -6808,7 +6808,8 @@ occur).
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'goggles
   (setq-default goggles-pulse t)
-  (goggles-mode 1))
+  (dolist (mode '(prog-mode-hook text-mode-hook))
+    (add-hook mode #'goggles-mode)))
 #+end_src
 
 *** Newline characters for file ending
