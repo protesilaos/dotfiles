@@ -522,6 +522,36 @@ minibuffer."
     (choose-completion)
     (minibuffer-force-complete-and-exit)))
 
+(defun prot-minibuffer--goto-line (n &optional args)
+  "Go to line N in the Completions' with optional ARGS."
+  (let ((bounds (count-lines (point-min) (point-max))))
+    (if (<= n bounds)
+        (progn
+          `(,@args)
+          (goto-char (point-min))
+          (forward-line (1- n))
+          (choose-completion))
+      (user-error "%d is not within Completions' buffer bounds (%d)" n bounds))))
+
+;;;###autoload
+(defun prot-minibuffer-choose-completion-number (n)
+  "Select completion candidate on line number N with prefix arg.
+
+The idea is to pass a prefix numeric argument that refers to a
+line number in the Completions' buffer."
+  (interactive "p")
+  (if current-prefix-arg
+      (cond
+       ((and (derived-mode-p 'completion-list-mode)
+             (active-minibuffer-window))
+        (prot-minibuffer--goto-line n))
+       ((and (minibufferp)
+             (prot-minibuffer--get-completion-window))
+        (prot-minibuffer--goto-line n (select-window (prot-minibuffer--get-completion-window))))
+       (t
+        (user-error "Only use this inside the minibuffer of the Completions")))
+    (user-error "Pass a numeric argument first")))
+
 (defvar crm-completion-table)
 
 ;;;###autoload

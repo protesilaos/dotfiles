@@ -1037,6 +1037,15 @@ What my completion selection interface does in a nutshell:
   This is the best =completing-read-multiple= experience I have had to
   date.
 
++ Another way to pick a completion is to target its line number.  This
+  is done with =prot-minibuffer-choose-completion-number= which expects a
+  prefix numeric argument and can be called from either the minibuffer
+  or the Completions' buffer.  For completeness, a numeric argument is
+  expressed in the form of =C-u NUMBER=, though you can just hold down
+  Ctrl or Meta hit a number and call the command.  If the number is
+  multiple digits long, start the prefix as usual, release the modifier
+  key and continue inputting numbers (e.g. =M-5 0 1= is equal to =C-u 501=).
+
 Finally, here is an overview of the settings covered herein:
 
 + Completion styles :: I mostly rely on [[#h:7b1374dd-6b1f-4548-8fbf-1034230c80e0][the Orderless completion style]].
@@ -1149,6 +1158,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (define-key global-map (kbd "s-v") #'prot-minibuffer-focus-mini-or-completions)
   (let ((map completion-list-mode-map))
     (define-key map (kbd "h") #'prot-simple-describe-symbol) ; from `prot-simple.el'
+    (define-key map (kbd "M-g") #'prot-minibuffer-choose-completion-number)
     (define-key map (kbd "M-v") #'prot-minibuffer-focus-minibuffer)
     (define-key map (kbd "C-g") #'prot-minibuffer-keyboard-quit-dwim)
     (define-key map (kbd "C-n") #'prot-minibuffer-next-completion-or-mini)
@@ -1163,6 +1173,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
     (define-key map (kbd "i") #'prot-minibuffer-completions-insert-symbol-at-point)
     (define-key map (kbd "j") #'prot-minibuffer-completions-insert-symbol-at-point-exit))
   (let ((map minibuffer-local-completion-map))
+    (define-key map (kbd "M-g") #'prot-minibuffer-choose-completion-number)
     (define-key map (kbd "C-n") #'prot-minibuffer-switch-to-completions-top)
     (define-key map (kbd "<down>") #'prot-minibuffer-switch-to-completions-top)
     (define-key map (kbd "C-p") #'prot-minibuffer-switch-to-completions-bottom)
