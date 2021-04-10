@@ -301,34 +301,19 @@ Must be bound to `minibuffer-local-filename-completion-map'."
 (defun prot-minibuffer-display-line-numbers ()
   "Set up line numbers for the completions' buffer.
 Add this to `completion-list-mode-hook'."
-  (if (derived-mode-p 'completion-list-mode)
-      (progn
+  (when (derived-mode-p 'completion-list-mode)
         (face-remap-add-relative 'line-number 'prot-minibuffer-line-number)
         (face-remap-add-relative 'line-number-current-line
                                  'prot-minibuffer-line-number-current-line)
-        (display-line-numbers-mode 1))
-    (display-line-numbers-mode -1)
-    ;; TODO: can we avoid `face-remap-add-relative' and just use the
-    ;; value it previously returned?
-    (face-remap-remove-relative
-     (face-remap-add-relative 'line-number
-                              'prot-minibuffer-line-number))
-    (face-remap-remove-relative
-     (face-remap-add-relative 'line-number-current-line
-                              'prot-minibuffer-line-number-current-line))))
+        (display-line-numbers-mode 1)))
 
 ;;;###autoload
 (defun prot-minibuffer-hl-line ()
   "Set up line highlighting for the completions' buffer.
 Add this to `completion-list-mode-hook'."
-  (if (derived-mode-p 'completion-list-mode)
-      (progn
-        (face-remap-add-relative 'hl-line 'prot-minibuffer-hl-line)
-        (hl-line-mode 1))
-    (hl-line-mode -1)
-    ;; TODO: same as above with regard to `face-remap-add-relative'.
-    (face-remap-remove-relative
-     (face-remap-add-relative 'hl-line 'prot-minibuffer-hl-line))))
+  (when (derived-mode-p 'completion-list-mode)
+    (face-remap-add-relative 'hl-line 'prot-minibuffer-hl-line)
+    (hl-line-mode 1)))
 
 (defun prot-minibuffer--clean-completions ()
   "Keep only completion candidates in the Completions."
