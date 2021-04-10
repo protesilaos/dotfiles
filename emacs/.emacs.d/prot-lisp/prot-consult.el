@@ -103,25 +103,6 @@ To be used with `advice-add'.")
 
 ;;;; Commands
 
-(defvar consult-find-command)
-(autoload 'consult-find "consult")
-(declare-function consult--directory-prompt "consult")
-
-;;;###autoload
-(defun prot-consult-fd (&optional dir initial)
-  "Use `consult--find' with FD executable.
-
-With optional DIR, or prefix argument (\\[universal-argument]),
-prompt for a directory to search in.  Else default to the
-directory determined by `consult-project-root-function'.
-
-Optional INITIAL is the input to pre-populate the search."
-  (interactive "P")
-  (let* ((cmd prot-consult-find-args)
-         (prompt-dir (consult--directory-prompt "Find" dir))
-         (default-directory (cdr prompt-dir)))
-    (consult--find (car prompt-dir) cmd initial)))
-
 (defvar consult--find-cmd)
 (defvar consult--directory-prompt)
 (declare-function consult--find "consult")
