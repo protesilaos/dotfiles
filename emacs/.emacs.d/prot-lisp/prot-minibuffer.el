@@ -583,9 +583,9 @@ Completions' buffer."
  prot-minibuffer-completions-kill-symbol-at-point
  "Append `symbol-at-point' to the `kill-ring'.
 Intended to be used from inside the Completions' buffer."
- (kill-new `,symbol)
+ (kill-new symbol)
  (message "Copied %s to kill-ring"
-          (propertize `,symbol 'face 'success)))
+          (propertize symbol 'face 'success)))
 
 (prot-minibuffer-completions-buffer-act
  prot-minibuffer-completions-insert-symbol-at-point
@@ -593,9 +593,9 @@ Intended to be used from inside the Completions' buffer."
 Intended to be used from inside the Completions' buffer."
  (let ((window (window-buffer (get-mru-window))))
    (with-current-buffer window
-     (insert `,symbol)
+     (insert symbol)
      (message "Inserted %s"
-              (propertize `,symbol 'face 'success)))))
+              (propertize symbol 'face 'success)))))
 
 (prot-minibuffer-completions-buffer-act
  prot-minibuffer-completions-insert-symbol-at-point-exit
@@ -603,9 +603,9 @@ Intended to be used from inside the Completions' buffer."
 Intended to be used from inside the Completions' buffer."
  (let ((window (window-buffer (get-mru-window))))
    (with-current-buffer window
-     (insert `,symbol)
+     (insert symbol)
      (message "Inserted %s"
-              (propertize `,symbol 'face 'success))))
+              (propertize symbol 'face 'success))))
  (top-level))
 
 (provide 'prot-minibuffer)
