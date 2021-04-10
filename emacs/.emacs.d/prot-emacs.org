@@ -1189,8 +1189,8 @@ Daniel Mendler's Consult is a welcome addition to the ecosystem of
 modular, extensible tools that work with the standard minibuffer
 completion mechanisms and, by extension, with every user interface that
 largely conforms with them (Icomplete, Selectrum) or fully respects them
-(Embark).  For my case, this means that it works with everything
-included in [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
+(Embark and [[https://github.com/minad/vertico][Daniel's own Vertico]]).  For my case, this means that it
+works with everything included in [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
 
 Consult's value proposition is two-fold: (1) remain aligned with the
 Emacs completion paradigm, and (2) offer minibuffer-centric commands
@@ -1205,7 +1205,7 @@ while you type of where you are about to land.
 
 Other commands enhance the defaults with a filtering mechanism that
 targets candidates by their type.  A case in point is =consult-imenu=
-which recognised syntactic constructs that are variables, functions,
+which recognises syntactic constructs that are variables, functions,
 macros (configurable via =consult-imenu-narrow=, =consult-imenu-toplevel=).
 
 This "filtering" mechanism, which is internally known as "narrowing",
@@ -1217,6 +1217,12 @@ relevant targets, such as => f= to narrow the =consult-imenu= candidates to
 functions.  Hit backspace to remove the narrowing (users may wish to set
 up [[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]], though I just memorise what I need,
 or call =consult-narrow-help=).
+
+This narrowing-by-type mechanism can also be used without inputting the
+=consult-narrow-key=, just by typing in the appropriate character and
+inserting a space.  For instance, to search only for functions in
+=consult-imenu=, you type =f= and then a space.  Consult will add an
+indicator to the minibuffer prompt describing the active filter.
 
 An all-in-one command that supports this kind of narrowing while also
 expanding on the features of its default equivalent is =consult-buffer=.
@@ -1231,7 +1237,7 @@ are internally stored as buffers, recent files, bookmarks.
 Another intriguing facility of Consult is its asynchronous call to
 external processes, such as =grep= and =find=.  Those calls can be
 configured to return some output based on a minimum number of
-characters, while they also allows for tweaks to their update delays.
+characters, while they also allow for tweaks to their update delays.
 Interactivity is already a given, meaning that you can continue typing
 and see the results pop up.  Furthermore, they implement a two-stage
 input scheme, separated by a configurable delimiter (=#= by default and
@@ -1243,6 +1249,7 @@ controlled with =consult-async-default-split=):
   text or a regular expression, but can also include command line flags
   for the underlying CLI program (check Consult's documentation for the
   technicalities).
+
 + Then you can add another field delimiter to instruct Consult to (i)
   keep the results that =#PATTERN= gave you and (ii) leverage Emacs' own
   mechanisms to further narrow the list.  Now your input looks like
@@ -1250,8 +1257,7 @@ controlled with =consult-async-default-split=):
   completion styles you have configured (check my =completion-styles=).
 
 As already suggested, Consult provides previews for its commands.  This
-feature should work without any further intervention for users of
-Icomplete or Selectrum.
+feature should work without any further intervention.
 
 Consult can shine when used in tandem with Embark to produce buffers
 that hold all the candidates of any given minibuffer completion command
@@ -1360,24 +1366,23 @@ try.
     (define-key map (kbd "C-x r L") #'consult-register-load)
     (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)))
 
-(with-eval-after-load 'consult
-  (prot-emacs-builtin-package 'prot-consult
-    (setq consult-project-root-function #'prot-consult-project-root)
-    (setq prot-consult-command-centre-list
-          '(consult-line
-            prot-consult-line
-            consult-mark))
-    (setq prot-consult-command-top-list
-          '(consult-outline
-            consult-imenu
-            prot-consult-outline
-            prot-consult-imenu))
-    (prot-consult-set-up-hooks-mode 1)
-    (let ((map global-map))
-      (define-key map (kbd "M-s M-i") #'prot-consult-imenu)
-      (define-key map (kbd "M-s M-s") #'prot-consult-outline)    ; M-s o is `occur'
-      (define-key map (kbd "M-s M-y") #'prot-consult-yank)
-      (define-key map (kbd "M-s M-l") #'prot-consult-line))))
+(prot-emacs-builtin-package 'prot-consult
+  (setq consult-project-root-function #'prot-consult-project-root)
+  (setq prot-consult-command-centre-list
+        '(consult-line
+          prot-consult-line
+          consult-mark))
+  (setq prot-consult-command-top-list
+        '(consult-outline
+          consult-imenu
+          prot-consult-outline
+          prot-consult-imenu))
+  (prot-consult-set-up-hooks-mode 1)
+  (let ((map global-map))
+    (define-key map (kbd "M-s M-i") #'prot-consult-imenu)
+    (define-key map (kbd "M-s M-s") #'prot-consult-outline)    ; M-s o is `occur'
+    (define-key map (kbd "M-s M-y") #'prot-consult-yank)
+    (define-key map (kbd "M-s M-l") #'prot-consult-line)))
 #+end_src
 
 Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
