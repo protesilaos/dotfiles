@@ -312,10 +312,10 @@ Must be bound to `minibuffer-local-filename-completion-map'."
   "Set up line numbers for the completions' buffer.
 Add this to `completion-list-mode-hook'."
   (when (derived-mode-p 'completion-list-mode)
-        (face-remap-add-relative 'line-number 'prot-minibuffer-line-number)
-        (face-remap-add-relative 'line-number-current-line
-                                 'prot-minibuffer-line-number-current-line)
-        (display-line-numbers-mode 1)))
+    (face-remap-add-relative 'line-number 'prot-minibuffer-line-number)
+    (face-remap-add-relative 'line-number-current-line
+                             'prot-minibuffer-line-number-current-line)
+    (display-line-numbers-mode 1)))
 
 ;;;###autoload
 (defun prot-minibuffer-hl-line ()
@@ -473,21 +473,6 @@ minibuffer."
         (prot-minibuffer-focus-mini)
       (next-completion (or num 1)))))
 
-;; This design is adapted from Omar Antolín Camarena's Embark:
-;; <https://github.com/oantolin/embark>.  We need to call the function
-;; after aborting the minibuffer, otherwise we cannot get the new
-;; window.
-(defun prot-minibuffer--run-after-abort (fn &rest args)
-  "Call FN with rest ARGS while aborting recursive edit."
-  (apply #'run-at-time 0 nil fn args)
-  (abort-recursive-edit))
-
-(defun prot-minibuffer--display-at-bottom (buf-name)
-  "Display BUF-NAME in bottom window."
-  (display-buffer-at-bottom
-   (get-buffer buf-name)
-   '((window-height . shrink-window-if-larger-than-buffer))))
-
 ;; ;; NOTE 2021-04-07: This was written as a temporary solution to get a
 ;; ;; copy of the completions' buffer.  It is no longer needed in my
 ;; ;; setup because Embark's ability to capture a snapshot of the
@@ -496,6 +481,22 @@ minibuffer."
 ;; ;; attached to each completion candidate.
 ;; ;;
 ;; ;; I am keeping this here for posterity.
+;; ;; ------------------------------------------------------------------
+;; ;; This design is adapted from Omar Antolín Camarena's Embark:
+;; ;; <https://github.com/oantolin/embark>.  We need to call the
+;; ;; function after aborting the minibuffer, otherwise we cannot get
+;; ;; the new window.
+;; (defun prot-minibuffer--run-after-abort (fn &rest args)
+;;   "Call FN with rest ARGS while aborting recursive edit."
+;;   (apply #'run-at-time 0 nil fn args)
+;;   (abort-recursive-edit))
+;; 
+;; (defun prot-minibuffer--display-at-bottom (buf-name)
+;;   "Display BUF-NAME in bottom window."
+;;   (display-buffer-at-bottom
+;;    (get-buffer buf-name)
+;;    '((window-height . shrink-window-if-larger-than-buffer))))
+;;
 ;;;###autoload
 ;; (defun prot-minibuffer-save-completions ()
 ;;   "Save completions in a bespoke buffer."
