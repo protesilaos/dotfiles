@@ -216,7 +216,7 @@ If it is a list, this actually returns its car."
 ;;;; Basic minibuffer interactions
 
 ;;;###autoload
-(defun prot-minibuffer-focus-mini ()
+(defun prot-minibuffer-focus-minibuffer ()
   "Focus the active minibuffer."
   (interactive)
   (let ((mini (active-minibuffer-window)))
@@ -455,7 +455,7 @@ minibuffer."
    ((or (eobp)
         (eq (point-max)
             (save-excursion (forward-line 1) (point))))
-    (prot-minibuffer-focus-mini))
+    (prot-minibuffer-focus-minibuffer))
    (t
     (next-completion (or arg 1))))
   (setq this-command 'next-line))
@@ -470,7 +470,7 @@ minibuffer."
   (let ((num (prot-common-number-negative arg)))
     (if (or (bobp)
             (eq (point) (1+ (point-min)))) ; see hack in `prot-minibuffer--clean-completions'
-        (prot-minibuffer-focus-mini)
+        (prot-minibuffer-focus-minibuffer)
       (next-completion (or num 1)))))
 
 ;; ;; NOTE 2021-04-07: This was written as a temporary solution to get a
@@ -503,7 +503,7 @@ minibuffer."
 ;;   (interactive)
 ;;   (let* ((completion (when (active-minibuffer-window)
 ;;                        (save-excursion
-;;                          (prot-minibuffer-focus-mini)
+;;                          (prot-minibuffer-focus-minibuffer)
 ;;                          (prot-minibuffer--input-string))))
 ;;          (buf-name (format "*%s # Completions*" completion)))
 ;;     (when (get-buffer buf-name)

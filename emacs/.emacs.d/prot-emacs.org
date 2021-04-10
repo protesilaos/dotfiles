@@ -1151,7 +1151,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (define-key global-map (kbd "s-v") #'prot-minibuffer-focus-mini-or-completions)
   (let ((map completion-list-mode-map))
     (define-key map (kbd "h") #'prot-simple-describe-symbol) ; from `prot-simple.el'
-    (define-key map (kbd "M-v") #'prot-minibuffer-focus-mini)
+    (define-key map (kbd "M-v") #'prot-minibuffer-focus-minibuffer)
     (define-key map (kbd "C-g") #'prot-minibuffer-keyboard-quit-dwim)
     (define-key map (kbd "C-n") #'prot-minibuffer-next-completion-or-mini)
     (define-key map (kbd "<down>") #'prot-minibuffer-next-completion-or-mini)

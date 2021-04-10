@@ -278,7 +278,7 @@ point can no longer move in that direction, then it switches to
 the minibuffer."
   (interactive "p")
   (if (or (eobp) (eq (point-max) (save-excursion (forward-line 1) (point))))
-      (prot-minibuffer-focus-mini)    ; from `prot-minibuffer.el'
+      (prot-minibuffer-focus-minibuffer) ; from `prot-minibuffer.el'
     (forward-line (or arg 1)))
   (setq this-command 'next-line))
 
@@ -291,7 +291,7 @@ the minibuffer."
   (interactive "p")
   (let ((num (prot-common-number-negative arg))) ; from `prot-common.el'
     (if (bobp)
-        (prot-minibuffer-focus-mini)    ; from `prot-minibuffer.el'
+        (prot-minibuffer-focus-minibuffer) ; from `prot-minibuffer.el'
       (forward-line (or num 1)))))
 
 ;;;###autoload
