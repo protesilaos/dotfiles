@@ -87,6 +87,15 @@ put it in a window (e.g. `prot-minibuffer-toggle-completions',
   :type '(repeat symbol)
   :group 'prot-minibuffer)
 
+(defcustom prot-minibuffer-completion-passlist nil
+  "Commands that do live updating of completions from the start.
+
+This means that they ignore `prot-minibuffer-minimum-input' and
+the inherent constraint of updating the Completions' buffer only
+upon user input."
+  :type '(repeat symbol)
+  :group 'prot-minibuffer)
+
 ;;;; Minibuffer behaviour
 
 ;; Thanks to Omar Antolín Camarena for providing the messageless and
@@ -367,8 +376,12 @@ Meant to be added to `after-change-functions'."
 
 (defun prot-minibuffer--setup-completions ()
   "Set up the completions buffer."
-  (unless (member this-command prot-minibuffer-completion-blocklist)
-    (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t)))
+  (cond
+   ((member this-command prot-minibuffer-completion-passlist)
+    (minibuffer-completion-help)
+    (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t))
+   ((unless (member this-command prot-minibuffer-completion-blocklist)
+    (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t)))))
 
 (add-hook 'minibuffer-setup-hook #'prot-minibuffer--setup-completions)
 
