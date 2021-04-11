@@ -103,7 +103,7 @@ passing optional prefix ARG (\\[universal-argument])."
   (interactive "P")
   (let ((indent (or arg nil)))
     (if (or (bobp)
-            (line-number-at-pos 1))
+            (line-number-at-pos (point-min)))
         (progn
           (beginning-of-line)
           (newline)
