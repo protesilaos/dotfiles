@@ -171,6 +171,9 @@ fonts, else nth 0, are applied."
      (mapcar #'car prot-fonts-typeface-sets-alist)
      nil t nil 'prot-fonts-font-display-hist def)))
 
+(defvar prot-fonts-set-typeface-hook nil
+  "Hook that runs after `prot-fonts-set-fonts'.")
+
 ;;;###autoload
 (defun prot-fonts-set-fonts (display)
   "Set fonts based on font set assossiated with DISPLAY.
@@ -197,7 +200,8 @@ DISPLAY is a symbol that represents the car of a cons cell in
          'variable-pitch variable-pitch-family variable-pitch-regular-weight variable-pitch-height)
         (set-face-attribute 'bold nil :weight fixed-pitch-heavy-weight)
         (setq-default line-spacing fixed-pitch-line-spacing)
-        (add-to-history 'prot-fonts-font-display-hist (format "%s" display)))
+        (add-to-history 'prot-fonts-font-display-hist (format "%s" display))
+        (run-hooks 'prot-fonts-set-typeface-hook))
     (error "Not running a graphical Emacs; cannot set fonts")))
 
 (defun prot-fonts-restore-last ()
