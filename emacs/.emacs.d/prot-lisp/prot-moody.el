@@ -81,5 +81,14 @@ mode line's typeface (or the default one if they are the same)."
         (moody-replace-vc-mode 'reverse)))
     (remove-hook 'prot-fonts-set-typeface-hook #'prot-moody--mode-line-height)))
 
+(defvar keycast-insert-after)
+
+(defun prot-moody-keycast-insert-after ()
+  "Specify `keycast-insert-after' buffer identification."
+  (setq keycast-insert-after
+        (if prot-moody-set-height
+            'moody-mode-line-buffer-identification
+          'mode-line-buffer-identification)))
+
 (provide 'prot-moody)
 ;;; prot-moody.el ends here

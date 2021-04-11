@@ -6223,12 +6223,8 @@ tweaks of my own.
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'keycast
   ;; Those are for `keycast-mode'
-  (setq keycast-window-predicate 'moody-window-active-p)
+  (setq keycast-window-predicate 'moody-window-active-p) ; assumes `moody.el'
   (setq keycast-separator-width 1)
-  (setq keycast-insert-after
-        (if prot-moody-set-height
-            'moody-mode-line-buffer-identification
-          'mode-line-buffer-identification))
   (setq keycast-remove-tail-elements nil)
 
   (dolist (input '(self-insert-command
@@ -6244,7 +6240,13 @@ tweaks of my own.
   (setq keycast-log-format "%-20K%C\n")
   (setq keycast-log-frame-alist
         '((minibuffer . nil)))
-  (setq keycast-log-newest-first t))
+  (setq keycast-log-newest-first t)
+
+  ;; Specify `keycast-insert-after' buffer identification.  This make it
+  ;; possible to seamlessly toggle `prot-moody-set-height' without
+  ;; disrupting keycast.
+  (with-eval-after-load 'prot-moody
+    (add-hook 'prot-moody-set-height-hook #'prot-moody-keycast-insert-after)))
 #+end_src
 
 ** Window divider mode
