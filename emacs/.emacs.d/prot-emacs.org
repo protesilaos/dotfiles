@@ -423,8 +423,9 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-lang-checkers nil
 
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
-        ;; 'borderless, 'borderless-3d, 'borderless-moody
-        modus-themes-mode-line nil
+        ;; 'borderless, 'borderless-3d, 'borderless-moody, 'accented,
+        ;; 'accented-3d, 'accented-moody
+        modus-themes-mode-line 'accented-3d
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
@@ -436,30 +437,36 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'accented-background, 'underline-neutral,
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
-        modus-themes-hl-line 'underline-accented
+        modus-themes-hl-line 'underline-neutral
         modus-themes-subtle-line-numbers nil
-        modus-themes-paren-match 'intense-bold ; {nil,'subtle-bold,'intense,'intense-bold}
+        modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
 
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only, 'neutral-underline-only
-        modus-themes-links nil
+        modus-themes-links 'neutral-underline
         modus-themes-no-mixed-fonts nil
 
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts 'subtle-accented
+        modus-themes-prompts 'subtle-gray
         modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
 
         ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
         ;; 'bg-only-no-extend, 'accent, 'accent-no-extend
         modus-themes-region 'accent-no-extend
 
-        modus-themes-diffs nil ; {nil,'desaturated,'fg-only,'bg-only,'deuteranopia}
+        ;; Options for `modus-themes-diffs': nil, 'desaturated,
+        ;; 'fg-only, 'bg-only, 'deuteranopia,
+        modus-themes-diffs 'desaturated
+
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
 
-        modus-themes-headings nil ; this is an alist: read the manual
+        modus-themes-headings ; this is an alist: read the manual
+        '((1 . rainbow-section)
+          (2 . rainbow-line)
+          (3 . rainbow))
 
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
