@@ -2683,7 +2683,12 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (display-buffer-at-bottom))
           ("\\*.*\\(e?shell\\|v?term\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
-           (window-height . 0.2))))
+           (window-height . 0.2))
+          ;; below currect window
+          ("diary"                      ; this looks fragile
+           (display-buffer-reuse-mode-window display-buffer-below-selected))
+          ("\\*Calendar.*"
+           (display-buffer-reuse-mode-window display-buffer-below-selected))))
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
@@ -4068,17 +4073,21 @@ and corresponding functions.
   (define-key global-map (kbd "<s-S-return>") #'shell))
 #+end_src
 
-** Calendar
+** Calendar and Diary
 :PROPERTIES:
 :CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
 :END:
 
-Some basic settings for =calendar.el=.  It is used by Org-mode facilities
-that require date/time input (see following sections).
+/NOTE 2021-04-12: This section is subject to major review./
+
+Some basic settings for =calendar.el= and =diary-lib.el=.  They can be used
+on their own, while they are also leveraged by Org facilities, such as
+the agenda.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'calendar
-  (setq calendar-mark-diary-entries-flag nil)
+  (setq calendar-mark-diary-entries-flag t)
+  (setq calendar-mode-line-format nil)
   (setq calendar-time-display-form
         '(24-hours ":" minutes
                    (when time-zone
@@ -4088,18 +4097,34 @@ that require date/time input (see following sections).
   (setq calendar-mark-holidays-flag nil)
   (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
 
-  ;; (require 'solar)
-  ;; (setq calendar-latitude 35.17
-  ;;       calendar-longitude 33.36)
-  ;;
-  ;; (require 'lunar)
-  ;; (setq lunar-phase-names
-  ;;       '("New Moon"
-  ;;         "First Quarter Moon"
-  ;;         "Full Moon"
-  ;;         "Last Quarter Moon"))
+  (require 'solar)
+  (setq calendar-latitude 35.17
+        calendar-longitude 33.36)
+
+  (require 'lunar)
+  (setq lunar-phase-names
+        '("New Moon"
+          "First Quarter Moon"
+          "Full Moon"
+          "Last Quarter Moon"))
+
+  ;; this is defined in calendar.el though it belongs to diary-lib.el...
+  (setq diary-date-forms (cond ((eq calendar-date-style 'iso)
+                                   diary-iso-date-forms)
+                                  ((eq calendar-date-style 'european)
+                                   diary-european-date-forms)
+                                  (t diary-american-date-forms)))
 
   (add-hook 'calendar-today-visible-hook #'calendar-mark-today))
+
+(prot-emacs-builtin-package 'diary-lib
+  (setq diary-display-function #'diary-simple-display)
+  (setq diary-mail-addr (or (bound-and-true-p user-mail-address) "")) ; check my email settings
+  (setq diary-mail-days 7)
+  (setq diary-abbreviated-year-flag nil))
+
+(prot-emacs-builtin-package 'appt
+  (setq appt-message-warning-time 15))
 #+end_src
 
 ** Org-mode (personal information manager)
