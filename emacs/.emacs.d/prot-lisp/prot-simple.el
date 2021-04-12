@@ -118,6 +118,8 @@ With optional ARG (\\[universal-argument]) duplicate the target
 instead.  When region is active, also apply context-aware
 indentation while duplicating."
   (interactive "P")
+  (unless mark-ring                  ; needed when entering a new buffer
+    (push-mark (point) t nil))
   (let* ((rbeg (region-beginning))
          (rend (region-end))
          (pbol (point-at-bol))
