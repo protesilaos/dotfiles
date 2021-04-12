@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.2.3
-;; Last-Modified: <2021-04-09 11:19:33 +0300>
+;; Last-Modified: <2021-04-11 16:11:44 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -440,9 +440,11 @@
     (bg-alt . "#f0f0f0") (fg-alt . "#505050")
     ;; specifically for on/off states and must be combined with
     ;; themselves, though the backgrounds are also meant to be used with
-    ;; other "active" values, defined further below
+    ;; other "active" values, defined further below; bg-active-accent
+    ;; can work as a substitute for bg-active
     (bg-active . "#d7d7d7") (fg-active . "#0a0a0a")
     (bg-inactive . "#efefef") (fg-inactive . "#404148")
+    (bg-active-accent . "#d0d6ff")
     ;; these special values are intended as alternatives to the base
     ;; values for cases where we need to avoid confusion between the
     ;; highlighted constructs; they must either be used as pairs based
@@ -502,7 +504,7 @@
     ;; those foregrounds are meant exclusively for bg-active, bg-inactive
     (red-active . "#8a0000")
     (green-active . "#004c2e")
-    (yellow-active . "#702d1f")
+    (yellow-active . "#702f00")
     (blue-active . "#0030b4")
     (magenta-active . "#5c2092")
     (cyan-active . "#003f8a")
@@ -569,7 +571,7 @@
     ;; work with all accents that cover those two, plus bg-main
     ;;
     ;; bg-hl-alt and bg-hl-alt-intense should only be used when no
-    ;; other greyscale or fairly neutral background is available to
+    ;; other grayscale or fairly neutral background is available to
     ;; properly draw attention to a given construct
     ;;
     ;; bg-header is between bg-active and bg-inactive, so it
@@ -693,9 +695,11 @@ symbol and the latter as a string.")
     (bg-alt . "#191a1b") (fg-alt . "#a8a8a8")
     ;; specifically for on/off states and must be combined with
     ;; themselves, though the backgrounds are also meant to be used with
-    ;; other "active" values, defined further below
+    ;; other "active" values, defined further below; bg-active-accent
+    ;; can work as a substitute for bg-active
     (bg-active . "#323232") (fg-active . "#f4f4f4")
     (bg-inactive . "#1e1e1e") (fg-inactive . "#bfc0c4")
+    (bg-active-accent . "#2a2a66")
     ;; these special values are intended as alternatives to the base
     ;; values for cases where we need to avoid confusion between the
     ;; highlighted constructs; they must either be used as pairs based
@@ -822,7 +826,7 @@ symbol and the latter as a string.")
     ;; work with all accents that cover those two, plus bg-main
     ;;
     ;; bg-hl-alt and bg-hl-alt-intense should only be used when no
-    ;; other greyscale or fairly neutral background is available to
+    ;; other grayscale or fairly neutral background is available to
     ;; properly draw attention to a given construct
     ;;
     ;; bg-header is between bg-active and bg-inactive, so it
@@ -1880,16 +1884,16 @@ accordance with it in cases where it changes, such as while using
   "Define the visibility of fringes.
 
 Nil means the fringes have no background color.  Option `subtle'
-will apply a greyscale value that is visible yet close to the
+will apply a grayscale value that is visible yet close to the
 main buffer background color.  Option `intense' will use a more
-pronounced greyscale value."
+pronounced grayscale value."
   :group 'modus-themes
   :package-version '(modus-themes . "1.0.0")
   :version "28.1"
   :type '(choice
           (const :format "[%v] %t\n" :tag "No visible fringes (default)" nil)
-          (const :format "[%v] %t\n" :tag "Subtle greyscale background" subtle)
-          (const :format "[%v] %t\n" :tag "Intense greyscale background" intense))
+          (const :format "[%v] %t\n" :tag "Subtle grayscale background" subtle)
+          (const :format "[%v] %t\n" :tag "Intense grayscale background" intense))
   :link '(info-link "(modus-themes) Fringes"))
 
 (defcustom modus-themes-lang-checkers nil
@@ -1994,9 +1998,9 @@ highlights the alert and overdue states."
 (defcustom modus-themes-mode-line nil
   "Adjust the overall style of the mode line.
 
-Nil is a two-dimensional rectangle with a border around it.  The
-active and the inactive modelines use different shades of
-greyscale values for the background and foreground.
+The default (nil) is a two-dimensional rectangle with a border
+around it.  The active and the inactive modelines use different
+shades of grayscale values for the background and foreground.
 
 A `3d' value will apply a three-dimensional effect to the active
 modeline.  The inactive modelines remain two-dimensional and are
@@ -2019,9 +2023,14 @@ and `moody' options respectively, while removing the borders.
 However, to ensure that the inactive modelines remain visible,
 they apply a slightly more prominent background to them than what
 their counterparts do (same inactive background as with the
-default)."
+default).
+
+Similarly, `accented', `accented-3d', and `accented-moody'
+correspond to the default (nil), `3d', and `moody' styles
+respectively, except that the active mode line uses a colored
+background instead of the standard shade of gray."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.1.0")
+  :package-version '(modus-themes . "1.3.0")
   :version "28.1"
   :type '(choice
           (const :format "[%v] %t\n" :tag "Two-dimensional box (default)" nil)
@@ -2029,7 +2038,10 @@ default)."
           (const :format "[%v] %t\n" :tag "No box effects, which are optimal for use with the `moody' library" moody)
           (const :format "[%v] %t\n" :tag "Like the default, but without border effects" borderless)
           (const :format "[%v] %t\n" :tag "Like `3d', but without noticeable border" borderless-3d)
-          (const :format "[%v] %t\n" :tag "Like `moody', but without noticeable border" borderless-moody))
+          (const :format "[%v] %t\n" :tag "Like `moody', but without noticeable border" borderless-moody)
+          (const :format "[%v] %t\n" :tag "Two-dimensional box with a colored background" accented)
+          (const :format "[%v] %t\n" :tag "Like `3d', but with a colored background" accented-3d)
+          (const :format "[%v] %t\n" :tag "Like `moody', but with a colored background" accented-moody))
   :link '(info-link "(modus-themes) Mode line"))
 
 (defcustom modus-themes-diffs nil
@@ -2048,7 +2060,7 @@ Option `fg-only' will remove all accented backgrounds, except
 from word-wise changes.  It instead uses color-coded foreground
 values to differentiate between added/removed/changed lines.  If
 a background is necessary, such as with `ediff', then a subtle
-greyscale value is used.
+grayscale value is used.
 
 Option `bg-only' applies a background but does not override the
 text's foreground.  This makes it suitable for a non-nil value
@@ -2263,11 +2275,11 @@ foreground.
 Option `faint' applies desaturated colors to the link's text and
 underline.
 
-Option `neutral-underline' applies a subtle grey underline, while
+Option `neutral-underline' applies a subtle gray underline, while
 retaining the link's foreground.
 
 Option `faint-neutral-underline' combines a desaturated text
-color with a subtle grey underline.
+color with a subtle gray underline.
 
 Option `no-underline' removes link underlines altogether, while
 retaining their original fairly vivid color.
@@ -2284,8 +2296,8 @@ using a subtle underline below it."
   :type '(choice
           (const :format "[%v] %t\n" :tag "Undeline link using the same color as the text (default)" nil)
           (const :format "[%v] %t\n" :tag "Like the default, but apply less intense colors to links" faint)
-          (const :format "[%v] %t\n" :tag "Change the color of link underlines to a neutral grey" neutral-underline)
-          (const :format "[%v] %t\n" :tag "Desaturated foreground with neutral grey underline" faint-neutral-underline)
+          (const :format "[%v] %t\n" :tag "Change the color of link underlines to a neutral gray" neutral-underline)
+          (const :format "[%v] %t\n" :tag "Desaturated foreground with neutral gray underline" faint-neutral-underline)
           (const :format "[%v] %t\n" :tag "Remove underline property from links, keeping their foreground as-is" no-underline)
           (const :format "[%v] %t\n" :tag "Apply underline only; use default foreground" underline-only)
           (const :format "[%v] %t\n" :tag "Like `underline-only' but with a subtle underline" neutral-underline-only))
@@ -2480,8 +2492,8 @@ Those are stored in `modus-themes-faces' and
 
 (defun modus-themes--fringe (mainbg subtlebg intensebg)
   "Conditional use of background colors for fringes.
-MAINBG is the default.  SUBTLEBG should be a subtle greyscale
-value.  INTENSEBG must be a more pronounced greyscale color."
+MAINBG is the default.  SUBTLEBG should be a subtle grayscale
+value.  INTENSEBG must be a more pronounced grayscale color."
   (pcase modus-themes-fringes
     ('intense (list :background intensebg))
     ('subtle (list :background subtlebg))
@@ -2680,10 +2692,10 @@ theme's source code)."
 BG, FG, BGACCENT, FGACCENT apply a background and foreground
 color respectively.
 
-The former pair is a greyscale combination that should be more
+The former pair is a grayscale combination that should be more
 distinct than the background of the block.  It is applied to the
 default styles or when `modus-themes-org-blocks' is set
-to `greyscale'.
+to `grayscale' (or `greyscale').
 
 The latter pair should be more subtle than the background of the
 block, as it is used when `modus-themes-org-blocks' is
@@ -2704,13 +2716,14 @@ instead.  Same for SIMPLE."
     (_ (list :background default))))
 
 (defun modus-themes--mode-line-attrs
-    (fg bg fg-alt bg-alt border border-3d &optional alt-style border-width fg-distant)
+    (fg bg fg-alt bg-alt fg-accent bg-accent border border-3d &optional alt-style border-width fg-distant)
   "Color combinations for `modus-themes-mode-line'.
 
 FG and BG are the default colors.  FG-ALT and BG-ALT are meant to
 accommodate the options for a 3D modeline or a `moody' compliant
-one.  BORDER applies to all permutations of the modeline, except
-the three-dimensional effect, where BORDER-3D is used instead.
+one.  FG-ACCENT and BG-ACCENT are used for all variants.  BORDER
+applies to all permutations of the modeline, except the
+three-dimensional effect, where BORDER-3D is used instead.
 
 Optional ALT-STYLE applies an appropriate style to the mode
 line's box property.
@@ -2741,6 +2754,17 @@ property."
     ('borderless-moody
      `(:background ,bg :foreground ,fg
        :underline ,bg :overline ,bg
+       :distant-foreground ,fg-distant))
+    ('accented
+     `(:foreground ,fg-accent :background ,bg-accent :box ,border))
+    ('accented-3d
+     `(:background ,bg-accent :foreground ,fg-accent
+       :box (:line-width ,(or border-width 1)
+             :color ,border-3d
+             :style ,(and alt-style 'released-button))))
+    ('accented-moody
+     `(:background ,bg-accent :foreground ,fg-accent
+       :underline ,border :overline ,border
        :distant-foreground ,fg-distant))
     (_
      `(:foreground ,fg :background ,bg :box ,border))))
@@ -2828,7 +2852,7 @@ These are intended for Helm, Ivy, etc."
   "Conditional application of link styles.
 FG is the link's default color for its text and underline
 property.  FGFAINT is a desaturated color for the text and
-underline.  UNDERLINE is a grey color only for the undeline."
+underline.  UNDERLINE is a gray color only for the undeline."
   (pcase modus-themes-links
     ('faint (list :foreground fgfaint :underline t))
     ('neutral-underline (list :foreground fg :underline underline))
@@ -3098,7 +3122,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; special base values
     ;; these are closer to the grayscale than the accents defined above
     ;; and should only be used when the next closest alternative would be
-    ;; a greyscale value than an accented one
+    ;; a grayscale value than an accented one
     `(modus-themes-special-cold ((,class :background ,bg-special-cold :foreground ,fg-special-cold)))
     `(modus-themes-special-mild ((,class :background ,bg-special-mild :foreground ,fg-special-mild)))
     `(modus-themes-special-warm ((,class :background ,bg-special-warm :foreground ,fg-special-warm)))
@@ -4934,11 +4958,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(kaocha-runner-warning-face ((,class :foreground ,yellow)))
 ;;;;; keycast
     `(keycast-command ((,class :inherit bold :foreground ,blue-active)))
-    `(keycast-key ((,class ,@(modus-themes--mode-line-attrs
-                              bg-main blue-active
-                              bg-main blue-active
-                              blue-active blue-intense
-                              'alt-style -3))))
+    `(keycast-key ((,class :background ,blue-active :foreground ,bg-main)))
 ;;;;; line numbers (display-line-numbers-mode and global variant)
     `(line-number
       ((,class :inherit default
@@ -5279,14 +5299,19 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; modeline
     `(mode-line ((,class ,@(modus-themes--variable-pitch-ui)
                          ,@(modus-themes--mode-line-attrs
-                            fg-active bg-active fg-dim bg-active
-                            fg-alt bg-active 'alt-style nil bg-main))))
+                            fg-active bg-active
+                            fg-dim bg-active
+                            fg-main bg-active-accent
+                            fg-alt bg-active
+                            'alt-style nil bg-main))))
     `(mode-line-buffer-id ((,class :inherit bold)))
     `(mode-line-emphasis ((,class :inherit bold :foreground ,blue-active)))
     `(mode-line-highlight ((,class :inherit modus-themes-active-blue :box (:line-width -1 :style pressed-button))))
     `(mode-line-inactive ((,class ,@(modus-themes--variable-pitch-ui)
                                   ,@(modus-themes--mode-line-attrs
-                                     fg-inactive bg-inactive fg-alt bg-dim
+                                     fg-inactive bg-inactive
+                                     fg-alt bg-dim
+                                     fg-inactive bg-inactive
                                      bg-region bg-active))))
 ;;;;; mood-line
     `(mood-line-modified ((,class :foreground ,magenta-active)))
