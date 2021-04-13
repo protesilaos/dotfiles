@@ -90,19 +90,47 @@ mode which has its own conventions."
 
 ;;;###autoload
 (defun prot-text-cite-region (beg end &optional arg)
-  "Cite text in region between BEG and END.
+  "Cite text in region lines between BEG and END.
+
+Region lines are always understood in absolute terms, regardless
+of whether the region boundaries coincide with them.
+
 With optional prefix ARG (\\[universal-argument]) prompt for a
 description that will be placed on a new line at the top of the
 newly formatted text."
   (interactive "*r\nP")
-  (let* ((text (buffer-substring-no-properties beg end))
-         (text-new (replace-regexp-in-string "^.*?" "| " text))
+  (let* ((absolute-beg (if (< beg end)
+                           (progn (goto-char beg) (point-at-bol))
+                         (progn (goto-char end) (point-at-eol))))
+         (absolute-end (if (< beg end)
+                           (progn (goto-char end) (point-at-eol))
+                         (progn (goto-char beg) (point-at-bol))))
+         (prefix-text (if (< beg end)
+                          (buffer-substring-no-properties absolute-beg beg)
+                        (buffer-substring-no-properties absolute-end end)))
+         (prefix (if (string-match-p "\\`[\t\s]+\\'" prefix-text)
+                     prefix-text
+                   (replace-regexp-in-string "\\`\\([\t\s]+\\).*" "\\1" prefix-text)))
          (description (if arg
                           (format "+----[ %s ]\n"
                                   (read-string "Add description: "))
-                        "+----\n")))
-    (delete-region beg end)
-    (insert (concat description text-new "\n+----"))))
+                        "+----\n"))
+         (marked-text (buffer-substring-no-properties absolute-beg absolute-end))
+         (marked-text-new (replace-regexp-in-string "^.*?" (concat prefix "|") marked-text))
+         (text (with-temp-buffer
+                 (insert marked-text-new)
+                 (save-excursion
+                   (goto-char (point-min))
+                   (re-search-forward "^\\(^[\s\t]+\\)?.*?")
+                   (forward-line -1)
+                   (insert (concat prefix description))
+                   (goto-char (point-max))
+                   (forward-line 1)
+                   (insert "\n")
+                   (insert (concat prefix "+----")))
+                 (buffer-substring-no-properties (point-min) (point-max)))))
+    (delete-region absolute-beg absolute-end)
+    (insert text)))
 
 ;; `prot-text-insert-undercaret' was offered to me by Gregory Heytings:
 ;; <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=45068#250>.
