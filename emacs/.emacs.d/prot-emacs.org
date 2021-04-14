@@ -4915,10 +4915,13 @@ and replace it with consecutive dashes with the date at their centre
   (add-hook 'diary-list-entries-hook 'diary-include-other-diary-files)
   (add-hook 'diary-mark-entries-hook 'diary-mark-included-diary-files)
 
+  ;; Prevent Org from interfering with my key bindings.
+  (remove-hook 'calendar-mode-hook #'org--setup-calendar-bindings)
+
   (let ((map calendar-mode-map))
     (define-key map (kbd "s") #'calendar-sunrise-sunset)
     (define-key map (kbd "l") #'lunar-phases)
-    (define-key map (kbd "i") nil) ; Org sets this, much to my chagrin
+    (define-key map (kbd "i") nil) ; Org sets this, much to my chagrin (see `remove-hook' above)
     (define-key map (kbd "i a") #'diary-insert-anniversary-entry)
     (define-key map (kbd "i c") #'diary-insert-cyclic-entry)
     (define-key map (kbd "i d") #'diary-insert-entry) ; for current "day"
