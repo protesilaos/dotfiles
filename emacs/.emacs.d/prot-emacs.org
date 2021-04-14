@@ -2701,7 +2701,8 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
     (define-key map (kbd "s-1") #'delete-other-windows)
     (define-key map (kbd "s-!") #'delete-other-windows-vertically) ; s-S-1
     (define-key map (kbd "s-5") #'delete-frame)
-    (define-key map (kbd "C-x _") #'balance-windows)
+    (define-key map (kbd "C-x _") #'balance-windows)      ; underscore
+    (define-key map (kbd "C-x -") #'fit-window-to-buffer) ; hyphen
     (define-key map (kbd "C-x +") #'balance-windows-area)
     (define-key map (kbd "s-q") #'window-toggle-side-windows)))
 #+end_src
