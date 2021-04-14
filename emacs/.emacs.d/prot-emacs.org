@@ -1350,6 +1350,8 @@ try.
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
 
+  (setq consult-preview-key nil) ; FIXME 2021-04-14: Does not work with `prot-minibuffer.el'
+
   (let ((map global-map))
     (define-key map (kbd "C-x M-:") #'consult-complex-command)
     (define-key map (kbd "C-x M-m") #'consult-minor-mode-menu)
