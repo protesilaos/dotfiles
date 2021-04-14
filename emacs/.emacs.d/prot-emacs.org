@@ -609,12 +609,6 @@ Relevant publications of mine that are not part of this document:
 
   ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
   ;; as it explains what those property lists should contain.
-  ;;
-  ;; Beware that the light weight I pass to Iosevka Comfy (my custom
-  ;; variant) is thicker than the equivalent for standard Iosevka.  In
-  ;; my build instructions, I set that to 350, while the standard light
-  ;; is at 300, while regular is at 400.  Source:
-  ;; <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
         '((laptop . ( :fixed-pitch-family "Hack"
                       :fixed-pitch-regular-weight normal
@@ -634,12 +628,12 @@ Relevant publications of mine that are not part of this document:
                        :variable-pitch-height 0.95
                        :variable-pitch-regular-weight normal))
 
-          (presentation . ( :fixed-pitch-family "Iosevka Comfy"
-                            :fixed-pitch-regular-weight light
-                            :fixed-pitch-heavy-weight semibold
-                            :fixed-pitch-height 140
+          (presentation . ( :fixed-pitch-family "Hack"
+                            :fixed-pitch-regular-weight normal
+                            :fixed-pitch-heavy-weight bold
+                            :fixed-pitch-height 130
                             :fixed-pitch-line-spacing 2
-                            :variable-pitch-family "Roboto"
+                            :variable-pitch-family "Inter"
                             :variable-pitch-height 1.0
                             :variable-pitch-regular-weight normal))))
 
