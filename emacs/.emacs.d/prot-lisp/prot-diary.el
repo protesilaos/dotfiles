@@ -170,7 +170,14 @@ Otherwise use `diary-mail-days'."
 ;; I might expand this further, depending on my usage patterns and the
 ;; conventions I establish over time.
 (defconst prot-diary-font-lock-keywords
-  '((";;.*"
+  `((,(format "^%s?\\(%s\\)" (regexp-quote diary-nonmarking-symbol)
+             (regexp-quote diary-sexp-entry-symbol))
+     (1 'shadow t))
+    (diary-font-lock-sexps
+     (0 'font-lock-function-name-face t))
+    (,(format "^%s" (regexp-quote diary-nonmarking-symbol))
+     (0 'warning t))
+    (,(format "%s.*" diary-comment-start)
      (0 'font-lock-comment-face)))
   "Rules for extra Diary fontification.")
 
