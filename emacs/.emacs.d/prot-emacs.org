@@ -270,6 +270,8 @@ appropriate place to re-bind or free up some common key combinations.
     (define-key map (kbd "C-'") #'prot-simple-insert-pair-completion)
     (define-key map (kbd "M-'") #'prot-simple-insert-pair-completion)
     (define-key map (kbd "M-\\") #'prot-simple-delete-pair-dwim)
+    (define-key map (kbd "C-M-;") #'prot-simple-cite-region)
+    (define-key map (kbd "C-M-^") #'prot-simple-insert-undercaret)
     (define-key map (kbd "<C-M-backspace>") #'backward-kill-sexp)
     (define-key map (kbd "M-c") #'capitalize-dwim)
     (define-key map (kbd "M-l") #'downcase-dwim)        ; "lower" case
@@ -6829,38 +6831,19 @@ environments that are not already supported by Emacs.
 :END:
 
 My =prot-text.el= (copied verbatim further below) is meant to provide a
-set of extensions for the built-in =text-mode.el=.  Currently there are
-only two commands, though I plan to add more of them over time:
+set of extensions for the built-in =text-mode.el=.  Currently there is
+only one command:
 
 + =prot-text-insert-heading= lets you add a heading delimiter to the line
   at point.  The length of the delimiter is equal to that of the line.
   By default, the delimiter consists of hyphens, but with a =C-u= prefix
   argument those are substituted for equals signs.
 
-+ =prot-text-cite-region= reformats the active region to look like a
-  quoted block.  It is meant to be simple and so does not test for
-  indentation (remember, this is strictly about plain text, not
-  structured program code).  When called with an optional =C-u= prefix
-  argument, it prompts for a description, which it places at the top of
-  the formatted text inside square brackets.  Instead of trying to
-  visualise the effect for you, check this:
+I used to have another two in this file, which have now (2021-04-13)
+been moved to =prot-simple.el=.  Those are =prot-simple-cite-region= and
+=prot-simple-insert-undercaret=.
 
-#+begin_example
-This is some text
-we would like to quote
-
-+----
-| This is some text
-| we would like to quote
-+----
-
-+----[ Description added (called command with C-u) ]
-| This is some text
-| we would like to quote
-+----
-#+end_example
-
-Here is the package configuration.
+Refer to the source code in [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common custom functions (prot-simple.el)]].
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'text-mode)
@@ -6868,10 +6851,7 @@ Here is the package configuration.
 (prot-emacs-builtin-package 'prot-text
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)$" . text-mode))
   (add-hook 'text-mode-hook #'goto-address-mode)
-  (let ((map text-mode-map))
-    (define-key map (kbd "<M-return>") #'prot-text-insert-heading)
-    (define-key map (kbd "C-M-^") #'prot-text-insert-undercaret)
-    (define-key map (kbd "M-;") #'prot-text-cite-region))
+  (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
   (define-key org-mode-map (kbd "M-;") nil))
 #+end_src
 
