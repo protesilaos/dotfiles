@@ -427,7 +427,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody, 'accented,
         ;; 'accented-3d, 'accented-moody
-        modus-themes-mode-line 'accented-3d
+        modus-themes-mode-line 'accented
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
@@ -460,7 +460,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'fg-only, 'bg-only, 'deuteranopia,
-        modus-themes-diffs 'desaturated
+        modus-themes-diffs 'deuteranopia
 
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
