@@ -2615,7 +2615,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'window
   (setq display-buffer-alist
-        '(;; top side window
+        `(;; top side window
           ("\\**prot-elfeed-bongo-queue.*"
            (display-buffer-reuse-window display-buffer-in-side-window)
            (window-height . 0.16)
@@ -2683,10 +2683,13 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.2))
           ;; below currect window
-          ("diary"                      ; this looks fragile
-           (display-buffer-reuse-mode-window display-buffer-below-selected))
           ("\\*Calendar.*"
-           (display-buffer-reuse-mode-window display-buffer-below-selected))))
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (window-height . shrink-window-if-larger-than-buffer))
+          ;; Miscellaneous
+          (,diary-fancy-buffer
+           (display-buffer-pop-up-window)
+           (window-parameters . ((mode-line-format . ,mode-line-format))))))
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
@@ -4072,60 +4075,6 @@ and corresponding functions.
   (define-key global-map (kbd "<s-S-return>") #'shell))
 #+end_src
 
-** Calendar and Diary
-:PROPERTIES:
-:CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
-:END:
-
-/NOTE 2021-04-12: This section is subject to major review./
-
-Some basic settings for =calendar.el= and =diary-lib.el=.  They can be used
-on their own, while they are also leveraged by Org facilities, such as
-the agenda.
-
-#+begin_src emacs-lisp
-(prot-emacs-builtin-package 'calendar
-  (setq calendar-mark-diary-entries-flag t)
-  (setq calendar-mode-line-format nil)
-  (setq calendar-time-display-form
-        '(24-hours ":" minutes
-                   (when time-zone
-                     (concat " (" time-zone ")"))))
-  (setq calendar-week-start-day 1)      ; Monday
-  (setq calendar-date-style 'iso)
-  (setq calendar-mark-holidays-flag nil)
-  (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
-
-  (require 'solar)
-  (setq calendar-latitude 35.17
-        calendar-longitude 33.36)
-
-  (require 'lunar)
-  (setq lunar-phase-names
-        '("New Moon"
-          "First Quarter Moon"
-          "Full Moon"
-          "Last Quarter Moon"))
-
-  ;; this is defined in calendar.el though it belongs to diary-lib.el...
-  (setq diary-date-forms (cond ((eq calendar-date-style 'iso)
-                                   diary-iso-date-forms)
-                                  ((eq calendar-date-style 'european)
-                                   diary-european-date-forms)
-                                  (t diary-american-date-forms)))
-
-  (add-hook 'calendar-today-visible-hook #'calendar-mark-today))
-
-(prot-emacs-builtin-package 'diary-lib
-  (setq diary-display-function #'diary-simple-display)
-  (setq diary-mail-addr (or (bound-and-true-p user-mail-address) "")) ; check my email settings
-  (setq diary-mail-days 7)
-  (setq diary-abbreviated-year-flag nil))
-
-(prot-emacs-builtin-package 'appt
-  (setq appt-message-warning-time 15))
-#+end_src
-
 ** Org-mode (personal information manager)
 :PROPERTIES:
 :CUSTOM_ID: h:4e8347de-415e-4804-b383-d61499e05ca1
@@ -4265,6 +4214,9 @@ package configurations:
 
   - And the =n= in the dispatcher will offer you a combined view of the
     above.
+
+  - Those granted, I prefer to just use the Diary and Calendar for my
+    simple needs: [[#h:b4040bc0-7a2a-4f17-824d-42de621bd1b9][Calendar and Diary (and prot-diary.el)]].
 
 + Org export :: I do not have much to offer here, apart from the setup
   that handles consistent heading IDs and anchor tags (the latter
@@ -4442,7 +4394,6 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
            (search category-keep))))
   (setq org-agenda-breadcrumbs-separator "->")
   (setq org-agenda-todo-keyword-format "%-1s")
-  (setq org-agenda-diary-sexp-prefix nil)
   (setq org-agenda-fontify-priorities 'cookies)
   (setq org-agenda-category-icon-alist nil)
   (setq org-agenda-remove-times-when-in-prefix nil)
@@ -4483,10 +4434,9 @@ produces dates with a fixed length."
   (setq org-agenda-persistent-marks nil)
 
 ;;;;; Agenda diary entries
-  ;; NOTE: I don't use the diary, but here it is anyway
   (setq org-agenda-insert-diary-strategy 'date-tree)
   (setq org-agenda-insert-diary-extract-time nil)
-  (setq org-agenda-include-diary nil)
+  (setq org-agenda-include-diary t)
 
 ;;;;; Agenda follow mode
   (setq org-agenda-start-with-follow-mode nil)
@@ -4669,6 +4619,356 @@ file which do not already have one."
     (define-key map (kbd "C-c S-l") #'org-toggle-link-display)
     (define-key map (kbd "C-c C-S-l") #'org-insert-last-stored-link)))
 #+end_src
+
+** Calendar and Diary (and prot-diary.el)
+:PROPERTIES:
+:CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
+:END:
+
+Emacs provides a suite of tools for planning events or recording dates
+of interest in your life.  These are part of the same workflow, but are
+divided into several smaller libraries.  The two main ones are
+=diary-lib.el= and =calendar.el=.  I extend them with =prot-diary.el=, which
+is reproduced at the end of this section, after the package
+configurations.
+
+=diary-lib.el= defines everything that pertains to the =diary-file=
+(defaults to =~/.emacs.d/diary=, which is what I want).  The Diary has a
+two-fold purpose: (i) to store entries about calendar events, and (ii)
+to display such events for the given day or range thereof.
+
+In the first case, the Diary functions as a regular buffer that you may
+edit freely.  This is where you can write one-off or recurring events
+using various date and time formats expressed in natural language or as
+Elisp forms (a sexp or "symbolic expression").
+
+When it comes to single events for a given day, I prefer to input them
+on a whole line using the ISO 8601 standard and a 24-hour clock, like
+this: =2021-04-13 15:00 Description of event=.
+
+For multiple events that are clustered on the same day, I write the date
+on its own line and below it place a description of each event
+optionally preceded by a timestamp.  Entries with no timestamp come
+first, followed by those that are time sensitive.  This is just a matter
+of personal style.
+
+In this scenario of grouped events under a given date, each entry below
+the date has to start with at least one empty space, otherwise the Diary
+will try to interpret them as two distinct expressions (the exact number
+of spaces is a matter of preference).  So the format looks like this
+(use =C-x TAB= (=indent-rigidly=) to incrementally adjust the indentation of
+the active region, or =C-u C-x TAB= to increase by four spaces):
+
+#+begin_example
+2021-04-13
+    This event is not time sensitive
+    06:30-09:00 Hiking
+    10:00 Prepare sourdough bread
+    11:00-13:00 Write stuff
+#+end_example
+
+The following is also possible, but looks too busy for no good reason:
+
+#+begin_example
+2021-04-13 This event is not time sensitive
+2021-04-13 06:30-09:00 Hiking
+2021-04-13 10:00 Prepare sourdough bread
+2021-04-13 11:00-13:00 Write stuff
+#+end_example
+
+Though not required, you can separate events by an empty line.  Keeps
+things easy to read.  Remember that lines that contain at least one
+space are thought to belong to the closest date entry above them.  Which
+means that for multiple events on a given day you can use something like
+this, if you need to (here dots represent empty spaces):
+
+#+begin_example
+2021-04-13
+    This event is not time sensitive
+....
+    06:30-09:00 Hiking
+....
+    10:00 Prepare sourdough bread
+....
+    11:00-13:00 Write stuff
+#+end_example
+
+Furthermore, it is possible to use nested levels of indentation or, in
+my case, call =prot-simple-cite-region= and indent it accordingly (check
+the source code: [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common custom functions (prot-simple.el)]]).  For
+example:
+
+#+begin_example
+2021-04-13
+    This event is not time sensitive
+....
+    06:30-09:00 Hiking
+    +----[ Sample text ]
+    | This is some random text
+    | It relates to the above event
+    +----
+....
+    10:00 Prepare sourdough bread
+    11:00-13:00 Write stuff
+#+end_example
+
+Remember that these are mere stylistic considerations.  I generally
+prefer to keep things simple, though I appreciate the flexibility of
+adapting the view of my evolving needs.
+
+I prefer to defer all formatting related decisions until after I have
+typed in all the information.  My =prot-diary-align-timestamped-entries=
+lets me align the negative space between an entry's timestamp and its
+description.  Consider the following block and suppose that the region
+starts from the line below the date and ends at the end of the line with
+the last entry (demarcated by the =|= characters).
+
+#+begin_example
+2021-04-13
+|This event is not time sensitive
+06:30-09:00 Hiking
+10:00 Prepare sourdough bread
+11:00-13:00 Write stuff|
+
+...becomes...
+
+2021-04-13
+    This event is not time sensitive
+    06:30-09:00 Hiking
+    10:00       Prepare sourdough bread
+    11:00-13:00 Write stuff
+#+end_example
+
+For anniversaries or cyclic events, I rely on Elisp.  It is better to
+read the Emacs manual on the technicalities as there are lots of
+examples that should help you get started.  Just bear in mind that the
+exact order for the =YEAR=, =MONTH=, =DATE= arguments depends on the value
+assigned to the variable =calendar-date-style=.  As I already noted, I
+follow the ISO style (evaluate this: =(format-time-string "%F")=).
+
+The second use case of the Diary, namely, of showing the events it holds
+is controlled by the variable =diary-display-function=.  On my setup it
+should present the information in a read-only buffer that is internally
+referred to as the "fancy" style.  To bring up that interface, you can
+either use the Calendar as a starting point (more on that later) or call
+a command directly, such as =prot-diary-display-entries=.  The resulting
+buffer is fairly straightforward: there is a date header (or many
+depending on the prefix numeric argument) and below that one or more
+entries related to it.  Those retain the indentation of the underlying
+Diary file, as described above.  Hit =RET= over an entry to visit the
+editable version of the Diary.
+
+Apart from displaying that buffer on demand, it is possible to get its
+information emailed to you.  The built-in command for that is
+=diary-mail-days=, however it has the downside of sending a mail even when
+there are no events for the day[s] specified.  I do not see the utility
+of such behaviour: what is the purpose of drawing attention to my email
+client, only to waste my time with some "nothing to see here" message?
+Whereas =prot-diary-mail-entries= only sends a message when that is the
+right thing to do, i.e. when there is something that requires our
+attention (for N days or =diary-mail-days=).  It also has the benefit of
+not popping up the Diary display in another window as a side effect of
+sending the email (check =prot-diary--mail-fn= for the technicalities).  I
+set it up to automatically try to send me an email briefing each morning
+when I launch Emacs.
+
+Email briefings just offer an overview of events in the immediate
+future.  We still need a mechanism to alert us some minutes in advance
+of a time sensitive appointment.  This is where the =appt.el= library
+comes in handy.  It already knows how to scan the Diary in search for
+time expressions and produce reminders for them: all it needs is to be
+activated with =(appt-activate 1)=.  Unlike email, this is a more
+persistent method of producing notifications inside of Emacs in the form
+of a pop-up window and a complementary modeline indicator with a
+countdown to the event.  The default notification time is specified in
+the variable =appt-message-warning-time=, though individual Diary entries
+can declare their own time (in minutes), by holding some extra text as
+defined in =appt-warning-time-regexp=.  Put that in a comment
+(=diary-comment-start=) to disambiguate it from the entry's description.
+For example, this Diary entry will work as expected with my
+configurations: =2021-04-13 18:00 Some task ;; appt 5=.  The =;; appt 5=
+part will not be shown in the Diary display, but will still activate the
+reminder.  Nice and simple!
+
+To recapitulate, the Diary is flexible enough to accommodate a variety
+of preferences on how to organise one's life events.  The key to get
+started is to learn how to edit the actual file, which is fairly easy.
+It then is trivial to either display that information on demand or be
+notified about it.
+
+Let us now cover the other major component of this suite of tools: the
+Calendar.  The main point of entry is =M-x calendar=.  It displays a
+horizontal three-month view centred on the current month.  Moving in the
+calendar is consistent with regular Emacs motions: =C-f= and =C-b= move one
+day forward/backward, =C-n= and =C-p= go down and up one week, =C-a= and =C-e=
+place the point at the beginning or end of the week, respectively.  Then
+we have the equivalent of paragraph and page motions: =M-{= and =M-}= which
+travel forward/backward a full month, with =C-v= and =M-v= moving to the
+next and previous three-month set.  To merely scroll the horizontal
+calendar strip, use =<= and =>= to do so in the given direction.  As always,
+do not forget to type =C-h m= (=describe-mode=) in any major-mode buffer you
+are unfamiliar with to get help for it: you will learn about those
+motions and some more of them (and always check the manual as well).
+
+The Calendar offers an overview of your Diary entries, as noted above,
+and, optionally, of all holidays that you have opted in to.  For the
+latter, check the variable =calendar-holidays=.  I set it to only a small
+set of records largely for experimental purposes, as I am not interested
+in either religious or secular special days.  Consider this, if you
+will, an attempt at introducing the illusion of eventfulness in my
+calendar.  I really don't care about any of this.
+
+To mark Diary entries in the Calendar, use =m= (=diary-mark-entries=).  That
+accepts a prefix argument (=C-u=) in case you wish to redraw those marks.
+Here we should clarify that "marks" are Emacs faces by default, unless
+you explicitly override them with characters.  I prefer faces, which
+leave a more pleasant, less noisy impression.  Similarly, use =x=
+(=calendar-mark-holidays=) to mark holidays.  Both of those tasks can be
+performed automatically upon accessing the Calendar, by setting the
+variables =calendar-mark-diary-entries-flag=, =calendar-mark-holidays-flag=
+to non-nil values (which is what I do).
+
+Events that should not appear in the Calendar when Diary entries are
+marked must be preceded with a special character, which is configurable
+by means of =diary-nonmarking-symbol=.  I personally have no use for this,
+because if something is not worth being marked, then it is not pointless
+to keep track of it in my day-to-day planner.
+
+While in the Calendar, you can move the point over a marked day and type
+=d= (=diary-view-entries=) to show the read-only variant of the Diary, as
+outlined above.  Or pass a number to it to encompasses Nth days (e.g. =7
+d= will show Diary entries for seven days starting from the current one).
+If the mark pertains to a holiday, type =h= to get a message in the echo
+area about it (=calendar-cursor-holidays=).
+
+If you opt to use my settings, the best way to learn how to disambiguate
+the two marks is to access the Calendar and hit =u= (=calendar-unmark=).
+Follow it up with =m= to mark Diary entries and =x= to render holiday marks.
+
+It is possible to use more faces than the ones which are provided by
+default.  To do so, you need to specify a face argument to the various
+Elisp expressions that can be written to the Diary.  For example, my
+=prot-diary.el= (reproduced further below) has a bespoke face for
+"administrative tasks", which can be assigned to the given expression
+like this (new line and indentation are optional, as mentioned above,
+otherwise keep everything on one line):
+
+#+begin_example
+%%(diary-date t t 13 'prot-diary-calendar-administrative-mark)
+    Some administrative monthly task
+%%(diary-anniversary 1900 4 13 'prot-diary-calendar-anniversary-mark)
+    Some anniversary is %d years
+#+end_example
+
+The manual covers a lot of other potentially useful tasks you may
+accomplish with those tools.  For example, it is possible to import an
+iCalendar, convert from one calendar to another (e.g. Gregorian to
+Chinese), get the phases of the moon, sunset and sunrise times in the
+given geographic coordinates...  Evaluate this expression to start
+reading the relevant Info nodes: =(info "(emacs) Calendar/Diary")=.
+
+Finally, note that I control the placement of those buffers in the
+=display-buffer-alist= (read: [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).  For the
+case of the "fancy" Diary display, I also reset its mode line format to
+my global settings, as its original behaviour is to remove everything
+and replace it with consecutive dashes with the date at their centre
+(why even unconditionally mess around with people's mode line?).
+
+#+begin_src emacs-lisp
+(prot-emacs-builtin-package 'calendar
+  (setq calendar-mark-diary-entries-flag t)
+  (setq calendar-mark-holidays-flag t)
+  (setq calendar-mode-line-format nil)
+  (setq calendar-time-display-form
+        '(24-hours ":" minutes
+                   (when time-zone
+                     (format "(%s)" time-zone))))
+  (setq calendar-week-start-day 1)      ; Monday
+  (setq calendar-date-style 'iso)
+  (setq calendar-date-display-form calendar-iso-date-display-form)
+  (setq calendar-time-zone-style 'numeric) ; Emacs 28.1
+
+  (require 'solar)
+  (setq calendar-latitude 35.17         ; Not my actual coordinates
+        calendar-longitude 33.36)
+
+  (require 'cal-dst)
+  (setq calendar-standard-time-zone-name "+0200")
+  (setq calendar-daylight-time-zone-name "+0300")
+
+  (require 'diary-lib)
+  (setq diary-date-forms diary-iso-date-forms)
+  (setq diary-comment-start ";;")
+  (setq diary-comment-end "")
+  (setq diary-nonmarking-symbol "!")
+  (setq diary-show-holidays-flag t)
+  (setq diary-display-function #'diary-fancy-display) ; better than its alternative
+  (setq diary-header-line-format nil)
+  (setq diary-list-include-blanks nil)
+  (setq diary-number-of-entries 2)
+  (setq diary-mail-days 2)
+  (setq diary-abbreviated-year-flag nil)
+
+  (add-hook 'calendar-today-visible-hook #'calendar-mark-today)
+  (add-hook 'diary-list-entries-hook 'diary-sort-entries t)
+  ;; Those presuppose (setq diary-display-function #'diary-fancy-display)
+  (add-hook 'diary-list-entries-hook 'diary-include-other-diary-files)
+  (add-hook 'diary-mark-entries-hook 'diary-mark-included-diary-files)
+
+  (let ((map calendar-mode-map))
+    (define-key map (kbd "s") #'calendar-sunrise-sunset)
+    (define-key map (kbd "l") #'lunar-phases)
+    (define-key map (kbd "i") nil) ; Org sets this, much to my chagrin
+    (define-key map (kbd "i a") #'diary-insert-anniversary-entry)
+    (define-key map (kbd "i c") #'diary-insert-cyclic-entry)
+    (define-key map (kbd "i d") #'diary-insert-entry) ; for current "day"
+    (define-key map (kbd "i i") #'diary-insert-entry) ; most common action, easier to type
+    (define-key map (kbd "i m") #'diary-insert-monthly-entry)
+    (define-key map (kbd "i w") #'diary-insert-weekly-entry)
+    (define-key map (kbd "i y") #'diary-insert-yearly-entry)
+    (define-key map (kbd "M-n") #'calendar-forward-month)
+    (define-key map (kbd "M-p") #'calendar-backward-month)))
+
+(prot-emacs-builtin-package 'appt
+  (setq appt-display-diary nil)
+  (setq appt-disp-window-function #'appt-disp-window)
+  (setq appt-display-mode-line t)
+  (setq appt-display-interval 3)
+  (setq appt-audible nil)
+  (setq appt-warning-time-regexp "appt \\([0-9]+\\)")
+  (setq appt-message-warning-time 15)
+
+  (appt-activate 1))
+
+(prot-emacs-builtin-package 'prot-diary
+  ;; The idea is to get a reminder via email when I launch Emacs in the
+  ;; morning and this file is evaluated.  Obviously this is not a super
+  ;; sophisticated approach, though I do not need one.
+  (let ((time (string-to-number (format-time-string "%H"))))
+    (when (and (> time 4) (< time 9))
+      (run-at-time 10 nil #'prot-diary-mail-entries)))
+
+  (require 'holidays)
+  (setq calendar-holidays (append holiday-solar-holidays prot-diary-local-holidays))
+
+  (let ((map diary-mode-map))
+    (define-key map (kbd "<M-return>") #'prot-diary-newline-indent)
+    (define-key map (kbd "M-n") #'prot-diary-heading-next)
+    (define-key map (kbd "M-p") #'prot-diary-heading-previous)
+    (define-key map (kbd "C-c C-a") #'prot-diary-align-timestamped-entries))
+  (let ((map global-map))
+    (define-key map (kbd "C-c d a") #'prot-diary-insert-appointment)
+    (define-key map (kbd "C-c d c") #'calendar)
+    (define-key map (kbd "C-c d d") #'prot-diary-display-entries)
+    (define-key map (kbd "C-c d e") #'prot-diary-edit-diary)
+    (define-key map (kbd "C-c d i") #'prot-diary-insert-entry)
+    (define-key map (kbd "C-c d m") #'prot-diary-mail-entries)))
+#+end_src
+
+These are the contents of the =prot-diary.el= library (find the source
+code in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
+
+#+include: prot-lisp/prot-diary.el src emacs-lisp :tangle no
 
 ** Email settings
 :PROPERTIES:
@@ -5261,7 +5561,7 @@ lots of options and commands: make sure to read its official manual.
   (setq ebdb-user-name-address-re 'self) ; match the above
   (setq ebdb-save-on-exit t)
 
-  (setq ebdb-use-diary nil)   ; how can I banish the diary from my life?
+  (setq ebdb-use-diary nil)
 
   (defun prot/ebdb-message-setup ()
     "Load EBDB if not done already."
