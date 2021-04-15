@@ -2685,11 +2685,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
           ;; below currect window
           ("\\*Calendar.*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . shrink-window-if-larger-than-buffer))
-          ;; Miscellaneous
-          (,diary-fancy-buffer
-           (display-buffer-pop-up-window)
-           (window-parameters . ((mode-line-format . ,mode-line-format))))))
+           (window-height . shrink-window-if-larger-than-buffer))))
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
