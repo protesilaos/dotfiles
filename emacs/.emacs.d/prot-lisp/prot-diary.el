@@ -174,6 +174,9 @@ Otherwise use `diary-mail-days'."
      (0 'font-lock-comment-face)))
   "Rules for extra Diary fontification.")
 
+(defvar outline-regexp)
+(defvar outline-heading-end-regexp)
+
 (defun prot-diary--extras-setup ()
   "Additional setup for Diary mode buffers.
 Applies `prot-diary-font-lock-keywords' and specifies what
@@ -181,7 +184,9 @@ constitutes a heading for the purposes of Outline minor mode."
   (when (derived-mode-p 'diary-mode)
     (font-lock-flush (point-min) (point-max))
     (font-lock-add-keywords nil prot-diary-font-lock-keywords t)
-    (setq outline-regexp (format "%s+\\{2,\\} .*" diary-comment-start))))
+    ;; FIXME 2021-04-15: Why are headings set at different levels?
+    (setq outline-regexp (format "%s+\\{2,\\} .*" diary-comment-start))
+    (setq outline-heading-end-regexp (format "%s$" diary-comment-end))))
 
 (add-hook 'diary-mode-hook #'prot-diary--extras-setup)
 
