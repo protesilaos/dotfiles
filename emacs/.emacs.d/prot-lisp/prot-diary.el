@@ -38,36 +38,11 @@
 (require 'diary-lib)
 (require 'prot-common)
 
-;;;; General utilities
-
 (defgroup prot-diary ()
   "Tweaks for the calendar and diary."
-  :group 'calendar)
+  :group 'diary)
 
-
-(defface prot-diary-calendar-anniversary-mark
-  '((((class color) (min-colors 88) (background light))
-     :background "#fff1f0" :foreground "#a60000")
-    (((class color) (min-colors 88) (background dark))
-     :background "#2c0614" :foreground "#ff8059")
-    (t :foreground "red"))
-  "Face to mark anniversaries in the calendar.")
-
-(defface prot-diary-calendar-administrative-mark
-  '((((class color) (min-colors 88) (background light))
-     :background "#fff3da" :foreground "#813e00")
-    (((class color) (min-colors 88) (background dark))
-     :background "#221000" :foreground "#eecc00")
-    (t :foreground "yellow"))
-  "Face to mark administrative tasks in the calendar.")
-
-(defface prot-diary-calendar-mundane-mark
-  '((((class color) (min-colors 88) (background light))
-     :background "#f0f0f0" :foreground "#505050")
-    (((class color) (min-colors 88) (background dark))
-     :background "#191a1b" :foreground "#a8a8a8")
-    (t :inherit shadow))
-  "Face to mark mundane tasks in the calendar.")
+;;;; Commands and utilities
 
 (defun prot-diary--list-entries (n inhibit)
   "Check for N days with diary entries.
@@ -76,6 +51,7 @@ When optional INHIBIT is non-nil, do not show thediary buffer."
         (hide (if inhibit t nil)))
     (diary-list-entries (calendar-current-date) n hide)))
 
+;;;###autoload
 (defun prot-diary-mail-entries (&optional ndays)
   "Email diary entries for NDAYS or `diary-mail-days'.
 
@@ -158,16 +134,42 @@ Otherwise use `diary-mail-days'."
   (newline)
   (insert (make-string 4 ?\s)))
 
+;;;; Fontification extras
+
+(defface prot-diary-calendar-anniversary-mark
+  '((((class color) (min-colors 88) (background light))
+     :background "#fff1f0" :foreground "#a60000")
+    (((class color) (min-colors 88) (background dark))
+     :background "#2c0614" :foreground "#ff8059")
+    (t :foreground "red"))
+  "Face to mark anniversaries in the calendar.")
+
+(defface prot-diary-calendar-administrative-mark
+  '((((class color) (min-colors 88) (background light))
+     :background "#fff3da" :foreground "#813e00")
+    (((class color) (min-colors 88) (background dark))
+     :background "#221000" :foreground "#eecc00")
+    (t :foreground "yellow"))
+  "Face to mark administrative tasks in the calendar.")
+
+(defface prot-diary-calendar-mundane-mark
+  '((((class color) (min-colors 88) (background light))
+     :background "#f0f0f0" :foreground "#505050")
+    (((class color) (min-colors 88) (background dark))
+     :background "#191a1b" :foreground "#a8a8a8")
+    (t :inherit shadow))
+  "Face to mark mundane tasks in the calendar.")
+
 ;; I might expand this further, depending on my usage patterns and the
 ;; conventions I establish over time.
 (defconst prot-diary-font-lock-keywords
   `((,(format "^%s?\\(%s\\)" (regexp-quote diary-nonmarking-symbol)
              (regexp-quote diary-sexp-entry-symbol))
-     (1 'shadow t))
+     (1 'font-lock-constant-face t))
     (diary-font-lock-sexps
      (0 'font-lock-function-name-face t))
     (,(format "^%s" (regexp-quote diary-nonmarking-symbol))
-     (0 'warning t))
+     (0 'font-lock-negation-char-face t))
     (,(format "%s.*" diary-comment-start)
      (0 'font-lock-comment-face)))
   "Rules for extra Diary fontification.")
