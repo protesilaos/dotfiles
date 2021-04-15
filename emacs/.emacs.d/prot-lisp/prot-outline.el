@@ -34,7 +34,8 @@
 
 ;;; Code:
 
-;; TODO 2021-04-15: This file needs to be refactored.
+;; TODO 2021-04-15: This file needs to be reviewed in light of changes
+;; in Emacs28.
 
 (require 'outline)
 (require 'imenu)
