@@ -184,8 +184,7 @@ constitutes a heading for the purposes of Outline minor mode."
   (when (derived-mode-p 'diary-mode)
     (font-lock-flush (point-min) (point-max))
     (font-lock-add-keywords nil prot-diary-font-lock-keywords t)
-    ;; FIXME 2021-04-15: Why are headings set at different levels?
-    (setq outline-regexp (format "%s+\\{2,\\} .*" diary-comment-start))
+    (setq outline-regexp (format "%s+\\{2,\\} [^ \t\n]" diary-comment-start))
     (setq outline-heading-end-regexp (format "%s$" diary-comment-end))))
 
 (add-hook 'diary-mode-hook #'prot-diary--extras-setup)
