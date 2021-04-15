@@ -174,13 +174,16 @@ Otherwise use `diary-mail-days'."
      (0 'font-lock-comment-face)))
   "Rules for extra Diary fontification.")
 
-(defun prot-diary--fontify ()
-  "Font-lock setup for `prot-diary-font-lock-keywords'."
+(defun prot-diary--extras-setup ()
+  "Additional setup for Diary mode buffers.
+Applies `prot-diary-font-lock-keywords' and specifies what
+constitutes a heading for the purposes of Outline minor mode."
   (when (derived-mode-p 'diary-mode)
     (font-lock-flush (point-min) (point-max))
-    (font-lock-add-keywords nil prot-diary-font-lock-keywords t)))
+    (font-lock-add-keywords nil prot-diary-font-lock-keywords t)
+    (setq outline-regexp (format "%s+\\{2,\\} .*" diary-comment-start))))
 
-(add-hook 'diary-mode-hook #'prot-diary--fontify)
+(add-hook 'diary-mode-hook #'prot-diary--extras-setup)
 
 (defconst prot-diary-date-pattern
   "^!?\\(\\([0-9]+\\|\\*\\)[-/]\\([0-9]+\\|\\*\\)[-/]\\([0-9]+\\|\\*\\)\\|%%\\)"
