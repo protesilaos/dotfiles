@@ -4832,10 +4832,10 @@ to keep track of it in my day-to-day planner.
 
 While in the Calendar, you can move the point over a marked day and type
 =d= (=diary-view-entries=) to show the read-only variant of the Diary, as
-outlined above.  Or pass a number to it to encompasses Nth days (e.g. =7
-d= will show Diary entries for seven days starting from the current one).
-If the mark pertains to a holiday, type =h= to get a message in the echo
-area about it (=calendar-cursor-holidays=).
+outlined above.  Or pass a number to it to encompasses Nth days
+(e.g. typing =7 d= will show Diary entries for seven days starting from
+the current one).  If the mark pertains to a holiday, type =h= to get a
+message in the echo area about it (=calendar-cursor-holidays=).
 
 If you opt to use my settings, the best way to learn how to disambiguate
 the two marks is to access the Calendar and hit =u= (=calendar-unmark=).
