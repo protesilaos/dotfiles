@@ -34,6 +34,8 @@
 
 ;;; Code:
 
+;; TODO 2021-04-15: This file needs to be refactored.
+
 (require 'outline)
 (require 'imenu)
 (require 'prot-common)
@@ -92,8 +94,6 @@ Add this to `prot-outline-minor-mode-exit-hook'."
 
 (defvar prot-outline-minor-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "M-n") 'outline-next-visible-heading)
-    (define-key map (kbd "M-p") 'outline-previous-visible-heading)
     (define-key map (kbd "C-c C-n") 'outline-next-visible-heading)
     (define-key map (kbd "C-c C-p") 'outline-previous-visible-heading)
     (define-key map (kbd "C-c C-f") 'outline-forward-same-level)
