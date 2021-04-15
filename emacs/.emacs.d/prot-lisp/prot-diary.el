@@ -76,18 +76,26 @@ When optional INHIBIT is non-nil, do not show thediary buffer."
         (hide (if inhibit t nil)))
     (diary-list-entries (calendar-current-date) n hide)))
 
-(defun prot-diary--mail-fn (n)
-  "Email diary entries for N days.
+(defun prot-diary-mail-entries (&optional ndays)
+  "Email diary entries for NDAYS or `diary-mail-days'.
 
-Alternative of `diary-mail-entries', meant as a subroutine of
-`prot-diary-mail-entries'.  Does not show the diary buffer after
-sending the email and does not send a mail when no entries are
-present (what is the point of first notifying me at my inbox and
-then telling me 'Oh, nothing of interest here'?)."
-  (if (string-equal diary-mail-addr "")
+With optional DAYS as a positive integer, produce a list for N
+days including the current one (so 2 is today and tomorrow).
+Otherwise use `diary-mail-days'.
+
+Alternative of `diary-mail-entries'.  Does not show the diary
+buffer after sending the email and does not send a mail when no
+entries are present (what is the point of first notifying me at
+my inbox and then telling me 'Oh, nothing of interest here'?)."
+  (interactive "p")
+  (if (or (string-equal diary-mail-addr "")
+          (eq diary-mail-addr nil))
       (user-error "You must set `diary-mail-addr' to use this command")
     (let ((entries)
-          (diary-display-function #'diary-fancy-display))
+          (diary-display-function #'diary-fancy-display)
+          (diary-mail-addr user-mail-address)
+          (n (or ndays diary-mail-days)))
+      (prot-common-number-interger-positive-p n)
       (diary-list-entries (calendar-current-date) (or n diary-mail-days))
       (if (prot-diary--list-entries n t)
           (progn
@@ -101,23 +109,6 @@ then telling me 'Oh, nothing of interest here'?)."
             (insert entries)
             (call-interactively (get mail-user-agent 'sendfunc)))
         (message "No diary entries; skipping email delivery")))))
-
-;;;###autoload
-(defun prot-diary-mail-entries (&optional days)
-  "Mail to self diary entries.
-With optional DAYS as a positive integer, produce a list for N
-days including the current one (so 2 is today and tomorrow).
-Otherwise use `diary-mail-days'.
-
-This command uses `prot-diary--mail-fn' to do its job, which
-means that (i) it is will only send an email when there are diary
-entries to show for the specified day[s] and (ii) it will not
-display the diary buffer in another window as a side effect of
-sending the email."
-  (interactive "p")
-  (let ((n (or days diary-mail-days)))
-    (prot-common-number-interger-positive-p n)
-    (prot-diary--mail-fn n)))
 
 ;;;###autoload
 (defun prot-diary-display-entries (&optional days)
