@@ -4941,7 +4941,7 @@ and replace it with consecutive dashes with the date at their centre
   (setq appt-warning-time-regexp "appt \\([0-9]+\\)")
   (setq appt-message-warning-time 15)
 
-  (appt-activate 1))
+  (run-at-time 10 nil #'appt-activate 1))
 
 (prot-emacs-builtin-package 'prot-diary
   ;; The idea is to get a reminder via email when I launch Emacs in the
@@ -4949,7 +4949,7 @@ and replace it with consecutive dashes with the date at their centre
   ;; sophisticated approach, though I do not need one.
   (let ((time (string-to-number (format-time-string "%H"))))
     (when (and (> time 4) (< time 9))
-      (run-at-time 10 nil #'prot-diary-mail-entries)))
+      (run-at-time 3 nil #'prot-diary-mail-entries)))
 
   (require 'holidays)
   (setq calendar-holidays (append holiday-solar-holidays prot-diary-local-holidays))
