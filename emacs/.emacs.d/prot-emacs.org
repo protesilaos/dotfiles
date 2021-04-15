@@ -4863,12 +4863,13 @@ Chinese), get the phases of the moon, sunset and sunrise times in the
 given geographic coordinates...  Evaluate this expression to start
 reading the relevant Info nodes: =(info "(emacs) Calendar/Diary")=.
 
+For the integration with =outline-minor-mode= that =prot-diary.el= provides,
+refer to the relevant section (in short: you get header folding like in
+Org for every line that starts with =;;;=, given my =diary-comment-start= is
+=;;=): [[#h:a8e737b8-7c90-4c68-8814-acf2f637ffa1][Outline mode, outline minor mode (prot-outline.el)]].
+
 Finally, note that I control the placement of those buffers in the
-=display-buffer-alist= (read: [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).  For the
-case of the "fancy" Diary display, I also reset its mode line format to
-my global settings, as its original behaviour is to remove everything
-and replace it with consecutive dashes with the date at their centre
-(why even unconditionally mess around with people's mode line?).
+=display-buffer-alist= (read: [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'calendar
@@ -4949,6 +4950,9 @@ and replace it with consecutive dashes with the date at their centre
 
   (require 'holidays)
   (setq calendar-holidays (append holiday-solar-holidays prot-diary-local-holidays))
+
+  (with-eval-after-load 'prot-outline
+    (add-hook 'diary-mode-hook #'prot-outline-minor-mode))
 
   (let ((map diary-mode-map))
     (define-key map (kbd "<M-return>") #'prot-diary-newline-indent)
