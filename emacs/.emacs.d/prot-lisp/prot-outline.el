@@ -103,6 +103,8 @@ Add this to `prot-outline-minor-mode-exit-hook'."
     (define-key map (kbd "C-c C-q") 'prot-outline-hide-all)
     (define-key map (kbd "C-c C-u") 'outline-up-heading)
     (define-key map (kbd "C-c C-d") 'prot-outline-down-heading)
+    (define-key map (kbd "C-c C-v") 'outline-move-subtree-down)
+    (define-key map (kbd "C-c M-v") 'outline-move-subtree-up)
     (define-key map (kbd "<tab>") 'prot-outline-cycle-dwim)
     map)
   "Custom keymap for working with Outlines.")
