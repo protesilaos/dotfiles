@@ -85,7 +85,8 @@ Add this to `prot-outline-minor-mode-exit-hook'."
     (when (bound-and-true-p outline-minor-faces)
       (font-lock-remove-keywords nil outline-minor-faces--font-lock-keywords))
     (when (or (derived-mode-p 'text-mode)
-              (derived-mode-p 'prog-mode))
+              (derived-mode-p 'prog-mode)
+              (derived-mode-p 'diary-mode))
       (funcall major-mode)
       ;; REVIEW: Are there any other minor modes we need to account for?
       ;; If so, create a defvar and check it here.
