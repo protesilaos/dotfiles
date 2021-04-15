@@ -6772,7 +6772,12 @@ note that it was recorded long before I wrote =prot-outline.el=.
 
 (prot-emacs-elpa-package 'outline-minor-faces
   (add-hook 'prot-outline-minor-mode-enter-hook
-	        #'outline-minor-faces-add-font-lock-keywords))
+	        #'outline-minor-faces-add-font-lock-keywords)
+
+  (with-eval-after-load 'modus-themes
+    (add-hook 'modus-themes-after-load-theme-hook
+              (lambda ()
+                (set-face-attribute 'outline-minor-0 nil :extend nil)))))
 #+end_src
 
 These are the contents of the =prot-outline.el= library (find the file in

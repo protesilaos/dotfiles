@@ -82,7 +82,7 @@ visibility.  Else call `indent-for-tab-command'."
   "Re-enable the current buffer's major mode.
 Add this to `prot-outline-minor-mode-exit-hook'."
   (let ((minor-modes (prot-common-minor-modes-active)))
-    (when (bound-and-true-p outline-minor-faces)
+    (when (featurep 'outline-minor-faces)
       (font-lock-remove-keywords nil outline-minor-faces--font-lock-keywords))
     (when (or (derived-mode-p 'text-mode)
               (derived-mode-p 'prog-mode)
@@ -91,8 +91,7 @@ Add this to `prot-outline-minor-mode-exit-hook'."
       ;; REVIEW: Are there any other minor modes we need to account for?
       ;; If so, create a defvar and check it here.
       (when (member 'org-src-mode minor-modes)
-        (org-src-mode))
-      (message "Re-enabled %s" major-mode))))
+        (org-src-mode)))))
 
 (defvar prot-outline-minor-mode-map
   (let ((map (make-sparse-keymap)))
@@ -100,7 +99,7 @@ Add this to `prot-outline-minor-mode-exit-hook'."
     (define-key map (kbd "C-c C-p") 'outline-previous-visible-heading)
     (define-key map (kbd "C-c C-f") 'outline-forward-same-level)
     (define-key map (kbd "C-c C-b") 'outline-backward-same-level)
-    (define-key map (kbd "C-c C-a") 'outline-show-all)
+    ;; (define-key map (kbd "C-c C-a") 'outline-show-all)
     (define-key map (kbd "C-c C-q") 'prot-outline-hide-all)
     (define-key map (kbd "C-c C-u") 'outline-up-heading)
     (define-key map (kbd "C-c C-d") 'prot-outline-down-heading)
@@ -116,7 +115,7 @@ Add this to `prot-outline-minor-mode-exit-hook'."
 
 ;;;###autoload
 (define-minor-mode prot-outline-minor-mode
-  "Toggles `outline-minor-mode' and extras.
+  "Toggle Outline minor mode and extras.
 
 \\{prot-outline-minor-mode-map}"
   :init-value nil
