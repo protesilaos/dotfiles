@@ -4621,6 +4621,14 @@ file which do not already have one."
 :CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
 :END:
 
+Relevant information for what you are about to read in this section
+(the list will be updated accordingly):
+
++ [[https://protesilaos.com/codelog/2021-04-14-emacs-diary-calendar/][Video of Emacs Diary and Calendar for tracking appointments]] (2021-04-14).
++ [[https://protesilaos.com/codelog/2021-04-15-emacs-diary-outline-minor-mode/][Make the Emacs Diary work as an Outline (outline-minor-mode)]] (2021-04-15).
++ [[https://www.youtube.com/watch?v=n8o66i08fzs][Video on using Hyperbole with the Emacs Diary]] by the Emacs Elements
+  channel (Raoul Comninos) (2021-04-16).
+
 Emacs provides a suite of tools for planning events or recording dates
 of interest in your life.  These are part of the same workflow, but are
 divided into several smaller libraries.  The two main ones are
