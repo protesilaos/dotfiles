@@ -4,8 +4,8 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 1.2.3
-;; Last-Modified: <2021-04-14 08:34:57 +0300>
+;; Version: 1.3.2
+;; Last-Modified: <2021-04-18 06:25:05 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -113,6 +113,7 @@
 ;;     compilation-mode
 ;;     completions
 ;;     consult
+;;     corfu
 ;;     counsel
 ;;     counsel-css
 ;;     counsel-notmuch
@@ -885,7 +886,7 @@ symbol and the latter as a string.")
     (cyan-tab . "#60e7e0")
     (magenta-tab . "#ffb8ff")
     (purple-tab . "#cfcaff")
-    
+
     (fg-escape-char-construct . "#e7a59a")
     (fg-escape-char-backslash . "#abab00")
 
@@ -3663,6 +3664,11 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(consult-preview-cursor ((,class :inherit modus-themes-intense-blue)))
     `(consult-preview-error ((,class :inherit modus-themes-intense-red)))
     `(consult-preview-line ((,class :background ,bg-hl-alt-intense)))
+;;;;; corfu
+    `(corfu-background ((,class :background ,bg-alt :foreground ,fg-alt)))
+    `(corfu-current ((,class :inherit bold :background ,cyan-subtle-bg)))
+    `(corfu-bar ((,class :background ,fg-alt :foreground ,fg-alt)))
+    `(corfu-border ((,class :background ,bg-active :foreground ,bg-region)))
 ;;;;; counsel
     `(counsel-active-mode ((,class :foreground ,magenta-alt-other)))
     `(counsel-application-name ((,class :foreground ,red-alt-other)))
@@ -5838,7 +5844,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(rcirc-nick-in-message ((,class :foreground ,magenta-alt-other)))
     `(rcirc-nick-in-message-full-line ((,class :inherit bold :foreground ,fg-special-mild)))
     `(rcirc-other-nick ((,class :inherit bold :foreground ,fg-special-cold)))
-    `(rcirc-prompt ((,class :inherit bold :foreground ,cyan-alt-other)))
+    `(rcirc-prompt ((,class :inherit comint-highlight-prompt)))
     `(rcirc-server ((,class :foreground ,fg-unfocused)))
     `(rcirc-timestamp ((,class :foreground ,blue-nuanced-fg)))
     `(rcirc-url ((,class :foreground ,blue :underline t)))
