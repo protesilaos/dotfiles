@@ -1459,6 +1459,14 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
   set up =which-key= in this document ([[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]]) and
   apply the necessary tweaks in the following package configurations.
 
+  - Keymaps aside, you can call /any command/ after invoking =embark-act=.
+    This can be either with =M-x= or via a key binding.  For example, if
+    you want to grep for the symbol at point in the current project, you
+    can do =embark-act= and then =C-x p g= (=project-find-regexp=) (also read
+    [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  This will, of course,
+    work as expected for commands that typically prompt you for
+    something to operate on.
+
 + You will often be targeting individual items, such as the current
   completion candidate in the minibuffer, or the symbol at point.  You
   can, however, collect the entire set of targets and store it in a
