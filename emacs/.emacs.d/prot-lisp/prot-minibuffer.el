@@ -333,10 +333,6 @@ Add this to `completion-list-mode-hook'."
     (face-remap-add-relative 'hl-line 'prot-minibuffer-hl-line)
     (hl-line-mode 1)))
 
-;; Thanks to Omar Antolín Camarena for informing me about the Info node
-;; (info "(elisp)Special Properties") and for showing me how to
-;; propertise text so that it is impossible to put the point before it.
-;; What I had here before was a set of minor, yet dirty workarounds.
 (defun prot-minibuffer--clean-completions ()
   "Keep only completion candidates in the Completions."
   (with-current-buffer standard-output
