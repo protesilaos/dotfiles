@@ -75,6 +75,13 @@ number of candidates that are being computed."
   :type 'integer
   :group 'prot-minibuffer)
 
+(defcustom prot-minibuffer-live-update-delay 0.3
+  "Delay in seconds before updating the Completions' buffer.
+
+Set this to 0 to disable the delay."
+  :type 'number
+  :group 'prot-minibuffer)
+
 (defcustom prot-minibuffer-completion-blocklist nil
   "Commands that do not do live updating of completions.
 
@@ -92,7 +99,8 @@ put it in a window (e.g. `prot-minibuffer-toggle-completions',
 
 This means that they ignore `prot-minibuffer-minimum-input' and
 the inherent constraint of updating the Completions' buffer only
-upon user input."
+upon user input.  Furthermore, they also bypass any possible
+delay introduced by `prot-minibuffer-live-update-delay'."
   :type '(repeat symbol)
   :group 'prot-minibuffer)
 
@@ -325,6 +333,10 @@ Add this to `completion-list-mode-hook'."
     (face-remap-add-relative 'hl-line 'prot-minibuffer-hl-line)
     (hl-line-mode 1)))
 
+;; Thanks to Omar Antolín Camarena for informing me about the Info node
+;; (info "(elisp)Special Properties") and for showing me how to
+;; propertise text so that it is impossible to put the point before it.
+;; What I had here before was a set of minor, yet dirty workarounds.
 (defun prot-minibuffer--clean-completions ()
   "Keep only completion candidates in the Completions."
   (with-current-buffer standard-output
@@ -375,6 +387,12 @@ Meant to be added to `after-change-functions'."
               (quit (abort-recursive-edit)))
           (minibuffer-hide-completions))))))
 
+(defun prot-minibuffer--live-completions-timer (&rest _)
+  "Update Completions with `prot-minibuffer-live-update-delay'."
+  (let ((delay prot-minibuffer-live-update-delay))
+    (when (>= delay 0)
+      (run-with-idle-timer delay nil #'prot-minibuffer--live-completions))))
+
 (defun prot-minibuffer--setup-completions ()
   "Set up the completions buffer."
   (cond
@@ -382,7 +400,7 @@ Meant to be added to `after-change-functions'."
     (minibuffer-completion-help)
     (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t))
    ((unless (member this-command prot-minibuffer-completion-blocklist)
-    (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t)))))
+    (add-hook 'after-change-functions #'prot-minibuffer--live-completions-timer nil t)))))
 
 (add-hook 'minibuffer-setup-hook #'prot-minibuffer--setup-completions)
 

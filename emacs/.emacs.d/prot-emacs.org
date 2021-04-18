@@ -978,9 +978,23 @@ What my completion selection interface does in a nutshell:
   [[#h:09d657c7-eb4d-4fe3-987a-4a2cf419bb40][Completion annotations (marginalia)]]).  This only happens after some
   input has been provided, otherwise all you see is an empty minibuffer
   (though =prot-minibuffer-toggle-completions= or any of the cycling
-  motions will display the candidates).  The length of minimum input
-  that triggers live completions when met or hides them when unmatched
-  is controlled by the variable =prot-minibuffer-minimum-input=.
+  motions will display the candidates).
+
+  - The length of minimum input that triggers live completions when met or
+    hides them when unmatched is controlled by the variable
+    =prot-minibuffer-minimum-input=.
+
+  - =prot-minibuffer-live-update-delay= controls how fast the
+    live-updating Completions should respond to minibuffer input.  I
+    find that a short delay is better than none, because I usually type
+    something quickly and do not need to peruse candidates in the
+    meantime.
+
+  - There are two variables =prot-minibuffer-completion-blocklist= and
+    =prot-minibuffer-completion-passlist= that can be used to disable live
+    completions altogether for select commands or bypass the minimum
+    input threshold and the delay.  I do not use those in practice,
+    because the minimum input and the delay are good enough for my case.
 
 + Using up/down motions or =C-n= and =C-p=, we can seamlessly switch from
   the minibuffer to the completions and vice versa by treating the two
@@ -1142,6 +1156,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (setq-default prot-minibuffer-mini-cursors t) ; also check `prot-cursor.el'
   (setq prot-minibuffer-remove-shadowed-file-names t)
   (setq prot-minibuffer-minimum-input 3)
+  (setq prot-minibuffer-live-update-delay 0.3)
 
   ;; ;; NOTE: `prot-minibuffer-completion-blocklist' can be used for
   ;; ;; commands with lots of candidates, depending also on how low
@@ -1152,6 +1167,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   ;;    describe-variable execute-extended-command
   ;;    insert-char)
   (setq prot-minibuffer-completion-blocklist nil)
+  (setq prot-minibuffer-completion-passlist nil)
 
   ;; This is for commands that should always pop up the completions'
   ;; buffer.  It circumvents the default method of waiting for some user
