@@ -2399,6 +2399,26 @@ Basically, its interaction model is as follows:
 :CUSTOM_ID: h:137f16fe-4f88-4b4d-bd71-cd978c9fdcd5
 :END:
 
+*** Keymap for buffers (Emacs28)
+:PROPERTIES:
+:CUSTOM_ID: h:17933226-27a8-47c0-80f9-3cc609aacae0
+:END:
+
+Starting with Emacs version 28, there is a keymap that can be accessed
+with the =C-x x= sequence.  This new keymap (=ctl-x-x-map=), is meant to be
+used for commands that pertain to the current buffer.  What I have here
+are just some tweaks to make it work the way I prefer.
+
+#+begin_src emacs-lisp
+(let ((map ctl-x-x-map))              ; Emacs 28
+  (define-key map "e" #'eval-buffer)
+  (define-key map "r" #'rename-uniquely))
+
+(with-eval-after-load 'org
+  (define-key ctl-x-x-map "i" #'contrib/org-id-headlines)
+  (define-key ctl-x-x-map "h" #'prot/ox-html))
+#+end_src
+
 *** Unique names for buffers
 :PROPERTIES:
 :CUSTOM_ID: h:60a70340-49dc-4f45-b147-12a4141db42b
