@@ -1562,7 +1562,7 @@ each other in terms of the end product they can provide.  Think, for
 example, how Emacs' source code is a single "project" that delivers the
 program we use.  In practical terms, a project is a version controlled
 directory (or directory tree) governed by some program.  For my case
-that is =git= though other backends are supported (by virte of VC---see
+that is =git= though other backends are supported (by virtue of VC---see
 section on [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]] as well as
 my related extras in [[#h:2ff46d23-09d5-4d92-b0af-2339dc19719f][Diff-mode (and prot-diff.el extensions)]]).
 
