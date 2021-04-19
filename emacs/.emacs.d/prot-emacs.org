@@ -6579,7 +6579,9 @@ an overview of the current time in various parts of the planet.
 ;;; World clock
   (setq zoneinfo-style-world-list
         '(("America/Los_Angeles" "Los Angeles")
+          ("America/Chicago" "Chicago")
           ("America/New_York" "New York")
+          ("Europe/Lisbon" "Lisbon")
           ("Europe/Brussels" "Brussels")
           ("Asia/Shanghai" "Shanghai")
           ("Asia/Tokyo" "Tokyo")))
