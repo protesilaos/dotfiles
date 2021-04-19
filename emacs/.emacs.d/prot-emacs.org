@@ -2680,14 +2680,12 @@ navigation.
 :CUSTOM_ID: h:3d8ebbb1-f749-412e-9c72-5d65f48d5957
 :END:
 
-The =display-buffer-alist= and all other functions grouped together with
-=prot/window-dired-vc-root-left= are considered *experimental and subject
-to review*.  The former is intended as a rule-set for controlling the
-display of windows.  While the latter serves as a series of tangible
-examples of passing certain rules programmatically, in combination with
-a few relevant extras.  The objective is to create a more intuitive
-workflow where targeted buffer groups or types are always shown in a
-given location, on the premise that predictability improves usability.
+The =display-buffer-alist= is intended as a rule-set for controlling the
+display of windows.  This is mostly needed for ancillary buffers, such
+as shells, compilation output, and the like.  The objective is to create
+a more intuitive workflow where targeted buffer groups or types are
+always shown in a given location, on the premise that predictability
+improves usability.
 
 For each buffer action in =display-buffer-alist= we can define several
 functions for selecting the appropriate window.  These are executed in
