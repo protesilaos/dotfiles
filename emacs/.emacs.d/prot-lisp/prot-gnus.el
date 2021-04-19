@@ -62,12 +62,10 @@ the appropriate paraphernalia."
 (defun prot-gnus-auth-get-field (host prop)
   "Find PROP in `auth-sources' for HOST entry."
   (let* ((source (auth-source-search :host host))
-         (field (plist-get
-                 (flatten-list source)
-                 prop)))
+         (field (plist-get (flatten-list source) prop)))
     (if source
         field
-      (user-error "No entry in auth sources"))))
+      (user-error "No `%s' host with `%s' entry in auth sources" host prop))))
 
 (autoload 'message-fetch-field "message")
 (autoload 'message-remove-header "message")
