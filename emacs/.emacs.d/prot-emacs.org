@@ -5318,12 +5318,30 @@ formatting customisations concerning time units, it is better to refer
 to the documentation of the function =format-time-string= to understand
 the meaning of the various date/time specifiers.
 
+The =prot-gnus-mail-indicator= is a global minor mode that checks whether
+there is any new mail in my maildir directories and displays a mode line
+indicator with the total number of those messages.  In this context,
+"new mail" means files that have been received but have not yet been
+seen.  This is done automatically by mbsync (check [[#h:88a605b8-d5b5-486f-87c9-0c80b423ae36][my .mbsyncrc]]), which
+places such items inside a special =new= subdirectory and, once they are
+seen, moves them to the main inbox (so it is not the same as unread
+mail, which can be old in this sense of having already been moved to the
+main inbox).  Once I update Gnus to display that new mail in its
+relevant groups, the counter will disappear.  This minor mode is defined
+in my =prot-gnus.el= library, whose contents are reproduced right after
+the following code block.
+
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'gnus
   (require 'gnus-sum)
   (require 'gnus-dired)
   (require 'gnus-topic)
   (require 'prot-gnus)
+
+;;; mode line indicator with the number of new mails
+  (setq prot-gnus-maildir-path-regexp "~/.mail/*/Inbox/new/")
+  (prot-gnus-mail-indicator 1)
+
 ;;; accounts
   (setq gnus-select-method '(nnnil ""))
   (setq gnus-secondary-select-methods
@@ -6538,21 +6556,10 @@ prefer to just write a string directly, keeping those two inactive.
 
 The =display-time-mode= can output more than just the current time.  It
 also shows the load average and an email indicator.  I do not need the
-load average as it adds too much noise, though I appreciate the mail
-indicator.
-
-With =display-time-mail-function=, I set it to check for new entries in my
-local mail directories, which I sync with the external =mbsync= utility
-(refer to the section on [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]]).  Note that, in this context,
-"new" does not cover the existing unread messages: it literally refers
-to items that have arrived in the inbox since the last time a sync was
-performed.  I was aware of this facility for a long time now, but I
-initially dismissed it as it did not fit into the email setup I
-maintained at the time.  Whereas the present configuration that keeps
-local records of my correspondence, makes it trivial to query some
-directory's contents.  The approach of using the =directory-files=
-function to perform that task is copied from [[https://ruzkuku.com/files/init.el.html][philip k.'s Emacs init]]
-file (the exact path is specified in my =.mbsyncrc= settings).
+load average as it adds too much noise.  As for the mail indicator, I
+used it for a while, but eventually decided to use my own approach which
+also shows the number of new emails (refer to the [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]] and
+search, in particular, for =prot-gnus-mail-indicator=).
 
 Lastly, I use the =world-clock= command (for Emacs28+) when I need to get
 an overview of the current time in various parts of the planet.
@@ -6564,17 +6571,15 @@ an overview of the current time in various parts of the planet.
   ;; (setq display-time-24hr-format t)
   ;; (setq display-time-day-and-date t)
   (setq display-time-interval 60)
-  (setq display-time-mail-directory nil)
   (setq display-time-default-load-average nil)
-  (setq display-time-mail-function
-        (lambda ()
-          (let ((nodots directory-files-no-dot-files-regexp))
-            (or (directory-files "~/.mail/inf/Inbox/new" nil nodots)
-                (directory-files "~/.mail/prv/Inbox/new" nil nodots)
-                (directory-files "~/.mail/pub/Inbox/new" nil nodots)))))
+  ;; NOTE 2021-04-19: For all those, I have implemented a custom
+  ;; solution that also shows the number of new items.  Refer to my Gnus
+  ;; settings, specifically `prot-gnus-mail-indicator'.
+  (setq display-time-mail-directory nil)
+  (setq display-time-mail-function nil)
   (setq display-time-use-mail-icon nil)
-  (setq display-time-mail-string "@+")
-  (setq display-time-mail-face 'mode-line-emphasis)
+  (setq display-time-mail-string nil)
+  (setq display-time-mail-face nil)
 
 ;;; World clock
   (setq zoneinfo-style-world-list

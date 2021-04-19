@@ -24,8 +24,6 @@
 
 ;;; Commentary:
 ;;
-;; XXX 2021-01-06: work-in-progress
-;;
 ;; This covers my Gnus tweaks, for use in my Emacs setup:
 ;; https://protesilaos.com/dotemacs.
 ;;
@@ -40,9 +38,82 @@
 (require 'prot-common)
 
 (defgroup prot-gnus ()
-  "Extensions for ignus and flygnus."
+  "Extensions for gnus and mail-related extras."
   :group 'gnus)
 
+(defcustom prot-gnus-maildir-path-regexp "~/.mail/*/Inbox/new/"
+  "Path passed to 'find' for checking new mail in maildir.
+As this is passed to a shell command, one can use glob patterns."
+  :type 'string
+  :group 'prot-gnus)
+
+(defface prot-gnus-mail-count
+  '((default :inherit bold)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#8a0000")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#ffa7ba")
+    (t :foreground "red"))
+  "Face for mode line indicator that shows a new mail count.")
+
+(defvar prot-gnus-new-mail-string nil
+  "New maildir count number for the mode line.")
+
+(defun prot-gnus--new-mail ()
+  "Search for new mail in personal maildir paths."
+  (with-temp-buffer
+    (shell-command
+     (format "find %s -type f | wc -l" prot-gnus-maildir-path-regexp) t)
+    (buffer-substring-no-properties (point-min) (1- (point-max)))))
+
+(defun prot-gnus--mode-string (count)
+  "Add properties to COUNT string."
+  (when (not (string= count "0"))
+    (propertize (format "@%s " count)
+                'face 'prot-gnus-mail-count
+                'help-echo "Number of new items in maildirs")))
+
+(defvar prot-gnus--mode-line-mail-indicator nil
+  "Internal variable used to store the state of new mails.")
+
+(defun prot-gnus--mode-line-mail-indicator ()
+  "Prepare mail count mode line indicator."
+  (let* ((count (prot-gnus--new-mail))
+         (indicator (prot-gnus--mode-string count))
+         (old-indicator prot-gnus--mode-line-mail-indicator))
+    ;; TODO 2021-04-19: Is appending to `global-mode-string' the best
+    ;; way to show this information?
+    (cond
+     (count
+      (setq global-mode-string (delete old-indicator global-mode-string))
+      (setq global-mode-string (push indicator global-mode-string))
+      (setq prot-gnus--mode-line-mail-indicator indicator))
+     ((string= count "0")
+      (setq global-mode-string (delete old-indicator global-mode-string))
+      (setq prot-gnus--mode-line-mail-indicator nil)))))
+
+(autoload 'gnus-topic-get-new-news-this-topic "gnus-topic")
+
+(defun prot-gnus--topic-hook (&rest _)
+  "Run `gnus-get-new-news-hook' when updating topics."
+  (run-hooks 'gnus-get-new-news-hook))
+
+(advice-add #'gnus-topic-get-new-news-this-topic :after #'prot-gnus--topic-hook)
+
+;;;###autoload
+(define-minor-mode prot-gnus-mail-indicator
+  "Enable mode line indicator with counter for new mail."
+  :init-value nil
+  :global t
+  (if prot-gnus-mail-indicator
+      (progn
+        (run-at-time t 60 #'prot-gnus--mode-line-mail-indicator)
+        (add-hook 'gnus-get-new-news-hook #'prot-gnus--mode-line-mail-indicator)
+        (force-mode-line-update t))
+    (cancel-function-timers #'prot-gnus--mode-line-mail-indicator)
+    (setq global-mode-string (delete prot-gnus--mode-line-mail-indicator global-mode-string))
+    (remove-hook 'gnus-get-new-news-hook #'prot-gnus--mode-line-mail-indicator)
+    (force-mode-line-update t)))
 
 (provide 'prot-gnus)
 ;;; prot-gnus.el ends here
