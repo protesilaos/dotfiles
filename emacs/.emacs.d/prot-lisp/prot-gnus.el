@@ -43,14 +43,6 @@
   "Extensions for ignus and flygnus."
   :group 'gnus)
 
-(autoload 'gnus-group-next-group "gnus-group")
-
-(defun prot-gnus-group-previous-group (&optional arg)
-  "Move to the ARGth previous group.
-If no numeric prefix ARG is supplied move by one."
-  (interactive "p")
-  (let ((num (prot-common-number-negative arg))) ; from `prot-common.el'
-    (gnus-group-next-group (or num -1) t)))
 
 (provide 'prot-gnus)
 ;;; prot-gnus.el ends here

@@ -5470,7 +5470,7 @@ the meaning of the various date/time specifiers.
     (define-key map (kbd "o") #'gnus-mime-copy-part))
   (let ((map gnus-group-mode-map))       ; I always use `gnus-topic-mode'
     (define-key map (kbd "n") #'gnus-group-next-group)
-    (define-key map (kbd "p") #'prot-gnus-group-previous-group) ; from `prot-gnus.el'
+    (define-key map (kbd "p") #'gnus-group-prev-group)
     (define-key map (kbd "M-n") #'gnus-topic-goto-next-topic)
     (define-key map (kbd "M-p") #'gnus-topic-goto-previous-topic))
   (let ((map gnus-summary-mode-map))
