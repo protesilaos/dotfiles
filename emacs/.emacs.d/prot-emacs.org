@@ -5172,8 +5172,8 @@ configurations are about.
   (setq mail-header-separator (purecopy "*****"))
   (setq compose-mail-user-agent-warnings nil)
   (setq message-mail-user-agent nil)    ; default is `gnus'
-  (setq mail-signature "Protesilaos Stavrou\nprotesilaos.com\n")
-  (setq message-signature "Protesilaos Stavrou\nprotesilaos.com\n")
+  (setq mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
+  (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
   (setq message-citation-line-format "On %Y-%m-%d, %R %z, %f wrote:\n")
   (setq message-citation-line-function
         'message-insert-formatted-citation-line)
