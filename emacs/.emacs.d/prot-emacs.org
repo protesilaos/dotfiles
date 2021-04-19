@@ -5221,14 +5221,15 @@ public document like this one, without worrying about leaking private
 data.
 
 Which brings us to the point of actually retrieving those values in a
-secure way.  The =prot-common-auth-get-field= is designed to return a
-field from the authinfo file (see [[#h:c82dcbfa-97d0-4f7c-85af-768ce90f1372][prot-common.el]]).  You will find this
-function used elsewhere in this document.  For example, to get the
-username and password for host =inf= we do:
+secure way.  The =prot-gnus-auth-get-field= is designed to return a field
+from the authinfo file (this is defined in my =prot-gnus.el=, which is
+reproduced at the end of [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][section on Gnus]]).  You will find this function
+used elsewhere in this document.  For example, to get the username and
+password for host =inf= we do:
 
 #+begin_example emacs-lisp
-(prot-common-auth-get-field "inf" :user)   ; login name
-(prot-common-auth-get-field "inf" :secret) ; password
+(prot-gnus-auth-get-field "inf" :user)   ; login name
+(prot-gnus-auth-get-field "inf" :secret) ; password
 #+end_example
 
 *** Contents of `~/.mbsyncrc' (external tool)
@@ -5398,13 +5399,13 @@ the following code block.
             (gcc "nnmaildir+inf:Sent")
             (From
              (format "%s <%s>" user-full-name
-                     (prot-common-auth-get-field "inf" :user)))))
+                     (prot-gnus-auth-get-field "inf" :user)))))
           ("prv"
            (posting-style
             (gcc "nnmaildir+prv:Sent")
             (From
              (format "%s <%s>" user-full-name
-                     (prot-common-auth-get-field "prv" :user)))))
+                     (prot-gnus-auth-get-field "prv" :user)))))
           ("pub"
            (posting-style               ; Uses default name+mail
             (gcc "nnmaildir+pub:Sent")))))
