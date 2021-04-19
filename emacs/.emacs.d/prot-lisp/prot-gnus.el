@@ -47,6 +47,18 @@ As this is passed to a shell command, one can use glob patterns."
   :type 'string
   :group 'prot-gnus)
 
+(autoload 'auth-source-search "auth-source")
+
+;;;###autoload
+(defun prot-gnus-auth-get-field (host prop)
+  "Find PROP in `auth-sources' for HOST entry."
+  (let* ((source (auth-source-search :host host))
+         (field (plist-get
+                 (flatten-list source)
+                 prop)))
+    (if source
+        field
+      (user-error "No entry in auth sources"))))
 (defface prot-gnus-mail-count
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))

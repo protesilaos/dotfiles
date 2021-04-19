@@ -134,19 +134,6 @@ To be used as the PREDICATE of `completing-read-multiple'."
         (not flag))
     t))
 
-(declare-function auth-source-search "auth-source")
-
-;;;###autoload
-(defun prot-common-auth-get-field (host prop)
-  "Find PROP in `auth-sources' for HOST entry."
-  (let* ((source (auth-source-search :host host))
-         (field (plist-get
-                 (flatten-list source)
-                 prop)))
-    (if source
-        field
-      (user-error "No entry in auth sources"))))
-
 ;; The `prot-common-line-regexp-p' and `prot-common--line-regexp-alist'
 ;; are contributed by Gabriel: <https://github.com/gabriel376>.  They
 ;; provide a more elegant approach to using a macro, as shown further
