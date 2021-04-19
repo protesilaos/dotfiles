@@ -5129,12 +5129,16 @@ configurations are about.
   specified group.  In my case that is the "Sent" directory of my
   corresponding email account.
 
-+ Function =prot/message-header-add-gcc= is directly related to the above.
-  The inserted header points to my public email account, which is
-  declared in =user-mail-address=.  This concerns only the creation of new
-  emails.  While replying to a message, the appropriate information is
-  filled in automatically, based on parameters I specify in the section
-  about [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]].
++ The function =prot-gnus-message-header-gcc= from my =prot-gnus.el= library
+  is directly related to the above.  The inserted header points to my
+  public email account, though the variable =prot-gnus-message-gcc-header=
+  can adjust things accordingly.  While composing new messages and with
+  Gnus active, that function takes care to pre-populate the headers with
+  the =Gcc= header that is used by Gnus to store a copy of the outgoing
+  message to the appropriate group.  Note that this only concerns newly
+  created messages: while replying to a message, the appropriate
+  information is filled in automatically, based on group parameters
+  (refer to [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]]).
 
 + The value of =message-citation-line-format= is expanded into something
   like /"On 2020-02-19, 13:54 +0200, NAME <EMAIL> wrote:"/.  To learn
@@ -5182,26 +5186,9 @@ configurations are about.
   (setq message-wide-reply-confirm-recipients t)
   (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
-  (defun prot/message-header-add-gcc ()
-    "While `gnus' is running, add pre-populated Gcc header.
+  (with-eval-after-load 'prot-gnus ; this is `require'd in the gnus section
+    (add-hook 'message-header-setup-hook #'prot-gnus-message-header-gcc))
 
-The Gcc header places a copy of the outgoing message to the
-appropriate directory of the IMAP server, as per the contents of
-~/.authinfo.gpg.
-
-In the absence of a Gcc header, the outgoing message will not
-appear in the appropriate maildir directory, though it will still
-be sent.
-
-Add this function to `message-header-setup-hook'."
-    (if (gnus-alive-p)
-        (progn
-          (when (message-fetch-field "Gcc")
-            (message-remove-header "Gcc"))
-          (message-add-header "Gcc: nnmaildir+pub:Sent"))
-      (message "Gnus is not running. No GCC field inserted.")))
-
-  (add-hook 'message-header-setup-hook #'prot/message-header-add-gcc)
   (add-hook 'message-setup-hook #'message-sort-headers))
 #+end_src
 

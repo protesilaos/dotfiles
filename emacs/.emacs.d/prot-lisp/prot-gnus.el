@@ -47,6 +47,15 @@ As this is passed to a shell command, one can use glob patterns."
   :type 'string
   :group 'prot-gnus)
 
+(defcustom prot-gnus-message-gcc-header "Gcc: nnmaildir+pub:Sent"
+  "Text of mail header for Gnus' Gcc.
+This is used to prepopulate a new message composition buffer with
+the appropriate paraphernalia."
+  :type 'string
+  :group 'prot-gnus)
+
+;;;; Helper functions
+
 (autoload 'auth-source-search "auth-source")
 
 ;;;###autoload
@@ -59,6 +68,33 @@ As this is passed to a shell command, one can use glob patterns."
     (if source
         field
       (user-error "No entry in auth sources"))))
+
+(autoload 'message-fetch-field "message")
+(autoload 'message-remove-header "message")
+(autoload 'message-add-header "message")
+
+;;;###autoload
+(defun prot-gnus-message-header-gcc ()
+  "While `gnus' is running, add pre-populated Gcc header.
+
+The Gcc header places a copy of the outgoing message to the
+appropriate directory of the IMAP server, as per the contents of
+~/.authinfo.gpg.
+
+In the absence of a Gcc header, the outgoing message will not
+appear in the appropriate maildir directory, though it will still
+be sent.
+
+Add this function to `message-header-setup-hook'."
+  (if (gnus-alive-p)
+      (progn
+        (when (message-fetch-field "Gcc")
+          (message-remove-header "Gcc"))
+        (message-add-header prot-gnus-message-gcc-header))
+    (message "Gnus is not running. No GCC field inserted.")))
+
+;;;; Mode line indicator
+
 (defface prot-gnus-mail-count
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
