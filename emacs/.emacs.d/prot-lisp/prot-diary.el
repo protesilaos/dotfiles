@@ -51,6 +51,24 @@ When optional INHIBIT is non-nil, do not show thediary buffer."
         (hide (if inhibit t nil)))
     (diary-list-entries (calendar-current-date) n hide)))
 
+(defvar prot-diary--current-window-configuration nil
+  "Current window configuration.")
+
+(defvar prot-diary--current-window-configuration-point nil
+  "Point in current window configuration.")
+
+(defun prot-diary--store-window-configuration ()
+  "Store current window configuration and point."
+  (setq prot-diary--current-window-configuration (current-window-configuration))
+  (setq prot-diary--current-window-configuration-point (point)))
+
+(defun prot-diary--restore-window-configuration ()
+  "Restore `prot-diary--store-window-configuration'."
+  (when prot-diary--current-window-configuration
+    (set-window-configuration prot-diary--current-window-configuration))
+  (when prot-diary--current-window-configuration-point
+    (goto-char prot-diary--current-window-configuration-point)))
+
 ;;;###autoload
 (defun prot-diary-mail-entries (&optional ndays)
   "Email diary entries for NDAYS or `diary-mail-days'.
@@ -72,13 +90,14 @@ my inbox and then telling me 'Oh, nothing of interest here'?)."
           (diary-mail-addr user-mail-address)
           (n (or ndays diary-mail-days)))
       (prot-common-number-interger-positive-p n)
+      (prot-diary--store-window-configuration)
       (diary-list-entries (calendar-current-date) (or n diary-mail-days))
       (if (prot-diary--list-entries n t)
           (progn
             (with-current-buffer (get-buffer diary-fancy-buffer)
               (setq entries (buffer-string))
               (kill-buffer) ; FIXME 2021-04-13: `bury-buffer' does not bury it...
-              (delete-window))
+              (prot-diary--restore-window-configuration))
             (compose-mail diary-mail-addr
                           (concat "Diary entries generated "
                                   (calendar-date-string (calendar-current-date))))
