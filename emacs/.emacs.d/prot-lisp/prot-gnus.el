@@ -91,6 +91,16 @@ Add this function to `message-header-setup-hook'."
         (message-add-header prot-gnus-message-gcc-header))
     (message "Gnus is not running. No GCC field inserted.")))
 
+(defvar ebdb-db-list)
+(autoload 'ebdb-load "ebdb")
+
+(when (require 'ebdb nil t)
+  (defun prot-gnus-ebdb-message-setup ()
+    "Load EBDB if not done already.
+Meant to be assigned to a hook, such as `message-setup-hook'."
+    (unless ebdb-db-list
+      (ebdb-load))))
+
 ;;;; Mode line indicator
 
 (defface prot-gnus-mail-count

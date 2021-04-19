@@ -5678,12 +5678,8 @@ lots of options and commands: make sure to read its official manual.
 
   (setq ebdb-use-diary nil)
 
-  (defun prot/ebdb-message-setup ()
-    "Load EBDB if not done already."
-    (unless ebdb-db-list
-      (ebdb-load)))
-
-  (add-hook 'message-setup-hook #'prot/ebdb-message-setup)
+  (with-eval-after-load 'prot-gnus ; check my `prot-gnus.el' from the gnus section
+    (add-hook 'message-setup-hook #'prot-gnus-ebdb-message-setup))
 
   (let ((map ebdb-mode-map))
     (define-key map (kbd "D") #'ebdb-delete-field-or-record)
