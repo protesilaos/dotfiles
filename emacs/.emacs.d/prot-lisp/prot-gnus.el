@@ -50,10 +50,10 @@ As this is passed to a shell command, one can use glob patterns."
 (defface prot-gnus-mail-count
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
-     :foreground "#8a0000")
+     :foreground "#61284f")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#ffa7ba")
-    (t :foreground "red"))
+     :foreground "#fbd6f4")
+    (t :foreground "magenta"))
   "Face for mode line indicator that shows a new mail count.")
 
 (defvar prot-gnus-new-mail-string nil
