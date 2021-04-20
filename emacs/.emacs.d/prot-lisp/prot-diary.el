@@ -171,6 +171,14 @@ Otherwise use `diary-mail-days'."
     (t :foreground "yellow"))
   "Face to mark administrative tasks in the calendar.")
 
+(defface prot-diary-calendar-event-mark
+  '((((class color) (min-colors 88) (background light))
+     :background "#aceaac" :foreground "#004c00")
+    (((class color) (min-colors 88) (background dark))
+     :background "#00422a" :foreground "#9ff0cf")
+    (t :foreground "green"))
+  "Face to mark events in the calendar.")
+
 (defface prot-diary-calendar-mundane-mark
   '((((class color) (min-colors 88) (background light))
      :background "#f0f0f0" :foreground "#505050")
