@@ -2418,7 +2418,7 @@ ecosystem:
   (let ((map dired-mode-map))
     (define-key map (kbd "<tab>") #'dired-subtree-toggle)
     (define-key map (kbd "<C-tab>") #'dired-subtree-cycle)
-    (define-key map (kbd "<S-iso-lefttab>") #'dired-subtree-remove)))
+    (define-key map (kbd "<backtab>") #'dired-subtree-remove))) ; S-TAB
 
 (prot-emacs-builtin-package 'wdired
   (setq wdired-allow-to-change-permissions t)
@@ -2931,7 +2931,7 @@ Here my settings, followed by the entirety of =prot-tab.el=.
   (tab-bar-history-mode -1)
   (let ((map global-map))
     (define-key map (kbd "<s-tab>") #'tab-next)
-    (define-key map (kbd "<S-s-iso-lefttab>") #'tab-previous)))
+    (define-key map (kbd "<s-backtab>") #'tab-previous))) ; S-s-TAB
 
 (prot-emacs-builtin-package 'prot-tab
   (let ((map global-map))
