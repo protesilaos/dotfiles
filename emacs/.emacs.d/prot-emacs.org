@@ -1159,7 +1159,10 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
     (define-key map (kbd "s-D") #'dired-other-window))
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "C-j") #'exit-minibuffer)
-    (define-key map (kbd "<tab>") #'minibuffer-force-complete)))
+    (define-key map (kbd "<tab>") #'minibuffer-force-complete))
+  (let ((map minibuffer-local-must-match-map))
+    ;; I use this prefix for other searches
+    (define-key map (kbd "M-s") nil)))
 
 (prot-emacs-builtin-package 'prot-minibuffer
   (setq-default prot-minibuffer-mini-cursors t) ; also check `prot-cursor.el'
