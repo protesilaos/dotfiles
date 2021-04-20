@@ -8664,6 +8664,14 @@ each in their own unique way:
   like reading email in Emacs.  Though I also appreciate commentary of a
   political sort: [[https://occasionallycogent.com/against_mindless_minimalism/index.html][Against Mindless Software Minimalism]] (2019-03-24).
 
++ Karl Voit :: Karl is an expert in Personal Information Management
+  (PIM) covering that and relevant topics over at [[https://karl-voit.at/][karl-voit.at]].  There
+  are lots of interesting articles on offer, such as how to organise
+  data with [[https://karl-voit.at/2020/01/25/avoid-complex-folder-hierarchies/][Don't Do Complex Folder Hierarchies]] and to keep a web
+  presence with [[https://karl-voit.at/2020/10/23/avoid-web-forums/][Don't Contribute Anything Relevant in Web Forums]].  Karl
+  also participated in the 2021 edition of the /Grazer Linuxtage/
+  conference with [[https://karl-voit.at/2021/04/10/GLT21-emacs-org-features/][a talk on Org features and extras]].
+
 + Sacha Chua :: Sacha's work is instrumental to the Emacs community's
   self awareness.  The [[https://sachachua.com/blog/category/geek/emacs/][weekly "Emacs news" blog entries]] offers an
   overview of what is happening in our space---consider it essential
