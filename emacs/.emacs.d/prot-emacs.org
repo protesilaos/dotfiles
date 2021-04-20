@@ -416,6 +416,9 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs nil
+        modus-themes-no-mixed-fonts nil
+        modus-themes-subtle-line-numbers nil
+
         modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers': nil,
@@ -427,7 +430,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody, 'accented,
         ;; 'accented-3d, 'accented-moody
-        modus-themes-mode-line nil
+        modus-themes-mode-line '3d
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
@@ -440,18 +443,18 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
         modus-themes-hl-line 'underline-neutral
-        modus-themes-subtle-line-numbers nil
+
         modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
 
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only, 'neutral-underline-only
         modus-themes-links 'neutral-underline
-        modus-themes-no-mixed-fonts nil
 
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
         modus-themes-prompts 'subtle-gray
+
         modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
 
         ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
@@ -460,19 +463,19 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'fg-only, 'bg-only, 'deuteranopia,
-        modus-themes-diffs 'deuteranopia
+        modus-themes-diffs 'fg-only
 
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
 
-        modus-themes-headings ; this is an alist: read the manual
-        '((1 . rainbow-section)
-          (2 . rainbow-line)
-          (3 . rainbow))
+        modus-themes-headings ; this is an alist: read the manual or its doc string
+        '((1 . line)
+          (2 . rainbow-line-no-bold)
+          (t . no-bold))
 
-        modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings nil
-        modus-themes-scale-headings nil
+        modus-themes-variable-pitch-ui t
+        modus-themes-variable-pitch-headings t
+        modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
