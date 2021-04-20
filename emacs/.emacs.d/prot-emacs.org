@@ -612,16 +612,7 @@ Relevant publications of mine that are not part of this document:
   ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
   ;; as it explains what those property lists should contain.
   (setq prot-fonts-typeface-sets-alist
-        '((small . ( :fixed-pitch-family "Hack"
-                     :fixed-pitch-regular-weight normal
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 80
-                     :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "DejaVu Sans Condensed"
-                     :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))
-
-          (laptop . ( :fixed-pitch-family "Hack"
+        '((laptop . ( :fixed-pitch-family "Hack"
                       :fixed-pitch-regular-weight normal
                       :fixed-pitch-heavy-weight bold
                       :fixed-pitch-height 90
