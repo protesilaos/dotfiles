@@ -2321,11 +2321,14 @@ ecosystem:
   separate buffer.  An external program is needed to convert the images
   into thumbnails: =imagemagick=.  Other useful external packages are
   =optipng= and =sxiv=.  The former is for operating on PNG files, while the
-  latter is a lightweight image viewer. I feel this process is a bit
+  latter is a lightweight image viewer.  I feel this process is a bit
   cumbersome and can be very slow if you try to generate lots of images
   at once.  The culprit is the image converter.  As such, only use this
-  for small collections.  Beside, Emacs can open an image in a buffer
-  and that works well for viewing individual items.
+  for smaller collections.  Besides, Emacs can open an image in a buffer
+  and that works well for viewing individual items.  I don't keep a lot
+  of images around, so I am not the best person to comment on this tool
+  as I seldom use it.  It is better to view the video demonstration of
+  [[https://www.youtube.com/watch?v=NrY3t3W0_cM][image-dired by Emacs Elements (Raoul Comninos)]].
 
 + My own extras :: =prot-dired.el= (reproduced after the package
   configurations) contains a set of commands that are conceptually
