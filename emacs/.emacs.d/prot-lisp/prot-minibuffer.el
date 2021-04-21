@@ -333,19 +333,28 @@ Add this to `completion-list-mode-hook'."
     (face-remap-add-relative 'hl-line 'prot-minibuffer-hl-line)
     (hl-line-mode 1)))
 
+;; Thanks to Omar Antolín Camarena for recommending the use of
+;; `cursor-sensor-functions' and the concomitant hook with
+;; `cursor-censor-mode' instead of the dirty hacks I had before to
+;; prevent the cursor from moving to that position where no completion
+;; candidates could be found at point (e.g. it would break `embark-act'
+;; as it could not read the topmost candidate when point was at the
+;; beginning of the line, unless the point was moved forward).
 (defun prot-minibuffer--clean-completions ()
   "Keep only completion candidates in the Completions."
   (with-current-buffer standard-output
     (let ((inhibit-read-only t))
       (goto-char (point-min))
       (delete-region (point-at-bol) (1+ (point-at-eol)))
-      ;; NOTE 2021-04-01: This hack is needed because when we delete the
-      ;; first line, we are somehow messing up the completion candidate
-      ;; that follows it.  More specifically, the first completion is
-      ;; not recognised.  I cannot determine why that happens.
-      (insert " ")
-      (put-text-property (point-at-bol) (point) 'invisible t))))
+      (insert (propertize " "
+                          'cursor-sensor-functions
+                          (list
+                           (lambda (_win prev dir)
+                             (when (eq dir 'entered)
+                               (goto-char prev))))))
+      (put-text-property (point-min) (point) 'invisible t))))
 
+(add-hook 'completion-list-mode-hook #'cursor-sensor-mode)
 (add-hook 'completion-setup-hook #'prot-minibuffer--clean-completions)
 
 (defun prot-minibuffer--fit-completions-window ()
@@ -461,17 +470,11 @@ This performs a regular motion for optional ARG lines, but when
 point can no longer move in that direction it switches to the
 minibuffer."
   (interactive "p")
-  (cond
-   ((and (bobp)   ; see hack in `prot-minibuffer--clean-completions'
-         (get-text-property (point) 'invisible))
-    (forward-char 1)
+  (if (or (eobp)
+          (eq (point-max)
+              (save-excursion (forward-line 1) (point))))
+      (prot-minibuffer-focus-minibuffer)
     (next-completion (or arg 1)))
-   ((or (eobp)
-        (eq (point-max)
-            (save-excursion (forward-line 1) (point))))
-    (prot-minibuffer-focus-minibuffer))
-   (t
-    (next-completion (or arg 1))))
   (setq this-command 'next-line))
 
 ;;;###autoload
@@ -600,11 +603,11 @@ interfacing with a `completing-read-multiple' prompt."
        ((and (not (bobp))
              (get-text-property (1- (point)) 'mouse-face))
         (setq end (1- (point)) beg (point)))
-       ((and (bobp)   ; see hack in `prot-minibuffer--clean-completions'
-             (get-text-property (point) 'invisible))
-        (save-excursion
-          (forward-char 1)
-          (setq end (point) beg (1+ (point)))))
+       ;; ((and (bobp)   ; see hack in `prot-minibuffer--clean-completions'
+       ;;       (get-text-property (point) 'invisible))
+       ;;  (save-excursion
+       ;;    (forward-char 1)
+       ;;    (setq end (point) beg (1+ (point)))))
        (t (user-error "No completion here")))
       (setq beg (previous-single-property-change beg 'mouse-face))
       (setq end (or (next-single-property-change end 'mouse-face)
