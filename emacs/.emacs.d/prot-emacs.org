@@ -630,7 +630,7 @@ Relevant publications of mine that are not part of this document:
                        :fixed-pitch-height 100
                        :fixed-pitch-line-spacing 1
                        :variable-pitch-family "Open Sans"
-                       :variable-pitch-height 0.95
+                       :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
           (presentation . ( :fixed-pitch-family "Hack"
@@ -640,7 +640,16 @@ Relevant publications of mine that are not part of this document:
                             :fixed-pitch-line-spacing 2
                             :variable-pitch-family "Inter"
                             :variable-pitch-height 1.0
-                            :variable-pitch-regular-weight normal))))
+                            :variable-pitch-regular-weight normal))
+
+          (micro . ( :fixed-pitch-family "Hack"
+                     :fixed-pitch-regular-weight normal
+                     :fixed-pitch-heavy-weight bold
+                     :fixed-pitch-height 80
+                     :fixed-pitch-line-spacing nil
+                     :variable-pitch-family "DejaVu Sans Condensed"
+                     :variable-pitch-height 1.0
+                     :variable-pitch-regular-weight normal))))
 
   ;; The value of `prot-fonts-laptop-desktop-keys-list' becomes '(laptop
   ;; desktop) based on the car of the first two cons cells found in
