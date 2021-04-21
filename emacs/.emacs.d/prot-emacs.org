@@ -809,21 +809,6 @@ Consult's narrowing facility.  Please refer to the relevant section:
   (which-key-mode -1))	   ; and turn this on, if you want to use this
 #+end_src
 
-** Some async facilities
-:PROPERTIES:
-:CUSTOM_ID: h:adca8953-98ea-4ed2-9844-b592bca66ced
-:END:
-
-This package provides some asynchronous processing facilities for
-various Emacs interfaces, such as for Dired's copy and rename operations
-(also read [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory editor, file manager)]]).
-
-All we need here is to just load the feature.
-
-#+begin_src emacs-lisp
-(prot-emacs-elpa-package 'async)
-#+end_src
-
 * Selection candidates and search methods
 :PROPERTIES:
 :CUSTOM_ID: h:5c060e2e-231d-4896-a5d2-b3fb4134764e
@@ -2438,10 +2423,6 @@ ecosystem:
   (setq image-dired-thumbs-per-row 4)
   (define-key image-dired-thumbnail-mode-map
     (kbd "<return>") #'image-dired-thumbnail-display-external))
-
-;; part of `async' package
-(prot-emacs-builtin-package 'dired-async
-  (add-hook 'dired-mode-hook #'dired-async-mode))
 #+end_src
 
 These are the contents of the de facto deprecated =prot-dired.el= (part of
@@ -5571,9 +5552,6 @@ other critical information are stored in =~/.authinfo.gpg=, as
 demonstrated in [[#h:a82766be-daab-4925-b23a-1c5ffd47e599][the base email settings]].  What follows is just a
 mirroring of the contents of that file.
 
-With regard to the asynchronous functionality, it is meant to improve
-performance by carrying out the relevant tasks in a non-blocking way.
-
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'smtpmail
   (setq smtpmail-default-smtp-server "mail.gandi.net")
@@ -5582,10 +5560,8 @@ performance by carrying out the relevant tasks in a non-blocking way.
   (setq smtpmail-smtp-service 465)
   (setq smtpmail-queue-mail nil))
 
-;; part of `async' package
-(prot-emacs-builtin-package 'smtpmail-async
-  (setq send-mail-function 'async-smtpmail-send-it)
-  (setq message-send-mail-function 'async-smtpmail-send-it))
+(prot-emacs-builtin-package 'sendmail
+  (setq send-mail-function 'smtpmail-send-it))
 #+end_src
 
 *** EBDB (mail contacts)
