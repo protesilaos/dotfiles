@@ -8589,6 +8589,36 @@ Outside the narrow confines of computer, Emacs is it people.
 Here is a non-exhaustive list of users that I have found to be helpful,
 each in their own unique way:
 
++ Omar Antolín Camarena :: Omar's work is mentioned several times in
+  this document (author of Orderless, Embark, and co-author of
+  Marginalia).  Apart from those inherently useful packages, Omar has
+  helped me several times with various programming issues by sharing
+  concrete code examples.  Make sure to check Omar's packages and also
+  monitor [[https://github.com/oantolin/emacs-config][the personal Emacs configuration]] which doubles as a laboratory
+  of experimentation for new packages or other useful ideas.
+
++ Daniel Mendler :: Daniel's name is referenced in a number of this
+  document's sections (author of Consult, Corfu, Goggles, Recursion
+  indicator, co-author of Marginalia together with Omar---you get the
+  idea).  As far as I can tell, Daniel does not share an Emacs
+  configuration, though one can still learn a lot by studying the code
+  of the numerous repositories on [[https://github.com/minad][@minad's Github]].
+
++ Manuel Uberti :: Manuel's contributions have been of paramount
+  importance to the development of my Modus themes.  Manuel offers a lot
+  to the Emacs milieu through code contributions but also by reporting
+  issues and communicating with package maintainers.  The domain name
+  [[https://www.manueluberti.eu/][www.manueluberti.eu]] hosts a blog with Manuel's musings on Emacs.  For
+  example, you will find articles that I have already referenced in this
+  document, such as [[https://www.manueluberti.eu/emacs/2020/11/14/extending-project/][Extending project.el]].  If you are interested in
+  cinema like Manuel, do not miss the reviews on [[https://www.filmsinwords.eu/][www.filmsinwords.eu]].
+
++ Nicolas De Jaeghere :: Nicolas is another contributor to my Modus
+  themes and has helped me understand several Elisp concepts, such as by
+  helping me refine the macros that are defined in my =init.el=.  Nicolas
+  maintains [[https://github.com/Koekelas/dotfiles][a personal dotfiles repo]] where you can find an =emacs.org=
+  file with lots of advanced code snippets.
+
 + Rainer König :: Rainer has [[https://www.youtube.com/playlist?list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE][a series of video tutorials]] on how to
   organise your life using various Org features, such as check lists and
   the agenda.  Each video covers a single utility or closely related
@@ -8598,7 +8628,7 @@ each in their own unique way:
 + Mike Zamansky :: Mike is a computer science professor who has been
   doing [[https://www.youtube.com/channel/UCxkMDXQ5qzYOgXPRnOBrp1w][videos on Emacs]] for several years.  There is a wealth of
   information to gather from those presentations as well as the
-  concomitant [[https://github.com/zamansky/dot-emacs][dot-emacs code repository]].
+  corresponding [[https://github.com/zamansky/dot-emacs][dot-emacs code repository]].
 
 + Emacs Elements :: This is [[https://www.youtube.com/channel/UCe5excZqMeG1CIW-YhMTCEQ][a channel on Youtube]] where Raoul Comninos
   shows how to get things done using Emacs.  There are tutorials on how
@@ -8609,35 +8639,8 @@ each in their own unique way:
 
 + System Crafters :: David Wilson's work on Emacs covers a broad range
   of themes, encapsulated in the [[https://github.com/daviwil/emacs-from-scratch][Emacs from scratch]] configuration.  The
-  corresponding [[https://youtube.com/c/SystemCrafters][Youtube channel]] contains lots of videos on how to set up
-  and use all sorts of packages in Emacs, such as Org and the Mu4e email
-  client.
-
-+ Omar Antolín Camarena :: Omar's work is mentioned several times in
-  this document (author of Orderless, Embark, and co-author of
-  Marginalia).  Apart from those inherently useful packages, Omar also
-  maintains [[https://github.com/oantolin/emacs-config][a personal Emacs configuration]] which doubles as a laboratory
-  of experimentation for new packages.
-
-+ Daniel Mendler :: Daniel's name is referenced in a number of this
-  document's sections (author of Consult, Goggles, Recursion indicator,
-  co-author of Marginalia...).  As far as I can tell, Daniel does not
-  share an Emacs configuration, though one can still learn a lot by
-  studying the code of the numerous repositories on [[https://github.com/minad][@minad's Github]].
-
-+ Manuel Uberti :: Manuel's contributions have been of paramount
-  importance to the development of my Modus themes.  Manuel offers a lot
-  to the Emacs milieu through code contributions but also by reporting
-  issues and communicating with package maintainers.  The website
-  [[https://www.manueluberti.eu/][manueluberti.eu]] hosts a blog with Manuel's musings on Emacs.  For
-  example, you will find articles that I have already referenced in this
-  document, such as [[https://www.manueluberti.eu/emacs/2020/11/14/extending-project/][Extending project.el]] (2020-11-14).
-
-+ Nicolas De Jaeghere :: Nicolas is another contributor to my Modus
-  themes and has helped me understand several Elisp concepts, such as by
-  refining the macros that are defined in my =init.el=.  Nicolas maintains
-  [[https://github.com/Koekelas/dotfiles][a personal dotfiles repo]] where you can find an =emacs.org= file with
-  lots of advanced code snippets.
+  [[https://youtube.com/c/SystemCrafters][Youtube channel]] contains lots of videos on how to set up and use all
+  sorts of packages in Emacs, such as Org and the Mu4e email client.
 
 + Karthik Chikmagalur :: Karthik's [[https://karthinks.com/software/batteries-included-with-emacs/][Batteries included with Emacs]]
   (2020-11-17) and [[https://karthinks.com/software/more-batteries-included-with-emacs/][More batteries included with Emacs]] (2020-12-11) are
