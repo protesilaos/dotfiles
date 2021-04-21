@@ -8667,14 +8667,14 @@ each in their own unique way:
   the years, such as hand-drawn guides to using Emacs, chats with
   prominent members of the Emacs community, and more.
 
-Please note that this is a non-exhaustive list.  Lots of people help in
-the betterment of the Emacs milieu, such as Jonas Bernoulli (developer
-of Magit, among many others), Oleh Krehel (developer of Ivy, Counsel,
-Swiper, and more), Thierry Volpiatto (maintainer of Helm), Bastien
-Guerry (Org maintainer), Eli Zaretskii (Emacs maintainer), Lars
+Please note that this is a non-exhaustive list.  Lots of people
+contribute to the betterment of Emacs, such as Jonas Bernoulli
+(developer of Magit, among many others), Oleh Krehel (developer of Ivy,
+Counsel, Swiper, and more), Thierry Volpiatto (maintainer of Helm),
+Bastien Guerry (Org maintainer), Eli Zaretskii (Emacs maintainer), Lars
 Ingebrigtsen (author of Gnus, co-maintainer of Emacs), Dmitry Gutov
 (maintainer of several built-in subsystems like project.el, as well as
-external packages like Company, diff-hl...), and many more.
+external packages like Company, diff-hl...), and many others.
 
 Every bit counts: a bug report, a blog post detailing one's workflow,
 participation in a mailing list thread, etc.  Do not hesitate to add
