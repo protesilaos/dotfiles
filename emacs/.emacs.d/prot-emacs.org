@@ -5084,7 +5084,6 @@ Finally, note that I control the placement of those buffers in the
     (define-key map (kbd "M-p") #'prot-diary-heading-previous)
     (define-key map (kbd "C-c C-a") #'prot-diary-align-timestamped-entries))
   (let ((map global-map))
-    (define-key map (kbd "C-c d a") #'prot-diary-insert-appointment)
     (define-key map (kbd "C-c d c") #'calendar)
     (define-key map (kbd "C-c d d") #'prot-diary-display-entries)
     (define-key map (kbd "C-c d e") #'prot-diary-edit-diary)
