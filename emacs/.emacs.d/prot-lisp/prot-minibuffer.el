@@ -573,9 +573,8 @@ line number in the Completions' buffer."
 
 ;;;###autoload
 (defun prot-minibuffer-choose-completion-dwim ()
-  "Run `choose-completion' and append it to the minibuffer.
-Return point to the completions' buffer.  This is useful while
-interfacing with a `completing-read-multiple' prompt."
+  "Append to minibuffer when at `completing-read-multiple' prompt.
+Otherwise behave like `prot-minibuffer-choose-completion-exit'."
   (interactive)
   (when (and (derived-mode-p 'completion-list-mode)
              (active-minibuffer-window))
@@ -584,8 +583,14 @@ interfacing with a `completing-read-multiple' prompt."
       (unless (eq (prot-minibuffer--completion-category) 'file)
         (minibuffer-force-complete))
       (when crm-completion-table
-        (insert ","))) ; FIXME 2021-04-02: assumes the `crm-separator' as constant
-    (switch-to-completions)))
+        ;; FIXME 2021-04-02: assumes the `crm-separator' as constant.
+        ;; UPDATE 2021-04-22: actually `crm-default-separator' is a
+        ;; defconst, so I am leaving this here just in case I ever need
+        ;; it.  We will have a problem if some command let-binds its own
+        ;; value, but it is not our fault here...
+        (insert ",")
+        (let ((inhibit-message t))
+          (switch-to-completions))))))
 
 ;;;; Simple actions for the "*Completions*" buffer
 
