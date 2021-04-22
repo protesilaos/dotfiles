@@ -68,7 +68,7 @@ process.")
 This is meant to evaluate forms that control the rest of my Emacs
 setup."
   (let* ((init prot-emacs-basic-init)
-         (file (thread-last user-emacs-directory (expand-file-name init))))
+         (file (locate-user-emacs-file init)))
     (when (file-exists-p file)
       (load-file file))))
 
@@ -161,7 +161,7 @@ expressions."
 ;; contains my themes which I use directly from source for development
 ;; purposes.
 (dolist (path '("prot-lisp" "contrib-lisp" "modus-themes"))
-  (add-to-list 'load-path (thread-last user-emacs-directory (expand-file-name path))))
+  (add-to-list 'load-path (locate-user-emacs-file path)))
 
 ;; Some basic settings
 (setq frame-title-format '("%b"))
@@ -194,9 +194,9 @@ expressions."
   "Base name of user-specific configuration file.")
 
 (defun prot-emacs--expand-file-name (file extension)
-  "Return canonical path to FILE with EXTENSION."
-  (expand-file-name
-   (concat user-emacs-directory file extension)))
+  "Return canonical path to FILE to Emacs config with EXTENSION."
+  (locate-user-emacs-file
+   (concat file extension)))
 
 (defun prot-emacs-load-config ()
   "Load main Emacs configurations, either '.el' or '.org' file."

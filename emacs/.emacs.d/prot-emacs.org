@@ -83,12 +83,12 @@ configuration of all packages declared herein.  In particular:
 
 + =prot-emacs-manual-package= handles the few packages that I install
   manually via their Git repository.  Each of those repos must be inside
-  =(thread-last user-emacs-directory (expand-file-name "contrib-lisp"))=
-  (typically at =~/.emacs.d/contrib-lisp=).  The macro will load the
-  package normally and configure it accordingly if it exists at the
-  desired path, else it will log a warning about what file path it
-  expects to read.  In concrete terms, if you want =package-A= you must
-  first place all of its files at =~/.emacs.d/contrib-lisp/package-A=.
+  =(locate-user-emacs-file "contrib-lisp")= (typically available at
+  =~/.emacs.d/contrib-lisp=).  The macro will load the package normally
+  and configure it accordingly if it exists at the desired path, else it
+  will log a warning about what file path it expects to read.  In
+  concrete terms, if you want =package-A= you must first place all of its
+  files at =~/.emacs.d/contrib-lisp/package-A=.
 
 *I must stress that no package is automatically installed by default:* the
 user is expected to do so on their own either by calling a command or by
@@ -137,8 +137,8 @@ with greater precision.  My code is as follows:
 
 In the =org-mode= version of this document, I make sure that the
 above-referenced code blocks are not declared as an =emacs-lisp= source
-but rather as mere examples, so they are not accidentally parsed by
-the actual setup.
+but rather as mere examples, so they are not accidentally parsed by the
+actual setup.
 
 Actual code blocks are wrapped between =#+begin_src= and =#+end_src= tags
 (not visible in the website version of this page).  For Emacs 27.1,
@@ -6297,8 +6297,7 @@ some of the above.
   (setq eww-suggest-uris
         '(eww-links-at-point
           thing-at-point-url-at-point))
-  (setq eww-bookmarks-directory
-        (thread-last user-emacs-directory (expand-file-name "eww-bookmarks/")))
+  (setq eww-bookmarks-directory (locate-user-emacs-file "eww-bookmarks/"))
   (setq eww-history-limit 150)
   (setq eww-use-external-browser-for-content-type
         "\\`\\(video/\\|audio\\)") ; On GNU/Linux check your mimeapps.list
