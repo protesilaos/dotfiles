@@ -5010,6 +5010,8 @@ Finally, note that I control the placement of those buffers in the
 
   (add-hook 'calendar-today-visible-hook #'calendar-mark-today)
   (add-hook 'diary-list-entries-hook 'diary-sort-entries t)
+  (add-hook 'diary-mode-hook #'goto-address-mode) ; buttonise plain text links
+
   ;; Those presuppose (setq diary-display-function #'diary-fancy-display)
   (add-hook 'diary-list-entries-hook 'diary-include-other-diary-files)
   (add-hook 'diary-mark-entries-hook 'diary-mark-included-diary-files)
