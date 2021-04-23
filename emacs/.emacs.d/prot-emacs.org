@@ -418,6 +418,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-bold-constructs t
         modus-themes-no-mixed-fonts nil
         modus-themes-subtle-line-numbers t
+        modus-themes-success-deuteranopia t
 
         modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
 
