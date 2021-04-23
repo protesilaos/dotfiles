@@ -759,6 +759,54 @@ in the [[https://200ok.ch/posts/2020-09-29_comprehensive_guide_on_handling_long_
   (global-so-long-mode 1))
 #+end_src
 
+** Repeatable key chords (repeat-mode)
+:PROPERTIES:
+:CUSTOM_ID: h:33d9a35a-54ed-4f9d-8f30-5c99c1a45ad0
+:END:
+
+Emacs28 comes with a built-in utility for repeating selected commands in
+a more convenient fashion.  Once =repeat-mode= is enabled, a key binding
+or chord that invokes a command succesfully can be repeated by typing in
+its tail or whatever the developer specifies.  So =other-window= may be
+used like this: =C-x o=, =o=, =o= to switch three windows, instead of =C-x o=,
+=C-x o=, =C-x o=.
+
+This is achieved by furnishing transient keymaps that get activated
+right after the command they belong to and only once the command in
+question has been added to the =repeat-map=.  Here is a sample from
+=window.el=:
+
+#+begin_example emacs-lisp
+(defvar resize-window-repeat-map
+  (let ((map (make-sparse-keymap)))
+    ;; Standard keys:
+    (define-key map "^" 'enlarge-window)
+    (define-key map "}" 'enlarge-window-horizontally)
+    (define-key map "{" 'shrink-window-horizontally) ; prot note: those three are C-x KEY
+    ;; Additional keys:
+    (define-key map "v" 'shrink-window) ; prot note: this is not bound by default
+    map)
+  "Keymap to repeat window resizing commands.  Used in `repeat-mode'.")
+(put 'enlarge-window 'repeat-map 'resize-window-repeat-map)
+(put 'enlarge-window-horizontally 'repeat-map 'resize-window-repeat-map)
+(put 'shrink-window-horizontally 'repeat-map 'resize-window-repeat-map)
+(put 'shrink-window 'repeat-map 'resize-window-repeat-map)
+#+end_example
+
+Once the keymap exists and its commands are in the =repeat-map=, such as
+with the above example, we do not have to recreate the entire setup if
+all we need is to change key bindings: we just have to rebind the
+commands to where it makes sense for us.  I actually do this for
+=resize-window-repeat-map= ([[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks (window.el)]]).
+
+At any rate, all we need here is to activate =repeat-mode= and then
+implement the repetition mechanism wherever we want.
+
+#+begin_src emacs-lisp
+(prot-emacs-builtin-package 'repeat
+  (repeat-mode 1))
+#+end_src
+
 ** Key chord hints (which-key.el)
 :PROPERTIES:
 :CUSTOM_ID: h:835d7498-31f3-4121-baaa-381599b8389a
