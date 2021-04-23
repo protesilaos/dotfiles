@@ -5126,7 +5126,7 @@ Finally, note that I control the placement of those buffers in the
   (setq calendar-holidays (append holiday-solar-holidays prot-diary-local-holidays))
 
   (with-eval-after-load 'prot-outline
-    (add-hook 'diary-mode-hook #'prot-outline-minor-mode))
+    (add-hook 'diary-mode-hook #'prot-outline-minor-mode-safe))
 
   (let ((map diary-mode-map))
     (define-key map (kbd "<M-return>") #'prot-diary-newline-indent)
@@ -6876,66 +6876,83 @@ This is =prot-sideline.el= (part of [[https://gitlab.com/protesilaos/dotfiles][m
 
 The =outline.el= library defines a major mode (=outline-mode=) that is
 similar to =org-mode= in that it consists of headings which can be
-expanded or contracted individually or as a group.  It is meant to work
-on plain text files, or be leveraged by other packages, that need to
-have some structure and the accompanying benefits of this mode.  In
-practice, however, I never found a dedicated use for this major mode
-that would justify it over the more featureful Org.
+expanded or contracted individually or as a group (actually Outline
+predates Org).  The major mode is meant to work with plain text files,
+or be leveraged by other packages that need to have some structure and
+the accompanying benefits of outline folding.  In practice, however, I
+never found a dedicated use for it that would justify it over the more
+featureful Org.
 
-Where =outline.el= truly shines is in the minor mode it defines
-(=outline-minor-mode=), which provides the familiar structured,
-heading-folding facilities in other major modes, such as =emacs-lisp-mode=
-(note: it may also work with other programming modes, though I am not a
-programmer so I cannot really test it).  With some careful tweaks you
-can continue to work on your code while also benefitting from a more
-effective means of organising and reviewing what you have.
+Where =outline.el= truly shines, in my experience, is in the minor mode it
+defines (=outline-minor-mode=), which provides the familiar structured,
+heading-folding facilities in other major modes, like =emacs-lisp-mode= or
+any arbitrary mode, like =diff-mode= and the =diary=.
+
+Also read:
+
++ [[#h:b4040bc0-7a2a-4f17-824d-42de621bd1b9][Calendar and Diary (and prot-diary.el)]].
++ [[#h:2ff46d23-09d5-4d92-b0af-2339dc19719f][Diff-mode (and prot-diff.el extensions)]].
+
+With some careful tweaks you can continue to work on your code while
+also benefitting from a more effective means of organising and reviewing
+what you have.
 
 In practice, to make an outline for Elisp buffers, you need to start a
 comment line /without leading spaces/ and make it at least three comment
-delimiters long (=;;;=).  That is considered a heading level 1.  Every
-extra delimiter will increase heading levels accordingly.  Markdown
-headings should be recognised right away.
+delimiters long (=;;;=) followed by a space and then the text of the
+heading, such as =;;; Code:=.  That is considered a heading level 1.
+Every extra delimiter will increase heading levels accordingly.  The
+buffer-local variable =outline-regexp= determines what constitutes a
+heading for this purpose.
 
 Now on to my custom library, =prot-outline.el= which builds on those
 concepts:
 
-+ Provide some new commands for working with outlines.  The main point
-  of entry is, for me at least, =prot-outline-cycle-dwim=.
++ Provide several new commands and minor extras for working with
+  outlines.
 
-+ Define a new minor mode, =prot-outline-minor-mode=, which sets up a
-  bespoke keymap as well as hooks that get fired when activating and
-  disabling the mode.  Combine it with =prot-outline-minor-mode-safe= that
-  checks whether the current buffer's major mode is not a member of a
-  blocklist.  The idea is not to run this minor mode with major modes
-  that already provide its functionality, namely, =org-mode=,
-  =outline-mode=, =markdown-mode=.
-
-+ Establish bindings with =imenu.el= (though this practically works with
-  [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).  This
-  is done via the aforementioned hooks and, in my experience, yields
-  more accurate results than the defaults.  A quick reminder of why this
-  matters: you can now navigate the outline using minibuffer completion,
-  which is my favourite way to navigate a file I am familiar with.
-
-Finally, an element of improved design: the =outline-minor-faces= package,
-by Jonas Bernoulli, will apply colouration to the headings produced by
-=outline-minor-mode=.  These inherit from =outline-mode=.
++ Define a =prot-outline-minor-mode-safe= command that checks whether the
+  current buffer's major mode is not a member of a blocklist.  The idea
+  is to not run =outline-minor-mode= with major modes that already provide
+  its functionality: =org-mode=, =outline-mode=, =markdown-mode=.
 
 Watch my [[https://protesilaos.com/codelog/2020-07-20-emacs-outline-imenu/][video demo of outline-minor-mode and imenu]] (2020-07-20), though
-note that it was recorded long before I wrote =prot-outline.el=.
+note that it was recorded long before I wrote =prot-outline.el=.  In
+particular, older versions of my code would establish bindings for
+=imenu.el=.  This was done via bespoke entry and exit hooks and was
+intended to complement the standard Imenu headings with those of the
+Outline.  This is no longer needed because =consult-outline= does exactly
+that ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).  A
+quick reminder of why this matters: you can navigate the outline using
+minibuffer completion, which is my favourite way to browse a file.  You
+can, in the same spirit, use Embark to produce a buffer with the
+completion candidates, i.e. the headings, or a subset you have narrowed
+to, and navigate them therefrom.  It really is an efficient workflow:
+[[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]].
 
 #+begin_src emacs-lisp
+(prot-emacs-builtin-package 'outline
+  (setq-default outline-minor-mode-highlight t) ; emacs28
+  (setq-default outline-minor-mode-cycle t)     ; emacs28
+  (let ((map outline-minor-mode-map))
+    (define-key map (kbd "C-<tab>") #'outline-cycle)
+    (define-key map (kbd "<backtab>") #'outline-cycle-buffer) ; S-TAB
+    (define-key map (kbd "C-c C-n") #'outline-next-visible-heading)
+    (define-key map (kbd "C-c C-p") #'outline-previous-visible-heading)
+    (define-key map (kbd "C-c C-f") #'outline-forward-same-level)
+    (define-key map (kbd "C-c C-b") #'outline-backward-same-level)
+    (define-key map (kbd "C-c C-a") #'outline-show-all)
+    (define-key map (kbd "C-c C-o") #'outline-hide-other)
+    (define-key map (kbd "C-c C-u") #'outline-up-heading)))
+
 (prot-emacs-builtin-package 'prot-outline
+  (let ((map outline-minor-mode-map))
+    (define-key map (kbd "C-c C-v") #'prot-outline-move-major-heading-down)
+    (define-key map (kbd "M-<down>") #'prot-outline-move-major-heading-down)
+    (define-key map (kbd "C-c M-v") #'prot-outline-move-major-heading-up)
+    (define-key map (kbd "M-<up>") #'prot-outline-move-major-heading-up)
+    (define-key map (kbd "C-x n s") #'prot-outline-narrow-to-subtree))
   (define-key global-map (kbd "<f10>") #'prot-outline-minor-mode-safe))
-
-(prot-emacs-elpa-package 'outline-minor-faces
-  (add-hook 'prot-outline-minor-mode-enter-hook
-	        #'outline-minor-faces-add-font-lock-keywords)
-
-  (with-eval-after-load 'modus-themes
-    (add-hook 'modus-themes-after-load-theme-hook
-              (lambda ()
-                (set-face-attribute 'outline-minor-0 nil :extend nil)))))
 #+end_src
 
 These are the contents of the =prot-outline.el= library (find the file in
