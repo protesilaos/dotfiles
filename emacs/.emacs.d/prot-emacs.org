@@ -613,41 +613,32 @@ Relevant publications of mine that are not part of this document:
   ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
   ;; as it explains what those property lists should contain.
   (setq prot-fonts-typeface-sets-alist
-        '((laptop . ( :fixed-pitch-family "Hack"
+        '((laptop . ( :fixed-pitch-family "Iosevka Comfy"
                       :fixed-pitch-regular-weight normal
                       :fixed-pitch-heavy-weight bold
-                      :fixed-pitch-height 90
+                      :fixed-pitch-height 100
                       :fixed-pitch-line-spacing 1
-                      :variable-pitch-family "DejaVu Sans Condensed"
-                      :variable-pitch-height 1.0
+                      :variable-pitch-family "FiraGO"
+                      :variable-pitch-height 0.9
                       :variable-pitch-regular-weight normal))
 
-          (desktop . ( :fixed-pitch-family "Source Code Pro"
+          (desktop . ( :fixed-pitch-family "Iosevka Comfy"
                        :fixed-pitch-regular-weight normal
                        :fixed-pitch-heavy-weight bold
-                       :fixed-pitch-height 100
-                       :fixed-pitch-line-spacing 1
-                       :variable-pitch-family "Open Sans"
-                       :variable-pitch-height 1.0
+                       :fixed-pitch-height 110
+                       :fixed-pitch-line-spacing nil
+                       :variable-pitch-family "FiraGO"
+                       :variable-pitch-height 0.9
                        :variable-pitch-regular-weight normal))
 
-          (presentation . ( :fixed-pitch-family "Hack"
+          (presentation . ( :fixed-pitch-family "Iosevka Comfy"
                             :fixed-pitch-regular-weight normal
                             :fixed-pitch-heavy-weight bold
-                            :fixed-pitch-height 130
-                            :fixed-pitch-line-spacing 2
-                            :variable-pitch-family "Inter"
-                            :variable-pitch-height 1.0
-                            :variable-pitch-regular-weight normal))
-
-          (micro . ( :fixed-pitch-family "Hack"
-                     :fixed-pitch-regular-weight normal
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 80
-                     :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "DejaVu Sans Condensed"
-                     :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))))
+                            :fixed-pitch-height 140
+                            :fixed-pitch-line-spacing nil
+                            :variable-pitch-family "Source Sans Pro"
+                            :variable-pitch-height 0.95
+                            :variable-pitch-regular-weight normal))))
 
   ;; The value of `prot-fonts-laptop-desktop-keys-list' becomes '(laptop
   ;; desktop) based on the car of the first two cons cells found in
