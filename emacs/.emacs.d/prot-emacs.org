@@ -637,7 +637,7 @@ Relevant publications of mine that are not part of this document:
                             :fixed-pitch-height 140
                             :fixed-pitch-line-spacing nil
                             :variable-pitch-family "Source Sans Pro"
-                            :variable-pitch-height 0.95
+                            :variable-pitch-height 1.0
                             :variable-pitch-regular-weight normal))))
 
   ;; The value of `prot-fonts-laptop-desktop-keys-list' becomes '(laptop
