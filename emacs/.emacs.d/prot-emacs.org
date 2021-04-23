@@ -8352,10 +8352,10 @@ Some sections of this document assign functions to key combinations that
 involve the "Super" key (also known as the "Windows key" on some
 commercial keyboards).  This is represented as a lower case =s=.
 
-In most cases, those key bindings are alternative ways of invoking
-/common commands/ that are by default bound to longer key chords.  The
-original keys will continue to function as intended (for example, =C-x o=
-is also =s-o=).  Otherwise they are bound to my own custom commands.
+Those key bindings typically are alternative ways of invoking /common
+commands/ that are by default bound to longer key chords.  The original
+keys will continue to function as intended (for example, =C-x o= is also
+=s-o=).  Otherwise they are bound to my own custom commands.
 
 To find all my keybindings of this sort in the source code version of
 this document from inside of Emacs, do =M-s o= (or =M-x occur=) followed by
