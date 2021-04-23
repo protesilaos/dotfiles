@@ -2702,16 +2702,16 @@ well, covering everything from window placement rules, to the recording
 of history and layouts, as well as directional or direct window
 navigation.
 
-*** Window rules and basic tweaks
+*** Window rules and basic tweaks (window.el)
 :PROPERTIES:
 :CUSTOM_ID: h:3d8ebbb1-f749-412e-9c72-5d65f48d5957
 :END:
 
 The =display-buffer-alist= is intended as a rule-set for controlling the
-display of windows.  This is mostly needed for ancillary buffers, such
+placement of windows.  This is mostly needed for ancillary buffers, such
 as shells, compilation output, and the like.  The objective is to create
 a more intuitive workflow where targeted buffer groups or types are
-always shown in a given location, on the premise that predictability
+always shown at a given location, on the premise that predictability
 improves usability.
 
 For each buffer action in =display-buffer-alist= we can define several
@@ -2720,18 +2720,27 @@ sequence, but my usage thus far suggests that a simpler method is just
 as effective for my case.
 
 Everything pertaining to buffer actions is documented at length in the
-GNU Emacs Lisp Reference Manual.  Information can also be found at all
-times via =C-h f display-buffer= and, for my particular settings, with
-=C-h f display-buffer-in-side-window=.
+GNU Emacs Lisp Reference Manual (evaluate =(elisp) Displaying Buffers=).
+Information can also be found at all times via =C-h f display-buffer= and,
+for my particular settings, with =C-h f display-buffer-in-side-window=.
 
-With regard to the key bindings, most combinations are complementary to
-the standard ones, such as =C-x 1= becoming =s-1=, =C-x o= turning into
-=s-o= and the like.  They *do not replace* the defaults: they just
-provide more convenient access to their corresponding functions.  They
-all involve the Super key, following the norms described in the relevant
-[[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note on the matter]].  Concerning the =balance-windows-area= I find that
-it is less intrusive than the original =balance-windows= normally bound
-to the same =C-x +=.
+With regard to the key bindings you will find here, most combinations
+are complementary to the standard ones, such as =C-x 1= being aliased as
+=s-1=, =C-x o= turning into =s-o= and the like.  They *do not replace* the
+defaults: they just provide more convenient access to their
+corresponding functions.  Some involve the Super key, in accordance with
+the norms described in the relevant [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note on the matter]].  Concerning the
+=balance-windows-area= I find that it is less intrusive than the original
+=balance-windows= normally bound to the same =C-x +=.  Lastly, the
+=resize-window-repeat-map= is for repeatable key chords that work with the
+=repeat-mode= for Emacs28 (read my description of what it is and how to
+set it up: [[#h:33d9a35a-54ed-4f9d-8f30-5c99c1a45ad0][Repeatable key chords (repeat-mode)]]).
+
+Make sure to also review the other window-related keys in those
+sections:
+
++ [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][Window history (winner-mode)]].
++ [[#h:230d96c8-a955-4b82-844d-9de9a1b7c531][Directional window motions (windmove)]].
 
 For a demo of the =display-buffer-alist= and the functions that
 accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-display-buffer/][video on rules for buffer placement]]
@@ -2830,7 +2839,14 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
     (define-key map (kbd "C-x _") #'balance-windows)      ; underscore
     (define-key map (kbd "C-x -") #'fit-window-to-buffer) ; hyphen
     (define-key map (kbd "C-x +") #'balance-windows-area)
-    (define-key map (kbd "s-q") #'window-toggle-side-windows)))
+    (define-key map (kbd "s-q") #'window-toggle-side-windows)
+    (define-key map (kbd "C-x }") #'enlarge-window)
+    (define-key map (kbd "C-x {") #'shrink-window)
+    (define-key map (kbd "C-x >") #'enlarge-window-horizontally) ; override `scroll-right'
+    (define-key map (kbd "C-x <") #'shrink-window-horizontally)) ; override `scroll-left'
+  (let ((map resize-window-repeat-map))
+    (define-key map ">" #'enlarge-window-horizontally)
+    (define-key map "<" #'shrink-window-horizontally)))
 #+end_src
 
 *** Window history (winner-mode)
@@ -2843,12 +2859,14 @@ layout changes.  It then allows us to move back and forth in the
 history of said changes.  I have it enabled by default, while I assign
 its two main functions to Super and the right/left arrow keys.
 
+Also check: [[#h:230d96c8-a955-4b82-844d-9de9a1b7c531][Directional window motions (windmove)]].
+
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'winner
   (add-hook 'after-init-hook #'winner-mode)
   (let ((map global-map))
-    (define-key map (kbd "<s-right>") #'winner-redo)
-    (define-key map (kbd "<s-left>") #'winner-undo)))
+    (define-key map (kbd "<M-s-right>") #'winner-redo)
+    (define-key map (kbd "<M-s-left>") #'winner-undo)))
 #+end_src
 
 *** Directional window motions (windmove)
@@ -2857,23 +2875,35 @@ its two main functions to Super and the right/left arrow keys.
 :END:
 
 Windmove is also built into Emacs.  It provides functions for selecting
-a window in any of the cardinal directions.  A decent addition to the
-simpler =other-window= command (=C-x o= by default).
+a window in any of the cardinal directions: a decent addition to the
+simpler =other-window= command (=C-x o= by default).  It also has commands
+for deleting a window in the given direction as well as for switching
+the current window with the one in the given direction.  I do not need
+the directional deletion motions, as they require extra key bindings
+while I feel that it is easy enough to select a window and delete it
+outright with =delete-window= (on =C-x 0= by default).
 
-The =windmove-create-window= specifies what should happen when trying to
-move past the edge of the frame.  The idea with this is to allow it to
-create a new window with the contents of the current buffer.  I tried it
-for a while but felt that the times it would interfere with my layout
-where more than those it would actually speed up my workflow.
+The =windmove-create-window= variable specifies what should happen when
+trying to move past the edge of the frame.  The idea with this is to
+allow it to create a new window with the contents of the current buffer.
+I tried it for a while but felt that the times it would interfere with
+my layout by mistake where more than those it would actually speed up my
+workflow.
+
+Also read: [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][Window history (winner-mode)]].
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'windmove
   (setq windmove-create-window nil)     ; Emacs 27.1
   (let ((map global-map))
-    (define-key map (kbd "<C-M-up>") #'windmove-up)
-    (define-key map (kbd "<C-M-right>") #'windmove-right)
-    (define-key map (kbd "<C-M-down>") #'windmove-down)
-    (define-key map (kbd "<C-M-left>") #'windmove-left)))
+    (define-key map (kbd "<s-up>") #'windmove-up)
+    (define-key map (kbd "<s-right>") #'windmove-right)
+    (define-key map (kbd "<s-down>") #'windmove-down)
+    (define-key map (kbd "<s-left>") #'windmove-left)
+    (define-key map (kbd "<S-s-up>") #'windmove-swap-states-up)
+    (define-key map (kbd "<S-s-right>") #'windmove-swap-states-right)
+    (define-key map (kbd "<S-s-down>") #'windmove-swap-states-down)
+    (define-key map (kbd "<S-s-left>") #'windmove-swap-states-left)))
 #+end_src
 
 *** Tabs for window layouts (and prot-tab.el)
