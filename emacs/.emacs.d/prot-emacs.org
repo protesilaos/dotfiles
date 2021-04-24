@@ -6933,7 +6933,7 @@ to, and navigate them therefrom.  It really is an efficient workflow:
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'outline
-  (setq-default outline-minor-mode-highlight t) ; emacs28
+  (setq-default outline-minor-mode-highlight 'override) ; emacs28
   (setq-default outline-minor-mode-cycle t)     ; emacs28
   (let ((map outline-minor-mode-map))
     (define-key map (kbd "C-<tab>") #'outline-cycle)
