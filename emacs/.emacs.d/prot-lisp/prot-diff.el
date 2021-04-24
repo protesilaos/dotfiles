@@ -133,44 +133,12 @@ hook `modus-themes-after-load-theme-hook'."
 ;;; Extend diff-mode font lock
 
 (defface prot-diff-diffstat-added
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#006800")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#44bc44")
-    (t :foreground "green"))
+  '((t :inherit diff-indicator-added))
   "Face for diffstat added indicators (+).")
 
 (defface prot-diff-diffstat-removed
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#a60000")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#ff8059")
-    (t :foreground "red"))
+  '((t :inherit diff-indicator-removed))
   "Face for diffstat removed indicators (-).")
-
-(defface prot-diff-diffstat-file-changed
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#5e3a20")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#d0ba95")
-    (t :foreground "yellow"))
-  "Face for diffstat changed files.")
-
-(defface prot-diff-hunk-file-added
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#104410")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#88cf88")
-    (t :foreground "green"))
-  "Face for diff hunk file added.")
-
-(defface prot-diff-hunk-file-removed
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#7f1010")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#ffa0a0")
-    (t :foreground "red"))
-  "Face for diff hunk file removed.")
 
 (defface prot-diff-commit-header
   '((((class color) (min-colors 88) (background light))
@@ -226,25 +194,14 @@ hook `modus-themes-after-load-theme-hook'."
      (2 'prot-diff-diffstat-file-changed)
      (4 'prot-diff-diffstat-added))
     ("\\(^[^+-]?\\)\\(\\+\\{3\\}\\) \\([ab].*?\\)"
-     (2 'prot-diff-diffstat-added)
-     ;; (3 'prot-diff-hunk-file-added)
-     )
+     (2 'prot-diff-diffstat-added))
     ("\\(^[^+-]?\\)\\(-+\\{3\\}\\) \\([ab].*?\\)"
-     (2 'prot-diff-diffstat-removed)
-     ;; (3 'prot-diff-hunk-file-removed)
-     )
+     (2 'prot-diff-diffstat-removed))
     ("\\(^[^+@-]?\\)\\(.*?\s+|\s+\\)\\([0-9]*\\) \\(\\++\\)?\\(-+\\)"
      (2 'prot-diff-diffstat-file-changed)
      (5 'prot-diff-diffstat-removed))
     ("\\([0-9]+ files? changed,.*\\)"
-     (0 'prot-diff-diffstat-file-changed)
-     ;; ;; NOTE: Or comment out the above and use the following
-     ;; "\\([0-9]+ files? changed,\\) \\(.*(\\+)\\)\\(, \\)?\\(.*(-)\\)?"
-     ;; (1 'prot-diff-diffstat-file-changed)
-     ;; (2 'prot-diff-hunk-file-added)
-     ;; (3 'prot-diff-diffstat-file-changed)
-     ;; (4 'prot-diff-hunk-file-removed)
-     )
+     (0 'prot-diff-diffstat-file-changed))
     ("^---\n"
      (0 'prot-diff-commit-header))
     ("\\(^commit \\)\\(.*\\)"
