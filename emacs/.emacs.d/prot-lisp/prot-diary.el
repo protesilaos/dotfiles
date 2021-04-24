@@ -204,6 +204,13 @@ Otherwise use `diary-mail-days'."
 (defvar outline-regexp)
 (defvar outline-heading-end-regexp)
 
+(defun prot-diary--outline-level ()
+  "Determine Outline heading level.
+To be assigned to the variable `outline-level'."
+  (let ((regexp "\\(;;+\\{2,\\}\\) [^ \t\n]"))
+    (looking-at regexp)
+    (- (- (match-end 1) (match-beginning 1)) 2)))
+
 (defun prot-diary--extras-setup ()
   "Additional setup for Diary mode buffers.
 Applies `prot-diary-font-lock-keywords' and specifies what
@@ -212,6 +219,7 @@ constitutes a heading for the purposes of Outline minor mode."
     (font-lock-flush (point-min) (point-max))
     (font-lock-add-keywords nil prot-diary-font-lock-keywords t)
     (setq outline-regexp (format "%s+\\{2,\\} [^ \t\n]" diary-comment-start))
+    (setq outline-level #'prot-diary--outline-level)
     (setq outline-heading-end-regexp (format "%s$" diary-comment-end))))
 
 (add-hook 'diary-mode-hook #'prot-diary--extras-setup)
