@@ -417,7 +417,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs t
         modus-themes-no-mixed-fonts nil
-        modus-themes-subtle-line-numbers t
+        modus-themes-subtle-line-numbers nil
         modus-themes-success-deuteranopia t
 
         modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
@@ -431,7 +431,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody, 'accented,
         ;; 'accented-3d, 'accented-moody
-        modus-themes-mode-line 'accented-moody
+        modus-themes-mode-line 'accented
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
@@ -460,7 +460,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
         ;; 'bg-only-no-extend, 'accent, 'accent-no-extend
-        modus-themes-region 'no-extend
+        modus-themes-region 'accent
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
@@ -470,11 +470,14 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((t . no-color))
+        '((1 . section)
+          (2 . rainbow-line)
+          (3 . rainbow-line-no-bold)
+          (t . no-bold))
 
-        modus-themes-variable-pitch-ui t
-        modus-themes-variable-pitch-headings t
-        modus-themes-scale-headings t
+        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-headings nil
+        modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
@@ -6547,7 +6550,7 @@ want is to make the mode line gracefully adapt to changes in font size.
 (prot-emacs-builtin-package 'prot-moody
   ;; Also check the Modus themes' `modus-themes-mode-line' which can set
   ;; the styles specifically for Moody.
-  (prot-moody-set-height 1))
+  (prot-moody-set-height -1))
 #+end_src
 
 Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
