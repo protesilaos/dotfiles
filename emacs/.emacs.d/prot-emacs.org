@@ -2515,6 +2515,7 @@ are just some tweaks to make it work the way I prefer.
 #+begin_src emacs-lisp
 (let ((map ctl-x-x-map))              ; Emacs 28
   (define-key map "e" #'eval-buffer)
+  (define-key map "f" #'follow-mode)  ; override `font-lock-update'
   (define-key map "r" #'rename-uniquely))
 
 (with-eval-after-load 'org
