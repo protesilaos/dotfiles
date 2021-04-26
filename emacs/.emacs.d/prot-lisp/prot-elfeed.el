@@ -85,23 +85,26 @@ Used by `prot-elfeed-toggle-tag'."
 
 (defface prot-elfeed-entry-critical
   '((((class color) (min-colors 88) (background light))
-     :inherit elfeed-search-title-face :foreground "#972500")
+     :inherit elfeed-search-title-face :foreground "#a60000")
     (((class color) (min-colors 88) (background dark))
-     :inherit elfeed-search-title-face :foreground "#f4923b"))
+     :inherit elfeed-search-title-face :foreground "#ff8059")
+    (t :foreground "red"))
   "Face for Elfeed entries tagged with 'critical'.")
 
 (defface prot-elfeed-entry-important
   '((((class color) (min-colors 88) (background light))
-     :inherit elfeed-search-title-face :foreground "#5d3026")
+     :inherit elfeed-search-title-face :foreground "#813e00")
     (((class color) (min-colors 88) (background dark))
-     :inherit elfeed-search-title-face :foreground "#f8dec0"))
+     :inherit elfeed-search-title-face :foreground "#f0ce43")
+    (t :foreground "yellow"))
   "Face for Elfeed entries tagged with 'important'.")
 
 (defface prot-elfeed-entry-personal
     '((((class color) (min-colors 88) (background light))
      :inherit elfeed-search-title-face :foreground "#0031a9")
     (((class color) (min-colors 88) (background dark))
-     :inherit elfeed-search-title-face :foreground "#2fafff"))
+     :inherit elfeed-search-title-face :foreground "#2fafff")
+    (t :foreground "blue"))
   "Face for Elfeed entries tagged with 'personal'.")
 
 ;;;; Utilities
