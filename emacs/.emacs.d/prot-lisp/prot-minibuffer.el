@@ -357,6 +357,15 @@ Add this to `completion-list-mode-hook'."
 (add-hook 'completion-list-mode-hook #'cursor-sensor-mode)
 (add-hook 'completion-setup-hook #'prot-minibuffer--clean-completions)
 
+;; This is needed to circumvent what we implement in
+;; prot-minibuffer--clean-completions with regard to
+;; `cursor-sensor-functions'.
+;;;###autoload
+(defun prot-minibuffer-beginning-of-buffer ()
+  "Go to the top of the Completions buffer."
+  (interactive)
+  (goto-char (1+ (point-min))))
+
 (defun prot-minibuffer--fit-completions-window ()
   "Fit Completions' buffer to its window."
   (fit-window-to-buffer (get-buffer-window "*Completions*")

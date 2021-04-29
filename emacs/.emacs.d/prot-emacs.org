@@ -1227,6 +1227,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
     (define-key map (kbd "<up>") #'prot-minibuffer-previous-completion-or-mini)
     (define-key map (kbd "<return>") #'prot-minibuffer-choose-completion-exit)
     (define-key map (kbd "<M-return>") #'prot-minibuffer-choose-completion-dwim)
+    (define-key map (kbd "M-<") #'prot-minibuffer-beginning-of-buffer)
     ;; Those are generic actions for the "*Completions*" buffer, though
     ;; I normally use `embark'.
     (define-key map (kbd "w") #'prot-minibuffer-completions-kill-symbol-at-point)
