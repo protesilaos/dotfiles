@@ -1858,24 +1858,21 @@ This is Emacs' own approach to dynamic/arbitrary text completion inside
 the buffer: "dynamic abbreviation" or else =dabbrev=.  This mechanism
 works by reading all text before point to find a suitable match.
 Different scenaria determine whether it should also look forward and in
-other buffers.  In essence, Dabbrev can help you type again what you
-already have.  It will not draw candidates from some knowledge bank and
-will thus not leverage Emacs' =completion-at-point-functions= (CAPF)
-(which means that it does not work with [[#h:675ebef4-d74d-41af-808d-f9579c2a5ec4][Corfu for in-buffer completion]],
-at least not for the time being).
+other buffers.  In essence, Dabbrev helps you re-type what you already
+have.
 
 With =dabbrev-expand= we make an attempt to complete the text at point.
 Repeated invocations will cycle through the candidates.  No feedback is
-provided, much in the same way yanking from the kill-ring works.  To
-complete a phrase, matching the last succesful =dabbrev-expand=, you need
-to supply an empty space and call the command again.  This will match
-the next word, and so on for N words.
+provided, much in the same way yanking from the kill-ring works (though
+for Emacs28 =yank-pop= on =M-y= will use completion if the previous command
+was not =yank= on =C-y=).  To complete a phrase, matching the last succesful
+=dabbrev-expand=, you need to supply an empty space and call the command
+again.  This will match the next word, and so on for N words.
 
 Whereas =dabbrev-completion= benefits from minibuffer interactivity and
 the pattern matching styles in effect ([[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]]).
-If you configure =completion-in-region-function= to display a list of
-candidates, such as how I do with Consult, then you can use that to pick
-the candidate you want ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el)]]).
+With the help of Corfu, the completion candidates are displayed in a
+pop-up window near point ([[#h:675ebef4-d74d-41af-808d-f9579c2a5ec4][Corfu for in-buffer completion]]).
 
 The =dabbrev-abbrev-char-regexp= is configured to match both regular words
 and symbols (e.g. words separated by hyphens).  This makes it equally
