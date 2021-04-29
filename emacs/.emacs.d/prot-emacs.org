@@ -7055,14 +7055,18 @@ This eliminates the friction of guessing where the point has warped to.
 
 As for per-line scrolling, I dislike the default behaviour of visually
 re-centring the point: it is too aggressive as a standard mode of
-interaction.  With the following =setq-default=, the point will stay at
-the top/bottom of the screen while moving in that direction (use =C-l= to
-reposition it).
+interaction.  With the following the point will stay at the top/bottom
+of the screen while moving in that direction (use =C-l= to reposition it).
+
+The =next-screen-context-lines= ensures that when moving by screenfulls
+(with either =C-v= or =M-v=) we do not get any continuation lines from the
+previous screen.  I find this more intuitive.
 
 #+begin_src emacs-lisp
 (setq-default scroll-preserve-screen-position t)
 (setq-default scroll-conservatively 1) ; affects `scroll-step'
 (setq-default scroll-margin 0)
+(setq-default next-screen-context-lines 0)
 #+end_src
 
 *** Delete selection
