@@ -4416,6 +4416,8 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-return-follows-link nil)
   (setq org-loop-over-headlines-in-active-region 'start-level)
   (setq org-modules '(ol-gnus ol-info ol-eww))
+  (setq org-use-sub-superscripts '{})
+  (setq org-insert-heading-respect-content t)
 
 ;;;; refile, todo
   (setq org-refile-targets
@@ -4469,6 +4471,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 
 ;;;; log
   (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
   (setq org-log-note-clock-out nil)
   (setq org-log-redeadline nil)
   (setq org-log-reschedule nil)
