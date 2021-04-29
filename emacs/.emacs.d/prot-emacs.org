@@ -1797,7 +1797,7 @@ This is a copy of =prot-recentf.el= (part of [[https://gitlab.com/protesilaos/do
 several others---search this document for a few of them), which focuses
 on text expansion within the buffer.  Its User Interface involves a
 pop-up that shows the completion candidates for the text before point.
-This pop-up, technically an overlay, is invoked manually with the =TAB=
+This pop-up, technically a child frame, is invoked manually with the =TAB=
 key.  While I would have preferred to use the minibuffer even for
 in-buffer text expansion, for the sake of consistency and
 predictability, I consider the added functionality more important than
@@ -1809,8 +1809,8 @@ tool that works with the standard completion mechanisms, as it reads
 from the =completion-styles= as well as the =completion-category-overrides=
 (refer to [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]],
 though note that if you are a fan of Daniel's work, you will probably
-want to check the [[https://github.com/minad/vertico][Vertico package]] instead of my dubious, largely
-experimental, hacks for the default minibuffer experience).
+want to check the [[https://github.com/minad/vertico][Vertico package]] instead of my largely experimental,
+hacks for the default minibuffer experience).
 
 Unlike its more established counterpart, =company-mode=, Corfu does not
 implement its own backends for various programming languages.  Instead,
@@ -1819,17 +1819,21 @@ Perhaps that could be seen as a downside for users who program in a lot
 of languages and/or who require some of Company's bespoke functionality.
 For me though, the CAPF facility is good enough because it works with
 the only programming language I have been coding in for the last several
-months: Emacs Lisp.  And I would assume that it also works for any major
-mode that is in sync with the current best practices in Emacs' design.
-Besides, this approach makes the code easier for me to understand and
-configure.
+months: Emacs Lisp.  CAPF also is future-proof in that any package that
+provides its own completion table, automatically works with Corfu, such
+as my contacts manager ([[#h:d386e14b-dcf7-46a2-851f-867cd84c6cae][EBDB (mail contacts)]]).  And I would assume that
+it also works for any major mode that is in sync with the current best
+practices in Emacs' design.  Besides, this approach makes the code
+easier for me to understand and configure.
 
-Once the Corfu overlay appears, press =TAB= or =S-TAB= to cycle through the
-candidates, or use =C-n= and =C-p=.  Other motions work as well, such as
-=C-v=, =M-v=, =M-<=, =M->=, though regular cycling is what you would normally
-want.  Additionally, you can use =M-h= (=corfu-show-documentation=) and =M-g=
-(=corfu-show-documentation=) over the selected candidate to either display
-its doc string or its source code, respectively.
+Once the Corfu overlay appears, use =C-n= and =C-p= to cycle through the
+candidates.  Other motions work as well, such as =C-v=, =M-v=, =M-<=, =M->=,
+though regular incremental motions is what you would normally want.  =RET=
+selects the current item and exits, while =TAB= tries to complete as much
+as possible, only exiting if the match is unique.  Additionally, you can
+use =M-h= (=corfu-show-documentation=) and =M-g= (=corfu-show-documentation=)
+over the selected candidate to either display its doc string or its
+source code, respectively.
 
 Note that for =TAB= to perform completion in addition to its primary
 function of adjusting indentation, we need =tab-always-indent= to be set
@@ -1838,11 +1842,11 @@ read that variable's doc string).
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'corfu
-  (dolist (mode '(prog-mode-hook shell-mode-hook eshell-mode-hook))
+  (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
+                   shell-mode-hook eshell-mode-hook))
     (add-hook mode #'corfu-mode))
-  (let ((map corfu-map))                ; I want tab to cycle
-    (define-key map (kbd "<tab>") #'corfu-next)
-    (define-key map (kbd "<backtab>") #'corfu-previous))) ; S-TAB
+  (let ((map corfu-map))
+    (define-key map (kbd "<tab>") #'corfu-complete)))
 #+end_src
 
 **** Dabbrev (dynamic word completion)
