@@ -5662,7 +5662,7 @@ correspondence, or they will simply contribute to the creation of a
 database that contains a lot of largely useless information.  Save only
 what matters---ignore the rest.
 
-While "ignore the rest" can mean to simply pass it over in silence, EDBD
+While "ignore the rest" can mean to simply pass it over in silence, EBBD
 actually provides a mechanism to permanently exclude individual
 addresses or domain names from ever being recorded.  Those are stored in
 the file specified by the variable =ebdb-permanent-ignores-file=: you can
@@ -5673,6 +5673,7 @@ regexp notation is accepted.  For example:
 #+begin_example
 @debbugs.gnu.org
 help-debbugs@gnu.org
+@reply.github.com
 #+end_example
 
 EBDB binds some common commands to the semicolon (=;=) prefix key inside
