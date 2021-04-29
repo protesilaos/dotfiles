@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.3.2
-;; Last-Modified: <2021-04-25 18:42:42 +0300>
+;; Last-Modified: <2021-04-29 08:19:30 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -306,6 +306,7 @@
 ;;     prism (see "Note for prism.el" in the manual)
 ;;     proced
 ;;     prodigy
+;;     pulse
 ;;     quick-peek
 ;;     racket-mode
 ;;     rainbow-blocks
@@ -3629,10 +3630,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(consult-preview-error ((,class :inherit modus-themes-intense-red)))
     `(consult-preview-line ((,class :background ,bg-hl-alt-intense)))
 ;;;;; corfu
-    `(corfu-background ((,class :background ,bg-alt :foreground ,fg-alt)))
+    `(corfu-background ((,class :background ,bg-alt)))
     `(corfu-current ((,class :inherit bold :background ,cyan-subtle-bg)))
-    `(corfu-bar ((,class :background ,fg-alt :foreground ,fg-alt)))
-    `(corfu-border ((,class :background ,bg-active :foreground ,bg-region)))
+    `(corfu-bar ((,class :background ,fg-alt)))
+    `(corfu-border ((,class :background ,bg-active)))
 ;;;;; counsel
     `(counsel-active-mode ((,class :foreground ,magenta-alt-other)))
     `(counsel-application-name ((,class :foreground ,red-alt-other)))
@@ -5761,6 +5762,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(prodigy-green-face ((,class :foreground ,green)))
     `(prodigy-red-face ((,class :foreground ,red)))
     `(prodigy-yellow-face ((,class :foreground ,yellow)))
+;;;;; pulse
+    `(pulse-highlight-face ((,class :background ,cyan-refine-bg :extend t)))
+    `(pulse-highlight-start-face ((,class :background ,cyan-refine-bg :extend t)))
 ;;;;; quick-peek
     `(quick-peek-background-face ((,class :background ,bg-alt)))
     `(quick-peek-border-face ((,class :background ,fg-window-divider-inner :height 1)))
