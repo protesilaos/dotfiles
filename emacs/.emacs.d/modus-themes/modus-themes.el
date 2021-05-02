@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.3.2
-;; Last-Modified: <2021-04-29 08:19:30 +0300>
+;; Last-Modified: <2021-05-01 22:49:35 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -651,7 +651,7 @@
     (fg-unfocused . "#56576d")
 
     (fg-docstring . "#2a486a")
-    (fg-comment-yellow . "#5f4400")
+    (fg-comment-yellow . "#794319")
 
     (bg-header . "#e5e5e5") (fg-header . "#2a2a2a")
 
@@ -907,7 +907,7 @@ symbol and the latter as a string.")
     (fg-unfocused . "#93959b")
 
     (fg-docstring . "#b0d6f5")
-    (fg-comment-yellow . "#cab98f")
+    (fg-comment-yellow . "#d0a070")
 
     (bg-header . "#212121") (fg-header . "#dddddd")
 
@@ -5763,8 +5763,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(prodigy-red-face ((,class :foreground ,red)))
     `(prodigy-yellow-face ((,class :foreground ,yellow)))
 ;;;;; pulse
-    `(pulse-highlight-face ((,class :background ,cyan-refine-bg :extend t)))
-    `(pulse-highlight-start-face ((,class :background ,cyan-refine-bg :extend t)))
+    `(pulse-highlight-face ((,class :background ,bg-active-accent :extend t)))
+    `(pulse-highlight-start-face ((,class :background ,bg-active-accent :extend t)))
 ;;;;; quick-peek
     `(quick-peek-background-face ((,class :background ,bg-alt)))
     `(quick-peek-border-face ((,class :background ,fg-window-divider-inner :height 1)))
