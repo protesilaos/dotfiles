@@ -2221,7 +2221,7 @@ Here are just the basics.  I might add more in the future.
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
   (setq xref-show-xrefs-function #'xref-show-definitions-buffer) ; for grep and the like
   (setq xref-file-name-display 'project-relative)
-  (setq xref-search-program 'ripgrep))
+  (setq xref-search-program 'grep))
 #+end_src
 
 * Directory, buffer, window management
