@@ -1887,7 +1887,7 @@ now typing the ===, then a letter, will still allow me to expand text
 based on that input.
 
 To check what I have on regular expressions, see further below my
-configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][re-builder and visual-regexp]].
+configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][re-builder (regexp-builder)]].
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'dabbrev
@@ -2144,22 +2144,33 @@ Here is =prot-search.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my 
 
 #+include: prot-lisp/prot-search.el src emacs-lisp :tangle no
 
-*** Regular expressions: re-builder and visual-regexp
+*** Test regular expressions (re-builder)
 :PROPERTIES:
 :CUSTOM_ID: h:6c6759c8-3ae3-40b0-8356-05cc0975e12a
 :END:
 
-To learn more about regular expressions, read the relevant pages in
-the official manual.  Assuming you have this installed properly on
-your system, run =C-h r i regexp= to get to the starting chapter.
+Emacs offers a built-in tool for testing regular expressions: invoke it
+with the =regexp-builder= or =re-builder= command.  It pops up a buffer at
+the bottom of the current window, which lets you test a regular
+expression on the contents of the buffer from where the command was
+called.  By default, =re-builder= uses Emacs-style notation, where escape
+sequences are written as a double backslash.  You can switch between the
+various styles by using =C-c TAB= inside of the regexp builder's buffer.
+I choose to keep this style as the default as it is what I also use when
+writing a pattern in some Elisp file.
 
-Also watch my ~35 minute-long [[https://protesilaos.com/codelog/2020-01-23-emacs-regexp-primer/][primer on Emacs regexp]] (2020-01-23).
+To learn more about regular expressions, read the relevant pages in the
+official manual by evaluating this: =(info "(emacs) Regexps")=.  Also
+consider watching my ~35 minute-long video [[https://protesilaos.com/codelog/2020-01-23-emacs-regexp-primer/][primer on Emacs regexp]]
+(2020-01-23).  If you actually need to do a regexp-aware query and
+replace operation that performs an arbitrary elisp function on a group
+check my article on how to use [[https://protesilaos.com/codelog/2021-03-03-emacs-query-replace-downcase/][query-replace-regexp to downcase matches]]
+(2021-03-03).  Remember that you can always get interactivity by first
+using something like =isearch-forward-regexp= and then switching to the
+=query-replace= operation with =M-%= (in this case, =query-replace=
+automatically becomes regexp-aware).
 
-Emacs offers a built-in package for practising regular expressions.
-By default, =re-builder= uses Emacs-style escape notation, in the form
-of double backslashes.  You can switch between the various styles by
-using =C-c TAB= inside of the regexp builder's buffer.  I choose to keep
-this style as the default.  Other options are =string= and =rx=.
+Also check: [[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][Isearch, occur, grep, and extras (prot-search.el)]].
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 're-builder
