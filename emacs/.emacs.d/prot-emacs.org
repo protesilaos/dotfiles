@@ -2166,21 +2166,6 @@ this style as the default.  Other options are =string= and =rx=.
   (setq reb-re-syntax 'read))
 #+end_src
 
-Another option (though the two are not mutually exclusive) is to use
-the third-party package =visual-regexp=.  This one is meant as a drop-in
-replacement for =query-replace= (and the regexp variant).  I prefer not
-to use it that way, but only invoke it via =M-x= when I need to test a
-regular expression that I would then replace with something else.  The
-major upside of this tool is that it highlights groups individually
-and offers a live preview of the replacement, making it absolutely
-great when dealing with complex sets of regexp constructs.
-
-#+begin_src emacs-lisp
-(prot-emacs-elpa-package 'visual-regexp
-  (setq vr/default-replace-preview nil)
-  (setq vr/match-separator-use-custom-face t))
-#+end_src
-
 *** wgrep (writable grep)
 :PROPERTIES:
 :CUSTOM_ID: h:42624165-f4cb-4318-abce-c11232426880
