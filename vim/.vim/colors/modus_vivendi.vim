@@ -22,28 +22,28 @@ else
 endif
 
 hi Visual guibg=#ffffff guifg=#000000 ctermbg=15 ctermfg=0
-hi Search gui=underline,bold guibg=#181a20 guifg=#ffffff cterm=underline,bold ctermbg=8 ctermfg=3
+hi Search gui=underline,bold guibg=#191a1b guifg=#ffffff cterm=underline,bold ctermbg=8 ctermfg=3
 hi IncSearch gui=underline,bold guibg=#a8a8a8 guifg=#000000 term=none cterm=underline,bold ctermbg=7 ctermfg=0
 
 hi StatusLine gui=none guibg=#ffffff guifg=#000000 cterm=none ctermbg=15 ctermfg=0
-hi StatusLineNC gui=none guibg=#181a20 guifg=#a8a8a8 cterm=none ctermbg=8 ctermfg=7
+hi StatusLineNC gui=none guibg=#191a1b guifg=#a8a8a8 cterm=none ctermbg=8 ctermfg=7
 hi StatusLineTerm gui=none guibg=#44bc44 guifg=#000000 cterm=none ctermbg=2 ctermfg=0
-hi StatusLineTermNC gui=none guibg=#181a20 guifg=#44bc44 cterm=none ctermbg=8 ctermfg=2
+hi StatusLineTermNC gui=none guibg=#191a1b guifg=#44bc44 cterm=none ctermbg=8 ctermfg=2
 
 hi VertSplit gui=none cterm=none
-hi TabLine gui=none guibg=#181a20 guifg=#a8a8a8 cterm=none ctermbg=8 ctermfg=7
+hi TabLine gui=none guibg=#191a1b guifg=#a8a8a8 cterm=none ctermbg=8 ctermfg=7
 hi TabLineSel gui=none guibg=#00d3d0 guifg=#000000 cterm=none ctermbg=6 ctermfg=0
 hi TabLineFill gui=none cterm=none
 
 hi Comment gui=italic guifg=#a8a8a8 cterm=none ctermfg=7
-hi Todo guibg=#110b11 guifg=#cfdf30 ctermbg=0 ctermfg=11
+hi Todo guibg=#100f10 guifg=#cfdf30 ctermbg=0 ctermfg=11
 
 hi Warning gui=none guibg=#eecc00 guifg=#000000 cterm=none ctermbg=3 ctermfg=0
 hi WarningMsg gui=none guibg=#eecc00 guifg=#000000 cterm=none ctermbg=3 ctermfg=0
 hi Error gui=none guibg=#ff8059 guifg=#000000 cterm=none ctermbg=1 ctermfg=0
 hi ErrorMsg gui=none guibg=#ff8059 guifg=#000000 cterm=none ctermbg=1 ctermfg=0
 
-hi MatchParen gui=underline,bold guibg=#181a20 guifg=#a8a8a8 cterm=underline,bold ctermbg=8 ctermfg=7
+hi MatchParen gui=underline,bold guibg=#191a1b guifg=#a8a8a8 cterm=underline,bold ctermbg=8 ctermfg=7
 
 hi ToolbarLine guibg=#a8a8a8 guifg=#000000 term=none ctermbg=7 ctermfg=0
 hi ToolbarButton gui=bold guibg=#a8a8a8 guifg=#000000 term=none cterm=bold ctermbg=7 ctermfg=0
@@ -94,21 +94,21 @@ hi Debug guifg=#f78fe7 ctermfg=13
 
 " Other
 " -----
-hi LineNr guibg=#181a20 guifg=#a8a8a8 term=none ctermbg=8 ctermfg=7
+hi LineNr guibg=#191a1b guifg=#a8a8a8 term=none ctermbg=8 ctermfg=7
 hi Cursor guibg=#ffffff guifg=#000000 ctermbg=15 ctermfg=0
-hi CursorLine gui=none guibg=#181a20 term=none cterm=none ctermbg=8
-hi CursorColumn gui=none guibg=#181a20 term=none cterm=none ctermbg=8
+hi CursorLine gui=none guibg=#191a1b term=none cterm=none ctermbg=8
+hi CursorColumn gui=none guibg=#191a1b term=none cterm=none ctermbg=8
 hi CursorLineNr gui=bold guibg=#a8a8a8 guifg=#000000 cterm=bold ctermbg=7 ctermfg=0
-hi ColorColumn guibg=#181a20 guifg=#ffffff term=none ctermbg=8 ctermfg=15
-hi SignColumn guibg=#181a20 guifg=#a8a8a8 term=none ctermbg=8 ctermfg=7
+hi ColorColumn guibg=#191a1b guifg=#ffffff term=none ctermbg=8 ctermfg=15
+hi SignColumn guibg=#191a1b guifg=#a8a8a8 term=none ctermbg=8 ctermfg=7
 
-hi Folded guibg=#181a20 guifg=#a8a8a8 ctermbg=8 ctermfg=7
-hi FoldColumn guibg=#181a20 guifg=#a8a8a8 ctermbg=8 ctermfg=7
+hi Folded guibg=#191a1b guifg=#a8a8a8 ctermbg=8 ctermfg=7
+hi FoldColumn guibg=#191a1b guifg=#a8a8a8 ctermbg=8 ctermfg=7
 
 hi Special gui=none guifg=#00cd68 term=none cterm=none ctermfg=2
-hi SpecialKey gui=none guibg=#181a20 guifg=#a8a8a8 cterm=none ctermbg=8 ctermfg=7
+hi SpecialKey gui=none guibg=#191a1b guifg=#a8a8a8 cterm=none ctermbg=8 ctermfg=7
 hi SpecialChar gui=bold guifg=#cfdf30 cterm=bold ctermfg=11
-hi NonText gui=none guibg=#181a20 guifg=#a8a8a8 cterm=none ctermbg=8 ctermfg=7
+hi NonText gui=none guibg=#191a1b guifg=#a8a8a8 cterm=none ctermbg=8 ctermfg=7
 hi EndOfBuffer gui=bold guifg=#a8a8a8 cterm=bold ctermfg=7
 
 hi Directory gui=none guifg=#44bc44 term=none cterm=none ctermfg=2
@@ -120,17 +120,17 @@ hi VimOption guifg=#4ae8fc ctermfg=6
 hi VimGroup guifg=#4ae8fc ctermfg=5
 
 hi Underlined gui=underline guifg=#ffffff cterm=underline ctermfg=15
-hi Ignore guibg=#181a20 guifg=#a8a8a8 ctermbg=8 ctermfg=7
-hi Conceal guibg=#a8a8a8 guifg=#181a20 ctermbg=7 ctermfg=8
+hi Ignore guibg=#191a1b guifg=#a8a8a8 ctermbg=8 ctermfg=7
+hi Conceal guibg=#a8a8a8 guifg=#191a1b ctermbg=7 ctermfg=8
 
 hi SpellBad guibg=#ff8059 guifg=#000000 ctermbg=1 ctermfg=0
 hi SpellCap guibg=#eecc00 guifg=#000000 ctermbg=3 ctermfg=0
 hi SpellRare guibg=#b6a0ff guifg=#000000 ctermbg=13 ctermfg=0
 hi SpellLocal guibg=#6ae4b9 guifg=#000000 ctermbg=14 ctermfg=0
 
-hi Pmenu gui=italic guibg=#181a20 guifg=#ffffff cterm=none ctermbg=8 ctermfg=15
+hi Pmenu gui=italic guibg=#191a1b guifg=#ffffff cterm=none ctermbg=8 ctermfg=15
 hi PmenuSel gui=none,bold guibg=#a8a8a8 guifg=#000000 cterm=none,bold ctermbg=7 ctermfg=0
-hi PmenuSbar guibg=#181a20 ctermbg=8
+hi PmenuSbar guibg=#191a1b ctermbg=8
 hi PmenuThumb guibg=#a8a8a8 ctermbg=7
 
 " Terminal
@@ -179,18 +179,18 @@ endif
 " -----
 hi DiffAdd gui=bold guibg=#44bc44 guifg=#000000 cterm=bold ctermbg=10 ctermfg=0
 hi DiffDelete gui=none guibg=#ff8059 guifg=#000000 cterm=none ctermbg=9 ctermfg=0
-hi DiffChange gui=bold guibg=#181a20 guifg=#a8a8a8 cterm=bold ctermbg=8 ctermfg=7
-hi DiffText gui=bold guibg=#181a20 guifg=#f4923b cterm=bold ctermbg=8 ctermfg=1
+hi DiffChange gui=bold guibg=#191a1b guifg=#a8a8a8 cterm=bold ctermbg=8 ctermfg=7
+hi DiffText gui=bold guibg=#191a1b guifg=#f4923b cterm=bold ctermbg=8 ctermfg=1
 
 hi diffAdded guifg=#44bc44 ctermfg=2
 hi diffRemoved guifg=#ff8059 ctermfg=1
 hi diffNewFile gui=none guifg=#2fafff ctermfg=4
 hi diffFile gui=none guifg=#eecc00 cterm=none ctermfg=3
 
-hi GitGutterAdd guibg=#181a20 guifg=#44bc44 ctermbg=8 ctermfg=2
-hi GitGutterChange gui=bold guibg=#181a20 guifg=#a8a8a8 cterm=bold ctermbg=8 ctermfg=7
-hi GitGutterDelete guibg=#181a20 guifg=#ff8059 ctermbg=8 ctermfg=1
-hi GitGutterChangeDelete gui=bold guibg=#181a20 guifg=#ff8059 cterm=bold ctermbg=8 ctermfg=1
+hi GitGutterAdd guibg=#191a1b guifg=#44bc44 ctermbg=8 ctermfg=2
+hi GitGutterChange gui=bold guibg=#191a1b guifg=#a8a8a8 cterm=bold ctermbg=8 ctermfg=7
+hi GitGutterDelete guibg=#191a1b guifg=#ff8059 ctermbg=8 ctermfg=1
+hi GitGutterChangeDelete gui=bold guibg=#191a1b guifg=#ff8059 cterm=bold ctermbg=8 ctermfg=1
 
 " Neomake
 " -------
@@ -205,7 +205,7 @@ hi NeomakeVirtualtextWarningDefault guifg=#eecc00 ctermfg=3
 hi NeomakeVirtualtextErrorDefault guifg=#ff8059 ctermfg=1
 
 hi NeomakeStatusGood gui=none guibg=#44bc44 guifg=#000000 cterm=none ctermbg=2 ctermfg=0
-hi NeomakeStatusGoodNC gui=none guibg=#181a20 guifg=#44bc44 cterm=none ctermbg=8 ctermfg=2
+hi NeomakeStatusGoodNC gui=none guibg=#191a1b guifg=#44bc44 cterm=none ctermbg=8 ctermfg=2
 
 hi NeomakeStatColorDefault gui=none guibg=#2fafff guifg=#000000 cterm=none ctermbg=4 ctermfg=0
 hi NeomakeStatColorTypeE gui=none guibg=#ff8059 guifg=#000000 cterm=none ctermbg=1 ctermfg=0
@@ -213,7 +213,7 @@ hi NeomakeStatColorTypeW gui=none guibg=#eecc00 guifg=#000000 cterm=none ctermbg
 
 " Markdown
 " --------
-hi MarkdownRule gui=bold guibg=#181a20 guifg=#70c900 cterm=bold ctermbg=8 ctermfg=10
+hi MarkdownRule gui=bold guibg=#191a1b guifg=#70c900 cterm=bold ctermbg=8 ctermfg=10
 
 hi MarkdownHeading gui=bold guifg=#ffffff cterm=bold ctermfg=15
 hi default link MarkdownH1 MarkdownHeading
