@@ -1140,10 +1140,10 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'minibuffer
-  (setq completion-styles '(orderless partial-completion))
+  (setq completion-styles 
+        '(substring initials flex partial-completion orderless))
   (setq completion-category-overrides
-        '((buffer (styles . (substring flex orderless)))
-          (file (styles . (partial-completion orderless)))))
+        '((file (styles . (partial-completion orderless)))))
   (setq completion-cycle-threshold nil)
   (setq completion-flex-nospace nil)
   (setq completion-pcm-complete-word-inserts-delimiters t)
