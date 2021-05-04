@@ -139,7 +139,7 @@ end of the buffer.")
 Which web browser to use depends on the value of the variable
 `browse-url-browser-function'.
 
-Also see `prot-search-occur-url'."
+Also see `prot-search-occur-urls'."
   (interactive)
   (let ((matches nil))
     (save-excursion
