@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.3.2
-;; Last-Modified: <2021-05-04 19:51:18 +0300>
+;; Last-Modified: <2021-05-05 09:11:09 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -98,6 +98,7 @@
 ;;     bm
 ;;     bongo
 ;;     boon
+;;     bookmark
 ;;     breakpoint (provided by built-in gdb-mi.el)
 ;;     buffer-expose
 ;;     calendar and diary
@@ -3449,6 +3450,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(boon-modeline-ins ((,class :inherit modus-themes-active-red)))
     `(boon-modeline-off ((,class :inherit modus-themes-active-yellow)))
     `(boon-modeline-spc ((,class :inherit modus-themes-active-green)))
+;;;;; bookmark
+    `(bookmark-face ((,class :inherit modus-themes-special-warm :extend t)))
 ;;;;; breakpoint (built-in gdb-mi.el)
     `(breakpoint-disabled ((,class :inherit shadow)))
     `(breakpoint-enabled ((,class :inherit bold :foreground ,red)))
