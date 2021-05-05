@@ -658,13 +658,13 @@ Relevant publications of mine that are not part of this document:
   ;; it to an external monitor (how I normally set it up on my desk).
   (setq prot-fonts-max-small-resolution-width 1366)
 
-  ;; See theme section for this hook and also read the doc string of
-  ;; `prot-fonts-restore-last'.
-  (add-hook 'modus-themes-after-load-theme-hook #'prot-fonts-restore-last)
-
   ;; And this just sets the right font depending on whether my laptop is
   ;; connected to an external monitor or not.
   (prot-fonts-fonts-per-monitor)
+
+  ;; See theme section for this hook and also read the doc string of
+  ;; `prot-fonts-restore-last'.
+  (add-hook 'modus-themes-after-load-theme-hook #'prot-fonts-restore-last)
 
   (define-key global-map (kbd "C-c f") #'prot-fonts-set-fonts))
 #+end_src
