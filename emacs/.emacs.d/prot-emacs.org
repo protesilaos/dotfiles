@@ -6553,6 +6553,10 @@ want is to make the mode line gracefully adapt to changes in font size.
 (prot-emacs-elpa-package 'moody)
 
 (prot-emacs-builtin-package 'prot-moody
+  ;; Addjust this and then evaluate `prot-moody-set-height'.  Not all
+  ;; fonts work equally well with the same value.
+  (setq prot-moody-font-height-multiplier 1.35)
+
   ;; Also check the Modus themes' `modus-themes-mode-line' which can set
   ;; the styles specifically for Moody.
   (prot-moody-set-height 1))

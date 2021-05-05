@@ -42,12 +42,17 @@
   "Tweaks for moody.el."
   :group 'mode-line)
 
+(defcustom prot-moody-font-height-multiplier 1.65
+  "Multiple of the font size to derive the moody height."
+  :type 'number
+  :group 'prot-moody)
+
 (defun prot-moody--height ()
   "Set Moody height to an even number.
 Bind this to a hook that gets called after loading/changing the
 mode line's typeface (or the default one if they are the same)."
   (let* ((font (face-font 'mode-line))
-         (height (truncate (* 1.65 (aref (font-info font) 2))))
+         (height (truncate (* prot-moody-font-height-multiplier (aref (font-info font) 2))))
          (height-even (if (prot-common-number-even-p height) height (+ height 1))))
     (if font
         height-even
