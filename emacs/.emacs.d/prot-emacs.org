@@ -323,7 +323,9 @@ point an arbitrary distance.
 (prot-emacs-builtin-package 'prot-pulse
   (setq prot-pulse-pulse-command-list
         '(recenter-top-bottom
-          reposition-window))
+          reposition-window
+          bookmark-jump
+          other-window))
   (prot-pulse-advice-commands-mode 1)
   (define-key global-map (kbd "<s-escape>") #'prot-pulse-pulse-line))
 #+end_src
