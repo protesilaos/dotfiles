@@ -433,13 +433,13 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody, 'accented,
         ;; 'accented-3d, 'accented-moody
-        modus-themes-mode-line 'accented-3d
+        modus-themes-mode-line 'accented-moody
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments, 'faint-yellow-comments
-        modus-themes-syntax 'faint-yellow-comments
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line': nil, 'intense-background,
         ;; 'accented-background, 'underline-neutral,
@@ -452,7 +452,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only, 'neutral-underline-only
-        modus-themes-links 'faint
+        modus-themes-links nil
 
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
@@ -466,7 +466,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'bg-only
+        modus-themes-diffs 'deuteranopia
 
         modus-themes-org-blocks nil ; {nil,'grayscale,'rainbow}
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
@@ -6555,7 +6555,7 @@ want is to make the mode line gracefully adapt to changes in font size.
 (prot-emacs-builtin-package 'prot-moody
   ;; Also check the Modus themes' `modus-themes-mode-line' which can set
   ;; the styles specifically for Moody.
-  (prot-moody-set-height -1))
+  (prot-moody-set-height 1))
 #+end_src
 
 Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
