@@ -368,6 +368,7 @@ Add this to `completion-list-mode-hook'."
 
 (defun prot-minibuffer--fit-completions-window ()
   "Fit Completions' buffer to its window."
+  (setq-local window-resize-pixelwise t)
   (fit-window-to-buffer (get-buffer-window "*Completions*")
                         (floor (frame-height) 2) 1))
 
