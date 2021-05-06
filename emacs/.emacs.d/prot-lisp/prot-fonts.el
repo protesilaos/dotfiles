@@ -174,6 +174,9 @@ fonts, else nth 0, are applied."
 (defvar prot-fonts-set-typeface-hook nil
   "Hook that runs after `prot-fonts-set-fonts'.")
 
+(defvar prot-fonts--current-spec nil
+  "Current font set in `prot-fonts-typeface-sets-alist'.")
+
 ;;;###autoload
 (defun prot-fonts-set-fonts (display)
   "Set fonts based on font set assossiated with DISPLAY.
@@ -201,6 +204,7 @@ DISPLAY is a symbol that represents the car of a cons cell in
         (set-face-attribute 'bold nil :weight fixed-pitch-heavy-weight)
         (setq-default line-spacing fixed-pitch-line-spacing)
         (add-to-history 'prot-fonts-font-display-hist (format "%s" display))
+        (setq prot-fonts--current-spec (format "%s" display))
         (run-hooks 'prot-fonts-set-typeface-hook))
     (error "Not running a graphical Emacs; cannot set fonts")))
 
@@ -211,7 +215,11 @@ typographic properties.  For example, when switching themes the
 :weight of the `bold' face will be set to whatever the theme
 specifies, typically 'bold', which is not what we always have on
 our end."
-  (prot-fonts-set-fonts (nth 0 prot-fonts-font-display-hist)))
+  (let ((ultimate (nth 0 prot-fonts-font-display-hist))
+        (penultimate (nth 1 prot-fonts-font-display-hist)))
+    (if (string= ultimate prot-fonts--current-spec)
+        (prot-fonts-set-fonts ultimate)
+      (prot-fonts-set-fonts penultimate))))
 
 (defun prot-fonts--display-type-for-monitor (&optional smaller larger)
   "Determine typeface specs based on monitor width.
