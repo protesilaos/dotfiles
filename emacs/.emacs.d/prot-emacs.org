@@ -6430,6 +6430,98 @@ And here is =prot-eww.el= in its entirety.  It is available as a file in
 
 #+include: prot-lisp/prot-eww.el src emacs-lisp :tangle no
 
+** Extensions for PDFs (pdf-tools)
+
+The =pdf-tools= package builds on top of the external libraries, =poppler=
+and =imagemagick= (if Emacs is compiled with support for it) to deliver a
+series of minor modes for reading and interacting with PDF files from
+inside of Emacs.  As it depends on those external files, it requires
+extra steps to make it work properly.  Those are documented at length in
+its README and vary depending on your operating system.
+
+All you need to start reading PDFs is to put the =pdf-loader-install=
+function in your configurations, which loads the tools once you open an
+appropriate file, such as through =dired= or with =find-file=.  Once inside
+the resulting buffer, do =C-h m= (=describe-mode=) to learn about the key
+bindings and the commands they call.  The basics:
+
+| Key   | Effect            |
+|-------+-------------------|
+| +     | Enlarge (zoom in) |
+| -     | Shrink (zoom out) |
+| 0     | Reset zoom        |
+| C-n   | Next line         |
+| C-p   | Previous line     |
+| SPC   | Scroll down       |
+| S-SPC | Scroll up         |
+
+To determine which minor modes out of the entire suite are activated,
+you need to configure the variable =pdf-tools-enabled-modes=.  I reduce it
+only a subset of what is available by default because I do not need all
+the extras.  That granted, there are at least two minor modes that users
+may find helpful: =pdf-annot-minor-mode= which provides annotation
+capabilities and =pdf-sync-minor-mode= which syncs the PDF with its
+corresponding TeX file when you are running some setup that compiles the
+latter to the former.
+
+The value proposition of =pdf-tools= is that it works with =isearch= and
+=occur= so you can easily (i) search through the file and (ii) produce a
+buffer of locations with matching queries.  As is the norm with
+=pdf-tools=, those facilities are implemented as minor modes:
+=pdf-isearch-minor-mode=, =pdf-occur-global-minor-mode= (this also works
+with =ibuffer= and =dired=).
+
+Another helpful integration is with Emacs' =outline-mode= and =imenu= by
+means of =pdf-outline-minor-mode=.  Simply hit =o= while viewing a PDF to
+produce an outline of the document and then, optionally, =M-x imenu= to
+navigate it using minibuffer completion (though for the latter task you
+may prefer something like =consult-outline=, which is part of the Consult
+package: [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
+
+Finally, I have some tweaks to change the backdrop of the buffer so that
+it is distinct from the page's background while using my light Modus
+Operandi theme ([[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes (my highly accessible themes)]]).  Plus, I
+make it automatically adapt to the =modus-themes-toggle= command, so that
+the PDF switches to a dark theme when it has to.  Those are documented
+in the manual of the themes.  If you are using them, evaluate this form:
+=(info "(modus-themes) Backdrop for pdf-tools (DIY)")=.
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'pdf-tools
+  (setq pdf-tools-enabled-modes         ; simplified from the defaults
+        '(pdf-history-minor-mode
+          pdf-isearch-minor-mode
+          pdf-outline-minor-mode
+          pdf-misc-size-indication-minor-mode
+          pdf-occur-global-minor-mode))
+  (setq pdf-view-display-size 'fit-height)
+  (setq pdf-view-continuous t)
+  (setq pdf-view-use-dedicated-register nil)
+  (setq pdf-view-max-image-width 1080)
+  (setq pdf-outline-imenu-use-flat-menus t)
+
+  (pdf-loader-install)
+
+  ;; Those functions and hooks are adapted from the manual of my
+  ;; modus-themes.  The idea is to (i) add a backdrop that is distinct
+  ;; from the background of the PDF's page and (ii) make pdf-tools adapt
+  ;; to theme switching via, e.g., `modus-themes-toggle'.
+  (defun prot/pdf-tools-backdrop ()
+    (face-remap-add-relative
+     'default
+     `(:background ,(modus-themes-color 'bg-alt))))
+
+  (defun prot/pdf-tools-midnight-mode-toggle ()
+    (when (derived-mode-p 'pdf-view-mode)
+      (if (eq (car custom-enabled-themes) 'modus-vivendi)
+          (pdf-view-midnight-minor-mode 1)
+        (pdf-view-midnight-minor-mode -1))
+      (prot/pdf-tools-backdrop)))
+
+  (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
+  (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
+#+end_src
+
 * General interface and interactions
 :PROPERTIES:
 :CUSTOM_ID: h:b6bd2eea-8269-4029-b446-ee340c12ebc3
