@@ -1146,9 +1146,9 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
         '(substring initials flex partial-completion orderless))
   (setq completion-category-overrides
         '((file (styles . (partial-completion orderless)))))
-  (setq completion-cycle-threshold nil)
+  (setq completion-cycle-threshold 2)
   (setq completion-flex-nospace nil)
-  (setq completion-pcm-complete-word-inserts-delimiters t)
+  (setq completion-pcm-complete-word-inserts-delimiters nil)
   (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-show-help nil)
   (setq completion-auto-help t)
@@ -4442,6 +4442,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-fontify-quote-and-verse-blocks t)
   (setq org-fontify-whole-heading-line nil)
   (setq org-fontify-whole-block-delimiter-line nil)
+  (setq org-highlight-latex-and-related '(latex script)) ; read the doc string
   (setq org-enforce-todo-dependencies t)
   (setq org-enforce-todo-checkbox-dependencies t)
   (setq org-track-ordered-property-with-tag t)
