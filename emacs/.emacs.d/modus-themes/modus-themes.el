@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.3.2
-;; Last-Modified: <2021-05-05 09:11:09 +0300>
+;; Last-Modified: <2021-05-06 19:12:13 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -608,6 +608,7 @@
     (bg-hl-alt-intense . "#e8dfd1")
     (bg-paren-match . "#e0af82")
     (bg-paren-match-intense . "#c488ff")
+    (bg-paren-expression . "#dff0ff")
     (bg-region . "#bcbcbc")
     (bg-region-accent . "#afafef")
 
@@ -854,6 +855,7 @@ symbol and the latter as a string.")
     (bg-hl-alt-intense . "#282e46")
     (bg-paren-match . "#5f362f")
     (bg-paren-match-intense . "#7416b5")
+    (bg-paren-expression . "#221044")
     (bg-region . "#3c3c3c")
     (bg-region-accent . "#4f3d88")
 
@@ -1931,28 +1933,43 @@ most intense combination of face properties."
 (defcustom modus-themes-org-blocks nil
   "Use a subtle gray or color-coded background for Org blocks.
 
-Nil means that the block will have no background of its own and
-will use the default that applies to the rest of the buffer.
+Nil (the default) means that the block has no distinct background
+of its own and uses the one that applies to the rest of the
+buffer.
 
-Option `grayscale' (or `greyscale') will apply a subtle neutral
-gray background to the block's contents.  It also affects the
-begin and end lines of the block: their background will be
-extended to the edge of the window for Emacs version >= 27 where
-the ':extend' keyword is recognized by `set-face-attribute'.
+Option `gray-background' applies a subtle gray background to the
+block's contents.  It also affects the begin and end lines of the
+block: their background extends to the edge of the window for
+Emacs version >= 27 where the ':extend' keyword is recognized by
+`set-face-attribute' (this is contingent on the variable
+`org-fontify-whole-block-delimiter-line').
 
-Option `rainbow' will use an accented background for the contents
-of the block.  The exact color will depend on the programming
-language and is controlled by the `org-src-block-faces'
-variable (refer to the theme's source code for the current
-association list)."
+Option `tinted-background' uses a slightly colored background for
+the contents of the block.  The exact color will depend on the
+programming language and is controlled by the variable
+`org-src-block-faces' (refer to the theme's source code for the
+current association list).  For this to take effect, the Org
+buffer needs to be restarted with `org-mode-restart'.
+
+Code blocks use their major mode's colors only when the variable
+`org-src-fontify-natively' is non-nil.  While quote/verse blocks
+require setting `org-fontify-quote-and-verse-blocks' to a non-nil
+value.
+
+Older versions of the themes provided options `grayscale' (or
+`greyscale') and `rainbow'.  Those will continue to work as they
+are aliases for `gray-background' and `tinted-background',
+respectively."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.0.0")
+  :package-version '(modus-themes . "1.4.0")
   :version "28.1"
   :type '(choice
           (const :format "[%v] %t\n" :tag "No Org block background (default)" nil)
-          (const :format "[%v] %t\n" :tag "Subtle gray block background" grayscale)
-          (const :format "[%v] %t\n" :tag "Subtle gray block background (alt spelling)" greyscale)
-          (const :format "[%v] %t\n" :tag "Color-coded background per programming language" rainbow))
+          (const :format "[%v] %t\n" :tag "Subtle gray block background" gray-background)
+          (const :format "[%v] %t\n" :tag "Alias for `gray-background'" grayscale) ; for backward compatibility
+          (const :format "[%v] %t\n" :tag "Alias for `gray-background'" greyscale)
+          (const :format "[%v] %t\n" :tag "Color-coded background per programming language" tinted-background)
+          (const :format "[%v] %t\n" :tag "Alias for `tinted-background'" rainbow)) ; back compat
   :link '(info-link "(modus-themes) Org mode blocks"))
 
 (defcustom modus-themes-org-habit nil
@@ -2628,19 +2645,22 @@ background and alternative foreground."
       (_
        (list :inherit `,varbold :foreground fg)))))
 
-(defun modus-themes--org-block (bgblk)
+(defun modus-themes--org-block (bgblk fgdefault &optional fgblk)
   "Conditionally set the background of Org blocks.
 BGBLK applies to a distinct neutral background.  Else blocks have
 no background of their own (the default), so they look the same
-as the rest of the buffer.
+as the rest of the buffer.  FGDEFAULT is used when no distinct
+background is present.  While optional FGBLK specifies a
+foreground value that can be combined with BGBLK.
 
-`modus-themes-org-blocks' also accepts a `rainbow' option
-which is applied conditionally to `org-src-block-faces' (see the
-theme's source code)."
-  (if (or (eq modus-themes-org-blocks 'grayscale)
+`modus-themes-org-blocks' also accepts `tinted-background' (alias
+`rainbow') as a value which applies to `org-src-block-faces' (see
+the theme's source code)."
+  (if (or (eq modus-themes-org-blocks 'gray-background)
+          (eq modus-themes-org-blocks 'grayscale)
           (eq modus-themes-org-blocks 'greyscale))
-      (list :background bgblk :extend t)
-    (list :background 'unspecified)))
+      (list :background bgblk :foreground (or fgblk fgdefault) :extend t)
+    (list :background 'unspecified :foreground fgdefault)))
 
 (defun modus-themes--org-block-delim (bgaccent fgaccent bg fg)
   "Conditionally set the styles of Org block delimiters.
@@ -2656,6 +2676,7 @@ The latter pair should be more subtle than the background of the
 block, as it is used when `modus-themes-org-blocks' is
 set to `rainbow'."
   (pcase modus-themes-org-blocks
+    ('gray-background (list :background bg :foreground fg :extend t))
     ('grayscale (list :background bg :foreground fg :extend t))
     ('greyscale (list :background bg :foreground fg :extend t))
     ('rainbow (list :background bgaccent :foreground fgaccent))
@@ -3190,9 +3211,18 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(modus-themes-graph-cyan-0 ((,class :background ,cyan-graph-0-bg)))
     `(modus-themes-graph-cyan-1 ((,class :background ,cyan-graph-1-bg)))
 ;;;;; language checkers
-    `(modus-themes-lang-error ((,class ,@(modus-themes--lang-check fg-lang-underline-error fg-lang-error red red-nuanced-bg))))
-    `(modus-themes-lang-note ((,class ,@(modus-themes--lang-check fg-lang-underline-note fg-lang-note blue-alt blue-nuanced-bg))))
-    `(modus-themes-lang-warning ((,class ,@(modus-themes--lang-check fg-lang-underline-warning fg-lang-warning yellow yellow-nuanced-bg))))
+    `(modus-themes-lang-error ((,class ,@(modus-themes--lang-check
+                                          fg-lang-underline-error
+                                          fg-lang-error
+                                          red red-nuanced-bg))))
+    `(modus-themes-lang-note ((,class ,@(modus-themes--lang-check
+                                         fg-lang-underline-note
+                                         fg-lang-note
+                                         blue-alt blue-nuanced-bg))))
+    `(modus-themes-lang-warning ((,class ,@(modus-themes--lang-check
+                                            fg-lang-underline-warning
+                                            fg-lang-warning
+                                            yellow yellow-nuanced-bg))))
 ;;;;; other custom faces
     `(modus-themes-bold ((,class ,@(modus-themes--bold-weight))))
     `(modus-themes-hl-line ((,class ,@(modus-themes--hl-line
@@ -3201,6 +3231,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                        bg-region blue-intense-bg)
                                     :extend t)))
     `(modus-themes-key-binding ((,class :inherit bold :foreground ,blue-alt-other)))
+    `(modus-themes-reset-hard ((,class :inherit (fixed-pitch modus-themes-reset-soft))))
+    `(modus-themes-reset-soft ((,class :background ,bg-main :foreground ,fg-main
+                                       :weight normal :slant normal :strike-through nil
+                                       :box nil :underline nil :overline nil :extend nil)))
     `(modus-themes-search-success ((,class :inherit ,@(modus-themes--success-deuteran
                                                        'modus-themes-intense-blue
                                                        'modus-themes-intense-green))))
@@ -3212,10 +3246,6 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                                                    green-active))))
     `(modus-themes-slant ((,class :inherit italic :slant ,@(modus-themes--slant))))
     `(modus-themes-variable-pitch ((,class ,@(modus-themes--variable-pitch))))
-    `(modus-themes-reset-soft ((,class :background ,bg-main :foreground ,fg-main
-                                       :weight normal :slant normal :strike-through nil
-                                       :box nil :underline nil :overline nil :extend nil)))
-    `(modus-themes-reset-hard ((,class :inherit (fixed-pitch modus-themes-reset-soft))))
 ;;;; standard faces
 ;;;;; absolute essentials
     `(default ((,class :background ,bg-main :foreground ,fg-main)))
@@ -4693,8 +4723,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(highlight-defined-special-form-name-face ((,class :foreground ,magenta-alt-other)))
     `(highlight-defined-variable-name-face ((,class :foreground ,cyan)))
 ;;;;; highlight-escape-sequences (`hes-mode')
-    `(hes-escape-backslash-face ((,class :inherit bold :foreground ,fg-escape-char-construct)))
-    `(hes-escape-sequence-face ((,class :inherit bold :foreground ,fg-escape-char-backslash)))
+    `(hes-escape-backslash-face ((,class :inherit font-lock-regexp-grouping-construct)))
+    `(hes-escape-sequence-face ((,class :inherit font-lock-regexp-grouping-backslash)))
 ;;;;; highlight-indentation
     `(highlight-indentation-face ((,class :inherit modus-themes-hl-line)))
     `(highlight-indentation-current-column-face ((,class :background ,bg-active)))
@@ -5490,8 +5520,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                     :foreground ,blue-alt)))
     `(org-archived ((,class :background ,bg-alt :foreground ,fg-alt)))
     `(org-block ((,class ,@(modus-themes--mixed-fonts)
-                         ,@(modus-themes--org-block bg-dim)
-                         :foreground ,fg-main)))
+                         ,@(modus-themes--org-block bg-dim fg-main))))
     `(org-block-begin-line ((,class ,@(modus-themes--mixed-fonts)
                                     ,@(modus-themes--org-block-delim
                                        bg-dim fg-special-cold
@@ -5585,7 +5614,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-priority ((,class :foreground ,magenta)))
     `(org-property-value ((,class ,@(modus-themes--mixed-fonts)
                                   :foreground ,fg-special-cold)))
-    `(org-quote ((,class ,@(modus-themes--org-block bg-dim))))
+    `(org-quote ((,class ,@(modus-themes--org-block bg-dim fg-special-cold fg-main))))
     `(org-scheduled ((,class :foreground ,magenta-alt)))
     `(org-scheduled-previously ((,class :foreground ,yellow-alt-other)))
     `(org-scheduled-today ((,class :foreground ,magenta-alt-other)))
@@ -5976,7 +6005,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(show-paren-match ((,class ,@(modus-themes--paren bg-paren-match
                                                        bg-paren-match-intense)
                                 :foreground ,fg-main)))
-    `(show-paren-match-expression ((,class :inherit modus-themes-special-calm)))
+    `(show-paren-match-expression ((,class :background ,bg-paren-expression)))
     `(show-paren-mismatch ((,class :inherit modus-themes-intense-red)))
 ;;;;; shr
     `(shr-abbreviation ((,class :inherit modus-themes-lang-note)))
@@ -6616,7 +6645,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;; xterm-color
     `(xterm-color-names ["black" ,red ,green ,yellow ,blue ,magenta ,cyan "gray65"])
     `(xterm-color-names-bright ["gray35" ,red-alt ,green-alt ,yellow-alt ,blue-alt ,magenta-alt ,cyan-alt "white"])
-    (if (eq modus-themes-org-blocks 'rainbow)
+    (if (or (eq modus-themes-org-blocks 'tinted-background)
+            (eq modus-themes-org-blocks 'rainbow))
         `(org-src-block-faces              ; TODO this list should be expanded
           `(("emacs-lisp" modus-themes-nuanced-magenta)
             ("elisp" modus-themes-nuanced-magenta)
