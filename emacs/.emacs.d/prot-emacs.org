@@ -422,24 +422,24 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-subtle-line-numbers nil
         modus-themes-success-deuteranopia t
 
-        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
         ;; 'subtle-foreground-straight-underline, 'intense-foreground,
         ;; 'intense-foreground-straight-underline, 'colored-background
-        modus-themes-lang-checkers 'colored-background
+        modus-themes-lang-checkers nil
 
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody, 'accented,
         ;; 'accented-3d, 'accented-moody
-        modus-themes-mode-line 'borderless-3d
+        modus-themes-mode-line nil
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments, 'faint-yellow-comments
-        modus-themes-syntax 'alt-syntax-yellow-comments
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line': nil, 'intense-background,
         ;; 'accented-background, 'underline-neutral,
@@ -447,7 +447,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'underline-only-accented
         modus-themes-hl-line nil
 
-        modus-themes-paren-match 'intense-bold ; {nil,'subtle-bold,'intense,'intense-bold}
+        modus-themes-paren-match 'intense ; {nil,'subtle-bold,'intense,'intense-bold}
 
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
@@ -456,19 +456,19 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts 'intense-accented
+        modus-themes-prompts 'subtle-accented
 
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
         ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
         ;; 'bg-only-no-extend, 'accent, 'accent-no-extend
-        modus-themes-region 'bg-only-no-extend
+        modus-themes-region 'accent-no-extend
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
         modus-themes-diffs 'fg-only-deuteranopia
 
-        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
+        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
