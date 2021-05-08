@@ -6491,6 +6491,7 @@ in the manual of the themes.  If you are using them, evaluate this form:
   (setq pdf-tools-enabled-modes         ; simplified from the defaults
         '(pdf-history-minor-mode
           pdf-isearch-minor-mode
+          pdf-links-minor-mode
           pdf-outline-minor-mode
           pdf-misc-size-indication-minor-mode
           pdf-occur-global-minor-mode))
