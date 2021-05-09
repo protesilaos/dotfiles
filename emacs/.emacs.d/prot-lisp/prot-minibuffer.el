@@ -427,7 +427,8 @@ Meant to be added to `after-change-functions'."
   (interactive)
   (if (get-buffer-window "*Completions*" 0)
       (minibuffer-hide-completions)
-    (minibuffer-completion-help)))
+    (minibuffer-completion-help)
+    (prot-minibuffer--fit-completions-window)))
 
 ;;;###autoload
 (defun prot-minibuffer-keyboard-quit-dwim ()
