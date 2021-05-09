@@ -228,43 +228,26 @@ constitutes a heading for the purposes of Outline minor mode."
   "^!?\\(\\([0-9]+\\|\\*\\)[-/]\\([0-9]+\\|\\*\\)[-/]\\([0-9]+\\|\\*\\)\\|%%\\)"
   "Date pattern found in my diary (NOT ALL POSSIBLE PATTERNS).")
 
-(defmacro prot-diary-date-motion (fn desc move-buf rx)
-  "Produce interactive commands to navigate custom bongo delimiters.
+;;;###autoload
+(defun prot-diary-heading-next (&optional arg)
+  "Move to next or optional ARGth Dired subdirectory heading.
+For more on such headings, read `dired-maybe-insert-subdir'."
+  (interactive "p")
+  (let ((heading prot-diary-date-pattern))
+    (goto-char (point-at-eol))
+    (re-search-forward heading nil t (or arg nil))
+    (goto-char (match-beginning 1))
+    (goto-char (point-at-bol))))
 
-FN is the resulting interactive function's name.  DESC is its doc
-string.  MOVE-BUF is a buffer search motion: it expects either
-`re-search-forward' or `re-search-backward'.  RX is the regular
-expression to search for."
-  (declare (indent defun))
-  `(defun ,fn ()
-     ,desc
-     (interactive)
-     (let ((line-motion (gensym)))
-       (pcase ,move-buf
-         ('re-search-forward (setq line-motion (point-at-eol)))
-         ('re-search-backward (setq line-motion (point-at-bol)))
-         (_ (error "Must specify a buffer motion for a regexp")))
-       (let ((section ,rx))
-         (when (progn
-                 (goto-char line-motion)
-                 (funcall ,move-buf section nil t))
-           (goto-char (point-at-bol)))))))
-
-(prot-diary-date-motion
-  prot-diary-heading-next
-  "Move to next diary date or sexp.
-NOTE: the date pattern does not cover all valid formats, but only
-those I use, per `prot-diary-date-pattern'."
-  're-search-forward
-  prot-diary-date-pattern)
-
-(prot-diary-date-motion
-  prot-diary-heading-previous
-  "Move to previous diary date or sexp.
-NOTE: the date pattern does not cover all valid formats, but only
-those I use, per `prot-diary-date-pattern'."
-  're-search-backward
-  prot-diary-date-pattern)
+;;;###autoload
+(defun prot-diary-heading-previous (&optional arg)
+  "Move to previous or optional ARGth Dired subdirectory heading.
+For more on such headings, read `dired-maybe-insert-subdir'."
+  (interactive "p")
+  (let ((heading prot-diary-date-pattern))
+    (goto-char (point-at-bol))
+    (re-search-backward heading nil t (or arg nil))
+    (goto-char (point-at-bol))))
 
 ;;;; Holidays
 
