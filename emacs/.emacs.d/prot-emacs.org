@@ -1209,12 +1209,14 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   ;;    describe-variable execute-extended-command
   ;;    insert-char)
   (setq prot-minibuffer-completion-blocklist nil)
-  (setq prot-minibuffer-completion-passlist nil)
 
   ;; This is for commands that should always pop up the completions'
   ;; buffer.  It circumvents the default method of waiting for some user
-  ;; input before displaying and updating the completions' buffer.
-  (setq prot-minibuffer-completion-passlist nil)
+  ;; input (see `prot-minibuffer-minimum-input') before displaying and
+  ;; updating the completions' buffer.
+  (setq prot-minibuffer-completion-passlist
+        '( dired-goto-file vc-retrieve-tag
+           prot-bongo-playlist-insert-playlist-file))
 
   (define-key global-map (kbd "s-v") #'prot-minibuffer-focus-mini-or-completions)
   (let ((map completion-list-mode-map))
