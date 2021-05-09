@@ -417,7 +417,7 @@ Meant to be added to `after-change-functions'."
     (prot-minibuffer--fit-completions-window)
     (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t))
    ((unless (member this-command prot-minibuffer-completion-blocklist)
-    (add-hook 'after-change-functions #'prot-minibuffer--live-completions-timer nil t)))))
+      (add-hook 'after-change-functions #'prot-minibuffer--live-completions-timer nil t)))))
 
 (add-hook 'minibuffer-setup-hook #'prot-minibuffer--setup-completions)
 
@@ -473,7 +473,7 @@ Meant to be bound in `minibuffer-local-completion-map'."
    (- -1
       (min (max 0 scroll-margin)
            (truncate (/ (window-body-height) 4.0))))
-      t))
+   t))
 
 ;;;###autoload
 (defun prot-minibuffer-next-completion-or-mini (&optional arg)
