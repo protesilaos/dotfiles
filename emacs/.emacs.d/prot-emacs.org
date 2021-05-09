@@ -3341,13 +3341,11 @@ documentation about the current buffer's major mode with =C-h m=---read
   command with an optional prefix argument (=C-u=) will enable word-wise
   highlighting across the diff.
 
-+ =prot-diff-refine-dwim= is how I manually control word-wise diff
-  highlights.  By default, the command will turn on refined changes
-  throughout the buffer.  If called with an optional prefix argument, it
-  will operate only on the diff hunk at point.  If the region is active,
-  it will instead apply fontification to the diff hunks encompassed by
-  the region.  And if word-wise highlights are already present, the
-  command will remove everything and leave point back where it was.
++ =prot-diff-refine-cycle= is how I manually control word-wise diff
+  highlights.  This command has a buffer-local cyclic behaviour.  The
+  first time it is called, it acts on the diff hunk at point.  Upon
+  second invocation, it operates on the entire buffer.  And on third
+  call it removes the word-wise diffs altogether.
 
 + =prot-diff-narrow-dwim= narrows to the diff hunk at point.  If narrowing
   is already present, it widens the buffer.  When invoked with an
@@ -3409,7 +3407,7 @@ the variable =display-buffer-alist=).
   ;; bind to another key---see VC section).
   (define-key global-map (kbd "C-x v =") #'prot-diff-buffer-dwim)
   (let ((map diff-mode-map))
-    (define-key map (kbd "C-c C-b") #'prot-diff-refine-dwim) ; replace `diff-refine-hunk'
+    (define-key map (kbd "C-c C-b") #'prot-diff-refine-cycle) ; replace `diff-refine-hunk'
     (define-key map (kbd "C-c C-n") #'prot-diff-narrow-dwim)))
 #+end_src
 

@@ -61,34 +61,33 @@ highlighting of word-wise changes (local to the current buffer)."
         (unless diff-refine
           (setq-local diff-refine 'font-lock))))))
 
+(defvar-local prot-diff--refine-diff-state 0
+  "Current state of `prot-diff-refine-dwim'.")
+
 ;;;###autoload
-(defun prot-diff-refine-dwim (&optional arg)
-  "Produce word-wise, 'refined' diffs in `diff-mode' buffer.
+(defun prot-diff-refine-cycle ()
+  "Produce buffer-local, 'refined' or word-wise diffs in Diff mode.
 
-Operate on the entire buffer by default.  With optional prefix
-ARG (\\[universal-argument]), act on the hunk at point.  When the
-region is active, fontify the diff hunks encompassed by it.
-
-If any such fontification is already present, revert the buffer
-and place point back where it was."
-  (interactive "P")
-  (let ((position (point))
-        (beg (or (when (mark) (region-beginning)) (point-min)))
-        (end (or (when (mark) (region-end)) (point-max))))
-    (when (derived-mode-p 'diff-mode)
-      (cond
-       ((and arg (not (region-active-p)))
-        (diff-refine-hunk)
-        (setq-local diff-refine 'font-lock))
-       ((eq (buffer-local-value 'diff-refine (current-buffer)) 'font-lock)
-        (revert-buffer)
-        (goto-char position)
-        (recenter))
-       (t
-        (setq-local diff-refine 'font-lock)
-        (when (region-active-p) (deactivate-mark))
-        (font-lock-flush beg end)
-        (goto-char position))))))
+Upon first invocation, refine the diff hunk at point or, when
+none exists, the one closest to it.  On second call, operate on
+the entire buffer.  And on the third time, remove all word-wise
+fontification."
+  (interactive)
+  (let ((point (point)))
+    (pcase prot-diff--refine-diff-state
+      (0
+       (diff-refine-hunk)
+       (setq prot-diff--refine-diff-state 1))
+      (1
+       (setq-local diff-refine 'font-lock)
+       (font-lock-flush)
+       (goto-char point)
+       (setq prot-diff--refine-diff-state 2))
+      (_
+       (revert-buffer)
+       (goto-char point)
+       (recenter)
+       (setq prot-diff--refine-diff-state 0)))))
 
 ;;;###autoload
 (defun prot-diff-narrow-dwim (&optional arg)
@@ -191,17 +190,17 @@ hook `modus-themes-after-load-theme-hook'."
 ;; still be errors or omissions.
 (defconst prot-diff-keywords
   '(("\\(^[^+@-]?\\)\\(.*?\s+|\s+\\)\\([0-9]*\\) \\(\\++\\)"
-     (2 'prot-diff-diffstat-file-changed)
+     ;; (2 'prot-diff-diffstat-file-changed)
      (4 'prot-diff-diffstat-added))
     ("\\(^[^+-]?\\)\\(\\+\\{3\\}\\) \\([ab].*?\\)"
      (2 'prot-diff-diffstat-added))
     ("\\(^[^+-]?\\)\\(-+\\{3\\}\\) \\([ab].*?\\)"
      (2 'prot-diff-diffstat-removed))
     ("\\(^[^+@-]?\\)\\(.*?\s+|\s+\\)\\([0-9]*\\) \\(\\++\\)?\\(-+\\)"
-     (2 'prot-diff-diffstat-file-changed)
+     ;; (2 'prot-diff-diffstat-file-changed)
      (5 'prot-diff-diffstat-removed))
-    ("\\([0-9]+ files? changed,.*\\)"
-     (0 'prot-diff-diffstat-file-changed))
+    ;; ("\\([0-9]+ files? changed,.*\\)"
+    ;;  (0 'prot-diff-diffstat-file-changed))
     ("^---\n"
      (0 'prot-diff-commit-header))
     ("\\(^commit \\)\\(.*\\)"
