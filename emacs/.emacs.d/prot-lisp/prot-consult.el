@@ -55,11 +55,6 @@ changes to take effect."
   :group 'prot-consult
   :type 'list)
 
-(defcustom prot-consult-find-args "fd -i -H -a -c never"
-  "List of strings with the FD command and its arguments."
-  :type 'string
-  :group 'prot-consult)
-
 ;;;; Setup for some consult commands (TODO: needs review)
 
 (defvar prot-consult-jump-recentre-hook nil
@@ -120,12 +115,6 @@ Intended to be assigned to `consult-project-root-function'."
   "Run `consult-outline' through `prot-orderless-with-styles'."
   (interactive)
   (prot-orderless-with-styles 'consult-outline))
-
-;;;###autoload
-(defun prot-consult-imenu ()
-  "Run `consult-imenu' through `prot-orderless-with-styles'."
-  (interactive)
-  (prot-orderless-with-styles 'consult-imenu))
 
 ;;;###autoload
 (defun prot-consult-line ()
