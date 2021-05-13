@@ -4417,7 +4417,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
                     "%i%?"))
           ("m" "Make email note" entry
            (file+headline "tasks.org" "Mail correspondence")
-           ,(concat "* TODO [#B] %:subject :mail:\n"
+           ,(concat "* TODO [#A] %:subject :mail:\n"
                     "SCHEDULED: %t\n:"
                     "PROPERTIES:\n:CONTEXT: %a\n:END:\n\n"
                     "%i%?"))))
@@ -5165,7 +5165,7 @@ any of those as I like the default.
   (setq mail-user-agent 'message-user-agent)
   (setq mail-header-separator (purecopy "*****"))
   (setq compose-mail-user-agent-warnings nil)
-  (setq message-mail-user-agent nil)
+  (setq message-mail-user-agent t)      ; use `mail-user-agent'
   (setq mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
   (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
   (setq message-cite-style nil)
@@ -5257,49 +5257,210 @@ the =~/.authinfo.gpg= (see [[#h:8d0bd754-8a31-431b-b112-f541cc0144ac][Sample of 
 :CUSTOM_ID: h:a196812e-1644-4536-84ba-687366867def
 :END:
 
-*NOTE 2021-05-13:* This section remains a work-in-progress: I have
+*NOTE 2021-05-13:* This section remains a work-in-progress: today I
 switched away from Gnus, but there still are things I intend to improve.
 
 
 At its core, Notmuch is a command-line program that maintains an index
 of a maildir directory structure and is capable to search through it
-using a strictly tag-based workflow.  Notmuch is both minimalist and
-powerful:
+using a tag-based method.  Notmuch is both minimalist and powerful:
 
 1. its clearly delimited role as a mail indexer allows it to be used in
    a variety of setups that involve different tools on how to handle
    email traffic;
 
 2. while its tag-centric design lifts the inherent restrictions of
-   complex filesystem paths of where a file must be stored, as messages
+   complex filesystem paths on where a file must be stored, as messages
    can be grouped together dynamically depending on the search criteria.
 
 In terms of overall setup, I use Notmuch together with =mbsync= to
-syncrhonise my maildir with the IMAP server ([[#h:88a605b8-d5b5-486f-87c9-0c80b423ae36][.mbsyncrc (external tool)]]).
+synchronise my maildir with the IMAP server ([[#h:88a605b8-d5b5-486f-87c9-0c80b423ae36][.mbsyncrc (external tool)]]).
 While I send messages with Emacs' own facility which relies on the
 =sendmail= program (refer to [[#h:2d793cf8-83f5-4830-b73d-78385d9b96dd][Sending email (SMTP)]]).  The latter may change
-in the future, as I evaluate the pros and cons of programs like =msmtp=.
-As for the actual composition of emails, this is done by Emacs'
-=message.el= ([[#h:a82766be-daab-4925-b23a-1c5ffd47e599][Client-agnostic email settings (and prot-mail.el)]].
+in the future, as I weigh the pros and cons of programs like =msmtp=,
+though this is low on my list of priorities.  As for the actual
+composition of emails, it is done by Emacs' =message.el= library
+([[#h:a82766be-daab-4925-b23a-1c5ffd47e599][Client-agnostic email settings (and prot-mail.el)]].
 
-Unlike most Emacs packages, I install =notmuch= from my distro's repos.
-This is because (i) I need the CLI program that is independent of Emacs,
-and (ii) =notmuch.el= is bundled together with the command-line tool
-because the two are developed by the same group of people.
+Tagging is integral to the Notmuch experience, because it allows you to
+cope with evolving circumstances.  It is best to consider this by means
+of an example.  Suppose that you are working on some project: (1) there
+is an email in your private account from a close friend that contains
+valuable information but which is part of an otherwise long thread that
+is not pertinent in its entirety to the task at hand, (2) there is
+another message from a mailing list you do not actively participate in
+and this message lives in your "throwaway" account that you use only for
+mailing lists and the like, and (3) there is yet another mail from some
+client or employer that is specific to the project and which is kept in
+your designated "professional" inbox.  Lets say that those correspond to
+"private@example.tld", "lists@example.tld", "work@example.tld".  In a
+folder-based approach, it is hard to combine those otherwise unrelated
+files.  Whereas with tags, say, =+project=, we can get everything into
+focus with a simple search for =tag:project=.
+
+While we will be using the Emacs interface to Notmuch, it is important
+to spend some time reading the man pages for the CLI tools.  Some
+examples for searching:
+
+#+begin_example
+$ notmuch search from:prot*
+$ notmuch search from:protesilaos tag:todo
+$ notmuch search from:protesilaos or from:socrates
+$ notmuch search 'from:"/(info|public)@protesilaos.com/"'
+$ notmuch search 'from:"/(info|public)@protesilaos.com/"' date:yesterday..today
+$ notmuch search body:recrudescence
+$ notmuch search path:inf/Inbox/** date:2021-05
+#+end_example
+
+There is no need to develop expertise in that syntax at the outset.
+Just learn the basics and let the rest grow organically through regular
+usage.  Though do read the man pages as they include important
+information such as what "stemming" is and how it affects your search
+results.
+
+Now let's focus on the Emacs side of things, starting with the
+"notmuch-hello" buffer (it runs =notmuch-hello-mode=).  What exactly shows
+up here depends on =notmuch-hello-sections=.  I like to keep it clean.  At
+any rate, from here we can switch to results from saved searches or
+tags, or perform a new search:
+
++ Type =j= to invoke =notmuch-jump-search=: it will produce a prompt for a
+  key binding that corresponds to one of your saved searches (controlled
+  by the variable =notmuch-saved-searches=).
+
++ With =t= for =notmuch-search-by-tag= you get minibuffer completion against
+  all known tags.
+
++ Hit =s= to call =notmuch-search= which lets you type a query such as one
+  of the aforementioned examples.  In the "notmuch-hello" buffer I keep
+  a list of recent searches, which can be helpful to re-use at a later
+  point, though we can always benefit from minibuffer history
+  navigation, such as =M-n= and =M-p= while at the =notmuch-search= prompt.
+
++ Same principle for =z= (=notmuch-tree=) only it differs from the above
+  search in the overall presentation where it visualises each thread
+  using indentation and arrows to show what belongs where.  It also
+  reduces the subject line to the first entry in each thread, making it
+  easier to follow the results.
+
+All of those will put you in a buffer that runs =notmuch-search-mode=.  As
+always, you should use =C-h m= (=describe-mode=) to learn about everything
+related to the current major mode (as well as all active minor modes).
+To further limit the results to an arbitrary list of search criteria,
+use =l= (=notmuch-search-filter=) and then supply whatever terms are needed.
+Or use =t=, which is here bound to =notmuch-search-filter-by-tag= to filter
+directly by tag using completion.  For example, I can start from the
+"notmuch-hello" buffer with =notmuch-search-by-tag=, select "todo", and
+then use =l= or =t= to further narrow to, say, a "replied" tag or
+"date:today".
+
+The Notmuch presentation is compact when it comes to longer threads as
+it reduces them to a single line.  We can still get a sense of context
+by viewing the total count of messages in the thread: this is controlled
+by the variable =notmuch-search-result-format=.  While I like this as a
+default, there are cases where we need to visualise the email exchanges:
+=notmuch-tree-from-unthreaded-current-query= can do just that and is bound
+to =Z= in =notmuch-search-mode-map=.  A similar variant is =U= for
+=notmuch-unthreaded-from-search-current-query=, as it expands the view
+without adding the tree indicators and without de-duplicating subject
+lines across the threads.
+
+All those happen in new buffers: you do not lose anything.  You can
+dismiss the current buffer with =q= (=notmuch-bury-or-kill-this-buffer=),
+which takes you back to the previous view.  Of course, you may always
+use commands like =previous-buffer= as well as minibuffer completion.  The
+point is that you can easily switch views to get the job done.
+
+To read a thread, hit =RET= (=notmuch-search-show-thread=) with point over
+it in any those search/tree views.  That puts you in =notmuch-show-mode=
+(did I tell you about =C-h m=?).  Notmuch organises all messages in the
+thread as headings, where the first line with the summary of the message
+uses a special face (a background colour, though that depends on the
+theme).  With point over the heading's line =RET= expands or contracts the
+body of the message.  The =n= and =p= keys move between expanded messages in
+the thread, while =N= and =P= always go to the next and previous items,
+respectively.  An Imenu index is also available, so you can jump to any
+heading using minibuffer completion (with =M-x imenu= or some third-party
+extension like the =consult-imenu= that I use).
+
+For searching to be productive, we must apply tags in accordance with a
+defined method of organising our workflow.  Too many over-specialised or
+poorly considered tags will likely make things more difficult, while too
+few will probably prevent you from finding what you need.  How you go
+about it is a matter that depends on you: Notmuch is just a tool (and
+don't believe in the hype of magical exominds or second brains that do
+the work for you---maximise the potential of the one mind that you have
+and the rest will follow from there).
+
+As my current needs are not too demanding, I like to use the default
+tags, such as "inbox" and "unread" for practically everything that is
+unsorted, and then I have specialised tags like "todo" for messages that
+require some further action ("todo" could also be complemented by other
+tags for greater precision).  Those marked as "todo" can be combined
+with =org-capture= to record a task that may appear in the Org agenda:
+just invoke =org-capture= while viewing such a message and Org will create
+a direct link back to it (the glue code is [[#h:a7580136-cf32-44e8-81f6-590dbdd7f8f9][ol-notmuch.el]] while my
+=org-capture-templates= and =org-capture-templates-contexts= are defined in
+[[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org-mode (personal information manager)]]).
+
+Tag addition or removal is denoted by a plus or minus prefix to the name
+of the tag.  The =k= binding exists in all relevant mode maps: it offers a
+shortcut to the "keys" (tags) that can be used to mark a give entry.
+That command will prompt for a choice among =notmuch-tagging-keys=.  For
+example =k d= will do =+del -inbox=, based on what I currently have.  Invert
+the meaning of those terms by prefixing the command with a =C-u= argument.
+
+To freely tag all items in the current view (search, tree, show) use =*=.
+That gives you a completion prompt where multiple terms can be supplied,
+each delimited by a space (internally this is =completing-read-multiple=
+and the space is governed by a let-bound =crm-separator=).  Combine that
+with the aforementioned methods for limiting the view to a given subset
+for maximum effect.
+
+Other ways to perform tagging operations involve the =+= and =-= keys.  They
+also use =completing-read-multiple=, so use that to its full potential.
+What those commands offer, beside the minibuffer interface, is the
+ability to operate on the entries encompassed by the active region,
+where point and mark delimit the lines to be affected.  There are cases
+where marking a region is faster than narrowing the view with new search
+criteria, so use whatever makes sense at the moment.
+
+Remember the governing principle of Notmuch: it does not touch your
+mail.  All those tags are specific to the Notmuch database (with the
+exception of some basic tags that are understood by the IMAP server and
+can be optionally affected by Notmuch ([[#h:79803e19-1150-49a6-a3df-1cffe3d0cbc5][.notmuch-config (external tool)]]
+has the =synchronize_flags=true= directive).
 
 As Notmuch is not a traditional mail client, it has neither opinions nor
-capabilities on how one handles its maildir.  It does not move files
-around nor does it have its own deletion and spam mechanisms.  While
-this may seem needlessly limited at first, it is consistent with the
-precise function that Notmuch performs in the broader email toolkit.  To
-actually delete mail, we can tag it accordingly and then run this either
+capabilities on how one handles their maildir.  It does not move files
+around nor does it have its own deletion and anti-spam mechanisms.  It
+is up to the user to provide those.  While this may seem needlessly
+limited at first, it is consistent with the precise function that
+Notmuch performs in the broader email toolkit.  To actually delete mail,
+we can tag it accordingly (e.g. "del") and then run this command either
 manually or from a script with some cron job or systemd timer:
 
 #+begin_example
-notmuch search --output=files --format=text0 tag:killed | xargs -r0 rm
+notmuch search --output=files --format=text0 tag:del | xargs -r0 rm
 #+end_example
 
-Work-in-progress: To be continued... (the configs are fairly okay).
+I actually prefer the manual method: mark items with =+del= and perform
+their removal from the disk whenever it is expedient.  This has the
+upside of offering me the chance to review the messages, in case I have
+mislabelled some item: I have deleted legitimate mail before, so it is
+not a bad idea to be extra careful.
+
+As of this writing (2021-05-13), I have no pressing need to define
+commands for moving my mail files between different directories: I did
+not do that even while I was using Gnus.  Though I might eventually do
+it just for the sake of completeness.  As such, consider the following
+package configurations a work-in-progress, though they already offer all
+I need to get things done.
+
+Unlike most Emacs packages, I install =notmuch= from my distro's repos.
+This is because (i) the CLI program is independent of Emacs, and (ii)
+=notmuch.el= is bundled up together with the command-line tool because the
+two are developed by the same group of people.  All good!
 
 #+begin_src emacs-lisp
 ;; I install notmuch from the distro's repos because the CLI program is
@@ -5331,8 +5492,7 @@ Work-in-progress: To be continued... (the configs are fairly okay).
         '(("unread" . notmuch-search-unread-face)
           ("flagged" . notmuch-search-flagged-face)))
   (setq notmuch-saved-searches
-        `((:name "new" :query "tag:new" :sort-order newest-first :key ,(kbd "n"))
-          (:name "inbox" :query "tag:inbox" :sort-order newest-first :key ,(kbd "i"))
+        `((:name "inbox" :query "tag:inbox" :sort-order newest-first :key ,(kbd "i"))
           (:name "unread" :query "tag:unread" :sort-order newest-first :key ,(kbd "u"))
           (:name "flagged" :query "tag:flagged" :sort-order newest-first :key ,(kbd "f"))
           (:name "sent" :query "tag:sent" :sort-order newest-first :key ,(kbd "s"))
@@ -5355,9 +5515,12 @@ Work-in-progress: To be continued... (the configs are fairly okay).
   (setq notmuch-mua-compose-in 'new-window)
   (setq notmuch-mua-hidden-headers nil) ;  TODO 2021-05-12: Review hidden headers
   (setq notmuch-identities
-        `(,(prot-mail-auth-get-field "prv" :user)
-          ,(prot-mail-auth-get-field "inf" :user)
-          ,(prot-mail-auth-get-field "pub" :user)))
+        (let ((identities))
+          (dolist (m `(,(prot-mail-auth-get-field "prv" :user)
+                       ,(prot-mail-auth-get-field "inf" :user)
+                       ,(prot-mail-auth-get-field "pub" :user)))
+            (push (format "%s <%s>" user-full-name m) identities))
+          identities))
   (setq notmuch-always-prompt-for-sender t)
   (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
   (setq notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
@@ -5381,11 +5544,12 @@ Work-in-progress: To be continued... (the configs are fairly okay).
   (setq notmuch-show-indent-multipart nil)
   (setq notmuch-show-part-button-default-action 'notmuch-show-save-part)
   (setq notmuch-show-text/html-blocked-images ".") ; block everything
+  (setq notmuch-unthreaded-show-out nil)
 
   (setq notmuch-tagging-keys
-        `((,(kbd "a") notmuch-archive-tags "Archive")
-          (,(kbd "d") ("+deleted" "-inbox") "Delete")
-          (,(kbd "f") ("+flagged") "Flag")
+        `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
+          (,(kbd "d") ("+del" "-inbox") "Mark for deletion")
+          (,(kbd "f") ("+flag") "Flag as important")
           (,(kbd "r") notmuch-show-mark-read-tags "Mark as read")
           (,(kbd "s") ("+spam" "-inbox") "Mark as spam")
           (,(kbd "t") ("+todo") "To-do")
@@ -5393,25 +5557,37 @@ Work-in-progress: To be continued... (the configs are fairly okay).
 
   (setq notmuch-tag-formats
         '(("unread" (propertize tag 'face 'notmuch-tag-unread))
-          ("flagged" (propertize tag 'face 'notmuch-tag-flagged)
-           ;; (notmuch-tag-format-image-data tag (notmuch-tag-star-icon))
-           )))
+          ("flagged" (propertize tag 'face 'notmuch-tag-flagged))))
 
   (setq notmuch-tag-deleted-formats
         '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
           (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
 
-  ;; (setq notmuch-unthreaded-show-out nil)
-
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
+  (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
 
   (require 'gnus-dired)                         ; does not require `gnus'
   (add-hook 'dired-mode-hook #'gnus-dired-mode) ; dired integration
 
-  (define-key global-map (kbd "C-c m") #'notmuch))
+  (let ((map global-map))
+    (define-key map (kbd "C-c m") #'notmuch)
+    (define-key map (kbd "C-x m") #'notmuch-mua-new-mail))) ; override `compose-mail'
+
+(prot-emacs-builtin-package 'prot-notmuch
+  (add-to-list 'notmuch-tag-formats
+               '("todo" (propertize tag 'face 'prot-notmuch-notmuch-todo-tag)))
+  (add-to-list 'notmuch-tag-formats
+               '("spam" (propertize tag 'face 'prot-notmuch-notmuch-spam-tag))))
 #+end_src
 
-*** Org+Notmuch integration
+And here is =prot-notmuch.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: prot-lisp/prot-notmuch.el src emacs-lisp :tangle no
+
+*** Org+Notmuch integration (ol-notmuch.el)
+:PROPERTIES:
+:CUSTOM_ID: h:a7580136-cf32-44e8-81f6-590dbdd7f8f9
+:END:
 
 The =ol-notmuch.el= is part of the =org-contrib= package which can be found
 in the NonGNU ELPA (that archive is configured out-of-the-box for

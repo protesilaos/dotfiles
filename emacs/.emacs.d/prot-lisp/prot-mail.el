@@ -133,7 +133,6 @@ Meant to be used as advice after specified commands that should
 update the mode line indicator with the new mail count."
   (run-hooks 'prot-mail--mode-line-mail-sync-hook))
 
-;; TODO 2021-05-13: Add a defcustom with all relevant commands
 (when prot-mail-mode-line-indicator-commands
   (dolist (fn prot-mail-mode-line-indicator-commands)
     (advice-add fn :after #'prot-mail--add-hook)))
