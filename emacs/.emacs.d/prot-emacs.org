@@ -2298,16 +2298,6 @@ ecosystem:
   as I seldom use it.  It is better to view the video demonstration of
   [[https://www.youtube.com/watch?v=NrY3t3W0_cM][image-dired by Emacs Elements (Raoul Comninos)]].
 
-+ My own extras :: =prot-dired.el= (reproduced after the package
-  configurations) contains a set of commands that are conceptually
-  related to those present in [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]],
-  as well as the ones in [[#h:06290f9c-491c-45b2-b213-0248f890c83d][the Ibuffer section]].  In short, they leverage
-  the =fd= executable to recursively search for directories or
-  directories+files from the root of the current version-controlled
-  directory tree, if inside one, or just the present working directory.
-  Those are deprecated, as I now use Consult's relevant commands (refer
-  to [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
-
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'dired
   (setq dired-recursive-copies 'always)
@@ -2351,17 +2341,21 @@ ecosystem:
     (define-key map (kbd "C-x v v") #'dired-vc-next-action)) ; Emacs 28
   (define-key minibuffer-local-filename-completion-map (kbd "C-c d") #'contrib/cd-bookmark))
 
-;; (prot-emacs-builtin-package 'prot-dired
-;;  (let ((map global-map))
-;;    (define-key map (kbd "M-s d") #' prot-dired-fd-dirs)
-;;    (define-key map (kbd "M-s z") #'prot-dired-fd-files-and-dirs)))
-
-;; ;; NOTE 2021-01-04: deprecated first in favour of `prot-dired.el' and
-;; ;; eventually replaced by `consult.el'
+;; ;; NOTE 2021-05-10: I do not use `find-dired' and related commands
+;; ;; because there are other tools that offer a better interface, such
+;; ;; as `consult-find', `consult-grep', `project-find-file',
+;; ;; `project-find-regexp', `prot-vc-git-grep'.
 ;; (prot-emacs-builtin-package 'find-dired
 ;;   (setq find-ls-option
 ;;         '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
 ;;   (setq find-name-arg "-iname"))
+
+(prot-emacs-builtin-package 'prot-dired
+ (let ((map dired-mode-map))
+   (define-key map (kbd "M-n") #'prot-dired-subdirectory-next)
+   (define-key map (kbd "C-c C-n") #'prot-dired-subdirectory-next)
+   (define-key map (kbd "M-p") #'prot-dired-subdirectory-previous)
+   (define-key map (kbd "C-c C-p") #'prot-dired-subdirectory-next)))
 
 (prot-emacs-builtin-package 'dired-x
   (setq dired-clean-up-buffers-too t)
@@ -2397,8 +2391,7 @@ ecosystem:
     (kbd "<return>") #'image-dired-thumbnail-display-external))
 #+end_src
 
-These are the contents of the de facto deprecated =prot-dired.el= (part of
-[[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+These are the contents of =prot-dired.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-dired.el src emacs-lisp :tangle no
 

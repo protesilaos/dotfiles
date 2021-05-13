@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -36,60 +36,68 @@
 
 (require 'prot-common)
 
-;; NOTE 2021-01-04: This library is deprecated and superseded by
-;; `prot-consult.el'.
+(defvar prot-dired--directory-header-regexp "^ +\\(.+\\):\n"
+  "Pattern to match Dired directory headings.")
 
-(defun prot-dired--expand-root-dir ()
-  "Expand file name of project or current directory."
-  (expand-file-name (or (vc-root-dir)
-                        (locate-dominating-file "." ".git")
-                        default-directory)))
+;;;; Subdir extras
 
-(defmacro prot-dired-fd-command (name doc prompt &rest flags)
-  "Make commands for selecting 'fd' results with completion.
-NAME is how the function should be named.  DOC is the function's
-documentation string.  PROMPT describes the scope of the query.
-FLAGS are the command line arguments passed to the 'fd'
-executable, each of which is a string."
-  `(defun ,name (&optional arg)
-     ,doc
-     (interactive "P")
-     (if (executable-find "fd")
-         (let* ((dir (prot-dired--expand-root-dir))
-                (regexp (read-regexp
-                         (format "%s matching REGEXP in %s: " ,prompt
-                                 (propertize dir 'face 'bold))))
-                (names (prot-common-completion-table
-                        'file
-                        (process-lines "fd" ,@flags regexp dir)))
-                (buf "*FD Dired*"))
-           (if names
-             (if arg
-                 (dired (cons (generate-new-buffer-name buf) names))
-               (find-file
-                (completing-read (format "Items matching %s: "
-                                         (propertize regexp 'face 'success))
-                                 names nil t)))
-             (message "No match for %s" regexp)))
-     (error "<< fd >> executable not found"))))
+;;;###autoload
+(defun prot-dired-subdirectory-next (&optional arg)
+  "Move to next or optional ARGth Dired subdirectory heading.
+For more on such headings, read `dired-maybe-insert-subdir'."
+  (interactive "p")
+  (let ((subdir prot-dired--directory-header-regexp))
+    (goto-char (point-at-eol))
+    (re-search-forward subdir nil t (or arg nil))
+    (goto-char (match-beginning 1))
+    (goto-char (point-at-bol))))
 
-(prot-dired-fd-command
- prot-dired-fd-dirs
- "Search for directories in VC root or PWD.
-With optional prefix argument (\\[universal-argument]) put the
-results in a `dired' buffer.  This relies on the external 'fd'
-executable."
- "Subdirectories"
- "-i" "-H" "-a" "-t" "d" "-c" "never")
+;;;###autoload
+(defun prot-dired-subdirectory-previous (&optional arg)
+  "Move to previous or optional ARGth Dired subdirectory heading.
+For more on such headings, read `dired-maybe-insert-subdir'."
+  (interactive "p")
+  (let ((subdir prot-dired--directory-header-regexp))
+    (goto-char (point-at-bol))
+    (re-search-backward subdir nil t (or arg nil))
+    (goto-char (point-at-bol))))
 
-(prot-dired-fd-command
- prot-dired-fd-files-and-dirs
- "Search for files and directories in VC root or PWD.
-With optional prefix argument (\\[universal-argument]) put the
-results in a `dired' buffer.  This relies on the external 'fd'
-executable."
- "Files and dirs"
- "-i" "-H" "-a" "-t" "d" "-t" "f" "-c" "never")
+(autoload 'dired-get-filename "dired")
+(autoload 'dired-maybe-insert-subdir "dired-aux")
+(defvar dired-subdir-switches)
+(defvar dired-actual-switches)
+
+;;;###autoload
+(defun prot-dired-insert-subdir (subdir &optional switches)
+  "Insert SUBDIR in current Dired buffer.
+With optional SWITCHES, prompt for the ls switches to use."
+  (interactive
+   (list
+    (or (dired-get-filename 'verbatim t)
+        (read-directory-name "Insert directory: "))
+    (when current-prefix-arg
+	  (read-string "Switches for listing: "
+			       (or dired-subdir-switches dired-actual-switches)))))
+  (dired-maybe-insert-subdir (expand-file-name subdir) (or switches nil) t))
+
+;;;; Imenu setup
+
+(defun prot-dired-imenu-prev-index-position ()
+  "Find the previous file in the buffer."
+  (let ((subdir prot-dired--directory-header-regexp))
+    (re-search-backward subdir nil t)))
+
+(defun prot-dired-imenu-extract-index-name ()
+  "Return the name of the file at point."
+  (buffer-substring-no-properties (+ (point-at-bol) 3) (1- (point-at-eol))))
+
+(defun prot-dired-setup-imenu ()
+  "Configure imenu for the current dired buffer.
+Add this to `dired-mode-hook'."
+  (set (make-local-variable 'imenu-prev-index-position-function)
+       'prot-dired-imenu-prev-index-position)
+  (set (make-local-variable 'imenu-extract-index-name-function)
+       'prot-dired-imenu-extract-index-name))
 
 (provide 'prot-dired)
 ;;; prot-dired.el ends here
