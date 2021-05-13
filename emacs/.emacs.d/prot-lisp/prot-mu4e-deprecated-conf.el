@@ -48,22 +48,22 @@
           :match-func (lambda (msg)
                         (when msg
                           (mu4e-message-contact-field-matches
-                           msg :to (prot-common-auth-get-field "prv" :user))))
-          :vars `((user-mail-address . ,(prot-common-auth-get-field "prv" :user))))
+                           msg :to (prot-mail-auth-get-field "prv" :user))))
+          :vars `((user-mail-address . ,(prot-mail-auth-get-field "prv" :user))))
         ,(make-mu4e-context
           :name "inf"
           :match-func (lambda (msg)
                         (when msg
                           (mu4e-message-contact-field-matches
-                           msg :to (prot-common-auth-get-field "inf" :user))))
-          :vars `((user-mail-address . ,(prot-common-auth-get-field "inf" :user))))
+                           msg :to (prot-mail-auth-get-field "inf" :user))))
+          :vars `((user-mail-address . ,(prot-mail-auth-get-field "inf" :user))))
         ,(make-mu4e-context
           :name "pub"
           :match-func (lambda (msg)
                         (when msg
                           (mu4e-message-contact-field-matches
-                           msg :to (prot-common-auth-get-field "pub" :user))))
-          :vars `((user-mail-address . ,(prot-common-auth-get-field "pub" :user))))))
+                           msg :to (prot-mail-auth-get-field "pub" :user))))
+          :vars `((user-mail-address . ,(prot-mail-auth-get-field "pub" :user))))))
 
 (setq mu4e-bookmarks
       '((:name "Unread messages" :query "g:unread AND NOT g:trashed" :key ?u)
@@ -71,30 +71,30 @@
         (:name "Last 7 days" :query "d:7d..now" :key ?w)
         (:name "PRV Unread"
                :query `,(format "to:%s %s"
-                                (prot-common-auth-get-field "prv" :user)
+                                (prot-mail-auth-get-field "prv" :user)
                                 "AND g:unread AND NOT g:trashed")
                :key ?v)
         (:name "PRV Inbox"
                :query `,(format "to:%s"
-                                (prot-common-auth-get-field "prv" :user))
+                                (prot-mail-auth-get-field "prv" :user))
                :key ?V)
         (:name "INF Unread"
                :query `,(format "to:%s %s"
-                                (prot-common-auth-get-field "inf" :user)
+                                (prot-mail-auth-get-field "inf" :user)
                                 "AND g:unread AND NOT g:trashed")
                :key ?i)
         (:name "INF Inbox"
                :query `,(format "to:%s"
-                                (prot-common-auth-get-field "inf" :user))
+                                (prot-mail-auth-get-field "inf" :user))
                :key ?I)
         (:name "PUB Unread"
                :query `,(format "to:%s %s"
-                                (prot-common-auth-get-field "pub" :user)
+                                (prot-mail-auth-get-field "pub" :user)
                                 "AND g:unread AND NOT g:trashed")
                :key ?p)
         (:name "PUB Inbox"
                :query `,(format "to:%s"
-                                (prot-common-auth-get-field "pub" :user))
+                                (prot-mail-auth-get-field "pub" :user))
                :key ?P)))
 
 (define-key global-map (kbd "C-c M") #'mu4e)

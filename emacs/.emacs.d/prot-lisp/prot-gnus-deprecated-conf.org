@@ -1,0 +1,301 @@
+*** Gnus for reading email, mailing lists, and more
+:PROPERTIES:
+:CUSTOM_ID: h:14cf6fea-54eb-4faa-bb16-3739485c929a
+:END:
+
+*NOTE 2021-05-13:* I no longer use Gnus for email as I switched to Notmuch
+([[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]].  I keep this here in
+case anyone still needs it.
+
+
+The documentation describes Gnus as the /"coffee-brewing, all singing,
+all dancing, kitchen sink newsreader"/.  I chuckled when I first read it,
+thinking to myself that the developers have an interesting sense of
+humour.  Then I decided to go through the list of user-facing options:
+=M-x customize-apropos-groups RET gnus RET= …  Not so funny after all!
+
+Simply put, Gnus is massive.  This makes it both extremely powerful and
+incredibly intimidating for new users.  Do not let that dissuade you
+though: start small and gradually tweak things as you go.  This is how
+you approach Emacs itself.  Learn the basics and then figure out your
+needs as your skills evolve.  This is what I always do.
+
+Now some basic information on the abstractions that Gnus relies on
+(Consider watching my [[https://protesilaos.com/codelog/2020-02-02-emacs-gnus-intro/][Introduction to Gnus]] (2020-02-02)):
+
+1. The default Gnus buffer is called "Group".  It will present you with
+   a list of all the news sources you have subscribed to.  By default,
+   Gnus only displays messages that have not been read.  The same
+   applies for groups.  The "Group" buffer will be empty the very first
+   time you log in because you have not subscribed to anything yet.  Use
+   =g= to fetch new messages from the sources.  If you only want to
+   refresh the group at point, do it with =M-g=.
+2. The "Server" buffer contains a list with all the sources you have
+   specified for discovering news.  In my case, these are my email
+   accounts and a Usenet server where mailing lists are hosted.  To
+   access the "Server" buffer from inside the "Group" buffer, just hit
+   the caret sign =^=.  To subscribe to an item, place the point over it
+   and hit =u=.  Do that for your email's inbox and for whatever mailing
+   lists you intend to follow.
+3. The "Summary" buffer contains all the messages of a group.  Hitting
+   the return key over a message will split the view in two, with the
+   list above and the message below.  Use =n= or =p= to move to the next or
+   previous unread message (or =N= and =P= to just the next/prev).  You
+   access the "Summary" buffer both from the "Group" and the "Server" by
+   entering a group.
+
+It is essential to take things slowly (and first test whether your
+messages are being sent and that you can receive them).  Each buffer has
+several unique functions that are relevant to the current interface: in
+other words, each has its own major-mode.  To learn more about them, use
+=M-x describe-mode= (bound to =C-h m= by default).  Do it for all three of
+the above.  Also rely on =describe-key= (=C-h k=) to get information about
+what each key does in the given context (or just start a key sequence
+and then hit =C-h= to display possible combinations in a new Help buffer).
+
+A couple of notes about the "Group" buffer:
+
++ A group can be assigned a level of importance.  This is a grade whose
+  highest score is 1 and the lowest is 6 (customisable though).  Each
+  level has a different colour.  To assign a new value to the group at
+  point, do it with =S l= and then give it a number.  Once you have graded
+  your groups, you can perform various actions on a per-level basis.
+  For example, to refresh all levels from 1 up to 3 but not higher, pass
+  a numeric argument to the standard =g= command.  So =C-3 g= (this is the
+  same as =C-u 3 g= and because this is a buffer that runs a mode which
+  derives from =special-mode=, =3 g= will do the same thing).
++ Groups can be organised by topic.  Create a new one with =T n= and give
+  it a name.  Move a group to a topic with =T m=.  To toggle the view of
+  topics use =t= (I have a hook that does this automatically at startup).
+  The level of indentation tells us whether a topic is a sub-set of
+  another.  Use =TAB= or =C-u TAB= to adjust it accordingly.  As with
+  levels, you can operate on a per-topic basis.  For example, to catch
+  up on all the news of a given topic (mark all as read), you place the
+  point over it, hit =c= and then confirm your choice.
+
+As noted, Gnus will only show you a list of unread items.  To view all
+your groups, type =L=.  Use the lower case version =l= to view only the
+unread ones.  To produce a Summary buffer that may contain read items,
+hit =C-u RET= over a group and specify the number of messages you want to
+list (the other option is =C-u M-g= from inside the Summary).  Another
+useful trick for the Summary buffer is the use of the caret sign (=^=) to
+show you the previous message that the current item is a reply to.
+
+Notwithstanding the numerous customisation options and certain perhaps
+idiosyncratic design choices, some prior experience with Emacs' various
+interfaces will definitely come in handy: Gnus uses similar metaphors
+for navigating and parsing information.  *It still is important to read
+the manual though*.
+
+Now here comes the nice part of leveraging the integration that Emacs
+offers: in my [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org mode configurations]] I have a template to capture the
+current email's buffer link.  This means that we can quickly convert any
+item into a task/note and always be able to go back to the original
+message by following the link.  /Found an interesting suggestion in some
+mailing list?/ Capture it.  /Need to act on an email later?/ Capture,
+capture, capture.  Same principle applies to the integration with Dired
+as a means of attaching files to emails, and to the EPA subsystem for
+GPG encryption.
+
+For contact management, read the section on [[#h:d386e14b-dcf7-46a2-851f-867cd84c6cae][EBDB (mail contacts)]].
+
+The package configurations below are divided into several subsections to
+make things easier to read and keep track of.  Remember to use =C-h v VAR=
+to read documentation about each =VAR= or simply place the point over it
+and then hit =C-h v= to pre-populate the results (=C-h f= is the equivalent
+for functions, =C-h o= for both kinds of symbols).  Whenever you see some
+formatting customisations concerning time units, it is better to refer
+to the documentation of the function =format-time-string= to understand
+the meaning of the various date/time specifiers.
+
+The =prot-mail-mail-indicator= is a global minor mode that checks whether
+there is any new mail in my maildir directories and displays a mode line
+indicator with the total number of those messages.  In this context,
+"new mail" means files that have been received but have not yet been
+seen.  This is done automatically by mbsync (check [[#h:88a605b8-d5b5-486f-87c9-0c80b423ae36][my .mbsyncrc]]), which
+places such items inside a special =new= subdirectory and, once they are
+seen, moves them to the main inbox (so it is not the same as unread
+mail, which can be old in this sense of having already been moved to the
+main inbox).  Once I update Gnus to display that new mail in its
+relevant groups, the counter will disappear.  This minor mode is defined
+in my =prot-mail.el= library, whose contents are reproduced right after
+the following code block.
+
+#+begin_src emacs-lisp
+;; NOTE 2021-05-13: I am no longer using Gnus for email as I switched to
+;; Notmuch (find it elsewhere in this document).  I keep this here in
+;; case anyone still needs it.
+;;
+;; Gnus can still be used for reading nntp sources (e.g. emacs-devel)
+;; though I might actually just subscribe to the mailing lists and
+;; filter things accordingly with notmuch.  More to follow.
+(prot-emacs-builtin-package 'gnus
+  (require 'gnus-sum)
+  (require 'gnus-dired)
+  (require 'gnus-topic)
+
+;;; accounts
+  (setq gnus-select-method '(nnnil ""))
+  (setq gnus-secondary-select-methods
+        '((nntp "news.gwene.org")
+          ;; ;;  NOTE 2021-05-13: Switched to notmuch.
+          ;; (nnmaildir "prv" (directory "~/.mail/prv")
+          ;;  (gnus-search-engine gnus-search-notmuch ; this feature is from Emacs 28
+ 		  ;;   		           (remove-prefix "~/.mail/prv")))
+          ;; (nnmaildir "inf" (directory "~/.mail/inf")
+          ;;  (gnus-search-engine gnus-search-notmuch
+ 		  ;;   		           (remove-prefix "~/.mail/inf")))
+          ;; (nnmaildir "pub" (directory "~/.mail/pub")
+          ;;  (gnus-search-engine gnus-search-notmuch
+ 		  ;;   		           (remove-prefix "~/.mail/pub")))
+          ))
+
+  (setq gnus-search-use-parsed-queries nil) ; Emacs 28
+
+  ;; ;;  NOTE 2021-05-13: Switched to notmuch.
+  ;; (setq gnus-parameters
+  ;;       '((".*"                         ; fallback option
+  ;;          (posting-style
+  ;;           (gcc "nnmaildir+inf:Sent")
+  ;;           (From
+  ;;            (format "%s <%s>" user-full-name
+  ;;                    (prot-mail-auth-get-field "inf" :user)))))
+  ;;         ("prv"
+  ;;          (posting-style
+  ;;           (gcc "nnmaildir+prv:Sent")
+  ;;           (From
+  ;;            (format "%s <%s>" user-full-name
+  ;;                    (prot-mail-auth-get-field "prv" :user)))))
+  ;;         ("pub"
+  ;;          (posting-style               ; Uses default name+mail
+  ;;           (gcc "nnmaildir+pub:Sent")))))
+
+  (setq gnus-gcc-mark-as-read t)
+  (setq gnus-agent t)
+  (setq gnus-novice-user nil)           ; careful with this
+  ;; checking sources
+  (setq gnus-check-new-newsgroups 'ask-server)
+  (setq gnus-read-active-file 'some)
+  ;; dribble
+  (setq gnus-use-dribble-file t)
+  (setq gnus-always-read-dribble-file t)
+;;; agent
+  (setq gnus-agent-article-alist-save-format 1)  ; uncompressed
+  (setq gnus-agent-cache t)
+  (setq gnus-agent-confirmation-function 'y-or-n-p)
+  (setq gnus-agent-consider-all-articles nil)
+  (setq gnus-agent-directory "~/News/agent/")
+  (setq gnus-agent-enable-expiration 'ENABLE)
+  (setq gnus-agent-expire-all nil)
+  (setq gnus-agent-expire-days 30)
+  (setq gnus-agent-mark-unread-after-downloaded t)
+  (setq gnus-agent-queue-mail t)        ; queue if unplugged
+  (setq gnus-agent-synchronize-flags nil)
+;;; article
+  (setq gnus-article-browse-delete-temp 'ask)
+  (setq gnus-article-over-scroll nil)
+  (setq gnus-article-show-cursor t)
+  (setq gnus-article-sort-functions
+        '((not gnus-article-sort-by-number)
+          (not gnus-article-sort-by-date)))
+  (setq gnus-article-truncate-lines nil)
+  (setq gnus-html-frame-width 80)
+  (setq gnus-html-image-automatic-caching t)
+  (setq gnus-inhibit-images t)
+  (setq gnus-max-image-proportion 0.7)
+  (setq gnus-treat-display-smileys nil)
+  (setq gnus-article-mode-line-format "%G %S %m")
+  (setq gnus-visible-headers
+        '("^From:" "^To:" "^Cc:" "^Subject:" "^Newsgroups:" "^Date:"
+          "Followup-To:" "Reply-To:" "^Organization:" "^X-Newsreader:"
+          "^X-Mailer:"))
+  (setq gnus-sorted-header-list gnus-visible-headers)
+  (setq gnus-article-x-face-too-ugly ".*") ; all images in headers are outright annoying---disabled!
+;;; async
+  (setq gnus-asynchronous t)
+  (setq gnus-use-article-prefetch 15)
+;;; group
+  (setq gnus-level-subscribed 6)
+  (setq gnus-level-unsubscribed 7)
+  (setq gnus-level-zombie 8)
+  (setq gnus-activate-level 1)
+  (setq gnus-list-groups-with-ticked-articles nil)
+  (setq gnus-group-sort-function
+        '((gnus-group-sort-by-unread)
+          (gnus-group-sort-by-alphabet)
+          (gnus-group-sort-by-rank)))
+  (setq gnus-group-line-format "%M%p%P%5y:%B%(%g%)\n")
+  (setq gnus-group-mode-line-format "%%b")
+  (setq gnus-topic-display-empty-topics nil)
+;;; summary
+  (setq gnus-auto-select-first nil)
+  (setq gnus-summary-ignore-duplicates t)
+  (setq gnus-suppress-duplicates t)
+  (setq gnus-save-duplicate-list t)
+  (setq gnus-summary-goto-unread nil)
+  (setq gnus-summary-make-false-root 'adopt)
+  (setq gnus-summary-thread-gathering-function
+        'gnus-gather-threads-by-subject)
+  (setq gnus-summary-gather-subject-limit 'fuzzy)
+  (setq gnus-thread-sort-functions
+        '((not gnus-thread-sort-by-date)
+          (not gnus-thread-sort-by-number)))
+  (setq gnus-subthread-sort-functions
+        'gnus-thread-sort-by-date)
+  (setq gnus-thread-hide-subtree nil)
+  (setq gnus-thread-ignore-subject nil)
+  (setq gnus-user-date-format-alist
+        '(((gnus-seconds-today) . "Today at %R")
+          ((+ (* 60 60 24) (gnus-seconds-today)) . "Yesterday, %R")
+          (t . "%Y-%m-%d %R")))
+
+  ;; When the %f specifier in `gnus-summary-line-format' matches my
+  ;; name, this will use the contents of the "To:" field, prefixed by
+  ;; the string I specify.  Useful when checking your "Sent" summary or
+  ;; a mailing list you participate in.
+  (setq gnus-ignored-from-addresses "Protesilaos Stavrou")
+  (setq gnus-summary-to-prefix "To: ")
+
+  (setq gnus-summary-line-format "%U%R %-18,18&user-date; %4L:%-25,25f %B%s\n")
+  (setq gnus-summary-mode-line-format "[%U] %p")
+  (setq gnus-sum-thread-tree-false-root "")
+  (setq gnus-sum-thread-tree-indent " ")
+  (setq gnus-sum-thread-tree-single-indent "")
+  (setq gnus-sum-thread-tree-leaf-with-other "+-> ")
+  (setq gnus-sum-thread-tree-root "")
+  (setq gnus-sum-thread-tree-single-leaf "\\-> ")
+  (setq gnus-sum-thread-tree-vertical "|")
+
+  (add-hook 'dired-mode-hook #'gnus-dired-mode) ; dired integration
+  (add-hook 'gnus-group-mode-hook #'gnus-topic-mode)
+  (add-hook 'gnus-select-group-hook #'gnus-group-set-timestamp)
+
+  (dolist (mode '(gnus-group-mode-hook gnus-summary-mode-hook gnus-browse-mode-hook))
+    (add-hook mode #'hl-line-mode))
+
+  ;; ;;  NOTE 2021-05-13: Switched to notmuch.
+  ;; (define-key global-map (kbd "C-c m") #'gnus)
+  (let ((map gnus-article-mode-map))
+    (define-key map (kbd "i") #'gnus-article-show-images)
+    (define-key map (kbd "s") #'gnus-mime-save-part)
+    (define-key map (kbd "o") #'gnus-mime-copy-part))
+  (let ((map gnus-group-mode-map))       ; I always use `gnus-topic-mode'
+    (define-key map (kbd "n") #'gnus-group-next-group)
+    (define-key map (kbd "p") #'gnus-group-prev-group)
+    (define-key map (kbd "M-n") #'gnus-topic-goto-next-topic)
+    (define-key map (kbd "M-p") #'gnus-topic-goto-previous-topic))
+  (let ((map gnus-summary-mode-map))
+    (define-key map (kbd "<delete>") #'gnus-summary-delete-article)
+    (define-key map (kbd "n") #'gnus-summary-next-article)
+    (define-key map (kbd "p") #'gnus-summary-prev-article)
+    (define-key map (kbd "N") #'gnus-summary-next-unread-article)
+    (define-key map (kbd "P") #'gnus-summary-prev-unread-article)
+    (define-key map (kbd "M-n") #'gnus-summary-next-thread)
+    (define-key map (kbd "M-p") #'gnus-summary-prev-thread)
+    (define-key map (kbd "C-M-n") #'gnus-summary-next-group)
+    (define-key map (kbd "C-M-p") #'gnus-summary-prev-group)
+    (define-key map (kbd "C-M-^") #'gnus-summary-refer-thread)))
+
+(prot-emacs-builtin-package 'nnmail
+  (setq nnmail-expiry-wait 30))         ; careful with this
+#+end_src

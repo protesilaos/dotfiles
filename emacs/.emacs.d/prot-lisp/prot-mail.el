@@ -1,4 +1,4 @@
-;;; prot-gnus.el --- Gnus tweaks for my dotemacs -*- lexical-binding: t -*-
+;;; prot-mail.el --- Mail tweaks for my dotemacs -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2021  Protesilaos Stavrou
 
@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 ;;
-;; This covers my Gnus tweaks, for use in my Emacs setup:
+;; This covers my email tweaks, for use in my Emacs setup:
 ;; https://protesilaos.com/dotemacs.
 ;;
 ;; Remember that every piece of Elisp that I write is for my own
@@ -34,32 +34,34 @@
 
 ;;; Code:
 
-(require 'gnus)
 (require 'prot-common)
 
-(defgroup prot-gnus ()
-  "Extensions for gnus and mail-related extras."
-  :group 'gnus)
+(defgroup prot-mail ()
+  "Extensions for mail."
+  :group 'mail)
 
-(defcustom prot-gnus-maildir-path-regexp "~/.mail/*/Inbox/new/"
+(defcustom prot-mail-maildir-path-regexp "~/.mail/*/Inbox/new/"
   "Path passed to 'find' for checking new mail in maildir.
-As this is passed to a shell command, one can use glob patterns."
-  :type 'string
-  :group 'prot-gnus)
+As this is passed to a shell command, one can use glob patterns.
 
-(defcustom prot-gnus-message-gcc-header "Gcc: nnmaildir+pub:Sent"
-  "Text of mail header for Gnus' Gcc.
-This is used to prepopulate a new message composition buffer with
-the appropriate paraphernalia."
+The user must ensure that this path or regexp matches the one
+specified in the mail syncing program (e.g. mbsync)."
   :type 'string
-  :group 'prot-gnus)
+  :group 'prot-mail)
+
+(defcustom prot-mail-mode-line-indicator-commands '(notmuch-refresh-this-buffer)
+  "List of commands that will be advised to update the mode line.
+The advice is designed to run a hook which is used internally by
+the function `prot-mail-mail-indicator'."
+  :type 'list
+  :group 'prot-mail)
 
 ;;;; Helper functions
 
 (autoload 'auth-source-search "auth-source")
 
 ;;;###autoload
-(defun prot-gnus-auth-get-field (host prop)
+(defun prot-mail-auth-get-field (host prop)
   "Find PROP in `auth-sources' for HOST entry."
   (let* ((source (auth-source-search :host host))
          (field (plist-get (flatten-list source) prop)))
@@ -67,35 +69,11 @@ the appropriate paraphernalia."
         field
       (user-error "No `%s' host with `%s' entry in auth sources" host prop))))
 
-(autoload 'message-fetch-field "message")
-(autoload 'message-remove-header "message")
-(autoload 'message-add-header "message")
-
-;;;###autoload
-(defun prot-gnus-message-header-gcc ()
-  "While `gnus' is running, add pre-populated Gcc header.
-
-The Gcc header places a copy of the outgoing message to the
-appropriate directory of the IMAP server, as per the contents of
-~/.authinfo.gpg.
-
-In the absence of a Gcc header, the outgoing message will not
-appear in the appropriate maildir directory, though it will still
-be sent.
-
-Add this function to `message-header-setup-hook'."
-  (if (gnus-alive-p)
-      (progn
-        (when (message-fetch-field "Gcc")
-          (message-remove-header "Gcc"))
-        (message-add-header prot-gnus-message-gcc-header))
-    (message "Gnus is not running. No GCC field inserted.")))
-
 (defvar ebdb-db-list)
 (autoload 'ebdb-load "ebdb")
 
 (when (require 'ebdb nil t)
-  (defun prot-gnus-ebdb-message-setup ()
+  (defun prot-mail-ebdb-message-setup ()
     "Load EBDB if not done already.
 Meant to be assigned to a hook, such as `message-setup-hook'."
     (unless ebdb-db-list
@@ -103,7 +81,7 @@ Meant to be assigned to a hook, such as `message-setup-hook'."
 
 ;;;; Mode line indicator
 
-(defface prot-gnus-mail-count
+(defface prot-mail-mail-count
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
      :foreground "#61284f")
@@ -112,64 +90,74 @@ Meant to be assigned to a hook, such as `message-setup-hook'."
     (t :foreground "magenta"))
   "Face for mode line indicator that shows a new mail count.")
 
-(defvar prot-gnus-new-mail-string nil
+(defvar prot-mail-new-mail-string nil
   "New maildir count number for the mode line.")
 
-(defun prot-gnus--new-mail ()
+(defun prot-mail--new-mail ()
   "Search for new mail in personal maildir paths."
   (with-temp-buffer
     (shell-command
-     (format "find %s -type f | wc -l" prot-gnus-maildir-path-regexp) t)
+     (format "find %s -type f | wc -l" prot-mail-maildir-path-regexp) t)
     (buffer-substring-no-properties (point-min) (1- (point-max)))))
 
-(defun prot-gnus--mode-string (count)
+(defun prot-mail--mode-string (count)
   "Add properties to COUNT string."
   (when (not (string= count "0"))
     (propertize (format "@%s " count)
-                'face 'prot-gnus-mail-count
+                'face 'prot-mail-mail-count
                 'help-echo "Number of new items in maildirs")))
 
-(defvar prot-gnus--mode-line-mail-indicator nil
+(defvar prot-mail--mode-line-mail-indicator nil
   "Internal variable used to store the state of new mails.")
 
-(defun prot-gnus--mode-line-mail-indicator ()
-  "Prepare mail count mode line indicator."
-  (let* ((count (prot-gnus--new-mail))
-         (indicator (prot-gnus--mode-string count))
-         (old-indicator prot-gnus--mode-line-mail-indicator))
-    ;; TODO 2021-04-19: Is appending to `global-mode-string' the best
-    ;; way to show this information?
+(defun prot-mail--mode-line-mail-indicator ()
+  "Prepare new mail count mode line indicator."
+  (let* ((count (prot-mail--new-mail))
+         (indicator (prot-mail--mode-string count))
+         (old-indicator prot-mail--mode-line-mail-indicator))
     (cond
      (count
       (setq global-mode-string (delete old-indicator global-mode-string))
       (setq global-mode-string (push indicator global-mode-string))
-      (setq prot-gnus--mode-line-mail-indicator indicator))
+      (setq prot-mail--mode-line-mail-indicator indicator))
      ((string= count "0")
       (setq global-mode-string (delete old-indicator global-mode-string))
-      (setq prot-gnus--mode-line-mail-indicator nil)))))
+      (setq prot-mail--mode-line-mail-indicator nil)))))
 
-(autoload 'gnus-topic-get-new-news-this-topic "gnus-topic")
+(defvar prot-mail--mode-line-mail-sync-hook nil
+  "Hook to refresh the mode line for the mail indicator.")
 
-(defun prot-gnus--topic-hook (&rest _)
-  "Run `gnus-get-new-news-hook' when updating topics."
-  (run-hooks 'gnus-get-new-news-hook))
+(defun prot-mail--add-hook (&rest _)
+  "Run `prot-mail--mode-line-mail-sync-hook'.
+Meant to be used as advice after specified commands that should
+update the mode line indicator with the new mail count."
+  (run-hooks 'prot-mail--mode-line-mail-sync-hook))
 
-(advice-add #'gnus-topic-get-new-news-this-topic :after #'prot-gnus--topic-hook)
+;; TODO 2021-05-13: Add a defcustom with all relevant commands
+(when prot-mail-mode-line-indicator-commands
+  (dolist (fn prot-mail-mode-line-indicator-commands)
+    (advice-add fn :after #'prot-mail--add-hook)))
 
 ;;;###autoload
-(define-minor-mode prot-gnus-mail-indicator
+(define-minor-mode prot-mail-mail-indicator
   "Enable mode line indicator with counter for new mail."
   :init-value nil
   :global t
-  (if prot-gnus-mail-indicator
+  (if prot-mail-mail-indicator
       (progn
-        (run-at-time t 60 #'prot-gnus--mode-line-mail-indicator)
-        (add-hook 'gnus-get-new-news-hook #'prot-gnus--mode-line-mail-indicator)
+        (run-at-time t 60 #'prot-mail--mode-line-mail-indicator)
+        (when prot-mail-mode-line-indicator-commands
+          (dolist (fn prot-mail-mode-line-indicator-commands)
+            (advice-add fn :after #'prot-mail--add-hook)))
+        (add-hook 'prot-mail--mode-line-mail-sync-hook #'prot-mail--mode-line-mail-indicator)
         (force-mode-line-update t))
-    (cancel-function-timers #'prot-gnus--mode-line-mail-indicator)
-    (setq global-mode-string (delete prot-gnus--mode-line-mail-indicator global-mode-string))
-    (remove-hook 'gnus-get-new-news-hook #'prot-gnus--mode-line-mail-indicator)
+    (cancel-function-timers #'prot-mail--mode-line-mail-indicator)
+    (setq global-mode-string (delete prot-mail--mode-line-mail-indicator global-mode-string))
+    (remove-hook 'prot-mail--mode-line-mail-sync-hook #'prot-mail--mode-line-mail-indicator)
+    (when prot-mail-mode-line-indicator-commands
+      (dolist (fn prot-mail-mode-line-indicator-commands)
+        (advice-remove fn #'prot-mail--add-hook)))
     (force-mode-line-update t)))
 
-(provide 'prot-gnus)
-;;; prot-gnus.el ends here
+(provide 'prot-mail)
+;;; prot-mail.el ends here

@@ -2974,7 +2974,7 @@ some compilation work and/or have a project shell, so the separate
 window layouts that tabs provide are necessary.  In such a case, those
 two are distinct projects yet they belong to the same task of patching
 upstream Emacs sources, so they get the "Emacs" group.  Whereas other
-tabs, say, one for Gnus and another for Elfeed, get the "News" tag.
+tabs, say, one for Notmuch and another for Elfeed, get the "News" tag.
 
 It is possible to integrate those tab groups with the presentation of
 =tab-bar-echo-area-mode=, by evaluating the helper function
@@ -3234,8 +3234,8 @@ This is its code (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' r
 This covers the standard =diff-mode.el=, which I use quite often, such as
 while interfacing with the built-in Version Control framework (see the
 section on [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]), or while
-browsing various code-related newsgroups through Gnus (refer to the
-[[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).
+browsing various code-related mailing lists through notmuch (refer to
+the [[#h:5ad80664-3163-4d9d-be65-462637d77903][email settings]]).
 
 Overview of my preferences for how diffs should look:
 
@@ -3721,14 +3721,13 @@ the one you specify.  In doing so, it allows you to prepare a series of
 patches, using the correct message headers.
 
 =git-email.el= is meant to work with the standard message composition
-buffer, such is the one you get when you call =M-x compose-email= (by
+buffer, such as the one you get when you call =M-x compose-email= (by
 default that command is bound to =C-x m= and I keep it that way).  Email
 clients like Gnus and Notmuch are also supported.  For my case as a user
-of the former, I just activate =git-email-gnus-mode= in order to add the
-relevant paraphernalia to the message composition buffers: a special
-"Gcc" header that Gnus uses to place a copy of the outgoing message to a
-given destination.  For more on Gnus and related configurations, please
-refer to the mega-section on [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]].
+of the latter, I just activate =git-email-notmuch-mode= in order to add
+the relevant settings to the message composition buffers.  For more on
+Notmuch and all related configurations, refer to the mega-section on
+[[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]].
 
 So here is the typical workflow with this package:
 
@@ -3768,9 +3767,9 @@ to see it getting more widespread adoption.
 ;;
 ;; `prot-emacs-manual-package' is defined in my init.el
 (prot-emacs-manual-package 'git-email
-  (with-eval-after-load 'gnus
-    (require 'git-email-gnus)
-    (git-email-gnus-mode 1))
+  (with-eval-after-load 'notmuch
+    (require 'git-email-notmuch)
+    (git-email-notmuch-mode 1))
   (define-key global-map (kbd "C-x v RET") #'git-email-format-patch) ; VC prefix and C-m
   (define-key dired-mode-map (kbd "C-x v RET") #'git-email-send-email))
 #+end_src
@@ -3989,13 +3988,14 @@ that below.
 
 The fact that Eshell cannot reproduce the artefacts of the ncurses
 library does not pose a hindrance to my workflow, as I have replacements
-for all such "graphical" programs within Emacs.  Gnus handles my email,
-=M-x proced= lets me interact with system processes, Bongo deals with
-media playback, while Elfeed fills the niche of following RSS/Atom feed.
+for all such "graphical" programs within Emacs.  Notmuch has an Emacs
+client which handles my email (yes, the CLI works as well), =M-x proced=
+lets me interact with system processes, Bongo deals with media playback,
+while Elfeed fills the niche of following RSS/Atom feed.
 
 Read relevant sections:
 
-+ [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]].
++ [[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]].
 + [[#h:6b56ce11-c84c-4b6d-98c7-bc3eefbe9325][Proced (process monitor, similar to `top')]].
 + [[#h:758afe0d-bc7c-4afc-9c6b-b5e569901591][Bongo (music or media manager)]].
 + [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed (RSS/Atom feed reader)]].
@@ -4224,9 +4224,8 @@ package configurations:
   functionality, we can freely write highly specialised templates that
   capture structured text when viewing some particular item, but are not
   needed for more general purposes.  I do this for certain actions that
-  only come into effect when reading email inside of the relevant =gnus=
-  buffers (also check my [[#h:5ad80664-3163-4d9d-be65-462637d77903][comprehensive configurations for email]] and the
-  Gnus news/mail reader).
+  only come into effect when reading email inside of the relevant
+  buffers (also check my [[#h:5ad80664-3163-4d9d-be65-462637d77903][comprehensive configurations for email]]).
 
   Speaking of mail, you will notice some specifiers like =:fromname=.  This
   refers to the =From= field in emails and will capture the name part only.
@@ -4335,7 +4334,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-catch-invisible-edits 'show)
   (setq org-return-follows-link nil)
   (setq org-loop-over-headlines-in-active-region 'start-level)
-  (setq org-modules '(ol-gnus ol-info ol-eww))
+  (setq org-modules '(ol-info ol-eww))
   (setq org-use-sub-superscripts '{})
   (setq org-insert-heading-respect-content t)
 
@@ -4403,14 +4402,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 
 ;;;; capture
   (setq org-capture-templates
-        `(("a" "Article to write" entry
-           (file+headline "tasks.org" "Writing list")
-           ,(concat "* WRITE %^{Title} %^g\n"
-                    "SCHEDULED: %^t\n"
-                    ":PROPERTIES:\n"
-                    ":CAPTURED: %U\n:END:\n\n"
-                    "%i%?"))
-          ("b" "Basic task for future review" entry
+        `(("b" "Basic task for future review" entry
            (file+headline "tasks.org" "Basic tasks that need to be reviewed")
            ,(concat "* %^{Title}\n"
                     ":PROPERTIES:\n"
@@ -4423,7 +4415,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
                     "SCHEDULED: %^t\n"
                     ":PROPERTIES:\n:CAPTURED: %U\n:END:\n\n"
                     "%i%?"))
-          ("r" "Reply to an email" entry
+          ("m" "Make email note" entry
            (file+headline "tasks.org" "Mail correspondence")
            ,(concat "* TODO [#B] %:subject :mail:\n"
                     "SCHEDULED: %t\n:"
@@ -4431,8 +4423,9 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
                     "%i%?"))))
 
   (setq org-capture-templates-contexts
-        '(("r" ((in-mode . "gnus-article-mode")
-                (in-mode . "gnus-summary-mode")))))
+        '(("m" ((in-mode . "notmuch-search-mode")
+                (in-mode . "notmuch-show-mode")
+                (in-mode . "notmuch-tree-mode")))))
 
   ;; Source: https://stackoverflow.com/a/54251825
   (defun contrib/org-capture-no-delete-windows (oldfun args)
@@ -4952,10 +4945,10 @@ like this (new line and indentation are optional, as mentioned above,
 otherwise keep everything on one line):
 
 #+begin_example
-%%(diary-date t t 13 'prot-diary-calendar-administrative-mark)
-    Some administrative monthly task
-%%(diary-anniversary 1900 4 13 'prot-diary-calendar-anniversary-mark)
-    Some anniversary is %d years
+ %%(diary-date t t 13 'prot-diary-calendar-administrative-mark)
+     Some administrative monthly task
+ %%(diary-anniversary 1900 4 13 'prot-diary-calendar-anniversary-mark)
+     Some anniversary is %d years
 #+end_example
 
 The manual covers a lot of other potentially useful tasks you may
@@ -5083,7 +5076,8 @@ code in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with 
 :END:
 
 Once you delve into the technical details, email is hard as it consists
-of arcane specs and protocols.  Combined with Emacs' open-endedness,
+of arcane specs and protocols.  Combined with Emacs' open-endedness as
+well as the wealth of free software command-line programs on offer,
 there are seemingly infinite ways to set things up.  The toolset for my
 current setup consists of the following:
 
@@ -5093,20 +5087,26 @@ current setup consists of the following:
   mail sources from the client.  The latter benefit is particularly
   important to avoid slowing down Emacs.
 
-+ The built-in Gnus framework (I call it "Gnu-s" with a "G", though it
-  is also pronounced as "News" or "Nooz", etc.).  This is a powerful
-  news reader and email client.  It serves as my default interface for
-  reading email and Usenet sources.  In this context "Usenet sources"
-  are mailing lists, such as emacs-devel, with the upside that you do
-  not have to subscribe to them and, thus, flood your main inbox with
-  potentially irrelevant messages.
++ The Notmuch package which includes the CLI program and the Emacs
+  library that implements a Mail User Agent.  Notmuch is a mail indexer
+  that can search through the database using a strictly tags-only
+  workflow.  I was using Gnus in the past (between early 2020 and May
+  2021), but ultimately decided to upgrade my workflow by going with the
+  more flexible approach of Notmuch (I had also used Mu4e before, which
+  is closer in spirit to Notmuch and is a good choice overall---in the
+  source code of my dotfiles, from where you can find this document,
+  there is the =prot-mu4e-deprecated-conf.el= file in case you need it;
+  same for =prot-gnus-deprecated-conf.org=).
 
 + The built-in capabilities to compose and send email.
+
++ Other extensions to integrate email composition with encryption tools,
+  Dired, Org, contact-completion (EBDB)...
 
 *This is a mega section that encompasses all of the aforementioned.*
 Please study it carefully.
 
-*** Client-agnostic email settings (credentials, message composition, encryption)
+*** Client-agnostic email settings (and prot-mail.el)
 :PROPERTIES:
 :CUSTOM_ID: h:a82766be-daab-4925-b23a-1c5ffd47e599
 :END:
@@ -5120,21 +5120,10 @@ configurations are about.
 + The =mail-user-agent= and =message-mail-user-agent= concern the default
   email composition buffer, called with =C-x m= or any other facility that
   falls back to the =compose-mail= function.  The default is =message-mode=.
-  When Gnus is running, it will insert relevant paraphernalia, else the
-  "Gcc" header.  The Gcc saves a copy of the outgoing message to a
-  specified group.  In my case that is the "Sent" directory of my
-  corresponding email account.
 
-+ The function =prot-gnus-message-header-gcc= from my =prot-gnus.el= library
-  is directly related to the above.  The inserted header points to my
-  public email account, though the variable =prot-gnus-message-gcc-header=
-  can adjust things accordingly.  While composing new messages and with
-  Gnus active, that function takes care to pre-populate the headers with
-  the =Gcc= header that is used by Gnus to store a copy of the outgoing
-  message to the appropriate group.  Note that this only concerns newly
-  created messages: while replying to a message, the appropriate
-  information is filled in automatically, based on group parameters
-  (refer to [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]]).
+  - When notmuch is in use, it will insert a special "Fcc" header whose
+    task is to copy the outgoing message to the appropriate maildir path
+    (this part is done in [[#h:a196812e-1644-4536-84ba-687366867def][the Notmuch section]]).
 
 + The value of =message-citation-line-format= is expanded into something
   like /"On 2020-02-19, 13:54 +0200, NAME <EMAIL> wrote:"/.  To learn
@@ -5143,13 +5132,17 @@ configurations are about.
 
 + As for the configurations of =mm-encode= and =mml-sec=, these are meant to
   come into effect when encrypting and signing an outgoing message with
-  =C-c C-m C-e= (=mml-secure-message-sign-encrypt=).  The guided key
-  selection will ask for confirmation on who to encrypt to.  It presents
-  a list with the available keys.  Items are marked with =m= and then the
-  mail can be sent with the standard commands (e.g. =C-c C-c=).  I select
-  myself and whomever the other party is.  This is an extra step just to
-  make sure that I have everything right with regard to the keys and the
-  correspondent[s] when using encryption.
+  =C-c C-m C-e= (=mml-secure-message-sign-encrypt=) and related.  The guided
+  key selection will ask for confirmation on who to encrypt to.  It
+  presents a list with the available keys.  Items are marked with =m= and
+  then the mail can be sent with the standard commands (e.g. =C-c C-c=).
+  I select myself and whomever the other party is.  This is an extra
+  step just to make sure that I have everything right with regard to the
+  keys and the correspondent[s] when using encryption.
+
+Note that =message-cite-style= can be configured to mimic the style of
+other email programs when replying to a message, though I have not used
+any of those as I like the default.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'auth-source
@@ -5171,9 +5164,10 @@ configurations are about.
   (setq mail-user-agent 'message-user-agent)
   (setq mail-header-separator (purecopy "*****"))
   (setq compose-mail-user-agent-warnings nil)
-  (setq message-mail-user-agent nil)    ; default is `gnus'
+  (setq message-mail-user-agent nil)
   (setq mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
   (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
+  (setq message-cite-style nil)
   (setq message-citation-line-format "On %Y-%m-%d, %R %z, %f wrote:\n")
   (setq message-citation-line-function
         'message-insert-formatted-citation-line)
@@ -5182,18 +5176,32 @@ configurations are about.
   (setq message-wide-reply-confirm-recipients t)
   (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
-  (with-eval-after-load 'prot-gnus ; this is `require'd in the gnus section
-    (add-hook 'message-header-setup-hook #'prot-gnus-message-header-gcc))
-
   (add-hook 'message-setup-hook #'message-sort-headers))
+
+(prot-emacs-builtin-package 'prot-mail
+  (setq prot-mail-maildir-path-regexp "~/.mail/*/Inbox/new/") ; shell regexp
+  (setq prot-mail-mode-line-indicator-commands
+        '(notmuch-refresh-this-buffer))
+  ;; mode line indicator with the number of new mails
+  (prot-mail-mail-indicator 1))
 #+end_src
 
+And here is =prot-mail.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: prot-lisp/prot-mail.el src emacs-lisp :tangle no
+
+**** Sample of authinfo.gpg
+:PROPERTIES:
+:CUSTOM_ID: h:8d0bd754-8a31-431b-b112-f541cc0144ac
+:END:
+
 Below is a sample with the contents of my =authinfo.gpg=.  This is read,
-inter alia, by =gnus= and =smtpmail= to be able to both fetch and send
-messages from the given account.  I strongly encourage you to *encrypt
-this file* if you add your login credentials there.  Do it from inside
-=dired= with =: e= while the point is over the file.  Emacs can decrypt all
-encrypted files automatically.
+inter alia, by =notmuch= and =smtpmail= to be able to both fetch and send
+messages from the given account.  By default, one can use a generic
+=authinfo= file though I consider that reckless: I strongly encourage you
+to *encrypt this file* if you add your login credentials there.  Do it
+from inside =dired= with =: e= while the point is over the file.  Emacs can
+decrypt all encrypted files automatically.
 
 #+begin_example
 machine prv port 993 login MAIL password SECRET
@@ -5211,24 +5219,24 @@ messages.  The =MAIL= is either your email address or some username for
 logging into the account.
 
 Note that the terms I use above for =prv=, =inf=, and =pub= are just arbitrary
-names for the given =MAIL= and =SECRET= combination.  This allows us to
-reference each name in the Gnus configurations, and share those in a
-public document like this one, without worrying about leaking private
-data.
+names for the given =MAIL= and =SECRET= combination.  This allows me to
+reference each name in the various package configurations in this
+document, and share them publicly without worrying about leaking
+sensitive data.
 
-Which brings us to the point of actually retrieving those values in a
-secure way.  The =prot-gnus-auth-get-field= is designed to return a field
-from the authinfo file (this is defined in my =prot-gnus.el=, which is
-reproduced at the end of [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][section on Gnus]]).  You will find this function
-used elsewhere in this document.  For example, to get the username and
-password for host =inf= we do:
+Which brings us to the point of actually retrieving those values.  The
+=prot-mail-auth-get-field= is designed to return a field from the authinfo
+file (this function is defined in my =prot-mail.el=, which is reproduced
+at the end of [[#h:a82766be-daab-4925-b23a-1c5ffd47e599][Client-agnostic email settings (and prot-mail.el)]]).  You
+will find this function used elsewhere in this document.  For example,
+to get the username and password for host =inf= we do:
 
 #+begin_example emacs-lisp
-(prot-gnus-auth-get-field "inf" :user)   ; login name
-(prot-gnus-auth-get-field "inf" :secret) ; password
+(prot-mail-auth-get-field "inf" :user)   ; login name
+(prot-mail-auth-get-field "inf" :secret) ; password
 #+end_example
 
-*** Contents of `~/.mbsyncrc' (external tool)
+**** .mbsyncrc (external tool)
 :PROPERTIES:
 :CUSTOM_ID: h:88a605b8-d5b5-486f-87c9-0c80b423ae36
 :END:
@@ -5239,308 +5247,352 @@ package that, depending on your operating system, is called "isync".
 Read the [[https://wiki.archlinux.org/index.php/Isync][Arch Wiki entry on mbsync]].
 
 My =~/.mbsyncrc= is furnished below.  Note that the =awk= call reads from
-the =~/.authinfo.gpg= that I document at the end of the section on
-[[#h:a82766be-daab-4925-b23a-1c5ffd47e599][Client-agnostic email settings]].
+the =~/.authinfo.gpg= (see [[#h:8d0bd754-8a31-431b-b112-f541cc0144ac][Sample of authinfo.gpg]]).
 
 #+include: ../../mbsync/.mbsyncrc src conf :tangle no
 
-*** Gnus for reading email, mailing lists, and more
+*** Notmuch (mail indexer and mail user agent (MUA))
 :PROPERTIES:
-:CUSTOM_ID: h:14cf6fea-54eb-4faa-bb16-3739485c929a
+:CUSTOM_ID: h:a196812e-1644-4536-84ba-687366867def
 :END:
 
-The documentation describes Gnus as the /"coffee-brewing, all singing,
-all dancing, kitchen sink newsreader"/.  I chuckled when I first read it,
-thinking to myself that the developers have an interesting sense of
-humour.  Then I decided to go through the list of user-facing options:
-=M-x customize-apropos-groups RET gnus RET= …  Not so funny after all!
+*NOTE 2021-05-13:* This section remains a work-in-progress: I have
+switched away from Gnus, but there still are things I intend to improve.
 
-Simply put, Gnus is massive.  This makes it both extremely powerful and
-incredibly intimidating for new users.  Do not let that dissuade you
-though: start small and gradually tweak things as you go.  This is how
-you approach Emacs itself.  Learn the basics and then figure out your
-needs as your skills evolve.  This is what I always do.
 
-Now some basic information on the abstractions that Gnus relies on
-(Consider watching my [[https://protesilaos.com/codelog/2020-02-02-emacs-gnus-intro/][Introduction to Gnus]] (2020-02-02)):
+At its core, Notmuch is a command-line program that maintains an index
+of a maildir directory structure and is capable to search through it
+using a strictly tag-based workflow.  Notmuch is both minimalist and
+powerful:
 
-1. The default Gnus buffer is called "Group".  It will present you with
-   a list of all the news sources you have subscribed to.  By default,
-   Gnus only displays messages that have not been read.  The same
-   applies for groups.  The "Group" buffer will be empty the very first
-   time you log in because you have not subscribed to anything yet.  Use
-   =g= to fetch new messages from the sources.  If you only want to
-   refresh the group at point, do it with =M-g=.
-2. The "Server" buffer contains a list with all the sources you have
-   specified for discovering news.  In my case, these are my email
-   accounts and a Usenet server where mailing lists are hosted.  To
-   access the "Server" buffer from inside the "Group" buffer, just hit
-   the caret sign =^=.  To subscribe to an item, place the point over it
-   and hit =u=.  Do that for your email's inbox and for whatever mailing
-   lists you intend to follow.
-3. The "Summary" buffer contains all the messages of a group.  Hitting
-   the return key over a message will split the view in two, with the
-   list above and the message below.  Use =n= or =p= to move to the next or
-   previous unread message (or =N= and =P= to just the next/prev).  You
-   access the "Summary" buffer both from the "Group" and the "Server" by
-   entering a group.
+1. its clearly delimited role as a mail indexer allows it to be used in
+   a variety of setups that involve different tools on how to handle
+   email traffic;
 
-It is essential to take things slowly (and first test whether your
-messages are being sent and that you can receive them).  Each buffer has
-several unique functions that are relevant to the current interface: in
-other words, each has its own major-mode.  To learn more about them, use
-=M-x describe-mode= (bound to =C-h m= by default).  Do it for all three of
-the above.  Also rely on =describe-key= (=C-h k=) to get information about
-what each key does in the given context (or just start a key sequence
-and then hit =C-h= to display possible combinations in a new Help buffer).
+2. while its tag-centric design lifts the inherent restrictions of
+   complex filesystem paths of where a file must be stored, as messages
+   can be grouped together dynamically depending on the search criteria.
 
-A couple of notes about the "Group" buffer:
+In terms of overall setup, I use Notmuch together with =mbsync= to
+syncrhonise my maildir with the IMAP server ([[#h:88a605b8-d5b5-486f-87c9-0c80b423ae36][.mbsyncrc (external tool)]]).
+While I send messages with Emacs' own facility which relies on the
+=sendmail= program (refer to [[#h:2d793cf8-83f5-4830-b73d-78385d9b96dd][Sending email (SMTP)]]).  The latter may change
+in the future, as I evaluate the pros and cons of programs like =msmtp=.
+As for the actual composition of emails, this is done by Emacs'
+=message.el= ([[#h:a82766be-daab-4925-b23a-1c5ffd47e599][Client-agnostic email settings (and prot-mail.el)]].
 
-+ A group can be assigned a level of importance.  This is a grade whose
-  highest score is 1 and the lowest is 6 (customisable though).  Each
-  level has a different colour.  To assign a new value to the group at
-  point, do it with =S l= and then give it a number.  Once you have graded
-  your groups, you can perform various actions on a per-level basis.
-  For example, to refresh all levels from 1 up to 3 but not higher, pass
-  a numeric argument to the standard =g= command.  So =C-3 g= (this is the
-  same as =C-u 3 g= and because this is a buffer that runs a mode which
-  derives from =special-mode=, =3 g= will do the same thing).
-+ Groups can be organised by topic.  Create a new one with =T n= and give
-  it a name.  Move a group to a topic with =T m=.  To toggle the view of
-  topics use =t= (I have a hook that does this automatically at startup).
-  The level of indentation tells us whether a topic is a sub-set of
-  another.  Use =TAB= or =C-u TAB= to adjust it accordingly.  As with
-  levels, you can operate on a per-topic basis.  For example, to catch
-  up on all the news of a given topic (mark all as read), you place the
-  point over it, hit =c= and then confirm your choice.
+Unlike most Emacs packages, I install =notmuch= from my distro's repos.
+This is because (i) I need the CLI program that is independent of Emacs,
+and (ii) =notmuch.el= is bundled together with the command-line tool
+because the two are developed by the same group of people.
 
-As noted, Gnus will only show you a list of unread items.  To view all
-your groups, type =L=.  Use the lower case version =l= to view only the
-unread ones.  To produce a Summary buffer that may contain read items,
-hit =C-u RET= over a group and specify the number of messages you want to
-list (the other option is =C-u M-g= from inside the Summary).  Another
-useful trick for the Summary buffer is the use of the caret sign (=^=) to
-show you the previous message that the current item is a reply to.
+As Notmuch is not a traditional mail client, it has neither opinions nor
+capabilities on how one handles its maildir.  It does not move files
+around nor does it have its own deletion and spam mechanisms.  While
+this may seem needlessly limited at first, it is consistent with the
+precise function that Notmuch performs in the broader email toolkit.  To
+actually delete mail, we can tag it accordingly and then run this either
+manually or from a script with some cron job or systemd timer:
 
-Notwithstanding the numerous customisation options and certain perhaps
-idiosyncratic design choices, some prior experience with Emacs' various
-interfaces will definitely come in handy: Gnus uses similar metaphors
-for navigating and parsing information.  *It still is important to read
-the manual though*.
+#+begin_example
+notmuch search --output=files --format=text0 tag:killed | xargs -r0 rm
+#+end_example
 
-Now here comes the nice part of leveraging the integration that Emacs
-offers: in my [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org mode configurations]] I have a template to capture the
-current email's buffer link.  This means that we can quickly convert any
-item into a task/note and always be able to go back to the original
-message by following the link.  /Found an interesting suggestion in some
-mailing list?/ Capture it.  /Need to act on an email later?/ Capture,
-capture, capture.  Same principle applies to the integration with Dired
-as a means of attaching files to emails, and to the EPA subsystem for
-GPG encryption.
-
-For contact management, read the section on [[#h:d386e14b-dcf7-46a2-851f-867cd84c6cae][EBDB (mail contacts)]].
-
-The package configurations below are divided into several subsections to
-make things easier to read and keep track of.  Remember to use =C-h v VAR=
-to read documentation about each =VAR= or simply place the point over it
-and then hit =C-h v= to pre-populate the results (=C-h f= is the equivalent
-for functions, =C-h o= for both kinds of symbols).  Whenever you see some
-formatting customisations concerning time units, it is better to refer
-to the documentation of the function =format-time-string= to understand
-the meaning of the various date/time specifiers.
-
-The =prot-gnus-mail-indicator= is a global minor mode that checks whether
-there is any new mail in my maildir directories and displays a mode line
-indicator with the total number of those messages.  In this context,
-"new mail" means files that have been received but have not yet been
-seen.  This is done automatically by mbsync (check [[#h:88a605b8-d5b5-486f-87c9-0c80b423ae36][my .mbsyncrc]]), which
-places such items inside a special =new= subdirectory and, once they are
-seen, moves them to the main inbox (so it is not the same as unread
-mail, which can be old in this sense of having already been moved to the
-main inbox).  Once I update Gnus to display that new mail in its
-relevant groups, the counter will disappear.  This minor mode is defined
-in my =prot-gnus.el= library, whose contents are reproduced right after
-the following code block.
+Work-in-progress: To be continued... (the configs are fairly okay).
 
 #+begin_src emacs-lisp
-(prot-emacs-builtin-package 'gnus
-  (require 'gnus-sum)
-  (require 'gnus-dired)
-  (require 'gnus-topic)
-  (require 'prot-gnus)
+;; I install notmuch from the distro's repos because the CLI program is
+;; not dependent on Emacs.  Though the package also includes notmuch.el
+;; which is what we use here (they are maintained by the same people).
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/")
+(prot-emacs-builtin-package 'notmuch
+  (setq notmuch-show-logo nil)
+  (setq notmuch-hello-recent-searches-max 10)
+  (setq notmuch-hello-thousands-separator "")
+  (setq notmuch-hello-auto-refresh t)
+  (setq notmuch-hello-sections
+        (list #'notmuch-hello-insert-saved-searches
+	          #'notmuch-hello-insert-search
+	          #'notmuch-hello-insert-recent-searches))
 
-;;; mode line indicator with the number of new mails
-  (setq prot-gnus-maildir-path-regexp "~/.mail/*/Inbox/new/")
-  (prot-gnus-mail-indicator 1)
+  (setq notmuch-show-empty-saved-searches nil)
+  (setq notmuch-show-all-tags-list t)
+  (setq notmuch-column-control t)
 
-;;; accounts
-  (setq gnus-select-method '(nnnil ""))
-  (setq gnus-secondary-select-methods
-        '((nntp "news.gwene.org")
-          (nnmaildir "prv" (directory "~/.mail/prv")
-           (gnus-search-engine gnus-search-notmuch ; this feature is from Emacs 28
- 					           (remove-prefix "~/.mail/prv")))
-          (nnmaildir "inf" (directory "~/.mail/inf")
-           (gnus-search-engine gnus-search-notmuch
- 					           (remove-prefix "~/.mail/inf")))
-          (nnmaildir "pub" (directory "~/.mail/pub")
-           (gnus-search-engine gnus-search-notmuch
- 					           (remove-prefix "~/.mail/pub")))))
+  (setq notmuch-search-oldest-first nil)
+  (setq notmuch-search-result-format
+        '(("date" . "%12s  ")
+          ("count" . "%-7s  ")
+          ("authors" . "%-30s  ")
+          ("subject" . "%s  ")
+          ("tags" . "(%s)")))
+  (setq notmuch-search-line-faces
+        '(("unread" . notmuch-search-unread-face)
+          ("flagged" . notmuch-search-flagged-face)))
+  (setq notmuch-saved-searches
+        `((:name "new" :query "tag:new" :sort-order newest-first :key ,(kbd "n"))
+          (:name "inbox" :query "tag:inbox" :sort-order newest-first :key ,(kbd "i"))
+          (:name "unread" :query "tag:unread" :sort-order newest-first :key ,(kbd "u"))
+          (:name "flagged" :query "tag:flagged" :sort-order newest-first :key ,(kbd "f"))
+          (:name "sent" :query "tag:sent" :sort-order newest-first :key ,(kbd "s"))
+          (:name "todo" :query "tag:todo" :sort-order newest-first :key ,(kbd "t"))
+          (:name "drafts" :query "tag:draft" :sort-order newest-first :key ,(kbd "d"))
+          (:name "all mail" :query "*" :sort-order newest-first :key ,(kbd "a"))))
+  (setq notmuch-archive-tags '("-inbox" "+archived"))
 
-  (setq gnus-search-use-parsed-queries t) ; Emacs 28
+  (setq notmuch-address-command nil)    ; FIXME 2021-05-13: Make it work with EBDB
+  (setq notmuch-crypto-process-mime t)
+  (setq notmuch-crypto-get-keys-asynchronously t)
 
-  (setq gnus-parameters
-        '((".*"                         ; fallback option
-           (posting-style
-            (gcc "nnmaildir+inf:Sent")
-            (From
-             (format "%s <%s>" user-full-name
-                     (prot-gnus-auth-get-field "inf" :user)))))
-          ("prv"
-           (posting-style
-            (gcc "nnmaildir+prv:Sent")
-            (From
-             (format "%s <%s>" user-full-name
-                     (prot-gnus-auth-get-field "prv" :user)))))
-          ("pub"
-           (posting-style               ; Uses default name+mail
-            (gcc "nnmaildir+pub:Sent")))))
+  (setq notmuch-message-replied-tags '("+replied"))
+  (setq notmuch-message-forwarded-tags '("+forwarded"))
+  (setq notmuch-show-mark-read-tags '("-unread"))
+  (setq notmuch-draft-tags '("+draft"))
+  (setq notmuch-draft-folder "drafts")
+  (setq notmuch-draft-save-plaintext 'ask)
 
-  (setq gnus-gcc-mark-as-read t)
-  (setq gnus-agent t)
-  (setq gnus-novice-user nil)           ; careful with this
-  ;; checking sources
-  (setq gnus-check-new-newsgroups 'ask-server)
-  (setq gnus-read-active-file 'some)
-  ;; dribble
-  (setq gnus-use-dribble-file t)
-  (setq gnus-always-read-dribble-file t)
-;;; agent
-  (setq gnus-agent-article-alist-save-format 1)  ; uncompressed
-  (setq gnus-agent-cache t)
-  (setq gnus-agent-confirmation-function 'y-or-n-p)
-  (setq gnus-agent-consider-all-articles nil)
-  (setq gnus-agent-directory "~/News/agent/")
-  (setq gnus-agent-enable-expiration 'ENABLE)
-  (setq gnus-agent-expire-all nil)
-  (setq gnus-agent-expire-days 30)
-  (setq gnus-agent-mark-unread-after-downloaded t)
-  (setq gnus-agent-queue-mail t)        ; queue if unplugged
-  (setq gnus-agent-synchronize-flags nil)
-;;; article
-  (setq gnus-article-browse-delete-temp 'ask)
-  (setq gnus-article-over-scroll nil)
-  (setq gnus-article-show-cursor t)
-  (setq gnus-article-sort-functions
-        '((not gnus-article-sort-by-number)
-          (not gnus-article-sort-by-date)))
-  (setq gnus-article-truncate-lines nil)
-  (setq gnus-html-frame-width 80)
-  (setq gnus-html-image-automatic-caching t)
-  (setq gnus-inhibit-images t)
-  (setq gnus-max-image-proportion 0.7)
-  (setq gnus-treat-display-smileys nil)
-  (setq gnus-article-mode-line-format "%G %S %m")
-  (setq gnus-visible-headers
-        '("^From:" "^To:" "^Cc:" "^Subject:" "^Newsgroups:" "^Date:"
-          "Followup-To:" "Reply-To:" "^Organization:" "^X-Newsreader:"
-          "^X-Mailer:"))
-  (setq gnus-sorted-header-list gnus-visible-headers)
-  (setq gnus-article-x-face-too-ugly ".*") ; all images in headers are outright annoying---disabled!
-;;; async
-  (setq gnus-asynchronous t)
-  (setq gnus-use-article-prefetch 15)
-;;; group
-  (setq gnus-level-subscribed 6)
-  (setq gnus-level-unsubscribed 7)
-  (setq gnus-level-zombie 8)
-  (setq gnus-activate-level 1)
-  (setq gnus-list-groups-with-ticked-articles nil)
-  (setq gnus-group-sort-function
-        '((gnus-group-sort-by-unread)
-          (gnus-group-sort-by-alphabet)
-          (gnus-group-sort-by-rank)))
-  (setq gnus-group-line-format "%M%p%P%5y:%B%(%g%)\n")
-  (setq gnus-group-mode-line-format "%%b")
-  (setq gnus-topic-display-empty-topics nil)
-;;; summary
-  (setq gnus-auto-select-first nil)
-  (setq gnus-summary-ignore-duplicates t)
-  (setq gnus-suppress-duplicates t)
-  (setq gnus-save-duplicate-list t)
-  (setq gnus-summary-goto-unread nil)
-  (setq gnus-summary-make-false-root 'adopt)
-  (setq gnus-summary-thread-gathering-function
-        'gnus-gather-threads-by-subject)
-  (setq gnus-summary-gather-subject-limit 'fuzzy)
-  (setq gnus-thread-sort-functions
-        '((not gnus-thread-sort-by-date)
-          (not gnus-thread-sort-by-number)))
-  (setq gnus-subthread-sort-functions
-        'gnus-thread-sort-by-date)
-  (setq gnus-thread-hide-subtree nil)
-  (setq gnus-thread-ignore-subject nil)
-  (setq gnus-user-date-format-alist
-        '(((gnus-seconds-today) . "Today at %R")
-          ((+ (* 60 60 24) (gnus-seconds-today)) . "Yesterday, %R")
-          (t . "%Y-%m-%d %R")))
+  (setq notmuch-mua-compose-in 'new-window)
+  (setq notmuch-mua-hidden-headers nil) ;  TODO 2021-05-12: Review hidden headers
+  (setq notmuch-identities
+        `(,(prot-mail-auth-get-field "prv" :user)
+          ,(prot-mail-auth-get-field "inf" :user)
+          ,(prot-mail-auth-get-field "pub" :user)))
+  (setq notmuch-always-prompt-for-sender t)
+  (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
+  (setq notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
+  (setq notmuch-mua-user-agent-function #'notmuch-mua-user-agent-full)
+  (setq notmuch-maildir-use-notmuch-insert t)
+  (setq notmuch-fcc-dirs
+        `((,(prot-mail-auth-get-field "prv" :user) . "prv/Sent")
+          (,(prot-mail-auth-get-field "inf" :user) . "inf/Sent")
+          (,(prot-mail-auth-get-field "pub" :user) . "pub/Sent")))
 
-  ;; When the %f specifier in `gnus-summary-line-format' matches my
-  ;; name, this will use the contents of the "To:" field, prefixed by
-  ;; the string I specify.  Useful when checking your "Sent" summary or
-  ;; a mailing list you participate in.
-  (setq gnus-ignored-from-addresses "Protesilaos Stavrou")
-  (setq gnus-summary-to-prefix "To: ")
+  (setq notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
+        (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
+                "pi[èe]ce\s+jointe?\\|"
+                "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
 
-  (setq gnus-summary-line-format "%U%R %-18,18&user-date; %4L:%-25,25f %B%s\n")
-  (setq gnus-summary-mode-line-format "[%U] %p")
-  (setq gnus-sum-thread-tree-false-root "")
-  (setq gnus-sum-thread-tree-indent " ")
-  (setq gnus-sum-thread-tree-single-indent "")
-  (setq gnus-sum-thread-tree-leaf-with-other "+-> ")
-  (setq gnus-sum-thread-tree-root "")
-  (setq gnus-sum-thread-tree-single-leaf "\\-> ")
-  (setq gnus-sum-thread-tree-vertical "|")
+  (setq notmuch-message-headers '("To" "Cc" "Subject" "Date"))
+  (setq notmuch-message-headers-visible t)
+  (setq notmuch-show-relative-dates nil)
+  (setq notmuch-show-all-multipart/alternative-parts nil)
+  (setq notmuch-show-indent-messages-width 0)
+  (setq notmuch-show-indent-multipart nil)
+  (setq notmuch-show-part-button-default-action 'notmuch-show-save-part)
+  (setq notmuch-show-text/html-blocked-images ".") ; block everything
 
+  (setq notmuch-tagging-keys
+        `((,(kbd "a") notmuch-archive-tags "Archive")
+          (,(kbd "d") ("+deleted" "-inbox") "Delete")
+          (,(kbd "f") ("+flagged") "Flag")
+          (,(kbd "r") notmuch-show-mark-read-tags "Mark as read")
+          (,(kbd "s") ("+spam" "-inbox") "Mark as spam")
+          (,(kbd "t") ("+todo") "To-do")
+          (,(kbd "u") ("+unread") "Mark as unread")))
+
+  (setq notmuch-tag-formats
+        '(("unread" (propertize tag 'face 'notmuch-tag-unread))
+          ("flagged" (propertize tag 'face 'notmuch-tag-flagged)
+           ;; (notmuch-tag-format-image-data tag (notmuch-tag-star-icon))
+           )))
+
+  (setq notmuch-tag-deleted-formats
+        '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
+          (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
+
+  ;; (setq notmuch-unthreaded-show-out nil)
+
+  (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
+
+  (require 'gnus-dired)                         ; does not require `gnus'
   (add-hook 'dired-mode-hook #'gnus-dired-mode) ; dired integration
-  (add-hook 'gnus-group-mode-hook #'gnus-topic-mode)
-  (add-hook 'gnus-select-group-hook #'gnus-group-set-timestamp)
 
-  (dolist (mode '(gnus-group-mode-hook gnus-summary-mode-hook gnus-browse-mode-hook))
-    (add-hook mode #'hl-line-mode))
-
-  ;; ;; TODO 2021-01-28: fill for `gnus-article-mode-hook' should be
-  ;; ;; reviewed in light of prot-fill.el
-  ;; (add-hook 'gnus-article-mode-hook (lambda () (setq-local fill-column 80)))
-  (define-key global-map (kbd "C-c m") #'gnus)
-  (let ((map gnus-article-mode-map))
-    (define-key map (kbd "i") #'gnus-article-show-images)
-    (define-key map (kbd "s") #'gnus-mime-save-part)
-    (define-key map (kbd "o") #'gnus-mime-copy-part))
-  (let ((map gnus-group-mode-map))       ; I always use `gnus-topic-mode'
-    (define-key map (kbd "n") #'gnus-group-next-group)
-    (define-key map (kbd "p") #'gnus-group-prev-group)
-    (define-key map (kbd "M-n") #'gnus-topic-goto-next-topic)
-    (define-key map (kbd "M-p") #'gnus-topic-goto-previous-topic))
-  (let ((map gnus-summary-mode-map))
-    (define-key map (kbd "<delete>") #'gnus-summary-delete-article)
-    (define-key map (kbd "n") #'gnus-summary-next-article)
-    (define-key map (kbd "p") #'gnus-summary-prev-article)
-    (define-key map (kbd "N") #'gnus-summary-next-unread-article)
-    (define-key map (kbd "P") #'gnus-summary-prev-unread-article)
-    (define-key map (kbd "M-n") #'gnus-summary-next-thread)
-    (define-key map (kbd "M-p") #'gnus-summary-prev-thread)
-    (define-key map (kbd "C-M-n") #'gnus-summary-next-group)
-    (define-key map (kbd "C-M-p") #'gnus-summary-prev-group)
-    (define-key map (kbd "C-M-^") #'gnus-summary-refer-thread)))
-
-(prot-emacs-builtin-package 'nnmail
-  (setq nnmail-expiry-wait 30))         ; careful with this
+  (define-key global-map (kbd "C-c m") #'notmuch))
 #+end_src
 
-And here is =prot-gnus.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+*** Org+Notmuch integration
 
-#+include: prot-lisp/prot-gnus.el src emacs-lisp :tangle no
+The =ol-notmuch.el= is part of the =org-contrib= package which can be found
+in the NonGNU ELPA (that archive is configured out-of-the-box for
+Emacs28, same as with GNU ELPA).  However, that package contains
+approximately one zillion things I do not need, so I prefer to copy the
+file here and handle it on its own.
+
+#+begin_src emacs-lisp
+;;; ol-notmuch.el --- Links to notmuch messages
+
+;; Copyright (C) 2010-2014  Matthieu Lemerre
+
+;; Author: Matthieu Lemerre <racin@free.fr>
+;; Keywords: outlines, hypermedia, calendar, wp
+;; Homepage: https://orgmode.org
+
+;; This file is not part of GNU Emacs.
+
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 2, or (at your option)
+;; any later version.
+
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; This file implements links to notmuch messages and "searches". A
+;; search is a query to be performed by notmuch; it is the equivalent
+;; to folders in other mail clients. Similarly, mails are referred to
+;; by a query, so both a link can refer to several mails.
+
+;; Links have one the following form
+;; notmuch:<search terms>
+;; notmuch-search:<search terms>.
+
+;; The first form open the queries in notmuch-show mode, whereas the
+;; second link open it in notmuch-search mode. Note that queries are
+;; performed at the time the link is opened, and the result may be
+;; different from when the link was stored.
+
+;;; Code:
+
+(require 'ol)
+
+;; customisable notmuch open functions
+(defcustom org-notmuch-open-function
+  'org-notmuch-follow-link
+  "Function used to follow notmuch links.
+
+Should accept a notmuch search string as the sole argument."
+  :group 'org-notmuch
+  :version "24.4"
+  :package-version '(Org . "8.0")
+  :type 'function)
+
+(defcustom org-notmuch-search-open-function
+  'org-notmuch-search-follow-link
+  "Function used to follow notmuch-search links.
+Should accept a notmuch search string as the sole argument."
+  :group 'org-notmuch
+  :version "24.4"
+  :package-version '(Org . "8.0")
+  :type 'function)
+
+(make-obsolete-variable 'org-notmuch-search-open-function nil "9.3")
+
+
+
+;; Install the link type
+(org-link-set-parameters "notmuch"
+			 :follow #'org-notmuch-open
+			 :store #'org-notmuch-store-link)
+
+(defun org-notmuch-store-link ()
+  "Store a link to a notmuch search or message."
+  (when (memq major-mode '(notmuch-show-mode notmuch-tree-mode))
+    (let* ((message-id (notmuch-show-get-message-id t))
+	   (subject (notmuch-show-get-subject))
+	   (to (notmuch-show-get-to))
+	   (from (notmuch-show-get-from))
+	   (date (org-trim (notmuch-show-get-date)))
+	   desc link)
+      (org-link-store-props :type "notmuch" :from from :to to :date date
+       			    :subject subject :message-id message-id)
+      (setq desc (org-link-email-description))
+      (setq link (concat "notmuch:id:" message-id))
+      (org-link-add-props :link link :description desc)
+      link)))
+
+(defun org-notmuch-open (path _)
+  "Follow a notmuch message link specified by PATH."
+  (funcall org-notmuch-open-function path))
+
+(defun org-notmuch-follow-link (search)
+  "Follow a notmuch link to SEARCH.
+
+Can link to more than one message, if so all matching messages are shown."
+  (require 'notmuch)
+  (notmuch-show search))
+
+
+
+(org-link-set-parameters "notmuch-search"
+			 :follow #'org-notmuch-search-open
+			 :store #'org-notmuch-search-store-link)
+
+(defun org-notmuch-search-store-link ()
+  "Store a link to a notmuch search or message."
+  (when (eq major-mode 'notmuch-search-mode)
+    (let ((link (concat "notmuch-search:" notmuch-search-query-string))
+	  (desc (concat "Notmuch search: " notmuch-search-query-string)))
+      (org-link-store-props :type "notmuch-search"
+			    :link link
+			    :description desc)
+      link)))
+
+(defun org-notmuch-search-open (path _)
+  "Follow a notmuch message link specified by PATH."
+  (message "%s" path)
+  (org-notmuch-search-follow-link path))
+
+(defun org-notmuch-search-follow-link (search)
+  "Follow a notmuch link by displaying SEARCH in notmuch-search mode."
+  (require 'notmuch)
+  (notmuch-search search))
+
+
+
+(org-link-set-parameters "notmuch-tree"
+			 :follow #'org-notmuch-tree-open
+			 :store #'org-notmuch-tree-store-link)
+
+(defun org-notmuch-tree-store-link ()
+  "Store a link to a notmuch search or message."
+  (when (eq major-mode 'notmuch-tree-mode)
+    (let ((link (concat "notmuch-tree:" (notmuch-tree-get-query)))
+	  (desc (concat "Notmuch tree: " (notmuch-tree-get-query))))
+      (org-link-store-props :type "notmuch-tree"
+			    :link link
+			    :description desc)
+      link)))
+
+(defun org-notmuch-tree-open (path _)
+  "Follow a notmuch message link specified by PATH."
+  (message "%s" path)
+  (org-notmuch-tree-follow-link path))
+
+(defun org-notmuch-tree-follow-link (search)
+  "Follow a notmuch link by displaying SEARCH in notmuch-tree mode."
+  (require 'notmuch)
+  (notmuch-tree search))
+
+(provide 'ol-notmuch)
+
+;;; ol-notmuch.el ends here
+#+end_src
+
+And now make the thing work:
+
+#+begin_src emacs-lisp
+(require 'ol-notmuch)
+#+end_src
+
+**** .notmuch-config (external tool)
+:PROPERTIES:
+:CUSTOM_ID: h:79803e19-1150-49a6-a3df-1cffe3d0cbc5
+:END:
+
+*NOTE 2021-05-13*: My Notmuch configurations remain a work-in-progress.
+What I furnish below is my current =.notmuch-config=, though expect things
+to change once I expand my setup with various hooks, as documented in
+=M-x man RET notmuch-hooks RET=.  As for the Emacs configs, refer to
+[[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]].
+
+#+include: ../../notmuch/.notmuch-config src conf :tangle no
 
 *** Sending email (SMTP)
 :PROPERTIES:
@@ -5570,8 +5622,9 @@ mirroring of the contents of that file.
 :END:
 
 EBDB is a contacts' manager by Eric Abrahamsen that integrates with Mail
-User Agents inside of Emacs.  I use it as part of my Gnus setup (which I
-document at length in [[#h:14cf6fea-54eb-4faa-bb16-3739485c929a][Gnus for reading email, mailing lists, and more]]).
+User Agents inside of Emacs.  I used to use it as part of my Gnus setup
+but as of 2021-05-13 my plan is to make it work with Notmuch as I have
+switched to it ([[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]]).
 
 What I need from it is to perform the task of storing every address that
 I exchange messages with.  When I send someone a message, their email
@@ -5640,17 +5693,16 @@ lots of options and commands: make sure to read its official manual.
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'ebdb
-  (require 'ebdb-gnus)
   (require 'ebdb-message)
+  (require 'ebdb-notmuch) ; FIXME 2021-05-13: does not activate the corfu-mode UI
   (setq ebdb-sources (locate-user-emacs-file "ebdb"))
   (setq ebdb-permanent-ignores-file (locate-user-emacs-file "ebdb-permanent-ignores"))
 
   (setq ebdb-mua-pop-up nil)
-  (setq ebdb-gnus-window-size 0.25)
+  (setq ebdb-default-window-size 0.25)
   (setq ebdb-mua-default-formatter ebdb-default-multiline-formatter)
 
   (setq ebdb-mua-auto-update-p 'existing)
-  (setq ebdb-gnus-auto-update-p 'existing)
   (setq ebdb-mua-reader-update-p 'existing)
   (setq ebdb-mua-sender-update-p 'create)
   (setq ebdb-message-auto-update-p 'create)
@@ -5672,8 +5724,8 @@ lots of options and commands: make sure to read its official manual.
 
   (setq ebdb-use-diary nil)
 
-  (with-eval-after-load 'prot-gnus ; check my `prot-gnus.el' from the gnus section
-    (add-hook 'message-setup-hook #'prot-gnus-ebdb-message-setup))
+  (with-eval-after-load 'prot-mail ; check my `prot-mail.el'
+    (add-hook 'message-setup-hook #'prot-mail-ebdb-message-setup))
 
   (let ((map ebdb-mode-map))
     (define-key map (kbd "D") #'ebdb-delete-field-or-record)
@@ -6353,6 +6405,9 @@ And here is =prot-eww.el= in its entirety.  It is available as a file in
 #+include: prot-lisp/prot-eww.el src emacs-lisp :tangle no
 
 ** Extensions for PDFs (pdf-tools)
+:PROPERTIES:
+:CUSTOM_ID: h:02894c1d-a739-48e7-9116-3c27a6505485
+:END:
 
 The =pdf-tools= package builds on top of the external libraries, =poppler=
 and =imagemagick= (if Emacs is compiled with support for it) to deliver a
@@ -6678,7 +6733,7 @@ also shows the load average and an email indicator.  I do not need the
 load average as it adds too much noise.  As for the mail indicator, I
 used it for a while, but eventually decided to use my own approach which
 also shows the number of new emails (refer to the [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]] and
-search, in particular, for =prot-gnus-mail-indicator=).
+search, in particular, for =prot-mail-mail-indicator=).
 
 Lastly, I use the =world-clock= command (for Emacs28+) when I need to get
 an overview of the current time in various parts of the planet.
@@ -6692,8 +6747,8 @@ an overview of the current time in various parts of the planet.
   (setq display-time-interval 60)
   (setq display-time-default-load-average nil)
   ;; NOTE 2021-04-19: For all those, I have implemented a custom
-  ;; solution that also shows the number of new items.  Refer to my Gnus
-  ;; settings, specifically `prot-gnus-mail-indicator'.
+  ;; solution that also shows the number of new items.  Refer to my
+  ;; email settings, specifically `prot-mail-mail-indicator'.
   (setq display-time-mail-directory nil)
   (setq display-time-mail-function nil)
   (setq display-time-use-mail-icon nil)
@@ -7870,13 +7925,7 @@ canonical.
 
 This section contains configurations for packages that are dedicated to
 the task of recording the state of various Emacs tools, such as the
-history of the minibuffer or the list of recently visited files.
-
-In practice, these are some of the most useful configurations one can
-make, as lots of functions depend on them.  For example, a record of the
-minibuffer's history of inputs allows the completion framework to guess
-the most likely course of action.  Typing =M-x g= gives me =gnus= as the
-first possible option, which is exactly what I want.
+history of the minibuffer.
 
 ** Emacs server and desktop
 :PROPERTIES:
@@ -8336,6 +8385,11 @@ consider two highly valuable blog posts by Karthik Chikmagalur:
 :CUSTOM_ID: h:7e4448ec-3878-4ea2-9cd6-75e9faaac373
 :END:
 
+*NOTE 2021-05-13:* This question used to pop up when I was using Gnus as
+my mail client.  Though I have since switched to Notmuch, I think the
+information provided here remains relevant.
+
+
 For the relevant setup, refer to the mega-section on [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]].
 
 I tried to make feeds work with Gnus because I generally like it and
@@ -8514,7 +8568,7 @@ emacs
     │   ├── prot-eshell.el
     │   ├── prot-fill.el
     │   ├── prot-fonts.el
-    │   ├── prot-gnus.el
+    │   ├── prot-mail.el
     │   ├── prot-ibuffer.el
     │   ├── prot-icomplete.el
     │   ├── prot-logos.el
