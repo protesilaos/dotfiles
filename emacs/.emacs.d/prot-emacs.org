@@ -5607,6 +5607,8 @@ two are developed by the same group of people.  All good!
   (setq notmuch-show-indent-multipart nil)
   (setq notmuch-show-part-button-default-action 'notmuch-show-save-part)
   (setq notmuch-show-text/html-blocked-images ".") ; block everything
+  (setq notmuch-wash-citation-lines-prefix 6)
+  (setq notmuch-wash-citation-lines-suffix 6)
   (setq notmuch-unthreaded-show-out nil)
 
   (setq notmuch-tagging-keys
