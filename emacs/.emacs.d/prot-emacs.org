@@ -4989,6 +4989,7 @@ Finally, note that I control the placement of those buffers in the
   (setq calendar-daylight-time-zone-name "+0300")
 
   (require 'diary-lib)
+  (setq diary-mail-addr user-mail-address)
   (setq diary-date-forms diary-iso-date-forms)
   (setq diary-comment-start ";;")
   (setq diary-comment-end "")
