@@ -4363,7 +4363,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-fontify-quote-and-verse-blocks t)
   (setq org-fontify-whole-heading-line nil)
   (setq org-fontify-whole-block-delimiter-line nil)
-  (setq org-highlight-latex-and-related '(latex script)) ; read the doc string
+  (setq org-highlight-latex-and-related nil) ; other options affect elisp regexp in src blocks
   (setq org-enforce-todo-dependencies t)
   (setq org-enforce-todo-checkbox-dependencies t)
   (setq org-track-ordered-property-with-tag t)
