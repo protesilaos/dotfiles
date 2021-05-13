@@ -117,6 +117,12 @@ Intended to be assigned to `consult-project-root-function'."
   (prot-orderless-with-styles 'consult-outline))
 
 ;;;###autoload
+(defun prot-consult-imenu ()
+  "Run `consult-imenu' through `prot-orderless-with-styles'."
+  (interactive)
+  (prot-orderless-with-styles 'consult-imenu))
+
+;;;###autoload
 (defun prot-consult-line ()
   "Run `consult-line' through `prot-orderless-with-styles'."
   (interactive)

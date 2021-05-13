@@ -1279,19 +1279,23 @@ experience over the default =repeat-complex-command=.  Same principle for
 preview of where you are about to land.
 
 Other commands enhance the defaults with a filtering mechanism that
-targets candidates by their type.  This "filtering" mechanism, which is
-internally known as "narrowing", can be accessed via a key binding for
-all commands that support it.  In my case, that key is the right angled
-bracket, or greater than sign (=>=) from inside the minibuffer (configure
-=consult-narrow-key=).  So you type the narrow key and follow it up with
-another key that matches the relevant targets.  Hit backspace to remove
-the narrowing (users may wish to set up [[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]],
-though I just memorise what I need, or call =consult-narrow-help=).
+targets candidates by their type.  A case in point is =consult-imenu=
+which recognises syntactic constructs that are variables, functions,
+macros (configurable via =consult-imenu-narrow=, =consult-imenu-toplevel=).
+
+This "filtering" mechanism, which is internally known as "narrowing",
+can be accessed via a key binding for all commands that support it.  In
+my case, that key is the right angled bracket, or greater than sign (=>=)
+from inside the minibuffer (configure =consult-narrow-key=).  So you type
+the narrow key and follow it up with another key that matches the
+relevant targets.  Hit backspace to remove the narrowing (users may wish
+to set up [[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]], though I just memorise what I
+need, or call =consult-narrow-help=).
 
 This narrowing-by-type mechanism can also be used without inputting the
 =consult-narrow-key=, just by typing in the appropriate character and
-inserting a space.  For instance, to search only for files in
-=consult-buffer=, you type =f= and then a space.  Consult will add an
+inserting a space.  For instance, to search only for functions in
+=consult-imenu=, you type =f= and then a space.  Consult will add an
 indicator to the minibuffer prompt describing the active filter.
 
 Another intriguing facility of Consult is its asynchronous call to
@@ -1327,6 +1331,52 @@ variants) to deliver a dedicated =grep-mode= buffer, which can then be
 edited with the help of the =wgrep= package (check [[#h:42624165-f4cb-4318-abce-c11232426880][wgrep (writable grep)]]).
 Use that to quickly refactor some pattern across your files.
 
+Other nice extensions of Consult are (i) its ability to work as a
+generic front-end for completion, and (ii) its preview facility for
+registers.  The former is done by =consult-completion-in-region= which
+provides completion for commands such as =dabbrev-completion= or the TAB
+key in programming buffers (see [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the TAB key]]).
+While the latter is an overall prettier presentation for the familiar
+register preview window (watch: [[https://protesilaos.com/codelog/2020-03-08-emacs-registers/][Primer on Emacs “registers”]]
+(2020-03-08)).
+
+As for registers themselves, Consult furnishes three commands, one
+focused on minibuffer completion and two as do-what-I-mean alternatives
+to the built-in facilities of storing and inserting---or jumping
+to---registered data.
+
++ =consult-register= is what you use for completion.  It searches through
+  the contents of the registered compartments and, thus, works well when
+  you have text-heavy registers that you need to filter through before
+  inserting one at point.
+
++ =consult-register-store= will save a "thing" to the specified key.  What
+  the thing is depends on the context:
+
+  + If the region is active, it will operate on the affected text.
+  + If you call it with a numeric argument, it will store that number.
+  + If no region is active and no numeric prefix is supplied, it will
+    let you select between the current position (point), window
+    configuration (window), set of frames with their window
+    configurations (frameset), or keyboard macro (kmacro).
+
+  This do-what-I-mean facility is complemented by an actions' menu that
+  offers hints on the keys you can use to specify the desired step
+  forward.  For example, if you are operating on a region, =M-a= will let
+  you append the text to the given register.
+
++ =consult-register-load= simplifies the mental workload of actually using
+  a register.  Unlike the Emacs default where you need to know in
+  advance what type of data does the register holds in order to use the
+  right action for it, Consult's version just handles that for you.  All
+  you have to do is instruct it to use the given register and it will
+  know whether it should insert some text or jump to a point/frameset,
+  etc.
+
+In practice, I only ever use =consult-register= because I have already
+developed muscle memory for the register-related actions.  Though using
+all three of the above is easier to learn and more consistent overall.
+
 Note that my =prot-consult.el= (reproduced after the following package
 configurations) defines some /quick and dirty/ extensions or thin wrappers
 around Consult commands.  The former *will be reviewed* in favour of
@@ -1342,6 +1392,16 @@ try.
   (setq consult-async-input-debounce 0.5)
   (setq consult-async-input-throttle 0.8)
   (setq consult-narrow-key ">")
+  (setq consult-imenu-config
+        '((emacs-lisp-mode :toplevel "Functions"
+                           :types ((?f "Functions" font-lock-function-name-face)
+                                   (?m "Macros"    font-lock-keyword-face)
+                                   (?p "Packages"  font-lock-constant-face)
+                                   (?t "Types"     font-lock-type-face)
+                                   (?v "Variables" font-lock-variable-name-face)))))
+  (setq register-preview-delay 0.8
+        register-preview-function #'consult-register-format)
+
   (setq consult-preview-key nil) ; FIXME 2021-04-14: Does not work with `prot-minibuffer.el'
   (setq consult-find-command "find . -iname *ARG* OPTS")
 
@@ -1367,9 +1427,12 @@ try.
           consult-mark))
   (setq prot-consult-command-top-list
         '(consult-outline
-          prot-consult-outline))
+          consult-imenu
+          prot-consult-outline
+          prot-consult-imenu))
   (prot-consult-set-up-hooks-mode 1)
   (let ((map global-map))
+    (define-key map (kbd "M-s M-i") #'prot-consult-imenu)
     (define-key map (kbd "M-s M-s") #'prot-consult-outline)
     (define-key map (kbd "M-s M-y") #'prot-consult-yank)
     (define-key map (kbd "M-s M-l") #'prot-consult-line)))
