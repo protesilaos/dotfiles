@@ -51,10 +51,8 @@ name=Protesilaos Stavrou
 #		in the mail store.
 #
 
-# NOTE 2021-05-13: the "new" tag needs review as it only makes sense
-# with some extra setup that involves hooks.
 [new]
-tags=new;unread;inbox;
+tags=unread;inbox;
 ignore=
 
 # Search configuration
