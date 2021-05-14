@@ -62,6 +62,14 @@ those.")
 Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
 
+(defface prot-notmuch-widget-field
+  '((((class color) (min-colors 88) (background light))
+     :underline "#d7d7d7")
+    (((class color) (min-colors 88) (background dark))
+     :underline "#323232")
+    (t :underline t))
+  "Face for search fields in the Notmuch hello buffer.")
+
 (declare-function message-fetch-field "message")
 (declare-function message-remove-header "message")
 (declare-function message-add-header "message")
@@ -79,6 +87,12 @@ Add this function to `message-header-setup-hook'."
     (message-add-header (format "From: %s <%s>" user-full-name user-mail-address))
     (notmuch-fcc-header-setup)
     (message-sort-headers)))
+
+(defun prot-notmuch-widget-field-face-remap ()
+  "Set up extra highlighting for widget fields in Notmuch hello.
+Add this to `notmuch-hello-mode-hook'."
+  (when (derived-mode-p 'notmuch-hello-mode)
+    (face-remap-add-relative 'widget-field 'prot-notmuch-widget-field)))
 
 ;;;; Mode line unread indicator
 

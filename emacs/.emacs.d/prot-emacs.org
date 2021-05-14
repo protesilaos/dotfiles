@@ -5678,7 +5678,9 @@ variable =prot-notmuch-mode-line-search-args=).
   (setq prot-notmuch-mode-line-indicator-commands
         '(notmuch-refresh-this-buffer))
   ;; Mode line indicator with the number of new mails.
-  (prot-notmuch-mail-indicator 1))
+  (prot-notmuch-mail-indicator 1)
+
+  (add-hook 'notmuch-hello-mode-hook #'prot-notmuch-widget-field-face-remap))
 #+end_src
 
 And here is =prot-notmuch.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
