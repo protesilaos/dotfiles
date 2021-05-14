@@ -3235,6 +3235,8 @@ the subsequent code block.
   (setq usls-file-region-separator-heading-level 1)
   (setq usls-custom-header-function nil)
 
+  (add-hook 'usls-mode-hook #'goto-address-mode)
+
   (let ((map global-map))               ; globally bound keys
     (define-key map (kbd "C-c n d") #'usls-dired)
     (define-key map (kbd "C-c n f") #'usls-find-file)
@@ -7711,7 +7713,6 @@ Refer to the source code in [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common cu
 
 (prot-emacs-builtin-package 'prot-text
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)$" . text-mode))
-  (add-hook 'text-mode-hook #'goto-address-mode)
   (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
   (define-key org-mode-map (kbd "M-;") nil))
 #+end_src
