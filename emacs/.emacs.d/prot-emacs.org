@@ -5322,10 +5322,6 @@ the =~/.authinfo.gpg= (see [[#h:8d0bd754-8a31-431b-b112-f541cc0144ac][Sample of 
 :CUSTOM_ID: h:a196812e-1644-4536-84ba-687366867def
 :END:
 
-*NOTE 2021-05-13:* This section remains a work-in-progress: today I
-switched away from Gnus, but there still are things I intend to improve.
-
-
 At its core, Notmuch is a command-line program that maintains an index
 of a maildir directory structure and is capable to search through it
 using a tag-based method.  Notmuch is both minimalist and powerful:
@@ -5563,7 +5559,7 @@ variable =prot-notmuch-mode-line-search-args=).
 ;;; General UI
   (setq notmuch-show-logo nil)
   (setq notmuch-column-control t)
-  (setq notmuch-hello-auto-refresh nil)
+  (setq notmuch-hello-auto-refresh t)
   (setq notmuch-hello-recent-searches-max 20)
   (setq notmuch-hello-thousands-separator "")
   (setq notmuch-hello-sections
@@ -5576,15 +5572,15 @@ variable =prot-notmuch-mode-line-search-args=).
   (setq notmuch-search-result-format
         '(("date" . "%12s  ")
           ("count" . "%-7s  ")
-          ("authors" . "%-30s  ")
-          ("subject" . "%s  ")
+          ("authors" . "%-20s  ")
+          ("subject" . "%-90s  ")
           ("tags" . "(%s)")))
   (setq notmuch-tree-result-format
         '(("date" . "%12s  ")
-          ("authors" . "%-23s")
+          ("authors" . "%-27s")
           ((("tree" . "%s")
             ("subject" . "%s"))
-           . " %-70s ")
+           . " %-90s ")
           ("tags" . "(%s)")))
   (setq notmuch-search-line-faces
         '(("unread" . notmuch-search-unread-face)
