@@ -5535,7 +5535,7 @@ two are developed by the same group of people.  All good!
 
 Finally, my =prot-notmuch.el= contains some minor stylistic extras
 including a mode line indicator that shows a count of all items matching
-the search terms =tag:inread and tag:inbox= (can be configured by the
+the search terms =tag:unread and tag:inbox= (can be configured by the
 variable =prot-notmuch-mode-line-search-args=).
 
 #+begin_src emacs-lisp
