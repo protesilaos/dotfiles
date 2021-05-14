@@ -5303,7 +5303,7 @@ to get the username and password for host =inf= we do:
 (prot-mail-auth-get-field "inf" :secret) ; password
 #+end_example
 
-**** .mbsyncrc (external tool)
+**** .mbsyncrc
 :PROPERTIES:
 :CUSTOM_ID: h:88a605b8-d5b5-486f-87c9-0c80b423ae36
 :END:
@@ -5340,7 +5340,7 @@ using a tag-based method.  Notmuch is both minimalist and powerful:
    can be grouped together dynamically depending on the search criteria.
 
 In terms of overall setup, I use Notmuch together with =mbsync= to
-synchronise my maildir with the IMAP server ([[#h:88a605b8-d5b5-486f-87c9-0c80b423ae36][.mbsyncrc (external tool)]]).
+synchronise my maildir with the IMAP server (consult my [[#h:88a605b8-d5b5-486f-87c9-0c80b423ae36][.mbsyncrc]]).
 While I send messages with Emacs' own facility which relies on the
 =sendmail= program (refer to [[#h:2d793cf8-83f5-4830-b73d-78385d9b96dd][Sending email (SMTP)]]).  The latter may change
 in the future, as I weigh the pros and cons of programs like =msmtp=,
@@ -5451,24 +5451,13 @@ heading using minibuffer completion (with =M-x imenu= or some third-party
 extension like the =consult-imenu= that I use).
 
 For searching to be productive, we must apply tags in accordance with a
-defined method of organising our workflow.  Too many over-specialised or
-poorly considered tags will likely make things more difficult, while too
-few will probably prevent you from finding what you need.  How you go
-about it is a matter that depends on you: Notmuch is just a tool (and
-don't believe in the hype of magical exominds or second brains that do
-the work for you---maximise the potential of the one mind that you have
-and the rest will follow from there).
-
-As my current needs are not too demanding, I like to use the default
-tags, such as "inbox" and "unread" for practically everything that is
-unsorted, and then I have specialised tags like "todo" for messages that
-require some further action ("todo" could also be complemented by other
-tags for greater precision).  Those marked as "todo" can be combined
-with =org-capture= to record a task that may appear in the Org agenda:
-just invoke =org-capture= while viewing such a message and Org will create
-a direct link back to it (the glue code is [[#h:a7580136-cf32-44e8-81f6-590dbdd7f8f9][ol-notmuch.el]] while my
-=org-capture-templates= and =org-capture-templates-contexts= are defined in
-[[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org-mode (personal information manager)]]).
+defined method of organising our workflow (more about my approach
+further below).  Too many over-specialised or poorly considered tags
+will likely make things more difficult, while too few will probably
+prevent you from finding what you need.  How you go about it is up to
+you.  Notmuch is just a tool: don't believe in the hype of magical
+exominds or second brains that do the work on your behalf---maximise the
+potential of the one mind you have and the rest will follow from there.
 
 Tag addition or removal is denoted by a plus or minus prefix to the name
 of the tag.  The =k= binding exists in all relevant mode maps: it offers a
@@ -5485,18 +5474,18 @@ with the aforementioned methods for limiting the view to a given subset
 for maximum effect.
 
 Other ways to perform tagging operations involve the =+= and =-= keys.  They
-also use =completing-read-multiple=, so use that to its full potential.
-What those commands offer, beside the minibuffer interface, is the
-ability to operate on the entries encompassed by the active region,
-where point and mark delimit the lines to be affected.  There are cases
-where marking a region is faster than narrowing the view with new search
-criteria, so use whatever makes sense at the moment.
+also use =completing-read-multiple=.  What those commands offer, beside
+the minibuffer interface, is the ability to operate on the entries
+encompassed by the active region, where point and mark delimit the lines
+to be affected.  There are cases where marking a region is faster than
+narrowing the view with new search criteria, so use whatever makes sense
+at the moment.
 
 Remember the governing principle of Notmuch: it does not touch your
 mail.  All those tags are specific to the Notmuch database (with the
 exception of some basic tags that are understood by the IMAP server and
-can be optionally affected by Notmuch ([[#h:79803e19-1150-49a6-a3df-1cffe3d0cbc5][.notmuch-config (external tool)]]
-has the =synchronize_flags=true= directive).
+can be optionally affected by Notmuch ([[#h:79803e19-1150-49a6-a3df-1cffe3d0cbc5][.notmuch-config]] has the
+=synchronize_flags=true= directive).
 
 As Notmuch is not a traditional mail client, it has neither opinions nor
 capabilities on how one handles their maildir.  It does not move files
@@ -5517,17 +5506,40 @@ upside of offering me the chance to review the messages, in case I have
 mislabelled some item: I have deleted legitimate mail before, so it is
 not a bad idea to be extra careful.
 
-As of this writing (2021-05-13), I have no pressing need to define
-commands for moving my mail files between different directories: I did
-not do that even while I was using Gnus.  Though I might eventually do
-it just for the sake of completeness.  As such, consider the following
-package configurations a work-in-progress, though they already offer all
-I need to get things done.
+I have no pressing need to define commands for moving my mail files
+between different directories: I did not do that even while I was using
+Gnus.  Though I might eventually do it just for the sake of
+completeness.  As such, consider the following package configurations a
+work-in-progress, though they already offer all I need to get things
+done.
+
+With regard to the use of tags for day-to-day usage, I like to employ
+the =tag:inbox and tag:unread= search as well as =tag:inbox= for practically
+everything that is unsorted or of general interest.  Then I have
+specialised tags like "list" for mailing lists which should not belong
+in the inbox and "todo" for messages that require some further action
+(those can always be complemented by other tags for greater precision
+such as =+list +emacs=).  To keep things in check, a "post-new" script
+outside the Emacs setup performs initial tagging on new mail.  For
+example, my sent messages are marked as =-unread= while new mailing list
+traffic goes to its right place with tags like =-inbox +list= (refer to
+the sections on [[#h:79803e19-1150-49a6-a3df-1cffe3d0cbc5][.notmuch-config]] and [[#h:70d60d41-cb63-4950-bbd9-9157c4d186dc][notmuch post-new rules]]).  Those that
+I manually mark as =+todo= can optionally be combined with =org-capture= to
+record a task that may appear in the Org agenda: call the =org-capture=
+command while viewing such a message and Org will create a direct link
+back to it: the glue code is found in [[#h:a7580136-cf32-44e8-81f6-590dbdd7f8f9][the section on ol-notmuch.el]] while
+my =org-capture-templates= and their =org-capture-templates-contexts= are
+defined in [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org-mode (personal information manager)]]).
 
 Unlike most Emacs packages, I install =notmuch= from my distro's repos.
 This is because (i) the CLI program is independent of Emacs, and (ii)
 =notmuch.el= is bundled up together with the command-line tool because the
 two are developed by the same group of people.  All good!
+
+Finally, my =prot-notmuch.el= contains some minor stylistic extras
+including a mode line indicator that shows a count of all items matching
+the search terms =tag:inread and tag:inbox= (can be configured by the
+variable =prot-notmuch-mode-line-search-args=).
 
 #+begin_src emacs-lisp
 ;; I install notmuch from the distro's repos because the CLI program is
@@ -5664,7 +5676,7 @@ two are developed by the same group of people.  All good!
   (setq prot-notmuch-mode-line-search-args "tag:unread and tag:inbox")
   (setq prot-notmuch-mode-line-indicator-commands
         '(notmuch-refresh-this-buffer))
-  ;; mode line indicator with the number of new mails
+  ;; Mode line indicator with the number of new mails.
   (prot-notmuch-mail-indicator 1))
 #+end_src
 
@@ -5672,7 +5684,36 @@ And here is =prot-notmuch.el= (part of [[https://gitlab.com/protesilaos/dotfiles
 
 #+include: prot-lisp/prot-notmuch.el src emacs-lisp :tangle no
 
-*** Org+Notmuch integration (ol-notmuch.el)
+**** .notmuch-config
+:PROPERTIES:
+:CUSTOM_ID: h:79803e19-1150-49a6-a3df-1cffe3d0cbc5
+:END:
+
+What follows is my =~/.notmuch-config=.  The =tags=new= configuration is
+what enables the use of initial tagging, as explained in the upstream
+documentation (basically you want to tag some mail right after a
+=notmuch new= such as, for example, to remove mailist list messages from
+the inbox---see [[#h:70d60d41-cb63-4950-bbd9-9157c4d186dc][notmuch post-new rules]]).
+
+The Emacs configs: [[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]].
+
+#+include: ../../notmuch/.notmuch-config src conf :tangle no
+
+**** notmuch post-new rules
+:PROPERTIES:
+:CUSTOM_ID: h:70d60d41-cb63-4950-bbd9-9157c4d186dc
+:END:
+
+And here are the rules that apply after running =notmuch new=.  Its file
+system path is =$maildir/.notmuch/hooks/post-new= where =$maildir= is the
+database path specified in =.notmuch-config= (see [[#h:79803e19-1150-49a6-a3df-1cffe3d0cbc5][.notmuch-config]]).
+Remember that this file needs to be an executable.
+
+The Emacs configs: [[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]].
+
+#+include: ../../notmuch/.mail/.notmuch/hooks/post-new src conf :tangle no
+
+**** Org+Notmuch integration (ol-notmuch.el)
 :PROPERTIES:
 :CUSTOM_ID: h:a7580136-cf32-44e8-81f6-590dbdd7f8f9
 :END:
@@ -5845,19 +5886,6 @@ And now make the thing work:
 #+begin_src emacs-lisp
 (require 'ol-notmuch)
 #+end_src
-
-**** .notmuch-config (external tool)
-:PROPERTIES:
-:CUSTOM_ID: h:79803e19-1150-49a6-a3df-1cffe3d0cbc5
-:END:
-
-*NOTE 2021-05-13*: My Notmuch configurations remain a work-in-progress.
-What I furnish below is my current =.notmuch-config=, though expect things
-to change once I expand my setup with various hooks, as documented in
-=M-x man RET notmuch-hooks RET=.  As for the Emacs configs, refer to
-[[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]].
-
-#+include: ../../notmuch/.notmuch-config src conf :tangle no
 
 *** Sending email (SMTP)
 :PROPERTIES:
