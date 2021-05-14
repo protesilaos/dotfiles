@@ -5429,7 +5429,8 @@ default, there are cases where we need to visualise the email exchanges:
 to =Z= in =notmuch-search-mode-map=.  A similar variant is =U= for
 =notmuch-unthreaded-from-search-current-query=, as it expands the view
 without adding the tree indicators and without de-duplicating subject
-lines across the threads.
+lines across the threads.  Go back to the standard search view with =S=
+(=notmuch-search-from-tree-current-query=).
 
 All those happen in new buffers: you do not lose anything.  You can
 dismiss the current buffer with =q= (=notmuch-bury-or-kill-this-buffer=),
@@ -5535,16 +5536,14 @@ two are developed by the same group of people.  All good!
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/")
 (prot-emacs-builtin-package 'notmuch
   (setq notmuch-show-logo nil)
-  (setq notmuch-hello-recent-searches-max 10)
+  (setq notmuch-hello-recent-searches-max 20)
   (setq notmuch-hello-thousands-separator "")
   (setq notmuch-hello-auto-refresh t)
   (setq notmuch-hello-sections
         (list #'notmuch-hello-insert-saved-searches
-	          #'notmuch-hello-insert-search
 	          #'notmuch-hello-insert-recent-searches))
 
-  (setq notmuch-show-empty-saved-searches nil)
-  (setq notmuch-show-all-tags-list t)
+  (setq notmuch-show-all-tags-list nil)
   (setq notmuch-column-control t)
 
   (setq notmuch-search-oldest-first nil)
@@ -5554,14 +5553,23 @@ two are developed by the same group of people.  All good!
           ("authors" . "%-30s  ")
           ("subject" . "%s  ")
           ("tags" . "(%s)")))
+  (setq notmuch-tree-result-format
+        '(("date" . "%12s  ")
+          ("authors" . "%-23s")
+          ((("tree" . "%s")
+            ("subject" . "%s"))
+           . " %-70s ")
+          ("tags" . "(%s)")))
   (setq notmuch-search-line-faces
         '(("unread" . notmuch-search-unread-face)
           ("flagged" . notmuch-search-flagged-face)))
+  (setq notmuch-show-empty-saved-searches t)
   (setq notmuch-saved-searches
-        `((:name "inbox" :query "tag:inbox" :sort-order newest-first :key ,(kbd "i"))
-          (:name "unread" :query "tag:unread" :sort-order newest-first :key ,(kbd "u"))
+        `((:name "inbox" :query "tag:inbox" :sort-order newest-first :search-type tree :key ,(kbd "i"))
+          (:name "unread" :query "tag:unread and tag:inbox" :sort-order newest-first :key ,(kbd "u"))
+          (:name "unread all" :query "tag:unread" :sort-order newest-first :search-type tree :key ,(kbd "U"))
           (:name "flagged" :query "tag:flagged" :sort-order newest-first :key ,(kbd "f"))
-          (:name "sent" :query "tag:sent" :sort-order newest-first :key ,(kbd "s"))
+          (:name "replied" :query "tag:replied" :sort-order newest-first :key ,(kbd "r"))
           (:name "todo" :query "tag:todo" :sort-order newest-first :key ,(kbd "t"))
           (:name "drafts" :query "tag:draft" :sort-order newest-first :key ,(kbd "d"))
           (:name "all mail" :query "*" :sort-order newest-first :key ,(kbd "a"))))
@@ -5633,6 +5641,7 @@ two are developed by the same group of people.  All good!
 
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
+  (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
 
   (require 'gnus-dired)                         ; does not require `gnus'
   (add-hook 'dired-mode-hook #'gnus-dired-mode) ; dired integration
