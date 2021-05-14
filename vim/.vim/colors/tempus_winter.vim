@@ -21,31 +21,31 @@ else
 endif
 
 hi Visual guibg=#8da3b8 guifg=#202427 ctermbg=15 ctermfg=0
-hi Search gui=underline,bold guibg=#292b35 guifg=#8da3b8 cterm=underline,bold ctermbg=8 ctermfg=3
-hi IncSearch gui=underline,bold guibg=#909294 guifg=#202427 term=none cterm=underline,bold ctermbg=7 ctermfg=0
+hi Search gui=underline,bold guibg=#2a2e38 guifg=#8da3b8 cterm=underline,bold ctermbg=8 ctermfg=3
+hi IncSearch gui=underline,bold guibg=#91959b guifg=#202427 term=none cterm=underline,bold ctermbg=7 ctermfg=0
 
 hi StatusLine gui=none guibg=#8da3b8 guifg=#202427 cterm=none ctermbg=15 ctermfg=0
-hi StatusLineNC gui=none guibg=#292b35 guifg=#909294 cterm=none ctermbg=8 ctermfg=7
-hi StatusLineTerm gui=none guibg=#49a61d guifg=#202427 cterm=none ctermbg=2 ctermfg=0
-hi StatusLineTermNC gui=none guibg=#292b35 guifg=#49a61d cterm=none ctermbg=8 ctermfg=2
+hi StatusLineNC gui=none guibg=#2a2e38 guifg=#91959b cterm=none ctermbg=8 ctermfg=7
+hi StatusLineTerm gui=none guibg=#4aa920 guifg=#202427 cterm=none ctermbg=2 ctermfg=0
+hi StatusLineTermNC gui=none guibg=#2a2e38 guifg=#4aa920 cterm=none ctermbg=8 ctermfg=2
 
 hi VertSplit gui=none cterm=none
-hi TabLine gui=none guibg=#292b35 guifg=#909294 cterm=none ctermbg=8 ctermfg=7
-hi TabLineSel gui=none guibg=#4fa090 guifg=#202427 cterm=none ctermbg=6 ctermfg=0
+hi TabLine gui=none guibg=#2a2e38 guifg=#91959b cterm=none ctermbg=8 ctermfg=7
+hi TabLineSel gui=none guibg=#4fa394 guifg=#202427 cterm=none ctermbg=6 ctermfg=0
 hi TabLineFill gui=none cterm=none
 
-hi Comment gui=italic guifg=#909294 cterm=none ctermfg=7
-hi Todo gui=bold guibg=#292b35 guifg=#ad8e4b cterm=bold ctermbg=8 ctermfg=11
+hi Comment gui=italic guifg=#91959b cterm=none ctermfg=7
+hi Todo gui=bold guibg=#2a2e38 guifg=#af9155 cterm=bold ctermbg=8 ctermfg=11
 
-hi Warning gui=none guibg=#959721 guifg=#202427 cterm=none ctermbg=3 ctermfg=0
-hi WarningMsg gui=none guibg=#959721 guifg=#202427 cterm=none ctermbg=3 ctermfg=0
-hi Error gui=none guibg=#eb6a58 guifg=#202427 cterm=none ctermbg=1 ctermfg=0
-hi ErrorMsg gui=none guibg=#eb6a58 guifg=#202427 cterm=none ctermbg=1 ctermfg=0
+hi Warning gui=none guibg=#9a9921 guifg=#202427 cterm=none ctermbg=3 ctermfg=0
+hi WarningMsg gui=none guibg=#9a9921 guifg=#202427 cterm=none ctermbg=3 ctermfg=0
+hi Error gui=none guibg=#ed6e5a guifg=#202427 cterm=none ctermbg=1 ctermfg=0
+hi ErrorMsg gui=none guibg=#ed6e5a guifg=#202427 cterm=none ctermbg=1 ctermfg=0
 
-hi MatchParen gui=underline,bold guibg=#292b35 guifg=#909294 cterm=underline,bold ctermbg=8 ctermfg=7
+hi MatchParen gui=underline,bold guibg=#2a2e38 guifg=#91959b cterm=underline,bold ctermbg=8 ctermfg=7
 
-hi ToolbarLine guibg=#909294 guifg=#202427 term=none ctermbg=7 ctermfg=0
-hi ToolbarButton gui=bold guibg=#909294 guifg=#202427 term=none cterm=bold ctermbg=7 ctermfg=0
+hi ToolbarLine guibg=#91959b guifg=#202427 term=none ctermbg=7 ctermfg=0
+hi ToolbarButton gui=bold guibg=#91959b guifg=#202427 term=none cterm=bold ctermbg=7 ctermfg=0
 
 hi WildMenu guibg=#202427 guifg=#8da3b8 term=standout ctermbg=0 ctermfg=15
 
@@ -53,85 +53,85 @@ hi Terminal guibg=#202427 guifg=#8da3b8 term=none ctermbg=0 ctermfg=15
 
 " Constructs
 " ----------
-hi Constant guifg=#798fd7 ctermfg=4
-hi Number guifg=#798fd7 ctermfg=4
-hi Float guifg=#798fd7 ctermfg=4
-hi String guifg=#309dc1 ctermfg=12
+hi Constant guifg=#7b91df ctermfg=4
+hi Number guifg=#7b91df ctermfg=4
+hi Float guifg=#7b91df ctermfg=4
+hi String guifg=#329fcb ctermfg=12
 
-hi Function guifg=#cd7b7e ctermfg=5
-hi Identifier guifg=#c874c2 term=none ctermfg=13
-hi Label guifg=#cd7b7e ctermfg=5
-hi Tag guifg=#cd7b7e ctermfg=5
-hi Keyword gui=bold guifg=#c874c2 gui=bold ctermfg=13
+hi Function guifg=#d17e80 ctermfg=5
+hi Identifier guifg=#ca77c5 term=none ctermfg=13
+hi Label guifg=#d17e80 ctermfg=5
+hi Tag guifg=#d17e80 ctermfg=5
+hi Keyword gui=bold guifg=#ca77c5 gui=bold ctermfg=13
 
-hi Character gui=bold guifg=#1ba2a0 cterm=bold ctermfg=14
+hi Character gui=bold guifg=#1ba6a4 cterm=bold ctermfg=14
 
-hi Type gui=none,bold guifg=#4fa090 term=none cterm=none,bold ctermfg=6
-hi Boolean guifg=#4fa090 ctermfg=6
-hi StorageClass guifg=#4fa090 ctermfg=6
-hi Structure guifg=#4fa090 ctermfg=6
-hi Typedef gui=bold guifg=#1ba2a0 cterm=bold ctermfg=14
+hi Type gui=none,bold guifg=#4fa394 term=none cterm=none,bold ctermfg=6
+hi Boolean guifg=#4fa394 ctermfg=6
+hi StorageClass guifg=#4fa394 ctermfg=6
+hi Structure guifg=#4fa394 ctermfg=6
+hi Typedef gui=bold guifg=#1ba6a4 cterm=bold ctermfg=14
 
-hi Conditional gui=bold guifg=#49a61d cterm=bold ctermfg=2
-hi Statement gui=none guifg=#00a854 cterm=none ctermfg=10
-hi Repeat gui=bold guifg=#00a854 cterm=bold ctermfg=10
+hi Conditional gui=bold guifg=#4aa920 cterm=bold ctermfg=2
+hi Statement gui=none guifg=#00ab5f cterm=none ctermfg=10
+hi Repeat gui=bold guifg=#00ab5f cterm=bold ctermfg=10
 hi Operator gui=bold guifg=#8da3b8 cterm=bold ctermfg=15
-hi Exception gui=bold guifg=#eb6a58 cterm=bold ctermfg=1
+hi Exception gui=bold guifg=#ed6e5a cterm=bold ctermfg=1
 
-hi Preproc gui=none guifg=#db7824 term=none cterm=none ctermfg=9
-hi PreCondit gui=bold guifg=#db7824 cterm=bold ctermfg=9
-hi Macro gui=bold guifg=#db7824 cterm=bold ctermfg=9
-hi Include guifg=#db7824 ctermfg=9
-hi Define guifg=#db7824 ctermfg=9
+hi Preproc gui=none guifg=#de7b28 term=none cterm=none ctermfg=9
+hi PreCondit gui=bold guifg=#de7b28 cterm=bold ctermfg=9
+hi Macro gui=bold guifg=#de7b28 cterm=bold ctermfg=9
+hi Include guifg=#de7b28 ctermfg=9
+hi Define guifg=#de7b28 ctermfg=9
 
-hi Title gui=bold guibg=#202427 guifg=#4fa090 cterm=bold ctermbg=0 ctermfg=6
+hi Title gui=bold guibg=#202427 guifg=#4fa394 cterm=bold ctermbg=0 ctermfg=6
 
-hi Delimeter gui=bold guifg=#cd7b7e cterm=bold ctermfg=5
-hi Delimiter gui=bold guifg=#cd7b7e cterm=bold ctermfg=5
-hi SpecialComment gui=bold guifg=#cd7b7e cterm=bold ctermfg=5
+hi Delimeter gui=bold guifg=#d17e80 cterm=bold ctermfg=5
+hi Delimiter gui=bold guifg=#d17e80 cterm=bold ctermfg=5
+hi SpecialComment gui=bold guifg=#d17e80 cterm=bold ctermfg=5
 
-hi Debug guifg=#c874c2 ctermfg=13
+hi Debug guifg=#ca77c5 ctermfg=13
 
 " Other
 " -----
-hi LineNr guibg=#292b35 guifg=#909294 term=none ctermbg=8 ctermfg=7
+hi LineNr guibg=#2a2e38 guifg=#91959b term=none ctermbg=8 ctermfg=7
 hi Cursor guibg=#8da3b8 guifg=#202427 ctermbg=15 ctermfg=0
-hi CursorLine gui=none guibg=#292b35 term=none cterm=none ctermbg=8
-hi CursorColumn gui=none guibg=#292b35 term=none cterm=none ctermbg=8
-hi CursorLineNr gui=bold guibg=#909294 guifg=#202427 cterm=bold ctermbg=7 ctermfg=0
-hi ColorColumn guibg=#292b35 guifg=#8da3b8 term=none ctermbg=8 ctermfg=15
-hi SignColumn guibg=#292b35 guifg=#909294 term=none ctermbg=8 ctermfg=7
+hi CursorLine gui=none guibg=#2a2e38 term=none cterm=none ctermbg=8
+hi CursorColumn gui=none guibg=#2a2e38 term=none cterm=none ctermbg=8
+hi CursorLineNr gui=bold guibg=#91959b guifg=#202427 cterm=bold ctermbg=7 ctermfg=0
+hi ColorColumn guibg=#2a2e38 guifg=#8da3b8 term=none ctermbg=8 ctermfg=15
+hi SignColumn guibg=#2a2e38 guifg=#91959b term=none ctermbg=8 ctermfg=7
 
-hi Folded guibg=#292b35 guifg=#909294 ctermbg=8 ctermfg=7
-hi FoldColumn guibg=#292b35 guifg=#909294 ctermbg=8 ctermfg=7
+hi Folded guibg=#2a2e38 guifg=#91959b ctermbg=8 ctermfg=7
+hi FoldColumn guibg=#2a2e38 guifg=#91959b ctermbg=8 ctermfg=7
 
-hi Special gui=bold guifg=#ad8e4b term=none cterm=bold ctermfg=11
-hi SpecialKey gui=none guibg=#292b35 guifg=#909294 cterm=none ctermbg=8 ctermfg=7
-hi SpecialChar gui=bold guifg=#ad8e4b cterm=bold ctermfg=11
-hi NonText gui=none guibg=#292b35 guifg=#909294 cterm=none ctermbg=8 ctermfg=7
-hi EndOfBuffer gui=bold guifg=#909294 cterm=bold ctermfg=7
+hi Special gui=bold guifg=#af9155 term=none cterm=bold ctermfg=11
+hi SpecialKey gui=none guibg=#2a2e38 guifg=#91959b cterm=none ctermbg=8 ctermfg=7
+hi SpecialChar gui=bold guifg=#af9155 cterm=bold ctermfg=11
+hi NonText gui=none guibg=#2a2e38 guifg=#91959b cterm=none ctermbg=8 ctermfg=7
+hi EndOfBuffer gui=bold guifg=#91959b cterm=bold ctermfg=7
 
-hi Directory gui=none guifg=#49a61d term=none cterm=none ctermfg=2
-hi Question gui=bold guifg=#ad8e4b cterm=bold ctermfg=11
-hi MoreMsg guifg=#00a854 ctermfg=10
-hi ModeMsg gui=bold guifg=#49a61d cterm=bold ctermfg=2
+hi Directory gui=none guifg=#4aa920 term=none cterm=none ctermfg=2
+hi Question gui=bold guifg=#af9155 cterm=bold ctermfg=11
+hi MoreMsg guifg=#00ab5f ctermfg=10
+hi ModeMsg gui=bold guifg=#4aa920 cterm=bold ctermfg=2
 
-hi VimOption guifg=#cd7b7e ctermfg=5
-hi VimGroup guifg=#cd7b7e ctermfg=5
+hi VimOption guifg=#d17e80 ctermfg=5
+hi VimGroup guifg=#d17e80 ctermfg=5
 
 hi Underlined gui=underline guifg=#8da3b8 cterm=underline ctermfg=15
-hi Ignore guibg=#292b35 guifg=#909294 ctermbg=8 ctermfg=7
-hi Conceal guibg=#909294 guifg=#292b35 ctermbg=7 ctermfg=8
+hi Ignore guibg=#2a2e38 guifg=#91959b ctermbg=8 ctermfg=7
+hi Conceal guibg=#91959b guifg=#2a2e38 ctermbg=7 ctermfg=8
 
-hi SpellBad guibg=#eb6a58 guifg=#202427 ctermbg=1 ctermfg=0
-hi SpellCap guibg=#959721 guifg=#202427 ctermbg=3 ctermfg=0
-hi SpellRare guibg=#c874c2 guifg=#202427 ctermbg=13 ctermfg=0
-hi SpellLocal guibg=#1ba2a0 guifg=#202427 ctermbg=14 ctermfg=0
+hi SpellBad guibg=#ed6e5a guifg=#202427 ctermbg=1 ctermfg=0
+hi SpellCap guibg=#9a9921 guifg=#202427 ctermbg=3 ctermfg=0
+hi SpellRare guibg=#ca77c5 guifg=#202427 ctermbg=13 ctermfg=0
+hi SpellLocal guibg=#1ba6a4 guifg=#202427 ctermbg=14 ctermfg=0
 
-hi Pmenu gui=italic guibg=#292b35 guifg=#8da3b8 cterm=none ctermbg=8 ctermfg=15
-hi PmenuSel gui=none,bold guibg=#909294 guifg=#202427 cterm=none,bold ctermbg=7 ctermfg=0
-hi PmenuSbar guibg=#292b35 ctermbg=8
-hi PmenuThumb guibg=#909294 ctermbg=7
+hi Pmenu gui=italic guibg=#2a2e38 guifg=#8da3b8 cterm=none ctermbg=8 ctermfg=15
+hi PmenuSel gui=none,bold guibg=#91959b guifg=#202427 cterm=none,bold ctermbg=7 ctermfg=0
+hi PmenuSbar guibg=#2a2e38 ctermbg=8
+hi PmenuThumb guibg=#91959b ctermbg=7
 
 " Terminal
 " --------
@@ -139,81 +139,81 @@ hi PmenuThumb guibg=#909294 ctermbg=7
 if exists('*term_setansicolors')
 	let g:terminal_ansi_colors = [
 				\ "#202427",
-				\ "#eb6a58",
-				\ "#49a61d",
-				\ "#959721",
-				\ "#798fd7",
-				\ "#cd7b7e",
-				\ "#4fa090",
-				\ "#909294",
-				\ "#292b35",
-				\ "#db7824",
-				\ "#00a854",
-				\ "#ad8e4b",
-				\ "#309dc1",
-				\ "#c874c2",
-				\ "#1ba2a0",
+				\ "#ed6e5a",
+				\ "#4aa920",
+				\ "#9a9921",
+				\ "#7b91df",
+				\ "#d17e80",
+				\ "#4fa394",
+				\ "#91959b",
+				\ "#2a2e38",
+				\ "#de7b28",
+				\ "#00ab5f",
+				\ "#af9155",
+				\ "#329fcb",
+				\ "#ca77c5",
+				\ "#1ba6a4",
 				\ "#8da3b8"
 				\ ]
 endif
 if has('nvim')
 	let g:terminal_color_0 = "#202427"
-	let g:terminal_color_1 = "#eb6a58"
-	let g:terminal_color_2 = "#49a61d"
-	let g:terminal_color_3 = "#959721"
-	let g:terminal_color_4 = "#798fd7"
-	let g:terminal_color_5 = "#cd7b7e"
-	let g:terminal_color_6 = "#4fa090"
-	let g:terminal_color_7 = "#909294"
-	let g:terminal_color_8 = "#292b35"
-	let g:terminal_color_9 = "#db7824"
-	let g:terminal_color_10 = "#00a854"
-	let g:terminal_color_11 = "#ad8e4b"
-	let g:terminal_color_12 = "#309dc1"
-	let g:terminal_color_13 = "#c874c2"
-	let g:terminal_color_14 = "#1ba2a0"
+	let g:terminal_color_1 = "#ed6e5a"
+	let g:terminal_color_2 = "#4aa920"
+	let g:terminal_color_3 = "#9a9921"
+	let g:terminal_color_4 = "#7b91df"
+	let g:terminal_color_5 = "#d17e80"
+	let g:terminal_color_6 = "#4fa394"
+	let g:terminal_color_7 = "#91959b"
+	let g:terminal_color_8 = "#2a2e38"
+	let g:terminal_color_9 = "#de7b28"
+	let g:terminal_color_10 = "#00ab5f"
+	let g:terminal_color_11 = "#af9155"
+	let g:terminal_color_12 = "#329fcb"
+	let g:terminal_color_13 = "#ca77c5"
+	let g:terminal_color_14 = "#1ba6a4"
 	let g:terminal_color_15 = "#8da3b8"
 endif
 
 " Diffs
 " -----
-hi DiffAdd gui=bold guibg=#49a61d guifg=#202427 cterm=bold ctermbg=10 ctermfg=0
-hi DiffDelete gui=none guibg=#eb6a58 guifg=#202427 cterm=none ctermbg=9 ctermfg=0
-hi DiffChange gui=bold guibg=#292b35 guifg=#909294 cterm=bold ctermbg=8 ctermfg=7
-hi DiffText gui=bold guibg=#292b35 guifg=#db7824 cterm=bold ctermbg=8 ctermfg=1
+hi DiffAdd gui=bold guibg=#4aa920 guifg=#202427 cterm=bold ctermbg=10 ctermfg=0
+hi DiffDelete gui=none guibg=#ed6e5a guifg=#202427 cterm=none ctermbg=9 ctermfg=0
+hi DiffChange gui=bold guibg=#2a2e38 guifg=#91959b cterm=bold ctermbg=8 ctermfg=7
+hi DiffText gui=bold guibg=#2a2e38 guifg=#de7b28 cterm=bold ctermbg=8 ctermfg=1
 
-hi diffAdded guifg=#49a61d ctermfg=2
-hi diffRemoved guifg=#eb6a58 ctermfg=1
-hi diffNewFile gui=none guifg=#798fd7 ctermfg=4
-hi diffFile gui=none guifg=#959721 cterm=none ctermfg=3
+hi diffAdded guifg=#4aa920 ctermfg=2
+hi diffRemoved guifg=#ed6e5a ctermfg=1
+hi diffNewFile gui=none guifg=#7b91df ctermfg=4
+hi diffFile gui=none guifg=#9a9921 cterm=none ctermfg=3
 
-hi GitGutterAdd guibg=#292b35 guifg=#49a61d ctermbg=8 ctermfg=2
-hi GitGutterChange gui=bold guibg=#292b35 guifg=#909294 cterm=bold ctermbg=8 ctermfg=7
-hi GitGutterDelete guibg=#292b35 guifg=#eb6a58 ctermbg=8 ctermfg=1
-hi GitGutterChangeDelete gui=bold guibg=#292b35 guifg=#eb6a58 cterm=bold ctermbg=8 ctermfg=1
+hi GitGutterAdd guibg=#2a2e38 guifg=#4aa920 ctermbg=8 ctermfg=2
+hi GitGutterChange gui=bold guibg=#2a2e38 guifg=#91959b cterm=bold ctermbg=8 ctermfg=7
+hi GitGutterDelete guibg=#2a2e38 guifg=#ed6e5a ctermbg=8 ctermfg=1
+hi GitGutterChangeDelete gui=bold guibg=#2a2e38 guifg=#ed6e5a cterm=bold ctermbg=8 ctermfg=1
 
 " Neomake
 " -------
-hi NeomakeError gui=none guibg=#eb6a58 guifg=#202427 cterm=none ctermbg=1 ctermfg=0
-hi NeomakeInfo gui=none guibg=#4fa090 guifg=#202427 cterm=none ctermbg=6 ctermfg=0
-hi NeomakeWarning gui=none guibg=#959721 guifg=#202427 cterm=none ctermbg=3 ctermfg=0
-hi NeomakeMessage gui=none guibg=#ad8e4b guifg=#202427 cterm=none ctermbg=11 ctermfg=0
+hi NeomakeError gui=none guibg=#ed6e5a guifg=#202427 cterm=none ctermbg=1 ctermfg=0
+hi NeomakeInfo gui=none guibg=#4fa394 guifg=#202427 cterm=none ctermbg=6 ctermfg=0
+hi NeomakeWarning gui=none guibg=#9a9921 guifg=#202427 cterm=none ctermbg=3 ctermfg=0
+hi NeomakeMessage gui=none guibg=#af9155 guifg=#202427 cterm=none ctermbg=11 ctermfg=0
 
-hi NeomakeVirtualtextInfoDefault guifg=#1ba2a0 ctermfg=14
-hi NeomakeVirtualtextMessageDefault guifg=#ad8e4b ctermfg=11
-hi NeomakeVirtualtextWarningDefault guifg=#959721 ctermfg=3
-hi NeomakeVirtualtextErrorDefault guifg=#eb6a58 ctermfg=1
+hi NeomakeVirtualtextInfoDefault guifg=#1ba6a4 ctermfg=14
+hi NeomakeVirtualtextMessageDefault guifg=#af9155 ctermfg=11
+hi NeomakeVirtualtextWarningDefault guifg=#9a9921 ctermfg=3
+hi NeomakeVirtualtextErrorDefault guifg=#ed6e5a ctermfg=1
 
-hi NeomakeStatusGood gui=none guibg=#49a61d guifg=#202427 cterm=none ctermbg=2 ctermfg=0
-hi NeomakeStatusGoodNC gui=none guibg=#292b35 guifg=#49a61d cterm=none ctermbg=8 ctermfg=2
+hi NeomakeStatusGood gui=none guibg=#4aa920 guifg=#202427 cterm=none ctermbg=2 ctermfg=0
+hi NeomakeStatusGoodNC gui=none guibg=#2a2e38 guifg=#4aa920 cterm=none ctermbg=8 ctermfg=2
 
-hi NeomakeStatColorDefault gui=none guibg=#798fd7 guifg=#202427 cterm=none ctermbg=4 ctermfg=0
-hi NeomakeStatColorTypeE gui=none guibg=#eb6a58 guifg=#202427 cterm=none ctermbg=1 ctermfg=0
-hi NeomakeStatColorTypeW gui=none guibg=#959721 guifg=#202427 cterm=none ctermbg=3 ctermfg=0
+hi NeomakeStatColorDefault gui=none guibg=#7b91df guifg=#202427 cterm=none ctermbg=4 ctermfg=0
+hi NeomakeStatColorTypeE gui=none guibg=#ed6e5a guifg=#202427 cterm=none ctermbg=1 ctermfg=0
+hi NeomakeStatColorTypeW gui=none guibg=#9a9921 guifg=#202427 cterm=none ctermbg=3 ctermfg=0
 
 " Markdown
 " --------
-hi MarkdownRule gui=bold guibg=#292b35 guifg=#00a854 cterm=bold ctermbg=8 ctermfg=10
+hi MarkdownRule gui=bold guibg=#2a2e38 guifg=#00ab5f cterm=bold ctermbg=8 ctermfg=10
 
 hi MarkdownHeading gui=bold guifg=#8da3b8 cterm=bold ctermfg=15
 hi default link MarkdownH1 MarkdownHeading
@@ -225,30 +225,30 @@ hi default link MarkdownH6 MarkdownHeading
 hi default link MarkdownHeadingDelimiter MarkdownHeading
 hi default link MarkdownHeadingRule MarkdownHeading
 
-hi MarkdownBold gui=bold guifg=#db7824 cterm=bold ctermfg=9
+hi MarkdownBold gui=bold guifg=#de7b28 cterm=bold ctermfg=9
 hi default link MarkdownBoldDelimiter MarkdownBold
 
-hi MarkdownItalic gui=italic guifg=#959721 cterm=none ctermfg=3
+hi MarkdownItalic gui=italic guifg=#9a9921 cterm=none ctermfg=3
 hi default link MarkdownItalicDelimiter MarkdownItalic
 
-hi MarkdownUrl gui=underline guifg=#798fd7 cterm=underline ctermfg=4
-hi MarkdownLinkText gui=none guifg=#309dc1 cterm=none ctermfg=12
+hi MarkdownUrl gui=underline guifg=#7b91df cterm=underline ctermfg=4
+hi MarkdownLinkText gui=none guifg=#329fcb cterm=none ctermfg=12
 hi MarkdownLinkDelimiter gui=bold guifg=#8da3b8 cterm=bold ctermfg=15
 hi default link MarkdownLinkTextDelimiter MarkdownLinkDelimiter
 
-hi MarkdownCode guifg=#cd7b7e ctermfg=5
+hi MarkdownCode guifg=#d17e80 ctermfg=5
 hi default link MarkdownCodeDelimiter MarkdownCode
 
 hi MarkdownCodeBlock guifg=#8da3b8 ctermfg=15
 
-hi MarkdownListMarker gui=none guifg=#49a61d cterm=none ctermfg=2
+hi MarkdownListMarker gui=none guifg=#4aa920 cterm=none ctermfg=2
 hi default link MarkdownOrderedListMarker MarkdownListMarker
 
 " Linting
 " -------
-hi YcmErrorSection gui=undercurl guisp=#eb6a58 cterm=underline
-hi YcmWarningSection gui=undercurl guisp=#959721 cterm=underline
-hi SyntasticError gui=undercurl guisp=#eb6a58 cterm=underline
-hi SyntasticWarning gui=undercurl guisp=#959721 cterm=underline
-hi SyntasticErrorSing guifg=#202427 guibg=#eb6a58 ctermfg=0 ctermbg=1
-hi SyntasticWarningSign guifg=#202427 guibg=#959721 ctermfg=0 ctermbg=3
+hi YcmErrorSection gui=undercurl guisp=#ed6e5a cterm=underline
+hi YcmWarningSection gui=undercurl guisp=#9a9921 cterm=underline
+hi SyntasticError gui=undercurl guisp=#ed6e5a cterm=underline
+hi SyntasticWarning gui=undercurl guisp=#9a9921 cterm=underline
+hi SyntasticErrorSing guifg=#202427 guibg=#ed6e5a ctermfg=0 ctermbg=1
+hi SyntasticWarningSign guifg=#202427 guibg=#9a9921 ctermfg=0 ctermbg=3

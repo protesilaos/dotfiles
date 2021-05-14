@@ -39,8 +39,8 @@ hi Todo gui=bold guibg=#312e30 guifg=#a8a030 cterm=bold ctermbg=8 ctermfg=11
 
 hi Warning gui=none guibg=#b1942b guifg=#232323 cterm=none ctermbg=3 ctermfg=0
 hi WarningMsg gui=none guibg=#b1942b guifg=#232323 cterm=none ctermbg=3 ctermfg=0
-hi Error gui=none guibg=#d2813d guifg=#232323 cterm=none ctermbg=1 ctermfg=0
-hi ErrorMsg gui=none guibg=#d2813d guifg=#232323 cterm=none ctermbg=1 ctermfg=0
+hi Error gui=none guibg=#d4823d guifg=#232323 cterm=none ctermbg=1 ctermfg=0
+hi ErrorMsg gui=none guibg=#d4823d guifg=#232323 cterm=none ctermbg=1 ctermfg=0
 
 hi MatchParen gui=underline,bold guibg=#312e30 guifg=#949d9f cterm=underline,bold ctermbg=8 ctermfg=7
 
@@ -76,7 +76,7 @@ hi Conditional gui=bold guifg=#8c9e3d cterm=bold ctermfg=2
 hi Statement gui=none guifg=#96a42d cterm=none ctermfg=10
 hi Repeat gui=bold guifg=#96a42d cterm=bold ctermfg=10
 hi Operator gui=bold guifg=#aeadaf cterm=bold ctermfg=15
-hi Exception gui=bold guifg=#d2813d cterm=bold ctermfg=1
+hi Exception gui=bold guifg=#d4823d cterm=bold ctermfg=1
 
 hi Preproc gui=none guifg=#d0913d term=none cterm=none ctermfg=9
 hi PreCondit gui=bold guifg=#d0913d cterm=bold ctermfg=9
@@ -123,7 +123,7 @@ hi Underlined gui=underline guifg=#aeadaf cterm=underline ctermfg=15
 hi Ignore guibg=#312e30 guifg=#949d9f ctermbg=8 ctermfg=7
 hi Conceal guibg=#949d9f guifg=#312e30 ctermbg=7 ctermfg=8
 
-hi SpellBad guibg=#d2813d guifg=#232323 ctermbg=1 ctermfg=0
+hi SpellBad guibg=#d4823d guifg=#232323 ctermbg=1 ctermfg=0
 hi SpellCap guibg=#b1942b guifg=#232323 ctermbg=3 ctermfg=0
 hi SpellRare guibg=#d58888 guifg=#232323 ctermbg=13 ctermfg=0
 hi SpellLocal guibg=#7aa880 guifg=#232323 ctermbg=14 ctermfg=0
@@ -139,7 +139,7 @@ hi PmenuThumb guibg=#949d9f ctermbg=7
 if exists('*term_setansicolors')
 	let g:terminal_ansi_colors = [
 				\ "#232323",
-				\ "#d2813d",
+				\ "#d4823d",
 				\ "#8c9e3d",
 				\ "#b1942b",
 				\ "#6e9cb0",
@@ -158,7 +158,7 @@ if exists('*term_setansicolors')
 endif
 if has('nvim')
 	let g:terminal_color_0 = "#232323"
-	let g:terminal_color_1 = "#d2813d"
+	let g:terminal_color_1 = "#d4823d"
 	let g:terminal_color_2 = "#8c9e3d"
 	let g:terminal_color_3 = "#b1942b"
 	let g:terminal_color_4 = "#6e9cb0"
@@ -178,23 +178,23 @@ endif
 " Diffs
 " -----
 hi DiffAdd gui=bold guibg=#8c9e3d guifg=#232323 cterm=bold ctermbg=10 ctermfg=0
-hi DiffDelete gui=none guibg=#d2813d guifg=#232323 cterm=none ctermbg=9 ctermfg=0
+hi DiffDelete gui=none guibg=#d4823d guifg=#232323 cterm=none ctermbg=9 ctermfg=0
 hi DiffChange gui=bold guibg=#312e30 guifg=#949d9f cterm=bold ctermbg=8 ctermfg=7
 hi DiffText gui=bold guibg=#312e30 guifg=#d0913d cterm=bold ctermbg=8 ctermfg=1
 
 hi diffAdded guifg=#8c9e3d ctermfg=2
-hi diffRemoved guifg=#d2813d ctermfg=1
+hi diffRemoved guifg=#d4823d ctermfg=1
 hi diffNewFile gui=none guifg=#6e9cb0 ctermfg=4
 hi diffFile gui=none guifg=#b1942b cterm=none ctermfg=3
 
 hi GitGutterAdd guibg=#312e30 guifg=#8c9e3d ctermbg=8 ctermfg=2
 hi GitGutterChange gui=bold guibg=#312e30 guifg=#949d9f cterm=bold ctermbg=8 ctermfg=7
-hi GitGutterDelete guibg=#312e30 guifg=#d2813d ctermbg=8 ctermfg=1
-hi GitGutterChangeDelete gui=bold guibg=#312e30 guifg=#d2813d cterm=bold ctermbg=8 ctermfg=1
+hi GitGutterDelete guibg=#312e30 guifg=#d4823d ctermbg=8 ctermfg=1
+hi GitGutterChangeDelete gui=bold guibg=#312e30 guifg=#d4823d cterm=bold ctermbg=8 ctermfg=1
 
 " Neomake
 " -------
-hi NeomakeError gui=none guibg=#d2813d guifg=#232323 cterm=none ctermbg=1 ctermfg=0
+hi NeomakeError gui=none guibg=#d4823d guifg=#232323 cterm=none ctermbg=1 ctermfg=0
 hi NeomakeInfo gui=none guibg=#6da280 guifg=#232323 cterm=none ctermbg=6 ctermfg=0
 hi NeomakeWarning gui=none guibg=#b1942b guifg=#232323 cterm=none ctermbg=3 ctermfg=0
 hi NeomakeMessage gui=none guibg=#a8a030 guifg=#232323 cterm=none ctermbg=11 ctermfg=0
@@ -202,13 +202,13 @@ hi NeomakeMessage gui=none guibg=#a8a030 guifg=#232323 cterm=none ctermbg=11 cte
 hi NeomakeVirtualtextInfoDefault guifg=#7aa880 ctermfg=14
 hi NeomakeVirtualtextMessageDefault guifg=#a8a030 ctermfg=11
 hi NeomakeVirtualtextWarningDefault guifg=#b1942b ctermfg=3
-hi NeomakeVirtualtextErrorDefault guifg=#d2813d ctermfg=1
+hi NeomakeVirtualtextErrorDefault guifg=#d4823d ctermfg=1
 
 hi NeomakeStatusGood gui=none guibg=#8c9e3d guifg=#232323 cterm=none ctermbg=2 ctermfg=0
 hi NeomakeStatusGoodNC gui=none guibg=#312e30 guifg=#8c9e3d cterm=none ctermbg=8 ctermfg=2
 
 hi NeomakeStatColorDefault gui=none guibg=#6e9cb0 guifg=#232323 cterm=none ctermbg=4 ctermfg=0
-hi NeomakeStatColorTypeE gui=none guibg=#d2813d guifg=#232323 cterm=none ctermbg=1 ctermfg=0
+hi NeomakeStatColorTypeE gui=none guibg=#d4823d guifg=#232323 cterm=none ctermbg=1 ctermfg=0
 hi NeomakeStatColorTypeW gui=none guibg=#b1942b guifg=#232323 cterm=none ctermbg=3 ctermfg=0
 
 " Markdown
@@ -246,9 +246,9 @@ hi default link MarkdownOrderedListMarker MarkdownListMarker
 
 " Linting
 " -------
-hi YcmErrorSection gui=undercurl guisp=#d2813d cterm=underline
+hi YcmErrorSection gui=undercurl guisp=#d4823d cterm=underline
 hi YcmWarningSection gui=undercurl guisp=#b1942b cterm=underline
-hi SyntasticError gui=undercurl guisp=#d2813d cterm=underline
+hi SyntasticError gui=undercurl guisp=#d4823d cterm=underline
 hi SyntasticWarning gui=undercurl guisp=#b1942b cterm=underline
-hi SyntasticErrorSing guifg=#232323 guibg=#d2813d ctermfg=0 ctermbg=1
+hi SyntasticErrorSing guifg=#232323 guibg=#d4823d ctermfg=0 ctermbg=1
 hi SyntasticWarningSign guifg=#232323 guibg=#b1942b ctermfg=0 ctermbg=3
