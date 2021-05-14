@@ -35,6 +35,7 @@
 ;;; Code:
 
 (require 'consult nil t)
+(require 'consult-imenu nil t)
 (require 'prot-pulse)
 
 (defgroup prot-consult ()
