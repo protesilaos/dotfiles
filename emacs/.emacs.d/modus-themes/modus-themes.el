@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.3.2
-;; Last-Modified: <2021-05-13 15:44:57 +0300>
+;; Last-Modified: <2021-05-13 23:55:23 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -3299,10 +3299,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
                             ,@(modus-themes--link-color
                                magenta-alt-other magenta-alt-other-faint fg-alt))))
     `(tooltip ((,class :background ,bg-special-cold :foreground ,fg-main)))
-    `(widget-button ((,class :inherit button)))
-    `(widget-button-pressed ((,class :inherit button
-                                     ,@(modus-themes--link-color
-                                        magenta magenta-faint))))
+    `(widget-button ((,class :inherit bold :foreground ,blue-alt)))
+    `(widget-button-pressed ((,class :inherit widget-button :foreground ,magenta)))
     `(widget-documentation ((,class :foreground ,green)))
     `(widget-field ((,class :background ,bg-alt :foreground ,fg-dim)))
     `(widget-inactive ((,class :background ,bg-inactive :foreground ,fg-inactive)))
@@ -5433,19 +5431,19 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(notmuch-search-count ((,class :inherit shadow)))
     `(notmuch-search-date ((,class :foreground ,cyan)))
     `(notmuch-search-flagged-face ((,class :foreground ,red-alt)))
-    `(notmuch-search-matching-authors ((,class :foreground ,fg-main)))
+    `(notmuch-search-matching-authors ((,class :foreground ,fg-special-cold)))
     `(notmuch-search-non-matching-authors ((,class :inherit shadow)))
-    `(notmuch-search-subject ((,class :foreground ,fg-dim)))
+    `(notmuch-search-subject ((,class :foreground ,fg-main)))
     `(notmuch-search-unread-face ((,class :inherit bold)))
     `(notmuch-tag-added ((,class :underline ,blue)))
     `(notmuch-tag-deleted ((,class :strike-through ,red)))
     `(notmuch-tag-face ((,class :inherit bold :foreground ,blue-alt)))
     `(notmuch-tag-flagged ((,class :foreground ,red-alt)))
     `(notmuch-tag-unread ((,class :foreground ,magenta-alt)))
-    `(notmuch-tree-match-author-face ((,class :foreground ,fg-special-cold)))
+    `(notmuch-tree-match-author-face ((,class :inherit notmuch-search-matching-authors)))
     `(notmuch-tree-match-date-face ((,class :inherit notmuch-search-date)))
     `(notmuch-tree-match-face ((,class :foreground ,fg-main)))
-    `(notmuch-tree-match-tag-face ((,class :inherit bold :foreground ,blue-alt)))
+    `(notmuch-tree-match-tag-face ((,class :inherit notmuch-tag-face)))
     `(notmuch-tree-no-match-face ((,class :inherit shadow)))
     `(notmuch-tree-no-match-date-face ((,class :inherit shadow)))
     `(notmuch-wash-cited-text ((,class :foreground ,blue-faint)))
