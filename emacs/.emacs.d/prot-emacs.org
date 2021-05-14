@@ -433,7 +433,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
         ;; 'borderless, 'borderless-3d, 'borderless-moody, 'accented,
         ;; 'accented-3d, 'accented-moody
-        modus-themes-mode-line nil
+        modus-themes-mode-line '3d
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
@@ -452,11 +452,11 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only, 'neutral-underline-only
-        modus-themes-links nil
+        modus-themes-links 'neutral-underline
 
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts 'subtle-accented
+        modus-themes-prompts nil
 
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
@@ -471,10 +471,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
 
-        modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . section)
-          (2 . line)
-          (t . line-no-bold))
+        modus-themes-headings nil ; this is an alist: read the manual or its doc string
 
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
