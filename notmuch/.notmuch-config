@@ -32,9 +32,8 @@ path=/home/prot/.mail
 
 [user]
 name=Protesilaos Stavrou
-## 2021-05-13 I set those from inside Emacs
-# primary_email=
-# other_email=
+primary_email=public@protesilaos.com
+other_email=info@protesilaos.com
 
 # Configuration for "notmuch new"
 #
@@ -52,7 +51,7 @@ name=Protesilaos Stavrou
 #
 
 [new]
-tags=unread;inbox;
+tags=new
 ignore=
 
 # Search configuration
@@ -66,7 +65,7 @@ ignore=
 #
 
 [search]
-exclude_tags=deleted;spam;
+exclude_tags=del;spam;
 
 # Maildir compatibility configuration
 #
