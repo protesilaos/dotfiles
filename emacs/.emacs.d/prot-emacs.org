@@ -445,7 +445,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'accented-background, 'underline-neutral,
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
-        modus-themes-hl-line nil
+        modus-themes-hl-line 'accented
 
         modus-themes-paren-match 'intense ; {nil,'subtle-bold,'intense,'intense-bold}
 
@@ -462,7 +462,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
         ;; 'bg-only-no-extend, 'accent, 'accent-no-extend
-        modus-themes-region 'accent-no-extend
+        modus-themes-region 'no-extend
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
