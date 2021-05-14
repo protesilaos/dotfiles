@@ -5243,11 +5243,14 @@ any of those as I like the default.
   (add-hook 'message-setup-hook #'message-sort-headers))
 
 (prot-emacs-builtin-package 'prot-mail
+  ;; NOTE 2021-05-14: This is a generic indicator for new mail in the
+  ;; maildir.  As I now use notmuch (see relevant section in this
+  ;; document) I have an alternative approach in prot-notmuch.el.
   (setq prot-mail-maildir-path-regexp "~/.mail/*/Inbox/new/") ; shell regexp
   (setq prot-mail-mode-line-indicator-commands
         '(notmuch-refresh-this-buffer))
   ;; mode line indicator with the number of new mails
-  (prot-mail-mail-indicator 1))
+  (prot-mail-mail-indicator -1))
 #+end_src
 
 And here is =prot-mail.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -5642,7 +5645,18 @@ two are developed by the same group of people.  All good!
   (add-to-list 'notmuch-tag-formats
                '("todo" (propertize tag 'face 'prot-notmuch-notmuch-todo-tag)))
   (add-to-list 'notmuch-tag-formats
-               '("spam" (propertize tag 'face 'prot-notmuch-notmuch-spam-tag))))
+               '("spam" (propertize tag 'face 'prot-notmuch-notmuch-spam-tag)))
+
+  ;; NOTE 2021-05-14: I have an alternative method of finding new mail
+  ;; in a maildir tree by using the find command.  It is somewhat
+  ;; simplistic, though it worked just fine: see prot-mail.el.  I prefer
+  ;; this implementation instead, as it leverages notmuch and so I can
+  ;; pass arbitrary search terms to it.
+  (setq prot-notmuch-mode-line-search-args "tag:unread and tag:inbox")
+  (setq prot-notmuch-mode-line-indicator-commands
+        '(notmuch-refresh-this-buffer))
+  ;; mode line indicator with the number of new mails
+  (prot-notmuch-mail-indicator 1))
 #+end_src
 
 And here is =prot-notmuch.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):

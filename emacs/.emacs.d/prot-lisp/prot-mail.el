@@ -81,6 +81,12 @@ Meant to be assigned to a hook, such as `message-setup-hook'."
 
 ;;;; Mode line indicator
 
+;; NOTE 2021-05-14: The following is a more generic approach that uses
+;; find to search for new mail.  In my prot-notmuch.el I define an
+;; alternative that checks for the "unread" tag, which works better for
+;; my particular setup (refer to my prot-emacs.org for the relevant
+;; commentary).
+
 (defface prot-mail-mail-count
   '((default :inherit bold)
     (((class color) (min-colors 88) (background light))
@@ -132,10 +138,6 @@ Meant to be assigned to a hook, such as `message-setup-hook'."
 Meant to be used as advice after specified commands that should
 update the mode line indicator with the new mail count."
   (run-hooks 'prot-mail--mode-line-mail-sync-hook))
-
-(when prot-mail-mode-line-indicator-commands
-  (dolist (fn prot-mail-mode-line-indicator-commands)
-    (advice-add fn :after #'prot-mail--add-hook)))
 
 ;;;###autoload
 (define-minor-mode prot-mail-mail-indicator
