@@ -5591,9 +5591,9 @@ variable =prot-notmuch-mode-line-search-args=).
           ("flagged" . notmuch-search-flagged-face)))
   (setq notmuch-show-empty-saved-searches t)
   (setq notmuch-saved-searches
-        `((:name "inbox" :query "tag:inbox" :sort-order newest-first :search-type tree :key ,(kbd "i"))
+        `((:name "inbox" :query "tag:inbox" :sort-order newest-first :key ,(kbd "i"))
           (:name "unread" :query "tag:unread and tag:inbox" :sort-order newest-first :key ,(kbd "u"))
-          (:name "unread all" :query "tag:unread" :sort-order newest-first :search-type tree :key ,(kbd "U"))
+          (:name "unread all" :query "tag:unread" :sort-order newest-first :key ,(kbd "U"))
           (:name "flagged" :query "tag:flagged" :sort-order newest-first :key ,(kbd "f"))
           (:name "replied" :query "tag:replied" :sort-order newest-first :key ,(kbd "r"))
           (:name "todo" :query "tag:todo" :sort-order newest-first :key ,(kbd "t"))
