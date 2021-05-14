@@ -5665,9 +5665,9 @@ variable =prot-notmuch-mode-line-search-args=).
 
 (prot-emacs-builtin-package 'prot-notmuch
   (add-to-list 'notmuch-tag-formats
-               '("todo" (propertize tag 'face 'prot-notmuch-notmuch-todo-tag)))
+               '("todo" (propertize tag 'face 'prot-notmuch-todo-tag)))
   (add-to-list 'notmuch-tag-formats
-               '("spam" (propertize tag 'face 'prot-notmuch-notmuch-spam-tag)))
+               '("spam" (propertize tag 'face 'prot-notmuch-spam-tag)))
 
   ;; NOTE 2021-05-14: I have an alternative method of finding new mail
   ;; in a maildir tree by using the find command.  It is somewhat

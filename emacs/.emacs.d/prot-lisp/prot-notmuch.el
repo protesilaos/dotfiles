@@ -40,7 +40,7 @@
   "Extensions for notmuch.el."
   :group 'notmuch)
 
-(defface prot-notmuch-notmuch-spam-tag
+(defface prot-notmuch-spam-tag
   '((default :inherit (bold italic))
     (((class color) (min-colors 88) (background light))
      :foreground "#70480f")
@@ -51,7 +51,7 @@
 Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
 
-(defface prot-notmuch-notmuch-todo-tag
+(defface prot-notmuch-todo-tag
   '((default :inherit (bold italic))
     (((class color) (min-colors 88) (background light))
      :foreground "#145c33")
