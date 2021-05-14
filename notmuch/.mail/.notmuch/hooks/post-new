@@ -35,7 +35,7 @@ notmuch tag +inbox +unread -new -- tag:new
 notmuch tag -new -unread +inbox +sent -- 'from:"/(Protesilaos Stavrou)?*@protesilaos.com*/"'
 
 # mailing lists
-notmuch tag -inbox +list +emacs from:emacs-devel@gnu.org or to:emacs-devel@gnu.org or subject:[emacs-devel]
-notmuch tag -inbox +list +emacs from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org or subject:[emacs-orgmode]
-notmuch tag -inbox +list +emacs from:*@debbugs.gnu.org or to:*@debbugs.gnu.org
-notmuch tag -inbox +list +emacs from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org or subject:[emacs-humanities]
+notmuch tag -inbox +list +emacs -- from:emacs-devel@gnu.org or to:emacs-devel@gnu.org or subject:[emacs-devel]
+notmuch tag -inbox +list +emacs -- from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org or subject:[emacs-orgmode]
+notmuch tag -inbox +list +emacs -- 'to:"/*@debbugs.gnu.org*/"'
+notmuch tag -inbox +list +emacs -- from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org or subject:[emacs-humanities]
