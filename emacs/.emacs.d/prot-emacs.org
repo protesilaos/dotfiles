@@ -5613,30 +5613,30 @@ variable =prot-notmuch-mode-line-search-args=).
             :sort-order newest-first
             :key ,(kbd "u"))
           ( :name "unread all"
-            :query "tag:unread"
+            :query "tag:unread not tag:archived"
             :sort-order newest-first
             :key ,(kbd "U"))
           ( :name "todo"
-            :query "tag:todo"
+            :query "tag:todo not tag:archived"
             :sort-order newest-first
             :key ,(kbd "t"))
           ( :name "mailing lists"
-            :query "tag:list"
+            :query "tag:list not tag:archived"
             :sort-order newest-first
             :key ,(kbd "l"))
           ( :name "emacs-devel"
-            :query "from:emacs-devel@gnu.org or to:emacs-devel@gnu.org or subject:[emacs-devel]"
+            :query "'(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org or subject:[emacs-devel])' not tag:archived"
             :sort-order newest-first
             :key ,(kbd "e d"))
           ( :name "emacs-orgmode"
-            :query "from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org or subject:[emacs-orgmode]"
+            :query "'(from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org or subject:[emacs-orgmode])' not tag:archived"
             :sort-order newest-first
             :key ,(kbd "e o"))
           ( :name "emacs-bugs"
-            :query "'to:\"/*@debbugs.gnu.org*/\"'"
+            :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
             :sort-order newest-first :key ,(kbd "e b"))
           ( :name "emacs-humanities" 
-            :query "from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org or subject:[emacs-humanities]"
+            :query "'(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org or subject:[emacs-humanities])' not tag:archived"
             :sort-order newest-first :key ,(kbd "e h"))))
 
 ;;; Tags
