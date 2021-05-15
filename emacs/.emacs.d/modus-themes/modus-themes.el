@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.3.2
-;; Last-Modified: <2021-05-14 19:02:25 +0300>
+;; Last-Modified: <2021-05-14 23:36:21 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -118,7 +118,6 @@
 ;;     corfu
 ;;     counsel
 ;;     counsel-css
-;;     counsel-notmuch
 ;;     counsel-org-capture-string
 ;;     cov
 ;;     cperl-mode
@@ -363,7 +362,7 @@
 ;;     tuareg
 ;;     typescript
 ;;     undo-tree
-;;     vc (built-in mode line status for version control)
+;;     vc (vc-dir.el, vc-hooks.el)
 ;;     vc-annotate (C-x v g)
 ;;     vdiff
 ;;     vertico
@@ -3687,11 +3686,6 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(counsel-css-selector-depth-face-4 ((,class :foreground ,yellow)))
     `(counsel-css-selector-depth-face-5 ((,class :foreground ,magenta)))
     `(counsel-css-selector-depth-face-6 ((,class :foreground ,red)))
-;;;;; counsel-notmuch
-    `(counsel-notmuch-count-face ((,class :foreground ,cyan)))
-    `(counsel-notmuch-date-face ((,class :foreground ,blue)))
-    `(counsel-notmuch-people-face ((,class :foreground ,magenta)))
-    `(counsel-notmuch-subject-face ((,class :foreground ,magenta-alt-other)))
 ;;;;; counsel-org-capture-string
     `(counsel-org-capture-string-template-body-face ((,class :foreground ,fg-special-cold)))
 ;;;;; cov
@@ -5297,7 +5291,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(message-header-subject ((,class :inherit bold :foreground ,magenta-alt)))
     `(message-header-to ((,class :inherit bold :foreground ,magenta-alt-other)))
     `(message-header-xheader ((,class :foreground ,blue-alt)))
-    `(message-mml ((,class :background ,bg-alt :foreground ,fg-alt)))
+    `(message-mml ((,class :foreground ,cyan-alt-other)))
     `(message-separator ((,class :inherit modus-themes-intense-neutral)))
 ;;;;; minibuffer-line
     `(minibuffer-line ((,class :foreground ,fg-main)))
@@ -5420,12 +5414,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; no-emoji
     `(no-emoji ((,class :foreground ,cyan)))
 ;;;;; notmuch
-    `(notmuch-crypto-decryption ((,class :inherit modus-themes-special-mild)))
+    `(notmuch-crypto-decryption ((,class :inherit (shadow bold))))
     `(notmuch-crypto-part-header ((,class :foreground ,magenta-alt-other)))
-    `(notmuch-crypto-signature-bad ((,class :inherit modus-themes-intense-red)))
-    `(notmuch-crypto-signature-good ((,class :inherit modus-themes-refine-blue)))
-    `(notmuch-crypto-signature-good-key ((,class :inherit modus-themes-refine-cyan)))
-    `(notmuch-crypto-signature-unknown ((,class :inherit modus-themes-refine-red)))
+    `(notmuch-crypto-signature-bad ((,class :inherit error)))
+    `(notmuch-crypto-signature-good ((,class :inherit success)))
+    `(notmuch-crypto-signature-good-key ((,class :inherit bold :foreground ,cyan)))
+    `(notmuch-crypto-signature-unknown ((,class :inherit warning)))
     `(notmuch-hello-logo-background ((,class :background "gray50")))
     `(notmuch-message-summary-face ((,class :inherit modus-themes-nuanced-cyan)))
     `(notmuch-search-count ((,class :inherit shadow)))
@@ -5437,7 +5431,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(notmuch-search-unread-face ((,class :inherit bold)))
     `(notmuch-tag-added ((,class :underline ,blue)))
     `(notmuch-tag-deleted ((,class :strike-through ,red)))
-    `(notmuch-tag-face ((,class :inherit bold :foreground ,blue-alt)))
+    `(notmuch-tag-face ((,class :foreground ,blue)))
     `(notmuch-tag-flagged ((,class :foreground ,red-alt)))
     `(notmuch-tag-unread ((,class :foreground ,magenta-alt)))
     `(notmuch-tree-match-author-face ((,class :inherit notmuch-search-matching-authors)))
