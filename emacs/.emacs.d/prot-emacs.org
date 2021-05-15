@@ -5572,32 +5572,57 @@ variable =prot-notmuch-mode-line-search-args=).
 ;;; Search
   (setq notmuch-search-oldest-first nil)
   (setq notmuch-search-result-format
-        '(("date" . "%12s  ")
-          ("count" . "%-7s  ")
-          ("authors" . "%-20s  ")
-          ("subject" . "%-90s  ")
+        '(("date" . "%12s ")
+          ("count" . "%-7s")
+          ("authors" . "%-20s ")
+          ("subject" . "%-85s ")
           ("tags" . "(%s)")))
   (setq notmuch-tree-result-format
-        '(("date" . "%12s  ")
-          ("authors" . "%-27s")
+        '(("date" . "%12s ")
+          ("authors" . "%-20s ")
           ((("tree" . "%s")
             ("subject" . "%s"))
-           . " %-90s ")
+           . " %-85s ")
           ("tags" . "(%s)")))
   (setq notmuch-search-line-faces
         '(("unread" . notmuch-search-unread-face)
-          ("flagged" . notmuch-search-flagged-face)))
+          ("flag" . notmuch-search-flagged-face)))
   (setq notmuch-show-empty-saved-searches t)
   (setq notmuch-saved-searches
-        `((:name "inbox" :query "tag:inbox" :sort-order newest-first :key ,(kbd "i"))
-          (:name "todo" :query "tag:todo" :sort-order newest-first :key ,(kbd "t"))
-          (:name "unread" :query "tag:unread and tag:inbox" :sort-order newest-first :key ,(kbd "u"))
-          (:name "unread all" :query "tag:unread" :sort-order newest-first :key ,(kbd "U"))
-          (:name "mailing lists" :query "tag:list" :sort-order newest-first :key ,(kbd "l"))
-          (:name "flagged" :query "tag:flagged" :sort-order newest-first :key ,(kbd "f"))
-          (:name "replied" :query "tag:replied" :sort-order newest-first :key ,(kbd "r"))
-          (:name "drafts" :query "tag:draft" :sort-order newest-first :key ,(kbd "d"))
-          (:name "all mail" :query "*" :sort-order newest-first :key ,(kbd "a"))))
+        `(( :name "inbox"
+            :query "tag:inbox"
+            :sort-order newest-first
+            :key ,(kbd "i"))
+          ( :name "unread"
+            :query "tag:unread and tag:inbox"
+            :sort-order newest-first
+            :key ,(kbd "u"))
+          ( :name "unread all"
+            :query "tag:unread"
+            :sort-order newest-first
+            :key ,(kbd "U"))
+          ( :name "todo"
+            :query "tag:todo"
+            :sort-order newest-first
+            :key ,(kbd "t"))
+          ( :name "mailing lists"
+            :query "tag:list"
+            :sort-order newest-first
+            :key ,(kbd "l"))
+          ( :name "emacs-devel"
+            :query "from:emacs-devel@gnu.org or to:emacs-devel@gnu.org or subject:[emacs-devel]"
+            :sort-order newest-first
+            :key ,(kbd "e d"))
+          ( :name "emacs-orgmode"
+            :query "from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org or subject:[emacs-orgmode]"
+            :sort-order newest-first
+            :key ,(kbd "e o"))
+          ( :name "emacs-bugs"
+            :query "'to:\"/*@debbugs.gnu.org*/\"'"
+            :sort-order newest-first :key ,(kbd "e b"))
+          ( :name "emacs-humanities" 
+            :query "from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org or subject:[emacs-humanities]"
+            :sort-order newest-first :key ,(kbd "e h"))))
 
 ;;; Tags
   (setq notmuch-archive-tags '("-inbox" "+archived"))
@@ -5609,15 +5634,15 @@ variable =prot-notmuch-mode-line-search-args=).
   (setq notmuch-draft-save-plaintext 'ask)
   (setq notmuch-tagging-keys
         `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
-          (,(kbd "d") ("+del" "-inbox") "Mark for deletion")
-          (,(kbd "f") ("+flag") "Flag as important")
+          (,(kbd "d") ("+del" "-inbox" "-unread") "Mark for deletion")
+          (,(kbd "f") ("+flag" "-unread") "Flag as important")
           (,(kbd "r") notmuch-show-mark-read-tags "Mark as read")
           (,(kbd "s") ("+spam" "-inbox") "Mark as spam")
-          (,(kbd "t") ("+todo") "To-do")
+          (,(kbd "t") ("+todo" "-unread") "To-do")
           (,(kbd "u") ("+unread") "Mark as unread")))
   (setq notmuch-tag-formats
         '(("unread" (propertize tag 'face 'notmuch-tag-unread))
-          ("flagged" (propertize tag 'face 'notmuch-tag-flagged))))
+          ("flag" (propertize tag 'face 'notmuch-tag-flagged))))
   (setq notmuch-tag-deleted-formats
         '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
           (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
@@ -5666,6 +5691,8 @@ variable =prot-notmuch-mode-line-search-args=).
     (define-key map (kbd "/") #'notmuch-search-filter))) ; alias for l
 
 (prot-emacs-builtin-package 'prot-notmuch
+  (add-to-list 'notmuch-tag-formats
+               '("encrypted" (propertize tag 'face 'prot-notmuch-encrypted-tag)))
   (add-to-list 'notmuch-tag-formats
                '("todo" (propertize tag 'face 'prot-notmuch-todo-tag)))
   (add-to-list 'notmuch-tag-formats
