@@ -5649,10 +5649,10 @@ variable =prot-notmuch-mode-line-search-args=).
   (setq notmuch-draft-save-plaintext 'ask)
   (setq notmuch-tagging-keys
         `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
-          (,(kbd "d") ("+del" "-inbox" "-unread") "Mark for deletion")
+          (,(kbd "d") ("+del" "-inbox" "-archived" "-unread") "Mark for deletion")
           (,(kbd "f") ("+flag" "-unread") "Flag as important")
           (,(kbd "r") notmuch-show-mark-read-tags "Mark as read")
-          (,(kbd "s") ("+spam" "-inbox") "Mark as spam")
+          (,(kbd "s") ("+spam" "+del" "-inbox") "Mark as spam")
           (,(kbd "t") ("+todo" "-unread") "To-do")
           (,(kbd "u") ("+unread") "Mark as unread")))
   (setq notmuch-tag-formats
