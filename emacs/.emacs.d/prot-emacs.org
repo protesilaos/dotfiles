@@ -636,7 +636,7 @@ Relevant publications of mine that are not part of this document:
           (presentation . ( :fixed-pitch-family "Iosevka Comfy"
                             :fixed-pitch-regular-weight normal
                             :fixed-pitch-heavy-weight bold
-                            :fixed-pitch-height 140
+                            :fixed-pitch-height 150
                             :fixed-pitch-line-spacing nil
                             :variable-pitch-family "Source Sans Pro"
                             :variable-pitch-height 1.0
