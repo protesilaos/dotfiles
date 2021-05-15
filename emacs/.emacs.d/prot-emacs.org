@@ -445,7 +445,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'accented-background, 'underline-neutral,
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
-        modus-themes-hl-line 'accented
+        modus-themes-hl-line 'accented-background
 
         modus-themes-paren-match 'intense ; {nil,'subtle-bold,'intense,'intense-bold}
 
