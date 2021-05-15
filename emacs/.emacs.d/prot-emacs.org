@@ -5193,19 +5193,21 @@ configurations are about.
   about all the date-related specifiers, it is better to read the
   documentation with =M-x describe-variable RET format-time-string RET=.
 
-+ As for the configurations of =mm-encode= and =mml-sec=, those are meant to
-  come into effect when encrypting and signing an outgoing message with
-  =C-c C-m C-e= (=mml-secure-message-sign-encrypt=) and related.  The
-  optional guided key selection will ask for confirmation on who to
-  encrypt to.  It presents a list with the available keys.  Items are
-  marked with =m= and then the mail can be sent with the standard commands
-  (e.g. =C-c C-c=).  I used that setup for a while, but ultimately decided
-  that the extra steps did not make any difference to my workflow, as I
-  always double-check before sending out an email.
++ The =mm-encode= and =mml-sec= are meant to come into effect when
+  encrypting and signing an outgoing message, such as with =C-c C-m C-e=
+  (=mml-secure-message-sign-encrypt=).  The optional guided key selection
+  will ask for confirmation on who to encrypt to.  It presents a list
+  with the available keys.  Items are marked with =m= and then the mail
+  can be sent with the standard commands (e.g. =C-c C-c=).  I used that
+  setup for a while, but ultimately decided that the extra steps did not
+  make any difference to my workflow, as I always double-check before
+  sending out an email.
 
-Note that =message-cite-style= can be configured to mimic the style of
-other email programs when replying to a message, though I have not used
-any of those as I like the default.
++ The =gnus-dired= library can be used independently of Gnus (and should
+  thus be refactored as "message-dired.el" or something).  It provides
+  glue code that integrates Dired buffers with message composition, so
+  that one can attach either the file at point or the marked ones with
+  =C-c C-m C-a= (=gnus-dired-attach=).
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'auth-source
@@ -5230,7 +5232,6 @@ any of those as I like the default.
   (setq message-mail-user-agent t)      ; use `mail-user-agent'
   (setq mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
   (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
-  (setq message-cite-style nil)
   (setq message-citation-line-format "On %Y-%m-%d, %R %z, %f wrote:\n")
   (setq message-citation-line-function
         'message-insert-formatted-citation-line)
@@ -5240,6 +5241,9 @@ any of those as I like the default.
   (add-to-list 'mm-body-charset-encoding-alist '(utf-8 . base64))
 
   (add-hook 'message-setup-hook #'message-sort-headers))
+
+(prot-emacs-builtin-package 'gnus-dired ; does not require `gnus'
+  (add-hook 'dired-mode-hook #'gnus-dired-mode))
 
 (prot-emacs-builtin-package 'prot-mail
   ;; NOTE 2021-05-14: This is a generic indicator for new mail in the
@@ -5680,9 +5684,6 @@ variable =prot-notmuch-mode-line-search-args=).
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
   (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
-
-  (require 'gnus-dired)                         ; does not require `gnus'
-  (add-hook 'dired-mode-hook #'gnus-dired-mode) ; dired integration
 
   (let ((map global-map))
     (define-key map (kbd "C-c m") #'notmuch)
