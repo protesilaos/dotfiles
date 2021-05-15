@@ -5369,6 +5369,8 @@ $ notmuch search from:protesilaos tag:todo
 $ notmuch search from:protesilaos or from:socrates
 $ notmuch search 'from:"/(info|public)@protesilaos.com/"'
 $ notmuch search 'from:"/(info|public)@protesilaos.com/"' date:yesterday..today
+$ notmuch search '(from:"*@protesilaos.com*" not to:"*@protesilaos.com*")' date:today
+$ notmuch search from:"*@protesilaos.com*" date:today..08:00
 $ notmuch search body:recrudescence
 $ notmuch search path:inf/Inbox/** date:2021-05
 #+end_example
