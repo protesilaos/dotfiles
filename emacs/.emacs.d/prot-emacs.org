@@ -5345,7 +5345,7 @@ While I send messages with Emacs' own facility which relies on the
 in the future, as I weigh the pros and cons of programs like =msmtp=,
 though this is low on my list of priorities.  As for the actual
 composition of emails, it is done by Emacs' =message.el= library
-([[#h:a82766be-daab-4925-b23a-1c5ffd47e599][Client-agnostic email settings (and prot-mail.el)]].
+([[#h:a82766be-daab-4925-b23a-1c5ffd47e599][Client-agnostic email settings (and prot-mail.el)]]).
 
 Tagging is integral to the Notmuch experience, because it allows you to
 cope with evolving circumstances.  It is best to consider this by means
