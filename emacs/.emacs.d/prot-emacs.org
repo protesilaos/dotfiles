@@ -5193,15 +5193,15 @@ configurations are about.
   about all the date-related specifiers, it is better to read the
   documentation with =M-x describe-variable RET format-time-string RET=.
 
-+ As for the configurations of =mm-encode= and =mml-sec=, these are meant to
++ As for the configurations of =mm-encode= and =mml-sec=, those are meant to
   come into effect when encrypting and signing an outgoing message with
-  =C-c C-m C-e= (=mml-secure-message-sign-encrypt=) and related.  The guided
-  key selection will ask for confirmation on who to encrypt to.  It
-  presents a list with the available keys.  Items are marked with =m= and
-  then the mail can be sent with the standard commands (e.g. =C-c C-c=).
-  I select myself and whomever the other party is.  This is an extra
-  step just to make sure that I have everything right with regard to the
-  keys and the correspondent[s] when using encryption.
+  =C-c C-m C-e= (=mml-secure-message-sign-encrypt=) and related.  The
+  optional guided key selection will ask for confirmation on who to
+  encrypt to.  It presents a list with the available keys.  Items are
+  marked with =m= and then the mail can be sent with the standard commands
+  (e.g. =C-c C-c=).  I used that setup for a while, but ultimately decided
+  that the extra steps did not make any difference to my workflow, as I
+  always double-check before sending out an email.
 
 Note that =message-cite-style= can be configured to mimic the style of
 other email programs when replying to a message, though I have not used
@@ -5214,8 +5214,8 @@ any of those as I like the default.
   (setq user-mail-address "public@protesilaos.com"))
 
 (prot-emacs-builtin-package 'mm-encode
-  (setq mm-encrypt-option 'guided)
-  (setq mm-sign-option 'guided))
+  (setq mm-encrypt-option nil) ; use 'guided if you need more control
+  (setq mm-sign-option nil))   ; same
 
 (prot-emacs-builtin-package 'mml-sec
   (setq mml-secure-openpgp-encrypt-to-self t)
