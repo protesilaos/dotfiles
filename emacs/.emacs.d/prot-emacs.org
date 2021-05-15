@@ -456,7 +456,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts nil
+        modus-themes-prompts 'intense-gray
 
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
@@ -474,8 +474,8 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-headings nil ; this is an alist: read the manual or its doc string
 
         modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings nil
-        modus-themes-scale-headings nil
+        modus-themes-variable-pitch-headings t
+        modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
