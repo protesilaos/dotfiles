@@ -5433,11 +5433,14 @@ without adding the tree indicators and without de-duplicating subject
 lines across the threads.  Go back to the standard search view with =S=
 (=notmuch-search-from-tree-current-query=).
 
-All those happen in new buffers: you do not lose anything.  You can
-dismiss the current buffer with =q= (=notmuch-bury-or-kill-this-buffer=),
-which takes you back to the previous view.  Of course, you may always
-use commands like =previous-buffer= as well as minibuffer completion.  The
-point is that you can easily switch views to get the job done.
+All those changes in presentation happen in new buffers: you do not lose
+anything, unless you explicitly kill those buffers.  For the sake of
+convenience, Notmuch provides the =notmuch-bury-or-kill-this-buffer=
+command, bound to =q= in all those views.  Read its doc string to know
+when it kills and when it buries the buffer.  Of course, you may always
+use commands like =previous-buffer= as well as minibuffer completion and
+=M-x ibuffer= or whatever else you normally use.  The point is that you
+can easily switch views to get the job done.
 
 To read a thread, hit =RET= (=notmuch-search-show-thread=) with point over
 it in any those search/tree views.  That puts you in =notmuch-show-mode=
@@ -5450,6 +5453,14 @@ the thread, while =N= and =P= always go to the next and previous items,
 respectively.  An Imenu index is also available, so you can jump to any
 heading using minibuffer completion (with =M-x imenu= or some third-party
 extension like the =consult-imenu= that I use).
+
+When you compose an email, such as by replying with =r= or =R=, you are
+taken to a buffer that leverages functionality provided by the built-in
+=message.el=.  As always, run =C-h m= to get a sense of how things work and
+what commands you may call: =C-c C-c= dispatches the email, =C-c C-a=
+prompts for an attachement, =C-c C-m C-e= encrypts and signs, =C-c C-m C-a=
+from a Dired buffer attaches the file at point or any marked ones (refer
+to [[#h:a82766be-daab-4925-b23a-1c5ffd47e599][Client-agnostic email settings (and prot-mail.el)]]).
 
 For searching to be productive, we must apply tags in accordance with a
 defined method of organising our workflow (more about my approach
