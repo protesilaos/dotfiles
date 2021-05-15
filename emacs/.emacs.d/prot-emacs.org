@@ -5717,7 +5717,7 @@ variable =prot-notmuch-mode-line-search-args=).
   ;; pass arbitrary search terms to it.
   (setq prot-notmuch-mode-line-search-args "tag:unread and tag:inbox")
   (setq prot-notmuch-mode-line-indicator-commands
-        '(notmuch-refresh-this-buffer))
+        '(notmuch notmuch-refresh-this-buffer))
   ;; Mode line indicator with the number of new mails.
   (prot-notmuch-mail-indicator 1)
 
