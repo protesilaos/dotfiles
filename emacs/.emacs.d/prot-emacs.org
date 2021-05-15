@@ -8716,6 +8716,93 @@ consider two highly valuable blog posts by Karthik Chikmagalur:
 + [[https://karthinks.com/software/batteries-included-with-emacs/][Batteries included with Emacs]] (2020-11-17).
 + [[https://karthinks.com/software/more-batteries-included-with-emacs/][More batteries included with Emacs]] (2020-12-11).
 
+** Compare Gnus, Mu4e, Notmuch?
+:PROPERTIES:
+:CUSTOM_ID: h:7be4b564-4360-4905-aa10-1405fba6ea2a
+:END:
+
+This question is best answered in reference to one's background and the
+intuitions made possible by it.  The short answer is that all three are
+good in different ways: the best tool for the job is the one that makes
+you most productive in the moment.
+
+Now to the longer reply, which fleshes out this time-sensitive
+subjectivity I am hinting at.
+
+Before switching to Emacs in the summer of 2019, I used to use Mutt or
+Thunderbird as a plan B (starting from mid 2016).  At that time I did
+not receive a lot of email, maybe 2-3 per week or even less, and did not
+follow any mailing lists.  My Mutt setup was just a basic front-end to
+the IMAP server, meaning that I did not have anything like =offlineimap=
+or =mbsync= set up.  My workflow back then was heavily focused on
+elaborate directories/folders to store the mail I wanted.  For example,
+I had an "archive" directory for each of my three email accounts and
+inside of that I had yearly archives.  To cut the long story short, in
+order to find an email I had to go looking for it at some exact
+location.  It was not efficient, but I was okay with it as my mail
+traffic was very low.
+
+Once I became a full-time Emacs user, I decided to push the boundaries
+of what I could do with email.  The most popular option seemed to be
+Mu4e so I picked that one (autumn 2019).  It was easy for me to set up
+and I liked its middle-of-the-road approach of combining a typical
+directory-based structure with a potent search tool.  I had stopped
+doing the complex directory structures with my archives and would keep
+everything in my inbox.  Still, the volume of incoming mail was very
+low: I was not really using the search features and was reverting to the
+directory views instead.
+
+Thus I decided to go with Gnus (early 2020) whose value proposition
+seemed to be /"directories are first-class citizens here, same for
+Newsgroup sources"/.  Gnus calls all of them "groups" based on its useful
+metaphor of treating everything as ephemeral news.  What I learnt from
+my time with Gnus is that:
+
+1. Mailing lists are worth paying attention to as you can learn a lot
+   from other people's input in various conversations (emacs-devel, bug
+   reports, etc.).
+
+2. It is good to use =mbsync= or equivalent as it removes the burden from
+   Emacs and allows you to keep a copy of your mail correspondence.  I
+   had started with Gnus' nnimap backend, which communicated directly
+   with the IMAP server, but once my email traffic started to increase,
+   I learnt the hard way that =mbsync= was better suited for the task, as
+   it did not block Emacs.
+
+3. Directory-based workflows do not scale.  As I started to get more
+   email, I realised that I often needed to quickly retrieve some piece
+   of information that was kept in one of my three inbox directories or
+   some other location.  Gnus has search methods but there are
+   inconsistencies between nntp, nnmaildir, etc. to the effect that I
+   would need to have special rules for each case.  Maybe I did not read
+   the manual very carefully?  Perhaps I did not understand something?
+   At any rate, it did not feel like worth the effort.
+
+The search engine I wanted to use with Gnus was =notmuch=, because it is
+mentioned in the Gnus manual.  As I was looking for a way to be in full
+control of my email setup, I thought it would be better to try Notmuch
+without the layer of abstraction that Gnus added on top of it, stop
+following a directory-based workflow, and embrace filtering and
+narrowing (concepts I learnt to appreciate through my daily usage of
+Emacs).
+
+My few test on the command-line convinced me to refactor my email setup.
+So I decided to read through all the manpages and then go with
+notmuch.el (made the switch between 2021-05-13 and 2021-05-14).  I did
+not want to revert to Mu4e because I had the feeling that its hybrid
+approach to directories and search would push me back to my old
+inefficient habits.  Whereas Notmuch is all about tagging and filtering,
+which makes me believe that I can push myself into new territory (the
+configs and docs: [[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]]).
+
+This is not to say that any of these tools is inherently better/worse
+than its peers.  You can be productive with all three of them (my old
+configurations for Mu4e and Gnus can be found in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]).
+What matters is to identify your requirements, set your expectations or
+ambitions, and pick the option that can optimise your productivity.  The
+point is to not be dogmatic about it: just use what works for you the
+same way I did in through journey to where I currently am.
+
 ** Have you tried Gnus for RSS feeds?
 :PROPERTIES:
 :CUSTOM_ID: h:7e4448ec-3878-4ea2-9cd6-75e9faaac373
