@@ -40,24 +40,30 @@
   "Extensions for notmuch.el."
   :group 'notmuch)
 
+(defface prot-notmuch-encrypted-tag
+  '((((class color) (min-colors 88) (background light))
+     :foreground "#5d3026")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#f8dec0"))
+  "Face for the 'encrypted' tag or related in Notmuch.
+Refer to the variable `notmuch-tag-formats' for how to assign
+those.")
+
 (defface prot-notmuch-spam-tag
-  '((default :inherit (bold italic))
+  '((default :inherit italic)
     (((class color) (min-colors 88) (background light))
      :foreground "#70480f")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#c4d030")
-    (t :foreground "yellow"))
+     :foreground "#c4d030"))
   "Face for the 'spam' tag or related in Notmuch.
 Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
 
 (defface prot-notmuch-todo-tag
-  '((default :inherit (bold italic))
-    (((class color) (min-colors 88) (background light))
-     :foreground "#145c33")
+  '((((class color) (min-colors 88) (background light))
+     :foreground "#a60000")
     (((class color) (min-colors 88) (background dark))
-     :foreground "#00c06f")
-    (t :foreground "green"))
+     :foreground "#ff8059"))
   "Face for the 'todo' tag or related in Notmuch.
 Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
