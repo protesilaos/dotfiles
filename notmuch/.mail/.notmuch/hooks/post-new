@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# remove "unread" from "replied"
-notmuch tag -unread -new -- tag:replied
-
 # post-new --- Notmuch rules that run after notmuch new
 #
 # Copyright (c) 2021  Protesilaos Stavrou <info@protesilaos.com>
@@ -27,6 +24,9 @@ notmuch tag -unread -new -- tag:replied
 #
 # Part of my dotfiles: <https://gitlab.com/protesilaos/dotfiles>.
 
+
+# remove "unread" from "replied"
+notmuch tag -unread -new -- tag:replied
 
 # tag all "new" messages "inbox" and "unread"
 notmuch tag +inbox +unread -new -- tag:new
