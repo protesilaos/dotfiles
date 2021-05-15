@@ -69,6 +69,8 @@ When optional INHIBIT is non-nil, do not show thediary buffer."
   (when prot-diary--current-window-configuration-point
     (goto-char prot-diary--current-window-configuration-point)))
 
+(autoload 'message-goto-body "message")
+
 ;;;###autoload
 (defun prot-diary-mail-entries (&optional ndays)
   "Email diary entries for NDAYS or `diary-mail-days'.
@@ -88,6 +90,7 @@ my inbox and then telling me 'Oh, nothing of interest here'?)."
     (let ((entries)
           (diary-display-function #'diary-fancy-display)
           (diary-mail-addr user-mail-address)
+          (mail-user-agent 'message-user-agent)
           (n (or ndays diary-mail-days)))
       (prot-common-number-interger-positive-p n)
       (prot-diary--store-window-configuration)
@@ -100,9 +103,11 @@ my inbox and then telling me 'Oh, nothing of interest here'?)."
               (prot-diary--restore-window-configuration))
             (compose-mail diary-mail-addr
                           (concat "Diary entries generated "
-                                  (calendar-date-string (calendar-current-date))))
+                                  (calendar-date-string (calendar-current-date)))
+                          nil)
+            (message-goto-body)
             (insert entries)
-            (call-interactively (get mail-user-agent 'sendfunc)))
+            (funcall (get mail-user-agent 'sendfunc)))
         (message "No diary entries; skipping email delivery")))))
 
 ;;;###autoload
