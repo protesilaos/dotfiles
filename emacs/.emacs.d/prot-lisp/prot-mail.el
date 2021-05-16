@@ -123,7 +123,8 @@ Meant to be assigned to a hook, such as `message-setup-hook'."
          (old-indicator prot-mail--mode-line-mail-indicator))
     (cond
      (count
-      (setq global-mode-string (delete old-indicator global-mode-string))
+      (when old-indicator
+        (setq global-mode-string (delete old-indicator global-mode-string)))
       (setq global-mode-string (push indicator global-mode-string))
       (setq prot-mail--mode-line-mail-indicator indicator))
      ((string= count "0")
