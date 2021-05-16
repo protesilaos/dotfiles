@@ -1400,9 +1400,12 @@ try.
                                    (?v "Variables" font-lock-variable-name-face)))))
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
-
-  (setq consult-preview-key nil) ; FIXME 2021-04-14: Does not work with `prot-minibuffer.el'
   (setq consult-find-command "find . -iname *ARG* OPTS")
+  (setq consult-preview-key 'any)
+
+  ;; Enables previews inside the standard *Completions* buffer (what
+  ;; `prot-minibuffer.el' uses).
+  (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
   (let ((map global-map))
     (define-key map (kbd "C-x M-:") #'consult-complex-command)
