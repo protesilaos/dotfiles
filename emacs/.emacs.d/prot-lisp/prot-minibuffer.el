@@ -580,7 +580,7 @@ line number in the Completions' buffer."
         (prot-minibuffer--goto-line n (select-window (prot-minibuffer--get-completion-window))))
        (t
         (user-error "Only use this inside the minibuffer of the Completions")))
-    (user-error "Pass a numeric argument first")))
+    (user-error "Pass a numeric prefix argument before calling this command")))
 
 (defvar crm-completion-table)
 
