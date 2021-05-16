@@ -121,14 +121,13 @@ Meant to be assigned to a hook, such as `message-setup-hook'."
   (let* ((count (prot-mail--new-mail))
          (indicator (prot-mail--mode-string count))
          (old-indicator prot-mail--mode-line-mail-indicator))
+    (when old-indicator
+      (setq global-mode-string (delete old-indicator global-mode-string)))
     (cond
-     (count
-      (when old-indicator
-        (setq global-mode-string (delete old-indicator global-mode-string)))
+     ((> (string-to-number count) 1)
       (setq global-mode-string (push indicator global-mode-string))
       (setq prot-mail--mode-line-mail-indicator indicator))
-     ((string= count "0")
-      (setq global-mode-string (delete old-indicator global-mode-string))
+     (t
       (setq prot-mail--mode-line-mail-indicator nil)))))
 
 (defvar prot-mail--mode-line-mail-sync-hook nil

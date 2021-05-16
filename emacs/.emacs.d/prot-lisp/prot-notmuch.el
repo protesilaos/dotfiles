@@ -152,14 +152,13 @@ the function `prot-notmuch-mail-indicator'."
   (let* ((count (prot-notmuch--new-mail))
          (indicator (prot-notmuch--mode-string count))
          (old-indicator prot-notmuch--mode-line-mail-indicator))
+    (when old-indicator
+      (setq global-mode-string (delete old-indicator global-mode-string)))
     (cond
-     (count
-      (when old-indicator
-        (setq global-mode-string (delete old-indicator global-mode-string)))
+     ((> (string-to-number count) 1)
       (setq global-mode-string (push indicator global-mode-string))
       (setq prot-notmuch--mode-line-mail-indicator indicator))
-     ((string= count "0")
-      (setq global-mode-string (delete old-indicator global-mode-string))
+     (t
       (setq prot-notmuch--mode-line-mail-indicator nil)))))
 
 (defvar prot-notmuch--mode-line-mail-sync-hook nil
