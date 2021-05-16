@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -454,7 +454,7 @@ This should be added `wdired-mode-hook'.  For more, refer to
 
 (defun prot-bongo--dired-insert-files ()
   "Add files in a `dired' buffer to the `bongo' playlist."
-  (let ((media (or (dired-get-marked-files) (dired-filename-at-point))))
+  (let ((media (or (dired-get-marked-files) (dired-x-guess-file-name-at-point)))) ; emacs28
     (with-current-buffer (bongo-playlist-buffer)
       (goto-char (point-max))
       (mapc (lambda (x)
