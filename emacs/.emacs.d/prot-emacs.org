@@ -2,6 +2,7 @@
 #+AUTHOR: Protesilaos Stavrou
 #+EMAIL: public@protesilaos.com
 #+OPTIONS: toc:nil
+#+STARTUP: content
 #+MACRO: export-date (eval (format-time-string "%F %R %z" (current-time)))
 #+MACRO: emacs-development-version (eval (substring (emacs-version) 0 17))
 
