@@ -155,7 +155,7 @@ the function `prot-notmuch-mail-indicator'."
     (when old-indicator
       (setq global-mode-string (delete old-indicator global-mode-string)))
     (cond
-     ((> (string-to-number count) 1)
+     ((>= (string-to-number count) 1)
       (setq global-mode-string (push indicator global-mode-string))
       (setq prot-notmuch--mode-line-mail-indicator indicator))
      (t

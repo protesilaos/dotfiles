@@ -124,7 +124,7 @@ Meant to be assigned to a hook, such as `message-setup-hook'."
     (when old-indicator
       (setq global-mode-string (delete old-indicator global-mode-string)))
     (cond
-     ((> (string-to-number count) 1)
+     ((>= (string-to-number count) 1)
       (setq global-mode-string (push indicator global-mode-string))
       (setq prot-mail--mode-line-mail-indicator indicator))
      (t
