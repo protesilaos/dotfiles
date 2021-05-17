@@ -1128,7 +1128,30 @@ Finally, here is an overview of the settings covered herein:
 + Key bindings :: The key bindings in the pattern of =s-KEY= follow the
   principles I outline in my [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note about the use of the Super key]].  They
   are included here because they are related to minibuffer-centric
-  actions.
+  actions.  As for the various keys to perform completion, we have the
+  following:
+
+  - The =RET= key always chooses the current candidate and exits,
+    regardless of whether it is called from inside the minibuffer or
+    the Completions' buffer.
+
+  - The =TAB= key completes the candidate when called from the
+    minibuffer.  If there are only a few candidates, repeated presses
+    of the key cycle through them, again when called from the
+    minibuffer.  If the =TAB= is pressed inside the Completions' buffer
+    it does either of two things: (i) when completing directories
+    using =find-file= or equivalent, it expands the directory at point
+    and moves to the minibuffer from where to continue with completion
+    inside the selected directory, or (ii) it selects the current
+    candidate if it is unique and/or a file and exits.
+
+  - The =M-RET= key behaves exactly like =RET= except when dealing with
+    prompts that accepts multiple inputs (=completing-read-multiple=).
+    Those prompts have =[CRM]= label prefixed to them.  In those cases,
+    =M-RET= from inside the Completions' buffer selects the current
+    candidate, inserts a delimiter, and goes back to the Completions
+    buffer to repeat the process.  To exit from that loop, you can use
+    either =TAB= or =RET= based on what is noted above.
 
 Also check my setup for the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][Minibuffer history (savehist-mode)]].  After
 several months of full time usage, I am confident in the built-in
