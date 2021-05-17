@@ -1222,7 +1222,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (setq-default prot-minibuffer-mini-cursors t) ; also check `prot-cursor.el'
   (setq prot-minibuffer-remove-shadowed-file-names t)
   (setq prot-minibuffer-minimum-input 3)
-  (setq prot-minibuffer-live-update-delay 0.3)
+  (setq prot-minibuffer-live-update-delay 0.5)
 
   ;; ;; NOTE: `prot-minibuffer-completion-blocklist' can be used for
   ;; ;; commands with lots of candidates, depending also on how low
