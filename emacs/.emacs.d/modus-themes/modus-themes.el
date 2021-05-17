@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.3.2
-;; Last-Modified: <2021-05-14 23:36:21 +0300>
+;; Last-Modified: <2021-05-17 09:56:29 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -57,6 +57,7 @@
 ;;     modus-themes-region                         (choice)
 ;;     modus-themes-links                          (choice)
 ;;     modus-themes-completions                    (choice)
+;;     modus-themes-mail-citations                 (choice)
 ;;     modus-themes-success-deuteranopia           (boolean)
 ;;
 ;; The default scale for headings is as follows (it can be customized as
@@ -704,9 +705,9 @@ symbol and the latter as a string.")
     (green . "#44bc44")
     (green-alt . "#70b900")
     (green-alt-other . "#00c06f")
-    (green-faint . "#88cf88")
-    (green-alt-faint . "#a8cf88")
-    (green-alt-other-faint . "#88cfaf")
+    (green-faint . "#78bf78")
+    (green-alt-faint . "#99b56f")
+    (green-alt-other-faint . "#88bf99")
     (yellow . "#e0cc00")
     (yellow-alt . "#c4d030")
     (yellow-alt-other . "#e3c55f")
@@ -716,9 +717,9 @@ symbol and the latter as a string.")
     (blue . "#2fafff")
     (blue-alt . "#79a8ff" )
     (blue-alt-other . "#00bcff")
-    (blue-faint . "#82b0f0")
-    (blue-alt-faint . "#a0acf5")
-    (blue-alt-other-faint . "#87c8ff")
+    (blue-faint . "#82b0ec")
+    (blue-alt-faint . "#a0acef")
+    (blue-alt-other-faint . "#80b2f0")
     (magenta . "#feacd0")
     (magenta-alt . "#f78fe7")
     (magenta-alt-other . "#b6a0ff")
@@ -2388,6 +2389,28 @@ configured to conform with deuteranopia: `modus-themes-diffs'."
   :type 'boolean
   :link '(info-link "(modus-themes) Success' color-code"))
 
+(defcustom modus-themes-mail-citations nil
+  "Control the color of citations in messages or email clients.
+
+Nil (the default) means to use a variety of contrasting hues to
+denote depth in nested citations.  Colors are fairly easy to tell
+apart.
+
+Option `desaturated' maintains a color-based distinction between
+citation levels but the colors it applies have very subtle
+differences between them.
+
+Option `monochrome' turns all citations that would otherwise be
+colored into a uniform shade of shade of gray."
+  :group 'modus-themes
+  :package-version '(modus-themes . "1.4.0")
+  :version "28.1"
+  :type '(choice
+          (const :format "[%v] %t\n" :tag "Colorful mail citations with contrasting hues (default)" nil)
+          (const :format "[%v] %t\n" :tag "Like the default, but with less saturated colors" desaturated)
+          (const :format "[%v] %t\n" :tag "Uniformly gray mail citations" monochrome))
+  :link '(info-link "(modus-themes) Mail citations"))
+
 
 
 ;;; Internal functions
@@ -2886,6 +2909,16 @@ accented."
     ('underline-only-neutral (list :background 'unspecified :underline lineneutral))
     ('underline-only-accented (list :background 'unspecified :underline lineaccent))
     (_ (list :background bgdefault))))
+
+(defun modus-themes--mail-cite (mainfg subtlefg)
+  "Combinations for `modus-themes-mail-citations'.
+
+MAINFG is an accented foreground value.  SUBTLEFG is its
+desaturated counterpart."
+  (pcase modus-themes-mail-citations
+    ('monochrome (list :inherit 'shadow))
+    ('desaturated (list :foreground subtlefg))
+    (_ (list :foreground mainfg))))
 
 
 
@@ -3700,7 +3733,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(cperl-array-face ((,class :inherit font-lock-keyword-face)))
     `(cperl-hash-face ((,class :inherit font-lock-variable-name-face)))
 ;;;;; csv-mode
-    `(csv-separator-face ((,class :background ,bg-special-cold :foreground ,fg-main)))
+    `(csv-separator-face ((,class :foreground ,red-intense)))
 ;;;;; ctrlf
     `(ctrlf-highlight-active ((,class :inherit (modus-themes-search-success bold))))
     `(ctrlf-highlight-line ((,class :inherit modus-themes-hl-line)))
@@ -4453,17 +4486,17 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(git-walktree-tree-face ((,class :foreground ,magenta)))
 ;;;;; gnus
     `(gnus-button ((,class :inherit button)))
-    `(gnus-cite-1 ((,class :foreground ,blue-faint)))
-    `(gnus-cite-10 ((,class :foreground ,yellow-alt-other)))
-    `(gnus-cite-11 ((,class :foreground ,magenta-alt)))
-    `(gnus-cite-2 ((,class :foreground ,green-alt-other)))
-    `(gnus-cite-3 ((,class :foreground ,red-alt-other)))
-    `(gnus-cite-4 ((,class :foreground ,cyan)))
-    `(gnus-cite-5 ((,class :foreground ,yellow-alt)))
-    `(gnus-cite-6 ((,class :foreground ,magenta)))
-    `(gnus-cite-7 ((,class :foreground ,green-alt)))
-    `(gnus-cite-8 ((,class :foreground ,magenta-alt-other)))
-    `(gnus-cite-9 ((,class :foreground ,cyan-alt)))
+    `(gnus-cite-1 ((,class :inherit message-cited-text-1)))
+    `(gnus-cite-2 ((,class :inherit message-cited-text-2)))
+    `(gnus-cite-3 ((,class :inherit message-cited-text-3)))
+    `(gnus-cite-4 ((,class :inherit message-cited-text-4)))
+    `(gnus-cite-5 ((,class :inherit gnus-cite-1)))
+    `(gnus-cite-6 ((,class :inherit gnus-cite-2)))
+    `(gnus-cite-7 ((,class :inherit gnus-cite-3)))
+    `(gnus-cite-8 ((,class :inherit gnus-cite-4)))
+    `(gnus-cite-9 ((,class :inherit gnus-cite-1)))
+    `(gnus-cite-10 ((,class :inherit gnus-cite-2)))
+    `(gnus-cite-11 ((,class :inherit gnus-cite-3)))
     `(gnus-cite-attribution ((,class :inherit italic :foreground ,fg-main)))
     `(gnus-emphasis-bold ((,class :inherit bold)))
     `(gnus-emphasis-bold-italic ((,class :inherit bold-italic)))
@@ -5280,10 +5313,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(mentor-highlight-face ((,class :inherit modus-themes-subtle-blue)))
     `(mentor-tracker-name ((,class :foreground ,magenta-alt)))
 ;;;;; messages
-    `(message-cited-text-1 ((,class :foreground ,blue-faint)))
-    `(message-cited-text-2 ((,class :foreground ,green-alt-other)))
-    `(message-cited-text-3 ((,class :foreground ,red-alt-other)))
-    `(message-cited-text-4 ((,class :foreground ,cyan)))
+    `(message-cited-text-1 ((,class ,@(modus-themes--mail-cite blue-faint fg-special-cold))))
+    `(message-cited-text-2 ((,class ,@(modus-themes--mail-cite green-faint fg-special-mild))))
+    `(message-cited-text-3 ((,class ,@(modus-themes--mail-cite red-faint fg-special-calm))))
+    `(message-cited-text-4 ((,class ,@(modus-themes--mail-cite yellow-faint fg-special-warm))))
     `(message-header-cc ((,class :foreground ,blue-alt-other)))
     `(message-header-name ((,class :inherit bold :foreground ,cyan)))
     `(message-header-newsgroups ((,class :inherit message-header-other)))
@@ -5339,13 +5372,13 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(mpdel-playlist-current-song-face ((,class :inherit bold :foreground ,blue-alt-other)))
 ;;;;; mu4e
     `(mu4e-attach-number-face ((,class :inherit bold :foreground ,fg-dim)))
-    `(mu4e-cited-1-face ((,class :foreground ,blue-faint)))
-    `(mu4e-cited-2-face ((,class :foreground ,green-alt-other)))
-    `(mu4e-cited-3-face ((,class :foreground ,red-alt-other)))
-    `(mu4e-cited-4-face ((,class :foreground ,cyan)))
-    `(mu4e-cited-5-face ((,class :foreground ,yellow-alt)))
-    `(mu4e-cited-6-face ((,class :foreground ,magenta)))
-    `(mu4e-cited-7-face ((,class :foreground ,green-alt)))
+    `(mu4e-cited-1-face ((,class :inherit message-cited-text-1)))
+    `(mu4e-cited-2-face ((,class :inherit message-cited-text-2)))
+    `(mu4e-cited-3-face ((,class :inherit message-cited-text-3)))
+    `(mu4e-cited-4-face ((,class :inherit message-cited-text-4)))
+    `(mu4e-cited-5-face ((,class :inherit message-cited-text-1)))
+    `(mu4e-cited-6-face ((,class :inherit message-cited-text-2)))
+    `(mu4e-cited-7-face ((,class :inherit message-cited-text-3)))
     `(mu4e-compose-header-face ((,class :inherit mu4e-compose-separator-face)))
     `(mu4e-compose-separator-face ((,class :inherit modus-themes-intense-neutral)))
     `(mu4e-contact-face ((,class :inherit message-header-to)))
@@ -5440,7 +5473,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(notmuch-tree-match-tag-face ((,class :inherit notmuch-tag-face)))
     `(notmuch-tree-no-match-face ((,class :inherit shadow)))
     `(notmuch-tree-no-match-date-face ((,class :inherit shadow)))
-    `(notmuch-wash-cited-text ((,class :foreground ,blue-faint)))
+    `(notmuch-wash-cited-text ((,class :inherit message-cited-text-1)))
     `(notmuch-wash-toggle-button ((,class :background ,bg-alt :foreground ,fg-alt)))
 ;;;;; num3-mode
     `(num3-face-even ((,class :inherit bold :background ,bg-alt)))
