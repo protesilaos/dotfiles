@@ -5476,6 +5476,16 @@ use commands like =previous-buffer= as well as minibuffer completion and
 =M-x ibuffer= or whatever else you normally use.  The point is that you
 can easily switch views to get the job done.
 
+Speaking of multiple buffers, Notmuch provides two commands to refresh
+those: (i) =notmuch-refresh-this-buffer=, which is bound by default to the
+usual =g= key as well as ===, and (ii) =notmuch-refresh-all-buffers= which is
+assigned to =M-g=.  My =prot-notmuch-refresh-buffer= is a wrapper of those
+two and is mapped to =g=: when called with a =C-u= prefix argument, it
+refreshes all buffers, else it operates on the current one.  There is
+also =G= (=notmuch-poll-and-refresh-this-buffer=) which runs =notmuch new=
+externally and then refreshes the buffer---personally I don't need this
+as mbsync automatically does that every few minutes.
+
 To read a thread, hit =RET= (=notmuch-search-show-thread=) with point over
 it in any those search/tree views.  That puts you in =notmuch-show-mode=
 (did I tell you about =C-h m=?).  Notmuch organises all messages in the
@@ -5582,10 +5592,10 @@ This is because (i) the CLI program is independent of Emacs, and (ii)
 =notmuch.el= is bundled up together with the command-line tool because the
 two are developed by the same group of people.  All good!
 
-Finally, my =prot-notmuch.el= contains some minor stylistic extras
-including a mode line indicator that shows a count of all items matching
-the search terms =tag:unread and tag:inbox= (can be configured by the
-variable =prot-notmuch-mode-line-search-args=).
+Finally, my =prot-notmuch.el= contains commands and some minor stylistic
+extras including a mode line indicator that shows a count of all items
+matching the search terms =tag:unread and tag:inbox= (can be configured by
+the variable =prot-notmuch-mode-line-search-args=).
 
 #+begin_src emacs-lisp
 ;; I install notmuch from the distro's repos because the CLI program is
@@ -5755,7 +5765,9 @@ variable =prot-notmuch-mode-line-search-args=).
   ;; Mode line indicator with the number of new mails.
   (prot-notmuch-mail-indicator 1)
 
-  (add-hook 'notmuch-hello-mode-hook #'prot-notmuch-widget-field-face-remap))
+  (add-hook 'notmuch-hello-mode-hook #'prot-notmuch-widget-field-face-remap)
+
+  (define-key notmuch-search-mode-map (kbd "g") #'prot-notmuch-refresh-buffer))
 #+end_src
 
 And here is =prot-notmuch.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):

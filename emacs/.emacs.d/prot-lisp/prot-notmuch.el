@@ -100,6 +100,21 @@ Add this to `notmuch-hello-mode-hook'."
   (when (derived-mode-p 'notmuch-hello-mode)
     (face-remap-add-relative 'widget-field 'prot-notmuch-widget-field)))
 
+;;;; Commands
+
+(autoload 'notmuch-refresh-this-buffer "notmuch")
+(autoload 'notmuch-refresh-all-buffers "notmuch")
+
+;;;###autoload
+(defun prot-notmuch-refresh-buffer (&optional arg)
+  "Run `notmuch-refresh-this-buffer'.
+With optional prefix ARG (\\[universal-argument]) call
+`notmuch-refresh-all-buffers'."
+  (interactive "P")
+  (if arg
+      (notmuch-refresh-all-buffers)
+    (notmuch-refresh-this-buffer)))
+
 ;;;; Mode line unread indicator
 
 ;; NOTE 2021-05-14: I have an alternative to this in prot-mail.el which
