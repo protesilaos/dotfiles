@@ -461,6 +461,8 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
+        modus-themes-mail-citations 'monochrome ; {nil,'desaturated,'monochrome}
+
         ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
         ;; 'bg-only-no-extend, 'accent, 'accent-no-extend
         modus-themes-region 'no-extend
