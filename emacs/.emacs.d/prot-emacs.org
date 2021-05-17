@@ -5623,9 +5623,8 @@ the variable =prot-notmuch-mode-line-search-args=).
   (setq notmuch-hello-auto-refresh t)
   (setq notmuch-hello-recent-searches-max 20)
   (setq notmuch-hello-thousands-separator "")
-  (setq notmuch-hello-sections
-        (list #'notmuch-hello-insert-saved-searches
-	          #'notmuch-hello-insert-recent-searches))
+  ;; ;; See my variant of it in `prot-notmuch' below.
+  ;; (setq notmuch-hello-sections '(notmuch-hello-insert-saved-searches))
   (setq notmuch-show-all-tags-list nil)
 
 ;;; Search
@@ -5747,6 +5746,8 @@ the variable =prot-notmuch-mode-line-search-args=).
     (define-key map (kbd "/") #'notmuch-search-filter))) ; alias for l
 
 (prot-emacs-builtin-package 'prot-notmuch
+  (setq notmuch-hello-sections '(prot-notmuch-hello-insert-saved-searches))
+
   (add-to-list 'notmuch-tag-formats
                '("encrypted" (propertize tag 'face 'prot-notmuch-encrypted-tag)))
   (add-to-list 'notmuch-tag-formats

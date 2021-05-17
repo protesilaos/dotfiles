@@ -40,6 +40,8 @@
   "Extensions for notmuch.el."
   :group 'notmuch)
 
+;;;; Utilities
+
 (defface prot-notmuch-encrypted-tag
   '((((class color) (min-colors 88) (background light))
      :foreground "#5d3026")
@@ -99,6 +101,46 @@ Add this function to `message-header-setup-hook'."
 Add this to `notmuch-hello-mode-hook'."
   (when (derived-mode-p 'notmuch-hello-mode)
     (face-remap-add-relative 'widget-field 'prot-notmuch-widget-field)))
+
+(defvar notmuch-saved-searches)
+(defvar notmuch-show-empty-saved-searches)
+(defvar notmuch-search-oldest-first)
+
+(declare-function notmuch-hello-query-counts "notmuch")
+(declare-function notmuch-saved-search-sort-function "notmuch")
+(declare-function notmuch-hello-nice-number "notmuch")
+(declare-function notmuch-hello-reflect "notmuch")
+
+(defun prot-notmuch-hello-insert-saved-searches ()
+  "Single column saved search buttons for Notmuch hello."
+  (let ((searches (notmuch-hello-query-counts
+		           (if notmuch-saved-search-sort-function
+		               (funcall notmuch-saved-search-sort-function
+				                notmuch-saved-searches)
+		             notmuch-saved-searches)
+		           :show-empty-searches notmuch-show-empty-saved-searches))
+        (count 0))
+    (mapc (lambda (elem)
+	        (when elem
+	          (let* ((name (plist-get elem :name))
+		             (query (plist-get elem :query))
+		             (oldest-first (cl-case (plist-get elem :sort-order)
+				                     (newest-first nil)
+				                     (oldest-first t)
+				                     (otherwise notmuch-search-oldest-first)))
+		             (search-type (plist-get elem :search-type))
+		             (msg-count (plist-get elem :count)))
+		        (widget-insert (format "\n%8s "
+				                       (notmuch-hello-nice-number msg-count)))
+		        (widget-create 'push-button
+			                   :notify #'notmuch-hello-widget-search
+			                   :notmuch-search-terms query
+			                   :notmuch-search-oldest-first oldest-first
+			                   :notmuch-search-type search-type
+			                   name)))
+	        (cl-incf count))
+	      (notmuch-hello-reflect searches 1))))
+                                               
 
 ;;;; Commands
 
