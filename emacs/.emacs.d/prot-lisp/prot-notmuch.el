@@ -105,14 +105,18 @@ Add this to `notmuch-hello-mode-hook'."
 (defvar notmuch-saved-searches)
 (defvar notmuch-show-empty-saved-searches)
 (defvar notmuch-search-oldest-first)
+(defvar notmuch-saved-search-sort-function)
 
 (declare-function notmuch-hello-query-counts "notmuch")
 (declare-function notmuch-saved-search-sort-function "notmuch")
 (declare-function notmuch-hello-nice-number "notmuch")
 (declare-function notmuch-hello-reflect "notmuch")
+(declare-function notmuch-hello-widget-search "notmuch")
 
+;; Simplified variant of what is available in `notmuch-hello.el'.
 (defun prot-notmuch-hello-insert-saved-searches ()
-  "Single column saved search buttons for Notmuch hello."
+  "Single column saved search buttons for Notmuch hello.
+Add this to `notmuch-hello-sections'."
   (let ((searches (notmuch-hello-query-counts
 		           (if notmuch-saved-search-sort-function
 		               (funcall notmuch-saved-search-sort-function
@@ -141,6 +145,40 @@ Add this to `notmuch-hello-mode-hook'."
 	        (cl-incf count))
 	      (notmuch-hello-reflect searches 1))))
                                                
+(defvar notmuch-hello-indent)
+(defvar notmuch-search-history)
+(defvar notmuch-hello-recent-searches-max)
+(declare-function notmuch-hello-search "notmuch")
+
+;; Adapted from `notmuch-hello.el'.
+(define-widget 'prot-notmuch-search-item 'item
+  "A widget that shows recent search queries."
+  :format "%v\n"
+  :value-create 'prot-notmuch-search-item-value-create)
+
+;; Adapted from `notmuch-hello.el'.
+(defun prot-notmuch-search-item-value-create (widget)
+  "Specify value of search WIDGET."
+  (let ((value (widget-get widget :value)))
+    (widget-insert (make-string notmuch-hello-indent ?\s))
+    (widget-create 'editable-field
+		   :size (widget-get widget :size)
+		   :parent widget
+		   :action #'notmuch-hello-search
+		   value)))
+
+;; Adapted from `notmuch-hello.el'.
+(defun prot-notmuch-hello-insert-recent-searches ()
+  "Insert widget with recent search terms.
+Add this to `notmuch-hello-sections'."
+  (when notmuch-search-history
+    (widget-insert "\n\n")
+    (widget-insert "Recent searches: ")
+    (widget-insert "\n\n")
+    (let ((width 100))
+      (dolist (search (seq-take notmuch-search-history
+				notmuch-hello-recent-searches-max))
+	(widget-create 'prot-notmuch-search-item :value search :size width)))))
 
 ;;;; Commands
 
