@@ -5698,7 +5698,8 @@ the variable =prot-notmuch-mode-line-search-args=).
   (setq notmuch-draft-save-plaintext 'ask)
   (setq notmuch-tagging-keys
         `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
-          (,(kbd "d") ("+del" "-inbox" "-archived" "-unread") "Mark for deletion")
+          (,(kbd "D") ("+del" "-inbox" "-archived" "-unread") "Mark for deletion")
+          (,(kbd "d") ("+archived" "-inbox" "-list" "-todo" "-unread") "Consider task done and archive")
           (,(kbd "f") ("+flag" "-unread") "Flag as important")
           (,(kbd "r") notmuch-show-mark-read-tags "Mark as read")
           (,(kbd "s") ("+spam" "+del" "-inbox") "Mark as spam")
@@ -5736,6 +5737,7 @@ the variable =prot-notmuch-mode-line-search-args=).
   (setq notmuch-show-text/html-blocked-images ".") ; block everything
   (setq notmuch-wash-citation-lines-prefix 6)
   (setq notmuch-wash-citation-lines-suffix 6)
+  (setq notmuch-wash-wrap-lines-length 80)
   (setq notmuch-unthreaded-show-out nil)
   (setq notmuch-message-headers '("To" "Cc" "Subject" "Date"))
   (setq notmuch-message-headers-visible t)
