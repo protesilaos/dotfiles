@@ -5651,7 +5651,7 @@ the variable =prot-notmuch-mode-line-search-args=).
             :query "tag:inbox"
             :sort-order newest-first
             :key ,(kbd "i"))
-          ( :name "unread"
+          ( :name "unread (inbox)"
             :query "tag:unread and tag:inbox"
             :sort-order newest-first
             :key ,(kbd "u"))
@@ -5666,7 +5666,8 @@ the variable =prot-notmuch-mode-line-search-args=).
           ( :name "mailing lists"
             :query "tag:list not tag:archived"
             :sort-order newest-first
-            :key ,(kbd "l"))
+            :key ,(kbd "m"))
+          ;; Emacs
           ( :name "emacs-devel"
             :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org or subject:[emacs-devel]) not tag:archived"
             :sort-order newest-first
@@ -5680,7 +5681,12 @@ the variable =prot-notmuch-mode-line-search-args=).
             :sort-order newest-first :key ,(kbd "e b"))
           ( :name "emacs-humanities" 
             :query "(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org or subject:[emacs-humanities]) not tag:archived"
-            :sort-order newest-first :key ,(kbd "e h"))))
+            :sort-order newest-first :key ,(kbd "e h"))
+          ;; CLI tools
+          ( :name "notmuch"
+            :query "from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "cn"))))
 
 ;;; Tags
   (setq notmuch-archive-tags '("-inbox" "+archived"))
@@ -5746,7 +5752,8 @@ the variable =prot-notmuch-mode-line-search-args=).
     (define-key map (kbd "/") #'notmuch-search-filter))) ; alias for l
 
 (prot-emacs-builtin-package 'prot-notmuch
-  (setq notmuch-hello-sections '(prot-notmuch-hello-insert-saved-searches))
+  (setq notmuch-hello-sections '(prot-notmuch-hello-insert-saved-searches
+                                 prot-notmuch-hello-insert-recent-searches))
 
   (add-to-list 'notmuch-tag-formats
                '("encrypted" (propertize tag 'face 'prot-notmuch-encrypted-tag)))
