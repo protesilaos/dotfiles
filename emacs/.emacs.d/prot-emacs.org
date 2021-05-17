@@ -5356,6 +5356,10 @@ the =~/.authinfo.gpg= (see [[#h:8d0bd754-8a31-431b-b112-f541cc0144ac][Sample of 
 :CUSTOM_ID: h:a196812e-1644-4536-84ba-687366867def
 :END:
 
+Also watch the video of what you are about to read in the following
+paragraphs: [[https://protesilaos.com/codelog/2021-05-15-emacs-notmuch/][Demo of the Emacs front-end to Notmuch]] (2021-05-15).
+
+
 At its core, Notmuch is a command-line program that maintains an index
 of a maildir directory structure and is capable to search through it
 using a tag-based method.  Notmuch is both minimalist and powerful:
