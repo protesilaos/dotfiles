@@ -5669,22 +5669,22 @@ the variable =prot-notmuch-mode-line-search-args=).
             :key ,(kbd "m"))
           ;; Emacs
           ( :name "emacs-devel"
-            :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org or subject:[emacs-devel]) not tag:archived"
+            :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
             :sort-order newest-first
             :key ,(kbd "e d"))
           ( :name "emacs-orgmode"
-            :query "(from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org or subject:[emacs-orgmode]) not tag:archived"
+            :query "(from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org) not tag:archived"
             :sort-order newest-first
             :key ,(kbd "e o"))
           ( :name "emacs-bugs"
             :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
             :sort-order newest-first :key ,(kbd "e b"))
           ( :name "emacs-humanities" 
-            :query "(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org or subject:[emacs-humanities]) not tag:archived"
+            :query "(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org) not tag:archived"
             :sort-order newest-first :key ,(kbd "e h"))
           ;; CLI tools
           ( :name "notmuch"
-            :query "from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org not tag:archived"
+            :query "(from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org) not tag:archived"
             :sort-order newest-first
             :key ,(kbd "cn"))))
 
