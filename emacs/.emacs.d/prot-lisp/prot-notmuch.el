@@ -219,7 +219,8 @@ With optional prefix ARG (\\[universal-argument]) call
 ;; does not rely on notmuch as it uses find instead.  The following
 ;; approach is specific to my setup and is what I prefer now.
 
-(defcustom prot-notmuch-mode-line-search-args "tag:unread and tag:inbox"
+(defcustom prot-notmuch-mode-line-search-args
+  "--output:files tag:unread and tag:inbox"
   "Arguments to pass to 'notmuch search' for counting new mail."
   :type 'string
   :group 'prot-notmuch)

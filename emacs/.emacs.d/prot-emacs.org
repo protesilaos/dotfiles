@@ -5800,7 +5800,8 @@ the variable =prot-notmuch-mode-line-search-args=).
   ;; simplistic, though it worked just fine: see prot-mail.el.  I prefer
   ;; this implementation instead, as it leverages notmuch and so I can
   ;; pass arbitrary search terms to it.
-  (setq prot-notmuch-mode-line-search-args "tag:unread and tag:inbox")
+  (setq prot-notmuch-mode-line-search-args
+        "--output:files tag:unread and tag:inbox")
   (setq prot-notmuch-mode-line-indicator-commands
         '(notmuch notmuch-refresh-this-buffer))
   ;; Mode line indicator with the number of new mails.
