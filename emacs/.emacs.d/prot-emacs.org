@@ -5604,7 +5604,23 @@ defined in [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org-mode (personal informa
 Unlike most Emacs packages, I install =notmuch= from my distro's repos.
 This is because (i) the CLI program is independent of Emacs, and (ii)
 =notmuch.el= is bundled up together with the command-line tool because the
-two are developed by the same group of people.  All good!
+two are developed by the same group of people.  All good!  There is also
+this note in =M-x find-library RET notmuch RET=:
+
+#+begin_quote
+Note for MELPA users (and others tracking the development version
+of notmuch-emacs):
+
+This emacs package needs a fairly closely matched version of the
+notmuch program. If you use the MELPA version of notmuch.el (as
+opposed to MELPA stable), you should be prepared to track the
+master development branch (i.e. build from git) for the notmuch
+program as well. Upgrading notmuch-emacs too far beyond the notmuch
+program can CAUSE YOUR EMAIL TO STOP WORKING.
+
+TL;DR: notmuch-emacs from MELPA and notmuch from distro packages is
+NOT SUPPORTED.
+#+end_quote
 
 Finally, my =prot-notmuch.el= contains commands and some minor stylistic
 extras including a mode line indicator that shows a count of all items
