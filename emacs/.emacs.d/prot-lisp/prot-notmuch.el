@@ -91,17 +91,21 @@ those.")
 (declare-function message-sort-headers "message")
 (declare-function notmuch-fcc-header-setup "notmuch")
 
-;;;###autoload
-(defun prot-notmuch-message-headers ()
-  "While `notmuch' is running, configure From header.
-Add this function to `message-header-setup-hook'."
-  (when (and (eq mail-user-agent 'notmuch-user-agent)
-             (eq last-command 'compose-mail))
-    (when (message-fetch-field "From")
-      (message-remove-header "From"))
-    (message-add-header (format "From: %s <%s>" user-full-name user-mail-address))
-    (notmuch-fcc-header-setup)
-    (message-sort-headers)))
+;; NOTE 2021-05-18: I used to have something like this when I was using
+;; Gnus and thought it would be useful here, but it ultimately isn't.  I
+;; just use `notmuch-mua-new-mail'.
+
+;; ;;;###autoload
+;; (defun prot-notmuch-message-headers ()
+;;   "While `notmuch' is running, configure From header.
+;; Add this function to `message-header-setup-hook'."
+;;   (when (and (eq mail-user-agent 'notmuch-user-agent)
+;;              (eq last-command 'compose-mail))
+;;     (when (message-fetch-field "From")
+;;       (message-remove-header "From"))
+;;     (message-add-header (format "From: %s <%s>" user-full-name user-mail-address))
+;;     (notmuch-fcc-header-setup)
+;;     (message-sort-headers)))
 
 (defun prot-notmuch-widget-field-face-remap ()
   "Set up extra highlighting for widget fields in Notmuch hello.
