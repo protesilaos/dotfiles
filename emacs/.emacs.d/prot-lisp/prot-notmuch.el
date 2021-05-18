@@ -40,6 +40,13 @@
   "Extensions for notmuch.el."
   :group 'notmuch)
 
+(defcustom prot-notmuch-search-field-width 100 ; Or use something like (/ (frame-width) 2)
+  "Number of characters for the width of search files.
+Those fields appear in the Notmuch hello buffer.  See
+`prot-notmuch-hello-insert-recent-searches'."
+  :type 'integer
+  :group 'prot-notmuch)
+
 ;;;; Utilities
 
 (defface prot-notmuch-encrypted-tag
@@ -167,6 +174,13 @@ Add this to `notmuch-hello-sections'."
 		   :action #'notmuch-hello-search
 		   value)))
 
+(defun prot-notmuch--search-width ()
+  "Confirm `prot-notmuch-search-field-width' is positive integer."
+  (let ((width prot-notmuch-search-field-width))
+    (if (prot-common-number-interger-positive-p width)
+        width
+      (error "Search field width must be a positive integer"))))
+
 ;; Adapted from `notmuch-hello.el'.
 (defun prot-notmuch-hello-insert-recent-searches ()
   "Insert widget with recent search terms.
@@ -175,7 +189,7 @@ Add this to `notmuch-hello-sections'."
     (widget-insert "\n\n")
     (widget-insert "Recent searches: ")
     (widget-insert "\n\n")
-    (let ((width 100))
+    (let ((width (prot-notmuch--search-width)))
       (dolist (search (seq-take notmuch-search-history
 				notmuch-hello-recent-searches-max))
 	(widget-create 'prot-notmuch-search-item :value search :size width)))))

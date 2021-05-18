@@ -5754,6 +5754,7 @@ the variable =prot-notmuch-mode-line-search-args=).
     (define-key map (kbd "/") #'notmuch-search-filter))) ; alias for l
 
 (prot-emacs-builtin-package 'prot-notmuch
+  (setq prot-notmuch-search-field-width 100)
   (setq notmuch-hello-sections '(prot-notmuch-hello-insert-saved-searches
                                  prot-notmuch-hello-insert-recent-searches))
 
