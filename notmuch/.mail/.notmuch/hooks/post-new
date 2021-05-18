@@ -36,10 +36,10 @@ notmuch tag -new -unread +inbox +sent -- '(from:"*@protesilaos.com*" not to:"*@p
 
 # mailing lists
 ## emacs
-notmuch tag -inbox +list +emacs -- from:emacs-devel@gnu.org or to:emacs-devel@gnu.org or subject:[emacs-devel]
-notmuch tag -inbox +list +emacs -- from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org or subject:[emacs-orgmode]
+notmuch tag -inbox +list +emacs -- from:emacs-devel@gnu.org or to:emacs-devel@gnu.org
+notmuch tag -inbox +list +emacs -- from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org
 notmuch tag -inbox +list +emacs -- 'to:"/*@debbugs.gnu.org*/"'
-notmuch tag -inbox +list +emacs -- from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org or subject:[emacs-humanities] not to:emacs-humanities-owner@gnu.org
+notmuch tag -inbox +list +emacs -- from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org not to:emacs-humanities-owner@gnu.org
 
 ## unix (CLI tools)
 notmuch tag -inbox +list +cli -- from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org
