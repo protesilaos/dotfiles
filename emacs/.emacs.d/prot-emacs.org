@@ -5734,7 +5734,7 @@ the variable =prot-notmuch-mode-line-search-args=).
           (,(kbd "d") ("+del" "-inbox" "-archived" "-unread") "Mark for deletion")
           (,(kbd "f") ("+flag" "-unread") "Flag as important")
           (,(kbd "r") notmuch-show-mark-read-tags "Mark as read")
-          (,(kbd "s") ("+spam" "+del" "-inbox") "Mark as spam")
+          (,(kbd "s") ("+spam" "+del" "-inbox" "-unread") "Mark as spam")
           (,(kbd "t") ("+todo" "-unread") "To-do")
           (,(kbd "u") ("+unread") "Mark as unread")))
   (setq notmuch-tag-formats
