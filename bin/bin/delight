@@ -91,5 +91,5 @@ _xfce() {
 
 case "$DESKTOP_SESSION" in
     gnome) _gnome ;;
-	xfce)  _xfce  ;;
+    xfce)  _xfce  ;;
 esac
