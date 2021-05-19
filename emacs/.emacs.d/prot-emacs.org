@@ -4760,6 +4760,8 @@ produces dates with a fixed length."
   (setq org-id-link-to-org-use-id
         'create-if-interactive-and-no-custom-id)
 
+  (declare-function org-id-add-location "org")
+
   ;; Copied from this article (with minor tweaks from my side):
   ;; <https://writequit.org/articles/emacs-org-mode-generate-ids.html>.
   (defun contrib/org-id-get (&optional pom create prefix)
