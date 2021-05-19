@@ -6154,7 +6154,7 @@ lots of options and commands: make sure to read its official manual.
 
   (let ((map ebdb-mode-map))
     (define-key map (kbd "D") #'ebdb-delete-field-or-record)
-    (define-key map (kbd "M") #'ebdb-email) ; disables `ebdb-mail-each'
+    (define-key map (kbd "M") #'ebdb-mail) ; disables `ebdb-mail-each'
     (define-key map (kbd "m") #'ebdb-toggle-record-mark)
     (define-key map (kbd "t") #'ebdb-toggle-all-record-marks)
     (define-key map (kbd "T") #'ebdb-toggle-records-format) ; disables `ebdb-toggle-all-records-format'
