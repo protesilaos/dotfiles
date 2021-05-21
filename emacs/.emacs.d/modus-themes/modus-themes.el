@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.3.2
-;; Last-Modified: <2021-05-19 08:05:35 +0300>
+;; Last-Modified: <2021-05-20 19:43:09 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -2049,7 +2049,7 @@ background instead of the standard shade of gray."
           (const :format "[%v] %t\n" :tag "Two-dimensional box (default)" nil)
           (const :format "[%v] %t\n" :tag "Three-dimensional style for the active mode line" 3d)
           (const :format "[%v] %t\n" :tag "No box effects, which are optimal for use with the `moody' library" moody)
-          (const :format "[%v] %t\n" :tag "Like the default, but without border effects" borderless)
+          (const :format "[%v] %t\n" :tag "Like the default, but without discernible border effects" borderless)
           (const :format "[%v] %t\n" :tag "Like `3d', but without noticeable border" borderless-3d)
           (const :format "[%v] %t\n" :tag "Like `moody', but without noticeable border" borderless-moody)
           (const :format "[%v] %t\n" :tag "Two-dimensional box with a colored background" accented)
@@ -2394,7 +2394,7 @@ Nil (the default) means to use a variety of contrasting hues to
 denote depth in nested citations.  Colors are fairly easy to tell
 apart.
 
-Option `desaturated' maintains a color-based distinction between
+Option `faint' maintains a color-based distinction between
 citation levels but the colors it applies have very subtle
 differences between them.
 
@@ -2405,7 +2405,8 @@ colored into a uniform shade of shade of gray."
   :version "28.1"
   :type '(choice
           (const :format "[%v] %t\n" :tag "Colorful mail citations with contrasting hues (default)" nil)
-          (const :format "[%v] %t\n" :tag "Like the default, but with less saturated colors" desaturated)
+          (const :format "[%v] %t\n" :tag "Like the default, but with less saturated colors" faint)
+          (const :format "[%v] %t\n" :tag "Deprecated alias of `faint'" desaturated)
           (const :format "[%v] %t\n" :tag "Uniformly gray mail citations" monochrome))
   :link '(info-link "(modus-themes) Mail citations"))
 
@@ -2620,7 +2621,7 @@ than the default.  BG is a nuanced, typically accented,
 background that can work well with either of the foreground
 values.  BORDER is a color value that combines well with the
 background and alternative foreground."
-  (let* ((key (modus-themes--heading-p `,level))
+  (let* ((key (modus-themes--heading-p level))
          (style (or key (modus-themes--heading-p t)))
          (var (when modus-themes-variable-pitch-headings
                 'variable-pitch))
@@ -2629,41 +2630,41 @@ background and alternative foreground."
                     'bold)))
     (pcase style
       ('no-bold
-       (list :inherit `,var :foreground fg))
+       (list :inherit var :foreground fg))
       ('no-color
-       (list :inherit `,varbold))
+       (list :inherit varbold))
       ('no-color-no-bold
-       (list :inherit `,var))
+       (list :inherit var))
       ('line
-       (list :inherit `,varbold :foreground fg :overline border))
+       (list :inherit varbold :foreground fg :overline border))
       ('line-no-bold
-       (list :inherit `,var :foreground fg :overline border))
+       (list :inherit var :foreground fg :overline border))
       ('rainbow
-       (list :inherit `,varbold :foreground fg-alt))
+       (list :inherit varbold :foreground fg-alt))
       ('rainbow-no-bold
-       (list :inherit `,var :foreground fg-alt))
+       (list :inherit var :foreground fg-alt))
       ('rainbow-line
-       (list :inherit `,varbold :foreground fg-alt :overline border))
+       (list :inherit varbold :foreground fg-alt :overline border))
       ('rainbow-line-no-bold
-       (list :inherit `,var :foreground fg-alt :overline border))
+       (list :inherit var :foreground fg-alt :overline border))
       ('highlight
-       (list :inherit `,varbold :background bg :foreground fg))
+       (list :inherit varbold :background bg :foreground fg))
       ('highlight-no-bold
-       (list :inherit `,var :background bg :foreground fg))
+       (list :inherit var :background bg :foreground fg))
       ('rainbow-highlight
-       (list :inherit `,varbold :background bg :foreground fg-alt))
+       (list :inherit varbold :background bg :foreground fg-alt))
       ('rainbow-highlight-no-bold
-       (list :inherit `,var :background bg :foreground fg-alt))
+       (list :inherit var :background bg :foreground fg-alt))
       ('section
-       (list :inherit `,varbold :background bg :foreground fg :overline border :extend t))
+       (list :inherit varbold :background bg :foreground fg :overline border :extend t))
       ('section-no-bold
-       (list :inherit `,var :background bg :foreground fg :overline border :extend t))
+       (list :inherit var :background bg :foreground fg :overline border :extend t))
       ('rainbow-section
-       (list :inherit `,varbold :background bg :foreground fg-alt :overline border :extend t))
+       (list :inherit varbold :background bg :foreground fg-alt :overline border :extend t))
       ('rainbow-section-no-bold
-       (list :inherit `,var :background bg :foreground fg-alt :overline border :extend t))
+       (list :inherit var :background bg :foreground fg-alt :overline border :extend t))
       (_
-       (list :inherit `,varbold :foreground fg)))))
+       (list :inherit varbold :foreground fg)))))
 
 (defun modus-themes--org-block (bgblk fgdefault &optional fgblk)
   "Conditionally set the background of Org blocks.
@@ -2732,38 +2733,38 @@ values.  It is intended to be used as a distant-foreground
 property."
   (pcase modus-themes-mode-line
     ('3d
-     `(:background ,bg-alt :foreground ,fg-alt
-       :box (:line-width ,(or border-width 1)
-             :color ,border-3d
-             :style ,(and alt-style 'released-button))))
+     `( :background ,bg-alt :foreground ,fg-alt
+        :box ( :line-width ,(or border-width 1)
+               :color ,border-3d
+               :style ,(and alt-style 'released-button))))
     ('moody
-     `(:background ,bg-alt :foreground ,fg-alt
-       :underline ,border :overline ,border
-       :distant-foreground ,fg-distant))
+     `( :background ,bg-alt :foreground ,fg-alt
+        :underline ,border :overline ,border
+        :distant-foreground ,fg-distant))
     ('borderless
-     `(:foreground ,fg :background ,bg :box ,bg))
+     `(:background ,bg :foreground ,fg :box ,bg))
     ('borderless-3d
-     `(:foreground ,fg :background ,bg
-       :box (:line-width ,(or border-width 1)
-             :color ,bg
-             :style ,(and alt-style 'released-button))))
+     `( :background ,bg :foreground ,fg
+        :box ( :line-width ,(or border-width 1)
+               :color ,bg
+               :style ,(and alt-style 'released-button))))
     ('borderless-moody
-     `(:background ,bg :foreground ,fg
-       :underline ,bg :overline ,bg
-       :distant-foreground ,fg-distant))
+     `( :background ,bg :foreground ,fg
+        :underline ,bg :overline ,bg
+        :distant-foreground ,fg-distant))
     ('accented
-     `(:foreground ,fg-accent :background ,bg-accent :box ,border))
+     `(:background ,bg-accent :foreground ,fg-accent :box ,border))
     ('accented-3d
-     `(:background ,bg-accent :foreground ,fg-accent
-       :box (:line-width ,(or border-width 1)
-             :color ,border-3d
-             :style ,(and alt-style 'released-button))))
+     `( :background ,bg-accent :foreground ,fg-accent
+        :box ( :line-width ,(or border-width 1)
+               :color ,border-3d
+               :style ,(and alt-style 'released-button))))
     ('accented-moody
-     `(:background ,bg-accent :foreground ,fg-accent
-       :underline ,border :overline ,border
-       :distant-foreground ,fg-distant))
+     `( :background ,bg-accent :foreground ,fg-accent
+        :underline ,border :overline ,border
+        :distant-foreground ,fg-distant))
     (_
-     `(:foreground ,fg :background ,bg :box ,border))))
+     `(:background ,bg :foreground ,fg :box ,border))))
 
 (defun modus-themes--diff
     (fg-only-bg fg-only-fg mainbg mainfg altbg altfg &optional deuteranbg deuteranfg  bg-only-fg)
@@ -2915,6 +2916,7 @@ MAINFG is an accented foreground value.  SUBTLEFG is its
 desaturated counterpart."
   (pcase modus-themes-mail-citations
     ('monochrome (list :inherit 'shadow))
+    ('faint (list :foreground subtlefg))
     ('desaturated (list :foreground subtlefg))
     (_ (list :foreground mainfg))))
 
@@ -3822,7 +3824,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(diff-hl-insert ((,class :inherit ,@(modus-themes--diff-deuteran
                                           'modus-themes-fringe-blue
                                           'modus-themes-fringe-green))))
-    `(diff-hl-reverted-hunk-highlight ((,class :inherit (modus-themes-active-magenta bold))))
+    `(diff-hl-reverted-hunk-highlight ((,class :background ,fg-main :foreground ,bg-main)))
 ;;;;; diff-mode
     `(diff-added ((,class :inherit modus-themes-diff-added)))
     `(diff-changed ((,class :inherit modus-themes-diff-changed :extend t)))
