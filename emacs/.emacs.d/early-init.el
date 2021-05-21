@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -56,5 +56,7 @@
 (setq inhibit-startup-echo-area-message "prot") ; read the docstring
 (setq inhibit-startup-screen t)
 (setq inhibit-startup-buffer-menu t)
+
+(setq native-comp-async-report-warnings-errors 'silent) ; emacs28 with native compilation
 
 ;;; early-init.el ends here
