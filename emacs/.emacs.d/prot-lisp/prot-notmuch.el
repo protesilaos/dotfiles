@@ -50,7 +50,8 @@ Those fields appear in the Notmuch hello buffer.  See
 ;;;; Utilities
 
 (defface prot-notmuch-encrypted-tag
-  '((((class color) (min-colors 88) (background light))
+  '((default :inherit italic)
+    (((class color) (min-colors 88) (background light))
      :foreground "#5d3026")
     (((class color) (min-colors 88) (background dark))
      :foreground "#f8dec0"))
@@ -79,7 +80,8 @@ Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
 
 (defface prot-notmuch-todo-tag
-  '((((class color) (min-colors 88) (background light))
+  '((default :inherit italic)
+    (((class color) (min-colors 88) (background light))
      :foreground "#a60000")
     (((class color) (min-colors 88) (background dark))
      :foreground "#ff8059"))
