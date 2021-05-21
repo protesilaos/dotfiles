@@ -1184,7 +1184,6 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (setq completions-detailed t)
 
   ;; Grouping of completions for Emacs 28
-  ;;  FIXME 2021-05-21: make grouping work
   (setq completions-group t)
   (setq completions-group-sort 'alphabetical)
   (setq completions-group-format
