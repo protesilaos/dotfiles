@@ -5463,13 +5463,23 @@ tags, or perform a new search:
 All of those will put you in a buffer that runs =notmuch-search-mode=.  As
 always, you should use =C-h m= (=describe-mode=) to learn about everything
 related to the current major mode (as well as all active minor modes).
+
 To further limit the results to an arbitrary list of search criteria,
 use =l= (=notmuch-search-filter=) and then supply whatever terms are needed.
 Or use =t=, which is here bound to =notmuch-search-filter-by-tag= to filter
 directly by tag using completion.  For example, I can start from the
 "notmuch-hello" buffer with =notmuch-search-by-tag=, select "todo", and
 then use =l= or =t= to further narrow to, say, a "replied" tag or
-"date:today".
+=date:today=.
+
+Filtering of search results is the best way to narrow the list to
+relevant matches.  You can try supplying just a search term without any
+keywords and you are likely to get what you are looking for.  For
+example, I was in a search that included results from the emacs-devel
+and bug-gnu-emacs mailing lists and had several unread threads, though I
+only wanted to read about "group-function".  So I just hit =l=
+(=notmuch-search-filter=) and then typed in that query.  Same principle if
+you wish to exclude something, such as with =not tag:flag=.
 
 The Notmuch presentation is compact when it comes to longer threads as
 it reduces them to a single line.  We can still get a sense of context
