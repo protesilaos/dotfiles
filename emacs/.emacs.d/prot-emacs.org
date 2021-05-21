@@ -1184,14 +1184,15 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (setq completions-detailed t)
 
   ;; Grouping of completions for Emacs 28
-  (setq completions-group t)
-  (setq completions-group-sort 'alphabetical)
-  (setq completions-group-format
-        (concat
-         (propertize "    " 'face 'completions-group-separator)
-         (propertize " %s " 'face 'completions-group-title)
-         (propertize " " 'face 'completions-group-separator
-                     'display '(space :align-to right))))
+  ;;  FIXME 2021-05-21: the group headings break prot-minibuffer cycling
+  (setq completions-group nil)
+  ;; (setq completions-group-sort 'alphabetical)
+  ;; (setq completions-group-format
+  ;;       (concat
+  ;;        (propertize "    " 'face 'completions-group-separator)
+  ;;        (propertize " %s " 'face 'completions-group-title)
+  ;;        (propertize " " 'face 'completions-group-separator
+  ;;                    'display '(space :align-to right))))
 
   (setq read-buffer-completion-ignore-case t)
   (setq read-file-name-completion-ignore-case t)
