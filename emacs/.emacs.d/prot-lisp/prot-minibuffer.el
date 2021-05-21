@@ -413,6 +413,7 @@ Meant to be added to `after-change-functions'."
   (cond
    ((member this-command prot-minibuffer-completion-passlist)
     (setq-local prot-minibuffer-minimum-input 0)
+    (setq-local prot-minibuffer-live-update-delay 0)
     (minibuffer-completion-help)
     (prot-minibuffer--fit-completions-window)
     (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t))
