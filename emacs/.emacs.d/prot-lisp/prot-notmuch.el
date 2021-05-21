@@ -58,6 +58,16 @@ Those fields appear in the Notmuch hello buffer.  See
 Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
 
+(defface prot-notmuch-sent-tag
+  '((default :inherit italic)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#005e00")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#44bc44"))
+  "Face for the 'sent' tag or related in Notmuch.
+Refer to the variable `notmuch-tag-formats' for how to assign
+those.")
+
 (defface prot-notmuch-spam-tag
   '((default :inherit italic)
     (((class color) (min-colors 88) (background light))

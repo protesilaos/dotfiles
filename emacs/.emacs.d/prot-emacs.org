@@ -5815,6 +5815,8 @@ the variable =prot-notmuch-mode-line-search-args=).
   (add-to-list 'notmuch-tag-formats
                '("encrypted" (propertize tag 'face 'prot-notmuch-encrypted-tag)))
   (add-to-list 'notmuch-tag-formats
+               '("sent" (propertize tag 'face 'prot-notmuch-sent-tag)))
+  (add-to-list 'notmuch-tag-formats
                '("todo" (propertize tag 'face 'prot-notmuch-todo-tag)))
   (add-to-list 'notmuch-tag-formats
                '("spam" (propertize tag 'face 'prot-notmuch-spam-tag)))
