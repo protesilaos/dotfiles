@@ -32,7 +32,7 @@ notmuch tag -unread -new -- tag:replied
 notmuch tag +inbox +unread -new -- tag:new
 
 # tag my replies as "sent"
-notmuch tag -new -unread +inbox +sent -- '(from:"*@protesilaos.com*" not to:"*@protesilaos.com*")'
+notmuch tag -new -unread +inbox +sent -- '(from:"*@protesilaos.com*" not to:"*@protesilaos.com*" not tag:list)'
 
 # mailing lists
 ## emacs
