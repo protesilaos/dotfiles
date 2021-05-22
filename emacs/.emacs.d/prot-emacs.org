@@ -2407,7 +2407,8 @@ ecosystem:
   (setq dired-listing-switches
         "-AGFhlv --group-directories-first --time-style=long-iso")
   (setq dired-dwim-target t)
-  (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; NOTE 2021-05-03: experimenting with this
+  (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
+
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
   (add-hook 'dired-mode-hook #'hl-line-mode))
 
@@ -2416,6 +2417,8 @@ ecosystem:
   ;; The following variables were introduced in Emacs 27.1
   (setq dired-create-destination-dirs 'ask)
   (setq dired-vc-rename-file t)
+  ;; And this is for Emacs 28
+  (setq dired-do-revert-buffer (lambda (dir) (not (file-remote-p dir))))
 
   ;; Those two functions are copied from the Emacs config of Omar
   ;; Antolín Camarena: <https://github.com/oantolin/emacs-config>.
