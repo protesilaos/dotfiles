@@ -5715,6 +5715,10 @@ the variable =prot-notmuch-mode-line-search-args=).
             :query "tag:unread not tag:archived"
             :sort-order newest-first
             :key ,(kbd "U"))
+          ( :name "references"
+            :query "tag:ref not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "r"))
           ( :name "todo"
             :query "tag:todo not tag:archived"
             :sort-order newest-first
@@ -5754,10 +5758,11 @@ the variable =prot-notmuch-mode-line-search-args=).
   (setq notmuch-draft-save-plaintext 'ask)
   (setq notmuch-tagging-keys
         `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
-          (,(kbd "c") ("+archived" "-inbox" "-list" "-todo" "-unread") "Complete todo and archive")
+          (,(kbd "c") ("+archived" "-inbox" "-list" "-todo" "-ref" "-unread") "Complete and archive")
           (,(kbd "d") ("+del" "-inbox" "-archived" "-unread") "Mark for deletion")
           (,(kbd "f") ("+flag" "-unread") "Flag as important")
-          (,(kbd "r") notmuch-show-mark-read-tags "Mark as read")
+          ;; (,(kbd "r") notmuch-show-mark-read-tags "Mark as read")
+          (,(kbd "r") ("+ref" "-unread") "Reference for the future")
           (,(kbd "s") ("+spam" "+del" "-inbox" "-unread") "Mark as spam")
           (,(kbd "t") ("+todo" "-unread") "To-do")
           (,(kbd "u") ("+unread") "Mark as unread")))
@@ -5819,6 +5824,8 @@ the variable =prot-notmuch-mode-line-search-args=).
                '("encrypted" (propertize tag 'face 'prot-notmuch-encrypted-tag)))
   (add-to-list 'notmuch-tag-formats
                '("sent" (propertize tag 'face 'prot-notmuch-sent-tag)))
+  (add-to-list 'notmuch-tag-formats
+               '("ref" (propertize tag 'face 'prot-notmuch-ref-tag)))
   (add-to-list 'notmuch-tag-formats
                '("todo" (propertize tag 'face 'prot-notmuch-todo-tag)))
   (add-to-list 'notmuch-tag-formats

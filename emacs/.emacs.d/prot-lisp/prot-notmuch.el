@@ -79,6 +79,16 @@ those.")
 Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
 
+(defface prot-notmuch-ref-tag
+  '((default :inherit italic)
+    (((class color) (min-colors 88) (background light))
+     :foreground "#005a5f")
+    (((class color) (min-colors 88) (background dark))
+     :foreground "#6ae4b9"))
+  "Face for the 'ref' tag or related in Notmuch.
+Refer to the variable `notmuch-tag-formats' for how to assign
+those.")
+
 (defface prot-notmuch-todo-tag
   '((default :inherit italic)
     (((class color) (min-colors 88) (background light))
