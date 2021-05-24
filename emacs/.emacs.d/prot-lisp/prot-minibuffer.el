@@ -288,7 +288,7 @@ Must be bound to `minibuffer-local-filename-completion-map'."
      :background "#b0d8ff" :foreground "#000000")
     (((class color) (min-colors 88) (background dark))
      :background "#103265" :foreground "#ffffff")
-    (t :inherit (font-lock-string-face elfeed-search-title-face)))
+    (t :inherit font-lock-string-face))
   "Face for current line in the completions' buffer."
   :group 'prot-minibuffer)
 
