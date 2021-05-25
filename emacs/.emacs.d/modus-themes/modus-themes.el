@@ -4,8 +4,8 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 1.3.2
-;; Last-Modified: <2021-05-22 09:19:54 +0300>
+;; Version: 1.4.0
+;; Last-Modified: <2021-05-25 12:25:39 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -40,9 +40,11 @@
 ;;     modus-themes-bold-constructs                (boolean)
 ;;     modus-themes-variable-pitch-headings        (boolean)
 ;;     modus-themes-variable-pitch-ui              (boolean)
+;;     modus-themes-scale-headings                 (boolean)
+;;     modus-themes-subtle-line-numbers            (boolean)
+;;     modus-themes-success-deuteranopia           (boolean)
 ;;     modus-themes-no-mixed-fonts                 (boolean)
 ;;     modus-themes-headings                       (alist)
-;;     modus-themes-scale-headings                 (boolean)
 ;;     modus-themes-fringes                        (choice)
 ;;     modus-themes-lang-checkers                  (choice)
 ;;     modus-themes-org-blocks                     (choice)
@@ -52,13 +54,11 @@
 ;;     modus-themes-diffs                          (choice)
 ;;     modus-themes-syntax                         (choice)
 ;;     modus-themes-hl-line                        (choice)
-;;     modus-themes-subtle-line-numbers            (boolean)
 ;;     modus-themes-paren-match                    (choice)
 ;;     modus-themes-region                         (choice)
 ;;     modus-themes-links                          (choice)
 ;;     modus-themes-completions                    (choice)
 ;;     modus-themes-mail-citations                 (choice)
-;;     modus-themes-success-deuteranopia           (boolean)
 ;;
 ;; The default scale for headings is as follows (it can be customized as
 ;; well---remember, no scaling takes place by default):
@@ -307,7 +307,6 @@
 ;;     prism (see "Note for prism.el" in the manual)
 ;;     proced
 ;;     prodigy
-;;     pulse
 ;;     quick-peek
 ;;     racket-mode
 ;;     rainbow-blocks
@@ -671,7 +670,7 @@ cover the blue-cyan-magenta side of the spectrum."
     (bg-mark-sel . "#a0f0cf") (fg-mark-sel . "#005040")
     (bg-mark-del . "#ffccbb") (fg-mark-del . "#840040")
     (bg-mark-alt . "#f5d88f") (fg-mark-alt . "#782900"))
-  "The entire palette of `modus-operandi' theme.
+  "The entire palette of the `modus-operandi' theme.
 Each element has the form (NAME . HEX) with the former as a
 symbol and the latter as a string.")
 
@@ -913,7 +912,7 @@ symbol and the latter as a string.")
     (bg-mark-sel . "#002f2f") (fg-mark-sel . "#60cfa2")
     (bg-mark-del . "#5a0000") (fg-mark-del . "#ff99aa")
     (bg-mark-alt . "#3f2210") (fg-mark-alt . "#f0aa20"))
-  "The entire palette of `modus-vivendi' theme.
+  "The entire palette of the `modus-vivendi' theme.
 Each element has the form (NAME . HEX) with the former as a
 symbol and the latter as a string.")
 
@@ -2045,9 +2044,15 @@ default).
 Similarly, `accented', `accented-3d', and `accented-moody'
 correspond to the default (nil), `3d', and `moody' styles
 respectively, except that the active mode line uses a colored
-background instead of the standard shade of gray."
+background instead of the standard shade of gray.
+
+Same principle for styles `borderless-accented',
+`borderless-accented-3d', `borderless-accented-moody', which
+apply a colored background to the active mode line, while they
+remove any noticeable border around both the active and inactive
+the mode lines."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.3.0")
+  :package-version '(modus-themes . "1.4.0")
   :version "28.1"
   :type '(choice
           (const :format "[%v] %t\n" :tag "Two-dimensional box (default)" nil)
@@ -2058,7 +2063,10 @@ background instead of the standard shade of gray."
           (const :format "[%v] %t\n" :tag "Like `moody', but without noticeable border" borderless-moody)
           (const :format "[%v] %t\n" :tag "Two-dimensional box with a colored background" accented)
           (const :format "[%v] %t\n" :tag "Like `3d', but with a colored background" accented-3d)
-          (const :format "[%v] %t\n" :tag "Like `moody', but with a colored background" accented-moody))
+          (const :format "[%v] %t\n" :tag "Like `moody', but with a colored background" accented-moody)
+          (const :format "[%v] %t\n" :tag "Like `accented', but without a noticeable border" borderless-accented)
+          (const :format "[%v] %t\n" :tag "Like `accented-3d', but with a noticeable border" borderless-accented-3d)
+          (const :format "[%v] %t\n" :tag "Like `accented-moody', but with a noticeable border" borderless-accented-moody))
   :link '(info-link "(modus-themes) Mode line"))
 
 (defcustom modus-themes-diffs nil
@@ -2766,6 +2774,17 @@ property."
     ('accented-moody
      `( :background ,bg-accent :foreground ,fg-accent
         :underline ,border :overline ,border
+        :distant-foreground ,fg-distant))
+    ('borderless-accented
+     `(:background ,bg-accent :foreground ,fg-accent :box ,bg-accent))
+    ('borderless-accented-3d
+     `( :background ,bg-accent :foreground ,fg-accent
+        :box ( :line-width ,(or border-width 1)
+               :color ,bg-accent
+               :style ,(and alt-style 'released-button))))
+    ('borderless-accented-moody
+     `( :background ,bg-accent :foreground ,fg-accent
+        :underline ,bg-accent :overline ,bg-accent
         :distant-foreground ,fg-distant))
     (_
      `(:background ,bg :foreground ,fg :box ,border))))
@@ -5458,7 +5477,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(notmuch-crypto-signature-good-key ((,class :inherit bold :foreground ,cyan)))
     `(notmuch-crypto-signature-unknown ((,class :inherit warning)))
     `(notmuch-hello-logo-background ((,class :background "gray50")))
-    `(notmuch-message-summary-face ((,class :inherit modus-themes-nuanced-cyan)))
+    `(notmuch-message-summary-face ((,class :inherit (bold modus-themes-nuanced-cyan))))
     `(notmuch-search-count ((,class :inherit shadow)))
     `(notmuch-search-date ((,class :foreground ,cyan)))
     `(notmuch-search-flagged-face ((,class :foreground ,red-alt)))
@@ -5826,9 +5845,6 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(prodigy-green-face ((,class :foreground ,green)))
     `(prodigy-red-face ((,class :foreground ,red)))
     `(prodigy-yellow-face ((,class :foreground ,yellow)))
-;;;;; pulse
-    `(pulse-highlight-face ((,class :background ,bg-active-accent :extend t)))
-    `(pulse-highlight-start-face ((,class :background ,bg-active-accent :extend t)))
 ;;;;; quick-peek
     `(quick-peek-background-face ((,class :background ,bg-alt)))
     `(quick-peek-border-face ((,class :background ,fg-window-divider-inner :height 1)))
