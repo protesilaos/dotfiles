@@ -417,11 +417,12 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs t
+  (setq modus-themes-slanted-constructs nil
+        modus-themes-bold-constructs nil
         modus-themes-no-mixed-fonts nil
         modus-themes-subtle-line-numbers t
         modus-themes-success-deuteranopia t
+        modus-themes-inhibit-reload nil ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
 
@@ -435,7 +436,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'borderless, 'borderless-3d, 'borderless-moody, 'accented,
         ;; 'accented-3d, 'accented-moody, 'borderless-accented,
         ;; 'borderless-accented-3d, 'borderless-accented-moody
-        modus-themes-mode-line 'borderless-accented-3d
+        modus-themes-mode-line 'borderless
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
@@ -470,14 +471,14 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'fg-only-deuteranopia
+        modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
         modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
 
         modus-themes-headings nil ; this is an alist: read the manual or its doc string
 
-        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-ui t
         modus-themes-variable-pitch-headings nil
         modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
