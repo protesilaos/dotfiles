@@ -43,3 +43,6 @@ notmuch tag -inbox +list +emacs -- from:emacs-humanities@gnu.org or to:emacs-hum
 
 ## unix (CLI tools)
 notmuch tag -inbox +list +cli -- from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org
+
+# include mailing lists sent to me into the "inbox"
+notmuch tag +inbox -- '(to:"*@protesilaos.com*" tag:list)'
