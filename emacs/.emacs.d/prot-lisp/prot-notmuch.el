@@ -277,7 +277,7 @@ the function `prot-notmuch-mail-indicator'."
   (when (not (string= count "0"))
     (propertize (format "@%s " count)
                 'face 'prot-notmuch-mail-count
-                'help-echo "Number of new items in maildirs")))
+                'help-echo "New mails matching `prot-notmuch-mode-line-count-args'")))
 
 (defvar prot-notmuch--mode-line-mail-indicator nil
   "Internal variable used to store the state of new mails.")
