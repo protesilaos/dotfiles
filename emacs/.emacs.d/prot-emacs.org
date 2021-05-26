@@ -407,6 +407,7 @@ and wish to get a glimpse of how much work goes into this project:
 + [[https://protesilaos.com/codelog/2020-12-27-modus-themes-review-rainbow-delimiters/][Modus themes: review rainbow-delimiters faces]] (2020-12-27)
 + [[https://protesilaos.com/codelog/2021-01-11-modus-themes-review-select-faint-colours/][Modus themes: review of select "faint" colours]] (2021-01-11)
 + [[https://protesilaos.com/codelog/2021-02-25-modus-themes-diffs-deuteranopia/][The Modus themes now cover deuteranopia in diffs]] (2021-02-25)
++ [[https://protesilaos.com/codelog/2021-05-19-modus-themes-status-update/][Status update on the Modus themes for Emacs]] (2021-05-19)
 
 And if you do enjoy reading such entries, then you may also wish to
 check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the Modus themes]].
