@@ -1879,8 +1879,7 @@ read that variable's doc string).
   (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
                    shell-mode-hook eshell-mode-hook))
     (add-hook mode #'corfu-mode))
-  (let ((map corfu-map))
-    (define-key map (kbd "<tab>") #'corfu-complete)))
+  (define-key corfu-map (kbd "<tab>") #'corfu-complete))
 #+end_src
 
 **** Dabbrev (dynamic word completion)
