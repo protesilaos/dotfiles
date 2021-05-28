@@ -49,10 +49,12 @@
 (defun tmr--unit (time)
   "Determine common time unit for TIME."
   (if (numberp time) ; TODO: how to recognise a positive/negative number?
-      (* time 60)
+      ;; NOTE: If time is negative, beeps immediately (bug?). so
+      ;; convert time to absolute value.
+      (* (abs time) 60)
     (let* ((unit (substring time -1))
            (str (substring time 0 -1))
-           (num (string-to-number str)))
+           (num (abs (string-to-number str))))
       (pcase unit
         ("s" num)
         ("h" (* num 60 60))
