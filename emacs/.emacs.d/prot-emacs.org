@@ -646,10 +646,10 @@ Relevant publications of mine that are not part of this document:
                        :variable-pitch-height 0.9
                        :variable-pitch-regular-weight normal))
 
-          (presentation . ( :fixed-pitch-family "Iosevka Comfy"
+          (presentation . ( :fixed-pitch-family "Hack"
                             :fixed-pitch-regular-weight normal
                             :fixed-pitch-heavy-weight bold
-                            :fixed-pitch-height 150
+                            :fixed-pitch-height 130
                             :fixed-pitch-line-spacing nil
                             :variable-pitch-family "Source Sans Pro"
                             :variable-pitch-height 1.0
@@ -4684,7 +4684,7 @@ produces dates with a fixed length."
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-show-current-time-in-grid t)
   (setq org-agenda-current-time-string
-        "Now -·-·-·-·-·-·-")
+        (concat "Now " (make-string 36 ?—)))
   (setq org-agenda-time-grid
         '((daily today require-timed)
           (0600 0700 0800 0900 1000 1100
@@ -5176,7 +5176,7 @@ Finally, note that I control the placement of those buffers in the
   ;; sophisticated approach, though I do not need one.
   (let ((time (string-to-number (format-time-string "%H"))))
     (when (and (> time 4) (< time 9))
-      (run-at-time 3 nil #'prot-diary-mail-entries)))
+      (run-at-time 30 nil #'prot-diary-mail-entries)))
 
   (require 'holidays)
   (setq calendar-holidays (append holiday-solar-holidays prot-diary-local-holidays))
