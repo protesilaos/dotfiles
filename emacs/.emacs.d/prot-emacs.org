@@ -437,7 +437,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'borderless, 'borderless-3d, 'borderless-moody, 'accented,
         ;; 'accented-3d, 'accented-moody, 'borderless-accented,
         ;; 'borderless-accented-3d, 'borderless-accented-moody
-        modus-themes-mode-line 'borderless
+        modus-themes-mode-line nil
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
@@ -468,25 +468,32 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
         ;; 'bg-only-no-extend, 'accent, 'accent-no-extend
-        modus-themes-region 'bg-only-no-extend
+        modus-themes-region nil
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
         modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
-        modus-themes-org-habit nil ; {nil,'simplified,'traffic-light}
 
-        modus-themes-headings nil ; this is an alist: read the manual or its doc string
+        modus-themes-org-agenda ; this is an alist: read the manual or its doc string
+        '((header-block . (variable-pitch scale-title))
+          (header-date . (grayscale workaholic bold-today))
+          (scheduled . uniform)
+          (habit . traffic-light-deuteranopia))
 
-        modus-themes-variable-pitch-ui t
+        modus-themes-headings ; this is an alist: read the manual or its doc string
+        '((1 . rainbow-section)
+          (t . rainbow-no-bold))
+
+        modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
         modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
         modus-themes-scale-4 1.27
-        modus-themes-scale-5 1.33)
+        modus-themes-scale-title 1.33)
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
