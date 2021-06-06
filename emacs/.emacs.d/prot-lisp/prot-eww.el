@@ -105,7 +105,7 @@ new EWW buffer."
     (dolist (bookmark eww-bookmarks)
       (push (plist-get bookmark :url) list))
     (eww (completing-read "Visit EWW bookmark: " list)
-         (if arg 4 nil))))
+         (when arg 4))))
 
 ;;;###autoload
 (defun prot-eww-visit-url-on-page (&optional arg)
@@ -127,7 +127,7 @@ new EWW buffer."
                   links))))
       (let* ((selection (completing-read "Browse URL from page: " links nil t))
              (url (replace-regexp-in-string ".*@ " "" selection)))
-        (eww url (if arg 4 nil))))))
+        (eww url (when arg 4))))))
 
 ;;;###autoload
 (defun prot-eww-jump-to-url-on-page ()
@@ -226,7 +226,7 @@ new EWW buffer."
          current-prefix-arg))
   (eww
    (format "https://debbugs.gnu.org/cgi/bugreport.cgi?bug=%d" number)
-   (if arg 4 nil))
+   (when arg 4))
   (add-to-history 'prot-eww--debbugs-hist number))
 
 (defvar prot-eww--wikipedia-hist '()
@@ -243,7 +243,7 @@ new EWW buffer."
          current-prefix-arg))
   (eww
    (format "https://en.m.wikipedia.org/w/index.php?search=%s" string)
-   (if arg 4 nil))
+   (when arg 4))
   (add-to-history 'prot-eww--wikipedia-hist string))
 
 (defvar prot-eww--arch-wiki-hist '()
@@ -260,7 +260,7 @@ new EWW buffer."
          current-prefix-arg))
   (eww
    (format "https://wiki.archlinux.org/index.php?search=%s" string)
-   (if arg 4 nil))
+   (when arg 4))
   (add-to-history 'prot-eww--arch-wiki-hist string))
 
 (defvar prot-eww--arch-aur-hist '()
@@ -277,7 +277,7 @@ new EWW buffer."
          current-prefix-arg))
   (eww
    (format "https://aur.archlinux.org/packages/?K=%s" (string-replace " " "+" string))
-   (if arg 4 nil))
+   (when arg 4))
   (add-to-history 'prot-eww--arch-aur-hist string))
 
 ;;;###autoload
