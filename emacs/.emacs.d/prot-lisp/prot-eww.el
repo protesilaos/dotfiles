@@ -77,19 +77,21 @@ To be used by `eww-after-render-hook'."
   "Visit a URL, maybe from `eww-prompt-history', with completion.
 
 With optional prefix ARG (\\[universal-argument]) open URL in a
-new eww buffer.
+new eww buffer.  If URL does not look like a valid link, run a
+web query using `eww-search-prefix'.
 
-If URL does not look like a valid link, run a web query using
-`eww-search-prefix'.
-
-When called from an eww buffer, provide the current link as
-initial input."
+When called from an eww buffer, provide the current link as as
+`next-history-element' accessible using `M-n'."
   (interactive
-   (list
-    (completing-read "Run EWW on: " (append prot-eww-visited-history eww-prompt-history)
-                     nil nil (plist-get eww-data :url) 'eww-prompt-history)
-    current-prefix-arg))
-  (eww url (if arg 4 nil)))
+   (let ((all-history (delete-dups
+		       (append prot-eww-visited-history
+			       eww-prompt-history)))
+	 (current-url (plist-get eww-data :url)))
+     (list
+      (completing-read "Run EWW on: " all-history
+                       nil nil nil 'eww-prompt-history current-url)
+      (prefix-numeric-value current-prefix-arg))))
+  (eww url arg))
 
 ;;;###autoload
 (defun prot-eww-visit-bookmark (&optional arg)
