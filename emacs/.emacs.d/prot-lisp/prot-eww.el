@@ -84,9 +84,9 @@ When called from an eww buffer, provide the current link as as
 `next-history-element' accessible using `M-n'."
   (interactive
    (let ((all-history (delete-dups
-		       (append prot-eww-visited-history
-			       eww-prompt-history)))
-	 (current-url (plist-get eww-data :url)))
+                       (append prot-eww-visited-history
+                               eww-prompt-history)))
+         (current-url (plist-get eww-data :url)))
      (list
       (completing-read "Run EWW on: " all-history
                        nil nil nil 'eww-prompt-history current-url)
@@ -319,9 +319,9 @@ images."
 Also replace multiple hyphens with a single one and remove any
 trailing hyphen."
   (replace-regexp-in-string
-    "-$" ""
+   "-$" ""
    (replace-regexp-in-string
-   "-\\{2,\\}" "-"
+    "-\\{2,\\}" "-"
     (replace-regexp-in-string "--+\\|\s+" "-" str))))
 
 (defun prot-eww--sluggify (str)
@@ -340,7 +340,7 @@ trailing hyphen."
                   (concat (format-time-string "%Y%m%d_%H%M%S") "--" name ".html"))))
          (out (prot-common-shell-command-with-exit-code-and-output
                "wget" "-q" (format "%s" (plist-get eww-data :url))
-                      "-O" (format "%s" (shell-quote-argument path)))))
+               "-O" (format "%s" (shell-quote-argument path)))))
     (if (= (car out) 0)
         (message "Downloaded page at %s" path)
       (message "Error downloading page: %s" (cdr out)))))
