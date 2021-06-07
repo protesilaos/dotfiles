@@ -792,8 +792,8 @@ in the [[https://200ok.ch/posts/2020-09-29_comprehensive_guide_on_handling_long_
 
 Emacs28 comes with a built-in utility for repeating selected commands in
 a more convenient fashion.  Once =repeat-mode= is enabled, a key binding
-or chord that invokes a command succesfully can be repeated by typing in
-its tail or whatever the developer specifies.  So =other-window= may be
+or chord that invokes a command successfully can be repeated by typing
+in its tail or whatever the developer specifies.  So =other-window= may be
 used like this: =C-x o=, =o=, =o= to switch three windows, instead of =C-x o=,
 =C-x o=, =C-x o=.
 
@@ -2869,7 +2869,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
           ("\\*.*\\(e?shell\\|v?term\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.2))
-          ;; below currect window
+          ;; below current window
           ("\\*Calendar.*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . shrink-window-if-larger-than-buffer))))
@@ -5562,7 +5562,7 @@ When you compose an email, such as by replying with =r= or =R=, you are
 taken to a buffer that leverages functionality provided by the built-in
 =message.el=.  As always, run =C-h m= to get a sense of how things work and
 what commands you may call: =C-c C-c= dispatches the email, =C-c C-a=
-prompts for an attachement, =C-c C-m C-e= encrypts and signs, =C-c C-m C-a=
+prompts for an attachment, =C-c C-m C-e= encrypts and signs, =C-c C-m C-a=
 from a Dired buffer attaches the file at point or any marked ones (refer
 to [[#h:a82766be-daab-4925-b23a-1c5ffd47e599][Client-agnostic email settings (and prot-mail.el)]]).
 
@@ -5809,7 +5809,7 @@ the variable =prot-notmuch-mode-line-search-args=).
                 "pi[èe]ce\s+jointe?\\|"
                 "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
 
-;;; Reading messsages
+;;; Reading messages
   (setq notmuch-show-relative-dates t)
   (setq notmuch-show-all-multipart/alternative-parts nil)
   (setq notmuch-show-indent-messages-width 0)
@@ -6308,7 +6308,7 @@ Now a few words about my custom delimiters that the likes of
 + Then there is my concept of "headings" that complements those section
   delimiters (=prot-bongo-playlist-heading-delimiter=).  Headings are
   comments in the Bongo playlist buffer that contain the name of the
-  directory or file that includes the tracks diretly below them.  Other
+  directory or file that includes the tracks directly below them.  Other
   than being informative, they function as anchors for navigation
   (e.g. with =prot-bongo-playlist-heading-next=), while they double as
   pointers in an =M-x imenu= index (by virtue of =prot-bongo-imenu-setup=).
@@ -7104,7 +7104,7 @@ want is to make the mode line gracefully adapt to changes in font size.
 (prot-emacs-elpa-package 'moody)
 
 (prot-emacs-builtin-package 'prot-moody
-  ;; Addjust this and then evaluate `prot-moody-set-height'.  Not all
+  ;; Adjust this and then evaluate `prot-moody-set-height'.  Not all
   ;; fonts work equally well with the same value.
   (setq prot-moody-font-height-multiplier 1.35)
 
@@ -7493,7 +7493,7 @@ quick reminder of why this matters: you can navigate the outline using
 minibuffer completion, which is my favourite way to browse a file.  You
 can, in the same spirit, use Embark to produce a buffer with the
 completion candidates, i.e. the headings, or a subset you have narrowed
-to, and navigate them therefrom.  It really is an efficient workflow:
+to, and navigate therefrom.  It really is an efficient workflow:
 [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]].
 
 #+begin_src emacs-lisp
