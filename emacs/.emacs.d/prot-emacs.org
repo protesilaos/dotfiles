@@ -503,7 +503,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
     (modus-themes-with-colors
       (custom-set-faces
        `(cursor ((,class :background ,(modus-themes-color-alts 'blue 'yellow-alt-other))))
-       `(fill-column-indicator ((,class :background ,bg-inactiven
+       `(fill-column-indicator ((,class :background ,bg-inactive
                                         :foreground ,bg-inactive))))))
 
   (add-hook 'modus-themes-after-load-theme-hook
