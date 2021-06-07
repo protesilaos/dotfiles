@@ -100,7 +100,7 @@ When called from an eww buffer, provide the current link as as
 With optional prefix ARG (\\[universal-argument]) open URL in a
 new EWW buffer."
   (interactive "P")
-  (eww-read-bookmarks t)
+  (eww-read-bookmarks)
   (let ((list (gensym)))
     (dolist (bookmark eww-bookmarks)
       (push (plist-get bookmark :url) list))
