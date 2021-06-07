@@ -104,8 +104,10 @@ new EWW buffer."
   (let ((list (gensym)))
     (dolist (bookmark eww-bookmarks)
       (push (plist-get bookmark :url) list))
-    (eww (completing-read "Visit EWW bookmark: " list)
-         (when arg 4))))
+    (if eww-bookmarks
+        (eww (completing-read "Visit EWW bookmark: " list)
+             (when arg 4))
+      (user-error "No bookmarks"))))
 
 ;;;###autoload
 (defun prot-eww-visit-url-on-page (&optional arg)
