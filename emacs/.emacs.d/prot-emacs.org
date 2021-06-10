@@ -648,13 +648,13 @@ Relevant publications of mine that are not part of this document:
                       :variable-pitch-height 0.9
                       :variable-pitch-regular-weight normal))
 
-          (desktop . ( :fixed-pitch-family "Iosevka Comfy"
+          (desktop . ( :fixed-pitch-family "Source Code Pro"
                        :fixed-pitch-regular-weight normal
                        :fixed-pitch-heavy-weight bold
-                       :fixed-pitch-height 110
+                       :fixed-pitch-height 100
                        :fixed-pitch-line-spacing nil
                        :variable-pitch-family "FiraGO"
-                       :variable-pitch-height 0.9
+                       :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
           (presentation . ( :fixed-pitch-family "Hack"
