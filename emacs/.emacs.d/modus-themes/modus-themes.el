@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.4.0
-;; Last-Modified: <2021-06-07 10:55:11 +0300>
+;; Last-Modified: <2021-06-10 13:33:00 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -309,6 +309,7 @@
 ;;     prism (see "Note for prism.el" in the manual)
 ;;     proced
 ;;     prodigy
+;;     pulse
 ;;     quick-peek
 ;;     racket-mode
 ;;     rainbow-blocks
@@ -2373,7 +2374,8 @@ with the library of the same name.  This practically means to
 remove the box effect and rely on underline and overline
 properties instead.  It also tones down the inactive mode lines.
 Despite its intended purpose, this option can also be used
-without the `moody' library.
+without the `moody' library (please consult the themes' manual on
+this point for more details).
 
 The `borderless' property removes the border effect.  This is
 done by making the box property use the same color as the
@@ -2388,12 +2390,15 @@ Valid combinations are:
 - (moody)
 - (borderless)
 - (accented)
+- (borderless accented)
 - (3d borderless)
 - (3d accented)
 - (3d borderless accented)
 - (moody borderless)
 - (moody accented)
-- (moody borderless accented)"
+- (moody borderless accented)
+
+The order of items in those lists is not significant."
   :group 'modus-themes
   :package-version '(modus-themes . "1.5.0")
   :version "28.1"
@@ -3769,7 +3774,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                     cyan-refine-bg fg-main))))
     `(mm-command-output ((,class :foreground ,red-alt-other)))
     `(mm-uu-extract ((,class :background ,bg-dim :foreground ,fg-special-mild)))
-    `(next-error ((,class :inherit modus-themes-subtle-red)))
+    `(next-error ((,class :inherit modus-themes-subtle-red :extend t)))
     `(rectangle-preview ((,class :inherit modus-themes-special-mild)))
     `(region ((,class ,@(modus-themes--region bg-region fg-main bg-hl-alt-intense bg-region-accent))))
     `(secondary-selection ((,class :inherit modus-themes-special-cold)))
@@ -6289,6 +6294,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(prodigy-green-face ((,class :foreground ,green)))
     `(prodigy-red-face ((,class :foreground ,red)))
     `(prodigy-yellow-face ((,class :foreground ,yellow)))
+;;;;; pulse
+    `(pulse-highlight-start-face ((,class :background ,bg-active-accent :extend t)))
 ;;;;; quick-peek
     `(quick-peek-background-face ((,class :background ,bg-alt)))
     `(quick-peek-border-face ((,class :background ,fg-window-divider-inner :height 1)))
