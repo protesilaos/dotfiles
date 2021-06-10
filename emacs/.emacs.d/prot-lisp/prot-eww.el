@@ -109,6 +109,36 @@ new EWW buffer."
              (when arg 4))
       (user-error "No bookmarks"))))
 
+(defun prot-eww--capture-url-on-page (&optional position)
+  "Capture all the links on the current web page.
+
+Return a list of strings.  Strings are in the form LABEL @ URL.
+When optional argument POSITION is non-nil, include position info
+in the strings too, so strings take the form
+LABEL @ URL ~ POSITION."
+  (let ((links))
+    (save-excursion
+      (goto-char (point-min))
+      (while (setq match (text-property-search-forward
+			  'shr-url nil nil t))
+	(let* ((raw-url (prop-match-value match))
+	       (start-point-prop (prop-match-beginning match))
+	       (end-point-prop (prop-match-end match))
+	       (url (when (stringp raw-url)
+		      (propertize raw-url 'face 'link)))
+	       (label (buffer-substring-no-properties
+		       start-point-prop end-point-prop))
+	       (point start-point-prop))
+	  (when url
+	    (if position
+		(push (format "%s  @ %s ~ %d"
+			      label url point)
+		      links)
+	      (push (format "%s  @ %s"
+			    label url)
+		    links))))))
+    links))
+
 ;;;###autoload
 (defun prot-eww-visit-url-on-page (&optional arg)
   "Visit URL from list of links on the page using completion.
@@ -117,19 +147,12 @@ With optional prefix ARG (\\[universal-argument]) open URL in a
 new EWW buffer."
   (interactive "P")
   (when (derived-mode-p 'eww-mode)
-    (let ((links))
-      (save-excursion
-        (goto-char (point-max))
-        (while (text-property-search-backward 'shr-url nil nil t)
-          (when (and (get-text-property (point) 'shr-url)
-                     (not (get-text-property (point) 'eww-form)))
-            (push (format "%s  @ %s"
-                          (button-label (point))
-                          (propertize (get-text-property (point) 'shr-url) 'face 'link))
-                  links))))
-      (let* ((selection (completing-read "Browse URL from page: " links nil t))
-             (url (replace-regexp-in-string ".*@ " "" selection)))
-        (eww url (when arg 4))))))
+    (let* ((links
+	    (prot-eww--capture-url-on-page))
+	   (selection
+	    (completing-read "Browse URL from page: " links nil t))
+           (url (replace-regexp-in-string ".*@ " "" selection)))
+      (eww url (when arg 4)))))
 
 ;;;###autoload
 (defun prot-eww-jump-to-url-on-page ()
@@ -139,22 +162,15 @@ With optional prefix ARG (\\[universal-argument]) open URL in a
 new EWW buffer."
   (interactive)
   (when (derived-mode-p 'eww-mode)
-    (let ((links))
-      (save-excursion
-        (goto-char (point-max))
-        (while (text-property-search-backward 'shr-url nil nil t)
-          (when (and (get-text-property (point) 'shr-url)
-                     (not (get-text-property (point) 'eww-form)))
-            (push (format "%s  @ %s ~ %d"
-                          (button-label (point))
-                          (propertize (get-text-property (point) 'shr-url) 'face 'link)
-                          (point))
-                  links))))
-      (let* ((selection (completing-read "Jump to URL on page: " links nil t))
-             (position (replace-regexp-in-string ".*~ " "" selection))
-             (point (string-to-number position)))
-        (goto-char point)
-        (prot-pulse-pulse-line)))))
+    (let* ((links
+	    (prot-eww--capture-url-on-page t))
+	   (selection
+	    (completing-read "Jump to URL on page: " links nil t))
+           (position
+	    (replace-regexp-in-string ".*~ " "" selection))
+           (point (string-to-number position)))
+      (goto-char point)
+      (prot-pulse-pulse-line))))
 
 (defvar prot-eww--occur-feed-regexp
   (concat "\\(rss\\|atom\\)\\+xml.\\(.\\|\n\\)"
