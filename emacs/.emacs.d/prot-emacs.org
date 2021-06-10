@@ -418,14 +418,14 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-slanted-constructs nil
+  (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs nil
         modus-themes-no-mixed-fonts nil
         modus-themes-subtle-line-numbers t
         modus-themes-success-deuteranopia t
         modus-themes-inhibit-reload nil ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
@@ -433,17 +433,17 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'intense-foreground-straight-underline, 'colored-background
         modus-themes-lang-checkers 'intense-foreground-straight-underline
 
-        ;; Options for `modus-themes-mode-line': nil, '3d, 'moody,
-        ;; 'borderless, 'borderless-3d, 'borderless-moody, 'accented,
-        ;; 'accented-3d, 'accented-moody, 'borderless-accented,
-        ;; 'borderless-accented-3d, 'borderless-accented-moody
-        modus-themes-mode-line 'borderless-accented-moody ; For Moody, also check `prot-moody'
+        ;; Options for `modus-themes-mode-line' are either nil, or a list
+        ;; that can combine any of `3d' OR `moody', `borderless',
+        ;; `accented'.  The variable's doc string shows all possible
+        ;; combinations.
+        modus-themes-mode-line '(borderless 3d) ; For Moody, also check `prot-moody'
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments, 'faint-yellow-comments
-        modus-themes-syntax nil
+        modus-themes-syntax 'alt-syntax-yellow-comments
 
         ;; Options for `modus-themes-hl-line': nil, 'intense-background,
         ;; 'accented-background, 'underline-neutral,
@@ -462,7 +462,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
         modus-themes-prompts 'subtle-gray
 
-        modus-themes-completions nil ; {nil,'moderate,'opinionated}
+        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
         modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
 
@@ -474,7 +474,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
         modus-themes-diffs 'fg-only-deuteranopia
 
-        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
+        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch scale-title))
@@ -483,12 +483,12 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
           (habit . traffic-light-deuteranopia))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . rainbow-section)
+        '((1 . rainbow-section-no-bold)
           (t . rainbow-no-bold))
 
-        modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings nil
-        modus-themes-scale-headings nil
+        modus-themes-variable-pitch-ui t
+        modus-themes-variable-pitch-headings t
+        modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
@@ -7110,7 +7110,7 @@ want is to make the mode line gracefully adapt to changes in font size.
 
   ;; Also check the Modus themes' `modus-themes-mode-line' which can set
   ;; the styles specifically for Moody.
-  (prot-moody-set-height 1))
+  (prot-moody-set-height -1))
 #+end_src
 
 Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
