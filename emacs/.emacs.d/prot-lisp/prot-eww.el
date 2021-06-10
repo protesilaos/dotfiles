@@ -80,8 +80,8 @@ With optional prefix ARG (\\[universal-argument]) open URL in a
 new eww buffer.  If URL does not look like a valid link, run a
 web query using `eww-search-prefix'.
 
-When called from an eww buffer, provide the current link as as
-`next-history-element' accessible using `M-n'."
+When called from an eww buffer, provide the current link as
+\\<minibuffer-local-map>\\[next-history-element]."
   (interactive
    (let ((all-history (delete-dups
                        (append prot-eww-visited-history
