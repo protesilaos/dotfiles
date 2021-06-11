@@ -120,23 +120,23 @@ LABEL @ URL ~ POSITION."
     (save-excursion
       (goto-char (point-min))
       (while (setq match (text-property-search-forward
-			  'shr-url nil nil t))
-	(let* ((raw-url (prop-match-value match))
-	       (start-point-prop (prop-match-beginning match))
-	       (end-point-prop (prop-match-end match))
-	       (url (when (stringp raw-url)
-		      (propertize raw-url 'face 'link)))
-	       (label (buffer-substring-no-properties
-		       start-point-prop end-point-prop))
-	       (point start-point-prop))
-	  (when url
-	    (if position
-		(push (format "%s  @ %s ~ %d"
-			      label url point)
-		      links)
-	      (push (format "%s  @ %s"
-			    label url)
-		    links))))))
+                          'shr-url nil nil t))
+        (let* ((raw-url (prop-match-value match))
+               (start-point-prop (prop-match-beginning match))
+               (end-point-prop (prop-match-end match))
+               (url (when (stringp raw-url)
+                      (propertize raw-url 'face 'link)))
+               (label (buffer-substring-no-properties
+                       start-point-prop end-point-prop))
+               (point start-point-prop))
+          (when url
+            (if position
+                (push (format "%s  @ %s ~ %d"
+                              label url point)
+                      links)
+              (push (format "%s  @ %s"
+                            label url)
+                    links))))))
     links))
 
 ;;;###autoload
@@ -148,9 +148,9 @@ new EWW buffer."
   (interactive "P")
   (when (derived-mode-p 'eww-mode)
     (let* ((links
-	    (prot-eww--capture-url-on-page))
-	   (selection
-	    (completing-read "Browse URL from page: " links nil t))
+            (prot-eww--capture-url-on-page))
+           (selection
+            (completing-read "Browse URL from page: " links nil t))
            (url (replace-regexp-in-string ".*@ " "" selection)))
       (eww url (when arg 4)))))
 
@@ -163,11 +163,11 @@ new EWW buffer."
   (interactive)
   (when (derived-mode-p 'eww-mode)
     (let* ((links
-	    (prot-eww--capture-url-on-page t))
-	   (selection
-	    (completing-read "Jump to URL on page: " links nil t))
+            (prot-eww--capture-url-on-page t))
+           (selection
+            (completing-read "Jump to URL on page: " links nil t))
            (position
-	    (replace-regexp-in-string ".*~ " "" selection))
+            (replace-regexp-in-string ".*~ " "" selection))
            (point (string-to-number position)))
       (goto-char point)
       (prot-pulse-pulse-line))))
