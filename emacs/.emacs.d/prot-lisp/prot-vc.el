@@ -274,7 +274,24 @@ instead of producing a complete log."
       (error "'%s' is not under version control" default-directory))))
 
 ;;;###autoload
-(defun prot-vc-git-patch-dwim (&optional arg)
+(defun prot-vc-git-patch-apply (patch &optional project)
+  "Apply PATCH to current project (git am).
+PROJECT is a path to the root of a git repo.  With optional
+prefix argument (\\[universal-argument]) prompt for one, else use
+the current git-controlled directory tree."
+  (interactive
+   (list
+    (read-file-name "Path to patch: ")
+    (when current-prefix-arg
+      (project-prompt-project-dir))))
+  (let* ((default-directory (or project (prot-vc--current-project)))
+         (buf-name prot-vc-shell-output)
+         (buf (get-buffer-create buf-name))
+         (resize-mini-windows nil))
+    (shell-command (format "git am --3way %s" patch) buf))) ; TODO 2021-06-11: make args a defcustom
+
+;;;###autoload
+(defun prot-vc-git-patch-create-dwim (&optional arg)
   "Do-What-I-mean to output Git patches to a directory.
 
 When the region is active inside of a Log View buffer, produce

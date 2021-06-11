@@ -3495,7 +3495,6 @@ the =prot-diff.el= that I linked to above):
 
 | Command                          | C-x v prefix | Mnemonic          |
 |----------------------------------+--------------+-------------------|
-| vc-annotate                      | a            |                   |
 | vc-update                        | F            | Fetch and Fuse    |
 | vc-push                          | P            |                   |
 | vc-log-incoming                  | f            | Fetch only        |
@@ -3507,7 +3506,8 @@ the =prot-diff.el= that I linked to above):
 | prot-diff-buffer-dwim            | =            | Equality check    |
 | prot-vc-project-or-dir           | p            | Project status    |
 | prot-vc-custom-log               | SPC          |                   |
-| prot-vc-git-patch-dwim           | c            | Create patch      |
+| prot-vc-git-patch-apply          | a            | Apply patch       |
+| prot-vc-git-patch-create-dwim    | c            | Create patch      |
 | prot-vc-git-show                 | s            | Show commit       |
 | prot-vc-git-grep                 | g            |                   |
 | prot-vc-git-log-grep             | G            |                   |
@@ -3550,11 +3550,17 @@ appreciate the scope of each action.  In short:
   prints a log for it.  Again, this is useful while writing the message
   of a commit, as I occasionally need to reference earlier changes.
 
-+ =prot-vc-git-patch-dwim= produces a properly formatted patch for a given
-  commit.  The outputted file is saved in a directory that is selected
-  via a minibuffer completion prompt: default candidates are stored in
-  =prot-vc-patch-output-dirs= and are complemented by the root of the
-  current project.
++ =prot-vc-git-patch-apply= prompts for a file system path to a patch
+  file.  It either applies it directly to the current git repo or, with
+  an optional argument, to a given project.  This make it very simple to
+  apply a patch from anywhere, such as while reading my email (also
+  refer to [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]]).
+
++ =prot-vc-git-patch-create-dwim= produces a properly formatted patch for
+  a given commit.  The outputted file is saved in a directory that is
+  selected via a minibuffer completion prompt: default candidates are
+  stored in =prot-vc-patch-output-dirs= and are complemented by the root
+  of the current project.
 
   - When browsing a =log-view= buffer, the commit is the one around point.
 
@@ -3741,7 +3747,6 @@ manual for more on the matter):
 
   ;; NOTE: I override lots of the defaults
   (let ((map global-map))
-    (define-key map (kbd "C-x v a") #'vc-annotate) ; `vc-update-change-log' is not in git
     (define-key map (kbd "C-x v b") #'vc-retrieve-tag)  ; "branch" switch
     (define-key map (kbd "C-x v t") #'vc-create-tag)
     (define-key map (kbd "C-x v f") #'vc-log-incoming)  ; the actual git fetch
@@ -3749,7 +3754,6 @@ manual for more on the matter):
     (define-key map (kbd "C-x v F") #'vc-update)        ; "F" because "P" is push
     (define-key map (kbd "C-x v d") #'vc-diff))
   (let ((map vc-dir-mode-map))
-    (define-key map (kbd "a") #'vc-annotate)
     (define-key map (kbd "b") #'vc-retrieve-tag)
     (define-key map (kbd "t") #'vc-create-tag)
     (define-key map (kbd "O") #'vc-log-outgoing)
@@ -3807,7 +3811,8 @@ manual for more on the matter):
     (define-key map (kbd "C-x v SPC") #'prot-vc-custom-log)
     (define-key map (kbd "C-x v g") #'prot-vc-git-grep)
     (define-key map (kbd "C-x v G") #'prot-vc-git-log-grep)
-    (define-key map (kbd "C-x v c") #'prot-vc-git-patch-dwim)
+    (define-key map (kbd "C-x v a") #'prot-vc-git-patch-apply)
+    (define-key map (kbd "C-x v c") #'prot-vc-git-patch-create-dwim)
     (define-key map (kbd "C-x v s") #'prot-vc-git-show)
     (define-key map (kbd "C-x v r") #'prot-vc-git-find-revision)
     (define-key map (kbd "C-x v B") #'prot-vc-git-blame-region-or-file)
@@ -3825,7 +3830,8 @@ manual for more on the matter):
     (define-key map (kbd "M-r") #'prot-vc-git-log-edit-complete-comment))
   (let ((map log-view-mode-map))
     (define-key map (kbd "<C-tab>") #'prot-vc-log-view-toggle-entry-all)
-    (define-key map (kbd "c") #'prot-vc-git-patch-dwim)
+    (define-key map (kbd "a") #'prot-vc-git-patch-apply)
+    (define-key map (kbd "c") #'prot-vc-git-patch-create-dwim)
     (define-key map (kbd "R") #'prot-vc-git-log-reset)
     (define-key map (kbd "w") #'prot-vc-log-kill-hash)))
 #+end_src
