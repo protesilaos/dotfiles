@@ -116,7 +116,8 @@ Return a list of strings.  Strings are in the form LABEL @ URL.
 When optional argument POSITION is non-nil, include position info
 in the strings too, so strings take the form
 LABEL @ URL ~ POSITION."
-  (let ((links))
+  (let ((links)
+        (match (gensym)))
     (save-excursion
       (goto-char (point-min))
       (while (setq match (text-property-search-forward
