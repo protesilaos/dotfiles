@@ -147,10 +147,8 @@ With optional prefix ARG (\\[universal-argument]) open URL in a
 new EWW buffer."
   (interactive "P")
   (when (derived-mode-p 'eww-mode)
-    (let* ((links
-            (prot-eww--capture-url-on-page))
-           (selection
-            (completing-read "Browse URL from page: " links nil t))
+    (let* ((links (prot-eww--capture-url-on-page))
+           (selection (completing-read "Browse URL from page: " links nil t))
            (url (replace-regexp-in-string ".*@ " "" selection)))
       (eww url (when arg 4)))))
 
@@ -162,12 +160,9 @@ With optional prefix ARG (\\[universal-argument]) open URL in a
 new EWW buffer."
   (interactive)
   (when (derived-mode-p 'eww-mode)
-    (let* ((links
-            (prot-eww--capture-url-on-page t))
-           (selection
-            (completing-read "Jump to URL on page: " links nil t))
-           (position
-            (replace-regexp-in-string ".*~ " "" selection))
+    (let* ((links (prot-eww--capture-url-on-page t))
+           (selection (completing-read "Jump to URL on page: " links nil t))
+           (position (replace-regexp-in-string ".*~ " "" selection))
            (point (string-to-number position)))
       (goto-char point)
       (prot-pulse-pulse-line))))
