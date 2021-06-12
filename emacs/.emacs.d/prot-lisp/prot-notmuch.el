@@ -47,6 +47,12 @@ Those fields appear in the Notmuch hello buffer.  See
   :type 'integer
   :group 'prot-notmuch)
 
+(defcustom prot-notmuch-delete-tag "del"
+  "Single tag that applies to mail marked for deletion.
+This is used by `prot-notmuch-delete-mail'."
+  :type 'string
+  :group 'prot-notmuch)
+
 ;;;; Utilities
 
 (defface prot-notmuch-encrypted-tag
@@ -234,6 +240,30 @@ With optional prefix ARG (\\[universal-argument]) call
   (if arg
       (notmuch-refresh-all-buffers)
     (notmuch-refresh-this-buffer)))
+
+;;;###autoload
+(defun prot-notmuch-delete-mail ()
+  "Permanently delete mail marked as `prot-notmuch-delete-mail'.
+Prompt for confirmation before carrying out the operation.
+
+Do not attempt to refresh the index.  This will be done upon the
+next invocation of 'notmuch new'."
+  (interactive)
+  (let* ((del-tag prot-notmuch-delete-tag)
+         (count
+          (string-to-number
+           (with-temp-buffer
+             (shell-command
+              (format "notmuch count tag:%s" prot-notmuch-delete-tag) t)
+             (buffer-substring-no-properties (point-min) (1- (point-max))))))
+         (mail (if (> count 1) "mails" "mail")))
+    (unless (> count 0)
+      (user-error "No mail marked as `%s'" del-tag))
+    (when (yes-or-no-p
+           (format "Delete %d %s marked as `%s'?" count mail del-tag))
+      (shell-command
+       (format "notmuch search --output=files --format=text0 tag:%s | xargs -r0 rm" del-tag)
+       t))))
 
 ;;;; Mode line unread indicator
 
