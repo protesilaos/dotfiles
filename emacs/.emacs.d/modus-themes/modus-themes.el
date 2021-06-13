@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.4.0
-;; Last-Modified: <2021-06-10 13:33:00 +0300>
+;; Last-Modified: <2021-06-13 09:27:49 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -5018,7 +5018,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(gnus-summary-normal-ticked ((,class :foreground ,red-alt-other)))
     `(gnus-summary-normal-undownloaded ((,class :foreground ,yellow)))
     `(gnus-summary-normal-unread ((,class :foreground ,fg-main)))
-    `(gnus-summary-selected ((,class :inherit modus-themes-subtle-blue :extend t)))
+    `(gnus-summary-selected ((,class :inherit highlight :extend t)))
 ;;;;; golden-ratio-scroll-screen
     `(golden-ratio-scroll-highlight-line-face ((,class :background ,cyan-subtle-bg :foreground ,fg-main)))
 ;;;;; helm
@@ -5186,7 +5186,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(hi-red-b ((,class :inherit bold :background ,red-intense-bg :foreground ,fg-main)))
     `(hi-salmon ((,class :background ,red-subtle-bg :foreground ,fg-main)))
     `(hi-yellow ((,class :background ,yellow-subtle-bg :foreground ,fg-main)))
-    `(highlight ((,class :inherit modus-themes-subtle-blue)))
+    `(highlight ((,class :background ,blue-subtle-bg :foreground ,fg-main)))
     `(highlight-changes ((,class :foreground ,red-alt :underline nil)))
     `(highlight-changes-delete ((,class :background ,red-nuanced-bg
                                         :foreground ,red :underline t)))
@@ -5860,7 +5860,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(mu4e-footer-face ((,class :inherit modus-themes-slant :foreground ,fg-special-cold)))
     `(mu4e-forwarded-face ((,class :foreground ,magenta-alt-other)))
     `(mu4e-header-face ((,class :inherit shadow)))
-    `(mu4e-header-highlight-face ((,class :inherit modus-themes-hl-line)))
+    `(mu4e-header-highlight-face ((,class :inherit highlight :extend t)))
     `(mu4e-header-key-face ((,class :inherit message-header-name)))
     `(mu4e-header-marks-face ((,class :inherit mu4e-special-header-value-face)))
     `(mu4e-header-title-face ((,class :foreground ,fg-special-mild)))
