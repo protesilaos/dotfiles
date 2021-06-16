@@ -202,104 +202,117 @@ new EWW buffer."
             (re-search-forward ".*")
             (replace-match (concat base-url "\\&"))))))))
 
+;;TODO: Add this variable as user-option, that is, define it with
+;;`defcustom' so that users can use the customization interface to
+;;modify it.
+
 (defvar prot-eww-search-engines
-  '((debbugs . prot-eww-search-debbugs)
-    (Wikipedia . prot-eww-search-wikipedia)
-    (ArchWiki . prot-eww-search-arch-wiki)
-    (AUR . prot-eww-search-arch-aur))
-  "Alist of web search commands.
-The car of each cons cell is an arbitrary string that describes
-the function it is associated with.")
+  '((debbugs . (debbugs
+                "https://debbugs.gnu.org/cgi/bugreport.cgi?bug="
+                hist-var prot-eww--debbugs-hist))
+    (wikipedia . (wikipedia
+                  "https://en.m.wikipedia.org/w/index.php?search="
+                  hist-var prot-eww--wikipedia-hist))
+    (archwiki . (archwiki
+                 "https://wiki.archlinux.org/index.php?search="
+                 hist-var prot-eww--archwiki-hist))
+    (aur . (aur "https://aur.archlinux.org/packages/?K="
+                hist-var prot-eww--aur-hist)))
+  "Alist of Plist of web search engines related data.
+From now on refer to this type of data as APLIST.  Each element
+of APLIST is (KEY . VALUE) pair.  KEY is a symbol specifying
+search engine name.  The VALUE is property list.
 
-(defvar prot-eww--engine-hist '()
-  "Input history for `prot-eww-search-engine'.")
+The plist has two key-value pairs.  K1 is the same symbol has KEY
+and V1 is search string of the search engine.
 
-;;;###autoload
-(defun prot-eww-search-engine (engine)
-  "Use ENGINE stored in `prot-eww-search-engines'."
+K2 is the symbol 'hist-var', V2 is also a symbol that has a format
+'prot-eww--K1-hist'.
+
+NOTE: If you modify this variable after prot-eww is loaded you
+need to run the following code after modification:
+`(prot-eww--define-hist-var prot-eww-search-engines)'")
+
+;; Below 's-string' is short for 'search-string'. For wikipedia which
+;; is this string: "https://en.m.wikipedia.org/w/index.php?search=". I
+;; use this name because I don't know it's proper name.
+
+;; Define constructor and selectors functions to access
+;; `prot-eww-search-engines'.
+;; the constructor
+(defun prot-eww--cons-search-engines (name s-string)
+  "Include a new Alist element.
+The alist element is added to variable `prot-eww-search-engines'.
+
+NAME should be symbol representing the search engine.  S-STRING
+should be string, which is specific to named search engine."
+  (let ((my-plist `(,name ,s-string))
+        (hist-var-name (format "prot-eww--%s-hist"
+                               (symbol-name name))))
+    (plist-put my-plist 'hist-var (intern hist-var-name))
+    (let ((my-alist (cons name my-plist)))
+      (add-to-list 'prot-eww-search-engines my-alist))))
+
+;; Selectors definitions start
+(defun prot-eww--select-hist-name (aplist engine-name)
+  "Get the hist-var-name from the APLIST."
+  (let ((hist-var-name (plist-get
+                        (alist-get engine-name aplist)
+                        'hist-var)))
+    hist-var-name))
+
+(defun prot-eww--select-engine-names (aplist)
+  "Return a list of search-engine names.
+Each value of the list is a string."
+  (mapcar (lambda (x) (format "%s" (car x)))
+          aplist))
+
+(defun prot-eww--select-s-string (aplist engine-name)
+  "Return the search-string for specified ENGINE-NAME."
+  (plist-get
+   (alist-get engine-name aplist)
+   engine-name))
+;; Selector definitions end here.
+
+(defun prot-eww--define-hist-var (aplist)
+  "Initialize all hist-variables to empty list. Return nil."
+  (let ((engine-names
+         (prot-eww--select-engine-names aplist)))
+    (dolist (engine engine-names)
+      (let ((hist-var-name
+             (prot-eww--select-hist-name aplist
+                                         (intern engine))))
+        (set hist-var-name '())))))
+
+(prot-eww--define-hist-var prot-eww-search-engines)
+
+(defun prot-eww-search-engine (engine s-term &optional arg)
+  "Search S-TERM using ENGINE.
+ENGINE should already be defined in the variable
+`prot-eww-search-engines'.  With optional prefix ARG
+(\\[universal-argument]) open the search result in a new buffer."
   (interactive
-   (list
-    (completing-read
-     "Search with: "
-     (mapcar (lambda (x) (format "%s" (car x))) prot-eww-search-engines) nil t
-     nil 'prot-eww--engine-hist)))
-  (call-interactively (alist-get (intern engine) prot-eww-search-engines))
-  (add-to-history 'prot-eww--engine-hist engine))
-
-(defvar prot-eww--debbugs-hist '()
-  "Input history for `prot-eww-search-debbugs'.")
-
-;;;###autoload
-(defun prot-eww-search-debbugs (number &optional arg)
-  "Visit bug report NUMBER on debbugs.gnu.org.
-
-With optional prefix ARG (\\[universal-argument]) open URL in a
-new EWW buffer."
-  (interactive
-   (list (read-number "Browse debbugs number: " nil 'prot-eww--debbugs-hist)
-         current-prefix-arg))
-  (eww
-   (format "https://debbugs.gnu.org/cgi/bugreport.cgi?bug=%d" number)
-   (when arg 4))
-  (add-to-history 'prot-eww--debbugs-hist number))
-
-(defvar prot-eww--wikipedia-hist '()
-  "Input history for `prot-eww-search-wikipedia'.")
-
-;;;###autoload
-(defun prot-eww-search-wikipedia (string &optional arg)
-  "Search Wikipedia page matching STRING.
-
-With optional prefix ARG (\\[universal-argument]) open URL in a
-new EWW buffer."
-  (interactive
-   (list (read-string "Search Wikipedia: " nil 'prot-eww--wikipedia-hist)
-         current-prefix-arg))
-  (eww
-   (format "https://en.m.wikipedia.org/w/index.php?search=%s" string)
-   (when arg 4))
-  (add-to-history 'prot-eww--wikipedia-hist string))
-
-(defvar prot-eww--arch-wiki-hist '()
-  "Input history for `prot-eww-search-arch-wiki'.")
-
-;;;###autoload
-(defun prot-eww-search-arch-wiki (string &optional arg)
-  "Search Arch Linux Wiki page matching STRING.
-
-With optional prefix ARG (\\[universal-argument]) open URL in a
-new EWW buffer."
-  (interactive
-   (list (read-string "Search Arch Linux Wiki: " nil 'prot-eww--arch-wiki-hist)
-         current-prefix-arg))
-  (eww
-   (format "https://wiki.archlinux.org/index.php?search=%s" string)
-   (when arg 4))
-  (add-to-history 'prot-eww--arch-wiki-hist string))
-
-(defvar prot-eww--arch-aur-hist '()
-  "Input history for `prot-eww-search-arch-aur'.")
-
-;;;###autoload
-(defun prot-eww-search-arch-aur (string &optional arg)
-  "Search Arch User Repository page matching STRING.
-
-With optional prefix ARG (\\[universal-argument]) open URL in a
-new EWW buffer."
-  (interactive
-   (list (read-string "Search Arch User Repository: " nil 'prot-eww--arch-aur-hist)
-         current-prefix-arg))
-  (eww
-   (format "https://aur.archlinux.org/packages/?K=%s" (string-replace " " "+" string))
-   (when arg 4))
-  (add-to-history 'prot-eww--arch-aur-hist string))
-
-;;;###autoload
-(defun prot-eww-open-in-other-window ()
-  "Use `eww-open-in-new-buffer' in another window."
-  (interactive)
-  (other-window-prefix)       ; For emacs28 -- it's a hack, but why not?
-  (eww-open-in-new-buffer))
+   (let* ((engine-list (prot-eww--select-engine-names
+                        prot-eww-search-engines))
+          (engine-name (completing-read
+                        "Search with: " engine-list nil t nil
+                        'prot-eww--engine-hist))
+          (history-list (prot-eww--select-hist-name
+                         prot-eww-search-engines
+                         (intern engine-name)))
+          (search-term (read-string
+                        "Search for: " nil history-list)))
+     (list engine-name search-term
+           (prefix-numeric-value current-prefix-arg))))
+  (let* ((s-string
+          (prot-eww--select-s-string prot-eww-search-engines
+                                     (intern engine)))
+         (eww-pass (format "%s%s" s-string s-term))
+         (history-list (prot-eww--select-hist-name
+                        prot-eww-search-engines
+                        (intern engine))))
+    (add-to-history history-list s-term)
+    (eww eww-pass arg)))
 
 ;;;###autoload
 (defun prot-eww-readable ()
