@@ -31,6 +31,9 @@
 ;; educational and recreational purposes.  I am not a programmer and I
 ;; do not recommend that you copy any of this if you are not certain of
 ;; what it does.
+;;
+;; Thanks to Abhiseck Paira for the patches (see commit log for this
+;; file, such as with C-x v l (vc-print-log)).
 
 ;;; Code:
 
@@ -255,27 +258,27 @@ should be string, which is specific to named search engine."
 
 ;; Selectors definitions start
 (defun prot-eww--select-hist-name (aplist engine-name)
-  "Get the hist-var-name from the APLIST."
+  "Get hist-var-name from APLIST of ENGINE-NAME."
   (let ((hist-var-name (plist-get
                         (alist-get engine-name aplist)
                         'hist-var)))
     hist-var-name))
 
 (defun prot-eww--select-engine-names (aplist)
-  "Return a list of search-engine names.
+  "Return a list of search-engine names from APLIST.
 Each value of the list is a string."
   (mapcar (lambda (x) (format "%s" (car x)))
           aplist))
 
 (defun prot-eww--select-s-string (aplist engine-name)
-  "Return the search-string for specified ENGINE-NAME."
+  "Return the search-string for specified ENGINE-NAME from APLIST."
   (plist-get
    (alist-get engine-name aplist)
    engine-name))
 ;; Selector definitions end here.
 
 (defun prot-eww--define-hist-var (aplist)
-  "Initialize all hist-variables to empty list. Return nil."
+  "Initialize APLIST hist-variables to empty list; return nil."
   (let ((engine-names
          (prot-eww--select-engine-names aplist)))
     (dolist (engine engine-names)
@@ -286,11 +289,13 @@ Each value of the list is a string."
 
 (prot-eww--define-hist-var prot-eww-search-engines)
 
+;;;###autoload
 (defun prot-eww-search-engine (engine s-term &optional arg)
   "Search S-TERM using ENGINE.
-ENGINE should already be defined in the variable
-`prot-eww-search-engines'.  With optional prefix ARG
-(\\[universal-argument]) open the search result in a new buffer."
+ENGINE is an assossiation defined in `prot-eww-search-engines'.
+
+With optional prefix ARG (\\[universal-argument]) open the search
+result in a new buffer."
   (interactive
    (let* ((engine-list (prot-eww--select-engine-names
                         prot-eww-search-engines))
