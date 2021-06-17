@@ -418,38 +418,38 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-slanted-constructs t
+  (setq modus-themes-slanted-constructs nil
         modus-themes-bold-constructs nil
         modus-themes-no-mixed-fonts nil
-        modus-themes-subtle-line-numbers t
-        modus-themes-success-deuteranopia t
+        modus-themes-subtle-line-numbers nil
+        modus-themes-success-deuteranopia nil
         modus-themes-inhibit-reload nil ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers': nil,
         ;; 'straight-underline, 'subtle-foreground,
         ;; 'subtle-foreground-straight-underline, 'intense-foreground,
         ;; 'intense-foreground-straight-underline, 'colored-background
-        modus-themes-lang-checkers 'intense-foreground-straight-underline
+        modus-themes-lang-checkers 'subtle-foreground
 
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
         ;; `accented'.  The variable's doc string shows all possible
         ;; combinations.
-        modus-themes-mode-line '(borderless 3d) ; For Moody, also check `prot-moody'
+        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments, 'faint-yellow-comments
-        modus-themes-syntax 'alt-syntax-yellow-comments
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line': nil, 'intense-background,
         ;; 'accented-background, 'underline-neutral,
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
-        modus-themes-hl-line 'underline-neutral
+        modus-themes-hl-line 'intense-background
 
         modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
 
@@ -460,9 +460,9 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
         ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts 'subtle-gray
+        modus-themes-prompts nil
 
-        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
+        modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
         modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
 
@@ -472,9 +472,9 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'fg-only-deuteranopia
+        modus-themes-diffs nil
 
-        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
+        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch scale-title))
@@ -483,7 +483,8 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
           (habit . traffic-light-deuteranopia))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . rainbow-section-no-bold)
+        '((1 . section)
+          (2 . rainbow-line)
           (t . rainbow-no-bold))
 
         modus-themes-variable-pitch-ui t
