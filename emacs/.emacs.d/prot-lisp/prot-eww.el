@@ -92,7 +92,7 @@ When called from an eww buffer, provide the current link as
          (current-url (plist-get eww-data :url)))
      (list
       (completing-read "Run EWW on: " all-history
-                       nil nil nil 'eww-prompt-history current-url)
+                       nil nil current-url 'eww-prompt-history current-url)
       (prefix-numeric-value current-prefix-arg))))
   (eww url arg))
 
