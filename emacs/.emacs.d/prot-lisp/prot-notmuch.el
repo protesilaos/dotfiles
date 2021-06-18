@@ -53,6 +53,39 @@ This is used by `prot-notmuch-delete-mail'."
   :type 'string
   :group 'prot-notmuch)
 
+(defcustom prot-notmuch-mark-complete-tags '("+archived" "-inbox" "-list" "-todo" "-ref" "-unread")
+  "List of tags to mark as completed."
+  :type '(repeat string)
+  :group 'prot-notmuch)
+
+(defcustom prot-notmuch-mark-delete-tags '("+del" "-inbox" "-archived" "-unread")
+  "List of tags to mark for deletion.
+To actually delete email, refer to `prot-notmuch-delete-mail'."
+  :type '(repeat string)
+  :group 'prot-notmuch)
+
+(defcustom prot-notmuch-mark-flag-tags '("+flag" "-unread")
+  "List of tags to mark as important (flagged).
+This gets the `notmuch-tag-flagged' face, if that is specified in
+`notmuch-tag-formats'."
+  :type '(repeat string)
+  :group 'prot-notmuch)
+
+(defcustom prot-notmuch-mark-spam-tags '("+spam" "+del" "-inbox" "-unread")
+  "List of tags to mark as spam."
+  :type '(repeat string)
+  :group 'prot-notmuch)
+
+(defcustom prot-notmuch-mark-todo-tags '("+todo" "-unread")
+  "List of tags to mark as a to-do item."
+  :type '(repeat string)
+  :group 'prot-notmuch)
+
+(defcustom prot-notmuch-mark-reference-tags '("+ref" "-unread")
+  "List of tags to mark as a reference."
+  :type '(repeat string)
+  :group 'prot-notmuch)
+
 ;;;; Utilities
 
 (defface prot-notmuch-encrypted-tag
@@ -227,6 +260,59 @@ Add this to `notmuch-hello-sections'."
 	(widget-create 'prot-notmuch-search-item :value search :size width)))))
 
 ;;;; Commands
+
+(autoload 'notmuch-interactive-region "notmuch")
+(autoload 'notmuch-tag-change-list "notmuch")
+(autoload 'notmuch-search-next-thread "notmuch")
+(autoload 'notmuch-search-tag "notmuch")
+
+(defmacro prot-notmuch-search-tag-thread (name tags)
+  "Produce NAME function parsing TAGS."
+  (declare (indent defun))
+  `(defun ,name (&optional untag beg end)
+     ,(format
+       "Mark with `%s' the currently selected thread.
+
+Operate on each message in the currently selected thread.  With
+optional BEG and END as points delimiting a region that
+encompasses multiple threads, operate on all those messages
+instead.
+
+With optional prefix argument (\\[universal-argument]) as UNTAG,
+reverse the application of the tags.
+
+This function advances to the next thread when finished."
+       tags)
+     (interactive (cons current-prefix-arg (notmuch-interactive-region)))
+     (when ,tags
+       (notmuch-search-tag
+        (notmuch-tag-change-list ,tags untag) beg end))
+     (when (eq beg end)
+       (notmuch-search-next-thread))))
+
+(prot-notmuch-search-tag-thread
+  prot-notmuch-search-complete-thread
+  prot-notmuch-mark-complete-tags)
+
+(prot-notmuch-search-tag-thread
+  prot-notmuch-search-delete-thread
+  prot-notmuch-mark-delete-tags)
+
+(prot-notmuch-search-tag-thread
+  prot-notmuch-search-flag-thread
+  prot-notmuch-mark-flag-tags)
+
+(prot-notmuch-search-tag-thread
+  prot-notmuch-search-spam-thread
+  prot-notmuch-mark-spam-tags)
+
+(prot-notmuch-search-tag-thread
+  prot-notmuch-search-todo-thread
+  prot-notmuch-mark-todo-tags)
+
+(prot-notmuch-search-tag-thread
+  prot-notmuch-search-reference-thread
+  prot-notmuch-mark-reference-tags)
 
 (autoload 'notmuch-refresh-this-buffer "notmuch")
 (autoload 'notmuch-refresh-all-buffers "notmuch")

@@ -5675,10 +5675,10 @@ TL;DR: notmuch-emacs from MELPA and notmuch from distro packages is
 NOT SUPPORTED.
 #+end_quote
 
-Finally, my =prot-notmuch.el= contains commands and some minor stylistic
-extras including a mode line indicator that shows a count of all items
-matching the search terms =tag:unread and tag:inbox= (can be configured by
-the variable =prot-notmuch-mode-line-search-args=).
+Finally, my =prot-notmuch.el= contains various commands and some minor
+stylistic extras including a mode line indicator that shows a count of
+all items matching the search terms =tag:unread and tag:inbox= (can be
+configured by the variable =prot-notmuch-mode-line-search-args=).
 
 #+begin_src emacs-lisp
 ;; I install notmuch from the distro's repos because the CLI program is
@@ -5783,16 +5783,18 @@ the variable =prot-notmuch-mode-line-search-args=).
   (setq notmuch-draft-tags '("+draft"))
   (setq notmuch-draft-folder "drafts")
   (setq notmuch-draft-save-plaintext 'ask)
-  (setq notmuch-tagging-keys
-        `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
-          (,(kbd "c") ("+archived" "-inbox" "-list" "-todo" "-ref" "-unread") "Complete and archive")
-          (,(kbd "d") ("+del" "-inbox" "-archived" "-unread") "Mark for deletion")
-          (,(kbd "f") ("+flag" "-unread") "Flag as important")
-          ;; (,(kbd "r") notmuch-show-mark-read-tags "Mark as read")
-          (,(kbd "r") ("+ref" "-unread") "Reference for the future")
-          (,(kbd "s") ("+spam" "+del" "-inbox" "-unread") "Mark as spam")
-          (,(kbd "t") ("+todo" "-unread") "To-do")
-          (,(kbd "u") ("+unread") "Mark as unread")))
+  ;; ;; NOTE 2021-06-18: See an updated version in the `prot-notmuch'
+  ;; ;; section below.
+  ;; (setq notmuch-tagging-keys
+  ;;       `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
+  ;;         (,(kbd "c") ("+archived" "-inbox" "-list" "-todo" "-ref" "-unread") "Complete and archive")
+  ;;         (,(kbd "d") ("+del" "-inbox" "-archived" "-unread") "Mark for deletion")
+  ;;         (,(kbd "f") ("+flag" "-unread") "Flag as important")
+  ;;         ;; (,(kbd "r") notmuch-show-mark-read-tags "Mark as read")
+  ;;         (,(kbd "r") ("+ref" "-unread") "Reference for the future")
+  ;;         (,(kbd "s") ("+spam" "+del" "-inbox" "-unread") "Mark as spam")
+  ;;         (,(kbd "t") ("+todo" "-unread") "To-do")
+  ;;         (,(kbd "u") ("+unread") "Mark as unread")))
   (setq notmuch-tag-formats
         '(("unread" (propertize tag 'face 'notmuch-tag-unread))
           ("flag" (propertize tag 'face 'notmuch-tag-flagged))))
@@ -5842,6 +5844,20 @@ the variable =prot-notmuch-mode-line-search-args=).
     (define-key map (kbd "/") #'notmuch-search-filter))) ; alias for l
 
 (prot-emacs-builtin-package 'prot-notmuch
+  ;; Those are for the actions that are available after pressing 'k'
+  ;; (`notmuch-tag-jump').  For direct actions, refer to the key
+  ;; bindings below.
+  (setq notmuch-tagging-keys
+        `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
+          (,(kbd "c") prot-notmuch-mark-complete-tags "Complete and archive")
+          (,(kbd "d") prot-notmuch-mark-delete-tags "Mark for deletion")
+          (,(kbd "f") prot-notmuch-mark-flag-tags "Flag as important")
+          (,(kbd "s") prot-notmuch-mark-spam-tags "Mark as spam")
+          (,(kbd "t") prot-notmuch-mark-todo-tags "To-do")
+          (,(kbd "x") prot-notmuch-mark-reference-tags "Reference for the future")
+          (,(kbd "r") ("-unread") "Mark as read")
+          (,(kbd "u") ("+unread") "Mark as unread")))
+
   (setq prot-notmuch-search-field-width 100)
   (setq notmuch-hello-sections '(prot-notmuch-hello-insert-saved-searches
                                  ;; prot-notmuch-hello-insert-recent-searches
@@ -5871,7 +5887,15 @@ the variable =prot-notmuch-mode-line-search-args=).
 
   (add-hook 'notmuch-hello-mode-hook #'prot-notmuch-widget-field-face-remap)
 
-  (define-key notmuch-search-mode-map (kbd "g") #'prot-notmuch-refresh-buffer))
+  (let ((map notmuch-search-mode-map))
+    (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
+    (define-key map (kbd "A") #'notmuch-search-archive-thread)
+    (define-key map (kbd "D") #'prot-notmuch-search-delete-thread)
+    (define-key map (kbd "T") #'prot-notmuch-search-todo-thread)
+    (define-key map (kbd "X") #'prot-notmuch-search-reference-thread)
+    (define-key map (kbd "C") #'prot-notmuch-search-complete-thread)
+    (define-key map (kbd "S") #'prot-notmuch-search-spam-thread)
+    (define-key map (kbd "g") #'prot-notmuch-refresh-buffer)))
 #+end_src
 
 And here is =prot-notmuch.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
