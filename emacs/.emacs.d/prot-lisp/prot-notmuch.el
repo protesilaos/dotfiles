@@ -231,7 +231,6 @@ Add this to `notmuch-hello-sections'."
 (autoload 'notmuch-refresh-this-buffer "notmuch")
 (autoload 'notmuch-refresh-all-buffers "notmuch")
 
-;;;###autoload
 (defun prot-notmuch-refresh-buffer (&optional arg)
   "Run `notmuch-refresh-this-buffer'.
 With optional prefix ARG (\\[universal-argument]) call
