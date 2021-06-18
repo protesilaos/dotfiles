@@ -314,6 +314,45 @@ This function advances to the next thread when finished."
   prot-notmuch-search-reference-thread
   prot-notmuch-mark-reference-tags)
 
+(defmacro prot-notmuch-show-tag-message (name tags)
+  "Produce NAME function parsing TAGS."
+  (declare (indent defun))
+  `(defun ,name (&optional untag)
+     ,(format
+       "Apply `%s' to message.
+
+With optional prefix argument (\\[universal-argument]) as UNTAG,
+reverse the application of the tags."
+       tags)
+     (interactive "P")
+     (when ,tags
+       (apply 'notmuch-show-tag-message
+	          (notmuch-tag-change-list ,tags untag)))))
+
+(prot-notmuch-show-tag-message
+  prot-notmuch-show-complete-message
+  prot-notmuch-mark-complete-tags)
+
+(prot-notmuch-show-tag-message
+  prot-notmuch-show-delete-message
+  prot-notmuch-mark-delete-tags)
+
+(prot-notmuch-show-tag-message
+  prot-notmuch-show-flag-message
+  prot-notmuch-mark-flag-tags)
+
+(prot-notmuch-show-tag-message
+  prot-notmuch-show-spam-message
+  prot-notmuch-mark-spam-tags)
+
+(prot-notmuch-show-tag-message
+  prot-notmuch-show-todo-message
+  prot-notmuch-mark-todo-tags)
+
+(prot-notmuch-show-tag-message
+  prot-notmuch-show-reference-message
+  prot-notmuch-mark-reference-tags)
+
 (autoload 'notmuch-refresh-this-buffer "notmuch")
 (autoload 'notmuch-refresh-all-buffers "notmuch")
 
