@@ -6852,6 +6852,9 @@ some of the above.
   (setq shr-discard-aria-hidden t)
   (setq shr-cookie-policy nil))
 
+(prot-emacs-builtin-package 'url-cookie
+  (setq url-cookie-untrusted-urls '(".*")))
+
 (prot-emacs-builtin-package 'eww
   (setq eww-restore-desktop t)
   (setq eww-desktop-remove-duplicates t)
