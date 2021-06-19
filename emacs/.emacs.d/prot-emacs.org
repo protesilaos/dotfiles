@@ -5890,11 +5890,11 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
   (let ((map notmuch-search-mode-map))
     (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
     (define-key map (kbd "A") #'notmuch-search-archive-thread)
-    (define-key map (kbd "D") #'prot-notmuch-mark-delete-thread)
-    (define-key map (kbd "T") #'prot-notmuch-mark-todo-thread)
-    (define-key map (kbd "X") #'prot-notmuch-mark-reference-thread)
-    (define-key map (kbd "C") #'prot-notmuch-mark-complete-thread)
-    (define-key map (kbd "S") #'prot-notmuch-mark-spam-thread)
+    (define-key map (kbd "D") #'prot-notmuch-search-delete-thread)
+    (define-key map (kbd "T") #'prot-notmuch-search-todo-thread)
+    (define-key map (kbd "X") #'prot-notmuch-search-reference-thread)
+    (define-key map (kbd "C") #'prot-notmuch-search-complete-thread)
+    (define-key map (kbd "S") #'prot-notmuch-search-spam-thread)
     (define-key map (kbd "g") #'prot-notmuch-refresh-buffer))
   (let ((map notmuch-show-mode-map))
     (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
