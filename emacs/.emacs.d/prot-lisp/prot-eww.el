@@ -63,6 +63,41 @@ To be used by `eww-after-render-hook'."
 (defvar prot-eww-visited-history '()
   "History of visited URLs.")
 
+(defvar prot-eww-save-history-place
+  (locate-user-emacs-file "prot-eww-visited-history")
+  "File to save the value of `prot-eww-visited-history'.")
+
+(defvar prot-eww-save-visited-history nil
+  "Whether to save `prot-eww-visited-history'.
+If non-nil, save the value of `prot-eww-visited-history' in
+`prot-eww-save-history-place'.")
+
+(defun prot-eww-save-visited-history ()
+  "Save the value of `prot-eww-visited-history' in a file.
+The file is determined by the variable `prot-eww-save-history-place'."
+  (when prot-eww-save-visited-history
+    (with-temp-file prot-eww-save-history-place
+      (insert (concat ";; Auto-generated file;"
+                      " don't edit -*- mode: lisp-data -*-\n"))
+      (pp prot-eww-visited-history (current-buffer)))))
+
+(defun prot-eww-read-visited-history (&optional error-out)
+  "Read history from `prot-eww-save-history-place'.
+If ERROR-OUT, signal `user-error' if there is no history."
+  (when prot-eww-save-visited-history
+    (let ((file prot-eww-save-history-place))
+      (setq prot-eww-visited-history
+            (unless (zerop
+                     (or (file-attribute-size (file-attributes file))
+                         0))
+              (with-temp-buffer
+                (insert-file-contents file)
+                (read (current-buffer)))))
+      (when (and error-out (not prot-eww-visited-history))
+        (user-error "No history is defined")))))
+
+(prot-eww-read-visited-history t)
+
 (defun prot-eww--record-history ()
   "Store URL in `prot-eww-visited-history'.
 To be used by `eww-after-render-hook'."
@@ -383,6 +418,42 @@ trailing hyphen."
     (if (= (car out) 0)
         (message "Downloaded page at %s" path)
       (message "Error downloading page: %s" (cdr out)))))
+
+(defun prot-eww--kill-buffers-major-mode (mode-symbol)
+  "Kill all the buffer which have MODE-SYMBOL as the `major-mode'."
+  (save-current-buffer
+    (let ((list-buffers (buffer-list)))
+      (dolist (buffer list-buffers)
+        (set-buffer buffer)
+        (when (eq major-mode mode-symbol)
+          (kill-buffer buffer))))))
+
+(defun prot-eww-kill-eww-buffers ()
+  "Kill all the buffers which have 'eww-mode' as `major-mode'."
+  (prot-eww--kill-buffers-major-mode 'eww-mode))
+
+(defvar prot-eww-delete-cookies t
+  "When non-nil delete cookies.")
+
+(defun prot-eww-delete-cookies ()
+  "Delete cookies from the cookie file."
+  (when prot-eww-delete-cookies
+    (url-cookie-delete-cookies)))
+
+(defun prot-eww-quit ()
+  "Quit eww.
+When quitting, kill all eww-buffers, save `prot-eww-visited-history'
+in a file, delete all cookies."
+  (interactive)
+  (if prot-eww-save-visited-history
+      (when (y-or-n-p "Are you sure you want to quit eww? ")
+        (prot-eww-delete-cookies)
+        (prot-eww-kill-eww-buffers)
+        (prot-eww-save-visited-history))
+    (when (yes-or-no-p "Are you sure you want to quit eww?")
+      (prot-eww-delete-cookies)
+      (prot-eww-kill-eww-buffers)
+      (prot-eww-save-visited-history))))
 
 (provide 'prot-eww)
 ;;; prot-eww.el ends here
