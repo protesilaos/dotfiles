@@ -63,7 +63,7 @@ To be used by `eww-after-render-hook'."
 (defvar prot-eww-visited-history '()
   "History of visited URLs.")
 
-(defcustom prot-eww-save-history-place
+(defcustom prot-eww-save-history-file
   (locate-user-emacs-file "prot-eww-visited-history")
   "File to save the value of `prot-eww-visited-history'."
   :type 'file
@@ -72,22 +72,22 @@ To be used by `eww-after-render-hook'."
 (defvar prot-eww-save-visited-history nil
   "Whether to save `prot-eww-visited-history'.
 If non-nil, save the value of `prot-eww-visited-history' in
-`prot-eww-save-history-place'.")
+`prot-eww-save-history-file'.")
 
 (defun prot-eww-save-visited-history ()
   "Save the value of `prot-eww-visited-history' in a file.
-The file is determined by the variable `prot-eww-save-history-place'."
+The file is determined by the variable `prot-eww-save-history-file'."
   (when prot-eww-save-visited-history
-    (with-temp-file prot-eww-save-history-place
+    (with-temp-file prot-eww-save-history-file
       (insert (concat ";; Auto-generated file;"
                       " don't edit -*- mode: lisp-data -*-\n"))
       (pp prot-eww-visited-history (current-buffer)))))
 
 (defun prot-eww-read-visited-history (&optional error-out)
-  "Read history from `prot-eww-save-history-place'.
+  "Read history from `prot-eww-save-history-file'.
 If ERROR-OUT, signal `user-error' if there is no history."
   (when prot-eww-save-visited-history
-    (let ((file prot-eww-save-history-place))
+    (let ((file prot-eww-save-history-file))
       (setq prot-eww-visited-history
             (unless (zerop
                      (or (file-attribute-size (file-attributes file))
@@ -445,7 +445,7 @@ trailing hyphen."
 (defun prot-eww-quit ()
   "Quit eww, kill all its buffers, delete all cookies.
 As a final step, save `prot-eww-visited-history' to a file (see
-`prot-eww-save-history-place')."
+`prot-eww-save-history-file')."
   (interactive)
   (if prot-eww-save-visited-history
       (when (y-or-n-p "Are you sure you want to quit eww? ")
