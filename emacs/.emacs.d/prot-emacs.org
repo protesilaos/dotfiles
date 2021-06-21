@@ -6898,6 +6898,8 @@ some of the above.
   (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
 
 (prot-emacs-builtin-package 'prot-eww
+  (setq prot-eww-save-visited-history t) ; also check `prot-eww-save-history-file'
+
   (define-prefix-command 'prot-eww-map)
   (define-key global-map (kbd "C-c w") 'prot-eww-map)
   (define-key global-map (kbd "s-w") 'prot-eww-map)
@@ -6914,7 +6916,8 @@ some of the above.
     (define-key map (kbd "o") #'prot-eww-open-in-other-window)
     (define-key map (kbd "E") #'prot-eww-visit-url-on-page)
     (define-key map (kbd "J") #'prot-eww-jump-to-url-on-page)
-    (define-key map (kbd "R") #'prot-eww-readable)))
+    (define-key map (kbd "R") #'prot-eww-readable)
+    (define-key map (kbd "Q") #'prot-eww-quit)))
 #+end_src
 
 And here is =prot-eww.el= in its entirety.  It is available as a file in
