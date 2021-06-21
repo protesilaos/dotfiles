@@ -441,9 +441,9 @@ trailing hyphen."
     (url-cookie-delete-cookies)))
 
 (defun prot-eww-quit ()
-  "Quit eww.
-When quitting, kill all eww-buffers, save `prot-eww-visited-history'
-in a file, delete all cookies."
+  "Quit eww, kill all its buffers, delete all cookies.
+As a final step, save `prot-eww-visited-history' to a file (see
+`prot-eww-save-history-place')."
   (interactive)
   (if prot-eww-save-visited-history
       (when (y-or-n-p "Are you sure you want to quit eww? ")
