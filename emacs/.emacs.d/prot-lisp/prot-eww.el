@@ -63,9 +63,11 @@ To be used by `eww-after-render-hook'."
 (defvar prot-eww-visited-history '()
   "History of visited URLs.")
 
-(defvar prot-eww-save-history-place
+(defcustom prot-eww-save-history-place
   (locate-user-emacs-file "prot-eww-visited-history")
-  "File to save the value of `prot-eww-visited-history'.")
+  "File to save the value of `prot-eww-visited-history'."
+  :type 'file
+  :group 'prot-eww)
 
 (defvar prot-eww-save-visited-history nil
   "Whether to save `prot-eww-visited-history'.
