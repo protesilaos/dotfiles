@@ -69,10 +69,12 @@ To be used by `eww-after-render-hook'."
   :type 'file
   :group 'prot-eww)
 
-(defvar prot-eww-save-visited-history nil
+(defcustom prot-eww-save-visited-history nil
   "Whether to save `prot-eww-visited-history'.
 If non-nil, save the value of `prot-eww-visited-history' in
-`prot-eww-save-history-file'.")
+`prot-eww-save-history-file'."
+  :type 'boolean
+  :group 'prot-eww)
 
 (defun prot-eww-save-visited-history ()
   "Save the value of `prot-eww-visited-history' in a file.
