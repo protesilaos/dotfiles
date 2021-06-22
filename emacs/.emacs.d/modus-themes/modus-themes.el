@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.4.0
-;; Last-Modified: <2021-06-13 09:27:49 +0300>
+;; Last-Modified: <2021-06-22 18:34:57 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -3857,19 +3857,19 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; apropos
     `(apropos-function-button ((,class :inherit button
                                        ,@(modus-themes--link-color
-                                          magenta-alt-other magenta-alt-other-faint))))
+                                          magenta magenta-faint))))
     `(apropos-keybinding ((,class :inherit modus-themes-key-binding)))
     `(apropos-misc-button ((,class :inherit button
                                    ,@(modus-themes--link-color
                                       cyan-alt-other cyan-alt-other-faint))))
     `(apropos-property ((,class :inherit modus-themes-bold :foreground ,magenta-alt)))
-    `(apropos-symbol ((,class :inherit modus-themes-bold :foreground ,magenta)))
+    `(apropos-symbol ((,class :inherit modus-themes-pseudo-header)))
     `(apropos-user-option-button ((,class :inherit button
                                           ,@(modus-themes--link-color
-                                             green-alt-other green-alt-other-faint))))
+                                             cyan cyan-faint))))
     `(apropos-variable-button ((,class :inherit button
                                        ,@(modus-themes--link-color
-                                          blue blue-faint))))
+                                          blue-alt blue-alt-faint))))
 ;;;;; apt-sources-list
     `(apt-sources-list-components ((,class :foreground ,cyan)))
     `(apt-sources-list-options ((,class :foreground ,yellow)))
@@ -4287,7 +4287,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; diff-mode
     `(diff-added ((,class :inherit modus-themes-diff-added)))
     `(diff-changed ((,class :inherit modus-themes-diff-changed :extend t)))
-    `(diff-context ((,class :foreground ,fg-alt)))
+    `(diff-context ((,class ,@(unless (eq modus-themes-diffs 'bg-only) (list :foreground fg-unfocused)))))
     `(diff-error ((,class :inherit modus-themes-intense-red)))
     `(diff-file-header ((,class :inherit (bold diff-header))))
     `(diff-function ((,class :inherit modus-themes-diff-heading)))
@@ -5568,7 +5568,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                   bg-diff-changed fg-diff-changed
                                   yellow-nuanced-bg fg-diff-changed))))
     `(magit-diff-base-highlight ((,class :inherit modus-themes-diff-focus-changed)))
-    `(magit-diff-context ((,class :foreground ,fg-unfocused)))
+    `(magit-diff-context ((,class ,@(unless (eq modus-themes-diffs 'bg-only) (list :foreground fg-unfocused)))))
     `(magit-diff-context-highlight ((,class ,@(modus-themes--diff
                                                bg-dim fg-dim
                                                bg-inactive fg-inactive
@@ -5860,7 +5860,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(mu4e-footer-face ((,class :inherit modus-themes-slant :foreground ,fg-special-cold)))
     `(mu4e-forwarded-face ((,class :foreground ,magenta-alt-other)))
     `(mu4e-header-face ((,class :inherit shadow)))
-    `(mu4e-header-highlight-face ((,class :inherit highlight :extend t)))
+    `(mu4e-header-highlight-face ((,class :inherit modus-themes-hl-line)))
     `(mu4e-header-key-face ((,class :inherit message-header-name)))
     `(mu4e-header-marks-face ((,class :inherit mu4e-special-header-value-face)))
     `(mu4e-header-title-face ((,class :foreground ,fg-special-mild)))
