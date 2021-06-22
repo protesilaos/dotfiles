@@ -100,7 +100,8 @@ If ERROR-OUT, signal `user-error' if there is no history."
       (when (and error-out (not prot-eww-visited-history))
         (user-error "No history is defined")))))
 
-(prot-eww-read-visited-history t)
+(unless prot-eww-visited-history
+  (prot-eww-read-visited-history t))
 
 (defun prot-eww--record-history ()
   "Store URL in `prot-eww-visited-history'.
