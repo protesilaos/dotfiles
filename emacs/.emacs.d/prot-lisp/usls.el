@@ -338,7 +338,7 @@ trailing hyphen."
 (defun usls--directory-subdirs-prompt ()
   "Handle user input on choice of subdirectory."
   (let* ((subdirs
-          (if (eq (usls--directory-subdirs-no-git) nil)
+          (if (null (usls--directory-subdirs-no-git))
               (user-error "No subdirs in `%s'; create them manually"
                           (usls--directory))
             (usls--directory-subdirs-no-git)))
@@ -722,7 +722,7 @@ When called interactively use completion."
                   (completing-read "Pick buffer: "
                                    bufs nil t)
                 (if (listp buffers) (car buffers) buffers))))
-    (unless (eq buf nil)
+    (unless (null buf)
       (get-buffer-window buf))))
 
 (defun usls--window-buffer-or-file ()
@@ -738,7 +738,7 @@ function, such as with `usls-append-region-buffer-or-file'."
   (let ((window (get-buffer-window buf))
         (mark (gensym)))
     (with-current-buffer buf
-      (goto-char (if (not (eq arg nil)) (point-max) (window-point window)))
+      (goto-char (if (not (null arg)) (point-max) (window-point window)))
       (setq mark (point))
       (insert region)
       (goto-char mark))))
