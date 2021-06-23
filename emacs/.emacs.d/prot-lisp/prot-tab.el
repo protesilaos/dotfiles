@@ -50,7 +50,7 @@ one other tab (so two in total) switch to it without further
 questions.  Else use completion to select the tab to switch to."
     (interactive)
     (let ((tabs (prot-tab--tab-bar-tabs)))
-      (cond ((eq tabs nil)
+      (cond ((null tabs)
              (tab-new))
             ((eq (length tabs) 1)
              (tab-next))

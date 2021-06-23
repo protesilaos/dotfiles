@@ -85,7 +85,7 @@ entries are present (what is the point of first notifying me at
 my inbox and then telling me 'Oh, nothing of interest here'?)."
   (interactive "p")
   (if (or (string-equal diary-mail-addr "")
-          (eq diary-mail-addr nil))
+          (null diary-mail-addr))
       (user-error "You must set `diary-mail-addr' to use this command")
     (let ((entries)
           (diary-display-function #'diary-fancy-display)

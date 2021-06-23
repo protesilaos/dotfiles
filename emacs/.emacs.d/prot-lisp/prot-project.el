@@ -244,11 +244,11 @@ Optional N integer overrides that variable's value."
                 (locate-dominating-file "." ".git")
                 default-directory))
         (modes (prot-common-minor-modes-active)))
-    (if (and (eq buffer-read-only nil)
+    (if (and (null buffer-read-only)
              (member pr known-projects)
              (not (prot-project--large-file-p))
              (not (member 'org-src-mode modes))
-             (not (eq buffer-file-truename nil)))
+             (not (null buffer-file-truename)))
         (flymake-mode 1)
       (flymake-mode -1))))
 

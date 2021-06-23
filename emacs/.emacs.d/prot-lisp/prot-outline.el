@@ -91,7 +91,7 @@ A major heading is one that has subheadings."
         (mode major-mode))
     (when (derived-mode-p (car (member mode blocklist)))
       (error "Don't use `prot-outline-minor-mode' with `%s'" mode))
-    (if (eq outline-minor-mode nil)
+    (if (null outline-minor-mode)
         (progn
           (outline-minor-mode 1)
           (message "Enabled `outline-minor-mode'"))

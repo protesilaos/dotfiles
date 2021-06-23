@@ -157,7 +157,7 @@ on its own."
 (defun prot-logos--hidden-modeline ()
   "Toggle mode line visibility."
   (when prot-logos-hidden-modeline
-    (if (or (eq mode-line-format nil)
+    (if (or (null mode-line-format)
             (not (bound-and-true-p prot-logos-focus-mode)))
         (kill-local-variable 'mode-line-format)
       (setq-local mode-line-format nil)
