@@ -437,8 +437,10 @@ trailing hyphen."
   "Kill all the buffers which have 'eww-mode' as `major-mode'."
   (prot-eww--kill-buffers-major-mode 'eww-mode))
 
-(defvar prot-eww-delete-cookies t
-  "When non-nil delete cookies.")
+(defcustom prot-eww-delete-cookies t
+  "If non-nil delete cookies when prot-eww-quit is called."
+  :type 'boolean
+  :group 'prot-eww)
 
 (defun prot-eww-delete-cookies ()
   "Delete cookies from the cookie file."
