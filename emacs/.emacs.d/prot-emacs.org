@@ -5194,7 +5194,7 @@ Finally, note that I control the placement of those buffers in the
   ;; sophisticated approach, though I do not need one.
   (let ((time (string-to-number (format-time-string "%H"))))
     (when (and (> time 4) (< time 9))
-      (run-at-time 30 nil #'prot-diary-mail-entries)))
+      (run-at-time (* 60 5) nil #'prot-diary-mail-entries)))
 
   (require 'holidays)
   (setq calendar-holidays (append holiday-solar-holidays prot-diary-local-holidays))
