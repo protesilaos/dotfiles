@@ -447,6 +447,16 @@ trailing hyphen."
   (when prot-eww-delete-cookies
     (url-cookie-delete-cookies)))
 
+;; TODO: Make it defcustom
+(defvar prot-eww-quit-hook nil
+  "Run this hook when `prot-eww-quit' is called.")
+
+;; Populate the hook with these functions.
+(dolist (func '(prot-eww-delete-cookies
+                prot-eww-kill-eww-buffers
+                prot-eww-save-visited-history))
+  (add-hook 'prot-eww-quit-hook func))
+
 (defun prot-eww-quit ()
   "Quit eww, kill all its buffers, delete all cookies.
 As a final step, save `prot-eww-visited-history' to a file (see
@@ -454,13 +464,12 @@ As a final step, save `prot-eww-visited-history' to a file (see
   (interactive)
   (if prot-eww-save-visited-history
       (when (y-or-n-p "Are you sure you want to quit eww? ")
-        (prot-eww-delete-cookies)
-        (prot-eww-kill-eww-buffers)
-        (prot-eww-save-visited-history))
+        (run-hooks 'prot-eww-quit-hook))
+    ;;
+    ;; Now users have full control what `prot-eww-quit' does, by
+    ;; modifying `prot-eww-quit-hook'.
     (when (yes-or-no-p "Are you sure you want to quit eww?")
-      (prot-eww-delete-cookies)
-      (prot-eww-kill-eww-buffers)
-      (prot-eww-save-visited-history))))
+      (run-hooks 'prot-eww-quit-hook))))
 
 (provide 'prot-eww)
 ;;; prot-eww.el ends here
