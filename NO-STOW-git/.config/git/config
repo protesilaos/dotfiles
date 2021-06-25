@@ -17,3 +17,5 @@
   xfuncname = "^((\\(|;;;+ ).*)$"
 [diff "org"]
   xfuncname = "^(\\*+ +.*)$"
+[init]
+	defaultBranch = main
