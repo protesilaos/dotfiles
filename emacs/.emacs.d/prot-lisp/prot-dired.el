@@ -36,10 +36,10 @@
 
 (require 'prot-common)
 
+;;;; Subdir extras and Imenu setup
+
 (defvar prot-dired--directory-header-regexp "^ +\\(.+\\):\n"
   "Pattern to match Dired directory headings.")
-
-;;;; Subdir extras
 
 ;;;###autoload
 (defun prot-dired-subdirectory-next (&optional arg)
@@ -79,8 +79,6 @@ With optional SWITCHES, prompt for the ls switches to use."
 	  (read-string "Switches for listing: "
 			       (or dired-subdir-switches dired-actual-switches)))))
   (dired-maybe-insert-subdir (expand-file-name subdir) (or switches nil) t))
-
-;;;; Imenu setup
 
 (defun prot-dired-imenu-prev-index-position ()
   "Find the previous file in the buffer."
