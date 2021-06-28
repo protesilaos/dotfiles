@@ -2475,13 +2475,6 @@ ecosystem:
 ;;         '("-ls" . "-AGFhlv --group-directories-first --time-style=long-iso"))
 ;;   (setq find-name-arg "-iname"))
 
-(prot-emacs-builtin-package 'prot-dired
- (let ((map dired-mode-map))
-   (define-key map (kbd "M-n") #'prot-dired-subdirectory-next)
-   (define-key map (kbd "C-c C-n") #'prot-dired-subdirectory-next)
-   (define-key map (kbd "M-p") #'prot-dired-subdirectory-previous)
-   (define-key map (kbd "C-c C-p") #'prot-dired-subdirectory-next)))
-
 (prot-emacs-builtin-package 'dired-x
   (setq dired-clean-up-buffers-too t)
   (setq dired-clean-confirm-killing-deleted-buffers t)
@@ -2494,6 +2487,23 @@ ecosystem:
     (define-key map (kbd "C-x 4 C-j") #'dired-jump-other-window)
     (define-key map (kbd "s-J") #'dired-jump-other-window))
   (define-key dired-mode-map (kbd "I") #'dired-info))
+
+(prot-emacs-builtin-package 'prot-dired
+  (setq prot-dired-image-viewers '("feh" "sxiv"))
+  (setq prot-dired-media-players '("mpv" "vlc"))
+  (setq prot-dired-media-extensions
+        "\\.\\(mp[34]\\|ogg\\|flac\\|webm\\|mkv\\)")
+  (setq prot-dired-image-extensions
+        "\\.\\(png\\|jpe?g\\|tiff\\)")
+  (setq dired-guess-shell-alist-user ; those are the defaults for ! and & in Dired
+        `((,prot-dired-image-extensions (prot-dired-image-viewer))
+          (,prot-dired-media-extensions (prot-dired-media-player))))
+
+  (let ((map dired-mode-map))
+    (define-key map (kbd "M-n") #'prot-dired-subdirectory-next)
+    (define-key map (kbd "C-c C-n") #'prot-dired-subdirectory-next)
+    (define-key map (kbd "M-p") #'prot-dired-subdirectory-previous)
+    (define-key map (kbd "C-c C-p") #'prot-dired-subdirectory-next)))
 
 (prot-emacs-elpa-package 'dired-subtree
   (setq dired-subtree-use-backgrounds nil)

@@ -34,7 +34,93 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'cl-lib))
 (require 'prot-common)
+
+(defgroup prot-dired ()
+  "Extensions for Dired."
+  :group 'dired)
+
+;;;; File associations
+
+(defcustom prot-dired-media-extensions
+  "\\.\\(mp[34]\\|ogg\\|flac\\|webm\\|mkv\\)"
+  "Regular expression for media file extensions.
+
+Also see the function `prot-dired-media-player' and the variable
+`prot-dired-media-players'.
+
+To be used in user configurations while setting up the variable
+`dired-guess-shell-alist-user'."
+  :type 'string
+  :group 'prot-dired)
+
+(defcustom prot-dired-image-extensions
+  "\\.\\(png\\|jpe?g\\|tiff\\)"
+  "Regular expression for media file extensions.
+
+Also see the function `prot-dired-image-viewer' and the variable
+`prot-dired-image-viewers'.
+
+To be used in user configurations while setting up the variable
+`dired-guess-shell-alist-user'."
+  :type 'string
+  :group 'prot-dired)
+
+(defcustom prot-dired-media-players '("mpv" "vlc")
+  "List of strings for media player programs.
+
+Also see the function `prot-dired-media-player' and the variable
+`prot-dired-media-extensions'.
+
+To be used in user configurations while setting up the variable
+`dired-guess-shell-alist-user'."
+  :type '(repeat string)
+  :group 'prot-dired)
+
+(defcustom prot-dired-image-viewers '("feh" "sxiv")
+  "List of strings for image viewer programs.
+
+Also see the function `prot-dired-image-viewer' and the variable
+`prot-dired-image-extensions'.
+
+To be used in user configurations while setting up the variable
+`dired-guess-shell-alist-user'."
+  :type '(repeat string)
+  :group 'prot-dired)
+
+;; NOTE 2021-06-28: I am not sure why the compiler complains without
+;; this, even though we require cl-lib.
+(declare-function cl-remove-if "cl-lib")
+
+(defmacro prot-dired-file-association (name programs)
+  "Make NAME function to check for PROGRAMS."
+  (declare (indent defun))
+  `(defun ,name ()
+     ,(format "Return available program.
+
+This checks each entry in `%s' and returns the first program that
+is available on the system.  If none is present, it falls back to
+xdg-open (for GNU/Linux only).
+
+This function is for use in `dired-guess-shell-alist-user'."
+              programs)
+     (let ((executables)
+           (program-list (cl-remove-if nil ,programs)))
+       (dolist (p program-list)
+         (when (executable-find p)
+           (push p executables)))
+       (if executables
+           (car (reverse executables))
+         "xdg-open"))))
+
+(prot-dired-file-association
+  prot-dired-media-player
+  prot-dired-media-players)
+
+(prot-dired-file-association
+  prot-dired-image-viewer
+  prot-dired-image-viewers)
 
 ;;;; Subdir extras and Imenu setup
 
