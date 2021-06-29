@@ -169,7 +169,7 @@ ARGS."
 (defun prot-minibuffer--completion-category ()
   "Return completion category."
   (let* ((beg (prot-minibuffer--field-beg))
-         (md (completion--field-metadata beg)))
+         (md (when (window-minibuffer-p) (completion--field-metadata beg))))
     (alist-get 'category (cdr md))))
 
 ;; Adapted from icomplete.el
