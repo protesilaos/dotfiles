@@ -982,9 +982,6 @@ visualising the standard minibuffer completion candidates---refer to
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'marginalia
-  (setq marginalia-annotators
-        '(marginalia-annotators-heavy
-          marginalia-annotators-light))
   (marginalia-mode 1))
 #+end_src
 
