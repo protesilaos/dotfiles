@@ -3565,7 +3565,7 @@ appreciate the scope of each action.  In short:
   prefix argument the command prompts for a project to use.  This makes
   it very simple to apply a patch from anywhere, such as while reading
   my email (also refer to [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]]).  Arguments that are passed to
-  it are those specified in =prot-vc-git-apply-patch-args=, unless the
+  it are those specified in =prot-vc-git-patch-apply-args=, unless the
   command is called from Lisp, in which case it accepts ARGS as a list
   of strings (read the =git am= man pages if you ever need this).
 

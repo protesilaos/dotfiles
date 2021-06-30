@@ -79,7 +79,7 @@ default value is conservative."
   :type 'list
   :group 'prot-vc)
 
-(defcustom prot-vc-git-apply-patch-args (list "--3way")
+(defcustom prot-vc-git-patch-apply-args (list "--3way")
   "List of strings to pass as arguments to 'git am'."
   :type '(repeat string)
   :group 'prot-vc)
@@ -289,7 +289,7 @@ prompt for a project instead.
 
 When called non-interactively, ARGS is a list of strings with
 command line flags for 'git am'.  Otherwise it takes the value of
-`prot-vc-git-apply-patch-args'."
+`prot-vc-git-patch-apply-args'."
   (interactive
    (list
     (read-file-name "Path to patch: ")
@@ -300,7 +300,7 @@ command line flags for 'git am'.  Otherwise it takes the value of
          (buf-name prot-vc-shell-output)
          (buf (get-buffer-create buf-name))
          (resize-mini-windows nil)
-         (arguments (or args prot-vc-git-apply-patch-args))
+         (arguments (or args prot-vc-git-patch-apply-args))
          (arg-string (mapconcat #'identity arguments " ")))
     (shell-command (format "git am %s %s" arg-string patch) buf)))
 
