@@ -3560,10 +3560,14 @@ appreciate the scope of each action.  In short:
   of a commit, as I occasionally need to reference earlier changes.
 
 + =prot-vc-git-patch-apply= prompts for a file system path to a patch
-  file.  It either applies it directly to the current git repo or, with
-  an optional argument, to a given project.  This make it very simple to
-  apply a patch from anywhere, such as while reading my email (also
-  refer to [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]]).
+  file.  By default, it applies the patch directly to the current git
+  repo.  If no such repository is found or if called with an optional
+  prefix argument the command prompts for a project to use.  This makes
+  it very simple to apply a patch from anywhere, such as while reading
+  my email (also refer to [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]]).  Arguments that are passed to
+  it are those specified in =prot-vc-git-apply-patch-args=, unless the
+  command is called from Lisp, in which case it accepts ARGS as a list
+  of strings (read the =git am= man pages if you ever need this).
 
 + =prot-vc-git-patch-create-dwim= produces a properly formatted patch for
   a given commit.  The outputted file is saved in a directory that is

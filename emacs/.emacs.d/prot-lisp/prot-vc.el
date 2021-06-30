@@ -79,6 +79,11 @@ default value is conservative."
   :type 'list
   :group 'prot-vc)
 
+(defcustom prot-vc-git-apply-patch-args (list "--3way")
+  "List of strings to pass as arguments to 'git am'."
+  :type '(repeat string)
+  :group 'prot-vc)
+
 ;;;; Commands and helper functions
 
 (defun prot-vc--current-project ()
@@ -274,21 +279,30 @@ instead of producing a complete log."
       (error "'%s' is not under version control" default-directory))))
 
 ;;;###autoload
-(defun prot-vc-git-patch-apply (patch &optional project)
-  "Apply PATCH to current project (git am).
-PROJECT is a path to the root of a git repo.  With optional
-prefix argument (\\[universal-argument]) prompt for one, else use
-the current git-controlled directory tree."
+(defun prot-vc-git-patch-apply (patch project &optional args)
+  "Apply PATCH to current project using 'git am'.
+
+PROJECT is a path to the root of a git repo, automatically
+defaulting to the current project.  If none is found or if this
+command is called with a prefix argument (\\[universal-argument])
+prompt for a project instead.
+
+When called non-interactively, ARGS is a list of strings with
+command line flags for 'git am'.  Otherwise it takes the value of
+`prot-vc-git-apply-patch-args'."
   (interactive
    (list
     (read-file-name "Path to patch: ")
-    (when current-prefix-arg
+    (when (or current-prefix-arg
+              (null (prot-vc--current-project)))
       (project-prompt-project-dir))))
-  (let* ((default-directory (or project (prot-vc--current-project)))
+  (let* ((default-directory (or project (prot-vc--current-project))) ; FIXME 2021-06-30: Avoid calling the function twice
          (buf-name prot-vc-shell-output)
          (buf (get-buffer-create buf-name))
-         (resize-mini-windows nil))
-    (shell-command (format "git am --3way %s" patch) buf))) ; TODO 2021-06-11: make args a defcustom
+         (resize-mini-windows nil)
+         (arguments (or args prot-vc-git-apply-patch-args))
+         (arg-string (mapconcat #'identity arguments " ")))
+    (shell-command (format "git am %s %s" arg-string patch) buf)))
 
 ;;;###autoload
 (defun prot-vc-git-patch-create-dwim (&optional arg)
