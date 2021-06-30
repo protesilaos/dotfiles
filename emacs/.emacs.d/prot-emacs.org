@@ -458,9 +458,10 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; 'underline-only, 'neutral-underline-only
         modus-themes-links 'neutral-underline
 
-        ;; Options for `modus-themes-prompts': nil, 'subtle-accented,
-        ;; 'intense-accented, 'subtle-gray, 'intense-gray
-        modus-themes-prompts nil
+        ;; Options for `modus-themes-prompts' are either nil (the
+        ;; default), or a list of properties that may include any of
+        ;; those symbols: `background', `bold', `gray', `intense'
+        modus-themes-prompts '(intense bold gray)
 
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
