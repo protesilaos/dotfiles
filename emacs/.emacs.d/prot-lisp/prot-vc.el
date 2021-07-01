@@ -296,7 +296,8 @@ command line flags for 'git am'.  Otherwise it takes the value of
     (when (or current-prefix-arg
               (null (prot-vc--current-project)))
       (project-prompt-project-dir))))
-  (let* ((default-directory (or project (prot-vc--current-project))) ; FIXME 2021-06-30: Avoid calling the function twice
+  ;; FIXME 2021-06-30: Avoid calling `prot-vc--current-project' twice
+  (let* ((default-directory (or project (prot-vc--current-project)))
          (buf-name prot-vc-shell-output)
          (buf (get-buffer-create buf-name))
          (resize-mini-windows nil)
