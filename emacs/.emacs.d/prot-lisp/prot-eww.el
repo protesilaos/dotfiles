@@ -424,18 +424,37 @@ trailing hyphen."
         (message "Downloaded page at %s" path)
       (message "Error downloading page: %s" (cdr out)))))
 
-(defun prot-eww--kill-buffers-major-mode (mode-symbol)
-  "Kill all the buffer which have MODE-SYMBOL as the `major-mode'."
+(defun prot-eww-kill-buffers-when (predicate)
+  "Kill buffers when PREDICATE returns non-nil.
+
+Loop through the buffer list, calling PREDICATE with each
+buffer. When calling PREDICATE with a buffer returns non-nil,
+kill that buffer.
+
+PREDICATE must be function that takes buffer-object as the one
+and only argument. It should return nil or non-nil."
+  (let ((list-buffers (buffer-list)))
+    (dolist (buffer list-buffers)
+      (when (funcall predicate buffer)
+        (kill-buffer buffer)))))
+
+(defun prot-eww--kill-eww-buffers-p (buffer)
+  "Predicate function. Return nil or non-nil.
+
+Take BUFFER, make it current, check if it has 'eww-mode' as the
+`major-mode' or if its major-mode is derived from `special-mode'
+and has \"eww\" in the buffer-name. Then return non-nil."
   (save-current-buffer
-    (let ((list-buffers (buffer-list)))
-      (dolist (buffer list-buffers)
-        (set-buffer buffer)
-        (when (eq major-mode mode-symbol)
-          (kill-buffer buffer))))))
+    (set-buffer buffer)
+    (or (eq major-mode 'eww-mode)
+        (and (derived-mode-p 'special-mode)
+             (string-match "\\*.*eww.*\\*" (buffer-name))))))
 
 (defun prot-eww-kill-eww-buffers ()
-  "Kill all the buffers which have 'eww-mode' as `major-mode'."
-  (prot-eww--kill-buffers-major-mode 'eww-mode))
+  "Kill all EWW buffers.
+Also kill special buffers made by EWW for example buffers like
+\"*eww-bookmarks*\", \"*eww-history*\" etc."
+  (prot-eww-kill-buffers-when 'prot-eww--kill-eww-buffers-p))
 
 (defcustom prot-eww-delete-cookies t
   "If non-nil delete cookies when prot-eww-quit is called."
