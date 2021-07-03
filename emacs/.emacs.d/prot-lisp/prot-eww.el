@@ -444,11 +444,11 @@ and only argument. It should return nil or non-nil."
 Take BUFFER, make it current, check if it has 'eww-mode' as the
 `major-mode' or if its major-mode is derived from `special-mode'
 and has \"eww\" in the buffer-name. Then return non-nil."
-  (save-current-buffer
-    (set-buffer buffer)
-    (or (eq major-mode 'eww-mode)
-        (and (derived-mode-p 'special-mode)
-             (string-match "\\*.*eww.*\\*" (buffer-name))))))
+  (let ((case-fold-search t))  ; ignore case
+    (with-current-buffer buffer
+      (or (eq major-mode 'eww-mode)
+          (and (derived-mode-p 'special-mode)
+               (string-match "\\*.*eww.*\\*" (buffer-name)))))))
 
 (defun prot-eww-kill-eww-buffers ()
   "Kill all EWW buffers.
