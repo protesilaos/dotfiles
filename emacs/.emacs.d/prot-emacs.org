@@ -418,7 +418,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-slanted-constructs nil
+  (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs nil
         modus-themes-no-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
@@ -460,8 +460,9 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of
-        ;; those symbols: `background', `bold', `gray', `intense'
-        modus-themes-prompts '(intense bold gray)
+        ;; those symbols: `background', `bold', `gray', `intense',
+        ;; `italic'
+        modus-themes-prompts '(italic bold intense)
 
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
