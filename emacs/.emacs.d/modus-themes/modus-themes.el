@@ -2273,7 +2273,16 @@ for `subtle-foreground-straight-underline' and its counterpart
 
 Option `colored-background' uses a straight underline, a
 background, and a foreground.  All are color-coded.  This is the
-most intense combination of face properties."
+most intense combination of face properties.
+
+To disable fringe indicators for Flymake or Flycheck, refer to
+variables `flymake-fringe-indicator-position' and
+`flycheck-indication-mode', respectively.
+
+NOTE: The placement of the straight underline, though not the
+wave style, is controlled by the built-in variables
+`underline-minimum-offset', `x-underline-at-descent-line',
+`x-use-underline-position-properties'."
   :group 'modus-themes
   :package-version '(modus-themes . "1.1.0")
   :version "28.1"
