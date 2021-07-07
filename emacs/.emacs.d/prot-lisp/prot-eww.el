@@ -476,6 +476,7 @@ Also kill special buffers made by EWW for example buffers like
                 prot-eww-save-visited-history))
   (add-hook 'prot-eww-quit-hook func))
 
+;;;###autoload
 (defun prot-eww-quit ()
   "Quit eww, kill all its buffers, delete all cookies.
 As a final step, save `prot-eww-visited-history' to a file (see
