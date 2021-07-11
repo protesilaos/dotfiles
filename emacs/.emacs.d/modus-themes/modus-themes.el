@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.4.0
-;; Last-Modified: <2021-07-07 18:34:10 +0300>
+;; Last-Modified: <2021-07-11 19:01:03 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -33,8 +33,7 @@
 ;; official Info manual for further documentation (distributed with the
 ;; themes, or available at: <https://protesilaos.com/modus-themes>).
 ;;
-;; The themes share the following customization variables, all of which
-;; are disabled by default (nil):
+;; The themes share the following customization variables:
 ;;
 ;;     modus-themes-inhibit-reload                 (boolean)
 ;;     modus-themes-italic-constructs              (boolean)
@@ -859,7 +858,7 @@ symbol and the latter as a string.")
     ;;
     ;; all pairs are combinable with themselves
     (bg-hl-line . "#151823")
-    (bg-hl-line-intense . "#2f2f2f")
+    (bg-hl-line-intense . "#292929")
     (bg-hl-line-intense-accent . "#00353f")
     (bg-hl-alt . "#181732")
     (bg-hl-alt-intense . "#282e46")
@@ -1674,14 +1673,14 @@ The actual styling of the face is done by `modus-themes-faces'."
 
 ;;; Customization variables
 
-(defcustom modus-themes-inhibit-reload nil
+(defcustom modus-themes-inhibit-reload t
   "Control theme reload when setting options with Customize.
 
 By default, customizing a theme-related user option through the
-Custom interfaces or with `customize-set-variable' reloads the
-currently active Modus theme.
+Custom interfaces or with `customize-set-variable' will not
+reload the currently active Modus theme.
 
-Disable this behaviour with a non-nil value."
+Enable this behaviour by setting this variable to nil."
   :group 'modus-themes
   :package-version '(modus-themes . "1.5.0")
   :version "28.1"
@@ -1693,10 +1692,16 @@ Disable this behaviour with a non-nil value."
 Will set SYM to VAL, and reload the current theme, unless
 `modus-themes-inhibit-reload' is non-nil."
   (set-default sym val)
-  (unless modus-themes-inhibit-reload
-    (pcase (modus-themes--current-theme)
-      ('modus-operandi (modus-themes-load-operandi))
-      ('modus-vivendi (modus-themes-load-vivendi)))))
+  (unless (or modus-themes-inhibit-reload
+              ;; Check if a theme is being loaded, in which case we
+              ;; don't want to reload a theme if the setter is
+              ;; invoked. `custom--inhibit-theme-enable' is set to nil
+              ;; by `enable-theme'.
+              (null (bound-and-true-p custom--inhibit-theme-enable)))
+    (let ((modus-themes-inhibit-reload t))
+      (pcase (modus-themes--current-theme)
+        ('modus-operandi (modus-themes-load-operandi))
+        ('modus-vivendi (modus-themes-load-vivendi))))))
 
 (defcustom modus-themes-operandi-color-overrides nil
   "Override colors in the Modus Operandi palette.
@@ -1808,107 +1813,92 @@ mixing fonts."
   :link '(info-link "(modus-themes) No mixed fonts"))
 
 (defconst modus-themes--headings-choice
-  '(choice
-    (const :format "[%v] %t\n" :tag "Fairly desaturated foreground with bold weight (default)" nil)
-    (const :format "[%v] %t\n" :tag "Same as the default (backward-compatible)" t)
-    (const :format "[%v] %t\n" :tag "Like the default without bold weight" no-bold)
-    (const :format "[%v] %t\n" :tag "Like the default plus overline" line)
-    (const :format "[%v] %t\n" :tag "Like `line' without bold weight" line-no-bold)
-    (const :format "[%v] %t\n" :tag "Like the default but with more colorful foreground" rainbow)
-    (const :format "[%v] %t\n" :tag "Like `rainbow' plus overline" rainbow-line)
-    (const :format "[%v] %t\n" :tag "Like `rainbow' without bold weight" rainbow-no-bold)
-    (const :format "[%v] %t\n" :tag "Like `rainbow-line' without bold weight" rainbow-line-no-bold)
-    (const :format "[%v] %t\n" :tag "Like the default plus subtle background" highlight)
-    (const :format "[%v] %t\n" :tag "Like `highlight' without bold weight" highlight-no-bold)
-    (const :format "[%v] %t\n" :tag "Like `highlight' with more colorful foreground" rainbow-highlight)
-    (const :format "[%v] %t\n" :tag "Like `rainbow-highlight' without bold weight" rainbow-highlight-no-bold)
-    (const :format "[%v] %t\n" :tag "Like `highlight' plus overline" section)
-    (const :format "[%v] %t\n" :tag "Like `section' without bold weight" section-no-bold)
-    (const :format "[%v] %t\n" :tag "Like `section' with more colorful foreground" rainbow-section)
-    (const :format "[%v] %t\n" :tag "Like `rainbow-section' without bold weight" rainbow-section-no-bold)
-    (const :format "[%v] %t\n" :tag "Do not use any distinct foreground color; just bold weight" no-color)
-    (const :format "[%v] %t\n" :tag "Like `no-bold' but without the distinct foreground color" no-color-no-bold))
+  '(set :tag "Properties" :greedy t
+        (const :tag "Background color" background)
+        (const :tag "Overline" overline)
+        (const :tag "No bold weight" no-bold)
+        (choice :tag "Colors"
+                (const :tag "Subtle colors" nil)
+                (const :tag "Rainbow colors" rainbow)
+                (const :tag "Monochrome" monochrome)))
   "Refer to the doc string of `modus-themes-headings'.
 This is a helper variable intended for internal use.")
 
 (defcustom modus-themes-headings nil
-  "Alist of styles for headings, with optional value per level.
+  "Heading styles with optional list of values for levels 1-8.
 
-To control faces per level from 1-8, use something like this:
+This is an alist that accepts a (key . list-of-values)
+combination.  The key is either a number, representing the
+heading's level or t, which pertains to the fallback style.  The
+list of values covers symbols that refer to properties, as
+described below.  Here is a sample, followed by a presentation of
+all available properties:
 
-  (setq modus-themes-headings
-        '((1 . highlight)
-          (2 . line)
-          (t . rainbow-line-no-bold)))
+    (setq modus-themes-headings
+          '((1 . (background overline))
+            (2 . (overline rainbow))
+            (t . (monochrome))))
 
-To set a uniform value for all heading levels, use this pattern:
+By default (a nil value for this variable), all headings have a
+bold typographic weight and use a desaturated text color.
 
-  (setq modus-themes-headings
-        '((t . rainbow-line-no-bold)))
+A `rainbow' property makes the text color more saturated.
 
-The default value uses a fairly desaturated foreground color in
-combination with a bold typographic weight.  To specify this
-style for a given level N (assuming you wish to have another
-fallback option), just specify the value nil like this:
+An `overline' property draws a line above the area of the
+heading.
 
-  (setq modus-themes-headings
-        '((1 . nil)
-          (2 . line)
-          (3) ; same as nil
-          (t . rainbow-line-no-bold)))
+A `background' property adds a subtle tinted color to the
+background of the heading.
 
-A description of all other possible values:
+A `no-bold' property removes the bold weight from the heading's
+text.
 
-+ `no-bold' retains the default text color while removing the
-  typographic weight.
+A `monochrome' property makes all headings the same base color,
+which is that of the default for the active theme (black/white).
+When `background' is also set, `monochrome' changes its color to
+gray.  If both `monochrome' and `rainbow' are set, the former
+takes precedence.
 
-+ `line' is the same as the default plus an overline over the
-  heading.
+Combinations of any of those properties are expressed as a list,
+like in these examples:
 
-+ `line-no-bold' is the same as `line' without bold weight.
+    (no-bold)
+    (rainbow background)
+    (overline monochrome no-bold)
 
-+ `rainbow' uses a more colorful foreground in combination with
-  bold weight.
+The order in which the properties are set is not significant.
 
-+ `rainbow-line' is the same as `rainbow' plus an overline.
+In user configuration files the form may look like this:
 
-+ `rainbow-line-no-bold' is the same as `rainbow-line' without
-  the bold weight.
+    (setq modus-themes-headings
+          '((1 . (background overline rainbow))
+            (2 . (background overline))
+            (t . (overline no-bold))))
 
-+ `highlight' retains the default style of a fairly desaturated
-  foreground combined with a bold weight and add to it a subtle
-  accented background.
+When defining the styles per heading level, it is possible to
+pass a non-nil value (t) instead of a list of properties.  This
+will retain the original aesthetic for that level.  For example:
 
-+ `highlight-no-bold' is the same as `highlight' without a bold
-  weight.
+    (setq modus-themes-headings
+          '((1 . t)           ; keep the default style
+            (2 . (background overline))
+            (t . (rainbow)))) ; style for all other headings
 
-+ `rainbow-highlight' is the same as `highlight' but with a more
-  colorful foreground.
+    (setq modus-themes-headings
+          '((1 . (background overline))
+            (2 . (rainbow no-bold))
+            (t . t))) ; default style for all other levels
 
-+ `rainbow-highlight-no-bold' is the same as `rainbow-highlight'
-  without a bold weight.
+For Org users, the extent of the heading depends on the variable
+`org-fontify-whole-heading-line'.  This affects the `overline'
+and `background' properties.  Depending on the version of Org,
+there may be others, such as `org-fontify-done-headline'.
 
-+ `section' retains the default looks and adds to them both an
-  overline and a slightly accented background.  It is, in effect,
-  a combination of the `line' and `highlight' values.
-
-+ `section-no-bold' is the same as `section' without a bold
-  weight.
-
-+ `rainbow-section' is the same as `section' but with a more
-  colorful foreground.
-
-+ `rainbow-section-no-bold' is the same as `rainbow-section'
-  without a bold weight.
-
-+ `no-color' does not apply any color to the heading, meaning
-  that it uses the foreground of the `default' face.  It still
-  renders the text with a bold typographic weight.
-
-+ `no-color-no-bold' is like `no-color' but without the bold
-  weight."
+Also read `modus-themes-scale-headings' to change the height of
+headings and `modus-themes-variable-pitch-headings' to make them
+use a proportionately spaced font."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.3.0")
+  :package-version '(modus-themes . "1.5.0")
   :version "28.1"
   :type `(alist
           :options ,(mapcar (lambda (el)
@@ -2440,7 +2430,7 @@ The order of items in those lists is not significant."
                       (const :tag "Rectangular Border" nil)
                       (const :tag "3d borders" 3d)
                       (const :tag "No box effects (Moody-compatible)" moody))
-              (const :tag "Coloured background" accented)
+              (const :tag "Colored background" accented)
               (const :tag "Without noticeable border" borderless))
   :set #'modus-themes--set-option
   :initialize #'custom-initialize-default
@@ -2561,8 +2551,8 @@ The property `bold' makes the text use a bold typographic weight.
 Similarly, `italic' adds a slant to the font's forms (italic or
 oblique forms, depending on the typeface).
 
-Combinations of any of those properties can be expressed in a
-list, as in those examples:
+Combinations of any of those properties are expressed as a list,
+like in these examples:
 
     (intense)
     (bold intense)
@@ -2602,39 +2592,42 @@ In user configuration files the form may look like this:
 (defcustom modus-themes-hl-line nil
   "Control the current line highlight of HL-line mode.
 
-The default (nil) is to apply a subtle neutral background to the
-current line.
+The value is a list of properties, each designated by a symbol.
+The default (a nil value or an empty list) is a subtle gray
+background color.
 
-Option `intense-background' uses a prominent neutral background.
+The property `accented' changes the background to a colored
+variant.
 
-Option `accented-background' is like the `intense-background' but
-with a more colorful background.
+An `underline' property draws a line below the highlighted area.
+Its color is similar to the background, so gray by default or an
+accent color when `accented' is also set.
 
-Option `underline-neutral' combines a subtle neutral background
-with a gray underline.
+An `intense' property amplifies the colors in use, which may be
+both the background and the underline.
 
-Option `underline-accented' draws an underline while applying a
-subtle colored background.
+Combinations of any of those properties are expressed as a list,
+like in these examples:
 
-Option `underline-only-neutral' uses just a neutral underline,
-without any added change to the background.
+    (intense)
+    (underline intense)
+    (accented intense underline)
 
-Option `underline-only-accented' uses just a colored underline,
-without any added change to the background.
+The order in which the properties are set is not significant.
+
+In user configuration files the form may look like this:
+
+    (setq modus-themes-hl-line '(underline accented))
 
 Set `x-underline-at-descent-line' to a non-nil value for better
 results with underlines."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.4.0")
+  :package-version '(modus-themes . "1.5.0")
   :version "28.1"
-  :type '(choice
-          (const :format "[%v] %t\n" :tag "Subtle neutral background (default)" nil)
-          (const :format "[%v] %t\n" :tag "Prominent neutral background" intense-background)
-          (const :format "[%v] %t\n" :tag "Subtle colored background" accented-background)
-          (const :format "[%v] %t\n" :tag "Underline with a subtle neutral background" underline-neutral)
-          (const :format "[%v] %t\n" :tag "Underline with a subtle colored background" underline-accented)
-          (const :format "[%v] %t\n" :tag "Just a neutral underline, without a background" underline-only-neutral)
-          (const :format "[%v] %t\n" :tag "Just an accented underline, without a background" underline-only-accented))
+  :type '(set :tag "Properties" :greedy t
+              (const :tag "Colored background" accented)
+              (const :tag "Underline" underline)
+              (const :tag "Intense style" intense))
   :set #'modus-themes--set-option
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) Line highlighting"))
@@ -2665,8 +2658,8 @@ to the delimiters.
 The `underline' property draws a straight line under the affected
 text.
 
-Combinations of any of those properties can be expressed in a
-list, as in those examples:
+Combinations of any of those properties are expressed as a list,
+like in these examples:
 
     (bold)
     (underline intense)
@@ -2712,8 +2705,8 @@ The property `alt-syntax' changes the combination of colors
 beyond strings and comments, so that the effective palette is
 broadened to provide greater variety relative to the default.
 
-Combinations of any of those properties can be expressed in a
-list, as in those examples:
+Combinations of any of those properties are expressed as a list,
+like in these examples:
 
     (faint)
     (green-strings yellow-comments)
@@ -2744,38 +2737,66 @@ bold weight or italic text: `modus-themes-bold-constructs' and
 (defcustom modus-themes-links nil
   "Set the style of links.
 
-Nil means to use an underline that is the same color as the
-foreground.
+The value is a list of properties, each designated by a symbol.
+The default (a nil value or an empty list) is a prominent text
+color, typically blue, with an underline of the same color.
 
-Option `faint' applies desaturated colors to the link's text and
-underline.
+For the style of the underline, a `neutral-underline' property
+turns the color of the line into a subtle gray, while the
+`no-underline' property removes the line altogether.  If both of
+those are set, the latter takes precedence.
 
-Option `neutral-underline' applies a subtle gray underline, while
-retaining the link's foreground.
+For text coloration, a `faint' property desaturates the color of
+the text and the underline, unless the underline is affected by
+the aforementioned properties.  While a `no-color' property
+removes the color from the text.  If both of those are set, the
+latter takes precedence.
 
-Option `faint-neutral-underline' combines a desaturated text
-color with a subtle gray underline.
+A `bold' property applies a heavy typographic weight to the text
+of the link.
 
-Option `no-underline' removes link underlines altogether, while
-retaining their original fairly vivid color.
+An `italic' property adds a slant to the link's text (italic or
+oblique forms, depending on the typeface).
 
-Option `underline-only' applies an underline while making the
-affected text colorless (it uses the same foreground as the
-theme's default).
+A `background' property applies a subtle tinted background color.
 
-Option `neutral-underline-only' makes the text colorless while
-using a subtle underline below it."
+In case both `no-underline' and `no-color' are set, then a subtle
+gray background is applied to all links.  This can still be
+combined with the `bold' and `italic' properties.
+
+Combinations of any of those properties are expressed as a list,
+like in these examples:
+
+    (faint)
+    (no-underline faint)
+    (no-color no-underline bold)
+    (italic bold background no-color no-underline)
+
+The order in which the properties are set is not significant.
+
+In user configuration files the form may look like this:
+
+    (setq modus-themes-links '(neutral-underline background))
+
+The placement of the underline, meaning its proximity to the
+text, is controlled by `x-use-underline-position-properties',
+`x-underline-at-descent-line', `underline-minimum-offset'.
+Please refer to their documentation strings."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.2.0")
+  :package-version '(modus-themes . "1.5.0")
   :version "28.1"
-  :type '(choice
-          (const :format "[%v] %t\n" :tag "Undeline link using the same color as the text (default)" nil)
-          (const :format "[%v] %t\n" :tag "Like the default, but apply less intense colors to links" faint)
-          (const :format "[%v] %t\n" :tag "Change the color of link underlines to a neutral gray" neutral-underline)
-          (const :format "[%v] %t\n" :tag "Desaturated foreground with neutral gray underline" faint-neutral-underline)
-          (const :format "[%v] %t\n" :tag "Remove underline property from links, keeping their foreground as-is" no-underline)
-          (const :format "[%v] %t\n" :tag "Apply underline only; use default foreground" underline-only)
-          (const :format "[%v] %t\n" :tag "Like `underline-only' but with a subtle underline" neutral-underline-only))
+  :type '(set :tag "Properties" :greedy t
+              (choice :tag "Text coloration"
+                      (const :tag "Saturared color (default)" nil)
+                      (const :tag "Faint coloration" faint)
+                      (const :tag "No color (use main black/white)" no-color))
+              (choice :tag "Underline"
+                      (const :tag "Same color as text (default)" nil)
+                      (const :tag "Neutral (gray) underline color" neutral-underline)
+                      (const :tag "No underline" no-underline))
+              (const :tag "Bold font weight" bold)
+              (const :tag "Italic font slant" italic)
+              (const :tag "Subtle background color" background))
   :set #'modus-themes--set-option
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) Link styles"))
@@ -2798,8 +2819,8 @@ colors.
 The `accented' property applies a more colorful background to the
 region.
 
-Combinations of any of those properties can be expressed in a
-list, as in those examples:
+Combinations of any of those properties are expressed as a list,
+like in these examples:
 
     (no-extend)
     (bg-only accented)
@@ -3193,59 +3214,69 @@ an alternative to the default value."
   "Get cdr of KEY in ALIST."
   (cdr (assoc key alist)))
 
-(defun modus-themes--heading (level fg fg-alt bg border)
+(defun modus-themes--heading (level fg fg-alt bg bg-gray border)
   "Conditional styles for `modus-themes-headings'.
 
 LEVEL is the heading's position in their order.  FG is the
 default text color.  FG-ALT is an accented, more saturated value
 than the default.  BG is a nuanced, typically accented,
 background that can work well with either of the foreground
-values.  BORDER is a color value that combines well with the
-background and alternative foreground."
+values.  BG-GRAY is a gray background.  BORDER is a color value
+that combines well with the background and foreground."
   (let* ((key (modus-themes--key-cdr level modus-themes-headings))
          (style (or key (modus-themes--key-cdr t modus-themes-headings)))
-         (var (when modus-themes-variable-pitch-headings
-                'variable-pitch))
+         (modus-themes-headings
+          (if (listp style)
+              style
+            ;; translation layer for legacy values
+            (pcase style
+              ('highlight '(background))
+              ('highlight-no-bold '(background no-bold))
+              ('line '(overline))
+              ('line-no-bold '(no-bold overline))
+              ('no-bold '(no-bold))
+              ('no-color '(monochrome))
+              ('no-color-no-bold '(no-bold monochrome))
+              ('rainbow '(rainbow))
+              ('rainbow-highlight '(rainbow background))
+              ('rainbow-highlight-no-bold '(no-bold rainbow background))
+              ('rainbow-line '(rainbow overline))
+              ('rainbow-no-bold '(no-bold rainbow))
+              ('rainbow-line-no-bold '(rainbow overline no-bold))
+              ('rainbow-section '(rainbow overline background))
+              ('rainbow-section-no-bold '(no-bold rainbow background overline))
+              ('section '(background overline))
+              ('section-no-bold '(background overline no-bold)))))
+         (var (if modus-themes-variable-pitch-headings
+                  'variable-pitch
+                'unspecified))
          (varbold (if var
                       (append (list 'bold) (list var))
                     'bold)))
-    (pcase style
-      ('no-bold
-       (list :inherit var :foreground fg))
-      ('no-color
-       (list :inherit varbold))
-      ('no-color-no-bold
-       (list :inherit var))
-      ('line
-       (list :inherit varbold :foreground fg :overline border))
-      ('line-no-bold
-       (list :inherit var :foreground fg :overline border))
-      ('rainbow
-       (list :inherit varbold :foreground fg-alt))
-      ('rainbow-no-bold
-       (list :inherit var :foreground fg-alt))
-      ('rainbow-line
-       (list :inherit varbold :foreground fg-alt :overline border))
-      ('rainbow-line-no-bold
-       (list :inherit var :foreground fg-alt :overline border))
-      ('highlight
-       (list :inherit varbold :background bg :foreground fg))
-      ('highlight-no-bold
-       (list :inherit var :background bg :foreground fg))
-      ('rainbow-highlight
-       (list :inherit varbold :background bg :foreground fg-alt))
-      ('rainbow-highlight-no-bold
-       (list :inherit var :background bg :foreground fg-alt))
-      ('section
-       (list :inherit varbold :background bg :foreground fg :overline border :extend t))
-      ('section-no-bold
-       (list :inherit var :background bg :foreground fg :overline border :extend t))
-      ('rainbow-section
-       (list :inherit varbold :background bg :foreground fg-alt :overline border :extend t))
-      ('rainbow-section-no-bold
-       (list :inherit var :background bg :foreground fg-alt :overline border :extend t))
-      (_
-       (list :inherit varbold :foreground fg)))))
+    (list :inherit
+          (cond
+           ((memq 'no-bold modus-themes-headings)
+            var)
+           (varbold))
+          :background
+          (cond
+           ((and (memq 'monochrome modus-themes-headings)
+                 (memq 'background modus-themes-headings))
+            bg-gray)
+           ((memq 'background modus-themes-headings)
+            bg)
+           ('unspecified))
+          :foreground
+          (cond
+           ((memq 'monochrome modus-themes-headings)
+            'unspecified)
+           ((memq 'rainbow modus-themes-headings)
+            fg-alt)
+           (fg))
+          :overline
+          (if (memq 'overline modus-themes-headings)
+              border
+            'unspecified))))
 
 (defun modus-themes--agenda-structure (fg)
   "Control the style of the Org agenda structure.
@@ -3501,30 +3532,85 @@ These are intended for Helm, Ivy, etc."
     ('moderate (list :inherit (list subtleface bold)))
     (_ (list :inherit (list intenseface bold)))))
 
-(defun modus-themes--link (fg fgfaint underline)
+(defun modus-themes--link (fg fgfaint underline bg bgneutral)
   "Conditional application of link styles.
 FG is the link's default color for its text and underline
 property.  FGFAINT is a desaturated color for the text and
-underline.  UNDERLINE is a gray color only for the undeline."
-  (pcase modus-themes-links
-    ('faint (list :foreground fgfaint :underline t))
-    ('neutral-underline (list :foreground fg :underline underline))
-    ('faint-neutral-underline (list :foreground fgfaint :underline underline))
-    ('no-underline (list :foreground fg :underline nil))
-    ('underline-only (list :underline t))
-    ('neutral-underline-only (list :underline underline))
-    (_ (list :foreground fg :underline t))))
+underline.  UNDERLINE is a gray color only for the undeline.  BG
+is a background color and BGNEUTRAL is its fallback value."
+  (let ((modus-themes-links
+         (if (listp modus-themes-links)
+             modus-themes-links
+           ;; translation layer for legacy values
+           (pcase modus-themes-links
+             ('faint '(faint))
+             ('neutral-underline '(neutral-underline))
+             ('faint-neutral-underline '(neutral-underline faint))
+             ('no-underline '(no-underline))
+             ('underline-only '(no-color))
+             ('neutral-underline-only '(no-color neutral-underline))))))
+    (list :inherit
+          (cond
+           ((and (memq 'bold modus-themes-links)
+                 (memq 'italic modus-themes-links))
+            'bold-italic)
+           ((memq 'italic modus-themes-links)
+            'italic)
+           ((memq 'bold modus-themes-links)
+            'bold)
+           ('unspecified))
+          :background
+          (cond
+           ((and (memq 'no-color modus-themes-links)
+                 (memq 'no-underline modus-themes-links))
+            bgneutral)
+           ((memq 'background modus-themes-links)
+            bg)
+           ('unspecified))
+          :foreground
+          (cond
+           ((memq 'no-color modus-themes-links)
+            'unspecified)
+           ((memq 'faint modus-themes-links)
+            fgfaint)
+           (fg))
+          :underline
+          (cond
+           ((memq 'no-underline modus-themes-links)
+            'unspecified)
+           ((memq 'neutral-underline modus-themes-links)
+            underline)
+           (t)))))
 
 (defun modus-themes--link-color (fg fgfaint &optional neutralfg)
   "Extends `modus-themes--link'.
 FG is the main accented foreground.  FGFAINT is also accented,
 yet desaturated.  Optional NEUTRALFG is a gray value."
-  (pcase modus-themes-links
-    ('faint (list :foreground fgfaint))
-    ('faint-neutral-underline (list :foreground fgfaint))
-    ('underline-only (list :underline t :foreground (or neutralfg 'unspecified)))
-    ('neutral-underline-only (list :underline 'unspecified :foreground (or neutralfg 'unspecified)))
-    (_ (list :foreground fg))))
+  (let ((modus-themes-links
+         (if (listp modus-themes-links)
+             modus-themes-links
+           ;; translation layer for legacy values
+           (pcase modus-themes-links
+             ('faint '(faint))
+             ('neutral-underline '(neutral-underline))
+             ('faint-neutral-underline '(neutral-underline faint))
+             ('no-underline '(no-underline))
+             ('underline-only '(no-color))
+             ('neutral-underline-only '(no-color neutral-underline))))))
+    (list :foreground
+          (cond
+           ((memq 'no-color modus-themes-links)
+            (or neutralfg 'unspecified))
+           ((memq 'faint modus-themes-links)
+            fgfaint)
+           (fg))
+          :underline
+          (cond
+           ((memq 'no-underline modus-themes-links)
+            'unspecified)
+           ((memq 'neutral-underline modus-themes-links)
+            (or neutralfg 'unspecified))
+           (t)))))
 
 (defun modus-themes--scale (amount)
   "Scale heading by AMOUNT.
@@ -3574,24 +3660,54 @@ combined with all colors used to fontify text."
             nil)
            (t)))))
 
-(defun modus-themes--hl-line (bgdefault bgintense bgaccent bgaccentul lineneutral lineaccent)
+(defun modus-themes--hl-line
+    (bgdefault bgintense bgaccent bgaccentsubtle lineneutral lineaccent lineneutralintense lineaccentintense)
   "Apply `modus-themes-hl-line' styles.
 
 BGDEFAULT is a subtle neutral background.  BGINTENSE is like the
 default, but more prominent.  BGACCENT is a prominent accented
-background, while BGACCENTUL is more subtle and is meant to be
-used in tandem with an underline.  LINENEUTRAL and LINEACCENT are
-a color values that can remain distinct against the buffer's
-possible backgrounds: the former is neutral, the latter is
-accented."
-  (pcase modus-themes-hl-line
-    ('intense-background (list :background bgintense))
-    ('accented-background (list :background bgaccent))
-    ('underline-neutral (list :background bgdefault :underline lineneutral))
-    ('underline-accented (list :background bgaccentul :underline lineaccent))
-    ('underline-only-neutral (list :background 'unspecified :underline lineneutral))
-    ('underline-only-accented (list :background 'unspecified :underline lineaccent))
-    (_ (list :background bgdefault))))
+background, while BGACCENTSUBTLE is more subtle.  LINENEUTRAL and
+LINEACCENT are color values that can remain distinct against the
+buffer's possible backgrounds: the former is neutral, the latter
+is accented.  LINENEUTRALINTENSE and LINEACCENTINTENSE are their
+more prominent alternatives."
+  (let ((modus-themes-hl-line
+         (if (listp modus-themes-hl-line)
+             modus-themes-hl-line
+           ;; translation layer for legacy values
+           (pcase modus-themes-hl-line
+             ('intense-background '(intense))
+             ('accented-background '(accented))
+             ('underline-neutral '(underline))
+             ('underline-accented '(underline accented))
+             ('underline-only-neutral '(underline)) ; only underline styles have been removed
+             ('underline-only-accented '(underline accented))))))
+    (list :background
+          (cond
+           ((and (memq 'intense modus-themes-hl-line)
+                 (memq 'accented modus-themes-hl-line))
+            bgaccent)
+           ((memq 'accented modus-themes-hl-line)
+            bgaccentsubtle)
+           ((memq 'intense modus-themes-hl-line)
+            bgintense)
+           (bgdefault))
+          :underline
+          (cond
+           ((and (memq 'intense modus-themes-hl-line)
+                 (memq 'accented modus-themes-hl-line)
+                 (memq 'underline modus-themes-hl-line))
+            lineaccentintense)
+           ((and (memq 'accented modus-themes-hl-line)
+                 (memq 'underline modus-themes-hl-line))
+            lineaccent)
+           ((and (memq 'intense modus-themes-hl-line)
+                 (memq 'underline modus-themes-hl-line))
+            lineneutralintense)
+           ((or (memq 'no-background modus-themes-hl-line)
+                (memq 'underline modus-themes-hl-line))
+            lineneutral)
+           ('unspecified)))))
 
 (defun modus-themes--mail-cite (mainfg subtlefg)
   "Combinations for `modus-themes-mail-citations'.
@@ -3719,19 +3835,17 @@ as when they are declared in the `:config' phase)."
 (defun modus-themes-load-operandi ()
   "Load `modus-operandi' and disable `modus-vivendi'.
 Also run `modus-themes-after-load-theme-hook'."
-  (let ((modus-themes-inhibit-reload t))
-    (disable-theme 'modus-vivendi)
-    (load-theme 'modus-operandi t)
-    (run-hooks 'modus-themes-after-load-theme-hook)))
+  (disable-theme 'modus-vivendi)
+  (load-theme 'modus-operandi t)
+  (run-hooks 'modus-themes-after-load-theme-hook))
 
 ;;;###autoload
 (defun modus-themes-load-vivendi ()
   "Load `modus-vivendi' and disable `modus-operandi'.
 Also run `modus-themes-after-load-theme-hook'."
-  (let ((modus-themes-inhibit-reload t))
-    (disable-theme 'modus-operandi)
-    (load-theme 'modus-vivendi t)
-    (run-hooks 'modus-themes-after-load-theme-hook)))
+  (disable-theme 'modus-operandi)
+  (load-theme 'modus-vivendi t)
+  (run-hooks 'modus-themes-after-load-theme-hook))
 
 (defun modus-themes--load-prompt ()
   "Helper for `modus-themes-toggle'."
@@ -3889,32 +4003,40 @@ by virtue of calling either of `modus-themes-load-operandi' and
     ;; styles for regular headings used in Org, Markdown, Info, etc.
     `(modus-themes-heading-1
       ((,class ,@(modus-themes--heading
-                  1 fg-main magenta-alt-other magenta-nuanced-bg bg-region)
+                  1 fg-main magenta-alt-other
+                  magenta-nuanced-bg bg-alt bg-region)
                ,@(modus-themes--scale modus-themes-scale-4))))
     `(modus-themes-heading-2
       ((,class ,@(modus-themes--heading
-                  2 fg-special-warm magenta-alt red-nuanced-bg bg-region)
+                  2 fg-special-warm magenta-alt
+                  red-nuanced-bg bg-alt bg-region)
                ,@(modus-themes--scale modus-themes-scale-3))))
     `(modus-themes-heading-3
       ((,class ,@(modus-themes--heading
-                  3 fg-special-cold blue blue-nuanced-bg bg-region)
+                  3 fg-special-cold blue
+                  blue-nuanced-bg bg-alt bg-region)
                ,@(modus-themes--scale modus-themes-scale-2))))
     `(modus-themes-heading-4
       ((,class ,@(modus-themes--heading
-                  4 fg-special-mild cyan cyan-nuanced-bg bg-region)
+                  4 fg-special-mild cyan
+                  cyan-nuanced-bg bg-alt bg-region)
                ,@(modus-themes--scale modus-themes-scale-1))))
     `(modus-themes-heading-5
       ((,class ,@(modus-themes--heading
-                  5 fg-special-calm green-alt-other green-nuanced-bg bg-region))))
+                  5 fg-special-calm green-alt-other
+                  green-nuanced-bg bg-alt bg-region))))
     `(modus-themes-heading-6
       ((,class ,@(modus-themes--heading
-                  6 yellow-nuanced-fg yellow-alt-other yellow-nuanced-bg bg-region))))
+                  6 yellow-nuanced-fg yellow-alt-other
+                  yellow-nuanced-bg bg-alt bg-region))))
     `(modus-themes-heading-7
       ((,class ,@(modus-themes--heading
-                  7 red-nuanced-fg red-alt red-nuanced-bg bg-region))))
+                  7 red-nuanced-fg red-alt
+                  red-nuanced-bg bg-alt bg-region))))
     `(modus-themes-heading-8
       ((,class ,@(modus-themes--heading
-                  8 magenta-nuanced-fg magenta bg-alt bg-region))))
+                  8 magenta-nuanced-fg magenta
+                  bg-alt bg-alt bg-region))))
 ;;;;; graph-specific faces
     `(modus-themes-graph-red-0 ((,class :background ,red-graph-0-bg)))
     `(modus-themes-graph-red-1 ((,class :background ,red-graph-1-bg)))
@@ -3946,7 +4068,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(modus-themes-hl-line ((,class ,@(modus-themes--hl-line
                                        bg-hl-line bg-hl-line-intense
                                        bg-hl-line-intense-accent blue-nuanced-bg
-                                       bg-region blue-intense-bg)
+                                       bg-region blue-intense-bg
+                                       fg-alt cyan-intense)
                                     :extend t)))
     `(modus-themes-key-binding ((,class :inherit bold :foreground ,blue-alt-other)))
     `(modus-themes-prompt ((,class ,@(modus-themes--prompt
@@ -4011,7 +4134,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(warning ((,class :inherit bold :foreground ,yellow)))
 ;;;;; buttons, links, widgets
     `(button ((,class ,@(modus-themes--link
-                         blue-alt-other blue-alt-other-faint bg-region))))
+                         blue-alt-other blue-alt-other-faint
+                         bg-region blue-nuanced-bg bg-alt))))
     `(link ((,class :inherit button)))
     `(link-visited ((,class :inherit button
                             ,@(modus-themes--link-color
@@ -4021,7 +4145,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(widget-button-pressed ((,class :inherit widget-button :foreground ,magenta)))
     `(widget-documentation ((,class :foreground ,green)))
     `(widget-field ((,class :background ,bg-alt :foreground ,fg-dim)))
-    `(widget-inactive ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+    `(widget-inactive ((,class :foreground ,fg-alt)))
     `(widget-single-line-field ((,class :inherit widget-field)))
 ;;;;; ag
     `(ag-hit-face ((,class :foreground ,fg-special-cold)))
@@ -5073,7 +5197,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                                       blue-faint blue-alt-other-faint))))
     `(font-lock-string-face ((,class ,@(modus-themes--syntax-string
                                         blue-alt blue-alt-faint
-                                        green red-alt
+                                        green red
                                         green-faint red-faint))))
     `(font-lock-type-face ((,class :inherit modus-themes-bold
                                    ,@(modus-themes--syntax-foreground
