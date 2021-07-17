@@ -4,8 +4,8 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 1.4.0
-;; Last-Modified: <2021-07-11 19:01:03 +0300>
+;; Version: 1.5.0
+;; Last-Modified: <2021-07-16 07:30:31 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -204,6 +204,7 @@
 ;;     git-timemachine
 ;;     git-walktree
 ;;     gnus
+;;     gotest
 ;;     golden-ratio-scroll-screen
 ;;     helm
 ;;     helm-ls-git
@@ -397,20 +398,6 @@
 ;;
 ;; - modus-operandi-theme.el    (Light theme)
 ;; - modus-vivendi-theme.el     (Dark theme)
-
-;;; News:
-;;
-;; Users updating from older versions to >= 1.0.0, are advised to read
-;; the announcement on the emacs-devel mailing list:
-;; <https://lists.gnu.org/archive/html/emacs-devel/2021-03/msg00300.html>.
-;;
-;; The web page of the change log is also available:
-;; <https://protesilaos.com/modus-themes-changelog/>.
-;;
-;; An Info manual should be distributed with the Modus themes.
-;; Evaluate this form to access it directly:
-;;
-;;    (info "(modus-themes) Top")
 
 ;;; Code:
 
@@ -1737,16 +1724,6 @@ For form, see `modus-themes-vivendi-colors'."
   (put 'modus-themes-vivendi-color-overrides
        'custom-options (copy-sequence colors)))
 
-(defcustom modus-themes-slanted-constructs nil
-  "Use slanted text in more code constructs (italics or oblique)."
-  :group 'modus-themes
-  :package-version '(modus-themes . "1.0.0")
-  :version "28.1"
-  :type 'boolean
-  :set #'modus-themes--set-option
-  :initialize #'custom-initialize-default
-  :link '(info-link "(modus-themes) Slanted constructs"))
-
 (define-obsolete-variable-alias
   'modus-themes-slanted-constructs
   'modus-themes-italic-constructs
@@ -2176,31 +2153,6 @@ accordance with it in cases where it changes, such as while using
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) Scaled heading sizes"))
 
-(defcustom modus-themes-scale-5 1.3
-  "Font size slightly larger than `modus-themes-scale-4'.
-
-This size is only used for 'special' top level headings, such as
-Org's file title heading, denoted by the #+title key word, and
-the Org agenda structure headers.
-
-The default value is a floating point that is interpreted as a
-multiple of the base font size.  It is recommended to use such a
-value.
-
-However, the variable also accepts an integer, understood as an
-absolute height that is 1/10 of the typeface's point size (e.g. a
-value of 140 is the same as setting the font at 14 point size).
-This will ignore the base font size and, thus, will not scale in
-accordance with it in cases where it changes, such as while using
-`text-scale-adjust'."
-  :group 'modus-themes
-  :package-version '(modus-themes . "1.2.0")
-  :version "28.1"
-  :type 'number
-  :set #'modus-themes--set-option
-  :initialize #'custom-initialize-default
-  :link '(info-link "(modus-themes) Scaled heading sizes"))
-
 (define-obsolete-variable-alias 'modus-themes-scale-5 'modus-themes-scale-title "1.5.0")
 
 (defcustom modus-themes-scale-title 1.3
@@ -2249,44 +2201,53 @@ pronounced grayscale value."
 (defcustom modus-themes-lang-checkers nil
   "Control the style of spelling and code checkers/linters.
 
-Nil (the default) applies a color-coded underline to the affected
-text, while it leaves the original foreground in tact.  If the
+The value is a list of properties, each designated by a symbol.
+The default (nil) applies a color-coded underline to the affected
+text, while it leaves the original foreground intact.  If the
 display spec of Emacs has support for it, the underline's style
 is that of a wave, otherwise it is a straight line.
 
-Options `subtle-foreground' and `intense-foreground' add a
-color-coded underline while also changing the text's foreground
-accordingly.  The style of the underline is the same as with the
-default option.
+The property `straight-underline' ensures that the underline
+under the affected text is always drawn as a straight line.
 
-Option `straight-underline' is like the default but always
-applies a straight line under the affected text.  Same principle
-for `subtle-foreground-straight-underline' and its counterpart
-`intense-foreground-straight-underline'.
+The property `text-also' applies the same color of the underline
+to the affected text.
 
-Option `colored-background' uses a straight underline, a
-background, and a foreground.  All are color-coded.  This is the
-most intense combination of face properties.
+The property `background' adds a color-coded background.
+
+The property `intense' amplifies the applicable colors if
+`background' and/or `text-only' are set.  If `intense' is set on
+its own, then it implies `text-only'.
 
 To disable fringe indicators for Flymake or Flycheck, refer to
 variables `flymake-fringe-indicator-position' and
 `flycheck-indication-mode', respectively.
+
+Combinations of any of those properties can be expressed in a
+list, as in those examples:
+
+    (background)
+    (straight-underline intense)
+    (background text-also straight-underline)
+
+The order in which the properties are set is not significant.
+
+In user configuration files the form may look like this:
+
+    (setq modus-themes-lang-checkers '(text-also background))
 
 NOTE: The placement of the straight underline, though not the
 wave style, is controlled by the built-in variables
 `underline-minimum-offset', `x-underline-at-descent-line',
 `x-use-underline-position-properties'."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.1.0")
+  :package-version '(modus-themes . "1.5.0")
   :version "28.1"
-  :type '(choice
-          (const :format "[%v] %t\n" :tag "Only color-coded wavy underline (default)" nil)
-          (const :format "[%v] %t\n" :tag "Like the default, but with a straight underline" straight-underline)
-          (const :format "[%v] %t\n" :tag "Color-coded wavy underline; subtle foreground" subtle-foreground)
-          (const :format "[%v] %t\n" :tag "Combines `straight-underline' and `subtle-foreground'" subtle-foreground-straight-underline)
-          (const :format "[%v] %t\n" :tag "Color-coded wavy underline; intense foreground" intense-foreground)
-          (const :format "[%v] %t\n" :tag "Combines `straight-underline' and `intense-foreground'" intense-foreground-straight-underline)
-          (const :format "[%v] %t\n" :tag "Color-coded background, foreground, straight underline" colored-background))
+  :type '(set :tag "Properties" :greedy t
+              (const :tag "Straight underline" straight-underline)
+              (const :tag "Colorise text as well" text-also)
+              (const :tag "Increase color intensity" intense)
+              (const :tag "With background" background))
   :set #'modus-themes--set-option
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) Language checkers"))
@@ -2380,58 +2341,81 @@ highlights the alert and overdue states."
 (make-obsolete 'modus-themes-org-habit 'modus-themes-org-agenda "1.5.0")
 
 (defcustom modus-themes-mode-line nil
-  "Adjust the overall style of the mode line.
+  "Control the overall style of the mode line.
 
 The value is a list of properties, each designated by a symbol.
 The default (a nil value or an empty list) is a two-dimensional
 rectangle with a border around it.  The active and the inactive
 mode lines use different shades of grayscale values for the
-background and foreground.
+background, foreground, border.
 
-The `3d' property will apply a three-dimensional effect to the
+The `3d' property applies a three-dimensional effect to the
 active mode line.  The inactive mode lines remain two-dimensional
-and are toned down a bit, relative to the nil value.
+and are toned down a bit, relative to the default style.
 
-The `moody' property is meant to optimize the mode line for use
-with the library of the same name.  This practically means to
-remove the box effect and rely on underline and overline
-properties instead.  It also tones down the inactive mode lines.
-Despite its intended purpose, this option can also be used
-without the `moody' library (please consult the themes' manual on
-this point for more details).
+The `moody' property optimizes the mode line for use with the
+library of the same name (hereinafter referred to as 'Moody').
+In practice, it removes the box effect and replaces it with
+underline and overline properties.  It also tones down the
+inactive mode lines.  Despite its intended purpose, this option
+can also be used without the Moody library (please consult the
+themes' manual on this point for more details).  If both `3d' and
+`moody' properties are set, the latter takes precedence.
 
-The `borderless' property removes the border effect.  This is
-done by making the box property use the same color as the
-background, effectively blending the two and creating some
-padding.
+The `borderless' property removes the color of the borders.  It
+does not actually remove the borders, but only makes their color
+the same as the background, effectively creating some padding.
 
 The `accented' property ensures that the active mode line uses a
 colored background instead of the standard shade of gray.
 
-Valid combinations are:
-- (3d)
-- (moody)
-- (borderless)
-- (accented)
-- (borderless accented)
-- (3d borderless)
-- (3d accented)
-- (3d borderless accented)
-- (moody borderless)
-- (moody accented)
-- (moody borderless accented)
+Combinations of any of those properties are expressed as a list,
+like in these examples:
 
-The order of items in those lists is not significant."
+    (accented)
+    (borderless 3d)
+    (moody accented borderless)
+
+The order in which the properties are set is not significant.
+
+In user configuration files the form may look like this:
+
+    (setq modus-themes-mode-line '(borderless accented))
+
+Note that Moody does not expose any faces that the themes could
+style directly.  Instead it re-purposes existing ones to render
+its tabs and ribbons.  As such, there may be cases where the
+contrast ratio falls below the 7:1 target that the themes conform
+with (WCAG AAA).  To hedge against this, we configure a fallback
+foreground for the `moody' property, which will come into effect
+when the background of the mode line changes to something less
+accessible, such as Moody ribbons (read the doc string of
+`set-face-attribute', specifically `:distant-foreground').  This
+fallback is activated when Emacs determines that the background
+and foreground of the given construct are too close to each other
+in terms of color distance.  In practice, users will need to
+experiment with the variable `face-near-same-color-threshold' to
+trigger the effect.  We find that a value of 45000 shall suffice,
+contrary to the default 30000.  Though for the combinations that
+involve the `accented' and `moody' properties, as mentioned
+above, that should be raised up to 70000.  Do not set it too
+high, because it has the adverse effect of always overriding the
+default colors (which have been carefully designed to be highly
+accessible).
+
+Furthermore, because Moody expects an underline and overline
+instead of a box style, it is advised to set
+`x-underline-at-descent-line' to a non-nil value."
   :group 'modus-themes
   :package-version '(modus-themes . "1.5.0")
   :version "28.1"
   :type '(set :tag "Properties" :greedy t
-              (choice :tag "Border effects"
+              (choice :tag "Overall style"
                       (const :tag "Rectangular Border" nil)
                       (const :tag "3d borders" 3d)
                       (const :tag "No box effects (Moody-compatible)" moody))
               (const :tag "Colored background" accented)
-              (const :tag "Without noticeable border" borderless))
+              (const :tag "Without border color" borderless))
   :set #'modus-themes--set-option
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) Mode line"))
@@ -2475,7 +2459,7 @@ interest of backward compatibility."
   :type '(choice
           (const :format "[%v] %t\n" :tag "Intensely colored backgrounds (default)" nil)
           (const :format "[%v] %t\n" :tag "Slightly accented backgrounds with tinted text" desaturated)
-          (const :format "[%v] %t\n" :tag "Apply color-coded backgrounds; keep syntax colors in tact" bg-only)
+          (const :format "[%v] %t\n" :tag "Apply color-coded backgrounds; keep syntax colors intact" bg-only)
           (const :format "[%v] %t\n" :tag "Like the default (nil), though optimized for red-green color defficiency" deuteranopia)
           (const :format "[%v] %t\n" :tag "No backgrounds, except for refined diffs" fg-only-deuteranopia)
           (const :format "[%v] %t\n" :tag "Alias of `fg-only-deuteranopia' for backward compatibility" fg-only))
@@ -2976,26 +2960,46 @@ combines with the theme's primary background (white/black)."
       (list :background (or altbg 'unspecified) :foreground altfg)
     (list :background mainbg :foreground mainfg)))
 
-(defun modus-themes--lang-check (underline subtlefg intensefg bg)
+(defun modus-themes--lang-check (underline subtlefg intensefg intensefg-alt subtlebg intensebg)
   "Conditional use of foreground colors for language checkers.
 UNDERLINE is a color-code value for the affected text's underline
 property.  SUBTLEFG and INTENSEFG follow the same color-coding
 pattern and represent a value that is faint or vibrant
-respectively.  BG is a color-coded background."
-  (pcase modus-themes-lang-checkers
-    ('colored-background
-     (list :underline underline :background bg :foreground intensefg))
-    ('intense-foreground
-     (list :underline (list :color underline :style 'wave) :foreground intensefg))
-    ('intense-foreground-straight-underline
-     (list :underline underline :foreground intensefg))
-    ('subtle-foreground
-     (list :underline (list :color underline :style 'wave) :foreground subtlefg))
-    ('subtle-foreground-straight-underline
-     (list :underline underline :foreground subtlefg))
-    ('straight-underline
-     (list :underline underline))
-    (_ (list :underline (list :color underline :style 'wave)))))
+respectively.  INTENSEFG-ALT is used when the intensity is high.
+SUBTLEBG and INTENSEBG are color-coded background colors that
+differ in overall intensity."
+  (let ((modus-themes-lang-checkers
+         (if (listp modus-themes-lang-checkers)
+             modus-themes-lang-checkers
+           (pcase modus-themes-lang-checkers
+             ('colored-background '(background intense))
+             ('intense-foreground '(intense))
+             ('intense-foreground-straight-underline '(intense straight-underline))
+             ('subtle-foreground '(text-also))
+             ('subtle-foreground-straight-underline '(text-also straight-underline))
+             ('straight-underline '(straight-underline))))))
+    (list :underline
+          (list :color
+                underline
+                :style
+                (if (memq 'straight-underline modus-themes-lang-checkers)
+                    'line 'wave))
+          :background
+          (cond
+           ((and (memq 'background modus-themes-lang-checkers)
+                 (memq 'intense modus-themes-lang-checkers))
+            intensebg)
+           ((memq 'background modus-themes-lang-checkers)
+            subtlebg))
+          :foreground
+          (cond
+           ((and (memq 'background modus-themes-lang-checkers)
+                 (memq 'intense modus-themes-lang-checkers))
+            intensefg-alt)
+           ((memq 'intense modus-themes-lang-checkers)
+            intensefg)
+           ((memq 'text-also modus-themes-lang-checkers)
+            subtlefg)))))
 
 (defun modus-themes--prompt (mainfg intensefg grayfg subtlebg intensebg intensebg-fg subtlebggray intensebggray)
   "Conditional use of colors for prompts.
@@ -4052,17 +4056,14 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(modus-themes-graph-cyan-1 ((,class :background ,cyan-graph-1-bg)))
 ;;;;; language checkers
     `(modus-themes-lang-error ((,class ,@(modus-themes--lang-check
-                                          fg-lang-underline-error
-                                          fg-lang-error
-                                          red red-nuanced-bg))))
+                                          fg-lang-underline-error fg-lang-error
+                                          red red-refine-fg red-nuanced-bg red-refine-bg))))
     `(modus-themes-lang-note ((,class ,@(modus-themes--lang-check
-                                         fg-lang-underline-note
-                                         fg-lang-note
-                                         blue-alt blue-nuanced-bg))))
+                                         fg-lang-underline-note fg-lang-note
+                                         blue-alt blue-refine-fg blue-nuanced-bg blue-refine-bg))))
     `(modus-themes-lang-warning ((,class ,@(modus-themes--lang-check
-                                            fg-lang-underline-warning
-                                            fg-lang-warning
-                                            yellow yellow-nuanced-bg))))
+                                            fg-lang-underline-warning fg-lang-warning
+                                            yellow yellow-refine-fg yellow-nuanced-bg yellow-refine-bg))))
 ;;;;; other custom faces
     `(modus-themes-bold ((,class ,@(modus-themes--bold-weight))))
     `(modus-themes-hl-line ((,class ,@(modus-themes--hl-line
@@ -4336,7 +4337,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(calendar-month-header ((,class :inherit modus-themes-pseudo-header)))
     `(calendar-today ((,class :inherit bold :underline t)))
     `(calendar-weekday-header ((,class :foreground ,fg-unfocused)))
-    `(calendar-weekend-header ((,class :foreground ,fg-unfocused)))
+    `(calendar-weekend-header ((,class :foreground ,red-faint)))
     `(diary ((,class :background ,blue-nuanced-bg :foreground ,blue-alt-other)))
     `(diary-anniversary ((,class :foreground ,red-alt-other)))
     `(diary-time ((,class :foreground ,cyan)))
@@ -5387,6 +5388,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(gnus-summary-normal-undownloaded ((,class :foreground ,yellow)))
     `(gnus-summary-normal-unread ((,class :foreground ,fg-main)))
     `(gnus-summary-selected ((,class :inherit highlight :extend t)))
+;;;;; gotest
+    `(go-test--ok-face ((,class :inherit success)))
+    `(go-test--error-face ((,class :inherit error)))
+    `(go-test--warning-face ((,class :inherit warning)))
+    `(go-test--pointer-face ((,class :foreground ,magenta-alt-other)))
+    `(go-test--standard-face ((,class :foreground ,fg-special-cold)))
 ;;;;; golden-ratio-scroll-screen
     `(golden-ratio-scroll-highlight-line-face ((,class :background ,cyan-subtle-bg :foreground ,fg-main)))
 ;;;;; helm
@@ -6035,7 +6042,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(marginalia-archive ((,class :foreground ,green-nuanced-fg)))
     `(marginalia-date ((,class :foreground ,blue-nuanced-fg)))
     `(marginalia-char ((,class :foreground ,red-active)))
-    `(marginalia-documentation ((,class :foreground ,fg-special-cold :inherit modus-themes-slant)))
+    `(marginalia-documentation ((,class :inherit modus-themes-slant :foreground ,fg-special-cold)))
     `(marginalia-file-modes ((,class :inherit shadow)))
     `(marginalia-file-name ((,class :foreground ,fg-special-mild)))
     `(marginalia-file-owner ((,class :foreground ,red-nuanced-fg)))
@@ -6666,9 +6673,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(proced-marked ((,class :inherit modus-themes-mark-alt)))
     `(proced-sort-header ((,class :inherit bold :foreground ,fg-special-calm :underline t)))
 ;;;;; prodigy
-    `(prodigy-green-face ((,class :foreground ,green)))
-    `(prodigy-red-face ((,class :foreground ,red)))
-    `(prodigy-yellow-face ((,class :foreground ,yellow)))
+    `(prodigy-green-face ((,class :inherit success)))
+    `(prodigy-red-face ((,class :inherit error)))
+    `(prodigy-yellow-face ((,class :inherit warning)))
 ;;;;; pulse
     `(pulse-highlight-start-face ((,class :background ,bg-active-accent :extend t)))
 ;;;;; quick-peek
