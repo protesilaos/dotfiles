@@ -5329,6 +5329,7 @@ configurations are about.
 (prot-emacs-builtin-package 'message
   (setq mail-user-agent 'message-user-agent)
   (setq mail-header-separator (purecopy "*****"))
+  (setq message-elide-ellipsis ">\n> [... %l lines elided]\n>\n>") ; NOTE 2021-07-13: experimental
   (setq compose-mail-user-agent-warnings nil)
   (setq message-mail-user-agent t)      ; use `mail-user-agent'
   (setq mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
