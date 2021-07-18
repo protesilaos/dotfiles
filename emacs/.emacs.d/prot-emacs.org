@@ -4799,8 +4799,9 @@ produces dates with a fixed length."
   (setq org-html-head-include-default-style nil)
   (setq org-html-head-include-scripts nil)
   (require 'ox-texinfo)
+  (require 'ox-md)
   ;; FIXME: how to remove everything else?
-  (setq org-export-backends '(html texinfo))
+  (setq org-export-backends '(html texinfo md))
 
   (defun prot/ox-html ()
     (interactive)
