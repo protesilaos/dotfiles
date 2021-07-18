@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.5.0
-;; Last-Modified: <2021-07-16 07:30:31 +0300>
+;; Last-Modified: <2021-07-18 08:22:27 +0300>
 ;; Package-Requires: ((emacs "26.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -6308,6 +6308,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(notmuch-crypto-signature-good-key ((,class :inherit bold :foreground ,cyan)))
     `(notmuch-crypto-signature-unknown ((,class :inherit warning)))
     `(notmuch-hello-logo-background ((,class :background "gray50")))
+    `(notmuch-jump-key ((,class :inherit modus-themes-key-binding)))
     `(notmuch-message-summary-face ((,class :inherit (bold modus-themes-nuanced-cyan))))
     `(notmuch-search-count ((,class :inherit shadow)))
     `(notmuch-search-date ((,class :foreground ,cyan)))
@@ -6413,7 +6414,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-checkbox-statistics-todo ((,class :inherit org-todo)))
     `(org-clock-overlay ((,class :inherit modus-themes-special-cold)))
     `(org-code ((,class :inherit modus-themes-fixed-pitch
-                        :background ,bg-alt :foreground ,fg-special-mild)))
+                        :background ,bg-alt :foreground ,fg-special-mild
+                        :extend t)))
     `(org-column ((,class :background ,bg-alt)))
     `(org-column-title ((,class :inherit bold :underline t :background ,bg-alt)))
     `(org-date ((,class :inherit ,(if modus-themes-no-mixed-fonts

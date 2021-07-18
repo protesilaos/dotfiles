@@ -419,19 +419,19 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs nil
+        modus-themes-bold-constructs t
         modus-themes-no-mixed-fonts nil
-        modus-themes-subtle-line-numbers nil
-        modus-themes-success-deuteranopia nil
-        modus-themes-inhibit-reload nil ; only applies to `customize-set-variable' and related
+        modus-themes-subtle-line-numbers t
+        modus-themes-success-deuteranopia t
+        modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
 
-        ;; Options for `modus-themes-lang-checkers': nil,
-        ;; 'straight-underline, 'subtle-foreground,
-        ;; 'subtle-foreground-straight-underline, 'intense-foreground,
-        ;; 'intense-foreground-straight-underline, 'colored-background
-        modus-themes-lang-checkers 'subtle-foreground
+        ;; Options for `modus-themes-lang-checkers' are either nil (the
+        ;; default), or a list of properties that may include any of those
+        ;; symbols: `straight-underline', `text-also', `background',
+        ;; `intense'
+        modus-themes-lang-checkers nil
 
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
@@ -439,38 +439,41 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; combinations.
         modus-themes-mode-line nil ; For Moody, also check `prot-moody'
 
-        ;; Options for `modus-themes-syntax': nil, 'faint,
-        ;; 'yellow-comments, 'green-strings,
-        ;; 'yellow-comments-green-strings, 'alt-syntax,
-        ;; 'alt-syntax-yellow-comments, 'faint-yellow-comments
-        modus-themes-syntax nil
+        ;; Options for `modus-themes-syntax' are either nil (the default),
+        ;; or a list of properties that may include any of those symbols:
+        ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
+        modus-themes-syntax '(alt-syntax yellow-comments)
 
-        ;; Options for `modus-themes-hl-line': nil, 'intense-background,
-        ;; 'accented-background, 'underline-neutral,
-        ;; 'underline-accented, 'underline-only-neutral,
-        ;; 'underline-only-accented
-        modus-themes-hl-line nil
+        ;; Options for `modus-themes-hl-line' are either nil (the default),
+        ;; or a list of properties that may include any of those symbols:
+        ;; `accented', `underline', `intense'
+        modus-themes-hl-line '(underline)
 
-        modus-themes-paren-match 'subtle-bold ; {nil,'subtle-bold,'intense,'intense-bold}
+        ;; Options for `modus-themes-paren-match' are either nil (the
+        ;; default), or a list of properties that may include any of those
+        ;; symbols: `bold', `intense', `underline'
+        modus-themes-paren-match '(intense underline)
 
-        ;; Options for `modus-themes-links': nil, 'faint,
-        ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
-        ;; 'underline-only, 'neutral-underline-only
-        modus-themes-links 'neutral-underline
+        ;; Options for `modus-themes-links' are either nil (the default),
+        ;; or a list of properties that may include any of those symbols:
+        ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
+        ;; `bold', `italic', `background'
+        modus-themes-links '(no-underline faint background)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(italic bold intense)
+        modus-themes-prompts '(intense italic)
 
-        modus-themes-completions nil ; {nil,'moderate,'opinionated}
+        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations 'monochrome ; {nil,'faint,'monochrome}
 
-        ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
-        ;; 'bg-only-no-extend, 'accent, 'accent-no-extend
-        modus-themes-region nil
+        ;; Options for `modus-themes-region' are either nil (the default),
+        ;; or a list of properties that may include any of those symbols:
+        ;; `no-extend', `bg-only', `accented'
+        modus-themes-region '(accented bg-only no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
@@ -485,12 +488,12 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
           (habit . traffic-light-deuteranopia))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . section)
-          (2 . rainbow-line)
-          (t . rainbow-no-bold))
+        '((1 . (overline background))
+          (2 . (overline))
+          (t . (rainbow no-bold)))
 
-        modus-themes-variable-pitch-ui t
-        modus-themes-variable-pitch-headings t
+        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-headings nil
         modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
@@ -501,7 +504,8 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
 
-  ;; Custom faces (check the themes' manual for more advanced uses)
+  ;; Custom faces (for demo purposes---check the themes' manual for more
+  ;; advanced uses)
   (defun prot/modus-themes-custom-faces ()
     (modus-themes-with-colors
       (custom-set-faces
@@ -509,8 +513,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
        `(fill-column-indicator ((,class :background ,bg-inactive
                                         :foreground ,bg-inactive))))))
 
-  (add-hook 'modus-themes-after-load-theme-hook
-            #'prot/modus-themes-custom-faces)
+  (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
 
   ;; Enable the theme at startup.  This is done after loading the files.
   ;; You only need `modus-themes-load-operandi' for the light theme or
