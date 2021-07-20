@@ -158,21 +158,26 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
   "Move to next or optional ARGth Dired subdirectory heading.
 For more on such headings, read `dired-maybe-insert-subdir'."
   (interactive "p")
-  (let ((subdir prot-dired--directory-header-regexp))
+  (let ((pos (point))
+        (subdir prot-dired--directory-header-regexp))
     (goto-char (point-at-eol))
-    (re-search-forward subdir nil t (or arg nil))
-    (goto-char (match-beginning 1))
-    (goto-char (point-at-bol))))
+    (if (re-search-forward subdir nil t (or arg nil))
+        (progn
+          (goto-char (match-beginning 1))
+          (goto-char (point-at-bol)))
+      (goto-char pos))))
 
 ;;;###autoload
 (defun prot-dired-subdirectory-previous (&optional arg)
   "Move to previous or optional ARGth Dired subdirectory heading.
 For more on such headings, read `dired-maybe-insert-subdir'."
   (interactive "p")
-  (let ((subdir prot-dired--directory-header-regexp))
+  (let ((pos (point))
+        (subdir prot-dired--directory-header-regexp))
     (goto-char (point-at-bol))
-    (re-search-backward subdir nil t (or arg nil))
-    (goto-char (point-at-bol))))
+    (if (re-search-backward subdir nil t (or arg nil))
+        (goto-char (point-at-bol))
+      (goto-char pos))))
 
 (autoload 'dired-get-filename "dired")
 (autoload 'dired-maybe-insert-subdir "dired-aux")
