@@ -2501,6 +2501,8 @@ ecosystem:
         `((,prot-dired-image-extensions (prot-dired-image-viewer))
           (,prot-dired-media-extensions (prot-dired-media-player))))
 
+  (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)
+
   (let ((map dired-mode-map))
     (define-key map (kbd "M-n") #'prot-dired-subdirectory-next)
     (define-key map (kbd "C-c C-n") #'prot-dired-subdirectory-next)
