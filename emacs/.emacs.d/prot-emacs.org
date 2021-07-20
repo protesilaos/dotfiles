@@ -2504,6 +2504,8 @@ ecosystem:
   (add-hook 'dired-mode-hook #'prot-dired-setup-imenu)
 
   (let ((map dired-mode-map))
+    (define-key map (kbd "/") #'prot-dired-limit-regexp)
+    (define-key map (kbd "C-c C-l") #'prot-dired-limit-regexp)
     (define-key map (kbd "M-n") #'prot-dired-subdirectory-next)
     (define-key map (kbd "C-c C-n") #'prot-dired-subdirectory-next)
     (define-key map (kbd "M-p") #'prot-dired-subdirectory-previous)

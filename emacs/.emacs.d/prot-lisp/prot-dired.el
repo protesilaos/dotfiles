@@ -122,6 +122,32 @@ This function is for use in `dired-guess-shell-alist-user'."
   prot-dired-image-viewer
   prot-dired-image-viewers)
 
+;;;; General commands
+
+(autoload 'dired-mark-files-regexp "dired")
+(autoload 'dired-toggle-marks "dired")
+(autoload 'dired-do-kill-lines "dired-aux")
+
+(defvar prot-dired--limit-hist '()
+  "Minibuffer history for `prot-dired-limit-regexp'.")
+
+;;;###autoload
+(defun prot-dired-limit-regexp (regexp omit)
+  "Limit Dired to keep files matching REGEXP.
+
+With optional OMIT argument as a prefix (\\[universal-argument]),
+exclude files matching REGEXP.
+
+Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
+  (interactive
+   (list
+    (read-regexp "Files matching PATTERN: " nil 'prot-dired--limit-hist)
+    current-prefix-arg))
+  (dired-mark-files-regexp regexp)
+  (unless omit (dired-toggle-marks))
+  (dired-do-kill-lines)
+  (add-to-history 'prot-dired--limit-hist regexp))
+
 ;;;; Subdir extras and Imenu setup
 
 (defvar prot-dired--directory-header-regexp "^ +\\(.+\\):\n"
