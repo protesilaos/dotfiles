@@ -242,7 +242,7 @@ Add this to `notmuch-hello-sections'."
 (defun prot-notmuch--search-width ()
   "Confirm `prot-notmuch-search-field-width' is positive integer."
   (let ((width prot-notmuch-search-field-width))
-    (if (prot-common-number-interger-positive-p width)
+    (if (prot-common-number-integer-positive-p width)
         width
       (error "Search field width must be a positive integer"))))
 

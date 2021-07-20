@@ -52,7 +52,7 @@
     (error "%s is not an integer" n)))
 
 ;;;###autoload
-(defun prot-common-number-interger-positive-p (n)
+(defun prot-common-number-integer-positive-p (n)
   "Test if N is a positive integer."
   (if (prot-common-number-integer-p n)
       (> n 0)

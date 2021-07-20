@@ -92,7 +92,7 @@ my inbox and then telling me 'Oh, nothing of interest here'?)."
           (diary-mail-addr user-mail-address)
           (mail-user-agent 'message-user-agent)
           (n (or ndays diary-mail-days)))
-      (prot-common-number-interger-positive-p n)
+      (prot-common-number-integer-positive-p n)
       (prot-diary--store-window-configuration)
       (diary-list-entries (calendar-current-date) (or n diary-mail-days))
       (if (prot-diary--list-entries n t)
@@ -118,7 +118,7 @@ days including the current one (so 2 is today and tomorrow).
 Otherwise use `diary-mail-days'."
   (interactive "p")
   (let ((n (or days diary-mail-days)))
-    (prot-common-number-interger-positive-p n)
+    (prot-common-number-integer-positive-p n)
     (unless (prot-diary--list-entries n nil)
       (message "No diary entries; skipping display"))))
 
