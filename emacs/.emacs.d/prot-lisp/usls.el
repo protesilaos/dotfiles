@@ -178,7 +178,7 @@ the source of this docstring):
 (defconst usls-id-regexp "\\([0-9_]+\\{15\\}\\)"
   "Regular expression to match `usls-id'.")
 
-(defconst usls-category-regexp "--\\([0-9A-Za-z_-]*\\)--"
+(defconst usls-category-regexp "\\(--\\)\\([0-9A-Za-z_-]*\\)\\(--\\)"
   "Regular expression to match `usls-categories'.")
 
 (defconst usls-file-regexp
@@ -255,12 +255,15 @@ To be used as the PREDICATE of `completing-read-multiple'."
   "Valid name format for `usls-directory'."
   (file-name-as-directory usls-directory))
 
-(defun usls--extract (regexp str)
-  "Extract REGEXP from STR."
+(defun usls--extract (regexp str &optional group)
+  "Extract REGEXP from STR, with optional regexp GROUP."
+  (when group
+    (unless (and (integerp group) (> group 0))
+      (error "`%s' is not a positive integer" group)))
   (with-temp-buffer
     (insert str)
     (when (re-search-forward regexp nil t -1)
-      (match-string 1))))
+      (match-string (or group 1)))))
 
 (defvar usls--punctuation-regexp "[][{}!@#$%^&*()_=+'\"?,.\|;:~`‘’“”]*"
   "Regular expression of punctionation that should be removed.")
@@ -353,7 +356,7 @@ trailing hyphen."
   "Produce list of categories in `usls--directory-files'."
   (cl-remove-if nil
    (mapcar (lambda (x)
-             (usls--extract usls-category-regexp x))
+             (usls--extract usls-category-regexp x 2))
            (usls--directory-files))))
 
 (defun usls--inferred-categories ()
@@ -902,11 +905,12 @@ directory will be directly displayed instead."
 ;; `usls-file-regexp'.
 (defconst usls-font-lock-keywords
   `((,usls-file-regexp
-     (0 'usls-dired-field-delimiter)
-     (1 'usls-dired-field-date t)
-     (2 'usls-dired-field-category t)
-     (3 'usls-dired-field-name t)
-     (4 'usls-dired-field-delimiter t))
+     (1 'usls-dired-field-date)
+     (2 'usls-dired-field-delimiter)
+     (3 'usls-dired-field-category)
+     (4 'usls-dired-field-delimiter)
+     (5 'usls-dired-field-name)
+     (6 'usls-dired-field-delimiter))
     ("\\(title:\\) \\(.*\\)"
      (1 'usls-header-data-key)
      (2 'usls-header-data-title))
