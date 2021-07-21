@@ -179,23 +179,75 @@ For more on such headings, read `dired-maybe-insert-subdir'."
         (goto-char (point-at-bol))
       (goto-char pos))))
 
+(autoload 'dired-current-directory "dired")
+(autoload 'dired-kill-subdir "dired-aux")
+
+;;;###autoload
+(defun prot-dired-remove-inserted-subdirs ()
+  "Remove all inserted Dired subdirectories."
+  (interactive)
+  (goto-char (point-max))
+  (while (and (prot-dired-subdirectory-previous)
+              (not (equal (dired-current-directory)
+                          (expand-file-name default-directory))))
+      (dired-kill-subdir)))
+
+(autoload 'cl-remove-if-not "cl-seq")
+
+(defun prot-dired--dir-list (list)
+  "Filter out non-directory file paths in LIST."
+  (cl-remove-if-not
+   (lambda (dir)
+     (file-directory-p dir))
+   list))
+
+(defun prot-dired--insert-dir (dir &optional flags)
+  "Insert DIR using optional FLAGS."
+  (dired-maybe-insert-subdir (expand-file-name dir) (or flags nil)))
+
 (autoload 'dired-get-filename "dired")
+(autoload 'dired-get-marked-files "dired")
 (autoload 'dired-maybe-insert-subdir "dired-aux")
 (defvar dired-subdir-switches)
 (defvar dired-actual-switches)
 
 ;;;###autoload
-(defun prot-dired-insert-subdir (subdir &optional switches)
-  "Insert SUBDIR in current Dired buffer.
-With optional SWITCHES, prompt for the ls switches to use."
-  (interactive
-   (list
-    (or (dired-get-filename 'verbatim t)
-        (read-directory-name "Insert directory: "))
-    (when current-prefix-arg
-	  (read-string "Switches for listing: "
-			       (or dired-subdir-switches dired-actual-switches)))))
-  (dired-maybe-insert-subdir (expand-file-name subdir) (or switches nil) t))
+(defun prot-dired-insert-subdir (&optional arg)
+  "Generic command to insert subdirectories in Dired buffers.
+
+When items are marked, insert those which are subsirectories of
+the current directory.  Ignore regular files.
+
+If no marks are active and point is on a subdirectory line,
+insert it directly.
+
+If no marks are active and point is not on a subdirectory line,
+prompt for a subdirectory using completion.
+
+With optional ARG as a single prefix (`\\[universal-argument]')
+argument, prompt for command line flags to pass to the underlying
+'ls' program.
+
+With optional ARG as a double prefix argument, remove all
+inserted subdirectories."
+  (interactive "p")
+  (let* ((name (dired-get-marked-files))
+         (flags (when (eq arg 4)
+                  (read-string "Flags for `ls' listing: "
+			                   (or dired-subdir-switches dired-actual-switches)))))
+    (cond  ; NOTE 2021-07-20: `length>', `length=' are from Emacs28
+     ((eq arg 16)
+      (prot-dired-remove-inserted-subdirs))
+     ((and (length> name 1) (prot-dired--dir-list name))
+      (mapc (lambda (file)
+              (when (file-directory-p file)
+                (prot-dired--insert-dir file flags)))
+            name))
+     ((and (length= name 1) (file-directory-p (car name)))
+      (prot-dired--insert-dir (car name) flags))
+     (t
+      (let ((selection (read-directory-name "Insert directory: ")))
+        (prot-dired--insert-dir selection flags))))))
 
 (defun prot-dired--imenu-prev-index-position ()
   "Find the previous file in the buffer."
