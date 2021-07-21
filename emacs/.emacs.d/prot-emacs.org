@@ -2280,7 +2280,7 @@ Here are just the basics.  I might add more in the future.
 :PROPERTIES:
 :CUSTOM_ID: h:402cb0db-1e93-4b1f-8f6d-e17b4409fb86
 :END:
-** Dired (directory editor, file manager)
+** Dired file manager (and prot-dired.el extras)
 :PROPERTIES:
 :CUSTOM_ID: h:c519300f-8a9a-472b-b26d-c2f49adbdb5d
 :END:
@@ -2296,11 +2296,11 @@ commands, combine Dired with regular editing capabilities as part of a
 keyboard macro, search[+replace] across multiple files, encrypt/decrypt
 files, start an email with the current or marked files attached to the
 message, and more.  Combine that with the possibility of matching items
-with regular expressions, such as for marking items or narrowing the
-list, or creating an editable Dired buffer and you have everything you
-need to maximise your productivity.
+with regular expressions, such as for marking files or narrowing the
+list, or creating an editable Dired buffer to bulk rename entries, and
+you have everything you need to maximise your productivity.
 
-Check some of my videos:
+Watch some of my older videos:
 
 + [[https://protesilaos.com/codelog/2019-08-12-emacs-dired-tweaks/][Dired tweaks and refinements]] (2019-08-12).
 + [[https://protesilaos.com/codelog/2019-09-03-emacs-dired-macros/][Use Dired and keyboard macros]] (2019-09-03).
@@ -2311,13 +2311,13 @@ Check some of my videos:
 + [[https://protesilaos.com/codelog/2019-12-08-emacs-multi-replace/][Search and replace across multiple files (not Dired-specific)]] (2019-12-08).
 
 The following package configurations are fairly comprehensive.  First an
-overview of the options I specify:
+overview of the options I specify for Dired proper:
 
 + Copy and delete recursively.  No need to be prompted about each
   action.
 
 + While in detailed view, search only file names when point is on one of
-  them, else apply the query to all the rest.
+  them, else apply the query to the rest of the data.
 
 + Deletion sends items to the system's Trash, making it safer than the
   standard =rm=.  The trash can be a life-saver, as it lets you restore
@@ -2344,7 +2344,8 @@ overview of the options I specify:
 + While having two dired buffers open, the rename and copy operations
   will place the path of the inactive one as the target destination.
   When multiple dired buffers are present, this works between the
-  current and most recently used ones.
+  current and most recently used ones, with =M-n= and =M-p= on the
+  minibuffer prompt allowing you to switch between all possible targets.
 
 + For Emacs 27.1 or higher, Dired can automatically create destination
   directories for its copy and rename operations.  So you can, for
@@ -2354,7 +2355,7 @@ overview of the options I specify:
 + For Emacs 27.1 or higher, renaming a file of a version-controlled
   repository (git) will be done using the appropriate VC mechanism.
   This is to ensure that file name changes are tracked correctly (also
-  check: [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]).
+  check my detailed: [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]).
 
 + The commands with the =contrib/= prefix in =dired-aux= are copied from the
   [[https://github.com/oantolin/emacs-config][Emacs configurations of Omar Antolín Camarena]].  They let you insert
@@ -2366,32 +2367,28 @@ overview of the options I specify:
 And here are a few words about the more specialised parts of the Dired
 ecosystem:
 
-+ Dired subtree :: This third-party package offers tree-style
-  navigation, meaning that the subdirectories of the current Dired
-  buffer can be expanded and contracted in place.  It is possible to
-  perform the same kind of folding on their subdirectories, and so on.
++ Dired subtree :: This third-party package which is part of the
+  [[https://github.com/Fuco1/dired-hacks][dired-hacks project by Matus Goljer]] offers tree-style navigation,
+  meaning that the subdirectories of the current Dired buffer can be
+  expanded and contracted in place.  It is possible to perform the same
+  kind of folding on their subdirectories, and so on.
 
-  This is, in my opinion, a far more intuitive interaction than the
-  default way of inserting subdirectories in the current buffer below
-  their parent (type =i= over the target dir).  There still are uses for
-  that technique (and quite powerful at that), but tree-style navigation
-  is easier for day-to-day tasks, especially when all you want is a
+  Tree-style navigation is useful in my workflow when all I want is a
   quick peek at a directory's contents.
 
 + Dired extras (dired-x) :: These are some additional features that are
   shipped with Emacs.  The one I need the most is =dired-jump= and its
   "other window" variant.  These are among my favourite commands.  They
   will always take you to the directory that contains the current
-  buffer. (Note for Emacs 28 users: =dired-jump= is now part of the main
-  Dired library).
+  buffer. (Note for Emacs 28 users: =dired-jump= is now part of =dired.el=).
 
   'Jumping' works even when you are inside buffers that do not visit
   files, such as Magit, Diff, or Eshell: it just takes you to the
-  =default-directory= or its parent.  This is its most valuable quality!
-  Edit a file then proceed to do some file management, then invoke
-  =previous-buffer= or =winner-undo= to go back to where you were (I have a
-  few key bindings for those in the [[#h:12591f89-eeea-4b12-93e8-9293504e5a12][Window configuration section]]).
-  Everything happens naturally.  Emacs' interconnectedness at its best!
+  =default-directory=.  This is its most valuable quality!  Edit a file
+  then proceed to do some file management, then invoke =previous-buffer=
+  or =winner-undo= to go back to where you were (I have a few key bindings
+  for those in the [[#h:12591f89-eeea-4b12-93e8-9293504e5a12][Window configuration section]]).  Everything happens
+  naturally.  Emacs' interconnectedness at its best!
 
   The other neat features of =dired-x= are (1) its ability to open Info
   files in place (=dired-info= command, bound to =I=), and (2) to open all
@@ -2405,22 +2402,75 @@ ecosystem:
   permissions (when the detailed list is available).  Note that while
   renaming a file, any forward slash is treated like a directory and *is
   created directly* upon successful exit.  Combine this utility with
-  keyboard macros, rectangle edits, or =query-replace= and you have one
-  supremely powerful tool at your disposal.
+  keyboard macros, rectangle edits, or =query-replace= (and its regexp
+  variant---[[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][Isearch, occur, grep, and extras (prot-search.el)]]) and you
+  have one potent tool at your disposal.
 
 + Image dired :: This built-in library offers facilities for generating
   thumbnails out of a selection of images and displaying them in a
   separate buffer.  An external program is needed to convert the images
   into thumbnails: =imagemagick=.  Other useful external packages are
-  =optipng= and =sxiv=.  The former is for operating on PNG files, while the
-  latter is a lightweight image viewer.  I feel this process is a bit
-  cumbersome and can be very slow if you try to generate lots of images
-  at once.  The culprit is the image converter.  As such, only use this
-  for smaller collections.  Besides, Emacs can open an image in a buffer
-  and that works well for viewing individual items.  I don't keep a lot
-  of images around, so I am not the best person to comment on this tool
-  as I seldom use it.  It is better to view the video demonstration of
-  [[https://www.youtube.com/watch?v=NrY3t3W0_cM][image-dired by Emacs Elements (Raoul Comninos)]].
+  =optipng= and =sxiv= (or equivalent).  The former is for operating on PNG
+  files, while the latter is a lightweight image viewer.  I feel this
+  process is a bit cumbersome and can be very slow if you try to
+  generate lots of images at once.  The culprit is the image converter.
+  As such, only use this for smaller collections.  Besides, Emacs can
+  open an image in a buffer and that works well for viewing individual
+  items (else use =!= or =&= to run an external process, with the latter
+  being asynchronous).  I don't keep a lot of images around, so I am not
+  the best person to comment on this feature.  Instead, I recommend you
+  view the video of [[https://www.youtube.com/watch?v=NrY3t3W0_cM][image-dired by Emacs Elements (Raoul Comninos)]].
+
++ prot-dired.el :: This file (reproduced in its entirety below those
+  configurations) contains a few custom extensions for streamlining some
+  repetitive tasks.
+
+  1. It contains methods for opening media files using an external
+     program.  The idea is to provide a default option when invoking
+     either =!= or =&= on a given file.  So if, for example, you try to open
+     an image, it will search the system for the first program matching
+     the elements in the =prot-dired-image-viewers= variable.  Same
+     principle for media players.
+
+  2. The =prot-dired-limit-regexp= command is a convenience wrapper around
+     built-in capabilities of narrowing the listing to the files that
+     match (or don't) a given regular expression.  When called directly,
+     it prompts for a regexp and removes everything that does not match
+     it.  This operation does not delete files.  It just hides them
+     (restore the view either with =g= or by using the =undo= command).
+     When the command is invoked with a universal prefix argument (=C-u=)
+     it inverts the meaning of the regular expression so that it hides
+     the matching entries.
+
+  3. The =prot-dired-insert-subdir= is a general purpose command for
+     inserting the contents of a subdirectory in the current Dired
+     buffer.  It basically provides a superset of features found in the
+     standard =dired-maybe-insert-subdir= (bound to =i= by default).  When
+     items are marked, it searches among them for the subdirectories to
+     the current directory and inserts them in the buffer, while
+     ignoring invalid entries.  If no marks are active and point is on a
+     subdirectory line, it inserts it directly.  If no marks are active
+     and point is not on a subdirectory, then it prompts for minibuffer
+     completion and inserts the selected item.  When invoked with a
+     single prefix argument (=C-u=) it first asks for the command-line
+     flags to pass to the underlying =ls= program, which can be helpful if
+     you want to get some more verbose information or pass the =-R= flag
+     to directly insert a tree recursively.  And when the command is
+     called with a double prefix argument (=C-u C-u=) it removes all
+     inserted subdirectories in one go.  As always, the =undo= command can
+     help you manage each step.
+
+     Tip: to remove a single subdirectory, you can still use =C-u k= over
+     its heading (=dired-do-kill-lines= with its ARG).
+
+     Another tip: to update the =ls= switches for the whole buffer, type
+     =C-u s= (=dired-sort-toggle-or-edit= with its ARG).
+
+  4. An Imenu index is set up which lets you jump to the headers of all
+     inserted directories using minibuffer completion (either with the
+     generic =M-x imenu= or some third-party variant).  The are commands
+     which provide directional motions to move between such headings:
+     =prot-dired-subdirectory-next= and =prot-dired-subdirectory-previous=.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'dired
