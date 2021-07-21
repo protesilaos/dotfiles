@@ -197,12 +197,12 @@ With optional SWITCHES, prompt for the ls switches to use."
 			       (or dired-subdir-switches dired-actual-switches)))))
   (dired-maybe-insert-subdir (expand-file-name subdir) (or switches nil) t))
 
-(defun prot-dired-imenu-prev-index-position ()
+(defun prot-dired--imenu-prev-index-position ()
   "Find the previous file in the buffer."
   (let ((subdir prot-dired--directory-header-regexp))
     (re-search-backward subdir nil t)))
 
-(defun prot-dired-imenu-extract-index-name ()
+(defun prot-dired--imenu-extract-index-name ()
   "Return the name of the file at point."
   (buffer-substring-no-properties (+ (point-at-bol) 3) (1- (point-at-eol))))
 
@@ -211,9 +211,9 @@ With optional SWITCHES, prompt for the ls switches to use."
   "Configure imenu for the current dired buffer.
 Add this to `dired-mode-hook'."
   (set (make-local-variable 'imenu-prev-index-position-function)
-       'prot-dired-imenu-prev-index-position)
+       'prot-dired--imenu-prev-index-position)
   (set (make-local-variable 'imenu-extract-index-name-function)
-       'prot-dired-imenu-extract-index-name))
+       'prot-dired--imenu-extract-index-name))
 
 (provide 'prot-dired)
 ;;; prot-dired.el ends here
