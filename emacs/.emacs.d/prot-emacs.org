@@ -447,7 +447,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(underline)
+        modus-themes-hl-line '(accented underline)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -458,7 +458,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(no-underline faint background)
+        modus-themes-links '(neutral-underline faint)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of
@@ -466,14 +466,14 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; `italic'
         modus-themes-prompts '(intense italic)
 
-        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
+        modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
         modus-themes-mail-citations 'monochrome ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(accented bg-only no-extend)
+        modus-themes-region '(accented no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
@@ -494,7 +494,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
-        modus-themes-scale-headings t
+        modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
