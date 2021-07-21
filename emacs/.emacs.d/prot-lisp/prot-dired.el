@@ -204,7 +204,9 @@ With optional SWITCHES, prompt for the ls switches to use."
 
 (defun prot-dired--imenu-extract-index-name ()
   "Return the name of the file at point."
-  (buffer-substring-no-properties (+ (point-at-bol) 3) (1- (point-at-eol))))
+  (file-relative-name
+   (buffer-substring-no-properties (+ (point-at-bol) 2)
+                                   (1- (point-at-eol)))))
 
 ;;;###autoload
 (defun prot-dired-setup-imenu ()
