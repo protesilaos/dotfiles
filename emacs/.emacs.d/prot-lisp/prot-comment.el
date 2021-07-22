@@ -41,7 +41,7 @@
 (defcustom prot-comment-comment-keywords
   '("TODO" "NOTE" "XXX" "REVIEW" "FIXME")
   "List of strings with comment keywords."
-  :type 'list
+  :type '(repeat string)
   :group 'prot-comment)
 
 ;;;###autoload
