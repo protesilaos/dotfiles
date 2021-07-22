@@ -107,8 +107,8 @@ This function is for use in `dired-guess-shell-alist-user'."
               programs)
      (catch :found
        (dolist (p (append ,programs '("xdg-open")))
-	 (when (executable-find p)
-	   (throw :found p))))))
+         (when (executable-find p)
+           (throw :found p))))))
 
 (prot-dired-file-association
   prot-dired-media-player
@@ -230,7 +230,7 @@ inserted subdirectories."
   (let* ((name (dired-get-marked-files))
          (flags (when (eq arg 4)
                   (read-string "Flags for `ls' listing: "
-			                   (or dired-subdir-switches dired-actual-switches)))))
+                               (or dired-subdir-switches dired-actual-switches)))))
     (cond  ; NOTE 2021-07-20: `length>', `length=' are from Emacs28
      ((eq arg 16)
       (prot-dired-remove-inserted-subdirs))
