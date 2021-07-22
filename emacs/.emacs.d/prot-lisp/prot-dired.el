@@ -105,14 +105,10 @@ xdg-open (for GNU/Linux only).
 
 This function is for use in `dired-guess-shell-alist-user'."
               programs)
-     (let ((executables)
-           (program-list (cl-remove-if nil ,programs)))
-       (dolist (p program-list)
-         (when (executable-find p)
-           (push p executables)))
-       (if executables
-           (car (reverse executables))
-         "xdg-open"))))
+     (catch :found
+       (dolist (p (append ,programs '("xdg-open")))
+	 (when (executable-find p)
+	   (throw :found p))))))
 
 (prot-dired-file-association
   prot-dired-media-player
