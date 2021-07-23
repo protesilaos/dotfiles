@@ -373,9 +373,9 @@ Also see `prot-bongo-dired-make-playlist-file'."
     (unless (file-directory-p path)
       (error "'%s' is not an existing directory" path))
     (let ((choice
-           (if (not (bongo-playlist-buffer-p (current-buffer)))
-               (user-error "Not in a `bongo' playlist buffer")
-             (prot-bongo--playlist-prompt))))
+           (if (bongo-playlist-buffer-p (current-buffer))
+               (prot-bongo--playlist-prompt)
+             (user-error "Not in a `bongo' playlist buffer"))))
       (mapc (lambda (x)
               (save-excursion
                 (goto-char (point-max))
