@@ -258,7 +258,6 @@ unused."
              '("\\`gemini:" . prot-eww--browser-handler))
 (add-to-list 'browse-url-default-handlers
              '("\\`gopher:" . prot-eww--browser-handler))
-
 (add-to-list 'browse-url-default-handlers
              '("\\`finger:" . prot-eww--browser-handler))
 
