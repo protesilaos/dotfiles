@@ -342,8 +342,8 @@ Helper function for `prot-bongo-playlist-insert-playlist-file'."
   (let* ((path prot-bongo-playlist-directory)
          (dotless directory-files-no-dot-files-regexp)
          (playlists (mapc
-                       'abbreviate-file-name
-                       (directory-files path nil dotless))))
+                     #'abbreviate-file-name
+                     (directory-files path nil dotless))))
     (completing-read-multiple
      "Add playlist: " playlists
      #'prot-common-crm-exclude-selected-p
