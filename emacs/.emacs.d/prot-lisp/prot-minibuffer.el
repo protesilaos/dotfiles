@@ -502,6 +502,13 @@ minibuffer."
   (interactive "p")
   (let ((num (prot-common-number-negative arg)))
     (if (or (bobp)
+            (and (save-excursion ; NOTE 2021-07-23: This `and' is for Emacs28 group titles
+                   (next-completion -1)
+                   (eq (line-number-at-pos) 1))
+                 (null
+                  (save-excursion
+                    (next-completion -1)
+                    (get-text-property (point) 'completion--string))))
             (eq (point) (1+ (point-min)))) ; see hack in `prot-minibuffer--clean-completions'
         (prot-minibuffer-focus-minibuffer)
       (next-completion (or num 1)))))
