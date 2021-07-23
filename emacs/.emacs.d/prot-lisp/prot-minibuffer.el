@@ -414,9 +414,7 @@ Meant to be added to `after-change-functions'."
    ((member this-command prot-minibuffer-completion-passlist)
     (setq-local prot-minibuffer-minimum-input 0)
     (setq-local prot-minibuffer-live-update-delay 0)
-    (minibuffer-completion-help)
-    (when (get-text-property (point) 'read-only)
-      (goto-char (minibuffer-prompt-end)))
+    (save-excursion (minibuffer-completion-help))
     (prot-minibuffer--fit-completions-window)
     (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t))
    ((unless (member this-command prot-minibuffer-completion-blocklist)
@@ -430,7 +428,7 @@ Meant to be added to `after-change-functions'."
   (interactive)
   (if (get-buffer-window "*Completions*" 0)
       (minibuffer-hide-completions)
-    (minibuffer-completion-help)
+    (save-excursion (minibuffer-completion-help))
     (prot-minibuffer--fit-completions-window)))
 
 ;;;###autoload
