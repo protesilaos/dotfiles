@@ -126,8 +126,8 @@ If ERROR-OUT, signal `user-error' if there is no history."
   (let ((inhibit-read-only t)
         start)
     (erase-buffer)
-    (setq header-line-format
-          "Your Browsing History")
+    (setq-local header-line-format
+                "Unified EWW and Elpher Browsing History (prot-eww)")
     (dolist (history prot-eww-visited-history)
       (setq start (point))
       (insert (format "%s" history) "\n")
