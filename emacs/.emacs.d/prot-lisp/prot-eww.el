@@ -274,7 +274,8 @@ K2 is the symbol 'hist-var', V2 is also a symbol that has a format
 
 NOTE: If you modify this variable after prot-eww is loaded you
 need to run the following code after modification:
-`(prot-eww--define-hist-var prot-eww-search-engines)'")
+
+    (prot-eww--define-hist-var prot-eww-search-engines)")
 
 ;; Below 's-string' is short for 'search-string'. For wikipedia which
 ;; is this string: "https://en.m.wikipedia.org/w/index.php?search=". I
@@ -425,24 +426,24 @@ trailing hyphen."
       (message "Error downloading page: %s" (cdr out)))))
 
 (defun prot-eww-kill-buffers-when (predicate)
-  "Kill buffers when PREDICATE returns non-nil.
+  "Kill buffers when PREDICATE is non-nil.
 
-Loop through the buffer list, calling PREDICATE with each
-buffer. When calling PREDICATE with a buffer returns non-nil,
-kill that buffer.
+Loop through the buffer list, calling PREDICATE with each buffer.
+When calling PREDICATE with a buffer returns non-nil, kill that
+buffer.
 
 PREDICATE must be function that takes buffer-object as the one
-and only argument. It should return nil or non-nil."
+and only argument.  It should return nil or non-nil."
   (let ((list-buffers (buffer-list)))
     (dolist (buffer list-buffers)
       (when (funcall predicate buffer)
         (kill-buffer buffer)))))
 
 (defun prot-eww--kill-eww-buffers-p (buffer)
-  "Predicate function. Return nil or non-nil.
+  "Predicate function.  Return nil or non-nil.
 
 Take BUFFER, make it current, check if it has 'eww-mode' as the
-`major-mode' or if its major-mode is derived from `special-mode'
+`major-mode' or if its major mode is derived from `special-mode'
 and has \"eww\" in the buffer-name. Then return non-nil."
   (let ((case-fold-search t))  ; ignore case
     (with-current-buffer buffer
@@ -457,7 +458,7 @@ Also kill special buffers made by EWW for example buffers like
   (prot-eww-kill-buffers-when 'prot-eww--kill-eww-buffers-p))
 
 (defcustom prot-eww-delete-cookies t
-  "If non-nil delete cookies when prot-eww-quit is called."
+  "If non-nil delete cookies when `prot-eww-quit' is called."
   :type 'boolean
   :group 'prot-eww)
 
