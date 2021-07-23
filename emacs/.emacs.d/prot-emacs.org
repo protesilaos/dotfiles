@@ -1210,7 +1210,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
 
   ;; Grouping of completions for Emacs 28
   (setq completions-group t)
-  (setq completions-group-sort 'alphabetical)
+  (setq completions-group-sort nil)
   (setq completions-group-format
         (concat
          (propertize "    " 'face 'completions-group-separator)
