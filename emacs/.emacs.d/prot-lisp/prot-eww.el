@@ -247,7 +247,7 @@ unused."
 
 ;; This variable determines which links to pass to browse-url.
 (setq eww-use-browse-url
-      "\\`mailto:\\|\\`gemini:\\|`gopher:\\|\\`finger")
+      "\\`mailto:\\|\\`gemini:\\|\\`gopher:\\|\\`finger")
 
 ;; Adding appropriate handler for browse-url.
 (add-to-list 'browse-url-default-handlers
