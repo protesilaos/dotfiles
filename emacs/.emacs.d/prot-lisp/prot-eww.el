@@ -397,10 +397,7 @@ new EWW buffer."
 
 ;;;###autoload
 (defun prot-eww-jump-to-url-on-page ()
-  "Jump to URL position on the page using completion.
-
-With optional prefix ARG (\\[universal-argument]) open URL in a
-new EWW buffer."
+  "Jump to URL position on the page using completion."
   (interactive)
   (when (derived-mode-p 'eww-mode)
     (let* ((links (prot-eww--capture-url-on-page t))
