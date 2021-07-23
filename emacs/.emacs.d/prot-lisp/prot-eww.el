@@ -78,6 +78,7 @@ If non-nil, save the value of `prot-eww-visited-history' in
   :type 'boolean
   :group 'prot-eww)
 
+;; These history related functions are adapted from eww.
 (defun prot-eww-save-visited-history ()
   "Save the value of `prot-eww-visited-history' in a file.
 The file is determined by the variable `prot-eww-save-history-file'."
@@ -104,6 +105,107 @@ If ERROR-OUT, signal `user-error' if there is no history."
 
 (unless prot-eww-visited-history
   (prot-eww-read-visited-history t))
+
+(defun prot-eww-history-prepare ()
+  (set-buffer (get-buffer-create "*prot-eww history*"))
+  (prot-eww-history-mode)
+  (let ((inhibit-read-only t)
+        start)
+    (erase-buffer)
+    (setq header-line-format
+          "Your Browsing History")
+    (dolist (history prot-eww-visited-history)
+      (setq start (point))
+      (insert (format "%s" history) "\n")
+      (put-text-property start (1+ start) 'prot-eww-history history))
+    (goto-char (point-min))))
+
+;;;###autoload
+(defun prot-eww-list-history ()
+  "Display prot-eww-visited-history."
+  (interactive)
+  (when prot-eww-visited-history
+    (prot-eww-save-visited-history))
+  (prot-eww-read-visited-history t)
+  (pop-to-buffer "*prot-eww history*")
+  (prot-eww-history-prepare))
+
+(defvar prot-eww-history-kill-ring nil
+  "Store the killed history element.")
+
+(defun prot-eww-history-kill ()
+  "Kill the current history."
+  (interactive)
+  (let* ((start (line-beginning-position))
+         (history (get-text-property start 'prot-eww-history))
+         (inhibit-read-only t))
+    (unless history
+      (user-error "No history on the current line"))
+    (forward-line 1)
+    (push (buffer-substring start (point))
+          prot-eww-history-kill-ring)
+    (delete-region start (point))
+    (setq prot-eww-visited-history (delq history
+                                         prot-eww-visited-history))
+    (prot-eww-save-visited-history)))
+
+(defun prot-eww-history-yank ()
+  "Yank a previously killed history to the current line."
+  (interactive)
+  (unless prot-eww-history-kill-ring
+    (user-error "No previously killed history"))
+  (beginning-of-line)
+  (let ((inhibit-read-only t)
+        (start (point))
+        history)
+    (insert (pop prot-eww-history-kill-ring))
+    (setq history (get-text-property start 'prot-eww-history))
+    (if (= start (point-min))
+        (push history prot-eww-visited-history)
+      (let ((line (count-lines start (point))))
+        (setcdr (nthcdr (1- line) prot-eww-visited-history)
+                (cons history (nthcdr line
+                                      prot-eww-visited-history)))))
+    (prot-eww-save-visited-history)))
+
+(defun prot-eww-history-browse ()
+  "Browse the history under point."
+  (interactive)
+  (let ((history (get-text-property (line-beginning-position)
+                                     'prot-eww-history)))
+    (unless history
+      (user-error "No history on the current line"))
+    (quit-window)
+    (prot-eww history)))
+
+(defvar prot-eww-history-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-k") 'prot-eww-history-kill)
+    (define-key map (kbd "C-y") 'prot-eww-history-yank)
+    (define-key map (kbd "<RET>") 'prot-eww-history-browse)
+
+    (easy-menu-define nil map
+      "Menu for `prot-eww-history-mode-map'."
+      '("prot-eww history"
+        ["Exit" quit-window t]
+        ["Browse" prot-eww-history-browse
+         :active (get-text-property (line-beginning-position)
+                                    'prot-eww-history)]
+        ["Kill" prot-eww-history-kill
+         :active (get-text-property (line-beginning-position)
+                                    'prot-eww-history)]
+        ["Yank" prot-eww-history-yank
+         :active prot-eww-history-kill-ring]))
+    map))
+
+(define-derived-mode prot-eww-history-mode
+  special-mode
+  "prot-eww history"
+  "Mode for listing history.
+
+\\{prot-eww-history-mode-map}"
+  (buffer-disable-undo)
+  (setq truncate-lines t))
 
 (defun prot-eww--record-history ()
   "Store URL in `prot-eww-visited-history'.
