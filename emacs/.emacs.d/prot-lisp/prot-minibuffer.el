@@ -415,6 +415,8 @@ Meant to be added to `after-change-functions'."
     (setq-local prot-minibuffer-minimum-input 0)
     (setq-local prot-minibuffer-live-update-delay 0)
     (minibuffer-completion-help)
+    (when (get-text-property (point) 'read-only)
+      (goto-char (minibuffer-prompt-end)))
     (prot-minibuffer--fit-completions-window)
     (add-hook 'after-change-functions #'prot-minibuffer--live-completions nil t))
    ((unless (member this-command prot-minibuffer-completion-blocklist)
