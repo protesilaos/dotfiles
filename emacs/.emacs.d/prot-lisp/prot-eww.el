@@ -114,7 +114,7 @@ If ERROR-OUT, signal `user-error' if there is no history."
 (unless prot-eww-visited-history
   (prot-eww-read-visited-history t))
 
-(defun prot-eww-history-prepare ()
+(defun prot-eww--history-prepare ()
   (set-buffer (get-buffer-create "*prot-eww history*"))
   (prot-eww-history-mode)
   (let ((inhibit-read-only t)
@@ -136,7 +136,7 @@ If ERROR-OUT, signal `user-error' if there is no history."
     (prot-eww-save-visited-history))
   (prot-eww-read-visited-history t)
   (pop-to-buffer "*prot-eww history*")
-  (prot-eww-history-prepare))
+  (prot-eww--history-prepare))
 
 (defvar prot-eww-history-kill-ring nil
   "Store the killed history element.")
