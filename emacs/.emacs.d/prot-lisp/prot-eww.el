@@ -267,7 +267,7 @@ unused."
   "Handler for URL with ARGS."
   (elpher-go url))
 
-(defun prot-eww-get-current-url ()
+(defun prot-eww--get-current-url ()
   "Return the current-page's URL."
   (cond ((eq major-mode 'elpher-mode)
          (elpher-address-to-url
@@ -329,7 +329,7 @@ When called from an eww buffer, provide the current link as
    (let ((all-history (delete-dups
                        (append prot-eww-visited-history
                                eww-prompt-history)))
-         (current-url (prot-eww-get-current-url)))
+         (current-url (prot-eww--get-current-url)))
      (list
       (completing-read "Run EWW on: " all-history
                        nil nil current-url 'eww-prompt-history current-url)
