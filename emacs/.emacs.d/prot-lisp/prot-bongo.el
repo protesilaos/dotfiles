@@ -452,6 +452,8 @@ This should be added `wdired-mode-hook'.  For more, refer to
 
 (advice-add 'wdired-finish-edit :after #'prot-bongo-dired-library-enable)
 
+(autoload 'dired-x-guess-file-name-at-point "dired-x")
+
 (defun prot-bongo--dired-insert-files ()
   "Add files in a `dired' buffer to the `bongo' playlist."
   (let ((media (or (dired-get-marked-files) (dired-x-guess-file-name-at-point)))) ; emacs28
