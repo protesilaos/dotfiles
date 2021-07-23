@@ -3817,6 +3817,8 @@ manual for more on the matter):
            (3 'change-log-name)
            (4 'change-log-date))))
 
+  (add-hook 'log-view-mode-hook #'hl-line-mode)
+
   ;; NOTE: I override lots of the defaults
   (let ((map global-map))
     (define-key map (kbd "C-x v b") #'vc-retrieve-tag)  ; "branch" switch
