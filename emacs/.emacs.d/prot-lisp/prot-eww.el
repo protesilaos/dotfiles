@@ -86,6 +86,11 @@ If non-nil, save the value of `prot-eww-visited-history' in
   :type 'boolean
   :group 'prot-eww)
 
+(defcustom prot-eww-list-history-buffer "*prot-eww-history*"
+  "Name of buffer for `prot-eww-list-history'."
+  :type 'string
+  :group 'prot-eww)
+
 ;; These history related functions are adapted from eww.
 (defun prot-eww-save-visited-history ()
   "Save the value of `prot-eww-visited-history' in a file.
@@ -116,7 +121,7 @@ If ERROR-OUT, signal `user-error' if there is no history."
 
 (defun prot-eww--history-prepare ()
   "Prepare dedicated buffer for browsing history."
-  (set-buffer (get-buffer-create "*prot-eww history*"))
+  (set-buffer (get-buffer-create prot-eww-list-history-buffer))
   (prot-eww-history-mode)
   (let ((inhibit-read-only t)
         start)
@@ -136,7 +141,7 @@ If ERROR-OUT, signal `user-error' if there is no history."
   (when prot-eww-visited-history
     (prot-eww-save-visited-history))
   (prot-eww-read-visited-history t)
-  (pop-to-buffer "*prot-eww history*")
+  (pop-to-buffer prot-eww-list-history-buffer)
   (prot-eww--history-prepare))
 
 (defvar prot-eww-history-kill-ring nil
