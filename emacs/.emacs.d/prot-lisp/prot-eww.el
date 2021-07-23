@@ -1,8 +1,10 @@
 ;;; prot-eww.el --- Extensions for EWW -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021  Protesilaos Stavrou
+;; Copyright (C) 2021  Protesilaos Stavrou, Abhiseck Paira
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;;         Abhiseck Paira <abhiseckpaira@disroot.org>
+;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "28.1") (elpher "2.10.3"))
@@ -33,7 +35,13 @@
 ;; what it does.
 ;;
 ;; Thanks to Abhiseck Paira for the patches (see commit log for this
-;; file, such as with C-x v l (vc-print-log)).
+;; file, such as with C-x v l (vc-print-log)).  Some of those improved
+;; on various aspects of the EWW-specific functionality, while others
+;; provide the layer of integration with Elpher.  Abhiseck's online
+;; presence:
+;;
+;; 1. <https://social.linux.pizza/@redstarfish>
+;; 2. <gemini://redstarfish.flounder.online/>
 
 ;;; Code:
 
