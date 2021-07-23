@@ -39,6 +39,8 @@
 
 (require 'shr)
 (require 'eww)
+(require 'elpher)
+(require 'url-parse)
 (require 'prot-common)
 (require 'prot-pulse)
 
@@ -109,9 +111,21 @@ To be used by `eww-after-render-hook'."
   (let ((url (plist-get eww-data :url)))
     (add-to-history 'prot-eww-visited-history url)))
 
+(defun prot-eww--record-elpher-history (arg1 &optional arg2 arg3)
+  "Store URLs visited using elpher in `prot-eww-visited-history'.
+To be used by `elpher-visited-page'. ARG1, ARG2, ARG3 are
+unused."
+  (let* ((address (elpher-page-address elpher-current-page))
+         (url (elpher-address-to-url address)))
+    ;; elpher-address-to-url checks for special pages.
+    (when url
+      (add-to-list 'prot-eww-visited-history url))))
+
 (add-hook 'eww-after-render-hook #'prot-eww--record-history)
 (advice-add 'eww-back-url :after #'prot-eww--record-history)
 (advice-add 'eww-forward-url :after #'prot-eww--record-history)
+(advice-add 'elpher-visit-page :after #'prot-eww--record-elpher-history)
+;; Is there a better function to add this advice?
 
 ;;;; Commands
 
