@@ -214,7 +214,7 @@ If ERROR-OUT, signal `user-error' if there is no history."
 
 (define-derived-mode prot-eww-history-mode
   special-mode
-  "prot-eww history"
+  "prot-eww-history"
   "Mode for listing history.
 
 \\{prot-eww-history-mode-map}"
