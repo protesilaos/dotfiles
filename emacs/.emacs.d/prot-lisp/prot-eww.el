@@ -136,7 +136,9 @@ If ERROR-OUT, signal `user-error' if there is no history."
 
 ;;;###autoload
 (defun prot-eww-list-history ()
-  "Display `prot-eww-visited-history' in a dedicated buffer."
+  "Display `prot-eww-visited-history' in a dedicated buffer.
+This is a replacement for `eww-list-histories' (or equivalent),
+as it can combine URLs in the Gopher or Gemini protocols."
   (interactive)
   (when prot-eww-visited-history
     (prot-eww-save-visited-history))
