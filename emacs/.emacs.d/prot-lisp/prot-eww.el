@@ -70,6 +70,8 @@ To be used by `eww-after-render-hook'."
 (advice-add 'eww-back-url :after #'prot-eww--rename-buffer)
 (advice-add 'eww-forward-url :after #'prot-eww--rename-buffer)
 
+;;;; History extras
+
 (defvar prot-eww-visited-history '()
   "History of visited URLs.")
 
