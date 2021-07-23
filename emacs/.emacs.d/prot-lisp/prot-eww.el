@@ -231,6 +231,69 @@ unused."
 
 ;;;; Commands
 
+;; This variable determines which links to pass to browse-url.
+(setq eww-use-browse-url
+      "\\`mailto:\\|\\`gemini:\\|`gopher:\\|\\`finger")
+
+;; Adding appropriate handler for browse-url.
+(add-to-list 'browse-url-default-handlers
+             '("\\`gemini:" . prot-eww--browser-handler))
+(add-to-list 'browse-url-default-handlers
+             '("\\`gopher:" . prot-eww--browser-handler))
+
+(add-to-list 'browse-url-default-handlers
+             '("\\`finger:" . prot-eww--browser-handler))
+
+;; handler that browse-url calls.
+(defun prot-eww--browser-handler (url &rest args)
+  (elpher-go url))
+
+(defun prot-eww-get-current-url ()
+  "Return the current-page's URL."
+  (cond ((eq major-mode 'elpher-mode)
+         (elpher-address-to-url
+          (elpher-page-address elpher-current-page)))
+        ((eq major-mode 'eww-mode)
+         (plist-get eww-data :url))
+        (t (user-error "Not a eww or elpher buffer"))))
+
+;; This is almost identical to browse-url-interactive-arg except it
+;; calls thing-at-point-url-at-point instead of
+;; browse-url-url-at-point[1]. The problem with [1] is that it cancats
+;; "http" anything it finds, which is a problem for gemini, gopher
+;; etc.  urls. I hope there's something similar or better way to do
+;; it, we don't have to use this one.
+(defun prot-eww-interactive-arg (prompt)
+  "Read a URL from the minibuffer, prompting with PROMPT.
+If `transient-mark-mode' is non-nil and the mark is active,
+it defaults to the current region, else to the URL at or before
+point.  If invoked with a mouse button, it moves point to the
+position clicked before acting.
+
+Return URL for use in a interactive."
+  (let ((event (elt (this-command-keys) 0)))
+    (and (listp event) (mouse-set-point event)))
+  (read-string prompt
+               (or (and transient-mark-mode mark-active
+                        ;; rfc2396 Appendix E.
+                        (replace-regexp-in-string
+                         "[\t\r\f\n ]+" ""
+                         (buffer-substring-no-properties
+                          (region-beginning) (region-end))))
+                   (thing-at-point-url-at-point t))))
+
+;;;###autoload
+(defun prot-eww (url &optional arg)
+  "Pass URL to appropriate client."
+  (interactive
+   (list (prot-eww-interactive-arg "URL: ")
+         current-prefix-arg))
+  (let ((url-parsed (url-generic-parse-url url)))
+    (pcase (url-type url-parsed)
+      ((or "gemini" "gopher" "gophers" "finger")
+       (elpher-go url))
+      (_ (eww url arg)))))
+
 ;;;###autoload
 (defun prot-eww-browse-dwim (url &optional arg)
   "Visit a URL, maybe from `eww-prompt-history', with completion.
@@ -245,12 +308,12 @@ When called from an eww buffer, provide the current link as
    (let ((all-history (delete-dups
                        (append prot-eww-visited-history
                                eww-prompt-history)))
-         (current-url (plist-get eww-data :url)))
+         (current-url (prot-eww-get-current-url)))
      (list
       (completing-read "Run EWW on: " all-history
                        nil nil current-url 'eww-prompt-history current-url)
       (prefix-numeric-value current-prefix-arg))))
-  (eww url arg))
+  (prot-eww url arg))
 
 ;;;###autoload
 (defun prot-eww-visit-bookmark (&optional arg)
