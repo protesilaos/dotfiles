@@ -291,6 +291,7 @@ appropriate place to re-bind or free up some common key combinations.
     ;; Commands for paragraphs
     (define-key map (kbd "M-Q") #'prot-simple-unfill-region-or-paragraph)
     ;; Commands for windows
+    (define-key map (kbd "C-x n n") #'prot-simple-narrow-dwim) ; replaces `narrow-to-region'
     (define-key map (kbd "s-m") #'prot-simple-monocle)
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)

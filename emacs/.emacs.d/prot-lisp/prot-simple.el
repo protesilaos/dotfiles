@@ -33,6 +33,8 @@
 
 ;;; Code:
 
+(require 'prot-common)
+
 (defgroup prot-simple ()
   "Generic utilities for my dotemacs."
   :group 'editing)
@@ -545,6 +547,43 @@ paragraph.  The idea is to produce the opposite effect of both
       (fill-paragraph))))
 
 ;;;; Commands for windows
+
+;;;###autoload
+(defun prot-simple-narrow-visible-window ()
+  "Narrow buffer to wisible window area.
+Also check `prot-simple-narrow-dwim'."
+  (interactive)
+  (let* ((bounds (prot-common-window-bounds))
+         (window-area (- (cadr bounds) (car bounds)))
+         (buffer-area (- (point-max) (point-min))))
+    (if (/= buffer-area window-area)
+        (narrow-to-region (car bounds) (cadr bounds))
+      (user-error "Buffer fits in the window; won't narrow"))))
+
+;;;###autoload
+(defun prot-simple-narrow-dwim ()
+  "Do-what-I-mean narrowing.
+If region is active, narrow the buffer to the region's
+boundaries.
+
+If no region is active, narrow to the visible portion of the
+window.
+
+If narrowing is in effect, widen the view."
+  (interactive)
+  (unless mark-ring                  ; needed when entering a new buffer
+    (push-mark (point) t nil))
+  (cond
+   ((and (use-region-p)
+         (null (buffer-narrowed-p)))
+    (let ((beg (region-beginning))
+          (end (region-end)))
+      (narrow-to-region beg end)))
+   ((null (buffer-narrowed-p))
+    (prot-simple-narrow-visible-window))
+   (t
+    (widen)
+    (recenter))))
 
 ;; Inspired by Pierre Neidhardt's windower:
 ;; https://gitlab.com/ambrevar/emacs-windower/-/blob/master/windower.el

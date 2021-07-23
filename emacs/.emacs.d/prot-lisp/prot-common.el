@@ -93,6 +93,16 @@
   (let ((inhibit-message t))
     (toggle-truncate-lines t)))
 
+;;;###autoload
+(defun prot-common-window-bounds ()
+  "Determine start and end points in the window."
+  (list (save-excursion ; FIXME 2021-07-23: more efficient way to get those points?
+          (move-to-window-line 0)
+          (point))
+        (save-excursion
+          (move-to-window-line -1)
+          (point))))
+
 ;; Thanks to Omar Antolín Camarena for providing this snippet!
 ;;;###autoload
 (defun prot-common-completion-table (category candidates)
