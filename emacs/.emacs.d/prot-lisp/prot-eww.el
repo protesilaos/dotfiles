@@ -265,7 +265,8 @@ unused."
           (elpher-page-address elpher-current-page)))
         ((eq major-mode 'eww-mode)
          (plist-get eww-data :url))
-        (t (user-error "Not a eww or elpher buffer"))))
+        ;; (t (user-error "Not a eww or elpher buffer"))
+        ))
 
 ;; This is almost identical to browse-url-interactive-arg except it
 ;; calls thing-at-point-url-at-point instead of
