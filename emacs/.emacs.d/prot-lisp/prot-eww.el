@@ -115,6 +115,7 @@ If ERROR-OUT, signal `user-error' if there is no history."
   (prot-eww-read-visited-history t))
 
 (defun prot-eww--history-prepare ()
+  "Prepare dedicated buffer for browsing history."
   (set-buffer (get-buffer-create "*prot-eww history*"))
   (prot-eww-history-mode)
   (let ((inhibit-read-only t)
@@ -130,7 +131,7 @@ If ERROR-OUT, signal `user-error' if there is no history."
 
 ;;;###autoload
 (defun prot-eww-list-history ()
-  "Display prot-eww-visited-history."
+  "Display `prot-eww-visited-history' in a dedicated buffer."
   (interactive)
   (when prot-eww-visited-history
     (prot-eww-save-visited-history))
@@ -223,7 +224,7 @@ To be used by `eww-after-render-hook'."
 
 (defun prot-eww--record-elpher-history (arg1 &optional arg2 arg3)
   "Store URLs visited using elpher in `prot-eww-visited-history'.
-To be used by `elpher-visited-page'. ARG1, ARG2, ARG3 are
+To be used by `elpher-visited-page'.  ARG1, ARG2, ARG3 are
 unused."
   (let* ((address (elpher-page-address elpher-current-page))
          (url (elpher-address-to-url address)))
@@ -254,6 +255,7 @@ unused."
 
 ;; handler that browse-url calls.
 (defun prot-eww--browser-handler (url &rest args)
+  "Handler for URL with ARGS."
   (elpher-go url))
 
 (defun prot-eww-get-current-url ()
@@ -273,8 +275,8 @@ unused."
 ;; it, we don't have to use this one.
 (defun prot-eww-interactive-arg (prompt)
   "Read a URL from the minibuffer, prompting with PROMPT.
-If `transient-mark-mode' is non-nil and the mark is active,
-it defaults to the current region, else to the URL at or before
+If Transient-mark-mode is non-nil and the mark is active, it
+defaults to the current region, else to the URL at or before
 point.  If invoked with a mouse button, it moves point to the
 position clicked before acting.
 
@@ -292,7 +294,8 @@ Return URL for use in a interactive."
 
 ;;;###autoload
 (defun prot-eww (url &optional arg)
-  "Pass URL to appropriate client."
+  "Pass URL to appropriate client.
+With optional ARG, use a new buffer."
   (interactive
    (list (prot-eww-interactive-arg "URL: ")
          current-prefix-arg))
@@ -459,7 +462,7 @@ and V1 is search string of the search engine.
 K2 is the symbol 'hist-var', V2 is also a symbol that has a format
 'prot-eww--K1-hist'.
 
-NOTE: If you modify this variable after prot-eww is loaded you
+NOTE: If you modify this variable after `prot-eww' is loaded you
 need to run the following code after modification:
 
     (prot-eww--define-hist-var prot-eww-search-engines)")
