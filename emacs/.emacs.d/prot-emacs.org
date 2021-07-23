@@ -408,6 +408,7 @@ and wish to get a glimpse of how much work goes into this project:
 + [[https://protesilaos.com/codelog/2021-01-11-modus-themes-review-select-faint-colours/][Modus themes: review of select "faint" colours]] (2021-01-11)
 + [[https://protesilaos.com/codelog/2021-02-25-modus-themes-diffs-deuteranopia/][The Modus themes now cover deuteranopia in diffs]] (2021-02-25)
 + [[https://protesilaos.com/codelog/2021-05-19-modus-themes-status-update/][Status update on the Modus themes for Emacs]] (2021-05-19)
++ [[https://protesilaos.com/codelog/2021-06-02-modus-themes-org-agenda/][Introducing the variable modus-themes-org-agenda]] (2021-06-02)
 
 And if you do enjoy reading such entries, then you may also wish to
 check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the Modus themes]].
@@ -437,12 +438,12 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; that can combine any of `3d' OR `moody', `borderless',
         ;; `accented'.  The variable's doc string shows all possible
         ;; combinations.
-        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
+        modus-themes-mode-line '(moody borderless accented) ; For Moody, also check `prot-moody'
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(alt-syntax yellow-comments)
+        modus-themes-syntax '(green-strings faint)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -458,13 +459,13 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(neutral-underline faint)
+        modus-themes-links nil
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(intense italic)
+        modus-themes-prompts '(italic gray bold)
 
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
@@ -7224,7 +7225,7 @@ want is to make the mode line gracefully adapt to changes in font size.
 
   ;; Also check the Modus themes' `modus-themes-mode-line' which can set
   ;; the styles specifically for Moody.
-  (prot-moody-set-height -1))
+  (prot-moody-set-height 1))
 #+end_src
 
 Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
