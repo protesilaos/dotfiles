@@ -446,7 +446,7 @@ Note, though, that this will interfere with `wdired-mode'.  See
 (prot-bongo-dired-library
   prot-bongo-dired-library-disable
   "Disable `bongo-dired-library-mode' when accessing ~/Music.
-This should be added `wdired-mode-hook'.  For more, refer to
+This should be added to `wdired-mode-hook'.  For more, refer to
 `prot-bongo-dired-library-enable'."
   -1)
 
