@@ -382,6 +382,37 @@ LABEL @ URL ~ POSITION."
                     links))))))
     links))
 
+(defun prot-eww--window-bounds ()
+  "Determine start and end points in the window."
+  (list (save-excursion ; FIXME 2021-07-23: more efficient way to get those points?
+          (move-to-window-line 0)
+          (point))
+        (save-excursion
+          (move-to-window-line -1)
+          (point))))
+
+(defun prot-eww--act-visible-window (action)
+  "Run ACTION on wisible window area."
+  (let* ((bounds (prot-eww--window-bounds)))
+    (unwind-protect
+        (progn
+          (narrow-to-region (car bounds) (cadr bounds))
+          (funcall action))
+      (widen))))
+
+;; ;; TODO 2021-07-23: We should refactor the code for getting the URLs
+;; ;; on a page, so that we get a narrowed portion by default, unless
+;; ;; the user passes prefix argument.  The following functions help
+;; ;; showcase the feature.
+
+;; (defun prot-eww-visi-url-on-page-visible ()
+;;   (interactive)
+;;   (prot-eww--act-visible-window 'prot-eww-visit-url-on-page))
+;; 
+;; (defun prot-eww-jump-to-url-on-page-visible ()
+;;   (interactive)
+;;   (prot-eww--act-visible-window 'prot-eww-jump-to-url-on-page))
+
 ;;;###autoload
 (defun prot-eww-visit-url-on-page (&optional arg)
   "Visit URL from list of links on the page using completion.
