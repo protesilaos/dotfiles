@@ -81,6 +81,16 @@ A major heading is one that has subheadings."
 
 ;;;; Minor mode setup
 
+;; HACK 2021-07-24: I am not sure about this.  It needs to be abstracted
+;; and be made useful for other major modes.  For Elisp in particular, I
+;; just want to stop elisp-mode from treating virtually everything as a
+;; heading.  For me, the headings are only the comments with three
+;; delimiters or more.  The rest is noise.
+(defun prot-outline-elisp-outline-headings ()
+  "Change outline headings for Elisp mode."
+  (when (derived-mode-p 'emacs-lisp-mode)
+    (setq-local outline-regexp ";\\{3,\\}+ [^\n]")))
+
 (defvar prot-outline-major-modes-blocklist '(org-mode outline-mode markdown-mode))
 
 ;;;###autoload
@@ -93,9 +103,11 @@ A major heading is one that has subheadings."
       (error "Don't use `prot-outline-minor-mode' with `%s'" mode))
     (if (null outline-minor-mode)
         (progn
+          (prot-outline-elisp-outline-headings) ; NOTE 2021-07-24: see comment above
           (outline-minor-mode 1)
           (message "Enabled `outline-minor-mode'"))
       (outline-minor-mode -1)
+      (remove-hook 'elisp-mode-hook #'prot-outline-elisp-outline-headings)
       (message "Disabled `outline-minor-mode'"))))
 
 (provide 'prot-outline)
