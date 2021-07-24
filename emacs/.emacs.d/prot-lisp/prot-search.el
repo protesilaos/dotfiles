@@ -163,7 +163,10 @@ prefix argument (\\[universal-argument]) for RECURSIVE, run a
 search starting from the current directory with `rgrep'."
   (interactive
    (list
-    (read-from-minibuffer "Local grep for PATTERN: "
+    (read-from-minibuffer (concat (if current-prefix-arg
+                                      (propertize "Recursive" 'face 'warning)
+                                    "Local")
+                                  " grep for PATTERN: ")
 				          nil nil nil 'prot-search--grep-hist)
     current-prefix-arg))
   (unless grep-command
