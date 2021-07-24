@@ -635,7 +635,7 @@ buffer's window as well."
 Do not try to make a new directory or anything fancy."
   (interactive
    (list (read-string "Rename current file: " (buffer-file-name))))
-  (let* ((file (buffer-file-name)))
+  (let ((file (buffer-file-name)))
     (if (vc-registered file)
         (vc-rename-file file name)
       (rename-file file name))
