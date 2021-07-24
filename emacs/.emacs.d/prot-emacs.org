@@ -6762,22 +6762,30 @@ bindings and their functions.
 (prot-emacs-elpa-package 'pass)
 #+end_src
 
-** Simple HTML Renderer (shr), Emacs Web Wowser (eww), and prot-eww.el
+** Simple HTML Renderer (shr), Emacs Web Wowser (eww), Elpher, and prot-eww.el
 :PROPERTIES:
 :CUSTOM_ID: h:524bc702-ff55-4ed9-9a38-26d30d64591d
 :END:
 
+NOTE 2021-07-24: This section needs to be expanded to cover the
+integration with =elpher= (Elpher is an Internet browser for the Gopher
+and Gemini protocols).
+
+
 The following code block encompasses libraries that power Emacs' web
 browsing experience.
 
-+ =browse-url= is determines what Emacs should do when the user follows a
++ =browse-url= determines what Emacs should do when the user follows a
   link to the Internet.  For my purposes, I configure it to open the web
   page inside of Emacs, while I let the Desktop Environment's default
   graphical browser be declared as a secondary option.  Put simply, when
-  I click on a URL, I go to an EWW buffer and from there I can opt to
-  open that page in the GUI browser via =eww-browse-with-external-browser=
-  which is bound to =&=.  That is only ever needed for websites that do
-  not work well in a text-centric interface.
+  I click on a URL, I go to an EWW or Elpher buffer.  If the page is
+  part of the World Wide Web (https? protocol) I can opt to open it in
+  the GUI browser via =eww-browse-with-external-browser=, which is bound
+  to =&= in =eww-mode-map=.  That is only ever needed for websites that do
+  not work well in a text-centric interface.  For pages that implement
+  the Gopher or Gemini protocols, there is no need whatsoever to open
+  them externally as they are plain text anyway.
 
 + =shr= is the "Simple HTML Renderer", which basically means to interpret
   the underlying code of a web page and show it in the way it is
@@ -6795,7 +6803,9 @@ browsing experience.
 
 + =prot-eww= adds commands that align EWW with my expectations and make it
   do what I want to achieve in a primarily text-based web browsing
-  experience.
+  experience.  It also provides the layer of integration between EWW and
+  Elpher, making the resulting browsing experience consistent as one
+  follows links that are implemented in the relevant protocols.
 
 My configurations for =browse-url= and =shr= are straightforward and are
 meant to keep things simple.  I want EWW to behave like the rest of
@@ -6808,8 +6818,15 @@ For =eww=, I repurpose some of its key bindings that I never plan to use,
 such as the toggle for proportional fonts, while I move around a few
 others.  Just to make things easier for me.
 
+NOTE 2021-07-24: Here we need to cover the Elpher configs.
+
 As for =prot-eww=, it includes functionality that make EWW good enough for
-my day-to-day needs.  In particular:
+my day-to-day needs.
+
+NOTE 2021-07-24: This section is incomplete, as it does not cover the
+latest state of the code.
+
+In particular:
 
 + It includes an unconditional internal mechanism that renames EWW
   buffers based on the rendered web page's title or, when that is not
@@ -6975,8 +6992,14 @@ some of the above.
   (define-key eww-buffers-mode-map (kbd "d") #'eww-bookmark-kill)   ; it actually deletes
   (define-key eww-bookmark-mode-map (kbd "d") #'eww-bookmark-kill)) ; same
 
+(prot-emacs-elpa-package 'elpher)    ; NOTE 2021-07-24: work-in-progress
+
 (prot-emacs-builtin-package 'prot-eww
-  (setq prot-eww-save-visited-history t) ; also check `prot-eww-save-history-file'
+  (setq prot-eww-save-history-file
+        (locate-user-emacs-file "prot-eww-visited-history"))
+  (setq prot-eww-save-visited-history t)
+
+  (add-hook 'prot-eww-history-mode-hook #'hl-line-mode)
 
   (define-prefix-command 'prot-eww-map)
   (define-key global-map (kbd "C-c w") 'prot-eww-map)
@@ -6989,6 +7012,7 @@ some of the above.
     (define-key map (kbd "B") #'prot-eww-bookmark-page)
     (define-key map (kbd "D") #'prot-eww-download-html)
     (define-key map (kbd "F") #'prot-eww-find-feed)
+    (define-key map (kbd "H") #'prot-eww-list-history)
     (define-key map (kbd "b") #'prot-eww-visit-bookmark)
     (define-key map (kbd "e") #'prot-eww-browse-dwim)
     (define-key map (kbd "o") #'prot-eww-open-in-other-window)
