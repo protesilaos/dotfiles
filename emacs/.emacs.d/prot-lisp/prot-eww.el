@@ -357,6 +357,7 @@ new EWW buffer."
              (when arg 4))
       (user-error "No bookmarks"))))
 
+;; BUG: If (point-min) has a link, it doesn't gets captured.
 (defun prot-eww--capture-url-on-page (&optional position)
   "Capture all the links on the current web page.
 
@@ -364,8 +365,7 @@ Return a list of strings.  Strings are in the form LABEL @ URL.
 When optional argument POSITION is non-nil, include position info
 in the strings too, so strings take the form
 LABEL @ URL ~ POSITION."
-  (let ((links)
-        (match (gensym)))
+  (let (links match)
     (save-excursion
       (goto-char (point-min))
       (while (setq match (text-property-search-forward
@@ -390,17 +390,17 @@ LABEL @ URL ~ POSITION."
 
 (defun prot-eww--window-bounds ()
   "Determine start and end points in the window."
-  (list (save-excursion ; FIXME 2021-07-23: more efficient way to get those points?
-          (move-to-window-line 0)
-          (point))
-        (save-excursion
-          (move-to-window-line -1)
-          (point))))
+  (save-excursion
+    (list (progn
+            (move-to-window-line 0)
+            (point))
+          (progn
+            (move-to-window-line -1)
+            (1- (vertical-motion 1))
+            ;; Otherwise point would be at the beginning of the last
+            ;; line, and last line wouldn't be considered.
+            (point)))))
 
-(defun prot-eww--act-visible-window (action)
-  "Run ACTION on wisible window area."
-  (let* ((bounds (prot-eww--window-bounds)))
-    (unwind-protect
         (progn
           (narrow-to-region (car bounds) (cadr bounds))
           (funcall action))
