@@ -449,7 +449,7 @@ this command is then required to abort the session."
 (defun prot-minibuffer--switch-to-completions ()
   "Subroutine for switching to the completions' buffer."
   (unless (get-buffer-window "*Completions*" 0)
-    (minibuffer-completion-help))
+    (save-excursion (minibuffer-completion-help)))
   (switch-to-completions)
   (prot-minibuffer--fit-completions-window))
 
