@@ -7,7 +7,7 @@
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "28.1") (elpher "2.10.3"))
+;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -47,7 +47,7 @@
 
 (require 'shr)
 (require 'eww)
-(require 'elpher)
+(require 'elpher nil t)
 (require 'url-parse)
 (require 'prot-common)
 (require 'prot-pulse)
@@ -231,6 +231,10 @@ To be used by `eww-after-render-hook'."
   (let ((url (plist-get eww-data :url)))
     (add-to-history 'prot-eww-visited-history url)))
 
+(autoload 'elpher-page-address "elpher")
+(autoload 'elpher-address-to-url "elpher")
+(defvar elpher-current-page)
+
 (defun prot-eww--record-elpher-history (arg1 &optional arg2 arg3)
   "Store URLs visited using elpher in `prot-eww-visited-history'.
 To be used by `elpher-visited-page'.  ARG1, ARG2, ARG3 are
@@ -260,6 +264,8 @@ unused."
              '("\\`gopher:" . prot-eww--browser-handler))
 (add-to-list 'browse-url-default-handlers
              '("\\`finger:" . prot-eww--browser-handler))
+
+(autoload 'elpher-go "elpher")
 
 ;; handler that browse-url calls.
 (defun prot-eww--browser-handler (url &rest args)
