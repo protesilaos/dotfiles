@@ -401,10 +401,15 @@ LABEL @ URL ~ POSITION."
             ;; line, and last line wouldn't be considered.
             (point)))))
 
+(defmacro prot-eww-act-visible-window (&rest body)
+  "Run BODY within narrowed-region.
+The value returned is the value of the last form in BODY."
+  `(let ((bounds (prot-eww--window-bounds)))
+     (unwind-protect
         (progn
           (narrow-to-region (car bounds) (cadr bounds))
-          (funcall action))
-      (widen))))
+          ,@body)
+       (widen))))
 
 ;; ;; TODO 2021-07-23: We should refactor the code for getting the URLs
 ;; ;; on a page, so that we get a narrowed portion by default, unless
@@ -433,11 +438,19 @@ new EWW buffer."
       (eww url (when arg 4)))))
 
 ;;;###autoload
-(defun prot-eww-jump-to-url-on-page ()
-  "Jump to URL position on the page using completion."
-  (interactive)
+(defun prot-eww-jump-to-url-on-page (&optional arg)
+  "Jump to URL position on the page using completion.
+
+When called without ARG (\\[universal-argument]) get URLs only
+from the visible portion of the buffer. But when ARG is provided
+consider whole buffer."
+  (interactive "P")
   (when (derived-mode-p 'eww-mode)
-    (let* ((links (prot-eww--capture-url-on-page t))
+    (let* ((links
+            (if arg
+                (prot-eww--capture-url-on-page t)
+              (prot-eww-act-visible-window
+               (prot-eww--capture-url-on-page t))))
            (selection (completing-read "Jump to URL on page: " links nil t))
            (position (replace-regexp-in-string ".*~ " "" selection))
            (point (string-to-number position)))
