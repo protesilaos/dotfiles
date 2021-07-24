@@ -172,9 +172,9 @@ search starting from the current directory with `rgrep'."
   (unless grep-command
     (grep-compute-defaults))
   (if recursive
-        (rgrep regexp "*" default-directory)
+      (rgrep regexp "*" default-directory)
     (lgrep regexp "*" default-directory)
-  (add-to-history 'prot-search--grep-hist regexp)))
+    (add-to-history 'prot-search--grep-hist regexp)))
 
 (provide 'prot-search)
 ;;; prot-search.el ends here
