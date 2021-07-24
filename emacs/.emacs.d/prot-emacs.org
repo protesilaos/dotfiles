@@ -1283,6 +1283,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (let ((map completion-list-mode-map))
     (define-key map (kbd "h") #'prot-simple-describe-symbol) ; from `prot-simple.el'
     (define-key map (kbd "M-g") #'prot-minibuffer-choose-completion-number)
+    (define-key map (kbd "M-e") #'prot-minibuffer-edit-completion)
     (define-key map (kbd "M-v") #'prot-minibuffer-focus-minibuffer)
     (define-key map (kbd "C-g") #'prot-minibuffer-keyboard-quit-dwim)
     (define-key map (kbd "C-n") #'prot-minibuffer-next-completion-or-mini)

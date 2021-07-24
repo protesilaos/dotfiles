@@ -613,6 +613,19 @@ Otherwise behave like `prot-minibuffer-choose-completion-exit'."
         (let ((inhibit-message t))
           (switch-to-completions))))))
 
+;;;###autoload
+(defun prot-minibuffer-edit-completion ()
+  "Edit the candidate from the Completions in the minibuffer."
+  (interactive)
+  (let ((string))
+  (when (and (derived-mode-p 'completion-list-mode)
+             (active-minibuffer-window))
+    (with-current-buffer "*Completions*"
+      (setq string (get-text-property (point) 'completion--string)))
+    (select-window (active-minibuffer-window) nil)
+    (delete-region (minibuffer-prompt-end) (point-max))
+    (insert string))))
+
 ;;;; Simple actions for the "*Completions*" buffer
 
 ;; DEPRECATED: I just use Embark for such tasks, but am keeping this
