@@ -8202,6 +8202,8 @@ documented in their docstrings, so please check the code below.
 (prot-emacs-builtin-package 'prot-comment
   (setq prot-comment-comment-keywords
         '("TODO" "NOTE" "XXX" "REVIEW" "FIXME"))
+  (setq prot-comment-timestamp-format-concise "%F")
+  (setq prot-comment-timestamp-format-verbose "%F %T %z")
   (let ((map global-map))
     (define-key map (kbd "C-;") #'prot-comment-comment-dwim)
     (define-key map (kbd "C-x C-;") #'prot-comment-timestamp-keyword)))

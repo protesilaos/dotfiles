@@ -34,6 +34,8 @@
 
 ;;; Code:
 
+(require 'prot-common)
+
 (defgroup prot-comment ()
   "Extensions for newcomment.el."
   :group 'comment)
@@ -42,6 +44,18 @@
   '("TODO" "NOTE" "XXX" "REVIEW" "FIXME")
   "List of strings with comment keywords."
   :type '(repeat string)
+  :group 'prot-comment)
+
+(defcustom prot-comment-timestamp-format-concise "%F"
+  "Specifier for date in `prot-comment-timestamp-keyword'.
+Refer to the doc string of `format-time-string' for the available
+options."
+  :type 'string
+  :group 'prot-comment)
+
+(defcustom prot-comment-timestamp-format-verbose "%F %T %z"
+  "Like `prot-comment-timestamp-format-concise', but longer."
+  :type 'string
   :group 'prot-comment)
 
 ;;;###autoload
@@ -83,32 +97,59 @@ operates on the lines before point)."
      keywords nil nil nil 'prot-comment--keyword-hist def)))
 
 ;;;###autoload
-(defun prot-comment-timestamp-keyword (keyword)
+(defun prot-comment-timestamp-keyword (keyword &optional verbose)
   "Add timestamped comment with KEYWORD.
+
 When called interactively, the list of possible keywords is that
 of `prot-comment-comment-keywords', though it is possible to
 input arbitrary text.
 
-If point is at the beginning of the line, the comment is started
-there.  Any existing text after the point will not be turned into
-a comment but will be pushed to a new line instead.
+If point is at the beginning of the line or if line is empty (no
+characters at all or just indentation), the comment is started
+there in accordance with `comment-style'.  Any existing text
+after the point will be pushed to a new line and will not be
+turned into a comment.
 
 If point is anywhere else on the line, the comment is indented
 with `comment-indent'.
 
-The comment is formatted as 'DELIMITER KEYWORD DATE:', with the
-date being represented as Year-Month-Day."
+The comment is always formatted as 'DELIMITER KEYWORD DATE:',
+with the date format being controlled by the variable
+`prot-comment-timestamp-format-concise'.
+
+With optional VERBOSE argument (such as a prefix argument
+`\\[universal-argument]'), use an alternative date format, as
+specified by `prot-comment-timestamp-format-verbose'."
   (interactive
    (list
-    (prot-comment--keyword-prompt prot-comment-comment-keywords)))
-  (let ((beg (point))
-        (end (gensym))
-        (string (format "%s %s: " keyword (format-time-string "%F"))))
+    (prot-comment--keyword-prompt prot-comment-comment-keywords)
+    current-prefix-arg))
+  (let* ((date (if verbose
+                   prot-comment-timestamp-format-verbose
+                 prot-comment-timestamp-format-concise))
+         (string (format "%s %s: " keyword (format-time-string date)))
+         (beg (point)))
     (cond
-     ((eq beg (point-at-bol))
-      (insert string)
-      (setq end (point))
-      (comment-region beg end))
+     ((or (eq beg (point-at-bol))
+          (prot-common-line-regexp-p 'empty))
+      (let* ((maybe-newline (unless (prot-common-line-regexp-p 'empty 1) "\n")))
+        ;; NOTE 2021-07-24: we use this `insert' instead of
+        ;; `comment-region' because of a yet-to-be-determined bug that
+        ;; traps `undo' to the two states between the insertion of the
+        ;; string and its transformation into a comment.
+        (insert
+         (concat comment-start
+                 ;; NOTE 2021-07-24: See function `comment-add' for
+                 ;; why we need this.
+                 (make-string
+                  (comment-add nil)
+                  (string-to-char comment-start))
+                 comment-padding
+                 string
+                 comment-end))
+        (indent-region beg (point))
+        (when maybe-newline
+          (save-excursion (insert maybe-newline)))))
      (t
       (comment-indent t)
       (insert (concat " " string))))))
