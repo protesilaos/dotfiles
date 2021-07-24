@@ -669,7 +669,7 @@ Relevant publications of mine that are not part of this document:
                             :fixed-pitch-heavy-weight bold
                             :fixed-pitch-height 130
                             :fixed-pitch-line-spacing nil
-                            :variable-pitch-family "Source Sans Pro"
+                            :variable-pitch-family "Inter"
                             :variable-pitch-height 1.0
                             :variable-pitch-regular-weight normal))))
 
