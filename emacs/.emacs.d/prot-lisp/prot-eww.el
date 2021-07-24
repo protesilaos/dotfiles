@@ -467,8 +467,7 @@ new EWW buffer."
     ;; Findings like "rss.xml" are not particularly helpful.
     ;;
     ;; NOTE 2021-03-31: the base-url heuristic may not always be
-    ;; correct, though it has worked in all websites I have tested it
-    ;; in.
+    ;; correct, though it has worked in all cases I have tested it on.
     (when (get-buffer buf-name)
       (with-current-buffer (get-buffer buf-name)
         (let ((inhibit-read-only t)
