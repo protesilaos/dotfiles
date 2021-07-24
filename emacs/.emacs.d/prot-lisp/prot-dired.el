@@ -137,7 +137,12 @@ exclude files matching REGEXP.
 Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
   (interactive
    (list
-    (read-regexp "Files matching PATTERN: " nil 'prot-dired--limit-hist)
+    (read-regexp
+     (concat "Files "
+             (when current-prefix-arg
+               (propertize "NOT " 'face 'warning))
+             "matching PATTERN: ")
+     nil 'prot-dired--limit-hist)
     current-prefix-arg))
   (dired-mark-files-regexp regexp)
   (unless omit (dired-toggle-marks))
