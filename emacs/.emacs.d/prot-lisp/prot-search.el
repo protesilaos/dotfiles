@@ -167,7 +167,7 @@ search starting from the current directory with `rgrep'."
                                       (propertize "Recursive" 'face 'warning)
                                     "Local")
                                   " grep for PATTERN: ")
-				          nil nil nil 'prot-search--grep-hist)
+                          nil nil nil 'prot-search--grep-hist)
     current-prefix-arg))
   (unless grep-command
     (grep-compute-defaults))
