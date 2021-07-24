@@ -325,6 +325,7 @@ point an arbitrary distance.
 (prot-emacs-builtin-package 'prot-pulse
   (setq prot-pulse-pulse-command-list
         '(recenter-top-bottom
+          move-to-window-line-top-bottom
           reposition-window
           bookmark-jump
           other-window))
