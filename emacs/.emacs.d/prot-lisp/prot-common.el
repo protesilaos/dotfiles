@@ -96,12 +96,16 @@
 ;;;###autoload
 (defun prot-common-window-bounds ()
   "Determine start and end points in the window."
-  (list (save-excursion ; FIXME 2021-07-23: more efficient way to get those points?
-          (move-to-window-line 0)
-          (point))
-        (save-excursion
-          (move-to-window-line -1)
-          (point))))
+  (save-excursion
+    (list (progn
+            (move-to-window-line 0)
+            (point))
+          (progn
+            (move-to-window-line -1)
+            (vertical-motion 1)
+            ;; Otherwise point would be at the beginning of the last
+            ;; line, and last line wouldn't be considered.
+            (point)))))
 
 ;; Thanks to Omar Antolín Camarena for providing this snippet!
 ;;;###autoload
