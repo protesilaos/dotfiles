@@ -388,23 +388,10 @@ LABEL @ URL ~ POSITION."
                     links))))))
     links))
 
-(defun prot-eww--window-bounds ()
-  "Determine start and end points in the window."
-  (save-excursion
-    (list (progn
-            (move-to-window-line 0)
-            (point))
-          (progn
-            (move-to-window-line -1)
-            (1- (vertical-motion 1))
-            ;; Otherwise point would be at the beginning of the last
-            ;; line, and last line wouldn't be considered.
-            (point)))))
-
 (defmacro prot-eww-act-visible-window (&rest body)
   "Run BODY within narrowed-region.
 The value returned is the value of the last form in BODY."
-  `(let ((bounds (prot-eww--window-bounds)))
+  `(let ((bounds (prot-common-window-bounds)))
      (unwind-protect
         (progn
           (narrow-to-region (car bounds) (cadr bounds))
