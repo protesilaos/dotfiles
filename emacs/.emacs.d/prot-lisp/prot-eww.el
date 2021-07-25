@@ -377,14 +377,19 @@ LABEL @ URL ~ POSITION."
                (end-point-prop (prop-match-end match))
                (url (when (stringp raw-url)
                       (propertize raw-url 'face 'link)))
-               (point start-point-prop))
                (label (replace-regexp-in-string "\n" " " ; NOTE 2021-07-25: newlines break completion
                        (buffer-substring-no-properties
                        start-point-prop end-point-prop)))
+               (point start-point-prop)
+               (line (line-number-at-pos point t))
+               (column (save-excursion (goto-char point) (current-column)))
+               (coordinates (propertize
+                             (format "%d,%d (%d)" line column point)
+                             'face 'shadow)))
           (when url
             (if position
-                (push (format "%s  @ %s ~ %d"
-                              label url point)
+                (push (format "%-15s ~ %s  @ %s"
+                              coordinates label url)
                       links)
               (push (format "%s  @ %s"
                             label url)
@@ -433,7 +438,7 @@ consider whole buffer."
                            "visible URL"))
            (prompt (format "Jump to %s: " prompt-scope))
            (selection (completing-read prompt links nil t))
-           (position (replace-regexp-in-string ".*~ " "" selection))
+           (position (replace-regexp-in-string "^L[0-9]+ \\([0-9]+\\) ~" "\\1" selection))
            (point (string-to-number position)))
       (goto-char point)
       (prot-pulse-pulse-line))))
