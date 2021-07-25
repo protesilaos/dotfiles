@@ -357,7 +357,6 @@ new EWW buffer."
              (when arg 4))
       (user-error "No bookmarks"))))
 
-;; BUG: If (point-min) has a link, it doesn't gets captured.
 (defun prot-eww--capture-url-on-page (&optional position)
   "Capture all the links on the current web page.
 
@@ -368,8 +367,11 @@ LABEL @ URL ~ POSITION."
   (let (links match)
     (save-excursion
       (goto-char (point-min))
-      (while (setq match (text-property-search-forward
-                          'shr-url nil nil t))
+      ;; NOTE 2021-07-25: The first clause in the `or' is meant to
+      ;; address a bug where if a URL is in `point-min' it does not get
+      ;; captured.
+      (while (or (setq match (text-property-search-forward 'shr-url))
+                 (setq match (text-property-search-forward 'shr-url nil nil t)))
         (let* ((raw-url (prop-match-value match))
                (start-point-prop (prop-match-beginning match))
                (end-point-prop (prop-match-end match))
