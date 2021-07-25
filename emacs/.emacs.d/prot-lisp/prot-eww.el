@@ -425,7 +425,11 @@ consider whole buffer."
                 (prot-eww--capture-url-on-page t)
               (prot-eww-act-visible-window
                (prot-eww--capture-url-on-page t))))
-           (selection (completing-read "Jump to URL on page: " links nil t))
+           (prompt-scope (if arg
+                             (propertize "URL on the page" 'face 'warning)
+                           "visible URL"))
+           (prompt (format "Jump to %s: " prompt-scope))
+           (selection (completing-read prompt links nil t))
            (position (replace-regexp-in-string ".*~ " "" selection))
            (point (string-to-number position)))
       (goto-char point)
