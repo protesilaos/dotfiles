@@ -37,6 +37,10 @@
 (require 'outline)
 (require 'prot-common)
 
+(defgroup prot-outline ()
+  "Tweaks for Outline mode."
+  :group 'outline)
+
 ;;;; Commands
 
 ;;;###autoload
@@ -81,15 +85,11 @@ A major heading is one that has subheadings."
 
 ;;;; Minor mode setup
 
-;; HACK 2021-07-24: I am not sure about this.  It needs to be abstracted
-;; and be made useful for other major modes.  For Elisp in particular, I
-;; just want to stop elisp-mode from treating virtually everything as a
-;; heading.  For me, the headings are only the comments with three
-;; delimiters or more.  The rest is noise.
-(defun prot-outline-elisp-outline-headings ()
-  "Change outline headings for Elisp mode."
-  (when (derived-mode-p 'emacs-lisp-mode)
-    (setq-local outline-regexp ";\\{3,\\}+ [^\n]")))
+(defcustom prot-outline-headings-per-mode
+  '((emacs-lisp-mode . ";\\{3,\\}+ [^\n]"))
+  "Alist of major modes with `outline-regexp' values."
+  :type '(alist :key-type symbol :value-type string)
+  :group 'prot-outline)
 
 (defvar prot-outline-major-modes-blocklist '(org-mode outline-mode markdown-mode))
 
@@ -97,13 +97,15 @@ A major heading is one that has subheadings."
 (defun prot-outline-minor-mode-safe ()
   "Test to set variable `outline-minor-mode' to non-nil."
   (interactive)
-  (let ((blocklist prot-outline-major-modes-blocklist)
-        (mode major-mode))
+  (let* ((blocklist prot-outline-major-modes-blocklist)
+         (mode major-mode)
+         (headings (alist-get mode prot-outline-headings-per-mode)))
     (when (derived-mode-p (car (member mode blocklist)))
       (error "Don't use `prot-outline-minor-mode' with `%s'" mode))
     (if (null outline-minor-mode)
         (progn
-          (prot-outline-elisp-outline-headings) ; NOTE 2021-07-24: see comment above
+          (when (derived-mode-p mode)
+            (setq-local outline-regexp headings))
           (outline-minor-mode 1)
           (message "Enabled `outline-minor-mode'"))
       (outline-minor-mode -1)
