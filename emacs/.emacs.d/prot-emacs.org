@@ -440,7 +440,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; that can combine any of `3d' OR `moody', `borderless',
         ;; `accented'.  The variable's doc string shows all possible
         ;; combinations.
-        modus-themes-mode-line '(borderless accented) ; For Moody, also check `prot-moody'
+        modus-themes-mode-line '(3d) ; For Moody, also check `prot-moody'
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -450,18 +450,18 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(intense)
+        modus-themes-hl-line '(intense accented)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold intense underline)
+        modus-themes-paren-match '(bold underline)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links nil
+        modus-themes-links '(neutral-underline faint)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of
@@ -476,11 +476,11 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend accented)
+        modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'bg-only
+        modus-themes-diffs 'fg-only-deuteranopia
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
@@ -491,11 +491,11 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
           (habit . traffic-light-deuteranopia))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((t . (overline no-bold)))
+        '((t . (overline no-bold background monochrome)))
 
-        modus-themes-variable-pitch-ui t
+        modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings t
-        modus-themes-scale-headings nil
+        modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
