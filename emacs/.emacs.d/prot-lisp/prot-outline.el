@@ -91,7 +91,11 @@ A major heading is one that has subheadings."
   :type '(alist :key-type symbol :value-type string)
   :group 'prot-outline)
 
-(defvar prot-outline-major-modes-blocklist '(org-mode outline-mode markdown-mode))
+(defcustom prot-outline-major-modes-blocklist
+  '(org-mode outline-mode markdown-mode)
+  "Major modes where Outline-minor-mode should not be enabled."
+  :type '(repeat symbol)
+  :group 'prot-outline)
 
 ;;;###autoload
 (defun prot-outline-minor-mode-safe ()
