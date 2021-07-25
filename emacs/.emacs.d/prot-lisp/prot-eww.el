@@ -416,7 +416,7 @@ new EWW buffer."
   "Jump to URL position on the page using completion.
 
 When called without ARG (\\[universal-argument]) get URLs only
-from the visible portion of the buffer. But when ARG is provided
+from the visible portion of the buffer.  But when ARG is provided
 consider whole buffer."
   (interactive "P")
   (when (derived-mode-p 'eww-mode)
