@@ -129,9 +129,10 @@ end of the buffer.")
 (defun prot-search-occur-urls ()
   "Produce buttonised list of all URLs in the current buffer."
   (interactive)
-  (add-hook 'occur-hook #'goto-address-mode)
-  (occur prot-common-url-regexp "\\&")
-  (remove-hook 'occur-hook #'goto-address-mode))
+  (let ((buf-name (format "*links in <%s>*" (buffer-name))))
+    (add-hook 'occur-hook #'goto-address-mode)
+    (occur-1 prot-common-url-regexp "\\&" (list (current-buffer)) buf-name)
+    (remove-hook 'occur-hook #'goto-address-mode)))
 
 ;;;###autoload
 (defun prot-search-occur-browse-url ()
