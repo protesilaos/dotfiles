@@ -107,7 +107,6 @@ A major heading is one that has subheadings."
           (outline-minor-mode 1)
           (message "Enabled `outline-minor-mode'"))
       (outline-minor-mode -1)
-      (remove-hook 'elisp-mode-hook #'prot-outline-elisp-outline-headings)
       (message "Disabled `outline-minor-mode'"))))
 
 (provide 'prot-outline)
