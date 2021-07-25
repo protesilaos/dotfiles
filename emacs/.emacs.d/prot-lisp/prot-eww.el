@@ -398,19 +398,6 @@ The value returned is the value of the last form in BODY."
           ,@body)
        (widen))))
 
-;; ;; TODO 2021-07-23: We should refactor the code for getting the URLs
-;; ;; on a page, so that we get a narrowed portion by default, unless
-;; ;; the user passes prefix argument.  The following functions help
-;; ;; showcase the feature.
-
-;; (defun prot-eww-visi-url-on-page-visible ()
-;;   (interactive)
-;;   (prot-eww--act-visible-window 'prot-eww-visit-url-on-page))
-;; 
-;; (defun prot-eww-jump-to-url-on-page-visible ()
-;;   (interactive)
-;;   (prot-eww--act-visible-window 'prot-eww-jump-to-url-on-page))
-
 ;;;###autoload
 (defun prot-eww-visit-url-on-page (&optional arg)
   "Visit URL from list of links on the page using completion.
