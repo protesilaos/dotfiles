@@ -400,11 +400,13 @@ LABEL @ URL ~ POSITION."
   "Run BODY within narrowed-region.
 The value returned is the value of the last form in BODY."
   `(let ((bounds (prot-common-window-bounds)))
-     (unwind-protect
-        (progn
-          (narrow-to-region (car bounds) (cadr bounds))
-          ,@body)
-       (widen))))
+     (if (buffer-narrowed-p)
+         ,@body
+       (unwind-protect
+           (progn
+             (narrow-to-region (car bounds) (cadr bounds))
+             ,@body)
+         (widen)))))
 
 ;;;###autoload
 (defun prot-eww-visit-url-on-page (&optional arg)
