@@ -377,9 +377,10 @@ LABEL @ URL ~ POSITION."
                (end-point-prop (prop-match-end match))
                (url (when (stringp raw-url)
                       (propertize raw-url 'face 'link)))
-               (label (buffer-substring-no-properties
-                       start-point-prop end-point-prop))
                (point start-point-prop))
+               (label (replace-regexp-in-string "\n" " " ; NOTE 2021-07-25: newlines break completion
+                       (buffer-substring-no-properties
+                       start-point-prop end-point-prop)))
           (when url
             (if position
                 (push (format "%s  @ %s ~ %d"
