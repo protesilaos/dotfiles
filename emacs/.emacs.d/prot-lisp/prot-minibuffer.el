@@ -528,7 +528,7 @@ minibuffer."
 ;;   "Call FN with rest ARGS while aborting recursive edit."
 ;;   (apply #'run-at-time 0 nil fn args)
 ;;   (abort-recursive-edit))
-;; 
+;;
 ;; (defun prot-minibuffer--display-at-bottom (buf-name)
 ;;   "Display BUF-NAME in bottom window."
 ;;   (display-buffer-at-bottom
@@ -618,8 +618,17 @@ Otherwise behave like `prot-minibuffer-choose-completion-exit'."
   "Edit the candidate from the Completions in the minibuffer."
   (interactive)
   (let (string)
-    (when (and (derived-mode-p 'completion-list-mode)
-               (active-minibuffer-window))
+    ;; BUG 2021-07-26: When we use `prot-minibuffer-toggle-completions'
+    ;; the first line is active even without switching to the
+    ;; Completions' buffer, so the user would expect that this command
+    ;; would capture the candidate at that point.  It does not.
+    ;;
+    ;; If we focus the Completions' buffer at least once, then
+    ;; everything works as expected.
+    (when (or (and (minibufferp)
+                   (get-buffer-window "*Completions*" 0))
+              (and (derived-mode-p 'completion-list-mode)
+                   (active-minibuffer-window)))
       (with-current-buffer "*Completions*"
         (setq string (get-text-property (point) 'completion--string)))
       (if string
