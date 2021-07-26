@@ -618,13 +618,16 @@ Otherwise behave like `prot-minibuffer-choose-completion-exit'."
   "Edit the candidate from the Completions in the minibuffer."
   (interactive)
   (let ((string))
-  (when (and (derived-mode-p 'completion-list-mode)
-             (active-minibuffer-window))
-    (with-current-buffer "*Completions*"
-      (setq string (get-text-property (point) 'completion--string)))
-    (select-window (active-minibuffer-window) nil)
-    (delete-region (minibuffer-prompt-end) (point-max))
-    (insert string))))
+    (when (and (derived-mode-p 'completion-list-mode)
+               (active-minibuffer-window))
+      (with-current-buffer "*Completions*"
+        (setq string (get-text-property (point) 'completion--string)))
+      (if string
+          (progn
+            (select-window (active-minibuffer-window) nil)
+            (delete-region (minibuffer-prompt-end) (point-max))
+            (insert string))
+        (user-error "Could not find completion at point")))))
 
 ;;;; Simple actions for the "*Completions*" buffer
 
