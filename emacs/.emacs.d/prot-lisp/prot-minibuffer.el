@@ -617,7 +617,7 @@ Otherwise behave like `prot-minibuffer-choose-completion-exit'."
 (defun prot-minibuffer-edit-completion ()
   "Edit the candidate from the Completions in the minibuffer."
   (interactive)
-  (let ((string))
+  (let (string)
     (when (and (derived-mode-p 'completion-list-mode)
                (active-minibuffer-window))
       (with-current-buffer "*Completions*"
