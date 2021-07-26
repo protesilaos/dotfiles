@@ -1127,6 +1127,16 @@ What my completion selection interface does in a nutshell:
   multiple digits long, start the prefix as usual, release the modifier
   key and continue inputting numbers (e.g. =M-5 0 1= is equal to =C-u 501=).
 
++ The current completion candidate can be edited with =M-e=, which calls
+  the command =prot-minibuffer-edit-completion=.  This works when we are
+  in the =*Completions*= buffer or in the minibuffer with the Completions
+  being visible.  The utility of this feature is obvious in contexts
+  where you can insert text that does not match any of the candidates
+  yet which counts as valid input (e.g. if a file =hello= exists, you can
+  put point over the candidate, =M-e=, and expand it to =hello-world=---my
+  common use-case is to edit URLs from my history of visited web pages:
+  [[#h:524bc702-ff55-4ed9-9a38-26d30d64591d][Emacs Web Wowser (eww), Elpher, and prot-eww.el]]).
+
 Finally, here is an overview of the settings covered herein:
 
 + Completion styles :: I mostly rely on [[#h:7b1374dd-6b1f-4548-8fbf-1034230c80e0][the Orderless completion style]].
@@ -1298,6 +1308,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
     (define-key map (kbd "j") #'prot-minibuffer-completions-insert-symbol-at-point-exit))
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "M-g") #'prot-minibuffer-choose-completion-number)
+    (define-key map (kbd "M-e") #'prot-minibuffer-edit-completion)
     (define-key map (kbd "C-n") #'prot-minibuffer-switch-to-completions-top)
     (define-key map (kbd "<down>") #'prot-minibuffer-switch-to-completions-top)
     (define-key map (kbd "C-p") #'prot-minibuffer-switch-to-completions-bottom)
