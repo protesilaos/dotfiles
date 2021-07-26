@@ -440,7 +440,7 @@ consider whole buffer."
                            "visible URL"))
            (prompt (format "Jump to %s: " prompt-scope))
            (selection (completing-read prompt links nil t))
-           (position (replace-regexp-in-string "^L[0-9]+ \\([0-9]+\\) ~" "\\1" selection))
+           (position (replace-regexp-in-string "^.*(\\([0-9]+\\))[\s\t]+~" "\\1" selection))
            (point (string-to-number position)))
       (goto-char point)
       (prot-pulse-pulse-line))))
