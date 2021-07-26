@@ -398,15 +398,15 @@ LABEL @ URL ~ POSITION."
 
 (defmacro prot-eww-act-visible-window (&rest body)
   "Run BODY within narrowed-region.
-The value returned is the value of the last form in BODY."
-  `(let ((bounds (prot-common-window-bounds)))
-     (if (buffer-narrowed-p)
-         ,@body
-       (unwind-protect
-           (progn
-             (narrow-to-region (car bounds) (cadr bounds))
-             ,@body)
-         (widen)))))
+If region is active run BODY within active region instead.
+Return the value of the last form of BODY."
+  `(save-restriction
+     (let (bounds)
+       (if (use-region-p)
+           (narrow-to-region (region-beginning) (region-end))
+         (setq bounds (prot-common-window-bounds))
+         (narrow-to-region (car bounds) (cadr bounds)))
+       ,@body)))
 
 ;;;###autoload
 (defun prot-eww-visit-url-on-page (&optional arg)
