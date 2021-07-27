@@ -37,6 +37,7 @@
 ;;;; General utilities
 
 (require 'prot-common)
+(require 'text-property-search)
 
 (defgroup prot-minibuffer ()
   "Extensions for the minibuffer."
@@ -510,6 +511,48 @@ minibuffer."
             (eq (point) (1+ (point-min)))) ; see hack in `prot-minibuffer--clean-completions'
         (prot-minibuffer-focus-minibuffer)
       (next-completion (or num 1)))))
+
+;; NOTE 2021-07-27: The next/previous group navigation commands are
+;; inspired by the blog post of James Cash with the title "Emacs
+;; Completes Me" (2021-07-25):
+;; <https://occasionallycogent.com/emacs_new_completions_helper/index.html>.
+;;;###autoload
+(defun prot-minibuffer-completion-next-group ()
+  "Move to the top of the next completion group.
+If no group is found while moving towards the end of the buffer,
+cycle to the beginning and match the first group in a forward
+motion."
+  (interactive)
+  (let (group)
+    (unless (text-property-search-forward 'completion--string nil nil t)
+      (goto-char (point-min)))
+    (when (setq group
+                (save-excursion
+                  (text-property-search-forward 'face 'completions-group-separator nil t)))
+      (let ((point (prop-match-end group)))
+        (if (eq point (point-max))
+            (goto-char (point-min))
+          (goto-char point))
+        (next-completion 1)))))
+
+;;;###autoload
+(defun prot-minibuffer-completion-previous-group ()
+  "Move to the top of the previous completion group.
+If no group is found while moving towards the top of the buffer,
+cycle to the end and match the first group in a backward motion."
+  (interactive)
+  (let (group)
+    (unless (text-property-search-backward 'completion--string nil nil t)
+      (goto-char (point-max)))
+    (when (setq group
+                (save-excursion
+                  (unless     ; FIXME 2021-07-27: More efficient method?
+                      (eq (progn (forward-line -1)
+                                 (get-text-property (point-at-bol) 'completions-group-separator))
+                          (text-property-search-backward 'face 'completions-group-separator))
+                    (text-property-search-backward 'face 'completions-group-separator t))))
+      (goto-char (prop-match-beginning group))
+      (next-completion 1))))
 
 ;; ;; NOTE 2021-04-07: This was written as a temporary solution to get a
 ;; ;; copy of the completions' buffer.  It is no longer needed in my
