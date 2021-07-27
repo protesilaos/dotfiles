@@ -9475,17 +9475,17 @@ software is OBS Studio, while I do no video editing whatsoever.
 
 Emacs is both a piece of software and a diverse community of people that
 are brought together by their shared interest in this unique program.
-Emacs' development unfolds through a distributed network of volunteer
-efforts coordinated by members of the GNU project.  While the community
-at-large contributes lots of valuable ideas to a pool of accumulated
-knowledge, such as configurations with custom Elisp code, video or
-written tutorials on particular workflows, and packages that cover a
-broad range of needs.
+Emacs' development unfolds through a distributed network of volunteers,
+coordinated by members of the GNU project.  While the community at-large
+develops and ultimately internalises lots of valuable ideas to a pool of
+accumulated knowledge, such as configurations with custom Elisp code,
+video or written tutorials on particular workflows, and packages that
+cover a broad range of needs.
 
-Outside the narrow confines of computer, Emacs is it people.
+Outside the narrow confines of the computer, Emacs is its people.
 
 Here is a non-exhaustive list of users that I have found to be helpful,
-each in their own unique way:
+each in their own unique way---the order is not significant:
 
 + Omar Antolín Camarena :: Omar's work is mentioned several times in
   this document (author of Orderless, Embark, and co-author of
@@ -9518,14 +9518,14 @@ each in their own unique way:
   file with lots of advanced code snippets.
 
 + Rainer König :: Rainer has [[https://www.youtube.com/playlist?list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE][a series of video tutorials]] on how to
-  organise your life using various Org features, such as check lists and
+  organise your life using various Org features, such as check-lists and
   the agenda.  Each video covers a single utility or closely related
   concepts, while the whole playlist offers a progression from basic to
   more advanced workflows.  Highly recommended!
 
 + Mike Zamansky :: Mike is a computer science professor who has been
   doing [[https://www.youtube.com/channel/UCxkMDXQ5qzYOgXPRnOBrp1w][videos on Emacs]] for several years.  There is a wealth of
-  information to gather from those presentations as well as the
+  information to parse from those presentations as well as the
   corresponding [[https://github.com/zamansky/dot-emacs][dot-emacs code repository]].
 
 + Emacs Elements :: This is [[https://www.youtube.com/channel/UCe5excZqMeG1CIW-YhMTCEQ][a channel on Youtube]] where Raoul Comninos
@@ -9539,11 +9539,13 @@ each in their own unique way:
   of themes, encapsulated in the [[https://github.com/daviwil/emacs-from-scratch][Emacs from scratch]] configuration.  The
   [[https://youtube.com/c/SystemCrafters][Youtube channel]] contains lots of videos on how to set up and use all
   sorts of packages in Emacs, such as Org and the Mu4e email client.
+  David's material is an excellent resource and point of reference for
+  new and experienced users alike.
 
 + Karthik Chikmagalur :: Karthik's [[https://karthinks.com/software/batteries-included-with-emacs/][Batteries included with Emacs]]
   (2020-11-17) and [[https://karthinks.com/software/more-batteries-included-with-emacs/][More batteries included with Emacs]] (2020-12-11) are
   essential reading for anyone wanting to gain an overview of some of
-  Emacs' capabilities out-of-the-box and learn about its 'hidden gems'.
+  Emacs' built-in capabilities and learn about its 'hidden gems'.
   Karthik's website includes philosophical insights as well, such as
   those found in [[https://karthinks.com/blog/thoughts-on-strength-training/][Thoughts on Strength Training]] (2019-03-02).
 
@@ -9568,14 +9570,47 @@ each in their own unique way:
   the years, such as hand-drawn guides to using Emacs, chats with
   prominent members of the Emacs community, and more.
 
++ Bozhidar Batsov :: Bozhidar is the maintainer of several popular Emacs
+  packages (and not only), such as the [[https://github.com/bbatsov/projectile][Projectile library]] for
+  interacting with projects (like a Git repo), the [[https://github.com/bbatsov/prelude][Prelude starter kit]]
+  which tries to enhance---but otherwise remain faithful to---the
+  standard Emacs experience, ports of the popular Zenburn and Solarized
+  themes, as well as the informative [[https://emacsredux.com/][blog Emacs redux]].
+
++ Timothy (aka tecosaur) :: Timothy, better known as TEC or tecosaur, is
+  the designer of the current iteration of the [[https://orgmode.org/][Org-mode web page]] and
+  provides, among others, the blog [[https://blog.tecosaur.com/tmio/archive.html][This Month in Org]] which, as it name
+  implies, offers a monthly overview of noteworthy new snippets that
+  concern the development of the deservedly beloved Org-mode.
+
++ Irreal :: Jon Snader's [[https://irreal.org/blog/][Irreal blog]] is one of the best places to start
+  learning about the people in the wider Emacs community and to continue
+  keeping track of their projects.  Irreal offers curated summaries of
+  our fellow Emacsers' contributions, as well as original entries.  Jon
+  takes the time to cover the main points in one's work and, where
+  appropriate, to highlight relevant information or offer a valuable
+  insight.
+
 Please note that this is a non-exhaustive list.  Lots of people
-contribute to the betterment of Emacs, such as Jonas Bernoulli
-(developer of Magit, among many others), Oleh Krehel (developer of Ivy,
-Counsel, Swiper, and more), Thierry Volpiatto (maintainer of Helm),
-Bastien Guerry (Org maintainer), Eli Zaretskii (Emacs maintainer), Lars
-Ingebrigtsen (author of Gnus, co-maintainer of Emacs), Dmitry Gutov
-(maintainer of several built-in subsystems like project.el, as well as
-external packages like Company, diff-hl...), and many others.
+contribute to the betterment of Emacs proper and to specialised
+packages, such as Jonas Bernoulli (developer of Magit, among many
+others), Oleh Krehel (developer of Ivy, Counsel, Swiper, and more),
+Thierry Volpiatto (maintainer of Helm), Bastien Guerry (Org maintainer),
+Eli Zaretskii (Emacs maintainer), Lars Ingebrigtsen (author of Gnus,
+co-maintainer of Emacs), Dmitry Gutov (maintainer of several built-in
+subsystems like project.el, as well as external packages like Company,
+diff-hl...), Henrik Lissner (author and maintainer of Doom Emacs), the
+ever-resourceful maintainers and contributors to Org-roam, and many
+others.
+
+For my part, I wish to express my gratitude to all those who have
+contributed to my own projects, including the ones who have sent patches
+against my Emacs setup, but also users who have reported issues, shared
+insights, provided code and suggestions for my Modus themes.  The
+themes' manual (which is 27k words as of this writing on 2021-07-27)
+contains an "Acknowledgements" section where everyone is included.  I
+think the least we can do is acknowledge how much we as individuals
+benefit from the communities that organically grow around our projects.
 
 Every bit counts: a bug report, a blog post detailing one's workflow,
 participation in a mailing list thread, etc.  Do not hesitate to add
