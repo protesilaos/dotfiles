@@ -538,8 +538,9 @@ motion."
 ;;;###autoload
 (defun prot-minibuffer-completion-previous-group ()
   "Move to the top of the previous completion group.
-If no group is found while moving towards the top of the buffer,
-cycle to the end and match the first group in a backward motion."
+If no group is found while moving towards the beginning of the
+buffer, cycle to the end and match the first group in a backward
+motion."
   (interactive)
   (let (group)
     (unless (text-property-search-backward 'completion--string nil nil t)
