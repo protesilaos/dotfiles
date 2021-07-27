@@ -503,7 +503,7 @@ minibuffer."
             (and (save-excursion ; NOTE 2021-07-23: This `and' is for Emacs28 group titles
                    (next-completion -1)
                    (eq (line-number-at-pos) 1))
-                 (null
+                 (not
                   (save-excursion
                     (next-completion -1)
                     (get-text-property (point) 'completion--string))))
