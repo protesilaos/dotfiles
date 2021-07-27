@@ -988,6 +988,7 @@ visualising the standard minibuffer completion candidates---refer to
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'marginalia
+  (setq marginalia-max-relative-age 0)  ; time is absolute here!
   (marginalia-mode 1))
 #+end_src
 
