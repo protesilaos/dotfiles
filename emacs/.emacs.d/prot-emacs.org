@@ -2394,7 +2394,8 @@ ecosystem:
 
 + prot-dired.el :: This file (reproduced in its entirety below those
   configurations) contains a few custom extensions for streamlining some
-  repetitive tasks.
+  repetitive tasks.  The video on [[https://protesilaos.com/codelog/2021-07-21-emacs-dired-custom-extras/][my custom Dired extras]] (2021-07-21)
+  may also be of help.
 
   1. It contains methods for opening media files using an external
      program.  The idea is to provide a default option when invoking
