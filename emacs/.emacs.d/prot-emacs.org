@@ -7652,18 +7652,45 @@ These are the contents of the =prot-outline.el= library (find the file in
 :CUSTOM_ID: h:cf9086c1-1b33-4127-a716-de94259e14a0
 :END:
 
-=prot-cursor.el= defines a minor mode that lets me control the overall
-looks and behaviour of the cursor depending on whether I am doing my
-usual work on Emacs or am preparing a presentation.
+=prot-cursor.el= defines a set of presets that control the overall style
+of the cursor.  There presuppose the =blink-cursor-mode=.  The properties
+we pass to those presets mirror those we can pass for the various
+built-in variables for the cursor.  Check the =prot-cursor.el= code, which
+is reproduced right after the following package configurations.
 
 Note that in [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]] I
-also add a customisation option for the minibuffer's cursor.  This
-concerns two functions that can be used to differentiate cursors in the
-minibuffer and completions' windows respectively.
+add a customisation option for the minibuffer's cursor: it is the
+variable =prot-minibuffer-mini-cursors=.  This affects two functions that
+are used to differentiate cursor types in the minibuffer and
+completions' windows, respectively.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'prot-cursor
-  (prot-cursor-presentation-mode -1))
+  (setq prot-cursor-presets
+        '((bar . ( :cursor-type (bar . 2)
+                   :cursor-no-selected hollow
+                   :blinks 10
+                   :blink-interval 0.5
+                   :blink-delay 0.2))
+
+          (box  . ( :cursor-type box
+                    :cursor-no-selected hollow
+                    :blinks 10
+                    :blink-interval 0.5
+                    :blink-delay 0.2))
+
+          (underscore . ( :cursor-type (hbar . 3)
+                          :cursor-no-selected hollow
+                          :blinks 50
+                          :blink-interval 0.2
+                          :blink-delay 0.2))))
+
+  ;; Sets my style on startup.
+  (prot-cursor-set-cursor 'underscore)
+
+  ;; We have to use the "point" mnemonic, because C-c c is for
+  ;; `org-capture'.
+  (define-key global-map (kbd "C-c p") #'prot-cursor-set-cursor))
 #+end_src
 
 This is =prot-cursor.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):

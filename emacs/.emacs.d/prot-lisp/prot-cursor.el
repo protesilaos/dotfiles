@@ -40,28 +40,65 @@
   "Tweaks for cursor appearance."
   :group 'cursor)
 
-(defvar prot-minibuffer-mini-cursors)
+(defcustom prot-cursor-presets
+  '((bar . ( :cursor-type (bar . 2)
+             :cursor-no-selected hollow
+             :blinks 10
+             :blink-interval 0.5
+             :blink-delay 0.2))
+
+    (box  . ( :cursor-type box
+              :cursor-no-selected hollow
+              :blinks 10
+              :blink-interval 0.5
+              :blink-delay 0.2))
+
+    (underscore . ( :cursor-type (hbar . 3)
+                    :cursor-no-selected hollow
+                    :blinks 50
+                    :blink-interval 0.2
+                    :blink-delay 0.2)))
+  "Alist of desired typeface properties for Blink-cursor-mode.
+
+The car of each cons cell is an arbitrary key that broadly
+describes the display type.
+
+The cdr is a plist that specifies the cursor type and blink
+properties."
+  :group 'prot-cursor
+  :type 'alist)
+
+(defvar prot-cursor--style-hist '()
+  "History of inputs for display-related font associations.")
+
+(defun prot-cursor--set-cursor-prompt ()
+  "Promp for font set (used by `prot-cursor-set-cursor')."
+  (let ((def (nth 1 prot-cursor--style-hist)))
+    (completing-read
+     (format "Select cursor STYLE [%s]: " def)
+     (mapcar #'car prot-cursor-presets)
+     nil t nil 'prot-cursor--style-hist def)))
 
 ;;;###autoload
-(define-minor-mode prot-cursor-presentation-mode ()
-  :init-value nil
-  :global t
-  (if prot-cursor-presentation-mode
-      (progn
-        (setq-default prot-minibuffer-mini-cursors nil) ; from `prot-minibuffer.el'
-        (setq-default cursor-type 'box)
-        (setq-default cursor-in-non-selected-windows 'hollow)
-        (setq-default blink-cursor-blinks 10)
-        (setq-default blink-cursor-interval 0.5)
-        (setq-default blink-cursor-delay 0.2)
-        (blink-cursor-mode 1))
-    (setq-default prot-minibuffer-mini-cursors t)
-    (setq-default cursor-type '(hbar . 3))
-    (setq-default cursor-in-non-selected-windows 'hollow)
-    (setq-default blink-cursor-blinks 50)
-    (setq-default blink-cursor-interval 0.2)
-    (setq-default blink-cursor-delay 0.2)
-    (blink-cursor-mode 1)))
+(defun prot-cursor-set-cursor (style)
+  "Set cursor preset associated with STYLE.
+
+STYLE is a symbol that represents the car of a cons cell in
+`prot-cursor-presets'."
+  (interactive (list (prot-cursor--set-cursor-prompt)))
+  (let* ((styles (if (stringp style) (intern style) style))
+         (properties (alist-get styles prot-cursor-presets))
+         (type (plist-get properties :cursor-type))
+         (type-no-select (plist-get properties :cursor-no-selected))
+         (blinks (plist-get properties :blinks))
+         (blink-interval (plist-get properties :blink-interval))
+         (blink-delay (plist-get properties :blink-delay)))
+    (setq-default cursor-type type
+                  cursor-in-non-selected-windows type-no-select
+                  blink-cursor-blinks blinks
+                  blink-cursor-interval blink-interval
+                  blink-cursor-delay blink-delay)
+    (add-to-history 'prot-cursor--style-hist (format "%s" style))))
 
 (provide 'prot-cursor)
 ;;; prot-cursor.el ends here
