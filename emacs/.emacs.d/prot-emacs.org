@@ -5817,7 +5817,7 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
           ( :name "emacs-bugs"
             :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
             :sort-order newest-first :key ,(kbd "e b"))
-          ( :name "emacs-humanities" 
+          ( :name "emacs-humanities"
             :query "(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org) not tag:archived"
             :sort-order newest-first :key ,(kbd "e h"))
           ;; CLI tools
