@@ -7650,8 +7650,8 @@ to, and navigate therefrom.  It really is an efficient workflow:
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'outline
-  (setq-default outline-minor-mode-highlight 'override) ; emacs28
-  (setq-default outline-minor-mode-cycle t)     ; emacs28
+  (setq outline-minor-mode-highlight 'override) ; emacs28
+  (setq outline-minor-mode-cycle t)             ; emacs28
   (let ((map outline-minor-mode-map))
     ;; ;; NOTE 2021-07-25: Those two are already defined (emacs28).
     ;; (define-key map (kbd "TAB") #'outline-cycle)
