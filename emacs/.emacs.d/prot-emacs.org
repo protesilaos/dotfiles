@@ -436,11 +436,10 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; `intense'
         modus-themes-lang-checkers nil
 
-        ;; Options for `modus-themes-mode-line' are either nil, or a list
-        ;; that can combine any of `3d' OR `moody', `borderless',
-        ;; `accented'.  The variable's doc string shows all possible
-        ;; combinations.
-        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
+        ;; Options for `modus-themes-mode-line' are either nil, or a
+        ;; list that can combine any of `3d' OR `moody', `borderless',
+        ;; `accented', `padded'.
+        modus-themes-mode-line '(padded borderless accented) ; For Moody, also check `prot-moody'
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
