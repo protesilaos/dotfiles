@@ -1553,17 +1553,19 @@ search for =embark=.
 Now a few things about actions that you can gain access to by invoking
 either of =embark-act= (most cases), or =embark-become= (where appropriate):
 
-+ To learn which keymap's contents get enabled in the present context,
-  either set up =which-key.el=, or follow up the =embark-act= call with =C-h=
-  (remember that this conforms with the Emacs convention of using =C-h= as
-  a suffix to display help about possible key chords that complete what
-  has already been typed in---if you are new to Emacs, consult my note
-  on [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).  For the sake of user-friendliness, I do
-  set up =which-key= in this document ([[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]]) and
-  apply the necessary tweaks in the following package configurations.
++ Embark has two ways to help you learn about its actions, though you
+  will probably only ever need one of them.  The first one, which is the
+  default is to display a detailed buffer when the variable
+  =embark-indicator= is set to a value of =embark-mixed-indicator= or
+  =embark-verbose-indicator=.  Those will produce a buffer that shows the
+  available actions, the keys they are bound to, and a description of
+  what each action does.  The other method, which is only really useful
+  if =embark-indicator= is set to =embark-minimal-indicator= is to follow up
+  the =embark-act= with =C-h=.  That will produce a minibuffer prompt
+  showing all available key bindings.
 
   - Keymaps aside, you can call /any command/ after invoking =embark-act=.
-    This can be either with =M-x= or via a key binding.  For example, if
+    This can be either with =M-x= or via its key binding.  For example, if
     you want to grep for the symbol at point in the current project, you
     can do =embark-act= and then =C-x p g= (=project-find-regexp=) (also read
     [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  This will, of course,
@@ -1605,13 +1607,9 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
     =ibuffer-mode= (check [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer and extras]]); grep results in a =grep-mode=
     buffer, and so on.
 
-Finally, a few words about =prot-embark.el= that is reproduced after the
-following block with the package configurations:
-
-- Extra keymaps that integrate Embark with packages like =consult=
-  ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
-
-- Tweaks to let =keycast= track and display Embark actions ([[#h:e8e51a73-e583-4250-ac26-15627cd93932][Keycast mode]]).
+Finally, the =prot-embark.el= that is reproduced after the following block
+contains a few keymaps that integrate Embark with packages like =consult=
+([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'embark
@@ -1619,6 +1617,14 @@ following block with the package configurations:
   (setq embark-quit-after-action t)     ; XXX: Read the doc string!
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
+  (setq embark-indicator #'embark-mixed-indicator)
+  (setq embark-mixed-indicator-delay 0.5)
+  ;;  NOTE 2021-07-28: This is used when `embark-indicator' is set to
+  ;;  `embark-mixed-indicator' or `embark-verbose-indicator'.  We can
+  ;;  specify the window parameters here, but I prefer to do that in my
+  ;;  `display-buffer-alist' (search this document) because it is easier
+  ;;  to keep track of all my rules in one place.
+  (setq embark-verbose-indicator-display-action nil)
 
   (define-key global-map (kbd "C-,") #'embark-act)
   (let ((map minibuffer-local-completion-map))
@@ -2876,6 +2882,13 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (slot . 2)
            (window-parameters . ((no-other-window . t))))
           ;; bottom side window
+          ("\\*Embark Actions.*"
+           (display-buffer-in-side-window)
+           (side . bottom)
+           (slot . -1)
+           (window-height . fit-window-to-buffer)
+           (window-parameters . ((no-other-window . t)
+                                 (mode-line-format . none))))
           ("\\*\\(Embark\\)?.*Completions.*"
            (display-buffer-in-side-window)
            (side . bottom)
