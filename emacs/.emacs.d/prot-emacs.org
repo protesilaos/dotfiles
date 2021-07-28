@@ -840,45 +840,6 @@ implement the repetition mechanism wherever we want.
   (repeat-mode 1))
 #+end_src
 
-** Key chord hints (which-key.el)
-:PROPERTIES:
-:CUSTOM_ID: h:835d7498-31f3-4121-baaa-381599b8389a
-:END:
-
-This library provides hints on the possible tails of a key chord.  So if
-you type =C-x r= and wait for =which-key-idle-delay=, a pop-up window will
-appear showing you the keys you can use and the actions bound to them.
-
-I do not use =which-key= as I have already memorised all the key sequences
-I type.  Plus, I prefer the default way of following up a key chord with
-=C-h=, which produces a help buffer with the relevant key bindings (a
-regular buffer can be renamed, written to a file, and generally acted
-upon, whereas some auto-disappearing pop-up does not lend itself to such
-workflows).
-
-The only reason I keep this package here is to make things easier when I
-record videos of my setup in which I invoke some Embark action or employ
-Consult's narrowing facility.  Please refer to the relevant section:
-[[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]].
-
-#+begin_src emacs-lisp
-(prot-emacs-elpa-package 'which-key
-  ;; NOTE: I only use this for `embark' and `consult' and for the sake
-  ;; of producing more user-friendly video demonstrations.
-  (setq which-key-dont-use-unicode t)
-  (setq which-key-add-column-padding 2)
-  (setq which-key-show-early-on-C-h nil)
-  (setq which-key-idle-delay most-positive-fixnum) ; set this to something like 0.8
-  (setq which-key-idle-secondary-delay 0.05)
-  (setq which-key-popup-type 'side-window)
-  (setq which-key-show-prefix 'echo)
-  (setq which-key-max-display-columns 3)
-  (setq which-key-separator "  ")
-  (setq which-key-special-keys nil)
-  (setq which-key-paging-key "<next>")
-  (which-key-mode -1))	   ; and turn this on, if you want to use this
-#+end_src
-
 * Selection candidates and search methods
 :PROPERTIES:
 :CUSTOM_ID: h:5c060e2e-231d-4896-a5d2-b3fb4134764e
@@ -1362,9 +1323,8 @@ can be accessed via a key binding for all commands that support it.  In
 my case, that key is the right angled bracket, or greater than sign (=>=)
 from inside the minibuffer (configure =consult-narrow-key=).  So you type
 the narrow key and follow it up with another key that matches the
-relevant targets.  Hit backspace to remove the narrowing (users may wish
-to set up [[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]], though I just memorise what I
-need, or call =consult-narrow-help=).
+relevant targets.  Hit backspace to remove the narrowing.  As for the
+available keys, type =?= which calls =consult-narrow-help=.
 
 This narrowing-by-type mechanism can also be used without inputting the
 =consult-narrow-key=, just by typing in the appropriate character and
@@ -1639,10 +1599,6 @@ following block with the package configurations:
   ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
 
 - Tweaks to let =keycast= track and display Embark actions ([[#h:e8e51a73-e583-4250-ac26-15627cd93932][Keycast mode]]).
-
-- A toggle for setting up =which-key= for the =embark-action-indicator=.
-  This shows key hints but only for Embark actions, as I normally do not
-  use them elsewhere (read [[#h:835d7498-31f3-4121-baaa-381599b8389a][Key chord hints (which-key.el)]]).
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'embark
