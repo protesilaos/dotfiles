@@ -512,48 +512,87 @@ minibuffer."
         (prot-minibuffer-focus-minibuffer)
       (next-completion (or num 1)))))
 
-;; NOTE 2021-07-27: The next/previous group navigation commands are
-;; inspired by the blog post of James Cash with the title "Emacs
-;; Completes Me" (2021-07-25):
+;; NOTE 2021-07-28: The next/previous group navigation commands are
+;; courtesy of James Norman Vladimir Cash.  I was originally inspired by
+;; James' blog post with the title "Emacs Completes Me" (2021-07-25):
 ;; <https://occasionallycogent.com/emacs_new_completions_helper/index.html>.
+;; Then James provided an alternative that leverages
+;; `text-property-search' functions.
+;;
+;; I change the prefix of the commands to "prot-minibuffer" to placate
+;; the compiler.
 ;;;###autoload
 (defun prot-minibuffer-completion-next-group ()
-  "Move to the top of the next completion group.
-If no group is found while moving towards the end of the buffer,
-cycle to the beginning and match the first group in a forward
-motion."
+  "Move to the next completion group."
   (interactive)
-  (let (group)
-    (unless (text-property-search-forward 'completion--string nil nil t)
-      (goto-char (point-min)))
-    (when (setq group
-                (save-excursion
-                  (text-property-search-forward 'face 'completions-group-separator nil t)))
-      (let ((point (prop-match-end group)))
-        (if (eq point (point-max))
-            (goto-char (point-min))
-          (goto-char point))
+  (when-let (group (save-excursion
+                     (text-property-search-forward 'face
+                                                   'completions-group-separator
+                                                   t nil)))
+    (let ((pos (prop-match-end group)))
+      (unless (eq pos (point-max))
+        (goto-char pos)
         (next-completion 1)))))
 
+;; NOTE 2021-07-28: By James Cash.  See comment above.
 ;;;###autoload
 (defun prot-minibuffer-completion-previous-group ()
-  "Move to the top of the previous completion group.
-If no group is found while moving towards the beginning of the
-buffer, cycle to the end and match the first group in a backward
-motion."
+  "Move to the previous completion group."
   (interactive)
-  (let (group)
-    (unless (text-property-search-backward 'completion--string nil nil t)
-      (goto-char (point-max)))
-    (when (setq group
-                (save-excursion
-                  (unless     ; FIXME 2021-07-27: More efficient method?
-                      (eq (progn (forward-line -1)
-                                 (get-text-property (point-at-bol) 'completions-group-separator))
-                          (text-property-search-backward 'face 'completions-group-separator))
-                    (text-property-search-backward 'face 'completions-group-separator t))))
-      (goto-char (prop-match-beginning group))
-      (next-completion 1))))
+  (when-let (group (save-excursion
+                     (text-property-search-backward 'face
+                                                    'completions-group-separator
+                                                    t nil)))
+    (let ((pos (prop-match-beginning group)))
+      (unless (eq pos (point-min))
+        (goto-char pos)
+        (text-property-search-backward 'face
+                                       'completions-group-separator
+                                       t nil)
+        (next-completion 1)))))
+
+;; ;; NOTE 2021-07-28: My old commands for switching between completion
+;; ;; groups.  Those have cyclic behaviour, which I decided I am not a
+;; ;; fan of---though it was fun experimenting with them.
+
+;; ;;;###autoload
+;; (defun prot-minibuffer-completion-next-group ()
+;;   "Move to the top of the next completion group.
+;; If no group is found while moving towards the end of the buffer,
+;; cycle to the beginning and match the first group in a forward
+;; motion."
+;;   (interactive)
+;;   (let (group)
+;;     (unless (text-property-search-forward 'completion--string nil nil t)
+;;       (goto-char (point-min)))
+;;     (when (setq group
+;;                 (save-excursion
+;;                   (text-property-search-forward 'face 'completions-group-separator nil t)))
+;;       (let ((point (prop-match-end group)))
+;;         (if (eq point (point-max))
+;;             (goto-char (point-min))
+;;           (goto-char point))
+;;         (next-completion 1)))))
+;; 
+;; ;;;###autoload
+;; (defun prot-minibuffer-completion-previous-group ()
+;;   "Move to the top of the previous completion group.
+;; If no group is found while moving towards the beginning of the
+;; buffer, cycle to the end and match the first group in a backward
+;; motion."
+;;   (interactive)
+;;   (let (group)
+;;     ;; (unless (text-property-search-backward 'completion--string nil nil t)
+;;     ;;   (goto-char (point-max)))
+;;     (when (setq group
+;;                 (save-excursion
+;;                   (unless     ; FIXME 2021-07-27: More efficient method?
+;;                       (eq (progn (forward-line -1)
+;;                                  (get-text-property (point-at-bol) 'completions-group-separator))
+;;                           (text-property-search-backward 'face 'completions-group-separator))
+;;                     (text-property-search-backward 'face 'completions-group-separator t))))
+;;       (goto-char (prop-match-beginning group))
+;;       (next-completion 1))))
 
 ;; ;; NOTE 2021-04-07: This was written as a temporary solution to get a
 ;; ;; copy of the completions' buffer.  It is no longer needed in my

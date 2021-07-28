@@ -1102,6 +1102,16 @@ What my completion selection interface does in a nutshell:
   common use-case is to edit URLs from my history of visited web pages:
   [[#h:524bc702-ff55-4ed9-9a38-26d30d64591d][Emacs Web Wowser (eww), Elpher, and prot-eww.el]]).
 
++ There are a couple of commands that cycle through /completion groups/,
+  as those are defined in Emacs 28 and supported by such packages as
+  [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Daniel Mendler's Consult]].  =prot-minibuffer-completion-next-group= is
+  bound to the =right= arrow key in the Completions' buffer while its
+  counterpart is on the =left= arrow.  The commands are copied from the
+  blog post of James Norman Vladimir Cash [[https://occasionallycogent.com/emacs_new_completions_helper/index.html][Emacs Completes Me]]
+  (2021-07-25).  With those we can jump through grouped results, such as
+  when we invoke =consult-imenu= and need to move directly to the section
+  with the functions.
+
 Finally, here is an overview of the settings covered herein:
 
 + Completion styles :: I mostly rely on [[#h:7b1374dd-6b1f-4548-8fbf-1034230c80e0][the Orderless completion style]].
