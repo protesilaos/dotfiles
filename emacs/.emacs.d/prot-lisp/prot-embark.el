@@ -143,34 +143,5 @@ To be passed as advice before `embark-act' and others."
     (dolist (cmd '(embark-act embark-become))
       (advice-remove cmd #'prot-embark--force-keycast-update))))
 
-;;;; which-key integration
-;; NOTE: I keep this around for when I do videos, otherwise I do not use
-;; it.
-
-(defvar embark-action-indicator)
-(defvar embark-become-indicator)
-(declare-function which-key--show-keymap "which-key")
-(declare-function which-key--hide-popup-ignore-command "which-key")
-
-(defvar prot-embark--which-key-state nil
-  "Store state of Embark's `which-key' hints.")
-
-;;;###autoload
-(defun prot-embark-toggle-which-key ()
-  "Toggle `which-key' hints for Embark actions."
-  (interactive)
-  (if prot-embark--which-key-state
-      (progn
-        (setq embark-action-indicator
-                   (let ((act (propertize "Act" 'face 'highlight)))
-                     (cons act (concat act " on '%s'"))))
-        (setq prot-embark--which-key-state nil))
-    (setq embark-action-indicator
-          (lambda (map _target)
-            (which-key--show-keymap "Embark" map nil nil 'no-paging)
-            #'which-key--hide-popup-ignore-command)
-          embark-become-indicator embark-action-indicator)
-    (setq prot-embark--which-key-state t)))
-
 (provide 'prot-embark)
 ;;; prot-embark.el ends here
