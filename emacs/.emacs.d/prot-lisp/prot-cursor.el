@@ -34,8 +34,6 @@
 
 ;;; Code:
 
-;;;; General utilities
-
 (defgroup prot-cursor ()
   "Tweaks for cursor appearance."
   :group 'cursor)
