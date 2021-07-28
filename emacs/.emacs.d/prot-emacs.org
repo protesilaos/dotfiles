@@ -1615,14 +1615,7 @@ following block with the package configurations:
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'embark
-  (setq embark-collect-initial-view-alist
-        '((file . list)
-          (buffer . list)
-          (symbol . list)
-          (line . list)
-          (xref-location . list)
-          (kill-ring . zebra)
-          (t . list)))
+  (setq embark-collect-initial-view-alist '((t . list)))
   (setq embark-quit-after-action t)     ; XXX: Read the doc string!
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
