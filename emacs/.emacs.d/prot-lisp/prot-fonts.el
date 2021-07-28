@@ -145,7 +145,7 @@ fonts, else nth 0, are applied."
   :group 'prot-fonts
   :type 'integer)
 
-(defvar prot-fonts-font-display-hist '()
+(defvar prot-fonts--font-display-hist '()
   "History of inputs for display-related font associations.")
 
 (defun prot-fonts--set-face-attribute (face family &optional weight height)
@@ -165,11 +165,11 @@ fonts, else nth 0, are applied."
 
 (defun prot-fonts--set-fonts-prompt ()
   "Promp for font set (used by `prot-fonts-set-fonts')."
-  (let ((def (nth 1 prot-fonts-font-display-hist)))
+  (let ((def (nth 1 prot-fonts--font-display-hist)))
     (completing-read
      (format "Select font set for DISPLAY [%s]: " def)
      (mapcar #'car prot-fonts-typeface-sets-alist)
-     nil t nil 'prot-fonts-font-display-hist def)))
+     nil t nil 'prot-fonts--font-display-hist def)))
 
 (defvar prot-fonts-set-typeface-hook nil
   "Hook that runs after `prot-fonts-set-fonts'.")
@@ -203,7 +203,7 @@ DISPLAY is a symbol that represents the car of a cons cell in
          'variable-pitch variable-pitch-family variable-pitch-regular-weight variable-pitch-height)
         (set-face-attribute 'bold nil :weight fixed-pitch-heavy-weight)
         (setq-default line-spacing fixed-pitch-line-spacing)
-        (add-to-history 'prot-fonts-font-display-hist (format "%s" display))
+        (add-to-history 'prot-fonts--font-display-hist (format "%s" display))
         (setq prot-fonts--current-spec (format "%s" display))
         (run-hooks 'prot-fonts-set-typeface-hook))
     (error "Not running a graphical Emacs; cannot set fonts")))
@@ -215,8 +215,8 @@ typographic properties.  For example, when switching themes the
 :weight of the `bold' face will be set to whatever the theme
 specifies, typically 'bold', which is not what we always have on
 our end."
-  (let ((ultimate (nth 0 prot-fonts-font-display-hist))
-        (penultimate (nth 1 prot-fonts-font-display-hist)))
+  (let ((ultimate (nth 0 prot-fonts--font-display-hist))
+        (penultimate (nth 1 prot-fonts--font-display-hist)))
     (if (string= ultimate prot-fonts--current-spec)
         (prot-fonts-set-fonts ultimate)
       (prot-fonts-set-fonts penultimate))))
