@@ -179,7 +179,7 @@ fonts, else nth 0, are applied."
 
 ;;;###autoload
 (defun prot-fonts-set-fonts (display)
-  "Set fonts based on font set assossiated with DISPLAY.
+  "Set fonts based on font set associated with DISPLAY.
 
 DISPLAY is a symbol that represents the car of a cons cell in
 `prot-fonts-typeface-sets-alist'."
