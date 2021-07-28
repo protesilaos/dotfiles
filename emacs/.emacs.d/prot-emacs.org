@@ -8450,6 +8450,13 @@ point.
   (setq flymake-start-on-save-buffer t)
   (setq flymake-proc-compilation-prevents-syntax-check t)
   (setq flymake-wrap-around nil)
+  ;; NOTE 2021-07-28: No extra space for the counters.
+  (setq flymake-mode-line-error-counter
+    `(:eval (flymake--mode-line-counter :error t)))
+  (setq flymake-mode-line-warning-counter
+    `(:eval (flymake--mode-line-counter :warning t)))
+  (setq flymake-mode-line-note-counter
+    `(:eval (flymake--mode-line-counter :note t)))
   (let ((map flymake-mode-map))
     (define-key map (kbd "C-c ! s") #'flymake-start)
     (define-key map (kbd "C-c ! d") #'flymake-show-diagnostics-buffer)
