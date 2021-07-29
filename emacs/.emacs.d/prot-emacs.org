@@ -1811,7 +1811,7 @@ stored layout.
 :CUSTOM_ID: h:5723c4bb-ff6c-449f-bb60-be66fab3f137
 :END:
 
-This is a built-in minor mode that keeps track of the files you have
+=recentf= is a built-in minor mode that keeps track of the files you have
 opened, allowing you to revisit them faster.  Its true power consists in
 the fact that its data, maintained in =recentf-list=, is a simple
 variable.  This means that we can access it through any relevant piece
@@ -1819,11 +1819,17 @@ of Elisp functionality.
 
 To that end, the functions I define in =prot-recentf.el= are meant to
 either control the contents of the list or allow me to access them
-through my completion framework or a dedicated file listing.
+through my completion framework or a dedicated file listing (refer to
+the mega-section [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]]).
 
 Note that there exists a built-in =recentf-open-files= function for
 accessing the recent files through a bespoke buffer.  I find that I have
 no use for it.
+
+Also note that the Consult package provides its own =recentf= command as
+well as the =consult-buffer= which combines candidates from multiple
+sources, including bookmarks, recent files, and buffers (check more in
+[[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'recentf
