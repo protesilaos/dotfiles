@@ -131,9 +131,10 @@ Intended to be assigned to `consult-project-root-function'."
 
 ;;;###autoload
 (defun prot-consult-yank ()
-  "Run `consult-yank' through `prot-orderless-with-styles'."
+  "Run Consult yank through `prot-orderless-with-styles'.
+Wraps around the `consult-yank-from-kill-ring' command."
   (interactive)
-  (prot-orderless-with-styles 'consult-yank))
+  (prot-orderless-with-styles 'consult-yank-from-kill-ring))
 
 (provide 'prot-consult)
 ;;; prot-consult.el ends here
