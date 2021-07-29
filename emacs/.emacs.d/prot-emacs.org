@@ -1219,11 +1219,14 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
 
   (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
 
+  (let ((map completion-list-mode-map))
+    (define-key map (kbd "<tab>") #'choose-completion)
+    (define-key map (kbd "M-v") #'scroll-down-command))
+
   ;; Defines, among others, aliases for common minibuffer commands to
   ;; Super-KEY.  Normally these should go in individual package
   ;; configurations, but their grouping here makes things easier to
   ;; understand.  Besides, they are related to the minibuffer.
-  (define-key completion-list-mode-map (kbd "<tab>") #'choose-completion)
   (let ((map global-map))
     (define-key map (kbd "s-b") #'switch-to-buffer)
     (define-key map (kbd "s-B") #'switch-to-buffer-other-window)
