@@ -1452,13 +1452,11 @@ try.
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
   (setq consult-find-command "find . -iname *ARG* OPTS")
-  (setq consult-preview-key 'any)
-
-  ;; Enables previews inside the standard *Completions* buffer (what
-  ;; `prot-minibuffer.el' uses).
-  (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
+  (setq consult-preview-key nil) ; use 'any if you always want previews
 
   (let ((map global-map))
+    (define-key map (kbd "s-b") #'consult-buffer)
+    (define-key map (kbd "s-B") #'consult-buffer-other-window)
     (define-key map (kbd "C-x M-:") #'consult-complex-command)
     (define-key map (kbd "C-x M-m") #'consult-minor-mode-menu)
     (define-key map (kbd "C-x M-k") #'consult-kmacro)
