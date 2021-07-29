@@ -1259,7 +1259,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   ;; input (see `prot-minibuffer-minimum-input') before displaying and
   ;; updating the completions' buffer.
   (setq prot-minibuffer-completion-passlist
-        '( vc-retrieve-tag
+        '( vc-retrieve-tag embark-prefix-help-command
            prot-bongo-playlist-insert-playlist-file))
 
   (define-key global-map (kbd "s-v") #'prot-minibuffer-focus-mini-or-completions)
@@ -1613,6 +1613,8 @@ contains a few keymaps that integrate Embark with packages like =consult=
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'embark
+  (setq prefix-help-command #'embark-prefix-help-command)
+  ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
   (setq embark-collect-initial-view-alist '((t . list)))
   (setq embark-quit-after-action t)     ; XXX: Read the doc string!
   (setq embark-collect-live-update-delay 0.5)
