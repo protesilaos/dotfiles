@@ -7120,26 +7120,6 @@ This section contains configurations for all aspects of the Emacs user
 interface, as well lots of small or self-contained tweaks that cover a
 wide range of built-in libraries.
 
-** Go to actionable beginning or end of buffer (beginend.el)
-:PROPERTIES:
-:CUSTOM_ID: h:29ea650f-f6a9-4bb4-abca-9548b4e4c4eb
-:END:
-
-This package by Damien Cassou offers the means to move to the first or
-last actionable point in a buffer rather than the absolute maximum or
-minimum point.  It does so by wrapping =M-<= and =M->= around a "do what I
-mean" behaviour where the initial command will take you to the
-actionable part, while another call will go to the absolute position.
-Nice and simple!
-
-Check [[https://github.com/DamienCassou/beginend][the package upstream]] for information on the supported modes and on
-how to contribute your own extensions.
-
-#+begin_src emacs-lisp
-(prot-emacs-elpa-package 'beginend
-  (beginend-global-mode 1))
-#+end_src
-
 ** Go to last change
 :PROPERTIES:
 :CUSTOM_ID: h:ac889a76-1092-449e-a184-9092093f3103
