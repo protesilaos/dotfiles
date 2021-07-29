@@ -8487,11 +8487,11 @@ point.
   (setq flymake-proc-compilation-prevents-syntax-check t)
   (setq flymake-wrap-around nil)
   (setq flymake-mode-line-format
-        '(" " flymake-mode-line-exception flymake-mode-line-counters))
+        '("" flymake-mode-line-exception flymake-mode-line-counters))
   (setq flymake-mode-line-counter-format
         '(" " flymake-mode-line-error-counter
           flymake-mode-line-warning-counter
-          flymake-mode-line-note-counter " "))
+          flymake-mode-line-note-counter ""))
 
   (let ((map flymake-mode-map))
     (define-key map (kbd "C-c ! s") #'flymake-start)
