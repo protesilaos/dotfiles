@@ -255,6 +255,7 @@ appropriate place to re-bind or free up some common key combinations.
     (define-key map (kbd "M-`") nil)
     (define-key map (kbd "s-h") #'prot-simple-describe-symbol)
     (define-key map (kbd "C-h K") #'describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
+    (define-key map (kbd "C-h c") #'describe-command) ; overrides `describe-key-briefly'
     ;; Commands for lines
     (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
     (define-key map (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
