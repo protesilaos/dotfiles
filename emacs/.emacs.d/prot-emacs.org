@@ -1524,7 +1524,7 @@ you carry out /contextually relevant actions/ on *targets* through a common
 
 + The "contextually relevant [actions]" are defined in keymaps whose
   scope matches the category of the target.  So =embark-file-map= holds
-  all key and command assossiations for when Embark recognises a file
+  all key and command associations for when Embark recognises a file
   name as its target.  =embark-region-map= is for actions pertaining to
   the active region; =embark-buffer-map= for buffer names that you access
   through, say, =switch-to-buffer= (=C-x b=).  And so on.
@@ -1550,15 +1550,15 @@ the exact same way you define all of your Emacs key bindings.  So you
 can bind any command to whatever key you want and confine that action to
 a context you specify.
 
-Learn more about the available keymaps with =M-x describe-keymap= and then
-search for =embark=.
+On Emacs 28, learn more about the keymaps with =M-x describe-keymap= and
+then search for =embark=.
 
 Now a few things about actions that you can gain access to by invoking
 either of =embark-act= (most cases), or =embark-become= (where appropriate):
 
 + Embark has two ways to help you learn about its actions, though you
   will probably only ever need one of them.  The first one, which is the
-  default is to display a detailed buffer when the variable
+  default, is to display a detailed buffer when the variable
   =embark-indicator= is set to a value of =embark-mixed-indicator= or
   =embark-verbose-indicator=.  Those will produce a buffer that shows the
   available actions, the keys they are bound to, and a description of
@@ -1574,6 +1574,15 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
     [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  This will, of course,
     work as expected for commands that typically prompt you for
     something to operate on.
+
+  - Using the =C-h= as a suffix is a standard procedure in Emacs to get a
+    Help buffer that contains references to all commands+keys that
+    extend a give key chord.  So, for example, =C-x r C-h= will show you
+    all commands under the =C-x r= prefix (see [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
+    While the generic =C-h= is fine in its own right, Embark offers an
+    alternative that leverages minibuffer completion: the
+    =embark-prefix-help-command=.  You can either select an action from
+    there or type =@= and the corresponding key.
 
 + You will often be targeting individual items, such as the current
   completion candidate in the minibuffer, or the symbol at point.  You
@@ -1631,14 +1640,17 @@ contains a few keymaps that integrate Embark with packages like =consult=
   ;;  to keep track of all my rules in one place.
   (setq embark-verbose-indicator-display-action nil)
 
-  (define-key global-map (kbd "C-,") #'embark-act)
+  (let ((map global-map))
+    (define-key map (kbd "C-.") #'embark-act)
+    (define-key map (kbd "C-,") #'embark-act))
   (let ((map minibuffer-local-completion-map))
+    (define-key map (kbd "C-.") #'embark-act)
     (define-key map (kbd "C-,") #'embark-act)
     (define-key map (kbd "C->") #'embark-become)
     (define-key map (kbd "M-q") #'embark-collect-toggle-view)) ; parallel of `fill-paragraph'
   (let ((map embark-collect-mode-map))
+    (define-key map (kbd "C-.") #'embark-act)
     (define-key map (kbd "C-,") #'embark-act)
-    (define-key map (kbd ",") #'embark-act)
     (define-key map (kbd "M-q") #'embark-collect-toggle-view))
   (let ((map embark-region-map))
     (define-key map (kbd "a") #'align-regexp)
