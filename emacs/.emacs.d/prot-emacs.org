@@ -1352,6 +1352,13 @@ inserting a space.  For instance, to search only for functions in
 =consult-imenu=, you type =f= and then a space.  Consult will add an
 indicator to the minibuffer prompt describing the active filter.
 
+In general, commands that involve multiple groups can benefit from this
+type of narrowing.  The prime example is =consult-buffer= which combines
+sources of recently visited files, bookmarks, and buffers (those are
+configurable via the variable =consult-buffer-sources=).  Though others
+follow the same principle, such as the aforementioned =consult-imenu= and
+=consult-bookmark=.
+
 Another intriguing facility of Consult is its asynchronous call to
 external processes, such as =grep= and =find=.  Those calls can be
 configured to return some output based on a minimum number of
