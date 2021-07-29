@@ -647,6 +647,9 @@ Relevant publications of mine that are not part of this document:
   ;; This is defined in Emacs C code: it belongs to font settings.
   (setq x-underline-at-descent-line t)
 
+  ;; And this is for Emacs28.
+  (setq-default text-scale-remap-header-line t)
+
   ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
   ;; as it explains what those property lists should contain.
   (setq prot-fonts-typeface-sets-alist
@@ -2063,19 +2066,22 @@ So =C-s INPUT M-s o= will search for input and then run =occur= on it.  Try
 =C-h k C-s= to get a help menu with all the extra keys you can use with
 =isearch=.  These are the ones I use the most:
 
-| Key chord | Description                  |
-|-----------+------------------------------|
-| C-s C-w   | Search char or word at point |
-| M-s .     | Search for symbol at point   |
-| M-s o     | Run `occur' on regexp        |
-| M-s h r   | Highlight regexp             |
-| M-s h u   | Undo the highlight           |
-| C-s M-r   | Toggle regexp search         |
-| M-%       | Run `query-replace'          |
-| C-M-%     | `query-replace-regexp'       |
+| Key chord | Description                         |
+|-----------+-------------------------------------|
+| C-s C-w   | Search char or word at point        |
+| M-s .     | Search for symbol at point          |
+| M-s M-.   | Search for thing at point (Emacs28) |
+| M-s o     | Run `occur' on regexp               |
+| M-s h r   | Highlight regexp                    |
+| M-s h u   | Undo the highlight                  |
+| C-s M-r   | Toggle regexp search                |
+| M-%       | Run `query-replace'                 |
+| C-M-%     | `query-replace-regexp'              |
 
 Every one of the above, except the first item, can be executed on their
-own, or as extensions of =C-s= (and variants).
+own, or as extensions of =C-s= (and variants).  In the latter case, when
+you run a regexp-aware Isearch (=C-M-s= or =C-M-r=) a =M-%= will automatically
+be interpreted as =C-M-%=.
 
 The Occur and Replace operations are aware of the active region, so if
 you highlight, say, a paragraph and do =M-%= you will only replace matches
@@ -2167,6 +2173,12 @@ package configurations).
   (setq lazy-count-suffix-format " (%s/%s)")
   (setq isearch-yank-on-move 'shift)
   (setq isearch-allow-scroll 'unlimited)
+  ;; These variables are from Emacs 28
+  (setq isearch-repeat-on-direction-change t)
+  (setq lazy-highlight-initial-delay 0.5)
+  (setq lazy-highlight-no-delay-length 3)
+  (setq isearch-wrap-pause t)
+
   (define-key minibuffer-local-isearch-map (kbd "M-/") #'isearch-complete-edit)
   (let ((map isearch-mode-map))
     (define-key map (kbd "C-g") #'isearch-cancel) ; instead of `isearch-abort'
@@ -7583,6 +7595,7 @@ extensions in [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framewo
 
   (require 'hl-line)
   (setq hl-line-sticky-flag nil)
+  (setq hl-line-overlay-priority -50) ; emacs28
 
   (require 'whitespace)
 
