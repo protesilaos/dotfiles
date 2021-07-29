@@ -667,12 +667,12 @@ Relevant publications of mine that are not part of this document:
                        :variable-pitch-height 0.95
                        :variable-pitch-regular-weight normal))
 
-          (presentation . ( :fixed-pitch-family "Hack"
+          (presentation . ( :fixed-pitch-family "Iosevka Comfy"
                             :fixed-pitch-regular-weight normal
                             :fixed-pitch-heavy-weight bold
-                            :fixed-pitch-height 130
+                            :fixed-pitch-height 135
                             :fixed-pitch-line-spacing nil
-                            :variable-pitch-family "Inter"
+                            :variable-pitch-family "Open Sans"
                             :variable-pitch-height 1.0
                             :variable-pitch-regular-weight normal))))
 
