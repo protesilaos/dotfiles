@@ -8642,51 +8642,24 @@ long as there is an Emacs frame attached to it.
 #+end_src
 
 With some exceptions aside, I only ever use Emacs in a single frame.
-What I find more useful is the ability to save the state I was in: the
-name the of buffers, the cursor's position in each of them, the recent
-file list, the minibuffer history, my stored registers.
-
-The state of the available buffers and the values of each register are
-called the "desktop" (for the other items see the following sections on
+What I find more useful is the ability to save what Emacs calls the
+=desktop=, which is an amalgamation of data such as the buffer list,
+visited files, and some important data like the content of registers
+(for various histories or other data see the following sections on
 [[#h:ab868c1a-7ca6-4f54-83d8-eab49447da82][recording various types of history]]).
 
-Preserving the "desktop" saves me from any possible crash or when I need
-to close Emacs and re-launch it later (my hardware is limited, so I do
-not keep it running while I am away).
-
-Overview of my settings:
-
-+ Enable the mode that saves the "desktop", instructing it to load a
-  small number of buffers at launch (=desktop-restore-eager=).  The
-  remainder of the buffer list will be loaded lazily.
-+ Now we must tell it where to store the files it generates and how
-  often it should save.  Concerning the latter, the default is to
-  store the state every time it changes.  I find that a bit too much,
-  so I set a timeout of five minutes of idleness.
-+ Note the =desktop-load-locked-desktop=.  By default, Emacs locks the
-  desktop file while it runs.  The lock is removed upon exiting.  This
-  is a safety mechanism.  There are two cases where the lock can create
-  issues:
-  + Emacs has crashed, meaning that it exited abruptly and was not able
-    to unlock the desktop.  Upon re-launch Emacs will prompt you whether
-    to load the locked file.  You normally want to answer affirmatively.
-  + Emacs runs in daemon mode, where it does not ask questions upon
-    loading.  In this case the lock is ignored.
-  + Because I am only affected by the former, I choose to disable the
-    prompt and just load the thing directly.  Otherwise, I would set it
-    to =nil=.
-+ Do not restore frame configurations.  If I need to store one of those,
-  I use registers, specifically =C-x r f=.
-+ Ask what to do in case the session has a newer file that the one it
-  initially started out with (e.g. when a new frame runs in parallel to
-  the older one).
+Because I can always access files I have visited before using completion
+(see [[#h:5723c4bb-ff6c-449f-bb60-be66fab3f137][Completion for recent files and directories (prot-recentf.el)]]), I
+opt to discard all files and buffers from the =desktop=.  Instead, I use
+it to restore everything in the variable =desktop-globals-to-save=.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'desktop
   (setq desktop-auto-save-timeout 300)
   (setq desktop-path `(,user-emacs-directory))
   (setq desktop-base-file-name "desktop")
-  (setq desktop-files-not-to-save nil)
+  (setq desktop-files-not-to-save ".*")
+  (setq desktop-buffers-not-to-save ".*")
   (setq desktop-globals-to-clear nil)
   (setq desktop-load-locked-desktop t)
   (setq desktop-missing-file-warning nil)
