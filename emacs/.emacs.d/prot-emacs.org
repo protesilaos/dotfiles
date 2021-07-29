@@ -423,13 +423,13 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-no-mixed-fonts nil
-        modus-themes-subtle-line-numbers t
+        modus-themes-subtle-line-numbers nil
         modus-themes-success-deuteranopia t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -440,7 +440,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', `padded'.
-        modus-themes-mode-line '(padded borderless accented) ; For Moody, also check `prot-moody'
+        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -450,7 +450,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(underline accented)
+        modus-themes-hl-line nil
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -461,13 +461,13 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(neutral-underline faint)
+        modus-themes-links '(neutral-underline)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(gray background intense)
+        modus-themes-prompts '(background intense)
 
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
