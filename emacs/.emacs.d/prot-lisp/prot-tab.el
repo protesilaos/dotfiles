@@ -103,11 +103,11 @@ questions.  Else use completion to select the tab to switch to."
   "Format double space for the tab bar."
   `((global menu-item "  " ignore)))
 
-(defvar prot-tab--mode-line-format  (default-value 'mode-line-format)
+(defvar prot-tab--mode-line-format (default-value 'mode-line-format)
   "Last value of `mode-line-format'.
 For use in Prot-Tab-Status-Line.")
 
-(defvar prot-tab--window-divider-place  (default-value 'window-divider-default-places)
+(defvar prot-tab--window-divider-place (default-value 'window-divider-default-places)
   "Last value of `window-divider-default-places'.
 For use in Prot-Tab-Status-Line.")
 
