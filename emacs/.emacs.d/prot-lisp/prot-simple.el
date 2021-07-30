@@ -187,17 +187,22 @@ This command can then be followed by the standard
      (format "Select character [%s]: " def)
      chars nil t nil 'prot-simple--character-hist def)))
 
+(define-obsolete-function-alias
+  'prot-simple-insert-pair-completion
+  'prot-simple-insert-pair "2021-07-30")
+
 ;;;###autoload
-(defun prot-simple-insert-pair-completion (&optional num)
-  "Insert pair from `prot-simple-insert-pair-alist'.
+(defun prot-simple-insert-pair (pair &optional num)
+  "Insert PAIR from `prot-simple-insert-pair-alist'.
 With optional NUM numeric argument, insert pair to NUMth
 constructs.  A negative number counts backwards."
-  (interactive "p")
+  (interactive
+   (list
+    (prot-simple--character-prompt prot-simple-insert-pair-alist)
+    current-prefix-arg))
   (let* ((data prot-simple-insert-pair-alist)
-         (chars (mapcar #'car data))
-         (choice (prot-simple--character-prompt chars))
-         (left (cadr (assoc choice data)))
-         (right (caddr (assoc choice data)))
+         (left (cadr (assoc pair data)))
+         (right (caddr (assoc pair data)))
          (n (or num 1)))
     (insert-pair n left right)))
 
