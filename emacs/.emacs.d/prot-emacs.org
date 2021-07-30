@@ -3127,7 +3127,7 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'tab-bar
   (setq tab-bar-close-button-show nil)
-  (setq tab-bar-close-last-tab-choice 'tab-bar-mode-disable)
+  (setq tab-bar-close-last-tab-choice nil)
   (setq tab-bar-close-tab-select 'recent)
   (setq tab-bar-new-tab-choice t)
   (setq tab-bar-new-tab-to 'right)
@@ -3160,6 +3160,8 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
           prot-tab-format-space-double
           tab-bar-format-global
           prot-tab-format-space-single))
+
+  (add-hook 'after-init-hook #'prot-tab-status-line)
 
   (let ((map global-map))
     (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-tab-bar-toggle'
