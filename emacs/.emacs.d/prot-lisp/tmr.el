@@ -84,6 +84,9 @@
      (propertize "End:" 'face 'warning) end)
     (tmr--play-sound)))
 
+(defvar tmr--last-timer nil
+  "Last timer object, used by `tmr-cancel'.")
+
 ;;;###autoload
 (defun tmr (time)
   "Set timer to TIME duration and notify after it elapses.
@@ -96,9 +99,14 @@ special final character denoting a unit of time: 'h' for 'hours',
 This command also plays back `tmr-sound-file'."
   (let ((start (format-time-string "%R"))
         (unit (tmr--unit time)))
-    (run-with-timer
-     unit nil
-     'tmr--notify-send start)))
+    (setq tmr--last-timer
+          (run-with-timer
+           unit nil
+           'tmr--notify-send start))))
+
+(defun tmr-cancel ()
+  "Cancel last timer object."
+  (cancel-timer tmr--last-timer))
 
 (provide 'tmr)
 ;;; tmr.el ends here
