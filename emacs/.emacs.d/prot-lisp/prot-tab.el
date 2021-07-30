@@ -126,9 +126,10 @@ Hide the mode lines and change their colors."
         (window-divider-mode 1)
         (setq mode-line-format " ")
         (custom-set-faces
-         `(mode-line ((t :height 1 :box nil :background ,@(if (facep 'modus-themes-active-blue)
-                                                  (list (face-attribute 'modus-themes-active-blue :background))
-                                                (list (face-attribute 'default :foreground))))))
+         `(mode-line ((t :height 1 :box nil
+                         :background ,@(if (facep 'modus-themes-active-blue)
+                                           (list (face-attribute 'modus-themes-active-blue :background))
+                                         (list (face-attribute 'default :foreground))))))
          `(mode-line-inactive ((t :height 1 :box nil :background nil)))))
     (setq tab-bar-show nil)
     (tab-bar-mode -1)
