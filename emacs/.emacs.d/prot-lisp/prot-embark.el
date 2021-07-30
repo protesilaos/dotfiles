@@ -160,10 +160,10 @@ clears the echo area when the verbose indicator pops up."
               (run-at-time
                embark-mixed-indicator-delay nil
                (lambda ()
+                 (message nil)
                  (setq vindicator (embark-verbose-indicator keymap targets)))))
       (setq vindicator (embark-verbose-indicator keymap targets)))
     (setq mindicator (embark-minimal-indicator keymap targets))
-    (message "")   ; FIXME 2021-07-30: Right way to clear the echo area?
     (lambda (prefix)
       (when (and (not prefix) vtimer)
         (cancel-timer vtimer))
