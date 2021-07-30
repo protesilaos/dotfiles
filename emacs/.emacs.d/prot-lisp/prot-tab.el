@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -68,6 +68,77 @@ questions.  Else use completion to select the tab to switch to."
         (tab-bar-mode -1))
     (setq tab-bar-show t)
     (tab-bar-mode 1)))
+
+;;;; Indicators for `tab-bar-format' --- EXPERIMENTAL
+
+(defun prot-tab-format-mule-info ()
+  "Format `mode-line-mule-info' for the tab bar."
+  `((global menu-item ,(string-trim-right (format-mode-line mode-line-mule-info)) ignore)))
+
+(defun prot-tab-format-modified ()
+  "Format `mode-line-modified' for the tab bar."
+  `((global menu-item ,(string-trim-right (format-mode-line mode-line-modified)) ignore)))
+
+(defun prot-tab-format-modes ()
+  "Format `mode-line-modes' for the tab bar."
+  `((global menu-item ,(string-trim-right (format-mode-line mode-line-modes)) ignore)))
+
+(defun prot-tab-format-position ()
+  "Format `mode-line-position' for the tab bar."
+  `((global menu-item ,(string-trim-right (format-mode-line mode-line-position)) ignore)))
+
+(defun prot-tab-format-vc ()
+  "Format VC status for the tab bar."
+  `((global menu-item ,(string-trim-right (format-mode-line vc-mode)) ignore)))
+
+(defun prot-tab-format-misc-info ()
+  "Format `mode-line-misc-info' for the tab bar."
+  `((global menu-item ,(string-trim-right (format-mode-line mode-line-misc-info)) ignore)))
+
+(defun prot-tab-format-space-single ()
+  "Format space for the tab bar."
+  `((global menu-item " " ignore)))
+
+(defun prot-tab-format-space-double ()
+  "Format double space for the tab bar."
+  `((global menu-item "  " ignore)))
+
+(defvar prot-tab--mode-line-format  (default-value 'mode-line-format)
+  "Last value of `mode-line-format'.
+For use in Prot-Tab-Status-Line.")
+
+(defvar prot-tab--window-divider-place  (default-value 'window-divider-default-places)
+  "Last value of `window-divider-default-places'.
+For use in Prot-Tab-Status-Line.")
+
+;; NOTE 2021-07-30: This is experimental and subject to review.
+;;;###autoload
+(define-minor-mode prot-tab-status-line
+  "Make Tab bar a status line and configure the extras.
+Hide the mode lines and change their colors."
+  :global t
+  :group 'prot-tab
+  (if prot-tab-status-line
+      (progn
+        (setq tab-bar-show t)
+        (tab-bar-mode 1)
+        (setq window-divider-default-places t)
+        (window-divider-mode 1)
+        (setq mode-line-format " ")
+        (custom-set-faces
+         `(mode-line ((t :height 1 :box nil :background ,@(if (facep 'modus-themes-active-blue)
+                                                  (list (face-attribute 'modus-themes-active-blue :background))
+                                                (list (face-attribute 'default :foreground))))))
+         `(mode-line-inactive ((t :height 1 :box nil :background nil)))))
+    (setq tab-bar-show nil)
+    (tab-bar-mode -1)
+    (setq window-divider-default-places prot-tab--window-divider-place)
+    (window-divider-mode -1)
+    (setq mode-line-format prot-tab--mode-line-format)
+    (force-mode-line-update)
+    (custom-set-faces
+     `(mode-line (( )))
+     `(mode-line-inactive (( ))))))
 
 (provide 'prot-tab)
 ;;; prot-tab.el ends here

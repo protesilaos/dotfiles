@@ -3060,10 +3060,12 @@ Also read: [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][Window history (winner-mod
     (define-key map (kbd "<S-s-left>") #'windmove-swap-states-left)))
 #+end_src
 
-*** Tabs for window layouts (and prot-tab.el)
+*** Tabs for window layouts (tab-bar.el and prot-tab.el)
 :PROPERTIES:
 :CUSTOM_ID: h:63ad472f-c9c2-40ad-9675-1dc529487788
 :END:
+
+/NOTE 2021-07-30: All documentation here is pending review./
 
 Starting with version 27.1, Emacs has built-in support for two distinct
 concepts of "tabs":
@@ -3117,7 +3119,7 @@ accessing buffers/files in the "other window" (the =C-x 4 KEY= pattern).
 There is also a command for giving a name to the current tab, accessed
 via =C-x t r=, though I find I do not use it.
 
-Here my settings, followed by the entirety of =prot-tab.el=.
+Here are my settings, followed by the entirety of =prot-tab.el=.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'tab-bar
@@ -3130,11 +3132,7 @@ Here my settings, followed by the entirety of =prot-tab.el=.
   (setq tab-bar-show nil)
   (setq tab-bar-tab-hints nil)
   (setq tab-bar-tab-name-function 'tab-bar-tab-name-current)
-  (setq tab-bar-format                  ; Emacs 28
-        '(tab-bar-format-tabs
-          tab-bar-separator
-          tab-bar-format-align-right
-          tab-bar-format-global))
+
   (tab-bar-mode -1)
   (tab-bar-history-mode -1)
   (let ((map global-map))
@@ -3142,8 +3140,25 @@ Here my settings, followed by the entirety of =prot-tab.el=.
     (define-key map (kbd "<s-backtab>") #'tab-previous))) ; S-s-TAB
 
 (prot-emacs-builtin-package 'prot-tab
+  (setq tab-bar-format                    ; Emacs 28
+        '(prot-tab-format-space-single
+          prot-tab-format-mule-info
+          prot-tab-format-modified
+          tab-bar-format-tabs
+          prot-tab-format-space-double
+          prot-tab-format-position
+          prot-tab-format-space-double
+          prot-tab-format-vc
+          prot-tab-format-space-double
+          prot-tab-format-modes         ; FIXME 2021-07-30: Make it work with `minions'.
+          tab-bar-format-align-right
+          prot-tab-format-misc-info
+          prot-tab-format-space-double
+          tab-bar-format-global
+          prot-tab-format-space-single))
+
   (let ((map global-map))
-    (define-key map (kbd "<f8>") #'prot-tab-tab-bar-toggle)
+    (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-tab-bar-toggle'
     (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)
     (define-key map (kbd "s-t") #'prot-tab-select-tab-dwim)))
 
@@ -7499,16 +7514,17 @@ tweaks of my own.
 :CUSTOM_ID: h:6fb900e3-49db-4bc3-8a9e-cd88e020f15b
 :END:
 
-This is a built-in mode that draws vertical window borders in a slightly
-different way than the default, which I find more consistent.  Only
-using it because of that, though it can also adjust the size of the
-borders as well as their placement.
+This is a built-in mode that can draw both vertical and horizontal
+borders.  It can be particularly helpful when used with windows that do
+not have a modeline, such as what happens when I enable my custom
+=prot-tab-status-line= on Emacs28, which moves all the relevant
+information to the tab bar (in effect, it creates a universal status
+line---see [[#h:63ad472f-c9c2-40ad-9675-1dc529487788][Tabs for window layouts (tab-bar.el and prot-tab.el)]]).
 
 #+begin_src emacs-lisp
 (setq window-divider-default-right-width 1)
 (setq window-divider-default-bottom-width 1)
 (setq window-divider-default-places 'right-only)
-(add-hook 'after-init-hook #'window-divider-mode)
 #+end_src
 
 ** Fringe mode
