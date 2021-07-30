@@ -3137,7 +3137,7 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
   (tab-bar-history-mode -1)
   (let ((map global-map))
     (define-key map (kbd "<s-tab>") #'tab-next)
-    (define-key map (kbd "<s-backtab>") #'tab-previous))) ; S-s-TAB
+    (define-key map (kbd "s-S-<iso-lefttab>") #'tab-previous))) ; super-shift-tab
 
 (prot-emacs-builtin-package 'prot-tab
   (setq tab-bar-format                    ; Emacs 28
