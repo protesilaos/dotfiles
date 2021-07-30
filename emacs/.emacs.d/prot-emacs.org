@@ -1643,7 +1643,7 @@ contains a few keymaps that integrate Embark with packages like =consult=
   (setq embark-cycle-key (kbd "C-."))   ; see the `embark-act' key
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
-  (setq embark-mixed-indicator-delay 0.5)
+  (setq embark-mixed-indicator-delay 1.2)
   ;;  NOTE 2021-07-28: This is used when `embark-indicator' (see
   ;;  prot-embark below) is set to `embark-mixed-indicator' or
   ;;  `embark-verbose-indicator'.  We can specify the window parameters
