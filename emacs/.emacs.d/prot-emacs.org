@@ -430,7 +430,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         modus-themes-tabs-accented t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -468,20 +468,20 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(background intense)
+        modus-themes-prompts '(background italic gray)
 
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations 'monochrome ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend)
+        modus-themes-region '(no-extend accented)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'deuteranopia
+        modus-themes-diffs 'fg-only-deuteranopia
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
