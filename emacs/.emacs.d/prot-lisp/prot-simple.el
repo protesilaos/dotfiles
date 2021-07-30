@@ -54,6 +54,7 @@
     ("= Equals signs"        . (61 61))     ; = =
     ("~ Tilde"               . (126 126))   ; ~ ~
     ("* Asterisks"           . (42 42))     ; * *
+    ("/ Forward Slash"       . (47 47))     ; / /
     ("_ underscores"         . (95 95)))    ; _ _
   "Alist of pairs for use with `prot-simple-insert-pair-completion'."
   :type 'alist
