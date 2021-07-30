@@ -83,6 +83,8 @@ questions.  Else use completion to select the tab to switch to."
   "Format `mode-line-modes' for the tab bar."
   `((global menu-item ,(string-trim-right (format-mode-line mode-line-modes)) ignore)))
 
+;; FIXME 2021-07-30: This does not update unless some other event takes
+;; place, such as an ELDOC update.  Otherwise it updates every second.
 (defun prot-tab-format-position ()
   "Format `mode-line-position' for the tab bar."
   `((global menu-item ,(string-trim-right (format-mode-line mode-line-position)) ignore)))
