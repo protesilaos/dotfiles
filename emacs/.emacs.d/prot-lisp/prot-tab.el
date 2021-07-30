@@ -36,6 +36,19 @@
 
 (require 'tab-bar)
 
+(defgroup prot-tab ()
+  "Extensions for tab-bar.el."
+  :group 'tab-bar)
+
+(defcustom prot-tab-tab-select-num-threshold 3
+  "Minimum number of tabs to prompt for numeric selection.
+This is used by `prot-tab-select-tab-dwim' to determine whether
+it should prompt for completion, or to ask for just a tab number
+to switch to.  If the number of open tabs is greater than this
+variable's value, then the command will prompt for a number."
+  :type 'integer
+  :group 'prot-tab)
+
 (defun prot-tab--tab-bar-tabs ()
   "Return a list of `tab-bar' tabs, minus the current one."
   (mapcar (lambda (tab)
@@ -43,20 +56,31 @@
           (tab-bar--tabs-recent)))
 
 ;;;###autoload
-(defun prot-tab-select-tab-dwim ()
-    "Do-What-I-Mean function for getting to a `tab-bar' tab.
-If no other tab exists, create one and switch to it.  If there is
-one other tab (so two in total) switch to it without further
-questions.  Else use completion to select the tab to switch to."
-    (interactive)
-    (let ((tabs (prot-tab--tab-bar-tabs)))
-      (cond ((null tabs)
-             (tab-new))
-            ((eq (length tabs) 1)
-             (tab-next))
-            (t
-             (tab-bar-switch-to-tab
-              (completing-read "Select tab: " tabs nil t))))))
+(defun prot-tab-select-tab-dwim (&optional arg)
+  "Do-What-I-Mean function for getting to a `tab-bar' tab.
+If no other tab exists, or with optional prefix argument
+ARG (\\[universal-argument]), create one and switch to it.
+
+If there is one other tab (so two in total) switch to it without
+further questions.
+
+If the tabs are more than `prot-tab-tab-select-num-threshold',
+show numeric hints (`tab-bar-tab-hints') and prompt for a number
+to switch to.  Else prompt for full text completion."
+  (interactive "P")
+  (let ((tabs (prot-tab--tab-bar-tabs)))
+    (cond
+     ((or arg (null tabs))
+      (tab-new))
+     ((length= tabs 1)
+      (tab-next))
+     ((length> tabs (1- prot-tab-tab-select-num-threshold))
+      (let ((tab-bar-tab-hints t))
+        (tab-bar-select-tab
+         (read-number "Go to tab NUM: "))))
+     (t
+      (tab-bar-switch-to-tab
+       (completing-read "Select tab: " tabs nil t))))))
 
 ;;;###autoload
 (defun prot-tab-tab-bar-toggle ()

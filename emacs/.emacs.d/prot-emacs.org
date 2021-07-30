@@ -3143,6 +3143,7 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
     (define-key map (kbd "s-S-<iso-lefttab>") #'tab-previous))) ; super-shift-tab
 
 (prot-emacs-builtin-package 'prot-tab
+  (setq prot-tab-tab-select-num-threshold 3)
   (setq tab-bar-format                    ; Emacs 28
         '(prot-tab-format-space-single
           prot-tab-format-mule-info
