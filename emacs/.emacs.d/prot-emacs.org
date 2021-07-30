@@ -7395,7 +7395,7 @@ an overview of the current time in various parts of the planet.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'time
-  (setq display-time-format "%H:%M  %Y-%m-%d")
+  (setq display-time-format "%a %e %b, %H:%M")
   ;;;; Covered by `display-time-format'
   ;; (setq display-time-24hr-format t)
   ;; (setq display-time-day-and-date t)
