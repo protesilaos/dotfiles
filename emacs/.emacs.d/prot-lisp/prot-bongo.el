@@ -454,9 +454,17 @@ This should be added to `wdired-mode-hook'.  For more, refer to
 
 (autoload 'dired-x-guess-file-name-at-point "dired-x")
 
-(defun prot-bongo--dired-insert-files ()
-  "Add files in a `dired' buffer to the `bongo' playlist."
-  (let ((media (or (dired-get-marked-files) (dired-x-guess-file-name-at-point)))) ; emacs28
+(defvar prot-bongo--dired-last-inserted nil
+  "Last input of `prot-bongo-dired-insert'.")
+
+(defun prot-bongo--dired-insert-files (&optional last-inserted)
+  "Add files in a `dired' buffer to the `bongo' playlist.
+With optional LAST-INSERTED try to add the last list of files or
+directories."
+  (let ((media (if (and last-inserted prot-bongo--dired-last-inserted)
+                   prot-bongo--dired-last-inserted
+                 (or (dired-get-marked-files) (dired-x-guess-file-name-at-point))))) ; emacs28
+    (setq prot-bongo--dired-last-inserted media)
     (with-current-buffer (bongo-playlist-buffer)
       (goto-char (point-max))
       (mapc (lambda (x)
@@ -472,7 +480,7 @@ This should be added to `wdired-mode-hook'.  For more, refer to
       (dired-next-line 1))))
 
 ;;;###autoload
-(defun prot-bongo-dired-insert ()
+(defun prot-bongo-dired-insert (&optional arg)
   "Add `dired' item at point or marked ones to Bongo playlist.
 
 The playlist buffer is created, if necessary, while some other
@@ -480,12 +488,18 @@ tweaks are introduced.  See `prot-bongo--dired-insert-files' as
 well as `prot-bongo-playlist-play-random'.
 
 Meant to work while inside a `dired' buffer that doubles as a
-library buffer (see `prot-bongo-dired-library-enable')."
-  (interactive)
+library buffer (see `prot-bongo-dired-library-enable').
+
+With optional prefix ARG (\\[universal-argument]) ignore the file
+at point or any marked items and just try to insert what was last
+added using this command (see `prot-bongo--dired-last-inserted').
+If no record exists for the last choice of this sort, then either
+the marked items or the file at point will be selected instead."
+  (interactive "P")
   (when (bongo-library-buffer-p)
     (unless (bongo-playlist-buffer-p)
       (bongo-playlist-buffer))
-    (prot-bongo--dired-insert-files)
+    (prot-bongo--dired-insert-files (or arg nil))
     (prot-bongo-playlist-play-random)))
 
 ;;;###autoload
