@@ -147,8 +147,8 @@ for a known project."
                                 (prot-vc--current-project)
                                 (cdr (project-current t))))
          (number (number-to-string
-                 (read-number "Insert N commits from HEAD: " 5
-                              'prot-vc--log-insert-num-hist))))
+                  (read-number "Insert N commits from HEAD: " 5
+                               'prot-vc--log-insert-num-hist))))
     (insert
      (with-temp-buffer
        (apply 'vc-git-command t nil nil
@@ -354,7 +354,7 @@ is always confined to `prot-vc-log-limit'."
                           (format "%s..%s" one two))
                          ((< beg end)
                           (format "%s..%s" two one)))
-                     (format "-1 %s" (cadr (log-view-current-entry (point) t))))))
+                      (format "-1 %s" (cadr (log-view-current-entry (point) t))))))
         (shell-command
          (format "git format-patch %s -o %s --" range out-dir) buf)
         (message "Prepared patch for `%s' and sent it to %s"
@@ -420,7 +420,7 @@ basic task of searching for a regexp in the current project.  Use
 the original command for its other features."
   (interactive
    (list (read-regexp "git-grep for PATTERN: "
-				      nil 'grep-history)))
+                      nil 'grep-history)))
   (vc-git-grep regexp "*" (prot-vc--current-project)))
 
 (autoload 'vc-git-region-history-mode "vc-git")
@@ -433,16 +433,16 @@ argument, also show the corresponding diffs."
   (interactive
    (list (read-regexp "Run 'git log --grep' for PATTERN")
          current-prefix-arg))
-   (let* ((buf-name prot-vc-shell-output)
-          (buf (get-buffer-create buf-name))
-          (diffs (if diff "-p" ""))
-          (type (if diff 'with-diff 'log-search))
-          (resize-mini-windows nil))
-     (shell-command (format "git log %s --grep=%s -E --" diffs pattern) buf)
-     (with-current-buffer buf
-       (setq-local vc-log-view-type type)
-       (setq-local revert-buffer-function nil)
-       (vc-git-region-history-mode))))
+  (let* ((buf-name prot-vc-shell-output)
+         (buf (get-buffer-create buf-name))
+         (diffs (if diff "-p" ""))
+         (type (if diff 'with-diff 'log-search))
+         (resize-mini-windows nil))
+    (shell-command (format "git log %s --grep=%s -E --" diffs pattern) buf)
+    (with-current-buffer buf
+      (setq-local vc-log-view-type type)
+      (setq-local revert-buffer-function nil)
+      (vc-git-region-history-mode))))
 
 (defun prot-vc-git--file-rev (file &optional limit)
   "Select revision for FILE using completion.
@@ -635,12 +635,12 @@ headers 'Amend' and 'Summary'."
          (branch (or (car branch-name) "Detached HEAD"))
          (remotes (process-lines "git" "branch" "-r"))
          (remote-name (if remotes
-                        (cl-remove-if-not (lambda (s)
-                                            (string-match-p "->" s))
-                                          remotes)
+                          (cl-remove-if-not (lambda (s)
+                                              (string-match-p "->" s))
+                                            remotes)
                         "None"))
          (remote (if (and remote-name (listp remote-name))
-                   (cadr (split-string (car remote-name) "->" t "[\s\t]+"))
+                     (cadr (split-string (car remote-name) "->" t "[\s\t]+"))
                    "No Remote Found"))
          (files (mapconcat (lambda (x)
                              (concat "#   " x))
@@ -675,7 +675,7 @@ With a numeric prefix ARG, go back ARG comments."
   (interactive "*p")
   (let ((len (ring-length log-edit-comment-ring)))
     (if (<= len 0)
-	    (progn (message "Empty comment ring") (ding))
+        (progn (message "Empty comment ring") (ding))
       ;; Don't use `erase-buffer' because we don't want to `widen'.
       (delete-region (point-min) (point-max))
       (setq log-edit-comment-ring-index (log-edit-new-comment-index arg len))
