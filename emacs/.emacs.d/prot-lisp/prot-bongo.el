@@ -466,12 +466,17 @@ This should be added to `wdired-mode-hook'.  For more, refer to
 (defun prot-bongo--save-last-inserted-file ()
   "Save `prot-bongo--dired-last-inserted' to a file.
 The file is specified by `prot-bongo-last-inserted-file'."
-  (let ((file prot-bongo-last-inserted-file))
-    (when file
-      (with-temp-file file
-        (insert (concat ";; Auto-generated file;"
-                        " don't edit -*- mode: lisp-data -*-\n"))
-        (pp prot-bongo--dired-last-inserted (current-buffer))))))
+  (let ((state prot-bongo--dired-last-inserted)
+        (file prot-bongo-last-inserted-file))
+    (cond
+     ((unless state
+        (setq prot-bongo--dired-last-inserted
+              (prot-common-read-data file))))
+     (t (when file
+          (with-temp-file file
+            (insert (concat ";; Auto-generated file;"
+                            " don't edit -*- mode: lisp-data -*-\n"))
+            (pp state (current-buffer))))))))
 
 (defun prot-bongo--dired-insert-files (&optional last-inserted crm)
   "Add files in a `dired' buffer to the `bongo' playlist.
@@ -480,6 +485,7 @@ directories.
 
 With optional CRM use `completing-read-multiple' to select paths
 from the history of inserted entries."
+  (prot-bongo--save-last-inserted-file)
   (let* ((data prot-bongo--dired-last-inserted)
          (media (cond
                  (crm
@@ -491,7 +497,6 @@ from the history of inserted entries."
                       (car data)
                     (dired-get-marked-files))))))
     (push media prot-bongo--dired-last-inserted)
-    (prot-bongo--save-last-inserted-file)
     (with-current-buffer (bongo-playlist-buffer)
       (goto-char (point-max))
       (mapc (lambda (x)
