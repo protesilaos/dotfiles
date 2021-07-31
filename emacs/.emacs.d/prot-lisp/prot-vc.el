@@ -485,29 +485,53 @@ will be used instead."
 (autoload 'vc-annotate-mode "vc-annotate")
 (autoload 'vc-annotate-display-select "vc-annotate")
 
+;; XXX NOTE XXX 2021-07-31: Those are meant to enable `revert-buffer'
+;; inside of `prot-vc-git-blame-region-or-file'.  I do not know whether
+;; this is a good approach.  It seems very convoluted and fragile.  But
+;; anyway, I tried and it seems to work.
+(defvar prot-vc--blame-beg nil)
+(defvar prot-vc--blame-end nil)
+(defvar prot-vc--blame-file nil)
+(defvar prot-vc--blame-origin nil)
+
 ;;;###autoload
-(defun prot-vc-git-blame-region-or-file (beg end)
-  "Git blame lines in region between BEG and END or whole file."
+(defun prot-vc-git-blame-region-or-file (beg end &optional file)
+  "Git blame lines in region between BEG and END.
+Optionally specify FILE, else default to the current one."
   (interactive "r")
   (let* ((buf-name prot-vc-shell-output)
          (buf (get-buffer-create buf-name))
-         (file (buffer-file-name))
-         (backend (vc-backend file))
-         (rev (vc-working-revision buffer-file-name))
+         (f (or file buffer-file-name))
+         (backend (vc-backend f))
+         (rev (vc-working-revision f))
          (e (if (region-active-p) beg (point-min)))
          (b (if (region-active-p) end (- (point-max) 1)))
          (beg-line (line-number-at-pos b t))
          (end-line (line-number-at-pos e t))
          (default-directory (prot-vc--current-project))
+         (origin (current-buffer))
          (resize-mini-windows nil))
     (shell-command
-     (format "git blame -L %d,%d -- %s" beg-line end-line file) buf)
+     (format "git blame -L %d,%d -- %s" beg-line end-line f) buf)
+    ;; FIXME 2021-07-31: Learn how to implement a cleaner
+    ;; `revert-buffer'.  See NOTE above.
+    (setq-local prot-vc--blame-beg beg
+                prot-vc--blame-end end
+                prot-vc--blame-file f
+                prot-vc--blame-origin origin)
     (with-current-buffer buf-name
       (unless (equal major-mode 'vc-annotate-mode)
-        (setq-local revert-buffer-function nil)
         (vc-annotate-mode))
+      ;; FIXME 2021-07-31: Same issue with `revert-buffer'.
+      (setq-local revert-buffer-function
+                  (lambda (_ignore-auto _noconfirm)
+                    (let ((inhibit-read-only t))
+                      (with-current-buffer origin
+                        (prot-vc-git-blame-region-or-file prot-vc--blame-beg
+                                                          prot-vc--blame-end
+                                                          prot-vc--blame-file)))))
       (setq-local vc-annotate-backend backend)
-      (setq-local vc-annotate-parent-file file)
+      (setq-local vc-annotate-parent-file f)
       (setq-local vc-annotate-parent-rev rev)
       (setq-local vc-annotate-parent-display-mode 'scale)
       (vc-annotate-display-select buf 'fullscale))))
