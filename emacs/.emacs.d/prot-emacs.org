@@ -3009,19 +3009,28 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
 :CUSTOM_ID: h:6b4f7792-6ccd-45d5-b262-01d200639072
 :END:
 
-Winner is a built-in tool that keeps a record of buffer and window
-layout changes.  It then allows us to move back and forth in the
-history of said changes.  I have it enabled by default, while I assign
-its two main functions to Super and the right/left arrow keys.
-
 Also check: [[#h:230d96c8-a955-4b82-844d-9de9a1b7c531][Directional window motions (windmove)]].
+
+Winner is a built-in tool that keeps a record of buffer and window
+layout changes.  It then allows us to move back and forth in the history
+of said changes.  As noted in the section about the =tab-bar=, the main
+problem with Winner is that it cannot keep parallel histories, each for
+a given tab (see [[#h:63ad472f-c9c2-40ad-9675-1dc529487788][Tabs for window layouts (tab-bar.el and prot-tab.el)]]).
+The alternative is to use =tab-bar-history-mode= and the commands it
+provides or, more specifically, the wrappers I have defined which fall
+back to Winner when tabs are not in use.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'winner
   (add-hook 'after-init-hook #'winner-mode)
-  (let ((map global-map))
-    (define-key map (kbd "<M-s-right>") #'winner-redo)
-    (define-key map (kbd "<M-s-left>") #'winner-undo)))
+
+  ;; ;; NOTE 2021-07-31: Those are superseded by the commands
+  ;; ;; `prot-tab-winner-undo' and `prot-tab-winner-redo' in prot-tab.el
+  ;; ;; (search this document).
+  ;; (let ((map global-map))
+  ;;   (define-key map (kbd "<M-s-right>") #'winner-redo)
+  ;;   (define-key map (kbd "<M-s-left>") #'winner-undo))
+  )
 #+end_src
 
 *** Directional window motions (windmove)
@@ -3124,6 +3133,16 @@ line.
 To learn about the key bindings that the =tab-bar= uses, type its prefix
 key =C-x t= and follow it up with =C-h= (read [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
 
+Finally, now that =tab-bar-history-mode= is a de facto replacement for
+=winner-mode=.  Like Winner, it stores a history of window layouts.
+Unlike Winner, it keeps histories that are specific to each tab.  The
+problem with Winner is that when we switch between tabs, it continues to
+retain a linear history, so when we try to undo in one tab, we
+effectively get the state of the previous one.  As such, my two commands
+=prot-tab-winner-undo= and =prot-tab-winner-redo= provide thin wrappers
+around the two modes.  If tabs are present, then we use the history for
+them, else we fall back to Winner.
+
 Here are my settings, followed by the entirety of =prot-tab.el=.
 
 #+begin_src emacs-lisp
@@ -3138,8 +3157,12 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
   (setq tab-bar-tab-hints nil)
   (setq tab-bar-tab-name-function 'tab-bar-tab-name-current)
 
-  (tab-bar-mode -1) ; see `prot-tab-status-line'
-  (tab-bar-history-mode -1)
+  (tab-bar-mode -1)                     ; see `prot-tab-status-line'
+
+  ;; Same concept as `winner-mode'.  See the `prot-tab-winner-undo' and
+  ;; its counterpart.
+  (tab-bar-history-mode 1)
+
   (let ((map global-map))
     (define-key map (kbd "<s-tab>") #'tab-next)
     (define-key map (kbd "s-S-<iso-lefttab>") #'tab-previous))) ; super-shift-tab
@@ -3166,6 +3189,8 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
   (add-hook 'after-init-hook #'prot-tab-status-line)
 
   (let ((map global-map))
+    (define-key map (kbd "<M-s-right>") #'prot-tab-winner-redo)
+    (define-key map (kbd "<M-s-left>") #'prot-tab-winner-undo)
     (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-tab-bar-toggle'
     (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)
     (define-key map (kbd "s-t") #'prot-tab-select-tab-dwim)))

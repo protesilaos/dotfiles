@@ -49,6 +49,8 @@ variable's value, then the command will prompt for a number."
   :type 'integer
   :group 'prot-tab)
 
+;;;; General commands
+
 (defun prot-tab--tab-bar-tabs ()
   "Return a list of `tab-bar' tabs, minus the current one."
   (mapcar (lambda (tab)
@@ -92,6 +94,49 @@ to switch to.  Else prompt for full text completion."
         (tab-bar-mode -1))
     (setq tab-bar-show t)
     (tab-bar-mode 1)))
+
+;;;; Window layout history
+
+(declare-function winner-undo "winner")
+(declare-function winner-redo "winner")
+
+;;;###autoload
+(defun prot-tab-winner-undo ()
+  "Go to previous window layout in the history.
+When Tab-Bar-Mode and Tab-Bar-History-Mode are active, use
+history that is specific to the current tab.  Else try to call
+`winner-undo' if Winner-Mode is active.  Signal an error
+otherwise."
+  (interactive)
+  (if (and (bound-and-true-p tab-bar-mode)
+           (bound-and-true-p tab-bar-history-mode))
+      (progn
+        (tab-bar-history-back)
+        (setq this-command 'tab-bar-history-back))
+    (if (bound-and-true-p winner-mode)
+        (progn
+          (winner-undo)
+          (setq this-command 'winner-undo))
+      (user-error "No `tab-bar-history-mode' or `winner-mode' active"))))
+
+;;;###autoload
+(defun prot-tab-winner-redo ()
+  "Go to next window layout in the history.
+When Tab-Bar-Mode and Tab-Bar-History-Mode are active, use
+history that is specific to the current tab.  Else try to call
+`winner-redo' if Winner-Mode is active.  Signal an error
+otherwise."
+  (interactive)
+  (if (and (bound-and-true-p tab-bar-mode)
+           (bound-and-true-p tab-bar-history-mode))
+      (progn
+        (tab-bar-history-forward)
+        (setq this-command 'tab-bar-history-forward))
+    (if (bound-and-true-p winner-mode)
+        (progn
+          (winner-redo)
+          (setq this-command 'winner-redo))
+      (user-error "No `tab-bar-history-mode' or `winner-mode' active"))))
 
 ;;;; Indicators for `tab-bar-format' --- EXPERIMENTAL
 
@@ -148,6 +193,7 @@ Hide the mode lines and change their colors."
       (progn
         (setq tab-bar-show t)
         (tab-bar-mode 1)
+        (tab-bar-history-mode 1)
         (setq window-divider-default-places t)
         (window-divider-mode 1)
         (setq mode-line-format " ")
@@ -157,6 +203,7 @@ Hide the mode lines and change their colors."
          `(mode-line-inactive ((t :height 1 :box nil :background nil)))))
     (setq tab-bar-show nil)
     (tab-bar-mode -1)
+    (tab-bar-history-mode -1)
     (setq window-divider-default-places prot-tab--window-divider-place)
     (window-divider-mode -1)
     (setq mode-line-format prot-tab--mode-line-format)
