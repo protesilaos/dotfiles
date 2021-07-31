@@ -143,34 +143,5 @@ To be passed as advice before `embark-act' and others."
     (dolist (cmd '(embark-act embark-become))
       (advice-remove cmd #'prot-embark--force-keycast-update))))
 
-;;;; Action indicator buffer
-
-(defvar embark-mixed-indicator-delay)
-(declare-function embark-verbose-indicator "embark")
-(declare-function embark-minimal-indicator "embark")
-
-;;;###autoload
-(defun prot-embark-mixed-indicator (keymap targets)
-  "Mixed indicator showing KEYMAP and TARGETS.
-This is the same as `embark-mixed-indicator' except that it
-clears the echo area when the verbose indicator pops up."
-  (let ((vtimer) (vindicator) (mindicator))
-    (if (> embark-mixed-indicator-delay 0)
-        (setq vtimer
-              (run-at-time
-               embark-mixed-indicator-delay nil
-               (lambda ()
-                 (message nil)
-                 (setq vindicator (embark-verbose-indicator keymap targets)))))
-      (setq vindicator (embark-verbose-indicator keymap targets)))
-    (setq mindicator (embark-minimal-indicator keymap targets))
-    (lambda (prefix)
-      (when (and (not prefix) vtimer)
-        (cancel-timer vtimer))
-      (when (functionp vindicator)
-        (funcall vindicator prefix))
-      (when (functionp mindicator)
-        (funcall mindicator prefix)))))
-
 (provide 'prot-embark)
 ;;; prot-embark.el ends here

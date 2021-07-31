@@ -1644,13 +1644,13 @@ contains a few keymaps that integrate Embark with packages like =consult=
   (setq embark-cycle-key (kbd "C-."))   ; see the `embark-act' key
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
+  (setq embark-indicator #'embark-mixed-indicator)
   (setq embark-mixed-indicator-delay 1.2)
-  ;;  NOTE 2021-07-28: This is used when `embark-indicator' (see
-  ;;  prot-embark below) is set to `embark-mixed-indicator' or
-  ;;  `embark-verbose-indicator'.  We can specify the window parameters
-  ;;  here, but I prefer to do that in my `display-buffer-alist' (search
-  ;;  this document) because it is easier to keep track of all my rules
-  ;;  in one place.
+  ;;  NOTE 2021-07-28: This is used when `embark-indicator' is set to
+  ;;  `embark-mixed-indicator' or `embark-verbose-indicator'.  We can
+  ;;  specify the window parameters here, but I prefer to do that in my
+  ;;  `display-buffer-alist' (search this document) because it is easier
+  ;;  to keep track of all my rules in one place.
   (setq embark-verbose-indicator-display-action nil)
 
   (define-key global-map (kbd "C-,") #'embark-act)
@@ -1671,8 +1671,6 @@ contains a few keymaps that integrate Embark with packages like =consult=
     (define-key map (kbd "k") #'describe-keymap)))
 
 (prot-emacs-builtin-package 'prot-embark
-  (setq embark-indicator #'prot-embark-mixed-indicator) ; read function's doc string
-
   (prot-embark-keymaps 1)
   (prot-embark-setup-packages 1))
 #+end_src
