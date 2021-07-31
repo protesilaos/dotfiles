@@ -2941,9 +2941,19 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
           ;; left side window
           ("\\*Help.*"
            (display-buffer-in-side-window)
-           (window-width . 0.20)       ; See the :hook
+           (window-width . 0.33)       ; See the :hook
+           (side . left)
+           (slot . -1))
+          ("\\*Faces\\*"
+           (display-buffer-in-side-window)
+           (window-width . 0.33)
            (side . left)
            (slot . 0))
+          ("\\*Custom.*"
+           (display-buffer-in-side-window)
+           (window-width . 0.33)
+           (side . left)
+           (slot . 1))
           ;; right side window
           ("\\*keycast\\*"
            (display-buffer-in-side-window)
@@ -2953,16 +2963,6 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (slot . -1)
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
-          ("\\*Faces\\*"
-           (display-buffer-in-side-window)
-           (window-width . 0.25)
-           (side . right)
-           (slot . 0))
-          ("\\*Custom.*"
-           (display-buffer-in-side-window)
-           (window-width . 0.25)
-           (side . right)
-           (slot . 1))
           ;; bottom buffer (NOT side window)
           ("\\*\\vc-\\(incoming\\|outgoing\\).*"
            (display-buffer-at-bottom))
