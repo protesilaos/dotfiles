@@ -81,6 +81,12 @@ at creating it or running any other kind of check."
   :type 'string
   :group 'prot-bongo)
 
+(defcustom prot-bongo-last-inserted-file
+  (locate-user-emacs-file "prot-bongo-last-inserted")
+  "File to save the last insertion from Dired into the playlist."
+  :type 'file
+  :group 'prot-bongo)
+
 ;;;; Basic setup
 
 (defvar bongo-enabled-backends)
@@ -457,14 +463,35 @@ This should be added to `wdired-mode-hook'.  For more, refer to
 (defvar prot-bongo--dired-last-inserted nil
   "Last input of `prot-bongo-dired-insert'.")
 
-(defun prot-bongo--dired-insert-files (&optional last-inserted)
+(defun prot-bongo--save-last-inserted-file ()
+  "Save `prot-bongo--dired-last-inserted' to a file.
+The file is specified by `prot-bongo-last-inserted-file'."
+  (let ((file prot-bongo-last-inserted-file))
+    (when file
+      (with-temp-file file
+        (insert (concat ";; Auto-generated file;"
+                        " don't edit -*- mode: lisp-data -*-\n"))
+        (pp prot-bongo--dired-last-inserted (current-buffer))))))
+
+(defun prot-bongo--dired-insert-files (&optional last-inserted crm)
   "Add files in a `dired' buffer to the `bongo' playlist.
 With optional LAST-INSERTED try to add the last list of files or
-directories."
-  (let ((media (if (and last-inserted prot-bongo--dired-last-inserted)
-                   prot-bongo--dired-last-inserted
-                 (or (dired-get-marked-files) (dired-x-guess-file-name-at-point))))) ; emacs28
-    (setq prot-bongo--dired-last-inserted media)
+directories.
+
+With optional CRM use `completing-read-multiple' to select paths
+from the history of inserted entries."
+  (let* ((data prot-bongo--dired-last-inserted)
+         (media (cond
+                 (crm
+                  (completing-read-multiple
+                   "Select from recent picks: "
+                   (flatten-tree prot-bongo--dired-last-inserted)
+                   nil t))
+                 ((if (and data last-inserted)
+                      (car data)
+                    (dired-get-marked-files))))))
+    (push media prot-bongo--dired-last-inserted)
+    (prot-bongo--save-last-inserted-file)
     (with-current-buffer (bongo-playlist-buffer)
       (goto-char (point-max))
       (mapc (lambda (x)
@@ -499,7 +526,10 @@ the marked items or the file at point will be selected instead."
   (when (bongo-library-buffer-p)
     (unless (bongo-playlist-buffer-p)
       (bongo-playlist-buffer))
-    (prot-bongo--dired-insert-files (or arg nil))
+    (pcase (prefix-numeric-value arg)
+      (16 (prot-bongo--dired-insert-files t t))
+      (4 (prot-bongo--dired-insert-files t))
+      (_ (prot-bongo--dired-insert-files)))
     (prot-bongo-playlist-play-random)))
 
 ;;;###autoload
