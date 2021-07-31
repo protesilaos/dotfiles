@@ -98,6 +98,13 @@
   "Determine start and end points in the window."
   (list (window-start) (window-end)))
 
+;;;###autoload
+(defun prot-common-read-data (file)
+  "Read Elisp data from FILE."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (read (current-buffer))))
+
 ;; Thanks to Omar Antolín Camarena for providing this snippet!
 ;;;###autoload
 (defun prot-common-completion-table (category candidates)
