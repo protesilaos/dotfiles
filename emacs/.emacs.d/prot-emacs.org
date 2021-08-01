@@ -2972,21 +2972,16 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
           ;; left side window
-          ("\\*Help.*"
+          ("\\*Help.*"            ; See the hooks for `visual-line-mode'
            (display-buffer-in-side-window)
-           (window-width . 0.33)       ; See the :hook
+           (window-width . 0.25)
            (side . left)
            (slot . -1))
           ("\\*Faces\\*"
            (display-buffer-in-side-window)
-           (window-width . 0.33)
+           (window-width . 0.25)
            (side . left)
            (slot . 0))
-          ("\\*Custom.*"
-           (display-buffer-in-side-window)
-           (window-width . 0.33)
-           (side . left)
-           (slot . 1))
           ;; right side window
           ("\\*keycast\\*"
            (display-buffer-in-side-window)
@@ -3012,8 +3007,10 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
   (setq switch-to-buffer-in-dedicated-window 'pop)
+
   (add-hook 'help-mode-hook #'visual-line-mode)
   (add-hook 'custom-mode-hook #'visual-line-mode)
+
   (let ((map global-map))
     (define-key map (kbd "s-n") #'next-buffer)
     (define-key map (kbd "s-p") #'previous-buffer)
