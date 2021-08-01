@@ -37,6 +37,7 @@
 ;; XXX Written on 2021-01-18.  Remains to be reviewed.
 
 (eval-when-compile (require 'subr-x))
+(eval-when-compile (require 'cl-lib))
 (require 'bongo nil t)
 (require 'prot-common)
 
@@ -466,12 +467,12 @@ This should be added to `wdired-mode-hook'.  For more, refer to
 (defun prot-bongo--save-last-inserted-file ()
   "Save `prot-bongo--dired-last-inserted' to a file.
 The file is specified by `prot-bongo-last-inserted-file'."
-  (let ((state prot-bongo--dired-last-inserted)
+  (let ((state (delete-dups prot-bongo--dired-last-inserted))
         (file prot-bongo-last-inserted-file))
     (cond
      ((unless state
         (setq prot-bongo--dired-last-inserted
-              (prot-common-read-data file))))
+              (delete-dups (prot-common-read-data file)))))
      (t (when file
           (with-temp-file file
             (insert (concat ";; Auto-generated file;"
@@ -496,7 +497,7 @@ from the history of inserted entries."
                  ((if (and data last-inserted)
                       (car data)
                     (dired-get-marked-files))))))
-    (push media prot-bongo--dired-last-inserted)
+    (cl-pushnew media prot-bongo--dired-last-inserted)
     (with-current-buffer (bongo-playlist-buffer)
       (goto-char (point-max))
       (mapc (lambda (x)
