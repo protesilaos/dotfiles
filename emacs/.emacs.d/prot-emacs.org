@@ -424,11 +424,11 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs nil
+        modus-themes-bold-constructs t
         modus-themes-no-mixed-fonts nil
-        modus-themes-subtle-line-numbers nil
-        modus-themes-success-deuteranopia t
-        modus-themes-tabs-accented t
+        modus-themes-subtle-line-numbers t
+        modus-themes-success-deuteranopia nil
+        modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -457,21 +457,21 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold underline)
+        modus-themes-paren-match '(intense underline)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(neutral-underline)
+        modus-themes-links '(faint)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(background italic gray)
+        modus-themes-prompts '(intense)
 
-        modus-themes-completions nil ; {nil,'moderate,'opinionated}
+        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
         modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
 
@@ -482,7 +482,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'fg-only-deuteranopia
+        modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
