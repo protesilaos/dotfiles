@@ -1468,8 +1468,6 @@ try.
   (setq consult-preview-key nil) ; use 'any if you always want previews
 
   (let ((map global-map))
-    (define-key map (kbd "s-b") #'consult-buffer)
-    (define-key map (kbd "s-B") #'consult-buffer-other-window)
     (define-key map (kbd "C-x r b") #'consult-bookmark) ; override `bookmark-jump'
     (define-key map (kbd "C-x M-:") #'consult-complex-command)
     (define-key map (kbd "C-x M-m") #'consult-minor-mode-menu)
