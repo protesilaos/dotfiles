@@ -1645,6 +1645,15 @@ contains a few keymaps that integrate Embark with packages like =consult=
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
   (setq embark-indicator #'embark-mixed-indicator)
+  ;; NOTE 2021-07-31: The mixed indicator starts out with a minimal view
+  ;; and then pops up the verbose buffer, so those variables matter.
+  (setq embark-verbose-indicator-excluded-commands
+        '("\\`embark-collect-" "\\`customize-" "\\(local\\|global\\)-set-key"
+          set-variable embark-cycle embark-export
+          embark-keymap-help embark-become embark-isearch))
+  (setq embark-verbose-indicator-buffer-sections
+        `(target "\n" shadowed-targets " " cycle "\n" bindings))
+  (setq embark-mixed-indicator-both nil)
   (setq embark-mixed-indicator-delay 1.2)
   ;;  NOTE 2021-07-28: This is used when `embark-indicator' is set to
   ;;  `embark-mixed-indicator' or `embark-verbose-indicator'.  We can
