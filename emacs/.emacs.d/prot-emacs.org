@@ -844,9 +844,37 @@ commands to where it makes sense for us.  I actually do this for
 At any rate, all we need here is to activate =repeat-mode= and then
 implement the repetition mechanism wherever we want.
 
+The =repeat= command is bound by default to =C-x z=, with =s-z= serving as my
+alias for it (read [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][What is the meaning of the `s-KEY' bindings?]]).  With
+the two variables I set in the following configurations, I make it so
+that subsequent repetitions require only hitting another =z=.  Depending
+on what you do, a =repeat= can save you from multiple key presses.  For
+more demanding tasks you are better off with keyboard macros.
+
+*Pro tip:* to make a keyboard macro out of your most recent commands, use
+=C-x C-k l= which calls =kmacro-edit-lossage=.  The list is editable, so
+remove any line that is not required and then save what is left.  The
+result is stored as the latest keyboard macro (and you also have the
+power to cycle through kmacros, store them in specific keys, etc.).
+
+Moving on to the mark, which is affected by =set-mark-command-repeat-pop=,
+practically every Emacs motion that operates on a portion of text will
+set the mark automatically.  You can also do it manually with =C-SPC= (hit
+it twice if you do not wish to activate the region).  It is then
+possible to cycle through the marks in reverse order by passing a prefix
+argument =C-u C-SPC=.  With =set-mark-command-repeat-pop= we can continue
+cycling by repeated presses of =C-SPC=.  Again though, this is not the
+type of functionality I rely on: for more deliberate actions of this
+sort, consider Emacs' registers or bookmarks.
+
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'repeat
-  (repeat-mode 1))
+  (setq repeat-on-final-keystroke t)
+  (setq set-mark-command-repeat-pop t)
+
+  (repeat-mode 1)
+
+  (define-key global-map (kbd "s-z") #'repeat))
 #+end_src
 
 * Selection candidates and search methods
@@ -8054,47 +8082,27 @@ when visiting or saving a buffer of relevance.
 (setq mode-require-final-newline 'visit-save)
 #+end_src
 
-*** Altered zap and easier repeats
+*** Zap characters
 :PROPERTIES:
 :CUSTOM_ID: h:5f6ffe61-f0cc-41ad-9d2f-46ad181c3a00
 :END:
 
-I seldom use the functionality related to this section, but when I do I
-prefer it to work the way I expect.  =zap-up-to-char= will delete
-everything from point up to the character you provide it with.  Think of
-how you may want to delete a file name but keep its file type extension.
+There are two kinds of "zap" functionality:
 
-The =repeat= command is bound by default to =C-x z=, with =s-z= serving as my
-alias for it (read [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][What is the meaning of the `s-KEY' bindings?]]).  I
-make it so that subsequent repetitions require only hitting another =z=.
-Depending on what you do, a =repeat= can save you from multiple key
-presses, such as when switching windows with =other-window= (=C-x o= by
-default).  For more demanding tasks you are better off with keyboard
-macros.
++ =zap-up-to-char= will delete everything from point up to the character
+  you provide it with.  Think of how you may want to remove a file name
+  but keep its file type extension, so =M-x zap-up-to-char RET .= will do
+  just that.
++ =zap-to-char=, which is bound to =M-z= by default, will delete the target
+  character as well.
 
-*Pro tip:* to make a keyboard macro out of your most recent commands, use
-=C-x C-k l= which calls =kmacro-edit-lossage=.  The list is editable, so
-remove any line that is not required and then save what is left.  The
-result is stored as the latest keyboard macro (and you also have the
-power to cycle through kmacros, store them in specific keys, etc.).
-
-Moving on to the mark, practically every Emacs motion that operates on a
-portion of text will set the mark automatically.  You can also do it
-manually with =C-SPC= (hit it twice if you do not wish to activate the
-region).  It is then possible to cycle through the marks in reverse
-order by passing a prefix argument =C-u C-SPC=.  With the evaluation of
-=set-mark-command-repeat-pop= as =t= we can continue cycling by repeated
-presses of =C-SPC=.  Again though, this is not the type of functionality I
-rely on: for more deliberate actions of this sort, consider Emacs'
-notion of "registers".
+I bind the former to =M-z= as I use it more often and leave its
+counterpart on =M-Z= (=M-S-z=).
 
 #+begin_src emacs-lisp
-(setq repeat-on-final-keystroke t)
-(setq set-mark-command-repeat-pop t)
 (let ((map global-map))
   (define-key map (kbd "M-z") #'zap-up-to-char)
-  (define-key map (kbd "M-Z") #'zap-to-char) ; M-S-z
-  (define-key map (kbd "s-z") #'repeat))
+  (define-key map (kbd "M-Z") #'zap-to-char)) ; M-S-z
 #+end_src
 
 *** Package lists
