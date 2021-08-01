@@ -509,7 +509,8 @@ from the history of inserted entries."
       (prot-bongo-playlist-section)
       (run-hooks 'prot-bongo-playlist-setup-hook))
     (with-current-buffer (bongo-library-buffer)
-      (dired-next-line 1))))
+      (dired-next-line 1)))
+  (prot-bongo--save-last-inserted-file))
 
 ;;;###autoload
 (defun prot-bongo-dired-insert (&optional arg)
