@@ -8040,24 +8040,6 @@ solution to this with the following:
 Now the contents of the clipboard are stored in the kill ring and can
 be retrieved from there (e.g. with =M-y=).
 
-*** Pulse highlight changes (goggles.el)
-:PROPERTIES:
-:CUSTOM_ID: h:fbfa2021-7713-450d-ac14-7ac0553ccc69
-:END:
-
-This is another package by Daniel Mendler which pulses the area where
-some change took effect.  It is a subtle, yet effective, method to
-visually capture the affected region of text and, thus, be confident
-that no mistakes were made in the process (or notice those as they
-occur).
-
-#+begin_src emacs-lisp
-(prot-emacs-elpa-package 'goggles
-  (setq-default goggles-pulse t)
-  (dolist (mode '(prog-mode-hook text-mode-hook))
-    (add-hook mode #'goggles-mode)))
-#+end_src
-
 *** Newline characters for file ending
 :PROPERTIES:
 :CUSTOM_ID: h:c0f0a2c1-1920-4bcf-8eb4-45f80cf1b874
@@ -9590,7 +9572,7 @@ each in their own unique way---the order is not significant:
   of experimentation for new packages or other useful ideas.
 
 + Daniel Mendler :: Daniel's name is referenced in a number of this
-  document's sections (author of Consult, Corfu, Goggles, Recursion
+  document's sections (author of Consult, Corfu, Vertico, Recursion
   indicator, co-author of Marginalia together with Omar---you get the
   idea).  As far as I can tell, Daniel does not share an Emacs
   configuration, though one can still learn a lot by studying the code
