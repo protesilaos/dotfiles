@@ -8091,8 +8091,10 @@ notion of "registers".
 #+begin_src emacs-lisp
 (setq repeat-on-final-keystroke t)
 (setq set-mark-command-repeat-pop t)
-(define-key global-map (kbd "M-z") #'zap-up-to-char)
-(define-key global-map (kbd "s-z") #'repeat)
+(let ((map global-map))
+  (define-key map (kbd "M-z") #'zap-up-to-char)
+  (define-key map (kbd "M-Z") #'zap-to-char) ; M-S-z
+  (define-key map (kbd "s-z") #'repeat))
 #+end_src
 
 *** Package lists
