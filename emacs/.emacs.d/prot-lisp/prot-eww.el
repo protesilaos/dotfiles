@@ -253,24 +253,7 @@ unused."
 
 ;;;; Commands
 
-;; This variable determines which links to pass to browse-url.
-(setq eww-use-browse-url
-      "\\`mailto:\\|\\`gemini:\\|\\`gopher:\\|\\`finger")
-
-;; Adding appropriate handler for browse-url.
-(add-to-list 'browse-url-default-handlers
-             '("\\`gemini:" . prot-eww--browser-handler))
-(add-to-list 'browse-url-default-handlers
-             '("\\`gopher:" . prot-eww--browser-handler))
-(add-to-list 'browse-url-default-handlers
-             '("\\`finger:" . prot-eww--browser-handler))
-
-(autoload 'elpher-go "elpher")
-
 ;; handler that browse-url calls.
-(defun prot-eww--browser-handler (url &rest args)
-  "Handler for URL with ARGS."
-  (elpher-go url))
 
 (defun prot-eww--get-current-url ()
   "Return the current-page's URL."
@@ -370,8 +353,7 @@ LABEL @ URL ~ POSITION."
       ;; NOTE 2021-07-25: The first clause in the `or' is meant to
       ;; address a bug where if a URL is in `point-min' it does not get
       ;; captured.
-      (while (or (setq match (text-property-search-forward 'shr-url))
-                 (setq match (text-property-search-forward 'shr-url nil nil t)))
+      (while (setq match (text-property-search-forward 'shr-url))
         (let* ((raw-url (prop-match-value match))
                (start-point-prop (prop-match-beginning match))
                (end-point-prop (prop-match-end match))
@@ -401,12 +383,10 @@ LABEL @ URL ~ POSITION."
 If region is active run BODY within active region instead.
 Return the value of the last form of BODY."
   `(save-restriction
-     (let (bounds)
-       (if (use-region-p)
-           (narrow-to-region (region-beginning) (region-end))
-         (setq bounds (prot-common-window-bounds))
-         (narrow-to-region (car bounds) (cadr bounds)))
-       ,@body)))
+     (if (use-region-p)
+         (narrow-to-region (region-beginning) (region-end))
+       (narrow-to-region (window-start) (window-end)))
+     ,@body))
 
 ;;;###autoload
 (defun prot-eww-visit-url-on-page (&optional arg)
