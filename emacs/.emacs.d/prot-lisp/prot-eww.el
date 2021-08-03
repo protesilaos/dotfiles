@@ -290,6 +290,8 @@ Return URL for use in a interactive."
                           (region-beginning) (region-end))))
                    (thing-at-point-url-at-point t))))
 
+(declare-function elpher-go "elpher")
+
 ;;;###autoload
 (defun prot-eww (url &optional arg)
   "Pass URL to appropriate client.
