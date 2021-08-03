@@ -94,7 +94,7 @@ If non-nil, save the value of `prot-eww-visited-history' in
   :group 'prot-eww)
 
 ;; These history related functions are adapted from eww.
-(defun prot-eww-save-visited-history ()
+(defun prot-eww--save-visited-history ()
   "Save the value of `prot-eww-visited-history' in a file.
 The file is determined by the variable `prot-eww-save-history-file'."
   (when prot-eww-save-visited-history
@@ -103,7 +103,7 @@ The file is determined by the variable `prot-eww-save-history-file'."
                       " don't edit -*- mode: lisp-data -*-\n"))
       (pp prot-eww-visited-history (current-buffer)))))
 
-(defun prot-eww-read-visited-history (&optional error-out)
+(defun prot-eww--read-visited-history (&optional error-out)
   "Read history from `prot-eww-save-history-file'.
 If ERROR-OUT, signal `user-error' if there is no history."
   (when prot-eww-save-visited-history
@@ -119,7 +119,7 @@ If ERROR-OUT, signal `user-error' if there is no history."
         (user-error "No history is defined")))))
 
 (unless prot-eww-visited-history
-  (prot-eww-read-visited-history t))
+  (prot-eww--read-visited-history t))
 
 (defun prot-eww--history-prepare ()
   "Prepare dedicated buffer for browsing history."
@@ -143,8 +143,8 @@ This is a replacement for `eww-list-histories' (or equivalent),
 as it can combine URLs in the Gopher or Gemini protocols."
   (interactive)
   (when prot-eww-visited-history
-    (prot-eww-save-visited-history))
-  (prot-eww-read-visited-history t)
+    (prot-eww--save-visited-history))
+  (prot-eww--read-visited-history t)
   (pop-to-buffer prot-eww-list-history-buffer)
   (prot-eww--history-prepare))
 
@@ -165,7 +165,7 @@ as it can combine URLs in the Gopher or Gemini protocols."
     (delete-region start (point))
     (setq prot-eww-visited-history (delq history
                                          prot-eww-visited-history))
-    (prot-eww-save-visited-history)))
+    (prot-eww--save-visited-history)))
 
 (defun prot-eww-history-yank ()
   "Yank a previously killed history to the current line."
@@ -184,7 +184,7 @@ as it can combine URLs in the Gopher or Gemini protocols."
         (setcdr (nthcdr (1- line) prot-eww-visited-history)
                 (cons history (nthcdr line
                                       prot-eww-visited-history)))))
-    (prot-eww-save-visited-history)))
+    (prot-eww--save-visited-history)))
 
 (defun prot-eww-history-browse ()
   "Browse the history under point."
@@ -271,7 +271,7 @@ unused."
 ;; "http" anything it finds, which is a problem for gemini, gopher
 ;; etc.  urls. I hope there's something similar or better way to do
 ;; it, we don't have to use this one.
-(defun prot-eww-interactive-arg (prompt)
+(defun prot-eww--interactive-arg (prompt)
   "Read a URL from the minibuffer, prompting with PROMPT.
 If Transient-mark-mode is non-nil and the mark is active, it
 defaults to the current region, else to the URL at or before
@@ -297,7 +297,7 @@ Return URL for use in a interactive."
   "Pass URL to appropriate client.
 With optional ARG, use a new buffer."
   (interactive
-   (list (prot-eww-interactive-arg "URL: ")
+   (list (prot-eww--interactive-arg "URL: ")
          current-prefix-arg))
   (let ((url-parsed (url-generic-parse-url url)))
     (pcase (url-type url-parsed)
@@ -640,7 +640,7 @@ trailing hyphen."
         (message "Downloaded page at %s" path)
       (message "Error downloading page: %s" (cdr out)))))
 
-(defun prot-eww-kill-buffers-when (predicate)
+(defun prot-eww--kill-buffers-when (predicate)
   "Kill buffers when PREDICATE is non-nil.
 
 Loop through the buffer list, calling PREDICATE with each buffer.
@@ -670,7 +670,7 @@ and has \"eww\" in the buffer-name. Then return non-nil."
   "Kill all EWW buffers.
 Also kill special buffers made by EWW for example buffers like
 \"*eww-bookmarks*\", \"*eww-history*\" etc."
-  (prot-eww-kill-buffers-when 'prot-eww--kill-eww-buffers-p))
+  (prot-eww--kill-buffers-when 'prot-eww--kill-eww-buffers-p))
 
 (defcustom prot-eww-delete-cookies t
   "If non-nil delete cookies when `prot-eww-quit' is called."
@@ -689,7 +689,7 @@ Also kill special buffers made by EWW for example buffers like
 ;; Populate the hook with these functions.
 (dolist (func '(prot-eww-delete-cookies
                 prot-eww-kill-eww-buffers
-                prot-eww-save-visited-history))
+                prot-eww--save-visited-history))
   (add-hook 'prot-eww-quit-hook func))
 
 ;;;###autoload
