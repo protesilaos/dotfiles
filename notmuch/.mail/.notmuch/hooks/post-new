@@ -40,6 +40,7 @@ notmuch tag -inbox +list +emacs -- from:emacs-devel@gnu.org or to:emacs-devel@gn
 notmuch tag -inbox +list +emacs -- from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org
 notmuch tag -inbox +list +emacs -- 'to:"/*@debbugs.gnu.org*/"'
 notmuch tag -inbox +list +emacs -- from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org not to:emacs-humanities-owner@gnu.org
+notmuch tag -inbox +list +emacs -- 'to:"/*~michel-slm/elpher@lists.sr.ht*/"'
 
 ## unix (CLI tools)
 notmuch tag -inbox +list +cli -- from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org

@@ -5955,6 +5955,9 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
           ( :name "emacs-humanities"
             :query "(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org) not tag:archived"
             :sort-order newest-first :key ,(kbd "e h"))
+          ( :name "emacs-elpher"
+            :query "(from:~michel-slm/elpher@lists.sr.ht or to:~michel-slm/elpher@lists.sr.ht) not tag:archived"
+            :sort-order newest-first :key ,(kbd "e e"))
           ;; CLI tools
           ( :name "notmuch"
             :query "(from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org) not tag:archived"
