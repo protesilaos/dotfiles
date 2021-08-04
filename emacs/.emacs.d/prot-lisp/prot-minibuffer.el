@@ -238,7 +238,7 @@ If it is a list, this actually returns its car."
    (lambda (window)
      (string-match-p
       prot-minibuffer-completion-windows-regexp
-      (format "%s" window)))))
+      (buffer-name (window-buffer window))))))
 
 (defun prot-minibuffer-focus-mini-or-completions ()
   "Focus the active minibuffer or the completions' window.
