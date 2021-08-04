@@ -199,8 +199,7 @@ Hide the mode lines and change their colors."
         (setq mode-line-format " ")
         (custom-set-faces
          `(mode-line ((t :height 1 :box nil
-                         :background ,@(list (face-attribute 'default :foreground))
-                         :foreground ,@(list (face-attribute 'default :background)))))
+                         :background ,@(list (face-attribute 'default :foreground)))))
          `(mode-line-inactive ((t :height 1 :box nil :background nil)))))
     (setq tab-bar-show nil)
     (tab-bar-mode -1)
