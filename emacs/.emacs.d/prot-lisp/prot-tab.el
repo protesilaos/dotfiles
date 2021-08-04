@@ -198,9 +198,21 @@ Hide the mode lines and change their colors."
         (window-divider-mode 1)
         (setq mode-line-format " ")
         (custom-set-faces
-         `(mode-line ((t :height 1 :box nil
-                         :background ,@(list (face-attribute 'default :foreground)))))
-         `(mode-line-inactive ((t :height 1 :box nil :background nil)))))
+         `(mode-line ((default :height 1 :box nil :overline nil :underline nil)
+                      (((class color) (min-colors 88) (background light))
+                       :background "#0000c0" ; OR ,@(list (face-attribute 'default :foreground))
+                       :foreground "#0000c0")
+                      (((class color) (min-colors 88) (background dark))
+                       :background "#00bcff"
+                       :foreground "#00bcff")
+                      (t :inverse-video t)))
+         `(mode-line-inactive ((default :height 1 :box nil :overline nil :underline nil)
+                      (((class color) (min-colors 88) (background light))
+                       :background "white"
+                       :foreground "white")
+                      (((class color) (min-colors 88) (background dark))
+                       :background "black"
+                       :foreground "black")))))
     (setq tab-bar-show nil)
     (tab-bar-mode -1)
     (tab-bar-history-mode -1)
