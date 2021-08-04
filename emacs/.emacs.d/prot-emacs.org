@@ -1006,8 +1006,7 @@ such interactions:
 + Narrowing :: Use pattern matching algorithms to limit the list of
   choices (known as "candidates" or "completion candidates") to those
   matching the given input.  There are several pattern matching styles
-  already built-in, while we can opt to extend them further, as I do
-  with Orderless ([[#h:7b1374dd-6b1f-4548-8fbf-1034230c80e0][Orderless completion style (and prot-orderless.el)]]).
+  already built-in, while we can opt to extend them further.
 
 + Selecting :: Visualise the list of completion candidates and pick an
   item out of it using regular motions or concomitant extras.  By
@@ -1017,9 +1016,9 @@ such interactions:
 
 There are third party completion frameworks that accomplish both of the
 aforementioned, such as Ivy and Helm.  While others focus on the latter,
-namely, Selectrum and the built-in Icomplete.  Then, there is also
-Embark which has a facility to display completion candidates in a live
-updating buffer (Embark is not about that task per se---read the details
+namely, Selectrum, Vertico, and the built-in Icomplete.  Then, there is
+also Embark which has a facility to display completion candidates in a
+live updating buffer (Embark is not limited to task---read the details
 of [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]]).
 
 I have used Ivy and Icomplete in the past, though I felt that the best
@@ -1148,12 +1147,18 @@ What my completion selection interface does in a nutshell:
 
 Finally, here is an overview of the settings covered herein:
 
-+ Completion styles :: I mostly rely on [[#h:7b1374dd-6b1f-4548-8fbf-1034230c80e0][the Orderless completion style]].
++ Completion styles :: I rely on a mixture of built-in styles as well as
+  external packages: =orderless= by Omar Antolín Camarena and =hotfuzz= by
+  Axel Forsman.  With the way I type my queries, I use the external
+  packages most of the time.  Hotfuzz takes effect when I input
+  characters sequentially, while Orderless gets activated whenever there
+  is a space between the characters or one of its style dispatchers is
+  used (read [[#h:7b1374dd-6b1f-4548-8fbf-1034230c80e0][the Orderless completion style]]).
+
   An exception is a niche functionality of the =partial-completion= style
   which is built-in: with it you can navigate to a filesystem path like
   =~/.l/s/fo= for =~/.local/share/fonts= (combine that with the file
-  shadowing mentioned above, for a minimalist, decluttered flow).  So I
-  use those two styles to cover every case by default, while the
+  shadowing mentioned above, for a minimalist, decluttered flow).  The
   variable =completion-category-overrides= can control the standard option
   of =completion-styles= on a per-category basis.
 
@@ -1209,8 +1214,10 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'minibuffer
-  (setq completion-styles
-        '(substring initials flex partial-completion orderless))
+  (require 'hotfuzz)
+
+  (setq completion-styles ; NOTE 2021-08-04: Experimenting with `hotfuzz'
+        '(substring initials hotfuzz partial-completion orderless))
   (setq completion-category-overrides
         '((file (styles . (partial-completion orderless)))))
   (setq completion-cycle-threshold 2)
