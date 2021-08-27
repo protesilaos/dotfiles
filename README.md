@@ -32,17 +32,13 @@ are willing to assume responsibility for any possible breakage, then
 please feel welcome to follow along.  You can always open an issue here
 or contribute any fixes, if you will.
 
-## Old BSPWM configuration
+## BSPWM configuration
 
-**DEPRECATION NOTICE 2020-05-04.** I am no longer using BSPWM and
-several of its accoutrements.  My focus is on my comprehensive Emacs
-setup and whatever external tweak may be necessary to improve the
-experience with this tool.
-
-The last state of my dotfiles with BSPWM and its extras can be found in
-[tag v2.2.0](https://gitlab.com/protesilaos/dotfiles/-/tree/v2.2.0).  I
-provide no change logs, no support (see the README of that tag for more
-information).
+As of 2021-08-27 I am back to using BSPWM.  Emacs remains the
+centrepiece of my computing environment, though I got bored with Xfce
+and thought I would re-use my old configurations.  There have been some
+updates and more will follow.  Everything should be considered a
+work-in-progress until further notice.
 
 ## Copying
 
