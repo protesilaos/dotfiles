@@ -2958,8 +2958,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
-           (slot . 2)
-           (window-parameters . ((no-other-window . t))))
+           (slot . 2))
           ;; bottom side window
           ("\\*Embark Actions.*"
            (display-buffer-in-side-window)
@@ -3003,7 +3002,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.2))
           ;; below current window
-          ("\\*Calendar.*"
+          ("\\*\\(Calendar\\|Org Select\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . shrink-window-if-larger-than-buffer))))
   (setq window-combination-resize t)
