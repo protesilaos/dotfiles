@@ -6029,8 +6029,8 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
   (let ((map global-map))
     (define-key map (kbd "C-c m") #'notmuch)
     (define-key map (kbd "C-x m") #'notmuch-mua-new-mail)) ; override `compose-mail'
-  (let ((map notmuch-search-mode-map))
-    (define-key map (kbd "/") #'notmuch-search-filter))) ; alias for l
+  (define-key notmuch-search-mode-map (kbd "/") #'notmuch-search-filter) ; alias for l
+  (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
 
 (prot-emacs-builtin-package 'prot-notmuch
   ;; Those are for the actions that are available after pressing 'k'
@@ -6571,7 +6571,7 @@ demonstrated back then (as of 2021-01-18).
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'bongo
-  (setq bongo-default-directory "~/Music")
+  (setq bongo-default-directory "~/Music/")
   (setq bongo-prefer-library-buffers nil)
   (setq bongo-insert-whole-directory-trees t)
   (setq bongo-logo nil)
