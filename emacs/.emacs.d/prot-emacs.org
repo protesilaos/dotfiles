@@ -8558,6 +8558,20 @@ point.
         'flymake-diagnostic-at-point-display-minibuffer))
 #+end_src
 
+**** Flymake + Shellcheck
+:PROPERTIES:
+:CUSTOM_ID: h:a45fd661-8cd7-4ee7-bff0-5f738d82b73b
+:END:
+
+The =flymake-shellcheck= package simply adds support for Shellcheck, the
+linter for shell scripts.  It otherwise relies on the standard utilities
+of =flymake-mode= (see [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][main Flymake configs]]).
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'flymake-shellcheck
+  (add-hook 'sh-mode-hook 'flymake-shellcheck-load))
+#+end_src
+
 **** Flymake + Proselint
 :PROPERTIES:
 :CUSTOM_ID: h:2a954862-c532-43e9-afdf-4bacd152295f
