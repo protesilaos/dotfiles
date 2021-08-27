@@ -98,5 +98,13 @@ Add this function to `recentf-keep'."
   (find-file dir)
   (add-to-history 'prot-recentf--history-dirs dir))
 
+;;;###autoload
+(defun prot-recentf-recent-files-or-dirs (&optional arg)
+  "Select recent file or, with ARG, recent directory."
+  (interactive "P")
+  (if arg
+      (call-interactively 'prot-recentf-recent-dirs)
+    (call-interactively 'prot-recentf-recent-files)))
+
 (provide 'prot-recentf)
 ;;; prot-recentf.el ends here
