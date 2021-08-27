@@ -3490,7 +3490,7 @@ with all my Elisp code):
 
 #+include: prot-lisp/usls.el src emacs-lisp :tangle no
 
-** TMR Must Recur (just my simplistic timer)
+** TMR Must Recur (just my generic timer)
 :PROPERTIES:
 :CUSTOM_ID: h:c90ba6fa-ebec-42a2-98a6-3ff9027b1ffa
 :END:
@@ -3499,22 +3499,22 @@ Sometimes I need to set off a timer with a notification.  I used to rely
 on a homegrown shell script for such a task, but where is the fun in
 that?
 
-=tmr.el= satisfies my curiosity to experiment with Elisp, while it also
-provides the =tmr= function that I only ever use from Eshell or through
-=eval-expression= (=M-:=).
+The =tmr= command works by prompting for a number, which it interprets as
+a count of minutes.  It can also understand numbers with a suffix, such
+as "1h" for 1 hour and "30s" for 30 seconds.  Once the time elapses, it
+produces a system notification as well as a message in the echo area
+with information about the start and end times (review the echo area log
+with =C-h e=).  Then it plays back some otherwise annoying sound, just to
+be sure that you feel the urge to quit whatever caught your attention in
+the meantime.
 
-=tmr= works by accepting a number, which it interprets as a count of
-minutes.  It can also read strings, such as "1h" for 1 hour and "30s"
-for 30 seconds.  Once the time elapses, it produces a system
-notification as well as a message in the echo area with information
-about the start and end times (review the echo area log with =C-h e=).
-Then it plays back some otherwise annoying sound, just to be sure that
-you feel an urge to quit whatever caught your attention in the meantime.
+=tmr-cancel= can be called with =M-x= to cancel the last defined =tmr=.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'tmr
   (setq tmr-sound-file
-        "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"))
+        "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
+  (define-key global-map (kbd "C-c t") #'tmr))
 #+end_src
 
 This is its code (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):

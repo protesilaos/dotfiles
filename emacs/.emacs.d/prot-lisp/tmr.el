@@ -48,10 +48,14 @@
 
 (defun tmr--unit (time)
   "Determine common time unit for TIME."
-  (if (numberp time) ; TODO: how to recognise a positive/negative number?
-      ;; NOTE: If time is negative, beeps immediately (bug?). so
-      ;; convert time to absolute value.
-      (* (abs time) 60)
+  (cond
+   ((and (stringp time)
+         (string-match-p "[0-9]\\'" time))
+    (let ((time (string-to-number time)))
+      (* time 60)))
+   ((natnump time)
+    (* time 60))
+   (t
     (let* ((unit (substring time -1))
            (str (substring time 0 -1))
            (num (abs (string-to-number str))))
@@ -61,7 +65,7 @@
         ;; This is not needed, of course, but we should not miss a good
         ;; chance to make some fun of ourselves.
         ("w" (user-error "TMR Made Ridiculous; use minutes, hours, seconds"))
-        (_ (* num 60))))))
+        (_ (* num 60)))))))
 
 (defun tmr--play-sound ()
   "Play `tmr-sound-file' using the 'ffplay' executable (ffmpeg)."
@@ -87,6 +91,11 @@
 (defvar tmr--last-timer nil
   "Last timer object, used by `tmr-cancel'.")
 
+(defun tmr-cancel ()
+  "Cancel last timer object set with `tmr' command."
+  (interactive)
+  (cancel-timer tmr--last-timer))
+
 ;;;###autoload
 (defun tmr (time)
   "Set timer to TIME duration and notify after it elapses.
@@ -96,17 +105,16 @@ Otherwise TIME must be a string that consists of a number and a
 special final character denoting a unit of time: 'h' for 'hours',
 's' for 'seconds'.
 
-This command also plays back `tmr-sound-file'."
+This command also plays back `tmr-sound-file'.
+
+To cancel the timer, use the `tmr-cancel' command."
+  (interactive "sN minutes for timer (append `h' or `s' for other units): ")
   (let ((start (format-time-string "%R"))
         (unit (tmr--unit time)))
     (setq tmr--last-timer
           (run-with-timer
            unit nil
            'tmr--notify-send start))))
-
-(defun tmr-cancel ()
-  "Cancel last timer object."
-  (cancel-timer tmr--last-timer))
 
 (provide 'tmr)
 ;;; tmr.el ends here
