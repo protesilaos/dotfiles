@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Delight (DE light) --- Toggle GNOME or Xfce Adwaita themes and Emacs Modus themes
+# Delight (DE light) --- Toggle DE/WM and Emacs themes
 #
 # Copyright (c) 2020-2021  Protesilaos Stavrou <info@protesilaos.com>
 #
@@ -17,79 +17,242 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-## Commentary:
+### Commentary:
 #
-# Simple tool to switch between Adwaita and Adwaita-dark and to perform
-# the equivalent action for Emacs using my Modus themes.
+# Simple tool to switch between light and dark themes.  Primarily
+# centred around my BSPWM setup.  For the standard DEs, this has been
+# tested with GNOME version 3.36 and Xfce 4.16.
 #
-# This has been tested with GNOME version 3.36 and Xfce 4.16, though it
-# is expected to work with several of the recent previous releases of
-# those Desktop Environments.
-#
-# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
+# Part of my dotfiles: <https://gitlab.com/protesilaos/dotfiles>.
 
-_depcheck() {
+### Code:
+
+#### General
+
+_depcheck ()
+{
     command -v "$1" > /dev/null || { echo "Missing dependency: $1."; return 1; }
 }
 
-_emacs() {
+_sed ()
+{
+    # NOTE 2021-08-27: Confirm the following.
+    #
+	# If we run this asynchronously other processes might fail to get
+	# the new colours.  To my knowledge as of 2019-06-27, this appears
+	# to be better than using sleep and/or until...
+	sed --follow-symlinks -i "$@"
+}
+
+_emacs ()
+{
     _depcheck emacs
 
     pgrep -x emacs > /dev/null || return 1
 
     # Just switch to the appropriate theme for Emacs:
     # https://gitlab.com/protesilaos/modus-themes
-    case "$1" in
-        l*) emacsclient -e "(modus-themes-load-operandi)" ;;
-        d*) emacsclient -e "(modus-themes-load-vivendi)"  ;;
+    case "$1"
+    in
+        l*) emacsclient -e "(modus-themes-load-operandi)" > /dev/null ;;
+        d*) emacsclient -e "(modus-themes-load-vivendi)"  > /dev/null ;;
     esac
 }
 
-_ggtk () {
+#### BSPWM
+
+_rofi ()
+{
+    _depcheck rofi
+
+    active_theme="$HOME"/.config/rofi/themes/modus-themes-active.rasi
+
+    [ -f "$active_theme" ] || { echo "No rofi theme. Did you 'stow' your configurations?"; return 1; }
+
+    case "$(cat "$HOME"/.config/bspwm/active-theme)"
+    in
+        light) echo -e '@import "modus-operandi.rasi"' > "$active_theme" ;;
+        dark)  echo -e '@import "modus-vivendi.rasi"' > "$active_theme"  ;;
+    esac
+}
+
+# NOTE 2021-08-27: technically this should not be part of the BSPWM setup, but it
+# is the only one I use right now.
+_alacritty ()
+{
+    _depcheck alacritty
+
+    active_theme="$HOME"/.config/alacritty/modus-themes-active.yml
+
+    [ -f "$active_theme" ] || { echo "No alacritty theme. Did you 'stow' your configurations?"; return 1; }
+
+    case "$(cat "$HOME"/.config/bspwm/active-theme)"
+    in
+        light) _sed "s,vivendi,operandi," "$active_theme" ;;
+        dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
+    esac
+}
+
+# TODO 2021-08-27: dunst
+
+_lemonbar ()
+{
+    _depcheck lemonbar
+    _depcheck melonpanel
+
+    pgrep -x melonpanel > /dev/null && killall melonpanel && killall lemonbar
+    melonpanel
+}
+
+_feh ()
+{
+    _depcheck feh
+
+    image_light="$HOME"/Pictures/light.jpg
+    image_dark="$HOME"/Pictures/dark.jpg
+
+    case "$(cat "$HOME"/.config/bspwm/active-theme)"
+    in
+        light) [ -f "$image_light" ] && feh --bg-fill "$image_light" ;;
+        dark)  [ -f "$image_dark" ]  && feh --bg-fill "$image_dark"  ;;
+    esac
+}
+
+_xsettingsd ()
+{
+	_gtk_common ()
+    {
+		# # GTK 2
+		# _sed "s,\(gtk-theme-name=\).*,\1\'${1}\', ; s,\(gtk-icon-theme-name=\).*,\1\'${2}\'," \
+        #      "$HOME"/.gtkrc-2.0
+
+		# GTK 3
+		_sed "s,\(gtk-theme-name=\).*,\1${1}, ; s,\(gtk-icon-theme-name=\).*,\1${2}," \
+             "$HOME"/.config/gtk-3.0/settings.ini
+	}
+
+	_gtk_live ()
+    {
+		_depcheck xsettingsd
+
+        xsettingsd="$HOME"/.config/xsettingsd/xsettingsd.conf
+
+        if [ -f "$xsettingsd" ]
+        then
+            _sed "s,\(.*\/ThemeName\) \"[a-zA-Z-]*\",\1 \"${1}\"," "$xsettingsd"
+            _sed "s,\(.*\/IconThemeName\) \"[a-zA-Z-]*\",\1 \"${2}\"," "$xsettingsd"
+        fi
+
+        # This is a very lightweight program that simply loads the
+        # settings it reads from the file.  Kill and run again to read
+        # the new values.
+        pgrep -xo xsettingsd > /dev/null && pkill -xo xsettingsd
+        xsettingsd -c "$xsettingsd" &
+	}
+
+	case "$1"
+    in
+		light)
+			_gtk_common 'Adwaita' 'Adwaita'
+			_gtk_live 'Adwaita' 'Adwaita'
+			;;
+		dark)
+			_gtk_common 'Adwaita-dark' 'Adwaita'
+			_gtk_live 'Adwaita-dark' 'Adwaita'
+			;;
+	esac
+}
+
+_bspwm ()
+{
+    _depcheck bspwm
+
+    theme="$HOME"/.config/bspwm/active-theme
+
+    if [ "$(cat "$theme")" = light ]
+    then
+        style=dark
+    else
+        style=light
+    fi
+
+    echo "$style" > "$theme"
+
+    _depcheck bspwm_conf_colors && bspwm_conf_colors
+    _emacs "$style" &
+    _xsettingsd "$style" &
+    _lemonbar & # FIXME 2021-08-27: does not always get re-launched (see melonpanel refactor note)
+    _alacritty &
+    _feh &
+    _rofi &
+}
+
+#### Gnome
+
+_ggtk ()
+{
     gsettings "$1" org.gnome.desktop.interface gtk-theme "${@:2}"
 }
 
 # Get the theme
-_gget () {
+_gget ()
+{
     _ggtk 'get'
 }
 
 # Set the theme
-_gset () {
+_gset ()
+{
     _ggtk 'set' "$1"
 }
 
-_gnome() {
-    if [ "$(_gget)" = "'Adwaita'" ]; then
-        _emacs dark
+_gnome ()
+{
+    if [ "$(_gget)" = "'Adwaita'" ]
+    then
+        style=dark
         _gset 'Adwaita-dark'
     else
-        _emacs light
+        style=light
         _gset 'Adwaita'
     fi
+
+    _emacs "$style"
 }
 
-_xfquery() {
+#### Xfce
+
+_xfquery ()
+{
     xfconf-query -c xfwm4 -p /general/theme
 }
 
-_xfquerys() {
+_xfquerys ()
+{
     xfconf-query -c "$1" -p "$2" -s "$3"
 }
 
-_xfce() {
-    if [ "$(_xfquery)" = 'Adwaita' ]; then
-        _emacs dark
+_xfce ()
+{
+    if [ "$(_xfquery)" = 'Adwaita' ]
+    then
+        style=dark
         _xfquerys 'xfwm4' '/general/theme' 'Adwaita-dark'
         _xfquerys 'xsettings' '/Net/ThemeName' 'Adwaita-dark'
     else
-        _emacs light
+        style=light
         _xfquerys 'xfwm4' '/general/theme' 'Adwaita'
         _xfquerys 'xsettings' '/Net/ThemeName' 'Adwaita'
     fi
+
+    _emacs "$style"
 }
 
-case "$DESKTOP_SESSION" in
+#### Sessions
+
+case "$DESKTOP_SESSION"
+in
+    bspwm) _bspwm ;;
     gnome) _gnome ;;
     xfce)  _xfce  ;;
 esac
