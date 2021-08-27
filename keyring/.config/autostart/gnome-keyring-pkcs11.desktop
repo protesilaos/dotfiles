@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Certificate and Key Storage
+Comment=GNOME Keyring: PKCS#11 Component
+Exec=/usr/bin/gnome-keyring-daemon --start --components=pkcs11
+X-GNOME-Autostart-Phase=PreDisplayServer
+X-GNOME-AutoRestart=true
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Notify=true

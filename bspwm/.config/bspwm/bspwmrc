@@ -1,0 +1,143 @@
+#!/bin/bash
+
+# bspwmrc --- Initialisation script for BSPWM.
+#
+# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+## Commentary:
+#
+# This file is part of my custom desktop session on Void Linux.  Other
+# important settings are defined in `.xinitrc' and application-specific
+# initialisation files.  See: https://gitlab.com/protesilaos/dotfiles
+
+
+##############
+# Essentials #
+##############
+
+# Truncate a couple of common commands that are used herein.
+_bc() {
+	bspc config "$@"
+}
+
+_check() {
+	command -v "$1" > /dev/null
+}
+
+# Determine XrandR settings.  Whether an external display is connected
+# to the laptop or not.
+_check bspwm_conf_xrandr && bspwm_conf_xrandr
+
+# Define desktop[s] [per monitor].  Contingent on the above.  Also note
+# that this leverages my `bspwm_dynamic_desktops'.
+_check bspwm_conf_desktops && bspwm_conf_desktops
+
+##################
+# Visual options #
+##################
+
+# window management
+# -----------------
+_bc initial_polarity second_child
+_bc border_width 2
+_bc window_gap 2
+_bc split_ratio 0.50
+_bc single_monocle true
+_bc borderless_monocle true
+_bc gapless_monocle false
+_bc focus_follows_pointer true
+_bc pointer_follows_monitor true
+_bc pointer_modifier mod1
+_bc pointer_action1 move
+_bc pointer_action2 resize_side
+_bc ignore_ewmh_focus false
+
+# window rules
+_check bspwm_external_rules && \
+    _bc external_rules_command \
+        "$(command -v bspwm_external_rules)"
+
+# colours
+# -------
+
+_check bspwm_conf_colors && bspwm_conf_colors
+
+#############
+# autostart #
+#############
+
+# Specify keyboard layout.  For the key chord that performs the layout
+# switching between US QWERTY and Greek refer to my `sxhkdrc`.
+#
+# Originally found the options in this location (Debian Buster):
+# /usr/share/X11/xkb/rules/base.lst
+#
+# caps:hyper           Make Caps Lock an additional Hyper
+# compose:menu         Menu key behaves as Compose
+#
+# The options are required in order for Xmodmap to work properly (see
+# below).
+if _check setxkbmap; then
+    setxkbmap -layout 'us,el' -option 'ctrl:nocaps,compose:menu'
+fi
+
+# Parse my custom key mappings.  These make Caps behave as another Ctrl
+# key.  We need to evaluate this first otherwise it might mess up with
+# SXHKD.
+[ -f "$HOME"/.Xmodmap ] && xmodmap "$HOME"/.Xmodmap
+
+# The hotkey daemon that handles all custom key bindings.  I split the
+# key chords into separate files, based on their scope.  The ones that
+# pertain to the window manager are defined in sxhkdrc_bspc.
+_check sxhkd && sxhkd -c "$HOME"/.config/sxhkd/sxhkdrc{,_bspc} &
+
+# Launch my custom Lemonbar implementation (the system panel).
+if _check melonpanel; then
+	# Make sure we have no running instances
+	pgrep -x melonpanel && pkill -x melonpanel
+	melonpanel
+
+    # Add padding equal to the panel height to fix an issue where there
+    # is an overlap between panel and windows in monitor LVDS1.  The
+    # panel gets covered by the windows.  This only happens when an
+    # external monitor is connected to my laptop, for reasons that I
+    # cannot determine…
+    if [ "$(bspc query -M | wc -l)" -gt 1 ]; then
+        _panel_height() {
+            awk -F '=' '/melonpanel_height/ { print $2; exit; }' \
+                $(command -v melonpanel)
+        }
+
+	    bspc config bottom_padding "$(_panel_height)"
+    fi
+fi
+
+# Run the tool that sets the wallpaper.  A program could be used that
+# handles the desktop in general, including the option to set icons.
+# But this is enough for my case.  Here is a command I tested and which
+# works (using the Xfce desktop manager):
+# xfdesktop --sm-client-disable --disable-wm-check &
+if _check feh; then
+	if [ -n "$HOME"/.fehbg ]; then
+		"$HOME"/.fehbg &
+	fi
+fi
+
+# Start the simple display compositor.  See `xcompmgr --help'.
+_check xcompmgr && xcompmgr -cCfF -t -2 -l -2 -r 2.8 -o 0.55 -D 5 -I 0.075 -O 0.075 &
+
+# Simple daemon for GTK settings
+xsettingsd -c "$HOME"/.config/xsettingsd/xsettingsd.conf &

@@ -1,0 +1,84 @@
+#!/bin/bash
+
+# bspwm focus mode --- removes gaps, padding, panel from the viewport.
+#
+# This script is meant to be used in my custom desktop session:
+# https://gitlab.com/protesilaos/dotfiles.
+#
+# Copyright (c) 2019-2021  Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or (at
+# your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# This assumes that we are already running the lemonbar script.
+[ -z "$(pgrep -x melonpanel > /dev/null)" ] || { echo "No running melonpanel"; exit 1; }
+
+panel_height="$(awk -F '=' '/melonpanel_height/ { print $2; exit; }' "$(command -v melonpanel 2> /dev/null)")"
+
+# The bottom padding is extracted from the running program.
+bottom_padding="$(bspc config bottom_padding)"
+
+# Read the default setting from the bspwm config file.
+_get_value() {
+	local bspwmrc
+	bspwmrc="$HOME/.config/bspwm/bspwmrc"
+
+	sed "/$1/!d ; s,.* $1 \([a-z0-9]*\).*,\1," "$bspwmrc"
+}
+
+## Use the function that gets the desired value from bspwmrc.
+window_gap="$(_get_value window_gap)"
+gapless_monocle="$(_get_value gapless_monocle)"
+border_width="$(_get_value border_width)"
+
+# Calculate the actual gap from the bottom of the viewport to the lower
+# part of the nodes.
+effective_padding=$(("$bottom_padding" + "$window_gap"))
+
+# If we are not in "focus mode"...
+if [ "$effective_padding" -ge "$panel_height" ] ; then
+	bottom_padding=0
+	window_gap=0
+	gapless_monocle=true
+	border_width=1
+
+	# No need to keep the panel
+	pkill -xo melonpanel && pkill -x lemonbar
+else
+	# Unset everything
+	unset bottom_padding
+	unset window_gap
+	unset gapless_monocle
+	unset border_width
+	panel_status=on
+fi
+
+# Create overlapping borders in focus mode.
+if [ -n "$border_width" ]; then
+	bspc config window_gap -"$border_width"
+	bspc config border_width "$border_width"
+	for side in top right bottom left; do
+		bspc config "${side}"_padding "$border_width"
+	done
+else
+	bspc config window_gap "${window_gap:=2}"
+	bspc config border_width "${border_width:=2}"
+	bspc config bottom_padding "${bottom_padding:=$panel_height}"
+	for side in right left top; do
+		bspc config "${side}"_padding "0"
+	done
+fi
+
+bspc config gapless_monocle "${gapless_monocle:=false}"
+
+[ -n "$panel_status" ] && melonpanel

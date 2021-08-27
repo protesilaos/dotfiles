@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# XXX 2021-08-27: work-in-progress
+
+case "$(cat "$HOME"/.config/bspwm/active-theme)"
+in
+    dark*)
+        bg_main="#000000"
+        bg_alt="#191a1b"
+        fg_main="#ffffff"
+        fg_alt="#a8a8a8"
+        red="#ff8059"
+        green="#44bc44"
+        yellow="#d0bc00"
+        ;;
+    *)
+        bg_main="#ffffff"
+        bg_alt="#f0f0f0"
+        fg_main="#000000"
+        fg_alt="#505050"
+        red="#a60000"
+        green="#005e00"
+        yellow="#813e00"
+        ;;
+esac

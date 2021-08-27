@@ -1,0 +1,99 @@
+#!/bin/bash
+
+# XXX 2021-08-27: work-in-progress
+
+command -v bspwm > /dev/null || { echo "Missing dependency: bspwm"; exit 1; }
+command -v panel_theme > /dev/null || { echo "Missing dependency: panel_theme"; exit 1; }
+
+. panel_theme
+
+fifo='/tmp/panel_bspwm.fifo'
+
+_make_pipe()
+{
+    if [ -p "$fifo" ]
+    then
+        return 0
+    else
+        mkfifo "$fifo" 2> /dev/null
+    fi
+}
+
+_make_pipe
+
+bspc subscribe report > "$fifo" &
+
+while read -r line
+do
+    # bspwm's state
+    wm=
+    IFS=':'
+    set -- ${line#?}
+    while [ "$#" -gt 0 ]
+    do
+        item="$1"
+        name="${item#?}"
+        case "$item" in
+            [mMfFoOuULG]*)
+                case "$item" in
+                    m*)
+                        # monitor
+                        FG="$fg_alt" # needed to avoid invalid colour error
+                        on_focused_monitor=
+                        name=
+                        ;;
+                    M*)
+                        # focused monitor
+                        FG="$fg_alt" # needed to avoid invalid colour error
+                        on_focused_monitor=1
+                        name=
+                        ;;
+                    # {Free,Occupied,Urgent} focused
+                    [FOU]*)
+                        if [ -n "$on_focused_monitor" ]
+                        then
+                            name="%{T2}${name/*/[$name]}%{T-}"
+                            FG="$fg_main"
+                        else
+                            name="${name/*/ $name-}"
+                            FG="$fg_alt"
+                        fi
+                        ;;
+                    # {free,occupied,urgent} unfocused
+                    f*)
+                        FG="$fg_alt"
+                        name="${name/*/ $name }"
+                        ;;
+                    o*)
+                        FG="$fg_alt"
+                        name="${name/*/ $name^}"
+                        ;;
+                    u*)
+                        FG="$red"
+                        name="${name/*/ $name\#}"
+                        ;;
+                    # desktop layout for monocle and node flags
+                    LM|G*?)
+                    if [ "$(bspc query -N -d any.focused | wc -l)" -gt 1 ]
+                    then
+                        FG="$fg_main"
+                        name="${name/*/ $name }"
+                    else
+                        FG="$fg_alt"
+                        name="${name/*/ * }"
+                    fi
+                    ;;
+                    *)
+                        FG="$fg_alt"
+                        name="${name/*/ * }"
+                        ;;
+                esac
+                wm="${wm}%{F$FG}${name}%{F-}"
+                ;;
+        esac
+        shift
+    done
+
+    echo "$wm"
+
+done < "$fifo"

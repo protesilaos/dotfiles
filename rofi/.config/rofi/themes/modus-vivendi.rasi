@@ -1,0 +1,34 @@
+/**
+ * rofi -dump-theme output.
+ * Rofi version: 1.6.1
+ * User: Protesilaos Stavrou
+ * Copyright: Protesilaos Stavrou --- Released under the GNU GPLv3
+ * Comment: Simple port of the Modus Operandi theme for Emacs (https://protesilaos.com/modus-themes)
+ **/
+
+* {
+    /* Custom colours */
+    bg-alt:         #191a1bff;
+    bg-main:        #000000ff;
+    fg-alt:         #a8a8a8ff;
+    fg-main:        #ffffffff;
+    red:            #ff8059ff;
+    green:          #44bc44ff;
+    yellow:         #d0bc00ff;
+    blue:           #2fafffff;
+    magenta:        #feacd0ff;
+    cyan:           #00d3d0ff;
+    red-bright:     #fe6060ff;
+    green-bright:   #4fe42fff;
+    yellow-bright:  #f0dd60ff;
+    blue-bright:    #4fafffff;
+    magenta-bright: #ff62d4ff;
+    cyan-bright:    #3fdfd0ff;
+    selection-bg:   #103265ff;
+
+    /* Global properties */
+    background-color: rgba (0,0,0, 0%);
+    highlight: bold underline #4fafff;
+}
+
+@import "modus-themes-common.rasi"

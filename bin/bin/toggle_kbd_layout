@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Very simple way to switch keyboard layouts between US QWERTY and
+# standard Greek.  This script is assigned to a key chord in my
+# `sxkdrc`.  A variant of this is also included in my system panel, the
+# `melonpanel` to get the current layout. Everything is part of my
+# dotfiles: https://gitlab.com/protesilaos/dotfiles.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+key_mods="$HOME"/.Xmodmap
+
+[ "$(command -v setxkbmap 2> /dev/null)" ] && [ -f "$key_mods" ] || { echo "Missing dependency"; exit 1; }
+
+_set_lang() {
+    setxkbmap -layout "$1" -option 'ctrl:nocaps,compose:menu'
+    xmodmap "$key_mods"
+}
+
+if [ "$(setxkbmap -query | sed '/^l/!d ; s,.*:[\ ]*,,g')" == 'gr' ]; then
+    _set_lang us
+else
+    _set_lang gr
+fi

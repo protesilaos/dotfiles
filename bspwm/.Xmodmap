@@ -43,11 +43,11 @@ clear control
 add control = Caps_Lock Control_L Control_R
 keycode 66 = Control_L Caps_Lock NoSymbol NoSymbol
 
-! Keep Super in left Win
-keycode 133 = Super_L
-
-! Right Super as right Hyper
-keycode 134 = Super_R
-
-! Set super
-add mod4 = Super_L Super_R
+! ! Keep Super in left Win
+! keycode 133 = Super_L
+! 
+! ! Right Super as right Win
+! keycode 134 = Super_R
+! 
+! ! Set super
+! add mod4 = Super_L Super_R

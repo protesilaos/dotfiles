@@ -1,0 +1,232 @@
+#
+# SXHKD module with BPSWM-specific commands
+#
+# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
+#
+### Description
+#
+# Partial configuration file for the Simple X Hotkey Daemon.  Meant to
+# work with `bspwm`.  This is part of my dotfiles, which are managed
+# with GNU Stow.  See https://gitlab.com/protesilaos/dotfiles
+#
+# LARGE PORTIONS OF THIS FILE INVOKE MY SHELL SCRIPTS.  Do not blindly
+# copy-paste from here!
+
+### Code
+
+# Close {or kill} currently focused node
+mod4 + {_,shift + }q
+	bspc node -{c,k}
+
+#### Focus/swap nodes/desktops
+
+# Focus the node in the given direction.
+mod4 + {h,j,k,l}
+	bspc node -f {west,south,north,east}
+
+# Swap focused window with the one in the given direction.  If there is
+# no window in that direction, a receptacle will be created.  Inputting
+# any direction again will move the focused window to the position of
+# the receptacle.  This will effectively remove it from the current
+# layout, creating a more fluid workflow that does not constrain you to
+# the tree of the tiling scheme.
+#
+# IF you only ever want to move a window into an existing one and avoid
+# the added features of the scripted behaviour, use the following
+# command instead:
+#
+# 	bspc node -s {west,south,north,east}
+#
+# TIP after breaking free from the layout, you can use --balance to
+# spread out the nodes (see the key chord further down).  You may also
+# --rotate the tree.
+#
+# bspwm_smart_move is part of my dotfiles (link in the description).
+mod4 + shift + {h,j,k,l}
+	bspwm_smart_move {west,south,north,east}
+
+# Dynamic desktop behaviour:  this invokes a script of mine that
+# implements dynamic desktops (see dotfiles).  If the given desktop
+# number is missing, it is created on the spot.  Empty desktops are then
+# removed automatically.
+#
+#
+# mod4 + <number> = focus the given desktop
+# mod4 + shift + <number> = send focused window to given desktop
+# mod4 + ctrl + shift + <number> = as above, but send to next monitor
+# mod4 + ctrl + <number> = switches the active (visible) desktop of the
+# unfocused monitor, without focusing it (focus stays on the current
+# desktop/monitor).  It also inserts a receptacle, meaning that the next
+# created window will go there without calling focus to itself (see my
+# bspwm_external_rules).
+#
+#
+# Commands for receptacles are defined in the "advanced operations"
+# section.
+#
+# NOTE the leading `;` runs this command asynchronously.
+#
+# NOTE2 the script also offers commands for sending to a desktop on the
+# current or the next monitor and following it right away.  The
+# shorthand for those is `--nsf' and `--nmf' respectively.  A
+# commented-out version is provided below the enabled key bindings,
+# which replaces the "send" commands noted above with their
+# "send+follow" equivalents.
+mod4 + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
+	;bspwm_dynamic_desktops {--df,--ns,--nm,--da} {0-9}
+
+## Use this for "send+follow" instead of just "send"
+# mod4 + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
+# 	;bspwm_dynamic_desktops {--df,--nsf,--nmf,--da} {0-9}
+
+# With `alt` focus {next,previous} window in the current desktop.  With
+# `mod4` focus {next,previous} desktop in the current monitor.
+# Cyclical behaviour.  Move in the opposite direction while also holding
+# down `shift`.
+{mod4,alt} + {_,shift +} Tab
+	bspc {desktop,node} -f {next,prev}.local
+
+# Switch to the other monitor.
+mod4 + o
+	bspc monitor -f next
+
+# Switch to last active {desktop,node}.  With mod4 move to the last
+# active desktop.  With alt move to the last active node. "grave" is
+# positioned above Tab in QWERTY layouts.
+{mod4,alt} + grave
+	bspc {desktop,node} -f last
+
+# Expand or contract node in the given direction.
+#
+# For floating windows one can use Alt + Right Mouse click to
+# drag/resize in the given direction (this works in other DEs as well,
+# such as MATE and Xfce).  I have not set the script to resize floating
+# windows because: (i) I do not use them and if I do I do not want to
+# change their dimensions, and (ii) to keep the script concise.
+mod4 + ctrl + {h,j,k,l}
+	bspwm_resize {west,south,north,east} 50
+
+# Move a floating window with the arrow keys (else use Alt + Left Mouse
+# Click to drag).  I seldom use floating windows.
+mod4 + shift + {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# Preselect the direction or insert again to cancel the preselection.
+# This enters the manual tiling mode that splits the currently focused
+# window.
+mod4 + alt + {h,j,k,l}
+	bspc node --presel-dir '~{west,south,north,east}'
+
+# Preselect the ratio.  The default value is 0.5, defined in `bspwmrc`.
+mod4 + alt + {1-9}
+	bspc node -o 0.{1-9}
+
+# Transpose desktops, while keeping focus on the present monitor.  With
+# shift the focus stays on the present window/desktop, thus moving to
+# the other monitor.
+mod4 + {_, shift + }t
+    bspc desktop --swap next.active {_,--follow}
+
+#### Node layout state and flags
+
+# Toggle monocle layout (maximise focused node).  If you use `-l
+# monocle` you lose the toggle functionality.
+mod4 + m
+	bspc desktop -l next
+
+# Toggle floating, tiled, fullscreen view.  Tiled is what is used by
+# default. Floating windows have their own dimensions and can be stacked
+# on top of each other.
+#
+# NOTE the presence of the tilde ~.  If current state matches the given
+# state, then the argument is interpreted as the last state.
+mod4 + {shift + space,space,f}
+ 	bspc node -t ~{tiled,floating,fullscreen}
+
+# Set the node flags.  Locked is a node that cannot be closed with `bspc
+# node --close`.  Marked is a specific selector that allows operating on
+# the given item (such as sending the marked item to the newest
+# preselection).  Sticky stays in the focused desktop.  Private tries to
+# keep its dimensions and tiling position.
+mod4 + x ; f ; {l,m,s,p}
+	bspc node -g {locked,marked,sticky,private}
+
+#### Manipulate the workspace
+
+# Rotate all windows {counter-}clockwise by 90 degrees.
+mod4 + {_,shift + }r
+	bspc node @/ --rotate {90,-90}
+
+# Dynamic gaps.
+mod4 + shift + bracket{left,right}
+	bspc config -d focused window_gap "$(($(bspc config -d focused window_gap) {-,+} 5 ))"
+
+#### Advanced operations (receptacles and scripted actions)
+
+# NOTE The behaviour of preselections and receptacles is regulated by my
+# bspwm_external_rules command (which is called from within bspwmrc).
+
+# Insert receptacle following the tiling scheme or preselection.
+# Receptacles are empty frames that function as placeholders for
+# windows.
+#
+# Whereas bspwm_smart_move (defined above) will automatically insert
+# a receptacle in the given direction by splitting the entire viewport.
+mod4 + x ; n ; r
+	bspc node -i
+
+# Insert the marked window (or focused if no marks) in the first
+# matching receptacle (or preselection if no receptacles).
+mod4 + x ; n ; i
+	bspwm_smart_presel
+
+# Kill/remove the first matching receptacle from the current desktop.
+# With shift, kill them all at once.
+mod4 + n ; mod4 + {_, shift + }r
+	{ \
+	bspc node 'any.leaf.!window.local' -k, \
+	bspwm_multifaceted_operation --kill-all-receptacles \
+	}
+
+# Summon all marked windows across all desktops to the current desktop.
+mod4 + x ; n ; m
+	bspwm_multifaceted_operation --summon-all-marked
+
+# Bring the windows of the given desktop to the current one.  With
+# shift, send the current window to the given one.
+mod4 + x ; n ; mod4 + {_, shift + }{0-9}
+	bspwm_multifaceted_operation {--bring-desktop-here,--send-desktop-there} {0-9}
+
+# Close {or kill} all windows in the present desktop except the focused
+# or any marked ones.
+mod4 + x ; n ; mod4 + {_,shift + }q
+	bspwm_multifaceted_operation --{close,kill}-all-local-non-focused
+
+# Assign the locked flag to all windows in the current desktop.  With
+# shift, remove the locked flag from all.
+mod4 + x ; n ; {_, shift + }l
+	bspwm_multifaceted_operation {--lock-all-local,--unlock-all-local}
+
+
+#### Continuous input mode
+
+# EXPLAIN: The following key chords have a colon sign `:' before their
+# last part.  By pressing the keys to the left of the colon, you can
+# then pass the commands by only using the keys to the right of the
+# colon.  This eliminates the need for repeated chord presses that
+# involve the modifier keys.  Exit the mode with "Escape".
+#
+# NOTE: All of the following are mirrors of their afore-mentioned
+# couterparts.
+
+# Resize node in the given direction.
+mod4 + c : {h,j,k,l}
+	bspwm_resize {west,south,north,east} 50
+
+# Mode for dynamic gaps.
+mod4 + c : bracket{left,right}
+	bspc config -d focused window_gap "$(($(bspc config -d focused window_gap) {-,+} 5 ))"
+
+# Move floating windows with the arrow keys
+mod4 + c : {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}

@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# bspwm_conf_colors --- Configure color settings for BSPWM.
+#
+# Copyright (c) 2019-2021  Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.	If not, see <http://www.gnu.org/licenses/>.
+
+# Values come from my Modus themes for GNU Emacs:
+# <https://protesilaos.com/modus-themes>.
+if [ -f "$HOME"/.config/bspwm/active-theme ]
+then
+   case "$(cat "$HOME"/.config/bspwm/active-theme)" in
+       dark*)
+           border_active="#c0c530"
+           border_focus="#44bc44"
+           border_normal="#000000"
+           bg_preselect="#041529"
+           ;;
+       *)
+           border_active="#5317ac"
+           border_focus="#8f0075"
+           border_normal="#ffffff"
+           bg_preselect="#ebf6fa"
+           ;;
+   esac
+
+   bspc config active_border_color "$border_active" # for multihead setups only
+   bspc config focused_border_color "$border_focus"
+   bspc config normal_border_color "$border_normal"
+   bspc config presel_feedback_color "$bg_preselect"
+fi

@@ -1,0 +1,136 @@
+/**
+ * rofi -dump-theme output.
+ * Rofi version: 1.6.1
+ * User: Protesilaos Stavrou
+ * Copyright: Protesilaos Stavrou --- Released under the GNU GPLv3
+ * Comment: Simple port of the Modus themes for Emacs (https://protesilaos.com/modus-themes)
+ **/
+
+window {
+    background-color: @bg-main;
+    border:           2px 0 0;
+    border-color:     @fg-alt;
+    padding:          0px;
+}
+
+mainbox {
+    border:  0;
+    padding: 0;
+}
+
+message {
+    border:       2px solid 0px 0px;
+    border-color: @fg-alt;
+    padding:      1px ;
+}
+
+textbox {
+    text-color:   @fg-main;
+}
+
+listview {
+    fixed-height: 0;
+    border:       2px solid 0px 0px;
+    border-color: @bg-alt;
+    spacing:      4px;
+    scrollbar:    true;
+    padding:      2px 0px 0px;
+}
+
+element {
+    border: 0;
+    padding: 1px;
+}
+
+element.normal.normal {
+    background-color: @bg-main;
+    text-color:       @fg-main;
+}
+
+element.normal.urgent {
+    background-color: @red;
+    text-color:       @bg-alt;
+}
+
+element.normal.active {
+    background-color: @bg-alt;
+    text-color:       @fg-alt;
+}
+
+element.selected.normal {
+    background-color: @selection-bg;
+    text-color:       @fg-main;
+}
+
+element.selected.urgent {
+    background-color: @red-bright;
+    text-color:       @bg-main;
+}
+
+element.selected.active {
+    background-color: @blue;
+    text-color:       @bg-main;
+}
+
+element.alternate.normal {
+    background-color: @bg-main;
+    text-color:       @fg-main;
+}
+
+element.alternate.urgent {
+    background-color: @red-bright;
+    text-color:       @bg-alt;
+}
+
+element alternate.active {
+    background-color: @cyan-bright;
+    text-color:       @bg-alt;
+}
+
+mode-switcher {
+    border:       2px dash 0px 0px ;
+    border-color: @bg-alt;
+}
+
+scrollbar {
+    /* width:        4px; */
+    width:        0;
+    border:       0;
+    handle-color: @fg-alt;
+    /* handle-width: 8px; */
+    handle-width: 0;
+    padding:      0;
+}
+
+sidebar {
+    border:       2px solid 0px 0px;
+    border-color: @fg-alt;
+}
+
+button {
+    spacing: 0;
+    background-color: @bg-main;
+    text-color:       @fg-alt;
+}
+
+button.selected {
+    background-color: @bg-alt;
+    text-color:       @fg-main;
+}
+
+inputbar {
+    spacing:    10;
+    padding:    1px;
+    text-color: @fg-main;
+    children:   [ prompt,entry ];
+}
+
+prompt {
+    spacing:    0;
+    text-color: @cyan;
+}
+
+entry {
+    spacing:    0;
+    text-color: @fg-main;
+}
