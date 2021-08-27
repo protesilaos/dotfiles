@@ -63,6 +63,13 @@ assumed to be a monospaced typeface."
   :type 'boolean
   :group 'prot-logos)
 
+
+(defcustom prot-logos-affect-prot-cursor nil
+  "Change the cursor style.
+This expects the `prot-cursor.el' library."
+  :type 'boolean
+  :group 'prot-logos)
+
 (defvar prot-logos--focus-mode-hook nil
   "Hook that runs from function `prot-logos-focus-mode'.")
 
@@ -164,6 +171,30 @@ on its own."
       (force-mode-line-update))))
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--hidden-modeline)
+
+(defvar prot-logos--prot-cursor-preset nil
+  "Current `prot-cursor-presets' preset.")
+
+(defvar prot-cursor--style-hist)
+(defvar prot-cursor--recovered-preset)
+(declare-function prot-cursor-set-cursor "prot-cursor")
+
+(defun prot-logos--prot-cursor-preset ()
+  "Change cursor style using `prot-cursor.el'."
+  (when prot-logos-affect-prot-cursor
+    (if (bound-and-true-p prot-logos-focus-mode)
+        (progn
+          (cond
+           (prot-cursor--style-hist
+            (setq prot-logos--prot-cursor-preset
+                  (intern (car prot-cursor--style-hist))))
+           (prot-cursor--recovered-preset
+            (setq prot-logos--prot-cursor-preset
+                  prot-cursor--recovered-preset)))
+          (prot-cursor-set-cursor 'box))
+      (prot-cursor-set-cursor prot-logos--prot-cursor-preset))))
+
+(add-hook 'prot-logos--focus-mode-hook #'prot-logos--prot-cursor-preset)
 
 (provide 'prot-logos)
 ;;; prot-logos.el ends here

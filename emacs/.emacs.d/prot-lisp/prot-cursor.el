@@ -66,6 +66,12 @@ properties."
   :group 'prot-cursor
   :type 'alist)
 
+(defcustom prot-cursor-last-state-file
+  (locate-user-emacs-file "prot-cursor-last-state")
+  "File to save the value of `prot-cursor-set-cursor'."
+  :type 'file
+  :group 'prot-cursor)
+
 (defvar prot-cursor--style-hist '()
   "History of inputs for display-related font associations.")
 
@@ -84,6 +90,8 @@ properties."
 STYLE is a symbol that represents the car of a cons cell in
 `prot-cursor-presets'."
   (interactive (list (prot-cursor--set-cursor-prompt)))
+  (when (or (eq style t) (null style))
+    (setq style 'box))
   (let* ((styles (if (stringp style) (intern style) style))
          (properties (alist-get styles prot-cursor-presets))
          (type (plist-get properties :cursor-type))
@@ -97,6 +105,30 @@ STYLE is a symbol that represents the car of a cons cell in
                   blink-cursor-interval blink-interval
                   blink-cursor-delay blink-delay)
     (add-to-history 'prot-cursor--style-hist (format "%s" style))))
+
+(defun prot-cursor-store-last-preset ()
+  "Write latest cursor state to `prot-cursor-last-state-file'.
+Can be assigned to `kill-emacs-hook'."
+  (when prot-cursor--style-hist
+    (with-temp-file prot-cursor-last-state-file
+      (insert (concat ";; Auto-generated file;"
+                      " don't edit -*- mode: lisp-data -*-\n"))
+      (pp (intern (car prot-cursor--style-hist)) (current-buffer)))))
+
+(defvar prot-cursor--recovered-preset nil
+  "Recovered value of last store cursor preset.")
+
+(defun prot-cursor-restore-last-preset ()
+  "Restore last cursor style."
+  (when-let ((file prot-cursor-last-state-file))
+    (when (file-exists-p file)
+      (setq prot-cursor--recovered-preset
+            (unless (zerop
+                     (or (file-attribute-size (file-attributes file))
+                         0))
+              (with-temp-buffer
+                (insert-file-contents file)
+                (read (current-buffer))))))))
 
 (provide 'prot-cursor)
 ;;; prot-cursor.el ends here

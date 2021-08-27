@@ -3385,6 +3385,12 @@ which are contingent on other features:
   focus state (refer to [[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][Fringe mode]] for the relevant configurations,
   while their overall presentation is controlled by the active theme).
 
++ Cursor :: My =prot-cursor.el= defines some convenient extras for setting
+  the overall style of the cursor: the shape and the blink rate.  When
+  in a "focus mode" we may want to have one particular style available,
+  which differs from the default (for all the technicalities refer to
+  [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks (prot-cursor.el)]]).
+
 All those combined contribute to an outcome that is appropriate for long
 reading or writing sessions, as well as presentations.  I intentionally
 do not introduce any font-resizing effect, as my needs vary in that
@@ -3431,6 +3437,7 @@ these:
   (setq prot-logos-variable-pitch nil)
   (setq prot-logos-scroll-lock nil)
   (setq prot-logos-hidden-modeline t)
+  (setq prot-logos-affect-prot-cursor t)
   (define-key global-map (kbd "<f9>") #'prot-logos-focus-mode))
 #+end_src
 
@@ -7821,20 +7828,29 @@ completions' windows, respectively.
                    :blink-interval 0.5
                    :blink-delay 0.2))
 
-          (box  . ( :cursor-type box
-                    :cursor-no-selected hollow
-                    :blinks 10
-                    :blink-interval 0.5
-                    :blink-delay 0.2))
+          (box . ( :cursor-type box
+                   :cursor-no-selected hollow
+                   :blinks 10
+                   :blink-interval 0.5
+                   :blink-delay 0.2))
 
           (underscore . ( :cursor-type (hbar . 3)
                           :cursor-no-selected hollow
                           :blinks 50
                           :blink-interval 0.2
                           :blink-delay 0.2))))
+  (setq prot-cursor-last-state-file
+        (locate-user-emacs-file "prot-cursor-last-state"))
+
+  (prot-cursor-restore-last-preset)
 
   ;; Sets my style on startup.
-  (prot-cursor-set-cursor 'underscore)
+  (if prot-cursor--recovered-preset
+      (prot-cursor-set-cursor prot-cursor--recovered-preset)
+    (prot-cursor-set-cursor 'underscore))
+
+  ;; The other side of `prot-cursor-restore-last-preset'.
+  (add-hook 'kill-emacs-hook #'prot-cursor-store-last-preset)
 
   ;; We have to use the "point" mnemonic, because C-c c is for
   ;; `org-capture'.
