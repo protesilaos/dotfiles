@@ -7391,7 +7391,7 @@ shows the level of recursion at the current minibuffer prompt (refer to
   (recursion-indicator-mode 1))
 #+end_src
 
-*** Battery status
+*** COMMENT Battery status
 :PROPERTIES:
 :CUSTOM_ID: h:3a759294-ab03-40cb-bb08-94275d76fc53
 :END:
