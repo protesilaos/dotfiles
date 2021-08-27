@@ -254,7 +254,7 @@ appropriate place to re-bind or free up some common key combinations.
     (define-key map (kbd "C-x C-z") nil)
     (define-key map (kbd "C-h h") nil)
     (define-key map (kbd "M-`") nil)
-    (define-key map (kbd "s-h") #'prot-simple-describe-symbol)
+    (define-key map (kbd "C-h .") #'prot-simple-describe-symbol) ; overrides `display-local-help'
     (define-key map (kbd "C-h K") #'describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
     (define-key map (kbd "C-h c") #'describe-command) ; overrides `describe-key-briefly'
     ;; Commands for lines
@@ -294,11 +294,11 @@ appropriate place to re-bind or free up some common key combinations.
     (define-key map (kbd "M-Q") #'prot-simple-unfill-region-or-paragraph)
     ;; Commands for windows
     (define-key map (kbd "C-x n n") #'prot-simple-narrow-dwim) ; replaces `narrow-to-region'
-    (define-key map (kbd "s-m") #'prot-simple-monocle)
+    (define-key map (kbd "C-x M") #'prot-simple-monocle)
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
-    (define-key map (kbd "s-k") #'prot-simple-kill-buffer-current)))
+    (define-key map (kbd "C-x K") #'prot-simple-kill-buffer-current)))
 #+end_src
 
 These are the contents of the =prot-simple.el= library (find the file in
@@ -332,7 +332,7 @@ point an arbitrary distance.
           bookmark-jump
           other-window))
   (prot-pulse-advice-commands-mode 1)
-  (define-key global-map (kbd "<s-escape>") #'prot-pulse-pulse-line))
+  (define-key global-map (kbd "C-x l") #'prot-pulse-pulse-line)) ; override `count-lines-page'
 #+end_src
 
 This is the code for =prot-pulse.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]], in case
@@ -878,9 +878,7 @@ sort, consider Emacs' registers or bookmarks.
   (setq repeat-on-final-keystroke t)
   (setq set-mark-command-repeat-pop t)
 
-  (repeat-mode 1)
-
-  (define-key global-map (kbd "s-z") #'repeat))
+  (repeat-mode 1))
 #+end_src
 
 * Selection candidates and search methods
@@ -1270,18 +1268,6 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (let ((map completion-list-mode-map))
     (define-key map (kbd "<tab>") #'choose-completion)
     (define-key map (kbd "M-v") #'scroll-down-command))
-
-  ;; Defines, among others, aliases for common minibuffer commands to
-  ;; Super-KEY.  Normally these should go in individual package
-  ;; configurations, but their grouping here makes things easier to
-  ;; understand.  Besides, they are related to the minibuffer.
-  (let ((map global-map))
-    (define-key map (kbd "s-b") #'switch-to-buffer)
-    (define-key map (kbd "s-B") #'switch-to-buffer-other-window)
-    (define-key map (kbd "s-f") #'find-file)
-    (define-key map (kbd "s-F") #'find-file-other-window)
-    (define-key map (kbd "s-d") #'dired)
-    (define-key map (kbd "s-D") #'dired-other-window))
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "C-j") #'exit-minibuffer)
     (define-key map (kbd "<tab>") #'minibuffer-force-complete))
@@ -1310,15 +1296,14 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   ;; input (see `prot-minibuffer-minimum-input') before displaying and
   ;; updating the completions' buffer.
   (setq prot-minibuffer-completion-passlist
-        '( vc-retrieve-tag embark-prefix-help-command
+        '( vc-retrieve-tag embark-prefix-help-command org-capture
            prot-bongo-playlist-insert-playlist-file))
 
-  (define-key global-map (kbd "s-v") #'prot-minibuffer-focus-mini-or-completions)
+  (define-key global-map (kbd "M-g M-m") #'prot-minibuffer-focus-mini-or-completions)
   (let ((map completion-list-mode-map))
     (define-key map (kbd "h") #'prot-simple-describe-symbol) ; from `prot-simple.el'
     (define-key map (kbd "M-g") #'prot-minibuffer-choose-completion-number)
     (define-key map (kbd "M-e") #'prot-minibuffer-edit-completion)
-    (define-key map (kbd "M-v") #'prot-minibuffer-focus-minibuffer)
     (define-key map (kbd "C-g") #'prot-minibuffer-keyboard-quit-dwim)
     (define-key map (kbd "C-n") #'prot-minibuffer-next-completion-or-mini)
     (define-key map (kbd "<down>") #'prot-minibuffer-next-completion-or-mini)
@@ -1343,7 +1328,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
     (define-key map (kbd "<up>") #'prot-minibuffer-switch-to-completions-bottom)
     (define-key map (kbd "C-l") #'prot-minibuffer-toggle-completions)) ; "list" mnemonic
   (let ((map minibuffer-local-filename-completion-map))
-    (define-key map (kbd "<M-backspace>") #'prot-minibuffer-backward-updir))
+    (define-key map (kbd "<backspace>") #'prot-minibuffer-backward-updir))
   (add-hook 'minibuffer-setup-hook #'prot-minibuffer-mini-cursor)
   (add-hook 'completion-list-mode-hook #'prot-minibuffer-completions-cursor)
   (add-hook 'completion-list-mode-hook #'prot-minibuffer-hl-line)
@@ -1897,8 +1882,7 @@ sources, including bookmarks, recent files, and buffers (check more in
 (prot-emacs-builtin-package 'prot-recentf
   (add-to-list 'recentf-keep 'prot-recentf-keep-predicate)
   (let ((map global-map))
-    (define-key map (kbd "s-r") #'prot-recentf-recent-files)
-    (define-key map (kbd "C-x C-r") #'prot-recentf-recent-dirs)))
+    (define-key map (kbd "C-x C-r") #'prot-recentf-recent-files-or-dirs)))
 #+end_src
 
 This is a copy of =prot-recentf.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -2023,7 +2007,7 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
   (setq dabbrev-upcase-means-case-search t)
   (let ((map global-map))
     (define-key map (kbd "M-/") #'dabbrev-expand)
-    (define-key map (kbd "s-/") #'dabbrev-completion)))
+    (define-key map (kbd "C-x M-/") #'dabbrev-completion)))
 #+end_src
 
 **** Skeletons and abbreviations
@@ -2607,11 +2591,6 @@ ecosystem:
   (setq dired-x-hands-off-my-keys t)    ; easier to show the keys I use
   (setq dired-bind-man nil)
   (setq dired-bind-info nil)
-  (let ((map global-map))
-    (define-key map (kbd "C-x C-j") #'dired-jump)
-    (define-key map (kbd "s-j") #'dired-jump)
-    (define-key map (kbd "C-x 4 C-j") #'dired-jump-other-window)
-    (define-key map (kbd "s-J") #'dired-jump-other-window))
   (define-key dired-mode-map (kbd "I") #'dired-info))
 
 (prot-emacs-builtin-package 'prot-dired
@@ -3026,19 +3005,14 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
   (add-hook 'custom-mode-hook #'visual-line-mode)
 
   (let ((map global-map))
-    (define-key map (kbd "s-n") #'next-buffer)
-    (define-key map (kbd "s-p") #'previous-buffer)
-    (define-key map (kbd "s-o") #'other-window)
-    (define-key map (kbd "s-2") #'split-window-below)
-    (define-key map (kbd "s-3") #'split-window-right)
-    (define-key map (kbd "s-0") #'delete-window)
-    (define-key map (kbd "s-1") #'delete-other-windows)
-    (define-key map (kbd "s-!") #'delete-other-windows-vertically) ; s-S-1
-    (define-key map (kbd "s-5") #'delete-frame)
+    (define-key map (kbd "C-x <down>") #'next-buffer)
+    (define-key map (kbd "C-x <up>") #'previous-buffer)
+    (define-key map (kbd "C-x C-n") #'next-buffer)     ; override `set-goal-column'
+    (define-key map (kbd "C-x C-p") #'previous-buffer) ; override `mark-page'
+    (define-key map (kbd "C-x !") #'delete-other-windows-vertically)
     (define-key map (kbd "C-x _") #'balance-windows)      ; underscore
     (define-key map (kbd "C-x -") #'fit-window-to-buffer) ; hyphen
     (define-key map (kbd "C-x +") #'balance-windows-area)
-    (define-key map (kbd "s-q") #'window-toggle-side-windows)
     (define-key map (kbd "C-x }") #'enlarge-window)
     (define-key map (kbd "C-x {") #'shrink-window)
     (define-key map (kbd "C-x >") #'enlarge-window-horizontally) ; override `scroll-right'
@@ -3104,14 +3078,16 @@ Also read: [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][Window history (winner-mod
 (prot-emacs-builtin-package 'windmove
   (setq windmove-create-window nil)     ; Emacs 27.1
   (let ((map global-map))
-    (define-key map (kbd "<s-up>") #'windmove-up)
-    (define-key map (kbd "<s-right>") #'windmove-right)
-    (define-key map (kbd "<s-down>") #'windmove-down)
-    (define-key map (kbd "<s-left>") #'windmove-left)
-    (define-key map (kbd "<S-s-up>") #'windmove-swap-states-up)
-    (define-key map (kbd "<S-s-right>") #'windmove-swap-states-right)
-    (define-key map (kbd "<S-s-down>") #'windmove-swap-states-down)
-    (define-key map (kbd "<S-s-left>") #'windmove-swap-states-left)))
+    ;; Those override some commands that are already available with
+    ;; C-M-u, C-M-f, C-M-b.
+    (define-key map (kbd "C-M-<up>") #'windmove-up)
+    (define-key map (kbd "C-M-<right>") #'windmove-right)
+    (define-key map (kbd "C-M-<down>") #'windmove-down)
+    (define-key map (kbd "C-M-<left>") #'windmove-left)
+    (define-key map (kbd "C-M-S-<up>") #'windmove-swap-states-up)
+    (define-key map (kbd "C-M-S-<right>") #'windmove-swap-states-right) ; conflicts with `org-increase-number-at-point'
+    (define-key map (kbd "C-M-S-<down>") #'windmove-swap-states-down)
+    (define-key map (kbd "C-M-S-<left>") #'windmove-swap-states-left)))
 #+end_src
 
 *** Tabs for window layouts (tab-bar.el and prot-tab.el)
@@ -3205,11 +3181,7 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
 
   ;; Same concept as `winner-mode'.  See the `prot-tab-winner-undo' and
   ;; its counterpart.
-  (tab-bar-history-mode 1)
-
-  (let ((map global-map))
-    (define-key map (kbd "<s-tab>") #'tab-next)
-    (define-key map (kbd "s-S-<iso-lefttab>") #'tab-previous))) ; super-shift-tab
+  (tab-bar-history-mode 1))
 
 (prot-emacs-builtin-package 'prot-tab
   (setq prot-tab-tab-select-num-threshold 3)
@@ -3233,11 +3205,10 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
   (add-hook 'after-init-hook #'prot-tab-status-line)
 
   (let ((map global-map))
-    (define-key map (kbd "<M-s-right>") #'prot-tab-winner-redo)
-    (define-key map (kbd "<M-s-left>") #'prot-tab-winner-undo)
+    (define-key map (kbd "C-x <right>") #'prot-tab-winner-redo)
+    (define-key map (kbd "C-x <left>") #'prot-tab-winner-undo)
     (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-tab-bar-toggle'
-    (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)
-    (define-key map (kbd "s-t") #'prot-tab-select-tab-dwim)))
+    (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)))
 
 ;; ;; This is only included as a reference.
 ;; (prot-emacs-builtin-package 'tab-line
@@ -3324,11 +3295,14 @@ layout of Emacs windows.  Rather than me describing how these work, I
 strongly encourage you to read the "Commentary" section in the source
 code.  Do it with =M-x find-library transpose-frame=.
 
+Remember that you can always repeat a command with =C-x z=.  And if you
+have the right settings, you can repeat again just by pressing another =z=
+(see [[#h:33d9a35a-54ed-4f9d-8f30-5c99c1a45ad0][Repeatable key chords (repeat-mode)]]).
+
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'transpose-frame
   (let ((map global-map))
-    (define-key map (kbd "C-s-t") #'flop-frame) ; what I consider "transpose" in this context
-    (define-key map (kbd "C-s-r") #'rotate-frame-clockwise)))
+    (define-key map (kbd "C-x M-r") #'rotate-frame-clockwise)))
 #+end_src
 
 * Applications and utilities
@@ -4427,7 +4401,6 @@ Also check these valuable resources:
 (prot-emacs-builtin-package 'prot-eshell
   (setq prot-eshell-output-buffer "*Exported Eshell output*")
   (setq prot-eshell-output-delimiter "* * *")
-  (define-key global-map (kbd "<s-return>") #'eshell)
   (let ((map eshell-mode-map))
     (define-key map (kbd "M-k") #'eshell-kill-input)
     (define-key map (kbd "C-c C-f") #'prot-eshell-ffap-find-file)
@@ -4479,9 +4452,8 @@ and corresponding functions.
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'shell
-  (setq ansi-color-for-comint-mode t)
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
-  (define-key global-map (kbd "<s-S-return>") #'shell))
+  (setq ansi-color-for-comint-mode t))
 #+end_src
 
 ** Org-mode (personal information manager)
@@ -5039,6 +5011,8 @@ file which do not already have one."
     (define-key map (kbd "C-,") nil)
     (define-key map (kbd "<C-return>") nil)
     (define-key map (kbd "<C-S-return>") nil)
+    (define-key map (kbd "C-M-S-<right>") nil)
+    (define-key map (kbd "C-M-S-<left>") nil)
     (define-key map (kbd "C-c S-l") #'org-toggle-link-display)
     (define-key map (kbd "C-c C-S-l") #'org-insert-last-stored-link)))
 #+end_src
@@ -7128,7 +7102,6 @@ some of the above.
 
   (define-prefix-command 'prot-eww-map)
   (define-key global-map (kbd "C-c w") 'prot-eww-map)
-  (define-key global-map (kbd "s-w") 'prot-eww-map)
   (let ((map prot-eww-map))
     (define-key map (kbd "b") #'prot-eww-visit-bookmark)
     (define-key map (kbd "e") #'prot-eww-browse-dwim)
