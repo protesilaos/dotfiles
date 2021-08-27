@@ -7490,7 +7490,7 @@ an overview of the current time in various parts of the planet.
   (add-hook 'after-init-hook #'display-time-mode))
 #+end_src
 
-*** Name of current form (which-function-mode)
+*** COMMENT Name of current form (which-function-mode)
 :PROPERTIES:
 :CUSTOM_ID: h:3f2c2d04-01c0-4c35-9a4f-a0cb00bb3062
 :END:
