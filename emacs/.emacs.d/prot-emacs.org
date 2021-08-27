@@ -4665,14 +4665,11 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-refile-use-cache t)
   (setq org-reverse-note-order nil)
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "|" "DONE(D)" "CANCEL(C)")
-          (sequence "MEET(m)" "|" "MET(M)")
-          (sequence "STUDY(s)" "|" "STUDIED(S)")
-          (sequence "WRITE(w)" "|" "WROTE(W)")))
+        '((sequence "TODO(t)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")))
   (setq org-todo-keyword-faces
-        '(("MEET" . '(font-lock-preprocessor-face org-todo))
-          ("STUDY" . '(font-lock-variable-name-face org-todo))
-          ("WRITE" . '(font-lock-type-face org-todo))))
+        '(("WAIT" . '(bold org-todo))
+          ("CANCEL" . '(bold org-todo))))
+  (setq org-use-fast-todo-selection 'expert)
   (setq org-priority-faces
         '((?A . '(org-scheduled-today org-priority))
           (?B . org-priority)
@@ -4690,55 +4687,66 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-default-priority ?A)
 
 ;;;; tags
-  (setq org-tag-alist                   ; TODO review org tag list
-        '((:startgroup)
-          ("@work")
-          ("@priv")
-          (:endgroup)
+  (setq org-tag-alist
+        '(("meeting")
+          ("admin")
           ("emacs")
           ("modus")
           ("politics")
           ("economics")
           ("philosophy")
-          ("paper")
           ("book")
           ("essay")
-          ("article")
           ("mail")
+          ("purchase")
+          ("hardware")
+          ("software")
           ("website")))
 
 ;;;; log
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
   (setq org-log-note-clock-out nil)
-  (setq org-log-redeadline nil)
-  (setq org-log-reschedule nil)
+  (setq org-log-redeadline 'time)
+  (setq org-log-reschedule 'time)
   (setq org-read-date-prefer-future 'time)
 
 ;;;; links
   (setq org-link-keep-stored-after-insertion t)
 
+  ;; See my prot-pulse.el for what this does.  Basically it recentres
+  ;; the window the way I like and pulse the line at point to make it
+  ;; easier to make sense of the context.
+  (add-hook 'org-follow-link-hook #'prot-pulse-recentre-top)
+
 ;;;; capture
   (setq org-capture-templates
         `(("b" "Basic task for future review" entry
-           (file+headline "tasks.org" "Basic tasks that need to be reviewed")
+           (file+headline "tasks.org" "Tasks to be reviewed")
            ,(concat "* %^{Title}\n"
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%i%l"))
+                    "%i%l")
+           :empty-lines-after 1)
           ("t" "Task with a due date" entry
-           (file+headline "tasks.org" "Task list with a date")
-           ,(concat "* %^{Scope of task||TODO|STUDY|MEET} %^{Title} %^g\n"
+           (file+headline "tasks.org" "Tasks with a date")
+           ,(concat "* TODO %^{Title} %^g\n"
                     "SCHEDULED: %^t\n"
-                    ":PROPERTIES:\n:CAPTURED: %U\n:END:\n\n"
-                    "%i%?"))
+                    ":PROPERTIES:\n"
+                    ":CAPTURED: %U\n"
+                    ":END:\n\n"
+                    "%i%?")
+           :empty-lines-after 1)
           ("m" "Make email note" entry
            (file+headline "tasks.org" "Mail correspondence")
-           ,(concat "* TODO [#A] %:subject :mail:\n"
+           ,(concat "* TODO %:subject :mail:\n"
                     "SCHEDULED: %t\n:"
-                    "PROPERTIES:\n:CONTEXT: %a\n:END:\n\n"
-                    "%i%?"))))
+                    "PROPERTIES:\n"
+                    ":CONTEXT: %a\n"
+                    ":END:\n\n"
+                    "%i%?")
+           :empty-lines-after 1)))
 
   (setq org-capture-templates-contexts
         '(("m" ((in-mode . "notmuch-search-mode")
@@ -4773,6 +4781,10 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-agenda-max-todos nil)
   (setq org-agenda-max-tags nil)
   (setq org-agenda-max-effort nil)
+
+  ;; TODO 2021-08-27: Does this work?
+  ;; Create reminders for tasks with a due date when this file is read.
+  (run-at-time (* 60 5) nil #'org-agenda-to-appt)
 
 ;;;;; General agenda view options
   (setq org-agenda-prefix-format
@@ -5002,7 +5014,6 @@ file which do not already have one."
     (org-map-entries
      (lambda () (contrib/org-id-get (point) t))))
 
-  (add-hook 'org-follow-link-hook #'prot-pulse-recentre-top)
   (let ((map global-map))
     (define-key map (kbd "C-c a") #'org-agenda)
     (define-key map (kbd "C-c c") #'org-capture)
