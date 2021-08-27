@@ -2627,7 +2627,6 @@ ecosystem:
   (setq dired-subtree-use-backgrounds nil)
   (let ((map dired-mode-map))
     (define-key map (kbd "<tab>") #'dired-subtree-toggle)
-    (define-key map (kbd "<C-tab>") #'dired-subtree-cycle)
     (define-key map (kbd "<backtab>") #'dired-subtree-remove))) ; S-TAB
 
 (prot-emacs-builtin-package 'wdired
