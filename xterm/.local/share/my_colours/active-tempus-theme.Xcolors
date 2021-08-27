@@ -1,5 +1,0 @@
-! Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
-!
-! IMPORTANT do not edit manually!!!  All themes (Xcolors, shell, bspwm,
-! etc.) are changed by a single script: tempus.
-#include "xcolors/tempus_classic.Xcolors"
