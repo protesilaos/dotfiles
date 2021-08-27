@@ -1154,19 +1154,22 @@ What my completion selection interface does in a nutshell:
 Finally, here is an overview of the settings covered herein:
 
 + Completion styles :: I rely on a mixture of built-in styles as well as
-  external packages: =orderless= by Omar Antolín Camarena and =hotfuzz= by
-  Axel Forsman.  With the way I type my queries, I use the external
-  packages most of the time.  Hotfuzz takes effect when I input
-  characters sequentially, while Orderless gets activated whenever there
-  is a space between the characters or one of its style dispatchers is
-  used (read [[#h:7b1374dd-6b1f-4548-8fbf-1034230c80e0][the Orderless completion style]]).
+  the external =orderless= package by Omar Antolín Camarena.  Orderless is
+  placed last on the list because simpler searches work fine with the
+  other styles.  Orderless is better suited for complex pattern
+  matching.  The way completion styles work, when one style cannot match
+  anything, Emacs tries the next one on the list, until one of them
+  yields results.  As such, it is easy to activate Orderless on demand,
+  either by separate input groups by spaces or passing one of the style
+  dispatchers that are acceptable (read [[#h:7b1374dd-6b1f-4548-8fbf-1034230c80e0][the Orderless completion style]]).
 
-  An exception is a niche functionality of the =partial-completion= style
-  which is built-in: with it you can navigate to a filesystem path like
-  =~/.l/s/fo= for =~/.local/share/fonts= (combine that with the file
-  shadowing mentioned above, for a minimalist, decluttered flow).  The
-  variable =completion-category-overrides= can control the standard option
-  of =completion-styles= on a per-category basis.
+  For file queries in particular, there exists a niche functionality in
+  the built-in =initials= and =partial-completion= styles to navigate
+  abbreviated paths.  Here is an example with the latter: you can type
+  =~/.l/s/fo= which will match =~/.local/share/fonts= (combine that with the
+  file shadowing mentioned above, for a minimalist, decluttered flow).
+  The variable =completion-category-overrides= can control the standard
+  option of =completion-styles= on a per-category basis.
 
 + Recursive minibuffers :: I enable recursive minibuffers.  This
   practically means that you can start something in the minibuffer,
@@ -1220,10 +1223,8 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
 
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'minibuffer
-  (require 'hotfuzz)
-
-  (setq completion-styles ; NOTE 2021-08-04: Experimenting with `hotfuzz'
-        '(substring initials hotfuzz partial-completion orderless))
+  (setq completion-styles
+        '(substring initials flex partial-completion orderless))
   (setq completion-category-overrides
         '((file (styles . (partial-completion orderless)))))
   (setq completion-cycle-threshold 2)
