@@ -228,9 +228,8 @@ If it is a list, this actually returns its car."
 (defun prot-minibuffer-focus-minibuffer ()
   "Focus the active minibuffer."
   (interactive)
-  (let ((mini (active-minibuffer-window)))
-    (when mini
-      (select-window mini))))
+  (when-let ((mini (active-minibuffer-window)))
+    (select-window mini)))
 
 (defun prot-minibuffer--get-completion-window ()
   "Find a live window showing completion candidates."
@@ -272,7 +271,7 @@ Must be bound to `minibuffer-local-filename-completion-map'."
            (eq (prot-minibuffer--completion-category) 'file))
       (save-excursion
         (goto-char (1- (point)))
-        (when (search-backward "/" (point-min) t)
+        (when (search-backward "/" (minibuffer-prompt-end) t)
           (delete-region (1+ (point)) (point-max))))
     (call-interactively 'backward-delete-char)))
 
@@ -378,7 +377,8 @@ Add this to `completion-list-mode-hook'."
   (buffer-substring-no-properties (minibuffer-prompt-end) (point-max)))
 
 (defun prot-minibuffer--minimum-input ()
-  "Test for minimum requisite input for live completions."
+  "Test for minimum requisite input for live completions.
+See `prot-minibuffer-minimum-input'."
   (>= (length (prot-minibuffer--input-string)) prot-minibuffer-minimum-input))
 
 ;; Adapted from Omar Antolín Camarena's live-completions library:
@@ -670,7 +670,7 @@ line number in the Completions' buffer."
              (prot-minibuffer--get-completion-window))
         (prot-minibuffer--goto-line n (select-window (prot-minibuffer--get-completion-window))))
        (t
-        (user-error "Only use this inside the minibuffer of the Completions")))
+        (user-error "Only use this inside the minibuffer or the Completions")))
     (user-error "Pass a numeric prefix argument before calling this command")))
 
 (defvar crm-completion-table)
