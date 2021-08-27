@@ -4681,20 +4681,6 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-fontify-quote-and-verse-blocks t)
   (setq org-fontify-whole-heading-line nil)
   (setq org-fontify-whole-block-delimiter-line nil)
-
-  (defun prot/modus-themes-org-fontify-block-delimiter-lines ()
-    "Match `org-fontify-whole-block-delimiter-line' to theme style.
-Run this function at the post theme load phase, such as with the
-hook `modus-themes-after-load-theme-hook'."
-    (if (eq modus-themes-org-blocks 'gray-background)
-        (setq org-fontify-whole-block-delimiter-line t)
-      (setq org-fontify-whole-block-delimiter-line nil))
-    (when (derived-mode-p 'org-mode)
-      (font-lock-flush)))
-
-  (add-hook 'modus-themes-after-load-theme-hook
-            #'prot/modus-themes-org-fontify-block-delimiter-lines)
-
   (setq org-highlight-latex-and-related nil) ; other options affect elisp regexp in src blocks
   (setq org-enforce-todo-dependencies t)
   (setq org-enforce-todo-checkbox-dependencies t)
@@ -4765,7 +4751,7 @@ hook `modus-themes-after-load-theme-hook'."
       (apply oldfun args)))
 
   ;; Same source as above
-  (advice-add 'org-capture-place-template
+  (advice-add 'org-capture-place-template ; TODO move this to prot-org.el
               :around 'contrib/org-capture-no-delete-windows)
 
 ;;;; agenda
