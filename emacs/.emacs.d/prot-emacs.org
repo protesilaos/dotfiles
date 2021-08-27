@@ -2930,7 +2930,10 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'window
   (setq display-buffer-alist
-        `(;; top side window
+        `(;; no window
+          ("\\`\\*Async Shell Command\\*\\'"
+           (display-buffer-no-window))
+          ;; top side window
           ("\\**prot-elfeed-bongo-queue.*"
            (display-buffer-reuse-window display-buffer-in-side-window)
            (window-height . 0.16)
