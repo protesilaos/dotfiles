@@ -3142,12 +3142,11 @@ tinkered with the available options...  Until Philip Kaludercic
 published the article [[http://ruzkuku.com/texts/emacs-global.html][Emacs 28 has a global mode line]] (2021-07-29) which
 inspired me to finally start experimenting.
 
-As of this writing (2021-07-30), upstream Emacs only covers the
-part of the mode line that shows the current time and the like
-(technically the =global-mode-string=---see [[#h:3a759294-ab03-40cb-bb08-94275d76fc53][Battery status]] as well as
-[[#h:da14ac1d-a06f-4531-b6c3-0414e8c98102][Display current time]] for some examples).  So my =prot-tab.el= library,
-which is reproduced after the following package configurations,
-implements some more indicators that I want to use.
+As of this writing (2021-07-30), upstream Emacs only covers the part of
+the mode line that shows the current time and the like (technically the
+=global-mode-string=).  So my =prot-tab.el= library, which is reproduced
+after the following package configurations, implements some more
+indicators that I want to use.
 
 The minor mode which takes care of this new "status line" concept is
 =prot-tab-status-line=.  Check the code to notice the dirty hacks I
