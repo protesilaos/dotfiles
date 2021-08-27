@@ -1658,7 +1658,10 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
 
 Finally, the =prot-embark.el= that is reproduced after the following block
 contains a few keymaps that integrate Embark with packages like =consult=
-([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
+([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).  The
+=embark-consult= package provides glue code that allows Embark to produce
+a correct export buffer while using relevant Consult commands, such as
+=consult-grep=.
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'embark
@@ -1698,11 +1701,16 @@ contains a few keymaps that integrate Embark with packages like =consult=
   (let ((map embark-region-map))
     (define-key map (kbd "a") #'align-regexp)
     (define-key map (kbd "i") #'epa-import-keys-region)
+    (define-key map (kbd "r") #'repunctuate-sentences) ; overrides `rot13-region'
     (define-key map (kbd "s") #'sort-lines)
     (define-key map (kbd "u") #'untabify))
   (let ((map embark-symbol-map))
     (define-key map (kbd ".") #'embark-find-definition)
     (define-key map (kbd "k") #'describe-keymap)))
+
+;; Needed for correct exporting while using Embark with Consult
+;; commands.
+(prot-emacs-elpa-package 'embark-consult)
 
 (prot-emacs-builtin-package 'prot-embark
   (prot-embark-keymaps 1)
