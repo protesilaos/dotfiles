@@ -463,6 +463,7 @@ This should be added to `wdired-mode-hook'.  For more, refer to
 (defvar prot-bongo--dired-last-inserted nil
   "Last input of `prot-bongo-dired-insert'.")
 
+;; FIXME 2021-08-27: Fails when file does not exist.
 (defun prot-bongo--save-last-inserted-file ()
   "Save `prot-bongo--dired-last-inserted' to a file.
 The file is specified by `prot-bongo-last-inserted-file'."
