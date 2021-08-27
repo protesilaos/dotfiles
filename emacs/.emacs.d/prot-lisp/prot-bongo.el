@@ -422,7 +422,6 @@ Add to `prot-bongo-playlist-change-track-hook'."
 (declare-function bongo-insert-directory-tree "bongo")
 (declare-function bongo-insert-file "bongo")
 (declare-function bongo-library-buffer "bongo")
-(autoload 'dired-filename-at-point "bongo")
 (autoload 'dired-get-marked-files "bongo")
 (autoload 'dired-next-line "bongo")
 
