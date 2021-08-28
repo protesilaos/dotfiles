@@ -1299,7 +1299,7 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
         '( vc-retrieve-tag embark-prefix-help-command org-capture
            prot-bongo-playlist-insert-playlist-file))
 
-  (define-key global-map (kbd "M-g M-m") #'prot-minibuffer-focus-mini-or-completions)
+  (define-key global-map (kbd "C-x :") #'prot-minibuffer-focus-mini-or-completions)
   (let ((map completion-list-mode-map))
     (define-key map (kbd "h") #'prot-simple-describe-symbol) ; from `prot-simple.el'
     (define-key map (kbd "M-g") #'prot-minibuffer-choose-completion-number)
