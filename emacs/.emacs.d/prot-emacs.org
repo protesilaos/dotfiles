@@ -203,6 +203,7 @@ dedicated =prot-common.el= file, which can then be marked as a dependency
 by other libraries of mine.  As such, all we do here is load the file.
 
 #+begin_src emacs-lisp
+;;; Common auxiliary functions (prot-common.el)
 (prot-emacs-builtin-package 'prot-common)
 #+end_src
 
@@ -226,6 +227,7 @@ Given that this is a foundational piece of my Emacs setup, it is the
 appropriate place to re-bind or free up some common key combinations.
 
 #+begin_src emacs-lisp
+;;; Common custom functions (prot-simple.el)
 (prot-emacs-builtin-package 'prot-simple
   (setq prot-simple-insert-pair-alist
         '(("' Single quote"        . (39 39))     ; ' '
@@ -324,6 +326,7 @@ buffer I am on, but can also be utilised by other tools that move the
 point an arbitrary distance.
 
 #+begin_src emacs-lisp
+;;; prot-pulse.el (highlight cursor position)
 (prot-emacs-builtin-package 'prot-pulse
   (setq prot-pulse-pulse-command-list
         '(recenter-top-bottom
@@ -358,6 +361,7 @@ some arbitrary code that you accidentally evaluated from messing up
 with your carefully designed (and version-controlled) configuration.
 
 #+begin_src emacs-lisp
+;;; Put customisation settings in a disposable "custom.el"
 (prot-emacs-builtin-package 'cus-edit
   ;; Disable the damn thing
   (setq custom-file (make-temp-file "emacs-custom-")))
@@ -418,6 +422,7 @@ And if you do enjoy reading such entries, then you may also wish to
 check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the Modus themes]].
 
 #+begin_src emacs-lisp
+;;; Modus themes (my highly accessible themes)
 (prot-emacs-builtin-package 'modus-themes
   ;; Add all your customizations prior to loading the themes
   ;;
@@ -648,6 +653,7 @@ Relevant publications of mine that are not part of this document:
 + [[https://protesilaos.com/modus-themes/#h:defcf4fc-8fa8-4c29-b12e-7119582cc929][Modus themes' manual on font configurations]].
 
 #+begin_src emacs-lisp
+;;; Font configurations (prot-fonts.el)
 (prot-emacs-builtin-package 'prot-fonts
   ;; This is defined in Emacs C code: it belongs to font settings.
   (setq x-underline-at-descent-line t)
@@ -800,6 +806,7 @@ The code below is a minor adaptation of the insights of Alain M. Lafon
 in the [[https://200ok.ch/posts/2020-09-29_comprehensive_guide_on_handling_long_lines_in_emacs.html][Comprehensive guide on handling long lines in Emacs]] (2020-09-29).
 
 #+begin_src emacs-lisp
+;;; Bidirectional writing and `so-long.el'
 (setq-default bidi-paragraph-direction 'left-to-right)
 (setq bidi-inhibit-bpa t)
 
@@ -874,6 +881,7 @@ type of functionality I rely on: for more deliberate actions of this
 sort, consider Emacs' registers or bookmarks.
 
 #+begin_src emacs-lisp
+;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
   (setq repeat-on-final-keystroke t)
   (setq set-mark-command-repeat-pop t)
@@ -946,6 +954,7 @@ code further below).
    variables are designed for this particular task.
 
 #+begin_src emacs-lisp
+;;; Orderless completion style (and prot-orderless.el)
 (prot-emacs-builtin-package 'prot-orderless
   (setq prot-orderless-default-styles
         '(orderless-prefixes
@@ -989,6 +998,7 @@ visualising the standard minibuffer completion candidates---refer to
 [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]]).
 
 #+begin_src emacs-lisp
+;;; Completion annotations (marginalia)
 (prot-emacs-elpa-package 'marginalia
   (setq marginalia-max-relative-age 0)  ; time is absolute here!
   (marginalia-mode 1))
@@ -1220,6 +1230,7 @@ completions' buffer.  The idea is to make the focus more noticeable.
 For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks]].
 
 #+begin_src emacs-lisp
+;;; Minibuffer configurations and extras (prot-minibuffer.el)
 (prot-emacs-builtin-package 'minibuffer
   (setq completion-styles
         '(substring initials flex partial-completion orderless))
@@ -1474,6 +1485,7 @@ better alternatives, even though they "simply work" with everything I
 try.
 
 #+begin_src emacs-lisp
+;;; Enhanced minibuffer commands (consult.el and prot-consult.el)
 (prot-emacs-elpa-package 'consult
   (setq consult-line-numbers-widen t)
   ;; ;; FIXME 2021-04-10: This does not work with `prot-minibuffer.el'.
@@ -1664,6 +1676,7 @@ a correct export buffer while using relevant Consult commands, such as
 =consult-grep=.
 
 #+begin_src emacs-lisp
+;;; Extended minibuffer actions and more (embark.el and prot-embark.el)
 (prot-emacs-elpa-package 'embark
   (setq prefix-help-command #'embark-prefix-help-command)
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
@@ -1781,6 +1794,7 @@ referenced in the source code below this configuration block):
 + [[https://www.manueluberti.eu/emacs/2020/11/21/flymake-projects/][Restricting Flymake to my projects]] (2020-11-21)
 
 #+begin_src emacs-lisp
+;;; Projects (project.el and prot-project.el)
 (prot-emacs-builtin-package 'project
   ;; ;; Use this for Emacs 27 (I am on 28)
   ;; (add-to-list 'prot-emacs-ensure-install 'project)
@@ -1844,6 +1858,7 @@ project's window configuration, while =C-x p j= will jump to an already
 stored layout.
 
 #+begin_src emacs-lisp
+;;; Extra features for projects (project-x.el)
 ;; Project repo: <https://github.com/karthink/project-x>.  This is one
 ;; of the packages I handle manually via git, at least until it becomes
 ;; available through an ELPA.
@@ -1881,6 +1896,7 @@ sources, including bookmarks, recent files, and buffers (check more in
 [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
 
 #+begin_src emacs-lisp
+;;; Completion for recent files and directories (prot-recentf.el)
 (prot-emacs-builtin-package 'recentf
   (setq recentf-save-file (locate-user-emacs-file "recentf"))
   (setq recentf-max-saved-items 200)
@@ -1954,6 +1970,7 @@ to a =complete= value (check [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, in
 read that variable's doc string).
 
 #+begin_src emacs-lisp
+;;; Corfu (Completion Overlay Region FUnction)
 (prot-emacs-elpa-package 'corfu
   (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
                    shell-mode-hook eshell-mode-hook))
@@ -2003,6 +2020,7 @@ To check what I have on regular expressions, see further below my
 configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][re-builder (regexp-builder)]].
 
 #+begin_src emacs-lisp
+;;; Dabbrev (dynamic word completion)
 (prot-emacs-builtin-package 'dabbrev
   (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-abbrev-skip-leading-regexp "[$*/=~']")
@@ -2038,6 +2056,7 @@ front.  Also note that wherever you see =" _ "= it signifies the
 position of the cursor after the skeleton has been inserted.
 
 #+begin_src emacs-lisp
+;;; Skeletons and abbreviations
 (prot-emacs-builtin-package 'abbrev
   (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
   (setq only-global-abbrevs nil)
@@ -2215,6 +2234,7 @@ package configurations).
   the added features are not needed).
 
 #+begin_src emacs-lisp
+;;; Isearch, occur, grep, and extras (prot-search.el)
 (prot-emacs-builtin-package 'isearch
   (setq search-highlight t)
   (setq search-whitespace-regexp ".*?")
@@ -2295,6 +2315,7 @@ automatically becomes regexp-aware).
 Also check: [[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][Isearch, occur, grep, and extras (prot-search.el)]].
 
 #+begin_src emacs-lisp
+;;; Test regular expressions (re-builder)
 (prot-emacs-builtin-package 're-builder
   (setq reb-re-syntax 'read))
 #+end_src
@@ -2311,6 +2332,7 @@ matches by leveraging the full power of Emacs' editing capabilities
 (e.g. keyboard macros, query and replace a regexp...).
 
 #+begin_src emacs-lisp
+;;; wgrep (writable grep)
 (prot-emacs-elpa-package 'wgrep
   (setq wgrep-auto-save-buffer t)
   (setq wgrep-change-readonly-file t)
@@ -2333,6 +2355,7 @@ as =xref-find-definitions= (=M-.=) and its counterpart =xref-pop-marker-stack=
 Here are just the basics.  I might add more in the future.
 
 #+begin_src emacs-lisp
+;;; Cross-references (xref.el)
 (prot-emacs-builtin-package 'xref
   ;; All those have been changed for Emacs 28
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read) ; for M-.
@@ -2539,6 +2562,7 @@ ecosystem:
      =prot-dired-subdirectory-next= and =prot-dired-subdirectory-previous=.
 
 #+begin_src emacs-lisp
+;;; Dired file manager (and prot-dired.el extras)
 (prot-emacs-builtin-package 'dired
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
@@ -2666,6 +2690,7 @@ Basically, its interaction model is as follows:
 - =x= to execute these special marks.
 
 #+begin_src emacs-lisp
+;;; dired-like mode for the trash (trashed.el)
 (prot-emacs-elpa-package 'trashed
   (setq trashed-action-confirmer 'y-or-n-p)
   (setq trashed-use-header-line t)
@@ -2689,6 +2714,7 @@ used for commands that pertain to the current buffer.  What I have here
 are just some tweaks to make it work the way I prefer.
 
 #+begin_src emacs-lisp
+;;; Keymap for buffers (Emacs28)
 (let ((map ctl-x-x-map))              ; Emacs 28
   (define-key map "e" #'eval-buffer)
   (define-key map "f" #'follow-mode)  ; override `font-lock-update'
@@ -2715,6 +2741,7 @@ from the list, allowing Emacs to revert to the standard of displaying
 only the buffer's name.
 
 #+begin_src emacs-lisp
+;;; Unique names for buffers
 (prot-emacs-builtin-package 'uniquify
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-strip-common-suffix t)
@@ -2782,6 +2809,7 @@ pertains to buffers, so they can adapt accordingly.  See, in particular,
 [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]].
 
 #+begin_src emacs-lisp
+;;; Ibuffer and extras (dired-like buffer list manager)
 (prot-emacs-builtin-package 'ibuffer
   (setq ibuffer-expert t)
   (setq ibuffer-display-summary nil)
@@ -2838,6 +2866,7 @@ renames it appropriately for the sake of easier discovery.  I got the
 idea of copying the region from [[https://gist.github.com/eev2/52edbfdb645e26aefec19226c0ca7ad0][a snippet shared by eev2 on GitHub]].
 
 #+begin_src emacs-lisp
+;;; Scratch buffers per major-mode
 (prot-emacs-elpa-package 'scratch
   ;; TODO 2021-01-19: refine `prot/scratch-buffer-setup'
   (defun prot/scratch-buffer-setup ()
@@ -2928,6 +2957,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
 (2020-01-07).
 
 #+begin_src emacs-lisp
+;;; Window rules and basic tweaks (window.el)
 (prot-emacs-builtin-package 'window
   (setq display-buffer-alist
         `(;; no window
@@ -3048,6 +3078,7 @@ provides or, more specifically, the wrappers I have defined which fall
 back to Winner when tabs are not in use.
 
 #+begin_src emacs-lisp
+;;; Window history (winner-mode)
 (prot-emacs-builtin-package 'winner
   (add-hook 'after-init-hook #'winner-mode)
 
@@ -3084,6 +3115,7 @@ workflow.
 Also read: [[#h:6b4f7792-6ccd-45d5-b262-01d200639072][Window history (winner-mode)]].
 
 #+begin_src emacs-lisp
+;;; Directional window motions (windmove)
 (prot-emacs-builtin-package 'windmove
   (setq windmove-create-window nil)     ; Emacs 27.1
   (let ((map global-map))
@@ -3174,6 +3206,7 @@ them, else we fall back to Winner.
 Here are my settings, followed by the entirety of =prot-tab.el=.
 
 #+begin_src emacs-lisp
+;;; Tabs for window layouts (tab-bar.el and prot-tab.el)
 (prot-emacs-builtin-package 'tab-bar
   (setq tab-bar-close-button-show nil)
   (setq tab-bar-close-last-tab-choice nil)
@@ -3245,6 +3278,7 @@ highlights the current item.  So we can retain both our minimalism and
 the contextuality a bar offers.  Simple, yet super effective!
 
 #+begin_src emacs-lisp
+;;; Tab-bar tabs in the echo area (tab-bar-echo-area.el)
 (prot-emacs-elpa-package 'tab-bar-echo-area
   (tab-bar-echo-area-mode 1))
 #+end_src
@@ -3280,6 +3314,7 @@ open tabs in which case it is easier to keep the tab-bar visible at all
 times (I toggle it on with =prot-tab-tab-bar-toggle=).
 
 #+begin_src emacs-lisp
+;;; Tab bar groups
 (prot-emacs-elpa-package 'tab-bar-groups
   (tab-bar-groups-activate)
 
@@ -3308,6 +3343,7 @@ have the right settings, you can repeat again just by pressing another =z=
 (see [[#h:33d9a35a-54ed-4f9d-8f30-5c99c1a45ad0][Repeatable key chords (repeat-mode)]]).
 
 #+begin_src emacs-lisp
+;;; Transposition and rotation of windows
 (prot-emacs-elpa-package 'transpose-frame
   (let ((map global-map))
     (define-key map (kbd "C-x M-r") #'rotate-frame-clockwise)))
@@ -3405,6 +3441,7 @@ these:
 + [[https://protesilaos.com/codelog/2020-07-17-emacs-mixed-fonts-org/][Configuring mixed fonts for Org mode and others]] (2020-07-17)
 
 #+begin_src emacs-lisp
+;;; Custom extensions for "focus mode" (prot-logos.el)
 (prot-emacs-builtin-package 'face-remap)
 
 (prot-emacs-elpa-package 'olivetti
@@ -3472,6 +3509,7 @@ The code for this project is on the [[https://gitlab.com/protesilaos/usls][USLS 
 the subsequent code block.
 
 #+begin_src emacs-lisp
+;;; USLS --- Unassuming Sidenotes of Little Significance
 (prot-emacs-builtin-package 'usls
   (setq usls-directory (expand-file-name "~/Documents/notes/"))
   (setq usls-known-categories '("economics" "philosophy" "politics"))
@@ -3519,6 +3557,7 @@ the meantime.
 =tmr-cancel= can be called with =M-x= to cancel the last defined =tmr=.
 
 #+begin_src emacs-lisp
+;;; TMR Must Recur (just my generic timer)
 (prot-emacs-builtin-package 'tmr
   (setq tmr-sound-file
         "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
@@ -3616,6 +3655,7 @@ in the section on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][window rules and ba
 the variable =display-buffer-alist=).
 
 #+begin_src emacs-lisp
+;;; Diff-mode (and prot-diff.el extensions)
 (prot-emacs-builtin-package 'diff-mode
   (setq diff-default-read-only t)
   (setq diff-advance-after-apply-hunk t)
@@ -3884,6 +3924,7 @@ manual for more on the matter):
   you cycle through prior commit messages.
 
 #+begin_src emacs-lisp
+;;; Version control framework (vc.el and prot-vc.el)
 (prot-emacs-builtin-package 'vc
   ;; Those offer various types of functionality, such as blaming,
   ;; viewing logs, showing a dedicated buffer with changes to affected
@@ -4081,6 +4122,7 @@ that certain git forges encourage.  I prefer this approach and am eager
 to see it getting more widespread adoption.
 
 #+begin_src emacs-lisp
+;;; git-email.el for preparing patches
 ;; Project repo: <https://git.sr.ht/~yoctocell/git-email>.  This is one
 ;; of the packages I handle manually via git, at least until it becomes
 ;; available through an ELPA.
@@ -4122,6 +4164,7 @@ commits that are clean and easy to read.  The =fill-column= is set
 elsewhere in this document to 72 characters long.
 
 #+begin_src emacs-lisp
+;;; Interactive and powerful git front-end (Magit)
 (prot-emacs-elpa-package 'magit
   (setq magit-define-global-key-bindings nil)
   (define-key global-map (kbd "C-c g") #'magit-status)
@@ -4247,6 +4290,7 @@ Also watch my video of [[https://protesilaos.com/codelog/2020-04-10-emacs-smerge
 (2020-04-10).
 
 #+begin_src emacs-lisp
+;;; Smerge and Ediff
 (prot-emacs-builtin-package 'smerge-mode)
 
 (prot-emacs-builtin-package 'ediff
@@ -4383,6 +4427,7 @@ Also check these valuable resources:
 + [[https://ambrevar.xyz/emacs-eshell/][Pierre Neidhardt's detailed blog post]] on the pros and cons of Eshell.
 
 #+begin_src emacs-lisp
+;;; Eshell and prot-eshell.el
 (prot-emacs-builtin-package 'eshell
   (require 'esh-mode)
   (require 'esh-module)
@@ -4466,6 +4511,7 @@ Run =C-h m= inside of a shell buffer to learn about all the key bindings
 and corresponding functions.
 
 #+begin_src emacs-lisp
+;;; Shell (M-x shell)
 (prot-emacs-builtin-package 'shell
   (setq shell-command-prompt-show-cwd t) ; Emacs 27.1
   (setq ansi-color-for-comint-mode t))
@@ -4625,6 +4671,7 @@ Finally, note that I sometimes deliver simple presentations using Org.
 Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (prot-logos.el)]].
 
 #+begin_src emacs-lisp
+;;; Org-mode (personal information manager)
 ;; Pro tip: If you are reading the source code, use C-c '
 ;; (`org-edit-special') to put the code block in a dedicated buffer and
 ;; then activate `prot-outline-minor-mode-safe' to conveniently browse
@@ -5301,6 +5348,7 @@ Finally, note that I control the placement of those buffers in the
 =display-buffer-alist= (read: [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
 
 #+begin_src emacs-lisp
+;;; Calendar and Diary (and prot-diary.el)
 (prot-emacs-builtin-package 'calendar
   (setq calendar-mark-diary-entries-flag t)
   (setq calendar-mark-holidays-flag t)
@@ -5482,6 +5530,7 @@ configurations are about.
   =C-c C-m C-a= (=gnus-dired-attach=).
 
 #+begin_src emacs-lisp
+;;; Client-agnostic email settings (and prot-mail.el)
 (prot-emacs-builtin-package 'auth-source
   (setq auth-sources '("~/.authinfo.gpg"))
   (setq user-full-name "Protesilaos Stavrou")
@@ -5867,6 +5916,7 @@ all items matching the search terms =tag:unread and tag:inbox= (can be
 configured by the variable =prot-notmuch-mode-line-search-args=).
 
 #+begin_src emacs-lisp
+;;; Notmuch (mail indexer and mail user agent (MUA))
 ;; I install notmuch from the distro's repos because the CLI program is
 ;; not dependent on Emacs.  Though the package also includes notmuch.el
 ;; which is what we use here (they are maintained by the same people).
@@ -6313,6 +6363,7 @@ demonstrated in [[#h:a82766be-daab-4925-b23a-1c5ffd47e599][the base email settin
 mirroring of the contents of that file.
 
 #+begin_src emacs-lisp
+;;; Sending email (SMTP)
 (prot-emacs-builtin-package 'smtpmail
   (setq smtpmail-default-smtp-server "mail.gandi.net")
   (setq smtpmail-smtp-server "mail.gandi.net")
@@ -6400,6 +6451,7 @@ Finally, note that this package is fairly comprehensive as it defines
 lots of options and commands: make sure to read its official manual.
 
 #+begin_src emacs-lisp
+;;; EBDB (mail contacts)
 (prot-emacs-elpa-package 'ebdb
   (require 'ebdb-message)
   (require 'ebdb-notmuch) ; FIXME 2021-05-13: does not activate the corfu-mode UI
@@ -6570,6 +6622,7 @@ though please bear in my that my current code is not exactly what was
 demonstrated back then (as of 2021-01-18).
 
 #+begin_src emacs-lisp
+;;; Bongo music or media manager (and prot-bongo.el)
 (prot-emacs-elpa-package 'bongo
   (setq bongo-default-directory "~/Music/")
   (setq bongo-prefer-library-buffers nil)
@@ -6750,6 +6803,7 @@ older code: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Ma
 Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MPV (Elfeed+Bongo extension)]].
 
 #+begin_src emacs-lisp
+;;; Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el
 (prot-emacs-elpa-package 'elfeed
   (setq elfeed-use-curl t)
   (setq elfeed-curl-max-connections 10)
@@ -6837,6 +6891,7 @@ right now.  Would need to experiment with it a bit more.  It works
 fine though.
 
 #+begin_src emacs-lisp
+;;; Proced (process monitor, similar to `top')
 (prot-emacs-builtin-package 'proced
   (setq proced-auto-update-flag t)
   (setq proced-auto-update-interval 1)
@@ -6861,8 +6916,12 @@ using completion methods (study [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Compl
 it to quickly store a password to the kill ring.
 
 #+begin_src emacs-lisp
+;;; Pass interface (password-store)
 (prot-emacs-elpa-package 'password-store
-  (setq password-store-time-before-clipboard-restore 30))
+  (setq password-store-time-before-clipboard-restore 30)
+  ;; Mnemonic is the root of the "code" word (κώδικας).  But also to add
+  ;; the password to the kill-ring.  Other options are already taken.
+  (define-key global-map (kbd "C-c k") #'password-store-copy))
 #+end_src
 
 And this one adds a major mode for browsing the =pass= keychain.  Call
@@ -7053,6 +7112,7 @@ Also watch [[https://protesilaos.com/codelog/2021-03-25-emacs-eww/][EWW and my e
 some of the above.
 
 #+begin_src emacs-lisp
+;;; Simple HTML Renderer (shr), Emacs Web Wowser (eww), Elpher, and prot-eww.el
 (prot-emacs-builtin-package 'browse-url
   (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-secondary-browser-function 'browse-url-default-browser))
@@ -7197,6 +7257,7 @@ in the manual of the themes.  If you are using them, evaluate this form:
 =(info "(modus-themes) Backdrop for pdf-tools (DIY)")=.
 
 #+begin_src emacs-lisp
+;;; Extensions for PDFs (pdf-tools)
 (prot-emacs-elpa-package 'pdf-tools
   (setq pdf-tools-enabled-modes         ; simplified from the defaults
         '(pdf-history-minor-mode
@@ -7256,6 +7317,7 @@ the Emacs GUI by default.  A complete waste of an extremely valuable key
 binding!
 
 #+begin_src emacs-lisp
+;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
   (define-key global-map (kbd "C-z") #'goto-last-change))
 #+end_src
@@ -7280,6 +7342,7 @@ provide a snippet that optionally toggles the visibility of the modeline
 while entering a bespoke "focus mode" for writing/reading.
 
 #+begin_src emacs-lisp
+;;; Mode line
 (setq mode-line-percent-position '(-3 "%p"))
 (setq mode-line-position-column-line-format '(" %l,%c")) ; Emacs 28
 (setq mode-line-defining-kbd-macro
@@ -7334,6 +7397,7 @@ Moody with my [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (pr
 want is to make the mode line gracefully adapt to changes in font size.
 
 #+begin_src emacs-lisp
+;;; Moody.el (simple mode line configuration utility)
 (prot-emacs-elpa-package 'moody)
 
 (prot-emacs-builtin-package 'prot-moody
@@ -7361,6 +7425,7 @@ the text that identifies the minor mode on the mode line.  Having a
 few of them is usually okay, but a lot of them do not scale well.
 
 #+begin_src emacs-lisp
+;;; Hide modeline "lighters" (minions.el)
 (prot-emacs-elpa-package 'minions
   (setq minions-mode-line-lighter ";")
   ;; NOTE: This will be expanded whenever I find a mode that should not
@@ -7385,6 +7450,7 @@ shows the level of recursion at the current minibuffer prompt (refer to
 [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]]).
 
 #+begin_src emacs-lisp
+;;; Mode line recursion indicators
 (prot-emacs-elpa-package 'recursion-indicator
   (setq recursion-indicator-general "&")
   (setq recursion-indicator-minibuffer "@")
@@ -7414,6 +7480,7 @@ to a lower threshold, meaning that the indicator remains present at all
 times.
 
 #+begin_src emacs-lisp
+;;; Battery status
 (prot-emacs-builtin-package 'battery
   (setq battery-mode-line-format " [%b%p%%]")
   (setq battery-mode-line-limit 95)
@@ -7452,6 +7519,7 @@ Lastly, I use the =world-clock= command (for Emacs28+) when I need to get
 an overview of the current time in various parts of the planet.
 
 #+begin_src emacs-lisp
+;;; Display current time
 (prot-emacs-builtin-package 'time
   (setq display-time-format "%a %e %b, %H:%M")
   ;;;; Covered by `display-time-format'
@@ -7507,6 +7575,7 @@ list for =which-func-modes=.  A value of =t= signifies every mode, which I
 do not consider a good default for a global minor mode.
 
 #+begin_src emacs-lisp
+;;; Name of current form (which-function-mode)
 (prot-emacs-builtin-package 'which-func
   (setq which-func-unknown "")
   (setq which-func-format     ; NOTE 2021-07-28: removes square brackets
@@ -7546,6 +7615,7 @@ of Elisp from the [[https://github.com/aadcg/dotfiles][dotfiles of André Alexan
 tweaks of my own.
 
 #+begin_src emacs-lisp
+;;; Keycast mode
 (prot-emacs-elpa-package 'keycast
   ;; Those are for `keycast-mode'
   (setq keycast-window-predicate 'moody-window-active-p) ; assumes `moody.el'
@@ -7587,6 +7657,7 @@ information to the tab bar (in effect, it creates a universal status
 line---see [[#h:63ad472f-c9c2-40ad-9675-1dc529487788][Tabs for window layouts (tab-bar.el and prot-tab.el)]]).
 
 #+begin_src emacs-lisp
+;;; Window divider mode
 (setq window-divider-default-right-width 1)
 (setq window-divider-default-bottom-width 1)
 (setq window-divider-default-places 'right-only)
@@ -7612,6 +7683,7 @@ The use of =setq-default= is necessary, otherwise these values become
 buffer-local.
 
 #+begin_src emacs-lisp
+;;; Fringe mode
 (prot-emacs-builtin-package 'fringe
   (fringe-mode nil)
   (setq-default fringes-outside-margins nil)
@@ -7631,6 +7703,7 @@ an interesting article on the matter: [[https://notes.neeasade.net/color-spaces.
 need some of those tools while developing my Modus themes.
 
 #+begin_src emacs-lisp
+;;; Color tools (ct.el)
 (prot-emacs-elpa-package 'ct)
 #+end_src
 
@@ -7644,6 +7717,7 @@ and sets the background for the value in that colour.  Quite useful
 when reviewing my themes (=rainbow-mode= is activated manually).
 
 #+begin_src emacs-lisp
+;;; Rainbow mode for colour previewing (rainbow-mode.el)
 (prot-emacs-elpa-package 'rainbow-mode
   (setq rainbow-ansi-colors nil)
   (setq rainbow-x-colors nil))
@@ -7674,6 +7748,7 @@ current hunk (=C-x v n=).  Those can come in handy (check my comprehensive
 extensions in [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]).
 
 #+begin_src emacs-lisp
+;;; Line numbers and relevant indicators (prot-sideline.el)
 (prot-emacs-builtin-package 'prot-sideline
   (require 'display-line-numbers)
   ;; Set absolute line numbers.  A value of "relative" is also useful.
@@ -7766,6 +7841,7 @@ to, and navigate therefrom.  It really is an efficient workflow:
 [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]].
 
 #+begin_src emacs-lisp
+;;; Outline mode, outline minor mode, and extras (prot-outline.el)
 (prot-emacs-builtin-package 'outline
   (setq outline-minor-mode-highlight 'override) ; emacs28
   (setq outline-minor-mode-cycle t)             ; emacs28
@@ -7818,6 +7894,7 @@ are used to differentiate cursor types in the minibuffer and
 completions' windows, respectively.
 
 #+begin_src emacs-lisp
+;;; Cursor appearance and tweaks (prot-cursor.el)
 (prot-emacs-builtin-package 'prot-cursor
   (setq prot-cursor-presets
         '((bar . ( :cursor-type (bar . 2)
@@ -7890,6 +7967,7 @@ mouse, =<mouse-3>= is the right click.  Normally I call that command with
 =M-x=, though it does not hurt to rely on the mouse from time to time.
 
 #+begin_src emacs-lisp
+;;; Mouse wheel behaviour
 (prot-emacs-builtin-package 'mouse
   ;; In Emacs 27+, use Control + mouse wheel to scale text.
   (setq mouse-wheel-scroll-amount
@@ -7924,6 +8002,7 @@ The =next-screen-context-lines= ensures that when moving by screenfulls
 previous screen.  I find this more intuitive.
 
 #+begin_src emacs-lisp
+;;; Scrolling behaviour
 (setq-default scroll-preserve-screen-position t)
 (setq-default scroll-conservatively 1) ; affects `scroll-step'
 (setq-default scroll-margin 0)
@@ -7941,6 +8020,7 @@ selected region will not insert itself when =mouse-drag-copy-region= is in
 effect (see the section on the [[#h:02572210-eb26-4941-8f7c-666a0314877b][mouse wheel behaviour]]).
 
 #+begin_src emacs-lisp
+;;; Delete selection
 (prot-emacs-builtin-package 'delsel
   (add-hook 'after-init-hook #'delete-selection-mode))
 #+end_src
@@ -7963,6 +8043,7 @@ mouse over an actionable item:
   been increased for immediate pop-ups thereafter.
 
 #+begin_src emacs-lisp
+;;; Tooltips (tooltip-mode)
 (prot-emacs-builtin-package 'tooltip
   (setq tooltip-delay 0.5)
   (setq tooltip-short-delay 0.5)
@@ -7990,6 +8071,7 @@ Note that this is a fairly new project (as of 2021-02-05), so things are
 likely to change over the near term.
 
 #+begin_src emacs-lisp
+;;; Dired-like list for registers (rlist)
 ;; Project repo: <https://gitlab.com/mmemmew/rlist>.  This is one of the
 ;; packages I handle manually via git, at least until it becomes
 ;; available through an ELPA.
@@ -8039,6 +8121,7 @@ All we do here is enable the package and add a hook to insert a time
 stamp upon save, where relevant.  It works seamlessly.
 
 #+begin_src emacs-lisp
+;;; Automatic time stamps for files (time-stamp.el)
 (prot-emacs-builtin-package 'time-stamp
   (add-hook 'before-save-hook #'time-stamp))
 #+end_src
@@ -8053,6 +8136,7 @@ A change can happen externally or by some other tool inside of Emacs
 (e.g. kill a Magit diff).
 
 #+begin_src emacs-lisp
+;;; Auto revert mode
 (prot-emacs-builtin-package 'autorevert
   (setq auto-revert-verbose t)
   (add-hook 'after-init-hook #'global-auto-revert-mode))
@@ -8070,6 +8154,7 @@ overriding the thing you copied earlier.  We can have a kill ring
 solution to this with the following:
 
 #+begin_src emacs-lisp
+;;; Preserve contents of system clipboard
 (setq save-interprogram-paste-before-kill t)
 #+end_src
 
@@ -8087,6 +8172,7 @@ As such, the =mode-require-final-newline= will add a newline character
 when visiting or saving a buffer of relevance.
 
 #+begin_src emacs-lisp
+;;; Newline characters for file ending
 (setq mode-require-final-newline 'visit-save)
 #+end_src
 
@@ -8108,6 +8194,7 @@ I bind the former to =M-z= as I use it more often and leave its
 counterpart on =M-Z= (=M-S-z=).
 
 #+begin_src emacs-lisp
+;;; Zap characters
 (let ((map global-map))
   (define-key map (kbd "M-z") #'zap-up-to-char)
   (define-key map (kbd "M-Z") #'zap-to-char)) ; M-S-z
@@ -8123,6 +8210,7 @@ of packages.  I generally use =hl-line-mode= on all interfaces where the
 current line is more important than the exact column of the point.
 
 #+begin_src emacs-lisp
+;;; Package lists
 (prot-emacs-builtin-package 'package
   ;; All variables are for Emacs 28+
   (setq package-name-column-width 40)
@@ -8169,6 +8257,7 @@ been moved to =prot-simple.el=.  Those are =prot-simple-cite-region= and
 Refer to the source code in [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common custom functions (prot-simple.el)]].
 
 #+begin_src emacs-lisp
+;;; Plain text (text-mode with prot-text.el)
 (prot-emacs-builtin-package 'text-mode)
 
 (prot-emacs-builtin-package 'prot-text
@@ -8190,6 +8279,7 @@ dotfiles' repo]] (as with all my Elisp code)):
 I edit lots of Markdown files.  This makes things easier.
 
 #+begin_src emacs-lisp
+;;; Markdown (markdown-mode)
 (prot-emacs-elpa-package 'markdown-mode
   (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
@@ -8205,6 +8295,7 @@ I edit lots of Markdown files.  This makes things easier.
 This adds support for YAML files.
 
 #+begin_src emacs-lisp
+;;; YAML (yaml-mode)
 (prot-emacs-elpa-package 'yaml-mode
   (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode)))
 #+end_src
@@ -8219,6 +8310,7 @@ to not apply previews to colour references.  If I ever need that, there
 is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant section]]).
 
 #+begin_src emacs-lisp
+;;; CSS (css-mode)
 (prot-emacs-builtin-package 'css-mode
   (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
   (add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
@@ -8240,6 +8332,7 @@ value assigned to =auto-mode-alist= will be expanded each time I
 identify such a file.
 
 #+begin_src emacs-lisp
+;;; Shell scripts (sh-mode)
 (prot-emacs-builtin-package 'sh-script
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
 #+end_src
@@ -8277,6 +8370,7 @@ for the current paragraph or the active region with =M-x fill-paragraph=,
 bound by default to =M-q=.
 
 #+begin_src emacs-lisp
+;;; Paragraphs and fill-mode (prot-fill.el)
 (prot-emacs-builtin-package 'prot-fill
   (setq prot-fill-default-column 72)
   (setq prot-fill-prog-mode-column 72)  ; Set this to another value if you want
@@ -8317,6 +8411,7 @@ that keybinding to the one I have for the much more specialised
 documented in their docstrings, so please check the code below.
 
 #+begin_src emacs-lisp
+;;; Comments (newcomment.el and prot-comment.el)
 (prot-emacs-builtin-package 'newcomment
   (setq comment-empty-lines t)
   (setq comment-fill-column nil)
@@ -8375,6 +8470,7 @@ auto-insertion of characters.  This is a summary of my settings:
   key and then an angled bracket (=<= or =>=) followed by a quote mark.
 
 #+begin_src emacs-lisp
+;;; Configure 'electric' behaviour
 (prot-emacs-builtin-package 'electric
   (setq electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
   (setq electric-pair-preserve-balance t)
@@ -8423,6 +8519,7 @@ Summary of what these do:
   parenthesis.
 
 #+begin_src emacs-lisp
+;;; Parentheses (show-paren-mode)
 (prot-emacs-builtin-package 'paren
   (setq show-paren-style 'parenthesis)
   (setq show-paren-when-point-in-periphery nil)
@@ -8452,6 +8549,7 @@ Note that =tab-always-indent= will first do indentation and then try to
 complete whatever you have typed in.
 
 #+begin_src emacs-lisp
+;;; Tabs, indentation, and the TAB key
 (setq-default tab-always-indent 'complete)
 (setq-default tab-first-completion 'word-or-paren-or-punct) ; Emacs 27
 (setq-default tab-width 4)
@@ -8486,6 +8584,7 @@ is disabled because I re-purpose it for a faster version of =C-x C-;=
 (much more useful for my work—see the [[#h:fa56241c-6840-4a39-8f59-18460d37fc69][section on comments]]).
 
 #+begin_src emacs-lisp
+;;; Flyspell and prot-spell.el (spell check)
 (prot-emacs-builtin-package 'flyspell
   (setq flyspell-issue-message-flag nil)
   (setq flyspell-issue-welcome-flag nil)
@@ -8532,6 +8631,7 @@ effective interface to displaying information about the warning at
 point.
 
 #+begin_src emacs-lisp
+;;; Flymake
 (prot-emacs-builtin-package 'flymake
   (setq flymake-fringe-indicator-position 'left-fringe)
   (setq flymake-suppress-zero-counters t)
@@ -8568,6 +8668,7 @@ linter for shell scripts.  It otherwise relies on the standard utilities
 of =flymake-mode= (see [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][main Flymake configs]]).
 
 #+begin_src emacs-lisp
+;;; Flymake + Shellcheck
 (prot-emacs-elpa-package 'flymake-shellcheck
   (add-hook 'sh-mode-hook 'flymake-shellcheck-load))
 #+end_src
@@ -8594,6 +8695,7 @@ I prefer to do the final step manually, as I normally do not run a
 linter while writing: it is too distracting.
 
 #+begin_src emacs-lisp
+;;; Flymake + Proselint
 (prot-emacs-elpa-package 'flymake-proselint
   (add-hook 'markdown-mode-hook #'flymake-proselint-setup)
   (add-hook 'org-mode-hook #'flymake-proselint-setup)
@@ -8624,6 +8726,7 @@ packaging.  I use it for my themes but also for any elisp library I may
 want to send patches to.
 
 #+begin_src emacs-lisp
+;;; Elisp packaging requirements
 (prot-emacs-elpa-package 'package-lint-flymake
   (add-hook 'flymake-diagnostic-functions #'package-lint-flymake))
 #+end_src
@@ -8643,6 +8746,7 @@ offer a lightweight complementary facility to that of the standard help
 commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
 
 #+begin_src emacs-lisp
+;;; Eldoc (elisp live documentation feedback)
 (prot-emacs-builtin-package 'eldoc
   (global-eldoc-mode 1))
 #+end_src
@@ -8686,6 +8790,7 @@ to work as expected.  Note that the capitalisation of those symbols is
 canonical.
 
 #+begin_src emacs-lisp
+;;; Tools for manual pages (manpages)
 (prot-emacs-builtin-package 'man
   (let ((map Man-mode-map))
     (define-key map (kbd "i") #'Man-goto-section)
@@ -8713,6 +8818,7 @@ original running process, aka "the server".  The server persists for as
 long as there is an Emacs frame attached to it.
 
 #+begin_src emacs-lisp
+;;; Emacs server and desktop
 (prot-emacs-builtin-package 'server
   (add-hook 'after-init-hook #'server-start))
 #+end_src
@@ -8766,6 +8872,7 @@ results towards the top as the most likely candidates.  Make sure to
 also read the [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]].
 
 #+begin_src emacs-lisp
+;;; Minibuffer history (savehist-mode)
 (prot-emacs-builtin-package 'savehist
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 10000)
@@ -8784,6 +8891,7 @@ subtle reminder of what you were doing the last time you visited that
 file, allowing you to pick up from there.
 
 #+begin_src emacs-lisp
+;;; Record cursor position
 (prot-emacs-builtin-package 'saveplace
   (setq save-place-file (locate-user-emacs-file "saveplace"))
   (setq save-place-forget-unreadable-files t)
@@ -8800,6 +8908,7 @@ but I prefer to be safe in the knowledge that if something goes awry
 there is something to fall back to.
 
 #+begin_src emacs-lisp
+;;; Backups
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backup/"))))
 (setq backup-by-copying t)
