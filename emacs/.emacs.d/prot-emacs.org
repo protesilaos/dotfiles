@@ -9,8 +9,12 @@
 + Created: 2019-08-15
 + Updated: *{{{export-date}}}*.
 + Emacs Version: {{{emacs-development-version}}}.
++ Git repository (part of my dotfiles for GNU/Linux):
+  <https://gitlab.com/protesilaos/dotfiles>.
 + File history:
   <https://gitlab.com/protesilaos/dotfiles/-/commits/master/emacs/.emacs.d/prot-emacs.org>.
++ Just the =*.el= version of this file:
+  <https://gitlab.com/protesilaos/dotfiles/-/commits/master/emacs/.emacs.d/prot-emacs.el>
 
 #+TOC: headlines 8 insert TOC here, with eight headline levels
 
