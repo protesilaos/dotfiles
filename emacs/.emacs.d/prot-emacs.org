@@ -4681,7 +4681,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 ;; then activate `prot-outline-minor-mode-safe' to conveniently browse
 ;; this massive code block.
 (prot-emacs-builtin-package 'org
-  (setq org-directory (convert-standard-filename "~/Org"))
+  (setq org-directory (convert-standard-filename "~/Documents/org"))
   (setq org-imenu-depth 7)
 ;;;; general settings
   (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
