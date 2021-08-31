@@ -442,7 +442,8 @@ argument, also show the corresponding diffs."
     (with-current-buffer buf
       (setq-local vc-log-view-type type)
       (setq-local revert-buffer-function nil)
-      (vc-git-region-history-mode))))
+      (vc-git-region-history-mode)
+      (setq-local log-view-vc-backend 'git))))
 
 (defun prot-vc-git--file-rev (file &optional limit)
   "Select revision for FILE using completion.
