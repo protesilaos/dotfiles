@@ -9749,6 +9749,20 @@ each in their own unique way---the order is not significant:
   maintains [[https://github.com/Koekelas/dotfiles][a personal dotfiles repo]] where you can find an =emacs.org=
   file with lots of advanced code snippets.
 
++ Adam Porter (aka alphapapa, github-alphapapa) :: Adam is a prolific
+  contributor to the Emacs packaging milieu and a prominent member of
+  the community on the =r/emacs= subreddit.  [[https://github.com/alphapapa][Adam's packages on Github]]
+  cover a wide range of needs and are designed using excellent coding
+  practices.  These include a client for the Matrix communication
+  protocol (=ement.el=), a robust query language for Org (=org-ql=), a code
+  colouriser that applies colour based on the level of depth (=prism.el=),
+  a powerful buffer-management system (=bufler.el=), a sticky header that
+  shows the first line of the code's definition when that is outside the
+  visible window (=topsy.el=), a tool that tracks your position across
+  Emacs buffers so you can return exactly to where you need to be
+  (=dogears.el=)...  You get the idea.  I still plan to incorporate some
+  of those into my workflow, starting with dogears, topsy, and bufler.
+
 + Rainer König :: Rainer has [[https://www.youtube.com/playlist?list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE][a series of video tutorials]] on how to
   organise your life using various Org features, such as check-lists and
   the agenda.  Each video covers a single utility or closely related
@@ -9822,6 +9836,14 @@ each in their own unique way---the order is not significant:
   takes the time to cover the main points in one's work and, where
   appropriate, to highlight relevant information or offer a valuable
   insight.
+
++ Álvaro Ramírez (aka xenodium) :: Álvaro maintains a blog on Emacs and
+  related programming topics: https://xenodium.com.  One of my favourite
+  aspects about the posts you will find there are the high quality GIFs
+  that capture some precise and very powerful Emacs motion, custom
+  command, or workflow.  Álvaro is, among others, the developer of a
+  mobile app that helps you track your habits: [[https://flathabits.com/][Flat Habits]].  And the
+  best part is that it is all powered by Org mode!
 
 Please note that this is a non-exhaustive list.  Lots of people
 contribute to the betterment of Emacs proper and to specialised
