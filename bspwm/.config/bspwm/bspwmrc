@@ -140,4 +140,4 @@ fi
 _check xcompmgr && xcompmgr -cCfF -t -2 -l -2 -r 2.8 -o 0.55 -D 5 -I 0.075 -O 0.075 &
 
 # Simple daemon for GTK settings
-xsettingsd -c "$HOME"/.config/xsettingsd/xsettingsd.conf &
+_check xsettingsd && xsettingsd -c "$HOME"/.config/xsettingsd/xsettingsd.conf &
