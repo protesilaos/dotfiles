@@ -9803,7 +9803,7 @@ each in their own unique way---the order is not significant:
 
 + Xah Lee :: Xah is a well-known member of the community through years
   of contributions either with packages or [[http://www.xahlee.info/][informational websites]] on
-  various aspects of Emacs.  On [[ https://www.youtube.com/channel/UCXEJNKH9I4xsoyUNN3IL96A][Xah's Youtube channel]] you will find
+  various aspects of Emacs.  On [[https://www.youtube.com/channel/UCXEJNKH9I4xsoyUNN3IL96A][Xah's Youtube channel]] you will find
   videos about Emacs on all sorts of topics.  Those are live streamed.
 
 + Karthik Chikmagalur :: Karthik's [[https://karthinks.com/software/batteries-included-with-emacs/][Batteries included with Emacs]]
