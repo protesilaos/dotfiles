@@ -141,3 +141,6 @@ _check xcompmgr && xcompmgr -cCfF -t -2 -l -2 -r 2.8 -o 0.55 -D 5 -I 0.075 -O 0.
 
 # Simple daemon for GTK settings
 _check xsettingsd && xsettingsd -c "$HOME"/.config/xsettingsd/xsettingsd.conf &
+
+# Use the same cursor everywhere
+_check xsetroot && xsetroot -xcf /usr/share/icons/Adwaita/cursors/left_ptr 16
