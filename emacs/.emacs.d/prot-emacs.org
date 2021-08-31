@@ -9763,6 +9763,14 @@ each in their own unique way---the order is not significant:
   (=dogears.el=)...  You get the idea.  I still plan to incorporate some
   of those into my workflow, starting with dogears, topsy, and bufler.
 
++ Andrew Tropin :: Andrew is a programmer and contributor to free
+  software who also produces [[https://www.youtube.com/channel/UCuj_loxODrOPxSsXDfJmpng][live streams on Youtube]] about various
+  Emacs-related topics, as well as the Guix System.  You will find
+  valuable information there, such as a Git workflow about pull requests
+  as compared to patches, an advanced email setup with Emacs+Notmuch,
+  and project management.  Andrew's =rde= is [[https://sr.ht/~abcdw/rde/][a suite of tools]] that manages
+  computing environments in Guix.
+
 + Rainer König :: Rainer has [[https://www.youtube.com/playlist?list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE][a series of video tutorials]] on how to
   organise your life using various Org features, such as check-lists and
   the agenda.  Each video covers a single utility or closely related
@@ -9784,9 +9792,19 @@ each in their own unique way---the order is not significant:
 + System Crafters :: David Wilson's work on Emacs covers a broad range
   of themes, encapsulated in the [[https://github.com/daviwil/emacs-from-scratch][Emacs from scratch]] configuration.  The
   [[https://youtube.com/c/SystemCrafters][Youtube channel]] contains lots of videos on how to set up and use all
-  sorts of packages in Emacs, such as Org and the Mu4e email client.
-  David's material is an excellent resource and point of reference for
-  new and experienced users alike.
+  sorts of packages in Emacs, such as Org and the Mu4e email client.  It
+  is fair to say that if something is related to Emacs, David has either
+  already done a video about it or is planning to do one in the near
+  future.  The [[https://systemcrafters.cc/][System Crafters]] website includes references to all such
+  work, while it also covers contributions by the community that David
+  has helped foster.  The material on offer is top-notch.  It serves as
+  an excellent resource and point of reference for new and experienced
+  users alike.
+
++ Xah Lee :: Xah is a well-known member of the community through years
+  of contributions either with packages or [[http://www.xahlee.info/][informational websites]] on
+  various aspects of Emacs.  On [[ https://www.youtube.com/channel/UCXEJNKH9I4xsoyUNN3IL96A][Xah's Youtube channel]] you will find
+  videos about Emacs on all sorts of topics.  Those are live streamed.
 
 + Karthik Chikmagalur :: Karthik's [[https://karthinks.com/software/batteries-included-with-emacs/][Batteries included with Emacs]]
   (2020-11-17) and [[https://karthinks.com/software/more-batteries-included-with-emacs/][More batteries included with Emacs]] (2020-12-11) are
