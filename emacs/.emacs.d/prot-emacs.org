@@ -9801,6 +9801,16 @@ each in their own unique way---the order is not significant:
   an excellent resource and point of reference for new and experienced
   users alike.
 
++ Alain M. Lafon :: Alain is one of my early influences in my Emacs
+  journey.  As soon as I had made the switch, I watched the video
+  presentation [[https://www.youtube.com/watch?v=gfZDwYeBlO4][Play Emacs like an instrument]], which shows some advanced
+  workflows of using Emacs in a seemingly effortless fashion.  I knew
+  Emacs was good, but did not realise it could be /that good/.  Alain is a
+  programmer as well as a Zen monk, who is the founder and CEO of the
+  200ok consultancy.  The [[https://200ok.ch/blog.html][consultancy's blog]] contains a lot of articles
+  and guides on Emacs, while you can find video tutorials on similar
+  topics over at [[https://www.youtube.com/channel/UCIFJHWyIlN0XFrW2vMKG6QA][Alain's Youtube channel]].
+
 + Xah Lee :: Xah is a well-known member of the community through years
   of contributions either with packages or [[http://www.xahlee.info/][informational websites]] on
   various aspects of Emacs.  On [[https://www.youtube.com/channel/UCXEJNKH9I4xsoyUNN3IL96A][Xah's Youtube channel]] you will find
