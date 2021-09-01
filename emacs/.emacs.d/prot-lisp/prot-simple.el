@@ -72,6 +72,15 @@ Used by `prot-simple-inset-date'."
   :type 'string
   :group 'prot-simple)
 
+(defcustom prot-simple-focusable-help-commands
+  '( describe-symbol describe-function
+     describe-variable describe-key
+     view-lossage)
+  "Commands whose buffers should steal focus.
+This makes it easier to dismiss them at once."
+  :type '(repeat symbol)
+  :group 'prot-simple)
+
 ;; TODO 2021-08-27: Is there a more general way to do this without
 ;; specifying the BUF?  That way we would only need one function.
 (defmacro prot-simple--auto-focus-buffer (fn doc buf)
@@ -93,9 +102,7 @@ Intended as :after advice for `describe-symbol' and friends."
 Intended as :after advice for `view-echo-area-messages'."
   (messages-buffer))
 
-(dolist (fn '( describe-symbol describe-function
-               describe-variable describe-key
-               view-lossage))
+(dolist (fn prot-simple-focusable-help-commands)
   (advice-add fn :after 'prot-simple--help-focus))
 
 (advice-add 'view-echo-area-messages :after 'prot-simple--messages-focus)

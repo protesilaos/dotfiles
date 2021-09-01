@@ -252,6 +252,11 @@ appropriate place to re-bind or free up some common key combinations.
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
   (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
+  (setq prot-simple-focusable-help-commands
+        '( describe-symbol describe-function
+           describe-variable describe-key
+           view-lossage
+           vc-git--pushpull))
 
   ;; General commands
   (let ((map global-map))
