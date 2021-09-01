@@ -3044,8 +3044,9 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
           ;; bottom buffer (NOT side window)
-          ("\\*\\vc-\\(incoming\\|outgoing\\|git: \\).*"
-           (display-buffer-at-bottom))
+          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+           (display-buffer-at-bottom)
+           (window-height . shrink-window-if-larger-than-buffer))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-at-bottom))
           ("\\*.*\\(e?shell\\|v?term\\).*"
