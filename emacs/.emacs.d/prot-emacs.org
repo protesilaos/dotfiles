@@ -3046,7 +3046,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
           ;; bottom buffer (NOT side window)
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-at-bottom)
-           (window-height . shrink-window-if-larger-than-buffer))
+           (window-height . fit-window-to-buffer))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-at-bottom))
           ("\\*.*\\(e?shell\\|v?term\\).*"
@@ -3055,7 +3055,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
           ;; below current window
           ("\\*\\(Calendar\\|Org Select\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . shrink-window-if-larger-than-buffer))))
+           (window-height . fit-window-to-buffer))))
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
