@@ -11,6 +11,8 @@ window {
     border:           2px 0 0;
     border-color:     @fg-alt;
     padding:          0px;
+    width:            100%;
+    max-height:       25%;
 }
 
 mainbox {
@@ -133,4 +135,10 @@ prompt {
 entry {
     spacing:    0;
     text-color: @fg-main;
+}
+
+
+element-text {
+    background-color: inherit;
+    text-color:       inherit;
 }

@@ -1,8 +1,5 @@
 configuration {
 	modi: "run,drun,window";
-	width: 100;
-	lines: 8;
-	columns: 1;
 	font: "Monospace 11";
 	location: 6;
 	yoffset: 0;
@@ -26,14 +23,11 @@ configuration {
 /*	tokenize: true;*/
 /*	m: "-5";*/
 /*	filter: ;*/
-	hide-scrollbar: true;
-	fullscreen: false;
 /*	dpi: -1;*/
 	threads: 0;
 /*	scroll-method: 0;*/
 	window-format: "{w:0}	{n:0}	{t:0}";
 	click-to-exit: true;
-	show-match: true;
     theme: "~/.config/rofi/themes/modus-themes-active.rasi";
 	max-history-size: 25;
 	combi-hide-mode-prefix: true;
