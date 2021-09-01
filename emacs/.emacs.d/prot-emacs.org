@@ -7510,7 +7510,7 @@ times.
   (add-hook 'after-init-hook #'display-battery-mode))
 #+end_src
 
-*** Display current time
+*** Display current time (and =world-clock=)
 :PROPERTIES:
 :CUSTOM_ID: h:da14ac1d-a06f-4531-b6c3-0414e8c98102
 :END:
@@ -7562,11 +7562,18 @@ an overview of the current time in various parts of the planet.
   (setq zoneinfo-style-world-list
         '(("America/Los_Angeles" "Los Angeles")
           ("America/Chicago" "Chicago")
+          ("Brazil/Acre" "Rio Branco")
           ("America/New_York" "New York")
+          ("Brazil/East" "Brasília")
           ("Europe/Lisbon" "Lisbon")
           ("Europe/Brussels" "Brussels")
+          ("Europe/Athens" "Athens")
+          ("Asia/Tbilisi" "Tbilisi")
+          ("Asia/Tehran" "Tehran")
+          ("Asia/Yekaterinburg" "Yekaterinburg")
           ("Asia/Shanghai" "Shanghai")
-          ("Asia/Tokyo" "Tokyo")))
+          ("Asia/Tokyo" "Tokyo")
+          ("Asia/Vladivostok" "Vladivostok")))
 
   ;; All of the following variables are for Emacs 28
   (setq world-clock-list t)
