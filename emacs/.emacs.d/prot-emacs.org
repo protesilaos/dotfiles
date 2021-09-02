@@ -1524,7 +1524,7 @@ try.
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
   (setq consult-find-command "find . -iname *ARG* OPTS")
-  (setq consult-preview-key nil) ; use 'any if you always want previews
+  (setq consult-preview-key 'any)
 
   (let ((map global-map))
     (define-key map (kbd "C-x r b") #'consult-bookmark) ; override `bookmark-jump'
