@@ -84,11 +84,11 @@ mod4 + x ; {x,b}
 # The other is of the entire X session (including all active monitors).
 # Note that `scrot` also has an interactive mode that I do not use.
 Print
-	scrot -u -z '%Y-%m-%d_%H:%M:%S_$wx$h$n.png' -e 'mv $f ~/Desktop' \
-    && notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Desktop"
+	scrot -u -z '%Y-%m-%d_%H:%M:%S_$wx$h$n.png' -e 'mv $f ~/Pictures' \
+    && notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Pictures"
 mod4 + Print
-	scrot -m -z '%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'mv $f ~/Desktop' \
-    && notify-send -i gnome-screenshot "Screen view screenshot" "Saved image to Desktop"
+	scrot -m -z '%Y-%m-%d_%H:%M:%S_$wx$h.png' -e 'mv $f ~/Pictures' \
+    && notify-send -i gnome-screenshot "Screen view screenshot" "Saved image to Pictures"
 
 # Control the laptop's screen brightness (requires `xbacklight`).
 XF86MonBrightness{Down,Up}
