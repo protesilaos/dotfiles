@@ -3057,7 +3057,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.2))
           ;; below current window
-          ("\\*\\(Calendar\\|Org Select\\).*"
+          ("\\*\\(Calendar\\|Org Select\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))))
   (setq window-combination-resize t)
@@ -7327,6 +7327,71 @@ in the manual of the themes.  If you are using them, evaluate this form:
 This section contains configurations for all aspects of the Emacs user
 interface, as well lots of small or self-contained tweaks that cover a
 wide range of built-in libraries.
+
+** Built-in bookmarking facility (bookmark.el)
+:PROPERTIES:
+:CUSTOM_ID: h:79cd6177-a81b-420f-8759-e6927b974377
+:END:
+
+Bookmarks are compartments that store data persistently about a file,
+directory, or Info node.  In short, when you place a bookmark with the
+command =bookmark-set= (bound to =C-x r m= by default), Emacs remembers both
+the current file and the position of the point in it.  It just prompts
+you for a name, which wil make it easier for you to retrieve the
+information afterwards.  Alternatively, use =bookmark-set-no-overwrite=
+(=C-x r M=) to prevent yourself from overriding existing bookmarks (though
+I generally prefer to write meaningful names for my entries).
+
+To access bookmarks using minibuffer completion, use the command
+=bookmark-jump= (=C-x r b=).  To get an overview in a tabulated list, call
+=list-bookmarks= (=C-x r l=).
+
+If you would like to browse bookmarks (and other sources such as recent
+files) through an all-in-one interface, use the =consult-buffer= command
+([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
+Consult also offers the command =consult-bookmark= which is like the
+standard =bookmark-jump= except that it also has support for group
+headings (so all files are under one heading, all Info nodes in another).
+
+The =list-bookmarks= interface provides several commands for altering the
+view, visiting, or deleting bookmarks.  Use =C-h m= (=describe-mode=) to get
+a help buffer with an explanation of what those are.
+
+Internally, bookmarks are similar to registers.  As such, I encourage
+you to read the official manual on the matter by evaluating this form:
+=(info "(emacs) Registers")=.  Also watch my [[https://protesilaos.com/codelog/2020-03-08-emacs-registers/][Primer on Emacs “registers”]]
+(2020-03-08).
+
+=bookmark.el= offers a few customisation options, though I find that the
+out-of-the-box design works well for my needs.  What I am still not sure
+about is the option to query for a longer form annotation (the variable
+=bookmark-use-annotations=) while recording a new bookmark.  It pops up a
+buffer where you can write a note on what is about to be recorded.  The
+note will appear in a separate buffer while visiting that bookmark (for
+its placement see [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks (window.el)]]).  To skip
+annotating the bookmark, just do not insert any text and either kill the
+buffer or type =C-c C-c= to accept the empty annotation.  In such a case,
+no buffer will pop up while visiting the bookmark.
+
+In the =list-bookmarks= view, items with an annotation have an asterisk
+prepended to their line.  With point over such a line, type =a= to produce
+the buffer with the contents of the annotation.
+
+Finally, I disable the fontification of the line where the bookmark is
+placed on (=bookmark-fontify= for Emacs 28), because I do not like how it
+is persistent.  I strongly believe this should optionally be a fringe
+indicator, but I do not know how to design that, so I can't send a
+patch.
+
+#+begin_src emacs-lisp
+;;; Built-in bookmarking facility (bookmark.el)
+(prot-emacs-builtin-package 'bookmark
+  (setq bookmark-use-annotations t)
+  (setq bookmark-automatically-show-annotations t)
+  (setq bookmark-fontify nil) ; Emacs28
+
+  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
+#+end_src
 
 ** Go to last change
 :PROPERTIES:
