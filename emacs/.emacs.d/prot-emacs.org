@@ -255,6 +255,7 @@ appropriate place to re-bind or free up some common key combinations.
   (setq prot-simple-focusable-help-commands
         '( describe-symbol
            describe-function
+           describe-mode
            describe-variable
            describe-key
            describe-package
