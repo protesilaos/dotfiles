@@ -229,6 +229,7 @@ Add this to `kill-emacs-hook', to use the newest file in the next
 session.  The idea is to reduce startup time, though just by
 rolling it over to the end of a session rather than the beginning
 of it."
+  (interactive)
   (let* ((main-init prot-emacs-configuration-main-file)
          (main-init-el (prot-emacs--expand-file-name main-init ".el"))
          (main-init-org (prot-emacs--expand-file-name main-init ".org"))
