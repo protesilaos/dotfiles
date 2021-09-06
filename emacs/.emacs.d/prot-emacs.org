@@ -4359,7 +4359,7 @@ emulator for command line shells/ and /toolkit for terminal emulators/.
 The present section covers only the former category as I never use the
 likes of =ansi-term= or =vterm=.
 
-**** Eshell and prot-eshell.el
+*** Eshell and prot-eshell.el
 :PROPERTIES:
 :CUSTOM_ID: h:103a8795-c29c-474f-9ddf-ecafaa2f6775
 :END:
@@ -4511,7 +4511,7 @@ This is =prot-eshell.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my 
 
 #+include: prot-lisp/prot-eshell.el src emacs-lisp :tangle no
 
-**** Shell (M-x shell)
+*** Shell (M-x shell)
 :PROPERTIES:
 :CUSTOM_ID: h:98804f0d-f2dd-41a4-b8df-c1bd04ef7f7a
 :END:
