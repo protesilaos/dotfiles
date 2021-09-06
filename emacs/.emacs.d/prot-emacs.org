@@ -567,9 +567,6 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
 :END:
 
-/NOTE 2021-08-27: I no longer have a laptop.  All references and
-concomitant code are subject to review./
-
 Any font I choose must conform with the following:
 
 + support Latin and Greek character sets;
@@ -593,20 +590,36 @@ Any font I choose must conform with the following:
 While there are many good free/libre options available, only a handful
 of them cover my fairly demanding needs.  Some look good at large point
 sizes.  Others lack Greek characters.  Some do not have italics...
+Getting it right is very difficult.
+
+The only font I could use over the years was Hack, which builds on the
+skeleton of DejaVu Sans Mono.  Though there are issues with Hack which I
+do not like, such as the default shape of the zero and one numbers, the
+small shape of the backtick character, misaligned at-sign...  Little
+things which keep annoying me.  Furthermore, Hack's open shapes are
+optimised for small point sizes, which makes it look a bit awkard when
+scaled up.  Again, another nit pick.  My [[https://gitlab.com/protesilaos/hack-font-mod][custom build of Hack]] (which I
+implement for smaller sizes) uses some alternative glyphs that alleviate
+some of those problems, but it cannot undo the overall character of the
+typeface (e.g. the open shapes).  To that end, I maintain a custom build
+of Iosevka which has a different line height than the original typeface,
+specifies the proportions and weights I want, and has different glyphs
+for roman and italic variants in order to match my aesthetic preferences
+and look good at larger point sizes.  I call it [[https://gitlab.com/protesilaos/iosevka-comfy][Iosevka Comfy]].
 
 Moving on to my configurations, =prot-fonts.el= covers my elaborate
 typeface requirements.  At its heart is =prot-fonts-typeface-sets-alist=.
 It contains associations of property lists (an alist of plists), each of
 which pertains to a give display type.  For example, when I am doing a
 video presentation, I require font configurations that differ from what
-I normally use.  So I have a =video= key in the alist to accommodate that
+I normally use.  So I have a =large= key in the alist to accommodate that
 particular need.  Those associations provide granular control over font
 attributes, as they specify both mono and proportionately spaced font
 families, each with their corresponding weights and heights.
 
 The command =prot-fonts-set-fonts= prompts with completion for a display
-type.  It gives options like =laptop=, =desktop=, =video=, which are drawn
-from the =prot-fonts-typeface-sets-alist= (more on completion in
+type.  It gives options like =small=, =regular=, =large=, which are drawn from
+the =prot-fonts-typeface-sets-alist= (more on completion in the section
 [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]]).  When called from Lisp it expects a
 =DISPLAY= argument, which is a symbol that matches the car of a cons cell
 in the aforementioned alist.
@@ -614,16 +627,19 @@ in the aforementioned alist.
 =prot-fonts-fonts-per-monitor= sets the appropriate font family and size
 depending on whether I am only on my laptop or have connected to it an
 external monitor.  In the latter case we use the =desktop= display type.
+Note that this is no longer relevant as of early August 2021 as my
+laptop broke, though I keep the code in place because I think it can be
+useful for others (or for my future reference).
 
 As noted above, =prot-fonts-typeface-sets-alist= associates a list of
 typefaces with desired weights, including for their bold variation.
 This is useful when the active theme (e.g. [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]) is designed
-in a way that parameterises the exact value of a bold weight, by calling
-=:inherit bold= instead of specifying =:weight bold=.  The former applies
-the =bold= face, whereas the latter sets the weight at a constant number,
-which typically is 700.  Thus, when the theme is designed that way, we
-can configure the =:weight= of the =bold= face to, e.g., =semibold= and have
-that propagate across all the faces that the theme defines.
+in a way that parameterises or abstracts the exact value of a bold
+weight, by calling =:inherit bold= instead of specifying =:weight bold=.
+The former applies the attributes of the =bold= face, whereas the latter
+sets the weight at a constant value.  When the theme is designed that
+way, we can configure the =:weight= of the =bold= face to, e.g., =extrabold=
+and have that propagate across all the faces that the theme defines.
 
 Now a few notes about setting fonts in Emacs.
 
@@ -631,19 +647,17 @@ While there are many ways to define a baseline or fallback font family,
 I find that the most consistent one in terms of overall configuration is
 to do it at the "face" level (read the docstring of =set-face-attribute=).
 Faces are understood as the domain of themes, though themes are just
-Elisp programs hence there is no real distinction here and it is
-perfectly fine to have one program define some properties of a face
-while another specifies some others.  The key is to make those
-complementary, so that one does not override the other.  Put concretely,
-=prot-fonts.el= sets properties such as =:family=, while my themes handle
-things like colours.
+Elisp programs so there is no real distinction here and it is perfectly
+fine to have one program define some properties of a face while another
+specifies a few others.  The key is to make those complementary.  Put
+concretely, =prot-fonts.el= sets properties such as =:family=, while my
+themes handle things like colours.
 
 To appreciate this point, consider that in Emacs parlance a "face"
 signifies a construct that bundles up together several display
 attributes, such as a foreground and a background colour, as well as all
-typography-related values.  Multiple assignments of value can expand the
-face's specifications, except when one explicitly overrules a given
-property.
+typography-related values.  Multiple assignments are compounded, unless
+one new attribute explicitly overrules an existing one.
 
 There are three faces that are of immediate interest to =prot-fonts.el=:
 the =default=, =variable-pitch=, and =fixed-pitch=.  The first is the Emacs
@@ -683,40 +697,29 @@ Relevant publications of mine that are not part of this document:
                      :fixed-pitch-height 90
                      :fixed-pitch-line-spacing 1
                      :variable-pitch-family "DejaVu Sans"
-                     :variable-pitch-height 0.95
+                     :variable-pitch-height 1.0
                      :variable-pitch-regular-weight normal))
 
-          (regular . ( :fixed-pitch-family "Source Code Pro"
-                       :fixed-pitch-regular-weight normal
-                       :fixed-pitch-heavy-weight bold
-                       :fixed-pitch-height 100
+          (regular . ( :fixed-pitch-family "Iosevka Comfy"
+                       :fixed-pitch-regular-weight book
+                       :fixed-pitch-heavy-weight extrabold
+                       :fixed-pitch-height 105
                        :fixed-pitch-line-spacing nil
-                       :variable-pitch-family "Open Sans"
+                       :variable-pitch-family "Noto Serif"
                        :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
-          (large . ( :fixed-pitch-family "Source Code Pro"
+          (large . ( :fixed-pitch-family "Iosevka Comfy"
                      :fixed-pitch-regular-weight normal
                      :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 130
+                     :fixed-pitch-height 135
                      :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "Open Sans"
-                     :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))
-
-          ;; Hack has tighter line spacing at this height.  It fits more
-          ;; text, saving the need for an extra slide.
-          (presentation . ( :fixed-pitch-family "Hack"
-                     :fixed-pitch-regular-weight normal
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 130
-                     :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "DejaVu Sans"
+                     :variable-pitch-family "Noto Serif"
                      :variable-pitch-height 1.0
                      :variable-pitch-regular-weight normal))))
 
-  ;; TODO 2021-08-27: I no longer have a laptop.  This part is subject
-  ;; to review.
+  ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
+  ;; are not relevant, but I keep them around as the idea is still good.
 
   ;; The value of `prot-fonts-laptop-desktop-keys-list' becomes '(small
   ;; regular) based on the car of the first two cons cells found in
