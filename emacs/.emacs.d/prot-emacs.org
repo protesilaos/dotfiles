@@ -445,11 +445,11 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-no-mixed-fonts nil
         modus-themes-subtle-line-numbers t
         modus-themes-success-deuteranopia nil
-        modus-themes-tabs-accented t
+        modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -490,7 +490,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(bold italic)
+        modus-themes-prompts '(bold background)
 
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
@@ -503,25 +503,25 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'fg-only-deuteranopia
+        modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch scale-title))
-          (header-date . (grayscale workaholic bold-today))
-          (scheduled . uniform)
+          (header-date . (bold-today grayscale scale))
+          (scheduled . rainbow)
           (habit . traffic-light-deuteranopia))
 
-        modus-themes-headings nil ; this is an alist: read the manual or its doc string
-        ;; '((1 . (overline background))
-        ;;   (2 . (overline background))
-        ;;   (3 . (overline rainbow))
-        ;;   (4 . (overline rainbow no-bold))
-        ;;   (t . (overline no-bold monochrome)))
+        modus-themes-headings ; this is an alist: read the manual or its doc string
+        '(;; (1 . (overline background))
+          ;; (2 . (overline background))
+          ;; (3 . (overline rainbow))
+          ;; (4 . (overline rainbow no-bold))
+          (t . (background overline rainbow)))
 
         modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings t
+        modus-themes-variable-pitch-headings nil
         modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
