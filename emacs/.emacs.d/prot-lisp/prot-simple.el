@@ -76,10 +76,16 @@ Used by `prot-simple-inset-date'."
   '( describe-symbol describe-function
      describe-variable describe-key
      view-lossage)
-  "Commands whose buffers should steal focus.
-This makes it easier to dismiss them at once."
+  "Commands whose buffers should be focused when displayed.
+This makes it easier to dismiss them at once.
+
+Also see `prot-simple-focus-help-buffers'."
   :type '(repeat symbol)
   :group 'prot-simple)
+
+;;; Generic setup
+
+;;;; Focus auxiliary buffers
 
 ;; TODO 2021-08-27: Is there a more general way to do this without
 ;; specifying the BUF?  That way we would only need one function.
@@ -102,10 +108,18 @@ Intended as :after advice for `describe-symbol' and friends."
 Intended as :after advice for `view-echo-area-messages'."
   (messages-buffer))
 
-(dolist (fn prot-simple-focusable-help-commands)
-  (advice-add fn :after 'prot-simple--help-focus))
-
-(advice-add 'view-echo-area-messages :after 'prot-simple--messages-focus)
+;;;###autoload
+(define-minor-mode prot-simple-focus-help-buffers
+  "Add advice to focus `prot-simple-focusable-help-commands'."
+  :lighter nil
+  (if prot-simple-focus-help-buffers
+      (progn
+        (dolist (fn prot-simple-focusable-help-commands)
+          (advice-add fn :after 'prot-simple--help-focus))
+        (advice-add 'view-echo-area-messages :after 'prot-simple--messages-focus))
+    (dolist (fn prot-simple-focusable-help-commands)
+      (advice-remove fn 'prot-simple--help-focus))
+    (advice-remove 'view-echo-area-messages 'prot-simple--messages-focus)))
 
 ;;; Commands
 

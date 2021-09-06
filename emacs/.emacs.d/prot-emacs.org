@@ -261,9 +261,9 @@ appropriate place to re-bind or free up some common key combinations.
            describe-char
            what-cursor-position
            describe-package
-           view-lossage
-           vc-git-push
-           vc-git-pull))
+           view-lossage))
+
+  (prot-simple-focus-help-buffers 1)
 
   ;; General commands
   (let ((map global-map))
