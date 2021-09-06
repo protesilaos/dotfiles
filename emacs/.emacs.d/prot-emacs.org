@@ -258,9 +258,12 @@ appropriate place to re-bind or free up some common key combinations.
            describe-mode
            describe-variable
            describe-key
+           describe-char
+           what-cursor-position
            describe-package
            view-lossage
-           vc-git--pushpull))
+           vc-git-push
+           vc-git-pull))
 
   ;; General commands
   (let ((map global-map))
