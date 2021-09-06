@@ -22,6 +22,18 @@
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
   (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
+  (setq prot-simple-focusable-help-commands
+        '( describe-symbol
+           describe-function
+           describe-mode
+           describe-variable
+           describe-key
+           describe-char
+           what-cursor-position
+           describe-package
+           view-lossage
+           vc-git-push
+           vc-git-pull))
 
   ;; General commands
   (let ((map global-map))
@@ -99,10 +111,10 @@
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-no-mixed-fonts nil
         modus-themes-subtle-line-numbers t
-        modus-themes-success-deuteranopia t
+        modus-themes-success-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
@@ -122,17 +134,17 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax nil
+        modus-themes-syntax '(alt-syntax yellow-comments)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(accented underline)
+        modus-themes-hl-line '(intense)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold intense underline)
+        modus-themes-paren-match '(bold underline)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -144,7 +156,7 @@
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(background gray)
+        modus-themes-prompts '(bold background)
 
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
@@ -153,30 +165,30 @@
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend bg-only)
+        modus-themes-region '(no-extend accented)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'bg-only
+        modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch scale-title))
-          (header-date . (grayscale workaholic bold-today))
-          (scheduled . uniform)
+          (header-date . (bold-today grayscale scale))
+          (scheduled . rainbow)
           (habit . traffic-light-deuteranopia))
 
-        modus-themes-headings nil ; this is an alist: read the manual or its doc string
-        ;; '((1 . (overline background))
-        ;;   (2 . (overline background))
-        ;;   (3 . (overline rainbow))
-        ;;   (4 . (overline rainbow no-bold))
-        ;;   (t . (overline no-bold monochrome)))
+        modus-themes-headings ; this is an alist: read the manual or its doc string
+        '(;; (1 . (overline background))
+          ;; (2 . (overline background))
+          ;; (3 . (overline rainbow))
+          ;; (4 . (overline rainbow no-bold))
+          (t . (background overline rainbow)))
 
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
-        modus-themes-scale-headings nil
+        modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
@@ -225,21 +237,21 @@
   ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
   ;; as it explains what those property lists should contain.
   (setq prot-fonts-typeface-sets-alist
-        '((small . ( :fixed-pitch-family "Iosevka Comfy"
+        '((small . ( :fixed-pitch-family "Hack"
                      :fixed-pitch-regular-weight normal
                      :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 100
+                     :fixed-pitch-height 90
                      :fixed-pitch-line-spacing 1
-                     :variable-pitch-family "FiraGO"
-                     :variable-pitch-height 0.95
+                     :variable-pitch-family "DejaVu Sans"
+                     :variable-pitch-height 1.0
                      :variable-pitch-regular-weight normal))
 
-          (regular . ( :fixed-pitch-family "Hack"
-                       :fixed-pitch-regular-weight normal
-                       :fixed-pitch-heavy-weight bold
-                       :fixed-pitch-height 100
+          (regular . ( :fixed-pitch-family "Iosevka Comfy"
+                       :fixed-pitch-regular-weight book
+                       :fixed-pitch-heavy-weight extrabold
+                       :fixed-pitch-height 105
                        :fixed-pitch-line-spacing nil
-                       :variable-pitch-family "DejaVu Sans"
+                       :variable-pitch-family "Noto Serif"
                        :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
@@ -248,12 +260,12 @@
                      :fixed-pitch-heavy-weight bold
                      :fixed-pitch-height 135
                      :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "Open Sans"
+                     :variable-pitch-family "Noto Serif"
                      :variable-pitch-height 1.0
                      :variable-pitch-regular-weight normal))))
 
-  ;; TODO 2021-08-27: I no longer have a laptop.  This part is subject
-  ;; to review.
+  ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
+  ;; are not relevant, but I keep them around as the idea is still good.
 
   ;; The value of `prot-fonts-laptop-desktop-keys-list' becomes '(small
   ;; regular) based on the car of the first two cons cells found in
@@ -454,8 +466,8 @@
                                    (?v "Variables" font-lock-variable-name-face)))))
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
-  (setq consult-find-command "find . -iname *ARG* OPTS")
-  (setq consult-preview-key nil) ; use 'any if you always want previews
+  (setq consult-find-args "find . -not ( -wholename */.* -prune )")
+  (setq consult-preview-key 'any)
 
   (let ((map global-map))
     (define-key map (kbd "C-x r b") #'consult-bookmark) ; override `bookmark-jump'
@@ -502,7 +514,7 @@
   (setq embark-indicator #'embark-mixed-indicator)
   ;; NOTE 2021-07-31: The mixed indicator starts out with a minimal view
   ;; and then pops up the verbose buffer, so those variables matter.
-  (setq embark-verbose-indicator-excluded-commands
+  (setq embark-verbose-indicator-excluded-actions
         '("\\`embark-collect-" "\\`customize-" "\\(local\\|global\\)-set-key"
           set-variable embark-cycle embark-export
           embark-keymap-help embark-become embark-isearch))
@@ -922,7 +934,7 @@ If region is active, add its contents to the new buffer."
            (window-height . 0.16)
            (side . top)
            (slot . -1))
-          ("\\*\\(Flymake\\|Package-Lint\\|vc-git :\\).*"
+          ("\\*\\(Flymake\\|Package-Lint\\).*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
@@ -972,17 +984,18 @@ If region is active, add its contents to the new buffer."
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
           ;; bottom buffer (NOT side window)
-          ("\\*\\vc-\\(incoming\\|outgoing\\).*"
-           (display-buffer-at-bottom))
+          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+           (display-buffer-at-bottom)
+           (window-height . fit-window-to-buffer))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-at-bottom))
           ("\\*.*\\(e?shell\\|v?term\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.2))
           ;; below current window
-          ("\\*\\(Calendar\\|Org Select\\).*"
+          ("\\*\\(Calendar\\|Org Select\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . shrink-window-if-larger-than-buffer))))
+           (window-height . fit-window-to-buffer))))
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
@@ -1467,7 +1480,7 @@ sure this is a good approach."
 ;; then activate `prot-outline-minor-mode-safe' to conveniently browse
 ;; this massive code block.
 (prot-emacs-builtin-package 'org
-  (setq org-directory (convert-standard-filename "~/Org"))
+  (setq org-directory (convert-standard-filename "~/Documents/org"))
   (setq org-imenu-depth 7)
 ;;;; general settings
   (setq org-adapt-indentation nil)      ; No, non, nein, όχι!
@@ -2438,8 +2451,6 @@ Can link to more than one message, if so all matching messages are shown."
   (setq ebdb-user-name-address-re 'self) ; match the above
   (setq ebdb-save-on-exit t)
 
-  (setq ebdb-use-diary nil)
-
   (with-eval-after-load 'prot-mail ; check my `prot-mail.el'
     (add-hook 'message-setup-hook #'prot-mail-ebdb-message-setup))
 
@@ -2701,6 +2712,14 @@ Can link to more than one message, if so all matching messages are shown."
   (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
   (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
 
+;;; Built-in bookmarking facility (bookmark.el)
+(prot-emacs-builtin-package 'bookmark
+  (setq bookmark-use-annotations t)
+  (setq bookmark-automatically-show-annotations t)
+  (setq bookmark-fontify nil) ; Emacs28
+
+  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
+
 ;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
   (define-key global-map (kbd "C-z") #'goto-last-change))
@@ -2792,11 +2811,18 @@ Can link to more than one message, if so all matching messages are shown."
   (setq zoneinfo-style-world-list
         '(("America/Los_Angeles" "Los Angeles")
           ("America/Chicago" "Chicago")
+          ("Brazil/Acre" "Rio Branco")
           ("America/New_York" "New York")
+          ("Brazil/East" "Brasília")
           ("Europe/Lisbon" "Lisbon")
           ("Europe/Brussels" "Brussels")
+          ("Europe/Athens" "Athens")
+          ("Asia/Tbilisi" "Tbilisi")
+          ("Asia/Tehran" "Tehran")
+          ("Asia/Yekaterinburg" "Yekaterinburg")
           ("Asia/Shanghai" "Shanghai")
-          ("Asia/Tokyo" "Tokyo")))
+          ("Asia/Tokyo" "Tokyo")
+          ("Asia/Vladivostok" "Vladivostok")))
 
   ;; All of the following variables are for Emacs 28
   (setq world-clock-list t)
