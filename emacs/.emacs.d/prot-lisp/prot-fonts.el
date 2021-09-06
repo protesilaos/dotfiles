@@ -48,26 +48,26 @@
   '((laptop  . ( :fixed-pitch-family "Hack"
                  :fixed-pitch-regular-weight normal
                  :fixed-pitch-heavy-weight bold
-                 :fixed-pitch-height 80
+                 :fixed-pitch-height 90
                  :fixed-pitch-line-spacing 1
-                 :variable-pitch-family "DejaVu Sans Condensed"
+                 :variable-pitch-family "DejaVu Sans"
                  :variable-pitch-height 1.0
                  :variable-pitch-regular-weight normal))
 
     (desktop . ( :fixed-pitch-family "Iosevka Comfy"
-                 :fixed-pitch-regular-weight normal
-                 :fixed-pitch-heavy-weight bold
-                 :fixed-pitch-height 100
-                 :fixed-pitch-line-spacing 1
+                 :fixed-pitch-regular-weight book
+                 :fixed-pitch-heavy-weight extrabold
+                 :fixed-pitch-height 105
+                 :fixed-pitch-line-spacing nil
                  :variable-pitch-family "FiraGO"
-                 :variable-pitch-height 0.9
+                 :variable-pitch-height 0.95
                  :variable-pitch-regular-weight normal))
 
     (video   . ( :fixed-pitch-family "Iosevka Comfy"
-                 :fixed-pitch-regular-weight light
-                 :fixed-pitch-heavy-weight semi-bold
-                 :fixed-pitch-height 150
-                 :fixed-pitch-line-spacing 1
+                 :fixed-pitch-regular-weight normal
+                 :fixed-pitch-heavy-weight bold
+                 :fixed-pitch-height 135
+                 :fixed-pitch-line-spacing nil
                  :variable-pitch-family "Source Sans Pro"
                  :variable-pitch-height 1.0
                  :variable-pitch-regular-weight normal)))
