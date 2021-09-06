@@ -1530,7 +1530,7 @@ try.
                                    (?v "Variables" font-lock-variable-name-face)))))
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
-  (setq consult-find-command "find . -iname *ARG* OPTS")
+  (setq consult-find-args "find . -not ( -wholename */.* -prune )")
   (setq consult-preview-key 'any)
 
   (let ((map global-map))
@@ -1715,7 +1715,7 @@ a correct export buffer while using relevant Consult commands, such as
   (setq embark-indicator #'embark-mixed-indicator)
   ;; NOTE 2021-07-31: The mixed indicator starts out with a minimal view
   ;; and then pops up the verbose buffer, so those variables matter.
-  (setq embark-verbose-indicator-excluded-commands
+  (setq embark-verbose-indicator-excluded-actions
         '("\\`embark-collect-" "\\`customize-" "\\(local\\|global\\)-set-key"
           set-variable embark-cycle embark-export
           embark-keymap-help embark-become embark-isearch))
@@ -6509,8 +6509,6 @@ lots of options and commands: make sure to read its official manual.
   (setq ebdb-record-self "ace719a4-61f8-4bee-a1ca-2f07e2292305")
   (setq ebdb-user-name-address-re 'self) ; match the above
   (setq ebdb-save-on-exit t)
-
-  (setq ebdb-use-diary nil)
 
   (with-eval-after-load 'prot-mail ; check my `prot-mail.el'
     (add-hook 'message-setup-hook #'prot-mail-ebdb-message-setup))
