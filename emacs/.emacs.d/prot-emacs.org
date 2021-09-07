@@ -9767,24 +9767,51 @@ branch).
 :CUSTOM_ID: h:e134a8b2-224e-4383-bf03-b080ab6659c7
 :END:
 
-I am using a Lenovo Thinkpad X220 that I got in 2018 for ~80 EUR.  This
-is the first computer I ever bought: before that I had a Macbook that
-was offered to me as part of an office job---but do not ask me about it
-because at the time I only knew how to copy/paste using right click and
-that sort of thing, while I only ever bothered with the hardware side of
-things once I got better at using the computer (my switch to GNU/Linux
-was about freedom and consumer sovereignty, i.e. politics, not tech-only
-considerations).
+I used to have a Lenovo Thinkpad X220 which I purchased in 2018 for ~80
+EUR.  In early August 2021 its battery stopped working and, for reasons
+I do not understand, it does not power up without it even though the
+Internet tells me it should...
 
-The laptop is mostly deployed as part of a desktop setup, attached to an
-external monitor, mouse, and keyboard.  The monitor is 1080p and I got
-free of charge from a clearance.  As for the mouse and keyboard, I
-bought those from a toy store for a grand total of 7 EUR combined.  The
-keyboard's layout is US Qwerty.
+Watch: [[https://protesilaos.com/codelog/2021-08-29-emacs-community-new-pc/][The Emacs community bought me a new PC]] (2021-08-29).
 
-For my videos I use the built-in camera and microphone (sorry if the
-production quality is sub-standard!).  Since we are here: the recording
-software is OBS Studio, while I do no video editing whatsoever.
+After the [[https://protesilaos.com/news/2021-08-16-status-update-computer/][donations I received up until August 16 2021]], which amounted
+to 430 EUR, I contacted a friend of mine who is tech-savvy and was able
+to build a custom desktop computer with his help.  I don't have the full
+picture of all the specs, as I know very little about hardware (the
+first computer I ever owned was my laptop and now this one) and my
+friend was the one who took care of everything.
+
+In the following table the discepancy between the values in the column
+"my cost" and "brand new" indicates that the component came second-hand.
+
+| Component    | Specification                                       | My cost | Brand new |
+|--------------+-----------------------------------------------------+---------+-----------|
+| GPU          | VGA BIOSTAR AMD RADEON RX560 2GB VA5615RF21         |     100 |       140 |
+| CPU          | AMD RYZEN 5 1600 AF 3.20GHZ 6-CORE                  |     120 |       180 |
+| RAM          | TEAM GROUP TED416G2400C1601 ELITE 16GB DDR4 2400MHZ |      83 |        83 |
+| MOTHERBOARD  | ASUS PRIME B450M - A II                             |      85 |        85 |
+| Fans         | Don't know                                          |      10 |        10 |
+| Power supply | Don't know                                          |      30 |        30 |
+| Box          | Don't know                                          |      30 |        30 |
+|--------------+-----------------------------------------------------+---------+-----------|
+|              |                                                     |     458 |       558 |
+
+Other components I already had: monitor, mouse, keyboard, speakers.  I
+had acquired those over the years.  The keyboard is a generic Qwerty
+layout that I got from a toy store for 7 EUR together with a small mouse
+(the size of the mouse is about half that of a regular one).  The mouse
+is annoying to work with (thankfully not often), though the keyboard
+feels better than what its cost suggests---still toy-level though.  Same
+for the speakers, which I think cost 8 or 10 EUR.  The monitor is 1080p
+and the best part is that I got it free of charge from a clearance
+several years ago, before I even had the Thinkpad.
+
+On the day I got the computer (August 6, 2021), I got a camera and
+microphone for 40 EUR combined.  Now I have a good setup in place to do
+live streams in addition to the prerecorded videos I would produce.
+
+Since we are here: the recording software is OBS Studio, while I do no
+video editing whatsoever.
 
 * Other people's Emacs work
 :PROPERTIES:
