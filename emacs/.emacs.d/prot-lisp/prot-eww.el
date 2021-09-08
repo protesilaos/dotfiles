@@ -764,6 +764,10 @@ record for the current EWW page."
 ;; FIXME 2021-09-08: Why `bookmark-bmenu-other-window' does not work as
 ;; intended?  It is bound to `o' in `bookmark-bmenu-mode-map' (C-x r l).
 
+;; TODO 2021-09-08: Restore position of point.  We would need a
+;; `with-current-buffer' for this, but the tricky part is to get the
+;; correct one that the bookmark handler visits at the moment.
+
 ;;;###autoload
 (defun prot-eww-bookmark-jump (bookmark)
   "Jump to BOOKMARK using EWW.
