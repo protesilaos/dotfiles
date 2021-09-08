@@ -6966,8 +6966,9 @@ bindings and their functions.
 :CUSTOM_ID: h:524bc702-ff55-4ed9-9a38-26d30d64591d
 :END:
 
-NOTE 2021-07-24: This section needs to be expanded to cover the
-integration with =elpher= (Elpher is an Internet browser for the Gopher
+TODO 2021-09-08: This section needs to be expanded to cover the
+integration with the built-in =bookmark.el= framework as well as the
+third-party =elpher= package (Elpher is an Internet browser for the Gopher
 and Gemini protocols).
 
 
@@ -6979,7 +6980,7 @@ browsing experience.
   page inside of Emacs, while I let the Desktop Environment's default
   graphical browser be declared as a secondary option.  Put simply, when
   I click on a URL, I go to an EWW or Elpher buffer.  If the page is
-  part of the World Wide Web (https? protocol) I can opt to open it in
+  part of the World Wide Web (=https?= protocol) I can opt to open it in
   the GUI browser via =eww-browse-with-external-browser=, which is bound
   to =&= in =eww-mode-map=.  That is only ever needed for websites that do
   not work well in a text-centric interface.  For pages that implement
@@ -7017,13 +7018,8 @@ For =eww=, I repurpose some of its key bindings that I never plan to use,
 such as the toggle for proportional fonts, while I move around a few
 others.  Just to make things easier for me.
 
-NOTE 2021-07-24: Here we need to cover the Elpher configs.
-
-As for =prot-eww=, it includes functionality that make EWW good enough for
-my day-to-day needs.
-
-NOTE 2021-07-24: This section is incomplete, as it does not cover the
-latest state of the code.
+As for =prot-eww=, it includes functionality that makes EWW good enough
+for my day-to-day needs.
 
 In particular:
 
