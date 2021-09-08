@@ -1338,7 +1338,8 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   ;; updating the completions' buffer.
   (setq prot-minibuffer-completion-passlist
         '( vc-retrieve-tag embark-prefix-help-command org-capture
-           prot-bongo-playlist-insert-playlist-file))
+           prot-bongo-playlist-insert-playlist-file
+           prot-bookmark-cd-bookmark))
 
   (define-key global-map (kbd "C-x :") #'prot-minibuffer-focus-mini-or-completions)
   (let ((map completion-list-mode-map))
@@ -1531,6 +1532,17 @@ try.
                                    (?p "Packages"  font-lock-constant-face)
                                    (?t "Types"     font-lock-type-face)
                                    (?v "Variables" font-lock-variable-name-face)))))
+  ;; Search C-h f for more "bookmark jump" handlers.
+  (setq consult-bookmark-narrow
+        `((?d "Docview" ,#'doc-view-bookmark-jump)
+          (?e "Eshell" ,#'eshell-bookmark-jump)
+          (?f "File" ,#'bookmark-default-handler)
+          (?h "Help" ,#'help-bookmark-jump)
+          (?i "Info" ,#'Info-bookmark-jump)
+          (?m "Man" ,#'Man-bookmark-jump)
+          (?p "PDF" ,#'pdf-view-bookmark-jump)
+          (?v "VC Dir" ,#'vc-dir-bookmark-jump)
+          (?w "EWW" ,#'prot-eww-bookmark-jump)))
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
   (setq consult-find-args "find . -not ( -wholename */.* -prune )")
@@ -2475,13 +2487,6 @@ overview of the options I specify for Dired proper:
   This is to ensure that file name changes are tracked correctly (also
   check my detailed: [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]]).
 
-+ The commands with the =contrib/= prefix in =dired-aux= are copied from the
-  [[https://github.com/oantolin/emacs-config][Emacs configurations of Omar Antolín Camarena]].  They let you insert
-  the path of a bookmarked directory while facing a =find-file= or =dired=
-  minibuffer prompt.  This is useful when you are performing an action
-  such as copying or renaming a file, with the desired destination being
-  the bookmark of choice.
-
 And here are a few words about the more specialised parts of the Dired
 ecosystem:
 
@@ -2613,30 +2618,10 @@ ecosystem:
   ;; And this is for Emacs 28
   (setq dired-do-revert-buffer (lambda (dir) (not (file-remote-p dir))))
 
-  ;; Those two functions are copied from the Emacs config of Omar
-  ;; Antolín Camarena: <https://github.com/oantolin/emacs-config>.
-  (defun contrib/cdb--bookmarked-directories ()
-    (bookmark-maybe-load-default-file)
-    (cl-loop for (name . props) in bookmark-alist
-             for fn = (cdr (assq 'filename props))
-             when (and fn (string-suffix-p "/" fn))
-             collect (cons name fn)))
-
-  (defun contrib/cd-bookmark (bm)
-    "Insert the path of a bookmarked directory."
-    (interactive
-     (list (let ((enable-recursive-minibuffers t))
-             (completing-read
-              "Directory: " (contrib/cdb--bookmarked-directories) nil t))))
-    (when (minibufferp)
-      (delete-region (minibuffer-prompt-end) (point-max)))
-    (insert (cdr (assoc bm (contrib/cdb--bookmarked-directories)))))
-
   (let ((map dired-mode-map))
     (define-key map (kbd "C-+") #'dired-create-empty-file)
     (define-key map (kbd "M-s f") #'nil)
-    (define-key map (kbd "C-x v v") #'dired-vc-next-action)) ; Emacs 28
-  (define-key minibuffer-local-filename-completion-map (kbd "C-c d") #'contrib/cd-bookmark))
+    (define-key map (kbd "C-x v v") #'dired-vc-next-action))) ; Emacs 28
 
 ;; ;; NOTE 2021-05-10: I do not use `find-dired' and related commands
 ;; ;; because there are other tools that offer a better interface, such
@@ -3389,6 +3374,110 @@ This section includes configurations for programs like email clients,
 news reader, music players…  Anything you would normally see in a
 standalone application.  The end goal is to eventually integrate every
 aspect of my computing inside of Emacs.
+
+** Built-in bookmarking framework (bookmark.el and prot-bookmark.el)
+:PROPERTIES:
+:CUSTOM_ID: h:79cd6177-a81b-420f-8759-e6927b974377
+:END:
+
+Bookmarks are compartments that store data persistently about a file,
+directory, Info node, Man or WoMan page, image-mode entry, Docview or
+pdf-tools document, Eshell buffer...  Basically there can be a bookmark
+for anything that Emacs can access, as long as it has a handler function
+configured for it.  Do =M-x apropos-function= and search for =bookmark jump=
+to see what is on offer (packages can add their own support).
+
+When you set a bookmark with the command =bookmark-set= (bound by default
+to =C-x r m=), Emacs remembers both the current item and, when data
+persists on disk, the position of the point in it.  The command prompts
+you for a name, which wil make it easier for you to retrieve the
+information afterwards.  Alternatively, use =bookmark-set-no-overwrite=
+(=C-x r M=) to prevent yourself from overriding existing bookmarks (though
+I generally prefer to write meaningful names for my entries).
+
+To access bookmarks with minibuffer completion, invoke the command
+=bookmark-jump= (=C-x r b=).  To get an overview in a tabulated list, call
+=list-bookmarks= (=C-x r l=).
+
+If you would like to browse bookmarks (and other sources such as recent
+files) through an all-in-one interface, use the =consult-buffer= command
+(see [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
+Consult also offers the command =consult-bookmark= which is like the
+standard =bookmark-jump= except that it also has support for group
+headings (so all files are under one heading, all Info nodes in
+another).  I thus consider it a drop-in replacement for =C-x r b=.
+
+The =list-bookmarks= interface provides several commands for visiting, or
+deleting bookmarks.  Use =C-h m= (=describe-mode=) to get a help buffer with
+an explanation of what those are (and remember to make best use of
+Emacs' self-documentation system: [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
+
+Internally, bookmarks are similar to registers.  As such, I encourage
+you to read the official manual on the matter by evaluating this form:
+=(info "(emacs) Registers")=.  Also watch my [[https://protesilaos.com/codelog/2020-03-08-emacs-registers/][Primer on Emacs “registers”]]
+(2020-03-08).
+
+=bookmark.el= offers a few customisation options, though I find that the
+out-of-the-box design works well for my needs.  What I am still not sure
+about is the option to query for a longer form annotation (the variable
+=bookmark-use-annotations=) /while recording a new bookmark/.  It pops up a
+buffer where you can write a note on what is about to be recorded.  The
+note will appear in a separate buffer while visiting that bookmark (for
+its placement see [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks (window.el)]]).  To skip
+annotating the bookmark, just do not insert any text and either kill the
+buffer or type =C-c C-c= to accept the empty annotation.  In such a case,
+no buffer will pop up while visiting the bookmark.  Perhaps a less
+intrusive alternative is to annotate bookmarks after the fact, through
+the =list-bookmarks= view by typing =e= with point over the entry of
+interest.
+
+Speaking of the =list-bookmarks= view, items with an annotation have an
+asterisk prepended to their line.  With point over such a line, type =a=
+to produce a buffer with the contents of the annotation, or =A= to show
+all bookmarks with their annotations or lack thereof.
+
+On the presentation front, I disable the fontification of the line where
+the bookmark is placed on (=bookmark-fontify= for Emacs 28), because I do
+not like how it is persistent.  I strongly believe this should
+optionally be a fringe indicator, but I do not know how to design that,
+so I can't send a patch.  While my =prot-bookmark.el= (reproduced after
+the following package configurations) defines some extra faces for the
+=list-bookmarks= view.  Those help differentiate URLs from files, PDFs,
+and directories, though it is a work-in-progress and will likely cover
+more cases.
+
+URL bookmarks are handled by my =prot-eww.el= extensions, by means of a
+custom handler that leverages the standard =bookmark.el= framework instead
+of the EWW-only bookmarking facility that is available by default
+([[#h:524bc702-ff55-4ed9-9a38-26d30d64591d][Simple HTML Renderer, Emacs Web Wowser, Elpher, prot-eww.el]]).
+
+Finally, some other extras provided by my =prot-bookmark.el=:
+
++ Insert the path of a bookmarked directory while in a file prompt.  The
+  selection of the bookmark happens in a recursive minibuffer.  This is
+  particularly useful when you copy/rename a file in Dired and want to
+  send it to an oft-visited location.  The code is adapted from the
+  [[https://github.com/oantolin/emacs-config][Emacs configurations of Omar Antolín Camarena]].
+
+#+begin_src emacs-lisp
+;;; Built-in bookmarking framework (bookmark.el and prot-bookmark.el)
+(prot-emacs-builtin-package 'bookmark
+  (setq bookmark-use-annotations nil)
+  (setq bookmark-automatically-show-annotations t)
+  (setq bookmark-fontify nil) ; Emacs28
+
+  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
+
+(prot-emacs-builtin-package 'prot-bookmark
+  (prot-bookmark-extra-keywords 1)
+
+  (define-key minibuffer-local-filename-completion-map
+    (kbd "C-c C-d") #'prot-bookmark-cd-bookmark))
+#+end_src
+
+Here is =prot-bookmark.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: prot-lisp/prot-bookmark.el src emacs-lisp :tangle no
 
 ** Custom extensions for "focus mode" (prot-logos.el)
 :PROPERTIES:
@@ -7328,71 +7417,6 @@ in the manual of the themes.  If you are using them, evaluate this form:
 This section contains configurations for all aspects of the Emacs user
 interface, as well lots of small or self-contained tweaks that cover a
 wide range of built-in libraries.
-
-** Built-in bookmarking facility (bookmark.el)
-:PROPERTIES:
-:CUSTOM_ID: h:79cd6177-a81b-420f-8759-e6927b974377
-:END:
-
-Bookmarks are compartments that store data persistently about a file,
-directory, or Info node.  In short, when you place a bookmark with the
-command =bookmark-set= (bound to =C-x r m= by default), Emacs remembers both
-the current file and the position of the point in it.  It just prompts
-you for a name, which wil make it easier for you to retrieve the
-information afterwards.  Alternatively, use =bookmark-set-no-overwrite=
-(=C-x r M=) to prevent yourself from overriding existing bookmarks (though
-I generally prefer to write meaningful names for my entries).
-
-To access bookmarks using minibuffer completion, use the command
-=bookmark-jump= (=C-x r b=).  To get an overview in a tabulated list, call
-=list-bookmarks= (=C-x r l=).
-
-If you would like to browse bookmarks (and other sources such as recent
-files) through an all-in-one interface, use the =consult-buffer= command
-([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
-Consult also offers the command =consult-bookmark= which is like the
-standard =bookmark-jump= except that it also has support for group
-headings (so all files are under one heading, all Info nodes in another).
-
-The =list-bookmarks= interface provides several commands for altering the
-view, visiting, or deleting bookmarks.  Use =C-h m= (=describe-mode=) to get
-a help buffer with an explanation of what those are.
-
-Internally, bookmarks are similar to registers.  As such, I encourage
-you to read the official manual on the matter by evaluating this form:
-=(info "(emacs) Registers")=.  Also watch my [[https://protesilaos.com/codelog/2020-03-08-emacs-registers/][Primer on Emacs “registers”]]
-(2020-03-08).
-
-=bookmark.el= offers a few customisation options, though I find that the
-out-of-the-box design works well for my needs.  What I am still not sure
-about is the option to query for a longer form annotation (the variable
-=bookmark-use-annotations=) while recording a new bookmark.  It pops up a
-buffer where you can write a note on what is about to be recorded.  The
-note will appear in a separate buffer while visiting that bookmark (for
-its placement see [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks (window.el)]]).  To skip
-annotating the bookmark, just do not insert any text and either kill the
-buffer or type =C-c C-c= to accept the empty annotation.  In such a case,
-no buffer will pop up while visiting the bookmark.
-
-In the =list-bookmarks= view, items with an annotation have an asterisk
-prepended to their line.  With point over such a line, type =a= to produce
-the buffer with the contents of the annotation.
-
-Finally, I disable the fontification of the line where the bookmark is
-placed on (=bookmark-fontify= for Emacs 28), because I do not like how it
-is persistent.  I strongly believe this should optionally be a fringe
-indicator, but I do not know how to design that, so I can't send a
-patch.
-
-#+begin_src emacs-lisp
-;;; Built-in bookmarking facility (bookmark.el)
-(prot-emacs-builtin-package 'bookmark
-  (setq bookmark-use-annotations t)
-  (setq bookmark-automatically-show-annotations t)
-  (setq bookmark-fontify nil) ; Emacs28
-
-  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
-#+end_src
 
 ** Go to last change
 :PROPERTIES:
