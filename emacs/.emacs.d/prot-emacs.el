@@ -31,9 +31,9 @@
            describe-char
            what-cursor-position
            describe-package
-           view-lossage
-           vc-git-push
-           vc-git-pull))
+           view-lossage))
+
+  (prot-simple-focus-help-buffers 1)
 
   ;; General commands
   (let ((map global-map))
@@ -111,14 +111,14 @@
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs nil
+        modus-themes-bold-constructs t
         modus-themes-no-mixed-fonts nil
-        modus-themes-subtle-line-numbers t
-        modus-themes-success-deuteranopia nil
+        modus-themes-subtle-line-numbers nil
+        modus-themes-success-deuteranopia t
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -129,12 +129,12 @@
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', `padded'.
-        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
+        modus-themes-mode-line '(3d) ; For Moody, also check `prot-moody'
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(alt-syntax yellow-comments)
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -144,13 +144,13 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold underline)
+        modus-themes-paren-match '(underline)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links nil
+        modus-themes-links '(faint neutral-underline)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of
@@ -169,9 +169,9 @@
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs nil
+        modus-themes-diffs 'fg-only-deuteranopia
 
-        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
+        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch scale-title))
@@ -411,7 +411,8 @@
   ;; updating the completions' buffer.
   (setq prot-minibuffer-completion-passlist
         '( vc-retrieve-tag embark-prefix-help-command org-capture
-           prot-bongo-playlist-insert-playlist-file))
+           prot-bongo-playlist-insert-playlist-file
+           prot-bookmark-cd-bookmark))
 
   (define-key global-map (kbd "C-x :") #'prot-minibuffer-focus-mini-or-completions)
   (let ((map completion-list-mode-map))
@@ -464,6 +465,17 @@
                                    (?p "Packages"  font-lock-constant-face)
                                    (?t "Types"     font-lock-type-face)
                                    (?v "Variables" font-lock-variable-name-face)))))
+  ;; Search C-h f for more "bookmark jump" handlers.
+  (setq consult-bookmark-narrow
+        `((?d "Docview" ,#'doc-view-bookmark-jump)
+          (?e "Eshell" ,#'eshell-bookmark-jump)
+          (?f "File" ,#'bookmark-default-handler)
+          (?h "Help" ,#'help-bookmark-jump)
+          (?i "Info" ,#'Info-bookmark-jump)
+          (?m "Man" ,#'Man-bookmark-jump)
+          (?p "PDF" ,#'pdf-view-bookmark-jump)
+          (?v "VC Dir" ,#'vc-dir-bookmark-jump)
+          (?w "EWW" ,#'prot-eww-bookmark-jump)))
   (setq register-preview-delay 0.8
         register-preview-function #'consult-register-format)
   (setq consult-find-args "find . -not ( -wholename */.* -prune )")
@@ -749,30 +761,10 @@
   ;; And this is for Emacs 28
   (setq dired-do-revert-buffer (lambda (dir) (not (file-remote-p dir))))
 
-  ;; Those two functions are copied from the Emacs config of Omar
-  ;; Antolín Camarena: <https://github.com/oantolin/emacs-config>.
-  (defun contrib/cdb--bookmarked-directories ()
-    (bookmark-maybe-load-default-file)
-    (cl-loop for (name . props) in bookmark-alist
-             for fn = (cdr (assq 'filename props))
-             when (and fn (string-suffix-p "/" fn))
-             collect (cons name fn)))
-
-  (defun contrib/cd-bookmark (bm)
-    "Insert the path of a bookmarked directory."
-    (interactive
-     (list (let ((enable-recursive-minibuffers t))
-             (completing-read
-              "Directory: " (contrib/cdb--bookmarked-directories) nil t))))
-    (when (minibufferp)
-      (delete-region (minibuffer-prompt-end) (point-max)))
-    (insert (cdr (assoc bm (contrib/cdb--bookmarked-directories)))))
-
   (let ((map dired-mode-map))
     (define-key map (kbd "C-+") #'dired-create-empty-file)
     (define-key map (kbd "M-s f") #'nil)
-    (define-key map (kbd "C-x v v") #'dired-vc-next-action)) ; Emacs 28
-  (define-key minibuffer-local-filename-completion-map (kbd "C-c d") #'contrib/cd-bookmark))
+    (define-key map (kbd "C-x v v") #'dired-vc-next-action))) ; Emacs 28
 
 ;; ;; NOTE 2021-05-10: I do not use `find-dired' and related commands
 ;; ;; because there are other tools that offer a better interface, such
@@ -984,15 +976,15 @@ If region is active, add its contents to the new buffer."
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
           ;; bottom buffer (NOT side window)
-          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-           (display-buffer-at-bottom)
-           (window-height . fit-window-to-buffer))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-at-bottom))
           ("\\*.*\\(e?shell\\|v?term\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.2))
           ;; below current window
+          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           (window-height . fit-window-to-buffer))
           ("\\*\\(Calendar\\|Org Select\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))))
@@ -1118,6 +1110,20 @@ If region is active, add its contents to the new buffer."
 (prot-emacs-elpa-package 'transpose-frame
   (let ((map global-map))
     (define-key map (kbd "C-x M-r") #'rotate-frame-clockwise)))
+
+;;; Built-in bookmarking framework (bookmark.el and prot-bookmark.el)
+(prot-emacs-builtin-package 'bookmark
+  (setq bookmark-use-annotations nil)
+  (setq bookmark-automatically-show-annotations t)
+  (setq bookmark-fontify nil) ; Emacs28
+
+  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
+
+(prot-emacs-builtin-package 'prot-bookmark
+  (prot-bookmark-extra-keywords 1)
+
+  (define-key minibuffer-local-filename-completion-map
+    (kbd "C-c C-d") #'prot-bookmark-cd-bookmark))
 
 ;;; Custom extensions for "focus mode" (prot-logos.el)
 (prot-emacs-builtin-package 'face-remap)
@@ -2654,6 +2660,7 @@ Can link to more than one message, if so all matching messages are shown."
   (setq prot-eww-save-history-file
         (locate-user-emacs-file "prot-eww-visited-history"))
   (setq prot-eww-save-visited-history t)
+  (setq prot-eww-bookmark-link nil)
 
   (add-hook 'prot-eww-history-mode-hook #'hl-line-mode)
 
@@ -2711,14 +2718,6 @@ Can link to more than one message, if so all matching messages are shown."
 
   (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
   (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
-
-;;; Built-in bookmarking facility (bookmark.el)
-(prot-emacs-builtin-package 'bookmark
-  (setq bookmark-use-annotations t)
-  (setq bookmark-automatically-show-annotations t)
-  (setq bookmark-fontify nil) ; Emacs28
-
-  (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
 
 ;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
