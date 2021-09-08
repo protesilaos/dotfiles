@@ -3459,6 +3459,8 @@ Finally, some other extras provided by my =prot-bookmark.el=:
   send it to an oft-visited location.  The code is adapted from the
   [[https://github.com/oantolin/emacs-config][Emacs configurations of Omar Antolín Camarena]].
 
+Also watch: [[https://protesilaos.com/codelog/2021-09-08-emacs-bookmarks-intro/][Primer on Emacs bookmarks]] (2021-09-08).
+
 #+begin_src emacs-lisp
 ;;; Built-in bookmarking framework (bookmark.el and prot-bookmark.el)
 (prot-emacs-builtin-package 'bookmark
@@ -4641,6 +4643,8 @@ and corresponding functions.
 :PROPERTIES:
 :CUSTOM_ID: h:4e8347de-415e-4804-b383-d61499e05ca1
 :END:
+
+Also watch: [[https://protesilaos.com/codelog/2021-08-31-emacs-second-brain-mindfulness/][Emacs as a 'second brain' and mindfulness]] (2021-08-31).
 
 In its purest form, Org is a markup language that is similar to
 Markdown: symbols are used to denote the meaning of a construct in its
