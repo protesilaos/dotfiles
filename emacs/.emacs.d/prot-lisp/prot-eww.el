@@ -326,6 +326,10 @@ When called from an eww buffer, provide the current link as
       (prefix-numeric-value current-prefix-arg))))
   (prot-eww url arg))
 
+;; NOTE 2021-09-08: This uses the EWW-specific bookmarks, NOT those of
+;; bookmark.el.  Further below I provide integration with the latter,
+;; meaning that we must either make this obsolete or make it work with
+;; the new system.
 ;;;###autoload
 (defun prot-eww-visit-bookmark (&optional arg)
   "Visit bookmarked URL.
@@ -593,6 +597,10 @@ images."
         (shr-max-image-proportion 0.35))
     (eww-readable)))
 
+;; NOTE 2021-09-08: This uses the EWW-specific bookmarks, NOT those of
+;; bookmark.el.  Further below I provide integration with the latter,
+;; meaning that we must either make this obsolete or make it work with
+;; the new system.
 ;;;###autoload
 (defun prot-eww-bookmark-page (title)
   "Add eww bookmark named with TITLE."
@@ -706,6 +714,72 @@ As a final step, save `prot-eww-visited-history' to a file (see
     ;; modifying `prot-eww-quit-hook'.
     (when (yes-or-no-p "Are you sure you want to quit eww?")
       (run-hooks 'prot-eww-quit-hook))))
+
+;;;;; Bookmarks with bookmark.el
+;; The following is adapted from vc-dir.el.
+
+;; TODO 2021-09-08: Review all legacy bookmark functions defined herein.
+
+(defcustom prot-eww-bookmark-link nil
+  "Control the behaviour of bookmarking inside EWW buffers.
+
+If non-nil bookmark the button at point, else the current page's
+URL.  Otherwise only target the current page.
+
+This concerns the standard bookmark.el framework, so it applies
+to commands `bookmark-set' and `bookmark-set-no-overwrite'."
+  :type 'boolean
+  :group 'prot-eww)
+
+(declare-function bookmark-make-record-default "bookmark" (&optional no-file no-context posn))
+(declare-function bookmark-prop-get "bookmark" (bookmark prop))
+(declare-function bookmark-default-handler "bookmark" (bmk))
+(declare-function bookmark-get-bookmark-record "bookmark" (bmk))
+
+(defun prot-eww--bookmark-make-record ()
+  "Return a bookmark record.
+If `prot-eww-bookmark-link' is non-nil and point is on a link button,
+return a bookmark record for that link.  Otherwise, return a bookmark
+record for the current EWW page."
+  (let* ((button (and prot-eww-bookmark-link
+                      (button-at (point))))
+         (url (if button
+                  (button-get button 'shr-url)
+                (plist-get eww-data :url))))
+    (unless url
+      (error "No link found; cannot bookmark this"))
+    (let* ((title (if button
+                      url
+                    (concat "(EWW) " (plist-get eww-data :title))))
+           (pos (if button nil (point)))
+           (defaults (delq nil (list title url))))
+      `(,title
+        ,@(bookmark-make-record-default 'no-file)
+        (eww-url . ,url)
+        (filename . ,url) ; This is a hack to get Marginalia annotations
+        (position . ,pos)
+        (handler . prot-eww-bookmark-jump)
+        (defaults . ,defaults)))))
+
+;; FIXME 2021-09-08: Why `bookmark-bmenu-other-window' does not work as
+;; intended?  It is bound to `o' in `bookmark-bmenu-mode-map' (C-x r l).
+
+;;;###autoload
+(defun prot-eww-bookmark-jump (bookmark)
+  "Jump to BOOKMARK using EWW.
+This implements the handler function interface for the record
+type returned by `prot-eww--bookmark-make-record'."
+  (let* ((file (bookmark-prop-get bookmark 'eww-url))
+         (buf (eww file)))
+    (bookmark-default-handler
+     `("" (buffer . ,buf) . ,(bookmark-get-bookmark-record bookmark)))))
+
+(defun prot-eww--set-bookmark-handler ()
+  "Set appropriate `bookmark-make-record-function'.
+Intended for use with `eww-mode-hook'."
+  (setq-local bookmark-make-record-function #'prot-eww--bookmark-make-record))
+
+(add-hook 'eww-mode-hook #'prot-eww--set-bookmark-handler)
 
 (provide 'prot-eww)
 ;;; prot-eww.el ends here

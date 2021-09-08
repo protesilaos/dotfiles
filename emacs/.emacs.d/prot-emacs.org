@@ -7198,6 +7198,7 @@ some of the above.
   (setq prot-eww-save-history-file
         (locate-user-emacs-file "prot-eww-visited-history"))
   (setq prot-eww-save-visited-history t)
+  (setq prot-eww-bookmark-link nil)
 
   (add-hook 'prot-eww-history-mode-hook #'hl-line-mode)
 
