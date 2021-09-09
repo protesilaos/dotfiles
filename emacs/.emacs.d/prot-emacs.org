@@ -227,8 +227,34 @@ offer an overview of each item in my library, I feel the code and
 concomitant documentation strings are clear enough for you to peruse the
 source directly (reproduced further below).
 
+Still, here are some highlights for those who don't like studying the
+source code:
+
++ =prot-simple-insert-pair= will surround a region with a pair of
+  delimiters.  It prompts for completion on which pair to use, while the
+  most recently used entry becomes the default, so next time the user
+  can just add it with =RET= at the minibuffer prompt.
+
++ =prot-simple-scratch-buffer= produces a buffer with the major-mode of
+  the current one.  With a prefix argument (=C-u=) it instead applies the
+  major-mode which is stored in the user customisation option
+  =prot-simple-scratch-buffer-default-mode=.  With a double prefix
+  argument (=C-u C-u=) it prompts for completion on which major-mode to
+  use.  If the region is active, its contents are copied to the newly
+  created scratch buffer.  The idea is based on [[https://github.com/ieure/scratch-el][the scratch.el package]]
+  by Ian Eure.
+
++ =prot-simple-copy-line-or-region= copies the current line or the region,
+  if that is active.  With a prefix argument (=C-u=) it creates a
+  duplicate of it right below.
+
+All of the other commands are optimisations for common motions or little
+quality-of-life improvements for oft-required operations (such as
+transposition of objects or marking of balanced expressions).
+
 Given that this is a foundational piece of my Emacs setup, it is the
-appropriate place to re-bind or free up some common key combinations.
+appropriate place to re-bind or free up some common key combinations for
+use elsewhere.
 
 #+begin_src emacs-lisp
 ;;; Common custom functions (prot-simple.el)
@@ -262,6 +288,7 @@ appropriate place to re-bind or free up some common key combinations.
            what-cursor-position
            describe-package
            view-lossage))
+  (setq prot-simple-scratch-buffer-default-mode 'markdown-mode)
 
   (prot-simple-focus-help-buffers 1)
 
@@ -275,6 +302,7 @@ appropriate place to re-bind or free up some common key combinations.
     (define-key map (kbd "C-h .") #'prot-simple-describe-symbol) ; overrides `display-local-help'
     (define-key map (kbd "C-h K") #'describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
     (define-key map (kbd "C-h c") #'describe-command) ; overrides `describe-key-briefly'
+    (define-key map (kbd "C-c s") #'prot-simple-scratch-buffer)
     ;; Commands for lines
     (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
     (define-key map (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
@@ -2913,47 +2941,6 @@ pertains to buffers, so they can adapt accordingly.  See, in particular,
 Here is =prot-ibuffer.el= (find everything in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-ibuffer.el src emacs-lisp :tangle no
-
-*** Scratch buffers per major-mode
-:PROPERTIES:
-:CUSTOM_ID: h:2695bfa4-89b4-4d7f-aa6e-8ef42f9177aa
-:END:
-
-This package will produce a buffer that matches the major mode of the
-one you are currently in.  Use it with =M-x scratch=.  Doing that with a
-prefix argument (=C-u=) will prompt for a major mode instead.  Simple yet
-super effective!
-
-The =prot/scratch-buffer-setup= simply adds some text in the buffer and
-renames it appropriately for the sake of easier discovery.  I got the
-idea of copying the region from [[https://gist.github.com/eev2/52edbfdb645e26aefec19226c0ca7ad0][a snippet shared by eev2 on GitHub]].
-
-#+begin_src emacs-lisp
-;;; Scratch buffers per major-mode
-(prot-emacs-elpa-package 'scratch
-  ;; TODO 2021-01-19: refine `prot/scratch-buffer-setup'
-  (defun prot/scratch-buffer-setup ()
-    "Add contents to `scratch' buffer and name it accordingly.
-If region is active, add its contents to the new buffer."
-    (let* ((mode major-mode)
-           (string (format "Scratch buffer for: %s\n\n" mode))
-           (region (with-current-buffer (current-buffer)
-                     (if (region-active-p)
-                         (buffer-substring-no-properties
-                          (region-beginning)
-                          (region-end)))
-                     ""))
-           (text (concat string region)))
-      (when scratch-buffer
-	    (save-excursion
-          (insert text)
-          (goto-char (point-min))
-          (comment-region (point-at-bol) (point-at-eol)))
-	    (forward-line 2))
-      (rename-buffer (format "*Scratch for %s*" mode) t)))
-  (add-hook 'scratch-create-buffer-hook #'prot/scratch-buffer-setup)
-  (define-key global-map (kbd "C-c s") #'scratch))
-#+end_src
 
 ** Window configuration
 :PROPERTIES:
