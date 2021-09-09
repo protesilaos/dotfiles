@@ -33,6 +33,9 @@
 
 ;;; Code:
 
+(eval-when-compile
+  (require 'subr-x))
+
 (defgroup prot-common ()
   "Auxiliary functions for my dotemacs."
   :group 'editing)
