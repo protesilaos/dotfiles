@@ -30,10 +30,10 @@ bottom_padding="$(bspc config bottom_padding)"
 
 # Read the default setting from the bspwm config file.
 _get_value() {
-	local bspwmrc
-	bspwmrc="$HOME/.config/bspwm/bspwmrc"
+    local bspwmrc
+    bspwmrc="$HOME/.config/bspwm/bspwmrc"
 
-	sed "/$1/!d ; s,.* $1 \([a-z0-9]*\).*,\1," "$bspwmrc"
+    sed "/$1/!d ; s,.* $1 \([a-z0-9]*\).*,\1," "$bspwmrc"
 }
 
 ## Use the function that gets the desired value from bspwmrc.
@@ -51,36 +51,36 @@ if [ "$effective_padding" -ge "$panel_height" ] ; then
     # though we should probably find a more robust way to get the
     # defaults.  'bspc' can do that, but the code here needs to be
     # reworked.
-	bottom_padding=0
-	window_gap=2
-	gapless_monocle=false
-	border_width=2
+    bottom_padding=0
+    window_gap=2
+    gapless_monocle=false
+    border_width=2
 
-	# No need to keep the panel
-	pkill -xo melonpanel && pkill -x lemonbar
+    # No need to keep the panel
+    pkill -xo melonpanel && pkill -x lemonbar
 else
-	# Unset everything
-	unset bottom_padding
-	unset window_gap
-	unset gapless_monocle
-	unset border_width
-	panel_status=on
+    # Unset everything
+    unset bottom_padding
+    unset window_gap
+    unset gapless_monocle
+    unset border_width
+    panel_status=on
 fi
 
 # Create overlapping borders in focus mode.
 if [ -n "$border_width" ]; then
-	bspc config window_gap -"$border_width"
-	bspc config border_width "$border_width"
-	for side in top right bottom left; do
-		bspc config "${side}"_padding "$border_width"
-	done
+    bspc config window_gap -"$border_width"
+    bspc config border_width "$border_width"
+    for side in top right bottom left; do
+        bspc config "${side}"_padding "$border_width"
+    done
 else
-	bspc config window_gap "${window_gap:=2}"
-	bspc config border_width "${border_width:=2}"
-	bspc config bottom_padding "${bottom_padding:=$panel_height}"
-	for side in right left top; do
-		bspc config "${side}"_padding "0"
-	done
+    bspc config window_gap "${window_gap:=2}"
+    bspc config border_width "${border_width:=2}"
+    bspc config bottom_padding "${bottom_padding:=$panel_height}"
+    for side in right left top; do
+        bspc config "${side}"_padding "0"
+    done
 fi
 
 bspc config gapless_monocle "${gapless_monocle:=false}"
