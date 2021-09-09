@@ -2129,7 +2129,7 @@ position of the cursor after the skeleton has been inserted.
   (add-hook 'git-commit-mode-hook #'abbrev-mode))
 #+end_src
 
-** Configurations for—or extensions to—built-in search commands
+** Configurations for---or extensions to---built-in search commands
 :PROPERTIES:
 :CUSTOM_ID: h:67dac9fe-5c15-437d-bb3e-26b293affa45
 :END:
