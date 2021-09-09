@@ -1585,6 +1585,55 @@ Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my
 
 #+include: prot-lisp/prot-consult.el src emacs-lisp :tangle no
 
+**** Switch to directories (consult-dir.el)
+:PROPERTIES:
+:CUSTOM_ID: h:4c41ab10-9533-40b2-8c0a-e38b5f0194f6
+:END:
+
+This is another nifty package by Karthik Chikmagalur (author of
+=project-x=, among others, which I configure elsewhere in this document:
+[[#h:4de10a0e-af55-4fdd-8000-d1e3a8ca8055][Extra features for projects (project-x.el)]]).  =consult-dir= provides an
+all-in-one interface with minibuffer completion for switching to a
+directory that belongs to (i) your list of bookmarks, (ii) the current
+project, (iii) your other projects, or (iv) recent files.  It thus
+integrates nicely with other parts of the Emacs setup, where those are
+present:
+
++ [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]].
++ [[#h:79cd6177-a81b-420f-8759-e6927b974377][Built-in bookmarking framework (bookmark.el and prot-bookmark.el)]].
++ [[#h:5723c4bb-ff6c-449f-bb60-be66fab3f137][Completion for recent files and directories (prot-recentf.el)]].
+
+As its name suggests, =consult-dir= builds on the Consult package by
+Daniel Mendler ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el)]]).  It thus
+retains the functionality of its base library, such as the ability to
+narrow the list of candidates to a subset in the same way as, e.g., the
+=consult-buffer= command does it: while at the empty minibuffer prompt,
+type =r= for recent directories, =m= for bookmarked entries, =p= for projects,
+and follow it up with an empty space.  This applies the relevant filter.
+To remove it just delete backwards.
+
+There are two main uses of the =consult-dir= command.  The first is the
+general feature of switching to the buffer of choice.  The other is when
+faced with a minibuffer prompt that expects a file path, such as when
+you copy or rename a file with Dired.  In that case you want to perform
+the operation with one of your directories of interest as the target, so
+you call the =consult-dir= command, select one item in a recursive
+minibuffer (a minibuffer command inside a minibuffer command), and have
+that populate the original prompt.
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'consult-dir
+  (setq consult-dir-sources '( consult-dir--source-bookmark
+                               consult-dir--source-default
+                               consult-dir--source-project
+                               consult-dir--source-recentf))
+
+  ;; Overrides `list-directory' in the `global-map', though I never used
+  ;; that anyway.
+  (dolist (map (list global-map minibuffer-local-filename-completion-map))
+    (define-key map (kbd "C-x C-d") #'consult-dir)))
+#+end_src
+
 *** Extended minibuffer actions and more (embark.el and prot-embark.el)
 :PROPERTIES:
 :CUSTOM_ID: h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984
@@ -3450,14 +3499,6 @@ custom handler that leverages the standard =bookmark.el= framework instead
 of the EWW-only bookmarking facility that is available by default
 ([[#h:524bc702-ff55-4ed9-9a38-26d30d64591d][Simple HTML Renderer, Emacs Web Wowser, Elpher, prot-eww.el]]).
 
-Finally, some other extras provided by my =prot-bookmark.el=:
-
-+ Insert the path of a bookmarked directory while in a file prompt.  The
-  selection of the bookmark happens in a recursive minibuffer.  This is
-  particularly useful when you copy/rename a file in Dired and want to
-  send it to an oft-visited location.  The code is adapted from the
-  [[https://github.com/oantolin/emacs-config][Emacs configurations of Omar Antolín Camarena]].
-
 Also watch: [[https://protesilaos.com/codelog/2021-09-08-emacs-bookmarks-intro/][Primer on Emacs bookmarks]] (2021-09-08).
 
 #+begin_src emacs-lisp
@@ -3470,10 +3511,7 @@ Also watch: [[https://protesilaos.com/codelog/2021-09-08-emacs-bookmarks-intro/]
   (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
 
 (prot-emacs-builtin-package 'prot-bookmark
-  (prot-bookmark-extra-keywords 1)
-
-  (define-key minibuffer-local-filename-completion-map
-    (kbd "C-c C-d") #'prot-bookmark-cd-bookmark))
+  (prot-bookmark-extra-keywords 1))
 #+end_src
 
 Here is =prot-bookmark.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -9958,7 +9996,9 @@ each in their own unique way---the order is not significant:
   essential reading for anyone wanting to gain an overview of some of
   Emacs' built-in capabilities and learn about its 'hidden gems'.
   Karthik's website includes philosophical insights as well, such as
-  those found in [[https://karthinks.com/blog/thoughts-on-strength-training/][Thoughts on Strength Training]] (2019-03-02).
+  those found in [[https://karthinks.com/blog/thoughts-on-strength-training/][Thoughts on Strength Training]] (2019-03-02).  You will
+  also find packages by Karthik in this document, such as =consult-dir=
+  and =project-x=.
 
 + James Norman Vladimir Cash :: James produces videos on Emacs, such as
   this one [[https://occasionallycogent.com/custom_emacs_modeline_video_edition/index.html][on customising the modeline]] and writes about similar topics,

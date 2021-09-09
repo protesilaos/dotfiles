@@ -96,36 +96,5 @@
     (remove-hook 'bookmark-bmenu-mode-hook #'prot-bookmark-extra-keywords)
     (font-lock-flush (point-min) (point-max))))
 
-;;;; Other extras
-
-(defcustom prot-bookmark-cd-exclude-regexp "^(Git)"
-  "Exclude pattern from `prot-bookmark-cd-bookmark'."
-  :type 'string
-  :group 'prot-bookmark)
-
-;; Those two functions are adapted from the Emacs config of Omar
-;; Antolín Camarena: <https://github.com/oantolin/emacs-config>.
-(defun prot-bookmark--bookmarked-directories ()
-  (bookmark-maybe-load-default-file)
-  (cl-loop for (name . props) in bookmark-alist
-           for fn = (cdr (assq 'filename props))
-           when (and fn
-                     (file-directory-p fn)
-                     (not (string-match-p prot-bookmark-cd-exclude-regexp name)))
-           collect (cons name fn)))
-
-;;;###autoload
-(defun prot-bookmark-cd-bookmark (bookmark)
-  "Insert the path of a BOOKMARK which is a directory.
-Bind this to `minibuffer-local-filename-completion-map' or
-equivalent."
-  (interactive
-   (list (let ((enable-recursive-minibuffers t))
-           (completing-read
-            "Directory: " (prot-bookmark--bookmarked-directories) nil t))))
-  (when (minibufferp)
-    (delete-region (minibuffer-prompt-end) (point-max)))
-  (insert (cdr (assoc bookmark (prot-bookmark--bookmarked-directories)))))
-
 (provide 'prot-bookmark)
 ;;; prot-bookmark.el ends here
