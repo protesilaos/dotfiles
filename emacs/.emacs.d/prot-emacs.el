@@ -32,6 +32,7 @@
            what-cursor-position
            describe-package
            view-lossage))
+  (setq prot-simple-scratch-buffer-default-mode 'markdown-mode)
 
   (prot-simple-focus-help-buffers 1)
 
@@ -45,6 +46,7 @@
     (define-key map (kbd "C-h .") #'prot-simple-describe-symbol) ; overrides `display-local-help'
     (define-key map (kbd "C-h K") #'describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
     (define-key map (kbd "C-h c") #'describe-command) ; overrides `describe-key-briefly'
+    (define-key map (kbd "C-c s") #'prot-simple-scratch-buffer)
     ;; Commands for lines
     (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
     (define-key map (kbd "C-S-y") #'prot-simple-yank-replace-line-or-region)
@@ -893,31 +895,6 @@
   (let ((map global-map))
     (define-key map (kbd "M-s b") #'prot-ibuffer-buffers-major-mode)
     (define-key map (kbd "M-s v") #'prot-ibuffer-buffers-vc-root)))
-
-;;; Scratch buffers per major-mode
-(prot-emacs-elpa-package 'scratch
-  ;; TODO 2021-01-19: refine `prot/scratch-buffer-setup'
-  (defun prot/scratch-buffer-setup ()
-    "Add contents to `scratch' buffer and name it accordingly.
-If region is active, add its contents to the new buffer."
-    (let* ((mode major-mode)
-           (string (format "Scratch buffer for: %s\n\n" mode))
-           (region (with-current-buffer (current-buffer)
-                     (if (region-active-p)
-                         (buffer-substring-no-properties
-                          (region-beginning)
-                          (region-end)))
-                     ""))
-           (text (concat string region)))
-      (when scratch-buffer
-	    (save-excursion
-          (insert text)
-          (goto-char (point-min))
-          (comment-region (point-at-bol) (point-at-eol)))
-	    (forward-line 2))
-      (rename-buffer (format "*Scratch for %s*" mode) t)))
-  (add-hook 'scratch-create-buffer-hook #'prot/scratch-buffer-setup)
-  (define-key global-map (kbd "C-c s") #'scratch))
 
 ;;; Window rules and basic tweaks (window.el)
 (prot-emacs-builtin-package 'window
