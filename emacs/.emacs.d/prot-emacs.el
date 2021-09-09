@@ -113,12 +113,12 @@
   (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs t
         modus-themes-no-mixed-fonts nil
-        modus-themes-subtle-line-numbers nil
+        modus-themes-subtle-line-numbers t
         modus-themes-success-deuteranopia t
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -129,22 +129,22 @@
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', `padded'.
-        modus-themes-mode-line '(3d) ; For Moody, also check `prot-moody'
+        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax nil
+        modus-themes-syntax '(green-strings alt-syntax faint yellow-comments)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(intense)
+        modus-themes-hl-line nil
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(underline)
+        modus-themes-paren-match '(bold)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -156,22 +156,22 @@
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(bold background)
+        modus-themes-prompts '(intense)
 
-        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
+        modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend accented)
+        modus-themes-region '(no-extend accented bg-only)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'fg-only-deuteranopia
+        modus-themes-diffs 'desaturated
 
-        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
+        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch scale-title))
@@ -180,14 +180,13 @@
           (habit . traffic-light-deuteranopia))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
-        '(;; (1 . (overline background))
-          ;; (2 . (overline background))
-          ;; (3 . (overline rainbow))
-          ;; (4 . (overline rainbow no-bold))
-          (t . (background overline rainbow)))
+        '((1 . (background))
+          (2 . (background rainbow))
+          (3 . (rainbow))
+          (4 . (rainbow no-bold)))
 
         modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings nil
+        modus-themes-variable-pitch-headings t
         modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
@@ -513,6 +512,17 @@
     (define-key map (kbd "M-s M-s") #'prot-consult-outline)
     (define-key map (kbd "M-s M-y") #'prot-consult-yank)
     (define-key map (kbd "M-s M-l") #'prot-consult-line)))
+
+(prot-emacs-elpa-package 'consult-dir
+  (setq consult-dir-sources '( consult-dir--source-bookmark
+                               consult-dir--source-default
+                               consult-dir--source-project
+                               consult-dir--source-recentf))
+
+  ;; Overrides `list-directory' in the `global-map', though I never used
+  ;; that anyway.
+  (dolist (map (list global-map minibuffer-local-filename-completion-map))
+    (define-key map (kbd "C-x C-d") #'consult-dir)))
 
 ;;; Extended minibuffer actions and more (embark.el and prot-embark.el)
 (prot-emacs-elpa-package 'embark
@@ -978,13 +988,13 @@ If region is active, add its contents to the new buffer."
           ;; bottom buffer (NOT side window)
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-at-bottom))
+          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+           (display-buffer-reuse-mode-window display-buffer-at-bottom)
+           (window-height . 0.2))
           ("\\*.*\\(e?shell\\|v?term\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.2))
           ;; below current window
-          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-           (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . fit-window-to-buffer))
           ("\\*\\(Calendar\\|Org Select\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))))
@@ -1120,10 +1130,7 @@ If region is active, add its contents to the new buffer."
   (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
 
 (prot-emacs-builtin-package 'prot-bookmark
-  (prot-bookmark-extra-keywords 1)
-
-  (define-key minibuffer-local-filename-completion-map
-    (kbd "C-c C-d") #'prot-bookmark-cd-bookmark))
+  (prot-bookmark-extra-keywords 1))
 
 ;;; Custom extensions for "focus mode" (prot-logos.el)
 (prot-emacs-builtin-package 'face-remap)
