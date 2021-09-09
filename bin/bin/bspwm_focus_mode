@@ -47,10 +47,14 @@ effective_padding=$(("$bottom_padding" + "$window_gap"))
 
 # If we are not in "focus mode"...
 if [ "$effective_padding" -ge "$panel_height" ] ; then
+    # NOTE 2021-09-09: Those values must match what is in bspwmrc,
+    # though we should probably find a more robust way to get the
+    # defaults.  'bspc' can do that, but the code here needs to be
+    # reworked.
 	bottom_padding=0
-	window_gap=0
-	gapless_monocle=true
-	border_width=1
+	window_gap=2
+	gapless_monocle=false
+	border_width=2
 
 	# No need to keep the panel
 	pkill -xo melonpanel && pkill -x lemonbar
