@@ -1,5 +1,5 @@
-gtk-theme-name='Arc-Dark'
-gtk-icon-theme-name='Papirus-Dark'
+gtk-theme-name='Adwaita'
+gtk-icon-theme-name='Adwaita'
 gtk-font-name='Sans 10'
 gtk-cursor-theme-name='Adwaita'
 gtk-cursor-theme-size=0
