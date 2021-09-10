@@ -50,12 +50,13 @@
 (require 'modus-themes)
 
 (defvar modus-themes-exporter-templates-alist
-  '(("alacritty" . modus-themes-exporter-alacritty)
-    ("urxvt"     . modus-themes-exporter-urxvt)
-    ("vim"       . modus-themes-exporter-vim)
-    ("xcolors"   . modus-themes-exporter-xcolors)
-    ("xfce"      . modus-themes-exporter-xfce)
-    ("xterm"     . modus-themes-exporter-xterm)))
+  '(("alacritty"        . modus-themes-exporter-alacritty)
+    ("urxvt"            . modus-themes-exporter-urxvt)
+    ("vim"              . modus-themes-exporter-vim)
+    ("windows-terminal" . modus-themes-exporter-windows-terminal)
+    ("xcolors"          . modus-themes-exporter-xcolors)
+    ("xfce"             . modus-themes-exporter-xfce)
+    ("xterm"            . modus-themes-exporter-xterm)))
 
 (defun modus-themes-exporter-xcolors ()
   "Template for generic Xcolors."
@@ -194,6 +195,37 @@
 "TabActivityColor=" magenta-alt "\n"
 "ColorSelectionBackground=" bg-region "\n"
 "ColorSelection=" fg-main "\n")))))
+
+(defun modus-themes-exporter-windows-terminal ()
+  "Template for Windows Terminal."
+  (modus-themes-with-colors
+    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+      (with-temp-buffer
+        (concat
+         "// Theme: " theme-name "\n"
+         "// Description: Windows Terminal port of " theme-name " (Modus themes for Emacs)" "\n"
+         "// Author: Protesilaos Stavrou, <https://protesilaos.com>" "\n"
+         "\"name\": \"" theme-name "\",\n"
+         "\"background\": \"" bg-main "\",\n"
+         "\"foreground\": \"" fg-main "\",\n"
+         "\"cursorColor\": \"" fg-main "\",\n"
+         "\"selectionBackground\": \"" bg-region "\",\n"
+         "\"black\": \"#000000\",\n"
+         "\"red\": \"" red "\",\n"
+         "\"green\": \"" green "\",\n"
+         "\"yellow\": \"" yellow "\",\n"
+         "\"blue\": \"" blue "\",\n"
+         "\"purple\": \"" magenta "\",\n"
+         "\"cyan\": \"" cyan "\",\n"
+         "\"white\": \"#bfbfbf\",\n"
+         "\"brightBlack\": \"#595959\",\n"
+         "\"brightRed\": \"" red-alt "\",\n"
+         "\"brightGreen\": \"" green-alt "\",\n"
+         "\"brightYellow\": \"" yellow-alt "\",\n"
+         "\"brightBlue\": \"" blue-alt "\",\n"
+         "\"brightPurple\": \"" magenta-alt-other "\",\n"
+         "\"brightCyan\": \"" cyan-alt-other "\",\n"
+         "\"brightWhite\": \"#ffffff\"\n")))))
 
 ;; Please skip this.  I only wrote it as an attempt to participate in
 ;; the contest for the ugliest concat ever imagined...  Seriously
