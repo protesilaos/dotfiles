@@ -7276,7 +7276,7 @@ some of the above.
   (setq eww-desktop-remove-duplicates t)
   (setq eww-header-line-format nil)
   (setq eww-search-prefix "https://duckduckgo.com/html/?q=")
-  (setq eww-download-directory (expand-file-name "~/Downloads/eww"))
+  (setq eww-download-directory (expand-file-name "~/Documents/eww-downloads"))
   (setq eww-suggest-uris
         '(eww-links-at-point
           thing-at-point-url-at-point))
