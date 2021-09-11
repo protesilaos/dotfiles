@@ -725,14 +725,14 @@ Relevant publications of mine that are not part of this document:
   ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
   ;; as it explains what those property lists should contain.
   (setq prot-fonts-typeface-sets-alist
-        '((small . ( :fixed-pitch-family "Hack"
-                     :fixed-pitch-regular-weight normal
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 90
-                     :fixed-pitch-line-spacing 1
-                     :variable-pitch-family "DejaVu Sans"
-                     :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))
+        '((small . ( :fixed-pitch-family "Iosevka Comfy"
+                       :fixed-pitch-regular-weight regular
+                       :fixed-pitch-heavy-weight bold
+                       :fixed-pitch-height 100
+                       :fixed-pitch-line-spacing nil
+                       :variable-pitch-family "Noto Serif"
+                       :variable-pitch-height 1.0
+                       :variable-pitch-regular-weight normal))
 
           (regular . ( :fixed-pitch-family "Iosevka Comfy"
                        :fixed-pitch-regular-weight book
