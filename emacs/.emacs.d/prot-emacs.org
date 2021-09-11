@@ -472,7 +472,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs t
+  (setq modus-themes-italic-constructs nil
         modus-themes-bold-constructs t
         modus-themes-no-mixed-fonts nil
         modus-themes-subtle-line-numbers t
@@ -496,7 +496,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(green-strings alt-syntax faint yellow-comments)
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -537,24 +537,26 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch scale-title))
-          (header-date . (bold-today grayscale scale))
-          (scheduled . rainbow)
+          (header-date . (bold-today scale-heading underline-today grayscale workaholic))
+          (event . (scale-small accented italic))
+          (scheduled . uniform)
           (habit . traffic-light-deuteranopia))
 
-        modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . (background))
-          (2 . (background rainbow))
-          (3 . (rainbow))
-          (4 . (rainbow no-bold)))
+        modus-themes-headings nil ; this is an alist: read the manual or its doc string
+        ;; '((1 . (background))
+        ;;   (2 . (background rainbow))
+        ;;   (3 . (rainbow))
+        ;;   (4 . (rainbow no-bold)))
 
         modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings t
-        modus-themes-scale-headings t
+        modus-themes-variable-pitch-headings nil
+        modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
         modus-themes-scale-4 1.27
-        modus-themes-scale-title 1.33)
+        modus-themes-scale-title 1.33
+        modus-themes-scale-small 0.9)
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
