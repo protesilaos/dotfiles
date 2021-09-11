@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.5.0
-;; Last-Modified: <2021-09-07 20:12:02 +0300>
+;; Last-Modified: <2021-09-15 20:36:53 +0300>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -68,6 +68,11 @@
 ;;     modus-themes-scale-3                        1.15
 ;;     modus-themes-scale-4                        1.2
 ;;     modus-themes-scale-title                    1.3
+;;
+;; There is another scaling-related option, which however is reserved
+;; for special cases and is not used for headings:
+;;
+;;     modus-themes-scale-small                    0.9
 ;;
 ;; There also exist two unique customization variables for overriding
 ;; color palette values.  The specifics are documented in the manual.
@@ -1903,6 +1908,7 @@ combinations:
     (setq modus-themes-org-agenda
           '((header-block . (variable-pitch scale-title))
             (header-date . (grayscale workaholic bold-today))
+            (event . (accented scale-small))
             (scheduled . uniform)
             (habit . traffic-light)))
 
@@ -1941,6 +1947,11 @@ that can include any of the following properties:
 - `bold-today' to apply a bold typographic weight to the current
   date;
 - `bold-all' to render all date headings in a bold weight.
+- `scale-heading' increases the height of the date headings to
+  the value of `modus-themes-scale-1' (which is the first step in
+  the scale for regular headings).
+- `underline-today' applies an underline to the current date
+  while removing the background it has by default.
 
 For example:
 
@@ -1949,6 +1960,28 @@ For example:
     (header-date . (grayscale bold-all))
     (header-date . (grayscale workaholic))
     (header-date . (grayscale workaholic bold-today))
+    (header-date . (grayscale workaholic bold-today scale-heading))
+
+An `event' key covers events from the diary and other entries
+that derive from a symbolic expression or sexp (e.g. phases of
+the moon, holidays).  By default those have a gray
+foreground (the default is a nil value or an empty list).  This
+key accepts a list of properties.  Those are:
+
+- `scale-small' reduces the height of the entries to the value of
+  the user option `modus-themes-scale-small' (0.9 the height of
+  the main font size by default).
+- `accented' applies an accent value to the event's foreground,
+  replacing the original gray.
+- `italic' adds a slant to the font's forms (italic or oblique
+  forms, depending on the typeface)
+
+For example:
+
+    (event . nil)
+    (event . (scale-small))
+    (event . (scale-small accented))
+    (event . (scale-small accented italic))
 
 A `scheduled' key applies to tasks with a scheduled date.  By
 default (a nil value), these use varying shades of yellow to
@@ -2004,7 +2037,7 @@ For example:
     (habit . simplified)
     (habit . traffic-light)"
   :group 'modus-themes
-  :package-version '(modus-themes . "1.5.0")
+  :package-version '(modus-themes . "1.6.0")
   :version "28.1"
   :type '(set
           (cons :tag "Block header"
@@ -2023,7 +2056,15 @@ For example:
                      (const :tag "Use grayscale for date headers" grayscale)
                      (const :tag "Do not differentiate weekdays from weekends" workaholic)
                      (const :tag "Make today bold" bold-today)
-                     (const :tag "Make all dates bold" bold-all)))
+                     (const :tag "Make all dates bold" bold-all)
+                     (const :tag "Increase font size (`modus-themes-scale-1')" scale-heading)
+                     (const :tag "Make today underlined; remove the background" underline-today)))
+          (cons :tag "Event entry" :greedy t
+                (const event)
+                (set :tag "Text presentation" :greedy t
+                     (const :tag "Use smaller font size (`modus-themes-scale-small')" scale-small)
+                     (const :tag "Apply an accent color" accented)
+                     (const :tag "Italic font slant (oblique forms)" italic)))
           (cons :tag "Scheduled tasks"
                 (const scheduled)
                 (choice (const :tag "Yellow colors to distinguish current and future tasks (default)" nil)
@@ -2043,8 +2084,8 @@ For example:
   "Use font scaling for headings.
 
 For regular headings the scale is controlled by the variables
-`modus-themes-scale-1' (smallest) and its variants all the way up
-to `modus-themes-scale-4' (larger).
+`modus-themes-scale-1' (smallest increase) and its variants all
+the way up to `modus-themes-scale-4' (largest increase).
 
 While `modus-themes-scale-title' is reserved for special headings
 that nominally are the largest on the scale (though that is not a
@@ -2180,6 +2221,31 @@ accordance with it in cases where it changes, such as while using
 `text-scale-adjust'."
   :group 'modus-themes
   :package-version '(modus-themes . "1.5.0")
+  :version "28.1"
+  :type 'number
+  :set #'modus-themes--set-option
+  :initialize #'custom-initialize-default
+  :link '(info-link "(modus-themes) Scaled heading sizes"))
+
+(defcustom modus-themes-scale-small 0.9
+  "Font size smaller than the default value.
+
+This size is only used in special contexts where users are
+presented with the option to have smaller text on display (see
+`modus-themes-org-agenda').
+
+The default value is a floating point that is interpreted as a
+multiple of the base font size.  It is recommended to use such a
+value.
+
+However, the variable also accepts an integer, understood as an
+absolute height that is 1/10 of the typeface's point size (e.g. a
+value of 140 is the same as setting the font at 14 point size).
+This will ignore the base font size and, thus, will not scale in
+accordance with it in cases where it changes, such as while using
+`text-scale-adjust'."
+  :group 'modus-themes
+  :package-version '(modus-themes . "1.6.0")
   :version "28.1"
   :type 'number
   :set #'modus-themes--set-option
@@ -3325,30 +3391,64 @@ FG is the foreground color to use."
           :height height
           :foreground fg)))
 
-(defun modus-themes--agenda-date (defaultfg grayscalefg &optional bold workaholicfg grayscaleworkaholicfg)
+(defun modus-themes--agenda-date (defaultfg grayscalefg &optional workaholicfg grayscaleworkaholicfg bg bold ul)
   "Control the style of date headings in Org agenda buffers.
 DEFAULTFG is the original accent color for the foreground.
-GRAYSCALEFG is a neutral color.  Optional BOLD applies a bold
-weight.  Optional WORKAHOLICFG and GRAYSCALEWORKAHOLICFG are
-alternative foreground colors."
-  (let* ((properties (modus-themes--key-cdr 'header-date modus-themes-org-agenda))
-         (weight (cond ((memq 'bold-all properties)
-                        'bold)
-                       ((and bold (memq 'bold-today properties))
-                        'bold)
-                       (t
-                        nil)))
-         (fg (cond ((and (memq 'grayscale properties)
-                         (memq 'workaholic properties))
-                    (or grayscaleworkaholicfg grayscalefg))
-                   ((memq 'grayscale properties)
-                    grayscalefg)
-                   ((memq 'workaholic properties)
-                    (or workaholicfg defaultfg))
-                   (t
-                    defaultfg))))
-    (list :inherit weight
-          :foreground fg)))
+GRAYSCALEFG is a neutral color.  Optional WORKAHOLICFG and
+GRAYSCALEWORKAHOLICFG are alternative foreground colors.
+Optional BG is a background color.  Optional BOLD applies a bold
+weight.  Optional UL applies an underline."
+  (let ((properties (modus-themes--key-cdr 'header-date modus-themes-org-agenda)))
+    (list :inherit
+          (cond
+           ((or (memq 'bold-all properties)
+                (and bold (memq 'bold-today properties)))
+            'bold)
+           (t
+            'unspecified))
+          :background
+          (unless (memq 'underline-today properties)
+            bg)
+          :foreground
+          (cond
+           ((and (memq 'grayscale properties)
+                 (memq 'workaholic properties))
+            (or grayscaleworkaholicfg grayscalefg))
+           ((memq 'grayscale properties)
+            grayscalefg)
+           ((memq 'workaholic properties)
+            (or workaholicfg defaultfg))
+           (t
+            defaultfg))
+          :height
+          (if (memq 'scale-heading properties)
+              modus-themes-scale-1
+            'unspecified)
+          :underline
+          (if (and ul (memq 'underline-today properties))
+              t
+            'unspecified))))
+
+(defun modus-themes--agenda-event (fg)
+  "Control the style of the Org agenda events.
+FG is the accent color to use."
+  (let ((properties (modus-themes--key-cdr 'event modus-themes-org-agenda)))
+    (list :height
+          (if (memq 'scale-small properties)
+              modus-themes-scale-small
+            'unspecified)
+          :foreground
+          (if (memq 'accented properties)
+              fg
+            'unspecified)
+          :inherit
+          (cond
+           ((and (memq 'accented properties)
+                 (memq 'italic properties))
+            'italic)
+           ((memq 'italic properties)
+            '(shadow italic))
+           ('shadow)))))
 
 (defun modus-themes--agenda-scheduled (defaultfg uniformfg rainbowfg)
   "Control the style of the Org agenda scheduled tasks.
@@ -6474,15 +6574,17 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                          yellow yellow-nuanced-bg
                                          yellow-refine-bg yellow-refine-fg))))
 ;;;;; org
-    `(org-agenda-calendar-event ((,class :inherit shadow)))
-    `(org-agenda-calendar-sexp ((,class :inherit (modus-themes-slant org-agenda-calendar-event))))
+    `(org-agenda-calendar-event ((,class ,@(modus-themes--agenda-event blue-alt))))
+    `(org-agenda-calendar-sexp ((,class :inherit org-agenda-calendar-event)))
     `(org-agenda-clocking ((,class :inherit modus-themes-special-cold :extend t)))
     `(org-agenda-column-dateline ((,class :background ,bg-alt)))
     `(org-agenda-current-time ((,class :foreground ,blue-alt-other-faint)))
-    `(org-agenda-date ((,class ,@(modus-themes--agenda-date cyan fg-main nil))))
-    `(org-agenda-date-today ((,class :background ,bg-active
-                                     ,@(modus-themes--agenda-date blue-active fg-main t cyan-active))))
-    `(org-agenda-date-weekend ((,class ,@(modus-themes--agenda-date cyan-alt-other fg-alt nil cyan fg-main))))
+    `(org-agenda-date ((,class ,@(modus-themes--agenda-date cyan fg-main))))
+    `(org-agenda-date-today ((,class ,@(modus-themes--agenda-date blue-active fg-main
+                                                                  cyan-active fg-main
+                                                                  bg-active t t))))
+    `(org-agenda-date-weekend ((,class ,@(modus-themes--agenda-date cyan-alt-other fg-alt
+                                                                    cyan fg-main))))
     `(org-agenda-diary ((,class :inherit org-agenda-calendar-event)))
     `(org-agenda-dimmed-todo-face ((,class :inherit shadow)))
     `(org-agenda-done ((,class :foreground ,@(modus-themes--success-deuteran
@@ -7162,6 +7264,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(tab-bar-groups-tab-8 ((,class ,@(modus-themes--variable-pitch-ui) :foreground ,magenta-tab)))
 ;;;;; tab-bar-mode
     `(tab-bar ((,class ,@(modus-themes--tab bg-active bg-active-accent nil nil nil nil t))))
+    `(tab-bar-tab-group-current ((,class ,@(modus-themes--tab bg-tab-active)
+                                         :box (:line-width (2 . -2) :color "gray50"))))
+    `(tab-bar-tab-group-inactive ((,class ,@(modus-themes--tab bg-tab-inactive bg-tab-inactive-accent fg-dim)
+                                          :box (:line-width (2 . -2) :color "gray50"))))
     `(tab-bar-tab ((,class ,@(modus-themes--tab bg-tab-active nil nil nil t t))))
     `(tab-bar-tab-inactive ((,class ,@(modus-themes--tab bg-tab-inactive bg-tab-inactive-accent fg-dim nil t))))
 ;;;;; tab-line-mode
