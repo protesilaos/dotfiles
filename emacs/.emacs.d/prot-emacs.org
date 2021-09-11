@@ -656,12 +656,14 @@ the =prot-fonts-typeface-sets-alist= (more on completion in the section
 =DISPLAY= argument, which is a symbol that matches the car of a cons cell
 in the aforementioned alist.
 
-=prot-fonts-fonts-per-monitor= sets the appropriate font family and size
-depending on whether I am only on my laptop or have connected to it an
-external monitor.  In the latter case we use the =desktop= display type.
-Note that this is no longer relevant as of early August 2021 as my
-laptop broke, though I keep the code in place because I think it can be
-useful for others (or for my future reference).
+=prot-fonts-fonts-per-monitor= is not useful with my current hardware, as
+I had designed it when I had a laptop (see [[#h:e134a8b2-224e-4383-bf03-b080ab6659c7][What hardware do you use?]]).
+Still, the idea is interesting and I keep it around in case someone has
+a need for it.  It sets the appropriate font family and size depending
+on whether the maximum width of the monitor is below a certain threshold
+defined in =prot-fonts-max-small-resolution-width=.  So it will use the
+two first presets defined in the aforementioned alist, with the
+assumption that the first is the smallest, laptop-specific one.
 
 As noted above, =prot-fonts-typeface-sets-alist= associates a list of
 typefaces with desired weights, including for their bold variation.
@@ -673,7 +675,7 @@ sets the weight at a constant value.  When the theme is designed that
 way, we can configure the =:weight= of the =bold= face to, e.g., =extrabold=
 and have that propagate across all the faces that the theme defines.
 
-Now a few notes about setting fonts in Emacs.
+Now a few general notes about setting fonts in Emacs.
 
 While there are many ways to define a baseline or fallback font family,
 I find that the most consistent one in terms of overall configuration is
@@ -688,8 +690,8 @@ themes handle things like colours.
 To appreciate this point, consider that in Emacs parlance a "face"
 signifies a construct that bundles up together several display
 attributes, such as a foreground and a background colour, as well as all
-typography-related values.  Multiple assignments are compounded, unless
-one new attribute explicitly overrules an existing one.
+typography-related values.  Multiple assignments are stacked, unless one
+new attribute explicitly overrules an existing one.
 
 There are three faces that are of immediate interest to =prot-fonts.el=:
 the =default=, =variable-pitch=, and =fixed-pitch=.  The first is the Emacs
@@ -1652,6 +1654,7 @@ minibuffer (a minibuffer command inside a minibuffer command), and have
 that populate the original prompt.
 
 #+begin_src emacs-lisp
+;;; Switch to directories (consult-dir.el)
 (prot-emacs-elpa-package 'consult-dir
   (setq consult-dir-sources '( consult-dir--source-bookmark
                                consult-dir--source-default
