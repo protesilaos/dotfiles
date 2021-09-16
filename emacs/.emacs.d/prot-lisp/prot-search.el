@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/dotemacs
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -38,6 +38,24 @@
 (require 'replace)
 (require 'grep)
 (require 'prot-common)
+
+(defgroup prot-search ()
+  "Setup for Isearch, Occur, and related."
+  :group 'search)
+
+;; NOTE 2021-09-16: Based on my git config for headings in diffs.  Read:
+;; <https://protesilaos.com/codelog/2021-01-26-git-diff-hunk-elisp-org/>.
+(defcustom prot-search-outline-regexp-alist
+  '((emacs-lisp-mode . "^\\((\\|;;;+ \\)")
+    (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)"))
+  "Alist of regular expressions per major mode.
+
+For best results the key must be a symbol that corresponds to a
+major mode.
+
+To be used by `prot-search-occur-outline'."
+  :type 'alist
+  :group 'prot-search)
 
 ;;;; Isearch
 
@@ -149,6 +167,32 @@ Also see `prot-search-occur-urls'."
         (push (match-string-no-properties 0) matches)))
     (funcall browse-url-browser-function
              (completing-read "Browse URL: " matches nil t))))
+
+(defvar prot-search--occur-outline-hist '()
+  "Minibuffer history of `prot-search-occur-outline'.")
+
+(defun prot-search--occur-outline-prompt ()
+  "Helper prompt for `prot-search-occur-outline'."
+  (let* ((alist prot-search-outline-regexp-alist)
+         (key (car (assoc major-mode alist)))
+         (default (or key (nth 1 prot-search--occur-outline-hist))))
+    (completing-read
+     (format "Outline style [%s]: " default)
+     (mapcar #'car alist)
+     nil nil nil 'prot-search--occur-outline-hist default)))
+
+;;;###autoload
+(defun prot-search-occur-outline (regexp)
+  "Produce buffer outline based on REGEXP.
+When called interactively, prompt for REGEXP among entries in
+`prot-search-outline-regexp-alist'."
+  (interactive (list (prot-search--occur-outline-prompt)))
+  (let ((buf-name (format "*outline of <%s>*" (buffer-name)))
+        (rx (if (string= major-mode regexp)
+                (cdr (assoc regexp prot-search-outline-regexp-alist))
+              regexp)))
+    (occur-1 rx nil (list (current-buffer)) buf-name)
+    (add-to-history 'prot-search--occur-outline-hist regexp)))
 
 ;;;; Grep
 
