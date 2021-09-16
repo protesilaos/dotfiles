@@ -3289,7 +3289,7 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
         '(prot-tab-format-space-single
           prot-tab-format-mule-info
           prot-tab-format-modified
-          tab-bar-format-tabs
+          tab-bar-format-tabs-groups
           prot-tab-format-space-double
           prot-tab-format-position
           prot-tab-format-space-double
