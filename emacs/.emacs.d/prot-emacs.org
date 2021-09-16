@@ -3513,6 +3513,65 @@ Here is =prot-bookmark.el= (from [[https://gitlab.com/protesilaos/dotfiles][my d
 
 #+include: prot-lisp/prot-bookmark.el src emacs-lisp :tangle no
 
+*** Ibuffer-like bookmark list (blist.el)
+:PROPERTIES:
+:CUSTOM_ID: h:67b7944e-6398-44a8-91d6-79e423b3e5f1
+:END:
+
+/NOTE 2021-09-16: Work-in-progress./
+
+This is a new package by Sévère Durand which makes the listing of
+bookmarks look more organised and provides many functions for operating
+on them, just like how =ibuffer= does it:
+
+1. [[#h:79cd6177-a81b-420f-8759-e6927b974377][Built-in bookmarking framework (bookmark.el and prot-bookmark.el)]].
+2. [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer and extras (dired-like buffer list manager)]].
+
+Durand is also the author of the useful =rlist= package, which lets you
+see your registers in a list and, optionally, delete the ones you no
+longer need ([[#h:aad79917-cd80-491b-9020-db27867ab132][Dired-like list for registers (rlist)]]).
+
+#+begin_src emacs-lisp
+;;; Ibuffer-like bookmark list (blist.el)
+;; Project repo: <https://gitlab.com/mmemmew/blist>.  Its dependency is
+;; `ilist', by the same author: <https://gitlab.com/mmemmew/blist>.
+;;
+;; I handle those manually via git, at least until they become available
+;; through an ELPA.
+;;
+;; `prot-emacs-manual-package' is defined in my init.el
+(prot-emacs-manual-package 'ilist)
+
+(prot-emacs-manual-package 'blist
+  (setq blist-expert t)
+  (setq blist-discard-empty-p t)
+
+  ;; NOTE 2021-09-16: This package is still in its early days.  Things
+  ;; will change.
+  (with-eval-after-load 'prot-eww
+    (blist-define-criterion "eww" "EWW"
+      (eq (bookmark-get-handler bookmark)
+          #'prot-eww-bookmark-jump)))
+
+  (blist-define-criterion "info" "Info"
+    (eq (bookmark-get-handler bookmark)
+        #'Info-bookmark-jump))
+
+  (with-eval-after-load 'pdf-tools
+    (blist-define-criterion "pdf" "PDF"
+      (eq (bookmark-get-handler bookmark)
+          #'pdf-view-bookmark-jump-handler)))
+
+  (setq blist-filter-groups
+        (list
+         (cons "EWW" #'blist-eww-p)
+         (cons "PDF" #'blist-pdf-p)
+         (cons "Info" #'blist-info-p)
+         (cons "Default" #'blist-default-p)))
+
+  (define-key global-map (kbd "C-x r l") #'blist-list-bookmarks))
+#+end_src
+
 ** Custom extensions for "focus mode" (prot-logos.el)
 :PROPERTIES:
 :CUSTOM_ID: h:77d14350-978d-4820-ab7f-4641706c445a
