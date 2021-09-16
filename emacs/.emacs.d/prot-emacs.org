@@ -230,10 +230,13 @@ source directly (reproduced further below).
 Still, here are some highlights for those who don't like studying the
 source code:
 
-+ =prot-simple-insert-pair= will surround a region with a pair of
-  delimiters.  It prompts for completion on which pair to use, while the
-  most recently used entry becomes the default, so next time the user
-  can just add it with =RET= at the minibuffer prompt.
++ =prot-simple-insert-pair= will surround either the symbol-at-point or
+  the active region with a pair of delimiters.  It prompts for
+  completion on which pair to use, while the most recently used entry
+  becomes the default, so next time the user can just add it with =RET= at
+  the minibuffer prompt.  With an optional prefix argument (=C-u=) it asks
+  for how many times to insert the selected delimiters (e.g. you want to
+  wrap two angled brackets around the region).
 
 + =prot-simple-scratch-buffer= produces a buffer with the major-mode of
   the current one.  With a prefix argument (=C-u=) it instead applies the

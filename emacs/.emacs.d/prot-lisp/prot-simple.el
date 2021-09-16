@@ -313,10 +313,14 @@ This command can then be followed by the standard
   'prot-simple-insert-pair "2021-07-30")
 
 ;;;###autoload
-(defun prot-simple-insert-pair (pair &optional num)
+(defun prot-simple-insert-pair (pair &optional count)
   "Insert PAIR from `prot-simple-insert-pair-alist'.
-With optional NUM numeric argument, insert pair to NUMth
-constructs.  A negative number counts backwards."
+Operate on the symbol at point.  If the region is active, use it
+instead.
+
+With optional COUNT (either as a natural number from Lisp or a
+universal prefix argument (\\[universal-argument]) when used
+interactively) prompt for the number of delimiters to insert."
   (interactive
    (list
     (prot-simple--character-prompt prot-simple-insert-pair-alist)
@@ -324,8 +328,31 @@ constructs.  A negative number counts backwards."
   (let* ((data prot-simple-insert-pair-alist)
          (left (cadr (assoc pair data)))
          (right (caddr (assoc pair data)))
-         (n (or num 1)))
-    (insert-pair n left right)))
+         (n (cond
+             ((and count (natnump count))
+              count)
+             (count
+              (read-number "How many delimiters?" 2))
+             (1)))
+         (beg)
+         (end))
+    (cond
+     ((region-active-p)
+      (setq beg (region-beginning)
+            end (region-end)))
+     ((when (thing-at-point 'symbol)
+        (let ((bounds (bounds-of-thing-at-point 'symbol)))
+          (setq beg (car bounds)
+                end (cdr bounds)))))
+     (t (setq beg (point)
+              end (point))))
+    (save-excursion
+      (goto-char end)
+      (dotimes (_ n)
+        (insert right))
+      (goto-char beg)
+      (dotimes (_ n)
+        (insert left)))))
 
 ;;;###autoload
 (defun prot-simple-delete-pair-dwim ()
