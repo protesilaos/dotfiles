@@ -2820,8 +2820,8 @@ are just some tweaks to make it work the way I prefer.
   (define-key map "r" #'rename-uniquely))
 
 (with-eval-after-load 'org
-  (define-key ctl-x-x-map "i" #'contrib/org-id-headlines)
-  (define-key ctl-x-x-map "h" #'prot/ox-html))
+  (define-key ctl-x-x-map "i" #'prot-org-id-headlines)
+  (define-key ctl-x-x-map "h" #'prot-org-ox-html))
 #+end_src
 
 *** Unique names for buffers
@@ -4839,11 +4839,12 @@ package configurations:
   automatically once you call the relevant template.  Same for their
   respective headings.
 
-  Finally, the =contrib/org-capture-no-delete-windows= and relevant =advice=
-  address a problem I have when =org-capture= fails to conclude its actions
-  when called from inside of a side window (for more on those, refer to
-  the section on [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).  The code is taken
-  directly from this [[https://stackoverflow.com/a/54251825][Stack Overflow thread]].
+  Finally, the =prot-org--capture-no-delete-windows= from my =prot-org.el=
+  (reproduced after the Org configs) addresses a problem I have when
+  =org-capture= fails to carry out its operations when it is called from
+  inside of a side window (for more on those, refer to the section on
+  [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).  The code is taken directly from this
+  [[https://stackoverflow.com/a/54251825][Stack Overflow thread]].
 
   Consider watching my [[https://protesilaos.com/codelog/2020-02-04-emacs-org-capture-intro/][primer on org-capture]] (2020-02-04) which shows all
   of the above in action.
@@ -5015,15 +5016,6 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
                 (in-mode . "notmuch-show-mode")
                 (in-mode . "notmuch-tree-mode")))))
 
-  ;; Source: https://stackoverflow.com/a/54251825
-  (defun contrib/org-capture-no-delete-windows (oldfun args)
-    (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
-      (apply oldfun args)))
-
-  ;; Same source as above
-  (advice-add 'org-capture-place-template ; TODO move this to prot-org.el
-              :around 'contrib/org-capture-no-delete-windows)
-
 ;;;; agenda
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (thread-last org-directory (expand-file-name "notes.org")))
@@ -5067,34 +5059,6 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-agenda-remove-timeranges-from-blocks nil)
   (setq org-agenda-compact-blocks nil)
   (setq org-agenda-block-separator ?—)
-
-  (defun prot/org-agenda-format-date-aligned (date)
-    "Format a DATE string for display in the daily/weekly agenda.
-This function makes sure that dates are aligned for easy reading.
-
-Slightly tweaked version of `org-agenda-format-date-aligned' that
-produces dates with a fixed length."
-    (require 'cal-iso)
-    (let* ((dayname (calendar-day-name date t))
-           (day (cadr date))
-           (day-of-week (calendar-day-of-week date))
-           (month (car date))
-           (monthname (calendar-month-name month t))
-           (year (nth 2 date))
-           (iso-week (org-days-to-iso-week
-                      (calendar-absolute-from-gregorian date)))
-           (weekyear (cond ((and (= month 1) (>= iso-week 52))
-                            (1- year))
-                           ((and (= month 12) (<= iso-week 1))
-                            (1+ year))
-                           (t year)))
-           (weekstring (if (= day-of-week 1)
-                           (format " (W%02d)" iso-week)
-                         "")))
-      (format "%s %2d %s %4d%s"
-              dayname day monthname year weekstring)))
-
-  (setq org-agenda-format-date #'prot/org-agenda-format-date-aligned)
 
 ;;;;; Agenda marks
   (setq org-agenda-bulk-mark-char "#")
@@ -5235,46 +5199,9 @@ produces dates with a fixed length."
   ;; FIXME: how to remove everything else?
   (setq org-export-backends '(html texinfo md))
 
-  (defun prot/ox-html ()
-    (interactive)
-    (org-html-export-as-html nil nil nil t nil))
-
-  (defun prot/ox-texinfo ()
-    (interactive)
-    (org-texinfo-export-to-info))
-
 ;;;; IDs
   (setq org-id-link-to-org-use-id
         'create-if-interactive-and-no-custom-id)
-
-  (declare-function org-id-add-location "org")
-
-  ;; Copied from this article (with minor tweaks from my side):
-  ;; <https://writequit.org/articles/emacs-org-mode-generate-ids.html>.
-  (defun contrib/org-id-get (&optional pom create prefix)
-    "Get the CUSTOM_ID property of the entry at point-or-marker
-POM. If POM is nil, refer to the entry at point. If the entry
-does not have an CUSTOM_ID, the function returns nil. However,
-when CREATE is non nil, create a CUSTOM_ID if none is present
-already. PREFIX will be passed through to `org-id-new'. In any
-case, the CUSTOM_ID of the entry is returned."
-    (org-with-point-at pom
-      (let ((id (org-entry-get nil "CUSTOM_ID")))
-        (cond
-         ((and id (stringp id) (string-match "\\S-" id))
-          id)
-         (create
-          (setq id (org-id-new (concat prefix "h")))
-          (org-entry-put pom "CUSTOM_ID" id)
-          (org-id-add-location id (format "%s" (buffer-file-name (buffer-base-buffer))))
-          id)))))
-
-  (defun contrib/org-id-headlines ()
-    "Add CUSTOM_ID properties to all headlines in the current
-file which do not already have one."
-    (interactive)
-    (org-map-entries
-     (lambda () (contrib/org-id-get (point) t))))
 
   (let ((map global-map))
     (define-key map (kbd "C-c a") #'org-agenda)
@@ -5289,7 +5216,14 @@ file which do not already have one."
     (define-key map (kbd "C-M-S-<left>") nil)
     (define-key map (kbd "C-c S-l") #'org-toggle-link-display)
     (define-key map (kbd "C-c C-S-l") #'org-insert-last-stored-link)))
+
+(prot-emacs-builtin-package 'prot-org
+  (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned))
 #+end_src
+
+Here are my few extras for Org (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: prot-lisp/prot-org.el src emacs-lisp :tangle no
 
 ** Calendar and Diary (and prot-diary.el)
 :PROPERTIES:

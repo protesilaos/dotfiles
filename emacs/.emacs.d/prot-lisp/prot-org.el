@@ -45,7 +45,7 @@
 (defvar modus-themes-org-blocks)
 (defvar org-fontify-whole-block-delimiter-line)
 
-(defun prot-org-modus-themes-fontify-block-delimiters ()
+(defun prot-org--modus-themes-fontify-block-delimiters ()
   "Match `org-fontify-whole-block-delimiter-line' to theme style.
 Run this function at the post theme load phase, such as with the
 hook `modus-themes-after-load-theme-hook'."
@@ -57,7 +57,7 @@ hook `modus-themes-after-load-theme-hook'."
 
 (when (require 'modus-themes nil t)
   (add-hook 'modus-themes-after-load-theme-hook
-            #'prot-org-modus-themes-fontify-block-delimiters))
+            #'prot-org--modus-themes-fontify-block-delimiters))
 
 ;;;; org-capture
 
@@ -65,21 +65,41 @@ hook `modus-themes-after-load-theme-hook'."
   "Hook that runs after select Org commands.
 To be used with `advice-add'.")
 
-(defun prot-org-agenda-after-edit (&rest _)
+(defun prot-org--agenda-after-edit (&rest _)
   "Run `prot-org-agenda-after-edit-hook'."
   (run-hooks 'prot-org-agenda-after-edit-hook))
 
 (dolist (fn '(org-agenda-archive org-archive-subtree))
-  (advice-add fn :after #'prot-org-agenda-after-edit))
+  (advice-add fn :after #'prot-org--agenda-after-edit))
 
 (dolist (hook '(org-capture-after-finalize-hook
                   org-agenda-after-show-hook
                   prot-org-agenda-after-edit-hook))
   (add-hook hook #'org-agenda-to-appt))
 
+(declare-function cl-letf "cl-lib")
+
+;; Source: https://stackoverflow.com/a/54251825
+(defun prot-org--capture-no-delete-windows (oldfun args)
+  (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
+    (apply oldfun args)))
+
+;; Same source as above
+(advice-add 'org-capture-place-template
+            :around 'prot-org--capture-no-delete-windows)
+
 ;;;; org-agenda
 
-(defun prot/org-agenda-format-date-aligned (date)
+(declare-function calendar-day-name "calendar")
+(declare-function calendar-day-of-week "calendar")
+(declare-function calendar-month-name "calendar")
+(declare-function org-days-to-iso-week "org")
+(declare-function calendar-absolute-from-gregorian "calendar")
+
+(defvar org-agenda-format-date)
+
+;;;###autoload
+(defun prot-org-agenda-format-date-aligned (date)
   "Format a DATE string for display in the daily/weekly agenda.
 This function makes sure that dates are aligned for easy reading.
 
@@ -94,42 +114,52 @@ produces dates with a fixed length."
          (year (nth 2 date))
          (iso-week (org-days-to-iso-week
                     (calendar-absolute-from-gregorian date)))
-         (weekyear (cond ((and (= month 1) (>= iso-week 52))
-                          (1- year))
-                         ((and (= month 12) (<= iso-week 1))
-                          (1+ year))
-                         (t year)))
+         ;; (weekyear (cond ((and (= month 1) (>= iso-week 52))
+         ;;                  (1- year))
+         ;;                 ((and (= month 12) (<= iso-week 1))
+         ;;                  (1+ year))
+         ;;                 (t year)))
          (weekstring (if (= day-of-week 1)
                          (format " (W%02d)" iso-week)
                        "")))
     (format "%s %2d %s %4d%s"
             dayname day monthname year weekstring)))
 
-(setq org-agenda-format-date #'prot/org-agenda-format-date-aligned)
-
 ;;;; org-export
 
-(defun prot/ox-html ()
+(declare-function org-html-export-as-html "org")
+(declare-function org-texinfo-export-to-info "org")
+
+;;;###autoload
+(defun prot-org-ox-html ()
+  "Streamline HTML export."
   (interactive)
   (org-html-export-as-html nil nil nil t nil))
 
-(defun prot/ox-texinfo ()
+;;;###autoload
+(defun prot-org-ox-texinfo ()
+  "Streamline Info export."
   (interactive)
   (org-texinfo-export-to-info))
 
 ;;;; org-id
 
 (declare-function org-id-add-location "org")
+(declare-function org-with-point-at "org")
+(declare-function org-entry-get "org")
+(declare-function org-id-new "org")
+(declare-function org-entry-put "org")
 
 ;; Copied from this article (with minor tweaks from my side):
 ;; <https://writequit.org/articles/emacs-org-mode-generate-ids.html>.
-(defun contrib/org-id-get (&optional pom create prefix)
-  "Get the CUSTOM_ID property of the entry at point-or-marker
-POM. If POM is nil, refer to the entry at point. If the entry
-does not have an CUSTOM_ID, the function returns nil. However,
-when CREATE is non nil, create a CUSTOM_ID if none is present
-already. PREFIX will be passed through to `org-id-new'. In any
-case, the CUSTOM_ID of the entry is returned."
+(defun prot-org--id-get (&optional pom create prefix)
+  "Get the CUSTOM_ID property of the entry at point-or-marker POM.
+
+If POM is nil, refer to the entry at point.  If the entry does
+not have an CUSTOM_ID, the function returns nil.  However, when
+CREATE is non nil, create a CUSTOM_ID if none is present already.
+PREFIX will be passed through to `org-id-new'.  In any case, the
+CUSTOM_ID of the entry is returned."
   (org-with-point-at pom
     (let ((id (org-entry-get nil "CUSTOM_ID")))
       (cond
@@ -141,12 +171,14 @@ case, the CUSTOM_ID of the entry is returned."
         (org-id-add-location id (format "%s" (buffer-file-name (buffer-base-buffer))))
         id)))))
 
-(defun contrib/org-id-headlines ()
-  "Add CUSTOM_ID properties to all headlines in the current
-file which do not already have one."
+(declare-function org-map-entries "calendar")
+
+;;;###autoload
+(defun prot-org-id-headlines ()
+  "Add missing CUSTOM_ID to all headlines in current file."
   (interactive)
   (org-map-entries
-   (lambda () (contrib/org-id-get (point) t))))
+   (lambda () (prot-org--id-get (point) t))))
 
 (provide 'prot-org)
 ;;; prot-org.el ends here
