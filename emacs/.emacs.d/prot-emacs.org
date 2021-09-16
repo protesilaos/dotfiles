@@ -3411,15 +3411,13 @@ asterisk prepended to their line.  With point over such a line, type =a=
 to produce a buffer with the contents of the annotation, or =A= to show
 all bookmarks with their annotations or lack thereof.
 
-On the presentation front, I disable the fontification of the line where
-the bookmark is placed on (=bookmark-fontify= for Emacs 28), because I do
-not like how it is persistent.  I strongly believe this should
-optionally be a fringe indicator, but I do not know how to design that,
-so I can't send a patch.  While my =prot-bookmark.el= (reproduced after
-the following package configurations) defines some extra faces for the
-=list-bookmarks= view.  Those help differentiate URLs from files, PDFs,
-and directories, though it is a work-in-progress and will likely cover
-more cases.
+On the presentation front, Emacs28 adds a fringe marker on the line
+where a bookmark is set or on the line where you land after visiting a
+bookmark.  This is controlled by the variable =bookmark-set-fringe-mark=.
+While my =prot-bookmark.el= (reproduced after the following package
+configurations) defines some extra faces for the =list-bookmarks= view.
+Those help differentiate URLs from files, PDFs, and directories, though
+it is a work-in-progress and will likely cover more cases.
 
 URL bookmarks are handled by my =prot-eww.el= extensions, by means of a
 custom handler that leverages the standard =bookmark.el= framework instead
@@ -3433,7 +3431,7 @@ Also watch: [[https://protesilaos.com/codelog/2021-09-08-emacs-bookmarks-intro/]
 (prot-emacs-builtin-package 'bookmark
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations t)
-  (setq bookmark-fontify nil) ; Emacs28
+  (setq bookmark-set-fringe-mark t) ; Emacs28
 
   (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
 
