@@ -112,21 +112,21 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+  (setq modus-themes-italic-constructs nil
+        modus-themes-bold-constructs nil
         modus-themes-no-mixed-fonts nil
-        modus-themes-subtle-line-numbers t
-        modus-themes-success-deuteranopia t
+        modus-themes-subtle-line-numbers nil
+        modus-themes-success-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense'
-        modus-themes-lang-checkers nil
+        modus-themes-lang-checkers '(straight-underline)
 
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
@@ -136,65 +136,67 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(green-strings alt-syntax faint yellow-comments)
+        modus-themes-syntax '(yellow-comments green-strings alt-syntax)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line nil
+        modus-themes-hl-line '(accented intense underline)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold)
+        modus-themes-paren-match '(underline intense)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(faint neutral-underline)
+        modus-themes-links '(no-color no-underline background bold)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(intense)
+        modus-themes-prompts '(intense background)
 
-        modus-themes-completions nil ; {nil,'moderate,'opinionated}
+        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
         modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend accented bg-only)
+        modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'desaturated
+        modus-themes-diffs nil
 
-        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
+        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch scale-title))
-          (header-date . (bold-today grayscale scale))
-          (scheduled . rainbow)
+          (header-date . (bold-today scale-heading underline-today grayscale workaholic))
+          (event . (scale-small accented italic))
+          (scheduled . uniform)
           (habit . traffic-light-deuteranopia))
 
-        modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . (background))
-          (2 . (background rainbow))
-          (3 . (rainbow))
-          (4 . (rainbow no-bold)))
+        modus-themes-headings nil ; this is an alist: read the manual or its doc string
+        ;; '((1 . (background))
+        ;;   (2 . (background rainbow))
+        ;;   (3 . (rainbow))
+        ;;   (4 . (rainbow no-bold)))
 
         modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings t
+        modus-themes-variable-pitch-headings nil
         modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
         modus-themes-scale-4 1.27
-        modus-themes-scale-title 1.33)
+        modus-themes-scale-title 1.33
+        modus-themes-scale-small 0.9)
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
@@ -238,14 +240,14 @@
   ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
   ;; as it explains what those property lists should contain.
   (setq prot-fonts-typeface-sets-alist
-        '((small . ( :fixed-pitch-family "Hack"
-                     :fixed-pitch-regular-weight normal
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 90
-                     :fixed-pitch-line-spacing 1
-                     :variable-pitch-family "DejaVu Sans"
-                     :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))
+        '((small . ( :fixed-pitch-family "Iosevka Comfy"
+                       :fixed-pitch-regular-weight regular
+                       :fixed-pitch-heavy-weight bold
+                       :fixed-pitch-height 100
+                       :fixed-pitch-line-spacing nil
+                       :variable-pitch-family "Noto Serif"
+                       :variable-pitch-height 1.0
+                       :variable-pitch-regular-weight normal))
 
           (regular . ( :fixed-pitch-family "Iosevka Comfy"
                        :fixed-pitch-regular-weight book
@@ -515,6 +517,7 @@
     (define-key map (kbd "M-s M-y") #'prot-consult-yank)
     (define-key map (kbd "M-s M-l") #'prot-consult-line)))
 
+;;; Switch to directories (consult-dir.el)
 (prot-emacs-elpa-package 'consult-dir
   (setq consult-dir-sources '( consult-dir--source-bookmark
                                consult-dir--source-default
@@ -850,8 +853,8 @@
   (define-key map "r" #'rename-uniquely))
 
 (with-eval-after-load 'org
-  (define-key ctl-x-x-map "i" #'contrib/org-id-headlines)
-  (define-key ctl-x-x-map "h" #'prot/ox-html))
+  (define-key ctl-x-x-map "i" #'prot-org-id-headlines)
+  (define-key ctl-x-x-map "h" #'prot-org-ox-html))
 
 ;;; Unique names for buffers
 (prot-emacs-builtin-package 'uniquify
@@ -1051,7 +1054,7 @@
         '(prot-tab-format-space-single
           prot-tab-format-mule-info
           prot-tab-format-modified
-          tab-bar-format-tabs
+          tab-bar-format-tabs-groups
           prot-tab-format-space-double
           prot-tab-format-position
           prot-tab-format-space-double
@@ -1076,23 +1079,6 @@
 ;; (prot-emacs-builtin-package 'tab-line
 ;;   (global-tab-line-mode -1))
 
-;;; Tab-bar tabs in the echo area (tab-bar-echo-area.el)
-(prot-emacs-elpa-package 'tab-bar-echo-area
-  (tab-bar-echo-area-mode 1))
-
-;;; Tab bar groups
-(prot-emacs-elpa-package 'tab-bar-groups
-  (tab-bar-groups-activate)
-
-  (let ((map tab-prefix-map))           ; the prefix is C-x t
-    (define-key map (kbd "g 0") #'tab-bar-groups-close-group)
-    (define-key map (kbd "g 2") #'tab-bar-groups-new-tab)
-    (define-key map (kbd "g a") #'tab-bar-groups-assign-group)
-    (define-key map (kbd "g g") #'tab-bar-groups-regroup-tabs)
-    (define-key map (kbd "g d") #'tab-bar-groups-duplicate-tab)
-    (define-key map (kbd "g e") #'tab-bar-groups-eject-tab)
-    (define-key map (kbd "g r") #'tab-bar-groups-rename-group)))
-
 ;;; Transposition and rotation of windows
 (prot-emacs-elpa-package 'transpose-frame
   (let ((map global-map))
@@ -1102,12 +1088,51 @@
 (prot-emacs-builtin-package 'bookmark
   (setq bookmark-use-annotations nil)
   (setq bookmark-automatically-show-annotations t)
-  (setq bookmark-fontify nil) ; Emacs28
+  (setq bookmark-set-fringe-mark t) ; Emacs28
 
   (add-hook 'bookmark-bmenu-mode-hook #'hl-line-mode))
 
 (prot-emacs-builtin-package 'prot-bookmark
   (prot-bookmark-extra-keywords 1))
+
+;;; Ibuffer-like bookmark list (blist.el)
+;; Project repo: <https://gitlab.com/mmemmew/blist>.  Its dependency is
+;; `ilist', by the same author: <https://gitlab.com/mmemmew/blist>.
+;;
+;; I handle those manually via git, at least until they become available
+;; through an ELPA.
+;;
+;; `prot-emacs-manual-package' is defined in my init.el
+(prot-emacs-manual-package 'ilist)
+
+(prot-emacs-manual-package 'blist
+  (setq blist-expert t)
+  (setq blist-discard-empty-p t)
+
+  ;; NOTE 2021-09-16: This package is still in its early days.  Things
+  ;; will change.
+  (with-eval-after-load 'prot-eww
+    (blist-define-criterion "eww" "EWW"
+      (eq (bookmark-get-handler bookmark)
+          #'prot-eww-bookmark-jump)))
+
+  (blist-define-criterion "info" "Info"
+    (eq (bookmark-get-handler bookmark)
+        #'Info-bookmark-jump))
+
+  (with-eval-after-load 'pdf-tools
+    (blist-define-criterion "pdf" "PDF"
+      (eq (bookmark-get-handler bookmark)
+          #'pdf-view-bookmark-jump-handler)))
+
+  (setq blist-filter-groups
+        (list
+         (cons "EWW" #'blist-eww-p)
+         (cons "PDF" #'blist-pdf-p)
+         (cons "Info" #'blist-info-p)
+         (cons "Default" #'blist-default-p)))
+
+  (define-key global-map (kbd "C-x r l") #'blist-list-bookmarks))
 
 ;;; Custom extensions for "focus mode" (prot-logos.el)
 (prot-emacs-builtin-package 'face-remap)
@@ -1508,7 +1533,7 @@ sure this is a good approach."
         '((sequence "TODO(t)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")))
   (setq org-todo-keyword-faces
         '(("WAIT" . '(bold org-todo))
-          ("CANCEL" . '(bold org-todo))))
+          ("CANCEL" . '(bold org-done))))
   (setq org-use-fast-todo-selection 'expert)
   (setq org-priority-faces
         '((?A . '(org-scheduled-today org-priority))
@@ -1593,15 +1618,6 @@ sure this is a good approach."
                 (in-mode . "notmuch-show-mode")
                 (in-mode . "notmuch-tree-mode")))))
 
-  ;; Source: https://stackoverflow.com/a/54251825
-  (defun contrib/org-capture-no-delete-windows (oldfun args)
-    (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
-      (apply oldfun args)))
-
-  ;; Same source as above
-  (advice-add 'org-capture-place-template ; TODO move this to prot-org.el
-              :around 'contrib/org-capture-no-delete-windows)
-
 ;;;; agenda
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (thread-last org-directory (expand-file-name "notes.org")))
@@ -1645,34 +1661,6 @@ sure this is a good approach."
   (setq org-agenda-remove-timeranges-from-blocks nil)
   (setq org-agenda-compact-blocks nil)
   (setq org-agenda-block-separator ?—)
-
-  (defun prot/org-agenda-format-date-aligned (date)
-    "Format a DATE string for display in the daily/weekly agenda.
-This function makes sure that dates are aligned for easy reading.
-
-Slightly tweaked version of `org-agenda-format-date-aligned' that
-produces dates with a fixed length."
-    (require 'cal-iso)
-    (let* ((dayname (calendar-day-name date t))
-           (day (cadr date))
-           (day-of-week (calendar-day-of-week date))
-           (month (car date))
-           (monthname (calendar-month-name month t))
-           (year (nth 2 date))
-           (iso-week (org-days-to-iso-week
-                      (calendar-absolute-from-gregorian date)))
-           (weekyear (cond ((and (= month 1) (>= iso-week 52))
-                            (1- year))
-                           ((and (= month 12) (<= iso-week 1))
-                            (1+ year))
-                           (t year)))
-           (weekstring (if (= day-of-week 1)
-                           (format " (W%02d)" iso-week)
-                         "")))
-      (format "%s %2d %s %4d%s"
-              dayname day monthname year weekstring)))
-
-  (setq org-agenda-format-date #'prot/org-agenda-format-date-aligned)
 
 ;;;;; Agenda marks
   (setq org-agenda-bulk-mark-char "#")
@@ -1813,46 +1801,9 @@ produces dates with a fixed length."
   ;; FIXME: how to remove everything else?
   (setq org-export-backends '(html texinfo md))
 
-  (defun prot/ox-html ()
-    (interactive)
-    (org-html-export-as-html nil nil nil t nil))
-
-  (defun prot/ox-texinfo ()
-    (interactive)
-    (org-texinfo-export-to-info))
-
 ;;;; IDs
   (setq org-id-link-to-org-use-id
         'create-if-interactive-and-no-custom-id)
-
-  (declare-function org-id-add-location "org")
-
-  ;; Copied from this article (with minor tweaks from my side):
-  ;; <https://writequit.org/articles/emacs-org-mode-generate-ids.html>.
-  (defun contrib/org-id-get (&optional pom create prefix)
-    "Get the CUSTOM_ID property of the entry at point-or-marker
-POM. If POM is nil, refer to the entry at point. If the entry
-does not have an CUSTOM_ID, the function returns nil. However,
-when CREATE is non nil, create a CUSTOM_ID if none is present
-already. PREFIX will be passed through to `org-id-new'. In any
-case, the CUSTOM_ID of the entry is returned."
-    (org-with-point-at pom
-      (let ((id (org-entry-get nil "CUSTOM_ID")))
-        (cond
-         ((and id (stringp id) (string-match "\\S-" id))
-          id)
-         (create
-          (setq id (org-id-new (concat prefix "h")))
-          (org-entry-put pom "CUSTOM_ID" id)
-          (org-id-add-location id (format "%s" (buffer-file-name (buffer-base-buffer))))
-          id)))))
-
-  (defun contrib/org-id-headlines ()
-    "Add CUSTOM_ID properties to all headlines in the current
-file which do not already have one."
-    (interactive)
-    (org-map-entries
-     (lambda () (contrib/org-id-get (point) t))))
 
   (let ((map global-map))
     (define-key map (kbd "C-c a") #'org-agenda)
@@ -1867,6 +1818,9 @@ file which do not already have one."
     (define-key map (kbd "C-M-S-<left>") nil)
     (define-key map (kbd "C-c S-l") #'org-toggle-link-display)
     (define-key map (kbd "C-c C-S-l") #'org-insert-last-stored-link)))
+
+(prot-emacs-builtin-package 'prot-org
+  (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned))
 
 ;;; Calendar and Diary (and prot-diary.el)
 (prot-emacs-builtin-package 'calendar
@@ -2609,7 +2563,7 @@ Can link to more than one message, if so all matching messages are shown."
   (setq eww-desktop-remove-duplicates t)
   (setq eww-header-line-format nil)
   (setq eww-search-prefix "https://duckduckgo.com/html/?q=")
-  (setq eww-download-directory (expand-file-name "~/Downloads/eww"))
+  (setq eww-download-directory (expand-file-name "~/Documents/eww-downloads"))
   (setq eww-suggest-uris
         '(eww-links-at-point
           thing-at-point-url-at-point))
@@ -3165,7 +3119,7 @@ Can link to more than one message, if so all matching messages are shown."
 
   (let ((map flymake-mode-map))
     (define-key map (kbd "C-c ! s") #'flymake-start)
-    (define-key map (kbd "C-c ! d") #'flymake-show-diagnostics-buffer)
+    (define-key map (kbd "C-c ! d") #'flymake-show-buffer-diagnostics) ; Emacs28
     (define-key map (kbd "C-c ! n") #'flymake-goto-next-error)
     (define-key map (kbd "C-c ! p") #'flymake-goto-prev-error)))
 
