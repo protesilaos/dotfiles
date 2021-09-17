@@ -1540,7 +1540,7 @@ sure this is a good approach."
           ("CANCEL" . '(bold org-done))))
   (setq org-use-fast-todo-selection 'expert)
   (setq org-priority-faces
-        '((?A . '(org-scheduled-today org-priority))
+        '((?A . '(bold org-priority))
           (?B . org-priority)
           (?C . '(shadow org-priority))))
   (setq org-fontify-done-headline nil)
