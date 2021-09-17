@@ -761,29 +761,121 @@ record for the current EWW page."
         (handler . prot-eww-bookmark-jump)
         (defaults . ,defaults)))))
 
-;; FIXME 2021-09-08: Why `bookmark-bmenu-other-window' does not work as
-;; intended?  It is bound to `o' in `bookmark-bmenu-mode-map' (C-x r l).
-
-;; TODO 2021-09-08: Restore position of point.  We would need a
-;; `with-current-buffer' for this, but the tricky part is to get the
-;; correct one that the bookmark handler visits at the moment.
-
-;;;###autoload
-(defun prot-eww-bookmark-jump (bookmark)
-  "Jump to BOOKMARK using EWW.
-This implements the handler function interface for the record
-type returned by `prot-eww--bookmark-make-record'."
-  (let* ((file (bookmark-prop-get bookmark 'eww-url))
-         (buf (eww file)))
-    (bookmark-default-handler
-     `("" (buffer . ,buf) . ,(bookmark-get-bookmark-record bookmark)))))
-
 (defun prot-eww--set-bookmark-handler ()
   "Set appropriate `bookmark-make-record-function'.
 Intended for use with `eww-mode-hook'."
   (setq-local bookmark-make-record-function #'prot-eww--bookmark-make-record))
 
 (add-hook 'eww-mode-hook #'prot-eww--set-bookmark-handler)
+
+(defun prot-eww--pop-to-buffer (buffer &rest _args)
+  "Set BUFFER and ignore ARGS.
+Just a temporary advice to override `pop-to-buffer'."
+  (set-buffer buffer))
+
+(declare-function bookmark-get-handler "bookmark" (bookmark-name-or-record))
+(declare-function bookmark-get-front-context-string "bookmark" (bookmark-name-or-record))
+(declare-function bookmark-get-rear-context-string "bookmark" (bookmark-name-or-record))
+(declare-function bookmark-get-position "bookmark" (bookmark-name-or-record))
+(declare-function bookmark-name-from-full-record "bookmark" (bookmark-record))
+(declare-function bookmark-get-bookmark "bookmark" (bookmark-name-or-record &optional noerror))
+
+;; Copied from the `eww-conf.el' of JSDurand on 2021-09-17 10:19 +0300:
+;; <https://git.jsdurand.xyz/emacsd.git/tree/eww-conf.el>.  My previous
+;; version would not work properly when trying to open the bookmark in
+;; the other window from inside the Bookmarks' list view.
+
+;;;###autoload
+(defun prot-eww-bookmark-jump (bookmark)
+  "Jump to BOOKMARK in EWW.
+This is intended to be the handler for bookmark records created
+by `prot-eww--bookmark-make-record'.
+
+If there is already a buffer visiting the URL of the bookmark,
+simply jump to that buffer and try to restore the point there.
+Otherwise, fetch URL and afterwards try to restore the point."
+  (let ((handler (bookmark-get-handler bookmark))
+        (location (bookmark-prop-get bookmark 'eww-url))
+        (front (cons 'front-context-string
+                     (bookmark-get-front-context-string bookmark)))
+        (rear (cons 'rear-context-string
+                    (bookmark-get-rear-context-string bookmark)))
+        (position (cons 'position (bookmark-get-position bookmark)))
+        (eww-buffers
+         (delq
+          nil
+          (mapcar
+           (lambda (buffer)
+             (cond
+              ((provided-mode-derived-p
+                (buffer-local-value
+                 'major-mode buffer)
+                'eww-mode)
+               buffer)))
+           (buffer-list))))
+        buffer)
+    (cond
+     ((and (stringp location)
+           (not (string= location ""))
+           (eq handler #'prot-eww-bookmark-jump))
+      (let (reuse-p)
+        (mapc
+         (lambda (temp-buffer)
+           (cond
+            ((string=
+              (plist-get
+               (buffer-local-value 'eww-data temp-buffer)
+               :url)
+              location)
+             (setq reuse-p temp-buffer)
+             (setq buffer temp-buffer))))
+         eww-buffers)
+        ;; Don't switch to that buffer, otherwise it will cause
+        ;; problems if we want to open the bookmark in another window.
+        (cond
+         (reuse-p
+          (set-buffer reuse-p)
+          ;; we may use the default handler to restore the position here
+          (with-current-buffer reuse-p
+            (goto-char (cdr position))
+            (cond
+             ((search-forward (cdr front) nil t)
+              (goto-char (match-beginning 0))))
+            (cond
+             ((search-forward (cdr rear) nil t)
+              (goto-char (match-end 0))))))
+         (t
+          ;; HACK, GIANT HACK!
+          
+          (advice-add #'pop-to-buffer :override
+                      #'prot-eww--pop-to-buffer)
+          (eww location 4)
+          ;; after the `set-buffer' in `eww', the current buffer is
+          ;; the buffer we want
+          (setq buffer (current-buffer))
+          ;; restore the definition of pop-to-buffer...
+          (advice-remove
+           #'pop-to-buffer #'prot-eww--pop-to-buffer)
+          ;; add a hook to restore the position
+
+          ;; make sure each hook function is unique, so that different
+          ;; hooks don't interfere with each other.
+          (let ((function-symbol
+                 (intern
+                  (format
+                   "eww-render-hook-%s"
+                   (bookmark-name-from-full-record
+                    (bookmark-get-bookmark bookmark))))))
+            (fset function-symbol
+                  (lambda ()
+                    (remove-hook
+                     'eww-after-render-hook function-symbol)
+                    (bookmark-default-handler
+                     (list
+                      "" (cons 'buffer buffer)
+                      front rear position))))
+            (add-hook 'eww-after-render-hook function-symbol))))))
+     ((user-error "Cannot jump to this bookmark")))))
 
 (provide 'prot-eww)
 ;;; prot-eww.el ends here
