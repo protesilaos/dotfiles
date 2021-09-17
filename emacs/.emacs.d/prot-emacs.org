@@ -2345,7 +2345,7 @@ package configurations).
 
 + =prot-search-occur-outline= produces an outline of the buffer based on a
   configurable association of major mode and regular expression.  Check
-  the variable =prot-search-outline-regexp-alist=.  The command prompts
+  the variable =prot-search-outline-regexp-alist=.  The command can prompt
   for a regexp style to use, defaulting to the current major mode if an
   outline regexp exists for it.  An arbitrary regexp can also be
   inserted either through interactive use or from Lisp code.

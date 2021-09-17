@@ -182,15 +182,26 @@ Also see `prot-search-occur-urls'."
      nil nil nil 'prot-search--occur-outline-hist default)))
 
 ;;;###autoload
-(defun prot-search-occur-outline (regexp)
-  "Produce buffer outline based on REGEXP.
-When called interactively, prompt for REGEXP among entries in
-`prot-search-outline-regexp-alist'."
-  (interactive (list (prot-search--occur-outline-prompt)))
-  (let ((buf-name (format "*outline of <%s>*" (buffer-name)))
-        (rx (if (string= major-mode regexp)
-                (cdr (assoc regexp prot-search-outline-regexp-alist))
-              regexp)))
+(defun prot-search-occur-outline (&optional arg)
+  "Produce buffer outline from `prot-search-outline-regexp-alist'.
+
+With optional prefix ARG (\\[universal-argument]), prompt for a
+preset among the entries in `prot-search-outline-regexp-alist'.
+
+ARG may also be a string (or regular expression) when called from
+Lisp."
+  (interactive "P")
+  (let* ((regexp (when (and arg (not (stringp arg)))
+                   (prot-search--occur-outline-prompt)))
+         (rx (cond
+              ((stringp arg)
+               arg)
+              ((and arg (string= major-mode regexp))
+               (cdr (assoc regexp prot-search-outline-regexp-alist)))
+              ((assoc major-mode prot-search-outline-regexp-alist)
+               (cdr (assoc major-mode prot-search-outline-regexp-alist)))
+              (t (user-error "Unknown outline style"))))
+         (buf-name (format "*outline of <%s>*" (buffer-name))))
     (occur-1 rx nil (list (current-buffer)) buf-name)
     (add-to-history 'prot-search--occur-outline-hist regexp)))
 
