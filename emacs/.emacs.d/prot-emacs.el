@@ -115,18 +115,18 @@
   (setq modus-themes-italic-constructs nil
         modus-themes-bold-constructs nil
         modus-themes-no-mixed-fonts nil
-        modus-themes-subtle-line-numbers nil
-        modus-themes-success-deuteranopia nil
+        modus-themes-subtle-line-numbers t
+        modus-themes-success-deuteranopia t
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense'
-        modus-themes-lang-checkers '(straight-underline)
+        modus-themes-lang-checkers '(straight-underline text-also)
 
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
@@ -136,12 +136,12 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(yellow-comments green-strings alt-syntax)
+        modus-themes-syntax '(alt-syntax)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(accented intense underline)
+        modus-themes-hl-line '(intense underline)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -152,17 +152,17 @@
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(no-color no-underline background bold)
+        modus-themes-links nil
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(intense background)
+        modus-themes-prompts '(intense gray background)
 
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations 'monochrome ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -171,7 +171,7 @@
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs nil
+        modus-themes-diffs 'deuteranopia
 
         modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
 
@@ -189,7 +189,7 @@
         ;;   (4 . (rainbow no-bold)))
 
         modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings nil
+        modus-themes-variable-pitch-headings t
         modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
@@ -1120,6 +1120,11 @@
       (eq (bookmark-get-handler bookmark)
           #'prot-eww-bookmark-jump)))
 
+  (with-eval-after-load 'prot-eshell
+    (blist-define-criterion "eshell" "Eshell"
+      (eq (bookmark-get-handler bookmark)
+          #'prot-eshell-bookmark-jump)))
+
   (blist-define-criterion "info" "Info"
     (eq (bookmark-get-handler bookmark)
         #'Info-bookmark-jump))
@@ -1132,6 +1137,7 @@
   (setq blist-filter-groups
         (list
          (cons "EWW" #'blist-eww-p)
+         (cons "Eshell" #'blist-eshell-p)
          (cons "PDF" #'blist-pdf-p)
          (cons "Info" #'blist-info-p)
          (cons "Default" #'blist-default-p)))
@@ -2822,6 +2828,16 @@ Can link to more than one message, if so all matching messages are shown."
 (prot-emacs-elpa-package 'rainbow-mode
   (setq rainbow-ansi-colors nil)
   (setq rainbow-x-colors nil))
+
+;;; Depth-based code colourisation (prism.el)
+(prot-emacs-elpa-package 'prism
+  (setq prism-comments t))
+
+(prot-emacs-builtin-package 'prot-prism
+  (setq prot-prism-negative-space-sensitive-modes
+        '(sh-mode yaml-mode))
+
+  (setq prot-prism-presets-function #'prot-prism--colors))
 
 ;;; Line numbers and relevant indicators (prot-sideline.el)
 (prot-emacs-builtin-package 'prot-sideline
