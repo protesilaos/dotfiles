@@ -199,5 +199,59 @@ wisely or prepare to call `eshell-interrupt-process'."
           (eshell-send-input))
       (user-error "Cannot find a project root here"))))
 
+;;;; Bookmark handler for bookmark.el
+;; The default pops up an existing Eshell buffer instead of creating a
+;; new one which visits the bookmarked location.
+
+(declare-function bookmark-get-handler "bookmark" (bookmark-name-or-record))
+(declare-function bookmark-prop-get "bookmark" (bookmark prop))
+
+;; Copied from the `eshell-conf.el' of JSDurand on 2021-09-17 17:47
+;; +0300: <https://git.jsdurand.xyz/emacsd.git/tree/eshell-conf.el>.
+
+(defun prot-eshell-bookmark-jump (bookmark)
+  "Handle Eshell BOOKMARK in my preferred way."
+  (let ((handler (bookmark-get-handler bookmark))
+        (location (bookmark-prop-get bookmark 'location))
+        (eshell-buffers
+         (delq
+          nil
+          (mapcar
+           (lambda (buffer)
+             (cond
+              ((provided-mode-derived-p
+                (buffer-local-value
+                 'major-mode buffer)
+                'eshell-mode)
+               buffer)))
+           (buffer-list)))))
+    (cond
+     ((and (stringp location)
+           (not (string= location ""))
+           (memq handler (list #'eshell-bookmark-jump
+                               #'prot-eshell-bookmark-jump)))
+      (let (reuse-p)
+        (mapc
+         (lambda (buffer)
+           (cond
+            ((string= (buffer-local-value 'default-directory
+                                          buffer)
+                      location)
+             (setq reuse-p buffer))))
+         eshell-buffers)
+        ;; Don't switch to that buffer, otherwise it will cause
+        ;; problems if we want to open the bookmark in another window.
+        (cond
+         (reuse-p (set-buffer reuse-p))
+         ;; eshell will pop the buffer
+         ((let ((buffer (generate-new-buffer eshell-buffer-name)))
+            (with-current-buffer buffer
+              (setq-local default-directory location)
+              (eshell-mode))
+            (set-buffer buffer))))))
+     ((user-error "Cannot jump to this bookmark")))))
+
+(advice-add #'eshell-bookmark-jump :override #'prot-eshell-bookmark-jump)
+
 (provide 'prot-eshell)
 ;;; prot-eshell.el ends here
