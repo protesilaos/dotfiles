@@ -7821,6 +7821,58 @@ when reviewing my themes (=rainbow-mode= is activated manually).
   (setq rainbow-x-colors nil))
 #+end_src
 
+** Depth-based code colourisation (prism.el)
+:PROPERTIES:
+:CUSTOM_ID: h:6478350b-b89b-406e-9b08-2dc9e93cc5b4
+:END:
+
+Adam Porter's (aka alphapapa) =prism.el= colourises programming code based
+on the level of depth, rather than targeting syntactic constructs like
+keywords, strings, variables.  This can be useful when working with
+highly-nested and/or unfamiliar code.  It has two modes that are
+intended for specific types of programming languages:
+
+1. =prism-mode= is good for Lisp and languages that look like C (I only
+   code in Elisp);
+2. =prism-whitespace-mode= is for languages that are more sensitive to
+   indentation.
+
+The degree of colouration for each level of depth is configurable, as
+are the colours to be used.  Consult Prism's documentation for the
+technicalities.
+
+My =prot-prism.el= (reproduced after the following configurations)
+provides a few extras that help me set the desired style of colouration.
+It provides an alist of palette presets.  Those can be applied through
+minibuffer completion with the command =prot-prism-set-colors=.  All the
+presets are designed to extract colour values from the active Modus
+theme ([[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes (my highly accessible themes)]]).  Those range from a
+minimalist style of drawing only four colours, to a more expansive
+sixteen-colour gamout.
+
+The =prot-prism-set-colors= command also takes care to activate the
+appropriate Prism mode for languages whose major mode is declared as
+"indentation-sensitive".  Those are added as a list to the variable
+=prot-prism-negative-space-sensitive-modes=.
+
+To disable the effect, just do =M-x prot-prism-disable=.
+
+#+begin_src emacs-lisp
+;;; Depth-based code colourisation (prism.el)
+(prot-emacs-elpa-package 'prism
+  (setq prism-comments t))
+
+(prot-emacs-builtin-package 'prot-prism
+  (setq prot-prism-negative-space-sensitive-modes
+        '(sh-mode yaml-mode))
+
+  (setq prot-prism-presets-function #'prot-prism--colors))
+#+end_src
+
+Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: prot-lisp/prot-prism.el src emacs-lisp :tangle no
+
 ** Line numbers and relevant indicators (prot-sideline.el)
 :PROPERTIES:
 :CUSTOM_ID: h:cb76fcee-e304-4b86-a764-6c3c6775da51
