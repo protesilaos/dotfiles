@@ -478,18 +478,18 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   (setq modus-themes-italic-constructs nil
         modus-themes-bold-constructs nil
         modus-themes-no-mixed-fonts nil
-        modus-themes-subtle-line-numbers nil
-        modus-themes-success-deuteranopia nil
+        modus-themes-subtle-line-numbers t
+        modus-themes-success-deuteranopia t
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense'
-        modus-themes-lang-checkers '(straight-underline)
+        modus-themes-lang-checkers '(straight-underline text-also)
 
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
@@ -499,12 +499,12 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(yellow-comments green-strings alt-syntax)
+        modus-themes-syntax '(alt-syntax)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(accented intense underline)
+        modus-themes-hl-line '(intense underline)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -515,17 +515,17 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(no-color no-underline background bold)
+        modus-themes-links nil
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(intense background)
+        modus-themes-prompts '(intense gray background)
 
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations 'monochrome ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -534,7 +534,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs nil
+        modus-themes-diffs 'deuteranopia
 
         modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
 
@@ -552,7 +552,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;;   (4 . (rainbow no-bold)))
 
         modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings nil
+        modus-themes-variable-pitch-headings t
         modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
