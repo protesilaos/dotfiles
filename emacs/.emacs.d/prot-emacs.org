@@ -3494,6 +3494,11 @@ longer need ([[#h:aad79917-cd80-491b-9020-db27867ab132][Dired-like list for regi
       (eq (bookmark-get-handler bookmark)
           #'prot-eww-bookmark-jump)))
 
+  (with-eval-after-load 'prot-eshell
+    (blist-define-criterion "eshell" "Eshell"
+      (eq (bookmark-get-handler bookmark)
+          #'prot-eshell-bookmark-jump)))
+
   (blist-define-criterion "info" "Info"
     (eq (bookmark-get-handler bookmark)
         #'Info-bookmark-jump))
@@ -3506,6 +3511,7 @@ longer need ([[#h:aad79917-cd80-491b-9020-db27867ab132][Dired-like list for regi
   (setq blist-filter-groups
         (list
          (cons "EWW" #'blist-eww-p)
+         (cons "Eshell" #'blist-eshell-p)
          (cons "PDF" #'blist-pdf-p)
          (cons "Info" #'blist-info-p)
          (cons "Default" #'blist-default-p)))
