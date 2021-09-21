@@ -88,6 +88,8 @@
      (propertize "End:" 'face 'warning) end)
     (tmr--play-sound)))
 
+;; REVIEW 2021-09-21: Maybe we should use a list instead of storing just
+;; the last one?
 (defvar tmr--last-timer nil
   "Last timer object, used by `tmr-cancel'.")
 
@@ -95,6 +97,19 @@
   "Cancel last timer object set with `tmr' command."
   (interactive)
   (cancel-timer tmr--last-timer))
+
+(defun tmr--echo-area (time)
+  "Produce `message' about current `tmr' TIME."
+  (let* ((specifier (substring time -1))
+         (amount (substring time 0 -1))
+         (start (format-time-string "%T"))
+         (unit (pcase specifier
+                 ("s" (format "%ss (s == second)" amount))
+                 ("h" (format "%sh (h == hour)" amount))
+                 (_   (concat time "m (m == minute)")))))
+    (message "`tmr' started at %s for %s"
+             (propertize start 'face 'success)
+             (propertize unit 'face 'bold))))
 
 ;;;###autoload
 (defun tmr (time)
@@ -111,6 +126,7 @@ To cancel the timer, use the `tmr-cancel' command."
   (interactive "sN minutes for timer (append `h' or `s' for other units): ")
   (let ((start (format-time-string "%R"))
         (unit (tmr--unit time)))
+    (tmr--echo-area time)
     (setq tmr--last-timer
           (run-with-timer
            unit nil
