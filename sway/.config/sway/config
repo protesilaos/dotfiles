@@ -192,10 +192,10 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-bindsym $mod+mod1+$left resize shrink width 25px
-bindsym $mod+mod1+$down resize grow height 25px
-bindsym $mod+mod1+$up resize shrink height 25px
-bindsym $mod+mod1+$right resize grow width 25px
+bindsym $mod+Ctrl+$left resize shrink width 25px
+bindsym $mod+Ctrl+$down resize grow height 25px
+bindsym $mod+Ctrl+$up resize shrink height 25px
+bindsym $mod+Ctrl+$right resize grow width 25px
 
 # Change gap size
 bindsym $mod+Bracketright gaps inner all plus 5
