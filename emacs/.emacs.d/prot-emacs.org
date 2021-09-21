@@ -414,6 +414,38 @@ with your carefully designed (and version-controlled) configuration.
   (setq custom-file (make-temp-file "emacs-custom-")))
 #+end_src
 
+** Propagation of shell environment variables (exec-path-from-shell.el)
+:PROPERTIES:
+:CUSTOM_ID: h:abe40d9f-e454-442a-9b9a-77e3b6c0b5db
+:END:
+
+Since 2021-09-21 I have been experimenting with Sway, a tiling window
+manager for the Wayland display protocol.  One of the major changes to
+how the older Xorg display server would handle the initialisation of the
+environment is that Wayland does not have a login shell.  Instead,
+programs are initialised by the session manager, which in my case is
+controlled by systemd (check my dotfiles' git repo for the
+technicalities).
+
+To cut the long story short, Emacs needs to be made aware of the
+environment variables that are available to my Bash shell but which
+Wayland has obscured from this contexts.  Thankfully, Steve Purcell's
+=exec-path-from-shell= handles the task splendidly.  In the user option
+=exec-path-from-shell-variables= we specify the environment variables we
+want to inform Emacs about.  Then we just invoke the function
+=exec-path-from-shell-initialize= and are good to go.  Now we can get back
+to using Emacs the way we did on Xorg.
+
+Note that Steve's package is not specifically about Wayland.  Its
+documentation makes references to other operating systems.
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'exec-path-from-shell
+  (setq exec-path-from-shell-variables
+        '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
+  (exec-path-from-shell-initialize))
+#+end_src
+
 ** Modus themes (my highly accessible themes)
 :PROPERTIES:
 :CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
