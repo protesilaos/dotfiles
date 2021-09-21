@@ -1,6 +1,6 @@
 # .profile --- Initialisation script for display managers.
 #
-# Copyright (c) 2020 Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (c) 2020-2021  Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software; you can redistribute it and/or
 # it under the terms of the GNU General Public License as published by
@@ -52,6 +52,3 @@ fi
 # Auto unlocks the GPG and SSH agents.
 eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
 export SSH_AUTH_SOCK
-
-# Load my XTerm and relevant configurations.
-[ -f "$HOME"/.Xresources ] && xrdb -I "$HOME" -merge "$HOME"/.Xresources
