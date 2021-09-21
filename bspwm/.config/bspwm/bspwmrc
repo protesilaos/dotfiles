@@ -2,7 +2,7 @@
 
 # bspwmrc --- Initialisation script for BSPWM.
 #
-# Copyright (c) 2019 Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (c) 2019-2021  Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,14 +19,10 @@
 #
 ## Commentary:
 #
-# This file is part of my custom desktop session on Void Linux.  Other
-# important settings are defined in `.xinitrc' and application-specific
-# initialisation files.  See: https://gitlab.com/protesilaos/dotfiles
+# This file is part of my custom desktop session:
+# <https://gitlab.com/protesilaos/dotfiles>.
 
-
-##############
-# Essentials #
-##############
+### Essentials
 
 # Truncate a couple of common commands that are used herein.
 _bc() {
@@ -45,12 +41,9 @@ _check bspwm_conf_xrandr && bspwm_conf_xrandr
 # that this leverages my `bspwm_dynamic_desktops'.
 _check bspwm_conf_desktops && bspwm_conf_desktops
 
-##################
-# Visual options #
-##################
+### Visual options
 
-# window management
-# -----------------
+#### window management
 _bc initial_polarity second_child
 _bc border_width 2
 _bc window_gap 2
@@ -65,19 +58,15 @@ _bc pointer_action1 move
 _bc pointer_action2 resize_side
 _bc ignore_ewmh_focus false
 
-# window rules
+#### window rules
 _check bspwm_external_rules && \
     _bc external_rules_command \
         "$(command -v bspwm_external_rules)"
 
-# colours
-# -------
-
+#### colours
 _check bspwm_conf_colors && bspwm_conf_colors
 
-#############
-# autostart #
-#############
+### autostart
 
 # Specify keyboard layout.  For the key chord that performs the layout
 # switching between US QWERTY and Greek refer to my `sxhkdrc`.
