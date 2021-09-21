@@ -4542,7 +4542,7 @@ after the package configurations:
   exist, it is created.  Otherwise subsequent invocations of this
   "export" command will append their contents to the existing ones.
   This is good for keeping a record of something you are working on.
-  And because this is a standard buffer, you can edit it a will as well
+  And because this is a standard buffer, you can edit it at will as well
   as call =write-file= (=C-x C-w=) to save it permanently to a file.
 
 + =prot-eshell-redirect-to-buffer= provides a completion prompt to help
