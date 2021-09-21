@@ -106,6 +106,11 @@
   ;; Disable the damn thing
   (setq custom-file (make-temp-file "emacs-custom-")))
 
+(prot-emacs-elpa-package 'exec-path-from-shell
+  (setq exec-path-from-shell-variables
+        '("PATH" "MANPATH" "SSH_AUTH_SOCK"))
+  (exec-path-from-shell-initialize))
+
 ;;; Modus themes (my highly accessible themes)
 (prot-emacs-builtin-package 'modus-themes
   ;; Add all your customizations prior to loading the themes
