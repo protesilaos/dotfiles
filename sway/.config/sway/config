@@ -1,0 +1,266 @@
+# sway --- Configuration file for SwayWM
+#
+# Copyright (c) 2021  Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+## Commentary:
+#
+# This file is part of my SwayWM session.  Other important settings are
+# defined in application-specific initialisation files.  See:
+# <https://gitlab.com/protesilaos/dotfiles>.
+#
+## Code:
+
+### Variables
+
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+set $term alacritty
+
+# Note: pass the final command to swaymsg so that the resulting window can be opened
+# on the original workspace that the command was run on.
+set $menu wofi --allow-images -S drun | xargs swaymsg exec --
+
+### Output configuration
+# exec swaybg -i "$HOME/Pictures/current.jpg" -m fill -o '*'
+output * bg ~/Pictures/current.jpg fill
+
+### Input configuration
+input * {
+    xkb_layout "us,gr"
+    xkb_options "grp:shifts_toggle,ctrl:nocaps,grp_led:caps,compose:menu"
+}
+
+### Key bindings
+
+#### Basics
+
+# Start a terminal
+bindsym $mod+Return exec $term
+
+# Kill focused window
+bindsym $mod+Shift+q kill
+
+# Start your launcher
+bindsym $mod+d exec $menu
+
+# Drag floating windows by holding down $mod and left mouse button.
+# Resize them with right mouse button + $mod.
+# Despite the name, also works for non-floating windows.
+# Change normal to inverse to use left mouse button for resizing and right
+# mouse button for dragging.
+floating_modifier $mod normal
+
+# Reload the configuration file
+bindsym $mod+Shift+c reload
+
+# Exit sway (logs you out of your Wayland session)
+bindsym $mod+Delete exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+
+#### Moving around
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+# Swap focused window with the one in the given direction.
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+#### Workspaces
+bindsym $mod+Tab workspace next
+bindsym $mod+Shift+Tab workspace prev
+
+set $ws1 1
+set $ws2 2
+set $ws3 3
+set $ws4 4
+set $ws5 5
+set $ws6 6
+set $ws7 7
+set $ws8 8
+set $ws9 9
+set $ws0 0
+
+# Switch to workspace N.
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws0
+
+# Move focused container to workspace N.
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws0
+
+# Move focused container to workspace N and switch to it.
+bindsym Ctrl+$mod+Shift+1 move container to workspace $ws1, workspace $ws1
+bindsym Ctrl+$mod+Shift+2 move container to workspace $ws2, workspace $ws2
+bindsym Ctrl+$mod+Shift+3 move container to workspace $ws3, workspace $ws3
+bindsym Ctrl+$mod+Shift+4 move container to workspace $ws4, workspace $ws4
+bindsym Ctrl+$mod+Shift+5 move container to workspace $ws5, workspace $ws5
+bindsym Ctrl+$mod+Shift+6 move container to workspace $ws6, workspace $ws6
+bindsym Ctrl+$mod+Shift+7 move container to workspace $ws7, workspace $ws7
+bindsym Ctrl+$mod+Shift+8 move container to workspace $ws8, workspace $ws8
+bindsym Ctrl+$mod+Shift+9 move container to workspace $ws9, workspace $ws9
+bindsym Ctrl+$mod+Shift+0 move container to workspace $ws0, workspace $ws0
+
+#### Layout stuff
+bindsym $mod+s splith
+bindsym $mod+v splitv
+
+bindsym $mod+f fullscreen
+
+# Toggle the current focus between tiling and floating mode
+bindsym $mod+Shift+space floating toggle
+
+# Swap focus between the tiling area and the floating area
+bindsym $mod+space focus mode_toggle
+
+
+# # Switch the current container between different layout styles
+# # NOTE 2021-09-20: I don't use those for the time being.
+# bindsym $mod+Shift+s layout stacking
+# bindsym $mod+Shift+t layout tabbed
+# bindsym $mod+Shift+e layout toggle split
+
+#### Window rules
+# NOTE 2021-09-20: I copied those from my old i3 config (from 2017).  I
+# was using xprop to find them, but I am not sure what the Wayland
+# equivalent is.
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_role="Preferences"] floating enable
+for_window [window_type="dialog"] floating enable
+for_window [window_type="menu"] floating enable
+
+
+#### Resizing containers
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindsym $left resize shrink width 25px
+    bindsym $down resize grow height 25px
+    bindsym $up resize shrink height 25px
+    bindsym $right resize grow width 25px
+
+    # Ditto, with arrow keys
+    bindsym Left resize shrink width 25px
+    bindsym Down resize grow height 25px
+    bindsym Up resize shrink height 25px
+    bindsym Right resize grow width 25px
+
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+bindsym $mod+mod1+$left resize shrink width 25px
+bindsym $mod+mod1+$down resize grow height 25px
+bindsym $mod+mod1+$up resize shrink height 25px
+bindsym $mod+mod1+$right resize grow width 25px
+
+# Change gap size
+bindsym $mod+Bracketright gaps inner all plus 5
+bindsym $mod+Bracketleft gaps inner all minus 5
+
+#### Media keys
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -SIGRTMIN+1 i3blocks
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -SIGRTMIN+1 i3blocks
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle && pkill -SIGRTMIN+1 i3blocks
+
+bindsym XF86AudioPlay exec emacsclient -e "(bongo-pause/resume)"
+bindsym XF86AudioNext exec emacsclient -e "(bongo-previous)"
+bindsym XF86AudioPrev exec emacsclient -e "(bongo-next)"
+
+bindsym $mod+XF86AudioPlay exec playerctl play-pause
+bindsym $mod+XF86AudioNext exec playerctl next
+bindsym $mod+XF86AudioPrev exec playerctl previous
+
+bindsym Print exec grim ~/Pictures/screenshot_$(date +'%F-%T.png') && notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Pictures"
+bindsym $mod+Print exec grim -g "$(slurp)" ~/Pictures/screenshot_region_$(date +'%F-%T.png') && notify-send -i gnome-screenshot "Region view screenshot" "Saved image to Pictures"
+
+# My custom environment-wide theme switcher.
+bindsym $mod+F5 exec ~/bin/delight
+
+### Status Bar
+bar {
+    position bottom
+
+    status_command i3blocks     # It works with Sway
+
+    # # When the status_command prints a new line to stdout, swaybar updates.
+    # # The default just shows the current date and time.
+    # status_command while date +'%a %e %b, %R'; do sleep 60; done
+    # 
+    colors {
+        statusline #ffffff
+        background #000000
+        focused_workspace #3c3c3c #191a1b #ffffff
+        inactive_workspace #000000 #000000 #93959b
+        # focused_workspace #a8a8a8 #a8a8a8 #000000
+        # inactive_workspace #191a1b #191a1b #a8a8a8
+    }
+}
+
+### Window colours
+exec_always ~/bin/sway_colors
+
+### Miscellaneous
+default_border pixel 3
+default_floating_border pixel
+hide_edge_borders smart
+workspace_auto_back_and_forth yes
+
+include /etc/sway/config.d/*
+
+# Autostart session programs
+exec dunst
+# # FIXME 2021-09-21: Why doesn't the keyring work?  Not here, not in
+# # the ~/.profile when logging in via GDM.
+# exec --no-startup-id eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+# exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secrets,pkcs11
+# exec --no-startup-id export $(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+# exec export SSH_AUTH_SOCK
+
+# FIXME 2021-09-21: This comes from the GNOME Settings Daemon.  Is it
+# running Wayland-native?  We need a settings daemon for changing GTK
+# themes on-the-fly.
+exec /usr/lib/gsd-xsettings
