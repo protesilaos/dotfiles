@@ -59,6 +59,29 @@ _emacs ()
     esac
 }
 
+_alacritty ()
+{
+    _depcheck alacritty
+
+    active_theme="$HOME"/.config/alacritty/modus-themes-active.yml
+
+    case "$DESKTOP_SESSION"
+    in
+        bspwm) wm_theme="$HOME"/.config/bspwm/active-theme ;;
+        sway)  wm_theme="$HOME"/.config/sway/active-theme  ;;
+    esac
+
+    [ -f "$active_theme" ] || { echo "No alacritty theme. Did you 'stow' your configurations?"; return 1; }
+
+    case "$(cat "$wm_theme")"
+    in
+        light) _sed "s,vivendi,operandi," "$active_theme" ;;
+        dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
+    esac
+}
+
+# TODO 2021-08-27: dunst
+
 #### BSPWM
 
 _rofi ()
@@ -75,25 +98,6 @@ _rofi ()
         dark)  echo -e '@import "modus-vivendi.rasi"' > "$active_theme"  ;;
     esac
 }
-
-# NOTE 2021-08-27: technically this should not be part of the BSPWM setup, but it
-# is the only one I use right now.
-_alacritty ()
-{
-    _depcheck alacritty
-
-    active_theme="$HOME"/.config/alacritty/modus-themes-active.yml
-
-    [ -f "$active_theme" ] || { echo "No alacritty theme. Did you 'stow' your configurations?"; return 1; }
-
-    case "$(cat "$HOME"/.config/bspwm/active-theme)"
-    in
-        light) _sed "s,vivendi,operandi," "$active_theme" ;;
-        dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
-    esac
-}
-
-# TODO 2021-08-27: dunst
 
 _lemonbar ()
 {
@@ -248,11 +252,62 @@ _xfce ()
     _emacs "$style"
 }
 
+#### Sway
+
+_swaybg ()
+{
+    _depcheck swaybg
+
+    image_light="$HOME"/Pictures/light.jpg
+    image_dark="$HOME"/Pictures/dark.jpg
+    image_current="$HOME"/Pictures/current.jpg
+
+    case "$(cat "$HOME"/.config/sway/active-theme)"
+    in
+        light) [ -f "$image_light" ] && cp "$image_light" "$image_current" ;;
+        dark)  [ -f "$image_dark" ]  && cp "$image_dark" "$image_current"  ;;
+    esac
+
+    swaymsg 'output * bg ~/Pictures/current.jpg fill'
+}
+
+# TODO 2021-09-20: How to update the bar's colours without reloading the
+# sway config?
+_sway ()
+{
+    _depcheck sway
+    theme="$HOME"/.config/sway/active-theme
+
+    if [ "$(cat "$theme")" = light ]
+    then
+        style=dark
+        gtk_theme='Adwaita-dark'
+
+        swaymsg client.focused "#323232" "#323232" "#ffffff" "#ff8059" "#00bcff"
+        swaymsg client.unfocused "#1e1e1e" "#1e1e1e" "#a8a8a8" "#323232" "#323232"
+    else
+        style=light
+        gtk_theme='Adwaita'
+
+        swaymsg client.focused "#d7d7d7" "#d7d7d7" "#000000" "#a60000" "#0000c0"
+        swaymsg client.unfocused "#efefef" "#efefef" "#505050" "#d7d7d7" "#d7d7d7"
+    fi
+
+    echo "$style" > "$theme"
+
+    _emacs "$style" &
+    _alacritty &
+    _swaybg &
+    # Sway can actually re-use GNOME's settings
+    _gset "$gtk_theme" &
+}
+
 #### Sessions
 
 case "$DESKTOP_SESSION"
 in
     bspwm) _bspwm ;;
     gnome) _gnome ;;
+    sway)  _sway  ;;
     xfce)  _xfce  ;;
 esac
