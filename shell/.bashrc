@@ -37,6 +37,10 @@ if [ -d "$HOME"/.local/share/gems ]; then
     PATH=$PATH:"$HOME"/.local/share/gems/bin
 fi
 
+# NOTE 2021-09-21: Check my systemd units.  Those are meant to work
+# around the fact that Wayland does not read environment variables from
+# something like ~/.profile.
+export SSH_AUTH_SOCK="/run/user/$(id -u)/gnupg/S.gpg-agent.ssh"
 
 # Default pager.  Note that the option I pass to it will quit once you
 # try to scroll past the end of the file.

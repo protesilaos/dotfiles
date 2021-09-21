@@ -253,12 +253,16 @@ include /etc/sway/config.d/*
 
 # Autostart session programs
 exec dunst
-# # FIXME 2021-09-21: Why doesn't the keyring work?  Not here, not in
-# # the ~/.profile when logging in via GDM.
-# exec --no-startup-id eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
-# exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secrets,pkcs11
-# exec --no-startup-id export $(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
-# exec export SSH_AUTH_SOCK
+
+# NOTE 2021-09-21: When I first set up this configuration file, I tried
+# to autostart the gnome-keyring.  I eventually learnt that Wayland does
+# not work like Xorg with regard to how it reads environment variables.
+# We cannot export variables from here (unless I missed something) and
+# we cannot rely on something like ~/.profile.
+#
+# So I am now using the gpg-agent, which provides an ssh component.  The
+# initialisation is handled by systemd, which I am not too happy about,
+# but here we are.  Search my dotfiles for the systemd units.
 
 # FIXME 2021-09-21: This comes from the GNOME Settings Daemon.  Is it
 # running Wayland-native?  We need a settings daemon for changing GTK
