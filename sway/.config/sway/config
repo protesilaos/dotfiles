@@ -243,6 +243,12 @@ bar {
 ### Window colours
 exec_always ~/bin/sway_colors
 
+### Idle configuration
+exec swayidle -w \
+     timeout 900 'swaylock -f -c 004850' \
+     timeout 1200 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+     before-sleep 'swaylock -f -c 004850'
+
 ### Miscellaneous
 default_border pixel 3
 default_floating_border pixel
