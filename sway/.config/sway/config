@@ -187,6 +187,9 @@ for_window [window_type="menu"] floating enable
 
 
 #### Resizing containers
+# FIXME 2021-09-22: We need smart resizing.  Choosing a direction should
+# expand or contract the container depending on what makes sense.
+
 mode "resize" {
     # left will shrink the containers width
     # right will grow the containers width
