@@ -262,6 +262,7 @@ bar {
     colors {
         statusline #ffffff
         background #000000
+        binding_mode #10387c #10387c #ffffff
         focused_workspace #3c3c3c #191a1b #ffffff
         inactive_workspace #000000 #000000 #93959b
         # focused_workspace #a8a8a8 #a8a8a8 #000000
