@@ -258,6 +258,8 @@ bindsym $mod+F5 exec ~/bin/delight
 bar {
     position bottom
 
+    font DejaVu Sans 8
+
     # It works with Sway
     status_command i3blocks
     tray_output none
