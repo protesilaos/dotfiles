@@ -156,8 +156,9 @@ bindsym Ctrl+$mod+Shift+9 move container to workspace $ws9, workspace $ws9
 bindsym Ctrl+$mod+Shift+0 move container to workspace $ws0, workspace $ws0
 
 #### Layout stuff
-bindsym $mod+s splith
-bindsym $mod+v splitv
+bindsym $mod+s split toggle
+# bindsym $mod+s splith
+# bindsym $mod+v splitv
 
 bindsym $mod+f fullscreen
 
