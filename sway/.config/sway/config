@@ -84,7 +84,7 @@ set $quit "Exit Sway: [l]ogout, [r]eboot, [s]hutdown"
 mode $quit {
   bindsym l exec swaymsg exit
   bindsym r exec systemctl reboot
-  bindsym s exec systemctl shutdown
+  bindsym s exec systemctl poweroff
 
   bindsym Escape mode "default"
   bindsym Return mode "default"
