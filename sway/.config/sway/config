@@ -258,9 +258,11 @@ bindsym $mod+F5 exec ~/bin/delight
 bar {
     position bottom
 
-    status_command i3blocks     # It works with Sway
+    # It works with Sway
+    status_command i3blocks
     tray_output none
-    modifier none               # See toggle below
+    # See toggle below
+    modifier none
 
     colors {
         statusline #ffffff
