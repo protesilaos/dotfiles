@@ -258,6 +258,7 @@ bar {
     position bottom
 
     status_command i3blocks     # It works with Sway
+    tray_output none
 
     colors {
         statusline #ffffff
