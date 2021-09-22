@@ -73,7 +73,24 @@ floating_modifier $mod normal
 bindsym $mod+Shift+c reload
 
 # Exit sway (logs you out of your Wayland session)
-bindsym $mod+Delete exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+
+# # NOTE 2021-09-22: This was the default.  I have no idea why a
+# # keyboard-centric WM would expect you to use the mouse for such a
+# # task.
+# bindsym $mod+Delete exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+
+set $quit "Exit Sway: [l]ogout, [r]eboot, [s]hutdown"
+
+mode $quit {
+  bindsym l exec swaymsg exit
+  bindsym r exec systemctl reboot
+  bindsym s exec systemctl shutdown
+
+  bindsym Escape mode "default"
+  bindsym Return mode "default"
+}
+
+bindsym $mod+Delete mode $quit
 
 #### Moving around
 bindsym $mod+$left focus left
