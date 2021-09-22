@@ -259,6 +259,7 @@ bar {
 
     status_command i3blocks     # It works with Sway
     tray_output none
+    modifier none               # See toggle below
 
     colors {
         statusline #ffffff
@@ -270,6 +271,11 @@ bar {
         # inactive_workspace #191a1b #191a1b #a8a8a8
     }
 }
+
+# Toggle between dock mode and hide mode.  By default, pressing the
+# `modifier' key specified in the bar module shows the bar when it is
+# hidden.  I do not like that so I disable that behaviour.
+bindsym $mod+b bar mode toggle
 
 ### Window colours
 exec_always ~/bin/sway_colors
