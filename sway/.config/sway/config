@@ -221,6 +221,19 @@ bindsym $mod+Ctrl+$right resize grow width 25px
 bindsym $mod+Bracketright gaps inner all plus 5
 bindsym $mod+Bracketleft gaps inner all minus 5
 
+set $gaps "Gap presets: [s]mall, [l]arge, [d]efault (none)"
+
+mode $gaps {
+  bindsym s gaps inner all plus 5
+  bindsym l gaps inner all plus 15
+  bindsym d gaps inner all set 0
+
+  bindsym Escape mode "default"
+  bindsym Return mode "default"
+}
+
+bindsym $mod+g mode $gaps
+
 #### Media keys
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -SIGRTMIN+1 i3blocks
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -SIGRTMIN+1 i3blocks
