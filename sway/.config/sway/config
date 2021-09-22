@@ -258,7 +258,6 @@ workspace_auto_back_and_forth yes
 include /etc/sway/config.d/*
 
 # Autostart session programs
-exec dunst
 
 # NOTE 2021-09-21: When I first set up this configuration file, I tried
 # to autostart the gnome-keyring.  I eventually learnt that Wayland does
