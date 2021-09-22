@@ -244,10 +244,13 @@ bar {
 exec_always ~/bin/sway_colors
 
 ### Idle configuration
-exec swayidle -w \
-     timeout 900 'swaylock -f -c 004850' \
-     timeout 1200 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
-     before-sleep 'swaylock -f -c 004850'
+exec swayidle -w timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
+
+# # Use this if you also want to lock the screen:
+# exec swayidle -w \
+#      timeout 600 'swaylock -f -c 004850' \
+#      timeout 900 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+#      before-sleep 'swaylock -f -c 004850'
 
 ### Miscellaneous
 default_border pixel 3
