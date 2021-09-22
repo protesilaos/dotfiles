@@ -117,8 +117,8 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs nil
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
         modus-themes-no-mixed-fonts nil
         modus-themes-subtle-line-numbers t
         modus-themes-success-deuteranopia t
@@ -131,7 +131,7 @@
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense'
-        modus-themes-lang-checkers '(straight-underline text-also)
+        modus-themes-lang-checkers '(text-also)
 
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
@@ -141,7 +141,7 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(alt-syntax)
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -151,7 +151,7 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(underline intense)
+        modus-themes-paren-match nil
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -163,11 +163,11 @@
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(intense gray background)
+        modus-themes-prompts '(intense)
 
-        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
+        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations 'monochrome ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -245,16 +245,25 @@
   ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
   ;; as it explains what those property lists should contain.
   (setq prot-fonts-typeface-sets-alist
-        '((small . ( :fixed-pitch-family "Iosevka Comfy"
+        '((small . ( :fixed-pitch-family "Hack"
                        :fixed-pitch-regular-weight regular
                        :fixed-pitch-heavy-weight bold
-                       :fixed-pitch-height 100
-                       :fixed-pitch-line-spacing nil
-                       :variable-pitch-family "Noto Serif"
+                       :fixed-pitch-height 80
+                       :fixed-pitch-line-spacing 1
+                       :variable-pitch-family "DejaVu Serif"
                        :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
           (regular . ( :fixed-pitch-family "Iosevka Comfy"
+                       :fixed-pitch-regular-weight book
+                       :fixed-pitch-heavy-weight extrabold
+                       :fixed-pitch-height 90
+                       :fixed-pitch-line-spacing 1
+                       :variable-pitch-family "Noto Serif"
+                       :variable-pitch-height 1.0
+                       :variable-pitch-regular-weight normal))
+
+          (medium . ( :fixed-pitch-family "Iosevka Comfy"
                        :fixed-pitch-regular-weight book
                        :fixed-pitch-heavy-weight extrabold
                        :fixed-pitch-height 105
