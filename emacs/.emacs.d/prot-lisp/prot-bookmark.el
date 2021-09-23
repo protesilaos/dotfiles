@@ -84,7 +84,7 @@
 
 ;;;###autoload
 (define-minor-mode prot-bookmark-extra-keywords
-  "Apply extra font-lock rules to diff buffers."
+  "Apply extra font-lock rules to bookmark list buffers."
   :init-value nil
   :global t
   (if prot-bookmark-extra-keywords
