@@ -36,7 +36,7 @@
 (require 'prot-common)
 
 (defgroup prot-bookmark ()
-  "Auxiliary functions for my dotemacs."
+  "Bookmark extras for my dotemacs."
   :group 'matching)
 
 ;;;; Extend Bookmark menu font-lock
