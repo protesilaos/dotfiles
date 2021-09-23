@@ -97,6 +97,11 @@
     (toggle-truncate-lines t)))
 
 ;;;###autoload
+(defun prot-common-disable-hl-line ()
+  "Disable Hl-Line-Mode (for hooks)."
+  (hl-line-mode -1))
+
+;;;###autoload
 (defun prot-common-window-bounds ()
   "Determine start and end points in the window."
   (list (window-start) (window-end)))
