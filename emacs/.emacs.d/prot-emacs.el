@@ -2152,6 +2152,14 @@ sure this is a good approach."
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
   (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
 
+  ;; Use alternating backgrounds, if `stripes' is available.
+  (with-eval-after-load 'stripes
+    (add-hook 'notmuch-search-hook #'stripes-mode)
+    ;; ;; To disable `hl-line-mode':
+    ;; (setq notmuch-search-hook nil)
+    ;; (add-hook 'notmuch-search-hook #'prot-common-disable-hl-line)
+    )
+
   (let ((map global-map))
     (define-key map (kbd "C-c m") #'notmuch)
     (define-key map (kbd "C-x m") #'notmuch-mua-new-mail)) ; override `compose-mail'
@@ -2536,6 +2544,14 @@ Can link to more than one message, if so all matching messages are shown."
     (setq prot-elfeed-tag-faces t)
     (prot-elfeed-fontify-tags)
     (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
+
+    ;; Use alternating backgrounds, if `stripes' is available.
+    (with-eval-after-load 'stripes
+      (add-hook 'elfeed-search-mode-hook #'stripes-mode)
+      ;; ;; To disable `hl-line-mode':
+      ;; (advice-add #'elfeed-search-mode :after #'prot-common-disable-hl-line)
+      )
+
     (let ((map elfeed-search-mode-map))
       (define-key map (kbd "s") #'prot-elfeed-search-tag-filter)
       (define-key map (kbd "o") #'prot-elfeed-search-open-other-window)
@@ -2552,9 +2568,15 @@ Can link to more than one message, if so all matching messages are shown."
 ;;; Proced (process monitor, similar to `top')
 (prot-emacs-builtin-package 'proced
   (setq proced-auto-update-flag t)
-  (setq proced-auto-update-interval 1)
+  (setq proced-auto-update-interval 5)
   (setq proced-descend t)
-  (setq proced-filter 'user))
+  (setq proced-filter 'user)
+
+  (with-eval-after-load 'stripes
+    (add-hook 'proced-mode-hook #'stripes-mode)))
+
+(prot-emacs-builtin-package 'prot-proced
+  (prot-proced-extra-keywords 1))
 
 ;;; Pass interface (password-store)
 (prot-emacs-elpa-package 'password-store
@@ -2990,6 +3012,10 @@ Can link to more than one message, if so all matching messages are shown."
   (let ((map global-map))
     (define-key map (kbd "C-x r <backspace>") #'rlist-list-registers)
     (define-key map (kbd "C-x r <delete>") #'rlist-list-registers)))
+
+;;; Alternating background highlights (stripes.el)
+(prot-emacs-elpa-package 'stripes
+  (setq stripes-unit 1))
 
 ;;; Automatic time stamps for files (time-stamp.el)
 (prot-emacs-builtin-package 'time-stamp
