@@ -7038,17 +7038,30 @@ ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
 
 This is a built-in tool that allows you to monitor running processes
 and act on them accordingly.  These are the basic settings I have
-right now.  Would need to experiment with it a bit more.  It works
-fine though.
+right now: it works fine.
+
+My =prot-proced.el= (reproduced after the package configurations) simply
+adds some extra colours to the otherwise plain buffer.  Makes it easier
+to keep track of the information on display.
 
 #+begin_src emacs-lisp
 ;;; Proced (process monitor, similar to `top')
 (prot-emacs-builtin-package 'proced
   (setq proced-auto-update-flag t)
-  (setq proced-auto-update-interval 1)
+  (setq proced-auto-update-interval 5)
   (setq proced-descend t)
-  (setq proced-filter 'user))
+  (setq proced-filter 'user)
+
+  (with-eval-after-load 'stripes
+    (add-hook 'proced-mode-hook #'stripes-mode)))
+
+(prot-emacs-builtin-package 'prot-proced
+  (prot-proced-extra-keywords 1))
 #+end_src
+
+Here is =prot-proced.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+
+#+include: prot-lisp/prot-proced.el src emacs-lisp :tangle no
 
 ** Pass interface (password-store)
 :PROPERTIES:
