@@ -1,0 +1,116 @@
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+[colors]
+include-file = ~/.config/polybar/config_colors
+
+[bar/bottom]
+width = 100%
+height = 18
+bottom = true
+radius = 0
+fixed-center = false
+
+background = ${colors.bgmain}
+foreground = ${colors.fgmain}
+
+padding-left = 0
+padding-right = 1
+
+module-margin-left = 0
+module-margin-right = 2
+
+font-0 = Hack:size=8:hintstyle=hintslight;2
+font-1 = Hack:weight=bold:size=8:hintstyle=hintslight;2
+
+modules-left = bspwm
+modules-center =
+modules-right = xkeyboard alsa notmuch date
+
+tray-position = none
+
+format-margin = 0
+
+wm-restack = bspwm
+override-redirect = false
+
+[module/bspwm]
+type = internal/bspwm
+
+inline-mode = false
+;label-tiled = 
+;label-fullscreen = 
+;label-floating = 
+;label-pseudotiled = P
+label-monocle = M
+label-monocle-foreground = ${colors.fgalt}
+label-locked = L
+label-locked-foreground = ${colors.yellow}
+label-sticky = S
+label-sticky-foreground = ${colors.magenta}
+label-private = P
+label-private-foreground = ${colors.blue}
+label-marked = *
+label-marked-foreground = ${colors.red}
+
+label-focused = "[%name%]"
+label-focused-font = 2
+
+label-occupied = " %name%^ "
+label-occupied-foreground = ${colors.fgalt}
+
+label-urgent = " %name%! "
+label-urgent-background = ${colors.red}
+label-urgent-foreground = ${colors.bgmain}
+
+label-empty = " %name% "
+label-empty-foreground = ${colors.fgalt}
+
+format = <label-state> <label-mode>
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+
+label-layout = %layout%
+
+[module/alsa]
+type = internal/alsa
+
+[module/cpu]
+type = internal/cpu
+interval = 5
+label = %percentage:2%%
+label-foreground = ${colors.magenta}
+
+[module/memory]
+type = internal/memory
+interval = 5
+label = %percentage_used%%
+label-foreground = ${colors.cyan}
+
+[module/notmuch]
+type = custom/script
+
+exec = notmuch count tag:unread and tag:inbox
+
+; Conditional command that, if defined, needs to exit successfully
+; before the main exec command is invoked.
+; Default: ""
+exec-if = command -v notmuch
+
+; Seconds to sleep between updates
+; Default: 5 (0 if `tail = true`)
+interval = 120
+
+format = @<label>
+
+[module/date]
+type = internal/date
+interval = 60
+
+date = %a %e %b, %R
+label = %date%
+
+; vim:ft=dosini

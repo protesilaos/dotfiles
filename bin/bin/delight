@@ -125,13 +125,25 @@ _rofi ()
     esac
 }
 
-_lemonbar ()
+_polybar ()
 {
-    _depcheck lemonbar
-    _depcheck melonpanel
+    _depcheck polybar
 
-    pgrep -x melonpanel > /dev/null && killall melonpanel && killall lemonbar
-    melonpanel
+    pgrep -x polybar > /dev/null && pkill -x polybar
+
+    active_theme="$HOME"/.config/polybar/config_colors
+    wm_theme="$HOME"/.config/bspwm/active-theme
+
+    [ -f "$active_theme" ] || { echo "No active theme"; exit 1; }
+    [ -f "$wm_theme" ] || { echo "No WM session theme"; exit 1; }
+
+    case "$(cat "$wm_theme")"
+    in
+        light) _sed "s,vivendi,operandi," "$active_theme" ;;
+        dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
+    esac
+
+    polybar bottom &
 }
 
 _feh ()
@@ -211,7 +223,6 @@ _bspwm ()
     _depcheck bspwm_conf_colors && bspwm_conf_colors
     _emacs "$style" &
     _xsettingsd "$style" &
-    _lemonbar & # FIXME 2021-08-27: does not always get re-launched (see melonpanel refactor note)
     _xterm &
     # # NOTE 2021-09-25: I tried alacritty for a while, but the way it
     # reads the fonts on Xorg makes the point size larger than expected.
@@ -221,6 +232,7 @@ _bspwm ()
     # _alacritty &
     _feh &
     _rofi &
+    _polybar
 }
 
 #### Gnome

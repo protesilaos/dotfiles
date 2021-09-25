@@ -1,0 +1,45 @@
+; Based on my Modus themes for Emacs:
+; <https://protesilaos.com/modus-themes>.
+
+[colors]
+bgmain = #000000
+fgmain = #ffffff
+bgalt = #191a1b
+fgalt = #a8a8a8
+
+red = #ff8059
+red-alt = #ef8b50
+red-alt-other = #ff9077
+red-faint = #ffa0a0
+red-alt-faint = #f5aa80
+red-alt-other-faint = #ff9fbf
+green = #44bc44
+green-alt = #70b900
+green-alt-other = #00c06f
+green-faint = #78bf78
+green-alt-faint = #99b56f
+green-alt-other-faint = #88bf99
+yellow = #d0bc00
+yellow-alt = #c0c530
+yellow-alt-other = #d3b55f
+yellow-faint = #d2b580
+yellow-alt-faint = #cabf77
+yellow-alt-other-faint = #d0ba95
+blue = #2fafff
+blue-alt = #79a8ff 
+blue-alt-other = #00bcff
+blue-faint = #82b0ec
+blue-alt-faint = #a0acef
+blue-alt-other-faint = #80b2f0
+magenta = #feacd0
+magenta-alt = #f78fe7
+magenta-alt-other = #b6a0ff
+magenta-faint = #e0b2d6
+magenta-alt-faint = #ef9fe4
+magenta-alt-other-faint = #cfa6ff
+cyan = #00d3d0
+cyan-alt = #4ae2f0
+cyan-alt-other = #6ae4b9
+cyan-faint = #90c4ed
+cyan-alt-faint = #a0bfdf
+cyan-alt-other-faint = #a4d0bb

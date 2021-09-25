@@ -29,7 +29,7 @@ _pkill() {
 _kill_processes() {
     _pkill bspwm_external_rules
     _pkill sxhkd
-    _pkill melonpanel
+    _pkill polybar
     _pkill feh
     _pkill xcompmgr
 }
@@ -81,7 +81,7 @@ _dynamic_menu() {
 }
 
 # Possible actions
-actions=('Log out' 'Reboot' 'Power off' 'Xmodmap and keyboard reload' 'Configure anew BSPWM monitors/desktops')
+actions=('Log out' 'Reboot' 'Power off' 'Xmodmap and keyboard reload')
 
 # List actions to choose from.  Output array items on a new line.
 _list_actions() {
@@ -96,5 +96,4 @@ case "$choice" in
     R*) _kill_processes && _reboot   ;;
     P*) _kill_processes && _poweroff ;;
     X*) _kbd_reset_and_xmodmap       ;;
-    C*) bspwm_conf_reset_monitors    ;;
 esac

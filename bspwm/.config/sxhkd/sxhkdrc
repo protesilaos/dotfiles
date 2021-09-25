@@ -21,13 +21,13 @@
 #
 # f == bspwm focus mode (my script)
 # s == reload sxhkd
-# p == reload melonpanel (my lemonbar script)
+# p == reload polybar
 # x == reload the Xresources file
 mod4 + x ; e ; {f,s,p,t,x}
     { \
     bspwm_focus_mode, \
     pkill -USR1 -x sxhkd && notify-send -i key_bindings "Reloaded key bindings", \
-    pkill -x melonpanel && melonpanel, \
+    pkill -x polybar && polybar bottom &, \
     xrdb -I "$HOME" -merge "$HOME"/.Xresources \
     }
 
@@ -52,13 +52,8 @@ mod4 + Delete
 #
 # However, doing so means losing out on the possibility to easily find
 # out the current/active layout from a script: X knows about "us,gr" in
-# that order, not which one is currently typing.  As such, in `bspwmrc`
-# I simply autostart `setxkbmap -layout 'us'` without defining the
-# second layout and a toggle.  The toggle is set below.  With the
-# difference being that it invokes a custom script that switches between
-# the us,gr layout.  All this is done to be able to get the active
-# keyboard layout and print its name to my system panel (custom lemonbar
-# called "melonpanel").
+# that order, not which one is currently typing.  Also, I want another
+# key binding that is not available in setxkbmap.
 #
 # The key chord is based on the Emacs function `toggle-input-method',
 # which is bound to C-\

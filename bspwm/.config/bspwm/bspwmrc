@@ -93,25 +93,21 @@ fi
 # pertain to the window manager are defined in sxhkdrc_bspc.
 _check sxhkd && sxhkd -c "$HOME"/.config/sxhkd/sxhkdrc{,_bspc} &
 
-# Launch my custom Lemonbar implementation (the system panel).
-if _check melonpanel; then
+# Launch Polybar
+if _check polybar; then
 	# Make sure we have no running instances
-	pgrep -x melonpanel && pkill -x melonpanel
-	melonpanel
+	pgrep -x polybar && pkill -x polybar
+
+    polybar bottom &
 
     # Add padding equal to the panel height to fix an issue where there
-    # is an overlap between panel and windows in monitor LVDS1.  The
-    # panel gets covered by the windows.  This only happens when an
-    # external monitor is connected to my laptop, for reasons that I
-    # cannot determine…
-    if [ "$(bspc query -M | wc -l)" -gt 1 ]; then
-        _panel_height() {
-            awk -F '=' '/melonpanel_height/ { print $2; exit; }' \
-                $(command -v melonpanel)
-        }
+    # is an overlap between panel and windows.
+    _panel_height() {
+        awk -F '=' '/height/ { print $2; exit; }' \
+            "$HOME"/.config/polybar/config
+    }
 
-	    bspc config bottom_padding "$(_panel_height)"
-    fi
+    bspc config bottom_padding "$(_panel_height)"
 fi
 
 # Run the tool that sets the wallpaper.  A program could be used that

@@ -20,10 +20,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# This assumes that we are already running the lemonbar script.
-[ -z "$(pgrep -x melonpanel > /dev/null)" ] || { echo "No running melonpanel"; exit 1; }
+command -v polybar > /dev/null || { echo "ERROR: no polybar available"; exit 1; }
 
-panel_height="$(awk -F '=' '/melonpanel_height/ { print $2; exit; }' "$(command -v melonpanel 2> /dev/null)")"
+panel_height="$(awk -F '=' '/height/ { print $2; exit; }' "$HOME"/.config/polybar/config)"
 
 # The bottom padding is extracted from the running program.
 bottom_padding="$(bspc config bottom_padding)"
@@ -45,19 +44,14 @@ border_width="$(_get_value border_width)"
 # part of the nodes.
 effective_padding=$(("$bottom_padding" + "$window_gap"))
 
-# If we are not in "focus mode"...
-if [ "$effective_padding" -ge "$panel_height" ] ; then
-    # NOTE 2021-09-09: Those values must match what is in bspwmrc,
-    # though we should probably find a more robust way to get the
-    # defaults.  'bspc' can do that, but the code here needs to be
-    # reworked.
-    bottom_padding=0
+if [ "$effective_padding" -ge "$panel_height" ]
+then
     window_gap=2
     gapless_monocle=false
     border_width=2
 
     # No need to keep the panel
-    pkill -xo melonpanel && pkill -x lemonbar
+    pkill -x polybar
 else
     # Unset everything
     unset bottom_padding
@@ -85,4 +79,4 @@ fi
 
 bspc config gapless_monocle "${gapless_monocle:=false}"
 
-[ -n "$panel_status" ] && melonpanel
+[ -n "$panel_status" ] && polybar bottom &
