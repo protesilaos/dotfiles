@@ -20,8 +20,8 @@
 ### Commentary:
 #
 # Simple tool to switch between light and dark themes.  Primarily
-# centred around my BSPWM setup.  For the standard DEs, this has been
-# tested with GNOME version 3.36 and Xfce 4.16.
+# centred around my BSPWM or Sway setup.  For the standard DEs, this has
+# been tested with GNOME version 3.36 and Xfce 4.16.
 #
 # Part of my dotfiles: <https://gitlab.com/protesilaos/dotfiles>.
 
@@ -58,6 +58,32 @@ _emacs ()
         d*) emacsclient -e "(modus-themes-load-vivendi)"  > /dev/null ;;
     esac
 }
+
+_xterm ()
+{
+    _depcheck xterm
+
+    xresources="$HOME"/.Xresources
+    active_theme="$HOME"/.config/xterm/xterm_active_theme
+    wm_theme="$HOME"/.config/bspwm/active-theme
+
+    [ -f "$xresources" ] || { echo "No Xresources file"; exit 1; }
+    [ -f "$active_theme" ] || { echo "No active Xresources theme"; exit 1; }
+    [ -f "$wm_theme" ] || { echo "No WM session theme"; exit 1; }
+
+    case "$(cat "$wm_theme")"
+    in
+        light) _sed "s,vivendi,operandi," "$active_theme" ;;
+        dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
+    esac
+    
+    xrdb -I "$HOME" -merge "$xresources"
+
+    # Another one of my scripts for live recolouring running terminal
+    # emulators, by using escape sequences.
+    repaint_terminals &
+}
+
 
 _alacritty ()
 {
@@ -186,7 +212,13 @@ _bspwm ()
     _emacs "$style" &
     _xsettingsd "$style" &
     _lemonbar & # FIXME 2021-08-27: does not always get re-launched (see melonpanel refactor note)
-    _alacritty &
+    _xterm &
+    # # NOTE 2021-09-25: I tried alacritty for a while, but the way it
+    # reads the fonts on Xorg makes the point size larger than expected.
+    # Also, it seems to miss some smaller sizes, so I cannot use it
+    # exactly how I want to.  Everything is fine on Wayland with Sway...
+    #
+    # _alacritty &
     _feh &
     _rofi &
 }
