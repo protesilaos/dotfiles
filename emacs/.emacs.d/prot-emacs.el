@@ -146,7 +146,7 @@
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(intense underline)
+        modus-themes-hl-line '(intense accented underline)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -194,8 +194,8 @@
         ;;   (4 . (rainbow no-bold)))
 
         modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings t
-        modus-themes-scale-headings t
+        modus-themes-variable-pitch-headings nil
+        modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
@@ -461,10 +461,13 @@
     (define-key map (kbd "C-l") #'prot-minibuffer-toggle-completions)) ; "list" mnemonic
   (let ((map minibuffer-local-filename-completion-map))
     (define-key map (kbd "<backspace>") #'prot-minibuffer-backward-updir))
+
   (add-hook 'minibuffer-setup-hook #'prot-minibuffer-mini-cursor)
-  (add-hook 'completion-list-mode-hook #'prot-minibuffer-completions-cursor)
-  (add-hook 'completion-list-mode-hook #'prot-minibuffer-hl-line)
-  (add-hook 'completion-list-mode-hook #'prot-minibuffer-display-line-numbers))
+  (let ((hook 'completion-list-mode-hook))
+    (add-hook hook #'prot-minibuffer-completions-cursor)
+    (add-hook hook #'prot-minibuffer-hl-line)
+    (add-hook hook #'prot-minibuffer-completions-stripes)
+    (add-hook hook #'prot-minibuffer-display-line-numbers)))
 
 ;;; Enhanced minibuffer commands (consult.el and prot-consult.el)
 (prot-emacs-elpa-package 'consult
@@ -989,9 +992,9 @@
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.2))
-          ("\\*.*\\(e?shell\\|v?term\\).*"
-           (display-buffer-reuse-mode-window display-buffer-at-bottom)
-           (window-height . 0.2))
+          ;; ("\\*.*\\(e?shell\\|v?term\\).*"
+          ;;  (display-buffer-reuse-mode-window display-buffer-at-bottom)
+          ;;  (window-height . 0.2))
           ;; below current window
           ("\\*\\(Calendar\\|Org Select\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
@@ -1188,7 +1191,7 @@
     (define-key map (kbd "<C-left>") #'org-tree-slide-move-previous-tree)))
 
 (prot-emacs-builtin-package 'prot-logos
-  (setq prot-logos-org-presentation nil)
+  (setq prot-logos-org-presentation t)
   (setq prot-logos-variable-pitch nil)
   (setq prot-logos-scroll-lock nil)
   (setq prot-logos-hidden-modeline t)
