@@ -43,6 +43,8 @@ inline-mode = false
 ;label-fullscreen = 
 ;label-floating = 
 ;label-pseudotiled = P
+
+; FIXME 2021-09-25: hide when bspc config single_monocle true
 label-monocle = M
 label-monocle-foreground = ${colors.fgalt}
 label-locked = L
