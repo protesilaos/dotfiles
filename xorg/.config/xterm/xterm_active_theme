@@ -1,0 +1,5 @@
+! Part of my dotfiles: <https://gitlab.com/protesilaos/dotfiles>.
+!
+! IMPORTANT do not edit manually!!!  All themes are changed by a single
+! script: delight.
+#include "modus_operandi.Xcolors"
