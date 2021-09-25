@@ -1873,6 +1873,12 @@ a correct export buffer while using relevant Consult commands, such as
   ;;  to keep track of all my rules in one place.
   (setq embark-verbose-indicator-display-action nil)
 
+  ;; Use alternating backgrounds, if `stripes' is available.
+  (with-eval-after-load 'stripes
+    (let ((hook 'embark-collect-mode-hook))
+      (add-hook hook #'stripes-mode)
+      (add-hook hook #'hl-line-mode)))
+
   (define-key global-map (kbd "C-,") #'embark-act)
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "C-,") #'embark-act)
