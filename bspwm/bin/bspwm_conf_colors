@@ -23,14 +23,14 @@ if [ -f "$HOME"/.config/bspwm/active-theme ]
 then
    case "$(cat "$HOME"/.config/bspwm/active-theme)" in
        dark*)
-           border_active="#c0c530"
-           border_focus="#44bc44"
+           border_active="#f78fe7"
+           border_focus="#00bcff"
            border_normal="#000000"
            bg_preselect="#041529"
            ;;
        *)
-           border_active="#5317ac"
-           border_focus="#8f0075"
+           border_active="#8f0075"
+           border_focus="#0000c0"
            border_normal="#ffffff"
            bg_preselect="#ebf6fa"
            ;;
