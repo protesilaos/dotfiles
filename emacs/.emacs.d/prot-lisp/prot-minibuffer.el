@@ -423,6 +423,61 @@ Meant to be added to `after-change-functions'."
 
 (add-hook 'minibuffer-setup-hook #'prot-minibuffer--setup-completions)
 
+;;;;; Alternating backgrounds (else "stripes")
+
+;; Based on `stripes.el' (maintained by Štěpán Němec) and the
+;; `embark-collect-zebra-minor-mode' from Omar Antolín Camarena's
+;; Embark:
+;;
+;; 1. <https://gitlab.com/stepnem/stripes-el>
+;; 2. <https://github.com/oantolin/embark>
+(defface prot-minibuffer-stripe
+  '((default :extend t)
+    (((class color) (min-colors 88) (background light))
+     :background "#f0f0f0")
+    (((class color) (min-colors 88) (background dark))
+     :background "#191a1b"))
+  "Face for alternating backgrounds in the Completions' buffer."
+  :group 'prot-minibuffer)
+
+(defun prot-minibuffer--remove-stripes ()
+  "Remove `prot-minibuffer-stripe' overlays."
+  (remove-overlays nil nil 'face 'prot-minibuffer-stripe))
+
+(defun prot-minibuffer--add-stripes ()
+  "Overlay alternate rows with the `prot-minibuffer-stripe' face."
+  (prot-minibuffer--remove-stripes)
+  (save-excursion
+    (goto-char (point-min))
+    (when (overlays-at (point)) (forward-line))
+    (while (not (eobp))
+      (condition-case nil
+          (forward-line 1)
+        (user-error (goto-char (point-max))))
+      (unless (eobp)
+        (let ((pt (point))
+              (overlay))
+          (condition-case nil
+              (forward-line 1)
+            (user-error (goto-char (point-max))))
+          ;; We set the overlay this way and give it a low priority so
+          ;; that `hl-line-mode' and/or the active region can override
+          ;; it.
+          (setq overlay (make-overlay pt (point)))
+          (overlay-put overlay 'face 'prot-minibuffer-stripe)
+          (overlay-put overlay 'priority -100))))))
+
+(define-minor-mode prot-minibuffer-completions-stripes
+  "Minor mode to highlight alternate lines.
+To be used with `completion-list-mode-hook'."
+  :init-value nil
+  :global nil
+  (if prot-minibuffer-completions-stripes
+      (prot-minibuffer--add-stripes)
+    (prot-minibuffer--remove-stripes)))
+
+;;;; Commands and helper functions
+
 ;;;###autoload
 (defun prot-minibuffer-toggle-completions ()
   "Toggle the presentation of the completions' buffer."
