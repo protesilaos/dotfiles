@@ -3139,9 +3139,9 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (window-height . 0.2))
-          ("\\*.*\\(e?shell\\|v?term\\).*"
-           (display-buffer-reuse-mode-window display-buffer-at-bottom)
-           (window-height . 0.2))
+          ;; ("\\*.*\\(e?shell\\|v?term\\).*"
+          ;;  (display-buffer-reuse-mode-window display-buffer-at-bottom)
+          ;;  (window-height . 0.2))
           ;; below current window
           ("\\*\\(Calendar\\|Org Select\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
