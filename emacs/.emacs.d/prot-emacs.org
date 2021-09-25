@@ -536,7 +536,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(intense underline)
+        modus-themes-hl-line '(intense accented underline)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -584,8 +584,8 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;;   (4 . (rainbow no-bold)))
 
         modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings t
-        modus-themes-scale-headings t
+        modus-themes-variable-pitch-headings nil
+        modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
