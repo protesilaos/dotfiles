@@ -31,7 +31,7 @@ _kill_processes() {
     _pkill sxhkd
     _pkill polybar
     _pkill feh
-    _pkill xcompmgr
+    _pkill picom
 }
 
 # In case something stops working, we can call this script

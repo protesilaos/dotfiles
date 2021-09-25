@@ -121,8 +121,8 @@ if _check feh; then
 	fi
 fi
 
-# Start the simple display compositor.  See `xcompmgr --help'.
-_check xcompmgr && xcompmgr -cCfF -t -2 -l -2 -r 2.8 -o 0.55 -D 5 -I 0.075 -O 0.075 &
+# Start the display compositor.  See `picom --help'.
+_check picom && picom -r 3 -o 0.55 -l -2 -t -2 -I 0.075 -O 0.075 -CGz --vsync --unredir-if-possible &
 
 # Simple daemon for GTK settings
 _check xsettingsd && xsettingsd -c "$HOME"/.config/xsettingsd/xsettingsd.conf &
