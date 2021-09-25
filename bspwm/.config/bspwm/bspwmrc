@@ -47,13 +47,13 @@ _check bspwm_conf_desktops && bspwm_conf_desktops
 _bc initial_polarity second_child
 _bc border_width 2
 _bc window_gap 2
-_bc split_ratio 0.50
+_bc split_ratio 0.60
 _bc single_monocle true
 _bc borderless_monocle true
 _bc gapless_monocle false
 _bc focus_follows_pointer true
 _bc pointer_follows_monitor true
-_bc pointer_modifier mod1
+_bc pointer_modifier mod4
 _bc pointer_action1 move
 _bc pointer_action2 resize_side
 _bc ignore_ewmh_focus false
@@ -116,13 +116,14 @@ fi
 # works (using the Xfce desktop manager):
 # xfdesktop --sm-client-disable --disable-wm-check &
 if _check feh; then
-	if [ -n "$HOME"/.fehbg ]; then
+	if [ -f "$HOME"/.fehbg ]; then
 		"$HOME"/.fehbg &
 	fi
 fi
 
 # Start the display compositor.  See `picom --help'.
-_check picom && picom -r 3 -o 0.55 -l -2 -t -2 -I 0.075 -O 0.075 -CGz --vsync --unredir-if-possible &
+_check picom && picom -r 3 -o 0.55 -l -2 -t -2 -I 0.075 -O 0.075 -CGfz -i 1.0 -e 1.0 \
+                      --vsync --unredir-if-possible &
 
 # Simple daemon for GTK settings
 _check xsettingsd && xsettingsd -c "$HOME"/.config/xsettingsd/xsettingsd.conf &
