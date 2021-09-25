@@ -34,9 +34,11 @@ mod4 + x ; e ; {f,s,p,t,x}
 mod4 + F5
      delight
 
-
 # Invoke the session management menu (log out, lock, reboot, shutdown).
 ctrl + alt + Delete
+     poweroptionsmenu
+
+mod4 + Delete
      poweroptionsmenu
 
 #### Keyboard layout
@@ -65,17 +67,15 @@ mod4 + backslash
 
 #### Main programs
 
-# # Use Xterm as a standalone tool or with Tmux (with Shift).
-# mod4 + {_, shift + } Return
-# 	{xterm,xterm -e tmux new-session -A -s 'Default'}
-
-mod4 + Return
-     alacritty
+mod4 + {_, shift +,ctrl + shift + } Return
+     {xterm -e emacsclient -nw -e "(eshell)",xterm -e emacsclient -nw -e "(shell)",xterm}
 
 # Show the desired rofi views.
+mod4 + d
+     rofi -show drun
+
 mod4 + x ; {x,b}
      rofi -show {drun,window}
-
 
 #### Miscellaneous tools and media keys
 
