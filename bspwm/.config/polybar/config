@@ -21,8 +21,8 @@ padding-right = 1
 module-margin-left = 0
 module-margin-right = 2
 
-font-0 = Hack:size=8:hintstyle=hintslight;2
-font-1 = Hack:weight=bold:size=8:hintstyle=hintslight;2
+font-0 = Monospace:size=8:hintstyle=hintslight;2
+font-1 = Monospace:weight=bold:size=8:hintstyle=hintslight;2
 
 modules-left = bspwm
 modules-center =
