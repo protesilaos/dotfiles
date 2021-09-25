@@ -143,7 +143,7 @@ _polybar ()
         dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
     esac
 
-    polybar bottom &
+    [ -n "$1" ] && polybar bottom &
 }
 
 _feh ()
@@ -232,7 +232,16 @@ _bspwm ()
     # _alacritty &
     _feh &
     _rofi &
-    _polybar
+
+    focus_mode_status="$HOME"/.config/bspwm/bspwm_focus_mode_status
+
+    if [ "$(sed 1q "$focus_mode_status")" = off ]
+    then
+        _polybar launch
+    else
+        # Just update the colours, but do not launch the process.
+        _polybar
+    fi
 }
 
 #### Gnome

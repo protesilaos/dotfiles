@@ -44,6 +44,8 @@ border_width="$(_get_value border_width)"
 # part of the nodes.
 effective_padding=$(("$bottom_padding" + "$window_gap"))
 
+focus_mode_status="$HOME"/.config/bspwm/bspwm_focus_mode_status
+
 if [ "$effective_padding" -ge "$panel_height" ]
 then
     window_gap=2
@@ -52,6 +54,8 @@ then
 
     # No need to keep the panel
     pkill -x polybar
+
+    echo "on" > "$focus_mode_status"
 else
     # Unset everything
     unset bottom_padding
@@ -59,6 +63,8 @@ else
     unset gapless_monocle
     unset border_width
     panel_status=on
+
+    echo "off" > "$focus_mode_status"
 fi
 
 # Create overlapping borders in focus mode.
