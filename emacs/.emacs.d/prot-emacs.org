@@ -9207,7 +9207,9 @@ help commands:
   example =C-c C-c= does something different in Org and Eshell buffers.
   Try =C-h k C-c C-c= to find about the different functions these will
   invoke in their respective major mode.
-+ =C-h l= (=view-lossage=)produces a log with your most recent key presses
++ =C-h w= (=where-is=) asks you for the symbol of a command and tells you to
+  which key binding it is assigned to.
++ =C-h l= (=view-lossage=) produces a log with your most recent key presses
   and the commands they call.  Emacs calls this the "lossage".  Ever
   mistyped something and got to the wrong place?  Use this as an
   opportunity to learn and, perhaps, a way to identify key sequences you
