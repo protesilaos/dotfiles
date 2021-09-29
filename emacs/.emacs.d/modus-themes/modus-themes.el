@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.5.0
-;; Last-Modified: <2021-09-27 09:14:56 +0300>
+;; Last-Modified: <2021-09-28 19:21:47 +0300>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -5103,6 +5103,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; embark
     `(embark-keybinding ((,class :inherit modus-themes-key-binding)))
 ;;;;; emms
+    `(emms-browser-album-face ((,class :foreground ,magenta-alt-other ,@(modus-themes--scale modus-themes-scale-2))))
+    `(emms-browser-artist-face ((,class :foreground ,cyan ,@(modus-themes--scale modus-themes-scale-3))))
+    `(emms-browser-composer-face ((,class :foreground ,magenta-alt ,@(modus-themes--scale modus-themes-scale-3))))
+    `(emms-browser-performer-face ((,class :inherit emms-browser-artist-face)))
+    `(emms-browser-track-face ((,class :inherit emms-playlist-track-face)))
+    `(emms-browser-year/genre-face ((,class :foreground ,cyan-alt-other ,@(modus-themes--scale modus-themes-scale-4))))
     `(emms-playlist-track-face ((,class :foreground ,blue-alt)))
     `(emms-playlist-selected-face ((,class :inherit bold :foreground ,blue-alt-other)))
     `(emms-metaplaylist-mode-current-face ((,class :inherit emms-playlist-selected-face)))
@@ -6616,6 +6622,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-agenda-filter-tags ((,class :inherit bold :foreground ,cyan-active)))
     `(org-agenda-restriction-lock ((,class :background ,bg-dim :foreground ,fg-dim)))
     `(org-agenda-structure ((,class ,@(modus-themes--agenda-structure blue-alt))))
+    `(org-agenda-structure-secondary ((,class :inherit org-agenda-structure :height 1.0)))
     `(org-archived ((,class :background ,bg-alt :foreground ,fg-alt)))
     `(org-block ((,class :inherit modus-themes-fixed-pitch
                          ,@(modus-themes--org-block bg-dim fg-main))))
@@ -7300,6 +7307,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(tab-line-tab-inactive ((,class ,@(modus-themes--tab bg-tab-inactive bg-tab-inactive-accent fg-dim nil t))))
     `(tab-line-tab-inactive-alternate ((,class ,@(modus-themes--tab bg-tab-inactive-alt
                                                                     bg-tab-inactive-alt-accent fg-main nil t))))
+    `(tab-line-tab-modified ((,class :foreground ,red-alt-other-faint)))
 ;;;;; table (built-in table.el)
     `(table-cell ((,class :background ,blue-nuanced-bg)))
 ;;;;; telega
