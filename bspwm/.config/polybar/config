@@ -63,8 +63,8 @@ label-occupied = " %name%^ "
 label-occupied-foreground = ${colors.fgalt}
 
 label-urgent = " %name%! "
-label-urgent-background = ${colors.red}
-label-urgent-foreground = ${colors.bgmain}
+label-urgent-font = 2
+label-urgent-foreground = ${colors.red}
 
 label-empty = " %name% "
 label-empty-foreground = ${colors.fgalt}
