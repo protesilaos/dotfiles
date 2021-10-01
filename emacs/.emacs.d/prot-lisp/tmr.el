@@ -90,19 +90,22 @@ Values can be `low', `normal' (default), or `critical'."
       (call-process-shell-command
        (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" sound) nil 0))))
 
-;; FIXME 2021-10-01: Economise on (if description ...)
 (defun tmr--notify-send (start &optional description)
   "Send system notification for timer with START time.
 Optionally include DESCRIPTION."
-  (let ((end (format-time-string "%T")))
+  (let ((end (format-time-string "%T"))
+        (desc-plain)
+        (desc-propertized))
+    (if description
+        (setq desc-plain (concat "\n" description)
+              desc-propertized (concat " [" (propertize description 'face 'bold) "]"))
+      (setq desc-plain ""
+            desc-propertized ""))
     ;; Read: (info "(elisp) Desktop Notifications")
     (notifications-notify
      :title "TMR Must Recur"
      :body (format "Time is up!\nStarted: %s\nEnded: %s%s"
-                   start end
-                   (if description
-                       (concat "\n" description)
-                     ""))
+                   start end desc-plain)
      :app-name "GNU Emacs"
      :urgency tmr-notification-urgency
      :sound-file tmr-sound-file)
@@ -111,9 +114,7 @@ Optionally include DESCRIPTION."
      "TMR %s %s ; %s %s%s"
      (propertize "Start:" 'face 'success) start
      (propertize "End:" 'face 'warning) end
-     (if description
-         (concat " [" (propertize description 'face 'bold) "]")
-       ""))
+     desc-propertized)
     (unless (plist-get (notifications-get-capabilities) :sound)
       (tmr--play-sound))))
 
