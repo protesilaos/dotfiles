@@ -24,8 +24,8 @@
 
 ;;; Commentary:
 ;;
-;; TMR Must Recur.  Else a super simple timer for my Emacs setup:
-;; https://protesilaos.com/dotemacs.
+;; TMR Must Recur.  Else a timer for my Emacs setup:
+;; <https://protesilaos.com/dotemacs>.
 ;;
 ;; Remember that every piece of Elisp that I write is for my own
 ;; educational and recreational purposes.  I am not a programmer and I
@@ -43,7 +43,21 @@
 (defcustom tmr-sound-file
   "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
   "Path to sound file used by `tmr--play-sound'."
-  :type 'string
+  :type 'file
+  :group 'tmr)
+
+(defcustom tmr-notification-urgency 'normal
+  "The urgency level of the desktop notification.
+Values can be `low', `normal' (default), or `critical'."
+  :type '(choice
+          (const :tag "Low" low)
+          (const :tag "Normal" normal)
+          (const :tag "Critical" critical))
+  :group 'tmr)
+
+(defcustom tmr-descriptions-list (list "Boil water" "Prepare tea" "Bake bread")
+  "Optional description candidates for the current `tmr'."
+  :type '(repeat string)
   :group 'tmr)
 
 (defun tmr--unit (time)
@@ -70,23 +84,38 @@
 (defun tmr--play-sound ()
   "Play `tmr-sound-file' using the 'ffplay' executable (ffmpeg)."
   (let ((sound tmr-sound-file))
-    (when (and (file-exists-p sound)
-               (executable-find "ffplay"))
+    (when (file-exists-p tmr-sound-file)
+      (unless (executable-find "ffplay")
+        (user-error "Cannot play %s without `ffplay'" sound))
       (call-process-shell-command
        (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" sound) nil 0))))
 
-(defun tmr--notify-send (start)
-  "Send system notification for timer with START time."
-  (let ((end (format-time-string "%R")))
+;; FIXME 2021-10-01: Economise on (if description ...)
+(defun tmr--notify-send (start &optional description)
+  "Send system notification for timer with START time.
+Optionally include DESCRIPTION."
+  (let ((end (format-time-string "%T")))
+    ;; Read: (info "(elisp) Desktop Notifications")
     (notifications-notify
      :title "TMR Must Recur"
-     :body (format "Time is up!\nStarted: %s\nEnded: %s" start end)
-     :app-name "GNU Emacs")
+     :body (format "Time is up!\nStarted: %s\nEnded: %s%s"
+                   start end
+                   (if description
+                       (concat "\n" description)
+                     ""))
+     :app-name "GNU Emacs"
+     :urgency tmr-notification-urgency
+     :sound-file tmr-sound-file)
+    ;; TODO 2021-10-01: Maybe add those messages to a tmr buffer?
     (message
-     "TMR %s %s ; %s %s"
+     "TMR %s %s ; %s %s%s"
      (propertize "Start:" 'face 'success) start
-     (propertize "End:" 'face 'warning) end)
-    (tmr--play-sound)))
+     (propertize "End:" 'face 'warning) end
+     (if description
+         (concat " [" (propertize description 'face 'bold) "]")
+       ""))
+    (unless (plist-get (notifications-get-capabilities) :sound)
+      (tmr--play-sound))))
 
 ;; REVIEW 2021-09-21: Maybe we should use a list instead of storing just
 ;; the last one?
@@ -98,8 +127,9 @@
   (interactive)
   (cancel-timer tmr--last-timer))
 
-(defun tmr--echo-area (time)
-  "Produce `message' about current `tmr' TIME."
+(defun tmr--echo-area (time &optional description)
+  "Produce `message' for current `tmr' TIME.
+Optionally include DESCRIPTION."
   (let* ((specifier (substring time -1))
          (amount (substring time 0 -1))
          (start (format-time-string "%T"))
@@ -107,14 +137,28 @@
                  ("s" (format "%ss (s == second)" amount))
                  ("h" (format "%sh (h == hour)" amount))
                  (_   (concat time "m (m == minute)")))))
-    (message "`tmr' started at %s for %s"
+    (message "`tmr' started at %s for %s%s"
              ;; Remember: these are just faces.  Don't get caught in the
              ;; semantics.
              (propertize start 'face 'success)
-             (propertize unit 'face 'error))))
+             (propertize unit 'face 'error)
+             (if description
+                 (concat " [" (propertize description 'face 'bold) "]")
+               ""))))
+
+(defvar tmr--description-hist '()
+  "Minibuffer history of `tmr' descriptions.")
+
+(defun tmr--description-prompt ()
+  "Helper prompt for descriptions in `tmr'."
+  (let ((def (nth 0 tmr--description-hist)))
+    (completing-read
+     (format "Description for this tmr [%s]: " def)
+     tmr-descriptions-list nil nil nil
+     'tmr--description-hist def)))
 
 ;;;###autoload
-(defun tmr (time)
+(defun tmr (time &optional description)
   "Set timer to TIME duration and notify after it elapses.
 
 When TIME is a number, it is interpreted as a count of minutes.
@@ -122,17 +166,24 @@ Otherwise TIME must be a string that consists of a number and a
 special final character denoting a unit of time: 'h' for 'hours',
 's' for 'seconds'.
 
+With optional DESCRIPTION as a prefix (\\[universal-argument]),
+prompt for a description among `tmr-descriptions-list', though
+allow for any string to serve as valid input.
+
 This command also plays back `tmr-sound-file'.
 
 To cancel the timer, use the `tmr-cancel' command."
-  (interactive "sN minutes for timer (append `h' or `s' for other units): ")
-  (let ((start (format-time-string "%R"))
+  (interactive
+   (list
+    (read-string "N minutes for timer (append `h' or `s' for other units): ")
+    (when current-prefix-arg (tmr--description-prompt))))
+  (let ((start (format-time-string "%T"))
         (unit (tmr--unit time)))
-    (tmr--echo-area time)
+    (tmr--echo-area time description)
     (setq tmr--last-timer
           (run-with-timer
            unit nil
-           'tmr--notify-send start))))
+           'tmr--notify-send start description))))
 
 (provide 'tmr)
 ;;; tmr.el ends here
