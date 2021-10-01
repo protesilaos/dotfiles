@@ -108,8 +108,10 @@
                  ("h" (format "%sh (h == hour)" amount))
                  (_   (concat time "m (m == minute)")))))
     (message "`tmr' started at %s for %s"
+             ;; Remember: these are just faces.  Don't get caught in the
+             ;; semantics.
              (propertize start 'face 'success)
-             (propertize unit 'face 'bold))))
+             (propertize unit 'face 'error))))
 
 ;;;###autoload
 (defun tmr (time)
