@@ -78,7 +78,7 @@ Values can be `low', `normal' (default), or `critical'."
         ("h" (* num 60 60))
         ;; This is not needed, of course, but we should not miss a good
         ;; chance to make some fun of ourselves.
-        ("w" (user-error "TMR Made Ridiculous; use minutes, hours, seconds"))
+        ("w" (user-error "TMR Made Ridiculous; append [m]inutes, [h]ours, [s]econds"))
         (_ (* num 60)))))))
 
 (defun tmr--play-sound ()
