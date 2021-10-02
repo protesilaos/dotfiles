@@ -3746,7 +3746,7 @@ with all my Elisp code):
 
 #+include: prot-lisp/usls.el src emacs-lisp :tangle no
 
-** TMR Must Recur (just my generic timer)
+** tmr.el (TMR Must Recur)
 :PROPERTIES:
 :CUSTOM_ID: h:c90ba6fa-ebec-42a2-98a6-3ff9027b1ffa
 :END:
@@ -3755,22 +3755,47 @@ Sometimes I need to set off a timer with a notification.  I used to rely
 on a homegrown shell script for such a task, but where is the fun in
 that?
 
-The =tmr= command works by prompting for a number, which it interprets as
-a count of minutes.  It can also understand numbers with a suffix, such
-as "1h" for 1 hour and "30s" for 30 seconds.  Once the time elapses, it
-produces a system notification as well as a message in the echo area
-with information about the start and end times (review the echo area log
-with =C-h e=).  Then it plays back some otherwise annoying sound, just to
-be sure that you feel the urge to quit whatever caught your attention in
-the meantime.
+This package of mine provides a single command for setting a timer: =tmr=.
 
-=tmr-cancel= can be called with =M-x= to cancel the last defined =tmr=.
+The command prompts for a unit of time, which is represented as a string
+that consists of a number and, optionally, a single character suffix
+which specifies the unit of time.
+
+Valid formats:
+
+| Input | Meaning   |
+|-------+-----------|
+| 5     | 5 minutes |
+| 5m    | 5 minutes |
+| 5s    | 5 seconds |
+| 5h    | 5 hours   |
+
+If =tmr= is called with an optional prefix argument (=C-u=), it also asks
+for a description which accompanies the given timer.  Preconfigured
+candidates are specified in the user option =tmr-descriptions-list=,
+though any arbitrary input is acceptable at the minibuffer prompt.
+
+When the timer is set, a message is sent to the echo area recording the
+current time and the point in the future when the timer elapses.  Echo
+area messages can be reviewed with the =view-echo-area-messages= which is
+bound to =C-h e= by default.
+
+Once the timer runs its course, it produces a desktop notification and
+plays an alarm sound.  The notification's message is practically the
+same as that which is sent to the echo area.  The sound file for the
+alarm is defined in =tmr-sound-file=, while the urgency of the
+notification can be set through the =tmr-notification-urgency= option.
+
+The =tmr-cancel= command cancels the last =tmr=.  Note that for the time
+being it has no notion of multiple timers---just the last one.
 
 #+begin_src emacs-lisp
 ;;; TMR Must Recur (just my generic timer)
 (prot-emacs-builtin-package 'tmr
   (setq tmr-sound-file
         "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
+  (setq tmr-notification-urgency 'normal)
+  (setq tmr-descriptions-list (list "Boil water" "Prepare tea" "Bake bread"))
   (let ((map global-map))
     (define-key map (kbd "C-c t t") #'tmr)
     (define-key map (kbd "C-c t c") #'tmr-cancel)))
