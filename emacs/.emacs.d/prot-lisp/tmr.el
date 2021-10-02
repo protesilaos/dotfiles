@@ -118,7 +118,7 @@ Optionally include DESCRIPTION."
     (unless (plist-get (notifications-get-capabilities) :sound)
       (tmr--play-sound))))
 
-;; REVIEW 2021-09-21: Maybe we should use a list instead of storing just
+;; TODO 2021-09-21: Maybe we should use a list instead of storing just
 ;; the last one?
 (defvar tmr--last-timer nil
   "Last timer object, used by `tmr-cancel'.")
