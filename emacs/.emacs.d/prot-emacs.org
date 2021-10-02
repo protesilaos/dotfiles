@@ -3771,7 +3771,9 @@ the meantime.
 (prot-emacs-builtin-package 'tmr
   (setq tmr-sound-file
         "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
-  (define-key global-map (kbd "C-c t") #'tmr))
+  (let ((map global-map))
+    (define-key map (kbd "C-c t t") #'tmr)
+    (define-key map (kbd "C-c t c") #'tmr-cancel)))
 #+end_src
 
 This is its code (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
