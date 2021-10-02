@@ -40,7 +40,7 @@
 ;;     modus-themes-bold-constructs                (boolean)
 ;;     modus-themes-inhibit-reload                 (boolean)
 ;;     modus-themes-italic-constructs              (boolean)
-;;     modus-themes-no-mixed-fonts                 (boolean)
+;;     modus-themes-mixed-fonts                    (boolean)
 ;;     modus-themes-scale-headings                 (boolean)
 ;;     modus-themes-subtle-line-numbers            (boolean)
 ;;     modus-themes-success-deuteranopia           (boolean)
@@ -1475,7 +1475,7 @@ The actual styling of the face is done by `modus-themes-faces'."
 
 (defface modus-themes-variable-pitch nil
   "Generic face for applying a conditional `variable-pitch'.
-This behaves in accordance with `modus-themes-no-mixed-fonts',
+This behaves in accordance with `modus-themes-mixed-fonts',
 `modus-themes-variable-pitch-headings' for all heading levels,
 and `modus-themes-variable-pitch-ui'.
 
@@ -1484,7 +1484,7 @@ The actual styling of the face is done by `modus-themes-faces'."
 
 (defface modus-themes-fixed-pitch nil
   "Generic face for applying a conditional `fixed-pitch'.
-This behaves in accordance with `modus-themes-no-mixed-fonts'.
+This behaves in accordance with `modus-themes-mixed-fonts'.
 
 The actual styling of the face is done by `modus-themes-faces'."
   :group 'modus-theme-faces)
@@ -1800,6 +1800,27 @@ mixing fonts."
   :set #'modus-themes--set-option
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) No mixed fonts"))
+
+(define-obsolete-variable-alias
+  'modus-themes-no-mixed-fonts
+  'modus-themes-mixed-fonts "On 2021-10-02 for version 1.7.0")
+
+(defcustom modus-themes-mixed-fonts nil
+  "Enable inheritance from `fixed-pitch' in some faces.
+
+This is done to allow spacing-sensitive constructs, such as Org
+tables and code blocks, to remain monospaced when users opt for
+something like the command `variable-pitch-mode'.
+
+Users may need to explicitly configure the font family of
+`fixed-pitch' in order to get a consistent experience."
+  :group 'modus-themes
+  :package-version '(modus-themes . "1.7.0")
+  :version "29.1"
+  :type 'boolean
+  :set #'modus-themes--set-option
+  :initialize #'custom-initialize-default
+  :link '(info-link "(modus-themes) Mixed fonts"))
 
 (defconst modus-themes--headings-choice
   '(set :tag "Properties" :greedy t
@@ -2319,7 +2340,7 @@ variables `flymake-fringe-indicator-position' and
 `flycheck-indication-mode', respectively."
   :group 'modus-themes
   :package-version '(modus-themes . "1.7.0")
-  :version "28.1"
+  :version "29.1"
   :type '(set :tag "Properties" :greedy t
               (const :tag "Straight underline" straight-underline)
               (const :tag "Colorise text as well" text-also)
@@ -3030,7 +3051,7 @@ Those are stored in `modus-themes-faces' and
 
 (defun modus-themes--fixed-pitch ()
   "Conditional application of `fixed-pitch' inheritance."
-  (unless modus-themes-no-mixed-fonts
+  (when modus-themes-mixed-fonts
     (list :inherit 'fixed-pitch)))
 
 (defun modus-themes--variable-pitch ()
@@ -6655,9 +6676,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
                         :extend t)))
     `(org-column ((,class :background ,bg-alt)))
     `(org-column-title ((,class :inherit bold :underline t :background ,bg-alt)))
-    `(org-date ((,class :inherit ,(if modus-themes-no-mixed-fonts
-                                      'button
-                                    '(button fixed-pitch))
+    `(org-date ((,class :inherit ,(if modus-themes-mixed-fonts
+                                      '(button fixed-pitch)
+                                    'button)
                         ,@(modus-themes--link-color
                            cyan cyan-faint))))
     `(org-date-selected ((,class :inherit bold :foreground ,blue-alt :inverse-video t)))
@@ -6716,6 +6737,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-headline-todo ((,class :inherit modus-themes-variable-pitch :foreground ,red-nuanced-fg)))
     `(org-hide ((,class :foreground ,bg-main)))
     `(org-indent ((,class :inherit (fixed-pitch org-hide))))
+    `(org-imminent-deadline ((,class :foreground ,red-intense)))
     `(org-latex-and-related ((,class :foreground ,magenta-refine-fg)))
     `(org-level-1 ((,class :inherit modus-themes-heading-1)))
     `(org-level-2 ((,class :inherit modus-themes-heading-2)))
