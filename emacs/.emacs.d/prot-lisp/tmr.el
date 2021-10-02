@@ -123,10 +123,13 @@ Optionally include DESCRIPTION."
 (defvar tmr--last-timer nil
   "Last timer object, used by `tmr-cancel'.")
 
+;;;###autoload
 (defun tmr-cancel ()
   "Cancel last timer object set with `tmr' command."
   (interactive)
-  (cancel-timer tmr--last-timer))
+  (if tmr--last-timer
+      (cancel-timer tmr--last-timer)
+    (message "No `tmr' to cancel")))
 
 (defun tmr--echo-area (time &optional description)
   "Produce `message' for current `tmr' TIME.
