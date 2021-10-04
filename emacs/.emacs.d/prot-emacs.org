@@ -4974,7 +4974,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-default-priority ?A)
 
 ;;;; tags
-  (setq org-tag-alist
+  (setq org-tag-alist ; I don't really use those, but whatever
         '(("meeting")
           ("admin")
           ("emacs")
@@ -5158,7 +5158,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
         '(todo search agenda))
   (setq org-agenda-hide-tags-regexp nil)
   (setq org-agenda-remove-tags nil)
-  (setq org-agenda-tags-column -120)
+  (setq org-agenda-tags-column -100)
 
 ;;;;; Agenda entry
   ;; NOTE: I do not use this right now.  Leaving everything to its
@@ -8546,11 +8546,12 @@ Refer to the source code in [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common cu
 (prot-emacs-builtin-package 'prot-text
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)$" . text-mode))
   (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
+  (define-key org-mode-map (kbd "<M-return>") #'org-meta-return) ; don't override M-RET here
   (define-key org-mode-map (kbd "M-;") nil))
 #+end_src
 
-Those are the contents of the =prot-text.el= library (find the file in [[https://gitlab.com/protesilaos/dotfiles][my
-dotfiles' repo]] (as with all my Elisp code)):
+This is =prot-text.el= (find the file in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my
+Elisp code)):
 
 #+include: prot-lisp/prot-text.el src emacs-lisp :tangle no
 
