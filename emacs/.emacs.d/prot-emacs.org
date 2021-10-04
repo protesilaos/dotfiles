@@ -7694,9 +7694,10 @@ times.
 
 I normally use Emacs in fullscreen view.  No system panels, no window
 decorations, no icons and blinking indicators.  Nothing to distract me.
-While I really like this environment, sometimes I need to take a look at
-the time…  Thankfully Emacs offers a convenient, built-in way of
-displaying such information in the mode line.
+While I really like this immersive experience, sometimes I need to take
+a look at the time...  Thankfully Emacs offers a convenient, built-in
+way of displaying such information in the mode line: just enable
+=display-time-mode=.
 
 The =display-time-format= can be configured to show the current date and
 time in all the various formats we would expect, using a string of
@@ -7710,7 +7711,12 @@ also shows the load average and an email indicator.  I do not need the
 load average as it adds too much noise.  As for the mail indicator, I
 used it for a while, but eventually decided to use my own approach which
 also shows the number of new emails (refer to the [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]] and
-search, in particular, for =prot-mail-mail-indicator=).
+search, in particular, for either the old =prot-mail-mail-indicator= or
+the newer =prot-notmuch-mail-indicator=).
+
+Since the inception of =prot-tab.el= which creates a status line that
+replaces mode lines, I enable the clock and mail indicator only when the
+status line is enabled (see [[#h:63ad472f-c9c2-40ad-9675-1dc529487788][Tabs for window layouts]]).
 
 Lastly, I use the =world-clock= command (for Emacs28+) when I need to get
 an overview of the current time in various parts of the planet.
@@ -7745,8 +7751,8 @@ an overview of the current time in various parts of the planet.
           ("Europe/Lisbon" "Lisbon")
           ("Europe/Brussels" "Brussels")
           ("Europe/Athens" "Athens")
-          ("Asia/Tbilisi" "Tbilisi")
           ("Asia/Tehran" "Tehran")
+          ("Asia/Tbilisi" "Tbilisi")
           ("Asia/Yekaterinburg" "Yekaterinburg")
           ("Asia/Shanghai" "Shanghai")
           ("Asia/Tokyo" "Tokyo")
@@ -7759,7 +7765,9 @@ an overview of the current time in various parts of the planet.
   (setq world-clock-timer-enable t)
   (setq world-clock-timer-second 60)
 
-  (add-hook 'after-init-hook #'display-time-mode))
+  ;; ;; NOTE 2021-10-04: Check `prot-tab-status-line'.
+  ;; (add-hook 'after-init-hook #'display-time-mode)
+  )
 #+end_src
 
 *** COMMENT Name of current form (which-function-mode)

@@ -178,6 +178,8 @@ otherwise."
   "Last value of `window-divider-default-places'.
 For use in Prot-Tab-Status-Line.")
 
+(declare-function prot-notmuch-mail-indicator "prot-notmuch")
+
 ;; NOTE 2021-07-30: This is experimental and subject to review.
 ;;;###autoload
 (define-minor-mode prot-tab-status-line
@@ -192,6 +194,8 @@ Hide the mode lines and change their colors."
         (tab-bar-history-mode 1)
         (setq window-divider-default-places t)
         (window-divider-mode 1)
+        (display-time-mode 1)
+        (prot-notmuch-mail-indicator 1)
         (custom-set-faces
          `(mode-line ((default :height 1 :box nil :overline nil :underline nil)
                       (((class color) (min-colors 88) (background light))
@@ -213,6 +217,8 @@ Hide the mode lines and change their colors."
     (tab-bar-history-mode -1)
     (setq window-divider-default-places prot-tab--window-divider-place)
     (window-divider-mode -1)
+    (display-time-mode -1)
+    (prot-notmuch-mail-indicator -1)
     (custom-set-faces
      `(mode-line (( )))
      `(mode-line-inactive (( ))))))
