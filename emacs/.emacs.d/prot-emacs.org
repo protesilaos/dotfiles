@@ -762,31 +762,31 @@ Relevant publications of mine that are not part of this document:
   ;; as it explains what those property lists should contain.
   (setq prot-fonts-typeface-sets-alist
         '((small . ( :fixed-pitch-family "Hack"
-                       :fixed-pitch-regular-weight regular
-                       :fixed-pitch-heavy-weight bold
-                       :fixed-pitch-height 80
-                       :fixed-pitch-line-spacing 1
-                       :variable-pitch-family "DejaVu Serif"
-                       :variable-pitch-height 1.0
-                       :variable-pitch-regular-weight normal))
+                     :fixed-pitch-regular-weight regular
+                     :fixed-pitch-heavy-weight bold
+                     :fixed-pitch-height 80
+                     :fixed-pitch-line-spacing 1
+                     :variable-pitch-family "DejaVu Serif"
+                     :variable-pitch-height 1.0
+                     :variable-pitch-regular-weight normal))
 
           (regular . ( :fixed-pitch-family "Iosevka Comfy"
                        :fixed-pitch-regular-weight book
                        :fixed-pitch-heavy-weight extrabold
-                       :fixed-pitch-height 90
-                       :fixed-pitch-line-spacing 1
+                       :fixed-pitch-height 100
+                       :fixed-pitch-line-spacing nil
                        :variable-pitch-family "Noto Serif"
                        :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
           (medium . ( :fixed-pitch-family "Iosevka Comfy"
-                       :fixed-pitch-regular-weight book
-                       :fixed-pitch-heavy-weight extrabold
-                       :fixed-pitch-height 105
-                       :fixed-pitch-line-spacing nil
-                       :variable-pitch-family "Noto Serif"
-                       :variable-pitch-height 1.0
-                       :variable-pitch-regular-weight normal))
+                      :fixed-pitch-regular-weight book
+                      :fixed-pitch-heavy-weight extrabold
+                      :fixed-pitch-height 105
+                      :fixed-pitch-line-spacing nil
+                      :variable-pitch-family "Noto Serif"
+                      :variable-pitch-height 1.0
+                      :variable-pitch-regular-weight normal))
 
           (large . ( :fixed-pitch-family "Iosevka Comfy"
                      :fixed-pitch-regular-weight normal
