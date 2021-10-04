@@ -509,13 +509,14 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs nil
         modus-themes-bold-constructs nil
-        modus-themes-no-mixed-fonts nil
+        modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers nil
+        modus-themes-intense-markup t
         modus-themes-success-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
+        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -526,7 +527,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', `padded'.
-        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
+        modus-themes-mode-line '(3d) ; For Moody, also check `prot-moody'
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -536,7 +537,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(intense underline)
+        modus-themes-hl-line '(accented intense underline)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -572,20 +573,20 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch scale-title))
-          (header-date . (bold-today scale-heading underline-today grayscale workaholic))
-          (event . (scale-small accented italic))
+          (header-date . (bold-today scale-heading ))
+          (event . (accented italic))
           (scheduled . uniform)
           (habit . traffic-light-deuteranopia))
 
-        modus-themes-headings nil ; this is an alist: read the manual or its doc string
-        ;; '((1 . (background))
-        ;;   (2 . (background rainbow))
-        ;;   (3 . (rainbow))
-        ;;   (4 . (rainbow no-bold)))
+        modus-themes-headings ; this is an alist: read the manual or its doc string
+        '((1 . (background line))
+          (2 . (background rainbow line))
+          (3 . (rainbow line))
+          (4 . (rainbow no-bold line)))
 
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
-        modus-themes-scale-headings nil
+        modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
