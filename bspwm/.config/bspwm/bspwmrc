@@ -131,3 +131,6 @@ _check xsettingsd && xsettingsd -c "$HOME"/.config/xsettingsd/xsettingsd.conf &
 
 # Use the same cursor everywhere
 _check xsetroot && xsetroot -xcf /usr/share/icons/Adwaita/cursors/left_ptr 16
+
+# Load my Xresources
+_check xrdb && [ -f "$HOME"/.Xresources ] && xrdb -I "$HOME" -merge "$HOME"/.Xresources
