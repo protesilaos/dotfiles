@@ -65,6 +65,15 @@ hook `modus-themes-after-load-theme-hook'."
   "Hook that runs after select Org commands.
 To be used with `advice-add'.")
 
+(declare-function prot-bongo-show "prot-bongo")
+
+(defun prot-org-capture-jukebox ()
+  "Capture template for current Bongo songo." ; NOTE 2021-10-06: Brilliant typo!
+  (concat "* " (prot-bongo-show) " :jukebox:\n"
+          ":PROPERTIES:\n"
+          ":CAPTURED: %U\n"
+          ":END:\n\n"))
+
 (defun prot-org--agenda-after-edit (&rest _)
   "Run `prot-org-agenda-after-edit-hook'."
   (run-hooks 'prot-org-agenda-after-edit-hook))

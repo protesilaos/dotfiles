@@ -284,6 +284,23 @@ With optional NEGATION, remove them."
 
 ;;;; Commands
 
+(defvar bongo-player)
+(declare-function with-bongo-playlist-buffer "bongo" (body))
+(declare-function bongo-format-infoset "bongo" (infoset))
+(declare-function bongo-player-infoset "bongo" (player))
+
+;;;###autoload
+(defun prot-bongo-show ()
+  "Echo Bongo track without elapsed time format.
+This is a simplified variant of `bongo-show'."
+  (interactive)
+  (let* ((player (with-bongo-playlist-buffer
+                   (or bongo-player
+                       (error "No currently playing track"))))
+         (string (bongo-format-infoset
+                  (bongo-player-infoset player))))
+      (message "%s" string)))
+
 (declare-function bongo-erase-buffer "bongo")
 (declare-function bongo-library-buffer-p "bongo")
 (declare-function bongo-play-random "bongo")

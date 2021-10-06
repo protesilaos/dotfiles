@@ -5244,7 +5244,14 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
     (define-key map (kbd "C-c C-S-l") #'org-insert-last-stored-link)))
 
 (prot-emacs-builtin-package 'prot-org
-  (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned))
+  (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
+
+  (add-to-list 'org-capture-templates
+               '("j" "Music suggestion (jukebox)" entry
+                 (file+headline "tasks.org" "Music suggestions")
+                 #'prot-org-capture-jukebox
+                 :empty-lines-after 1
+                 :immediate-finish t)))
 #+end_src
 
 Here are my few extras for Org (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
