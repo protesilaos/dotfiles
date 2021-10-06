@@ -24,7 +24,7 @@ module-margin-right = 2
 font-0 = Monospace:size=8:hintstyle=hintslight;2
 font-1 = Monospace:weight=bold:size=8:hintstyle=hintslight;2
 
-modules-left = bspwm
+modules-left = bspwm bspwm_panel_monocle
 modules-center =
 modules-right = xkeyboard alsa notmuch date
 
@@ -44,8 +44,11 @@ inline-mode = false
 ;label-floating = 
 ;label-pseudotiled = P
 
-; FIXME 2021-09-25: hide when bspc config single_monocle true
-label-monocle = M
+; FIXME 2021-09-25: hide when bspc config single_monocle true.
+;
+; UPDATE 2021-10-06: check module/bspwm_panel_monocle and my shell
+; script bspwm_panel_monocle.
+label-monocle = 
 label-monocle-foreground = ${colors.fgalt}
 label-locked = L
 label-locked-foreground = ${colors.yellow}
@@ -70,6 +73,11 @@ label-empty = " %name% "
 label-empty-foreground = ${colors.fgalt}
 
 format = <label-state> <label-mode>
+
+[module/bspwm_panel_monocle]
+type = custom/script
+exec = bspwm_panel_monocle
+tail = true
 
 [module/xkeyboard]
 type = internal/xkeyboard

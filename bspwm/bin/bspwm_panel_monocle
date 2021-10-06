@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# bspwm_panel_monocle --- Handle monocle layout for the system panel
+#
+# Copyright (c) 2021  Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.	If not, see <http://www.gnu.org/licenses/>.
+
+
+# FIXME 2021-10-06: Neither of the following methods works when the
+# focus a single node and toggle the monocle layout, because apparently
+# the 'bspc subscribe report' does not get updated.  Same for when we
+# have two nodes in monocle view and close the one: in that scenario we
+# would expect the single node to not count as being in a monocle layout
+# given 'bspc config single_monocle true'.
+
+### Approach 1
+
+_layout ()
+{
+    bspc query -T -d | sed 's,.*userLayout":"\(tiled\|monocle\)".*,\1,'
+}
+
+while read -r
+do
+    case "$(_layout)" in
+        monocle) echo "M" ;;
+        *) echo "" ;;
+    esac
+done < <(bspc subscribe report)
+
+### Approach 2
+
+# _single_monocle ()
+# {
+#     bspc config single_monocle
+# }
+# 
+# while read -r line
+# do
+#     case $line in
+#         *LM*)
+#             if [ "$(bspc query -N -d any.focused | wc -l)" -eq 1 ] && [ "$(_single_monocle)" = "true" ]
+#             then
+#                 echo ""
+#             else
+#                 echo "M"
+#             fi
+#             ;;
+#         *) echo "" ;;
+#     esac
+# done < <(bspc subscribe report)
