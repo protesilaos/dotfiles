@@ -117,26 +117,27 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
-        modus-themes-no-mixed-fonts nil
-        modus-themes-subtle-line-numbers t
-        modus-themes-success-deuteranopia t
+  (setq modus-themes-italic-constructs nil
+        modus-themes-bold-constructs nil
+        modus-themes-mixed-fonts t
+        modus-themes-subtle-line-numbers nil
+        modus-themes-intense-markup t
+        modus-themes-success-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
-        ;; `intense'
-        modus-themes-lang-checkers '(text-also)
+        ;; `intense' OR `faint'.
+        modus-themes-lang-checkers '(faint)
 
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', `padded'.
-        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
+        modus-themes-mode-line '(3d) ; For Moody, also check `prot-moody'
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -146,7 +147,7 @@
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(intense accented underline)
+        modus-themes-hl-line '(accented intense underline)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -163,7 +164,7 @@
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(intense)
+        modus-themes-prompts '(intense gray bold)
 
         modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
 
@@ -172,7 +173,7 @@
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend)
+        modus-themes-region '(no-extend accented)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
@@ -182,20 +183,20 @@
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch scale-title))
-          (header-date . (bold-today scale-heading underline-today grayscale workaholic))
-          (event . (scale-small accented italic))
+          (header-date . (bold-today scale-heading ))
+          (event . (accented italic))
           (scheduled . uniform)
           (habit . traffic-light-deuteranopia))
 
-        modus-themes-headings nil ; this is an alist: read the manual or its doc string
-        ;; '((1 . (background))
-        ;;   (2 . (background rainbow))
-        ;;   (3 . (rainbow))
-        ;;   (4 . (rainbow no-bold)))
+        modus-themes-headings ; this is an alist: read the manual or its doc string
+        '((1 . (background line))
+          (2 . (background rainbow line))
+          (3 . (rainbow line))
+          (4 . (rainbow no-bold line)))
 
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
-        modus-themes-scale-headings nil
+        modus-themes-scale-headings t
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
@@ -246,31 +247,31 @@
   ;; as it explains what those property lists should contain.
   (setq prot-fonts-typeface-sets-alist
         '((small . ( :fixed-pitch-family "Hack"
-                       :fixed-pitch-regular-weight regular
-                       :fixed-pitch-heavy-weight bold
-                       :fixed-pitch-height 80
-                       :fixed-pitch-line-spacing 1
-                       :variable-pitch-family "DejaVu Serif"
-                       :variable-pitch-height 1.0
-                       :variable-pitch-regular-weight normal))
+                     :fixed-pitch-regular-weight regular
+                     :fixed-pitch-heavy-weight bold
+                     :fixed-pitch-height 80
+                     :fixed-pitch-line-spacing 1
+                     :variable-pitch-family "DejaVu Serif"
+                     :variable-pitch-height 1.0
+                     :variable-pitch-regular-weight normal))
 
           (regular . ( :fixed-pitch-family "Iosevka Comfy"
                        :fixed-pitch-regular-weight book
                        :fixed-pitch-heavy-weight extrabold
-                       :fixed-pitch-height 90
-                       :fixed-pitch-line-spacing 1
+                       :fixed-pitch-height 100
+                       :fixed-pitch-line-spacing nil
                        :variable-pitch-family "Noto Serif"
                        :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
           (medium . ( :fixed-pitch-family "Iosevka Comfy"
-                       :fixed-pitch-regular-weight book
-                       :fixed-pitch-heavy-weight extrabold
-                       :fixed-pitch-height 105
-                       :fixed-pitch-line-spacing nil
-                       :variable-pitch-family "Noto Serif"
-                       :variable-pitch-height 1.0
-                       :variable-pitch-regular-weight normal))
+                      :fixed-pitch-regular-weight book
+                      :fixed-pitch-heavy-weight extrabold
+                      :fixed-pitch-height 105
+                      :fixed-pitch-line-spacing nil
+                      :variable-pitch-family "Noto Serif"
+                      :variable-pitch-height 1.0
+                      :variable-pitch-regular-weight normal))
 
           (large . ( :fixed-pitch-family "Iosevka Comfy"
                      :fixed-pitch-regular-weight normal
@@ -572,6 +573,12 @@
   ;;  `display-buffer-alist' (search this document) because it is easier
   ;;  to keep track of all my rules in one place.
   (setq embark-verbose-indicator-display-action nil)
+
+  ;; Use alternating backgrounds, if `stripes' is available.
+  (with-eval-after-load 'stripes
+    (let ((hook 'embark-collect-mode-hook))
+      (add-hook hook #'stripes-mode)
+      (add-hook hook #'hl-line-mode)))
 
   (define-key global-map (kbd "C-,") #'embark-act)
   (let ((map minibuffer-local-completion-map))
@@ -1191,7 +1198,7 @@
     (define-key map (kbd "<C-left>") #'org-tree-slide-move-previous-tree)))
 
 (prot-emacs-builtin-package 'prot-logos
-  (setq prot-logos-org-presentation t)
+  (setq prot-logos-org-presentation nil)
   (setq prot-logos-variable-pitch nil)
   (setq prot-logos-scroll-lock nil)
   (setq prot-logos-hidden-modeline t)
@@ -1223,7 +1230,11 @@
 (prot-emacs-builtin-package 'tmr
   (setq tmr-sound-file
         "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
-  (define-key global-map (kbd "C-c t") #'tmr))
+  (setq tmr-notification-urgency 'normal)
+  (setq tmr-descriptions-list (list "Boil water" "Prepare tea" "Bake bread"))
+  (let ((map global-map))
+    (define-key map (kbd "C-c t t") #'tmr)
+    (define-key map (kbd "C-c t c") #'tmr-cancel)))
 
 ;;; Diff-mode (and prot-diff.el extensions)
 (prot-emacs-builtin-package 'diff-mode
@@ -1579,7 +1590,7 @@ sure this is a good approach."
   (setq org-default-priority ?A)
 
 ;;;; tags
-  (setq org-tag-alist
+  (setq org-tag-alist ; I don't really use those, but whatever
         '(("meeting")
           ("admin")
           ("emacs")
@@ -1763,7 +1774,7 @@ sure this is a good approach."
         '(todo search agenda))
   (setq org-agenda-hide-tags-regexp nil)
   (setq org-agenda-remove-tags nil)
-  (setq org-agenda-tags-column -120)
+  (setq org-agenda-tags-column -100)
 
 ;;;;; Agenda entry
   ;; NOTE: I do not use this right now.  Leaving everything to its
@@ -2803,8 +2814,8 @@ Can link to more than one message, if so all matching messages are shown."
           ("Europe/Lisbon" "Lisbon")
           ("Europe/Brussels" "Brussels")
           ("Europe/Athens" "Athens")
-          ("Asia/Tbilisi" "Tbilisi")
           ("Asia/Tehran" "Tehran")
+          ("Asia/Tbilisi" "Tbilisi")
           ("Asia/Yekaterinburg" "Yekaterinburg")
           ("Asia/Shanghai" "Shanghai")
           ("Asia/Tokyo" "Tokyo")
@@ -2817,7 +2828,9 @@ Can link to more than one message, if so all matching messages are shown."
   (setq world-clock-timer-enable t)
   (setq world-clock-timer-second 60)
 
-  (add-hook 'after-init-hook #'display-time-mode))
+  ;; ;; NOTE 2021-10-04: Check `prot-tab-status-line'.
+  ;; (add-hook 'after-init-hook #'display-time-mode)
+  )
 
 ;;; Keycast mode
 (prot-emacs-elpa-package 'keycast
@@ -3055,6 +3068,7 @@ Can link to more than one message, if so all matching messages are shown."
 (prot-emacs-builtin-package 'prot-text
   (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)$" . text-mode))
   (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
+  (define-key org-mode-map (kbd "<M-return>") #'org-meta-return) ; don't override M-RET here
   (define-key org-mode-map (kbd "M-;") nil))
 
 ;;; Markdown (markdown-mode)
