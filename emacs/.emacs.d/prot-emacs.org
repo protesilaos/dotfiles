@@ -3308,10 +3308,9 @@ The minor mode which takes care of this new "status line" concept is
 alluded to.
 
 In the past, I was using a command which would merely toggle the display
-of the =tab-bar= (=prot-tab-tab-bar-toggle=), but now that I can finally
-avoid the duplication of information and keep things cleaner, I think I
-am not going back to the paradigm where each window has its own mode
-line.
+of the =tab-bar= (=prot-tab-bar-toggle=), but now that I can finally avoid
+the duplication of information and keep things cleaner, I think I am not
+going back to the paradigm where each window has its own mode line.
 
 To learn about the key bindings that the =tab-bar= uses, type its prefix
 key =C-x t= and follow it up with =C-h= (read [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
@@ -3371,7 +3370,7 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
   (let ((map global-map))
     (define-key map (kbd "C-x <right>") #'prot-tab-winner-redo)
     (define-key map (kbd "C-x <left>") #'prot-tab-winner-undo)
-    (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-tab-bar-toggle'
+    (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-bar-toggle'
     (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)))
 
 ;; ;; This is only included as a reference.

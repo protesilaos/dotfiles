@@ -77,23 +77,32 @@ to switch to.  Else prompt for full text completion."
      ((length= tabs 1)
       (tab-next))
      ((length> tabs (1- prot-tab-tab-select-num-threshold))
-      (let ((tab-bar-tab-hints t))
-        (tab-bar-select-tab
-         (read-number "Go to tab NUM: "))))
+      (let ((tab-bar-tab-hints t)
+            (bar tab-bar-mode))
+        (unwind-protect
+            (progn
+              (unless bar
+                (prot-tab-bar-toggle 1))
+              (tab-bar-select-tab
+               (read-number "Go to tab NUM: ")))
+          (unless bar
+            (prot-tab-bar-toggle -1)))))
      (t
       (tab-bar-switch-to-tab
        (completing-read "Select tab: " tabs nil t))))))
 
 ;;;###autoload
-(defun prot-tab-tab-bar-toggle ()
+(define-minor-mode prot-tab-bar-toggle
   "Toggle `tab-bar' presentation."
-  (interactive)
-  (if (bound-and-true-p tab-bar-mode)
+  :init-value nil
+  :global t
+  (if (or prot-tab-bar-toggle
+          (not (bound-and-true-p tab-bar-mode)))
       (progn
-        (setq tab-bar-show nil)
-        (tab-bar-mode -1))
-    (setq tab-bar-show t)
-    (tab-bar-mode 1)))
+        (setq tab-bar-show t)
+        (tab-bar-mode 1))
+    (setq tab-bar-show nil)
+    (tab-bar-mode -1)))
 
 ;;;; Window layout history
 
