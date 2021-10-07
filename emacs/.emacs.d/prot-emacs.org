@@ -1720,7 +1720,8 @@ that populate the original prompt.
 :CUSTOM_ID: h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984
 :END:
 
-Video introduction: [[https://protesilaos.com/codelog/2021-01-09-emacs-embark-extras/][Embark and my extras]] (2021-01-09).
+Video introduction: [[https://protesilaos.com/codelog/2021-01-09-emacs-embark-extras/][Embark and my extras]] (2021-01-09).  Also read
+[[https://karthinks.com/software/fifteen-ways-to-use-embark/][Fifteen ways to use Embark]] (2021-10-06) by Karthik Chikmagalur.
 
 [ NOTE 2021-04-02: the part in that video that deals with cycling
   through the completion candidates has been moved to the file
@@ -10127,10 +10128,11 @@ each in their own unique way---the order is not significant:
   (2020-11-17) and [[https://karthinks.com/software/more-batteries-included-with-emacs/][More batteries included with Emacs]] (2020-12-11) are
   essential reading for anyone wanting to gain an overview of some of
   Emacs' built-in capabilities and learn about its 'hidden gems'.
+  Another excellent piece is [[https://karthinks.com/software/fifteen-ways-to-use-embark/][Fifteen ways to use Embark]] (2021-10-06).
   Karthik's website includes philosophical insights as well, such as
   those found in [[https://karthinks.com/blog/thoughts-on-strength-training/][Thoughts on Strength Training]] (2019-03-02).  You will
-  also find packages by Karthik in this document, such as =consult-dir=
-  and =project-x=.
+  also discover packages by Karthik in this document, such as
+  =consult-dir= and =project-x=.
 
 + James Norman Vladimir Cash :: James produces videos on Emacs, such as
   this one [[https://occasionallycogent.com/custom_emacs_modeline_video_edition/index.html][on customising the modeline]] and writes about similar topics,
