@@ -113,6 +113,15 @@ mod4 + XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer set Capture {toggle,5%-,5%+}
 
 
+#### Notifications
+
+mod4 + x ; d ; {q,Q,c,h}
+     dunstctl {close,close-all,context,history-pop}
+
+# 'dunst_toggle_notify' is a shell script of mine.  Check my dotfiles.
+mod4 + x ; d ; p
+     dunst_toggle_notify
+
 
 # TODO 2019-11-01: These will need to be reviewed once all key bindings
 # are rewritten.  Perhaps it would be nice to produce something that is
