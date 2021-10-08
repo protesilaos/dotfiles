@@ -126,13 +126,13 @@
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes 'intense ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense' OR `faint'.
-        modus-themes-lang-checkers '(faint)
+        modus-themes-lang-checkers nil
 
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
@@ -152,7 +152,7 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match nil
+        modus-themes-paren-match '(underline)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -164,7 +164,7 @@
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(intense gray bold)
+        modus-themes-prompts '(italic)
 
         modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
 
@@ -173,13 +173,13 @@
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend accented)
+        modus-themes-region '(no-extend bg-only)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'deuteranopia
+        modus-themes-diffs 'desaturated
 
-        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
+        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch scale-title))
@@ -189,10 +189,10 @@
           (habit . traffic-light-deuteranopia))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . (background line))
-          (2 . (background rainbow line))
-          (3 . (rainbow line))
-          (4 . (rainbow no-bold line)))
+        '((1 . (overline))
+          (2 . (overline))
+          (3 . (rainbow overline))
+          (4 . (rainbow no-bold overline)))
 
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
@@ -1102,7 +1102,7 @@
   (let ((map global-map))
     (define-key map (kbd "C-x <right>") #'prot-tab-winner-redo)
     (define-key map (kbd "C-x <left>") #'prot-tab-winner-undo)
-    (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-tab-bar-toggle'
+    (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-bar-toggle'
     (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)))
 
 ;; ;; This is only included as a reference.
@@ -1860,7 +1860,14 @@ sure this is a good approach."
     (define-key map (kbd "C-c C-S-l") #'org-insert-last-stored-link)))
 
 (prot-emacs-builtin-package 'prot-org
-  (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned))
+  (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
+
+  (add-to-list 'org-capture-templates
+               '("j" "Music suggestion (jukebox)" entry
+                 (file+headline "tasks.org" "Music suggestions")
+                 #'prot-org-capture-jukebox
+                 :empty-lines-after 1
+                 :immediate-finish t)))
 
 ;;; Calendar and Diary (and prot-diary.el)
 (prot-emacs-builtin-package 'calendar
