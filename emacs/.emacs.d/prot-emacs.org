@@ -304,7 +304,7 @@ use elsewhere.
     (define-key map (kbd "M-`") nil)
     (define-key map (kbd "C-h .") #'prot-simple-describe-symbol) ; overrides `display-local-help'
     (define-key map (kbd "C-h K") #'describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
-    (define-key map (kbd "C-h c") #'describe-command) ; overrides `describe-key-briefly'
+    (define-key map (kbd "C-h c") #'describe-char) ; overrides `describe-key-briefly'
     (define-key map (kbd "C-c s") #'prot-simple-scratch-buffer)
     ;; Commands for lines
     (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
