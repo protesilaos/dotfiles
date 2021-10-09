@@ -6135,14 +6135,14 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
         '(("date" . "%12s  ")
           ("count" . "%-7s  ")
           ("authors" . "%-20s  ")
-          ("subject" . "%-80s  ")
+          ("subject" . "%-120s  ")
           ("tags" . "(%s)")))
   (setq notmuch-tree-result-format
         '(("date" . "%12s  ")
           ("authors" . "%-20s  ")
           ((("tree" . "%s")
             ("subject" . "%s"))
-           . " %-80s  ")
+           . " %-120s  ")
           ("tags" . "(%s)")))
   (setq notmuch-search-line-faces
         '(("unread" . notmuch-search-unread-face)
