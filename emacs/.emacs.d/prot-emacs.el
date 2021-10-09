@@ -45,7 +45,7 @@
     (define-key map (kbd "M-`") nil)
     (define-key map (kbd "C-h .") #'prot-simple-describe-symbol) ; overrides `display-local-help'
     (define-key map (kbd "C-h K") #'describe-keymap) ; overrides `Info-goto-emacs-key-command-node'
-    (define-key map (kbd "C-h c") #'describe-command) ; overrides `describe-key-briefly'
+    (define-key map (kbd "C-h c") #'describe-char) ; overrides `describe-key-briefly'
     (define-key map (kbd "C-c s") #'prot-simple-scratch-buffer)
     ;; Commands for lines
     (define-key map (kbd "C-S-w") #'prot-simple-copy-line-or-region)
@@ -997,14 +997,14 @@
                                  (mode-line-format . none))))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
-          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
-           (display-buffer-reuse-mode-window display-buffer-at-bottom)
-           ;; NOTE 2021-10-06: we cannot `fit-window-to-buffer' because
-           ;; the size is not known in advance.
-           (window-height . 0.2))
           ;; below current window
           ("\\*.*\\(e?shell\\|v?term\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected))
+          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+           (display-buffer-reuse-mode-window display-buffer-below-selected)
+           ;; NOTE 2021-10-06: we cannot `fit-window-to-buffer' because
+           ;; the size is not known in advance.
+           (window-height . 0.2))
           ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))))
@@ -2051,14 +2051,14 @@ sure this is a good approach."
         '(("date" . "%12s  ")
           ("count" . "%-7s  ")
           ("authors" . "%-20s  ")
-          ("subject" . "%-80s  ")
+          ("subject" . "%-120s  ")
           ("tags" . "(%s)")))
   (setq notmuch-tree-result-format
         '(("date" . "%12s  ")
           ("authors" . "%-20s  ")
           ((("tree" . "%s")
             ("subject" . "%s"))
-           . " %-80s  ")
+           . " %-120s  ")
           ("tags" . "(%s)")))
   (setq notmuch-search-line-faces
         '(("unread" . notmuch-search-unread-face)
