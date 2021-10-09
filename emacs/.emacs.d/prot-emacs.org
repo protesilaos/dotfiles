@@ -224,8 +224,8 @@ in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (same for all 
 =prot-simple.el= contains a wide range of commands that are broadly in
 line with the built-in =simple.el= and =lisp.el= libraries.  While I could
 offer an overview of each item in my library, I feel the code and
-concomitant documentation strings are clear enough for you to peruse the
-source directly (reproduced further below).
+accompanying documentation strings are clear enough for you to peruse
+the source directly (reproduced further below).
 
 Still, here are some highlights for those who don't like studying the
 source code:
