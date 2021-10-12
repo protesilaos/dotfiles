@@ -294,6 +294,7 @@ use elsewhere.
   (setq prot-simple-scratch-buffer-default-mode 'markdown-mode)
 
   (prot-simple-focus-help-buffers 1)
+  (prot-simple-rename-help-buffers 1)
 
   ;; General commands
   (let ((map global-map))
@@ -3115,8 +3116,8 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (side . top)
            (slot . 2))
           ;; left side window
-          ("\\*Help\\*"            ; See the hooks for `visual-line-mode'
-           (display-buffer-in-side-window)
+          ("\\*\\(.* # Help.*\\|Help\\)\\*"    ; See the hooks for `visual-line-mode'
+           (display-buffer-reuse-mode-window display-buffer-in-side-window)
            (window-width . 0.25)
            (side . left)
            (slot . 0))

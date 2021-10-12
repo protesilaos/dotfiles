@@ -192,6 +192,59 @@ Intended as :after advice for `view-echo-area-messages'."
       (advice-remove fn 'prot-simple--help-focus))
     (advice-remove 'view-echo-area-messages 'prot-simple--messages-focus)))
 
+;;;; Rename Help buffers (EXPERIMENTAL)
+
+(defvar prot-simple-help-mode-post-render-hook nil
+  "Hook that runs after Help is rendered (via `advice-add').")
+
+(defun prot-simple--help-mode-post-render (&rest _)
+  "Run `prot-simple-help-mode-post-render-hook'."
+  (run-hooks 'prot-simple-help-mode-post-render-hook))
+
+(defconst prot-simple--help-symbol-regexp
+  ;; TODO 2021-10-12: Avoid duplication in regexp.
+  (concat
+   "^\\(.*?\\)\s\\(is an?\\|runs the\\)\s\\(command\\|function\\|variable\\|keymap variable"
+   "\\|native compiled Lisp function\\|interactive native compiled Lisp function"
+   "\\|built-in function\\|interactive built-in function\\|Lisp closure\\)\s"
+   "\\(\\_<.*?\\_>\\)\\( (found in .*)\\)?")
+  "Regexp to match Help buffer description.")
+
+(defconst prot-simple--help-symbol-false-positives
+  "\\(in\\|defined\\)"
+  "False positives for `prot-simple--help-symbol-regexp'.")
+
+(defun prot-simple--rename-help-buffer ()
+  "Rename the current Help buffer."
+  (with-current-buffer (help-buffer)
+    (goto-char (point-min))
+    (when (re-search-forward prot-simple--help-symbol-regexp nil t)
+      (let* ((thing (match-string 1))
+             (symbol (match-string 4))
+             (scope (match-string 5))
+             (description (cond
+                           (scope
+                            (concat symbol scope))
+                           ((and (not (string-match-p prot-simple--help-symbol-false-positives symbol))
+                                 (symbolp (intern symbol)))
+                            symbol)
+                           ((match-string 3)))))
+        (rename-buffer
+         (format "*%s (%s) # Help*" thing description)
+         t)))))
+
+;;;###autoload
+(define-minor-mode prot-simple-rename-help-buffers
+  "Rename Help buffers based on their contents."
+  :init-value nil
+  :global t
+  (if prot-simple-rename-help-buffers
+      (progn
+        (advice-add #'help-window-setup :after #'prot-simple--help-mode-post-render)
+        (add-hook 'prot-simple-help-mode-post-render-hook #'prot-simple--rename-help-buffer))
+    (advice-remove #'help-window-setup #'prot-simple--help-mode-post-render)
+    (remove-hook 'prot-simple-help-mode-post-render-hook #'prot-simple--rename-help-buffer)))
+
 ;;; Commands
 
 ;;;; General commands
