@@ -529,6 +529,10 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; `accented', `padded'.
         modus-themes-mode-line '(3d) ; For Moody, also check `prot-moody'
 
+        ;; This one only works when `modus-themes-mode-line' (above) has
+        ;; the `padded' property.  It takes a positive integer.
+        modus-themes-mode-line-padding 3
+
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
