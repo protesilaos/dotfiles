@@ -35,6 +35,7 @@
   (setq prot-simple-scratch-buffer-default-mode 'markdown-mode)
 
   (prot-simple-focus-help-buffers 1)
+  (prot-simple-rename-help-buffers 1)
 
   ;; General commands
   (let ((map global-map))
@@ -138,6 +139,10 @@
         ;; list that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', `padded'.
         modus-themes-mode-line '(3d) ; For Moody, also check `prot-moody'
+
+        ;; This one only works when `modus-themes-mode-line' (above) has
+        ;; the `padded' property.  It takes a positive integer.
+        modus-themes-mode-line-padding 3
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -960,8 +965,8 @@
            (side . top)
            (slot . 2))
           ;; left side window
-          ("\\*Help\\*"            ; See the hooks for `visual-line-mode'
-           (display-buffer-in-side-window)
+          ("\\*\\(.* # Help.*\\|Help\\)\\*"    ; See the hooks for `visual-line-mode'
+           (display-buffer-reuse-mode-window display-buffer-in-side-window)
            (window-width . 0.25)
            (side . left)
            (slot . 0))
