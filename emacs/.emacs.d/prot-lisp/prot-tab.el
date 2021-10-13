@@ -204,7 +204,8 @@ Hide the mode lines and change their colors."
         (setq window-divider-default-places t)
         (window-divider-mode 1)
         (display-time-mode 1)
-        (prot-notmuch-mail-indicator 1)
+        (when (featurep 'prot-notmuch)
+          (prot-notmuch-mail-indicator 1))
         (custom-set-faces
          `(mode-line ((default :height 1 :box nil :overline nil :underline nil)
                       (((class color) (min-colors 88) (background light))
@@ -227,7 +228,8 @@ Hide the mode lines and change their colors."
     (setq window-divider-default-places prot-tab--window-divider-place)
     (window-divider-mode -1)
     (display-time-mode -1)
-    (prot-notmuch-mail-indicator -1)
+    (when (featurep 'prot-notmuch)
+      (prot-notmuch-mail-indicator -1))
     (custom-set-faces
      `(mode-line (( )))
      `(mode-line-inactive (( ))))))
