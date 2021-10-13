@@ -28,7 +28,8 @@ modules-left = bspwm bspwm_panel_monocle
 modules-center =
 modules-right = xkeyboard alsa notmuch date
 
-tray-position = none
+tray-position = right
+tray-padding = 5
 
 format-margin = 0
 
