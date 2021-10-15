@@ -196,9 +196,18 @@ and will be created if it does not exist."
 
 ;;;; General commands
 
+;; NOTE 2021-10-15: This is a prototype of a "privay redirect" feature.
+;; It should eventually find its way into prot-eww.el.
 (defvar elfeed-show-entry)
 (declare-function elfeed-search-selected "elfeed")
 (declare-function elfeed-entry-link "elfeed")
+
+(defcustom prot-elfeed-privacy-redirect-alist
+  '(("www.reddit.com" . "libredd.it")
+    ("www.youtube.com" . "yewtu.be"))
+  "Alist of sites and their privacy-respecting alternatives."
+  :type 'alist
+  :group 'prot-elfeed)
 
 ;;;###autoload
 (defun prot-elfeed-show-eww (&optional link)
@@ -210,7 +219,12 @@ fail on poorly-designed websites."
   (let* ((entry (if (eq major-mode 'elfeed-show-mode)
                     elfeed-show-entry
                   (elfeed-search-selected :ignore-region)))
-         (link (or link (elfeed-entry-link entry))))
+         (link (or link (elfeed-entry-link entry)))
+         ;; TODO 2021-10-15: Consider other protocols
+         (base-link (replace-regexp-in-string "^https?://\\(.*?\\)/.*" "\\1" link)))
+    (when-let ((new-base (cdr (assoc base-link prot-elfeed-privacy-redirect-alist
+                                     (lambda (x regexp) (string-match-p regexp x))))))
+      (setq link (replace-regexp-in-string base-link new-base link)))
     (eww link)
     (add-hook 'eww-after-render-hook 'eww-readable nil t)))
 
