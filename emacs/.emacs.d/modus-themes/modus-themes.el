@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.6.0
-;; Last-Modified: <2021-10-12 10:16:40 +0300>
+;; Last-Modified: <2021-10-12 10:16:55 +0300>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -381,6 +381,7 @@
 ;;     vc-annotate (C-x v g)
 ;;     vdiff
 ;;     vertico
+;;     vertico-quick
 ;;     vimish-fold
 ;;     visible-mark
 ;;     visual-regexp
@@ -7620,6 +7621,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                :background ,@(pcase modus-themes-completions
                                                ('opinionated (list bg-active))
                                                (_ (list bg-inactive))))))
+;;;;; vertico-quick
+    `(vertico-quick1 ((,class :inherit (modus-themes-intense-magenta bold))))
+    `(vertico-quick2 ((,class :inherit (modus-themes-refine-cyan bold))))
 ;;;;; vimish-fold
     `(vimish-fold-fringe ((,class :foreground ,cyan-active)))
     `(vimish-fold-mouse-face ((,class :inherit modus-themes-intense-blue)))
