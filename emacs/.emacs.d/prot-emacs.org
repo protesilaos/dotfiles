@@ -281,19 +281,22 @@ use elsewhere.
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
   (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
-  (setq prot-simple-focusable-help-commands
-        '( describe-symbol
-           describe-function
-           describe-mode
-           describe-variable
-           describe-key
-           describe-char
-           what-cursor-position
-           describe-package
-           view-lossage))
   (setq prot-simple-scratch-buffer-default-mode 'markdown-mode)
+  (setq help-window-select t)
 
-  (prot-simple-focus-help-buffers 1)
+  ;; ;; DEPRECATED 2021-10-15: set `help-window-select' to non-nil.
+  ;; (setq prot-simple-focusable-help-commands
+  ;;       '( describe-symbol
+  ;;          describe-function
+  ;;          describe-mode
+  ;;          describe-variable
+  ;;          describe-key
+  ;;          describe-char
+  ;;          what-cursor-position
+  ;;          describe-package
+  ;;          view-lossage))
+  ;; (prot-simple-focus-help-buffers 1)
+
   (prot-simple-rename-help-buffers 1)
 
   ;; General commands
@@ -5007,7 +5010,8 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-read-date-prefer-future 'time)
 
 ;;;; links
-  (setq org-link-keep-stored-after-insertion t)
+  (setq org-link-keep-stored-after-insertion nil)
+  ;; TODO 2021-10-15 org-link-make-description-function
 
   ;; See my prot-pulse.el for what this does.  Basically it recentres
   ;; the window the way I like and pulse the line at point to make it
