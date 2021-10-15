@@ -58,6 +58,9 @@
 
 ;;;; Basic setup
 
+;; TODO 2021-10-15: Deprecate this in favour of what we added to Emacs29.
+;; <https://protesilaos.com/codelog/2021-10-15-emacs-29-eww-rename-buffers/>.
+
 (defun prot-eww--rename-buffer ()
   "Rename EWW buffer using page title or URL.
 To be used by `eww-after-render-hook'."
