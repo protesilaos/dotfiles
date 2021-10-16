@@ -22,19 +22,22 @@
   (setq prot-simple-date-specifier "%F")
   (setq prot-simple-time-specifier "%R %z")
   (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
-  (setq prot-simple-focusable-help-commands
-        '( describe-symbol
-           describe-function
-           describe-mode
-           describe-variable
-           describe-key
-           describe-char
-           what-cursor-position
-           describe-package
-           view-lossage))
   (setq prot-simple-scratch-buffer-default-mode 'markdown-mode)
+  (setq help-window-select t)
 
-  (prot-simple-focus-help-buffers 1)
+  ;; ;; DEPRECATED 2021-10-15: set `help-window-select' to non-nil.
+  ;; (setq prot-simple-focusable-help-commands
+  ;;       '( describe-symbol
+  ;;          describe-function
+  ;;          describe-mode
+  ;;          describe-variable
+  ;;          describe-key
+  ;;          describe-char
+  ;;          what-cursor-position
+  ;;          describe-package
+  ;;          view-lossage))
+  ;; (prot-simple-focus-help-buffers 1)
+
   (prot-simple-rename-help-buffers 1)
 
   ;; General commands
@@ -260,12 +263,12 @@
                      :variable-pitch-height 1.0
                      :variable-pitch-regular-weight normal))
 
-          (regular . ( :fixed-pitch-family "Iosevka Comfy"
-                       :fixed-pitch-regular-weight book
-                       :fixed-pitch-heavy-weight extrabold
-                       :fixed-pitch-height 100
+          (regular . ( :fixed-pitch-family "Hack"
+                       :fixed-pitch-regular-weight regular
+                       :fixed-pitch-heavy-weight bold
+                       :fixed-pitch-height 90
                        :fixed-pitch-line-spacing nil
-                       :variable-pitch-family "Noto Serif"
+                       :variable-pitch-family "DejaVu Serif"
                        :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
@@ -1622,7 +1625,8 @@ sure this is a good approach."
   (setq org-read-date-prefer-future 'time)
 
 ;;;; links
-  (setq org-link-keep-stored-after-insertion t)
+  (setq org-link-keep-stored-after-insertion nil)
+  ;; TODO 2021-10-15 org-link-make-description-function
 
   ;; See my prot-pulse.el for what this does.  Basically it recentres
   ;; the window the way I like and pulse the line at point to make it
