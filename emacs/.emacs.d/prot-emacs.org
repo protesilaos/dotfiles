@@ -675,13 +675,14 @@ small shape of the backtick character, misaligned at-sign...  Little
 things which keep annoying me.  Furthermore, Hack's open shapes are
 optimised for small point sizes, which makes it look a bit awkard when
 scaled up.  Again, another nit pick.  My [[https://gitlab.com/protesilaos/hack-font-mod][custom build of Hack]] (which I
-implement for smaller sizes) uses some alternative glyphs that alleviate
-some of those problems, but it cannot undo the overall character of the
-typeface (e.g. the open shapes).  To that end, I maintain a custom build
-of Iosevka which has a different line height than the original typeface,
-specifies the proportions and weights I want, and has different glyphs
-for roman and italic variants in order to match my aesthetic preferences
-and look good at larger point sizes.  I call it [[https://gitlab.com/protesilaos/iosevka-comfy][Iosevka Comfy]].
+implement for smaller sizes) uses some alternative glyphs from a variety
+of sources that alleviate most of those problems, but it cannot undo the
+overall character of the typeface.  To that end, I also maintain a
+custom build of Iosevka which has a different line height than its
+original typeface, specifies the proportions and weights I want to be
+consistent with my variant of Hack, and has different glyphs for roman
+and italic variants in order to match my aesthetic preferences and look
+good at larger point sizes.  I call it [[https://gitlab.com/protesilaos/iosevka-comfy][Iosevka Comfy]].
 
 Moving on to my configurations, =prot-fonts.el= covers my elaborate
 typeface requirements.  At its heart is =prot-fonts-typeface-sets-alist=.
@@ -778,12 +779,12 @@ Relevant publications of mine that are not part of this document:
                      :variable-pitch-height 1.0
                      :variable-pitch-regular-weight normal))
 
-          (regular . ( :fixed-pitch-family "Iosevka Comfy"
-                       :fixed-pitch-regular-weight book
-                       :fixed-pitch-heavy-weight extrabold
-                       :fixed-pitch-height 100
+          (regular . ( :fixed-pitch-family "Hack"
+                       :fixed-pitch-regular-weight regular
+                       :fixed-pitch-heavy-weight bold
+                       :fixed-pitch-height 90
                        :fixed-pitch-line-spacing nil
-                       :variable-pitch-family "Noto Serif"
+                       :variable-pitch-family "DejaVu Serif"
                        :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
