@@ -36,6 +36,7 @@
 
 (eval-when-compile (require 'subr-x))
 (require 'elfeed nil t)
+(require 'url-util)
 (require 'prot-common)
 
 (defgroup prot-elfeed ()
@@ -204,15 +205,24 @@ and will be created if it does not exist."
 
 (defcustom prot-elfeed-privacy-redirect-alist
   '(("www.reddit.com" . "libredd.it")
-    ("www.youtube.com" . "yewtu.be"))
-  "Alist of sites and their privacy-respecting alternatives."
+    ("www.youtube.com" . "yewtu.be")
+    ;; Some sites block the proxy sites (e.g., Instagram) if they make
+    ;; too many requests. In those cases a user may want to specify
+    ;; something like this:
+    ("www.instagram.com" . (lambda ()
+                             (let ((sequence '("bibliogram.snopyta.org"
+                                               "bibliogram.org"
+                                               "insta.trom.tf")))
+                               (seq-elt sequence (random (length sequence)))))))
+  "Alist of sites and their privacy-respecting alternatives.
+Alist KEY must be string.  VALUE can either be a string or a
+thunk (function with no arguments) that returns a string."
   :type 'alist
   :group 'prot-elfeed)
 
 ;;;###autoload
 (defun prot-elfeed-show-eww (&optional link)
   "Browse current entry's link or optional LINK in `eww'.
-
 Only show the readable part once the website loads.  This can
 fail on poorly-designed websites."
   (interactive)
@@ -220,12 +230,17 @@ fail on poorly-designed websites."
                     elfeed-show-entry
                   (elfeed-search-selected :ignore-region)))
          (link (or link (elfeed-entry-link entry)))
-         ;; TODO 2021-10-15: Consider other protocols
-         (base-link (replace-regexp-in-string "^https?://\\(.*?\\)/.*" "\\1" link)))
-    (when-let ((new-base (cdr (assoc base-link prot-elfeed-privacy-redirect-alist
-                                     (lambda (x regexp) (string-match-p regexp x))))))
-      (setq link (replace-regexp-in-string base-link new-base link)))
-    (eww link)
+         (parsed-url (url-generic-parse-url link))
+         (replacement (alist-get (url-host parsed-url)
+                                 prot-elfeed-privacy-redirect-alist
+                                 nil
+                                 nil
+                                 #'equal)))
+    (setq replacement (if (functionp replacement)
+                          (funcall replacement)
+                        replacement))
+    (setf (url-host parsed-url) replacement)
+    (eww (url-recreate-url parsed-url))
     (add-hook 'eww-after-render-hook 'eww-readable nil t)))
 
 (declare-function elfeed-search-untag-all-unread "elfeed")
