@@ -531,7 +531,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', `padded'.
-        modus-themes-mode-line '(padded accented borderless) ; For Moody, also check `prot-moody'
+        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
 
         ;; This one only works when `modus-themes-mode-line' (above) has
         ;; the `padded' property.  It takes a positive integer.
@@ -545,12 +545,12 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(intense underline)
+        modus-themes-hl-line nil
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold intense)
+        modus-themes-paren-match '(bold)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -562,36 +562,39 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(italic)
+        modus-themes-prompts '(bold italic gray background)
 
-        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
+        modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
         modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend bg-only)
+        modus-themes-region '(no-extend bg-only accented)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'fg-only-deuteranopia
+        modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
-        modus-themes-org-agenda ; this is an alist: read the manual or its doc string
+        ;; This is an alist: read the manual or its doc string.
+        modus-themes-org-agenda
         '((header-block . (variable-pitch scale-title))
           (header-date . (bold-today scale-heading ))
           (event . (accented italic))
           (scheduled . uniform)
           (habit . traffic-light-deuteranopia))
 
-        modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . (overline))
-          (2 . (overline))
-          (3 . (rainbow overline))
-          (4 . (rainbow no-bold overline)))
-
+        ;; This is an alist: read the manual or its doc string.
+        modus-themes-headings
+        ;; '((1 . (overline))
+        ;;   (2 . (overline))
+        ;;   (3 . (rainbow overline))
+        ;;   (t . (rainbow no-bold overline)))
+        '((t . (no-bold background overline)))
+        
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
         modus-themes-scale-headings t
