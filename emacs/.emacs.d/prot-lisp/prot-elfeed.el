@@ -236,11 +236,14 @@ fail on poorly-designed websites."
                                  nil
                                  nil
                                  #'equal)))
-    (setq replacement (if (functionp replacement)
-                          (funcall replacement)
-                        replacement))
-    (setf (url-host parsed-url) replacement)
-    (eww (url-recreate-url parsed-url))
+    (if replacement
+        (progn
+          (setq replacement (if (functionp replacement)
+                                (funcall replacement)
+                              replacement))
+          (setf (url-host parsed-url) replacement)
+          (eww (url-recreate-url parsed-url)))
+      (eww link))
     (add-hook 'eww-after-render-hook 'eww-readable nil t)))
 
 (declare-function elfeed-search-untag-all-unread "elfeed")
