@@ -104,7 +104,7 @@ label-foreground = ${colors.cyan}
 [module/notmuch]
 type = custom/script
 
-exec = notmuch count tag:unread and tag:inbox
+exec = ~/bin/polybar_notmuch_count
 
 ; Conditional command that, if defined, needs to exit successfully
 ; before the main exec command is invoked.
