@@ -125,8 +125,8 @@
         modus-themes-bold-constructs t
         modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers t
-        modus-themes-intense-markup t
-        modus-themes-success-deuteranopia t
+        modus-themes-intense-markup nil
+        modus-themes-success-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
@@ -155,7 +155,7 @@
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line nil
+        modus-themes-hl-line '(underline accented intense)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -172,22 +172,22 @@
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(bold italic gray background)
+        modus-themes-prompts '(bold italic intense)
 
-        modus-themes-completions nil ; {nil,'moderate,'opinionated}
+        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
         modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend bg-only accented)
+        modus-themes-region '(no-extend accented)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs nil
+        modus-themes-diffs 'desaturated
 
-        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
+        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
 
         ;; This is an alist: read the manual or its doc string.
         modus-themes-org-agenda
@@ -275,23 +275,23 @@
                        :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
-          (medium . ( :fixed-pitch-family "Iosevka Comfy"
-                      :fixed-pitch-regular-weight book
-                      :fixed-pitch-heavy-weight extrabold
-                      :fixed-pitch-height 105
-                      :fixed-pitch-line-spacing nil
-                      :variable-pitch-family "Noto Serif"
-                      :variable-pitch-height 1.0
-                      :variable-pitch-regular-weight normal))
-
-          (large . ( :fixed-pitch-family "Iosevka Comfy"
+          (large . ( :fixed-pitch-family "Hack"
                      :fixed-pitch-regular-weight normal
                      :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 135
+                     :fixed-pitch-height 130
                      :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "Noto Serif"
+                     :variable-pitch-family "DejaVu Serif"
                      :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))))
+                     :variable-pitch-regular-weight normal))
+
+          (large-alt . ( :fixed-pitch-family "Iosevka Comfy"
+                         :fixed-pitch-regular-weight book
+                         :fixed-pitch-heavy-weight extrabold
+                         :fixed-pitch-height 135
+                         :fixed-pitch-line-spacing nil
+                         :variable-pitch-family "Noto Serif"
+                         :variable-pitch-height 1.0
+                         :variable-pitch-regular-weight normal))))
 
   ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
   ;; are not relevant, but I keep them around as the idea is still good.
@@ -362,7 +362,7 @@
   (setq marginalia-max-relative-age 0)  ; time is absolute here!
   (marginalia-mode 1))
 
-;;; Minibuffer configurations and extras (prot-minibuffer.el)
+;;; Minibuffer configurations and my extras (mct.el)
 (prot-emacs-builtin-package 'minibuffer
   (setq completion-styles
         '(substring initials flex partial-completion orderless))
@@ -372,15 +372,8 @@
   (setq completion-flex-nospace nil)
   (setq completion-pcm-complete-word-inserts-delimiters nil)
   (setq completion-pcm-word-delimiters "-_./:| ")
-  (setq completion-show-help nil)
-  (setq completion-auto-help t)
   (setq completion-ignore-case t)
   (setq-default case-fold-search t)   ; For general regexp
-
-  ;; The following two are updated in Emacs 28.  They concern the
-  ;; *Completions* buffer.
-  (setq completions-format 'one-column)
-  (setq completions-detailed t)
 
   ;; Grouping of completions for Emacs 28
   (setq completions-group t)
@@ -405,86 +398,34 @@
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
-
-  (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
-
-  (let ((map completion-list-mode-map))
-    (define-key map (kbd "<tab>") #'choose-completion)
-    (define-key map (kbd "M-v") #'scroll-down-command))
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "C-j") #'exit-minibuffer)
-    (define-key map (kbd "<tab>") #'minibuffer-force-complete))
+  
   (let ((map minibuffer-local-must-match-map))
     ;; I use this prefix for other searches
     (define-key map (kbd "M-s") nil)))
 
-(prot-emacs-builtin-package 'prot-minibuffer
-  (setq-default prot-minibuffer-mini-cursors t) ; also check `prot-cursor.el'
-  (setq prot-minibuffer-remove-shadowed-file-names t)
-  (setq prot-minibuffer-minimum-input 3)
-  (setq prot-minibuffer-live-update-delay 0.6)
+;; Source: <https://gitlab.com/protesilaos/mct.el>.
+;; Manual: <https://protesilaos.com/emacs/mct>.
+(prot-emacs-builtin-package 'mct
+  (setq mct-remove-shadowed-file-names t) ; when `file-name-shadow-mode' is enabled
+  (setq mct-hide-completion-mode-line t)
+  (setq mct-show-completion-line-numbers nil)
+  (setq mct-apply-completion-stripes t)
+  (setq mct-minimum-input 3)
+  (setq mct-live-update-delay 0.6)
+  (setq mct-completion-blocklist nil)
+  (setq mct-completion-passlist
+        '( embark-prefix-help-command Info-goto-node
+           Info-index Info-menu vc-retrieve-tag
+           prot-bookmark-cd-bookmark
+           prot-bongo-playlist-insert-playlist-file))
 
-  ;; ;; NOTE: `prot-minibuffer-completion-blocklist' can be used for
-  ;; ;; commands with lots of candidates, depending also on how low
-  ;; ;; `prot-minibuffer-minimum-input' is.  With my current settings,
-  ;; ;; this is not required, otherwise I would use this list:
-  ;;
-  ;; '( describe-symbol describe-function
-  ;;    describe-variable execute-extended-command
-  ;;    insert-char)
-  (setq prot-minibuffer-completion-blocklist nil)
+  (mct-mode 1)
 
-  ;; This is for commands that should always pop up the completions'
-  ;; buffer.  It circumvents the default method of waiting for some user
-  ;; input (see `prot-minibuffer-minimum-input') before displaying and
-  ;; updating the completions' buffer.
-  (setq prot-minibuffer-completion-passlist
-        '( vc-retrieve-tag embark-prefix-help-command org-capture
-           prot-bongo-playlist-insert-playlist-file
-           prot-bookmark-cd-bookmark))
-
-  (define-key global-map (kbd "C-x :") #'prot-minibuffer-focus-mini-or-completions)
-  (let ((map completion-list-mode-map))
-    (define-key map (kbd "h") #'prot-simple-describe-symbol) ; from `prot-simple.el'
-    (define-key map (kbd "M-g") #'prot-minibuffer-choose-completion-number)
-    (define-key map (kbd "M-e") #'prot-minibuffer-edit-completion)
-    (define-key map (kbd "C-g") #'prot-minibuffer-keyboard-quit-dwim)
-    (define-key map (kbd "C-n") #'prot-minibuffer-next-completion-or-mini)
-    (define-key map (kbd "<down>") #'prot-minibuffer-next-completion-or-mini)
-    (define-key map (kbd "C-p") #'prot-minibuffer-previous-completion-or-mini)
-    (define-key map (kbd "<up>") #'prot-minibuffer-previous-completion-or-mini)
-    (define-key map (kbd "<right>") #'prot-minibuffer-completion-next-group)
-    (define-key map (kbd "<left>") #'prot-minibuffer-completion-previous-group)
-    (define-key map (kbd "<return>") #'prot-minibuffer-choose-completion-exit)
-    (define-key map (kbd "<M-return>") #'prot-minibuffer-choose-completion-dwim)
-    (define-key map (kbd "M-<") #'prot-minibuffer-beginning-of-buffer)
-    ;; Those are generic actions for the "*Completions*" buffer, though
-    ;; I normally use `embark'.
-    (define-key map (kbd "w") #'prot-minibuffer-completions-kill-symbol-at-point)
-    (define-key map (kbd "i") #'prot-minibuffer-completions-insert-symbol-at-point)
-    (define-key map (kbd "j") #'prot-minibuffer-completions-insert-symbol-at-point-exit))
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "M-g") #'prot-minibuffer-choose-completion-number)
-    (define-key map (kbd "M-e") #'prot-minibuffer-edit-completion)
-    (define-key map (kbd "C-n") #'prot-minibuffer-switch-to-completions-top)
-    (define-key map (kbd "<down>") #'prot-minibuffer-switch-to-completions-top)
-    (define-key map (kbd "C-p") #'prot-minibuffer-switch-to-completions-bottom)
-    (define-key map (kbd "<up>") #'prot-minibuffer-switch-to-completions-bottom)
-    (define-key map (kbd "C-l") #'prot-minibuffer-toggle-completions)) ; "list" mnemonic
-  (let ((map minibuffer-local-filename-completion-map))
-    (define-key map (kbd "<backspace>") #'prot-minibuffer-backward-updir))
-
-  (add-hook 'minibuffer-setup-hook #'prot-minibuffer-mini-cursor)
-  (let ((hook 'completion-list-mode-hook))
-    (add-hook hook #'prot-minibuffer-completions-cursor)
-    (add-hook hook #'prot-minibuffer-hl-line)
-    (add-hook hook #'prot-minibuffer-completions-stripes)
-    (add-hook hook #'prot-minibuffer-display-line-numbers)))
+  (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions))
 
 ;;; Enhanced minibuffer commands (consult.el and prot-consult.el)
 (prot-emacs-elpa-package 'consult
   (setq consult-line-numbers-widen t)
-  ;; ;; FIXME 2021-04-10: This does not work with `prot-minibuffer.el'.
   ;; (setq completion-in-region-function #'consult-completion-in-region)
   (setq consult-async-min-input 3)
   (setq consult-async-input-debounce 0.5)
@@ -1004,8 +945,7 @@
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (side . bottom)
            (slot . 0)
-           (window-parameters . ((no-other-window . t)
-                                 (mode-line-format . none))))
+           (window-parameters . ((no-other-window . t))))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
