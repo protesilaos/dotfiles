@@ -470,7 +470,7 @@ minibuffer."
   "Show line numbers and select one of them."
   (with-current-buffer "*Completions*"
     (let ((mct-show-completion-line-numbers t))
-      (if display-line-numbers-mode
+      (if (bound-and-true-p display-line-numbers-mode)
           (mct-goto-line)
         (unwind-protect
             (progn
@@ -645,18 +645,16 @@ To be assigned to `minibuffer-setup-hook'."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "<tab>") #'choose-completion)
     (define-key map (kbd "M-v") #'scroll-down-command)
-    (define-key map (kbd "M-g M-g") #'mct-choose-completion-number)
+    (define-key map [remap goto-line] #'mct-choose-completion-number)
     (define-key map (kbd "M-e") #'mct-edit-completion)
-    (define-key map (kbd "C-g") #'mct-keyboard-quit-dwim)
-    (define-key map (kbd "C-n") #'mct-next-completion-or-mini)
+    (define-key map [remap keyboard-quit] #'mct-keyboard-quit-dwim)
+    (define-key map [remap next-line] #'mct-next-completion-or-mini)
     (define-key map (kbd "n") #'mct-next-completion-or-mini)
-    (define-key map (kbd "<down>") #'mct-next-completion-or-mini)
-    (define-key map (kbd "C-p") #'mct-previous-completion-or-mini)
+    (define-key map [remap previous-line] #'mct-previous-completion-or-mini)
     (define-key map (kbd "p") #'mct-previous-completion-or-mini)
-    (define-key map (kbd "<up>") #'mct-previous-completion-or-mini)
     (define-key map (kbd "<return>") #'mct-choose-completion-exit)
     (define-key map (kbd "<M-return>") #'mct-choose-completion-dwim)
-    (define-key map (kbd "M-<") #'mct-beginning-of-buffer)
+    (define-key map [remap beginning-of-buffer] #'mct-beginning-of-buffer)
     map)
   "Derivative of `completion-list-mode-map'.")
 
@@ -664,7 +662,7 @@ To be assigned to `minibuffer-setup-hook'."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-j") #'exit-minibuffer)
     (define-key map (kbd "<tab>") #'minibuffer-force-complete)
-    (define-key map (kbd "M-g M-g") #'mct-choose-completion-number)
+    (define-key map [remap goto-line] #'mct-choose-completion-number)
     (define-key map (kbd "M-e") #'mct-edit-completion)
     (define-key map (kbd "C-n") #'mct-switch-to-completions-top)
     (define-key map (kbd "<down>") #'mct-switch-to-completions-top)
