@@ -1113,7 +1113,7 @@ meant to be framework-agnostic, so it works with Selectrum, Icomplete
 vertical, Embark's completions buffer, as well as the default
 completions' buffer (as of 2021-04-02, the latter is my choice for
 visualising the standard minibuffer completion candidates---refer to
-[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]]).
+[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]]).
 
 #+begin_src emacs-lisp
 ;;; Completion annotations (marginalia)
@@ -1122,7 +1122,7 @@ visualising the standard minibuffer completion candidates---refer to
   (marginalia-mode 1))
 #+end_src
 
-*** Minibuffer configurations and extras (prot-minibuffer.el)
+*** Minibuffer configurations and my extras (mct.el)
 :PROPERTIES:
 :CUSTOM_ID: h:c110e399-3f43-4555-8427-b1afe44c0779
 :END:
@@ -1158,37 +1158,35 @@ experience was with Embark.  However, as of 2021-04-02 I realised that
 Emacs version 28 comes with a built-in way to render =*Completions*= in a
 vertical list, one item per line.  So equipped with my knowledge of
 extending Embark, I implemented a layer of interactivity that, I feel,
-is just as good as what other frameworks provide.  The technicalities
-are in the =prot-minibuffer.el= file, which is reproduced after the
-following code block, while the placement and properties of the
-=*Completions*= buffer is controlled by the =display-buffer-alist= (refer to
-[[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
+is just as good as what other frameworks provide.  As of 2021-10-22 this
+is its own package, called "Minibuffer and Completions in Tandem", else
+MCT (or variants).  The technicalities are in the =mct.el= file, which is
+reproduced after the following code block, while the placement and
+properties of the =*Completions*= buffer is controlled by the
+=display-buffer-alist= (refer to [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
 
-What my completion selection interface does in a nutshell:
+What my completion selection interface does in outline:
 
 + When minibuffer completion is invoked, a live updating =*Completions*=
   buffer is placed right above the minibuffer, displaying all completion
   candidates in a vertical list (meta data provided by Marginalia:
   [[#h:09d657c7-eb4d-4fe3-987a-4a2cf419bb40][Completion annotations (marginalia)]]).  This only happens after some
   input has been provided, otherwise all you see is an empty minibuffer
-  (though =prot-minibuffer-toggle-completions= or any of the cycling
-  motions will display the candidates).
+  (though =mct-list-completions-toggle= or any of the cycling motions will
+  display the candidates).
 
-  - The length of minimum input that triggers live completions when met or
-    hides them when unmatched is controlled by the variable
-    =prot-minibuffer-minimum-input=.
+  - The length of minimum input that triggers live completions when met
+    or hides them when unmatched is controlled by the variable
+    =mct-minimum-input=.
 
-  - =prot-minibuffer-live-update-delay= controls how fast the
-    live-updating Completions should respond to minibuffer input.  I
-    find that a short delay is better than none, because I usually type
-    something quickly and do not need to peruse candidates in the
-    meantime.
+  - =mct-live-update-delay= controls how fast the live-updating
+    Completions should respond to minibuffer input.  I find that a short
+    delay is better than none, because I usually type something quickly
+    and do not need to peruse candidates in the meantime.
 
-  - There are two variables =prot-minibuffer-completion-blocklist= and
-    =prot-minibuffer-completion-passlist= that can be used to disable live
-    completions altogether for select commands or bypass the minimum
-    input threshold and the delay.  I do not use those in practice,
-    because the minimum input and the delay are good enough for my case.
+  - There =mct-completion-blocklist= and =mct-completion-passlist= that can
+    be used to disable live completions altogether for select commands
+    or bypass the minimum input threshold and the delay.
 
 + Using up/down motions or =C-n= and =C-p=, we can seamlessly switch from
   the minibuffer to the completions and vice versa by treating the two
@@ -1213,27 +1211,21 @@ What my completion selection interface does in a nutshell:
   when I call =C-x C-f= from this file, so typing =~/.em<tab>= completes
   =~/.emacs.d/= and continues with the contents of that directory.  Use
   =undo= (=C-/=) when you mistype something.  This "file name shadowing"
-  works while =file-name-shadow-mode= is enabled.  User of Icomplete will
-  be familiar with this functionality.
+  works while =file-name-shadow-mode= is enabled.
 
-+ For file name completion, the =M-backspace= exhibits a "do-what-I-mean"
-  behaviour (=prot-minibuffer-backward-updir=): when point is after a
-  character, the backspace will just delete it as usual, but when it
-  finds a directory signified by =/= it will instead remove the entirety
-  of it.  As such, =path/to/some/file/= with point at the very end will
-  delete =file/= and so on.  This is what the built-in Ido mode does and
-  what Fido mode re-implements for Icomplete.
-
-+ By default, hitting =RET= in the =*Completions*= buffer will take the
-  candidate and place it in the minibuffer.  To actually complete the
-  process, you need to confirm it again from there.  I prefer to take a
-  shortcut, hence =prot-minibuffer-choose-completion-exit=.
++ For file name completion, the =backspace= key exhibits a "do what I
+  mean" behaviour (=mct-backward-updir=): when point is after a character,
+  the backspace will just delete it as usual, but when it finds a
+  directory signified by =/= it will instead remove the entirety of it.
+  As such, =path/to/some/file/= with point at the very end will delete
+  =file/= and so on.  This is what the built-in Ido mode does and what
+  Fido mode re-implements for Icomplete.
 
 + While we normally type in the minibuffer for narrowing and use the
   =*Completions*= to pick a candidate, we can also operate directly from
-  the latter.  =prot-minibuffer-choose-completion-dwim= lets you append a
-  candidate to the minibuffer and to act on it depending on the context.
-  For completing buffers, this command will just switch to the desired
+  the latter.  =mct-choose-completion-dwim= lets you append a candidate to
+  the minibuffer and to act on it depending on the context.  For
+  completing buffers, this command will just switch to the desired
   buffer.  For file names, it will append the path, and stay in the
   =*Completions*= from where we can append a candidate among those in the
   new list.  Though my favourite mode of action is while interfacing
@@ -1249,33 +1241,18 @@ What my completion selection interface does in a nutshell:
   date.
 
 + Another way to pick a completion is to target its line number.  This
-  is done with =prot-minibuffer-choose-completion-number= which expects a
-  prefix numeric argument and can be called from either the minibuffer
-  or the Completions' buffer.  For completeness, a numeric argument is
-  expressed in the form of =C-u NUMBER=, though you can just hold down
-  Ctrl or Meta hit a number and call the command.  If the number is
-  multiple digits long, start the prefix as usual, release the modifier
-  key and continue inputting numbers (e.g. =M-5 0 1= is equal to =C-u 501=).
+  is done with =mct-choose-completion-number= which prompts for a number
+  while displaying the line numbers in the Completions' buffer.  It can
+  be called from either the minibuffer or the Completions' buffer.
 
-+ The current completion candidate can be edited with =M-e=, which calls
-  the command =prot-minibuffer-edit-completion=.  This works when we are
-  in the =*Completions*= buffer or in the minibuffer with the Completions
-  being visible.  The utility of this feature is obvious in contexts
-  where you can insert text that does not match any of the candidates
-  yet which counts as valid input (e.g. if a file =hello= exists, you can
-  put point over the candidate, =M-e=, and expand it to =hello-world=---my
-  common use-case is to edit URLs from my history of visited web pages:
++ The current completion candidate in the Completions' buffer can be
+  edited with =M-e=, which calls the command =mct-edit-completion=.  The
+  utility of this feature is obvious in contexts where you can insert
+  text that does not match any of the candidates yet which counts as
+  valid input (e.g. if a file =hello= exists, you can put point over the
+  candidate, =M-e=, and expand it to =hello-world=---though my most common
+  use-case is to edit URLs from my history of visited web pages in EWW:
   [[#h:524bc702-ff55-4ed9-9a38-26d30d64591d][Emacs Web Wowser (eww), Elpher, and prot-eww.el]]).
-
-+ There are a couple of commands that cycle through /completion groups/,
-  as those are defined in Emacs 28 and supported by such packages as
-  [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Daniel Mendler's Consult]].  =prot-minibuffer-completion-next-group= is
-  bound to the =right= arrow key in the Completions' buffer while its
-  counterpart is on the =left= arrow.  The commands are copied from the
-  blog post of James Norman Vladimir Cash [[https://occasionallycogent.com/emacs_new_completions_helper/index.html][Emacs Completes Me]]
-  (2021-07-25).  With those we can jump through grouped results, such as
-  when we invoke =consult-imenu= and need to move directly to the section
-  with the functions.
 
 Finally, here is an overview of the settings covered herein:
 
@@ -1309,11 +1286,8 @@ Finally, here is an overview of the settings covered herein:
   represented as a number, next to the minibuffer prompt, if a recursive
   edit is in progress (also check [[#h:bb707bec-bcaf-44d0-bb82-1ed6bb0cb33b][Mode line recursion indicators]]).
 
-+ Key bindings :: The key bindings in the pattern of =s-KEY= follow the
-  principles I outline in my [[#h:fbba4dea-9cc8-4e73-bffa-02aab10a6703][note about the use of the Super key]].  They
-  are included here because they are related to minibuffer-centric
-  actions.  As for the various keys to perform completion, we have the
-  following:
++ Key bindings :: As for the various keys to perform completion, we have
+  the following:
 
   - The =RET= key always chooses the current candidate and exits,
     regardless of whether it is called from inside the minibuffer or
@@ -1342,13 +1316,8 @@ several months of full time usage, I am confident in the built-in
 mechanism's ability to sort things well enough and to surface the
 results I am most likely interested in, based on previous selections.
 
-Finally, the =prot-minibuffer.el= file contains tweaks for the cursor's
-appearance, depending on whether it is in the minibuffer or the
-completions' buffer.  The idea is to make the focus more noticeable.
-For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks]].
-
 #+begin_src emacs-lisp
-;;; Minibuffer configurations and extras (prot-minibuffer.el)
+;;; Minibuffer configurations and my extras (mct.el)
 (prot-emacs-builtin-package 'minibuffer
   (setq completion-styles
         '(substring initials flex partial-completion orderless))
@@ -1358,15 +1327,8 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (setq completion-flex-nospace nil)
   (setq completion-pcm-complete-word-inserts-delimiters nil)
   (setq completion-pcm-word-delimiters "-_./:| ")
-  (setq completion-show-help nil)
-  (setq completion-auto-help t)
   (setq completion-ignore-case t)
   (setq-default case-fold-search t)   ; For general regexp
-
-  ;; The following two are updated in Emacs 28.  They concern the
-  ;; *Completions* buffer.
-  (setq completions-format 'one-column)
-  (setq completions-detailed t)
 
   ;; Grouping of completions for Emacs 28
   (setq completions-group t)
@@ -1391,86 +1353,35 @@ For everything else, check [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor app
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
-
-  (add-hook 'completion-list-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
-
-  (let ((map completion-list-mode-map))
-    (define-key map (kbd "<tab>") #'choose-completion)
-    (define-key map (kbd "M-v") #'scroll-down-command))
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "C-j") #'exit-minibuffer)
-    (define-key map (kbd "<tab>") #'minibuffer-force-complete))
+  
   (let ((map minibuffer-local-must-match-map))
     ;; I use this prefix for other searches
     (define-key map (kbd "M-s") nil)))
 
-(prot-emacs-builtin-package 'prot-minibuffer
-  (setq-default prot-minibuffer-mini-cursors t) ; also check `prot-cursor.el'
-  (setq prot-minibuffer-remove-shadowed-file-names t)
-  (setq prot-minibuffer-minimum-input 3)
-  (setq prot-minibuffer-live-update-delay 0.6)
+;; Source: <https://gitlab.com/protesilaos/mct.el>.
+;; Manual: <https://protesilaos.com/emacs/mct>.
+(prot-emacs-builtin-package 'mct
+  (setq mct-remove-shadowed-file-names t) ; when `file-name-shadow-mode' is enabled
+  (setq mct-hide-completion-mode-line t)
+  (setq mct-show-completion-line-numbers nil)
+  (setq mct-apply-completion-stripes t)
+  (setq mct-minimum-input 3)
+  (setq mct-live-update-delay 0.6)
+  (setq mct-completion-blocklist nil)
+  (setq mct-completion-passlist
+        '( embark-prefix-help-command Info-goto-node
+           Info-index Info-menu vc-retrieve-tag
+           prot-bookmark-cd-bookmark
+           prot-bongo-playlist-insert-playlist-file))
 
-  ;; ;; NOTE: `prot-minibuffer-completion-blocklist' can be used for
-  ;; ;; commands with lots of candidates, depending also on how low
-  ;; ;; `prot-minibuffer-minimum-input' is.  With my current settings,
-  ;; ;; this is not required, otherwise I would use this list:
-  ;;
-  ;; '( describe-symbol describe-function
-  ;;    describe-variable execute-extended-command
-  ;;    insert-char)
-  (setq prot-minibuffer-completion-blocklist nil)
+  (mct-mode 1)
 
-  ;; This is for commands that should always pop up the completions'
-  ;; buffer.  It circumvents the default method of waiting for some user
-  ;; input (see `prot-minibuffer-minimum-input') before displaying and
-  ;; updating the completions' buffer.
-  (setq prot-minibuffer-completion-passlist
-        '( vc-retrieve-tag embark-prefix-help-command org-capture
-           prot-bongo-playlist-insert-playlist-file
-           prot-bookmark-cd-bookmark))
-
-  (define-key global-map (kbd "C-x :") #'prot-minibuffer-focus-mini-or-completions)
-  (let ((map completion-list-mode-map))
-    (define-key map (kbd "h") #'prot-simple-describe-symbol) ; from `prot-simple.el'
-    (define-key map (kbd "M-g") #'prot-minibuffer-choose-completion-number)
-    (define-key map (kbd "M-e") #'prot-minibuffer-edit-completion)
-    (define-key map (kbd "C-g") #'prot-minibuffer-keyboard-quit-dwim)
-    (define-key map (kbd "C-n") #'prot-minibuffer-next-completion-or-mini)
-    (define-key map (kbd "<down>") #'prot-minibuffer-next-completion-or-mini)
-    (define-key map (kbd "C-p") #'prot-minibuffer-previous-completion-or-mini)
-    (define-key map (kbd "<up>") #'prot-minibuffer-previous-completion-or-mini)
-    (define-key map (kbd "<right>") #'prot-minibuffer-completion-next-group)
-    (define-key map (kbd "<left>") #'prot-minibuffer-completion-previous-group)
-    (define-key map (kbd "<return>") #'prot-minibuffer-choose-completion-exit)
-    (define-key map (kbd "<M-return>") #'prot-minibuffer-choose-completion-dwim)
-    (define-key map (kbd "M-<") #'prot-minibuffer-beginning-of-buffer)
-    ;; Those are generic actions for the "*Completions*" buffer, though
-    ;; I normally use `embark'.
-    (define-key map (kbd "w") #'prot-minibuffer-completions-kill-symbol-at-point)
-    (define-key map (kbd "i") #'prot-minibuffer-completions-insert-symbol-at-point)
-    (define-key map (kbd "j") #'prot-minibuffer-completions-insert-symbol-at-point-exit))
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "M-g") #'prot-minibuffer-choose-completion-number)
-    (define-key map (kbd "M-e") #'prot-minibuffer-edit-completion)
-    (define-key map (kbd "C-n") #'prot-minibuffer-switch-to-completions-top)
-    (define-key map (kbd "<down>") #'prot-minibuffer-switch-to-completions-top)
-    (define-key map (kbd "C-p") #'prot-minibuffer-switch-to-completions-bottom)
-    (define-key map (kbd "<up>") #'prot-minibuffer-switch-to-completions-bottom)
-    (define-key map (kbd "C-l") #'prot-minibuffer-toggle-completions)) ; "list" mnemonic
-  (let ((map minibuffer-local-filename-completion-map))
-    (define-key map (kbd "<backspace>") #'prot-minibuffer-backward-updir))
-
-  (add-hook 'minibuffer-setup-hook #'prot-minibuffer-mini-cursor)
-  (let ((hook 'completion-list-mode-hook))
-    (add-hook hook #'prot-minibuffer-completions-cursor)
-    (add-hook hook #'prot-minibuffer-hl-line)
-    (add-hook hook #'prot-minibuffer-completions-stripes)
-    (add-hook hook #'prot-minibuffer-display-line-numbers)))
+  (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions))
 #+end_src
 
-And here is =prot-minibuffer.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+And here is =mct.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
 
-#+include: prot-lisp/prot-minibuffer.el src emacs-lisp :tangle no
+#+include: prot-lisp/mct.el src emacs-lisp :tangle no
 
 *** Enhanced minibuffer commands (consult.el and prot-consult.el)
 :PROPERTIES:
@@ -1610,7 +1521,6 @@ try.
 ;;; Enhanced minibuffer commands (consult.el and prot-consult.el)
 (prot-emacs-elpa-package 'consult
   (setq consult-line-numbers-widen t)
-  ;; ;; FIXME 2021-04-10: This does not work with `prot-minibuffer.el'.
   ;; (setq completion-in-region-function #'consult-completion-in-region)
   (setq consult-async-min-input 3)
   (setq consult-async-input-debounce 0.5)
@@ -1737,8 +1647,9 @@ Video introduction: [[https://protesilaos.com/codelog/2021-01-09-emacs-embark-ex
 
 [ NOTE 2021-04-02: the part in that video that deals with cycling
   through the completion candidates has been moved to the file
-  =prot-minibuffer.el=, though the effect is practically the
-  same---[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]]. ]
+  =prot-minibuffer.el=, though the effect is practically the same.  UPDATE
+  2021-10-22: It now is its own standalone package, called
+  =mct.el=---[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]]. ]
 
 Embark provides a unified framework of regular Emacs keymaps which let
 you carry out /contextually relevant actions/ on *targets* through a common
@@ -1841,7 +1752,7 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
     several months together with the default minibuffer as part my
     bespoke completion framework, though as of 2021-04-02 I handle the
     live-updating completions' buffer independently of Embark
-    ([[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]]).
+    ([[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]]).
 
   - Other than producing a snapshot, Embark can also collect the targets
     and present them in a buffer whose major-mode is specialised to work
@@ -2126,10 +2037,10 @@ invoked manually makes this largely irrelevant).
 As is the norm with Daniel's contributions, =corfu= is a sharp and focused
 tool that works with the standard completion mechanisms, as it reads
 from the =completion-styles= as well as the =completion-category-overrides=
-(refer to [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]],
-though note that if you are a fan of Daniel's work, you will probably
-want to check the [[https://github.com/minad/vertico][Vertico package]] instead of my largely experimental,
-hacks for the default minibuffer experience).
+(refer to [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]], though note
+that if you are a fan of Daniel's work, you will probably want to check
+the [[https://github.com/minad/vertico][Vertico package]] instead of my hacks for the default minibuffer
+experience).
 
 Unlike its more established counterpart, =company-mode=, Corfu does not
 implement its own backends for various programming languages.  Instead,
@@ -3156,8 +3067,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
            (side . bottom)
            (slot . 0)
-           (window-parameters . ((no-other-window . t)
-                                 (mode-line-format . none))))
+           (window-parameters . ((no-other-window . t))))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
@@ -7667,7 +7577,7 @@ midst of a recursive editing session when we should, perhaps, not be in
 one.  I consider =recursion-indicator= complementary to what is already
 built into Emacs in the form of =minibuffer-depth-indicate-mode= which
 shows the level of recursion at the current minibuffer prompt (refer to
-[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]]).
+[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]]).
 
 #+begin_src emacs-lisp
 ;;; Mode line recursion indicators
@@ -8173,12 +8083,6 @@ of the cursor.  There presuppose the =blink-cursor-mode=.  The properties
 we pass to those presets mirror those we can pass for the various
 built-in variables for the cursor.  Check the =prot-cursor.el= code, which
 is reproduced right after the following package configurations.
-
-Note that in [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]] I
-add a customisation option for the minibuffer's cursor: it is the
-variable =prot-minibuffer-mini-cursors=.  This affects two functions that
-are used to differentiate cursor types in the minibuffer and
-completions' windows, respectively.
 
 #+begin_src emacs-lisp
 ;;; Cursor appearance and tweaks (prot-cursor.el)
@@ -9176,7 +9080,7 @@ completion framework that leverages the built-in mechanisms.
 
 Emacs will remember your input and choices and will surface the desired
 results towards the top as the most likely candidates.  Make sure to
-also read the [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras (prot-minibuffer.el)]].
+also read the [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]].
 
 #+begin_src emacs-lisp
 ;;; Minibuffer history (savehist-mode)

@@ -24,6 +24,10 @@
 
 ;;; Commentary:
 ;;
+;; DEPRECATED 2021-10-22: Use my mct.el instead (part of this
+;; repository).
+;;
+;;
 ;; Extensions for the minibuffer, intended for my Emacs setup:
 ;; <https://protesilaos.com/dotemacs/>.
 ;;
