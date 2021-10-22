@@ -792,23 +792,23 @@ Relevant publications of mine that are not part of this document:
                        :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
-          (medium . ( :fixed-pitch-family "Iosevka Comfy"
-                      :fixed-pitch-regular-weight book
-                      :fixed-pitch-heavy-weight extrabold
-                      :fixed-pitch-height 105
-                      :fixed-pitch-line-spacing nil
-                      :variable-pitch-family "Noto Serif"
-                      :variable-pitch-height 1.0
-                      :variable-pitch-regular-weight normal))
-
-          (large . ( :fixed-pitch-family "Iosevka Comfy"
+          (large . ( :fixed-pitch-family "Hack"
                      :fixed-pitch-regular-weight normal
                      :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 135
+                     :fixed-pitch-height 130
                      :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "Noto Serif"
+                     :variable-pitch-family "DejaVu Serif"
                      :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))))
+                     :variable-pitch-regular-weight normal))
+
+          (large-alt . ( :fixed-pitch-family "Iosevka Comfy"
+                         :fixed-pitch-regular-weight book
+                         :fixed-pitch-heavy-weight extrabold
+                         :fixed-pitch-height 135
+                         :fixed-pitch-line-spacing nil
+                         :variable-pitch-family "Noto Serif"
+                         :variable-pitch-height 1.0
+                         :variable-pitch-regular-weight normal))))
 
   ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
   ;; are not relevant, but I keep them around as the idea is still good.
