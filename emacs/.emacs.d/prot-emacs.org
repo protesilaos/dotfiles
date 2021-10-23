@@ -1162,98 +1162,10 @@ extending Embark, I implemented a layer of interactivity that, I feel,
 is just as good as what other frameworks provide.  As of 2021-10-22 this
 is its own package, called "Minibuffer and Completions in Tandem", else
 MCT (or variants).  The technicalities are in the =mct.el= file, which is
-reproduced after the following code block, while the placement and
-properties of the =*Completions*= buffer is controlled by the
-=display-buffer-alist= (refer to [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
+reproduced after the following code block.
 
-What my completion selection interface does in outline:
-
-+ When minibuffer completion is invoked, a live updating =*Completions*=
-  buffer is placed right above the minibuffer, displaying all completion
-  candidates in a vertical list (meta data provided by Marginalia:
-  [[#h:09d657c7-eb4d-4fe3-987a-4a2cf419bb40][Completion annotations (marginalia)]]).  This only happens after some
-  input has been provided, otherwise all you see is an empty minibuffer
-  (though =mct-list-completions-toggle= or any of the cycling motions will
-  display the candidates).
-
-  - The length of minimum input that triggers live completions when met
-    or hides them when unmatched is controlled by the variable
-    =mct-minimum-input=.
-
-  - =mct-live-update-delay= controls how fast the live-updating
-    Completions should respond to minibuffer input.  I find that a short
-    delay is better than none, because I usually type something quickly
-    and do not need to peruse candidates in the meantime.
-
-  - There =mct-completion-blocklist= and =mct-completion-passlist= that can
-    be used to disable live completions altogether for select commands
-    or bypass the minimum input threshold and the delay.
-
-+ Using up/down motions or =C-n= and =C-p=, we can seamlessly switch from
-  the minibuffer to the completions and vice versa by treating the two
-  as a contiguous area.  The implementation follows a "do the right
-  thing" model where such a motion will switch between the minibuffer
-  and the =*Completions*= only while moving towards each buffer's outer
-  boundaries (top/bottom), otherwise it just proceeds in the given
-  direction.  For example, if we are in the minibuffer and use =C-n= we go
-  to the top of the =*Completions*= buffer, while another =C-n= movers to
-  the second completion candidate on the list (if any), until it
-  eventually reaches the buffer's end, where a subsequent =C-n= switches
-  back to the minibuffer.
-
-+ While completing file names, such as at the =find-file= prompt (which is
-  bound to =C-x C-f= by default), it is possible to hide the current path
-  by specifying a base directory either of the user's =$HOME= or the file
-  system's absolute root.  In other words, =~/= or =/= followed by any valid
-  candidate will clear the minibuffer's contents while continuing with
-  completion to the respective paths.  This is very helpful when you are
-  switching from a deeply nested directory into some other location.
-  For instance, =~/Git/Projects/dotfiles/emacs/.emacs.d/= is what I get
-  when I call =C-x C-f= from this file, so typing =~/.em<tab>= completes
-  =~/.emacs.d/= and continues with the contents of that directory.  Use
-  =undo= (=C-/=) when you mistype something.  This "file name shadowing"
-  works while =file-name-shadow-mode= is enabled.
-
-+ For file name completion, the =backspace= key exhibits a "do what I
-  mean" behaviour (=mct-backward-updir=): when point is after a character,
-  the backspace will just delete it as usual, but when it finds a
-  directory signified by =/= it will instead remove the entirety of it.
-  As such, =path/to/some/file/= with point at the very end will delete
-  =file/= and so on.  This is what the built-in Ido mode does and what
-  Fido mode re-implements for Icomplete.
-
-+ While we normally type in the minibuffer for narrowing and use the
-  =*Completions*= to pick a candidate, we can also operate directly from
-  the latter.  =mct-choose-completion-dwim= lets you append a candidate to
-  the minibuffer and to act on it depending on the context.  For
-  completing buffers, this command will just switch to the desired
-  buffer.  For file names, it will append the path, and stay in the
-  =*Completions*= from where we can append a candidate among those in the
-  new list.  Though my favourite mode of action is while interfacing
-  with =completing-read-multiple= prompts, where it will append the
-  candidate, add a =,= for the separator, and go back to the
-  =*Completions*=, letting you pick another entry from those available
-  (e.g. this is how I insert multiple custom playlists in a Bongo
-  buffer---[[#h:758afe0d-bc7c-4afc-9c6b-b5e569901591][Bongo music or media manager (and prot-bongo.el)]]).  The
-  elegance of this latter aspect is that my =prot-common.el= contains a
-  snippet which removes selected entries from the candidates, so we
-  never input them twice ([[#h:c82dcbfa-97d0-4f7c-85af-768ce90f1372][Common auxiliary functions (prot-common.el)]]).
-  This is the best =completing-read-multiple= experience I have had to
-  date.
-
-+ Another way to pick a completion is to target its line number.  This
-  is done with =mct-choose-completion-number= which prompts for a number
-  while displaying the line numbers in the Completions' buffer.  It can
-  be called from either the minibuffer or the Completions' buffer.
-
-+ The current completion candidate in the Completions' buffer can be
-  edited with =M-e=, which calls the command =mct-edit-completion=.  The
-  utility of this feature is obvious in contexts where you can insert
-  text that does not match any of the candidates yet which counts as
-  valid input (e.g. if a file =hello= exists, you can put point over the
-  candidate, =M-e=, and expand it to =hello-world=---though my most common
-  use-case is to edit URLs from my history of visited web pages in EWW:
-  [[#h:524bc702-ff55-4ed9-9a38-26d30d64591d][Emacs Web Wowser (eww), Elpher, and prot-eww.el]]).
+Read [[https://protesilaos.com/emacs/mct][the official manual of MCT]] as it covers its basics, explains its
+key bindings, and shows how to configure it further.
 
 Finally, here is an overview of the settings covered herein:
 
@@ -1286,31 +1198,6 @@ Finally, here is an overview of the settings covered herein:
   The =minibuffer-depth-indicate-mode= will show a recursion indicator,
   represented as a number, next to the minibuffer prompt, if a recursive
   edit is in progress (also check [[#h:bb707bec-bcaf-44d0-bb82-1ed6bb0cb33b][Mode line recursion indicators]]).
-
-+ Key bindings :: As for the various keys to perform completion, we have
-  the following:
-
-  - The =RET= key always chooses the current candidate and exits,
-    regardless of whether it is called from inside the minibuffer or
-    the Completions' buffer.
-
-  - The =TAB= key completes the candidate when called from the
-    minibuffer.  If there are only a few candidates, repeated presses
-    of the key cycle through them, again when called from the
-    minibuffer.  If the =TAB= is pressed inside the Completions' buffer
-    it does either of two things: (i) when completing directories
-    using =find-file= or equivalent, it expands the directory at point
-    and moves to the minibuffer from where to continue with completion
-    inside the selected directory, or (ii) it selects the current
-    candidate if it is unique and/or a file and exits.
-
-  - The =M-RET= key behaves exactly like =RET= except when dealing with
-    prompts that accepts multiple inputs (=completing-read-multiple=).
-    Those prompts have =[CRM]= label prefixed to them.  In those cases,
-    =M-RET= from inside the Completions' buffer selects the current
-    candidate, inserts a delimiter, and goes back to the Completions
-    buffer to repeat the process.  To exit from that loop, you can use
-    either =TAB= or =RET= based on what is noted above.
 
 Also check my setup for the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][Minibuffer history (savehist-mode)]].  After
 several months of full time usage, I am confident in the built-in
@@ -1365,7 +1252,7 @@ results I am most likely interested in, based on previous selections.
   (setq mct-remove-shadowed-file-names t) ; when `file-name-shadow-mode' is enabled
   (setq mct-hide-completion-mode-line t)
   (setq mct-show-completion-line-numbers nil)
-  (setq mct-apply-completion-stripes t)
+  (setq mct-apply-completion-stripes nil)
   (setq mct-minimum-input 3)
   (setq mct-live-update-delay 0.6)
   (setq mct-completion-blocklist nil)
@@ -1374,6 +1261,15 @@ results I am most likely interested in, based on previous selections.
            Info-index Info-menu vc-retrieve-tag
            prot-bookmark-cd-bookmark
            prot-bongo-playlist-insert-playlist-file))
+
+  ;; You can place the Completions' buffer wherever you want, by
+  ;; following the syntax of `display-buffer-alist' (check elsewhere in
+  ;; this file).  For example, try this:
+
+  ;; (setq mct-display-buffer-action
+  ;;       '((display-buffer-in-side-window)
+  ;;         (side . left)
+  ;;         (window-width . 0.3)))
 
   (mct-mode 1)
 
