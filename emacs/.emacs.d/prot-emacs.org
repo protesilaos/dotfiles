@@ -3059,15 +3059,11 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
           ;; bottom buffer (NOT side window)
           ("\\*Embark Actions\\*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
-           (side . bottom)
-           (slot . -1)
            (window-height . fit-window-to-buffer)
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
           ("\\*\\(Embark\\)?.*Completions.*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
-           (side . bottom)
-           (slot . 0)
            (window-parameters . ((no-other-window . t))))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
@@ -3077,7 +3073,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            ;; NOTE 2021-10-06: we cannot `fit-window-to-buffer' because
-           ;; the size is not known in advance.
+           ;; the height is not known in advance.
            (window-height . 0.2))
           ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
