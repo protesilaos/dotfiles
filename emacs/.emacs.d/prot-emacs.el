@@ -172,7 +172,7 @@
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(bold italic intense)
+        modus-themes-prompts '(bold italic)
 
         modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
@@ -198,16 +198,17 @@
           (habit . traffic-light-deuteranopia))
 
         ;; This is an alist: read the manual or its doc string.
-        modus-themes-headings
+        modus-themes-headings nil
         ;; '((1 . (overline))
         ;;   (2 . (overline))
         ;;   (3 . (rainbow overline))
         ;;   (t . (rainbow no-bold overline)))
-        '((t . (no-bold background overline)))
-        
+        ;;
+        ;; '((t . (no-bold background overline)))
+
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
-        modus-themes-scale-headings t
+        modus-themes-scale-headings nil
         modus-themes-scale-1 1.1
         modus-themes-scale-2 1.15
         modus-themes-scale-3 1.21
@@ -256,6 +257,10 @@
 
   ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
   ;; as it explains what those property lists should contain.
+  ;;
+  ;; The version of "Hack" that I custom is a custom build on mine:
+  ;; <https://gitlab.com/protesilaos/hack-font-mod>.  Same principle for
+  ;; Iosevka: <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
         '((small . ( :fixed-pitch-family "Hack"
                      :fixed-pitch-regular-weight regular
@@ -398,7 +403,7 @@
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
-  
+
   (let ((map minibuffer-local-must-match-map))
     ;; I use this prefix for other searches
     (define-key map (kbd "M-s") nil)))
@@ -409,7 +414,7 @@
   (setq mct-remove-shadowed-file-names t) ; when `file-name-shadow-mode' is enabled
   (setq mct-hide-completion-mode-line t)
   (setq mct-show-completion-line-numbers nil)
-  (setq mct-apply-completion-stripes t)
+  (setq mct-apply-completion-stripes nil)
   (setq mct-minimum-input 3)
   (setq mct-live-update-delay 0.6)
   (setq mct-completion-blocklist nil)
@@ -418,6 +423,15 @@
            Info-index Info-menu vc-retrieve-tag
            prot-bookmark-cd-bookmark
            prot-bongo-playlist-insert-playlist-file))
+
+  ;; You can place the Completions' buffer wherever you want, by
+  ;; following the syntax of `display-buffer-alist' (check elsewhere in
+  ;; this file).  For example, try this:
+
+  ;; (setq mct-display-buffer-action
+  ;;       '((display-buffer-in-side-window)
+  ;;         (side . left)
+  ;;         (window-width . 0.3)))
 
   (mct-mode 1)
 
@@ -459,7 +473,7 @@
     (define-key map (kbd "C-x M-:") #'consult-complex-command)
     (define-key map (kbd "C-x M-m") #'consult-minor-mode-menu)
     (define-key map (kbd "C-x M-k") #'consult-kmacro)
-    (define-key map (kbd "M-g M-g") #'consult-goto-line)
+    (define-key map [remap goto-line] #'consult-goto-line)
     (define-key map (kbd "M-K") #'consult-keep-lines) ; M-S-k is similar to M-S-5 (M-%)
     (define-key map (kbd "M-F") #'consult-focus-lines) ; same principle
     (define-key map (kbd "M-s M-b") #'consult-buffer)
@@ -936,15 +950,11 @@
           ;; bottom buffer (NOT side window)
           ("\\*Embark Actions\\*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
-           (side . bottom)
-           (slot . -1)
            (window-height . fit-window-to-buffer)
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
           ("\\*\\(Embark\\)?.*Completions.*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom)
-           (side . bottom)
-           (slot . 0)
            (window-parameters . ((no-other-window . t))))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
@@ -954,7 +964,7 @@
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            ;; NOTE 2021-10-06: we cannot `fit-window-to-buffer' because
-           ;; the size is not known in advance.
+           ;; the height is not known in advance.
            (window-height . 0.2))
           ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
