@@ -33,7 +33,7 @@ instead of reproducing the whole thing.
 If, however, you insist on going ahead with your plan, I provide more
 details in the heading _"How to reproduce your dotemacs?"_ of my
 `prot-emacs.org`.  Either find it there, or read it on my website:
-<https://protesilaos.com/dotemacs/#h:0675f798-e2d9-4762-9df2-f47cd24cf00a>.
+<https://protesilaos.com/emacs/dotemacs/#h:0675f798-e2d9-4762-9df2-f47cd24cf00a>.
 
 It also explains how to manage my dotfiles with the help of GNU Stow.
 

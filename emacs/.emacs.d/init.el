@@ -3,7 +3,7 @@
 ;; Copyright (c) 2019-2021  Protesilaos Stavrou <info@protesilaos.com>
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/dotemacs
+;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "28.1"))
 

@@ -3,7 +3,7 @@
 ;; Copyright (C) 2020-2021  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/dotemacs
+;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "28.1"))
 
@@ -25,7 +25,7 @@
 ;;; Commentary:
 ;;
 ;; Extensions to `embark.el' for my Emacs configuration:
-;; <https://protesilaos.com/dotemacs/>.
+;; <https://protesilaos.com/emacs/dotemacs/>.
 ;;
 ;; NOTE 2021-04-02: Everything pertaining to the completions' buffer has
 ;; been moved to `prot-minibuffer.el'.

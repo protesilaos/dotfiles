@@ -3,7 +3,7 @@
 ;; Copyright (C) 2021  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/dotemacs
+;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "27.1"))
 
@@ -25,7 +25,7 @@
 ;;; Commentary:
 ;;
 ;; Extensions for line numbers and relevant indicators, intended to be
-;; used as part of my Emacs setup: https://protesilaos.com/dotemacs.
+;; used as part of my Emacs setup: https://protesilaos.com/emacs/dotemacs.
 ;;
 ;; Remember that every piece of Elisp that I write is for my own
 ;; educational and recreational purposes.  I am not a programmer and I

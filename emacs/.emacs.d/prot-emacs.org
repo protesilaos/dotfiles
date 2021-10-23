@@ -27,7 +27,7 @@
 :CUSTOM_ID: h:0a9b72b3-aa4a-4c5c-a654-d4bc04b31bbd
 :END:
 
-+ HTML version :: <https://protesilaos.com/dotemacs>
++ HTML version :: <https://protesilaos.com/emacs/dotemacs>
 + Git repo :: <https://gitlab.com/protesilaos/dotfiles>
 
 ** What is this
@@ -469,7 +469,7 @@ also known as the WCAG AAA standard (the highest of its kind).
 
 The themes are "Modus Operandi" (light) and "Modus Vivendi" (dark).  The
 source code is available [[https://gitlab.com/protesilaos/modus-themes][on their GitLab page]] while you can read the
-HTML version of [[https://protesilaos.com/modus-themes][their manual on my website]].  If you have the package
+HTML version of [[https://protesilaos.com/emacs/modus-themes][their manual on my website]].  If you have the package
 installed or are using Emacs >=28, you can read the manual from the
 built-in Info reader.  Evaluate: =(info "(modus-themes) Top")=.
 
@@ -502,7 +502,7 @@ and wish to get a glimpse of how much work goes into this project:
 + [[https://protesilaos.com/codelog/2021-06-02-modus-themes-org-agenda/][Introducing the variable modus-themes-org-agenda]] (2021-06-02)
 
 And if you do enjoy reading such entries, then you may also wish to
-check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the Modus themes]].
+check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of the Modus themes]].
 
 #+begin_src emacs-lisp
 ;;; Modus themes (my highly accessible themes)
@@ -753,7 +753,7 @@ Relevant publications of mine that are not part of this document:
 
 + [[https://protesilaos.com/codelog/2020-08-28-notes-emacs-theme-devs/][Notes for aspiring Emacs theme developers]] (2020-08-28).
 + [[https://protesilaos.com/codelog/2020-09-05-emacs-note-mixed-font-heights/][Emacs: note on mixed font heights]] (2020-09-05).
-+ [[https://protesilaos.com/modus-themes/#h:defcf4fc-8fa8-4c29-b12e-7119582cc929][Modus themes' manual on font configurations]].
++ [[https://protesilaos.com/emacs/modus-themes/#h:defcf4fc-8fa8-4c29-b12e-7119582cc929][Modus themes' manual on font configurations]].
 
 #+begin_src emacs-lisp
 ;;; Font configurations (prot-fonts.el)

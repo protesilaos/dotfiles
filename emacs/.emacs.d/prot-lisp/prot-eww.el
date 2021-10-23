@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;;         Abhiseck Paira <abhiseckpaira@disroot.org>
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/dotemacs
+;; URL: https://protesilaos.com/emacs/dotemacs
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "28.1"))
 
@@ -27,7 +27,7 @@
 ;;; Commentary:
 ;;
 ;; Extensions for the eww, intended for my Emacs setup:
-;; <https://protesilaos.com/dotemacs/>.
+;; <https://protesilaos.com/emacs/dotemacs/>.
 ;;
 ;; Remember that every piece of Elisp that I write is for my own
 ;; educational and recreational purposes.  I am not a programmer and I
