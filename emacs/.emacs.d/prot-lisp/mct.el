@@ -71,6 +71,18 @@ Only works when variable `file-name-shadow-mode' is non-nil."
   :type 'boolean
   :group 'mct)
 
+(defcustom mct-live-completion t
+  "Automatically display the Completions buffer.
+
+When disabled, the user has to manually request completions,
+using the regular activating commands.  Note that
+`mct-completion-passlist' overrides this option, while taking
+precedence over `mct-completion-blocklist'.
+
+Live updating is subject to `mct-minimum-input'."
+  :type 'boolean
+  :group 'mct)
+
 (defcustom mct-minimum-input 3
   "Live update completions when input is >= N.
 
@@ -106,6 +118,42 @@ the inherent constraint of updating the Completions' buffer only
 upon user input.  Furthermore, they also bypass any possible
 delay introduced by `mct-live-update-delay'."
   :type '(repeat symbol)
+  :group 'mct)
+
+(defcustom mct-display-buffer-action
+  '((display-buffer-at-bottom))
+  "The action used to display the Completions' buffer.
+
+The value has the form (FUNCTION . ALIST), where FUNCTIONS is
+either an \"action function\" or a possibly empty list of action
+functions.  ALIST is a possibly empty \"action alist\".
+
+Sample configuration:
+
+    (setq mct-display-buffer-action
+          '((display-buffer-in-side-window)
+            (side . left)
+            (slot . 99)
+            (window-width . 0.3)))
+
+See Info node `(elisp) Displaying Buffers' for more details
+and/or the documentation string of `display-buffer'."
+  :type '(cons (choice (function :tag "Display Function")
+                       (repeat :tag "Display Functions" function))
+               alist)
+  :group 'mct)
+
+(defcustom mct-completions-format 'one-column
+  "The appearance and sorting used by `mct-mode'.
+See `completions-format' for possible values.
+
+NOTE that setting this option with `setq' requires a restart of
+`mct-mode'."
+  :set (lambda (var val)
+         (when (bound-and-true-p mct-mode)
+           (setq completions-format val))
+         (set var val))
+  :type '(choice (const horizontal) (const vertical) (const one-column))
   :group 'mct)
 
 ;;;; Basic helper functions
@@ -179,7 +227,8 @@ Add this to `completion-list-mode-hook'."
 (defun mct--hl-line ()
   "Set up line highlighting for the completions' buffer.
 Add this to `completion-list-mode-hook'."
-  (when (derived-mode-p 'completion-list-mode)
+  (when (and (derived-mode-p 'completion-list-mode)
+             (eq mct-completions-format 'one-column))
     (face-remap-add-relative 'hl-line 'mct-hl-line)
     (hl-line-mode 1)))
 
@@ -207,6 +256,7 @@ Add this to `completion-list-mode-hook'."
 (defun mct--fit-completions-window ()
   "Fit Completions' buffer to its window."
   (setq-local window-resize-pixelwise t)
+  (select-window (mct--get-completion-window))
   (fit-window-to-buffer (mct--get-completion-window)
                         (floor (frame-height) 2) 1))
 
@@ -238,8 +288,7 @@ Meant to be added to `after-change-functions'."
                           ;; don't ring the bell in `minibuffer-completion-help'
                           ;; when <= 1 completion exists.
                           (ring-bell-function #'ignore))
-                      (minibuffer-completion-help)
-                      (mct--fit-completions-window))))
+                      (mct--show-completions))))
               (quit (abort-recursive-edit)))
           (minibuffer-hide-completions))))))
 
@@ -252,13 +301,14 @@ Meant to be added to `after-change-functions'."
 (defun mct--setup-completions ()
   "Set up the completions' buffer."
   (cond
-   ((member this-command mct-completion-passlist)
+   ((memq this-command mct-completion-passlist)
     (setq-local mct-minimum-input 0)
     (setq-local mct-live-update-delay 0)
     (mct--show-completions)
     (add-hook 'after-change-functions #'mct--live-completions nil t))
-   ((unless (member this-command mct-completion-blocklist)
-      (add-hook 'after-change-functions #'mct--live-completions-timer nil t)))))
+   ((null mct-live-completion))
+   ((not (memq this-command mct-completion-blocklist))
+    (add-hook 'after-change-functions #'mct--live-completions-timer nil t))))
 
 ;;;;; Alternating backgrounds (else "stripes")
 
@@ -304,7 +354,7 @@ Meant to be added to `after-change-functions'."
             (setq overlay (make-overlay pt (point)))
             (overlay-put overlay 'face 'mct-stripe)
             (overlay-put overlay 'priority -100)))))))
-  
+
 ;;;; Commands and helper functions
 
 ;;;;; Focus minibuffer and/or show completions
@@ -326,8 +376,11 @@ Meant to be added to `after-change-functions'."
 
 (defun mct--show-completions ()
   "Show the completions' buffer."
-  (save-excursion (minibuffer-completion-help))
-  (mct--fit-completions-window))
+  (let ((display-buffer-alist
+         (cons (cons mct-completion-windows-regexp mct-display-buffer-action)
+               display-buffer-alist)))
+    (save-excursion (minibuffer-completion-help)))
+  (fit-window-to-buffer (mct--get-completion-window)))
 
 ;;;###autoload
 (defun mct-focus-mini-or-completions ()
@@ -379,9 +432,8 @@ by `mct-completion-windows-regexp'."
 (defun mct--switch-to-completions ()
   "Subroutine for switching to the completions' buffer."
   (unless (mct--get-completion-window)
-    (save-excursion (minibuffer-completion-help)))
-  (switch-to-completions)
-  (mct--fit-completions-window))
+    (mct--show-completions))
+  (switch-to-completions))
 
 (defun mct-switch-to-completions-top ()
   "Switch to the top of the completions' buffer."
@@ -396,12 +448,14 @@ by `mct-completion-windows-regexp'."
   (mct--switch-to-completions)
   (goto-char (point-max))
   (next-completion -1)
-  (goto-char (point-at-bol))
-  (recenter
-   (- -1
-      (min (max 0 scroll-margin)
-           (truncate (/ (window-body-height) 4.0))))
-   t))
+  (when (eq mct-completions-format 'one-column)
+    (goto-char (point-at-bol))
+    (recenter
+     (- -1
+        (min (max 0 scroll-margin)
+             (truncate (/ (window-body-height) 4.0))))
+     t)))
+
 
 (defun mct-next-completion-or-mini (&optional arg)
   "Move to the next completion or switch to the minibuffer.
@@ -410,8 +464,7 @@ point can no longer move in that direction it switches to the
 minibuffer."
   (interactive "p" mct-mode)
   (if (or (eobp)
-          (eq (point-max)
-              (save-excursion (forward-line 1) (point))))
+          (= (point-max) (save-excursion (next-completion (or arg t)) (point))))
       (mct-focus-minibuffer)
     (next-completion (or arg 1)))
   (setq this-command 'next-line))
@@ -422,18 +475,14 @@ This performs a regular motion for optional ARG lines, but when
 point can no longer move in that direction it switches to the
 minibuffer."
   (interactive "p" mct-mode)
-  (let ((num (when (and (numberp arg) (> arg 0)) (* -1 arg))))
-    (if (or (bobp)
-            (and (save-excursion ; NOTE 2021-07-23: This `and' is for Emacs28 group titles
-                   (next-completion -1)
-                   (eq (line-number-at-pos) 1))
-                 (not
-                  (save-excursion
-                    (next-completion -1)
-                    (get-text-property (point) 'completion--string))))
-            (eq (point) (1+ (point-min)))) ; see hack in `mct--clean-completions'
-        (mct-focus-minibuffer)
-      (next-completion (or num 1)))))
+  (if (or (bobp)
+          (save-excursion
+            (previous-completion 1)
+            (and (get-text-property (point) 'completion--string)
+                 (= (point) (point-min))))
+          (eq (point) (1+ (point-min)))) ; see hack in `mct--clean-completions'
+      (mct-focus-minibuffer)
+    (previous-completion (if (natnump arg) arg 1))))
 
 ;;;;; Candidate selection
 
@@ -722,7 +771,7 @@ To be assigned to `minibuffer-setup-hook'."
         (setq resize-mini-windows t
               completion-show-help nil
               completion-auto-help t
-              completions-format 'one-column
+              completions-format mct-completions-format
               completions-detailed t)
         (let ((hook 'minibuffer-setup-hook))
           (add-hook hook #'mct--setup-completions)
