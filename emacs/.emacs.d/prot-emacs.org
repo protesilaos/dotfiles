@@ -1555,7 +1555,7 @@ try.
     (define-key map (kbd "C-x M-:") #'consult-complex-command)
     (define-key map (kbd "C-x M-m") #'consult-minor-mode-menu)
     (define-key map (kbd "C-x M-k") #'consult-kmacro)
-    (define-key map (kbd "M-g M-g") #'consult-goto-line)
+    (define-key map [remap goto-line] #'consult-goto-line)
     (define-key map (kbd "M-K") #'consult-keep-lines) ; M-S-k is similar to M-S-5 (M-%)
     (define-key map (kbd "M-F") #'consult-focus-lines) ; same principle
     (define-key map (kbd "M-s M-b") #'consult-buffer)
