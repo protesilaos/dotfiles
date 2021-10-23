@@ -595,7 +595,7 @@ check the [[https://protesilaos.com/modus-themes-changelog/][Change Log of the M
         ;;   (t . (rainbow no-bold overline)))
         ;;
         ;; '((t . (no-bold background overline)))
-        
+
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
         modus-themes-scale-headings nil
@@ -1354,7 +1354,7 @@ results I am most likely interested in, based on previous selections.
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
-  
+
   (let ((map minibuffer-local-must-match-map))
     ;; I use this prefix for other searches
     (define-key map (kbd "M-s") nil)))
