@@ -673,20 +673,13 @@ sizes.  Others lack Greek characters.  Some do not have italics...
 Getting it right is very difficult.
 
 The only font I could use over the years was Hack, which builds on the
-skeleton of DejaVu Sans Mono.  Though there are issues with Hack which I
-do not like, such as the default shape of the zero and one numbers, the
-small shape of the backtick character, misaligned at-sign...  Little
-things which keep annoying me.  Furthermore, Hack's open shapes are
-optimised for small point sizes, which makes it look a bit awkard when
-scaled up.  Again, another nit pick.  My [[https://gitlab.com/protesilaos/hack-font-mod][custom build of Hack]] (which I
-implement for smaller sizes) uses some alternative glyphs from a variety
-of sources that alleviate most of those problems, but it cannot undo the
-overall character of the typeface.  To that end, I also maintain a
-custom build of Iosevka which has a different line height than its
-original typeface, specifies the proportions and weights I want to be
-consistent with my variant of Hack, and has different glyphs for roman
-and italic variants in order to match my aesthetic preferences and look
-good at larger point sizes.  I call it [[https://gitlab.com/protesilaos/iosevka-comfy][Iosevka Comfy]].
+skeleton of DejaVu Sans Mono.  Though there are issues with the default
+version of Hack which I do not like, such as the default shape of the
+zero and one numbers, the small shape of the backtick character...
+Little things which keep annoying me.  My [[https://gitlab.com/protesilaos/hack-font-mod][custom build of Hack]] uses some
+alternative glyphs from a variety of sources that alleviate most of
+those problems (though it obviously cannot alter the overall character
+of the typeface).
 
 Moving on to my configurations, =prot-fonts.el= covers my elaborate
 typeface requirements.  At its heart is =prot-fonts-typeface-sets-alist=.
@@ -773,6 +766,10 @@ Relevant publications of mine that are not part of this document:
 
   ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
   ;; as it explains what those property lists should contain.
+  ;;
+  ;; The version of "Hack" that I custom is a custom build on mine:
+  ;; <https://gitlab.com/protesilaos/hack-font-mod>.  Same principle for
+  ;; Iosevka: <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
         '((small . ( :fixed-pitch-family "Hack"
                      :fixed-pitch-regular-weight regular
