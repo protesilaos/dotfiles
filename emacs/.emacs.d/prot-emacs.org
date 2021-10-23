@@ -1125,6 +1125,9 @@ visualising the standard minibuffer completion candidates---refer to
 :CUSTOM_ID: h:c110e399-3f43-4555-8427-b1afe44c0779
 :END:
 
+UPDATE 2021-10-23: Watch my video demonstration of the package I wrote
+[[https://protesilaos.com/codelog/2021-10-22-emacs-mct-demo/][Minibuffer and Completions in Tandem (mct.el)]].
+
 The minibuffer is the epicentre of extended interactivity with all sorts
 of Emacs workflows: to select a buffer, open a file, provide an answer
 to some prompt, such as a number, regular expression, password, and so
