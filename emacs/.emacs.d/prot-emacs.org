@@ -1267,9 +1267,11 @@ results I am most likely interested in, based on previous selections.
   ;; this file).  For example, try this:
 
   ;; (setq mct-display-buffer-action
-  ;;       '((display-buffer-in-side-window)
-  ;;         (side . left)
-  ;;         (window-width . 0.3)))
+  ;;       (quote ((display-buffer-reuse-window
+  ;;                display-buffer-in-side-window)
+  ;;               (side . left)
+  ;;               (slot . 99)
+  ;;               (window-width . 0.3))))
 
   (mct-mode 1)
 
