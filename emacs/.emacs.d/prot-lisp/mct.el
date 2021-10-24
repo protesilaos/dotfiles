@@ -121,7 +121,7 @@ delay introduced by `mct-live-update-delay'."
   :group 'mct)
 
 (defcustom mct-display-buffer-action
-  '((display-buffer-at-bottom))
+  '((display-buffer-reuse-window display-buffer-at-bottom))
   "The action used to display the Completions' buffer.
 
 The value has the form (FUNCTION . ALIST), where FUNCTIONS is
@@ -131,10 +131,11 @@ functions.  ALIST is a possibly empty \"action alist\".
 Sample configuration:
 
     (setq mct-display-buffer-action
-          '((display-buffer-in-side-window)
-            (side . left)
-            (slot . 99)
-            (window-width . 0.3)))
+          (quote ((display-buffer-reuse-window
+                   display-buffer-in-side-window)
+                  (side . left)
+                  (slot . 99)
+                  (window-width . 0.3))))
 
 See Info node `(elisp) Displaying Buffers' for more details
 and/or the documentation string of `display-buffer'."
@@ -255,10 +256,10 @@ Add this to `completion-list-mode-hook'."
 
 (defun mct--fit-completions-window ()
   "Fit Completions' buffer to its window."
-  (setq-local window-resize-pixelwise t)
-  (select-window (mct--get-completion-window))
-  (fit-window-to-buffer (mct--get-completion-window)
-                        (floor (frame-height) 2) 1))
+  (when-let ((window (mct--get-completion-window)))
+    (with-current-buffer (window-buffer window)
+      (setq-local window-resize-pixelwise t))
+    (fit-window-to-buffer window (floor (frame-height) 2) 1)))
 
 (defun mct--input-string ()
   "Return the contents of the minibuffer as a string."
@@ -380,7 +381,7 @@ Meant to be added to `after-change-functions'."
          (cons (cons mct-completion-windows-regexp mct-display-buffer-action)
                display-buffer-alist)))
     (save-excursion (minibuffer-completion-help)))
-  (fit-window-to-buffer (mct--get-completion-window)))
+  (mct--fit-completions-window))
 
 ;;;###autoload
 (defun mct-focus-mini-or-completions ()
