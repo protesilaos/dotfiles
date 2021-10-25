@@ -369,15 +369,19 @@
 
 ;;; Minibuffer configurations and my extras (mct.el)
 (prot-emacs-builtin-package 'minibuffer
+  ;; NOTE 2021-10-25: I am adding `basic' because it works better as a
+  ;; default for some contexts.  Read:
+  ;; <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=50387>.
   (setq completion-styles
-        '(substring initials flex partial-completion orderless))
+        '(basic substring initials flex partial-completion orderless))
   (setq completion-category-overrides
-        '((file (styles . (partial-completion orderless)))))
+        '((file (styles . (basic partial-completion orderless)))))
   (setq completion-cycle-threshold 2)
   (setq completion-flex-nospace nil)
   (setq completion-pcm-complete-word-inserts-delimiters nil)
   (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-ignore-case t)
+  (setq completions-detailed t)
   (setq-default case-fold-search t)   ; For general regexp
 
   ;; Grouping of completions for Emacs 28
@@ -429,9 +433,11 @@
   ;; this file).  For example, try this:
 
   ;; (setq mct-display-buffer-action
-  ;;       '((display-buffer-in-side-window)
-  ;;         (side . left)
-  ;;         (window-width . 0.3)))
+  ;;       (quote ((display-buffer-reuse-window
+  ;;                display-buffer-in-side-window)
+  ;;               (side . left)
+  ;;               (slot . 99)
+  ;;               (window-width . 0.3))))
 
   (mct-mode 1)
 
@@ -758,6 +764,7 @@
         "-AGFhlv --group-directories-first --time-style=long-iso")
   (setq dired-dwim-target t)
   (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
+  (setq dired-make-directory-clickable t) ; Emacs 29.1
 
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
   (add-hook 'dired-mode-hook #'hl-line-mode))
