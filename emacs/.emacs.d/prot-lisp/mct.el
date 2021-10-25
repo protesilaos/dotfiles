@@ -430,18 +430,59 @@ by `mct-completion-windows-regexp'."
 
 ;;;;; Cyclic motions between minibuffer and completions' buffer
 
+(defun mct--first-completion-point ()
+  "Find the `point' of the first completion."
+  (save-excursion
+    (goto-char (point-min))
+    (next-completion 1)
+    (point)))
+
+(defun mct--last-completion-point ()
+  "Find the `point' of the last completion."
+  (save-excursion
+    (goto-char (point-max))
+    (next-completion -1)
+    (point)))
+
+(defun mct--completions-line-boundary (boundary)
+  "Determine if current line has reached BOUNDARY.
+BOUNDARY is a line position at the top or bottom of the
+Completions' buffer.  See `mct--first-completion-point' or
+`mct--last-completion-point'.
+
+This check only applies when `completions-format' is not assigned
+a `one-column' value."
+  (and (= (line-number-at-pos) (line-number-at-pos boundary))
+       (not (eq completions-format 'one-column))))
+
+(defun mct--completions-no-completion-line-p (arg)
+  "Check if ARGth line has a completion candidate."
+  (save-excursion
+    (vertical-motion arg)
+    (get-text-property (point) 'completion--string)))
+
 (defun mct--switch-to-completions ()
   "Subroutine for switching to the completions' buffer."
   (unless (mct--get-completion-window)
     (mct--show-completions))
   (switch-to-completions))
 
+(defun mct--restore-old-point-in-grid (line)
+  "Restore old point in window if LINE is on its line."
+  (unless (eq completions-format 'one-column)
+    (let (old-line old-point)
+      (when-let ((window (mct--get-completion-window)))
+        (setq old-point (window-old-point window)
+              old-line (line-number-at-pos old-point))
+        (when (= (line-number-at-pos line) old-line)
+          (goto-char old-point))))))
+
 (defun mct-switch-to-completions-top ()
   "Switch to the top of the completions' buffer."
   (interactive nil mct-mode)
   (mct--switch-to-completions)
-  (goto-char (point-min))
-  (next-completion 1))
+  (goto-char (mct--first-completion-point))
+  (mct--restore-old-point-in-grid (point)))
 
 (defun mct-switch-to-completions-bottom ()
   "Switch to the bottom of the completions' buffer."
@@ -449,14 +490,28 @@ by `mct-completion-windows-regexp'."
   (mct--switch-to-completions)
   (goto-char (point-max))
   (next-completion -1)
-  (when (eq mct-completions-format 'one-column)
-    (goto-char (point-at-bol))
-    (recenter
-     (- -1
-        (min (max 0 scroll-margin)
-             (truncate (/ (window-body-height) 4.0))))
-     t)))
+  (goto-char (point-at-bol))
+  (mct--restore-old-point-in-grid (point))
+  (recenter
+   (- -1
+      (min (max 0 scroll-margin)
+           (truncate (/ (window-body-height) 4.0))))
+   t))
 
+(defun mct--bottom-of-completions-p (arg)
+  "Test if point is at the notional bottom of the Completions.
+ARG is a numeric argument for `next-completion', as described in
+`mct-next-completion-or-mini'."
+  (or (eobp)
+      (mct--completions-line-boundary (mct--last-completion-point))
+      (= (save-excursion (next-completion arg) (point)) (point-max))
+      ;; The empty final line case...
+      (save-excursion
+        (goto-char (point-at-bol))
+        (and (not (bobp))
+	         (or (beginning-of-line (1+ arg)) t)
+	         (save-match-data
+	           (looking-at "[\s\t]*$"))))))
 
 (defun mct-next-completion-or-mini (&optional arg)
   "Move to the next completion or switch to the minibuffer.
@@ -464,11 +519,34 @@ This performs a regular motion for optional ARG lines, but when
 point can no longer move in that direction it switches to the
 minibuffer."
   (interactive "p" mct-mode)
-  (if (or (eobp)
-          (= (point-max) (save-excursion (next-completion (or arg t)) (point))))
-      (mct-focus-minibuffer)
-    (next-completion (or arg 1)))
-  (setq this-command 'next-line))
+  (cond
+   ((mct--bottom-of-completions-p (or arg 1))
+    (mct-focus-minibuffer))
+   (t
+    (if (not (eq completions-format 'one-column))
+        ;; Retaining the column number ensures that things work
+        ;; intuitively in a grid view.
+        (let ((col (current-column)))
+          ;; The `unless' is meant to skip past lines that do not
+          ;; contain completion candidates, such as those with
+          ;; `completions-group-format'.
+          (unless (mct--completions-no-completion-line-p (or arg 1))
+            (if arg
+                (setq arg (1+ arg))
+              (setq arg 2)))
+          (vertical-motion (or arg 1))
+          (unless (eq col (save-excursion (goto-char (point-at-bol)) (current-column)))
+            (line-move-to-column col)))
+      (next-completion (or arg 1))))
+   (setq this-command 'next-line)))
+
+(defun mct--top-of-completions-p (arg)
+  "Test if point is at the notional top of the Completions.
+ARG is a numeric argument for `previous-completion', as described in
+`mct-previous-completion-or-mini'."
+  (or (bobp)
+      (mct--completions-line-boundary (mct--first-completion-point))
+      (= (save-excursion (previous-completion arg) (point)) (point-min))))
 
 (defun mct-previous-completion-or-mini (&optional arg)
   "Move to the next completion or switch to the minibuffer.
@@ -476,14 +554,24 @@ This performs a regular motion for optional ARG lines, but when
 point can no longer move in that direction it switches to the
 minibuffer."
   (interactive "p" mct-mode)
-  (if (or (bobp)
-          (save-excursion
-            (previous-completion 1)
-            (and (get-text-property (point) 'completion--string)
-                 (= (point) (point-min))))
-          (eq (point) (1+ (point-min)))) ; see hack in `mct--clean-completions'
-      (mct-focus-minibuffer)
-    (previous-completion (if (natnump arg) arg 1))))
+  (cond
+   ((mct--top-of-completions-p (if (natnump arg) arg 1))
+    (mct-focus-minibuffer))
+   ((if (not (eq completions-format 'one-column))
+        ;; Retaining the column number ensures that things work
+        ;; intuitively in a grid view.
+        (let ((col (current-column)))
+          ;; The `unless' is meant to skip past lines that do not
+          ;; contain completion candidates, such as those with
+          ;; `completions-group-format'.
+          (unless (mct--completions-no-completion-line-p (or (- arg) -1))
+            (if arg
+                (setq arg (1+ arg))
+              (setq arg 2)))
+          (vertical-motion (or (- arg) -1))
+          (unless (eq col (save-excursion (goto-char (point-at-bol)) (current-column)))
+            (line-move-to-column col)))
+      (previous-completion (if (natnump arg) arg 1))))))
 
 ;;;;; Candidate selection
 
@@ -755,7 +843,6 @@ To be assigned to `minibuffer-setup-hook'."
 (defvar mct--completion-show-help nil)
 (defvar mct--completion-auto-help nil)
 (defvar mct--completions-format nil)
-(defvar mct--completions-detailed nil)
 
 ;;;###autoload
 (define-minor-mode mct-mode
@@ -767,13 +854,11 @@ To be assigned to `minibuffer-setup-hook'."
         (setq mct--resize-mini-windows resize-mini-windows
               mct--completion-show-help completion-show-help
               mct--completion-auto-help completion-auto-help
-              mct--completions-format completions-format
-              mct--completions-detailed completions-detailed)
+              mct--completions-format completions-format)
         (setq resize-mini-windows t
               completion-show-help nil
               completion-auto-help t
-              completions-format mct-completions-format
-              completions-detailed t)
+              completions-format mct-completions-format)
         (let ((hook 'minibuffer-setup-hook))
           (add-hook hook #'mct--setup-completions)
           (add-hook hook #'mct--minibuffer-local-completion-map)
@@ -799,8 +884,7 @@ To be assigned to `minibuffer-setup-hook'."
     (setq resize-mini-windows mct--resize-mini-windows
           completion-show-help mct--completion-show-help
           completion-auto-help mct--completion-auto-help
-          completions-format mct--completions-format
-          completions-detailed mct--completions-detailed)
+          completions-format mct--completions-format)
     (let ((hook 'minibuffer-setup-hook))
       (remove-hook hook #'mct--setup-completions)
       (remove-hook hook #'mct--minibuffer-local-completion-map)
