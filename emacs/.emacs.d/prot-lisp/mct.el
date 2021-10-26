@@ -157,28 +157,29 @@ NOTE that setting this option with `setq' requires a restart of
   :type '(choice (const horizontal) (const vertical) (const one-column))
   :group 'mct)
 
-;;;; Basic helper functions
+;;;; Completion metadata
 
-;; Copied from icomplete.el
 (defun mct--field-beg ()
   "Determine beginning of completion."
-  (if (window-minibuffer-p)
-      (minibuffer-prompt-end)
+  (if-let ((window (active-minibuffer-window)))
+      (with-current-buffer (window-buffer window)
+        (minibuffer-prompt-end))
     (nth 0 completion-in-region--data)))
 
-;; Copied from icomplete.el
 (defun mct--field-end ()
   "Determine end of completion."
-  (if (window-minibuffer-p)
-      (point-max)
+  (if-let ((window (active-minibuffer-window)))
+      (with-current-buffer (window-buffer window)
+        (point-max))
     (nth 1 completion-in-region--data)))
 
-;; Copied from icomplete.el
 (defun mct--completion-category ()
   "Return completion category."
-  (let* ((beg (mct--field-beg))
-         (md (when (window-minibuffer-p) (completion--field-metadata beg))))
-    (alist-get 'category (cdr md))))
+  (when-let ((window (active-minibuffer-window)))
+    (with-current-buffer (window-buffer window)
+      (let* ((beg (mct--field-beg))
+             (md (completion--field-metadata beg)))
+        (alist-get 'category (cdr md))))))
 
 ;;;; Basics of intersection between minibuffer and Completions' buffer
 
@@ -578,10 +579,23 @@ minibuffer."
 (defun mct-choose-completion-exit ()
   "Run `choose-completion' in the Completions buffer and exit."
   (interactive nil mct-mode)
-  (when (and (derived-mode-p 'completion-list-mode)
-             (active-minibuffer-window))
-    (choose-completion)
-    (minibuffer-force-complete-and-exit)))
+  (when (active-minibuffer-window)
+    (when-let* ((window (mct--get-completion-window))
+                (buffer (window-buffer)))
+      (with-current-buffer buffer
+        (choose-completion))
+      (minibuffer-force-complete-and-exit))))
+
+(defun mct-choose-completion-no-exit ()
+  "Run `choose-completion' in the Completions without exiting."
+  (interactive nil mct-mode)
+  (when-let* ((window (mct--get-completion-window))
+              (buffer (window-buffer))
+              (mini (active-minibuffer-window)))
+    (with-current-buffer buffer
+      (let ((completion-no-auto-exit t))
+        (choose-completion)))
+    (select-window mini nil)))
 
 (defvar display-line-numbers-mode)
 
@@ -649,24 +663,19 @@ Completions' buffer."
 
 (defun mct-choose-completion-dwim ()
   "Append to minibuffer when at `completing-read-multiple' prompt.
-Otherwise behave like `mct-choose-completion-exit'."
+In any other prompt use `mct-choose-completion-no-exit'."
   (interactive nil mct-mode)
-  (when (and (derived-mode-p 'completion-list-mode)
-             (active-minibuffer-window))
-    (choose-completion)
-    (with-current-buffer (window-buffer (active-minibuffer-window))
-      (unless (eq (mct--completion-category) 'file)
-        (minibuffer-force-complete))
+  (when-let* ((mini (active-minibuffer-window))
+              (window (mct--get-completion-window))
+              (buffer (window-buffer window)))
+    (mct-choose-completion-no-exit)
+    (with-current-buffer (window-buffer mini)
       (when crm-completion-table
         ;; FIXME 2021-10-22: How to deal with commands that let-bind the
         ;; crm-separator?  For example: `org-set-tags-command'.
         (insert ",")
         (let ((inhibit-message t))
           (switch-to-completions))))))
-
-(defun mct--completion-string (point)
-  "Get completion string at POINT."
-  (get-text-property point 'completion--string))
 
 (defun mct-edit-completion ()
   "Edit the current completion candidate inside the minibuffer.
@@ -686,23 +695,23 @@ determined as follows:
 A candidate is recognised for as long as point is not past its
 last character."
   (interactive nil mct-mode)
-  (let (string)
-    (when (or (and (minibufferp)
-                   (mct--get-completion-window))
-              (and (derived-mode-p 'completion-list-mode)
-                   (active-minibuffer-window)))
-      (let ((window (mct--get-completion-window)))
-        (with-current-buffer (window-buffer window)
-          (when-let ((old-point (window-old-point window)))
-            (if (= old-point (point-min))
-                (setq string (mct--completion-string (mct--first-completion-point)))
-              (setq string (mct--completion-string old-point))))))
-      (if string
-          (progn
-            (select-window (active-minibuffer-window) nil)
-            (delete-region (minibuffer-prompt-end) (point-max))
-            (insert string))
-        (user-error "Could not find completion at point")))))
+  (let* ((window (mct--get-completion-window))
+         (buffer (window-buffer window))
+         (mini (active-minibuffer-window))
+         pos)
+    (when (and mini window)
+      (with-current-buffer buffer
+        (when-let ((old-point (window-old-point window)))
+          (if (= old-point (point-min))
+              (setq pos (mct--first-completion-point))
+            (setq pos old-point))))
+      (when pos
+        ;; NOTE 2021-10-26: why must we `switch-to-completions' to get a
+        ;; valid candidate?  Why can't this be part of the above
+        ;; `with-current-buffer'?
+        (switch-to-completions)
+        (goto-char pos)
+        (mct-choose-completion-no-exit)))))
 
 ;;;;; Miscellaneous commands
 
@@ -711,7 +720,7 @@ last character."
 (defun mct-beginning-of-buffer ()
   "Go to the top of the Completions buffer."
   (interactive nil mct-mode)
-  (goto-char (1+ (point-min))))
+  (goto-char (mct--first-completion-point)))
 
 (defun mct-keyboard-quit-dwim ()
   "Control the exit behaviour for completions' buffers.
@@ -802,15 +811,15 @@ To be assigned to `minibuffer-setup-hook'."
 
 (defvar mct-completion-list-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "<tab>") #'choose-completion)
     (define-key map (kbd "M-v") #'scroll-down-command)
-    (define-key map [remap goto-line] #'mct-choose-completion-number)
-    (define-key map (kbd "M-e") #'mct-edit-completion)
     (define-key map [remap keyboard-quit] #'mct-keyboard-quit-dwim)
+    (define-key map [remap goto-line] #'mct-choose-completion-number)
     (define-key map [remap next-line] #'mct-next-completion-or-mini)
     (define-key map (kbd "n") #'mct-next-completion-or-mini)
     (define-key map [remap previous-line] #'mct-previous-completion-or-mini)
     (define-key map (kbd "p") #'mct-previous-completion-or-mini)
+    (define-key map (kbd "M-e") #'mct-edit-completion)
+    (define-key map (kbd "<tab>") #'mct-choose-completion-no-exit)
     (define-key map (kbd "<return>") #'mct-choose-completion-exit)
     (define-key map (kbd "<M-return>") #'mct-choose-completion-dwim)
     (define-key map [remap beginning-of-buffer] #'mct-beginning-of-buffer)
