@@ -880,5 +880,80 @@ Otherwise, fetch URL and afterwards try to restore the point."
             (add-hook 'eww-after-render-hook function-symbol))))))
      ((user-error "Cannot jump to this bookmark")))))
 
+
+;;; lynx dump
+
+(defcustom prot-eww-post-lynx-dump-function nil
+  "Function to run on lynx dumped buffer.
+Function is called with the URL of the page the buffer is
+visiting.  Specifying nil turns off this variable."
+  :group 'prot-eww
+  :type '(choice (const :tag "Unspecified" nil)
+                 function))
+
+(defcustom prot-eww-lynx-dump-dir
+  (if (stringp eww-download-directory)
+      eww-download-directory
+    (funcall eww-download-directory))
+  "Directory to save lynx dumped files.
+It should be an existing directory or a sexp that evaluates to an
+existing directory."
+  :group 'prot-eww
+  :type '(choice directory sexp))
+
+(defvar prot-eww-lynx-available-p
+  (executable-find "lynx")
+  "Check if `lynx' is available in PATH.")
+
+(defun prot-eww--get-text-property-string (prop)
+  "Return string that has text property PROP at (point).
+The string is from (point) to end of PROP.  If there is no text
+property PROP at (point), return nil."
+  (let* ((match (text-property-search-forward prop))
+         (start-point-prop (prop-match-beginning match))
+         (end-point-prop (prop-match-end match)))
+    (and
+     (<= start-point-prop (point) end-point-prop)
+     (replace-regexp-in-string
+      "\n" " "
+      (buffer-substring-no-properties
+       start-point-prop end-point-prop)))))
+
+(defun prot-eww-current-page-title ()
+  "Return title of the Web page EWW buffer is visiting."
+  (plist-get eww-data :title))
+
+(defun prot-eww-lynx-dump (url filename)
+  "Run lynx -dump on URL and save output as FILENAME.
+When run interactively in a eww buffer visiting a web page, run
+lynx dump on the web page's URL.  If point is on a link, then run
+lynx dump on that link instead."
+  (interactive
+   (let* ((default-url (or (get-text-property (point) 'shr-url)
+                           (eww-current-url)))
+          (dir prot-eww-lynx-dump-dir)
+          (title (or
+                  (prot-eww--get-text-property-string 'shr-url)
+                  (prot-eww-current-page-title)))
+          (def-file-name
+            (file-name-concat dir
+                              (concat (prot-eww--sluggify title) ".txt"))))
+     (list
+      (read-string "URL: " nil nil default-url)
+      (read-file-name "File Name: " dir def-file-name))))
+  (if prot-eww-lynx-available-p
+      (progn
+        (access-file dir "Non existing directory specified")
+        (with-temp-file filename
+          (with-temp-message
+              (format "Running `lynx --dump %s'" url)
+            (let ((coding-system-for-read 'prefer-utf-8))
+              (call-process "lynx" nil t nil "-dump" url)))
+          (with-temp-message "Processing lynx dumped buffer..."
+            (and
+             (functionp prot-eww-post-lynx-dump-function)
+             (funcall prot-eww-post-lynx-dump-function url)))))
+    (error "lynx executable not found in PATH.")))
+
 (provide 'prot-eww)
 ;;; prot-eww.el ends here
