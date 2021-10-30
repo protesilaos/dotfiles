@@ -6823,7 +6823,7 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
   (setq elfeed-search-filter "@4-months-ago +unread")
   (setq elfeed-sort-order 'descending)
   (setq elfeed-search-clipboard-type 'CLIPBOARD)
-  (setq elfeed-search-title-max-width 100)
+  (setq elfeed-search-title-max-width 160)
   (setq elfeed-search-title-min-width 30)
   (setq elfeed-search-trailing-width 25)
   (setq elfeed-show-truncate-long-urls t)
