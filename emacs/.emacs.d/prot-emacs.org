@@ -610,11 +610,10 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   (modus-themes-load-themes)
 
   ;; Custom faces (for demo purposes---check the themes' manual for more
-  ;; advanced uses)
+  ;; advanced uses).
   (defun prot/modus-themes-custom-faces ()
     (modus-themes-with-colors
       (custom-set-faces
-       `(cursor ((,class :background ,(modus-themes-color-alts 'blue 'blue-alt-other))))
        `(fill-column-indicator ((,class :background ,bg-inactive
                                         :foreground ,bg-inactive))))))
 
