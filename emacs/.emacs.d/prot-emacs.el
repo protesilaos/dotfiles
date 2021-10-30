@@ -105,10 +105,10 @@
   (prot-pulse-advice-commands-mode 1)
   (define-key global-map (kbd "C-x l") #'prot-pulse-pulse-line)) ; override `count-lines-page'
 
-;;; Put customisation settings in a disposable "custom.el"
+;;; Put customisation settings in the null device
 (prot-emacs-builtin-package 'cus-edit
   ;; Disable the damn thing
-  (setq custom-file (make-temp-file "emacs-custom-")))
+  (setq custom-file null-device))
 
 (prot-emacs-elpa-package 'exec-path-from-shell
   (setq exec-path-from-shell-variables
@@ -220,11 +220,10 @@
   (modus-themes-load-themes)
 
   ;; Custom faces (for demo purposes---check the themes' manual for more
-  ;; advanced uses)
+  ;; advanced uses).
   (defun prot/modus-themes-custom-faces ()
     (modus-themes-with-colors
       (custom-set-faces
-       `(cursor ((,class :background ,(modus-themes-color-alts 'blue 'blue-alt-other))))
        `(fill-column-indicator ((,class :background ,bg-inactive
                                         :foreground ,bg-inactive))))))
 
@@ -2506,7 +2505,7 @@ Can link to more than one message, if so all matching messages are shown."
   (setq elfeed-search-filter "@4-months-ago +unread")
   (setq elfeed-sort-order 'descending)
   (setq elfeed-search-clipboard-type 'CLIPBOARD)
-  (setq elfeed-search-title-max-width 100)
+  (setq elfeed-search-title-max-width 160)
   (setq elfeed-search-title-min-width 30)
   (setq elfeed-search-trailing-width 25)
   (setq elfeed-show-truncate-long-urls t)
