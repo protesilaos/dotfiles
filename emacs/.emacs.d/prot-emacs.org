@@ -394,7 +394,7 @@ you wish to get the file):
 
 #+include: prot-lisp/prot-pulse.el src emacs-lisp :tangle no
 
-** Put customisation settings in a disposable "custom.el"
+** Send Custom UI code straight to =/dev/null=
 :PROPERTIES:
 :CUSTOM_ID: h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d
 :END:
@@ -408,6 +408,10 @@ all "custom" code in the null device such that it never gets loaded.
 This feels kinda hacky but is better than having some arbitrary code
 that you accidentally evaluated from messing up with your carefully
 designed (and version-controlled) configuration.
+
+Thanks to Justin Schell for suggesting the use of =null-device=, which
+looks cleaner that creating a temporary file and storing everything
+there.
 
 #+begin_src emacs-lisp
 ;;; Put customisation settings in the null device
