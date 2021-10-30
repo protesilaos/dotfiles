@@ -403,19 +403,17 @@ When you install a package or use the various customisation interfaces
 to tweak things to your liking, Emacs will append a piece of Elisp to
 your init file.  In my experience, this is a common source of
 inconsistencies, arising from a conflict between the user's code and
-what is stored in that =custom= snippet.
-
-As it does not seem possible to outright disable this behaviour, I
-instruct Emacs to place all "custom" code in a temporary file that
-never gets loaded.  This feels kinda hacky but is better than having
-some arbitrary code that you accidentally evaluated from messing up
-with your carefully designed (and version-controlled) configuration.
+what is stored in that =custom= snippet.  Thus, instruct Emacs to put
+all "custom" code in the null device such that it never gets loaded.
+This feels kinda hacky but is better than having some arbitrary code
+that you accidentally evaluated from messing up with your carefully
+designed (and version-controlled) configuration.
 
 #+begin_src emacs-lisp
-;;; Put customisation settings in a disposable "custom.el"
+;;; Put customisation settings in the null device
 (prot-emacs-builtin-package 'cus-edit
   ;; Disable the damn thing
-  (setq custom-file (make-temp-file "emacs-custom-")))
+  (setq custom-file null-device))
 #+end_src
 
 ** Propagation of shell environment variables (exec-path-from-shell.el)
