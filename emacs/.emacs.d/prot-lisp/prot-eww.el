@@ -919,7 +919,7 @@ property PROP at (point), return nil."
       (buffer-substring-no-properties
        start-point-prop end-point-prop)))))
 
-(defun prot-eww-current-page-title ()
+(defun prot-eww--current-page-title ()
   "Return title of the Web page EWW buffer is visiting."
   (plist-get eww-data :title))
 
@@ -934,7 +934,7 @@ lynx dump on that link instead."
           (dir prot-eww-lynx-dump-dir)
           (title (or
                   (prot-eww--get-text-property-string 'shr-url)
-                  (prot-eww-current-page-title)))
+                  (prot-eww--current-page-title)))
           (def-file-name
             (file-name-concat dir
                               (concat (prot-eww--sluggify title) ".txt"))))
