@@ -939,7 +939,7 @@ lynx dump on that link instead."
             (file-name-concat dir
                               (concat (prot-eww--sluggify title) ".txt"))))
      (list
-      (read-string "URL: " nil nil default-url)
+      (read-string (format "URL [%s]: " default-url) nil nil default-url)
       (read-file-name "File Name: " dir def-file-name))))
   (if prot-eww-lynx-available-p
       (progn
