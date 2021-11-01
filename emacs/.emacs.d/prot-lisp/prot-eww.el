@@ -884,9 +884,12 @@ Otherwise, fetch URL and afterwards try to restore the point."
 ;;; lynx dump
 
 (defcustom prot-eww-post-lynx-dump-function nil
-  "Function to run on lynx dumped buffer.
+  "Function to run on lynx dumped buffer for post-processing.
 Function is called with the URL of the page the buffer is
-visiting.  Specifying nil turns off this variable."
+visiting.
+
+Specifying nil turns off this variable, meaning that no
+post-processing takes place."
   :group 'prot-eww
   :type '(choice (const :tag "Unspecified" nil)
                  function))
@@ -901,9 +904,9 @@ existing directory."
   :group 'prot-eww
   :type '(choice directory sexp))
 
-(defvar prot-eww-lynx-available-p
-  (executable-find "lynx")
-  "Check if `lynx' is available in PATH.")
+(defun prot-eww--lynx-available-p ()
+  "Check if `lynx' is available in PATH."
+  (executable-find "lynx"))
 
 (defun prot-eww--get-text-property-string (prop)
   "Return string that has text property PROP at (point).
@@ -940,10 +943,10 @@ lynx dump on that link instead."
                               (concat (prot-eww--sluggify title) ".txt"))))
      (list
       (read-string (format "URL [%s]: " default-url) nil nil default-url)
-      (read-file-name "File Name: " dir def-file-name))))
-  (if prot-eww-lynx-available-p
+      (read-file-name (format "File Name [%s]: " def-file-name) dir def-file-name))))
+  (if (prot-eww--lynx-available-p)
       (progn
-        (access-file dir "Non existing directory specified")
+        (access-file prot-eww-lynx-dump-dir "Non existing directory specified")
         (with-temp-file filename
           (with-temp-message
               (format "Running `lynx --dump %s'" url)
@@ -953,7 +956,7 @@ lynx dump on that link instead."
             (and
              (functionp prot-eww-post-lynx-dump-function)
              (funcall prot-eww-post-lynx-dump-function url)))))
-    (error "lynx executable not found in PATH.")))
+    (error "`lynx' executable not found in PATH")))
 
 (provide 'prot-eww)
 ;;; prot-eww.el ends here
