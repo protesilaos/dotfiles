@@ -639,6 +639,44 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
 #+end_src
 
+** LIN Is Noticeable (lin.el)
+:PROPERTIES:
+:CUSTOM_ID: h:601027a1-7288-4dcd-bb78-435965df27ba
+:END:
+
+This is another package of mine.  LIN locally remaps the =hl-line= face to
+a style that is optimal for major modes where line selection is the
+primary mode of interaction.
+
+The idea is that =hl-line= cannot work equally well for contexts with
+competing priorities: (i) line selection, or (ii) simple line highlight.
+In the former case, the current line needs to be made prominent because
+it carries a specific meaning of some significance in the given context.
+Whereas in the latter case, the primary mode of interaction does not
+revolve around the line highlight itself: it may be because the focus is
+on editing text or reading through the buffer's contents, so the current
+line highlight is more of a gentle reminder of the point's location on
+the vertical axis.
+
+=lin-mode= only shows its effect when =hl-line-mode= is active or, more
+specifically, when the =hl-line= face is used in the buffer.  =lin-mode=
+DOES NOT activate =hl-line-mode= and does not do anything other than the
+aforementioned face remapping.
+
+I just enable LIN in contexts where I know it is useful.  Check their
+sections for further details:
+
++ [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el]].
++ [[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]].
+
+#+begin_src emacs-lisp
+(prot-emacs-builtin-package 'lin
+  (setq lin-foreground-override nil)
+
+  (dolist (hook '(elfeed-search-mode-hook notmuch-search-mode-hook))
+    (add-hook hook #'lin-mode)))
+#+end_src
+
 ** Typeface configurations
 :PROPERTIES:
 :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
