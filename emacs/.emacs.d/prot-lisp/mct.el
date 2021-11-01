@@ -3,7 +3,7 @@
 ;; Copyright (C) 2021  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://gitlab.com/protesilaos/mct.el
+;; URL: https://gitlab.com/protesilaos/mct
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "28.1"))
 
@@ -574,6 +574,44 @@ minibuffer."
             (line-move-to-column col)))
       (previous-completion (if (natnump arg) arg 1))))))
 
+(declare-function text-property-search-backward "text-property-search" (property &optional value predicate not-current))
+(declare-function text-property-search-forward "text-property-search" (property &optional value predicate not-current))
+(declare-function prop-match-beginning "text-property-search" (cl-x))
+(declare-function prop-match-end "text-property-search" (cl-x))
+
+(defun mct-next-completion-group (&optional arg)
+  "Move to the next completion group.
+If ARG is supplied, move that many completion groups at a time."
+  (interactive "p" mct-mode)
+  (dotimes (_ (or arg 1))
+    (when-let (group (save-excursion
+                       (text-property-search-forward 'face
+                                                     'completions-group-separator
+                                                     t nil)))
+      (let ((pos (prop-match-end group)))
+        (unless (eq pos (point-max))
+          (goto-char pos)
+          (next-completion 1))))))
+
+(defun mct-previous-completion-group (&optional arg)
+  "Move to the previous completion group.
+If ARG is supplied, move that many completion groups at a time."
+  (interactive "p" mct-mode)
+  (dotimes (_ (or arg 1))
+    ;; skip back, so if we're at the top of a group, we go to the previous one...
+    (forward-line -1)
+    (if-let (group (save-excursion
+                     (text-property-search-backward 'face
+                                                    'completions-group-separator
+                                                    t nil)))
+        (let ((pos (prop-match-beginning group)))
+          (unless (eq pos (point-min))
+            (goto-char pos)
+            (next-completion 1)))
+      ;; ...and if there was a match, go back down, so the point doesn't
+      ;; end in the group separator
+      (forward-line 1))))
+
 ;;;;; Candidate selection
 
 (defun mct-choose-completion-exit ()
@@ -660,6 +698,21 @@ Completions' buffer."
           (mct--line-number-selection)))))
 
 (defvar crm-completion-table)
+(defvar crm-separator)
+
+(defun mct--regex-to-separator (regex)
+  (save-match-data
+    (cond
+     ;; whitespace-delimited, like default & org-set-tag-command
+     ((string-match (rx
+                     bos "[" (1+ blank) "]*"
+                     (group (1+ any))
+                     "[" (1+ blank) "]*" eos)
+                    regex)
+      (match-string 1 regex))
+     ;; literal character
+     ((string= regex (regexp-quote regex))
+      regex))))
 
 (defun mct-choose-completion-dwim ()
   "Append to minibuffer when at `completing-read-multiple' prompt.
@@ -671,9 +724,9 @@ In any other prompt use `mct-choose-completion-no-exit'."
     (mct-choose-completion-no-exit)
     (with-current-buffer (window-buffer mini)
       (when crm-completion-table
-        ;; FIXME 2021-10-22: How to deal with commands that let-bind the
-        ;; crm-separator?  For example: `org-set-tags-command'.
-        (insert ",")
+        (let ((separator (or (mct--regex-to-separator crm-separator)
+                             ",")))
+          (insert separator))
         (let ((inhibit-message t))
           (switch-to-completions))))))
 
@@ -817,6 +870,8 @@ To be assigned to `minibuffer-setup-hook'."
     (define-key map [remap next-line] #'mct-next-completion-or-mini)
     (define-key map (kbd "n") #'mct-next-completion-or-mini)
     (define-key map [remap previous-line] #'mct-previous-completion-or-mini)
+    (define-key map (kbd "M-p") #'mct-previous-completion-group)
+    (define-key map (kbd "M-n") #'mct-next-completion-group)
     (define-key map (kbd "p") #'mct-previous-completion-or-mini)
     (define-key map (kbd "M-e") #'mct-edit-completion)
     (define-key map (kbd "<tab>") #'mct-choose-completion-no-exit)
