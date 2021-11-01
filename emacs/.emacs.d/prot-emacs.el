@@ -121,16 +121,16 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+  (setq modus-themes-italic-constructs nil
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts t
-        modus-themes-subtle-line-numbers t
+        modus-themes-subtle-line-numbers nil
         modus-themes-intense-markup nil
         modus-themes-success-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -155,7 +155,7 @@
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(underline accented intense)
+        modus-themes-hl-line nil
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -172,11 +172,11 @@
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(bold italic)
+        modus-themes-prompts '(background gray)
 
-        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
+        modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -185,7 +185,7 @@
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'desaturated
+        modus-themes-diffs 'bg-only
 
         modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
 
@@ -245,6 +245,12 @@
   ;; the `modus-themes-after-load-theme-hook' for some typeface-related
   ;; tweaks (as those are made at the "face" level).
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
+
+(prot-emacs-builtin-package 'lin
+  (setq lin-foreground-override nil)
+
+  (dolist (hook '(elfeed-search-mode-hook notmuch-search-mode-hook))
+    (add-hook hook #'lin-mode)))
 
 ;;; Font configurations (prot-fonts.el)
 (prot-emacs-builtin-package 'prot-fonts
