@@ -329,19 +329,16 @@
 
   (define-key global-map (kbd "C-c f") #'prot-fonts-set-fonts))
 
-;;; Bidirectional writing and `so-long.el'
-(setq-default bidi-paragraph-direction 'left-to-right)
-(setq bidi-inhibit-bpa t)
-
-(prot-emacs-builtin-package 'so-long
-  (global-so-long-mode 1))
-
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
   (setq repeat-on-final-keystroke t)
   (setq set-mark-command-repeat-pop t)
 
   (repeat-mode 1))
+
+;;; Handle performance for very long lines (so-long.el)
+(prot-emacs-builtin-package 'so-long
+  (global-so-long-mode 1))
 
 ;;; Orderless completion style (and prot-orderless.el)
 (prot-emacs-builtin-package 'prot-orderless
