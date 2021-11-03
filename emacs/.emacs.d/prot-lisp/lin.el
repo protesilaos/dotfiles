@@ -84,7 +84,7 @@ the `lin-hl-override-fg' is applied."
     (((class color) (min-colors 88) (background dark))
      :background "#103265")
     (t :inherit highlight))
-  "Like `lin-hl', but does not override foreground color.
+  "Like `lin-hl-override-fg', but does not override foreground color.
 Used only when `lin-override-foreground' is nil."
   :group 'lin)
 
@@ -99,22 +99,32 @@ Used only when `lin-override-foreground' is nil."
 Used only when `lin-override-foreground' is non-nil."
   :group 'lin)
 
-(defun lin--face ()
-  "Determine face based on `lin-override-foreground'."
-  (if lin-override-foreground 'lin-hl-override-fg 'lin-hl))
-
-(defvar lin--cookie nil
+(defvar-local lin--cookie nil
   "Cookie returned by `face-remap-add-relative'.")
+
+(defun lin--source-face ()
+  "Determine the source face, what to remap."
+  (cond
+   ((derived-mode-p 'mu4e-headers-mode)
+    'mu4e-header-highlight-face)
+   (t
+    'hl-line)))
+
+(defun lin--dest-face ()
+  "Determine the destination face, what source must remap to.
+This is controlled by `lin-override-foreground', which see."
+  (if lin-override-foreground 'lin-hl-override-fg 'lin-hl))
 
 (define-minor-mode lin-mode
   "Remap `hl-line' face to a local LIN face.
 The overall style is controlled by `lin-override-foreground'."
   :local t
   :init-value nil
-  (let ((face (lin--face)))
-    (if lin-mode
-        (setq lin--cookie (face-remap-add-relative 'hl-line face))
-      (face-remap-remove-relative lin--cookie))))
+  (if lin-mode
+      (setq lin--cookie
+            (face-remap-add-relative (lin--source-face) (lin--dest-face)))
+    (face-remap-remove-relative lin--cookie)))
 
 (provide 'lin)
+
 ;;; lin.el ends here
