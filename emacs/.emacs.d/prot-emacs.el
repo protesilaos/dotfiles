@@ -121,16 +121,16 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs nil
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts t
-        modus-themes-subtle-line-numbers nil
+        modus-themes-subtle-line-numbers t
         modus-themes-intense-markup nil
-        modus-themes-success-deuteranopia nil
+        modus-themes-success-deuteranopia t
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -141,7 +141,7 @@
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', `padded'.
-        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
+        modus-themes-mode-line '(3d) ; For Moody, also check `prot-moody'
 
         ;; This one only works when `modus-themes-mode-line' (above) has
         ;; the `padded' property.  It takes a positive integer.
@@ -160,7 +160,7 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold)
+        modus-themes-paren-match '(intense underline)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -172,22 +172,22 @@
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(background gray)
+        modus-themes-prompts '(background bold)
 
-        modus-themes-completions nil ; {nil,'moderate,'opinionated}
+        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations 'monochrome ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend accented)
+        modus-themes-region '(no-extend bg-only)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
         modus-themes-diffs 'bg-only
 
-        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background} (also read doc string)
+        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
         ;; This is an alist: read the manual or its doc string.
         modus-themes-org-agenda
@@ -198,13 +198,11 @@
           (habit . traffic-light-deuteranopia))
 
         ;; This is an alist: read the manual or its doc string.
-        modus-themes-headings nil
-        ;; '((1 . (overline))
-        ;;   (2 . (overline))
-        ;;   (3 . (rainbow overline))
-        ;;   (t . (rainbow no-bold overline)))
-        ;;
-        ;; '((t . (no-bold background overline)))
+        modus-themes-headings
+        '((1 . (background overline))
+          (2 . (background overline))
+          (3 . (background rainbow overline))
+          (t . (background rainbow no-bold overline)))
 
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
