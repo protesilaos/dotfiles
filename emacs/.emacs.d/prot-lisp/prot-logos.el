@@ -109,12 +109,30 @@ on its own."
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--olivetti-toggle)
 
+(defface prot-logos-fringe
+  `((((class color) (background light))
+     :background "#ffffff")
+    (((class color) (background dark))
+     :background "#000000")
+    (t :background ,(face-attribute 'default :background)))
+  "Face to remove background from fringes.
+Only tested with the Modus themes.")
+
+(defvar-local prot-logos--fringe-cookie nil
+  "Cookie returned by `face-remap-add-relative'.")
+
+(declare-function face-remap-add-relative "face-remap" (face &rest specs))
+(declare-function face-remap-remove-relative "face-remap" (cookie))
+
 (defun prot-logos--fringe-toggle ()
-  "Toggle fringe width."
-  (if (or (= (car (window-fringes)) 0)
-          (not (bound-and-true-p prot-logos-focus-mode)))
-      (set-window-fringes (selected-window) nil)
-    (set-window-fringes (selected-window) 0 0)))
+  "Toggle fringe visibility."
+  (if (bound-and-true-p prot-logos-focus-mode)
+      (progn
+        (set-window-fringes (selected-window) 0 0)
+        (setq prot-logos--fringe-cookie
+              (face-remap-add-relative 'olivetti-fringe 'prot-logos-fringe)))
+    (set-window-fringes (selected-window) nil)
+    (face-remap-remove-relative prot-logos--fringe-cookie)))
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--fringe-toggle)
 
