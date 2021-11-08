@@ -1,0 +1,169 @@
+#!/bin/bash
+
+# hlwm autostart --- Initialisation script for HerbstluftWM
+#
+# Copyright (c) 2021  Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+## Commentary:
+#
+# This file is part of my custom desktop session:
+# <https://gitlab.com/protesilaos/dotfiles>.
+
+## Code:
+
+### Essentials
+
+_hc ()
+{
+    herbstclient "$@"
+}
+
+_check ()
+{
+    command -v "$1" > /dev/null
+}
+
+_hc emit_hook reload
+
+# Remove all existing keybindings.  We set them further below.
+_hc keyunbind --all
+
+### Tags and monitors
+
+# unlock, just to be sure
+_hc unlock
+
+# NOTE that tags must be defined before the monitors.
+
+tag_names=( {0..9} )
+
+_hc rename default "${tag_names[0]}" || true
+
+for i in "${!tag_names[@]}"
+do
+    _hc add "${tag_names[$i]}"
+done
+
+# Set up virtual monitors.  The monitor is is 2560x1080 (and what
+# inspired me to switch to HerbstluftWM).  Also check the script
+# 'herbstluftwm_toggle_monitors'.
+_hc set_monitors 640x1060+0+0 1920x1060+640+0
+
+### Configuration
+
+_hc set auto_detect_panels on
+
+_hc set window_gap 0
+_hc set frame_gap 0
+
+_hc set frame_padding 0
+_hc set smart_window_surroundings off
+_hc set smart_frame_surroundings off
+_hc set mouse_recenter_gap 0
+_hc set focus_follows_mouse on
+_hc set always_show_frame on
+_hc set frame_bg_transparent on
+_hc set frame_transparent_width 3
+
+_hc set frame_border_width 2
+_hc attr theme.tiling.reset 1
+_hc attr theme.floating.reset 1
+_hc attr theme.title_height 0
+_hc attr theme.inner_width 1
+_hc attr theme.border_width 1
+_hc attr theme.active.outer_width 1
+_hc attr theme.floating.border_width 1
+_hc attr theme.floating.outer_width 1
+
+#### Colours
+_check herbstluftwm_conf_colors && herbstluftwm_conf_colors
+
+#### Rules
+# TODO 2021-11-08: I have kept the defaults here.  Needs review.
+
+_hc unrule -F
+#_hc rule class=XTerm tag=3 # move all xterms to tag 3
+_hc rule focus=on # normally focus new clients
+_hc rule floatplacement=smart
+#_hc rule focus=off # normally do not focus new clients
+# give focus to most common terminals
+#_hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
+_hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on
+_hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
+_hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
+
+_hc set tree_style '╾│ ├└╼─┐'
+
+### Autostart
+
+# Specify keyboard layout.  For the key chord that performs the layout
+# switching between US QWERTY and Greek refer to my `sxhkdrc`.
+#
+# Originally found the options in this location (was on Debian Buster
+# circa 2019 and confirmed with Arch Linux on 2021-11-08):
+# /usr/share/X11/xkb/rules/base.lst
+#
+# caps:hyper           Make Caps Lock an additional Hyper
+# compose:menu         Menu key behaves as Compose
+#
+# The options are required in order for Xmodmap to work properly (see
+# below).
+if _check setxkbmap; then
+    setxkbmap -layout 'us,el' -option 'ctrl:nocaps,compose:menu'
+fi
+
+# Parse my custom key mappings.  These make Caps behave as another Ctrl
+# key.  We need to evaluate this first otherwise it might mess up with
+# SXHKD.
+[ -f "$HOME"/.Xmodmap ] && xmodmap "$HOME"/.Xmodmap
+
+# The hotkey daemon that handles all custom key bindings.  I split the
+# key chords into separate files, based on their scope.  The ones that
+# pertain to the window manager are defined in sxhkdrc_herbstclient.
+_check sxhkd && sxhkd -c "$HOME"/.config/sxhkd/sxhkdrc{,_herbstclient} &
+
+# Launch Polybar
+if _check polybar; then
+    # Make sure we have no running instances
+    pkill -x polybar
+
+    polybar herbstluftwm &
+fi
+
+# Run the tool that sets the wallpaper.  A program could be used that
+# handles the desktop in general, including the option to set icons.
+# But this is enough for my case.  Here is a command I tested and which
+# works (using the Xfce desktop manager):
+# xfdesktop --sm-client-disable --disable-wm-check &
+if _check feh; then
+    if [ -f "$HOME"/.fehbg ]; then
+        "$HOME"/.fehbg &
+    fi
+fi
+
+# Start the display compositor.  See `picom --help'.
+_check picom && picom --config /dev/null -r 3 -o 0.55 -l -2 -t -2 \
+                      -I 0.075 -O 0.075 -CGfz -i 1.0 -e 1.0 \
+                      --vsync --unredir-if-possible &
+
+# Simple daemon for GTK settings
+_check xsettingsd && xsettingsd -c "$HOME"/.config/xsettingsd/xsettingsd.conf &
+
+# Use the same cursor everywhere
+_check xsetroot && xsetroot -xcf /usr/share/icons/Adwaita/cursors/left_ptr 16
+
+# Load my Xresources
+_check xrdb && [ -f "$HOME"/.Xresources ] && xrdb -I "$HOME" -merge "$HOME"/.Xresources

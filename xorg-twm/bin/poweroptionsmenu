@@ -65,6 +65,15 @@ _poweroff() {
     _check_systemd 'poweroff'
 }
 
+_quit()
+{
+    case "$DESKTOP_SESSION"
+    in
+        bspwm) bspc quit ;;
+        herbstluftwm) herbstclient quit ;;
+    esac
+}
+
 _checkdep() {
     command -v "$1" > /dev/null || return 1
 }
@@ -92,7 +101,7 @@ choice="$(_list_actions)"
 
 # Run the selected command.
 case "$choice" in
-    L*) _kill_processes && bspc quit ;;
+    L*) _kill_processes && _quit     ;;
     R*) _kill_processes && _reboot   ;;
     P*) _kill_processes && _poweroff ;;
     X*) _kbd_reset_and_xmodmap       ;;

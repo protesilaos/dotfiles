@@ -98,7 +98,7 @@ if _check polybar; then
 	# Make sure we have no running instances
 	pgrep -x polybar && pkill -x polybar
 
-    polybar bottom &
+    polybar bspwm &
 
     # Add padding equal to the panel height to fix an issue where there
     # is an overlap between panel and windows.

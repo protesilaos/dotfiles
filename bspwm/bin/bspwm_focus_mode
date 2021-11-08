@@ -85,4 +85,4 @@ fi
 
 bspc config gapless_monocle "${gapless_monocle:=false}"
 
-[ -n "$panel_status" ] && polybar bottom &
+[ -n "$panel_status" ] && polybar bspwm &

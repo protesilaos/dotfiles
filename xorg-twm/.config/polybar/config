@@ -5,7 +5,7 @@ margin-bottom = 0
 [colors]
 include-file = ~/.config/polybar/config_colors
 
-[bar/bottom]
+[bar/bspwm]
 width = 100%
 height = 18
 bottom = true
@@ -24,7 +24,37 @@ module-margin-right = 2
 font-0 = Monospace:size=8:hintstyle=hintslight;2
 font-1 = Monospace:weight=bold:size=8:hintstyle=hintslight;2
 
+tray-position = right
+tray-padding = 5
+
+format-margin = 0
+
 modules-left = bspwm bspwm_panel_monocle
+modules-center =
+modules-right = xkeyboard alsa notmuch date
+wm-restack = bspwm
+override-redirect = false
+
+[bar/herbstluftwm]
+width = 100%
+height = 18
+bottom = true
+radius = 0
+fixed-center = false
+
+background = ${colors.bgmain}
+foreground = ${colors.fgmain}
+
+padding-left = 0
+padding-right = 1
+
+module-margin-left = 0
+module-margin-right = 2
+
+font-0 = Monospace:size=8:hintstyle=hintslight;2
+font-1 = Monospace:weight=bold:size=8:hintstyle=hintslight;2
+
+modules-left = ewmh
 modules-center =
 modules-right = xkeyboard alsa notmuch date
 
@@ -33,8 +63,24 @@ tray-padding = 5
 
 format-margin = 0
 
-wm-restack = bspwm
-override-redirect = false
+; wm-restack = bspwm
+; override-redirect = false
+
+[module/ewmh]
+type = internal/xworkspaces
+
+label-active = "[%name%]"
+label-active-font = 2b
+
+label-occupied = " %name%^ "
+label-occupied-foreground = ${colors.fgalt}
+
+label-urgent = " %name%! "
+label-urgent-font = 2
+label-urgent-foreground = ${colors.red}
+
+label-empty = ""
+label-empty-foreground = ${colors.fgalt}
 
 [module/bspwm]
 type = internal/bspwm

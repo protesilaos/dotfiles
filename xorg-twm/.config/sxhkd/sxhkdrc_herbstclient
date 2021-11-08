@@ -1,0 +1,45 @@
+#
+# SXHKD module with HerbstluftWM-specific commands
+#
+# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
+#
+### Description
+#
+# Partial configuration file for the Simple X Hotkey Daemon.  Meant to
+# work with `herbstclient`.  This is part of my dotfiles, which are
+# managed with GNU Stow.  See https://gitlab.com/protesilaos/dotfiles
+
+### Code
+
+# Close currently focused window
+mod4 + q
+     herbstclient close
+
+#### Focus/swap windows/tags
+
+# Focus in the given direction.  With Shift move the window in the given
+# direction.
+mod4 + {_, shift +, ctrl +} {h,j,k,l}
+     herbstclient {focus,shift,resize} {left,down,up,right} {_,_,0.05}
+
+mod4 + {_,shift +} {0-9}
+     herbstclient {use_index,move_index} {0-9}
+
+mod4 + {b,r}
+     herbstclient split {bottom,right} 0.5
+
+mod4 + shift + r
+     herbstclient remove
+
+mod4 + {f,space}
+     herbstclient {fullscreen toggle,set_attr clients.focus.floating toggle}
+
+# Alt + Tab
+mod1 + {_, shift +} Tab
+     herbstclient cycle_all {+1,-1}
+
+mod4 + m
+     herbstluftwm_toggle_monitors
+
+mod4 + w
+     herbstclient cycle_layout +1 vertical horizontal max

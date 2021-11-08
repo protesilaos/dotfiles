@@ -65,7 +65,6 @@ _xterm ()
 
     xresources="$HOME"/.Xresources
     active_theme="$HOME"/.config/xterm/xterm_active_theme
-    wm_theme="$HOME"/.config/bspwm/active-theme
 
     [ -f "$xresources" ] || { echo "No Xresources file"; exit 1; }
     [ -f "$active_theme" ] || { echo "No active Xresources theme"; exit 1; }
@@ -91,12 +90,6 @@ _alacritty ()
 
     active_theme="$HOME"/.config/alacritty/modus-themes-active.yml
 
-    case "$DESKTOP_SESSION"
-    in
-        bspwm) wm_theme="$HOME"/.config/bspwm/active-theme ;;
-        sway)  wm_theme="$HOME"/.config/sway/active-theme  ;;
-    esac
-
     [ -f "$active_theme" ] || { echo "No alacritty theme. Did you 'stow' your configurations?"; return 1; }
 
     case "$(cat "$wm_theme")"
@@ -108,7 +101,7 @@ _alacritty ()
 
 # TODO 2021-08-27: dunst
 
-#### BSPWM
+#### BSPWM and HerbstluftWM (I configure them almost identically)
 
 _rofi ()
 {
@@ -118,7 +111,7 @@ _rofi ()
 
     [ -f "$active_theme" ] || { echo "No rofi theme. Did you 'stow' your configurations?"; return 1; }
 
-    case "$(cat "$HOME"/.config/bspwm/active-theme)"
+    case "$(cat "$wm_theme")"
     in
         light) echo -e '@import "modus-operandi.rasi"' > "$active_theme" ;;
         dark)  echo -e '@import "modus-vivendi.rasi"' > "$active_theme"  ;;
@@ -132,7 +125,6 @@ _polybar ()
     pgrep -x polybar > /dev/null && pkill -x polybar
 
     active_theme="$HOME"/.config/polybar/config_colors
-    wm_theme="$HOME"/.config/bspwm/active-theme
 
     [ -f "$active_theme" ] || { echo "No active theme"; exit 1; }
     [ -f "$wm_theme" ] || { echo "No WM session theme"; exit 1; }
@@ -143,7 +135,7 @@ _polybar ()
         dark)  _sed "s,operandi,vivendi," "$active_theme" ;;
     esac
 
-    [ -n "$1" ] && polybar bottom &
+    [ -n "$1" ] && polybar "$DESKTOP_SESSION" &
 }
 
 _feh ()
@@ -153,7 +145,7 @@ _feh ()
     image_light="$HOME"/Pictures/light.jpg
     image_dark="$HOME"/Pictures/dark.jpg
 
-    case "$(cat "$HOME"/.config/bspwm/active-theme)"
+    case "$(cat "$wm_theme")"
     in
         light) [ -f "$image_light" ] && feh --bg-fill "$image_light" ;;
         dark)  [ -f "$image_dark" ]  && feh --bg-fill "$image_dark"  ;;
@@ -242,6 +234,37 @@ _bspwm ()
         # Just update the colours, but do not launch the process.
         _polybar
     fi
+}
+
+_hlwm ()
+{
+    _depcheck herbstluftwm
+
+    theme="$HOME"/.config/herbstluftwm/active-theme
+
+    if [ "$(cat "$theme")" = light ]
+    then
+        style=dark
+    else
+        style=light
+    fi
+
+    echo "$style" > "$theme"
+
+    _depcheck herbstluftwm_conf_colors && herbstluftwm_conf_colors
+    _emacs "$style" &
+    _xsettingsd "$style" &
+    _xterm &
+    # # NOTE 2021-09-25: I tried alacritty for a while, but the way it
+    # reads the fonts on Xorg makes the point size larger than expected.
+    # Also, it seems to miss some smaller sizes, so I cannot use it
+    # exactly how I want to.  Everything is fine on Wayland with Sway...
+    #
+    # _alacritty &
+    _feh &
+    _rofi &
+
+    _polybar launch
 }
 
 #### Gnome
@@ -359,8 +382,19 @@ _sway ()
 
 case "$DESKTOP_SESSION"
 in
-    bspwm) _bspwm ;;
+    bspwm)
+        wm_theme="$HOME"/.config/bspwm/active-theme
+        _bspwm
+        ;;
+    herbstluftwm)
+        wm_theme="$HOME"/.config/herbstluftwm/active-theme
+        _hlwm
+        ;;
+    sway)
+        wm_theme="$HOME"/.config/sway/active-theme
+        _sway
+        ;;
     gnome) _gnome ;;
-    sway)  _sway  ;;
     xfce)  _xfce  ;;
+
 esac

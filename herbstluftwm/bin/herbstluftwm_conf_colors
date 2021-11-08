@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# herbstluftwm_conf_colors --- Configure color settings for HerbstluftWM.
+#
+# Copyright (c) 2021  Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.	If not, see <http://www.gnu.org/licenses/>.
+
+_hc ()
+{
+    herbstclient "$@"
+}
+
+# Values come from my Modus themes for GNU Emacs:
+# <https://protesilaos.com/modus-themes>.
+if [ -f "$HOME"/.config/herbstluftwm/active-theme ]
+then
+   case "$(cat "$HOME"/.config/herbstluftwm/active-theme)" in
+       dark*)
+           border_active="#00bcff"
+           border_normal="#000000"
+           border_urgent="#ff8059"
+           window_divider="#323232"
+           bg_active="#0f0e39"
+           bg_normal="$border_normal"           
+           ;;
+       *)
+           border_active="#0000c0"
+           border_normal="#ffffff"
+           border_urgent="#a60000"
+           window_divider="#d7d7d7"
+           bg_active="#ebf6fa"
+           bg_normal="$border_normal"
+           ;;
+   esac
+
+   _hc set frame_border_active_color "$border_active"
+   # _hc set frame_border_normal_color "$border_normal"
+   _hc set frame_border_normal_color "#00000000" # full transparency
+   _hc set frame_bg_normal_color "$bg_normal"
+   _hc set frame_bg_active_color "$bg_active"
+
+   _hc attr theme.active.color "$border_active"
+   _hc attr theme.normal.color "$border_normal"
+   _hc attr theme.urgent.color "$border_urgent"
+
+   _hc attr theme.active.inner_color "$border_active"
+   _hc attr theme.normal.inner_color "$window_divider"
+   _hc attr theme.urgent.inner_color "$border_urgent"
+
+   _hc attr theme.floating.outer_color "$border_active"
+
+   #  TODO 2021-11-08: Check what this does
+   _hc attr theme.background_color "#505050"
+
+   for state in active urgent normal ; do
+    _hc substitute C theme.${state}.inner_color \
+        attr theme.${state}.outer_color C
+   done
+fi

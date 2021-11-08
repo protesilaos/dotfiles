@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# herbstluftwm_toggle_monitors --- Toggle HerbstluftWM monitor layouts.
+#
+# Copyright (c) 2021  Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.	If not, see <http://www.gnu.org/licenses/>.
+
+if [ "$(herbstclient list_monitors | wc -l)" -gt 2 ]
+then
+    # herbstclient set_monitors 2560x1080
+    herbstclient set_monitors 640x1060+0+0 1920x1060+640+0
+else
+    herbstclient set_monitors 620x1060+0+0 1315x1060+625+0 615x1060+1945+0
+fi

@@ -14,20 +14,19 @@
 
 #### Environment
 
-
 # I am using the prefix `mod4 + e' as a mnemonic for "environment".
 #
 # The following commands are:
 #
 # f == bspwm focus mode (my script)
 # s == reload sxhkd
-# p == reload polybar
+# p == reload polybar (NOTE: check the panel names in its config)
 # x == reload the Xresources file
 mod4 + x ; e ; {f,s,p,t,x}
     { \
     bspwm_focus_mode, \
     pkill -USR1 -x sxhkd && notify-send -i key_bindings "Reloaded key bindings", \
-    pkill -x polybar && polybar bottom &, \
+    pkill -x polybar && polybar "$DESKTOP_SESSION" &, \
     xrdb -I "$HOME" -merge "$HOME"/.Xresources \
     }
 

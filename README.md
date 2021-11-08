@@ -24,6 +24,47 @@ are willing to assume responsibility for any possible breakage, then
 please feel welcome to follow along.  You can always open an issue here
 or contribute any fixes, if you will.
 
+## Window managers
+
+As of 2021-11-08, I have configurations for three window managers, in
+order from oldest to newest:
+
++ **bspwm:** I used this for years.  In the summer of 2021 I configured
+  it again to bring it up to standard.  Some legacy issues remain
+  (specifically with the key bindings), but it is okay overall.  Use
+  this if you want something that is easy to grasp for beginners, but
+  super-powerful for those who wish to script its behaviour.
+
++ **swaywm:** I used it for about two weeks at the end of September or
+  the beginning of October 2021.  I did it mostly because I was curious
+  about Wayland.  Overall, things work fine and I am happy with it.  I
+  don't use the tabbed/stacked layouts and don't mess around too much
+  with its container functionality for grouping windows.  Just give me
+  the standard tiling scheme.  If/when Emacs' `pgtk` branch is merged
+  into `master`, I might reconsider it.  In the meantime, I stay with
+  Xorg.  Choose Sway if you want to switch to Wayland right away.
+
++ **herbstluftwm:** I used this WM privately some years ago when I was
+  deciding between it and bspwm.  If you check and compare all relevant
+  configurations, you will notice that herbstluftwm and bspwm are very
+  similar in how they work.  The latter has an automatic tiling scheme
+  that is smart enough to split windows depending on their direction or
+  longest side, whereas the former is strictly manual.  The main
+  difference is that herbstluftwm handles monitors and workspaces
+  ("tags") differently.  In short: a monitor can be virtual, by being
+  assigned to a portion of the effective screen area.  Opt for
+  herbstluftwm if you have an ultrawide display and want to create
+  virtual monitors out of it.  I got such a display on 2021-11-08 as
+  part of a temporary exchange with a friend and my first impressions
+  are positive.  Too bad I won't keep it for too long...
+
+Sway's configurations are self-contained.  Whereas bspwm and
+herbstluftwm have a shared basis in the `xorg-twm` stow package.  I plan
+to document everything: (i) how to use stow, (ii) how the directory
+strucure is designed, (iii) package names and dependencies.  In the
+meantime, **this is highly experimental and you should not use anything,
+unless you know what you are doing.**
+
 ## How to reproduce my Emacs setup
 
 I am not using `use-package` so this will not be an easy ride.  It is
@@ -35,25 +76,9 @@ details in the heading _"How to reproduce your dotemacs?"_ of my
 `prot-emacs.org`.  Either find it there, or read it on my website:
 <https://protesilaos.com/emacs/dotemacs/#h:0675f798-e2d9-4762-9df2-f47cd24cf00a>.
 
-It also explains how to manage my dotfiles with the help of GNU Stow.
-
-## BSPWM configuration
-
-As of 2021-08-27 I am back to using BSPWM.  Emacs remains the
-centrepiece of my computing environment, though I got bored of Xfce and
-thought I would re-use my old configurations.  There have been some
-updates and more will follow.  Everything should be considered a
-work-in-progress until further notice.
-
-## Experiments with Sway
-
-Starting on 2021-09-21, I maintain configuration related to the Sway
-window manager.  The plan is to switch to Wayland at some point in the
-near future.  Sway is a stable package for testing things, though I am
-not sure I will stick with it.  Perhaps there is another window manager
-I might like more.  In the meantime, **consider everything related to
-Sway to be highly experimental, unstable, and subject to removal without
-prior notice**.
+It also explains how to manage my dotfiles with the help of GNU Stow,
+notwithstanding the need for proper documentation, as noted in the
+previous section.
 
 ## Copying
 
