@@ -105,10 +105,10 @@
   (prot-pulse-advice-commands-mode 1)
   (define-key global-map (kbd "C-x l") #'prot-pulse-pulse-line)) ; override `count-lines-page'
 
-;;; Put customisation settings in the null device
+;;; Make Custom UI code disposable
 (prot-emacs-builtin-package 'cus-edit
   ;; Disable the damn thing
-  (setq custom-file null-device))
+  (setq custom-file (make-temp-file "emacs-custom-")))
 
 (prot-emacs-elpa-package 'exec-path-from-shell
   (setq exec-path-from-shell-variables
@@ -247,7 +247,8 @@
 (prot-emacs-builtin-package 'lin
   (setq lin-foreground-override nil)
 
-  (dolist (hook '(elfeed-search-mode-hook notmuch-search-mode-hook))
+  (dolist (hook '( elfeed-search-mode-hook notmuch-search-mode-hook
+                   log-view-mode-hook))
     (add-hook hook #'lin-mode)))
 
 ;;; Font configurations (prot-fonts.el)
