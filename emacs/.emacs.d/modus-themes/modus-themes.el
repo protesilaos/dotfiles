@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.6.0
-;; Last-Modified: <2021-10-27 18:16:50 +0300>
+;; Last-Modified: <2021-11-09 07:45:15 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -240,6 +240,7 @@
 ;;     ido-mode
 ;;     iedit
 ;;     iflipb
+;;     image-dired
 ;;     imenu-list
 ;;     indium
 ;;     info
@@ -1791,7 +1792,7 @@ This includes the mode line, header line, tab bar, and tab line."
   'modus-themes-mixed-fonts "On 2021-10-02 for version 1.7.0")
 
 (defcustom modus-themes-mixed-fonts nil
-  "Enable inheritance from `fixed-pitch' in some faces.
+  "Non-nil to enable inheritance from `fixed-pitch' in some faces.
 
 This is done to allow spacing-sensitive constructs, such as Org
 tables and code blocks, to remain monospaced when users opt for
@@ -1865,9 +1866,11 @@ takes precedence.
 The symbol of a weight attribute adjusts the font of the heading
 accordingly, such as `light', `semibold', etc.  Valid symbols are
 defined in the internal variable `modus-themes--heading-weights'.
-The absence of a weight means that bold will be used.  For
-backward compatibility, the `no-bold' value is accepted, though
-users are encouraged to specify a `regular' weight instead.
+The absence of a weight means that bold will be used by virtue of
+inheriting the `bold' face (check the manual for tweaking bold
+and italic faces).  For backward compatibility, the `no-bold'
+value is accepted, though users are encouraged to specify a
+`regular' weight instead.
 
 Combinations of any of those properties are expressed as a list,
 like in these examples:
@@ -2974,12 +2977,14 @@ In user configuration files the form may look like this:
 
 This is to account for red-green color deficiency.
 
-The present customization option should apply to all contexts where
-there can be a color-coded distinction between success and failure,
-to-do and done, and so on.
+The present customization option applies to all contexts where
+there can be a color-coded distinction between success or
+failure, to-do or done, mark for selection or deletion (e.g. in
+Dired), current and lazily highlighted search matches, and so on.
 
-Diffs, which have a red/green dichotomy by default, can also be
-configured to conform with deuteranopia: `modus-themes-diffs'."
+Diffs, which rely on a red/green dichotomy by default, can also
+be configured to meet the needs of users with deuteranopia via
+the option `modus-themes-diffs'."
   :group 'modus-themes
   :package-version '(modus-themes . "1.4.0")
   :version "28.1"
@@ -3390,19 +3395,16 @@ an alternative to the default value."
   (cdr (assoc key alist)))
 
 (defvar modus-themes--heading-weights
-  '(thin ultralight extralight light semilight regular medium semibold extrabold ultrabold)
+  '( thin ultralight extralight light semilight regular medium
+     semibold bold heavy extrabold ultrabold)
   "List of font weights used by `modus-themes--heading'.")
 
-;; TODO 2021-10-27: Maybe we can improve this?
 (defun modus-themes--heading-weight (list)
   "Search for `modus-themes--heading' weight in LIST."
-  (let (weight)
-    (setq weight
-          (mapcar (lambda (elt)
-                    (member elt modus-themes--heading-weights))
-                  list))
-    (setq weight (delq nil weight))
-    (setq weight (caar weight))))
+  (catch 'found
+    (dolist (elt list)
+      (when (memq elt modus-themes--heading-weights)
+        (throw 'found elt)))))
 
 (defun modus-themes--heading (level fg fg-alt bg bg-gray border)
   "Conditional styles for `modus-themes-headings'.
@@ -3674,7 +3676,7 @@ property."
                        (cons fg-alt bg-alt))
                       ((cons fg bg))))
           (box (cond ((memq 'moody modus-themes-mode-line)
-                      nil)
+                      'unspecified)
                      ((and (memq '3d modus-themes-mode-line)
                            (memq 'padded modus-themes-mode-line))
                       (list :line-width padding
@@ -3711,7 +3713,7 @@ property."
                      (border)))
           (line (cond ((not (or (memq 'moody modus-themes-mode-line)
                                 (memq 'padded modus-themes-mode-line)))
-                       nil)
+                       'unspecified)
                       ((and (memq 'borderless modus-themes-mode-line)
                             (memq 'accented modus-themes-mode-line))
                        bg-accent)
@@ -4132,6 +4134,7 @@ as when they are declared in the `:config' phase)."
 (defun modus-themes-load-operandi ()
   "Load `modus-operandi' and disable `modus-vivendi'.
 Also run `modus-themes-after-load-theme-hook'."
+  (interactive)
   (disable-theme 'modus-vivendi)
   (load-theme 'modus-operandi t)
   (run-hooks 'modus-themes-after-load-theme-hook))
@@ -4140,6 +4143,7 @@ Also run `modus-themes-after-load-theme-hook'."
 (defun modus-themes-load-vivendi ()
   "Load `modus-vivendi' and disable `modus-operandi'.
 Also run `modus-themes-after-load-theme-hook'."
+  (interactive)
   (disable-theme 'modus-operandi)
   (load-theme 'modus-vivendi t)
   (run-hooks 'modus-themes-after-load-theme-hook))
@@ -4294,7 +4298,11 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(modus-themes-pseudo-header ((,class :inherit bold :foreground ,fg-main)))
     `(modus-themes-mark-alt ((,class :inherit bold :background ,bg-mark-alt :foreground ,fg-mark-alt)))
     `(modus-themes-mark-del ((,class :inherit bold :background ,bg-mark-del :foreground ,fg-mark-del)))
-    `(modus-themes-mark-sel ((,class :inherit bold :background ,bg-mark-sel :foreground ,fg-mark-sel)))
+    `(modus-themes-mark-sel ((,class :inherit bold
+                                     :background ,@(modus-themes--success-deuteran
+                                                    cyan-refine-bg
+                                                    bg-mark-sel)
+                                     :foreground ,fg-mark-sel)))
     `(modus-themes-mark-symbol ((,class :inherit bold :foreground ,blue-alt)))
 ;;;;; heading levels
     ;; styles for regular headings used in Org, Markdown, Info, etc.
@@ -4401,6 +4409,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(buffer-menu-buffer ((,class :inherit bold)))
     `(comint-highlight-input ((,class :inherit bold)))
     `(comint-highlight-prompt ((,class :inherit modus-themes-prompt)))
+    `(confusingly-reordered ((,class :inherit modus-themes-lang-error)))
     `(error ((,class :inherit bold :foreground ,red)))
     `(escape-glyph ((,class :foreground ,fg-escape-char-construct)))
     `(file-name-shadow ((,class :inherit (shadow italic))))
@@ -5977,6 +5986,11 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; iflipb
     `(iflipb-current-buffer-face ((,class :inherit bold :foreground ,cyan-alt)))
     `(iflipb-other-buffer-face ((,class :inherit shadow)))
+;;;;; image-dired
+    `(image-dired-thumb-flagged ((,class :background ,red-intense-bg)))
+    `(image-dired-thumb-mark ((,class :background ,@(modus-themes--success-deuteran
+                                                     cyan-intense-bg
+                                                     green-intense-bg))))
 ;;;;; imenu-list
     `(imenu-list-entry-face-0 ((,class :foreground ,cyan)))
     `(imenu-list-entry-face-1 ((,class :foreground ,blue)))
@@ -6009,7 +6023,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(info-title-3 ((,class :inherit modus-themes-heading-3)))
     `(info-title-4 ((,class :inherit modus-themes-heading-4)))
 ;;;;; info-colors
-    `(info-colors-lisp-code-block ((,class :inherit fixed-pitch)))
+    `(info-colors-lisp-code-block ((,class :inherit modus-themes-fixed-pitch)))
     `(info-colors-ref-item-command ((,class :inherit font-lock-function-name-face)))
     `(info-colors-ref-item-constant ((,class :inherit font-lock-constant-face)))
     `(info-colors-ref-item-function ((,class :inherit font-lock-function-name-face)))
@@ -6477,7 +6491,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(markup-meta-face ((,class :inherit shadow)))
     `(markup-meta-hide-face ((,class :foreground "gray50")))
     `(markup-reference-face ((,class :foreground ,blue-alt :underline ,bg-region)))
-    `(markup-replacement-face ((,class :inherit fixed-pitch :foreground ,red-alt)))
+    `(markup-replacement-face ((,class :inherit modus-themes-fixed-pitch :foreground ,red-alt)))
     `(markup-secondary-text-face ((,class :height 0.9 :foreground ,cyan-alt-other)))
     `(markup-small-face ((,class :inherit markup-gen-face :height 0.9)))
     `(markup-strong-face ((,class :inherit markup-bold-face)))
@@ -7466,9 +7480,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(telega-button-active ((,class :box ,blue-intense-bg :background ,blue-intense-bg :foreground ,fg-main)))
     `(telega-button-highlight ((,class :inherit modus-themes-subtle-magenta)))
     `(telega-chat-prompt ((,class :inherit bold)))
-    `(telega-entity-type-code ((,class :inherit fixed-pitch)))
+    `(telega-entity-type-code ((,class :inherit modus-themes-fixed-pitch)))
     `(telega-entity-type-mention ((,class :foreground ,cyan)))
-    `(telega-entity-type-pre ((,class :inherit fixed-pitch)))
+    `(telega-entity-type-pre ((,class :inherit modus-themes-fixed-pitch)))
     `(telega-msg-heading ((,class :background ,bg-alt)))
     `(telega-msg-self-title ((,class :inherit bold)))
     `(telega-root-heading ((,class :inherit modus-themes-subtle-neutral)))
@@ -7477,9 +7491,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(telega-user-online-status ((,class :foreground ,cyan-active)))
     `(telega-username ((,class :foreground ,cyan-alt-other)))
     `(telega-webpage-chat-link ((,class :background ,bg-alt)))
-    `(telega-webpage-fixed ((,class :inherit fixed-pitch :height 0.85)))
+    `(telega-webpage-fixed ((,class :inherit modus-themes-fixed-pitch :height 0.85)))
     `(telega-webpage-header ((,class :inherit modus-themes-variable-pitch :height 1.3)))
-    `(telega-webpage-preformatted ((,class :inherit fixed-pitch :background ,bg-alt)))
+    `(telega-webpage-preformatted ((,class :inherit modus-themes-fixed-pitch :background ,bg-alt)))
     `(telega-webpage-subheader ((,class :inherit modus-themes-variable-pitch :height 1.15)))
 ;;;;; telephone-line
     `(telephone-line-accent-active ((,class :background ,fg-inactive :foreground ,bg-inactive)))
