@@ -394,7 +394,7 @@ you wish to get the file):
 
 #+include: prot-lisp/prot-pulse.el src emacs-lisp :tangle no
 
-** Send Custom UI code straight to =/dev/null=
+** Make Custom UI code disposable
 :PROPERTIES:
 :CUSTOM_ID: h:b24ce3fc-a12c-4d21-93d7-c1e7bd36a65d
 :END:
@@ -403,21 +403,25 @@ When you install a package or use the various customisation interfaces
 to tweak things to your liking, Emacs will append a piece of Elisp to
 your init file.  In my experience, this is a common source of
 inconsistencies, arising from a conflict between the user's code and
-what is stored in that =custom= snippet.  Thus, instruct Emacs to put
-all "custom" code in the null device such that it never gets loaded.
-This feels kinda hacky but is better than having some arbitrary code
-that you accidentally evaluated from messing up with your carefully
+what is stored in that =custom-*= snippet.
+
+To avoid conflicts, I instruct Emacs to put all "custom" code in a
+temporary file (the =/tmp= path on Linux).  Custom does its work as
+expected, but its state does not persist to mess up with my carefully
 designed (and version-controlled) configuration.
 
-Thanks to Justin Schell for suggesting the use of =null-device=, which
-looks cleaner that creating a temporary file and storing everything
-there.
+This feels kinda hacky though it gets the job done.
+
+Together with Justin Schell we had experimented with using the
+=null-device= instead of a temporary file.  However, that created problems
+under certain conditions, as Emacs would issue warnings about it and
+prompt on how to proceed.
 
 #+begin_src emacs-lisp
-;;; Put customisation settings in the null device
+;;; Make Custom UI code disposable
 (prot-emacs-builtin-package 'cus-edit
   ;; Disable the damn thing
-  (setq custom-file null-device))
+  (setq custom-file (make-temp-file "emacs-custom-")))
 #+end_src
 
 ** Propagation of shell environment variables (exec-path-from-shell.el)
