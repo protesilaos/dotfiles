@@ -20,7 +20,7 @@
 if [ "$(herbstclient list_monitors | wc -l)" -gt 2 ]
 then
     # herbstclient set_monitors 2560x1080
-    herbstclient set_monitors 640x1060+0+0 1920x1060+640+0
+    herbstclient set_monitors 640x1080+0+0 1920x1080+640+0
 else
-    herbstclient set_monitors 620x1060+0+0 1315x1060+625+0 615x1060+1945+0
+    herbstclient set_monitors 620x1080+0+0 1315x1080+625+0 615x1080+1945+0
 fi
