@@ -72,15 +72,37 @@ Only works when variable `file-name-shadow-mode' is non-nil."
   :group 'mct)
 
 (defcustom mct-live-completion t
-  "Automatically display the Completions buffer.
+  "Control auto-display and live-update of Completions' buffer.
 
-When disabled, the user has to manually request completions,
-using the regular activating commands.  Note that
-`mct-completion-passlist' overrides this option, while taking
-precedence over `mct-completion-blocklist'.
+When nil, the user has to manually request completions, using the
+regular activating commands.  The Completions' buffer is never
+updated live to match user input.  Updating has to be handled
+manually.  This is like the out-of-the-box minibuffer completion
+experience.
 
-Live updating is subject to `mct-minimum-input'."
-  :type 'boolean
+When set to the value `visible', the Completions' buffer is live
+updated only if it is visible.  The actual display of the
+completions is still handled manually.  For this reason, the
+`visible' style does not read the `mct-minimum-input', meaning
+that it will always try to live update the visible completions,
+regardless of input length.
+
+When non-nil (the default), the Completions' buffer is
+automatically displayed once the `mct-minimum-input' is met and
+is hidden once the input drops below that threshold.  While
+visible, the buffer is updated live to match the user input.
+
+Note that every function in the `mct-completion-passlist' ignores
+this option altogether.  This means that every such command will
+always show the Completions' buffer automatically and will always
+update its contents live.  Same principle for every function
+declared in the `mct-completion-blocklist', which will always
+disable both the automatic display and live updating of the
+Completions' buffer."
+  :type '(choice
+          (const :tag "Disable live-updating" nil)
+          (const :tag "Enable live-updating" t)
+          (const :tag "Live update only visible Completions" 'visible))
   :group 'mct)
 
 (defcustom mct-minimum-input 3
@@ -99,24 +121,25 @@ Set this to 0 to disable the delay."
   :group 'mct)
 
 (defcustom mct-completion-blocklist nil
-  "Commands that do not do live updating of completions.
-
-A less drastic measure is to set `mct-minimum-input'
-to an appropriate value.
+  "Functions that disable live completions.
+This means that they ignore `mct-live-completion'.  They do not
+automatically display the Completions' buffer, nor do they update
+it to match user input.
 
 The Completions' buffer can still be accessed with commands that
 place it in a window (such as `mct-list-completions-toggle',
-`mct-switch-to-completions-top')."
+`mct-switch-to-completions-top').
+
+A less drastic measure is to set `mct-minimum-input' to an
+appropriate value."
   :type '(repeat symbol)
   :group 'mct)
 
 (defcustom mct-completion-passlist nil
-  "Commands that do live updating of completions from the start.
-
-This means that they ignore `mct-minimum-input' and
-the inherent constraint of updating the Completions' buffer only
-upon user input.  Furthermore, they also bypass any possible
-delay introduced by `mct-live-update-delay'."
+  "Functions that do live updating of completions from the start.
+This means that they ignore the value of `mct-live-completion'
+and the `mct-minimum-input'.  They also bypass any possible delay
+introduced by `mct-live-update-delay'."
   :type '(repeat symbol)
   :group 'mct)
 
@@ -281,7 +304,8 @@ Meant to be added to `after-change-functions'."
   (when (minibufferp) ; skip if we've exited already
     (let ((while-no-input-ignore-events '(selection-request)))
       (while-no-input
-        (if (mct--minimum-input)
+        (if (or (mct--minimum-input)
+                (eq mct-live-completion 'visible))
             (condition-case nil
                 (save-match-data
                   (save-excursion
@@ -300,6 +324,11 @@ Meant to be added to `after-change-functions'."
     (when (>= delay 0)
       (run-with-idle-timer delay nil #'mct--live-completions))))
 
+(defun mct--live-completions-visible-timer (&rest _)
+  "Update visible Completions' buffer."
+  (when (window-live-p (mct--get-completion-window))
+    (mct--live-completions-timer)))
+
 (defun mct--setup-completions ()
   "Set up the completions' buffer."
   (cond
@@ -310,7 +339,9 @@ Meant to be added to `after-change-functions'."
     (add-hook 'after-change-functions #'mct--live-completions nil t))
    ((null mct-live-completion))
    ((not (memq this-command mct-completion-blocklist))
-    (add-hook 'after-change-functions #'mct--live-completions-timer nil t))))
+    (if (eq mct-live-completion 'visible)
+        (add-hook 'after-change-functions #'mct--live-completions-visible-timer nil t)
+      (add-hook 'after-change-functions #'mct--live-completions-timer nil t)))))
 
 ;;;;; Alternating backgrounds (else "stripes")
 
