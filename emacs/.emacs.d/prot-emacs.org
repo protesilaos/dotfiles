@@ -675,7 +675,8 @@ sections for further details:
 (prot-emacs-builtin-package 'lin
   (setq lin-foreground-override nil)
 
-  (dolist (hook '(elfeed-search-mode-hook notmuch-search-mode-hook))
+  (dolist (hook '( elfeed-search-mode-hook notmuch-search-mode-hook
+                   log-view-mode-hook))
     (add-hook hook #'lin-mode)))
 #+end_src
 
