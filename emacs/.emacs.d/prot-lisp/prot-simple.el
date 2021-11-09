@@ -442,7 +442,7 @@ with the specified date."
 
 ;;;###autoload
 (defun prot-simple-escape-url ()
-  "Wrap URL in angled brackets."
+  "Wrap URL (or email address) in angled brackets."
   (interactive)
   (when-let ((url (ffap-url-at-point)))
     (let* ((reg ffap-string-at-point-region)
