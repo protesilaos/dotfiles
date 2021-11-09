@@ -9787,23 +9787,48 @@ have used Debian and Arch Linux, switching between the two.  As of
 2020-05-03, I am back on Arch.
 
 My criterion for picking a distro is that it is community-driven and has
-a strong following that ensures its longer-term continuity and overall
+a strong following to ensure its longer-term continuity and overall
 stability.  This happens to be consistent with my current focus on
-Emacs: I need things to work so that I may not be bothered by too much
-admin work (and yes, Arch is super-stable once you know what you are
-doing---and, well, Debian is designed for that).
+Emacs: I need things to work so that I may not be bothered by too many
+administrative tasks (and yes, Arch is super-stable once you know what
+you are doing---and, well, Debian is designed for that).
 
-Given that I mostly live inside of Emacs, the desktop environment is no
-longer important to me, provided it does not impede my usage of Emacs,
-which practically means that it does /not bind any keys/ system-wide (with
-the exception of some standard ones like those for accessing TTYs).
+Given that I mostly live inside of Emacs, the desktop environment is not
+super important to me.  Though I still like to configure things to my
+liking, partially because it gives me a predictable environment but also
+for the inherent fun of it.
 
-Prior to my Emacs days, I used to have a highly customised session
-centred around BSPWM (the Binary Space Partitioning Window Manager),
-while I also spent time with i3WM, DWM, Herbestluftwm.  The tiling
-window manager paradigm offers little to no value now that practically
-my entire computing experience happens inside of a single application,
-which is why I have no interest whatsoever in EXWM.
+I run a custom session centred around a tiling window manager.  Normally
+this is bspwm (Binary Space Partitioning Window Manager), though my
+dotfiles also include configurations for (i) swaywm and (ii)
+herbstluftwm.  The former is a Wayland compositor.  I keep it as a
+reliable solution for the inevitable Wayland future (Xorg is in
+maintenance mode, but it still works perfectly fine for my needs).
+While the latter is conceptually similar to bspwm, with the major
+exception being how it handles monitors and workspaces.
+
+As of 2021-11-08, I have an ultrawide display as part of a temporary
+exchange.  My bspwm is not optimised for it, because contents start off
+far to the left.  It is possible to make it behave in a desirable
+fashion, but I don't want to adapt my setup to this monitor and then
+revert back to what I had before.  So I am using herbstluftwm for the
+time being, which lets me designate areas of the physical display as
+virtual monitors.  So I divide the 2560x1080 area into two parts with
+the right one being 1920x1080.  This means that my Emacs goes to the
+right virtual monitor and its left window (the Emacs concept of
+"window") is positioned closer to the centre of the display.  My setup
+includes a shell script which splits the display in three, with the
+largest area in the middle.
+
+Herbstluftwm's virtual monitors are not mere workspaces.  They do
+confine everything inside of them, as if they were physical displays.
+Fullscreen mode, for example.
+
+None of my tiling window managers is as well documented as my Emacs
+setup.  I do plan to improve things at some point.  Until then, my
+dotfiles are only intended for experienced users or, generally, those
+who understand that they will handle everything on their own:
+<https://gitlab.com/protesilaos/dotfiles>.
 
 My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/][built from source]], directly from trunk (i.e. the =master=
 branch).
@@ -9848,9 +9873,15 @@ layout that I got from a toy store for 7 EUR together with a small mouse
 (the size of the mouse is about half that of a regular one).  The mouse
 is annoying to work with (thankfully not often), though the keyboard
 feels better than what its cost suggests---still toy-level though.  Same
-for the speakers, which I think cost 8 or 10 EUR.  The monitor is 1080p
-and the best part is that I got it free of charge from a clearance
-several years ago, before I even had the Thinkpad.
+for the speakers, which I think cost 8 or 10 EUR.  The monitor is
+1920x1080 and the best part is that I got it free of charge from a
+clearance several years ago, before I even had the Thinkpad.
+
+As of 2021-11-08, I exchanged that monitor with a friend's ultrawide
+one, which is 2560x1080.  I thought I would experiment with it for a
+while to see what kind of software solutions can be applied to such an
+otherwise awkward ratio ([[#h:044977f2-a909-4804-bf89-576dd429d405][What is your distro and/or window manager?]]).
+While my friend needs to use a dual monitor setup for some work.
 
 On the day I got the computer (August 6, 2021), I got a camera and
 microphone for 40 EUR combined.  Now I have a good setup in place to do
