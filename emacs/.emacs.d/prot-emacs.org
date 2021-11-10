@@ -816,7 +816,7 @@ Relevant publications of mine that are not part of this document:
         '((small . ( :fixed-pitch-family "Hack"
                      :fixed-pitch-regular-weight regular
                      :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 80
+                     :fixed-pitch-height 75
                      :fixed-pitch-line-spacing 1
                      :variable-pitch-family "DejaVu Serif"
                      :variable-pitch-height 1.0
