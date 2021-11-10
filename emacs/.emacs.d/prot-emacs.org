@@ -7494,9 +7494,10 @@ few of them is usually okay, but a lot of them do not scale well.
   (setq minions-mode-line-lighter ";")
   ;; NOTE: This will be expanded whenever I find a mode that should not
   ;; be hidden
-  (setq minions-direct (list 'defining-kbd-macro
-                             'flymake-mode
-                             'prot-simple-monocle))
+  (setq minions-prominent-modes
+        (list 'defining-kbd-macro
+              'flymake-mode
+              'prot-simple-monocle))
   (minions-mode 1))
 #+end_src
 
