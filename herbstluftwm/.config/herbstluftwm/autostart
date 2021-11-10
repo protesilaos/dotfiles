@@ -121,7 +121,8 @@ _hc set tree_style '╾│ ├└╼─┐'
 #
 # The options are required in order for Xmodmap to work properly (see
 # below).
-if _check setxkbmap; then
+if _check setxkbmap
+then
     setxkbmap -layout 'us,el' -option 'ctrl:nocaps,compose:menu'
 fi
 
@@ -136,7 +137,8 @@ fi
 _check sxhkd && sxhkd -c "$HOME"/.config/sxhkd/sxhkdrc{,_herbstclient} &
 
 # Launch Polybar
-if _check polybar; then
+if _check polybar
+then
     # Make sure we have no running instances
     pkill -x polybar
 
@@ -148,8 +150,10 @@ fi
 # But this is enough for my case.  Here is a command I tested and which
 # works (using the Xfce desktop manager):
 # xfdesktop --sm-client-disable --disable-wm-check &
-if _check feh; then
-    if [ -f "$HOME"/.fehbg ]; then
+if _check feh
+then
+    if [ -f "$HOME"/.fehbg ]
+    then
         "$HOME"/.fehbg &
     fi
 fi
