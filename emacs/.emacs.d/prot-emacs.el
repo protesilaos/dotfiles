@@ -248,7 +248,7 @@
   (setq lin-foreground-override nil)
 
   (dolist (hook '( elfeed-search-mode-hook notmuch-search-mode-hook
-                   log-view-mode-hook))
+                   log-view-mode-hook package-menu-mode-hook))
     (add-hook hook #'lin-mode)))
 
 ;;; Font configurations (prot-fonts.el)
@@ -2753,9 +2753,10 @@ Can link to more than one message, if so all matching messages are shown."
   (setq minions-mode-line-lighter ";")
   ;; NOTE: This will be expanded whenever I find a mode that should not
   ;; be hidden
-  (setq minions-direct (list 'defining-kbd-macro
-                             'flymake-mode
-                             'prot-simple-monocle))
+  (setq minions-prominent-modes
+        (list 'defining-kbd-macro
+              'flymake-mode
+              'prot-simple-monocle))
   (minions-mode 1))
 
 ;;; Mode line recursion indicators
