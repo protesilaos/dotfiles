@@ -64,7 +64,8 @@ then
    #  TODO 2021-11-08: Check what this does
    _hc attr theme.background_color "#505050"
 
-   for state in active urgent normal ; do
+   for state in active urgent normal
+   do
     _hc substitute C theme.${state}.inner_color \
         attr theme.${state}.outer_color C
    done
