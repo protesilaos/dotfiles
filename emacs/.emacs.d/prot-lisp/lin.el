@@ -102,11 +102,17 @@ Used only when `lin-override-foreground' is non-nil."
 (defvar-local lin--cookie nil
   "Cookie returned by `face-remap-add-relative'.")
 
+(defvar hl-line-face)
+
 (defun lin--source-face ()
   "Determine the source face, what to remap."
   (cond
    ((derived-mode-p 'mu4e-headers-mode)
     'mu4e-header-highlight-face)
+   ;; Do not target `hl-line' directly, as it can be changed by
+   ;; `hl-line-face'.
+   ((when (bound-and-true-p hl-line-face)
+      hl-line-face))
    (t
     'hl-line)))
 
