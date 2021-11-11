@@ -22,7 +22,7 @@
 # s == reload sxhkd
 # p == reload polybar (NOTE: check the panel names in its config)
 # x == reload the Xresources file
-mod4 + x ; e ; {f,s,p,t,x}
+mod4 + e ; {f,s,p,t,x}
     { \
     xtwm_focus_mode, \
     pkill -USR1 -x sxhkd && notify-send -i key_bindings "Reloaded key bindings", \
@@ -32,6 +32,13 @@ mod4 + x ; e ; {f,s,p,t,x}
 
 mod4 + F5
      delight
+
+mod4 + e ; d ; {q,Q,c,h}
+     dunstctl {close,close-all,context,history-pop}
+
+# 'dunst_toggle_notify' is a shell script of mine.  Check my dotfiles.
+mod4 + e ; d ; p
+     dunst_toggle_notify
 
 # Invoke the session management menu (log out, lock, reboot, shutdown).
 ctrl + alt + Delete
@@ -67,9 +74,6 @@ mod4 + {_, shift +,ctrl + shift + } Return
 # Show the desired rofi views.
 mod4 + d
      rofi -show drun
-
-mod4 + x ; {x,b}
-     rofi -show {drun,window}
 
 #### Miscellaneous tools and media keys
 
@@ -110,17 +114,6 @@ XF86AudioMicMute
 	amixer set Capture toggle
 mod4 + XF86Audio{Mute,LowerVolume,RaiseVolume}
 	amixer set Capture {toggle,5%-,5%+}
-
-
-#### Notifications
-
-mod4 + x ; d ; {q,Q,c,h}
-     dunstctl {close,close-all,context,history-pop}
-
-# 'dunst_toggle_notify' is a shell script of mine.  Check my dotfiles.
-mod4 + x ; d ; p
-     dunst_toggle_notify
-
 
 # TODO 2019-11-01: These will need to be reviewed once all key bindings
 # are rewritten.  Perhaps it would be nice to produce something that is
