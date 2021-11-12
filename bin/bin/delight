@@ -197,22 +197,20 @@ _xsettingsd ()
 	esac
 }
 
-_bspwm ()
+_bspwm_or_hlwm ()
 {
-    _depcheck bspwm
+    _depcheck "$wm_executable"
 
-    theme="$HOME"/.config/bspwm/active-theme
-
-    if [ "$(cat "$theme")" = light ]
+    if [ "$(cat "$wm_theme")" = light ]
     then
         style=dark
     else
         style=light
     fi
 
-    echo "$style" > "$theme"
+    echo "$style" > "$wm_theme"
 
-    _depcheck bspwm_conf_colors && bspwm_conf_colors
+    _depcheck "$conf_colors" && "$conf_colors"
     _emacs "$style" &
     _xsettingsd "$style" &
     _xterm &
@@ -224,8 +222,6 @@ _bspwm ()
     # _alacritty &
     _feh &
     _rofi &
-
-    focus_mode_status="$HOME"/.config/bspwm/bspwm_focus_mode_status
 
     if [ "$(sed 1q "$focus_mode_status")" = off ]
     then
@@ -234,37 +230,6 @@ _bspwm ()
         # Just update the colours, but do not launch the process.
         _polybar
     fi
-}
-
-_hlwm ()
-{
-    _depcheck herbstluftwm
-
-    theme="$HOME"/.config/herbstluftwm/active-theme
-
-    if [ "$(cat "$theme")" = light ]
-    then
-        style=dark
-    else
-        style=light
-    fi
-
-    echo "$style" > "$theme"
-
-    _depcheck herbstluftwm_conf_colors && herbstluftwm_conf_colors
-    _emacs "$style" &
-    _xsettingsd "$style" &
-    _xterm &
-    # # NOTE 2021-09-25: I tried alacritty for a while, but the way it
-    # reads the fonts on Xorg makes the point size larger than expected.
-    # Also, it seems to miss some smaller sizes, so I cannot use it
-    # exactly how I want to.  Everything is fine on Wayland with Sway...
-    #
-    # _alacritty &
-    _feh &
-    _rofi &
-
-    _polybar launch
 }
 
 #### Gnome
@@ -383,12 +348,20 @@ _sway ()
 case "$DESKTOP_SESSION"
 in
     bspwm)
+        wm_executable=bspwm
         wm_theme="$HOME"/.config/bspwm/active-theme
-        _bspwm
+        focus_mode_status="$HOME"/.config/bspwm/bspwm_focus_mode_status
+        conf_colors=bspwm_conf_colors
+
+        _bspwm_or_hlwm
         ;;
     herbstluftwm)
+        wm_executable=herbstluftwm
         wm_theme="$HOME"/.config/herbstluftwm/active-theme
-        _hlwm
+        focus_mode_status="$HOME"/.config/herbstluftwm/herbstluftwm_focus_mode_status
+        conf_colors=herbstluftwm_conf_colors
+
+        _bspwm_or_hlwm
         ;;
     sway)
         wm_theme="$HOME"/.config/sway/active-theme
