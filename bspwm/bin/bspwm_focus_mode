@@ -44,6 +44,7 @@ border_width="$(_get_value border_width)"
 # part of the nodes.
 effective_padding=$(("$bottom_padding" + "$window_gap"))
 
+# This is used by the 'delight' script.
 focus_mode_status="$HOME"/.config/bspwm/bspwm_focus_mode_status
 
 if [ "$effective_padding" -ge "$panel_height" ]
@@ -68,7 +69,8 @@ else
 fi
 
 # Create overlapping borders in focus mode.
-if [ -n "$border_width" ]; then
+if [ -n "$border_width" ]
+then
     bspc config window_gap -"$border_width"
     bspc config border_width "$border_width"
     for side in top right bottom left; do
@@ -78,7 +80,8 @@ else
     bspc config window_gap "${window_gap:=2}"
     bspc config border_width "${border_width:=2}"
     bspc config bottom_padding "${bottom_padding:=$panel_height}"
-    for side in right left top; do
+    for side in right left top
+    do
         bspc config "${side}"_padding "0"
     done
 fi
