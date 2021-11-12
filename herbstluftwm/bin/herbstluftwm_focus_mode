@@ -48,6 +48,8 @@ then
     _hc set frame_border_width 0
 
     echo "on" > "$focus_mode_status"
+
+    pkill -x polybar
 else
     _hc set smart_window_surroundings "$smart_window_surroundings"
     _hc set smart_frame_surroundings "$smart_frame_surroundings"
