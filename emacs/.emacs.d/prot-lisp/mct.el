@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/mct
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "28.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -182,15 +182,15 @@ NOTE that setting this option with `setq' requires a restart of
 
 ;;;; Completion metadata
 
-(defun mct--field-beg ()
-  "Determine beginning of completion."
+(defun mct--minibuffer-field-beg ()
+  "Determine beginning of completion in the minibuffer."
   (if-let ((window (active-minibuffer-window)))
       (with-current-buffer (window-buffer window)
         (minibuffer-prompt-end))
     (nth 0 completion-in-region--data)))
 
-(defun mct--field-end ()
-  "Determine end of completion."
+(defun mct--minibuffer-field-end ()
+  "Determine end of completion in the minibuffer."
   (if-let ((window (active-minibuffer-window)))
       (with-current-buffer (window-buffer window)
         (point-max))
@@ -200,20 +200,31 @@ NOTE that setting this option with `setq' requires a restart of
   "Return completion category."
   (when-let ((window (active-minibuffer-window)))
     (with-current-buffer (window-buffer window)
-      (let* ((beg (mct--field-beg))
+      (let* ((beg (mct--minibuffer-field-beg))
              (md (completion--field-metadata beg)))
         (alist-get 'category (cdr md))))))
 
 ;;;; Basics of intersection between minibuffer and Completions' buffer
 
-(defface mct-hl-line
+;; TODO 2021-11-16: Is there a better way to check that the current
+;; command does not do completion?  This is fragile.
+(defvar mct--no-complete-functions
+  '( eval-expression query-replace query-replace-regexp
+     isearch-forward isearch-backward
+     isearch-forward-regexp isearch-backward-regexp)
+  "List of functions that do not do completion.")
+
+(define-obsolete-variable-alias
+  'mct-hl-line 'mct-highlight-candidate "0.3.0")
+
+(defface mct-highlight-candidate
   '((default :extend t)
     (((class color) (min-colors 88) (background light))
      :background "#b0d8ff" :foreground "#000000")
     (((class color) (min-colors 88) (background dark))
      :background "#103265" :foreground "#ffffff")
     (t :inherit highlight))
-  "Face for current line in the completions' buffer."
+  "Face for current candidate in the completions' buffer."
   :group 'mct)
 
 (defface mct-line-number
@@ -248,14 +259,6 @@ Add this to `completion-list-mode-hook'."
     (face-remap-add-relative 'line-number-current-line
                              'mct-line-number-current-line)
     (display-line-numbers-mode 1)))
-
-(defun mct--hl-line ()
-  "Set up line highlighting for the completions' buffer.
-Add this to `completion-list-mode-hook'."
-  (when (and (derived-mode-p 'completion-list-mode)
-             (eq mct-completions-format 'one-column))
-    (face-remap-add-relative 'hl-line 'mct-hl-line)
-    (hl-line-mode 1)))
 
 ;; Thanks to Omar Antolín Camarena for recommending the use of
 ;; `cursor-sensor-functions' and the concomitant hook with
@@ -331,17 +334,18 @@ Meant to be added to `after-change-functions'."
 
 (defun mct--setup-completions ()
   "Set up the completions' buffer."
-  (cond
-   ((memq this-command mct-completion-passlist)
-    (setq-local mct-minimum-input 0)
-    (setq-local mct-live-update-delay 0)
-    (mct--show-completions)
-    (add-hook 'after-change-functions #'mct--live-completions nil t))
-   ((null mct-live-completion))
-   ((not (memq this-command mct-completion-blocklist))
-    (if (eq mct-live-completion 'visible)
-        (add-hook 'after-change-functions #'mct--live-completions-visible-timer nil t)
-      (add-hook 'after-change-functions #'mct--live-completions-timer nil t)))))
+  (unless (memq this-command mct--no-complete-functions)
+    (cond
+     ((memq this-command mct-completion-passlist)
+      (setq-local mct-minimum-input 0)
+      (setq-local mct-live-update-delay 0)
+      (mct--show-completions)
+      (add-hook 'after-change-functions #'mct--live-completions nil t))
+     ((null mct-live-completion))
+     ((not (memq this-command mct-completion-blocklist))
+      (if (eq mct-live-completion 'visible)
+          (add-hook 'after-change-functions #'mct--live-completions-visible-timer nil t)
+        (add-hook 'after-change-functions #'mct--live-completions-timer nil t))))))
 
 ;;;;; Alternating backgrounds (else "stripes")
 
@@ -382,8 +386,8 @@ Meant to be added to `after-change-functions'."
                 (forward-line 1)
               (user-error (goto-char (point-max))))
             ;; We set the overlay this way and give it a low priority so
-            ;; that `hl-line-mode' and/or the active region can override
-            ;; it.
+            ;; that `mct--highlight-overlay' and/or the active region
+            ;; can override it.
             (setq overlay (make-overlay pt (point)))
             (overlay-put overlay 'face 'mct-stripe)
             (overlay-put overlay 'priority -100)))))))
@@ -452,25 +456,30 @@ by `mct-completion-windows-regexp'."
 (defun mct-backward-updir ()
   "Delete char before point or go up a directory."
   (interactive nil mct-mode)
-  (if (and (eq (char-before) ?/)
-           (eq (mct--completion-category) 'file))
-      (save-excursion
-        (goto-char (1- (point)))
-        (when (search-backward "/" (minibuffer-prompt-end) t)
-          (delete-region (1+ (point)) (point-max))))
-    (call-interactively 'backward-delete-char)))
+  (cond
+   ((and (eq (char-before) ?/)
+         (eq (mct--completion-category) 'file))
+    (when (string-equal (minibuffer-contents) "~/")
+      (delete-region (mct--minibuffer-field-beg) (mct--minibuffer-field-end))
+      (insert (expand-file-name "~/"))
+      (goto-char (line-end-position)))
+    (save-excursion
+      (goto-char (1- (point)))
+      (when (search-backward "/" (point-min) t)
+        (delete-region (1+ (point)) (point-max)))))
+   (t (call-interactively 'backward-delete-char))))
 
 ;;;;; Cyclic motions between minibuffer and completions' buffer
 
 (defun mct--first-completion-point ()
-  "Find the `point' of the first completion."
+  "Return the `point' of the first completion."
   (save-excursion
     (goto-char (point-min))
     (next-completion 1)
     (point)))
 
 (defun mct--last-completion-point ()
-  "Find the `point' of the last completion."
+  "Return the `point' of the last completion."
   (save-excursion
     (goto-char (point-max))
     (next-completion -1)
@@ -491,7 +500,7 @@ a `one-column' value."
   "Check if ARGth line has a completion candidate."
   (save-excursion
     (vertical-motion arg)
-    (get-text-property (point) 'completion--string)))
+    (eq 'completions-group-separator (get-text-property (point) 'face))))
 
 (defun mct--switch-to-completions ()
   "Subroutine for switching to the completions' buffer."
@@ -507,7 +516,9 @@ a `one-column' value."
         (setq old-point (window-old-point window)
               old-line (line-number-at-pos old-point))
         (when (= (line-number-at-pos line) old-line)
-          (goto-char old-point))))))
+          (if (eq old-point (point-min))
+              (goto-char (mct--first-completion-point))
+            (goto-char old-point)))))))
 
 (defun mct-switch-to-completions-top ()
   "Switch to the top of the completions' buffer."
@@ -523,6 +534,8 @@ a `one-column' value."
   (goto-char (point-max))
   (next-completion -1)
   (goto-char (point-at-bol))
+  (unless (get-text-property (point) 'completion--string)
+    (next-completion 1))
   (mct--restore-old-point-in-grid (point))
   (recenter
    (- -1
@@ -559,16 +572,19 @@ minibuffer."
         ;; Retaining the column number ensures that things work
         ;; intuitively in a grid view.
         (let ((col (current-column)))
-          ;; The `unless' is meant to skip past lines that do not
+          ;; The `when' is meant to skip past lines that do not
           ;; contain completion candidates, such as those with
           ;; `completions-group-format'.
-          (unless (mct--completions-no-completion-line-p (or arg 1))
+          (when (mct--completions-no-completion-line-p (or arg 1))
             (if arg
-                (setq arg (1+ arg))
-              (setq arg 2)))
+                (setq arg 2)
+              (setq arg (1+ arg))))
           (vertical-motion (or arg 1))
           (unless (eq col (save-excursion (goto-char (point-at-bol)) (current-column)))
-            (line-move-to-column col)))
+            (line-move-to-column col))
+          (when (or (> (current-column) col)
+                    (not (get-text-property (point) 'completion--string)))
+            (next-completion -1)))
       (next-completion (or arg 1))))
    (setq this-command 'next-line)))
 
@@ -593,16 +609,19 @@ minibuffer."
         ;; Retaining the column number ensures that things work
         ;; intuitively in a grid view.
         (let ((col (current-column)))
-          ;; The `unless' is meant to skip past lines that do not
+          ;; The `when' is meant to skip past lines that do not
           ;; contain completion candidates, such as those with
           ;; `completions-group-format'.
-          (unless (mct--completions-no-completion-line-p (or (- arg) -1))
+          (when (mct--completions-no-completion-line-p (or (- arg) -1))
             (if arg
-                (setq arg (1+ arg))
-              (setq arg 2)))
+                (setq arg 2)
+              (setq arg (1+ arg))))
           (vertical-motion (or (- arg) -1))
           (unless (eq col (save-excursion (goto-char (point-at-bol)) (current-column)))
-            (line-move-to-column col)))
+            (line-move-to-column col))
+          (when (or (> (current-column) col)
+                    (not (get-text-property (point) 'completion--string)))
+            (next-completion -1)))
       (previous-completion (if (natnump arg) arg 1))))))
 
 (declare-function text-property-search-backward "text-property-search" (property &optional value predicate not-current))
@@ -797,6 +816,16 @@ last character."
         (goto-char pos)
         (mct-choose-completion-no-exit)))))
 
+(defun mct-complete-and-exit ()
+  "Complete current input and exit.
+
+This is the same as with
+\\<mct-minibuffer-local-completion-map>\\[mct-edit-completion],
+followed by exiting the minibuffer with that candidate."
+  (interactive nil mct-mode)
+  (mct-edit-completion)
+  (minibuffer-complete-and-exit))
+
 ;;;;; Miscellaneous commands
 
 ;; This is needed to circumvent `mct--clean-completions' with regard to
@@ -880,7 +909,7 @@ ARGS."
            (eq (mct--completion-category) 'file)
            rfn-eshadow-overlay (overlay-buffer rfn-eshadow-overlay)
            (eq this-command 'self-insert-command)
-           (= saved-point (mct--field-end))
+           (= saved-point (mct--minibuffer-field-end))
            (or (>= (- (point) (overlay-end rfn-eshadow-overlay)) 2)
                (eq ?/ (char-before (- (point) 2)))))
       (delete-region (overlay-start rfn-eshadow-overlay)
@@ -890,6 +919,56 @@ ARGS."
   "Set up shadowed file name deletion.
 To be assigned to `minibuffer-setup-hook'."
   (add-hook 'after-change-functions #'mct--shadow-filenames nil t))
+
+;;;;; Highlight current candidate
+
+(defvar-local mct--highlight-overlay nil
+  "Overlay to highlight candidate in the Completions' buffer.")
+
+(defvar mct--overlay-priority -50
+  "Priority used on the `mct--highlight-overlay'.
+This value means that it takes precedence over lines that have
+the `mct-stripe' face, while it is overriden by the active
+region.")
+
+(defun mct--completions-completion-beg ()
+  "Return point of completion candidate at START and END."
+  (if-let ((string (get-text-property (point) 'completion--string)))
+      (save-excursion
+        (prop-match-beginning (text-property-search-forward 'completion--string)))
+    (point)))
+
+(defun mct--completions-completion-end ()
+  "Return end of completion candidate."
+  (if-let ((string (get-text-property (point) 'completion--string)))
+      (save-excursion
+        (if (eq completions-format 'one-column)
+            (1+ (prop-match-end (text-property-search-forward 'completion--string)))
+          (prop-match-end (text-property-search-forward 'completion--string))))
+    (point)))
+
+(defun mct--overlay-make ()
+  "Make overlay to highlight current candidate."
+  (let ((ol (make-overlay (point) (point))))
+    (overlay-put ol 'priority mct--overlay-priority)
+    (overlay-put ol 'face 'mct-highlight-candidate)
+    ol))
+
+(defun mct--overlay-move (overlay)
+  "Highlight the candidate at point with OVERLAY."
+  (let* ((beg (mct--completions-completion-beg))
+         (end (mct--completions-completion-end)))
+	(move-overlay overlay beg end)))
+
+(defun mct--completions-candidate-highlight ()
+  "Activate `mct--highlight-overlay'."
+  (unless (overlayp mct--highlight-overlay)
+    (setq mct--highlight-overlay (mct--overlay-make)))
+  (mct--overlay-move mct--highlight-overlay))
+
+(defun mct--completions-highlighting ()
+  "Highlight the current completion in the Completions' buffer."
+  (add-hook 'post-command-hook #'mct--completions-candidate-highlight nil t))
 
 ;;;;; Keymaps
 
@@ -918,6 +997,7 @@ To be assigned to `minibuffer-setup-hook'."
     (define-key map (kbd "<tab>") #'minibuffer-force-complete)
     (define-key map [remap goto-line] #'mct-choose-completion-number)
     (define-key map (kbd "M-e") #'mct-edit-completion)
+    (define-key map (kbd "<C-return>") #'mct-complete-and-exit)
     (define-key map (kbd "C-n") #'mct-switch-to-completions-top)
     (define-key map (kbd "<down>") #'mct-switch-to-completions-top)
     (define-key map (kbd "C-p") #'mct-switch-to-completions-bottom)
@@ -934,21 +1014,24 @@ To be assigned to `minibuffer-setup-hook'."
 
 (defun mct--completion-list-mode-map ()
   "Hook to `completion-setup-hook'."
-  (use-local-map
-   (make-composed-keymap mct-completion-list-mode-map
-                         (current-local-map))))
+  (unless (memq this-command mct--no-complete-functions)
+    (use-local-map
+     (make-composed-keymap mct-completion-list-mode-map
+                           (current-local-map)))))
 
 (defun mct--minibuffer-local-completion-map ()
   "Hook to `minibuffer-setup-hook'."
-  (use-local-map
-   (make-composed-keymap mct-minibuffer-local-completion-map
-                         (current-local-map))))
+  (unless (memq this-command mct--no-complete-functions)
+    (use-local-map
+     (make-composed-keymap mct-minibuffer-local-completion-map
+                           (current-local-map)))))
 
 (defun mct--minibuffer-local-filename-completion-map ()
   "Hook to `minibuffer-setup-hook'."
-  (use-local-map
-   (make-composed-keymap mct-minibuffer-local-filename-completion-map
-                         (current-local-map))))
+  (when (eq (mct--completion-category) 'file)
+    (use-local-map
+     (make-composed-keymap mct-minibuffer-local-filename-completion-map
+                           (current-local-map)))))
 
 ;;;;; mct-mode declaration
 
@@ -983,7 +1066,7 @@ To be assigned to `minibuffer-setup-hook'."
           (add-hook hook #'mct--setup-completions-styles)
           (add-hook hook #'mct--completion-list-mode-map)
           (add-hook hook #'mct--truncate-lines-silently)
-          (add-hook hook #'mct--hl-line)
+          (add-hook hook #'mct--completions-highlighting)
           (add-hook hook #'mct--display-line-numbers)
           (add-hook hook #'cursor-sensor-mode))
         (add-hook 'completion-setup-hook #'mct--clean-completions)
@@ -1008,7 +1091,7 @@ To be assigned to `minibuffer-setup-hook'."
       (remove-hook hook #'mct--setup-completions-styles)
       (remove-hook hook #'mct--completion-list-mode-map)
       (remove-hook hook #'mct--truncate-lines-silently)
-      (remove-hook hook #'mct--hl-line)
+      (remove-hook hook #'mct--completions-highlighting)
       (remove-hook hook #'mct--display-line-numbers)
       (remove-hook hook #'cursor-sensor-mode))
     (remove-hook 'completion-setup-hook #'mct--clean-completions)
