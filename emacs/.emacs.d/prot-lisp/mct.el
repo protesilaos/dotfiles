@@ -824,7 +824,7 @@ This is the same as with
 followed by exiting the minibuffer with that candidate."
   (interactive nil mct-mode)
   (mct-edit-completion)
-  (minibuffer-complete-and-exit))
+  (exit-minibuffer))
 
 ;;;;; Miscellaneous commands
 
@@ -943,7 +943,7 @@ region.")
   (if-let ((string (get-text-property (point) 'completion--string)))
       (save-excursion
         (if (eq completions-format 'one-column)
-            (1+ (prop-match-end (text-property-search-forward 'completion--string)))
+            (1+ (point-at-eol))
           (prop-match-end (text-property-search-forward 'completion--string))))
     (point)))
 
