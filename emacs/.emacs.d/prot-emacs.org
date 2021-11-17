@@ -1487,6 +1487,8 @@ try.
   (setq consult-find-args "find . -not ( -wholename */.* -prune )")
   (setq consult-preview-key 'any)
 
+  (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
+
   (let ((map global-map))
     (define-key map (kbd "C-x r b") #'consult-bookmark) ; override `bookmark-jump'
     (define-key map (kbd "C-x M-:") #'consult-complex-command)
