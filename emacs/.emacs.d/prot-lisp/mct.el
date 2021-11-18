@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/mct
 ;; Version: 0.2.0
-;; Package-Requires: ((emacs "28.1"))
+;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -227,37 +227,13 @@ NOTE that setting this option with `setq' requires a restart of
   "Face for current candidate in the completions' buffer."
   :group 'mct)
 
-(defface mct-line-number
-  '((default :inherit default)
-    (((class color) (min-colors 88) (background light))
-     :background "#f2eff3" :foreground "#252525")
-    (((class color) (min-colors 88) (background dark))
-     :background "#151823" :foreground "#dddddd")
-    (t :inverse-video t))
-  "Face for line numbers in the completions' buffer."
-  :group 'mct)
-
-(defface mct-line-number-current-line
-  '((default :inherit default)
-    (((class color) (min-colors 88) (background light))
-     :background "#8ac7ff" :foreground "#000000")
-    (((class color) (min-colors 88) (background dark))
-     :background "#142a79" :foreground "#ffffff")
-    (t :inverse-video t))
-  "Face for current line number in the completions' buffer."
-  :group 'mct)
-
 (declare-function display-line-numbers-mode "display-line-numbers")
-(declare-function face-remap-remove-relative "face-remap" (cookie))
 
 (defun mct--display-line-numbers ()
   "Set up line numbers for the completions' buffer.
 Add this to `completion-list-mode-hook'."
   (when (and (derived-mode-p 'completion-list-mode)
              mct-show-completion-line-numbers)
-    (face-remap-add-relative 'line-number 'mct-line-number)
-    (face-remap-add-relative 'line-number-current-line
-                             'mct-line-number-current-line)
     (display-line-numbers-mode 1)))
 
 ;; Thanks to Omar Antolín Camarena for recommending the use of
@@ -394,6 +370,28 @@ Meant to be added to `after-change-functions'."
 
 ;;;; Commands and helper functions
 
+;; TODO 2021-11-17: We must `autoload' instead of `declare-function' for
+;; things to work on Emacs 27.  Perhaps we should keep the latter but
+;; add (eval-when-compile (require 'text-property-search))?  That should
+;; work for packages, but not if we just `eval-buffer', right?
+
+(autoload 'text-property-search-backward "text-property-search")
+(autoload 'text-property-search-forward "text-property-search")
+(autoload 'prop-match-beginning "text-property-search")
+(autoload 'prop-match-end "text-property-search")
+
+;; (declare-function text-property-search-backward "text-property-search" (property &optional value predicate not-current))
+;; (declare-function text-property-search-forward "text-property-search" (property &optional value predicate not-current))
+;; (declare-function prop-match-beginning "text-property-search" (cl-x))
+;; (declare-function prop-match-end "text-property-search" (cl-x))
+
+;; We need this to make things work on Emacs 27.
+(defun mct--one-column-p ()
+  "Test if we have a one-column view available."
+  (and (eq completions-format 'one-column)
+       (eq mct-completions-format 'one-column)
+       (>= emacs-major-version 28)))
+
 ;;;;; Focus minibuffer and/or show completions
 
 ;;;###autoload
@@ -471,6 +469,14 @@ by `mct-completion-windows-regexp'."
 
 ;;;;; Cyclic motions between minibuffer and completions' buffer
 
+(defun mct--completions-completion-p ()
+  "Return non-nil if there is a completion at point."
+  (let ((point (point)))
+    ;; The `or' is for Emacs 27 where there were no completion--string
+    ;; properties.
+    (or (get-text-property point 'completion--string)
+        (get-text-property point 'mouse-face))))
+
 (defun mct--first-completion-point ()
   "Return the `point' of the first completion."
   (save-excursion
@@ -494,7 +500,7 @@ Completions' buffer.  See `mct--first-completion-point' or
 This check only applies when `completions-format' is not assigned
 a `one-column' value."
   (and (= (line-number-at-pos) (line-number-at-pos boundary))
-       (not (eq completions-format 'one-column))))
+       (not (mct--one-column-p))))
 
 (defun mct--completions-no-completion-line-p (arg)
   "Check if ARGth line has a completion candidate."
@@ -510,7 +516,7 @@ a `one-column' value."
 
 (defun mct--restore-old-point-in-grid (line)
   "Restore old point in window if LINE is on its line."
-  (unless (eq completions-format 'one-column)
+  (unless (mct--one-column-p)
     (let (old-line old-point)
       (when-let ((window (mct--get-completion-window)))
         (setq old-point (window-old-point window)
@@ -534,7 +540,7 @@ a `one-column' value."
   (goto-char (point-max))
   (next-completion -1)
   (goto-char (point-at-bol))
-  (unless (get-text-property (point) 'completion--string)
+  (unless (mct--completions-completion-p)
     (next-completion 1))
   (mct--restore-old-point-in-grid (point))
   (recenter
@@ -568,7 +574,7 @@ minibuffer."
    ((mct--bottom-of-completions-p (or arg 1))
     (mct-focus-minibuffer))
    (t
-    (if (not (eq completions-format 'one-column))
+    (if (not (mct--one-column-p))
         ;; Retaining the column number ensures that things work
         ;; intuitively in a grid view.
         (let ((col (current-column)))
@@ -583,7 +589,7 @@ minibuffer."
           (unless (eq col (save-excursion (goto-char (point-at-bol)) (current-column)))
             (line-move-to-column col))
           (when (or (> (current-column) col)
-                    (not (get-text-property (point) 'completion--string)))
+                    (not (mct--completions-completion-p)))
             (next-completion -1)))
       (next-completion (or arg 1))))
    (setq this-command 'next-line)))
@@ -605,7 +611,7 @@ minibuffer."
   (cond
    ((mct--top-of-completions-p (if (natnump arg) arg 1))
     (mct-focus-minibuffer))
-   ((if (not (eq completions-format 'one-column))
+   ((if (not (mct--one-column-p))
         ;; Retaining the column number ensures that things work
         ;; intuitively in a grid view.
         (let ((col (current-column)))
@@ -620,14 +626,9 @@ minibuffer."
           (unless (eq col (save-excursion (goto-char (point-at-bol)) (current-column)))
             (line-move-to-column col))
           (when (or (> (current-column) col)
-                    (not (get-text-property (point) 'completion--string)))
+                    (not (mct--completions-completion-p)))
             (next-completion -1)))
       (previous-completion (if (natnump arg) arg 1))))))
-
-(declare-function text-property-search-backward "text-property-search" (property &optional value predicate not-current))
-(declare-function text-property-search-forward "text-property-search" (property &optional value predicate not-current))
-(declare-function prop-match-beginning "text-property-search" (cl-x))
-(declare-function prop-match-end "text-property-search" (cl-x))
 
 (defun mct-next-completion-group (&optional arg)
   "Move to the next completion group.
@@ -734,7 +735,7 @@ are always visible).
 This command can be invoked from either the minibuffer or the
 Completions' buffer."
   (interactive nil mct-mode)
-  (if (not (eq completions-format 'one-column))
+  (if (not (mct--one-column-p))
       (user-error "Cannot select by line in grid view")
     (let ((mct-remove-shadowed-file-names t)
           (mct-live-update-delay most-positive-fixnum)
@@ -751,6 +752,7 @@ Completions' buffer."
 (defvar crm-separator)
 
 (defun mct--regex-to-separator (regex)
+  "Parse REGEX of `crm-separator' in `mct-choose-completion-dwim'."
   (save-match-data
     (cond
      ;; whitespace-delimited, like default & org-set-tag-command
@@ -931,20 +933,30 @@ This value means that it takes precedence over lines that have
 the `mct-stripe' face, while it is overriden by the active
 region.")
 
+;; This is for Emacs 27 which does not have a completion--string text
+;; property.
+(defun mct--completions-text-property-search ()
+  "Search for text property of completion candidate."
+  (or (text-property-search-forward 'completion--string)
+      (text-property-search-forward 'mouse-face)))
+
+;; The `if-let' is to prevent highlighting of empty space, such as by
+;; clicking on it with the mouse.
 (defun mct--completions-completion-beg ()
   "Return point of completion candidate at START and END."
-  (if-let ((string (get-text-property (point) 'completion--string)))
+  (if-let ((string (mct--completions-completion-p)))
       (save-excursion
-        (prop-match-beginning (text-property-search-forward 'completion--string)))
+        (prop-match-beginning (mct--completions-text-property-search)))
     (point)))
 
+;; Same as above for the `if-let'.
 (defun mct--completions-completion-end ()
   "Return end of completion candidate."
-  (if-let ((string (get-text-property (point) 'completion--string)))
+  (if-let ((string (mct--completions-completion-p)))
       (save-excursion
-        (if (eq completions-format 'one-column)
+        (if (mct--one-column-p)
             (1+ (point-at-eol))
-          (prop-match-end (text-property-search-forward 'completion--string))))
+          (prop-match-end (mct--completions-text-property-search))))
     (point)))
 
 (defun mct--overlay-make ()
