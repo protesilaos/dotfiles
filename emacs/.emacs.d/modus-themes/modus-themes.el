@@ -4,8 +4,8 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 1.6.0
-;; Last-Modified: <2021-11-17 17:15:52 +0200>
+;; Version: 1.7.0
+;; Last-Modified: <2021-11-20 13:15:54 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -3163,7 +3163,8 @@ differ in overall intensity.  FAINTFG is a nuanced color."
                  (memq 'intense modus-themes-lang-checkers))
             intensebg)
            ((memq 'background modus-themes-lang-checkers)
-            subtlebg))
+            subtlebg)
+           ('unspecified))
           :foreground
           (cond
            ((and (memq 'faint modus-themes-lang-checkers)
@@ -3175,7 +3176,8 @@ differ in overall intensity.  FAINTFG is a nuanced color."
            ((memq 'intense modus-themes-lang-checkers)
             intensefg)
            ((memq 'text-also modus-themes-lang-checkers)
-            subtlefg)))))
+            subtlefg)
+           ('unspecified)))))
 
 (defun modus-themes--prompt (mainfg intensefg grayfg subtlebg intensebg intensebg-fg subtlebggray intensebggray)
   "Conditional use of colors for prompts.
@@ -3506,8 +3508,10 @@ weight.  Optional UL applies an underline."
            (t
             'unspecified))
           :background
-          (unless (memq 'underline-today properties)
-            bg)
+          (cond
+           ((memq 'underline-today properties)
+            'unspecified)
+           ((or bg 'unspecified)))
           :foreground
           (cond
            ((and (memq 'grayscale properties)
@@ -6797,8 +6801,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
                         ,@(modus-themes--markup fg-special-mild green-alt-other
                                                 bg-alt green-nuanced-bg)
                         :extend t)))
-    `(org-column ((,class :background ,bg-alt)))
-    `(org-column-title ((,class :inherit bold :underline t :background ,bg-alt)))
+    `(org-column ((,class :inherit (modus-themes-fixed-pitch default)
+                          :background ,bg-alt)))
+    `(org-column-title ((,class :inherit (bold modus-themes-fixed-pitch default)
+                                :underline t :background ,bg-alt)))
     `(org-date ((,class :inherit ,(if modus-themes-mixed-fonts
                                       '(button fixed-pitch)
                                     'button)
