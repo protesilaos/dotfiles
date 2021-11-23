@@ -59,7 +59,7 @@ done
 
 # Set up virtual monitors.  The monitor is is 2560x1080 (and what
 # inspired me to switch to HerbstluftWM).  Also check the script
-# 'herbstluftwm_toggle_monitors'.
+# 'herbstluftwm_cycle_monitors'.
 _hc set_monitors 640x1080+0+0 1920x1080+640+0
 
 ### Configuration

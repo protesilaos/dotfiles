@@ -39,7 +39,7 @@ mod1 + {_, shift +} Tab
      herbstclient cycle_all {+1,-1}
 
 mod4 + m
-     herbstluftwm_toggle_monitors
+     herbstluftwm_cycle_monitors
 
 mod4 + w
      herbstclient cycle_layout +1 vertical horizontal max
