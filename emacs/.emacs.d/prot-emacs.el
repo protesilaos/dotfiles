@@ -121,12 +121,12 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs t
+  (setq modus-themes-italic-constructs nil
         modus-themes-bold-constructs t
         modus-themes-mixed-fonts t
-        modus-themes-subtle-line-numbers t
-        modus-themes-intense-markup nil
-        modus-themes-success-deuteranopia t
+        modus-themes-subtle-line-numbers nil
+        modus-themes-intense-markup t
+        modus-themes-success-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
@@ -136,12 +136,12 @@
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense' OR `faint'.
-        modus-themes-lang-checkers nil
+        modus-themes-lang-checkers '(text-also straight-underline)
 
         ;; Options for `modus-themes-mode-line' are either nil, or a
         ;; list that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', `padded'.
-        modus-themes-mode-line '(3d) ; For Moody, also check `prot-moody'
+        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
 
         ;; This one only works when `modus-themes-mode-line' (above) has
         ;; the `padded' property.  It takes a positive integer.
@@ -150,7 +150,7 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax nil
+        modus-themes-syntax '(yellow-comments green-strings)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -172,11 +172,11 @@
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(background bold)
+        modus-themes-prompts '(background gray intense)
 
         modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations 'monochrome ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -648,6 +648,12 @@
                    shell-mode-hook eshell-mode-hook))
     (add-hook mode #'corfu-mode))
   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
+
+(prot-emacs-elpa-package 'cape
+  (dolist (backend '( cape-abbrev-capf cape-keyword-capf
+                      cape-dict-capf cape-ispell-capf cape-file-capf
+                      cape-dabbrev-capf))
+    (add-to-list 'completion-at-point-functions backend)))
 
 ;;; Dabbrev (dynamic word completion)
 (prot-emacs-builtin-package 'dabbrev
