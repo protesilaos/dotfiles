@@ -1966,7 +1966,7 @@ This is a copy of =prot-recentf.el= (part of [[https://gitlab.com/protesilaos/do
 :PROPERTIES:
 :CUSTOM_ID: h:98876022-57cc-40de-936e-4ee42cefd69a
 :END:
-**** Corfu (Completion Overlay Region FUnction)
+**** Corfu (Completion Overlay Region FUnction) and CAPE
 :PROPERTIES:
 :CUSTOM_ID: h:675ebef4-d74d-41af-808d-f9579c2a5ec4
 :END:
@@ -2018,6 +2018,11 @@ function of adjusting indentation, we need =tab-always-indent= to be set
 to a =complete= value (check [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the TAB key]] and/or
 read that variable's doc string).
 
+Finally, the =cape= package, also by Daniel, adds some more backends for
+the aforementioned CAPF facility.  They make Corfu work in more
+contexts.  Basically, this is the sort of thing that you set up and it
+"just works".
+
 #+begin_src emacs-lisp
 ;;; Corfu (Completion Overlay Region FUnction)
 (prot-emacs-elpa-package 'corfu
@@ -2025,6 +2030,12 @@ read that variable's doc string).
                    shell-mode-hook eshell-mode-hook))
     (add-hook mode #'corfu-mode))
   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
+
+(prot-emacs-elpa-package 'cape
+  (dolist (backend '( cape-abbrev-capf cape-keyword-capf
+                      cape-dict-capf cape-ispell-capf cape-file-capf
+                      cape-dabbrev-capf))
+    (add-to-list 'completion-at-point-functions backend)))
 #+end_src
 
 **** Dabbrev (dynamic word completion)
