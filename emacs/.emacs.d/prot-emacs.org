@@ -6565,6 +6565,75 @@ lots of options and commands: make sure to read its official manual.
     (define-key map (kbd "U") #'ebdb-unmark-all-records)))
 #+end_src
 
+** Rcirc (IRC client)
+:PROPERTIES:
+:CUSTOM_ID: h:4d2f596a-6fc5-4179-a361-c29f77a5ba11
+:END:
+
+The first time I used IRC in earnest was at EmacsConf 2021.  The event
+lasted two days (I also delivered [[https://emacsconf.org/2021/talks/freedom][a presentation]]).  For the first day I
+tried the =erc= package that is built into Emacs, while for the second I
+opted for =rcirc=, another built-in option.
+
+Overall, Rcirc feels more straightforward to me as a regular user.
+Whereas ERC seems to have too many options and a larger code base for
+technicalities I do not need to know about for the purposes of my casual
+usage of IRC.
+
+To get started, run =M-x irc= and confirm your choice at the prompts.  The
+defaults for the server and the connection port should be fine.  In my
+case, those steps are skipped because of the values specified in the
+=rcirc-server-alist=.  Note the presence of =prot-mail-auth-get-field=.
+This is a function that queries my =~/.authinfo.gpg= file to retrieve
+encrypted information stored there (see [[#h:8d0bd754-8a31-431b-b112-f541cc0144ac][Sample of authinfo.gpg]]).  I use
+this method to (i) automate the process of logging in while (ii) not
+divulging sensitive data (also see the mega-section on [[#h:5ad80664-3163-4d9d-be65-462637d77903][Email settings]]).
+
+IRC is fairly easy to use: you just type your message at the command
+prompt and everyone in the channel can see it.  Some things I learnt:
+
++ Join a channel like =#emacs= by typing at the prompt =/join #emacs=.
++ Leave a channel with =/leave #vim= 😉.
++ To quit IRC do =/quit=, or optionally =/quit Going for a brisk walk=.
++ You can mention another user in the channel just by including their
+  nick in your message, like =Hello protesilaos=.  When replying to
+  someone, do it like this =protesilaos: My reply here=.
++ Start a private channel with, say, =protesilaos= by running the command
+  =/msg protesilaos My message here=.  Then use the channel like any
+  other.
+
+There probably are more commands and other tricks we can employ.  I
+expect to familiarise myself with them over time.
+
+The following configuration is straightforward and the doc string of
+every variable is clear on what it is supposed to do.
+
+#+begin_src emacs-lisp
+(prot-emacs-builtin-package 'rcirc
+  (setq rcirc-server-alist
+        `(("irc.libera.chat"
+           :channels ("#emacs" "#org-mode" "#rcirc")
+           :port 6697 :encryption tls
+           :password ,(prot-mail-auth-get-field "libera" :secret))))
+
+  (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
+
+  (setq rcirc-default-nick "protesilaos"
+        rcirc-default-user-name rcirc-default-nick
+        rcirc-default-full-name "Protesilaos Stavrou")
+
+  ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
+  ;; ;; actually need this.
+  ;; (setq rcirc-bright-nicks '("bandali" "sachac" "zaeph"))
+
+  ;; NOTE 2021-11-28: Is there a canonical way to disable this?
+  (setq rcirc-timeout-seconds most-positive-fixnum)
+
+  (rcirc-track-minor-mode 1)
+
+  (define-key global-map (kbd "C-c i") #'irc))
+#+end_src
+
 ** Bongo music or media manager (and prot-bongo.el)
 :PROPERTIES:
 :CUSTOM_ID: h:758afe0d-bc7c-4afc-9c6b-b5e569901591
