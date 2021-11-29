@@ -517,11 +517,11 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs t
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers nil
-        modus-themes-intense-markup t
+        modus-themes-intense-markup nil
         modus-themes-success-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
@@ -546,7 +546,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(yellow-comments green-strings)
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -556,7 +556,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(intense underline)
+        modus-themes-paren-match nil
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -568,9 +568,9 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(background gray intense)
+        modus-themes-prompts nil
 
-        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
+        modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
         modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
 
