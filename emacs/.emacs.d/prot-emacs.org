@@ -2026,9 +2026,10 @@ contexts.  Basically, this is the sort of thing that you set up and it
 #+begin_src emacs-lisp
 ;;; Corfu (Completion Overlay Region FUnction)
 (prot-emacs-elpa-package 'corfu
-  (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
-                   shell-mode-hook eshell-mode-hook))
-    (add-hook mode #'corfu-mode))
+  ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
+  ;;                  shell-mode-hook eshell-mode-hook))
+  ;;   (add-hook mode #'corfu-mode))
+  (corfu-global-mode 1)
   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
 
 (prot-emacs-elpa-package 'cape
