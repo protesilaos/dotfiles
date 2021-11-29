@@ -63,11 +63,10 @@ the function `prot-mail-mail-indicator'."
 ;;;###autoload
 (defun prot-mail-auth-get-field (host prop)
   "Find PROP in `auth-sources' for HOST entry."
-  (let* ((source (auth-source-search :host host))
-         (field (plist-get (flatten-list source) prop)))
-    (if source
-        field
-      (user-error "No `%s' host with `%s' entry in auth sources" host prop))))
+  (when-let ((source (auth-source-search :host host)))
+    (if (eq prop :secret)
+       (funcall (plist-get (car source) prop))
+      (plist-get (flatten-list source) prop))))
 
 (defvar ebdb-db-list)
 (autoload 'ebdb-load "ebdb")
