@@ -121,11 +121,11 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs t
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers nil
-        modus-themes-intense-markup t
+        modus-themes-intense-markup nil
         modus-themes-success-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
@@ -150,7 +150,7 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(yellow-comments green-strings)
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -160,7 +160,7 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(intense underline)
+        modus-themes-paren-match nil
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -172,9 +172,9 @@
         ;; default), or a list of properties that may include any of
         ;; those symbols: `background', `bold', `gray', `intense',
         ;; `italic'
-        modus-themes-prompts '(background gray intense)
+        modus-themes-prompts nil
 
-        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
+        modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
         modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
 
@@ -405,7 +405,7 @@
   (setq minibuffer-eldef-shorten-default t)
 
   (setq echo-keystrokes 0.25)           ; from the C source code
-  
+
   ;; Do not allow the cursor to move inside the minibuffer prompt.  I
   ;; got this from the documentation of Daniel Mendler's Vertico
   ;; package: <https://github.com/minad/vertico>.
@@ -644,9 +644,10 @@
 
 ;;; Corfu (Completion Overlay Region FUnction)
 (prot-emacs-elpa-package 'corfu
-  (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
-                   shell-mode-hook eshell-mode-hook))
-    (add-hook mode #'corfu-mode))
+  ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
+  ;;                  shell-mode-hook eshell-mode-hook))
+  ;;   (add-hook mode #'corfu-mode))
+  (corfu-global-mode 1)
   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
 
 (prot-emacs-elpa-package 'cape
@@ -2447,6 +2448,30 @@ Can link to more than one message, if so all matching messages are shown."
     (define-key map (kbd "t") #'ebdb-toggle-all-record-marks)
     (define-key map (kbd "T") #'ebdb-toggle-records-format) ; disables `ebdb-toggle-all-records-format'
     (define-key map (kbd "U") #'ebdb-unmark-all-records)))
+
+(prot-emacs-builtin-package 'rcirc
+  (setq rcirc-server-alist
+        `(("irc.libera.chat"
+           :channels ("#emacs" "#org-mode" "#rcirc")
+           :port 6697 :encryption tls
+           :password ,(prot-mail-auth-get-field "libera" :secret))))
+
+  (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
+
+  (setq rcirc-default-nick "protesilaos"
+        rcirc-default-user-name rcirc-default-nick
+        rcirc-default-full-name "Protesilaos Stavrou")
+
+  ;; ;; NOTE 2021-11-28: demo from the days of EmacsConf 2021.  I don't
+  ;; ;; actually need this.
+  ;; (setq rcirc-bright-nicks '("bandali" "sachac" "zaeph"))
+
+  ;; NOTE 2021-11-28: Is there a canonical way to disable this?
+  (setq rcirc-timeout-seconds most-positive-fixnum)
+
+  (rcirc-track-minor-mode 1)
+
+  (define-key global-map (kbd "C-c i") #'irc))
 
 ;;; Bongo music or media manager (and prot-bongo.el)
 (prot-emacs-elpa-package 'bongo
