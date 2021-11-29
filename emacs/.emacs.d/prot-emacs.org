@@ -1276,7 +1276,7 @@ results I am most likely interested in, based on previous selections.
   (setq minibuffer-eldef-shorten-default t)
 
   (setq echo-keystrokes 0.25)           ; from the C source code
-  
+
   ;; Do not allow the cursor to move inside the minibuffer prompt.  I
   ;; got this from the documentation of Daniel Mendler's Vertico
   ;; package: <https://github.com/minad/vertico>.
