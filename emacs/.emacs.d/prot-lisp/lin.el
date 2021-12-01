@@ -60,6 +60,21 @@
 
 (require 'face-remap)
 
+(defconst lin--default-foreign-hooks
+  ;; please keep the list sorted:
+  '(elfeed-search-mode-hook
+    git-rebase-mode-hook
+    ibuffer-mode-hook
+    ledger-report-mode-hook
+    log-view-mode-hook
+    magit-log-mode-hook
+    notmuch-search-mode-hook
+    notmuch-tree-mode-hook
+    org-agenda-mode-hook
+    tabulated-list-mode-hook)
+  "List of default hooks in which to use `lin-mode'.
+See also the user option `lin-override-foreground'.")
+
 (defgroup lin ()
   "Locally remap `hl-line' face for greater flexility."
   :group 'convenience)
@@ -76,6 +91,13 @@ When this option is nil, the `lin-hl' face is used.  Otherwise
 the `lin-hl-override-fg' is applied."
   :type 'boolean
   :group 'lin)
+
+(defcustom lin-foreign-hooks lin--default-foreign-hooks
+  "List of hook variable names in which to use `lin-mode'.
+
+Call `lin-add-to-many-modes' to start `lin-mode' for all these
+hooks."
+  :type '(repeat variable))
 
 (defface lin-hl
   '((default :foreground unspecified :underline nil :extend t)
@@ -130,6 +152,11 @@ The overall style is controlled by `lin-override-foreground'."
       (setq lin--cookie
             (face-remap-add-relative (lin--source-face) (lin--dest-face)))
     (face-remap-remove-relative lin--cookie)))
+
+(defun lin-add-to-many-modes ()
+  "Turn on `lin-mode' on every mode of `lin-foreign-hooks'."
+  (dolist (hook lin-foreign-hooks)
+    (add-hook hook #'lin-mode)))
 
 (provide 'lin)
 
