@@ -665,8 +665,8 @@ specifically, when the =hl-line= face is used in the buffer.  =lin-mode=
 DOES NOT activate =hl-line-mode= and does not do anything other than the
 aforementioned face remapping.
 
-I just enable LIN in contexts where I know it is useful.  Check their
-sections for further details:
+I just enable LIN in contexts where I know it is useful (check the doc
+string o =lin-add-to-many-modes= for the details).  For example:
 
 + [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el]].
 + [[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]].
@@ -674,11 +674,8 @@ sections for further details:
 #+begin_src emacs-lisp
 (prot-emacs-builtin-package 'lin
   (setq lin-foreground-override nil)
-
-  (dolist (hook '( elfeed-search-mode-hook notmuch-search-mode-hook
-                   log-view-mode-hook package-menu-mode-hook
-                   ibuffer-mode-hook))
-    (add-hook hook #'lin-mode)))
+  (setq lin-foreign-hooks lin--default-foreign-hooks)
+  (lin-add-to-many-modes))
 #+end_src
 
 ** Typeface configurations
@@ -1322,6 +1319,7 @@ results I am most likely interested in, based on previous selections.
 
   (mct-mode 1)
 
+  (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
   (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions))
 #+end_src
 
