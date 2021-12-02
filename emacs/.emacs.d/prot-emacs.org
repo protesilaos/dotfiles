@@ -522,7 +522,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers nil
         modus-themes-intense-markup nil
-        modus-themes-success-deuteranopia nil
+        modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
@@ -579,9 +579,8 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; `no-extend', `bg-only', `accented'
         modus-themes-region '(no-extend bg-only)
 
-        ;; Options for `modus-themes-diffs': nil, 'desaturated,
-        ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'bg-only
+        ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
+        modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
@@ -591,7 +590,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
           (header-date . (bold-today scale-heading ))
           (event . (accented italic))
           (scheduled . uniform)
-          (habit . traffic-light-deuteranopia))
+          (habit . nil))
 
         ;; This is an alist: read the manual or its doc string.
         modus-themes-headings
