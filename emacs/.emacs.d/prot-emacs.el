@@ -126,7 +126,7 @@
         modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers nil
         modus-themes-intense-markup nil
-        modus-themes-success-deuteranopia nil
+        modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
@@ -183,9 +183,8 @@
         ;; `no-extend', `bg-only', `accented'
         modus-themes-region '(no-extend bg-only)
 
-        ;; Options for `modus-themes-diffs': nil, 'desaturated,
-        ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs 'bg-only
+        ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
+        modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
 
@@ -195,7 +194,7 @@
           (header-date . (bold-today scale-heading ))
           (event . (accented italic))
           (scheduled . uniform)
-          (habit . traffic-light-deuteranopia))
+          (habit . nil))
 
         ;; This is an alist: read the manual or its doc string.
         modus-themes-headings
@@ -246,11 +245,8 @@
 
 (prot-emacs-builtin-package 'lin
   (setq lin-foreground-override nil)
-
-  (dolist (hook '( elfeed-search-mode-hook notmuch-search-mode-hook
-                   log-view-mode-hook package-menu-mode-hook
-                   ibuffer-mode-hook))
-    (add-hook hook #'lin-mode)))
+  (setq lin-foreign-hooks lin--default-foreign-hooks)
+  (lin-add-to-many-modes))
 
 ;;; Font configurations (prot-fonts.el)
 (prot-emacs-builtin-package 'prot-fonts
@@ -451,6 +447,7 @@
 
   (mct-mode 1)
 
+  (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
   (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions))
 
 ;;; Enhanced minibuffer commands (consult.el and prot-consult.el)
@@ -784,6 +781,7 @@
   (setq dired-dwim-target t)
   (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
   (setq dired-make-directory-clickable t) ; Emacs 29.1
+  (setq dired-free-space 'first) ; Emacs 29.1
 
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
   (add-hook 'dired-mode-hook #'hl-line-mode))
