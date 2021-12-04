@@ -815,8 +815,8 @@ Relevant publications of mine that are not part of this document:
                      :fixed-pitch-heavy-weight bold
                      :fixed-pitch-height 75
                      :fixed-pitch-line-spacing 1
-                     :variable-pitch-family "DejaVu Serif"
-                     :variable-pitch-height 1.0
+                     :variable-pitch-family "FiraGO"
+                     :variable-pitch-height 1.05
                      :variable-pitch-regular-weight normal))
 
           (regular . ( :fixed-pitch-family "Hack"
@@ -824,8 +824,8 @@ Relevant publications of mine that are not part of this document:
                        :fixed-pitch-heavy-weight bold
                        :fixed-pitch-height 90
                        :fixed-pitch-line-spacing nil
-                       :variable-pitch-family "DejaVu Serif"
-                       :variable-pitch-height 1.0
+                       :variable-pitch-family "FiraGO"
+                       :variable-pitch-height 1.05
                        :variable-pitch-regular-weight normal))
 
           (large . ( :fixed-pitch-family "Hack"
@@ -833,8 +833,8 @@ Relevant publications of mine that are not part of this document:
                      :fixed-pitch-heavy-weight bold
                      :fixed-pitch-height 130
                      :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "DejaVu Serif"
-                     :variable-pitch-height 1.0
+                     :variable-pitch-family "FiraGO"
+                     :variable-pitch-height 1.05
                      :variable-pitch-regular-weight normal))
 
           (large-alt . ( :fixed-pitch-family "Iosevka Comfy"
@@ -842,7 +842,7 @@ Relevant publications of mine that are not part of this document:
                          :fixed-pitch-heavy-weight extrabold
                          :fixed-pitch-height 135
                          :fixed-pitch-line-spacing nil
-                         :variable-pitch-family "Noto Serif"
+                         :variable-pitch-family "Noto Sans"
                          :variable-pitch-height 1.0
                          :variable-pitch-regular-weight normal))))
 
