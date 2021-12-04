@@ -176,7 +176,7 @@
 
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -191,17 +191,17 @@
         ;; This is an alist: read the manual or its doc string.
         modus-themes-org-agenda
         '((header-block . (variable-pitch scale-title))
-          (header-date . (bold-today scale-heading ))
-          (event . (accented italic))
+          (header-date . (bold-today grayscale workaholic))
+          (event . (accented varied italic))
           (scheduled . uniform)
           (habit . nil))
 
         ;; This is an alist: read the manual or its doc string.
-        modus-themes-headings
-        '((1 . (background overline))
-          (2 . (background overline))
-          (3 . (background rainbow overline))
-          (t . (background rainbow no-bold overline)))
+        modus-themes-headings nil
+        ;; '((1 . (background overline))
+        ;;   (2 . (background overline))
+        ;;   (3 . (background rainbow overline))
+        ;;   (t . (background rainbow no-bold overline)))
 
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
@@ -268,8 +268,8 @@
                      :fixed-pitch-heavy-weight bold
                      :fixed-pitch-height 75
                      :fixed-pitch-line-spacing 1
-                     :variable-pitch-family "DejaVu Serif"
-                     :variable-pitch-height 1.0
+                     :variable-pitch-family "FiraGO"
+                     :variable-pitch-height 1.05
                      :variable-pitch-regular-weight normal))
 
           (regular . ( :fixed-pitch-family "Hack"
@@ -277,8 +277,8 @@
                        :fixed-pitch-heavy-weight bold
                        :fixed-pitch-height 90
                        :fixed-pitch-line-spacing nil
-                       :variable-pitch-family "DejaVu Serif"
-                       :variable-pitch-height 1.0
+                       :variable-pitch-family "FiraGO"
+                       :variable-pitch-height 1.05
                        :variable-pitch-regular-weight normal))
 
           (large . ( :fixed-pitch-family "Hack"
@@ -286,8 +286,8 @@
                      :fixed-pitch-heavy-weight bold
                      :fixed-pitch-height 130
                      :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "DejaVu Serif"
-                     :variable-pitch-height 1.0
+                     :variable-pitch-family "FiraGO"
+                     :variable-pitch-height 1.05
                      :variable-pitch-regular-weight normal))
 
           (large-alt . ( :fixed-pitch-family "Iosevka Comfy"
@@ -295,7 +295,7 @@
                          :fixed-pitch-heavy-weight extrabold
                          :fixed-pitch-height 135
                          :fixed-pitch-line-spacing nil
-                         :variable-pitch-family "Noto Serif"
+                         :variable-pitch-family "Noto Sans"
                          :variable-pitch-height 1.0
                          :variable-pitch-regular-weight normal))))
 
@@ -449,6 +449,14 @@
 
   (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
   (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions))
+
+;;; Minibuffer history (savehist-mode)
+(prot-emacs-builtin-package 'savehist
+  (setq savehist-file (locate-user-emacs-file "savehist"))
+  (setq history-length 10000)
+  (setq history-delete-duplicates t)
+  (setq savehist-save-minibuffer-history t)
+  (add-hook 'after-init-hook #'savehist-mode))
 
 ;;; Enhanced minibuffer commands (consult.el and prot-consult.el)
 (prot-emacs-elpa-package 'consult
@@ -648,9 +656,8 @@
   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
 
 (prot-emacs-elpa-package 'cape
-  (dolist (backend '( cape-abbrev-capf cape-keyword-capf
-                      cape-dict-capf cape-ispell-capf cape-file-capf
-                      cape-dabbrev-capf))
+  (setq cape-dabbrev-min-length 2)
+  (dolist (backend '( cape-keyword-capf cape-file-capf cape-dabbrev-capf))
     (add-to-list 'completion-at-point-functions backend)))
 
 ;;; Dabbrev (dynamic word completion)
@@ -781,7 +788,7 @@
   (setq dired-dwim-target t)
   (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
   (setq dired-make-directory-clickable t) ; Emacs 29.1
-  (setq dired-free-space 'first) ; Emacs 29.1
+  (setq dired-free-space nil) ; Emacs 29.1
 
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
   (add-hook 'dired-mode-hook #'hl-line-mode))
@@ -1648,7 +1655,7 @@ sure this is a good approach."
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (thread-last org-directory (expand-file-name "notes.org")))
   (setq org-agenda-files `(,org-directory "~/Documents"))
-  (setq org-agenda-span 14)
+  (setq org-agenda-span 'week)
   (setq org-agenda-start-on-weekday 1)  ; Monday
   (setq org-agenda-confirm-kill t)
   (setq org-agenda-show-all-dates t)
@@ -3268,14 +3275,6 @@ Can link to more than one message, if so all matching messages are shown."
     (add-to-list 'desktop-globals-to-save symbol))
 
   (desktop-save-mode 1))
-
-;;; Minibuffer history (savehist-mode)
-(prot-emacs-builtin-package 'savehist
-  (setq savehist-file (locate-user-emacs-file "savehist"))
-  (setq history-length 10000)
-  (setq history-delete-duplicates t)
-  (setq savehist-save-minibuffer-history t)
-  (add-hook 'after-init-hook #'savehist-mode))
 
 ;;; Record cursor position
 (prot-emacs-builtin-package 'saveplace
