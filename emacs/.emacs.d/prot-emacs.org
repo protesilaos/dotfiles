@@ -572,7 +572,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
 
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -587,17 +587,17 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; This is an alist: read the manual or its doc string.
         modus-themes-org-agenda
         '((header-block . (variable-pitch scale-title))
-          (header-date . (bold-today scale-heading ))
-          (event . (accented italic))
+          (header-date . (bold-today grayscale workaholic))
+          (event . (accented varied italic))
           (scheduled . uniform)
           (habit . nil))
 
         ;; This is an alist: read the manual or its doc string.
-        modus-themes-headings
-        '((1 . (background overline))
-          (2 . (background overline))
-          (3 . (background rainbow overline))
-          (t . (background rainbow no-bold overline)))
+        modus-themes-headings nil
+        ;; '((1 . (background overline))
+        ;;   (2 . (background overline))
+        ;;   (3 . (background rainbow overline))
+        ;;   (t . (background rainbow no-bold overline)))
 
         modus-themes-variable-pitch-ui nil
         modus-themes-variable-pitch-headings nil
