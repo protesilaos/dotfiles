@@ -1326,6 +1326,36 @@ And here is =mct.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfile
 
 #+include: prot-lisp/mct.el src emacs-lisp :tangle no
 
+*** Minibuffer history (savehist-mode)
+:PROPERTIES:
+:CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
+:END:
+
+The built-in =savehist-mode= keeps a record of actions involving the
+minibuffer.  You can access previous inputs with =M-p= and =M-n=.  Well
+designed commands that use completion will have their own history, so
+those key bindings will only cycle through relevant results.  You can
+also search backwardly through them with =M-r=.
+
+This kind of functionality is of paramount importance to a fast and
+efficient workflow involving any completion framework that leverages the
+built-in mechanisms.
+
+Emacs will remember your input and choices so it will prioritise the
+desired results when trying to force complete a given input.  Make sure
+to also read the [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]] for
+the minibuffer-specific setup.
+
+#+begin_src emacs-lisp
+;;; Minibuffer history (savehist-mode)
+(prot-emacs-builtin-package 'savehist
+  (setq savehist-file (locate-user-emacs-file "savehist"))
+  (setq history-length 10000)
+  (setq history-delete-duplicates t)
+  (setq savehist-save-minibuffer-history t)
+  (add-hook 'after-init-hook #'savehist-mode))
+#+end_src
+
 *** Enhanced minibuffer commands (consult.el and prot-consult.el)
 :PROPERTIES:
 :CUSTOM_ID: h:9c9401d6-8c53-4276-be4c-3bff345d3eeb
@@ -9093,29 +9123,6 @@ it to restore everything in the variable =desktop-globals-to-save=.
 :PROPERTIES:
 :CUSTOM_ID: h:ab868c1a-7ca6-4f54-83d8-eab49447da82
 :END:
-*** Minibuffer history (savehist-mode)
-:PROPERTIES:
-:CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
-:END:
-
-Keeps a record of actions involving the minibuffer.  This is of
-paramount importance to a fast and efficient workflow involving any
-completion framework that leverages the built-in mechanisms.
-
-Emacs will remember your input and choices and will surface the desired
-results towards the top as the most likely candidates.  Make sure to
-also read the [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]].
-
-#+begin_src emacs-lisp
-;;; Minibuffer history (savehist-mode)
-(prot-emacs-builtin-package 'savehist
-  (setq savehist-file (locate-user-emacs-file "savehist"))
-  (setq history-length 10000)
-  (setq history-delete-duplicates t)
-  (setq savehist-save-minibuffer-history t)
-  (add-hook 'after-init-hook #'savehist-mode))
-#+end_src
-
 *** Record cursor position
 :PROPERTIES:
 :CUSTOM_ID: h:ae1cad56-c12c-4bd5-a5cc-e85c0ad4b978
