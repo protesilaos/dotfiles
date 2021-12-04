@@ -4924,7 +4924,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 ;;;;; Basic agenda setup
   (setq org-default-notes-file (thread-last org-directory (expand-file-name "notes.org")))
   (setq org-agenda-files `(,org-directory "~/Documents"))
-  (setq org-agenda-span 14)
+  (setq org-agenda-span 'week)
   (setq org-agenda-start-on-weekday 1)  ; Monday
   (setq org-agenda-confirm-kill t)
   (setq org-agenda-show-all-dates t)
