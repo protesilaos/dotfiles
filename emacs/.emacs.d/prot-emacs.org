@@ -2030,9 +2030,8 @@ contexts.  Basically, this is the sort of thing that you set up and it
   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
 
 (prot-emacs-elpa-package 'cape
-  (dolist (backend '( cape-abbrev-capf cape-keyword-capf
-                      cape-dict-capf cape-ispell-capf cape-file-capf
-                      cape-dabbrev-capf))
+  (setq cape-dabbrev-min-length 2)
+  (dolist (backend '( cape-keyword-capf cape-file-capf cape-dabbrev-capf))
     (add-to-list 'completion-at-point-functions backend)))
 #+end_src
 
