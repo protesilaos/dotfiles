@@ -28,7 +28,6 @@ configuration {
 /*	scroll-method: 0;*/
 	window-format: "{w:0}	{n:0}	{t:0}";
 	click-to-exit: true;
-    theme: "~/.config/rofi/themes/modus-themes-active.rasi";
 	max-history-size: 25;
 	combi-hide-mode-prefix: true;
 /*	pid: "/run/user/1000/rofi.pid";*/
@@ -111,3 +110,6 @@ configuration {
 /*	me-accept-entry: "MouseDPrimary";*/
 /*	me-accept-custom: "Control+MouseDPrimary";*/
 }
+
+/* Rofi version 1.7.2 */
+@theme "~/.config/rofi/themes/modus-themes-active.rasi"
