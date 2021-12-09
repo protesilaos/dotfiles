@@ -175,7 +175,6 @@ produces dates with a fixed length."
                 (org-agenda-start-day "+3d")
                 (org-agenda-span 14)
                 (org-agenda-show-all-dates nil)
-                (org-agenda-time-grid nil)
                 (org-deadline-warning-days 0)
                 (org-agenda-block-separator nil)
                 (org-agenda-entry-types '(:deadline))
