@@ -82,8 +82,8 @@ To be used with `advice-add'.")
   (advice-add fn :after #'prot-org--agenda-after-edit))
 
 (dolist (hook '(org-capture-after-finalize-hook
-                  org-agenda-after-show-hook
-                  prot-org-agenda-after-edit-hook))
+                org-agenda-after-show-hook
+                prot-org-agenda-after-edit-hook))
   (add-hook hook #'org-agenda-to-appt))
 
 (declare-function cl-letf "cl-lib")
