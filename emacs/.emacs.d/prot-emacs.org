@@ -4819,6 +4819,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-hide-emphasis-markers t)
   (setq org-hide-macro-markers t)
   (setq org-hide-leading-stars nil)
+  (setq org-cycle-separator-lines 0)
   (setq org-structure-template-alist    ; CHANGED in Org 9.3, Emacs 27.1
         '(("s" . "src")
           ("E" . "src emacs-lisp")
@@ -4984,7 +4985,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 ;;;;; Agenda diary entries
   (setq org-agenda-insert-diary-strategy 'date-tree)
   (setq org-agenda-insert-diary-extract-time nil)
-  (setq org-agenda-include-diary t)
+  (setq org-agenda-include-diary nil)
 
 ;;;;; Agenda follow mode
   (setq org-agenda-start-with-follow-mode nil)
@@ -5009,7 +5010,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-agenda-skip-scheduled-delay-if-deadline nil)
   (setq org-agenda-skip-additional-timestamps-same-entry nil)
   (setq org-agenda-skip-timestamp-if-done nil)
-  (setq org-agenda-search-headline-for-time t)
+  (setq org-agenda-search-headline-for-time nil)
   (setq org-scheduled-past-days 365)
   (setq org-deadline-past-days 365)
   (setq org-agenda-move-date-from-past-immediately-to-today t)
@@ -5028,7 +5029,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-show-current-time-in-grid t)
   (setq org-agenda-current-time-string
-        (concat "Now " (make-string 36 ?—)))
+        (concat "Now " (make-string 70 ?-)))
   (setq org-agenda-time-grid
         '((daily today require-timed)
           (0600 0700 0800 0900 1000 1100
