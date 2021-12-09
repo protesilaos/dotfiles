@@ -4789,7 +4789,10 @@ package configurations:
     above.
 
   - Those granted, I prefer to just use the Diary and Calendar for my
-    simple needs: [[#h:b4040bc0-7a2a-4f17-824d-42de621bd1b9][Calendar and Diary (and prot-diary.el)]].
+    simple needs: [[#h:b4040bc0-7a2a-4f17-824d-42de621bd1b9][Calendar and Diary (and prot-diary.el)]].  Though this
+    may change going forward, as I am starting to experiment with more
+    advanced workflows, including the creation of bespoke "block agenda"
+    views (watch my [[https://protesilaos.com/codelog/2021-12-09-emacs-org-block-agenda/][Demo of my custom Org block agenda]] (2021-12-09)).
 
 + Org export :: I do not have much to offer here, apart from the setup
   that handles consistent heading IDs and anchor tags (the latter
@@ -4961,6 +4964,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (run-at-time (* 60 5) nil #'org-agenda-to-appt)
 
 ;;;;; General agenda view options
+  ;; NOTE 2021-12-07: Check further below my `org-agenda-custom-commands'
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s")
           (todo . " %i %-12:c")
@@ -5139,6 +5143,19 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 
 (prot-emacs-builtin-package 'prot-org
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
+
+  ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el
+  (setq org-agenda-custom-commands
+        `(("A" "Daily agenda and top priority tasks"
+           ,prot-org-custom-daily-agenda)
+          ("P" "Plain text daily agenda and top priorities"
+           ,prot-org-custom-daily-agenda
+           ((org-agenda-with-colors nil)
+            (org-agenda-prefix-format "%t %s")
+            (org-agenda-current-time-string ,(car (last org-agenda-time-grid)))
+            (org-agenda-fontify-priorities nil)
+            (org-agenda-remove-tags t))
+           ("agenda.txt"))))
 
   (add-to-list 'org-capture-templates
                '("j" "Music suggestion (jukebox)" entry
