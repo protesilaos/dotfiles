@@ -356,17 +356,16 @@ Apply APP by first setting up the minibuffer to work with Mct."
             (forward-line 1)
           (user-error (goto-char (point-max))))
         (unless (eobp)
-          (let ((pt (point))
-                (overlay))
+          (let ((pt (point)))
             (condition-case nil
                 (forward-line 1)
               (user-error (goto-char (point-max))))
             ;; We set the overlay this way and give it a low priority so
             ;; that `mct--highlight-overlay' and/or the active region
             ;; can override it.
-            (setq overlay (make-overlay pt (point)))
-            (overlay-put overlay 'face 'mct-stripe)
-            (overlay-put overlay 'priority -100)))))))
+            (let ((stripe (make-overlay pt (point))))
+              (overlay-put stripe 'priority -100)
+              (overlay-put stripe 'face 'mct-stripe))))))))
 
 ;;;; Commands and helper functions
 
@@ -414,7 +413,11 @@ Apply APP by first setting up the minibuffer to work with Mct."
          (cons (cons mct-completion-windows-regexp mct-display-buffer-action)
                display-buffer-alist)))
     (save-excursion (minibuffer-completion-help)))
-  (mct--fit-completions-window))
+  ;; ;; NOTE 2021-12-09: We should no longer have a need for this, as we
+  ;; ;; pass an after advice to `minibuffer-completion-help'.
+  ;;
+  ;; (mct--fit-completions-window)
+  )
 
 ;;;###autoload
 (defun mct-focus-mini-or-completions ()
@@ -981,6 +984,7 @@ region.")
     (define-key map (kbd "M-p") #'mct-previous-completion-group)
     (define-key map (kbd "M-n") #'mct-next-completion-group)
     (define-key map (kbd "p") #'mct-previous-completion-or-mini)
+    (define-key map (kbd "e") #'mct-focus-minibuffer)
     (define-key map (kbd "M-e") #'mct-edit-completion)
     (define-key map (kbd "<tab>") #'mct-choose-completion-no-exit)
     (define-key map (kbd "<return>") #'mct-choose-completion-exit)
@@ -1016,7 +1020,7 @@ region.")
                          (current-local-map))))
 
 (defun mct--setup-keymap ()
-  "Setup minibuffer keymaps."
+  "Set up minibuffer keymaps."
   (use-local-map
    (make-composed-keymap mct-minibuffer-local-completion-map
                          (current-local-map)))
@@ -1059,6 +1063,7 @@ region.")
         (advice-add #'completing-read-multiple :around #'mct--completing-read-advice)
         (advice-add #'completing-read-multiple :filter-args #'mct--crm-indicator)
         (advice-add #'display-completion-list :around #'mct--display-completion-list-advice)
+        (advice-add #'minibuffer-completion-help :after #'mct--fit-completions-window)
         (advice-add #'minibuffer-message :around #'mct--honor-inhibit-message)
         (advice-add #'minibuf-eldef-setup-minibuffer :around #'mct--stealthily))
     (remove-hook 'completion-list-mode-hook #'mct--setup-completion-list)
@@ -1072,6 +1077,7 @@ region.")
     (advice-remove #'completing-read-multiple #'mct--completing-read-advice)
     (advice-remove #'completing-read-multiple #'mct--crm-indicator)
     (advice-remove #'display-completion-list #'mct--display-completion-list-advice)
+    (advice-remove #'minibuffer-completion-help #'mct--fit-completions-window)
     (advice-remove #'minibuffer-message #'mct--honor-inhibit-message)
     (advice-remove #'minibuf-eldef-setup-minibuffer #'mct--stealthily)))
 
