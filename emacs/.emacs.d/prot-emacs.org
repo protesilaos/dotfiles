@@ -4954,7 +4954,9 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-agenda-max-tags nil)
   (setq org-agenda-max-effort nil)
 
-  ;; TODO 2021-08-27: Does this work?
+  ;; NOTE 2021-12-07: In my `prot-org.el' (see further below), I add
+  ;; `org-agenda-to-appt' to various relevant hooks.
+  ;;
   ;; Create reminders for tasks with a due date when this file is read.
   (run-at-time (* 60 5) nil #'org-agenda-to-appt)
 
