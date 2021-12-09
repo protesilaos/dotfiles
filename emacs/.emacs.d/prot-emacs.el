@@ -123,29 +123,26 @@
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs nil
-        modus-themes-mixed-fonts t
+        modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
         modus-themes-intense-markup nil
         modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
+        modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense' OR `faint'.
-        modus-themes-lang-checkers '(text-also straight-underline)
+        modus-themes-lang-checkers nil
 
-        ;; Options for `modus-themes-mode-line' are either nil, or a
-        ;; list that can combine any of `3d' OR `moody', `borderless',
-        ;; `accented', `padded'.
-        modus-themes-mode-line nil ; For Moody, also check `prot-moody'
-
-        ;; This one only works when `modus-themes-mode-line' (above) has
-        ;; the `padded' property.  It takes a positive integer.
-        modus-themes-mode-line-padding 2
+        ;; Options for `modus-themes-mode-line' are either nil, or a list
+        ;; that can combine any of `3d' OR `moody', `borderless',
+        ;; `accented', and a natural number for extra padding
+        modus-themes-mode-line '(4 borderless accented)
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -155,7 +152,7 @@
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line nil
+        modus-themes-hl-line '(intense)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -169,49 +166,35 @@
         modus-themes-links nil
 
         ;; Options for `modus-themes-prompts' are either nil (the
-        ;; default), or a list of properties that may include any of
-        ;; those symbols: `background', `bold', `gray', `intense',
-        ;; `italic'
-        modus-themes-prompts nil
+        ;; default), or a list of properties that may include any of those
+        ;; symbols: `background', `bold', `gray', `intense', `italic'
+        modus-themes-prompts '(intense italic bold)
 
-        modus-themes-completions nil ; {nil,'moderate,'opinionated}
+        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
 
-        modus-themes-mail-citations 'faint ; {nil,'faint,'monochrome}
+        modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend bg-only)
+        modus-themes-region '(accented no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs nil
 
-        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background} (also read doc string)
+        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
 
-        ;; This is an alist: read the manual or its doc string.
-        modus-themes-org-agenda
-        '((header-block . (variable-pitch scale-title))
-          (header-date . (bold-today grayscale workaholic))
-          (event . (accented varied italic))
-          (scheduled . uniform)
-          (habit . nil))
+        modus-themes-org-agenda ; this is an alist: read the manual or its doc string
+        '((header-block . (variable-pitch regular 1.4))
+          (header-date . (bold-today underline-today 1.2))
+          (event . (accented varied))
+          (scheduled . nil)
+          (habit . traffic-light))
 
-        ;; This is an alist: read the manual or its doc string.
-        modus-themes-headings nil
-        ;; '((1 . (background overline))
-        ;;   (2 . (background overline))
-        ;;   (3 . (background rainbow overline))
-        ;;   (t . (background rainbow no-bold overline)))
-
-        modus-themes-variable-pitch-ui nil
-        modus-themes-variable-pitch-headings nil
-        modus-themes-scale-headings nil
-        modus-themes-scale-1 1.1
-        modus-themes-scale-2 1.15
-        modus-themes-scale-3 1.21
-        modus-themes-scale-4 1.27
-        modus-themes-scale-title 1.33
-        modus-themes-scale-small 0.9)
+        modus-themes-headings ; this is an alist: read the manual or its doc string
+        '((1 . (variable-pitch regular 1.4))
+          (2 . (1.2))
+          (t . (rainbow 1.05))))
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
@@ -1537,6 +1520,7 @@ sure this is a good approach."
   (setq org-hide-emphasis-markers t)
   (setq org-hide-macro-markers t)
   (setq org-hide-leading-stars nil)
+  (setq org-cycle-separator-lines 0)
   (setq org-structure-template-alist    ; CHANGED in Org 9.3, Emacs 27.1
         '(("s" . "src")
           ("E" . "src emacs-lisp")
@@ -1671,11 +1655,14 @@ sure this is a good approach."
   (setq org-agenda-max-tags nil)
   (setq org-agenda-max-effort nil)
 
-  ;; TODO 2021-08-27: Does this work?
+  ;; NOTE 2021-12-07: In my `prot-org.el' (see further below), I add
+  ;; `org-agenda-to-appt' to various relevant hooks.
+  ;;
   ;; Create reminders for tasks with a due date when this file is read.
   (run-at-time (* 60 5) nil #'org-agenda-to-appt)
 
 ;;;;; General agenda view options
+  ;; NOTE 2021-12-07: Check further below my `org-agenda-custom-commands'
   (setq org-agenda-prefix-format
         '((agenda . " %i %-12:c%?-12t% s")
           (todo . " %i %-12:c")
@@ -1702,7 +1689,7 @@ sure this is a good approach."
 ;;;;; Agenda diary entries
   (setq org-agenda-insert-diary-strategy 'date-tree)
   (setq org-agenda-insert-diary-extract-time nil)
-  (setq org-agenda-include-diary t)
+  (setq org-agenda-include-diary nil)
 
 ;;;;; Agenda follow mode
   (setq org-agenda-start-with-follow-mode nil)
@@ -1727,7 +1714,7 @@ sure this is a good approach."
   (setq org-agenda-skip-scheduled-delay-if-deadline nil)
   (setq org-agenda-skip-additional-timestamps-same-entry nil)
   (setq org-agenda-skip-timestamp-if-done nil)
-  (setq org-agenda-search-headline-for-time t)
+  (setq org-agenda-search-headline-for-time nil)
   (setq org-scheduled-past-days 365)
   (setq org-deadline-past-days 365)
   (setq org-agenda-move-date-from-past-immediately-to-today t)
@@ -1746,7 +1733,7 @@ sure this is a good approach."
   (setq org-agenda-use-time-grid t)
   (setq org-agenda-show-current-time-in-grid t)
   (setq org-agenda-current-time-string
-        (concat "Now " (make-string 36 ?—)))
+        (concat "Now " (make-string 70 ?-)))
   (setq org-agenda-time-grid
         '((daily today require-timed)
           (0600 0700 0800 0900 1000 1100
@@ -1854,6 +1841,19 @@ sure this is a good approach."
 
 (prot-emacs-builtin-package 'prot-org
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
+
+  ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el
+  (setq org-agenda-custom-commands
+        `(("A" "Daily agenda and top priority tasks"
+           ,prot-org-custom-daily-agenda)
+          ("P" "Plain text daily agenda and top priorities"
+           ,prot-org-custom-daily-agenda
+           ((org-agenda-with-colors nil)
+            (org-agenda-prefix-format "%t %s")
+            (org-agenda-current-time-string ,(car (last org-agenda-time-grid)))
+            (org-agenda-fontify-priorities nil)
+            (org-agenda-remove-tags t))
+           ("agenda.txt"))))
 
   (add-to-list 'org-capture-templates
                '("j" "Music suggestion (jukebox)" entry
