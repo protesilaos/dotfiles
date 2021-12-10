@@ -1546,9 +1546,10 @@ sure this is a good approach."
   (setq org-refile-use-cache t)
   (setq org-reverse-note-order nil)
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")))
+        '((sequence "TODO(t)" "MAYBE(m)" "WAIT(w@/!)" "|" "CANCEL(c@)" "DONE(d!)")))
   (setq org-todo-keyword-faces
         '(("WAIT" . '(bold org-todo))
+          ("MAYBE" . '(bold shadow))
           ("CANCEL" . '(bold org-done))))
   (setq org-use-fast-todo-selection 'expert)
   (setq org-priority-faces
@@ -1621,14 +1622,13 @@ sure this is a good approach."
                     "%i%?")
            :empty-lines-after 1)
           ("m" "Make email note" entry
-           (file+headline "tasks.org" "Mail correspondence")
+           (file+headline "tasks.org" "Tasks with a date")
            ,(concat "* TODO %:subject :mail:\n"
                     "SCHEDULED: %t\n:"
                     "PROPERTIES:\n"
-                    ":CONTEXT: %a\n"
+                    ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%i%?")
-           :empty-lines-after 1)))
+                    "%a\n%i%?"))))
 
   (setq org-capture-templates-contexts
         '(("m" ((in-mode . "notmuch-search-mode")
@@ -1845,7 +1845,9 @@ sure this is a good approach."
   ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el
   (setq org-agenda-custom-commands
         `(("A" "Daily agenda and top priority tasks"
-           ,prot-org-custom-daily-agenda)
+           ,prot-org-custom-daily-agenda
+           ((org-agenda-fontify-priorities nil)
+            (org-agenda-dim-blocked-tasks nil)))
           ("P" "Plain text daily agenda and top priorities"
            ,prot-org-custom-daily-agenda
            ((org-agenda-with-colors nil)
