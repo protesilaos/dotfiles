@@ -5147,7 +5147,9 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   ;; Check the variable `prot-org-custom-daily-agenda' in prot-org.el
   (setq org-agenda-custom-commands
         `(("A" "Daily agenda and top priority tasks"
-           ,prot-org-custom-daily-agenda)
+           ,prot-org-custom-daily-agenda
+           ((org-agenda-fontify-priorities nil)
+            (org-agenda-dim-blocked-tasks nil)))
           ("P" "Plain text daily agenda and top priorities"
            ,prot-org-custom-daily-agenda
            ((org-agenda-with-colors nil)
