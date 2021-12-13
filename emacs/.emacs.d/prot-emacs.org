@@ -5511,7 +5511,7 @@ Finally, note that I control the placement of those buffers in the
   (setq appt-display-interval 3)
   (setq appt-audible nil)
   (setq appt-warning-time-regexp "appt \\([0-9]+\\)")
-  (setq appt-message-warning-time 15)
+  (setq appt-message-warning-time 6)
 
   (run-at-time 10 nil #'appt-activate 1))
 
