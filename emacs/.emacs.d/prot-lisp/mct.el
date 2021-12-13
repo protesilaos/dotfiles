@@ -231,7 +231,7 @@ See `completions-format' for possible values."
                                (goto-char prev))))))
       (put-text-property (point-min) (point) 'invisible t))))
 
-(defun mct--fit-completions-window ()
+(defun mct--fit-completions-window (&rest _args)
   "Fit Completions' buffer to its window."
   (when-let ((window (mct--get-completion-window)))
     (with-current-buffer (window-buffer window)
@@ -278,16 +278,20 @@ Meant to be added to `after-change-functions'."
   (when (window-live-p (mct--get-completion-window))
     (mct--live-completions-timer)))
 
+(defun mct--this-command ()
+  "Return this command."
+  (or (bound-and-true-p current-minibuffer-command) this-command))
+
 (defun mct--setup-live-completions ()
   "Set up the completions' buffer."
   (cond
-   ((memq this-command mct-completion-passlist)
+   ((memq (mct--this-command) mct-completion-passlist)
     (setq-local mct-minimum-input 0)
     (setq-local mct-live-update-delay 0)
     (mct--show-completions)
     (add-hook 'after-change-functions #'mct--live-completions nil t))
    ((null mct-live-completion))
-   ((not (memq this-command mct-completion-blocklist))
+   ((not (memq (mct--this-command) mct-completion-blocklist))
     (if (eq mct-live-completion 'visible)
         (add-hook 'after-change-functions #'mct--live-completions-visible-timer nil t)
       (add-hook 'after-change-functions #'mct--live-completions-timer nil t)))))
@@ -900,7 +904,7 @@ Apply APP while inhibiting modification hooks."
            mct-remove-shadowed-file-names
            (eq (mct--completion-category) 'file)
            rfn-eshadow-overlay (overlay-buffer rfn-eshadow-overlay)
-           (eq this-command 'self-insert-command)
+           (eq (mct--this-command) 'self-insert-command)
            (= saved-point (point-max))
            (or (>= (- (point) (overlay-end rfn-eshadow-overlay)) 2)
                (eq ?/ (char-before (- (point) 2)))))
