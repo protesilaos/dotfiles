@@ -1584,6 +1584,7 @@ that populate the original prompt.
 #+begin_src emacs-lisp
 ;;; Switch to directories (consult-dir.el)
 (prot-emacs-elpa-package 'consult-dir
+  (setq consult-dir-shadow-filenames nil)
   (setq consult-dir-sources '( consult-dir--source-bookmark
                                consult-dir--source-default
                                consult-dir--source-project
