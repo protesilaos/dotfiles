@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 1.7.0
-;; Last-Modified: <2021-12-09 20:20:06 +0200>
+;; Last-Modified: <2021-12-13 08:57:03 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -2410,7 +2410,9 @@ The padding has no effect when the `moody' property is also used,
 because Moody already applies its own tweaks.  To ensure that the
 underline is placed at the bottom of the mode line, set
 `x-underline-at-descent-line' to non-nil (this is not needed when
-the `borderless' property is also set).
+the `borderless' property is also set).  For users on Emacs 29,
+the `x-use-underline-position-properties' variable must also be
+set to nil.
 
 Combinations of any of those properties are expressed as a list,
 like in these examples:
@@ -6506,7 +6508,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-date ((,class :inherit ,(if modus-themes-mixed-fonts
                                       '(fixed-pitch modus-themes-link-symlink)
                                     'modus-themes-link-symlink))))
-    `(org-date-selected ((,class :inherit bold :foreground ,blue-alt :inverse-video t)))
+    `(org-date-selected ((,class :foreground ,blue-alt :inverse-video t)))
     `(org-dispatcher-highlight ((,class :inherit (bold modus-themes-mark-alt))))
     `(org-document-info ((,class :foreground ,fg-special-cold)))
     `(org-document-info-keyword ((,class :inherit (shadow modus-themes-fixed-pitch))))
@@ -6585,7 +6587,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-sexp-date ((,class :foreground ,cyan-alt-other)))
     `(org-special-keyword ((,class :inherit (shadow modus-themes-fixed-pitch))))
     `(org-table ((,class :inherit modus-themes-fixed-pitch :foreground ,fg-special-cold)))
-    `(org-table-header ((,class :inherit (fixed-pitch modus-themes-intense-neutral))))
+    `(org-table-header ((,class :inherit (fixed-pitch modus-themes-special-cold))))
     `(org-tag ((,class :foreground ,magenta-nuanced-fg)))
     `(org-tag-group ((,class :inherit bold :foreground ,cyan-nuanced-fg)))
     `(org-target ((,class :underline t)))
@@ -6622,7 +6624,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-superstar-item ((,class :foreground ,fg-main)))
     `(org-superstar-leading ((,class :foreground ,fg-whitespace)))
 ;;;;; org-table-sticky-header
-    `(org-table-sticky-header-face ((,class :inherit modus-themes-intense-neutral)))
+    `(org-table-sticky-header-face ((,class :inherit modus-themes-special-cold)))
 ;;;;; org-tree-slide
     `(org-tree-slide-header-overlay-face ((,class :inherit org-document-title)))
 ;;;;; org-treescope
