@@ -5154,6 +5154,10 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
             (org-agenda-remove-tags t))
            ("agenda.txt"))))
 
+  ;; I bind `org-agenda' to C-c a, so this one puts me straight into my
+  ;; custom block agenda.
+  (define-key global-map (kbd "C-c A") (lambda () (interactive) (org-agenda nil "A")))
+
   (add-to-list 'org-capture-templates
                '("j" "Music suggestion (jukebox)" entry
                  (file+headline "tasks.org" "Music suggestions")
