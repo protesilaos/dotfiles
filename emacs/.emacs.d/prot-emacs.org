@@ -582,9 +582,9 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch regular 1.4))
-          (header-date . (bold-today underline-today 1.2))
+          (header-date . (bold-today grayscale underline-today 1.2))
           (event . (accented varied))
-          (scheduled . nil)
+          (scheduled . uniform)
           (habit . traffic-light))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
