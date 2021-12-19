@@ -244,8 +244,8 @@ bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && pk
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle && pkill -SIGRTMIN+1 i3blocks
 
 bindsym XF86AudioPlay exec emacsclient -e "(bongo-pause/resume)"
-bindsym XF86AudioNext exec emacsclient -e "(bongo-previous)"
-bindsym XF86AudioPrev exec emacsclient -e "(bongo-next)"
+bindsym XF86AudioNext exec emacsclient -e "(bongo-next)"
+bindsym XF86AudioPrev exec emacsclient -e "(bongo-previous)"
 
 bindsym $mod+XF86AudioPlay exec playerctl play-pause
 bindsym $mod+XF86AudioNext exec playerctl next
