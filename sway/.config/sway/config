@@ -188,24 +188,27 @@ for_window [window_type="menu"] floating enable
 
 
 #### Resizing containers
-# FIXME 2021-09-22: We need smart resizing.  Choosing a direction should
-# expand or contract the container depending on what makes sense.
+
+# NOTE 2021-12-19: The `sway_resize' is a custom script of mine.  Check
+# my dotfiles.
+
+set $increment 25px
 
 mode "resize" {
     # left will shrink the containers width
     # right will grow the containers width
     # up will shrink the containers height
     # down will grow the containers height
-    bindsym $left resize shrink width 25px
-    bindsym $down resize grow height 25px
-    bindsym $up resize shrink height 25px
-    bindsym $right resize grow width 25px
+    bindsym $left exec ~/bin/sway_resize left $increment
+    bindsym $down exec ~/bin/sway_resize down $increment
+    bindsym $up exec ~/bin/sway_resize up $increment
+    bindsym $right exec ~/bin/sway_resize right $increment
 
     # Ditto, with arrow keys
-    bindsym Left resize shrink width 25px
-    bindsym Down resize grow height 25px
-    bindsym Up resize shrink height 25px
-    bindsym Right resize grow width 25px
+    bindsym Left exec ~/bin/sway_resize left $increment
+    bindsym Down exec ~/bin/sway_resize down $increment
+    bindsym Up exec ~/bin/sway_resize up $increment
+    bindsym Right exec ~/bin/sway_resize right $increment
 
     # Return to default mode
     bindsym Return mode "default"
@@ -213,10 +216,10 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-bindsym $mod+Ctrl+$left resize shrink width 25px
-bindsym $mod+Ctrl+$down resize grow height 25px
-bindsym $mod+Ctrl+$up resize shrink height 25px
-bindsym $mod+Ctrl+$right resize grow width 25px
+bindsym $mod+Ctrl+$left exec ~/bin/sway_resize left $increment
+bindsym $mod+Ctrl+$down exec ~/bin/sway_resize down $increment
+bindsym $mod+Ctrl+$up exec ~/bin/sway_resize up $increment
+bindsym $mod+Ctrl+$right exec ~/bin/sway_resize right $increment
 
 # Change gap size
 bindsym $mod+Bracketright gaps inner all plus 5

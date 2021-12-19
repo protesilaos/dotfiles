@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# sway_resize --- Resize SwayWM windows intuitively
+#
+# Copyright (c) 2021  Protesilaos Stavrou <info@protesilaos.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+### Commentary
+
+# Adapted from a similar script for BSPWM:
+# <https://github.com/Chrysostomus/bspwm-scripts/blob/master/bin/bspwm_resize.sh>.
+
+direction=$1
+shift
+
+case "$direction" in
+  left)  swaymsg -q resize shrink right "$@" || swaymsg -q resize grow left "$@";;
+  down)  swaymsg -q resize grow down "$@"    || swaymsg -q resize shrink up "$@";;
+  up)    swaymsg -q resize shrink down "$@"  || swaymsg -q resize grow up "$@";;
+  right) swaymsg -q resize grow right "$@"   || swaymsg -q resize shrink left "$@";;
+esac
