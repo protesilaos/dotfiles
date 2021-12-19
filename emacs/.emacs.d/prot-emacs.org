@@ -1286,7 +1286,8 @@ results I am most likely interested in, based on previous selections.
         '( embark-prefix-help-command Info-goto-node
            Info-index Info-menu vc-retrieve-tag
            prot-bookmark-cd-bookmark
-           prot-bongo-playlist-insert-playlist-file))
+           prot-bongo-playlist-insert-playlist-file
+           project-switch-to-buffer))
 
   ;; You can place the Completions' buffer wherever you want, by
   ;; following the syntax of `display-buffer-alist' (check elsewhere in
