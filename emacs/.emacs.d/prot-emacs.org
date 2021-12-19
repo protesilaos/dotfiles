@@ -4910,6 +4910,14 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
                     ":END:\n\n"
                     "%i%l")
            :empty-lines-after 1)
+          ("m" "Memorandum of conversation" entry
+           (file+headline "tasks.org" "Tasks to be reviewed")
+           ,(concat "* Memorandum of conversation with %^{Person}\n"
+                    ":PROPERTIES:\n"
+                    ":CAPTURED: %U\n"
+                    ":END:\n\n"
+                    "%i%?")
+           :empty-lines-after 1)
           ("t" "Task with a due date" entry
            (file+headline "tasks.org" "Tasks with a date")
            ,(concat "* TODO %^{Title} %^g\n"
@@ -4919,17 +4927,17 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
                     ":END:\n\n"
                     "%i%?")
            :empty-lines-after 1)
-          ("m" "Make email note" entry
-           (file+headline "tasks.org" "Tasks with a date")
-           ,(concat "* TODO %:subject :mail:\n"
-                    "SCHEDULED: %t\n:"
+          ("e" "Email note" entry
+           (file+headline "tasks.org" "Tasks to be reviewed")
+           ,(concat "* MAYBE %:subject :mail:\n"
                     "PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%a\n%i%?"))))
+                    "%a\n%i%?")
+           :empty-lines-after 1)))
 
   (setq org-capture-templates-contexts
-        '(("m" ((in-mode . "notmuch-search-mode")
+        '(("e" ((in-mode . "notmuch-search-mode")
                 (in-mode . "notmuch-show-mode")
                 (in-mode . "notmuch-tree-mode")))))
 
