@@ -186,9 +186,9 @@
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch regular 1.4))
-          (header-date . (bold-today underline-today 1.2))
+          (header-date . (bold-today grayscale underline-today 1.2))
           (event . (accented varied))
-          (scheduled . nil)
+          (scheduled . uniform)
           (habit . traffic-light))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
@@ -415,7 +415,8 @@
         '( embark-prefix-help-command Info-goto-node
            Info-index Info-menu vc-retrieve-tag
            prot-bookmark-cd-bookmark
-           prot-bongo-playlist-insert-playlist-file))
+           prot-bongo-playlist-insert-playlist-file
+           project-switch-to-buffer))
 
   ;; You can place the Completions' buffer wherever you want, by
   ;; following the syntax of `display-buffer-alist' (check elsewhere in
@@ -509,6 +510,7 @@
 
 ;;; Switch to directories (consult-dir.el)
 (prot-emacs-elpa-package 'consult-dir
+  (setq consult-dir-shadow-filenames nil)
   (setq consult-dir-sources '( consult-dir--source-bookmark
                                consult-dir--source-default
                                consult-dir--source-project
@@ -545,12 +547,6 @@
   ;;  `display-buffer-alist' (search this document) because it is easier
   ;;  to keep track of all my rules in one place.
   (setq embark-verbose-indicator-display-action nil)
-
-  ;; Use alternating backgrounds, if `stripes' is available.
-  (with-eval-after-load 'stripes
-    (let ((hook 'embark-collect-mode-hook))
-      (add-hook hook #'stripes-mode)
-      (add-hook hook #'hl-line-mode)))
 
   (define-key global-map (kbd "C-,") #'embark-act)
   (let ((map minibuffer-local-completion-map))
@@ -1612,6 +1608,14 @@ sure this is a good approach."
                     ":END:\n\n"
                     "%i%l")
            :empty-lines-after 1)
+          ("m" "Memorandum of conversation" entry
+           (file+headline "tasks.org" "Tasks to be reviewed")
+           ,(concat "* Memorandum of conversation with %^{Person}\n"
+                    ":PROPERTIES:\n"
+                    ":CAPTURED: %U\n"
+                    ":END:\n\n"
+                    "%i%?")
+           :empty-lines-after 1)
           ("t" "Task with a due date" entry
            (file+headline "tasks.org" "Tasks with a date")
            ,(concat "* TODO %^{Title} %^g\n"
@@ -1621,17 +1625,17 @@ sure this is a good approach."
                     ":END:\n\n"
                     "%i%?")
            :empty-lines-after 1)
-          ("m" "Make email note" entry
-           (file+headline "tasks.org" "Tasks with a date")
-           ,(concat "* TODO %:subject :mail:\n"
-                    "SCHEDULED: %t\n:"
+          ("e" "Email note" entry
+           (file+headline "tasks.org" "Tasks to be reviewed")
+           ,(concat "* MAYBE %:subject :mail:\n"
                     "PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%a\n%i%?"))))
+                    "%a\n%i%?")
+           :empty-lines-after 1)))
 
   (setq org-capture-templates-contexts
-        '(("m" ((in-mode . "notmuch-search-mode")
+        '(("e" ((in-mode . "notmuch-search-mode")
                 (in-mode . "notmuch-show-mode")
                 (in-mode . "notmuch-tree-mode")))))
 
@@ -1857,6 +1861,10 @@ sure this is a good approach."
             (org-agenda-remove-tags t))
            ("agenda.txt"))))
 
+  ;; I bind `org-agenda' to C-c a, so this one puts me straight into my
+  ;; custom block agenda.
+  (define-key global-map (kbd "C-c A") (lambda () (interactive) (org-agenda nil "A")))
+
   (add-to-list 'org-capture-templates
                '("j" "Music suggestion (jukebox)" entry
                  (file+headline "tasks.org" "Music suggestions")
@@ -1933,7 +1941,7 @@ sure this is a good approach."
   (setq appt-display-interval 3)
   (setq appt-audible nil)
   (setq appt-warning-time-regexp "appt \\([0-9]+\\)")
-  (setq appt-message-warning-time 15)
+  (setq appt-message-warning-time 6)
 
   (run-at-time 10 nil #'appt-activate 1))
 
@@ -2046,14 +2054,14 @@ sure this is a good approach."
         '(("date" . "%12s  ")
           ("count" . "%-7s  ")
           ("authors" . "%-20s  ")
-          ("subject" . "%-120s  ")
+          ("subject" . "%-80s  ")
           ("tags" . "(%s)")))
   (setq notmuch-tree-result-format
         '(("date" . "%12s  ")
           ("authors" . "%-20s  ")
           ((("tree" . "%s")
             ("subject" . "%s"))
-           . " %-120s  ")
+           . " %-80s  ")
           ("tags" . "(%s)")))
   (setq notmuch-search-line-faces
         '(("unread" . notmuch-search-unread-face)
@@ -2169,14 +2177,6 @@ sure this is a good approach."
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
   (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
-
-  ;; Use alternating backgrounds, if `stripes' is available.
-  (with-eval-after-load 'stripes
-    (add-hook 'notmuch-search-hook #'stripes-mode)
-    ;; ;; To disable `hl-line-mode':
-    ;; (setq notmuch-search-hook nil)
-    ;; (add-hook 'notmuch-search-hook #'prot-common-disable-hl-line)
-    )
 
   (let ((map global-map))
     (define-key map (kbd "C-c m") #'notmuch)
@@ -2556,7 +2556,7 @@ Can link to more than one message, if so all matching messages are shown."
   (setq elfeed-search-filter "@4-months-ago +unread")
   (setq elfeed-sort-order 'descending)
   (setq elfeed-search-clipboard-type 'CLIPBOARD)
-  (setq elfeed-search-title-max-width 160)
+  (setq elfeed-search-title-max-width 100)
   (setq elfeed-search-title-min-width 30)
   (setq elfeed-search-trailing-width 25)
   (setq elfeed-show-truncate-long-urls t)
@@ -2587,13 +2587,6 @@ Can link to more than one message, if so all matching messages are shown."
     (prot-elfeed-fontify-tags)
     (add-hook 'elfeed-search-mode-hook #'prot-elfeed-load-feeds)
 
-    ;; Use alternating backgrounds, if `stripes' is available.
-    (with-eval-after-load 'stripes
-      (add-hook 'elfeed-search-mode-hook #'stripes-mode)
-      ;; ;; To disable `hl-line-mode':
-      ;; (advice-add #'elfeed-search-mode :after #'prot-common-disable-hl-line)
-      )
-
     (let ((map elfeed-search-mode-map))
       (define-key map (kbd "s") #'prot-elfeed-search-tag-filter)
       (define-key map (kbd "o") #'prot-elfeed-search-open-other-window)
@@ -2612,10 +2605,7 @@ Can link to more than one message, if so all matching messages are shown."
   (setq proced-auto-update-flag t)
   (setq proced-auto-update-interval 5)
   (setq proced-descend t)
-  (setq proced-filter 'user)
-
-  (with-eval-after-load 'stripes
-    (add-hook 'proced-mode-hook #'stripes-mode)))
+  (setq proced-filter 'user))
 
 (prot-emacs-builtin-package 'prot-proced
   (prot-proced-extra-keywords 1))
@@ -3057,10 +3047,6 @@ Can link to more than one message, if so all matching messages are shown."
   (let ((map global-map))
     (define-key map (kbd "C-x r <backspace>") #'rlist-list-registers)
     (define-key map (kbd "C-x r <delete>") #'rlist-list-registers)))
-
-;;; Alternating background highlights (stripes.el)
-(prot-emacs-elpa-package 'stripes
-  (setq stripes-unit 1))
 
 ;;; Automatic time stamps for files (time-stamp.el)
 (prot-emacs-builtin-package 'time-stamp
