@@ -157,8 +157,6 @@ bindsym Ctrl+$mod+Shift+0 move container to workspace $ws0, workspace $ws0
 
 #### Layout stuff
 bindsym $mod+s split toggle
-# bindsym $mod+s splith
-# bindsym $mod+v splitv
 
 bindsym $mod+f fullscreen
 
@@ -168,12 +166,8 @@ bindsym $mod+Shift+space floating toggle
 # Swap focus between the tiling area and the floating area
 bindsym $mod+space focus mode_toggle
 
-
-# # Switch the current container between different layout styles
-# # NOTE 2021-09-20: I don't use those for the time being.
-# bindsym $mod+Shift+s layout stacking
-# bindsym $mod+Shift+t layout tabbed
-# bindsym $mod+Shift+e layout toggle split
+# Switch the current container between different layout styles
+bindsym $mod+Shift+s layout toggle split
 
 #### Window rules
 # NOTE 2021-09-20: I copied those from my old i3 config (from 2017).  I
