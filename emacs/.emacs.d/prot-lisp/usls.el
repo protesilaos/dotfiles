@@ -64,7 +64,7 @@ The default workflow of USLS is to maintain a flat directory
 where all the notes are stored in.  This allows us to omit the
 common filesystem path and only show file names.
 
-When set to non-nil, the usls workflow can handle subdirectories
+When set to non-nil, the USLS workflow can handle subdirectories
 at the expense of making all file names more verbose, as it needs
 to include the complete path.
 
@@ -133,7 +133,7 @@ option `usls-file-region-separator-heading-level' and defaults to
 
 (defcustom usls-file-region-separator-heading-level 1
   "Heading level for `usls-file-region-separator'.
-Has effect when `usls-file-type-extension' is either that for
+Has effect when `usls-file-type-extension' is either that of
 Markdown or Org types."
   :group 'usls
   :type 'integer)
@@ -158,7 +158,7 @@ use-case is to `let' bind it in wrapper functions around
 `usls-new-note'.  In that scenario, it could be desirable to also
 set the value of `usls-file-type-extension', so as to generate a
 different type of note than the default: such as to write
-something in '.tex' while the default extension remains in tact.
+something in '.tex' while the default extension remains intact.
 In this case, users are expected to define a wrapper for
 `usls-new-note' like this (without the backslashes that appear in
 the source of this docstring):
@@ -178,7 +178,7 @@ the source of this docstring):
 (defconst usls-id-regexp "\\([0-9_]+\\{15\\}\\)"
   "Regular expression to match `usls-id'.")
 
-(defconst usls-category-regexp "\\(--\\)\\([0-9A-Za-z_-]*\\)\\(--\\)"
+(defconst usls-category-regexp "\\(--\\)\\([0-9A-Za-z_+]*\\)\\(--\\)"
   "Regular expression to match `usls-categories'.")
 
 (defconst usls-file-regexp
@@ -354,7 +354,7 @@ trailing hyphen."
 
 (defun usls--categories-in-files ()
   "Produce list of categories in `usls--directory-files'."
-  (cl-remove-if nil
+  (delq nil
    (mapcar (lambda (x)
              (usls--extract usls-category-regexp x 2))
            (usls--directory-files))))
@@ -678,7 +678,7 @@ When called interactively use completion."
 
 (defun usls--window-buffer-file-names-list ()
   "Return file names in `usls--window-buffer-list'."
-  (cl-remove-if nil
+  (delq nil
    (mapcar (lambda (x)
              (buffer-file-name x))
            (usls--window-buffer-list))))
@@ -687,7 +687,7 @@ When called interactively use completion."
   "Return USLS files in `usls--window-buffer-file-names-list'."
   (let ((files (usls--directory-files-recursive))
         (buf-files (mapcar #'abbreviate-file-name (usls--window-buffer-file-names-list))))
-    (cl-remove-if nil
+    (delq nil
      (mapcar (lambda (x)
                (when (member x files)
                  x))
