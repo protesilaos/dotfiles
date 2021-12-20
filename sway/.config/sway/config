@@ -233,17 +233,17 @@ mode $gaps {
 bindsym $mod+g mode $gaps
 
 #### Media keys
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -SIGRTMIN+1 i3blocks
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -SIGRTMIN+1 i3blocks
-bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle && pkill -SIGRTMIN+1 i3blocks
+bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5% && pkill -SIGRTMIN+1 i3blocks
+bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5% && pkill -SIGRTMIN+1 i3blocks
+bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle && pkill -SIGRTMIN+1 i3blocks
 
-bindsym XF86AudioPlay exec emacsclient -e "(bongo-pause/resume)"
-bindsym XF86AudioNext exec emacsclient -e "(bongo-next)"
-bindsym XF86AudioPrev exec emacsclient -e "(bongo-previous)"
+bindsym --locked XF86AudioPlay exec emacsclient -e "(bongo-pause/resume)"
+bindsym --locked XF86AudioNext exec emacsclient -e "(bongo-next)"
+bindsym --locked XF86AudioPrev exec emacsclient -e "(bongo-previous)"
 
-bindsym $mod+XF86AudioPlay exec playerctl play-pause
-bindsym $mod+XF86AudioNext exec playerctl next
-bindsym $mod+XF86AudioPrev exec playerctl previous
+bindsym --locked $mod+XF86AudioPlay exec playerctl play-pause
+bindsym --locked $mod+XF86AudioNext exec playerctl next
+bindsym --locked $mod+XF86AudioPrev exec playerctl previous
 
 bindsym Print exec grim ~/Pictures/screenshot_$(date +'%F-%T.png') && notify-send -i gnome-screenshot "Window view screenshot" "Saved image to Pictures"
 bindsym $mod+Print exec grim -g "$(slurp)" ~/Pictures/screenshot_region_$(date +'%F-%T.png') && notify-send -i gnome-screenshot "Region view screenshot" "Saved image to Pictures"
@@ -283,7 +283,9 @@ bindsym $mod+b bar mode toggle
 exec_always ~/bin/sway_colors
 
 ### Idle configuration
-exec swayidle -w timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
+bindsym $mod+End exec ~/bin/sway_lock
+
+# exec swayidle -w timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
 
 # # Use this if you also want to lock the screen:
 # exec swayidle -w \
