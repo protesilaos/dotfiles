@@ -71,6 +71,40 @@
     (error "%s is not a valid positive number" n)))
 
 ;;;###autoload
+(defun prot-common-reverse-percentage (number percent change-p)
+  "Determine the original value of NUMBER given PERCENT.
+
+CHANGE-P should specify the increase or decrease.  For simplicity,
+nil means decrease while non-nil stands for an increase.
+
+NUMBER must satisfy `numberp', while PERCENT must be `natnump'."
+  (unless (numberp number)
+    (user-error "NUMBER must satisfy numberp"))
+  (unless (natnump percent)
+    (user-error "PERCENT must satisfy natnump"))
+  (let* ((pc (/ (float percent) 100))
+         (pc-change (if change-p (+ 1 pc) pc))
+         (n (if change-p pc-change (float (- 1 pc-change)))))
+    ;; FIXME 2021-12-21: If float, round to 4 decimal points.
+    (/ number n)))
+
+;;;###autoload
+(defun prot-common-percentage-change (n-original n-final)
+  "Find percentage change between N-ORIGINAL and N-FINAL numbers.
+
+When the percentage is not an integer, it is rounded to 4
+floating points: 16.666666666666664 => 16.667."
+  (unless (numberp n-original)
+    (user-error "N-ORIGINAL must satisfy numberp"))
+  (unless (numberp n-final)
+    (user-error "N-FINAL must satisfy numberp"))
+  (let* ((difference (float (abs (- n-original n-final))))
+         (n (* (/ difference n-original) 100))
+         (round (floor n)))
+    ;; FIXME 2021-12-21: Any way to avoid the `string-to-number'?
+    (if (> n round) (string-to-number (format "%0.4f" n)) round)))
+
+;;;###autoload
 (defun prot-common-empty-buffer-p ()
   "Test whether the buffer is empty."
   (or (= (point-min) (point-max))
