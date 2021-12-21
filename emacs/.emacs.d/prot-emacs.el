@@ -1628,7 +1628,7 @@ sure this is a good approach."
           ("e" "Email note" entry
            (file+headline "tasks.org" "Tasks to be reviewed")
            ,(concat "* MAYBE %:subject :mail:\n"
-                    "PROPERTIES:\n"
+                    ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
                     "%a\n%i%?")
