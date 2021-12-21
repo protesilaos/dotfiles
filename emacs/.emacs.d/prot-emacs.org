@@ -4930,7 +4930,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
           ("e" "Email note" entry
            (file+headline "tasks.org" "Tasks to be reviewed")
            ,(concat "* MAYBE %:subject :mail:\n"
-                    "PROPERTIES:\n"
+                    ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
                     "%a\n%i%?")
