@@ -384,11 +384,11 @@ output is sorted with `string-lessp'."
         (car choice)
       (sort choice #'string-lessp))))
 
-(defun usls--categories-hyphenate (categories)
+(defun usls--categories-combine (categories)
   "Format CATEGORIES output of `usls--categories-prompt'."
   (if (and (> (length categories) 1)
            (not (stringp categories)))
-      (mapconcat #'downcase categories "-")
+      (mapconcat #'downcase categories "+")
     categories))
 
 (defun usls--categories-capitalize (categories)
@@ -553,7 +553,7 @@ note in.  Subdirectories must already exist."
          (path (file-name-as-directory (or subdir usls-directory)))
          (id (format-time-string usls-id))
          (filename (usls--format-file path id
-                    (usls--categories-hyphenate categories)
+                    (usls--categories-combine categories)
                     slug usls-file-type-extension))
          (date (format-time-string "%F"))
          (region (usls--file-region)))
