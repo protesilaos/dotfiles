@@ -29,7 +29,7 @@
 pgrep -x swayidle > /dev/null && pkill -x swayidle
 
 swayidle \
-    timeout 5 'swaymsg "output * dpms off"' \
+    timeout 30 'swaymsg "output * dpms off"' \
     resume 'swaymsg "output * dpms on"' &
 
 swaylock -F -e -k -l -c '003f69' --font 'Monospace' --font-size 24 \
