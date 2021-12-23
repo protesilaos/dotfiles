@@ -341,11 +341,11 @@ if _checkexec mpv; then
 	alias mpvhd="mpv --ytdl-raw-options='format=[[bestvideo=height<=720]]'"
 fi
 
-# Quick shortcuts for `youtube-dl`.  Output is placed in the present
-# working directory.
-if _checkexec youtube-dl; then
-	alias ytaud='youtube-dl --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
-	alias ytvid='youtube-dl --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
+# Quick shortcuts for `yt-dlp`.  Output is placed in the present working
+# directory.
+if _checkexec yt-dlp; then
+	alias ytaud='yt-dlp --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
+	alias ytvid='yt-dlp --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
 fi
 
 # When I need to copy the contents of a file to the clipboard
