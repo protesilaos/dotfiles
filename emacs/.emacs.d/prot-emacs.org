@@ -518,11 +518,11 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs nil
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
         modus-themes-intense-markup nil
-        modus-themes-deuteranopia nil
+        modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
@@ -548,7 +548,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(intense)
+        modus-themes-hl-line nil
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -564,7 +564,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(intense italic bold)
+        modus-themes-prompts '(intense gray background)
 
         modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
 
