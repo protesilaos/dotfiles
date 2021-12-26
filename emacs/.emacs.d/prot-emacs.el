@@ -122,11 +122,11 @@
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs nil
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
         modus-themes-intense-markup nil
-        modus-themes-deuteranopia nil
+        modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
@@ -152,7 +152,7 @@
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(intense)
+        modus-themes-hl-line nil
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -168,7 +168,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(intense italic bold)
+        modus-themes-prompts '(intense gray background)
 
         modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
 
@@ -397,9 +397,8 @@
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
 
-  (let ((map minibuffer-local-must-match-map))
-    ;; I use this prefix for other searches
-    (define-key map (kbd "M-s") nil)))
+  ;; I use this prefix for other searches
+  (define-key minibuffer-local-must-match-map (kbd "M-s") nil))
 
 ;; Source: <https://gitlab.com/protesilaos/mct.el>.
 ;; Manual: <https://protesilaos.com/emacs/mct>.
@@ -654,36 +653,42 @@
     (define-key map (kbd "M-/") #'dabbrev-expand)
     (define-key map (kbd "C-x M-/") #'dabbrev-completion)))
 
-;;; Skeletons and abbreviations
+;;; Abbreviations or Abbrevs
 (prot-emacs-builtin-package 'abbrev
   (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
   (setq only-global-abbrevs nil)
 
-  ;;;;;;;;;;;;;;;;;;;;;;
-  ;; simple skeletons ;;
-  ;;;;;;;;;;;;;;;;;;;;;;
-  (define-skeleton protesilaos-com-skeleton
-    "Adds a link to my website while prompting for a possible
-  extension."
-    "Insert website extension: "
-    "https://protesilaos.com/" str "")
-  (define-abbrev global-abbrev-table "meweb"
-    "" 'protesilaos-com-skeleton)
+  (let ((table global-abbrev-table))
+    (define-abbrev table "meweb" "https://protesilaos.com")
+    (define-abbrev table "megit" "https://gitlab.com/protesilaos"))
 
-  (define-skeleton protesilaos-gitlab-skeleton
-    "Adds a link to my GitLab account while prompting for a
-  possible extension.  Makes it easy to link to my various git
-  repos."
-    "Website extension: "
-    "https://gitlab.com/protesilaos/" str "")
-  (define-abbrev global-abbrev-table "megit"
-    "" 'protesilaos-gitlab-skeleton)
+  (let ((table text-mode-abbrev-table))
+    (define-abbrev table "latex" "LaTeX")
+    (define-abbrev table "latex" "LaTeX")
+    (define-abbrev table "github" "GitHub")
+    (define-abbrev table "gitlab" "GitLab")
+    (define-abbrev table "sourcehut" "SourceHut")
+    (define-abbrev table "auctex" "AUCTeX")
+    (define-abbrev table "Emacs27" "Emacs 27")
+    (define-abbrev table "Emacs28" "Emacs 28")
+    (define-abbrev table "Emacs29" "Emacs 29")
+    (define-abbrev table "asciidoc" "AsciiDoc"))
+
+  (let ((table message-mode-abbrev-table)
+        (name "Protesilaos (or simply \"Prot\")"))
+    (define-abbrev table "bestregards" (format "Best regards,\n%s" name))
+    (define-abbrev table "allthebest" (format "All the best,\n%s" name))
+    (define-abbrev table "abest" "All the best,\nProt")
+    (define-abbrev table "aregards" "Best regards,\nProt"))
 
   (let ((map global-map))
     (define-key map (kbd "C-x a e") #'expand-abbrev) ; default, just here for visibility
     (define-key map (kbd "C-x a u") #'unexpand-abbrev))
-  (add-hook 'text-mode-hook #'abbrev-mode)
-  (add-hook 'git-commit-mode-hook #'abbrev-mode))
+
+  ;; message-mode derives from text-mode, so we don't need a separate
+  ;; hook for it.
+  (dolist (hook '(text-mode-hook git-commit-mode-hook))
+    (add-hook hook #'abbrev-mode)))
 
 ;;; Isearch, occur, grep, and extras (prot-search.el)
 (prot-emacs-builtin-package 'isearch
@@ -1012,8 +1017,8 @@
   ;; ;; `prot-tab-winner-undo' and `prot-tab-winner-redo' in prot-tab.el
   ;; ;; (search this document).
   ;; (let ((map global-map))
-  ;;   (define-key map (kbd "<M-s-right>") #'winner-redo)
-  ;;   (define-key map (kbd "<M-s-left>") #'winner-undo))
+  ;;   (define-key map (kbd "C-x <right>") #'winner-redo)
+  ;;   (define-key map (kbd "C-x <left>") #'winner-undo))
   )
 
 ;;; Directional window motions (windmove)
