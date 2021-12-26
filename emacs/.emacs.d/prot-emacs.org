@@ -1268,9 +1268,8 @@ results I am most likely interested in, based on previous selections.
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
 
-  (let ((map minibuffer-local-must-match-map))
-    ;; I use this prefix for other searches
-    (define-key map (kbd "M-s") nil)))
+  ;; I use this prefix for other searches
+  (define-key minibuffer-local-must-match-map (kbd "M-s") nil))
 
 ;; Source: <https://gitlab.com/protesilaos/mct.el>.
 ;; Manual: <https://protesilaos.com/emacs/mct>.
@@ -3095,8 +3094,8 @@ back to Winner when tabs are not in use.
   ;; ;; `prot-tab-winner-undo' and `prot-tab-winner-redo' in prot-tab.el
   ;; ;; (search this document).
   ;; (let ((map global-map))
-  ;;   (define-key map (kbd "<M-s-right>") #'winner-redo)
-  ;;   (define-key map (kbd "<M-s-left>") #'winner-undo))
+  ;;   (define-key map (kbd "C-x <right>") #'winner-redo)
+  ;;   (define-key map (kbd "C-x <left>") #'winner-undo))
   )
 #+end_src
 
