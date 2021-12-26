@@ -416,12 +416,7 @@ Apply APP by first setting up the minibuffer to work with Mct."
   (let ((display-buffer-alist
          (cons (cons mct-completion-windows-regexp mct-display-buffer-action)
                display-buffer-alist)))
-    (save-excursion (minibuffer-completion-help)))
-  ;; ;; NOTE 2021-12-09: We should no longer have a need for this, as we
-  ;; ;; pass an after advice to `minibuffer-completion-help'.
-  ;;
-  ;; (mct--fit-completions-window)
-  )
+    (save-excursion (minibuffer-completion-help))))
 
 ;;;###autoload
 (defun mct-focus-mini-or-completions ()
