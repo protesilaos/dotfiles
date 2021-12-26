@@ -2154,7 +2154,7 @@ abbrevs.  I have no real use for them right now.
     (define-abbrev table "bestregards" (format "Best regards,\n%s" name))
     (define-abbrev table "allthebest" (format "All the best,\n%s" name))
     (define-abbrev table "abest" "All the best,\nProt")
-    (define-abbrev table "aregards" "Best regards,\nProt"))
+    (define-abbrev table "bregards" "Best regards,\nProt"))
 
   (let ((map global-map))
     (define-key map (kbd "C-x a e") #'expand-abbrev) ; default, just here for visibility
