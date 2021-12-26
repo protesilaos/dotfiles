@@ -134,7 +134,7 @@ package if it is missing."
        (add-to-list 'prot-emacs-ensure-install ,package)
        (display-warning
         'prot-emacs
-        (format "Run `prot-emacs-install-ensured' to install all packages in `prot-emacs-ensure-install'")
+        "Run `prot-emacs-install-ensured' to install all packages in `prot-emacs-ensure-install'"
         :warning))))
 
 (defmacro prot-emacs-manual-package (package &rest body)
