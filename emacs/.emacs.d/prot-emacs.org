@@ -2101,56 +2101,69 @@ configurations and documentation for [[#h:6c6759c8-3ae3-40b0-8356-05cc0975e12a][
     (define-key map (kbd "C-x M-/") #'dabbrev-completion)))
 #+end_src
 
-**** Skeletons and abbreviations
+**** Abbreviations or Abbrevs
 :PROPERTIES:
 :CUSTOM_ID: h:33cd69cc-1a50-4abb-9f09-cae98dc8998b
 :END:
 
-/NOTE 2020-06-08: Pending major review. UPDATE 2021-01-16: I still plan
-to review this./
+The =abbrev= library provides an easy way to automatically correct some of
+your most common typos or write an abbreviation that expands into
+another string of characters when =abbrev-mode= is enabled in the relevant
+mode.  For example, I have set it up to convert =latex= into =LaTeX= when I
+am using =text-mode= or derivates, such as =org-mode=.  This expansion is
+case-insensitive, so =Latex= will still become =LaTeX=.
 
-This section stores all the "skeletons" I define.  These are snippets of
-text, typically templates or code statements, that are meant to speed up
-typing.  While abbreviations are shorter versions of terms that
-automatically expand into what they correspond to.  I combine skeletons
-with abbreviations.
+The expansion is triggered by a non-text character such as a space or
+newline, or the command =expand-abbrev= (=C-x a e=) after the target text
+has been filled in and point is at the end of it.
 
-*Please note that these will be very simplistic at first.*  I am aware
-that they can be abstracted using elisp—need to learn more on that
-front.  Also note that wherever you see =" _ "= it signifies the
-position of the cursor after the skeleton has been inserted.
+Abbreviations are stored in tables.  In general, we want to have our
+most common entries in the =global-abbrev-table=.  Then we can refine our
+substitutes based on the major mode we are in.  Each major modes comes
+with its own abbrev table, so we can have something like
+=message-mode-abbrev-table= which only works in =message-mode=.
+
+The Emacs manual also covers the concept of "skeletons", which are
+templates that can be parameterised with Elisp and then expanded as
+abbrevs.  I have no real use for them right now.
 
 #+begin_src emacs-lisp
-;;; Skeletons and abbreviations
+;;; Abbreviations or Abbrevs
 (prot-emacs-builtin-package 'abbrev
   (setq abbrev-file-name (locate-user-emacs-file "abbrevs"))
   (setq only-global-abbrevs nil)
 
-  ;;;;;;;;;;;;;;;;;;;;;;
-  ;; simple skeletons ;;
-  ;;;;;;;;;;;;;;;;;;;;;;
-  (define-skeleton protesilaos-com-skeleton
-    "Adds a link to my website while prompting for a possible
-  extension."
-    "Insert website extension: "
-    "https://protesilaos.com/" str "")
-  (define-abbrev global-abbrev-table "meweb"
-    "" 'protesilaos-com-skeleton)
+  (let ((table global-abbrev-table))
+    (define-abbrev table "meweb" "https://protesilaos.com")
+    (define-abbrev table "megit" "https://gitlab.com/protesilaos"))
 
-  (define-skeleton protesilaos-gitlab-skeleton
-    "Adds a link to my GitLab account while prompting for a
-  possible extension.  Makes it easy to link to my various git
-  repos."
-    "Website extension: "
-    "https://gitlab.com/protesilaos/" str "")
-  (define-abbrev global-abbrev-table "megit"
-    "" 'protesilaos-gitlab-skeleton)
+  (let ((table text-mode-abbrev-table))
+    (define-abbrev table "latex" "LaTeX")
+    (define-abbrev table "latex" "LaTeX")
+    (define-abbrev table "github" "GitHub")
+    (define-abbrev table "gitlab" "GitLab")
+    (define-abbrev table "sourcehut" "SourceHut")
+    (define-abbrev table "auctex" "AUCTeX")
+    (define-abbrev table "Emacs27" "Emacs 27")
+    (define-abbrev table "Emacs28" "Emacs 28")
+    (define-abbrev table "Emacs29" "Emacs 29")
+    (define-abbrev table "asciidoc" "AsciiDoc"))
+
+  (let ((table message-mode-abbrev-table)
+        (name "Protesilaos (or simply \"Prot\")"))
+    (define-abbrev table "bestregards" (format "Best regards,\n%s" name))
+    (define-abbrev table "allthebest" (format "All the best,\n%s" name))
+    (define-abbrev table "abest" "All the best,\nProt")
+    (define-abbrev table "aregards" "Best regards,\nProt"))
 
   (let ((map global-map))
     (define-key map (kbd "C-x a e") #'expand-abbrev) ; default, just here for visibility
     (define-key map (kbd "C-x a u") #'unexpand-abbrev))
-  (add-hook 'text-mode-hook #'abbrev-mode)
-  (add-hook 'git-commit-mode-hook #'abbrev-mode))
+
+  ;; message-mode derives from text-mode, so we don't need a separate
+  ;; hook for it.
+  (dolist (hook '(text-mode-hook git-commit-mode-hook))
+    (add-hook hook #'abbrev-mode)))
 #+end_src
 
 ** Configurations for---or extensions to---built-in search commands
