@@ -363,7 +363,7 @@ trailing hyphen."
   "Extract categories from `usls--directory-files'."
   (let ((sequence (usls--categories-in-files)))
     (mapcan (lambda (s)
-              (split-string s "-" t))
+              (split-string s "+" t))
             sequence)))
 
 (defun usls-categories ()
