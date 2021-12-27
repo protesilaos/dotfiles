@@ -664,7 +664,6 @@
 
   (let ((table text-mode-abbrev-table))
     (define-abbrev table "latex" "LaTeX")
-    (define-abbrev table "latex" "LaTeX")
     (define-abbrev table "github" "GitHub")
     (define-abbrev table "gitlab" "GitLab")
     (define-abbrev table "sourcehut" "SourceHut")
@@ -674,12 +673,13 @@
     (define-abbrev table "Emacs29" "Emacs 29")
     (define-abbrev table "asciidoc" "AsciiDoc"))
 
-  (let ((table message-mode-abbrev-table)
-        (name "Protesilaos (or simply \"Prot\")"))
-    (define-abbrev table "bestregards" (format "Best regards,\n%s" name))
-    (define-abbrev table "allthebest" (format "All the best,\n%s" name))
-    (define-abbrev table "abest" "All the best,\nProt")
-    (define-abbrev table "aregards" "Best regards,\nProt"))
+  (with-eval-after-load 'message
+    (let ((table message-mode-abbrev-table)
+          (name "Protesilaos (or simply \"Prot\")"))
+      (define-abbrev table "bestregards" (format "Best regards,\n%s" name))
+      (define-abbrev table "allthebest" (format "All the best,\n%s" name))
+      (define-abbrev table "abest" "All the best,\nProt")
+      (define-abbrev table "bregards" "Best regards,\nProt")))
 
   (let ((map global-map))
     (define-key map (kbd "C-x a e") #'expand-abbrev) ; default, just here for visibility
