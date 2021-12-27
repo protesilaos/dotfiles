@@ -2139,7 +2139,6 @@ abbrevs.  I have no real use for them right now.
 
   (let ((table text-mode-abbrev-table))
     (define-abbrev table "latex" "LaTeX")
-    (define-abbrev table "latex" "LaTeX")
     (define-abbrev table "github" "GitHub")
     (define-abbrev table "gitlab" "GitLab")
     (define-abbrev table "sourcehut" "SourceHut")
