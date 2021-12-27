@@ -356,7 +356,7 @@ trailing hyphen."
   "Produce list of categories in `usls--directory-files'."
   (delq nil
    (mapcar (lambda (x)
-             (usls--extract usls-category-regexp x 2))
+             (usls--extract (concat usls-id-regexp usls-category-regexp) x 3))
            (usls--directory-files))))
 
 (defun usls--inferred-categories ()
