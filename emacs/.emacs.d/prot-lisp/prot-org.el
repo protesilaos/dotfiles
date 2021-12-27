@@ -61,10 +61,6 @@ hook `modus-themes-after-load-theme-hook'."
 
 ;;;; org-capture
 
-(defvar prot-org-agenda-after-edit-hook nil
-  "Hook that runs after select Org commands.
-To be used with `advice-add'.")
-
 (declare-function prot-bongo-show "prot-bongo")
 
 (defun prot-org-capture-jukebox ()
@@ -73,18 +69,6 @@ To be used with `advice-add'.")
           ":PROPERTIES:\n"
           ":CAPTURED: %U\n"
           ":END:\n\n"))
-
-(defun prot-org--agenda-after-edit (&rest _)
-  "Run `prot-org-agenda-after-edit-hook'."
-  (run-hooks 'prot-org-agenda-after-edit-hook))
-
-(dolist (fn '(org-agenda-archive org-archive-subtree))
-  (advice-add fn :after #'prot-org--agenda-after-edit))
-
-(dolist (hook '(org-capture-after-finalize-hook
-                org-agenda-after-show-hook
-                prot-org-agenda-after-edit-hook))
-  (add-hook hook #'org-agenda-to-appt))
 
 (declare-function cl-letf "cl-lib")
 
@@ -194,6 +178,48 @@ produces dates with a fixed length."
                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                 (org-agenda-overriding-header "\nUpcoming deadlines (+14d)\n"))))
   "Custom agenda for use in `org-agenda-custom-commands'.")
+
+;;;;; agenda appointments
+
+(defvar prot-org-agenda-after-edit-hook nil
+  "Hook that runs after select Org commands.
+To be used with `advice-add'.")
+
+(defun prot-org--agenda-after-edit (&rest _)
+  "Run `prot-org-agenda-after-edit-hook'."
+  (run-hooks 'prot-org-agenda-after-edit-hook))
+
+(defvar prot-org-after-deadline-or-schedule-hook nil
+  "Hook that runs after `org--deadline-or-schedule'.
+To be used with `advice-add'.")
+
+(defvar prot-org--appt-agenda-commands
+  '( org-agenda-archive org-agenda-deadline org-agenda-schedule
+     org-agenda-todo org-archive-subtree)
+  "List of commands that run `prot-org-agenda-after-edit-hook'.")
+
+(dolist (fn prot-org--appt-agenda-commands)
+  (advice-add fn :after #'prot-org--agenda-after-edit))
+
+(defun prot-org--after-deadline-or-schedule (&rest _)
+  "Run `prot-org-after-deadline-or-schedule-hook'."
+  (run-hooks 'prot-org-after-deadline-or-schedule-hook))
+
+(defun prot-org-org-agenda-to-appt ()
+  "Make `org-agenda-to-appt' always refresh appointment list."
+  (org-agenda-to-appt :refresh))
+
+(dolist (hook '(org-capture-after-finalize-hook
+                org-after-todo-state-change-hook
+                org-agenda-after-show-hook
+                prot-org-agenda-after-edit-hook))
+  (add-hook hook #'prot-org-org-agenda-to-appt))
+
+(declare-function org--deadline-or-schedule "org" (arg type time))
+
+(advice-add #'org--deadline-or-schedule :after #'prot-org--after-deadline-or-schedule)
+
+(add-hook 'prot-org-after-deadline-or-schedule-hook #'prot-org-org-agenda-to-appt)
 
 ;;;; org-export
 
