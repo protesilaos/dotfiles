@@ -124,9 +124,9 @@
   (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
-        modus-themes-subtle-line-numbers nil
-        modus-themes-intense-markup nil
-        modus-themes-deuteranopia t
+        modus-themes-subtle-line-numbers t
+        modus-themes-intense-markup t
+        modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
@@ -142,12 +142,12 @@
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', and a natural number for extra padding
-        modus-themes-mode-line nil
+        modus-themes-mode-line '(borderless 4)
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax nil
+        modus-themes-syntax '(yellow-comments alt-syntax green-strings)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -157,7 +157,7 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(intense bold)
+        modus-themes-paren-match '(intense underline bold)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -168,21 +168,21 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(intense gray background)
+        modus-themes-prompts nil
 
-        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
+        modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
         modus-themes-mail-citations nil ; {nil,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(accented no-extend)
+        modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs nil
 
-        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
+        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch regular 1.4))
@@ -192,8 +192,11 @@
           (habit . traffic-light))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . (variable-pitch regular 1.4))
-          (2 . (1.2))
+        '((1 . (variable-pitch light 1.8))
+          (2 . (variable-pitch regular 1.6))
+          (3 . (variable-pitch regular 1.3))
+          (4 . (monochrome 1.2))
+          (5 . (1.1))
           (t . (rainbow 1.05))))
 
   ;; Load the theme files before enabling a theme (else you get an error).
