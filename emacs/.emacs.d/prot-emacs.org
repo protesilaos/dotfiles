@@ -1142,6 +1142,10 @@ visualising the standard minibuffer completion candidates---refer to
 :CUSTOM_ID: h:c110e399-3f43-4555-8427-b1afe44c0779
 :END:
 
+NOTE 2021-12-29: There are experiments to make MCT perform completion in
+region (the job that Corfu handles).  The feature is not fully fleshed
+out and there will be changes over the coming days and weeks.
+
 UPDATE 2021-10-23: Watch my video demonstration of the package I wrote
 [[https://protesilaos.com/codelog/2021-10-22-emacs-mct-demo/][Minibuffer and Completions in Tandem (mct.el)]].
 
@@ -1302,7 +1306,8 @@ results I am most likely interested in, based on previous selections.
   ;;               (slot . 99)
   ;;               (window-width . 0.3))))
 
-  (mct-mode 1)
+  (mct-region-mode 1)
+  (mct-minibuffer-mode 1)
 
   (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
   (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions))
@@ -1979,6 +1984,10 @@ This is a copy of =prot-recentf.el= (part of [[https://gitlab.com/protesilaos/do
 :CUSTOM_ID: h:675ebef4-d74d-41af-808d-f9579c2a5ec4
 :END:
 
+NOTE 2021-12-29: There are experiments to make MCT to the job that
+Corfu does.  As such, I am disabling this for the time being, though I
+strongly encourage you to stick with Corfu.
+
 =corfu= is another nimble package by Daniel Mendler (author of Consult and
 several others---search this document for a few of them), which focuses
 on text expansion within the buffer.  Its User Interface involves a
@@ -2033,17 +2042,17 @@ contexts.  Basically, this is the sort of thing that you set up and it
 
 #+begin_src emacs-lisp
 ;;; Corfu (Completion Overlay Region FUnction)
-(prot-emacs-elpa-package 'corfu
-  ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
-  ;;                  shell-mode-hook eshell-mode-hook))
-  ;;   (add-hook mode #'corfu-mode))
-  (corfu-global-mode 1)
-  (define-key corfu-map (kbd "<tab>") #'corfu-complete))
-
-(prot-emacs-elpa-package 'cape
-  (setq cape-dabbrev-min-length 2)
-  (dolist (backend '( cape-keyword-capf cape-file-capf cape-dabbrev-capf))
-    (add-to-list 'completion-at-point-functions backend)))
+;; (prot-emacs-elpa-package 'corfu
+;;   ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
+;;   ;;                  shell-mode-hook eshell-mode-hook))
+;;   ;;   (add-hook mode #'corfu-mode))
+;;   (corfu-global-mode 1)
+;;   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
+;;
+;; (prot-emacs-elpa-package 'cape
+;;   (setq cape-dabbrev-min-length 2)
+;;   (dolist (backend '( cape-keyword-capf cape-file-capf cape-dabbrev-capf))
+;;     (add-to-list 'completion-at-point-functions backend)))
 #+end_src
 
 **** Dabbrev (dynamic word completion)
