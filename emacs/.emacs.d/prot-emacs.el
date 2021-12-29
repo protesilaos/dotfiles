@@ -431,7 +431,8 @@
   ;;               (slot . 99)
   ;;               (window-width . 0.3))))
 
-  (mct-mode 1)
+  (mct-region-mode 1)
+  (mct-minibuffer-mode 1)
 
   (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
   (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions))
@@ -629,17 +630,17 @@
     (define-key map (kbd "C-x C-r") #'prot-recentf-recent-files-or-dirs)))
 
 ;;; Corfu (Completion Overlay Region FUnction)
-(prot-emacs-elpa-package 'corfu
-  ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
-  ;;                  shell-mode-hook eshell-mode-hook))
-  ;;   (add-hook mode #'corfu-mode))
-  (corfu-global-mode 1)
-  (define-key corfu-map (kbd "<tab>") #'corfu-complete))
-
-(prot-emacs-elpa-package 'cape
-  (setq cape-dabbrev-min-length 2)
-  (dolist (backend '( cape-keyword-capf cape-file-capf cape-dabbrev-capf))
-    (add-to-list 'completion-at-point-functions backend)))
+;; (prot-emacs-elpa-package 'corfu
+;;   ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
+;;   ;;                  shell-mode-hook eshell-mode-hook))
+;;   ;;   (add-hook mode #'corfu-mode))
+;;   (corfu-global-mode 1)
+;;   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
+;; 
+;; (prot-emacs-elpa-package 'cape
+;;   (setq cape-dabbrev-min-length 2)
+;;   (dolist (backend '( cape-keyword-capf cape-file-capf cape-dabbrev-capf))
+;;     (add-to-list 'completion-at-point-functions backend)))
 
 ;;; Dabbrev (dynamic word completion)
 (prot-emacs-builtin-package 'dabbrev
@@ -1206,6 +1207,10 @@
   (let ((map usls-mode-map))            ; only for usls buffers
     (define-key map (kbd "C-c n i") #'usls-id-insert)
     (define-key map (kbd "C-c n l") #'usls-follow-link)))
+
+;;; INVTR (toy inventory and client manager)
+;; DO NOT USE THIS!!!
+(prot-emacs-builtin-package 'invtr)
 
 ;;; TMR Must Recur (just my generic timer)
 (prot-emacs-builtin-package 'tmr
