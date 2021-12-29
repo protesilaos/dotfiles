@@ -288,15 +288,18 @@ trailing hyphen."
 
 ;;;; Files in directory
 
-(defun usls--directory-files-flat ()
-  "List `usls-directory' files, assuming flat directory."
-  (let ((dotless directory-files-no-dot-files-regexp))
+(defun usls--directory-files-flat (&optional directory)
+  "List `usls-directory' files, assuming flat directory.
+With optional DIRECTORY, find files there, else use
+`usls--directory'."
+  (let ((dotless directory-files-no-dot-files-regexp)
+        (dir (or directory (usls--directory))))
     (cl-remove-if
      (lambda (x)
        ;; TODO: generalise this for all VC backends?  Which ones?
        (or (string-match-p "\\.git" x)
            (file-directory-p x)))
-     (directory-files (usls--directory) nil dotless t))))
+     (directory-files dir nil dotless t))))
 
 (defun usls--directory-files-recursive ()
   "List `usls-directory' files, assuming directory tree."
@@ -306,14 +309,20 @@ trailing hyphen."
        (string-match-p "\\.git" x))
      (directory-files-recursively (usls--directory) ".*" nil t)))
 
-(defun usls--directory-files ()
-  "List directory files."
-  (let ((path (usls--directory)))
+(defun usls--make-directory (directory)
+  "Make DIRECTORY, if missing."
+  (let ((path directory))
     (unless (file-directory-p path)
-      (make-directory path t))
-    (if usls-subdir-support
-        (usls--directory-files-recursive)
-      (usls--directory-files-flat))))
+      (make-directory path t))))
+
+(defun usls--directory-files (&optional directory)
+  "List directory files.
+With optional DIRECTORY, specify path for
+`usls--directory-files-flat'."
+  (usls--make-directory (usls--directory))
+  (if usls-subdir-support
+      (usls--directory-files-recursive)
+    (usls--directory-files-flat directory)))
 
 (defun usls--directory-subdirs ()
   "Return list of subdirectories in `usls-directory'."
