@@ -3052,9 +3052,9 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (window-height . fit-window-to-buffer)
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
-          ("\\*\\(Embark\\)?.*Completions.*"
-           (display-buffer-reuse-mode-window display-buffer-at-bottom)
-           (window-parameters . ((no-other-window . t))))
+          ;; ("\\*\\(Embark\\)?.*Completions.*"
+          ;;  (display-buffer-reuse-mode-window display-buffer-at-bottom)
+          ;;  (window-parameters . ((no-other-window . t))))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
