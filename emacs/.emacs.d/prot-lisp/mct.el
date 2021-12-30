@@ -173,6 +173,10 @@ See `completions-format' for possible values."
   :type '(choice (const horizontal) (const vertical) (const one-column))
   :group 'mct)
 
+(defcustom mct-region-excluded-modes nil
+  "List of modes excluded by `mct-region-global-mode'."
+  :type '(repeat symbol))
+
 ;;;; Completion metadata
 
 (defun mct--completion-category ()
@@ -211,7 +215,7 @@ See `completions-format' for possible values."
     (display-line-numbers-mode 1)))
 
 (defun mct--first-line-completion-p ()
-  "Return non-nil if first line contains completion candidates."
+  "Return non-nil if first line has completion candidates."
   (eq (line-number-at-pos (point-min))
       (line-number-at-pos (mct--first-completion-point))))
 
@@ -306,11 +310,11 @@ Meant to be added to `after-change-functions'."
               (buf (window-buffer win)))
       (buffer-local-value 'mct--active buf)))
 
-;; TODO 2021-12-29: If we want to make a buffer-local variant, then we
-;; need to review this.
 (defun mct--region-p ()
   "Return non-nil if Mct is completing in region."
-  (and (bound-and-true-p mct-region-mode) (mct--region-current-buffer)))
+  (when-let ((buf (mct--region-current-buffer)))
+    (with-current-buffer buf
+      (bound-and-true-p mct-region-mode))))
 
 (defun mct--display-completion-list-advice (&rest app)
   "Prepare advice around `display-completion-list'.
@@ -548,14 +552,14 @@ a `one-column' value."
 
 (defun mct-switch-to-completions-top ()
   "Switch to the top of the completions' buffer."
-  (interactive nil mct-minibuffer-mode)
+  (interactive nil mct-minibuffer-mode mct-region-mode)
   (mct--switch-to-completions)
   (goto-char (mct--first-completion-point))
   (mct--restore-old-point-in-grid (point)))
 
 (defun mct-switch-to-completions-bottom ()
   "Switch to the bottom of the completions' buffer."
-  (interactive nil mct-minibuffer-mode)
+  (interactive nil mct-minibuffer-mode mct-region-mode)
   (mct--switch-to-completions)
   (goto-char (point-max))
   (next-completion -1)
@@ -666,7 +670,7 @@ the minibuffer."
 (defun mct-next-completion-group (&optional arg)
   "Move to the next completion group.
 If ARG is supplied, move that many completion groups at a time."
-  (interactive "p" mct-minibuffer-mode)
+  (interactive "p" mct-minibuffer-mode mct-region-mode)
   (dotimes (_ (or arg 1))
     (when-let (group (save-excursion
                        (text-property-search-forward 'face
@@ -680,7 +684,7 @@ If ARG is supplied, move that many completion groups at a time."
 (defun mct-previous-completion-group (&optional arg)
   "Move to the previous completion group.
 If ARG is supplied, move that many completion groups at a time."
-  (interactive "p" mct-minibuffer-mode)
+  (interactive "p" mct-minibuffer-mode mct-region-mode)
   (dotimes (_ (or arg 1))
     ;; skip back, so if we're at the top of a group, we go to the previous one...
     (forward-line -1)
@@ -698,25 +702,21 @@ If ARG is supplied, move that many completion groups at a time."
 
 ;;;;; Candidate selection
 
-;; TODO review, is this not almost the same as choose-completion?
+;; The difference between this and choose-completion is that it will
+;; exit even if a directory is selected in find-file, whereas
+;; choose-completion expands the directory and continues the session.
 (defun mct-choose-completion-exit ()
   "Run `choose-completion' in the Completions buffer and exit."
   (interactive nil mct-minibuffer-mode)
+  (choose-completion)
   (when (active-minibuffer-window)
-    (when-let* ((window (mct--get-completion-window))
-              (buffer (window-buffer)))
-    ;; TODO review, are we not always in the *Completions* buffer here?
-    (with-current-buffer buffer
-      (choose-completion)))
     (minibuffer-force-complete-and-exit)))
 
 (defun mct-choose-completion-no-exit ()
   "Run `choose-completion' in the Completions without exiting."
   (interactive nil mct-minibuffer-mode)
-  (when-let ((mini (active-minibuffer-window)))
-    (let ((completion-no-auto-exit t))
-      (choose-completion))
-    (select-window mini nil)))
+  (let ((completion-no-auto-exit t))
+    (choose-completion)))
 
 (defvar display-line-numbers-mode)
 
@@ -834,11 +834,13 @@ last character."
   (interactive nil mct-minibuffer-mode)
   (when-let ((window (mct--get-completion-window))
              ((active-minibuffer-window)))
-    (with-selected-window window
-      (when-let* ((old-point (window-old-point window))
-                  (pos (if (= old-point (point-min))
-                           (mct--first-completion-point)
-                         old-point)))
+    (with-current-buffer (window-buffer window)
+      (let* ((old-point (save-excursion
+                          (select-window window)
+                          (window-old-point)))
+             (pos (if (= old-point (point-min))
+                      (mct--first-completion-point)
+                    old-point)))
         (goto-char pos)
         (mct-choose-completion-no-exit)))))
 
@@ -998,7 +1000,7 @@ region.")
 
 ;;;;; Keymaps
 
-(defvar mct-completion-list-mode-map
+(defvar mct-minibuffer-completion-list-map
   (let ((map (make-sparse-keymap)))
     (define-key map [remap keyboard-quit] #'mct-keyboard-quit-dwim)
     (define-key map [remap goto-line] #'mct-choose-completion-number)
@@ -1040,7 +1042,7 @@ region.")
 (defun mct--setup-completion-list-keymap ()
   "Set up completion list keymap."
   (use-local-map
-   (make-composed-keymap mct-completion-list-mode-map
+   (make-composed-keymap mct-minibuffer-completion-list-map
                          (current-local-map))))
 
 (defun mct--setup-keymap ()
@@ -1132,10 +1134,22 @@ Meant to be added to `after-change-functions'."
 
 ;;;;;; Minor mode specification
 
+(defvar mct-region-buffer-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map [remap next-line] #'mct-switch-to-completions-top)
+    (define-key map [remap previous-line] #'mct-switch-to-completions-bottom)
+    ;; TODO: Either keep the TAB=completion-at-point binding or add our own
+    ;; command which is compatible with orderless completion.
+    (define-key map (kbd "TAB") #'ignore)
+    map)
+  "Derivative of `completion-in-region-map'.")
+
 (defun mct--region-setup-completion-in-region ()
   "Set up Mct for `completion-in-region'."
   (if completion-in-region-mode
       (progn
+        (setcdr (assq #'completion-in-region-mode minor-mode-overriding-map-alist)
+                (make-composed-keymap mct-region-buffer-map completion-in-region-mode-map))
         (mct--region-current-buffer)
         ;; NOTE: Ignore the predicate in order to support orderless style.
         ;; TODO: This override should be guarded by a customizable variable,
@@ -1181,7 +1195,7 @@ minibuffer)."
      (t
       (mct--previous-completion count)))))
 
-(defvar mct-region-completion-list-mode-map
+(defvar mct-region-completion-list-map
   (let ((map (make-sparse-keymap)))
     ;; TODO 2021-12-29: Maybe we can make this work in this context as
     ;; well.
@@ -1201,19 +1215,14 @@ minibuffer)."
 (defun mct--region-setup-completion-list-keymap ()
   "Set up completion list keymap."
   (use-local-map
-   (make-composed-keymap mct-region-completion-list-mode-map
+   (make-composed-keymap mct-region-completion-list-map
                          (current-local-map))))
-
-(defun debug-cir ()
-  (message (if completion-in-region-mode "CIR START" "CIR END")))
 
 (defun mct--region-setup-completion-list ()
   "Set up the completion-list for Mct."
   (when (mct--region-p)
     (setq-local completion-show-help nil
                 truncate-lines t)
-    ;; TODO: Remove this debugging later
-    (add-hook 'completion-in-region-mode-hook #'debug-cir)
     (mct--setup-clean-completions)
     (mct--setup-appearance)
     (mct--region-setup-completion-list-keymap)
@@ -1221,16 +1230,15 @@ minibuffer)."
     (mct--setup-line-numbers)
     (cursor-sensor-mode)))
 
+(defun mct--region-completion-done (&rest app)
+  "Apply APP before disabling completion in region."
+  (apply app)
+  (completion-in-region-mode -1))
+
 ;;;###autoload
 (define-minor-mode mct-region-mode
   "Set up interactivity over the default `completion-in-region'."
-  ;; TODO the mct-region-mode should be buffer-local. One may want to use
-  ;; different completion-in-region UIs depending on the major mode/buffer. Of
-  ;; course it is only my preference to make this configurabe, but in principle
-  ;; nothing is hindering us from offering mct-region-mode as a local mode. In
-  ;; contrast, for mct-minibuffer-mode, offering a buffer-local mode does not
-  ;; make sense.
-  :global t
+  :global nil
   (if mct-region-mode
       (progn
         (advice-add #'completion--done :around #'mct--region-completion-done)
@@ -1238,24 +1246,27 @@ minibuffer)."
         (add-hook 'completion-in-region-mode-hook #'mct--region-setup-completion-in-region)
         (advice-add #'minibuffer-completion-help :after #'mct--fit-completions-window)
         (advice-add #'display-completion-list :around #'mct--display-completion-list-advice)
-        (advice-add #'minibuffer-message :around #'mct--honor-inhibit-message)
-        ;; TODO 2021-12-03: Set up a keymap after we are sure things work.
-        (let ((map completion-in-region-mode-map))
-          (define-key map (kbd "C-n") #'mct-switch-to-completions-top)
-          (define-key map (kbd "C-p") #'mct-switch-to-completions-bottom)))
+        (advice-add #'minibuffer-message :around #'mct--honor-inhibit-message))
     (advice-remove #'completion--done #'mct--region-completion-done)
     (remove-hook 'completion-list-mode-hook #'mct--region-setup-completion-list)
     (remove-hook 'completion-in-region-mode-hook #'mct--region-setup-completion-in-region)
     (advice-remove #'minibuffer-completion-help #'mct--fit-completions-window)
     (advice-remove #'display-completion-list #'mct--display-completion-list-advice)
-    (advice-remove #'minibuffer-message #'mct--honor-inhibit-message)
-    (let ((map completion-in-region-mode-map))
-      (define-key map (kbd "C-n") nil)
-      (define-key map (kbd "C-p") nil))))
+    (advice-remove #'minibuffer-message #'mct--honor-inhibit-message)))
 
-(defun mct--region-completion-done (&rest app)
-  (apply app)
-  (completion-in-region-mode -1))
+;; The `mct-region-global-mode', `mct-region--on', and
+;; `mct-region-excluded-modes' are adapted from the corfu.el library of
+;; Daniel Mendler.
+
+;;;###autoload
+(define-globalized-minor-mode mct-region-global-mode mct-region-mode mct-region--on)
+
+(defun mct-region--on ()
+  "Turn `mct-region-mode' on."
+  (unless (or noninteractive
+              (eq (aref (buffer-name) 0) ?\s)
+              (memq major-mode mct-region-excluded-modes))
+    (mct-region-mode 1)))
 
 (provide 'mct)
 ;;; mct.el ends here
