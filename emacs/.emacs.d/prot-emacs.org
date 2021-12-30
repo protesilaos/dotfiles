@@ -1306,7 +1306,7 @@ results I am most likely interested in, based on previous selections.
   ;;               (slot . 99)
   ;;               (window-width . 0.3))))
 
-  (mct-region-mode 1)
+  (mct-region-global-mode 1) ; Or use `mct-region-mode' per major-mode
   (mct-minibuffer-mode 1)
 
   (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
