@@ -3443,9 +3443,9 @@ longer need ([[#h:aad79917-cd80-491b-9020-db27867ab132][Dired-like list for regi
 ;; through an ELPA.
 ;;
 ;; `prot-emacs-manual-package' is defined in my init.el
-(prot-emacs-manual-package 'ilist)
+(prot-emacs-elpa-package 'ilist)
 
-(prot-emacs-manual-package 'blist
+(prot-emacs-elpa-package 'blist
   (setq blist-expert t)
   (setq blist-discard-empty-p t)
 
