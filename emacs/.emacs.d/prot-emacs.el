@@ -121,8 +121,8 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+  (setq modus-themes-italic-constructs nil
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers t
         modus-themes-intense-markup t
@@ -147,7 +147,7 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(yellow-comments alt-syntax green-strings)
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -189,15 +189,19 @@
           (header-date . (bold-today grayscale underline-today 1.2))
           (event . (accented varied))
           (scheduled . uniform)
-          (habit . traffic-light))
+          (habit . nil))
 
-        modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . (variable-pitch light 1.8))
-          (2 . (variable-pitch regular 1.6))
-          (3 . (variable-pitch regular 1.3))
-          (4 . (monochrome 1.2))
-          (5 . (1.1))
-          (t . (rainbow 1.05))))
+        modus-themes-headings nil ; this is an alist: read the manual or its doc string
+
+        ;; ;; For example:
+        ;; modus-themes-headings
+        ;; '((1 . (variable-pitch light 1.8))
+        ;;   (2 . (variable-pitch regular 1.6))
+        ;;   (3 . (variable-pitch regular 1.3))
+        ;;   (4 . (monochrome 1.2))
+        ;;   (5 . (1.1))
+        ;;   (t . (rainbow 1.05)))
+        )
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
@@ -431,7 +435,7 @@
   ;;               (slot . 99)
   ;;               (window-width . 0.3))))
 
-  (mct-region-mode 1)
+  (mct-region-global-mode 1) ; Or use `mct-region-mode' per major-mode
   (mct-minibuffer-mode 1)
 
   (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
@@ -636,7 +640,7 @@
 ;;   ;;   (add-hook mode #'corfu-mode))
 ;;   (corfu-global-mode 1)
 ;;   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
-;; 
+;;
 ;; (prot-emacs-elpa-package 'cape
 ;;   (setq cape-dabbrev-min-length 2)
 ;;   (dolist (backend '( cape-keyword-capf cape-file-capf cape-dabbrev-capf))
@@ -831,7 +835,8 @@
     (define-key map (kbd "M-n") #'prot-dired-subdirectory-next)
     (define-key map (kbd "C-c C-n") #'prot-dired-subdirectory-next)
     (define-key map (kbd "M-p") #'prot-dired-subdirectory-previous)
-    (define-key map (kbd "C-c C-p") #'prot-dired-subdirectory-previous)))
+    (define-key map (kbd "C-c C-p") #'prot-dired-subdirectory-previous)
+    (define-key map (kbd "M-s G") #'prot-dired-grep-marked-files))) ; M-s g is `prot-search-grep'
 
 (prot-emacs-elpa-package 'dired-subtree
   (setq dired-subtree-use-backgrounds nil)
@@ -972,9 +977,9 @@
            (window-height . fit-window-to-buffer)
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
-          ("\\*\\(Embark\\)?.*Completions.*"
-           (display-buffer-reuse-mode-window display-buffer-at-bottom)
-           (window-parameters . ((no-other-window . t))))
+          ;; ("\\*\\(Embark\\)?.*Completions.*"
+          ;;  (display-buffer-reuse-mode-window display-buffer-at-bottom)
+          ;;  (window-parameters . ((no-other-window . t))))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
@@ -1113,9 +1118,9 @@
 ;; through an ELPA.
 ;;
 ;; `prot-emacs-manual-package' is defined in my init.el
-(prot-emacs-manual-package 'ilist)
+(prot-emacs-elpa-package 'ilist)
 
-(prot-emacs-manual-package 'blist
+(prot-emacs-elpa-package 'blist
   (setq blist-expert t)
   (setq blist-discard-empty-p t)
 
@@ -1621,6 +1626,18 @@ sure this is a good approach."
                     ":END:\n\n"
                     "%i%l")
            :empty-lines-after 1)
+          ("c" "Clock in to a task" entry
+           (file+headline "tasks.org" "Clocked tasks")
+           ,(concat "* TODO %^{Title}\n"
+                    "SCHEDULED: %T\n"
+                    ":PROPERTIES:\n"
+                    ":EFFORT: %^{Effort estimate in minutes|15|30|45|60|90|120}\n"
+                    ":END:\n\n")
+           :prepend t
+           :clock-in t
+           :clock-keep t
+           :immediate-finish t
+           :empty-lines-after 1)
           ("m" "Memorandum of conversation" entry
            (file+headline "tasks.org" "Tasks to be reviewed")
            ,(concat "* Memorandum of conversation with %^{Person}\n"
@@ -1816,6 +1833,10 @@ sure this is a good approach."
   (setq org-agenda-columns-add-appointments-to-effort-sum nil)
   (setq org-agenda-auto-exclude-function nil)
   (setq org-agenda-bulk-custom-functions nil)
+
+;;;;; Agenda habits
+  (require 'org-habit)
+  (setq org-habit-graph-column 50)
 
 ;;;; code blocks
   (setq org-confirm-babel-evaluate nil)
@@ -3155,7 +3176,7 @@ Can link to more than one message, if so all matching messages are shown."
 
 ;;; Configure 'electric' behaviour
 (prot-emacs-builtin-package 'electric
-  (setq electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
+  (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
   (setq electric-pair-preserve-balance t)
   (setq electric-pair-pairs
         '((8216 . 8217)
@@ -3163,17 +3184,15 @@ Can link to more than one message, if so all matching messages are shown."
           (171 . 187)))
   (setq electric-pair-skip-self 'electric-pair-default-skip-self)
   (setq electric-pair-skip-whitespace nil)
-  (setq electric-pair-skip-whitespace-chars
-        '(9
-          10
-          32))
+  (setq electric-pair-skip-whitespace-chars '(9 10 32))
   (setq electric-quote-context-sensitive t)
   (setq electric-quote-paragraph t)
   (setq electric-quote-string nil)
   (setq electric-quote-replace-double t)
-  (electric-indent-mode 1)
   (electric-pair-mode -1)
-  (electric-quote-mode -1))
+  (electric-quote-mode -1)
+  ;; I don't like auto indents in Org and related.
+  (add-hook 'prog-mode-hook #'electric-indent-local-mode))
 
 ;;; Parentheses (show-paren-mode)
 (prot-emacs-builtin-package 'paren
