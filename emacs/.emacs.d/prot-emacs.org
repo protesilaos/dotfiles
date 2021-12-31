@@ -5154,6 +5154,10 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-agenda-auto-exclude-function nil)
   (setq org-agenda-bulk-custom-functions nil)
 
+;;;;; Agenda habits
+  (require 'org-habit)
+  (setq org-habit-graph-column 50)
+
 ;;;; code blocks
   (setq org-confirm-babel-evaluate nil)
   (setq org-src-window-setup 'current-window)
