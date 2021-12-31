@@ -149,6 +149,48 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
   (dired-do-kill-lines)
   (add-to-history 'prot-dired--limit-hist regexp))
 
+(defvar prot-dired--find-grep-hist '()
+  "Minibuffer history for `prot-dired-grep-marked-files'.")
+
+;; Also see `prot-search-grep' from prot-search.el.
+;;;###autoload
+(defun prot-dired-grep-marked-files (regexp &optional arg)
+  "Run `find' with `grep' for REGEXP on marked files.
+When no files are marked or when just a single one is marked,
+search the entire directory instead.
+
+With optional prefix ARG target a single marked file.
+
+We assume that there is no point in marking a single file and
+running find+grep on its contents.  Visit it and call `occur' or
+run grep directly on it without the whole find part."
+  (interactive
+   (list
+    (read-string "grep for PATTERN in marked files: " nil 'prot-dired--find-grep-hist)
+    current-prefix-arg)
+   dired-mode)
+  (when-let* ((marks (dired-get-marked-files 'no-dir))
+              (files (mapconcat #'identity marks " -o -name "))
+              (args (if (or arg (length> marks 1))
+                        (concat
+                         "find . -type f "
+                         (shell-quote-argument "(")
+                         " -name " files " "
+                         (shell-quote-argument ")")
+                         " -exec grep -nH --color=auto " regexp " "
+                         (shell-quote-argument "{}")
+                         " " (shell-quote-argument ";") " ")
+                      (concat
+                       "find . -type f "
+                       " -exec grep -nH --color=auto " regexp " "
+                       (shell-quote-argument "{}")
+                       " " (shell-quote-argument ";") " "))))
+    (compilation-start
+     args
+     'grep-mode
+     (lambda (mode) (format "*prot-dired-find-%s '%s'" mode regexp))
+     t)))
+
 ;;;; Subdir extras and Imenu setup
 
 (defvar prot-dired--directory-header-regexp "^ +\\(.+\\):\n"

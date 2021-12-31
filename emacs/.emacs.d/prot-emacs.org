@@ -2659,6 +2659,14 @@ ecosystem:
      which provide directional motions to move between such headings:
      =prot-dired-subdirectory-next= and =prot-dired-subdirectory-previous=.
 
+  5. The command =prot-dired-grep-marked-files= streamlines a common
+     workflow I have of using =find= on the command line to grep for file
+     contents.  It performs a search in the marked files.  When no items
+     are marked, it goes through all files in the current directory
+     (non-recursive).  Its doc string covers the technicalities.  The
+     command serves as a specialised variant of =prot-search-grep=
+     ([[#h:b67687ee-25a3-4bf4-a924-180ccb63c629][Isearch, occur, grep, and extras (prot-search.el)]]).
+
 #+begin_src emacs-lisp
 ;;; Dired file manager (and prot-dired.el extras)
 (prot-emacs-builtin-package 'dired
@@ -2725,7 +2733,8 @@ ecosystem:
     (define-key map (kbd "M-n") #'prot-dired-subdirectory-next)
     (define-key map (kbd "C-c C-n") #'prot-dired-subdirectory-next)
     (define-key map (kbd "M-p") #'prot-dired-subdirectory-previous)
-    (define-key map (kbd "C-c C-p") #'prot-dired-subdirectory-previous)))
+    (define-key map (kbd "C-c C-p") #'prot-dired-subdirectory-previous)
+    (define-key map (kbd "M-s G") #'prot-dired-grep-marked-files))) ; M-s g is `prot-search-grep'
 
 (prot-emacs-elpa-package 'dired-subtree
   (setq dired-subtree-use-backgrounds nil)
