@@ -4958,6 +4958,18 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
                     ":END:\n\n"
                     "%i%l")
            :empty-lines-after 1)
+          ("c" "Clock in to a task" entry
+           (file+headline "tasks.org" "Clocked tasks")
+           ,(concat "* TODO %^{Title}\n"
+                    "SCHEDULED: %T\n"
+                    ":PROPERTIES:\n"
+                    ":EFFORT: %^{Effort estimate in minutes|15|30|45|60|90|120}\n"
+                    ":END:\n\n")
+           :prepend t
+           :clock-in t
+           :clock-keep t
+           :immediate-finish t
+           :empty-lines-after 1)
           ("m" "Memorandum of conversation" entry
            (file+headline "tasks.org" "Tasks to be reviewed")
            ,(concat "* Memorandum of conversation with %^{Person}\n"
