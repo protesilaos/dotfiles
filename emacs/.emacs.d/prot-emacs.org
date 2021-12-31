@@ -524,7 +524,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         modus-themes-intense-markup t
         modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui t
+        modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -585,15 +585,19 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
           (header-date . (bold-today grayscale underline-today 1.2))
           (event . (accented varied))
           (scheduled . uniform)
-          (habit . traffic-light))
+          (habit . nil))
 
-        modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . (variable-pitch light 1.8))
-          (2 . (variable-pitch regular 1.6))
-          (3 . (variable-pitch regular 1.3))
-          (4 . (monochrome 1.2))
-          (5 . (1.1))
-          (t . (rainbow 1.05))))
+        modus-themes-headings nil ; this is an alist: read the manual or its doc string
+
+        ;; ;; For example:
+        ;; modus-themes-headings
+        ;; '((1 . (variable-pitch light 1.8))
+        ;;   (2 . (variable-pitch regular 1.6))
+        ;;   (3 . (variable-pitch regular 1.3))
+        ;;   (4 . (monochrome 1.2))
+        ;;   (5 . (1.1))
+        ;;   (t . (rainbow 1.05)))
+        )
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
