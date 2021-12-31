@@ -8734,18 +8734,19 @@ And here is =prot-comment.el= (part of [[https://gitlab.com/protesilaos/dotfiles
 :END:
 
 Emacs labels as "electric" any behaviour that involves contextual
-auto-insertion of characters.  This is a summary of my settings:
+auto-insertion of characters.  while the idea is neat, I generally
+dislike it because of its false positives.  This is a summary of my
+settings:
 
-+ Indent automatically.
 + If =electric-pair-mode= is enabled (which I might do manually), insert
   quotes and brackets in pairs.  Only do so if there is no alphabetic
   character after the cursor.
 + The cryptic numbers in the pairs set, correspond to curly single and
   double quotes and these =«»=.  The contents of this set are always
-  inserted in pairs, regardless of major mode.
-  + To get those numbers, evaluate =(string-to-char CHAR)= where CHAR is
-    the one you are interested in.  For example, get the literal tab's
-    character with =(string-to-char "\t")=.
+  inserted in pairs, regardless of major mode.  To get those numbers,
+  evaluate =(string-to-char CHAR)= where CHAR is the one you are
+  interested in.  For example, get the literal tab's character with
+  =(string-to-char "\t")=.
 + While inputting a pair, inserting the closing character will just skip
   over the existing one, rather than add a new one.  So typing =(= will
   insert =()= and then typing =)= will just be the same as moving forward
@@ -8765,7 +8766,7 @@ auto-insertion of characters.  This is a summary of my settings:
 #+begin_src emacs-lisp
 ;;; Configure 'electric' behaviour
 (prot-emacs-builtin-package 'electric
-  (setq electric-pair-inhibit-predicate'electric-pair-conservative-inhibit)
+  (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
   (setq electric-pair-preserve-balance t)
   (setq electric-pair-pairs
         '((8216 . 8217)
@@ -8773,17 +8774,15 @@ auto-insertion of characters.  This is a summary of my settings:
           (171 . 187)))
   (setq electric-pair-skip-self 'electric-pair-default-skip-self)
   (setq electric-pair-skip-whitespace nil)
-  (setq electric-pair-skip-whitespace-chars
-        '(9
-          10
-          32))
+  (setq electric-pair-skip-whitespace-chars '(9 10 32))
   (setq electric-quote-context-sensitive t)
   (setq electric-quote-paragraph t)
   (setq electric-quote-string nil)
   (setq electric-quote-replace-double t)
-  (electric-indent-mode 1)
   (electric-pair-mode -1)
-  (electric-quote-mode -1))
+  (electric-quote-mode -1)
+  ;; I don't like auto indents in Org and related.
+  (add-hook 'prog-mode-hook #'electric-indent-local-mode))
 #+end_src
 
 ** Parentheses (show-paren-mode)
