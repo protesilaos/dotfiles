@@ -207,6 +207,8 @@ Helper function for `prot-eshell-complete-history'."
 
 (autoload 'cl-remove-if-not "cl-seq")
 
+;; TODO 2022-01-01: Maybe we can rewrite this using `find' and then
+;; processing the output.
 ;;;###autoload
 (defun prot-eshell-find-subdirectory-recursive ()
   "Recursive `eshell/cd' to subdirectory.
