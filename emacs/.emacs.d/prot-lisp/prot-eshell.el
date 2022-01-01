@@ -230,13 +230,9 @@ wisely or prepare to call `eshell-interrupt-process'."
 (defun prot-eshell-root-dir ()
   "Switch to the root directory of the present project."
   (interactive)
-  (let ((root (or (vc-root-dir)
-                  (locate-dominating-file "." ".git"))))
-    (if root
-        (progn
-          (insert root)
-          (eshell-send-input))
-      (user-error "Cannot find a project root here"))))
+  (if-let ((root (or (vc-root-dir) (locate-dominating-file "." ".git"))))
+      (progn (insert root) (eshell-send-input))
+    (user-error "Cannot find a project root here")))
 
 ;;;; Bookmark handler for bookmark.el
 ;; The default pops up an existing Eshell buffer instead of creating a
