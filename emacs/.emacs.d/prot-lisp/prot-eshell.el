@@ -186,13 +186,24 @@ open the directory in a `dired' buffer."
     (when arg
       (dired dir))))
 
+(defvar prot-eshell--complete-history-prompt-history '()
+  "History of `prot-eshell-narrow-output-highlight-regexp'.")
+
+(defun prot-eshell--complete-history-prompt ()
+  "Prompt with completion for history element.
+Helper function for `prot-eshell-complete-history'."
+  (if-let ((hist (ring-elements eshell-history-ring)))
+      (completing-read "Input from history: "
+                       hist nil t nil
+                       'prot-eshell--complete-history-prompt-history)
+    (user-error "There is no Eshell history")))
+
 ;;;###autoload
-(defun prot-eshell-complete-history ()
-  "Insert element from Eshell history using completion."
-  (interactive)
-  (let ((hist (ring-elements eshell-history-ring)))
-    (insert
-     (completing-read "Input from history: " hist nil t))))
+(defun prot-eshell-complete-history (elt)
+  "Insert ELT from Eshell history using completion."
+  (interactive
+   (list (prot-eshell--complete-history-prompt)))
+  (insert elt))
 
 (autoload 'cl-remove-if-not "cl-seq")
 
