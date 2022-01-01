@@ -70,10 +70,9 @@ documentation string.  BODY is the set of arguments passed to the
   `(defun ,name ()
      ,doc
      (interactive)
-     (let ((file (ffap-file-at-point)))
-       (if file
-           ,@body
-         (user-error "No file at point")))))
+     (if-let ((file (ffap-file-at-point)))
+         ,@body
+       (user-error "No file at point"))))
 
 (prot-eshell-ffap
  prot-eshell-ffap-insert
