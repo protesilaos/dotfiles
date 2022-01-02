@@ -300,7 +300,7 @@ With optional ARG, produce a receipt buffer."
 
 (defun invtr--reset-cost (cost)
   "Reset file's cost entry to COST.
-Helper for `invtr-reset-price-discount'."
+Helper for `invtr-reset-cost-discount'."
   (let* ((regexp "^\\(#\\+cost:\\)\s+\\([0-9a-z.,]+\\)$")
          (datum (invtr--find-key-value-pair regexp))
          (key (car datum))
@@ -310,7 +310,7 @@ Helper for `invtr-reset-price-discount'."
 
 (defun invtr--reset-discount (discount)
   "Reset file's discount entry to DISCOUNT.
-Helper for `invtr-reset-price-discount'."
+Helper for `invtr-reset-cost-discount'."
   (let* ((regexp "^\\(#\\+discount:\\)\s+\\([0-9a-z.,]+\\)%$")
          (datum (invtr--find-key-value-pair regexp))
          (key (car datum))
@@ -320,7 +320,7 @@ Helper for `invtr-reset-price-discount'."
 
 (defun invtr--reset-truecost (truecost)
   "Reset file's truecost entry to TRUECOST.
-Helper for `invtr-reset-price-discount'."
+Helper for `invtr-reset-cost-discount'."
   (let* ((regexp "^\\(#\\+truecost:\\)\s+\\([0-9a-z.,]+\\)$")
          (datum (invtr--find-key-value-pair regexp))
          (key (car datum))
@@ -328,13 +328,16 @@ Helper for `invtr-reset-price-discount'."
     (invtr--make-replacement regexp old-truecost truecost :float-p)
     (cons old-truecost truecost)))
 
+(defvar invtr--reset-cost-history '())
+(defvar invtr--reset-cost-discount-history '())
+
 ;;;###autoload
-(defun invtr-reset-price-discount (cost discount)
+(defun invtr-reset-cost-discount (cost discount)
   "Write COST and recalculate true cost given DISCOUNT."
   (interactive
    (list
-    (read-string "New cost: " nil 'invtr--add-acquisition-quantity-history)
-    (read-string "New discount (number without %): " nil 'invtr--add-acquisition-invoice-history)))
+    (read-string "New cost: " nil 'invtr--reset-cost-history)
+    (read-string "New discount (number without %): " nil 'invtr--reset-cost-discount-history)))
   (let* ((costs (invtr--reset-cost cost))
          (old-cost (car costs))
          (new-cost (cdr costs))
@@ -352,6 +355,56 @@ Helper for `invtr-reset-price-discount'."
      (format "#+calc: %s      (%% %s %s) => %s :: Old cost, discount, true cost: (%% %s %s) => %s\n"
              (format-time-string "%F") cost discount truecost
              old-cost old-discount old-truecost))))
+
+(defvar invtr--reset-price-history '())
+
+(defun invtr--reset-price (price)
+  "Reset file's price entry to PRICE.
+Helper for `invtr-reset-price'."
+  (let* ((regexp "^\\(#\\+price:\\)\s+\\([0-9,.]+\\)$")
+         (datum (invtr--find-key-value-pair regexp))
+         (key (car datum))
+         (old-price (cdr datum)))
+    (cons old-price price)))
+
+(defun invtr--reset-price-rename (price)
+  "Update file's PRICE component (rename the file accordingly).
+Helper for `invtr-reset-price'."
+  (let* ((file (buffer-file-name))
+         ;; We are hardcoding the file extension here, which is
+         ;; technically wrong, though I do not mind since I am only
+         ;; including prices for org-mode files.
+         (name (replace-regexp-in-string "--[0-9,.]+\\.org" (format "--%s.org" price) file)))
+    (if (vc-registered file)
+        (vc-rename-file file name)
+      (rename-file file name))
+    (set-visited-file-name name t t)))
+
+;;;###autoload
+(defun invtr-reset-price (price)
+  "Change PRICE of item."
+  (interactive
+   (list
+    (format "%.2f" (read-number "New price: " nil 'invtr--reset-price-history))))
+  (let* ((price-regexp "^\\(#\\+price:\\)\s+\\([0-9,.]+\\)$")
+         (datum (invtr--find-key-value-pair price-regexp))
+         (key (car datum))
+         (old-price (cdr datum))
+         (cost-regexp "^\\(#\\+cost:\\)\s+\\([0-9,.]+\\)$")
+         (datum (invtr--find-key-value-pair cost-regexp))
+         (key (car datum))
+         (cost (cdr datum))
+         (profit-regexp "^\\(#\\+profit:\\)\s+\\([0-9,.]+\\)%$")
+         (datum (invtr--find-key-value-pair profit-regexp))
+         (key (car datum))
+         (old-profit (cdr datum))
+         (profit (format "%.2f" (invtr-percentage-change (string-to-number cost) (string-to-number price)))))
+    (invtr--reset-price-rename price)
+    (invtr--make-replacement price-regexp old-price price :float-p)
+    (invtr--make-replacement profit-regexp old-profit profit :float-p)
+    (insert
+     (format "#+markup: %s    (€ %s %s%%) :: Old cost and profit: (€ %s %s%%)\n"
+             (format-time-string "%F") price profit old-price old-profit))))
 
 ;; TODO 2021-12-28: The receipt's template should be a defcustom.
 (defvar invtr-receipt-template-function #'invtr--single-item-receipt
