@@ -384,7 +384,15 @@ point an arbitrary distance.
           move-to-window-line-top-bottom
           reposition-window
           bookmark-jump
-          other-window))
+          other-window
+          scroll-up-command
+          scroll-down-command
+          org-next-visible-heading
+          org-previous-visible-heading
+          org-forward-heading-same-level
+          org-backward-heading-same-level
+          org-tree-slide-move-next-tree
+          org-tree-slide-move-previous-tree))
   (prot-pulse-advice-commands-mode 1)
   (define-key global-map (kbd "C-x l") #'prot-pulse-pulse-line)) ; override `count-lines-page'
 #+end_src
