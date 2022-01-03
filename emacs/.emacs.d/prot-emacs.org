@@ -5186,6 +5186,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
 ;;;;; Agenda habits
   (require 'org-habit)
   (setq org-habit-graph-column 50)
+  (setq org-habit-preceding-days 9)
 
 ;;;; code blocks
   (setq org-confirm-babel-evaluate nil)
