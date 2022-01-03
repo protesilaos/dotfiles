@@ -4661,7 +4661,7 @@ Also check these valuable resources:
     (define-key map (kbd "C-c C-r") #'prot-eshell-root-dir))
   (let ((map eshell-cmpl-mode-map))
     (define-key map (kbd "C-c TAB") #'prot-eshell-ffap-insert) ; C-c C-i
-    (define-key map (kbd "C-c M-h") #'prot-eshell-narrow-output-highlight-regexp))
+    (define-key map (kbd "C-c C-h") #'prot-eshell-narrow-output-highlight-regexp))
   (let ((map eshell-hist-mode-map))
     (define-key map (kbd "M-s") #'nil) ; I use this prefix for lots of more useful commands
     (define-key map (kbd "M-r") #'prot-eshell-complete-history)
