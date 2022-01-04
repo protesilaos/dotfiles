@@ -101,7 +101,15 @@
           move-to-window-line-top-bottom
           reposition-window
           bookmark-jump
-          other-window))
+          other-window
+          scroll-up-command
+          scroll-down-command
+          org-next-visible-heading
+          org-previous-visible-heading
+          org-forward-heading-same-level
+          org-backward-heading-same-level
+          org-tree-slide-move-next-tree
+          org-tree-slide-move-previous-tree))
   (prot-pulse-advice-commands-mode 1)
   (define-key global-map (kbd "C-x l") #'prot-pulse-pulse-line)) ; override `count-lines-page'
 
@@ -1506,7 +1514,7 @@ sure this is a good approach."
     (define-key map (kbd "C-c C-r") #'prot-eshell-root-dir))
   (let ((map eshell-cmpl-mode-map))
     (define-key map (kbd "C-c TAB") #'prot-eshell-ffap-insert) ; C-c C-i
-    (define-key map (kbd "C-c M-h") #'prot-eshell-narrow-output-highlight-regexp))
+    (define-key map (kbd "C-c C-h") #'prot-eshell-narrow-output-highlight-regexp))
   (let ((map eshell-hist-mode-map))
     (define-key map (kbd "M-s") #'nil) ; I use this prefix for lots of more useful commands
     (define-key map (kbd "M-r") #'prot-eshell-complete-history)
@@ -1631,8 +1639,9 @@ sure this is a good approach."
            ,(concat "* TODO %^{Title}\n"
                     "SCHEDULED: %T\n"
                     ":PROPERTIES:\n"
-                    ":EFFORT: %^{Effort estimate in minutes|15|30|45|60|90|120}\n"
-                    ":END:\n\n")
+                    ":EFFORT: %^{Effort estimate in minutes|5|10|15|30|45|60|90|120}\n"
+                    ":END:\n\n"
+                    "%a\n")
            :prepend t
            :clock-in t
            :clock-keep t
@@ -1653,7 +1662,7 @@ sure this is a good approach."
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%i%?")
+                    "%a\n%i%?")
            :empty-lines-after 1)
           ("e" "Email note" entry
            (file+headline "tasks.org" "Tasks to be reviewed")
@@ -1837,6 +1846,7 @@ sure this is a good approach."
 ;;;;; Agenda habits
   (require 'org-habit)
   (setq org-habit-graph-column 50)
+  (setq org-habit-preceding-days 9)
 
 ;;;; code blocks
   (setq org-confirm-babel-evaluate nil)
@@ -2539,7 +2549,15 @@ Can link to more than one message, if so all matching messages are shown."
     (define-key map (kbd "<C-M-XF86AudioPlay>") #'bongo-play-random)
     (define-key map (kbd "<M-XF86AudioPlay>") #'bongo-show)
     (define-key map (kbd "<S-XF86AudioNext>") #'bongo-seek-forward-10)
-    (define-key map (kbd "<S-XF86AudioPrev>") #'bongo-seek-backward-10))
+    (define-key map (kbd "<S-XF86AudioPrev>") #'bongo-seek-backward-10)
+    ;; Same as above for the pgtk build of Emacs 29.
+    (define-key map (kbd "C-<269025044>") #'bongo-pause/resume)
+    (define-key map (kbd "C-<269025047>") #'bongo-next)
+    (define-key map (kbd "C-<269025046>") #'bongo-previous)
+    (define-key map (kbd "C-M-<269025044>") #'bongo-play-random)
+    (define-key map (kbd "M-<269025044>") #'bongo-show)
+    (define-key map (kbd "S-<269025047>") #'bongo-seek-forward-10)
+    (define-key map (kbd "S-<269025046>") #'bongo-seek-backward-10))
   (let ((map bongo-playlist-mode-map))
     (define-key map (kbd "n") #'bongo-next-object)
     (define-key map (kbd "p") #'bongo-previous-object)
