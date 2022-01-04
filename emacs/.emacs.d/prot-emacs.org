@@ -4609,12 +4609,17 @@ after the package configurations:
 Here is a [[https://protesilaos.com/codelog/2020-05-08-emacs-eshell-demo/][video on Eshell and my extras]] (2020-05-08) which, however,
 showcases older code than what I have here.
 
-Also check these valuable resources:
+For further inspiration, check these valuable resources (in no
+particular order):
 
 + [[https://cestlaz.github.io/post/using-emacs-66-eshell-elisp][Mike Zamansky's video demo]] that also shows how to program an Eshell
   switcher.
 + [[https://www.youtube.com/watch?v=RhYNu6i_uY4][Howard Abrahams' video]] that covers the features of Eshell.
 + [[https://ambrevar.xyz/emacs-eshell/][Pierre Neidhardt's detailed blog post]] on the pros and cons of Eshell.
++ [[https://git.spwhitton.name/dotfiles][Sean Whitton's comprehensive dotfiles repository]] which includes lots
+  of useful snippets, including for Eshell.  Some commands/functions of
+  mine are either copied or adapted from Sean's implementation,
+  following the review that was done on 2022-01-04.
 
 #+begin_src emacs-lisp
 ;;; Eshell and prot-eshell.el
