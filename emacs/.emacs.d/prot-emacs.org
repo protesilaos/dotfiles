@@ -4985,8 +4985,9 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
            ,(concat "* TODO %^{Title}\n"
                     "SCHEDULED: %T\n"
                     ":PROPERTIES:\n"
-                    ":EFFORT: %^{Effort estimate in minutes|15|30|45|60|90|120}\n"
-                    ":END:\n\n")
+                    ":EFFORT: %^{Effort estimate in minutes|5|10|15|30|45|60|90|120}\n"
+                    ":END:\n\n"
+                    "%a\n")
            :prepend t
            :clock-in t
            :clock-keep t
@@ -5007,7 +5008,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%i%?")
+                    "%a\ni%?")
            :empty-lines-after 1)
           ("e" "Email note" entry
            (file+headline "tasks.org" "Tasks to be reviewed")
