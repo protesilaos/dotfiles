@@ -173,18 +173,38 @@ For use in `prot-eshell-narrow-output-highlight-regexp'."
            (propertize "Narrowed" 'face 'bold)
            (propertize regexp 'face 'italic)))
 
+;; Copied on 2022-01-04 10:32 +0200 from Sean Whitton's `spw/eshell-cd'.
+;; I had to change the symbol to use the prot-eshell prefix for lexical
+;; binding.  Sean's dotfiles: <https://git.spwhitton.name/dotfiles>.
+(defun prot-eshell--cd (dir)
+  "Routine to cd into DIR."
+  (delete-region eshell-last-output-end (point-max))
+  (when (> eshell-last-output-end (point))
+    (goto-char eshell-last-output-end))
+  (insert-and-inherit "cd " (eshell-quote-argument dir))
+  (eshell-send-input))
+
 ;;;###autoload
-(defun prot-eshell-complete-recent-dir (&optional arg)
-  "Switch to a recent Eshell directory using completion.
+(defun prot-eshell-complete-recent-dir (dir &optional arg)
+  "Switch to a recent Eshell directory.
+
+When called interactively, DIR is selected with completion from
+the elements of `eshell-last-dir-ring'.
+
 With optional ARG prefix argument (\\[universal-argument]) also
 open the directory in a `dired' buffer."
-  (interactive "P")
-  (let* ((dirs (ring-elements eshell-last-dir-ring))
-         (dir (completing-read "Switch to recent dir: " dirs nil t)))
-    (insert dir)
-    (eshell-send-input)
-    (when arg
-      (dired dir))))
+  (interactive
+   (list
+    (if-let ((dirs (ring-elements eshell-last-dir-ring)))
+        (completing-read "Switch to recent dir: " dirs nil t)
+      (user-error "There is no Eshell history for recent directories"))
+    current-prefix-arg))
+  (prot-eshell--cd dir)
+  ;; UPDATE 2022-01-04 10:48 +0200: The idea for `dired-other-window'
+  ;; was taken from Sean Whitton's `spw/eshell-cd-recent-dir'.  Check
+  ;; Sean's dotfiles: <https://git.spwhitton.name/dotfiles>.
+  (when arg
+    (dired-other-window dir)))
 
 (defvar prot-eshell--complete-history-prompt-history '()
   "History of `prot-eshell-narrow-output-highlight-regexp'.")
@@ -225,15 +245,14 @@ wisely or prepare to call `eshell-interrupt-process'."
                      (format "Find sub-dir from %s: "
                              (propertize dir 'face 'success))
                      dirs nil t)))
-    (insert selection)
-    (eshell-send-input)))
+    (prot-eshell--cd selection)))
 
 ;;;###autoload
 (defun prot-eshell-root-dir ()
   "Switch to the root directory of the present project."
   (interactive)
   (if-let ((root (or (vc-root-dir) (locate-dominating-file "." ".git"))))
-      (progn (insert root) (eshell-send-input))
+      (prot-eshell--cd root)
     (user-error "Cannot find a project root here")))
 
 ;;;; Bookmark handler for bookmark.el
