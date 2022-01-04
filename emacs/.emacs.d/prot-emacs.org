@@ -5008,7 +5008,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
                     ":PROPERTIES:\n"
                     ":CAPTURED: %U\n"
                     ":END:\n\n"
-                    "%a\ni%?")
+                    "%a\n%i%?")
            :empty-lines-after 1)
           ("e" "Email note" entry
            (file+headline "tasks.org" "Tasks to be reviewed")
