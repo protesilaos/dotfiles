@@ -3635,7 +3635,7 @@ And here is =prot-logos.el= in its totality.  It is available as a file in
 NOTE 2021-12-29: USLS is subject to a rewrite.  I have been using it
 daily since its inception, though the code needs to be refactored.  As a
 proof-of-concept of its utility, check out my =invtr= (only for curious
-hackers, not actual users): [[*INVTR (toy inventory and client manager)][INVTR (toy inventory and client manager)]].
+hackers, not actual users): [[#h:c66a0f25-840a-49f0-a615-66dfca61890b][INVTR (toy inventory and client manager)]].
 
 This is a library that I am developing to help me flesh out my
 note-taking system.  In essence, =usls= is a set of helper functions
@@ -3685,6 +3685,9 @@ with all my Elisp code):
 #+include: prot-lisp/usls.el src emacs-lisp :tangle no
 
 ** INVTR (toy inventory and client manager)
+:PROPERTIES:
+:CUSTOM_ID: h:c66a0f25-840a-49f0-a615-66dfca61890b
+:END:
 
 I am intentionally not documenting this because it is not intended for
 public use.  It is a *highly experimental proof-of-concept* of a nimble
