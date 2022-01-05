@@ -35,6 +35,14 @@
 ;; do not recommend that you copy any of this if you are not certain of
 ;; what it does.
 
+
+
+;; NOTE 2022-01-05: I plan to rewrite the whole file to bring it up to
+;; my current standard (don't forget what the Commentary of every such
+;; files explains: I do all this for educational or recreational
+;; purposes).  The overall functionality will stay in place.
+
+
 ;;; Code:
 
 (require 'vc)
