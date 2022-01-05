@@ -182,7 +182,10 @@ run grep directly on it without the whole find part."
                         ;; Any other errors or omissions are my own.
                         (format "grep -nH --color=auto %s %s" (shell-quote-argument regexp) files)
                       (concat
-                       "find . -type f "
+                       "find . -not " (shell-quote-argument "(")
+                       " -wholename " (shell-quote-argument "*/.git*")
+                       " -prune " (shell-quote-argument ")")
+                       " -type f"
                        " -exec grep -nHE --color=auto " regexp " "
                        (shell-quote-argument "{}")
                        " " (shell-quote-argument ";") " "))))
