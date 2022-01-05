@@ -1,6 +1,6 @@
 ;;; prot-bookmark.el --- Bookmark extras for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021  Protesilaos Stavrou
+;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs

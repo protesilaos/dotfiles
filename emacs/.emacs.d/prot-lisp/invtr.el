@@ -1,6 +1,6 @@
 ;;; invtr.el --- INVTR Needn't Vindicate Thorough Rationalists -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021  Protesilaos Stavrou
+;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos/emacs/invtr

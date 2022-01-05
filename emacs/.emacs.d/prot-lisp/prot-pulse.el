@@ -1,6 +1,6 @@
 ;;; prot-pulse.el --- Extend pulse.el for my dotemacs -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020  Protesilaos Stavrou
+;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/dotemacs

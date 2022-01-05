@@ -173,7 +173,7 @@ Consult the section on [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org-mode (pers
 :CUSTOM_ID: h:1b9e6455-ba10-4683-88d4-738ecc41cdf6
 :END:
 
-Copyright (c) 2019-2021  Protesilaos Stavrou <info@protesilaos.com>
+Copyright (c) 2019-2022  Protesilaos Stavrou <info@protesilaos.com>
 
 This file is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the

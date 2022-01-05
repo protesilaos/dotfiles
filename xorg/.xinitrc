@@ -1,6 +1,6 @@
 # xinitrc --- Initialisation script for the X server session.
 #
-# Copyright (c) 2019-2020 Protesilaos Stavrou <info@protesilaos.com>
+# Copyright (c) 2019-2022 Protesilaos Stavrou <info@protesilaos.com>
 #
 # This program is free software; you can redistribute it and/or
 # it under the terms of the GNU General Public License as published by

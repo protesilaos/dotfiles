@@ -1,6 +1,6 @@
 ;;; usls.el --- Unassuming Sidenotes of Little Significance -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2021  Protesilaos Stavrou
+;; Copyright (C) 2020-2022  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/usls
