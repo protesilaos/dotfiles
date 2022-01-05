@@ -1540,6 +1540,7 @@ try.
     (define-key map (kbd "M-s M-b") #'consult-buffer)
     (define-key map (kbd "M-s M-f") #'consult-find)
     (define-key map (kbd "M-s M-g") #'consult-grep)
+    (define-key map (kbd "M-s M-h") #'consult-history)
     (define-key map (kbd "M-s M-m") #'consult-mark)
     (define-key map (kbd "C-x r r") #'consult-register)) ; Use the register's prefix
   (define-key consult-narrow-map (kbd "?") #'consult-narrow-help))
