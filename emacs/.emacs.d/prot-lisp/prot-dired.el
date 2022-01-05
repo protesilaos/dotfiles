@@ -166,29 +166,30 @@ running find+grep on its contents.  Visit it and call `occur' or
 run grep directly on it without the whole find part."
   (interactive
    (list
-    (read-string "grep for PATTERN in marked files: " nil 'prot-dired--find-grep-hist)
+    (read-string "grep for PATTERN (marked files OR current directory): " nil 'prot-dired--find-grep-hist)
     current-prefix-arg)
    dired-mode)
   (when-let* ((marks (dired-get-marked-files 'no-dir))
-              (files (mapconcat #'identity marks " -o -name "))
+              (files (mapconcat #'identity marks " "))
               (args (if (or arg (length> marks 1))
-                        (concat
-                         "find . -type f "
-                         (shell-quote-argument "(")
-                         " -name " files " "
-                         (shell-quote-argument ")")
-                         " -exec grep -nH --color=auto " regexp " "
-                         (shell-quote-argument "{}")
-                         " " (shell-quote-argument ";") " ")
+                        ;; Thanks to Sean Whitton for pointing out an
+                        ;; earlier superfluity of mine: we do not need
+                        ;; to call grep through find when we already
+                        ;; know the files we want to search in.  Check
+                        ;; Sean's dotfiles:
+                        ;; <https://git.spwhitton.name/dotfiles>.
+                        ;;
+                        ;; Any other errors or omissions are my own.
+                        (format "grep -nH --color=auto %s %s" (shell-quote-argument regexp) files)
                       (concat
                        "find . -type f "
-                       " -exec grep -nH --color=auto " regexp " "
+                       " -exec grep -nHE --color=auto " regexp " "
                        (shell-quote-argument "{}")
                        " " (shell-quote-argument ";") " "))))
     (compilation-start
      args
      'grep-mode
-     (lambda (mode) (format "*prot-dired-find-%s '%s'" mode regexp))
+     (lambda (mode) (format "*prot-dired-find-%s for '%s'" mode regexp))
      t)))
 
 ;;;; Subdir extras and Imenu setup
