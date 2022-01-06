@@ -89,6 +89,8 @@
     ;; Commands for windows
     (define-key map (kbd "C-x n n") #'prot-simple-narrow-dwim) ; replaces `narrow-to-region'
     (define-key map (kbd "C-x M") #'prot-simple-monocle)
+    (define-key map [remap forward-page] #'prot-simple-forward-page-dwim)
+    (define-key map [remap backward-page] #'prot-simple-backward-page-dwim)
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
@@ -165,7 +167,7 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(intense underline bold)
+        modus-themes-paren-match nil
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -501,6 +503,7 @@
     (define-key map (kbd "M-s M-b") #'consult-buffer)
     (define-key map (kbd "M-s M-f") #'consult-find)
     (define-key map (kbd "M-s M-g") #'consult-grep)
+    (define-key map (kbd "M-s M-h") #'consult-history)
     (define-key map (kbd "M-s M-m") #'consult-mark)
     (define-key map (kbd "C-x r r") #'consult-register)) ; Use the register's prefix
   (define-key consult-narrow-map (kbd "?") #'consult-narrow-help))
