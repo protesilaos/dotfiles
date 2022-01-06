@@ -793,6 +793,26 @@ If narrowing is in effect, widen the view."
     (widen)
     (recenter))))
 
+;;;###autoload
+(defun prot-simple-forward-page-dwim (&optional count)
+  "Move to next or COUNTth page forward.
+If buffer is narrowed to the page, keep the effect while
+performing the motion."
+  (interactive "p")
+  (if (buffer-narrowed-p)
+      (narrow-to-page (or (abs count) 1))
+    (forward-page count)))
+
+;;;###autoload
+(defun prot-simple-backward-page-dwim (&optional count)
+  "Move to previous or COUNTth page backward.
+If buffer is narrowed to the page, keep the effect while
+performing the motion."
+  (interactive "p")
+  (if (buffer-narrowed-p)
+      (narrow-to-page (or (- count) -1))
+    (backward-page count)))
+
 ;; Inspired by Pierre Neidhardt's windower:
 ;; https://gitlab.com/ambrevar/emacs-windower/-/blob/master/windower.el
 (defvar prot-simple--windows-current nil

@@ -348,6 +348,8 @@ use elsewhere.
     ;; Commands for windows
     (define-key map (kbd "C-x n n") #'prot-simple-narrow-dwim) ; replaces `narrow-to-region'
     (define-key map (kbd "C-x M") #'prot-simple-monocle)
+    (define-key map [remap forward-page] #'prot-simple-forward-page-dwim)
+    (define-key map [remap backward-page] #'prot-simple-backward-page-dwim)
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
