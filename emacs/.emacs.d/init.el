@@ -171,10 +171,10 @@ expressions."
 (setq use-short-answers t)    ; for Emacs28, replaces the defalias below
 ;; (defalias 'yes-or-no-p 'y-or-n-p)
 
-(put 'narrow-to-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-(put 'dired-find-alternate-file 'disabled nil)
+(dolist (c '( narrow-to-region narrow-to-page upcase-region
+              downcase-region dired-find-alternate-file))
+  (put c 'disabled nil))
+
 (put 'overwrite-mode 'disabled t)
 
 (setq initial-buffer-choice t)			; always start with *scratch*
