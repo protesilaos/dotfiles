@@ -38,6 +38,7 @@
 (require 'esh-mode)
 (require 'em-dirs)
 (require 'em-hist)
+(require 'prot-common)
 
 ;;;; Customisation options
 
@@ -136,26 +137,33 @@ append to it, while separating multiple outputs with
   '(hi-yellow hi-blue hi-pink hi-green hi-salmon hi-aquamarine)
   "List of faces to highlight output.")
 
-(defvar prot-eshell--highlight-last-face nil
-  "Last used face used for highlighting output.")
-
-(defun prot-eshell--highlight-random-face ()
-  "Return random face except last used.
-For use in `prot-eshell-narrow-output-highlight-regexp'."
-  (let* ((faces prot-eshell--highlight-faces)
-         (last prot-eshell--highlight-last-face)
-         (remaining (when last (remove last faces)))
-         (length (1- (length faces)))
-         (n (random length))
-         (face (nth n remaining)))
-    (cond
-     ((null face)
-      (setq face (car faces)))
-     ((eq face last)
-      (setq remaining (remove face remaining))
-      (setq face (car remaining))))
-    (setq prot-eshell--highlight-last-face face)
-    face))
+;; ;; NOTE 2022-01-06: Deprecated in favour of the simpler method of
+;; ;; rotating the list: `prot-common-rotate-list-of-symbol'.  Try it with:
+;; ;;
+;; ;; (format "%s -- %s"
+;; ;;         (prot-common-rotate-list-of-symbol 'prot-eshell--highlight-faces)
+;; ;;         prot-eshell--highlight-faces)
+;;
+;; (defvar prot-eshell--highlight-last-face nil
+;;   "Last used face used for highlighting output.")
+;; 
+;; (defun prot-eshell--highlight-random-face ()
+;;   "Return random face except last used.
+;; For use in `prot-eshell-narrow-output-highlight-regexp'."
+;;   (let* ((faces prot-eshell--highlight-faces)
+;;          (last prot-eshell--highlight-last-face)
+;;          (remaining (when last (remove last faces)))
+;;          (length (1- (length faces)))
+;;          (n (random length))
+;;          (face (nth n remaining)))
+;;     (cond
+;;      ((null face)
+;;       (setq face (car faces)))
+;;      ((eq face last)
+;;       (setq remaining (remove face remaining))
+;;       (setq face (car remaining))))
+;;     (setq prot-eshell--highlight-last-face face)
+;;     face))
 
 (defvar prot-eshell--output-highlight-history '()
   "History of `prot-eshell-narrow-output-highlight-regexp'.")
@@ -168,7 +176,7 @@ For use in `prot-eshell-narrow-output-highlight-regexp'."
   (narrow-to-region (eshell-beginning-of-output)
                     (eshell-end-of-output))
   (goto-char (point-min))
-  (highlight-regexp regexp (prot-eshell--highlight-random-face))
+  (highlight-regexp regexp (prot-common-rotate-list-of-symbol 'prot-eshell--highlight-faces))
   (message "%s to last output and highlighted '%s'"
            (propertize "Narrowed" 'face 'bold)
            (propertize regexp 'face 'italic)))
