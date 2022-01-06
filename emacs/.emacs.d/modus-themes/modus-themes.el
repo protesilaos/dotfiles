@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 2.0.0
-;; Last-Modified: <2022-01-02 18:46:40 +0200>
+;; Last-Modified: <2022-01-06 08:02:13 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -496,13 +496,13 @@ cover the blue-cyan-magenta side of the spectrum."
     ;; applications where colored blocks are expected to be positioned
     ;; next to each other
     (red-graph-0-bg . "#ef7969")
-    (red-graph-1-bg . "#ffafa0")
-    (green-graph-0-bg . "#49c029")
+    (red-graph-1-bg . "#ffaab4")
+    (green-graph-0-bg . "#4faa09")
     (green-graph-1-bg . "#8fef00")
     (yellow-graph-0-bg . "#ffcf00")
     (yellow-graph-1-bg . "#f9ff00")
     (blue-graph-0-bg . "#7090ff")
-    (blue-graph-1-bg . "#8fbfff")
+    (blue-graph-1-bg . "#9fc6ff")
     (magenta-graph-0-bg . "#e07fff")
     (magenta-graph-1-bg . "#fad0ff")
     (cyan-graph-0-bg . "#70d3f0")
@@ -738,9 +738,9 @@ symbol and the latter as a string.")
     ;; next to each other
     (red-graph-0-bg . "#b52c2c")
     (red-graph-1-bg . "#702020")
-    (green-graph-0-bg . "#24bf00")
+    (green-graph-0-bg . "#4fd100")
     (green-graph-1-bg . "#007800")
-    (yellow-graph-0-bg . "#f7ef00")
+    (yellow-graph-0-bg . "#f1e00a")
     (yellow-graph-1-bg . "#b08600")
     (blue-graph-0-bg . "#2fafef")
     (blue-graph-1-bg . "#1f2f8f")
@@ -3531,6 +3531,12 @@ property."
               fg-distant
             'unspecified))))
 
+;; Basically this is just for the keycast key indicator.
+(defun modus-themes--mode-line-padded-box (color)
+  "Set padding of mode line box attribute with given COLOR."
+  (let ((padding (seq-find #'natnump modus-themes-mode-line 1)))
+    (list :box (list :line-width padding :color color))))
+
 (defun modus-themes--diff (mainbg mainfg altbg altfg &optional deuteranbg deuteranfg  bg-only-fg)
   "Color combinations for `modus-themes-diffs'.
 
@@ -5801,7 +5807,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(kaocha-runner-warning-face ((,class :inherit warning)))
 ;;;;; keycast
     `(keycast-command ((,class :inherit bold :foreground ,blue-active)))
-    `(keycast-key ((,class :background ,blue-active :foreground ,bg-main)))
+    `(keycast-key ((,class ,@(modus-themes--mode-line-padded-box blue-active)
+                           :background ,blue-active :foreground ,bg-main)))
 ;;;;; ledger-mode
     `(ledger-font-auto-xact-face ((,class :foreground ,magenta)))
     `(ledger-font-account-name-face ((,class :foreground ,fg-special-cold)))
