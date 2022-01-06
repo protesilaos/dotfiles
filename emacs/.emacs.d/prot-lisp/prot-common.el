@@ -113,8 +113,11 @@ This means that if `sample-list' has an initial value of `(one
 two three)', this function will first return `one' and update the
 value of `sample-list' to `(two three one)'.  Subsequent calls
 will continue rotating accordingly."
-  (let* ((list (symbol-value symbol))
-         (first (car list)))
+  (unless (symbolp symbol)
+    (user-error "%s is not a symbol" symbol))
+  (when-let* ((value (symbol-value symbol))
+              (list (and (listp value) value))
+              (first (car list)))
     (set symbol (append (cdr list) (list first)))
     first))
 
