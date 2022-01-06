@@ -105,6 +105,20 @@ floating points: 16.666666666666664 => 16.667."
     (if (> n round) (string-to-number (format "%0.4f" n)) round)))
 
 ;;;###autoload
+(defun prot-common-rotate-list-of-symbol (symbol)
+  "Rotate list value of SYMBOL by moving its car to the end.
+Return the first element before performing the rotation.
+
+This means that if `sample-list' has an initial value of `(one
+two three)', this function will first return `one' and update the
+value of `sample-list' to `(two three one)'.  Subsequent calls
+will continue rotating accordingly."
+  (let* ((list (symbol-value symbol))
+         (first (car list)))
+    (set symbol (append (cdr list) (list first)))
+    first))
+
+;;;###autoload
 (defun prot-common-empty-buffer-p ()
   "Test whether the buffer is empty."
   (or (= (point-min) (point-max))
