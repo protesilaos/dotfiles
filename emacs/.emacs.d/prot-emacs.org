@@ -531,10 +531,10 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs nil
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers t
-        modus-themes-intense-markup t
+        modus-themes-intense-markup nil
         modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
@@ -551,7 +551,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', and a natural number for extra padding
-        modus-themes-mode-line '(borderless 4)
+        modus-themes-mode-line '(4 borderless)
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -566,7 +566,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match nil
+        modus-themes-paren-match '(bold intense)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -577,7 +577,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts nil
+        modus-themes-prompts '(background gray intense)
 
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
@@ -586,7 +586,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend)
+        modus-themes-region '(no-extend accented)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs nil
