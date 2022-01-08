@@ -48,6 +48,11 @@ changes to take effect."
   :type 'list
   :group 'prot-pulse)
 
+(defcustom prot-pulse-delay 0.05
+  "Duration in seconds of pulse delay."
+  :type 'list
+  :group 'prot-pulse)
+
 (defface prot-pulse-line
   '((default :extend t)
     (((class color) (min-colors 88) (background light))
@@ -66,7 +71,7 @@ changes to take effect."
                    (line-beginning-position 0)
                  (line-beginning-position)))
         (end (line-beginning-position 2))
-        (pulse-delay .04)
+        (pulse-delay prot-pulse-delay)
         (face (or face 'prot-pulse-line)))
     (pulse-momentary-highlight-region start end face)))
 
@@ -74,7 +79,7 @@ changes to take effect."
 (defun prot-pulse-recentre-top ()
   "Reposition at the top and pulse line.
 Add this to a hook, such as `imenu-after-jump-hook'."
-  (let ((pulse-delay .05))
+  (let ((pulse-delay prot-pulse-delay))
     (recenter 0)
     (prot-pulse-pulse-line)))
 
@@ -82,7 +87,7 @@ Add this to a hook, such as `imenu-after-jump-hook'."
 (defun prot-pulse-recentre-centre ()
   "Recentre and pulse line.
 Add this to a hook, such as `imenu-after-jump-hook'."
-  (let ((pulse-delay .05))
+  (let ((pulse-delay prot-pulse-delay))
     (recenter nil)
     (prot-pulse-pulse-line)))
 
