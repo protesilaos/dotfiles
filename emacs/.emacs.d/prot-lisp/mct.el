@@ -168,14 +168,22 @@ and/or the documentation string of `display-buffer'."
   :group 'mct)
 
 (defcustom mct-completions-format 'one-column
-  "The appearance and sorting used by `mct-minibuffer-mode'.
+  "The Completions' appearance used by `mct-minibuffer-mode'.
 See `completions-format' for possible values."
   :type '(choice (const horizontal) (const vertical) (const one-column))
   :group 'mct)
 
-(defcustom mct-region-excluded-modes nil
-  "List of modes excluded by `mct-region-global-mode'."
-  :type '(repeat symbol))
+(defcustom mct-region-completions-format mct-completions-format
+  "The Completions' appearance used by `mct-region-mode'.
+See `completions-format' for possible values.
+
+This is like `mct-completions-format' when performing in-buffer
+completion."
+  :type '(choice (variable :tag "Inherit value of `mct-completions-format'" mct-completions-format)
+                 (const horizontal)
+                 (const vertical)
+                 (const one-column))
+  :group 'mct)
 
 ;;;; Completion metadata
 
@@ -274,9 +282,9 @@ Meant to be added to `after-change-functions'."
 
 (defun mct--live-completions-timer (&rest _)
   "Update Completions with `mct-live-update-delay'."
-  (let ((delay mct-live-update-delay))
-    (when (>= delay 0)
-      (run-with-idle-timer delay nil #'mct--live-completions))))
+  (when-let* ((delay mct-live-update-delay)
+              ((>= delay 0)))
+    (run-with-idle-timer delay nil #'mct--live-completions)))
 
 (defun mct--live-completions-visible-timer (&rest _)
   "Update visible Completions' buffer."
@@ -304,7 +312,7 @@ Meant to be added to `after-change-functions'."
 (defvar-local mct--active nil
   "Minibuffer local variable, t if Mct is active.")
 
-(defun mct--active-p ()
+(defun mct--minibuffer-p ()
   "Return t if Mct is active."
   (when-let* ((win (active-minibuffer-window))
               (buf (window-buffer win)))
@@ -313,16 +321,26 @@ Meant to be added to `after-change-functions'."
 (defun mct--region-p ()
   "Return non-nil if Mct is completing in region."
   (when-let ((buf (mct--region-current-buffer)))
-    (with-current-buffer buf
-      (bound-and-true-p mct-region-mode))))
+    (buffer-local-value 'mct-region-mode buf)))
 
-(defun mct--display-completion-list-advice (&rest app)
+(defun mct--minibuffer-completion-help-advice (&rest app)
   "Prepare advice around `display-completion-list'.
 Apply APP by first let binding the `completions-format' to
 `mct-completions-format'."
-  (if (or (mct--active-p) (mct--region-p))
+  (if (mct--minibuffer-p)
       (let ((completions-format mct-completions-format))
-        (apply app))
+        (apply app)
+        (mct--fit-completions-window))
+    (apply app)))
+
+(defun mct--region-completion-help-advice (&rest app)
+  "Prepare advice around `display-completion-list'.
+Apply APP by first let binding the `completions-format' to
+`mct-completions-format'."
+  (if (mct--region-p)
+      (let ((completions-format mct-region-completions-format))
+        (apply app)
+        (mct--fit-completions-window))
     (apply app)))
 
 (defun mct--completing-read-advice (&rest app)
@@ -847,7 +865,7 @@ last character."
 (defun mct-complete-and-exit ()
   "Complete current input and exit.
 
-This is the same as with
+This has the same effect as with
 \\<mct-minibuffer-local-completion-map>\\[mct-edit-completion],
 followed by exiting the minibuffer with that candidate."
   (interactive nil mct-minibuffer-mode)
@@ -881,28 +899,9 @@ this command is then required to abort the session."
 
 ;;;;; Stylistic tweaks and refinements
 
-;; Thanks to Omar Antolín Camarena for providing the messageless and
-;; stealthily.  Source: <https://github.com/oantolin/emacs-config>.
-(defun mct--messageless (&rest app)
-  "Set `minibuffer-message-timeout' to 0 while applying APP."
-  (let ((minibuffer-message-timeout 0))
-    (apply app)))
-
-;; Copied from Daniel Mendler's `vertico' library:
-;; <https://github.com/minad/vertico>.
-(defun mct--crm-indicator (args)
-  "Add prompt indicator to `completing-read-multiple' filter ARGS."
-  (cons (concat "[CRM] " (car args)) (cdr args)))
-
-;; Adapted from Omar Antolín Camarena's live-completions library:
-;; <https://github.com/oantolin/live-completions>.
-(defun mct--honor-inhibit-message (&rest app)
-  "Honor `inhibit-message' while applying APP."
-  (unless inhibit-message
-    (apply app)))
-
 ;; Note that this solves bug#45686:
 ;; <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=45686>
+;; TODO review that stealthily does not affect the region mode, it seems intrusive.
 (defun mct--stealthily (&rest app)
   "Prevent minibuffer default from counting as a modification.
 Apply APP while inhibiting modification hooks."
@@ -916,6 +915,12 @@ Apply APP while inhibiting modification hooks."
   (if mct-apply-completion-stripes
       (mct--add-stripes)
     (mct--remove-stripes)))
+
+;; Copied from Daniel Mendler's `vertico' library:
+;; <https://github.com/minad/vertico>.
+(defun mct--crm-indicator (args)
+  "Add prompt indicator to `completing-read-multiple' filter ARGS."
+  (cons (concat "[CRM] " (car args)) (cdr args)))
 
 ;;;;; Shadowed path
 
@@ -1010,6 +1015,8 @@ region.")
     (define-key map (kbd "p") #'mct-previous-completion-or-mini)
     (define-key map [remap backward-paragraph] #'mct-previous-completion-group)
     (define-key map [remap forward-paragraph] #'mct-next-completion-group)
+    (define-key map (kbd "M-p") #'mct-previous-completion-group)
+    (define-key map (kbd "M-n") #'mct-next-completion-group)
     (define-key map (kbd "e") #'mct-focus-minibuffer)
     (define-key map (kbd "M-e") #'mct-edit-completion)
     (define-key map (kbd "TAB") #'mct-choose-completion-no-exit)
@@ -1057,7 +1064,7 @@ region.")
 
 (defun mct--setup-completion-list ()
   "Set up the completion-list for Mct."
-  (when (mct--active-p)
+  (when (mct--minibuffer-p)
     (setq-local completion-show-help nil
                 truncate-lines t)
     (mct--setup-clean-completions)
@@ -1079,33 +1086,18 @@ region.")
   (if mct-minibuffer-mode
       (progn
         (add-hook 'completion-list-mode-hook #'mct--setup-completion-list)
-        (dolist (fn '(exit-minibuffer
-                      choose-completion
-                      minibuffer-force-complete
-                      minibuffer-complete-and-exit
-                      minibuffer-force-complete-and-exit))
-          (advice-add fn :around #'mct--messageless))
         (advice-add #'completing-read-default :around #'mct--completing-read-advice)
         (advice-add #'completing-read-multiple :around #'mct--completing-read-advice)
+        (advice-add #'minibuffer-completion-help :around #'mct--minibuffer-completion-help-advice)
         (advice-add #'completing-read-multiple :filter-args #'mct--crm-indicator)
-        (advice-add #'display-completion-list :around #'mct--display-completion-list-advice)
-        (advice-add #'minibuffer-completion-help :after #'mct--fit-completions-window)
-        (advice-add #'minibuffer-message :around #'mct--honor-inhibit-message)
         (advice-add #'minibuf-eldef-setup-minibuffer :around #'mct--stealthily))
     (remove-hook 'completion-list-mode-hook #'mct--setup-completion-list)
-    (dolist (fn '(exit-minibuffer
-                  choose-completion
-                  minibuffer-force-complete
-                  minibuffer-complete-and-exit
-                  minibuffer-force-complete-and-exit))
-      (advice-remove fn #'mct--messageless))
     (advice-remove #'completing-read-default #'mct--completing-read-advice)
     (advice-remove #'completing-read-multiple #'mct--completing-read-advice)
+    (advice-remove #'minibuffer-completion-help #'mct--minibuffer-completion-help-advice)
     (advice-remove #'completing-read-multiple #'mct--crm-indicator)
-    (advice-remove #'display-completion-list #'mct--display-completion-list-advice)
-    (advice-remove #'minibuffer-completion-help #'mct--fit-completions-window)
-    (advice-remove #'minibuffer-message #'mct--honor-inhibit-message)
-    (advice-remove #'minibuf-eldef-setup-minibuffer #'mct--stealthily)))
+    (advice-remove #'minibuf-eldef-setup-minibuffer #'mct--stealthily))
+  (mct--setup-shared))
 
 (define-obsolete-function-alias 'mct-mode 'mct-minibuffer-mode "0.4.0")
 
@@ -1197,13 +1189,12 @@ minibuffer)."
 
 (defvar mct-region-completion-list-map
   (let ((map (make-sparse-keymap)))
-    ;; TODO 2021-12-29: Maybe we can make this work in this context as
-    ;; well.
-    ;; (define-key map [remap goto-line] #'mct-choose-completion-number)
     (define-key map [remap next-line] #'mct-next-completion-or-quit)
     (define-key map [remap previous-line] #'mct-previous-completion-or-quit)
     (define-key map (kbd "n") #'mct-next-completion-or-quit)
     (define-key map (kbd "p") #'mct-previous-completion-or-quit)
+    (define-key map [remap backward-paragraph] #'mct-previous-completion-group)
+    (define-key map [remap forward-paragraph] #'mct-next-completion-group)
     (define-key map (kbd "M-n") #'mct-next-completion-group)
     (define-key map (kbd "M-p") #'mct-previous-completion-group)
     (define-key map (kbd "TAB") #'choose-completion)
@@ -1235,38 +1226,82 @@ minibuffer)."
   (apply app)
   (completion-in-region-mode -1))
 
+;; UPDATE 2022-01-01 13:12 +0200: Actually this is not related to mct.
+;; I can reproduce it in emacs -Q with just those:
+;;
+;; (electric-indent-mode 1)
+;; (setq-default tab-always-indent 'complete)
+;;
+;; FIXME 2022-01-01: I experienced a bug which is as follows:
+;;
+;; + (electric-indent-mode 1)
+;; + (setq-default tab-always-indent 'complete)
+;; + visit an Org file with an elisp src block that includes comments
+;; + go to the end of a comment's line and hit RET
+;; + the block temporarily changes background to secondary-selection
+;;   (same as when you type C-c '), seems to be trying to perform
+;;   completion, and then ultimately does what RET is supposed to do.
+;;
+;; Disabling electric-indent-mode fixes the issue, though that is beside
+;; the point.
+
+;; FIXME 2022-01-03: This does not work with either M-x shell or M-x
+;; eshell.  Not on Emacs 29, not on Emacs 27.  Try to tab-complete with
+;; 'cd' and it will not be possible to switch to the Completions'
+;; buffer, even if it works the first time.
+
 ;;;###autoload
 (define-minor-mode mct-region-mode
   "Set up interactivity over the default `completion-in-region'."
-  :global nil
+  :global t
   (if mct-region-mode
       (progn
         (advice-add #'completion--done :around #'mct--region-completion-done)
+        (advice-add #'minibuffer-completion-help :around #'mct--region-completion-help-advice)
         (add-hook 'completion-list-mode-hook #'mct--region-setup-completion-list)
-        (add-hook 'completion-in-region-mode-hook #'mct--region-setup-completion-in-region)
-        (advice-add #'minibuffer-completion-help :after #'mct--fit-completions-window)
-        (advice-add #'display-completion-list :around #'mct--display-completion-list-advice)
-        (advice-add #'minibuffer-message :around #'mct--honor-inhibit-message))
+        (add-hook 'completion-in-region-mode-hook #'mct--region-setup-completion-in-region))
     (advice-remove #'completion--done #'mct--region-completion-done)
+    (advice-remove #'minibuffer-completion-help #'mct--region-completion-help-advice)
     (remove-hook 'completion-list-mode-hook #'mct--region-setup-completion-list)
-    (remove-hook 'completion-in-region-mode-hook #'mct--region-setup-completion-in-region)
-    (advice-remove #'minibuffer-completion-help #'mct--fit-completions-window)
-    (advice-remove #'display-completion-list #'mct--display-completion-list-advice)
-    (advice-remove #'minibuffer-message #'mct--honor-inhibit-message)))
+    (remove-hook 'completion-in-region-mode-hook #'mct--region-setup-completion-in-region))
+  (mct--setup-shared))
 
-;; The `mct-region-global-mode', `mct-region--on', and
-;; `mct-region-excluded-modes' are adapted from the corfu.el library of
-;; Daniel Mendler.
+;; Adapted from Omar Antolín Camarena's live-completions library:
+;; <https://github.com/oantolin/live-completions>.
+(defun mct--shared-honor-inhibit-message (&rest app)
+  "Honor `inhibit-message' while applying APP."
+  (unless (and (or (mct--region-p) (mct--minibuffer-p)) inhibit-message)
+    (apply app)))
 
-;;;###autoload
-(define-globalized-minor-mode mct-region-global-mode mct-region-mode mct-region--on)
+;; Thanks to Omar Antolín Camarena for providing the messageless and
+;; stealthily.  Source: <https://github.com/oantolin/emacs-config>.
+(defun mct--shared-messageless (&rest app)
+  "Set `minibuffer-message-timeout' to 0 while applying APP."
+  (if (or (mct--region-p) (mct--minibuffer-p))
+      (let ((minibuffer-message-timeout 0))
+        (apply app))
+    (apply app)))
 
-(defun mct-region--on ()
-  "Turn `mct-region-mode' on."
-  (unless (or noninteractive
-              (eq (aref (buffer-name) 0) ?\s)
-              (memq major-mode mct-region-excluded-modes))
-    (mct-region-mode 1)))
+(defun mct--setup-shared ()
+  "Silence the minibuffer and the Completions."
+  (if (or mct-region-mode mct-minibuffer-mode)
+      (progn
+        ;; NOTE 2022-01-09: Only `choose-completion' is relevant for
+        ;; completion-in-region.
+        (dolist (fn '(exit-minibuffer
+                      choose-completion
+                      minibuffer-force-complete
+                      minibuffer-complete-and-exit
+                      minibuffer-force-complete-and-exit))
+          (advice-add fn :around #'mct--shared-messageless))
+        (advice-add #'minibuffer-message :around #'mct--shared-honor-inhibit-message))
+    (dolist (fn '(exit-minibuffer
+                  choose-completion
+                  minibuffer-force-complete
+                  minibuffer-complete-and-exit
+                  minibuffer-force-complete-and-exit))
+      (advice-add fn :around #'mct--shared-messageless))
+    (advice-add #'minibuffer-message :around #'mct--shared-honor-inhibit-message)))
 
 (provide 'mct)
 ;;; mct.el ends here
