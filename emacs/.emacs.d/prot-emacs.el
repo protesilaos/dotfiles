@@ -112,6 +112,7 @@
           org-backward-heading-same-level
           org-tree-slide-move-next-tree
           org-tree-slide-move-previous-tree))
+  (setq prot-pulse-delay 0.06)
   (prot-pulse-advice-commands-mode 1)
   (define-key global-map (kbd "C-x l") #'prot-pulse-pulse-line)) ; override `count-lines-page'
 
@@ -132,10 +133,10 @@
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs nil
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers t
-        modus-themes-intense-markup t
+        modus-themes-intense-markup nil
         modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
@@ -152,7 +153,7 @@
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', and a natural number for extra padding
-        modus-themes-mode-line '(borderless 4)
+        modus-themes-mode-line '(4 borderless)
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -167,7 +168,7 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match nil
+        modus-themes-paren-match '(bold intense)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -178,7 +179,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts nil
+        modus-themes-prompts '(background gray intense)
 
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
@@ -187,7 +188,7 @@
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend)
+        modus-themes-region '(no-extend accented)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs nil
@@ -445,8 +446,8 @@
   ;;               (slot . 99)
   ;;               (window-width . 0.3))))
 
-  (mct-region-global-mode 1) ; Or use `mct-region-mode' per major-mode
   (mct-minibuffer-mode 1)
+  (mct-region-mode 1) ; NOTE 2022-01-15: This is new and remains experimental
 
   (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
   (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions))
@@ -548,7 +549,9 @@
   (setq embark-cycle-key (kbd "C-."))   ; see the `embark-act' key
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
-  (setq embark-indicator #'embark-mixed-indicator)
+  (setq embark-indicators
+        '(embark-mixed-indicator
+          embark-highlight-indicator))
   ;; NOTE 2021-07-31: The mixed indicator starts out with a minimal view
   ;; and then pops up the verbose buffer, so those variables matter.
   (setq embark-verbose-indicator-excluded-actions
@@ -644,18 +647,12 @@
   (let ((map global-map))
     (define-key map (kbd "C-x C-r") #'prot-recentf-recent-files-or-dirs)))
 
-;;; Corfu (Completion Overlay Region FUnction)
-;; (prot-emacs-elpa-package 'corfu
-;;   ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
-;;   ;;                  shell-mode-hook eshell-mode-hook))
-;;   ;;   (add-hook mode #'corfu-mode))
-;;   (corfu-global-mode 1)
-;;   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
-;;
-;; (prot-emacs-elpa-package 'cape
-;;   (setq cape-dabbrev-min-length 2)
-;;   (dolist (backend '( cape-keyword-capf cape-file-capf cape-dabbrev-capf))
-;;     (add-to-list 'completion-at-point-functions backend)))
+;;; CAPE (extra completion-at-point backends)
+(prot-emacs-elpa-package 'cape
+  (setq cape-dabbrev-min-length 3)
+  (dolist (backend '( cape-symbol cape-keyword-capf cape-file-capf
+                      cape-abbrev cape-ispell cape-dabbrev-capf))
+    (add-to-list 'completion-at-point-functions backend)))
 
 ;;; Dabbrev (dynamic word completion)
 (prot-emacs-builtin-package 'dabbrev
