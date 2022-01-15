@@ -86,6 +86,6 @@ else
     done
 fi
 
-bspc config gapless_monocle "${gapless_monocle:=false}"
+bspc config gapless_monocle "${gapless_monocle:=true}"
 
 [ -n "$panel_status" ] && polybar bspwm &
