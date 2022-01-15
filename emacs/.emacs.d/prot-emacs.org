@@ -1647,9 +1647,8 @@ you carry out /contextually relevant actions/ on *targets* through a common
 + "Targets" are semantically sensitive constructs, such as the symbol at
   point, a URL, a file name, the active region, or the current
   completion candidate in the minibuffer (or the completions'
-  buffer---more on that in the next section).  Embark has so-called
-  "clasifiers" which help it determine the category that the target
-  belongs to.
+  buffer---more on that in the next section).  Embark has mechanisms
+  which help it determine the category that the target belongs to.
 
 + The "contextually relevant [actions]" are defined in keymaps whose
   scope matches the category of the target.  So =embark-file-map= holds
@@ -1688,13 +1687,13 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
 + Embark has two ways to help you learn about its actions, though you
   will probably only ever need one of them.  The first one, which is the
   default, is to display a detailed buffer when the variable
-  =embark-indicator= is set to a value of =embark-mixed-indicator= or
-  =embark-verbose-indicator=.  Those will produce a buffer that shows the
-  available actions, the keys they are bound to, and a description of
-  what each action does.  The other method, which is only really useful
-  if =embark-indicator= is set to =embark-minimal-indicator= is to follow up
-  the =embark-act= with =C-h=.  That will produce a minibuffer prompt
-  showing all available key bindings.
+  =embark-indicators= includes the symbol =embark-mixed-indicator= or
+  =embark-verbose-indicator=.  Either of those will produce a buffer that
+  shows the available actions, the keys they are bound to, and a
+  description of what each action does.  The other method, which is only
+  really useful if =embark-indicator= is set to =embark-minimal-indicator=
+  is to follow up the =embark-act= with =C-h=.  That will produce a
+  minibuffer prompt showing all available key bindings.
 
   - Keymaps aside, you can call /any command/ after invoking =embark-act=.
     This can be either with =M-x= or via its key binding.  For example, if
@@ -1765,7 +1764,9 @@ a correct export buffer while using relevant Consult commands, such as
   (setq embark-cycle-key (kbd "C-."))   ; see the `embark-act' key
   (setq embark-collect-live-update-delay 0.5)
   (setq embark-collect-live-initial-delay 0.8)
-  (setq embark-indicator #'embark-mixed-indicator)
+  (setq embark-indicators
+        '(embark-mixed-indicator
+          embark-highlight-indicator))
   ;; NOTE 2021-07-31: The mixed indicator starts out with a minimal view
   ;; and then pops up the verbose buffer, so those variables matter.
   (setq embark-verbose-indicator-excluded-actions
