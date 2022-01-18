@@ -94,7 +94,9 @@
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
-    (define-key map (kbd "C-x K") #'prot-simple-kill-buffer-current)))
+    (define-key map (kbd "C-x K") #'prot-simple-kill-buffer-current)
+    (define-key map (kbd "M-s b") #'prot-simple-buffers-major-mode)
+    (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
 
 ;;; prot-pulse.el (highlight cursor position)
 (prot-emacs-builtin-package 'prot-pulse
@@ -136,7 +138,6 @@
         modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers t
-        modus-themes-intense-markup nil
         modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
@@ -153,12 +154,17 @@
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', and a natural number for extra padding
-        modus-themes-mode-line '(4 borderless)
+        modus-themes-mode-line '(3d)
+
+        ;; Options for `modus-themes-markup' are either nil, or a list
+        ;; that can combine any of `bold', `italic', `background',
+        ;; `intense'.
+        modus-themes-markup '(background italic)
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax nil
+        modus-themes-syntax '(yellow-comments green-strings)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -179,7 +185,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(background gray intense)
+        modus-themes-prompts '(bold italic intense)
 
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
@@ -188,7 +194,7 @@
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend accented)
+        modus-themes-region '(no-extend accented bg-only)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs nil
@@ -356,10 +362,56 @@
         '(prot-orderless-literal-dispatcher
           prot-orderless-initialism-dispatcher
           prot-orderless-flex-dispatcher))
+
   ;; SPC should never complete: use it for `orderless' groups.
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "SPC") nil)
-    (define-key map (kbd "?") nil)))
+    (define-key map (kbd "?") nil))
+
+  ;;;; Initialisms
+
+  ;; All of the following is a copy of code that was removed from
+  ;; orderless.el.  I was using it, so I want to keep it, at least until
+  ;; some new version is provided upstream.
+
+  (defun orderless--strict-*-initialism (component &optional anchored)
+    "Match a COMPONENT as a strict initialism, optionally ANCHORED.
+The characters in COMPONENT must occur in the candidate in that
+order at the beginning of subsequent words comprised of letters.
+Only non-letters can be in between the words that start with the
+initials.
+
+If ANCHORED is `start' require that the first initial appear in
+the first word of the candidate.  If ANCHORED is `both' require
+that the first and last initials appear in the first and last
+words of the candidate, respectively."
+    (orderless--separated-by
+     '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)))
+     (cl-loop for char across component collect `(seq word-start ,char))
+     (when anchored '(seq (group buffer-start) (zero-or-more (not alpha))))
+     (when (eq anchored 'both)
+       '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)) eol))))
+
+  (defun orderless-strict-initialism (component)
+    "Match a COMPONENT as a strict initialism.
+This means the characters in COMPONENT must occur in the
+candidate in that order at the beginning of subsequent words
+comprised of letters.  Only non-letters can be in between the
+words that start with the initials."
+    (orderless--strict-*-initialism component))
+
+  (defun orderless-strict-leading-initialism (component)
+    "Match a COMPONENT as a strict initialism, anchored at start.
+See `orderless-strict-initialism'.  Additionally require that the
+first initial appear in the first word of the candidate."
+    (orderless--strict-*-initialism component 'start))
+
+  (defun orderless-strict-full-initialism (component)
+    "Match a COMPONENT as a strict initialism, anchored at both ends.
+See `orderless-strict-initialism'.  Additionally require that the
+first and last initials appear in the first and last words of the
+candidate, respectively."
+    (orderless--strict-*-initialism component 'both)))
 
 ;;; Completion annotations (marginalia)
 (prot-emacs-elpa-package 'marginalia
@@ -919,11 +971,6 @@
     (define-key map (kbd "* n") #'ibuffer-mark-by-name-regexp)
     (define-key map (kbd "s n") #'ibuffer-do-sort-by-alphabetic)  ; "sort name" mnemonic
     (define-key map (kbd "/ g") #'ibuffer-filter-by-content)))
-
-(prot-emacs-builtin-package 'prot-ibuffer
-  (let ((map global-map))
-    (define-key map (kbd "M-s b") #'prot-ibuffer-buffers-major-mode)
-    (define-key map (kbd "M-s v") #'prot-ibuffer-buffers-vc-root)))
 
 ;;; Window rules and basic tweaks (window.el)
 (prot-emacs-builtin-package 'window
