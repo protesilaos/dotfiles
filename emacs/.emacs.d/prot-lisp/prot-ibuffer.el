@@ -34,6 +34,10 @@
 
 ;;; Code:
 
+;; NOTE 2022-01-18: Deprecated as I wrote cleaner commands in
+;; prot-simple.el.  Search for `prot-simple-buffers-major-mode' and
+;; `prot-simple-buffers-vc-root'.
+
 (require 'ibuffer)
 
 ;;;###autoload

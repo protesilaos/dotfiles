@@ -353,7 +353,9 @@ use elsewhere.
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
-    (define-key map (kbd "C-x K") #'prot-simple-kill-buffer-current)))
+    (define-key map (kbd "C-x K") #'prot-simple-kill-buffer-current)
+    (define-key map (kbd "M-s b") #'prot-simple-buffers-major-mode)
+    (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
 #+end_src
 
 These are the contents of the =prot-simple.el= library (find the file in
@@ -2947,29 +2949,12 @@ to the default behaviour and presentation:
 
 Also watch my [[https://protesilaos.com/codelog/2020-04-02-emacs-intro-ibuffer/][introduction to Ibuffer]] (2020-04-02).
 
-Now some extras that I introduced after I published that video, which
-pertain to my =prot-ibuffer.el= library (copied in its entirety below the
-package configurations):
-
-+ =prot-ibuffer-buffers-major-mode= produces a filtered list of buffers
-  that match the major mode of the current buffer and lets you pick one
-  using minibuffer completion.  With an optional prefix argument (=C-u=)
-  it places the results in an Ibuffer list.
-
-+ =prot-ibuffer-buffers-vc-root= filters the list to items that match the
-  current buffer's version-controlled directory.  In practice, this
-  fills the same niche as the built-in =project-switch-to-buffer= (for
-  Emacs 28+), with the crucial difference that it neither reads from nor
-  writes to the list of known projects (also check my configurations for
-  [[#h:7862f39e-aed0-4d02-9f1e-60c4601a9734][Projects (project.el and prot-project.el)]]).  When called with an
-  optional prefix argument, this command puts its matching candidates in
-  an Ibuffer view.
-
-For those two I received guidance from Omar Antolín Camarena with regard
-to the use of =read-buffer= and the =lambda= passed to it (any errors are my
-own).  This method informs other tools that this type of completion
-pertains to buffers, so they can adapt accordingly.  See, in particular,
-[[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]].
+Finally, note that my =prot-simple.el= library includes a few commands for
+switching buffers based on their current major mode or VC root
+directory.  Search for =prot-simple-buffers-major-mode= and
+=prot-simple-buffers-vc-root=.  It is trivial to produce a filtered
+Ibuffer out of them with the help of Embark's export facility (see
+[[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Embark]]).
 
 #+begin_src emacs-lisp
 ;;; Ibuffer and extras (dired-like buffer list manager)
@@ -3003,16 +2988,7 @@ pertains to buffers, so they can adapt accordingly.  See, in particular,
     (define-key map (kbd "* n") #'ibuffer-mark-by-name-regexp)
     (define-key map (kbd "s n") #'ibuffer-do-sort-by-alphabetic)  ; "sort name" mnemonic
     (define-key map (kbd "/ g") #'ibuffer-filter-by-content)))
-
-(prot-emacs-builtin-package 'prot-ibuffer
-  (let ((map global-map))
-    (define-key map (kbd "M-s b") #'prot-ibuffer-buffers-major-mode)
-    (define-key map (kbd "M-s v") #'prot-ibuffer-buffers-vc-root)))
 #+end_src
-
-Here is =prot-ibuffer.el= (find everything in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
-
-#+include: prot-lisp/prot-ibuffer.el src emacs-lisp :tangle no
 
 ** Window configuration
 :PROPERTIES:

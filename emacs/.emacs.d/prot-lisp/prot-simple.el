@@ -869,5 +869,39 @@ Do not try to make a new directory or anything fancy."
       (rename-file file name))
     (set-visited-file-name name t t)))
 
+(defun prot-simple--buffer-major-mode-prompt ()
+  "Prompt of `prot-simple-buffers-major-mode'."
+  (let ((major major-mode))
+    (read-buffer
+     (format "Buffer for %s: " major)
+     nil t
+     (lambda (pair) ; pair is (name-string . buffer-object)
+       (with-current-buffer (cdr pair) (derived-mode-p major))))))
+
+;;;###autoload
+(defun prot-simple-buffers-major-mode (buffer)
+  "Select BUFFER matching the current one's major mode."
+  (interactive
+   (list (prot-simple--buffer-major-mode-prompt)))
+  (switch-to-buffer buffer))
+
+
+(defun prot-simple--buffer-vc-root-prompt ()
+  "Prompt of `prot-simple-buffers-vc-root'."
+  (let ((root (or (vc-root-dir)
+                   (locate-dominating-file "." ".git"))))
+    (read-buffer
+     (format "Buffers in %s: " root)
+     nil t
+     (lambda (pair) ; pair is (name-string . buffer-object)
+       (with-current-buffer (cdr pair) (string-match-p root default-directory))))))
+
+;;;###autoload
+(defun prot-simple-buffers-vc-root (buffer)
+  "Select BUFFER matching the current one's VC root."
+  (interactive
+   (list (prot-simple--buffer-vc-root-prompt)))
+  (switch-to-buffer buffer))
+
 (provide 'prot-simple)
 ;;; prot-simple.el ends here
