@@ -135,7 +135,7 @@
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers t
         modus-themes-deuteranopia nil
@@ -154,17 +154,17 @@
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
         ;; `accented', and a natural number for extra padding
-        modus-themes-mode-line '(3d)
+        modus-themes-mode-line nil
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
         ;; `intense'.
-        modus-themes-markup '(background italic)
+        modus-themes-markup nil
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(yellow-comments green-strings)
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -174,7 +174,7 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold intense)
+        modus-themes-paren-match nil
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -185,7 +185,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(bold italic intense)
+        modus-themes-prompts '(bold italic)
 
         modus-themes-completions nil ; {nil,'moderate,'opinionated}
 
@@ -702,8 +702,8 @@ candidate, respectively."
 ;;; CAPE (extra completion-at-point backends)
 (prot-emacs-elpa-package 'cape
   (setq cape-dabbrev-min-length 3)
-  (dolist (backend '( cape-symbol cape-keyword-capf cape-file-capf
-                      cape-abbrev cape-ispell cape-dabbrev-capf))
+  (dolist (backend '( cape-symbol cape-keyword cape-file
+                      cape-abbrev cape-ispell cape-dabbrev))
     (add-to-list 'completion-at-point-functions backend)))
 
 ;;; Dabbrev (dynamic word completion)
