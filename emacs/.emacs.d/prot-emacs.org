@@ -2061,8 +2061,8 @@ completion.
 ;;; CAPE (extra completion-at-point backends)
 (prot-emacs-elpa-package 'cape
   (setq cape-dabbrev-min-length 3)
-  (dolist (backend '( cape-symbol cape-keyword-capf cape-file-capf
-                      cape-abbrev cape-ispell cape-dabbrev-capf))
+  (dolist (backend '( cape-symbol cape-keyword cape-file
+                      cape-abbrev cape-ispell cape-dabbrev))
     (add-to-list 'completion-at-point-functions backend)))
 #+end_src
 
@@ -2139,6 +2139,7 @@ read that variable's doc string).
   (corfu-global-mode 1)
   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
 #+end_example
+
 **** Dabbrev (dynamic word completion)
 :PROPERTIES:
 :CUSTOM_ID: h:57dcf193-0c4e-4ee6-9b2d-6892558b0a84
