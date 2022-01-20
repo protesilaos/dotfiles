@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/mct
-;; Version: 0.3.0
+;; Version: 0.4.0
 ;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -90,7 +90,7 @@ regardless of input length.
 When non-nil (the default), the Completions' buffer is
 automatically displayed once the `mct-minimum-input' is met and
 is hidden if the input drops below that threshold.  While
-visible, the buffer is updated live to match the user input.
+visible, the buffer is updated live to match the user's input.
 
 Note that every function in the `mct-completion-passlist' ignores
 this option altogether.  This means that every such command will
@@ -420,8 +420,14 @@ Apply APP by first setting up the minibuffer to work with Mct."
 ;; We need this to make things work on Emacs 27.
 (defun mct--one-column-p ()
   "Test if we have a one-column view available."
-  (and (eq mct-completions-format 'one-column)
-       (>= emacs-major-version 28)))
+  (cond
+   ;; FIXME 2022-01-19: Avoid duplication?
+   ((mct--region-p) 
+    (and (eq mct-region-completions-format 'one-column)
+         (>= emacs-major-version 28)))
+   ((mct--minibuffer-p) 
+    (and (eq mct-completions-format 'one-column)
+         (>= emacs-major-version 28)))))
 
 ;;;;; Focus minibuffer and/or show completions
 
@@ -1113,12 +1119,15 @@ region.")
 (defun mct--region-live-completions (&rest _)
   "Update the *Completions* buffer.
 Meant to be added to `after-change-functions'."
-  (when (mct--region-current-buffer)
-    (while-no-input
-      (condition-case nil
-          (save-match-data
-            (mct--show-completions))
-        (quit (keyboard-quit))))))
+  (when-let (buf (mct--region-current-buffer))
+    ;; TODO 2022-01-18: Do the same for company-mode, but we need to
+    ;; test it as well.
+    (when (null (buffer-local-value 'corfu-mode buf))
+      (while-no-input
+        (condition-case nil
+            (save-match-data
+              (mct--show-completions))
+          (quit (keyboard-quit)))))))
 
 (defun mct--region-live-update ()
   "Hook up `mct--region-live-completions'."
