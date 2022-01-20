@@ -159,7 +159,7 @@ buffer."
 ;; ;; DEPRECATED 2021-10-15: Just set `help-window-select' to non-nil.
 ;;
 ;; ;;;; Focus auxiliary buffers
-;; 
+;;
 ;; ;; TODO 2021-08-27: Is there a more general way to do this without
 ;; ;; specifying the BUF?  That way we would only need one function.
 ;; (defmacro prot-simple--auto-focus-buffer (fn doc buf)
@@ -168,19 +168,19 @@ buffer."
 ;;     ,doc
 ;;     (when-let ((window (get-buffer-window ,buf)))
 ;;       (select-window window))))
-;; 
+;;
 ;; (prot-simple--auto-focus-buffer
 ;;  prot-simple--help-focus
 ;;   "Select window with Help buffer.
 ;; Intended as :after advice for `describe-symbol' and friends."
 ;;   (help-buffer))
-;; 
+;;
 ;; (prot-simple--auto-focus-buffer
 ;;  prot-simple--messages-focus
 ;;   "Select window with Help buffer.
 ;; Intended as :after advice for `view-echo-area-messages'."
 ;;   (messages-buffer))
-;; 
+;;
 ;; ;;;###autoload
 ;; (define-minor-mode prot-simple-focus-help-buffers
 ;;   "Add advice to focus `prot-simple-focusable-help-commands'."
