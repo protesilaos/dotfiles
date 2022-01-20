@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 2.0.0
-;; Last-Modified: <2022-01-19 10:19:55 +0200>
+;; Last-Modified: <2022-01-20 13:33:55 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -323,6 +323,7 @@
 ;;     telephone-line
 ;;     terraform-mode
 ;;     term
+;;     textsec
 ;;     tomatinho
 ;;     transient (pop-up windows like Magit's)
 ;;     trashed
@@ -3881,27 +3882,63 @@ application of a variable-pitch font."
 
 ;;;; Utilities for DIY users
 
-(defun modus-themes-list-colors ()
-  "Like `list-colors-display' for the active Modus theme."
-  (interactive)
-  (unless (modus-themes--current-theme)
-    (user-error "No Modus theme is active"))
-  (with-help-window (format "*%s-list-colors*" (modus-themes--current-theme))
+;;;;; List colors (a respin of M-x list-colors-display)
+
+(defun modus-themes--list-colors-render (buffer palette)
+  "Render colors in BUFFER from PALETTE.
+Routine for `modus-themes-list-colors'."
+  (with-help-window buffer
     (with-current-buffer standard-output
       (erase-buffer)
-      (dolist (cell (modus-themes-current-palette))
+      ;; We need this to properly render the first line.
+      (insert " ")
+      (dolist (cell palette)
         (let* ((name (car cell))
                (color (cdr cell))
-               (old-point (point))
-               (fg (readable-foreground-color color)))
-          (insert (format "\n %s %s %s\n\n" color (make-string 10 ?\s) name))
-          (put-text-property old-point (point)
-                             'face `( :background ,color
-                                      :foreground ,fg
-                                      :extend t))))
-      ;; This is dirty, but we need it so that the last three lines also
-      ;; :extend properly.
-      (insert " "))))
+               (fg (readable-foreground-color color))
+               (pad (make-string 5 ?\s)))
+          (let ((old-point (point)))
+            (insert (format "%s %s" color pad))
+            (put-text-property old-point (point) 'face `( :foreground ,color)))
+          (let ((old-point (point)))
+            (insert (format " %s %s %s\n" color pad name))
+            (put-text-property old-point (point)
+                               'face `( :background ,color
+                                        :foreground ,fg
+                                        :extend t)))
+          ;; We need this to properly render the last line.
+          (insert " "))))))
+
+(defvar modus-themes--list-colors-prompt-history '()
+  "Minibuffer history for `modus-themes--list-colors-prompt'.")
+
+(defun modus-themes--list-colors-prompt ()
+  "Prompt for Modus theme.
+Helper function for `modus-themes-list-colors'."
+  (let ((def (format "%s" (modus-themes--current-theme))))
+    (completing-read
+     (format "Use palette from theme [%s]: " def)
+     '(modus-operandi modus-vivendi) nil t nil
+     'modus-themes--list-colors-prompt-history def)))
+
+(defun modus-themes-list-colors (theme)
+  "Preview palette of the Modus THEME of choice."
+  (interactive
+   (list (intern (modus-themes--list-colors-prompt))))
+  (let ((palette (pcase theme
+                   ('modus-operandi modus-themes-operandi-colors)
+                   ('modus-vivendi modus-themes-vivendi-colors)
+                   (_ (user-error "`%s' is not a Modus theme" theme)))))
+    (modus-themes--list-colors-render
+     (format "*%s-list-colors*" theme)
+     palette)))
+
+(defun modus-themes-list-colors-current ()
+  "Call `modus-themes-list-colors' for the current Modus theme."
+  (interactive)
+  (modus-themes-list-colors (modus-themes--current-theme)))
+
+;;;;; Formula to measure relative luminance
 
 ;; This is the WCAG formula: https://www.w3.org/TR/WCAG20-TECHS/G18.html
 (defun modus-themes-wcag-formula (hex)
@@ -3921,6 +3958,8 @@ C1 and C2 are color values written in hexadecimal RGB."
   (let ((ct (/ (+ (modus-themes-wcag-formula c1) 0.05)
                (+ (modus-themes-wcag-formula c2) 0.05))))
     (max ct (/ ct))))
+
+;;;;; Retrieve colors from the themes
 
 (defun modus-themes-current-palette ()
   "Return current color palette."
@@ -5029,7 +5068,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(el-search-occur-match ((,class :inherit modus-themes-special-calm)))
 ;;;;; eldoc
     ;; NOTE: see https://github.com/purcell/package-lint/issues/187
-    (list 'eldoc-highlight-function-argument `((,class :inherit bold :foreground ,red-alt-other)))
+    (list 'eldoc-highlight-function-argument `((,class :inherit bold :foreground ,cyan-alt-other)))
 ;;;;; eldoc-box
     `(eldoc-box-body ((,class :background ,bg-alt :foreground ,fg-main)))
     `(eldoc-box-border ((,class :background ,fg-alt)))
@@ -5392,8 +5431,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(fountain-synopsis ((,class :foreground ,cyan-alt)))
     `(fountain-trans ((,class :foreground ,yellow-alt-other)))
 ;;;;; geiser
-    `(geiser-font-lock-autodoc-current-arg ((,class :inherit bold :foreground ,red-alt-other)))
-    `(geiser-font-lock-autodoc-identifier ((,class :foreground ,cyan)))
+    `(geiser-font-lock-autodoc-current-arg ((,class :inherit bold :foreground ,cyan-alt-other)))
+    `(geiser-font-lock-autodoc-identifier ((,class :foreground ,magenta-alt-other)))
     `(geiser-font-lock-doc-button ((,class :inherit button :foreground ,fg-docstring)))
     `(geiser-font-lock-doc-link ((,class :inherit button)))
     `(geiser-font-lock-error-link ((,class :inherit button :foreground ,red)))
@@ -7131,6 +7170,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(term-color-white ((,class :background "gray65" :foreground "gray65")))
     `(term-color-yellow ((,class :background ,yellow :foreground ,yellow)))
     `(term-underline ((,class :underline t)))
+;;;;; textsec
+    `(textsec-suspicious ((,class :inherit modus-themes-refine-red)))
 ;;;;; tomatinho
     `(tomatinho-ok-face ((,class :foreground ,blue-intense)))
     `(tomatinho-pause-face ((,class :foreground ,yellow-intense)))
