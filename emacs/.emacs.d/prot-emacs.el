@@ -38,7 +38,9 @@
   ;;          view-lossage))
   ;; (prot-simple-focus-help-buffers 1)
 
-  (prot-simple-rename-help-buffers 1)
+  ;; ;; NOTE 2022-01-20: The idea is good, but the implementation needs
+  ;; ;; to be refined.
+  ;; (prot-simple-rename-help-buffers 1)
 
   ;; General commands
   (let ((map global-map))
@@ -486,6 +488,8 @@ candidate, respectively."
            prot-bookmark-cd-bookmark
            prot-bongo-playlist-insert-playlist-file
            project-switch-to-buffer))
+  (setq mct-completions-format 'one-column)
+  (setq mct-region-completions-format 'vertical)
 
   ;; You can place the Completions' buffer wherever you want, by
   ;; following the syntax of `display-buffer-alist' (check elsewhere in
