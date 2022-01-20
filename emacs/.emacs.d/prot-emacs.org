@@ -1362,6 +1362,8 @@ results I am most likely interested in, based on previous selections.
            prot-bookmark-cd-bookmark
            prot-bongo-playlist-insert-playlist-file
            project-switch-to-buffer))
+  (setq mct-completions-format 'one-column)
+  (setq mct-region-completions-format 'vertical)
 
   ;; You can place the Completions' buffer wherever you want, by
   ;; following the syntax of `display-buffer-alist' (check elsewhere in
