@@ -4,17 +4,26 @@
 #+OPTIONS: toc:nil
 #+STARTUP: content indent
 #+MACRO: export-date (eval (format-time-string "%F %R %z" (current-time)))
-#+MACRO: emacs-development-version (eval (substring (emacs-version) 0 17))
+#+MACRO: count-words (eval (count-words (point-min) (point-max)))
 
 + Created: 2019-08-15
 + Updated: *{{{export-date}}}*.
-+ Emacs Version: {{{emacs-development-version}}}.
++ Word count: *{{{count-words}}}* (not a measure of quality, just to offer an
+  idea on what to expect)
 + Git repository (part of my dotfiles for GNU/Linux):
-  <https://gitlab.com/protesilaos/dotfiles>.
-+ File history:
-  <https://gitlab.com/protesilaos/dotfiles/-/commits/master/emacs/.emacs.d/prot-emacs.org>.
-+ Just the =*.el= version of this file:
+  <https://gitlab.com/protesilaos/dotfiles> OR <https://github.com/protesilaos/dotfiles>
++ Just the =*.el= version of this file (works with =outline-minor-mode=):
   <https://gitlab.com/protesilaos/dotfiles/-/commits/master/emacs/.emacs.d/prot-emacs.el>
+
+Information pertaining to my build of Emacs:
+
+#+begin_src emacs-lisp :tangle no :exports both
+(emacs-version)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no :exports both
+system-configuration-options
+#+end_src
 
 #+TOC: headlines 8 insert TOC here, with eight headline levels
 
@@ -9798,8 +9807,8 @@ read: [[#h:044977f2-a909-4804-bf89-576dd429d405][What is your distro and/or wind
 :CUSTOM_ID: h:0675f798-e2d9-4762-9df2-f47cd24cf00a
 :END:
 
-/Remember that I am not using Emacs 27 or some other stable release.  I
-currently am on {{{emacs-development-version}}}./
+/Remember that I am not using Emacs 27 or some other stable release.
+Check the build details at the top of this file./
 
 First you must understand that this is my personal setup: I have never
 tried to develop a framework that works out-of-the-box for other users.
