@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 2.0.0
-;; Last-Modified: <2022-01-20 13:33:55 +0200>
+;; Last-Modified: <2022-01-21 22:12:20 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -74,6 +74,8 @@
 ;;     ace-window
 ;;     alert
 ;;     all-the-icons
+;;     all-the-icons-dired
+;;     all-the-icons-ibuffer
 ;;     annotate
 ;;     ansi-color
 ;;     anzu
@@ -4348,10 +4350,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(italic ((,class :slant italic)))
     `(nobreak-hyphen ((,class :foreground ,fg-escape-char-construct)))
     `(nobreak-space ((,class :foreground ,fg-escape-char-construct :underline t)))
+    `(menu ((,class :inverse-video unspecified :inherit modus-themes-intense-neutral)))
     `(minibuffer-prompt ((,class :inherit modus-themes-prompt)))
     `(mm-command-output ((,class :foreground ,red-alt-other)))
     `(mm-uu-extract ((,class :background ,bg-dim :foreground ,fg-special-mild)))
     `(next-error ((,class :inherit modus-themes-subtle-red :extend t)))
+    `(pgtk-im-0 ((,class :inherit modus-themes-fringe-blue :underline t)))
     `(rectangle-preview ((,class :inherit modus-themes-special-mild)))
     `(region ((,class ,@(modus-themes--region bg-region fg-main
                                               bg-hl-alt-intense bg-region-accent
@@ -4383,41 +4387,47 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(alert-trivial-face ((,class :foreground ,fg-special-calm)))
     `(alert-urgent-face ((,class :inherit bold :foreground ,red-intense)))
 ;;;;; all-the-icons
-    `(all-the-icons-blue ((,class :foreground ,blue)))
+    `(all-the-icons-blue ((,class :foreground ,blue-alt-other)))
     `(all-the-icons-blue-alt ((,class :foreground ,blue-alt)))
-    `(all-the-icons-cyan ((,class :foreground ,cyan)))
+    `(all-the-icons-cyan ((,class :foreground ,cyan-intense)))
     `(all-the-icons-cyan-alt ((,class :foreground ,cyan-alt)))
-    `(all-the-icons-dblue ((,class :foreground ,blue-alt-other)))
-    `(all-the-icons-dcyan ((,class :foreground ,cyan-alt-other)))
-    `(all-the-icons-dgreen ((,class :foreground ,green-alt-other)))
-    `(all-the-icons-dired-dir-face ((,class :foreground ,blue)))
-    `(all-the-icons-dmaroon ((,class :foreground ,magenta-alt-other)))
-    `(all-the-icons-dorange ((,class :foreground ,red-alt-other)))
-    `(all-the-icons-dpink ((,class :foreground ,magenta)))
-    `(all-the-icons-dpurple ((,class :foreground ,magenta-alt)))
-    `(all-the-icons-dred ((,class :foreground ,red)))
-    `(all-the-icons-dsilver ((,class :foreground ,fg-special-cold)))
-    `(all-the-icons-dyellow ((,class :foreground ,yellow)))
-    `(all-the-icons-green ((,class :foreground ,green)))
-    `(all-the-icons-lblue ((,class :foreground ,blue-refine-fg)))
-    `(all-the-icons-lcyan ((,class :foreground ,cyan-refine-fg)))
-    `(all-the-icons-lgreen ((,class :foreground ,green-refine-fg)))
-    `(all-the-icons-lmaroon ((,class :foreground ,magenta-refine-fg)))
-    `(all-the-icons-lorange ((,class :foreground ,red-refine-fg)))
-    `(all-the-icons-lpink ((,class :foreground ,magenta-refine-fg)))
-    `(all-the-icons-lpurple ((,class :foreground ,magenta-refine-fg)))
-    `(all-the-icons-lred ((,class :foreground ,red-refine-fg)))
-    `(all-the-icons-lsilver ((,class :foreground ,fg-special-cold)))
-    `(all-the-icons-lyellow ((,class :foreground ,yellow-refine-fg)))
-    `(all-the-icons-maroon ((,class :foreground ,magenta)))
-    `(all-the-icons-orange ((,class :foreground ,red-alt)))
-    `(all-the-icons-pink ((,class :foreground ,magenta)))
-    `(all-the-icons-purple ((,class :foreground ,magenta-alt)))
-    `(all-the-icons-purple-alt ((,class :foreground ,magenta-alt-other)))
-    `(all-the-icons-red ((,class :foreground ,red)))
-    `(all-the-icons-red-alt ((,class :foreground ,red-alt)))
+    `(all-the-icons-dblue ((,class :foreground ,blue-faint)))
+    `(all-the-icons-dcyan ((,class :foreground ,cyan-faint)))
+    `(all-the-icons-dgreen ((,class :foreground ,green)))
+    `(all-the-icons-dmaroon ((,class :foreground ,magenta-alt-faint)))
+    `(all-the-icons-dorange ((,class :foreground ,red-alt-faint)))
+    `(all-the-icons-dpink ((,class :foreground ,magenta-faint)))
+    `(all-the-icons-dpurple ((,class :foreground ,magenta-alt-other-faint)))
+    `(all-the-icons-dred ((,class :foreground ,red-faint)))
+    `(all-the-icons-dsilver ((,class :foreground ,cyan-alt-faint)))
+    `(all-the-icons-dyellow ((,class :foreground ,yellow-alt-faint)))
+    `(all-the-icons-green ((,class :foreground ,green-intense)))
+    `(all-the-icons-lblue ((,class :foreground ,blue-alt-other)))
+    `(all-the-icons-lcyan ((,class :foreground ,cyan)))
+    `(all-the-icons-lgreen ((,class :foreground ,green-alt-other)))
+    `(all-the-icons-lmaroon ((,class :foreground ,magenta-alt)))
+    `(all-the-icons-lorange ((,class :foreground ,red-alt)))
+    `(all-the-icons-lpink ((,class :foreground ,magenta)))
+    `(all-the-icons-lpurple ((,class :foreground ,magenta-faint)))
+    `(all-the-icons-lred ((,class :foreground ,red)))
+    `(all-the-icons-lsilver ((,class :foreground ,fg-docstring)))
+    `(all-the-icons-lyellow ((,class :foreground ,yellow-alt)))
+    `(all-the-icons-maroon ((,class :foreground ,magenta-intense)))
+    `(all-the-icons-orange ((,class :foreground ,orange-intense)))
+    `(all-the-icons-pink ((,class :foreground ,fg-special-calm)))
+    `(all-the-icons-purple ((,class :foreground ,magenta-alt-other)))
+    `(all-the-icons-purple-alt ((,class :foreground ,purple-intense)))
+    `(all-the-icons-red ((,class :foreground ,red-intense)))
+    `(all-the-icons-red-alt ((,class :foreground ,red-alt-other)))
     `(all-the-icons-silver ((,class :foreground ,fg-special-cold)))
     `(all-the-icons-yellow ((,class :foreground ,yellow)))
+;;;;; all-the-icons-dired
+    `(all-the-icons-dired-dir-face ((,class :foreground ,cyan-faint)))
+;;;;; all-the-icons-ibuffer
+    `(all-the-icons-ibuffer-dir-face ((,class :foreground ,cyan-faint)))
+    `(all-the-icons-ibuffer-file-face ((,class :foreground ,blue-faint)))
+    `(all-the-icons-ibuffer-mode-face ((,class :foreground ,cyan)))
+    `(all-the-icons-ibuffer-size-face ((,class :foreground ,cyan-alt-other)))
 ;;;;; annotate
     `(annotate-annotation ((,class :inherit modus-themes-subtle-blue)))
     `(annotate-annotation-secondary ((,class :inherit modus-themes-subtle-green)))
@@ -5068,7 +5078,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(el-search-occur-match ((,class :inherit modus-themes-special-calm)))
 ;;;;; eldoc
     ;; NOTE: see https://github.com/purcell/package-lint/issues/187
-    (list 'eldoc-highlight-function-argument `((,class :inherit bold :foreground ,cyan-alt-other)))
+    (list 'eldoc-highlight-function-argument `((,class :inherit bold :foreground ,red-alt-other)))
 ;;;;; eldoc-box
     `(eldoc-box-body ((,class :background ,bg-alt :foreground ,fg-main)))
     `(eldoc-box-border ((,class :background ,fg-alt)))
@@ -5431,8 +5441,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(fountain-synopsis ((,class :foreground ,cyan-alt)))
     `(fountain-trans ((,class :foreground ,yellow-alt-other)))
 ;;;;; geiser
-    `(geiser-font-lock-autodoc-current-arg ((,class :inherit bold :foreground ,cyan-alt-other)))
-    `(geiser-font-lock-autodoc-identifier ((,class :foreground ,magenta-alt-other)))
+    `(geiser-font-lock-autodoc-current-arg ((,class :inherit bold :foreground ,red-alt-other)))
+    `(geiser-font-lock-autodoc-identifier ((,class :foreground ,cyan)))
     `(geiser-font-lock-doc-button ((,class :inherit button :foreground ,fg-docstring)))
     `(geiser-font-lock-doc-link ((,class :inherit button)))
     `(geiser-font-lock-error-link ((,class :inherit button :foreground ,red)))
@@ -6209,6 +6219,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(markdown-header-face-5 ((,class :inherit modus-themes-heading-5)))
     `(markdown-header-face-6 ((,class :inherit modus-themes-heading-6)))
     `(markdown-header-rule-face ((,class :inherit bold :foreground ,fg-special-warm)))
+    `(markdown-highlighting-face ((,class :inherit modus-themes-refine-yellow)))
     `(markdown-hr-face ((,class :inherit bold :foreground ,fg-special-warm)))
     `(markdown-html-attr-name-face ((,class :inherit modus-themes-fixed-pitch
                                             :foreground ,cyan)))
@@ -7179,7 +7190,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; transient
     `(transient-active-infix ((,class :inherit modus-themes-special-mild)))
     `(transient-amaranth ((,class :inherit bold :foreground ,yellow-alt)))
-    `(transient-argument ((,class :inherit bold :foreground ,green)))
+    `(transient-argument ((,class :inherit bold :foreground ,cyan)))
     `(transient-blue ((,class :inherit bold :foreground ,blue)))
     `(transient-disabled-suffix ((,class :inherit modus-themes-intense-red)))
     `(transient-enabled-suffix ((,class :inherit modus-themes-grue-background-subtle)))
@@ -7190,11 +7201,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(transient-mismatched-key ((,class :underline t)))
     `(transient-nonstandard-key ((,class :underline t)))
     `(transient-pink ((,class :inherit bold :foreground ,magenta-alt-faint)))
+    `(transient-purple ((,class :inherit bold :foreground ,magenta-alt-other)))
     `(transient-red ((,class :inherit bold :foreground ,red-faint)))
     `(transient-teal ((,class :inherit bold :foreground ,cyan-alt-other)))
     `(transient-unreachable ((,class :foreground ,fg-unfocused)))
     `(transient-unreachable-key ((,class :foreground ,fg-unfocused)))
-    `(transient-value ((,class :inherit bold :foreground ,magenta-alt-other)))
+    `(transient-value ((,class :inherit bold :foreground ,red-alt)))
 ;;;;; trashed
     `(trashed-deleted ((,class :inherit modus-themes-mark-del)))
     `(trashed-directory ((,class :foreground ,blue)))
