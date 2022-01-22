@@ -117,6 +117,7 @@
           org-tree-slide-move-next-tree
           org-tree-slide-move-previous-tree))
   (setq prot-pulse-delay 0.06)
+  (setq prot-pulse-line-face 'prot-pulse-line) ; or specify `prot-pulse-line-intense'
   (prot-pulse-advice-commands-mode 1)
   (define-key global-map (kbd "C-x l") #'prot-pulse-pulse-line)) ; override `count-lines-page'
 
