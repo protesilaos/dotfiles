@@ -1363,7 +1363,7 @@ results I am most likely interested in, based on previous selections.
            prot-bongo-playlist-insert-playlist-file
            project-switch-to-buffer))
   (setq mct-completions-format 'one-column)
-  (setq mct-region-completions-format 'vertical)
+  (setq mct-region-completions-format mct-completions-format)
 
   ;; You can place the Completions' buffer wherever you want, by
   ;; following the syntax of `display-buffer-alist' (check elsewhere in
@@ -2052,6 +2052,9 @@ This is a copy of =prot-recentf.el= (part of [[https://gitlab.com/protesilaos/do
 :CUSTOM_ID: h:98876022-57cc-40de-936e-4ee42cefd69a
 :END:
 **** CAPE (extra completion-at-point backends)
+:PROPERTIES:
+:CUSTOM_ID: h:5c227fea-189a-43a2-bf1e-70aeececfcb8
+:END:
 
 The =cape= package, by Daniel Mendler (developer of Consult, Vertico,
 Corfu, ...), adds more backends to the =completion-at-point-functions=
@@ -4979,6 +4982,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
           (?B . org-priority)
           (?C . '(shadow org-priority))))
   (setq org-fontify-done-headline nil)
+  (setq org-fontify-todo-headline nil)
   (setq org-fontify-quote-and-verse-blocks t)
   (setq org-fontify-whole-heading-line nil)
   (setq org-fontify-whole-block-delimiter-line nil)
