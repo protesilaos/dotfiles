@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/mct
-;; Version: 0.4.0
+;; Version: 0.4.2
 ;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -265,9 +265,8 @@ See `mct-minimum-input'."
 
 ;; Adapted from Omar Antolín Camarena's live-completions library:
 ;; <https://github.com/oantolin/live-completions>.
-(defun mct--live-completions (&rest _)
-  "Update the *Completions* buffer.
-Meant to be added to `after-change-functions'."
+(defun mct--live-completions-refresh-immediately ()
+  "Update the *Completions* buffer immediately."
   (when (minibufferp) ; skip if we've exited already
     (while-no-input
       (if (or (mct--minimum-input)
@@ -280,16 +279,28 @@ Meant to be added to `after-change-functions'."
             (quit (abort-recursive-edit)))
         (minibuffer-hide-completions)))))
 
-(defun mct--live-completions-timer (&rest _)
-  "Update Completions with `mct-live-update-delay'."
-  (when-let* ((delay mct-live-update-delay)
-              ((>= delay 0)))
-    (run-with-idle-timer delay nil #'mct--live-completions)))
+(defvar mct--timer nil
+  "Latest timer object for live completions.")
 
-(defun mct--live-completions-visible-timer (&rest _)
-  "Update visible Completions' buffer."
-  (when (window-live-p (mct--get-completion-window))
-    (mct--live-completions-timer)))
+(defun mct--live-completions-refresh (&rest _)
+  "Update the *Completions* buffer with a delay.
+Meant to be added to `after-change-functions'."
+  (when (and
+         ;; Check that live completions are enabled by looking at
+         ;; after-change-functions. This check is needed for Consult
+         ;; integration, which refreshes the display asynchronously.
+         (memq #'mct--live-completions-refresh after-change-functions)
+         ;; Update only visible completion windows?
+         (or (not (eq mct-live-completion 'visible))
+             (window-live-p (mct--get-completion-window))))
+    (when mct--timer
+      (cancel-timer mct--timer)
+      (setq mct--timer nil))
+    (if (> mct-live-update-delay 0)
+        (setq mct--timer (run-with-idle-timer
+                          mct-live-update-delay
+                          nil #'mct--live-completions-refresh-immediately))
+      (mct--live-completions-refresh-immediately))))
 
 (defun mct--this-command ()
   "Return this command."
@@ -298,16 +309,14 @@ Meant to be added to `after-change-functions'."
 (defun mct--setup-live-completions ()
   "Set up the completions' buffer."
   (cond
+   ((null mct-live-completion))
    ((memq (mct--this-command) mct-completion-passlist)
     (setq-local mct-minimum-input 0)
     (setq-local mct-live-update-delay 0)
     (mct--show-completions)
-    (add-hook 'after-change-functions #'mct--live-completions nil t))
-   ((null mct-live-completion))
+    (add-hook 'after-change-functions #'mct--live-completions-refresh nil t))
    ((not (memq (mct--this-command) mct-completion-blocklist))
-    (if (eq mct-live-completion 'visible)
-        (add-hook 'after-change-functions #'mct--live-completions-visible-timer nil t)
-      (add-hook 'after-change-functions #'mct--live-completions-timer nil t)))))
+    (add-hook 'after-change-functions #'mct--live-completions-refresh nil t))))
 
 (defvar-local mct--active nil
   "Minibuffer local variable, t if Mct is active.")
@@ -417,17 +426,20 @@ Apply APP by first setting up the minibuffer to work with Mct."
 ;; (declare-function prop-match-beginning "text-property-search" (cl-x))
 ;; (declare-function prop-match-end "text-property-search" (cl-x))
 
+
+
+;; FIXME 2022-01-21: The line highlight does not :extend for
+;; mct-region-mode when using the one-column style.
+
 ;; We need this to make things work on Emacs 27.
 (defun mct--one-column-p ()
   "Test if we have a one-column view available."
-  (cond
-   ;; FIXME 2022-01-19: Avoid duplication?
-   ((mct--region-p) 
-    (and (eq mct-region-completions-format 'one-column)
-         (>= emacs-major-version 28)))
-   ((mct--minibuffer-p) 
-    (and (eq mct-completions-format 'one-column)
-         (>= emacs-major-version 28)))))
+  (when (>= emacs-major-version 28)
+    (cond
+     ((mct--region-p)
+      (eq mct-region-completions-format 'one-column))
+     ((mct--minibuffer-p)
+      (eq mct-completions-format 'one-column)))))
 
 ;;;;; Focus minibuffer and/or show completions
 
@@ -554,7 +566,7 @@ a `one-column' value."
   "Check if ARGth line has a completion candidate."
   (save-excursion
     (vertical-motion arg)
-    (eq 'completions-group-separator (get-text-property (point) 'face))))
+    (null (mct--completions-completion-p))))
 
 (defun mct--switch-to-completions ()
   "Subroutine for switching to the completions' buffer."
@@ -647,13 +659,19 @@ the minibuffer."
       (mct--next-completion count))
      (setq this-command 'next-line))))
 
+(defun mct--motion-below-point-min-p (arg)
+  "Return non-nil if backward ARG motion exceeds `point-min'."
+  (let ((line (- (line-number-at-pos) arg)))
+    (or (< line 1)
+        (= (save-excursion (previous-completion arg) (point)) (point-min)))))
+
 (defun mct--top-of-completions-p (arg)
   "Test if point is at the notional top of the Completions.
 ARG is a numeric argument for `previous-completion', as described in
 `mct-previous-completion-or-mini'."
   (or (bobp)
       (mct--completions-line-boundary (mct--first-completion-point))
-      (= (save-excursion (previous-completion arg) (point)) (point-min))
+      (mct--motion-below-point-min-p arg)
       ;; FIXME 2021-12-27: Why do we need this now?  Regression upstream?
       (eq (line-number-at-pos) 1)))
 
@@ -676,7 +694,7 @@ ARG is a numeric argument for `previous-completion', as described in
         (when (or (> (current-column) col)
                   (not (mct--completions-completion-p)))
           (next-completion -1)))
-    (previous-completion (if (natnump arg) arg 1))))
+    (previous-completion (or (abs arg) 1))))
 
 (defun mct-previous-completion-or-mini (&optional arg)
   "Move to the previous completion or switch to the minibuffer.
@@ -685,11 +703,9 @@ when point can no longer move in that direction it switches to
 the minibuffer."
   (interactive "p" mct-minibuffer-mode)
   (let ((count (if (natnump arg) arg 1)))
-    (cond
-     ((mct--top-of-completions-p count)
-      (mct-focus-minibuffer))
-     (t
-      (mct--previous-completion count)))))
+    (if (mct--top-of-completions-p count)
+        (mct-focus-minibuffer)
+      (mct--previous-completion count))))
 
 (defun mct-next-completion-group (&optional arg)
   "Move to the next completion group.
@@ -1072,6 +1088,7 @@ region.")
   "Set up the completion-list for Mct."
   (when (mct--minibuffer-p)
     (setq-local completion-show-help nil
+                completion-wrap-movement nil ; Emacs 29
                 truncate-lines t)
     (mct--setup-clean-completions)
     (mct--setup-appearance)
@@ -1120,14 +1137,11 @@ region.")
   "Update the *Completions* buffer.
 Meant to be added to `after-change-functions'."
   (when-let (buf (mct--region-current-buffer))
-    ;; TODO 2022-01-18: Do the same for company-mode, but we need to
-    ;; test it as well.
-    (when (null (buffer-local-value 'corfu-mode buf))
-      (while-no-input
-        (condition-case nil
-            (save-match-data
-              (mct--show-completions))
-          (quit (keyboard-quit)))))))
+    (while-no-input
+      (condition-case nil
+          (save-match-data
+            (mct--show-completions))
+        (quit (keyboard-quit))))))
 
 (defun mct--region-live-update ()
   "Hook up `mct--region-live-completions'."
@@ -1222,6 +1236,7 @@ minibuffer)."
   "Set up the completion-list for Mct."
   (when (mct--region-p)
     (setq-local completion-show-help nil
+                completion-wrap-movement nil ; Emacs 29
                 truncate-lines t)
     (mct--setup-clean-completions)
     (mct--setup-appearance)
