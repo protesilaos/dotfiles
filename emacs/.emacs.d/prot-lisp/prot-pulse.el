@@ -48,6 +48,13 @@ changes to take effect."
   :type 'list
   :group 'prot-pulse)
 
+(defcustom prot-pulse-line-face 'prot-pulse-line
+  "Face to use for the pulse line."
+  :type '(choice (face :tag "Subtle style" 'prot-pulse-line)
+                 (face :tag "Intense style" 'prot-pulse-line-intense)
+                 (face :tag "Other face"))
+  :group 'prot-pulse)
+
 (defcustom prot-pulse-delay 0.05
   "Duration in seconds of pulse delay."
   :type 'list
@@ -63,6 +70,16 @@ changes to take effect."
   "Default face for `prot-pulse-pulse-line'."
   :group 'prot-pulse)
 
+(defface prot-pulse-line-intense
+  '((default :extend t)
+    (((class color) (min-colors 88) (background light))
+     :background "#f5df23")
+    (((class color) (min-colors 88) (background dark))
+     :background "#874900")
+    (t :inverse-video t))
+  "Intense variant face for `prot-pulse-pulse-line'."
+  :group 'prot-pulse)
+
 ;;;###autoload
 (defun prot-pulse-pulse-line (&optional face)
   "Temporarily highlight the current line with optional FACE."
@@ -72,7 +89,7 @@ changes to take effect."
                  (line-beginning-position)))
         (end (line-beginning-position 2))
         (pulse-delay prot-pulse-delay)
-        (face (or face 'prot-pulse-line)))
+        (face (or face prot-pulse-line-face)))
     (pulse-momentary-highlight-region start end face)))
 
 ;;;###autoload
