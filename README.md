@@ -1,4 +1,4 @@
-# My Emacs and other configurations for GNU/Linux
+# My Emacs and other configurations for Arch Linux
 
 This is the set of files that powers my day-to-day computing experience.
 GNU Emacs is its centrepiece, with other programs providing ancillary
