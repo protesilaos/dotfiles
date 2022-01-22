@@ -489,7 +489,7 @@ candidate, respectively."
            prot-bongo-playlist-insert-playlist-file
            project-switch-to-buffer))
   (setq mct-completions-format 'one-column)
-  (setq mct-region-completions-format 'vertical)
+  (setq mct-region-completions-format mct-completions-format)
 
   ;; You can place the Completions' buffer wherever you want, by
   ;; following the syntax of `display-buffer-alist' (check elsewhere in
@@ -1630,6 +1630,7 @@ sure this is a good approach."
           (?B . org-priority)
           (?C . '(shadow org-priority))))
   (setq org-fontify-done-headline nil)
+  (setq org-fontify-todo-headline nil)
   (setq org-fontify-quote-and-verse-blocks t)
   (setq org-fontify-whole-heading-line nil)
   (setq org-fontify-whole-block-delimiter-line nil)
