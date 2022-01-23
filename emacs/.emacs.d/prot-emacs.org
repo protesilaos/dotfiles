@@ -9140,14 +9140,13 @@ want to send patches to.
 :CUSTOM_ID: h:d0f76937-4f54-401c-aae8-ffadf8697357
 :END:
 
-When editing elisp, this mode will display useful information about the
-construct at point in the echo area.  For functions it will display the
-list of arguments they accept.  While it will show the the first
-sentence of a variable's documentation string.
-
-At first, I dismissed this package.  Upon closer inspection, it does
-offer a lightweight complementary facility to that of the standard help
-commands: =C-h f FUNCTION=, =C-h v VARIABLE=.
+When editing Elisp and other supported major-modes, Eldoc will display
+useful information about the construct at point in the echo area.  I
+only work with Elisp, so in my case it will display the list of a
+function's arguments or the first sentence of a variable's documentation
+string.  In that regard, it offers a lightweight complementary facility
+to that of the standard help commands: =C-h f FUNCTION=, =C-h v VARIABLE=,
+=C-h o SYMBOL=.
 
 #+begin_src emacs-lisp
 ;;; Eldoc (elisp live documentation feedback)
