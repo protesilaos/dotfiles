@@ -333,7 +333,9 @@
   ;; `prot-fonts-restore-last'.
   (add-hook 'modus-themes-after-load-theme-hook #'prot-fonts-restore-last)
 
-  (define-key global-map (kbd "C-c f") #'prot-fonts-set-fonts))
+  (let ((map global-map))
+    (define-key map (kbd "C-c f") #'prot-fonts-set-fonts)
+    (define-key map (kbd "C-c F") #'prot-fonts-set-default-font)))
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
