@@ -935,6 +935,7 @@ x×X
 …⋯
 ...
 
+
 Sample character set
 Check for monospacing and Greek glyphs
 
@@ -947,17 +948,32 @@ abcdefghijklmnopqrstuvwxyz
 ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ
 αβγδεζηθικλμνξοπρστυφχψω
 
-// NOTE that I got this from Hack's website:
-// https://source-foundry.github.io/Hack/font-specimen.html
-//  The four boxing wizards jump
-#include <stdio.h> // <= quickly.
-int main(int argc, char **argv) {
-  long il1[]={1-2/3.4,5+6==7/8};
-  int OxFaced=0xBAD||"[{(CQUINE";
-  unsigned O0,l1,Z2,S5,G6,B8__XY;
-  printf("@$Hamburgefo%c`",'\n');
-  return ~7&8^9?0:l1|!"j->k+=*w";
-}
+
+Unambiguous characters
+
+()[]{}<>«»‹› 6bB8&0ODdoa 1tiIlL|
+
+!ij c¢ 5$Ss 7Z2z 9gqp nmMNNMW uvvwWuuw
+
+x×X .,·°;:¡!¿?`'‘’
+
+
+Words that show different character combinations
+
+because  illicit  mnemonic  gimmicky  query  incandescent  transcendental
+gymnasium  interoperability  bifurcation  amphibian  quixotic  verboten
+incongruous  malfeasance  syntax  hitherto  yesterday  paramilitary
+coagulation  acerbic  admiration  juxtapose  superjacent  tequila
+hyperion  scholarch  industrious  quotidian  caffeine  intergovernmentalism
+obfuscate  liaison  voyage  reify  antipode  heteroclite  sovereignty
+
+
+Code sample
+
+(defvar prot-eww--occur-feed-regexp
+  (concat "\\(rss\\|atom\\)\\+xml.\\(.\\|\n\\)"
+          ".*href=[\"']\\(.*?\\)[\"']")
+  "Regular expression to match web feeds in HTML source.")
 #+end_example
 
 ** Repeatable key chords (repeat-mode)
