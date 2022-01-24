@@ -756,7 +756,9 @@ type.  It gives options like =small=, =regular=, =large=, which are drawn from
 the =prot-fonts-typeface-sets-alist= (more on completion in the section
 [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]]).  When called from Lisp it expects a
 =DISPLAY= argument, which is a symbol that matches the car of a cons cell
-in the aforementioned alist.
+in the aforementioned alist.  While the =prot-fonts-set-default-font= only
+operates on the =default= face: it uses minibuffer completion to select
+the font family, weight, and height.
 
 =prot-fonts-fonts-per-monitor= is not useful with my current hardware, as
 I had designed it when I had a laptop (see [[#h:e134a8b2-224e-4383-bf03-b080ab6659c7][What hardware do you use?]]).
@@ -891,7 +893,9 @@ Relevant publications of mine that are not part of this document:
   ;; `prot-fonts-restore-last'.
   (add-hook 'modus-themes-after-load-theme-hook #'prot-fonts-restore-last)
 
-  (define-key global-map (kbd "C-c f") #'prot-fonts-set-fonts))
+  (let ((map global-map))
+    (define-key map (kbd "C-c f") #'prot-fonts-set-fonts)
+    (define-key map (kbd "C-c F") #'prot-fonts-set-default-font)))
 #+end_src
 
 This is the source code of =prot-fonts.el= (you can always find the file

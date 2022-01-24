@@ -112,26 +112,19 @@ properties:
 It is recommended that the order of the cons cells follows from
 the smallest to largest font heights, to simplify the process of
 identifying the set that belongs to the small and larger display
-respectively (see code of `prot-fonts-laptop-desktop-keys')."
+respectively (see code of `prot-fonts--laptop-desktop-keys')."
   :group 'prot-fonts
   :type 'alist)
 
-(defun prot-fonts-laptop-desktop-keys ()
-  "List laptop and desktop fontsets.
-The elements of the list are the cars of the first two cons cells
-of `prot-fonts-laptop-desktop-keys-list'"
-  (let ((sets (mapcar #'car prot-fonts-typeface-sets-alist)))
-    (list (nth 0 sets) (nth 1 sets))))
-
 (defcustom prot-fonts-laptop-desktop-keys-list
-  (prot-fonts-laptop-desktop-keys) ; '(laptop desktop)
+  (prot-fonts--laptop-desktop-keys) ; '(laptop desktop)
   "Symbols for `prot-fonts-fonts-per-monitor'.
 This is a list whose first item denotes the smallest desirable
 entry in `prot-fonts-typeface-sets-alist' for use on a laptop or
 just smaller monitor, while the second points to a larger
 display's key in that same alist.
 
-The helper function `prot-fonts-laptop-desktop-keys' picks the
+The helper function `prot-fonts--laptop-desktop-keys' picks the
 first two entries in `prot-fonts-typeface-sets-alist'."
   :group 'prot-fonts
   :type 'list)
@@ -145,8 +138,14 @@ fonts, else nth 0, are applied."
   :group 'prot-fonts
   :type 'integer)
 
-(defvar prot-fonts--font-display-hist '()
-  "History of inputs for display-related font associations.")
+;;;; Helper functions
+
+(defun prot-fonts--laptop-desktop-keys ()
+  "List laptop and desktop fontsets.
+The elements of the list are the cars of the first two cons cells
+of `prot-fonts-laptop-desktop-keys-list'"
+  (let ((sets (mapcar #'car prot-fonts-typeface-sets-alist)))
+    (list (nth 0 sets) (nth 1 sets))))
 
 (defun prot-fonts--set-face-attribute (face family &optional weight height)
   "Set FACE font to FAMILY, with optional HEIGHT and WEIGHT."
@@ -163,6 +162,11 @@ fonts, else nth 0, are applied."
       (internal-set-lisp-face-attribute face :weight w 0))
     (internal-set-lisp-face-attribute face :height h 0)))
 
+;;;; Set preset families
+
+(defvar prot-fonts--font-display-hist '()
+  "History of inputs for display-related font associations.")
+
 (defun prot-fonts--set-fonts-prompt ()
   "Promp for font set (used by `prot-fonts-set-fonts')."
   (let ((def (nth 1 prot-fonts--font-display-hist)))
@@ -172,7 +176,7 @@ fonts, else nth 0, are applied."
      nil t nil 'prot-fonts--font-display-hist def)))
 
 (defvar prot-fonts-set-typeface-hook nil
-  "Hook that runs after `prot-fonts-set-fonts'.")
+  "Hook that runs after setting fonts.")
 
 (defvar prot-fonts--current-spec nil
   "Current font set in `prot-fonts-typeface-sets-alist'.")
@@ -207,6 +211,69 @@ DISPLAY is a symbol that represents the car of a cons cell in
         (setq prot-fonts--current-spec (format "%s" display))
         (run-hooks 'prot-fonts-set-typeface-hook))
     (error "Not running a graphical Emacs; cannot set fonts")))
+
+;;;; Set default only
+
+(defvar prot-fonts--system-typeface-hist ()
+  "Minibuffer history for `prot-fonts--system-typefaces-prompt'.")
+
+(defun prot-fonts--system-typefaces-prompt ()
+  "Select font from installed typefaces."
+  (let ((def (or (nth 1 prot-fonts--system-typeface-hist) "Monospace")))
+    (completing-read
+     (format "Select typeface [%s]: " def)
+     (font-family-list)
+     nil t nil 'prot-fonts--system-typeface-hist def)))
+
+(defvar prot-fonts--font-weights
+  '( thin ultralight extralight light semilight regular medium
+     semibold bold heavy extrabold ultrabold)
+  "List of font weights.")
+
+(defvar prot-fonts--font-weight-hist ()
+  "Minibuffer history for `prot-fonts--font-weight-prompt'.")
+
+(defun prot-fonts--font-weight-prompt ()
+  "Select weight from `prot-fonts--font-weights'."
+  (let ((def (or (car prot-fonts--font-weight-hist) 'regular)))
+    (intern
+     (completing-read
+      (format "Select font weight [%s]: " def)
+      prot-fonts--font-weights
+      nil t nil 'prot-fonts--font-weight-hist def))))
+
+(defvar prot-fonts--font-height-hist ()
+  "Minibuffer history for `prot-fonts--font-weight-prompt'.")
+
+(defvar prot-fonts--font-heights
+  '(80 85 90 95 100 105 110 120 130 140 150 160 170 180)
+  "Non-exhuastive list of font heights.")
+
+(defun prot-fonts--font-height-prompt ()
+  "Select height from `prot-fonts--font-heights'."
+  (let ((def (or (car prot-fonts--font-height-hist) 100)))
+    ;; FIXME 2022-01-24: the `string-to-number' and `number-to-string'
+    ;; roundabout feels wrong.  Can't we complete against numbers
+    ;; directly?
+    (string-to-number
+     ;; `read-number' does not support completion...
+     (completing-read
+      (format "Select font height [%s]: " def)
+      (mapcar #'number-to-string prot-fonts--font-heights)
+      nil nil nil 'prot-fonts--font-height-hist def))))
+
+;;;###autoload
+(defun prot-fonts-set-default-font (font weight height)
+  "Change `default' face family to FONT with WEIGHT and HEIGHT.
+To pick a preset, use `prot-fonts-set-fonts' instead."
+  (interactive
+   (list (prot-fonts--system-typefaces-prompt)
+         (prot-fonts--font-weight-prompt)
+         (prot-fonts--font-height-prompt)))
+  (prot-fonts--set-face-attribute 'default font weight height)
+  (run-hooks 'prot-fonts-set-typeface-hook))
+
+;;;; Automatic font adjustments
 
 (defun prot-fonts-restore-last ()
   "Restore last fontset.
