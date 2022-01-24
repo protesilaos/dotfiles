@@ -872,12 +872,12 @@ Relevant publications of mine that are not part of this document:
   ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
   ;; are not relevant, but I keep them around as the idea is still good.
 
-  ;; The value of `prot-fonts-laptop-desktop-keys-list' becomes '(small
+  ;; The value of `prot-fonts--laptop-desktop-keys-list' becomes '(small
   ;; regular) based on the car of the first two cons cells found in
   ;; `prot-fonts-typeface-sets-alist'.  The assumption is that those
   ;; contain sets from smaller to larger display types.
-  (setq prot-fonts-laptop-desktop-keys-list
-        (prot-fonts-laptop-desktop-keys))
+  (setq prot-fonts--laptop-desktop-keys-list
+        (prot-fonts--laptop-desktop-keys))
 
   ;; This is the breakpoint, in pixels, for determining whether we are
   ;; on the small or large screen layout.  The number here is my

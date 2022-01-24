@@ -45,32 +45,41 @@
 ;; 1. https://gitlab.com/protesilaos/hack-font-mod
 ;; 2. https://gitlab.com/protesilaos/iosevka-comfy
 (defcustom prot-fonts-typeface-sets-alist
-  '((laptop  . ( :fixed-pitch-family "Hack"
-                 :fixed-pitch-regular-weight normal
+  '((small . ( :fixed-pitch-family "Hack"
+               :fixed-pitch-regular-weight regular
+               :fixed-pitch-heavy-weight bold
+               :fixed-pitch-height 75
+               :fixed-pitch-line-spacing 1
+               :variable-pitch-family "FiraGO"
+               :variable-pitch-height 1.05
+               :variable-pitch-regular-weight normal))
+
+    (regular . ( :fixed-pitch-family "Hack"
+                 :fixed-pitch-regular-weight regular
                  :fixed-pitch-heavy-weight bold
                  :fixed-pitch-height 90
-                 :fixed-pitch-line-spacing 1
-                 :variable-pitch-family "DejaVu Sans"
-                 :variable-pitch-height 1.0
-                 :variable-pitch-regular-weight normal))
-
-    (desktop . ( :fixed-pitch-family "Iosevka Comfy"
-                 :fixed-pitch-regular-weight book
-                 :fixed-pitch-heavy-weight extrabold
-                 :fixed-pitch-height 105
                  :fixed-pitch-line-spacing nil
                  :variable-pitch-family "FiraGO"
-                 :variable-pitch-height 0.95
+                 :variable-pitch-height 1.05
                  :variable-pitch-regular-weight normal))
 
-    (video   . ( :fixed-pitch-family "Iosevka Comfy"
-                 :fixed-pitch-regular-weight normal
-                 :fixed-pitch-heavy-weight bold
-                 :fixed-pitch-height 135
-                 :fixed-pitch-line-spacing nil
-                 :variable-pitch-family "Source Sans Pro"
-                 :variable-pitch-height 1.0
-                 :variable-pitch-regular-weight normal)))
+    (large . ( :fixed-pitch-family "Source Code Pro"
+               :fixed-pitch-regular-weight normal
+               :fixed-pitch-heavy-weight bold
+               :fixed-pitch-height 130
+               :fixed-pitch-line-spacing nil
+               :variable-pitch-family "Noto Serif"
+               :variable-pitch-height 1.0
+               :variable-pitch-regular-weight normal))
+
+    (large-alt . ( :fixed-pitch-family "Iosevka Comfy"
+                   :fixed-pitch-regular-weight book
+                   :fixed-pitch-heavy-weight extrabold
+                   :fixed-pitch-height 135
+                   :fixed-pitch-line-spacing nil
+                   :variable-pitch-family "Noto Sans"
+                   :variable-pitch-height 1.0
+                   :variable-pitch-regular-weight normal)))
   "Alist of desired typeface properties.
 
 The car of each cons cell is an arbitrary key that broadly
@@ -116,8 +125,15 @@ respectively (see code of `prot-fonts--laptop-desktop-keys')."
   :group 'prot-fonts
   :type 'alist)
 
+(defun prot-fonts--laptop-desktop-keys ()
+  "List laptop and desktop fontsets.
+The elements of the list are the cars of the first two cons cells
+of `prot-fonts-laptop-desktop-keys-list'"
+  (let ((sets (mapcar #'car prot-fonts-typeface-sets-alist)))
+    (list (nth 0 sets) (nth 1 sets))))
+
 (defcustom prot-fonts-laptop-desktop-keys-list
-  (prot-fonts--laptop-desktop-keys) ; '(laptop desktop)
+  (prot-fonts--laptop-desktop-keys)
   "Symbols for `prot-fonts-fonts-per-monitor'.
 This is a list whose first item denotes the smallest desirable
 entry in `prot-fonts-typeface-sets-alist' for use on a laptop or
@@ -139,13 +155,6 @@ fonts, else nth 0, are applied."
   :type 'integer)
 
 ;;;; Helper functions
-
-(defun prot-fonts--laptop-desktop-keys ()
-  "List laptop and desktop fontsets.
-The elements of the list are the cars of the first two cons cells
-of `prot-fonts-laptop-desktop-keys-list'"
-  (let ((sets (mapcar #'car prot-fonts-typeface-sets-alist)))
-    (list (nth 0 sets) (nth 1 sets))))
 
 (defun prot-fonts--set-face-attribute (face family &optional weight height)
   "Set FACE font to FAMILY, with optional HEIGHT and WEIGHT."
