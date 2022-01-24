@@ -6,7 +6,7 @@ configuration {
 	xoffset: 0;
 	fixed-num-lines: false;
 	show-icons: true;
-	terminal: "xterm";
+	terminal: "uxterm";
 /*	run-command: "{cmd}";*/
 /*	run-list-command: "";*/
 /*	run-shell-command: "{terminal} -e {cmd}";*/

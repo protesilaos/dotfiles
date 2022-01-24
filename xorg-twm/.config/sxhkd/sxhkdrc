@@ -69,7 +69,7 @@ mod4 + backslash
 #### Main programs
 
 mod4 + {_, shift +,ctrl + shift + } Return
-     {xterm,xterm -e emacsclient -nw -e "(eshell)",xterm -e emacsclient -nw -e "(shell)"}
+     {uxterm,TERM=xterm-direct uxterm -e emacsclient -nw -e "(eshell)",TERM=xterm-direct uxterm -e emacsclient -nw -e "(shell)"}
 
 # Show the desired rofi views.
 mod4 + d
@@ -120,5 +120,5 @@ mod4 + XF86Audio{Mute,LowerVolume,RaiseVolume}
 # interactive and searchable…
 # # Bring up the help text for common keybindings
 # mod4 + {F1,Home}
-# 	xterm -class "my_float_window" \
+# 	uxterm -class "my_float_window" \
 # 	-geometry '100x30' -e less "$HOME/.config/sxhkd/cheatsheet_sxhkdrc.txt"
