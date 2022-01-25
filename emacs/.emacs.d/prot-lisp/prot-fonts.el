@@ -177,7 +177,7 @@ fonts, else nth 0, are applied."
   "History of inputs for display-related font associations.")
 
 (defun prot-fonts--set-fonts-prompt ()
-  "Promp for font set (used by `prot-fonts-set-fonts')."
+  "Prompt for font set (used by `prot-fonts-set-fonts')."
   (let ((def (nth 1 prot-fonts--font-display-hist)))
     (completing-read
      (format "Select font set for DISPLAY [%s]: " def)
