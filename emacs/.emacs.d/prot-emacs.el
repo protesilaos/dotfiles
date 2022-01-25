@@ -271,7 +271,7 @@
   ;;
   ;; The version of "Hack" that I custom is a custom build on mine:
   ;; <https://gitlab.com/protesilaos/hack-font-mod>.  Same principle for
-  ;; Iosevka: <https://gitlab.com/protesilaos/iosevka-comfy>.
+  ;; Iosevka Comfy: <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
         '((small . ( :fixed-pitch-family "Hack"
                      :fixed-pitch-regular-weight regular
@@ -282,31 +282,31 @@
                      :variable-pitch-height 1.05
                      :variable-pitch-regular-weight normal))
 
-          (regular . ( :fixed-pitch-family "Hack"
+          (regular . ( :fixed-pitch-family "Iosevka Comfy"
                        :fixed-pitch-regular-weight regular
-                       :fixed-pitch-heavy-weight bold
-                       :fixed-pitch-height 90
+                       :fixed-pitch-heavy-weight extrabold
+                       :fixed-pitch-height 100
                        :fixed-pitch-line-spacing nil
                        :variable-pitch-family "FiraGO"
-                       :variable-pitch-height 1.05
+                       :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
-          (large . ( :fixed-pitch-family "Hack"
-                     :fixed-pitch-regular-weight normal
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 130
+          (large . ( :fixed-pitch-family "Iosevka Comfy"
+                     :fixed-pitch-regular-weight regular
+                     :fixed-pitch-heavy-weight extrabold
+                     :fixed-pitch-height 135
                      :fixed-pitch-line-spacing nil
                      :variable-pitch-family "FiraGO"
-                     :variable-pitch-height 1.05
+                     :variable-pitch-height 1.0
                      :variable-pitch-regular-weight normal))
 
-          (large-alt . ( :fixed-pitch-family "Iosevka Comfy"
-                         :fixed-pitch-regular-weight book
-                         :fixed-pitch-heavy-weight extrabold
-                         :fixed-pitch-height 135
+          (large-alt . ( :fixed-pitch-family "Hack"
+                         :fixed-pitch-regular-weight normal
+                         :fixed-pitch-heavy-weight bold
+                         :fixed-pitch-height 130
                          :fixed-pitch-line-spacing nil
-                         :variable-pitch-family "Noto Sans"
-                         :variable-pitch-height 1.0
+                         :variable-pitch-family "FiraGO"
+                         :variable-pitch-height 1.05
                          :variable-pitch-regular-weight normal))))
 
   ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
