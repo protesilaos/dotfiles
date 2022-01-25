@@ -197,7 +197,7 @@ fonts, else nth 0, are applied."
 DISPLAY is a symbol that represents the car of a cons cell in
 `prot-fonts-typeface-sets-alist'."
   (interactive (list (prot-fonts--set-fonts-prompt)))
-  (if window-system
+  (when window-system
       (let* ((fonts (if (stringp display) (intern display) display))
              (properties (alist-get fonts prot-fonts-typeface-sets-alist))
              (fixed-pitch-family (plist-get properties :fixed-pitch-family))
@@ -218,8 +218,7 @@ DISPLAY is a symbol that represents the car of a cons cell in
         (setq-default line-spacing fixed-pitch-line-spacing)
         (add-to-history 'prot-fonts--font-display-hist (format "%s" display))
         (setq prot-fonts--current-spec (format "%s" display))
-        (run-hooks 'prot-fonts-set-typeface-hook))
-    (error "Not running a graphical Emacs; cannot set fonts")))
+        (run-hooks 'prot-fonts-set-typeface-hook))))
 
 ;;;; Set default only
 
