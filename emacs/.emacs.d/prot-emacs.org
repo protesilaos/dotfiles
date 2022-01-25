@@ -710,7 +710,8 @@ string o =lin-add-to-many-modes= for the details).  For example:
 Any font I choose must conform with the following:
 
 + support Latin and Greek character sets;
-+ be readable at small sizes and look okay at large sizes;
++ be readable at small sizes and look decent at large sizes (the smaller
+  ones take precedence);
 + offer both roman and italic variants, preferably with corresponding
   bold weights;
 + not be too thin or at least have multiple weights from which to choose
@@ -724,8 +725,8 @@ Any font I choose must conform with the following:
   details or by exaggerating some glyph shapes;
 + be equally readable against light and dark backdrops (for instance,
   bitmap fonts are not legible on a white background---too bad because I
-  really like Terminus);
-+ use the =*.ttf= spec which yields the best results on GNU/Linux.
+  really like what Terminus is trying to achieve);
++ use the =*.ttf= spec which seems to yield the best results on GNU/Linux.
 
 While there are many good free/libre options available, only a handful
 of them cover my fairly demanding needs.  Some look good at large point
@@ -733,15 +734,41 @@ sizes.  Others lack Greek characters.  Some do not have italics...
 Getting it right is very difficult.
 
 The only font I could use over the years was Hack, which builds on the
-skeleton of DejaVu Sans Mono.  Though there are issues with the default
-version of Hack which I do not like, such as the default shape of the
-zero and one numbers, the small shape of the backtick character...
-Little things which keep annoying me.  My [[https://gitlab.com/protesilaos/hack-font-mod][custom build of Hack]] uses some
-alternative glyphs from a variety of sources that alleviate most of
-those problems (though it obviously cannot alter the overall character
-of the typeface).
+skeleton of DejaVu Sans Mono.  Though there are issues with the upstream
+version of Hack which I do not like, such as the elongated mid dot
+inside the =0= and the pronounced hook at the top of the =1=, the small
+shape of the backtick character...  Little things which keep annoying
+me.  My [[https://gitlab.com/protesilaos/hack-font-mod][custom build of Hack]] uses some alternative glyphs from a variety
+of sources that alleviate most of those problems (though it obviously
+cannot alter the overall character of the typeface).
 
-Moving on to my configurations, =prot-fonts.el= covers my elaborate
+Another custom font of mine that you will find below is [[https://github.com/protesilaos/iosevka-comfy][Iosevka Comfy]]
+which builds on top of the highly customisable Iosevka typeface.  My
+project's README delves into the differences between it and the base
+font:
+
+#+begin_quote
+Iosevka Comfy is wider and more vertically compact than the standard
+upstream configuration.  Glyphs are rounder and have tailed ends or
+serifs wherever those are required to both impose an aesthetic rhythm
+and keep characters distinct from each other.  Roman and italic variants
+are made to look more consistent while retaining their stylistic
+features (e.g. the italics do not have calligraphic tendencies that
+greatly contrast with more rigid or straight roman shapes---they still
+use carefully selected glyphs that are distinct from their roman
+counterparts albeit in more nuanced ways).
+
+The overall appearance of the typeface is optimised for small point
+sizes.  This informs the choice of certain glyphs such as 'D' with a top
+and bottom serif and a curved body to clearly differentiate it from the
+capital 'O', or an 'm' with a short middle leg to prevent the letter's
+lines from visually blending into a box-like shape (always referring to
+small point sizes).  For larger sizes, these details are not strictly
+necessary, though Iosevka Comfy should still look decent despite their
+presence.
+#+end_quote
+
+Moving on to my Elisp configurations, =prot-fonts.el= covers my advanced
 typeface requirements.  At its heart is =prot-fonts-typeface-sets-alist=.
 It contains associations of property lists (an alist of plists), each of
 which pertains to a give display type.  For example, when I am doing a
@@ -761,7 +788,7 @@ operates on the =default= face: it uses minibuffer completion to select
 the font family, weight, and height.
 
 =prot-fonts-fonts-per-monitor= is not useful with my current hardware, as
-I had designed it when I had a laptop (see [[#h:e134a8b2-224e-4383-bf03-b080ab6659c7][What hardware do you use?]]).
+I designed it when I had a laptop (see [[#h:e134a8b2-224e-4383-bf03-b080ab6659c7][What hardware do you use?]]).
 Still, the idea is interesting and I keep it around in case someone has
 a need for it.  It sets the appropriate font family and size depending
 on whether the maximum width of the monitor is below a certain threshold
@@ -773,11 +800,12 @@ As noted above, =prot-fonts-typeface-sets-alist= associates a list of
 typefaces with desired weights, including for their bold variation.
 This is useful when the active theme (e.g. [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]) is designed
 in a way that parameterises or abstracts the exact value of a bold
-weight, by calling =:inherit bold= instead of specifying =:weight bold=.
-The former applies the attributes of the =bold= face, whereas the latter
-sets the weight at a constant value.  When the theme is designed that
-way, we can configure the =:weight= of the =bold= face to, e.g., =extrabold=
-and have that propagate across all the faces that the theme defines.
+weight, by calling =:inherit bold= instead of specifying =:weight bold= for
+each face it controls.  The former applies the attributes of the =bold=
+face, whereas the latter sets the weight at a constant value.  When the
+theme is designed that way, we can configure the =:weight= of the =bold=
+face to, e.g., =extrabold= and have that propagate across all the
+supported faces at once.
 
 Now a few general notes about setting fonts in Emacs.
 
@@ -831,7 +859,7 @@ Relevant publications of mine that are not part of this document:
   ;;
   ;; The version of "Hack" that I custom is a custom build on mine:
   ;; <https://gitlab.com/protesilaos/hack-font-mod>.  Same principle for
-  ;; Iosevka: <https://gitlab.com/protesilaos/iosevka-comfy>.
+  ;; Iosevka Comfy: <https://gitlab.com/protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
         '((small . ( :fixed-pitch-family "Hack"
                      :fixed-pitch-regular-weight regular
@@ -842,31 +870,31 @@ Relevant publications of mine that are not part of this document:
                      :variable-pitch-height 1.05
                      :variable-pitch-regular-weight normal))
 
-          (regular . ( :fixed-pitch-family "Hack"
+          (regular . ( :fixed-pitch-family "Iosevka Comfy"
                        :fixed-pitch-regular-weight regular
-                       :fixed-pitch-heavy-weight bold
-                       :fixed-pitch-height 90
+                       :fixed-pitch-heavy-weight extrabold
+                       :fixed-pitch-height 100
                        :fixed-pitch-line-spacing nil
                        :variable-pitch-family "FiraGO"
-                       :variable-pitch-height 1.05
+                       :variable-pitch-height 1.0
                        :variable-pitch-regular-weight normal))
 
-          (large . ( :fixed-pitch-family "Hack"
-                     :fixed-pitch-regular-weight normal
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 130
+          (large . ( :fixed-pitch-family "Iosevka Comfy"
+                     :fixed-pitch-regular-weight regular
+                     :fixed-pitch-heavy-weight extrabold
+                     :fixed-pitch-height 135
                      :fixed-pitch-line-spacing nil
                      :variable-pitch-family "FiraGO"
-                     :variable-pitch-height 1.05
+                     :variable-pitch-height 1.0
                      :variable-pitch-regular-weight normal))
 
-          (large-alt . ( :fixed-pitch-family "Iosevka Comfy"
-                         :fixed-pitch-regular-weight book
-                         :fixed-pitch-heavy-weight extrabold
-                         :fixed-pitch-height 135
+          (large-alt . ( :fixed-pitch-family "Hack"
+                         :fixed-pitch-regular-weight normal
+                         :fixed-pitch-heavy-weight bold
+                         :fixed-pitch-height 130
                          :fixed-pitch-line-spacing nil
-                         :variable-pitch-family "Noto Sans"
-                         :variable-pitch-height 1.0
+                         :variable-pitch-family "FiraGO"
+                         :variable-pitch-height 1.05
                          :variable-pitch-regular-weight normal))))
 
   ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
