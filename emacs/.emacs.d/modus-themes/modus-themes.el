@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 2.0.0
-;; Last-Modified: <2022-01-24 09:56:46 +0200>
+;; Last-Modified: <2022-01-24 12:40:09 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -811,7 +811,7 @@ symbol and the latter as a string.")
     (bg-hl-line-intense-accent . "#00353f")
     (bg-hl-alt . "#181732")
     (bg-hl-alt-intense . "#282e46")
-    (bg-paren-match . "#5f362f")
+    (bg-paren-match . "#6f3355")
     (bg-paren-match-intense . "#7416b5")
     (bg-paren-expression . "#221044")
     (bg-region . "#3c3c3c")
@@ -7197,7 +7197,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; transient
     `(transient-active-infix ((,class :inherit modus-themes-special-mild)))
     `(transient-amaranth ((,class :inherit bold :foreground ,yellow-alt)))
-    `(transient-argument ((,class :inherit bold :foreground ,cyan)))
+    `(transient-argument ((,class :inherit bold :background ,cyan-nuanced-bg :foreground ,cyan)))
     `(transient-blue ((,class :inherit bold :foreground ,blue)))
     `(transient-disabled-suffix ((,class :inherit modus-themes-intense-red)))
     `(transient-enabled-suffix ((,class :inherit modus-themes-grue-background-subtle)))
@@ -7211,9 +7211,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(transient-purple ((,class :inherit bold :foreground ,magenta-alt-other)))
     `(transient-red ((,class :inherit bold :foreground ,red-faint)))
     `(transient-teal ((,class :inherit bold :foreground ,cyan-alt-other)))
-    `(transient-unreachable ((,class :foreground ,fg-unfocused)))
-    `(transient-unreachable-key ((,class :foreground ,fg-unfocused)))
-    `(transient-value ((,class :inherit bold :foreground ,red-alt)))
+    `(transient-unreachable ((,class :inherit shadow)))
+    `(transient-unreachable-key ((,class :inherit shadow)))
+    `(transient-value ((,class :inherit bold :background ,yellow-nuanced-bg :foreground ,yellow-alt-other)))
 ;;;;; trashed
     `(trashed-deleted ((,class :inherit modus-themes-mark-del)))
     `(trashed-directory ((,class :foreground ,blue)))
