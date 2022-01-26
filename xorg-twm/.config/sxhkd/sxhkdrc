@@ -22,7 +22,7 @@
 # s == reload sxhkd
 # p == reload polybar (NOTE: check the panel names in its config)
 # x == reload the Xresources file
-mod4 + e ; {f,s,p,t,x}
+mod4 + e ; {f,s,p,x}
     { \
     xtwm_focus_mode, \
     pkill -USR1 -x sxhkd && notify-send -i key_bindings "Reloaded key bindings", \
