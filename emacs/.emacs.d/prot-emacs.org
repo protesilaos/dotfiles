@@ -743,29 +743,28 @@ of sources that alleviate most of those problems (though it obviously
 cannot alter the overall character of the typeface).
 
 Another custom font of mine that you will find below is [[https://github.com/protesilaos/iosevka-comfy][Iosevka Comfy]]
-which builds on top of the highly customisable Iosevka typeface.  My
+which builds on top of the highly customisable Iosevka typeface.  The
 project's README delves into the differences between it and the base
 font:
 
 #+begin_quote
-Iosevka Comfy is wider and more vertically compact than the standard
-upstream configuration.  Glyphs are rounder and have tailed ends or
-serifs wherever those are required to both impose an aesthetic rhythm
-and keep characters distinct from each other.  Roman and italic variants
-are made to look more consistent while retaining their stylistic
-features (e.g. the italics do not have calligraphic tendencies that
-greatly contrast with more rigid or straight roman shapes---they still
-use carefully selected glyphs that are distinct from their roman
-counterparts albeit in more nuanced ways).
+Iosevka Comfy is more vertically compact than the standard upstream
+configuration.  Glyphs are rounder and have tailed ends or serifs only
+when those are required to both impose a predictable rhythm and keep
+characters distinct from each other.
 
-The overall appearance of the typeface is optimised for small point
-sizes.  This informs the choice of certain glyphs such as 'D' with a top
-and bottom serif and a curved body to clearly differentiate it from the
-capital 'O', or an 'm' with a short middle leg to prevent the letter's
-lines from visually blending into a box-like shape (always referring to
-small point sizes).  For larger sizes, these details are not strictly
-necessary, though Iosevka Comfy should still look decent despite their
-presence.
+[...]
+
+Roman and italic variants are made to look more consistent while
+retaining their stylistic features.  Unlike the default Iosevka style,
+the upright glyphs do not have a mixture of straight/blocky and curved
+or serified characters (special exceptions notwithstanding).  While the
+italics do not have calligraphic tendencies that would greatly contrast
+with their counterparts.  The differences within each character set and
+between the variants themselves are nuanced.  The intent is to make
+everything feel part of the same aesthetic.  Distinctions are drawn on
+the premise of contributing to the demands of the design without ever
+calling attention to themselves.
 #+end_quote
 
 Moving on to my Elisp configurations, =prot-fonts.el= covers my advanced
@@ -869,6 +868,15 @@ Relevant publications of mine that are not part of this document:
                      :variable-pitch-family "FiraGO"
                      :variable-pitch-height 1.05
                      :variable-pitch-regular-weight normal))
+
+          (small-alt . ( :fixed-pitch-family "Iosevka Comfy"
+                         :fixed-pitch-regular-weight regular
+                         :fixed-pitch-heavy-weight extrabold
+                         :fixed-pitch-height 80
+                         :fixed-pitch-line-spacing 1
+                         :variable-pitch-family "FiraGO"
+                         :variable-pitch-height 1.0
+                         :variable-pitch-regular-weight normal))
 
           (regular . ( :fixed-pitch-family "Iosevka Comfy"
                        :fixed-pitch-regular-weight regular
