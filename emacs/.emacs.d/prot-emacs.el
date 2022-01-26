@@ -282,6 +282,15 @@
                      :variable-pitch-height 1.05
                      :variable-pitch-regular-weight normal))
 
+          (small-alt . ( :fixed-pitch-family "Iosevka Comfy"
+                         :fixed-pitch-regular-weight regular
+                         :fixed-pitch-heavy-weight extrabold
+                         :fixed-pitch-height 80
+                         :fixed-pitch-line-spacing 1
+                         :variable-pitch-family "FiraGO"
+                         :variable-pitch-height 1.0
+                         :variable-pitch-regular-weight normal))
+
           (regular . ( :fixed-pitch-family "Iosevka Comfy"
                        :fixed-pitch-regular-weight regular
                        :fixed-pitch-heavy-weight extrabold
