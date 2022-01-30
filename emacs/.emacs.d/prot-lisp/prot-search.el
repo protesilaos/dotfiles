@@ -181,6 +181,18 @@ Also see `prot-search-occur-urls'."
      (mapcar #'car alist)
      nil nil nil 'prot-search--occur-outline-hist default)))
 
+(defvar-local prot-search--remap-cookie nil
+  "Current local value of `prot-search--remap-match-face'.")
+
+(defface prot-search-match '((t :inherit default))
+  "Face intended to override `match' buffer-locally.")
+
+(defun prot-search--remap-match-face (buf)
+  "Remap `match' to `prot-search-match' in BUF."
+  (with-current-buffer buf
+    (setq prot-search--remap-cookie
+          (face-remap-add-relative 'match 'prot-search-match))))
+
 ;;;###autoload
 (defun prot-search-occur-outline (&optional arg)
   "Produce buffer outline from `prot-search-outline-regexp-alist'.
@@ -197,12 +209,15 @@ Lisp."
               ((stringp arg)
                arg)
               ((and arg (string= major-mode regexp))
-               (cdr (assoc regexp prot-search-outline-regexp-alist)))
+               (alist-get regexp prot-search-outline-regexp-alist))
               ((assoc major-mode prot-search-outline-regexp-alist)
-               (cdr (assoc major-mode prot-search-outline-regexp-alist)))
+               (alist-get major-mode prot-search-outline-regexp-alist))
               (t (user-error "Unknown outline style"))))
          (buf-name (format "*outline of <%s>*" (buffer-name))))
     (occur-1 rx nil (list (current-buffer)) buf-name)
+    ;; Because we are producing an outline, we do not need to know what
+    ;; the exact matches are.
+    (prot-search--remap-match-face buf-name)
     (add-to-history 'prot-search--occur-outline-hist regexp)))
 
 ;;;; Grep
