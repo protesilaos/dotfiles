@@ -2134,8 +2134,7 @@ completion.
 ;;; CAPE (extra completion-at-point backends)
 (prot-emacs-elpa-package 'cape
   (setq cape-dabbrev-min-length 3)
-  (dolist (backend '( cape-symbol cape-keyword cape-file
-                      cape-abbrev cape-ispell cape-dabbrev))
+  (dolist (backend '( cape-symbol cape-keyword cape-file cape-dabbrev))
     (add-to-list 'completion-at-point-functions backend)))
 #+end_src
 
