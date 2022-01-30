@@ -2464,6 +2464,10 @@ package configurations).
   places them in an Occur buffer /without their context/ while also making
   them clickable (we say that it "buttonises" them).
 
++ =prot-search-occur-browse-url= gathers all URLs in the buffer and
+  prompts you to select one with completion.  It then browses that item
+  using whatever browser you have for =browse-url-browser-function=.
+
 + =prot-search-occur-outline= produces an outline of the buffer based on a
   configurable association of major mode and regular expression.  Check
   the variable =prot-search-outline-regexp-alist=.  The command can prompt
@@ -2471,21 +2475,30 @@ package configurations).
   outline regexp exists for it.  An arbitrary regexp can also be
   inserted either through interactive use or from Lisp code.
 
-+ =prot-search-occur-browse-url= gathers all URLs in the buffer and
-  prompts you to select one with completion.  It then browses that item
-  using whatever browser you have for =browse-url-browser-function=.
-
-+ =prot-search-grep= runs a local grep in the current directory.  With a
-  prefix argument, it runs recursively instead.  This is a thin wrapper
-  around the built-in =lgrep= and =rgrep= commands: it makes the process
-  faster by not asking for a directory and file extension pattern.  All
-  output is placed in a separate buffer.  Note that I also have a
-  variant for git-controlled projects: it is =prot-vc-git-grep= from
++ =prot-search-grep= runs grep in the current directory (a "local grep").
+  With a prefix argument, it uses grep recursively starting from the
+  current directory.  This is a thin wrapper around the built-in =lgrep=
+  and =rgrep= commands: it makes the process faster by not asking for a
+  directory and file extension pattern.  Note that I also have a variant
+  for git-controlled projects: it is =prot-vc-git-grep= from the section
   [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framework (vc.el and prot-vc.el)]].  Also note that
   Consult provides a live version: refer to the [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][section on consult.el]].
   (I normally use Consult and export the results with Embark, except for
   when I know exactly what I am looking for and want it in a buffer, so
   the added features are not needed).
+
++ =prot-search-occur-keywords= runs the equivalent of =M-x occur= in the
+  current buffer for all words like "TODO" and "FIXME".  The regular
+  expression is stored in the user option =prot-search-todo-keywords=.
+  When called with a numeric prefix argument, the command displays that
+  many lines of context.
+
++ =prot-search-grep-todo-keywords= is like the above, except it uses grep
+  for a directory-wide search.  With a prefix argument, it invokes the
+  command =prot-search-git-grep-todo-keywords= which applies Git's own
+  variant of grep to the entire project.  If Git is not installed on the
+  system and a prefix argument is supplied, then regular grep is used
+  recursively starting from the current directory.
 
 #+begin_src emacs-lisp
 ;;; Isearch, occur, grep, and extras (prot-search.el)
@@ -2524,6 +2537,9 @@ package configurations).
   (setq prot-search-outline-regexp-alist
         '((emacs-lisp-mode . "^\\((\\|;;;+ \\)")
           (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)")))
+  (setq prot-search-todo-keywords
+        (concat "TODO\\|FIXME\\|NOTE\\|REVIEW\\|XXX\\|KLUDGE"
+                "\\|HACK\\|WARN\\|WARNING\\|DEPRECATED\\|BUG"))
 
   (let ((map global-map))
     (define-key map (kbd "M-s %") #'prot-search-isearch-replace-symbol)
@@ -2531,6 +2547,8 @@ package configurations).
     (define-key map (kbd "M-s M->") #'prot-search-isearch-end-of-buffer)
     (define-key map (kbd "M-s g") #'prot-search-grep)
     (define-key map (kbd "M-s u") #'prot-search-occur-urls)
+    (define-key map (kbd "M-s t") #'prot-search-occur-todo-keywords)
+    (define-key map (kbd "M-s M-t") #'prot-search-grep-todo-keywords) ; With C-u it runs `prot-search-git-grep-todo-keywords'
     (define-key map (kbd "M-s M-o") #'prot-search-occur-outline)
     (define-key map (kbd "M-s M-u") #'prot-search-occur-browse-url))
   (let ((map isearch-mode-map))

@@ -57,6 +57,13 @@ To be used by `prot-search-occur-outline'."
   :type 'alist
   :group 'prot-search)
 
+(defcustom prot-search-todo-keywords
+  (concat "TODO\\|FIXME\\|NOTE\\|REVIEW\\|XXX\\|KLUDGE"
+          "\\|HACK\\|WARN\\|WARNING\\|DEPRECATED\\|BUG")
+  "Regexp with search to-do keywords."
+  :type 'string
+  :group 'prot-search)
+
 ;;;; Isearch
 
 ;;;###autoload
@@ -220,6 +227,25 @@ Lisp."
     (prot-search--remap-match-face buf-name)
     (add-to-history 'prot-search--occur-outline-hist regexp)))
 
+;;;###autoload
+(defun prot-search-occur-todo-keywords (&optional context)
+  "Produce Occur buffer with `prot-search-todo-keywords'.
+With optional numeric prefix argument for CONTEXT, show as many
+lines before and after each match.
+
+When called from Lisp CONTEXT must satisfy `natnump'.  A faulty
+value is read as 0.
+
+Also see `prot-search-grep-todo-keywords'."
+  (interactive "P")
+  (let* ((case-fold-search nil)
+         (num (cond
+               (current-prefix-arg
+	            (prefix-numeric-value current-prefix-arg))
+               (t (if (natnump context) context 0))))
+         (buf-name (format "*keywords in <%s>*" (buffer-name))))
+    (occur-1 prot-search-todo-keywords num (list (current-buffer)) buf-name)))
+
 ;;;; Grep
 
 (defvar prot-search--grep-hist '()
@@ -246,6 +272,42 @@ search starting from the current directory with `rgrep'."
       (rgrep regexp "*" default-directory)
     (lgrep regexp "*" default-directory)
     (add-to-history 'prot-search--grep-hist regexp)))
+
+;;;###autoload
+(defun prot-search-grep-todo-keywords (&optional arg)
+  "Use `prot-search-grep' to find `prot-search-todo-keywords'.
+
+With optional prefix ARG use git-grep instead for the entire
+repository (runs `prot-search-git-grep-todo-keywords').  If Git
+is not available on the system, run `prot-search-grep'
+recursively, starting from the current directory.
+
+Also see `prot-search-occur-todo-keywords'."
+  (interactive "P")
+  (cond
+   (arg
+    (if (executable-find "git")
+        (prot-search-git-grep-todo-keywords)
+      (prot-search-grep prot-search-todo-keywords t)))
+   (t
+    (prot-search-grep prot-search-todo-keywords))))
+
+;; NOTE 2022-01-30: We could use `project-find-regexp' but I prefer
+;; grep's editable buffers.  Besides, where is the fun in that when we
+;; can use `compilation-start' instead?
+;;;###autoload
+(defun prot-search-git-grep-todo-keywords ()
+  "Use the git-grep mechanism for `prot-search-todo-keywords'."
+  (interactive)
+  (let ((regexp prot-search-todo-keywords)
+        (default-directory (or (vc-root-dir)
+                               (locate-dominating-file "." ".git")
+                               default-directory)))
+    (compilation-start
+     (format "git --no-pager grep -n --color=auto -r -I -E -e %s" regexp)
+     'grep-mode
+     (lambda (mode) (format "*prot-search-git-%s for '%s'" mode regexp))
+     t)))
 
 (provide 'prot-search)
 ;;; prot-search.el ends here
