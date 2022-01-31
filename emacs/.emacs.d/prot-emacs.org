@@ -1415,21 +1415,23 @@ results I am most likely interested in, based on previous selections.
 ;; Source: <https://gitlab.com/protesilaos/mct.el>.
 ;; Manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-builtin-package 'mct
+  (setq mct-completion-window-size (cons #'mct--frame-height-fraction 1))
   (setq mct-remove-shadowed-file-names t) ; when `file-name-shadow-mode' is enabled
   (setq mct-hide-completion-mode-line t)
   (setq mct-show-completion-line-numbers nil)
   (setq mct-apply-completion-stripes nil)
   (setq mct-minimum-input 3)
   (setq mct-live-update-delay 0.6)
-  (setq mct-completion-blocklist nil)
   (setq mct-completion-passlist
-        '( embark-prefix-help-command Info-goto-node
-           Info-index Info-menu vc-retrieve-tag
-           prot-bookmark-cd-bookmark
-           prot-bongo-playlist-insert-playlist-file
-           project-switch-to-buffer))
+        '(;; Accepts symbols of commands like these:
+          embark-prefix-help-command vc-retrieve-tag
+          prot-bongo-playlist-insert-playlist-file
+          Info-goto-node
+          ;; Or completion categories:
+          kill-ring bookmark buffer consult-location
+          info-menu file imenu))
+  (setq mct-completion-blocklist nil) ; Same principle as `mct-completion-passlist'
   (setq mct-completions-format 'one-column)
-  (setq mct-region-completions-format mct-completions-format)
 
   ;; You can place the Completions' buffer wherever you want, by
   ;; following the syntax of `display-buffer-alist' (check elsewhere in
