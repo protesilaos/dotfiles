@@ -188,9 +188,9 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(bold italic)
+        modus-themes-prompts '(background)
 
-        modus-themes-completions nil ; {nil,'moderate,'opinionated}
+        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
 
         modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
 
@@ -487,21 +487,23 @@ candidate, respectively."
 ;; Source: <https://gitlab.com/protesilaos/mct.el>.
 ;; Manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-builtin-package 'mct
+  (setq mct-completion-window-size (cons #'mct--frame-height-fraction 1))
   (setq mct-remove-shadowed-file-names t) ; when `file-name-shadow-mode' is enabled
   (setq mct-hide-completion-mode-line t)
   (setq mct-show-completion-line-numbers nil)
   (setq mct-apply-completion-stripes nil)
   (setq mct-minimum-input 3)
   (setq mct-live-update-delay 0.6)
-  (setq mct-completion-blocklist nil)
   (setq mct-completion-passlist
-        '( embark-prefix-help-command Info-goto-node
-           Info-index Info-menu vc-retrieve-tag
-           prot-bookmark-cd-bookmark
-           prot-bongo-playlist-insert-playlist-file
-           project-switch-to-buffer))
+        '(;; Accepts symbols of commands like these:
+          embark-prefix-help-command vc-retrieve-tag
+          prot-bongo-playlist-insert-playlist-file
+          Info-goto-node
+          ;; Or completion categories:
+          kill-ring bookmark buffer consult-location
+          info-menu file imenu))
+  (setq mct-completion-blocklist nil) ; Same principle as `mct-completion-passlist'
   (setq mct-completions-format 'one-column)
-  (setq mct-region-completions-format mct-completions-format)
 
   ;; You can place the Completions' buffer wherever you want, by
   ;; following the syntax of `display-buffer-alist' (check elsewhere in
@@ -718,8 +720,7 @@ candidate, respectively."
 ;;; CAPE (extra completion-at-point backends)
 (prot-emacs-elpa-package 'cape
   (setq cape-dabbrev-min-length 3)
-  (dolist (backend '( cape-symbol cape-keyword cape-file
-                      cape-abbrev cape-ispell cape-dabbrev))
+  (dolist (backend '( cape-symbol cape-keyword cape-file cape-dabbrev))
     (add-to-list 'completion-at-point-functions backend)))
 
 ;;; Dabbrev (dynamic word completion)
@@ -810,6 +811,9 @@ candidate, respectively."
   (setq prot-search-outline-regexp-alist
         '((emacs-lisp-mode . "^\\((\\|;;;+ \\)")
           (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)")))
+  (setq prot-search-todo-keywords
+        (concat "TODO\\|FIXME\\|NOTE\\|REVIEW\\|XXX\\|KLUDGE"
+                "\\|HACK\\|WARN\\|WARNING\\|DEPRECATED\\|BUG"))
 
   (let ((map global-map))
     (define-key map (kbd "M-s %") #'prot-search-isearch-replace-symbol)
@@ -817,6 +821,8 @@ candidate, respectively."
     (define-key map (kbd "M-s M->") #'prot-search-isearch-end-of-buffer)
     (define-key map (kbd "M-s g") #'prot-search-grep)
     (define-key map (kbd "M-s u") #'prot-search-occur-urls)
+    (define-key map (kbd "M-s t") #'prot-search-occur-todo-keywords)
+    (define-key map (kbd "M-s M-t") #'prot-search-grep-todo-keywords) ; With C-u it runs `prot-search-git-grep-todo-keywords'
     (define-key map (kbd "M-s M-o") #'prot-search-occur-outline)
     (define-key map (kbd "M-s M-u") #'prot-search-occur-browse-url))
   (let ((map isearch-mode-map))
@@ -3273,7 +3279,9 @@ Can link to more than one message, if so all matching messages are shown."
   (setq electric-quote-replace-double t)
   (electric-pair-mode -1)
   (electric-quote-mode -1)
-  ;; I don't like auto indents in Org and related.
+  ;; I don't like auto indents in Org and related.  They are okay for
+  ;; programming.
+  (electric-indent-mode -1)
   (add-hook 'prog-mode-hook #'electric-indent-local-mode))
 
 ;;; Parentheses (show-paren-mode)
