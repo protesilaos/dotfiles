@@ -8968,7 +8968,9 @@ settings:
   (setq electric-quote-replace-double t)
   (electric-pair-mode -1)
   (electric-quote-mode -1)
-  ;; I don't like auto indents in Org and related.
+  ;; I don't like auto indents in Org and related.  They are okay for
+  ;; programming.
+  (electric-indent-mode -1)
   (add-hook 'prog-mode-hook #'electric-indent-local-mode))
 #+end_src
 
