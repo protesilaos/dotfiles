@@ -793,24 +793,34 @@ If narrowing is in effect, widen the view."
     (widen)
     (recenter))))
 
+(defun prot-simple--narrow-to-page (count &optional back)
+  "Narrow to COUNTth page with optional BACK motion."
+  (if back
+      (narrow-to-page (or (- count) -1))
+    (narrow-to-page (or (abs count) 1)))
+  ;; Avoids the problem of skiping pages while cycling back and forth.
+  (goto-char (point-min)))
+
 ;;;###autoload
 (defun prot-simple-forward-page-dwim (&optional count)
   "Move to next or COUNTth page forward.
 If buffer is narrowed to the page, keep the effect while
-performing the motion."
+performing the motion.  Always move point to the beginning of the
+narrowed page."
   (interactive "p")
   (if (buffer-narrowed-p)
-      (narrow-to-page (or (abs count) 1))
+      (prot-simple--narrow-to-page count)
     (forward-page count)))
 
 ;;;###autoload
 (defun prot-simple-backward-page-dwim (&optional count)
   "Move to previous or COUNTth page backward.
 If buffer is narrowed to the page, keep the effect while
-performing the motion."
+performing the motion.  Always move point to the beginning of the
+narrowed page."
   (interactive "p")
   (if (buffer-narrowed-p)
-      (narrow-to-page (or (- count) -1))
+      (prot-simple--narrow-to-page count t)
     (backward-page count)))
 
 ;; Inspired by Pierre Neidhardt's windower:
