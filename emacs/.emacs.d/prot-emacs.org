@@ -3704,6 +3704,12 @@ which are contingent on other features:
   focus state (refer to [[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][Fringe mode]] for the relevant configurations,
   while their overall presentation is controlled by the active theme).
 
++ Line breaks :: The user option =prot-logos-prettify-line-breaks=
+  determines whether page breaks (the =^L= character which can be inserted
+  with =C-q C-l=) should be prettified or not.  The prettification
+  basically is a =* * *= that appear almost centred when the text is kept
+  at my desired =fill-column= of 72.
+
 + Cursor :: My =prot-cursor.el= defines some convenient extras for setting
   the overall style of the cursor: the shape and the blink rate.  When
   in a "focus mode" we may want to have one particular style available,
@@ -3731,6 +3737,10 @@ these:
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t))
 
+;; NOTE 2022-02-05: `org-tree-slide' may be removed, as I simplified how
+;; I handle presentations by using narrowing and page breaks.  See the
+;; commands `prot-simple-forward-page-dwim' and
+;; `prot-simple-backward-page-dwim'.
 (prot-emacs-elpa-package 'org-tree-slide
   (setq org-tree-slide-breadcrumbs nil)
   (setq org-tree-slide-header nil)
@@ -3757,7 +3767,8 @@ these:
   (setq prot-logos-variable-pitch nil)
   (setq prot-logos-scroll-lock nil)
   (setq prot-logos-hidden-modeline t)
-  (setq prot-logos-affect-prot-cursor t)
+  (setq prot-logos-prettify-line-breaks t)
+  (setq prot-logos-affect-prot-cursor nil)
   (define-key global-map (kbd "<f9>") #'prot-logos-focus-mode))
 #+end_src
 

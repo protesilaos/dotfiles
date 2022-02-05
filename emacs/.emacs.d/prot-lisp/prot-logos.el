@@ -70,6 +70,17 @@ This expects the `prot-cursor.el' library."
   :type 'boolean
   :group 'prot-logos)
 
+(defcustom prot-logos-prettify-line-breaks nil
+  "Change ^L to `prot-logos-line-break'."
+  :type 'boolean
+  :group 'prot-logos)
+
+;; Based on Paul W. Rankin's idea that was shared on the
+;; emacs-humanities mailing list:
+;; <https://lists.gnu.org/archive/html/emacs-humanities/2021-01/msg00011.html>.
+(defvar prot-logos-line-break (vconcat (make-string 30 ?\s) "* * *")
+  "Style for line break override.")
+
 (defvar prot-logos--focus-mode-hook nil
   "Hook that runs from function `prot-logos-focus-mode'.")
 
@@ -108,6 +119,19 @@ on its own."
     (olivetti-mode 1)))
 
 (add-hook 'prot-logos--focus-mode-hook #'prot-logos--olivetti-toggle)
+
+(defun prot-logos--line-break ()
+  "Make ^L use `prot-logos-line-break'."
+  (if (and (bound-and-true-p prot-logos-focus-mode)
+           prot-logos-prettify-line-breaks)
+      ;; TODO 2022-02-05: Maybe setq-local is better?  If yes, we need a
+      ;; `defvar' cookie to store its value.
+      (aset (or standard-display-table
+                (setq standard-display-table (make-display-table)))
+            ?\^L prot-logos-line-break)
+    (setq standard-display-table nil)))
+
+(add-hook 'prot-logos--focus-mode-hook #'prot-logos--line-break)
 
 (defface prot-logos-fringe
   `((((class color) (background light))
