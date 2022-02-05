@@ -9400,6 +9400,8 @@ I thought I would cover them all in this section.
 :CUSTOM_ID: h:83730fe8-d917-4d94-96f4-bbc5c900fe38
 :END:
 
+Also watch: [[https://protesilaos.com/codelog/2022-01-31-learning-emacs/][Learning Emacs and Elisp]] (2022-01-31).
+
 There is no one-size-fits-all approach to learning.  What one finds
 satisfactory, another may consider insufficient.  In my opinion, the
 best way to learn Emacs is to start small, be patient, and brace
