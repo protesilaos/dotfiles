@@ -888,8 +888,8 @@ Relevant publications of mine that are not part of this document:
                        :variable-pitch-regular-weight normal))
 
           (large . ( :fixed-pitch-family "Iosevka Comfy"
-                     :fixed-pitch-regular-weight regular
-                     :fixed-pitch-heavy-weight extrabold
+                     :fixed-pitch-regular-weight semilight
+                     :fixed-pitch-heavy-weight bold
                      :fixed-pitch-height 135
                      :fixed-pitch-line-spacing nil
                      :variable-pitch-family "FiraGO"
