@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 2.0.0
-;; Last-Modified: <2022-01-28 09:37:01 +0200>
+;; Last-Modified: <2022-02-05 18:35:24 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -306,6 +306,8 @@
 ;;     side-notes
 ;;     sieve-mode
 ;;     skewer-mode
+;;     slime (sldb)
+;;     sly
 ;;     smart-mode-line
 ;;     smartparens
 ;;     smerge
@@ -3074,19 +3076,7 @@ should be combinable with INTENSEBG-FG.
 SUBTLEBGGRAY and INTENSEBGGRAY are background values.  The former
 can be combined with GRAYFG, while the latter only works with the
 theme's fallback text color."
-  (let ((properties
-         (if (listp modus-themes-prompts)
-             modus-themes-prompts
-           ;; translation layer for legacy values
-           (pcase modus-themes-prompts
-             ;; `subtle' is the same as `subtle-accented', while `intense' is
-             ;; equal to `intense-accented' for backward compatibility
-             ('subtle '(background))
-             ('subtle-accented '(background))
-             ('subtle-gray '(background gray))
-             ('intense '(background intense))
-             ('intense-accented '(background intense))
-             ('intense-gray '(background intense gray))))))
+  (let ((properties modus-themes-prompts))
     (list :foreground
           (cond
            ((and (memq 'gray properties)
@@ -3132,16 +3122,7 @@ NORMALBG should be the special palette color 'bg-paren-match' or
 something similar.  INTENSEBG must be easier to discern next to
 other backgrounds, such as the special palette color
 'bg-paren-match-intense'."
-  (let ((properties
-         (if (listp modus-themes-paren-match)
-             modus-themes-paren-match
-           ;; translation layer for legacy values
-           (pcase modus-themes-paren-match
-             ;; `subtle' is the same as `subtle-accented', while `intense' is
-             ;; equal to `intense-accented' for backward compatibility
-             ('intense-bold '(intense bold))
-             ('subtle-bold '(bold))
-             ('intense '(intense))))))
+  (let ((properties modus-themes-paren-match))
     (list :inherit
           (if (memq 'bold properties)
               'bold
@@ -3159,18 +3140,7 @@ other backgrounds, such as the special palette color
   "Apply foreground value to code syntax.
 FG is the default.  FAINT is typically the same color in its
 desaturated version."
-  (let ((properties
-         (if (listp modus-themes-syntax)
-             modus-themes-syntax
-           ;; translation layer for legacy values
-           (pcase modus-themes-syntax
-             ('faint '(faint))
-             ('faint-yellow-comments '(faint yellow-comments))
-             ('green-strings '(green-strings))
-             ('yellow-comments '(yellow-comments))
-             ('yellow-comments-green-strings '(green-strings yellow-comments))
-             ('alt-syntax '(alt-syntax))
-             ('alt-syntax-yellow-comments '(alt-syntax yellow-comments))))))
+  (let ((properties modus-themes-syntax))
     (list :foreground
           (cond
            ((memq 'faint properties)
@@ -3182,18 +3152,7 @@ desaturated version."
 FG is the default.  FAINT is typically the same color in its
 desaturated version.  ALT is another hue while optional FAINT-ALT
 is its subtle alternative."
-  (let ((properties
-         (if (listp modus-themes-syntax)
-             modus-themes-syntax
-           ;; translation layer for legacy values
-           (pcase modus-themes-syntax
-             ('faint '(faint))
-             ('faint-yellow-comments '(faint yellow-comments))
-             ('green-strings '(green-strings))
-             ('yellow-comments '(yellow-comments))
-             ('yellow-comments-green-strings '(green-strings yellow-comments))
-             ('alt-syntax '(alt-syntax))
-             ('alt-syntax-yellow-comments '(alt-syntax yellow-comments))))))
+  (let ((properties modus-themes-syntax))
     (list :foreground
           (cond
            ((and (memq 'alt-syntax properties)
@@ -3212,18 +3171,7 @@ desaturated version.  GREEN is a color variant in that side of
 the spectrum.  ALT is another hue.  Optional FAINT-GREEN is a
 subtle alternative to GREEN.  Optional FAINT-ALT is a subtle
 alternative to ALT."
-  (let ((properties
-         (if (listp modus-themes-syntax)
-             modus-themes-syntax
-           ;; translation layer for legacy values
-           (pcase modus-themes-syntax
-             ('faint '(faint))
-             ('faint-yellow-comments '(faint yellow-comments))
-             ('green-strings '(green-strings))
-             ('yellow-comments '(yellow-comments))
-             ('yellow-comments-green-strings '(green-strings yellow-comments))
-             ('alt-syntax '(alt-syntax))
-             ('alt-syntax-yellow-comments '(alt-syntax yellow-comments))))))
+  (let ((properties modus-themes-syntax))
     (list :foreground
           (cond
            ((and (memq 'faint properties)
@@ -3245,18 +3193,7 @@ alternative to ALT."
 FG is the default.  YELLOW is a color variant of that name while
 optional FAINT-YELLOW is its subtle variant.  Optional FAINT is
 an alternative to the default value."
-  (let ((properties
-         (if (listp modus-themes-syntax)
-             modus-themes-syntax
-           ;; translation layer for legacy values
-           (pcase modus-themes-syntax
-             ('faint '(faint))
-             ('faint-yellow-comments '(faint yellow-comments))
-             ('green-strings '(green-strings))
-             ('yellow-comments '(yellow-comments))
-             ('yellow-comments-green-strings '(green-strings yellow-comments))
-             ('alt-syntax '(alt-syntax))
-             ('alt-syntax-yellow-comments '(alt-syntax yellow-comments))))))
+  (let ((properties modus-themes-syntax))
     (list :foreground
           (cond
            ((and (memq 'faint properties)
@@ -3300,28 +3237,7 @@ that combines well with the background and foreground."
   (let* ((key (modus-themes--key-cdr level modus-themes-headings))
          (style (or key (modus-themes--key-cdr t modus-themes-headings)))
          (style-listp (listp style))
-         (properties
-          (if style-listp
-              style
-            ;; translation layer for legacy values
-            (pcase style
-              ('highlight '(background))
-              ('highlight-no-bold '(background no-bold))
-              ('line '(overline))
-              ('line-no-bold '(no-bold overline))
-              ('no-bold '(no-bold))
-              ('no-color '(monochrome))
-              ('no-color-no-bold '(no-bold monochrome))
-              ('rainbow '(rainbow))
-              ('rainbow-highlight '(rainbow background))
-              ('rainbow-highlight-no-bold '(no-bold rainbow background))
-              ('rainbow-line '(rainbow overline))
-              ('rainbow-no-bold '(no-bold rainbow))
-              ('rainbow-line-no-bold '(rainbow overline no-bold))
-              ('rainbow-section '(rainbow overline background))
-              ('rainbow-section-no-bold '(no-bold rainbow background overline))
-              ('section '(background overline))
-              ('section-no-bold '(background overline no-bold)))))
+         (properties style)
          (var (when (memq 'variable-pitch properties) 'variable-pitch))
          (varbold (if var
                       (append (list 'bold) (list var))
@@ -3540,22 +3456,7 @@ line's box property.
 Optional FG-DISTANT should be close to the main background
 values.  It is intended to be used as a distant-foreground
 property."
-  (let* ((properties
-          (if (listp modus-themes-mode-line)
-              modus-themes-mode-line
-            ;; translation layer for legacy values
-            (alist-get modus-themes-mode-line
-                       '((3d . (3d))
-                         (moody . (moody))
-                         (borderless . (borderless))
-                         (borderless-3d . (borderless 3d))
-                         (borderless-moody . (borderless moody))
-                         (accented . (accented))
-                         (accented-3d . (accented 3d))
-                         (accented-moody . (accented moody))
-                         (borderless-accented . (borderless accented))
-                         (borderless-accented-3d . (borderless accented 3d))
-                         (borderless-accented-moody . (borderless accented moody))))))
+  (let* ((properties modus-themes-mode-line)
          (padding (seq-find #'natnump properties 1))
          (padded (> padding 1))
          (base (cond ((memq 'accented properties)
@@ -3691,17 +3592,7 @@ FG is the link's default color for its text and underline
 property.  FGFAINT is a desaturated color for the text and
 underline.  UNDERLINE is a gray color only for the undeline.  BG
 is a background color and BGNEUTRAL is its fallback value."
-  (let ((properties
-         (if (listp modus-themes-links)
-             modus-themes-links
-           ;; translation layer for legacy values
-           (pcase modus-themes-links
-             ('faint '(faint))
-             ('neutral-underline '(neutral-underline))
-             ('faint-neutral-underline '(neutral-underline faint))
-             ('no-underline '(no-underline))
-             ('underline-only '(no-color))
-             ('neutral-underline-only '(no-color neutral-underline))))))
+  (let ((properties modus-themes-links))
     (list :inherit
           (cond
            ((and (memq 'bold properties)
@@ -3739,17 +3630,7 @@ is a background color and BGNEUTRAL is its fallback value."
   "Extend `modus-themes--link'.
 FG is the main accented foreground.  FGFAINT is also accented,
 yet desaturated.  Optional NEUTRALFG is a gray value."
-  (let ((properties
-         (if (listp modus-themes-links)
-             modus-themes-links
-           ;; translation layer for legacy values
-           (pcase modus-themes-links
-             ('faint '(faint))
-             ('neutral-underline '(neutral-underline))
-             ('faint-neutral-underline '(neutral-underline faint))
-             ('no-underline '(no-underline))
-             ('underline-only '(no-color))
-             ('neutral-underline-only '(no-color neutral-underline))))))
+  (let ((properties modus-themes-links))
     (list :foreground
           (cond
            ((memq 'no-color properties)
@@ -3773,16 +3654,7 @@ is a subtle background value that can be combined with all colors
 used to fontify text and code syntax.  BGACCENT is a colored
 background that combines well with FG.  BGACCENTSUBTLE can be
 combined with all colors used to fontify text."
-  (let ((properties
-         (if (listp modus-themes-region)
-             modus-themes-region
-           ;; translation layer for legacy values
-           (pcase modus-themes-region
-             ('bg-only '(bg-only))
-             ('bg-only-no-extend '(bg-only no-extend))
-             ('accent '(accented))
-             ('accent-no-extend '(accented no-extend))
-             ('no-extend '(no-extend))))))
+  (let ((properties modus-themes-region))
     (list :background
           (cond
            ((and (memq 'accented properties)
@@ -3818,17 +3690,7 @@ LINEACCENT are color values that can remain distinct against the
 buffer's possible backgrounds: the former is neutral, the latter
 is accented.  LINENEUTRALINTENSE and LINEACCENTINTENSE are their
 more prominent alternatives."
-  (let ((properties
-         (if (listp modus-themes-hl-line)
-             modus-themes-hl-line
-           ;; translation layer for legacy values
-           (pcase modus-themes-hl-line
-             ('intense-background '(intense))
-             ('accented-background '(accented))
-             ('underline-neutral '(underline))
-             ('underline-accented '(underline accented))
-             ('underline-only-neutral '(underline)) ; only underline styles have been removed
-             ('underline-only-accented '(underline accented))))))
+  (let ((properties modus-themes-hl-line))
     (list :background
           (cond
            ((and (memq 'intense properties)
@@ -5102,10 +4964,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(elfeed-search-date-face ((,class :foreground ,cyan)))
     `(elfeed-search-feed-face ((,class :foreground ,blue-faint)))
     `(elfeed-search-filter-face ((,class :inherit bold :foreground ,magenta-active)))
-    `(elfeed-search-last-update-face ((,class :foreground ,cyan-active)))
-    `(elfeed-search-tag-face ((,class :foreground ,cyan-alt-other)))
+    `(elfeed-search-last-update-face ((,class :inherit bold :foreground ,cyan-active)))
+    `(elfeed-search-tag-face ((,class :foreground ,magenta-alt-faint)))
     `(elfeed-search-title-face ((,class :foreground ,fg-dim)))
-    `(elfeed-search-unread-count-face ((,class :foreground ,green-active)))
+    `(elfeed-search-unread-count-face ((,class :inherit bold :foreground ,fg-active)))
     `(elfeed-search-unread-title-face ((,class :inherit bold :foreground ,fg-main)))
 ;;;;; elfeed-score
     `(elfeed-score-date-face ((,class :foreground ,blue)))
@@ -6052,9 +5914,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(macrostep-gensym-5 ((,class :inherit bold :foreground ,magenta :box t)))
     `(macrostep-macro-face ((,class :inherit button :foreground ,green-alt)))
 ;;;;; magit
-    `(magit-bisect-bad ((,class :foreground ,red-alt-other)))
-    `(magit-bisect-good ((,class :foreground ,green-alt-other)))
-    `(magit-bisect-skip ((,class :foreground ,yellow-alt-other)))
+    `(magit-bisect-bad ((,class :inherit error)))
+    `(magit-bisect-good ((,class :inherit success)))
+    `(magit-bisect-skip ((,class :inherit warning)))
     `(magit-blame-date ((,class :foreground ,blue)))
     `(magit-blame-dimmed ((,class :inherit (shadow modus-themes-reset-hard))))
     `(magit-blame-hash ((,class :foreground ,fg-special-warm)))
@@ -6137,15 +5999,15 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(magit-mode-line-process-error ((,class :inherit bold :foreground ,red-active)))
     `(magit-process-ng ((,class :inherit error)))
     `(magit-process-ok ((,class :inherit success)))
-    `(magit-reflog-amend ((,class :background ,bg-main :foreground ,magenta-intense)))
-    `(magit-reflog-checkout ((,class :background ,bg-main :foreground ,blue-intense)))
-    `(magit-reflog-cherry-pick ((,class :background ,bg-main :foreground ,green-intense)))
-    `(magit-reflog-commit ((,class :background ,bg-main :foreground ,green-intense)))
-    `(magit-reflog-merge ((,class :background ,bg-main :foreground ,green-intense)))
-    `(magit-reflog-other ((,class :background ,bg-main :foreground ,cyan-intense)))
-    `(magit-reflog-rebase ((,class :background ,bg-main :foreground ,magenta-intense)))
-    `(magit-reflog-remote ((,class :background ,bg-main :foreground ,cyan-intense)))
-    `(magit-reflog-reset ((,class :background ,bg-main :foreground ,red-intense)))
+    `(magit-reflog-amend ((,class :inherit warning)))
+    `(magit-reflog-checkout ((,class :inherit bold :foreground ,blue-alt)))
+    `(magit-reflog-cherry-pick ((,class :inherit success)))
+    `(magit-reflog-commit ((,class :inherit bold)))
+    `(magit-reflog-merge ((,class :inherit success)))
+    `(magit-reflog-other ((,class :inherit bold :foreground ,cyan)))
+    `(magit-reflog-rebase ((,class :inherit bold :foreground ,magenta)))
+    `(magit-reflog-remote ((,class :inherit bold :foreground ,magenta-alt-other)))
+    `(magit-reflog-reset ((,class :inherit error)))
     `(magit-refname ((,class :inherit shadow)))
     `(magit-refname-pullreq ((,class :inherit shadow)))
     `(magit-refname-stash ((,class :inherit shadow)))
@@ -6154,21 +6016,21 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(magit-section-heading ((,class :inherit bold :foreground ,cyan)))
     `(magit-section-heading-selection ((,class :inherit (modus-themes-refine-cyan bold))))
     `(magit-section-highlight ((,class :background ,bg-alt)))
-    `(magit-sequence-done ((,class :inherit modus-themes-grue)))
-    `(magit-sequence-drop ((,class :foreground ,red-alt)))
-    `(magit-sequence-exec ((,class :foreground ,magenta-alt)))
-    `(magit-sequence-head ((,class :foreground ,cyan-alt)))
-    `(magit-sequence-onto ((,class :inherit shadow)))
-    `(magit-sequence-part ((,class :foreground ,yellow-alt)))
-    `(magit-sequence-pick ((,class :foreground ,blue-alt)))
-    `(magit-sequence-stop ((,class :foreground ,red)))
-    `(magit-signature-bad ((,class :inherit bold :foreground ,red)))
-    `(magit-signature-error ((,class :foreground ,red-alt)))
-    `(magit-signature-expired ((,class :foreground ,yellow)))
+    `(magit-sequence-done ((,class :inherit success)))
+    `(magit-sequence-drop ((,class :inherit error)))
+    `(magit-sequence-exec ((,class :inherit bold :foreground ,magenta-alt)))
+    `(magit-sequence-head ((,class :inherit bold :foreground ,cyan-alt)))
+    `(magit-sequence-onto ((,class :inherit (bold shadow))))
+    `(magit-sequence-part ((,class :inherit warning)))
+    `(magit-sequence-pick ((,class :inherit bold)))
+    `(magit-sequence-stop ((,class :inherit error)))
+    `(magit-signature-bad ((,class :inherit error)))
+    `(magit-signature-error ((,class :inherit error)))
+    `(magit-signature-expired ((,class :inherit warning)))
     `(magit-signature-expired-key ((,class :foreground ,yellow)))
-    `(magit-signature-good ((,class :inherit modus-themes-grue)))
-    `(magit-signature-revoked ((,class :foreground ,magenta)))
-    `(magit-signature-untrusted ((,class :foreground ,cyan)))
+    `(magit-signature-good ((,class :inherit success)))
+    `(magit-signature-revoked ((,class :inherit bold :foreground ,magenta)))
+    `(magit-signature-untrusted ((,class :inherit (bold shadow))))
     `(magit-tag ((,class :foreground ,yellow-alt-other)))
 ;;;;; magit-imerge
     `(magit-imerge-overriding-value ((,class :inherit bold :foreground ,red-alt)))
@@ -6973,6 +6835,33 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(sieve-test-commands ((,class :inherit font-lock-function-name-face)))
 ;;;;; skewer-mode
     `(skewer-error-face ((,class :foreground ,red :underline t)))
+;;;;; slime (sldb)
+    `(sldb-condition-face ((,class :inherit font-lock-preprocessor-face)))
+    `(sldb-restart-number-face ((,class :inherit bold)))
+    `(sldb-restart-type-face ((,class :inherit font-lock-type-face)))
+    `(sldb-restartable-frame-line-face ((,class :inherit success)))
+    `(sldb-section-face ((,class :inherit modus-themes-pseudo-header)))
+    `(slime-error-face ((,class :inherit modus-themes-lang-error)))
+    `(slime-note-face ((,class :underline t)))
+    `(slime-repl-input-face ((,class :inherit bold)))
+    `(slime-repl-inputed-output-face ((,class :inherit font-lock-string-face)))
+    `(slime-repl-output-mouseover-face ((,class :inherit highlight)))
+    `(slime-repl-prompt-face ((,class :inherit modus-themes-prompt)))
+    `(slime-style-warning-face ((,class :inherit modus-themes-lang-note)))
+    `(slime-warning-face ((,class :inherit modus-themes-lang-warning)))
+;;;;; sly
+    `(sly-action-face ((,class :inherit font-lock-type-face)))
+    `(sly-db-condition-face ((,class :inherit font-lock-preprocessor-face)))
+    `(sly-db-restartable-frame-line-face ((,class :inherit success)))
+    `(sly-error-face ((,class :inherit modus-themes-lang-error)))
+    `(sly-mode-line ((,class :inherit mode-line-emphasis)))
+    `(sly-mrepl-output-face ((,class :inherit font-lock-string-face)))
+    `(sly-mrepl-output-face ((,class :inherit font-lock-string-face)))
+    `(sly-mrepl-prompt-face ((,class :inherit modus-themes-prompt)))
+    `(sly-note-face ((,class :inherit modus-themes-lang-note)))
+    `(sly-stickers-placed-face ((,class :inherit modus-themes-subtle-neutral)))
+    `(sly-style-warning-face ((,class :inherit modus-themes-lang-note)))
+    `(sly-warning-face ((,class :inherit modus-themes-lang-warning)))
 ;;;;; smart-mode-line
     `(sml/charging ((,class :foreground ,green-active)))
     `(sml/discharging ((,class :foreground ,red-active)))
