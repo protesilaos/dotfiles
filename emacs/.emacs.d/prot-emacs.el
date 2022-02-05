@@ -301,8 +301,8 @@
                        :variable-pitch-regular-weight normal))
 
           (large . ( :fixed-pitch-family "Iosevka Comfy"
-                     :fixed-pitch-regular-weight regular
-                     :fixed-pitch-heavy-weight extrabold
+                     :fixed-pitch-regular-weight semilight
+                     :fixed-pitch-heavy-weight bold
                      :fixed-pitch-height 135
                      :fixed-pitch-line-spacing nil
                      :variable-pitch-family "FiraGO"
@@ -1240,6 +1240,10 @@ candidate, respectively."
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t))
 
+;; NOTE 2022-02-05: `org-tree-slide' may be removed, as I simplified how
+;; I handle presentations by using narrowing and page breaks.  See the
+;; commands `prot-simple-forward-page-dwim' and
+;; `prot-simple-backward-page-dwim'.
 (prot-emacs-elpa-package 'org-tree-slide
   (setq org-tree-slide-breadcrumbs nil)
   (setq org-tree-slide-header nil)
@@ -1266,7 +1270,8 @@ candidate, respectively."
   (setq prot-logos-variable-pitch nil)
   (setq prot-logos-scroll-lock nil)
   (setq prot-logos-hidden-modeline t)
-  (setq prot-logos-affect-prot-cursor t)
+  (setq prot-logos-prettify-line-breaks t)
+  (setq prot-logos-affect-prot-cursor nil)
   (define-key global-map (kbd "<f9>") #'prot-logos-focus-mode))
 
 ;;; USLS --- Unassuming Sidenotes of Little Significance
