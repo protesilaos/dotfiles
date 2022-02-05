@@ -798,7 +798,7 @@ If narrowing is in effect, widen the view."
   (if back
       (narrow-to-page (or (- count) -1))
     (narrow-to-page (or (abs count) 1)))
-  ;; Avoids the problem of skiping pages while cycling back and forth.
+  ;; Avoids the problem of skipping pages while cycling back and forth.
   (goto-char (point-min)))
 
 ;;;###autoload
