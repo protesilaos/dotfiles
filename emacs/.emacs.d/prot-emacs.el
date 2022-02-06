@@ -103,7 +103,8 @@
 ;;; prot-pulse.el (highlight cursor position)
 (prot-emacs-builtin-package 'prot-pulse
   (setq prot-pulse-pulse-command-list
-        '(recenter-top-bottom
+        '(recenter
+          recenter-top-bottom
           move-to-window-line-top-bottom
           reposition-window
           bookmark-jump
@@ -357,75 +358,27 @@
 (prot-emacs-builtin-package 'so-long
   (global-so-long-mode 1))
 
-;;; Orderless completion style (and prot-orderless.el)
-(prot-emacs-builtin-package 'prot-orderless
-  (setq prot-orderless-default-styles
-        '(orderless-prefixes
-          orderless-strict-leading-initialism
-          orderless-regexp))
-  (setq prot-orderless-alternative-styles
-        '(orderless-literal
-          orderless-prefixes
-          orderless-strict-leading-initialism
-          orderless-regexp)))
+  ;;; Orderless completion style (and prot-orderless.el)
+  (prot-emacs-elpa-package 'orderless
+    (setq orderless-component-separator " +")
+    ;; NOTE 2022-02-06: I made some major changes and this list may need
+    ;; to be refined further.  Remember to check my `completion-styles'
+    ;; and the `completion-category-overrides'.
+    (setq orderless-matching-styles
+          '( orderless-prefixes orderless-strict-leading-initialism
+             orderless-flex orderless-regexp))
+    (setq orderless-style-dispatchers
+          '(prot-orderless-literal-dispatcher
+            prot-orderless-initialism-dispatcher
+            prot-orderless-flex-dispatcher))
 
-(prot-emacs-elpa-package 'orderless
-  (setq orderless-component-separator " +")
-  (setq orderless-matching-styles prot-orderless-default-styles)
-  (setq orderless-style-dispatchers
-        '(prot-orderless-literal-dispatcher
-          prot-orderless-initialism-dispatcher
-          prot-orderless-flex-dispatcher))
+    ;; SPC should never complete: use it for `orderless' groups.
+    ;; The `?' is a regexp construct.
+    (let ((map minibuffer-local-completion-map))
+      (define-key map (kbd "SPC") nil)
+      (define-key map (kbd "?") nil)))
 
-  ;; SPC should never complete: use it for `orderless' groups.
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "SPC") nil)
-    (define-key map (kbd "?") nil))
-
-  ;;;; Initialisms
-
-  ;; All of the following is a copy of code that was removed from
-  ;; orderless.el.  I was using it, so I want to keep it, at least until
-  ;; some new version is provided upstream.
-
-  (defun orderless--strict-*-initialism (component &optional anchored)
-    "Match a COMPONENT as a strict initialism, optionally ANCHORED.
-The characters in COMPONENT must occur in the candidate in that
-order at the beginning of subsequent words comprised of letters.
-Only non-letters can be in between the words that start with the
-initials.
-
-If ANCHORED is `start' require that the first initial appear in
-the first word of the candidate.  If ANCHORED is `both' require
-that the first and last initials appear in the first and last
-words of the candidate, respectively."
-    (orderless--separated-by
-     '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)))
-     (cl-loop for char across component collect `(seq word-start ,char))
-     (when anchored '(seq (group buffer-start) (zero-or-more (not alpha))))
-     (when (eq anchored 'both)
-       '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)) eol))))
-
-  (defun orderless-strict-initialism (component)
-    "Match a COMPONENT as a strict initialism.
-This means the characters in COMPONENT must occur in the
-candidate in that order at the beginning of subsequent words
-comprised of letters.  Only non-letters can be in between the
-words that start with the initials."
-    (orderless--strict-*-initialism component))
-
-  (defun orderless-strict-leading-initialism (component)
-    "Match a COMPONENT as a strict initialism, anchored at start.
-See `orderless-strict-initialism'.  Additionally require that the
-first initial appear in the first word of the candidate."
-    (orderless--strict-*-initialism component 'start))
-
-  (defun orderless-strict-full-initialism (component)
-    "Match a COMPONENT as a strict initialism, anchored at both ends.
-See `orderless-strict-initialism'.  Additionally require that the
-first and last initials appear in the first and last words of the
-candidate, respectively."
-    (orderless--strict-*-initialism component 'both)))
+  (prot-emacs-builtin-package 'prot-orderless)
 
 ;;; Completion annotations (marginalia)
 (prot-emacs-elpa-package 'marginalia
@@ -434,15 +387,24 @@ candidate, respectively."
 
 ;;; Minibuffer configurations and my extras (mct.el)
 (prot-emacs-builtin-package 'minibuffer
-  ;; NOTE 2021-10-25: I am adding `basic' because it works better as a
-  ;; default for some contexts.  Read:
-  ;; <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=50387>.
-  (setq completion-styles
-        '(basic substring initials flex partial-completion orderless))
+  (setq completion-styles '(orderless)) ; also see `completion-category-overrides'
+  (setq completion-category-defaults nil)
+  ;; For a list of known completion categories, check the MCT manual's
+  ;; section on the matter:
+  ;; <https://protesilaos.com/emacs/mct#h:1f42c4e6-53c1-4e8a-81ef-deab70822fa4>
   (setq completion-category-overrides
-        '((file (styles . (basic partial-completion orderless)))))
+        ;; NOTE 2021-10-25: I am adding `basic' because it works better as a
+        ;; default for some contexts.  Read:
+        ;; <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=50387>.
+        ;;
+        ;; `partial-completion' is a killer app for files, because it
+        ;; can expand ~/.l/s/fo to ~/.local/share/fonts.
+        '((file (styles . (basic partial-completion orderless)))
+          (imenu (styles . (basic substring orderless)))
+          (consult-location (styles . (basic substring orderless)))))
+
   (setq completion-cycle-threshold 2)
-  (setq completion-flex-nospace nil)
+  (setq completion-flex-nospace nil) ; though I don't use the built-in `flex' style...
   (setq completion-pcm-complete-word-inserts-delimiters nil)
   (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-ignore-case t)
@@ -487,7 +449,6 @@ candidate, respectively."
 ;; Source: <https://gitlab.com/protesilaos/mct.el>.
 ;; Manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-builtin-package 'mct
-  (setq mct-completion-window-size (cons #'mct--frame-height-fraction 1))
   (setq mct-remove-shadowed-file-names t) ; when `file-name-shadow-mode' is enabled
   (setq mct-hide-completion-mode-line t)
   (setq mct-show-completion-line-numbers nil)
@@ -504,6 +465,9 @@ candidate, respectively."
           info-menu file imenu))
   (setq mct-completion-blocklist nil) ; Same principle as `mct-completion-passlist'
   (setq mct-completions-format 'one-column)
+
+  ;; Check its doc string to keep its size fixed.
+  (setq mct-completion-window-size (cons #'mct--frame-height-fraction 1))
 
   ;; You can place the Completions' buffer wherever you want, by
   ;; following the syntax of `display-buffer-alist' (check elsewhere in
@@ -530,7 +494,7 @@ candidate, respectively."
   (setq savehist-save-minibuffer-history t)
   (add-hook 'after-init-hook #'savehist-mode))
 
-;;; Enhanced minibuffer commands (consult.el and prot-consult.el)
+;;; Enhanced minibuffer commands (consult.el)
 (prot-emacs-elpa-package 'consult
   (setq consult-line-numbers-widen t)
   ;; (setq completion-in-region-function #'consult-completion-in-region)
@@ -561,6 +525,9 @@ candidate, respectively."
   (setq consult-find-args "find . -not ( -wholename */.* -prune )")
   (setq consult-preview-key 'any)
 
+  (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
+  (add-hook 'consult-after-jump-hook #'prot-pulse-recentre-top) ; see `prot-pulse.el'
+
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
   (let ((map global-map))
@@ -575,27 +542,13 @@ candidate, respectively."
     (define-key map (kbd "M-s M-f") #'consult-find)
     (define-key map (kbd "M-s M-g") #'consult-grep)
     (define-key map (kbd "M-s M-h") #'consult-history)
+    (define-key map (kbd "M-s M-i") #'consult-imenu)
+    (define-key map (kbd "M-s M-l") #'consult-line)
     (define-key map (kbd "M-s M-m") #'consult-mark)
+    (define-key map (kbd "M-s M-s") #'consult-outline)
+    (define-key map (kbd "M-s M-y") #'consult-yank-pop)
     (define-key map (kbd "C-x r r") #'consult-register)) ; Use the register's prefix
   (define-key consult-narrow-map (kbd "?") #'consult-narrow-help))
-
-(prot-emacs-builtin-package 'prot-consult
-  (setq consult-project-root-function #'prot-consult-project-root)
-  (setq prot-consult-command-centre-list
-        '(consult-line
-          prot-consult-line
-          consult-mark))
-  (setq prot-consult-command-top-list
-        '(consult-outline
-          consult-imenu
-          prot-consult-outline
-          prot-consult-imenu))
-  (prot-consult-set-up-hooks-mode 1)
-  (let ((map global-map))
-    (define-key map (kbd "M-s M-i") #'prot-consult-imenu)
-    (define-key map (kbd "M-s M-s") #'prot-consult-outline)
-    (define-key map (kbd "M-s M-y") #'prot-consult-yank)
-    (define-key map (kbd "M-s M-l") #'prot-consult-line)))
 
 ;;; Switch to directories (consult-dir.el)
 (prot-emacs-elpa-package 'consult-dir
