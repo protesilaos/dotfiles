@@ -94,21 +94,28 @@ changes to take effect."
         (face (or face prot-pulse-line-face)))
     (pulse-momentary-highlight-region start end face)))
 
+(defun prot-pulse--recentre (&optional position)
+  "Recentre the window with optional POSITION.
+POSITION is an argument passed to `recenter'."
+  (let ((pulse-delay prot-pulse-delay))
+    (recenter position)
+    ;; ;; NOTE 2022-02-06: we do not need this if we add `recenter' to
+    ;; ;; the `prot-pulse-pulse-command-list'.  See my prot-emacs.org
+    ;; ;; for the relevant configuration.
+    ;; (prot-pulse-pulse-line)
+    (prot-pulse-show-entry)))
+
 ;;;###autoload
 (defun prot-pulse-recentre-top ()
   "Reposition at the top and pulse line.
 Add this to a hook, such as `imenu-after-jump-hook'."
-  (let ((pulse-delay prot-pulse-delay))
-    (recenter 0)
-    (prot-pulse-pulse-line)))
+  (prot-pulse--recentre 0))
 
 ;;;###autoload
 (defun prot-pulse-recentre-centre ()
   "Recentre and pulse line.
 Add this to a hook, such as `imenu-after-jump-hook'."
-  (let ((pulse-delay prot-pulse-delay))
-    (recenter nil)
-    (prot-pulse-pulse-line)))
+  (prot-pulse--recentre))
 
 (autoload 'org-at-heading-p "org")
 (autoload 'org-show-entry "org")
@@ -124,7 +131,8 @@ To be used with a hook such as `imenu-after-jump-hook'."
          (org-at-heading-p))
     (org-show-entry)
     (org-reveal t))
-   ((bound-and-true-p prot-outline-minor-mode)
+   ((or (bound-and-true-p prot-outline-minor-mode)
+        (bound-and-true-p outline-minor-mode))
     (outline-show-entry))))
 
 (defvar prot-pulse-after-command-hook nil

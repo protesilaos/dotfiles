@@ -395,7 +395,8 @@ move the point an arbitrary distance.
 ;;; prot-pulse.el (highlight cursor position)
 (prot-emacs-builtin-package 'prot-pulse
   (setq prot-pulse-pulse-command-list
-        '(recenter-top-bottom
+        '(recenter
+          recenter-top-bottom
           move-to-window-line-top-bottom
           reposition-window
           bookmark-jump
