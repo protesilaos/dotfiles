@@ -1146,8 +1146,8 @@ determined using several styles, such as regexp, flex, prefix,
 initialism (check its README because there are lots of variations).
 Delimiters are literal spaces by default, but can be configured to match
 other characters, with hyphens and slashes being likely choices.  As
-such, Orderless can supersede---and for most part improve upon---the
-completion styles that come built into Emacs, adding to them the
+such, Orderless can supersede---and for most part improve upon---many of
+the completion styles that come built into Emacs, adding to them the
 powerful out-of-order capability.
 
 All we do here is set up Orderless.  The =orderless= completion style is
@@ -1155,99 +1155,41 @@ appended to the minibuffer's customisation option for =completion-styles=.
 That is defined in [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and extras]].
 
 My =prot-orderless.el= contains the few minor tweaks I introduce (full
-code further below).
+code further below).  It defines three style dispatchers. Those are
+single characters that acquire a special meaning while at the end of a
+given input:
 
-1. It defines three style dispatchers. Those are single characters that
-   acquire a special meaning while at the end of a given input:
++ With the equals sign appended to a sequence of characters, we call
+  =prot-orderless-literal-dispatcher= which instructs orderless to match
+  that sequence as a literal string.
 
-   - With the equals sign appended to a sequence of characters, we call
-     =prot-orderless-literal-dispatcher= which instructs orderless to match
-     that sequence as a literal string.
++ A comma at the end of a string of characters treats that group as
+  an initialism, per =prot-orderless-initialism-dispatcher=.
 
-   - A comma at the end of a string of characters treats that group as
-     an initialism, per =prot-orderless-initialism-dispatcher=.
-
-   - While a tilde (=prot-orderless-flex-dispatcher=) makes it makes it a
-     flex match.
-
-2. =prot-orderless-with-styles= is a function that changes the default
-   pattern-matching styles on a per-command basis.  The idea is to use a
-   certain style for most completion sessions, but prioritise an
-   alternative when needed.  I use this with some Consult commands
-   ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).  The
-   =prot-orderless-default-styles= and =prot-orderless-alternative-styles=
-   variables are designed for this particular task.
++ While a tilde (=prot-orderless-flex-dispatcher=) makes it a flex match.
 
 #+begin_src emacs-lisp
-;;; Orderless completion style (and prot-orderless.el)
-(prot-emacs-builtin-package 'prot-orderless
-  (setq prot-orderless-default-styles
-        '(orderless-prefixes
-          orderless-strict-leading-initialism
-          orderless-regexp))
-  (setq prot-orderless-alternative-styles
-        '(orderless-literal
-          orderless-prefixes
-          orderless-strict-leading-initialism
-          orderless-regexp)))
+  ;;; Orderless completion style (and prot-orderless.el)
+  (prot-emacs-elpa-package 'orderless
+    (setq orderless-component-separator " +")
+    ;; NOTE 2022-02-06: I made some major changes and this list may need
+    ;; to be refined further.  Remember to check my `completion-styles'
+    ;; and the `completion-category-overrides'.
+    (setq orderless-matching-styles
+          '( orderless-prefixes orderless-strict-leading-initialism
+             orderless-flex orderless-regexp))
+    (setq orderless-style-dispatchers
+          '(prot-orderless-literal-dispatcher
+            prot-orderless-initialism-dispatcher
+            prot-orderless-flex-dispatcher))
 
-(prot-emacs-elpa-package 'orderless
-  (setq orderless-component-separator " +")
-  (setq orderless-matching-styles prot-orderless-default-styles)
-  (setq orderless-style-dispatchers
-        '(prot-orderless-literal-dispatcher
-          prot-orderless-initialism-dispatcher
-          prot-orderless-flex-dispatcher))
+    ;; SPC should never complete: use it for `orderless' groups.
+    ;; The `?' is a regexp construct.
+    (let ((map minibuffer-local-completion-map))
+      (define-key map (kbd "SPC") nil)
+      (define-key map (kbd "?") nil)))
 
-  ;; SPC should never complete: use it for `orderless' groups.
-  (let ((map minibuffer-local-completion-map))
-    (define-key map (kbd "SPC") nil)
-    (define-key map (kbd "?") nil))
-
-  ;;;; Initialisms
-
-  ;; All of the following is a copy of code that was removed from
-  ;; orderless.el.  I was using it, so I want to keep it, at least until
-  ;; some new version is provided upstream.
-
-  (defun orderless--strict-*-initialism (component &optional anchored)
-    "Match a COMPONENT as a strict initialism, optionally ANCHORED.
-The characters in COMPONENT must occur in the candidate in that
-order at the beginning of subsequent words comprised of letters.
-Only non-letters can be in between the words that start with the
-initials.
-
-If ANCHORED is `start' require that the first initial appear in
-the first word of the candidate.  If ANCHORED is `both' require
-that the first and last initials appear in the first and last
-words of the candidate, respectively."
-    (orderless--separated-by
-     '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)))
-     (cl-loop for char across component collect `(seq word-start ,char))
-     (when anchored '(seq (group buffer-start) (zero-or-more (not alpha))))
-     (when (eq anchored 'both)
-       '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)) eol))))
-
-  (defun orderless-strict-initialism (component)
-    "Match a COMPONENT as a strict initialism.
-This means the characters in COMPONENT must occur in the
-candidate in that order at the beginning of subsequent words
-comprised of letters.  Only non-letters can be in between the
-words that start with the initials."
-    (orderless--strict-*-initialism component))
-
-  (defun orderless-strict-leading-initialism (component)
-    "Match a COMPONENT as a strict initialism, anchored at start.
-See `orderless-strict-initialism'.  Additionally require that the
-first initial appear in the first word of the candidate."
-    (orderless--strict-*-initialism component 'start))
-
-  (defun orderless-strict-full-initialism (component)
-    "Match a COMPONENT as a strict initialism, anchored at both ends.
-See `orderless-strict-initialism'.  Additionally require that the
-first and last initials appear in the first and last words of the
-candidate, respectively."
-    (orderless--strict-*-initialism component 'both)))
+  (prot-emacs-builtin-package 'prot-orderless)
 #+end_src
 
 These are the contents of the =prot-orderless.el= library (get the file
