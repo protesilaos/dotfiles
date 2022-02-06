@@ -84,7 +84,9 @@ changes to take effect."
 (defun prot-pulse-pulse-line (&optional face)
   "Temporarily highlight the current line with optional FACE."
   (interactive)
-  (let ((start (if (eobp)
+  (let ((start (if (or (eobp)
+                       (eq (line-number-at-pos)
+                           (line-number-at-pos (point-max))))
                    (line-beginning-position 0)
                  (line-beginning-position)))
         (end (line-beginning-position 2))
