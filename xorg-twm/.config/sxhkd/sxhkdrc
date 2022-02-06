@@ -69,7 +69,7 @@ mod4 + backslash
 #### Main programs
 
 mod4 + {_, shift +,ctrl + shift + } Return
-     {uxterm,TERM=xterm-direct uxterm -e emacsclient -nw -e "(eshell)",TERM=xterm-direct uxterm -e emacsclient -nw -e "(shell)"}
+     {uxterm,TERM=xterm-direct uxterm -e emacsclient -nw,TERM=xterm-direct uxterm -e emacsclient -nw -e "(shell)"}
 
 # Show the desired rofi views.
 mod4 + d
