@@ -1367,7 +1367,6 @@ results I am most likely interested in, based on previous selections.
 ;; Source: <https://gitlab.com/protesilaos/mct.el>.
 ;; Manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-builtin-package 'mct
-  (setq mct-completion-window-size (cons #'mct--frame-height-fraction 1))
   (setq mct-remove-shadowed-file-names t) ; when `file-name-shadow-mode' is enabled
   (setq mct-hide-completion-mode-line t)
   (setq mct-show-completion-line-numbers nil)
@@ -1384,6 +1383,9 @@ results I am most likely interested in, based on previous selections.
           info-menu file imenu))
   (setq mct-completion-blocklist nil) ; Same principle as `mct-completion-passlist'
   (setq mct-completions-format 'one-column)
+
+  ;; Check its doc string to keep its size fixed.
+  (setq mct-completion-window-size (cons #'mct--frame-height-fraction 1))
 
   ;; You can place the Completions' buffer wherever you want, by
   ;; following the syntax of `display-buffer-alist' (check elsewhere in
