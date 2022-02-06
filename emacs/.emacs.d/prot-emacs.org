@@ -1486,7 +1486,7 @@ the minibuffer-specific setup.
   (add-hook 'after-init-hook #'savehist-mode))
 #+end_src
 
-*** Enhanced minibuffer commands (consult.el and prot-consult.el)
+*** Enhanced minibuffer commands (consult.el)
 :PROPERTIES:
 :CUSTOM_ID: h:9c9401d6-8c53-4276-be4c-3bff345d3eeb
 :END:
@@ -1614,14 +1614,8 @@ In practice, I only ever use =consult-register= because I have already
 developed muscle memory for the register-related actions.  Though using
 all three of the above is easier to learn and more consistent overall.
 
-Note that my =prot-consult.el= (reproduced after the following package
-configurations) defines some /quick and dirty/ extensions or thin wrappers
-around Consult commands.  The former *will be reviewed* in favour of
-better alternatives, even though they "simply work" with everything I
-try.
-
 #+begin_src emacs-lisp
-;;; Enhanced minibuffer commands (consult.el and prot-consult.el)
+;;; Enhanced minibuffer commands (consult.el)
 (prot-emacs-elpa-package 'consult
   (setq consult-line-numbers-widen t)
   ;; (setq completion-in-region-function #'consult-completion-in-region)
@@ -1652,6 +1646,9 @@ try.
   (setq consult-find-args "find . -not ( -wholename */.* -prune )")
   (setq consult-preview-key 'any)
 
+  (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
+  (add-hook 'consult-after-jump-hook #'prot-pulse-recentre-top) ; see `prot-pulse.el'
+
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
   (let ((map global-map))
@@ -1666,32 +1663,14 @@ try.
     (define-key map (kbd "M-s M-f") #'consult-find)
     (define-key map (kbd "M-s M-g") #'consult-grep)
     (define-key map (kbd "M-s M-h") #'consult-history)
+    (define-key map (kbd "M-s M-i") #'consult-imenu)
+    (define-key map (kbd "M-s M-l") #'consult-line)
     (define-key map (kbd "M-s M-m") #'consult-mark)
+    (define-key map (kbd "M-s M-s") #'consult-outline)
+    (define-key map (kbd "M-s M-y") #'consult-yank)
     (define-key map (kbd "C-x r r") #'consult-register)) ; Use the register's prefix
   (define-key consult-narrow-map (kbd "?") #'consult-narrow-help))
-
-(prot-emacs-builtin-package 'prot-consult
-  (setq consult-project-root-function #'prot-consult-project-root)
-  (setq prot-consult-command-centre-list
-        '(consult-line
-          prot-consult-line
-          consult-mark))
-  (setq prot-consult-command-top-list
-        '(consult-outline
-          consult-imenu
-          prot-consult-outline
-          prot-consult-imenu))
-  (prot-consult-set-up-hooks-mode 1)
-  (let ((map global-map))
-    (define-key map (kbd "M-s M-i") #'prot-consult-imenu)
-    (define-key map (kbd "M-s M-s") #'prot-consult-outline)
-    (define-key map (kbd "M-s M-y") #'prot-consult-yank)
-    (define-key map (kbd "M-s M-l") #'prot-consult-line)))
 #+end_src
-
-Here is =prot-consult.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
-
-#+include: prot-lisp/prot-consult.el src emacs-lisp :tangle no
 
 **** Switch to directories (consult-dir.el)
 :PROPERTIES:
@@ -1871,10 +1850,9 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
 
 Finally, the =prot-embark.el= that is reproduced after the following block
 contains a few keymaps that integrate Embark with packages like =consult=
-([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).  The
-=embark-consult= package provides glue code that allows Embark to produce
-a correct export buffer while using relevant Consult commands, such as
-=consult-grep=.
+([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el)]]).  The =embark-consult= package
+provides glue code that allows Embark to produce a correct export buffer
+while using relevant Consult commands, such as =consult-grep=.
 
 #+begin_src emacs-lisp
 ;;; Extended minibuffer actions and more (embark.el and prot-embark.el)
@@ -2096,7 +2074,7 @@ no use for it.
 Also note that the Consult package provides its own =recentf= command as
 well as the =consult-buffer= which combines candidates from multiple
 sources, including bookmarks, recent files, and buffers (check more in
-[[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
+[[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el)]]).
 
 #+begin_src emacs-lisp
 ;;; Completion for recent files and directories (prot-recentf.el)
@@ -3510,11 +3488,11 @@ To access bookmarks with minibuffer completion, invoke the command
 
 If you would like to browse bookmarks (and other sources such as recent
 files) through an all-in-one interface, use the =consult-buffer= command
-(see [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
-Consult also offers the command =consult-bookmark= which is like the
-standard =bookmark-jump= except that it also has support for group
-headings (so all files are under one heading, all Info nodes in
-another).  I thus consider it a drop-in replacement for =C-x r b=.
+(see [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el)]]).  Consult also offers
+the command =consult-bookmark= which is like the standard =bookmark-jump=
+except that it also has support for group headings (so all files are
+under one heading, all Info nodes in another).  I thus consider it a
+drop-in replacement for =C-x r b=.
 
 The =list-bookmarks= interface provides several commands for visiting, or
 deleting bookmarks.  Use =C-h m= (=describe-mode=) to get a help buffer with
@@ -7675,7 +7653,7 @@ means of =pdf-outline-minor-mode=.  Simply hit =o= while viewing a PDF to
 produce an outline of the document and then, optionally, =M-x imenu= to
 navigate it using minibuffer completion (though for the latter task you
 may prefer something like =consult-outline=, which is part of the Consult
-package: [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).
+package: [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el)]]).
 
 Finally, I have some tweaks to change the backdrop of the buffer so that
 it is distinct from the page's background while using my light Modus
@@ -8329,8 +8307,9 @@ particular, older versions of my code would establish bindings for
 =imenu.el=.  This was done via bespoke entry and exit hooks and was
 intended to complement the standard Imenu headings with those of the
 Outline.  This is no longer needed because =consult-outline= does exactly
-that ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el and prot-consult.el)]]).  A
-quick reminder of why this matters: you can navigate the outline using
+that ([[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el)]]).
+
+A quick reminder of why this matters: you can navigate the outline using
 minibuffer completion, which is my favourite way to browse a file.  You
 can, in the same spirit, use Embark to produce a buffer with the
 completion candidates, i.e. the headings, or a subset you have narrowed
