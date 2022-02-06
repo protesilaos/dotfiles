@@ -1620,7 +1620,7 @@ all three of the above is easier to learn and more consistent overall.
     (define-key map (kbd "M-s M-l") #'consult-line)
     (define-key map (kbd "M-s M-m") #'consult-mark)
     (define-key map (kbd "M-s M-s") #'consult-outline)
-    (define-key map (kbd "M-s M-y") #'consult-yank)
+    (define-key map (kbd "M-s M-y") #'consult-yank-pop)
     (define-key map (kbd "C-x r r") #'consult-register)) ; Use the register's prefix
   (define-key consult-narrow-map (kbd "?") #'consult-narrow-help))
 #+end_src
