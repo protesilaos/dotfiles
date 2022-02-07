@@ -1604,6 +1604,8 @@ all three of the above is easier to learn and more consistent overall.
 
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
+  (require 'consult-imenu) ; the `imenu' extension is in its own file
+
   (let ((map global-map))
     (define-key map (kbd "C-x r b") #'consult-bookmark) ; override `bookmark-jump'
     (define-key map (kbd "C-x M-:") #'consult-complex-command)
