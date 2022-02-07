@@ -102,6 +102,7 @@
 
 ;;; prot-pulse.el (highlight cursor position)
 (prot-emacs-builtin-package 'prot-pulse
+  ;; Restart `prot-pulse-advice-commands-mode' after updating this list.
   (setq prot-pulse-pulse-command-list
         '(recenter
           recenter-top-bottom
@@ -109,6 +110,8 @@
           reposition-window
           bookmark-jump
           other-window
+          forward-page
+          backward-page
           scroll-up-command
           scroll-down-command
           org-next-visible-heading
@@ -402,6 +405,7 @@
         '((file (styles . (basic partial-completion orderless)))
           (project-file (styles . (basic substring partial-completion orderless)))
           (imenu (styles . (basic substring orderless)))
+          (kill-ring (styles . (basic substring orderless)))
           (consult-location (styles . (basic substring orderless)))))
 
   (setq completion-cycle-threshold 2)
@@ -431,6 +435,7 @@
   (setq minibuffer-eldef-shorten-default t)
 
   (setq echo-keystrokes 0.25)           ; from the C source code
+  (setq kill-ring-max 60)               ; Keep it small
 
   ;; Do not allow the cursor to move inside the minibuffer prompt.  I
   ;; got this from the documentation of Daniel Mendler's Vertico
@@ -485,7 +490,36 @@
   (mct-region-mode 1) ; NOTE 2022-01-15: This is new and remains experimental
 
   (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
-  (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions))
+  (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions)
+
+  ;;;; Sorting completion candidates
+  ;; Only works on Emacs 29 due to a patch of mine that was merged
+  ;; upstream.  A variant of this is in the MCT manual.
+
+  ;; Some sorting functions...
+  (defun prot/mct-sort-by-alpha-length (elems)
+    "Sort ELEMS first alphabetically, then by length."
+    (sort elems (lambda (c1 c2)
+                  (and (string-version-lessp c1 c2)
+                       (< (length c1) (length c2))))))
+
+  (defun prot/mct-sort-by-history (elems)
+    "Sort ELEMS by minibuffer history.
+Use `prot/mct-sort-sort-by-alpha-length' if no history is available."
+    (if-let ((hist (and (not (eq minibuffer-history-variable t))
+                        (symbol-value minibuffer-history-variable))))
+        (minibuffer--sort-by-position hist elems)
+      (prot/mct-sort-sort-by-alpha-length elems)))
+
+  (defun prot/mct-sort-multi-category (elems)
+    "Sort ELEMS per completion category."
+    (pcase (mct--completion-category)
+      ('nil elems) ; no sorting
+      ('kill-ring elems)
+      (_ (prot/mct-sort-by-history elems))))
+
+  ;; Specify the sorting function on Emacs 29.
+  (setq completions-sort #'prot/mct-sort-multi-category))
 
 ;;; Minibuffer history (savehist-mode)
 (prot-emacs-builtin-package 'savehist
