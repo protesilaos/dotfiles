@@ -1318,6 +1318,7 @@ results I am most likely interested in, based on previous selections.
         ;; `partial-completion' is a killer app for files, because it
         ;; can expand ~/.l/s/fo to ~/.local/share/fonts.
         '((file (styles . (basic partial-completion orderless)))
+          (project-file (styles . (basic substring partial-completion orderless)))
           (imenu (styles . (basic substring orderless)))
           (consult-location (styles . (basic substring orderless)))))
 
