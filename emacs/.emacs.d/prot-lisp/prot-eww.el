@@ -358,19 +358,19 @@ in the strings too, so strings take the form
 LABEL @ URL ~ POSITION."
   (let (links match)
     (save-excursion
-      (goto-char (point-min))
+      (goto-char (point-max))
       ;; NOTE 2021-07-25: The first clause in the `or' is meant to
       ;; address a bug where if a URL is in `point-min' it does not get
       ;; captured.
-      (while (setq match (text-property-search-forward 'shr-url))
+      (while (setq match (text-property-search-backward 'shr-url))
         (let* ((raw-url (prop-match-value match))
                (start-point-prop (prop-match-beginning match))
                (end-point-prop (prop-match-end match))
                (url (when (stringp raw-url)
                       (propertize raw-url 'face 'link)))
                (label (replace-regexp-in-string "\n" " " ; NOTE 2021-07-25: newlines break completion
-                       (buffer-substring-no-properties
-                       start-point-prop end-point-prop)))
+                                                (buffer-substring-no-properties
+                                                 start-point-prop end-point-prop)))
                (point start-point-prop)
                (line (line-number-at-pos point t))
                (column (save-excursion (goto-char point) (current-column)))
