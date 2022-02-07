@@ -400,6 +400,7 @@
         ;; `partial-completion' is a killer app for files, because it
         ;; can expand ~/.l/s/fo to ~/.local/share/fonts.
         '((file (styles . (basic partial-completion orderless)))
+          (project-file (styles . (basic substring partial-completion orderless)))
           (imenu (styles . (basic substring orderless)))
           (consult-location (styles . (basic substring orderless)))))
 
@@ -529,6 +530,8 @@
   (add-hook 'consult-after-jump-hook #'prot-pulse-recentre-top) ; see `prot-pulse.el'
 
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
+
+  (require 'consult-imenu) ; the `imenu' extension is in its own file
 
   (let ((map global-map))
     (define-key map (kbd "C-x r b") #'consult-bookmark) ; override `bookmark-jump'
