@@ -394,6 +394,7 @@ move the point an arbitrary distance.
 #+begin_src emacs-lisp
 ;;; prot-pulse.el (highlight cursor position)
 (prot-emacs-builtin-package 'prot-pulse
+  ;; Restart `prot-pulse-advice-commands-mode' after updating this list.
   (setq prot-pulse-pulse-command-list
         '(recenter
           recenter-top-bottom
@@ -401,6 +402,8 @@ move the point an arbitrary distance.
           reposition-window
           bookmark-jump
           other-window
+          forward-page
+          backward-page
           scroll-up-command
           scroll-down-command
           org-next-visible-heading
