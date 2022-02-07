@@ -810,7 +810,8 @@ narrowed page."
   (interactive "p")
   (if (buffer-narrowed-p)
       (prot-simple--narrow-to-page count)
-    (forward-page count)))
+    (forward-page count)
+    (setq this-command 'forward-page)))
 
 ;;;###autoload
 (defun prot-simple-backward-page-dwim (&optional count)
@@ -821,7 +822,8 @@ narrowed page."
   (interactive "p")
   (if (buffer-narrowed-p)
       (prot-simple--narrow-to-page count t)
-    (backward-page count)))
+    (backward-page count)
+    (setq this-command 'backward-page)))
 
 ;; Inspired by Pierre Neidhardt's windower:
 ;; https://gitlab.com/ambrevar/emacs-windower/-/blob/master/windower.el
