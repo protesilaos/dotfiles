@@ -4,7 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/mct
-;; Version: 0.4.2
+;; Version: 0.5.0
 ;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -25,7 +25,7 @@
 ;;; Commentary:
 ;;
 ;; MCT enhances the default Emacs completion.  It makes the minibuffer
-;; and Completions' buffer work together and look like a vertical
+;; and Completions' buffer work together as part of a singular
 ;; completion UI.
 ;;
 ;; Read the documentation for basic usage and configuration.
@@ -78,7 +78,7 @@ Only works when variable `file-name-shadow-mode' is non-nil."
   :group 'mct)
 
 (defcustom mct-hide-completion-mode-line nil
-  "When non-nil, do not show the Completions' buffer mode line."
+  "When non-nil, hide the Completions' buffer mode line."
   :type 'boolean
   :group 'mct)
 
@@ -470,7 +470,7 @@ Apply APP by first setting up the minibuffer to work with Mct."
                     completion-auto-help t)
         (setq mct--active t)
         (mct--setup-live-completions)
-        (mct--setup-keymap)
+        (mct--setup-minibuffer-keymap)
         (mct--setup-shadow-files))
     (apply app)))
 
@@ -607,25 +607,6 @@ by `mct--completions-window-name'."
   (if (mct--get-completion-window)
       (minibuffer-hide-completions)
     (mct--show-completions)))
-
-;;;;; Commands for file completion
-
-;; Adaptation of `icomplete-fido-backward-updir'.
-(defun mct-backward-updir ()
-  "Delete char before point or go up a directory."
-  (interactive nil mct-minibuffer-mode)
-  (cond
-   ((and (eq (char-before) ?/)
-         (eq (mct--completion-category) 'file))
-    (when (string-equal (minibuffer-contents) "~/")
-      (delete-minibuffer-contents)
-      (insert (expand-file-name "~/"))
-      (goto-char (line-end-position)))
-    (save-excursion
-      (goto-char (1- (point)))
-      (when (search-backward "/" (minibuffer-prompt-end) t)
-        (delete-region (1+ (point)) (point-max)))))
-   (t (call-interactively 'backward-delete-char))))
 
 ;;;;; Cyclic motions between minibuffer and completions' buffer
 
@@ -1052,12 +1033,6 @@ Apply APP while inhibiting modification hooks."
       (mct--add-stripes)
     (mct--remove-stripes)))
 
-;; Copied from Daniel Mendler's `vertico' library:
-;; <https://github.com/minad/vertico>.
-(defun mct--crm-indicator (args)
-  "Add prompt indicator to `completing-read-multiple' filter ARGS."
-  (cons (concat "[CRM] " (car args)) (cdr args)))
-
 ;;;;; Shadowed path
 
 ;; Adapted from icomplete.el
@@ -1176,27 +1151,17 @@ region.")
     map)
   "Derivative of `minibuffer-local-completion-map'.")
 
-(defvar mct-minibuffer-local-filename-completion-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "DEL") #'mct-backward-updir)
-    map)
-  "Derivative of `minibuffer-local-filename-completion-map'.")
-
 (defun mct--setup-completion-list-keymap ()
   "Set up completion list keymap."
   (use-local-map
    (make-composed-keymap mct-minibuffer-completion-list-map
                          (current-local-map))))
 
-(defun mct--setup-keymap ()
-  "Set up minibuffer keymaps."
+(defun mct--setup-minibuffer-keymap ()
+  "Set up minibuffer keymap."
   (use-local-map
    (make-composed-keymap mct-minibuffer-local-completion-map
-                         (current-local-map)))
-  (when (eq (mct--completion-category) 'file)
-    (use-local-map
-     (make-composed-keymap mct-minibuffer-local-filename-completion-map
-                           (current-local-map)))))
+                         (current-local-map))))
 
 (defun mct--setup-completion-list ()
   "Set up the completion-list for Mct."
@@ -1248,13 +1213,11 @@ region.")
         (advice-add #'completing-read-default :around #'mct--completing-read-advice)
         (advice-add #'completing-read-multiple :around #'mct--completing-read-advice)
         (advice-add #'minibuffer-completion-help :around #'mct--minibuffer-completion-help-advice)
-        (advice-add #'completing-read-multiple :filter-args #'mct--crm-indicator)
         (advice-add #'minibuf-eldef-setup-minibuffer :around #'mct--stealthily))
     (remove-hook 'completion-list-mode-hook #'mct--setup-completion-list)
     (advice-remove #'completing-read-default #'mct--completing-read-advice)
     (advice-remove #'completing-read-multiple #'mct--completing-read-advice)
     (advice-remove #'minibuffer-completion-help #'mct--minibuffer-completion-help-advice)
-    (advice-remove #'completing-read-multiple #'mct--crm-indicator)
     (advice-remove #'minibuf-eldef-setup-minibuffer #'mct--stealthily))
   (mct--setup-dynamic-completion-persist)
   (mct--setup-shared))
