@@ -7719,6 +7719,47 @@ binding!
   (define-key global-map (kbd "C-z") #'goto-last-change))
 #+end_src
 
+** Jump to visible position (avy)
+:PROPERTIES:
+:CUSTOM_ID: h:a1dabcea-9756-40cf-8c88-91c5e2dd0e70
+:END:
+
+The =avy= package by Oleh Krehel lets you select a location on the screen
+to move the cursor to.  It does so by producing an overlay with
+characters that need to be typed to specify the location.  By default,
+the overlay covers the candidate, though I change the =avy-style= to have
+it appear as a prefix instead.
+
+There are several commands on offer which narrow down the candidates.
+My favourite is =avy-goto-char-timer= (closely followed by =avy-goto-char-2=
+and =avy-goto-word-1=).  It prompts for a character and then has a time
+window lasting =avy-timeout-seconds= during which it can read more
+characters.  Once Avy receives the input, it overlays every word that
+contains those characters in succession.  If there is a single match, it
+jumps directly to it.
+
+Avy has the ability to act on the candidate rather than simply jump to
+it.  Karthik Chikmagalur has a comprehensive essay on the matter, which
+I consider essential reading for anyone wanting to make best use of this
+package: [[https://karthinks.com/software/avy-can-do-anything/][Avy can do anything]] (2021-10-21).  I still am not sure whether
+I need all that power though, as in my workflow I jump to a point and
+then invoke =embark-act= (see [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions (embark.el)]]).
+
+Finally, we can use Avy to select a candidate from the =*Completions*=
+buffer (see [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]]).
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'avy
+  (setq avy-all-windows nil) ; only the current window
+  (setq avy-all-windows-alt t) ; all windows with C-u
+  (setq avy-single-candidate-jump t)
+  (setq avy-background nil)
+  (setq avy-case-fold-search nil) ; case is significant
+  (setq avy-timeout-seconds 0.5)
+  (setq avy-style 'pre) ; prefixes candidate; otherwise use `at-full'
+  (define-key global-map (kbd "C-.") #'avy-goto-char-timer))
+#+end_src
+
 ** Mode line
 :PROPERTIES:
 :CUSTOM_ID: h:39f57b0d-300a-4310-9ba8-8c388fa72e1d
