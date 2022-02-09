@@ -1305,6 +1305,9 @@ several months of full time usage, I am confident in the built-in
 mechanism's ability to sort things well enough and to surface the
 results I am most likely interested in, based on previous selections.
 
+Finally, read the section [[#h:a1dabcea-9756-40cf-8c88-91c5e2dd0e70][Jump to visible position (avy)]] for more on the
+code that leverages =avy=.
+
 #+begin_src emacs-lisp
 ;;; Minibuffer configurations and my extras (mct.el)
 (prot-emacs-builtin-package 'minibuffer
@@ -1434,10 +1437,42 @@ Use `prot/mct-sort-sort-by-alpha-length' if no history is available."
     (pcase (mct--completion-category)
       ('nil elems) ; no sorting
       ('kill-ring elems)
+      ('project-file (prot/mct-sort-by-alpha-length elems))
       (_ (prot/mct-sort-by-history elems))))
 
   ;; Specify the sorting function on Emacs 29.
-  (setq completions-sort #'prot/mct-sort-multi-category))
+  (setq completions-sort #'prot/mct-sort-multi-category)
+
+  ;;;; Integration with Avy
+
+  (with-eval-after-load 'avy
+    ;; Adapted from Omar Antolín Camarena's `avy-embark-collect.el'.
+    (defun prot/mct-avy--choose (pt)
+      "Choose completion at PT."
+      (goto-char pt)
+      (mct-choose-completion-exit))
+
+    (defun prot/mct-avy-completions-select ()
+      "Choose completion and exit using Avy."
+      (interactive)
+      (when (mct--get-completion-window)
+        (mct--switch-to-completions)
+        (avy-with avy-completion
+          (let ((avy-action 'prot/mct-avy--choose))
+            (avy-process
+             (save-excursion
+               (let (completions)
+                 (goto-char (mct--first-completion-point))
+                 (while (not (eobp))
+                   (push (point) completions)
+                   (next-completion 1))
+                 (nreverse completions))))))))
+
+    (dolist (map (list mct-minibuffer-local-completion-map
+                       mct-minibuffer-completion-list-map
+                       mct-region-completion-list-map
+                       mct-region-buffer-map))
+      (define-key map (kbd "C-.") #'prot/mct-avy-completions-select))))
 #+end_src
 
 And here is =mct.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
