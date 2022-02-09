@@ -1418,8 +1418,8 @@ results I am most likely interested in, based on previous selections.
   (defun prot/mct-sort-by-alpha-length (elems)
     "Sort ELEMS first alphabetically, then by length."
     (sort elems (lambda (c1 c2)
-                  (and (string-version-lessp c1 c2)
-                       (< (length c1) (length c2))))))
+                  (or (string-version-lessp c1 c2)
+                      (< (length c1) (length c2))))))
 
   (defun prot/mct-sort-by-history (elems)
     "Sort ELEMS by minibuffer history.
