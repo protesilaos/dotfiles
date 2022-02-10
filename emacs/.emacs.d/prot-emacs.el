@@ -104,7 +104,7 @@
 (prot-emacs-builtin-package 'prot-pulse
   ;; Restart `prot-pulse-advice-commands-mode' after updating this list.
   (setq prot-pulse-pulse-command-list
-        '(recenter
+        '(;; recenter
           recenter-top-bottom
           move-to-window-line-top-bottom
           reposition-window
@@ -141,11 +141,11 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs nil
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers t
-        modus-themes-deuteranopia nil
+        modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
@@ -166,7 +166,7 @@
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
         ;; `intense'.
-        modus-themes-markup nil
+        modus-themes-markup '(background)
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -192,16 +192,16 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(background)
+        modus-themes-prompts nil
 
-        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated}
+        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated,'super-opinionated}
 
         modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend accented bg-only)
+        modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs nil
@@ -500,8 +500,8 @@
   (defun prot/mct-sort-by-alpha-length (elems)
     "Sort ELEMS first alphabetically, then by length."
     (sort elems (lambda (c1 c2)
-                  (and (string-version-lessp c1 c2)
-                       (< (length c1) (length c2))))))
+                  (or (string-version-lessp c1 c2)
+                      (< (length c1) (length c2))))))
 
   (defun prot/mct-sort-by-history (elems)
     "Sort ELEMS by minibuffer history.
@@ -516,10 +516,42 @@ Use `prot/mct-sort-sort-by-alpha-length' if no history is available."
     (pcase (mct--completion-category)
       ('nil elems) ; no sorting
       ('kill-ring elems)
+      ('project-file (prot/mct-sort-by-alpha-length elems))
       (_ (prot/mct-sort-by-history elems))))
 
   ;; Specify the sorting function on Emacs 29.
-  (setq completions-sort #'prot/mct-sort-multi-category))
+  (setq completions-sort #'prot/mct-sort-multi-category)
+
+  ;;;; Integration with Avy
+
+  (with-eval-after-load 'avy
+    ;; Adapted from Omar Antolín Camarena's `avy-embark-collect.el'.
+    (defun prot/mct-avy--choose (pt)
+      "Choose completion at PT."
+      (goto-char pt)
+      (mct-choose-completion-exit))
+
+    (defun prot/mct-avy-completions-select ()
+      "Choose completion and exit using Avy."
+      (interactive)
+      (when (mct--get-completion-window)
+        (mct--switch-to-completions)
+        (avy-with avy-completion
+          (let ((avy-action 'prot/mct-avy--choose))
+            (avy-process
+             (save-excursion
+               (let (completions)
+                 (goto-char (mct--first-completion-point))
+                 (while (not (eobp))
+                   (push (point) completions)
+                   (next-completion 1))
+                 (nreverse completions))))))))
+
+    (dolist (map (list mct-minibuffer-local-completion-map
+                       mct-minibuffer-completion-list-map
+                       mct-region-completion-list-map
+                       mct-region-buffer-map))
+      (define-key map (kbd "C-.") #'prot/mct-avy-completions-select))))
 
 ;;; Minibuffer history (savehist-mode)
 (prot-emacs-builtin-package 'savehist
@@ -2855,6 +2887,16 @@ Can link to more than one message, if so all matching messages are shown."
 ;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
   (define-key global-map (kbd "C-z") #'goto-last-change))
+
+(prot-emacs-elpa-package 'avy
+  (setq avy-all-windows nil) ; only the current window
+  (setq avy-all-windows-alt t) ; all windows with C-u
+  (setq avy-single-candidate-jump t)
+  (setq avy-background nil)
+  (setq avy-case-fold-search nil) ; case is significant
+  (setq avy-timeout-seconds 0.5)
+  (setq avy-style 'pre) ; prefixes candidate; otherwise use `at-full'
+  (define-key global-map (kbd "C-.") #'avy-goto-char-timer))
 
 ;;; Mode line
 (setq mode-line-percent-position '(-3 "%p"))
