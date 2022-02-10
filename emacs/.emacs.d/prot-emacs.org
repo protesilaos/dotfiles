@@ -601,7 +601,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; symbols: `background', `bold', `gray', `intense', `italic'
         modus-themes-prompts nil
 
-        modus-themes-completions nil ; {nil,'moderate,'opinionated}
+        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated,'super-opinionated}
 
         modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
 
