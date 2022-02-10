@@ -396,7 +396,7 @@ move the point an arbitrary distance.
 (prot-emacs-builtin-package 'prot-pulse
   ;; Restart `prot-pulse-advice-commands-mode' after updating this list.
   (setq prot-pulse-pulse-command-list
-        '(recenter
+        '(;; recenter
           recenter-top-bottom
           move-to-window-line-top-bottom
           reposition-window
