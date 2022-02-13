@@ -1367,6 +1367,14 @@ code that leverages =avy=.
 
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
+  ;; Adapted from Vertico.
+  (defun crm-indicator (args)
+    "Add prompt indicator to `completing-read-multiple' filter ARGS."
+    ;; The `error' face just makes the text red.
+    (cons (concat (propertize "[CRM] " 'face 'error) (car args)) (cdr args)))
+
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
@@ -1456,18 +1464,18 @@ Use `prot/mct-sort-sort-by-alpha-length' if no history is available."
     (defun prot/mct-avy-completions-select ()
       "Choose completion and exit using Avy."
       (interactive)
-      (when (mct--get-completion-window)
-        (mct--switch-to-completions)
-        (avy-with avy-completion
-          (let ((avy-action 'prot/mct-avy--choose))
-            (avy-process
-             (save-excursion
-               (let (completions)
-                 (goto-char (mct--first-completion-point))
-                 (while (not (eobp))
-                   (push (point) completions)
-                   (next-completion 1))
-                 (nreverse completions))))))))
+      (when-let ((window (mct--get-completion-window)))
+        (with-selected-window window
+          (avy-with avy-completion
+            (let ((avy-action 'prot/mct-avy--choose))
+              (avy-process
+               (save-excursion
+                 (let (completions)
+                   (goto-char (mct--first-completion-point))
+                   (while (not (eobp))
+                     (push (point) completions)
+                     (next-completion 1))
+                   (nreverse completions)))))))))
 
     (dolist (map (list mct-minibuffer-local-completion-map
                        mct-minibuffer-completion-list-map
