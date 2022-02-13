@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 2.0.0
-;; Last-Modified: <2022-02-10 19:39:28 +0200>
+;; Last-Modified: <2022-02-13 09:26:33 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -99,6 +99,7 @@
 ;;     change-log and log-view (`vc-print-log' and `vc-print-root-log')
 ;;     cider
 ;;     circe
+;;     citar
 ;;     color-rg
 ;;     column-enforce-mode
 ;;     company-mode
@@ -148,6 +149,7 @@
 ;;     elfeed-score
 ;;     elpher
 ;;     embark
+;;     ement (ement.el)
 ;;     emms
 ;;     enh-ruby-mode (enhanced-ruby-mode)
 ;;     epa
@@ -284,6 +286,7 @@
 ;;     proced
 ;;     prodigy
 ;;     pulse
+;;     pyim
 ;;     quick-peek
 ;;     racket-mode
 ;;     rainbow-blocks
@@ -4276,6 +4279,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(comint-highlight-input ((,class :inherit bold)))
     `(comint-highlight-prompt ((,class :inherit modus-themes-prompt)))
     `(confusingly-reordered ((,class :inherit modus-themes-lang-error)))
+    `(elisp-shorthand-font-lock-face ((,class :inherit font-lock-variable-name-face)))
     `(error ((,class :inherit bold :foreground ,red)))
     `(escape-glyph ((,class :foreground ,fg-escape-char-construct)))
     `(file-name-shadow ((,class :inherit (shadow italic))))
@@ -4295,7 +4299,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(mm-uu-extract ((,class :background ,bg-dim :foreground ,fg-special-mild)))
     `(next-error ((,class :inherit modus-themes-subtle-red :extend t)))
     `(pgtk-im-0 ((,class :inherit modus-themes-fringe-blue :underline t)))
-    `(rectangle-preview ((,class :inherit modus-themes-special-mild)))
+    `(rectangle-preview ((,class :background ,bg-special-faint-warm :foreground ,fg-special-warm)))
     `(region ((,class ,@(modus-themes--region bg-region fg-main
                                               bg-hl-alt-intense bg-region-accent
                                               bg-region-accent-subtle))))
@@ -4602,6 +4606,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(lui-button-face ((,class :inherit button)))
     `(lui-highlight-face ((,class :foreground ,magenta-alt)))
     `(lui-time-stamp-face ((,class :foreground ,blue-nuanced-fg)))
+;;;;; citar
+    `(citar ((,class :inherit shadow)))
+    `(citar-highlight (( )))
 ;;;;; color-rg
     `(color-rg-font-lock-column-number ((,class :foreground ,magenta-alt-other)))
     `(color-rg-font-lock-command ((,class :inherit bold :foreground ,fg-main)))
@@ -4644,11 +4651,11 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; compilation
     `(compilation-column-number ((,class :inherit compilation-line-number)))
     `(compilation-error ((,class :inherit modus-themes-bold :foreground ,red)))
-    `(compilation-info ((,class :inherit modus-themes-bold :foreground ,cyan)))
-    `(compilation-line-number ((,class :inherit modus-themes-bold :foreground ,magenta-alt-faint)))
-    `(compilation-mode-line-exit ((,class :inherit modus-themes-bold :foreground ,blue-active)))
+    `(compilation-info ((,class :inherit modus-themes-bold :foreground ,fg-special-cold)))
+    `(compilation-line-number ((,class :foreground ,fg-special-warm)))
+    `(compilation-mode-line-exit ((,class :inherit bold)))
     `(compilation-mode-line-fail ((,class :inherit modus-themes-bold :foreground ,red-active)))
-    `(compilation-mode-line-run ((,class :inherit modus-themes-bold :foreground ,magenta-active)))
+    `(compilation-mode-line-run ((,class :inherit modus-themes-bold :foreground ,cyan-active)))
     `(compilation-warning ((,class :inherit modus-themes-bold :foreground ,yellow-alt)))
 ;;;;; completions
     `(completions-annotations ((,class :inherit modus-themes-slant :foreground ,cyan-faint)))
@@ -5049,6 +5056,18 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(elpher-gemini-heading3 ((,class :inherit modus-themes-heading-3)))
 ;;;;; embark
     `(embark-keybinding ((,class :inherit modus-themes-completion-key-binding)))
+;;;;; ement (ement.el)
+    `(ement-room-fully-read-marker ((,class :background ,cyan-subtle-bg)))
+    `(ement-room-membership ((,class :inherit shadow)))
+    `(ement-room-mention (( )))
+    `(ement-room-name ((,class :inherit bold)))
+    `(ement-room-reactions ((,class :inherit shadow)))
+    `(ement-room-read-receipt-marker ((,class :background ,yellow-subtle-bg)))
+    `(ement-room-self ((,class :inherit bold :foreground ,magenta)))
+    `(ement-room-self-message ((,class :foreground ,magenta-faint)))
+    `(ement-room-timestamp ((,class :inherit shadow)))
+    `(ement-room-timestamp-header ((,class :inherit bold :foreground ,cyan)))
+    `(ement-room-user ((,class :inherit bold :foreground ,blue)))
 ;;;;; emms
     `(emms-browser-album-face ((,class :foreground ,magenta-alt-other)))
     `(emms-browser-artist-face ((,class :foreground ,cyan)))
@@ -5640,7 +5659,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(hi-red-b ((,class :inherit bold :background ,red-intense-bg :foreground ,fg-main)))
     `(hi-salmon ((,class :background ,red-subtle-bg :foreground ,fg-main)))
     `(hi-yellow ((,class :background ,yellow-subtle-bg :foreground ,fg-main)))
-    `(highlight ((,class :background ,blue-subtle-bg :foreground ,fg-main)))
+    `(highlight ((,class :background ,cyan-subtle-bg :foreground ,fg-main)))
     `(highlight-changes ((,class :foreground ,red-alt :underline nil)))
     `(highlight-changes-delete ((,class :background ,red-nuanced-bg
                                         :foreground ,red :underline t)))
@@ -5994,7 +6013,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(magit-log-author ((,class :foreground ,cyan)))
     `(magit-log-date ((,class :inherit shadow)))
     `(magit-log-graph ((,class :foreground ,fg-dim)))
-    `(magit-mode-line-process ((,class :inherit bold :foreground ,blue-active)))
+    `(magit-mode-line-process ((,class :inherit bold :foreground ,cyan-active)))
     `(magit-mode-line-process-error ((,class :inherit bold :foreground ,red-active)))
     `(magit-process-ng ((,class :inherit error)))
     `(magit-process-ok ((,class :inherit success)))
@@ -6037,9 +6056,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(makefile-makepp-perl ((,class :background ,cyan-nuanced-bg)))
     `(makefile-space ((,class :background ,magenta-nuanced-bg)))
 ;;;;; man
-    `(Man-overstrike ((,class :inherit bold :foreground ,magenta)))
+    `(Man-overstrike ((,class :inherit bold)))
     `(Man-reverse ((,class :inherit modus-themes-subtle-magenta)))
-    `(Man-underline ((,class :foreground ,cyan :underline t)))
 ;;;;; marginalia
     `(marginalia-archive ((,class :foreground ,cyan-alt-other)))
     `(marginalia-char ((,class :foreground ,magenta)))
@@ -6201,10 +6219,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
                             'alt-style bg-main))))
     `(mode-line-active ((,class :inherit mode-line)))
     `(mode-line-buffer-id ((,class :inherit bold)))
-    `(mode-line-emphasis ((,class :inherit bold :foreground ,blue-active)))
-    `(mode-line-highlight ((,class :inherit ,(if (memq 'accented modus-themes-mode-line)
-                                                  'modus-themes-active-blue
-                                                'highlight))))
+    `(mode-line-emphasis ((,class :inherit bold)))
+    `(mode-line-highlight ((,class :inherit highlight)))
     `(mode-line-inactive ((,class :inherit modus-themes-ui-variable-pitch
                                   ,@(modus-themes--mode-line-attrs
                                      fg-inactive bg-inactive
@@ -6658,6 +6674,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(prodigy-yellow-face ((,class :inherit warning)))
 ;;;;; pulse
     `(pulse-highlight-start-face ((,class :background ,bg-active-accent :extend t)))
+;;;;; pyim
+    `(pyim-page ((,class :background ,bg-active :foreground ,fg-active)))
+    `(pyim-page-selection ((,class :inherit bold :background ,bg-active :foreground ,blue-active)))
+    `(pyim-page-subword ((,class :background ,bg-inactive)))
 ;;;;; quick-peek
     `(quick-peek-background-face ((,class :background ,bg-alt)))
     `(quick-peek-border-face ((,class :background ,fg-window-divider-inner :height 1)))
@@ -7338,9 +7358,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(writegood-weasels-face ((,class :inherit modus-themes-lang-error)))
 ;;;;; woman
     `(woman-addition ((,class :foreground ,magenta-alt-other)))
-    `(woman-bold ((,class :inherit bold :foreground ,magenta)))
-    `(woman-italic ((,class :inherit italic :foreground ,cyan)))
-    `(woman-unknown ((,class :inherit italic :foreground ,yellow)))
+    `(woman-unknown ((,class :foreground ,cyan)))
 ;;;;; xah-elisp-mode
     `(xah-elisp-at-symbol ((,class :inherit font-lock-warning-face)))
     `(xah-elisp-cap-variable ((,class :inherit font-lock-preprocessor-face)))
@@ -7377,8 +7395,6 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;; awesome-tray
     `(awesome-tray-mode-line-active-color ,blue)
     `(awesome-tray-mode-line-inactive-color ,bg-active)
-;;;; compilation
-    `(compilation-message-face 'link)
 ;;;; exwm
     `(exwm-floating-border-color ,fg-window-divider-inner)
 ;;;; flymake fringe indicators
