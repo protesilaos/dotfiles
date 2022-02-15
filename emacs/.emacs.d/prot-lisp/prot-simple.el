@@ -774,8 +774,11 @@ Also check `prot-simple-narrow-dwim'."
 If region is active, narrow the buffer to the region's
 boundaries.
 
-If no region is active, narrow to the visible portion of the
-window.
+If pages are defined by virtues of `prot-common-page-p' narrow to
+the current page boundaries.
+
+If no region is active and no pages exist, narrow to the visible
+portion of the window.
 
 If narrowing is in effect, widen the view."
   (interactive)
@@ -787,11 +790,11 @@ If narrowing is in effect, widen the view."
     (let ((beg (region-beginning))
           (end (region-end)))
       (narrow-to-region beg end)))
+   ((prot-common-page-p)
+    (narrow-to-page))
    ((null (buffer-narrowed-p))
     (prot-simple-narrow-visible-window))
-   (t
-    (widen)
-    (recenter))))
+   ((widen))))
 
 (defun prot-simple--narrow-to-page (count &optional back)
   "Narrow to COUNTth page with optional BACK motion."
