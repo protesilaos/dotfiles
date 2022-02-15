@@ -5059,8 +5059,8 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-special-ctrl-a/e nil)
   (setq org-special-ctrl-k nil)
   (setq org-M-RET-may-split-line '((default . nil)))
-  (setq org-hide-emphasis-markers t)
-  (setq org-hide-macro-markers t)
+  (setq org-hide-emphasis-markers nil)
+  (setq org-hide-macro-markers nil)
   (setq org-hide-leading-stars nil)
   (setq org-cycle-separator-lines 0)
   (setq org-structure-template-alist    ; CHANGED in Org 9.3, Emacs 27.1
