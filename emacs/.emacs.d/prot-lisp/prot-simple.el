@@ -774,7 +774,7 @@ Also check `prot-simple-narrow-dwim'."
 If region is active, narrow the buffer to the region's
 boundaries.
 
-If pages are defined by virtues of `prot-common-page-p' narrow to
+If pages are defined by virtue of `prot-common-page-p', narrow to
 the current page boundaries.
 
 If no region is active and no pages exist, narrow to the visible
@@ -787,9 +787,7 @@ If narrowing is in effect, widen the view."
   (cond
    ((and (use-region-p)
          (null (buffer-narrowed-p)))
-    (let ((beg (region-beginning))
-          (end (region-end)))
-      (narrow-to-region beg end)))
+    (narrow-to-region (region-beginning) (region-end)))
    ((prot-common-page-p)
     (narrow-to-page))
    ((null (buffer-narrowed-p))
