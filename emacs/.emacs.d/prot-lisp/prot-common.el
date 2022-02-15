@@ -158,6 +158,12 @@ will continue rotating accordingly."
   (list (window-start) (window-end)))
 
 ;;;###autoload
+(defun prot-common-page-p ()
+  "Return non-nil if there is a `page-delimiter' in the buffer."
+  (or (save-excursion (re-search-forward page-delimiter nil t))
+      (save-excursion (re-search-backward page-delimiter nil t))))
+
+;;;###autoload
 (defun prot-common-read-data (file)
   "Read Elisp data from FILE."
   (with-temp-buffer
