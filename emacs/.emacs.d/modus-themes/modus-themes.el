@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 2.0.0
-;; Last-Modified: <2022-02-13 09:26:33 +0200>
+;; Last-Modified: <2022-02-14 15:10:16 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -44,6 +44,7 @@
 ;;     modus-themes-mixed-fonts                    (boolean)
 ;;     modus-themes-subtle-line-numbers            (boolean)
 ;;     modus-themes-variable-pitch-ui              (boolean)
+;;     modus-themes-box-buttons                    (choice)
 ;;     modus-themes-completions                    (choice)
 ;;     modus-themes-diffs                          (choice)
 ;;     modus-themes-fringes                        (choice)
@@ -1630,6 +1631,16 @@ The actual styling of the face is done by `modus-themes-faces'."
 The actual styling of the face is done by `modus-themes-faces'."
   :group 'modus-themes-faces)
 
+(defface modus-themes-box-button nil
+  "Face for widget buttons (e.g. in the Custom UI).
+The actual styling of the face is done by `modus-themes-faces'."
+  :group 'modus-themes-faces)
+
+(defface modus-themes-box-button-pressed nil
+  "Face for pressed widget buttons (e.g. in the Custom UI).
+The actual styling of the face is done by `modus-themes-faces'."
+  :group 'modus-themes-faces)
+
 
 
 ;;; Customization variables
@@ -1770,6 +1781,7 @@ Users may need to explicitly configure the font family of
 (defconst modus-themes--headings-choice
   '(set :tag "Properties" :greedy t
         (const :tag "Background color" background)
+        (const :tag "Proportionately spaced font (variable-pitch)" variable-pitch)
         (const :tag "Overline" overline)
         (choice :tag "Font weight (must be supported by the typeface)"
                 (const :tag "Bold (default)" nil)
@@ -1833,12 +1845,12 @@ proportionately spaced typeface).
 
 The symbol of a weight attribute adjusts the font of the heading
 accordingly, such as `light', `semibold', etc.  Valid symbols are
-defined in the internal variable `modus-themes--heading-weights'.
-The absence of a weight means that bold will be used by virtue of
-inheriting the `bold' face (check the manual for tweaking bold
-and italic faces).  For backward compatibility, the `no-bold'
-value is accepted, though users are encouraged to specify a
-`regular' weight instead.
+defined in the variable `modus-themes-weights'.  The absence of a
+weight means that bold will be used by virtue of inheriting the
+`bold' face (check the manual for tweaking bold and italic
+faces).  For backward compatibility, the `no-bold' value is
+accepted, though users are encouraged to specify a `regular'
+weight instead.
 
 A number, expressed as a floating point (e.g. 1.5), adjusts the
 height of the heading to that many times the base font size.  The
@@ -1922,10 +1934,10 @@ include either or both of those properties:
   small increase in height (a value of 1.15).
 - The symbol of a weight attribute adjusts the font of the
   heading accordingly, such as `light', `semibold', etc.  Valid
-  symbols are defined in the internal variable
-  `modus-themes--heading-weights'.  The absence of a weight means
-  that bold will be used by virtue of inheriting the `bold'
-  face (check the manual for tweaking bold and italic faces).
+  symbols are defined in the variable `modus-themes-weights'.
+  The absence of a weight means that bold will be used by virtue
+  of inheriting the `bold' face (check the manual for tweaking
+  bold and italic faces).
 
 In case both a number and `no-scale' are in the list, the latter
 takes precedence.  If two numbers are specified, the first one is
@@ -2929,6 +2941,75 @@ as the Centaur tabs package."
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) Tab style"))
 
+(defcustom modus-themes-box-buttons nil
+  "Control the style of buttons in the Custom UI and related.
+
+The value is a list of properties, each designated by a symbol.
+The default (a nil value or an empty list) is a gray background
+combined with a pseudo three-dimensional effect.
+
+The `flat' property makes the button two dimensional.
+
+The `accented' property changes the background from gray to an
+accent color.
+
+The `faint' property reduces the overall coloration.
+
+The `variable-pitch' property applies a proportionately spaced
+typeface to the button's text.
+
+The `underline' property draws a line below the affected text and
+removes whatever box effect.  This is optimal when Emacs runs
+inside a terminal emulator.  If `flat' and `underline' are
+defined together, the latter takes precedence.
+
+The symbol of a weight attribute adjusts the font of the button
+accordingly, such as `light', `semibold', etc.  Valid symbols are
+defined in the variable `modus-themes-weights'.
+
+A number, expressed as a floating point (e.g. 0.9), adjusts the
+height of the button's text to that many times the base font
+size.  The default height is the same as 1.0, though it need not
+be explicitly stated.
+
+Combinations of any of those properties are expressed as a list,
+like in these examples:
+
+    (flat)
+    (variable-pitch flat)
+    (variable-pitch flat 0.9 semibold)
+
+The order in which the properties are set is not significant.
+
+In user configuration files the form may look like this:
+
+    (setq modus-themes-box-buttons (quote (variable-pitch flat 0.9)))"
+  :group 'modus-themes
+  :package-version '(modus-themes . "2.1.0")
+  :version "29.1"
+  :type '(set :tag "Properties" :greedy t
+              (const :tag "Two-dimensional button" flat)
+              (const :tag "Accented background instead of gray" accented)
+              (const :tag "Reduce overall coloration" faint)
+              (const :tag "Proportionately spaced font (variable-pitch)" variable-pitch)
+              (const :tag "Underline instead of a box effect" underline)
+              (choice :tag "Font weight (must be supported by the typeface)"
+                      (const :tag "Thin" thin)
+                      (const :tag "Ultra-light" ultralight)
+                      (const :tag "Extra-light" extralight)
+                      (const :tag "Light" light)
+                      (const :tag "Semi-light" semilight)
+                      (const :tag "Regulat (default)" nil)
+                      (const :tag "Medium" medium)
+                      (const :tag "Bold" bold)
+                      (const :tag "Semi-bold" semibold)
+                      (const :tag "Extra-bold" extrabold)
+                      (const :tag "Ultra-bold" ultrabold))
+              (float :tag "Number (float) to adjust height by" :value 0.9))
+  :set #'modus-themes--set-option
+  :initialize #'custom-initialize-default
+  :link '(info-link "(modus-themes) Box buttons"))
+
 
 
 ;;; Internal functions
@@ -3251,12 +3332,17 @@ an alternative to the default value."
   "Get cdr of KEY in ALIST."
   (cdr (assoc key alist)))
 
-(defvar modus-themes--heading-weights
+(define-obsolete-variable-alias
+  'modus-themes--heading-weights
+  'modus-themes-weights
+  "2.1.0")
+
+(defconst modus-themes-weights
   '( thin ultralight extralight light semilight regular medium
      semibold bold heavy extrabold ultrabold)
-  "List of font weights used by `modus-themes--heading'.")
+  "List of font weights.")
 
-(defun modus-themes--heading-weight (list)
+(defun modus-themes--weight (list)
   "Search for `modus-themes--heading' weight in LIST."
   (catch 'found
     (dolist (elt list)
@@ -3280,7 +3366,7 @@ that combines well with the background and foreground."
          (varbold (if var
                       (append (list 'bold) (list var))
                     'bold))
-         (weight (when style-listp (modus-themes--heading-weight style))))
+         (weight (when style-listp (modus-themes--weight style))))
     (list :inherit
           (cond
            ;; `no-bold' is for backward compatibility because we cannot
@@ -3316,7 +3402,7 @@ that combines well with the background and foreground."
   "Control the style of the Org agenda structure.
 FG is the foreground color to use."
   (let* ((properties (modus-themes--key-cdr 'header-block modus-themes-org-agenda))
-         (weight (modus-themes--heading-weight properties)))
+         (weight (modus-themes--weight properties)))
     (list :inherit
           (cond
            ((and weight (memq 'variable-pitch properties))
@@ -3800,6 +3886,56 @@ application of a variable-pitch font."
      :foreground (or foreground 'unspecified)
      :box (if box-p (list :line-width 2 :color background) 'unspecified))))
 
+(defun modus-themes--button (bg bgfaint bgaccent bgaccentfaint border &optional pressed-button-p)
+  "Apply `modus-themes-box-buttons' styles.
+
+Work in progress.  BG BGFAINT BGACCENT BGACCENTFAINT BORDER PRESSED-BUTTON-P."
+  (let* ((properties modus-themes-box-buttons)
+         (weight (modus-themes--weight properties)))
+    (list :inherit
+          (cond
+           ((and (memq 'variable-pitch properties)
+                 (eq weight 'bold))
+            (list 'bold 'variable-pitch))
+           ((memq 'variable-pitch properties)
+            'variable-pitch)
+           ((eq weight 'bold)
+            'bold)
+           ('unspecified))
+          :background
+          (cond
+           ((and (memq 'accented properties)
+                 (memq 'faint properties)
+                 bgaccentfaint))
+           ((memq 'faint properties)
+            bgfaint)
+           ((memq 'accented properties)
+            bgaccent)
+           (bg))
+          :box
+          (cond
+           ((memq 'underline properties)
+            'unspecified)
+           ((memq 'flat properties)
+            (list :line-width -1 :color border))
+           ((list :line-width -1
+                  :style (if pressed-button-p
+                             'pressed-button
+                           'released-button)
+                  :color border)))
+          :weight
+          (cond
+           ((eq weight 'bold)
+            'unspecified) ; we :inherit the `bold' face above
+           (weight weight)
+           ('unspecified))
+          :height
+          (seq-find #'floatp properties 'unspecified)
+          :underline
+          (if (memq 'underline properties)
+              t
+            'unspecified))))
+
 
 
 ;;;; Utilities for DIY users
@@ -4244,6 +4380,13 @@ by virtue of calling either of `modus-themes-load-operandi' and
       ((,class ,@(if (null modus-themes-completions)
                      (list :foreground magenta-alt-other)
                    (list :inherit 'modus-themes-key-binding)))))
+;;;;; buttons
+    `(modus-themes-box-button
+      ((,class ,@(modus-themes--button bg-active bg-main bg-active-accent
+                                       bg-special-cold bg-region))))
+    `(modus-themes-box-button-pressed
+      ((,class ,@(modus-themes--button bg-active bg-main bg-active-accent
+                                       bg-special-cold bg-region t))))
 ;;;;; typography
     `(modus-themes-bold ((,class ,@(modus-themes--bold-weight))))
     `(modus-themes-fixed-pitch ((,class ,@(modus-themes--fixed-pitch))))
@@ -4728,12 +4871,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; cursor-flash
     `(cursor-flash-face ((,class :inherit modus-themes-intense-blue)))
 ;;;;; custom (M-x customize)
-    `(custom-button ((,class :box (:line-width 2 :color nil :style released-button)
-                             :background ,bg-active :foreground ,fg-main)))
-    `(custom-button-mouse ((,class :box (:line-width 2 :color nil :style released-button)
-                                   :background ,bg-active :foreground ,fg-active)))
-    `(custom-button-pressed ((,class :box (:line-width 2 :color nil :style pressed-button)
-                                     :background ,bg-active :foreground ,fg-main)))
+    `(custom-button ((,class :inherit modus-themes-box-button)))
+    `(custom-button-mouse ((,class :inherit (highlight custom-button))))
+    `(custom-button-pressed ((,class :inherit modus-themes-box-button-pressed)))
     `(custom-changed ((,class :inherit modus-themes-subtle-cyan)))
     `(custom-comment ((,class :inherit shadow)))
     `(custom-comment-tag ((,class :background ,bg-alt :foreground ,yellow-alt-other)))
@@ -4746,7 +4886,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(custom-set ((,class :foreground ,blue-alt)))
     `(custom-state ((,class :foreground ,cyan-alt-other)))
     `(custom-themed ((,class :inherit modus-themes-subtle-blue)))
-    `(custom-variable-tag ((,class :inherit bold :foreground ,cyan)))
+    `(custom-variable-tag ((,class :foreground ,cyan)))
 ;;;;; dap-mode
     `(dap-mouse-eval-thing-face ((,class :box (:line-width -1 :color ,blue-active :style nil)
                                          :background ,bg-active :foreground ,fg-main)))
@@ -5245,8 +5385,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(eww-form-checkbox ((,class :inherit eww-form-text)))
     `(eww-form-file ((,class :inherit eww-form-submit)))
     `(eww-form-select ((,class :inherit eww-form-submit)))
-    `(eww-form-submit ((,class :box (:line-width 2 :style released-button)
-                               :background ,bg-active)))
+    `(eww-form-submit ((,class :inherit modus-themes-box-button)))
     `(eww-form-text ((,class :box ,bg-active :background ,bg-alt)))
     `(eww-form-textarea ((,class :background ,bg-alt)))
 ;;;;; eyebrowse
@@ -6056,7 +6195,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(makefile-makepp-perl ((,class :background ,cyan-nuanced-bg)))
     `(makefile-space ((,class :background ,magenta-nuanced-bg)))
 ;;;;; man
-    `(Man-overstrike ((,class :inherit bold)))
+    `(Man-overstrike ((,class :inherit bold :foreground ,fg-special-calm)))
     `(Man-reverse ((,class :inherit modus-themes-subtle-magenta)))
 ;;;;; marginalia
     `(marginalia-archive ((,class :foreground ,cyan-alt-other)))
@@ -7358,6 +7497,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(writegood-weasels-face ((,class :inherit modus-themes-lang-error)))
 ;;;;; woman
     `(woman-addition ((,class :foreground ,magenta-alt-other)))
+    `(woman-bold ((,class :inherit bold :foreground ,fg-special-calm)))
     `(woman-unknown ((,class :foreground ,cyan)))
 ;;;;; xah-elisp-mode
     `(xah-elisp-at-symbol ((,class :inherit font-lock-warning-face)))
