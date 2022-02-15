@@ -8814,7 +8814,7 @@ Refer to the source code in [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common cu
 (prot-emacs-builtin-package 'text-mode)
 
 (prot-emacs-builtin-package 'prot-text
-  (add-to-list 'auto-mode-alist '("\\`\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
+  (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
   (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
   (define-key org-mode-map (kbd "<M-return>") #'org-meta-return) ; don't override M-RET here
   (define-key org-mode-map (kbd "M-;") nil))
