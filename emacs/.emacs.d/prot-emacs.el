@@ -142,12 +142,12 @@
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts nil
-        modus-themes-subtle-line-numbers t
-        modus-themes-deuteranopia t
-        modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui nil
+        modus-themes-subtle-line-numbers nil
+        modus-themes-deuteranopia nil
+        modus-themes-tabs-accented t
+        modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -160,53 +160,61 @@
 
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
-        ;; `accented', and a natural number for extra padding
+        ;; `accented', and a natural number for extra padding.
         modus-themes-mode-line nil
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
         ;; `intense'.
-        modus-themes-markup '(background)
+        modus-themes-markup nil
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax nil
+        modus-themes-syntax '(green-strings)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line nil
+        modus-themes-hl-line '(underline intense)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match nil
+        modus-themes-paren-match '(bold)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links nil
+        modus-themes-links '(neutral-underline)
+
+        ;; Options for `modus-themes-box-buttons' are either nil (the
+        ;; default), or a list that can combine any of `flat',
+        ;; `accented', `faint', `variable-pitch', `underline', the
+        ;; symbol of any font weight as listed in
+        ;; `modus-themes-weights', and a floating point number
+        ;; (e.g. 0.9) for the height of the button's text.
+        modus-themes-box-buttons '(variable-pitch flat faint 0.9)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts nil
+        modus-themes-prompts '(background)
 
-        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated,'super-opinionated}
+        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated,'super-opinionated}
 
-        modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
+        modus-themes-mail-citations 'faint ; {nil,'intense,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend)
+        modus-themes-region '(no-extend accented)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
-        modus-themes-diffs nil
+        modus-themes-diffs 'desaturated
 
-        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
+        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch regular 1.4))
@@ -219,7 +227,7 @@
 
         ;; ;; For example:
         ;; modus-themes-headings
-        ;; '((1 . (variable-pitch light 1.8))
+        ;; '((1 . (overline background variable-pitch light 1.8))
         ;;   (2 . (variable-pitch regular 1.6))
         ;;   (3 . (variable-pitch regular 1.3))
         ;;   (4 . (monochrome 1.2))
@@ -235,6 +243,7 @@
   (defun prot/modus-themes-custom-faces ()
     (modus-themes-with-colors
       (custom-set-faces
+       `(cursor ((,class :background ,red-intense)))
        `(fill-column-indicator ((,class :background ,bg-inactive
                                         :foreground ,bg-inactive))))))
 
@@ -445,6 +454,14 @@
 
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
+  ;; Adapted from Vertico.
+  (defun crm-indicator (args)
+    "Add prompt indicator to `completing-read-multiple' filter ARGS."
+    ;; The `error' face just makes the text red.
+    (cons (concat (propertize "[CRM] " 'face 'error) (car args)) (cdr args)))
+
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
   (minibuffer-electric-default-mode 1)
@@ -534,18 +551,18 @@ Use `prot/mct-sort-sort-by-alpha-length' if no history is available."
     (defun prot/mct-avy-completions-select ()
       "Choose completion and exit using Avy."
       (interactive)
-      (when (mct--get-completion-window)
-        (mct--switch-to-completions)
-        (avy-with avy-completion
-          (let ((avy-action 'prot/mct-avy--choose))
-            (avy-process
-             (save-excursion
-               (let (completions)
-                 (goto-char (mct--first-completion-point))
-                 (while (not (eobp))
-                   (push (point) completions)
-                   (next-completion 1))
-                 (nreverse completions))))))))
+      (when-let ((window (mct--get-completion-window)))
+        (with-selected-window window
+          (avy-with avy-completion
+            (let ((avy-action 'prot/mct-avy--choose))
+              (avy-process
+               (save-excursion
+                 (let (completions)
+                   (goto-char (mct--first-completion-point))
+                   (while (not (eobp))
+                     (push (point) completions)
+                     (next-completion 1))
+                   (nreverse completions)))))))))
 
     (dolist (map (list mct-minibuffer-local-completion-map
                        mct-minibuffer-completion-list-map
@@ -1635,8 +1652,8 @@ sure this is a good approach."
   (setq org-special-ctrl-a/e nil)
   (setq org-special-ctrl-k nil)
   (setq org-M-RET-may-split-line '((default . nil)))
-  (setq org-hide-emphasis-markers t)
-  (setq org-hide-macro-markers t)
+  (setq org-hide-emphasis-markers nil)
+  (setq org-hide-macro-markers nil)
   (setq org-hide-leading-stars nil)
   (setq org-cycle-separator-lines 0)
   (setq org-structure-template-alist    ; CHANGED in Org 9.3, Emacs 27.1
@@ -3240,26 +3257,26 @@ Can link to more than one message, if so all matching messages are shown."
 (prot-emacs-builtin-package 'text-mode)
 
 (prot-emacs-builtin-package 'prot-text
-  (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)$" . text-mode))
+  (add-to-list 'auto-mode-alist '("\\`\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
   (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
   (define-key org-mode-map (kbd "<M-return>") #'org-meta-return) ; don't override M-RET here
   (define-key org-mode-map (kbd "M-;") nil))
 
 ;;; Markdown (markdown-mode)
 (prot-emacs-elpa-package 'markdown-mode
-  (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
+  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
 ;; Allows for fenced block focus with C-c ' (same as Org blocks).
 (prot-emacs-elpa-package 'edit-indirect)
 
 ;;; YAML (yaml-mode)
 (prot-emacs-elpa-package 'yaml-mode
-  (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode)))
+  (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode)))
 
 ;;; CSS (css-mode)
 (prot-emacs-builtin-package 'css-mode
-  (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
-  (add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
+  (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
+  (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
   (setq css-fontify-colors nil))
 
 ;;; Shell scripts (sh-mode)
