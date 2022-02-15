@@ -3257,7 +3257,7 @@ Can link to more than one message, if so all matching messages are shown."
 (prot-emacs-builtin-package 'text-mode)
 
 (prot-emacs-builtin-package 'prot-text
-  (add-to-list 'auto-mode-alist '("\\`\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
+  (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
   (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
   (define-key org-mode-map (kbd "<M-return>") #'org-meta-return) ; don't override M-RET here
   (define-key org-mode-map (kbd "M-;") nil))
@@ -3343,6 +3343,7 @@ Can link to more than one message, if so all matching messages are shown."
   (setq show-paren-style 'parenthesis)
   (setq show-paren-when-point-in-periphery nil)
   (setq show-paren-when-point-inside-paren nil)
+  (setq show-paren-context-when-offscreen 'child-frame) ; Emacs 29
   (add-hook 'after-init-hook #'show-paren-mode))
 
 ;;; Tabs, indentation, and the TAB key
