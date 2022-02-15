@@ -8806,7 +8806,7 @@ Refer to the source code in [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common cu
 (prot-emacs-builtin-package 'text-mode)
 
 (prot-emacs-builtin-package 'prot-text
-  (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)$" . text-mode))
+  (add-to-list 'auto-mode-alist '("\\`\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
   (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
   (define-key org-mode-map (kbd "<M-return>") #'org-meta-return) ; don't override M-RET here
   (define-key org-mode-map (kbd "M-;") nil))
@@ -8827,7 +8827,7 @@ I edit lots of Markdown files.  This makes things easier.
 #+begin_src emacs-lisp
 ;;; Markdown (markdown-mode)
 (prot-emacs-elpa-package 'markdown-mode
-  (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
+  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
 ;; Allows for fenced block focus with C-c ' (same as Org blocks).
 (prot-emacs-elpa-package 'edit-indirect)
@@ -8843,7 +8843,7 @@ This adds support for YAML files.
 #+begin_src emacs-lisp
 ;;; YAML (yaml-mode)
 (prot-emacs-elpa-package 'yaml-mode
-  (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode)))
+  (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode)))
 #+end_src
 
 *** CSS (css-mode)
@@ -8858,8 +8858,8 @@ is =rainbow-mode= (see [[#h:9061c694-5f45-46b0-a878-6bcfb018e18d][relevant secti
 #+begin_src emacs-lisp
 ;;; CSS (css-mode)
 (prot-emacs-builtin-package 'css-mode
-  (add-to-list 'auto-mode-alist '("\\.css$" . css-mode))
-  (add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
+  (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
+  (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
   (setq css-fontify-colors nil))
 #+end_src
 
