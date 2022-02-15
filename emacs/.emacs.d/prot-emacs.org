@@ -1297,6 +1297,9 @@ Finally, here is an overview of the settings covered herein:
   =completion-category-overrides= can control the standard option of
   =completion-styles= on a per-category basis.
 
+  Also watch: [[https://www.youtube.com/watch?v=w9hHMDyF9V4][Emacs Minibuffer Completion Styles]] (2022-02-12) by Greg
+  Yut.
+
 + Recursive minibuffers :: I enable recursive minibuffers.  This
   practically means that you can start something in the minibuffer,
   switch to another window, call the minibuffer again, run some
