@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 2.2.0
-;; Last-Modified: <2022-02-23 18:55:19 +0200>
+;; Last-Modified: <2022-02-26 14:13:42 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -1611,17 +1611,17 @@ The actual styling of the face is done by `modus-themes-faces'."
 
 (define-obsolete-face-alias
  'modus-themes-completion-standard-first-match
- 'modus-themes-completion-selection
+ 'modus-themes-completion-selected
  "2.2.0")
 
 (define-obsolete-face-alias
  'modus-themes-completion-standard-selected
- 'modus-themes-completion-selection
+ 'modus-themes-completion-selected
  "2.2.0")
 
 (define-obsolete-face-alias
  'modus-themes-completion-extra-selected
- 'modus-themes-completion-selection
+ 'modus-themes-completion-selected
  "2.2.0")
 
 (define-obsolete-face-alias
@@ -1737,11 +1737,6 @@ For form, see `modus-themes-vivendi-colors'."
   (put 'modus-themes-vivendi-color-overrides
        'custom-options (copy-sequence colors)))
 
-(define-obsolete-variable-alias
-  'modus-themes-slanted-constructs
-  'modus-themes-italic-constructs
-  "1.5.0")
-
 (defcustom modus-themes-italic-constructs nil
   "Use italic font forms in more code constructs."
   :group 'modus-themes
@@ -1762,18 +1757,6 @@ For form, see `modus-themes-vivendi-colors'."
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) Bold constructs"))
 
-(defcustom modus-themes-variable-pitch-headings nil
-  "DEPRECATED: specify `variable-pitch' in `modus-themes-headings'."
-  :group 'modus-themes
-  :package-version '(modus-themes . "1.0.0")
-  :version "28.1"
-  :type 'boolean
-  :set #'modus-themes--set-option
-  :initialize #'custom-initialize-default
-  :link '(info-link "(modus-themes) Headings' typeface"))
-
-(make-obsolete 'modus-themes-variable-pitch-headings 'modus-themes-headings "2.0.0")
-
 (defcustom modus-themes-variable-pitch-ui nil
   "Use proportional fonts (variable-pitch) in UI elements.
 This includes the mode line, header line, tab bar, and tab line."
@@ -1784,10 +1767,6 @@ This includes the mode line, header line, tab bar, and tab line."
   :set #'modus-themes--set-option
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) UI typeface"))
-
-(define-obsolete-variable-alias
-  'modus-themes-no-mixed-fonts
-  'modus-themes-mixed-fonts "On 2021-10-02 for version 1.7.0")
 
 (defcustom modus-themes-mixed-fonts nil
   "Non-nil to enable inheritance from `fixed-pitch' in some faces.
@@ -1823,7 +1802,11 @@ Users may need to explicitly configure the font family of
                 (const :tag "Semi-bold" semibold)
                 (const :tag "Extra-bold" extrabold)
                 (const :tag "Ultra-bold" ultrabold))
-        (float :tag "Number (float) to adjust height by" :value 1.1)
+        (radio :tag "Height"
+               (float :tag "Floating point to adjust height by")
+               (cons :tag "Cons cell of `(height . FLOAT)'"
+                     (const :tag "The `height' key (constant)" height)
+                     (float :tag "Floating point")))
         (choice :tag "Colors"
                 (const :tag "Subtle colors" nil)
                 (const :tag "Rainbow colors" rainbow)
@@ -1883,7 +1866,9 @@ weight instead.
 A number, expressed as a floating point (e.g. 1.5), adjusts the
 height of the heading to that many times the base font size.  The
 default height is the same as 1.0, though it need not be
-explicitly stated.
+explicitly stated.  Instead of a floating point, an acceptable
+value can be in the form of a cons cell like (height . FLOAT)
+or (height FLOAT), where FLOAT is the given number.
 
 Combinations of any of those properties are expressed as a list,
 like in these examples:
@@ -1891,6 +1876,8 @@ like in these examples:
     (semibold)
     (rainbow background)
     (overline monochrome semibold 1.3)
+    (overline monochrome semibold (height 1.3)) ; same as above
+    (overline monochrome semibold (height . 1.3)) ; same as above
 
 The order in which the properties are set is not significant.
 
@@ -1920,7 +1907,7 @@ For Org users, the extent of the heading depends on the variable
 and `background' properties.  Depending on the version of Org,
 there may be others, such as `org-fontify-done-headline'."
   :group 'modus-themes
-  :package-version '(modus-themes . "2.0.0")
+  :package-version '(modus-themes . "2.3.0")
   :version "29.1"
   :type `(alist
           :options ,(mapcar (lambda (el)
@@ -1954,12 +1941,18 @@ font size.  Acceptable values come in the form of a list that can
 include either or both of those properties:
 
 - `variable-pitch' to use a proportionately spaced typeface;
+
 - A number as a floating point (e.g. 1.5) to set the height of
   the text to that many times the default font height.  A float
   of 1.0 or the symbol `no-scale' have the same effect of making
-  the font to the same height as the rest of the buffer.  When
+  the font the same height as the rest of the buffer.  When
   neither a number nor `no-scale' are present, the default is a
   small increase in height (a value of 1.15).
+
+  Instead of a floating point, an acceptable value can be in the
+  form of a cons cell like (height . FLOAT) or (height FLOAT),
+  where FLOAT is the given number.
+
 - The symbol of a weight attribute adjusts the font of the
   heading accordingly, such as `light', `semibold', etc.  Valid
   symbols are defined in the variable `modus-themes-weights'.
@@ -1987,17 +1980,24 @@ that can include any of the following properties:
 
 - `grayscale' to make weekdays use the main foreground color and
   weekends a more subtle gray;
+
 - `workaholic' to make weekdays and weekends look the same in
   terms of color;
+
 - `bold-today' to apply a bold typographic weight to the current
   date;
+
 - `bold-all' to render all date headings in a bold weight;
+
 - `underline-today' applies an underline to the current date
   while removing the background it has by default;
+
 - A number as a floating point (e.g. 1.2) to set the height of
   the text to that many times the default font height.  The
   default is the same as the base font height (the equivalent of
-  1.0).
+  1.0).  Instead of a floating point, an acceptable value can be
+  in the form of a cons cell like (height . FLOAT) or (height
+  FLOAT), where FLOAT is the given number.
 
 For example:
 
@@ -2094,7 +2094,7 @@ For example:
     (habit . simplified)
     (habit . traffic-light)"
   :group 'modus-themes
-  :package-version '(modus-themes . "2.1.0")
+  :package-version '(modus-themes . "2.3.0")
   :version "29.1"
   :type '(set
           (cons :tag "Block header"
@@ -2115,10 +2115,14 @@ For example:
                              (const :tag "Semi-bold" semibold)
                              (const :tag "Extra-bold" extrabold)
                              (const :tag "Ultra-bold" ultrabold))
-                     (choice :tag "Scaling"
+                     (radio :tag "Scaling"
                              (const :tag "Slight increase in height (default)" nil)
                              (const :tag "Do not scale" no-scale)
-                             (float :tag "Number (float) to adjust height by" :value 1.3))))
+                             (radio :tag "Number (float) to adjust height by"
+                                    (float :tag "Just the number")
+                                    (cons :tag "Cons cell of `(height . FLOAT)'"
+                                          (const :tag "The `height' key (constant)" height)
+                                          (float :tag "Floating point"))))))
           (cons :tag "Date header" :greedy t
                 (const header-date)
                 (set :tag "Header presentation" :greedy t
@@ -2126,8 +2130,12 @@ For example:
                      (const :tag "Do not differentiate weekdays from weekends" workaholic)
                      (const :tag "Make today bold" bold-today)
                      (const :tag "Make all dates bold" bold-all)
-                     (float :tag "Number (float) to adjust height by" :value 1.05)
-                     (const :tag "Make today underlined; remove the background" underline-today)))
+                     (const :tag "Make today underlined; remove the background" underline-today)
+                     (radio :tag "Number (float) to adjust height by"
+                                    (float :tag "Just the number")
+                                    (cons :tag "Cons cell of `(height . FLOAT)'"
+                                          (const :tag "The `height' key (constant)" height)
+                                          (float :tag "Floating point")))))
           (cons :tag "Event entry" :greedy t
                 (const event)
                 (set :tag "Text presentation" :greedy t
@@ -2147,84 +2155,6 @@ For example:
   :set #'modus-themes--set-option
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) Org agenda"))
-
-(defcustom modus-themes-scale-headings nil
-  "DEPRECATED: specify height in `modus-themes-headings'."
-  :group 'modus-themes
-  :package-version '(modus-themes . "1.2.0")
-  :version "28.1"
-  :type 'boolean
-  :set #'modus-themes--set-option
-  :initialize #'custom-initialize-default)
-
-(make-obsolete 'modus-themes-scale-headings 'modus-themes-headings "2.0.0")
-
-(defcustom modus-themes-scale-1 1.05
-  "DEPRECATED: specify height in `modus-themes-headings'."
-  :group 'modus-themes
-  :package-version '(modus-themes . "1.2.0")
-  :version "28.1"
-  :type 'number
-  :set #'modus-themes--set-option
-  :initialize #'custom-initialize-default)
-
-(make-obsolete 'modus-themes-scale-1 'modus-themes-headings "2.0.0")
-
-(defcustom modus-themes-scale-2 1.1
-  "DEPRECATED: specify height in `modus-themes-headings'."
-  :group 'modus-themes
-  :package-version '(modus-themes . "1.2.0")
-  :version "28.1"
-  :type 'number
-  :set #'modus-themes--set-option
-  :initialize #'custom-initialize-default)
-
-(make-obsolete 'modus-themes-scale-2 'modus-themes-headings "2.0.0")
-
-(defcustom modus-themes-scale-3 1.15
-  "DEPRECATED: specify height in `modus-themes-headings'."
-  :group 'modus-themes
-  :package-version '(modus-themes . "1.2.0")
-  :version "28.1"
-  :type 'number
-  :set #'modus-themes--set-option
-  :initialize #'custom-initialize-default)
-
-(make-obsolete 'modus-themes-scale-3 'modus-themes-headings "2.0.0")
-
-(defcustom modus-themes-scale-4 1.2
-  "DEPRECATED: specify height in `modus-themes-headings'."
-  :group 'modus-themes
-  :package-version '(modus-themes . "1.2.0")
-  :version "28.1"
-  :type 'number
-  :set #'modus-themes--set-option
-  :initialize #'custom-initialize-default)
-
-(make-obsolete 'modus-themes-scale-4 'modus-themes-headings "2.0.0")
-
-(defcustom modus-themes-scale-title 1.3
-  "DEPRECATED: specify height in `modus-themes-headings'.
-Same principle for `modus-themes-org-agenda'."
-  :group 'modus-themes
-  :package-version '(modus-themes . "1.5.0")
-  :version "28.1"
-  :type 'number
-  :set #'modus-themes--set-option
-  :initialize #'custom-initialize-default)
-
-(make-obsolete 'modus-themes-scale-title 'modus-themes-headings "2.0.0")
-
-(defcustom modus-themes-scale-small 0.9
-  "DEPRECATED."
-  :group 'modus-themes
-  :package-version '(modus-themes . "1.6.0")
-  :version "28.1"
-  :type 'number
-  :set #'modus-themes--set-option
-  :initialize #'custom-initialize-default)
-
-(make-obsolete 'modus-themes-scale-small nil "2.0.0")
 
 (defcustom modus-themes-fringes nil
   "Define the visibility of fringes.
@@ -2395,12 +2325,30 @@ the `borderless' property is also set).  For users on Emacs 29,
 the `x-use-underline-position-properties' variable must also be
 set to nil.
 
+The padding can also be expressed as a cons cell in the form
+of (padding . NATNUM) or (padding NATNUM) where the key is
+constant and NATNUM is the desired natural number.
+
+A floating point (e.g. 0.9) applies an adjusted height to the
+mode line's text as a multiple of the main font size.  The
+default rate is 1.0 and does not need to be specified.  Apart
+from a floating point, the height may also be expressed as a cons
+cell in the form of (height . FLOAT) or (height FLOAT) where the
+key is constant and the FLOAT is the desired number.
+
 Combinations of any of those properties are expressed as a list,
 like in these examples:
 
     (accented)
     (borderless 3d)
     (moody accented borderless)
+
+Same as above, using the padding and height as an example (these
+all yield the same result):
+
+    (accented borderless 4 0.9)
+    (accented borderless (padding . 4) (height . 0.9))
+    (accented borderless (padding 4) (height 0.9))
 
 The order in which the properties are set is not significant.
 
@@ -2433,8 +2381,8 @@ Furthermore, because Moody expects an underline and overline
 instead of a box style, it is strongly advised to set
 `x-underline-at-descent-line' to a non-nil value."
   :group 'modus-themes
-  :package-version '(modus-themes . "1.6.0")
-  :version "28.1"
+  :package-version '(modus-themes . "2.3.0")
+  :version "29.1"
   :type '(set :tag "Properties" :greedy t
               (choice :tag "Overall style"
                       (const :tag "Rectangular Border" nil)
@@ -2442,22 +2390,19 @@ instead of a box style, it is strongly advised to set
                       (const :tag "No box effects (Moody-compatible)" moody))
               (const :tag "Colored background" accented)
               (const :tag "Without border color" borderless)
-              (natnum :tag "With extra padding"))
+              (radio :tag "Padding"
+               (natnum :tag "Natural number (e.g. 4)")
+               (cons :tag "Cons cell of `(padding . NATNUM)'"
+                     (const :tag "The `padding' key (constant)" padding)
+                     (natnum :tag "Natural number")))
+              (radio :tag "Height"
+               (float :tag "Floating point (e.g. 0.9)")
+               (cons :tag "Cons cell of `(height . FLOAT)'"
+                     (const :tag "The `height' key (constant)" height)
+                     (float :tag "Floating point"))))
   :set #'modus-themes--set-option
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) Mode line"))
-
-(defcustom modus-themes-mode-line-padding 6
-  "DEPRECATED: Set natural number in `modus-themes-mode-line'."
-  :group 'modus-themes
-  :package-version '(modus-themes . "1.7.0")
-  :version "29.1"
-  :type 'natnum
-  :set #'modus-themes--set-option
-  :initialize #'custom-initialize-default
-  :link '(info-link "(modus-themes) Mode line"))
-
-(make-obsolete 'modus-themes-mode-line-padding 'modus-themes-mode-line "2.0.0")
 
 (defcustom modus-themes-diffs nil
   "Adjust the overall style of diffs.
@@ -2525,10 +2470,14 @@ regardless of the order they may appear in:
 The `selection' key applies to the current line or currently
 matched candidate, depending on the specifics of the User
 Interface.  By default (nil or an empty list), it has a subtle
-gray background and a bold weight.  The list of properties it
-accepts is as follows (order is not significant):
+gray background, a bold weight, and the base foreground value
+for the text.  The list of properties it accepts is as
+follows (order is not significant):
 
 - `accented' to make the background colorful instead of gray;
+
+- `text-also' to apply extra color to the text of the selected
+  line;
 
 - `intense' to increase the overall coloration;
 
@@ -2560,7 +2509,8 @@ Is the same as:
 
 In the case of the fallback, any property that does not apply to
 the corresponding key is simply ignored (`matches' does not have
-`accented', `selection' and `popup' do not have `background').
+`accented' and `text-also', while `selection' and `popup' do not
+have `background').
 
 A concise expression of those associations can be written as
 follows, where the `car' is always the key and the `cdr' is the
@@ -2577,7 +2527,7 @@ node `(modus-themes) Configure bold and italic faces'.
 Also refer to the Orderless documentation for its intersection
 with Company (if you choose to use those in tandem)."
   :group 'modus-themes
-  :package-version '(modus-themes . "2.2.0")
+  :package-version '(modus-themes . "2.3.0")
   :version "29.1"
   :type `(set
           (cons :tag "Matches"
@@ -2614,6 +2564,7 @@ with Company (if you choose to use those in tandem)."
                              (const :tag "Semi-bold" semibold)
                              (const :tag "Extra-bold" extrabold)
                              (const :tag "Ultra-bold" ultrabold))
+                     (const :tag "Apply color to the line's text" text-also)
                      (const :tag "With accented background" accented)
                      (const :tag "Increased coloration" intense)
                      (const :tag "Italic font (oblique or slanted forms)" italic)
@@ -2633,6 +2584,7 @@ with Company (if you choose to use those in tandem)."
                              (const :tag "Semi-bold" semibold)
                              (const :tag "Extra-bold" extrabold)
                              (const :tag "Ultra-bold" ultrabold))
+                     (const :tag "Apply color to the line's text" text-also)
                      (const :tag "With accented background" accented)
                      (const :tag "Increased coloration" intense)
                      (const :tag "Italic font (oblique or slanted forms)" italic)
@@ -2994,11 +2946,6 @@ In user configuration files the form may look like this:
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) Active region"))
 
-(define-obsolete-variable-alias
-  'modus-themes-success-deuteranopia
-  'modus-themes-deuteranopia
-  "2.0.0")
-
 (defcustom modus-themes-deuteranopia nil
   "When non-nil use red/blue color-coding instead of red/green.
 
@@ -3101,14 +3048,18 @@ defined in the variable `modus-themes-weights'.
 A number, expressed as a floating point (e.g. 0.9), adjusts the
 height of the button's text to that many times the base font
 size.  The default height is the same as 1.0, though it need not
-be explicitly stated.
+be explicitly stated.  Instead of a floating point, an acceptable
+value can be in the form of a cons cell like (height . FLOAT)
+or (height FLOAT), where FLOAT is the given number.
 
 Combinations of any of those properties are expressed as a list,
 like in these examples:
 
     (flat)
     (variable-pitch flat)
-    (variable-pitch flat 0.9 semibold)
+    (variable-pitch flat semibold 0.9)
+    (variable-pitch flat semibold (height 0.9)) ; same as above
+    (variable-pitch flat semibold (height . 0.9)) ; same as above
 
 The order in which the properties are set is not significant.
 
@@ -3116,7 +3067,7 @@ In user configuration files the form may look like this:
 
     (setq modus-themes-box-buttons (quote (variable-pitch flat 0.9)))"
   :group 'modus-themes
-  :package-version '(modus-themes . "2.1.0")
+  :package-version '(modus-themes . "2.3.0")
   :version "29.1"
   :type '(set :tag "Properties" :greedy t
               (const :tag "Two-dimensional button" flat)
@@ -3136,7 +3087,11 @@ In user configuration files the form may look like this:
                       (const :tag "Semi-bold" semibold)
                       (const :tag "Extra-bold" extrabold)
                       (const :tag "Ultra-bold" ultrabold))
-              (float :tag "Number (float) to adjust height by" :value 0.9))
+              (radio :tag "Height"
+                     (float :tag "Floating point to adjust height by")
+                     (cons :tag "Cons cell of `(height . FLOAT)'"
+                           (const :tag "The `height' key (constant)" height)
+                           (float :tag "Floating point"))))
   :set #'modus-themes--set-option
   :initialize #'custom-initialize-default
   :link '(info-link "(modus-themes) Box buttons"))
@@ -3144,6 +3099,17 @@ In user configuration files the form may look like this:
 
 
 ;;; Internal functions
+
+(defun modus-themes--alist-or-seq (properties alist-key seq-pred seq-default)
+  "Return value from alist or sequence.
+Check PROPERTIES for an alist value that corresponds to
+ALIST-KEY.  If no alist is present, search the PROPERTIES
+sequence given SEQ-PRED, using SEQ-DEFAULT as a fallback."
+  (if-let* ((val (or (alist-get alist-key properties)
+                     (seq-find seq-pred properties seq-default)))
+            ((listp val)))
+      (car val)
+    val))
 
 (defun modus-themes--palette (theme)
   "Return color palette for Modus theme THEME.
@@ -3521,7 +3487,7 @@ that combines well with the background and foreground."
             fg-alt)
            (fg))
           :height
-          (seq-find #'floatp properties 'unspecified)
+          (modus-themes--alist-or-seq properties 'height #'floatp 'unspecified)
           :weight
           (or weight 'unspecified)
           :overline
@@ -3546,7 +3512,7 @@ FG is the foreground color to use."
           (or weight 'unspecified)
           :height
           (cond ((memq 'no-scale properties) 'unspecified)
-                ((seq-find #'floatp properties 1.15)))
+                ((modus-themes--alist-or-seq properties 'height #'floatp 1.15)))
           :foreground fg)))
 
 (defun modus-themes--agenda-date (defaultfg grayscalefg &optional workaholicfg grayscaleworkaholicfg bg bold ul)
@@ -3581,7 +3547,7 @@ weight.  Optional UL applies an underline."
            (t
             defaultfg))
           :height
-          (seq-find #'floatp properties 'unspecified)
+          (modus-themes--alist-or-seq properties 'height #'floatp 'unspecified)
           :underline
           (if (and ul (memq 'underline-today properties))
               t
@@ -3712,7 +3678,8 @@ Optional FG-DISTANT should be close to the main background
 values.  It is intended to be used as a distant-foreground
 property."
   (let* ((properties modus-themes-mode-line)
-         (padding (seq-find #'natnump properties 1))
+         (padding (modus-themes--alist-or-seq properties 'padding #'natnump 1))
+         (height (modus-themes--alist-or-seq properties 'height #'floatp 'unspecified))
          (padded (> padding 1))
          (base (cond ((memq 'accented properties)
                       (cons fg-accent bg-accent))
@@ -3735,6 +3702,7 @@ property."
                      (border))))
     (list :foreground (car base)
           :background (cdr base)
+          :height height
           :box
           (cond ((memq 'moody properties)
                  'unspecified)
@@ -3807,7 +3775,15 @@ unspecified."
       (list deuteran)
     (list main)))
 
-(defun modus-themes--completion (key bg fg bgintense fgintense &optional bgaccent bgaccentintense)
+(define-obsolete-function-alias
+  'modus-themes--completion
+  'modus-themes--completion-line "2.3.0")
+
+(define-obsolete-function-alias
+  'modus-themes--completion
+  'modus-themes--completion-match "2.3.0")
+
+(defun modus-themes--completion-line (key bg fg bgintense fgintense &optional bgaccent bgaccentintense)
   "Styles for `modus-themes-completions'.
 KEY is the key of a cons cell.  BG and FG are the main colors.
 BGINTENSE works with the main foreground.  FGINTENSE works on its
@@ -3825,8 +3801,7 @@ other backgrounds."
          (popup (eq key 'popup))
          (selection (eq key 'selection))
          (line (or popup selection))
-         (background (or line (memq 'background properties)))
-         (base-fg (if selection fg 'unspecified))
+         (text (memq 'text-also properties))
          (accented (memq 'accented properties))
          (intense (memq 'intense properties))
          (italic (memq 'italic properties))
@@ -3847,6 +3822,50 @@ other backgrounds."
        bgaccentintense)
       ((and accented line)
        bgaccent)
+      (intense bgintense)
+      (bg))
+     :foreground
+     (cond
+      ((and line text intense)
+       fgintense)
+      ((and line text)
+       fg)
+      ('unspecified))
+     :underline
+     (if (memq 'underline properties) t 'unspecified)
+     :weight
+     (if (and weight (null bold)) weight 'unspecified))))
+
+(defun modus-themes--completion-match (key bg fg bgintense fgintense)
+  "Styles for `modus-themes-completions'.
+KEY is the key of a cons cell.  BG and FG are the main colors.
+BGINTENSE works with the main foreground.  FGINTENSE works on its
+own."
+  (let* ((var (if (listp modus-themes-completions)
+                  modus-themes-completions
+                (prog1 nil
+                  (warn (concat "`modus-themes-completions' has changed."
+                                "\n"
+                                "Its value must now be an alist."
+                                "\n"
+                                "Please read the updated doc string.")))))
+         (properties (or (alist-get key var) (alist-get t var)))
+         (background (memq 'background properties))
+         (intense (memq 'intense properties))
+         (italic (memq 'italic properties))
+         (weight (modus-themes--weight properties))
+         (bold (when (and weight (eq weight 'bold)) 'bold)))
+    (list
+     :inherit
+     (cond
+      ((and italic weight (not (eq weight 'bold)))
+       'italic)
+      ((and weight (not (eq weight 'bold)))
+       'unspecified)
+      (italic 'bold-italic)
+      ('bold))
+     :background
+     (cond
       ((and background intense)
        bgintense)
       (background bg)
@@ -3854,7 +3873,7 @@ other backgrounds."
      :foreground
      (cond
       ((and background intense)
-       base-fg)
+       'unspecified)
       (background fg)
       (intense fgintense)
       (fg))
@@ -4075,7 +4094,7 @@ Work in progress.  BG BGFAINT BGACCENT BGACCENTFAINT BORDER PRESSED-BUTTON-P."
            (weight weight)
            ('unspecified))
           :height
-          (seq-find #'floatp properties 'unspecified)
+          (modus-themes--alist-or-seq properties 'height #'floatp 'unspecified)
           :underline
           (if (memq 'underline properties)
               t
@@ -4481,30 +4500,30 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(modus-themes-tab-inactive ((,class ,@(modus-themes--tab bg-tab-inactive bg-tab-inactive-accent fg-dim nil t))))
 ;;;;; completion frameworks
     `(modus-themes-completion-match-0
-      ((,class ,@(modus-themes--completion
+      ((,class ,@(modus-themes--completion-match
                   'matches bg-special-faint-calm magenta-alt
                   magenta-subtle-bg magenta-intense))))
     `(modus-themes-completion-match-1
-      ((,class ,@(modus-themes--completion
+      ((,class ,@(modus-themes--completion-match
                   'matches bg-special-faint-cold cyan
                   cyan-subtle-bg cyan-intense))))
     `(modus-themes-completion-match-2
-      ((,class ,@(modus-themes--completion
+      ((,class ,@(modus-themes--completion-match
                   'matches bg-special-faint-mild green
                   green-subtle-bg green-intense))))
     `(modus-themes-completion-match-3
-      ((,class ,@(modus-themes--completion
+      ((,class ,@(modus-themes--completion-match
                   'matches bg-special-faint-warm yellow
                   yellow-subtle-bg orange-intense))))
     `(modus-themes-completion-selected
-      ((,class ,@(modus-themes--completion
-                  'selection bg-inactive 'unspecified
-                  bg-active 'unspecified
+      ((,class ,@(modus-themes--completion-line
+                  'selection bg-inactive blue-alt
+                  bg-active blue-active
                   bg-completion-subtle bg-completion))))
     `(modus-themes-completion-selected-popup
-      ((,class ,@(modus-themes--completion
-                  'popup bg-active 'unspecified
-                  bg-region 'unspecified
+      ((,class ,@(modus-themes--completion-line
+                  'popup bg-active blue-alt
+                  bg-region blue-active
                   cyan-subtle-bg cyan-refine-bg))))
 ;;;;; buttons
     `(modus-themes-box-button
@@ -4902,7 +4921,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(company-preview-common ((,class :inherit company-echo-common)))
     `(company-preview-search ((,class :inherit modus-themes-special-calm)))
     `(company-template-field ((,class :inherit modus-themes-intense-magenta)))
-    `(company-tooltip ((,class :background ,bg-alt :foreground ,fg-alt)))
+    `(company-tooltip ((,class :background ,bg-alt)))
     `(company-tooltip-annotation ((,class :inherit completions-annotations)))
     `(company-tooltip-common ((,class :inherit company-echo-common)))
     `(company-tooltip-deprecated ((,class :inherit company-tooltip :strike-through t)))
@@ -5918,7 +5937,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; icomplete-vertical
     `(icomplete-vertical-separator ((,class :inherit shadow)))
 ;;;;; ido-mode
-    `(ido-first-match ((,class :inherit modus-themes-completion-selected)))
+    `(ido-first-match ((,class :inherit modus-themes-completion-match-0)))
     `(ido-incomplete-regexp ((,class :inherit error)))
     `(ido-indicator ((,class :inherit modus-themes-subtle-yellow)))
     `(ido-only-match ((,class :inherit ido-first-match)))
