@@ -1336,9 +1336,9 @@ Finally, read the section [[#h:a1dabcea-9756-40cf-8c88-91c5e2dd0e70][Jump to vis
 code that leverages =avy=.
 
 #+begin_src emacs-lisp
-;;; Minibuffer configurations and my extras (mct.el)
+  ;;; Minibuffer configurations and my extras (mct.el)
 (prot-emacs-builtin-package 'minibuffer
-  (setq completion-styles '(orderless)) ; also see `completion-category-overrides'
+  (setq completion-styles '(basic orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
   ;; For a list of known completion categories, check the MCT manual's
   ;; section on the matter:
@@ -1445,6 +1445,9 @@ code that leverages =avy=.
   (mct-minibuffer-mode 1)
   (mct-region-mode 1) ; NOTE 2022-01-15: This is new and remains experimental
 
+  (require 'mct-tcm) ; NOTE 2022-02-27: Experimental extension
+  (mct-tcm-mode 1)
+
   (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
   (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions)
 
@@ -1461,7 +1464,7 @@ code that leverages =avy=.
 
   (defun prot/mct-sort-by-history (elems)
     "Sort ELEMS by minibuffer history.
-Use `prot/mct-sort-sort-by-alpha-length' if no history is available."
+  Use `prot/mct-sort-by-alpha-length' if no history is available."
     (if-let ((hist (and (not (eq minibuffer-history-variable t))
                         (symbol-value minibuffer-history-variable))))
         (minibuffer--sort-by-position hist elems)
