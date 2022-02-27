@@ -419,13 +419,31 @@ Meant to be added to `after-change-functions'."
   "Set up the completions' buffer."
   (cond
    ((null mct-live-completion))
-   ((mct--passlist-p)
+   ;; ;; NOTE 2022-02-25: The passlist setup we had here was being
+   ;; ;; called too early in `mct--completing-read-advice'.  It would
+   ;; ;; fail to filter out the current candidate from the list
+   ;; ;; (e.g. current buffer from `switch-to-buffer').  This would, in
+   ;; ;; turn, hinder the scrolling behaviour of `minibuffer-complete'.
+   ;; ;; See: <https://gitlab.com/protesilaos/mct/-/issues/24>.  The
+   ;; ;; replacement function is `mct--setup-passlist' which is hooked
+   ;; ;; directly to `minibuffer-setup-hook'.
+   ;;
+   ;; ((mct--passlist-p)
+   ;;  (setq-local mct-minimum-input 0)
+   ;;  (setq-local mct-live-update-delay 0)
+   ;;  (mct--show-completions)
+   ;;  (add-hook 'after-change-functions #'mct--live-completions-refresh nil t))
+   ((not (mct--blocklist-p))
+    (add-hook 'after-change-functions #'mct--live-completions-refresh nil t))))
+
+(defun mct--setup-passlist ()
+  "Set up the minibuffer for `mct-completion-passlist'."
+  (when (and (mct--passlist-p) (mct--minibuffer-p))
     (setq-local mct-minimum-input 0)
     (setq-local mct-live-update-delay 0)
     (mct--show-completions)
-    (add-hook 'after-change-functions #'mct--live-completions-refresh nil t))
-   ((not (mct--blocklist-p))
-    (add-hook 'after-change-functions #'mct--live-completions-refresh nil t))))
+    (when (string-empty-p (minibuffer-contents))
+      (setq this-command 'completion-at-point))))
 
 (defvar-local mct--active nil
   "Minibuffer local variable, t if Mct is active.")
@@ -606,7 +624,8 @@ by `mct--completions-window-name'."
   (interactive nil mct-minibuffer-mode)
   (if (mct--get-completion-window)
       (minibuffer-hide-completions)
-    (mct--show-completions)))
+    (mct--show-completions)
+    (setq this-command 'completion-at-point)))
 
 ;;;;; Cyclic motions between minibuffer and completions' buffer
 
@@ -745,12 +764,9 @@ when point can no longer move in that direction it switches to
 the minibuffer."
   (interactive "p" mct-minibuffer-mode)
   (let ((count (or arg 1)))
-    (cond
-     ((mct--bottom-of-completions-p count)
-      (mct-focus-minibuffer))
-     (t
-      (mct--next-completion count))
-     (setq this-command 'next-line))))
+    (if (mct--bottom-of-completions-p count)
+        (mct-focus-minibuffer)
+      (mct--next-completion count))))
 
 (defun mct--motion-below-point-min-p (arg)
   "Return non-nil if backward ARG motion exceeds `point-min'."
@@ -1192,7 +1208,7 @@ region.")
 (defun mct--setup-dynamic-completion-persist ()
   "Set up `mct-persist-dynamic-completion'."
   (let ((commands '(choose-completion minibuffer-complete minibuffer-force-complete)))
-    (if mct-minibuffer-mode
+    (if (bound-and-true-p mct-minibuffer-mode)
         (dolist (fn commands)
           (advice-add fn :after #'mct--persist-dynamic-completion))
       (dolist (fn commands)
@@ -1210,11 +1226,13 @@ region.")
   (if mct-minibuffer-mode
       (progn
         (add-hook 'completion-list-mode-hook #'mct--setup-completion-list)
+        (add-hook 'minibuffer-setup-hook #'mct--setup-passlist)
         (advice-add #'completing-read-default :around #'mct--completing-read-advice)
         (advice-add #'completing-read-multiple :around #'mct--completing-read-advice)
         (advice-add #'minibuffer-completion-help :around #'mct--minibuffer-completion-help-advice)
         (advice-add #'minibuf-eldef-setup-minibuffer :around #'mct--stealthily))
     (remove-hook 'completion-list-mode-hook #'mct--setup-completion-list)
+    (remove-hook 'minibuffer-setup-hook #'mct--setup-passlist)
     (advice-remove #'completing-read-default #'mct--completing-read-advice)
     (advice-remove #'completing-read-multiple #'mct--completing-read-advice)
     (advice-remove #'minibuffer-completion-help #'mct--minibuffer-completion-help-advice)
@@ -1424,8 +1442,8 @@ minibuffer)."
                   minibuffer-force-complete
                   minibuffer-complete-and-exit
                   minibuffer-force-complete-and-exit))
-      (advice-add fn :around #'mct--shared-messageless))
-    (advice-add #'minibuffer-message :around #'mct--shared-honor-inhibit-message)))
+      (advice-remove fn #'mct--shared-messageless))
+    (advice-remove #'minibuffer-message #'mct--shared-honor-inhibit-message)))
 
 (provide 'mct)
 ;;; mct.el ends here
