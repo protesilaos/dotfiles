@@ -35,7 +35,9 @@
 ;;;; General utilities
 
 (defgroup mct ()
-  "Extensions for the minibuffer."
+  "Minibuffer and Completions in Tandem.
+A layer of interactivity that integrates the standard minibuffer
+and the Completions."
   :group 'minibuffer)
 
 (make-obsolete 'mct-completion-windows-regexp 'mct--completions-window-name "0.5.0")
@@ -441,9 +443,7 @@ Meant to be added to `after-change-functions'."
   (when (and (mct--passlist-p) (mct--minibuffer-p))
     (setq-local mct-minimum-input 0)
     (setq-local mct-live-update-delay 0)
-    (mct--show-completions)
-    (when (string-empty-p (minibuffer-contents))
-      (setq this-command 'completion-at-point))))
+    (mct--show-completions)))
 
 (defvar-local mct--active nil
   "Minibuffer local variable, t if Mct is active.")
@@ -624,8 +624,7 @@ by `mct--completions-window-name'."
   (interactive nil mct-minibuffer-mode)
   (if (mct--get-completion-window)
       (minibuffer-hide-completions)
-    (mct--show-completions)
-    (setq this-command 'completion-at-point)))
+    (mct--show-completions)))
 
 ;;;;; Cyclic motions between minibuffer and completions' buffer
 
