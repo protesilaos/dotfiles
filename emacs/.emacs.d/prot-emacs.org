@@ -10371,6 +10371,13 @@ each in their own unique way---the order is not significant:
   information to parse from those presentations as well as the
   corresponding [[https://github.com/zamansky/dot-emacs][dot-emacs code repository]].
 
++ Greg Yut :: Greg has [[https://www.youtube.com/channel/UCsUmtmlYNLQB2Z4GJAVjBcA][a channel on Youtube]] with informative videos
+  about Emacs.  The first video in the series is about how to use the
+  built-in Info reader, while the second explores the all-too-important
+  topic of completion styles and completion category overrides.  Greg
+  presents the information in a clear way that is easy to understand
+  regardless of experience with Emacs.
+
 + Emacs Elements :: This is [[https://www.youtube.com/channel/UCe5excZqMeG1CIW-YhMTCEQ][a channel on Youtube]] where Raoul Comninos
   shows how to get things done using Emacs.  There are tutorials on how
   to use the =diary=, =calendar=, and =org-agenda=, while you will also find
