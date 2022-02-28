@@ -142,12 +142,13 @@
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs nil
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
+        modus-themes-intense-mouseovers t
         modus-themes-deuteranopia nil
-        modus-themes-tabs-accented t
-        modus-themes-variable-pitch-ui t
+        modus-themes-tabs-accented nil
+        modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -160,8 +161,11 @@
 
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
-        ;; `accented', and a natural number for extra padding.
-        modus-themes-mode-line nil
+        ;; `accented', a natural number for extra padding (or a cons cell
+        ;; of padding and NATNUM), and a floating point for the height of
+        ;; the text relative to the base font size (or a cons cell of
+        ;; height and FLOAT)
+        modus-themes-mode-line '(borderless (padding . 4) (height . 0.9))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -171,23 +175,23 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(green-strings)
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(underline intense)
+        modus-themes-hl-line '(intense)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold)
+        modus-themes-paren-match nil
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(neutral-underline)
+        modus-themes-links nil
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
@@ -200,11 +204,26 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(background)
+        modus-themes-prompts '(background subtle)
 
-        modus-themes-completions 'opinionated ; {nil,'moderate,'opinionated,'super-opinionated}
+        ;; The `modus-themes-completions' is an alist that reads three
+        ;; keys: `matches', `selection', `popup'.  Each accepts a nil
+        ;; value (or empty list) or a list of properties that can include
+        ;; any of the following (for WEIGHT read further below):
+        ;;
+        ;; `matches' - `background', `intense', `underline', `italic', WEIGHT
+        ;; `selection' - `accented', `intense', `underline', `italic', `text-also' WEIGHT
+        ;; `popup' - same as `selected'
+        ;; `t' - applies to any key not explicitly referenced (check docs)
+        ;;
+        ;; WEIGHT is a symbol such as `semibold', `light', or anything
+        ;; covered in `modus-themes-weights'.  Bold is used in the absence
+        ;; of an explicit WEIGHT.
+        modus-themes-completions '((matches . (extrabold background))
+                                   (selection . (semibold text-also))
+                                   (popup . (accented intense)))
 
-        modus-themes-mail-citations 'faint ; {nil,'intense,'faint,'monochrome}
+        modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -214,7 +233,7 @@
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs 'desaturated
 
-        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
+        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch regular 1.4))
@@ -223,17 +242,13 @@
           (scheduled . uniform)
           (habit . nil))
 
-        modus-themes-headings nil ; this is an alist: read the manual or its doc string
-
-        ;; ;; For example:
-        ;; modus-themes-headings
-        ;; '((1 . (overline background variable-pitch light 1.8))
-        ;;   (2 . (variable-pitch regular 1.6))
-        ;;   (3 . (variable-pitch regular 1.3))
-        ;;   (4 . (monochrome 1.2))
-        ;;   (5 . (1.1))
-        ;;   (t . (rainbow 1.05)))
-        )
+        modus-themes-headings ; this is an alist: read the manual or its doc string
+        '((1 . (variable-pitch light 1.6))
+          (2 . (variable-pitch regular 1.4))
+          (3 . (variable-pitch regular 1.3))
+          (4 . (1.2))
+          (5 . (1.1))
+          (t . (monochrome 1.05))))
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
@@ -243,7 +258,7 @@
   (defun prot/modus-themes-custom-faces ()
     (modus-themes-with-colors
       (custom-set-faces
-       `(cursor ((,class :background ,red-intense)))
+       `(cursor ((,class :background ,magenta-intense)))
        `(fill-column-indicator ((,class :background ,bg-inactive
                                         :foreground ,bg-inactive))))))
 
@@ -397,9 +412,9 @@
   (setq marginalia-max-relative-age 0)  ; time is absolute here!
   (marginalia-mode 1))
 
-;;; Minibuffer configurations and my extras (mct.el)
+  ;;; Minibuffer configurations and my extras (mct.el)
 (prot-emacs-builtin-package 'minibuffer
-  (setq completion-styles '(orderless)) ; also see `completion-category-overrides'
+  (setq completion-styles '(basic orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
   ;; For a list of known completion categories, check the MCT manual's
   ;; section on the matter:
@@ -506,6 +521,9 @@
   (mct-minibuffer-mode 1)
   (mct-region-mode 1) ; NOTE 2022-01-15: This is new and remains experimental
 
+  (require 'mct-tcm) ; NOTE 2022-02-27: Experimental extension
+  (mct-tcm-mode 1)
+
   (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
   (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions)
 
@@ -522,11 +540,11 @@
 
   (defun prot/mct-sort-by-history (elems)
     "Sort ELEMS by minibuffer history.
-Use `prot/mct-sort-sort-by-alpha-length' if no history is available."
+  Use `prot/mct-sort-by-alpha-length' if no history is available."
     (if-let ((hist (and (not (eq minibuffer-history-variable t))
                         (symbol-value minibuffer-history-variable))))
         (minibuffer--sort-by-position hist elems)
-      (prot/mct-sort-sort-by-alpha-length elems)))
+      (prot/mct-sort-by-alpha-length elems)))
 
   (defun prot/mct-sort-multi-category (elems)
     "Sort ELEMS per completion category."
@@ -541,34 +559,23 @@ Use `prot/mct-sort-sort-by-alpha-length' if no history is available."
 
   ;;;; Integration with Avy
 
-  (with-eval-after-load 'avy
-    ;; Adapted from Omar Antolín Camarena's `avy-embark-collect.el'.
-    (defun prot/mct-avy--choose (pt)
-      "Choose completion at PT."
-      (goto-char pt)
-      (mct-choose-completion-exit))
+  (require 'mct-avy)
 
-    (defun prot/mct-avy-completions-select ()
-      "Choose completion and exit using Avy."
-      (interactive)
-      (when-let ((window (mct--get-completion-window)))
-        (with-selected-window window
-          (avy-with avy-completion
-            (let ((avy-action 'prot/mct-avy--choose))
-              (avy-process
-               (save-excursion
-                 (let (completions)
-                   (goto-char (mct--first-completion-point))
-                   (while (not (eobp))
-                     (push (point) completions)
-                     (next-completion 1))
-                   (nreverse completions)))))))))
+  ;; ;; From the mct manual (I don't need it, but you might):
+  ;; (defun my-mct-avy-embark-act ()
+  ;;   "Use Avy to run `embark-act' on candidate."
+  ;;   (interactive)
+  ;;   (mct-avy--choose #'embark-act))
 
-    (dolist (map (list mct-minibuffer-local-completion-map
-                       mct-minibuffer-completion-list-map
-                       mct-region-completion-list-map
-                       mct-region-buffer-map))
-      (define-key map (kbd "C-.") #'prot/mct-avy-completions-select))))
+  (dolist (map (list mct-minibuffer-local-completion-map
+                     mct-minibuffer-completion-list-map))
+    (define-key map (kbd "C-.") #'mct-avy-choose-completion-exit)
+    (define-key map (kbd "C-;") #'mct-avy-choose-completion-dwim))
+
+  ;; If you are using `mct-region-mode':
+  (dolist (map (list mct-region-completion-list-map
+                     mct-region-buffer-map))
+    (define-key map (kbd "C-.") #'mct-avy-region-choose-completion)))
 
 ;;; Minibuffer history (savehist-mode)
 (prot-emacs-builtin-package 'savehist
