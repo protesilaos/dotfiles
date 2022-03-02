@@ -160,6 +160,10 @@ This is only relevant when `logos-focus-mode' is enabled."
   ;; Avoids the problem of skipping pages while cycling back and forth.
   (goto-char (point-min)))
 
+(defvar logos-page-motion-hook nil
+  "Hook that runs after a page motion.
+See `logos-forward-page-dwim' or `logos-backward-page-dwim'.")
+
 (defun logos--page-motion (&optional count back)
   "Routine for page motions.
 With optional numeric COUNT move by that many pages.  With
@@ -169,7 +173,8 @@ optional BACK perform the motion backwards."
     (if (buffer-narrowed-p)
         (logos--narrow-to-page count back)
       (funcall cmd count)
-      (setq this-command cmd))))
+      (setq this-command cmd))
+    (run-hooks 'logos-page-motion-hook)))
 
 ;;;###autoload
 (defun logos-forward-page-dwim (&optional count)

@@ -3740,9 +3740,17 @@ Other potentially relevant parts of my dotemacs:
         `((emacs-lisp-mode . "^;;;+ ")
           (org-mode . "^\\*+ +")
           (t . ,(or outline-regexp logos--page-delimiter))))
+
+  ;; These apply when `logos-focus-mode' is enabled
   (setq logos-hide-mode-line nil)
   (setq logos-scroll-lock nil)
   (setq logos-variable-pitch nil)
+
+  (let ((map global-map))
+    (define-key map [remap narrow-to-region] #'logos-narrow-dwim)
+    (define-key map [remap forward-page] #'logos-forward-page-dwim)
+    (define-key map [remap backward-page] #'logos-backward-page-dwim)
+    (define-key map (kbd "<f9>") #'logos-focus-mode))
 
   ;; glue code for `logos-focus-mode' and `olivetti-mode'
   (defun prot/logos--olivetti-mode ()
@@ -3754,11 +3762,19 @@ Other potentially relevant parts of my dotemacs:
 
   (add-hook 'logos-focus-mode-hook #'prot/logos--olivetti-mode)
 
-  (let ((map global-map))
-    (define-key map [remap narrow-to-region] #'logos-narrow-dwim)
-    (define-key map [remap forward-page] #'logos-forward-page-dwim)
-    (define-key map [remap backward-page] #'logos-backward-page-dwim)
-    (define-key map (kbd "<f9>") #'logos-focus-mode)))
+  ;; glue code to expand an Org/Outline heading
+  (defun prot/logos--reveal ()
+    "Reveal Org or Outline entry."
+    (cond
+     ((and (eq major-mode 'org-mode)
+           (org-at-heading-p))
+      (org-show-entry)
+      (org-reveal t))
+     ((or (bound-and-true-p prot-outline-minor-mode)
+          (bound-and-true-p outline-minor-mode))
+      (outline-show-entry))))
+
+  (add-hook 'logos-page-motion-hook #'prot/logos--reveal))
 #+end_src
 
 And here is =logos.el= in its totality.  It is available as a file in
