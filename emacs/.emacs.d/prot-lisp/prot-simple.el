@@ -754,7 +754,7 @@ paragraph.  The idea is to produce the opposite effect of both
         (fill-region beg end)
       (fill-paragraph))))
 
-;;;; Commands for windows
+;;;; Commands for windows and pages
 
 ;;;###autoload
 (defun prot-simple-narrow-visible-window ()
