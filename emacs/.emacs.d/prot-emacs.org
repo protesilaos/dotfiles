@@ -3741,10 +3741,11 @@ Other potentially relevant parts of my dotemacs:
           (org-mode . "^\\*+ +")
           (t . ,(or outline-regexp logos--page-delimiter))))
 
-  ;; These apply when `logos-focus-mode' is enabled
-  (setq logos-hide-mode-line nil)
-  (setq logos-scroll-lock nil)
-  (setq logos-variable-pitch nil)
+  ;; These apply when `logos-focus-mode' is enabled.  Their value is
+  ;; buffer-local.
+  (setq-default logos-hide-mode-line nil)
+  (setq-default logos-scroll-lock nil)
+  (setq-default logos-variable-pitch nil)
 
   (let ((map global-map))
     (define-key map [remap narrow-to-region] #'logos-narrow-dwim)
