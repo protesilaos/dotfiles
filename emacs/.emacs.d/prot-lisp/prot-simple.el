@@ -826,6 +826,22 @@ narrowed page."
     (backward-page count)
     (setq this-command 'backward-page)))
 
+;;;###autoload
+(defun prot-simple-delete-page-delimiters (&optional beg end)
+  "Delete lines with just page delimiters in the current buffer.
+When region is active, only operate on the region between BEG and
+END, representing the point and mark."
+  (interactive "r")
+  (let (b e)
+    (if (use-region-p)
+        (setq b beg
+              e end)
+      (setq b (point-min)
+            e (point-max)))
+  (widen)
+  (flush-lines (format "%s$" page-delimiter) b e)
+  (setq this-command 'flush-lines)))
+
 ;; Inspired by Pierre Neidhardt's windower:
 ;; https://gitlab.com/ambrevar/emacs-windower/-/blob/master/windower.el
 (defvar prot-simple--windows-current nil
