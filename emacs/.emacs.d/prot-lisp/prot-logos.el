@@ -24,6 +24,11 @@
 
 ;;; Commentary:
 ;;
+;; DEPRECATED 2022-03-02 Use my logos.el instead (part of this
+;; repository).
+;;
+;;
+;;
 ;; Extensions to help me read, write, present.  For use in my Emacs
 ;; setup: https://protesilaos.com/emacs/dotemacs.
 ;;
