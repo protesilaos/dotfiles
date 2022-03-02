@@ -88,11 +88,16 @@
     (define-key map (kbd "C-M-d") #'prot-simple-downward-list)
     ;; Commands for paragraphs
     (define-key map (kbd "M-Q") #'prot-simple-unfill-region-or-paragraph)
-    ;; Commands for windows
-    (define-key map (kbd "C-x n n") #'prot-simple-narrow-dwim) ; replaces `narrow-to-region'
+    ;; Commands for windows and pages
+    (define-key map (kbd "C-x n k") #'prot-simple-delete-page-delimiters)
     (define-key map (kbd "C-x M") #'prot-simple-monocle)
-    (define-key map [remap forward-page] #'prot-simple-forward-page-dwim)
-    (define-key map [remap backward-page] #'prot-simple-backward-page-dwim)
+    ;; NOTE 2022-03-02: Elsewhere I provide my `logos.el' package which
+    ;; has the functionality of these three commands.
+    ;;
+    ;; (define-key map [remap narrow-to-region] #'prot-simple-narrow-dwim)
+    ;; (define-key map [remap forward-page] #'prot-simple-forward-page-dwim)
+    ;; (define-key map [remap backward-page] #'prot-simple-backward-page-dwim)
+    ;;
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
@@ -1278,47 +1283,37 @@
 
   (define-key global-map (kbd "C-x r l") #'blist-list-bookmarks))
 
-;;; Custom extensions for "focus mode" (prot-logos.el)
-(prot-emacs-builtin-package 'face-remap)
-
+;;; Custom extensions for "focus mode" (logos.el)
 (prot-emacs-elpa-package 'olivetti
   (setq olivetti-body-width 0.7)
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t))
 
-;; NOTE 2022-02-05: `org-tree-slide' may be removed, as I simplified how
-;; I handle presentations by using narrowing and page breaks.  See the
-;; commands `prot-simple-forward-page-dwim' and
-;; `prot-simple-backward-page-dwim'.
-(prot-emacs-elpa-package 'org-tree-slide
-  (setq org-tree-slide-breadcrumbs nil)
-  (setq org-tree-slide-header nil)
-  (setq org-tree-slide-slide-in-effect nil)
-  (setq org-tree-slide-heading-emphasis nil)
-  (setq org-tree-slide-cursor-init t)
-  (setq org-tree-slide-modeline-display nil)
-  (setq org-tree-slide-skip-done nil)
-  (setq org-tree-slide-skip-comments t)
-  (setq org-tree-slide-fold-subtrees-skipped t)
-  (setq org-tree-slide-skip-outline-level 8)
-  (setq org-tree-slide-never-touch-face t)
-  (setq org-tree-slide-activate-message
-        (format "Presentation %s" (propertize "ON" 'face 'success)))
-  (setq org-tree-slide-deactivate-message
-        (format "Presentation %s" (propertize "OFF" 'face 'error)))
-  (let ((map org-tree-slide-mode-map))
-    (define-key map (kbd "<C-down>") #'org-tree-slide-display-header-toggle)
-    (define-key map (kbd "<C-right>") #'org-tree-slide-move-next-tree)
-    (define-key map (kbd "<C-left>") #'org-tree-slide-move-previous-tree)))
+(prot-emacs-builtin-package 'logos
+  (setq logos-outlines-are-pages t)
+  (setq logos-outline-regexp-alist
+        '((emacs-lisp-mode . "^;;;+ ")
+          (org-mode . "^\\*+ +")
+          (t . (or outline-regexp logos--page-delimiter))))
+  (setq logos-hide-mode-line nil)
+  (setq logos-scroll-lock nil)
+  (setq logos-variable-pitch nil)
 
-(prot-emacs-builtin-package 'prot-logos
-  (setq prot-logos-org-presentation nil)
-  (setq prot-logos-variable-pitch nil)
-  (setq prot-logos-scroll-lock nil)
-  (setq prot-logos-hidden-modeline t)
-  (setq prot-logos-prettify-line-breaks t)
-  (setq prot-logos-affect-prot-cursor nil)
-  (define-key global-map (kbd "<f9>") #'prot-logos-focus-mode))
+  ;; glue code for `logos-focus-mode' and `olivetti-mode'
+  (defun prot/logos--olivetti-mode ()
+    "Toggle `olivetti-mode'."
+    (if (or (bound-and-true-p olivetti-mode)
+            (null (logos--focus-p)))
+        (olivetti-mode -1)
+      (olivetti-mode 1)))
+
+  (add-hook 'logos-focus-mode-hook #'prot/logos--olivetti-mode)
+
+  (let ((map global-map))
+    (define-key map [remap narrow-to-region] #'logos-narrow-dwim)
+    (define-key map [remap forward-page] #'logos-forward-page-dwim)
+    (define-key map [remap backward-page] #'logos-backward-page-dwim)
+    (define-key map (kbd "<f9>") #'logos-focus-mode)))
 
 ;;; USLS --- Unassuming Sidenotes of Little Significance
 (prot-emacs-builtin-package 'usls
@@ -3197,6 +3192,7 @@ Can link to more than one message, if so all matching messages are shown."
   (define-key global-map (kbd "C-M-<mouse-3>") #'tear-off-window))
 
 ;;; Scrolling behaviour
+;; These four come from the C source code.
 (setq-default scroll-preserve-screen-position t)
 (setq-default scroll-conservatively 1) ; affects `scroll-step'
 (setq-default scroll-margin 0)
