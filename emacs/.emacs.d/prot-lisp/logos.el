@@ -92,10 +92,13 @@ When this variable is nil, pages are demarcated by the
   :type 'boolean
   :group 'logos)
 
+(defconst logos--page-delimiter (default-value 'page-delimiter)
+  "The default value of `page-delimiter'.")
+
 (defcustom logos-outline-regexp-alist   ; TODO 2022-03-02: more sensible outlines?
-  '((emacs-lisp-mode . "^;;;+ ")
+  `((emacs-lisp-mode . "^;;;+ ")
     (org-mode . "^\\*+ +")
-    (t . (or outline-regexp logos--page-delimiter)))
+    (t . ,(or outline-regexp logos--page-delimiter)))
   "Alist of major mode and regular expression of the outline.
 Only used when `logos-outlines-are-pages' is non-nil."
   :type `(alist :key-type symbol :value-type string) ; TODO 2022-03-02: ensure symbol is mode?
@@ -134,9 +137,6 @@ This is only relevant when `logos-focus-mode' is enabled."
   "Return non-nil if `logos-focus-mode' is bound locally."
   (when (bound-and-true-p logos-focus-mode)
     (buffer-local-value 'logos-focus-mode (current-buffer))))
-
-(defconst logos--page-delimiter (default-value 'page-delimiter)
-  "The default value of `page-delimiter'.")
 
 ;;;; Page motions
 

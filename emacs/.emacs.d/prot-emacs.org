@@ -3737,9 +3737,9 @@ Other potentially relevant parts of my dotemacs:
 (prot-emacs-builtin-package 'logos
   (setq logos-outlines-are-pages t)
   (setq logos-outline-regexp-alist
-        '((emacs-lisp-mode . "^;;;+ ")
+        `((emacs-lisp-mode . "^;;;+ ")
           (org-mode . "^\\*+ +")
-          (t . (or outline-regexp logos--page-delimiter))))
+          (t . ,(or outline-regexp logos--page-delimiter))))
   (setq logos-hide-mode-line nil)
   (setq logos-scroll-lock nil)
   (setq logos-variable-pitch nil)
