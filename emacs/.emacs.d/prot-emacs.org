@@ -356,11 +356,16 @@ use elsewhere.
     (define-key map (kbd "C-M-d") #'prot-simple-downward-list)
     ;; Commands for paragraphs
     (define-key map (kbd "M-Q") #'prot-simple-unfill-region-or-paragraph)
-    ;; Commands for windows
-    (define-key map (kbd "C-x n n") #'prot-simple-narrow-dwim) ; replaces `narrow-to-region'
+    ;; Commands for windows and pages
+    (define-key map (kbd "C-x n k") #'prot-simple-delete-page-delimiters)
     (define-key map (kbd "C-x M") #'prot-simple-monocle)
-    (define-key map [remap forward-page] #'prot-simple-forward-page-dwim)
-    (define-key map [remap backward-page] #'prot-simple-backward-page-dwim)
+    ;; NOTE 2022-03-02: Elsewhere I provide my `logos.el' package which
+    ;; has the functionality of these three commands.
+    ;;
+    ;; (define-key map [remap narrow-to-region] #'prot-simple-narrow-dwim)
+    ;; (define-key map [remap forward-page] #'prot-simple-forward-page-dwim)
+    ;; (define-key map [remap backward-page] #'prot-simple-backward-page-dwim)
+    ;;
     ;; Commands for buffers
     (define-key map (kbd "M-=") #'count-words)
     (define-key map (kbd "<C-f2>") #'prot-simple-rename-file-and-buffer)
@@ -864,7 +869,7 @@ for User Interface elements such as the mode line to economise on
 spacing, and so on.  Again, my Modus themes cover that niche
 out-of-the-box (and offer relevant customisation options).  We call this
 a "mixed font" setup: the easiest way to get to it is to enable
-=variable-pitch-mode= (read: [[#h:77d14350-978d-4820-ab7f-4641706c445a][Extensions for "focus mode" (prot-logos.el)]]).
+=variable-pitch-mode= (read: [[#h:77d14350-978d-4820-ab7f-4641706c445a][Extensions for "focus mode" (logos.el)]]).
 
 Relevant publications of mine that are not part of this document:
 
@@ -3672,141 +3677,94 @@ longer need ([[#h:aad79917-cd80-491b-9020-db27867ab132][Dired-like list for regi
   (define-key global-map (kbd "C-x r l") #'blist-list-bookmarks))
 #+end_src
 
-** Custom extensions for "focus mode" (prot-logos.el)
+** Custom extensions for "focus mode" (logos.el)
 :PROPERTIES:
 :CUSTOM_ID: h:77d14350-978d-4820-ab7f-4641706c445a
 :END:
 
-My =prot-logos.el= (copied verbatim after the package configurations)
-provides the necessary infrastructure for my preferred "focus mode"
-aesthetic.  Everything is controlled by =prot-logos-focus-mode=.  Bind
-that to a key and you are good to go.  An overview of its components,
-which are contingent on other features:
+=logos= (or =logos.el=) is a new library of mine (as of 2022-03-02)
+which provides a set of utilities for handling presentations and/or
+focusing your attention on the current buffer's contents:
+https://protesilaos.com/emacs/logos.  It supersedes the =prot-logos.el=
+I had before and will soon be available via =M-x package-install=.
 
-+ Olivetti (centred buffer content) :: I spend much of my time in Emacs
-  reading and writing long form texts.  It is nice to be able to easily
-  toggle a mode that centres the buffer, allowing for greater comfort.
-  Olivetti covers that niche very nicely.  It is not aggressive in its
-  requirements, which is important to play well with my paragraph and
-  fill-mode settings ([[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][Paragraphs and fill-mode (prot-fill.el)]]): it
-  respects my existing line length and my preference for auto-filling
-  text, while it does not introduce any kind of functionality beyond the
-  scope of bringing the current window's buffer to the centre of the
-  view.  This is exactly what I need.  Any other enhancement, such as a
-  larger font size can be delegated to a specialised instrument.  Thanks
-  to Paul W. Rankin for providing such a nimble tool!  For =prot-logos=
-  Olivetti always gets activated.
+With all user options disabled (the out-of-the-box design), this package
+provides a simple approach to handling presentations using nothing but
+the =page-delimiter= together with some commands to move between pages
+whether narrowing is in effect or not.
 
-+ =variable-pitch-mode= (mixed fonts) :: This is a built-in mode that
-  remaps the =default= face's font family to a proportionately spaced one
-  (also see [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]]).  It can produce a
-  prose-friendly presentation, especially if the =variable-pitch= face is
-  set to some nice font family.  As the effect is not particularly good
-  in =prog-mode= buffers, due to misalignments in spacing and indentation,
-  =prot-logos= only applies variable width fonts in =text-mode= buffers.
-  The activation is further controlled by =prot-logos-variable-pitch= (off
-  by default).  Bear in mind that =variable-pitch-mode= is quite
-  aggressive in its application, as it affects all other faces, unless
-  the active theme (or some minor mode) makes provisions to retain fixed
-  typographic spacing for those elements that require it, such as code
-  blocks and inline code elements, tables, and indentation (refer to
-  [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][Modus themes (my highly accessible themes)]]).
+What constitutes a page delimiter is determined by the user options
+=logos-outlines-are-pages= and =logos-outline-regexp-alist=.  By
+default, this only corresponds to the =^L= character (which can be
+inserted using the standard keys with =C-q C-l=).
 
-+ =org-tree-slide= and =org-indent= :: The former is a third-party package
-  and the latter is part of the Org distribution.  What the first does
-  is convert headings into pseudo slides.  While the other indents
-  content visually, without actually affecting the underlying initial
-  spacing, to match the heading's depth.  Those two are disabled by
-  default and the =prot-logos-org-presentation= toggle determines whether
-  they should be activated.
+Logos does not define any key bindings. Though I do so in the
+configuration block further below.
 
-+ Scroll lock :: Sometimes you want the cursor to remain centred on the
-  screen while your focus is on writing or reading.  This is controlled
-  by the variable =prot-logos-scroll-lock= (off by default), which
-  controls the activation of the built-in =scroll-lock-mode=.
+Additionally, Logos provides some optional aesthetic tweaks which come
+into effect when the buffer-local =logos-focus-mode= is enabled.  These
+will hide the mode line (=logos-hide-mode-line=), enable
+=scroll-lock-mode= (=logos-scroll-lock=), and use =variable-pitch-mode=
+in non-programming buffers (=logos-variable-pitch=).  All these
+variables are buffer-local.
 
-+ Modeline :: The variable =prot-logos-hidden-modeline= (off by default)
-  can be set to =t= to hide the modeline while entering the focused state.
-  For me this is mostly useful for presentations.
+To position the buffer in the center of the window, I install the
+=olivetti= package by Paul W. Rankin.  =logos.el= does not need to
+reinvent what already works well: all that is required is some glue code
+to integrate the two packages.
 
-+ Fringes :: There is also a function that unconditionally disables
-  fringes on the edge of the window.  It ensures that we do not see that
-  area and any indicators that may be placed on it while entering the
-  focus state (refer to [[#h:26a4fac6-33e2-4f6c-8589-9463df8525c9][Fringe mode]] for the relevant configurations,
-  while their overall presentation is controlled by the active theme).
+"Logos" is the familiar word derived from Greek (watch my presentation
+on philosophy about /Cosmos, Logos, and the living universe/:
+https://protesilaos.com/books/2022-02-05-cosmos-logos-living-universe/),
+though it also stands for these two perhaps equally insightful
+backronyms about the mechanics of this package:
 
-+ Line breaks :: The user option =prot-logos-prettify-line-breaks=
-  determines whether page breaks (the =^L= character which can be inserted
-  with =C-q C-l=) should be prettified or not.  The prettification
-  basically is a =* * *= that appear almost centred when the text is kept
-  at my desired =fill-column= of 72.
+1. =^L= Only Generates Ostensible Slides
+2. Logos Optionally Garners Outline Sections
 
-+ Cursor :: My =prot-cursor.el= defines some convenient extras for setting
-  the overall style of the cursor: the shape and the blink rate.  When
-  in a "focus mode" we may want to have one particular style available,
-  which differs from the default (for all the technicalities refer to
-  [[#h:cf9086c1-1b33-4127-a716-de94259e14a0][Cursor appearance and tweaks (prot-cursor.el)]]).
+Other potentially relevant parts of my dotemacs:
 
-All those combined contribute to an outcome that is appropriate for long
-reading or writing sessions, as well as presentations.  I intentionally
-do not introduce any font-resizing effect, as my needs vary in that
-regard depending on the context (though do refer to the =prot-fonts.el= I
-linked to earlier).
-
-For video demonstrations, albeit with earlier versions of my code, watch
-these:
-
-+ [[https://protesilaos.com/codelog/2020-07-16-emacs-focused-editing/][“Focused editing” tools for Emacs]] (2020-07-16)
-+ [[https://protesilaos.com/codelog/2020-07-17-emacs-mixed-fonts-org/][Configuring mixed fonts for Org mode and others]] (2020-07-17)
++ [[#h:1ae84fae-efc1-4bcc-9542-55b4ab8391a3][Paragraphs and fill-mode (prot-fill.el)]]
++ [[#h:e03b6415-a18f-4058-b9b0-5721d38c6c50][Font configurations (prot-fonts.el)]]
 
 #+begin_src emacs-lisp
-;;; Custom extensions for "focus mode" (prot-logos.el)
-(prot-emacs-builtin-package 'face-remap)
-
+;;; Custom extensions for "focus mode" (logos.el)
 (prot-emacs-elpa-package 'olivetti
   (setq olivetti-body-width 0.7)
   (setq olivetti-minimum-body-width 80)
   (setq olivetti-recall-visual-line-mode-entry-state t))
 
-;; NOTE 2022-02-05: `org-tree-slide' may be removed, as I simplified how
-;; I handle presentations by using narrowing and page breaks.  See the
-;; commands `prot-simple-forward-page-dwim' and
-;; `prot-simple-backward-page-dwim'.
-(prot-emacs-elpa-package 'org-tree-slide
-  (setq org-tree-slide-breadcrumbs nil)
-  (setq org-tree-slide-header nil)
-  (setq org-tree-slide-slide-in-effect nil)
-  (setq org-tree-slide-heading-emphasis nil)
-  (setq org-tree-slide-cursor-init t)
-  (setq org-tree-slide-modeline-display nil)
-  (setq org-tree-slide-skip-done nil)
-  (setq org-tree-slide-skip-comments t)
-  (setq org-tree-slide-fold-subtrees-skipped t)
-  (setq org-tree-slide-skip-outline-level 8)
-  (setq org-tree-slide-never-touch-face t)
-  (setq org-tree-slide-activate-message
-        (format "Presentation %s" (propertize "ON" 'face 'success)))
-  (setq org-tree-slide-deactivate-message
-        (format "Presentation %s" (propertize "OFF" 'face 'error)))
-  (let ((map org-tree-slide-mode-map))
-    (define-key map (kbd "<C-down>") #'org-tree-slide-display-header-toggle)
-    (define-key map (kbd "<C-right>") #'org-tree-slide-move-next-tree)
-    (define-key map (kbd "<C-left>") #'org-tree-slide-move-previous-tree)))
+(prot-emacs-builtin-package 'logos
+  (setq logos-outlines-are-pages t)
+  (setq logos-outline-regexp-alist
+        '((emacs-lisp-mode . "^;;;+ ")
+          (org-mode . "^\\*+ +")
+          (t . (or outline-regexp logos--page-delimiter))))
+  (setq logos-hide-mode-line nil)
+  (setq logos-scroll-lock nil)
+  (setq logos-variable-pitch nil)
 
-(prot-emacs-builtin-package 'prot-logos
-  (setq prot-logos-org-presentation nil)
-  (setq prot-logos-variable-pitch nil)
-  (setq prot-logos-scroll-lock nil)
-  (setq prot-logos-hidden-modeline t)
-  (setq prot-logos-prettify-line-breaks t)
-  (setq prot-logos-affect-prot-cursor nil)
-  (define-key global-map (kbd "<f9>") #'prot-logos-focus-mode))
+  ;; glue code for `logos-focus-mode' and `olivetti-mode'
+  (defun prot/logos--olivetti-mode ()
+    "Toggle `olivetti-mode'."
+    (if (or (bound-and-true-p olivetti-mode)
+            (null (logos--focus-p)))
+        (olivetti-mode -1)
+      (olivetti-mode 1)))
+
+  (add-hook 'logos-focus-mode-hook #'prot/logos--olivetti-mode)
+
+  (let ((map global-map))
+    (define-key map [remap narrow-to-region] #'logos-narrow-dwim)
+    (define-key map [remap forward-page] #'logos-forward-page-dwim)
+    (define-key map [remap backward-page] #'logos-backward-page-dwim)
+    (define-key map (kbd "<f9>") #'logos-focus-mode)))
 #+end_src
 
-And here is =prot-logos.el= in its totality.  It is available as a file in
+And here is =logos.el= in its totality.  It is available as a file in
 [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (same for all my Emacs libraries):
 
-#+include: prot-lisp/prot-logos.el src emacs-lisp :tangle no
+#+include: prot-lisp/logos.el src emacs-lisp :tangle no
 
 ** USLS --- Unassuming Sidenotes of Little Significance
 :PROPERTIES:
@@ -5053,7 +5011,7 @@ package configurations:
   This fixes the issue (read the article for more).
 
 Finally, note that I sometimes deliver simple presentations using Org.
-Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (prot-logos.el)]].
+Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (logos.el)]].
 
 #+begin_src emacs-lisp
 ;;; Org-mode (personal information manager)
@@ -7837,9 +7795,9 @@ tweaked to use a more appropriate string for its indicator and to apply
 colours that are designed specifically for the mode line (the default
 uses the generic font-lock warning face).
 
-Note that in [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (prot-logos.el)]] I
-provide a snippet that optionally toggles the visibility of the modeline
-while entering a bespoke "focus mode" for writing/reading.
+Note that in [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus mode" (logos.el)]] I provide a
+snippet that optionally toggles the visibility of the modeline while
+entering a bespoke "focus mode" for writing/reading.
 
 #+begin_src emacs-lisp
 ;;; Mode line
