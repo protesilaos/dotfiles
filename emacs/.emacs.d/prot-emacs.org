@@ -8557,8 +8557,9 @@ This eliminates the friction of guessing where the point has warped to.
 
 As for per-line scrolling, I dislike the default behaviour of visually
 re-centring the point: it is too aggressive as a standard mode of
-interaction.  With the following the point will stay at the top/bottom
-of the screen while moving in that direction (use =C-l= to reposition it).
+interaction.  With the following, the point will stay at the top/bottom
+of the screen while moving in that direction (use =C-l= to reposition
+it).
 
 The =next-screen-context-lines= ensures that when moving by screenfulls
 (with either =C-v= or =M-v=) we do not get any continuation lines from the
@@ -8566,6 +8567,7 @@ previous screen.  I find this more intuitive.
 
 #+begin_src emacs-lisp
 ;;; Scrolling behaviour
+;; These four come from the C source code.
 (setq-default scroll-preserve-screen-position t)
 (setq-default scroll-conservatively 1) ; affects `scroll-step'
 (setq-default scroll-margin 0)
@@ -10035,55 +10037,71 @@ at the tree representation of my "emacs package", per Stow's parlance
 you review it, but that is beside the point).
 
 #+begin_example sh
-~/Git/prot-dotfiles $ tree -aF --dirsfirst emacs
-emacs
-└── .emacs.d/
-    ├── modus-themes/
-    │   ├── modus-operandi-theme.el
-    │   ├── modus-themes.el
-    │   └── modus-vivendi-theme.el
-    ├── prot-lisp/
-    │   ├── prot-bongo.el
-    │   ├── prot-comment.el
-    │   ├── prot-common.el
-    │   ├── prot-consult.el
-    │   ├── prot-cursor.el
-    │   ├── prot-diff.el
-    │   ├── prot-dired.el
-    │   ├── prot-elfeed-bongo.el
-    │   ├── prot-elfeed.el
-    │   ├── prot-embark.el
-    │   ├── prot-embark-extras.el
-    │   ├── prot-eshell.el
-    │   ├── prot-fill.el
-    │   ├── prot-fonts.el
-    │   ├── prot-mail.el
-    │   ├── prot-ibuffer.el
-    │   ├── prot-icomplete.el
-    │   ├── prot-logos.el
-    │   ├── prot-minibuffer.el
-    │   ├── prot-moody.el
-    │   ├── prot-orderless.el
-    │   ├── prot-outline.el
-    │   ├── prot-project.el
-    │   ├── prot-pulse.el
-    │   ├── prot-recentf.el
-    │   ├── prot-search.el
-    │   ├── prot-sideline.el
-    │   ├── prot-simple.el
-    │   ├── prot-spell.el
-    │   ├── prot-tab.el
-    │   ├── prot-text.el
-    │   ├── prot-vc.el
-    │   ├── tmr.el
-    │   └── usls.el
-    ├── basic-init.el
-    ├── early-init.el
-    ├── init.el
-    ├── prot-emacs.org
-    └── user-emacs.org
+~/Git/Projects/dotfiles $ tree -aF --dirsfirst emacs
+emacs/
+`-- .emacs.d/
+    |-- modus-themes/
+    |   |-- modus-operandi-theme.el
+    |   |-- modus-themes.el
+    |   `-- modus-vivendi-theme.el
+    |-- prot-lisp/
+    |   |-- invtr.el
+    |   |-- lin.el
+    |   |-- logos.el
+    |   |-- mct-avy.el
+    |   |-- mct-tcm.el
+    |   |-- mct.el
+    |   |-- modus-themes-exporter.el
+    |   |-- prot-bongo.el
+    |   |-- prot-bookmark.el
+    |   |-- prot-comment.el
+    |   |-- prot-common.el
+    |   |-- prot-cursor.el
+    |   |-- prot-diary.el
+    |   |-- prot-diff.el
+    |   |-- prot-dired.el
+    |   |-- prot-elfeed-bongo.el
+    |   |-- prot-elfeed.el
+    |   |-- prot-embark.el
+    |   |-- prot-eshell.el
+    |   |-- prot-eww.el
+    |   |-- prot-fill.el
+    |   |-- prot-fonts.el
+    |   |-- prot-gnus-deprecated-conf.org
+    |   |-- prot-ibuffer.el
+    |   |-- prot-icomplete-deprecated-conf.el
+    |   |-- prot-icomplete.el
+    |   |-- prot-ivy-deprecated-conf.el
+    |   |-- prot-logos.el
+    |   |-- prot-mail.el
+    |   |-- prot-minibuffer.el
+    |   |-- prot-moody.el
+    |   |-- prot-mu4e-deprecated-conf.el
+    |   |-- prot-notmuch.el
+    |   |-- prot-orderless.el
+    |   |-- prot-org.el
+    |   |-- prot-outline.el
+    |   |-- prot-prism.el
+    |   |-- prot-proced.el
+    |   |-- prot-project.el
+    |   |-- prot-pulse.el
+    |   |-- prot-recentf.el
+    |   |-- prot-search.el
+    |   |-- prot-sideline.el
+    |   |-- prot-simple.el
+    |   |-- prot-spell.el
+    |   |-- prot-tab.el
+    |   |-- prot-text.el
+    |   |-- prot-vc.el
+    |   |-- tmr.el
+    |   `-- usls.el
+    |-- basic-init.el
+    |-- early-init.el
+    |-- init.el
+    |-- prot-emacs.el
+    `-- prot-emacs.org
 
-3 directories, 42 files
+3 directories, 58 files
 #+end_example
 
 When we invoke a =stow= command on this =emacs= package we are instructing
