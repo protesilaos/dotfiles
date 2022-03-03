@@ -1296,17 +1296,18 @@
           (org-mode . "^\\*+ +")
           (t . ,(or outline-regexp logos--page-delimiter))))
 
-  ;; These apply when `logos-focus-mode' is enabled
-  (setq logos-hide-mode-line nil)
-  (setq logos-scroll-lock nil)
-  (setq logos-variable-pitch nil)
+  ;; These apply when `logos-focus-mode' is enabled.  Their value is
+  ;; buffer-local.
+  (setq-default logos-hide-mode-line nil)
+  (setq-default logos-scroll-lock nil)
+  (setq-default logos-variable-pitch nil)
 
   (let ((map global-map))
     (define-key map [remap narrow-to-region] #'logos-narrow-dwim)
     (define-key map [remap forward-page] #'logos-forward-page-dwim)
     (define-key map [remap backward-page] #'logos-backward-page-dwim)
     (define-key map (kbd "<f9>") #'logos-focus-mode))
-  
+
   ;; glue code for `logos-focus-mode' and `olivetti-mode'
   (defun prot/logos--olivetti-mode ()
     "Toggle `olivetti-mode'."
@@ -2047,6 +2048,39 @@ sure this is a good approach."
                  #'prot-org-capture-jukebox
                  :empty-lines-after 1
                  :immediate-finish t)))
+
+(prot-emacs-elpa-package 'org-modern
+  ;; NOTE 2022-03-03: These are all the user options.  Keeping them at
+  ;; their default value.
+
+  ;; (setq org-modern-label-border 'auto)
+  ;; (setq org-modern-star ["◉""○""◈""◇""⁕"])
+  ;; (setq org-modern-hide-stars 'leading)
+  ;; (setq org-modern-timestamp t)
+  ;; (setq org-modern-table t)
+  ;; (setq org-modern-table-vertical 3)
+  ;; (setq org-modern-table-horizontal 0.1)
+  ;; (setq org-modern-priority
+  ;;       '((?A . "🅐") ;; Ⓐ
+  ;;         (?B . "🅑") ;; Ⓑ
+  ;;         (?C . "🅒"))) ;; Ⓒ
+  ;; (setq org-modern-list
+  ;;       '((?+ . "◦")
+  ;;         (?- . "–")
+  ;;         (?* . "•")))
+  ;; (setq org-modern-checkbox
+  ;;       '((?X . #("▢✓" 0 2 (composition ((2)))))
+  ;;         (?- . #("▢–" 0 2 (composition ((2)))))
+  ;;         (?\s . #("▢" 0 1 (composition ((1)))))))
+  ;; (setq org-modern-horizontal-rule t)
+  ;; (setq org-modern-todo t)
+  ;; (setq org-modern-tag t)
+  ;; (setq org-modern-block t)
+  ;; (setq org-modern-keyword t)
+  ;; (setq org-modern-statistics t)
+  ;; (setq org-modern-progress ["○""◔""◐""◕""●"])
+
+  (add-hook 'org-mode-hook #'org-modern-mode))
 
 ;;; Calendar and Diary (and prot-diary.el)
 (prot-emacs-builtin-package 'calendar
@@ -3048,9 +3082,9 @@ Can link to more than one message, if so all matching messages are shown."
 ;;; Keycast mode
 (prot-emacs-elpa-package 'keycast
   ;; Those are for `keycast-mode'
-  (setq keycast-window-predicate 'moody-window-active-p) ; assumes `moody.el'
+  (setq keycast-mode-line-window-predicate 'moody-window-active-p) ; assumes `moody.el'
   (setq keycast-separator-width 1)
-  (setq keycast-remove-tail-elements nil)
+  (setq keycast-mode-line-remove-tail-elements nil)
 
   (dolist (input '(self-insert-command
                    org-self-insert-command))
