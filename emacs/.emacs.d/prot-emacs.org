@@ -8141,10 +8141,11 @@ Once enabled, this package uses the mode line to show the keys being
 pressed and the command they call.  It is quite useful for screen
 casting.
 
-The placement of the indicator is controlled by =keycast-window-predicate=
-which I set to the current window.  The =moody.el= library offers that
-specific piece of functionality (though [[#h:c07b9dfc-14a2-41a6-9310-53539dec8684][I also configure Moody]] for its
-primary purpose of styling the mode line).
+The placement of the indicator is controlled by the user option
+=keycast-mode-line-window-predicate= which I set to the current window.
+The =moody.el= library offers that specific piece of functionality
+(though [[#h:c07b9dfc-14a2-41a6-9310-53539dec8684][I also configure Moody]] for its primary purpose of styling the
+mode line).
 
 The tweaks to the =keycast-substitute-alist= prevent the display of
 self-inserting characters and some other commands that are not
@@ -8157,9 +8158,9 @@ tweaks of my own.
 ;;; Keycast mode
 (prot-emacs-elpa-package 'keycast
   ;; Those are for `keycast-mode'
-  (setq keycast-window-predicate 'moody-window-active-p) ; assumes `moody.el'
+  (setq keycast-mode-line-window-predicate 'moody-window-active-p) ; assumes `moody.el'
   (setq keycast-separator-width 1)
-  (setq keycast-remove-tail-elements nil)
+  (setq keycast-mode-line-remove-tail-elements nil)
 
   (dolist (input '(self-insert-command
                    org-self-insert-command))
