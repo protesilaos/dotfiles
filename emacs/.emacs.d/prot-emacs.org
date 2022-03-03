@@ -5427,6 +5427,54 @@ Here are my few extras for Org (from [[https://gitlab.com/protesilaos/dotfiles][
 
 #+include: prot-lisp/prot-org.el src emacs-lisp :tangle no
 
+*** Prettier Org constructs (org-modern.el)
+:PROPERTIES:
+:CUSTOM_ID: h:a6b1bb67-b62b-4018-999a-90cbd0bdceb5
+:END:
+
+This is yet another high-quality package by Daniel Mendler which handles
+the prettification of Org buffers in a performant way.  Rathen than
+write about what the package does, it is better you check the GIF in the
+project's README: https://github.com/minad/org-modern.
+
+The package is still in its early days, so expect things to change.
+Though I am already happy with the results.
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'org-modern
+  ;; NOTE 2022-03-03: These are all the user options.  Keeping them at
+  ;; their default value.
+
+  ;; (setq org-modern-label-border 'auto)
+  ;; (setq org-modern-star ["◉""○""◈""◇""⁕"])
+  ;; (setq org-modern-hide-stars 'leading)
+  ;; (setq org-modern-timestamp t)
+  ;; (setq org-modern-table t)
+  ;; (setq org-modern-table-vertical 3)
+  ;; (setq org-modern-table-horizontal 0.1)
+  ;; (setq org-modern-priority
+  ;;       '((?A . "🅐") ;; Ⓐ
+  ;;         (?B . "🅑") ;; Ⓑ
+  ;;         (?C . "🅒"))) ;; Ⓒ
+  ;; (setq org-modern-list
+  ;;       '((?+ . "◦")
+  ;;         (?- . "–")
+  ;;         (?* . "•")))
+  ;; (setq org-modern-checkbox
+  ;;       '((?X . #("▢✓" 0 2 (composition ((2)))))
+  ;;         (?- . #("▢–" 0 2 (composition ((2)))))
+  ;;         (?\s . #("▢" 0 1 (composition ((1)))))))
+  ;; (setq org-modern-horizontal-rule t)
+  ;; (setq org-modern-todo t)
+  ;; (setq org-modern-tag t)
+  ;; (setq org-modern-block t)
+  ;; (setq org-modern-keyword t)
+  ;; (setq org-modern-statistics t)
+  ;; (setq org-modern-progress ["○""◔""◐""◕""●"])
+
+  (add-hook 'org-mode-hook #'org-modern-mode))
+#+end_src
+
 ** Calendar and Diary (and prot-diary.el)
 :PROPERTIES:
 :CUSTOM_ID: h:b4040bc0-7a2a-4f17-824d-42de621bd1b9
