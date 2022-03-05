@@ -5450,24 +5450,28 @@ Though I am already happy with the results.
 
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'org-modern
-  ;; NOTE 2022-03-03: These are all the user options.  Keeping them at
-  ;; their default value.
+  ;; NOTE 2022-03-05: The `org-modern-label-border' is ignored because
+  ;; of my face tweaks further below.
+  ;; (setq org-modern-label-border 0.1)
 
-  ;; (setq org-modern-label-border 'auto)
+  (setq org-modern-timestamp nil)
+  (setq org-modern-table t)
+  (setq org-modern-table-vertical 1)
+  (setq org-modern-table-horizontal 0)
+  (setq org-modern-priority ; the defaults in comments
+        '((?A . "α") ; Ⓐ
+          (?B . "β") ; Ⓑ
+          (?C . "γ"))) ; Ⓒ
+  (setq org-modern-list ; I swap the defaults for + and *
+        '((?+ . "•")
+          (?- . "–")
+          (?* . "◦")))
+
+  ;; NOTE 2022-03-05: The variables that are commented out are the
+  ;; defaults.
+
   ;; (setq org-modern-star ["◉""○""◈""◇""⁕"])
   ;; (setq org-modern-hide-stars 'leading)
-  ;; (setq org-modern-timestamp t)
-  ;; (setq org-modern-table t)
-  ;; (setq org-modern-table-vertical 3)
-  ;; (setq org-modern-table-horizontal 0.1)
-  ;; (setq org-modern-priority
-  ;;       '((?A . "🅐") ;; Ⓐ
-  ;;         (?B . "🅑") ;; Ⓑ
-  ;;         (?C . "🅒"))) ;; Ⓒ
-  ;; (setq org-modern-list
-  ;;       '((?+ . "◦")
-  ;;         (?- . "–")
-  ;;         (?* . "•")))
   ;; (setq org-modern-checkbox
   ;;       '((?X . #("▢✓" 0 2 (composition ((2)))))
   ;;         (?- . #("▢–" 0 2 (composition ((2)))))
@@ -5480,7 +5484,25 @@ Though I am already happy with the results.
   ;; (setq org-modern-statistics t)
   ;; (setq org-modern-progress ["○""◔""◐""◕""●"])
 
-  (add-hook 'org-mode-hook #'org-modern-mode))
+  (add-hook 'org-mode-hook #'org-modern-mode)
+
+  ;; Override the default use of `variable-pitch' and increase the font
+  ;; size a bit.  It works better with my font settings.  The change to
+  ;; the :box attribute is necessary to apply the appropriate colour
+  ;; when switching between `modus-operandi' and `modus-vivendi',
+  ;; otherwise the border's colour is that of the main background the
+  ;; moment the face was first evaluated (so on the other theme it would
+  ;; be visible).
+  ;;
+  ;; Note that I do not wrap this in `with-eval-after-load' because the
+  ;; `modus-themes' are always loaded first in my config.
+  (defun prot/org-modern-face-tweaks ()
+    (modus-themes-with-colors
+      (custom-set-faces
+       `(org-modern-label ((,class :inherit fixed-pitch :height 0.9
+                                   :box (:line-width -1 :color ,bg-main)))))))
+
+  (add-hook 'modus-themes-after-load-theme-hook #'prot/org-modern-face-tweaks))
 #+end_src
 
 ** Calendar and Diary (and prot-diary.el)
