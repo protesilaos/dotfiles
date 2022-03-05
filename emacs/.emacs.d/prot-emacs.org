@@ -5113,6 +5113,9 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
           ("software")
           ("website")))
 
+  (setq org-auto-align-tags nil)
+  (setq org-tags-column 0)
+
 ;;;; log
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
