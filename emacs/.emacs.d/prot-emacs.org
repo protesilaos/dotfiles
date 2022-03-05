@@ -554,11 +554,11 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
-        modus-themes-intense-mouseovers t
-        modus-themes-deuteranopia nil
+        modus-themes-intense-mouseovers nil
+        modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
@@ -577,7 +577,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless (padding . 4) (height . 0.9))
+        modus-themes-mode-line '(borderless accented (padding . 4) (height . 0.9))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -654,13 +654,18 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
           (scheduled . uniform)
           (habit . nil))
 
-        modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . (variable-pitch light 1.6))
-          (2 . (variable-pitch regular 1.4))
-          (3 . (variable-pitch regular 1.3))
-          (4 . (1.2))
-          (5 . (1.1))
-          (t . (monochrome 1.05))))
+        modus-themes-headings nil ; this is an alist: read the manual or its doc string
+
+        ;; Sample for headings:
+
+        ;; modus-themes-headings
+        ;; '((1 . (variable-pitch light 1.6))
+        ;;   (2 . (variable-pitch regular 1.4))
+        ;;   (3 . (variable-pitch regular 1.3))
+        ;;   (4 . (1.2))
+        ;;   (5 . (1.1))
+        ;;   (t . (monochrome 1.05)))
+        )
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
