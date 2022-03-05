@@ -5454,7 +5454,7 @@ Though I am already happy with the results.
   ;; of my face tweaks further below.
   ;; (setq org-modern-label-border 0.1)
 
-  (setq org-modern-timestamp nil)
+  (setq org-modern-timestamp t)
   (setq org-modern-table t)
   (setq org-modern-table-vertical 1)
   (setq org-modern-table-horizontal 0)
@@ -5484,8 +5484,6 @@ Though I am already happy with the results.
   ;; (setq org-modern-statistics t)
   ;; (setq org-modern-progress ["○""◔""◐""◕""●"])
 
-  (add-hook 'org-mode-hook #'org-modern-mode)
-
   ;; Override the default use of `variable-pitch' and increase the font
   ;; size a bit.  It works better with my font settings.  The change to
   ;; the :box attribute is necessary to apply the appropriate colour
@@ -5499,10 +5497,28 @@ Though I am already happy with the results.
   (defun prot/org-modern-face-tweaks ()
     (modus-themes-with-colors
       (custom-set-faces
-       `(org-modern-label ((,class :inherit fixed-pitch :height 0.9
-                                   :box (:line-width -1 :color ,bg-main)))))))
+       `(org-modern-block-keyword ((,class :inherit org-modern-label :background ,bg-alt)))
+       `(org-modern-label ((,class :inherit fixed-pitch :height 0.9 :box (:line-width -1 :color ,bg-main))))
+       `(org-modern-done ((,class :inherit org-modern-label :background ,bg-alt :foreground ,fg-dim)))
+       `(org-modern-statistics ((,class :inherit org-modern-label :background ,yellow-nuanced-bg :foreground ,yellow-nuanced-fg)))
+       `(org-modern-tag ((,class :inherit org-modern-label :background ,magenta-nuanced-bg :foreground ,magenta-nuanced-fg)))
+       `(org-modern-todo ((,class :inherit org-modern-label :background ,red-nuanced-bg :foreground ,red-nuanced-fg)))
+       ;; NOTE 2022-03-05: The cons cell for the `:line' attribute here
+       ;; only works for Emacs 28 or higher.  This is a dirty hack that
+       ;; aligns timestamps with tables at the specific point size I use
+       ;; and only with my my particular font configurations.  It is not
+       ;; a general solution and it affects mouse hover effects!
+       `(org-modern-date-active ((,class :inherit org-modern-label :box (:line-width (8 . -1) :color ,bg-main)
+                                         :background ,bg-alt :foreground ,fg-dim)))
+       `(org-modern-date-inactive ((,class :inherit org-modern-date-active :foreground ,fg-dim)))
+       `(org-modern-time-active ((,class :inherit org-modern-label :box (:line-width (8 . -1) :color ,bg-main)
+                                         :background ,bg-active-accent :foreground ,fg-main)))
+       `(org-modern-time-inactive ((,class :inherit org-modern-label :box (:line-width (8 . -1) :color ,bg-main)
+                                           :background ,bg-active :foreground ,fg-dim))))))
 
-  (add-hook 'modus-themes-after-load-theme-hook #'prot/org-modern-face-tweaks))
+  (add-hook 'modus-themes-after-load-theme-hook #'prot/org-modern-face-tweaks)
+
+  (add-hook 'org-mode-hook #'org-modern-mode))
 #+end_src
 
 ** Calendar and Diary (and prot-diary.el)
