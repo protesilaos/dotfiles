@@ -147,11 +147,11 @@
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
-        modus-themes-intense-mouseovers t
-        modus-themes-deuteranopia nil
+        modus-themes-intense-mouseovers nil
+        modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
@@ -170,7 +170,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless (padding . 4) (height . 0.9))
+        modus-themes-mode-line '(borderless accented (padding . 4) (height . 0.9))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -247,13 +247,18 @@
           (scheduled . uniform)
           (habit . nil))
 
-        modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((1 . (variable-pitch light 1.6))
-          (2 . (variable-pitch regular 1.4))
-          (3 . (variable-pitch regular 1.3))
-          (4 . (1.2))
-          (5 . (1.1))
-          (t . (monochrome 1.05))))
+        modus-themes-headings nil ; this is an alist: read the manual or its doc string
+
+        ;; Sample for headings:
+
+        ;; modus-themes-headings
+        ;; '((1 . (variable-pitch light 1.6))
+        ;;   (2 . (variable-pitch regular 1.4))
+        ;;   (3 . (variable-pitch regular 1.3))
+        ;;   (4 . (1.2))
+        ;;   (5 . (1.1))
+        ;;   (t . (monochrome 1.05)))
+        )
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
@@ -1740,6 +1745,9 @@ sure this is a good approach."
           ("software")
           ("website")))
 
+  (setq org-auto-align-tags nil)
+  (setq org-tags-column 0)
+
 ;;;; log
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
@@ -2050,24 +2058,28 @@ sure this is a good approach."
                  :immediate-finish t)))
 
 (prot-emacs-elpa-package 'org-modern
-  ;; NOTE 2022-03-03: These are all the user options.  Keeping them at
-  ;; their default value.
+  ;; NOTE 2022-03-05: The `org-modern-label-border' is ignored because
+  ;; of my face tweaks further below.
+  ;; (setq org-modern-label-border 0.1)
 
-  ;; (setq org-modern-label-border 'auto)
+  (setq org-modern-timestamp nil)
+  (setq org-modern-table t)
+  (setq org-modern-table-vertical 1)
+  (setq org-modern-table-horizontal 0)
+  (setq org-modern-priority ; the defaults in comments
+        '((?A . "α") ; Ⓐ
+          (?B . "β") ; Ⓑ
+          (?C . "γ"))) ; Ⓒ
+  (setq org-modern-list ; I swap the defaults for + and *
+        '((?+ . "•")
+          (?- . "–")
+          (?* . "◦")))
+
+  ;; NOTE 2022-03-05: The variables that are commented out are the
+  ;; defaults.
+
   ;; (setq org-modern-star ["◉""○""◈""◇""⁕"])
   ;; (setq org-modern-hide-stars 'leading)
-  ;; (setq org-modern-timestamp t)
-  ;; (setq org-modern-table t)
-  ;; (setq org-modern-table-vertical 3)
-  ;; (setq org-modern-table-horizontal 0.1)
-  ;; (setq org-modern-priority
-  ;;       '((?A . "🅐") ;; Ⓐ
-  ;;         (?B . "🅑") ;; Ⓑ
-  ;;         (?C . "🅒"))) ;; Ⓒ
-  ;; (setq org-modern-list
-  ;;       '((?+ . "◦")
-  ;;         (?- . "–")
-  ;;         (?* . "•")))
   ;; (setq org-modern-checkbox
   ;;       '((?X . #("▢✓" 0 2 (composition ((2)))))
   ;;         (?- . #("▢–" 0 2 (composition ((2)))))
@@ -2080,7 +2092,25 @@ sure this is a good approach."
   ;; (setq org-modern-statistics t)
   ;; (setq org-modern-progress ["○""◔""◐""◕""●"])
 
-  (add-hook 'org-mode-hook #'org-modern-mode))
+  (add-hook 'org-mode-hook #'org-modern-mode)
+
+  ;; Override the default use of `variable-pitch' and increase the font
+  ;; size a bit.  It works better with my font settings.  The change to
+  ;; the :box attribute is necessary to apply the appropriate colour
+  ;; when switching between `modus-operandi' and `modus-vivendi',
+  ;; otherwise the border's colour is that of the main background the
+  ;; moment the face was first evaluated (so on the other theme it would
+  ;; be visible).
+  ;;
+  ;; Note that I do not wrap this in `with-eval-after-load' because the
+  ;; `modus-themes' are always loaded first in my config.
+  (defun prot/org-modern-face-tweaks ()
+    (modus-themes-with-colors
+      (custom-set-faces
+       `(org-modern-label ((,class :inherit fixed-pitch :height 0.9
+                                   :box (:line-width -1 :color ,bg-main)))))))
+
+  (add-hook 'modus-themes-after-load-theme-hook #'prot/org-modern-face-tweaks))
 
 ;;; Calendar and Diary (and prot-diary.el)
 (prot-emacs-builtin-package 'calendar
