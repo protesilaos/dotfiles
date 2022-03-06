@@ -147,13 +147,13 @@
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs nil
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
         modus-themes-intense-mouseovers nil
         modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -170,7 +170,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless accented (padding . 4) (height . 0.9))
+        modus-themes-mode-line '(borderless (padding . 4) (height . 0.9))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -225,7 +225,7 @@
         ;; covered in `modus-themes-weights'.  Bold is used in the absence
         ;; of an explicit WEIGHT.
         modus-themes-completions '((matches . (extrabold background))
-                                   (selection . (semibold text-also))
+                                   (selection . (semibold intense accented text-also))
                                    (popup . (accented intense)))
 
         modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
@@ -2058,18 +2058,12 @@ sure this is a good approach."
                  :immediate-finish t)))
 
 (prot-emacs-elpa-package 'org-modern
-  ;; NOTE 2022-03-05: The `org-modern-label-border' is ignored because
-  ;; of my face tweaks further below.
-  ;; (setq org-modern-label-border 0.1)
-
+  (setq org-modern-label-border 1)
+  (setq org-modern-variable-pitch nil)
   (setq org-modern-timestamp t)
   (setq org-modern-table t)
   (setq org-modern-table-vertical 1)
   (setq org-modern-table-horizontal 0)
-  (setq org-modern-priority ; the defaults in comments
-        '((?A . "α") ; Ⓐ
-          (?B . "β") ; Ⓑ
-          (?C . "γ"))) ; Ⓒ
   (setq org-modern-list ; I swap the defaults for + and *
         '((?+ . "•")
           (?- . "–")
@@ -2085,6 +2079,7 @@ sure this is a good approach."
   ;;         (?- . #("▢–" 0 2 (composition ((2)))))
   ;;         (?\s . #("▢" 0 1 (composition ((1)))))))
   ;; (setq org-modern-horizontal-rule t)
+  ;; (setq org-modern-priority t)
   ;; (setq org-modern-todo t)
   ;; (setq org-modern-tag t)
   ;; (setq org-modern-block t)
@@ -2092,41 +2087,28 @@ sure this is a good approach."
   ;; (setq org-modern-statistics t)
   ;; (setq org-modern-progress ["○""◔""◐""◕""●"])
 
-  ;; Override the default use of `variable-pitch' and increase the font
-  ;; size a bit.  It works better with my font settings.  The change to
-  ;; the :box attribute is necessary to apply the appropriate colour
-  ;; when switching between `modus-operandi' and `modus-vivendi',
-  ;; otherwise the border's colour is that of the main background the
-  ;; moment the face was first evaluated (so on the other theme it would
-  ;; be visible).
+  (add-hook 'org-mode-hook #'org-modern-mode)
+
+  ;; NOTE 2022-03-06: I am experimenting with various styles here.  DO NOT COPY.
   ;;
-  ;; Note that I do not wrap this in `with-eval-after-load' because the
-  ;; `modus-themes' are always loaded first in my config.
+  ;; Also note that I do not wrap this in `with-eval-after-load' because
+  ;; the `modus-themes' are always loaded first in my config.
   (defun prot/org-modern-face-tweaks ()
     (modus-themes-with-colors
       (custom-set-faces
        `(org-modern-block-keyword ((,class :inherit org-modern-label :background ,bg-alt)))
-       `(org-modern-label ((,class :inherit fixed-pitch :height 0.9 :box (:line-width -1 :color ,bg-main))))
-       `(org-modern-done ((,class :inherit org-modern-label :background ,bg-alt :foreground ,fg-dim)))
-       `(org-modern-statistics ((,class :inherit org-modern-label :background ,yellow-nuanced-bg :foreground ,yellow-nuanced-fg)))
-       `(org-modern-tag ((,class :inherit org-modern-label :background ,magenta-nuanced-bg :foreground ,magenta-nuanced-fg)))
-       `(org-modern-todo ((,class :inherit org-modern-label :background ,red-nuanced-bg :foreground ,red-nuanced-fg)))
-       ;; NOTE 2022-03-05: The cons cell for the `:line' attribute here
-       ;; only works for Emacs 28 or higher.  This is a dirty hack that
-       ;; aligns timestamps with tables at the specific point size I use
-       ;; and only with my my particular font configurations.  It is not
-       ;; a general solution and it affects mouse hover effects!
-       `(org-modern-date-active ((,class :inherit org-modern-label :box (:line-width (8 . -1) :color ,bg-main)
-                                         :background ,bg-alt :foreground ,fg-dim)))
+       `(org-modern-label ((,class :box (:line-width (-1 . ,org-modern-label-border) :color ,bg-main))))
+       `(org-modern-done ((,class :inherit org-modern-label :background ,bg-active :foreground ,fg-dim)))
+       `(org-modern-priority ((,class :inherit org-modern-label :background ,bg-special-warm :foreground ,fg-special-warm)))
+       `(org-modern-statistics ((,class :inherit org-modern-label :background ,cyan-subtle-bg :foreground ,cyan-nuanced-fg)))
+       `(org-modern-tag ((,class :inherit org-modern-label :background ,bg-special-cold :foreground ,fg-special-cold)))
+       `(org-modern-todo ((,class :inherit org-modern-label :background ,red-subtle-bg :foreground ,red-nuanced-fg)))
+       `(org-modern-date-active ((,class :inherit org-modern-label :background ,bg-alt :foreground ,fg-dim)))
        `(org-modern-date-inactive ((,class :inherit org-modern-date-active :foreground ,fg-dim)))
-       `(org-modern-time-active ((,class :inherit org-modern-label :box (:line-width (8 . -1) :color ,bg-main)
-                                         :background ,bg-active-accent :foreground ,fg-main)))
-       `(org-modern-time-inactive ((,class :inherit org-modern-label :box (:line-width (8 . -1) :color ,bg-main)
-                                           :background ,bg-active :foreground ,fg-dim))))))
+       `(org-modern-time-active ((,class :inherit org-modern-label :background ,bg-active-accent :foreground ,fg-main)))
+       `(org-modern-time-inactive ((,class :inherit org-modern-label :background ,bg-active :foreground ,fg-dim))))))
 
-  (add-hook 'modus-themes-after-load-theme-hook #'prot/org-modern-face-tweaks)
-
-  (add-hook 'org-mode-hook #'org-modern-mode))
+  (add-hook 'modus-themes-after-load-theme-hook #'prot/org-modern-face-tweaks))
 
 ;;; Calendar and Diary (and prot-diary.el)
 (prot-emacs-builtin-package 'calendar
