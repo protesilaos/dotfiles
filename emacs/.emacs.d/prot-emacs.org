@@ -554,13 +554,13 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs nil
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
         modus-themes-intense-mouseovers nil
         modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -577,7 +577,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless accented (padding . 4) (height . 0.9))
+        modus-themes-mode-line '(borderless (padding . 4) (height . 0.9))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -632,7 +632,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; covered in `modus-themes-weights'.  Bold is used in the absence
         ;; of an explicit WEIGHT.
         modus-themes-completions '((matches . (extrabold background))
-                                   (selection . (semibold text-also))
+                                   (selection . (semibold intense accented text-also))
                                    (popup . (accented intense)))
 
         modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
