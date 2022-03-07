@@ -5493,7 +5493,6 @@ those changes, especially since it is theme-agnostic.
   (defun prot/org-modern-face-tweaks ()
     (modus-themes-with-colors
       (custom-set-faces
-       `(org-modern-block-keyword ((,class :inherit org-modern-label :background ,bg-alt)))
        `(org-modern-label ((,class :box (:line-width (-1 . ,org-modern-label-border) :color ,bg-main))))
        `(org-modern-done ((,class :inherit org-modern-label :background ,bg-special-faint-mild :foreground ,green-alt-other)))
        `(org-modern-priority ((,class :inherit org-modern-label :background ,bg-special-faint-calm :foreground ,magenta-alt-other)))
