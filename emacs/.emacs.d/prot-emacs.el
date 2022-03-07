@@ -2098,15 +2098,15 @@ sure this is a good approach."
       (custom-set-faces
        `(org-modern-block-keyword ((,class :inherit org-modern-label :background ,bg-alt)))
        `(org-modern-label ((,class :box (:line-width (-1 . ,org-modern-label-border) :color ,bg-main))))
-       `(org-modern-done ((,class :inherit org-modern-label :background ,bg-active :foreground ,fg-dim)))
-       `(org-modern-priority ((,class :inherit org-modern-label :background ,bg-special-warm :foreground ,fg-special-warm)))
-       `(org-modern-statistics ((,class :inherit org-modern-label :background ,cyan-subtle-bg :foreground ,cyan-nuanced-fg)))
-       `(org-modern-tag ((,class :inherit org-modern-label :background ,bg-special-cold :foreground ,fg-special-cold)))
-       `(org-modern-todo ((,class :inherit org-modern-label :background ,red-subtle-bg :foreground ,red-nuanced-fg)))
-       `(org-modern-date-active ((,class :inherit org-modern-label :background ,bg-alt :foreground ,fg-dim)))
+       `(org-modern-done ((,class :inherit org-modern-label :background ,bg-special-faint-mild :foreground ,green-alt-other)))
+       `(org-modern-priority ((,class :inherit org-modern-label :background ,bg-special-faint-calm :foreground ,magenta-alt-other)))
+       `(org-modern-statistics ((,class :inherit org-modern-label :background ,bg-special-faint-warm :foreground ,yellow-alt-other)))
+       `(org-modern-tag ((,class :inherit org-modern-label :background ,bg-special-faint-calm :foreground ,magenta)))
+       `(org-modern-todo ((,class :inherit org-modern-label :background ,bg-special-faint-warm :foreground ,red-alt-other)))
+       `(org-modern-date-active ((,class :inherit org-modern-label :background ,bg-alt :foreground ,fg-main)))
        `(org-modern-date-inactive ((,class :inherit org-modern-date-active :foreground ,fg-dim)))
-       `(org-modern-time-active ((,class :inherit org-modern-label :background ,bg-active-accent :foreground ,fg-main)))
-       `(org-modern-time-inactive ((,class :inherit org-modern-label :background ,bg-active :foreground ,fg-dim))))))
+       `(org-modern-time-active ((,class :inherit org-modern-label :background ,bg-active :foreground ,fg-main)))
+       `(org-modern-time-inactive ((,class :inherit org-modern-date-inactive))))))
 
   (add-hook 'modus-themes-after-load-theme-hook #'prot/org-modern-face-tweaks))
 
