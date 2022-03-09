@@ -618,7 +618,7 @@
           (?h "Help" ,#'help-bookmark-jump)
           (?i "Info" ,#'Info-bookmark-jump)
           (?m "Man" ,#'Man-bookmark-jump)
-          (?p "PDF" ,#'pdf-view-bookmark-jump)
+          ;; (?p "PDF" ,#'pdf-view-bookmark-jump)
           (?v "VC Dir" ,#'vc-dir-bookmark-jump)
           (?w "EWW" ,#'prot-eww-bookmark-jump)))
   (setq register-preview-delay 0.8
@@ -1273,16 +1273,10 @@
     (eq (bookmark-get-handler bookmark)
         #'Info-bookmark-jump))
 
-  (with-eval-after-load 'pdf-tools
-    (blist-define-criterion "pdf" "PDF"
-      (eq (bookmark-get-handler bookmark)
-          #'pdf-view-bookmark-jump-handler)))
-
   (setq blist-filter-groups
         (list
          (cons "EWW" #'blist-eww-p)
          (cons "Eshell" #'blist-eshell-p)
-         (cons "PDF" #'blist-pdf-p)
          (cons "Info" #'blist-info-p)
          (cons "Default" #'blist-default-p)))
 
@@ -1298,12 +1292,12 @@
   (setq logos-outlines-are-pages t)
   (setq logos-outline-regexp-alist
         `((emacs-lisp-mode . "^;;;+ ")
-          (org-mode . "^\\*+ +")
+          (org-mode . "^\\(\\*+ +\\|-----$\\)")
           (t . ,(or outline-regexp logos--page-delimiter))))
 
   ;; These apply when `logos-focus-mode' is enabled.  Their value is
   ;; buffer-local.
-  (setq-default logos-hide-mode-line nil)
+  (setq-default logos-hide-mode-line t)
   (setq-default logos-scroll-lock nil)
   (setq-default logos-variable-pitch nil)
 
@@ -2943,42 +2937,6 @@ Can link to more than one message, if so all matching messages are shown."
     (define-key map (kbd "J") #'prot-eww-jump-to-url-on-page)
     (define-key map (kbd "R") #'prot-eww-readable)
     (define-key map (kbd "Q") #'prot-eww-quit)))
-
-;;; Extensions for PDFs (pdf-tools)
-(prot-emacs-elpa-package 'pdf-tools
-  (setq pdf-tools-enabled-modes         ; simplified from the defaults
-        '(pdf-history-minor-mode
-          pdf-isearch-minor-mode
-          pdf-links-minor-mode
-          pdf-outline-minor-mode
-          pdf-misc-size-indication-minor-mode
-          pdf-occur-global-minor-mode))
-  (setq pdf-view-display-size 'fit-height)
-  (setq pdf-view-continuous t)
-  (setq pdf-view-use-dedicated-register nil)
-  (setq pdf-view-max-image-width 1080)
-  (setq pdf-outline-imenu-use-flat-menus t)
-
-  (pdf-loader-install)
-
-  ;; Those functions and hooks are adapted from the manual of my
-  ;; modus-themes.  The idea is to (i) add a backdrop that is distinct
-  ;; from the background of the PDF's page and (ii) make pdf-tools adapt
-  ;; to theme switching via, e.g., `modus-themes-toggle'.
-  (defun prot/pdf-tools-backdrop ()
-    (face-remap-add-relative
-     'default
-     `(:background ,(modus-themes-color 'bg-alt))))
-
-  (defun prot/pdf-tools-midnight-mode-toggle ()
-    (when (derived-mode-p 'pdf-view-mode)
-      (if (eq (car custom-enabled-themes) 'modus-vivendi)
-          (pdf-view-midnight-minor-mode 1)
-        (pdf-view-midnight-minor-mode -1))
-      (prot/pdf-tools-backdrop)))
-
-  (add-hook 'pdf-tools-enabled-hook #'prot/pdf-tools-midnight-mode-toggle)
-  (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
 
 ;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
