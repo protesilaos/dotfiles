@@ -7804,6 +7804,40 @@ in the manual of the themes.  If you are using them, evaluate this form:
   (add-hook 'modus-themes-after-load-theme-hook #'prot/pdf-tools-midnight-mode-toggle))
 #+end_src
 
+** OpenStreetMap viewer (osm.el)
+:PROPERTIES:
+:CUSTOM_ID: h:db40bd63-fe98-42b2-a10d-83966a59be4e
+:END:
+
+This is yet another brilliant package by Daniel Mendler.  It uses Emacs'
+image viewing facilities in combination with asynchronous =curl= calls
+to fetch and present maps from the OpenStreetMap project.
+
+Viewing maps is just the beginning.  It is also possible to use the
+standard bookmark facility to store the coordinates of a location and
+visit them on demand ([[#h:79cd6177-a81b-420f-8759-e6927b974377][Built-in bookmarking framework]]).  Or invoke the
+=org-store-link= command to capture the information about the current
+coordinates and produce a direct link out of them with =org-insert-link=
+([[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org-mode (personal information manager)]]).
+
+What I like the most about =osm= is that it pushes the boundaries of
+what we can do with Emacs.  It does so in a way that feels natural and
+actually useful.  Well done, Daniel!
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'osm
+  (let ((map global-map))
+    (define-key map (kbd "C-c o h") #'osm-home)
+    (define-key map (kbd "C-c o s") #'osm-search)
+    (define-key map (kbd "C-c o t") #'osm-server)
+    (define-key map (kbd "C-c o g") #'osm-goto)
+    (define-key map (kbd "C-c o j") #'osm-bookmark-jump))
+
+  ;; Load Org link support
+  (with-eval-after-load 'org
+    (require 'osm-ol)))
+#+end_src
+
 * General interface and interactions
 :PROPERTIES:
 :CUSTOM_ID: h:b6bd2eea-8269-4029-b446-ee340c12ebc3
