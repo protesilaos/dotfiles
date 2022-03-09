@@ -241,7 +241,7 @@ DISPLAY is a symbol that represents the car of a cons cell in
   (let ((def (or (nth 1 prot-fonts--system-typeface-hist) "Monospace")))
     (completing-read
      (format "Select typeface [%s]: " def)
-     (funcall family-list-func)
+     (delete-dups (funcall family-list-func))
      nil t nil 'prot-fonts--system-typeface-hist def)))
 
 (defvar prot-fonts--font-weights
