@@ -1698,7 +1698,7 @@ all three of the above is easier to learn and more consistent overall.
           (?h "Help" ,#'help-bookmark-jump)
           (?i "Info" ,#'Info-bookmark-jump)
           (?m "Man" ,#'Man-bookmark-jump)
-          (?p "PDF" ,#'pdf-view-bookmark-jump)
+          ;; (?p "PDF" ,#'pdf-view-bookmark-jump)
           (?v "VC Dir" ,#'vc-dir-bookmark-jump)
           (?w "EWW" ,#'prot-eww-bookmark-jump)))
   (setq register-preview-delay 0.8
@@ -3666,16 +3666,10 @@ longer need ([[#h:aad79917-cd80-491b-9020-db27867ab132][Dired-like list for regi
     (eq (bookmark-get-handler bookmark)
         #'Info-bookmark-jump))
 
-  (with-eval-after-load 'pdf-tools
-    (blist-define-criterion "pdf" "PDF"
-      (eq (bookmark-get-handler bookmark)
-          #'pdf-view-bookmark-jump-handler)))
-
   (setq blist-filter-groups
         (list
          (cons "EWW" #'blist-eww-p)
          (cons "Eshell" #'blist-eshell-p)
-         (cons "PDF" #'blist-pdf-p)
          (cons "Info" #'blist-info-p)
          (cons "Default" #'blist-default-p)))
 
@@ -7711,7 +7705,7 @@ And here is =prot-eww.el= in its entirety.  It is available as a file in
 
 #+include: prot-lisp/prot-eww.el src emacs-lisp :tangle no
 
-** Extensions for PDFs (pdf-tools)
+** COMMENT Extensions for PDFs (pdf-tools)
 :PROPERTIES:
 :CUSTOM_ID: h:02894c1d-a739-48e7-9116-3c27a6505485
 :END:
