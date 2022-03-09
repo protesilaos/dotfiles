@@ -3737,12 +3737,12 @@ Other potentially relevant parts of my dotemacs:
   (setq logos-outlines-are-pages t)
   (setq logos-outline-regexp-alist
         `((emacs-lisp-mode . "^;;;+ ")
-          (org-mode . "^\\*+ +")
+          (org-mode . "^\\(\\*+ +\\|-----$\\)")
           (t . ,(or outline-regexp logos--page-delimiter))))
 
   ;; These apply when `logos-focus-mode' is enabled.  Their value is
   ;; buffer-local.
-  (setq-default logos-hide-mode-line nil)
+  (setq-default logos-hide-mode-line t)
   (setq-default logos-scroll-lock nil)
   (setq-default logos-variable-pitch nil)
 
