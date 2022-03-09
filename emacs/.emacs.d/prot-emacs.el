@@ -170,7 +170,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless (padding . 4) (height . 0.9))
+        modus-themes-mode-line '(borderless accented (padding . 4) (height . 0.9))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -217,23 +217,24 @@
         ;; any of the following (for WEIGHT read further below):
         ;;
         ;; `matches' - `background', `intense', `underline', `italic', WEIGHT
-        ;; `selection' - `accented', `intense', `underline', `italic', `text-also' WEIGHT
+        ;; `selection' - `accented', `intense', `underline', `italic', `text-also', WEIGHT
         ;; `popup' - same as `selected'
         ;; `t' - applies to any key not explicitly referenced (check docs)
         ;;
         ;; WEIGHT is a symbol such as `semibold', `light', or anything
         ;; covered in `modus-themes-weights'.  Bold is used in the absence
         ;; of an explicit WEIGHT.
-        modus-themes-completions '((matches . (extrabold background))
-                                   (selection . (semibold intense accented text-also))
-                                   (popup . (accented intense)))
+        modus-themes-completions
+        '((matches . (extrabold background))
+          (selection . (semibold intense accented text-also))
+          (popup . (accented intense)))
 
         modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend accented)
+        modus-themes-region '(no-extend bg-only)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs 'desaturated
@@ -247,7 +248,8 @@
           (scheduled . uniform)
           (habit . nil))
 
-        modus-themes-headings nil ; this is an alist: read the manual or its doc string
+        modus-themes-headings ; this is an alist: read the manual or its doc string
+        '((t . (variable-pitch extrabold)))
 
         ;; Sample for headings:
 
@@ -2937,6 +2939,18 @@ Can link to more than one message, if so all matching messages are shown."
     (define-key map (kbd "J") #'prot-eww-jump-to-url-on-page)
     (define-key map (kbd "R") #'prot-eww-readable)
     (define-key map (kbd "Q") #'prot-eww-quit)))
+
+(prot-emacs-elpa-package 'osm
+  (let ((map global-map))
+    (define-key map (kbd "C-c o h") #'osm-home)
+    (define-key map (kbd "C-c o s") #'osm-search)
+    (define-key map (kbd "C-c o t") #'osm-server)
+    (define-key map (kbd "C-c o g") #'osm-goto)
+    (define-key map (kbd "C-c o j") #'osm-bookmark-jump))
+
+  ;; Load Org link support
+  (with-eval-after-load 'org
+    (require 'osm-ol)))
 
 ;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
