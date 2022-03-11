@@ -46,24 +46,9 @@
 ;; `logos-narrow-dwim' is not necessary if you already know how to
 ;; narrow effectively.
 ;;
-;; Logos provides some optional aesthetic tweaks which come into effect
-;; when the buffer-local `logos-focus-mode' is enabled.  These will hide
-;; the mode line (`logos-hide-mode-line'), enable `scroll-lock-mode'
-;; (`logos-scroll-lock'), and use `variable-pitch-mode' in
-;; non-programming buffers (`logos-variable-pitch').  All these
-;; variables are buffer-local.
-;;
-;; To position the buffer in the center of the window, use the
-;; `olivetti' package by Paul W. Rankin.  Sample glue code:
-;;
-;;     (defun my-logos--olivetti-mode ()
-;;       "Toggle `olivetti-mode'."
-;;       (if (or (bound-and-true-p olivetti-mode)
-;;               (null (logos--focus-p)))
-;;           (olivetti-mode -1)
-;;         (olivetti-mode 1)))
-;;     
-;;     (add-hook 'logos-focus-mode-hook #'my-logos--olivetti-mode)
+;; The `logos-focus-mode' tweaks the aesthetics of the current buffer.
+;; When enabled it sets the buffer-local value of these user options:
+;; `logos-scroll-lock', `logos-variable-pitch',`logos-hide-mode-line'.
 ;;
 ;; Logos is the familiar word derived from Greek (watch my presentation
 ;; on philosophy about Cosmos, Logos, and the living universe:
@@ -73,6 +58,9 @@
 ;;
 ;; 1. ^L Only Generates Ostensible Slides
 ;; 2. Logos Optionally Garners Outline Sections
+;;
+;; Consult the manual for all sorts of tweaks and extras:
+;; <https://protesilaos.com/emacs/logos>.
 
 ;;; Code:
 
@@ -100,7 +88,12 @@ When this variable is nil, pages are demarcated by the
     (org-mode . "^\\*+ +")
     (t . ,(or outline-regexp logos--page-delimiter)))
   "Alist of major mode and regular expression of the outline.
-Only used when `logos-outlines-are-pages' is non-nil."
+Only used when `logos-outlines-are-pages' is non-nil.
+
+The major mode also targets any of its derivatives.  For example,
+`lisp-interaction-mode' (the standard scratch buffer) is based on
+`emacs-lisp-mode' so one only needs to set the outline regexp of
+the latter."
   :type `(alist :key-type symbol :value-type string) ; TODO 2022-03-02: ensure symbol is mode?
   :group 'logos)
 
@@ -142,8 +135,10 @@ This is only relevant when `logos-focus-mode' is enabled."
 
 (defun logos--outline-regexp ()
   "Return page delimiter from `logos-outline-regexp-alist'."
-  (let ((outline logos-outline-regexp-alist))
-    (or (alist-get major-mode outline)
+  (let ((outline logos-outline-regexp-alist)
+        (mode major-mode))
+    (or (alist-get mode outline)
+        (alist-get (get mode 'derived-mode-parent) outline)
         (alist-get t outline))))
 
 (defun logos--page-delimiter ()
@@ -193,6 +188,22 @@ motion.  Always move point to the beginning of the narrowed
 page."
   (interactive "p")
   (logos--page-motion count :back))
+
+(declare-function org-at-heading-p "org" (&optional _))
+(declare-function org-show-entry "org")
+(declare-function outline-show-entry "outline")
+
+(defun logos--reveal-entry ()
+  "Reveal Org or Outline entry."
+  (cond
+   ((and (eq major-mode 'org-mode)
+         (org-at-heading-p))
+    (org-show-entry))
+   ((or (eq major-mode 'outline-mode)
+        (bound-and-true-p outline-minor-mode))
+    (outline-show-entry))))
+
+(add-hook 'logos-page-motion-hook #'logos--reveal-entry)
 
 ;;;; Narrowing
 ;; NOTE 2022-03-02: This section is most likely unnecessary, but let's
@@ -250,10 +261,13 @@ If narrowing is in effect, widen the view."
 ;;;; Optional "focus mode" and utilities
 
 (define-minor-mode logos-focus-mode
-  "Buffer-local mode for focused editing."
+  "Buffer-local mode for focused editing.
+When enabled it sets the buffer-local value of these user
+options: `logos-scroll-lock', `logos-variable-pitch',
+`logos-hide-mode-line'."
   :init-value nil
   :global nil
-  :lighter " Λ" ; greek lambda majuscule
+  :lighter " Λ" ; lambda majuscule
   (logos--setup))
 
 (defun logos--setup ()
