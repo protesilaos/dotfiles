@@ -24,6 +24,10 @@
 
 ;;; Commentary:
 ;;
+;; DEPRECATED 2022-03-11 Use my pulsar.el instead (part of this
+;; repository).
+;;
+;;
 ;; Extensions to the built-in `pulse.el' library for my Emacs
 ;; configuration: <https://protesilaos.com/emacs/dotemacs/>.
 ;;

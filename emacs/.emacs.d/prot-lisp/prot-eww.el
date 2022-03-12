@@ -50,7 +50,6 @@
 (require 'elpher nil t)
 (require 'url-parse)
 (require 'prot-common)
-(require 'prot-pulse)
 
 (defgroup prot-eww ()
   "Tweaks for EWW."
@@ -431,8 +430,7 @@ consider whole buffer."
            (selection (completing-read prompt links nil t))
            (position (replace-regexp-in-string "^.*(\\([0-9]+\\))[\s\t]+~" "\\1" selection))
            (point (string-to-number position)))
-      (goto-char point)
-      (prot-pulse-pulse-line))))
+      (goto-char point))))
 
 (defvar prot-eww--occur-feed-regexp
   (concat "\\(rss\\|atom\\)\\+xml.\\(.\\|\n\\)"
