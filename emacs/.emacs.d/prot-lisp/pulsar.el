@@ -49,7 +49,7 @@
   "Extensions for `pulse.el'."
   :group 'editing)
 
-;;;; User options and faces
+;;;; User options
 
 (defcustom pulsar-pulse-functions
   '(recenter-top-bottom
@@ -57,10 +57,23 @@
     reposition-window
     bookmark-jump
     other-window
+    delete-window
+    delete-other-windows
     forward-page
     backward-page
     scroll-up-command
     scroll-down-command
+    windmove-right
+    windmove-left
+    windmove-up
+    windmove-down
+    windmove-swap-states-right
+    windmove-swap-states-left
+    windmove-swap-states-up
+    windmove-swap-states-down
+    tab-new
+    tab-close
+    tab-next
     org-next-visible-heading
     org-previous-visible-heading
     org-forward-heading-same-level
@@ -107,6 +120,8 @@ that has a background attribute."
   "Duration in seconds of the active pulse highlight."
   :type 'number
   :group 'pulsar)
+
+;;;; Faces
 
 (defgroup pulsar-faces ()
   "Faces for `pulsar.el'."
@@ -172,7 +187,7 @@ that has a background attribute."
   "Alternative cyan face for `pulsar-face'."
   :group 'pulsar-faces)
 
-;;;; Functions and commands
+;;;; Pulse functions
 
 (defun pulsar--indentation-only-line-p ()
   "Return non-nil if current line has only indentation."
@@ -207,6 +222,8 @@ that has a background attribute."
   (let ((pulse-delay pulsar-delay))
     (pulse-momentary-highlight-region (pulsar--start) (pulsar--end) pulsar-face)))
 
+;;;; Advice setup
+
 (defvar pulsar-after-function-hook nil
   "Hook that runs after any function in `pulsar-pulse-functions'.")
 
@@ -232,6 +249,49 @@ sets up the aforementioned hook."
     (dolist (fn pulsar-pulse-functions)
       (advice-add fn :after #'pulsar--add-hook))
     (add-hook 'pulsar-after-function-hook #'pulsar-pulse-line))))
+
+;;;; Recentering commands
+
+(defmacro pulsar-recenter (name doc arg)
+  "Produce command to pulse and recenter.
+The symbol is NAME, DOC for the doc string, and ARG is passed to
+`recenter'."
+  (declare (indent defun))
+  `(defun ,name ()
+     ,doc
+     (interactive)
+     (recenter ,arg)
+     (pulsar-pulse-line)))
+
+(pulsar-recenter
+  pulsar-recenter-top
+  "Reposition point at the top of the window and pulse line."
+  0)
+
+(pulsar-recenter
+  pulsar-recenter-middle
+  "Reposition point at the center of the window and pulse line."
+  nil)
+
+;;;; Reveal contents of Org or Outline headings
+
+(declare-function org-at-heading-p "org" (&optional _))
+(declare-function org-show-entry "org")
+(declare-function outline-on-heading-p "outline" (&optional invisible-ok))
+(declare-function outline-show-entry "outline")
+
+(defun pulsar-reveal-entry ()
+  "Reveal Org or Outline entry.
+Use this in combination with `pulsar-recenter-top' or
+`pulsar-recenter-middle'."
+  (cond
+   ((and (eq major-mode 'org-mode)
+         (org-at-heading-p))
+    (org-show-entry))
+   ((and (or (eq major-mode 'outline-mode)
+             (bound-and-true-p outline-minor-mode))
+         (outline-on-heading-p))
+    (outline-show-entry))))
 
 (provide 'pulsar)
 ;;; pulsar.el ends here
