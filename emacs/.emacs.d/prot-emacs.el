@@ -105,30 +105,33 @@
     (define-key map (kbd "M-s b") #'prot-simple-buffers-major-mode)
     (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
 
-;;; prot-pulse.el (highlight cursor position)
-(prot-emacs-builtin-package 'prot-pulse
-  ;; Restart `prot-pulse-advice-commands-mode' after updating this list.
-  (setq prot-pulse-pulse-command-list
-        '(;; recenter
-          recenter-top-bottom
-          move-to-window-line-top-bottom
-          reposition-window
-          bookmark-jump
-          other-window
-          forward-page
-          backward-page
-          scroll-up-command
-          scroll-down-command
-          org-next-visible-heading
-          org-previous-visible-heading
-          org-forward-heading-same-level
-          org-backward-heading-same-level
-          org-tree-slide-move-next-tree
-          org-tree-slide-move-previous-tree))
-  (setq prot-pulse-delay 0.06)
-  (setq prot-pulse-line-face 'prot-pulse-line) ; or specify `prot-pulse-line-intense'
-  (prot-pulse-advice-commands-mode 1)
-  (define-key global-map (kbd "C-x l") #'prot-pulse-pulse-line)) ; override `count-lines-page'
+;;; pulsar.el (highlight cursor position)
+(prot-emacs-builtin-package 'pulsar
+  (customize-set-variable
+   'pulsar-pulse-functions ; Read the doc string for why not `setq'
+   '(recenter-top-bottom
+     move-to-window-line-top-bottom
+     reposition-window
+     bookmark-jump
+     other-window
+     forward-page
+     backward-page
+     scroll-up-command
+     scroll-down-command
+     org-next-visible-heading
+     org-previous-visible-heading
+     org-forward-heading-same-level
+     org-backward-heading-same-level
+     outline-backward-same-level
+     outline-forward-same-level
+     outline-next-visible-heading
+     outline-previous-visible-heading
+     outline-up-heading))
+
+  (setq pulsar-face 'pulsar-magenta)
+  (setq pulsar-delay 0.055)
+
+  (define-key global-map (kbd "C-x l") #'pulsar-pulse-line)) ; override `count-lines-page'
 
 ;;; Make Custom UI code disposable
 (prot-emacs-builtin-package 'cus-edit
@@ -146,14 +149,14 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs t
+  (setq modus-themes-italic-constructs nil
         modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
-        modus-themes-intense-mouseovers nil
+        modus-themes-intense-mouseovers t
         modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui t
+        modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -170,7 +173,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless accented (padding . 4) (height . 0.9))
+        modus-themes-mode-line nil
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -234,7 +237,7 @@
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend bg-only)
+        modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs 'desaturated
@@ -244,7 +247,7 @@
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch regular 1.4))
           (header-date . (bold-today grayscale underline-today 1.2))
-          (event . (accented varied))
+          (event . (accented italic varied))
           (scheduled . uniform)
           (habit . nil))
 
@@ -629,7 +632,6 @@
   (setq consult-preview-key 'any)
 
   (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
-  (add-hook 'consult-after-jump-hook #'prot-pulse-recentre-top) ; see `prot-pulse.el'
 
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
@@ -1293,8 +1295,8 @@
 (prot-emacs-builtin-package 'logos
   (setq logos-outlines-are-pages t)
   (setq logos-outline-regexp-alist
-        `((emacs-lisp-mode . "^;;;+ ")
-          (org-mode . "^\\(\\*+ +\\|-----$\\)")
+        `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos--page-delimiter))
+          (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos--page-delimiter))
           (t . ,(or outline-regexp logos--page-delimiter))))
 
   ;; These apply when `logos-focus-mode' is enabled.  Their value is
@@ -1307,7 +1309,15 @@
     (define-key map [remap narrow-to-region] #'logos-narrow-dwim)
     (define-key map [remap forward-page] #'logos-forward-page-dwim)
     (define-key map [remap backward-page] #'logos-backward-page-dwim)
+    ;; I don't think I ever saw a package bind M-] or M-[...
+    (define-key map (kbd "M-]") #'logos-forward-page-dwim)
+    (define-key map (kbd "M-[") #'logos-backward-page-dwim)
     (define-key map (kbd "<f9>") #'logos-focus-mode))
+
+;;;; Extra tweaks
+  ;; Read the logos manual: <https://protesilaos.com/emacs/logos>.
+
+;;;;; Extras for `logos-focus-mode'
 
   ;; glue code for `logos-focus-mode' and `olivetti-mode'
   (defun prot/logos--olivetti-mode ()
@@ -1319,19 +1329,15 @@
 
   (add-hook 'logos-focus-mode-hook #'prot/logos--olivetti-mode)
 
-  ;; glue code to expand an Org/Outline heading
-  (defun prot/logos--reveal ()
-    "Reveal Org or Outline entry."
-    (cond
-     ((and (eq major-mode 'org-mode)
-           (org-at-heading-p))
-      (org-show-entry)
-      (org-reveal t))
-     ((or (bound-and-true-p prot-outline-minor-mode)
-          (bound-and-true-p outline-minor-mode))
-      (outline-show-entry))))
+;;;;; Extras for the DWIM page motions
 
-  (add-hook 'logos-page-motion-hook #'prot/logos--reveal))
+  ;; place point at the top when changing pages, but not in `prog-mode'
+  (defun prot/logos--recenter-top ()
+    "Use `recenter' to reposition the view at the top."
+    (unless (derived-mode-p 'prog-mode)
+      (recenter 1))) ; Use 0 for the absolute top
+
+  (add-hook 'logos-page-motion-hook #'prot/logos--recenter-top))
 
 ;;; USLS --- Unassuming Sidenotes of Little Significance
 (prot-emacs-builtin-package 'usls
@@ -1756,11 +1762,6 @@ sure this is a good approach."
   (setq org-link-keep-stored-after-insertion nil)
   ;; TODO 2021-10-15 org-link-make-description-function
 
-  ;; See my prot-pulse.el for what this does.  Basically it recentres
-  ;; the window the way I like and pulse the line at point to make it
-  ;; easier to make sense of the context.
-  (add-hook 'org-follow-link-hook #'prot-pulse-recentre-top)
-
 ;;;; capture
   (setq org-capture-templates
         `(("b" "Basic task for future review" entry
@@ -2084,6 +2085,7 @@ sure this is a good approach."
   ;; (setq org-modern-progress ["○""◔""◐""◕""●"])
 
   (add-hook 'org-mode-hook #'org-modern-mode)
+  (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
 
   ;; NOTE 2022-03-06: I am experimenting with various styles here.  DO NOT COPY.
   ;;
