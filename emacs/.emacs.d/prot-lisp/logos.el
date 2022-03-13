@@ -6,6 +6,7 @@
 ;; URL: https://gitlab.com/protesilaos/logos
 ;; Version: 0.1.2
 ;; Package-Requires: ((emacs "27.1"))
+;; Keywords: convenience, focus, writing, presentation, narrowing
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -112,6 +113,27 @@ This is only relevant when `logos-focus-mode' is enabled."
 In programming modes the default font is always used, as that is
 assumed to be a monospaced typeface.
 
+This is only relevant when `logos-focus-mode' is enabled."
+  :type 'boolean
+  :group 'logos
+  :local t)
+
+(defcustom logos-indicate-buffer-boundaries nil
+  "If non-nil locally disable `indicate-buffer-boundaries'.
+This is only relevant when `logos-focus-mode' is enabled."
+  :type 'boolean
+  :group 'logos
+  :local t)
+
+(defcustom logos-buffer-read-only nil
+  "If non-nil make buffer read-only.
+This applies when `logos-focus-mode' is enabled."
+  :type 'boolean
+  :group 'logos
+  :local t)
+
+(defcustom logos-olivetti nil
+  "If non-nil center buffer in its window with Olivetti package.
 This is only relevant when `logos-focus-mode' is enabled."
   :type 'boolean
   :group 'logos
@@ -255,6 +277,29 @@ If narrowing is in effect, widen the view."
 
 ;;;; Optional "focus mode" and utilities
 
+;; I learnt about the method of using `logos--mode' and `logos--set'
+;; from Daniel Mendler: <https://github.com/minad>.
+(defvar-local logos--restore nil)
+
+(defun logos--mode (mode arg)
+  "Set MODE to ARG.
+ARG is either 1 or -1.  The current value changes to its
+alternate, thus toggling MODE."
+  (let ((old (if (and (boundp mode) (symbol-value mode)) 1 -1)))
+    (unless (eq old arg)
+      (push (lambda () (funcall mode old)) logos--restore)
+      (funcall mode arg))))
+
+(defun logos--set (var val)
+  "Set VAR to buffer-local VAL."
+  (let ((old (and (boundp var) (symbol-value var))))
+    (unless (equal old val)
+      (set var val)
+      (if (local-variable-p var)
+          (push (lambda () (set var old)) logos--restore)
+        (make-local-variable var)
+        (push (lambda () (kill-local-variable var)) logos--restore)))))
+
 (define-minor-mode logos-focus-mode
   "Buffer-local mode for focused editing.
 When enabled it sets the buffer-local value of these user
@@ -263,42 +308,58 @@ options: `logos-scroll-lock', `logos-variable-pitch',
   :init-value nil
   :global nil
   :lighter " Λ" ; lambda majuscule
-  (logos--setup))
+  (mapc #'funcall logos--restore)
+  (setq logos--restore nil)
+  (when logos-focus-mode
+    (logos--setup)))
 
 (defun logos--setup ()
-  "Setup aesthetics for presentation."
-  (logos--variable-pitch-toggle)
+  "Set up aesthetics for presentation."
+  ;; modes
+  (logos--variable-pitch)
   (logos--scroll-lock)
-  (logos--hide-mode-line))
+  (logos--olivetti)
+  ;; variables
+  (logos--hide-mode-line)
+  (logos--indicate-buffer-boundaries)
+  (logos--buffer-read-only))
 
-(defun logos--variable-pitch-toggle ()
-  "Make text use `variable-pitch' face, except for programming."
-  (when (and logos-variable-pitch
-             (derived-mode-p 'text-mode))
-    (if (or (bound-and-true-p buffer-face-mode)
-            (null (logos--focus-p)))
-        (variable-pitch-mode -1)
-      (variable-pitch-mode 1))))
+(defun logos--variable-pitch ()
+  "Set `logos-variable-pitch'."
+  (when (and logos-variable-pitch (derived-mode-p 'text-mode))
+    (logos--mode 'variable-pitch-mode 1)))
 
 (defun logos--scroll-lock ()
-  "Keep the point at the centre."
+  "Set `logos-scroll-lock'."
   (when logos-scroll-lock
-    (if (or (bound-and-true-p scroll-lock-mode)
-            (null (logos--focus-p)))
-        (scroll-lock-mode -1)
-      (recenter nil)
-      (scroll-lock-mode 1))))
+    (logos--mode 'scroll-lock-mode 1)))
 
-;; Based on Paul W. Rankin's code:
-;; <https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8>.
+(defun logos--indicate-buffer-boundaries ()
+  "Set `logos-indicate-buffer-boundaries'."
+  (when logos-indicate-buffer-boundaries
+    (logos--set 'indicate-buffer-boundaries nil)))
+
+;; FIXME 2022-03-13: The mode line is not redrawn properly.  Not even
+;; with `force-mode-line-update', unless something happens like
+;; switching to the other window.  Using `redisplay' does not fix the
+;; issue.  I can reproduce the problem on both Emacs 29 and 27.
+;;
+;; When using `logos-olivetti' the problem no longer occurs, presumably
+;; because Olivetti triggers some kind of redraw.  Which one?
 (defun logos--hide-mode-line ()
-  "Toggle mode line visibility."
+  "Set `logos-hide-mode-line'."
   (when logos-hide-mode-line
-    (if (or (null mode-line-format)
-            (null (logos--focus-p)))
-        (kill-local-variable 'mode-line-format)
-      (setq-local mode-line-format nil)
-      (force-mode-line-update))))
+    (logos--set 'mode-line-format nil)))
+
+(defun logos--buffer-read-only ()
+  "Set `logos-buffer-read-only'."
+  (when logos-buffer-read-only
+    (logos--set 'buffer-read-only t)))
+
+(defun logos--olivetti ()
+  "Set `logos-olivetti'."
+  (when (and logos-olivetti (require 'olivetti nil t))
+    (logos--mode 'olivetti-mode 1)))
 
 (provide 'logos)
 ;;; logos.el ends here
