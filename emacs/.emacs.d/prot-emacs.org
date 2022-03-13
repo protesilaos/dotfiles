@@ -3761,6 +3761,8 @@ Other potentially relevant parts of my dotemacs:
   (setq-default logos-hide-mode-line t)
   (setq-default logos-scroll-lock nil)
   (setq-default logos-variable-pitch nil)
+  (setq-default logos-buffer-read-only nil)
+  (setq-default logos-olivetti t)
 
   (let ((map global-map))
     (define-key map [remap narrow-to-region] #'logos-narrow-dwim)
@@ -3773,20 +3775,6 @@ Other potentially relevant parts of my dotemacs:
 
 ;;;; Extra tweaks
   ;; Read the logos manual: <https://protesilaos.com/emacs/logos>.
-
-;;;;; Extras for `logos-focus-mode'
-
-  ;; glue code for `logos-focus-mode' and `olivetti-mode'
-  (defun prot/logos--olivetti-mode ()
-    "Toggle `olivetti-mode'."
-    (if (or (bound-and-true-p olivetti-mode)
-            (null (logos--focus-p)))
-        (olivetti-mode -1)
-      (olivetti-mode 1)))
-
-  (add-hook 'logos-focus-mode-hook #'prot/logos--olivetti-mode)
-
-;;;;; Extras for the DWIM page motions
 
   ;; place point at the top when changing pages, but not in `prog-mode'
   (defun prot/logos--recenter-top ()
