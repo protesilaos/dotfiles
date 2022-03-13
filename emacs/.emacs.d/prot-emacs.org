@@ -379,7 +379,7 @@ These are the contents of the =prot-simple.el= library (find the file in
 
 #+include: prot-lisp/prot-simple.el src emacs-lisp :tangle no
 
-*** pulsar.el (highlight cursor position)
+** pulsar.el (highlight cursor position)
 :PROPERTIES:
 :CUSTOM_ID: h:6bbc41d6-da7c-4301-84c6-c5887c29283f
 :END:
