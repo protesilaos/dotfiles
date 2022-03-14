@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 2.2.0
-;; Last-Modified: <2022-02-27 20:12:21 +0200>
+;; Last-Modified: <2022-03-14 06:27:29 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -3800,13 +3800,8 @@ unspecified."
       (list deuteran)
     (list main)))
 
-(define-obsolete-function-alias
-  'modus-themes--completion
-  'modus-themes--completion-line "2.3.0")
-
-(define-obsolete-function-alias
-  'modus-themes--completion
-  'modus-themes--completion-match "2.3.0")
+(make-obsolete 'modus-themes--completion 'modus-themes--completion-line "2.3.0")
+(make-obsolete 'modus-themes--completion 'modus-themes--completion-match "2.3.0")
 
 (defun modus-themes--completion-line (key bg fg bgintense fgintense &optional bgaccent bgaccentintense)
   "Styles for `modus-themes-completions'.
@@ -4604,6 +4599,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                               bg-hl-alt-intense bg-region-accent
                                               bg-region-accent-subtle))))
     `(secondary-selection ((,class :inherit modus-themes-special-cold)))
+    `(separator-line ((,class :inherit shadow :underline t)))
     `(shadow ((,class :foreground ,fg-alt)))
     `(success ((,class :inherit (bold modus-themes-grue))))
     `(trailing-whitespace ((,class :background ,red-intense-bg)))
@@ -4617,8 +4613,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
                             ,@(modus-themes--link-color
                                magenta-alt-other magenta-alt-other-faint fg-alt))))
     `(tooltip ((,class :background ,bg-special-cold :foreground ,fg-main)))
-    `(widget-button ((,class :inherit bold :foreground ,blue-alt)))
-    `(widget-button-pressed ((,class :inherit widget-button :foreground ,magenta)))
+    `(widget-button ((,class :inherit modus-themes-box-button)))
+    `(widget-button-pressed ((,class :inherit modus-themes-box-button-pressed)))
     `(widget-documentation ((,class :foreground ,green)))
     `(widget-field ((,class :background ,bg-alt :foreground ,fg-main :extend nil)))
     `(widget-inactive ((,class :inherit shadow :background ,bg-dim)))
@@ -5230,7 +5226,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(diredp-tagged-autofile-name ((,class :inherit modus-themes-refine-magenta)))
     `(diredp-write-priv ((,class :foreground ,cyan)))
 ;;;;; display-fill-column-indicator-mode
-    `(fill-column-indicator ((,class :foreground ,bg-active)))
+    `(fill-column-indicator ((,class :height 1 :background ,bg-inactive :foreground ,bg-inactive)))
 ;;;;; doom-modeline
     `(doom-modeline-bar ((,class :inherit modus-themes-active-blue)))
     `(doom-modeline-bar-inactive ((,class :background ,fg-inactive :foreground ,bg-main)))
@@ -6626,7 +6622,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; org
     `(org-agenda-calendar-event ((,class ,@(modus-themes--agenda-event blue-alt))))
     `(org-agenda-calendar-sexp ((,class ,@(modus-themes--agenda-event blue-alt t))))
-    `(org-agenda-clocking ((,class :inherit modus-themes-special-cold :extend t)))
+    `(org-agenda-clocking ((,class :background ,yellow-nuanced-bg :foreground ,red-alt)))
     `(org-agenda-column-dateline ((,class :background ,bg-alt)))
     `(org-agenda-current-time ((,class :foreground ,blue-alt-other-faint)))
     `(org-agenda-date ((,class ,@(modus-themes--agenda-date cyan fg-main))))
@@ -6660,7 +6656,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-checkbox (( )))
     `(org-checkbox-statistics-done ((,class :inherit org-done)))
     `(org-checkbox-statistics-todo ((,class :inherit org-todo)))
-    `(org-clock-overlay ((,class :inherit modus-themes-special-cold)))
+    `(org-clock-overlay ((,class :background ,yellow-nuanced-bg :foreground ,red-alt-faint)))
     `(org-code ((,class :inherit modus-themes-markup-code :extend t)))
     `(org-column ((,class :inherit (modus-themes-fixed-pitch default)
                           :background ,bg-alt)))
@@ -7681,6 +7677,11 @@ by virtue of calling either of `modus-themes-load-operandi' and
         (340 . ,blue-alt-other)
         (360 . ,magenta-alt-other)))
     `(vc-annotate-very-old-color nil)
+;;;; wid-edit
+    `(widget-link-prefix " ")
+    `(widget-link-suffix " ")
+    `(widget-push-button-prefix " ")
+    `(widget-push-button-suffix " ")
 ;;;; xterm-color
     `(xterm-color-names ["black" ,red ,green ,yellow ,blue ,magenta ,cyan "gray65"])
     `(xterm-color-names-bright ["gray35" ,red-alt ,green-alt ,yellow-alt ,blue-alt ,magenta-alt ,cyan-alt "white"])
