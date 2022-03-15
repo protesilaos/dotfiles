@@ -238,7 +238,7 @@ portion of the buffer."
       (save-excursion (re-search-backward page-delimiter nil t))))
 
 (defun logos-narrow-visible-window ()
-  "Narrow buffer to wisible window area.
+  "Narrow buffer to visible window area.
 Also check `logos-narrow-dwim'."
   (interactive)
   (let* ((bounds (logos--window-bounds))
