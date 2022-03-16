@@ -515,66 +515,6 @@
 "hi SyntasticErrorSing guifg=" bg-main " guibg=" fg-lang-error " ctermfg=" termcolbg " ctermbg=1" "\n"
 "hi SyntasticWarningSign guifg=" bg-main " guibg=" fg-lang-warning " ctermfg=" termcolbg " ctermbg=3" "\n")))))
 
-;;;; Export command
-
-(defvar modus-themes-exporter-template-hist '()
-  "History of inputs for templates.")
-
-(defun modus-themes-exporter--export-prompt (apps)
-  "Helper for `modus-themes-exporter-export' to select among APPS."
-  (completing-read "Select template: " apps nil t nil 'modus-themes-exporter-template-hist))
-
-;;;###autoload
-(defun modus-themes-exporter-export (template &optional file no-visit)
-  "Export current Modus theme using TEMPLATE.
-
-When called interactively, TEMPLATE is chosen from a list of candidates
-using completion.  Else it must be a string that corresponds to the car
-of a cons cell in `modus-themes-exporter-templates-alist'.
-
-The output is stored in the kill ring.
-
-When called from Lisp with optional FILE as a path to a regular file,
-write there directly.  When called interactively with the universal
-prefix argument (\\[universal-argument]), prompt for FILE instead:
-supplying a non-existent path will create that file outright.  Once the
-output has been written to the file, prompt to visit it.
-
-With optional NO-VISIT, either as a non-nil symbol in Lisp or a
-double prefix argument interactively, do not prompt to visit the
-file."
-  (interactive
-   (list
-    (modus-themes-exporter--export-prompt
-     (mapcar #'car modus-themes-exporter-templates-alist))
-    current-prefix-arg))
-  (let* ((modus-themes '(modus-operandi modus-vivendi))
-         (current-theme (car custom-enabled-themes))
-         (fn (funcall (cdr (assoc template modus-themes-exporter-templates-alist))))
-         (path (when file
-                 (if (stringp file)
-                     file
-                   (expand-file-name
-                    (read-file-name "Select file: " nil default-directory))))))
-    (unless (member current-theme modus-themes)
-      (error "`%s' is not a member of %s" current-theme modus-themes))
-    (cond
-     ((when (and path (file-writable-p path) (file-regular-p path))
-        (with-temp-buffer
-          (insert (eval fn))
-          (write-region (point-min) (point-max) path))
-        (if (or no-visit (prefix-numeric-value '(16)))
-            (message "Wrote %s template to %s" template path)
-          (when (yes-or-no-p (format "Wrote to file; visit new %s?" path))
-            (find-file path)))))
-     ((when (and path
-                 (not (file-regular-p path)))
-        (when (yes-or-no-p "Not a valid FILE; print output at point instead?")
-          (insert (eval fn)))))
-     (t
-      (kill-new fn)
-      (message "Saved to kill-ring port of %s for %s" current-theme template)))))
-
 ;;;; iterm template
 
 (defun modus-themes-exporter--iterm2-color-component (color component)
@@ -669,6 +609,66 @@ or is a list of color string in a from of #RRGGBB and an alpha value."
             ("Selection Color" . ,bg-region)))
          "\n"
          "</plist>" "\n")))))
+
+;;;; Export command
+
+(defvar modus-themes-exporter-template-hist '()
+  "History of inputs for templates.")
+
+(defun modus-themes-exporter--export-prompt (apps)
+  "Helper for `modus-themes-exporter-export' to select among APPS."
+  (completing-read "Select template: " apps nil t nil 'modus-themes-exporter-template-hist))
+
+;;;###autoload
+(defun modus-themes-exporter-export (template &optional file no-visit)
+  "Export current Modus theme using TEMPLATE.
+
+When called interactively, TEMPLATE is chosen from a list of candidates
+using completion.  Else it must be a string that corresponds to the car
+of a cons cell in `modus-themes-exporter-templates-alist'.
+
+The output is stored in the kill ring.
+
+When called from Lisp with optional FILE as a path to a regular file,
+write there directly.  When called interactively with the universal
+prefix argument (\\[universal-argument]), prompt for FILE instead:
+supplying a non-existent path will create that file outright.  Once the
+output has been written to the file, prompt to visit it.
+
+With optional NO-VISIT, either as a non-nil symbol in Lisp or a
+double prefix argument interactively, do not prompt to visit the
+file."
+  (interactive
+   (list
+    (modus-themes-exporter--export-prompt
+     (mapcar #'car modus-themes-exporter-templates-alist))
+    current-prefix-arg))
+  (let* ((modus-themes '(modus-operandi modus-vivendi))
+         (current-theme (car custom-enabled-themes))
+         (fn (funcall (cdr (assoc template modus-themes-exporter-templates-alist))))
+         (path (when file
+                 (if (stringp file)
+                     file
+                   (expand-file-name
+                    (read-file-name "Select file: " nil default-directory))))))
+    (unless (member current-theme modus-themes)
+      (error "`%s' is not a member of %s" current-theme modus-themes))
+    (cond
+     ((when (and path (file-writable-p path) (file-regular-p path))
+        (with-temp-buffer
+          (insert (eval fn))
+          (write-region (point-min) (point-max) path))
+        (if (or no-visit (prefix-numeric-value '(16)))
+            (message "Wrote %s template to %s" template path)
+          (when (yes-or-no-p (format "Wrote to file; visit new %s?" path))
+            (find-file path)))))
+     ((when (and path
+                 (not (file-regular-p path)))
+        (when (yes-or-no-p "Not a valid FILE; print output at point instead?")
+          (insert (eval fn)))))
+     (t
+      (kill-new fn)
+      (message "Saved to kill-ring port of %s for %s" current-theme template)))))
 
 (provide 'modus-themes-exporter)
 ;;; modus-themes-exporter.el ends here
