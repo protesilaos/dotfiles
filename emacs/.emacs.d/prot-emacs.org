@@ -957,14 +957,14 @@ Relevant publications of mine that are not part of this document:
                      :variable-pitch-height 1.0
                      :variable-pitch-regular-weight normal))
 
-          (large-alt . ( :fixed-pitch-family "Hack"
-                         :fixed-pitch-regular-weight normal
-                         :fixed-pitch-heavy-weight bold
-                         :fixed-pitch-height 130
-                         :fixed-pitch-line-spacing nil
-                         :variable-pitch-family "FiraGO"
-                         :variable-pitch-height 1.05
-                         :variable-pitch-regular-weight normal))))
+          (jumbo . ( :fixed-pitch-family "Iosevka Comfy"
+                     :fixed-pitch-regular-weight semilight
+                     :fixed-pitch-heavy-weight bold
+                     :fixed-pitch-height 150
+                     :fixed-pitch-line-spacing nil
+                     :variable-pitch-family "FiraGO"
+                     :variable-pitch-height 1.0
+                     :variable-pitch-regular-weight normal))))
 
   ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
   ;; are not relevant, but I keep them around as the idea is still good.
