@@ -699,9 +699,8 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   (defun prot/modus-themes-custom-faces ()
     (modus-themes-with-colors
       (custom-set-faces
-       `(cursor ((,class :background ,magenta-intense)))
-       `(fill-column-indicator ((,class :background ,bg-inactive
-                                        :foreground ,bg-inactive))))))
+       ;; Here add all your face definitions.
+       `(cursor ((,class :background ,magenta-intense))))))
 
   (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
 
