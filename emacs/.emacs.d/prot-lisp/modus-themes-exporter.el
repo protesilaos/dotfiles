@@ -61,6 +61,8 @@
     ("xfce"             . modus-themes-exporter-xfce)
     ("xterm"            . modus-themes-exporter-xterm)))
 
+;;;; Generic Xcolors template
+
 (defun modus-themes-exporter-xcolors ()
   "Template for generic Xcolors."
   (modus-themes-with-colors
@@ -89,6 +91,8 @@
          "*color14: " cyan-alt-other "\n"
          "*color15: " "#ffffff" "\n")))))
 
+;;;; XTerm template
+
 (defun modus-themes-exporter-xterm ()
   "Template for XTerm."
   (modus-themes-with-colors
@@ -116,6 +120,8 @@
          "xterm*color13: " magenta-alt-other "\n"
          "xterm*color14: " cyan-alt-other "\n"
          "xterm*color15: " "#ffffff" "\n")))))
+
+;;;; Alacritty template
 
 (defun modus-themes-exporter-alacritty ()
   "Template for Alacritty."
@@ -149,6 +155,8 @@
          "    cyan:    '" cyan-alt-other "'" "\n"
          "    white:   '#ffffff'" "\n")))))
 
+;;;; URxvt template
+
 (defun modus-themes-exporter-urxvt ()
   "Template for URxvt (Rxvt-unicode)."
   (modus-themes-with-colors
@@ -179,6 +187,8 @@
          "URxvt*color14: " cyan-alt-other "\n"
          "URxvt*color15: " "#ffffff" "\n")))))
 
+;;;; Xfce terminal template
+
 (defun modus-themes-exporter-xfce ()
   "Template for Xfce terminal."
   (modus-themes-with-colors
@@ -198,6 +208,8 @@
 "TabActivityColor=" magenta-alt "\n"
 "ColorSelectionBackground=" bg-region "\n"
 "ColorSelection=" fg-main "\n")))))
+
+;;;; Windows terminal template 
 
 (defun modus-themes-exporter-windows-terminal ()
   "Template for Windows Terminal."
@@ -229,6 +241,8 @@
          "\"brightPurple\": \"" magenta-alt-other "\",\n"
          "\"brightCyan\": \"" cyan-alt-other "\",\n"
          "\"brightWhite\": \"#ffffff\"\n")))))
+
+;;;; Vim template
 
 ;; Please skip this.  I only wrote it as an attempt to participate in
 ;; the contest for the ugliest concat ever imagined...  Seriously
@@ -501,6 +515,8 @@
 "hi SyntasticErrorSing guifg=" bg-main " guibg=" fg-lang-error " ctermfg=" termcolbg " ctermbg=1" "\n"
 "hi SyntasticWarningSign guifg=" bg-main " guibg=" fg-lang-warning " ctermfg=" termcolbg " ctermbg=3" "\n")))))
 
+;;;; Export command
+
 (defvar modus-themes-exporter-template-hist '()
   "History of inputs for templates.")
 
@@ -559,6 +575,7 @@ file."
       (kill-new fn)
       (message "Saved to kill-ring port of %s for %s" current-theme template)))))
 
+;;;; iterm template
 
 (defun modus-themes-exporter--iterm2-color-component (color component)
   "Generate a string value for the COMPONENT of the specified COLOR.
@@ -611,8 +628,6 @@ or is a list of color string in a from of #RRGGBB and an alpha value."
      t t)
     (buffer-string)))
 
-
-
 (defun modus-themes-exporter-iterm2 ()
   "Template for iTerm2."
   (modus-themes-with-colors
@@ -651,11 +666,9 @@ or is a list of color string in a from of #RRGGBB and an alpha value."
             ("Foreground Color" . ,fg-main)
             ("Link Color" . ,blue-alt)
             ("Selected Text Color" . ,fg-main)
-            ("Selection Color" . ,bg-region)
-            ))
+            ("Selection Color" . ,bg-region)))
          "\n"
          "</plist>" "\n")))))
-
 
 (provide 'modus-themes-exporter)
 ;;; modus-themes-exporter.el ends here
