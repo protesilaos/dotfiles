@@ -396,6 +396,7 @@ the official manual: https://protesilaos.com/emacs/pulsar.
 
 #+begin_src emacs-lisp
 ;;; pulsar.el (highlight cursor position)
+;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-builtin-package 'pulsar
   (customize-set-variable
    'pulsar-pulse-functions ; Read the doc string for why not `setq'
@@ -431,10 +432,18 @@ the official manual: https://protesilaos.com/emacs/pulsar.
      outline-previous-visible-heading
      outline-up-heading))
 
-  (setq pulsar-face 'pulsar-magenta)
+  (setq pulsar-pulse t)
   (setq pulsar-delay 0.055)
+  (setq pulsar-iterations 10)
+  (setq pulsar-face 'pulsar-magenta)
 
-  (define-key global-map (kbd "C-x l") #'pulsar-pulse-line)) ; override `count-lines-page'
+  ;; pulsar does not define any key bindings.  This is just my personal
+  ;; preference.  Remember to read the manual on the matter.  Evaluate:
+  ;;
+  ;; (info "(elisp) Key Binding Conventions")
+  (let ((map global-map))
+    (define-key map (kbd "C-x l") #'pulsar-pulse-line) ; override `count-lines-page'
+    (define-key map (kbd "C-x L") #'pulsar-highlight-line)))
 #+end_src
 
 This is the code for =pulsar.el=:
@@ -1721,8 +1730,6 @@ all three of the above is easier to learn and more consistent overall.
   (setq consult-find-args "find . -not ( -wholename */.* -prune )")
   (setq consult-preview-key 'any)
 
-  (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
-
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
   (require 'consult-imenu) ; the `imenu' extension is in its own file
@@ -1745,7 +1752,13 @@ all three of the above is easier to learn and more consistent overall.
     (define-key map (kbd "M-s M-s") #'consult-outline)
     (define-key map (kbd "M-s M-y") #'consult-yank-pop)
     (define-key map (kbd "C-x r r") #'consult-register)) ; Use the register's prefix
-  (define-key consult-narrow-map (kbd "?") #'consult-narrow-help))
+  (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)
+
+  ;; see my `pulsar' package, which is declared further above:
+  ;; <https://protesilaos.com/emacs/pulsar>
+  (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
+  (dolist (fn '(pulsar-recenter-top pulsar-reveal-entry))
+    (add-hook 'consult-after-jump-hook fn)))
 #+end_src
 
 **** Switch to directories (consult-dir.el)

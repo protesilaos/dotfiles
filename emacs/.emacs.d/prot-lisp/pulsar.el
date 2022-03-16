@@ -1,10 +1,10 @@
-;;; pulsar.el --- Pulse line after running select functions -*- lexical-binding: t -*-
+;;; pulsar.el --- Pulse highlight on demand or after select functions -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://protesilaos.com/emacs/pulsar
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: convenience, pulse, highlight
 
@@ -26,15 +26,19 @@
 ;;; Commentary:
 ;;
 ;; This is a small package that temporarily highlights the current line
-;; after a given function is invoked.  The affected functions are defined
-;; in the user option `pulsar-pulse-functions'.  What Pulsar does is set up
-;; an advice so that those functions run a hook after they are called.
-;; The pulse effect is added there (`pulsar-after-function-hook').
+;; either on demand or after a given function is invoked.  The affected
+;; functions are defined in the user option `pulsar-pulse-functions'.
+;; What Pulsar does is set up an advice so that those functions run a
+;; hook after they are called.  The pulse effect is added there
+;; (`pulsar-after-function-hook').
 ;; 
-;; The duration of the highlight is determined by `pulsar-delay'.  While
-;; the applicable face is specified in `pulsar-face'.
+;; The duration of the highlight is determined by `pulsar-delay'.  The
+;; steps of the pulse effect are controlled by `pulsar-iterations'.
+;; While the applicable face is specified in `pulsar-face'.
 ;; 
-;; To highlight the current line on demand, use `pulsar-pulse-line'.
+;; To pulse highlight the current line on demand, use
+;; `pulsar-pulse-line'.  To highlight the current line without pulsing
+;; it, use `pulsar-highlight-line' instead.
 ;; 
 ;; Pulsar depends on the built-in `pulse.el' library.
 ;;
@@ -47,7 +51,8 @@
 (require 'pulse)
 
 (defgroup pulsar ()
-  "Extensions for `pulse.el'."
+  "Pulse highlight line on demand or after running select functions.
+Extension of `pulse.el'."
   :group 'editing)
 
 ;;;; User options
@@ -126,12 +131,14 @@ command is invoked."
   :group 'pulsar)
 
 (defcustom pulsar-delay 0.05
-  "Duration in seconds of the active pulse highlight."
+  "Duration in seconds of the active pulse highlight.
+Only applies when `pulsar-pulse' is non-nil."
   :type 'number
   :group 'pulsar)
 
 (defcustom pulsar-iterations pulse-iterations
-  "Number of iterations in a pulse highlight."
+  "Number of iterations in a pulse highlight.
+Only applies when `pulsar-pulse' is non-nil."
   :type 'number
   :group 'pulsar)
 
@@ -234,14 +241,17 @@ command is invoked."
       (line-beginning-position 1)
     (line-beginning-position 2)))
 
-(defun pulsar--pulse (&optional no-pulse)
+(defun pulsar--pulse (&optional no-pulse face)
   "Highlight the current line.
 With optional NO-PULSE keep the highlight until another command
-is invoked.  Otherwise use whatever `pulsar-pulse' entails."
+is invoked.  Otherwise use whatever `pulsar-pulse' entails.
+
+With optional FACE, use it instead of `pulsar-face'."
   (let ((pulse-flag (if no-pulse nil pulsar-pulse))
         (pulse-delay pulsar-delay)
-        (pulse-iterations pulsar-iterations))
-    (pulse-momentary-highlight-region (pulsar--start) (pulsar--end) pulsar-face)))
+        (pulse-iterations pulsar-iterations)
+        (f (if (facep face) face pulsar-face)))
+    (pulse-momentary-highlight-region (pulsar--start) (pulsar--end) f)))
 
 ;;;###autoload
 (defun pulsar-pulse-line ()
