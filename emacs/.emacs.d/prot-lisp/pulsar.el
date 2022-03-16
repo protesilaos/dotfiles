@@ -6,6 +6,7 @@
 ;; URL: https://protesilaos.com/emacs/pulsar
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "27.1"))
+;; Keywords: convenience, pulse, highlight
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -100,13 +101,14 @@ such as `customize-set-variable' do that automatically."
            (pulsar-setup)))
   :group 'pulsar)
 
-(defcustom pulsar-face 'pulse-highlight-start-face
+(defcustom pulsar-face 'pulsar-generic
   "Face to use for the pulse line.
-The default is `pulse-highlight-start-face', though users can
-select one among `pulsar-red', `pulsar-green', `pulsar-yellow',
-`pulsar-blue', `pulsar-magenta', `pulsar-cyan', or any other face
-that has a background attribute."
-  :type '(radio (face :tag "Standard pulse.el face" pulse-highlight-start-face)
+The default is `pulsar-generic' which reuses the standard face
+from the underlying pulse library.  Users can select one among
+`pulsar-red', `pulsar-green', `pulsar-yellow', `pulsar-blue',
+`pulsar-magenta', `pulsar-cyan', or any other face that has a
+background attribute."
+  :type '(radio (face :tag "Generic pulse.el face" pulsar-generic)
                 (face :tag "Red style" pulsar-red)
                 (face :tag "Green style" pulsar-green)
                 (face :tag "Yellow style" pulsar-yellow)
@@ -116,8 +118,20 @@ that has a background attribute."
                 (face :tag "Other face (must have a background)"))
   :group 'pulsar)
 
+(defcustom pulsar-pulse t
+  "When non-nil enable pulsing.
+Otherwise the highlight stays on the current line until another
+command is invoked."
+  :type 'boolean
+  :group 'pulsar)
+
 (defcustom pulsar-delay 0.05
   "Duration in seconds of the active pulse highlight."
+  :type 'number
+  :group 'pulsar)
+
+(defcustom pulsar-iterations pulse-iterations
+  "Number of iterations in a pulse highlight."
   :type 'number
   :group 'pulsar)
 
@@ -126,6 +140,11 @@ that has a background attribute."
 (defgroup pulsar-faces ()
   "Faces for `pulsar.el'."
   :group 'pulsar)
+
+(defface pulsar-generic
+  '((t :inherit pulse-highlight-start-face :extend t))
+  "Default value of `pulsar-face'."
+  :group 'pulsar-faces)
 
 (defface pulsar-red
   '((default :extend t)
@@ -215,12 +234,34 @@ that has a background attribute."
       (line-beginning-position 1)
     (line-beginning-position 2)))
 
+(defun pulsar--pulse (&optional no-pulse)
+  "Highlight the current line.
+With optional NO-PULSE keep the highlight until another command
+is invoked.  Otherwise use whatever `pulsar-pulse' entails."
+  (let ((pulse-flag (if no-pulse nil pulsar-pulse))
+        (pulse-delay pulsar-delay)
+        (pulse-iterations pulsar-iterations))
+    (pulse-momentary-highlight-region (pulsar--start) (pulsar--end) pulsar-face)))
+
 ;;;###autoload
 (defun pulsar-pulse-line ()
-  "Temporarily highlight the current line with optional FACE."
+  "Temporarily highlight the current line.
+When `pulsar-pulse' is non-nil (the default) make the highlight
+pulse before fading away.  The pulse effect is controlled by
+`pulsar-delay' and `pulsar-iterations'.
+
+Also see `pulsar-highlight-line' for a highlight without the
+pulse effect."
   (interactive)
-  (let ((pulse-delay pulsar-delay))
-    (pulse-momentary-highlight-region (pulsar--start) (pulsar--end) pulsar-face)))
+  (pulsar--pulse))
+
+;;;###autoload
+(defun pulsar-highlight-line ()
+  "Temporarily highlight the current line.
+Unlike `pulsar-pulse-line', never pulse the current line.  Keep
+the highlight in place until another command is invoked."
+  (interactive)
+  (pulsar--pulse :no-pulse))
 
 ;;;; Advice setup
 
