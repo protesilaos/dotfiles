@@ -722,41 +722,77 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
 #+end_src
 
-** LIN Is Noticeable (lin.el)
+** Enhancements to hl-line-mode (lin.el)
 :PROPERTIES:
 :CUSTOM_ID: h:601027a1-7288-4dcd-bb78-435965df27ba
 :END:
 
-This is another package of mine.  LIN locally remaps the =hl-line= face to
-a style that is optimal for major modes where line selection is the
-primary mode of interaction.
+This is another package of mine: <https://protesilaos.com/emacs/lin>.
+Lin is a stylistic enhancement for Emacs' built-in =hl-line-mode=.  It
+remaps the =hl-line= face (or equivalent) buffer-locally to a style that
+is optimal for major modes where line selection is the primary mode of
+interaction.
 
-The idea is that =hl-line= cannot work equally well for contexts with
-competing priorities: (i) line selection, or (ii) simple line highlight.
-In the former case, the current line needs to be made prominent because
-it carries a specific meaning of some significance in the given context.
-Whereas in the latter case, the primary mode of interaction does not
-revolve around the line highlight itself: it may be because the focus is
-on editing text or reading through the buffer's contents, so the current
-line highlight is more of a gentle reminder of the point's location on
-the vertical axis.
+The idea is that =hl-line-mode= cannot work equally well for contexts
+with competing priorities: (i) line selection, or (ii) simple line
+highlight.  In the former case, the current line needs to be made
+prominent because it carries a specific meaning of some significance in
+the given context: the user has to select a line.  Whereas in the latter
+case, the primary mode of interaction does not revolve around the line
+highlight itself: it may be because the focus is on editing text or
+reading through the buffer's contents, so the current line highlight is
+more of a reminder of the point's location on the vertical axis.
 
-=lin-mode= only shows its effect when =hl-line-mode= is active or, more
-specifically, when the =hl-line= face is used in the buffer.  =lin-mode=
-DOES NOT activate =hl-line-mode= and does not do anything other than the
-aforementioned face remapping.
+=lin-mode= enables =hl-line-mode= by adding it to every hook specified
+in the user option =lin-mode-hooks=.  Users are advised to configure
+that variable with =customize-set-variable=, or the Custom UI, or
+equivalent as it has a function which automatically sets up Lin.  Those
+who prefer to set values with =setq= must handle the process manually,
+by using the =lin-setup= function.
 
-I just enable LIN in contexts where I know it is useful (check the doc
-string o =lin-add-to-many-modes= for the details).  For example:
-
-+ [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el]].
-+ [[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]].
+Users can selected their preferred style by customizing the user option
+=lin-face=.  Options include the faces =lin-red=, =lin-green=,
+=lin-yellow=, =lin-blue= (default), =lin-magenta=, =lin-cyan=,
+=lin-mac=, =lin-red-override-fg=, =lin-green-override-fg=,
+=lin-yellow-override-fg=, =lin-blue-override-fg=,
+=lin-magenta-override-fg=, =lin-cyan-override-fg=,
+=lin-mac-override-fg=, or any other face that preferably has a
+background attribute.  The Lin faces with the =-override-fg= suffix set
+a foreground value which replaces that of the underlying text.  Whereas
+the others only specify a background attribute.
 
 #+begin_src emacs-lisp
+;;; Enhancements to hl-line-mode (lin.el)
 (prot-emacs-builtin-package 'lin
-  (setq lin-foreground-override nil)
-  (setq lin-foreign-hooks lin--default-foreign-hooks)
-  (lin-add-to-many-modes))
+  ;; Either run `lin-setup' or change `lin-mode-hooks'.  I prefer the
+  ;; latter.
+
+  ;; (lin-setup)
+
+  ;; Do not use `setq' for `lin-mode-hooks' and `lin-face'.  Both have a
+  ;; custom setter function associated with them, which automatically
+  ;; sets things up when they are configured via Custom (with
+  ;; `custom-set-variables', `customize-set-variable', the Custom UI,
+  ;; the `:custom' keyword of `use-package', or related).  Read their
+  ;; doc strings if you still want to use `setq'.
+  (custom-set-variables
+   '(lin-mode-hooks
+     '(bongo-mode-hook
+       dired-mode-hook
+       elfeed-search-mode-hook
+       git-rebase-mode-hook
+       ibuffer-mode-hook
+       ilist-mode-hook
+       ledger-report-mode-hook
+       log-view-mode-hook
+       magit-log-mode-hook
+       mu4e-headers-mode
+       notmuch-search-mode-hook
+       notmuch-tree-mode-hook
+       occur-mode-hook
+       org-agenda-mode-hook
+       tabulated-list-mode-hook))
+   '(lin-face 'lin-blue))) ; check `lin-face' doc string for alternative styles
 #+end_src
 
 ** Typeface configurations
