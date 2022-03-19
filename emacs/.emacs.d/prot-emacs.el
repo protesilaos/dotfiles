@@ -106,6 +106,7 @@
     (define-key map (kbd "M-s v") #'prot-simple-buffers-vc-root)))
 
 ;;; pulsar.el (highlight cursor position)
+;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-builtin-package 'pulsar
   (customize-set-variable
    'pulsar-pulse-functions ; Read the doc string for why not `setq'
@@ -141,10 +142,18 @@
      outline-previous-visible-heading
      outline-up-heading))
 
-  (setq pulsar-face 'pulsar-magenta)
+  (setq pulsar-pulse t)
   (setq pulsar-delay 0.055)
+  (setq pulsar-iterations 10)
+  (setq pulsar-face 'pulsar-magenta)
 
-  (define-key global-map (kbd "C-x l") #'pulsar-pulse-line)) ; override `count-lines-page'
+  ;; pulsar does not define any key bindings.  This is just my personal
+  ;; preference.  Remember to read the manual on the matter.  Evaluate:
+  ;;
+  ;; (info "(elisp) Key Binding Conventions")
+  (let ((map global-map))
+    (define-key map (kbd "C-x l") #'pulsar-pulse-line) ; override `count-lines-page'
+    (define-key map (kbd "C-x L") #'pulsar-highlight-line)))
 
 ;;; Make Custom UI code disposable
 (prot-emacs-builtin-package 'cus-edit
@@ -286,9 +295,8 @@
   (defun prot/modus-themes-custom-faces ()
     (modus-themes-with-colors
       (custom-set-faces
-       `(cursor ((,class :background ,magenta-intense)))
-       `(fill-column-indicator ((,class :background ,bg-inactive
-                                        :foreground ,bg-inactive))))))
+       ;; Here add all your face definitions.
+       `(cursor ((,class :background ,magenta-intense))))))
 
   (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
 
@@ -309,10 +317,37 @@
   ;; tweaks (as those are made at the "face" level).
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
 
+;;; Enhancements to hl-line-mode (lin.el)
 (prot-emacs-builtin-package 'lin
-  (setq lin-foreground-override nil)
-  (setq lin-foreign-hooks lin--default-foreign-hooks)
-  (lin-add-to-many-modes))
+  ;; Either run `lin-setup' or change `lin-mode-hooks'.  I prefer the
+  ;; latter.
+
+  ;; (lin-setup)
+
+  ;; Do not use `setq' for `lin-mode-hooks' and `lin-face'.  Both have a
+  ;; custom setter function associated with them, which automatically
+  ;; sets things up when they are configured via Custom (with
+  ;; `custom-set-variables', `customize-set-variable', the Custom UI,
+  ;; the `:custom' keyword of `use-package', or related).  Read their
+  ;; doc strings if you still want to use `setq'.
+  (custom-set-variables
+   '(lin-mode-hooks
+     '(bongo-mode-hook
+       dired-mode-hook
+       elfeed-search-mode-hook
+       git-rebase-mode-hook
+       ibuffer-mode-hook
+       ilist-mode-hook
+       ledger-report-mode-hook
+       log-view-mode-hook
+       magit-log-mode-hook
+       mu4e-headers-mode
+       notmuch-search-mode-hook
+       notmuch-tree-mode-hook
+       occur-mode-hook
+       org-agenda-mode-hook
+       tabulated-list-mode-hook))
+   '(lin-face 'lin-blue))) ; check `lin-face' doc string for alternative styles
 
 ;;; Font configurations (prot-fonts.el)
 (prot-emacs-builtin-package 'prot-fonts
@@ -365,14 +400,14 @@
                      :variable-pitch-height 1.0
                      :variable-pitch-regular-weight normal))
 
-          (large-alt . ( :fixed-pitch-family "Hack"
-                         :fixed-pitch-regular-weight normal
-                         :fixed-pitch-heavy-weight bold
-                         :fixed-pitch-height 130
-                         :fixed-pitch-line-spacing nil
-                         :variable-pitch-family "FiraGO"
-                         :variable-pitch-height 1.05
-                         :variable-pitch-regular-weight normal))))
+          (jumbo . ( :fixed-pitch-family "Iosevka Comfy"
+                     :fixed-pitch-regular-weight semilight
+                     :fixed-pitch-heavy-weight bold
+                     :fixed-pitch-height 150
+                     :fixed-pitch-line-spacing nil
+                     :variable-pitch-family "FiraGO"
+                     :variable-pitch-height 1.0
+                     :variable-pitch-regular-weight normal))))
 
   ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
   ;; are not relevant, but I keep them around as the idea is still good.
@@ -644,8 +679,6 @@
   (setq consult-find-args "find . -not ( -wholename */.* -prune )")
   (setq consult-preview-key 'any)
 
-  (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
-
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
   (require 'consult-imenu) ; the `imenu' extension is in its own file
@@ -668,7 +701,13 @@
     (define-key map (kbd "M-s M-s") #'consult-outline)
     (define-key map (kbd "M-s M-y") #'consult-yank-pop)
     (define-key map (kbd "C-x r r") #'consult-register)) ; Use the register's prefix
-  (define-key consult-narrow-map (kbd "?") #'consult-narrow-help))
+  (define-key consult-narrow-map (kbd "?") #'consult-narrow-help)
+
+  ;; see my `pulsar' package, which is declared further above:
+  ;; <https://protesilaos.com/emacs/pulsar>
+  (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
+  (dolist (fn '(pulsar-recenter-top pulsar-reveal-entry))
+    (add-hook 'consult-after-jump-hook fn)))
 
 ;;; Switch to directories (consult-dir.el)
 (prot-emacs-elpa-package 'consult-dir
