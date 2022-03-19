@@ -795,6 +795,10 @@ the others only specify a background attribute.
    '(lin-face 'lin-blue))) ; check `lin-face' doc string for alternative styles
 #+end_src
 
+This is the code for =lin.el=:
+
+#+include: prot-lisp/lin.el src emacs-lisp :tangle no
+
 ** Typeface configurations
 :PROPERTIES:
 :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
