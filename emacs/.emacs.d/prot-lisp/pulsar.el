@@ -39,6 +39,11 @@
 ;; To pulse highlight the current line on demand, use
 ;; `pulsar-pulse-line'.  To highlight the current line without pulsing
 ;; it, use `pulsar-highlight-line' instead.
+;;
+;; To help users differentiate between the momentary pulse and transient
+;; highlight effects, the user option `pulsar-highlight-face' controls
+;; the presentation of the `pulsar-highlight-line' command.  By default,
+;; this that variable is the same as `pulsar-face'.
 ;; 
 ;; Pulsar depends on the built-in `pulse.el' library.
 ;;
@@ -107,7 +112,7 @@ such as `customize-set-variable' do that automatically."
   :group 'pulsar)
 
 (defcustom pulsar-face 'pulsar-generic
-  "Face to use for the pulse line.
+  "Face of the regular pulse line effect (`pulsar-pulse-line').
 The default is `pulsar-generic' which reuses the standard face
 from the underlying pulse library.  Users can select one among
 `pulsar-red', `pulsar-green', `pulsar-yellow', `pulsar-blue',
@@ -121,6 +126,19 @@ background attribute."
                 (face :tag "Magenta style" pulsar-magenta)
                 (face :tag "Cyan style" pulsar-cyan)
                 (face :tag "Other face (must have a background)"))
+  :group 'pulsar)
+
+(defcustom pulsar-highlight-face 'pulsar-face
+  "Face used in `pulsar-highlight-line'."
+  :type '(choice (variable pulsar-face)
+                 (radio (face :tag "Generic pulse.el face" pulsar-generic)
+                        (face :tag "Red style" pulsar-red)
+                        (face :tag "Green style" pulsar-green)
+                        (face :tag "Yellow style" pulsar-yellow)
+                        (face :tag "Blue style" pulsar-blue)
+                        (face :tag "Magenta style" pulsar-magenta)
+                        (face :tag "Cyan style" pulsar-cyan)
+                        (face :tag "Other face (must have a background)")))
   :group 'pulsar)
 
 (defcustom pulsar-pulse t
@@ -231,13 +249,13 @@ Only applies when `pulsar-pulse' is non-nil."
 
 (defun pulsar--start ()
   "Return appropriate line start."
-  (if (pulsar--buffer-end-p)
+  (if (and (pulsar--buffer-end-p) (eq (char-before) ?\n))
       (line-beginning-position 0)
     (line-beginning-position)))
 
 (defun pulsar--end ()
   "Return appropriate line end."
-  (if (pulsar--buffer-end-p)
+  (if (and (pulsar--buffer-end-p) (eq (char-before) ?\n))
       (line-beginning-position 1)
     (line-beginning-position 2)))
 
@@ -269,9 +287,12 @@ pulse effect."
 (defun pulsar-highlight-line ()
   "Temporarily highlight the current line.
 Unlike `pulsar-pulse-line', never pulse the current line.  Keep
-the highlight in place until another command is invoked."
+the highlight in place until another command is invoked.
+
+Use `pulsar-highlight-face' (it is the same as `pulsar-face' by
+default)."
   (interactive)
-  (pulsar--pulse :no-pulse))
+  (pulsar--pulse :no-pulse pulsar-highlight-face))
 
 ;;;; Advice setup
 
