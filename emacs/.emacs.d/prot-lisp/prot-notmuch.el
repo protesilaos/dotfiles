@@ -35,6 +35,7 @@
 ;;; Code:
 
 (require 'prot-common)
+(eval-when-compile (require 'cl-lib))
 
 (defgroup prot-notmuch ()
   "Extensions for notmuch.el."
