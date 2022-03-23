@@ -1,11 +1,11 @@
-;;; modus-themes.el --- Highly accessible and customizable themes (WCAG AAA) -*- lexical-binding:t -*-
+;;; modus-themes.el --- Elegant, highly legible and customizable themes -*- lexical-binding:t -*-
 
 ;; Copyright (C) 2019-2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
 ;; Version: 2.2.0
-;; Last-Modified: <2022-03-16 13:57:44 +0200>
+;; Last-Modified: <2022-03-23 09:42:38 +0200>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -124,6 +124,7 @@
 ;;     deadgrep
 ;;     debbugs
 ;;     deft
+;;     devdocs
 ;;     dictionary
 ;;     diff-hl
 ;;     diff-mode
@@ -3071,6 +3072,11 @@ be explicitly stated.  Instead of a floating point, an acceptable
 value can be in the form of a cons cell like (height . FLOAT)
 or (height FLOAT), where FLOAT is the given number.
 
+The `all-buttons' property extends the box button effect (or the
+aforementioned properties) to the faces of the generic widget
+library.  By default, those do not look like the buttons of the
+Custom UI as they are ordinary text wrapped in square brackets.
+
 Combinations of any of those properties are expressed as a list,
 like in these examples:
 
@@ -3094,6 +3100,7 @@ In user configuration files the form may look like this:
               (const :tag "Reduce overall coloration" faint)
               (const :tag "Proportionately spaced font (variable-pitch)" variable-pitch)
               (const :tag "Underline instead of a box effect" underline)
+              (const :tag "Apply box button style to generic widget faces" all-buttons)
               (choice :tag "Font weight (must be supported by the typeface)"
                       (const :tag "Thin" thin)
                       (const :tag "Ultra-light" ultralight)
@@ -4059,7 +4066,12 @@ application of a variable-pitch font."
 (defun modus-themes--button (bg bgfaint bgaccent bgaccentfaint border &optional pressed-button-p)
   "Apply `modus-themes-box-buttons' styles.
 
-Work in progress.  BG BGFAINT BGACCENT BGACCENTFAINT BORDER PRESSED-BUTTON-P."
+BG is the main background.  BGFAINT is its subtle alternative.
+BGACCENT is its accented variant and BGACCENTFAINT is the same
+but less intense.  BORDER is the color around the box.
+
+When optional PRESSED-BUTTON-P is non-nil, the box uses the
+pressed button style, else the released button."
   (let* ((properties modus-themes-box-buttons)
          (weight (modus-themes--weight properties)))
     (list :inherit
@@ -4614,8 +4626,12 @@ by virtue of calling either of `modus-themes-load-operandi' and
                             ,@(modus-themes--link-color
                                magenta-alt-other magenta-alt-other-faint fg-alt))))
     `(tooltip ((,class :background ,bg-special-cold :foreground ,fg-main)))
-    `(widget-button ((,class :inherit modus-themes-box-button)))
-    `(widget-button-pressed ((,class :inherit modus-themes-box-button-pressed)))
+    `(widget-button ((,class ,@(if (memq 'all-buttons modus-themes-box-buttons)
+                                   (list :inherit 'modus-themes-box-button)
+                                 (list :inherit 'bold :foreground blue-alt)))))
+    `(widget-button-pressed ((,class ,@(if (memq 'all-buttons modus-themes-box-buttons)
+                                           (list :inherit 'modus-themes-box-button-pressed)
+                                         (list :inherit 'bold :foreground magenta-alt)))))
     `(widget-documentation ((,class :foreground ,green)))
     `(widget-field ((,class :background ,bg-alt :foreground ,fg-main :extend nil)))
     `(widget-inactive ((,class :inherit shadow :background ,bg-dim)))
@@ -4727,7 +4743,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(font-latex-string-face ((,class :inherit font-lock-string-face)))
     `(font-latex-subscript-face ((,class :height 0.95)))
     `(font-latex-superscript-face ((,class :height 0.95)))
-    `(font-latex-verbatim-face ((,class :background ,bg-dim :foreground ,fg-special-mild)))
+    `(font-latex-verbatim-face ((,class :inherit modus-themes-markup-verbatim)))
     `(font-latex-warning-face ((,class :inherit font-lock-warning-face)))
     `(tex-match ((,class :foreground ,blue-alt-other)))
     `(tex-verbatim ((,class :inherit modus-themes-markup-verbatim)))
@@ -5082,6 +5098,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(deft-summary-face ((,class :inherit (shadow modus-themes-slant))))
     `(deft-time-face ((,class :foreground ,fg-special-cold)))
     `(deft-title-face ((,class :inherit bold :foreground ,fg-main)))
+;;;;; devdocs
+    `(devdocs-code-block ((,class :inherit modus-themes-fixed-pitch :background ,bg-dim :extend t)))
 ;;;;; dictionary
     `(dictionary-button-face ((,class :inherit bold :foreground ,fg-special-cold)))
     `(dictionary-reference-face ((,class :inherit button)))
@@ -5344,6 +5362,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(elpher-gemini-heading3 ((,class :inherit modus-themes-heading-3)))
 ;;;;; embark
     `(embark-keybinding ((,class :inherit modus-themes-key-binding)))
+    `(embark-collect-marked ((,class :inherit modus-themes-mark-sel)))
 ;;;;; ement (ement.el)
     `(ement-room-fully-read-marker ((,class :background ,cyan-subtle-bg)))
     `(ement-room-membership ((,class :inherit shadow)))
@@ -6728,7 +6747,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-hide ((,class :foreground ,bg-main)))
     `(org-indent ((,class :inherit (fixed-pitch org-hide))))
     `(org-imminent-deadline ((,class :foreground ,red-intense)))
-    `(org-latex-and-related ((,class :foreground ,magenta-refine-fg)))
+    `(org-latex-and-related ((,class :foreground ,magenta-faint)))
     `(org-level-1 ((,class :inherit modus-themes-heading-1)))
     `(org-level-2 ((,class :inherit modus-themes-heading-2)))
     `(org-level-3 ((,class :inherit modus-themes-heading-3)))
@@ -7051,13 +7070,14 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(show-paren-match-expression ((,class :background ,bg-paren-expression)))
     `(show-paren-mismatch ((,class :inherit modus-themes-intense-red)))
 ;;;;; shr
+    `(shr-abbreviation ((,class :inherit modus-themes-lang-note)))
+    `(shr-code ((,class :inherit modus-themes-markup-verbatim)))
     `(shr-h1 ((,class :inherit modus-themes-heading-1)))
     `(shr-h2 ((,class :inherit modus-themes-heading-2)))
     `(shr-h3 ((,class :inherit modus-themes-heading-3)))
     `(shr-h4 ((,class :inherit modus-themes-heading-4)))
     `(shr-h5 ((,class :inherit modus-themes-heading-5)))
     `(shr-h6 ((,class :inherit modus-themes-heading-6)))
-    `(shr-abbreviation ((,class :inherit modus-themes-lang-note)))
     `(shr-selected-link ((,class :inherit modus-themes-subtle-red)))
 ;;;;; side-notes
     `(side-notes ((,class :background ,bg-dim :foreground ,fg-dim)))
@@ -7679,11 +7699,19 @@ by virtue of calling either of `modus-themes-load-operandi' and
         (360 . ,magenta-alt-other)))
     `(vc-annotate-very-old-color nil)
 ;;;; wid-edit
-    `(widget-link-prefix " ")
-    `(widget-link-suffix " ")
+    `(widget-link-prefix ,(if (memq 'all-buttons modus-themes-box-buttons)
+                              " "
+                            "["))
+    `(widget-link-suffix ,(if (memq 'all-buttons modus-themes-box-buttons)
+                              " "
+                            "]"))
     `(widget-mouse-face '(highlight widget-button))
-    `(widget-push-button-prefix " ")
-    `(widget-push-button-suffix " ")
+    `(widget-push-button-prefix ,(if (memq 'all-buttons modus-themes-box-buttons)
+                                     " "
+                                   "["))
+    `(widget-push-button-suffix ,(if (memq 'all-buttons modus-themes-box-buttons)
+                                     " "
+                                   "]"))
 ;;;; xterm-color
     `(xterm-color-names ["black" ,red ,green ,yellow ,blue ,magenta ,cyan "gray65"])
     `(xterm-color-names-bright ["gray35" ,red-alt ,green-alt ,yellow-alt ,blue-alt ,magenta-alt ,cyan-alt "white"])
