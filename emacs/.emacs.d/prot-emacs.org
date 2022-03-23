@@ -436,6 +436,7 @@ the official manual: https://protesilaos.com/emacs/pulsar.
   (setq pulsar-delay 0.055)
   (setq pulsar-iterations 10)
   (setq pulsar-face 'pulsar-magenta)
+  (setq pulsar-highlight-face 'pulsar-green)
 
   ;; pulsar does not define any key bindings.  This is just my personal
   ;; preference.  Remember to read the manual on the matter.  Evaluate:
