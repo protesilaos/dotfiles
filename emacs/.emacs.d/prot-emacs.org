@@ -1558,20 +1558,16 @@ code that leverages =avy=.
 
   (require 'mct-avy)
 
-  ;; ;; From the mct manual (I don't need it, but you might):
-  ;; (defun my-mct-avy-embark-act ()
-  ;;   "Use Avy to run `embark-act' on candidate."
-  ;;   (interactive)
-  ;;   (mct-avy--choose #'embark-act))
-
   (dolist (map (list mct-minibuffer-local-completion-map
                      mct-minibuffer-completion-list-map))
+    (define-key map (kbd "C-M-a") #'mct-avy-embark-act)
     (define-key map (kbd "C-.") #'mct-avy-choose-completion-exit)
     (define-key map (kbd "C-;") #'mct-avy-choose-completion-dwim))
 
   ;; If you are using `mct-region-mode':
   (dolist (map (list mct-region-completion-list-map
                      mct-region-buffer-map))
+    (define-key map (kbd "C-M-a") #'mct-avy-embark-act)
     (define-key map (kbd "C-.") #'mct-avy-region-choose-completion)))
 #+end_src
 

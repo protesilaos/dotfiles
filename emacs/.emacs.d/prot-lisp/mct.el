@@ -84,11 +84,6 @@ Only works when variable `file-name-shadow-mode' is non-nil."
   :type 'boolean
   :group 'mct)
 
-(defcustom mct-show-completion-line-numbers nil
-  "Display line numbers in the Completions' buffer."
-  :type 'boolean
-  :group 'mct)
-
 (defcustom mct-apply-completion-stripes nil
   "When non-nil, use alternating backgrounds in the Completions."
   :type 'boolean
@@ -310,14 +305,6 @@ affairs."
   '((t :inherit highlight :extend t))
   "Face for current candidate in the completions' buffer."
   :group 'mct)
-
-(declare-function display-line-numbers-mode "display-line-numbers")
-
-(defun mct--setup-line-numbers ()
-  "Set up line numbers for the completions' buffer."
-  (when (and (derived-mode-p 'completion-list-mode)
-             mct-show-completion-line-numbers)
-    (display-line-numbers-mode 1)))
 
 (defun mct--first-line-completion-p ()
   "Return non-nil if first line has completion candidates."
@@ -866,68 +853,6 @@ If ARG is supplied, move that many completion groups at a time."
   (let ((completion-no-auto-exit t))
     (choose-completion)))
 
-(defvar display-line-numbers-mode)
-
-(defun mct--line-completion (n)
-  "Select completion on Nth line."
-  (with-current-buffer (window-buffer (mct--get-completion-window))
-    (goto-char (point-min))
-    (next-completion n)
-    (mct-choose-completion-exit)))
-
-(defun mct--line-bounds (n)
-  "Test if Nth line is in the buffer."
-  (with-current-buffer (window-buffer (mct--get-completion-window))
-    (let ((bounds (count-lines (point-min) (point-max))))
-      (unless (<= n bounds)
-        (user-error "%d is not within the buffer bounds (%d)" n bounds)))))
-
-(defun mct-goto-line ()
-  "Go to line N in the Completions' buffer."
-  (interactive nil mct-minibuffer-mode)
-  (let ((n (read-number "Line number: ")))
-    (mct--line-bounds n)
-    (select-window (mct--get-completion-window))
-    (mct--line-completion n)))
-
-(defun mct--line-number-selection ()
-  "Show line numbers and select one of them."
-  (with-current-buffer (window-buffer (mct--get-completion-window))
-    (let ((mct-show-completion-line-numbers t))
-      (if (bound-and-true-p display-line-numbers-mode)
-          (mct-goto-line)
-        (unwind-protect
-            (progn
-              (mct--setup-line-numbers)
-              (mct-goto-line))
-          (display-line-numbers-mode -1))))))
-
-(defun mct-choose-completion-number ()
-  "Select completion candidate on a given line number.
-Upon selecting the candidate, exit the minibuffer (i.e. confirm
-the choice right away).
-
-If the Completions' buffer is not visible, it is displayed.  Line
-numbers are shown on the side for during the operation (unless
-`mct-show-completion-line-numbers' is non-nil, in which case they
-are always visible).
-
-This command can be invoked from either the minibuffer or the
-Completions' buffer."
-  (interactive nil mct-minibuffer-mode)
-  (if (not (mct--one-column-p))
-      (user-error "Cannot select by line in grid view")
-    (let ((mct-remove-shadowed-file-names t)
-          (mct-live-update-delay most-positive-fixnum)
-          (enable-recursive-minibuffers t))
-      (unless (mct--get-completion-window)
-        (mct--show-completions))
-      (if (or (and (derived-mode-p 'completion-list-mode)
-                   (active-minibuffer-window))
-              (and (minibufferp)
-                   (mct--get-completion-window)))
-          (mct--line-number-selection)))))
-
 (defvar crm-completion-table)
 (defvar crm-separator)
 
@@ -1134,7 +1059,6 @@ region.")
 (defvar mct-minibuffer-completion-list-map
   (let ((map (make-sparse-keymap)))
     (define-key map [remap keyboard-quit] #'mct-keyboard-quit-dwim)
-    (define-key map [remap goto-line] #'mct-choose-completion-number)
     (define-key map [remap next-line] #'mct-next-completion-or-mini)
     (define-key map (kbd "n") #'mct-next-completion-or-mini)
     (define-key map [remap previous-line] #'mct-previous-completion-or-mini)
@@ -1155,7 +1079,6 @@ region.")
 (defvar mct-minibuffer-local-completion-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-j") #'exit-minibuffer)
-    (define-key map [remap goto-line] #'mct-choose-completion-number)
     (define-key map [remap next-line] #'mct-switch-to-completions-top)
     (define-key map [remap next-line-or-history-element] #'mct-switch-to-completions-top)
     (define-key map [remap previous-line] #'mct-switch-to-completions-bottom)
@@ -1188,7 +1111,6 @@ region.")
     (mct--setup-appearance)
     (mct--setup-completion-list-keymap)
     (mct--setup-highlighting)
-    (mct--setup-line-numbers)
     (cursor-sensor-mode)))
 
 ;;;;; Dynamic completion
@@ -1359,7 +1281,6 @@ minibuffer)."
     (mct--setup-appearance)
     (mct--region-setup-completion-list-keymap)
     (mct--setup-highlighting)
-    (mct--setup-line-numbers)
     (cursor-sensor-mode)))
 
 (defun mct--region-completion-done (&rest app)
