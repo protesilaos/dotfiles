@@ -575,12 +575,12 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs nil
+  (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
-        modus-themes-intense-mouseovers t
-        modus-themes-deuteranopia t
+        modus-themes-intense-mouseovers nil
+        modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
@@ -629,11 +629,11 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
-        ;; `accented', `faint', `variable-pitch', `underline', the
-        ;; symbol of any font weight as listed in
+        ;; `accented', `faint', `variable-pitch', `underline',
+        ;; `all-buttons', the symbol of any font weight as listed in
         ;; `modus-themes-weights', and a floating point number
         ;; (e.g. 0.9) for the height of the button's text.
-        modus-themes-box-buttons '(variable-pitch flat faint 0.9)
+        modus-themes-box-buttons '(all-buttons variable-pitch (height 0.9) flat faint accented)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -666,7 +666,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
-        modus-themes-diffs 'desaturated
+        modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
 
