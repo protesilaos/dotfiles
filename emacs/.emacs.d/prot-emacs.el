@@ -146,6 +146,7 @@
   (setq pulsar-delay 0.055)
   (setq pulsar-iterations 10)
   (setq pulsar-face 'pulsar-magenta)
+  (setq pulsar-highlight-face 'pulsar-green)
 
   ;; pulsar does not define any key bindings.  This is just my personal
   ;; preference.  Remember to read the manual on the matter.  Evaluate:
@@ -171,12 +172,12 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs nil
+  (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
-        modus-themes-intense-mouseovers t
-        modus-themes-deuteranopia t
+        modus-themes-intense-mouseovers nil
+        modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
@@ -225,11 +226,11 @@
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
-        ;; `accented', `faint', `variable-pitch', `underline', the
-        ;; symbol of any font weight as listed in
+        ;; `accented', `faint', `variable-pitch', `underline',
+        ;; `all-buttons', the symbol of any font weight as listed in
         ;; `modus-themes-weights', and a floating point number
         ;; (e.g. 0.9) for the height of the button's text.
-        modus-themes-box-buttons '(variable-pitch flat faint 0.9)
+        modus-themes-box-buttons '(all-buttons variable-pitch (height 0.9) flat faint accented)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -262,7 +263,7 @@
         modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
-        modus-themes-diffs 'desaturated
+        modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
 
@@ -624,20 +625,16 @@
 
   (require 'mct-avy)
 
-  ;; ;; From the mct manual (I don't need it, but you might):
-  ;; (defun my-mct-avy-embark-act ()
-  ;;   "Use Avy to run `embark-act' on candidate."
-  ;;   (interactive)
-  ;;   (mct-avy--choose #'embark-act))
-
   (dolist (map (list mct-minibuffer-local-completion-map
                      mct-minibuffer-completion-list-map))
+    (define-key map (kbd "C-M-a") #'mct-avy-embark-act)
     (define-key map (kbd "C-.") #'mct-avy-choose-completion-exit)
     (define-key map (kbd "C-;") #'mct-avy-choose-completion-dwim))
 
   ;; If you are using `mct-region-mode':
   (dolist (map (list mct-region-completion-list-map
                      mct-region-buffer-map))
+    (define-key map (kbd "C-M-a") #'mct-avy-embark-act)
     (define-key map (kbd "C-.") #'mct-avy-region-choose-completion)))
 
 ;;; Minibuffer history (savehist-mode)
@@ -975,6 +972,7 @@
   (setq dired-auto-revert-buffer #'dired-directory-changed-p) ; also see `dired-do-revert-buffer'
   (setq dired-make-directory-clickable t) ; Emacs 29.1
   (setq dired-free-space nil) ; Emacs 29.1
+  (setq dired-mouse-drag-files t) ; Emacs 29.1
 
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
   (add-hook 'dired-mode-hook #'hl-line-mode))
