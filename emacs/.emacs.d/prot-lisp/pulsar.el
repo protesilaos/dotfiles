@@ -28,9 +28,6 @@
 ;; This is a small package that temporarily highlights the current line
 ;; either on demand or after a given function is invoked.  The affected
 ;; functions are defined in the user option `pulsar-pulse-functions'.
-;; What Pulsar does is set up an advice so that those functions run a
-;; hook after they are called.  The pulse effect is added there
-;; (`pulsar-after-function-hook').
 ;; 
 ;; The duration of the highlight is determined by `pulsar-delay'.  The
 ;; steps of the pulse effect are controlled by `pulsar-iterations'.
@@ -296,31 +293,18 @@ default)."
 
 ;;;; Advice setup
 
-(defvar pulsar-after-function-hook nil
-  "Hook that runs after any function in `pulsar-pulse-functions'.")
-
-(defun pulsar--add-hook (&rest _)
-  "Run `pulsar-after-function-hook'."
-  (run-hooks 'pulsar-after-function-hook))
+(defun pulsar--post-command-pulse ()
+  "Run `pulsar-pulse-line' for `pulsar-pulse-functions'."
+  (when (memq this-command pulsar-pulse-functions)
+    (pulsar-pulse-line)))
 
 ;;;###autoload
 (defun pulsar-setup (&optional reverse)
-  "Set up pulsar for select functions.
-This adds the `pulsar-after-function-hook' to every command listed
-in the `pulsar-pulse-functions'.  If the list is updated, this
-command needs to be invoked again.
-
-With optional non-nil REVERSE argument, remove the advice that
-sets up the aforementioned hook."
-  (cond
-   (reverse
-    (dolist (fn pulsar-pulse-functions)
-      (advice-remove fn #'pulsar--add-hook))
-    (remove-hook 'pulsar-after-function-hook #'pulsar-pulse-line))
-   (t
-    (dolist (fn pulsar-pulse-functions)
-      (advice-add fn :after #'pulsar--add-hook))
-    (add-hook 'pulsar-after-function-hook #'pulsar-pulse-line))))
+  "Set up pulsar for each function in `pulsar-pulse-functions'.
+With optional non-nil REVERSE argument, remove the effect."
+  (if reverse
+      (remove-hook 'post-command-hook #'pulsar--post-command-pulse)
+    (add-hook 'post-command-hook #'pulsar--post-command-pulse)))
 
 ;;;; Recentering commands
 
