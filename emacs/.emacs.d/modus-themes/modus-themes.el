@@ -4,8 +4,8 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 2.2.0
-;; Last-Modified: <2022-03-23 09:42:38 +0200>
+;; Version: 2.3.0
+;; Last-Modified: <2022-04-01 12:33:34 +0300>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -245,6 +245,7 @@
 ;;     mct
 ;;     mentor
 ;;     messages
+;;     mini-modeline
 ;;     minimap
 ;;     mmm-mode
 ;;     mode-line
@@ -2105,7 +2106,7 @@ value are passed as a symbol.  Those are:
   highlights the alert and overdue states.
 - When `modus-themes-deuteranopia' is non-nil the exact style of
   the habit graph adapts to the needs of users with red-green
-  colour deficiency by substituting every instance of green with
+  color deficiency by substituting every instance of green with
   blue or cyan (depending on the specifics).
 
 For example:
@@ -3190,8 +3191,9 @@ Those are stored in `modus-themes-faces' and
        (custom-theme-set-variables ',name ,@modus-themes-custom-variables))))
 
 (defun modus-themes--current-theme ()
-  "Return current theme."
-  (car custom-enabled-themes))
+  "Return current modus theme."
+  (car (seq-filter (lambda (arg) (string-match-p "^modus" (symbol-name arg)))
+                   custom-enabled-themes)))
 
 ;; Helper functions that are meant to ease the implementation of the
 ;; above customization variables.
@@ -4612,7 +4614,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                               bg-hl-alt-intense bg-region-accent
                                               bg-region-accent-subtle))))
     `(secondary-selection ((,class :inherit modus-themes-special-cold)))
-    `(separator-line ((,class :strike-through ,bg-region)))
+    `(separator-line ((,class :underline ,bg-region)))
     `(shadow ((,class :foreground ,fg-alt)))
     `(success ((,class :inherit (bold modus-themes-grue))))
     `(trailing-whitespace ((,class :background ,red-intense-bg)))
@@ -5366,7 +5368,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; ement (ement.el)
     `(ement-room-fully-read-marker ((,class :background ,cyan-subtle-bg)))
     `(ement-room-membership ((,class :inherit shadow)))
-    `(ement-room-mention (( )))
+    `(ement-room-mention ((,class :background ,bg-hl-alt-intense)))
     `(ement-room-name ((,class :inherit bold)))
     `(ement-room-reactions ((,class :inherit shadow)))
     `(ement-room-read-receipt-marker ((,class :background ,yellow-subtle-bg)))
@@ -6460,6 +6462,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(message-header-xheader ((,class :foreground ,blue-alt)))
     `(message-mml ((,class :foreground ,cyan-alt-other)))
     `(message-separator ((,class :inherit modus-themes-intense-neutral)))
+;;;;; mini-modeline
+    `(mini-modeline-mode-line ((,class :background ,blue-intense :height 0.14)))
+    `(mini-modeline-mode-line-inactive ((,class :background ,fg-window-divider-inner :height 0.1)))
 ;;;;; minimap
     `(minimap-active-region-background ((,class :background ,bg-active)))
     `(minimap-current-line-face ((,class :background ,cyan-intense-bg :foreground ,fg-main)))
@@ -7672,6 +7677,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
         ("XXX+" . ,red-alt)
         ("REVIEW" . ,cyan-alt-other)
         ("DEPRECATED" . ,blue-nuanced-fg)))
+;;;; mini-modeline
+    `(mini-modeline-face-attr '(:background unspecified))
 ;;;; pdf-tools
     `(pdf-view-midnight-colors
       '(,fg-main . ,bg-dim))
