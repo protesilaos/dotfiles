@@ -770,35 +770,27 @@ the others only specify a background attribute.
 #+begin_src emacs-lisp
 ;;; Enhancements to hl-line-mode (lin.el)
 (prot-emacs-builtin-package 'lin
-  ;; Either run `lin-setup' or change `lin-mode-hooks'.  I prefer the
-  ;; latter.
-
-  ;; (lin-setup)
-
-  ;; Do not use `setq' for `lin-mode-hooks' and `lin-face'.  Both have a
-  ;; custom setter function associated with them, which automatically
-  ;; sets things up when they are configured via Custom (with
-  ;; `custom-set-variables', `customize-set-variable', the Custom UI,
-  ;; the `:custom' keyword of `use-package', or related).  Read their
-  ;; doc strings if you still want to use `setq'.
-  (custom-set-variables
-   '(lin-mode-hooks
-     '(bongo-mode-hook
-       dired-mode-hook
-       elfeed-search-mode-hook
-       git-rebase-mode-hook
-       ibuffer-mode-hook
-       ilist-mode-hook
-       ledger-report-mode-hook
-       log-view-mode-hook
-       magit-log-mode-hook
-       mu4e-headers-mode
-       notmuch-search-mode-hook
-       notmuch-tree-mode-hook
-       occur-mode-hook
-       org-agenda-mode-hook
-       tabulated-list-mode-hook))
-   '(lin-face 'lin-blue))) ; check `lin-face' doc string for alternative styles
+  ;; You can use this to live update the face:
+  ;;
+  ;; (customize-set-variable 'lin-face 'lin-green)
+  (setq lin-face 'lin-blue)
+  (setq lin-mode-hooks
+        '(bongo-mode-hook
+          dired-mode-hook
+          elfeed-search-mode-hook
+          git-rebase-mode-hook
+          ibuffer-mode-hook
+          ilist-mode-hook
+          ledger-report-mode-hook
+          log-view-mode-hook
+          magit-log-mode-hook
+          mu4e-headers-mode
+          notmuch-search-mode-hook
+          notmuch-tree-mode-hook
+          occur-mode-hook
+          org-agenda-mode-hook
+          tabulated-list-mode-hook))
+  (lin-global-mode 1)) ; applies to all `lin-mode-hooks'
 #+end_src
 
 This is the code for =lin.el=:
@@ -1006,11 +998,20 @@ Relevant publications of mine that are not part of this document:
           (jumbo . ( :fixed-pitch-family "Iosevka Comfy"
                      :fixed-pitch-regular-weight semilight
                      :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 150
+                     :fixed-pitch-height 160
                      :fixed-pitch-line-spacing nil
                      :variable-pitch-family "FiraGO"
                      :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))))
+                     :variable-pitch-regular-weight normal))
+
+          (presentation . ( :fixed-pitch-family "Iosevka Comfy"
+                            :fixed-pitch-regular-weight semilight
+                            :fixed-pitch-heavy-weight bold
+                            :fixed-pitch-height 170
+                            :fixed-pitch-line-spacing nil
+                            :variable-pitch-family "FiraGO"
+                            :variable-pitch-height 1.0
+                            :variable-pitch-regular-weight normal))))
 
   ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
   ;; are not relevant, but I keep them around as the idea is still good.
@@ -6558,6 +6559,7 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
 ;;; Hooks and key bindings
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
+  (remove-hook 'notmuch-search-hook 'notmuch-hl-line-mode) ; CHECK
   (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
 
   (let ((map global-map))
