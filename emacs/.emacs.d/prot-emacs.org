@@ -581,17 +581,17 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+  (setq modus-themes-italic-constructs nil
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
         modus-themes-intense-mouseovers nil
         modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -615,7 +615,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax nil
+        modus-themes-syntax '(yellow-comments alt-syntax green-strings faint)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -625,13 +625,13 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match nil
+        modus-themes-paren-match '(intense)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links nil
+        modus-themes-links '(neutral-underline background)
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
@@ -672,9 +672,9 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
-        modus-themes-diffs nil
+        modus-themes-diffs 'desaturated
 
-        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
+        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch regular 1.4))
