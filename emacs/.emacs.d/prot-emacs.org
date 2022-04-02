@@ -386,51 +386,54 @@ These are the contents of the =prot-simple.el= library (find the file in
 
 This is a small package of mine that highlights the current line after a
 given command is invoked.  The affected commands are defined in the user
-option =pulsar-pulse-functions=.  This is one of the few options I set
-with =customize-set-variable=.  Unlike =setq= this has the ability to
-run the custom-setter code specified in the option's definition.  Put
-concretely, it makes sure the affected functions are updated properly.
+option =pulsar-pulse-functions=.  Then all one needs is to enable the
+minor mode, either globally (=pulsar-global-mode=) or hook the local
+mode (=pulsar-mode=) to the desired major-mode hooks.  I just enable the
+global mode.
 
 Pulsar builds on top of the built-in =pulse.el=.  More information in
 the official manual: https://protesilaos.com/emacs/pulsar.
+
+Also watch my [[https://protesilaos.com/codelog/2022-03-14-emacs-pulsar-demo/][demonstration of pulsar]] (2022-03-14).
 
 #+begin_src emacs-lisp
 ;;; pulsar.el (highlight cursor position)
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-builtin-package 'pulsar
-  (customize-set-variable
-   'pulsar-pulse-functions ; Read the doc string for why not `setq'
-   '(recenter-top-bottom
-     move-to-window-line-top-bottom
-     reposition-window
-     bookmark-jump
-     other-window
-     delete-window
-     delete-other-windows
-     forward-page
-     backward-page
-     scroll-up-command
-     scroll-down-command
-     windmove-right
-     windmove-left
-     windmove-up
-     windmove-down
-     windmove-swap-states-right
-     windmove-swap-states-left
-     windmove-swap-states-up
-     windmove-swap-states-down
-     tab-new
-     tab-close
-     tab-next
-     org-next-visible-heading
-     org-previous-visible-heading
-     org-forward-heading-same-level
-     org-backward-heading-same-level
-     outline-backward-same-level
-     outline-forward-same-level
-     outline-next-visible-heading
-     outline-previous-visible-heading
-     outline-up-heading))
+  (setq pulsar-pulse-functions
+        '(recenter-top-bottom
+          move-to-window-line-top-bottom
+          reposition-window
+          bookmark-jump
+          other-window
+          delete-window
+          delete-other-windows
+          forward-page
+          backward-page
+          scroll-up-command
+          scroll-down-command
+          windmove-right
+          windmove-left
+          windmove-up
+          windmove-down
+          windmove-swap-states-right
+          windmove-swap-states-left
+          windmove-swap-states-up
+          windmove-swap-states-down
+          tab-new
+          tab-close
+          tab-next
+          logos-forward-page-dwim
+          logos-backward-page-dwim
+          org-next-visible-heading
+          org-previous-visible-heading
+          org-forward-heading-same-level
+          org-backward-heading-same-level
+          outline-backward-same-level
+          outline-forward-same-level
+          outline-next-visible-heading
+          outline-previous-visible-heading
+          outline-up-heading))
 
   (setq pulsar-pulse t)
   (setq pulsar-delay 0.055)
@@ -438,13 +441,15 @@ the official manual: https://protesilaos.com/emacs/pulsar.
   (setq pulsar-face 'pulsar-magenta)
   (setq pulsar-highlight-face 'pulsar-green)
 
+  (pulsar-global-mode 1)
+
   ;; pulsar does not define any key bindings.  This is just my personal
   ;; preference.  Remember to read the manual on the matter.  Evaluate:
   ;;
   ;; (info "(elisp) Key Binding Conventions")
   (let ((map global-map))
     (define-key map (kbd "C-x l") #'pulsar-pulse-line) ; override `count-lines-page'
-    (define-key map (kbd "C-x L") #'pulsar-highlight-line)))
+    (define-key map (kbd "C-x L") #'pulsar-highlight-dwim))) ; or use `pulsar-highlight-line'
 #+end_src
 
 This is the code for =pulsar.el=:
