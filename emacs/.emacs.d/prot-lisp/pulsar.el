@@ -26,27 +26,37 @@
 ;;; Commentary:
 ;;
 ;; This is a small package that temporarily highlights the current line
-;; either on demand or after a given function is invoked.  The affected
-;; functions are defined in the user option `pulsar-pulse-functions'.
-;; 
-;; The duration of the highlight is determined by `pulsar-delay'.  The
-;; steps of the pulse effect are controlled by `pulsar-iterations'.
-;; While the applicable face is specified in `pulsar-face'.
-;; 
-;; To pulse highlight the current line on demand, use
-;; `pulsar-pulse-line'.  To highlight the current line without pulsing
-;; it, use `pulsar-highlight-line' instead.
+;; after a given function is invoked.  The affected functions are
+;; defined in the user option `pulsar-pulse-functions' and the effect
+;; takes place when either `pulsar-mode' (buffer-local) or
+;; `pulsar-global-mode' is enabled.
 ;;
-;; To help users differentiate between the momentary pulse and transient
-;; highlight effects, the user option `pulsar-highlight-face' controls
-;; the presentation of the `pulsar-highlight-line' command.  By default,
-;; this that variable is the same as `pulsar-face'.
-;; 
+;; The overall duration of the highlight is determined by a combination
+;; of `pulsar-delay' and `pulsar-iterations'.  The latter determines the
+;; number of blinks in a pulse, while the former sets their delay in
+;; seconds before they fade out.  The applicable face is specified in
+;; `pulsar-face'.
+;;
+;; To disable the pulse but keep the temporary highlight, set the user
+;; option `pulsar-pulse' to nil.  The current line will remain
+;; highlighted until another command is invoked.
+;;
+;; To highlight the current line on demand, use the `pulsar-pulse-line'
+;; command.  When `pulsar-pulse' is non-nil (the default), its highlight
+;; will pulse before fading away.  Whereas the `pulsar-highlight-line'
+;; command never pulses the line: the highlight stays in place as if
+;; `pulsar-pulse' is nil.
+;;
+;; To help users differentiate between the pulse and highlight effects,
+;; the user option `pulsar-highlight-face' controls the presentation of
+;; the `pulsar-highlight-line' command.  By default, this variable is
+;; the same as `pulsar-face'.
+;;
 ;; Pulsar depends on the built-in `pulse.el' library.
 ;;
 ;; Why the name "pulsar"?  It sounds like "pulse" and is a recognisable
-;; word.  Though if you need a backronym, consider "Pulsar
-;; Unquestionably Luminates, Strictly Absent the Radiation".
+;; word.  Though if you need a backronym, consider "Pulsar Unquestionably
+;; Luminates, Strictly Absent the Radiation".
 
 ;;; Code:
 
@@ -91,21 +101,10 @@ Extension of `pulse.el'."
     outline-next-visible-heading
     outline-previous-visible-heading
     outline-up-heading)
-  "Functions that highlight the current line after invocation.
-This only takes effect when `pulsar-setup' is invoked (e.g. while
-setting up `pulsar.el').
-
-Any update to this user option outside of Custom (e.g. with
-`setq') requires a re-run of `pulsar-setup'.  Whereas functions
-such as `customize-set-variable' do that automatically."
+  "Functions that `pulsar-pulse-line' after invocation.
+This only takes effect when `pulsar-mode' or `pulsar-global-mode'
+is enabled."
   :type '(repeat function)
-  :initialize #'custom-initialize-default
-  :set (lambda (symbol value)
-         (if (eq value (default-value symbol))
-             (set-default symbol value)
-           (pulsar-setup 'reverse)
-           (set-default symbol value)
-           (pulsar-setup)))
   :group 'pulsar)
 
 (defcustom pulsar-face 'pulsar-generic
@@ -146,14 +145,16 @@ command is invoked."
   :group 'pulsar)
 
 (defcustom pulsar-delay 0.05
-  "Duration in seconds of the active pulse highlight.
-Only applies when `pulsar-pulse' is non-nil."
+  "Delay between increments of a pulse.
+Together with `pulsar-iterations' control the overall duration of
+a pulse.  Only applies when `pulsar-pulse' is non-nil."
   :type 'number
   :group 'pulsar)
 
 (defcustom pulsar-iterations pulse-iterations
   "Number of iterations in a pulse highlight.
-Only applies when `pulsar-pulse' is non-nil."
+Together with `pulsar-delay' control the overall duration of a
+pulse.  Only applies when `pulsar-pulse' is non-nil."
   :type 'number
   :group 'pulsar)
 
@@ -256,17 +257,23 @@ Only applies when `pulsar-pulse' is non-nil."
       (line-beginning-position 1)
     (line-beginning-position 2)))
 
-(defun pulsar--pulse (&optional no-pulse face)
+(defun pulsar--pulse (&optional no-pulse face start end)
   "Highlight the current line.
 With optional NO-PULSE keep the highlight until another command
 is invoked.  Otherwise use whatever `pulsar-pulse' entails.
 
-With optional FACE, use it instead of `pulsar-face'."
-  (let ((pulse-flag (if no-pulse nil pulsar-pulse))
-        (pulse-delay pulsar-delay)
-        (pulse-iterations pulsar-iterations)
-        (f (if (facep face) face pulsar-face)))
-    (pulse-momentary-highlight-region (pulsar--start) (pulsar--end) f)))
+With optional FACE, use it instead of `pulsar-face'.
+
+With optional START and END, highlight the region in-between
+instead of the current line."
+  (let* ((pulse-flag (if no-pulse nil pulsar-pulse))
+         (pulse-delay pulsar-delay)
+         (pulse-iterations pulsar-iterations)
+         (f (if (facep face) face pulsar-face))
+         (o (make-overlay (or start (pulsar--start)) (or end (pulsar--end)))))
+    (overlay-put o 'pulse-delete t)
+    (overlay-put o 'window (frame-selected-window))
+    (pulse-momentary-highlight-overlay o f)))
 
 ;;;###autoload
 (defun pulsar-pulse-line ()
@@ -291,20 +298,80 @@ default)."
   (interactive)
   (pulsar--pulse :no-pulse pulsar-highlight-face))
 
-;;;; Advice setup
+;;;;; Highlight region
+
+(defvar-local pulsar--rectangle-face-cookie nil
+  "Cookie of remapped rectangle region face.")
+
+(autoload 'face-remap-remove-relative "face-remap.el")
+
+(defun pulsar--remove-face-remap ()
+  "Remove `pulsar--rectangle-face-cookie'."
+  (when pulsar--rectangle-face-cookie
+    (face-remap-remove-relative pulsar--rectangle-face-cookie)))
+
+(defvar rectangle-mark-mode)
+
+;; When we highlight a region, it gets the `region' face.  The
+;; `pulsar-highlight-dwim' overlays it with `pulsar-highlight-face'
+;; using a standard pulse.el mechanism.  If the user tries to expand the
+;; region further, it gets its original face.  This function ensures
+;; that the rectangle behaves the same way (pulse.el does not handle
+;; rectangular regions).
+(defun pulsar--remove-rectangle-remap ()
+  "Remove face remap from rectangle region when appropriate."
+  (when (and (bound-and-true-p rectangle-mark-mode)
+             (not (eq this-command 'pulsar-highlight-dwim)))
+    (pulsar--remove-face-remap)))
+
+(defun pulsar--highlight-rectangle ()
+  "Remap `region' face and set `pulsar--remove-face-remap'."
+  (setq pulsar--rectangle-face-cookie
+        (face-remap-add-relative 'region pulsar-highlight-face))
+  (add-hook 'post-command-hook #'pulsar--remove-rectangle-remap nil t)
+  (add-hook 'deactivate-mark-hook #'pulsar--remove-face-remap nil t))
+
+;;;###autoload
+(defun pulsar-highlight-dwim ()
+  "Temporarily highlight the current line or active region.
+The region may also be a rectangle.
+
+For lines, do the same as `pulsar-highlight-line'."
+  (interactive)
+  (cond
+   ((bound-and-true-p rectangle-mark-mode)
+    (pulsar--highlight-rectangle))
+   ((use-region-p)
+    (pulsar--pulse :no-pulse pulsar-highlight-face (region-beginning) (region-end)))
+   (t
+    (pulsar--pulse :no-pulse pulsar-highlight-face))))
+
+;;;; Mode setup
+
+(define-minor-mode pulsar-mode
+  "Set up pulsar for each function in `pulsar-pulse-functions'.
+This is a buffer-local mode.  Also check `pulsar-global-mode'."
+  :global nil
+  (if pulsar-mode
+      (add-hook 'post-command-hook #'pulsar--post-command-pulse nil 'local)
+    (remove-hook 'post-command-hook #'pulsar--post-command-pulse 'local)))
+
+(defun pulsar--on ()
+  "Enable `pulsar-mode'."
+  (unless (minibufferp)
+    (let (inhibit-quit)
+      (pulsar-mode 1))))
+
+;;;###autoload
+(define-globalized-minor-mode pulsar-global-mode pulsar-mode pulsar--on)
 
 (defun pulsar--post-command-pulse ()
   "Run `pulsar-pulse-line' for `pulsar-pulse-functions'."
-  (when (memq this-command pulsar-pulse-functions)
+  (when (and (or pulsar-mode pulsar-global-mode)
+             (memq this-command pulsar-pulse-functions))
     (pulsar-pulse-line)))
 
-;;;###autoload
-(defun pulsar-setup (&optional reverse)
-  "Set up pulsar for each function in `pulsar-pulse-functions'.
-With optional non-nil REVERSE argument, remove the effect."
-  (if reverse
-      (remove-hook 'post-command-hook #'pulsar--post-command-pulse)
-    (add-hook 'post-command-hook #'pulsar--post-command-pulse)))
+(make-obsolete 'pulsar-setup nil "0.3.0")
 
 ;;;; Recentering commands
 
