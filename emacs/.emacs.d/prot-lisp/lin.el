@@ -99,9 +99,9 @@ point is while editing, (ii) current selection."
   :set (lambda (symbol value)
          (if (eq value (default-value symbol))
              (set-default symbol value)
-           (lin-setup 'reverse)
+           (lin--setup 'reverse)
            (set-default symbol value)
-           (lin-setup)))
+           (lin--setup)))
   :group 'lin)
 
 (defcustom lin-face 'lin-blue
@@ -312,23 +312,40 @@ updates the face.  Users who prefer to use `setq' must run
   :init-value nil
   (if lin-global-mode
       (progn
-        (lin-setup)
+        (lin--setup)
         (lin-enable-mode-in-buffers))
-    (lin-setup :reverse)
+    (lin--setup :reverse)
     (lin-disable-mode-in-buffers)))
 
-(defun lin-setup (&optional reverse)
+(defun lin--setup-add-hooks ()
+  "Add `lin-mode-hooks'."
+  (dolist (hook lin-mode-hooks)
+    (add-hook hook #'lin-mode)))
+
+(defun lin--setup-remove-hooks (&optional hooks)
+  "Remove `lin-mode-hooks' or, optionally, HOOKS."
+  (dolist (hook (or hooks lin-mode-hooks))
+    (remove-hook hook #'lin-mode)))
+
+(defvar lin--setup-hooks nil
+  "Last value used by `lin--setup'.")
+
+(defun lin--setup (&optional reverse)
   "Set up Lin for select mode hooks.
 
 This adds `lin-mode' and `hl-line-mode' to every hook in
 `lin-mode-hooks'.
 
 With optional non-nil REVERSE argument, remove those hooks."
-  (if reverse
-      (dolist (hook lin-mode-hooks)
-        (remove-hook hook #'lin-mode))
-    (dolist (hook lin-mode-hooks)
-      (add-hook hook #'lin-mode))))
+  (cond
+   (reverse
+    (lin--setup-remove-hooks))
+   (t
+    (lin--setup-remove-hooks lin--setup-hooks)
+    (lin--setup-add-hooks)))
+  (setq lin--setup-hooks lin-mode-hooks))
+
+(define-obsolete-function-alias 'lin-setup 'lin--setup "0.3.0")
 
 (defun lin--mode-enable (buffer)
   "Enable `lin-mode' in BUFFER if appropriate."
@@ -344,7 +361,7 @@ With optional non-nil REVERSE argument, remove those hooks."
       (lin-mode -1))))
 
 (defun lin-enable-mode-in-buffers ()
-  "Restart `lin-mode' if already enabled in any buffer.
+  "Enable (restart) `lin-mode' if already enabled in any buffer.
 Do so by checking the `buffer-list'."
   (mapc #'lin--mode-enable (buffer-list)))
 
