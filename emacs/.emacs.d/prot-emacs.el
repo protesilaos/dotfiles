@@ -108,39 +108,40 @@
 ;;; pulsar.el (highlight cursor position)
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-builtin-package 'pulsar
-  (customize-set-variable
-   'pulsar-pulse-functions ; Read the doc string for why not `setq'
-   '(recenter-top-bottom
-     move-to-window-line-top-bottom
-     reposition-window
-     bookmark-jump
-     other-window
-     delete-window
-     delete-other-windows
-     forward-page
-     backward-page
-     scroll-up-command
-     scroll-down-command
-     windmove-right
-     windmove-left
-     windmove-up
-     windmove-down
-     windmove-swap-states-right
-     windmove-swap-states-left
-     windmove-swap-states-up
-     windmove-swap-states-down
-     tab-new
-     tab-close
-     tab-next
-     org-next-visible-heading
-     org-previous-visible-heading
-     org-forward-heading-same-level
-     org-backward-heading-same-level
-     outline-backward-same-level
-     outline-forward-same-level
-     outline-next-visible-heading
-     outline-previous-visible-heading
-     outline-up-heading))
+  (setq pulsar-pulse-functions
+        '(recenter-top-bottom
+          move-to-window-line-top-bottom
+          reposition-window
+          bookmark-jump
+          other-window
+          delete-window
+          delete-other-windows
+          forward-page
+          backward-page
+          scroll-up-command
+          scroll-down-command
+          windmove-right
+          windmove-left
+          windmove-up
+          windmove-down
+          windmove-swap-states-right
+          windmove-swap-states-left
+          windmove-swap-states-up
+          windmove-swap-states-down
+          tab-new
+          tab-close
+          tab-next
+          logos-forward-page-dwim
+          logos-backward-page-dwim
+          org-next-visible-heading
+          org-previous-visible-heading
+          org-forward-heading-same-level
+          org-backward-heading-same-level
+          outline-backward-same-level
+          outline-forward-same-level
+          outline-next-visible-heading
+          outline-previous-visible-heading
+          outline-up-heading))
 
   (setq pulsar-pulse t)
   (setq pulsar-delay 0.055)
@@ -148,13 +149,15 @@
   (setq pulsar-face 'pulsar-magenta)
   (setq pulsar-highlight-face 'pulsar-green)
 
+  (pulsar-global-mode 1)
+
   ;; pulsar does not define any key bindings.  This is just my personal
   ;; preference.  Remember to read the manual on the matter.  Evaluate:
   ;;
   ;; (info "(elisp) Key Binding Conventions")
   (let ((map global-map))
     (define-key map (kbd "C-x l") #'pulsar-pulse-line) ; override `count-lines-page'
-    (define-key map (kbd "C-x L") #'pulsar-highlight-line)))
+    (define-key map (kbd "C-x L") #'pulsar-highlight-dwim))) ; or use `pulsar-highlight-line'
 
 ;;; Make Custom UI code disposable
 (prot-emacs-builtin-package 'cus-edit
@@ -172,17 +175,17 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+  (setq modus-themes-italic-constructs nil
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers nil
         modus-themes-intense-mouseovers nil
         modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -206,7 +209,7 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax nil
+        modus-themes-syntax '(yellow-comments alt-syntax green-strings faint)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -216,13 +219,13 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match nil
+        modus-themes-paren-match '(intense)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links nil
+        modus-themes-links '(neutral-underline background)
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
@@ -263,9 +266,9 @@
         modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
-        modus-themes-diffs nil
+        modus-themes-diffs 'desaturated
 
-        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
+        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch regular 1.4))
@@ -320,35 +323,27 @@
 
 ;;; Enhancements to hl-line-mode (lin.el)
 (prot-emacs-builtin-package 'lin
-  ;; Either run `lin-setup' or change `lin-mode-hooks'.  I prefer the
-  ;; latter.
-
-  ;; (lin-setup)
-
-  ;; Do not use `setq' for `lin-mode-hooks' and `lin-face'.  Both have a
-  ;; custom setter function associated with them, which automatically
-  ;; sets things up when they are configured via Custom (with
-  ;; `custom-set-variables', `customize-set-variable', the Custom UI,
-  ;; the `:custom' keyword of `use-package', or related).  Read their
-  ;; doc strings if you still want to use `setq'.
-  (custom-set-variables
-   '(lin-mode-hooks
-     '(bongo-mode-hook
-       dired-mode-hook
-       elfeed-search-mode-hook
-       git-rebase-mode-hook
-       ibuffer-mode-hook
-       ilist-mode-hook
-       ledger-report-mode-hook
-       log-view-mode-hook
-       magit-log-mode-hook
-       mu4e-headers-mode
-       notmuch-search-mode-hook
-       notmuch-tree-mode-hook
-       occur-mode-hook
-       org-agenda-mode-hook
-       tabulated-list-mode-hook))
-   '(lin-face 'lin-blue))) ; check `lin-face' doc string for alternative styles
+  ;; You can use this to live update the face:
+  ;;
+  ;; (customize-set-variable 'lin-face 'lin-green)
+  (setq lin-face 'lin-blue)
+  (setq lin-mode-hooks
+        '(bongo-mode-hook
+          dired-mode-hook
+          elfeed-search-mode-hook
+          git-rebase-mode-hook
+          ibuffer-mode-hook
+          ilist-mode-hook
+          ledger-report-mode-hook
+          log-view-mode-hook
+          magit-log-mode-hook
+          mu4e-headers-mode
+          notmuch-search-mode-hook
+          notmuch-tree-mode-hook
+          occur-mode-hook
+          org-agenda-mode-hook
+          tabulated-list-mode-hook))
+  (lin-global-mode 1)) ; applies to all `lin-mode-hooks'
 
 ;;; Font configurations (prot-fonts.el)
 (prot-emacs-builtin-package 'prot-fonts
@@ -404,11 +399,20 @@
           (jumbo . ( :fixed-pitch-family "Iosevka Comfy"
                      :fixed-pitch-regular-weight semilight
                      :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 150
+                     :fixed-pitch-height 160
                      :fixed-pitch-line-spacing nil
                      :variable-pitch-family "FiraGO"
                      :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))))
+                     :variable-pitch-regular-weight normal))
+
+          (presentation . ( :fixed-pitch-family "Iosevka Comfy"
+                            :fixed-pitch-regular-weight semilight
+                            :fixed-pitch-heavy-weight bold
+                            :fixed-pitch-height 170
+                            :fixed-pitch-line-spacing nil
+                            :variable-pitch-family "FiraGO"
+                            :variable-pitch-height 1.0
+                            :variable-pitch-regular-weight normal))))
 
   ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
   ;; are not relevant, but I keep them around as the idea is still good.
@@ -2449,6 +2453,7 @@ sure this is a good approach."
 ;;; Hooks and key bindings
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
+  (remove-hook 'notmuch-search-hook 'notmuch-hl-line-mode) ; CHECK
   (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
 
   (let ((map global-map))
