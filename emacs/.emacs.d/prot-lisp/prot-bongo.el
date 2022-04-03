@@ -509,7 +509,7 @@ from the history of inserted entries."
                  (crm
                   (completing-read-multiple
                    "Select from recent picks: "
-                   (flatten-tree prot-bongo--dired-last-inserted)
+                   (delete-dups (flatten-tree prot-bongo--dired-last-inserted))
                    nil t))
                  ((if (and data last-inserted)
                       (car data)
