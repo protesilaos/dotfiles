@@ -2416,13 +2416,15 @@ abbrevs.  I have no real use for them right now.
 
   (let ((table global-abbrev-table))
     (define-abbrev table "meweb" "https://protesilaos.com")
-    (define-abbrev table "megit" "https://gitlab.com/protesilaos"))
+    (define-abbrev table "megit" "https://git.sr.ht/~protesilaos"))
 
   (let ((table text-mode-abbrev-table))
     (define-abbrev table "latex" "LaTeX")
     (define-abbrev table "github" "GitHub")
     (define-abbrev table "gitlab" "GitLab")
     (define-abbrev table "sourcehut" "SourceHut")
+    (define-abbrev table "libreplanet" "LibrePlanet")
+    (define-abbrev table "emacsconf" "EmacsConf")
     (define-abbrev table "auctex" "AUCTeX")
     (define-abbrev table "Emacs27" "Emacs 27")
     (define-abbrev table "Emacs28" "Emacs 28")
