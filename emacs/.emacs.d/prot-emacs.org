@@ -1990,7 +1990,6 @@ while using relevant Consult commands, such as =consult-grep=.
 (prot-emacs-elpa-package 'embark
   (setq prefix-help-command #'embark-prefix-help-command)
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
-  (setq embark-collect-initial-view-alist '((t . list)))
   (setq embark-quit-after-action t)     ; XXX: Read the doc string!
   (setq embark-cycle-key (kbd "C-."))   ; see the `embark-act' key
   (setq embark-collect-live-update-delay 0.5)
@@ -2016,13 +2015,10 @@ while using relevant Consult commands, such as =consult-grep=.
   (setq embark-verbose-indicator-display-action nil)
 
   (define-key global-map (kbd "C-,") #'embark-act)
+  (define-key embark-collect-mode-map (kbd "C-,") #'embark-act)
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "C-,") #'embark-act)
-    (define-key map (kbd "C->") #'embark-become)
-    (define-key map (kbd "M-q") #'embark-collect-toggle-view)) ; parallel of `fill-paragraph'
-  (let ((map embark-collect-mode-map))
-    (define-key map (kbd "C-,") #'embark-act)
-    (define-key map (kbd "M-q") #'embark-collect-toggle-view))
+    (define-key map (kbd "C->") #'embark-become))
   (let ((map embark-region-map))
     (define-key map (kbd "a") #'align-regexp)
     (define-key map (kbd "i") #'epa-import-keys-region)
