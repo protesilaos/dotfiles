@@ -3,9 +3,9 @@
 ;; Copyright (C) 2019-2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://gitlab.com/protesilaos/modus-themes
-;; Version: 2.3.0
-;; Last-Modified: <2022-04-01 12:33:34 +0300>
+;; URL: https://git.sr.ht/~protesilaos/modus-themes
+;; Version: 2.3.2
+;; Last-Modified: <2022-04-07 12:52:40 +0300>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -352,6 +352,7 @@
 ;;     visible-mark
 ;;     visual-regexp
 ;;     vterm
+;;     vundo
 ;;     wcheck-mode
 ;;     web-mode
 ;;     wgrep
@@ -6129,22 +6130,22 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(ledger-font-xact-highlight-face ((,class :background ,bg-hl-alt)))
 ;;;;; line numbers (display-line-numbers-mode and global variant)
     `(line-number
-      ((,class :inherit default
+      ((,class :inherit ,(if modus-themes-mixed-fonts 'fixed-pitch 'default)
                ,@(modus-themes--line-numbers
                   fg-alt bg-dim
                   fg-unfocused))))
     `(line-number-current-line
-      ((,class :inherit (bold default)
+      ((,class :inherit (bold line-number)
                ,@(modus-themes--line-numbers
                   fg-main bg-active
                   blue-alt-other))))
     `(line-number-major-tick
-      ((,class :inherit (bold default)
+      ((,class :inherit (bold line-number)
                ,@(modus-themes--line-numbers
                   yellow-nuanced-fg yellow-nuanced-bg
                   red-alt))))
     `(line-number-minor-tick
-      ((,class :inherit (bold default)
+      ((,class :inherit (bold line-number)
                ,@(modus-themes--line-numbers
                   fg-alt bg-inactive
                   fg-inactive))))
@@ -7491,6 +7492,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(vterm-color-underline ((,class :foreground ,fg-special-warm :underline t)))
     `(vterm-color-white ((,class :background "gray65" :foreground "gray65")))
     `(vterm-color-yellow ((,class :background ,yellow :foreground ,yellow)))
+;;;;; vundo
+    `(vundo-highlight ((,class :inherit (bold vundo-node) :foreground ,red-intense)))
 ;;;;; wcheck-mode
     `(wcheck-default-face ((,class :foreground ,red :underline t)))
 ;;;;; web-mode
