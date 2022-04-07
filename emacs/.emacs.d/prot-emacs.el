@@ -185,7 +185,7 @@
         modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -209,7 +209,7 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(yellow-comments alt-syntax green-strings faint)
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -225,7 +225,7 @@
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(neutral-underline background)
+        modus-themes-links '(neutral-underline)
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
@@ -238,7 +238,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(background subtle)
+        modus-themes-prompts '(background subtle intense)
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -268,7 +268,7 @@
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs 'desaturated
 
-        modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
+        modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
         '((header-block . (variable-pitch regular 1.4))
@@ -727,7 +727,6 @@
 (prot-emacs-elpa-package 'embark
   (setq prefix-help-command #'embark-prefix-help-command)
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
-  (setq embark-collect-initial-view-alist '((t . list)))
   (setq embark-quit-after-action t)     ; XXX: Read the doc string!
   (setq embark-cycle-key (kbd "C-."))   ; see the `embark-act' key
   (setq embark-collect-live-update-delay 0.5)
@@ -753,13 +752,10 @@
   (setq embark-verbose-indicator-display-action nil)
 
   (define-key global-map (kbd "C-,") #'embark-act)
+  (define-key embark-collect-mode-map (kbd "C-,") #'embark-act)
   (let ((map minibuffer-local-completion-map))
     (define-key map (kbd "C-,") #'embark-act)
-    (define-key map (kbd "C->") #'embark-become)
-    (define-key map (kbd "M-q") #'embark-collect-toggle-view)) ; parallel of `fill-paragraph'
-  (let ((map embark-collect-mode-map))
-    (define-key map (kbd "C-,") #'embark-act)
-    (define-key map (kbd "M-q") #'embark-collect-toggle-view))
+    (define-key map (kbd "C->") #'embark-become))
   (let ((map embark-region-map))
     (define-key map (kbd "a") #'align-regexp)
     (define-key map (kbd "i") #'epa-import-keys-region)
@@ -858,13 +854,15 @@
 
   (let ((table global-abbrev-table))
     (define-abbrev table "meweb" "https://protesilaos.com")
-    (define-abbrev table "megit" "https://gitlab.com/protesilaos"))
+    (define-abbrev table "megit" "https://git.sr.ht/~protesilaos"))
 
   (let ((table text-mode-abbrev-table))
     (define-abbrev table "latex" "LaTeX")
     (define-abbrev table "github" "GitHub")
     (define-abbrev table "gitlab" "GitLab")
     (define-abbrev table "sourcehut" "SourceHut")
+    (define-abbrev table "libreplanet" "LibrePlanet")
+    (define-abbrev table "emacsconf" "EmacsConf")
     (define-abbrev table "auctex" "AUCTeX")
     (define-abbrev table "Emacs27" "Emacs 27")
     (define-abbrev table "Emacs28" "Emacs 28")
