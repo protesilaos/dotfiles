@@ -10486,7 +10486,7 @@ each in their own unique way---the order is not significant:
   [[https://manueluberti.eu/][manueluberti.eu]] hosts a blog with Manuel's musings on Emacs.  For
   example, you will find articles that I have already referenced in this
   document, such as [[https://manueluberti.eu/emacs/2020/11/14/extending-project/][Extending project.el]].  If you are interested in
-  cinema like Manuel, do not miss the reviews on [[https://www.filmsinwords.eu/][www.filmsinwords.eu]].
+  cinema like Manuel, do not miss the reviews on [[https://filmsinwords.eu/][filmsinwords.eu]].
 
 + Nicolas De Jaeghere :: Nicolas is another contributor to my Modus
   themes and has helped me understand several Elisp concepts, such as by
