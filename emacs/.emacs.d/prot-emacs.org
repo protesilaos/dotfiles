@@ -9387,16 +9387,15 @@ of =flymake-mode= (see [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][main Flymake c
 :CUSTOM_ID: h:2a954862-c532-43e9-afdf-4bacd152295f
 :END:
 
-Manuel Uberti has published [[https://github.com/manuel-uberti/flymake-proselint][flymake-proselint on Github]] and MELPA.  It
-offers a Flymake interface to the external =proselint= executable (see
-[[#h:6dff70a8-7eba-4b5d-982c-f13d13ed3b3b][Proselint configuration]]).
+Manuel Uberti's =flymake-proselint= offers a Flymake interface to the
+external =proselint= executable (see [[#h:6dff70a8-7eba-4b5d-982c-f13d13ed3b3b][Proselint configuration]]).
 
 This comes in handy when I need to review some long-form text for common
-inconsistencies and stylistic irregularities.  Errors will be marked on
-the fringe, while you can quickly get an overview with pointers to the
-precise line number by invoking =flymake-show-diagnostics-buffer= (check
-my [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][configurations for Flymake]] and then also review what I have to
-spelling in [[#h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c][Flyspell and prot-spell.el (spell check)]]).
+inconsistencies and stylistic irregularities.  Errors will be marked in
+the fringe area, while I can quickly get an overview with pointers to
+the precise line number by invoking =flymake-show-diagnostics-buffer=
+(check my [[#h:b8bfcc05-c0d3-4093-b3fe-f06187d22c6a][configurations for Flymake]] and then also review what I have
+about spelling in [[#h:3f1b2856-c6b7-418a-9d7d-464bd1ebe69c][Flyspell and prot-spell.el (spell check)]]).
 
 To run the program, you just need to hook it to whatever major-mode you
 use for prose.  Then you need to enable =flymake-mode= to start using it.
@@ -9406,8 +9405,6 @@ linter while writing: it is too distracting.
 #+begin_src emacs-lisp
 ;;; Flymake + Proselint
 (prot-emacs-elpa-package 'flymake-proselint
-  (add-hook 'markdown-mode-hook #'flymake-proselint-setup)
-  (add-hook 'org-mode-hook #'flymake-proselint-setup)
   (add-hook 'text-mode-hook #'flymake-proselint-setup))
 #+end_src
 
