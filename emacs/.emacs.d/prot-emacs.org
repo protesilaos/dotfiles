@@ -2098,8 +2098,8 @@ an otherwise comprehensive system (full code further below):
 To aid me in my work, I copied code from Manuel Uberti's website (also
 referenced in the source code below this configuration block):
 
-+ [[https://www.manueluberti.eu/emacs/2020/11/14/extending-project/][Extending project.el]] (2020-11-14)
-+ [[https://www.manueluberti.eu/emacs/2020/11/21/flymake-projects/][Restricting Flymake to my projects]] (2020-11-21)
++ [[https://manueluberti.eu/emacs/2020/11/14/extending-project/][Extending project.el]] (2020-11-14)
++ [[https://manueluberti.eu/emacs/2020/11/21/flymake-projects/][Restricting Flymake to my projects]] (2020-11-21)
 
 #+begin_src emacs-lisp
 ;;; Projects (project.el and prot-project.el)
@@ -10483,9 +10483,9 @@ each in their own unique way---the order is not significant:
   importance to the development of my Modus themes.  Manuel offers a lot
   to the Emacs milieu through code contributions but also by reporting
   issues and communicating with package maintainers.  The domain name
-  [[https://www.manueluberti.eu/][www.manueluberti.eu]] hosts a blog with Manuel's musings on Emacs.  For
+  [[https://manueluberti.eu/][manueluberti.eu]] hosts a blog with Manuel's musings on Emacs.  For
   example, you will find articles that I have already referenced in this
-  document, such as [[https://www.manueluberti.eu/emacs/2020/11/14/extending-project/][Extending project.el]].  If you are interested in
+  document, such as [[https://manueluberti.eu/emacs/2020/11/14/extending-project/][Extending project.el]].  If you are interested in
   cinema like Manuel, do not miss the reviews on [[https://www.filmsinwords.eu/][www.filmsinwords.eu]].
 
 + Nicolas De Jaeghere :: Nicolas is another contributor to my Modus
