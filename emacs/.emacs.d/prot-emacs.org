@@ -7025,7 +7025,7 @@ every variable is clear on what it is supposed to do.
 (prot-emacs-builtin-package 'rcirc
   (setq rcirc-server-alist
         `(("irc.libera.chat"
-           :channels ("#emacs" "#org-mode" "#rcirc")
+           :channels ("#emacs" "#org-mode" "#rcirc" "#sr.ht")
            :port 6697 :encryption tls
            :password ,(prot-mail-auth-get-field "libera" :secret))))
 
