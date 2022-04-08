@@ -178,11 +178,11 @@
   (setq modus-themes-italic-constructs nil
         modus-themes-bold-constructs nil
         modus-themes-mixed-fonts nil
-        modus-themes-subtle-line-numbers nil
+        modus-themes-subtle-line-numbers t
         modus-themes-intense-mouseovers nil
-        modus-themes-deuteranopia nil
+        modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui t
+        modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -199,7 +199,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line nil
+        modus-themes-mode-line '(borderless (padding 3))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -219,13 +219,13 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(intense)
+        modus-themes-paren-match '(bold)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(neutral-underline)
+        modus-themes-links '(no-underline background faint)
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
@@ -233,12 +233,12 @@
         ;; `all-buttons', the symbol of any font weight as listed in
         ;; `modus-themes-weights', and a floating point number
         ;; (e.g. 0.9) for the height of the button's text.
-        modus-themes-box-buttons '(all-buttons variable-pitch (height 0.9) flat faint accented)
+        modus-themes-box-buttons '(variable-pitch (height 0.9) flat faint accented)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(background subtle intense)
+        modus-themes-prompts '(italic gray intense bold)
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -254,19 +254,19 @@
         ;; covered in `modus-themes-weights'.  Bold is used in the absence
         ;; of an explicit WEIGHT.
         modus-themes-completions
-        '((matches . (extrabold background))
+        '((matches . (extrabold background intense))
           (selection . (semibold intense accented text-also))
           (popup . (accented intense)))
 
-        modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
+        modus-themes-mail-citations 'faint ; {nil,'intense,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend)
+        modus-themes-region '(no-extend accented)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
-        modus-themes-diffs 'desaturated
+        modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
 
@@ -278,7 +278,7 @@
           (habit . nil))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((t . (variable-pitch extrabold)))
+        '((t . (extrabold)))
 
         ;; Sample for headings:
 
@@ -2735,7 +2735,7 @@ Can link to more than one message, if so all matching messages are shown."
 (prot-emacs-builtin-package 'rcirc
   (setq rcirc-server-alist
         `(("irc.libera.chat"
-           :channels ("#emacs" "#org-mode" "#rcirc")
+           :channels ("#emacs" "#org-mode" "#rcirc" "#sr.ht")
            :port 6697 :encryption tls
            :password ,(prot-mail-auth-get-field "libera" :secret))))
 
@@ -3497,8 +3497,6 @@ Can link to more than one message, if so all matching messages are shown."
 
 ;;; Flymake + Proselint
 (prot-emacs-elpa-package 'flymake-proselint
-  (add-hook 'markdown-mode-hook #'flymake-proselint-setup)
-  (add-hook 'org-mode-hook #'flymake-proselint-setup)
   (add-hook 'text-mode-hook #'flymake-proselint-setup))
 
 ;;; Elisp packaging requirements
