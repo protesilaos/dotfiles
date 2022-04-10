@@ -21,7 +21,7 @@
 #
 # Simple tool to switch between light and dark themes.  Primarily
 # centred around my BSPWM/HerbstluftWM or Sway setup.  For the standard
-# DEs, this has been tested with GNOME version 3.36 and Xfce 4.16.
+# DEs, this has been tested with GNOME 42 and Xfce 4.16.
 #
 # Part of my dotfiles: <https://gitlab.com/protesilaos/dotfiles>.
 
@@ -239,27 +239,46 @@ _ggtk ()
     gsettings "$1" org.gnome.desktop.interface gtk-theme "${@:2}"
 }
 
-# Get the theme
-_gget ()
+_gcolor_scheme ()
+{
+    gsettings "$1" org.gnome.desktop.interface color-scheme "${@:2}"
+}
+
+# Get the GTK theme
+_ggtk_get ()
 {
     _ggtk 'get'
 }
 
-# Set the theme
-_gset ()
+# Set the GTK theme
+_ggtk_set ()
 {
     _ggtk 'set' "$1"
 }
 
+# Get the Color Scheme
+_gcolor_scheme_get ()
+{
+    _gcolor_scheme 'get'
+}
+
+# Set the Color Scheme
+_gcolor_scheme_set ()
+{
+    _gcolor_scheme 'set' "$1"
+}
+
 _gnome ()
 {
-    if [ "$(_gget)" = "'Adwaita'" ]
+    if [ "$(_ggtk_get)" = "'Adwaita'" ]
     then
         style=dark
-        _gset 'Adwaita-dark'
+        _ggtk_set 'Adwaita-dark'
+	_gcolor_scheme_set 'prefer-dark'
     else
         style=light
-        _gset 'Adwaita'
+        _ggtk_set 'Adwaita'
+	_gcolor_scheme_set 'prefer-light'
     fi
 
     _emacs "$style"
@@ -323,12 +342,14 @@ _sway ()
     then
         style=dark
         gtk_theme='Adwaita-dark'
+	color_scheme='prefer-dark'
 
         swaymsg client.focused "#323232" "#323232" "#ffffff" "#ff8059" "#00bcff"
         swaymsg client.unfocused "#1e1e1e" "#1e1e1e" "#a8a8a8" "#323232" "#323232"
     else
         style=light
         gtk_theme='Adwaita'
+	color_scheme='prefer-light'
 
         swaymsg client.focused "#d7d7d7" "#d7d7d7" "#000000" "#a60000" "#0000c0"
         swaymsg client.unfocused "#efefef" "#efefef" "#505050" "#d7d7d7" "#d7d7d7"
@@ -340,7 +361,8 @@ _sway ()
     _alacritty &
     _swaybg &
     # Sway can actually re-use GNOME's settings
-    _gset "$gtk_theme" &
+    _ggtk_set "$gtk_theme" &
+    _gcolor_scheme "$color_scheme" &
 }
 
 #### Sessions
