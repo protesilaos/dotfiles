@@ -4,8 +4,8 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/modus-themes
+;; Mailing list: https://lists.sr.ht/~protesilaos/modus-themes
 ;; Version: 2.3.2
-;; Last-Modified: <2022-04-08 12:39:10 +0300>
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -4594,7 +4594,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(elisp-shorthand-font-lock-face ((,class :inherit font-lock-variable-name-face)))
     `(error ((,class :inherit bold :foreground ,red)))
     `(escape-glyph ((,class :foreground ,fg-escape-char-construct)))
-    `(file-name-shadow ((,class :inherit (shadow italic))))
+    `(file-name-shadow ((,class :inherit shadow)))
     `(header-line ((,class :inherit modus-themes-ui-variable-pitch
                            :background ,bg-header :foreground ,fg-header)))
     `(header-line-highlight ((,class :inherit highlight)))
@@ -7357,7 +7357,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; transient
     `(transient-active-infix ((,class :inherit modus-themes-special-mild)))
     `(transient-amaranth ((,class :inherit bold :foreground ,yellow-alt)))
-    `(transient-argument ((,class :inherit bold :background ,cyan-nuanced-bg :foreground ,cyan)))
+    ;; Placate the compiler for what is a spurious warning.  We also
+    ;; have to do this with `eldoc-highlight-function-argument'.
+    (list 'transient-argument `((,class :inherit bold :background ,cyan-nuanced-bg :foreground ,cyan)))
     `(transient-blue ((,class :inherit bold :foreground ,blue)))
     `(transient-disabled-suffix ((,class :inherit modus-themes-intense-red)))
     `(transient-enabled-suffix ((,class :inherit modus-themes-grue-background-subtle)))
@@ -7775,9 +7777,4 @@ by virtue of calling either of `modus-themes-load-operandi' and
       (add-to-list 'custom-theme-load-path dir))))
 
 (provide 'modus-themes)
-
-;; Local Variables:
-;; time-stamp-pattern: "Last-Modified: <%Y-%02m-%02d %02H:%02M:%02S %5z>"
-;; End:
-
 ;;; modus-themes.el ends here
