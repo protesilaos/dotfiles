@@ -3,7 +3,7 @@
 ;; Copyright (C) 2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://gitlab.com/protesilaos/mct
+;; URL: https://git.sr.ht/~protesilaos/mct
 ;; Version: 0.5.0
 ;; Package-Requires: ((emacs "27.1") (mct "0.5"))
 

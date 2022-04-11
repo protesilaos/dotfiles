@@ -3,7 +3,7 @@
 ;; Copyright (C) 2021-2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://gitlab.com/protesilaos/mct
+;; URL: https://git.sr.ht/~protesilaos/mct
 ;; Version: 0.5.0
 ;; Package-Requires: ((emacs "27.1"))
 
@@ -1106,6 +1106,7 @@ region.")
   (when (mct--minibuffer-p)
     (setq-local completion-show-help nil
                 completion-wrap-movement nil ; Emacs 29
+                completions-highlight-face nil
                 truncate-lines t)
     (mct--setup-clean-completions)
     (mct--setup-appearance)
