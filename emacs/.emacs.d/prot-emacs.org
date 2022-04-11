@@ -8795,7 +8795,7 @@ likely to change over the near term.
 :PROPERTIES:
 :CUSTOM_ID: h:271c9122-280b-424e-98f0-af9e4f09bbdb
 :END:
-*** Automatic time stamps for files (time-stamp.el)
+*** COMMENT Automatic time stamps for files (time-stamp.el)
 :PROPERTIES:
 :CUSTOM_ID: h:24c2ac42-a537-4658-8a08-9aebb0de1a73
 :END:
