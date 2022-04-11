@@ -6491,11 +6491,15 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
           ( :name "emacs-elpher"
             :query "(from:~michel-slm/elpher@lists.sr.ht or to:~michel-slm/elpher@lists.sr.ht) not tag:archived"
             :sort-order newest-first :key ,(kbd "e e"))
-          ;; CLI tools
+          ;; Others
           ( :name "notmuch"
             :query "(from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org) not tag:archived"
             :sort-order newest-first
-            :key ,(kbd "cn"))))
+            :key ,(kbd "on"))
+          ( :name "sourcehut"
+            :query "(from:~sircmpwn/sr.ht-discuss@lists.sr.ht or to:~sircmpwn/sr.ht-discuss@lists.sr.ht) not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "os"))))
 
 ;;; Tags
   (setq notmuch-archive-tags '("-inbox" "+archived"))
