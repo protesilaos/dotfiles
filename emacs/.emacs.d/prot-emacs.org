@@ -7928,6 +7928,63 @@ binding!
   (define-key global-map (kbd "C-z") #'goto-last-change))
 #+end_src
 
+** Cycle between related buffers (transient-cycles.el)
+:PROPERTIES:
+:CUSTOM_ID: h:44652046-e499-4bf1-b203-0763c7d4e993
+:END:
+
+This is a package by Sean Whitton which allows you to quickly switch
+between related buffers using a pair of keys: those are the left and
+right arrow keys by default.  The way this works depends on the context,
+which is delimited by each of the three minor modes on offer:
+
++ =transient-cycles-buffer-siblings-modes= :: It allows you to select a
+  buffer, such as with =C-x b= (=switch-to-buffer=), and immediately use
+  the left and right arrow keys to flip between related buffers.  What
+  constitutes a "related buffer" is defined in the user option
+  =transient-cycles-buffer-siblings-major-modes=.  You will notice that
+  I have a few associations for shells, git-related operations, EWW and
+  Embark collect buffers.
+
++ =transient-cycles-window-buffers-mode= :: It applies to each window
+  and treats as "related buffers" all that were displayed there.  In
+  practice, this is faithful to the behaviour exhibited by the built-in
+  =next-buffer= and =previous-buffer= commands.  You invoke either of
+  those and then use the left/right arrow to cycle through them.
+
++ =transient-cycles-tab-bar-mode= :: This provides the now-familiar
+  cycling for the tabs of =tab-bar-mode=.  You switch to one using the
+  usual method (e.g. =tab-next= bound to =C-x t o= by default) and then
+  follow up with the left or right arrow keys.
+
+Overall, =transient-cycles= implements a useful concept that "just
+works" in an intuitive way.
+
+#+begin_src emacs-lisp
+;;; Cycle between related buffers (transient-cycles.el)
+(prot-emacs-elpa-package 'transient-cycles
+  (setq transient-cycles-show-cycling-keys t)
+  ;; (setq transient-cycles-default-cycle-backwards-key [left])
+  ;; (setq transient-cycles-default-cycle-forwards-key [right])
+  ;; (setq transient-cycles-buffer-siblings-cycle-backwards-key [left])
+  ;; (setq transient-cycles-buffer-siblings-cycle-forwards-key [right])
+  ;; (setq transient-cycles-window-buffers-cycle-backwards-key [left])
+  ;; (setq transient-cycles-window-buffers-cycle-forwards-key [right])
+  ;; (setq transient-cycles-tab-bar-cycle-backwards-key [left])
+  ;; (setq transient-cycles-tab-bar-cycle-forwards-key [right])
+  (setq transient-cycles-buffer-siblings-major-modes
+        '(("\\*.*eshell.*" . eshell-mode)
+          ("\\*.*shell.*" . shell-mode)
+          (".*vc-dir.*" . vc-dir-mode)
+          ("^magit: .*" . magit-status-mode)
+          ("\\*.*eww.*\\*" . eww-mode)
+          ("\\*Embark Collect: .*" . embark-collect-mode)))
+
+  (transient-cycles-buffer-siblings-mode 1)
+  (transient-cycles-window-buffers-mode 1)
+  (transient-cycles-tab-bar-mode 1))
+#+end_src
+
 ** Jump to visible position (avy)
 :PROPERTIES:
 :CUSTOM_ID: h:a1dabcea-9756-40cf-8c88-91c5e2dd0e70
