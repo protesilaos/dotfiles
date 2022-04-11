@@ -2385,11 +2385,15 @@ sure this is a good approach."
           ( :name "emacs-elpher"
             :query "(from:~michel-slm/elpher@lists.sr.ht or to:~michel-slm/elpher@lists.sr.ht) not tag:archived"
             :sort-order newest-first :key ,(kbd "e e"))
-          ;; CLI tools
+          ;; Others
           ( :name "notmuch"
             :query "(from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org) not tag:archived"
             :sort-order newest-first
-            :key ,(kbd "cn"))))
+            :key ,(kbd "on"))
+          ( :name "sourcehut"
+            :query "(from:~sircmpwn/sr.ht-discuss@lists.sr.ht or to:~sircmpwn/sr.ht-discuss@lists.sr.ht) not tag:archived"
+            :sort-order newest-first
+            :key ,(kbd "os"))))
 
 ;;; Tags
   (setq notmuch-archive-tags '("-inbox" "+archived"))
@@ -2457,7 +2461,10 @@ sure this is a good approach."
   (let ((map global-map))
     (define-key map (kbd "C-c m") #'notmuch)
     (define-key map (kbd "C-x m") #'notmuch-mua-new-mail)) ; override `compose-mail'
-  (define-key notmuch-search-mode-map (kbd "/") #'notmuch-search-filter) ; alias for l
+  (let ((map notmuch-search-mode-map)) ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
+    (define-key map (kbd "/") #'notmuch-search-filter) ; alias for l
+    (define-key map (kbd "r") #'notmuch-search-reply-to-thread) ; easier to reply to all by default
+    (define-key map (kbd "R") #'notmuch-search-reply-to-thread-sender))
   (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
 
 (prot-emacs-builtin-package 'prot-notmuch
@@ -2999,6 +3006,29 @@ Can link to more than one message, if so all matching messages are shown."
 (prot-emacs-elpa-package 'goto-last-change
   (define-key global-map (kbd "C-z") #'goto-last-change))
 
+;;; Cycle between related buffers (transient-cycles.el)
+(prot-emacs-elpa-package 'transient-cycles
+  (setq transient-cycles-show-cycling-keys t)
+  ;; (setq transient-cycles-default-cycle-backwards-key [left])
+  ;; (setq transient-cycles-default-cycle-forwards-key [right])
+  ;; (setq transient-cycles-buffer-siblings-cycle-backwards-key [left])
+  ;; (setq transient-cycles-buffer-siblings-cycle-forwards-key [right])
+  ;; (setq transient-cycles-window-buffers-cycle-backwards-key [left])
+  ;; (setq transient-cycles-window-buffers-cycle-forwards-key [right])
+  ;; (setq transient-cycles-tab-bar-cycle-backwards-key [left])
+  ;; (setq transient-cycles-tab-bar-cycle-forwards-key [right])
+  (setq transient-cycles-buffer-siblings-major-modes
+        '(("\\*.*eshell.*" . eshell-mode)
+          ("\\*.*shell.*" . shell-mode)
+          (".*vc-dir.*" . vc-dir-mode)
+          ("^magit: .*" . magit-status-mode)
+          ("\\*.*eww.*\\*" . eww-mode)
+          ("\\*Embark Collect: .*" . embark-collect-mode)))
+
+  (transient-cycles-buffer-siblings-mode 1)
+  (transient-cycles-window-buffers-mode 1)
+  (transient-cycles-tab-bar-mode 1))
+
 (prot-emacs-elpa-package 'avy
   (setq avy-all-windows nil) ; only the current window
   (setq avy-all-windows-alt t) ; all windows with C-u
@@ -3318,10 +3348,6 @@ Can link to more than one message, if so all matching messages are shown."
   (let ((map global-map))
     (define-key map (kbd "C-x r <backspace>") #'rlist-list-registers)
     (define-key map (kbd "C-x r <delete>") #'rlist-list-registers)))
-
-;;; Automatic time stamps for files (time-stamp.el)
-(prot-emacs-builtin-package 'time-stamp
-  (add-hook 'before-save-hook #'time-stamp))
 
 ;;; Auto revert mode
 (prot-emacs-builtin-package 'autorevert
