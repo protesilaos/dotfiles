@@ -6563,7 +6563,10 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
   (let ((map global-map))
     (define-key map (kbd "C-c m") #'notmuch)
     (define-key map (kbd "C-x m") #'notmuch-mua-new-mail)) ; override `compose-mail'
-  (define-key notmuch-search-mode-map (kbd "/") #'notmuch-search-filter) ; alias for l
+  (let ((map notmuch-search-mode-map)) ; I normally don't use the tree view, otherwise check `notmuch-tree-mode-map'
+    (define-key map (kbd "/") #'notmuch-search-filter) ; alias for l
+    (define-key map (kbd "r") #'notmuch-search-reply-to-thread) ; easier to reply to all by default
+    (define-key map (kbd "R") #'notmuch-search-reply-to-thread-sender))
   (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
 
 (prot-emacs-builtin-package 'prot-notmuch
