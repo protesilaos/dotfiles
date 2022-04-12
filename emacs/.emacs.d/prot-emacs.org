@@ -386,10 +386,18 @@ These are the contents of the =prot-simple.el= library (find the file in
 
 This is a small package of mine that highlights the current line after a
 given command is invoked.  The affected commands are defined in the user
-option =pulsar-pulse-functions=.  Then all one needs is to enable the
+option =pulsar-pulse-functions=, while there also is the convenience of
+=pulsar-pulse-on-window-change=.  Then all one needs is to enable the
 minor mode, either globally (=pulsar-global-mode=) or hook the local
 mode (=pulsar-mode=) to the desired major-mode hooks.  I just enable the
 global mode.
+
+Pulsar can also be integrated with other packages through hooks.  There
+are some examples in this document, such as with Consult and Org mode
+(search for =pulsar-recenter-top= or =pulsar-reveal-entry=):
+
++ [[#h:9c9401d6-8c53-4276-be4c-3bff345d3eeb][Enhanced minibuffer commands (consult.el)]].
++ [[#h:4e8347de-415e-4804-b383-d61499e05ca1][Org-mode (personal information manager)]].
 
 Pulsar builds on top of the built-in =pulse.el=.  More information in
 the official manual: https://protesilaos.com/emacs/pulsar.
@@ -401,28 +409,31 @@ Also watch my [[https://protesilaos.com/codelog/2022-03-14-emacs-pulsar-demo/][d
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-builtin-package 'pulsar
   (setq pulsar-pulse-functions
+        ;; NOTE 2022-04-09: The commented out functions are from before
+        ;; the introduction of `pulsar-pulse-on-window-change'.  Try
+        ;; that instead.
         '(recenter-top-bottom
           move-to-window-line-top-bottom
           reposition-window
           bookmark-jump
-          other-window
-          delete-window
-          delete-other-windows
+          ;; other-window
+          ;; delete-window
+          ;; delete-other-windows
           forward-page
           backward-page
           scroll-up-command
           scroll-down-command
-          windmove-right
-          windmove-left
-          windmove-up
-          windmove-down
-          windmove-swap-states-right
-          windmove-swap-states-left
-          windmove-swap-states-up
-          windmove-swap-states-down
-          tab-new
-          tab-close
-          tab-next
+          ;; windmove-right
+          ;; windmove-left
+          ;; windmove-up
+          ;; windmove-down
+          ;; windmove-swap-states-right
+          ;; windmove-swap-states-left
+          ;; windmove-swap-states-up
+          ;; windmove-swap-states-down
+          ;; tab-new
+          ;; tab-close
+          ;; tab-next
           logos-forward-page-dwim
           logos-backward-page-dwim
           org-next-visible-heading
@@ -435,6 +446,7 @@ Also watch my [[https://protesilaos.com/codelog/2022-03-14-emacs-pulsar-demo/][d
           outline-previous-visible-heading
           outline-up-heading))
 
+  (setq pulsar-pulse-on-window-change t)
   (setq pulsar-pulse t)
   (setq pulsar-delay 0.055)
   (setq pulsar-iterations 10)
