@@ -5452,6 +5452,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
     (define-key map (kbd "C-c S-l") #'org-toggle-link-display)
     (define-key map (kbd "C-c C-S-l") #'org-insert-last-stored-link)))
 
+;;;; Custom extensions (prot-org.el)
 (prot-emacs-builtin-package 'prot-org
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
 
