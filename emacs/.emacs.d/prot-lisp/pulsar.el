@@ -3,8 +3,9 @@
 ;; Copyright (C) 2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/emacs/pulsar
-;; Version: 0.2.0
+;; URL: https://git.sr.ht/~protesilaos/pulsar
+;; Mailing list: https://lists.sr.ht/~protesilaos/pulsar
+;; Version: 0.3.0
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: convenience, pulse, highlight
 
@@ -70,28 +71,30 @@ Extension of `pulse.el'."
 ;;;; User options
 
 (defcustom pulsar-pulse-functions
+  ;; NOTE 2022-04-09: The commented out functions are from before the
+  ;; introduction of `pulsar-pulse-on-window-change'.  Try that instead.
   '(recenter-top-bottom
     move-to-window-line-top-bottom
     reposition-window
-    bookmark-jump
-    other-window
-    delete-window
-    delete-other-windows
+    ;; bookmark-jump
+    ;; other-window
+    ;; delete-window
+    ;; delete-other-windows
     forward-page
     backward-page
     scroll-up-command
     scroll-down-command
-    windmove-right
-    windmove-left
-    windmove-up
-    windmove-down
-    windmove-swap-states-right
-    windmove-swap-states-left
-    windmove-swap-states-up
-    windmove-swap-states-down
-    tab-new
-    tab-close
-    tab-next
+    ;; windmove-right
+    ;; windmove-left
+    ;; windmove-up
+    ;; windmove-down
+    ;; windmove-swap-states-right
+    ;; windmove-swap-states-left
+    ;; windmove-swap-states-up
+    ;; windmove-swap-states-down
+    ;; tab-new
+    ;; tab-close
+    ;; tab-next
     org-next-visible-heading
     org-previous-visible-heading
     org-forward-heading-same-level
@@ -103,8 +106,22 @@ Extension of `pulse.el'."
     outline-up-heading)
   "Functions that `pulsar-pulse-line' after invocation.
 This only takes effect when `pulsar-mode' or `pulsar-global-mode'
-is enabled."
+is enabled.
+
+For functions/commands that change the current window, it is
+better to set the user option `pulsar-pulse-on-window-change' to
+non-nil instead of specifying each of them in this list."
   :type '(repeat function)
+  :group 'pulsar)
+
+(defcustom pulsar-pulse-on-window-change t
+  "When non-nil enable pulsing on every window change.
+This covers all commands or functions that affect the current
+window.  Users who prefer to trigger a pulse only after select
+functions (e.g. only after `other-window') are advised to set
+this variable to nil and update the `pulsar-pulse-functions'
+accordingly."
+  :type 'boolean
   :group 'pulsar)
 
 (defcustom pulsar-face 'pulsar-generic
@@ -353,8 +370,11 @@ For lines, do the same as `pulsar-highlight-line'."
 This is a buffer-local mode.  Also check `pulsar-global-mode'."
   :global nil
   (if pulsar-mode
-      (add-hook 'post-command-hook #'pulsar--post-command-pulse nil 'local)
-    (remove-hook 'post-command-hook #'pulsar--post-command-pulse 'local)))
+      (progn
+        (add-hook 'post-command-hook #'pulsar--post-command-pulse nil 'local)
+        (add-hook 'window-selection-change-functions #'pulsar--pulse-on-window-change nil 'local))
+    (remove-hook 'post-command-hook #'pulsar--post-command-pulse 'local)
+    (remove-hook 'window-selection-change-functions #'pulsar--pulse-on-window-change 'local)))
 
 (defun pulsar--on ()
   "Enable `pulsar-mode'."
@@ -364,6 +384,12 @@ This is a buffer-local mode.  Also check `pulsar-global-mode'."
 
 ;;;###autoload
 (define-globalized-minor-mode pulsar-global-mode pulsar-mode pulsar--on)
+
+(defun pulsar--pulse-on-window-change (&rest _)
+  "Run `pulsar-pulse-line' on window change."
+  (when (and pulsar-pulse-on-window-change
+             (or pulsar-mode pulsar-global-mode))
+    (pulsar-pulse-line)))
 
 (defun pulsar--post-command-pulse ()
   "Run `pulsar-pulse-line' for `pulsar-pulse-functions'."
