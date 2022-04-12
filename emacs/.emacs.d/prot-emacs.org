@@ -5438,6 +5438,15 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (setq org-id-link-to-org-use-id
         'create-if-interactive-and-no-custom-id)
 
+;;;; Hooks and key bindings
+
+  ;; See my `pulsar' package, which is declared further above (otherwise
+  ;; I would wrap this in `with-eval-after-load'):
+  ;; <https://protesilaos.com/emacs/pulsar>
+  (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
+    (add-hook hook #'pulsar-recenter-top)
+    (add-hook hook #'pulsar-reveal-entry))
+
   (let ((map global-map))
     (define-key map (kbd "C-c a") #'org-agenda)
     (define-key map (kbd "C-c c") #'org-capture)
