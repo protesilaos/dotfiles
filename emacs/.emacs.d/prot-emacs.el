@@ -109,28 +109,31 @@
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-builtin-package 'pulsar
   (setq pulsar-pulse-functions
+        ;; NOTE 2022-04-09: The commented out functions are from before
+        ;; the introduction of `pulsar-pulse-on-window-change'.  Try
+        ;; that instead.
         '(recenter-top-bottom
           move-to-window-line-top-bottom
           reposition-window
           bookmark-jump
-          other-window
-          delete-window
-          delete-other-windows
+          ;; other-window
+          ;; delete-window
+          ;; delete-other-windows
           forward-page
           backward-page
           scroll-up-command
           scroll-down-command
-          windmove-right
-          windmove-left
-          windmove-up
-          windmove-down
-          windmove-swap-states-right
-          windmove-swap-states-left
-          windmove-swap-states-up
-          windmove-swap-states-down
-          tab-new
-          tab-close
-          tab-next
+          ;; windmove-right
+          ;; windmove-left
+          ;; windmove-up
+          ;; windmove-down
+          ;; windmove-swap-states-right
+          ;; windmove-swap-states-left
+          ;; windmove-swap-states-up
+          ;; windmove-swap-states-down
+          ;; tab-new
+          ;; tab-close
+          ;; tab-next
           logos-forward-page-dwim
           logos-backward-page-dwim
           org-next-visible-heading
@@ -143,6 +146,7 @@
           outline-previous-visible-heading
           outline-up-heading))
 
+  (setq pulsar-pulse-on-window-change t)
   (setq pulsar-pulse t)
   (setq pulsar-delay 0.055)
   (setq pulsar-iterations 10)
@@ -2051,6 +2055,15 @@ sure this is a good approach."
   (setq org-id-link-to-org-use-id
         'create-if-interactive-and-no-custom-id)
 
+;;;; Hooks and key bindings
+
+  ;; See my `pulsar' package, which is declared further above (otherwise
+  ;; I would wrap this in `with-eval-after-load'):
+  ;; <https://protesilaos.com/emacs/pulsar>
+  (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
+    (add-hook hook #'pulsar-recenter-top)
+    (add-hook hook #'pulsar-reveal-entry))
+
   (let ((map global-map))
     (define-key map (kbd "C-c a") #'org-agenda)
     (define-key map (kbd "C-c c") #'org-capture)
@@ -2065,6 +2078,7 @@ sure this is a good approach."
     (define-key map (kbd "C-c S-l") #'org-toggle-link-display)
     (define-key map (kbd "C-c C-S-l") #'org-insert-last-stored-link)))
 
+;;;; Custom extensions (prot-org.el)
 (prot-emacs-builtin-package 'prot-org
   (setq org-agenda-format-date #'prot-org-agenda-format-date-aligned)
 
