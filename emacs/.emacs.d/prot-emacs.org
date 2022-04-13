@@ -6593,6 +6593,9 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
     (define-key map (kbd "/") #'notmuch-search-filter) ; alias for l
     (define-key map (kbd "r") #'notmuch-search-reply-to-thread) ; easier to reply to all by default
     (define-key map (kbd "R") #'notmuch-search-reply-to-thread-sender))
+  (let ((map notmuch-show-mode-map))
+    (define-key map (kbd "r") #'notmuch-show-reply) ; easier to reply to all by default
+    (define-key map (kbd "R") #'notmuch-show-reply-sender))
   (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
 
 (prot-emacs-builtin-package 'prot-notmuch
