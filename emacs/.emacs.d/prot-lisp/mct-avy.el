@@ -24,6 +24,9 @@
 
 ;;; Commentary:
 ;;
+;; UPDATE 2022-04-15: Development of this package has been discontinued:
+;; <https://protesilaos.com/codelog/2022-04-14-emacs-discontinue-mct/>.
+;;
 ;; MCT extension which provides the means to select a completion
 ;; candidate with the `avy' package's mode of interaction.
 ;;

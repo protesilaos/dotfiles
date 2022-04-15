@@ -24,6 +24,9 @@
 
 ;;; Commentary:
 ;;
+;; UPDATE 2022-04-15: Development of this package has been discontinued:
+;; <https://protesilaos.com/codelog/2022-04-14-emacs-discontinue-mct/>.
+;;
 ;; MCT enhances the default Emacs completion.  It makes the minibuffer
 ;; and Completions' buffer work together as part of a singular
 ;; completion UI.

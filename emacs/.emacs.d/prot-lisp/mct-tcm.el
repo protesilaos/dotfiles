@@ -24,6 +24,9 @@
 
 ;;; Commentary:
 ;;
+;; UPDATE 2022-04-15: Development of this package has been discontinued:
+;; <https://protesilaos.com/codelog/2022-04-14-emacs-discontinue-mct/>.
+;;
 ;; MCT extension which Treats the Completions as the Minibuffer.  It
 ;; intercepts any single character input (without Control or Alt
 ;; modifiers) in the Completions' buffer and passes it to the minibuffer
