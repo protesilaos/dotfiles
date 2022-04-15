@@ -1327,7 +1327,7 @@ meant to be framework-agnostic, so it works with Selectrum, Icomplete
 vertical, Embark's completions buffer, as well as the default
 completions' buffer (as of 2021-04-02, the latter is my choice for
 visualising the standard minibuffer completion candidates---refer to
-[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]]).
+[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer and Vertico configurations]]).
 
 #+begin_src emacs-lisp
 ;;; Completion annotations (marginalia)
@@ -1336,20 +1336,15 @@ visualising the standard minibuffer completion candidates---refer to
   (marginalia-mode 1))
 #+end_src
 
-*** Minibuffer configurations and my extras (mct.el)
+*** Minibuffer and Vertico configurations
 :PROPERTIES:
 :CUSTOM_ID: h:c110e399-3f43-4555-8427-b1afe44c0779
 :END:
 
-UPDATE 2021-10-23: Watch my video demonstration of the package I wrote
-[[https://protesilaos.com/codelog/2021-10-22-emacs-mct-demo/][Minibuffer and Completions in Tandem (mct.el)]].
-
 The minibuffer is the epicentre of extended interactivity with all sorts
 of Emacs workflows: to select a buffer, open a file, provide an answer
 to some prompt, such as a number, regular expression, password, and so
-on.
-
-Emacs has built-in capabilities to perform two distinct tasks related to
+on.  Emacs has capabilities to perform two distinct tasks related to
 such interactions:
 
 + Narrowing :: Use pattern matching algorithms to limit the list of
@@ -1358,33 +1353,15 @@ such interactions:
   already built-in, while we can opt to extend them further.
 
 + Selecting :: Visualise the list of completion candidates and pick an
-  item out of it using regular motions or concomitant extras.  By
-  default, Emacs visualises results in a special =*Completions*= buffer,
-  which does not have lots of features and is not particularly pleasing
-  to use.
+  item out of the list using regular motions.
 
-There are third party completion frameworks that accomplish both of the
-aforementioned, such as Ivy and Helm.  While others focus on the latter,
-namely, Selectrum, Vertico, and the built-in Icomplete.  Then, there is
-also Embark which has a facility to display completion candidates in a
-live updating buffer (Embark is not limited to task---read the details
-of [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions and more (embark.el and prot-embark.el)]]).
+There are third party completion frameworks that provide their own code
+for both of the aforementioned, such as Ivy and Helm.  While others
+focus only on the latter functionality of visualising and selecting
+candidates.  The package I now use for that purpose is =vertico= by
+Daniel Mendler.
 
-I have used Ivy and Icomplete in the past, though I felt that the best
-experience was with Embark.  However, as of 2021-04-02 I realised that
-Emacs version 28 comes with a built-in way to render the =*Completions*=
-in a vertical list, one item per line.  So equipped with my knowledge of
-extending Embark, I implemented a layer of interactivity that, I feel,
-is "good enough" to approximate what other frameworks provide while
-simply reusing built-in mechanisms.  As of 2021-10-22 this is its own
-package, called "Minibuffer and Completions in Tandem", else MCT (or
-variants).  The technicalities are in the =mct.el= file, which is
-reproduced after the following code block.
-
-Read [[https://protesilaos.com/emacs/mct][the official manual of MCT]] as it covers its basics, explains its
-key bindings, and shows how to configure it further.
-
-Finally, here is an overview of the settings covered herein:
+This is an overview of the settings covered herein:
 
 + Completion styles :: I rely on a mixture of built-in styles as well as
   the external =orderless= package by Omar Antolín Camarena.  Orderless is
@@ -1401,7 +1378,7 @@ Finally, here is an overview of the settings covered herein:
   the built-in =initials= and =partial-completion= styles to navigate
   abbreviated paths.  Here is an example with the latter: you can type
   =~/.l/s/fo= which will match =~/.local/share/fonts=.  The variable
-  =completion-category-overrides= can control the standard option of
+  =completion-category-overrides= can modify the standard option of
   =completion-styles= on a per-category basis.
 
   Also watch: [[https://www.youtube.com/watch?v=w9hHMDyF9V4][Emacs Minibuffer Completion Styles]] (2022-02-12) by Greg
@@ -1419,22 +1396,59 @@ Finally, here is an overview of the settings covered herein:
   represented as a number, next to the minibuffer prompt, if a recursive
   edit is in progress (also check [[#h:bb707bec-bcaf-44d0-bb82-1ed6bb0cb33b][Mode line recursion indicators]]).
 
-Also check my setup for the [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][Minibuffer history (savehist-mode)]].  After
-several months of full time usage, I am confident in the built-in
-mechanism's ability to sort things well enough and to surface the
-results I am most likely interested in, based on previous selections.
++ Minibuffer history :: The built-in =savehist-mode= keeps a record of
+  actions involving the minibuffer.  You can access previous inputs with
+  =M-p= and =M-n=.  Well designed commands that use completion will have
+  their own history, so those key bindings will only cycle through
+  relevant entries.  You can also search backwardly through them with
+  =M-r=.
 
-Finally, read the section [[#h:a1dabcea-9756-40cf-8c88-91c5e2dd0e70][Jump to visible position (avy)]] for more on the
-code that leverages =avy=.
 
 #+begin_src emacs-lisp
-  ;;; Minibuffer configurations and my extras (mct.el)
+;;; Minibuffer configurations and Vertico
 (prot-emacs-builtin-package 'minibuffer
   (setq completion-styles '(basic orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
-  ;; For a list of known completion categories, check the MCT manual's
-  ;; section on the matter:
-  ;; <https://protesilaos.com/emacs/mct#h:1f42c4e6-53c1-4e8a-81ef-deab70822fa4>
+
+  ;; A list of known completion categories:
+  ;;
+  ;; - `bookmark'
+  ;; - `buffer'
+  ;; - `charset'
+  ;; - `coding-system'
+  ;; - `color'
+  ;; - `command' (e.g. `M-x')
+  ;; - `customize-group'
+  ;; - `environment-variable'
+  ;; - `expression'
+  ;; - `face'
+  ;; - `file'
+  ;; - `function' (the `describe-function' command bound to `C-h f')
+  ;; - `info-menu'
+  ;; - `imenu'
+  ;; - `input-method'
+  ;; - `kill-ring'
+  ;; - `library'
+  ;; - `minor-mode'
+  ;; - `multi-category'
+  ;; - `package'
+  ;; - `project-file'
+  ;; - `symbol' (the `describe-symbol' command bound to `C-h o')
+  ;; - `theme'
+  ;; - `unicode-name' (the `insert-char' command bound to `C-x 8 RET')
+  ;; - `variable' (the `describe-variable' command bound to `C-h v')
+  ;;
+  ;; From the `consult' package:
+  ;;
+  ;; - `consult-grep'
+  ;; - `consult-isearch'
+  ;; - `consult-kmacro'
+  ;; - `consult-location'
+  ;;
+  ;; From the `embark' package:
+  ;;
+  ;; - `embark-keybinding'
+  ;;
   (setq completion-category-overrides
         ;; NOTE 2021-10-25: I am adding `basic' because it works better as a
         ;; default for some contexts.  Read:
@@ -1442,39 +1456,28 @@ code that leverages =avy=.
         ;;
         ;; `partial-completion' is a killer app for files, because it
         ;; can expand ~/.l/s/fo to ~/.local/share/fonts.
+        ;;
+        ;; If `basic' cannot match my current input, Emacs tries the
+        ;; next completion style in the given order.  In other words,
+        ;; `orderless' kicks in as soon as I input a space or one of its
+        ;; style dispatcher characters.
         '((file (styles . (basic partial-completion orderless)))
           (project-file (styles . (basic substring partial-completion orderless)))
           (imenu (styles . (basic substring orderless)))
           (kill-ring (styles . (basic substring orderless)))
           (consult-location (styles . (basic substring orderless)))))
 
-  (setq completion-cycle-threshold 2)
-  (setq completion-flex-nospace nil) ; though I don't use the built-in `flex' style...
-  (setq completion-pcm-complete-word-inserts-delimiters nil)
-  (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-ignore-case t)
-  (setq completions-detailed t)
-  (setq-default case-fold-search t)   ; For general regexp
-
-  ;; Grouping of completions for Emacs 28
-  (setq completions-group t)
-  (setq completions-group-sort nil)
-  (setq completions-group-format
-        (concat
-         (propertize "    " 'face 'completions-group-separator)
-         (propertize " %s " 'face 'completions-group-title)
-         (propertize " " 'face 'completions-group-separator
-                     'display '(space :align-to right))))
-
   (setq read-buffer-completion-ignore-case t)
   (setq read-file-name-completion-ignore-case t)
+  (setq-default case-fold-search t)   ; For general regexp
 
   (setq enable-recursive-minibuffers t)
-  (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
   (setq resize-mini-windows t)
   (setq minibuffer-eldef-shorten-default t)
 
-  (setq echo-keystrokes 0.25)           ; from the C source code
+  (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
+  (setq echo-keystrokes 0.25)
   (setq kill-ring-max 60)               ; Keep it small
 
   ;; Do not allow the cursor to move inside the minibuffer prompt.  I
@@ -1485,7 +1488,7 @@ code that leverages =avy=.
 
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-  ;; Adapted from Vertico.
+  ;; Also adapted from Vertico.
   (defun crm-indicator (args)
     "Add prompt indicator to `completing-read-multiple' filter ARGS."
     ;; The `error' face just makes the text red.
@@ -1495,133 +1498,35 @@ code that leverages =avy=.
 
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
-  (minibuffer-electric-default-mode 1)
+  (minibuffer-electric-default-mode 1))
 
-  ;; I use this prefix for other searches
-  (define-key minibuffer-local-must-match-map (kbd "M-s") nil))
-
-;; Source: <https://gitlab.com/protesilaos/mct.el>.
-;; Manual: <https://protesilaos.com/emacs/mct>.
-(prot-emacs-builtin-package 'mct
-  (setq mct-remove-shadowed-file-names t) ; when `file-name-shadow-mode' is enabled
-  (setq mct-hide-completion-mode-line t)
-  (setq mct-show-completion-line-numbers nil)
-  (setq mct-apply-completion-stripes nil)
-  (setq mct-minimum-input 3)
-  (setq mct-live-update-delay 0.6)
-  (setq mct-completion-passlist
-        '(;; Accepts symbols of commands like these:
-          embark-prefix-help-command vc-retrieve-tag
-          prot-bongo-playlist-insert-playlist-file
-          Info-goto-node
-          ;; Or completion categories:
-          kill-ring bookmark buffer consult-location
-          info-menu file imenu))
-  (setq mct-completion-blocklist nil) ; Same principle as `mct-completion-passlist'
-  (setq mct-completions-format 'one-column)
-
-  ;; Check its doc string to keep its size fixed.
-  (setq mct-completion-window-size (cons #'mct--frame-height-fraction 1))
-
-  ;; You can place the Completions' buffer wherever you want, by
-  ;; following the syntax of `display-buffer-alist' (check elsewhere in
-  ;; this file).  For example, try this:
-
-  ;; (setq mct-display-buffer-action
-  ;;       (quote ((display-buffer-reuse-window
-  ;;                display-buffer-in-side-window)
-  ;;               (side . left)
-  ;;               (slot . 99)
-  ;;               (window-width . 0.3))))
-
-  (mct-minibuffer-mode 1)
-  (mct-region-mode 1) ; NOTE 2022-01-15: This is new and remains experimental
-
-  (require 'mct-tcm) ; NOTE 2022-02-27: Experimental extension
-  (mct-tcm-mode 1)
-
-  (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
-  (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions)
-
-  ;;;; Sorting completion candidates
-  ;; Only works on Emacs 29 due to a patch of mine that was merged
-  ;; upstream.  A variant of this is in the MCT manual.
-
-  ;; Some sorting functions...
-  (defun prot/mct-sort-by-alpha-length (elems)
-    "Sort ELEMS first alphabetically, then by length."
-    (sort elems (lambda (c1 c2)
-                  (or (string-version-lessp c1 c2)
-                      (< (length c1) (length c2))))))
-
-  (defun prot/mct-sort-by-history (elems)
-    "Sort ELEMS by minibuffer history.
-  Use `prot/mct-sort-by-alpha-length' if no history is available."
-    (if-let ((hist (and (not (eq minibuffer-history-variable t))
-                        (symbol-value minibuffer-history-variable))))
-        (minibuffer--sort-by-position hist elems)
-      (prot/mct-sort-by-alpha-length elems)))
-
-  (defun prot/mct-sort-multi-category (elems)
-    "Sort ELEMS per completion category."
-    (pcase (mct--completion-category)
-      ('nil elems) ; no sorting
-      ('kill-ring elems)
-      ('project-file (prot/mct-sort-by-alpha-length elems))
-      (_ (prot/mct-sort-by-history elems))))
-
-  ;; Specify the sorting function on Emacs 29.
-  (setq completions-sort #'prot/mct-sort-multi-category)
-
-  ;;;; Integration with Avy
-
-  (require 'mct-avy)
-
-  (dolist (map (list mct-minibuffer-local-completion-map
-                     mct-minibuffer-completion-list-map))
-    (define-key map (kbd "C-M-a") #'mct-avy-embark-act)
-    (define-key map (kbd "C-.") #'mct-avy-choose-completion-exit)
-    (define-key map (kbd "C-;") #'mct-avy-choose-completion-dwim))
-
-  ;; If you are using `mct-region-mode':
-  (dolist (map (list mct-region-completion-list-map
-                     mct-region-buffer-map))
-    (define-key map (kbd "C-M-a") #'mct-avy-embark-act)
-    (define-key map (kbd "C-.") #'mct-avy-region-choose-completion)))
-#+end_src
-
-And here is =mct.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
-
-#+include: prot-lisp/mct.el src emacs-lisp :tangle no
-
-*** Minibuffer history (savehist-mode)
-:PROPERTIES:
-:CUSTOM_ID: h:2733674b-51f9-494e-b34d-e8842ac4ef96
-:END:
-
-The built-in =savehist-mode= keeps a record of actions involving the
-minibuffer.  You can access previous inputs with =M-p= and =M-n=.  Well
-designed commands that use completion will have their own history, so
-those key bindings will only cycle through relevant results.  You can
-also search backwardly through them with =M-r=.
-
-This kind of functionality is of paramount importance to a fast and
-efficient workflow involving any completion framework that leverages the
-built-in mechanisms.
-
-Emacs will remember your input and choices so it will prioritise the
-desired results when trying to force complete a given input.  Make sure
-to also read the [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]] for
-the minibuffer-specific setup.
-
-#+begin_src emacs-lisp
-;;; Minibuffer history (savehist-mode)
 (prot-emacs-builtin-package 'savehist
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 10000)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
   (add-hook 'after-init-hook #'savehist-mode))
+
+(prot-emacs-elpa-package 'vertico
+  (setq vertico-scroll-margin 0)
+  (setq vertico-count 10)
+  (setq vertico-resize t)
+  (setq vertico-cycle t)
+
+  (setq vertico-multiform-categories
+        '((function reverse (vertico-sort-function . vertico-sort-alpha))
+          (symbol reverse (vertico-sort-function . vertico-sort-alpha))
+          (variable reverse (vertico-sort-function . vertico-sort-alpha))
+          (t reverse)))
+
+  ;; This works with `file-name-shadow-mode'.  When you are in a
+  ;; sub-directory and use, say, `find-file' to go to your home '~/' or
+  ;; root '/' directory, Vertico will clear the old path to keep only
+  ;; your current input.
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+
+  (vertico-multiform-mode 1)
+  (vertico-mode 1))
 #+end_src
 
 *** Enhanced minibuffer commands (consult.el)
@@ -2248,7 +2153,7 @@ Corfu, ...), adds more backends to the =completion-at-point-functions=
 completion in more scenaria and with relevant candidates.
 
 A package such as Daniel's own Corfu is used to visualise in-buffer
-completion.
+completion: [[#h:675ebef4-d74d-41af-808d-f9579c2a5ec4][Corfu (Completion Overlay Region FUnction)]].
 
 #+begin_src emacs-lisp
 ;;; CAPE (extra completion-at-point backends)
@@ -2263,18 +2168,6 @@ completion.
 :CUSTOM_ID: h:675ebef4-d74d-41af-808d-f9579c2a5ec4
 :END:
 
-NOTE 2022-01-15: My =mct.el= package which originally handled completion
-only inside the minibuffer now also provides the =mct-region-mode= which
-performs the task of in-buffer completion.  Daniel Mendler (the author
-of Corfu) was instrumental in developing this capability.  Thus, I
-personally no longer use Corfu because I must be testing the code I
-maintain.  Still, I think Corfu is a better option because of its
-overall polish and the fact that it uses an intuitive popup near point
-to display candidates, as opposed to MCT which produces a =*Completions*=
-buffer below the current one.
-
------
-
 =corfu= is another nimble package by Daniel Mendler (author of Consult and
 several others---search this document for a few of them), which focuses
 on text expansion within the buffer.  Its User Interface involves a
@@ -2286,13 +2179,10 @@ predictability, I consider the added functionality more important than
 my mild preference against pop-ups (though the fact that Corfu is
 invoked manually makes this largely irrelevant).
 
-As is the norm with Daniel's contributions, =corfu= is a sharp and focused
-tool that works with the standard completion mechanisms, as it reads
-from the =completion-styles= as well as the =completion-category-overrides=
-(refer to [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]], though note
-that if you are a fan of Daniel's work, you will probably want to check
-the [[https://github.com/minad/vertico][Vertico package]] instead of my hacks for the default minibuffer
-experience).
+As is the norm with Daniel's contributions, =corfu= is a focused tool
+that works with the standard completion mechanisms.  It reads from the
+=completion-styles= as well as the =completion-category-overrides=
+(refer to [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer and Vertico configurations]]).
 
 Unlike its more established counterpart, =company-mode=, Corfu does not
 implement its own backends for various programming languages.  Instead,
@@ -2322,7 +2212,7 @@ function of adjusting indentation, we need =tab-always-indent= to be set
 to a =complete= value (check [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, indentation, and the TAB key]] and/or
 read that variable's doc string).
 
-#+begin_example emacs-lisp
+#+begin_src emacs-lisp
 ;;; Corfu (Completion Overlay Region FUnction)
 (prot-emacs-elpa-package 'corfu
   ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
@@ -2330,7 +2220,7 @@ read that variable's doc string).
   ;;   (add-hook mode #'corfu-mode))
   (corfu-global-mode 1)
   (define-key corfu-map (kbd "<tab>") #'corfu-complete))
-#+end_example
+#+end_src
 
 **** Dabbrev (dynamic word completion)
 :PROPERTIES:
@@ -7608,9 +7498,8 @@ In particular:
   rendered page.  This is then used by =prot-eww-browse-dwim= (more
   below).  To keep things in check, =prot-eww-visited-history= is
   implemented as a minibuffer history which is ultimately limited to the
-  value of =history-length= (read: [[#h:2733674b-51f9-494e-b34d-e8842ac4ef96][Minibuffer history (savehist-mode)]]).
-  Remember that each command can have its own history and this is common
-  in a lot of my extras.
+  value of =history-length=.  Remember that each command can have its
+  own history and this is common in a lot of my extras.
 
 + The =prot-eww-browse-dwim= is my main point of entry to EWW.  When I
   call it from a random place inside of Emacs, it just offers a prompt
@@ -8036,9 +7925,6 @@ package: [[https://karthinks.com/software/avy-can-do-anything/][Avy can do anyth
 I need all that power though, as in my workflow I jump to a point and
 then invoke =embark-act= (see [[#h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984][Extended minibuffer actions (embark.el)]]).
 
-Finally, we can use Avy to select a candidate from the =*Completions*=
-buffer (see [[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]]).
-
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'avy
   (setq avy-all-windows nil) ; only the current window
@@ -8177,7 +8063,7 @@ midst of a recursive editing session when we should, perhaps, not be in
 one.  I consider =recursion-indicator= complementary to what is already
 built into Emacs in the form of =minibuffer-depth-indicate-mode= which
 shows the level of recursion at the current minibuffer prompt (refer to
-[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]]).
+[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer and Vertico configurations]]).
 
 #+begin_src emacs-lisp
 ;;; Mode line recursion indicators
