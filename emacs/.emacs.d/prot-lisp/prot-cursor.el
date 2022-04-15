@@ -24,6 +24,10 @@
 
 ;;; Commentary:
 ;;
+;; DEPRECATED 2022-04-15 Use my cursory.el instead (part of this
+;; repository).
+;;
+;;
 ;; Extensions for the cursor, intended for my Emacs setup:
 ;; <https://protesilaos.com/emacs/dotemacs/>.
 ;;
