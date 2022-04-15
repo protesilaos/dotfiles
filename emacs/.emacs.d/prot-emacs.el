@@ -150,8 +150,8 @@
   (setq pulsar-pulse t)
   (setq pulsar-delay 0.055)
   (setq pulsar-iterations 10)
-  (setq pulsar-face 'pulsar-magenta)
-  (setq pulsar-highlight-face 'pulsar-green)
+  (setq pulsar-face 'pulsar-green)
+  (setq pulsar-highlight-face 'pulsar-yellow)
 
   (pulsar-global-mode 1)
 
@@ -179,14 +179,14 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs nil
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers t
         modus-themes-intense-mouseovers nil
-        modus-themes-deuteranopia t
+        modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -203,7 +203,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless (padding 3))
+        modus-themes-mode-line '(borderless accented (padding 3))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -218,7 +218,7 @@
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(intense)
+        modus-themes-hl-line nil
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -229,7 +229,7 @@
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(no-underline background faint)
+        modus-themes-links '(neutral-underline faint)
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
@@ -242,7 +242,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(italic gray intense bold)
+        modus-themes-prompts nil
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -258,9 +258,9 @@
         ;; covered in `modus-themes-weights'.  Bold is used in the absence
         ;; of an explicit WEIGHT.
         modus-themes-completions
-        '((matches . (extrabold background intense))
-          (selection . (semibold intense accented text-also))
-          (popup . (accented intense)))
+        '((matches . (extrabold background))
+          (selection . (semibold accented))
+          (popup . (extrabold)))
 
         modus-themes-mail-citations 'faint ; {nil,'intense,'faint,'monochrome}
 
@@ -304,7 +304,7 @@
     (modus-themes-with-colors
       (custom-set-faces
        ;; Here add all your face definitions.
-       `(cursor ((,class :background ,magenta-intense))))))
+       `(cursor ((,class :background ,red-intense))))))
 
   (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
 
@@ -484,13 +484,50 @@
   (setq marginalia-max-relative-age 0)  ; time is absolute here!
   (marginalia-mode 1))
 
-  ;;; Minibuffer configurations and my extras (mct.el)
+;;; Minibuffer configurations and Vertico
 (prot-emacs-builtin-package 'minibuffer
   (setq completion-styles '(basic orderless)) ; also see `completion-category-overrides'
   (setq completion-category-defaults nil)
-  ;; For a list of known completion categories, check the MCT manual's
-  ;; section on the matter:
-  ;; <https://protesilaos.com/emacs/mct#h:1f42c4e6-53c1-4e8a-81ef-deab70822fa4>
+
+  ;; A list of known completion categories:
+  ;;
+  ;; - `bookmark'
+  ;; - `buffer'
+  ;; - `charset'
+  ;; - `coding-system'
+  ;; - `color'
+  ;; - `command' (e.g. `M-x')
+  ;; - `customize-group'
+  ;; - `environment-variable'
+  ;; - `expression'
+  ;; - `face'
+  ;; - `file'
+  ;; - `function' (the `describe-function' command bound to `C-h f')
+  ;; - `info-menu'
+  ;; - `imenu'
+  ;; - `input-method'
+  ;; - `kill-ring'
+  ;; - `library'
+  ;; - `minor-mode'
+  ;; - `multi-category'
+  ;; - `package'
+  ;; - `project-file'
+  ;; - `symbol' (the `describe-symbol' command bound to `C-h o')
+  ;; - `theme'
+  ;; - `unicode-name' (the `insert-char' command bound to `C-x 8 RET')
+  ;; - `variable' (the `describe-variable' command bound to `C-h v')
+  ;;
+  ;; From the `consult' package:
+  ;;
+  ;; - `consult-grep'
+  ;; - `consult-isearch'
+  ;; - `consult-kmacro'
+  ;; - `consult-location'
+  ;;
+  ;; From the `embark' package:
+  ;;
+  ;; - `embark-keybinding'
+  ;;
   (setq completion-category-overrides
         ;; NOTE 2021-10-25: I am adding `basic' because it works better as a
         ;; default for some contexts.  Read:
@@ -498,39 +535,28 @@
         ;;
         ;; `partial-completion' is a killer app for files, because it
         ;; can expand ~/.l/s/fo to ~/.local/share/fonts.
+        ;;
+        ;; If `basic' cannot match my current input, Emacs tries the
+        ;; next completion style in the given order.  In other words,
+        ;; `orderless' kicks in as soon as I input a space or one of its
+        ;; style dispatcher characters.
         '((file (styles . (basic partial-completion orderless)))
           (project-file (styles . (basic substring partial-completion orderless)))
           (imenu (styles . (basic substring orderless)))
           (kill-ring (styles . (basic substring orderless)))
           (consult-location (styles . (basic substring orderless)))))
 
-  (setq completion-cycle-threshold 2)
-  (setq completion-flex-nospace nil) ; though I don't use the built-in `flex' style...
-  (setq completion-pcm-complete-word-inserts-delimiters nil)
-  (setq completion-pcm-word-delimiters "-_./:| ")
   (setq completion-ignore-case t)
-  (setq completions-detailed t)
-  (setq-default case-fold-search t)   ; For general regexp
-
-  ;; Grouping of completions for Emacs 28
-  (setq completions-group t)
-  (setq completions-group-sort nil)
-  (setq completions-group-format
-        (concat
-         (propertize "    " 'face 'completions-group-separator)
-         (propertize " %s " 'face 'completions-group-title)
-         (propertize " " 'face 'completions-group-separator
-                     'display '(space :align-to right))))
-
   (setq read-buffer-completion-ignore-case t)
   (setq read-file-name-completion-ignore-case t)
+  (setq-default case-fold-search t)   ; For general regexp
 
   (setq enable-recursive-minibuffers t)
-  (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
   (setq resize-mini-windows t)
   (setq minibuffer-eldef-shorten-default t)
 
-  (setq echo-keystrokes 0.25)           ; from the C source code
+  (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
+  (setq echo-keystrokes 0.25)
   (setq kill-ring-max 60)               ; Keep it small
 
   ;; Do not allow the cursor to move inside the minibuffer prompt.  I
@@ -541,7 +567,7 @@
 
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-  ;; Adapted from Vertico.
+  ;; Also adapted from Vertico.
   (defun crm-indicator (args)
     "Add prompt indicator to `completing-read-multiple' filter ARGS."
     ;; The `error' face just makes the text red.
@@ -551,107 +577,35 @@
 
   (file-name-shadow-mode 1)
   (minibuffer-depth-indicate-mode 1)
-  (minibuffer-electric-default-mode 1)
+  (minibuffer-electric-default-mode 1))
 
-  ;; I use this prefix for other searches
-  (define-key minibuffer-local-must-match-map (kbd "M-s") nil))
-
-;; Source: <https://gitlab.com/protesilaos/mct.el>.
-;; Manual: <https://protesilaos.com/emacs/mct>.
-(prot-emacs-builtin-package 'mct
-  (setq mct-remove-shadowed-file-names t) ; when `file-name-shadow-mode' is enabled
-  (setq mct-hide-completion-mode-line t)
-  (setq mct-show-completion-line-numbers nil)
-  (setq mct-apply-completion-stripes nil)
-  (setq mct-minimum-input 3)
-  (setq mct-live-update-delay 0.6)
-  (setq mct-completion-passlist
-        '(;; Accepts symbols of commands like these:
-          embark-prefix-help-command vc-retrieve-tag
-          prot-bongo-playlist-insert-playlist-file
-          Info-goto-node
-          ;; Or completion categories:
-          kill-ring bookmark buffer consult-location
-          info-menu file imenu))
-  (setq mct-completion-blocklist nil) ; Same principle as `mct-completion-passlist'
-  (setq mct-completions-format 'one-column)
-
-  ;; Check its doc string to keep its size fixed.
-  (setq mct-completion-window-size (cons #'mct--frame-height-fraction 1))
-
-  ;; You can place the Completions' buffer wherever you want, by
-  ;; following the syntax of `display-buffer-alist' (check elsewhere in
-  ;; this file).  For example, try this:
-
-  ;; (setq mct-display-buffer-action
-  ;;       (quote ((display-buffer-reuse-window
-  ;;                display-buffer-in-side-window)
-  ;;               (side . left)
-  ;;               (slot . 99)
-  ;;               (window-width . 0.3))))
-
-  (mct-minibuffer-mode 1)
-  (mct-region-mode 1) ; NOTE 2022-01-15: This is new and remains experimental
-
-  (require 'mct-tcm) ; NOTE 2022-02-27: Experimental extension
-  (mct-tcm-mode 1)
-
-  (define-key minibuffer-local-completion-map (kbd "<tab>") #'minibuffer-force-complete)
-  (define-key global-map (kbd "C-x :") #'mct-focus-mini-or-completions)
-
-  ;;;; Sorting completion candidates
-  ;; Only works on Emacs 29 due to a patch of mine that was merged
-  ;; upstream.  A variant of this is in the MCT manual.
-
-  ;; Some sorting functions...
-  (defun prot/mct-sort-by-alpha-length (elems)
-    "Sort ELEMS first alphabetically, then by length."
-    (sort elems (lambda (c1 c2)
-                  (or (string-version-lessp c1 c2)
-                      (< (length c1) (length c2))))))
-
-  (defun prot/mct-sort-by-history (elems)
-    "Sort ELEMS by minibuffer history.
-  Use `prot/mct-sort-by-alpha-length' if no history is available."
-    (if-let ((hist (and (not (eq minibuffer-history-variable t))
-                        (symbol-value minibuffer-history-variable))))
-        (minibuffer--sort-by-position hist elems)
-      (prot/mct-sort-by-alpha-length elems)))
-
-  (defun prot/mct-sort-multi-category (elems)
-    "Sort ELEMS per completion category."
-    (pcase (mct--completion-category)
-      ('nil elems) ; no sorting
-      ('kill-ring elems)
-      ('project-file (prot/mct-sort-by-alpha-length elems))
-      (_ (prot/mct-sort-by-history elems))))
-
-  ;; Specify the sorting function on Emacs 29.
-  (setq completions-sort #'prot/mct-sort-multi-category)
-
-  ;;;; Integration with Avy
-
-  (require 'mct-avy)
-
-  (dolist (map (list mct-minibuffer-local-completion-map
-                     mct-minibuffer-completion-list-map))
-    (define-key map (kbd "C-M-a") #'mct-avy-embark-act)
-    (define-key map (kbd "C-.") #'mct-avy-choose-completion-exit)
-    (define-key map (kbd "C-;") #'mct-avy-choose-completion-dwim))
-
-  ;; If you are using `mct-region-mode':
-  (dolist (map (list mct-region-completion-list-map
-                     mct-region-buffer-map))
-    (define-key map (kbd "C-M-a") #'mct-avy-embark-act)
-    (define-key map (kbd "C-.") #'mct-avy-region-choose-completion)))
-
-;;; Minibuffer history (savehist-mode)
 (prot-emacs-builtin-package 'savehist
   (setq savehist-file (locate-user-emacs-file "savehist"))
   (setq history-length 10000)
   (setq history-delete-duplicates t)
   (setq savehist-save-minibuffer-history t)
   (add-hook 'after-init-hook #'savehist-mode))
+
+(prot-emacs-elpa-package 'vertico
+  (setq vertico-scroll-margin 0)
+  (setq vertico-count 10)
+  (setq vertico-resize t)
+  (setq vertico-cycle t)
+
+  (setq vertico-multiform-categories
+        '((function reverse (vertico-sort-function . vertico-sort-alpha))
+          (symbol reverse (vertico-sort-function . vertico-sort-alpha))
+          (variable reverse (vertico-sort-function . vertico-sort-alpha))
+          (t reverse)))
+
+  ;; This works with `file-name-shadow-mode'.  When you are in a
+  ;; sub-directory and use, say, `find-file' to go to your home '~/' or
+  ;; root '/' directory, Vertico will clear the old path to keep only
+  ;; your current input.
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+
+  (vertico-multiform-mode 1)
+  (vertico-mode 1))
 
 ;;; Enhanced minibuffer commands (consult.el)
 (prot-emacs-elpa-package 'consult
@@ -733,17 +687,15 @@
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
   (setq embark-quit-after-action t)     ; XXX: Read the doc string!
   (setq embark-cycle-key (kbd "C-."))   ; see the `embark-act' key
-  (setq embark-collect-live-update-delay 0.5)
-  (setq embark-collect-live-initial-delay 0.8)
+  (setq embark-confirm-act-all nil)
   (setq embark-indicators
         '(embark-mixed-indicator
           embark-highlight-indicator))
   ;; NOTE 2021-07-31: The mixed indicator starts out with a minimal view
   ;; and then pops up the verbose buffer, so those variables matter.
   (setq embark-verbose-indicator-excluded-actions
-        '("\\`embark-collect-" "\\`customize-" "\\(local\\|global\\)-set-key"
-          set-variable embark-cycle embark-export
-          embark-keymap-help embark-become embark-isearch))
+        '("\\`customize-" "\\(local\\|global\\)-set-key"
+          set-variable embark-cycle embark-keymap-help embark-isearch))
   (setq embark-verbose-indicator-buffer-sections
         `(target "\n" shadowed-targets " " cycle "\n" bindings))
   (setq embark-mixed-indicator-both nil)
@@ -835,6 +787,14 @@
   (setq cape-dabbrev-min-length 3)
   (dolist (backend '( cape-symbol cape-keyword cape-file cape-dabbrev))
     (add-to-list 'completion-at-point-functions backend)))
+
+;;; Corfu (Completion Overlay Region FUnction)
+(prot-emacs-elpa-package 'corfu
+  ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
+  ;;                  shell-mode-hook eshell-mode-hook))
+  ;;   (add-hook mode #'corfu-mode))
+  (corfu-global-mode 1)
+  (define-key corfu-map (kbd "<tab>") #'corfu-complete))
 
 ;;; Dabbrev (dynamic word completion)
 (prot-emacs-builtin-package 'dabbrev
@@ -2479,6 +2439,9 @@ sure this is a good approach."
     (define-key map (kbd "/") #'notmuch-search-filter) ; alias for l
     (define-key map (kbd "r") #'notmuch-search-reply-to-thread) ; easier to reply to all by default
     (define-key map (kbd "R") #'notmuch-search-reply-to-thread-sender))
+  (let ((map notmuch-show-mode-map))
+    (define-key map (kbd "r") #'notmuch-show-reply) ; easier to reply to all by default
+    (define-key map (kbd "R") #'notmuch-show-reply-sender))
   (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
 
 (prot-emacs-builtin-package 'prot-notmuch
