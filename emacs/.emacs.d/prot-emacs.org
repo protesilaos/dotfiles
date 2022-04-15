@@ -2176,7 +2176,7 @@ read that variable's doc string).
   ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
   ;;                  shell-mode-hook eshell-mode-hook))
   ;;   (add-hook mode #'corfu-mode))
-  (corfu-global-mode 1)
+  (global-corfu-mode 1)
   (define-key corfu-map (kbd "<tab>") #'corfu-complete)
 
   ;; Adapted from Corfu's manual.
