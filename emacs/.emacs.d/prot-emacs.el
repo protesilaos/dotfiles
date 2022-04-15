@@ -782,19 +782,30 @@
   (let ((map global-map))
     (define-key map (kbd "C-x C-r") #'prot-recentf-recent-files-or-dirs)))
 
+;;; Corfu (Completion Overlay Region FUnction)
+(prot-emacs-elpa-package 'corfu
+  ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
+  ;;                  shell-mode-hook eshell-mode-hook))
+  ;;   (add-hook mode #'corfu-mode))
+  (global-corfu-mode 1)
+  (define-key corfu-map (kbd "<tab>") #'corfu-complete)
+
+  ;; Adapted from Corfu's manual.
+  (defun contrib/corfu-enable-always-in-minibuffer ()
+    "Enable Corfu in the minibuffer if Vertico is not active.
+Useful for prompts such as `eval-expression' and `shell-command'."
+    (unless (bound-and-true-p vertico--input)
+      (corfu-mode 1)))
+
+  (add-hook 'minibuffer-setup-hook #'contrib/corfu-enable-always-in-minibuffer 1))
+
 ;;; CAPE (extra completion-at-point backends)
 (prot-emacs-elpa-package 'cape
   (setq cape-dabbrev-min-length 3)
   (dolist (backend '( cape-symbol cape-keyword cape-file cape-dabbrev))
     (add-to-list 'completion-at-point-functions backend)))
 
-;;; Corfu (Completion Overlay Region FUnction)
-(prot-emacs-elpa-package 'corfu
-  ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
-  ;;                  shell-mode-hook eshell-mode-hook))
-  ;;   (add-hook mode #'corfu-mode))
-  (corfu-global-mode 1)
-  (define-key corfu-map (kbd "<tab>") #'corfu-complete))
+(prot-emacs-elpa-package 'pcmpl-args)
 
 ;;; Dabbrev (dynamic word completion)
 (prot-emacs-builtin-package 'dabbrev
@@ -3238,42 +3249,43 @@ Can link to more than one message, if so all matching messages are shown."
     (define-key map (kbd "C-x n s") #'prot-outline-narrow-to-subtree))
   (define-key global-map (kbd "<f10>") #'prot-outline-minor-mode-safe))
 
-;;; Cursor appearance and tweaks (prot-cursor.el)
-(prot-emacs-builtin-package 'prot-cursor
-  (setq prot-cursor-presets
+;;; Cursor appearance (cursory.el)
+(prot-emacs-builtin-package 'cursory
+  (setq cursory-presets
         '((bar . ( :cursor-type (bar . 2)
-                   :cursor-no-selected hollow
-                   :blinks 10
-                   :blink-interval 0.5
-                   :blink-delay 0.2))
+                   :cursor-in-non-selected-windows hollow
+                   :blink-cursor-blinks 10
+                   :blink-cursor-interval 0.5
+                   :blink-cursor-delay 0.2))
 
-          (box . ( :cursor-type box
-                   :cursor-no-selected hollow
-                   :blinks 10
-                   :blink-interval 0.5
-                   :blink-delay 0.2))
+          (box  . ( :cursor-type box
+                    :cursor-in-non-selected-windows hollow
+                    :blink-cursor-blinks 10
+                    :blink-cursor-interval 0.5
+                    :blink-cursor-delay 0.2))
 
           (underscore . ( :cursor-type (hbar . 3)
-                          :cursor-no-selected hollow
-                          :blinks 50
-                          :blink-interval 0.2
-                          :blink-delay 0.2))))
-  (setq prot-cursor-last-state-file
-        (locate-user-emacs-file "prot-cursor-last-state"))
+                          :cursor-in-non-selected-windows hollow
+                          :blink-cursor-blinks 50
+                          :blink-cursor-interval 0.2
+                          :blink-cursor-delay 0.2))))
 
-  (prot-cursor-restore-last-preset)
+  (setq cursory-latest-state-file (locate-user-emacs-file "cursory-latest-state"))
 
-  ;; Sets my style on startup.
-  (if prot-cursor--recovered-preset
-      (prot-cursor-set-cursor prot-cursor--recovered-preset)
-    (prot-cursor-set-cursor 'underscore))
+  (cursory-restore-latest-preset)
 
-  ;; The other side of `prot-cursor-restore-last-preset'.
-  (add-hook 'kill-emacs-hook #'prot-cursor-store-last-preset)
+  ;; Set `cursory-recovered-preset' or fall back to desired style from
+  ;; `cursory-presets'.
+  (if cursory-recovered-preset
+      (cursory-set-preset cursory-recovered-preset)
+    (cursory-set-preset 'bar))
 
-  ;; We have to use the "point" mnemonic, because C-c c is for
-  ;; `org-capture'.
-  (define-key global-map (kbd "C-c p") #'prot-cursor-set-cursor))
+  ;; The other side of `cursory-restore-latest-preset'.
+  (add-hook 'kill-emacs-hook #'cursory-store-latest-preset)
+
+  ;; We have to use the "point" mnemonic, because C-c c is often the
+  ;; suggested binding for `org-capture'.
+  (define-key global-map (kbd "C-c p") #'cursory-set-preset))
 
 ;;; Mouse wheel behaviour
 (prot-emacs-builtin-package 'mouse
