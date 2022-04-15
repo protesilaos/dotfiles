@@ -1,4 +1,4 @@
-*** Gnus for reading email, mailing lists, and more
+*** COMMENT Gnus for reading email, mailing lists, and more
 :PROPERTIES:
 :CUSTOM_ID: h:14cf6fea-54eb-4faa-bb16-3739485c929a
 :END:
