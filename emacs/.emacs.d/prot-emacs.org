@@ -1511,28 +1511,11 @@ This is an overview of the settings covered herein:
   ;; Those are the default values, but check the user option
   ;; `vertico-multiform-categories' for per-category tweaks.
   (setq vertico-scroll-margin 0)
-  (setq vertico-count 5)
+  (setq vertico-count 10)
   (setq vertico-resize nil)
   (setq vertico-cycle t)
-  (setq vertico-buffer-hide-prompt nil)
-  ;; NOTE: Do not conflate this with a side window.
-  (setq vertico-buffer-display-action
-        '(display-buffer-in-direction
-          (direction . leftmost)))
 
-  (vertico-multiform-mode 1)
   (vertico-mode 1)
-
-  (setq vertico-multiform-categories
-        '((consult-grep buffer)
-          (imenu buffer)
-          (consult-location buffer)
-          (command (vertico-count . 3) (vertico-resize . t))
-          (file grid (vertico-count . 10))
-          (project-file grid (vertico-count . 10))
-          (function buffer (vertico-sort-function . vertico-sort-alpha))
-          (symbol buffer (vertico-sort-function . vertico-sort-alpha))
-          (variable buffer (vertico-sort-function . vertico-sort-alpha))))
 
   ;; This works with `file-name-shadow-mode'.  When you are in a
   ;; sub-directory and use, say, `find-file' to go to your home '~/' or
