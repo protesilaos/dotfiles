@@ -1776,14 +1776,8 @@ that populate the original prompt.
 :CUSTOM_ID: h:d67ed8d0-d711-48b0-9f40-f88ae2e5c984
 :END:
 
-Video introduction: [[https://protesilaos.com/codelog/2021-01-09-emacs-embark-extras/][Embark and my extras]] (2021-01-09).  Also read
-[[https://karthinks.com/software/fifteen-ways-to-use-embark/][Fifteen ways to use Embark]] (2021-10-06) by Karthik Chikmagalur.
-
-[ NOTE 2021-04-02: the part in that video that deals with cycling
-  through the completion candidates has been moved to the file
-  =prot-minibuffer.el=, though the effect is practically the same.  UPDATE
-  2021-10-22: It now is its own standalone package, called
-  =mct.el=---[[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]]. ]
+Relevant essay: [[https://karthinks.com/software/fifteen-ways-to-use-embark/][Fifteen ways to use Embark]] (2021-10-06) by Karthik
+Chikmagalur.
 
 Embark provides a unified framework of regular Emacs keymaps which let
 you carry out /contextually relevant actions/ on *targets* through a common
@@ -1827,8 +1821,8 @@ the exact same way you define all of your Emacs key bindings.  So you
 can bind any command to whatever key you want and confine that action to
 a context you specify.
 
-On Emacs 28, learn more about the keymaps with =M-x describe-keymap= and
-then search for =embark=.
+On Emacs 28, learn more about a keymap with =M-x describe-keymap=.  Do
+it while searching for =embark=.
 
 Now a few things about actions that you can gain access to by invoking
 either of =embark-act= (most cases), or =embark-become= (where appropriate):
@@ -1844,7 +1838,7 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
   is to follow up the =embark-act= with =C-h=.  That will produce a
   minibuffer prompt showing all available key bindings.
 
-  - Keymaps aside, you can call /any command/ after invoking =embark-act=.
+  - Keymaps aside, you can call most commands after invoking =embark-act=.
     This can be either with =M-x= or via its key binding.  For example, if
     you want to grep for the symbol at point in the current project, you
     can do =embark-act= and then =C-x p g= (=project-find-regexp=) (also read
@@ -1852,9 +1846,9 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
     work as expected for commands that typically prompt you for
     something to operate on.
 
-  - Using the =C-h= as a suffix is a standard procedure in Emacs to get a
-    Help buffer that contains references to all commands+keys that
-    extend a give key chord.  So, for example, =C-x r C-h= will show you
+  - Using the =C-h= as a suffix is a standard procedure in Emacs to get
+    a Help buffer that contains references to all commands+keys that
+    extend the given key chord.  For example, =C-x r C-h= will show you
     all commands under the =C-x r= prefix (see [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
     While the generic =C-h= is fine in its own right, Embark offers an
     alternative that leverages minibuffer completion: the
@@ -1865,36 +1859,23 @@ either of =embark-act= (most cases), or =embark-become= (where appropriate):
   completion candidate in the minibuffer, or the symbol at point.  You
   can, however, collect the entire set of targets and store it in a
   buffer, which you can then re-use at your convenience or save it on
-  disk (with =write-file= bound to =C-x C-w= by default).  This is done by
-  the =embark-collect-snapshot= command, which you can always access
-  through =embark-act=.
+  disk (with =write-file= bound to =C-x C-w= by default).  This is done
+  by the =embark-collect= command, which you can always access through
+  =embark-act=.
 
-  - The "Embark Collect" buffer can be presented as a grid or a list,
-    with the possibility to manually switch between the two by means of
-    the =embark-collect-toggle-view= command.  The list view offers more
-    room to the side of each candidate.  It can be used to display
-    annotations (see [[#h:09d657c7-eb4d-4fe3-987a-4a2cf419bb40][Completion annotations (marginalia)]]), such as the
-    first line of a variable's doc string and current value, a command's
-    key binding, the buffer's underlying file system path if it is
-    visiting a file, and so on.
+  Other than producing a snapshot, Embark can also collect the targets
+  and present them in a buffer whose major-mode is specialised to work
+  on the category those targets belong to.  This is done with the
+  =embark-export= command.  If you are targeting files, then the export
+  takes you to a =dired-mode= buffer (also refer to this document's
+  section on [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory editor, file manager)]]); buffers go to
+  =ibuffer-mode= (check [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer and extras]]); grep results in a
+  =grep-mode= buffer, and so on.
 
-  - Embark's "collect" buffer also has a live-updating version, which
-    can be use to filter the list of targets.  This particular feature
-    can, in fact, be used as a medium for visualising the list of
-    candidates in the active minibuffer session.  I used that setup for
-    several months together with the default minibuffer as part my
-    bespoke completion framework, though as of 2021-04-02 I handle the
-    live-updating completions' buffer independently of Embark
-    ([[#h:c110e399-3f43-4555-8427-b1afe44c0779][Minibuffer configurations and my extras (mct.el)]]).
-
-  - Other than producing a snapshot, Embark can also collect the targets
-    and present them in a buffer whose major-mode is specialised to work
-    on the category those targets belong to.  This is done with the
-    =embark-export= command.  If you are targeting files, then the export
-    takes you to a =dired-mode= buffer (also refer to this document's
-    section on [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory editor, file manager)]]); buffers go to
-    =ibuffer-mode= (check [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer and extras]]); grep results in a =grep-mode=
-    buffer, and so on.
++ In Embark Collect buffers, it is possible to mark entries like you do
+  in Dired with =m= to mark and =u= to unmark.   To act on all marked
+  items type =A=.  Once you select an action, it will ask for
+  confirmation unless =embark-confirm-act-all= is nil.
 
 Finally, the =prot-embark.el= that is reproduced after the following block
 contains a few keymaps that integrate Embark with packages like =consult=
@@ -1909,17 +1890,15 @@ while using relevant Consult commands, such as =consult-grep=.
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
   (setq embark-quit-after-action t)     ; XXX: Read the doc string!
   (setq embark-cycle-key (kbd "C-."))   ; see the `embark-act' key
-  (setq embark-collect-live-update-delay 0.5)
-  (setq embark-collect-live-initial-delay 0.8)
+  (setq embark-confirm-act-all nil)
   (setq embark-indicators
         '(embark-mixed-indicator
           embark-highlight-indicator))
   ;; NOTE 2021-07-31: The mixed indicator starts out with a minimal view
   ;; and then pops up the verbose buffer, so those variables matter.
   (setq embark-verbose-indicator-excluded-actions
-        '("\\`embark-collect-" "\\`customize-" "\\(local\\|global\\)-set-key"
-          set-variable embark-cycle embark-export
-          embark-keymap-help embark-become embark-isearch))
+        '("\\`customize-" "\\(local\\|global\\)-set-key"
+          set-variable embark-cycle embark-keymap-help embark-isearch))
   (setq embark-verbose-indicator-buffer-sections
         `(target "\n" shadowed-targets " " cycle "\n" bindings))
   (setq embark-mixed-indicator-both nil)
