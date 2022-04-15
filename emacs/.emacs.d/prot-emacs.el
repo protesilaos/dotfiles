@@ -552,7 +552,7 @@
   (setq-default case-fold-search t)   ; For general regexp
 
   (setq enable-recursive-minibuffers t)
-  (setq resize-mini-windows t)
+  (setq resize-mini-windows nil)
   (setq minibuffer-eldef-shorten-default t)
 
   (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
@@ -587,25 +587,37 @@
   (add-hook 'after-init-hook #'savehist-mode))
 
 (prot-emacs-elpa-package 'vertico
+  ;; Those are the default values, but check the user option
+  ;; `vertico-multiform-categories' for per-category tweaks.
   (setq vertico-scroll-margin 0)
-  (setq vertico-count 10)
-  (setq vertico-resize t)
+  (setq vertico-count 5)
+  (setq vertico-resize nil)
   (setq vertico-cycle t)
+  (setq vertico-buffer-hide-prompt nil)
+  ;; NOTE: Do not conflate this with a side window.
+  (setq vertico-buffer-display-action
+        '(display-buffer-in-direction
+          (direction . leftmost)))
+
+  (vertico-multiform-mode 1)
+  (vertico-mode 1)
 
   (setq vertico-multiform-categories
-        '((function reverse (vertico-sort-function . vertico-sort-alpha))
-          (symbol reverse (vertico-sort-function . vertico-sort-alpha))
-          (variable reverse (vertico-sort-function . vertico-sort-alpha))
-          (t reverse)))
+        '((consult-grep buffer)
+          (imenu buffer)
+          (consult-location buffer)
+          (command (vertico-count . 3) (vertico-resize . t))
+          (file grid (vertico-count . 10))
+          (project-file grid (vertico-count . 10))
+          (function buffer (vertico-sort-function . vertico-sort-alpha))
+          (symbol buffer (vertico-sort-function . vertico-sort-alpha))
+          (variable buffer (vertico-sort-function . vertico-sort-alpha))))
 
   ;; This works with `file-name-shadow-mode'.  When you are in a
   ;; sub-directory and use, say, `find-file' to go to your home '~/' or
   ;; root '/' directory, Vertico will clear the old path to keep only
   ;; your current input.
-  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
-
-  (vertico-multiform-mode 1)
-  (vertico-mode 1))
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
 
 ;;; Enhanced minibuffer commands (consult.el)
 (prot-emacs-elpa-package 'consult
