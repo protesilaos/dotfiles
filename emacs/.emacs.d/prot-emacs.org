@@ -2210,6 +2210,29 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (add-hook 'minibuffer-setup-hook #'contrib/corfu-enable-always-in-minibuffer 1))
 #+end_src
 
+**** Enhance command-line completion (pcmpl-args)
+:PROPERTIES:
+:CUSTOM_ID: h:8b45802a-a136-4802-b721-86741370de8a
+:END:
+
+This neat package by Jonathan Waltman enhances the standard completion
+mechanism used in =M-x eshell=, =M-x shell=, or any other prompt that
+calls a shell command.  It parses manpages dynamically to collect
+information about available flags and their relevant annotations.  A
+package such as =corfu= can then display the results and let the user
+select one among them.
+
+There is no extra configuration required.  We just load the package and
+are good to go.
+
+Relevant sections in this document:
+
++ [[#h:675ebef4-d74d-41af-808d-f9579c2a5ec4][Corfu (Completion Overlay Region FUnction)]].
++ [[#h:103a8795-c29c-474f-9ddf-ecafaa2f6775][Eshell and prot-eshell.el]].
++ [[#h:103a8795-c29c-474f-9ddf-ecafaa2f6775][Shell (M-x shell)]].
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'pcmpl-args)
 #+end_src
 
 **** Dabbrev (dynamic word completion)
