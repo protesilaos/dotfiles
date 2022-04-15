@@ -593,14 +593,14 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs nil
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts nil
         modus-themes-subtle-line-numbers t
         modus-themes-intense-mouseovers nil
-        modus-themes-deuteranopia t
+        modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -617,7 +617,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless (padding 3))
+        modus-themes-mode-line '(borderless accented (padding 3))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -632,7 +632,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(intense)
+        modus-themes-hl-line nil
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -643,7 +643,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(no-underline background faint)
+        modus-themes-links '(neutral-underline faint)
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
@@ -656,7 +656,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(italic gray intense bold)
+        modus-themes-prompts nil
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -672,9 +672,9 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; covered in `modus-themes-weights'.  Bold is used in the absence
         ;; of an explicit WEIGHT.
         modus-themes-completions
-        '((matches . (extrabold background intense))
-          (selection . (semibold intense accented text-also))
-          (popup . (accented intense)))
+        '((matches . (extrabold background))
+          (selection . (semibold accented))
+          (popup . (extrabold)))
 
         modus-themes-mail-citations 'faint ; {nil,'intense,'faint,'monochrome}
 
@@ -718,7 +718,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
     (modus-themes-with-colors
       (custom-set-faces
        ;; Here add all your face definitions.
-       `(cursor ((,class :background ,magenta-intense))))))
+       `(cursor ((,class :background ,red-intense))))))
 
   (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
 
