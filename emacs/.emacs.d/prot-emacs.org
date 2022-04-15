@@ -2199,7 +2199,7 @@ Corfu, ...), adds more backends to the =completion-at-point-functions=
 (CAPF) facility.  This practically means that you can use in-buffer
 completion in more scenaria and with relevant candidates.
 
-A package such as Daniel's own Corfu is used to visualise in-buffer
+A package such as Daniel's own Corfu is used to handle in-buffer
 completion: [[#h:675ebef4-d74d-41af-808d-f9579c2a5ec4][Corfu (Completion Overlay Region FUnction)]].
 
 #+begin_src emacs-lisp
