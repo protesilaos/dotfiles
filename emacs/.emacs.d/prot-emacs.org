@@ -6341,13 +6341,12 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
 
 ;;; General UI
   (setq notmuch-show-logo nil)
-  (setq notmuch-column-control t)
+  (setq notmuch-column-control 1.0)
   (setq notmuch-hello-auto-refresh t)
   (setq notmuch-hello-recent-searches-max 20)
   (setq notmuch-hello-thousands-separator "")
-  ;; ;; See my variant of it in `prot-notmuch' below.
-  ;; (setq notmuch-hello-sections '(notmuch-hello-insert-saved-searches))
-  (setq notmuch-show-all-tags-list nil)
+  (setq notmuch-hello-sections '(notmuch-hello-insert-saved-searches notmuch-hello-insert-alltags))
+  (setq notmuch-show-all-tags-list t)
 
 ;;; Search
   (setq notmuch-search-oldest-first nil)
@@ -6481,7 +6480,7 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
 ;;; Hooks and key bindings
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
-  (remove-hook 'notmuch-search-hook 'notmuch-hl-line-mode) ; CHECK
+  (remove-hook 'notmuch-search-hook 'notmuch-hl-line-mode) ; Check my `lin' package
   (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
 
   (let ((map global-map))
@@ -6511,11 +6510,6 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
           (,(kbd "r") ("-unread") "Mark as read")
           (,(kbd "u") ("+unread") "Mark as unread")))
 
-  (setq prot-notmuch-search-field-width 100)
-  (setq notmuch-hello-sections '(prot-notmuch-hello-insert-saved-searches
-                                 ;; prot-notmuch-hello-insert-recent-searches
-                                 ))
-
   (add-to-list 'notmuch-tag-formats
                '("encrypted" (propertize tag 'face 'prot-notmuch-encrypted-tag)))
   (add-to-list 'notmuch-tag-formats
@@ -6537,8 +6531,6 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
         '(notmuch notmuch-refresh-this-buffer))
   ;; Mode line indicator with the number of new mails.
   (prot-notmuch-mail-indicator 1)
-
-  (add-hook 'notmuch-hello-mode-hook #'prot-notmuch-widget-field-face-remap)
 
   (let ((map notmuch-search-mode-map))
     (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
