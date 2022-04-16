@@ -72,14 +72,18 @@ hook `modus-themes-after-load-theme-hook'."
 
 (declare-function cl-letf "cl-lib")
 
-;; Source: https://stackoverflow.com/a/54251825
-(defun prot-org--capture-no-delete-windows (oldfun args)
+;; Adapted from source: <https://stackoverflow.com/a/54251825>.
+;;
+;; Thanks to Juanjo Presa (@uningan on GitHub) for discovering that the
+;; original version was causing an error in `org-roam'.  I then figure
+;; we were missing the `&rest':
+;; <https://github.com/org-roam/org-roam/issues/2142#issuecomment-1100718373>.
+(defun prot-org--capture-no-delete-windows (oldfun &rest args)
   (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
     (apply oldfun args)))
 
 ;; Same source as above
-(advice-add 'org-capture-place-template
-            :around 'prot-org--capture-no-delete-windows)
+(advice-add 'org-capture-place-template :around 'prot-org--capture-no-delete-windows)
 
 ;;;; org-agenda
 
