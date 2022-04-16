@@ -9778,87 +9778,119 @@ consider two highly valuable blog posts by Karthik Chikmagalur:
 :CUSTOM_ID: h:7be4b564-4360-4905-aa10-1405fba6ea2a
 :END:
 
-This question is best answered in reference to one's background and the
-intuitions made possible by it.  The short answer is that all three are
-good in different ways: the best tool for the job is the one that makes
-you most productive in the moment.
+There is no optimal tool in abstract.  The user has to find the one that
+suits their needs and is aligned with their preferences.  What follows
+is a brief comparison based on my experience as of 2022-04-16.
 
-Now to the longer reply, which fleshes out this time-sensitive
-subjectivity I am hinting at.
+Gnus is the most complex of the three or, at least, such is my
+impression based on what I have seen in the source code.  It also is the
+one you cannot use outside of Emacs (=emacsclient= notwithstanding).
+=notmuch= and =mu= are command-line programs that ship with their own
+Emacs-based mail user agent.  The CLI handles the search queries, while
+the MUA lets the user interact with the retrieved messages.  The CLI
+component can be used without Emacs.
 
-Before switching to Emacs in the summer of 2019, I used to use Mutt or
-Thunderbird as a plan B (starting from mid 2016).  At that time I did
-not receive a lot of email, maybe 2-3 per week or even less, and did not
-follow any mailing lists.  My Mutt setup was just a basic front-end to
-the IMAP server, meaning that I did not have anything like =offlineimap=
-or =mbsync= set up.  My workflow back then was heavily focused on
-elaborate directories/folders to store the mail I wanted.  For example,
-I had an "archive" directory for each of my three email accounts and
-inside of that I had yearly archives.  To cut the long story short, in
-order to find an email I had to go looking for it at some exact
-location.  It was not efficient, but I was okay with it as my mail
-traffic was very low.
+Of the three, Gnus is the only one that reads NNTP sources.  This can be
+convenient because one may follow a mailing list without ever
+subscribing to it.  The benefit is that the user's inbox stays clean
+without any kind of rules-based setup to filter out incoming traffic.
+It also is trivial to review the history of a mailing list without ever
+bothering to import its archives as everything is readily available on
+the NNTP source.
 
-Once I became a full-time Emacs user, I decided to push the boundaries
-of what I could do with email.  The most popular option seemed to be
-Mu4e so I picked that one (autumn 2019).  It was easy for me to set up
-and I liked its middle-of-the-road approach of combining a typical
-directory-based structure with a potent search tool.  I had stopped
-doing the complex directory structures with my archives and would keep
-everything in my inbox.  Still, the volume of incoming mail was very
-low: I was not really using the search features and was reverting to the
-directory views instead.
+[ Gnus can also read RSS feeds, but I do not think it is good at it.
+  Read: [[#h:7e4448ec-3878-4ea2-9cd6-75e9faaac373][Have you tried Gnus for RSS feeds?]] ]
 
-Thus I decided to go with Gnus (early 2020) whose value proposition
-seemed to be /"directories are first-class citizens here, same for
-Newsgroup sources"/.  Gnus calls all of them "groups" based on its useful
-metaphor of treating everything as ephemeral news.  What I learnt from
-my time with Gnus is that:
+Gnus is a competent email client as well: it can practically do
+everything one needs though at the non-negligible cost of configuring
+lots of variables and learning the relevant commands.  I believe that
+without much tinkering Gnus is best suited for those who like their mail
+to (i) reflect a specific file system directory tree and (ii) wish to
+consolidate their email and NNTP news reading in a single interface.
+There is also the fact that Gnus is built into Emacs, though I
+personally do not consider that a compelling reason to make a certain
+choice.
 
-1. Mailing lists are worth paying attention to as you can learn a lot
-   from other people's input in various conversations (emacs-devel, bug
-   reports, etc.).
+Neither Mu4e nor Notmuch have a capability to parse NNTP sources, so the
+user must subscribe to mailing lists.  The major downside in terms of
+convenience is that one must download and then import the archive in
+order to review older threads.  I have not had that problem, though the
+convenience of Gnus on this matter should not be underestimated.
 
-2. It is good to use =mbsync= or equivalent as it removes the burden from
-   Emacs and allows you to keep a copy of your mail correspondence.  I
-   had started with Gnus' nnimap backend, which communicated directly
-   with the IMAP server, but once my email traffic started to increase,
-   I learnt the hard way that =mbsync= was better suited for the task, as
-   it did not block Emacs.
+Both Mu4e and Notmuch are centred around the idea that a search-driven
+interface with dynamic, virtual sets of emails is more efficient at
+scale than a physical directory structure.  Gnus also has search
+capabilities and can even use the Notmuch CLI as its backend, though I
+did not find the experience to be as good as just using notmuch.el
+(perhaps because I prefer a focused tool that is optimised for its task
+instead of a do-a-bit-of-everything approach that has to make
+compromises to accommodate old and new requirements).
 
-3. Directory-based workflows do not scale.  As I started to get more
-   email, I realised that I often needed to quickly retrieve some piece
-   of information that was kept in one of my three inbox directories or
-   some other location.  Gnus has search methods but there are
-   inconsistencies between nntp, nnmaildir, etc. to the effect that I
-   would need to have special rules for each case.  Maybe I did not read
-   the manual very carefully?  Perhaps I did not understand something?
-   At any rate, it did not feel like worth the effort.
+Virtual folders and physical directories are not mutually exclusive.
+All three programs use combinations of both concepts.  The differences
+are mostly in terms of execution or sheer preference.
 
-The search engine I wanted to use with Gnus was =notmuch=, because it is
-mentioned in the Gnus manual.  As I was looking for a way to be in full
-control of my email setup, I thought it would be better to try Notmuch
-without the layer of abstraction that Gnus added on top of it, stop
-following a directory-based workflow, and embrace filtering and
-narrowing (concepts I learnt to appreciate through my daily usage of
-Emacs).
+The main differences I have observed between Mu4e and Notmuch reflect
+the focus of each package.  Both can be made to cater to almost the same
+workflows, so this is mostly about their respective starting points.
+Mu4e defaults to a tree view for its message threads, whereas Notmuch
+uses a compact view of threads (a tree style is also available and can
+be toggled on at any time).  Mu4e will show, say, three emails
+discussing the same topic, while Notmuch will display a single line with
+the count of messages that deal with the given topic (Gnus is like Mu4e
+in this regard).  For users who track lots of mailing lists, Notmuch's
+presentation feels more appropriate as it makes it easier to ignore
+threads without having to look at individual messages inside of them.
 
-My few test on the command-line convinced me to refactor my email setup.
-So I decided to read through all the manpages and then go with
-notmuch.el (made the switch between 2021-05-13 and 2021-05-14).  I did
-not want to revert to Mu4e because I had the feeling that its hybrid
-approach to directories and search would push me back to my old
-inefficient habits.  Whereas Notmuch is all about tagging and filtering,
-which makes me believe that I can push myself into new territory (the
-configs and docs: [[#h:a196812e-1644-4536-84ba-687366867def][Notmuch (mail indexer and mail user agent (MUA))]]).
+Both Mu4e and Notmuch have notions of "saved searches" or "bookmarks".
+Basically, these are virtual folders that contain messages which match
+user-defined search terms.  Notmuch can quickly switch to a saved search
+by using a single key or a key sequence.  The option of a key sequence
+is particularly helpful when dealing with conceptually related entries,
+such as the key sequence =e d= pertaining to "Emacs development" while
+=e b= is for "Emacs bugs".  Mu4e can only accept a single character, as
+far as I can tell, which is perfectly fine for ordinary usage though
+imposes constraints at scale.
 
-This is not to say that any of these tools is inherently better/worse
-than its peers.  You can be productive with all three of them (my old
-configurations for Mu4e and Gnus can be found in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]).
-What matters is to identify your requirements, set your expectations or
-ambitions, and pick the option that can optimise your productivity.  The
-point is to not be dogmatic about it: just use what works for you the
-same way I did in through journey to where I currently am.
+Gnus has a concept of "topics" and provides a powerful design for
+organising and prioritising them.  Again though, the user must be
+prepared to put in the necessary work to make best use of this facility.
+Otherwise it is overkill.
+
+For those not used to a search-centric presentation, Mu4e is more
+intuitive at applying changes to items in its mail listing view, such as
+to mark emails as read, flag them as important, etc.  Mu4e's approach is
+to apply a mark on demand and execute all marks at the user's request (a
+bit like Dired), which practically means that the user can declare some
+messages as unread, specify others for deletion, others still for a
+third operation, and act on all of them at once.  This can be done
+inside any mail listing, as the user can skip past entries that should
+remain intact.  Whereas Notmuch has no concept of marking items and then
+operating on them at once.  Instead it can add/remove tags for the
+thread or mail at point or for those in the given region.  Regions need
+to be contiguous, which can be a limitation.  The experienced Notmuch
+user learns to limit the view to a given search pattern and then apply
+the changes to all remaining results by drawing a region on the entire
+buffer (Notmuch's filters can be compounded so it is typical to search
+for messages that match "from PERSON" and then filter further with
+"unread only").  Notmuch's approach is practical, though it might appear
+more difficult at first.
+
+For basic requirements, Mu4e is the easiest to set up.  Notmuch is not
+difficult either, though its paradigm for treating emails may require
+some time to get used to.  Gnus can be configured with minimal tweaks,
+though it should still feel like the most difficult to master.  More so
+if one wants to customise it extensively.
+
+For these reasons, I think Mu4e is a great choice for someone who wants
+a reliable client for their own email correspondence and perhaps keep
+track of a few mailing lists.  Gnus can fill that same niche while also
+providing access to NNTP sources.  Though its sheer power and impression
+of complexity makes it more suitable for those who have the patience to
+cope with its demands.  Finally, Notmuch is the best for those who
+prefer a search-driven method for all their mail, who appreciate the
+compact thread view, and who tend to follow lots of mailing lists or
+generally receive a high volume of messages to their inbox.
 
 ** Have you tried Gnus for RSS feeds?
 :PROPERTIES:
