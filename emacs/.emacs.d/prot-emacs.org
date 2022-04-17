@@ -1473,7 +1473,9 @@ This is an overview of the settings covered herein:
   (setq-default case-fold-search t)   ; For general regexp
 
   (setq enable-recursive-minibuffers t)
-  (setq resize-mini-windows nil)
+  ;; Allow Emacs to resize mini windows, otherwise this does not work:
+  ;;   (setq org-use-fast-todo-selection 'expert)
+  (setq resize-mini-windows t)
   (setq minibuffer-eldef-shorten-default t)
 
   (setq read-answer-short t) ; also check `use-short-answers' for Emacs28
