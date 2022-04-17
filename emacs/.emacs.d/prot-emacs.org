@@ -5960,7 +5960,7 @@ configurations are about.
   (setq mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
   (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
   (setq message-citation-line-format "On %Y-%m-%d, %R %z, %f wrote:\n")
-  (setq message-citation-line-function 'message-insert-formatted-citation-line)
+  (setq message-citation-line-function nil)
   (setq message-ignored-cited-headers nil) ; default is "." for all headers
   (setq message-confirm-send nil)
   (setq message-kill-buffer-on-exit t)
