@@ -6550,7 +6550,10 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
     (define-key map (kbd "T") #'prot-notmuch-show-todo-message)
     (define-key map (kbd "X") #'prot-notmuch-show-reference-message)
     (define-key map (kbd "C") #'prot-notmuch-show-complete-message)
-    (define-key map (kbd "S") #'prot-notmuch-show-spam-message)))
+    (define-key map (kbd "S") #'prot-notmuch-show-spam-message))
+  (define-key notmuch-show-stash-map (kbd "S") #'prot-notmuch-stash-sourcehut-link)
+  ;; Like C-c M-h for `message-insert-headers'
+  (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
 #+end_src
 
 And here is =prot-notmuch.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
@@ -6601,7 +6604,7 @@ Simple and super effective!
 (prot-emacs-elpa-package 'ol-notmuch)
 #+end_src
 
-**** Use of transient.el with Notmuch (notmuch-transient)
+**** COMMENT Use of transient.el with Notmuch (notmuch-transient)
 :PROPERTIES:
 :CUSTOM_ID: h:e1ab755f-28bb-40ad-ac22-920c49e8b7bc
 :END:
