@@ -378,5 +378,36 @@ REJECTED, APPLIED."
       (message-add-header (format "X-Sourcehut-Patchset-Update: %s" control-code)))
     (user-error "%s is not specified in `prot-notmuch-patch-control-codes'" control-code)))
 
+;; NOTE 2022-04-19: Ideally we should be able to use the
+;; `notmuch-show-stash-mlarchive-link-alist' for
+;; `prot-notmuch-stash-sourcehut-link', but it assumes that the base URL
+;; is fixed for all message IDs, whereas those on SourceHut are not.
+
+(declare-function notmuch-show-get-header "notmuch-show" (header &optional props))
+(declare-function notmuch-show-get-message-id "notmuch-show" (&optional bare))
+(declare-function notmuch-show-message-top "notmuch-show")
+(declare-function notmuch-common-do-stash "notmuch-lib" (text))
+
+;;;###autoload
+(defun prot-notmuch-stash-sourcehut-link (&optional current)
+  "Stash web link to current SourceHut thread.
+With optional CURRENT argument, produce a link to the current
+message, else use the topmost message (start of the thread).
+
+Note that the topmost message is assumed to hold the id of the
+base URL, though this is not necessarily true."
+  (interactive "P")
+  (let* ((to (concat (notmuch-show-get-header :To) " "
+                     (notmuch-show-get-header :Cc)))
+         (ml (replace-regexp-in-string ".*?\\([-a-zA-Z0-9=._+~<>/]+\\)@\\(lists.sr.ht\\).*?" "\\1" to))
+         (base-id (save-excursion (goto-char (point-min))
+                                  (notmuch-show-message-top)
+                                  (notmuch-show-get-message-id t)))
+         (current-id (notmuch-show-get-message-id t)))
+    (notmuch-common-do-stash
+     (if current
+         (format "https://lists.sr.ht/%s/<%s>#<%s>" ml base-id current-id)
+       (format "https://lists.sr.ht/%s/<%s>" ml base-id)))))
+
 (provide 'prot-notmuch)
 ;;; prot-notmuch.el ends here
