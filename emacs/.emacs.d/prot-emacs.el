@@ -2253,8 +2253,8 @@ sure this is a good approach."
   (setq mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
   (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
   (setq message-citation-line-format "On %Y-%m-%d, %R %z, %f wrote:\n")
-  (setq message-citation-line-function
-        'message-insert-formatted-citation-line)
+  (setq message-citation-line-function nil)
+  (setq message-ignored-cited-headers nil) ; default is "." for all headers
   (setq message-confirm-send nil)
   (setq message-kill-buffer-on-exit t)
   (setq message-wide-reply-confirm-recipients t)
@@ -2504,16 +2504,12 @@ sure this is a good approach."
     (define-key map (kbd "T") #'prot-notmuch-show-todo-message)
     (define-key map (kbd "X") #'prot-notmuch-show-reference-message)
     (define-key map (kbd "C") #'prot-notmuch-show-complete-message)
-    (define-key map (kbd "S") #'prot-notmuch-show-spam-message)))
+    (define-key map (kbd "S") #'prot-notmuch-show-spam-message))
+  (define-key notmuch-show-stash-map (kbd "S") #'prot-notmuch-stash-sourcehut-link)
+  ;; Like C-c M-h for `message-insert-headers'
+  (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
 
 (prot-emacs-elpa-package 'ol-notmuch)
-
-(prot-emacs-elpa-package 'notmuch-transient
-  (setq notmuch-transient-prefix (kbd "?"))
-  (define-key notmuch-hello-mode-map  notmuch-transient-prefix #'notmuch-hello-mode-transient)
-  (define-key notmuch-tree-mode-map   notmuch-transient-prefix #'notmuch-tree-mode-transient)
-  (define-key notmuch-search-mode-map notmuch-transient-prefix #'notmuch-search-mode-transient)
-  (define-key notmuch-show-mode-map   notmuch-transient-prefix #'notmuch-show-mode-transient))
 
 ;;; Sending email (SMTP)
 (prot-emacs-builtin-package 'smtpmail
