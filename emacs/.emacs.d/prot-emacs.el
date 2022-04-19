@@ -2488,6 +2488,8 @@ sure this is a good approach."
   ;; Mode line indicator with the number of new mails.
   (prot-notmuch-mail-indicator 1)
 
+  (add-hook 'notmuch-mua-send-hook #'prot-notmuch-ask-sourcehut-control-code)
+
   (let ((map notmuch-search-mode-map))
     (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
     (define-key map (kbd "A") #'notmuch-search-archive-thread)
