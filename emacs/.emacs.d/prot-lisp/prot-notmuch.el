@@ -365,7 +365,7 @@ them.")
   "Return RX-GROUP of SourceHut mail in STRING."
   (string-clean-whitespace
    (replace-regexp-in-string
-    ".*?\\(\\([-a-zA-Z0-9=._+~<>/]+\\)@\\(lists.sr.ht\\)\\).*?"
+    ".*?[<]?\\(\\([-a-zA-Z0-9=._+~/]+\\)@\\(lists\\.sr\\.ht\\)\\)[>]?.*?"
     (format "\\%s" rx-group) string)))
 
 (declare-function notmuch-show-get-header "notmuch-show" (header &optional props))
