@@ -353,5 +353,30 @@ update the mode line indicator with the new mail count."
         (advice-remove fn #'prot-notmuch--add-hook)))
     (force-mode-line-update t)))
 
+;;;; SourceHut-related setup
+
+(defconst prot-notmuch-patch-control-codes
+  '("PROPOSED" "NEEDS_REVISION" "SUPERSEDED" "APPROVED" "REJECTED" "APPLIED")
+  "Control codes for SourceHut patches.
+See `prot-notmuch-patch-add-email-control-code' for how to apply
+them.")
+
+(declare-function message-fetch-field "message" (header &optional first))
+(declare-function message-add-header "message" (&rest headers))
+
+;; Read: <https://man.sr.ht/lists.sr.ht/#email-controls>.
+;;;###autoload
+(defun prot-notmuch-patch-add-email-control-code (control-code)
+  "Add custom header for SourceHut email controls.
+The CONTROL-CODE is one of these special keywords (capitalisation
+is canonical): PROPOSED, NEEDS_REVISION, SUPERSEDED, APPROVED,
+REJECTED, APPLIED."
+  (interactive
+   (list (completing-read "Select control code: " prot-notmuch-patch-control-codes nil t)))
+  (if (member control-code prot-notmuch-patch-control-codes)
+    (unless (message-fetch-field "X-Sourcehut-Patchset-Update")
+      (message-add-header (format "X-Sourcehut-Patchset-Update: %s" control-code)))
+    (user-error "%s is not specified in `prot-notmuch-patch-control-codes'" control-code)))
+
 (provide 'prot-notmuch)
 ;;; prot-notmuch.el ends here
