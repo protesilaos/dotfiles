@@ -363,10 +363,11 @@ them.")
 
 (defun prot-notmuch--rx-in-sourcehut-mail (rx-group string)
   "Return RX-GROUP of SourceHut mail in STRING."
-  (string-clean-whitespace
-   (replace-regexp-in-string
-    ".*?[<]?\\(\\([-a-zA-Z0-9=._+~/]+\\)@\\(lists\\.sr\\.ht\\)\\)[>]?.*?"
-    (format "\\%s" rx-group) string)))
+  (when (string-match-p "lists\\.sr\\.ht" string)
+    (string-clean-whitespace
+     (replace-regexp-in-string
+      ".*?[<]?\\(\\([-a-zA-Z0-9=._+~/]+\\)@\\(lists\\.sr\\.ht\\)\\)[>]?.*?"
+      (format "\\%s" rx-group) string))))
 
 (declare-function notmuch-show-get-header "notmuch-show" (header &optional props))
 (declare-function message-fetch-field "message" (header &optional first))
