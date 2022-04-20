@@ -6538,7 +6538,9 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
   ;; Mode line indicator with the number of new mails.
   (prot-notmuch-mail-indicator 1)
 
-  (add-hook 'notmuch-mua-send-hook #'prot-notmuch-ask-sourcehut-control-code)
+  (dolist (fn '(prot-notmuch-check-valid-sourcehut-email
+                prot-notmuch-ask-sourcehut-control-code))
+    (add-hook 'notmuch-mua-send-hook fn))
 
   (let ((map notmuch-search-mode-map))
     (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally

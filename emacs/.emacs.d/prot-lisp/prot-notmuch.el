@@ -369,6 +369,7 @@ them.")
     (format "\\%s" rx-group) string)))
 
 (declare-function notmuch-show-get-header "notmuch-show" (header &optional props))
+(declare-function message-fetch-field "message" (header &optional first))
 
 (defun prot-notmuch--get-to-or-cc-header ()
   "Get appropriate To or Cc header."
@@ -387,7 +388,6 @@ domain."
   (prot-notmuch--rx-in-sourcehut-mail
    rx-group (prot-notmuch--get-to-or-cc-header)))
 
-(declare-function message-fetch-field "message" (header &optional first))
 (declare-function message-add-header "message" (&rest headers))
 
 ;; Read: <https://man.sr.ht/lists.sr.ht/#email-controls>.
@@ -442,5 +442,14 @@ base URL, though this is not necessarily true."
          (format "https://lists.sr.ht/%s/<%s>#<%s>" ml base-id current-id)
        (format "https://lists.sr.ht/%s/<%s>" ml base-id)))))
 
+;;;###autoload
+(defun prot-notmuch-check-valid-sourcehut-email ()
+  "Check if SourceHut address is correct.
+Add this to `notmuch-mua-send-hook'."
+  (when-let* ((recipients (prot-notmuch--get-to-or-cc-header))
+              (sourcehut (prot-notmuch--rx-in-sourcehut-mail 1 recipients)))
+    (unless (string-match-p "^\\(~\\|\\.\\)" sourcehut)
+      (y-or-n-p "SourceHut address looks wrong.  Send anyway?"))))
+    
 (provide 'prot-notmuch)
 ;;; prot-notmuch.el ends here
