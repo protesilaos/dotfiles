@@ -447,10 +447,10 @@ base URL, though this is not necessarily true."
 (defun prot-notmuch-check-valid-sourcehut-email ()
   "Check if SourceHut address is correct.
 Add this to `notmuch-mua-send-hook'."
-  (when-let* ((recipients (prot-notmuch--get-to-or-cc-header))
-              (sourcehut (prot-notmuch--rx-in-sourcehut-mail 1 recipients)))
-    (unless (string-match-p "^\\(~\\|\\.\\)" sourcehut)
-      (y-or-n-p "SourceHut address looks wrong.  Send anyway?"))))
+  (when-let* ((ml (prot-notmuch--extract-sourcehut-mail 1))
+              ((not (string-match-p "^\\(~\\|\\.\\)" ml)))
+              ((not (y-or-n-p "SourceHut address looks wrong.  Send anyway?"))))
+    (user-error "Incorrect SourceHut address")))
     
 (provide 'prot-notmuch)
 ;;; prot-notmuch.el ends here
