@@ -1519,6 +1519,10 @@ This is an overview of the settings covered herein:
 
   (vertico-mode 1)
 
+  (let ((map vertico-map))
+    (define-key map (kbd "M-,") #'vertico-quick-insert)
+    (define-key map (kbd "M-.") #'vertico-quick-exit))
+
   ;; This works with `file-name-shadow-mode'.  When you are in a
   ;; sub-directory and use, say, `find-file' to go to your home '~/' or
   ;; root '/' directory, Vertico will clear the old path to keep only
