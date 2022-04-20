@@ -186,7 +186,7 @@
         modus-themes-intense-mouseovers nil
         modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui t
+        modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -203,7 +203,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless accented (padding 3))
+        modus-themes-mode-line nil
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -229,7 +229,7 @@
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(neutral-underline faint)
+        modus-themes-links nil
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
@@ -242,7 +242,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts nil
+        modus-themes-prompts '(intense bold)
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -262,12 +262,12 @@
           (selection . (semibold accented))
           (popup . (extrabold)))
 
-        modus-themes-mail-citations 'faint ; {nil,'intense,'faint,'monochrome}
+        modus-themes-mail-citations 'intense ; {nil,'intense,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend accented)
+        modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs nil
@@ -304,7 +304,7 @@
     (modus-themes-with-colors
       (custom-set-faces
        ;; Here add all your face definitions.
-       `(cursor ((,class :background ,red-intense))))))
+       `(cursor ((,class :background ,magenta-intense))))))
 
   (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
 
@@ -597,6 +597,10 @@
   (setq vertico-cycle t)
 
   (vertico-mode 1)
+
+  (let ((map vertico-map))
+    (define-key map (kbd "M-,") #'vertico-quick-insert)
+    (define-key map (kbd "M-.") #'vertico-quick-exit))
 
   ;; This works with `file-name-shadow-mode'.  When you are in a
   ;; sub-directory and use, say, `find-file' to go to your home '~/' or
@@ -2488,7 +2492,9 @@ sure this is a good approach."
   ;; Mode line indicator with the number of new mails.
   (prot-notmuch-mail-indicator 1)
 
-  (add-hook 'notmuch-mua-send-hook #'prot-notmuch-ask-sourcehut-control-code)
+  (dolist (fn '(prot-notmuch-check-valid-sourcehut-email
+                prot-notmuch-ask-sourcehut-control-code))
+    (add-hook 'notmuch-mua-send-hook fn))
 
   (let ((map notmuch-search-mode-map))
     (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
