@@ -15,7 +15,7 @@
   <https://gitlab.com/protesilaos/dotfiles> OR
   <https://github.com/protesilaos/dotfiles>
 + Just the =*.el= version of this file (works with =outline-minor-mode=):
-  <https://gitlab.com/protesilaos/dotfiles/-/commits/master/emacs/.emacs.d/prot-emacs.el>
+  <https://git.sr.ht/~protesilaos/dotfiles/tree/master/item/emacs/.emacs.d/prot-emacs.el>
 
 Information pertaining to my build of Emacs:
 
