@@ -11,7 +11,9 @@
 + Word count: *{{{count-words}}}* (not a measure of quality, just to offer an
   idea on what to expect)
 + Git repository (part of my dotfiles for GNU/Linux):
-  <https://gitlab.com/protesilaos/dotfiles> OR <https://github.com/protesilaos/dotfiles>
+  https://git.sr.ht/~protesilaos/dotfiles OR
+  <https://gitlab.com/protesilaos/dotfiles> OR
+  <https://github.com/protesilaos/dotfiles>
 + Just the =*.el= version of this file (works with =outline-minor-mode=):
   <https://gitlab.com/protesilaos/dotfiles/-/commits/master/emacs/.emacs.d/prot-emacs.el>
 
@@ -37,7 +39,7 @@ system-configuration-options
 :END:
 
 + HTML version :: <https://protesilaos.com/emacs/dotemacs>
-+ Git repo :: <https://gitlab.com/protesilaos/dotfiles>
++ Git repo :: <https://git.sr.ht/~protesilaos/dotfiles>
 
 ** What is this
 :PROPERTIES:
@@ -221,7 +223,7 @@ by other libraries of mine.  As such, all we do here is load the file.
 #+end_src
 
 And here is =prot-common.el= in its totality.  It is available as a file
-in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (same for all my Emacs libraries):
+in [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]] (same for all my Emacs libraries):
 
 #+include: prot-lisp/prot-common.el src emacs-lisp :tangle no
 
@@ -375,7 +377,7 @@ use elsewhere.
 #+end_src
 
 These are the contents of the =prot-simple.el= library (find the file in
-[[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
+[[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
 
 #+include: prot-lisp/prot-simple.el src emacs-lisp :tangle no
 
@@ -548,7 +550,7 @@ background values.  This stands for a minimum contrast ratio of 7:1,
 also known as the WCAG AAA standard (the highest of its kind).
 
 The themes are "Modus Operandi" (light) and "Modus Vivendi" (dark).  The
-source code is available [[https://gitlab.com/protesilaos/modus-themes][on their GitLab page]] while you can read the
+source code is available [[https://git.sr.ht/~protesilaos/modus-themes][on their GitLab page]] while you can read the
 HTML version of [[https://protesilaos.com/emacs/modus-themes][their manual on my website]].  If you have the package
 installed or are using Emacs >=28, you can read the manual from the
 built-in Info reader.  Evaluate: =(info "(modus-themes) Top")=.
@@ -849,7 +851,7 @@ skeleton of DejaVu Sans Mono.  Though there are issues with the upstream
 version of Hack which I do not like, such as the elongated mid dot
 inside the =0= and the pronounced hook at the top of the =1=, the small
 shape of the backtick character...  Little things which keep annoying
-me.  My [[https://gitlab.com/protesilaos/hack-font-mod][custom build of Hack]] uses some alternative glyphs from a variety
+me.  My [[https://git.sr.ht/~protesilaos/hack-font-mod][custom build of Hack]] uses some alternative glyphs from a variety
 of sources that alleviate most of those problems (though it obviously
 cannot alter the overall character of the typeface).
 
@@ -968,8 +970,8 @@ Relevant publications of mine that are not part of this document:
   ;; as it explains what those property lists should contain.
   ;;
   ;; The version of "Hack" that I custom is a custom build on mine:
-  ;; <https://gitlab.com/protesilaos/hack-font-mod>.  Same principle for
-  ;; Iosevka Comfy: <https://gitlab.com/protesilaos/iosevka-comfy>.
+  ;; <https://git.sr.ht/~protesilaos/hack-font-mod>.  Same principle for
+  ;; Iosevka Comfy: <https://git.sr.ht/~protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
         '((small . ( :fixed-pitch-family "Hack"
                      :fixed-pitch-regular-weight regular
@@ -1055,7 +1057,7 @@ Relevant publications of mine that are not part of this document:
 #+end_src
 
 This is the source code of =prot-fonts.el= (you can always find the file
-if you directly clone [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]).
+if you directly clone [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]).
 
 #+include: prot-lisp/prot-fonts.el src emacs-lisp :tangle no
 
@@ -1312,7 +1314,7 @@ given input:
 #+end_src
 
 These are the contents of the =prot-orderless.el= library (get the file
-from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
+from [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
 
 #+include: prot-lisp/prot-orderless.el src emacs-lisp :tangle no
 
@@ -1935,7 +1937,7 @@ while using relevant Consult commands, such as =consult-grep=.
   (prot-embark-setup-packages 1))
 #+end_src
 
-This is =prot-embark.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+This is =prot-embark.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-embark.el src emacs-lisp :tangle no
 
@@ -2029,7 +2031,7 @@ referenced in the source code below this configuration block):
     (define-key map (kbd "C-x p t") #'prot-project-retrieve-tag)))
 #+end_src
 
-This is =prot-project.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+This is =prot-project.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-project.el src emacs-lisp :tangle no
 
@@ -2114,7 +2116,7 @@ sources, including bookmarks, recent files, and buffers (check more in
     (define-key map (kbd "C-x C-r") #'prot-recentf-recent-files-or-dirs)))
 #+end_src
 
-This is a copy of =prot-recentf.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+This is a copy of =prot-recentf.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-recentf.el src emacs-lisp :tangle no
 
@@ -2584,7 +2586,7 @@ package configurations).
     (define-key map (kbd "<C-return>") #'prot-search-isearch-other-end)))
 #+end_src
 
-Here is =prot-search.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+Here is =prot-search.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-search.el src emacs-lisp :tangle no
 
@@ -2954,7 +2956,7 @@ ecosystem:
     (kbd "<return>") #'image-dired-thumbnail-display-external))
 #+end_src
 
-These are the contents of =prot-dired.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+These are the contents of =prot-dired.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-dired.el src emacs-lisp :tangle no
 
@@ -3473,7 +3475,7 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
 ;;   (global-tab-line-mode -1))
 #+end_src
 
-The =prot-tab.el= code, which is in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]:
+The =prot-tab.el= code, which is in [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]:
 
 #+include: prot-lisp/prot-tab.el src emacs-lisp :tangle no
 
@@ -3597,7 +3599,7 @@ Also watch: [[https://protesilaos.com/codelog/2021-09-08-emacs-bookmarks-intro/]
   (prot-bookmark-extra-keywords 1))
 #+end_src
 
-Here is =prot-bookmark.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+Here is =prot-bookmark.el= (from [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-bookmark.el src emacs-lisp :tangle no
 
@@ -3756,7 +3758,7 @@ Other potentially relevant parts of my dotemacs:
 #+end_src
 
 And here is =logos.el= in its totality.  It is available as a file in
-[[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (same for all my Emacs libraries):
+[[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]] (same for all my Emacs libraries):
 
 #+include: prot-lisp/logos.el src emacs-lisp :tangle no
 
@@ -3786,7 +3788,7 @@ did not bind any keys: this is a user-level customisation.  The other
 options I have here are for the sake of visibility and are left to their
 default values.
 
-The code for this project is on the [[https://gitlab.com/protesilaos/usls][USLS Gitlab repo]] and reproduced in
+The code for this project is on the [[https://git.sr.ht/~protesilaos/usls][USLS Gitlab repo]] and reproduced in
 the subsequent code block.
 
 #+begin_src emacs-lisp
@@ -3812,7 +3814,7 @@ the subsequent code block.
     (define-key map (kbd "C-c n l") #'usls-follow-link)))
 #+end_src
 
-Here is the =usls.el= code, which is also part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as
+Here is the =usls.el= code, which is also part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]] (as
 with all my Elisp code):
 
 #+include: prot-lisp/usls.el src emacs-lisp :tangle no
@@ -3895,7 +3897,7 @@ create them, including the optional description that =tmr= accepts.
     (define-key map (kbd "C-c t c") #'tmr-cancel)))
 #+end_src
 
-This is its code (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+This is its code (from [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/tmr.el src emacs-lisp :tangle no
 
@@ -4012,7 +4014,7 @@ the variable =display-buffer-alist=).
     (define-key map (kbd "C-c C-n") #'prot-diff-narrow-dwim)))
 #+end_src
 
-This is =prot-diff.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+This is =prot-diff.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-diff.el src emacs-lisp :tangle no
 
@@ -4396,7 +4398,7 @@ manual for more on the matter):
     (define-key map (kbd "w") #'prot-vc-log-kill-hash)))
 #+end_src
 
-And here is =prot-vc.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+And here is =prot-vc.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-vc.el src emacs-lisp :tangle no
 
@@ -4815,7 +4817,7 @@ particular order):
     (define-key map (kbd "C-c C-s") #'prot-eshell-find-subdirectory-recursive)))
 #+end_src
 
-This is =prot-eshell.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+This is =prot-eshell.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-eshell.el src emacs-lisp :tangle no
 
@@ -5413,7 +5415,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
                  :immediate-finish t)))
 #+end_src
 
-Here are my few extras for Org (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+Here are my few extras for Org (from [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-org.el src emacs-lisp :tangle no
 
@@ -5863,7 +5865,7 @@ Finally, note that I control the placement of those buffers in the
 #+end_src
 
 These are the contents of the =prot-diary.el= library (find the source
-code in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
+code in [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
 
 #+include: prot-lisp/prot-diary.el src emacs-lisp :tangle no
 
@@ -5992,7 +5994,7 @@ configurations are about.
   (prot-mail-mail-indicator -1))
 #+end_src
 
-And here is =prot-mail.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+And here is =prot-mail.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-mail.el src emacs-lisp :tangle no
 
@@ -6569,7 +6571,7 @@ configured by the variable =prot-notmuch-mode-line-search-args=).
   (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
 #+end_src
 
-And here is =prot-notmuch.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+And here is =prot-notmuch.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-notmuch.el src emacs-lisp :tangle no
 
@@ -7056,7 +7058,7 @@ demonstrated back then (as of 2021-01-18).
       (define-key map (kbd "C-c +") #'prot-bongo-dired-make-playlist-file))))
 #+end_src
 
-Here is my =prot-bongo.el= library (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+Here is my =prot-bongo.el= library (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-bongo.el src emacs-lisp :tangle no
 
@@ -7223,11 +7225,11 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
       (define-key map (kbd "+") #'prot-elfeed-toggle-tag))))
 #+end_src
 
-This is =prot-elfeed.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+This is =prot-elfeed.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-elfeed.el src emacs-lisp :tangle no
 
-And here is =prot-elfeed-bongo.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+And here is =prot-elfeed-bongo.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-elfeed-bongo.el src emacs-lisp :tangle no
 
@@ -7272,7 +7274,7 @@ to keep track of the information on display.
   (prot-proced-extra-keywords 1))
 #+end_src
 
-Here is =prot-proced.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+Here is =prot-proced.el= (from [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-proced.el src emacs-lisp :tangle no
 
@@ -7564,7 +7566,7 @@ some of the above.
 #+end_src
 
 And here is =prot-eww.el= in its entirety.  It is available as a file in
-[[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (same for all my Emacs libraries):
+[[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]] (same for all my Emacs libraries):
 
 #+include: prot-lisp/prot-eww.el src emacs-lisp :tangle no
 
@@ -7910,7 +7912,7 @@ want is to make the mode line gracefully adapt to changes in font size.
   (prot-moody-set-height -1))
 #+end_src
 
-Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+Here are my tweaks (from [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-moody.el src emacs-lisp :tangle no
 
@@ -8288,7 +8290,7 @@ To disable the effect, just do =M-x prot-prism-disable=.
   (setq prot-prism-presets-function #'prot-prism--colors))
 #+end_src
 
-Here are my tweaks (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+Here are my tweaks (from [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-prism.el src emacs-lisp :tangle no
 
@@ -8344,7 +8346,7 @@ extensions in [[#h:31deeff4-dfae-48d9-a906-1f3272f29bc9][Version control framewo
     (define-key map (kbd "C-c z") #'delete-trailing-whitespace)))
 #+end_src
 
-This is =prot-sideline.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+This is =prot-sideline.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-sideline.el src emacs-lisp :tangle no
 
@@ -8438,7 +8440,7 @@ to, and navigate therefrom.  It really is an efficient workflow:
 #+end_src
 
 These are the contents of the =prot-outline.el= library (find the file in
-[[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
+[[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]] (as with all my Elisp code)):
 
 #+include: prot-lisp/prot-outline.el src emacs-lisp :tangle no
 
@@ -8505,7 +8507,7 @@ be restored with the =cursory-restore-latest-preset= function.
   (define-key global-map (kbd "C-c p") #'cursory-set-preset))
 #+end_src
 
-This is =prot-cursor.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+This is =prot-cursor.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-cursor.el src emacs-lisp :tangle no
 
@@ -8842,7 +8844,7 @@ Refer to the source code in [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common cu
   (define-key org-mode-map (kbd "M-;") nil))
 #+end_src
 
-This is =prot-text.el= (find the file in [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]] (as with all my
+This is =prot-text.el= (find the file in [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]] (as with all my
 Elisp code)):
 
 #+include: prot-lisp/prot-text.el src emacs-lisp :tangle no
@@ -8961,7 +8963,7 @@ bound by default to =M-q=.
   (add-hook 'after-init-hook #'column-number-mode))
 #+end_src
 
-These are the contents of =prot-fill.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+These are the contents of =prot-fill.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-fill.el src emacs-lisp :tangle no
 
@@ -9007,7 +9009,7 @@ documented in their docstrings, so please check the code below.
     (define-key map (kbd "C-x C-;") #'prot-comment-timestamp-keyword)))
 #+end_src
 
-And here is =prot-comment.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+And here is =prot-comment.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-comment.el src emacs-lisp :tangle no
 
@@ -9181,7 +9183,7 @@ is disabled because I re-purpose it for a faster version of =C-x C-;=
     (define-key map (kbd "C-M-$") #'prot-spell-change-dictionary)))
 #+end_src
 
-This is =prot-spell.el= (part of [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+This is =prot-spell.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-spell.el src emacs-lisp :tangle no
 
@@ -10050,14 +10052,14 @@ use.  Let's say you plan to clone the repo at =~/Git/prot-dotfiles=.  You
 invoke this command from your shell:
 
 #+begin_example sh
-git clone https://gitlab.com/protesilaos/dotfiles.git ~/Git/prot-dotfiles
+git clone https://git.sr.ht/~protesilaos/dotfiles.git ~/Git/prot-dotfiles
 #+end_example
 
 If you do not want to copy the entire history of the project, you can
 pass the =--depth= flag, like this:
 
 #+begin_example sh
-git clone --depth 1 https://gitlab.com/protesilaos/dotfiles.git ~/Git/prot-dotfiles
+git clone --depth 1 https://git.sr.ht/~protesilaos/dotfiles.git ~/Git/prot-dotfiles
 #+end_example
 
 That one fetches just the latest commit and is considerably faster.
@@ -10229,7 +10231,7 @@ will be evaluated at startup and everything will work as expected:
 responsibility for everything.
 
 This hopefully covers it.  If you have any questions, either open an
-issue in [[https://gitlab.com/protesilaos/dotfiles/][my dotfiles' repo]] or [[https://protesilaos.com/contact/][contact me directly]].  Remember that I wish
+issue in [[https://git.sr.ht/~protesilaos/dotfiles/][my dotfiles' repo]] or [[https://protesilaos.com/contact/][contact me directly]].  Remember that I wish
 to be helpful, though I have no plan to turn this into yet another Emacs
 distro.
 
@@ -10284,7 +10286,7 @@ None of my tiling window managers is as well documented as my Emacs
 setup.  I do plan to improve things at some point.  Until then, my
 dotfiles are only intended for experienced users or, generally, those
 who understand that they will handle everything on their own:
-<https://gitlab.com/protesilaos/dotfiles>.
+<https://git.sr.ht/~protesilaos/dotfiles>.
 
 My Emacs is [[https://git.savannah.gnu.org/cgit/emacs.git/][built from source]], directly from trunk (i.e. the =master=
 branch).
