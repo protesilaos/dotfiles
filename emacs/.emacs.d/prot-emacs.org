@@ -3835,22 +3835,18 @@ my USLS (see [[#h:787df548-0d95-4512-a61d-27852198f561][USLS --- Unassuming Side
 
 #+include: prot-lisp/invtr.el src emacs-lisp :tangle no
 
-** tmr.el (TMR Must Recur)
+** TMR Must Recur (tmr to set timers)
 :PROPERTIES:
 :CUSTOM_ID: h:c90ba6fa-ebec-42a2-98a6-3ff9027b1ffa
 :END:
 
-Sometimes I need to set off a timer with a notification.  I used to rely
-on a homegrown shell script for such a task, but where is the fun in
-that?
+This is a package of mine.
 
-This package of mine provides a single command for setting a timer: =tmr=.
-
-The command prompts for a unit of time, which is represented as a string
-that consists of a number and, optionally, a single character suffix
-which specifies the unit of time.
-
-Valid formats:
+TMR provides facilities for setting timers using a convenient notation.
+The point of entry is the =tmr= command.  It prompts for a unit of time,
+which is represented as a string that consists of a number and,
+optionally, a single character suffix which specifies the unit of time.
+Valid input formats:
 
 | Input | Meaning   |
 |-------+-----------|
@@ -3859,24 +3855,32 @@ Valid formats:
 | 5s    | 5 seconds |
 | 5h    | 5 hours   |
 
-If =tmr= is called with an optional prefix argument (=C-u=), it also asks
-for a description which accompanies the given timer.  Preconfigured
+If =tmr= is called with an optional prefix argument (=C-u=), it also
+asks for a description which accompanies the given timer.  Preconfigured
 candidates are specified in the user option =tmr-descriptions-list=,
 though any arbitrary input is acceptable at the minibuffer prompt.
 
 When the timer is set, a message is sent to the echo area recording the
 current time and the point in the future when the timer elapses.  Echo
 area messages can be reviewed with the =view-echo-area-messages= which is
-bound to =C-h e= by default.
+bound to =C-h e= by default.  Though TMR provides its own buffer for
+reviewing its log: it is named =*tmr-messages*= and can be accessed with
+the command =tmr-view-echo-area-messages=.
 
 Once the timer runs its course, it produces a desktop notification and
 plays an alarm sound.  The notification's message is practically the
 same as that which is sent to the echo area.  The sound file for the
 alarm is defined in =tmr-sound-file=, while the urgency of the
 notification can be set through the =tmr-notification-urgency= option.
+Note that it is up to the desktop environment or notification daemon to
+decide how to handle the urgency value.
 
-The =tmr-cancel= command cancels the last =tmr=.  Note that for the time
-being it has no notion of multiple timers---just the last one.
+The =tmr-cancel= command is used to cancel running timers (as set by the
+=tmr= command).  If there is only one timer, it cancels it outright.  If
+there are multiple timers, it produces a minibuffer completion prompt
+which asks for one among them.  Timers at the completion prompt are
+described by the exact time they were set and the input that was used to
+create them, including the optional description that =tmr= accepts.
 
 #+begin_src emacs-lisp
 ;;; TMR Must Recur (just my generic timer)
@@ -3887,6 +3891,7 @@ being it has no notion of multiple timers---just the last one.
   (setq tmr-descriptions-list (list "Boil water" "Prepare tea" "Bake bread"))
   (let ((map global-map))
     (define-key map (kbd "C-c t t") #'tmr)
+    (define-key map (kbd "C-c t e") #'tmr-view-echo-area-messages) ; "e" to remind of C-h e
     (define-key map (kbd "C-c t c") #'tmr-cancel)))
 #+end_src
 

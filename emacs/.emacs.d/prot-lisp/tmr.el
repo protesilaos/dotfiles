@@ -1,10 +1,11 @@
 ;;; tmr.el --- TMR Must Recur -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2022  Protesilaos Stavrou
+;; Copyright (C) 2020-2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://protesilaos.com/emacs/dotemacs
-;; Version: 0.1.0
+;; URL: https://git.sr.ht/~protesilaos/tmr
+;; Mailing list: https://lists.sr.ht/~protesilaos/tmr
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -24,13 +25,45 @@
 
 ;;; Commentary:
 ;;
-;; TMR Must Recur.  Else a timer for my Emacs setup:
-;; <https://protesilaos.com/emacs/dotemacs>.
+;; TMR is an Emacs package that provides facilities for setting timers
+;; using a convenient notation.  The point of entry is the `tmr' command.
+;; It prompts for a unit of time, which is represented as a string that
+;; consists of a number and, optionally, a single character suffix which
+;; specifies the unit of time.  Valid input formats:
 ;;
-;; Remember that every piece of Elisp that I write is for my own
-;; educational and recreational purposes.  I am not a programmer and I
-;; do not recommend that you copy any of this if you are not certain of
-;; what it does.
+;; | Input | Meaning   |
+;; |-------+-----------|
+;; | 5     | 5 minutes |
+;; | 5m    | 5 minutes |
+;; | 5s    | 5 seconds |
+;; | 5h    | 5 hours   |
+;;
+;; If `tmr' is called with an optional prefix argument (`C-u'), it also
+;; asks for a description which accompanies the given timer.  Preconfigured
+;; candidates are specified in the user option `tmr-descriptions-list',
+;; though any arbitrary input is acceptable at the minibuffer prompt.
+;;
+;; When the timer is set, a message is sent to the echo area recording the
+;; current time and the point in the future when the timer elapses.  Echo
+;; area messages can be reviewed with the `view-echo-area-messages' which is
+;; bound to =C-h e= by default.  Though TMR provides its own buffer for
+;; reviewing its log: it is named =*tmr-messages*= and can be accessed with
+;; the command `tmr-view-echo-area-messages'.
+;;
+;; Once the timer runs its course, it produces a desktop notification and
+;; plays an alarm sound.  The notification's message is practically the
+;; same as that which is sent to the echo area.  The sound file for the
+;; alarm is defined in `tmr-sound-file', while the urgency of the
+;; notification can be set through the `tmr-notification-urgency' option.
+;; Note that it is up to the desktop environment or notification daemon to
+;; decide how to handle the urgency value.
+;;
+;; The `tmr-cancel' command is used to cancel running timers (as set by the
+;; `tmr' command).  If there is only one timer, it cancels it outright.  If
+;; there are multiple timers, it produces a minibuffer completion prompt
+;; which asks for one among them.  Timers at the completion prompt are
+;; described by the exact time they were set and the input that was used to
+;; create them, including the optional description that `tmr' accepts.
 
 ;;; Code:
 
@@ -48,7 +81,10 @@
 
 (defcustom tmr-notification-urgency 'normal
   "The urgency level of the desktop notification.
-Values can be `low', `normal' (default), or `critical'."
+Values can be `low', `normal' (default), or `critical'.
+
+The desktop environment or notification daemon is responsible for
+such notifications."
   :type '(choice
           (const :tag "Low" low)
           (const :tag "Normal" normal)
@@ -78,29 +114,52 @@ Values can be `low', `normal' (default), or `critical'."
         ("h" (* num 60 60))
         ;; This is not needed, of course, but we should not miss a good
         ;; chance to make some fun of ourselves.
-        ("w" (user-error "TMR Made Ridiculous; append [m]inutes, [h]ours, [s]econds"))
+        ("w" (user-error "TMR Made Ridiculous; append character for [m]inutes, [h]ours, [s]econds"))
         (_ (* num 60)))))))
 
+;; NOTE 2022-04-21: Emacs has a `play-sound' function but it only
+;; supports .wav and .au formats.  Also, it does not work on all
+;; platforms and Emacs needs to be compiled --with-sound capabilities.
 (defun tmr--play-sound ()
   "Play `tmr-sound-file' using the 'ffplay' executable (ffmpeg)."
   (let ((sound tmr-sound-file))
-    (when (file-exists-p tmr-sound-file)
+    (when (file-exists-p sound)
       (unless (executable-find "ffplay")
         (user-error "Cannot play %s without `ffplay'" sound))
       (call-process-shell-command
        (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" sound) nil 0))))
 
+(defun tmr--log-in-buffer (log)
+  "Insert LOG message in tmr buffer."
+  (when-let ((buf (get-buffer-create "*tmr-messages*")))
+    (with-current-buffer buf
+      (messages-buffer-mode)
+      (goto-char (point-max))
+      (let ((inhibit-read-only t))
+        (insert (concat log "\n"))))))
+
+(defun tmr-view-echo-area-messages ()
+  "View the '*tmr-messages*' buffer if present."
+  (interactive)
+  (if-let ((buf (get-buffer "*tmr-messages*")))
+      (with-current-buffer buf
+        (goto-char (point-max))
+        (let ((win (display-buffer (current-buffer))))
+          ;; If the buffer is already displayed, we need to forcibly set
+          ;; the window point to scroll to the end of the buffer.
+          (set-window-point win (point))
+          win))
+    (user-error "No *tmr-messages* buffer; have you used `tmr'?")))
+
 (defun tmr--notify-send (start &optional description)
   "Send system notification for timer with START time.
 Optionally include DESCRIPTION."
   (let ((end (format-time-string "%T"))
-        (desc-plain)
-        (desc-propertized))
-    (if description
-        (setq desc-plain (concat "\n" description)
-              desc-propertized (concat " [" (propertize description 'face 'bold) "]"))
-      (setq desc-plain ""
-            desc-propertized ""))
+        (desc-plain "")
+        (desc-propertized ""))
+    (when description
+      (setq desc-plain (concat "\n" description)
+            desc-propertized (concat " [" (propertize description 'face 'bold) "]")))
     ;; Read: (info "(elisp) Desktop Notifications")
     (notifications-notify
      :title "TMR Must Recur"
@@ -109,7 +168,6 @@ Optionally include DESCRIPTION."
      :app-name "GNU Emacs"
      :urgency tmr-notification-urgency
      :sound-file tmr-sound-file)
-    ;; TODO 2021-10-01: Maybe add those messages to a tmr buffer?
     (message
      "TMR %s %s ; %s %s%s"
      (propertize "Start:" 'face 'success) start
@@ -118,18 +176,32 @@ Optionally include DESCRIPTION."
     (unless (plist-get (notifications-get-capabilities) :sound)
       (tmr--play-sound))))
 
-;; TODO 2021-09-21: Maybe we should use a list instead of storing just
-;; the last one?
-(defvar tmr--last-timer nil
-  "Last timer object, used by `tmr-cancel'.")
+(defvar tmr--timers nil
+  "List of timer objects.
+Populated by `tmr' and then operated on by `tmr-cancel'.")
 
 ;;;###autoload
 (defun tmr-cancel ()
-  "Cancel last timer object set with `tmr' command."
+  "Cancel timer object set with `tmr' command.
+If there is a single timer, cancel it outright.  If there are
+multiple timers, prompt for one with completion."
   (interactive)
-  (if tmr--last-timer
-      (cancel-timer tmr--last-timer)
-    (message "No `tmr' to cancel")))
+  (if-let ((timers tmr--timers))
+      (cond
+       ((= (length timers) 1)
+        (let ((cell (car timers)))
+          (cancel-timer (cdr cell))
+          (tmr--log-in-buffer (format "CANCELLED <<%s>>" (car cell)))
+          (setq tmr--timers nil)))
+       ((> (length timers) 1)
+        (let* ((selection (completing-read "Cancel timer: " (mapc #'car timers) nil t))
+               (cell (assoc selection timers #'string-match-p))
+               (key (car cell))
+               (object (cdr cell)))
+          (cancel-timer object)
+          (tmr--log-in-buffer (format "CANCELLED <<%s>>" key))
+          (setq tmr--timers (delete cell tmr--timers)))))
+    (user-error "No `tmr' to cancel")))
 
 (defun tmr--echo-area (time &optional description)
   "Produce `message' for current `tmr' TIME.
@@ -147,7 +219,7 @@ Optionally include DESCRIPTION."
              (propertize start 'face 'success)
              (propertize unit 'face 'error)
              (if description
-                 (concat " [" (propertize description 'face 'bold) "]")
+                 (format " [%s]" (propertize description 'face 'bold))
                ""))))
 
 (defvar tmr--description-hist '()
@@ -181,13 +253,19 @@ To cancel the timer, use the `tmr-cancel' command."
    (list
     (read-string "N minutes for timer (append `h' or `s' for other units): ")
     (when current-prefix-arg (tmr--description-prompt))))
-  (let ((start (format-time-string "%T"))
-        (unit (tmr--unit time)))
+  (let* ((start (format-time-string "%T"))
+         (unit (tmr--unit time))
+         (object-desc (if description
+                          (format "Started at %s with input '%s' and description '%s'" start time description)
+                        (format "Started at %s with input '%s'" start time))))
     (tmr--echo-area time description)
-    (setq tmr--last-timer
-          (run-with-timer
-           unit nil
-           'tmr--notify-send start description))))
+    (push (cons
+           object-desc
+           (run-with-timer
+            unit nil
+            'tmr--notify-send start description))
+          tmr--timers)
+    (tmr--log-in-buffer object-desc)))
 
 (provide 'tmr)
 ;;; tmr.el ends here
