@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # External rules for BSPWM.  This script is part of my dotfiles:
-# https://gitlab.com/protesilaos/dotfiles.
+# https://git.sr.ht/~protesilaos/dotfiles.
 #
 # Copyright (c) 2019-2022  Protesilaos Stavrou <info@protesilaos.com>
 #

@@ -6,7 +6,7 @@
 ! ===========
 !
 ! This file is part of my dotfiles and is meant to work with the rest of
-! my custom desktop session: https://gitlab.com/protesilaos/dotfiles
+! my custom desktop session: https://git.sr.ht/~protesilaos/dotfiles
 
 
 ! Font settings (for programs that do not support fontconfig)

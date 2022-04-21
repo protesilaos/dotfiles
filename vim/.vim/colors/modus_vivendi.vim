@@ -3,7 +3,7 @@
 " Description: Vim port of modus-vivendi (Modus themes for Emacs)
 " Author: Protesilaos Stavrou, <https://protesilaos.com>
 " Meta: Created with the modus-themes-exporter.el library
-" URL: https://gitlab.com/protesilaos/modus-themes
+" URL: https://git.sr.ht/~protesilaos/modus-themes
 
 set background=dark
 hi clear

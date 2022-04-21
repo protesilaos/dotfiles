@@ -1,7 +1,7 @@
 #
 # ~/.bash_profile
 #
-# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
+# Part of my dotfiles: https://git.sr.ht/~protesilaos/dotfiles
 #
 
 # Load my configs

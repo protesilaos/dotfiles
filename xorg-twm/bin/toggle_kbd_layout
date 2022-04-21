@@ -15,7 +15,7 @@
 #
 # Very simple way to switch keyboard layouts between US QWERTY and
 # standard Greek.  Everything is part of my dotfiles:
-# <https://gitlab.com/protesilaos/dotfiles>.
+# <https://git.sr.ht/~protesilaos/dotfiles>.
 
 key_mods="$HOME"/.Xmodmap
 

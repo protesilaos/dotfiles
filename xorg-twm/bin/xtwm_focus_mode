@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Wrapper for my "focus mode" scripts for Xorg tiling window managers.
-# Part of my dotfiles: <https://gitlab.com/protesilaos/dotfiles>.
+# Part of my dotfiles: <https://git.sr.ht/~protesilaos/dotfiles>.
 
 case "$DESKTOP_SESSION"
 in

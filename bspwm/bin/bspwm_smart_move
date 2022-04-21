@@ -9,7 +9,7 @@
 # the latter scenario, inputting the direction twice will thus move the
 # focused window out of its current layout and into the receptacle.
 #
-# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
+# Part of my dotfiles: https://git.sr.ht/~protesilaos/dotfiles
 #
 # Copyright (c) 2019-2022  Protesilaos Stavrou <info@protesilaos.com>
 #

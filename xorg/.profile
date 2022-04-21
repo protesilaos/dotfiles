@@ -21,7 +21,7 @@
 # the session.  It is conceptually similar to `.xinitrc' and I am
 # considering it as practically equivalent to it for the ordinary
 # functioning of my custom desktop session.  Refer to my dotfiles for
-# the specifics: https://gitlab.com/protesilaos/dotfiles
+# the specifics: https://git.sr.ht/~protesilaos/dotfiles
 
 
 ###############

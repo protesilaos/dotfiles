@@ -42,8 +42,8 @@
 ;; NOTE: "Hack" and "Iosevka Comfy" are personal builds of Hack and
 ;; Iosevka respectively:
 ;;
-;; 1. https://gitlab.com/protesilaos/hack-font-mod
-;; 2. https://gitlab.com/protesilaos/iosevka-comfy
+;; 1. https://git.sr.ht/~protesilaos/hack-font-mod
+;; 2. https://git.sr.ht/~protesilaos/iosevka-comfy
 (defcustom prot-fonts-typeface-sets-alist
   '((small . ( :fixed-pitch-family "Hack"
                :fixed-pitch-regular-weight regular

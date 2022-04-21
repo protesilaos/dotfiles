@@ -4,7 +4,7 @@
 # Implements the formula provided by the Web Content Accessibility
 # Guidelines (WCAG) 2.0: https://www.w3.org/TR/WCAG20-TECHS/G18.html
 #
-# CLR is part of my dotfiles: https://gitlab.com/protesilaos/dotfiles.
+# CLR is part of my dotfiles: https://git.sr.ht/~protesilaos/dotfiles.
 # Apart from its utility, this script has been developed as a means of
 # practicing certain shell scripting techniques.
 #

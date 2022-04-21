@@ -162,7 +162,7 @@ code that leverages =avy=.
   ;; I use this prefix for other searches
   (define-key minibuffer-local-must-match-map (kbd "M-s") nil))
 
-;; Source: <https://gitlab.com/protesilaos/mct.el>.
+;; Source: <https://git.sr.ht/~protesilaos/mct.el>.
 ;; Manual: <https://protesilaos.com/emacs/mct>.
 (prot-emacs-builtin-package 'mct
   (setq mct-remove-shadowed-file-names t) ; when `file-name-shadow-mode' is enabled
@@ -252,6 +252,6 @@ code that leverages =avy=.
     (define-key map (kbd "C-.") #'mct-avy-region-choose-completion)))
 #+end_src
 
-And here is =mct.el= (from [[https://gitlab.com/protesilaos/dotfiles][my dotfiles' repo]]):
+And here is =mct.el= (from [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/mct.el src emacs-lisp :tangle no

@@ -3,7 +3,7 @@
 # bspwm focus mode --- removes gaps, padding, panel from the viewport.
 #
 # This script is meant to be used in my custom desktop session:
-# https://gitlab.com/protesilaos/dotfiles.
+# https://git.sr.ht/~protesilaos/dotfiles.
 #
 # Copyright (c) 2019-2022  Protesilaos Stavrou <info@protesilaos.com>
 #

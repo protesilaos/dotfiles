@@ -23,7 +23,7 @@
 # centred around my BSPWM/HerbstluftWM or Sway setup.  For the standard
 # DEs, this has been tested with GNOME 42 and Xfce 4.16.
 #
-# Part of my dotfiles: <https://gitlab.com/protesilaos/dotfiles>.
+# Part of my dotfiles: <https://git.sr.ht/~protesilaos/dotfiles>.
 
 ### Code:
 
@@ -51,7 +51,7 @@ _emacs ()
     pgrep -x emacs > /dev/null || return 1
 
     # Just switch to the appropriate theme for Emacs:
-    # https://gitlab.com/protesilaos/modus-themes
+    # https://git.sr.ht/~protesilaos/modus-themes
     case "$1"
     in
         l*) emacsclient -e "(modus-themes-load-operandi)" > /dev/null ;;

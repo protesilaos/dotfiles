@@ -1,13 +1,13 @@
 #
 # SXHKD module with HerbstluftWM-specific commands
 #
-# Part of my dotfiles: https://gitlab.com/protesilaos/dotfiles
+# Part of my dotfiles: https://git.sr.ht/~protesilaos/dotfiles
 #
 ### Description
 #
 # Partial configuration file for the Simple X Hotkey Daemon.  Meant to
 # work with `herbstclient`.  This is part of my dotfiles, which are
-# managed with GNU Stow.  See https://gitlab.com/protesilaos/dotfiles
+# managed with GNU Stow.  See https://git.sr.ht/~protesilaos/dotfiles
 
 ### Code
 

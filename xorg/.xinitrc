@@ -18,7 +18,7 @@
 ### Commentary:
 #
 # This script is a core part of my custom desktop session, centred
-# around GNU Emacs: <https://gitlab.com/protesilaos/dotfiles>.
+# around GNU Emacs: <https://git.sr.ht/~protesilaos/dotfiles>.
 #
 ### Code:
 

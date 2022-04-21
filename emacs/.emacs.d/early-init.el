@@ -30,7 +30,7 @@
 ;; behaviour is to start the package manager before loading the init
 ;; file.
 ;;
-;; See my dotfiles: https://gitlab.com/protesilaos/dotfiles
+;; See my dotfiles: https://git.sr.ht/~protesilaos/dotfiles
 
 ;;; Code:
 

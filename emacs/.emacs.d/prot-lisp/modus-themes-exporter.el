@@ -3,7 +3,7 @@
 ;; Copyright (C) 2021-2022  Protesilaos Stavrou
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
-;; URL: https://gitlab.com/protesilaos/modus-themes
+;; URL: https://git.sr.ht/~protesilaos/modus-themes
 ;; Version: 0.0.0
 ;; Package-Requires: ((emacs "28.1"))
 ;; Keywords: faces, theme, accessibility
@@ -265,7 +265,7 @@
 "\" Description: Vim port of " theme-name " (Modus themes for Emacs)" "\n"
 "\" Author: Protesilaos Stavrou, <https://protesilaos.com>" "\n"
 "\" Meta: Created with the modus-themes-exporter.el library" "\n"
-"\" URL: https://gitlab.com/protesilaos/modus-themes" "\n"
+"\" URL: https://git.sr.ht/~protesilaos/modus-themes" "\n"
 "\n"
 "set background=" variant "\n"
 "hi clear" "\n"

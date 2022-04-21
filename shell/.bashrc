@@ -7,7 +7,7 @@
 #
 # BASH configuration file.  Any modules such as the `dircolors` config
 # are stored in ~/.local/share/my_bash/.  This setup is part of my
-# dotfiles.  See https://gitlab.com/protesilaos/dotfiles.
+# dotfiles.  See https://git.sr.ht/~protesilaos/dotfiles.
 #
 # Note that ALL MY SCRIPTS are designed to work with `#!/bin/bash`.
 # They are not tested for portability.

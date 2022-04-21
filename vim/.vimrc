@@ -13,7 +13,7 @@
 " dedicated tool.  For me, Vim is just a text editor.
 "
 " This is part of my dotfiles, which deploy a custom desktop session
-" based on BSPWM: https://gitlab.com/protesilaos/dotfiles.
+" based on BSPWM: https://git.sr.ht/~protesilaos/dotfiles.
 "
 " The colour scheme is part of my Tempus Themes (designed for
 " accessibility): https://protesilaos.com/tempus-themes.  Theme files
@@ -77,8 +77,8 @@ set listchars=tab:›\ ,nbsp:␣,trail:•,precedes:«,extends:»
 " abbreviations (try not to use common words)
 iab medate <c-r>=strftime('%Y-%m-%d')<cr>
 iab meweb https://protesilaos.com/
-iab megit https://gitlab.com/protesilaos
-iab medot https://gitlab.com/protesilaos/dotfiles
+iab megit https://git.sr.ht/~protesilaos
+iab medot https://git.sr.ht/~protesilaos/dotfiles
 
 " Theme settings
 " --------------

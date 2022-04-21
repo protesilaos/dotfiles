@@ -30,7 +30,7 @@
 ;; audience that includes new or potential users (I am still very new
 ;; myself).
 ;;
-;; See my dotfiles: https://gitlab.com/protesilaos/dotfiles
+;; See my dotfiles: https://git.sr.ht/~protesilaos/dotfiles
 
 ;;; Code:
 

@@ -361,8 +361,8 @@
   ;; as it explains what those property lists should contain.
   ;;
   ;; The version of "Hack" that I custom is a custom build on mine:
-  ;; <https://gitlab.com/protesilaos/hack-font-mod>.  Same principle for
-  ;; Iosevka Comfy: <https://gitlab.com/protesilaos/iosevka-comfy>.
+  ;; <https://git.sr.ht/~protesilaos/hack-font-mod>.  Same principle for
+  ;; Iosevka Comfy: <https://git.sr.ht/~protesilaos/iosevka-comfy>.
   (setq prot-fonts-typeface-sets-alist
         '((small . ( :fixed-pitch-family "Hack"
                      :fixed-pitch-regular-weight regular
