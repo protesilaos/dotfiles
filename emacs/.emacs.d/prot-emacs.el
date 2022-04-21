@@ -1388,6 +1388,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq tmr-descriptions-list (list "Boil water" "Prepare tea" "Bake bread"))
   (let ((map global-map))
     (define-key map (kbd "C-c t t") #'tmr)
+    (define-key map (kbd "C-c t e") #'tmr-view-echo-area-messages) ; "e" to remind of C-h e
     (define-key map (kbd "C-c t c") #'tmr-cancel)))
 
 ;;; Diff-mode (and prot-diff.el extensions)
