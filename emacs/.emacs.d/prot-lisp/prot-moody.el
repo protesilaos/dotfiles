@@ -67,6 +67,7 @@ mode line's typeface (or the default one if they are the same)."
 
 (autoload 'moody-replace-mode-line-buffer-identification "moody")
 (autoload 'moody-replace-vc-mode "moody")
+(autoload 'moody-replace-eldoc-minibuffer-message-function "moody")
 
 ;;;###autoload
 (define-minor-mode prot-moody-set-height
@@ -77,6 +78,7 @@ mode line's typeface (or the default one if they are the same)."
       (progn
         (moody-replace-mode-line-buffer-identification)
         (moody-replace-vc-mode)
+        (moody-replace-eldoc-minibuffer-message-function)
         (add-hook 'prot-fonts-set-typeface-hook #'prot-moody--mode-line-height)
         (run-hooks 'prot-fonts-set-typeface-hook))
     (let ((format (default-value 'mode-line-format)))
@@ -84,6 +86,8 @@ mode line's typeface (or the default one if they are the same)."
         (moody-replace-mode-line-buffer-identification 'reverse))
       (when (member '(vc-mode moody-vc-mode) format)
         (moody-replace-vc-mode 'reverse)))
+    (when (eq eldoc-message-function 'moody-eldoc-minibuffer-message)
+        (moody-replace-eldoc-minibuffer-message-function 'reverse))
     (remove-hook 'prot-fonts-set-typeface-hook #'prot-moody--mode-line-height)))
 
 (defvar keycast-insert-after)
