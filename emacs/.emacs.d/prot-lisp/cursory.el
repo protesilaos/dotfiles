@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/cursory
 ;; Mailing list: https://lists.sr.ht/~protesilaos/cursory
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: convenience, cursor
 
@@ -146,14 +146,14 @@ With optional LOCAL as a prefix argument, set the
 (defun cursory-store-latest-preset ()
   "Write latest cursor state to `cursory-latest-state-file'.
 Can be assigned to `kill-emacs-hook'."
-  (when cursory--style-hist
+  (when-let ((hist cursory--style-hist))
     (with-temp-file cursory-latest-state-file
       (insert ";; Auto-generated file; don't edit -*- mode: "
-	      (if (<= 28 emacs-major-version)
-		  "lisp-data"
-		"emacs-lisp")
-	      " -*-\n"))
-      (pp (intern (car cursory--style-hist)) (current-buffer))))
+	          (if (<= 28 emacs-major-version)
+		          "lisp-data"
+		        "emacs-lisp")
+	          " -*-\n")
+      (pp (intern (car hist)) (current-buffer)))))
 
 (defvar cursory-recovered-preset nil
   "Recovered value of latest store cursor preset.")
@@ -161,15 +161,15 @@ Can be assigned to `kill-emacs-hook'."
 ;;;###autoload
 (defun cursory-restore-latest-preset ()
   "Restore latest cursor style."
-  (when-let ((file cursory-latest-state-file))
-    (when (file-exists-p file)
-      (setq cursory-recovered-preset
-            (unless (zerop
-                     (or (file-attribute-size (file-attributes file))
-                         0))
-              (with-temp-buffer
-                (insert-file-contents file)
-                (read (current-buffer))))))))
+  (when-let* ((file cursory-latest-state-file)
+              ((file-exists-p file)))
+    (setq cursory-recovered-preset
+          (unless (zerop
+                   (or (file-attribute-size (file-attributes file))
+                       0))
+            (with-temp-buffer
+              (insert-file-contents file)
+              (read (current-buffer)))))))
 
 (provide 'cursory)
 ;;; cursory.el ends here

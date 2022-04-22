@@ -8532,25 +8532,26 @@ be restored with the =cursory-restore-latest-preset= function.
 ;;; Cursor appearance (cursory.el)
 (prot-emacs-builtin-package 'cursory
   (setq cursory-presets
-        '((bar . ( :cursor-type (bar . 2)
-                   :cursor-in-non-selected-windows hollow
-                   :blink-cursor-blinks 10
-                   :blink-cursor-interval 0.5
-                   :blink-cursor-delay 0.2))
+        '((bar
+           :cursor-type (bar . 2)
+           :cursor-in-non-selected-windows hollow
+           :blink-cursor-blinks 10
+           :blink-cursor-interval 0.5
+           :blink-cursor-delay 0.2)
+          (box
+           :cursor-type box
+           :cursor-in-non-selected-windows hollow
+           :blink-cursor-blinks 10
+           :blink-cursor-interval 0.5
+           :blink-cursor-delay 0.2)
+          (underscore
+           :cursor-type (hbar . 3)
+           :cursor-in-non-selected-windows hollow
+           :blink-cursor-blinks 50
+           :blink-cursor-interval 0.2
+           :blink-cursor-delay 0.2)))
 
-          (box  . ( :cursor-type box
-                    :cursor-in-non-selected-windows hollow
-                    :blink-cursor-blinks 10
-                    :blink-cursor-interval 0.5
-                    :blink-cursor-delay 0.2))
-
-          (underscore . ( :cursor-type (hbar . 3)
-                          :cursor-in-non-selected-windows hollow
-                          :blink-cursor-blinks 50
-                          :blink-cursor-interval 0.2
-                          :blink-cursor-delay 0.2))))
-
-  (setq cursory-latest-state-file (locate-user-emacs-file "cursory-latest-state"))
+  (setq cursory-latest-state-file (locate-user-emacs-file "cursory-latest-state.eld"))
 
   (cursory-restore-latest-preset)
 
