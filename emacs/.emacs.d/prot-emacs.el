@@ -827,7 +827,11 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (let ((map global-map))
     (define-key map (kbd "M-+") #'tempel-complete) ; Alternative: `tempel-expand'
-    (define-key map (kbd "M-*") #'tempel-insert)))
+    (define-key map (kbd "M-*") #'tempel-insert))
+  (let ((map tempel-map))
+    (define-key map (kbd "RET") #'tempel-done)
+    (define-key map (kbd "C-p") #'tempel-previous)
+    (define-key map (kbd "C-n") #'tempel-next)))
 
 ;;; Enhance command-line completion (pcmpl-args)
 (prot-emacs-elpa-package 'pcmpl-args)
@@ -3122,25 +3126,26 @@ sure this is a good approach."
 ;;; Cursor appearance (cursory.el)
 (prot-emacs-builtin-package 'cursory
   (setq cursory-presets
-        '((bar . ( :cursor-type (bar . 2)
-                   :cursor-in-non-selected-windows hollow
-                   :blink-cursor-blinks 10
-                   :blink-cursor-interval 0.5
-                   :blink-cursor-delay 0.2))
+        '((bar
+           :cursor-type (bar . 2)
+           :cursor-in-non-selected-windows hollow
+           :blink-cursor-blinks 10
+           :blink-cursor-interval 0.5
+           :blink-cursor-delay 0.2)
+          (box
+           :cursor-type box
+           :cursor-in-non-selected-windows hollow
+           :blink-cursor-blinks 10
+           :blink-cursor-interval 0.5
+           :blink-cursor-delay 0.2)
+          (underscore
+           :cursor-type (hbar . 3)
+           :cursor-in-non-selected-windows hollow
+           :blink-cursor-blinks 50
+           :blink-cursor-interval 0.2
+           :blink-cursor-delay 0.2)))
 
-          (box  . ( :cursor-type box
-                    :cursor-in-non-selected-windows hollow
-                    :blink-cursor-blinks 10
-                    :blink-cursor-interval 0.5
-                    :blink-cursor-delay 0.2))
-
-          (underscore . ( :cursor-type (hbar . 3)
-                          :cursor-in-non-selected-windows hollow
-                          :blink-cursor-blinks 50
-                          :blink-cursor-interval 0.2
-                          :blink-cursor-delay 0.2))))
-
-  (setq cursory-latest-state-file (locate-user-emacs-file "cursory-latest-state"))
+  (setq cursory-latest-state-file (locate-user-emacs-file "cursory-latest-state.eld"))
 
   (cursory-restore-latest-preset)
 
