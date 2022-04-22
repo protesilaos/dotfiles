@@ -1,12 +1,13 @@
-;;; tmr.el --- TMR Must Recur -*- lexical-binding: t -*-
+;;; tmr.el --- Set timers using a convenient notation -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/tmr
 ;; Mailing list: https://lists.sr.ht/~protesilaos/tmr
-;; Version: 0.2.0
+;; Version: 0.2.2
 ;; Package-Requires: ((emacs "27.1"))
+;; Keywords: convenience, timer
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -171,7 +172,7 @@ Optionally include DESCRIPTION."
     (message
      "TMR %s %s ; %s %s%s"
      (propertize "Start:" 'face 'success) start
-     (propertize "End:" 'face 'warning) end
+     (propertize "End:" 'face 'error) end
      desc-propertized)
     (unless (plist-get (notifications-get-capabilities) :sound)
       (tmr--play-sound))))
