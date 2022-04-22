@@ -4,7 +4,8 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/lin
-;; Version: 0.2.0
+;; Mailing list: https://lists.sr.ht/~protesilaos/lin
+;; Version: 0.3.1
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: convenience, faces, theme
 
@@ -76,6 +77,7 @@
     dired-mode-hook
     elfeed-search-mode-hook
     git-rebase-mode-hook
+    grep-mode-hook
     ibuffer-mode-hook
     ilist-mode-hook
     ledger-report-mode-hook
@@ -86,6 +88,7 @@
     notmuch-tree-mode-hook
     occur-mode-hook
     org-agenda-mode-hook
+    proced-mode-hook
     tabulated-list-mode-hook)
   "List of hooks that should enable Lin.
 
@@ -265,12 +268,15 @@ updates the face.  Users who prefer to use `setq' must run
   '((((type ns))
      ;; <https://developer.apple.com/design/human-interface-guidelines/macos/visual-design/color/>.
      :background "selectedContentBackgroundColor" :extend t)
+    (((type mac))
+     :background "mac:selectedContentBackgroundColor" :extend t)
     (t :inherit lin-blue))
   "Alternative macOS-style face for `lin-face'."
   :group 'lin-faces)
 
 (defface lin-mac-override-fg
-  '((t :inherit lin-mac :foreground "alternateSelectedControlTextColor"))
+  '((((type ns)) :inherit lin-mac :foreground "alternateSelectedControlTextColor")
+    (((type mac)) :inherit lin-mac :foreground "mac:alternateSelectedControlTextColor"))
   "Like `lin-mac' but also sets a foreground."
   :group 'lin-faces)
 
@@ -293,6 +299,7 @@ updates the face.  Users who prefer to use `setq' must run
    (t
     'hl-line)))
 
+;;;###autoload
 (define-minor-mode lin-mode
   "Enable `hl-line-mode' and remap its face to `lin-face'."
   :global nil
