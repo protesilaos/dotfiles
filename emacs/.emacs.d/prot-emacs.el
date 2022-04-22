@@ -783,7 +783,7 @@
   (let ((map global-map))
     (define-key map (kbd "C-x C-r") #'prot-recentf-recent-files-or-dirs)))
 
-;;; Corfu (Completion Overlay Region FUnction)
+;;; Corfu (in-buffer completion popup)
 (prot-emacs-elpa-package 'corfu
   ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
   ;;                  shell-mode-hook eshell-mode-hook))
@@ -806,6 +806,30 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (dolist (backend '( cape-symbol cape-keyword cape-file cape-dabbrev))
     (add-to-list 'completion-at-point-functions backend)))
 
+;;; Template-based in-buffer completion (tempel.el)
+(prot-emacs-elpa-package 'tempel
+
+  ;; Setup completion at point
+  (defun contrib/tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
+
+  (dolist (hook '(prog-mode-hook text-mode-hook))
+    (add-hook hook 'contrib/tempel-setup-capf))
+
+  (let ((map global-map))
+    (define-key map (kbd "M-+") #'tempel-complete) ; Alternative: `tempel-expand'
+    (define-key map (kbd "M-*") #'tempel-insert)))
+
+;;; Enhance command-line completion (pcmpl-args)
 (prot-emacs-elpa-package 'pcmpl-args)
 
 ;;; Dabbrev (dynamic word completion)
