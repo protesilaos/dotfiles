@@ -2213,6 +2213,62 @@ completion: [[#h:675ebef4-d74d-41af-808d-f9579c2a5ec4][Corfu (Completion Overlay
     (add-to-list 'completion-at-point-functions backend)))
 #+end_src
 
+**** Template-based in-buffer completion (tempel.el)
+:PROPERTIES:
+:CUSTOM_ID: h:21ac2cea-4b41-4f3d-8dc0-725d0674be79
+:END:
+
+This is yet another nimble package from Daniel Mendler.  It lets us
+define a template which we can insert at ay point and fill in the empty
+fields with whatever values we want.
+
+My templates are rudimentary right now:
+
+#+begin_example emacs-lisp
+text-mode
+
+(sync-package p ": sync latest updates" n n
+              "Refer to its repo for documentation and proper commit/change logs:"
+              n "<https://git.sr.ht/~protesilaos/"
+              p ">")
+
+(update-manual-website "Update " p ".html")
+
+;; Local Variables:
+;; mode: lisp-data
+;; outline-regexp: "[a-z]"
+;; End:
+#+end_example
+
+I will add more of them over time as I think of better uses for this
+package.  In the meantime, please check the tempel documentation on how
+to define such templates: <https://github.com/minad/tempel>.
+
+#+begin_src emacs-lisp
+;;; Template-based in-buffer completion (tempel.el)
+(prot-emacs-elpa-package 'tempel
+
+  ;; Setup completion at point
+  (defun contrib/tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
+
+  (dolist (hook '(prog-mode-hook text-mode-hook))
+    (add-hook hook 'contrib/tempel-setup-capf))
+
+  (let ((map global-map))
+    (define-key map (kbd "M-+") #'tempel-complete) ; Alternative: `tempel-expand'
+    (define-key map (kbd "M-*") #'tempel-insert)))
+#+end_src
+
 **** Enhance command-line completion (pcmpl-args)
 :PROPERTIES:
 :CUSTOM_ID: h:8b45802a-a136-4802-b721-86741370de8a
