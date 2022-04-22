@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/cursory
 ;; Mailing list: https://lists.sr.ht/~protesilaos/cursory
-;; Version: 0.1.0
+;; Version: 0.1.1
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: convenience, cursor
 
@@ -47,23 +47,24 @@
   :group 'cursor)
 
 (defcustom cursory-presets
-  '((bar . ( :cursor-type (bar . 2)
-             :cursor-in-non-selected-windows hollow
-             :blink-cursor-blinks 10
-             :blink-cursor-interval 0.5
-             :blink-cursor-delay 0.2))
-
-    (box  . ( :cursor-type box
-              :cursor-in-non-selected-windows hollow
-              :blink-cursor-blinks 10
-              :blink-cursor-interval 0.5
-              :blink-cursor-delay 0.2))
-
-    (underscore . ( :cursor-type (hbar . 3)
-                    :cursor-in-non-selected-windows hollow
-                    :blink-cursor-blinks 50
-                    :blink-cursor-interval 0.2
-                    :blink-cursor-delay 0.2)))
+  '((bar
+     :cursor-type (bar . 2)
+     :cursor-in-non-selected-windows hollow
+     :blink-cursor-blinks 10
+     :blink-cursor-interval 0.5
+     :blink-cursor-delay 0.2)
+    (box
+     :cursor-type box
+     :cursor-in-non-selected-windows hollow
+     :blink-cursor-blinks 10
+     :blink-cursor-interval 0.5
+     :blink-cursor-delay 0.2)
+    (underscore
+     :cursor-type (hbar . 3)
+     :cursor-in-non-selected-windows hollow
+     :blink-cursor-blinks 50
+     :blink-cursor-interval 0.2
+     :blink-cursor-delay 0.2))
   "Alist of preset configurations for `blink-cursor-mode'.
 
 The car of each cons cell is an arbitrary, user-specified key
@@ -86,7 +87,8 @@ as the corresponding variable."
   :group 'cursory
   :type 'alist) ; FIXME 2022-04-15: Make this usable in the Custom UI
 
-(defcustom cursory-latest-state-file (locate-user-emacs-file "cursory-latest-state")
+(defcustom cursory-latest-state-file
+  (locate-user-emacs-file "cursory-latest-state.eld")
   "File to save the value of `cursory-set-preset'.
 Saving is done by the `cursory-store-latest-preset' function."
   :type 'file
@@ -146,9 +148,12 @@ With optional LOCAL as a prefix argument, set the
 Can be assigned to `kill-emacs-hook'."
   (when cursory--style-hist
     (with-temp-file cursory-latest-state-file
-      (insert (concat ";; Auto-generated file;"
-                      " don't edit -*- mode: lisp-data -*-\n"))
-      (pp (intern (car cursory--style-hist)) (current-buffer)))))
+      (insert ";; Auto-generated file; don't edit -*- mode: "
+	      (if (<= 28 emacs-major-version)
+		  "lisp-data"
+		"emacs-lisp")
+	      " -*-\n"))
+      (pp (intern (car cursory--style-hist)) (current-buffer))))
 
 (defvar cursory-recovered-preset nil
   "Recovered value of latest store cursor preset.")
