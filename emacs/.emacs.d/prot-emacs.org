@@ -2266,7 +2266,11 @@ to define such templates: <https://github.com/minad/tempel>.
 
   (let ((map global-map))
     (define-key map (kbd "M-+") #'tempel-complete) ; Alternative: `tempel-expand'
-    (define-key map (kbd "M-*") #'tempel-insert)))
+    (define-key map (kbd "M-*") #'tempel-insert))
+  (let ((map tempel-map))
+    (define-key map (kbd "RET") #'tempel-done)
+    (define-key map (kbd "C-p") #'tempel-previous)
+    (define-key map (kbd "C-n") #'tempel-next)))
 #+end_src
 
 **** Enhance command-line completion (pcmpl-args)
