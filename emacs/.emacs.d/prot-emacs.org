@@ -2124,7 +2124,7 @@ This is a copy of =prot-recentf.el= (part of [[https://git.sr.ht/~protesilaos/do
 :PROPERTIES:
 :CUSTOM_ID: h:98876022-57cc-40de-936e-4ee42cefd69a
 :END:
-**** Corfu (Completion Overlay Region FUnction)
+**** Corfu (in-buffer completion popup)
 :PROPERTIES:
 :CUSTOM_ID: h:675ebef4-d74d-41af-808d-f9579c2a5ec4
 :END:
@@ -2174,7 +2174,7 @@ to a =complete= value (check [[#h:d51d37df-4e58-4e0b-85a1-019ceda342f6][Tabs, in
 read that variable's doc string).
 
 #+begin_src emacs-lisp
-;;; Corfu (Completion Overlay Region FUnction)
+;;; Corfu (in-buffer completion popup)
 (prot-emacs-elpa-package 'corfu
   ;; (dolist (mode '( message-mode-hook text-mode-hook prog-mode-hook
   ;;                  shell-mode-hook eshell-mode-hook))
@@ -2235,6 +2235,7 @@ Relevant sections in this document:
 + [[#h:103a8795-c29c-474f-9ddf-ecafaa2f6775][Shell (M-x shell)]].
 
 #+begin_src emacs-lisp
+;;; Enhance command-line completion (pcmpl-args)
 (prot-emacs-elpa-package 'pcmpl-args)
 #+end_src
 
