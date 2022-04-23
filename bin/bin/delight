@@ -365,7 +365,7 @@ _sway ()
 
         swaymsg bar 0 colors background '#ffffff'
         swaymsg bar 0 colors statusline '#000000'
-        swaymsg bar 0 colors binding_mode '#77aaff' '#77aaff' '#000000'
+        swaymsg bar 0 colors binding_mode '#9fc6ff' '#9fc6ff' '#000000'
         swaymsg bar 0 colors focused_workspace '#aaaaaa' '#efefef' '#000000'
         swaymsg bar 0 colors inactive_workspace '#ffffff' '#ffffff' '#505050'
     fi
