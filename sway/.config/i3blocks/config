@@ -5,7 +5,8 @@ separator=false
 separator_block_width=18
 
 [volume]
-command=pactl list sinks | sed '/^[[:space:]]Volume/!d ; s,\(.*\) \([0-9]*%\)\(.*\),\2,g ; q' # Isn't sed wonderful?
+# command=pactl list sinks | sed '/^[[:space:]]Volume/!d ; s,\(.*\) \([0-9]*%\)\(.*\),\2,g ; q' # Isn't sed wonderful?
+command=pactl get-sink-volume $(pactl get-default-sink) | sed 's,\(.*\) \([0-9]*%\)\(.*\),\2,g ; q'
 # command=amixer get Master | awk -F'[][]' '/%/{print $2;exit}'
 interval=60
 signal=1 # check the sway conf for 'pkill -SIGRTMIN+1 i3blocks'
