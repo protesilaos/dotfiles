@@ -267,6 +267,7 @@ bar {
     colors {
         background #ffffff
         statusline #000000
+        # Sequence is border background text
         binding_mode #9fc6ff #9fc6ff #000000
         focused_workspace #aaaaaa #efefef #000000
         inactive_workspace #ffffff #ffffff #505050
