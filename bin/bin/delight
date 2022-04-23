@@ -377,7 +377,7 @@ _sway ()
     _swaybg &
     # Sway can actually re-use GNOME's settings
     _ggtk_set "$gtk_theme" &
-    _gcolor_scheme "$color_scheme" &
+    _gcolor_scheme_set "$color_scheme" &
 }
 
 #### Sessions
