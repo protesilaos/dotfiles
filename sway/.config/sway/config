@@ -253,6 +253,7 @@ bindsym $mod+F5 exec ~/bin/delight
 
 ### Status Bar
 bar {
+    id 0
     position bottom
 
     font Monospace 8.5

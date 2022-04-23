@@ -346,6 +346,15 @@ _sway ()
 
         swaymsg client.focused "#323232" "#323232" "#ffffff" "#ff8059" "#00bcff"
         swaymsg client.unfocused "#1e1e1e" "#1e1e1e" "#a8a8a8" "#323232" "#323232"
+
+        swaymsg bar 0 colors background '#000000'
+        swaymsg bar 0 colors foreground '#ffffff'
+
+        swaymsg bar 0 colors background '#000000'
+        swaymsg bar 0 colors statusline '#ffffff'
+        swaymsg bar 0 colors binding_mode '#10387c' '#10387c' '#ffffff'
+        swaymsg bar 0 colors focused_workspace '#3c3c3c' '#191a1b' '#ffffff'
+        swaymsg bar 0 colors inactive_workspace '#000000' '#000000' '#93959b'
     else
         style=light
         gtk_theme='Adwaita'
@@ -353,6 +362,12 @@ _sway ()
 
         swaymsg client.focused "#d7d7d7" "#d7d7d7" "#000000" "#a60000" "#0000c0"
         swaymsg client.unfocused "#efefef" "#efefef" "#505050" "#d7d7d7" "#d7d7d7"
+
+        swaymsg bar 0 colors background '#ffffff'
+        swaymsg bar 0 colors statusline '#000000'
+        swaymsg bar 0 colors binding_mode '#77aaff' '#77aaff' '#000000'
+        swaymsg bar 0 colors focused_workspace '#aaaaaa' '#efefef' '#000000'
+        swaymsg bar 0 colors inactive_workspace '#ffffff' '#ffffff' '#505050'
     fi
 
     echo "$style" > "$theme"
