@@ -38,10 +38,10 @@ _sed ()
 {
     # NOTE 2021-08-27: Confirm the following.
     #
-	# If we run this asynchronously other processes might fail to get
-	# the new colours.  To my knowledge as of 2019-06-27, this appears
-	# to be better than using sleep and/or until...
-	sed --follow-symlinks -i "$@"
+    # If we run this asynchronously other processes might fail to get
+    # the new colours.  To my knowledge as of 2019-06-27, this appears
+    # to be better than using sleep and/or until...
+    sed --follow-symlinks -i "$@"
 }
 
 _emacs ()
@@ -154,20 +154,20 @@ _feh ()
 
 _xsettingsd ()
 {
-	_gtk_common ()
+    _gtk_common ()
     {
-		# # GTK 2
-		# _sed "s,\(gtk-theme-name=\).*,\1\'${1}\', ; s,\(gtk-icon-theme-name=\).*,\1\'${2}\'," \
-        #      "$HOME"/.gtkrc-2.0
+        # # GTK 2
+        # _sed "s,\(gtk-theme-name=\).*,\1\'${1}\', ; s,\(gtk-icon-theme-name=\).*,\1\'${2}\'," \
+            #      "$HOME"/.gtkrc-2.0
 
-		# GTK 3
-		_sed "s,\(gtk-theme-name=\).*,\1${1}, ; s,\(gtk-icon-theme-name=\).*,\1${2}," \
+        # GTK 3
+        _sed "s,\(gtk-theme-name=\).*,\1${1}, ; s,\(gtk-icon-theme-name=\).*,\1${2}," \
              "$HOME"/.config/gtk-3.0/settings.ini
-	}
+    }
 
-	_gtk_live ()
+    _gtk_live ()
     {
-		_depcheck xsettingsd
+        _depcheck xsettingsd
 
         xsettingsd="$HOME"/.config/xsettingsd/xsettingsd.conf
 
@@ -182,19 +182,19 @@ _xsettingsd ()
         # the new values.
         pgrep -xo xsettingsd > /dev/null && pkill -xo xsettingsd
         xsettingsd -c "$xsettingsd" &
-	}
+    }
 
-	case "$1"
+    case "$1"
     in
-		light)
-			_gtk_common 'Adwaita' 'Adwaita'
-			_gtk_live 'Adwaita' 'Adwaita'
-			;;
-		dark)
-			_gtk_common 'Adwaita-dark' 'Adwaita'
-			_gtk_live 'Adwaita-dark' 'Adwaita'
-			;;
-	esac
+        light)
+            _gtk_common 'Adwaita' 'Adwaita'
+            _gtk_live 'Adwaita' 'Adwaita'
+            ;;
+        dark)
+            _gtk_common 'Adwaita-dark' 'Adwaita'
+            _gtk_live 'Adwaita-dark' 'Adwaita'
+            ;;
+    esac
 }
 
 _bspwm_or_hlwm ()
@@ -274,11 +274,11 @@ _gnome ()
     then
         style=dark
         _ggtk_set 'Adwaita-dark'
-	_gcolor_scheme_set 'prefer-dark'
+        _gcolor_scheme_set 'prefer-dark'
     else
         style=light
         _ggtk_set 'Adwaita'
-	_gcolor_scheme_set 'prefer-light'
+        _gcolor_scheme_set 'prefer-light'
     fi
 
     _emacs "$style"
@@ -342,14 +342,14 @@ _sway ()
     then
         style=dark
         gtk_theme='Adwaita-dark'
-	color_scheme='prefer-dark'
+        color_scheme='prefer-dark'
 
         swaymsg client.focused "#323232" "#323232" "#ffffff" "#ff8059" "#00bcff"
         swaymsg client.unfocused "#1e1e1e" "#1e1e1e" "#a8a8a8" "#323232" "#323232"
     else
         style=light
         gtk_theme='Adwaita'
-	color_scheme='prefer-light'
+        color_scheme='prefer-light'
 
         swaymsg client.focused "#d7d7d7" "#d7d7d7" "#000000" "#a60000" "#0000c0"
         swaymsg client.unfocused "#efefef" "#efefef" "#505050" "#d7d7d7" "#d7d7d7"
