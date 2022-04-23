@@ -2,7 +2,7 @@
 
 # Global properties
 separator=false
-separator_block_width=20
+separator_block_width=18
 
 [volume]
 command=pactl list sinks | sed '/^[[:space:]]Volume/!d ; s,\(.*\) \([0-9]*%\)\(.*\),\2,g ; q' # Isn't sed wonderful?
