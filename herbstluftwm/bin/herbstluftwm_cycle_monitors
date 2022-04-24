@@ -19,9 +19,15 @@
 
 monitor_count="$(herbstclient list_monitors | wc -l)"
 
+_smart_borders ()
+{
+    herbstclient set smart_frame_surroundings "$1"
+    herbstclient set smart_window_surroundings "$1"
+}
+
 case "$monitor_count"
 in
-    1) herbstclient set_monitors 640x1080+0+0 1920x1080+640+0 ;;
-    2) herbstclient set_monitors 620x1080+0+0 1320x1080+620+0 620x1080+1940+0 ;;
-    *) herbstclient detect_monitors ;;
+    1) herbstclient set_monitors 640x1080+0+0 1920x1080+640+0 && _smart_borders 'off' ;;
+    2) herbstclient set_monitors 620x1080+0+0 1320x1080+620+0 620x1080+1940+0  && _smart_borders 'off' ;;
+    *) herbstclient detect_monitors && _smart_borders 'on' ;;
 esac
