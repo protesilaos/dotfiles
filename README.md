@@ -41,8 +41,10 @@ order from oldest to newest:
   don't use the tabbed/stacked layouts and don't mess around too much
   with its container functionality for grouping windows.  Just give me
   the standard tiling scheme.  If/when Emacs' `pgtk` branch is merged
-  into `master`, I might reconsider it.  In the meantime, I stay with
-  Xorg.  Choose Sway if you want to switch to Wayland right away.
+  into `master`, I might reconsider it (UPDATE 2022-04-24 08:37 +0300:
+  Emacs 29 can be built `--with-pgtk` but I still prefer bspwm and the
+  Xorg build of Emacs).  In the meantime, I stay with Xorg.  Choose Sway
+  if you want to switch to Wayland right away.
 
 + **herbstluftwm:** I used this WM privately some years ago when I was
   deciding between it and bspwm.  If you check and compare all relevant
