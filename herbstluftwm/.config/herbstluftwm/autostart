@@ -57,8 +57,8 @@ do
     _hc add "${tag_names[$i]}"
 done
 
-# Set up virtual monitors.  The monitor is is 2560x1080 (and what
-# inspired me to switch to HerbstluftWM).  Also check the script
+# Set up virtual monitors.  The monitor's resolution is 2560x1080 (and
+# what inspired me to set up HerbstluftWM).  Also check my script
 # 'herbstluftwm_cycle_monitors'.
 _hc set_monitors 640x1080+0+0 1920x1080+640+0
 
