@@ -72,6 +72,7 @@ unless you know what you are doing.**
 As of 2022-04-24.  In no particular order.
 
 + A herbstluftwm script like `bspwm_resize`.
++ Same as above for sway.
 + Can herbstluftwm mouse drag/resize be defined in sxhkd?
 + Use a bold weight for the focused workspace in sway's bar?  Add other
   characters like `[1]` for the focused workspace, `2^` for unfocused
