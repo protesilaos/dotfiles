@@ -67,6 +67,18 @@ strucure is designed, (iii) package names and dependencies.  In the
 meantime, **this is highly experimental and you should not use anything,
 unless you know what you are doing.**
 
+### TODO for window managers
+
+As of 2022-04-24.  In no particular order.
+
++ A herbstluftwm script like `bspwm_resize`.
++ Can herbstluftwm mouse drag/resize be defined in sxhkd?
++ Use a bold weight for the focused workspace in sway's bar?  Add other
+  characters like `[1]` for the focused workspace, `2^` for unfocused
+  but occupied, and `3` for unfocused and empty? (That is how I do it
+  with polybar on bspwm/herbstluftwm.)
++ Show keyboard layout in sway bar (English/Greek).
+
 ## How to reproduce my Emacs setup
 
 I am not using `use-package` so this will not be an easy ride.  It is
