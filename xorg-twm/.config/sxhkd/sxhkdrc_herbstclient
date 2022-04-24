@@ -43,3 +43,6 @@ mod4 + m
 
 mod4 + w
      herbstclient cycle_layout +1 vertical horizontal max
+
+mod4 + {_,shift +} Tab
+     herbstclient use_index {+,-}1 --skip-visible
