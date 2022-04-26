@@ -24,6 +24,11 @@
 
 ;;; Commentary:
 ;;
+;; DEPRECATED 2022-04-26 Use my fontaine.el instead (part of this
+;; repository).
+;;
+;;
+;;
 ;; This set of configurations pertains to my font settings, for use in
 ;; my Emacs setup: https://protesilaos.com/emacs/dotemacs.
 ;;

@@ -815,10 +815,22 @@ This is the code for =lin.el=:
 :PROPERTIES:
 :CUSTOM_ID: h:7a4dd5b8-724d-4f7c-b5ee-01d8ac98bda9
 :END:
-*** Font configurations (prot-fonts.el)
+*** Font configurations (fontaine.el)
 :PROPERTIES:
 :CUSTOM_ID: h:e03b6415-a18f-4058-b9b0-5721d38c6c50
 :END:
+
+=fontaine= is yet another package of mine for Emacs.  It lets the user
+define detailed font configurations and set them on demand.  For
+example, one can have a =regular-editing= preset and another for
+=presentation-mode= (these are arbitrary, user-defined symbols): the
+former uses small fonts which are optimised for writing, while the
+latter applies typefaces that are pleasant to read at comfortable point
+sizes.  More information in the official manual:
+https://protesilaos.com/emacs/fontaine.
+
+Check the configuration I have for it further below, while I dedicate
+the rest of this section to a commentary on fonts in general.
 
 Any font I choose must conform with the following:
 
@@ -880,45 +892,6 @@ the premise of contributing to the demands of the design without ever
 calling attention to themselves.
 #+end_quote
 
-Moving on to my Elisp configurations, =prot-fonts.el= covers my advanced
-typeface requirements.  At its heart is =prot-fonts-typeface-sets-alist=.
-It contains associations of property lists (an alist of plists), each of
-which pertains to a give display type.  For example, when I am doing a
-video presentation, I require font configurations that differ from what
-I normally use.  So I have a =large= key in the alist to accommodate that
-particular need.  Those associations provide granular control over font
-attributes, as they specify both mono and proportionately spaced font
-families, each with their corresponding weights and heights.
-
-The command =prot-fonts-set-fonts= prompts with completion for a display
-type.  It gives options like =small=, =regular=, =large=, which are drawn from
-the =prot-fonts-typeface-sets-alist= (more on completion in the section
-[[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]]).  When called from Lisp it expects a
-=DISPLAY= argument, which is a symbol that matches the car of a cons cell
-in the aforementioned alist.  While the =prot-fonts-set-default-font= only
-operates on the =default= face: it uses minibuffer completion to select
-the font family, weight, and height.
-
-=prot-fonts-fonts-per-monitor= is not useful with my current hardware, as
-I designed it when I had a laptop (see [[#h:e134a8b2-224e-4383-bf03-b080ab6659c7][What hardware do you use?]]).
-Still, the idea is interesting and I keep it around in case someone has
-a need for it.  It sets the appropriate font family and size depending
-on whether the maximum width of the monitor is below a certain threshold
-defined in =prot-fonts-max-small-resolution-width=.  So it will use the
-two first presets defined in the aforementioned alist, with the
-assumption that the first is the smallest, laptop-specific one.
-
-As noted above, =prot-fonts-typeface-sets-alist= associates a list of
-typefaces with desired weights, including for their bold variation.
-This is useful when the active theme (e.g. [[#h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6][my Modus themes]]) is designed
-in a way that parameterises or abstracts the exact value of a bold
-weight, by calling =:inherit bold= instead of specifying =:weight bold= for
-each face it controls.  The former applies the attributes of the =bold=
-face, whereas the latter sets the weight at a constant value.  When the
-theme is designed that way, we can configure the =:weight= of the =bold=
-face to, e.g., =extrabold= and have that propagate across all the
-supported faces at once.
-
 Now a few general notes about setting fonts in Emacs.
 
 While there are many ways to define a baseline or fallback font family,
@@ -958,102 +931,90 @@ Relevant publications of mine that are not part of this document:
 + [[https://protesilaos.com/emacs/modus-themes/#h:defcf4fc-8fa8-4c29-b12e-7119582cc929][Modus themes' manual on font configurations]].
 
 #+begin_src emacs-lisp
-;;; Font configurations (prot-fonts.el)
-(prot-emacs-builtin-package 'prot-fonts
+;;; Font configurations (fontaine.el)
+(prot-emacs-builtin-package 'fontaine
   ;; This is defined in Emacs C code: it belongs to font settings.
   (setq x-underline-at-descent-line t)
 
   ;; And this is for Emacs28.
   (setq-default text-scale-remap-header-line t)
 
-  ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
-  ;; as it explains what those property lists should contain.
-  ;;
-  ;; The version of "Hack" that I custom is a custom build on mine:
-  ;; <https://git.sr.ht/~protesilaos/hack-font-mod>.  Same principle for
-  ;; Iosevka Comfy: <https://git.sr.ht/~protesilaos/iosevka-comfy>.
-  (setq prot-fonts-typeface-sets-alist
-        '((small . ( :fixed-pitch-family "Hack"
-                     :fixed-pitch-regular-weight regular
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 75
-                     :fixed-pitch-line-spacing 1
-                     :variable-pitch-family "FiraGO"
-                     :variable-pitch-height 1.05
-                     :variable-pitch-regular-weight normal))
+  (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
+  (setq fontaine-presets
+        '((regular
+           :default-family "Iosevka Comfy"
+           :default-weight normal
+           :default-height 100
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "FiraGO"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.05
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing nil)
+          (medium
+           :default-family "Iosevka Comfy"
+           :default-weight semilight
+           :default-height 135
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "FiraGO"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.05
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing nil)
+          (large
+           :default-family "Iosevka Comfy"
+           :default-weight semilight
+           :default-height 160
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "FiraGO"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.05
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing nil)
+          (presentation
+           :default-family "Iosevka Comfy"
+           :default-weight semilight
+           :default-height 170
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "FiraGO"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.05
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing nil)))
 
-          (small-alt . ( :fixed-pitch-family "Iosevka Comfy"
-                         :fixed-pitch-regular-weight regular
-                         :fixed-pitch-heavy-weight extrabold
-                         :fixed-pitch-height 80
-                         :fixed-pitch-line-spacing 1
-                         :variable-pitch-family "FiraGO"
-                         :variable-pitch-height 1.0
-                         :variable-pitch-regular-weight normal))
+  (fontaine-restore-latest-preset)
 
-          (regular . ( :fixed-pitch-family "Iosevka Comfy"
-                       :fixed-pitch-regular-weight regular
-                       :fixed-pitch-heavy-weight extrabold
-                       :fixed-pitch-height 100
-                       :fixed-pitch-line-spacing nil
-                       :variable-pitch-family "FiraGO"
-                       :variable-pitch-height 1.0
-                       :variable-pitch-regular-weight normal))
+  ;; Set `fontaine-recovered-preset' or fall back to desired style from
+  ;; `fontaine-presets'.
+  (if fontaine-recovered-preset
+      (fontaine-set-preset fontaine-recovered-preset)
+    (fontaine-set-preset 'regular))
 
-          (large . ( :fixed-pitch-family "Iosevka Comfy"
-                     :fixed-pitch-regular-weight semilight
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 135
-                     :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "FiraGO"
-                     :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))
+  ;; The other side of `fontaine-restore-latest-preset'.
+  (add-hook 'kill-emacs-hook #'fontaine-store-latest-preset)
 
-          (jumbo . ( :fixed-pitch-family "Iosevka Comfy"
-                     :fixed-pitch-regular-weight semilight
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 160
-                     :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "FiraGO"
-                     :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))
-
-          (presentation . ( :fixed-pitch-family "Iosevka Comfy"
-                            :fixed-pitch-regular-weight semilight
-                            :fixed-pitch-heavy-weight bold
-                            :fixed-pitch-height 170
-                            :fixed-pitch-line-spacing nil
-                            :variable-pitch-family "FiraGO"
-                            :variable-pitch-height 1.0
-                            :variable-pitch-regular-weight normal))))
-
-  ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
-  ;; are not relevant, but I keep them around as the idea is still good.
-
-  ;; The value of `prot-fonts--laptop-desktop-keys-list' becomes '(small
-  ;; regular) based on the car of the first two cons cells found in
-  ;; `prot-fonts-typeface-sets-alist'.  The assumption is that those
-  ;; contain sets from smaller to larger display types.
-  (setq prot-fonts--laptop-desktop-keys-list
-        (prot-fonts--laptop-desktop-keys))
-
-  ;; This is the breakpoint, in pixels, for determining whether we are
-  ;; on the small or large screen layout.  The number here is my
-  ;; laptop's screen width, while it expands beyond that when I connect
-  ;; it to an external monitor (how I normally set it up on my desk).
-  (setq prot-fonts-max-small-resolution-width 1366)
-
-  ;; And this just sets the right font depending on whether my laptop is
-  ;; connected to an external monitor or not.
-  (prot-fonts-fonts-per-monitor)
-
-  ;; See theme section for this hook and also read the doc string of
-  ;; `prot-fonts-restore-last'.
-  (add-hook 'modus-themes-after-load-theme-hook #'prot-fonts-restore-last)
-
-  (let ((map global-map))
-    (define-key map (kbd "C-c f") #'prot-fonts-set-fonts)
-    (define-key map (kbd "C-c F") #'prot-fonts-set-default-font)))
+  (define-key global-map (kbd "C-c f") #'fontaine-set-preset)
+  (define-key global-map (kbd "C-c F") #'fontaine-set-face-font))
 #+end_src
 
 This is the source code of =prot-fonts.el= (you can always find the file
