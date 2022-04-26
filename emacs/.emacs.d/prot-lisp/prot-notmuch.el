@@ -65,7 +65,7 @@ This gets the `notmuch-tag-flagged' face, if that is specified in
   :type '(repeat string)
   :group 'prot-notmuch)
 
-(defcustom prot-notmuch-mark-spam-tags '("+spam" "+del" "-inbox" "-unread")
+(defcustom prot-notmuch-mark-spam-tags '("+spam" "-inbox" "-unread")
   "List of tags to mark as spam."
   :type '(repeat string)
   :group 'prot-notmuch)
