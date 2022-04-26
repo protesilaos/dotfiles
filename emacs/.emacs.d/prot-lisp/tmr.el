@@ -97,6 +97,12 @@ such notifications."
   :type '(repeat string)
   :group 'tmr)
 
+(defcustom tmr-notify-function #'tmr-notifications-notify
+  "Function called to send notification.
+It should take two string arguments: the title and the message."
+  :type 'function
+  :group 'tmr)
+
 (defun tmr--unit (time)
   "Determine common time unit for TIME."
   (cond
@@ -152,8 +158,23 @@ such notifications."
           win))
     (user-error "No *tmr-messages* buffer; have you used `tmr'?")))
 
-(defun tmr--notify-send (start &optional description)
-  "Send system notification for timer with START time.
+(defun tmr-notifications-notify (title message)
+  "Dispatch notification titled TITLE with MESSAGE via D-Bus.
+
+Read: (info \"(elisp) Desktop Notifications\") for details."
+  (notifications-notify
+   :title title
+   :body message
+   :app-name "GNU Emacs"
+   :urgency tmr-notification-urgency
+   :sound-file tmr-sound-file))
+
+(defun tmr--notify-send-notification (title message)
+  "Send notification with TITLE and MESSAGE using `tmr-notify-function'."
+  (funcall tmr-notify-function title message))
+
+(defun tmr--notify (start &optional description)
+  "Send notification for timer with START time.
 Optionally include DESCRIPTION."
   (let ((end (format-time-string "%T"))
         (desc-plain "")
@@ -161,19 +182,16 @@ Optionally include DESCRIPTION."
     (when description
       (setq desc-plain (concat "\n" description)
             desc-propertized (concat " [" (propertize description 'face 'bold) "]")))
-    ;; Read: (info "(elisp) Desktop Notifications")
-    (notifications-notify
-     :title "TMR Must Recur"
-     :body (format "Time is up!\nStarted: %s\nEnded: %s%s"
-                   start end desc-plain)
-     :app-name "GNU Emacs"
-     :urgency tmr-notification-urgency
-     :sound-file tmr-sound-file)
+    (tmr--notify-send-notification
+     "TMR Must Recur"
+     (format "Time is up!\nStarted: %s\nEnded: %s%s"
+             start end desc-plain))
     (message
      "TMR %s %s ; %s %s%s"
      (propertize "Start:" 'face 'success) start
      (propertize "End:" 'face 'error) end
      desc-propertized)
+    (tmr--log-in-buffer (format "Completed at %s what started at %s" end start))
     (unless (plist-get (notifications-get-capabilities) :sound)
       (tmr--play-sound))))
 
@@ -264,7 +282,7 @@ To cancel the timer, use the `tmr-cancel' command."
            object-desc
            (run-with-timer
             unit nil
-            'tmr--notify-send start description))
+            'tmr--notify start description))
           tmr--timers)
     (tmr--log-in-buffer object-desc)))
 
