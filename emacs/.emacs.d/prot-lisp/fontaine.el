@@ -72,6 +72,17 @@
 ;; command is for interactive use only and is supposed to be used for
 ;; previewing certain styles before eventually codifying them as presets.
 ;;
+;; Changing the `bold' and `italic' faces only has a noticeable effect if
+;; the underlying theme does not hardcode a weight and slant but inherits
+;; from those faces instead (e.g. the `modus-themes').
+;;
+;; The latest value of `fontaine-set-preset' is stored in a file whose
+;; location is defined in `fontaine-latest-state-file'.  Saving is done by
+;; the `fontaine-store-latest-preset' function, which should be assigned to
+;; a hook (e.g. `kill-emacs-hook').  To restore that value, the user can
+;; call the function `fontaine-restore-latest-preset' (such as by adding it
+;; to their init file).
+;;
 ;; As for the name of this package, it is the French word for "fountain"
 ;; which, in turn, is what the font or source is.  However, I will not
 ;; blame you if you can only interpret it as a descriptive acronym: FONTs
@@ -224,8 +235,12 @@ Use the desired preset with the command `fontaine-set-preset'."
 
 (defcustom fontaine-latest-state-file
   (locate-user-emacs-file "fontaine-latest-state.eld")
-  "File to save the value of `fontaine-set-preset'.
-Saving is done by the `fontaine-store-latest-preset' function."
+  "File to save the latest value of `fontaine-set-preset'.
+Saving is done by the `fontaine-store-latest-preset' function,
+which should be assigned to a hook (e.g. `kill-emacs-hook').
+
+This is then used to restore the last value with the function
+`fontaine-restore-latest-preset'."
   :type 'file
   :group 'fontaine)
 
@@ -506,7 +521,8 @@ Can be assigned to `kill-emacs-hook'."
 
 ;;;###autoload
 (defun fontaine-restore-latest-preset ()
-  "Restore latest preset set by `fontaine-set-preset'."
+  "Restore latest preset set by `fontaine-set-preset'.
+The value is stored in `fontaine-latest-state-file'."
   (when-let* ((file fontaine-latest-state-file)
               ((file-exists-p file)))
     (setq fontaine-recovered-preset

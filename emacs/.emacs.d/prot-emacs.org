@@ -1006,8 +1006,8 @@ Relevant publications of mine that are not part of this document:
 
   ;; Set `fontaine-recovered-preset' or fall back to desired style from
   ;; `fontaine-presets'.
-  (if fontaine-recovered-preset
-      (fontaine-set-preset fontaine-recovered-preset)
+  (if-let ((state fontaine-recovered-preset))
+      (fontaine-set-preset state)
     (fontaine-set-preset 'regular))
 
   ;; The other side of `fontaine-restore-latest-preset'.
