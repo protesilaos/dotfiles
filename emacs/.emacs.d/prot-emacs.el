@@ -349,102 +349,90 @@
           tabulated-list-mode-hook))
   (lin-global-mode 1)) ; applies to all `lin-mode-hooks'
 
-;;; Font configurations (prot-fonts.el)
-(prot-emacs-builtin-package 'prot-fonts
+;;; Font configurations (fontaine.el)
+(prot-emacs-builtin-package 'fontaine
   ;; This is defined in Emacs C code: it belongs to font settings.
   (setq x-underline-at-descent-line t)
 
   ;; And this is for Emacs28.
   (setq-default text-scale-remap-header-line t)
 
-  ;; Make sure to read the `prot-fonts-typeface-sets-alist' doc string,
-  ;; as it explains what those property lists should contain.
-  ;;
-  ;; The version of "Hack" that I custom is a custom build on mine:
-  ;; <https://git.sr.ht/~protesilaos/hack-font-mod>.  Same principle for
-  ;; Iosevka Comfy: <https://git.sr.ht/~protesilaos/iosevka-comfy>.
-  (setq prot-fonts-typeface-sets-alist
-        '((small . ( :fixed-pitch-family "Hack"
-                     :fixed-pitch-regular-weight regular
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 75
-                     :fixed-pitch-line-spacing 1
-                     :variable-pitch-family "FiraGO"
-                     :variable-pitch-height 1.05
-                     :variable-pitch-regular-weight normal))
+  (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
+  (setq fontaine-presets
+        '((regular
+           :default-family "Iosevka Comfy"
+           :default-weight normal
+           :default-height 100
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "FiraGO"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.05
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing nil)
+          (medium
+           :default-family "Iosevka Comfy"
+           :default-weight semilight
+           :default-height 135
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "FiraGO"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.05
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing nil)
+          (large
+           :default-family "Iosevka Comfy"
+           :default-weight semilight
+           :default-height 160
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "FiraGO"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.05
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing nil)
+          (presentation
+           :default-family "Iosevka Comfy"
+           :default-weight semilight
+           :default-height 170
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "FiraGO"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.05
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing nil)))
 
-          (small-alt . ( :fixed-pitch-family "Iosevka Comfy"
-                         :fixed-pitch-regular-weight regular
-                         :fixed-pitch-heavy-weight extrabold
-                         :fixed-pitch-height 80
-                         :fixed-pitch-line-spacing 1
-                         :variable-pitch-family "FiraGO"
-                         :variable-pitch-height 1.0
-                         :variable-pitch-regular-weight normal))
+  (fontaine-restore-latest-preset)
 
-          (regular . ( :fixed-pitch-family "Iosevka Comfy"
-                       :fixed-pitch-regular-weight regular
-                       :fixed-pitch-heavy-weight extrabold
-                       :fixed-pitch-height 100
-                       :fixed-pitch-line-spacing nil
-                       :variable-pitch-family "FiraGO"
-                       :variable-pitch-height 1.0
-                       :variable-pitch-regular-weight normal))
+  ;; Set `fontaine-recovered-preset' or fall back to desired style from
+  ;; `fontaine-presets'.
+  (if-let ((state fontaine-recovered-preset))
+      (fontaine-set-preset state)
+    (fontaine-set-preset 'regular))
 
-          (large . ( :fixed-pitch-family "Iosevka Comfy"
-                     :fixed-pitch-regular-weight semilight
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 135
-                     :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "FiraGO"
-                     :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))
+  ;; The other side of `fontaine-restore-latest-preset'.
+  (add-hook 'kill-emacs-hook #'fontaine-store-latest-preset)
 
-          (jumbo . ( :fixed-pitch-family "Iosevka Comfy"
-                     :fixed-pitch-regular-weight semilight
-                     :fixed-pitch-heavy-weight bold
-                     :fixed-pitch-height 160
-                     :fixed-pitch-line-spacing nil
-                     :variable-pitch-family "FiraGO"
-                     :variable-pitch-height 1.0
-                     :variable-pitch-regular-weight normal))
-
-          (presentation . ( :fixed-pitch-family "Iosevka Comfy"
-                            :fixed-pitch-regular-weight semilight
-                            :fixed-pitch-heavy-weight bold
-                            :fixed-pitch-height 170
-                            :fixed-pitch-line-spacing nil
-                            :variable-pitch-family "FiraGO"
-                            :variable-pitch-height 1.0
-                            :variable-pitch-regular-weight normal))))
-
-  ;; TODO 2021-08-27: I no longer have a laptop.  Those configurations
-  ;; are not relevant, but I keep them around as the idea is still good.
-
-  ;; The value of `prot-fonts--laptop-desktop-keys-list' becomes '(small
-  ;; regular) based on the car of the first two cons cells found in
-  ;; `prot-fonts-typeface-sets-alist'.  The assumption is that those
-  ;; contain sets from smaller to larger display types.
-  (setq prot-fonts--laptop-desktop-keys-list
-        (prot-fonts--laptop-desktop-keys))
-
-  ;; This is the breakpoint, in pixels, for determining whether we are
-  ;; on the small or large screen layout.  The number here is my
-  ;; laptop's screen width, while it expands beyond that when I connect
-  ;; it to an external monitor (how I normally set it up on my desk).
-  (setq prot-fonts-max-small-resolution-width 1366)
-
-  ;; And this just sets the right font depending on whether my laptop is
-  ;; connected to an external monitor or not.
-  (prot-fonts-fonts-per-monitor)
-
-  ;; See theme section for this hook and also read the doc string of
-  ;; `prot-fonts-restore-last'.
-  (add-hook 'modus-themes-after-load-theme-hook #'prot-fonts-restore-last)
-
-  (let ((map global-map))
-    (define-key map (kbd "C-c f") #'prot-fonts-set-fonts)
-    (define-key map (kbd "C-c F") #'prot-fonts-set-default-font)))
+  (define-key global-map (kbd "C-c f") #'fontaine-set-preset)
+  (define-key global-map (kbd "C-c F") #'fontaine-set-face-font))
 
 ;;; Repeatable key chords (repeat-mode)
 (prot-emacs-builtin-package 'repeat
