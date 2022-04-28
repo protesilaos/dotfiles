@@ -2183,17 +2183,24 @@ This is yet another nimble package from Daniel Mendler.  It lets us
 define a template which we can insert at ay point and fill in the empty
 fields with whatever values we want.
 
-My templates are rudimentary right now:
+My templates:
 
 #+begin_example emacs-lisp
 text-mode
 
-(sync-package p ": sync latest updates" n n
-              "Refer to its repo for documentation and proper commit/change logs:"
-              n "<https://git.sr.ht/~protesilaos/"
-              p ">")
+(dotfiles-sync-package
+ (p "Package name: " package t) package ": sync latest updates" n n
+ "Refer to its repo for documentation and proper commit/change logs:"
+ n "<https://git.sr.ht/~protesilaos/" package ">.")
 
-(update-manual-website "Update " p ".html")
+(website-update-package-manual "Update " p ".html")
+
+(sourcehut-list-description
+ (p "Package name: " package t)
+ "Post your comments, bug reports, or patches about " "'" package "': "
+ "<https://git.sr.ht/~protesilaos/" package ">." n n "If you need help formatting a"
+ "patch, read: <https://protesilaos.com/codelog/2022-04-09-simple-guide-git-patches-emacs/>."
+ n n "The email address for this mailing list is: <~protesilaos/" package "@lists.sr.ht>")
 
 ;; Local Variables:
 ;; mode: lisp-data
@@ -2203,7 +2210,11 @@ text-mode
 
 I will add more of them over time as I think of better uses for this
 package.  In the meantime, please check the tempel documentation on how
-to define such templates: <https://github.com/minad/tempel>.
+to define such templates: <https://github.com/minad/tempel>.  You will
+notice that my templates have the =(p "Package name: " package t)= form
+which is then expanded in multiple places by referencing its =package=
+name.  This is a neat feature as I only have to type in once the keyword
+and it gets expanded in all the relevant places.
 
 #+begin_src emacs-lisp
 ;;; Template-based in-buffer completion (tempel.el)
