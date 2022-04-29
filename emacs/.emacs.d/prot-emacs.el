@@ -359,7 +359,22 @@
 
   (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
   (setq fontaine-presets
-        '((regular
+        '((small
+           :default-family "Hack"
+           :default-weight normal
+           :default-height 75
+           :fixed-pitch-family nil ; falls back to :default-family
+           :fixed-pitch-weight nil ; falls back to :default-weight
+           :fixed-pitch-height 1.0
+           :variable-pitch-family "Noto Sans"
+           :variable-pitch-weight normal
+           :variable-pitch-height 1.0
+           :bold-family nil ; use whatever the underlying face has
+           :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+           :line-spacing nil)
+          (regular
            :default-family "Iosevka Comfy"
            :default-weight normal
            :default-height 100
@@ -375,17 +390,17 @@
            :italic-slant italic
            :line-spacing nil)
           (medium
-           :default-family "Iosevka Comfy"
-           :default-weight semilight
-           :default-height 135
+           :default-family "Source Code Pro"
+           :default-weight normal
+           :default-height 110
            :fixed-pitch-family nil ; falls back to :default-family
            :fixed-pitch-weight nil ; falls back to :default-weight
            :fixed-pitch-height 1.0
-           :variable-pitch-family "FiraGO"
+           :variable-pitch-family "Source Sans Pro"
            :variable-pitch-weight normal
            :variable-pitch-height 1.05
            :bold-family nil ; use whatever the underlying face has
-           :bold-weight bold
+           :bold-weight semibold
            :italic-family nil
            :italic-slant italic
            :line-spacing nil)
