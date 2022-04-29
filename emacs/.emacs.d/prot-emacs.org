@@ -39,7 +39,7 @@ system-configuration-options
 :END:
 
 + HTML version :: <https://protesilaos.com/emacs/dotemacs>
-+ Git repo :: <https://git.sr.ht/~protesilaos/dotfiles>
++ Git repo :: <https://git.sr.ht/~protesilaos/dotfiles/tree/master/item/emacs/.emacs.d/prot-emacs.org>
 
 ** What is this
 :PROPERTIES:
