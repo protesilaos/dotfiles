@@ -69,8 +69,11 @@
     (define-key map (kbd "C-'") #'prot-simple-insert-pair)
     (define-key map (kbd "M-'") #'prot-simple-insert-pair)
     (define-key map (kbd "M-\\") #'prot-simple-delete-pair-dwim)
-    (define-key map (kbd "C-M-;") #'prot-simple-cite-region)
-    (define-key map (kbd "C-M-^") #'prot-simple-insert-undercaret)
+    ;; NOTE 2022-05-01: I deprecated those commands.  I don't use them
+    ;; and they need to be reworked.
+    ;;
+    ;; (define-key map (kbd "C-M-;") #'prot-simple-cite-region)
+    ;; (define-key map (kbd "C-M-^") #'prot-simple-insert-undercaret)
     (define-key map (kbd "<C-M-backspace>") #'backward-kill-sexp)
     (define-key map (kbd "M-c") #'capitalize-dwim)
     (define-key map (kbd "M-l") #'downcase-dwim)        ; "lower" case
@@ -935,6 +938,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (let ((map global-map))
     (define-key map (kbd "M-s %") #'prot-search-isearch-replace-symbol)
+    (define-key map (kbd "M-s M-%") #'prot-search-replace-markup) ; see `prot-search-markup-replacements'
     (define-key map (kbd "M-s M-<") #'prot-search-isearch-beginning-of-buffer)
     (define-key map (kbd "M-s M->") #'prot-search-isearch-end-of-buffer)
     (define-key map (kbd "M-s g") #'prot-search-grep)
