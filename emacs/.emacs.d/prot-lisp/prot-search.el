@@ -141,6 +141,51 @@ end of the buffer.")
 
 ;;;; Replace/Occur
 
+(defvar prot-search-markup-replacements
+  '((elisp-to-org-code "`\\(.*?\\)'" "~\\1~")
+    (elisp-to-org-verbatim "`\\(.*?\\)'" "=\\1=")
+    (org-to-elisp-quote "[=~]\\(.*?\\)[=~]" "`\\1'")
+    (org-to-markdown-code "[=~]\\(.*?\\)[=~]" "`\\1`"))
+  "Common markup replacement patterns.")
+
+(defvar prot-search--replace-markup-history '()
+  "Minibuffer history of `prot-search-replace-markup'.")
+
+(defun prot-search--replace-markup-prompt ()
+  "Prompt for font set (used by `fontaine-set-fonts')."
+  (let* ((def (nth 0 prot-search--replace-markup-history))
+         (prompt (if def
+                     (format "Replace markup TYPE [%s]: " def)
+                   "Replace markup TYPE: ")))
+    (intern
+     (completing-read
+      prompt
+      ;; TODO 2022-05-01: maybe older Emacs versions need to explicitly
+      ;; map through the car of each list?
+      prot-search-markup-replacements
+      nil t nil 'prot-search--replace-markup-history def))))
+
+(defun prot-search-replace-markup (type)
+  "Perform TYPE of markup replacement.
+TYPE is the car of a list in `prot-search-markup-replacements'.
+
+When used interactively, prompt for completion among the
+available types.
+
+When the region is active, only perform replacements within its
+boundaries, else start from point to the end of the buffer."
+  (interactive (list (prot-search--replace-markup-prompt)))
+  (if-let* ((types prot-search-markup-replacements)
+            ((memq type (mapcar #'car types)))
+            (association (alist-get type types))
+            (search (nth 0 association))
+            (replace (nth 1 association)))
+      (if (use-region-p)
+          (replace-regexp-in-region search replace (region-beginning) (region-end))
+        (while (re-search-forward search nil t)
+          (replace-match replace)))
+    (user-error "`%s' is not part of `prot-search-markup-replacements'" type)))
+
 ;; TODO: make this work backwardly when given a negative argument
 (defun prot-search-isearch-replace-symbol ()
   "Run `query-replace-regexp' for the symbol at point."

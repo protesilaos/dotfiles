@@ -2539,6 +2539,15 @@ package configurations).
   they interpret as an offset.  In practice, this is the same as running
   =M-s . M-s <= or =M-s . M-s >=.
 
++ =prot-search-replace-markup= helps me handle the common case where I
+  copy text from, say, Org to Emacs Lisp buffers and need to change the
+  markup for inline code.  It prompts for completion on the exact style
+  to use and basically changes something like =`test'= to the equivalent
+  in Org, and vice versa.  When the region is active, it only performs
+  replacements within its boundaries, else replaces from point to the
+  end of the buffer.  The =prot-search-markup-replacements= variable
+  holds all the relevant associations of regexp and replacement.
+
 + =prot-search-occur-urls= gathers all URLs in the current buffer and
   places them in an Occur buffer /without their context/ while also making
   them clickable (we say that it "buttonises" them).
@@ -2622,6 +2631,7 @@ package configurations).
 
   (let ((map global-map))
     (define-key map (kbd "M-s %") #'prot-search-isearch-replace-symbol)
+    (define-key map (kbd "M-s M-%") #'prot-search-replace-markup) ; see `prot-search-markup-replacements'
     (define-key map (kbd "M-s M-<") #'prot-search-isearch-beginning-of-buffer)
     (define-key map (kbd "M-s M->") #'prot-search-isearch-end-of-buffer)
     (define-key map (kbd "M-s g") #'prot-search-grep)
