@@ -339,8 +339,11 @@ use elsewhere.
     (define-key map (kbd "C-'") #'prot-simple-insert-pair)
     (define-key map (kbd "M-'") #'prot-simple-insert-pair)
     (define-key map (kbd "M-\\") #'prot-simple-delete-pair-dwim)
-    (define-key map (kbd "C-M-;") #'prot-simple-cite-region)
-    (define-key map (kbd "C-M-^") #'prot-simple-insert-undercaret)
+    ;; NOTE 2022-05-01: I deprecated those commands.  I don't use them
+    ;; and they need to be reworked.
+    ;;
+    ;; (define-key map (kbd "C-M-;") #'prot-simple-cite-region)
+    ;; (define-key map (kbd "C-M-^") #'prot-simple-insert-undercaret)
     (define-key map (kbd "<C-M-backspace>") #'backward-kill-sexp)
     (define-key map (kbd "M-c") #'capitalize-dwim)
     (define-key map (kbd "M-l") #'downcase-dwim)        ; "lower" case
@@ -5621,9 +5624,7 @@ this, if you need to (here dots represent empty spaces):
     11:00-13:00 Write stuff
 #+end_example
 
-Furthermore, it is possible to use nested levels of indentation or, in
-my case, call =prot-simple-cite-region= and indent it accordingly (check
-the source code: [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common custom functions (prot-simple.el)]]).  For
+Furthermore, it is possible to use nested levels of indentation.  For
 example:
 
 #+begin_example
@@ -8868,19 +8869,8 @@ environments that are not already supported by Emacs.
 :END:
 
 My =prot-text.el= (copied verbatim further below) is meant to provide a
-set of extensions for the built-in =text-mode.el=.  Currently there is
-only one command:
-
-+ =prot-text-insert-heading= lets you add a heading delimiter to the line
-  at point.  The length of the delimiter is equal to that of the line.
-  By default, the delimiter consists of hyphens, but with a =C-u= prefix
-  argument those are substituted for equals signs.
-
-I used to have another two in this file, which have now (2021-04-13)
-been moved to =prot-simple.el=.  Those are =prot-simple-cite-region= and
-=prot-simple-insert-undercaret=.
-
-Refer to the source code in [[#h:ae48fe61-a3c3-4132-8986-785f9bfbeafb][Common custom functions (prot-simple.el)]].
+set of extensions for the built-in =text-mode.el=.  It remains a
+work-in-progress.
 
 #+begin_src emacs-lisp
 ;;; Plain text (text-mode with prot-text.el)
