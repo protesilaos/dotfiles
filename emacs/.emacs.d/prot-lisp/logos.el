@@ -47,8 +47,8 @@
 ;; The `logos-focus-mode' tweaks the aesthetics of the current buffer.
 ;; When enabled it sets the buffer-local value of these user options:
 ;; `logos-scroll-lock', `logos-variable-pitch',`logos-hide-mode-line',
-;; `logos-indicate-buffer-boundaries', `logos-buffer-read-only', and
-;; `logos-olivetti'.
+;; `logos-indicate-buffer-boundaries', `logos-buffer-read-only',
+;; `logos-olivetti', and `logos-hide-fringe'.
 ;;
 ;; Logos is the familiar word derived from Greek (watch my presentation
 ;; on philosophy about Cosmos, Logos, and the living universe:
@@ -137,6 +137,13 @@ This applies when `logos-focus-mode' is enabled."
 
 (defcustom logos-olivetti nil
   "If non-nil center buffer in its window with Olivetti package.
+This is only relevant when `logos-focus-mode' is enabled."
+  :type 'boolean
+  :group 'logos
+  :local t)
+
+(defcustom logos-hide-fringe nil
+  "If non-nil make the `fringe' face the same as `default' background.
 This is only relevant when `logos-focus-mode' is enabled."
   :type 'boolean
   :group 'logos
@@ -335,11 +342,12 @@ alternate, thus toggling MODE."
 When enabled it sets the buffer-local value of these user
 options: `logos-scroll-lock', `logos-variable-pitch',
 `logos-hide-mode-line', `logos-indicate-buffer-boundaries',
-`logos-buffer-read-only', `logos-olivetti'."
+`logos-buffer-read-only', `logos-olivetti', `logos-hide-fringe'."
   :init-value nil
   :global nil
   :lighter " Λ" ; lambda majuscule
   (mapc #'funcall logos--restore)
+  (logos--remove-fringe-remap)
   (setq logos--restore nil)
   (when logos-focus-mode
     (logos--setup)))
@@ -353,7 +361,9 @@ options: `logos-scroll-lock', `logos-variable-pitch',
   ;; variables
   (logos--hide-mode-line)
   (logos--indicate-buffer-boundaries)
-  (logos--buffer-read-only))
+  (logos--buffer-read-only)
+  ;; faces
+  (logos--hide-fringe))
 
 (defun logos--variable-pitch ()
   "Set `logos-variable-pitch'."
@@ -391,6 +401,23 @@ options: `logos-scroll-lock', `logos-variable-pitch',
   "Set `logos-olivetti'."
   (when (and logos-olivetti (require 'olivetti nil t))
     (logos--mode 'olivetti-mode 1)))
+
+(defvar-local logos--fringe-remap-cookie nil
+  "Cookie of remapped `fringe' face.")
+
+(declare-function face-remap-add-relative "face-remap" (face &rest specs))
+(declare-function face-remap-remove-relative "face-remap" (cookie))
+
+(defun logos--hide-fringe ()
+  "Set buffer-local `fringe' to the same background as `default'."
+  (when logos-hide-fringe
+      (setq logos--fringe-remap-cookie
+            (face-remap-add-relative 'fringe :background (face-background 'default)))))
+
+(defun logos--remove-fringe-remap ()
+  "Remove effect of `logos--hide-fringe'."
+  (when logos--fringe-remap-cookie
+    (face-remap-remove-relative logos--fringe-remap-cookie)))
 
 (provide 'logos)
 ;;; logos.el ends here
