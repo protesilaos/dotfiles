@@ -8509,19 +8509,18 @@ These are the contents of the =prot-outline.el= library (find the file in
 :CUSTOM_ID: h:cf9086c1-1b33-4127-a716-de94259e14a0
 :END:
 
-Cursory is a package of mine.  It provides a thin wrapper around
+Cursory is another package of mine.  It provides a thin wrapper around
 built-in variables that affect the style of the Emacs cursor.  The
 intent is to allow the user to define preset configurations such as
 "block with slow blinking" or "bar with fast blinking" and set them on
 demand.
 
-Users can define their preferences in the option =cursory-presets=.  The
-command =cursory-set-preset= can then be used to select one such style.
-Selection uses minibuffer completion.
+The user option =cursory-presets= holds the presets.  The command
+=cursory-set-preset= is used to select one among them.  Selection
+supports minibuffer completion when there are multiple presets, else
+sets the single preset outright.
 
-The function =cursory-store-latest-preset= can be used to save the last
-selected style in the =cursory-latest-state-file=.  The value can then
-be restored with the =cursory-restore-latest-preset= function.
+More information in the manual: https://protesilaos.com/emacs/cursory.
 
 #+begin_src emacs-lisp
 ;;; Cursor appearance (cursory.el)
