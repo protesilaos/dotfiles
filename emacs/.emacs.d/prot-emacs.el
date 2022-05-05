@@ -438,13 +438,8 @@
            :italic-slant italic
            :line-spacing nil)))
 
-  (fontaine-restore-latest-preset)
-
-  ;; Set `fontaine-recovered-preset' or fall back to desired style from
-  ;; `fontaine-presets'.
-  (if-let ((state fontaine-recovered-preset))
-      (fontaine-set-preset state)
-    (fontaine-set-preset 'regular))
+  ;; Set last preset or fall back to desired style from `fontaine-presets'.
+  (fontaine-set-preset (or (fontaine-restore-latest-preset) 'regular))
 
   ;; The other side of `fontaine-restore-latest-preset'.
   (add-hook 'kill-emacs-hook #'fontaine-store-latest-preset)
@@ -3154,13 +3149,8 @@ sure this is a good approach."
 
   (setq cursory-latest-state-file (locate-user-emacs-file "cursory-latest-state.eld"))
 
-  (cursory-restore-latest-preset)
-
-  ;; Set `cursory-recovered-preset' or fall back to desired style from
-  ;; `cursory-presets'.
-  (if cursory-recovered-preset
-      (cursory-set-preset cursory-recovered-preset)
-    (cursory-set-preset 'bar))
+  ;; Set last preset or fall back to desired style from `cursory-presets'.
+  (cursory-set-preset (or (cursory-restore-latest-preset) 'bar))
 
   ;; The other side of `cursory-restore-latest-preset'.
   (add-hook 'kill-emacs-hook #'cursory-store-latest-preset)
