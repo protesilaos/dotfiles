@@ -28,17 +28,46 @@
 ;;
 ;; Cursory provides a thin wrapper around built-in variables that affect
 ;; the style of the Emacs cursor.  The intent is to allow the user to
-;; define preset configurations such as "block with slow blinking" or
-;; "bar with fast blinking" and set them on demand.
+;; define preset configurations such as "block with slow blinking" or "bar
+;; with fast blinking" and set them on demand.
 ;;
-;; Users can define their preferences in the option `cursory-presets'.
-;; The command `cursory-set-preset' can then be used to select one such
-;; style.  Selection uses minibuffer completion.
+;; The user option `cursory-presets' holds the presets.  The command
+;; `cursory-set-preset' is used to select one among them.  Selection
+;; supports minibuffer completion when there are multiple presets, else
+;; sets the single preset outright.
 ;;
-;; The function `cursory-store-latest-preset' can be used to save the
-;; last selected style in the `cursory-latest-state-file'.  The value
-;; can then be restored with the `cursory-restore-latest-preset'
-;; function.
+;; Presets consist of a list of properties that govern the cursor type in
+;; the active and inactive windows, as well as cursor blinking variables.
+;; They look like this:
+;;
+;;     (bar
+;;      :cursor-type (bar . 2)
+;;      :cursor-in-non-selected-windows hollow
+;;      :blink-cursor-blinks 10
+;;      :blink-cursor-interval 0.5
+;;      :blink-cursor-delay 0.2)
+;;
+;; The car of the list is an arbitrary, user-defined symbol that identifies
+;; (and can describe) the set.  Each of the properties corresponds to
+;; built-in variables: `cursor-type', `cursor-in-non-selected-windows',
+;; `blink-cursor-blinks', `blink-cursor-interval', `blink-cursor-delay'.
+;; The value each property accepts is the same as the variable it
+;; references.
+;;
+;; When called from Lisp, the `cursory-set-preset' command requires a
+;; PRESET argument, such as:
+;;
+;;     (cursory-set-preset 'bar)
+;;
+;; The default behaviour of `cursory-set-preset' is to change cursors
+;; globally.  The user can, however, limit the effect to the current
+;; buffer.  With interactive use, this is done by invoking the command with
+;; a universal prefix argument (`C-u' by default).  When called from Lisp,
+;; the LOCAL argument must be non-nil.
+;;
+;; The function `cursory-store-latest-preset' is used to save the last
+;; selected style in the `cursory-latest-state-file'.  The value can then
+;; be restored with the `cursory-restore-latest-preset' function.
 
 ;;; Code:
 
@@ -79,11 +108,10 @@ properties.  In particular, it accepts the following properties:
     :blink-cursor-interval
     :blink-cursor-delay
 
-They correspond to built-in variables of the same name:
-`cursor-type', `cursor-in-non-selected-windows',
-`blink-cursor-blinks', `blink-cursor-interval',
-`blink-cursor-delay'.  The value each of them accepts is the same
-as the corresponding variable."
+They correspond to built-in variables: `cursor-type',
+`cursor-in-non-selected-windows', `blink-cursor-blinks',
+`blink-cursor-interval', `blink-cursor-delay'.  The value each of
+them accepts is the same as the variable it references."
   :group 'cursory
   :type `(alist
           :value-type
@@ -132,7 +160,12 @@ STYLE is a symbol that represents the car of a list in
 
 With optional LOCAL as a prefix argument, set the
 `cursory-presets' only for the current buffer."
-  (interactive (list (cursory--set-cursor-prompt) current-prefix-arg))
+  (interactive
+   (list
+    (if (= (length cursory-presets) 1)
+        (caar cursory-presets)
+      (cursory--set-cursor-prompt))
+    current-prefix-arg))
   (when-let* ((styles (if (stringp style) (intern style) style))
               (properties (alist-get styles cursory-presets))
               (type (plist-get properties :cursor-type))
