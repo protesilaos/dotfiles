@@ -153,7 +153,7 @@
   (setq pulsar-pulse t)
   (setq pulsar-delay 0.055)
   (setq pulsar-iterations 10)
-  (setq pulsar-face 'pulsar-green)
+  (setq pulsar-face 'pulsar-blue)
   (setq pulsar-highlight-face 'pulsar-yellow)
 
   (pulsar-global-mode 1)
@@ -184,21 +184,21 @@
   ;; configurations.  Though I still like what I have here.
   (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs t
-        modus-themes-mixed-fonts nil
+        modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers t
-        modus-themes-intense-mouseovers nil
-        modus-themes-deuteranopia nil
+        modus-themes-intense-mouseovers t
+        modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense' OR `faint'.
-        modus-themes-lang-checkers nil
+        modus-themes-lang-checkers '(straight-underline text-also)
 
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
@@ -206,17 +206,17 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line nil
+        modus-themes-mode-line '(borderless accented (height 0.9) (padding 4))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
         ;; `intense'.
-        modus-themes-markup nil
+        modus-themes-markup '(bold italic intense)
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax nil
+        modus-themes-syntax '(alt-syntax yellow-comments)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -226,7 +226,7 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold)
+        modus-themes-paren-match '(bold intense)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -245,7 +245,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(intense bold)
+        modus-themes-prompts '(intense bold gray)
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -285,7 +285,7 @@
           (habit . nil))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((t . (extrabold)))
+        '((t . (variable-pitch extrabold)))
 
         ;; Sample for headings:
 
@@ -307,7 +307,7 @@
     (modus-themes-with-colors
       (custom-set-faces
        ;; Here add all your face definitions.
-       `(cursor ((,class :background ,magenta-intense))))))
+       `(cursor ((,class :background ,blue-intense))))))
 
   (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
 
@@ -393,17 +393,17 @@
            :italic-slant italic
            :line-spacing nil)
           (medium
-           :default-family "Source Code Pro"
-           :default-weight normal
-           :default-height 110
+           :default-family "Iosevka Comfy"
+           :default-weight semilight
+           :default-height 130
            :fixed-pitch-family nil ; falls back to :default-family
            :fixed-pitch-weight nil ; falls back to :default-weight
            :fixed-pitch-height 1.0
-           :variable-pitch-family "Source Sans Pro"
+           :variable-pitch-family "FiraGO"
            :variable-pitch-weight normal
            :variable-pitch-height 1.05
            :bold-family nil ; use whatever the underlying face has
-           :bold-weight semibold
+           :bold-weight extrabold
            :italic-family nil
            :italic-slant italic
            :line-spacing nil)
@@ -418,7 +418,7 @@
            :variable-pitch-weight normal
            :variable-pitch-height 1.05
            :bold-family nil ; use whatever the underlying face has
-           :bold-weight bold
+           :bold-weight extrabold
            :italic-family nil
            :italic-slant italic
            :line-spacing nil)
@@ -433,7 +433,7 @@
            :variable-pitch-weight normal
            :variable-pitch-height 1.05
            :bold-family nil ; use whatever the underlying face has
-           :bold-weight bold
+           :bold-weight extrabold
            :italic-family nil
            :italic-slant italic
            :line-spacing nil)))
