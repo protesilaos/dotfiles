@@ -975,17 +975,17 @@ Relevant publications of mine that are not part of this document:
            :italic-slant italic
            :line-spacing nil)
           (medium
-           :default-family "Source Code Pro"
-           :default-weight normal
-           :default-height 110
+           :default-family "Iosevka Comfy"
+           :default-weight semilight
+           :default-height 130
            :fixed-pitch-family nil ; falls back to :default-family
            :fixed-pitch-weight nil ; falls back to :default-weight
            :fixed-pitch-height 1.0
-           :variable-pitch-family "Source Sans Pro"
+           :variable-pitch-family "FiraGO"
            :variable-pitch-weight normal
            :variable-pitch-height 1.05
            :bold-family nil ; use whatever the underlying face has
-           :bold-weight semibold
+           :bold-weight extrabold
            :italic-family nil
            :italic-slant italic
            :line-spacing nil)
@@ -1000,7 +1000,7 @@ Relevant publications of mine that are not part of this document:
            :variable-pitch-weight normal
            :variable-pitch-height 1.05
            :bold-family nil ; use whatever the underlying face has
-           :bold-weight bold
+           :bold-weight extrabold
            :italic-family nil
            :italic-slant italic
            :line-spacing nil)
@@ -1015,7 +1015,7 @@ Relevant publications of mine that are not part of this document:
            :variable-pitch-weight normal
            :variable-pitch-height 1.05
            :bold-family nil ; use whatever the underlying face has
-           :bold-weight bold
+           :bold-weight extrabold
            :italic-family nil
            :italic-slant italic
            :line-spacing nil)))
