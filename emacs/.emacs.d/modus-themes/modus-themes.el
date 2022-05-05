@@ -2981,11 +2981,11 @@ foreground.  INTENSEFG is an alternative to the default."
      (cond
       ((and (memq 'bold properties)
             (memq 'italic properties))
-       (list 'modus-themes-fixed-pitch 'bold-italic))
+       (list 'bold-italic 'modus-themes-fixed-pitch))
       ((memq 'italic properties)
-       (list 'modus-themes-fixed-pitch 'italic))
+       (list 'italic 'modus-themes-fixed-pitch))
       ((memq 'bold properties)
-       (list 'modus-themes-fixed-pitch 'bold))
+       (list 'bold 'modus-themes-fixed-pitch))
       (t 'modus-themes-fixed-pitch))
      :background
      (cond
@@ -5878,7 +5878,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(kaocha-runner-warning-face ((,class :inherit warning)))
 ;;;;; keycast
     `(keycast-command ((,class :inherit bold :foreground ,blue-active)))
-    `(keycast-key ((,class ,@(modus-themes--mode-line-padded-box blue-active)
+    ;; FIXME 2022-05-03: The padding breaks `keycast-tab-bar-mode'
+    `(keycast-key ((,class ;; ,@(modus-themes--mode-line-padded-box blue-active)
                            :background ,blue-active :foreground ,bg-main)))
 ;;;;; ledger-mode
     `(ledger-font-auto-xact-face ((,class :foreground ,magenta)))
