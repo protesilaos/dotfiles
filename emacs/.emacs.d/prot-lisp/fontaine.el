@@ -96,11 +96,16 @@
 ;; which is the same as what was described above for `fontaine-set-preset'.
 ;;
 ;; The latest value of `fontaine-set-preset' is stored in a file whose
-;; location is defined in `fontaine-latest-state-file'.  Saving is done by
-;; the `fontaine-store-latest-preset' function, which should be assigned to
-;; a hook (e.g. `kill-emacs-hook').  To restore that value, the user can
-;; call the function `fontaine-restore-latest-preset' (such as by adding it
-;; to their init file).
+;; location is defined in `fontaine-latest-state-file' (normally part of
+;; the `.emacs.d' directory).  Saving is done by the function
+;; `fontaine-store-latest-preset', which should be assigned to a hook
+;; (e.g. `kill-emacs-hook').  To restore that value, the user can call the
+;; function `fontaine-restore-latest-preset' (such as by adding it to their
+;; init file).
+;;
+;; For users of the `no-littering' package, `fontaine-latest-state-file' is
+;; not stored in their `.emacs.d', but in a standard directory instead:
+;; <https://github.com/emacscollective/no-littering>.
 ;;
 ;; As for the name of this package, it is the French word for "fountain"
 ;; which, in turn, is what the font or source is.  However, I will not
