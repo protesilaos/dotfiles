@@ -47,7 +47,7 @@
 ;; The `logos-focus-mode' tweaks the aesthetics of the current buffer.
 ;; When enabled it sets the buffer-local value of these user options:
 ;; `logos-scroll-lock', `logos-variable-pitch',`logos-hide-mode-line',
-;; `logos-indicate-buffer-boundaries', `logos-buffer-read-only',
+;; `logos-hide-buffer-boundaries', `logos-buffer-read-only',
 ;; `logos-olivetti', and `logos-hide-fringe'.
 ;;
 ;; Logos is the familiar word derived from Greek (watch my presentation
@@ -83,9 +83,10 @@ When this variable is nil, pages are demarcated by the
 (defconst logos--page-delimiter (default-value 'page-delimiter)
   "The default value of `page-delimiter'.")
 
-(defcustom logos-outline-regexp-alist   ; TODO 2022-03-02: more sensible outlines?
+(defcustom logos-outline-regexp-alist
   `((emacs-lisp-mode . "^;;;+ ")
     (org-mode . "^\\*+ +")
+    (markdown-mode . "^\\#+ +")
     (t . ,(or outline-regexp logos--page-delimiter)))
   "Alist of major mode and regular expression of the outline.
 Only used when `logos-outlines-are-pages' is non-nil.
@@ -121,7 +122,12 @@ This is only relevant when `logos-focus-mode' is enabled."
   :group 'logos
   :local t)
 
-(defcustom logos-indicate-buffer-boundaries nil
+(define-obsolete-variable-alias
+  'logos-indicate-buffer-boundaries
+  'logos-hide-buffer-boundaries
+  "0.4.0")
+
+(defcustom logos-hide-buffer-boundaries nil
   "If non-nil locally disable `indicate-buffer-boundaries'.
 This is only relevant when `logos-focus-mode' is enabled."
   :type 'boolean
@@ -341,7 +347,7 @@ alternate, thus toggling MODE."
   "Buffer-local mode for focused editing.
 When enabled it sets the buffer-local value of these user
 options: `logos-scroll-lock', `logos-variable-pitch',
-`logos-hide-mode-line', `logos-indicate-buffer-boundaries',
+`logos-hide-mode-line', `logos-hide-buffer-boundaries',
 `logos-buffer-read-only', `logos-olivetti', `logos-hide-fringe'."
   :init-value nil
   :global nil
@@ -376,8 +382,8 @@ options: `logos-scroll-lock', `logos-variable-pitch',
     (logos--mode 'scroll-lock-mode 1)))
 
 (defun logos--indicate-buffer-boundaries ()
-  "Set `logos-indicate-buffer-boundaries'."
-  (when logos-indicate-buffer-boundaries
+  "Set `logos-hide-buffer-boundaries'."
+  (when logos-hide-buffer-boundaries
     (logos--set 'indicate-buffer-boundaries nil)))
 
 ;; FIXME 2022-03-13: The mode line is not redrawn properly.  Not even
