@@ -182,14 +182,14 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+  (setq modus-themes-italic-constructs nil
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts t
-        modus-themes-subtle-line-numbers t
+        modus-themes-subtle-line-numbers nil
         modus-themes-intense-mouseovers t
-        modus-themes-deuteranopia t
+        modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui t
+        modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
@@ -198,7 +198,7 @@
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense' OR `faint'.
-        modus-themes-lang-checkers '(straight-underline text-also)
+        modus-themes-lang-checkers '(straight-underline background text-also)
 
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
@@ -206,17 +206,17 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless accented (height 0.9) (padding 4))
+        modus-themes-mode-line '(3d borderless)
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
         ;; `intense'.
-        modus-themes-markup '(bold italic intense)
+        modus-themes-markup nil
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(alt-syntax yellow-comments)
+        modus-themes-syntax '(green-strings)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -245,7 +245,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(intense bold gray)
+        modus-themes-prompts '(bold background gray)
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -364,22 +364,28 @@
   (setq fontaine-presets
         '((small
            :default-family "Hack"
-           :default-weight normal
            :default-height 75
-           :fixed-pitch-family nil ; falls back to :default-family
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "Noto Sans"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.0
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight bold
-           :italic-family nil
-           :italic-slant italic
-           :line-spacing nil)
+           :variable-pitch-family "Noto Sans")
           (regular
+           :default-height 100)
+          (medium
+           :default-weight semilight
+           :default-height 130
+           :bold-weight extrabold)
+          (large
+           :default-weight semilight
+           :default-height 160
+           :bold-weight extrabold)
+          (presentation
+           :default-weight semilight
+           :default-height 170
+           :bold-weight extrabold)
+          (t
+           ;; I keep all properties for didactic purposes, but most can be
+           ;; omitted.  See the fontaine manual for the technicalities:
+           ;; <https://protesilaos.com/emacs/fontaine>.
            :default-family "Iosevka Comfy"
-           :default-weight normal
+           :default-weight regular
            :default-height 100
            :fixed-pitch-family nil ; falls back to :default-family
            :fixed-pitch-weight nil ; falls back to :default-weight
@@ -389,51 +395,6 @@
            :variable-pitch-height 1.05
            :bold-family nil ; use whatever the underlying face has
            :bold-weight bold
-           :italic-family nil
-           :italic-slant italic
-           :line-spacing nil)
-          (medium
-           :default-family "Iosevka Comfy"
-           :default-weight semilight
-           :default-height 130
-           :fixed-pitch-family nil ; falls back to :default-family
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "FiraGO"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.05
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight extrabold
-           :italic-family nil
-           :italic-slant italic
-           :line-spacing nil)
-          (large
-           :default-family "Iosevka Comfy"
-           :default-weight semilight
-           :default-height 160
-           :fixed-pitch-family nil ; falls back to :default-family
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "FiraGO"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.05
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight extrabold
-           :italic-family nil
-           :italic-slant italic
-           :line-spacing nil)
-          (presentation
-           :default-family "Iosevka Comfy"
-           :default-weight semilight
-           :default-height 170
-           :fixed-pitch-family nil ; falls back to :default-family
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "FiraGO"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.05
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight extrabold
            :italic-family nil
            :italic-slant italic
            :line-spacing nil)))
@@ -859,7 +820,12 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (let ((table global-abbrev-table))
     (define-abbrev table "meweb" "https://protesilaos.com")
-    (define-abbrev table "megit" "https://git.sr.ht/~protesilaos"))
+    (define-abbrev table "megit" "https://git.sr.ht/~protesilaos")
+    ;; to speed up technical writing about Emacs in Greek (I wrote the
+    ;; Emacs TUTORIAL in Greek)
+    (define-abbrev table "εμαψσ" "Emacs")
+    (define-abbrev table "βθφφερ" "αποσβεστήρας")
+    (define-abbrev table "μινιβθφφερ" "μικροαποσβεστήρας"))
 
   (let ((table text-mode-abbrev-table))
     (define-abbrev table "latex" "LaTeX")
@@ -1360,9 +1326,11 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   ;; These apply when `logos-focus-mode' is enabled.  Their value is
   ;; buffer-local.
   (setq-default logos-hide-mode-line t)
-  (setq-default logos-scroll-lock nil)
+  (setq-default logos-hide-buffer-boundaries t)
+  (setq-default logos-hide-fringe t)
   (setq-default logos-variable-pitch nil)
   (setq-default logos-buffer-read-only nil)
+  (setq-default logos-scroll-lock nil)
   (setq-default logos-olivetti t)
 
   (let ((map global-map))
