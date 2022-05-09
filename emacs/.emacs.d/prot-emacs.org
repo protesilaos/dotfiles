@@ -948,22 +948,28 @@ Relevant publications of mine that are not part of this document:
   (setq fontaine-presets
         '((small
            :default-family "Hack"
-           :default-weight normal
            :default-height 75
-           :fixed-pitch-family nil ; falls back to :default-family
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "Noto Sans"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.0
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight bold
-           :italic-family nil
-           :italic-slant italic
-           :line-spacing nil)
+           :variable-pitch-family "Noto Sans")
           (regular
+           :default-height 100)
+          (medium
+           :default-weight semilight
+           :default-height 130
+           :bold-weight extrabold)
+          (large
+           :default-weight semilight
+           :default-height 160
+           :bold-weight extrabold)
+          (presentation
+           :default-weight semilight
+           :default-height 170
+           :bold-weight extrabold)
+          (t
+           ;; I keep all properties for didactic purposes, but most can be
+           ;; omitted.  See the fontaine manual for the technicalities:
+           ;; <https://protesilaos.com/emacs/fontaine>.
            :default-family "Iosevka Comfy"
-           :default-weight normal
+           :default-weight regular
            :default-height 100
            :fixed-pitch-family nil ; falls back to :default-family
            :fixed-pitch-weight nil ; falls back to :default-weight
@@ -973,51 +979,6 @@ Relevant publications of mine that are not part of this document:
            :variable-pitch-height 1.05
            :bold-family nil ; use whatever the underlying face has
            :bold-weight bold
-           :italic-family nil
-           :italic-slant italic
-           :line-spacing nil)
-          (medium
-           :default-family "Iosevka Comfy"
-           :default-weight semilight
-           :default-height 130
-           :fixed-pitch-family nil ; falls back to :default-family
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "FiraGO"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.05
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight extrabold
-           :italic-family nil
-           :italic-slant italic
-           :line-spacing nil)
-          (large
-           :default-family "Iosevka Comfy"
-           :default-weight semilight
-           :default-height 160
-           :fixed-pitch-family nil ; falls back to :default-family
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "FiraGO"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.05
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight extrabold
-           :italic-family nil
-           :italic-slant italic
-           :line-spacing nil)
-          (presentation
-           :default-family "Iosevka Comfy"
-           :default-weight semilight
-           :default-height 170
-           :fixed-pitch-family nil ; falls back to :default-family
-           :fixed-pitch-weight nil ; falls back to :default-weight
-           :fixed-pitch-height 1.0
-           :variable-pitch-family "FiraGO"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.05
-           :bold-family nil ; use whatever the underlying face has
-           :bold-weight extrabold
            :italic-family nil
            :italic-slant italic
            :line-spacing nil)))
