@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/fontaine
 ;; Mailing list: https://lists.sr.ht/~protesilaos/fontaine
-;; Version: 0.1.1
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -170,6 +170,12 @@
 The car of each cell is an arbitrary symbol that identifies
 and/or describes the set of properties (e.g. 'small', 'reading').
 
+A preset whose car is t is treated as the default option.  This
+makes it easier to specify multiple presets without duplicating
+their properties.  The other presets beside t act as overrides of
+the defaults and, as such, need only consist of the properties
+that change from the default.
+
 The cdr is a plist that specifies the typographic properties of
 the faces `default', `fixed-pitch', `variable-pitch', `bold', and
 `italic'.  It also covers the `line-spacing' variable.
@@ -215,6 +221,9 @@ The properties in detail:
   variable.
 
 Use the desired preset with the command `fontaine-set-preset'.
+
+For detailed configuration: Info node `(fontaine) Shared and
+implicit fallback values for presets'.
 
 Caveats or further notes:
 
@@ -265,7 +274,8 @@ Caveats or further notes:
                     (const reverse-oblique)))
 
                   ((const :tag "Line spacing" :line-spacing) ,(get 'line-spacing 'custom-type))))
-          :key-type symbol))
+          :key-type symbol)
+  :link '(info-link "(fontaine) Shared and implicit fallback values for presets"))
 
 (defcustom fontaine-latest-state-file
   (locate-user-emacs-file "fontaine-latest-state.eld")
@@ -352,62 +362,77 @@ combine the other two lists."
 
 ;;;; Apply preset configurations
 
-(defun fontaine--apply-default-preset (preset &optional frame)
-  "Set `default' face attributes based on PRESET for optional FRAME."
-  (if-let ((properties (alist-get preset fontaine-presets)))
-      (progn
-        (fontaine--set-face-attributes
-         'default
-         (plist-get properties :default-family)
-         (plist-get properties :default-weight)
-         (plist-get properties :default-height)
-         frame)
-        (setq-default line-spacing (plist-get properties :line-spacing)))
-    (user-error "%s is not in `fontaine-presets'" preset)))
+(defmacro fontaine--apply-preset (fn doc args)
+  "Produce function to apply preset.
+FN is the symbol of the function, DOC is its documentation, and
+ARGS are its routines."
+  `(defun ,fn (preset &optional frame)
+     ,doc
+     (if-let ((properties (append (alist-get preset fontaine-presets)
+                                  (alist-get t fontaine-presets))))
+         ,args
+       (user-error "%s is not in `fontaine-presets' or is empty" preset))))
 
-(defun fontaine--apply-fixed-pitch-preset (preset &optional frame)
-  "Set `fixed-pitch' face attributes based on PRESET for optional FRAME."
-  (if-let ((properties (alist-get preset fontaine-presets)))
-      (fontaine--set-face-attributes
-       'fixed-pitch
-       (or (plist-get properties :fixed-pitch-family) (plist-get properties :default-family))
-       (or (plist-get properties :fixed-pitch-weight) (plist-get properties :default-weight))
-       (or (plist-get properties :fixed-pitch-height) 1.0)
-       frame)
-    (user-error "%s is not in `fontaine-presets'" preset)))
+(fontaine--apply-preset
+ fontaine--apply-default-preset
+ "Set `default' face attributes based on PRESET for optional FRAME."
+ (progn
+   (fontaine--set-face-attributes
+    'default
+    (plist-get properties :default-family)
+    (plist-get properties :default-weight)
+    (plist-get properties :default-height)
+    frame)
+   (setq-default line-spacing (plist-get properties :line-spacing))))
 
-(defun fontaine--apply-variable-pitch-preset (preset &optional frame)
-  "Set `variable-pitch' face attributes based on PRESET for optional FRAME."
-  (if-let ((properties (alist-get preset fontaine-presets)))
-      (fontaine--set-face-attributes
-       'variable-pitch
-       (or (plist-get properties :variable-pitch-family) (plist-get properties :default-family))
-       (or (plist-get properties :variable-pitch-weight) (plist-get properties :default-weight))
-       (or (plist-get properties :variable-pitch-height) 1.0)
-       frame)
-    (user-error "%s is not in `fontaine-presets'" preset)))
+(fontaine--apply-preset
+ fontaine--apply-fixed-pitch-preset
+ "Set `fixed-pitch' face attributes based on PRESET for optional FRAME."
+ (fontaine--set-face-attributes
+  'fixed-pitch
+  (or (plist-get properties :fixed-pitch-family) (plist-get properties :default-family))
+  (or (plist-get properties :fixed-pitch-weight) (plist-get properties :default-weight))
+  (or (plist-get properties :fixed-pitch-height) 1.0)
+  frame))
 
-(defun fontaine--apply-bold-preset (preset &optional frame)
+(fontaine--apply-preset
+ fontaine--apply-variable-pitch-preset
+ "Set `variable-pitch' face attributes based on PRESET for optional FRAME."
+ (fontaine--set-face-attributes
+  'variable-pitch
+  (or (plist-get properties :variable-pitch-family) (plist-get properties :default-family))
+  (or (plist-get properties :variable-pitch-weight) (plist-get properties :default-weight))
+  (or (plist-get properties :variable-pitch-height) 1.0)
+  frame))
+
+(fontaine--apply-preset
+ fontaine--apply-bold-preset
   "Set `bold' face attributes based on PRESET for optional FRAME."
-  (if-let ((properties (alist-get preset fontaine-presets)))
-      (fontaine--set-face-attributes
-       'bold
-       (or (plist-get properties :bold-family) 'unspecified)
-       (or (plist-get properties :bold-weight) 'bold)
-       frame)
-    (user-error "%s is not in `fontaine-presets'" preset)))
+  (fontaine--set-face-attributes
+   'bold
+   (or (plist-get properties :bold-family) 'unspecified)
+   (or (plist-get properties :bold-weight) 'bold)
+   frame))
 
-(defun fontaine--apply-italic-preset (preset &optional frame)
+(fontaine--apply-preset
+ fontaine--apply-italic-preset
   "Set `italic' face attributes based on PRESET for optional FRAME."
-  (if-let ((properties (alist-get preset fontaine-presets)))
-      (fontaine--set-italic-slant
-       (or (plist-get properties :italic-family) 'unspecified)
-       (or (plist-get properties :italic-slant) 'italic)
-       frame)
-    (user-error "%s is not in `fontaine-presets'" preset)))
+  (fontaine--set-italic-slant
+   (or (plist-get properties :italic-family) 'unspecified)
+   (or (plist-get properties :italic-slant) 'italic)
+   frame))
 
 (defvar fontaine--font-display-hist '()
   "History of inputs for display-related font associations.")
+
+(defun fontaine--presets-no-fallback ()
+  "Return list of `fontaine-presets', minus the fallback value."
+  (delete
+   nil
+   (mapcar (lambda (symbol)
+             (unless (eq (car symbol) t)
+               symbol))
+           fontaine-presets)))
 
 (defun fontaine--set-fonts-prompt ()
   "Prompt for font set (used by `fontaine-set-fonts')."
@@ -418,7 +443,7 @@ combine the other two lists."
     (intern
      (completing-read
       prompt
-      fontaine-presets
+      (fontaine--presets-no-fallback)
       nil t nil 'fontaine--font-display-hist def))))
 
 (defvar fontaine-set-preset-hook nil
