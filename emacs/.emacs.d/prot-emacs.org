@@ -2378,7 +2378,12 @@ abbrevs.  I have no real use for them right now.
 
   (let ((table global-abbrev-table))
     (define-abbrev table "meweb" "https://protesilaos.com")
-    (define-abbrev table "megit" "https://git.sr.ht/~protesilaos"))
+    (define-abbrev table "megit" "https://git.sr.ht/~protesilaos")
+    ;; to speed up technical writing about Emacs in Greek (I wrote the
+    ;; Emacs TUTORIAL in Greek)
+    (define-abbrev table "εμαψσ" "Emacs")
+    (define-abbrev table "βθφφερ" "αποσβεστήρας")
+    (define-abbrev table "μινιβθφφερ" "μικροαποσβεστήρας"))
 
   (let ((table text-mode-abbrev-table))
     (define-abbrev table "latex" "LaTeX")
