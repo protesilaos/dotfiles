@@ -53,6 +53,14 @@
 (require 'dom)
 (require 'seq)
 
+(defun modus-themes-exporter--current-theme ()
+  "Return current modus theme."
+  (car
+   (seq-filter
+    (lambda (theme)
+      (string-match-p "^modus" (symbol-name theme)))
+    custom-enabled-themes)))
+
 (defvar modus-themes-exporter-templates-alist
   '(("alacritty"        . modus-themes-exporter-alacritty)
     ("foot"             . modus-themes-exporter-foot)
@@ -69,7 +77,7 @@
 (defun modus-themes-exporter-xcolors ()
   "Template for generic Xcolors."
   (modus-themes-with-colors
-    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+    (let ((theme-name (format "%s" (modus-themes-exporter--current-theme))))
       (with-temp-buffer
         (concat
          "! Theme: " theme-name "\n"
@@ -99,7 +107,7 @@
 (defun modus-themes-exporter-xterm ()
   "Template for XTerm."
   (modus-themes-with-colors
-    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+    (let ((theme-name (format "%s" (modus-themes-exporter--current-theme))))
       (with-temp-buffer
         (concat
          "! Theme: " theme-name "\n"
@@ -129,7 +137,7 @@
 (defun modus-themes-exporter-alacritty ()
   "Template for Alacritty."
   (modus-themes-with-colors
-    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+    (let ((theme-name (format "%s" (modus-themes-exporter--current-theme))))
       (with-temp-buffer
         (concat
          "# Theme: " theme-name "\n"
@@ -163,7 +171,7 @@
 (defun modus-themes-exporter-foot ()
   "Template for Foot."
   (modus-themes-with-colors
-    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+    (let ((theme-name (format "%s" (modus-themes-exporter--current-theme))))
       (with-temp-buffer
         (string-replace
          "=#" "="
@@ -197,7 +205,7 @@
 (defun modus-themes-exporter-urxvt ()
   "Template for URxvt (Rxvt-unicode)."
   (modus-themes-with-colors
-    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+    (let ((theme-name (format "%s" (modus-themes-exporter--current-theme))))
       (with-temp-buffer
         (concat
          "! Theme: " theme-name "\n"
@@ -229,7 +237,7 @@
 (defun modus-themes-exporter-xfce ()
   "Template for Xfce terminal."
   (modus-themes-with-colors
-    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+    (let ((theme-name (format "%s" (modus-themes-exporter--current-theme))))
       (with-temp-buffer
         (concat
 "[Scheme]" "\n"
@@ -251,7 +259,7 @@
 (defun modus-themes-exporter-windows-terminal ()
   "Template for Windows Terminal."
   (modus-themes-with-colors
-    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+    (let ((theme-name (format "%s" (modus-themes-exporter--current-theme))))
       (with-temp-buffer
         (concat
          "// Theme: " theme-name "\n"
@@ -288,7 +296,7 @@
 (defun modus-themes-exporter-vim ()
   "Template for Vim."
   (modus-themes-with-colors
-    (let* ((theme-name (format "%s" (car custom-enabled-themes)))
+    (let* ((theme-name (format "%s" (modus-themes-exporter--current-theme)))
            (theme-name-underscore (string-replace "-" "_" theme-name))
            (variant (if (string= theme-name "modus-operandi") "light" "dark"))
            (termcolbg (format "%s" (if (string= variant "light") 15 0)))
@@ -608,7 +616,7 @@ or is a list of color string in a from of #RRGGBB and an alpha value."
 (defun modus-themes-exporter-iterm2 ()
   "Template for iTerm2."
   (modus-themes-with-colors
-    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+    (let ((theme-name (format "%s" (modus-themes-exporter--current-theme))))
       (with-temp-buffer
         (concat
          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -681,7 +689,7 @@ file."
      (mapcar #'car modus-themes-exporter-templates-alist))
     current-prefix-arg))
   (let* ((modus-themes '(modus-operandi modus-vivendi))
-         (current-theme (car custom-enabled-themes))
+         (current-theme (modus-themes-exporter--current-theme))
          (fn (funcall (cdr (assoc template modus-themes-exporter-templates-alist))))
          (path (when file
                  (if (stringp file)
