@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/fontaine
 ;; Mailing list: https://lists.sr.ht/~protesilaos/fontaine
-;; Version: 0.2.0
+;; Version: 0.2.1
 ;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -558,7 +558,8 @@ Target FRAME, if provided as an optional argument."
          (weight (intern (completing-read "Select weight for `default': "
                                           fontaine--font-weights nil)))
          (height (read-number "Height of `default' face (must be a natural number): "
-                              (or (string-to-number (nth 0 fontaine--natnum-history)))
+                              (and fontaine--natnum-history
+                                   (string-to-number (nth 0 fontaine--natnum-history)))
                               'fontaine--natnum-history)))
     (if (natnump height)
         (fontaine--set-face-attributes 'default family weight height frame)
