@@ -53,6 +53,7 @@
 
 (defvar modus-themes-exporter-templates-alist
   '(("alacritty"        . modus-themes-exporter-alacritty)
+    ("foot"             . modus-themes-exporter-foot)
     ("iterm2"           . modus-themes-exporter-iterm2)
     ("urxvt"            . modus-themes-exporter-urxvt)
     ("vim"              . modus-themes-exporter-vim)
@@ -154,6 +155,40 @@
          "    magenta: '" magenta-alt-other "'" "\n"
          "    cyan:    '" cyan-alt-other "'" "\n"
          "    white:   '#ffffff'" "\n")))))
+
+;;;; Foot template
+
+(defun modus-themes-exporter-foot ()
+  "Template for Foot."
+  (modus-themes-with-colors
+    (let ((theme-name (format "%s" (car custom-enabled-themes))))
+      (with-temp-buffer
+        (string-replace
+         "=#" "="
+         (concat
+          "# Theme: " theme-name "\n"
+          "# Description: Foot port of " theme-name " (Modus themes for Emacs)" "\n"
+          "# Author: Protesilaos Stavrou, <https://protesilaos.com>" "\n"
+          "[colors]" "\n"
+          "alpha=1.00" "\n"
+          "background=" bg-main "\n"
+          "foreground=" fg-main "\n"
+          "regular0=000000" "\n"
+          "regular1=" red "\n"
+          "regular2=" green "\n"
+          "regular3=" yellow "\n"
+          "regular4=" blue "\n"
+          "regular5=" magenta "\n"
+          "regular6=" cyan "\n"
+          "regular7=bfbfbf" "\n"
+          "bright0=595959" "\n"
+          "bright1=" red-alt "\n"
+          "bright2=" green-alt "\n"
+          "bright3=" yellow-alt "\n"
+          "bright4=" blue-alt "\n"
+          "bright5=" magenta-alt-other "\n"
+          "bright6=" cyan-alt-other "\n"
+          "bright7=ffffff" "\n"))))))
 
 ;;;; URxvt template
 
