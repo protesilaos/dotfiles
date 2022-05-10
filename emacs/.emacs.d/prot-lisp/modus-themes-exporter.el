@@ -47,7 +47,9 @@
 
 
 
-(require 'modus-themes)
+(if (functionp 'require-theme)
+    (require-theme 'modus-themes) ; for those provided by Emacs >= 28
+  (require 'modus-themes))
 (require 'dom)
 (require 'seq)
 
