@@ -3766,7 +3766,7 @@ Other potentially relevant parts of my dotemacs:
   (setq-default logos-hide-mode-line t)
   (setq-default logos-hide-buffer-boundaries t)
   (setq-default logos-hide-fringe t)
-  (setq-default logos-variable-pitch nil)
+  (setq-default logos-variable-pitch t) ; see my `fontaine' configurations
   (setq-default logos-buffer-read-only nil)
   (setq-default logos-scroll-lock nil)
   (setq-default logos-olivetti t)
