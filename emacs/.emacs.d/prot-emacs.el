@@ -1337,7 +1337,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq-default logos-hide-mode-line t)
   (setq-default logos-hide-buffer-boundaries t)
   (setq-default logos-hide-fringe t)
-  (setq-default logos-variable-pitch nil)
+  (setq-default logos-variable-pitch t) ; see my `fontaine' configurations
   (setq-default logos-buffer-read-only nil)
   (setq-default logos-scroll-lock nil)
   (setq-default logos-olivetti t)
@@ -1387,15 +1387,18 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 ;; DO NOT USE THIS!!!
 (prot-emacs-builtin-package 'invtr)
 
-;;; TMR Must Recur (just my generic timer)
+;;; TMR May Ring (tmr is used to set timers)
 (prot-emacs-builtin-package 'tmr
   (setq tmr-sound-file
         "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
   (setq tmr-notification-urgency 'normal)
   (setq tmr-descriptions-list (list "Boil water" "Prepare tea" "Bake bread"))
+  (require 'tmr-tabulated) ; you do not need this if you install the package
   (let ((map global-map))
     (define-key map (kbd "C-c t t") #'tmr)
+    (define-key map (kbd "C-c t T") #'tmr-with-description)
     (define-key map (kbd "C-c t e") #'tmr-view-echo-area-messages) ; "e" to remind of C-h e
+    (define-key map (kbd "C-c t l") #'tmr-tabulated-view) ; "list timers" mnemonic
     (define-key map (kbd "C-c t c") #'tmr-cancel)))
 
 ;;; Diff-mode (and prot-diff.el extensions)
