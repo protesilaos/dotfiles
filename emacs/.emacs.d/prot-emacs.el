@@ -216,7 +216,7 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(green-strings)
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -307,7 +307,7 @@
     (modus-themes-with-colors
       (custom-set-faces
        ;; Here add all your face definitions.
-       `(cursor ((,class :background ,blue-intense))))))
+       `(cursor ((,class :background ,red-intense))))))
 
   (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
 
@@ -361,11 +361,18 @@
   (setq-default text-scale-remap-header-line t)
 
   (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
+  ;; Iosevka Comfy is my highly customised build of Iosevka with
+  ;; monospaced and duospaced (quasi-proportional) variants as well as
+  ;; support or no support for ligatures:
+  ;; <https://git.sr.ht/~protesilaos/iosevka-comfy>.
+  ;;
+  ;; Iosevka Comfy       == monospaced, supports ligatures
+  ;; Iosevka Comfy Fixed == monospaced, no ligatures
+  ;; Iosevka Comfy Duo   == quasi-proportional, supports ligatures
   (setq fontaine-presets
         '((small
-           :default-family "Hack"
-           :default-height 75
-           :variable-pitch-family "Noto Sans")
+           :default-family "Iosevka Comfy Fixed"
+           :default-height 90)
           (regular
            :default-height 100)
           (medium
@@ -390,9 +397,9 @@
            :fixed-pitch-family nil ; falls back to :default-family
            :fixed-pitch-weight nil ; falls back to :default-weight
            :fixed-pitch-height 1.0
-           :variable-pitch-family "FiraGO"
-           :variable-pitch-weight normal
-           :variable-pitch-height 1.05
+           :variable-pitch-family "Iosevka Comfy Duo"
+           :variable-pitch-weight nil
+           :variable-pitch-height 1.0
            :bold-family nil ; use whatever the underlying face has
            :bold-weight bold
            :italic-family nil
@@ -882,7 +889,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (define-key map (kbd "M-/") #'isearch-complete)))
 
 (prot-emacs-builtin-package 'replace
-  (setq list-matching-lines-jump-to-current-line t)
+  (setq list-matching-lines-jump-to-current-line nil)
   (add-hook 'occur-mode-hook #'hl-line-mode)
   (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
@@ -892,7 +899,8 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 (prot-emacs-builtin-package 'prot-search
   (setq prot-search-outline-regexp-alist
         '((emacs-lisp-mode . "^\\((\\|;;;+ \\)")
-          (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)")))
+          (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)")
+          (markdown-mode . "^#+ +")))
   (setq prot-search-todo-keywords
         (concat "TODO\\|FIXME\\|NOTE\\|REVIEW\\|XXX\\|KLUDGE"
                 "\\|HACK\\|WARN\\|WARNING\\|DEPRECATED\\|BUG"))
@@ -1321,6 +1329,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq logos-outline-regexp-alist
         `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos--page-delimiter))
           (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos--page-delimiter))
+          (markdown-mode . ,(format "\\(^\\#+ +\\|^[*-]\\{5\\}$\\|^\\* \\* \\*$\\|%s\\)" logos--page-delimiter))
           (t . ,(or outline-regexp logos--page-delimiter))))
 
   ;; These apply when `logos-focus-mode' is enabled.  Their value is
