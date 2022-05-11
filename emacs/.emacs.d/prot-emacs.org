@@ -2577,7 +2577,7 @@ package configurations).
     (define-key map (kbd "M-/") #'isearch-complete)))
 
 (prot-emacs-builtin-package 'replace
-  (setq list-matching-lines-jump-to-current-line t)
+  (setq list-matching-lines-jump-to-current-line nil)
   (add-hook 'occur-mode-hook #'hl-line-mode)
   (add-hook 'occur-mode-hook #'prot-common-truncate-lines-silently) ; from `prot-common.el'
   (define-key occur-mode-map (kbd "t") #'toggle-truncate-lines))
