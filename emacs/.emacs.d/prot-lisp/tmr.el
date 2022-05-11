@@ -2,7 +2,9 @@
 
 ;; Copyright (C) 2020-2022  Free Software Foundation, Inc.
 
-;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos Stavrou <info@protesilaos.com>,
+;;         Damien Cassou <damien@cassou.me>
+;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/tmr
 ;; Mailing list: https://lists.sr.ht/~protesilaos/tmr
 ;; Version: 0.2.3
@@ -27,10 +29,10 @@
 ;;; Commentary:
 ;;
 ;; TMR is an Emacs package that provides facilities for setting timers
-;; using a convenient notation.  The point of entry is the `tmr' command.
-;; It prompts for a unit of time, which is represented as a string that
-;; consists of a number and, optionally, a single character suffix which
-;; specifies the unit of time.  Valid input formats:
+;; using a convenient notation.  The first point of entry is the `tmr'
+;; command.  It prompts for a unit of time, which is represented as a
+;; string that consists of a number and, optionally, a single character
+;; suffix which specifies the unit of time.  Valid input formats:
 ;;
 ;; | Input | Meaning   |
 ;; |-------+-----------|
@@ -51,8 +53,8 @@
 ;; When the timer is set, a message is sent to the echo area recording the
 ;; current time and the point in the future when the timer elapses.  Echo
 ;; area messages can be reviewed with the `view-echo-area-messages' which is
-;; bound to =C-h e= by default.  Though TMR provides its own buffer for
-;; reviewing its log: it is named =*tmr-messages*= and can be accessed with
+;; bound to `C-h e' by default.  Though TMR provides its own buffer for
+;; reviewing its log: it is named `*tmr-messages*' and can be accessed with
 ;; the command `tmr-view-echo-area-messages'.
 ;;
 ;; Once the timer runs its course, it produces a desktop notification and
@@ -67,11 +69,33 @@
 ;; be played.
 ;;
 ;; The `tmr-cancel' command is used to cancel running timers (as set by the
-;; `tmr' command).  If there is only one timer, it cancels it outright.  If
-;; there are multiple timers, it produces a minibuffer completion prompt
-;; which asks for one among them.  Timers at the completion prompt are
-;; described by the exact time they were set and the input that was used to
-;; create them, including the optional description that `tmr' accepts.
+;; `tmr' or `tmr-with-description' commands).  If there is only one timer,
+;; it cancels it outright.  If there are multiple timers, it produces a
+;; minibuffer completion prompt which asks for one among them.  Timers at
+;; the completion prompt are described by the exact time they were set and
+;; the input that was used to create them, including the optional
+;; description that `tmr' and `tmr-with-description' accept.
+;;
+;; Active timers can be viewed in a grid with `tmr-tabulated-view' (part of
+;; the `tmr-tabulated.el' file).  The grid is placed in the
+;; `*tmr-tabulated-view*' buffer and looks like this:
+;;
+;; Start      End        Finished?  Description
+;; 12:26:50   12:51:50   ✔         Update tmr manual
+;; 12:26:35   12:56:35              Bake bread
+;; 12:26:26   12:36:26              Prepare tea
+;;
+;; If a timer has elapsed, it has a check mark, otherwise the `Finished?'
+;; column is empty.  A `Description' is shown only if it is provided while
+;; setting the timer, otherwise the field is left blank.
+;;
+;; The `tmr-tabulated-view' command relies on Emacs' `tabulated-list-mode'.
+;; From the `*tmr-tabulated-view*' buffer, invoke the command
+;; `describe-mode' to learn about the applicable key bindings, such as how
+;; to expand/contract columns and toggle their sort.
+;;
+;; While in this grid view, the `k' key runs the `tmr-tabulated-cancel'
+;; command.  It immediately cancels the timer at point.
 
 ;;; Code:
 
@@ -114,6 +138,52 @@ used."
 It should take two string arguments: the title and the message."
   :type 'function
   :group 'tmr)
+
+(cl-defstruct (tmr-timer
+               (:constructor tmr--timer-create)
+               (:conc-name tmr--timer-))
+  (creation-date
+   nil
+   :read-only t
+   :documentation "Time at which the timer was created.")
+  (duration
+   nil
+   :read-only t
+   :documentation "Number of seconds after `start' indicating when the timer finishes.")
+  (donep
+   nil
+   :read-only nil
+   :documentation "Non-nil if the timer is finished.")
+  (timer-object
+   nil
+   :read-only nil
+   :documentation "The object returned by `run-with-timer'.")
+  (description
+   nil
+   :read-only t
+   :documentation "Optional string describing the purpose of the timer, e.g., \"Stop the oven\"."))
+
+(defun tmr--long-description (timer)
+  "Return a human-readable description for TIMER."
+  (let ((start (tmr--format-creation-date timer))
+        (duration (tmr--timer-duration timer))
+        (description (tmr--timer-description timer)))
+    (if description
+        (format "Started at %s with input '%s' and description '%s'" start duration description)
+      (format "Started at %s with input '%s'" start duration))))
+
+(defun tmr--format-creation-date (timer)
+  "Return a string representing when TIMER was created."
+  (tmr--format-time (tmr--timer-creation-date timer)))
+
+(defun tmr--format-end-date (timer)
+  "Return a string representing when TIMER should finish."
+  (format-time-string "%T" (time-add (tmr--timer-creation-date timer)
+                                     (tmr--timer-duration timer))))
+
+(defun tmr--format-time (time)
+  "Return a human-readable string representing TIME."
+  (format-time-string "%T" time))
 
 (defun tmr--unit (time)
   "Determine common time unit for TIME."
@@ -185,19 +255,21 @@ Read: (info \"(elisp) Desktop Notifications\") for details."
   "Send notification with TITLE and MESSAGE using `tmr-notify-function'."
   (funcall tmr-notify-function title message))
 
-(defun tmr--notify (start &optional description)
-  "Send notification for timer with START time.
-Optionally include DESCRIPTION."
-  (let ((end (format-time-string "%T"))
-        (desc-plain "")
-        (desc-propertized ""))
-    (when description
-      (setq desc-plain (concat "\n" description)
-            desc-propertized (concat " [" (propertize description 'face 'bold) "]")))
+(defun tmr--notify (timer)
+  "Send notification for TIMER."
+  (let* ((description (tmr--timer-description timer))
+         (desc-plain (if description
+                         (concat "\n" description)
+                       ""))
+         (desc-propertized (if description
+                               (concat " [" (propertize description 'face 'bold) "]")
+                             ""))
+         (start (tmr--format-creation-date timer))
+         (end (tmr--format-end-date timer)))
+    (setf (tmr--timer-donep timer) t)
     (tmr--notify-send-notification
      "TMR May Ring (Emacs tmr package)"
-     (format "Time is up!\nStarted: %s\nEnded: %s%s"
-             start end desc-plain))
+     (format "Time is up!\nStarted: %s\nEnded: %s%s" start end desc-plain))
     (message
      "TMR %s %s ; %s %s%s"
      (propertize "Start:" 'face 'success) start
@@ -211,35 +283,42 @@ Optionally include DESCRIPTION."
   "List of timer objects.
 Populated by `tmr' and then operated on by `tmr-cancel'.")
 
+(defun tmr--get-timer-by-creation-date (creation-date)
+  "Return the timer which was started at CREATION-DATE."
+  (cl-find creation-date tmr--timers :key #'tmr--timer-creation-date))
+
 ;;;###autoload
-(defun tmr-cancel ()
-  "Cancel timer object set with `tmr' command.
-If there is a single timer, cancel it outright.  If there are
-multiple timers, prompt for one with completion."
-  (interactive)
-  (if-let ((timers tmr--timers))
-      (cond
-       ((= (length timers) 1)
-        (let ((cell (car timers)))
-          (cancel-timer (cdr cell))
-          (tmr--log-in-buffer (format "CANCELLED <<%s>>" (car cell)))
-          (setq tmr--timers nil)))
-       ((> (length timers) 1)
-        (let* ((selection (completing-read "Cancel timer: " (mapc #'car timers) nil t))
-               (cell (assoc selection timers #'string-match-p))
-               (key (car cell))
-               (object (cdr cell)))
-          (cancel-timer object)
-          (tmr--log-in-buffer (format "CANCELLED <<%s>>" key))
-          (setq tmr--timers (delete cell tmr--timers)))))
-    (user-error "No `tmr' to cancel")))
+(defun tmr-cancel (timer)
+  "Cancel TIMER object set with `tmr' command.
+Interactively, let the user choose which timer to cancel with
+completion."
+  (interactive (list (tmr--read-timer)))
+  (if (not timer)
+      (user-error "No `tmr' to cancel")
+    (cancel-timer (tmr--timer-timer-object timer))
+    (tmr--log-in-buffer (format "CANCELLED <<%s>>" (tmr--long-description timer)))
+    (setq tmr--timers (cl-delete timer tmr--timers))))
+
+(defun tmr--read-timer ()
+  "Let the user choose a timer among all timers.
+Return the selected timer.  If there is a single timer, use that.
+If there are multiple timers, prompt for one with completion.  If
+there are no timers, return nil."
+  (let ((timers tmr--timers))
+    (cond
+     ((= (length timers) 1)
+      (car timers))
+     ((> (length timers) 1)
+      (let* ((timer-descriptions (mapcar #'tmr--long-description timers))
+             (selection (completing-read "Timer: " timer-descriptions nil t)))
+        (cl-find selection timers :test #'string= :key #'tmr--long-description))))))
 
 (defun tmr--echo-area (time &optional description)
   "Produce `message' for current `tmr' TIME.
 Optionally include DESCRIPTION."
   (let* ((specifier (substring time -1))
          (amount (substring time 0 -1))
-         (start (format-time-string "%T"))
+         (start (tmr--format-time (current-time)))
          (unit (pcase specifier
                  ("s" (format "%ss (s == second)" amount))
                  ("h" (format "%sh (h == hour)" amount))
@@ -302,19 +381,19 @@ command `tmr-with-description' instead of this one."
    (list
     (tmr--read-duration)
     (when current-prefix-arg (tmr--description-prompt))))
-  (let* ((start (format-time-string "%T"))
-         (unit (tmr--unit time))
-         (object-desc (if description
-                          (format "Started at %s with input '%s' and description '%s'" start time description)
-                        (format "Started at %s with input '%s'" start time))))
+  (let* ((creation-date (current-time))
+         (duration (tmr--unit time))
+         (timer (tmr--timer-create
+                 :description description
+                 :creation-date creation-date
+                 :duration duration))
+         (timer-object (run-with-timer
+                        duration nil
+                        #'tmr--notify timer)))
+    (setf (tmr--timer-timer-object timer) timer-object)
     (tmr--echo-area time description)
-    (push (cons
-           object-desc
-           (run-with-timer
-            unit nil
-            'tmr--notify start description))
-          tmr--timers)
-    (tmr--log-in-buffer object-desc)))
+    (push timer tmr--timers)
+    (tmr--log-in-buffer (tmr--long-description timer))))
 
 ;;;###autoload
 (defun tmr-with-description (time description)
