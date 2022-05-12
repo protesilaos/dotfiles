@@ -960,12 +960,10 @@ Relevant publications of mine that are not part of this document:
           (regular
            :default-height 100)
           (medium
-           :default-weight semilight
-           :default-height 130
-           :bold-weight extrabold)
+           :default-height 110)
           (large
            :default-weight semilight
-           :default-height 160
+           :default-height 140
            :bold-weight extrabold)
           (presentation
            :default-weight semilight
