@@ -52,10 +52,9 @@
 ;;
 ;; When the timer is set, a message is sent to the echo area recording the
 ;; current time and the point in the future when the timer elapses.  Echo
-;; area messages can be reviewed with the `view-echo-area-messages' which is
-;; bound to `C-h e' by default.  Though TMR provides its own buffer for
-;; reviewing its log: it is named `*tmr-messages*' and can be accessed with
-;; the command `tmr-view-echo-area-messages'.
+;; area messages can be reviewed with the `view-echo-area-messages' which
+;; is bound to `C-h e' by default.  To check all timers, use the command
+;; `tmr-tabulated-view', which is described further below.
 ;;
 ;; Once the timer runs its course, it produces a desktop notification and
 ;; plays an alarm sound.  The notification's message is practically the
@@ -76,6 +75,10 @@
 ;; the input that was used to create them, including the optional
 ;; description that `tmr' and `tmr-with-description' accept.
 ;;
+;; An existing timer can be cloned with the `tmr-clone' command.  It copies
+;; the duration and optional description of an existing timer into a new
+;; one.
+;;
 ;; Active timers can be viewed in a grid with `tmr-tabulated-view' (part of
 ;; the `tmr-tabulated.el' file).  The grid is placed in the
 ;; `*tmr-tabulated-view*' buffer and looks like this:
@@ -94,8 +97,17 @@
 ;; `describe-mode' to learn about the applicable key bindings, such as how
 ;; to expand/contract columns and toggle their sort.
 ;;
-;; While in this grid view, the `k' key runs the `tmr-tabulated-cancel'
-;; command.  It immediately cancels the timer at point.
+;; While in this grid view:
+;;
+;; + The `+' key creates a new timer by calling the standard `tmr' command.
+;;   As always, use a prefix argument to also prompt for a description.
+;;
+;; + The `c' key invokes the `tmr-tabulated-cancel' command.  It is the
+;;   same as the aforementioned `tmr-cancel' plus some tweaks for the grid
+;;   view.
+;;
+;; + The `k' key runs the `tmr-tabulated-cancel' command.  It immediately
+;;   cancels the timer at point.
 
 ;;; Code:
 
@@ -218,28 +230,6 @@ It should take two string arguments: the title and the message."
       (call-process-shell-command
        (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" sound) nil 0))))
 
-(defun tmr--log-in-buffer (log)
-  "Insert LOG message in tmr buffer."
-  (when-let ((buf (get-buffer-create "*tmr-messages*")))
-    (with-current-buffer buf
-      (messages-buffer-mode)
-      (goto-char (point-max))
-      (let ((inhibit-read-only t))
-        (insert (concat log "\n"))))))
-
-(defun tmr-view-echo-area-messages ()
-  "View the '*tmr-messages*' buffer if present."
-  (interactive)
-  (if-let ((buf (get-buffer "*tmr-messages*")))
-      (with-current-buffer buf
-        (goto-char (point-max))
-        (let ((win (display-buffer (current-buffer))))
-          ;; If the buffer is already displayed, we need to forcibly set
-          ;; the window point to scroll to the end of the buffer.
-          (set-window-point win (point))
-          win))
-    (user-error "No *tmr-messages* buffer; have you used `tmr'?")))
-
 (defun tmr-notifications-notify (title message)
   "Dispatch notification titled TITLE with MESSAGE via D-Bus.
 
@@ -275,7 +265,6 @@ Read: (info \"(elisp) Desktop Notifications\") for details."
      (propertize "Start:" 'face 'success) start
      (propertize "End:" 'face 'error) end
      desc-propertized)
-    (tmr--log-in-buffer (format "Completed at %s what started at %s" end start))
     (unless (plist-get (notifications-get-capabilities) :sound)
       (tmr--play-sound))))
 
@@ -296,7 +285,6 @@ completion."
   (if (not timer)
       (user-error "No `tmr' to cancel")
     (cancel-timer (tmr--timer-timer-object timer))
-    (tmr--log-in-buffer (format "CANCELLED <<%s>>" (tmr--long-description timer)))
     (setq tmr--timers (cl-delete timer tmr--timers))))
 
 (defun tmr--read-timer ()
@@ -335,9 +323,10 @@ Optionally include DESCRIPTION."
 (defvar tmr--duration-hist '()
   "Minibuffer history of `tmr' durations.")
 
-(defun tmr--read-duration ()
-  "Ask the user to type a duration."
-  (let ((def (nth 0 tmr--duration-hist)))
+(defun tmr--read-duration (&optional default)
+  "Ask the user to type a duration.
+If DEFAULT is provided, use that as a default."
+  (let ((def (or default (nth 0 tmr--duration-hist))))
     (read-string
      (if def
          (format "N minutes for timer (append `h' or `s' for other units) [%s]: " def)
@@ -392,8 +381,7 @@ command `tmr-with-description' instead of this one."
                         #'tmr--notify timer)))
     (setf (tmr--timer-timer-object timer) timer-object)
     (tmr--echo-area time description)
-    (push timer tmr--timers)
-    (tmr--log-in-buffer (tmr--long-description timer))))
+    (push timer tmr--timers)))
 
 ;;;###autoload
 (defun tmr-with-description (time description)
@@ -408,6 +396,14 @@ user uses a prefix argument (\\[universal-argument])."
     (tmr--read-duration)
     (tmr--description-prompt)))
   (tmr time description))
+
+;;;###autoload
+(defun tmr-clone (timer)
+  "Create a new timer by cloning TIMER."
+  (interactive (list (tmr--read-timer)))
+  (tmr (tmr--read-duration
+        (format "%ss" (tmr--timer-duration timer)))
+       (tmr--timer-description timer)))
 
 (provide 'tmr)
 ;;; tmr.el ends here
