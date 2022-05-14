@@ -950,11 +950,16 @@ Relevant publications of mine that are not part of this document:
   ;; support or no support for ligatures:
   ;; <https://git.sr.ht/~protesilaos/iosevka-comfy>.
   ;;
-  ;; Iosevka Comfy       == monospaced, supports ligatures
-  ;; Iosevka Comfy Fixed == monospaced, no ligatures
-  ;; Iosevka Comfy Duo   == quasi-proportional, supports ligatures
+  ;; Iosevka Comfy            == monospaced, supports ligatures
+  ;; Iosevka Comfy Fixed      == monospaced, no ligatures
+  ;; Iosevka Comfy Duo        == quasi-proportional, supports ligatures
+  ;; Iosevka Comfy Wide       == like Iosevka Comfy, but wider
+  ;; Iosevka Comfy Wide Fixed == like Iosevka Comfy Fixed, but wider
   (setq fontaine-presets
-        '((small
+        '((tiny
+           :default-family "Iosevka Comfy Wide Fixed"
+           :default-height 70)
+          (small
            :default-family "Iosevka Comfy Fixed"
            :default-height 90)
           (regular
