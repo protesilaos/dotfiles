@@ -2593,6 +2593,7 @@ package configurations).
   (setq prot-search-outline-regexp-alist
         '((emacs-lisp-mode . "^\\((\\|;;;+ \\)")
           (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)")
+          (conf-toml-mode . "^\\[")
           (markdown-mode . "^#+ +")))
   (setq prot-search-todo-keywords
         (concat "TODO\\|FIXME\\|NOTE\\|REVIEW\\|XXX\\|KLUDGE"
@@ -3757,6 +3758,7 @@ Other potentially relevant parts of my dotemacs:
         `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos--page-delimiter))
           (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos--page-delimiter))
           (markdown-mode . ,(format "\\(^\\#+ +\\|^[*-]\\{5\\}$\\|^\\* \\* \\*$\\|%s\\)" logos--page-delimiter))
+          (conf-toml-mode . "^\\[")
           (t . ,(or outline-regexp logos--page-delimiter))))
 
   ;; These apply when `logos-focus-mode' is enabled.  Their value is
