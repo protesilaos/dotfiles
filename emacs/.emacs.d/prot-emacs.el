@@ -182,17 +182,17 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs nil
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts t
-        modus-themes-subtle-line-numbers nil
-        modus-themes-intense-mouseovers t
+        modus-themes-subtle-line-numbers t
+        modus-themes-intense-mouseovers nil
         modus-themes-deuteranopia nil
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui nil
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -206,7 +206,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(3d borderless)
+        modus-themes-mode-line nil
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -226,7 +226,7 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(bold intense)
+        modus-themes-paren-match nil
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -240,12 +240,12 @@
         ;; `all-buttons', the symbol of any font weight as listed in
         ;; `modus-themes-weights', and a floating point number
         ;; (e.g. 0.9) for the height of the button's text.
-        modus-themes-box-buttons '(variable-pitch (height 0.9) flat faint accented)
+        modus-themes-box-buttons nil
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(bold background gray)
+        modus-themes-prompts '(bold italic)
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -265,7 +265,7 @@
           (selection . (semibold accented))
           (popup . (extrabold)))
 
-        modus-themes-mail-citations 'intense ; {nil,'intense,'faint,'monochrome}
+        modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
 
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -278,11 +278,11 @@
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
-        '((header-block . (variable-pitch regular 1.4))
-          (header-date . (bold-today grayscale underline-today 1.2))
+        '((header-block . (variable-pitch semilight 1.4))
+          (header-date . (underline-today grayscale workaholic 1.2))
           (event . (accented italic varied))
-          (scheduled . uniform)
-          (habit . nil))
+          (scheduled . rainbow)
+          (habit . simplified))
 
         modus-themes-headings ; this is an alist: read the manual or its doc string
         '((t . (variable-pitch extrabold)))
@@ -376,12 +376,10 @@
           (regular
            :default-height 100)
           (medium
-           :default-weight semilight
-           :default-height 130
-           :bold-weight extrabold)
+           :default-height 110)
           (large
            :default-weight semilight
-           :default-height 160
+           :default-height 140
            :bold-weight extrabold)
           (presentation
            :default-weight semilight
@@ -1397,9 +1395,9 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (let ((map global-map))
     (define-key map (kbd "C-c t t") #'tmr)
     (define-key map (kbd "C-c t T") #'tmr-with-description)
-    (define-key map (kbd "C-c t e") #'tmr-view-echo-area-messages) ; "e" to remind of C-h e
+    (define-key map (kbd "C-c t c") #'tmr-clone)
     (define-key map (kbd "C-c t l") #'tmr-tabulated-view) ; "list timers" mnemonic
-    (define-key map (kbd "C-c t c") #'tmr-cancel)))
+    (define-key map (kbd "C-c t k") #'tmr-cancel)))
 
 ;;; Diff-mode (and prot-diff.el extensions)
 (prot-emacs-builtin-package 'diff-mode
