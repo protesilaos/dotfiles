@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/fontaine
 ;; Mailing list: https://lists.sr.ht/~protesilaos/fontaine
-;; Version: 0.2.1
+;; Version: 0.2.2
 ;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -113,6 +113,8 @@
 ;; Are Irrelevant in Non-graphical Emacs (because that is actually true).
 
 ;;; Code:
+
+(eval-when-compile (require 'subr-x))
 
 (defgroup fontaine ()
   "Set font configurations using presets."
@@ -552,7 +554,7 @@ Target FRAME, if provided as an optional argument."
                        (append (alist-get 'fixed-pitch fontaine-font-families)
                                (alist-get 'variable-pitch fontaine-font-families))
                        (font-family-list)))
-         (family (completing-read "Font family of `default' face: "
+         (family (completing-read "Font family of `default': "
                                   families nil t
                                   nil 'fontaine--default-font-family-history))
          (weight (intern (completing-read "Select weight for `default': "
