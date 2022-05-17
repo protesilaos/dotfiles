@@ -7,7 +7,7 @@
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/tmr
 ;; Mailing list: https://lists.sr.ht/~protesilaos/tmr
-;; Version: 0.2.3
+;; Version: 0.3.0
 ;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -31,6 +31,9 @@
 ;; one by line with sortable columns.  Columns show the creation date,
 ;; the end date, a check mark if the timer is finished and the timer's
 ;; optional description.
+;;
+;; Please read the manual for all the technicalities.  Either evaluate
+;; (info "(tmr) Top") or visit <https://protesilaos.com/emacs/tmr>.
 
 ;;; Code:
 
@@ -61,8 +64,11 @@
 (defvar tmr-tabulated-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "k" #'tmr-tabulated-cancel)
+    (define-key map "K" #'tmr-tabulated-remove-finished)
     (define-key map "+" #'tmr)
     (define-key map "c" #'tmr-tabulated-clone)
+    (define-key map "w" #'tmr-tabulated-rewrite-description)
+    (define-key map "s" #'tmr-tabulated-reschedule)
     map)
   "Keybindings for `tmr-tabulated-mode-map'.")
 
@@ -76,13 +82,21 @@
   (add-hook 'tabulated-list-revert-hook #'tmr-tabulated--set-entries nil t)
   (tabulated-list-init-header))
 
-(defun tmr-tabulated-cancel (timer)
+(defun tmr-tabulated-cancel (timer &optional no-hooks)
   "Stop TIMER and remove it from the list.
-Interactively, use the timer at point."
-  (interactive (list (tmr-tabulated--get-timer-at-point)))
-  (tmr-cancel timer)
+Interactively, use the timer at point.
+
+Optional NO-HOOKS has the same meaning as in `tmr-cancel'."
+  (interactive (list (tmr-tabulated--get-timer-at-point) current-prefix-arg))
+  (tmr-cancel timer no-hooks)
   ;; avoid point moving back to the beginning of the buffer:
   (tmr-tabulated--move-point-to-closest-entry)
+  (revert-buffer))
+
+(defun tmr-tabulated-remove-finished ()
+  "Remove all finished timers."
+  (interactive)
+  (tmr-remove-finished)
   (revert-buffer))
 
 (defun tmr-tabulated-clone (timer)
@@ -90,6 +104,26 @@ Interactively, use the timer at point."
 Interactively, use the timer at point."
   (interactive (list (tmr-tabulated--get-timer-at-point)))
   (tmr-clone timer)
+  (revert-buffer))
+
+(defun tmr-tabulated-reschedule (timer)
+  "Reschedule TIMER.
+This is the same as cloning it and cancelling the original one.
+
+If TIMER has a description, prompt for one.  Otherwise only
+prompt for a duration."
+  (interactive (list (tmr-tabulated--get-timer-at-point)))
+  (tmr-clone timer :prompt)
+  ;; Cancel the old timer
+  (tmr-tabulated-cancel timer :no-hooks))
+
+(defun tmr-tabulated-rewrite-description (timer description)
+  "Change TIMER description with that of DESCRIPTION."
+  (interactive
+   (list
+    (tmr-tabulated--get-timer-at-point)
+    (tmr--description-prompt)))
+  (setf (tmr--timer-description timer) description)
   (revert-buffer))
 
 (defun tmr-tabulated--move-point-to-closest-entry ()
