@@ -366,11 +366,16 @@
   ;; support or no support for ligatures:
   ;; <https://git.sr.ht/~protesilaos/iosevka-comfy>.
   ;;
-  ;; Iosevka Comfy       == monospaced, supports ligatures
-  ;; Iosevka Comfy Fixed == monospaced, no ligatures
-  ;; Iosevka Comfy Duo   == quasi-proportional, supports ligatures
+  ;; Iosevka Comfy            == monospaced, supports ligatures
+  ;; Iosevka Comfy Fixed      == monospaced, no ligatures
+  ;; Iosevka Comfy Duo        == quasi-proportional, supports ligatures
+  ;; Iosevka Comfy Wide       == like Iosevka Comfy, but wider
+  ;; Iosevka Comfy Wide Fixed == like Iosevka Comfy Fixed, but wider
   (setq fontaine-presets
-        '((small
+        '((tiny
+           :default-family "Iosevka Comfy Wide Fixed"
+           :default-height 70)
+          (small
            :default-family "Iosevka Comfy Fixed"
            :default-height 90)
           (regular
@@ -898,6 +903,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq prot-search-outline-regexp-alist
         '((emacs-lisp-mode . "^\\((\\|;;;+ \\)")
           (org-mode . "^\\(\\*+ +\\|#\\+[Tt][Ii][Tt][Ll][Ee]:\\)")
+          (conf-toml-mode . "^\\[")
           (markdown-mode . "^#+ +")))
   (setq prot-search-todo-keywords
         (concat "TODO\\|FIXME\\|NOTE\\|REVIEW\\|XXX\\|KLUDGE"
@@ -1328,6 +1334,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
         `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos--page-delimiter))
           (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos--page-delimiter))
           (markdown-mode . ,(format "\\(^\\#+ +\\|^[*-]\\{5\\}$\\|^\\* \\* \\*$\\|%s\\)" logos--page-delimiter))
+          (conf-toml-mode . "^\\[")
           (t . ,(or outline-regexp logos--page-delimiter))))
 
   ;; These apply when `logos-focus-mode' is enabled.  Their value is
@@ -1391,13 +1398,19 @@ Useful for prompts such as `eval-expression' and `shell-command'."
         "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
   (setq tmr-notification-urgency 'normal)
   (setq tmr-descriptions-list (list "Boil water" "Prepare tea" "Bake bread"))
-  (require 'tmr-tabulated) ; you do not need this if you install the package
+
+  ;; You do not need these if you install the package.
+  (require 'tmr-sound)
+  (require 'tmr-notification)
+  (require 'tmr-tabulated)
+
   (let ((map global-map))
     (define-key map (kbd "C-c t t") #'tmr)
     (define-key map (kbd "C-c t T") #'tmr-with-description)
     (define-key map (kbd "C-c t c") #'tmr-clone)
     (define-key map (kbd "C-c t l") #'tmr-tabulated-view) ; "list timers" mnemonic
-    (define-key map (kbd "C-c t k") #'tmr-cancel)))
+    (define-key map (kbd "C-c t k") #'tmr-cancel)
+    (define-key map (kbd "C-c t K") #'tmr-remove-finished)))
 
 ;;; Diff-mode (and prot-diff.el extensions)
 (prot-emacs-builtin-package 'diff-mode
