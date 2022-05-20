@@ -4307,7 +4307,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                        bg-region blue-intense-bg
                                        fg-alt blue-intense)
                                     :extend t)))
-    `(modus-themes-key-binding ((,class :inherit bold :foreground ,blue-alt-other)))
+    `(modus-themes-key-binding ((,class :inherit (bold modus-themes-fixed-pitch)
+                                        :foreground ,blue-alt-other)))
     `(modus-themes-prompt ((,class ,@(modus-themes--prompt
                                       cyan-alt-other blue-alt-other fg-alt
                                       cyan-nuanced-bg blue-refine-bg fg-main
@@ -5897,6 +5898,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(ledger-font-payee-uncleared-face ((,class :foreground ,red-alt-other)))
     `(ledger-font-xact-highlight-face ((,class :background ,bg-hl-alt)))
 ;;;;; line numbers (display-line-numbers-mode and global variant)
+    ;; Here we cannot inherit `modus-themes-fixed-pitch'.  We need to
+    ;; fall back to `default' otherwise line numbers do not scale when
+    ;; using `text-scale-adjust'.
     `(line-number
       ((,class :inherit ,(if modus-themes-mixed-fonts 'fixed-pitch 'default)
                ,@(modus-themes--line-numbers
@@ -6456,9 +6460,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
                           :background ,bg-alt)))
     `(org-column-title ((,class :inherit (bold modus-themes-fixed-pitch default)
                                 :underline t :background ,bg-alt)))
-    `(org-date ((,class :inherit ,(if modus-themes-mixed-fonts
-                                      '(fixed-pitch modus-themes-link-symlink)
-                                    'modus-themes-link-symlink))))
+    `(org-date ((,class :inherit (modus-themes-link-symlink modus-themes-fixed-pitch))))
     `(org-date-selected ((,class :foreground ,blue-alt :inverse-video t)))
     `(org-dispatcher-highlight ((,class :inherit (bold modus-themes-mark-alt))))
     `(org-document-info ((,class :foreground ,fg-special-cold)))
@@ -7547,8 +7549,4 @@ by virtue of calling either of `modus-themes-load-operandi' and
       (add-to-list 'custom-theme-load-path dir))))
 
 (provide 'modus-themes)
-
-;; Local Variables:
-;; no-byte-compile: t
-;; End:
 ;;; modus-themes.el ends here
