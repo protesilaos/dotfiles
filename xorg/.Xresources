@@ -60,7 +60,7 @@ xterm*highlightTextColor: XtDefaultBackground
 
 ! Font settings
 xterm*faceName: Monospace
-xterm*faceSize: 9
+xterm*faceSize: 8
 xterm*renderFont: true
 xterm*boldColors: false
 xterm*faceSize1: 9.5
