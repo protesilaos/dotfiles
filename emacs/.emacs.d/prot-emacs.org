@@ -5957,9 +5957,11 @@ configurations are about.
     (this part is done in [[#h:a196812e-1644-4536-84ba-687366867def][the Notmuch section]]).
 
 + The value of =message-citation-line-format= is expanded into something
-  like /"On 2020-02-19, 13:54 +0200, NAME <EMAIL> wrote:"/.  To learn
-  about all the date-related specifiers, it is better to read the
-  documentation with =M-x describe-variable RET format-time-string RET=.
+  like /"On 2020-02-19, 13:54 +0200, NAME <EMAIL> wrote:"/.  This works
+  when =message-citation-line-function= has a value of
+  =message-insert-formatted-citation-line= (or equivalent).  I stopped
+  using that approach and instead configure replies to reference the
+  =From= and =Date= headers directly.
 
 + The =mm-encode= and =mml-sec= are meant to come into effect when
   encrypting and signing an outgoing message, such as with =C-c C-m C-e=
@@ -5997,14 +5999,30 @@ configurations are about.
 (prot-emacs-builtin-package 'message
   (setq mail-user-agent 'message-user-agent)
   (setq mail-header-separator (purecopy "*****"))
-  (setq message-elide-ellipsis ">\n> [... %l lines elided]\n>\n>") ; NOTE 2021-07-13: experimental
+  (setq message-elide-ellipsis "\n> [... %l lines elided]\n")
   (setq compose-mail-user-agent-warnings nil)
   (setq message-mail-user-agent t)      ; use `mail-user-agent'
   (setq mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
   (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
-  (setq message-citation-line-format "On %Y-%m-%d, %R %z, %f wrote:\n")
+
+  ;; Instead of using a citation format like this:
+  ;;
+  ;; On DATE, PERSON wrote:
+  ;; > MESSAGE
+  ;;
+  ;; I disable the citation line and `message-ignored-cited-headers' to
+  ;; get this template instead:
+  ;;
+  ;; > From: PERSON
+  ;; > Date: DATE
+  ;; >
+  ;; > MESSAGE
+  ;;
+  ;; (setq message-citation-line-format "On %Y-%m-%d, %R %z, %f wrote:\n")
+  ;; (setq message-citation-line-function 'message-insert-formatted-citation-line)
   (setq message-citation-line-function nil)
   (setq message-ignored-cited-headers nil) ; default is "." for all headers
+
   (setq message-confirm-send nil)
   (setq message-kill-buffer-on-exit t)
   (setq message-wide-reply-confirm-recipients t)
