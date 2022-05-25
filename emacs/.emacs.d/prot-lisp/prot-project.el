@@ -24,6 +24,10 @@
 
 ;;; Commentary:
 ;;
+;;
+;; NOTE 2022-05-25: This file is subject to a major review.
+;;
+;;
 ;; This covers my project.el extensions, for use in my Emacs setup:
 ;; https://protesilaos.com/emacs/dotemacs.
 ;;
