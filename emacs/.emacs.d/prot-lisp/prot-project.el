@@ -163,12 +163,17 @@ DIRS."
 (defvar prot-project--subdir-hist '()
   "Minibuffer history for `prot-project-find-subdir'.")
 
+(defun prot-project--project-current ()
+  "Return directory from `project-current' based on Emacs version."
+  (if (>= emacs-major-version 29)
+      (project-root (project-current))
+    (cdr (project-current))))
+
 ;;;###autoload
 (defun prot-project-find-subdir ()
   "Find subdirectories in the current project, using completion."
   (interactive)
-  (let* ((pr (project-current t))
-         (dir (cdr pr))
+  (let* ((dir (prot-project--project-current))
          (subdirs (prot-project--subdirs-completion-table dir))
          (directory (completing-read "Select Project subdir: " subdirs
                                      nil t nil 'prot-project--subdir-hist)))
@@ -187,8 +192,7 @@ The log is limited to the integer specified by
 `prot-project-commit-log-limit'.  A value of 0 means
 'unlimited'."
   (interactive "P")
-  (let* ((pr (project-current t))
-         (dir (cdr pr))
+  (let* ((dir (prot-project--project-current))
          (default-directory dir) ; otherwise fails at spontaneous M-x calls
          (backend (vc-responsible-backend dir))
          (num prot-project-commit-log-limit)
@@ -203,8 +207,7 @@ The log is limited to the integer specified by
   "Run `vc-retrieve-tag' on project and switch to the root dir.
 Basically switches to a new branch or tag."
   (interactive)
-  (let* ((pr (project-current t))
-         (dir (cdr pr))
+  (let* ((dir (prot-project--project-current))
          (default-directory dir) ; otherwise fails at spontaneous M-x calls
          (name
           (vc-read-revision "Tag name: "
@@ -219,9 +222,7 @@ Basically switches to a new branch or tag."
 (defun prot-project-magit-status ()
   "Run `magit-status' on project."
   (interactive)
-  (let* ((pr (project-current t))
-         (dir (cdr pr)))
-    (magit-status dir)))
+  (magit-status (prot-project--project-current)))
 
 (defun prot-project--max-line ()
   "Return the last line's number."
