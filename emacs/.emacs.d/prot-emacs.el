@@ -2273,14 +2273,30 @@ sure this is a good approach."
 (prot-emacs-builtin-package 'message
   (setq mail-user-agent 'message-user-agent)
   (setq mail-header-separator (purecopy "*****"))
-  (setq message-elide-ellipsis ">\n> [... %l lines elided]\n>\n>") ; NOTE 2021-07-13: experimental
+  (setq message-elide-ellipsis "\n> [... %l lines elided]\n")
   (setq compose-mail-user-agent-warnings nil)
   (setq message-mail-user-agent t)      ; use `mail-user-agent'
   (setq mail-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
   (setq message-signature "Protesilaos Stavrou\nhttps://protesilaos.com\n")
-  (setq message-citation-line-format "On %Y-%m-%d, %R %z, %f wrote:\n")
+
+  ;; Instead of using a citation format like this:
+  ;;
+  ;; On DATE, PERSON wrote:
+  ;; > MESSAGE
+  ;;
+  ;; I disable the citation line and `message-ignored-cited-headers' to
+  ;; get this template instead:
+  ;;
+  ;; > From: PERSON
+  ;; > Date: DATE
+  ;; >
+  ;; > MESSAGE
+  ;;
+  ;; (setq message-citation-line-format "On %Y-%m-%d, %R %z, %f wrote:\n")
+  ;; (setq message-citation-line-function 'message-insert-formatted-citation-line)
   (setq message-citation-line-function nil)
   (setq message-ignored-cited-headers nil) ; default is "." for all headers
+
   (setq message-confirm-send nil)
   (setq message-kill-buffer-on-exit t)
   (setq message-wide-reply-confirm-recipients t)
