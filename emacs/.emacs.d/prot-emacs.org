@@ -553,7 +553,7 @@ background values.  This stands for a minimum contrast ratio of 7:1,
 also known as the WCAG AAA standard (the highest of its kind).
 
 The themes are "Modus Operandi" (light) and "Modus Vivendi" (dark).  The
-source code is available [[https://git.sr.ht/~protesilaos/modus-themes][on their GitLab page]] while you can read the
+source code is available [[https://git.sr.ht/~protesilaos/modus-themes][on their Git repository]] while you can read the
 HTML version of [[https://protesilaos.com/emacs/modus-themes][their manual on my website]].  If you have the package
 installed or are using Emacs >=28, you can read the manual from the
 built-in Info reader.  Evaluate: =(info "(modus-themes) Top")=.
