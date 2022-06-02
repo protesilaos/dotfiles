@@ -186,10 +186,10 @@
         modus-themes-bold-constructs t
         modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers t
-        modus-themes-intense-mouseovers nil
-        modus-themes-deuteranopia nil
+        modus-themes-intense-mouseovers t
+        modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
-        modus-themes-variable-pitch-ui nil
+        modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
         modus-themes-fringes nil ; {nil,'subtle,'intense}
@@ -198,7 +198,7 @@
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense' OR `faint'.
-        modus-themes-lang-checkers '(straight-underline background text-also)
+        modus-themes-lang-checkers nil
 
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
@@ -206,7 +206,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line nil
+        modus-themes-mode-line '(accented borderless (padding 3))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -216,7 +216,7 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax nil
+        modus-themes-syntax '(alt-syntax)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -245,7 +245,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(bold italic)
+        modus-themes-prompts nil
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -273,7 +273,7 @@
         modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
-        modus-themes-diffs nil
+        modus-themes-diffs 'desaturated
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
 
