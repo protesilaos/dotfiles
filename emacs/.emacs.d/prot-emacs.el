@@ -1327,7 +1327,19 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq denote-known-keywords
         '("emacs" "philosophy" "politics" "economics"))
   (setq denote-infer-keywords t)
-  (setq denote-sort-keywords t))
+  (setq denote-sort-keywords t)
+
+  (with-eval-after-load 'org-capture
+    (add-to-list 'org-capture-templates
+                 `("n" "New note (with denote.el)" plain
+                   #'denote-org-capture
+                   ,(concat "%i"
+                            "\n\n"
+                            "%a")
+                   :no-save t
+                   :immediate-finish t
+                   :kill-buffer t
+                   :jump-to-captured t))))
 
 ;;; Custom extensions for "focus mode" (logos.el)
 (prot-emacs-elpa-package 'olivetti
