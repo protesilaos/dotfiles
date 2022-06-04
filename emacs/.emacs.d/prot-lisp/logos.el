@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/logos
 ;; Mailing list: https://lists.sr.ht/~protesilaos/logos
-;; Version: 0.3.2
+;; Version: 0.4.0
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: convenience, focus, writing, presentation, narrowing
 
@@ -154,6 +154,19 @@ This is only relevant when `logos-focus-mode' is enabled."
   :type 'boolean
   :group 'logos
   :local t)
+
+(defcustom logos-focus-mode-extra-functions nil
+  "List of functions to execute when `logos-focus-mode' is toggled.
+
+Each function is run without an argument.  An example that sets a
+variable is `logos--buffer-read-only'; one that sets a mode is
+`logos--scroll-lock'; another that sets the mode of an external
+package is `logos--olivetti'; while `logos--hide-fringe' provides
+yet another useful sample.
+
+Consult the Logos manual for concrete do-it-yourself examples."
+  :type 'hook
+  :group 'logos)
 
 ;;;; General utilities
 
@@ -356,7 +369,8 @@ options: `logos-scroll-lock', `logos-variable-pitch',
   (logos--remove-fringe-remap)
   (setq logos--restore nil)
   (when logos-focus-mode
-    (logos--setup)))
+    (logos--setup)
+    (run-hooks 'logos-focus-mode-extra-functions)))
 
 (defun logos--setup ()
   "Set up aesthetics for presentation."
@@ -393,6 +407,10 @@ options: `logos-scroll-lock', `logos-variable-pitch',
 ;;
 ;; When using `logos-olivetti' the problem no longer occurs, presumably
 ;; because Olivetti triggers some kind of redraw.  Which one?
+;;
+;; UPDATE 2022-05-08: If I use `redraw-display', the mode line is
+;; restored even without `logos-olivetti'.  This, however, feels like
+;; the wrong thing to do because it affects all visible frames.
 (defun logos--hide-mode-line ()
   "Set `logos-hide-mode-line'."
   (when logos-hide-mode-line
