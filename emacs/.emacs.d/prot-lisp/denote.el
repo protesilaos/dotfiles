@@ -1,4 +1,4 @@
-;;; denote.el --- Unassuming Sidenotes of Little Significance -*- lexical-binding: t -*-
+;;; denote.el --- Do Easy NOTE -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2022  Protesilaos Stavrou
 
@@ -105,7 +105,10 @@ If nil, show the keywords in their given order."
 
 (defun denote--directory ()
   "Valid name format for `denote-directory'."
-  (file-name-as-directory denote-directory))
+  (let ((path denote-directory))
+    (unless (file-directory-p path)
+      (make-directory path t))
+    (file-name-as-directory path)))
 
 (defun denote--extract (regexp str &optional group)
   "Extract REGEXP from STR, with optional regexp GROUP."
@@ -324,7 +327,7 @@ sample template.  We will eventually have a manual."
 ;;                   "%a")
 ;;          :no-save t
 ;;          :immediate-finish t
-;;          :empty-lines-before 1
+;;          :kill-buffer t
 ;;          :jump-to-captured t)))
 ;;
 ;; FIXME 2022-06-04: The :kill-buffer does not actually kill the buffer
