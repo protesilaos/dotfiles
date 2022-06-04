@@ -24,7 +24,8 @@
 
 ;;; Commentary:
 ;;
-;; Consult the project's README.
+;; NOTE 2022-06-04: Deprecated and superseded by my denote.el:
+;; <https://git.sr.ht/~protesilaos/denote>.
 
 ;;; Code:
 
