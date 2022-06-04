@@ -3802,81 +3802,6 @@ And here is =logos.el= in its totality.  It is available as a file in
 
 #+include: prot-lisp/logos.el src emacs-lisp :tangle no
 
-** USLS --- Unassuming Sidenotes of Little Significance
-:PROPERTIES:
-:CUSTOM_ID: h:787df548-0d95-4512-a61d-27852198f561
-:END:
-
-NOTE 2021-12-29: USLS is subject to a rewrite.  I have been using it
-daily since its inception, though the code needs to be refactored.  As a
-proof-of-concept of its utility, check out my =invtr= (only for curious
-hackers, not actual users): [[#h:c66a0f25-840a-49f0-a615-66dfca61890b][INVTR (toy inventory and client manager)]].
-
-This is a library that I am developing to help me flesh out my
-note-taking system.  In essence, =usls= is a set of helper functions
-around standard Emacs tools, such as =find-file=, =dired=, and internal
-libraries like =thingatpt=.  It has no external dependencies whatsoever.
-This blog post of mine documents the principles and general ideas about
-it: [[https://protesilaos.com/codelog/2020-10-08-intro-usls-emacs-notes/][My simple note-taking system for Emacs (without Org)]] (2020-10-08).
-
-Because this is standard Emacs stuff, I can always benefit from the rest
-of my setup, such as to search for file contents in the current
-directory.  Study the entirety of my [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
-
-In the =usls.el= code I wanted to respect key binding conventions, so I
-did not bind any keys: this is a user-level customisation.  The other
-options I have here are for the sake of visibility and are left to their
-default values.
-
-The code for this project is on the [[https://git.sr.ht/~protesilaos/usls][USLS Gitlab repo]] and reproduced in
-the subsequent code block.
-
-#+begin_src emacs-lisp
-;;; USLS --- Unassuming Sidenotes of Little Significance
-(prot-emacs-builtin-package 'usls
-  (setq usls-directory (expand-file-name "~/Documents/notes/"))
-  (setq usls-known-categories '("economics" "philosophy" "politics"))
-  (setq usls-file-type-extension ".txt") ; {.txt,.org,.md}
-  (setq usls-subdir-support nil)
-  (setq usls-file-region-separator 'line) ; {'line,'heading, OR string of your choice}
-  (setq usls-file-region-separator-heading-level 1)
-  (setq usls-custom-header-function nil)
-
-  (add-hook 'usls-mode-hook #'goto-address-mode)
-
-  (let ((map global-map))               ; globally bound keys
-    (define-key map (kbd "C-c n d") #'usls-dired)
-    (define-key map (kbd "C-c n f") #'usls-find-file)
-    (define-key map (kbd "C-c n a") #'usls-append-region-buffer-or-file)
-    (define-key map (kbd "C-c n n") #'usls-new-note))
-  (let ((map usls-mode-map))            ; only for usls buffers
-    (define-key map (kbd "C-c n i") #'usls-id-insert)
-    (define-key map (kbd "C-c n l") #'usls-follow-link)))
-#+end_src
-
-Here is the =usls.el= code, which is also part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]] (as
-with all my Elisp code):
-
-#+include: prot-lisp/usls.el src emacs-lisp :tangle no
-
-** INVTR (toy inventory and client manager)
-:PROPERTIES:
-:CUSTOM_ID: h:c66a0f25-840a-49f0-a615-66dfca61890b
-:END:
-
-I am intentionally not documenting this because it is not intended for
-public use.  It is a *highly experimental proof-of-concept* of a nimble
-inventory and client manager that extends the file-naming methodology of
-my USLS (see [[#h:787df548-0d95-4512-a61d-27852198f561][USLS --- Unassuming Sidenotes of Little Significance]]).
-
-#+begin_src emacs-lisp
-;;; INVTR (toy inventory and client manager)
-;; DO NOT USE THIS!!!
-(prot-emacs-builtin-package 'invtr)
-#+end_src
-
-#+include: prot-lisp/invtr.el src emacs-lisp :tangle no
-
 ** TMR May Ring (tmr is used to set timers)
 :PROPERTIES:
 :CUSTOM_ID: h:c90ba6fa-ebec-42a2-98a6-3ff9027b1ffa
@@ -7753,6 +7678,91 @@ actually useful.  Well done, Daniel!
   (with-eval-after-load 'org
     (require 'osm-ol)))
 #+end_src
+
+** COMMENT Experimental packages for private use
+:PROPERTIES:
+:CUSTOM_ID: h:45fc77c9-9724-492d-bf58-91032e7172fd
+:END:
+
+What I have here is not distributed as a package and is not intended for
+public use.  Notice that this section has a "COMMENT" keyword, meaning
+that the code is not loaded and this part of the file is not exported to
+the website.
+
+*** USLS --- Unassuming Sidenotes of Little Significance
+:PROPERTIES:
+:CUSTOM_ID: h:787df548-0d95-4512-a61d-27852198f561
+:END:
+
+NOTE 2021-12-29: USLS is subject to a rewrite.  I have been using it
+daily since its inception, though the code needs to be refactored.  As a
+proof-of-concept of its utility, check out my =invtr= (only for curious
+hackers, not actual users): [[#h:c66a0f25-840a-49f0-a615-66dfca61890b][INVTR (toy inventory and client manager)]].
+
+This is a library that I am developing to help me flesh out my
+note-taking system.  In essence, =usls= is a set of helper functions
+around standard Emacs tools, such as =find-file=, =dired=, and internal
+libraries like =thingatpt=.  It has no external dependencies whatsoever.
+This blog post of mine documents the principles and general ideas about
+it: [[https://protesilaos.com/codelog/2020-10-08-intro-usls-emacs-notes/][My simple note-taking system for Emacs (without Org)]] (2020-10-08).
+
+Because this is standard Emacs stuff, I can always benefit from the rest
+of my setup, such as to search for file contents in the current
+directory.  Study the entirety of my [[#h:98d3abcc-f34e-4029-aabc-740f0b6421f8][Completion framework and extras]].
+
+In the =usls.el= code I wanted to respect key binding conventions, so I
+did not bind any keys: this is a user-level customisation.  The other
+options I have here are for the sake of visibility and are left to their
+default values.
+
+The code for this project is on the [[https://gitlab.com/protesilaos/usls][USLS Gitlab repo]] and reproduced in
+the subsequent code block.
+
+#+begin_src emacs-lisp
+;;; USLS --- Unassuming Sidenotes of Little Significance
+(prot-emacs-builtin-package 'usls
+  (setq usls-directory (expand-file-name "~/Documents/notes/"))
+  (setq usls-known-categories '("economics" "philosophy" "politics"))
+  (setq usls-file-type-extension ".txt") ; {.txt,.org,.md}
+  (setq usls-subdir-support nil)
+  (setq usls-file-region-separator 'line) ; {'line,'heading, OR string of your choice}
+  (setq usls-file-region-separator-heading-level 1)
+  (setq usls-custom-header-function nil)
+
+  (add-hook 'usls-mode-hook #'goto-address-mode)
+
+  (let ((map global-map))               ; globally bound keys
+    (define-key map (kbd "C-c n d") #'usls-dired)
+    (define-key map (kbd "C-c n f") #'usls-find-file)
+    (define-key map (kbd "C-c n a") #'usls-append-region-buffer-or-file)
+    (define-key map (kbd "C-c n n") #'usls-new-note))
+  (let ((map usls-mode-map))            ; only for usls buffers
+    (define-key map (kbd "C-c n i") #'usls-id-insert)
+    (define-key map (kbd "C-c n l") #'usls-follow-link)))
+#+end_src
+
+Here is the =usls.el= code, which is also part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]] (as
+with all my Elisp code):
+
+#+include: prot-lisp/usls.el src emacs-lisp :tangle no
+
+*** INVTR (toy inventory and client manager)
+:PROPERTIES:
+:CUSTOM_ID: h:c66a0f25-840a-49f0-a615-66dfca61890b
+:END:
+
+I am intentionally not documenting this because it is not intended for
+public use.  It is a *highly experimental proof-of-concept* of an
+inventory and client manager that extends the file-naming methodology of
+my USLS (see [[#h:787df548-0d95-4512-a61d-27852198f561][USLS --- Unassuming Sidenotes of Little Significance]]).
+
+#+begin_src emacs-lisp
+;;; INVTR (toy inventory and client manager)
+;; DO NOT USE THIS!!!
+(prot-emacs-builtin-package 'invtr)
+#+end_src
+
+#+include: prot-lisp/invtr.el src emacs-lisp :tangle no
 
 * General interface and interactions
 :PROPERTIES:
