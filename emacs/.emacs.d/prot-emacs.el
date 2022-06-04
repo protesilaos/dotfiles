@@ -1322,6 +1322,13 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (define-key global-map (kbd "C-x r l") #'blist-list-bookmarks))
 
+(prot-emacs-builtin-package 'denote
+  (setq denote-directory (expand-file-name "~/Documents/notes/"))
+  (setq denote-known-keywords
+        '("emacs" "philosophy" "politics" "economics"))
+  (setq denote-infer-keywords t)
+  (setq denote-sort-keywords t))
+
 ;;; Custom extensions for "focus mode" (logos.el)
 (prot-emacs-elpa-package 'olivetti
   (setq olivetti-body-width 0.7)
@@ -1366,31 +1373,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
       (recenter 1))) ; Use 0 for the absolute top
 
   (add-hook 'logos-page-motion-hook #'prot/logos--recenter-top))
-
-;;; USLS --- Unassuming Sidenotes of Little Significance
-(prot-emacs-builtin-package 'usls
-  (setq usls-directory (expand-file-name "~/Documents/notes/"))
-  (setq usls-known-categories '("economics" "philosophy" "politics"))
-  (setq usls-file-type-extension ".txt") ; {.txt,.org,.md}
-  (setq usls-subdir-support nil)
-  (setq usls-file-region-separator 'line) ; {'line,'heading, OR string of your choice}
-  (setq usls-file-region-separator-heading-level 1)
-  (setq usls-custom-header-function nil)
-
-  (add-hook 'usls-mode-hook #'goto-address-mode)
-
-  (let ((map global-map))               ; globally bound keys
-    (define-key map (kbd "C-c n d") #'usls-dired)
-    (define-key map (kbd "C-c n f") #'usls-find-file)
-    (define-key map (kbd "C-c n a") #'usls-append-region-buffer-or-file)
-    (define-key map (kbd "C-c n n") #'usls-new-note))
-  (let ((map usls-mode-map))            ; only for usls buffers
-    (define-key map (kbd "C-c n i") #'usls-id-insert)
-    (define-key map (kbd "C-c n l") #'usls-follow-link)))
-
-;;; INVTR (toy inventory and client manager)
-;; DO NOT USE THIS!!!
-(prot-emacs-builtin-package 'invtr)
 
 ;;; TMR May Ring (tmr is used to set timers)
 (prot-emacs-builtin-package 'tmr
