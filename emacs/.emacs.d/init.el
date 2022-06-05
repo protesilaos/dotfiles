@@ -253,6 +253,18 @@ of it."
       (org-babel-tangle-file user-init-org user-init-el)
       (byte-compile-file user-init-el))))
 
+;; NOTE 2022-06-05: Experimental.  Since I have lots of custom code of
+;; mine, I thought it would be a good idea to have .elc versions of it.
+;; Whether this will have a noticeable effect or not remains to be
+;; determined.
+(defun prot-emacs-byte-compile-files ()
+  "Byte compile everything in `prot-emacs-elisp-directories'."
+  (mapc (lambda (dir)
+          (byte-recompile-directory
+           (file-name-as-directory (concat user-emacs-directory dir)) 0))
+        prot-emacs-elisp-directories))
+
 (add-hook 'kill-emacs-hook #'prot-emacs-build-config)
+(add-hook 'kill-emacs-hook #'prot-emacs-byte-compile-files)
 
 ;;; init.el ends here
