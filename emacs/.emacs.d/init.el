@@ -211,14 +211,16 @@ expressions."
          (user-init-org (prot-emacs--expand-file-name user-init ".org")))
     (prot-emacs-basic-init-setup)
     (require 'org)
-    (if (file-exists-p main-init-el)    ; FIXME 2021-02-16: this should be improved
-        (load-file main-init-el)
-      (when (file-exists-p main-init-org)
-        (org-babel-load-file main-init-org)))
-    (if (file-exists-p user-init-el)
-        (load-file user-init-el)
-      (when (file-exists-p user-init-org)
-        (org-babel-load-file user-init-org)))))
+    (cond
+     ((file-exists-p main-init-el)
+      (load-file main-init-el))
+     ((file-exists-p main-init-org)
+      (org-babel-load-file main-init-org)))
+    (cond
+     ((file-exists-p user-init-el)
+      (load-file user-init-el))
+     ((file-exists-p user-init-org)
+      (org-babel-load-file user-init-org)))))
 
 ;; Load configurations.
 (prot-emacs-load-config)
