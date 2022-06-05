@@ -1328,16 +1328,15 @@ Useful for prompts such as `eval-expression' and `shell-command'."
         '("emacs" "philosophy" "politics" "economics"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
+  (setq denote-org-capture-specifiers "%l\n%i\n%?")
 
   (with-eval-after-load 'org-capture
     (add-to-list 'org-capture-templates
-                 `("n" "New note (with denote.el)" plain
+                 '("n" "New note (with denote.el)" plain
+                   (file denote-last-path)
                    #'denote-org-capture
-                   ,(concat "%i"
-                            "\n\n"
-                            "%a")
                    :no-save t
-                   :immediate-finish t
+                   :immediate-finish nil
                    :kill-buffer t
                    :jump-to-captured t))))
 
