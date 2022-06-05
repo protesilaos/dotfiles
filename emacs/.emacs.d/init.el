@@ -259,6 +259,7 @@ of it."
 ;; determined.
 (defun prot-emacs-byte-compile-files ()
   "Byte compile everything in `prot-emacs-elisp-directories'."
+  (interactive)
   (mapc (lambda (dir)
           (byte-recompile-directory
            (file-name-as-directory (concat user-emacs-directory dir)) 0))
