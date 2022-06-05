@@ -156,11 +156,14 @@ expressions."
 (require 'vc)
 (setq vc-follow-symlinks t) ; Because my dotfiles are managed that way
 
+(defvar prot-emacs-elisp-directories '("prot-lisp" "contrib-lisp" "modus-themes")
+  "List of directories in the Emacs setup with custom Elisp.")
+
 ;; "prot-lisp" is for all my custom libraries; "contrib-lisp" is for
 ;; third-party code that I handle manually; while "modus-themes"
 ;; contains my themes which I use directly from source for development
 ;; purposes.
-(dolist (path '("prot-lisp" "contrib-lisp" "modus-themes"))
+(dolist (path prot-emacs-elisp-directories)
   (add-to-list 'load-path (locate-user-emacs-file path)))
 
 ;; Some basic settings
