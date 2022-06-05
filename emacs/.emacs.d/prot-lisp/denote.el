@@ -82,16 +82,6 @@ If nil, show the keywords in their given order."
   :group 'denote
   :type 'boolean)
 
-(defcustom denote-org-capture-specifiers "%l\n%i\n%?"
-  "String with format specifieirs for `org-capture-templates'.
-Check that variable's documentation for the details.
-
-This string is append to new notes in the `denote-org-capture'
-function.  Every new note has the standard front matter we
-define."
-  :type 'string
-  :group 'denote)
-
 ;;; Main variables
 
 ;; TODO 2022-06-04: Can we make the entire file name format a defcustom?
@@ -104,6 +94,9 @@ define."
 
 (defconst denote-keyword-regexp "\\(--\\)\\([0-9A-Za-z_+]*\\)\\(--\\)"
   "Regular expression to match `denote-keywords'.")
+
+(defconst denote--punctuation-regexp "[][{}!@#$%^&*()_=+'\"?,.\|;:~`‘’“”]*"
+  "Regular expression of punctionation that should be removed.")
 
 (defvar denote-last-path nil "Store last path.")
 (defvar denote-last-title nil "Store last title.")
@@ -130,9 +123,6 @@ define."
     (when (re-search-forward regexp nil t -1)
       (match-string (or group 1)))))
 
-(defvar denote--punctuation-regexp "[][{}!@#$%^&*()_=+'\"?,.\|;:~`‘’“”]*"
-  "Regular expression of punctionation that should be removed.")
-
 (defun denote--slug-no-punct (str)
   "Convert STR to a file name slug."
   (replace-regexp-in-string denote--punctuation-regexp "" str))
@@ -155,12 +145,12 @@ trailing hyphen."
 
 (defun denote--directory-files ()
   "List `denote-directory' files, assuming flat directory."
-  (seq-remove
-   (lambda (file)
-     ;; TODO: generalise this for more VC backends?  Which ones?
-     (or (string-match-p "\\.git" file)
-         (file-directory-p file)))
-   (directory-files (denote--directory) nil directory-files-no-dot-files-regexp t)))
+  (let* ((dir (denote--directory))
+        (default-directory dir))
+    (seq-remove
+     (lambda (file)
+       (file-directory-p file))
+     (directory-files dir nil directory-files-no-dot-files-regexp t))))
 
 (defun denote--keywords-in-files ()
   "Produce list of keywords in `denote--directory-files'."
@@ -253,8 +243,11 @@ TITLE, DATE, KEYWORDS, FILENAME, ID are all strings which are
     (concat "#+title:      " title     "\n"
             "#+date:       " date      "\n"
             "#+keywords:   " kw        "\n"
-            "#+filename:   " filename  "\n"
-            "#+identifier: " id        "\n\n")))
+            "#+identifier: " id        "\n"
+            "#+filename:   " (string-remove-prefix denote-directory filename)  "\n"
+            "#+path:       " filename  "\n"
+            "#+link:       " "denote /home/prot/Documents/notes/%s"
+            "\n\n")))
 
 (defun denote--path (title keywords)
   "Return path to new file with TITLE and KEYWORDS.
@@ -269,11 +262,11 @@ Format current time, else use optional ID."
 (defun denote--prepare-note (title keywords &optional path)
   "Use TITLE and KEYWORDS to prepare new note file.
 Use optional PATH, else create it with `denote--path'."
-  (let* ((filename (or path (denote--path title keywords)))
+  (let* ((path (or path (denote--path title keywords)))
          (default-directory denote-directory)
-         (buffer (unless path (find-file filename)))
+         (buffer (unless path (find-file path)))
          (header (denote--file-meta-header
-                  title (format-time-string "%F") keywords filename
+                  title (format-time-string "%F") keywords path
                   (format-time-string denote-id))))
     (unless path
       (with-current-buffer buffer (insert header))
@@ -302,7 +295,7 @@ Completion candidates are those of `denote-known-keywords'.  If
 file names are also provided as candidates.
 
 When `denote-sort-keywords' is non-nil, keywords are sorted
-alphabetically."
+alphabetically in both the file name and file contents."
   (declare (interactive-only t))
   (interactive
    (list
@@ -310,51 +303,6 @@ alphabetically."
     (denote--keywords-prompt)))
   (denote--prepare-note title keywords)
   (denote--keywords-add-to-history keywords))
-
-;;;###autoload
-(defun denote-org-capture ()
-  "Create new note through `org-capture-templates'.
-Use this as a function that returns the path to the new file.
-The file is populated with Denote's front matter.  It can then be
-expanded with the usual specifiers or strings that
-`org-capture-templates' supports.
-
-Search the source code of this function for a comment with a
-sample template.  We will eventually have a manual."
-  (let ((title (denote--title-prompt))
-        (keywords (denote--keywords-prompt)))
-    (denote--path title keywords)
-    (denote--prepare-note denote-last-title denote-last-keywords denote-last-path)
-    (denote--keywords-add-to-history denote-last-keywords)
-    (add-hook 'org-capture-after-finalize-hook #'denote-org-capture-delete-empty-file)
-    (concat denote-last-front-matter denote-org-capture-specifiers)))
-
-(defun denote-org-capture-delete-empty-file ()
-  "Delete file if capture with `denote-org-capture' is aborted."
-  (when-let* ((file denote-last-path)
-              ((zerop (or (file-attribute-size (file-attributes file)) 0))))
-    (delete-file denote-last-path)))
-
-;; Samples of an `org-capture-templates' entry:
-;;
-;; (setq org-capture-templates
-;;       '(("n" "New note (with denote.el)" plain
-;;          (file denote-last-path)
-;;          #'denote-org-capture
-;;          :no-save t
-;;          :immediate-finish nil
-;;          :kill-buffer t
-;;          :jump-to-captured t)))
-;;
-;; (with-eval-after-load 'org-capture
-;;   (add-to-list 'org-capture-templates
-;;                '("n" "New note (with denote.el)" plain
-;;                  (file denote-last-path)
-;;                  #'denote-org-capture
-;;                  :no-save t
-;;                  :immediate-finish nil
-;;                  :kill-buffer t
-;;                  :jump-to-captured t)))
 
 ;; TODO 2022-06-04: `denote-rename-file'
 

@@ -1331,6 +1331,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq denote-org-capture-specifiers "%l\n%i\n%?")
 
   (with-eval-after-load 'org-capture
+    (require 'denote-org-capture)
     (add-to-list 'org-capture-templates
                  '("n" "New note (with denote.el)" plain
                    (file denote-last-path)
