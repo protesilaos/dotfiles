@@ -39,7 +39,7 @@
   "Simple tool for plain text notes."
   :group 'files)
 
-;;; User options
+;;;; User options
 
 (defcustom denote-directory (expand-file-name "~/Documents/notes/")
   "Directory for storing personal notes."
@@ -82,9 +82,7 @@ If nil, show the keywords in their given order."
   :group 'denote
   :type 'boolean)
 
-;;; Main variables
-
-;; TODO 2022-06-04: Can we make the entire file name format a defcustom?
+;;;; Main variables
 
 (defconst denote-id "%Y%m%d_%H%M%S"
   "Format of ID prefix of a note's filename.")
@@ -104,7 +102,7 @@ If nil, show the keywords in their given order."
 (defvar denote-last-buffer nil "Store last buffer.")
 (defvar denote-last-front-matter nil "Store last front-matter.")
 
-;;;; File name helpers
+;;;; File helper functions
 
 (defun denote--directory ()
   "Valid name format for `denote-directory'."
@@ -141,12 +139,18 @@ trailing hyphen."
   "Make STR an appropriate file name slug."
   (downcase (denote--slug-hyphenate (denote--slug-no-punct str))))
 
+(defun denote--file-empty-p (file)
+  "Return non-nil if FILE is empty."
+  (zerop (or (file-attribute-size (file-attributes file)) 0)))
+
 ;;;; Keywords
 
 (defun denote--directory-files ()
   "List `denote-directory' files, assuming flat directory."
   (let* ((dir (denote--directory))
-        (default-directory dir))
+         (default-directory dir))
+    ;; TODO 2022-06-06: Do this elegantly without seq-remove or
+    ;; cl-remove-if?  Just curious...
     (seq-remove
      (lambda (file)
        (file-directory-p file))
@@ -303,8 +307,6 @@ alphabetically in both the file name and file contents."
     (denote--keywords-prompt)))
   (denote--prepare-note title keywords)
   (denote--keywords-add-to-history keywords))
-
-;; TODO 2022-06-04: `denote-rename-file'
 
 (provide 'denote)
 ;;; denote.el ends here
