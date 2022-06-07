@@ -143,6 +143,29 @@ trailing hyphen."
   "Return non-nil if FILE is empty."
   (zerop (or (file-attribute-size (file-attributes file)) 0)))
 
+(defvar denote--line-regexp-alist
+  '((empty . "[\s\t]*$")
+    (indent . "^[\s\t]+")
+    (non-empty . "^.+$")
+    (list . "^\\([\s\t#*+]+\\|[0-9]+[^\s]?[).]+\\)")
+    (heading . "^\\*+ +"))              ; assumes Org markup
+  "Alist of regexp types used by `denote-line-regexp-p'.")
+
+(defun denote--line-regexp-p (type &optional n)
+  "Test for TYPE on line.
+TYPE is the car of a cons cell in
+`denote--line-regexp-alist'.  It matches a regular
+expression.
+
+With optional N, search in the Nth line from point."
+  (save-excursion
+    (goto-char (point-at-bol))
+    (and (not (bobp))
+         (or (beginning-of-line n) t)
+         (save-match-data
+           (looking-at
+            (alist-get type denote--line-regexp-alist))))))
+
 ;;;; Keywords
 
 (defun denote--directory-files ()
@@ -266,11 +289,11 @@ Format current time, else use optional ID."
 (defun denote--prepare-note (title keywords &optional path)
   "Use TITLE and KEYWORDS to prepare new note file.
 Use optional PATH, else create it with `denote--path'."
-  (let* ((path (or path (denote--path title keywords)))
+  (let* ((p (or path (denote--path title keywords)))
          (default-directory denote-directory)
-         (buffer (unless path (find-file path)))
+         (buffer (unless path (find-file p)))
          (header (denote--file-meta-header
-                  title (format-time-string "%F") keywords path
+                  title (format-time-string "%F") keywords p
                   (format-time-string denote-id))))
     (unless path
       (with-current-buffer buffer (insert header))

@@ -3719,6 +3719,8 @@ I will explain how Denote works once the package is ready.  Introduced:
   (setq denote-sort-keywords t)
   (setq denote-org-capture-specifiers "%l\n%i\n%?")
 
+  (require 'denote-link)
+
   (with-eval-after-load 'org-capture
     (require 'denote-org-capture)
     (add-to-list 'org-capture-templates
