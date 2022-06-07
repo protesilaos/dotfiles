@@ -56,14 +56,14 @@
   :group 'files)
 
 (defcustom denote-org-capture-specifiers "%l\n%i\n%?"
-  "String with format specifieirs for `org-capture-templates'.
+  "String with format specifiers for `org-capture-templates'.
 Check that variable's documentation for the details.
 
 This string is append to new notes in the `denote-org-capture'
 function.  Every new note has the standard front matter we
 define."
   :type 'string
-  :group 'denote)
+  :group 'denote-org-capture)
 
 ;;;###autoload
 (defun denote-org-capture ()
