@@ -1,4 +1,4 @@
-;;; denote-org-capture.el --- Denote integration with org-capture -*- lexical-binding: t -*-
+;;; denote-org-capture.el --- Integration between denote and org-capture -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2022  Protesilaos Stavrou
 
@@ -52,8 +52,8 @@
 (require 'denote)
 
 (defgroup denote-org-capture ()
-  "Simple tool for plain text notes."
-  :group 'files)
+  "Integration between denote and Org Capture."
+  :group 'denote)
 
 (defcustom denote-org-capture-specifiers "%l\n%i\n%?"
   "String with format specifiers for `org-capture-templates'.

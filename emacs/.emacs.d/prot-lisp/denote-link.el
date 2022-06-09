@@ -1,4 +1,4 @@
-;;; denote-link.el --- Link to file with denote -*- lexical-binding: t -*-
+;;; denote-link.el --- Link facility for Denote -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2022  Protesilaos Stavrou
 
@@ -31,8 +31,8 @@
 (require 'denote)
 
 (defgroup denote-link ()
-  "Simple tool for plain text notes."
-  :group 'files)
+  "Link facility for Denote."
+  :group 'denote)
 
 ;;; User options
 
@@ -73,22 +73,25 @@ Both are supplied by `denote-link'."
 
 (defun denote-link--retrieve-value (note regexp)
   "Return REGEXP value from NOTE."
-  (let ((default-directory (denote--directory)))
+  (let ((default-directory (denote-directory)))
     (with-temp-buffer
       (insert-file-contents-literally note)
       (denote-link--find-key-value-pair regexp))))
 
 (defun denote-link--read-file-prompt ()
-  "Prompt for regular file in `denote-directory'."
-  (read-file-name "Select note: " (denote--directory)
+  "Prompt for regular file in variable `denote-directory'."
+  (read-file-name "Select note: " (denote-directory)
                   nil t nil #'file-regular-p)) ; Includes backup files.  Maybe we can remove them?
 
 ;;;###autoload
 (defun denote-link (target)
-  "Create Org link to TARGET note in `denote-directory'.
+  "Create Org link to TARGET note in variable `denote-directory'.
 Run `denote-link-insert-functions' afterwards."
   (interactive (list (denote-link--read-file-prompt)))
-  (let* ((dir (denote--directory))
+  (let* ((dir (denote-directory))
+         ;; TODO 2022-06-09: This is probably the ugliest function in
+         ;; the whole project.  We need to make it more readable by
+         ;; extracting the parts that should go in helper functions.
          (target-id (cdr (denote-link--retrieve-value target denote-link--identifier-regexp)))
          (target-name (string-remove-prefix
                        dir (cdr (denote-link--retrieve-value target denote-link--filename-regexp))))
@@ -109,7 +112,7 @@ This heading is appended to a file when another links to it.")
 
 (defun denote-link-backlink (target-file origin-link)
   "Insert ORIGIN-LINK to TARGET-FILE."
-  (let ((default-directory (denote--directory))
+  (let ((default-directory (denote-directory))
         (heading denote-link-backlink-heading)
         heading-point)
     (with-current-buffer (find-file-noselect target-file)
@@ -121,20 +124,19 @@ This heading is appended to a file when another links to it.")
          (format "* %s\n%s\n\n" heading "# Do not edit; this is for denote.el and related")))
       (insert (format "- %s\n" origin-link))
       ;; delete duplicate links
-      (unwind-protect
-          (delete-duplicate-lines heading-point (point-max) nil nil t)
-        (widen)))))
+      (when heading-point
+        (delete-duplicate-lines heading-point (point-max) nil nil t)))))
 
 (defun denote-link-clear-stale-backlinks ()
   "Delete backlinks that no longer point to files."
   (interactive)
-  (let ((default-directory (denote--directory)))
+  (let ((default-directory (denote-directory)))
     (save-excursion
       (goto-char (point-min))
-      (when (re-search-forward denote-link-backlink-heading nil t))
-      (while (re-search-forward denote-link--backlink-regexp nil t)
-        (unless (file-exists-p (match-string-no-properties 1))
-          (delete-line))))))
+      (when (re-search-forward denote-link-backlink-heading nil t)
+        (while (re-search-forward denote-link--backlink-regexp nil t)
+          (unless (file-exists-p (match-string-no-properties 1))
+            (delete-region (point-at-bol) (point-at-bol 2))))))))
 
 (provide 'denote-link)
 ;;; denote-link.el ends here

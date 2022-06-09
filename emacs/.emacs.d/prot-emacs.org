@@ -3717,14 +3717,29 @@ I will explain how Denote works once the package is ready.  Introduced:
         '("emacs" "philosophy" "politics" "economics"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
-  (setq denote-org-capture-specifiers "%l\n%i\n%?")
 
   (require 'denote-link)
   (require 'denote-dired)
-  (add-hook 'dired-mode-hook #'denote-dired-mode)
+
+  ;; I use different ways to specify a path for demo purposes.
+  (setq denote-dired-directories
+        (list denote-directory
+              (thread-last denote-directory (expand-file-name "attachments"))
+              (expand-file-name "~/Documents/vlog")))
+
+  ;; Generic:
+  ;; (add-hook 'dired-mode-hook #'denote-dired-mode)
+  ;;
+  ;; OR better:
+  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+
+  ;; You can bind `denote' to a global key if you prefer not to use
+  ;; `org-capture' or want an alternative.  For example:
+  (define-key global-map (kbd "C-c n") #'denote)
 
   (with-eval-after-load 'org-capture
     (require 'denote-org-capture)
+    (setq denote-org-capture-specifiers "%l\n%i\n%?")
     (add-to-list 'org-capture-templates
                  '("n" "New note (with denote.el)" plain
                    (file denote-last-path)

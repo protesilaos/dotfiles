@@ -1,4 +1,4 @@
-;;; denote.el --- Do Easy NOTE -*- lexical-binding: t -*-
+;;; denote.el --- Simple notes with a strict file-naming scheme -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2022  Protesilaos Stavrou
 
@@ -36,13 +36,16 @@
 ;;; Code:
 
 (defgroup denote ()
-  "Simple tool for plain text notes."
+  "Simple notes with a strict file-naming scheme."
   :group 'files)
 
 ;;;; User options
 
 (defcustom denote-directory (expand-file-name "~/Documents/notes/")
-  "Directory for storing personal notes."
+  "Directory for storing personal notes.
+If you intend to reference this variable in Lisp, consider using
+the function `denote-directory' instead: it returns the path as a
+directory."
   :group 'denote
   :type 'directory)
 
@@ -60,9 +63,9 @@ are assumed to demarcate distinct keywords."
 (defcustom denote-infer-keywords t
   "Whether to infer keywords.
 
-When non-nil, search the file names of existing notes in
-`denote-directory' for their keyword field and extract the
-entries as \"inferred keywords\".  These are combined with
+When non-nil, search the file names of existing notes in the
+variable `denote-directory' for their keyword field and extract
+the entries as \"inferred keywords\".  These are combined with
 `denote-known-keywords' and are presented as completion
 candidated while using `denote-new-note' interactively.
 
@@ -82,6 +85,24 @@ If nil, show the keywords in their given order."
   :group 'denote
   :type 'boolean)
 
+(defcustom denote-front-matter-date-format nil
+  "Date format in the front matter (file header) of new notes.
+
+If the value is nil, use a plain date in YEAR-MONTH-DAY notation,
+like 2022-06-08.
+
+If the value is the `org-timestamp' symbol, format the date as an
+inactive Org timestamp such as: [2022-06-08 Wed 06:19].
+
+If a string, use it as the argument of `format-time-string'.
+Read the documentation of that function for valid format
+specifiers."
+  :type '(choice
+          (const :tag "Just the date like 2022-06-08" nil)
+          (const :tag "An inactive Org timestamp like [2022-06-08 Wed 06:19]" org-timestamp)
+          (string :tag "Custom format for `format-time-string'"))
+  :group 'denote)
+
 ;;;; Main variables
 
 (defconst denote--id "%Y%m%d_%H%M%S"
@@ -94,7 +115,7 @@ If nil, show the keywords in their given order."
   "Regular expression to match `denote-keywords'.")
 
 (defconst denote--file-regexp
-  (concat denote--id-regexp denote--keyword-regexp "\\(.*\\)\\.org")
+  (concat denote--id-regexp denote--keyword-regexp "\\(.*\\)\\.?.*")
   "Regular expression to match file names from `denote-new-note'.")
 
 (defconst denote--punctuation-regexp "[][{}!@#$%^&*()_=+'\"?,.\|;:~`‘’“”]*"
@@ -108,8 +129,8 @@ If nil, show the keywords in their given order."
 
 ;;;; File helper functions
 
-(defun denote--directory ()
-  "Valid name format for `denote-directory'."
+(defun denote-directory ()
+  "Return path of variable `denote-directory' as a proper directory."
   (let ((path denote-directory))
     (unless (file-directory-p path)
       (make-directory path t))
@@ -173,11 +194,9 @@ With optional N, search in the Nth line from point."
 ;;;; Keywords
 
 (defun denote--directory-files ()
-  "List `denote-directory' files, assuming flat directory."
-  (let* ((dir (denote--directory))
+  "List note files, assuming flat directory."
+  (let* ((dir (denote-directory))
          (default-directory dir))
-    ;; TODO 2022-06-06: Do this elegantly without seq-remove or
-    ;; cl-remove-if?  Just curious...
     (seq-remove
      (lambda (file)
        (file-directory-p file))
@@ -256,14 +275,18 @@ output is sorted with `string-lessp'."
 
 ;;;; New note
 
-(defun denote--format-file (path id keywords slug)
+(defun denote--format-file (path id keywords slug &optional extension)
   "Format file name.
 PATH, ID, KEYWORDS, SLUG are expected to be supplied by `denote'
-or equivalent: they will all be converted into a single string."
+or equivalent: they will all be converted into a single string.
+
+Optional EXTENSION is the file type extension.  Use .org if none
+is specified."
   (let ((kws (if denote-infer-keywords
                  (denote--keywords-combine keywords)
-               keywords)))
-    (format "%s%s--%s--%s.org" path id kws slug)))
+               keywords))
+        (ext (or extension ".org")))
+    (format "%s%s--%s--%s%s" path id kws slug ext)))
 
 (defun denote--file-meta-header (title date keywords filename id)
   "Front matter for new notes.
@@ -273,11 +296,11 @@ TITLE, DATE, KEYWORDS, FILENAME, ID are all strings which are
   (let ((kw (denote--keywords-capitalize keywords)))
     (concat "#+title:      " title     "\n"
             "#+date:       " date      "\n"
-            "#+keywords:   " kw        "\n"
+            "#+filetags:   " kw        "\n"
             "#+identifier: " id        "\n"
             "#+filename:   " (string-remove-prefix denote-directory filename)  "\n"
             "#+path:       " filename  "\n"
-            "#+link:       " "denote /home/prot/Documents/notes/%s"
+            "#+link:       " "denote " (denote-directory) "%s"
             "\n\n")))
 
 (defun denote--path (title keywords)
@@ -290,6 +313,16 @@ Format current time, else use optional ID."
          keywords
          (denote--sluggify title))))
 
+(defun denote--date ()
+  "Expand the date for a new note's front matter."
+  (let ((format denote-front-matter-date-format))
+    (cond
+     ((eq format 'org-timestamp)
+      (format-time-string "[%F %a %R]"))
+     ((stringp format)
+      (format-time-string format))
+     (t (format-time-string "%F")))))
+
 (defun denote--prepare-note (title keywords &optional path)
   "Use TITLE and KEYWORDS to prepare new note file.
 Use optional PATH, else create it with `denote--path'."
@@ -297,7 +330,7 @@ Use optional PATH, else create it with `denote--path'."
          (default-directory denote-directory)
          (buffer (unless path (find-file p)))
          (header (denote--file-meta-header
-                  title (format-time-string "%F") keywords p
+                  title (denote--date) keywords p
                   (format-time-string denote--id))))
     (unless path
       (with-current-buffer buffer (insert header))
@@ -327,7 +360,6 @@ file names are also provided as candidates.
 
 When `denote-sort-keywords' is non-nil, keywords are sorted
 alphabetically in both the file name and file contents."
-  (declare (interactive-only t))
   (interactive
    (list
     (denote--title-prompt)
