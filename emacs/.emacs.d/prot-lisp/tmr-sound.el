@@ -7,7 +7,7 @@
 ;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/tmr
 ;; Mailing list: https://lists.sr.ht/~protesilaos/tmr
-;; Version: 0.3.0
+;; Version: 0.3.1
 ;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -56,12 +56,12 @@ If nil, don't play any sound."
 (defun tmr-sound-play (&optional _timer)
   "Play `tmr-sound-file' using the 'ffplay' executable (ffmpeg).
 TIMER is unused."
-  (when-let* ((sound tmr-sound-file))
-    (when (file-exists-p sound)
-      (unless (executable-find "ffplay")
-        (user-error "Cannot play %s without `ffplay'" sound))
-      (call-process-shell-command
-       (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" sound) nil 0))))
+  (when-let ((sound tmr-sound-file)
+             ((file-exists-p sound)))
+    (unless (executable-find "ffplay")
+      (user-error "Cannot play %s without `ffplay'" sound))
+    (call-process-shell-command
+     (format "ffplay -nodisp -autoexit %s >/dev/null 2>&1" sound) nil 0)))
 
 (provide 'tmr-sound)
 ;;; tmr-sound.el ends here
