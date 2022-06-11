@@ -165,16 +165,17 @@ is suspended: we use whatever the user wants."
 (defconst denote--id-regexp "\\([0-9]\\{8\\}\\)\\(T[0-9]\\{6\\}\\)"
   "Regular expression to match `denote--id'.")
 
-(defconst denote--file-regexp
-  (concat denote--id-regexp "\\(--\\)\\(.*\\)\\(--\\)")
+(defconst denote--file-title-regexp
+  (concat denote--id-regexp "\\(--\\)\\(.*\\)\\(__\\)")
   "Regular expression to match file names from `denote'.")
 
-(defconst denote--keyword-regexp
-  (concat denote--file-regexp "\\([0-9A-Za-z_+]*\\)\\(\\.?.*\\)")
+(defconst denote--file-regexp
+  (concat denote--file-title-regexp "\\([0-9A-Za-z_-]*\\)\\(\\.?.*\\)")
   "Regular expression to match `denote-keywords'.")
 
 (defconst denote--punctuation-regexp "[][{}!@#$%^&*()_=+'\"?,.\|;:~`‘’“”]*"
-  "Regular expression of punctionation that should be removed.")
+  "Regular expression of punctionation that should be removed.
+We consider those characters illigal for our purposes.")
 
 (defvar denote-last-path nil "Store last path.")
 (defvar denote-last-title nil "Store last title.")
@@ -216,8 +217,14 @@ trailing hyphen."
     (replace-regexp-in-string "--+\\|\s+" "-" str))))
 
 (defun denote--sluggify (str)
-  "Make STR an appropriate file name slug."
+  "Make STR an appropriate slug for file names and related."
   (downcase (denote--slug-hyphenate (denote--slug-no-punct str))))
+
+(defun denote--sluggify-keywords (keywords)
+  "Sluggify KEYWORDS."
+  (if (listp keywords)
+      (mapcar #'denote--sluggify keywords)
+    (denote--sluggify keywords)))
 
 (defun denote--file-empty-p (file)
   "Return non-nil if FILE is empty."
@@ -261,14 +268,14 @@ With optional N, search in the Nth line from point."
   "Produce list of keywords in `denote--directory-files'."
   (delq nil (mapcar
              (lambda (x)
-               (denote--extract denote--keyword-regexp x 6))
+               (denote--extract denote--file-regexp x 6))
              (denote--directory-files))))
 
 (defun denote--inferred-keywords ()
   "Extract keywords from `denote--directory-files'."
   (let ((sequence (denote--keywords-in-files)))
     (mapcan (lambda (s)
-              (split-string s "+" t))
+              (split-string s "_" t))
             sequence)))
 
 (defun denote-keywords ()
@@ -304,7 +311,7 @@ output is sorted with `string-lessp'."
   "Format KEYWORDS output of `denote--keywords-prompt'."
   (if (and (> (length keywords) 1)
            (not (stringp keywords)))
-      (mapconcat #'downcase keywords "+")
+      (mapconcat #'downcase keywords "_")
     keywords))
 
 (defun denote--keywords-add-to-history (keywords)
@@ -341,7 +348,7 @@ include the starting dot or the return value of
                  (denote--keywords-combine keywords)
                keywords))
         (ext (or extension (denote--file-extension))))
-    (format "%s%s--%s--%s%s" path id slug kws ext)))
+    (format "%s%s--%s__%s%s" path id slug kws ext)))
 
 (defun denote--map-quote-downcase (seq)
   "Quote and downcase elements in SEQ."
@@ -358,17 +365,18 @@ keyword is just downcased.
 With optional TYPE, format the keywords accordingly (this might
 be `toml' or, in the future, some other spec that needss special
 treatment)."
-  (cond
-   ((and (> (length keywords) 1) (not (stringp keywords)))
-    (pcase type
-      ('toml (format "[%s]" (denote--map-quote-downcase keywords)))
-      (_ (mapconcat #'downcase keywords "  "))))
-   (t
-    (pcase type
-      ('toml (format "[%S]" (downcase keywords)))
-      (_ (downcase keywords))))))
+  (let ((kw (denote--sluggify-keywords keywords)))
+    (cond
+     ((and (> (length kw) 1) (not (stringp kw)))
+      (pcase type
+        ('toml (format "[%s]" (denote--map-quote-downcase kw)))
+        (_ (mapconcat #'downcase kw "  "))))
+     (t
+      (pcase type
+        ('toml (format "[%S]" (downcase kw)))
+        (_ (downcase kw)))))))
 
-(defvar denote-tml-front-matter
+(defvar denote-toml-front-matter
   "+++
 title      = %S
 date       = %s
@@ -423,7 +431,7 @@ TITLE, DATE, KEYWORDS, FILENAME, ID are all strings which are
   (let ((kw-space (denote--file-meta-keywords keywords))
         (kw-toml (denote--file-meta-keywords keywords 'toml)))
     (pcase denote-file-type
-      ('markdown-toml (format denote-tml-front-matter title date kw-toml id))
+      ('markdown-toml (format denote-toml-front-matter title date kw-toml id))
       ('markdown-yaml (format denote-yaml-front-matter title date kw-space id))
       ('text (format denote-text-front-matter title date kw-space id denote-text-front-matter-delimiter))
       (_ (format denote-org-front-matter title date kw-space id)))))
@@ -435,12 +443,12 @@ Format current time, else use optional ID."
         (denote--format-file
          (file-name-as-directory denote-directory)
          (format-time-string denote--id)
-         keywords
+         (denote--sluggify-keywords keywords)
          (denote--sluggify title)
          (denote--file-extension))))
 
-;; Adapted from `org-hugo--org-date-time-to-rfc3339' in Kashual Modi's
-;; `ox-hugo' package: <https://github.com/kaushalmodi/ox-hugo>.
+;; Adapted from `org-hugo--org-date-time-to-rfc3339' in the `ox-hugo'
+;; package: <https://github.com/kaushalmodi/ox-hugo>.
 (defun denote--date-rfc3339 ()
   "Format date using the RFC3339 specification."
   (replace-regexp-in-string
