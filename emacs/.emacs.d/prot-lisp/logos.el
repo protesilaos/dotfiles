@@ -443,5 +443,23 @@ options: `logos-scroll-lock', `logos-variable-pitch',
   (when logos--fringe-remap-cookie
     (face-remap-remove-relative logos--fringe-remap-cookie)))
 
+(defun logos--update-fringe (buffer)
+  "Update fringe in current BUFFER."
+  (with-current-buffer buffer
+    (when logos-focus-mode
+      (logos--remove-fringe-remap)
+      (logos--hide-fringe))))
+
+(defun logos-update-fringe-in-buffers ()
+  "Run `logos--update-fringe' through the `buffer-list'.
+This is only relevant if the user option `logos-hide-fringe' is
+non-nil and the `logos-focus-mode' is enabled.
+
+Bind this function to a hook that runs at the post theme load
+phase.  For example: `modus-themes-after-load-theme-hook' from
+the `modus-themes' (`modus-operandi' and `modus-vivendi' themes
+are built into Emacs)."
+  (mapc #'logos--update-fringe (buffer-list)))
+
 (provide 'logos)
 ;;; logos.el ends here
