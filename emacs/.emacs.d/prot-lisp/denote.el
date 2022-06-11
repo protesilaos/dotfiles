@@ -1,6 +1,6 @@
 ;;; denote.el --- Simple notes with a strict file-naming scheme -*- lexical-binding: t -*-
 
-;; Copyright (C) 2022  Protesilaos Stavrou
+;; Copyright (C) 2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/denote
@@ -34,14 +34,16 @@
 ;; What Denote prioritizes with the enforcement of a strict file-naming
 ;; scheme is portability.  Notes can be accessed, filtered, and understood
 ;; without Emacs or any other advanced tool for that matter (though Emacs,
-;; Org, and others are excellent programs).
+;; Org, and the like are excellent programs).
 ;;
-;; Denote has no mechanism to test for adherence to a given note-taking
-;; method, such as that of Zettelkasten (i.e. the contemporary digital
-;; equivalent of Niklas Luhmann's methodology).  It is possible to employ
-;; such a method, though it is ultimately up to the user to apply the
-;; requisite rigor.  What matters for our purposes is that Denote is not a
-;; zettelkasten implementation per se.
+;; Denote only has a strong opinion about the file name.  It otherwise is
+;; flexible and poses no constraints on the desired workflow.  Denote has
+;; no mechanism to test for adherence to a given note-taking method, such
+;; as that of Zettelkasten (i.e. the contemporary digital equivalent of
+;; Niklas Luhmann's methodology).  It is possible to employ such a method,
+;; though it is ultimately up to the user to apply the requisite rigor.
+;; What matters for our purposes is that Denote is not a zettelkasten
+;; implementation per se.
 ;;
 ;; By default, Denote creates note files using the `.org' extension.
 ;; However, Denote does not depend on org.el or any of its accoutrements
@@ -55,7 +57,7 @@
 ;; + Don't Ever Note Only The Ephemeral
 ;; + Denote Everything Neatly; Omit The Excesses
 ;;
-;; But we'll let you get back to work.  Don't Escape or Neglect your
+;; But we'll let you get back to work.  Don't Eschew or Neglect your
 ;; Obligations, Tasks, Engagements...
 
 ;;; Code:
@@ -76,7 +78,7 @@ directory."
 
 (defcustom denote-known-keywords
   '("emacs" "philosophy" "politics" "economics")
-  "List of strings with predefined keywords for `denote-new-note'.
+  "List of strings with predefined keywords for `denote'.
 
 The implicit assumption is that a keyword is a single word.  If
 you need a keyword to be multiple words long, use underscores to
@@ -92,7 +94,7 @@ When non-nil, search the file names of existing notes in the
 variable `denote-directory' for their keyword field and extract
 the entries as \"inferred keywords\".  These are combined with
 `denote-known-keywords' and are presented as completion
-candidated while using `denote-new-note' interactively.
+candidated while using `denote' interactively.
 
 If nil, refrain from inferring keywords.  The aforementioned
 completion prompt only shows the `denote-known-keywords'."
@@ -102,7 +104,7 @@ completion prompt only shows the `denote-known-keywords'."
 (defcustom denote-sort-keywords t
   "Whether to sort keywords in new files.
 
-When non-nil, the keywords of `denote-new-note' are sorted with
+When non-nil, the keywords of `denote' are sorted with
 `string-lessp' regardless of the order they were inserted at the
 minibuffer prompt.
 
@@ -115,15 +117,18 @@ If nil, show the keywords in their given order."
 
 By default (a nil value), the file type is that of Org mode.
 
-When the value is the symbol `markdown', the file type is that of
-Markdown mode.
+When the value is the symbol `markdown-yaml', the file type is
+that of Markdown mode and the front matter uses YAML.  Similarly,
+`markdown-toml' will use Markdown but apply TOML to the front
+matter.
 
 When the value is `text', the file type is that of Text mode.
 
 Any other non-nil value is the same as the default."
   :type '(choice
           (const :tag "Org mode (default)" nil)
-          (const :tag "Markdown" markdown)
+          (const :tag "Markdown (YAML front matter)" markdown-yaml)
+          (const :tag "Markdown (TOML front matter)" markdown-toml)
           (const :tag "Plain text" text))
   :group 'denote)
 
@@ -131,14 +136,21 @@ Any other non-nil value is the same as the default."
   "Date format in the front matter (file header) of new notes.
 
 If the value is nil, use a plain date in YEAR-MONTH-DAY notation,
-like 2022-06-08.
+like 2022-06-08 (the ISO 8601 standard).
 
 If the value is the `org-timestamp' symbol, format the date as an
 inactive Org timestamp such as: [2022-06-08 Wed 06:19].
 
 If a string, use it as the argument of `format-time-string'.
 Read the documentation of that function for valid format
-specifiers."
+specifiers.
+
+When `denote-file-type' specifies one of the Markdown flavors, we
+ignore this user option in order to enforce the RFC3339
+specification (Markdown is typically employed in static site
+generators as source code for Web pages).  However, when
+`denote-front-matter-date-format' has a string value, this rule
+is suspended: we use whatever the user wants."
   :type '(choice
           (const :tag "Just the date like 2022-06-08" nil)
           (const :tag "An inactive Org timestamp like [2022-06-08 Wed 06:19]" org-timestamp)
@@ -155,7 +167,7 @@ specifiers."
 
 (defconst denote--file-regexp
   (concat denote--id-regexp "\\(--\\)\\(.*\\)\\(--\\)")
-  "Regular expression to match file names from `denote-new-note'.")
+  "Regular expression to match file names from `denote'.")
 
 (defconst denote--keyword-regexp
   (concat denote--file-regexp "\\([0-9A-Za-z_+]*\\)\\(\\.?.*\\)")
@@ -313,7 +325,8 @@ output is sorted with `string-lessp'."
 (defun denote--file-extension ()
   "Return file type extension based on `denote-file-type'."
   (pcase denote-file-type
-    ('markdown ".md")
+    ('markdown-toml ".md")
+    ('markdown-yaml ".md")
     ('text ".txt")
     (_ ".org")))
 
@@ -330,43 +343,90 @@ include the starting dot or the return value of
         (ext (or extension (denote--file-extension))))
     (format "%s%s--%s--%s%s" path id slug kws ext)))
 
-(defun denote--file-meta-keywords (keywords)
+(defun denote--map-quote-downcase (seq)
+  "Quote and downcase elements in SEQ."
+  (mapconcat (lambda (k)
+               (format "%S" (downcase k)))
+             seq ", "))
+
+(defun denote--file-meta-keywords (keywords &optional type)
   "Prepare KEYWORDS for inclusion in the file's front matter.
 Parse the output of `denote--keywords-prompt', using `downcase'
 on the keywords and separating them by two spaces.  A single
-keyword is just downcased."
-  (if (and (> (length keywords) 1)
-           (not (stringp keywords)))
-      (mapconcat #'downcase keywords "  ")
-    (downcase keywords)))
+keyword is just downcased.
+
+With optional TYPE, format the keywords accordingly (this might
+be `toml' or, in the future, some other spec that needss special
+treatment)."
+  (cond
+   ((and (> (length keywords) 1) (not (stringp keywords)))
+    (pcase type
+      ('toml (format "[%s]" (denote--map-quote-downcase keywords)))
+      (_ (mapconcat #'downcase keywords "  "))))
+   (t
+    (pcase type
+      ('toml (format "[%S]" (downcase keywords)))
+      (_ (downcase keywords))))))
+
+(defvar denote-tml-front-matter
+  "+++
+title      = %S
+date       = %s
+tags       = %s
+identifier = %S
++++\n\n"
+  "TOML front matter value for `format'.
+Read `denote-org-front-matter' for the technicalities.")
+
+(defvar denote-yaml-front-matter
+  "---
+title:      %S
+date:       %s
+tags:       %s
+identifier: %S
+---\n\n"
+  "YAML front matter value for `format'.
+Read `denote-org-front-matter' for the technicalities.")
+
+(defvar denote-text-front-matter
+  "title:      %s
+date:       %s
+tags:       %s
+identifier: %s
+%s\n\n"
+  "Plain text front matter value for `format'.
+Read `denote-org-front-matter' for the technicalities of the
+first four specifiers this variable accepts.  The fifth specifier
+this specific to this variable: it expect a delimiter:
+`denote-text-front-matter-delimiter'.")
+
+(defvar denote-text-front-matter-delimiter (make-string 27 ?-)
+  "Final delimiter for plain text front matter.")
+
+(defvar denote-org-front-matter
+  "#+title:      %s
+#+date:       %s
+#+filetags:   %s
+#+identifier: %s
+\n"
+  "Org front matter value for `format'.
+The order of the arguments is TITLE, DATE, KEYWORDS, ID.  If you
+are an avdanced user who wants to edit this variable to affect
+how front matter is produced, consider using something like %2$s
+to control where Nth argument is placed.")
 
 (defun denote--file-meta-header (title date keywords id)
   "Front matter for new notes.
 
 TITLE, DATE, KEYWORDS, FILENAME, ID are all strings which are
- provided by `denote-new-note'."
-  (let ((kw (denote--file-meta-keywords keywords)))
+ provided by `denote'."
+  (let ((kw-space (denote--file-meta-keywords keywords))
+        (kw-toml (denote--file-meta-keywords keywords 'toml)))
     (pcase denote-file-type
-      ('markdown (concat "---" "\n"
-                         "title:      " title "\n"
-                         "date:       " date  "\n"
-                         "tags:       " kw    "\n"
-                         "identifier: " id    "\n"
-                         "---"                "\n"
-                         "\n"))
-
-      ('text (concat "title:      " title "\n"
-                     "date:       " date  "\n"
-                     "tags:       " kw    "\n"
-                     "identifier: " id    "\n"
-                     (make-string 27 ?-)  "\n"
-                     "\n"))
-
-      (_ (concat "#+title:      " title "\n"
-                 "#+date:       " date  "\n"
-                 "#+filetags:   " kw    "\n"
-                 "#+identifier: " id    "\n"
-                 "\n")))))
+      ('markdown-toml (format denote-tml-front-matter title date kw-toml id))
+      ('markdown-yaml (format denote-yaml-front-matter title date kw-space id))
+      ('text (format denote-text-front-matter title date kw-space id denote-text-front-matter-delimiter))
+      (_ (format denote-org-front-matter title date kw-space id)))))
 
 (defun denote--path (title keywords)
   "Return path to new file with TITLE and KEYWORDS.
@@ -379,15 +439,34 @@ Format current time, else use optional ID."
          (denote--sluggify title)
          (denote--file-extension))))
 
+;; Adapted from `org-hugo--org-date-time-to-rfc3339' in Kashual Modi's
+;; `ox-hugo' package: <https://github.com/kaushalmodi/ox-hugo>.
+(defun denote--date-rfc3339 ()
+  "Format date using the RFC3339 specification."
+  (replace-regexp-in-string
+   "\\([0-9]\\{2\\}\\)\\([0-9]\\{2\\}\\)\\'" "\\1:\\2"
+   (format-time-string "%FT%T%z")))
+
+(defun denote--date-org-timestamp ()
+  "Format date using the Org inactive timestamp notation."
+  (format-time-string "[%F %a %R]"))
+
+(defun denote--date-iso-8601 ()
+  "Format date according to ISO 8601 standard."
+  (format-time-string "%F"))
+
 (defun denote--date ()
   "Expand the date for a new note's front matter."
   (let ((format denote-front-matter-date-format))
     (cond
-     ((eq format 'org-timestamp)
-      (format-time-string "[%F %a %R]"))
      ((stringp format)
       (format-time-string format))
-     (t (format-time-string "%F")))))
+     ((or (eq denote-file-type 'markdown-toml)
+          (eq denote-file-type 'markdown-yaml))
+      (denote--date-rfc3339))
+     ((eq format 'org-timestamp)
+      (denote--date-org-timestamp))
+     (t (denote--date-iso-8601)))))
 
 (defun denote--prepare-note (title keywords &optional path)
   "Use TITLE and KEYWORDS to prepare new note file.
@@ -407,7 +486,7 @@ Use optional PATH, else create it with `denote--path'."
   "Minibuffer history of `denote--title-prompt'.")
 
 (defun denote--title-prompt ()
-  "Read file title for `denote-new-note'."
+  "Read file title for `denote'."
   (setq denote-last-title
         (read-string "File title: " nil 'denote--title-history)))
 
