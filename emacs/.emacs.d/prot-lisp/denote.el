@@ -24,41 +24,63 @@
 
 ;;; Commentary:
 ;;
-;; Denote is a simple, yet effective note-taking tool for Emacs.  It is
-;; based on the principle that notes must follow a predictable and
-;; descriptive file-naming scheme.  The file name alone should offer a
-;; clear indication of what the note is about, without reference to any
-;; other metadata.  Denote basically streamlines the creation of such
-;; files.
+;; NOTE THAT WE ARE ACTIVELY WORKING TOWARDS VERSION `0.1.0' AND MIGHT
+;; STILL INTRODUCE BREAKING, BACKWARD-INCOMPATIBLE CHANGES.  This is
+;; particularly true for the linking facility.  Everything else is in a
+;; stable state.
 ;;
-;; What Denote prioritizes with the enforcement of a strict file-naming
-;; scheme is portability.  Notes can be accessed, filtered, and understood
-;; without Emacs or any other advanced tool for that matter (though Emacs,
-;; Org, and the like are excellent programs).
+;; Denote aims to be a simple-to-use, focused-in-scope, and effective
+;; note-taking tool for Emacs.  It is based on the following core design
+;; principles:
 ;;
-;; Denote only has a strong opinion about the file name.  It otherwise is
-;; flexible and poses no constraints on the desired workflow.  Denote has
-;; no mechanism to test for adherence to a given note-taking method, such
-;; as that of Zettelkasten (i.e. the contemporary digital equivalent of
-;; Niklas Luhmann's methodology).  It is possible to employ such a method,
-;; though it is ultimately up to the user to apply the requisite rigor.
-;; What matters for our purposes is that Denote is not a zettelkasten
-;; implementation per se.
+;; * Predictability :: File names must follow a consistent and
+;;   descriptive naming convention (read the manual's "The file-naming
+;;   scheme").  The file name alone should offer a clear indication of
+;;   what the contents are, without reference to any other metadatum.
+;;   This convention is not specific to note-taking, as it is pertinent
+;;   to any form of file that is part of the user's long-term storage
+;;   (read the manual's "Renaming files").
 ;;
-;; By default, Denote creates note files using the `.org' extension.
-;; However, Denote does not depend on org.el or any of its accoutrements
-;; and extensions.  Users are given the option to change from Org to either
-;; Markdown (`.md') or Plain Text (`.txt'), as explained further in the
-;; manual (search for `denote-file-type').
+;; * Composability :: Be a good Emacs citizen, by integrating with other
+;;   packages or built-in functionality instead of re-inventing
+;;   functions such as for filtering or greping.  Do not introduce
+;;   dependencies on specific libraries.  While Org is a killer app for
+;;   Emacs and the default file type for new notes, Denote does not
+;;   depend on org.el nor its extensions and does allow notes to be
+;;   created in a variety of formats ((read the manual's "Notes in
+;;   multiple file types").  The author of Denote (Protesilaos, aka
+;;   "Prot") writes ordinary notes in plain text (`.txt'), switching to
+;;   an Org file only when its expanded set of functionality is required
+;;   for the task at hand (read the manual's "Points of entry").
 ;;
-;; "Denote" is the familiar word, though it also is a play on to the "note"
-;; concept.  Plus, we can come up with acronyms (of dubious utility) like:
+;; * Portability :: Notes are plain text and should remain portable.
+;;   The way Denote writes file names, the front matter it include in
+;;   the note's header, and the links it establishes must all be
+;;   adequately usable with standard Unix tools.  No need for a databse
+;;   or some specialised software.  As Denote develops and this manual
+;;   is fully fleshed out, there will be concrete examples on how to do
+;;   the Denote-equivalent on the command-line.
 ;;
-;; + Don't Ever Note Only The Ephemeral
-;; + Denote Everything Neatly; Omit The Excesses
+;; * Flexibility :: Do not assume the user's preference for a
+;;   note-taking methodology.  Denote is conceptually similar to the
+;;   Zettelkasten Method, which you can learn more about in this
+;;   detailed introduction: <https://zettelkasten.de/introduction/>.
+;;   Notes are atomic (one file per note) and have a unique identifier.
+;;   However, Denote does not enforce a particular methodology for
+;;   knowledge management, such as a restricted vocabulary or mutually
+;;   exclusive sets of keywords.  It is up to the user to apply the
+;;   requisite rigor in pursuit of their preferred workflow.
+;;
+;; Now the important part...  "Denote" is the familiar word, though it
+;; also is a play on the "note" concept.  Plus, we can come up with
+;; acronyms, recursive or otherwise, of increasingly dubious utility
+;; like:
+;;
+;; * Don't Ever Note Only The Epiphenomenal
+;; * Denote Everything Neatly; Omit The Excesses
 ;;
 ;; But we'll let you get back to work.  Don't Eschew or Neglect your
-;; Obligations, Tasks, Engagements...
+;; Obligations, Tasks, and Engagements.
 
 ;;; Code:
 
@@ -109,6 +131,20 @@ When non-nil, the keywords of `denote' are sorted with
 minibuffer prompt.
 
 If nil, show the keywords in their given order."
+  :group 'denote
+  :type 'boolean)
+
+(defcustom denote-allow-multi-word-keywords t
+  "If non-nil keywords can consist of multiple words.
+Words are automatically separated by a hyphen when using the
+`denote' command or related.  The hyphen is the only legal
+character---no spaces, no other characters.  If, for example, the
+user types <word1+word2> or <word1 word2>, it is converted to
+<word1-word2>.
+
+When nil, do not allow keywords to consist of multiple words.
+Reduce them to a single word, such as by turning <word1+word2> or
+<word1 word2> into <word1word2>."
   :group 'denote
   :type 'boolean)
 
@@ -218,7 +254,12 @@ trailing hyphen."
 
 (defun denote--sluggify (str)
   "Make STR an appropriate slug for file names and related."
-  (downcase (denote--slug-hyphenate (denote--slug-no-punct str))))
+  (downcase
+   (if denote-allow-multi-word-keywords
+       (denote--slug-hyphenate (denote--slug-no-punct str))
+     (replace-regexp-in-string
+      "-" ""
+      (denote--slug-hyphenate (denote--slug-no-punct str))))))
 
 (defun denote--sluggify-keywords (keywords)
   "Sluggify KEYWORDS."
@@ -520,6 +561,38 @@ alphabetically in both the file name and file contents."
     (denote--keywords-prompt)))
   (denote--prepare-note title keywords)
   (denote--keywords-add-to-history keywords))
+
+(defvar denote--file-type-history nil
+  "Minibuffer history of `denote--file-type-prompt'.")
+
+(defun denote--file-type-prompt ()
+  "Prompt for `denote-file-type'.
+Note that a non-nil value other than `text', `markdown-yaml', and
+`markdown-toml' falls back to an Org file type.  We use `org'
+here for clarity."
+  (completing-read
+   "Select file type: " '(org markdown-yaml markdown-toml text) nil t
+   nil 'denote--file-type-history))
+
+(defun denote--file-type-symbol (filetype)
+  "Return FILETYPE as a symbol."
+  (cond
+   ((stringp filetype)
+    (intern filetype))
+   ((symbolp filetype)
+    filetype)
+   (t (user-error "`%s' is not a symbol or string" filetype))))
+
+;;;###autoload
+(defun denote-type (filetype)
+  "Like `denote' but with FILETYPE for `denote-file-type'.
+In practice, this command lets you create, say, a Markdown file
+even when your default is Org.
+
+When called from Lisp the FILETYPE must be a symbol."
+  (interactive (list (denote--file-type-prompt)))
+  (let ((denote-file-type (denote--file-type-symbol filetype)))
+    (call-interactively #'denote)))
 
 (provide 'denote)
 ;;; denote.el ends here
