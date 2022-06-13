@@ -23,6 +23,10 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+
+;; NOTE 2022-06-08: This is old code.  There are things I would like to
+;; improve.
+
 ;;
 ;; Extensions for Elfeed, intended for use in my Emacs setup:
 ;; https://protesilaos.com/emacs/dotemacs.
@@ -173,27 +177,27 @@ The list of tags is provided by `prot-elfeed-search-tags'."
 (declare-function elfeed-entry-title "elfeed")
 (declare-function elfeed-show-refresh "elfeed")
 
-;;;###autoload
-(defun prot-elfeed-show-archive-entry ()
-  "Store a plain text copy of the current `elfeed' entry.
-
-The destination is defined in `prot-elfeed-archives-directory'
-and will be created if it does not exist."
-  (interactive)
-  (let* ((entry (if (eq major-mode 'elfeed-show-mode)
-                    elfeed-show-entry
-                  (elfeed-search-selected :ignore-region)))
-         (title (replace-regexp-in-string " " "-" (elfeed-entry-title entry)))
-         (elfeed-show-truncate-long-urls nil)
-         (archives (file-name-as-directory prot-elfeed-archives-directory))
-         (file (format "%s%s.txt" archives title)))
-    (unless (file-exists-p archives)
-      (make-directory archives t))
-    (when (derived-mode-p 'elfeed-show-mode)
-      ;; Refresh to expand truncated URLs
-      (elfeed-show-refresh)
-      (write-file file t)
-      (message "Saved buffer at %s" file))))
+;; ;;;###autoload
+;; (defun prot-elfeed-show-archive-entry ()
+;;   "Store a plain text copy of the current `elfeed' entry.
+;;
+;; The destination is defined in `prot-elfeed-archives-directory'
+;; and will be created if it does not exist."
+;;   (interactive)
+;;   (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+;;                     elfeed-show-entry
+;;                   (elfeed-search-selected :ignore-region)))
+;;          (title (replace-regexp-in-string " " "-" (elfeed-entry-title entry)))
+;;          (elfeed-show-truncate-long-urls nil)
+;;          (archives (file-name-as-directory prot-elfeed-archives-directory))
+;;          (file (format "%s%s.txt" archives title)))
+;;     (unless (file-exists-p archives)
+;;       (make-directory archives t))
+;;     (when (derived-mode-p 'elfeed-show-mode)
+;;       ;; Refresh to expand truncated URLs
+;;       (elfeed-show-refresh)
+;;       (write-file file t)
+;;       (message "Saved buffer at %s" file))))
 
 ;;;; General commands
 
@@ -249,52 +253,52 @@ fail on poorly-designed websites."
 (declare-function elfeed-search-untag-all-unread "elfeed")
 (declare-function elfeed-search-show-entry "elfeed")
 
-;;;###autoload
-(defun prot-elfeed-search-open-other-window (&optional arg)
-  "Browse `elfeed' entry in the other window.
-With optional prefix ARG (\\[universal-argument]) browse the
-entry in `eww' using the `prot-elfeed-show-eww' wrapper."
-  (interactive "P")
-  (let* ((entry (if (eq major-mode 'elfeed-show-mode)
-                    elfeed-show-entry
-                  (elfeed-search-selected :ignore-region)))
-         (link (elfeed-entry-link entry))
-         (win (selected-window)))
-    (with-current-buffer (get-buffer "*elfeed-search*")
-      (unless (one-window-p)              ; experimental
-        (delete-other-windows win))
-      (split-window win (/ (frame-height) 5) 'below)
-      (other-window 1)
-      (if arg
-          (progn
-            (when (eq major-mode 'elfeed-search-mode)
-              (elfeed-search-untag-all-unread))
-            (prot-elfeed-show-eww link))
-        (elfeed-search-show-entry entry)))))
-
-(declare-function elfeed-kill-buffer "elfeed")
-(declare-function elfeed-search-quit-window "elfeed")
-
-;;;###autoload
-(defun prot-elfeed-kill-buffer-close-window-dwim ()
-  "Do-what-I-mean way to handle `elfeed' windows and buffers.
-
-When in an entry buffer, kill the buffer and return to the Elfeed
-Search view.  If the entry is in its own window, delete it as
-well.
-
-When in the search view, close all other windows.  Else just kill
-the buffer."
-  (interactive)
-  (let ((win (selected-window)))
-    (cond ((eq major-mode 'elfeed-show-mode)
-           (elfeed-kill-buffer)
-           (unless (one-window-p) (delete-window win))
-           (switch-to-buffer "*elfeed-search*"))
-          ((eq major-mode 'elfeed-search-mode)
-           (if (one-window-p)
-               (elfeed-search-quit-window)
-             (delete-other-windows win))))))
+;; ;;;###autoload
+;; (defun prot-elfeed-search-open-other-window (&optional arg)
+;;   "Browse `elfeed' entry in the other window.
+;; With optional prefix ARG (\\[universal-argument]) browse the
+;; entry in `eww' using the `prot-elfeed-show-eww' wrapper."
+;;   (interactive "P")
+;;   (let* ((entry (if (eq major-mode 'elfeed-show-mode)
+;;                     elfeed-show-entry
+;;                   (elfeed-search-selected :ignore-region)))
+;;          (link (elfeed-entry-link entry))
+;;          (win (selected-window)))
+;;     (with-current-buffer (get-buffer "*elfeed-search*")
+;;       (unless (one-window-p)              ; experimental
+;;         (delete-other-windows win))
+;;       (split-window win (/ (frame-height) 5) 'below)
+;;       (other-window 1)
+;;       (if arg
+;;           (progn
+;;             (when (eq major-mode 'elfeed-search-mode)
+;;               (elfeed-search-untag-all-unread))
+;;             (prot-elfeed-show-eww link))
+;;         (elfeed-search-show-entry entry)))))
+;;
+;; (declare-function elfeed-kill-buffer "elfeed")
+;; (declare-function elfeed-search-quit-window "elfeed")
+;;
+;; ;;;###autoload
+;; (defun prot-elfeed-kill-buffer-close-window-dwim ()
+;;   "Do-what-I-mean way to handle `elfeed' windows and buffers.
+;;
+;; When in an entry buffer, kill the buffer and return to the Elfeed
+;; Search view.  If the entry is in its own window, delete it as
+;; well.
+;;
+;; When in the search view, close all other windows.  Else just kill
+;; the buffer."
+;;   (interactive)
+;;   (let ((win (selected-window)))
+;;     (cond ((eq major-mode 'elfeed-show-mode)
+;;            (elfeed-kill-buffer)
+;;            (unless (one-window-p) (delete-window win))
+;;            (switch-to-buffer "*elfeed-search*"))
+;;           ((eq major-mode 'elfeed-search-mode)
+;;            (if (one-window-p)
+;;                (elfeed-search-quit-window)
+;;              (delete-other-windows win))))))
 
 (defvar elfeed-search-filter-active)
 (defvar elfeed-search-filter)
