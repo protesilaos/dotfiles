@@ -3835,6 +3835,10 @@ Other potentially relevant parts of my dotemacs:
   (setq-default logos-scroll-lock nil)
   (setq-default logos-olivetti t)
 
+  ;; I don't need to do `with-eval-after-load' for the `modus-themes' as
+  ;; I always load them before other relevant potentially packages.
+  (add-hook 'modus-themes-after-load-theme-hook #'logos-update-fringe-in-buffers)
+
   (let ((map global-map))
     (define-key map [remap narrow-to-region] #'logos-narrow-dwim)
     (define-key map [remap forward-page] #'logos-forward-page-dwim)
