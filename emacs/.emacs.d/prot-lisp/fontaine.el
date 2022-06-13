@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/fontaine
 ;; Mailing list: https://lists.sr.ht/~protesilaos/fontaine
-;; Version: 0.2.2
+;; Version: 0.2.3
 ;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -414,6 +414,7 @@ ARGS are its routines."
    'bold
    (or (plist-get properties :bold-family) 'unspecified)
    (or (plist-get properties :bold-weight) 'bold)
+   (or (plist-get properties :variable-pitch-height) 1.0)
    frame))
 
 (fontaine--apply-preset
@@ -475,7 +476,7 @@ non-nil."
         (caar fontaine-presets)
       (fontaine--set-fonts-prompt))
     current-prefix-arg))
-  (if (not window-system)
+  (if (and (not (daemonp)) (not window-system))
       (user-error "Cannot use this in a terminal emulator; try the Emacs GUI")
     (fontaine--apply-default-preset preset frame)
     (fontaine--apply-fixed-pitch-preset preset frame)
