@@ -35,6 +35,7 @@
 ;;; Code:
 
 (require 'prot-common)
+(require 'org-macs)
 
 (defgroup prot-org ()
   "Extensions for org.el."
