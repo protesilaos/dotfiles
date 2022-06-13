@@ -2996,7 +2996,7 @@ These are the contents of =prot-dired.el= (part of [[https://git.sr.ht/~protesil
 
 #+include: prot-lisp/prot-dired.el src emacs-lisp :tangle no
 
-*** dired-like mode for the trash (trashed.el)
+** Dired-like mode for the trash (trashed.el)
 :PROPERTIES:
 :CUSTOM_ID: h:954adfb4-8f2c-4665-bb5b-e098926341b0
 :END:
