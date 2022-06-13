@@ -1328,12 +1328,32 @@ Useful for prompts such as `eval-expression' and `shell-command'."
         '("emacs" "philosophy" "politics" "economics"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
-  (setq denote-org-capture-specifiers "%l\n%i\n%?")
 
   (require 'denote-link)
+  (require 'denote-dired)
+
+  ;; I use different ways to specify a path for demo purposes.
+  (setq denote-dired-directories
+        (list denote-directory
+              (thread-last denote-directory (expand-file-name "attachments"))
+              (expand-file-name "~/Documents/vlog")))
+
+  ;; Generic:
+  ;; (add-hook 'dired-mode-hook #'denote-dired-mode)
+  ;;
+  ;; OR better:
+  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+
+  ;; You can bind `denote' to a global key if you prefer not to use
+  ;; `org-capture' or want an alternative.  Denote does not define any key
+  ;; bindings though: this is for the user to decide.  For example:
+  (let ((map global-map))
+    (define-key map (kbd "C-c n") #'denote)
+    (define-key map (kbd "C-c N") #'denote-type))
 
   (with-eval-after-load 'org-capture
     (require 'denote-org-capture)
+    (setq denote-org-capture-specifiers "%l\n%i\n%?")
     (add-to-list 'org-capture-templates
                  '("n" "New note (with denote.el)" plain
                    (file denote-last-path)
@@ -1367,6 +1387,10 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq-default logos-buffer-read-only nil)
   (setq-default logos-scroll-lock nil)
   (setq-default logos-olivetti t)
+
+  ;; I don't need to do `with-eval-after-load' for the `modus-themes' as
+  ;; I always load them before other relevant potentially packages.
+  (add-hook 'modus-themes-after-load-theme-hook #'logos-update-fringe-in-buffers)
 
   (let ((map global-map))
     (define-key map [remap narrow-to-region] #'logos-narrow-dwim)
@@ -2750,14 +2774,17 @@ sure this is a good approach."
 
     (let ((map elfeed-search-mode-map))
       (define-key map (kbd "s") #'prot-elfeed-search-tag-filter)
-      (define-key map (kbd "o") #'prot-elfeed-search-open-other-window)
-      (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
+      ;; ;; TODO 2022-06-13: I disable some of these keybindings as
+      ;; ;; there are changes I want to make in the underlying code.
+      ;;
+      ;; (define-key map (kbd "o") #'prot-elfeed-search-open-other-window)
+      ;; (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
       (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
       (define-key map (kbd "+") #'prot-elfeed-toggle-tag))
     (let ((map elfeed-show-mode-map))
-      (define-key map (kbd "a") #'prot-elfeed-show-archive-entry)
+      ;; (define-key map (kbd "a") #'prot-elfeed-show-archive-entry)
       (define-key map (kbd "e") #'prot-elfeed-show-eww)
-      (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
+      ;; (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
       (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
       (define-key map (kbd "+") #'prot-elfeed-toggle-tag))))
 
