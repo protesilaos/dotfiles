@@ -24,46 +24,9 @@
 
 ;;; Commentary:
 ;;
-;; Denote has a basic linking facility to quickly establish connections
-;; between notes.  The command `denote-link' prompts for a file name in the
-;; `denote-directory' (only regular files are considered, not directories).
-;; It then retrieves the path of the given note, inserts it at point using
-;; the appropriate link notation, and creates a backlink entry in the
-;; target file (again using the appropriate notation).
-;;
-;; What constitutes "appropriate link notation" depends on the file type
-;; of the given entry per `denote-file-type' (see "The file naming
-;; scheme" in the manual).  For example when linking from an Org file to
-;; a Markdown file, the link in the former will follow Org syntax while
-;; the backlink in the latter will use that of Markdown.  Org links use
-;; `[[file:TARGET][DESCRIPTION]]', those of Markdown are
-;; `[DESCRIPTION](file:TARGET)', while for plain text we implement our
-;; own scheme of `<TYPE: TARGET> [DESCRIPTION]', where `TYPE' is either
-;; `LINK' or `BACKLINK' (capitalization in the latter two is literal,
-;; because plain text lacks other means of emphasis).
-;;
-;; Plain text links can benefit from Emacs' notion of "future history",
-;; else its ability to read the thing at point for relevant commands.  With
-;; point over the `TARGET', `M-x find-file' followed by `M-n' will fill the
-;; path to that file (this also works with point over just the identifier
-;; of a note).
-;;
-;; Backlinks are recorded at the end of a note under the heading with the
-;; title `Denote backlinks'.  Users should not edit the note below this
-;; part manually: it is controlled by Denote, such as to delete duplicate
-;; links (in the future it might also handle stuff like alphabetic
-;; sorting).
-;;
-;; The section with the backlinks is formatted according to the note's file
-;; type.
-;;
-;; The special hook `denote-link-insert-functions' is called after a link
-;; is created.  It accepts two arguments for the target file and the
-;; formatted backlink to the original file.  The function
-;; `denote-link-backlink' provides an example for advanced users.
-;;
-;; Backlinks that no longer point to available notes can be removed from
-;; the current buffer with the command `denote-link-clear-stale-backlinks'.
+;; The linking facility is subject to review and there will likely be
+;; breaking changes.  This is the only area that needs to be fixed
+;; before we release the first stable version of the package.
 
 ;;; Code:
 
@@ -73,76 +36,124 @@
   "Link facility for Denote."
   :group 'denote)
 
-;;; User options
-
-(defcustom denote-link-insert-functions nil
-  "Functions that run after `denote-link'.
-Each function accepts a TARGET file and a BACKLINK argument.
-Both are supplied by `denote-link'.
-
-Advanced users are encouraged to study `denote-link-backlink' for
-how those arguments are used.  Add that function to this hook if
-you want Denote to automatically insert backlinks in the
-applicable files.  Though you might prefer to use the command
-`denote-link-backlinks', which does not touch the underlying
-files."
-  :type 'hook
-  :group 'denote-link)
-
 ;;;; Link to note
 
-(defconst denote-link--link-format-org "[[file:%s][%s (%s)]]"
+;; FIXME 2022-06-14 16:58:24 +0300: Plain text links will use the
+;; identifier only.  But for Org we need to figure out a better way of
+;; integrating with Org/Markdown in a standard way.  Relying on
+;; org-id.el may be the right course of action for Org.  What does
+;; markdown-mode require?
+;;
+;; Whatever we do, we need to consider the implications very carefully.
+;; This is not something we can undo once the package gets its first
+;; stable release.
+;;
+;; My principle is to avoid dependencies as much as possible.  The
+;; `denote-link-find-file' exemplifies this idea.
+;;
+;; Discussions on the GitHub mirror:
+;;
+;; * https://github.com/protesilaos/denote/issues/8
+;; * https://github.com/protesilaos/denote/issues/13
+;;
+;; And on the mailing list:
+;;
+;; * https://lists.sr.ht/~protesilaos/denote/%3C9ac1913b-7e8f-7d38-b547-771861a8d641%40eh-is.de%3E
+;; * https://lists.sr.ht/~protesilaos/denote/%3C87edzvd5oz.fsf%40cassou.me%3E
+
+;; Arguments are: FILE-ID FILE-TITLE
+(defconst denote-link--format-org "[[denote:%s][%s]]"
   "Format of Org link to note.")
 
-(defconst denote-link--backlink-format-org "[[file:%s][backlink: %s (%s)]]"
-  "Format of Org backlink to note.")
-
-(defconst denote-link--link-format-md "[%2$s (%3$s)](file:%1$s)"
+(defconst denote-link--format-markdown "[%2$s](denote:%1$s)"
   "Format of Markdown link to note.")
 
-(defconst denote-link--backlink-format-md "[backlink: %2$s (%3$s)](file:%1$s)"
-  "Format of Markdown backlink to note.")
-
-(defconst denote-link--link-format-txt "<LINK: %s> [NAME %s (%s)]"
+(defconst denote-link--format-text "[[%2$s] [%1$s]]"
   "Format of plain text link to note.")
 
-(defconst denote-link--backlink-format-txt "BACKLINK: <%s> [NAME %s (%s)]"
-  "Format of plain text backlink to note.")
+(defconst denote-link--regexp-org
+  (concat "\\[\\[" "denote:"  "\\(?1:" denote--id-regexp "\\)" "]" "\\[.*?]]"))
 
-(defconst denote-link--backlink-regexp "\\[\\[file:\\(.*?\\)\\]\\[backlink: \\(.*?\\) (\\(.*?\\))\\]\\]"
-  "Regexp of `denote-link--backlink-format-org'.")
+(defconst denote-link--regexp-markdown
+  (concat "\\[.*?]" "(denote:"  "\\(?1:" denote--id-regexp "\\)" ")"))
 
-(defun denote-link--file-type-format (file &optional backlink)
-  "Return link pattern based on FILE format.
-With optional BACKLINK, return a backlink pattern"
+(defconst denote-link--regexp-text
+  (concat "\\[\\["  ".*?]" "\s?" "\\[" "\\(?1:" denote--id-regexp "\\)" "]]"))
+
+(defun denote-link--file-type-format (file)
+  "Return link format based on FILE format."
   (pcase (file-name-extension file)
-    ("md" (if backlink denote-link--backlink-format-md denote-link--link-format-md))
-    ("txt" (if backlink denote-link--backlink-format-txt denote-link--link-format-txt))
-    (_ (if backlink denote-link--backlink-format-org denote-link--link-format-org)))) ; Includes backup files.  Maybe we can remove them?
+    ("md" denote-link--format-markdown)
+    ("txt" denote-link--format-text)
+    (_ denote-link--format-org))) ; Includes backup files.  Maybe we can remove them?
+
+(defun denote-link--file-type-regexp (file)
+  "Return link regexp based on FILE format."
+  (pcase (file-name-extension file)
+    ("md" denote-link--regexp-markdown)
+    ("txt" denote-link--regexp-text)
+    (_ denote-link--regexp-org)))
 
 (defun denote-link--format-link (file pattern)
-  "Prepare link to FILE using PATTERN.
-With optional BACKLINK, format it as a backlink."
-  (let* ((dir (denote-directory))
-         (file-id (denote-retrieve--value file denote-retrieve--identifier-regexp))
-         (file-path (file-name-completion file-id dir))
-         (file-title (denote-retrieve--value file denote-retrieve--title-regexp)))
-    (format pattern file-path file-title file-id)))
+  "Prepare link to FILE using PATTERN."
+  (let* ((file-id (denote-retrieve--filename-identifier file))
+         (file-title (denote-retrieve--value file denote-retrieve--title-front-matter-regexp)))
+    (format pattern file-id file-title)))
 
 ;;;###autoload
 (defun denote-link (target)
   "Create Org link to TARGET note in variable `denote-directory'.
 Run `denote-link-insert-functions' afterwards."
   (interactive (list (denote-retrieve--read-file-prompt)))
-  (let* ((origin (buffer-file-name))
-         (link (denote-link--format-link target (denote-link--file-type-format origin)))
-         (backlink (denote-link--format-link origin (denote-link--file-type-format target :backlink))))
-    (insert link)
-    (run-hook-with-args 'denote-link-insert-functions target backlink)))
+  (insert
+   (denote-link--format-link
+    target
+    (denote-link--file-type-format (buffer-file-name)))))
+
+(defun denote-link--collect-identifiers (regexp)
+  "Return collection of identifiers in buffer matching REGEXP."
+  (let (matches)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward regexp nil t)
+        (push (match-string-no-properties 1) matches)))
+    matches))
+
+(defun denote-link--expand-identifiers (regexp)
+  "Expend identifiers matching REGEXP into file paths."
+  (delq nil (mapcar (lambda (i)
+                      (file-name-completion i (denote-directory)))
+                    (denote-link--collect-identifiers regexp))))
+
+(defvar denote-link--find-file-history nil
+  "History for `denote-link-find-file'.")
+
+(defun denote-link--find-file-prompt (files)
+  "Prompt for linked file among FILES."
+  (completing-read "Find linked file "
+                   (denote--completion-table 'file files)
+                   nil t
+                   nil 'denote-link--find-file-history))
+
+;; TODO 2022-06-14: We should document the use of Embark for
+;; `denote-link-find-file'.  Users are gonna love it!
+
+;; TODO 2022-06-14: Do we need to add any sort of extension to better
+;; integrate with Embark?  For the minibuffer interaction it is not
+;; necessary, but maybe it can be done to immediately recognise the
+;; identifiers are links to files?
+
+;;;###autoload
+(defun denote-link-find-file ()
+  "Use minibuffer completion to visit linked file."
+  (interactive)
+  (if-let* ((regexp (denote-link--file-type-regexp (buffer-file-name)))
+            (files (denote-link--expand-identifiers regexp)))
+      (find-file (denote-link--find-file-prompt files))
+    (user-error "No links found in the current buffer")))
 
 ;;;; Backlinks' buffer (WORK-IN-PROGRESS)
 
-;; (require 'button)
 (define-button-type 'denote-link-find-file
   'follow-link t
   'action #'denote-link--find-file
@@ -179,10 +190,11 @@ PROOF-OF-CONCEPT."
   (interactive)
   (let* ((default-directory (denote-directory))
          (file (file-name-nondirectory (buffer-file-name)))
-         (id (denote-retrieve--value file denote-retrieve--identifier-regexp))
+         (id (denote-retrieve--filename-identifier file))
          (buf (format "*denote-backlinks to %s*" id)))
   (compilation-start
-   (format "find * -type f -exec %s --color=auto -l -m 1 -e %s- %s %s"
+   (format "find * -type f ! -name '%s' -exec %s --color=auto -l -m 1 -e %s %s %s"
+           file
            grep-program
            id
            (shell-quote-argument "{}")
@@ -192,77 +204,6 @@ PROOF-OF-CONCEPT."
    t)
   (with-current-buffer buf
     (add-hook 'compilation-finish-functions #'denote-link--prettify-compilation nil t))))
-
-;;;; Automatic backlink insertion
-
-(defconst denote-link-backlink-heading "Denote backlinks"
-  "String of the backlink's heading.
-This heading is appended to a file when another links to it.")
-
-(defvar denote-link-backlink-warning
-  "Do not edit past this line; this is for denote.el and related."
-  "String that warns about not editing the backlinks' section.")
-
-(defvar denote-link--markdown-comment "<!-- %s -->"
-  "Specifier for Markdown comments passed to `format'.")
-
-(defvar denote-link--org-comment "# %s"
-  "Specifier for Markdown comments passed to `format'.")
-
-(defun denote-link--format-comment (comment filetype)
-  "Use appropriate COMMENT for FILETYPE."
-  (pcase filetype
-    ("md" (format denote-link--markdown-comment comment))
-    (_ (format denote-link--org-comment comment))))
-
-(defvar denote-link--markdown-heading "%s\n# %s\n\n"
-  "Specifier for Markdown heading passed to `format'.")
-
-(defvar denote-link--org-heading "%s\n* %s\n\n"
-  "Specifier for Org heading passed to `format'.")
-
-(defvar denote-link--text-heading "%s\n%s\n%s\n\n"
-  "Specifier for plain text heading passed to `format'.")
-
-(defun denote-link--format-heading (heading filetype comment)
-  "Use appropriate HEADING for FILETYPE, while prepending COMMENT."
-  (pcase filetype
-    ("md" (format denote-link--markdown-heading comment heading))
-    ("org" (format denote-link--org-heading comment heading))
-    (_ (format denote-link--text-heading comment heading (make-string 16 ?=)))))
-
-(defun denote-link--format-backlinks-heading (heading)
-  "Format HEADING for backlinks."
-  (let* ((ext (file-name-extension (buffer-file-name)))
-         (comment (denote-link--format-comment denote-link-backlink-warning ext)))
-    (denote-link--format-heading heading ext comment)))
-
-(defun denote-link-backlink (target backlink)
-  "Insert BACKLINK to TARGET file."
-  (let ((default-directory (denote-directory))
-        (heading denote-link-backlink-heading)
-        heading-point)
-    (with-current-buffer (find-file-noselect target)
-      (goto-char (point-max))
-      (unless (save-excursion (setq heading-point (re-search-backward heading nil t)))
-        (unless (denote--line-regexp-p 'empty 0)
-          (newline))
-        (insert (denote-link--format-backlinks-heading heading)))
-      (insert (format "- %s\n" backlink))
-      ;; delete duplicate links
-      (when heading-point
-        (delete-duplicate-lines heading-point (point-max) nil nil t)))))
-
-(defun denote-link-clear-stale-backlinks ()
-  "Delete backlinks that no longer point to files."
-  (interactive)
-  (let ((default-directory (denote-directory)))
-    (save-excursion
-      (goto-char (point-min))
-      (when (re-search-forward denote-link-backlink-heading nil t)
-        (while (re-search-forward denote-link--backlink-regexp nil t)
-          (unless (file-exists-p (match-string-no-properties 1))
-            (delete-region (point-at-bol) (point-at-bol 2))))))))
 
 (provide 'denote-link)
 ;;; denote-link.el ends here

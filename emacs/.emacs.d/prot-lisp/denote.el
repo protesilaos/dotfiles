@@ -195,11 +195,11 @@ is suspended: we use whatever the user wants."
 
 ;;;; Main variables
 
-(defconst denote--id "%Y%m%dT%H%M%S"
+(defconst denote--id-format "%Y%m%dT%H%M%S"
   "Format of ID prefix of a note's filename.")
 
 (defconst denote--id-regexp "\\([0-9]\\{8\\}\\)\\(T[0-9]\\{6\\}\\)"
-  "Regular expression to match `denote--id'.")
+  "Regular expression to match `denote--id-format'.")
 
 (defconst denote--file-title-regexp
   (concat denote--id-regexp "\\(--\\)\\(.*\\)\\(__\\)")
@@ -207,7 +207,7 @@ is suspended: we use whatever the user wants."
 
 (defconst denote--file-regexp
   (concat denote--file-title-regexp "\\([0-9A-Za-z_-]*\\)\\(\\.?.*\\)")
-  "Regular expression to match `denote-keywords'.")
+  "Regular expression to match the entire file name'.")
 
 (defconst denote--punctuation-regexp "[][{}!@#$%^&*()_=+'\"?,.\|;:~`‘’“”]*"
   "Regular expression of punctionation that should be removed.
@@ -220,6 +220,13 @@ We consider those characters illigal for our purposes.")
 (defvar denote-last-front-matter nil "Store last front-matter.")
 
 ;;;; File helper functions
+
+(defun denote--completion-table (category candidates)
+  "Pass appropriate metadata CATEGORY to completion CANDIDATES."
+  (lambda (string pred action)
+    (if (eq action 'metadata)
+        `(metadata (category . ,category))
+      (complete-with-action action candidates string pred))))
 
 (defun denote-directory ()
   "Return path of variable `denote-directory' as a proper directory."
@@ -484,7 +491,7 @@ With optional ID, use it else format the current time."
   (setq denote-last-path
         (denote--format-file
          (or dir (file-name-as-directory denote-directory))
-         (or id (format-time-string denote--id))
+         (or id (format-time-string denote--id-format))
          (denote--sluggify-keywords keywords)
          (denote--sluggify title)
          (denote--file-extension))))
@@ -526,7 +533,7 @@ Use optional PATH, else create it with `denote--path'."
          (buffer (unless path (find-file p)))
          (header (denote--file-meta-header
                   title (denote--date) keywords
-                  (format-time-string denote--id))))
+                  (format-time-string denote--id-format))))
     (unless path
       (with-current-buffer buffer (insert header))
       (setq denote-last-buffer buffer))
