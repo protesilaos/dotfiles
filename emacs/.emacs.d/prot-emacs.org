@@ -540,6 +540,9 @@ documentation makes references to other operating systems.
 :CUSTOM_ID: h:b7444e76-75d4-4ae6-a9d6-96ff9408efe6
 :END:
 
+Also watch: [[https://www.youtube.com/watch?v=JJPokfFxyFo][Style Your Emacs with the Modus Themes]] (2022-06-11) by David
+Wilson from the System Crafters channel.
+
 This is a project I started as soon as I switched to Emacs in July 2019.
 About a year later the themes became part of upstream Emacs, available
 for Emacs version 28 (as of version 0.12.0 of the themes).  I have
