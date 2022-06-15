@@ -3701,7 +3701,7 @@ longer need ([[#h:aad79917-cd80-491b-9020-db27867ab132][Dired-like list for regi
   (define-key global-map (kbd "C-x r l") #'blist-list-bookmarks))
 #+end_src
 
-** Denote (my simple note-taking solution)
+** Denote (simple note-taking)
 :PROPERTIES:
 :CUSTOM_ID: h:c518a3d3-a8a9-499a-ba3c-bcce51b5aa0f
 :END:
@@ -3714,6 +3714,7 @@ I will explain how Denote works once the package is ready.  Introduced:
 2022-06-04 11:41 +0300.
 
 #+begin_src emacs-lisp
+;;;; Denote (simple note-taking)
 (prot-emacs-builtin-package 'denote
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
