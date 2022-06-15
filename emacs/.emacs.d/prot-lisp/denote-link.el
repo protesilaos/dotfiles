@@ -43,6 +43,24 @@
   :type 'boolean
   :group 'denote-link)
 
+(defcustom denote-link-register-ol-hyperlink t
+  "When non-nil, register the `denote:' custom Org hyperlink type.
+This practically means that the links Denote creates will behave
+link ordinary links in Org files.  They can be followed with a
+mouse click or the `org-open-at-point' command, and they can be
+insterted with completion via the `org-insert-link' command after
+selecting the `denote:' hyperlink type.
+
+When this option is nil, Denote links will not work properly in
+Org files.  All commands that Denote defines, such as
+`denote-link-backlinks' and `denote-link-find-file' will work as
+intended.
+
+Note that if you do not want to `require' ol.el, you must set
+this option to nil BEFORE loading denote-link.el."
+  :type 'boolean
+  :group 'denote-link)
+
 (defcustom denote-link-backlinks-display-buffer-action
   '((display-buffer-reuse-window display-buffer-below-selected)
     (window-height . fit-window-to-buffer))
@@ -72,29 +90,6 @@ and/or the documentation string of `display-buffer'."
 
 ;;;; Link to note
 
-;; FIXME 2022-06-14 16:58:24 +0300: Plain text links will use the
-;; identifier only.  But for Org we need to figure out a better way of
-;; integrating with Org/Markdown in a standard way.  Relying on
-;; org-id.el may be the right course of action for Org.  What does
-;; markdown-mode require?
-;;
-;; Whatever we do, we need to consider the implications very carefully.
-;; This is not something we can undo once the package gets its first
-;; stable release.
-;;
-;; My principle is to avoid dependencies as much as possible.  The
-;; `denote-link-find-file' exemplifies this idea.
-;;
-;; Discussions on the GitHub mirror:
-;;
-;; * https://github.com/protesilaos/denote/issues/8
-;; * https://github.com/protesilaos/denote/issues/13
-;;
-;; And on the mailing list:
-;;
-;; * https://lists.sr.ht/~protesilaos/denote/%3C9ac1913b-7e8f-7d38-b547-771861a8d641%40eh-is.de%3E
-;; * https://lists.sr.ht/~protesilaos/denote/%3C87edzvd5oz.fsf%40cassou.me%3E
-
 ;; Arguments are: FILE-ID FILE-TITLE
 (defconst denote-link--format-org "[[denote:%s][%s]]"
   "Format of Org link to note.")
@@ -102,30 +97,22 @@ and/or the documentation string of `display-buffer'."
 (defconst denote-link--format-markdown "[%2$s](denote:%1$s)"
   "Format of Markdown link to note.")
 
-(defconst denote-link--format-text "[[%2$s] [%1$s]]"
-  "Format of plain text link to note.")
-
 (defconst denote-link--regexp-org
   (concat "\\[\\[" "denote:"  "\\(?1:" denote--id-regexp "\\)" "]" "\\[.*?]]"))
 
 (defconst denote-link--regexp-markdown
   (concat "\\[.*?]" "(denote:"  "\\(?1:" denote--id-regexp "\\)" ")"))
 
-(defconst denote-link--regexp-text
-  (concat "\\[\\["  ".*?]" "\s?" "\\[" "\\(?1:" denote--id-regexp "\\)" "]]"))
-
 (defun denote-link--file-type-format (file)
   "Return link format based on FILE format."
   (pcase (file-name-extension file)
     ("md" denote-link--format-markdown)
-    ("txt" denote-link--format-text)
     (_ denote-link--format-org))) ; Includes backup files.  Maybe we can remove them?
 
 (defun denote-link--file-type-regexp (file)
   "Return link regexp based on FILE format."
   (pcase (file-name-extension file)
     ("md" denote-link--regexp-markdown)
-    ("txt" denote-link--regexp-text)
     (_ denote-link--regexp-org)))
 
 (defun denote-link--format-link (file pattern)
@@ -136,13 +123,14 @@ and/or the documentation string of `display-buffer'."
 
 ;;;###autoload
 (defun denote-link (target)
-  "Create Org link to TARGET note in variable `denote-directory'.
-Run `denote-link-insert-functions' afterwards."
+  "Create link to TARGET note in variable `denote-directory'."
   (interactive (list (denote-retrieve--read-file-prompt)))
   (insert
    (denote-link--format-link
     target
     (denote-link--file-type-format (buffer-file-name)))))
+
+(defalias 'denote-link-insert-link (symbol-function 'denote-link))
 
 (defun denote-link--collect-identifiers (regexp)
   "Return collection of identifiers in buffer matching REGEXP."
@@ -256,20 +244,29 @@ default, it will show up below the current window."
         (denote-link--prepare-backlinks id files title)
       (user-error "No links to the current note"))))
 
+(defalias 'denote-link-show-backlinks-buffer (symbol-function 'denote-link-backlinks))
+
 (defvar denote-link--links-to-files nil
   "String of `denote-link-add-links-matching-keyword'.")
+
+(defvar denote-link--prepare-links-format "- %s\n"
+  "Format specifiers for `denote-link-add-links'.")
 
 (defun denote-link--prepare-links (files ext)
   "Prepare links to FILES using format of EXT."
   (setq denote-link--links-to-files
         (with-temp-buffer
           (mapc (lambda (f)
-                  (insert (concat "- " (denote-link--format-link f ext)))
-                  (newline))
+                  (insert
+                   (format denote-link--prepare-links-format
+                           (denote-link--format-link f ext))))
                 files)
           (let ((min (point-min))
                 (max (point-max)))
             (buffer-substring-no-properties min max)))))
+
+(defvar denote-link--add-links-history nil
+  "Minibuffer history for `denote-link-add-links'.")
 
 ;;;###autoload
 (defun denote-link-add-links (regexp)
@@ -278,12 +275,45 @@ Use this command to reference multiple files at once.
 Particularly useful for the creation of metanotes (read the
 manual for more on the matter)."
   (interactive
-   (list (read-regexp "Insert links matching REGEX: ")))
+   (list (read-regexp "Insert links matching REGEX: " nil 'denote-link--add-links-history)))
   (let* ((default-directory (denote-directory))
          (ext (denote-link--file-type-format (buffer-file-name))))
     (if-let ((files (denote--directory-files-matching-regexp regexp)))
         (insert (denote-link--prepare-links files ext))
       (user-error "No links matching `%s'" regexp))))
+
+(defalias 'denote-link-insert-links-matching-regexp (symbol-function 'denote-link-add-links))
+
+;;;; Register `denote:' custom Org hyperlink
+
+(declare-function org-link-set-parameters "ol.el" (type &rest parameters))
+
+;; REVIEW 2022-06-15: Maybe there is a better way to make this optional.
+(when denote-link-register-ol-hyperlink
+  (require 'ol)
+  (org-link-set-parameters
+   "denote"
+   :follow #'denote-link-ol
+   :complete #'denote-link-ol-complete))
+
+(defun denote-link--ol-find-file (identifier)
+  "Visit file with IDENTIFIER.
+Uses the function `denote-directory' to establish the path to the
+file."
+  (find-file (file-name-completion identifier (denote-directory))))
+
+(defun denote-link-ol (identifier _)
+  "Find file of type `denote:' matching IDENTIFIER."
+  (funcall #'denote-link--ol-find-file identifier))
+
+(defun denote-link-ol-complete ()
+  "Like `denote-link' but for Org integration.
+This lets the user complete a link through the `org-insert-link'
+interface by first selecting the `denote:' hyperlink type."
+  (insert
+   (denote-link--format-link
+    (denote-retrieve--read-file-prompt)
+    (denote-link--file-type-format (buffer-file-name)))))
 
 (provide 'denote-link)
 ;;; denote-link.el ends here

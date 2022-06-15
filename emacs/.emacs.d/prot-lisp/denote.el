@@ -303,14 +303,16 @@ With optional N, search in the Nth line from point."
 
 ;;;; Keywords
 
-(defun denote--directory-files ()
-  "List note files, assuming flat directory."
+(defun denote--directory-files (&optional absolute)
+  "List note files, assuming flat directory.
+If optional ABSOLUTE, show full paths, else only show base file
+names that are relative to the variable `denote-directory'."
   (let* ((dir (denote-directory))
          (default-directory dir))
     (seq-remove
      (lambda (file)
        (file-directory-p file))
-     (directory-files dir nil directory-files-no-dot-files-regexp t))))
+     (directory-files dir absolute directory-files-no-dot-files-regexp t))))
 
 (defun denote--directory-files-matching-regexp (regexp)
   "Return list of files matching REGEXP."
@@ -579,6 +581,8 @@ alphabetically in both the file name and file contents."
   (denote--prepare-note title keywords)
   (denote--keywords-add-to-history keywords))
 
+(defalias 'denote-create-note (symbol-function 'denote))
+
 (defvar denote--file-type-history nil
   "Minibuffer history of `denote--file-type-prompt'.")
 
@@ -610,6 +614,8 @@ When called from Lisp the FILETYPE must be a symbol."
   (interactive (list (denote--file-type-prompt)))
   (let ((denote-file-type (denote--file-type-symbol filetype)))
     (call-interactively #'denote)))
+
+(defalias 'denote-create-note-using-type (symbol-function 'denote-type))
 
 (provide 'denote)
 ;;; denote.el ends here
