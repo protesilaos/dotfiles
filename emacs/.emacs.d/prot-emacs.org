@@ -3736,13 +3736,29 @@ I will explain how Denote works once the package is ready.  Introduced:
   ;; OR better:
   (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 
+  ;; I have lots of examples like this one in the manual:
+  ;; <https://protesilaos.com/emacs/denote>.
+  (defun prot/denote-journal ()
+    "Create an entry tagged 'journal', while prompting for a title."
+    (interactive)
+    (denote
+     (denote--title-prompt)
+     "journal"))
+
   ;; You can bind `denote' to a global key if you prefer not to use
   ;; `org-capture' or want an alternative.  Denote does not define any key
   ;; bindings though: this is for the user to decide.  For example:
   (let ((map global-map))
-    (define-key map (kbd "C-c n") #'denote)
-    (define-key map (kbd "C-c N") #'denote-type))
+    (define-key map (kbd "C-c n n") #'denote)
+    (define-key map (kbd "C-c n N") #'denote-type)
+    (define-key map (kbd "C-c n l") #'denote-link)
+    (define-key map (kbd "C-c n L") #'denote-link-add-links)
+    (define-key map (kbd "C-c n b") #'denote-link-backlinks)
+    (define-key map (kbd "C-c n j") #'prot/denote-journal))
 
+  ;; I bind `org-capture' to C-c c, so C-c c n for the note.  I use this
+  ;; one when I need to leverage the extras that Org provides, such as a
+  ;; link to an email, elfeed entry, and more.
   (with-eval-after-load 'org-capture
     (require 'denote-org-capture)
     (setq denote-org-capture-specifiers "%l\n%i\n%?")
