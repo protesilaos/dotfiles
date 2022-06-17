@@ -390,6 +390,10 @@
            :default-weight semilight
            :default-height 170
            :bold-weight extrabold)
+          (jumbo
+           :default-weight semilight
+           :default-height 220
+           :bold-weight extrabold)
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
@@ -1322,6 +1326,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (define-key global-map (kbd "C-x r l") #'blist-list-bookmarks))
 
+;;;; Denote (simple note-taking)
 (prot-emacs-builtin-package 'denote
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
@@ -1329,7 +1334,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
         '("emacs" "philosophy" "politics" "economics"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
-  (setq denote-file-type nil) ; Org is the default, set others here
+  (setq denote-file-type 'text) ; Org is the default, set others here like I do
 
   ;; We allow multi-word keywords by default.  The author's personal
   ;; preference is for single-word keywords for a more rigid workflow.
@@ -1370,6 +1375,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (define-key map (kbd "C-c n j") #'prot/denote-journal) ; our custom command
     (define-key map (kbd "C-c n n") #'denote)
     (define-key map (kbd "C-c n N") #'denote-type)
+    (define-key map (kbd "C-c n d") #'denote-date)
     ;; If you intend to use Denote with a variety of file types, it is
     ;; easier to bind the link-related commands to the `global-map', as
     ;; shown here.  Otherwise follow the same pattern for `org-mode-map',
@@ -2116,7 +2122,8 @@ sure this is a good approach."
   (let ((map global-map))
     (define-key map (kbd "C-c a") #'org-agenda)
     (define-key map (kbd "C-c c") #'org-capture)
-    (define-key map (kbd "C-c l") #'org-store-link))
+    (define-key map (kbd "C-c l") #'org-store-link)
+    (define-key map (kbd "C-c o") #'org-open-at-point-global))
   (let ((map org-mode-map))
     (define-key map (kbd "C-'") nil)
     (define-key map (kbd "C-,") nil)
@@ -2124,8 +2131,8 @@ sure this is a good approach."
     (define-key map (kbd "<C-S-return>") nil)
     (define-key map (kbd "C-M-S-<right>") nil)
     (define-key map (kbd "C-M-S-<left>") nil)
-    (define-key map (kbd "C-c S-l") #'org-toggle-link-display)
-    (define-key map (kbd "C-c C-S-l") #'org-insert-last-stored-link)))
+    (define-key map (kbd "C-c M-l") #'org-insert-last-stored-link)
+    (define-key map (kbd "C-c C-M-l") #'org-toggle-link-display)))
 
 ;;;; Custom extensions (prot-org.el)
 (prot-emacs-builtin-package 'prot-org
