@@ -1,11 +1,11 @@
-;;; denote-retrieve.el --- Link facility for Denote -*- lexical-binding: t -*-
+;;; denote-retrieve.el --- Internal search functions for Denote -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/denote
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "27.2"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -31,16 +31,20 @@
 (require 'denote)
 
 (defconst denote-retrieve--title-front-matter-regexp
-  "^\\(?:#\\+\\)?\\(?:title:\\)[\s\t]+\\(?1:.*\\)"
+  "^\\(?:#\\+\\)?\\(?:title\\)\\s-*[:=]\\s-*[\"']?\\(?1:.*\\b\\)[\"']?"
   "Regular expression for title key and value.
-
 The match that needs to be extracted is explicityly marked as
 group 1.")
 
 (defconst denote-retrieve--identifier-regexp
-  "^.?.?\\b\\(?:identifier\\|ID\\)\\s-*[:=]\\s-*\"?\\(?1:[0-9T]+\\)"
-  "Regular expression for filename key and value.
+  "^.?.?\\b\\(?:identifier\\|ID\\)\\s-*[:=]\\s-*[\"']?\\(?1:[0-9T]+\\)[\"']?"
+  "Regular expression for identifier key and value.
+The match that needs to be extracted is explicityly marked as
+group 1.")
 
+(defconst denote-retrieve--date-front-matter-regexp
+  "^\\(?:#\\+\\)?\\(?:date\\)\\s-*[:=]\\s-*[\"']?\\(?1:.*\\b\\)[\"']?"
+  "Regular expression for date key and value.
 The match that needs to be extracted is explicityly marked as
 group 1.")
 
@@ -52,23 +56,36 @@ group 1.")
         (match-string 0 file))
     (error "Cannot find `%s' as a file" file)))
 
-(defun denote-retrieve--search (regexp)
-  "Search for REGEXP in the current buffer."
+(defun denote-retrieve--search (regexp &optional group)
+  "Search for REGEXP in the current buffer.
+With optional GROUP match it, else match group 1."
   (save-excursion
     (save-restriction
       (widen)
       (goto-char (point-min))
       (re-search-forward regexp nil t 1)
-      (match-string-no-properties 1))))
+      (unless (eq (point) (point-min))
+        (match-string-no-properties (or group 1))))))
 
-(defun denote-retrieve--value (file regexp)
+(defun denote-retrieve--value (file regexp &optional group)
   "Return REGEXP value from FILE.
-FILE is a note in the variable `denote-directory'."
+FILE is a note in the variable `denote-directory'.
+
+Optional GROUP is a regexp construct for
+`denote-retrieve--search'."
   (let ((default-directory (denote-directory)))
     (with-temp-buffer
-      (insert-file-contents-literally file)
-      (or (denote-retrieve--search regexp)
-          (user-error "Cannot retrieve %s in %s" regexp file)))))
+      (insert-file-contents file)
+      (or (denote-retrieve--search regexp group)
+          nil))))
+
+(defun denote-retrieve--value-title (file &optional group)
+  "Return title from FILE, optionally matching regexp GROUP."
+  (denote-retrieve--value file denote-retrieve--title-front-matter-regexp group))
+
+(defun denote-retrieve--value-date (file &optional group)
+  "Return date from FILE, optionally matching regexp GROUP."
+  (denote-retrieve--value file denote-retrieve--date-front-matter-regexp group))
 
 (defun denote-retrieve--read-file-prompt ()
   "Prompt for regular file in variable `denote-directory'."

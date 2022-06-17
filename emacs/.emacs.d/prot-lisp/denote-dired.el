@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/denote
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "27.2"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -23,6 +23,62 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+;;
+;; Denote's file-naming scheme is not specific to notes or text files:
+;; it is useful for all sorts of files, such as multimedia and PDFs that
+;; form part of the user's longer-term storage (read manual's "The
+;; file-naming scheme").  While Denote does not manage such files, it
+;; already has all the mechanisms to facilitate the task of renaming
+;; them.
+;;
+;; To this end, we provide the `denote-dired-rename-file' command.  It
+;; has a two-fold purpose: (i) to change the name of an existing file
+;; while retaining its identifier and (ii) to write a Denote-compliant
+;; file name for an item that was not created by `denote' or related
+;; commands (such as an image or PDF).
+;;
+;; The `denote-dired-rename-file' command will target the file at point
+;; if it finds one in the current Dired buffer.  Otherwise it prompts
+;; with minibuffer completion for a file name.  It then uses the
+;; familiar prompts for a `TITLE' and `KEYWORDS' the same way the
+;; `denote' command does (read manual's "Points of entry).  As a final
+;; step, it asks for confirmation before renaming the file at point,
+;; showing a message like:
+;;
+;;     Rename sample.pdf to 20220612T052900--my-sample-title__testing.pdf? (y or n)
+;;
+;; However, if the user option `denote-dired-rename-expert' is non-nil,
+;; conduct the renaming operation outright---no questions asked.
+;;
+;; When operating on a file that has no identifier, such as
+;; `sample.pdf', Denote reads the file properties to retrieve its last
+;; modification time.  If the file was from a past date like 2000-11-31
+;; it will get an identifier starting with `20001131' followed by the
+;; time component (per our file-naming scheme).
+;;
+;; The file type extension (e.g. `.pdf') is read from the underlying
+;; file and is preserved through the renaming process.  Files that have
+;; no extension are simply left without one.
+;;
+;; Renaming only occurs relative to the current directory.  Files are not
+;; moved between directories.
+;;
+;; The final step of the `denote-dired-rename-file' command is to call
+;; the special hook `denote-dired-post-rename-functions'.  Functions
+;; added to that hook must accept three arguments, as explained in its
+;; doc string.  For the time being, the only function we define is the
+;; one which updates the underlying note's front matter to match the new
+;; file name: `denote-dired-rewrite-front-matter'.  The function takes
+;; care to only operate on an actual note, instead of arbitrary files.
+;;
+;; DEVELOPMENT NOTE: the `denote-dired-rewrite-front-matter' needs to be
+;; tested thoroughly.  It rewrites file contents so we have to be sure
+;; it does the right thing.  To avoid any trouble, it always asks for
+;; confirmation before performing the replacement.  This confirmation
+;; ignores `denote-dired-rename-expert' for the time being, though we
+;; might want to lift that restriction once everything works as
+;; intended.
+;;
 ;;
 ;; One of the upsides of Denote's file-naming scheme is the predictable
 ;; pattern it establishes, which appears as a near-tabular presentation in
@@ -62,7 +118,7 @@
 
 ;;; Code:
 
-(require 'denote)
+(require 'denote-retrieve)
 (require 'dired)
 
 (defgroup denote-dired ()
@@ -83,6 +139,26 @@
 The confiration is asked via a `y-or-n-p' prompt which shows the
 old name followed by the new one."
   :type 'boolean
+  :group 'denote-dired)
+
+(defcustom denote-dired-post-rename-functions
+  (list #'denote-dired-rewrite-front-matter)
+  "List of functions called after `denote-dired-rename-file'.
+Each function must accept three arguments: FILE, TITLE, and
+KEYWORDS.  The first is the full path to the file provided as a
+string, the second is the human-readable file name (not what
+Denote sluggifies) also as a string, and the third are the
+keywords.  If there is only one keyword, it is a string, else a
+list of strings.
+
+DEVELOPMENT NOTE: the `denote-dired-rewrite-front-matter' needs
+to be tested thoroughly.  It rewrites file contents so we have to
+be sure it does the right thing.  To avoid any trouble, it always
+asks for confirmation before performing the replacement.  This
+confirmation ignores `denote-dired-rename-expert' for the time
+being, though we might want to lift that restriction once
+everything works as intended."
+  :type 'hook
   :group 'denote-dired)
 
 ;;;; Commands
@@ -124,7 +200,8 @@ file and is preserved through the renaming process.  Files that
 have no extension are simply left without one.
 
 Renaming only occurs relative to the current directory.  Files
-are not moved between directories.
+are not moved between directories.  As a final step, call the
+`denote-dired-post-rename-functions'.
 
 This command is intended to (i) rename existing Denote
 notes, (ii) complement note-taking, such as by renaming
@@ -142,14 +219,98 @@ attachments that the user adds to their notes."
                     (denote-dired--file-name-id file)
                     keywords
                     (denote--sluggify title)
-                    extension)))
-    (when (y-or-n-p
-           (format "Rename %s to %s?"
-                   (propertize old-name 'face 'error)
-                   (propertize (file-name-nondirectory new-name) 'face 'success)))
-      (rename-file old-name new-name nil)
-      (when (eq major-mode 'dired-mode)
-        (revert-buffer)))))
+                    extension))
+         (max-mini-window-height 0.25)) ; allow minibuffer to be resized
+    (unless (string= old-name (file-name-nondirectory new-name))
+      (when (y-or-n-p
+             (format "Rename %s to %s?"
+                     (propertize old-name 'face 'error)
+                     (propertize (file-name-nondirectory new-name) 'face 'success)))
+        (rename-file old-name new-name nil)
+        (when (derived-mode-p 'dired-mode)
+          (revert-buffer))
+        (run-hook-with-args 'denote-dired-post-rename-functions new-name title keywords)))))
+
+(defun denote-dired--file-meta-header (title date keywords id filetype)
+  "Front matter for renamed notes.
+
+TITLE, DATE, KEYWORDS, FILENAME, ID, and FILETYPE are all strings
+ which are provided by `denote-dired-rewrite-front-matter'."
+  (let ((kw-space (denote--file-meta-keywords keywords))
+        (kw-toml (denote--file-meta-keywords keywords 'toml)))
+    (pcase filetype
+      ('markdown-toml (format denote-toml-front-matter title date kw-toml id))
+      ('markdown-yaml (format denote-yaml-front-matter title date kw-space id))
+      ('text (format denote-text-front-matter title date kw-space id denote-text-front-matter-delimiter))
+      (_ (format denote-org-front-matter title date kw-space id)))))
+
+(defun denote-dired--filetype-heuristics (file)
+  "Return likely file type of FILE.
+The return value is for `denote--file-meta-header'."
+  (pcase (file-name-extension file)
+    ("md" (if (string-match-p "title\\s-*=" (denote-retrieve--value-title file 0))
+              'markdown-toml
+            'markdown-yaml))
+    ("txt" 'text)
+    (_ 'org)))
+
+(defun denote-dired--front-matter-search-delimiter (filetype)
+  "Return likely front matter delimiter search for FILETYPE."
+  (pcase filetype
+    ('markdown-toml (re-search-forward "^\\+\\+\\+$" nil t 2))
+    ('markdown-yaml (re-search-forward "^---$" nil t 2))
+    ;; 2 at most, as the user might prepend it to the block as well.
+    ;; Though this might give us false positives, it ultimately is the
+    ;; user's fault.
+    ('text (or (re-search-forward denote-text-front-matter-delimiter nil t 2)
+               (re-search-forward denote-text-front-matter-delimiter nil t 1)
+               (re-search-forward "^[\s\t]*$" nil t 1)))
+    ;; Org does not have a real delimiter.  This is the trickiest one.
+    (_ (re-search-forward "^[\s\t]*$" nil t 1))))
+
+(defun denote-dired--edit-front-matter-p (file)
+  "Test if FILE should be subject to front matter rewrite."
+  (when-let ((ext (file-name-extension file)))
+    (and (file-regular-p file)
+         (file-writable-p file)
+         (not (denote--file-empty-p file))
+         (string-match-p "\\(md\\|org\\|txt\\)\\'" ext)
+         ;; Heuristic to check if this is one of our notes
+         (string= default-directory (abbreviate-file-name (denote-directory))))))
+
+(defun denote-dired-rewrite-front-matter (file title keywords)
+  "Rewrite front matter of note after `denote-dired-rename-file'.
+The FILE, TITLE, and KEYWORDS are passed from the renaming
+ command and are used to construct a new front matter block."
+  (when (denote-dired--edit-front-matter-p file)
+    (when-let* ((id (denote-retrieve--filename-identifier file))
+                (date (denote-retrieve--value-date file))
+                (filetype (denote-dired--filetype-heuristics file))
+                (new-front-matter (denote--file-meta-header title date keywords id filetype)))
+      (let (old-front-matter front-matter-delimiter)
+        (with-current-buffer (find-file-noselect file)
+          (save-excursion
+            (save-restriction
+              (widen)
+              (goto-char (point-min))
+              (setq front-matter-delimiter (denote-dired--front-matter-search-delimiter filetype))
+              (when front-matter-delimiter
+                (setq old-front-matter
+                      (buffer-substring-no-properties
+                       (point-min)
+                       (progn front-matter-delimiter (point)))))))
+          (when (and old-front-matter
+                     (y-or-n-p
+                      (format "%s\n%s\nReplace front matter?"
+                              (propertize old-front-matter 'face 'error)
+                              (propertize new-front-matter 'face 'success))))
+            (delete-region (point-min) front-matter-delimiter)
+            (goto-char (point-min))
+            (insert new-front-matter)
+            ;; FIXME 2022-06-16: Instead of `delete-blank-lines', we
+            ;; should check if we added any new lines and delete only
+            ;; those.
+            (delete-blank-lines)))))))
 
 ;;;; Extra fontification
 

@@ -1,11 +1,11 @@
-;;; denote.el --- Simple notes with a strict file-naming scheme -*- lexical-binding: t -*-
+;;; denote.el --- Simple notes with an efficient file-naming scheme -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/denote
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "27.2"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -278,29 +278,6 @@ trailing hyphen."
   "Return non-nil if FILE is empty."
   (zerop (or (file-attribute-size (file-attributes file)) 0)))
 
-(defvar denote--line-regexp-alist
-  '((empty . "[\s\t]*$")
-    (indent . "^[\s\t]+")
-    (non-empty . "^.+$")
-    (list . "^\\([\s\t#*+]+\\|[0-9]+[^\s]?[).]+\\)")
-    (heading . "^\\*+ +"))              ; assumes Org markup
-  "Alist of regexp types used by `denote-line-regexp-p'.")
-
-(defun denote--line-regexp-p (type &optional n)
-  "Test for TYPE on line.
-TYPE is the car of a cons cell in
-`denote--line-regexp-alist'.  It matches a regular
-expression.
-
-With optional N, search in the Nth line from point."
-  (save-excursion
-    (goto-char (point-at-bol))
-    (and (not (bobp))
-         (or (beginning-of-line n) t)
-         (save-match-data
-           (looking-at
-            (alist-get type denote--line-regexp-alist))))))
-
 ;;;; Keywords
 
 (defun denote--directory-files (&optional absolute)
@@ -314,15 +291,19 @@ names that are relative to the variable `denote-directory'."
        (file-directory-p file))
      (directory-files dir absolute directory-files-no-dot-files-regexp t))))
 
-(defun denote--directory-files-matching-regexp (regexp)
-  "Return list of files matching REGEXP."
+(defun denote--directory-files-matching-regexp (regexp &optional no-check-current)
+  "Return list of files matching REGEXP.
+With optional NO-CHECK-CURRENT do not test if the current file is
+part of the list."
   (delq
    nil
-   (mapcar (lambda (f)
-             (when (and (string-match-p regexp f)
-                        (not (string= (file-name-nondirectory (buffer-file-name)) f)))
-               f))
-           (denote--directory-files))))
+   (mapcar
+    (lambda (f)
+      (when (and (string-match-p regexp f)
+                 (or no-check-current
+                     (not (string= (file-name-nondirectory (buffer-file-name)) f))))
+        f))
+    (denote--directory-files))))
 
 (defun denote--keywords-in-files ()
   "Produce list of keywords in `denote--directory-files'."
@@ -465,7 +446,7 @@ identifier: %s
   "Plain text front matter value for `format'.
 Read `denote-org-front-matter' for the technicalities of the
 first four specifiers this variable accepts.  The fifth specifier
-this specific to this variable: it expect a delimiter:
+is specific to this variable: it expect a delimiter such as
 `denote-text-front-matter-delimiter'.")
 
 (defvar denote-text-front-matter-delimiter (make-string 27 ?-)
@@ -481,16 +462,29 @@ this specific to this variable: it expect a delimiter:
 The order of the arguments is TITLE, DATE, KEYWORDS, ID.  If you
 are an avdanced user who wants to edit this variable to affect
 how front matter is produced, consider using something like %2$s
-to control where Nth argument is placed.")
+to control where Nth argument is placed.
 
-(defun denote--file-meta-header (title date keywords id)
+Make sure to
+
+1. Not use empty lines inside the front matter block.
+
+2. Insert at least one empty line after the front matter block
+and do not use any empty line before it.
+
+These help ensure consistency and might prove useful if we need
+to operate on the front matter as a whole.")
+
+(defun denote--file-meta-header (title date keywords id &optional filetype)
   "Front matter for new notes.
 
 TITLE, DATE, KEYWORDS, FILENAME, ID are all strings which are
- provided by `denote'."
+ provided by `denote'.
+
+Optional FILETYPE is one of the values of `denote-file-type',
+else that variable is used."
   (let ((kw-space (denote--file-meta-keywords keywords))
         (kw-toml (denote--file-meta-keywords keywords 'toml)))
-    (pcase denote-file-type
+    (pcase (or filetype denote-file-type)
       ('markdown-toml (format denote-toml-front-matter title date kw-toml id))
       ('markdown-yaml (format denote-yaml-front-matter title date kw-space id))
       ('text (format denote-text-front-matter title date kw-space id denote-text-front-matter-delimiter))
@@ -510,42 +504,51 @@ With optional ID, use it else format the current time."
 
 ;; Adapted from `org-hugo--org-date-time-to-rfc3339' in the `ox-hugo'
 ;; package: <https://github.com/kaushalmodi/ox-hugo>.
-(defun denote--date-rfc3339 ()
-  "Format date using the RFC3339 specification."
+(defun denote--date-rfc3339 (&optional date)
+  "Format date using the RFC3339 specification.
+With optional DATE, use it else use the current one."
   (replace-regexp-in-string
    "\\([0-9]\\{2\\}\\)\\([0-9]\\{2\\}\\)\\'" "\\1:\\2"
-   (format-time-string "%FT%T%z")))
+   (format-time-string "%FT%T%z" date)))
 
-(defun denote--date-org-timestamp ()
-  "Format date using the Org inactive timestamp notation."
-  (format-time-string "[%F %a %R]"))
+(defun denote--date-org-timestamp (&optional date)
+  "Format date using the Org inactive timestamp notation.
+With optional DATE, use it else use the current one."
+  (format-time-string "[%F %a %R]" date))
 
-(defun denote--date-iso-8601 ()
-  "Format date according to ISO 8601 standard."
-  (format-time-string "%F"))
+(defun denote--date-iso-8601 (&optional date)
+  "Format date according to ISO 8601 standard.
+With optional DATE, use it else use the current one."
+  (format-time-string "%F" date))
 
-(defun denote--date ()
-  "Expand the date for a new note's front matter."
+(defun denote--date (&optional date)
+  "Expand the date for a new note's front matter.
+With optional DATE, use it else use the current one."
   (let ((format denote-front-matter-date-format))
     (cond
      ((stringp format)
-      (format-time-string format))
+      (format-time-string format date))
      ((or (eq denote-file-type 'markdown-toml)
           (eq denote-file-type 'markdown-yaml))
-      (denote--date-rfc3339))
+      (denote--date-rfc3339 date))
      ((eq format 'org-timestamp)
-      (denote--date-org-timestamp))
-     (t (denote--date-iso-8601)))))
+      (denote--date-org-timestamp date))
+     (t (denote--date-iso-8601 date)))))
 
-(defun denote--prepare-note (title keywords &optional path)
+(defun denote--prepare-note (title keywords &optional path date id)
   "Use TITLE and KEYWORDS to prepare new note file.
-Use optional PATH, else create it with `denote--path'."
-  (let* ((p (or path (denote--path title keywords)))
-         (default-directory denote-directory)
+Use optional PATH, else create it with `denote--path'.  When PATH
+is provided, refrain from writing to a buffer (useful for org
+capture).
+
+Optional DATE is passed to `denote--date', while optional ID is
+used to construct the path's identifier."
+  (let* ((default-directory denote-directory)
+         (p (or path (denote--path title keywords default-directory id)))
          (buffer (unless path (find-file p)))
          (header (denote--file-meta-header
-                  title (denote--date) keywords
-                  (format-time-string denote--id-format))))
+                  title (denote--date date) keywords
+                  (format-time-string denote--id-format date))))
     (unless path
       (with-current-buffer buffer (insert header))
       (setq denote-last-buffer buffer))
@@ -616,6 +619,62 @@ When called from Lisp the FILETYPE must be a symbol."
     (call-interactively #'denote)))
 
 (defalias 'denote-create-note-using-type (symbol-function 'denote-type))
+
+(defvar denote--date-history nil
+  "Minibuffer history of `denote--date-prompt'.")
+
+(defun denote--date-prompt ()
+  "Prompt for date."
+  (read-string
+   "DATE and TIME for note (e.g. 2022-06-16 14:30): "
+   nil 'denote--date-history))
+
+(defun denote--valid-date (date)
+  "Return DATE if parsed by `date-to-time', else signal error."
+  (date-to-time date))
+
+;; This should only be relevant for `denote-date', otherwise the
+;; identifier is always unique (we trust that no-one writes multiple
+;; notes within fractions of a second).
+(defun denote--id-exists-p (identifier no-check-current)
+  "Return non-nil if IDENTIFIER already exists.
+NO-CHECK-CURRENT passes the appropriate flag to
+`denote--directory-files-matching-regexp'."
+  (denote--directory-files-matching-regexp identifier no-check-current))
+
+(defun denote--barf-duplicate-id (identifier)
+  "Throw a user-error if IDENTIFIER already exists else return t."
+  (if (denote--id-exists-p identifier :no-check-current)
+      (user-error "`%s' already exists; aborting new note creation" identifier)
+    t))
+
+;;;###autoload
+(defun denote-date (date title keywords)
+  "Like `denote', but create new note for given DATE.
+
+DATE can either be something like 2022-06-16 or that plus time:
+2022-06-16 14:30.
+
+The hour can be omitted, in which case it is interpreted as
+00:00.  Beware that you might create files with non-unique
+identifiers if they both have the same date and time.  In such a
+case, Denote will refrain from creating the new note.  Try with
+another DATE value where, for instance, a different time is
+specified.
+
+The TITLE and KEYWORDS arguments are the same as with `denote'."
+  (interactive
+   (list
+    (denote--date-prompt)
+    (denote--title-prompt)
+    (denote--keywords-prompt)))
+  (when-let ((d (denote--valid-date date))
+             (id (format-time-string denote--id-format d))
+             ((denote--barf-duplicate-id id)))
+    (denote--prepare-note title keywords nil d id)
+    (denote--keywords-add-to-history keywords)))
+
+(defalias 'denote-create-note-using-date (symbol-function 'denote-date))
 
 (provide 'denote)
 ;;; denote.el ends here

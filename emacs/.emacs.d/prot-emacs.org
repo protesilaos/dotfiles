@@ -3722,7 +3722,7 @@ I will explain how Denote works once the package is ready.  Introduced:
         '("emacs" "philosophy" "politics" "economics"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
-  (setq denote-file-type nil) ; Org is the default, set others here
+  (setq denote-file-type 'text) ; Org is the default, set others here like I do
 
   ;; We allow multi-word keywords by default.  The author's personal
   ;; preference is for single-word keywords for a more rigid workflow.
@@ -3763,6 +3763,7 @@ I will explain how Denote works once the package is ready.  Introduced:
     (define-key map (kbd "C-c n j") #'prot/denote-journal) ; our custom command
     (define-key map (kbd "C-c n n") #'denote)
     (define-key map (kbd "C-c n N") #'denote-type)
+    (define-key map (kbd "C-c n d") #'denote-date)
     ;; If you intend to use Denote with a variety of file types, it is
     ;; easier to bind the link-related commands to the `global-map', as
     ;; shown here.  Otherwise follow the same pattern for `org-mode-map',
