@@ -977,6 +977,10 @@ Relevant publications of mine that are not part of this document:
            :default-weight semilight
            :default-height 170
            :bold-weight extrabold)
+          (jumbo
+           :default-weight semilight
+           :default-height 220
+           :bold-weight extrabold)
           (t
            ;; I keep all properties for didactic purposes, but most can be
            ;; omitted.  See the fontaine manual for the technicalities:
