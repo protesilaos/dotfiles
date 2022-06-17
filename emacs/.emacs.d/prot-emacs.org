@@ -5435,7 +5435,8 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   (let ((map global-map))
     (define-key map (kbd "C-c a") #'org-agenda)
     (define-key map (kbd "C-c c") #'org-capture)
-    (define-key map (kbd "C-c l") #'org-store-link))
+    (define-key map (kbd "C-c l") #'org-store-link)
+    (define-key map (kbd "C-c o") #'org-open-at-point-global))
   (let ((map org-mode-map))
     (define-key map (kbd "C-'") nil)
     (define-key map (kbd "C-,") nil)
@@ -5443,8 +5444,8 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
     (define-key map (kbd "<C-S-return>") nil)
     (define-key map (kbd "C-M-S-<right>") nil)
     (define-key map (kbd "C-M-S-<left>") nil)
-    (define-key map (kbd "C-c S-l") #'org-toggle-link-display)
-    (define-key map (kbd "C-c C-S-l") #'org-insert-last-stored-link)))
+    (define-key map (kbd "C-c M-l") #'org-insert-last-stored-link)
+    (define-key map (kbd "C-c C-M-l") #'org-toggle-link-display)))
 
 ;;;; Custom extensions (prot-org.el)
 (prot-emacs-builtin-package 'prot-org
