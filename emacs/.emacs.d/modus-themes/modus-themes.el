@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/modus-themes
 ;; Mailing list: https://lists.sr.ht/~protesilaos/modus-themes
-;; Version: 2.3.2
+;; Version: 2.4.1
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
 
@@ -108,8 +108,13 @@ cover the blue-cyan-magenta side of the spectrum."
   :prefix "modus-themes-"
   :tag "Modus Themes Faces")
 
-(defvar modus-themes--version "2.4.0-dev"
-  "Current version of the Modus themes.")
+(defvar modus-themes--version "2.5.0-dev"
+  "Current version of the Modus themes.
+
+The version either is the last tagged release, such as '2.4.0',
+or an in-development version like '2.5.0-dev'.  As we use
+semantic versioning, tags of the '2.4.1' sort are not reported:
+those would count as part of '2.5.0-dev'.")
 
 ;;;###autoload
 (defun modus-themes-version (&optional insert)
@@ -125,6 +130,7 @@ argument, insert the `modus-themes--version' at point."
 ;;;###autoload
 (defun modus-themes-report-bug ()
   "Submit a bug report or issue to the Modus themes developers."
+  (interactive)
   (reporter-submit-bug-report
    "~protesilaos/modus-themes@lists.sr.ht"
    (format "modus-themes (%s)\n" modus-themes--version)
@@ -4324,7 +4330,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
                                       cyan-alt-other blue-alt-other fg-alt
                                       cyan-nuanced-bg blue-refine-bg fg-main
                                       bg-alt bg-active))))
-    `(modus-themes-reset-hard ((,class :inherit (fixed-pitch modus-themes-reset-soft))))
+    `(modus-themes-reset-hard ((,class :inherit (fixed-pitch modus-themes-reset-soft)
+                                       :family ,(face-attribute 'default :family))))
     `(modus-themes-reset-soft ((,class :background ,bg-main :foreground ,fg-main
                                        :weight normal :slant normal :strike-through nil
                                        :box nil :underline nil :overline nil :extend nil)))
@@ -5102,6 +5109,13 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(ediff-odd-diff-Ancestor ((,class :inherit ediff-even-diff-Ancestor)))
     `(ediff-odd-diff-B ((,class :inherit ediff-even-diff-B)))
     `(ediff-odd-diff-C ((,class :inherit ediff-even-diff-C)))
+;;;;; ein (Emacs IPython Notebook)
+    `(ein:basecell-input-area-face ((,class :background ,bg-dim :extend t)))
+    `(ein:cell-output-area (( )))
+    `(ein:cell-output-area-error ((,class :background ,red-nuanced-bg :extend t)))
+    `(ein:cell-output-stderr ((,class :background ,red-nuanced-bg :extend t)))
+    `(ein:markdowncell-input-area-face (( )))
+    `(ein:notification-tab-normal ((,class :underline t)))
 ;;;;; eglot
     `(eglot-mode-line ((,class :inherit modus-themes-bold :foreground ,magenta-active)))
 ;;;;; el-search
@@ -5792,6 +5806,26 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(info-title-2 ((,class :inherit modus-themes-heading-2)))
     `(info-title-3 ((,class :inherit modus-themes-heading-3)))
     `(info-title-4 ((,class :inherit modus-themes-heading-4)))
+;;;;; info+ (info-plus)
+    `(info-command-ref-item ((,class :inherit font-lock-function-name-face)))
+    `(info-constant-ref-item ((,class :inherit font-lock-constant-face)))
+    `(info-custom-delimited ((,class :inherit modus-themes-markup-verbatim)))
+    `(info-double-quoted-name ((,class :inherit font-lock-string-face)))
+    `(info-file (( )))
+    `(info-function-ref-item ((,class :inherit font-lock-function-name-face)))
+    `(info-glossary-word ((,class :inherit modus-themes-box-button)))
+    `(info-indented-text (( )))
+    `(info-isolated-backquote (( )))
+    `(info-isolated-quote (( )))
+    `(info-macro-ref-item ((,class :inherit font-lock-keyword-face)))
+    `(info-menu ((,class :inherit bold)))
+    `(info-quoted-name ((,class :inherit modus-themes-markup-verbatim)))
+    `(info-reference-item ((,class :inherit bold)))
+    `(info-special-form-ref-item ((,class :inherit warning)))
+    `(info-string ((,class :inherit font-lock-string-face)))
+    `(info-syntax-class-item ((,class :inherit modus-themes-markup-code)))
+    `(info-user-option-ref-item ((,class :inherit font-lock-variable-name-face)))
+    `(info-variable-ref-item ((,class :inherit font-lock-variable-name-face)))
 ;;;;; info-colors
     `(info-colors-lisp-code-block ((,class :inherit modus-themes-fixed-pitch)))
     `(info-colors-ref-item-command ((,class :inherit font-lock-function-name-face)))
@@ -5913,7 +5947,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     ;; fall back to `default' otherwise line numbers do not scale when
     ;; using `text-scale-adjust'.
     `(line-number
-      ((,class :inherit ,(if modus-themes-mixed-fonts 'fixed-pitch 'default)
+      ((,class :inherit ,(if modus-themes-mixed-fonts '(fixed-pitch default) 'default)
                ,@(modus-themes--line-numbers
                   fg-alt bg-dim
                   fg-unfocused))))
@@ -7491,29 +7525,6 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;; pdf-tools
     `(pdf-view-midnight-colors
       '(,fg-main . ,bg-dim))
-;;;; vc-annotate (C-x v g)
-    `(vc-annotate-background nil)
-    `(vc-annotate-background-mode nil)
-    `(vc-annotate-color-map
-      '((20 . ,red)
-        (40 . ,magenta)
-        (60 . ,magenta-alt)
-        (80 . ,red-alt)
-        (100 . ,yellow)
-        (120 . ,yellow-alt)
-        (140 . ,fg-special-warm)
-        (160 . ,fg-special-mild)
-        (180 . ,green)
-        (200 . ,green-alt)
-        (220 . ,cyan-alt-other)
-        (240 . ,cyan-alt)
-        (260 . ,cyan)
-        (280 . ,fg-special-cold)
-        (300 . ,blue)
-        (320 . ,blue-alt)
-        (340 . ,blue-alt-other)
-        (360 . ,magenta-alt-other)))
-    `(vc-annotate-very-old-color nil)
 ;;;; wid-edit
     `(widget-link-prefix ,(if (memq 'all-buttons modus-themes-box-buttons)
                               " "
