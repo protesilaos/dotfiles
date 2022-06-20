@@ -182,8 +182,8 @@
   ;;
   ;; NOTE: these are not my preferences!  I am always testing various
   ;; configurations.  Though I still like what I have here.
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
+  (setq modus-themes-italic-constructs nil
+        modus-themes-bold-constructs nil
         modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers nil
         modus-themes-intense-mouseovers nil
@@ -192,7 +192,7 @@
         modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
-        modus-themes-fringes 'subtle ; {nil,'subtle,'intense}
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-lang-checkers' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -216,7 +216,7 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax nil
+        modus-themes-syntax '(yellow-comments)
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -226,7 +226,7 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(intense)
+        modus-themes-paren-match nil
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -245,7 +245,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts nil
+        modus-themes-prompts '(background bold italic gray)
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -261,8 +261,8 @@
         ;; covered in `modus-themes-weights'.  Bold is used in the absence
         ;; of an explicit WEIGHT.
         modus-themes-completions
-        '((matches . (extrabold background))
-          (selection . (semibold accented))
+        '((matches . (semibold underline italic background intense))
+          (selection . (extrabold intense accented))
           (popup . (extrabold)))
 
         modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
@@ -278,25 +278,25 @@
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
 
         modus-themes-org-agenda ; this is an alist: read the manual or its doc string
-        '((header-block . (variable-pitch semilight 1.4))
+        '((header-block . (variable-pitch light 1.6))
           (header-date . (underline-today grayscale workaholic 1.2))
           (event . (accented italic varied))
           (scheduled . rainbow)
           (habit . simplified))
 
-        modus-themes-headings ; this is an alist: read the manual or its doc string
-        '((t . (variable-pitch extrabold)))
-
-        ;; Sample for headings:
-
+        ;; Simpler heading style:
+        ;;
         ;; modus-themes-headings
-        ;; '((1 . (variable-pitch light 1.6))
-        ;;   (2 . (variable-pitch regular 1.4))
-        ;;   (3 . (variable-pitch regular 1.3))
-        ;;   (4 . (1.2))
-        ;;   (5 . (1.1))
-        ;;   (t . (monochrome 1.05)))
-        )
+        ;; '((t . (variable-pitch extrabold)))
+        ;;
+        ;; A slightly more elaborate example:
+        modus-themes-headings
+        '((1 . (variable-pitch light (height 1.6) background))
+          (2 . (variable-pitch rainbow regular (height 1.4) overline))
+          (3 . (variable-pitch rainbow regular (height 1.3) overline))
+          (4 . (1.2))
+          (5 . (1.1))
+          (t . (monochrome 1.05))))
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
@@ -1343,18 +1343,23 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq denote-front-matter-date-format nil) ; change this to `org-timestamp' or custom string
 
   (require 'denote-link)
+
+  ;; If you use Markdown or plain text files (Org renders links as
+  ;; buttons right away)
+  (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
+
   (require 'denote-dired)
 
   ;; I use different ways to specify a path for demo purposes.
   (setq denote-dired-directories
         (list denote-directory
               (thread-last denote-directory (expand-file-name "attachments"))
-              (expand-file-name "~/Documents/vlog")))
+              (expand-file-name "~/Documents/books")))
 
-  ;; Generic:
+  ;; Generic (great if you rename files Denote-style in lots of places):
   ;; (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;;
-  ;; OR better:
+  ;; OR if only want it in `denote-dired-directories':
   (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 
   ;; Here is a custom, user-level command from one of the examples we
@@ -2116,7 +2121,7 @@ sure this is a good approach."
   ;; I would wrap this in `with-eval-after-load'):
   ;; <https://protesilaos.com/emacs/pulsar>
   (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
-    (add-hook hook #'pulsar-recenter-top)
+    (add-hook hook #'pulsar-recenter-middle)
     (add-hook hook #'pulsar-reveal-entry))
 
   (let ((map global-map))
@@ -2175,6 +2180,10 @@ sure this is a good approach."
         '((?+ . "•")
           (?- . "–")
           (?* . "◦")))
+  ;; I don't use those in documents anyway, and if I ever do I need to
+  ;; remember what their standard looks are.
+  (setq org-modern-internal-target nil)
+  (setq org-modern-radio-target nil)
 
   ;; NOTE 2022-03-05: The variables that are commented out are the
   ;; defaults.
@@ -2931,11 +2940,11 @@ sure this is a good approach."
 
 (prot-emacs-elpa-package 'osm
   (let ((map global-map))
-    (define-key map (kbd "C-c o h") #'osm-home)
-    (define-key map (kbd "C-c o s") #'osm-search)
-    (define-key map (kbd "C-c o t") #'osm-server)
-    (define-key map (kbd "C-c o g") #'osm-goto)
-    (define-key map (kbd "C-c o j") #'osm-bookmark-jump))
+    (define-key map (kbd "C-c O h") #'osm-home)
+    (define-key map (kbd "C-c O s") #'osm-search)
+    (define-key map (kbd "C-c O t") #'osm-server)
+    (define-key map (kbd "C-c O g") #'osm-goto)
+    (define-key map (kbd "C-c O j") #'osm-bookmark-jump))
 
   ;; Load Org link support
   (with-eval-after-load 'org
