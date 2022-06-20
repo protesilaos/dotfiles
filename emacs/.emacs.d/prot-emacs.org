@@ -5521,6 +5521,10 @@ those changes, especially since it is theme-agnostic.
         '((?+ . "•")
           (?- . "–")
           (?* . "◦")))
+  ;; I don't use those in documents anyway, and if I ever do I need to
+  ;; remember what their standard looks are.
+  (setq org-modern-internal-target nil)
+  (setq org-modern-radio-target nil)
 
   ;; NOTE 2022-03-05: The variables that are commented out are the
   ;; defaults.
