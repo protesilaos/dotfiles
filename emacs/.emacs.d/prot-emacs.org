@@ -3714,8 +3714,8 @@ Those who have followed my work for a while may have noticed my
 =usls.el=.  It is now superseded by =denote.el=, which I intend to turn
 into a fully fledged package for others to use.
 
-I will explain how Denote works once the package is ready.  Introduced:
-2022-06-04 11:41 +0300.
+I will explain how Denote works once the package is ready.  In the
+meantime, watch the [[https://protesilaos.com/codelog/2022-06-18-denote-demo/][demonstration of my Denote package]] (2022-06-18).
 
 #+begin_src emacs-lisp
 ;;;; Denote (simple note-taking)
