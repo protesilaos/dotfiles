@@ -5438,7 +5438,7 @@ Refer to [[#h:77d14350-978d-4820-ab7f-4641706c445a][Custom extensions for "focus
   ;; I would wrap this in `with-eval-after-load'):
   ;; <https://protesilaos.com/emacs/pulsar>
   (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
-    (add-hook hook #'pulsar-recenter-top)
+    (add-hook hook #'pulsar-recenter-middle)
     (add-hook hook #'pulsar-reveal-entry))
 
   (let ((map global-map))
