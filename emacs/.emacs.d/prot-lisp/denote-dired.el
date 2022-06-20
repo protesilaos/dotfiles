@@ -142,7 +142,8 @@ old name followed by the new one."
   :group 'denote-dired)
 
 (defcustom denote-dired-post-rename-functions
-  (list #'denote-dired-rewrite-front-matter)
+  (list #'denote-dired-update-dired-buffers
+        #'denote-dired-rewrite-front-matter)
   "List of functions called after `denote-dired-rename-file'.
 Each function must accept three arguments: FILE, TITLE, and
 KEYWORDS.  The first is the full path to the file provided as a
@@ -177,6 +178,38 @@ everything works as intended."
    ((denote-dired--file-attributes-time file))
    (t (format-time-string denote--id-format))))
 
+(defun denote-dired--rename-buffer (old-name new-name)
+  "Rename OLD-NAME buffer to NEW-NAME, when appropriate."
+  (when-let ((old-buf (find-buffer-visiting old-name)))
+    (with-current-buffer old-buf
+      ;; We get the window to replace the buffer without affecting the
+      ;; window layout.
+      (let ((win (get-buffer-window old-buf)))
+        (rename-buffer (file-name-nondirectory new-name))
+        ;; TODO 2022-06-17: Is there a better way to avoid duplication
+        ;; between old and new?  It seems wrong to kill-buffer and then
+        ;; find-file.
+        (kill-buffer (find-buffer-visiting old-name))
+        (when win
+          (with-selected-window win
+            (find-file new-name)))))))
+
+(defun denote-dired--rename-dired-file-or-prompt ()
+  "Return Dired file at point, else prompt for one."
+  (or (dired-get-filename nil t)
+      (let* ((file (buffer-file-name))
+             (format (if file
+                         (format "Rename file Denote-style [%s]: " file)
+                       "Rename file Denote-style: ")))
+        (read-file-name format nil file t nil))))
+
+(defun denote-dired--rename-file-is-regular (file)
+  "Throw error is FILE is not regular, else return FILE."
+  (if (or (file-directory-p file)
+          (not (file-regular-p file)))
+      (user-error "Only rename regular files")
+    file))
+
 ;;;###autoload
 (defun denote-dired-rename-file (file title keywords)
   "Rename FILE to include TITLE and KEYWORDS.
@@ -208,7 +241,7 @@ notes, (ii) complement note-taking, such as by renaming
 attachments that the user adds to their notes."
   (interactive
    (list
-    (or (dired-get-filename nil t) (read-file-name "Rename file Denote-style: "))
+    (denote-dired--rename-file-is-regular (denote-dired--rename-dired-file-or-prompt))
     (denote--title-prompt)
     (denote--keywords-prompt)))
   (let* ((dir (file-name-directory file))
@@ -227,9 +260,20 @@ attachments that the user adds to their notes."
                      (propertize old-name 'face 'error)
                      (propertize (file-name-nondirectory new-name) 'face 'success)))
         (rename-file old-name new-name nil)
-        (when (derived-mode-p 'dired-mode)
-          (revert-buffer))
+        (denote-dired--rename-buffer old-name new-name)
         (run-hook-with-args 'denote-dired-post-rename-functions new-name title keywords)))))
+
+(defun denote-dired-update-dired-buffers (&rest _)
+  "Update Dired buffers of variable `denote-directory'.
+Can run after `denote-dired-post-rename-functions', though it
+ignores all its arguments."
+  (mapc
+   (lambda (buf)
+     (with-current-buffer buf
+       (when (and (eq major-mode 'dired-mode)
+                  (string-match-p (expand-file-name default-directory) (denote-directory)))
+         (revert-buffer))))
+   (buffer-list)))
 
 (defun denote-dired--file-meta-header (title date keywords id filetype)
   "Front matter for renamed notes.
@@ -269,48 +313,52 @@ The return value is for `denote--file-meta-header'."
     (_ (re-search-forward "^[\s\t]*$" nil t 1))))
 
 (defun denote-dired--edit-front-matter-p (file)
-  "Test if FILE should be subject to front matter rewrite."
+  "Test if FILE should be subject to front matter rewrite.
+This is relevant for `denote-dired-rewrite-front-matter': if FILE
+has no front matter, then we abort early instead of trying to
+replace what isn't there."
   (when-let ((ext (file-name-extension file)))
     (and (file-regular-p file)
          (file-writable-p file)
          (not (denote--file-empty-p file))
          (string-match-p "\\(md\\|org\\|txt\\)\\'" ext)
          ;; Heuristic to check if this is one of our notes
-         (string= default-directory (abbreviate-file-name (denote-directory))))))
+         (string= (expand-file-name default-directory) (denote-directory)))))
 
 (defun denote-dired-rewrite-front-matter (file title keywords)
   "Rewrite front matter of note after `denote-dired-rename-file'.
 The FILE, TITLE, and KEYWORDS are passed from the renaming
- command and are used to construct a new front matter block."
-  (when (denote-dired--edit-front-matter-p file)
-    (when-let* ((id (denote-retrieve--filename-identifier file))
-                (date (denote-retrieve--value-date file))
-                (filetype (denote-dired--filetype-heuristics file))
-                (new-front-matter (denote--file-meta-header title date keywords id filetype)))
-      (let (old-front-matter front-matter-delimiter)
-        (with-current-buffer (find-file-noselect file)
-          (save-excursion
-            (save-restriction
-              (widen)
-              (goto-char (point-min))
-              (setq front-matter-delimiter (denote-dired--front-matter-search-delimiter filetype))
-              (when front-matter-delimiter
-                (setq old-front-matter
-                      (buffer-substring-no-properties
-                       (point-min)
-                       (progn front-matter-delimiter (point)))))))
-          (when (and old-front-matter
-                     (y-or-n-p
-                      (format "%s\n%s\nReplace front matter?"
-                              (propertize old-front-matter 'face 'error)
-                              (propertize new-front-matter 'face 'success))))
-            (delete-region (point-min) front-matter-delimiter)
+command and are used to construct a new front matter block if
+appropriate."
+  (when-let* ((denote-dired--edit-front-matter-p file)
+              (id (denote-retrieve--filename-identifier file))
+              (date (denote-retrieve--value-date file))
+              (filetype (denote-dired--filetype-heuristics file))
+              (new-front-matter (denote--file-meta-header title date keywords id filetype)))
+    (let (old-front-matter front-matter-delimiter)
+      (with-current-buffer (find-file-noselect file)
+        (save-excursion
+          (save-restriction
+            (widen)
             (goto-char (point-min))
-            (insert new-front-matter)
-            ;; FIXME 2022-06-16: Instead of `delete-blank-lines', we
-            ;; should check if we added any new lines and delete only
-            ;; those.
-            (delete-blank-lines)))))))
+            (setq front-matter-delimiter (denote-dired--front-matter-search-delimiter filetype))
+            (when front-matter-delimiter
+              (setq old-front-matter
+                    (buffer-substring-no-properties
+                     (point-min)
+                     (progn front-matter-delimiter (point)))))))
+        (when (and old-front-matter
+                   (y-or-n-p
+                    (format "%s\n%s\nReplace front matter?"
+                            (propertize old-front-matter 'face 'error)
+                            (propertize new-front-matter 'face 'success))))
+          (delete-region (point-min) front-matter-delimiter)
+          (goto-char (point-min))
+          (insert new-front-matter)
+          ;; FIXME 2022-06-16: Instead of `delete-blank-lines', we
+          ;; should check if we added any new lines and delete only
+          ;; those.
+          (delete-blank-lines))))))
 
 ;;;; Extra fontification
 

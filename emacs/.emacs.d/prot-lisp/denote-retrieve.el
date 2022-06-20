@@ -73,11 +73,10 @@ FILE is a note in the variable `denote-directory'.
 
 Optional GROUP is a regexp construct for
 `denote-retrieve--search'."
-  (let ((default-directory (denote-directory)))
-    (with-temp-buffer
-      (insert-file-contents file)
-      (or (denote-retrieve--search regexp group)
-          nil))))
+  (with-temp-buffer
+    (insert-file-contents file)
+    (or (denote-retrieve--search regexp group)
+        nil)))
 
 (defun denote-retrieve--value-title (file &optional group)
   "Return title from FILE, optionally matching regexp GROUP."
@@ -89,12 +88,12 @@ Optional GROUP is a regexp construct for
 
 (defun denote-retrieve--read-file-prompt ()
   "Prompt for regular file in variable `denote-directory'."
-  (read-file-name "Select note: " (denote-directory) nil t nil #'file-regular-p))
+  (read-file-name "Select note: " (denote-directory) nil nil nil #'denote--only-note-p))
 
 (defun denote-retrieve--files-in-output (files)
   "Return list of FILES from `find' output."
   (delq nil (mapcar (lambda (f)
-                      (when (file-regular-p f) f))
+                      (when (denote--only-note-p f) f))
                     files)))
 
 ;; TODO 2022-06-15: Maybe we can do the same in a more standard way?
@@ -106,22 +105,24 @@ Optional GROUP is a regexp construct for
   (let* ((default-directory (denote-directory))
          (file (file-name-nondirectory (buffer-file-name))))
     (denote-retrieve--files-in-output
-     (process-lines
-      "find"
-      default-directory
-      "-maxdepth" "1"
-      "-type" "f"
-      "!" "-name" file
-      "-exec"
-      grep-program
-      "--color=never"
-      "-m"
-      "1"
-      "-e"
-      identifier
-      "{}"
-      ";"
-      "-print"))))
+     (sort
+      (process-lines
+       "find"
+       default-directory
+       "-maxdepth" "1"
+       "-type" "f"
+       "!" "-name" file
+       "-exec"
+       grep-program
+       "--color=never"
+       "-m"
+       "1"
+       "-e"
+       identifier
+       "{}"
+       ";"
+       "-print")
+      #'string-lessp))))
 
 (provide 'denote-retrieve)
 ;;; denote-retrieve.el ends here

@@ -90,22 +90,30 @@
 
 ;;;; User options
 
+;; About the autoload: (info "(elisp) File Local Variables")
+
+;;;###autoload (put 'denote-directory 'safe-local-variable (lambda (val) (or (eq val 'local) (eq val 'default-directory))))
 (defcustom denote-directory (expand-file-name "~/Documents/notes/")
   "Directory for storing personal notes.
+
+A safe local value of either `default-directory' or `local' can
+be added as a value in a .dir-local.el file.  Do this if you
+intend to use multiple directories for your notes while still
+relying on a global value (which is the value of this variable).
+The Denote manual has a sample (search for '.dir-locals.el').
+
 If you intend to reference this variable in Lisp, consider using
 the function `denote-directory' instead: it returns the path as a
-directory."
+directory and also checks if a safe local value should be used."
   :group 'denote
+  :safe (lambda (val) (or (eq val 'local) (eq val 'default-directory)))
   :type 'directory)
 
 (defcustom denote-known-keywords
   '("emacs" "philosophy" "politics" "economics")
   "List of strings with predefined keywords for `denote'.
-
-The implicit assumption is that a keyword is a single word.  If
-you need a keyword to be multiple words long, use underscores to
-separate them.  Do not use hyphens or other characters, as those
-are assumed to demarcate distinct keywords."
+Also see user options: `denote-allow-multi-word-keywords',
+`denote-infer-keywords', `denote-sort-keywords'."
   :group 'denote
   :type '(repeat string))
 
@@ -230,7 +238,9 @@ We consider those characters illigal for our purposes.")
 
 (defun denote-directory ()
   "Return path of variable `denote-directory' as a proper directory."
-  (let ((path denote-directory))
+  (let* ((val (or (buffer-local-value 'denote-directory (current-buffer))
+                  denote-directory))
+         (path (if (or (eq val 'default-directory) (eq val 'local)) default-directory val)))
     (unless (file-directory-p path)
       (make-directory path t))
     (file-name-as-directory path)))
@@ -278,18 +288,31 @@ trailing hyphen."
   "Return non-nil if FILE is empty."
   (zerop (or (file-attribute-size (file-attributes file)) 0)))
 
+(defun denote--only-note-p (file)
+  "Make sure FILE is an actual Denote note.
+FILE is relative to the variable `denote-directory'."
+  (and (not (file-directory-p file))
+       (file-regular-p file)
+       (string-match-p (concat "\\b" denote--id-regexp) file)
+       (not (string-match-p "[#~]\\'" file))))
+
+(defun denote--current-file-is-note-p ()
+  "Return non-nil if current file likely is a Denote note."
+  (and (or (string-match-p denote--id-regexp (buffer-file-name))
+           (string-match-p denote--id-regexp (buffer-name)))
+       (string= (expand-file-name default-directory) (denote-directory))))
+
 ;;;; Keywords
 
 (defun denote--directory-files (&optional absolute)
   "List note files, assuming flat directory.
 If optional ABSOLUTE, show full paths, else only show base file
 names that are relative to the variable `denote-directory'."
-  (let* ((dir (denote-directory))
-         (default-directory dir))
+  (let ((default-directory (denote-directory)))
     (seq-remove
-     (lambda (file)
-       (file-directory-p file))
-     (directory-files dir absolute directory-files-no-dot-files-regexp t))))
+     (lambda (f)
+       (not (denote--only-note-p f)))
+     (directory-files default-directory absolute directory-files-no-dot-files-regexp t))))
 
 (defun denote--directory-files-matching-regexp (regexp &optional no-check-current)
   "Return list of files matching REGEXP.
@@ -299,7 +322,8 @@ part of the list."
    nil
    (mapcar
     (lambda (f)
-      (when (and (string-match-p regexp f)
+      (when (and (denote--only-note-p f)
+                 (string-match-p regexp f)
                  (or no-check-current
                      (not (string= (file-name-nondirectory (buffer-file-name)) f))))
         f))
@@ -496,7 +520,7 @@ With optional DIR, use it instead of variable `denote-directory'.
 With optional ID, use it else format the current time."
   (setq denote-last-path
         (denote--format-file
-         (or dir (file-name-as-directory denote-directory))
+         (or dir (file-name-as-directory (denote-directory)))
          (or id (format-time-string denote--id-format))
          (denote--sluggify-keywords keywords)
          (denote--sluggify title)
@@ -543,7 +567,7 @@ capture).
 
 Optional DATE is passed to `denote--date', while optional ID is
 used to construct the path's identifier."
-  (let* ((default-directory denote-directory)
+  (let* ((default-directory (denote-directory))
          (p (or path (denote--path title keywords default-directory id)))
          (buffer (unless path (find-file p)))
          (header (denote--file-meta-header
