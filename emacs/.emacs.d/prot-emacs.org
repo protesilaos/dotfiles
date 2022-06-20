@@ -7784,11 +7784,11 @@ actually useful.  Well done, Daniel!
 #+begin_src emacs-lisp
 (prot-emacs-elpa-package 'osm
   (let ((map global-map))
-    (define-key map (kbd "C-c o h") #'osm-home)
-    (define-key map (kbd "C-c o s") #'osm-search)
-    (define-key map (kbd "C-c o t") #'osm-server)
-    (define-key map (kbd "C-c o g") #'osm-goto)
-    (define-key map (kbd "C-c o j") #'osm-bookmark-jump))
+    (define-key map (kbd "C-c O h") #'osm-home)
+    (define-key map (kbd "C-c O s") #'osm-search)
+    (define-key map (kbd "C-c O t") #'osm-server)
+    (define-key map (kbd "C-c O g") #'osm-goto)
+    (define-key map (kbd "C-c O j") #'osm-bookmark-jump))
 
   ;; Load Org link support
   (with-eval-after-load 'org
