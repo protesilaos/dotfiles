@@ -356,6 +356,9 @@ alternate, thus toggling MODE."
         (make-local-variable var)
         (push (lambda () (kill-local-variable var)) logos--restore)))))
 
+(defvar logos-focus-mode-map (make-sparse-keymap)
+  "The keymap of `logos-focus-mode'.")
+
 (define-minor-mode logos-focus-mode
   "Buffer-local mode for focused editing.
 When enabled it sets the buffer-local value of these user
@@ -364,6 +367,7 @@ options: `logos-scroll-lock', `logos-variable-pitch',
 `logos-buffer-read-only', `logos-olivetti', `logos-hide-fringe'."
   :init-value nil
   :global nil
+  :keymap logos-focus-mode-map
   :lighter " Λ" ; lambda majuscule
   (mapc #'funcall logos--restore)
   (logos--remove-fringe-remap)
