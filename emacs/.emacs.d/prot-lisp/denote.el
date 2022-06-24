@@ -4,6 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/denote
+;; Mailing list: https://lists.sr.ht/~protesilaos/denote
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "27.2"))
 
@@ -46,15 +47,14 @@
 ;;
 ;; * Composability :: Be a good Emacs citizen, by integrating with other
 ;;   packages or built-in functionality instead of re-inventing
-;;   functions such as for filtering or greping.  Do not introduce
-;;   strong dependencies on specific libraries.  The author of Denote
+;;   functions such as for filtering or greping.  The author of Denote
 ;;   (Protesilaos, aka "Prot") writes ordinary notes in plain text
-;;   (=.txt=), switching to an Org file only when its expanded set of
-;;   functionality is required for the task at hand (see the manual's
-;;   "Points of entry").
+;;   (`.txt'), switching on demand to an Org file only when its expanded
+;;   set of functionality is required for the task at hand (see the
+;;   manual's "Points of entry").
 ;;
 ;; * Portability :: Notes are plain text and should remain portable.
-;;   The way Denote writes file names, the front matter it included in
+;;   The way Denote writes file names, the front matter it includes in
 ;;   the note's header, and the links it establishes must all be
 ;;   adequately usable with standard Unix tools.  No need for a databse
 ;;   or some specialised software.  As Denote develops and this manual
@@ -68,8 +68,9 @@
 ;;   Notes are atomic (one file per note) and have a unique identifier.
 ;;   However, Denote does not enforce a particular methodology for
 ;;   knowledge management, such as a restricted vocabulary or mutually
-;;   exclusive sets of keywords.  It is up to the user to apply the
-;;   requisite rigor and/or creativity in pursuit of their preferred
+;;   exclusive sets of keywords.  Denote also does not check if the user
+;;   writes thematically atomic notes.  It is up to the user to apply
+;;   the requisite rigor and/or creativity in pursuit of their preferred
 ;;   workflow (see the manual's "Writing metanotes").
 ;;
 ;; * Hackability :: Denote's code base consists of small and reusable
@@ -245,6 +246,8 @@ We consider those characters illigal for our purposes.")
         `(metadata (category . ,category))
       (complete-with-action action candidates string pred))))
 
+(defvar org-id-extra-files)
+
 (defun denote-directory ()
   "Return path of variable `denote-directory' as a proper directory."
   (let* ((val (or (buffer-local-value 'denote-directory (current-buffer))
@@ -252,6 +255,8 @@ We consider those characters illigal for our purposes.")
          (path (if (or (eq val 'default-directory) (eq val 'local)) default-directory val)))
     (unless (file-directory-p path)
       (make-directory path t))
+    (when (require 'org-id nil :noerror)
+      (setq org-id-extra-files (directory-files path nil "\.org$")))
     (file-name-as-directory path)))
 
 (defun denote--extract (regexp str &optional group)
@@ -486,10 +491,12 @@ is specific to this variable: it expect a delimiter such as
   "Final delimiter for plain text front matter.")
 
 (defvar denote-org-front-matter
-  "#+title:      %s
-#+date:       %s
-#+filetags:   %s
-#+identifier: %s
+  ":PROPERTIES:
+:ID:          %4$s
+:END:
+#+title:      %1$s
+#+date:       %2$s
+#+filetags:   %3$s
 \n"
   "Org front matter value for `format'.
 The order of the arguments is TITLE, DATE, KEYWORDS, ID.  If you

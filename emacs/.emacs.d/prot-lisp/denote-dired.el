@@ -4,6 +4,7 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; URL: https://git.sr.ht/~protesilaos/denote
+;; Mailing list: https://lists.sr.ht/~protesilaos/denote
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "27.2"))
 
@@ -243,7 +244,7 @@ attachments that the user adds to their notes."
                     keywords
                     (denote--sluggify title)
                     extension))
-         (max-mini-window-height 0.25)) ; allow minibuffer to be resized
+         (max-mini-window-height 0.33)) ; allow minibuffer to be resized
     (unless (string= old-name (file-name-nondirectory new-name))
       (when (y-or-n-p
              (format "Rename %s to %s?"
