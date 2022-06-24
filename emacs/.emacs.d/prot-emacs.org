@@ -4432,7 +4432,7 @@ manual for more on the matter):
   (setq prot-vc-git-log-edit-show-commit-count 10)
   (setq prot-vc-shell-output "*prot-vc-output*")
   (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
-  (add-to-list' log-edit-headers-alist '("Amend"))
+  (add-to-list 'log-edit-headers-alist '("Amend"))
 
   ;; This refashions log view and log edit buffers
   (prot-vc-git-setup-mode 1)
