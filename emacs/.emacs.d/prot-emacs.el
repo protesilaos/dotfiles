@@ -186,7 +186,7 @@
         modus-themes-bold-constructs nil
         modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers nil
-        modus-themes-intense-mouseovers nil
+        modus-themes-intense-mouseovers t
         modus-themes-deuteranopia t
         modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui t
@@ -198,7 +198,7 @@
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense' OR `faint'.
-        modus-themes-lang-checkers '(text-also)
+        modus-themes-lang-checkers '(text-also straight-underline intense)
 
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
@@ -216,7 +216,7 @@
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `faint', `yellow-comments', `green-strings', `alt-syntax'
-        modus-themes-syntax '(yellow-comments)
+        modus-themes-syntax nil
 
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -245,7 +245,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(background bold italic gray)
+        modus-themes-prompts nil
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -261,8 +261,8 @@
         ;; covered in `modus-themes-weights'.  Bold is used in the absence
         ;; of an explicit WEIGHT.
         modus-themes-completions
-        '((matches . (semibold underline italic background intense))
-          (selection . (extrabold intense accented))
+        '((matches . (semibold underline italic intense))
+          (selection . (extrabold))
           (popup . (extrabold)))
 
         modus-themes-mail-citations nil ; {nil,'intense,'faint,'monochrome}
@@ -270,10 +270,10 @@
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend accented)
+        modus-themes-region '(no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
-        modus-themes-diffs 'desaturated
+        modus-themes-diffs nil
 
         modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
 
@@ -1342,13 +1342,27 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (setq denote-front-matter-date-format nil) ; change this to `org-timestamp' or custom string
 
+  ;; You will not need to `require' all those individually once the
+  ;; package is available.
+  (require 'denote-retrieve)
   (require 'denote-link)
 
-  ;; If you use Markdown or plain text files (Org renders links as
-  ;; buttons right away)
+  ;; If you want links to and from Org notes to use the standard 'id:'
+  ;; link type instead of 'denote:'.
+  (setq denote-link-use-org-id t)
+
+  ;; By default, we fontify backlinks in their bespoke buffer.
+  (setq denote-link-fontify-backlinks t)
+
+  ;; Also see `denote-link-backlinks-display-buffer-action' which is a bit
+  ;; advanced.
+
+  ;; If you use Markdown or plain text files (Org renders links as buttons
+  ;; right away)
   (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
 
   (require 'denote-dired)
+  (setq denote-dired-rename-expert nil)
 
   ;; I use different ways to specify a path for demo purposes.
   (setq denote-dired-directories
@@ -1607,7 +1621,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq prot-vc-git-log-edit-show-commit-count 10)
   (setq prot-vc-shell-output "*prot-vc-output*")
   (setq prot-vc-patch-output-dirs (list "~/" "~/Desktop/"))
-  (add-to-list' log-edit-headers-alist '("Amend"))
+  (add-to-list 'log-edit-headers-alist '("Amend"))
 
   ;; This refashions log view and log edit buffers
   (prot-vc-git-setup-mode 1)
