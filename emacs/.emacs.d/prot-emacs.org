@@ -3734,13 +3734,27 @@ meantime, watch the [[https://protesilaos.com/codelog/2022-06-18-denote-demo/][d
 
   (setq denote-front-matter-date-format nil) ; change this to `org-timestamp' or custom string
 
+  ;; You will not need to `require' all those individually once the
+  ;; package is available.
+  (require 'denote-retrieve)
   (require 'denote-link)
 
-  ;; If you use Markdown or plain text files (Org renders links as
-  ;; buttons right away)
+  ;; If you want links to and from Org notes to use the standard 'id:'
+  ;; link type instead of 'denote:'.
+  (setq denote-link-use-org-id t)
+
+  ;; By default, we fontify backlinks in their bespoke buffer.
+  (setq denote-link-fontify-backlinks t)
+
+  ;; Also see `denote-link-backlinks-display-buffer-action' which is a bit
+  ;; advanced.
+
+  ;; If you use Markdown or plain text files (Org renders links as buttons
+  ;; right away)
   (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
 
   (require 'denote-dired)
+  (setq denote-dired-rename-expert nil)
 
   ;; I use different ways to specify a path for demo purposes.
   (setq denote-dired-directories
