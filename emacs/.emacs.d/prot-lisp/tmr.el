@@ -42,9 +42,19 @@
   "TMR May Ring: set timers using a simple notation."
   :group 'data)
 
-(defcustom tmr-description-list 'tmr--description-hist
+(define-obsolete-variable-alias
+  'tmr-descriptions-list
+  'tmr-description-list
+  "0.4.0")
+
+(defcustom tmr-description-list 'tmr-description-history
   "List of timer description presets.
-The value can either be a variable symbol or a list of strings."
+The value can be either a list of strings or the symbol of a
+variable that holds a list of strings.
+
+The default value of `tmr-description-history', is the name of a
+variable that contains input provided by the user at the relevant
+prompt of the `tmr' and `tmr-with-description' commands."
   :type '(choice symbol (repeat string)))
 
 (defcustom tmr-sound-file
@@ -64,14 +74,19 @@ Each function must accept a timer as argument."
 
 (declare-function tmr-notification-notify "ext:tmr-notification.el" (title message))
 
-(defcustom tmr-timer-completed-functions
-  (list #'tmr-print-message-for-completed-timer
+(define-obsolete-variable-alias
+  'tmr-timer-completed-functions
+  'tmr-timer-finished-functions
+  "0.4.0")
+
+(defcustom tmr-timer-finished-functions
+  (list #'tmr-print-message-for-finished-timer
         #'tmr-sound-play
         #'tmr-notification-notify)
-  "Functions to execute when a timer is completed.
+  "Functions to execute when a timer is finished.
 Each function must accept a timer as argument."
   :type 'hook
-  :options (list #'tmr-print-message-for-completed-timer
+  :options (list #'tmr-print-message-for-finished-timer
                  #'tmr-sound-play
                  #'tmr-notification-notify))
 
@@ -92,7 +107,7 @@ Each function must accept a timer as argument."
    nil
    :read-only t
    :documentation "Number of seconds after `start' indicating when the timer finishes.")
-  (donep
+  (finishedp
    nil
    :read-only nil
    :documentation "Non-nil if the timer is finished.")
@@ -113,21 +128,23 @@ Each function must accept a timer as argument."
   "Return a human-readable description for TIMER."
   (let ((start (tmr--format-creation-date timer))
         (end (tmr--format-end-date timer))
+        (remaining (tmr--format-remaining timer "finished" "in "))
         (description (tmr--timer-description timer)))
     ;; We prefix it with TMR just so it is easier to find in
     ;; `view-echo-area-messages'.  The concise wording makes it flexible
     ;; enough to be used when starting a timer but also when cancelling
     ;; one: check `tmr-print-message-for-created-timer' and
     ;; `tmr-print-message-for-cancelled-timer'.
-    (format "TMR start at %s; end at %s%s"
+    (format "TMR start at %s; end at %s; %s%s"
             (propertize start 'face 'success)
             (propertize end 'face 'error)
+            remaining
             (if description
                 (format " [%s]" (propertize description 'face 'bold))
               ""))))
 
-(defun tmr--long-description-for-completed-timer (timer)
-  "Return a human-readable description of completed TIMER.
+(defun tmr--long-description-for-finished-timer (timer)
+  "Return a human-readable description of finished TIMER.
 This includes the creation and completion dates as well as the
 optional `tmr--timer-description'."
   (let ((start (tmr--format-creation-date timer))
@@ -147,11 +164,13 @@ This is like `tmr--long-description' with the inclusion of the
 original input for TIMER's duration."
   (let ((start (tmr--format-creation-date timer))
         (end (tmr--format-end-date timer))
+        (remaining (tmr--format-remaining timer "finished" "in "))
         (description (tmr--timer-description timer))
         (input (tmr--timer-input timer)))
-    (format "TMR start at %s; end at %s%s (input was '%s')"
+    (format "TMR start at %s; end at %s; %s%s (input was '%s')"
             (propertize start 'face 'success)
             (propertize end 'face 'error)
+            remaining
             (if description
                 (format " [%s]" (propertize description 'face 'bold))
               "")
@@ -166,19 +185,22 @@ original input for TIMER's duration."
   (tmr--format-time (time-add (tmr--timer-creation-date timer)
                               (tmr--timer-duration timer))))
 
-(defun tmr--format-remaining (timer)
-  "Format remaining time of TIMER."
-  (if (tmr--timer-donep timer)
-      "✔"
+(defun tmr--format-remaining (timer &optional finished prefix)
+  "Format remaining time of TIMER.
+FINISHED is the string used for finished timers.
+PREFIX is used as prefix for running timers."
+  (setq prefix (or prefix ""))
+  (if (tmr--timer-finishedp timer)
+      (or finished "✔")
     (let ((secs (round (- (float-time
                            (time-add (tmr--timer-creation-date timer)
                                      (tmr--timer-duration timer)))
                           (float-time)))))
       (if (> secs 3600)
-          (format "%sh %sm" (/ secs 3600) (/ (% secs 3600) 60))
+          (format "%s%sh %sm" prefix (/ secs 3600) (/ (% secs 3600) 60))
         (if (> secs 60)
-            (format "%sm %ss" (/ secs 60) (% secs 60))
-          (format "%ss" secs))))))
+            (format "%s%sm %ss" prefix (/ secs 60) (% secs 60))
+          (format "%s%ss" prefix secs))))))
 
 (defun tmr--format-time (time)
   "Return a human-readable string representing TIME."
@@ -249,7 +271,7 @@ cancelling the original one."
 (defun tmr-remove-finished ()
   "Remove all finished timers."
   (interactive)
-  (setq tmr--timers (cl-delete-if #'tmr--timer-donep tmr--timers))
+  (setq tmr--timers (cl-delete-if #'tmr--timer-finishedp tmr--timers))
   (run-hooks 'tmr--update-hook))
 
 (defvar tmr--read-timer-hook nil
@@ -264,21 +286,23 @@ there are no timers, return nil.
 If optional ACTIVE is non-nil, limit the list of timers to those
 that are still running.
 
-If optional DESCRIPTION is provided use it to format the
+If optional DESCRIPTION function is provided use it to format the
 completion candidates."
   (or
    (run-hook-with-args-until-success 'tmr--read-timer-hook)
    (pcase
        (if active
-           (cl-remove-if #'tmr--timer-donep tmr--timers)
+           (cl-remove-if #'tmr--timer-finishedp tmr--timers)
          tmr--timers)
      ('nil (user-error "No timers available"))
      (`(,timer) timer)
      (timers
       (let* ((formatter (or description #'tmr--long-description))
-             (timer-descriptions (mapcar formatter timers))
-             (selection (completing-read "Timer: " timer-descriptions nil t)))
-        (cl-find selection timers :test #'string= :key formatter))))))
+             (timer-alist (mapcar
+                           (lambda (x)
+                             (cons (funcall formatter x) x))
+                           timers)))
+        (cdr (assoc (completing-read "Timer: " timer-alist nil t) timer-alist)))))))
 
 ;; NOTE 2022-04-21: Emacs has a `play-sound' function but it only
 ;; supports .wav and .au formats.  Also, it does not work on all
@@ -297,29 +321,34 @@ TIMER is unused."
   "Show a `message' informing the user that TIMER was created."
   (message "%s" (tmr--long-description timer)))
 
-(defun tmr-print-message-for-completed-timer (timer)
-  "Show a `message' informing the user that TIMER has completed."
-  (message "%s" (tmr--long-description-for-completed-timer timer)))
+(defun tmr-print-message-for-finished-timer (timer)
+  "Show a `message' informing the user that TIMER has finished."
+  (message "%s" (tmr--long-description-for-finished-timer timer)))
+
+(define-obsolete-function-alias
+  'tmr-print-message-for-completed-timer
+  'tmr-print-message-for-finished-timer
+  "0.4.0")
 
 (defun tmr-print-message-for-cancelled-timer (timer)
   "Show a `message' informing the user that TIMER is cancelled."
   (message "Cancelled: <<%s>>" (tmr--long-description timer)))
 
-(defvar tmr--duration-hist '()
+(defvar tmr-duration-history '()
   "Minibuffer history of `tmr' durations.")
 
 (defun tmr--read-duration (&optional default)
   "Ask the user to type a duration.
 If DEFAULT is provided, use that as a default."
-  (let ((def (or default (nth 0 tmr--duration-hist))))
+  (let ((def (or default (nth 0 tmr-duration-history))))
     (read-string
      (if def
          (format "N minutes for timer (append `h' or `s' for other units) [%s]: " def)
        "N minutes for timer (append `h' or `s' for other units): ")
      nil
-     'tmr--duration-hist def)))
+     'tmr-duration-history def)))
 
-(defvar tmr--description-hist '()
+(defvar tmr-description-history '()
   "Minibuffer history of `tmr' descriptions.")
 
 (defun tmr--description-prompt (&optional default)
@@ -339,13 +368,13 @@ If optional DEFAULT is provided use it as a default candidate."
                                (symbol-value tmr-description-list))
                              string predicate)))
    nil nil nil
-   'tmr--description-hist default))
+   'tmr-description-history default))
 
 (defun tmr--complete (timer)
-  "Mark TIMER as completed and execute `tmr-timer-completed-functions'."
-  (setf (tmr--timer-donep timer) t)
+  "Mark TIMER as finished and execute `tmr-timer-finished-functions'."
+  (setf (tmr--timer-finishedp timer) t)
   (run-hooks 'tmr--update-hook)
-  (run-hook-with-args 'tmr-timer-completed-functions timer))
+  (run-hook-with-args 'tmr-timer-finished-functions timer))
 
 ;;;###autoload
 (defun tmr (time &optional description)
@@ -402,9 +431,9 @@ user uses a prefix argument (\\[universal-argument])."
 ;;;###autoload
 (defun tmr-clone (timer &optional prompt)
   "Create a new timer by cloning TIMER.
-With optional PROMPT, such as a prefix argument (C-u), ask for
-confirmation about the duration. The description is asked only
-when the prefix argument is given twice (C-u C-u).
+With optional PROMPT, such as a prefix argument, ask for
+confirmation about the duration.  When PROMPT is a double prefix
+argument, ask for a description as well.
 
 Without a PROMPT, clone TIMER outright."
   (interactive

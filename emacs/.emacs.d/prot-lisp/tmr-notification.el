@@ -59,7 +59,7 @@ such notifications."
 Read: (info \"(elisp) Desktop Notifications\") for details."
   (if (featurep 'dbusbind)
       (let ((title "TMR May Ring (Emacs tmr package)")
-            (body (tmr--long-description-for-completed-timer timer)))
+            (body (tmr--long-description-for-finished-timer timer)))
         (notifications-notify
          :title title
          :body body

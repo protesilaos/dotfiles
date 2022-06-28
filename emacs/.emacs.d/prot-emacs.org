@@ -3966,7 +3966,7 @@ Read the manual for further details: https://protesilaos.com/emacs/tmr.
   (setq tmr-sound-file
         "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
   (setq tmr-notification-urgency 'normal)
-  (setq tmr-descriptions-list (list "Boil water" "Prepare tea" "Bake bread"))
+  (setq tmr-description-list 'tmr-description-history)
 
   ;; You do not need these if you install the package.
   (require 'tmr-notification)
