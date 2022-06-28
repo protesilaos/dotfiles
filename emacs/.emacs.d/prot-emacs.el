@@ -1371,10 +1371,10 @@ Useful for prompts such as `eval-expression' and `shell-command'."
               (expand-file-name "~/Documents/books")))
 
   ;; Generic (great if you rename files Denote-style in lots of places):
-  ;; (add-hook 'dired-mode-hook #'denote-dired-mode)
+  (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;;
   ;; OR if only want it in `denote-dired-directories':
-  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+  ;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 
   ;; Here is a custom, user-level command from one of the examples we
   ;; showed in this manual.  We define it here and add it to a key binding
@@ -1477,10 +1477,9 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (setq tmr-sound-file
         "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
   (setq tmr-notification-urgency 'normal)
-  (setq tmr-descriptions-list (list "Boil water" "Prepare tea" "Bake bread"))
+  (setq tmr-description-list 'tmr-description-history)
 
   ;; You do not need these if you install the package.
-  (require 'tmr-sound)
   (require 'tmr-notification)
   (require 'tmr-tabulated)
 
