@@ -3,8 +3,8 @@
 ;; Copyright (C) 2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Maintainer: Denote Development <~protesilaos/denote@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/denote
-;; Mailing list: https://lists.sr.ht/~protesilaos/denote
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "27.2"))
 
@@ -38,7 +38,7 @@
 The match that needs to be extracted is explicityly marked as
 group 1.")
 
-(defconst denote-retrieve--identifier-regexp
+(defconst denote-retrieve--id-front-matter-regexp
   "^.?.?\\b\\(?:identifier\\|[Ii][Dd]\\)\\s-*[:=]\\s-*[\"']?\\(?1:[0-9T]+\\)[\"']?"
   "Regular expression for identifier key and value.
 The match that needs to be extracted is explicityly marked as

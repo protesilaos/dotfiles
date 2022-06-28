@@ -3,8 +3,8 @@
 ;; Copyright (C) 2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Maintainer: Denote Development <~protesilaos/denote@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/denote
-;; Mailing list: https://lists.sr.ht/~protesilaos/denote
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "27.2"))
 
@@ -95,7 +95,7 @@
 ;;; Code:
 
 (defgroup denote ()
-  "Simple notes with a strict file-naming scheme."
+  "Simple notes with an efficient file-naming scheme."
   :group 'files)
 
 ;;;; User options
