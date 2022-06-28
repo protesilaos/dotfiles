@@ -4,9 +4,8 @@
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>,
 ;;         Damien Cassou <damien@cassou.me>
-;; Maintainer: Protesilaos Stavrou <info@protesilaos.com>
+;; Maintainer: TMR Development <~protesilaos/tmr@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/tmr
-;; Mailing list: https://lists.sr.ht/~protesilaos/tmr
 ;; Version: 0.3.1
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: convenience, timer
@@ -104,10 +103,10 @@ Each function must accept a timer as argument."
    nil
    :read-only t
    :documentation "Time at which the timer was created.")
-  (duration
+  (end-date
    nil
    :read-only t
-   :documentation "Number of seconds after `start' indicating when the timer finishes.")
+   :documentation "Time at which the timer finishes.")
   (finishedp
    nil
    :read-only nil
@@ -183,8 +182,7 @@ original input for TIMER's duration."
 
 (defun tmr--format-end-date (timer)
   "Return a string representing when TIMER should finish."
-  (tmr--format-time (time-add (tmr--timer-creation-date timer)
-                              (tmr--timer-duration timer))))
+  (tmr--format-time (tmr--timer-end-date timer)))
 
 (defun tmr--format-remaining (timer &optional finished prefix)
   "Format remaining time of TIMER.
@@ -193,9 +191,7 @@ PREFIX is used as prefix for running timers."
   (setq prefix (or prefix ""))
   (if (tmr--timer-finishedp timer)
       (or finished "✔")
-    (let ((secs (round (- (float-time
-                           (time-add (tmr--timer-creation-date timer)
-                                     (tmr--timer-duration timer)))
+    (let ((secs (round (- (float-time (tmr--timer-end-date timer))
                           (float-time)))))
       (if (> secs 3600)
           (format "%s%sh %sm" prefix (/ secs 3600) (/ (% secs 3600) 60))
@@ -303,7 +299,11 @@ completion candidates."
                            (lambda (x)
                              (cons (funcall formatter x) x))
                            timers)))
-        (cdr (assoc (completing-read "Timer: " timer-alist nil t) timer-alist)))))))
+        (cdr (assoc (completing-read
+                     "Timer: "
+                     (tmr--completion-table timer-alist 'tmr-timer)
+                     nil t)
+                    timer-alist)))))))
 
 ;; NOTE 2022-04-21: Emacs has a `play-sound' function but it only
 ;; supports .wav and .au formats.  Also, it does not work on all
@@ -359,17 +359,11 @@ If optional DEFAULT is provided use it as a default candidate."
    (if default
        (format "Description for this tmr [%s]: " default)
      "Description for this tmr: ")
-   (lambda (string predicate action)
-     (if (eq action 'metadata)
-         `(metadata (display-sort-function . ,#'identity)
-                    (cycle-sort-function . ,#'identity))
-       (complete-with-action action
-                             (if (listp tmr-description-list)
-                                 tmr-description-list
-                               (symbol-value tmr-description-list))
-                             string predicate)))
-   nil nil nil
-   'tmr-description-history default))
+   (tmr--completion-table
+    (if (listp tmr-description-list)
+        tmr-description-list
+      (symbol-value tmr-description-list)))
+   nil nil nil 'tmr-description-history default))
 
 (defun tmr--complete (timer)
   "Mark TIMER as finished and execute `tmr-timer-finished-functions'."
@@ -405,7 +399,7 @@ command `tmr-with-description' instead of this one."
          (timer (tmr--timer-create
                  :description description
                  :creation-date creation-date
-                 :duration duration
+                 :end-date (time-add creation-date duration)
                  :input time))
          (timer-object (run-with-timer
                         duration nil
@@ -448,6 +442,15 @@ Without a PROMPT, clone TIMER outright."
    (if (equal prompt '(16))
        (tmr--description-prompt (tmr--timer-description timer))
      (tmr--timer-description timer))))
+
+(defun tmr--completion-table (candidates &optional category)
+  "Return completion table for CANDIDATES of CATEGORY with sorting disabled."
+  (lambda (str pred action)
+    (if (eq action 'metadata)
+        `(metadata (display-sort-function . identity)
+                   (cycle-sort-function . identity)
+                   (category . ,category))
+      (complete-with-action action candidates str pred))))
 
 (provide 'tmr)
 ;;; tmr.el ends here
