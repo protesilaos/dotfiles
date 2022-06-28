@@ -3,8 +3,8 @@
 ;; Copyright (C) 2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Maintainer: Cursory Development <~protesilaos/cursory@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/cursory
-;; Mailing list: https://lists.sr.ht/~protesilaos/cursory
 ;; Version: 0.1.4
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: convenience, cursor
@@ -27,9 +27,9 @@
 ;;; Commentary:
 ;;
 ;; Cursory provides a thin wrapper around built-in variables that affect
-;; the style of the Emacs cursor.  The intent is to allow the user to
-;; define preset configurations such as "block with slow blinking" or "bar
-;; with fast blinking" and set them on demand.
+;; the style of the Emacs cursor on graphical terminals.  The intent is to
+;; allow the user to define preset configurations such as "block with slow
+;; blinking" or "bar with fast blinking" and set them on demand.
 ;;
 ;; The user option `cursory-presets' holds the presets.  The command
 ;; `cursory-set-preset' is used to select one among them.  Selection
