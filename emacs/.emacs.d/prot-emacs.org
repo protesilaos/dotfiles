@@ -1,10 +1,10 @@
-#+TITLE: GNU Emacs package configuration file
-#+AUTHOR: Protesilaos Stavrou
-#+EMAIL: public@protesilaos.com
-#+OPTIONS: toc:nil
-#+STARTUP: content indent
-#+MACRO: export-date (eval (format-time-string "%F %R %z" (current-time)))
-#+MACRO: count-words (eval (count-words (point-min) (point-max)))
+#+title:    GNU Emacs package configuration file
+#+author:   Protesilaos Stavrou
+#+email:    public@protesilaos.com
+#+options:  toc:nil
+#+startup:  content indent
+#+macro:    export-date (eval (format-time-string "%F %R %z" (current-time)))
+#+macro:    count-words (eval (count-words (point-min) (point-max)))
 
 + Created: 2019-08-15
 + Updated: *{{{export-date}}}*.
