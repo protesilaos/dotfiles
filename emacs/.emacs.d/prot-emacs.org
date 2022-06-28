@@ -3763,10 +3763,10 @@ meantime, watch the [[https://protesilaos.com/codelog/2022-06-18-denote-demo/][d
               (expand-file-name "~/Documents/books")))
 
   ;; Generic (great if you rename files Denote-style in lots of places):
-  ;; (add-hook 'dired-mode-hook #'denote-dired-mode)
+  (add-hook 'dired-mode-hook #'denote-dired-mode)
   ;;
   ;; OR if only want it in `denote-dired-directories':
-  (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+  ;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 
   ;; Here is a custom, user-level command from one of the examples we
   ;; showed in this manual.  We define it here and add it to a key binding
