@@ -36,7 +36,8 @@
 
 ;;; Code:
 
-(require 'cl-lib)
+(require 'seq)
+(eval-when-compile (require 'cl-lib))
 
 (defgroup tmr ()
   "TMR May Ring: set timers using a simple notation."
@@ -271,7 +272,7 @@ cancelling the original one."
 (defun tmr-remove-finished ()
   "Remove all finished timers."
   (interactive)
-  (setq tmr--timers (cl-delete-if #'tmr--timer-finishedp tmr--timers))
+  (setq tmr--timers (seq-remove #'tmr--timer-finishedp tmr--timers))
   (run-hooks 'tmr--update-hook))
 
 (defvar tmr--read-timer-hook nil
@@ -292,7 +293,7 @@ completion candidates."
    (run-hook-with-args-until-success 'tmr--read-timer-hook)
    (pcase
        (if active
-           (cl-remove-if #'tmr--timer-finishedp tmr--timers)
+           (seq-remove #'tmr--timer-finishedp tmr--timers)
          tmr--timers)
      ('nil (user-error "No timers available"))
      (`(,timer) timer)

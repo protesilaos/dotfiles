@@ -53,7 +53,7 @@
 
 (defun tmr-tabulated--timer-to-entry (timer)
   "Convert TIMER into an entry suitable for `tabulated-list-entries'."
-  (list (tmr--timer-creation-date timer)
+  (list timer
         (vector (tmr--format-creation-date timer)
                 (tmr--format-end-date timer)
                 (tmr--format-remaining timer)
@@ -86,9 +86,15 @@
                 (lambda ()
                   (if (buffer-live-p buf)
                       (with-current-buffer buf
-                        (if (get-buffer-window)
-                            (progn
-                              (revert-buffer)
+                        (if-let (win (get-buffer-window))
+                            (with-selected-window win
+                              (let ((end (eobp)))
+                                ;; Optimized refreshing
+                                (dolist (entry tabulated-list-entries)
+                                  (setf (aref (cadr entry) 2) (tmr--format-remaining (car entry))))
+                                (tabulated-list-print t t)
+                                (when end
+                                  (goto-char (point-max))))
                               ;; HACK: For some reason the hl-line highlighting gets lost here
                               (when (and (bound-and-true-p global-hl-line-mode)
                                          (fboundp 'global-hl-line-highlight))
@@ -120,8 +126,7 @@
 
 (defun tmr-tabulated--timer-at-point ()
   "Return the timer on the current line or nil."
-  (and (eq major-mode #'tmr-tabulated-mode)
-       (cl-find (tabulated-list-get-id) tmr--timers :key #'tmr--timer-creation-date)))
+  (and (eq major-mode #'tmr-tabulated-mode) (tabulated-list-get-id)))
 
 (defun tmr-tabulated--refresh ()
   "Refresh *tmr-tabulated-view* buffer if it exists."
