@@ -38,7 +38,6 @@
 
 ;;; Code:
 (require 'tmr)
-(require 'tmr-sound)
 (require 'notifications)
 
 (defcustom tmr-notification-urgency 'normal
@@ -58,14 +57,16 @@ such notifications."
   "Dispatch a notification for TIMER.
 
 Read: (info \"(elisp) Desktop Notifications\") for details."
-  (let ((title "TMR May Ring (Emacs tmr package)")
-        (body (tmr--long-description-for-completed-timer timer)))
-    (notifications-notify
-     :title title
-     :body body
-     :app-name "GNU Emacs"
-     :urgency tmr-notification-urgency
-     :sound-file tmr-sound-file)))
+  (if (featurep 'dbusbind)
+      (let ((title "TMR May Ring (Emacs tmr package)")
+            (body (tmr--long-description-for-completed-timer timer)))
+        (notifications-notify
+         :title title
+         :body body
+         :app-name "GNU Emacs"
+         :urgency tmr-notification-urgency
+         :sound-file tmr-sound-file))
+    (warn "Emacs has no DBUS support, TMR notifications unavailable")))
 
 (provide 'tmr-notification)
 ;;; tmr-notification.el ends here

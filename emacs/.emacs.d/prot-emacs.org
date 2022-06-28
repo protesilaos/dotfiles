@@ -3969,7 +3969,6 @@ Read the manual for further details: https://protesilaos.com/emacs/tmr.
   (setq tmr-descriptions-list (list "Boil water" "Prepare tea" "Bake bread"))
 
   ;; You do not need these if you install the package.
-  (require 'tmr-sound)
   (require 'tmr-notification)
   (require 'tmr-tabulated)
 
