@@ -2,10 +2,12 @@
 
 ;; Copyright (C) 2020-2022  Free Software Foundation, Inc.
 
-;; Author: Damien Cassou <damien@cassou.me>,
-;;         Protesilaos Stavrou <info@protesilaos.com>
+;; Author: Protesilaos Stavrou <info@protesilaos.com>,
+;;         Damien Cassou <damien@cassou.me>,
+;;         Daniel Mendler <mail@daniel-mendler.de>
 ;; Maintainer: TMR Development <~protesilaos/tmr@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/tmr
+;; Mailing-List: https://lists.sr.ht/~protesilaos/tmr
 ;; Version: 0.3.1
 ;; Package-Requires: ((emacs "27.1"))
 
@@ -60,8 +62,9 @@
 
 (defvar tmr-tabulated-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "k" #'tmr-cancel)
-    (define-key map "K" #'tmr-remove-finished)
+    (define-key map "k" #'tmr-remove)
+    (define-key map "r" #'tmr-remove)
+    (define-key map "R" #'tmr-remove-finished)
     (define-key map "+" #'tmr)
     (define-key map "t" #'tmr)
     (define-key map "*" #'tmr-with-description)
