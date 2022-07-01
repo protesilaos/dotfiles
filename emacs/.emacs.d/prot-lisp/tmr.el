@@ -67,10 +67,16 @@ If nil, don't play any sound."
           file
           (const :tag "Off" nil)))
 
-(defcustom tmr-confirm t
-  "Confirm timer operations.
-If set to nil and if there is only a single timer,
-the operation is performed without confirmation."
+(defcustom tmr-confirm-single-timer t
+  "Whether to act on the sole timer outright or with confirmation.
+
+If non-nil (the default), TMR will use the minibuffer to select a
+timer object to operate on, even when there is only one candidate
+available.
+
+If set to nil, TMR will not ask for confirmation when there is
+one timer available: the operatation will be carried out
+outright."
   :type 'boolean)
 
 (defcustom tmr-timer-created-functions
