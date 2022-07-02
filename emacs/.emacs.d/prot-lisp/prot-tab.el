@@ -34,6 +34,10 @@
 
 ;;; Code:
 
+;; NOTE 2022-07-02: This is old code which is probably not up to the
+;; standard of my packages: <https://protesilaos.com/emacs>.  It does
+;; work though.
+
 (require 'tab-bar)
 
 (defgroup prot-tab ()
@@ -147,49 +151,10 @@ otherwise."
           (setq this-command 'winner-redo))
       (user-error "No `tab-bar-history-mode' or `winner-mode' active"))))
 
-;;;; Indicators for `tab-bar-format' --- EXPERIMENTAL
-
-(defun prot-tab-format-mule-info ()
-  "Format `mode-line-mule-info' for the tab bar."
-  `((global menu-item ,(string-trim-right (format-mode-line mode-line-mule-info)) ignore)))
-
-(defun prot-tab-format-modified ()
-  "Format `mode-line-modified' for the tab bar."
-  `((global menu-item ,(string-trim-right (format-mode-line mode-line-modified)) ignore)))
-
-(defun prot-tab-format-modes ()
-  "Format `mode-line-modes' for the tab bar."
-  `((global menu-item ,(string-trim-right (format-mode-line mode-line-modes)) ignore)))
-
-;; FIXME 2021-07-30: This does not update unless some other event takes
-;; place, such as an ELDOC update.  Otherwise it updates every minute.
-(defun prot-tab-format-position ()
-  "Format `mode-line-position' for the tab bar."
-  `((global menu-item ,(string-trim-right (format-mode-line mode-line-position)) ignore)))
-
-(defun prot-tab-format-vc ()
-  "Format VC status for the tab bar."
-  `((global menu-item ,(string-trim-right (format-mode-line vc-mode)) ignore)))
-
-(defun prot-tab-format-misc-info ()
-  "Format `mode-line-misc-info' for the tab bar."
-  `((global menu-item ,(string-trim-right (format-mode-line mode-line-misc-info)) ignore)))
-
-(defun prot-tab-format-space-single ()
-  "Format space for the tab bar."
-  `((global menu-item " " ignore)))
-
-(defun prot-tab-format-space-double ()
-  "Format double space for the tab bar."
-  `((global menu-item "  " ignore)))
-
-(defvar prot-tab--window-divider-place (default-value 'window-divider-default-places)
-  "Last value of `window-divider-default-places'.
-For use in Prot-Tab-Status-Line.")
+;;;; Status line
 
 (declare-function prot-notmuch-mail-indicator "prot-notmuch")
 
-;; NOTE 2021-07-30: This is experimental and subject to review.
 ;;;###autoload
 (define-minor-mode prot-tab-status-line
   "Make Tab bar a status line and configure the extras.
@@ -201,38 +166,15 @@ Hide the mode lines and change their colors."
         (setq tab-bar-show t)
         (tab-bar-mode 1)
         (tab-bar-history-mode 1)
-        (setq window-divider-default-places t)
-        (window-divider-mode 1)
         (display-time-mode 1)
         (when (featurep 'prot-notmuch)
-          (prot-notmuch-mail-indicator 1))
-        (custom-set-faces
-         `(mode-line ((default :height 1 :box nil :overline nil :underline nil)
-                      (((class color) (min-colors 88) (background light))
-                       :background "#0000c0" ; OR ,@(list (face-attribute 'default :foreground))
-                       :foreground "#0000c0")
-                      (((class color) (min-colors 88) (background dark))
-                       :background "#00bcff"
-                       :foreground "#00bcff")
-                      (t :inverse-video t)))
-         `(mode-line-inactive ((default :height 1 :box nil :overline nil :underline nil)
-                      (((class color) (min-colors 88) (background light))
-                       :background "white"
-                       :foreground "white")
-                      (((class color) (min-colors 88) (background dark))
-                       :background "black"
-                       :foreground "black")))))
+          (prot-notmuch-mail-indicator 1)))
     (setq tab-bar-show nil)
     (tab-bar-mode -1)
     (tab-bar-history-mode -1)
-    (setq window-divider-default-places prot-tab--window-divider-place)
-    (window-divider-mode -1)
     (display-time-mode -1)
     (when (featurep 'prot-notmuch)
-      (prot-notmuch-mail-indicator -1))
-    (custom-set-faces
-     `(mode-line (( )))
-     `(mode-line-inactive (( ))))))
+      (prot-notmuch-mail-indicator -1))))
 
 (provide 'prot-tab)
 ;;; prot-tab.el ends here

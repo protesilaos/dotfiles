@@ -3413,49 +3413,33 @@ The latter, implemented in =tab-line=, is the same as the tabs you are
 used to in web browsers.  Each buffer is assigned to a single tab.
 Clicking on the tab takes you to the corresponding buffer.
 
-I do not need the =tab-line= as I find such tabs to be inefficient at
-scale.  Finding a buffer through search mechanisms is generally faster:
-it does not matter whether you have ten or a hundred buffers on the list
-(unless, of course, they all have similar names in which case you are in
-trouble either way---do not forget to check my [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer settings]]).
+I do not need the =tab-line=: it is inefficient at scale.  Retrieving a
+buffer through search mechanisms is generally faster.  It does not
+matter whether you have ten or a hundred items on the list (unless, of
+course, they all have similar names in which case you are in trouble
+either way---do not forget to check my [[#h:06290f9c-491c-45b2-b213-0248f890c83d][Ibuffer settings]]).
 
 On the other hand, the work spaces (=tab-bar=) are very useful for
 organising the various applications that are running inside of Emacs.
 You can, for example, have your current project on tab (workspace) 1,
-your email and news reader on 2, music on 3, and so on.  Of course, this
-can also be achieved by using separate frames for each of these, though
-I generally prefer working in a single frame (plus you can define a
-window configuration or frameset in a register).
+your email and news reader on 2, music on 3, another project on 4, and
+so on.  Of course, this can also be achieved by using separate frames
+for each of these, though I generally prefer working in a single frame
+at fullscreen mode (plus you can define a window configuration or
+frameset in a register).
 
-Starting with Emacs 28, the =tab-bar= can re-use indicators from the mode
-line.  With a bit of tweaking (and dirty hacks---but, hey, they work!)
-we can hide all mode lines and replace them with a single status bar
-that spans the length of the frame (just like the Tmux status line, if
-you have ever used that).  I was aware of this possibility for a long
-time, as I keep track of developments in emacs.git, but I never actually
-tinkered with the available options...  Until Philip Kaludercic
-published the article [[http://ruzkuku.com/texts/emacs-global.html][Emacs 28 has a global mode line]] (2021-07-29) which
-inspired me to finally start experimenting.
+Starting with Emacs 28, the =tab-bar= can extact global indicators from
+the mode line (technically the =global-mode-string=), such as the
+current time produced by the built-in =display-time-mode=.  This has the
+benefit of not replicating the same information across all mode lines.
+The exact format is controlled by =tab-bar-format=.  My thin wrapper for
+toggling this "status line" on or off is =prot-tab-status-line=.
 
-As of this writing (2021-07-30), upstream Emacs only covers the part of
-the mode line that shows the current time and the like (technically the
-=global-mode-string=).  So my =prot-tab.el= library, which is reproduced
-after the following package configurations, implements some more
-indicators that I want to use.
+The =tab-bar= implements several commands for operating on tabs.  They
+extend the =C-x t= prefix.  So type it and follow it up with =C-h= to
+learn abou the available options (read [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
 
-The minor mode which takes care of this new "status line" concept is
-=prot-tab-status-line=.  Check the code to notice the dirty hacks I
-alluded to.
-
-In the past, I was using a command which would merely toggle the display
-of the =tab-bar= (=prot-tab-bar-toggle=), but now that I can finally avoid
-the duplication of information and keep things cleaner, I think I am not
-going back to the paradigm where each window has its own mode line.
-
-To learn about the key bindings that the =tab-bar= uses, type its prefix
-key =C-x t= and follow it up with =C-h= (read [[#h:83730fe8-d917-4d94-96f4-bbc5c900fe38][How do you learn Emacs?]]).
-
-Finally, now that =tab-bar-history-mode= is a de facto replacement for
+Finally, note that =tab-bar-history-mode= is a de facto replacement for
 =winner-mode=.  Like Winner, it stores a history of window layouts.
 Unlike Winner, it keeps histories that are specific to each tab.  The
 problem with Winner is that when we switch between tabs, it continues to
@@ -3489,21 +3473,9 @@ Here are my settings, followed by the entirety of =prot-tab.el=.
 (prot-emacs-builtin-package 'prot-tab
   (setq prot-tab-tab-select-num-threshold 3)
   (setq tab-bar-format                    ; Emacs 28
-        '(prot-tab-format-space-single
-          prot-tab-format-mule-info
-          prot-tab-format-modified
-          tab-bar-format-tabs-groups
-          prot-tab-format-space-double
-          prot-tab-format-position
-          prot-tab-format-space-double
-          prot-tab-format-vc
-          prot-tab-format-space-double
-          prot-tab-format-modes         ; FIXME 2021-07-30: Make it work with `minions'.
+        '(tab-bar-format-tabs-groups
           tab-bar-format-align-right
-          prot-tab-format-misc-info
-          prot-tab-format-space-double
-          tab-bar-format-global
-          prot-tab-format-space-single))
+          tab-bar-format-global))
 
   (add-hook 'after-init-hook #'prot-tab-status-line)
 
@@ -8359,7 +8331,7 @@ tweaks of my own.
     (add-hook 'prot-moody-set-height-hook #'prot-moody-keycast-insert-after)))
 #+end_src
 
-** Window divider mode
+** COMMENT Window divider mode
 :PROPERTIES:
 :CUSTOM_ID: h:6fb900e3-49db-4bc3-8a9e-cd88e020f15b
 :END:
