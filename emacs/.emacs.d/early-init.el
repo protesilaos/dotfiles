@@ -45,12 +45,6 @@
 ;; Do not resize the frame at this early stage.
 (setq frame-inhibit-implied-resize t)
 
-(setq default-frame-alist
-      '((tab-bar-lines . 1)
-        (undecorated . t) ; window decorations have no purpose in my setup
-        (left-fringe)
-        (right-fringe)))
-
 ;; Disable GUI elements
 (menu-bar-mode -1)
 (tool-bar-mode -1)
