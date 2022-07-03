@@ -94,6 +94,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'cl-lib))
+
 (defgroup denote ()
   "Simple notes with an efficient file-naming scheme."
   :group 'files)
@@ -186,30 +188,28 @@ Any other non-nil value is the same as the default."
           (const :tag "Plain text" text))
   :group 'denote)
 
-(defcustom denote-front-matter-date-format nil
+(defcustom denote-date-format nil
   "Date format in the front matter (file header) of new notes.
 
-If the value is nil, use a plain date in YEAR-MONTH-DAY notation,
-like 2022-06-08 (the ISO 8601 standard).
+When nil, use a file-type-specific format:
 
-If the value is the `org-timestamp' symbol, format the date as an
-inactive Org timestamp such as: [2022-06-08 Wed 06:19].
+- For Org, an inactive timestamp is used, such as [2022-06-30 Wed
+  06:19].
 
-If a string, use it as the argument of `format-time-string'.
-Read the documentation of that function for valid format
-specifiers.
+- For Markdowmn, the RFC3339 standard is applied:
+  2022-06-30T15:48:00+03:00.
 
-When `denote-file-type' specifies one of the Markdown flavors, we
-ignore this user option in order to enforce the RFC3339
-specification (Markdown is typically employed in static site
-generators as source code for Web pages).  However, when
-`denote-front-matter-date-format' has a string value, this rule
-is suspended: we use whatever the user wants."
+- For plain text, the format is that of ISO 8601: 2022-06-30.
+
+If the value is a string, ignore the above and use it instead.
+The string must include format specifiers for the date.  These
+are described in the doc string of `format-time-string'."
   :type '(choice
-          (const :tag "Just the date like 2022-06-08" nil)
-          (const :tag "An inactive Org timestamp like [2022-06-08 Wed 06:19]" org-timestamp)
+          (const :tag "Use appropiate format for each file type" nil)
           (string :tag "Custom format for `format-time-string'"))
   :group 'denote)
+
+(make-obsolete 'denote-front-matter-date-format 'denote-date-format "0.2.0")
 
 ;;;; Main variables
 
@@ -226,6 +226,10 @@ is suspended: we use whatever the user wants."
 (defconst denote--file-regexp
   (concat denote--file-title-regexp "\\([0-9A-Za-z_-]*\\)\\(\\.?.*\\)")
   "Regular expression to match the entire file name'.")
+
+(defconst denote--file-only-note-regexp
+  (concat denote--file-regexp "\\.\\(org\\|md\\|txt\\)")
+  "Regular expression to match the entire file name of a note file.")
 
 (defconst denote--punctuation-regexp "[][{}!@#$%^&*()_=+'\"?,.\|;:~`‘’“”/]*"
   "Regular expression of punctionation that should be removed.
@@ -256,7 +260,7 @@ We consider those characters illigal for our purposes.")
     (unless (file-directory-p path)
       (make-directory path t))
     (when (require 'org-id nil :noerror)
-      (setq org-id-extra-files (directory-files path nil "\.org$")))
+      (setq org-id-extra-files (directory-files-recursively path "\.org$")))
     (file-name-as-directory path)))
 
 (defun denote--extract (regexp str &optional group)
@@ -307,26 +311,55 @@ trailing hyphen."
 FILE is relative to the variable `denote-directory'."
   (and (not (file-directory-p file))
        (file-regular-p file)
-       (string-match-p (concat "\\b" denote--id-regexp) file)
+       (string-match-p denote--file-only-note-regexp file)
        (not (string-match-p "[#~]\\'" file))))
+
+(defun denote--file-name-relative-to-denote-directory (file)
+  "Return file name of FILE relative to the variable `denote-directory'.
+FILE must be an absolute path."
+  (if-let* ((dir (denote-directory))
+            ((file-name-absolute-p file))
+            ((string-prefix-p dir file)))
+      (substring-no-properties file (length dir))
+    file))
 
 (defun denote--current-file-is-note-p ()
   "Return non-nil if current file likely is a Denote note."
   (and (or (string-match-p denote--id-regexp (buffer-file-name))
            (string-match-p denote--id-regexp (buffer-name)))
-       (string= (expand-file-name default-directory) (denote-directory))))
+       (string-prefix-p (denote-directory) (expand-file-name default-directory))))
 
 ;;;; Keywords
 
+(defun denote--directory-files-recursively (directory)
+  "Return expanded files in DIRECTORY recursively."
+  (mapcar
+   (lambda (s) (expand-file-name s))
+   (seq-remove
+    (lambda (f)
+      (not (denote--only-note-p f)))
+    (directory-files-recursively directory directory-files-no-dot-files-regexp t))))
+
 (defun denote--directory-files (&optional absolute)
-  "List note files, assuming flat directory.
+  "List note files.
 If optional ABSOLUTE, show full paths, else only show base file
 names that are relative to the variable `denote-directory'."
-  (let ((default-directory (denote-directory)))
-    (seq-remove
-     (lambda (f)
-       (not (denote--only-note-p f)))
-     (directory-files default-directory absolute directory-files-no-dot-files-regexp t))))
+  (let* ((default-directory (denote-directory))
+         (files (denote--directory-files-recursively default-directory)))
+    (if absolute
+        files
+      (mapcar
+       (lambda (s) (denote--file-name-relative-to-denote-directory s))
+       files))))
+
+(declare-function cl-find-if "cl-seq" (cl-pred cl-list &rest cl-keys))
+
+(defun denote--get-note-path-by-id (id)
+  "Return the absolute path of ID note in variable `denote-directory'."
+  (cl-find-if
+   (lambda (f)
+     (string-prefix-p id (file-name-nondirectory f)))
+   (denote--directory-files :absolute)))
 
 (defun denote--directory-files-matching-regexp (regexp &optional no-check-current)
   "Return list of files matching REGEXP.
@@ -564,16 +597,17 @@ With optional DATE, use it else use the current one."
 (defun denote--date (&optional date)
   "Expand the date for a new note's front matter.
 With optional DATE, use it else use the current one."
-  (let ((format denote-front-matter-date-format))
+  (let ((format denote-date-format))
     (cond
      ((stringp format)
       (format-time-string format date))
      ((or (eq denote-file-type 'markdown-toml)
           (eq denote-file-type 'markdown-yaml))
       (denote--date-rfc3339 date))
-     ((eq format 'org-timestamp)
-      (denote--date-org-timestamp date))
-     (t (denote--date-iso-8601 date)))))
+     ((eq denote-file-type 'text)
+      (denote--date-iso-8601 date))
+     (t
+      (denote--date-org-timestamp date)))))
 
 (defun denote--prepare-note (title keywords &optional path date id)
   "Use TITLE and KEYWORDS to prepare new note file.

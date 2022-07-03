@@ -200,8 +200,8 @@ and/or the documentation string of `display-buffer'."
                alist)
   :group 'denote-link)
 
-(defcustom denote-link-use-org-id nil
-  "When non-nil use the ID link type in Org files if appropriate.
+(defcustom denote-link-use-org-id t
+  "When non-nil use the ID link type in Org files, if appropriate.
 
 Newly created links from Org notes which target other Org notes
 will use the standard `id:' hyperlink type instead of the custom
@@ -213,9 +213,9 @@ other tools in the Org ecosystem.
 
 When the value is nil, Denote links rely on the custom `denote:'
 hyperlink type (which should behave the same as the standard
-`file:' type).
+`file:' link).
 
-Other files types beside Org always use the `denote:' links."
+Other file types beside Org always use the `denote:' links."
   :type 'boolean
   :group 'denote-link)
 ;;;###autoload (put 'denote-link-use-org-id 'safe-local-variable 'booleanp)
@@ -312,9 +312,13 @@ format is always [[denote:IDENTIFIER]]."
 
 (defun denote-link--expand-identifiers (regexp)
   "Expend identifiers matching REGEXP into file paths."
-  (delq nil (mapcar (lambda (i)
-                      (file-name-completion i (denote-directory)))
-                    (denote-link--collect-identifiers regexp))))
+  (let ((files (denote--directory-files))
+        (found-files))
+    (dolist (file files)
+      (dolist (i (denote-link--collect-identifiers regexp))
+        (when (string-prefix-p i (file-name-nondirectory file))
+          (push file found-files))))
+    found-files))
 
 (defvar denote-link--find-file-history nil
   "History for `denote-link-find-file'.")
@@ -382,11 +386,12 @@ format is always [[denote:IDENTIFIER]]."
 
 (defun denote-link--find-file-at-button (button)
   "Visit file referenced by BUTTON."
-  (let ((id (denote-link--id-from-string
-             (buffer-substring-no-properties
-              (button-start button)
-              (button-end button)))))
-    (funcall denote-link-buton-action (file-name-completion id (denote-directory)))))
+  (let* ((id (denote-link--id-from-string
+              (buffer-substring-no-properties
+               (button-start button)
+               (button-end button))))
+         (file (denote--get-note-path-by-id id)))
+    (funcall denote-link-buton-action file)))
 
 ;;;###autoload
 (defun denote-link-buttonize-buffer (&optional beg end)
@@ -419,14 +424,14 @@ positions, limit the process to the region in-between."
   "Action for BUTTON to `find-file'."
   (funcall denote-link-buton-action (buffer-substring (button-start button) (button-end button))))
 
-(declare-function denote-dired-mode "denote-dired")
-
 (defun denote-link--display-buffer (buf)
   "Run `display-buffer' on BUF.
 Expand `denote-link-backlinks-display-buffer-action'."
   (display-buffer
    buf
    `(,@denote-link-backlinks-display-buffer-action)))
+
+(require 'denote-faces)
 
 (defun denote-link--prepare-backlinks (id files &optional title)
   "Create backlinks' buffer for ID including FILES.
@@ -442,16 +447,13 @@ Use optional TITLE for a prettier heading."
                   (l (length heading)))
         (insert (format "%s\n%s\n\n" heading (make-string l ?-))))
       (mapc (lambda (f)
-              (insert (file-name-nondirectory f))
+              (insert f)
               (make-button (point-at-bol) (point-at-eol) :type 'denote-link-backlink-button)
               (newline))
             files)
       (goto-char (point-min))
-      ;; NOTE 2022-06-15: Technically this is not Dired.  Maybe we
-      ;; should abstract the fontification into a general purpose
-      ;; minor-mode.
       (when denote-link-fontify-backlinks
-        (denote-dired-mode 1)))
+        (font-lock-add-keywords nil denote-faces-file-name-with-subdir-keywords t)))
     (denote-link--display-buffer buf)))
 
 ;;;###autoload
@@ -466,7 +468,7 @@ option `denote-link-backlinks-display-buffer-action'.  By
 default, it will show up below the current window."
   (interactive)
   (let* ((default-directory (denote-directory))
-         (file (file-name-nondirectory (buffer-file-name)))
+         (file (buffer-file-name))
          (id (denote-retrieve--filename-identifier file))
          (title (denote-retrieve--value-title file)))
     (if-let ((files (denote-retrieve--proces-grep id)))
@@ -549,11 +551,11 @@ inserts links with just the identifier."
 With optional PATH-ID return a cons cell consisting of the path
 and the identifier."
   (let* ((search (and (string-match "::\\(.*\\)\\'" link)
-		              (match-string 1 link)))
-	     (id (if (and (stringp search) (not (string-empty-p search)))
+                      (match-string 1 link)))
+         (id (if (and (stringp search) (not (string-empty-p search)))
                  (substring link 0 (match-beginning 0))
                link))
-         (path (expand-file-name (file-name-completion id (denote-directory)))))
+         (path (denote--get-note-path-by-id id)))
     (cond
      (path-id
       (cons (format "%s" path) (format "%s" id)))
@@ -589,7 +591,7 @@ backend."
          (path (file-name-nondirectory (car path-id)))
          (p (file-name-sans-extension path))
          (id (cdr path-id))
-	     (desc (or description (concat "denote:" id))))
+         (desc (or description (concat "denote:" id))))
     (cond
      ((eq format 'html) (format "<a target=\"_blank\" href=\"%s.html\">%s</a>" p desc))
      ((eq format 'latex) (format "\\href{%s}{%s}" (replace-regexp-in-string "[\\{}$%&_#~^]" "\\\\\\&" path) desc))

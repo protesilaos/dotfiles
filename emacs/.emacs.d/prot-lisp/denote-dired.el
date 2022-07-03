@@ -284,7 +284,7 @@ TITLE, DATE, KEYWORDS, FILENAME, ID, and FILETYPE are all strings
   "Return likely file type of FILE.
 The return value is for `denote--file-meta-header'."
   (pcase (file-name-extension file)
-    ("md" (if (string-match-p "title\\s-*=" (denote-retrieve--value-title file 0))
+    ("md" (if (string-match-p "title\\s-*=" (denote-retrieve--value-title file t))
               'markdown-toml
             'markdown-yaml))
     ("txt" 'text)
@@ -354,61 +354,7 @@ appropriate."
 
 ;;;; Extra fontification
 
-(defface denote-dired-field-date
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#00538b")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#00d3d0")
-    (t :inherit font-lock-variable-name-face))
-  "Face for file name date in `dired-mode' buffers."
-  :group 'denote-dired)
-
-(defface denote-dired-field-time
-  '((t :inherit denote-dired-field-date))
-  "Face for file name time in `dired-mode' buffers."
-  :group 'denote-dired)
-
-(defface denote-dired-field-title
-  '((t ))
-  "Face for file name title in `dired-mode' buffers."
-  :group 'denote-dired)
-
-(defface denote-dired-field-extension
-  '((t :inherit shadow))
-  "Face for file extension type in `dired-mode' buffers."
-  :group 'denote-dired)
-
-(defface denote-dired-field-keywords
-  '((default :inherit bold)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#8f0075")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#f78fe7")
-    (t :inherit font-lock-builtin-face))
-  "Face for file name keywords in `dired-mode' buffers."
-  :group 'denote-dired)
-
-(defface denote-dired-field-delimiter
-  '((((class color) (min-colors 88) (background light))
-     :foreground "gray70")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "gray30")
-    (t :inherit shadow))
-  "Face for file name delimiters in `dired-mode' buffers."
-  :group 'denote-dired)
-
-(defconst denote-dired-font-lock-keywords
-  `((,denote--file-regexp
-     (1 'denote-dired-field-date)
-     (2 'denote-dired-field-time)
-     (3 'denote-dired-field-delimiter)
-     (4 'denote-dired-field-title)
-     (5 'denote-dired-field-delimiter)
-     (6 'denote-dired-field-keywords)
-     (7 'denote-dired-field-extension))
-    ("_"
-     (0 'denote-dired-field-delimiter t)))
-  "Keywords for fontification.")
+(require 'denote-faces)
 
 ;;;###autoload
 (define-minor-mode denote-dired-mode
@@ -416,8 +362,8 @@ appropriate."
   :global nil
   :group 'denote-dired
   (if denote-dired-mode
-      (font-lock-add-keywords nil denote-dired-font-lock-keywords t)
-    (font-lock-remove-keywords nil denote-dired-font-lock-keywords))
+      (font-lock-add-keywords nil denote-faces-file-name-keywords t)
+    (font-lock-remove-keywords nil denote-faces-file-name-keywords))
   (font-lock-flush (point-min) (point-max)))
 
 (defun denote-dired--modes-dirs-as-dirs ()
