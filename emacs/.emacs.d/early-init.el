@@ -34,6 +34,11 @@
 
 ;;; Code:
 
+(setq initial-frame-alist
+      '((width . (text-pixels . 1600))
+        (height . (text-pixels . 900)))
+      default-frame-alist initial-frame-alist)
+
 ;; Initialise installed packages
 (setq package-enable-at-startup t)
 
