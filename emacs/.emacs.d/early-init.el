@@ -34,10 +34,9 @@
 
 ;;; Code:
 
-(setq initial-frame-alist
-      '((width . (text-pixels . 1600))
-        (height . (text-pixels . 900)))
-      default-frame-alist initial-frame-alist)
+(dolist (var '(default-frame-alist initial-frame-alist))
+  (add-to-list var '(width . (text-pixels . 1600)))
+  (add-to-list var '(height . (text-pixels . 900))))
 
 ;; Initialise installed packages
 (setq package-enable-at-startup t)
