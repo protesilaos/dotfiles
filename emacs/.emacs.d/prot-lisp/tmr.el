@@ -293,9 +293,9 @@ cancelling the original one."
   "Let the user choose a timer among all (or ACTIVE) timers.
 
 Return the selected timer.  If there is a single timer and
-`tmr-confirm' is nil, use that.  If there are multiple timers,
-prompt for one with completion with PROMPT text.  If there are no
-timers, throw an error."
+`tmr-confirm-single-timer' is nil, use that.  If there are
+multiple timers, prompt for one with completion with PROMPT text.
+If there are no timers, throw an error."
   (or
    (run-hook-with-args-until-success 'tmr--read-timer-hook)
    (pcase
@@ -303,7 +303,7 @@ timers, throw an error."
            (seq-remove #'tmr--timer-finishedp tmr--timers)
          tmr--timers)
      ('nil (user-error "No timers available"))
-     ((and `(,timer) (guard (not tmr-confirm))) timer)
+     ((and `(,timer) (guard (not tmr-confirm-single-timer))) timer)
      (timers
       (let* ((timer-list (mapcar
                           (lambda (x)
