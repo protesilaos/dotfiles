@@ -188,7 +188,7 @@
         modus-themes-subtle-line-numbers nil
         modus-themes-intense-mouseovers t
         modus-themes-deuteranopia t
-        modus-themes-tabs-accented nil
+        modus-themes-tabs-accented t
         modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
@@ -206,7 +206,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line nil
+        modus-themes-mode-line '(3d accented)
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -292,10 +292,10 @@
         ;; A slightly more elaborate example:
         modus-themes-headings
         '((1 . (variable-pitch light (height 1.6) background))
-          (2 . (variable-pitch rainbow regular (height 1.4) overline))
-          (3 . (variable-pitch rainbow regular (height 1.3) overline))
-          (4 . (1.2))
-          (5 . (1.1))
+          (2 . (variable-pitch regular (height 1.4) overline))
+          (3 . (variable-pitch regular (height 1.3) overline))
+          (4 . (rainbow 1.2))
+          (5 . (rainbow 1.1))
           (t . (monochrome 1.05))))
 
   ;; Load the theme files before enabling a theme (else you get an error).
@@ -1243,21 +1243,9 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 (prot-emacs-builtin-package 'prot-tab
   (setq prot-tab-tab-select-num-threshold 3)
   (setq tab-bar-format                    ; Emacs 28
-        '(prot-tab-format-space-single
-          prot-tab-format-mule-info
-          prot-tab-format-modified
-          tab-bar-format-tabs-groups
-          prot-tab-format-space-double
-          prot-tab-format-position
-          prot-tab-format-space-double
-          prot-tab-format-vc
-          prot-tab-format-space-double
-          prot-tab-format-modes         ; FIXME 2021-07-30: Make it work with `minions'.
+        '(tab-bar-format-tabs-groups
           tab-bar-format-align-right
-          prot-tab-format-misc-info
-          prot-tab-format-space-double
-          tab-bar-format-global
-          prot-tab-format-space-single))
+          tab-bar-format-global))
 
   (add-hook 'after-init-hook #'prot-tab-status-line)
 
@@ -1395,6 +1383,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (define-key map (kbd "C-c n n") #'denote)
     (define-key map (kbd "C-c n N") #'denote-type)
     (define-key map (kbd "C-c n d") #'denote-date)
+    (define-key map (kbd "C-c n s") #'denote-subdirectory)
     ;; If you intend to use Denote with a variety of file types, it is
     ;; easier to bind the link-related commands to the `global-map', as
     ;; shown here.  Otherwise follow the same pattern for `org-mode-map',
@@ -1474,8 +1463,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
 ;;; TMR May Ring (tmr is used to set timers)
 (prot-emacs-builtin-package 'tmr
-  (setq tmr-sound-file
-        "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
+  (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
   (setq tmr-notification-urgency 'normal)
   (setq tmr-description-list 'tmr-description-history)
 
@@ -1486,10 +1474,13 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (let ((map global-map))
     (define-key map (kbd "C-c t t") #'tmr)
     (define-key map (kbd "C-c t T") #'tmr-with-description)
-    (define-key map (kbd "C-c t c") #'tmr-clone)
     (define-key map (kbd "C-c t l") #'tmr-tabulated-view) ; "list timers" mnemonic
+    (define-key map (kbd "C-c t c") #'tmr-clone)
     (define-key map (kbd "C-c t k") #'tmr-cancel)
-    (define-key map (kbd "C-c t K") #'tmr-remove-finished)))
+    (define-key map (kbd "C-c t s") #'tmr-reschedule)
+    (define-key map (kbd "C-c t e") #'tmr-edit-description)
+    (define-key map (kbd "C-c t r") #'tmr-remove)
+    (define-key map (kbd "C-c t R") #'tmr-remove-finished)))
 
 ;;; Diff-mode (and prot-diff.el extensions)
 (prot-emacs-builtin-package 'diff-mode
@@ -3139,11 +3130,6 @@ sure this is a good approach."
   ;; disrupting keycast.
   (with-eval-after-load 'prot-moody
     (add-hook 'prot-moody-set-height-hook #'prot-moody-keycast-insert-after)))
-
-;;; Window divider mode
-(setq window-divider-default-right-width 1)
-(setq window-divider-default-bottom-width 1)
-(setq window-divider-default-places 'right-only)
 
 ;;; Fringe mode
 (prot-emacs-builtin-package 'fringe
