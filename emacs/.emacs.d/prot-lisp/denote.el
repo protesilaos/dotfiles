@@ -5,7 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Denote Development <~protesilaos/denote@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/denote
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "27.2"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -209,7 +209,8 @@ Any other non-nil value is the same as the default."
 (defcustom denote-date-format nil
   "Date format in the front matter (file header) of new notes.
 
-When nil, use a file-type-specific format:
+When nil (the default value), use a file-type-specific
+format (also check `denote-file-type'):
 
 - For Org, an inactive timestamp is used, such as [2022-06-30 Wed
   06:19].
@@ -813,7 +814,7 @@ The TITLE and KEYWORDS arguments are the same as with `denote'."
 
 (defun denote--subdirs-prompt ()
   "Handle user input on choice of subdirectory."
-  (let* ((root (denote-directory))
+  (let* ((root (directory-file-name (denote-directory)))
          (subdirs (denote--subdirs))
          (dirs (push root subdirs)))
     (denote--subdirs-completion-table dirs)))
