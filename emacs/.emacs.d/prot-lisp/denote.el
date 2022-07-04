@@ -94,6 +94,7 @@
 
 ;;; Code:
 
+(require 'seq)
 (eval-when-compile (require 'cl-lib))
 
 (defgroup denote ()
@@ -110,9 +111,16 @@
 
 A safe local value of either `default-directory' or `local' can
 be added as a value in a .dir-local.el file.  Do this if you
-intend to use multiple directories for your notes while still
+intend to use multiple directory silos for your notes while still
 relying on a global value (which is the value of this variable).
 The Denote manual has a sample (search for '.dir-locals.el').
+Those silos do not communicate with each other: they remain
+separate.
+
+The local value influences where commands such as `denote' will
+place the newly created note.  If the command is called from a
+directory or file where the local value exists, then that value
+take precedence, otherwise the global value is used.
 
 If you intend to reference this variable in Lisp, consider using
 the function `denote-directory' instead: it returns the path as a
@@ -130,16 +138,26 @@ Also see user options: `denote-allow-multi-word-keywords',
   :type '(repeat string))
 
 (defcustom denote-infer-keywords t
-  "Whether to infer keywords.
+  "Whether to infer keywords from existing notes' file names.
 
 When non-nil, search the file names of existing notes in the
 variable `denote-directory' for their keyword field and extract
 the entries as \"inferred keywords\".  These are combined with
 `denote-known-keywords' and are presented as completion
-candidated while using `denote' interactively.
+candidates while using `denote' and related commands
+interactively.
 
 If nil, refrain from inferring keywords.  The aforementioned
-completion prompt only shows the `denote-known-keywords'."
+completion prompt only shows the `denote-known-keywords'.  Use
+this if you want to enforce a restricted vocabulary.
+
+Inferred keywords are specific to the value of the variable
+`denote-directory'.  If a silo with a local value is used, as
+explained in that variable's doc string, the inferred keywords
+are specific to the given silo.
+
+For advanced Lisp usage, the function `denote-keywords' returns
+the appropriate list of strings."
   :group 'denote
   :type 'boolean)
 
@@ -250,8 +268,6 @@ We consider those characters illigal for our purposes.")
         `(metadata (category . ,category))
       (complete-with-action action candidates string pred))))
 
-(defvar org-id-extra-files)
-
 (defun denote-directory ()
   "Return path of variable `denote-directory' as a proper directory."
   (let* ((val (or (buffer-local-value 'denote-directory (current-buffer))
@@ -259,8 +275,6 @@ We consider those characters illigal for our purposes.")
          (path (if (or (eq val 'default-directory) (eq val 'local)) default-directory val)))
     (unless (file-directory-p path)
       (make-directory path t))
-    (when (require 'org-id nil :noerror)
-      (setq org-id-extra-files (directory-files-recursively path "\.org$")))
     (file-name-as-directory path)))
 
 (defun denote--extract (regexp str &optional group)
@@ -381,6 +395,11 @@ part of the list."
   (delq nil (mapcar
              (lambda (x)
                (denote--extract denote--file-regexp x 6))
+             ;; REVIEW 2022-07-03: I tested this with ~3000 files.  It
+             ;; has about 2 seconds of delay on my end.  After I placed
+             ;; the list of those files in a variable instead of calling
+             ;; `denote--directory-files', there was no noticeable
+             ;; performance penalty.
              (denote--directory-files))))
 
 (defun denote--inferred-keywords ()
@@ -391,8 +410,14 @@ part of the list."
             sequence)))
 
 (defun denote-keywords ()
-  "Combine `denote--inferred-keywords' with `denote-known-keywords'."
-  (delete-dups (append (denote--inferred-keywords) denote-known-keywords)))
+  "Return appropriate list of keyword candidates.
+If `denote-infer-keywords' is non-nil, infer keywords from
+existing notes and combine them into a list with
+`denote-known-keywords'.  Else use only the latter."
+  (delete-dups
+   (if denote-infer-keywords
+       (append (denote--inferred-keywords) denote-known-keywords)
+     denote-known-keywords)))
 
 (defvar denote--keyword-history nil
   "Minibuffer history of inputted keywords.")
@@ -441,6 +466,8 @@ output is sorted with `string-lessp'."
 
 ;;;; New note
 
+;;;;; Common helpers for new notes
+
 (defun denote--file-extension ()
   "Return file type extension based on `denote-file-type'."
   (pcase denote-file-type
@@ -456,9 +483,7 @@ or equivalent: they will all be converted into a single string.
 EXTENSION is the file type extension, either a string which
 include the starting dot or the return value of
 `denote--file-extension'."
-  (let ((kws (if denote-infer-keywords
-                 (denote--keywords-combine keywords)
-               keywords))
+  (let ((kws (denote--keywords-combine keywords))
         (ext (or extension (denote--file-extension))))
     (format "%s%s--%s__%s%s" path id slug kws ext)))
 
@@ -524,12 +549,10 @@ is specific to this variable: it expect a delimiter such as
   "Final delimiter for plain text front matter.")
 
 (defvar denote-org-front-matter
-  ":PROPERTIES:
-:ID:          %4$s
-:END:
-#+title:      %1$s
-#+date:       %2$s
-#+filetags:   %3$s
+  "#+title:      %s
+#+date:       %s
+#+filetags:   %s
+#+identifier: %s
 \n"
   "Org front matter value for `format'.
 The order of the arguments is TITLE, DATE, KEYWORDS, ID.  If you
@@ -631,10 +654,17 @@ used to construct the path's identifier."
 (defvar denote--title-history nil
   "Minibuffer history of `denote--title-prompt'.")
 
-(defun denote--title-prompt ()
-  "Read file title for `denote'."
-  (setq denote-last-title
-        (read-string "File title: " nil 'denote--title-history)))
+(defun denote--title-prompt (&optional default-title)
+  "Read file title for `denote'.
+
+Optional DEFAULT-TITLE is used as the default value."
+  (let ((format (if default-title
+                    (format "File title [%s]: " default-title)
+                  "File title: ")))
+    (setq denote-last-title
+          (read-string format nil 'denote--title-history default-title))))
+
+;;;;; The `denote' command
 
 ;;;###autoload
 (defun denote (title keywords)
@@ -659,6 +689,8 @@ alphabetically in both the file name and file contents."
   (denote--keywords-add-to-history keywords))
 
 (defalias 'denote-create-note (symbol-function 'denote))
+
+;;;;; The `denote-type' command
 
 (defvar denote--file-type-history nil
   "Minibuffer history of `denote--file-type-prompt'.")
@@ -693,6 +725,8 @@ When called from Lisp the FILETYPE must be a symbol."
     (call-interactively #'denote)))
 
 (defalias 'denote-create-note-using-type (symbol-function 'denote-type))
+
+;;;;; The `denote-date' command
 
 (defvar denote--date-history nil
   "Minibuffer history of `denote--date-prompt'.")
@@ -749,6 +783,60 @@ The TITLE and KEYWORDS arguments are the same as with `denote'."
     (denote--keywords-add-to-history keywords)))
 
 (defalias 'denote-create-note-using-date (symbol-function 'denote-date))
+
+;;;;; The `denote-subdirectory' command
+
+(defvar denote--subdir-history nil
+  "Minibuffer history of `denote-subdirectory'.")
+
+(defun denote--subdirs ()
+  "Return list of subdirectories in variable `denote-directory'."
+  (seq-remove
+   (lambda (filename)
+     ;; TODO 2022-07-03: Generalise for all VC backends.  Which ones?
+     ;;
+     ;; TODO 2022-07-03: Maybe it makes sense to also allow the user to
+     ;; specify a blocklist of directories that should always be
+     ;; excluded?
+     (or (string-match-p "\\.git" filename)
+         (not (file-directory-p filename))))
+   (directory-files-recursively (denote-directory) ".*" t t)))
+
+(defun denote--subdirs-completion-table (dirs)
+  "Match DIRS as a completion table."
+  (let* ((def (car denote--subdir-history))
+         (table (denote--completion-table 'file dirs))
+         (prompt (if def
+                     (format "Select subdirectory [%s]: " def)
+                   "Select subdirectory: ")))
+    (completing-read prompt table nil t nil 'denote--subdir-history def)))
+
+(defun denote--subdirs-prompt ()
+  "Handle user input on choice of subdirectory."
+  (let* ((root (denote-directory))
+         (subdirs (denote--subdirs))
+         (dirs (push root subdirs)))
+    (denote--subdirs-completion-table dirs)))
+
+;;;###autoload
+(defun denote-subdirectory (directory title keywords)
+  "Like `denote' but ask for DIRECTORY to put the note in.
+
+The DIRECTORY is either the variable `denote-directory' or a
+subdirectory of it.  The TITLE and KEYWORDS are the same as for
+the `denote' command.
+
+Denote does not create subdirectories."
+  (interactive
+   (list
+    (denote--subdirs-prompt)
+    (denote--title-prompt)
+    (denote--keywords-prompt)))
+  (let ((denote-directory directory))
+    (denote--prepare-note title keywords)
+    (denote--keywords-add-to-history keywords)))
+
+(defalias 'denote-create-note-in-subdirectory (symbol-function 'denote-subdirectory))
 
 (provide 'denote)
 ;;; denote.el ends here

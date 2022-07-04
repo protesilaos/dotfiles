@@ -129,7 +129,7 @@
 (defcustom denote-dired-directories
   ;; We use different ways to specify a path for demo purposes.
   (list denote-directory
-        (thread-last denote-directory (expand-file-name "attachments"))
+        ;; (thread-last denote-directory (expand-file-name "attachments"))
         (expand-file-name "~/Documents/vlog"))
   "List of directories where `denote-dired-mode' should apply to."
   :type '(repeat directory)
@@ -231,10 +231,11 @@ This command is intended to (i) rename existing Denote
 notes, (ii) complement note-taking, such as by renaming
 attachments that the user adds to their notes."
   (interactive
-   (list
-    (denote-dired--rename-file-is-regular (denote-dired--rename-dired-file-or-prompt))
-    (denote--title-prompt)
-    (denote--keywords-prompt)))
+   (let ((file (denote-dired--rename-file-is-regular (denote-dired--rename-dired-file-or-prompt))))
+     (list
+      file
+      (denote--title-prompt (denote-retrieve--value-title file))
+      (denote--keywords-prompt))))
   (let* ((dir (file-name-directory file))
          (old-name (file-name-nondirectory file))
          (extension (file-name-extension file t))
