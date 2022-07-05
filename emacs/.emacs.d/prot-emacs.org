@@ -3680,37 +3680,50 @@ longer need ([[#h:aad79917-cd80-491b-9020-db27867ab132][Dired-like list for regi
 :END:
 
 Those who have followed my work for a while may have noticed my
-=usls.el=.  It is now superseded by =denote.el=, which I intend to turn
-into a fully fledged package for others to use.
+=usls.el=.  It is now superseded by =denote=, which is a package on the
+official GNU ELPA archive.
 
-I will explain how Denote works once the package is ready.  In the
-meantime, watch the [[https://protesilaos.com/codelog/2022-06-18-denote-demo/][demonstration of my Denote package]] (2022-06-18).
+Denote is a simple note-taking tool.  It is based on the idea that notes
+should follow a predictable and descriptive file-naming scheme.  The
+file name must offer a clear indication of what the note is about,
+without reference to any other metadata.  Denote basically streamlines
+the creation of such files while providing facilities to link between
+them.
+
+Watch the [[https://protesilaos.com/codelog/2022-06-18-denote-demo/][demonstration of my Denote package]] (2022-06-18).
+
++ Package name (GNU ELPA): =denote=
++ Official manual: <https://protesilaos.com/emacs/denote>
++ Change log: <https://protesilaos.com/emacs/denote-changelog>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/denote>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/denote>
+    + GitLab: <https://gitlab.com/protesilaos/denote>
++ Mailing list: <https://lists.sr.ht/~protesilaos/denote>
 
 #+begin_src emacs-lisp
 ;;;; Denote (simple note-taking)
 (prot-emacs-builtin-package 'denote
+
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
-  (setq denote-known-keywords
-        '("emacs" "philosophy" "politics" "economics"))
+  (setq denote-known-keywords '("emacs" "philosophy" "politics" "economics"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
   (setq denote-file-type 'text) ; Org is the default, set others here like I do
 
   ;; We allow multi-word keywords by default.  The author's personal
-  ;; preference is for single-word keywords for a more rigid workflow.
-  (setq denote-allow-multi-word-keywords t)
+  ;; preference is for single-word keywords for a more disciplined
+  ;; workflow.
+  (setq denote-allow-multi-word-keywords nil)
 
-  (setq denote-front-matter-date-format nil) ; change this to `org-timestamp' or custom string
+  (setq denote-date-format nil) ; read its doc string
 
-  ;; You will not need to `require' all those individually once the
-  ;; package is available.
+  ;; You will not need to `require' all those individually if you
+  ;; install the package.  I load all my packages locally, as I
+  ;; test/develop things.
   (require 'denote-retrieve)
   (require 'denote-link)
-
-  ;; If you want links to and from Org notes to use the standard 'id:'
-  ;; link type instead of 'denote:'.
-  (setq denote-link-use-org-id t)
 
   ;; By default, we fontify backlinks in their bespoke buffer.
   (setq denote-link-fontify-backlinks t)
@@ -3718,14 +3731,15 @@ meantime, watch the [[https://protesilaos.com/codelog/2022-06-18-denote-demo/][d
   ;; Also see `denote-link-backlinks-display-buffer-action' which is a bit
   ;; advanced.
 
-  ;; If you use Markdown or plain text files (Org renders links as buttons
-  ;; right away)
+  ;; If you use Markdown or plain text files you want to buttonise
+  ;; existing buttons upon visiting the file (Org renders links as
+  ;; buttons right away).
   (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
 
   (require 'denote-dired)
   (setq denote-dired-rename-expert nil)
 
-  ;; I use different ways to specify a path for demo purposes.
+  ;; We use different ways to specify a path for demo purposes.
   (setq denote-dired-directories
         (list denote-directory
               (thread-last denote-directory (expand-file-name "attachments"))
@@ -3738,10 +3752,8 @@ meantime, watch the [[https://protesilaos.com/codelog/2022-06-18-denote-demo/][d
   ;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 
   ;; Here is a custom, user-level command from one of the examples we
-  ;; showed in this manual.  We define it here and add it to a key binding
-  ;; below.
-  ;;
-  ;; The manual: <https://protesilaos.com/emacs/denote>.
+  ;; show in this manual.  We define it here and add it to a key binding
+  ;; below.  The manual: <https://protesilaos.com/emacs/denote>.
   (defun prot/denote-journal ()
     "Create an entry tagged 'journal', while prompting for a title."
     (interactive)
@@ -3752,7 +3764,7 @@ meantime, watch the [[https://protesilaos.com/codelog/2022-06-18-denote-demo/][d
   ;; Denote does not define any key bindings.  This is for the user to
   ;; decide.  For example:
   (let ((map global-map))
-    (define-key map (kbd "C-c n j") #'prot/denote-journal) ; our custom command
+    (define-key map (kbd "C-c n j") #'my-denote-journal) ; our custom command
     (define-key map (kbd "C-c n n") #'denote)
     (define-key map (kbd "C-c n N") #'denote-type)
     (define-key map (kbd "C-c n d") #'denote-date)
@@ -3770,9 +3782,6 @@ meantime, watch the [[https://protesilaos.com/codelog/2022-06-18-denote-demo/][d
     ;; `global-map'.
     (define-key map (kbd "C-c n r") #'denote-dired-rename-file))
 
-  ;; I bind `org-capture' to C-c c, so C-c c n for the note.  I use this
-  ;; one when I need to leverage the extras that Org provides, such as a
-  ;; link to an email, elfeed entry, and more.
   (with-eval-after-load 'org-capture
     (require 'denote-org-capture)
     (setq denote-org-capture-specifiers "%l\n%i\n%?")
@@ -3785,10 +3794,6 @@ meantime, watch the [[https://protesilaos.com/codelog/2022-06-18-denote-demo/][d
                    :kill-buffer t
                    :jump-to-captured t))))
 #+end_src
-
-The contents of =denote.el=.
-
-#+include: prot-lisp/denote.el src emacs-lisp :tangle no
 
 ** Custom extensions for "focus mode" (logos.el)
 :PROPERTIES:
