@@ -3,8 +3,9 @@
 ;; Copyright (C) 2019-2022  Free Software Foundation, Inc.
 
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; Maintainer: Modus-Themes Development <~protesilaos/modus-themes@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/modus-themes
-;; Mailing list: https://lists.sr.ht/~protesilaos/modus-themes
+;; Mailing-List: https://lists.sr.ht/~protesilaos/modus-themes
 ;; Version: 2.4.1
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: faces, theme, accessibility
@@ -4879,13 +4880,15 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(debbugs-gnu-stale-5 ((,class :foreground ,red-alt)))
     `(debbugs-gnu-tagged ((,class :foreground ,magenta-alt)))
 ;;;;; deft
-    `(deft-filter-string-error-face ((,class :inherit modus-themes-refine-red)))
-    `(deft-filter-string-face ((,class :foreground ,green-intense)))
-    `(deft-header-face ((,class :inherit bold :foreground ,fg-special-warm)))
-    `(deft-separator-face ((,class :inherit shadow)))
+    `(deft-filter-string-face ((,class :inherit bold :foreground ,blue)))
+    `(deft-header-face ((,class :foreground ,fg-special-warm)))
+    `(deft-separator-face ((,class :foreground "gray50")))
     `(deft-summary-face ((,class :inherit (shadow modus-themes-slant))))
-    `(deft-time-face ((,class :foreground ,fg-special-cold)))
-    `(deft-title-face ((,class :inherit bold :foreground ,fg-main)))
+    `(deft-time-face ((,class :foreground ,cyan)))
+    `(deft-title-face ((,class :inherit bold)))
+;;;;; denote
+    `(denote-faces-date ((,class :foreground ,cyan)))
+    `(denote-faces-keywords ((,class :inherit modus-themes-bold :foreground ,magenta-alt)))
 ;;;;; devdocs
     `(devdocs-code-block ((,class :inherit modus-themes-fixed-pitch :background ,bg-dim :extend t)))
 ;;;;; dictionary
@@ -5944,6 +5947,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(ledger-font-payee-pending-face ((,class :foreground ,yellow)))
     `(ledger-font-payee-uncleared-face ((,class :foreground ,red-alt-other)))
     `(ledger-font-xact-highlight-face ((,class :background ,bg-hl-alt)))
+;;;;; leerzeichen
+    `(leerzeichen ((,class :background ,bg-whitespace :foreground ,fg-whitespace)))
 ;;;;; line numbers (display-line-numbers-mode and global variant)
     ;; Here we cannot inherit `modus-themes-fixed-pitch'.  We need to
     ;; fall back to `default' otherwise line numbers do not scale when
@@ -6612,8 +6617,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-journal-calendar-scheduled-face ((,class :inherit modus-themes-slant :foreground ,red-alt-other)))
     `(org-journal-highlight ((,class :foreground ,magenta-alt)))
 ;;;;; org-noter
-    `(org-noter-no-notes-exist-face ((,class :inherit bold :foreground ,red-active)))
-    `(org-noter-notes-exist-face ((,class :inherit bold :foreground ,green-active)))
+    `(org-noter-no-notes-exist-face ((,class :inherit error)))
+    `(org-noter-notes-exist-face ((,class :inherit success)))
 ;;;;; org-pomodoro
     `(org-pomodoro-mode-line ((,class :foreground ,red-active)))
     `(org-pomodoro-mode-line-break ((,class :foreground ,cyan-active)))
@@ -6636,9 +6641,6 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-table-sticky-header-face ((,class :inherit modus-themes-special-cold)))
 ;;;;; org-tree-slide
     `(org-tree-slide-header-overlay-face ((,class :inherit org-document-title)))
-;;;;; org-treescope
-    `(org-treescope-faces--markerinternal-midday ((,class :inherit modus-themes-intense-blue)))
-    `(org-treescope-faces--markerinternal-range ((,class :inherit modus-themes-special-mild)))
 ;;;;; origami
     `(origami-fold-header-face ((,class :background ,bg-dim :foreground ,fg-dim :box t)))
     `(origami-fold-replacement-face ((,class :background ,bg-alt :foreground ,fg-alt)))
@@ -7009,7 +7011,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(speedbar-button-face ((,class :inherit button)))
     `(speedbar-directory-face ((,class :inherit bold :foreground ,blue)))
     `(speedbar-file-face ((,class :foreground ,fg-main)))
-    `(speedbar-highlight-face ((,class :inherit modus-themes-subtle-blue)))
+    `(speedbar-highlight-face ((,class :inherit highlight)))
     `(speedbar-selected-face ((,class :inherit bold :foreground ,cyan)))
     `(speedbar-separator-face ((,class :inherit modus-themes-intense-neutral)))
     `(speedbar-tag-face ((,class :foreground ,yellow-alt-other)))
@@ -7070,14 +7072,14 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(symbol-overlay-face-8 ((,class :inherit modus-themes-refine-cyan)))
 ;;;;; syslog-mode
     `(syslog-debug ((,class :inherit bold :foreground ,cyan-alt-other)))
-    `(syslog-error ((,class :inherit bold :foreground ,red)))
+    `(syslog-error ((,class :inherit error)))
     `(syslog-file ((,class :inherit bold :foreground ,fg-special-cold)))
     `(syslog-hide ((,class :background ,bg-main :foreground ,fg-main)))
     `(syslog-hour ((,class :inherit bold :foreground ,magenta-alt-other)))
-    `(syslog-info ((,class :inherit bold :foreground ,blue-alt-other)))
+    `(syslog-info ((,class :inherit success)))
     `(syslog-ip ((,class :inherit bold :foreground ,fg-special-mild :underline t)))
     `(syslog-su ((,class :inherit bold :foreground ,red-alt)))
-    `(syslog-warn ((,class :inherit bold :foreground ,yellow)))
+    `(syslog-warn ((,class :inherit warning)))
 ;;;;; tab-bar-groups
     `(tab-bar-groups-tab-1 ((,class :inherit modus-themes-ui-variable-pitch :foreground ,blue-tab)))
     `(tab-bar-groups-tab-2 ((,class :inherit modus-themes-ui-variable-pitch :foreground ,red-tab)))
