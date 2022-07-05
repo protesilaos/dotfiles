@@ -5,6 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Denote Development <~protesilaos/denote@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/denote
+;; Mailing-List: https://lists.sr.ht/~protesilaos/denote
 ;; Version: 0.2.0
 ;; Package-Requires: ((emacs "27.2"))
 
@@ -213,9 +214,9 @@ When nil (the default value), use a file-type-specific
 format (also check `denote-file-type'):
 
 - For Org, an inactive timestamp is used, such as [2022-06-30 Wed
-  06:19].
+  15:31].
 
-- For Markdowmn, the RFC3339 standard is applied:
+- For Markdown, the RFC3339 standard is applied:
   2022-06-30T15:48:00+03:00.
 
 - For plain text, the format is that of ISO 8601: 2022-06-30.

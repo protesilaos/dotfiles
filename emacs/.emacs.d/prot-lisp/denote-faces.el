@@ -5,6 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Denote Development <~protesilaos/denote@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/denote
+;; Mailing-List: https://lists.sr.ht/~protesilaos/denote
 ;; Version: 0.2.0
 ;; Package-Requires: ((emacs "27.2"))
 
@@ -44,11 +45,7 @@ equivalent), not in Dired."
   :group 'denote-faces)
 
 (defface denote-faces-date
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#00538b")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#00d3d0")
-    (t :inherit font-lock-variable-name-face))
+  '((t :inherit font-lock-variable-name-face))
   "Face for file name date in Dired buffers.
 This is the part of the identifier that covers the year, month,
 and day."
@@ -72,12 +69,7 @@ and seconds."
   :group 'denote-faces)
 
 (defface denote-faces-keywords
-  '((default :inherit bold)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#8f0075")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#f78fe7")
-    (t :inherit font-lock-builtin-face))
+  '((t :inherit font-lock-builtin-face))
   "Face for file name keywords in Dired buffers."
   :group 'denote-faces)
 

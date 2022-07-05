@@ -5,6 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Denote Development <~protesilaos/denote@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/denote
+;; Mailing-List: https://lists.sr.ht/~protesilaos/denote
 ;; Version: 0.2.0
 ;; Package-Requires: ((emacs "27.2"))
 
