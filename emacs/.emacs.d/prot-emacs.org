@@ -3905,7 +3905,8 @@ And here is =logos.el= in its totality.  It is available as a file in
 
 This is yet another package of mine.  I wrote the original version and
 continue to be the maintainer, but I have since received substantial
-contributions from Damien Cassou, who now counts as the co-author.
+contributions from Damien Cassou and Daniel Mendler, who now counts as
+my co-authors.
 
 TMR is an Emacs package that provides facilities for setting timers
 using a convenient notation.  The first point of entry is the ~tmr~
@@ -3928,7 +3929,15 @@ The input can be a floating point:
 | 1.5   | 1.5 minutes (90 seconds) |
 | 1.5h  | 1.5 hours (90 minutes)   |
 
-Read the manual for further details: https://protesilaos.com/emacs/tmr.
+The manual describes all the technicalities.
+
++ Package name (GNU ELPA): =tmr=
++ Official manual: <https://protesilaos.com/emacs/tmr>
++ Git repo on SourceHut: <https://git.sr.ht/~protesilaos/tmr>
+  - Mirrors:
+    + GitHub: <https://github.com/protesilaos/tmr>
+    + GitLab: <https://gitlab.com/protesilaos/tmr>
++ Mailing list: <https://lists.sr.ht/~protesilaos/tmr>
 
 #+begin_src emacs-lisp
 ;;; TMR May Ring (tmr is used to set timers)
@@ -3952,10 +3961,6 @@ Read the manual for further details: https://protesilaos.com/emacs/tmr.
     (define-key map (kbd "C-c t r") #'tmr-remove)
     (define-key map (kbd "C-c t R") #'tmr-remove-finished)))
 #+end_src
-
-This is its code (from [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
-
-#+include: prot-lisp/tmr.el src emacs-lisp :tangle no
 
 ** Version control tools
 :PROPERTIES:
