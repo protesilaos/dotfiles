@@ -185,10 +185,10 @@
   (setq modus-themes-italic-constructs nil
         modus-themes-bold-constructs nil
         modus-themes-mixed-fonts t
-        modus-themes-subtle-line-numbers nil
-        modus-themes-intense-mouseovers t
-        modus-themes-deuteranopia t
-        modus-themes-tabs-accented t
+        modus-themes-subtle-line-numbers t
+        modus-themes-intense-mouseovers nil
+        modus-themes-deuteranopia nil
+        modus-themes-tabs-accented nil
         modus-themes-variable-pitch-ui t
         modus-themes-inhibit-reload t ; only applies to `customize-set-variable' and related
 
@@ -198,7 +198,7 @@
         ;; default), or a list of properties that may include any of those
         ;; symbols: `straight-underline', `text-also', `background',
         ;; `intense' OR `faint'.
-        modus-themes-lang-checkers '(text-also straight-underline intense)
+        modus-themes-lang-checkers nil
 
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
@@ -206,7 +206,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(3d accented)
+        modus-themes-mode-line '(borderless (padding 3))
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -226,13 +226,13 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match nil
+        modus-themes-paren-match '(intense)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links nil
+        modus-themes-links '(no-color)
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
@@ -245,7 +245,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts nil
+        modus-themes-prompts '(bold gray intense)
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -261,7 +261,7 @@
         ;; covered in `modus-themes-weights'.  Bold is used in the absence
         ;; of an explicit WEIGHT.
         modus-themes-completions
-        '((matches . (semibold underline italic intense))
+        '((matches . (semibold underline italic))
           (selection . (extrabold))
           (popup . (extrabold)))
 
@@ -270,7 +270,7 @@
         ;; Options for `modus-themes-region' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `no-extend', `bg-only', `accented'
-        modus-themes-region '(no-extend)
+        modus-themes-region '(bg-only no-extend)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated, 'bg-only
         modus-themes-diffs nil
@@ -284,19 +284,16 @@
           (scheduled . rainbow)
           (habit . simplified))
 
-        ;; Simpler heading style:
-        ;;
-        ;; modus-themes-headings
-        ;; '((t . (variable-pitch extrabold)))
-        ;;
-        ;; A slightly more elaborate example:
+        ;; The `modus-themes-headings' a alist with lots of possible
+        ;; combinations, include per-heading-level tweaks: read the
+        ;; manual or its doc string
         modus-themes-headings
-        '((1 . (variable-pitch light (height 1.6) background))
-          (2 . (variable-pitch regular (height 1.4) overline))
-          (3 . (variable-pitch regular (height 1.3) overline))
-          (4 . (rainbow 1.2))
-          (5 . (rainbow 1.1))
-          (t . (monochrome 1.05))))
+        '(;; (1 . (variable-pitch light (height 1.6) background))
+          ;; (2 . (variable-pitch regular (height 1.4) overline))
+          ;; (3 . (variable-pitch regular (height 1.3) overline))
+          ;; (4 . (rainbow (height 1.2)))
+          ;; (5 . (rainbow (height 1.1)))
+          (t . (variable-pitch extrabold (height 1.05)))))
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
@@ -1316,28 +1313,26 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
 ;;;; Denote (simple note-taking)
 (prot-emacs-builtin-package 'denote
+
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
-  (setq denote-known-keywords
-        '("emacs" "philosophy" "politics" "economics"))
+  (setq denote-known-keywords '("emacs" "philosophy" "politics" "economics"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
   (setq denote-file-type 'text) ; Org is the default, set others here like I do
 
   ;; We allow multi-word keywords by default.  The author's personal
-  ;; preference is for single-word keywords for a more rigid workflow.
-  (setq denote-allow-multi-word-keywords t)
+  ;; preference is for single-word keywords for a more disciplined
+  ;; workflow.
+  (setq denote-allow-multi-word-keywords nil)
 
-  (setq denote-front-matter-date-format nil) ; change this to `org-timestamp' or custom string
+  (setq denote-date-format nil) ; read its doc string
 
-  ;; You will not need to `require' all those individually once the
-  ;; package is available.
+  ;; You will not need to `require' all those individually if you
+  ;; install the package.  I load all my packages locally, as I
+  ;; test/develop things.
   (require 'denote-retrieve)
   (require 'denote-link)
-
-  ;; If you want links to and from Org notes to use the standard 'id:'
-  ;; link type instead of 'denote:'.
-  (setq denote-link-use-org-id t)
 
   ;; By default, we fontify backlinks in their bespoke buffer.
   (setq denote-link-fontify-backlinks t)
@@ -1345,14 +1340,15 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   ;; Also see `denote-link-backlinks-display-buffer-action' which is a bit
   ;; advanced.
 
-  ;; If you use Markdown or plain text files (Org renders links as buttons
-  ;; right away)
+  ;; If you use Markdown or plain text files you want to buttonise
+  ;; existing buttons upon visiting the file (Org renders links as
+  ;; buttons right away).
   (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
 
   (require 'denote-dired)
   (setq denote-dired-rename-expert nil)
 
-  ;; I use different ways to specify a path for demo purposes.
+  ;; We use different ways to specify a path for demo purposes.
   (setq denote-dired-directories
         (list denote-directory
               (thread-last denote-directory (expand-file-name "attachments"))
@@ -1365,10 +1361,8 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   ;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 
   ;; Here is a custom, user-level command from one of the examples we
-  ;; showed in this manual.  We define it here and add it to a key binding
-  ;; below.
-  ;;
-  ;; The manual: <https://protesilaos.com/emacs/denote>.
+  ;; show in this manual.  We define it here and add it to a key binding
+  ;; below.  The manual: <https://protesilaos.com/emacs/denote>.
   (defun prot/denote-journal ()
     "Create an entry tagged 'journal', while prompting for a title."
     (interactive)
@@ -1379,7 +1373,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   ;; Denote does not define any key bindings.  This is for the user to
   ;; decide.  For example:
   (let ((map global-map))
-    (define-key map (kbd "C-c n j") #'prot/denote-journal) ; our custom command
+    (define-key map (kbd "C-c n j") #'my-denote-journal) ; our custom command
     (define-key map (kbd "C-c n n") #'denote)
     (define-key map (kbd "C-c n N") #'denote-type)
     (define-key map (kbd "C-c n d") #'denote-date)
@@ -1397,9 +1391,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     ;; `global-map'.
     (define-key map (kbd "C-c n r") #'denote-dired-rename-file))
 
-  ;; I bind `org-capture' to C-c c, so C-c c n for the note.  I use this
-  ;; one when I need to leverage the extras that Org provides, such as a
-  ;; link to an email, elfeed entry, and more.
   (with-eval-after-load 'org-capture
     (require 'denote-org-capture)
     (setq denote-org-capture-specifiers "%l\n%i\n%?")
