@@ -2778,7 +2778,7 @@ sure this is a good approach."
       (define-key map (kbd "C-c SPC") #'prot-bongo-dired-insert)
       (define-key map (kbd "C-c +") #'prot-bongo-dired-make-playlist-file))))
 
-;;; Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el
+;;; Elfeed feed/RSS reader
 (prot-emacs-elpa-package 'elfeed
   (setq elfeed-use-curl t)
   (setq elfeed-curl-max-connections 10)
@@ -2799,8 +2799,6 @@ sure this is a good approach."
   (add-hook 'elfeed-show-mode-hook
             (lambda () (setq-local shr-width (current-fill-column))))
 
-  (prot-emacs-builtin-package 'prot-elfeed-bongo)
-
   (define-key global-map (kbd "C-c e") #'elfeed)
   (let ((map elfeed-search-mode-map))
     (define-key map (kbd "w") #'elfeed-search-yank)
@@ -2820,19 +2818,26 @@ sure this is a good approach."
 
     (let ((map elfeed-search-mode-map))
       (define-key map (kbd "s") #'prot-elfeed-search-tag-filter)
-      ;; ;; TODO 2022-06-13: I disable some of these keybindings as
-      ;; ;; there are changes I want to make in the underlying code.
-      ;;
-      ;; (define-key map (kbd "o") #'prot-elfeed-search-open-other-window)
-      ;; (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
-      (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
       (define-key map (kbd "+") #'prot-elfeed-toggle-tag))
-    (let ((map elfeed-show-mode-map))
-      ;; (define-key map (kbd "a") #'prot-elfeed-show-archive-entry)
-      (define-key map (kbd "e") #'prot-elfeed-show-eww)
-      ;; (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
-      (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
-      (define-key map (kbd "+") #'prot-elfeed-toggle-tag))))
+    (define-key elfeed-show-mode-map (kbd "+") #'prot-elfeed-toggle-tag)))
+
+;;; Elfeed extensions for watching videos (elfeed-tube)
+(prot-emacs-elpa-package 'elfeed-tube
+  ;; (setq elfeed-tube-auto-save-p nil) ; default value
+  ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
+  (elfeed-tube-setup)
+
+  (let ((map elfeed-show-mode-map))
+    (define-key map (kbd "F") #'elfeed-tube-fetch)
+    (define-key map [remap save-buffer] #'elfeed-tube-save))
+  (let ((map elfeed-search-mode-map))
+    (define-key map (kbd "F") #'elfeed-tube-fetch)
+    (define-key map [remap save-buffer] #'elfeed-tube-save)))
+
+(prot-emacs-elpa-package 'elfeed-tube-mpv
+  (let ((map elfeed-show-mode-map))
+    (define-key map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
+    (define-key map (kbd "C-c C-w") 'elfeed-tube-mpv-where)))
 
 ;;; Proced (process monitor, similar to `top')
 (prot-emacs-builtin-package 'proced
