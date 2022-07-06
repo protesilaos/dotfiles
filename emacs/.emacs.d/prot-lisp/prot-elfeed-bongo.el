@@ -34,7 +34,9 @@
 
 ;;; Code:
 
-;; XXX Written on 2021-01-18.  Remains to be reviewed.
+;; DEPRECATED 2022-07-06: The idea is solid, but the code was nothing
+;; more than a protoype.  I will revisit this workflow when I have the
+;; time to write proper code for it.
 
 (eval-when-compile (require 'subr-x))
 (require 'bongo nil t)
