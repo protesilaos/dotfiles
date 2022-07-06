@@ -6960,11 +6960,6 @@ is just a Dired buffer, so I also benefit from everything this powerful
 tool provides (for configurations and commentary, check [[#h:c519300f-8a9a-472b-b26d-c2f49adbdb5d][Dired (directory
 editor, file manager)]]).
 
-I mostly use Bongo for my local Music collection, but also as an
-interface to the various video or audio streams I access via their RSS
-feed (the latter is done through the integration with Elfeed---as such,
-consult [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el]]).
-
 My music directories inside =~/Music= are, in principle, organised in file
 system paths that follow the pattern =Artist/Album/Tracks=.  Each track
 inside of them is named in the style of =Artist - Album - Title=.  As part
@@ -7152,7 +7147,7 @@ Here is my =prot-bongo.el= library (part of [[https://git.sr.ht/~protesilaos/dot
 
 #+include: prot-lisp/prot-bongo.el src emacs-lisp :tangle no
 
-** Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el
+** Elfeed feed/RSS reader
 :PROPERTIES:
 :CUSTOM_ID: h:0cd8ddab-55d1-40df-b3db-1234850792ba
 :END:
@@ -7164,7 +7159,7 @@ efficient tagging system.
 
 In terms of feed format specifications, i.e. Atom vs RSS, things should
 just work without any kind of configuration from your side (a huge plus
-compared to, say, Gnus' =nnrss= backend that only supports the latter).
+compared to, say, Gnus' =nnrss= backend that only supports RSS).
 
 Elfeed stores feed sources in a single list that associates a valid URL
 to one or more tags.  These are then written to a database.  The Elisp
@@ -7225,43 +7220,13 @@ Since I only need this facility to filter by tag, I rebind =s= to my
 used to access the original command, whenever we need more precise
 control over the search filters.
 
-The MPV-related functions require the external =mpv= program.  They will
-play a video in a new app window at a resolution that matches the
-current setup's display width or, in the case of an enclosure
-(presumably a podcast), play just the audio file without popping up a
-new app window.  The process runs in a dedicated buffer, so it can be
-terminated by killing the buffer.  In the future I might make this
-cleaner, so that it understands input from, e.g., =playerctl=, though it
-is not a priority as the current simplistic design is "good enough" for
-my case.
-
 For an older, albeit still relevant, demonstration of what I have here,
 watch [[https://protesilaos.com/codelog/2020-06-09-emacs-elfeed-demo/][my Elfeed video]] (2020-06-09).
-
-As I also am a user of Bongo, and because Emacs lets one handle things
-with precision, there are a few functions here that are meant to make
-the Elfeed search buffer a bongo-aware media library, from where we can
-enqueue online multimedia sources (video links, or podcast enclosures).
-The key is to not interfere with the primary Bongo playlist and library
-tandem, which is dedicated to my local music collection, but to maintain
-a separate playlist which can be controlled independently.  The entirety
-of my =prot-elfeed-bongo.el= is shared after =prot-elfeed.el= below the
-following package configurations (for my other extensions, refer to
-[[#h:758afe0d-bc7c-4afc-9c6b-b5e569901591][Bongo music or media manager (and prot-bongo.el)]]).
-
-The placement of my custom buffers for Elfeed's multimedia output is
-controlled by =display-buffer-alist= (see [[#h:3d8ebbb1-f749-412e-9c72-5d65f48d5957][Window rules and basic tweaks]]).
-
-I benefited in this particular Elfeed+Bongo workflow from an email
-exchange I had with Madhavan Krishnan: we shared code and ideas that
-helped establish the modalities of interaction between Elfeed and Bongo
-(this information is made public with permission).  Video demo with
-older code: [[https://protesilaos.com/codelog/2020-09-11-emacs-elfeed-bongo/][Manage podcasts in Emacs with Elfeed and Bongo]] (2020-09-11).
 
 Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MPV (Elfeed+Bongo extension)]].
 
 #+begin_src emacs-lisp
-;;; Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el
+;;; Elfeed feed/RSS reader
 (prot-emacs-elpa-package 'elfeed
   (setq elfeed-use-curl t)
   (setq elfeed-curl-max-connections 10)
@@ -7282,8 +7247,6 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
   (add-hook 'elfeed-show-mode-hook
             (lambda () (setq-local shr-width (current-fill-column))))
 
-  (prot-emacs-builtin-package 'prot-elfeed-bongo)
-
   (define-key global-map (kbd "C-c e") #'elfeed)
   (let ((map elfeed-search-mode-map))
     (define-key map (kbd "w") #'elfeed-search-yank)
@@ -7303,44 +7266,30 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
 
     (let ((map elfeed-search-mode-map))
       (define-key map (kbd "s") #'prot-elfeed-search-tag-filter)
-      ;; ;; TODO 2022-06-13: I disable some of these keybindings as
-      ;; ;; there are changes I want to make in the underlying code.
-      ;;
-      ;; (define-key map (kbd "o") #'prot-elfeed-search-open-other-window)
-      ;; (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
-      (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
       (define-key map (kbd "+") #'prot-elfeed-toggle-tag))
-    (let ((map elfeed-show-mode-map))
-      ;; (define-key map (kbd "a") #'prot-elfeed-show-archive-entry)
-      (define-key map (kbd "e") #'prot-elfeed-show-eww)
-      ;; (define-key map (kbd "q") #'prot-elfeed-kill-buffer-close-window-dwim)
-      (define-key map (kbd "v") #'prot-elfeed-mpv-dwim)
-      (define-key map (kbd "+") #'prot-elfeed-toggle-tag))))
+    (define-key elfeed-show-mode-map (kbd "+") #'prot-elfeed-toggle-tag)))
 #+end_src
 
 This is =prot-elfeed.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-elfeed.el src emacs-lisp :tangle no
 
-And here is =prot-elfeed-bongo.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
-
-#+include: prot-lisp/prot-elfeed-bongo.el src emacs-lisp :tangle no
-
-*** Sample configuration for MPV (Elfeed+Bongo extension)
+*** Sample configuration for MPV
 :PROPERTIES:
 :CUSTOM_ID: h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f
 :END:
 
-In the previous section I configure Elfeed to integrate with the Bongo
-media manager.  The external =mpv= executable is used to play back audio
-and video links.  Instead of passing command-line arguments to control
-the settings of the player, I just add the following to my local
+The external =mpv= executable is used to play back audio and video
+links.  Instead of passing command-line arguments to control the
+settings of the player, I just add the following to my local
 configuration files, specifically =~/.config/mpv/mpv.conf=:
 
 #+begin_example conf
 hwdec=auto-safe
 ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
 #+end_example
+
+This is useful for Elfeed, Bongo, and related.
 
 ** Proced (process monitor, similar to `top')
 :PROPERTIES:
@@ -7528,7 +7477,7 @@ In particular:
   website whose designers failed to provide a user-facing link for it
   (which is the norm nowadays).  I read feeds on a daily basis: it is
   the best way to keep track of updates to web pages (read section
-  [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el]]).
+  [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed/RSS reader]]).
 
 + =prot-eww-readable= is a more opinionated take on the built-in option.
   It specifies a narrower =shr-width=, specifically at the 72 character
@@ -10114,7 +10063,7 @@ take this as a pretence of objectivity.
    But it otherwise is a show-stopper.  This means that you must run the
    process externally.  Fine in principle, though I cannot avoid the
    fact that Elfeed already has an option for that (also refer to the
-   section [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed reader, prot-elfeed.el and prot-elfeed-bongo.el]]).
+   section [[#h:0cd8ddab-55d1-40df-b3db-1234850792ba][Elfeed feed/RSS reader]]).
 
 4. Updating feeds often produces duplicate items or fetches the same
    item again, even though it was already read.  The solution is to
