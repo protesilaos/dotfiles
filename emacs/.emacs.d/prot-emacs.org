@@ -7223,7 +7223,7 @@ control over the search filters.
 For an older, albeit still relevant, demonstration of what I have here,
 watch [[https://protesilaos.com/codelog/2020-06-09-emacs-elfeed-demo/][my Elfeed video]] (2020-06-09).
 
-Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MPV (Elfeed+Bongo extension)]].
+Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MPV]].
 
 #+begin_src emacs-lisp
 ;;; Elfeed feed/RSS reader
@@ -7273,6 +7273,52 @@ Also see: [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MP
 This is =prot-elfeed.el= (part of [[https://git.sr.ht/~protesilaos/dotfiles][my dotfiles' repo]]):
 
 #+include: prot-lisp/prot-elfeed.el src emacs-lisp :tangle no
+
+*** Elfeed extensions for watching videos (elfeed-tube)
+:PROPERTIES:
+:CUSTOM_ID: h:6ef31ab3-e341-4d0b-81eb-b8713dd3d66a
+:END:
+
+This is a wonderful package by Karthik Chikmagalur that is targeted at
+users who, like me, subscribe to RSS feeds of Youtube channels instead
+of checking the website (and if you need to visit the website, use an
+Invidious mirror: https://redirect.invidious.io/).
+
+=elfeed-tube= knows how to fetch in a non-blocking manner information
+about the present entry, if it points to a Youtube URL.  It gets the
+transcript and related metadata such as the video's duration.
+
+Transcripts are written in the buffer, whereas normally the buffer is
+empty.  Each portion of the transcript is buttonised, meaning that it
+can be used to navigate directly to that point in the video.  Ads are
+blotted out.  Fantastic stuff!
+
+The =elfeed-tube-mpv=, also by Karthik, is a companion to help integrate
+with the external =mpv= program as well as =mpv.el=.  Also see the
+section [[#h:aa64c61e-49b5-41b0-b1fe-10bbe3be661f][Sample configuration for MPV]].
+
+The package's README goes into the minutia and provides concrete
+examples: <https://github.com/karthink/elfeed-tube>.
+
+#+begin_src emacs-lisp
+;;; Elfeed extensions for watching videos (elfeed-tube)
+(prot-emacs-elpa-package 'elfeed-tube
+  ;; (setq elfeed-tube-auto-save-p nil) ; default value
+  ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
+  (elfeed-tube-setup)
+
+  (let ((map elfeed-show-mode-map))
+    (define-key map (kbd "F") #'elfeed-tube-fetch)
+    (define-key map [remap save-buffer] #'elfeed-tube-save))
+  (let ((map elfeed-search-mode-map))
+    (define-key map (kbd "F") #'elfeed-tube-fetch)
+    (define-key map [remap save-buffer] #'elfeed-tube-save)))
+
+(prot-emacs-elpa-package 'elfeed-tube-mpv
+  (let ((map elfeed-show-mode-map))
+    (define-key map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
+    (define-key map (kbd "C-c C-w") 'elfeed-tube-mpv-where)))
+#+end_src
 
 *** Sample configuration for MPV
 :PROPERTIES:
