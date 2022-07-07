@@ -9022,6 +9022,19 @@ I edit lots of Markdown files.  This makes things easier.
 (prot-emacs-elpa-package 'edit-indirect)
 #+end_src
 
+*** Systemd unit files
+:PROPERTIES:
+:CUSTOM_ID: h:39510230-eb08-4363-84cd-bb472165b6d3
+:END:
+
+Sometimes I need to edit a systemd file.  The =systemd= package sets up
+the appropriate major-mode.  The package provides some user options, but
+the defaults work perfectly fine.
+
+#+begin_src emacs-lisp
+(prot-emacs-elpa-package 'systemd)
+#+end_src
+
 *** YAML (yaml-mode)
 :PROPERTIES:
 :CUSTOM_ID: h:c6a1aa30-4850-40b4-9764-302d98ba95fc
