@@ -2834,8 +2834,13 @@ sure this is a good approach."
     (define-key map (kbd "F") #'elfeed-tube-fetch)
     (define-key map [remap save-buffer] #'elfeed-tube-save)))
 
+(prot-emacs-elpa-package 'mpv)
+
 (prot-emacs-elpa-package 'elfeed-tube-mpv
+  (define-key elfeed-search-mode-map (kbd "v") 'elfeed-tube-mpv)
   (let ((map elfeed-show-mode-map))
+    (define-key map (kbd "v") 'elfeed-tube-mpv)
+    (define-key map (kbd "C-c C-v") 'elfeed-tube-mpv)
     (define-key map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
     (define-key map (kbd "C-c C-w") 'elfeed-tube-mpv-where)))
 
@@ -3329,6 +3334,8 @@ sure this is a good approach."
   (setq markdown-fontify-code-blocks-natively t))
 ;; Allows for fenced block focus with C-c ' (same as Org blocks).
 (prot-emacs-elpa-package 'edit-indirect)
+
+(prot-emacs-elpa-package 'systemd)
 
 ;;; YAML (yaml-mode)
 (prot-emacs-elpa-package 'yaml-mode
