@@ -7314,8 +7314,13 @@ examples: <https://github.com/karthink/elfeed-tube>.
     (define-key map (kbd "F") #'elfeed-tube-fetch)
     (define-key map [remap save-buffer] #'elfeed-tube-save)))
 
+(prot-emacs-elpa-package 'mpv)
+
 (prot-emacs-elpa-package 'elfeed-tube-mpv
+  (define-key elfeed-search-mode-map (kbd "v") 'elfeed-tube-mpv)
   (let ((map elfeed-show-mode-map))
+    (define-key map (kbd "v") 'elfeed-tube-mpv)
+    (define-key map (kbd "C-c C-v") 'elfeed-tube-mpv)
     (define-key map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
     (define-key map (kbd "C-c C-w") 'elfeed-tube-mpv-where)))
 #+end_src
