@@ -100,12 +100,9 @@ Also see `prot-simple-focus-help-buffers'."
 (defun prot-simple--scratch-list-modes ()
   "List known major modes."
   (cl-loop for sym the symbols of obarray
-           for name = (symbol-name sym)
            when (and (functionp sym)
-                     (not (member sym minor-mode-list))
-                     (string-match "-mode$" name)
-                     (not (string-match "--" name)))
-           collect name))
+                     (provided-mode-derived-p sym 'prog-mode))
+           collect sym))
 
 (defun prot-simple--scratch-buffer-setup (region &optional mode)
   "Add contents to `scratch' buffer and name it accordingly.
