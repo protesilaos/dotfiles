@@ -5,6 +5,7 @@
 ;; Author: Protesilaos Stavrou <info@protesilaos.com>
 ;; Maintainer: Lin Development <~protesilaos/lin@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/lin
+;; Mailing-List: https://lists.sr.ht/~protesilaos/lin
 ;; Version: 0.4.0
 ;; Package-Requires: ((emacs "27.1"))
 ;; Keywords: convenience, faces, theme
