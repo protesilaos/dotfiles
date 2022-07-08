@@ -1103,6 +1103,14 @@ This is intended for use in modes such as Dired, Ibuffer, Proced.
 The actual styling of the face is done by `modus-themes-faces'."
   :group 'modus-themes-faces)
 
+(defface modus-themes-heading-0 nil
+  "General purpose face for use as the document's title.
+The exact attributes assigned to this face are contingent on the
+values assigned to the `modus-themes-headings' variable.
+
+The actual styling of the face is done by `modus-themes-faces'."
+  :group 'modus-themes-faces)
+
 (defface modus-themes-heading-1 nil
   "General purpose face for use in headings level 1.
 The exact attributes assigned to this face are contingent on the
@@ -1577,14 +1585,19 @@ speaking, is not limited to mouse usage."
 This is a helper variable intended for internal use.")
 
 (defcustom modus-themes-headings nil
-  "Heading styles with optional list of values for levels 1-8.
+  "Heading styles with optional list of values for levels 0-8.
 
 This is an alist that accepts a (key . list-of-values)
 combination.  The key is either a number, representing the
-heading's level or t, which pertains to the fallback style.  The
-list of values covers symbols that refer to properties, as
-described below.  Here is a sample, followed by a presentation of
-all available properties:
+heading's level (0-8) or t, which pertains to the fallback style.
+
+Level 0 is a special heading: it is used for what counts as a
+document title or equivalent, such as the #+title construct we
+find in Org files.  Levels 1-8 are regular headings.
+
+The list of values covers symbols that refer to properties, as
+described below.  Here is a complete sample, followed by a
+presentation of all available properties:
 
     (setq modus-themes-headings
           (quote ((1 . (background overline variable-pitch 1.5))
@@ -1669,12 +1682,12 @@ For Org users, the extent of the heading depends on the variable
 and `background' properties.  Depending on the version of Org,
 there may be others, such as `org-fontify-done-headline'."
   :group 'modus-themes
-  :package-version '(modus-themes . "2.3.0")
+  :package-version '(modus-themes . "2.5.0")
   :version "29.1"
   :type `(alist
           :options ,(mapcar (lambda (el)
                               (list el modus-themes--headings-choice))
-                            '(1 2 3 4 5 6 7 8 t))
+                            '(0 1 2 3 4 5 6 7 8 t))
           :key-type symbol
           :value-type ,modus-themes--headings-choice)
   :set #'modus-themes--set-option
@@ -4210,6 +4223,10 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(modus-themes-mark-symbol ((,class :inherit bold :foreground ,blue-alt)))
 ;;;;; heading levels
     ;; styles for regular headings used in Org, Markdown, Info, etc.
+    `(modus-themes-heading-0
+      ((,class ,@(modus-themes--heading
+                  0 cyan-alt-other blue-alt
+                  cyan-nuanced-bg bg-alt bg-region))))
     `(modus-themes-heading-1
       ((,class ,@(modus-themes--heading
                   1 fg-main magenta-alt-other
@@ -4266,12 +4283,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
       ((,class ,@(modus-themes--markup magenta-alt magenta-intense bg-alt
                                        bg-special-faint-calm))))
 ;;;;; search
-    `(modus-themes-search-success ((,class :inherit ,@(modus-themes--deuteran
-                                                       'modus-themes-intense-blue
-                                                       'modus-themes-intense-green))))
-    `(modus-themes-search-success-lazy ((,class :inherit ,@(modus-themes--deuteran
-                                                            'modus-themes-special-mild
-                                                            'modus-themes-refine-cyan))))
+    `(modus-themes-search-success ((,class :inherit modus-themes-intense-yellow)))
+    `(modus-themes-search-success-lazy ((,class :inherit modus-themes-subtle-cyan)))
     `(modus-themes-search-success-modeline ((,class :foreground ,@(modus-themes--deuteran
                                                                    blue-active
                                                                    green-active))))
@@ -4479,8 +4492,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(anzu-match-3 ((,class :inherit modus-themes-subtle-yellow)))
     `(anzu-mode-line ((,class :inherit (bold modus-themes-search-success-modeline))))
     `(anzu-mode-line-no-match ((,class :inherit bold :foreground ,red-active)))
-    `(anzu-replace-highlight ((,class :inherit modus-themes-refine-yellow :underline t)))
-    `(anzu-replace-to ((,class :inherit (modus-themes-search-success bold))))
+    `(anzu-replace-highlight ((,class :inherit modus-themes-refine-red :underline t)))
+    `(anzu-replace-to ((,class :inherit modus-themes-search-success)))
 ;;;;; apropos
     `(apropos-button ((,class :foreground ,magenta-alt-other)))
     `(apropos-function-button ((,class :foreground ,magenta)))
@@ -4739,7 +4752,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(company-tooltip-scrollbar-thumb ((,class :background ,fg-active)))
     `(company-tooltip-scrollbar-track ((,class :background ,bg-active)))
     `(company-tooltip-search ((,class :inherit (modus-themes-search-success-lazy bold))))
-    `(company-tooltip-search-selection ((,class :inherit (modus-themes-search-success bold) :underline t)))
+    `(company-tooltip-search-selection ((,class :inherit modus-themes-search-success :underline t)))
     `(company-tooltip-selection ((,class :inherit modus-themes-completion-selected-popup)))
 ;;;;; company-posframe
     `(company-posframe-active-backend-name ((,class :inherit bold :background ,bg-active :foreground ,blue-active)))
@@ -4817,11 +4830,9 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; csv-mode
     `(csv-separator-face ((,class :foreground ,red-intense)))
 ;;;;; ctrlf
-    `(ctrlf-highlight-active ((,class :inherit (modus-themes-search-success bold))))
+    `(ctrlf-highlight-active ((,class :inherit modus-themes-search-success)))
     `(ctrlf-highlight-line ((,class :inherit modus-themes-hl-line)))
     `(ctrlf-highlight-passive ((,class :inherit modus-themes-search-success-lazy)))
-;;;;; cursor-flash
-    `(cursor-flash-face ((,class :inherit modus-themes-intense-blue)))
 ;;;;; custom (M-x customize)
     `(custom-button ((,class :inherit modus-themes-box-button)))
     `(custom-button-mouse ((,class :inherit (highlight custom-button))))
@@ -5322,7 +5333,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(evil-ex-lazy-highlight ((,class :inherit modus-themes-search-success-lazy)))
     `(evil-ex-search ((,class :inherit modus-themes-search-success)))
     `(evil-ex-substitute-matches ((,class :inherit modus-themes-refine-yellow :underline t)))
-    `(evil-ex-substitute-replacement ((,class :inherit (modus-themes-search-success bold))))
+    `(evil-ex-substitute-replacement ((,class :inherit modus-themes-search-success)))
 ;;;;; evil-goggles
     `(evil-goggles-change-face ((,class :inherit modus-themes-refine-yellow)))
     `(evil-goggles-commentary-face ((,class :inherit (modus-themes-subtle-neutral modus-themes-slant))))
@@ -5860,13 +5871,13 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(ioccur-regexp-face ((,class :inherit (modus-themes-intense-magenta bold))))
     `(ioccur-title-face ((,class :inherit modus-themes-pseudo-header :foreground ,fg-special-cold)))
 ;;;;; isearch, occur, and the like
-    `(isearch ((,class :inherit (modus-themes-search-success bold))))
+    `(isearch ((,class :inherit modus-themes-search-success)))
     `(isearch-fail ((,class :inherit modus-themes-refine-red)))
     `(isearch-group-1 ((,class :inherit modus-themes-refine-blue)))
     `(isearch-group-2 ((,class :inherit modus-themes-refine-magenta)))
     `(lazy-highlight ((,class :inherit modus-themes-search-success-lazy)))
     `(match ((,class :inherit modus-themes-special-calm)))
-    `(query-replace ((,class :inherit (modus-themes-intense-yellow bold))))
+    `(query-replace ((,class :inherit modus-themes-intense-red)))
 ;;;;; ivy
     `(ivy-action ((,class :inherit modus-themes-key-binding)))
     `(ivy-confirm-face ((,class :inherit success)))
@@ -6263,8 +6274,6 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(markup-title-4-face ((,class :inherit modus-themes-heading-5)))
     `(markup-title-5-face ((,class :inherit modus-themes-heading-6)))
     `(markup-verbatim-face ((,class :inherit modus-themes-fixed-pitch :background ,bg-alt)))
-;;;;; mct
-    `(mct-highlight-candidate ((,class :inherit modus-themes-completion-selected)))
 ;;;;; mentor
     `(mentor-download-message ((,class :foreground ,fg-special-warm)))
     `(mentor-download-name ((,class :foreground ,fg-special-cold)))
@@ -6519,7 +6528,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(org-dispatcher-highlight ((,class :inherit (bold modus-themes-mark-alt))))
     `(org-document-info ((,class :foreground ,fg-special-cold)))
     `(org-document-info-keyword ((,class :inherit (shadow modus-themes-fixed-pitch))))
-    `(org-document-title ((,class :inherit modus-themes-heading-1 :background ,bg-main :overline nil :foreground ,fg-special-cold)))
+    `(org-document-title ((,class :inherit modus-themes-heading-0)))
     `(org-done ((,class :inherit modus-themes-grue)))
     `(org-drawer ((,class :inherit (shadow modus-themes-fixed-pitch))))
     `(org-ellipsis (())) ; inherits from the heading's color
@@ -6720,7 +6729,7 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(pomidor-work-face ((,class :inherit modus-themes-grue)))
 ;;;;; popup
     `(popup-face ((,class :background ,bg-alt :foreground ,fg-main)))
-    `(popup-isearch-match ((,class :inherit (modus-themes-search-success bold))))
+    `(popup-isearch-match ((,class :inherit modus-themes-search-success)))
     `(popup-menu-mouse-face ((,class :inherit highlight)))
     `(popup-menu-selection-face ((,class :inherit modus-themes-completion-selected-popup)))
     `(popup-scroll-bar-background-face ((,class :background ,bg-active)))
@@ -6859,10 +6868,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
 ;;;;; selectrum
     `(selectrum-current-candidate ((,class :inherit modus-themes-completion-selected)))
     `(selectrum-mouse-highlight ((,class :inherit highlight)))
-    `(selectrum-quick-keys-highlight
-      ((,class :inherit modus-themes-refine-red)))
-    `(selectrum-quick-keys-match
-      ((,class :inherit (bold modus-themes-search-success))))
+    `(selectrum-quick-keys-highlight ((,class :inherit bold :background ,bg-char-0)))
+    `(selectrum-quick-keys-match ((,class :inherit bold :background ,bg-char-1)))
 ;;;;; selectrum-prescient
     `(selectrum-prescient-primary-highlight ((,class :inherit modus-themes-completion-match-0)))
     `(selectrum-prescient-secondary-highlight ((,class :inherit modus-themes-completion-match-1)))
@@ -6879,8 +6886,8 @@ by virtue of calling either of `modus-themes-load-operandi' and
     `(semantic-tag-boundary-face ((,class :overline ,blue-intense)))
     `(semantic-unmatched-syntax-face ((,class :underline ,fg-lang-error)))
 ;;;;; sesman
-    `(sesman-browser-button-face ((,class :foreground ,blue-alt-other :underline t)))
-    `(sesman-browser-highligh-face ((,class :inherit modus-themes-subtle-blue)))
+    `(sesman-browser-button-face ((,class :inherit button)))
+    `(sesman-browser-highligh-face ((,class :inherit highlight)))
     `(sesman-buffer-face ((,class :foreground ,magenta)))
     `(sesman-directory-face ((,class :inherit bold :foreground ,blue)))
     `(sesman-project-face ((,class :inherit bold :foreground ,magenta-alt-other)))
