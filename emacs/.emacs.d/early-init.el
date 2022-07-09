@@ -37,8 +37,12 @@
 (setq frame-resize-pixelwise t)
 
 (dolist (var '(default-frame-alist initial-frame-alist))
-  (add-to-list var '(width . (text-pixels . 1600)))
-  (add-to-list var '(height . (text-pixels . 900))))
+  (add-to-list var '(width . (text-pixels . 1920)))
+  ;; The height should be 1080, but the panel and the window's
+  ;; deocrations reduce the effective value.  If I set 1080 here, Emacs
+  ;; maximises the frame regardless of the width value, which I do not
+  ;; want.
+  (add-to-list var '(height . (text-pixels . 990))))
 
 ;; Initialise installed packages
 (setq package-enable-at-startup t)
