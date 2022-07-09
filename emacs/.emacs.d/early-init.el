@@ -36,6 +36,9 @@
 
 (setq frame-resize-pixelwise t)
 
+;; Do not resize the frame at this early stage.
+(setq frame-inhibit-implied-resize t)
+
 (dolist (var '(default-frame-alist initial-frame-alist))
   (add-to-list var '(width . (text-pixels . 1920)))
   ;; The height should be 1080, but the panel and the window's
@@ -51,9 +54,6 @@
 
 ;; Allow loading from the package cache
 (setq package-quickstart t)
-
-;; Do not resize the frame at this early stage.
-(setq frame-inhibit-implied-resize t)
 
 ;; Disable GUI elements
 (menu-bar-mode -1)
