@@ -288,11 +288,12 @@
         ;; combinations, include per-heading-level tweaks: read the
         ;; manual or its doc string
         modus-themes-headings
-        '(;; (1 . (variable-pitch light (height 1.6) background))
-          ;; (2 . (variable-pitch regular (height 1.4) overline))
-          ;; (3 . (variable-pitch regular (height 1.3) overline))
-          ;; (4 . (rainbow (height 1.2)))
-          ;; (5 . (rainbow (height 1.1)))
+        '((0 . (variable-pitch light (height 1.9)))
+          (1 . (variable-pitch light (height 1.6) background))
+          (2 . (variable-pitch regular (height 1.4) overline))
+          (3 . (variable-pitch regular (height 1.3) overline))
+          (4 . (rainbow (height 1.2)))
+          (5 . (rainbow (height 1.1)))
           (t . (variable-pitch extrabold (height 1.05)))))
 
   ;; Load the theme files before enabling a theme (else you get an error).
@@ -1113,7 +1114,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
            (window-height . 0.16)
            (side . top)
            (slot . 0))
-          ("\\*Messages.*"
+          ((derived-mode . messages-buffer-mode)
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
@@ -1124,7 +1125,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
            (side . top)
            (slot . 2))
           ;; left side window
-          ("\\*\\(.* # Help.*\\|Help\\)\\*"    ; See the hooks for `visual-line-mode'
+          ((derived-mode . help-mode) ; See the hooks for `visual-line-mode'
            (display-buffer-reuse-mode-window display-buffer-in-side-window)
            (window-width . 0.25)
            (side . left)
@@ -1157,7 +1158,11 @@ Useful for prompts such as `eval-expression' and `shell-command'."
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
-          ("\\*.*\\(e?shell\\|v?term\\).*"
+          ((or . ((derived-mode . eshell-mode)
+                  (major-mode . eshell-mode)
+                  (derived-mode . shell-mode)
+                  (major-mode . shell-mode)
+                  "\\*.*\\(e?shell\\|v?term\\).*"))
            (display-buffer-reuse-mode-window display-buffer-below-selected))
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
