@@ -3242,7 +3242,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (window-height . 0.16)
            (side . top)
            (slot . 0))
-          ("\\*Messages.*"
+          ((derived-mode . messages-buffer-mode)
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
@@ -3253,7 +3253,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (side . top)
            (slot . 2))
           ;; left side window
-          ("\\*\\(.* # Help.*\\|Help\\)\\*"    ; See the hooks for `visual-line-mode'
+          ((derived-mode . help-mode) ; See the hooks for `visual-line-mode'
            (display-buffer-reuse-mode-window display-buffer-in-side-window)
            (window-width . 0.25)
            (side . left)
@@ -3286,7 +3286,11 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
-          ("\\*.*\\(e?shell\\|v?term\\).*"
+          ((or . ((derived-mode . eshell-mode)
+                  (major-mode . eshell-mode)
+                  (derived-mode . shell-mode)
+                  (major-mode . shell-mode)
+                  "\\*.*\\(e?shell\\|v?term\\).*"))
            (display-buffer-reuse-mode-window display-buffer-below-selected))
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
