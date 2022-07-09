@@ -34,6 +34,8 @@
 
 ;;; Code:
 
+(setq frame-resize-pixelwise t)
+
 (dolist (var '(default-frame-alist initial-frame-alist))
   (add-to-list var '(width . (text-pixels . 1600)))
   (add-to-list var '(height . (text-pixels . 900))))
