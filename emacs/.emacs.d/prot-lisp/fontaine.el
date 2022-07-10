@@ -139,45 +139,42 @@
 
 (defcustom fontaine-presets
   '((regular
-     :default-family "Hack"
-     :default-weight normal
-     :default-height 100
-     :fixed-pitch-family "Fira Code"
-     :fixed-pitch-weight nil ; falls back to :default-weight
-     :fixed-pitch-height 1.0
-     :variable-pitch-family "Noto Sans"
-     :variable-pitch-weight normal
-     :variable-pitch-height 1.0
-     :bold-family nil ; use whatever the underlying face has
-     :bold-weight bold
-     :italic-family "Source Code Pro"
-     :italic-slant italic
-     :line-spacing 1)
+     :default-height 100)
     (large
-     :default-family "Iosevka"
-     :default-weight normal
-     :default-height 150
+     :default-weight semilight
+     :default-height 140
+     :bold-weight extrabold)
+    (t
+     ;; I keep all properties for didactic purposes, but most can be
+     ;; omitted.
+     :default-family "Monospace"
+     :default-weight regular
+     :default-height 100
      :fixed-pitch-family nil ; falls back to :default-family
      :fixed-pitch-weight nil ; falls back to :default-weight
      :fixed-pitch-height 1.0
-     :variable-pitch-family "FiraGO"
-     :variable-pitch-weight normal
-     :variable-pitch-height 1.05
+     :fixed-pitch-serif-family nil ; falls back to :default-family
+     :fixed-pitch-serif-weight nil ; falls back to :default-weight
+     :fixed-pitch-serif-height 1.0
+     :variable-pitch-family "Sans"
+     :variable-pitch-weight nil
+     :variable-pitch-height 1.0
      :bold-family nil ; use whatever the underlying face has
      :bold-weight bold
-     :italic-family nil ; use whatever the underlying face has
+     :italic-family nil
      :italic-slant italic
-     :line-spacing 1))
+     :line-spacing nil))
   "Alist of desired typographic properties.
 
 The car of each cell is an arbitrary symbol that identifies
-and/or describes the set of properties (e.g. 'small', 'reading').
+and/or describes the set of properties (e.g. small, reading).
 
 A preset whose car is t is treated as the default option.  This
 makes it easier to specify multiple presets without duplicating
 their properties.  The other presets beside t act as overrides of
 the defaults and, as such, need only consist of the properties
-that change from the default.
+that change from the default.  See the default value of this
+variable for how that is done.
 
 The cdr is a plist that specifies the typographic properties of
 the faces `default', `fixed-pitch', `variable-pitch', `bold', and
@@ -201,6 +198,11 @@ The properties in detail:
   `:fixed-pitch-height' apply to the `fixed-pitch' face.  Their
   fallback values are `:default-family', `:default-weight', and
   1.0, respectively.
+
+- `:fixed-pitch-serif-family', `:fixed-pitch-serif-weight',
+  `:fixed-pitch-serif-height' apply to the `fixed-pitch-serif'
+  face.  Their fallback values are `:default-family',
+  `:default-weight', and 1.0, respectively.
 
 - The `:variable-pitch-family', `:variable-pitch-weight', and
   `:variable-pitch-height' apply to the `variable-pitch' face.
@@ -259,6 +261,10 @@ Caveats or further notes:
                   ((const :tag "Fixed pitch font family" :fixed-pitch-family) string)
                   ((const :tag "Fixed pitch regular weight" :fixed-pitch-weight) ,fontaine--weights-widget)
                   ((const :tag "Fixed pitch height" :fixed-pitch-height) float)
+
+                  ((const :tag "Fixed pitch serif font family" :fixed-pitch-serif-family) string)
+                  ((const :tag "Fixed pitch serif regular weight" :fixed-pitch-serif-weight) ,fontaine--weights-widget)
+                  ((const :tag "Fixed pitch serif height" :fixed-pitch-serif-height) float)
 
                   ((const :tag "Variable pitch font family" :variable-pitch-family) string)
                   ((const :tag "Variable pitch regular weight" :variable-pitch-weight) ,fontaine--weights-widget)
@@ -399,6 +405,16 @@ ARGS are its routines."
   frame))
 
 (fontaine--apply-preset
+ fontaine--apply-fixed-pitch-serif-preset
+ "Set `fixed-pitch-serif' face attributes based on PRESET for optional FRAME."
+ (fontaine--set-face-attributes
+  'fixed-pitch-serif
+  (or (plist-get properties :fixed-pitch-family) (plist-get properties :default-family))
+  (or (plist-get properties :fixed-pitch-weight) (plist-get properties :default-weight))
+  (or (plist-get properties :fixed-pitch-height) 1.0)
+  frame))
+
+(fontaine--apply-preset
  fontaine--apply-variable-pitch-preset
  "Set `variable-pitch' face attributes based on PRESET for optional FRAME."
  (fontaine--set-face-attributes
@@ -481,6 +497,7 @@ non-nil."
       (user-error "Cannot use this in a terminal emulator; try the Emacs GUI")
     (fontaine--apply-default-preset preset frame)
     (fontaine--apply-fixed-pitch-preset preset frame)
+    (fontaine--apply-fixed-pitch-serif-preset preset frame)
     (fontaine--apply-variable-pitch-preset preset frame)
     (fontaine--apply-bold-preset preset frame)
     (fontaine--apply-italic-preset preset frame)
@@ -491,7 +508,7 @@ non-nil."
 ;;;; Modify individual faces
 
 (defconst fontaine--font-faces
-  '(default fixed-pitch variable-pitch bold italic)
+  '(default fixed-pitch fixed-pitch-serif variable-pitch bold italic)
   "List of faces whose typographic attributes we may change.")
 
 (defconst fontaine--font-weights
@@ -575,8 +592,10 @@ Target FRAME, if provided as an optional argument."
 (defvar fontaine--fixed-pitch-font-family-history '()
   "Minibuffer history of selected `fixed-pitch' font families.")
 
-(defun fontaine--set-fixed-pitch (&optional frame)
-  "Set `fixed-pitch' attributes, optionally for FRAME."
+(defun fontaine--set-fixed-pitch (&optional frame serif)
+  "Set `fixed-pitch' attributes, optionally for FRAME.
+If optional SERIF is non-nil, operate on the `fixed-pitch-serif'
+face."
   (let* ((families (or (alist-get 'fixed-pitch fontaine-font-families)
                        (fontaine--family-list-fixed-pitch)))
          (family (completing-read "Font family of `fixed-pitch': "
@@ -585,9 +604,10 @@ Target FRAME, if provided as an optional argument."
          (weight (intern (completing-read "Select weight for `fixed-pitch': "
                                           fontaine--font-weights nil)))
          (height (read-number "Height of `fixed-pitch' face (must be a floating point): "
-                              1.0 'fontaine--float-history)))
+                              1.0 'fontaine--float-history))
+         (face (if serif 'fixed-pitch-serif 'fixed-pitch)))
     (if (floatp height)
-        (fontaine--set-face-attributes 'fixed-pitch family weight height frame)
+        (fontaine--set-face-attributes face family weight height frame)
       (user-error "Height of `fixed-pitch' face must be a floating point"))))
 
 (defvar fontaine--variable-pitch-font-family-history '()
@@ -665,6 +685,7 @@ non-nil."
     ('bold (fontaine--set-bold frame))
     ('default (fontaine--set-default frame))
     ('fixed-pitch (fontaine--set-fixed-pitch frame))
+    ('fixed-pitch-serif (fontaine--set-fixed-pitch frame :serif))
     ('italic (fontaine--set-italic frame))
     ('variable-pitch (fontaine--set-variable-pitch frame))
     (_ (call-interactively #'fontaine-set-preset))))

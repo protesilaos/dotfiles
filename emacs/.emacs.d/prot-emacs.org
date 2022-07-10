@@ -989,6 +989,9 @@ Relevant publications of mine that are not part of this document:
            :fixed-pitch-family nil ; falls back to :default-family
            :fixed-pitch-weight nil ; falls back to :default-weight
            :fixed-pitch-height 1.0
+           :fixed-pitch-serif-family nil ; falls back to :default-family
+           :fixed-pitch-serif-weight nil ; falls back to :default-weight
+           :fixed-pitch-serif-height 1.0
            :variable-pitch-family "Iosevka Comfy Duo"
            :variable-pitch-weight nil
            :variable-pitch-height 1.0
