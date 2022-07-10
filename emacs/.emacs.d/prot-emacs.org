@@ -627,7 +627,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless (padding 3))
+        modus-themes-mode-line nil
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -653,7 +653,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(no-color)
+        modus-themes-links '(neutral-underline)
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
@@ -666,7 +666,7 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(bold gray intense)
+        modus-themes-prompts '(bold italic intense)
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -709,10 +709,10 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
         ;; combinations, include per-heading-level tweaks: read the
         ;; manual or its doc string
         modus-themes-headings
-        '((0 . (variable-pitch light (height 1.9)))
-          (1 . (variable-pitch light (height 1.6) background))
-          (2 . (variable-pitch regular (height 1.4) overline))
-          (3 . (variable-pitch regular (height 1.3) overline))
+        '((0 . (variable-pitch monochrome light (height 1.9)))
+          (1 . (variable-pitch rainbow light (height 1.6)))
+          (2 . (variable-pitch rainbow regular (height 1.4)))
+          (3 . (variable-pitch rainbow regular (height 1.3)))
           (4 . (rainbow (height 1.2)))
           (5 . (rainbow (height 1.1)))
           (t . (variable-pitch extrabold (height 1.05)))))
