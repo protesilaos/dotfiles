@@ -89,6 +89,7 @@
     notmuch-tree-mode-hook
     occur-mode-hook
     org-agenda-mode-hook
+    pdf-outline-buffer-mode-hook
     proced-mode-hook
     tabulated-list-mode-hook)
   "List of hooks that should enable Lin.
