@@ -6,7 +6,7 @@
 ;; Maintainer: Denote Development <~protesilaos/denote@lists.sr.ht>
 ;; URL: https://git.sr.ht/~protesilaos/denote
 ;; Mailing-List: https://lists.sr.ht/~protesilaos/denote
-;; Version: 0.2.1
+;; Version: 0.3.0
 ;; Package-Requires: ((emacs "27.2"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -367,13 +367,10 @@ positions, limit the process to the region in-between."
 
 ;;;; Backlinks' buffer
 
-(defface denote-link--backlink-button nil
-  "Face for backlink buttons.")
-
 (define-button-type 'denote-link-backlink-button
   'follow-link t
   'action #'denote-link--backlink-find-file
-  'face 'denote-link--backlink-button)     ; we use this face attribute to style it later
+  'face nil)            ; we use this face though we style it later
 
 (defun denote-link--backlink-find-file (button)
   "Action for BUTTON to `find-file'."
