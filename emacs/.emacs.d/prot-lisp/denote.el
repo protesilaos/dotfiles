@@ -162,73 +162,6 @@ the appropriate list of strings."
   :group 'denote
   :type 'boolean)
 
-(defconst denote--prompt-symbols
-  '(title keywords date file-type subdirectory)
-  "List of symbols representing `denote' prompts.")
-
-(defcustom denote-prompts '(title keywords)
-  "Specify the prompts of the `denote' command.
-
-The value is a list of symbols, which includes any of the following:
-
-- `title': Prompt for the title of the new note.  If unspecified, the
-  title is left empty.
-
-- `keywords': Prompts with completion for the keywords of the new
-  note.  Available candidates are those specified in the user
-  option `denote-known-keywords'.  If the user option
-  `denote-infer-keywords' is non-nil, keywords in existing note
-  file names are included in the list of candidates.  The
-  `keywords' prompt uses `completing-read-multiple', meaning that
-  it can accept multiple keywords, separated by a comma (or
-  whatever the value of `crm-sepator' is).
-
-- `date': Prompts for the date of the new note.  It will expect a
-  date like 2022-06-16 or a date plus time: 2022-06-16 14:30.
-  Without the `date' prompt, the `denote' command uses the
-  `current-time'.
-
-- `file-type': Prompts with completion for the filetype of the
-  new note.  Available candidates are those specified in the user
-  option `denote-file-type'.  Without this prompt, `denote' uses
-  the value of `denote-file-type'.
-
-- `subdirectory': Prompts with completion for a subdirectory in
-  which to create the note.  Available candidates are the value
-  of the user option `denote-directory' and all of its
-  subdirectories.  Any subdirectory must already exist: Denote
-  will not create it.
-
-The prompts will happen in the given order.
-
-If the value of this user option is nil, no prompts are used.
-The resulting file name will consist of an identifier (i.e. the
-date and time) and a supported file type extension (per
-`denote-file-type').
-
-Recall that Denote's standard file-naming scheme is as
-follows (read the manual for the technicalities):
-
-    DATE--TITLE__KEYWORDS.EXT
-
-If either or both of the `title' and `keywords' prompts are not
-included in the value of this variable, file names will be any of
-those permutations:
-
-    DATE.EXT
-    DATE--TITLE.EXT
-    DATE__KEYWORDS.EXT
-
-When in doubt, always include the `title' and `keywords' prompts."
-  :group 'denote
-  :type '(radio (const :tag "Use no prompts" nil)
-                (set :tag "Available prompts" :greedy t
-                     (const :tag "Title" title)
-                     (const :tag "Keywords" keywords)
-                     (const :tag "Date" date)
-                     (const :tag "File type extension" file-type)
-                     (const :tag "Subdirectory" subdirectory))))
-
 (defcustom denote-sort-keywords t
   "Whether to sort keywords in new files.
 
@@ -341,7 +274,7 @@ We consider those characters illigal for our purposes.")
          (path (if (or (eq val 'default-directory) (eq val 'local)) default-directory val)))
     (unless (file-directory-p path)
       (make-directory path t))
-    (file-name-as-directory path)))
+    (file-name-as-directory (expand-file-name path))))
 
 (defun denote--slug-no-punct (str)
   "Convert STR to a file name slug."
@@ -393,11 +326,11 @@ FILE is relative to the variable `denote-directory'."
 (defun denote--file-name-relative-to-denote-directory (file)
   "Return file name of FILE relative to the variable `denote-directory'.
 FILE must be an absolute path."
-  (if-let* ((dir (denote-directory))
-            ((file-name-absolute-p file))
-            ((string-prefix-p dir file)))
-      (substring-no-properties file (length dir))
-    file))
+  (when-let* ((dir (denote-directory))
+              ((file-name-absolute-p file))
+              (file-name (expand-file-name file))
+              ((string-prefix-p dir file-name)))
+    (substring-no-properties file-name (length dir))))
 
 (defun denote--current-file-is-note-p ()
   "Return non-nil if current file likely is a Denote note."
@@ -713,44 +646,26 @@ Optional DEFAULT-TITLE is used as the default value."
 ;;;;; The `denote' command
 
 ;;;###autoload
-(defun denote (&optional title keywords type date subdir)
-  "Create a new note with the appropriate metadata and file name.
+(defun denote (title keywords)
+  "Create new note with the appropriate metadata and file name.
 
-When called interactively, the metadata and file name are prompted
-according to the value of `denote-prompts'.
+This command first prompts for a file TITLE and then for one or
+more KEYWORDS (separated by the `crm-separator', typically a
+comma).  The latter supports completion though any arbitrary
+string can be inserted.
 
-When called from Lisp, all arguments are optional.
+Completion candidates are those of `denote-known-keywords'.  If
+`denote-infer-keywords' is non-nil, then keywords in existing
+file names are also provided as candidates.
 
-- TITLE is a string.  If nil, an empty string is used.
-
-- KEYWORDS is a list of strings.
-
-- TYPE is a symbol among those described in `denote-file-type'.
-
-- DATE is a string representing a date like 2022-06-30 or a date
-  and time like 2022-06-16 14:30.
-
-- SUBDIR is a string representing the path to either the value of
-  the variable `denote-directory' or a subdirectory thereof.  The
-  subdirectory must exist: Denote will not create it."
-  (interactive)
-  (when (called-interactively-p 'any)
-    (dolist (prompt denote-prompts)
-      (pcase prompt
-        ('title (setq title (denote--title-prompt)))
-        ('date (setq date (denote--date-prompt)))
-        ('file-type (setq type (denote--file-type-prompt)))
-        ('subdirectory (setq subdir (denote--subdirs-prompt)))
-        ('keywords (setq keywords (denote--keywords-prompt))))))
-  (let* ((denote-file-type (denote--file-type-symbol (or type denote-file-type)))
-         (date (if (or (null date) (string-empty-p date))
-                   (current-time)
-                 (denote--valid-date date)))
-         (id (format-time-string denote--id-format date))
-         (denote-directory (or subdir (denote-directory))))
-    (denote--barf-duplicate-id id)
-    (denote--prepare-note (or title "") keywords nil date id)
-    (denote--keywords-add-to-history keywords)))
+When `denote-sort-keywords' is non-nil, keywords are sorted
+alphabetically in both the file name and file contents."
+  (interactive
+   (list
+    (denote--title-prompt)
+    (denote--keywords-prompt)))
+  (denote--prepare-note title keywords)
+  (denote--keywords-add-to-history keywords))
 
 (defalias 'denote-create-note (symbol-function 'denote))
 
@@ -778,14 +693,14 @@ here for clarity."
    (t (user-error "`%s' is not a symbol or string" filetype))))
 
 ;;;###autoload
-(defun denote-type ()
-  "Create note while prompting for a file type.
+(defun denote-type (filetype)
+  "Like `denote' but with FILETYPE for `denote-file-type'.
+In practice, this command lets you create, say, a Markdown file
+even when your default is Org.
 
-This is the equivalent to calling `denote' when `denote-prompts'
-is set to \\'(file-type title keywords)."
-  (declare (interactive-only t))
-  (interactive)
-  (let ((denote-prompts '(file-type title keywords)))
+When called from Lisp the FILETYPE must be a symbol."
+  (interactive (list (denote--file-type-prompt)))
+  (let ((denote-file-type (denote--file-type-symbol filetype)))
     (call-interactively #'denote)))
 
 (defalias 'denote-create-note-using-type (symbol-function 'denote-type))
@@ -821,18 +736,30 @@ NO-CHECK-CURRENT passes the appropriate flag to
     t))
 
 ;;;###autoload
-(defun denote-date ()
-  "Create note while prompting for a date.
+(defun denote-date (date title keywords)
+  "Like `denote', but create new note for given DATE.
 
-The date can be in YEAR-MONTH-DAY notation like 2022-06-30 or
-that plus the time: 2022-06-16 14:30
+DATE can either be something like 2022-06-16 or that plus time:
+2022-06-16 14:30.
 
-This is the equivalent to calling `denote' when `denote-prompts'
-is set to \\'(date title keywords)."
-  (declare (interactive-only t))
-  (interactive)
-  (let ((denote-prompts '(date title keywords)))
-    (call-interactively #'denote)))
+The hour can be omitted, in which case it is interpreted as
+00:00.  Beware that you might create files with non-unique
+identifiers if they both have the same date and time.  In such a
+case, Denote will refrain from creating the new note.  Try with
+another DATE value where, for instance, a different time is
+specified.
+
+The TITLE and KEYWORDS arguments are the same as with `denote'."
+  (interactive
+   (list
+    (denote--date-prompt)
+    (denote--title-prompt)
+    (denote--keywords-prompt)))
+  (when-let ((d (denote--valid-date date))
+             (id (format-time-string denote--id-format d))
+             ((denote--barf-duplicate-id id)))
+    (denote--prepare-note title keywords nil d id)
+    (denote--keywords-add-to-history keywords)))
 
 (defalias 'denote-create-note-using-date (symbol-function 'denote-date))
 
@@ -871,18 +798,22 @@ is set to \\'(date title keywords)."
     (denote--subdirs-completion-table dirs)))
 
 ;;;###autoload
-(defun denote-subdirectory ()
-  "Create note while prompting for a subdirectory.
+(defun denote-subdirectory (directory title keywords)
+  "Like `denote' but ask for DIRECTORY to put the note in.
 
-Available candidates include the value of the variable
-`denote-directory' and any subdirectory thereof.
+The DIRECTORY is either the variable `denote-directory' or a
+subdirectory of it.  The TITLE and KEYWORDS are the same as for
+the `denote' command.
 
-This is equivalent to calling `denote' when `denote-prompts' is set to
-\\'(subdirectory title keywords)."
-  (declare (interactive-only t))
-  (interactive)
-  (let ((denote-prompts '(subdirectory title keywords)))
-    (call-interactively #'denote)))
+Denote does not create subdirectories."
+  (interactive
+   (list
+    (denote--subdirs-prompt)
+    (denote--title-prompt)
+    (denote--keywords-prompt)))
+  (let ((denote-directory directory))
+    (denote--prepare-note title keywords)
+    (denote--keywords-add-to-history keywords)))
 
 (defalias 'denote-create-note-in-subdirectory (symbol-function 'denote-subdirectory))
 
