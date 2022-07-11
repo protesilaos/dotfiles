@@ -3767,12 +3767,12 @@ Watch the [[https://protesilaos.com/codelog/2022-06-18-denote-demo/][demonstrati
     (interactive)
     (denote
      (denote--title-prompt)
-     "journal"))
+     '("journal")))
 
   ;; Denote does not define any key bindings.  This is for the user to
   ;; decide.  For example:
   (let ((map global-map))
-    (define-key map (kbd "C-c n j") #'my-denote-journal) ; our custom command
+    (define-key map (kbd "C-c n j") #'prot/denote-journal) ; our custom command
     (define-key map (kbd "C-c n n") #'denote)
     (define-key map (kbd "C-c n N") #'denote-type)
     (define-key map (kbd "C-c n d") #'denote-date)
