@@ -720,27 +720,19 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
 
-  ;; Custom faces (for demo purposes---check the themes' manual for more
-  ;; advanced uses).
-  (defun prot/modus-themes-custom-faces ()
-    (modus-themes-with-colors
-      (custom-set-faces
-       ;; Here add all your face definitions.
-       `(cursor ((,class :background ,red-intense))))))
-
-  (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
-
-  ;; Enable the theme at startup.  This is done after loading the files.
-  ;; You only need `modus-themes-load-operandi' for the light theme or
-  ;; `modus-themes-load-vivendi' for the dark one.  What I have here is
-  ;; a simple test to load a light/dark theme based on some general time
-  ;; ranges (just accounting for the hour and without checking for the
-  ;; actual sunrise/sunset times).  Plus we have `modus-themes-toggle'
-  ;; to switch themes at will.
-  (let ((time (string-to-number (format-time-string "%H"))))
-    (if (and (> time 5) (< time 18))
-        (modus-themes-load-operandi)
-      (modus-themes-load-vivendi)))
+  ;; A simple check to load the desired theme at startup based on what
+  ;; the global preference for GNOME is.  If such preference is not
+  ;; registered, it just loads `modus-operandi'.  Check my dotfiles for
+  ;; the shell script called "delight", which handles system-wide theme
+  ;; switching (as I bind the `modus-themes-toggle' to <f5>, delight is
+  ;; bound to s-<f5> in the desktop's own custom key bindings.
+  (if-let ((pref (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme")))
+      (cond
+       ((string-match-p "dark" pref)
+        (modus-themes-load-vivendi))
+       ((string-match-p "light" pref)
+        (modus-themes-load-operandi)))
+    (modus-themes-load-operandi))
 
   ;; Also check my package configurations for `prot-fonts' because I use
   ;; the `modus-themes-after-load-theme-hook' for some typeface-related
