@@ -206,7 +206,7 @@
         ;; of padding and NATNUM), and a floating point for the height of
         ;; the text relative to the base font size (or a cons cell of
         ;; height and FLOAT)
-        modus-themes-mode-line '(borderless (padding 3))
+        modus-themes-mode-line nil
 
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
@@ -226,13 +226,13 @@
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `bold', `intense', `underline'
-        modus-themes-paren-match '(intense)
+        modus-themes-paren-match '(bold underline)
 
         ;; Options for `modus-themes-links' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(no-color)
+        modus-themes-links '(neutral-underline)
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat',
@@ -245,7 +245,7 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense', `italic'
-        modus-themes-prompts '(bold gray intense)
+        modus-themes-prompts '(bold italic intense)
 
         ;; The `modus-themes-completions' is an alist that reads three
         ;; keys: `matches', `selection', `popup'.  Each accepts a nil
@@ -288,10 +288,10 @@
         ;; combinations, include per-heading-level tweaks: read the
         ;; manual or its doc string
         modus-themes-headings
-        '((0 . (variable-pitch light (height 1.9)))
-          (1 . (variable-pitch light (height 1.6) background))
-          (2 . (variable-pitch regular (height 1.4) overline))
-          (3 . (variable-pitch regular (height 1.3) overline))
+        '((0 . (variable-pitch monochrome light (height 1.9)))
+          (1 . (variable-pitch rainbow light (height 1.6)))
+          (2 . (variable-pitch rainbow regular (height 1.4)))
+          (3 . (variable-pitch rainbow regular (height 1.3)))
           (4 . (rainbow (height 1.2)))
           (5 . (rainbow (height 1.1)))
           (t . (variable-pitch extrabold (height 1.05)))))
@@ -299,27 +299,19 @@
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
 
-  ;; Custom faces (for demo purposes---check the themes' manual for more
-  ;; advanced uses).
-  (defun prot/modus-themes-custom-faces ()
-    (modus-themes-with-colors
-      (custom-set-faces
-       ;; Here add all your face definitions.
-       `(cursor ((,class :background ,red-intense))))))
-
-  (add-hook 'modus-themes-after-load-theme-hook #'prot/modus-themes-custom-faces)
-
-  ;; Enable the theme at startup.  This is done after loading the files.
-  ;; You only need `modus-themes-load-operandi' for the light theme or
-  ;; `modus-themes-load-vivendi' for the dark one.  What I have here is
-  ;; a simple test to load a light/dark theme based on some general time
-  ;; ranges (just accounting for the hour and without checking for the
-  ;; actual sunrise/sunset times).  Plus we have `modus-themes-toggle'
-  ;; to switch themes at will.
-  (let ((time (string-to-number (format-time-string "%H"))))
-    (if (and (> time 5) (< time 18))
-        (modus-themes-load-operandi)
-      (modus-themes-load-vivendi)))
+  ;; A simple check to load the desired theme at startup based on what
+  ;; the global preference for GNOME is.  If such preference is not
+  ;; registered, it just loads `modus-operandi'.  Check my dotfiles for
+  ;; the shell script called "delight", which handles system-wide theme
+  ;; switching (as I bind the `modus-themes-toggle' to <f5>, delight is
+  ;; bound to s-<f5> in the desktop's own custom key bindings.
+  (if-let ((pref (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme")))
+      (cond
+       ((string-match-p "dark" pref)
+        (modus-themes-load-vivendi))
+       ((string-match-p "light" pref)
+        (modus-themes-load-operandi)))
+    (modus-themes-load-operandi))
 
   ;; Also check my package configurations for `prot-fonts' because I use
   ;; the `modus-themes-after-load-theme-hook' for some typeface-related
@@ -402,6 +394,9 @@
            :fixed-pitch-family nil ; falls back to :default-family
            :fixed-pitch-weight nil ; falls back to :default-weight
            :fixed-pitch-height 1.0
+           :fixed-pitch-serif-family nil ; falls back to :default-family
+           :fixed-pitch-serif-weight nil ; falls back to :default-weight
+           :fixed-pitch-serif-height 1.0
            :variable-pitch-family "Iosevka Comfy Duo"
            :variable-pitch-weight nil
            :variable-pitch-height 1.0
@@ -1373,12 +1368,12 @@ Useful for prompts such as `eval-expression' and `shell-command'."
     (interactive)
     (denote
      (denote--title-prompt)
-     "journal"))
+     '("journal")))
 
   ;; Denote does not define any key bindings.  This is for the user to
   ;; decide.  For example:
   (let ((map global-map))
-    (define-key map (kbd "C-c n j") #'my-denote-journal) ; our custom command
+    (define-key map (kbd "C-c n j") #'prot/denote-journal) ; our custom command
     (define-key map (kbd "C-c n n") #'denote)
     (define-key map (kbd "C-c n N") #'denote-type)
     (define-key map (kbd "C-c n d") #'denote-date)
