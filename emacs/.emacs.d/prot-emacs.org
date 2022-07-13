@@ -726,12 +726,10 @@ check the [[https://protesilaos.com/emacs/modus-themes-changelog/][Change Log of
   ;; the shell script called "delight", which handles system-wide theme
   ;; switching (as I bind the `modus-themes-toggle' to <f5>, delight is
   ;; bound to s-<f5> in the desktop's own custom key bindings.
-  (if-let ((pref (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme")))
-      (cond
-       ((string-match-p "dark" pref)
-        (modus-themes-load-vivendi))
-       ((string-match-p "light" pref)
-        (modus-themes-load-operandi)))
+  (if (string-match-p
+       "dark"
+       (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))
+      (modus-themes-load-vivendi)
     (modus-themes-load-operandi))
 
   ;; Also check my package configurations for `prot-fonts' because I use
