@@ -3537,7 +3537,7 @@ to see what is on offer (packages can add their own support).
 When you set a bookmark with the command =bookmark-set= (bound by default
 to =C-x r m=), Emacs remembers both the current item and, when data
 persists on disk, the position of the point in it.  The command prompts
-you for a name, which wil make it easier for you to retrieve the
+you for a name, which will make it easier for you to retrieve the
 information afterwards.  Alternatively, use =bookmark-set-no-overwrite=
 (=C-x r M=) to prevent yourself from overriding existing bookmarks (though
 I generally prefer to write meaningful names for my entries).
