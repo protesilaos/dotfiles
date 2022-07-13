@@ -288,13 +288,13 @@
         ;; combinations, include per-heading-level tweaks: read the
         ;; manual or its doc string
         modus-themes-headings
-        '((0 . (variable-pitch monochrome light (height 1.9)))
-          (1 . (variable-pitch rainbow light (height 1.6)))
-          (2 . (variable-pitch rainbow regular (height 1.4)))
-          (3 . (variable-pitch rainbow regular (height 1.3)))
-          (4 . (rainbow (height 1.2)))
+        '((0 . (variable-pitch monochrome light (height 2.2)))
+          (1 . (variable-pitch light (height 1.6)))
+          (2 . (variable-pitch light (height 1.4)))
+          (3 . (variable-pitch regular (height 1.3)))
+          (4 . (rainbow regular (height 1.2)))
           (5 . (rainbow (height 1.1)))
-          (t . (variable-pitch extrabold (height 1.05)))))
+          (t . (variable-pitch rainbow extrabold))))
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
@@ -305,12 +305,10 @@
   ;; the shell script called "delight", which handles system-wide theme
   ;; switching (as I bind the `modus-themes-toggle' to <f5>, delight is
   ;; bound to s-<f5> in the desktop's own custom key bindings.
-  (if-let ((pref (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme")))
-      (cond
-       ((string-match-p "dark" pref)
-        (modus-themes-load-vivendi))
-       ((string-match-p "light" pref)
-        (modus-themes-load-operandi)))
+  (if (string-match-p
+       "dark"
+       (shell-command-to-string "gsettings get org.gnome.desktop.interface color-scheme"))
+      (modus-themes-load-vivendi)
     (modus-themes-load-operandi))
 
   ;; Also check my package configurations for `prot-fonts' because I use
