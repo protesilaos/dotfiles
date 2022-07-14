@@ -202,11 +202,9 @@ optional `tmr--timer-description'."
   "Determine common time unit for TIME given current time NOW."
   (save-match-data
     (cond
-     ((natnump time)
-      (* time 60))
-     ((and (stringp time) (string-match-p "\\`[0-9]+\\(?:\\.[0-9]+\\)?\\'" time))
+     ((string-match-p "\\`[0-9]+\\(?:\\.[0-9]+\\)?\\'" time)
       (* (string-to-number time) 60))
-     ((and (stringp time) (string-match "\\`\\([0-9]+\\):\\([0-9]+\\)\\(?::\\([0-9]+\\)\\)?\\'" time))
+     ((string-match "\\`\\([0-9]+\\):\\([0-9]+\\)\\(?::\\([0-9]+\\)\\)?\\'" time)
       (let ((val (decode-time now)))
         (setf (decoded-time-hour val) (string-to-number (match-string 1 time))
               (decoded-time-minute val) (string-to-number (match-string 2 time))
@@ -217,7 +215,7 @@ optional `tmr--timer-description'."
         (when (time-less-p val now)
           (user-error "Time %s is already over" time))
         (ceiling (float-time (time-subtract val now)))))
-     ((and (stringp time) (string-match "\\`\\([0-9]+\\(?:\\.[0-9]+\\)?\\)[mhs]\\'" time))
+     ((string-match "\\`\\([0-9]+\\(?:\\.[0-9]+\\)?\\)[mhs]\\'" time)
       (let ((num (string-to-number (match-string 1 time))))
         (pcase (aref time (1- (length time)))
           (?s num)
@@ -410,6 +408,8 @@ command `tmr-with-description' instead of this one."
    (list
     (tmr--read-duration)
     (when current-prefix-arg (tmr--description-prompt))))
+  (when (natnump time)
+    (setq time (number-to-string time)))
   (let* ((creation-date (current-time))
          (duration (tmr--unit creation-date time))
          (timer (tmr--timer-create
