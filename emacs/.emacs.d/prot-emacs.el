@@ -1092,17 +1092,12 @@ Useful for prompts such as `eval-expression' and `shell-command'."
           ("\\`\\*Async Shell Command\\*\\'"
            (display-buffer-no-window))
           ;; top side window
-          ("\\**prot-elfeed-bongo-queue.*"
-           (display-buffer-reuse-window display-buffer-in-side-window)
-           (window-height . 0.16)
-           (side . top)
-           (slot . -2))
-          ("\\*\\(prot-elfeed-mpv-output\\|world-clock\\).*"
+          ("\\*world-clock.*"
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
            (slot . -1))
-          ("\\*\\(Flymake diagnostics\\|Package-Lint\\).*"
+          ((derived-mode . flymake-diagnostics-buffer-mode)
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
@@ -1112,7 +1107,11 @@ Useful for prompts such as `eval-expression' and `shell-command'."
            (window-height . 0.16)
            (side . top)
            (slot . 1))
-          ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|Flymake log\\)\\*"
+          ((or . ((derived-mode . backtrace-mode)
+                  (derived-mode . shell-mode)
+                  (derived-mode . term-mode)
+                  (derived-mode . vterm-mode)
+                  "\\*\\(Warnings\\|Compile-Log\\)\\*"))
            (display-buffer-in-side-window)
            (window-height . 0.16)
            (side . top)
@@ -1145,18 +1144,9 @@ Useful for prompts such as `eval-expression' and `shell-command'."
            (window-height . fit-window-to-buffer)
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
-          ;; ("\\*\\(Embark\\)?.*Completions.*"
-          ;;  (display-buffer-reuse-mode-window display-buffer-at-bottom)
-          ;;  (window-parameters . ((no-other-window . t))))
           ("\\*\\(Output\\|Register Preview\\).*"
            (display-buffer-reuse-mode-window display-buffer-at-bottom))
           ;; below current window
-          ((or . ((derived-mode . eshell-mode)
-                  (major-mode . eshell-mode)
-                  (derived-mode . shell-mode)
-                  (major-mode . shell-mode)
-                  "\\*.*\\(e?shell\\|v?term\\).*"))
-           (display-buffer-reuse-mode-window display-buffer-below-selected))
           ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            ;; NOTE 2021-10-06: we cannot `fit-window-to-buffer' because
@@ -1164,7 +1154,42 @@ Useful for prompts such as `eval-expression' and `shell-command'."
            (window-height . 0.2))
           ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . fit-window-to-buffer))))
+           (window-height . fit-window-to-buffer))
+          ;; new frame
+          (prot/display-buffer-shell-or-term-p ; see definition below
+           (display-buffer-reuse-window display-buffer-pop-up-frame)
+           (pop-up-frame-parameters . ((width . (text-pixels . 640))
+                                       (height . (text-pixels . 360))
+                                       (tab-bar-lines . 0)
+                                       ;; Add transparency to join the
+                                       ;; cool kids (requires Emacs 29).
+                                       ;;
+                                       ;; Actually, I am just testing
+                                       ;; this.  I do not like
+                                       ;; transparency, but need to know
+                                       ;; if it works properly for the
+                                       ;; purposes of my modus-themes.
+                                       (alpha-background . 90)))
+           (window-parameters . ((no-other-window . t)
+                                 (mode-line-format . none))))
+          ((or . ((derived-mode . Man-mode)
+                  (derived-mode . woman-mode)
+                  "\\*\\(Man\\|woman\\).*"))
+           (display-buffer-reuse-window display-buffer-pop-up-frame)
+           (pop-up-frame-parameters . ((width . (text-pixels . 640))
+                                       (height . (text-pixels . 360)))))))
+
+  (defun prot/display-buffer-shell-or-term-p (buffer &rest _)
+    "Check if BUFFER is a shell or terminal.
+This is a predicate function for `buffer-match-p', intended for use in `display-buffer-alist'."
+    (when (string-match-p "\\*.*\\(e?shell\\|v?term\\).*" (buffer-name buffer))
+      (with-current-buffer buffer
+        ;; REVIEW 2022-07-14: Is this robust?
+        (and (or (not (derived-mode-p 'message-mode))
+                 (not (derived-mode-p 'special-mode)))
+             (or (derived-mode-p 'eshell-mode)
+                 (derived-mode-p 'shell-mode))))))
+
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
   (setq window-sides-vertical nil)
