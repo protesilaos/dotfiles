@@ -1108,9 +1108,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
            (side . top)
            (slot . 1))
           ((or . ((derived-mode . backtrace-mode)
-                  (derived-mode . shell-mode)
-                  (derived-mode . term-mode)
-                  (derived-mode . vterm-mode)
                   "\\*\\(Warnings\\|Compile-Log\\)\\*"))
            (display-buffer-in-side-window)
            (window-height . 0.16)
@@ -1186,9 +1183,11 @@ This is a predicate function for `buffer-match-p', intended for use in `display-
       (with-current-buffer buffer
         ;; REVIEW 2022-07-14: Is this robust?
         (and (or (not (derived-mode-p 'message-mode))
-                 (not (derived-mode-p 'special-mode)))
+                 (not (derived-mode-p 'text-mode)))
              (or (derived-mode-p 'eshell-mode)
-                 (derived-mode-p 'shell-mode))))))
+                 (derived-mode-p 'shell-mode)
+                 (derived-mode-p 'comint-mode)
+                 (derived-mode-p 'fundamental-mode))))))
 
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
