@@ -3311,9 +3311,11 @@ This is a predicate function for `buffer-match-p', intended for use in `display-
       (with-current-buffer buffer
         ;; REVIEW 2022-07-14: Is this robust?
         (and (or (not (derived-mode-p 'message-mode))
-                 (not (derived-mode-p 'special-mode)))
+                 (not (derived-mode-p 'text-mode)))
              (or (derived-mode-p 'eshell-mode)
-                 (derived-mode-p 'shell-mode))))))
+                 (derived-mode-p 'shell-mode)
+                 (derived-mode-p 'comint-mode)
+                 (derived-mode-p 'fundamental-mode))))))
 
   (setq window-combination-resize t)
   (setq even-window-sizes 'height-only)
