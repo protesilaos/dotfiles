@@ -1154,19 +1154,13 @@ Useful for prompts such as `eval-expression' and `shell-command'."
            (window-height . fit-window-to-buffer))
           ;; new frame
           (prot/display-buffer-shell-or-term-p ; see definition below
-           (display-buffer-reuse-window display-buffer-pop-up-frame)
+           (display-buffer-pop-up-frame)
            (pop-up-frame-parameters . ((width . (text-pixels . 640))
                                        (height . (text-pixels . 360))
                                        (tab-bar-lines . 0)
-                                       ;; Add transparency to join the
-                                       ;; cool kids (requires Emacs 29).
-                                       ;;
-                                       ;; Actually, I am just testing
-                                       ;; this.  I do not like
-                                       ;; transparency, but need to know
-                                       ;; if it works properly for the
-                                       ;; purposes of my modus-themes.
-                                       (alpha-background . 90)))
+                                       ;; ;; Emacs 29 transparency, if you want:
+                                       ;; (alpha-background . 90)
+                                       ))
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
           ((or . ((derived-mode . Man-mode)
