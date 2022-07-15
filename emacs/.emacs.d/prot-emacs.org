@@ -3282,7 +3282,7 @@ accompany it, watch my [[https://protesilaos.com/codelog/2020-01-07-emacs-displa
            (window-height . fit-window-to-buffer))
           ;; new frame
           (prot/display-buffer-shell-or-term-p ; see definition below
-           (display-buffer-reuse-window display-buffer-pop-up-frame)
+           (display-buffer-pop-up-frame)
            (pop-up-frame-parameters . ((width . (text-pixels . 640))
                                        (height . (text-pixels . 360))
                                        (tab-bar-lines . 0)
