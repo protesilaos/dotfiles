@@ -114,15 +114,15 @@ Try to install the package if it is missing."
 (require 'prot-emacs-modeline)
 (require 'prot-emacs-completion)
 (require 'prot-emacs-search)
-(require 'prot-emacs-dired) ; dired and ibuffer
+(require 'prot-emacs-dired)             ; dired and ibuffer
 (require 'prot-emacs-window)
-(require 'prot-emacs-git)  ; git, diff, and related
-(require 'prot-emacs-shell) ; e?shell, man, proced, pass
-(require 'prot-emacs-write) ; denote, logos, etc.
-(require 'prot-emacs-org)   ; org, calendar, appt
+(require 'prot-emacs-git)               ; git, diff, and related
+(require 'prot-emacs-shell)             ; e?shell, man, proced, pass
+(require 'prot-emacs-write)             ; denote, logos, etc.
+(require 'prot-emacs-org)               ; org, calendar, appt
 (require 'prot-emacs-langs)
 (require 'prot-emacs-email)
-(require 'prot-emacs-web)   ; eww, elfeed, rcirc
+(require 'prot-emacs-web)               ; eww, elfeed, rcirc
 (require 'prot-emacs-conveniences)
 
 ;; init.el ends here
