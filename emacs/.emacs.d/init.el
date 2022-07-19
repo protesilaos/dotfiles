@@ -124,5 +124,6 @@ Try to install the package if it is missing."
 (require 'prot-emacs-email)
 (require 'prot-emacs-web)               ; eww, elfeed, rcirc
 (require 'prot-emacs-conveniences)
+(require 'prot-emacs-history)
 
 ;; init.el ends here
