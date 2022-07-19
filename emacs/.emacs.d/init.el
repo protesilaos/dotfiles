@@ -62,7 +62,7 @@
         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
         ("melpa" . "https://melpa.org/packages/")))
 
-;; Highest number gets priority (what is not mentioned gets priority 0)
+;; Highest number gets priority (what is not mentioned has priority 0)
 (setq package-archive-priorities
       '(("elpa" . 2)
         ("nongnu" . 1)))
