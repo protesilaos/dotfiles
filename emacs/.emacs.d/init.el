@@ -102,6 +102,8 @@ Try to install the package if it is missing."
   (declare (indent 1))
   `(progn
      (when (not (package-installed-p ,package))
+       (unless package-archive-contents
+         (package-refresh-contents))
        (package-install ,package))
      (if (require ,package nil 'noerror)
          (progn ,@body)
