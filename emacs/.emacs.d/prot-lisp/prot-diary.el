@@ -32,6 +32,11 @@
 ;; do not recommend that you copy any of this if you are not certain of
 ;; what it does.
 
+
+;; DEPRECATED 2022-07-19: I am no longer using the diary.  Keeping this
+;; here for posterity.
+
+
 ;;; Code:
 
 (require 'calendar)
