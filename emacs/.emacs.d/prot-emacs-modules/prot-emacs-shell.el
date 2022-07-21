@@ -79,5 +79,4 @@
 
 (prot-emacs-elpa-package 'pass)
 
-
 (provide 'prot-emacs-shell)

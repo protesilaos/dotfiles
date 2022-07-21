@@ -1,3 +1,4 @@
+;;; Pulsar
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-elpa-package 'pulsar
   (setq pulsar-pulse-functions
@@ -38,6 +39,7 @@
     (define-key map (kbd "C-x l") #'pulsar-pulse-line) ; override `count-lines-page'
     (define-key map (kbd "C-x L") #'pulsar-highlight-dwim))) ; or use `pulsar-highlight-line'
 
+;;; Lin
 ;; Read the lin manual: <https://protesilaos.com/emacs/lin>.
 (prot-emacs-elpa-package 'lin
   ;; You can use this to live update the face:
@@ -101,7 +103,8 @@
   (setq-default indicate-empty-lines nil)
   (setq-default overflow-newline-into-fringe t))
 
-;;; Cursor appearance (cursory.el)
+;;; Cursor appearance (cursory)
+;; Read the manual: <https://protesilaos.com/emacs/cursory>.
 (prot-emacs-elpa-package 'cursory
   (setq cursory-presets
         '((bar
@@ -134,6 +137,5 @@
   ;; We have to use the "point" mnemonic, because C-c c is often the
   ;; suggested binding for `org-capture'.
   (define-key global-map (kbd "C-c p") #'cursory-set-preset))
-
 
 (provide 'prot-emacs-theme-extras)

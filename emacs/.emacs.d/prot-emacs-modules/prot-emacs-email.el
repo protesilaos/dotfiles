@@ -68,7 +68,7 @@
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/")
 (prot-emacs-builtin-package 'notmuch
 
-;;; Account settings
+';;; Account settings
   (setq notmuch-identities
         (let ((identities))
           (dolist (m `(,(prot-mail-auth-get-field "prv" :user)
@@ -81,7 +81,7 @@
           (,(prot-mail-auth-get-field "inf" :user) . "inf/Sent")
           (,(prot-mail-auth-get-field "pub" :user) . "pub/Sent")))
 
-;;; General UI
+;;;; General UI
   (setq notmuch-show-logo nil)
   (setq notmuch-column-control 1.0)
   (setq notmuch-hello-auto-refresh t)
@@ -90,7 +90,7 @@
   (setq notmuch-hello-sections '(notmuch-hello-insert-saved-searches notmuch-hello-insert-alltags))
   (setq notmuch-show-all-tags-list t)
 
-;;; Search
+;;;; Search
   (setq notmuch-search-oldest-first nil)
   (setq notmuch-search-result-format
         '(("date" . "%12s  ")
@@ -162,7 +162,7 @@
             :sort-order newest-first
             :key ,(kbd "os"))))
 
-;;; Tags
+;;;; Tags
   (setq notmuch-archive-tags '("-inbox" "+archived"))
   (setq notmuch-message-replied-tags '("+replied"))
   (setq notmuch-message-forwarded-tags '("+forwarded"))
@@ -189,7 +189,7 @@
         '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
           (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
 
-;;; Email composition
+;;;; Email composition
   (setq notmuch-mua-compose-in 'current-window)
   (setq notmuch-mua-hidden-headers nil) ; TODO 2021-05-12: Review hidden headers
   (setq notmuch-address-command nil)    ; FIXME 2021-05-13: Make it work with EBDB
@@ -205,7 +205,7 @@
                 "pi[èe]ce\s+jointe?\\|"
                 "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
 
-;;; Reading messages
+;;;; Reading messages
   (setq notmuch-show-relative-dates t)
   (setq notmuch-show-all-multipart/alternative-parts nil)
   (setq notmuch-show-indent-messages-width 0)
@@ -219,7 +219,7 @@
   (setq notmuch-message-headers '("To" "Cc" "Subject" "Date"))
   (setq notmuch-message-headers-visible t)
 
-;;; Hooks and key bindings
+;;;; Hooks and key bindings
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check)
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
   (remove-hook 'notmuch-search-hook 'notmuch-hl-line-mode) ; Check my `lin' package
@@ -353,6 +353,5 @@
     (define-key map (kbd "t") #'ebdb-toggle-all-record-marks)
     (define-key map (kbd "T") #'ebdb-toggle-records-format) ; disables `ebdb-toggle-all-records-format'
     (define-key map (kbd "U") #'ebdb-unmark-all-records)))
-
 
 (provide 'prot-emacs-email)

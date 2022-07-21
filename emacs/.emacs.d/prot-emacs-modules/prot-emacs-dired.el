@@ -1,3 +1,4 @@
+;;; Dired file manager and prot-dired.el extras
 (prot-emacs-builtin-package 'dired
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
@@ -92,8 +93,7 @@
   (setq trashed-sort-key '("Date deleted" . t))
   (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
 
-
-;;; Ibuffer and extras (dired-like buffer list manager)
+;;; Ibuffer (dired-like buffer list manager)
 (prot-emacs-builtin-package 'ibuffer
   (setq ibuffer-expert t)
   (setq ibuffer-display-summary nil)
@@ -124,6 +124,5 @@
     (define-key map (kbd "* n") #'ibuffer-mark-by-name-regexp)
     (define-key map (kbd "s n") #'ibuffer-do-sort-by-alphabetic)  ; "sort name" mnemonic
     (define-key map (kbd "/ g") #'ibuffer-filter-by-content)))
-
 
 (provide 'prot-emacs-dired)

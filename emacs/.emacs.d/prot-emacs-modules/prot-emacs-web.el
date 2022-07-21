@@ -78,7 +78,6 @@
     (define-key map (kbd "R") #'prot-eww-readable)
     (define-key map (kbd "Q") #'prot-eww-quit)))
 
-
 ;;; Elfeed feed/RSS reader
 (prot-emacs-elpa-package 'elfeed
   (setq elfeed-use-curl t)
@@ -144,8 +143,6 @@
     (define-key map (kbd "C-c C-v") 'elfeed-tube-mpv)
     (define-key map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
     (define-key map (kbd "C-c C-w") 'elfeed-tube-mpv-where)))
-
-
 
 ;;; Rcirc (IRC client)
 (prot-emacs-builtin-package 'rcirc

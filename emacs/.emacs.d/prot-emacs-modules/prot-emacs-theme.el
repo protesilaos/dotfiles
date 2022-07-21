@@ -137,5 +137,4 @@
   ;; tweaks (as those are made at the "face" level).
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
 
-
 (provide 'prot-emacs-theme)

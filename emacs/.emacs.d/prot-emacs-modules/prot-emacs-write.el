@@ -23,9 +23,8 @@
     (define-key map (kbd "C-x n s") #'prot-outline-narrow-to-subtree))
   (define-key global-map (kbd "<f10>") #'prot-outline-minor-mode-safe))
 
-;;;; Denote (simple note-taking)
+;;; Denote (simple note-taking)
 (prot-emacs-elpa-package 'denote
-
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
   (setq denote-known-keywords '("emacs" "philosophy" "politics" "economics"))
@@ -116,6 +115,7 @@
                    :jump-to-captured t))))
 
 ;;; Custom extensions for "focus mode" (logos.el)
+;; Read the manual: <https://protesilaos.com/emacs/logos>.
 (prot-emacs-elpa-package 'olivetti
   (setq olivetti-body-width 0.7)
   (setq olivetti-minimum-body-width 80)
@@ -154,8 +154,6 @@
     (define-key map (kbd "<f9>") #'logos-focus-mode))
 
 ;;;; Extra tweaks
-  ;; Read the logos manual: <https://protesilaos.com/emacs/logos>.
-
   ;; place point at the top when changing pages, but not in `prog-mode'
   (defun prot/logos--recenter-top ()
     "Use `recenter' to reposition the view at the top."
@@ -163,26 +161,5 @@
       (recenter 1))) ; Use 0 for the absolute top
 
   (add-hook 'logos-page-motion-hook #'prot/logos--recenter-top))
-
-;;; TMR May Ring (tmr is used to set timers)
-(prot-emacs-elpa-package 'tmr
-  (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
-  (setq tmr-notification-urgency 'normal)
-  (setq tmr-description-list 'tmr-description-history)
-
-  ;; You do not need these if you install the package.
-  (require 'tmr-notification)
-  (require 'tmr-tabulated)
-
-  (let ((map global-map))
-    (define-key map (kbd "C-c t t") #'tmr)
-    (define-key map (kbd "C-c t T") #'tmr-with-description)
-    (define-key map (kbd "C-c t l") #'tmr-tabulated-view) ; "list timers" mnemonic
-    (define-key map (kbd "C-c t c") #'tmr-clone)
-    (define-key map (kbd "C-c t k") #'tmr-cancel)
-    (define-key map (kbd "C-c t s") #'tmr-reschedule)
-    (define-key map (kbd "C-c t e") #'tmr-edit-description)
-    (define-key map (kbd "C-c t r") #'tmr-remove)
-    (define-key map (kbd "C-c t R") #'tmr-remove-finished)))
 
 (provide 'prot-emacs-write)

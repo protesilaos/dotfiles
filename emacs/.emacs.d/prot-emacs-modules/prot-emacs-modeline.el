@@ -118,14 +118,6 @@
   (setq keycast-log-format "%-20K%C\n")
   (setq keycast-log-frame-alist
         '((minibuffer . nil)))
-  (setq keycast-log-newest-first t)
-
-  ;; Specify `keycast-insert-after' buffer identification.  This make it
-  ;; possible to seamlessly toggle `prot-moody-set-height' without
-  ;; disrupting keycast.
-  (with-eval-after-load 'prot-moody
-    (add-hook 'prot-moody-set-height-hook #'prot-moody-keycast-insert-after)))
-
-
+  (setq keycast-log-newest-first t))
 
 (provide 'prot-emacs-modeline)

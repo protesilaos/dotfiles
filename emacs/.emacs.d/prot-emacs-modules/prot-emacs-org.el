@@ -395,6 +395,7 @@
                  :empty-lines-after 1
                  :immediate-finish t)))
 
+;;; org-modern
 (prot-emacs-elpa-package 'org-modern
   (setq org-modern-label-border 1)
   (setq org-modern-variable-pitch nil)
@@ -485,6 +486,5 @@
   (setq appt-message-warning-time 6)
 
   (run-at-time 10 nil #'appt-activate 1))
-
 
 (provide 'prot-emacs-org)

@@ -196,5 +196,4 @@ This is a predicate function for `buffer-match-p', intended for use in `display-
   (let ((map global-map))
     (define-key map (kbd "C-x M-r") #'rotate-frame-clockwise)))
 
-
 (provide 'prot-emacs-window)

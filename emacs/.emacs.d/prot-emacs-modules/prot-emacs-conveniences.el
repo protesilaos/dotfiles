@@ -163,4 +163,26 @@
   (with-eval-after-load 'org
     (require 'osm-ol)))
 
+;;; TMR May Ring (tmr is used to set timers)
+;; Read the manual: <https://protesilaos.com/emacs/tmr>.
+(prot-emacs-elpa-package 'tmr
+  (setq tmr-sound-file "/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga")
+  (setq tmr-notification-urgency 'normal)
+  (setq tmr-description-list 'tmr-description-history)
+
+  ;; You do not need these if you install the package.
+  (require 'tmr-notification)
+  (require 'tmr-tabulated)
+
+  (let ((map global-map))
+    (define-key map (kbd "C-c t t") #'tmr)
+    (define-key map (kbd "C-c t T") #'tmr-with-description)
+    (define-key map (kbd "C-c t l") #'tmr-tabulated-view) ; "list timers" mnemonic
+    (define-key map (kbd "C-c t c") #'tmr-clone)
+    (define-key map (kbd "C-c t k") #'tmr-cancel)
+    (define-key map (kbd "C-c t s") #'tmr-reschedule)
+    (define-key map (kbd "C-c t e") #'tmr-edit-description)
+    (define-key map (kbd "C-c t r") #'tmr-remove)
+    (define-key map (kbd "C-c t R") #'tmr-remove-finished)))
+
 (provide 'prot-emacs-conveniences)

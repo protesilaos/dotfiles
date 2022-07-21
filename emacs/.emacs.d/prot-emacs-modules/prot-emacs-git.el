@@ -222,5 +222,4 @@ sure this is a good approach."
     (interactive)
     (flush-lines ".*prot-ediff.*" (point-min) (point-max) nil)))
 
-
 (provide 'prot-emacs-git)
