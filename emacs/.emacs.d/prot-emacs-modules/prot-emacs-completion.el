@@ -1,4 +1,4 @@
-  ;;; Orderless completion style (and prot-orderless.el)
+;;; Orderless completion style (and prot-orderless.el)
 (prot-emacs-elpa-package 'orderless
   (setq orderless-component-separator " +")
   ;; NOTE 2022-02-06: I made some major changes and this list may need
@@ -308,8 +308,6 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (dolist (backend '( cape-symbol cape-keyword cape-file cape-dabbrev))
     (add-to-list 'completion-at-point-functions backend)))
 
-
-
 ;;; Template-based in-buffer completion (tempel.el)
 (prot-emacs-elpa-package 'tempel
 
@@ -398,6 +396,5 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   ;; hook for it.
   (dolist (hook '(text-mode-hook git-commit-mode-hook))
     (add-hook hook #'abbrev-mode)))
-
 
 (provide 'prot-emacs-completion)
