@@ -76,6 +76,8 @@
     (define-key map (kbd "C-'") #'prot-simple-insert-pair)
     (define-key map (kbd "M-'") #'prot-simple-insert-pair)
     (define-key map (kbd "M-\\") #'prot-simple-delete-pair-dwim)
+    (define-key map (kbd "M-z") #'zap-up-to-char) ; NOT `zap-to-char'
+    (define-key map (kbd "M-Z") #'prot-simple-zap-to-char-backward)
     ;; NOTE 2022-05-01: I deprecated those commands.  I don't use them
     ;; and they need to be reworked.
     ;;

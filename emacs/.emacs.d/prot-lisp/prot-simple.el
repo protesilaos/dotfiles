@@ -451,6 +451,16 @@ with the specified date."
       (delete-region beg end)
       (insert (format "<%s>" string)))))
 
+(defun prot-simple-zap-to-char-backward (char &optional arg)
+  "Backward `zap-to-char' for CHAR.
+Optional ARG is a numeric prefix to match ARGth occurence of
+CHAR."
+  (interactive
+   (list
+    (read-char-from-minibuffer "Zap to char: " nil 'read-char-history)
+    (prefix-numeric-value current-prefix-arg)))
+  (zap-to-char (- arg) char t))
+
 ;; NOTE 2022-05-01: I deprecate the following commands, as I don't use
 ;; them often and feel they need to be refined further.
 

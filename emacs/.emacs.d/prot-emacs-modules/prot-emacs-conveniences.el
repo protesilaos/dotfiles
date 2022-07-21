@@ -57,11 +57,6 @@
 ;;; Newline characters for file ending
 (setq mode-require-final-newline 'visit-save)
 
-;;; Zap characters
-(let ((map global-map))
-  (define-key map (kbd "M-z") #'zap-up-to-char)
-  (define-key map (kbd "M-Z") #'zap-to-char)) ; M-S-z
-
 ;;; Go to last change
 (prot-emacs-elpa-package 'goto-last-change
   (define-key global-map (kbd "C-z") #'goto-last-change))
