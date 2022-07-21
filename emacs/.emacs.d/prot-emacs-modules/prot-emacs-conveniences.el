@@ -1,5 +1,5 @@
 ;;; Keymap for buffers (Emacs28)
-(let ((map ctl-x-x-map))              ; Emacs 28
+(let ((map ctl-x-x-map))
   (define-key map "e" #'eval-buffer)
   (define-key map "f" #'follow-mode)  ; override `font-lock-update'
   (define-key map "r" #'rename-uniquely))
