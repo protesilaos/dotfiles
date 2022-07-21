@@ -24,6 +24,83 @@ are willing to assume responsibility for any possible breakage, then
 please feel welcome to follow along.  You can always open an issue here
 or contribute any fixes, if you will.
 
+## Emacs setup
+
+I do not recommend you reproduce my Emacs setup because I do not use the
+de facto `use-package` to configure packages.  I prefer a simpler
+approach.
+
+If you insist though, the files are in the `emacs` directory.  Add them
+to your home directory with:
+
+```sh
+/path/to/prot-dotfiles $ stow -t "$HOME" emacs
+```
+
+This will create symlinks to my configuration files inside the
+`~/.emacs.d` directory.  My custom libraries are in the directory
+`prot-lisp` while the configuration modules (where we tweak variables,
+assign key bindings, etc.) are in the directory `prot-emacs-modules`.
+
+The modules are loaded from the `init.el`.  Each module defines the
+packages to install/load.  **My setup auto-installs packages**.  This
+will happen the first time you start up Emacs.  In particular, the
+`prot-emacs-elpa-package` macro performs that task.  You will find that
+macro in all of the modules: it is a thin wrapper which runs `require`
+on the given package as well as evaluates all code inside of it (so you
+don't have to evaluate each form individually).  Example:
+
+```elisp
+(prot-emacs-elpa-package 'cursory
+  (setq cursory-presets
+        '((bar
+           :cursor-type (bar . 2)
+           :cursor-in-non-selected-windows hollow
+           :blink-cursor-blinks 10
+           :blink-cursor-interval 0.5
+           :blink-cursor-delay 0.2)
+          (box
+           :cursor-type box
+           :cursor-in-non-selected-windows hollow
+           :blink-cursor-blinks 10
+           :blink-cursor-interval 0.5
+           :blink-cursor-delay 0.2)
+          (underscore
+           :cursor-type (hbar . 3)
+           :cursor-in-non-selected-windows hollow
+           :blink-cursor-blinks 50
+           :blink-cursor-interval 0.2
+           :blink-cursor-delay 0.2)))
+
+  (setq cursory-latest-state-file (locate-user-emacs-file "cursory-latest-state.eld"))
+
+  ;; Set last preset or fall back to desired style from `cursory-presets'.
+  (cursory-set-preset (or (cursory-restore-latest-preset) 'bar))
+
+  ;; The other side of `cursory-restore-latest-preset'.
+  (add-hook 'kill-emacs-hook #'cursory-store-latest-preset)
+
+  ;; We have to use the "point" mnemonic, because C-c c is often the
+  ;; suggested binding for `org-capture'.
+  (define-key global-map (kbd "C-c p") #'cursory-set-preset))
+```
+
+If a package is not found in the archives it likely means that you need
+to refresh the package listing: `M-x package-refresh-contents`.  This is
+done automatically at startup, if necessary, but is needed for any new
+packages you may define.  Then retry installing the package.
+
+The macro `prot-emacs-builtin-package` simply is a wrapper.  It does not
+install anything, as it is for libraries that are built into Emacs OR
+the code in my `prot-lisp` directory.
+
+If you make changes to the dotfiles, such as by moving things around,
+run stow again with the `-R` flag:
+
+```sh
+/path/to/prot-dotfiles $ stow -t "$HOME" -R emacs
+```
+
 ## Window managers
 
 As of 2021-11-08, I have configurations for three window managers, in
@@ -79,21 +156,6 @@ As of 2022-04-24.  In no particular order.
   but occupied, and `3` for unfocused and empty? (That is how I do it
   with polybar on bspwm/herbstluftwm.)
 + Show keyboard layout in sway bar (English/Greek).
-
-## How to reproduce my Emacs setup
-
-I am not using `use-package` so this will not be an easy ride.  It is
-better for you to peruse the relevant files and copy whatever you want
-instead of reproducing the whole thing.
-
-If, however, you insist on going ahead with your plan, I provide more
-details in the heading _"How to reproduce your dotemacs?"_ of my
-`prot-emacs.org`.  Either find it there, or read it on my website:
-<https://protesilaos.com/emacs/dotemacs/#h:0675f798-e2d9-4762-9df2-f47cd24cf00a>.
-
-It also explains how to manage my dotfiles with the help of GNU Stow,
-notwithstanding the need for proper documentation, as noted in the
-previous section.
 
 ## Copying
 
