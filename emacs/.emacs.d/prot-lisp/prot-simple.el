@@ -158,97 +158,6 @@ buffer."
       (4 (prot-simple--scratch-buffer-setup region default-mode))
       (_ (prot-simple--scratch-buffer-setup region)))))
 
-;; ;; DEPRECATED 2021-10-15: Just set `help-window-select' to non-nil.
-;;
-;; ;;;; Focus auxiliary buffers
-;;
-;; ;; TODO 2021-08-27: Is there a more general way to do this without
-;; ;; specifying the BUF?  That way we would only need one function.
-;; (defmacro prot-simple--auto-focus-buffer (fn doc buf)
-;;   "Produce FN with DOC for focusing BUF."
-;;   `(defun ,fn (&rest _)
-;;     ,doc
-;;     (when-let ((window (get-buffer-window ,buf)))
-;;       (select-window window))))
-;;
-;; (prot-simple--auto-focus-buffer
-;;  prot-simple--help-focus
-;;   "Select window with Help buffer.
-;; Intended as :after advice for `describe-symbol' and friends."
-;;   (help-buffer))
-;;
-;; (prot-simple--auto-focus-buffer
-;;  prot-simple--messages-focus
-;;   "Select window with Help buffer.
-;; Intended as :after advice for `view-echo-area-messages'."
-;;   (messages-buffer))
-;;
-;; ;;;###autoload
-;; (define-minor-mode prot-simple-focus-help-buffers
-;;   "Add advice to focus `prot-simple-focusable-help-commands'."
-;;   :lighter nil
-;;   (if prot-simple-focus-help-buffers
-;;       (progn
-;;         (dolist (fn prot-simple-focusable-help-commands)
-;;           (advice-add fn :after 'prot-simple--help-focus))
-;;         (advice-add 'view-echo-area-messages :after 'prot-simple--messages-focus))
-;;     (dolist (fn prot-simple-focusable-help-commands)
-;;       (advice-remove fn 'prot-simple--help-focus))
-;;     (advice-remove 'view-echo-area-messages 'prot-simple--messages-focus)))
-
-;; ;;;; Rename Help buffers (EXPERIMENTAL)
-;;
-;; (defvar prot-simple-help-mode-post-render-hook nil
-;;   "Hook that runs after Help is rendered (via `advice-add').")
-;;
-;; (defun prot-simple--help-mode-post-render (&rest _)
-;;   "Run `prot-simple-help-mode-post-render-hook'."
-;;   (run-hooks 'prot-simple-help-mode-post-render-hook))
-;;
-;; (defconst prot-simple--help-symbol-regexp
-;;   ;; TODO 2021-10-12: Avoid duplication in regexp.
-;;   (concat
-;;    "^\\(.*?\\)\s\\(is an?\\|runs the\\)\s\\(command\\|function\\|variable\\|keymap variable"
-;;    "\\|native compiled Lisp function\\|interactive native compiled Lisp function"
-;;    "\\|built-in function\\|interactive built-in function\\|Lisp closure\\)\s"
-;;    "\\(\\_<.*?\\_>\\)\\( (found in .*)\\)?")
-;;   "Regexp to match Help buffer description.")
-;;
-;; (defconst prot-simple--help-symbol-false-positives
-;;   "\\(in\\|defined\\)"
-;;   "False positives for `prot-simple--help-symbol-regexp'.")
-;;
-;; (defun prot-simple--rename-help-buffer ()
-;;   "Rename the current Help buffer."
-;;   (with-current-buffer (help-buffer)
-;;     (goto-char (point-min))
-;;     (when (re-search-forward prot-simple--help-symbol-regexp nil t)
-;;       (let* ((thing (match-string 1))
-;;              (symbol (match-string 4))
-;;              (scope (match-string 5))
-;;              (description (cond
-;;                            (scope
-;;                             (concat symbol scope))
-;;                            ((and (not (string-match-p prot-simple--help-symbol-false-positives symbol))
-;;                                  (symbolp (intern symbol)))
-;;                             symbol)
-;;                            ((match-string 3)))))
-;;         (rename-buffer
-;;          (format "*%s (%s) # Help*" thing description)
-;;          t)))))
-;;
-;; ;;;###autoload
-;; (define-minor-mode prot-simple-rename-help-buffers
-;;   "Rename Help buffers based on their contents."
-;;   :init-value nil
-;;   :global t
-;;   (if prot-simple-rename-help-buffers
-;;       (progn
-;;         (advice-add #'help-window-setup :after #'prot-simple--help-mode-post-render)
-;;         (add-hook 'prot-simple-help-mode-post-render-hook #'prot-simple--rename-help-buffer))
-;;     (advice-remove #'help-window-setup #'prot-simple--help-mode-post-render)
-;;     (remove-hook 'prot-simple-help-mode-post-render-hook #'prot-simple--rename-help-buffer)))
-
 ;;; Commands
 
 ;;;; General commands
@@ -438,7 +347,6 @@ with the specified date."
       (delete-region (region-beginning) (region-end)))
     (insert (format-time-string format))))
 
-
 (autoload 'ffap-url-at-point "ffap")
 (defvar ffap-string-at-point-region)
 
@@ -465,87 +373,6 @@ CHAR."
     (read-char-from-minibuffer "Zap to char: " nil 'read-char-history)
     (prefix-numeric-value current-prefix-arg)))
   (zap-to-char (- arg) char t))
-
-;; NOTE 2022-05-01: I deprecate the following commands, as I don't use
-;; them often and feel they need to be refined further.
-
-;; ;;;###autoload
-;; (defun prot-simple-cite-region (beg end &optional arg)
-;;   "Cite text in region lines between BEG and END.
-;; 
-;; Region lines are always understood in absolute terms, regardless
-;; of whether the region boundaries coincide with them.
-;; 
-;; With optional prefix ARG (\\[universal-argument]) prompt for a
-;; description that will be placed on a new line at the top of the
-;; newly formatted text."
-;;   (interactive "*r\nP")
-;;   (let* ((absolute-beg (if (< beg end)
-;;                            (progn (goto-char beg) (point-at-bol))
-;;                          (progn (goto-char end) (point-at-eol))))
-;;          (absolute-end (if (< beg end)
-;;                            (progn (goto-char end) (point-at-eol))
-;;                          (progn (goto-char beg) (point-at-bol))))
-;;          (prefix-text (if (< beg end)
-;;                           (buffer-substring-no-properties absolute-beg beg)
-;;                         (buffer-substring-no-properties absolute-end end)))
-;;          (prefix (if (string-match-p "\\`[\t\s]+\\'" prefix-text)
-;;                      prefix-text
-;;                    (replace-regexp-in-string "\\`\\([\t\s]+\\).*" "\\1" prefix-text)))
-;;          (description (if arg
-;;                           (format "+----[ %s ]\n"
-;;                                   (read-string "Add description: "))
-;;                         "+----\n"))
-;;          (marked-text (buffer-substring-no-properties absolute-beg absolute-end))
-;;          (marked-text-new (replace-regexp-in-string "^.*?" (concat prefix "|") marked-text))
-;;          (text (with-temp-buffer
-;;                  (insert marked-text-new)
-;;                  (save-excursion
-;;                    (goto-char (point-min))
-;;                    (re-search-forward "^\\(^[\s\t]+\\)?.*?")
-;;                    (forward-line -1)
-;;                    (insert (concat prefix description))
-;;                    (goto-char (point-max))
-;;                    (forward-line 1)
-;;                    (insert "\n")
-;;                    (insert (concat prefix "+----")))
-;;                  (buffer-substring-no-properties (point-min) (point-max)))))
-;;     (delete-region absolute-beg absolute-end)
-;;     (insert text)))
-;; 
-;; ;; `prot-simple-insert-undercaret' was offered to me by Gregory
-;; ;; Heytings: <https://debbugs.gnu.org/cgi/bugreport.cgi?bug=45068#250>.
-;; ;;;###autoload
-;; (defun prot-simple-insert-undercaret (&optional arg)
-;;   "Draw carets below the characters on the current line or region."
-;;   (interactive "p")
-;;   (let* ((begin (if (region-active-p) (region-beginning) (line-beginning-position)))
-;;          (end (if (region-active-p) (region-end) (line-end-position)))
-;;          (lines (- (line-number-at-pos end) (line-number-at-pos begin) -1))
-;;          (comment (and (/= arg 1) (= lines 1)))
-;;          (final-forward-line -1))
-;;     (goto-char begin)
-;;     (dotimes (i lines)
-;;       (let* ((line-begin (if (zerop i) begin (line-beginning-position)))
-;;              (line-end (if (= (1+ i) lines) end (line-end-position)))
-;;              (begin-column (progn (goto-char line-begin) (current-column)))
-;;              (end-column (progn (goto-char line-end) (current-column)))
-;;              (prefix-begin (line-beginning-position))
-;;              (prefix-end (progn (beginning-of-line-text) (point)))
-;;              (prefix-end-column (progn (goto-char prefix-end) (current-column)))
-;;              (delta (if (< begin-column prefix-end-column) (- prefix-end-column begin-column) 0))
-;;              (prefix-string (buffer-substring-no-properties prefix-begin prefix-end))
-;;              (prefix (if (string-match-p "\\` *\\'" prefix-string) "" prefix-string))
-;;              (whitespace (make-string (- (+ begin-column delta) (string-width prefix)) ?\ ))
-;;              (do-under (< delta (- line-end line-begin)))
-;;              (under (if do-under (make-string (- end-column begin-column delta) ?^) ""))
-;;              (under-string (concat prefix whitespace under "\n")))
-;;         (forward-line 1)
-;;         (if do-under (insert under-string) (setq final-forward-line -2))
-;;         (setq end (+ end (length under-string)))
-;;         (when comment (insert prefix whitespace "\n"))))
-;;     (forward-line final-forward-line)
-;;     (goto-char (line-end-position))))
 
 ;;;; Commands for object transposition
 
@@ -730,31 +557,6 @@ direction (negative is forward due to this being a
 
 ;;;; Commands for paragraphs
 
-(defvar-local prot-simple--auto-fill-cycle-state 1
-  "Representation of `prot-simple-auto-fill-cycle' state.")
-
-;; Based on gungadin-cylocal.el (private communication with Christopher
-;; Dimech---disclosed with permission).
-;;;###autoload
-(defun prot-simple-auto-fill-cycle ()
-  "Cycles auto fill for comments, everything, nothing."
-  (interactive)
-  (let ((n prot-simple--auto-fill-cycle-state))
-    (pcase n
-      (2
-       (message "Auto fill %s" (propertize "buffer" 'face 'warning))
-       (setq-local comment-auto-fill-only-comments nil)
-       (setq-local prot-simple--auto-fill-cycle-state (1+ n)))
-      (3
-       (message "Disable auto fill")
-       (auto-fill-mode 0)
-       (setq-local prot-simple--auto-fill-cycle-state (1+ n)))
-      (_
-       (message "Auto fill %s" (propertize "comments" 'face 'success))
-       (setq-local comment-auto-fill-only-comments t)
-       (auto-fill-mode 1)
-       (setq-local prot-simple--auto-fill-cycle-state 2)))))
-
 ;;;###autoload
 (defun prot-simple-unfill-region-or-paragraph (&optional beg end)
   "Unfill paragraph or, when active, the region.
@@ -928,7 +730,6 @@ Do not try to make a new directory or anything fancy."
   (interactive
    (list (prot-simple--buffer-major-mode-prompt)))
   (switch-to-buffer buffer))
-
 
 (defun prot-simple--buffer-vc-root-prompt ()
   "Prompt of `prot-simple-buffers-vc-root'."
