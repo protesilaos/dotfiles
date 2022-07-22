@@ -101,7 +101,8 @@ Also see `prot-simple-focus-help-buffers'."
   "List known major modes."
   (cl-loop for sym the symbols of obarray
            when (and (functionp sym)
-                     (provided-mode-derived-p sym 'prog-mode))
+                     (or (provided-mode-derived-p sym 'text-mode)
+                         (provided-mode-derived-p sym 'prog-mode)))
            collect sym))
 
 (defun prot-simple--scratch-buffer-setup (region &optional mode)
