@@ -119,10 +119,14 @@ MODE use that major mode instead."
     (with-current-buffer (get-buffer-create buf)
       (funcall major)
 	  (save-excursion
-        (insert text)
-        (goto-char (point-min))
-        (comment-region (point-at-bol) (point-at-eol)))
-	  (vertical-motion 2))
+        (if (prot-common-empty-buffer-p)
+            (progn
+              (insert text)
+              (goto-char (point-min))
+              (comment-region (point-at-bol) (point-at-eol)))
+          (newline)
+          (insert region)))
+      (goto-char (point-max)))
     (pop-to-buffer buf)))
 
 ;;;###autoload
