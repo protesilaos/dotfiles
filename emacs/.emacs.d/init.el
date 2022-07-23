@@ -90,7 +90,9 @@ expressions."
   (declare (indent 1))
   `(progn
      (unless (require ,package nil 'noerror)
-       (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :warning))
+       (display-warning 'prot-emacs
+                        (format "Loading `%s' failed" ,package)
+                        :warning))
      ,@body))
 
 (defmacro prot-emacs-elpa-package (package &rest body)
@@ -107,7 +109,9 @@ Try to install the package if it is missing."
        (package-install ,package))
      (if (require ,package nil 'noerror)
          (progn ,@body)
-       (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :warning))))
+       (display-warning 'prot-emacs
+                        (format "Loading `%s' failed" ,package)
+                        :warning))))
 
 (require 'prot-emacs-essentials)
 (require 'prot-emacs-theme)
