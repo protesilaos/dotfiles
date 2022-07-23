@@ -132,4 +132,10 @@ Try to install the package if it is missing."
 (require 'prot-emacs-conveniences)
 (require 'prot-emacs-history)
 
+;; For those who use my dotfiles and need an easy way to write their own
+;; extras.  The file must exist at ~/.emacs.d/user-emacs.el
+(when-let* ((file (locate-user-emacs-file "user-emacs.el"))
+            ((file-exists-p file)))
+  (load-file file))
+
 ;; init.el ends here
