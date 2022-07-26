@@ -280,13 +280,7 @@ the function `prot-notmuch-mail-indicator'."
   :type 'list
   :group 'prot-notmuch)
 
-(defface prot-notmuch-mail-count
-  '((default :inherit bold)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#61284f")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#fbd6f4")
-    (t :foreground "magenta"))
+(defface prot-notmuch-mail-count '((t :inherit bold))
   "Face for mode line indicator that shows a new mail count.")
 
 (defvar prot-notmuch-new-mail-string nil
