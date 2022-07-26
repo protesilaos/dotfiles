@@ -81,10 +81,10 @@
      (denote--title-prompt)
      '("journal")))
 
-  ;; Denote does not define any key bindings.  This is for the user to
+  ;; Denote DOES NOT define any key bindings.  This is for the user to
   ;; decide.  For example:
   (let ((map global-map))
-    (define-key map (kbd "C-c n j") #'prot/denote-journal) ; our custom command
+    (define-key map (kbd "C-c n j") #'prot/denote-journal)
     (define-key map (kbd "C-c n n") #'denote)
     (define-key map (kbd "C-c n N") #'denote-type)
     (define-key map (kbd "C-c n d") #'denote-date)
@@ -100,7 +100,14 @@
     ;; Note that `denote-dired-rename-file' can work from any context, not
     ;; just Dired bufffers.  That is why we bind it here to the
     ;; `global-map'.
-    (define-key map (kbd "C-c n r") #'denote-dired-rename-file))
+    (define-key map (kbd "C-c n r") #'denote-dired-rename-file)
+    (define-key map (kbd "C-c n R") #'denote-dired-rename-file-and-add-front-matter))
+
+  ;; Key bindings specifically for Dired.
+  (let ((map dired-mode-map))
+    (define-key map (kbd "C-c C-d C-i") #'denote-link-dired-marked-notes)
+    (define-key map (kbd "C-c C-d C-r") #'denote-dired-rename-marked-files)
+    (define-key map (kbd "C-c C-d C-R") #'denote-dired-rename-marked-files-and-add-front-matters))
 
   (with-eval-after-load 'org-capture
     (require 'denote-org-capture)
