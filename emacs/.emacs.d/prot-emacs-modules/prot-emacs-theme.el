@@ -1,3 +1,11 @@
+;;; The Modus themes
+
+;; These are built into Emacs 28 or higher, though I use the package for
+;; my development purposes (I need to make sure it always builds cleanly
+;; and works properly).
+
+;; Read their manual with Emacs' Info reader, or visit:
+;; <https://protesilaos.com/emacs/modus-themes>.
 (prot-emacs-elpa-package 'modus-themes
   ;; Add all your customizations prior to loading the themes
   ;;
