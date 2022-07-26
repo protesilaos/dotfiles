@@ -86,13 +86,7 @@ Meant to be assigned to a hook, such as `message-setup-hook'."
 ;; my particular setup (refer to my prot-emacs.org for the relevant
 ;; commentary).
 
-(defface prot-mail-mail-count
-  '((default :inherit bold)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#61284f")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#fbd6f4")
-    (t :foreground "magenta"))
+(defface prot-mail-mail-count '((t :inherit bold))
   "Face for mode line indicator that shows a new mail count.")
 
 (defvar prot-mail-new-mail-string nil
