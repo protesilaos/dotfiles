@@ -113,6 +113,14 @@ Try to install the package if it is missing."
                         (format "Loading `%s' failed" ,package)
                         :warning))))
 
+(defvar prot-emacs-package-form-regexp
+  "^(\\(prot-emacs-.*-package\\|require\\) +'\\([0-9a-zA-Z-]+\\)"
+  "Regexp to add packages to `lisp-imenu-generic-expression'.")
+
+(eval-after-load 'lisp-mode
+  `(add-to-list 'lisp-imenu-generic-expression
+                (list "Packages" ,prot-emacs-package-form-regexp 2)))
+
 (require 'prot-emacs-essentials)
 (require 'prot-emacs-theme)
 (require 'prot-emacs-theme-extras)
