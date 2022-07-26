@@ -80,7 +80,7 @@
 
 ;;; Elfeed feed/RSS reader
 (prot-emacs-elpa-package 'elfeed
-  (setq elfeed-use-curl t)
+  (setq elfeed-use-curl nil)
   (setq elfeed-curl-max-connections 10)
   (setq elfeed-db-directory (concat user-emacs-directory "elfeed/"))
   (setq elfeed-enclosure-default-dir "~/Downloads/")
