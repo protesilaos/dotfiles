@@ -91,7 +91,8 @@
 
   (defun prot/display-buffer-shell-or-term-p (buffer &rest _)
     "Check if BUFFER is a shell or terminal.
-This is a predicate function for `buffer-match-p', intended for use in `display-buffer-alist'."
+This is a predicate function for `buffer-match-p', intended for
+use in `display-buffer-alist'."
     (when (string-match-p "\\*.*\\(e?shell\\|v?term\\).*" (buffer-name buffer))
       (with-current-buffer buffer
         ;; REVIEW 2022-07-14: Is this robust?
