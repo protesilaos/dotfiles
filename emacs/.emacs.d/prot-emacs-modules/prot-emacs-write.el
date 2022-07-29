@@ -2,6 +2,7 @@
 (prot-emacs-builtin-package 'outline
   (setq outline-minor-mode-highlight 'override) ; emacs28
   (setq outline-minor-mode-cycle t)             ; emacs28
+  (setq outline-minor-mode-use-buttons nil) ; emacs29---bless you for the nil option!
   (let ((map outline-minor-mode-map))
     ;; ;; NOTE 2021-07-25: Those two are already defined (emacs28).
     ;; (define-key map (kbd "TAB") #'outline-cycle)
