@@ -30,9 +30,12 @@
 
 ;; Some basic settings
 (setq frame-title-format '("%b"))
-(setq default-input-method "greek")
 (setq ring-bell-function 'ignore)
 (setq use-short-answers t)
+
+;; In 'M-x find-library RET greek' we also find the greek-postfix style,
+;; though I don't need it right now.
+(setq default-input-method "greek")
 
 ;; Enable those
 (dolist (c '( narrow-to-region narrow-to-page upcase-region downcase-region))
