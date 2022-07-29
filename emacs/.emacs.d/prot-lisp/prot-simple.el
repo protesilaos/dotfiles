@@ -145,7 +145,7 @@ If region is active, copy its contents to the new scratch
 buffer.
 
 Buffers are named as *MAJOR-MODE scratch*.  If one already exists
-for the given MAJOR-MODE, any text is appended to its end."
+for the given MAJOR-MODE, any text is appended to it."
   (interactive "P")
   (let* ((default-mode prot-simple-scratch-buffer-default-mode)
          (modes (prot-simple--scratch-list-modes))
