@@ -23,6 +23,9 @@
 ;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+
+;; DEPRECATED 2022-07-31: My `logos' package makes all this reduntant.
+
 ;;
 ;; Extensions to the built-in `outline.el' library for my Emacs
 ;; configuration: <https://protesilaos.com/emacs/dotemacs/>.
