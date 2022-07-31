@@ -369,6 +369,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (let ((table text-mode-abbrev-table))
     (define-abbrev table "latex" "LaTeX")
+    (define-abbrev table "javascript" "JavaScript")
     (define-abbrev table "github" "GitHub")
     (define-abbrev table "gitlab" "GitLab")
     (define-abbrev table "sourcehut" "SourceHut")
