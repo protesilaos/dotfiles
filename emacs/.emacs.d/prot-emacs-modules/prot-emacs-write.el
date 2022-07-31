@@ -37,12 +37,6 @@
 
   (setq denote-date-format nil) ; read its doc string
 
-  ;; You will not need to `require' all those individually if you
-  ;; install the package.  I load all my packages locally, as I
-  ;; test/develop things.
-  (require 'denote-retrieve)
-  (require 'denote-link)
-
   ;; By default, we fontify backlinks in their bespoke buffer.
   (setq denote-link-fontify-backlinks t)
 
@@ -53,9 +47,6 @@
   ;; existing buttons upon visiting the file (Org renders links as
   ;; buttons right away).
   (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
-
-  (require 'denote-dired)
-  (setq denote-dired-rename-expert nil)
 
   ;; We use different ways to specify a path for demo purposes.
   (setq denote-dired-directories
@@ -108,7 +99,6 @@
     (define-key map (kbd "C-c C-d C-R") #'denote-dired-rename-marked-files-and-add-front-matters))
 
   (with-eval-after-load 'org-capture
-    (require 'denote-org-capture)
     (setq denote-org-capture-specifiers "%l\n%i\n%?")
     (add-to-list 'org-capture-templates
                  '("n" "New note (with denote.el)" plain
