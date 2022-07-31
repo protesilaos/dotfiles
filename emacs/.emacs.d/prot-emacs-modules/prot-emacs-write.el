@@ -21,6 +21,7 @@
   (define-key global-map (kbd "<f10>") #'outline-minor-mode))
 
 ;;; Denote (simple note-taking)
+;; Read the manual: <https://protesilaos.com/emacs/denote>.
 (prot-emacs-elpa-package 'denote
   ;; Remember to check the doc strings of those variables.
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
