@@ -45,7 +45,7 @@
   ;; deocrations reduce the effective value.  If I set 1080 here, Emacs
   ;; maximises the frame regardless of the width value, which I do not
   ;; want.
-  (add-to-list var '(height . (text-pixels . 998))))
+  (add-to-list var '(height . (text-pixels . 1040))))
 
 ;; Initialise installed packages
 (setq package-enable-at-startup t)
