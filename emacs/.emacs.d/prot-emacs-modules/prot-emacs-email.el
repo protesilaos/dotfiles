@@ -68,7 +68,6 @@
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/")
 (prot-emacs-builtin-package 'notmuch
 
-';;; Account settings
   (setq notmuch-identities
         (let ((identities))
           (dolist (m `(,(prot-mail-auth-get-field "prv" :user)
@@ -80,6 +79,7 @@
         `((,(prot-mail-auth-get-field "prv" :user) . "prv/Sent")
           (,(prot-mail-auth-get-field "inf" :user) . "inf/Sent")
           (,(prot-mail-auth-get-field "pub" :user) . "pub/Sent")))
+;;; Account settings
 
 ;;;; General UI
   (setq notmuch-show-logo nil)
