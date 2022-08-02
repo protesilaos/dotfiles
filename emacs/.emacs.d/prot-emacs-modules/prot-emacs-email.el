@@ -212,9 +212,10 @@
   (setq notmuch-show-indent-multipart nil)
   (setq notmuch-show-part-button-default-action 'notmuch-show-save-part)
   (setq notmuch-show-text/html-blocked-images ".") ; block everything
-  (setq notmuch-wash-citation-lines-prefix 6)
-  (setq notmuch-wash-citation-lines-suffix 6)
-  (setq notmuch-wash-wrap-lines-length 100)
+  (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
+    (setq notmuch-wash-cqitation-lines-prefix count
+          notmuch-wash-citation-lines-suffix count))
+  (setq notmuch-wash-wrap-lines-length 120)
   (setq notmuch-unthreaded-show-out nil)
   (setq notmuch-message-headers '("To" "Cc" "Subject" "Date"))
   (setq notmuch-message-headers-visible t)
