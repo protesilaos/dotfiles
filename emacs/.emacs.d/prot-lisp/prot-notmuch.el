@@ -288,10 +288,9 @@ the function `prot-notmuch-mail-indicator'."
 
 (defun prot-notmuch--new-mail ()
   "Search for new mail in personal maildir paths."
-  (with-temp-buffer
-    (shell-command
-     (format "notmuch count %s" prot-notmuch-mode-line-count-args) t)
-    (buffer-substring-no-properties (point-min) (1- (point-max)))))
+  (string-trim
+   (shell-command-to-string
+    (format "notmuch count %s" prot-notmuch-mode-line-count-args))))
 
 (defun prot-notmuch--mode-string (count)
   "Add properties to COUNT string."
