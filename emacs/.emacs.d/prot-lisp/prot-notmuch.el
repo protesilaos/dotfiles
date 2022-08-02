@@ -255,7 +255,7 @@ the function `prot-notmuch-mail-indicator'."
   :type 'list
   :group 'prot-notmuch)
 
-(defface prot-notmuch-mail-count '((t :inherit font-lock-constant-face))
+(defface prot-notmuch-mail-count nil
   "Face for mode line indicator that shows a new mail count.")
 
 (defvar prot-notmuch-new-mail-string nil
