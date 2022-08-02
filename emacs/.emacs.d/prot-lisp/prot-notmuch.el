@@ -82,52 +82,27 @@ This gets the `notmuch-tag-flagged' face, if that is specified in
 
 ;;;; Utilities
 
-(defface prot-notmuch-encrypted-tag
-  '((default :inherit italic)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#5d3026")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#f8dec0"))
+(defface prot-notmuch-encrypted-tag '((t :inherit warning))
   "Face for the 'encrypted' tag or related in Notmuch.
 Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
 
-(defface prot-notmuch-sent-tag
-  '((default :inherit italic)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#005e00")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#44bc44"))
+(defface prot-notmuch-sent-tag '((t :inherit success))
   "Face for the 'sent' tag or related in Notmuch.
 Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
 
-(defface prot-notmuch-spam-tag
-  '((default :inherit italic)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#70480f")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#c4d030"))
+(defface prot-notmuch-spam-tag '((t :inherit shadow))
   "Face for the 'spam' tag or related in Notmuch.
 Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
 
-(defface prot-notmuch-ref-tag
-  '((default :inherit italic)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#005a5f")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#6ae4b9"))
+(defface prot-notmuch-ref-tag '((t :inherit italic))
   "Face for the 'ref' tag or related in Notmuch.
 Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
 
-(defface prot-notmuch-todo-tag
-  '((default :inherit italic)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#a60000")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#ff8059"))
+(defface prot-notmuch-todo-tag '((t :inherit error))
   "Face for the 'todo' tag or related in Notmuch.
 Refer to the variable `notmuch-tag-formats' for how to assign
 those.")
