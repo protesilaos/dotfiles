@@ -68,18 +68,18 @@
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/")
 (prot-emacs-builtin-package 'notmuch
 
-  (setq notmuch-identities
-        (let ((identities))
-          (dolist (m `(,(prot-mail-auth-get-field "prv" :user)
-                       ,(prot-mail-auth-get-field "inf" :user)
-                       ,(prot-mail-auth-get-field "pub" :user)))
-            (push (format "%s <%s>" user-full-name m) identities))
-          identities))
-  (setq notmuch-fcc-dirs
-        `((,(prot-mail-auth-get-field "prv" :user) . "prv/Sent")
-          (,(prot-mail-auth-get-field "inf" :user) . "inf/Sent")
-          (,(prot-mail-auth-get-field "pub" :user) . "pub/Sent")))
 ;;; Account settings
+  (let ((prv (prot-mail-auth-get-field "prv" :user))
+        (pub (prot-mail-auth-get-field "pub" :user))
+        (inf (prot-mail-auth-get-field "inf" :user)))
+    (setq notmuch-identities
+          (mapcar (lambda (str)
+                    (format "%s <%s>" user-full-name str))
+                  (list prv pub inf)))
+    (setq notmuch-fcc-dirs
+          `((,prv . "prv/Sent")
+            (,inf . "inf/Sent")
+            (,pub . "pub/Sent"))))
 
 ;;;; General UI
   (setq notmuch-show-logo nil)
