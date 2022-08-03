@@ -12,7 +12,12 @@
   (setq dired-mouse-drag-files t) ; Emacs 29.1
 
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
-  (add-hook 'dired-mode-hook #'hl-line-mode))
+  (add-hook 'dired-mode-hook #'hl-line-mode)
+
+  ;; In Emacs 29 there is a binding for `repeat-mode' which let you
+  ;; repeat C-x C-j just by following it up with j.  For me, this is a
+  ;; problem as j calls `dired-goto-file', which I often use.
+  (define-key dired-jump-map (kbd "j") nil))
 
 (prot-emacs-builtin-package 'dired-aux
   (setq dired-isearch-filenames 'dwim)
