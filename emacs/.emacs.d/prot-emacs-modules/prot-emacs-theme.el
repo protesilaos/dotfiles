@@ -114,8 +114,8 @@
           (habit . simplified))
 
         ;; The `modus-themes-headings' is an alist with lots of possible
-        ;; combinations, include per-heading-level tweaks: read the
-        ;; manual or its doc string
+        ;; combinations, including per-heading-level tweaks: read the
+        ;; manual or its doc string.
         modus-themes-headings
         '((0 . (variable-pitch light (height 2.2)))
           (1 . (rainbow variable-pitch light (height 1.6)))
