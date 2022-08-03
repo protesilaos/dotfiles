@@ -166,6 +166,12 @@
     (define-key map (kbd "w") #'prot-vc-log-kill-hash)))
 
 ;;; Interactive and powerful git front-end (Magit)
+
+;; There is no need to install the package, as transient.el is built
+;; into Emacs.  By requiring it, I prevent the installation of the
+;; package, which would be done by Magit.
+(prot-emacs-builtin-package 'transient)
+
 (prot-emacs-elpa-package 'magit
   (setq magit-define-global-key-bindings nil)
   (define-key global-map (kbd "C-c g") #'magit-status)
