@@ -157,4 +157,18 @@
 
   (add-hook 'logos-page-motion-hook #'prot/logos--recenter-top))
 
+;;; Emoji input
+(prot-emacs-builtin-package 'emoji
+  (defun prot/emoji-insert (&optional transient)
+    "Thin wrapper for `emoji-insert' and `emoji-search'.
+When called with optional TRANSIENT as a prefix argument, use the
+transient interface (transient.el), else pick an emoji with
+minibuffer completion."
+    (interactive "P")
+    (let ((cmd (if transient 'emoji-insert 'emoji-search)))
+      (call-interactively cmd)))
+
+  ;; The default key bindings for Emoji are behind the C-x 8 e prefix.
+  (define-key global-map (kbd "C-.") #'prot/emoji-insert))
+
 (provide 'prot-emacs-write)
