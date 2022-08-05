@@ -103,12 +103,9 @@
   (let ((map elfeed-search-mode-map))
     (define-key map (kbd "w") #'elfeed-search-yank)
     (define-key map (kbd "g") #'elfeed-update)
-    (define-key map (kbd "G") #'elfeed-search-update--force)
-    (define-key map (kbd "b") #'prot-elfeed-bongo-insert-item)
-    (define-key map (kbd "h") #'prot-elfeed-bongo-switch-to-playlist)) ; "hop" mnemonic
+    (define-key map (kbd "G") #'elfeed-search-update--force))
   (let ((map elfeed-show-mode-map))
-    (define-key map (kbd "w") #'elfeed-show-yank)
-    (define-key map (kbd "b") #'prot-elfeed-bongo-insert-item)))
+    (define-key map (kbd "w") #'elfeed-show-yank)))
 
 (with-eval-after-load 'elfeed
   (prot-emacs-builtin-package 'prot-elfeed
