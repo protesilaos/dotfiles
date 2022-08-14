@@ -143,6 +143,10 @@ Try to install the package if it is missing."
 (require 'prot-emacs-conveniences)
 (require 'prot-emacs-history)
 
+(setq safe-local-variable-values
+      '((org-hide-leading-stars . t)
+        (org-hide-macro-markers . t)))
+
 ;; For those who use my dotfiles and need an easy way to write their own
 ;; extras.  The file must exist at ~/.emacs.d/user-emacs.el
 (when-let* ((file (locate-user-emacs-file "user-emacs.el"))
