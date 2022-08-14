@@ -137,10 +137,6 @@
     (define-key map (kbd "C-c ! n") #'flymake-goto-next-error)
     (define-key map (kbd "C-c ! p") #'flymake-goto-prev-error)))
 
-(prot-emacs-elpa-package 'flymake-diagnostic-at-point
-  (setq flymake-diagnostic-at-point-display-diagnostic-function
-        'flymake-diagnostic-at-point-display-minibuffer))
-
 ;;; Flymake + Shellcheck
 (prot-emacs-elpa-package 'flymake-shellcheck
   (add-hook 'sh-mode-hook 'flymake-shellcheck-load))
