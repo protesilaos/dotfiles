@@ -86,17 +86,15 @@
     (define-key map (kbd "C-c n I") #'denote-link-add-links)
     (define-key map (kbd "C-c n l") #'denote-link-find-file) ; "list" links
     (define-key map (kbd "C-c n b") #'denote-link-backlinks)
-    ;; Note that `denote-dired-rename-file' can work from any context, not
+    ;; Note that `denote-rename-file' can work from any context, not
     ;; just Dired bufffers.  That is why we bind it here to the
     ;; `global-map'.
-    (define-key map (kbd "C-c n r") #'denote-dired-rename-file)
-    (define-key map (kbd "C-c n R") #'denote-dired-rename-file-and-add-front-matter))
+    (define-key map (kbd "C-c n r") #'denote-rename-file))
 
   ;; Key bindings specifically for Dired.
   (let ((map dired-mode-map))
     (define-key map (kbd "C-c C-d C-i") #'denote-link-dired-marked-notes)
-    (define-key map (kbd "C-c C-d C-r") #'denote-dired-rename-marked-files)
-    (define-key map (kbd "C-c C-d C-R") #'denote-dired-rename-marked-files-and-add-front-matters))
+    (define-key map (kbd "C-c C-d C-r") #'denote-dired-rename-marked-files))
 
   (with-eval-after-load 'org-capture
     (setq denote-org-capture-specifiers "%l\n%i\n%?")
