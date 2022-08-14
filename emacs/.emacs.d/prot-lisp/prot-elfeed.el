@@ -70,28 +70,13 @@ Used by `prot-elfeed-toggle-tag'."
   :type 'list
   :group 'prot-elfeed)
 
-(defface prot-elfeed-entry-critical
-  '((((class color) (min-colors 88) (background light))
-     :inherit elfeed-search-title-face :foreground "#a60000")
-    (((class color) (min-colors 88) (background dark))
-     :inherit elfeed-search-title-face :foreground "#ff8059")
-    (t :foreground "red"))
+(defface prot-elfeed-entry-critical '((t :inherit font-lock-warning-face))
   "Face for Elfeed entries tagged with `critical'.")
 
-(defface prot-elfeed-entry-important
-  '((((class color) (min-colors 88) (background light))
-     :inherit elfeed-search-title-face :foreground "#813e00")
-    (((class color) (min-colors 88) (background dark))
-     :inherit elfeed-search-title-face :foreground "#f0ce43")
-    (t :foreground "yellow"))
+(defface prot-elfeed-entry-important '((t :inherit font-lock-constant-face))
   "Face for Elfeed entries tagged with `important'.")
 
-(defface prot-elfeed-entry-personal
-    '((((class color) (min-colors 88) (background light))
-     :inherit elfeed-search-title-face :foreground "#0031a9")
-    (((class color) (min-colors 88) (background dark))
-     :inherit elfeed-search-title-face :foreground "#2fafff")
-    (t :foreground "blue"))
+(defface prot-elfeed-entry-personal '((t :inherit font-lock-variable-name-face))
   "Face for Elfeed entries tagged with `personal'.")
 
 ;;;; Utilities
