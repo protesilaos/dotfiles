@@ -1,28 +1,9 @@
 ;;; Pulsar
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-elpa-package 'pulsar
-  (setq pulsar-pulse-functions
-        '(recenter-top-bottom
-          move-to-window-line-top-bottom
-          reposition-window
-          bookmark-jump
-          forward-page
-          backward-page
-          scroll-up-command
-          scroll-down-command
-          logos-forward-page-dwim
-          logos-backward-page-dwim
-          org-next-visible-heading
-          org-previous-visible-heading
-          org-forward-heading-same-level
-          org-backward-heading-same-level
-          outline-backward-same-level
-          outline-forward-same-level
-          outline-next-visible-heading
-          outline-previous-visible-heading
-          outline-up-heading))
 
-  (setq pulsar-pulse-on-window-change t)
+  ;; I keep the default value of `pulsar-pulse-functions'.
+
   (setq pulsar-pulse t)
   (setq pulsar-delay 0.055)
   (setq pulsar-iterations 10)
@@ -30,6 +11,10 @@
   (setq pulsar-highlight-face 'pulsar-yellow)
 
   (pulsar-global-mode 1)
+
+  ;; There are convenience functions/commands which pulse the line using
+  ;; a specific colour: `pulsar-pulse-line-red' is one of them.
+  (add-hook 'next-error-hook #'pulsar-pulse-line-red)
 
   ;; pulsar does not define any key bindings.  This is just my personal
   ;; preference.  Remember to read the manual on the matter.  Evaluate:
