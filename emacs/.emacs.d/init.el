@@ -79,6 +79,7 @@
 (setq package-pinned-packages
       '((cursory . "elpa-devel")
         (denote . "elpa-devel")
+        (ef-themes . "elpa-devel")
         (fontaine . "elpa-devel")
         (lin . "elpa-devel")
         (logos . "elpa-devel")
