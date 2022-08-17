@@ -41,28 +41,13 @@
 
 ;;;; Extend Bookmark menu font-lock
 
-(defface prot-bookmark-url
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#0000c0")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#00bcff")
-    (t :foreground "blue"))
+(defface prot-bookmark-url '((t :inherit link :underline nil))
   "Face for URL bookmarks.")
 
-(defface prot-bookmark-pdf
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#7f1010")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#ffa0a0")
-    (t :foreground "red"))
+(defface prot-bookmark-pdf '((t :inherit error))
   "Face for PDF bookmarks.")
 
-(defface prot-bookmark-directory
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#0f3d8c")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#a0acef")
-    (t :foreground "cyan"))
+(defface prot-bookmark-directory '((t :inherit success))
   "Face for directory bookmarks.")
 
 ;; TODO 2021-09-08: We should be able to filter out bookmarks from the
