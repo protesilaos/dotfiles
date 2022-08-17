@@ -56,7 +56,7 @@ hook `modus-themes-after-load-theme-hook'."
   (when (derived-mode-p 'org-mode)
     (font-lock-flush)))
 
-(when (require 'modus-themes nil t)
+(when (featurep 'modus-themes)
   (add-hook 'modus-themes-after-load-theme-hook
             #'prot-org--modus-themes-fontify-block-delimiters))
 
