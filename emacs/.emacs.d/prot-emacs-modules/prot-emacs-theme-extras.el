@@ -30,7 +30,7 @@
   ;; You can use this to live update the face:
   ;;
   ;; (customize-set-variable 'lin-face 'lin-green)
-  (setq lin-face 'lin-blue)
+  (setq lin-face 'hl-line)
   (setq lin-mode-hooks
         '(bongo-mode-hook
           dired-mode-hook
