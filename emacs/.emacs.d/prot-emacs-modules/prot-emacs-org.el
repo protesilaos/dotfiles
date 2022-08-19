@@ -51,7 +51,7 @@
   (setq org-fontify-todo-headline nil)
   (setq org-fontify-quote-and-verse-blocks t)
   (setq org-fontify-whole-heading-line nil)
-  (setq org-fontify-whole-block-delimiter-line nil)
+  (setq org-fontify-whole-block-delimiter-line t)
   (setq org-highlight-latex-and-related nil) ; other options affect elisp regexp in src blocks
   (setq org-enforce-todo-dependencies t)
   (setq org-enforce-todo-checkbox-dependencies t)
