@@ -188,13 +188,4 @@ use in `display-buffer-alist'."
     (define-key map (kbd "<f8>") #'prot-tab-status-line) ; unopinionated alternative: `prot-tab-bar-toggle'
     (define-key map (kbd "C-x t t") #'prot-tab-select-tab-dwim)))
 
-;; ;; This is only included as a reference.
-;; (prot-emacs-builtin-package 'tab-line
-;;   (global-tab-line-mode -1))
-
-;;; Transposition and rotation of windows
-(prot-emacs-elpa-package 'transpose-frame
-  (let ((map global-map))
-    (define-key map (kbd "C-x M-r") #'rotate-frame-clockwise)))
-
 (provide 'prot-emacs-window)
