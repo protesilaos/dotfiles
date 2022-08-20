@@ -846,30 +846,15 @@ This is a thin wrapper around `log-edit-done', which first calls
   (run-hooks 'prot-vc-git-log-edit-done-hook))
 
 (defface prot-vc-git-log-edit-file-name
-  '((default :inherit font-lock-comment-face)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#2a486a")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#b0d6f5")
-    (t :foreground "cyan"))
+  '((t :inherit (font-lock-function-name-face font-lock-comment-face)))
   "Face for file names in VC Git Log Edit buffers.")
 
 (defface prot-vc-git-log-edit-local-branch-name
-  '((default :inherit font-lock-comment-face)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#0031a9")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#2fafff")
-    (t :foreground "blue"))
+  '((t :inherit (font-lock-variable-name-face font-lock-comment-face)))
   "Face for local branch name in VC Git Log Edit buffers.")
 
 (defface prot-vc-git-log-edit-remote-branch-name
-  '((default :inherit font-lock-comment-face)
-    (((class color) (min-colors 88) (background light))
-     :foreground "#55348e")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#cfa6ff")
-    (t :foreground "magenta"))
+  '((t :inherit (font-lock-constant-face font-lock-comment-face)))
   "Face for remote branch name in VC Git Log Edit buffers.")
 
 (defconst prot-vc-git-log-edit-font-lock
