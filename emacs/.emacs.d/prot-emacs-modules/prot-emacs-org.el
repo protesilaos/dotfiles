@@ -431,27 +431,7 @@
   ;; (setq org-modern-progress ["○""◔""◐""◕""●"])
 
   (add-hook 'org-mode-hook #'org-modern-mode)
-  (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
-
-  ;; NOTE 2022-03-06: I am experimenting with various styles here.  DO NOT COPY.
-  ;;
-  ;; Also note that I do not wrap this in `with-eval-after-load' because
-  ;; the `modus-themes' are always loaded first in my config.
-  (defun prot/org-modern-face-tweaks ()
-    (modus-themes-with-colors
-      (custom-set-faces
-       `(org-modern-label ((,class :box (:line-width (-1 . ,org-modern-label-border) :color ,bg-main))))
-       `(org-modern-done ((,class :inherit org-modern-label :background ,bg-special-faint-mild :foreground ,green-alt-other)))
-       `(org-modern-priority ((,class :inherit org-modern-label :background ,bg-special-faint-calm :foreground ,magenta-alt-other)))
-       `(org-modern-statistics ((,class :inherit org-modern-label :background ,bg-special-faint-warm :foreground ,yellow-alt-other)))
-       `(org-modern-tag ((,class :inherit org-modern-label :background ,bg-special-faint-calm :foreground ,magenta)))
-       `(org-modern-todo ((,class :inherit org-modern-label :background ,bg-special-faint-warm :foreground ,red-alt-other)))
-       `(org-modern-date-active ((,class :inherit org-modern-label :background ,bg-alt :foreground ,fg-main)))
-       `(org-modern-date-inactive ((,class :inherit org-modern-date-active :foreground ,fg-dim)))
-       `(org-modern-time-active ((,class :inherit org-modern-label :background ,bg-active :foreground ,fg-main)))
-       `(org-modern-time-inactive ((,class :inherit org-modern-date-inactive))))))
-
-  (add-hook 'modus-themes-after-load-theme-hook #'prot/org-modern-face-tweaks))
+  (add-hook 'org-agenda-finalize-hook #'org-modern-agenda))
 
 ;;; Calendar
 (prot-emacs-builtin-package 'calendar
