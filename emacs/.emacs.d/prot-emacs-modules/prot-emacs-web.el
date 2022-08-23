@@ -8,7 +8,8 @@
   (setq shr-use-fonts nil)              ; t is not for me
   (setq shr-max-image-proportion 0.6)
   (setq shr-image-animate nil)          ; No GIFs, thank you!
-  (setq shr-width nil)                  ; check `prot-eww-readable'
+  (setq shr-width fill-column)          ; check `prot-eww-readable'
+  (setq shr-max-width fill-column)
   (setq shr-discard-aria-hidden t)
   (setq shr-cookie-policy nil))
 
