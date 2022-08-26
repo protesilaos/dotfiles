@@ -228,7 +228,7 @@
   (setq prefix-help-command #'embark-prefix-help-command)
   ;; (setq prefix-help-command #'describe-prefix-bindings) ; the default of the above
   (setq embark-quit-after-action t)     ; XXX: Read the doc string!
-  (setq embark-cycle-key (kbd "C-."))   ; see the `embark-act' key
+  (setq embark-cycle-key (kbd "C-,"))   ; see the `embark-act' key
   (setq embark-confirm-act-all nil)
   (setq embark-indicators
         '(embark-mixed-indicator
