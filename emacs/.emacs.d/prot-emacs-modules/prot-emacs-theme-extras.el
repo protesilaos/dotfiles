@@ -2,7 +2,11 @@
 ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
 (prot-emacs-elpa-package 'pulsar
 
-  ;; I keep the default value of `pulsar-pulse-functions'.
+  (dolist (cmd '( narrow-to-page narrow-to-defun
+                  narrow-to-region widen
+                  logos-forward-page-dwim
+                  logos-backward-page-dwim))
+    (add-to-list 'pulsar-pulse-functions cmd))
 
   (setq pulsar-pulse t)
   (setq pulsar-delay 0.055)
