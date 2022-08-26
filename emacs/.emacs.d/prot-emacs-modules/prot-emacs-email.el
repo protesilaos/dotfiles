@@ -210,7 +210,7 @@
   (setq notmuch-show-all-multipart/alternative-parts nil)
   (setq notmuch-show-indent-messages-width 0)
   (setq notmuch-show-indent-multipart nil)
-  (setq notmuch-show-part-button-default-action 'notmuch-show-save-part)
+  (setq notmuch-show-part-button-default-action 'notmuch-show-view-part)
   (setq notmuch-show-text/html-blocked-images ".") ; block everything
   (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
     (setq notmuch-wash-cqitation-lines-prefix count
