@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 
-;; DEPRECATED 2022-07-31: My `logos' package makes all this reduntant.
+;; DEPRECATED 2022-07-31: My `logos' package makes all this redundant.
 
 ;;
 ;; Extensions to the built-in `outline.el' library for my Emacs

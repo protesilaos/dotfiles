@@ -371,7 +371,7 @@ with the specified date."
 
 (defun prot-simple-zap-to-char-backward (char &optional arg)
   "Backward `zap-to-char' for CHAR.
-Optional ARG is a numeric prefix to match ARGth occurence of
+Optional ARG is a numeric prefix to match ARGth occurance of
 CHAR."
   (interactive
    (list
@@ -436,7 +436,7 @@ with the one at point (region end).
 Otherwise, and while inside a sentence, this behaves as the
 built-in `transpose-words', dragging forward the word behind the
 point.  The difference lies in its behaviour at the end or
-beginnning of a line, where it will always transpose the word at
+beginning of a line, where it will always transpose the word at
 point with the one behind or ahead of it (effectively the
 last/first two words)."
   (interactive "p")

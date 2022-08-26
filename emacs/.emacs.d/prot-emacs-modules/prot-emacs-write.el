@@ -87,7 +87,7 @@
     (define-key map (kbd "C-c n l") #'denote-link-find-file) ; "list" links
     (define-key map (kbd "C-c n b") #'denote-link-backlinks)
     ;; Note that `denote-rename-file' can work from any context, not
-    ;; just Dired bufffers.  That is why we bind it here to the
+    ;; just Dired buffers.  That is why we bind it here to the
     ;; `global-map'.
     (define-key map (kbd "C-c n r") #'denote-rename-file))
 

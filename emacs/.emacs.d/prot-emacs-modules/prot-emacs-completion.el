@@ -366,7 +366,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   (let ((table text-mode-abbrev-table))
     (define-abbrev table "visavis" "vis-à-vis")
-    (define-abbrev table "cliche" "clichè")
+    (define-abbrev table "cliche" "cliché")
     (define-abbrev table "latex" "LaTeX")
     (define-abbrev table "javascript" "JavaScript")
     (define-abbrev table "github" "GitHub")
