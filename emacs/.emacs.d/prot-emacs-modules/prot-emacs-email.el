@@ -87,7 +87,7 @@
   (setq notmuch-hello-auto-refresh t)
   (setq notmuch-hello-recent-searches-max 20)
   (setq notmuch-hello-thousands-separator "")
-  (setq notmuch-hello-sections '(notmuch-hello-insert-saved-searches notmuch-hello-insert-alltags))
+  (setq notmuch-hello-sections '(notmuch-hello-insert-saved-searches))
   (setq notmuch-show-all-tags-list t)
 
 ;;;; Search
