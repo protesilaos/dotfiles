@@ -361,13 +361,12 @@ Useful for prompts such as `eval-expression' and `shell-command'."
   (let ((table global-abbrev-table))
     (define-abbrev table "meweb" "https://protesilaos.com")
     (define-abbrev table "megit" "https://git.sr.ht/~protesilaos")
-    ;; to speed up technical writing about Emacs in Greek (I wrote the
-    ;; Emacs TUTORIAL in Greek)
-    (define-abbrev table "εμαψσ" "Emacs")
-    (define-abbrev table "βθφφερ" "αποσβεστήρας")
-    (define-abbrev table "μινιβθφφερ" "μικροαποσβεστήρας"))
+    (define-abbrev table "mehub" "https://github.com/protesilaos")
+    (define-abbrev table "melab" "https://gitlab.com/protesilaos"))
 
   (let ((table text-mode-abbrev-table))
+    (define-abbrev table "visavis" "vis-à-vis")
+    (define-abbrev table "cliche" "clichè")
     (define-abbrev table "latex" "LaTeX")
     (define-abbrev table "javascript" "JavaScript")
     (define-abbrev table "github" "GitHub")
@@ -395,7 +394,7 @@ Useful for prompts such as `eval-expression' and `shell-command'."
 
   ;; message-mode derives from text-mode, so we don't need a separate
   ;; hook for it.
-  (dolist (hook '(text-mode-hook git-commit-mode-hook))
+  (dolist (hook '(text-mode-hook prog-mode-hook git-commit-mode-hook))
     (add-hook hook #'abbrev-mode)))
 
 (provide 'prot-emacs-completion)
