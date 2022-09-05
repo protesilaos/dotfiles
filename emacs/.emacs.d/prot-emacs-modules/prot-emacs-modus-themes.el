@@ -3,7 +3,7 @@
 ;; These are built into Emacs 28 or higher, though I use the package for
 ;; my development purposes (I need to make sure it always builds cleanly
 ;; and works properly).
-
+;;
 ;; Read their manual with Emacs' Info reader, or visit:
 ;; <https://protesilaos.com/emacs/modus-themes>.
 (prot-emacs-elpa-package 'modus-themes
@@ -40,7 +40,7 @@
         ;; Options for `modus-themes-markup' are either nil, or a list
         ;; that can combine any of `bold', `italic', `background',
         ;; `intense'.
-        modus-themes-markup nil
+        modus-themes-markup '(bold italic intense)
 
         ;; Options for `modus-themes-syntax' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
@@ -117,8 +117,8 @@
         ;; combinations, including per-heading-level tweaks: read the
         ;; manual or its doc string.
         modus-themes-headings
-        '((0 . (variable-pitch light (height 2.2)))
-          (1 . (rainbow variable-pitch light (height 1.6)))
+        '((0 . (variable-pitch light (height 1.8)))
+          (1 . (variable-pitch light (height 1.6)))
           (2 . (rainbow variable-pitch light (height 1.4)))
           (3 . (rainbow variable-pitch regular (height 1.3)))
           (4 . (rainbow regular (height 1.2)))
@@ -416,4 +416,4 @@ provide."
       (setq modus-themes-operandi-color-overrides nil
             modus-themes-vivendi-color-overrides nil))))
 
-(provide 'prot-emacs-theme)
+(provide 'prot-emacs-modus-themes)
