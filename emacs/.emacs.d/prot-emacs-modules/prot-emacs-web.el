@@ -3,6 +3,12 @@
   (setq browse-url-browser-function 'eww-browse-url)
   (setq browse-url-secondary-browser-function 'browse-url-default-browser))
 
+(prot-emacs-builtin-package 'goto-addr
+  (setq goto-address-url-face 'link)
+  (setq goto-address-url-mouse-face 'highlight)
+  (setq goto-address-mail-face nil)
+  (setq goto-address-mail-mouse-face 'highlight))
+
 (prot-emacs-builtin-package 'shr
   (setq shr-use-colors nil)             ; t is bad for accessibility
   (setq shr-use-fonts nil)              ; t is not for me
