@@ -95,27 +95,8 @@
 ;;; Cursor appearance (cursory)
 ;; Read the manual: <https://protesilaos.com/emacs/cursory>.
 (prot-emacs-elpa-package 'cursory
-  (setq cursory-presets
-        '((bar
-           :cursor-type (bar . 2)
-           :cursor-in-non-selected-windows hollow
-           :blink-cursor-blinks 10
-           :blink-cursor-interval 0.5
-           :blink-cursor-delay 0.2)
-          (box
-           :cursor-type box
-           :cursor-in-non-selected-windows hollow
-           :blink-cursor-blinks 10
-           :blink-cursor-interval 0.5
-           :blink-cursor-delay 0.2)
-          (underscore
-           :cursor-type (hbar . 3)
-           :cursor-in-non-selected-windows hollow
-           :blink-cursor-blinks 50
-           :blink-cursor-interval 0.2
-           :blink-cursor-delay 0.2)))
-
-  (setq cursory-latest-state-file (locate-user-emacs-file "cursory-latest-state.eld"))
+  ;; I am using the default values of `cursory-presets',
+  ;; `cursory-latest-state-file'.
 
   ;; Set last preset or fall back to desired style from `cursory-presets'.
   (cursory-set-preset (or (cursory-restore-latest-preset) 'bar))
