@@ -17,6 +17,8 @@
   ;; Iosevka Comfy Duo        == quasi-proportional, supports ligatures
   ;; Iosevka Comfy Wide       == like Iosevka Comfy, but wider
   ;; Iosevka Comfy Wide Fixed == like Iosevka Comfy Fixed, but wider
+  ;; Iosevka Comfy Motion     == monospaced, supports ligatures, fancier glyphs
+  ;; Iosevka Comfy Motion Duo == as above, but quasi-proportional
   (setq fontaine-presets
         '((tiny
            :default-family "Iosevka Comfy Wide Fixed"
@@ -53,12 +55,12 @@
            :fixed-pitch-serif-family nil ; falls back to :default-family
            :fixed-pitch-serif-weight nil ; falls back to :default-weight
            :fixed-pitch-serif-height 1.0
-           :variable-pitch-family "Iosevka Comfy Duo"
+           :variable-pitch-family "Iosevka Comfy Motion Duo"
            :variable-pitch-weight nil
            :variable-pitch-height 1.0
            :bold-family nil ; use whatever the underlying face has
            :bold-weight bold
-           :italic-family nil
+           :italic-family "Iosevka Comfy Motion"
            :italic-slant italic
            :line-spacing nil)))
 
