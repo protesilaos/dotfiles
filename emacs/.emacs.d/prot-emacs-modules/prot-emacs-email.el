@@ -192,7 +192,7 @@
 ;;;; Email composition
   (setq notmuch-mua-compose-in 'current-window)
   (setq notmuch-mua-hidden-headers nil) ; TODO 2021-05-12: Review hidden headers
-  (setq notmuch-address-command nil)    ; FIXME 2021-05-13: Make it work with EBDB
+  (setq notmuch-address-command 'internal)
   (setq notmuch-always-prompt-for-sender t)
   (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
   (setq notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
@@ -312,47 +312,5 @@
 
 (prot-emacs-builtin-package 'sendmail
   (setq send-mail-function 'smtpmail-send-it))
-
-;;; EBDB (mail contacts)
-(prot-emacs-elpa-package 'ebdb
-  (require 'ebdb-message)
-  (require 'ebdb-notmuch) ; FIXME 2021-05-13: does not activate the corfu-mode UI
-  (setq ebdb-sources (locate-user-emacs-file "ebdb"))
-  (setq ebdb-permanent-ignores-file (locate-user-emacs-file "ebdb-permanent-ignores"))
-
-  (setq ebdb-mua-pop-up nil)
-  (setq ebdb-default-window-size 0.25)
-  (setq ebdb-mua-default-formatter ebdb-default-multiline-formatter)
-
-  (setq ebdb-mua-auto-update-p 'existing)
-  (setq ebdb-mua-reader-update-p 'existing)
-  (setq ebdb-mua-sender-update-p 'create)
-  (setq ebdb-message-auto-update-p 'create)
-
-  (setq ebdb-message-try-all-headers t)
-  (setq ebdb-message-headers
-        '((sender "From" "Resent-From" "Reply-To" "Sender")
-          (recipients "Resent-To" "Resent-Cc" "Resent-CC" "To" "Cc" "CC" "Bcc" "BCC")))
-  (setq ebdb-message-all-addresses t)
-
-  (setq ebdb-complete-mail 'capf)
-  (setq ebdb-mail-avoid-redundancy t)
-  (setq ebdb-completion-display-record nil)
-  (setq ebdb-complete-mail-allow-cycling nil)
-
-  (setq ebdb-record-self "ace719a4-61f8-4bee-a1ca-2f07e2292305")
-  (setq ebdb-user-name-address-re 'self) ; match the above
-  (setq ebdb-save-on-exit t)
-
-  (with-eval-after-load 'prot-mail ; check my `prot-mail.el'
-    (add-hook 'message-setup-hook #'prot-mail-ebdb-message-setup))
-
-  (let ((map ebdb-mode-map))
-    (define-key map (kbd "D") #'ebdb-delete-field-or-record)
-    (define-key map (kbd "M") #'ebdb-mail) ; disables `ebdb-mail-each'
-    (define-key map (kbd "m") #'ebdb-toggle-record-mark)
-    (define-key map (kbd "t") #'ebdb-toggle-all-record-marks)
-    (define-key map (kbd "T") #'ebdb-toggle-records-format) ; disables `ebdb-toggle-all-records-format'
-    (define-key map (kbd "U") #'ebdb-unmark-all-records)))
 
 (provide 'prot-emacs-email)

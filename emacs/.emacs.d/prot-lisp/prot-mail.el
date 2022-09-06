@@ -68,16 +68,6 @@ the function `prot-mail-mail-indicator'."
        (funcall (plist-get (car source) prop))
       (plist-get (flatten-list source) prop))))
 
-(defvar ebdb-db-list)
-(autoload 'ebdb-load "ebdb")
-
-(when (require 'ebdb nil t)
-  (defun prot-mail-ebdb-message-setup ()
-    "Load EBDB if not done already.
-Meant to be assigned to a hook, such as `message-setup-hook'."
-    (unless ebdb-db-list
-      (ebdb-load))))
-
 ;;;; Mode line indicator
 
 ;; NOTE 2021-05-14: The following is a more generic approach that uses
