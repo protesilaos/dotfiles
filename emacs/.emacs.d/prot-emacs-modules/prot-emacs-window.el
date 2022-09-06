@@ -128,17 +128,20 @@ use in `display-buffer-alist'."
     (define-key map ">" #'enlarge-window-horizontally)
     (define-key map "<" #'shrink-window-horizontally)))
 
-;;; Window history (winner-mode)
-(prot-emacs-builtin-package 'winner
-  (add-hook 'after-init-hook #'winner-mode)
+;; NOTE 2022-09-05: This is not needed anymore, as I am just using the
+;; `tab-bar-history-mode'.  Am keeping it around, just in case.
 
-  ;; ;; NOTE 2021-07-31: Those are superseded by the commands
-  ;; ;; `prot-tab-winner-undo' and `prot-tab-winner-redo' in prot-tab.el
-  ;; ;; (search this document).
-  ;; (let ((map global-map))
-  ;;   (define-key map (kbd "C-x <right>") #'winner-redo)
-  ;;   (define-key map (kbd "C-x <left>") #'winner-undo))
-  )
+;; ;;; Window history (winner-mode)
+;; (prot-emacs-builtin-package 'winner
+;;   (add-hook 'after-init-hook #'winner-mode)
+;;
+;;   ;; ;; NOTE 2021-07-31: Those are superseded by the commands
+;;   ;; ;; `prot-tab-winner-undo' and `prot-tab-winner-redo' in prot-tab.el
+;;   ;; ;; (search this document).
+;;   ;; (let ((map global-map))
+;;   ;;   (define-key map (kbd "C-x <right>") #'winner-redo)
+;;   ;;   (define-key map (kbd "C-x <left>") #'winner-undo))
+;;   )
 
 ;;; Directional window motions (windmove)
 (prot-emacs-builtin-package 'windmove
