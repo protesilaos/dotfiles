@@ -34,11 +34,11 @@
            :default-weight semilight
            :default-height 140
            :bold-weight extrabold)
-          (presentation
+          (code-demo
            :default-weight semilight
            :default-height 170
            :bold-weight extrabold)
-          (jumbo
+          (presentation
            :default-weight semilight
            :default-height 220
            :bold-weight extrabold)
