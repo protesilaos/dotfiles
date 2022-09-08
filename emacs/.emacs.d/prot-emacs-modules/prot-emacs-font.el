@@ -6,7 +6,10 @@
   ;; And this is for Emacs28.
   (setq-default text-scale-remap-header-line t)
 
+  ;; This is the default value.  Just including it here for
+  ;; completeness.
   (setq fontaine-latest-state-file (locate-user-emacs-file "fontaine-latest-state.eld"))
+
   ;; Iosevka Comfy is my highly customised build of Iosevka with
   ;; monospaced and duospaced (quasi-proportional) variants as well as
   ;; support or no support for ligatures:
@@ -73,7 +76,7 @@
   ;; Persist font configurations while switching themes (doing it with
   ;; my `modus-themes' and `ef-themes' via the hooks they provide).
   (dolist (hook '(modus-themes-after-load-theme-hook ef-themes-post-load-hook))
-    (add-hook hook (lambda () (fontaine-set-preset fontaine-current-preset))))
+    (add-hook hook #'fontaine-apply-current-preset))
 
   (define-key global-map (kbd "C-c f") #'fontaine-set-preset)
   (define-key global-map (kbd "C-c F") #'fontaine-set-face-font))
