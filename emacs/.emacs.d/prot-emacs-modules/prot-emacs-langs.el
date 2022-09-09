@@ -111,6 +111,11 @@
           ("EL Ελληνικά" . "el")
           ("FR Français" . "fr")
           ("ES Espanõl" . "es")))
+
+  ;; Also check prot-spell.el for what I am doing with
+  ;; `prot-spell-ispell-display-buffer'.  Then refer to the
+  ;; `display-buffer-alist' for the relevant entry.
+
   (let ((map global-map))
     (define-key map (kbd "M-$") #'prot-spell-spell-dwim)
     (define-key map (kbd "C-M-$") #'prot-spell-change-dictionary)))
