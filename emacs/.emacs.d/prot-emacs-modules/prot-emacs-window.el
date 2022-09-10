@@ -71,11 +71,12 @@
           ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . fit-window-to-buffer))
-          ;; NOTE 2022-09-09: The following is for `ispell-word', though
+          ;; NOTE 2022-09-10: The following is for `ispell-word', though
           ;; it only works because I override `ispell-display-buffer'
-          ;; with `prot-spell-ispell-display-buffer'.  Check my
-          ;; prot-spell.el for the details.
-          ((and . ((derived-mode . fundamental-mode) "\\*Choices\\*"))
+          ;; with `prot-spell-ispell-display-buffer' and change the
+          ;; value of `ispell-choices-buffer'.  Check my prot-spell.el
+          ;; for the details.
+          ("\\*ispell-top-choices\\*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
            (window-height . 2))
           ;; new frame

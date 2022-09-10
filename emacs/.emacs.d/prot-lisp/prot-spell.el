@@ -89,6 +89,8 @@ word and no active region invoke `ispell-word'.  Else call
    (t
     (call-interactively 'prot-spell-change-dictionary))))
 
+(setq ispell-choices-buffer "*ispell-top-choices*")
+
 (defun prot-spell-ispell-display-buffer (buffer)
   "Function to override `ispell-display-buffer'.
 Use this as `advice-add' to override the aforementioned Ispell
