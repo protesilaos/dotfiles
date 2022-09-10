@@ -78,7 +78,7 @@
           ;; for the details.
           ("\\*ispell-top-choices\\*"
            (display-buffer-reuse-mode-window display-buffer-below-selected)
-           (window-height . 2))
+           (window-height . fit-window-to-buffer))
           ;; new frame
           (prot/display-buffer-shell-or-term-p ; see definition below
            (display-buffer-pop-up-frame)
