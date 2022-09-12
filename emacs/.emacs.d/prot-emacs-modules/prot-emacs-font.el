@@ -31,6 +31,10 @@
            :default-height 90)
           (regular
            :default-height 100)
+          (regular-motion ; For testing purposes
+           :default-family "Iosevka Comfy Motion"
+           :default-height 100
+           :variable-pitch-family "Iosevka Comfy Duo")
           (medium
            :default-height 110)
           (large
@@ -63,7 +67,7 @@
            :variable-pitch-height 1.0
            :bold-family nil ; use whatever the underlying face has
            :bold-weight bold
-           :italic-family "Iosevka Comfy Motion"
+           :italic-family nil
            :italic-slant italic
            :line-spacing nil)))
 
