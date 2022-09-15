@@ -142,9 +142,40 @@
   ;; Those are the default values, but check the user option
   ;; `vertico-multiform-categories' for per-category tweaks.
   (setq vertico-scroll-margin 0)
-  (setq vertico-count 10)
-  (setq vertico-resize nil)
+  ;; NOTE 2022-09-15: I normally set `vertico-count' to 10 and
+  ;; `vertico-resize' to nil, though I am now experimenting with
+  ;; `contrib/vertico-bottom-display-candidates'.
+  (setq vertico-count 20)
+  (setq vertico-resize t)
   (setq vertico-cycle t)
+
+  ;; Got `contrib/vertico-bottom-display-candidates' from the Vertico Wiki:
+  ;; <https://github.com/minad/vertico/wiki#input-at-bottom-of-completion-list>.
+  ;; I just renamed it for consistency.
+  (defun contrib/vertico-bottom-display-candidates (lines)
+    "Display LINES in bottom."
+    (move-overlay vertico--candidates-ov (point-min) (point-min))
+    (unless (eq vertico-resize t)
+      (setq lines (nconc (make-list (max 0 (- vertico-count (length lines))) "\n") lines)))
+    (let ((string (apply #'concat lines)))
+      (add-face-text-property 0 (length string) 'default 'append string)
+      (overlay-put vertico--candidates-ov 'before-string string)
+      (overlay-put vertico--candidates-ov 'after-string nil))
+    (vertico--resize-window (length lines)))
+
+  (advice-add #'vertico--display-candidates :override #'contrib/vertico-bottom-display-candidates)
+
+  ;; Adapted from the source in the Vertico Wiki:
+  ;; <https://github.com/minad/vertico/wiki#prefix-current-candidate-with-arrow>.
+  (defun contrib/vertico-selection-indicator (orig cand prefix suffix index _start)
+    (setq cand (funcall orig cand prefix suffix index _start))
+    (concat
+     (if (= vertico--index index)
+         (propertize "» " 'face 'vertico-current)
+       "  ")
+     cand))
+
+  (advice-add #'vertico--format-candidate :around #'contrib/vertico-selection-indicator)
 
   (vertico-mode 1)
 
