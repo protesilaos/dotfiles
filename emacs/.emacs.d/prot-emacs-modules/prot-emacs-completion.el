@@ -110,11 +110,20 @@
 
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-  ;; Also adapted from Vertico.
+  ;; Add prompt indicator to `completing-read-multiple'.  We display
+  ;; [CRM<separator>], e.g., [CRM,] if the separator is a comma.  This
+  ;; is copied from the README of the `vertico' package.  I made some
+  ;; small tweaks to propertize the segments of the prompt.
   (defun crm-indicator (args)
-    "Add prompt indicator to `completing-read-multiple' filter ARGS."
-    ;; The `error' face just makes the text red.
-    (cons (concat (propertize "[CRM] " 'face 'error) (car args)) (cdr args)))
+    (cons (format "[%s %s] %s"
+                  (propertize "CRM" 'face 'error)
+                  (propertize
+                   (replace-regexp-in-string
+                    "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                    crm-separator)
+                   'face 'success)
+                  (car args))
+          (cdr args)))
 
   (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
