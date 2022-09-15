@@ -23,27 +23,21 @@
   ;; Iosevka Comfy Motion     == monospaced, supports ligatures, fancier glyphs
   ;; Iosevka Comfy Motion Duo == as above, but quasi-proportional
   (setq fontaine-presets
-        '((tiny
+        '((small
            :default-family "Iosevka Comfy Wide Fixed"
-           :default-height 70)
-          (small
-           :default-family "Iosevka Comfy Fixed"
-           :default-height 90)
+           :default-height 80
+           :variable-pitch-family "Iosevka Comfy Wide Duo")
           (regular
            :default-height 100)
-          (regular-motion ; For testing purposes
-           :default-family "Iosevka Comfy Motion"
-           :default-height 100
-           :variable-pitch-family "Iosevka Comfy Duo")
-          (medium
-           :default-height 110)
           (large
            :default-weight semilight
            :default-height 140
            :bold-weight extrabold)
           (code-demo
+           :default-family "Iosevka Comfy Fixed"
            :default-weight semilight
            :default-height 170
+           :variable-pitch-family "Iosevka Comfy Duo"
            :bold-weight extrabold)
           (presentation
            :default-weight semilight
