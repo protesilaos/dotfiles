@@ -145,7 +145,7 @@
   ;; NOTE 2022-09-15: I normally set `vertico-count' to 10 and
   ;; `vertico-resize' to nil, though I am now experimenting with
   ;; `contrib/vertico-bottom-display-candidates'.
-  (setq vertico-count 20)
+  (setq vertico-count 5)
   (setq vertico-resize t)
   (setq vertico-cycle t)
 
