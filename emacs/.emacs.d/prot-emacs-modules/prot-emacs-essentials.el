@@ -31,6 +31,7 @@
   (setq delete-pair-blink-delay 0.15) ; Emacs28 -- see `prot-simple-delete-pair-dwim'
   (setq prot-simple-scratch-buffer-default-mode 'markdown-mode)
   (setq help-window-select t)
+  (setq next-error-recenter '(4)) ; center of the window
 
   ;; ;; DEPRECATED 2021-10-15: set `help-window-select' to non-nil.
   ;; (setq prot-simple-focusable-help-commands
