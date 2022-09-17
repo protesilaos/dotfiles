@@ -2,8 +2,7 @@
 # ~/.bashrc
 #
 
-# Description
-# ===========
+### Description
 #
 # BASH configuration file.  Any modules such as the `dircolors` config
 # are stored in ~/.local/share/my_bash/.  This setup is part of my
@@ -11,16 +10,14 @@
 #
 # Note that ALL MY SCRIPTS are designed to work with `#!/bin/bash`.
 # They are not tested for portability.
-#
-# Last full review on 2019-06-28
+
 
 # Shorter version of a common command that it used herein.
 _checkexec() {
 	command -v "$1" > /dev/null
 }
 
-# General settings
-# ================
+### General settings
 
 # Include my scripts in the PATH.
 if [ -d "$HOME"/bin ]; then
@@ -110,15 +107,14 @@ shopt -s checkwinsize
 # Make `less` more friendly for non-text input files.
 _checkexec lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
 
-# Aliases
-# =======
+### Aliases
+
 # A note on how I define aliases.  I try to abstract the command into
 # its initials or something that resembles the original.  This helps me
 # remember the original command when necessary.  There are some
 # exceptions for commands I seldom execute.
 
-# APT (package management on Debian)
-# ----------------------------------
+#### APT (package management on Debian)
 
 # If you are coming to Debian from Arch-based distros, check
 # compatibility with `pacman`:
@@ -174,8 +170,8 @@ fi
 
 # NOTE 2019-11-10: Work-in-progress
 # UPDATE 2020-04-27: Generally okay, but never refined
-# XBPS (package management on Void Linux)
-# ---------------------------------------
+#### XBPS (package management on Void Linux)
+
 if _checkexec xbps-install; then
     alias xbi="sudo xbps-install -S"        # Update lists without a package arg
     alias xbiu="sudo xbps-install -Su"      # Upgrade system
@@ -215,8 +211,8 @@ if _checkexec xbps-remove && _checkexec xbps-query; then
     }
 fi
 
-# Pacman and Yay (Arch Linux)
-# ---------------------------
+#### Pacman and Yay (Arch Linux)
+
 if _checkexec pacman; then
     # General package management
     alias pSyu="sudo pacman -Syu"   # system upgrade
@@ -252,8 +248,7 @@ if _checkexec yay; then
     alias ySi="yay -Si"         # see remote package details
 fi
 
-# Common tasks and utilities
-# --------------------------
+#### Common tasks and utilities
 
 # Check these because some of them modify the behaviour of standard
 # commands, such as `cp`, `mv`, `rm`, so that they provide verbose
@@ -321,8 +316,7 @@ alias lsa='ls -pvA --color=auto --group-directories-first'
 alias lsl='ls -lhpv --color=auto --group-directories-first'
 alias lsla='ls -lhpvA --color=auto --group-directories-first'
 
-# Extra tasks and infrequently used tools
-# ---------------------------------------
+#### Extra tasks and infrequently used tools
 
 # These options are very opinionated, disabling images, javascript,
 # etc.  See `man surf`.
@@ -358,8 +352,7 @@ if _checkexec stow; then
     alias stow="stow -t $HOME"
 fi
 
-# Flatpak commands
-# ----------------
+#### Flatpak commands
 
 if _checkexec flatpak; then
 	alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
@@ -368,8 +361,7 @@ if _checkexec flatpak; then
 	alias flu="flatpak update"
 fi
 
-# Git commands
-# ------------
+#### Git commands
 
 if _checkexec git; then
 	export GIT_EDITOR="$EDITOR"
@@ -416,8 +408,7 @@ if _checkexec git; then
 	alias gph='git push -u origin HEAD'
 fi
 
-# Functions
-# =========
+### Functions
 
 # Colourise man pages
 man() {
