@@ -19,16 +19,19 @@ _checkexec ()
 ### General settings
 
 # Include my scripts in the PATH.
-if [ -d "$HOME"/bin ]; then
+if [ -d "$HOME"/bin ]
+then
     PATH=$PATH:"$HOME"/bin
 fi
 
-if [ -d "$HOME"/.local/bin ]; then
+if [ -d "$HOME"/.local/bin ]
+then
     PATH=$PATH:"$HOME"/.local/bin
 fi
 
 # May be needed for Jekyll…
-if [ -d "$HOME"/.local/share/gems ]; then
+if [ -d "$HOME"/.local/share/gems ]
+then
     GEM_HOME="$HOME"/.local/share/gems
     PATH=$PATH:"$HOME"/.local/share/gems/bin
 fi
@@ -44,10 +47,12 @@ export PAGER="less --quit-at-eof"
 export MANPAGER="$PAGER"
 
 # Default editor.
-if pgrep -x emacs > /dev/null; then
+if pgrep -x emacs > /dev/null
+then
     export VISUAL="emacsclient -c"
 	export EDITOR="emacsclient -t"
-elif _checkexec gvim; then
+elif _checkexec gvim
+then
 	export VISUAL="gvim"
 	export EDITOR=vim
 else
@@ -59,7 +64,8 @@ fi
 export BROWSER=/usr/bin/xdg-open
 
 # Simple prompt
-if [ -n "$SSH_CONNECTION" ]; then
+if [ -n "$SSH_CONNECTION" ]
+then
 	export PS1="\u@\h: \w \$ "
 else
 	export PS1="\w \$ "
@@ -70,10 +76,13 @@ export PS2="> "
 # programmable completion features (you don't need to enable this, if
 # it's already enabled in /etc/bash.bashrc and /etc/profile sources
 # /etc/bash.bashrc).
-if ! shopt -oq posix; then
-	if [ -f /usr/share/bash-completion/bash_completion ]; then
+if ! shopt -oq posix
+then
+	if [ -f /usr/share/bash-completion/bash_completion ]
+    then
 	. /usr/share/bash-completion/bash_completion
-	elif [ -f /etc/bash_completion ]; then
+	elif [ -f /etc/bash_completion ]
+    then
 	. /etc/bash_completion
 	fi
 fi
@@ -118,7 +127,8 @@ _checkexec lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
 # If you are coming to Debian from Arch-based distros, check
 # compatibility with `pacman`:
 # https://wiki.archlinux.org/index.php/Pacman/Rosetta
-if _checkexec apt; then
+if _checkexec apt
+then
 	# up{dating,grading}.  The -V shows version changes.
 	alias au="sudo apt-get update"
 	alias aug="sudo apt-get upgrade -V"
@@ -151,7 +161,8 @@ fi
 
 # No point in checking for dpkg on a Debian system.  Still, it can help
 # people who copy-paste stuff.
-if _checkexec dpkg; then
+if _checkexec dpkg
+then
 	alias dgl='dpkg --listfiles' # target a package name, e.g. dgl bspwm
 	alias dgg='dpkg --get-selections' # would normally be pipped to grep
 	# The following removes/purges unused configs without asking for
@@ -160,7 +171,8 @@ if _checkexec dpkg; then
 	alias dgp='sudo dpkg --purge $(dpkg --get-selections | grep deinstall | cut -f 1)'
 fi
 
-if _checkexec aptitude; then
+if _checkexec aptitude
+then
 	# The following two aliases perform the same action of removing
 	# unused system files.  Unlike 'alias dgp', confirmation is needed.
 	#alias apc="sudo aptitude purge ?config-files"
@@ -171,7 +183,8 @@ fi
 # UPDATE 2020-04-27: Generally okay, but never refined
 #### XBPS (package management on Void Linux)
 
-if _checkexec xbps-install; then
+if _checkexec xbps-install
+then
     alias xbi="sudo xbps-install -S"        # Update lists without a package arg
     alias xbiu="sudo xbps-install -Su"      # Upgrade system
     alias xbif="sudo xbps-install -f"       # Re-install 'forcefully' (no checks)
@@ -179,12 +192,14 @@ if _checkexec xbps-install; then
     alias xbiSuvn="sudo xbps-install -Suvn" # List upgradeable
 fi
 
-if _checkexec xbps-remove; then
+if _checkexec xbps-remove
+then
     alias xbr="sudo xbps-remove -R"         # Remove deps as well
     alias xbro="sudo xbps-remove -Oo"       # PKG, orphans, obsolete files
 fi
 
-if _checkexec xbps-query; then
+if _checkexec xbps-query
+then
     alias xbq="xbps-query"                  # Search for local package
     alias xbqR="xbps-query -Rs"             # Search for remote package
     alias xbqH="xbps-query -H"              # Query "hold" rules
@@ -197,14 +212,16 @@ if _checkexec xbps-query; then
     alias xbqO="xbps-query -O"              # List orphans
 fi
 
-if _checkexec xbps-pkgdb; then
+if _checkexec xbps-pkgdb
+then
     alias xbma="sudo xbps-pkgdb -m auto"    # Mark as auto install
     alias xbmm="sudo xbps-pkgdb -m manual"  # Mark as manual install
     alias xbmh="sudo xbps-pkgdb -m hold"
     alias xbmuh="sudo xbps-pkgdb -m unhold"
 fi
 
-if _checkexec xbps-remove && _checkexec xbps-query; then
+if _checkexec xbps-remove && _checkexec xbps-query
+then
     xbrq ()
     {
         sudo xbps-remove -R $(xbps-query -s "$1" | cut -d ' ' -f 2 | tr '\n' ' ')
@@ -213,7 +230,8 @@ fi
 
 #### Pacman and Yay (Arch Linux)
 
-if _checkexec pacman; then
+if _checkexec pacman
+then
     # General package management
     alias pSyu="sudo pacman -Syu"   # system upgrade
     alias pSyyu="sudo pacman -Syyu" # when updating mirrors
@@ -241,7 +259,8 @@ if _checkexec pacman; then
     alias pcache0="sudo paccache -ruk0" # remove all cache
 fi
 
-if _checkexec yay; then
+if _checkexec yay
+then
     alias ySyu="yay -Syu"       # upgrade aur
     alias yS="yay -S"           # sync download AUR
     alias ySs="yay -Ss"         # search aur
@@ -263,7 +282,8 @@ fi
 #	\cp == cp
 
 # _Entering_ Vim is easy.
-if _checkexec vim; then
+if _checkexec vim
+then
     alias v='vim'
     alias vi='vim'
 fi
@@ -282,7 +302,8 @@ alias mv='mv -iv'
 alias rm='rm -Iv'
 
 # Some common tasks for the `rsync` utiity.
-if _checkexec rsync; then
+if _checkexec rsync
+then
 	alias rsync='rsync --progress'
 	alias rsyncavz='rsync -avz --progress'
 	alias rsyncavzr='rsync -avzr --progress'
@@ -292,7 +313,8 @@ fi
 # Enable automatic color support for common commands that list output
 # and also add handy aliases.  Note the link to the `dircolors`.  This
 # is provided by my dotfiles.
-if _checkexec dircolors; then
+if _checkexec dircolors
+then
 	dircolors_data="$HOME/.local/share/my_bash/dircolors"
 	test -r $dircolors_data && eval "$(dircolors -b ${dircolors_data})" || eval "$(dircolors -b)"
 fi
@@ -320,7 +342,8 @@ alias lsla='ls -lhpvA --color=auto --group-directories-first'
 
 # These options are very opinionated, disabling images, javascript,
 # etc.  See `man surf`.
-if _checkexec surf; then
+if _checkexec surf
+then
 	alias surf="surf -giKMnps"
 fi
 
@@ -329,7 +352,8 @@ fi
 # When I only need to view the file I use --no-audio.  The one with
 # --ytdl-raw-options is for those occasions where a video is 4k or
 # something that slows things down considerably.
-if _checkexec mpv; then
+if _checkexec mpv
+then
 	alias mpvna='mpv --no-audio'
 	alias mpvnv='mpv --no-video'
 	alias mpvhd="mpv --ytdl-raw-options='format=[[bestvideo=height<=720]]'"
@@ -337,24 +361,28 @@ fi
 
 # Quick shortcuts for `yt-dlp`.  Output is placed in the present working
 # directory.
-if _checkexec yt-dlp; then
+if _checkexec yt-dlp
+then
 	alias ytaud='yt-dlp --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
 	alias ytvid='yt-dlp --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
 fi
 
 # When I need to copy the contents of a file to the clipboard
-if _checkexec xclip; then
+if _checkexec xclip
+then
 	alias xclipc='xclip -selection clipboard' # followed by path to file
 fi
 
 # I only ever use Stow to make symlinks with my home dir as the base
-if _checkexec stow; then
+if _checkexec stow
+then
     alias stow="stow -t $HOME"
 fi
 
 #### Flatpak commands
 
-if _checkexec flatpak; then
+if _checkexec flatpak
+then
 	alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
 	alias fliu="flatpak uninstall"
 	alias flls="flatpak list --app --columns='desc,app,orig'"
@@ -363,7 +391,8 @@ fi
 
 #### Git commands
 
-if _checkexec git; then
+if _checkexec git
+then
 	export GIT_EDITOR="$EDITOR"
 
 	# add, commit
@@ -432,7 +461,8 @@ man ()
 # Enter directory and list contents
 cd ()
 {
-	if [ -n "$1" ]; then
+	if [ -n "$1" ]
+    then
 		builtin cd "$@" && ls -pvA --color=auto --group-directories-first
 	else
 		builtin cd ~ && ls -pvA --color=auto --group-directories-first
