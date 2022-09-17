@@ -125,112 +125,6 @@ _checkexec lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
 # remember the original command when necessary.  There are some
 # exceptions for commands I seldom execute.
 
-#### APT (package management on Debian)
-
-# If you are coming to Debian from Arch-based distros, check
-# compatibility with `pacman`:
-# https://wiki.archlinux.org/index.php/Pacman/Rosetta
-if _checkexec apt
-then
-    # up{dating,grading}.  The -V shows version changes.
-    alias au="sudo apt-get update"
-    alias aug="sudo apt-get upgrade -V"
-    alias auu="sudo apt-get update && sudo apt-get upgrade -V"
-    alias afu="sudo apt-get dist-upgrade -V"
-    alias auufu="sudo apt-get update && sudo apt-get upgrade -V && sudo apt-get dist-upgrade -V"
-
-    # act on package targets
-    alias ai="sudo apt-get install"
-    alias air="sudo apt-get install --reinstall"
-    alias ar="sudo apt-get remove -V"
-
-    # list local packages
-    alias ard="apt rdepends" # followed by package name to print reverse dependencies
-    alias ali="apt list --installed"
-    alias alu="apt list --upgradable"
-    alias aulu="sudo apt update && apt list --upgradable"
-
-    # act on the repos
-    alias as="apt search"
-    alias ash="apt show"
-    alias adl="apt download" # gets source .deb in current directory
-
-    # package handling
-    alias aac="sudo apt-get autoclean"
-    alias aar="sudo apt-get autoremove -V"
-    alias ama="sudo apt-mark auto"
-    alias amm="sudo apt-mark manual"
-fi
-
-# No point in checking for dpkg on a Debian system.  Still, it can help
-# people who copy-paste stuff.
-if _checkexec dpkg
-then
-    alias dgl='dpkg --listfiles' # target a package name, e.g. dgl bspwm
-    alias dgg='dpkg --get-selections' # would normally be pipped to grep
-    # The following removes/purges unused configs without asking for
-    # confirmation.  Same end product as 'alias apc' (see below where
-    # aptitude is defined).
-    alias dgp='sudo dpkg --purge $(dpkg --get-selections | grep deinstall | cut -f 1)'
-fi
-
-if _checkexec aptitude
-then
-    # The following two aliases perform the same action of removing
-    # unused system files.  Unlike 'alias dgp', confirmation is needed.
-    #alias apc="sudo aptitude purge ?config-files"
-    alias apc="sudo aptitude purge ~c"
-fi
-
-# NOTE 2019-11-10: Work-in-progress
-# UPDATE 2020-04-27: Generally okay, but never refined
-#### XBPS (package management on Void Linux)
-
-if _checkexec xbps-install
-then
-    alias xbi="sudo xbps-install -S"        # Update lists without a package arg
-    alias xbiu="sudo xbps-install -Su"      # Upgrade system
-    alias xbif="sudo xbps-install -f"       # Re-install 'forcefully' (no checks)
-    alias xbiD="sudo xbps-install -D"       # Just download
-    alias xbiSuvn="sudo xbps-install -Suvn" # List upgradeable
-fi
-
-if _checkexec xbps-remove
-then
-    alias xbr="sudo xbps-remove -R"         # Remove deps as well
-    alias xbro="sudo xbps-remove -Oo"       # PKG, orphans, obsolete files
-fi
-
-if _checkexec xbps-query
-then
-    alias xbq="xbps-query"                  # Search for local package
-    alias xbqR="xbps-query -Rs"             # Search for remote package
-    alias xbqH="xbps-query -H"              # Query "hold" rules
-    alias xbqX="xbps-query -X"              # Reverse dependencies
-    alias xbql="xbps-query -l"              # List installed
-    alias xbqL="xbps-query -L"              # List info sources
-    alias xbqx="xbps-query -x"              # Dependencies
-    alias xbqf="xbps-query -f"              # List local package files
-    alias xbqF="xbps-query -Rf"             # Remote package files
-    alias xbqO="xbps-query -O"              # List orphans
-fi
-
-if _checkexec xbps-pkgdb
-then
-    alias xbma="sudo xbps-pkgdb -m auto"    # Mark as auto install
-    alias xbmm="sudo xbps-pkgdb -m manual"  # Mark as manual install
-    alias xbmh="sudo xbps-pkgdb -m hold"
-    alias xbmuh="sudo xbps-pkgdb -m unhold"
-fi
-
-if _checkexec xbps-remove && _checkexec xbps-query
-then
-    xbrq ()
-    {
-        sudo xbps-remove -R $(xbps-query -s "$1" | cut -d ' ' -f 2 | tr '\n' ' ')
-    }
-fi
-
 #### Pacman and Yay (Arch Linux)
 
 if _checkexec pacman
@@ -284,13 +178,6 @@ fi
 #   cp == cp -iv
 #   \cp == cp
 
-# _Entering_ Vim is easy.
-if _checkexec vim
-then
-    alias v='vim'
-    alias vi='vim'
-fi
-
 # cd into the previous working directory by omitting `cd`.
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -304,15 +191,6 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias rm='rm -Iv'
 
-# Some common tasks for the `rsync` utiity.
-if _checkexec rsync
-then
-    alias rsync='rsync --progress'
-    alias rsyncavz='rsync -avz --progress'
-    alias rsyncavzr='rsync -avzr --progress'
-    alias rsyncavzrd='rsync -avzr --delete --progress'
-fi
-
 # Enable automatic color support for common commands that list output
 # and also add handy aliases.  Note the link to the `dircolors`.  This
 # is provided by my dotfiles.
@@ -323,10 +201,8 @@ then
 fi
 
 alias diff='diff --color=auto'
-
 alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
-
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
@@ -342,13 +218,6 @@ alias lsl='ls -lhpv --color=auto --group-directories-first'
 alias lsla='ls -lhpvA --color=auto --group-directories-first'
 
 #### Extra tasks and infrequently used tools
-
-# These options are very opinionated, disabling images, javascript,
-# etc.  See `man surf`.
-if _checkexec surf
-then
-    alias surf="surf -giKMnps"
-fi
 
 # Quick shortcuts for `mpv`.  When I want to play a podcast that only
 # shows a static image, I run the command with the --no-video option.
@@ -368,76 +237,6 @@ if _checkexec yt-dlp
 then
     alias ytaud='yt-dlp --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
     alias ytvid='yt-dlp --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
-fi
-
-# When I need to copy the contents of a file to the clipboard
-if _checkexec xclip
-then
-    alias xclipc='xclip -selection clipboard' # followed by path to file
-fi
-
-# I only ever use Stow to make symlinks with my home dir as the base
-if _checkexec stow
-then
-    alias stow="stow -t $HOME"
-fi
-
-#### Flatpak commands
-
-if _checkexec flatpak
-then
-    alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
-    alias fliu="flatpak uninstall"
-    alias flls="flatpak list --app --columns='desc,app,orig'"
-    alias flu="flatpak update"
-fi
-
-#### Git commands
-
-if _checkexec git
-then
-    export GIT_EDITOR="$EDITOR"
-
-    # add, commit
-    alias gadd='git add -v'
-    alias gaddp='git add --patch'
-    alias gaddi='git add --interactive'
-    alias gall='git add -Av'
-    alias gcom='git commit' # opens in the predefined editor.
-    alias gcomm='git commit -m' # pass a message directly: gcomm 'My commit'
-    alias gca='git commit --amend'
-    alias grh='git reset HEAD'
-
-    # stats and diffs
-    alias gsh='git show'
-    alias gsho='git show --oneline'
-    alias glo='git log --oneline'
-    alias glog='git log'
-    alias gsta='git status'
-    alias gstat='git status'
-    alias gdif='git diff'
-    alias gdiff='git diff'
-    alias gdifs='git diff --stat --summary'
-    alias gdiffss='git diff --stat --summary'
-
-    # branching
-    alias gch='git checkout'
-    alias gchb='git checkout -b'
-    alias gbd='git branch -d'
-    alias gbl='git branch --list'
-    alias gpd='git push origin --delete'
-    alias gmerg='git merge --edit --stat'
-    alias gmerge='git merge --edit --stat'
-
-    # tagging
-    alias gtag='git tag --sign' # followed by the tag's name
-    alias gtagl='git tag --list'
-
-    # syncing
-    alias gpull='git pull'
-    alias gfetch='git fetch'
-    alias gpm='git push -u origin master'
-    alias gph='git push -u origin HEAD'
 fi
 
 ### Functions
