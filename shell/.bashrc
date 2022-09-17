@@ -36,6 +36,9 @@ then
     PATH=$PATH:"$HOME"/.local/share/gems/bin
 fi
 
+# Needed for obs-studio
+export QT_QPA_PLATFORM=wayland
+
 # NOTE 2021-09-21: Check my systemd units.  Those are meant to work
 # around the fact that Wayland does not read environment variables from
 # something like ~/.profile.
@@ -474,8 +477,3 @@ backupthis ()
 {
 	cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
 }
-
-### Environment variables
-
-# Needed for obs-studio
-export QT_QPA_PLATFORM=wayland
