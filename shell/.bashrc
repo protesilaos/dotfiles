@@ -450,3 +450,9 @@ cd() {
 backupthis() {
 	cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
 }
+
+
+### Environment variables
+
+# Needed for obs-studio
+export QT_QPA_PLATFORM=wayland
