@@ -239,6 +239,21 @@ then
     alias ytvid='yt-dlp --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
 fi
 
+# Just for fun.
+alias 👽='sudo'
+alias 📦='pacman'
+alias 👺='vim'
+alias 🦄='emacsclient -c -a vim'
+alias 🐵='cp -iv'
+alias 🤡='whoami'
+
+if _checkexec notmuch
+then
+    # Careful with 'tag:del'!!!  It is specific to my setup.
+    alias ✉️💀='notmuch search --output=files --format=text0 tag:del | xargs -r0 rm'
+    alias notmuchrmdel='notmuch search --output=files --format=text0 tag:del | xargs -r0 rm'
+fi
+
 ### Functions
 
 # Colourise man pages
