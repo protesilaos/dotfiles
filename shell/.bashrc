@@ -13,7 +13,7 @@
 # Shorter version of a common command that it used herein.
 _checkexec ()
 {
-	command -v "$1" > /dev/null
+    command -v "$1" > /dev/null
 }
 
 ### General settings
@@ -53,14 +53,14 @@ export MANPAGER="$PAGER"
 if pgrep -x emacs > /dev/null
 then
     export VISUAL="emacsclient -c"
-	export EDITOR="emacsclient -t"
+    export EDITOR="emacsclient -t"
 elif _checkexec gvim
 then
-	export VISUAL="gvim"
-	export EDITOR=vim
+    export VISUAL="gvim"
+    export EDITOR=vim
 else
-	export VISUAL=vim
-	export EDITOR=$VISUAL
+    export VISUAL=vim
+    export EDITOR=$VISUAL
 fi
 
 # Default browser.  This leverages the MIME list.
@@ -69,9 +69,9 @@ export BROWSER=/usr/bin/xdg-open
 # Simple prompt
 if [ -n "$SSH_CONNECTION" ]
 then
-	export PS1="\u@\h: \w \$ "
+    export PS1="\u@\h: \w \$ "
 else
-	export PS1="\w \$ "
+    export PS1="\w \$ "
 fi
 export PS2="> "
 
@@ -81,13 +81,13 @@ export PS2="> "
 # /etc/bash.bashrc).
 if ! shopt -oq posix
 then
-	if [ -f /usr/share/bash-completion/bash_completion ]
+    if [ -f /usr/share/bash-completion/bash_completion ]
     then
-	. /usr/share/bash-completion/bash_completion
-	elif [ -f /etc/bash_completion ]
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]
     then
-	. /etc/bash_completion
-	fi
+        . /etc/bash_completion
+    fi
 fi
 
 # Enable tab completion when starting a command with 'sudo'
@@ -96,8 +96,8 @@ fi
 # If not running interactively, don't do anything.  This too is taken
 # from Debian 9's bashrc.
 case $- in
-	*i*) ;;
-	  *) return;;
+    *i*) ;;
+    *) return;;
 esac
 
 # Don't put duplicate lines or lines starting with space in the history.
@@ -132,54 +132,54 @@ _checkexec lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
 # https://wiki.archlinux.org/index.php/Pacman/Rosetta
 if _checkexec apt
 then
-	# up{dating,grading}.  The -V shows version changes.
-	alias au="sudo apt-get update"
-	alias aug="sudo apt-get upgrade -V"
-	alias auu="sudo apt-get update && sudo apt-get upgrade -V"
-	alias afu="sudo apt-get dist-upgrade -V"
-	alias auufu="sudo apt-get update && sudo apt-get upgrade -V && sudo apt-get dist-upgrade -V"
+    # up{dating,grading}.  The -V shows version changes.
+    alias au="sudo apt-get update"
+    alias aug="sudo apt-get upgrade -V"
+    alias auu="sudo apt-get update && sudo apt-get upgrade -V"
+    alias afu="sudo apt-get dist-upgrade -V"
+    alias auufu="sudo apt-get update && sudo apt-get upgrade -V && sudo apt-get dist-upgrade -V"
 
-	# act on package targets
-	alias ai="sudo apt-get install"
-	alias air="sudo apt-get install --reinstall"
-	alias ar="sudo apt-get remove -V"
+    # act on package targets
+    alias ai="sudo apt-get install"
+    alias air="sudo apt-get install --reinstall"
+    alias ar="sudo apt-get remove -V"
 
-	# list local packages
-	alias ard="apt rdepends" # followed by package name to print reverse dependencies
-	alias ali="apt list --installed"
-	alias alu="apt list --upgradable"
-	alias aulu="sudo apt update && apt list --upgradable"
+    # list local packages
+    alias ard="apt rdepends" # followed by package name to print reverse dependencies
+    alias ali="apt list --installed"
+    alias alu="apt list --upgradable"
+    alias aulu="sudo apt update && apt list --upgradable"
 
-	# act on the repos
-	alias as="apt search"
-	alias ash="apt show"
-	alias adl="apt download" # gets source .deb in current directory
+    # act on the repos
+    alias as="apt search"
+    alias ash="apt show"
+    alias adl="apt download" # gets source .deb in current directory
 
-	# package handling
-	alias aac="sudo apt-get autoclean"
-	alias aar="sudo apt-get autoremove -V"
-	alias ama="sudo apt-mark auto"
-	alias amm="sudo apt-mark manual"
+    # package handling
+    alias aac="sudo apt-get autoclean"
+    alias aar="sudo apt-get autoremove -V"
+    alias ama="sudo apt-mark auto"
+    alias amm="sudo apt-mark manual"
 fi
 
 # No point in checking for dpkg on a Debian system.  Still, it can help
 # people who copy-paste stuff.
 if _checkexec dpkg
 then
-	alias dgl='dpkg --listfiles' # target a package name, e.g. dgl bspwm
-	alias dgg='dpkg --get-selections' # would normally be pipped to grep
-	# The following removes/purges unused configs without asking for
-	# confirmation.  Same end product as 'alias apc' (see below where
-	# aptitude is defined).
-	alias dgp='sudo dpkg --purge $(dpkg --get-selections | grep deinstall | cut -f 1)'
+    alias dgl='dpkg --listfiles' # target a package name, e.g. dgl bspwm
+    alias dgg='dpkg --get-selections' # would normally be pipped to grep
+    # The following removes/purges unused configs without asking for
+    # confirmation.  Same end product as 'alias apc' (see below where
+    # aptitude is defined).
+    alias dgp='sudo dpkg --purge $(dpkg --get-selections | grep deinstall | cut -f 1)'
 fi
 
 if _checkexec aptitude
 then
-	# The following two aliases perform the same action of removing
-	# unused system files.  Unlike 'alias dgp', confirmation is needed.
-	#alias apc="sudo aptitude purge ?config-files"
-	alias apc="sudo aptitude purge ~c"
+    # The following two aliases perform the same action of removing
+    # unused system files.  Unlike 'alias dgp', confirmation is needed.
+    #alias apc="sudo aptitude purge ?config-files"
+    alias apc="sudo aptitude purge ~c"
 fi
 
 # NOTE 2019-11-10: Work-in-progress
@@ -281,8 +281,8 @@ fi
 # command and the alias have the same name.  Example is my `cp` which is
 # aliased to `cp -iv`:
 #
-#	cp == cp -iv
-#	\cp == cp
+#   cp == cp -iv
+#   \cp == cp
 
 # _Entering_ Vim is easy.
 if _checkexec vim
@@ -307,10 +307,10 @@ alias rm='rm -Iv'
 # Some common tasks for the `rsync` utiity.
 if _checkexec rsync
 then
-	alias rsync='rsync --progress'
-	alias rsyncavz='rsync -avz --progress'
-	alias rsyncavzr='rsync -avzr --progress'
-	alias rsyncavzrd='rsync -avzr --delete --progress'
+    alias rsync='rsync --progress'
+    alias rsyncavz='rsync -avz --progress'
+    alias rsyncavzr='rsync -avzr --progress'
+    alias rsyncavzrd='rsync -avzr --delete --progress'
 fi
 
 # Enable automatic color support for common commands that list output
@@ -318,8 +318,8 @@ fi
 # is provided by my dotfiles.
 if _checkexec dircolors
 then
-	dircolors_data="$HOME/.local/share/my_bash/dircolors"
-	test -r $dircolors_data && eval "$(dircolors -b ${dircolors_data})" || eval "$(dircolors -b)"
+    dircolors_data="$HOME/.local/share/my_bash/dircolors"
+    test -r $dircolors_data && eval "$(dircolors -b ${dircolors_data})" || eval "$(dircolors -b)"
 fi
 
 alias diff='diff --color=auto'
@@ -347,7 +347,7 @@ alias lsla='ls -lhpvA --color=auto --group-directories-first'
 # etc.  See `man surf`.
 if _checkexec surf
 then
-	alias surf="surf -giKMnps"
+    alias surf="surf -giKMnps"
 fi
 
 # Quick shortcuts for `mpv`.  When I want to play a podcast that only
@@ -357,23 +357,23 @@ fi
 # something that slows things down considerably.
 if _checkexec mpv
 then
-	alias mpvna='mpv --no-audio'
-	alias mpvnv='mpv --no-video'
-	alias mpvhd="mpv --ytdl-raw-options='format=[[bestvideo=height<=720]]'"
+    alias mpvna='mpv --no-audio'
+    alias mpvnv='mpv --no-video'
+    alias mpvhd="mpv --ytdl-raw-options='format=[[bestvideo=height<=720]]'"
 fi
 
 # Quick shortcuts for `yt-dlp`.  Output is placed in the present working
 # directory.
 if _checkexec yt-dlp
 then
-	alias ytaud='yt-dlp --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
-	alias ytvid='yt-dlp --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
+    alias ytaud='yt-dlp --add-metadata -ci --extract-audio --audio-format mp3 -o "%(title)s.%(ext)s"'
+    alias ytvid='yt-dlp --add-metadata --no-playlist --no-part --write-description --newline --prefer-free-formats -o "%(title)s.%(ext)s" '
 fi
 
 # When I need to copy the contents of a file to the clipboard
 if _checkexec xclip
 then
-	alias xclipc='xclip -selection clipboard' # followed by path to file
+    alias xclipc='xclip -selection clipboard' # followed by path to file
 fi
 
 # I only ever use Stow to make symlinks with my home dir as the base
@@ -386,58 +386,58 @@ fi
 
 if _checkexec flatpak
 then
-	alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
-	alias fliu="flatpak uninstall"
-	alias flls="flatpak list --app --columns='desc,app,orig'"
-	alias flu="flatpak update"
+    alias fli="flatpak install" # must be followed by a source, e.g. fli flathub
+    alias fliu="flatpak uninstall"
+    alias flls="flatpak list --app --columns='desc,app,orig'"
+    alias flu="flatpak update"
 fi
 
 #### Git commands
 
 if _checkexec git
 then
-	export GIT_EDITOR="$EDITOR"
+    export GIT_EDITOR="$EDITOR"
 
-	# add, commit
-	alias gadd='git add -v'
-	alias gaddp='git add --patch'
-	alias gaddi='git add --interactive'
-	alias gall='git add -Av'
-	alias gcom='git commit' # opens in the predefined editor.
-	alias gcomm='git commit -m' # pass a message directly: gcomm 'My commit'
-	alias gca='git commit --amend'
-	alias grh='git reset HEAD'
+    # add, commit
+    alias gadd='git add -v'
+    alias gaddp='git add --patch'
+    alias gaddi='git add --interactive'
+    alias gall='git add -Av'
+    alias gcom='git commit' # opens in the predefined editor.
+    alias gcomm='git commit -m' # pass a message directly: gcomm 'My commit'
+    alias gca='git commit --amend'
+    alias grh='git reset HEAD'
 
-	# stats and diffs
-	alias gsh='git show'
-	alias gsho='git show --oneline'
-	alias glo='git log --oneline'
-	alias glog='git log'
-	alias gsta='git status'
-	alias gstat='git status'
-	alias gdif='git diff'
-	alias gdiff='git diff'
-	alias gdifs='git diff --stat --summary'
-	alias gdiffss='git diff --stat --summary'
+    # stats and diffs
+    alias gsh='git show'
+    alias gsho='git show --oneline'
+    alias glo='git log --oneline'
+    alias glog='git log'
+    alias gsta='git status'
+    alias gstat='git status'
+    alias gdif='git diff'
+    alias gdiff='git diff'
+    alias gdifs='git diff --stat --summary'
+    alias gdiffss='git diff --stat --summary'
 
-	# branching
-	alias gch='git checkout'
-	alias gchb='git checkout -b'
-	alias gbd='git branch -d'
-	alias gbl='git branch --list'
-	alias gpd='git push origin --delete'
-	alias gmerg='git merge --edit --stat'
-	alias gmerge='git merge --edit --stat'
+    # branching
+    alias gch='git checkout'
+    alias gchb='git checkout -b'
+    alias gbd='git branch -d'
+    alias gbl='git branch --list'
+    alias gpd='git push origin --delete'
+    alias gmerg='git merge --edit --stat'
+    alias gmerge='git merge --edit --stat'
 
-	# tagging
-	alias gtag='git tag --sign' # followed by the tag's name
-	alias gtagl='git tag --list'
+    # tagging
+    alias gtag='git tag --sign' # followed by the tag's name
+    alias gtagl='git tag --list'
 
-	# syncing
-	alias gpull='git pull'
-	alias gfetch='git fetch'
-	alias gpm='git push -u origin master'
-	alias gph='git push -u origin HEAD'
+    # syncing
+    alias gpull='git pull'
+    alias gfetch='git fetch'
+    alias gpm='git push -u origin master'
+    alias gph='git push -u origin HEAD'
 fi
 
 ### Functions
@@ -445,35 +445,35 @@ fi
 # Colourise man pages
 man ()
 {
-	env \
-	LESS_TERMCAP_mb=$(tput bold; tput setaf 6) \
-	LESS_TERMCAP_md=$(tput bold; tput setaf 6) \
-	LESS_TERMCAP_me=$(tput sgr0) \
-	LESS_TERMCAP_se=$(tput rmso; tput sgr0) \
-	LESS_TERMCAP_ue=$(tput rmul; tput sgr0) \
-	LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 4) \
-	LESS_TERMCAP_mr=$(tput rev) \
-	LESS_TERMCAP_mh=$(tput dim) \
-	LESS_TERMCAP_ZN=$(tput ssubm) \
-	LESS_TERMCAP_ZV=$(tput rsubm) \
-	LESS_TERMCAP_ZO=$(tput ssupm) \
-	LESS_TERMCAP_ZW=$(tput rsupm) \
-		man "$@"
+    env \
+        LESS_TERMCAP_mb=$(tput bold; tput setaf 6) \
+        LESS_TERMCAP_md=$(tput bold; tput setaf 6) \
+        LESS_TERMCAP_me=$(tput sgr0) \
+        LESS_TERMCAP_se=$(tput rmso; tput sgr0) \
+        LESS_TERMCAP_ue=$(tput rmul; tput sgr0) \
+        LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 4) \
+        LESS_TERMCAP_mr=$(tput rev) \
+        LESS_TERMCAP_mh=$(tput dim) \
+        LESS_TERMCAP_ZN=$(tput ssubm) \
+        LESS_TERMCAP_ZV=$(tput rsubm) \
+        LESS_TERMCAP_ZO=$(tput ssupm) \
+        LESS_TERMCAP_ZW=$(tput rsupm) \
+        man "$@"
 }
 
 # Enter directory and list contents
 cd ()
 {
-	if [ -n "$1" ]
+    if [ -n "$1" ]
     then
-		builtin cd "$@" && ls -pvA --color=auto --group-directories-first
-	else
-		builtin cd ~ && ls -pvA --color=auto --group-directories-first
-	fi
+        builtin cd "$@" && ls -pvA --color=auto --group-directories-first
+    else
+        builtin cd ~ && ls -pvA --color=auto --group-directories-first
+    fi
 }
 
 # Back up a file. Usage "backupthis <filename>"
 backupthis ()
 {
-	cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
+    cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
 }
