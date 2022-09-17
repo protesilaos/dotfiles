@@ -119,6 +119,7 @@ use in `display-buffer-alist'."
   (add-hook 'help-mode-hook #'visual-line-mode)
   (add-hook 'custom-mode-hook #'visual-line-mode)
 
+  ;; NOTE 2022-09-17: Also see `prot-simple-swap-window-buffers'.
   (let ((map global-map))
     (define-key map (kbd "C-x <down>") #'next-buffer)
     (define-key map (kbd "C-x <up>") #'previous-buffer)

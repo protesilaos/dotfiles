@@ -753,5 +753,21 @@ Do not try to make a new directory or anything fancy."
    (list (prot-simple--buffer-vc-root-prompt)))
   (switch-to-buffer buffer))
 
+;;;###autoload
+(defun prot-simple-swap-window-buffers (counter)
+  "Swap states of live buffers.
+With two windows, transpose their buffers.  With more windows,
+perform a clockwise rotation.  Do not alter the window layout.
+Just move the buffers around.
+
+With COUNTER as a prefix argument, do the rotation
+counter-clockwise."
+  (interactive "P")
+  (when-let* ((winlist (if counter (reverse (window-list)) (window-list)))
+              (wincount (count-windows))
+              ((> wincount 1)))
+    (dotimes (i (- wincount 1))
+      (window-swap-states (elt winlist i) (elt winlist (+ i 1))))))
+
 (provide 'prot-simple)
 ;;; prot-simple.el ends here

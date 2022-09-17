@@ -104,6 +104,7 @@
     ;; Commands for windows and pages
     (define-key map (kbd "C-x n k") #'prot-simple-delete-page-delimiters)
     (define-key map (kbd "C-x M") #'prot-simple-monocle)
+    (define-key map (kbd "C-x M-r") #'prot-simple-swap-window-buffers)
     ;; NOTE 2022-03-02: Elsewhere I provide my `logos.el' package which
     ;; has the functionality of these three commands.
     ;;
