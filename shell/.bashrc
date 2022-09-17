@@ -11,7 +11,8 @@
 
 
 # Shorter version of a common command that it used herein.
-_checkexec() {
+_checkexec ()
+{
 	command -v "$1" > /dev/null
 }
 
@@ -204,7 +205,8 @@ if _checkexec xbps-pkgdb; then
 fi
 
 if _checkexec xbps-remove && _checkexec xbps-query; then
-    xbrq() {
+    xbrq ()
+    {
         sudo xbps-remove -R $(xbps-query -s "$1" | cut -d ' ' -f 2 | tr '\n' ' ')
     }
 fi
@@ -409,7 +411,8 @@ fi
 ### Functions
 
 # Colourise man pages
-man() {
+man ()
+{
 	env \
 	LESS_TERMCAP_mb=$(tput bold; tput setaf 6) \
 	LESS_TERMCAP_md=$(tput bold; tput setaf 6) \
@@ -427,7 +430,8 @@ man() {
 }
 
 # Enter directory and list contents
-cd() {
+cd ()
+{
 	if [ -n "$1" ]; then
 		builtin cd "$@" && ls -pvA --color=auto --group-directories-first
 	else
@@ -436,10 +440,10 @@ cd() {
 }
 
 # Back up a file. Usage "backupthis <filename>"
-backupthis() {
+backupthis ()
+{
 	cp -riv $1 ${1}-$(date +%Y%m%d%H%M).backup;
 }
-
 
 ### Environment variables
 
