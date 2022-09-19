@@ -110,11 +110,11 @@
           ("flag" . notmuch-search-flagged-face)))
   (setq notmuch-show-empty-saved-searches t)
   (setq notmuch-saved-searches
-        `(( :name "inbox"
+        `(( :name "📥 inbox"
             :query "tag:inbox"
             :sort-order newest-first
             :key ,(kbd "i"))
-          ( :name "unread (inbox)"
+          ( :name "✉️ unread (inbox)"
             :query "tag:unread and tag:inbox"
             :sort-order newest-first
             :key ,(kbd "u"))
@@ -130,20 +130,20 @@
             :query "tag:todo not tag:archived"
             :sort-order newest-first
             :key ,(kbd "t"))
-          ( :name "mailing lists"
+          ( :name "📬 mailing lists"
             :query "tag:list not tag:archived"
             :sort-order newest-first
             :key ,(kbd "m"))
           ;; Emacs
-          ( :name "emacs-devel"
+          ( :name "🛠️ emacs-devel"
             :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
             :sort-order newest-first
             :key ,(kbd "e d"))
-          ( :name "emacs-orgmode"
+          ( :name "🦄 emacs-orgmode"
             :query "(from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org) not tag:archived"
             :sort-order newest-first
             :key ,(kbd "e o"))
-          ( :name "emacs-bugs"
+          ( :name "🐛 emacs-bugs"
             :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
             :sort-order newest-first :key ,(kbd "e b"))
           ( :name "emacs-humanities"
@@ -184,7 +184,8 @@
   ;;         (,(kbd "u") ("+unread") "Mark as unread")))
   (setq notmuch-tag-formats
         '(("unread" (propertize tag 'face 'notmuch-tag-unread))
-          ("flag" (propertize tag 'face 'notmuch-tag-flagged))))
+          ("flag" (propertize tag 'face 'notmuch-tag-flagged)
+           (concat tag "🚩")))) ; the tag is still "flag"; the emoji is cosmetic
   (setq notmuch-tag-deleted-formats
         '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
           (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
@@ -245,8 +246,8 @@
   (setq notmuch-tagging-keys
         `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
           (,(kbd "c") prot-notmuch-mark-complete-tags "Complete and archive")
-          (,(kbd "d") prot-notmuch-mark-delete-tags "Mark for deletion")
-          (,(kbd "f") prot-notmuch-mark-flag-tags "Flag as important")
+          (,(kbd "d") prot-notmuch-mark-delete-tags "💀 Mark for deletion")
+          (,(kbd "f") prot-notmuch-mark-flag-tags "🚩 Flag as important")
           (,(kbd "s") prot-notmuch-mark-spam-tags "Mark as spam")
           (,(kbd "t") prot-notmuch-mark-todo-tags "To-do")
           (,(kbd "x") prot-notmuch-mark-reference-tags "Reference for the future")
@@ -254,7 +255,9 @@
           (,(kbd "u") ("+unread") "Mark as unread")))
 
   (add-to-list 'notmuch-tag-formats
-               '("encrypted" (propertize tag 'face 'prot-notmuch-encrypted-tag)))
+               '("encrypted" (propertize tag 'face 'prot-notmuch-encrypted-tag)
+                 (concat tag "🔒"))) ; cosmetic emoji, tag is the same
+  (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎"))) ; cosmetic emoji, tag is the same
   (add-to-list 'notmuch-tag-formats
                '("sent" (propertize tag 'face 'prot-notmuch-sent-tag)))
   (add-to-list 'notmuch-tag-formats
