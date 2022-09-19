@@ -122,14 +122,6 @@
             :query "tag:unread not tag:archived"
             :sort-order newest-first
             :key ,(kbd "U"))
-          ( :name "references"
-            :query "tag:ref not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "r"))
-          ( :name "todo"
-            :query "tag:todo not tag:archived"
-            :sort-order newest-first
-            :key ,(kbd "t"))
           ( :name "📬 mailing lists"
             :query "tag:list not tag:archived"
             :sort-order newest-first
@@ -163,29 +155,19 @@
             :key ,(kbd "os"))))
 
 ;;;; Tags
-  (setq notmuch-archive-tags '("-inbox" "+archived"))
+  (setq notmuch-archive-tags nil) ; I do not archive email
   (setq notmuch-message-replied-tags '("+replied"))
   (setq notmuch-message-forwarded-tags '("+forwarded"))
   (setq notmuch-show-mark-read-tags '("-unread"))
   (setq notmuch-draft-tags '("+draft"))
   (setq notmuch-draft-folder "drafts")
   (setq notmuch-draft-save-plaintext 'ask)
-  ;; ;; NOTE 2021-06-18: See an updated version in the `prot-notmuch'
-  ;; ;; section below.
-  ;; (setq notmuch-tagging-keys
-  ;;       `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
-  ;;         (,(kbd "c") ("+archived" "-inbox" "-list" "-todo" "-ref" "-unread") "Complete and archive")
-  ;;         (,(kbd "d") ("+del" "-inbox" "-archived" "-unread") "Mark for deletion")
-  ;;         (,(kbd "f") ("+flag" "-unread") "Flag as important")
-  ;;         ;; (,(kbd "r") notmuch-show-mark-read-tags "Mark as read")
-  ;;         (,(kbd "r") ("+ref" "-unread") "Reference for the future")
-  ;;         (,(kbd "s") ("+spam" "+del" "-inbox" "-unread") "Mark as spam")
-  ;;         (,(kbd "t") ("+todo" "-unread") "To-do")
-  ;;         (,(kbd "u") ("+unread") "Mark as unread")))
+  ;; Also see `notmuch-tagging-keys' the `prot-notmuch' further below
+
   (setq notmuch-tag-formats
         '(("unread" (propertize tag 'face 'notmuch-tag-unread))
           ("flag" (propertize tag 'face 'notmuch-tag-flagged)
-           (concat tag "🚩")))) ; the tag is still "flag"; the emoji is cosmetic
+           (concat tag "💕")))) ; the tag is still "flag"; the emoji is cosmetic
   (setq notmuch-tag-deleted-formats
         '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
           (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
@@ -244,28 +226,15 @@
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
   (setq notmuch-tagging-keys
-        `((,(kbd "a") notmuch-archive-tags "Archive (remove from inbox)")
-          (,(kbd "c") prot-notmuch-mark-complete-tags "Complete and archive")
-          (,(kbd "d") prot-notmuch-mark-delete-tags "💀 Mark for deletion")
-          (,(kbd "f") prot-notmuch-mark-flag-tags "🚩 Flag as important")
-          (,(kbd "s") prot-notmuch-mark-spam-tags "Mark as spam")
-          (,(kbd "t") prot-notmuch-mark-todo-tags "To-do")
-          (,(kbd "x") prot-notmuch-mark-reference-tags "Reference for the future")
-          (,(kbd "r") ("-unread") "Mark as read")
-          (,(kbd "u") ("+unread") "Mark as unread")))
+        `((,(kbd "d") prot-notmuch-mark-delete-tags "💀 Mark for deletion")
+          (,(kbd "f") prot-notmuch-mark-flag-tags "💕 Flag as important")
+          (,(kbd "s") prot-notmuch-mark-spam-tags "⚠️ Mark as spam")
+          (,(kbd "r") ("-unread") "🔵 Mark as read")
+          (,(kbd "u") ("+unread") "🔴 Mark as unread")))
 
-  (add-to-list 'notmuch-tag-formats
-               '("encrypted" (propertize tag 'face 'prot-notmuch-encrypted-tag)
-                 (concat tag "🔒"))) ; cosmetic emoji, tag is the same
+  (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒"))) ; cosmetic emoji, tag is the same
   (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎"))) ; cosmetic emoji, tag is the same
-  (add-to-list 'notmuch-tag-formats
-               '("sent" (propertize tag 'face 'prot-notmuch-sent-tag)))
-  (add-to-list 'notmuch-tag-formats
-               '("ref" (propertize tag 'face 'prot-notmuch-ref-tag)))
-  (add-to-list 'notmuch-tag-formats
-               '("todo" (propertize tag 'face 'prot-notmuch-todo-tag)))
-  (add-to-list 'notmuch-tag-formats
-               '("spam" (propertize tag 'face 'prot-notmuch-spam-tag)))
+  (add-to-list 'notmuch-tag-formats '("spam" (concat tag "⚠️")))
 
   ;; NOTE 2021-05-14: I have an alternative method of finding new mail
   ;; in a maildir tree by using the find command.  It is somewhat
@@ -286,18 +255,12 @@
     (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
     (define-key map (kbd "A") #'notmuch-search-archive-thread)
     (define-key map (kbd "D") #'prot-notmuch-search-delete-thread)
-    (define-key map (kbd "T") #'prot-notmuch-search-todo-thread)
-    (define-key map (kbd "X") #'prot-notmuch-search-reference-thread)
-    (define-key map (kbd "C") #'prot-notmuch-search-complete-thread)
     (define-key map (kbd "S") #'prot-notmuch-search-spam-thread)
     (define-key map (kbd "g") #'prot-notmuch-refresh-buffer))
   (let ((map notmuch-show-mode-map))
     (define-key map (kbd "a") nil) ; the default is too easy to hit accidentally
     (define-key map (kbd "A") #'notmuch-show-archive-message-then-next-or-next-thread)
     (define-key map (kbd "D") #'prot-notmuch-show-delete-message)
-    (define-key map (kbd "T") #'prot-notmuch-show-todo-message)
-    (define-key map (kbd "X") #'prot-notmuch-show-reference-message)
-    (define-key map (kbd "C") #'prot-notmuch-show-complete-message)
     (define-key map (kbd "S") #'prot-notmuch-show-spam-message))
   (define-key notmuch-show-stash-map (kbd "S") #'prot-notmuch-stash-sourcehut-link)
   ;; Like C-c M-h for `message-insert-headers'

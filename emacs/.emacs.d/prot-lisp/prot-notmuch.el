@@ -47,12 +47,8 @@ This is used by `prot-notmuch-delete-mail'."
   :type 'string
   :group 'prot-notmuch)
 
-(defcustom prot-notmuch-mark-complete-tags '("+archived" "-inbox" "-list" "-todo" "-ref" "-unread")
-  "List of tags to mark as completed."
-  :type '(repeat string)
-  :group 'prot-notmuch)
-
-(defcustom prot-notmuch-mark-delete-tags '("+del" "-inbox" "-archived" "-unread")
+(defcustom prot-notmuch-mark-delete-tags
+  `(,(format "+%s" prot-notmuch-delete-tag) "-inbox" "-archived" "-unread")
   "List of tags to mark for deletion.
 To actually delete email, refer to `prot-notmuch-delete-mail'."
   :type '(repeat string)
@@ -69,43 +65,6 @@ This gets the `notmuch-tag-flagged' face, if that is specified in
   "List of tags to mark as spam."
   :type '(repeat string)
   :group 'prot-notmuch)
-
-(defcustom prot-notmuch-mark-todo-tags '("+todo" "-unread")
-  "List of tags to mark as a to-do item."
-  :type '(repeat string)
-  :group 'prot-notmuch)
-
-(defcustom prot-notmuch-mark-reference-tags '("+ref" "-unread")
-  "List of tags to mark as a reference."
-  :type '(repeat string)
-  :group 'prot-notmuch)
-
-;;;; Utilities
-
-(defface prot-notmuch-encrypted-tag '((t :inherit warning))
-  "Face for the 'encrypted' tag or related in Notmuch.
-Refer to the variable `notmuch-tag-formats' for how to assign
-those.")
-
-(defface prot-notmuch-sent-tag '((t :inherit success))
-  "Face for the 'sent' tag or related in Notmuch.
-Refer to the variable `notmuch-tag-formats' for how to assign
-those.")
-
-(defface prot-notmuch-spam-tag '((t :inherit shadow))
-  "Face for the 'spam' tag or related in Notmuch.
-Refer to the variable `notmuch-tag-formats' for how to assign
-those.")
-
-(defface prot-notmuch-ref-tag '((t :inherit italic))
-  "Face for the 'ref' tag or related in Notmuch.
-Refer to the variable `notmuch-tag-formats' for how to assign
-those.")
-
-(defface prot-notmuch-todo-tag '((t :inherit error))
-  "Face for the 'todo' tag or related in Notmuch.
-Refer to the variable `notmuch-tag-formats' for how to assign
-those.")
 
 ;;;; Commands
 
@@ -139,10 +98,6 @@ This function advances to the next thread when finished."
        (notmuch-search-next-thread))))
 
 (prot-notmuch-search-tag-thread
-  prot-notmuch-search-complete-thread
-  prot-notmuch-mark-complete-tags)
-
-(prot-notmuch-search-tag-thread
   prot-notmuch-search-delete-thread
   prot-notmuch-mark-delete-tags)
 
@@ -153,14 +108,6 @@ This function advances to the next thread when finished."
 (prot-notmuch-search-tag-thread
   prot-notmuch-search-spam-thread
   prot-notmuch-mark-spam-tags)
-
-(prot-notmuch-search-tag-thread
-  prot-notmuch-search-todo-thread
-  prot-notmuch-mark-todo-tags)
-
-(prot-notmuch-search-tag-thread
-  prot-notmuch-search-reference-thread
-  prot-notmuch-mark-reference-tags)
 
 (defmacro prot-notmuch-show-tag-message (name tags)
   "Produce NAME function parsing TAGS."
@@ -178,10 +125,6 @@ reverse the application of the tags."
 	          (notmuch-tag-change-list ,tags untag)))))
 
 (prot-notmuch-show-tag-message
-  prot-notmuch-show-complete-message
-  prot-notmuch-mark-complete-tags)
-
-(prot-notmuch-show-tag-message
   prot-notmuch-show-delete-message
   prot-notmuch-mark-delete-tags)
 
@@ -192,14 +135,6 @@ reverse the application of the tags."
 (prot-notmuch-show-tag-message
   prot-notmuch-show-spam-message
   prot-notmuch-mark-spam-tags)
-
-(prot-notmuch-show-tag-message
-  prot-notmuch-show-todo-message
-  prot-notmuch-mark-todo-tags)
-
-(prot-notmuch-show-tag-message
-  prot-notmuch-show-reference-message
-  prot-notmuch-mark-reference-tags)
 
 (autoload 'notmuch-refresh-this-buffer "notmuch")
 (autoload 'notmuch-refresh-all-buffers "notmuch")
