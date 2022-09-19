@@ -107,7 +107,13 @@
           ("tags" . "(%s)")))
   (setq notmuch-search-line-faces
         '(("unread" . notmuch-search-unread-face)
-          ("flag" . notmuch-search-flagged-face)))
+          ;; ;; NOTE 2022-09-19: I disable this because I add a cosmeic
+          ;; ;; emoji via `notmuch-tag-formats'.  This way I do not get
+          ;; ;; an intense style which is very distracting when I filter
+          ;; ;; my mail to include this tag.
+          ;;
+          ;; ("flag" . notmuch-search-flagged-face)
+          ))
   (setq notmuch-show-empty-saved-searches t)
   (setq notmuch-saved-searches
         `(( :name "📥 inbox"
@@ -234,7 +240,6 @@
 
   (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒"))) ; cosmetic emoji, tag is the same
   (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎"))) ; cosmetic emoji, tag is the same
-  (add-to-list 'notmuch-tag-formats '("spam" (concat tag "⚠️")))
 
   ;; NOTE 2021-05-14: I have an alternative method of finding new mail
   ;; in a maildir tree by using the find command.  It is somewhat
