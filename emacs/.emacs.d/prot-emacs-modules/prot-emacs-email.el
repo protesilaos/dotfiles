@@ -121,11 +121,11 @@
             :query "tag:inbox"
             :sort-order newest-first
             :key ,(kbd "i"))
-          ( :name "✉️ unread (inbox)"
+          ( :name "📮 unread (inbox)"
             :query "tag:unread and tag:inbox"
             :sort-order newest-first
             :key ,(kbd "u"))
-          ( :name "unread all"
+          ( :name "📯 unread all"
             :query "tag:unread not tag:archived"
             :sort-order newest-first
             :key ,(kbd "U"))
@@ -134,7 +134,7 @@
             :sort-order newest-first
             :key ,(kbd "m"))
           ;; Emacs
-          ( :name "🛠️ emacs-devel"
+          ( :name "🔨 emacs-devel"
             :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
             :sort-order newest-first
             :key ,(kbd "e d"))
@@ -145,18 +145,15 @@
           ( :name "🐛 emacs-bugs"
             :query "'to:\"/*@debbugs.gnu.org*/\"' not tag:archived"
             :sort-order newest-first :key ,(kbd "e b"))
-          ( :name "emacs-humanities"
+          ( :name "📚 emacs-humanities"
             :query "(from:emacs-humanities@gnu.org or to:emacs-humanities@gnu.org) not tag:archived"
             :sort-order newest-first :key ,(kbd "e h"))
-          ( :name "emacs-elpher"
-            :query "(from:~michel-slm/elpher@lists.sr.ht or to:~michel-slm/elpher@lists.sr.ht) not tag:archived"
-            :sort-order newest-first :key ,(kbd "e e"))
           ;; Others
-          ( :name "notmuch"
+          ( :name "📧 notmuch"
             :query "(from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org) not tag:archived"
             :sort-order newest-first
             :key ,(kbd "on"))
-          ( :name "sourcehut"
+          ( :name "🧰 sourcehut"
             :query "(from:~sircmpwn/sr.ht-discuss@lists.sr.ht or to:~sircmpwn/sr.ht-discuss@lists.sr.ht) not tag:archived"
             :sort-order newest-first
             :key ,(kbd "os"))))
