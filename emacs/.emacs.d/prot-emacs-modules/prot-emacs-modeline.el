@@ -59,11 +59,9 @@
   ;; (setq display-time-day-and-date t)
   (setq display-time-interval 60)
   (setq display-time-default-load-average nil)
-  ;; NOTE 2021-04-19: For all those, I have implemented a custom
-  ;; solution that also shows the number of new items.  Refer to my
-  ;; email settings, specifically `prot-mail-mail-indicator'.
-  ;;
-  ;; NOTE 2021-05-16: Or better check `prot-notmuch-mail-indicator'.
+  ;; NOTE 2022-09-21: For all those, I have implemented my own solution
+  ;; that also shows the number of new items, although it depends on
+  ;; notmuch: the `notmuch-indicator' package.
   (setq display-time-mail-directory nil)
   (setq display-time-mail-function nil)
   (setq display-time-use-mail-icon nil)

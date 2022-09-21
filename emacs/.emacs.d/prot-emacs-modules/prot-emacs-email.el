@@ -250,17 +250,6 @@
   (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒"))) ; cosmetic emoji, tag is the same
   (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎"))) ; cosmetic emoji, tag is the same
 
-  ;; NOTE 2021-05-14: I have an alternative method of finding new mail
-  ;; in a maildir tree by using the find command.  It is somewhat
-  ;; simplistic, though it worked just fine: see prot-mail.el.  I prefer
-  ;; this implementation instead, as it leverages notmuch and so I can
-  ;; pass arbitrary search terms to it.
-  (setq prot-notmuch-mode-line-count-args "tag:unread and tag:inbox")
-  (setq prot-notmuch-mode-line-indicator-commands
-        '(notmuch notmuch-refresh-this-buffer))
-  ;; Mode line indicator with the number of new mails.
-  (prot-notmuch-mail-indicator 1)
-
   (dolist (fn '(prot-notmuch-check-valid-sourcehut-email
                 prot-notmuch-ask-sourcehut-control-code))
     (add-hook 'notmuch-mua-send-hook fn))
@@ -281,6 +270,15 @@
   (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
 
 (prot-emacs-elpa-package 'ol-notmuch)
+
+;;; notmuch-indicator (another package of mine)
+(prot-emacs-elpa-package 'notmuch-indicator
+  ;; Just the default values...
+  (setq notmuch-indicator-args '((:terms "tag:unread and tag:inbox" :label "@"))) ; also accepts a :face, read doc string
+  (setq notmuch-indicator-refresh-count (* 60 3))
+  (setq notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
+
+  (notmuch-indicator-mode 1))
 
 ;;; Sending email (SMTP)
 (prot-emacs-builtin-package 'smtpmail

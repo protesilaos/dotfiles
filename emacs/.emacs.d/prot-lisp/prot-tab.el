@@ -153,8 +153,6 @@ otherwise."
 
 ;;;; Status line
 
-(declare-function prot-notmuch-mail-indicator "prot-notmuch")
-
 ;;;###autoload
 (define-minor-mode prot-tab-status-line
   "Make Tab bar a status line and configure the extras.
@@ -166,15 +164,11 @@ Hide the mode lines and change their colors."
         (setq tab-bar-show t)
         (tab-bar-mode 1)
         (tab-bar-history-mode 1)
-        (display-time-mode 1)
-        (when (featurep 'prot-notmuch)
-          (prot-notmuch-mail-indicator 1)))
+        (display-time-mode 1))
     (setq tab-bar-show nil)
     (tab-bar-mode -1)
     (tab-bar-history-mode -1)
-    (display-time-mode -1)
-    (when (featurep 'prot-notmuch)
-      (prot-notmuch-mail-indicator -1))))
+    (display-time-mode -1)))
 
 (provide 'prot-tab)
 ;;; prot-tab.el ends here
