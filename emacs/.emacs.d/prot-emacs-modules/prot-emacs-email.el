@@ -177,15 +177,15 @@
   (setq notmuch-tag-formats
         '(("unread" (propertize tag 'face 'notmuch-tag-unread))
           ("flag" (propertize tag 'face 'notmuch-tag-flagged)
-           (concat tag " 🚩")))) ; the tag is still "flag"; the emoji is cosmetic
+           (concat tag "🚩")))) ; the tag is still "flag"; the emoji is cosmetic
   (setq notmuch-tag-deleted-formats
         '(("unread" (notmuch-apply-face bare-tag 'notmuch-tag-deleted)
-           (concat "🚫 " tag))
+           (concat "🚫" tag))
           (".*" (notmuch-apply-face tag 'notmuch-tag-deleted)
-           (concat "🚫 " tag))))
+           (concat "🚫" tag))))
   (setq notmuch-tag-added-formats
         '((".*" (notmuch-apply-face tag 'notmuch-tag-added)
-           (concat "✏️ " tag))))
+           (concat "✏️" tag))))
 
 ;;;; Email composition
   (setq notmuch-mua-compose-in 'current-window)
@@ -247,8 +247,8 @@
           (,(kbd "r") ("-unread") "✅ Mark as read")
           (,(kbd "u") ("+unread") "📔 Mark as unread")))
 
-  (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag " 🔒"))) ; cosmetic emoji, tag is the same
-  (add-to-list 'notmuch-tag-formats '("attachment" (concat tag " 📎"))) ; cosmetic emoji, tag is the same
+  (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒"))) ; cosmetic emoji, tag is the same
+  (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎"))) ; cosmetic emoji, tag is the same
 
   ;; NOTE 2021-05-14: I have an alternative method of finding new mail
   ;; in a maildir tree by using the find command.  It is somewhat
