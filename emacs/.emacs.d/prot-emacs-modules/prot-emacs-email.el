@@ -114,14 +114,19 @@
           ;; ;; my mail to include this tag.
           ;;
           ;; ("flag" . notmuch-search-flagged-face)
-          ))
+          ;;
+          ;; Using `italic' instead is just fine.  Though I also tried
+          ;; it without any face and I was okay with it.  The upside of
+          ;; having a face is that you can identify the message even
+          ;; when the window is split and you don't see the tags.
+          ("flag" . italic)))
   (setq notmuch-show-empty-saved-searches t)
   (setq notmuch-saved-searches
         `(( :name "📥 inbox"
             :query "tag:inbox"
             :sort-order newest-first
             :key ,(kbd "i"))
-          ( :name "📮 unread (inbox)"
+          ( :name "📔 unread (inbox)"
             :query "tag:unread and tag:inbox"
             :sort-order newest-first
             :key ,(kbd "u"))
@@ -153,7 +158,7 @@
             :query "(from:notmuch@notmuchmail.org or to:notmuch@notmuchmail.org) not tag:archived"
             :sort-order newest-first
             :key ,(kbd "on"))
-          ( :name "🧰 sourcehut"
+          ( :name "🛖 sourcehut"
             :query "(from:~sircmpwn/sr.ht-discuss@lists.sr.ht or to:~sircmpwn/sr.ht-discuss@lists.sr.ht) not tag:archived"
             :sort-order newest-first
             :key ,(kbd "os"))))
@@ -166,15 +171,21 @@
   (setq notmuch-draft-tags '("+draft"))
   (setq notmuch-draft-folder "drafts")
   (setq notmuch-draft-save-plaintext 'ask)
-  ;; Also see `notmuch-tagging-keys' the `prot-notmuch' further below
+  ;; Also see `notmuch-tagging-keys' in the `prot-notmuch' section
+  ;; further below.
 
   (setq notmuch-tag-formats
         '(("unread" (propertize tag 'face 'notmuch-tag-unread))
           ("flag" (propertize tag 'face 'notmuch-tag-flagged)
-           (concat tag "💕")))) ; the tag is still "flag"; the emoji is cosmetic
+           (concat tag " 🚩")))) ; the tag is still "flag"; the emoji is cosmetic
   (setq notmuch-tag-deleted-formats
-        '(("unread" (notmuch-apply-face bare-tag `notmuch-tag-deleted))
-          (".*" (notmuch-apply-face tag `notmuch-tag-deleted))))
+        '(("unread" (notmuch-apply-face bare-tag 'notmuch-tag-deleted)
+           (concat "🚫 " tag))
+          (".*" (notmuch-apply-face tag 'notmuch-tag-deleted)
+           (concat "🚫 " tag))))
+  (setq notmuch-tag-added-formats
+        '((".*" (notmuch-apply-face tag 'notmuch-tag-added)
+           (concat "✏️ " tag))))
 
 ;;;; Email composition
   (setq notmuch-mua-compose-in 'current-window)
@@ -230,14 +241,14 @@
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
   ;; bindings below.
   (setq notmuch-tagging-keys
-        `((,(kbd "d") prot-notmuch-mark-delete-tags "💀 Mark for deletion")
-          (,(kbd "f") prot-notmuch-mark-flag-tags "💕 Flag as important")
+        `((,(kbd "d") prot-notmuch-mark-delete-tags "⛔ Mark for deletion")
+          (,(kbd "f") prot-notmuch-mark-flag-tags "🚩 Flag as important")
           (,(kbd "s") prot-notmuch-mark-spam-tags "⚠️ Mark as spam")
-          (,(kbd "r") ("-unread") "🔵 Mark as read")
-          (,(kbd "u") ("+unread") "🔴 Mark as unread")))
+          (,(kbd "r") ("-unread") "✅ Mark as read")
+          (,(kbd "u") ("+unread") "📔 Mark as unread")))
 
-  (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag "🔒"))) ; cosmetic emoji, tag is the same
-  (add-to-list 'notmuch-tag-formats '("attachment" (concat tag "📎"))) ; cosmetic emoji, tag is the same
+  (add-to-list 'notmuch-tag-formats '("encrypted" (concat tag " 🔒"))) ; cosmetic emoji, tag is the same
+  (add-to-list 'notmuch-tag-formats '("attachment" (concat tag " 📎"))) ; cosmetic emoji, tag is the same
 
   ;; NOTE 2021-05-14: I have an alternative method of finding new mail
   ;; in a maildir tree by using the find command.  It is somewhat
