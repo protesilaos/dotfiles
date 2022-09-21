@@ -343,12 +343,11 @@
 
 ;;;; Hooks and key bindings
 
-  ;; See my `pulsar' package, which is declared further above (otherwise
-  ;; I would wrap this in `with-eval-after-load'):
-  ;; <https://protesilaos.com/emacs/pulsar>
-  (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
-    (add-hook hook #'pulsar-recenter-middle)
-    (add-hook hook #'pulsar-reveal-entry))
+  ;; See my `pulsar' package, defined elsewhere in this setup.
+  (with-eval-after-load 'pulsar
+    (dolist (hook '(org-agenda-after-show-hook org-follow-link-hook))
+      (add-hook hook #'pulsar-recenter-middle)
+      (add-hook hook #'pulsar-reveal-entry)))
 
   (let ((map global-map))
     (define-key map (kbd "C-c a") #'org-agenda)
