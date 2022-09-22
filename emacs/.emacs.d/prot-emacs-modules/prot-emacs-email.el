@@ -1,4 +1,4 @@
-;;; Client-agnostic email settings (and prot-mail.el)
+;;; Client-agnostic email settings
 (prot-emacs-builtin-package 'auth-source
   (setq auth-sources '("~/.authinfo.gpg"))
   (setq user-full-name "Protesilaos Stavrou")
@@ -50,17 +50,6 @@
 
 (prot-emacs-builtin-package 'gnus-dired ; does not require `gnus'
   (add-hook 'dired-mode-hook #'gnus-dired-mode))
-
-(prot-emacs-builtin-package 'prot-mail
-  ;; ;; NOTE 2021-05-14: This is a generic indicator for new mail in the
-  ;; ;; maildir.  As I now use notmuch (see relevant section in this
-  ;; ;; document) I have an alternative approach in prot-notmuch.el.
-  ;; (setq prot-mail-maildir-path-regexp "~/.mail/*/Inbox/new/") ; shell regexp
-  ;; (setq prot-mail-mode-line-indicator-commands
-  ;;       '(notmuch-refresh-this-buffer))
-  ;; ;; mode line indicator with the number of new mails
-  ;; (prot-mail-mail-indicator -1)
-  )
 
 ;;; Notmuch (mail indexer and mail user agent (MUA))
 ;; I install notmuch from the distro's repos because the CLI program is
