@@ -107,6 +107,17 @@
     (define-key map (kbd "C-<AudioNext>") #'bongo-next)
     (define-key map (kbd "C-<AudioPrev>") #'bongo-previous)
     (define-key map (kbd "C-M-<AudioPlay>") #'bongo-play-random)
+    ;; NOTE 2022-09-22: The above four do not work on GNOME 42
+    ;; (Wayland).  The key binding is intercepted by the desktop
+    ;; environment.  I did not try Xorg because the reason to use GNOME
+    ;; is for testing Wayland.  I thus define the function
+    ;; `prot-bongo-emacsclient-act' and then set those to key bindings
+    ;; at the DE level:
+    ;;
+    ;; emacsclient -e "(prot-bongo-emacsclient-act 'bongo-pause/resume)"
+    ;; emacsclient -e "(prot-bongo-emacsclient-act 'bongo-play-next)"
+    ;; emacsclient -e "(prot-bongo-emacsclient-act 'bongo-play-previous)"
+    ;; emacsclient -e "(prot-bongo-emacsclient-act 'bongo-play-random)"
     (define-key map (kbd "M-<AudioPlay>") #'bongo-show)
     (define-key map (kbd "S-<AudioNext>") #'bongo-seek-forward-10)
     (define-key map (kbd "S-<AudioPrev>") #'bongo-seek-backward-10))

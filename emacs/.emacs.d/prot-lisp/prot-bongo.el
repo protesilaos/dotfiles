@@ -34,6 +34,7 @@
 
 ;;; Code:
 
+;; NOTE 2022-09-22: This file REALLY needs a review...
 ;; XXX Written on 2021-01-18.  Remains to be reviewed.
 
 (eval-when-compile (require 'subr-x))
@@ -326,6 +327,21 @@ This is a simplified variant of `bongo-show'."
         (bongo-play-random)
         (bongo-random-playback-mode)
         (bongo-recenter)))))
+
+(defun prot-bongo-emacsclient-act (fn &rest _)
+  "Call FN in Bongo playlist.
+Meant to be used via emacsclient as a system-wide key binding."
+  (when (bongo-playing-p)
+    (with-current-buffer (bongo-playlist-buffer)
+      (funcall fn)
+      (bongo-recenter))))
+
+;; Examples:
+;;
+;; emacsclient -e "(prot-bongo-emacsclient-act 'bongo-pause/resume)"
+;; emacsclient -e "(prot-bongo-emacsclient-act 'bongo-play-next)"
+;; emacsclient -e "(prot-bongo-emacsclient-act 'bongo-play-previous)"
+;; emacsclient -e "(prot-bongo-emacsclient-act 'bongo-play-random)"
 
 (defvar bongo-next-action)
 
