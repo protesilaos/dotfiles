@@ -303,5 +303,15 @@ Copy of variable `browse-url-button-regexp'.")
 ;;  prot-common-text-heading-line-p
 ;;  "^[=-]+")
 
+(autoload 'auth-source-search "auth-source")
+
+;;;###autoload
+(defun prot-common-auth-get-field (host prop)
+  "Find PROP in `auth-sources' for HOST entry."
+  (when-let ((source (auth-source-search :host host)))
+    (if (eq prop :secret)
+       (funcall (plist-get (car source) prop))
+      (plist-get (flatten-list source) prop))))
+
 (provide 'prot-common)
 ;;; prot-common.el ends here

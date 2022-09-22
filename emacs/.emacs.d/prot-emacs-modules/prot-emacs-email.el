@@ -70,9 +70,9 @@
 (prot-emacs-builtin-package 'notmuch
 
 ;;; Account settings
-  (let ((prv (prot-mail-auth-get-field "prv" :user))
-        (pub (prot-mail-auth-get-field "pub" :user))
-        (inf (prot-mail-auth-get-field "inf" :user)))
+  (let ((prv (prot-common-auth-get-field "prv" :user))
+        (pub (prot-common-auth-get-field "pub" :user))
+        (inf (prot-common-auth-get-field "inf" :user)))
     (setq notmuch-identities
           (mapcar (lambda (str)
                     (format "%s <%s>" user-full-name str))

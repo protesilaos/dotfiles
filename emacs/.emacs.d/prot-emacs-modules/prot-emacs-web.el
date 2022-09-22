@@ -154,7 +154,7 @@
         `(("irc.libera.chat"
            :channels ("#emacs" "#org-mode" "#rcirc" "#sr.ht")
            :port 6697 :encryption tls
-           :password ,(prot-mail-auth-get-field "libera" :secret))))
+           :password ,(prot-common-auth-get-field "libera" :secret))))
 
   (setq rcirc-prompt "%t> ") ; Read the docs or use (customize-set-variable 'rcirc-prompt "%t> ")
 
