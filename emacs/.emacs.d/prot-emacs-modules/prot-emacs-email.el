@@ -225,6 +225,7 @@
     (define-key map (kbd "R") #'notmuch-show-reply-sender))
   (define-key notmuch-hello-mode-map (kbd "C-<tab>") nil))
 
+;;; My own tweaks for notmuch (prot-notmuch.el)
 (prot-emacs-builtin-package 'prot-notmuch
   ;; Those are for the actions that are available after pressing 'k'
   ;; (`notmuch-tag-jump').  For direct actions, refer to the key
@@ -258,6 +259,7 @@
   ;; Like C-c M-h for `message-insert-headers'
   (define-key notmuch-message-mode-map (kbd "C-c M-e") #'prot-notmuch-patch-add-email-control-code))
 
+;;; Glue code for notmuch and org-link (ol-notmuch.el)
 (prot-emacs-elpa-package 'ol-notmuch)
 
 ;;; notmuch-indicator (another package of mine)
