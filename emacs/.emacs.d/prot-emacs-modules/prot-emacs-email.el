@@ -262,6 +262,14 @@
 ;;; Glue code for notmuch and org-link (ol-notmuch.el)
 (prot-emacs-elpa-package 'ol-notmuch)
 
+;;; New backend for notmuch address completion (notmuch-addr.el)
+;; Per the project's documentation, we need to make sure
+;; `notmuch-address' is loaded before setting up the `notmuch-addr'
+;; alternative.
+(with-eval-after-load 'notmuch-address
+  (prot-emacs-elpa-package 'notmuch-addr
+    (notmuch-addr-setup)))         ; NOTE 2022-09-22: I am testing this.
+
 ;;; notmuch-indicator (another package of mine)
 (prot-emacs-elpa-package 'notmuch-indicator
   ;; Just the default values...
