@@ -33,23 +33,6 @@
   (setq help-window-select t)
   (setq next-error-recenter '(4)) ; center of the window
 
-  ;; ;; DEPRECATED 2021-10-15: set `help-window-select' to non-nil.
-  ;; (setq prot-simple-focusable-help-commands
-  ;;       '( describe-symbol
-  ;;          describe-function
-  ;;          describe-mode
-  ;;          describe-variable
-  ;;          describe-key
-  ;;          describe-char
-  ;;          what-cursor-position
-  ;;          describe-package
-  ;;          view-lossage))
-  ;; (prot-simple-focus-help-buffers 1)
-
-  ;; ;; NOTE 2022-01-20: The idea is good, but the implementation needs
-  ;; ;; to be refined.
-  ;; (prot-simple-rename-help-buffers 1)
-
   ;; General commands
   (let ((map global-map))
     (define-key map (kbd "<insert>") nil)
