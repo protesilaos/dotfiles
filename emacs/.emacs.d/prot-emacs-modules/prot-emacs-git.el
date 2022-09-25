@@ -77,14 +77,22 @@
 
   ;; NOTE: I override lots of the defaults
   (let ((map global-map))
-    (define-key map (kbd "C-x v b") #'vc-retrieve-tag)  ; "branch" switch
+
+    ;; NOTE 2022-09-24: Emacs 29 repurposes 'C-x v b' to a prefix key
+    ;; for branch-related commands.  I am using that now.
+    
+    ;; (define-key map (kbd "C-x v b") #'vc-retrieve-tag)  ; "branch" switch
+
     (define-key map (kbd "C-x v t") #'vc-create-tag)
     (define-key map (kbd "C-x v f") #'vc-log-incoming)  ; the actual git fetch
     (define-key map (kbd "C-x v o") #'vc-log-outgoing)
     (define-key map (kbd "C-x v F") #'vc-update)        ; "F" because "P" is push
     (define-key map (kbd "C-x v d") #'vc-diff))
   (let ((map vc-dir-mode-map))
-    (define-key map (kbd "b") #'vc-retrieve-tag)
+    ;; See note above about 'C-x v b'
+
+    ;; (define-key map (kbd "b") #'vc-retrieve-tag)
+
     (define-key map (kbd "t") #'vc-create-tag)
     (define-key map (kbd "O") #'vc-log-outgoing)
     (define-key map (kbd "o") #'vc-dir-find-file-other-window)
@@ -93,12 +101,14 @@
     (define-key map (kbd "d") #'vc-diff)         ; parallel to D: `vc-root-diff'
     (define-key map (kbd "k") #'vc-dir-clean-files)
     (define-key map (kbd "G") #'vc-revert)
-    (let ((prot-vc-git-branch-map (make-sparse-keymap)))
-      (define-key map "B" prot-vc-git-branch-map)
-      (define-key prot-vc-git-branch-map "n" #'vc-create-tag) ; new branch/tag
-      (define-key prot-vc-git-branch-map "s" #'vc-retrieve-tag) ; switch branch/tag
-      (define-key prot-vc-git-branch-map "c" #'prot-vc-git-checkout-remote) ; "checkout" remote
-      (define-key prot-vc-git-branch-map "l" #'vc-print-branch-log))
+    ;; TODO 2022-09-24: The prot-vc-git-branch-map needs to be reviewed.
+    
+    ;; (let ((prot-vc-git-branch-map (make-sparse-keymap)))
+    ;;   (define-key map "B" prot-vc-git-branch-map)
+    ;;   (define-key prot-vc-git-branch-map "n" #'vc-create-tag) ; new branch/tag
+    ;;   (define-key prot-vc-git-branch-map "s" #'vc-retrieve-tag) ; switch branch/tag
+    ;;   (define-key prot-vc-git-branch-map "c" #'prot-vc-git-checkout-remote) ; "checkout" remote
+    ;;   (define-key prot-vc-git-branch-map "l" #'vc-print-branch-log))
     (let ((prot-vc-git-stash-map (make-sparse-keymap)))
       (define-key map "S" prot-vc-git-stash-map)
       (define-key prot-vc-git-stash-map "c" 'vc-git-stash) ; "create" named stash
