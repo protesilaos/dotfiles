@@ -78,7 +78,7 @@
   "Apply extra font-lock rules to diff buffers."
   :init-value nil
   :global t
-  (if prot-proced-extra-keywords
+  (if (and prot-proced-extra-keywords (derived-mode-p 'proced-mode))
       (progn
         (font-lock-flush (point-min) (point-max))
         (font-lock-add-keywords nil prot-proced-keywords nil)
