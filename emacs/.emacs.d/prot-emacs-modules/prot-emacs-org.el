@@ -387,6 +387,10 @@
   ;; custom block agenda.
   (define-key global-map (kbd "C-c A") (lambda () (interactive) (org-agenda nil "A")))
 
+  (let ((map ctl-x-x-map))
+    (define-key map "i" #'prot-org-id-headlines)
+    (define-key map "h" #'prot-org-ox-html))
+
   (add-to-list 'org-capture-templates
                '("j" "Music suggestion (jukebox)" entry
                  (file+headline "tasks.org" "Music suggestions")
