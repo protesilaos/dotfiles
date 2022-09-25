@@ -4,7 +4,7 @@
   (setq diff-advance-after-apply-hunk t)
   (setq diff-update-on-the-fly t)
   ;; The following are from Emacs 27.1
-  (setq diff-refine nil)                ; I do it on demand
+  (setq diff-refine nil) ; I do it on demand, per `prot-diff-refine-cycle'
   (setq diff-font-lock-prettify t) ; I think nil is better for patches, but let me try this for a while
   ;; The following is further controlled by
   ;; `prot-diff-modus-themes-diffs'
