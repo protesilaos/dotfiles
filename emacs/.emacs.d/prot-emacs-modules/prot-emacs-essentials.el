@@ -62,11 +62,6 @@
     (define-key map (kbd "M-\\") #'prot-simple-delete-pair-dwim)
     (define-key map (kbd "M-z") #'zap-up-to-char) ; NOT `zap-to-char'
     (define-key map (kbd "M-Z") #'prot-simple-zap-to-char-backward)
-    ;; NOTE 2022-05-01: I deprecated those commands.  I don't use them
-    ;; and they need to be reworked.
-    ;;
-    ;; (define-key map (kbd "C-M-;") #'prot-simple-cite-region)
-    ;; (define-key map (kbd "C-M-^") #'prot-simple-insert-undercaret)
     (define-key map (kbd "<C-M-backspace>") #'backward-kill-sexp)
     (define-key map (kbd "M-c") #'capitalize-dwim)
     (define-key map (kbd "M-l") #'downcase-dwim)        ; "lower" case
