@@ -43,39 +43,19 @@
 (defface prot-proced-user '((t :inherit shadow))
   "Face for user indicator in `proced'.")
 
-(defface prot-proced-pid
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#5317ac")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#b6a0ff"))
+(defface prot-proced-pid '((t :inherit font-lock-constant-face))
   "Face for PID indicator in `proced'.")
 
-(defface prot-proced-cpu
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#8f0075")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#f78fe7"))
+(defface prot-proced-cpu nil
   "Face for memory indicator in `proced'.")
 
-(defface prot-proced-mem
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#0031a9")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#2fafff"))
+(defface prot-proced-mem nil
   "Face for CPU indicator in `proced'.")
 
-(defface prot-proced-time-start
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#30517f")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#a0bfdf"))
+(defface prot-proced-time-start '((t :inherit font-lock-type-face))
   "Face for start time indicator in `proced'.")
 
-(defface prot-proced-time-duration
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#00538b")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#00cdc8"))
+(defface prot-proced-time-duration '((t :inherit font-lock-function-name-face))
   "Face for time indicator in `proced'.")
 
 (defface prot-proced-process nil
