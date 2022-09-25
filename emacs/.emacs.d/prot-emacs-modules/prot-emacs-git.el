@@ -13,7 +13,7 @@
     (define-key map (kbd "L") #'vc-print-root-log)
     ;; Emacs 29 can use C-x v v in diff buffers, which is great, but now I
     ;; need quick access to it...
-    (define-key map (kbd "v") #'vc-next-action))
+    (define-key map (kbd "v") #'vc-next-action)))
 
 (prot-emacs-builtin-package 'prot-diff
   (prot-diff-modus-themes-diffs)
