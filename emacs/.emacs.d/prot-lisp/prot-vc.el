@@ -598,6 +598,21 @@ pass the '--hard' flag instead."
                   (car name))))
     (shell-command (format "git checkout -b %s %s" local remote))))
 
+(defun prot-vc-git--prompt-remote ()
+  "Helper prompt for `prot-vc-git-push'."
+  (if-let ((remotes (process-lines "git" "remote"))
+           ((length> remotes 1))) ; `length>' is Emacs 28+
+      (completing-read "Select Git remote: " remotes)
+    "origin"))
+
+;;;###autoload
+(defun prot-vc-git-push (remote)
+  "Perform a git push on REMOTE.
+When there are multiple remotes prompt for REMOTE.  Else assume
+it is named \"origin\"."
+  (interactive (list (prot-vc-git--prompt-remote)))
+  (vc-git--pushpull "push" nil `(,remote)))
+
 ;;;; User Interface setup
 
 ;; This is a tweaked variant of `vc-git-expanded-log-entry'
