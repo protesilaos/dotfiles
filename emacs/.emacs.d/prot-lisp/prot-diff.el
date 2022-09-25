@@ -134,7 +134,7 @@ will not account for them.
 If no region is active and the point is not on a line that starts
 with the plus or minus sign, call `diff-hunk-kill' interactively.
 
-NOTE 2022-09-25 11:37 +0300: not thoroughly tested yet."
+NOTE 2022-09-25 11:37 +0300: not tested thoroughly yet."
   (interactive "r" diff-mode)
   (when-let (((derived-mode-p 'diff-mode))
              (inhibit-read-only t))
