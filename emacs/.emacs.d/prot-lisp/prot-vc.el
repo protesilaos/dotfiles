@@ -606,12 +606,11 @@ pass the '--hard' flag instead."
     "origin"))
 
 ;;;###autoload
-(defun prot-vc-git-push (remote)
-  "Perform a git push on REMOTE.
-When there are multiple remotes prompt for REMOTE.  Else assume
-it is named \"origin\"."
-  (interactive (list (prot-vc-git--prompt-remote)))
-  (vc-git--pushpull "push" nil `(,remote)))
+(defun prot-vc-git-push (prompt)
+  "Substitute for `vc-git-push' with the same meaning for PROMPT."
+  (vc-git--pushpull "push" prompt (unless prompt `(,(prot-vc-git--prompt-remote)))))
+
+(advice-add #'vc-git-push :override #'prot-vc-git-push)
 
 ;;;; User Interface setup
 
