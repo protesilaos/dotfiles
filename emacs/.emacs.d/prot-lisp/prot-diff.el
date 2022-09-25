@@ -196,12 +196,12 @@ hook `modus-themes-after-load-theme-hook'."
 (defconst prot-diff-keywords
   '(("\\(^[^+@-]?\\)\\(.*?\s+|\s+\\)\\([0-9]*\\) \\(\\++\\)"
      (4 'prot-diff-diffstat-added))
+    ("\\(^[^+@-]?\\)\\(.*?\s+|\s+\\)\\([0-9]*\\) \\(\\++\\)?\\(-+\\)"
+     (5 'prot-diff-diffstat-removed))
     ("\\(^[^+-]?\\)\\(\\+\\{3\\}\\) \\([ab].*?\\)"
      (2 'prot-diff-diffstat-added))
     ("\\(^[^+-]?\\)\\(-+\\{3\\}\\) \\([ab].*?\\)"
      (2 'prot-diff-diffstat-removed))
-    ("\\(^[^+@-]?\\)\\(.*?\s+|\s+\\)\\([0-9]*\\) \\(\\++\\)?\\(-+\\)"
-     (5 'prot-diff-diffstat-removed))
     ("^---\n"
      (0 'prot-diff-commit-header))
     ("\\(^commit \\)\\(.*\\)"
