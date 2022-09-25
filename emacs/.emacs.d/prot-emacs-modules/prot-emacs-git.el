@@ -73,8 +73,6 @@
 
   (setq vc-follow-symlinks t)
 
-  (add-hook 'log-view-mode-hook #'hl-line-mode)
-
   ;; NOTE: I override lots of the defaults
   (let ((map global-map))
 
