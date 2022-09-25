@@ -27,8 +27,8 @@
 ;; This covers my diff-mode.el extensions, for use in my Emacs setup:
 ;; https://protesilaos.com/emacs/dotemacs.
 ;;
-;; Make sure to also inspect prot-vc.el and prot-project.el for a more
-;; complete view of what I have on the topic of version control.
+;; Make sure to also inspect prot-vc.el for a more complete view of what
+;; I have on the topic of version control.
 ;;
 ;; Remember that every piece of Elisp that I write is for my own
 ;; educational and recreational purposes.  I am not a programmer and I
