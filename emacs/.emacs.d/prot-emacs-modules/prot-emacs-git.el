@@ -58,13 +58,13 @@
   (setq vc-git-print-log-follow t)
   (setq vc-git-revision-complete-only-branches nil) ; Emacs 28
   (setq vc-git-root-log-format
-        '("%d %h %ad %an: %s"
+        '("%d %h %ai %an: %s"
           ;; The first shy group matches the characters drawn by --graph.
           ;; We use numbered groups because `log-view-message-re' wants the
           ;; revision number to be group 1.
           "^\\(?:[*/\\|]+\\)\\(?:[*/\\| ]+\\)?\
 \\(?2: ([^)]+) \\)?\\(?1:[0-9a-z]+\\) \
-\\(?4:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\) \
+\\(?4:[0-9]\\{4\\}-[0-9-]\\{4\\}[0-9\s+:]\\{16\\}\\) \
 \\(?3:.*?\\):"
           ((1 'log-view-message)
            (2 'change-log-list nil lax)
