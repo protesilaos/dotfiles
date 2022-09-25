@@ -176,8 +176,6 @@ hook `modus-themes-after-load-theme-hook'."
      (2 'prot-diff-diffstat-removed))
     ("\\(^[^+@-]?\\)\\(.*?\s+|\s+\\)\\([0-9]*\\) \\(\\++\\)?\\(-+\\)"
      (5 'prot-diff-diffstat-removed))
-    ("\\([0-9]+ files? changed,.*\\)"
-     (0 'prot-diff-commit-header))
     ("^---\n"
      (0 'prot-diff-commit-header))
     ("\\(^commit \\)\\(.*\\)"
