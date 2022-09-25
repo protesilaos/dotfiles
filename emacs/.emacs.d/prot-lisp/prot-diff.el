@@ -239,7 +239,7 @@ hook `modus-themes-after-load-theme-hook'."
   "Apply extra font-lock rules to diff buffers."
   :init-value nil
   :global t
-  (if prot-diff-extra-keywords
+  (if (and prot-diff-extra-keywords (derived-mode-p 'diff-mode))
       (progn
         (font-lock-flush (point-min) (point-max))
         (font-lock-add-keywords nil prot-diff-keywords nil)
