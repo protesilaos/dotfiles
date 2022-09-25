@@ -163,7 +163,7 @@ set to nil.
 Run this function at the post theme load phase, such as with the
 hook `modus-themes-after-load-theme-hook'."
   (if (and (featurep 'modus-themes)
-	   (not (eq modus-themes-diffs 'bg-only)))
+           (not (eq modus-themes-diffs 'bg-only)))
       (setq diff-font-lock-syntax nil)
     (setq diff-font-lock-syntax 'hunk-also)))
 
