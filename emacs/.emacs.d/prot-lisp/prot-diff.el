@@ -143,59 +143,28 @@ hook `modus-themes-after-load-theme-hook'."
 
 ;;; Extend diff-mode font lock
 
-(defface prot-diff-diffstat-added
-  '((t :inherit diff-indicator-added))
+(defface prot-diff-diffstat-added '((t :inherit diff-indicator-added))
   "Face for diffstat added indicators (+).")
 
-(defface prot-diff-diffstat-removed
-  '((t :inherit diff-indicator-removed))
+(defface prot-diff-diffstat-removed '((t :inherit diff-indicator-removed))
   "Face for diffstat removed indicators (-).")
 
-(defface prot-diff-commit-header
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#000000")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#ffffff"))
+(defface prot-diff-commit-header nil
   "Face for diff commit header keys like 'Author:'.")
 
-(defface prot-diff-commit-hash
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#184034")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#bfebe0")
-    (t :inherit shadow))
+(defface prot-diff-commit-hash '((t :inherit log-view-message))
   "Face for diff commit unique identifier (hash).")
 
-(defface prot-diff-commit-author
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#00538b")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#00d3d0")
-    (t :foreground "cyan"))
+(defface prot-diff-commit-author '((t :inherit change-log-name))
   "Face for diff commit author name.")
 
-(defface prot-diff-commit-email
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#0031a9")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#2fafff")
-    (t :foreground "blue"))
+(defface prot-diff-commit-email '((t :inherit change-log-email))
   "Face for diff commit author email.")
 
-(defface prot-diff-commit-date
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#55348e")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#cfa6ff")
-    (t :foreground "magenta"))
+(defface prot-diff-commit-date '((t :inherit change-log-date))
   "Face for diff commit date.")
 
-(defface prot-diff-commit-subject
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#005a5f")
-    (((class color) (min-colors 88) (background dark))
-     :foreground "#6ae4b9")
-    (t :foreground "cyan"))
+(defface prot-diff-commit-subject '((t :inherit change-log-name))
   "Face for diff commit message subject.")
 
 ;; NOTE 2021-01-30: These work in all scenaria I tried, but there may
