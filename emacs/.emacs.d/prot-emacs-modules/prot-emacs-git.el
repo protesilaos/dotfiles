@@ -28,7 +28,8 @@
   (define-key global-map (kbd "C-x v =") #'prot-diff-buffer-dwim)
   (let ((map diff-mode-map))
     (define-key map (kbd "C-c C-b") #'prot-diff-refine-cycle) ; replace `diff-refine-hunk'
-    (define-key map (kbd "C-c C-n") #'prot-diff-narrow-dwim)))
+    (define-key map (kbd "C-c C-n") #'prot-diff-narrow-dwim))
+  (define-key diff-mode-shared-map (kbd "k") #'prot-diff-hunk-kill-dwim))
 
 ;;; Version control framework (vc.el and prot-vc.el)
 (prot-emacs-builtin-package 'vc

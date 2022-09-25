@@ -119,6 +119,32 @@ current file instead."
         (diff-restrict-view)
         (message "Narrowed to diff hunk")))))
 
+;;;###autoload
+(defun prot-diff-hunk-kill-dwim (&optional beg end)
+  "Kill current hunk or remove the plus or minus signs.
+When the region is active, remove the plus or minus sign at the
+start of the line.
+
+When the region is not active but point is on a line that start
+with a plus or minus sign, remove that sign.
+
+Removing the plus or minus sign means any any subsequent commit
+will not account for them.
+
+If no region is active and the point is not on a line that starts
+with the plus or minus sign, call `diff-hunk-kill' interactively.
+
+NOTE 2022-09-25 11:37 +0300: not thoroughly tested yet."
+  (interactive "r" diff-mode)
+  (when-let (((derived-mode-p 'diff-mode))
+             (inhibit-read-only t))
+    (cond
+     ((region-active-p)
+      (replace-regexp-in-region "^[+-]" " " beg end))
+     ((progn (goto-char (line-beginning-position)) (looking-at "^[+-]"))
+      (replace-match " "))
+     (t (call-interactively #'diff-hunk-kill)))))
+
 (defvar modus-themes-diffs)
 
 ;;;###autoload
