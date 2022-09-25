@@ -8,7 +8,10 @@
   (setq diff-font-lock-prettify nil)    ; better for patches
   ;; The following is further controlled by
   ;; `prot-diff-modus-themes-diffs'
-  (setq diff-font-lock-syntax 'hunk-also))
+  (setq diff-font-lock-syntax 'hunk-also)
+  ;; Emacs 29 can use C-x v v in diff buffers, which is great, but now I
+  ;; need quick access to it...
+  (define-key diff-mode-map (kbd "v") #'vc-next-action))
 
 (prot-emacs-builtin-package 'prot-diff
   (prot-diff-modus-themes-diffs)
