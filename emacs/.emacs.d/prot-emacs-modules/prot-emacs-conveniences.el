@@ -4,9 +4,12 @@
   (define-key map "f" #'follow-mode)  ; override `font-lock-update'
   (define-key map "r" #'rename-uniquely))
 
-(with-eval-after-load 'org
-  (define-key ctl-x-x-map "i" #'prot-org-id-headlines)
-  (define-key ctl-x-x-map "h" #'prot-org-ox-html))
+(prot-emacs-builtin-package 'dictionary
+  (setq dictionary-server "dict.org")
+  (setq dictionary-default-popup-strategy "lev") ; read doc string
+  (setq dictionary-create-buttons nil)
+  (setq dictionary-use-single-buffer t)
+  (define-key global-map (kbd "C-c d") #'dictionary-search))
 
 ;;; Mouse wheel behaviour
 (prot-emacs-builtin-package 'mouse
