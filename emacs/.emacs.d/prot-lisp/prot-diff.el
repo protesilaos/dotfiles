@@ -149,7 +149,7 @@ hook `modus-themes-after-load-theme-hook'."
 (defface prot-diff-diffstat-removed '((t :inherit diff-indicator-removed))
   "Face for diffstat removed indicators (-).")
 
-(defface prot-diff-commit-header nil
+(defface prot-diff-commit-header '((t :inherit bold))
   "Face for diff commit header keys like 'Author:'.")
 
 (defface prot-diff-commit-hash '((t :inherit log-view-message))
@@ -167,21 +167,17 @@ hook `modus-themes-after-load-theme-hook'."
 (defface prot-diff-commit-subject '((t :inherit change-log-name))
   "Face for diff commit message subject.")
 
-;; NOTE 2021-01-30: These work in all scenaria I tried, but there may
-;; still be errors or omissions.
 (defconst prot-diff-keywords
   '(("\\(^[^+@-]?\\)\\(.*?\s+|\s+\\)\\([0-9]*\\) \\(\\++\\)"
-     ;; (2 'prot-diff-diffstat-file-changed)
      (4 'prot-diff-diffstat-added))
     ("\\(^[^+-]?\\)\\(\\+\\{3\\}\\) \\([ab].*?\\)"
      (2 'prot-diff-diffstat-added))
     ("\\(^[^+-]?\\)\\(-+\\{3\\}\\) \\([ab].*?\\)"
      (2 'prot-diff-diffstat-removed))
     ("\\(^[^+@-]?\\)\\(.*?\s+|\s+\\)\\([0-9]*\\) \\(\\++\\)?\\(-+\\)"
-     ;; (2 'prot-diff-diffstat-file-changed)
      (5 'prot-diff-diffstat-removed))
-    ;; ("\\([0-9]+ files? changed,.*\\)"
-    ;;  (0 'prot-diff-diffstat-file-changed))
+    ("\\([0-9]+ files? changed,.*\\)"
+     (0 'prot-diff-commit-header))
     ("^---\n"
      (0 'prot-diff-commit-header))
     ("\\(^commit \\)\\(.*\\)"
@@ -190,15 +186,15 @@ hook `modus-themes-after-load-theme-hook'."
     ("\\(^Author: \\)\\(.*\\)\\(<\\)\\(.*\\)\\(>\\)"
      (1 'prot-diff-commit-header)
      (2 'prot-diff-commit-author)
-     (3 'prot-diff-commit-header)
+     (3 'prot-diff-commit-email)
      (4 'prot-diff-commit-email)
-     (5 'prot-diff-commit-header))
+     (5 'prot-diff-commit-email))
     ("\\(^From:\\|^To:\\|^Cc:\\) ?\\(.*\\)?\\(<\\)\\(.*\\)\\(>\\)"
      (1 'prot-diff-commit-header)
      (2 'prot-diff-commit-author)
-     (3 'prot-diff-commit-header)
+     (3 'prot-diff-commit-email)
      (4 'prot-diff-commit-email)
-     (5 'prot-diff-commit-header))
+     (5 'prot-diff-commit-email))
     ("\\(^Subject:\\) \\(.*\\)"
      (1 'prot-diff-commit-header)
      (2 'prot-diff-commit-subject))
