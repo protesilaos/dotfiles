@@ -128,8 +128,8 @@ start of the line.
 When the region is not active but point is on a line that start
 with a plus or minus sign, remove that sign.
 
-Removing the plus or minus sign means any any subsequent commit
-will not account for them.
+Removing the plus or minus sign means any subsequent commit will
+not account for them.
 
 If no region is active and the point is not on a line that starts
 with the plus or minus sign, call `diff-hunk-kill' interactively.
