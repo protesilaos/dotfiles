@@ -21,6 +21,8 @@
 
   (prot-diff-extra-keywords 1)
 
+  (add-hook 'diff-mode-hook #'prot-diff-enable-outline-minor-mode)
+
   ;; `prot-diff-buffer-dwim' replaces the default for `vc-diff' (which I
   ;; bind to another key---see VC section).
   (define-key global-map (kbd "C-x v =") #'prot-diff-buffer-dwim)

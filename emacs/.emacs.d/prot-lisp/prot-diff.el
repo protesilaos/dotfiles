@@ -43,6 +43,17 @@
   "Extensions for diff mode."
   :group 'diff)
 
+(defun prot-diff-enable-outline-minor-mode ()
+  "Enable `outline-minor-mode' with appropriate tweaks for diffs.
+This basically gives you folding of diff hunks by means of the
+`outline-cycle' command.
+
+Add the function to the `diff-mode-hook'."
+  (require 'outline)
+  (let ((outline-minor-mode-highlight nil))
+    (when (derived-mode-p 'diff-mode)
+      (outline-minor-mode 1))))
+
 ;;;###autoload
 (defun prot-diff-buffer-dwim (&optional arg)
   "Diff buffer with its file's last saved state, or run `vc-diff'.
