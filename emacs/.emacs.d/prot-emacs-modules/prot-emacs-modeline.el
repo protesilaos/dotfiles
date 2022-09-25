@@ -34,6 +34,8 @@
                 mode-line-misc-info
                 mode-line-end-spaces))
 
+(add-hook 'after-init-hook #'column-number-mode)
+
 ;;; Hide modeline "lighters" (minions.el)
 (prot-emacs-elpa-package 'minions
   (setq minions-mode-line-lighter ";")

@@ -23,19 +23,13 @@
 (prot-emacs-builtin-package 'sh-script
   (add-to-list 'auto-mode-alist '("PKGBUILD" . sh-mode)))
 
-;;; Paragraphs and fill-mode (prot-fill.el)
-(prot-emacs-builtin-package 'prot-fill
-  (setq prot-fill-default-column 72)
-  (setq prot-fill-prog-mode-column 72)  ; Set this to another value if you want
-  ;; Those variables come from various sources, though they feel part of the
-  ;; same conceptual framework.
-  (setq sentence-end-double-space t)
-  (setq sentence-end-without-period nil)
-  (setq colon-double-space nil)
-  (setq use-hard-newlines nil)
-  (setq adaptive-fill-mode t)
-  (prot-fill-fill-mode 1)
-  (add-hook 'after-init-hook #'column-number-mode))
+;;; Paragraphs and fill-mode
+(setq sentence-end-double-space t)
+(setq sentence-end-without-period nil)
+(setq colon-double-space nil)
+(setq use-hard-newlines nil)
+(setq adaptive-fill-mode t)
+(add-hook 'text-mode-hook #'turn-on-auto-fill)
 
 ;;; Comments (newcomment.el and prot-comment.el)
 (prot-emacs-builtin-package 'newcomment
