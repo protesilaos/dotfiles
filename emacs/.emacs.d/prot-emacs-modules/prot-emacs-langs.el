@@ -1,11 +1,6 @@
-;;; Plain text (text-mode with prot-text.el)
-(prot-emacs-builtin-package 'text-mode)
-
-(prot-emacs-builtin-package 'prot-text
-  (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode))
-  (define-key text-mode-map (kbd "<M-return>") #'prot-text-insert-heading)
-  (define-key org-mode-map (kbd "<M-return>") #'org-meta-return) ; don't override M-RET here
-  (define-key org-mode-map (kbd "M-;") nil))
+;;; Plain text (text-mode)
+(prot-emacs-builtin-package 'text-mode
+  (add-to-list 'auto-mode-alist '("\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'" . text-mode)))
 
 ;;; Markdown (markdown-mode)
 (prot-emacs-elpa-package 'markdown-mode

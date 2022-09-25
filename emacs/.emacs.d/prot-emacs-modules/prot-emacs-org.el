@@ -355,8 +355,11 @@
     (define-key map (kbd "C-c l") #'org-store-link)
     (define-key map (kbd "C-c o") #'org-open-at-point-global))
   (let ((map org-mode-map))
+    ;; I don't like that Org binds one zillion keys, so if I want one
+    ;; for something more important, I disable it from here.
     (define-key map (kbd "C-'") nil)
     (define-key map (kbd "C-,") nil)
+    (define-key map (kbd "M-;") nil)
     (define-key map (kbd "<C-return>") nil)
     (define-key map (kbd "<C-S-return>") nil)
     (define-key map (kbd "C-M-S-<right>") nil)
