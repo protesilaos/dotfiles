@@ -7,8 +7,6 @@
   (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
   (setq markdown-fontify-code-blocks-natively t))
 
-(prot-emacs-elpa-package 'systemd)
-
 ;;; YAML (yaml-mode)
 (prot-emacs-elpa-package 'yaml-mode
   (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-mode)))
