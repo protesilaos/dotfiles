@@ -128,7 +128,9 @@
     (define-key map (kbd "o") #'vc-log-outgoing)
     (define-key map (kbd "f") #'vc-log-incoming)
     (define-key map (kbd "F") #'vc-update)
-    (define-key map (kbd "P") #'vc-push)))
+    ;; ;; See `prot-vc-git-push' further below.
+    ;; (define-key map (kbd "P") #'vc-push)
+    ))
 
 (prot-emacs-builtin-package 'prot-vc
   (setq prot-vc-log-limit 100)
@@ -154,7 +156,8 @@
     (define-key map (kbd "C-x v s") #'prot-vc-git-show)
     (define-key map (kbd "C-x v r") #'prot-vc-git-find-revision)
     (define-key map (kbd "C-x v B") #'prot-vc-git-blame-region-or-file)
-    (define-key map (kbd "C-x v R") #'prot-vc-git-reset))
+    (define-key map (kbd "C-x v R") #'prot-vc-git-reset)
+    (define-key map (kbd "C-x v P") #'prot-vc-git-push))
   (let ((map vc-git-log-edit-mode-map))
     (define-key map (kbd "C-C C-n") #'prot-vc-git-log-edit-extract-file-name)
     (define-key map (kbd "C-C C-i") #'prot-vc-git-log-insert-commits)
@@ -171,7 +174,8 @@
     (define-key map (kbd "a") #'prot-vc-git-patch-apply)
     (define-key map (kbd "c") #'prot-vc-git-patch-create-dwim)
     (define-key map (kbd "R") #'prot-vc-git-log-reset)
-    (define-key map (kbd "w") #'prot-vc-log-kill-hash)))
+    (define-key map (kbd "w") #'prot-vc-log-kill-hash)
+    (define-key map (kbd "P") #'prot-vc-git-push)))
 
 ;;; Interactive and powerful git front-end (Magit)
 
