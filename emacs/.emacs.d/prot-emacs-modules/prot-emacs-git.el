@@ -82,6 +82,7 @@
 
     ;; (define-key map (kbd "C-x v b") #'vc-retrieve-tag)  ; "branch" switch
 
+    (define-key map (kbd "C-x v G") #'vc-log-search)    ; git log --grep
     (define-key map (kbd "C-x v t") #'vc-create-tag)
     (define-key map (kbd "C-x v f") #'vc-log-incoming)  ; the actual git fetch
     (define-key map (kbd "C-x v o") #'vc-log-outgoing)
@@ -147,7 +148,6 @@
     (define-key map (kbd "C-x v p") #'prot-vc-project-or-dir)
     (define-key map (kbd "C-x v SPC") #'prot-vc-custom-log)
     (define-key map (kbd "C-x v g") #'prot-vc-git-grep)
-    (define-key map (kbd "C-x v G") #'prot-vc-git-log-grep)
     (define-key map (kbd "C-x v a") #'prot-vc-git-patch-apply)
     (define-key map (kbd "C-x v c") #'prot-vc-git-patch-create-dwim)
     (define-key map (kbd "C-x v s") #'prot-vc-git-show)
