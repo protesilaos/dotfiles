@@ -189,6 +189,8 @@
   (setq consult-find-args "find . -not ( -wholename */.* -prune )")
   (setq consult-preview-key 'any)
 
+  (add-to-list 'consult-mode-histories '(vc-git-log-edit-mode . log-edit-comment-ring))
+        
   (add-hook 'completion-list-mode-hook #'consult-preview-at-point-mode)
 
   (require 'consult-imenu) ; the `imenu' extension is in its own file
