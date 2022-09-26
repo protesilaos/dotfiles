@@ -85,8 +85,7 @@
                                        ))
            (window-parameters . ((no-other-window . t)
                                  (mode-line-format . none))))
-          ((or . ((derived-mode . log-view-mode)
-                  "\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"))
+          ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
            (display-buffer-reuse-window display-buffer-pop-up-frame)
            (pop-up-frame-parameters . ((width . (text-pixels . 640))
                                        (height . (text-pixels . 360))
