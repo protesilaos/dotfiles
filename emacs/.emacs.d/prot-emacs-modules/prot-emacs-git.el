@@ -79,7 +79,7 @@
 
     ;; NOTE 2022-09-24: Emacs 29 repurposes 'C-x v b' to a prefix key
     ;; for branch-related commands.  I am using that now.
-    
+
     ;; (define-key map (kbd "C-x v b") #'vc-retrieve-tag)  ; "branch" switch
 
     (define-key map (kbd "C-x v t") #'vc-create-tag)
@@ -101,7 +101,7 @@
     (define-key map (kbd "k") #'vc-dir-clean-files)
     (define-key map (kbd "G") #'vc-revert)
     ;; TODO 2022-09-24: The prot-vc-git-branch-map needs to be reviewed.
-    
+
     ;; (let ((prot-vc-git-branch-map (make-sparse-keymap)))
     ;;   (define-key map "B" prot-vc-git-branch-map)
     ;;   (define-key prot-vc-git-branch-map "n" #'vc-create-tag) ; new branch/tag
