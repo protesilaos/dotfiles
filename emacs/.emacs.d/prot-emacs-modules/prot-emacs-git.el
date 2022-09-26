@@ -71,6 +71,10 @@
            (3 'change-log-name)
            (4 'change-log-date))))
 
+  ;; These two are from Emacs 29
+  (setq vc-git-log-edit-summary-target-len 50)
+  (setq vc-git-log-edit-summary-max-len 70)
+
   (setq vc-follow-symlinks t)
 
   ;; NOTE: I override lots of the defaults
