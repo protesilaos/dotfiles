@@ -122,6 +122,9 @@
     (define-key map (kbd "M-q") #'vc-annotate-toggle-annotation-visibility)
     (define-key map (kbd "C-c C-c") #'vc-annotate-goto-line)
     (define-key map (kbd "<return>") #'vc-annotate-find-revision-at-line))
+  (let ((map log-edit-mode-map))
+    (define-key map (kbd "M-s") nil) ; I use M-s for my search commands
+    (define-key map (kbd "M-r") nil)) ; I use `consult-history'
   (let ((map log-view-mode-map))
     (define-key map (kbd "<tab>") #'log-view-toggle-entry-display)
     (define-key map (kbd "<return>") #'log-view-find-revision)
